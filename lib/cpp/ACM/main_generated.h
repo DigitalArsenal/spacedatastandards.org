@@ -13,8 +13,912 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
               FLATBUFFERS_VERSION_REVISION == 25,
              "Non-compatible flatbuffers version included");
 
+struct attitudeState;
+struct attitudeStateBuilder;
+
+struct attPhysicalProperties;
+struct attPhysicalPropertiesBuilder;
+
+struct attCovariance;
+struct attCovarianceBuilder;
+
+struct attManeuver;
+struct attManeuverBuilder;
+
 struct ACM;
 struct ACMBuilder;
+
+enum attitudeStateType : int8_t {
+  attitudeStateType_QUATERNION = 0,
+  attitudeStateType_EULER_ANGLES = 1,
+  attitudeStateType_SPIN = 2,
+  attitudeStateType_DIRECTION_COSINE = 3,
+  attitudeStateType_MIN = attitudeStateType_QUATERNION,
+  attitudeStateType_MAX = attitudeStateType_DIRECTION_COSINE
+};
+
+inline const attitudeStateType (&EnumValuesattitudeStateType())[4] {
+  static const attitudeStateType values[] = {
+    attitudeStateType_QUATERNION,
+    attitudeStateType_EULER_ANGLES,
+    attitudeStateType_SPIN,
+    attitudeStateType_DIRECTION_COSINE
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesattitudeStateType() {
+  static const char * const names[5] = {
+    "QUATERNION",
+    "EULER_ANGLES",
+    "SPIN",
+    "DIRECTION_COSINE",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameattitudeStateType(attitudeStateType e) {
+  if (::flatbuffers::IsOutRange(e, attitudeStateType_QUATERNION, attitudeStateType_DIRECTION_COSINE)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesattitudeStateType()[index];
+}
+
+enum attCovType : int8_t {
+  attCovType_ANGLE = 0,
+  attCovType_ANGLE_GYROBIAS = 1,
+  attCovType_ANGLE_ANGVEL = 2,
+  attCovType_QUATERNION_COV = 3,
+  attCovType_MIN = attCovType_ANGLE,
+  attCovType_MAX = attCovType_QUATERNION_COV
+};
+
+inline const attCovType (&EnumValuesattCovType())[4] {
+  static const attCovType values[] = {
+    attCovType_ANGLE,
+    attCovType_ANGLE_GYROBIAS,
+    attCovType_ANGLE_ANGVEL,
+    attCovType_QUATERNION_COV
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesattCovType() {
+  static const char * const names[5] = {
+    "ANGLE",
+    "ANGLE_GYROBIAS",
+    "ANGLE_ANGVEL",
+    "QUATERNION_COV",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameattCovType(attCovType e) {
+  if (::flatbuffers::IsOutRange(e, attCovType_ANGLE, attCovType_QUATERNION_COV)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesattCovType()[index];
+}
+
+enum maneuverableFlag : int8_t {
+  maneuverableFlag_YES = 0,
+  maneuverableFlag_NO = 1,
+  maneuverableFlag_UNKNOWN = 2,
+  maneuverableFlag_MIN = maneuverableFlag_YES,
+  maneuverableFlag_MAX = maneuverableFlag_UNKNOWN
+};
+
+inline const maneuverableFlag (&EnumValuesmaneuverableFlag())[3] {
+  static const maneuverableFlag values[] = {
+    maneuverableFlag_YES,
+    maneuverableFlag_NO,
+    maneuverableFlag_UNKNOWN
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesmaneuverableFlag() {
+  static const char * const names[4] = {
+    "YES",
+    "NO",
+    "UNKNOWN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamemaneuverableFlag(maneuverableFlag e) {
+  if (::flatbuffers::IsOutRange(e, maneuverableFlag_YES, maneuverableFlag_UNKNOWN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesmaneuverableFlag()[index];
+}
+
+/// Attitude State Data
+struct attitudeState FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef attitudeStateBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_ATT_TYPE = 4,
+    VT_REF_FRAME_A = 6,
+    VT_REF_FRAME_B = 8,
+    VT_ATT_DIR = 10,
+    VT_EPOCH = 12,
+    VT_Q1 = 14,
+    VT_Q2 = 16,
+    VT_Q3 = 18,
+    VT_QC = 20,
+    VT_ANGLE_1 = 22,
+    VT_ANGLE_2 = 24,
+    VT_ANGLE_3 = 26,
+    VT_EULER_ROT_SEQ = 28,
+    VT_ANGVEL_X = 30,
+    VT_ANGVEL_Y = 32,
+    VT_ANGVEL_Z = 34,
+    VT_SPIN_ALPHA = 36,
+    VT_SPIN_DELTA = 38,
+    VT_SPIN_ANGLE = 40,
+    VT_SPIN_ANGLE_VEL = 42,
+    VT_NUTATION = 44,
+    VT_NUTATION_PERIOD = 46,
+    VT_NUTATION_PHASE = 48
+  };
+  /// Attitude state type
+  attitudeStateType ATT_TYPE() const {
+    return static_cast<attitudeStateType>(GetField<int8_t>(VT_ATT_TYPE, 0));
+  }
+  /// Reference frame A
+  const ::flatbuffers::String *REF_FRAME_A() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REF_FRAME_A);
+  }
+  /// Reference frame B
+  const ::flatbuffers::String *REF_FRAME_B() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REF_FRAME_B);
+  }
+  /// Attitude direction (A2B or B2A)
+  const ::flatbuffers::String *ATT_DIR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ATT_DIR);
+  }
+  /// Epoch (ISO 8601)
+  const ::flatbuffers::String *EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
+  }
+  /// Quaternion scalar component (q0 or qc)
+  double Q1() const {
+    return GetField<double>(VT_Q1, 0.0);
+  }
+  /// Quaternion vector component i
+  double Q2() const {
+    return GetField<double>(VT_Q2, 0.0);
+  }
+  /// Quaternion vector component j
+  double Q3() const {
+    return GetField<double>(VT_Q3, 0.0);
+  }
+  /// Quaternion vector component k
+  double QC() const {
+    return GetField<double>(VT_QC, 0.0);
+  }
+  /// Euler angle X in degrees
+  double ANGLE_1() const {
+    return GetField<double>(VT_ANGLE_1, 0.0);
+  }
+  /// Euler angle Y in degrees
+  double ANGLE_2() const {
+    return GetField<double>(VT_ANGLE_2, 0.0);
+  }
+  /// Euler angle Z in degrees
+  double ANGLE_3() const {
+    return GetField<double>(VT_ANGLE_3, 0.0);
+  }
+  /// Euler rotation sequence (e.g., 321, 313)
+  const ::flatbuffers::String *EULER_ROT_SEQ() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EULER_ROT_SEQ);
+  }
+  /// Angular velocity X in deg/s
+  double ANGVEL_X() const {
+    return GetField<double>(VT_ANGVEL_X, 0.0);
+  }
+  /// Angular velocity Y in deg/s
+  double ANGVEL_Y() const {
+    return GetField<double>(VT_ANGVEL_Y, 0.0);
+  }
+  /// Angular velocity Z in deg/s
+  double ANGVEL_Z() const {
+    return GetField<double>(VT_ANGVEL_Z, 0.0);
+  }
+  /// Spin alpha in degrees
+  double SPIN_ALPHA() const {
+    return GetField<double>(VT_SPIN_ALPHA, 0.0);
+  }
+  /// Spin delta in degrees
+  double SPIN_DELTA() const {
+    return GetField<double>(VT_SPIN_DELTA, 0.0);
+  }
+  /// Spin angle in degrees
+  double SPIN_ANGLE() const {
+    return GetField<double>(VT_SPIN_ANGLE, 0.0);
+  }
+  /// Spin angle velocity in deg/s
+  double SPIN_ANGLE_VEL() const {
+    return GetField<double>(VT_SPIN_ANGLE_VEL, 0.0);
+  }
+  /// Nutation angle in degrees
+  double NUTATION() const {
+    return GetField<double>(VT_NUTATION, 0.0);
+  }
+  /// Nutation period in seconds
+  double NUTATION_PERIOD() const {
+    return GetField<double>(VT_NUTATION_PERIOD, 0.0);
+  }
+  /// Nutation phase in degrees
+  double NUTATION_PHASE() const {
+    return GetField<double>(VT_NUTATION_PHASE, 0.0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int8_t>(verifier, VT_ATT_TYPE, 1) &&
+           VerifyOffset(verifier, VT_REF_FRAME_A) &&
+           verifier.VerifyString(REF_FRAME_A()) &&
+           VerifyOffset(verifier, VT_REF_FRAME_B) &&
+           verifier.VerifyString(REF_FRAME_B()) &&
+           VerifyOffset(verifier, VT_ATT_DIR) &&
+           verifier.VerifyString(ATT_DIR()) &&
+           VerifyOffset(verifier, VT_EPOCH) &&
+           verifier.VerifyString(EPOCH()) &&
+           VerifyField<double>(verifier, VT_Q1, 8) &&
+           VerifyField<double>(verifier, VT_Q2, 8) &&
+           VerifyField<double>(verifier, VT_Q3, 8) &&
+           VerifyField<double>(verifier, VT_QC, 8) &&
+           VerifyField<double>(verifier, VT_ANGLE_1, 8) &&
+           VerifyField<double>(verifier, VT_ANGLE_2, 8) &&
+           VerifyField<double>(verifier, VT_ANGLE_3, 8) &&
+           VerifyOffset(verifier, VT_EULER_ROT_SEQ) &&
+           verifier.VerifyString(EULER_ROT_SEQ()) &&
+           VerifyField<double>(verifier, VT_ANGVEL_X, 8) &&
+           VerifyField<double>(verifier, VT_ANGVEL_Y, 8) &&
+           VerifyField<double>(verifier, VT_ANGVEL_Z, 8) &&
+           VerifyField<double>(verifier, VT_SPIN_ALPHA, 8) &&
+           VerifyField<double>(verifier, VT_SPIN_DELTA, 8) &&
+           VerifyField<double>(verifier, VT_SPIN_ANGLE, 8) &&
+           VerifyField<double>(verifier, VT_SPIN_ANGLE_VEL, 8) &&
+           VerifyField<double>(verifier, VT_NUTATION, 8) &&
+           VerifyField<double>(verifier, VT_NUTATION_PERIOD, 8) &&
+           VerifyField<double>(verifier, VT_NUTATION_PHASE, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct attitudeStateBuilder {
+  typedef attitudeState Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_ATT_TYPE(attitudeStateType ATT_TYPE) {
+    fbb_.AddElement<int8_t>(attitudeState::VT_ATT_TYPE, static_cast<int8_t>(ATT_TYPE), 0);
+  }
+  void add_REF_FRAME_A(::flatbuffers::Offset<::flatbuffers::String> REF_FRAME_A) {
+    fbb_.AddOffset(attitudeState::VT_REF_FRAME_A, REF_FRAME_A);
+  }
+  void add_REF_FRAME_B(::flatbuffers::Offset<::flatbuffers::String> REF_FRAME_B) {
+    fbb_.AddOffset(attitudeState::VT_REF_FRAME_B, REF_FRAME_B);
+  }
+  void add_ATT_DIR(::flatbuffers::Offset<::flatbuffers::String> ATT_DIR) {
+    fbb_.AddOffset(attitudeState::VT_ATT_DIR, ATT_DIR);
+  }
+  void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
+    fbb_.AddOffset(attitudeState::VT_EPOCH, EPOCH);
+  }
+  void add_Q1(double Q1) {
+    fbb_.AddElement<double>(attitudeState::VT_Q1, Q1, 0.0);
+  }
+  void add_Q2(double Q2) {
+    fbb_.AddElement<double>(attitudeState::VT_Q2, Q2, 0.0);
+  }
+  void add_Q3(double Q3) {
+    fbb_.AddElement<double>(attitudeState::VT_Q3, Q3, 0.0);
+  }
+  void add_QC(double QC) {
+    fbb_.AddElement<double>(attitudeState::VT_QC, QC, 0.0);
+  }
+  void add_ANGLE_1(double ANGLE_1) {
+    fbb_.AddElement<double>(attitudeState::VT_ANGLE_1, ANGLE_1, 0.0);
+  }
+  void add_ANGLE_2(double ANGLE_2) {
+    fbb_.AddElement<double>(attitudeState::VT_ANGLE_2, ANGLE_2, 0.0);
+  }
+  void add_ANGLE_3(double ANGLE_3) {
+    fbb_.AddElement<double>(attitudeState::VT_ANGLE_3, ANGLE_3, 0.0);
+  }
+  void add_EULER_ROT_SEQ(::flatbuffers::Offset<::flatbuffers::String> EULER_ROT_SEQ) {
+    fbb_.AddOffset(attitudeState::VT_EULER_ROT_SEQ, EULER_ROT_SEQ);
+  }
+  void add_ANGVEL_X(double ANGVEL_X) {
+    fbb_.AddElement<double>(attitudeState::VT_ANGVEL_X, ANGVEL_X, 0.0);
+  }
+  void add_ANGVEL_Y(double ANGVEL_Y) {
+    fbb_.AddElement<double>(attitudeState::VT_ANGVEL_Y, ANGVEL_Y, 0.0);
+  }
+  void add_ANGVEL_Z(double ANGVEL_Z) {
+    fbb_.AddElement<double>(attitudeState::VT_ANGVEL_Z, ANGVEL_Z, 0.0);
+  }
+  void add_SPIN_ALPHA(double SPIN_ALPHA) {
+    fbb_.AddElement<double>(attitudeState::VT_SPIN_ALPHA, SPIN_ALPHA, 0.0);
+  }
+  void add_SPIN_DELTA(double SPIN_DELTA) {
+    fbb_.AddElement<double>(attitudeState::VT_SPIN_DELTA, SPIN_DELTA, 0.0);
+  }
+  void add_SPIN_ANGLE(double SPIN_ANGLE) {
+    fbb_.AddElement<double>(attitudeState::VT_SPIN_ANGLE, SPIN_ANGLE, 0.0);
+  }
+  void add_SPIN_ANGLE_VEL(double SPIN_ANGLE_VEL) {
+    fbb_.AddElement<double>(attitudeState::VT_SPIN_ANGLE_VEL, SPIN_ANGLE_VEL, 0.0);
+  }
+  void add_NUTATION(double NUTATION) {
+    fbb_.AddElement<double>(attitudeState::VT_NUTATION, NUTATION, 0.0);
+  }
+  void add_NUTATION_PERIOD(double NUTATION_PERIOD) {
+    fbb_.AddElement<double>(attitudeState::VT_NUTATION_PERIOD, NUTATION_PERIOD, 0.0);
+  }
+  void add_NUTATION_PHASE(double NUTATION_PHASE) {
+    fbb_.AddElement<double>(attitudeState::VT_NUTATION_PHASE, NUTATION_PHASE, 0.0);
+  }
+  explicit attitudeStateBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<attitudeState> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<attitudeState>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<attitudeState> CreateattitudeState(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    attitudeStateType ATT_TYPE = attitudeStateType_QUATERNION,
+    ::flatbuffers::Offset<::flatbuffers::String> REF_FRAME_A = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REF_FRAME_B = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ATT_DIR = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
+    double Q1 = 0.0,
+    double Q2 = 0.0,
+    double Q3 = 0.0,
+    double QC = 0.0,
+    double ANGLE_1 = 0.0,
+    double ANGLE_2 = 0.0,
+    double ANGLE_3 = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> EULER_ROT_SEQ = 0,
+    double ANGVEL_X = 0.0,
+    double ANGVEL_Y = 0.0,
+    double ANGVEL_Z = 0.0,
+    double SPIN_ALPHA = 0.0,
+    double SPIN_DELTA = 0.0,
+    double SPIN_ANGLE = 0.0,
+    double SPIN_ANGLE_VEL = 0.0,
+    double NUTATION = 0.0,
+    double NUTATION_PERIOD = 0.0,
+    double NUTATION_PHASE = 0.0) {
+  attitudeStateBuilder builder_(_fbb);
+  builder_.add_NUTATION_PHASE(NUTATION_PHASE);
+  builder_.add_NUTATION_PERIOD(NUTATION_PERIOD);
+  builder_.add_NUTATION(NUTATION);
+  builder_.add_SPIN_ANGLE_VEL(SPIN_ANGLE_VEL);
+  builder_.add_SPIN_ANGLE(SPIN_ANGLE);
+  builder_.add_SPIN_DELTA(SPIN_DELTA);
+  builder_.add_SPIN_ALPHA(SPIN_ALPHA);
+  builder_.add_ANGVEL_Z(ANGVEL_Z);
+  builder_.add_ANGVEL_Y(ANGVEL_Y);
+  builder_.add_ANGVEL_X(ANGVEL_X);
+  builder_.add_ANGLE_3(ANGLE_3);
+  builder_.add_ANGLE_2(ANGLE_2);
+  builder_.add_ANGLE_1(ANGLE_1);
+  builder_.add_QC(QC);
+  builder_.add_Q3(Q3);
+  builder_.add_Q2(Q2);
+  builder_.add_Q1(Q1);
+  builder_.add_EULER_ROT_SEQ(EULER_ROT_SEQ);
+  builder_.add_EPOCH(EPOCH);
+  builder_.add_ATT_DIR(ATT_DIR);
+  builder_.add_REF_FRAME_B(REF_FRAME_B);
+  builder_.add_REF_FRAME_A(REF_FRAME_A);
+  builder_.add_ATT_TYPE(ATT_TYPE);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<attitudeState> CreateattitudeStateDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    attitudeStateType ATT_TYPE = attitudeStateType_QUATERNION,
+    const char *REF_FRAME_A = nullptr,
+    const char *REF_FRAME_B = nullptr,
+    const char *ATT_DIR = nullptr,
+    const char *EPOCH = nullptr,
+    double Q1 = 0.0,
+    double Q2 = 0.0,
+    double Q3 = 0.0,
+    double QC = 0.0,
+    double ANGLE_1 = 0.0,
+    double ANGLE_2 = 0.0,
+    double ANGLE_3 = 0.0,
+    const char *EULER_ROT_SEQ = nullptr,
+    double ANGVEL_X = 0.0,
+    double ANGVEL_Y = 0.0,
+    double ANGVEL_Z = 0.0,
+    double SPIN_ALPHA = 0.0,
+    double SPIN_DELTA = 0.0,
+    double SPIN_ANGLE = 0.0,
+    double SPIN_ANGLE_VEL = 0.0,
+    double NUTATION = 0.0,
+    double NUTATION_PERIOD = 0.0,
+    double NUTATION_PHASE = 0.0) {
+  auto REF_FRAME_A__ = REF_FRAME_A ? _fbb.CreateString(REF_FRAME_A) : 0;
+  auto REF_FRAME_B__ = REF_FRAME_B ? _fbb.CreateString(REF_FRAME_B) : 0;
+  auto ATT_DIR__ = ATT_DIR ? _fbb.CreateString(ATT_DIR) : 0;
+  auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
+  auto EULER_ROT_SEQ__ = EULER_ROT_SEQ ? _fbb.CreateString(EULER_ROT_SEQ) : 0;
+  return CreateattitudeState(
+      _fbb,
+      ATT_TYPE,
+      REF_FRAME_A__,
+      REF_FRAME_B__,
+      ATT_DIR__,
+      EPOCH__,
+      Q1,
+      Q2,
+      Q3,
+      QC,
+      ANGLE_1,
+      ANGLE_2,
+      ANGLE_3,
+      EULER_ROT_SEQ__,
+      ANGVEL_X,
+      ANGVEL_Y,
+      ANGVEL_Z,
+      SPIN_ALPHA,
+      SPIN_DELTA,
+      SPIN_ANGLE,
+      SPIN_ANGLE_VEL,
+      NUTATION,
+      NUTATION_PERIOD,
+      NUTATION_PHASE);
+}
+
+/// Attitude Physical Characteristics
+struct attPhysicalProperties FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef attPhysicalPropertiesBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_DRAG_COEFF = 4,
+    VT_WET_MASS = 6,
+    VT_DRY_MASS = 8,
+    VT_CP_REF_FRAME = 10,
+    VT_CP_X = 12,
+    VT_CP_Y = 14,
+    VT_CP_Z = 16,
+    VT_INERTIA_REF_FRAME = 18,
+    VT_IXX = 20,
+    VT_IYY = 22,
+    VT_IZZ = 24,
+    VT_IXY = 26,
+    VT_IXZ = 28,
+    VT_IYZ = 30
+  };
+  /// Drag coefficient
+  double DRAG_COEFF() const {
+    return GetField<double>(VT_DRAG_COEFF, 0.0);
+  }
+  /// Wet mass in kg
+  double WET_MASS() const {
+    return GetField<double>(VT_WET_MASS, 0.0);
+  }
+  /// Dry mass in kg
+  double DRY_MASS() const {
+    return GetField<double>(VT_DRY_MASS, 0.0);
+  }
+  /// Center of pressure reference frame
+  const ::flatbuffers::String *CP_REF_FRAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CP_REF_FRAME);
+  }
+  /// Center of pressure X in m
+  double CP_X() const {
+    return GetField<double>(VT_CP_X, 0.0);
+  }
+  /// Center of pressure Y in m
+  double CP_Y() const {
+    return GetField<double>(VT_CP_Y, 0.0);
+  }
+  /// Center of pressure Z in m
+  double CP_Z() const {
+    return GetField<double>(VT_CP_Z, 0.0);
+  }
+  /// Inertia reference frame
+  const ::flatbuffers::String *INERTIA_REF_FRAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_INERTIA_REF_FRAME);
+  }
+  /// Moment of inertia about X axis in kg*m^2
+  double IXX() const {
+    return GetField<double>(VT_IXX, 0.0);
+  }
+  /// Moment of inertia about Y axis in kg*m^2
+  double IYY() const {
+    return GetField<double>(VT_IYY, 0.0);
+  }
+  /// Moment of inertia about Z axis in kg*m^2
+  double IZZ() const {
+    return GetField<double>(VT_IZZ, 0.0);
+  }
+  /// Product of inertia XY in kg*m^2
+  double IXY() const {
+    return GetField<double>(VT_IXY, 0.0);
+  }
+  /// Product of inertia XZ in kg*m^2
+  double IXZ() const {
+    return GetField<double>(VT_IXZ, 0.0);
+  }
+  /// Product of inertia YZ in kg*m^2
+  double IYZ() const {
+    return GetField<double>(VT_IYZ, 0.0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<double>(verifier, VT_DRAG_COEFF, 8) &&
+           VerifyField<double>(verifier, VT_WET_MASS, 8) &&
+           VerifyField<double>(verifier, VT_DRY_MASS, 8) &&
+           VerifyOffset(verifier, VT_CP_REF_FRAME) &&
+           verifier.VerifyString(CP_REF_FRAME()) &&
+           VerifyField<double>(verifier, VT_CP_X, 8) &&
+           VerifyField<double>(verifier, VT_CP_Y, 8) &&
+           VerifyField<double>(verifier, VT_CP_Z, 8) &&
+           VerifyOffset(verifier, VT_INERTIA_REF_FRAME) &&
+           verifier.VerifyString(INERTIA_REF_FRAME()) &&
+           VerifyField<double>(verifier, VT_IXX, 8) &&
+           VerifyField<double>(verifier, VT_IYY, 8) &&
+           VerifyField<double>(verifier, VT_IZZ, 8) &&
+           VerifyField<double>(verifier, VT_IXY, 8) &&
+           VerifyField<double>(verifier, VT_IXZ, 8) &&
+           VerifyField<double>(verifier, VT_IYZ, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct attPhysicalPropertiesBuilder {
+  typedef attPhysicalProperties Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_DRAG_COEFF(double DRAG_COEFF) {
+    fbb_.AddElement<double>(attPhysicalProperties::VT_DRAG_COEFF, DRAG_COEFF, 0.0);
+  }
+  void add_WET_MASS(double WET_MASS) {
+    fbb_.AddElement<double>(attPhysicalProperties::VT_WET_MASS, WET_MASS, 0.0);
+  }
+  void add_DRY_MASS(double DRY_MASS) {
+    fbb_.AddElement<double>(attPhysicalProperties::VT_DRY_MASS, DRY_MASS, 0.0);
+  }
+  void add_CP_REF_FRAME(::flatbuffers::Offset<::flatbuffers::String> CP_REF_FRAME) {
+    fbb_.AddOffset(attPhysicalProperties::VT_CP_REF_FRAME, CP_REF_FRAME);
+  }
+  void add_CP_X(double CP_X) {
+    fbb_.AddElement<double>(attPhysicalProperties::VT_CP_X, CP_X, 0.0);
+  }
+  void add_CP_Y(double CP_Y) {
+    fbb_.AddElement<double>(attPhysicalProperties::VT_CP_Y, CP_Y, 0.0);
+  }
+  void add_CP_Z(double CP_Z) {
+    fbb_.AddElement<double>(attPhysicalProperties::VT_CP_Z, CP_Z, 0.0);
+  }
+  void add_INERTIA_REF_FRAME(::flatbuffers::Offset<::flatbuffers::String> INERTIA_REF_FRAME) {
+    fbb_.AddOffset(attPhysicalProperties::VT_INERTIA_REF_FRAME, INERTIA_REF_FRAME);
+  }
+  void add_IXX(double IXX) {
+    fbb_.AddElement<double>(attPhysicalProperties::VT_IXX, IXX, 0.0);
+  }
+  void add_IYY(double IYY) {
+    fbb_.AddElement<double>(attPhysicalProperties::VT_IYY, IYY, 0.0);
+  }
+  void add_IZZ(double IZZ) {
+    fbb_.AddElement<double>(attPhysicalProperties::VT_IZZ, IZZ, 0.0);
+  }
+  void add_IXY(double IXY) {
+    fbb_.AddElement<double>(attPhysicalProperties::VT_IXY, IXY, 0.0);
+  }
+  void add_IXZ(double IXZ) {
+    fbb_.AddElement<double>(attPhysicalProperties::VT_IXZ, IXZ, 0.0);
+  }
+  void add_IYZ(double IYZ) {
+    fbb_.AddElement<double>(attPhysicalProperties::VT_IYZ, IYZ, 0.0);
+  }
+  explicit attPhysicalPropertiesBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<attPhysicalProperties> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<attPhysicalProperties>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<attPhysicalProperties> CreateattPhysicalProperties(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    double DRAG_COEFF = 0.0,
+    double WET_MASS = 0.0,
+    double DRY_MASS = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> CP_REF_FRAME = 0,
+    double CP_X = 0.0,
+    double CP_Y = 0.0,
+    double CP_Z = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> INERTIA_REF_FRAME = 0,
+    double IXX = 0.0,
+    double IYY = 0.0,
+    double IZZ = 0.0,
+    double IXY = 0.0,
+    double IXZ = 0.0,
+    double IYZ = 0.0) {
+  attPhysicalPropertiesBuilder builder_(_fbb);
+  builder_.add_IYZ(IYZ);
+  builder_.add_IXZ(IXZ);
+  builder_.add_IXY(IXY);
+  builder_.add_IZZ(IZZ);
+  builder_.add_IYY(IYY);
+  builder_.add_IXX(IXX);
+  builder_.add_CP_Z(CP_Z);
+  builder_.add_CP_Y(CP_Y);
+  builder_.add_CP_X(CP_X);
+  builder_.add_DRY_MASS(DRY_MASS);
+  builder_.add_WET_MASS(WET_MASS);
+  builder_.add_DRAG_COEFF(DRAG_COEFF);
+  builder_.add_INERTIA_REF_FRAME(INERTIA_REF_FRAME);
+  builder_.add_CP_REF_FRAME(CP_REF_FRAME);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<attPhysicalProperties> CreateattPhysicalPropertiesDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    double DRAG_COEFF = 0.0,
+    double WET_MASS = 0.0,
+    double DRY_MASS = 0.0,
+    const char *CP_REF_FRAME = nullptr,
+    double CP_X = 0.0,
+    double CP_Y = 0.0,
+    double CP_Z = 0.0,
+    const char *INERTIA_REF_FRAME = nullptr,
+    double IXX = 0.0,
+    double IYY = 0.0,
+    double IZZ = 0.0,
+    double IXY = 0.0,
+    double IXZ = 0.0,
+    double IYZ = 0.0) {
+  auto CP_REF_FRAME__ = CP_REF_FRAME ? _fbb.CreateString(CP_REF_FRAME) : 0;
+  auto INERTIA_REF_FRAME__ = INERTIA_REF_FRAME ? _fbb.CreateString(INERTIA_REF_FRAME) : 0;
+  return CreateattPhysicalProperties(
+      _fbb,
+      DRAG_COEFF,
+      WET_MASS,
+      DRY_MASS,
+      CP_REF_FRAME__,
+      CP_X,
+      CP_Y,
+      CP_Z,
+      INERTIA_REF_FRAME__,
+      IXX,
+      IYY,
+      IZZ,
+      IXY,
+      IXZ,
+      IYZ);
+}
+
+/// Attitude Covariance
+struct attCovariance FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef attCovarianceBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_COV_TYPE = 4,
+    VT_COV_REF_FRAME = 6,
+    VT_EPOCH = 8,
+    VT_COV = 10
+  };
+  /// Covariance type
+  attCovType COV_TYPE() const {
+    return static_cast<attCovType>(GetField<int8_t>(VT_COV_TYPE, 0));
+  }
+  /// Reference frame
+  const ::flatbuffers::String *COV_REF_FRAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COV_REF_FRAME);
+  }
+  /// Epoch (ISO 8601)
+  const ::flatbuffers::String *EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
+  }
+  /// Upper-triangular covariance matrix elements (row-major)
+  const ::flatbuffers::Vector<double> *COV() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COV);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<int8_t>(verifier, VT_COV_TYPE, 1) &&
+           VerifyOffset(verifier, VT_COV_REF_FRAME) &&
+           verifier.VerifyString(COV_REF_FRAME()) &&
+           VerifyOffset(verifier, VT_EPOCH) &&
+           verifier.VerifyString(EPOCH()) &&
+           VerifyOffset(verifier, VT_COV) &&
+           verifier.VerifyVector(COV()) &&
+           verifier.EndTable();
+  }
+};
+
+struct attCovarianceBuilder {
+  typedef attCovariance Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_COV_TYPE(attCovType COV_TYPE) {
+    fbb_.AddElement<int8_t>(attCovariance::VT_COV_TYPE, static_cast<int8_t>(COV_TYPE), 0);
+  }
+  void add_COV_REF_FRAME(::flatbuffers::Offset<::flatbuffers::String> COV_REF_FRAME) {
+    fbb_.AddOffset(attCovariance::VT_COV_REF_FRAME, COV_REF_FRAME);
+  }
+  void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
+    fbb_.AddOffset(attCovariance::VT_EPOCH, EPOCH);
+  }
+  void add_COV(::flatbuffers::Offset<::flatbuffers::Vector<double>> COV) {
+    fbb_.AddOffset(attCovariance::VT_COV, COV);
+  }
+  explicit attCovarianceBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<attCovariance> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<attCovariance>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<attCovariance> CreateattCovariance(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    attCovType COV_TYPE = attCovType_ANGLE,
+    ::flatbuffers::Offset<::flatbuffers::String> COV_REF_FRAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> COV = 0) {
+  attCovarianceBuilder builder_(_fbb);
+  builder_.add_COV(COV);
+  builder_.add_EPOCH(EPOCH);
+  builder_.add_COV_REF_FRAME(COV_REF_FRAME);
+  builder_.add_COV_TYPE(COV_TYPE);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<attCovariance> CreateattCovarianceDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    attCovType COV_TYPE = attCovType_ANGLE,
+    const char *COV_REF_FRAME = nullptr,
+    const char *EPOCH = nullptr,
+    const std::vector<double> *COV = nullptr) {
+  auto COV_REF_FRAME__ = COV_REF_FRAME ? _fbb.CreateString(COV_REF_FRAME) : 0;
+  auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
+  auto COV__ = COV ? _fbb.CreateVector<double>(*COV) : 0;
+  return CreateattCovariance(
+      _fbb,
+      COV_TYPE,
+      COV_REF_FRAME__,
+      EPOCH__,
+      COV__);
+}
+
+/// Attitude Maneuver
+struct attManeuver FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef attManeuverBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_MAN_EPOCH_START = 4,
+    VT_DURATION = 6,
+    VT_REF_FRAME = 8,
+    VT_TOR_1 = 10,
+    VT_TOR_2 = 12,
+    VT_TOR_3 = 14
+  };
+  /// Maneuver epoch start (ISO 8601)
+  const ::flatbuffers::String *MAN_EPOCH_START() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MAN_EPOCH_START);
+  }
+  /// Duration in seconds
+  double DURATION() const {
+    return GetField<double>(VT_DURATION, 0.0);
+  }
+  /// Reference frame
+  const ::flatbuffers::String *REF_FRAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REF_FRAME);
+  }
+  /// Torque about body X in N*m
+  double TOR_1() const {
+    return GetField<double>(VT_TOR_1, 0.0);
+  }
+  /// Torque about body Y in N*m
+  double TOR_2() const {
+    return GetField<double>(VT_TOR_2, 0.0);
+  }
+  /// Torque about body Z in N*m
+  double TOR_3() const {
+    return GetField<double>(VT_TOR_3, 0.0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_MAN_EPOCH_START) &&
+           verifier.VerifyString(MAN_EPOCH_START()) &&
+           VerifyField<double>(verifier, VT_DURATION, 8) &&
+           VerifyOffset(verifier, VT_REF_FRAME) &&
+           verifier.VerifyString(REF_FRAME()) &&
+           VerifyField<double>(verifier, VT_TOR_1, 8) &&
+           VerifyField<double>(verifier, VT_TOR_2, 8) &&
+           VerifyField<double>(verifier, VT_TOR_3, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct attManeuverBuilder {
+  typedef attManeuver Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_MAN_EPOCH_START(::flatbuffers::Offset<::flatbuffers::String> MAN_EPOCH_START) {
+    fbb_.AddOffset(attManeuver::VT_MAN_EPOCH_START, MAN_EPOCH_START);
+  }
+  void add_DURATION(double DURATION) {
+    fbb_.AddElement<double>(attManeuver::VT_DURATION, DURATION, 0.0);
+  }
+  void add_REF_FRAME(::flatbuffers::Offset<::flatbuffers::String> REF_FRAME) {
+    fbb_.AddOffset(attManeuver::VT_REF_FRAME, REF_FRAME);
+  }
+  void add_TOR_1(double TOR_1) {
+    fbb_.AddElement<double>(attManeuver::VT_TOR_1, TOR_1, 0.0);
+  }
+  void add_TOR_2(double TOR_2) {
+    fbb_.AddElement<double>(attManeuver::VT_TOR_2, TOR_2, 0.0);
+  }
+  void add_TOR_3(double TOR_3) {
+    fbb_.AddElement<double>(attManeuver::VT_TOR_3, TOR_3, 0.0);
+  }
+  explicit attManeuverBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<attManeuver> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<attManeuver>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<attManeuver> CreateattManeuver(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> MAN_EPOCH_START = 0,
+    double DURATION = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> REF_FRAME = 0,
+    double TOR_1 = 0.0,
+    double TOR_2 = 0.0,
+    double TOR_3 = 0.0) {
+  attManeuverBuilder builder_(_fbb);
+  builder_.add_TOR_3(TOR_3);
+  builder_.add_TOR_2(TOR_2);
+  builder_.add_TOR_1(TOR_1);
+  builder_.add_DURATION(DURATION);
+  builder_.add_REF_FRAME(REF_FRAME);
+  builder_.add_MAN_EPOCH_START(MAN_EPOCH_START);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<attManeuver> CreateattManeuverDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *MAN_EPOCH_START = nullptr,
+    double DURATION = 0.0,
+    const char *REF_FRAME = nullptr,
+    double TOR_1 = 0.0,
+    double TOR_2 = 0.0,
+    double TOR_3 = 0.0) {
+  auto MAN_EPOCH_START__ = MAN_EPOCH_START ? _fbb.CreateString(MAN_EPOCH_START) : 0;
+  auto REF_FRAME__ = REF_FRAME ? _fbb.CreateString(REF_FRAME) : 0;
+  return CreateattManeuver(
+      _fbb,
+      MAN_EPOCH_START__,
+      DURATION,
+      REF_FRAME__,
+      TOR_1,
+      TOR_2,
+      TOR_3);
+}
 
 /// Attitude Comprehensive Message
 struct ACM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
@@ -24,22 +928,72 @@ struct ACM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_CREATION_DATE = 6,
     VT_ORIGINATOR = 8,
     VT_OBJECT_NAME = 10,
-    VT_OBJECT_ID = 12
+    VT_OBJECT_ID = 12,
+    VT_CATALOG_NAME = 14,
+    VT_EPOCH = 16,
+    VT_TIME_SYSTEM = 18,
+    VT_ATT_STATES = 20,
+    VT_PHYS_PROPERTIES = 22,
+    VT_COV_DATA = 24,
+    VT_MANEUVERS = 26,
+    VT_MANEUVERABLE = 28,
+    VT_COMMENT = 30
   };
+  /// CCSDS ACM version
   const ::flatbuffers::String *CCSDS_ACM_VERS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CCSDS_ACM_VERS);
   }
+  /// Message creation date (ISO 8601)
   const ::flatbuffers::String *CREATION_DATE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CREATION_DATE);
   }
+  /// Creating organization
   const ::flatbuffers::String *ORIGINATOR() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIGINATOR);
   }
+  /// Object name
   const ::flatbuffers::String *OBJECT_NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_NAME);
   }
+  /// International designator
   const ::flatbuffers::String *OBJECT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_ID);
+  }
+  /// Catalog name
+  const ::flatbuffers::String *CATALOG_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CATALOG_NAME);
+  }
+  /// Epoch of state (ISO 8601)
+  const ::flatbuffers::String *EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
+  }
+  /// Time system
+  const ::flatbuffers::String *TIME_SYSTEM() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TIME_SYSTEM);
+  }
+  /// Attitude states
+  const ::flatbuffers::Vector<::flatbuffers::Offset<attitudeState>> *ATT_STATES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<attitudeState>> *>(VT_ATT_STATES);
+  }
+  /// Physical properties
+  const attPhysicalProperties *PHYS_PROPERTIES() const {
+    return GetPointer<const attPhysicalProperties *>(VT_PHYS_PROPERTIES);
+  }
+  /// Attitude covariance data
+  const ::flatbuffers::Vector<::flatbuffers::Offset<attCovariance>> *COV_DATA() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<attCovariance>> *>(VT_COV_DATA);
+  }
+  /// Attitude maneuvers
+  const ::flatbuffers::Vector<::flatbuffers::Offset<attManeuver>> *MANEUVERS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<attManeuver>> *>(VT_MANEUVERS);
+  }
+  /// Maneuverability status
+  maneuverableFlag MANEUVERABLE() const {
+    return static_cast<maneuverableFlag>(GetField<int8_t>(VT_MANEUVERABLE, 0));
+  }
+  /// Additional comments
+  const ::flatbuffers::String *COMMENT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COMMENT);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -53,6 +1007,26 @@ struct ACM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(OBJECT_NAME()) &&
            VerifyOffset(verifier, VT_OBJECT_ID) &&
            verifier.VerifyString(OBJECT_ID()) &&
+           VerifyOffset(verifier, VT_CATALOG_NAME) &&
+           verifier.VerifyString(CATALOG_NAME()) &&
+           VerifyOffset(verifier, VT_EPOCH) &&
+           verifier.VerifyString(EPOCH()) &&
+           VerifyOffset(verifier, VT_TIME_SYSTEM) &&
+           verifier.VerifyString(TIME_SYSTEM()) &&
+           VerifyOffset(verifier, VT_ATT_STATES) &&
+           verifier.VerifyVector(ATT_STATES()) &&
+           verifier.VerifyVectorOfTables(ATT_STATES()) &&
+           VerifyOffset(verifier, VT_PHYS_PROPERTIES) &&
+           verifier.VerifyTable(PHYS_PROPERTIES()) &&
+           VerifyOffset(verifier, VT_COV_DATA) &&
+           verifier.VerifyVector(COV_DATA()) &&
+           verifier.VerifyVectorOfTables(COV_DATA()) &&
+           VerifyOffset(verifier, VT_MANEUVERS) &&
+           verifier.VerifyVector(MANEUVERS()) &&
+           verifier.VerifyVectorOfTables(MANEUVERS()) &&
+           VerifyField<int8_t>(verifier, VT_MANEUVERABLE, 1) &&
+           VerifyOffset(verifier, VT_COMMENT) &&
+           verifier.VerifyString(COMMENT()) &&
            verifier.EndTable();
   }
 };
@@ -76,6 +1050,33 @@ struct ACMBuilder {
   void add_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> OBJECT_ID) {
     fbb_.AddOffset(ACM::VT_OBJECT_ID, OBJECT_ID);
   }
+  void add_CATALOG_NAME(::flatbuffers::Offset<::flatbuffers::String> CATALOG_NAME) {
+    fbb_.AddOffset(ACM::VT_CATALOG_NAME, CATALOG_NAME);
+  }
+  void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
+    fbb_.AddOffset(ACM::VT_EPOCH, EPOCH);
+  }
+  void add_TIME_SYSTEM(::flatbuffers::Offset<::flatbuffers::String> TIME_SYSTEM) {
+    fbb_.AddOffset(ACM::VT_TIME_SYSTEM, TIME_SYSTEM);
+  }
+  void add_ATT_STATES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<attitudeState>>> ATT_STATES) {
+    fbb_.AddOffset(ACM::VT_ATT_STATES, ATT_STATES);
+  }
+  void add_PHYS_PROPERTIES(::flatbuffers::Offset<attPhysicalProperties> PHYS_PROPERTIES) {
+    fbb_.AddOffset(ACM::VT_PHYS_PROPERTIES, PHYS_PROPERTIES);
+  }
+  void add_COV_DATA(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<attCovariance>>> COV_DATA) {
+    fbb_.AddOffset(ACM::VT_COV_DATA, COV_DATA);
+  }
+  void add_MANEUVERS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<attManeuver>>> MANEUVERS) {
+    fbb_.AddOffset(ACM::VT_MANEUVERS, MANEUVERS);
+  }
+  void add_MANEUVERABLE(maneuverableFlag MANEUVERABLE) {
+    fbb_.AddElement<int8_t>(ACM::VT_MANEUVERABLE, static_cast<int8_t>(MANEUVERABLE), 0);
+  }
+  void add_COMMENT(::flatbuffers::Offset<::flatbuffers::String> COMMENT) {
+    fbb_.AddOffset(ACM::VT_COMMENT, COMMENT);
+  }
   explicit ACMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -93,13 +1094,31 @@ inline ::flatbuffers::Offset<ACM> CreateACM(
     ::flatbuffers::Offset<::flatbuffers::String> CREATION_DATE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ORIGINATOR = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OBJECT_NAME = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_ID = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CATALOG_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> TIME_SYSTEM = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<attitudeState>>> ATT_STATES = 0,
+    ::flatbuffers::Offset<attPhysicalProperties> PHYS_PROPERTIES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<attCovariance>>> COV_DATA = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<attManeuver>>> MANEUVERS = 0,
+    maneuverableFlag MANEUVERABLE = maneuverableFlag_YES,
+    ::flatbuffers::Offset<::flatbuffers::String> COMMENT = 0) {
   ACMBuilder builder_(_fbb);
+  builder_.add_COMMENT(COMMENT);
+  builder_.add_MANEUVERS(MANEUVERS);
+  builder_.add_COV_DATA(COV_DATA);
+  builder_.add_PHYS_PROPERTIES(PHYS_PROPERTIES);
+  builder_.add_ATT_STATES(ATT_STATES);
+  builder_.add_TIME_SYSTEM(TIME_SYSTEM);
+  builder_.add_EPOCH(EPOCH);
+  builder_.add_CATALOG_NAME(CATALOG_NAME);
   builder_.add_OBJECT_ID(OBJECT_ID);
   builder_.add_OBJECT_NAME(OBJECT_NAME);
   builder_.add_ORIGINATOR(ORIGINATOR);
   builder_.add_CREATION_DATE(CREATION_DATE);
   builder_.add_CCSDS_ACM_VERS(CCSDS_ACM_VERS);
+  builder_.add_MANEUVERABLE(MANEUVERABLE);
   return builder_.Finish();
 }
 
@@ -109,19 +1128,44 @@ inline ::flatbuffers::Offset<ACM> CreateACMDirect(
     const char *CREATION_DATE = nullptr,
     const char *ORIGINATOR = nullptr,
     const char *OBJECT_NAME = nullptr,
-    const char *OBJECT_ID = nullptr) {
+    const char *OBJECT_ID = nullptr,
+    const char *CATALOG_NAME = nullptr,
+    const char *EPOCH = nullptr,
+    const char *TIME_SYSTEM = nullptr,
+    const std::vector<::flatbuffers::Offset<attitudeState>> *ATT_STATES = nullptr,
+    ::flatbuffers::Offset<attPhysicalProperties> PHYS_PROPERTIES = 0,
+    const std::vector<::flatbuffers::Offset<attCovariance>> *COV_DATA = nullptr,
+    const std::vector<::flatbuffers::Offset<attManeuver>> *MANEUVERS = nullptr,
+    maneuverableFlag MANEUVERABLE = maneuverableFlag_YES,
+    const char *COMMENT = nullptr) {
   auto CCSDS_ACM_VERS__ = CCSDS_ACM_VERS ? _fbb.CreateString(CCSDS_ACM_VERS) : 0;
   auto CREATION_DATE__ = CREATION_DATE ? _fbb.CreateString(CREATION_DATE) : 0;
   auto ORIGINATOR__ = ORIGINATOR ? _fbb.CreateString(ORIGINATOR) : 0;
   auto OBJECT_NAME__ = OBJECT_NAME ? _fbb.CreateString(OBJECT_NAME) : 0;
   auto OBJECT_ID__ = OBJECT_ID ? _fbb.CreateString(OBJECT_ID) : 0;
+  auto CATALOG_NAME__ = CATALOG_NAME ? _fbb.CreateString(CATALOG_NAME) : 0;
+  auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
+  auto TIME_SYSTEM__ = TIME_SYSTEM ? _fbb.CreateString(TIME_SYSTEM) : 0;
+  auto ATT_STATES__ = ATT_STATES ? _fbb.CreateVector<::flatbuffers::Offset<attitudeState>>(*ATT_STATES) : 0;
+  auto COV_DATA__ = COV_DATA ? _fbb.CreateVector<::flatbuffers::Offset<attCovariance>>(*COV_DATA) : 0;
+  auto MANEUVERS__ = MANEUVERS ? _fbb.CreateVector<::flatbuffers::Offset<attManeuver>>(*MANEUVERS) : 0;
+  auto COMMENT__ = COMMENT ? _fbb.CreateString(COMMENT) : 0;
   return CreateACM(
       _fbb,
       CCSDS_ACM_VERS__,
       CREATION_DATE__,
       ORIGINATOR__,
       OBJECT_NAME__,
-      OBJECT_ID__);
+      OBJECT_ID__,
+      CATALOG_NAME__,
+      EPOCH__,
+      TIME_SYSTEM__,
+      ATT_STATES__,
+      PHYS_PROPERTIES,
+      COV_DATA__,
+      MANEUVERS__,
+      MANEUVERABLE,
+      COMMENT__);
 }
 
 inline const ACM *GetACM(const void *buf) {

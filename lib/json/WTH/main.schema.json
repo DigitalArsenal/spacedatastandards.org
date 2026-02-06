@@ -6,100 +6,132 @@
       "description" : "Weather Data",
       "properties" : {
         "ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique identifier"
               },
         "ID_SENSOR" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Sensor identifier"
               },
         "ORIG_SENSOR_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Original sensor identifier"
               },
         "OB_TIME" : {
-                "type" : "string"
-              },
-        "SIG_PWRS" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
-        "NOISE_LVLS" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
-        "SPEC_WIDTHS" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
-        "FIRST_GUESS_AVGS" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
-        "QC_VALUE" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "string",
+                "description" : "Observation time (ISO 8601)"
               },
         "FILE_CREATION" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "File creation time (ISO 8601)"
+              },
+        "QC_VALUE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Quality control value"
               },
         "TERM_ALT" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Terminal altitude (km)"
               },
         "AVG_TX_PWR" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Average transmit power (dBm)"
               },
         "AVG_REF_PWR" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Average reflected power (dBm)"
               },
         "SECTOR_NUM" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Sector number"
               },
         "NUM_ELEMENTS" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "TD_AVG_SAMPLE_NUMS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Number of data elements"
               },
         "CHECKSUM" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Checksum"
+              },
+        "SIG_PWRS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Signal power values (dBm)"
+              },
+        "NOISE_LVLS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Noise level values (dBm)"
+              },
+        "SPEC_WIDTHS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Spectral width values (m/s)"
+              },
+        "FIRST_GUESS_AVGS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "First guess average values"
+              },
+        "TD_AVG_SAMPLE_NUMS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Time domain average sample numbers"
               },
         "CO_INTEGS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Co-integration values"
               },
         "SPEC_AVGS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Spectral average values"
               },
         "INTERPULSE_PERIODS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Interpulse periods (microseconds)"
               },
         "DOPP_VELS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Doppler velocities (m/s)"
               },
         "CONS_RECS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Consecutive records count"
               },
         "SNRS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Signal-to-noise ratios (dB)"
               },
         "SIG_STRENGTH" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Signal strength (dBm)"
               },
         "SEMI_MAJOR_AXIS" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Error ellipse semi-major axis (km)"
               },
         "SEMI_MINOR_AXIS" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Error ellipse semi-minor axis (km)"
               },
         "ANGLE_ORIENTATION" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Error ellipse orientation angle (degrees)"
               },
         "LIGHT_EVENT_NUM" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Lightning event number"
               },
         "LIGHT_DET_SENSORS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Lightning detection sensor identifiers"
               },
         "POS_CONFIDENCE" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Position confidence (0-1)"
               },
         "SRC_TYPS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Source types"
               },
         "SRC_IDS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Source identifiers"
               }
       },
       "additionalProperties" : false

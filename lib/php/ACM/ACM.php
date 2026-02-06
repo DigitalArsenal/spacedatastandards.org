@@ -41,33 +41,144 @@ class ACM extends Table
         return $this;
     }
 
+    /// CCSDS ACM version
     public function getCCSDS_ACM_VERS()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Message creation date (ISO 8601)
     public function getCREATION_DATE()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Creating organization
     public function getORIGINATOR()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Object name
     public function getOBJECT_NAME()
     {
         $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// International designator
     public function getOBJECT_ID()
     {
         $o = $this->__offset(12);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Catalog name
+    public function getCATALOG_NAME()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Epoch of state (ISO 8601)
+    public function getEPOCH()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Time system
+    public function getTIME_SYSTEM()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Attitude states
+    /**
+     * @returnVectorOffset
+     */
+    public function getATT_STATES($j)
+    {
+        $o = $this->__offset(20);
+        $obj = new AttitudeState();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getATT_STATESLength()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Physical properties
+    public function getPHYS_PROPERTIES()
+    {
+        $obj = new AttPhysicalProperties();
+        $o = $this->__offset(22);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Attitude covariance data
+    /**
+     * @returnVectorOffset
+     */
+    public function getCOV_DATA($j)
+    {
+        $o = $this->__offset(24);
+        $obj = new AttCovariance();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCOV_DATALength()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Attitude maneuvers
+    /**
+     * @returnVectorOffset
+     */
+    public function getMANEUVERS($j)
+    {
+        $o = $this->__offset(26);
+        $obj = new AttManeuver();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMANEUVERSLength()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Maneuverability status
+    /**
+     * @return sbyte
+     */
+    public function getMANEUVERABLE()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \maneuverableFlag::YES;
+    }
+
+    /// Additional comments
+    public function getCOMMENT()
+    {
+        $o = $this->__offset(30);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -77,21 +188,30 @@ class ACM extends Table
      */
     public static function startACM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(5);
+        $builder->StartObject(14);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return ACM
      */
-    public static function createACM(FlatBufferBuilder $builder, $CCSDS_ACM_VERS, $CREATION_DATE, $ORIGINATOR, $OBJECT_NAME, $OBJECT_ID)
+    public static function createACM(FlatBufferBuilder $builder, $CCSDS_ACM_VERS, $CREATION_DATE, $ORIGINATOR, $OBJECT_NAME, $OBJECT_ID, $CATALOG_NAME, $EPOCH, $TIME_SYSTEM, $ATT_STATES, $PHYS_PROPERTIES, $COV_DATA, $MANEUVERS, $MANEUVERABLE, $COMMENT)
     {
-        $builder->startObject(5);
+        $builder->startObject(14);
         self::addCCSDS_ACM_VERS($builder, $CCSDS_ACM_VERS);
         self::addCREATION_DATE($builder, $CREATION_DATE);
         self::addORIGINATOR($builder, $ORIGINATOR);
         self::addOBJECT_NAME($builder, $OBJECT_NAME);
         self::addOBJECT_ID($builder, $OBJECT_ID);
+        self::addCATALOG_NAME($builder, $CATALOG_NAME);
+        self::addEPOCH($builder, $EPOCH);
+        self::addTIME_SYSTEM($builder, $TIME_SYSTEM);
+        self::addATT_STATES($builder, $ATT_STATES);
+        self::addPHYS_PROPERTIES($builder, $PHYS_PROPERTIES);
+        self::addCOV_DATA($builder, $COV_DATA);
+        self::addMANEUVERS($builder, $MANEUVERS);
+        self::addMANEUVERABLE($builder, $MANEUVERABLE);
+        self::addCOMMENT($builder, $COMMENT);
         $o = $builder->endObject();
         return $o;
     }
@@ -144,6 +264,168 @@ class ACM extends Table
     public static function addOBJECT_ID(FlatBufferBuilder $builder, $OBJECT_ID)
     {
         $builder->addOffsetX(4, $OBJECT_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCATALOG_NAME(FlatBufferBuilder $builder, $CATALOG_NAME)
+    {
+        $builder->addOffsetX(5, $CATALOG_NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEPOCH(FlatBufferBuilder $builder, $EPOCH)
+    {
+        $builder->addOffsetX(6, $EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addTIME_SYSTEM(FlatBufferBuilder $builder, $TIME_SYSTEM)
+    {
+        $builder->addOffsetX(7, $TIME_SYSTEM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addATT_STATES(FlatBufferBuilder $builder, $ATT_STATES)
+    {
+        $builder->addOffsetX(8, $ATT_STATES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createATT_STATESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startATT_STATESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addPHYS_PROPERTIES(FlatBufferBuilder $builder, $PHYS_PROPERTIES)
+    {
+        $builder->addOffsetX(9, $PHYS_PROPERTIES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addCOV_DATA(FlatBufferBuilder $builder, $COV_DATA)
+    {
+        $builder->addOffsetX(10, $COV_DATA, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createCOV_DATAVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startCOV_DATAVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addMANEUVERS(FlatBufferBuilder $builder, $MANEUVERS)
+    {
+        $builder->addOffsetX(11, $MANEUVERS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createMANEUVERSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startMANEUVERSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addMANEUVERABLE(FlatBufferBuilder $builder, $MANEUVERABLE)
+    {
+        $builder->addSbyteX(12, $MANEUVERABLE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCOMMENT(FlatBufferBuilder $builder, $COMMENT)
+    {
+        $builder->addOffsetX(13, $COMMENT, 0);
     }
 
     /**

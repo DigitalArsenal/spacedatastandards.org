@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { driftRecord, driftRecordT } from './driftRecord.js';
 
 
 /**
@@ -31,6 +32,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$DFH');
 }
 
+/**
+ * Unique identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,32 +42,209 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-EFFECTIVE_UNTIL():string|null
-EFFECTIVE_UNTIL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-EFFECTIVE_UNTIL(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Satellite number
+ */
+SAT_NO():number {
   const offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Object designator
+ */
+OBJECT_DESIGNATOR():string|null
+OBJECT_DESIGNATOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OBJECT_DESIGNATOR(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Object common name
+ */
+OBJECT_NAME():string|null
+OBJECT_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OBJECT_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * History start time (ISO 8601)
+ */
+START_TIME():string|null
+START_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+START_TIME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * History end time (ISO 8601)
+ */
+END_TIME():string|null
+END_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+END_TIME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Current effective until date (ISO 8601)
+ */
+EFFECTIVE_UNTIL():string|null
+EFFECTIVE_UNTIL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EFFECTIVE_UNTIL(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Current drift rate in degrees/day
+ */
 DRIFT_RATE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 8);
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Current mean longitude in degrees East
+ */
+MEAN_LONGITUDE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Longitude slot center in degrees East (if station-keeping)
+ */
+SLOT_CENTER():number {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Longitude slot half-width in degrees
+ */
+SLOT_HALF_WIDTH():number {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Whether object is actively station-keeping
+ */
+STATION_KEEPING():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Historical drift records
+ */
+RECORDS(index: number, obj?:driftRecord):driftRecord|null {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? (obj || new driftRecord()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+recordsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Number of records in history
+ */
+NUM_RECORDS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Additional notes
+ */
+NOTES():string|null
+NOTES(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+NOTES(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startDFH(builder:flatbuffers.Builder) {
-  builder.startObject(3);
+  builder.startObject(15);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
   builder.addFieldOffset(0, IDOffset, 0);
 }
 
+static addSatNo(builder:flatbuffers.Builder, SAT_NO:number) {
+  builder.addFieldInt32(1, SAT_NO, 0);
+}
+
+static addObjectDesignator(builder:flatbuffers.Builder, OBJECT_DESIGNATOROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(2, OBJECT_DESIGNATOROffset, 0);
+}
+
+static addObjectName(builder:flatbuffers.Builder, OBJECT_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(3, OBJECT_NAMEOffset, 0);
+}
+
+static addStartTime(builder:flatbuffers.Builder, START_TIMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(4, START_TIMEOffset, 0);
+}
+
+static addEndTime(builder:flatbuffers.Builder, END_TIMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, END_TIMEOffset, 0);
+}
+
 static addEffectiveUntil(builder:flatbuffers.Builder, EFFECTIVE_UNTILOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, EFFECTIVE_UNTILOffset, 0);
+  builder.addFieldOffset(6, EFFECTIVE_UNTILOffset, 0);
 }
 
 static addDriftRate(builder:flatbuffers.Builder, DRIFT_RATE:number) {
-  builder.addFieldFloat64(2, DRIFT_RATE, 0.0);
+  builder.addFieldFloat64(7, DRIFT_RATE, 0.0);
+}
+
+static addMeanLongitude(builder:flatbuffers.Builder, MEAN_LONGITUDE:number) {
+  builder.addFieldFloat64(8, MEAN_LONGITUDE, 0.0);
+}
+
+static addSlotCenter(builder:flatbuffers.Builder, SLOT_CENTER:number) {
+  builder.addFieldFloat64(9, SLOT_CENTER, 0.0);
+}
+
+static addSlotHalfWidth(builder:flatbuffers.Builder, SLOT_HALF_WIDTH:number) {
+  builder.addFieldFloat64(10, SLOT_HALF_WIDTH, 0.0);
+}
+
+static addStationKeeping(builder:flatbuffers.Builder, STATION_KEEPING:boolean) {
+  builder.addFieldInt8(11, +STATION_KEEPING, +false);
+}
+
+static addRecords(builder:flatbuffers.Builder, RECORDSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(12, RECORDSOffset, 0);
+}
+
+static createRecordsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startRecordsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addNumRecords(builder:flatbuffers.Builder, NUM_RECORDS:number) {
+  builder.addFieldInt32(13, NUM_RECORDS, 0);
+}
+
+static addNotes(builder:flatbuffers.Builder, NOTESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, NOTESOffset, 0);
 }
 
 static endDFH(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -79,46 +260,112 @@ static finishSizePrefixedDFHBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$DFH', true);
 }
 
-static createDFH(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, EFFECTIVE_UNTILOffset:flatbuffers.Offset, DRIFT_RATE:number):flatbuffers.Offset {
+static createDFH(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, SAT_NO:number, OBJECT_DESIGNATOROffset:flatbuffers.Offset, OBJECT_NAMEOffset:flatbuffers.Offset, START_TIMEOffset:flatbuffers.Offset, END_TIMEOffset:flatbuffers.Offset, EFFECTIVE_UNTILOffset:flatbuffers.Offset, DRIFT_RATE:number, MEAN_LONGITUDE:number, SLOT_CENTER:number, SLOT_HALF_WIDTH:number, STATION_KEEPING:boolean, RECORDSOffset:flatbuffers.Offset, NUM_RECORDS:number, NOTESOffset:flatbuffers.Offset):flatbuffers.Offset {
   DFH.startDFH(builder);
   DFH.addId(builder, IDOffset);
+  DFH.addSatNo(builder, SAT_NO);
+  DFH.addObjectDesignator(builder, OBJECT_DESIGNATOROffset);
+  DFH.addObjectName(builder, OBJECT_NAMEOffset);
+  DFH.addStartTime(builder, START_TIMEOffset);
+  DFH.addEndTime(builder, END_TIMEOffset);
   DFH.addEffectiveUntil(builder, EFFECTIVE_UNTILOffset);
   DFH.addDriftRate(builder, DRIFT_RATE);
+  DFH.addMeanLongitude(builder, MEAN_LONGITUDE);
+  DFH.addSlotCenter(builder, SLOT_CENTER);
+  DFH.addSlotHalfWidth(builder, SLOT_HALF_WIDTH);
+  DFH.addStationKeeping(builder, STATION_KEEPING);
+  DFH.addRecords(builder, RECORDSOffset);
+  DFH.addNumRecords(builder, NUM_RECORDS);
+  DFH.addNotes(builder, NOTESOffset);
   return DFH.endDFH(builder);
 }
 
 unpack(): DFHT {
   return new DFHT(
     this.ID(),
+    this.SAT_NO(),
+    this.OBJECT_DESIGNATOR(),
+    this.OBJECT_NAME(),
+    this.START_TIME(),
+    this.END_TIME(),
     this.EFFECTIVE_UNTIL(),
-    this.DRIFT_RATE()
+    this.DRIFT_RATE(),
+    this.MEAN_LONGITUDE(),
+    this.SLOT_CENTER(),
+    this.SLOT_HALF_WIDTH(),
+    this.STATION_KEEPING(),
+    this.bb!.createObjList<driftRecord, driftRecordT>(this.RECORDS.bind(this), this.recordsLength()),
+    this.NUM_RECORDS(),
+    this.NOTES()
   );
 }
 
 
 unpackTo(_o: DFHT): void {
   _o.ID = this.ID();
+  _o.SAT_NO = this.SAT_NO();
+  _o.OBJECT_DESIGNATOR = this.OBJECT_DESIGNATOR();
+  _o.OBJECT_NAME = this.OBJECT_NAME();
+  _o.START_TIME = this.START_TIME();
+  _o.END_TIME = this.END_TIME();
   _o.EFFECTIVE_UNTIL = this.EFFECTIVE_UNTIL();
   _o.DRIFT_RATE = this.DRIFT_RATE();
+  _o.MEAN_LONGITUDE = this.MEAN_LONGITUDE();
+  _o.SLOT_CENTER = this.SLOT_CENTER();
+  _o.SLOT_HALF_WIDTH = this.SLOT_HALF_WIDTH();
+  _o.STATION_KEEPING = this.STATION_KEEPING();
+  _o.RECORDS = this.bb!.createObjList<driftRecord, driftRecordT>(this.RECORDS.bind(this), this.recordsLength());
+  _o.NUM_RECORDS = this.NUM_RECORDS();
+  _o.NOTES = this.NOTES();
 }
 }
 
 export class DFHT implements flatbuffers.IGeneratedObject {
 constructor(
   public ID: string|Uint8Array|null = null,
+  public SAT_NO: number = 0,
+  public OBJECT_DESIGNATOR: string|Uint8Array|null = null,
+  public OBJECT_NAME: string|Uint8Array|null = null,
+  public START_TIME: string|Uint8Array|null = null,
+  public END_TIME: string|Uint8Array|null = null,
   public EFFECTIVE_UNTIL: string|Uint8Array|null = null,
-  public DRIFT_RATE: number = 0.0
+  public DRIFT_RATE: number = 0.0,
+  public MEAN_LONGITUDE: number = 0.0,
+  public SLOT_CENTER: number = 0.0,
+  public SLOT_HALF_WIDTH: number = 0.0,
+  public STATION_KEEPING: boolean = false,
+  public RECORDS: (driftRecordT)[] = [],
+  public NUM_RECORDS: number = 0,
+  public NOTES: string|Uint8Array|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ID = (this.ID !== null ? builder.createString(this.ID!) : 0);
+  const OBJECT_DESIGNATOR = (this.OBJECT_DESIGNATOR !== null ? builder.createString(this.OBJECT_DESIGNATOR!) : 0);
+  const OBJECT_NAME = (this.OBJECT_NAME !== null ? builder.createString(this.OBJECT_NAME!) : 0);
+  const START_TIME = (this.START_TIME !== null ? builder.createString(this.START_TIME!) : 0);
+  const END_TIME = (this.END_TIME !== null ? builder.createString(this.END_TIME!) : 0);
   const EFFECTIVE_UNTIL = (this.EFFECTIVE_UNTIL !== null ? builder.createString(this.EFFECTIVE_UNTIL!) : 0);
+  const RECORDS = DFH.createRecordsVector(builder, builder.createObjectOffsetList(this.RECORDS));
+  const NOTES = (this.NOTES !== null ? builder.createString(this.NOTES!) : 0);
 
   return DFH.createDFH(builder,
     ID,
+    this.SAT_NO,
+    OBJECT_DESIGNATOR,
+    OBJECT_NAME,
+    START_TIME,
+    END_TIME,
     EFFECTIVE_UNTIL,
-    this.DRIFT_RATE
+    this.DRIFT_RATE,
+    this.MEAN_LONGITUDE,
+    this.SLOT_CENTER,
+    this.SLOT_HALF_WIDTH,
+    this.STATION_KEEPING,
+    RECORDS,
+    this.NUM_RECORDS,
+    NOTES
   );
 }
 }

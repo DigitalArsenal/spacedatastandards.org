@@ -1,54 +1,116 @@
-// Hash: 52a8a82dbbc7b8e1f48b8bc7d36cf9179e0a99186a796a63832d3045f7a50bb2
-// Version: 0.0.2
+// Hash: 35197c7f461677088d9266fb5d10e796a70ab613d607d3eca0c55e2fe9c32bf6
+// Version: 0.0.3
 // -----------------------------------END_HEADER
+enum eventCategory : byte {
+  ANOMALY,
+  FAILURE,
+  RETIREMENT,
+  DEORBIT,
+  BREAKUP,
+  COLLISION,
+  STATUS_CHANGE,
+  REPOSITIONING,
+  UNKNOWN
+}
+
+enum eventResult : byte {
+  TOTAL_LOSS,
+  PARTIAL_LOSS,
+  DEGRADED,
+  RECOVERED,
+  NOMINAL,
+  PENDING
+}
+
 /// On-Orbit Event
 table OOE {
+  /// Unique identifier
   ID:string;
-  DERIVED_FROM:string;
-  DECLASSIFICATION_DATE:string;
-  DECLASSIFICATION_STRING:string;
-  SAT_NO:int;
+  /// Satellite catalog number
+  SAT_NO:uint32;
+  /// International designator
   ORIG_OBJECT_ID:string;
+  /// Source record this was derived from
+  DERIVED_FROM:string;
+  /// Classification date (ISO 8601)
+  DECLASSIFICATION_DATE:string;
+  /// Classification marking
+  DECLASSIFICATION_STRING:string;
+  /// Event time (ISO 8601)
   EVENT_TIME:string;
+  /// Notes on event time accuracy
   EVENT_TIME_NOTES:string;
-  OPERATOR_ORG_ID:string;
-  OWNER_ORG_ID:string;
-  LESSEE_ORG_ID:string;
-  OPERATED_ON_BEHALF_OF_ORG_ID:string;
-  GEO_POSITION:double;
-  PLANE_SLOT:string;
-  PLANE_NUMBER:string;
-  POSITION_STATUS:string;
-  UNTIL_TIME:string;
-  OFFICIAL_LOSS_DATE:string;
-  NET_AMOUNT:double;
-  UNDERLYING_CAUSE:string;
-  CAPABILITY_LOSS:double;
-  CAPACITY_LOSS:double;
-  INSURANCE_LOSS:double;
-  THIRD_PARTY_INSURANCE_LOSS:double;
-  INJURED:int;
-  KILLED:int;
-  LIFE_LOST:double;
-  AGE_AT_EVENT:double;
-  ACHIEVED_FLIGHT_PHASE:string;
-  OCCURRENCE_FLIGHT_PHASE:string;
-  STAGE_AT_FAULT:string;
-  EQUIPMENT_AT_FAULT:string;
-  EQUIPMENT_TYPE_AT_FAULT:string;
-  EQUIPMENT_PART_AT_FAULT:string;
-  CONSEQUENTIAL_EQUIPMENT_FAILURE:string;
-  INCLINED:bool;
-  DESCRIPTION:string;
-  REMARKS:string;
-  INSURANCE_LOSS_NOTES:string;
-  CAPABILITY_LOSS_NOTES:string;
-  INSURANCE_CARRIED_NOTES:string;
-  EQUIPMENT_CAUSING_LOSS_NOTES:string;
+  /// Event category
+  CATEGORY:eventCategory;
+  /// Event result/outcome
+  RESULT:eventResult;
+  /// Event type detail
   EVENT_TYPE:string;
-  EVENT_RESULT:string;
+  /// Operator organization identifier
+  OPERATOR_ORG_ID:string;
+  /// Owner organization identifier
+  OWNER_ORG_ID:string;
+  /// Lessee organization identifier
+  LESSEE_ORG_ID:string;
+  /// Operated on behalf of organization
+  OPERATED_ON_BEHALF_OF_ORG_ID:string;
+  /// GEO longitude at event time (degrees east)
+  GEO_POSITION:double;
+  /// Orbital plane slot
+  PLANE_SLOT:string;
+  /// Orbital plane number
+  PLANE_NUMBER:string;
+  /// Position status at event time
+  POSITION_STATUS:string;
+  /// Time until expected recovery (ISO 8601)
+  UNTIL_TIME:string;
+  /// Official loss date (ISO 8601)
+  OFFICIAL_LOSS_DATE:string;
+  /// Financial loss amount (USD)
+  NET_AMOUNT:double;
+  /// Root cause description
+  UNDERLYING_CAUSE:string;
+  /// Capability loss fraction (0-1)
+  CAPABILITY_LOSS:double;
+  /// Capacity loss fraction (0-1)
+  CAPACITY_LOSS:double;
+  /// Insurance loss amount (USD)
+  INSURANCE_LOSS:double;
+  /// Third-party insurance loss (USD)
+  THIRD_PARTY_INSURANCE_LOSS:double;
+  /// Number of personnel injured
+  INJURED:uint16;
+  /// Number of fatalities
+  KILLED:uint16;
+  /// Spacecraft age at event (years)
+  AGE_AT_EVENT:double;
+  /// Design life remaining at event (years)
+  LIFE_LOST:double;
+  /// Flight phase achieved
+  ACHIEVED_FLIGHT_PHASE:string;
+  /// Flight phase at occurrence
+  OCCURRENCE_FLIGHT_PHASE:string;
+  /// Stage at fault
+  STAGE_AT_FAULT:string;
+  /// Equipment at fault
+  EQUIPMENT_AT_FAULT:string;
+  /// Equipment type at fault
+  EQUIPMENT_TYPE_AT_FAULT:string;
+  /// Equipment part at fault
+  EQUIPMENT_PART_AT_FAULT:string;
+  /// Consequential equipment failure
+  CONSEQUENTIAL_EQUIPMENT_FAILURE:string;
+  /// True if orbit is inclined
+  INCLINED:bool;
+  /// Event description
+  DESCRIPTION:string;
+  /// Additional remarks
+  REMARKS:string;
+  /// Object status after event
   OBJECT_STATUS:string;
+  /// Satellite position after event
   SATELLITE_POSITION:string;
+  /// On-orbit reference
   ON_ORBIT:string;
 }
 

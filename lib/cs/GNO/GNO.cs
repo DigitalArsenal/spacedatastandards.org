@@ -19,51 +19,188 @@ public struct GNO : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public GNO __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public string GNSS_SAT_ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Unique identifier
+  public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetGNSS_SAT_IDBytes() { return __p.__vector_as_span<byte>(4, 1); }
+  public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
 #else
-  public ArraySegment<byte>? GetGNSS_SAT_IDBytes() { return __p.__vector_as_arraysegment(4); }
+  public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
-  public byte[] GetGNSS_SAT_IDArray() { return __p.__vector_as_array<byte>(4); }
-  public int TRACKING_STATUS { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int AGC_STATE { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public string OBS_CODE_SET(int j) { int o = __p.__offset(10); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int OBS_CODE_SETLength { get { int o = __p.__offset(10); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string OB(int j) { int o = __p.__offset(12); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int OBLength { get { int o = __p.__offset(12); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
+  /// Receiver identifier
+  public string RECEIVER_ID { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetRECEIVER_IDBytes() { return __p.__vector_as_span<byte>(6, 1); }
+#else
+  public ArraySegment<byte>? GetRECEIVER_IDBytes() { return __p.__vector_as_arraysegment(6); }
+#endif
+  public byte[] GetRECEIVER_IDArray() { return __p.__vector_as_array<byte>(6); }
+  /// Receiver type/model
+  public string RECEIVER_TYPE { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetRECEIVER_TYPEBytes() { return __p.__vector_as_span<byte>(8, 1); }
+#else
+  public ArraySegment<byte>? GetRECEIVER_TYPEBytes() { return __p.__vector_as_arraysegment(8); }
+#endif
+  public byte[] GetRECEIVER_TYPEArray() { return __p.__vector_as_array<byte>(8); }
+  /// Antenna identifier
+  public string ANTENNA_ID { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetANTENNA_IDBytes() { return __p.__vector_as_span<byte>(10, 1); }
+#else
+  public ArraySegment<byte>? GetANTENNA_IDBytes() { return __p.__vector_as_arraysegment(10); }
+#endif
+  public byte[] GetANTENNA_IDArray() { return __p.__vector_as_array<byte>(10); }
+  /// Antenna type/model
+  public string ANTENNA_TYPE { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetANTENNA_TYPEBytes() { return __p.__vector_as_span<byte>(12, 1); }
+#else
+  public ArraySegment<byte>? GetANTENNA_TYPEBytes() { return __p.__vector_as_arraysegment(12); }
+#endif
+  public byte[] GetANTENNA_TYPEArray() { return __p.__vector_as_array<byte>(12); }
+  /// Receiver firmware version
+  public string FIRMWARE_VERSION { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetFIRMWARE_VERSIONBytes() { return __p.__vector_as_span<byte>(14, 1); }
+#else
+  public ArraySegment<byte>? GetFIRMWARE_VERSIONBytes() { return __p.__vector_as_arraysegment(14); }
+#endif
+  public byte[] GetFIRMWARE_VERSIONArray() { return __p.__vector_as_array<byte>(14); }
+  /// Observation epoch (ISO 8601)
+  public string EPOCH { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetEPOCHBytes() { return __p.__vector_as_span<byte>(16, 1); }
+#else
+  public ArraySegment<byte>? GetEPOCHBytes() { return __p.__vector_as_arraysegment(16); }
+#endif
+  public byte[] GetEPOCHArray() { return __p.__vector_as_array<byte>(16); }
+  /// Receiver clock offset in seconds
+  public double CLOCK_OFFSET { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Receiver clock drift in seconds/second
+  public double CLOCK_DRIFT { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Receiver geodetic latitude in degrees
+  public double LATITUDE { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Receiver geodetic longitude in degrees
+  public double LONGITUDE { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Receiver altitude in meters above WGS-84
+  public double ALTITUDE { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Approximate position X in meters (ECEF)
+  public double APPROX_X { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Approximate position Y in meters (ECEF)
+  public double APPROX_Y { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Approximate position Z in meters (ECEF)
+  public double APPROX_Z { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Observation interval in seconds
+  public double INTERVAL { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Number of satellites observed
+  public uint NUM_SATS { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// PDOP
+  public double PDOP { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// HDOP
+  public double HDOP { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// VDOP
+  public double VDOP { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Satellite observations
+  public gnssSatObs? SAT_OBS(int j) { int o = __p.__offset(44); return o != 0 ? (gnssSatObs?)(new gnssSatObs()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int SAT_OBSLength { get { int o = __p.__offset(44); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Observation code set identifiers
+  public string OBS_CODE_SET(int j) { int o = __p.__offset(46); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int OBS_CODE_SETLength { get { int o = __p.__offset(46); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Additional notes
+  public string NOTES { get { int o = __p.__offset(48); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetNOTESBytes() { return __p.__vector_as_span<byte>(48, 1); }
+#else
+  public ArraySegment<byte>? GetNOTESBytes() { return __p.__vector_as_arraysegment(48); }
+#endif
+  public byte[] GetNOTESArray() { return __p.__vector_as_array<byte>(48); }
 
   public static Offset<GNO> CreateGNO(FlatBufferBuilder builder,
-      StringOffset GNSS_SAT_IDOffset = default(StringOffset),
-      int TRACKING_STATUS = 0,
-      int AGC_STATE = 0,
+      StringOffset IDOffset = default(StringOffset),
+      StringOffset RECEIVER_IDOffset = default(StringOffset),
+      StringOffset RECEIVER_TYPEOffset = default(StringOffset),
+      StringOffset ANTENNA_IDOffset = default(StringOffset),
+      StringOffset ANTENNA_TYPEOffset = default(StringOffset),
+      StringOffset FIRMWARE_VERSIONOffset = default(StringOffset),
+      StringOffset EPOCHOffset = default(StringOffset),
+      double CLOCK_OFFSET = 0.0,
+      double CLOCK_DRIFT = 0.0,
+      double LATITUDE = 0.0,
+      double LONGITUDE = 0.0,
+      double ALTITUDE = 0.0,
+      double APPROX_X = 0.0,
+      double APPROX_Y = 0.0,
+      double APPROX_Z = 0.0,
+      double INTERVAL = 0.0,
+      uint NUM_SATS = 0,
+      double PDOP = 0.0,
+      double HDOP = 0.0,
+      double VDOP = 0.0,
+      VectorOffset SAT_OBSOffset = default(VectorOffset),
       VectorOffset OBS_CODE_SETOffset = default(VectorOffset),
-      VectorOffset OBOffset = default(VectorOffset)) {
-    builder.StartTable(5);
-    GNO.AddOB(builder, OBOffset);
+      StringOffset NOTESOffset = default(StringOffset)) {
+    builder.StartTable(23);
+    GNO.AddVDOP(builder, VDOP);
+    GNO.AddHDOP(builder, HDOP);
+    GNO.AddPDOP(builder, PDOP);
+    GNO.AddINTERVAL(builder, INTERVAL);
+    GNO.AddAPPROX_Z(builder, APPROX_Z);
+    GNO.AddAPPROX_Y(builder, APPROX_Y);
+    GNO.AddAPPROX_X(builder, APPROX_X);
+    GNO.AddALTITUDE(builder, ALTITUDE);
+    GNO.AddLONGITUDE(builder, LONGITUDE);
+    GNO.AddLATITUDE(builder, LATITUDE);
+    GNO.AddCLOCK_DRIFT(builder, CLOCK_DRIFT);
+    GNO.AddCLOCK_OFFSET(builder, CLOCK_OFFSET);
+    GNO.AddNOTES(builder, NOTESOffset);
     GNO.AddOBS_CODE_SET(builder, OBS_CODE_SETOffset);
-    GNO.AddAGC_STATE(builder, AGC_STATE);
-    GNO.AddTRACKING_STATUS(builder, TRACKING_STATUS);
-    GNO.AddGNSS_SAT_ID(builder, GNSS_SAT_IDOffset);
+    GNO.AddSAT_OBS(builder, SAT_OBSOffset);
+    GNO.AddNUM_SATS(builder, NUM_SATS);
+    GNO.AddEPOCH(builder, EPOCHOffset);
+    GNO.AddFIRMWARE_VERSION(builder, FIRMWARE_VERSIONOffset);
+    GNO.AddANTENNA_TYPE(builder, ANTENNA_TYPEOffset);
+    GNO.AddANTENNA_ID(builder, ANTENNA_IDOffset);
+    GNO.AddRECEIVER_TYPE(builder, RECEIVER_TYPEOffset);
+    GNO.AddRECEIVER_ID(builder, RECEIVER_IDOffset);
+    GNO.AddID(builder, IDOffset);
     return GNO.EndGNO(builder);
   }
 
-  public static void StartGNO(FlatBufferBuilder builder) { builder.StartTable(5); }
-  public static void AddGNSS_SAT_ID(FlatBufferBuilder builder, StringOffset GNSS_SAT_IDOffset) { builder.AddOffset(0, GNSS_SAT_IDOffset.Value, 0); }
-  public static void AddTRACKING_STATUS(FlatBufferBuilder builder, int TRACKING_STATUS) { builder.AddInt(1, TRACKING_STATUS, 0); }
-  public static void AddAGC_STATE(FlatBufferBuilder builder, int AGC_STATE) { builder.AddInt(2, AGC_STATE, 0); }
-  public static void AddOBS_CODE_SET(FlatBufferBuilder builder, VectorOffset OBS_CODE_SETOffset) { builder.AddOffset(3, OBS_CODE_SETOffset.Value, 0); }
+  public static void StartGNO(FlatBufferBuilder builder) { builder.StartTable(23); }
+  public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
+  public static void AddRECEIVER_ID(FlatBufferBuilder builder, StringOffset RECEIVER_IDOffset) { builder.AddOffset(1, RECEIVER_IDOffset.Value, 0); }
+  public static void AddRECEIVER_TYPE(FlatBufferBuilder builder, StringOffset RECEIVER_TYPEOffset) { builder.AddOffset(2, RECEIVER_TYPEOffset.Value, 0); }
+  public static void AddANTENNA_ID(FlatBufferBuilder builder, StringOffset ANTENNA_IDOffset) { builder.AddOffset(3, ANTENNA_IDOffset.Value, 0); }
+  public static void AddANTENNA_TYPE(FlatBufferBuilder builder, StringOffset ANTENNA_TYPEOffset) { builder.AddOffset(4, ANTENNA_TYPEOffset.Value, 0); }
+  public static void AddFIRMWARE_VERSION(FlatBufferBuilder builder, StringOffset FIRMWARE_VERSIONOffset) { builder.AddOffset(5, FIRMWARE_VERSIONOffset.Value, 0); }
+  public static void AddEPOCH(FlatBufferBuilder builder, StringOffset EPOCHOffset) { builder.AddOffset(6, EPOCHOffset.Value, 0); }
+  public static void AddCLOCK_OFFSET(FlatBufferBuilder builder, double CLOCK_OFFSET) { builder.AddDouble(7, CLOCK_OFFSET, 0.0); }
+  public static void AddCLOCK_DRIFT(FlatBufferBuilder builder, double CLOCK_DRIFT) { builder.AddDouble(8, CLOCK_DRIFT, 0.0); }
+  public static void AddLATITUDE(FlatBufferBuilder builder, double LATITUDE) { builder.AddDouble(9, LATITUDE, 0.0); }
+  public static void AddLONGITUDE(FlatBufferBuilder builder, double LONGITUDE) { builder.AddDouble(10, LONGITUDE, 0.0); }
+  public static void AddALTITUDE(FlatBufferBuilder builder, double ALTITUDE) { builder.AddDouble(11, ALTITUDE, 0.0); }
+  public static void AddAPPROX_X(FlatBufferBuilder builder, double APPROX_X) { builder.AddDouble(12, APPROX_X, 0.0); }
+  public static void AddAPPROX_Y(FlatBufferBuilder builder, double APPROX_Y) { builder.AddDouble(13, APPROX_Y, 0.0); }
+  public static void AddAPPROX_Z(FlatBufferBuilder builder, double APPROX_Z) { builder.AddDouble(14, APPROX_Z, 0.0); }
+  public static void AddINTERVAL(FlatBufferBuilder builder, double INTERVAL) { builder.AddDouble(15, INTERVAL, 0.0); }
+  public static void AddNUM_SATS(FlatBufferBuilder builder, uint NUM_SATS) { builder.AddUint(16, NUM_SATS, 0); }
+  public static void AddPDOP(FlatBufferBuilder builder, double PDOP) { builder.AddDouble(17, PDOP, 0.0); }
+  public static void AddHDOP(FlatBufferBuilder builder, double HDOP) { builder.AddDouble(18, HDOP, 0.0); }
+  public static void AddVDOP(FlatBufferBuilder builder, double VDOP) { builder.AddDouble(19, VDOP, 0.0); }
+  public static void AddSAT_OBS(FlatBufferBuilder builder, VectorOffset SAT_OBSOffset) { builder.AddOffset(20, SAT_OBSOffset.Value, 0); }
+  public static VectorOffset CreateSAT_OBSVector(FlatBufferBuilder builder, Offset<gnssSatObs>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateSAT_OBSVectorBlock(FlatBufferBuilder builder, Offset<gnssSatObs>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSAT_OBSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<gnssSatObs>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSAT_OBSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<gnssSatObs>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSAT_OBSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddOBS_CODE_SET(FlatBufferBuilder builder, VectorOffset OBS_CODE_SETOffset) { builder.AddOffset(21, OBS_CODE_SETOffset.Value, 0); }
   public static VectorOffset CreateOBS_CODE_SETVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateOBS_CODE_SETVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateOBS_CODE_SETVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateOBS_CODE_SETVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartOBS_CODE_SETVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddOB(FlatBufferBuilder builder, VectorOffset OBOffset) { builder.AddOffset(4, OBOffset.Value, 0); }
-  public static VectorOffset CreateOBVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateOBVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateOBVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateOBVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartOBVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddNOTES(FlatBufferBuilder builder, StringOffset NOTESOffset) { builder.AddOffset(22, NOTESOffset.Value, 0); }
   public static Offset<GNO> EndGNO(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<GNO>(o);
@@ -76,53 +213,132 @@ public struct GNO : IFlatbufferObject
     return _o;
   }
   public void UnPackTo(GNOT _o) {
-    _o.GNSS_SAT_ID = this.GNSS_SAT_ID;
-    _o.TRACKING_STATUS = this.TRACKING_STATUS;
-    _o.AGC_STATE = this.AGC_STATE;
+    _o.ID = this.ID;
+    _o.RECEIVER_ID = this.RECEIVER_ID;
+    _o.RECEIVER_TYPE = this.RECEIVER_TYPE;
+    _o.ANTENNA_ID = this.ANTENNA_ID;
+    _o.ANTENNA_TYPE = this.ANTENNA_TYPE;
+    _o.FIRMWARE_VERSION = this.FIRMWARE_VERSION;
+    _o.EPOCH = this.EPOCH;
+    _o.CLOCK_OFFSET = this.CLOCK_OFFSET;
+    _o.CLOCK_DRIFT = this.CLOCK_DRIFT;
+    _o.LATITUDE = this.LATITUDE;
+    _o.LONGITUDE = this.LONGITUDE;
+    _o.ALTITUDE = this.ALTITUDE;
+    _o.APPROX_X = this.APPROX_X;
+    _o.APPROX_Y = this.APPROX_Y;
+    _o.APPROX_Z = this.APPROX_Z;
+    _o.INTERVAL = this.INTERVAL;
+    _o.NUM_SATS = this.NUM_SATS;
+    _o.PDOP = this.PDOP;
+    _o.HDOP = this.HDOP;
+    _o.VDOP = this.VDOP;
+    _o.SAT_OBS = new List<gnssSatObsT>();
+    for (var _j = 0; _j < this.SAT_OBSLength; ++_j) {_o.SAT_OBS.Add(this.SAT_OBS(_j).HasValue ? this.SAT_OBS(_j).Value.UnPack() : null);}
     _o.OBS_CODE_SET = new List<string>();
     for (var _j = 0; _j < this.OBS_CODE_SETLength; ++_j) {_o.OBS_CODE_SET.Add(this.OBS_CODE_SET(_j));}
-    _o.OB = new List<string>();
-    for (var _j = 0; _j < this.OBLength; ++_j) {_o.OB.Add(this.OB(_j));}
+    _o.NOTES = this.NOTES;
   }
   public static Offset<GNO> Pack(FlatBufferBuilder builder, GNOT _o) {
     if (_o == null) return default(Offset<GNO>);
-    var _GNSS_SAT_ID = _o.GNSS_SAT_ID == null ? default(StringOffset) : builder.CreateString(_o.GNSS_SAT_ID);
+    var _ID = _o.ID == null ? default(StringOffset) : builder.CreateString(_o.ID);
+    var _RECEIVER_ID = _o.RECEIVER_ID == null ? default(StringOffset) : builder.CreateString(_o.RECEIVER_ID);
+    var _RECEIVER_TYPE = _o.RECEIVER_TYPE == null ? default(StringOffset) : builder.CreateString(_o.RECEIVER_TYPE);
+    var _ANTENNA_ID = _o.ANTENNA_ID == null ? default(StringOffset) : builder.CreateString(_o.ANTENNA_ID);
+    var _ANTENNA_TYPE = _o.ANTENNA_TYPE == null ? default(StringOffset) : builder.CreateString(_o.ANTENNA_TYPE);
+    var _FIRMWARE_VERSION = _o.FIRMWARE_VERSION == null ? default(StringOffset) : builder.CreateString(_o.FIRMWARE_VERSION);
+    var _EPOCH = _o.EPOCH == null ? default(StringOffset) : builder.CreateString(_o.EPOCH);
+    var _SAT_OBS = default(VectorOffset);
+    if (_o.SAT_OBS != null) {
+      var __SAT_OBS = new Offset<gnssSatObs>[_o.SAT_OBS.Count];
+      for (var _j = 0; _j < __SAT_OBS.Length; ++_j) { __SAT_OBS[_j] = gnssSatObs.Pack(builder, _o.SAT_OBS[_j]); }
+      _SAT_OBS = CreateSAT_OBSVector(builder, __SAT_OBS);
+    }
     var _OBS_CODE_SET = default(VectorOffset);
     if (_o.OBS_CODE_SET != null) {
       var __OBS_CODE_SET = new StringOffset[_o.OBS_CODE_SET.Count];
       for (var _j = 0; _j < __OBS_CODE_SET.Length; ++_j) { __OBS_CODE_SET[_j] = builder.CreateString(_o.OBS_CODE_SET[_j]); }
       _OBS_CODE_SET = CreateOBS_CODE_SETVector(builder, __OBS_CODE_SET);
     }
-    var _OB = default(VectorOffset);
-    if (_o.OB != null) {
-      var __OB = new StringOffset[_o.OB.Count];
-      for (var _j = 0; _j < __OB.Length; ++_j) { __OB[_j] = builder.CreateString(_o.OB[_j]); }
-      _OB = CreateOBVector(builder, __OB);
-    }
+    var _NOTES = _o.NOTES == null ? default(StringOffset) : builder.CreateString(_o.NOTES);
     return CreateGNO(
       builder,
-      _GNSS_SAT_ID,
-      _o.TRACKING_STATUS,
-      _o.AGC_STATE,
+      _ID,
+      _RECEIVER_ID,
+      _RECEIVER_TYPE,
+      _ANTENNA_ID,
+      _ANTENNA_TYPE,
+      _FIRMWARE_VERSION,
+      _EPOCH,
+      _o.CLOCK_OFFSET,
+      _o.CLOCK_DRIFT,
+      _o.LATITUDE,
+      _o.LONGITUDE,
+      _o.ALTITUDE,
+      _o.APPROX_X,
+      _o.APPROX_Y,
+      _o.APPROX_Z,
+      _o.INTERVAL,
+      _o.NUM_SATS,
+      _o.PDOP,
+      _o.HDOP,
+      _o.VDOP,
+      _SAT_OBS,
       _OBS_CODE_SET,
-      _OB);
+      _NOTES);
   }
 }
 
 public class GNOT
 {
-  public string GNSS_SAT_ID { get; set; }
-  public int TRACKING_STATUS { get; set; }
-  public int AGC_STATE { get; set; }
+  public string ID { get; set; }
+  public string RECEIVER_ID { get; set; }
+  public string RECEIVER_TYPE { get; set; }
+  public string ANTENNA_ID { get; set; }
+  public string ANTENNA_TYPE { get; set; }
+  public string FIRMWARE_VERSION { get; set; }
+  public string EPOCH { get; set; }
+  public double CLOCK_OFFSET { get; set; }
+  public double CLOCK_DRIFT { get; set; }
+  public double LATITUDE { get; set; }
+  public double LONGITUDE { get; set; }
+  public double ALTITUDE { get; set; }
+  public double APPROX_X { get; set; }
+  public double APPROX_Y { get; set; }
+  public double APPROX_Z { get; set; }
+  public double INTERVAL { get; set; }
+  public uint NUM_SATS { get; set; }
+  public double PDOP { get; set; }
+  public double HDOP { get; set; }
+  public double VDOP { get; set; }
+  public List<gnssSatObsT> SAT_OBS { get; set; }
   public List<string> OBS_CODE_SET { get; set; }
-  public List<string> OB { get; set; }
+  public string NOTES { get; set; }
 
   public GNOT() {
-    this.GNSS_SAT_ID = null;
-    this.TRACKING_STATUS = 0;
-    this.AGC_STATE = 0;
+    this.ID = null;
+    this.RECEIVER_ID = null;
+    this.RECEIVER_TYPE = null;
+    this.ANTENNA_ID = null;
+    this.ANTENNA_TYPE = null;
+    this.FIRMWARE_VERSION = null;
+    this.EPOCH = null;
+    this.CLOCK_OFFSET = 0.0;
+    this.CLOCK_DRIFT = 0.0;
+    this.LATITUDE = 0.0;
+    this.LONGITUDE = 0.0;
+    this.ALTITUDE = 0.0;
+    this.APPROX_X = 0.0;
+    this.APPROX_Y = 0.0;
+    this.APPROX_Z = 0.0;
+    this.INTERVAL = 0.0;
+    this.NUM_SATS = 0;
+    this.PDOP = 0.0;
+    this.HDOP = 0.0;
+    this.VDOP = 0.0;
+    this.SAT_OBS = null;
     this.OBS_CODE_SET = null;
-    this.OB = null;
+    this.NOTES = null;
   }
   public static GNOT DeserializeFromBinary(byte[] fbBuffer) {
     return GNO.GetRootAsGNO(new ByteBuffer(fbBuffer)).UnPack();
@@ -140,11 +356,29 @@ static public class GNOVerify
   static public bool Verify(Google.FlatBuffers.Verifier verifier, uint tablePos)
   {
     return verifier.VerifyTableStart(tablePos)
-      && verifier.VerifyString(tablePos, 4 /*GNSS_SAT_ID*/, false)
-      && verifier.VerifyField(tablePos, 6 /*TRACKING_STATUS*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 8 /*AGC_STATE*/, 4 /*int*/, 4, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 10 /*OBS_CODE_SET*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 12 /*OB*/, false)
+      && verifier.VerifyString(tablePos, 4 /*ID*/, false)
+      && verifier.VerifyString(tablePos, 6 /*RECEIVER_ID*/, false)
+      && verifier.VerifyString(tablePos, 8 /*RECEIVER_TYPE*/, false)
+      && verifier.VerifyString(tablePos, 10 /*ANTENNA_ID*/, false)
+      && verifier.VerifyString(tablePos, 12 /*ANTENNA_TYPE*/, false)
+      && verifier.VerifyString(tablePos, 14 /*FIRMWARE_VERSION*/, false)
+      && verifier.VerifyString(tablePos, 16 /*EPOCH*/, false)
+      && verifier.VerifyField(tablePos, 18 /*CLOCK_OFFSET*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 20 /*CLOCK_DRIFT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 22 /*LATITUDE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 24 /*LONGITUDE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 26 /*ALTITUDE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 28 /*APPROX_X*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 30 /*APPROX_Y*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 32 /*APPROX_Z*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 34 /*INTERVAL*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 36 /*NUM_SATS*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 38 /*PDOP*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 40 /*HDOP*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 42 /*VDOP*/, 8 /*double*/, 8, false)
+      && verifier.VerifyVectorOfTables(tablePos, 44 /*SAT_OBS*/, gnssSatObsVerify.Verify, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 46 /*OBS_CODE_SET*/, false)
+      && verifier.VerifyString(tablePos, 48 /*NOTES*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -5,7 +5,127 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-///  RF Band
+class RfBandDesignation {
+  final int value;
+  const RfBandDesignation._(this.value);
+
+  factory RfBandDesignation.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum RfBandDesignation');
+    }
+    return result;
+  }
+
+  static RfBandDesignation? _createOrNull(int? value) => 
+      value == null ? null : RfBandDesignation.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 12;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const RfBandDesignation UHF = RfBandDesignation._(0);
+  static const RfBandDesignation L = RfBandDesignation._(1);
+  static const RfBandDesignation S = RfBandDesignation._(2);
+  static const RfBandDesignation C = RfBandDesignation._(3);
+  static const RfBandDesignation X = RfBandDesignation._(4);
+  static const RfBandDesignation KU = RfBandDesignation._(5);
+  static const RfBandDesignation K = RfBandDesignation._(6);
+  static const RfBandDesignation KA = RfBandDesignation._(7);
+  static const RfBandDesignation V = RfBandDesignation._(8);
+  static const RfBandDesignation W = RfBandDesignation._(9);
+  static const RfBandDesignation Q = RfBandDesignation._(10);
+  static const RfBandDesignation EHF = RfBandDesignation._(11);
+  static const RfBandDesignation OTHER = RfBandDesignation._(12);
+  static const Map<int, RfBandDesignation> values = {
+    0: UHF,
+    1: L,
+    2: S,
+    3: C,
+    4: X,
+    5: KU,
+    6: K,
+    7: KA,
+    8: V,
+    9: W,
+    10: Q,
+    11: EHF,
+    12: OTHER};
+
+  static const fb.Reader<RfBandDesignation> reader = _RfBandDesignationReader();
+
+  @override
+  String toString() {
+    return 'RfBandDesignation{value: $value}';
+  }
+}
+
+class _RfBandDesignationReader extends fb.Reader<RfBandDesignation> {
+  const _RfBandDesignationReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  RfBandDesignation read(fb.BufferContext bc, int offset) =>
+      RfBandDesignation.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class RfPolarization {
+  final int value;
+  const RfPolarization._(this.value);
+
+  factory RfPolarization.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum RfPolarization');
+    }
+    return result;
+  }
+
+  static RfPolarization? _createOrNull(int? value) => 
+      value == null ? null : RfPolarization.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 6;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const RfPolarization LHCP = RfPolarization._(0);
+  static const RfPolarization RHCP = RfPolarization._(1);
+  static const RfPolarization LINEAR_H = RfPolarization._(2);
+  static const RfPolarization LINEAR_V = RfPolarization._(3);
+  static const RfPolarization DUAL = RfPolarization._(4);
+  static const RfPolarization CROSS = RfPolarization._(5);
+  static const RfPolarization UNKNOWN = RfPolarization._(6);
+  static const Map<int, RfPolarization> values = {
+    0: LHCP,
+    1: RHCP,
+    2: LINEAR_H,
+    3: LINEAR_V,
+    4: DUAL,
+    5: CROSS,
+    6: UNKNOWN};
+
+  static const fb.Reader<RfPolarization> reader = _RfPolarizationReader();
+
+  @override
+  String toString() {
+    return 'RfPolarization{value: $value}';
+  }
+}
+
+class _RfPolarizationReader extends fb.Reader<RfPolarization> {
+  const _RfPolarizationReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  RfPolarization read(fb.BufferContext bc, int offset) =>
+      RfPolarization.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  RF Band Specification
 class RFB {
   RFB._(this._bc, this._bcOffset);
   factory RFB(List<int> bytes) {
@@ -18,26 +138,42 @@ class RFB {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Parent entity identifier
   String? get ID_ENTITY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Band name or designation
   String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get BAND => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  RF band designation
+  RfBandDesignation get BAND => RfBandDesignation.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  ///  Operating mode
   String? get MODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Band purpose (e.g., TT&C, PAYLOAD, BEACON)
   String? get PURPOSE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Minimum frequency (MHz)
   double get FREQ_MIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Maximum frequency (MHz)
   double get FREQ_MAX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  ///  Center frequency (MHz)
   double get CENTER_FREQ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
-  double get PEAK_GAIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
-  double get EDGE_GAIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
-  double get BANDWIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  ///  Bandwidth (MHz)
+  double get BANDWIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Peak antenna gain (dBi)
+  double get PEAK_GAIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  ///  Edge-of-coverage gain (dBi)
+  double get EDGE_GAIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  ///  Antenna beamwidth (degrees)
   double get BEAMWIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
-  String? get POLARIZATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  ///  Polarization
+  RfPolarization get POLARIZATION => RfPolarization.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 30, 0));
+  ///  Effective radiated power (dBW)
   double get ERP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  ///  Effective isotropic radiated power (dBW)
   double get EIRP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
 
   @override
   String toString() {
-    return 'RFB{ID: ${ID}, ID_ENTITY: ${ID_ENTITY}, NAME: ${NAME}, BAND: ${BAND}, MODE: ${MODE}, PURPOSE: ${PURPOSE}, FREQ_MIN: ${FREQ_MIN}, FREQ_MAX: ${FREQ_MAX}, CENTER_FREQ: ${CENTER_FREQ}, PEAK_GAIN: ${PEAK_GAIN}, EDGE_GAIN: ${EDGE_GAIN}, BANDWIDTH: ${BANDWIDTH}, BEAMWIDTH: ${BEAMWIDTH}, POLARIZATION: ${POLARIZATION}, ERP: ${ERP}, EIRP: ${EIRP}}';
+    return 'RFB{ID: ${ID}, ID_ENTITY: ${ID_ENTITY}, NAME: ${NAME}, BAND: ${BAND}, MODE: ${MODE}, PURPOSE: ${PURPOSE}, FREQ_MIN: ${FREQ_MIN}, FREQ_MAX: ${FREQ_MAX}, CENTER_FREQ: ${CENTER_FREQ}, BANDWIDTH: ${BANDWIDTH}, PEAK_GAIN: ${PEAK_GAIN}, EDGE_GAIN: ${EDGE_GAIN}, BEAMWIDTH: ${BEAMWIDTH}, POLARIZATION: ${POLARIZATION}, ERP: ${ERP}, EIRP: ${EIRP}}';
   }
 }
 
@@ -70,8 +206,8 @@ class RFBBuilder {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addBandOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
+  int addBand(RfBandDesignation? BAND) {
+    fbBuilder.addInt8(3, BAND?.value);
     return fbBuilder.offset;
   }
   int addModeOffset(int? offset) {
@@ -94,24 +230,24 @@ class RFBBuilder {
     fbBuilder.addFloat64(8, CENTER_FREQ);
     return fbBuilder.offset;
   }
+  int addBandwidth(double? BANDWIDTH) {
+    fbBuilder.addFloat64(9, BANDWIDTH);
+    return fbBuilder.offset;
+  }
   int addPeakGain(double? PEAK_GAIN) {
-    fbBuilder.addFloat64(9, PEAK_GAIN);
+    fbBuilder.addFloat64(10, PEAK_GAIN);
     return fbBuilder.offset;
   }
   int addEdgeGain(double? EDGE_GAIN) {
-    fbBuilder.addFloat64(10, EDGE_GAIN);
-    return fbBuilder.offset;
-  }
-  int addBandwidth(double? BANDWIDTH) {
-    fbBuilder.addFloat64(11, BANDWIDTH);
+    fbBuilder.addFloat64(11, EDGE_GAIN);
     return fbBuilder.offset;
   }
   int addBeamwidth(double? BEAMWIDTH) {
     fbBuilder.addFloat64(12, BEAMWIDTH);
     return fbBuilder.offset;
   }
-  int addPolarizationOffset(int? offset) {
-    fbBuilder.addOffset(13, offset);
+  int addPolarization(RfPolarization? POLARIZATION) {
+    fbBuilder.addInt8(13, POLARIZATION?.value);
     return fbBuilder.offset;
   }
   int addErp(double? ERP) {
@@ -132,17 +268,17 @@ class RFBObjectBuilder extends fb.ObjectBuilder {
   final String? _ID;
   final String? _ID_ENTITY;
   final String? _NAME;
-  final String? _BAND;
+  final RfBandDesignation? _BAND;
   final String? _MODE;
   final String? _PURPOSE;
   final double? _FREQ_MIN;
   final double? _FREQ_MAX;
   final double? _CENTER_FREQ;
+  final double? _BANDWIDTH;
   final double? _PEAK_GAIN;
   final double? _EDGE_GAIN;
-  final double? _BANDWIDTH;
   final double? _BEAMWIDTH;
-  final String? _POLARIZATION;
+  final RfPolarization? _POLARIZATION;
   final double? _ERP;
   final double? _EIRP;
 
@@ -150,17 +286,17 @@ class RFBObjectBuilder extends fb.ObjectBuilder {
     String? ID,
     String? ID_ENTITY,
     String? NAME,
-    String? BAND,
+    RfBandDesignation? BAND,
     String? MODE,
     String? PURPOSE,
     double? FREQ_MIN,
     double? FREQ_MAX,
     double? CENTER_FREQ,
+    double? BANDWIDTH,
     double? PEAK_GAIN,
     double? EDGE_GAIN,
-    double? BANDWIDTH,
     double? BEAMWIDTH,
-    String? POLARIZATION,
+    RfPolarization? POLARIZATION,
     double? ERP,
     double? EIRP,
   })
@@ -173,9 +309,9 @@ class RFBObjectBuilder extends fb.ObjectBuilder {
         _FREQ_MIN = FREQ_MIN,
         _FREQ_MAX = FREQ_MAX,
         _CENTER_FREQ = CENTER_FREQ,
+        _BANDWIDTH = BANDWIDTH,
         _PEAK_GAIN = PEAK_GAIN,
         _EDGE_GAIN = EDGE_GAIN,
-        _BANDWIDTH = BANDWIDTH,
         _BEAMWIDTH = BEAMWIDTH,
         _POLARIZATION = POLARIZATION,
         _ERP = ERP,
@@ -190,29 +326,25 @@ class RFBObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ID_ENTITY!);
     final int? NAMEOffset = _NAME == null ? null
         : fbBuilder.writeString(_NAME!);
-    final int? BANDOffset = _BAND == null ? null
-        : fbBuilder.writeString(_BAND!);
     final int? MODEOffset = _MODE == null ? null
         : fbBuilder.writeString(_MODE!);
     final int? PURPOSEOffset = _PURPOSE == null ? null
         : fbBuilder.writeString(_PURPOSE!);
-    final int? POLARIZATIONOffset = _POLARIZATION == null ? null
-        : fbBuilder.writeString(_POLARIZATION!);
     fbBuilder.startTable(16);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, ID_ENTITYOffset);
     fbBuilder.addOffset(2, NAMEOffset);
-    fbBuilder.addOffset(3, BANDOffset);
+    fbBuilder.addInt8(3, _BAND?.value);
     fbBuilder.addOffset(4, MODEOffset);
     fbBuilder.addOffset(5, PURPOSEOffset);
     fbBuilder.addFloat64(6, _FREQ_MIN);
     fbBuilder.addFloat64(7, _FREQ_MAX);
     fbBuilder.addFloat64(8, _CENTER_FREQ);
-    fbBuilder.addFloat64(9, _PEAK_GAIN);
-    fbBuilder.addFloat64(10, _EDGE_GAIN);
-    fbBuilder.addFloat64(11, _BANDWIDTH);
+    fbBuilder.addFloat64(9, _BANDWIDTH);
+    fbBuilder.addFloat64(10, _PEAK_GAIN);
+    fbBuilder.addFloat64(11, _EDGE_GAIN);
     fbBuilder.addFloat64(12, _BEAMWIDTH);
-    fbBuilder.addOffset(13, POLARIZATIONOffset);
+    fbBuilder.addInt8(13, _POLARIZATION?.value);
     fbBuilder.addFloat64(14, _ERP);
     fbBuilder.addFloat64(15, _EIRP);
     return fbBuilder.endTable();

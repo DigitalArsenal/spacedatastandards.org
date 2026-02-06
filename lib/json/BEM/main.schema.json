@@ -1,21 +1,123 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "beamType" : {
+      "type" : "string",
+      "enum": ["SPOT", "REGIONAL", "GLOBAL", "SHAPED", "STEERABLE", "HOPPING"]
+    },
+    "beamPolarization" : {
+      "type" : "string",
+      "enum": ["RHCP", "LHCP", "LINEAR_H", "LINEAR_V", "DUAL_CIRCULAR", "DUAL_LINEAR", "CROSS_POL"]
+    },
+    "beamContourPoint" : {
+      "type" : "object",
+      "description" : "Beam Contour Point (gain pattern boundary)",
+      "properties" : {
+        "LATITUDE" : {
+                "type" : "number",
+                "description" : "Latitude in degrees"
+              },
+        "LONGITUDE" : {
+                "type" : "number",
+                "description" : "Longitude in degrees"
+              },
+        "GAIN" : {
+                "type" : "number",
+                "description" : "Gain level in dBi at this contour"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "beamContour" : {
+      "type" : "object",
+      "description" : "Beam Contour (iso-gain boundary)",
+      "properties" : {
+        "CONTOUR_ID" : {
+                "type" : "string",
+                "description" : "Contour level identifier"
+              },
+        "GAIN_LEVEL" : {
+                "type" : "number",
+                "description" : "Gain level in dBi"
+              },
+        "POINTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/beamContourPoint"},
+                "description" : "Contour boundary points"
+              }
+      },
+      "additionalProperties" : false
+    },
     "BEM" : {
       "type" : "object",
       "description" : "Antenna Beam",
       "properties" : {
         "ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique beam identifier"
               },
         "BEAM_NAME" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Beam name or designation"
               },
-        "NOTES" : {
-                "type" : "string"
+        "ID_ENTITY" : {
+                "type" : "string",
+                "description" : "Reference to parent entity (satellite/transponder)"
+              },
+        "ID_ANTENNA" : {
+                "type" : "string",
+                "description" : "Reference to parent antenna"
+              },
+        "TYPE" : {
+                "$ref" : "#/definitions/beamType",
+                "description" : "Beam type"
+              },
+        "POLARIZATION" : {
+                "$ref" : "#/definitions/beamPolarization",
+                "description" : "Beam polarization"
+              },
+        "PEAK_GAIN" : {
+                "type" : "number",
+                "description" : "Peak gain in dBi"
+              },
+        "EOC_GAIN" : {
+                "type" : "number",
+                "description" : "Edge-of-coverage gain in dBi"
+              },
+        "CENTER_LATITUDE" : {
+                "type" : "number",
+                "description" : "Beam center latitude in degrees"
+              },
+        "CENTER_LONGITUDE" : {
+                "type" : "number",
+                "description" : "Beam center longitude in degrees"
+              },
+        "BEAMWIDTH" : {
+                "type" : "number",
+                "description" : "Beamwidth (3dB) in degrees"
+              },
+        "FREQUENCY" : {
+                "type" : "number",
+                "description" : "Operating frequency in MHz"
+              },
+        "EIRP" : {
+                "type" : "number",
+                "description" : "EIRP at beam center in dBW"
+              },
+        "G_OVER_T" : {
+                "type" : "number",
+                "description" : "G/T at beam center in dB/K"
+              },
+        "FOOTPRINT_AREA" : {
+                "type" : "number",
+                "description" : "Beam footprint area in km^2"
               },
         "BEAM_CONTOURS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"$ref" : "#/definitions/beamContour"},
+                "description" : "Beam contour definitions"
+              },
+        "NOTES" : {
+                "type" : "string",
+                "description" : "Additional notes"
               }
       },
       "additionalProperties" : false

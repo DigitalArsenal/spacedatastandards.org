@@ -1,39 +1,71 @@
-// Hash: 92e90241381df55eae26326177a8cd8c2f9e944340ae8462043f61c8979b8f0e
-// Version: 0.0.2
+// Hash: 3ab99da23141257effa4c7746b943cbe24b186df192f01bc2b5973b257afee24
+// Version: 0.0.3
 // -----------------------------------END_HEADER
 /// Weather Data
 table WTH {
+  /// Unique identifier
   ID:string;
+  /// Sensor identifier
   ID_SENSOR:string;
+  /// Original sensor identifier
   ORIG_SENSOR_ID:string;
+  /// Observation time (ISO 8601)
   OB_TIME:string;
-  SIG_PWRS:[string];
-  NOISE_LVLS:[string];
-  SPEC_WIDTHS:[string];
-  FIRST_GUESS_AVGS:[string];
-  QC_VALUE:int;
+  /// File creation time (ISO 8601)
   FILE_CREATION:string;
+  /// Quality control value
+  QC_VALUE:uint8;
+  /// Terminal altitude (km)
   TERM_ALT:double;
+  /// Average transmit power (dBm)
   AVG_TX_PWR:double;
+  /// Average reflected power (dBm)
   AVG_REF_PWR:double;
-  SECTOR_NUM:int;
-  NUM_ELEMENTS:int;
-  TD_AVG_SAMPLE_NUMS:[string];
-  CHECKSUM:int;
-  CO_INTEGS:[string];
-  SPEC_AVGS:[string];
-  INTERPULSE_PERIODS:[string];
-  DOPP_VELS:[string];
-  CONS_RECS:[string];
-  SNRS:[string];
+  /// Sector number
+  SECTOR_NUM:uint16;
+  /// Number of data elements
+  NUM_ELEMENTS:uint16;
+  /// Checksum
+  CHECKSUM:uint32;
+  /// Signal power values (dBm)
+  SIG_PWRS:[double];
+  /// Noise level values (dBm)
+  NOISE_LVLS:[double];
+  /// Spectral width values (m/s)
+  SPEC_WIDTHS:[double];
+  /// First guess average values
+  FIRST_GUESS_AVGS:[double];
+  /// Time domain average sample numbers
+  TD_AVG_SAMPLE_NUMS:[double];
+  /// Co-integration values
+  CO_INTEGS:[double];
+  /// Spectral average values
+  SPEC_AVGS:[double];
+  /// Interpulse periods (microseconds)
+  INTERPULSE_PERIODS:[double];
+  /// Doppler velocities (m/s)
+  DOPP_VELS:[double];
+  /// Consecutive records count
+  CONS_RECS:[double];
+  /// Signal-to-noise ratios (dB)
+  SNRS:[double];
+  /// Signal strength (dBm)
   SIG_STRENGTH:double;
+  /// Error ellipse semi-major axis (km)
   SEMI_MAJOR_AXIS:double;
+  /// Error ellipse semi-minor axis (km)
   SEMI_MINOR_AXIS:double;
+  /// Error ellipse orientation angle (degrees)
   ANGLE_ORIENTATION:double;
-  LIGHT_EVENT_NUM:int;
+  /// Lightning event number
+  LIGHT_EVENT_NUM:uint32;
+  /// Lightning detection sensor identifiers
   LIGHT_DET_SENSORS:[string];
+  /// Position confidence (0-1)
   POS_CONFIDENCE:double;
+  /// Source types
   SRC_TYPS:[string];
+  /// Source identifiers
   SRC_IDS:[string];
 }
 

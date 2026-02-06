@@ -1,36 +1,381 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "emitterType": {
+      "type": "string",
+      "enum": [
+        "RADAR",
+        "COMMUNICATIONS",
+        "NAVIGATION",
+        "JAMMER",
+        "BEACON",
+        "TRANSPONDER",
+        "DATA_LINK",
+        "TELEMETRY",
+        "EW",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "RADAR": {
+          "value": 0
+        },
+        "COMMUNICATIONS": {
+          "value": 1
+        },
+        "NAVIGATION": {
+          "value": 2
+        },
+        "JAMMER": {
+          "value": 3
+        },
+        "BEACON": {
+          "value": 4
+        },
+        "TRANSPONDER": {
+          "value": 5
+        },
+        "DATA_LINK": {
+          "value": 6
+        },
+        "TELEMETRY": {
+          "value": 7
+        },
+        "EW": {
+          "value": 8
+        },
+        "UNKNOWN": {
+          "value": 9
+        }
+      }
+    },
+    "signalModulation": {
+      "type": "string",
+      "enum": [
+        "CW",
+        "PULSE",
+        "FMCW",
+        "CHIRP",
+        "BPSK",
+        "QPSK",
+        "FSK",
+        "AM",
+        "FM",
+        "SPREAD_SPECTRUM",
+        "PHASED_ARRAY",
+        "AGILE",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "CW": {
+          "value": 0
+        },
+        "PULSE": {
+          "value": 1
+        },
+        "FMCW": {
+          "value": 2
+        },
+        "CHIRP": {
+          "value": 3
+        },
+        "BPSK": {
+          "value": 4
+        },
+        "QPSK": {
+          "value": 5
+        },
+        "FSK": {
+          "value": 6
+        },
+        "AM": {
+          "value": 7
+        },
+        "FM": {
+          "value": 8
+        },
+        "SPREAD_SPECTRUM": {
+          "value": 9
+        },
+        "PHASED_ARRAY": {
+          "value": 10
+        },
+        "AGILE": {
+          "value": 11
+        },
+        "UNKNOWN": {
+          "value": 12
+        }
+      }
+    },
+    "rfEmitterDetail": {
+      "type": "object",
+      "description": "RF Emitter Detail Record",
+      "properties": {
+        "MODE_NAME": {
+          "type": "string",
+          "description": "Mode name or identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "FREQUENCY": {
+          "type": "number",
+          "description": "Center frequency in MHz",
+          "x-flatbuffer-type": "double"
+        },
+        "FREQ_MIN": {
+          "type": "number",
+          "description": "Frequency minimum in MHz",
+          "x-flatbuffer-type": "double"
+        },
+        "FREQ_MAX": {
+          "type": "number",
+          "description": "Frequency maximum in MHz",
+          "x-flatbuffer-type": "double"
+        },
+        "PRI": {
+          "type": "number",
+          "description": "Pulse repetition interval in microseconds",
+          "x-flatbuffer-type": "double"
+        },
+        "PRI_MIN": {
+          "type": "number",
+          "description": "PRI minimum in microseconds",
+          "x-flatbuffer-type": "double"
+        },
+        "PRI_MAX": {
+          "type": "number",
+          "description": "PRI maximum in microseconds",
+          "x-flatbuffer-type": "double"
+        },
+        "PULSE_WIDTH": {
+          "type": "number",
+          "description": "Pulse width in microseconds",
+          "x-flatbuffer-type": "double"
+        },
+        "PW_MIN": {
+          "type": "number",
+          "description": "Pulse width minimum in microseconds",
+          "x-flatbuffer-type": "double"
+        },
+        "PW_MAX": {
+          "type": "number",
+          "description": "Pulse width maximum in microseconds",
+          "x-flatbuffer-type": "double"
+        },
+        "SCAN_PERIOD": {
+          "type": "number",
+          "description": "Scan period in seconds",
+          "x-flatbuffer-type": "double"
+        },
+        "ERP": {
+          "type": "number",
+          "description": "Effective radiated power in dBW",
+          "x-flatbuffer-type": "double"
+        },
+        "MODULATION": {
+          "$ref": "#/definitions/signalModulation",
+          "description": "Signal modulation",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "CW": {
+              "value": 0
+            },
+            "PULSE": {
+              "value": 1
+            },
+            "FMCW": {
+              "value": 2
+            },
+            "CHIRP": {
+              "value": 3
+            },
+            "BPSK": {
+              "value": 4
+            },
+            "QPSK": {
+              "value": 5
+            },
+            "FSK": {
+              "value": 6
+            },
+            "AM": {
+              "value": 7
+            },
+            "FM": {
+              "value": 8
+            },
+            "SPREAD_SPECTRUM": {
+              "value": 9
+            },
+            "PHASED_ARRAY": {
+              "value": 10
+            },
+            "AGILE": {
+              "value": 11
+            },
+            "UNKNOWN": {
+              "value": 12
+            }
+          }
+        },
+        "ANTENNA_PATTERN": {
+          "type": "string",
+          "description": "Antenna pattern type",
+          "x-flatbuffer-type": "string"
+        },
+        "BEAMWIDTH": {
+          "type": "number",
+          "description": "3dB beamwidth in degrees",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
     "RFE": {
       "type": "object",
       "description": "RF Emitter",
       "properties": {
         "ID": {
           "type": "string",
+          "description": "Unique emitter identifier",
           "x-flatbuffer-type": "string"
         },
         "ID_ENTITY": {
           "type": "string",
+          "description": "Reference to parent entity",
           "x-flatbuffer-type": "string"
         },
         "NAME": {
           "type": "string",
+          "description": "Emitter name or designation",
           "x-flatbuffer-type": "string"
         },
         "TYPE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
+          "$ref": "#/definitions/emitterType",
+          "description": "Emitter type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "RADAR": {
+              "value": 0
+            },
+            "COMMUNICATIONS": {
+              "value": 1
+            },
+            "NAVIGATION": {
+              "value": 2
+            },
+            "JAMMER": {
+              "value": 3
+            },
+            "BEACON": {
+              "value": 4
+            },
+            "TRANSPONDER": {
+              "value": 5
+            },
+            "DATA_LINK": {
+              "value": 6
+            },
+            "TELEMETRY": {
+              "value": 7
+            },
+            "EW": {
+              "value": 8
+            },
+            "UNKNOWN": {
+              "value": 9
+            }
+          }
         },
         "ENTITY": {
           "type": "string",
+          "description": "Parent entity designator",
           "x-flatbuffer-type": "string"
+        },
+        "ELNOT": {
+          "type": "string",
+          "description": "ELNOT (Electronic Notation)",
+          "x-flatbuffer-type": "string"
+        },
+        "NATO_NAME": {
+          "type": "string",
+          "description": "NATO reporting name",
+          "x-flatbuffer-type": "string"
+        },
+        "PLATFORM_TYPE": {
+          "type": "string",
+          "description": "Platform type (e.g., SHIP, AIRCRAFT, GROUND, SATELLITE)",
+          "x-flatbuffer-type": "string"
+        },
+        "COUNTRY": {
+          "type": "string",
+          "description": "Country of origin",
+          "x-flatbuffer-type": "string"
+        },
+        "FUNCTION": {
+          "type": "string",
+          "description": "Primary function description",
+          "x-flatbuffer-type": "string"
+        },
+        "BAND": {
+          "type": "string",
+          "description": "Operating band (e.g., HF, VHF, UHF, L, S, C, X, Ku, Ka)",
+          "x-flatbuffer-type": "string"
+        },
+        "FREQ_MIN": {
+          "type": "number",
+          "description": "Minimum operating frequency in MHz",
+          "x-flatbuffer-type": "double"
+        },
+        "FREQ_MAX": {
+          "type": "number",
+          "description": "Maximum operating frequency in MHz",
+          "x-flatbuffer-type": "double"
+        },
+        "PEAK_POWER": {
+          "type": "number",
+          "description": "Peak power in kW",
+          "x-flatbuffer-type": "double"
+        },
+        "AVG_POWER": {
+          "type": "number",
+          "description": "Average power in kW",
+          "x-flatbuffer-type": "double"
+        },
+        "ANTENNA_GAIN": {
+          "type": "number",
+          "description": "Antenna gain in dBi",
+          "x-flatbuffer-type": "double"
+        },
+        "NUM_MODES": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of operating modes",
+          "x-flatbuffer-type": "uint"
         },
         "RF_EMITTER_DETAILS": {
           "type": "array",
           "items": {
-            "type": "string"
+            "$ref": "#/definitions/rfEmitterDetail"
           },
-          "x-flatbuffer-type": "[string]"
+          "description": "Emitter operating mode details",
+          "x-flatbuffer-type": "[rfEmitterDetail]"
+        },
+        "THREAT_LEVEL": {
+          "type": "string",
+          "description": "Threat level assessment",
+          "x-flatbuffer-type": "string"
+        },
+        "NOTES": {
+          "type": "string",
+          "description": "Additional notes",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

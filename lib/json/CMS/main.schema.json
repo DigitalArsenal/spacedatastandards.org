@@ -1,27 +1,187 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "modulationType" : {
+      "type" : "string",
+      "enum": ["BPSK", "QPSK", "OQPSK", "PSK8", "QAM16", "QAM64", "FSK", "MSK", "GMSK", "AM", "FM", "PM", "SPREAD_SPECTRUM", "DVB_S2", "DVB_S2X"]
+    },
+    "encryptionType" : {
+      "type" : "string",
+      "enum": ["NONE", "DES", "TRIPLE_DES", "AES_128", "AES_256", "TYPE_1", "TYPE_2", "CUSTOM"]
+    },
+    "commsChannel" : {
+      "type" : "object",
+      "description" : "Transponder Channel",
+      "properties" : {
+        "CHANNEL_ID" : {
+                "type" : "string",
+                "description" : "Channel identifier"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Channel name"
+              },
+        "UPLINK_FREQ" : {
+                "type" : "number",
+                "description" : "Uplink frequency in MHz"
+              },
+        "DOWNLINK_FREQ" : {
+                "type" : "number",
+                "description" : "Downlink frequency in MHz"
+              },
+        "BANDWIDTH" : {
+                "type" : "number",
+                "description" : "Channel bandwidth in MHz"
+              },
+        "MODULATION" : {
+                "$ref" : "#/definitions/modulationType",
+                "description" : "Modulation type"
+              },
+        "DATA_RATE" : {
+                "type" : "number",
+                "description" : "Data rate in Mbps"
+              },
+        "ENCRYPTION" : {
+                "$ref" : "#/definitions/encryptionType",
+                "description" : "Encryption method"
+              },
+        "FEC_RATE" : {
+                "type" : "number",
+                "description" : "Forward error correction coding rate (e.g., 0.5, 0.75)"
+              },
+        "POWER" : {
+                "type" : "number",
+                "description" : "Channel power in dBW"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "commsTransponder" : {
+      "type" : "object",
+      "description" : "Transponder",
+      "properties" : {
+        "TRANSPONDER_ID" : {
+                "type" : "string",
+                "description" : "Transponder identifier"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Transponder name"
+              },
+        "TYPE" : {
+                "type" : "string",
+                "description" : "Transponder type (e.g., BENT_PIPE, REGENERATIVE, OBP)"
+              },
+        "BAND" : {
+                "type" : "string",
+                "description" : "Operating band (e.g., C, Ku, Ka, L, S, X)"
+              },
+        "UPLINK_FREQ_MIN" : {
+                "type" : "number",
+                "description" : "Uplink frequency range minimum in MHz"
+              },
+        "UPLINK_FREQ_MAX" : {
+                "type" : "number",
+                "description" : "Uplink frequency range maximum in MHz"
+              },
+        "DOWNLINK_FREQ_MIN" : {
+                "type" : "number",
+                "description" : "Downlink frequency range minimum in MHz"
+              },
+        "DOWNLINK_FREQ_MAX" : {
+                "type" : "number",
+                "description" : "Downlink frequency range maximum in MHz"
+              },
+        "EIRP" : {
+                "type" : "number",
+                "description" : "Saturated EIRP in dBW"
+              },
+        "G_OVER_T" : {
+                "type" : "number",
+                "description" : "G/T in dB/K"
+              },
+        "BANDWIDTH" : {
+                "type" : "number",
+                "description" : "Total bandwidth in MHz"
+              },
+        "NUM_CHANNELS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of channels"
+              },
+        "CHANNELS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/commsChannel"},
+                "description" : "Channels on this transponder"
+              },
+        "POLARIZATION" : {
+                "type" : "string",
+                "description" : "Polarization (e.g., RHCP, LHCP, LINEAR_H, LINEAR_V)"
+              }
+      },
+      "additionalProperties" : false
+    },
     "CMS" : {
       "type" : "object",
       "description" : "Communications Payload",
       "properties" : {
         "ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique identifier"
               },
         "ID_ENTITY" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Reference to parent entity"
               },
         "NAME" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Communications payload name"
               },
         "DESCRIPTION" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Description"
               },
         "ENTITY" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Parent entity designator"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Satellite number"
+              },
+        "NUM_TRANSPONDERS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of transponders"
               },
         "TRANSPONDERS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"$ref" : "#/definitions/commsTransponder"},
+                "description" : "Transponders"
+              },
+        "TOTAL_POWER" : {
+                "type" : "number",
+                "description" : "Total payload power in Watts"
+              },
+        "TOTAL_MASS" : {
+                "type" : "number",
+                "description" : "Total payload mass in kg"
+              },
+        "TOTAL_BANDWIDTH" : {
+                "type" : "number",
+                "description" : "Total aggregate bandwidth in MHz"
+              },
+        "MISSION" : {
+                "type" : "string",
+                "description" : "Primary mission (e.g., FIXED_SAT, BROADCAST, MOBILE, RELAY, MILSATCOM)"
+              },
+        "COVERAGE" : {
+                "type" : "string",
+                "description" : "Coverage region description"
+              },
+        "DESIGN_LIFE" : {
+                "type" : "number",
+                "description" : "Design lifetime in years"
+              },
+        "NOTES" : {
+                "type" : "string",
+                "description" : "Additional notes"
               }
       },
       "additionalProperties" : false

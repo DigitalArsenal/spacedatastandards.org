@@ -6,7 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Difference of Arrival
+/// Difference of Arrival Geolocation
 public struct DOA : IFlatbufferObject
 {
   private Table __p;
@@ -19,6 +19,7 @@ public struct DOA : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public DOA __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Unique identifier
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,6 +27,7 @@ public struct DOA : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
+  /// Observation time (ISO 8601)
   public string OB_TIME { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetOB_TIMEBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -33,92 +35,123 @@ public struct DOA : IFlatbufferObject
   public ArraySegment<byte>? GetOB_TIMEBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetOB_TIMEArray() { return __p.__vector_as_array<byte>(6); }
-  public string ID_SENSOR1 { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Satellite catalog number
+  public uint SAT_NO { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// International designator
+  public string ORIG_OBJECT_ID { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetID_SENSOR1Bytes() { return __p.__vector_as_span<byte>(8, 1); }
+  public Span<byte> GetORIG_OBJECT_IDBytes() { return __p.__vector_as_span<byte>(10, 1); }
 #else
-  public ArraySegment<byte>? GetID_SENSOR1Bytes() { return __p.__vector_as_arraysegment(8); }
+  public ArraySegment<byte>? GetORIG_OBJECT_IDBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
-  public byte[] GetID_SENSOR1Array() { return __p.__vector_as_array<byte>(8); }
-  public string ID_SENSOR2 { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetORIG_OBJECT_IDArray() { return __p.__vector_as_array<byte>(10); }
+  /// On-orbit reference
+  public string ON_ORBIT { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetID_SENSOR2Bytes() { return __p.__vector_as_span<byte>(10, 1); }
+  public Span<byte> GetON_ORBITBytes() { return __p.__vector_as_span<byte>(12, 1); }
 #else
-  public ArraySegment<byte>? GetID_SENSOR2Bytes() { return __p.__vector_as_arraysegment(10); }
+  public ArraySegment<byte>? GetON_ORBITBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
-  public byte[] GetID_SENSOR2Array() { return __p.__vector_as_array<byte>(10); }
-  public int SAT_NO { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public string TASK_ID { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetON_ORBITArray() { return __p.__vector_as_array<byte>(12); }
+  /// True if uncorrelated target
+  public bool UCT { get { int o = __p.__offset(14); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Task identifier
+  public string TASK_ID { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTASK_IDBytes() { return __p.__vector_as_span<byte>(14, 1); }
+  public Span<byte> GetTASK_IDBytes() { return __p.__vector_as_span<byte>(16, 1); }
 #else
-  public ArraySegment<byte>? GetTASK_IDBytes() { return __p.__vector_as_arraysegment(14); }
+  public ArraySegment<byte>? GetTASK_IDBytes() { return __p.__vector_as_arraysegment(16); }
 #endif
-  public byte[] GetTASK_IDArray() { return __p.__vector_as_array<byte>(14); }
-  public string ORIG_OBJECT_ID { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetTASK_IDArray() { return __p.__vector_as_array<byte>(16); }
+  /// Transaction identifier
+  public string TRANSACTION_ID { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetORIG_OBJECT_IDBytes() { return __p.__vector_as_span<byte>(16, 1); }
+  public Span<byte> GetTRANSACTION_IDBytes() { return __p.__vector_as_span<byte>(18, 1); }
 #else
-  public ArraySegment<byte>? GetORIG_OBJECT_IDBytes() { return __p.__vector_as_arraysegment(16); }
+  public ArraySegment<byte>? GetTRANSACTION_IDBytes() { return __p.__vector_as_arraysegment(18); }
 #endif
-  public byte[] GetORIG_OBJECT_IDArray() { return __p.__vector_as_array<byte>(16); }
-  public string ORIG_SENSOR_ID1 { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetTRANSACTION_IDArray() { return __p.__vector_as_array<byte>(18); }
+  /// Collection mode
+  public doaCollectionMode COLLECTION_MODE { get { int o = __p.__offset(20); return o != 0 ? (doaCollectionMode)__p.bb.GetSbyte(o + __p.bb_pos) : doaCollectionMode.TDOA; } }
+  /// Sensor 1 identifier
+  public string ID_SENSOR1 { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetORIG_SENSOR_ID1Bytes() { return __p.__vector_as_span<byte>(18, 1); }
+  public Span<byte> GetID_SENSOR1Bytes() { return __p.__vector_as_span<byte>(22, 1); }
 #else
-  public ArraySegment<byte>? GetORIG_SENSOR_ID1Bytes() { return __p.__vector_as_arraysegment(18); }
+  public ArraySegment<byte>? GetID_SENSOR1Bytes() { return __p.__vector_as_arraysegment(22); }
 #endif
-  public byte[] GetORIG_SENSOR_ID1Array() { return __p.__vector_as_array<byte>(18); }
-  public string ORIG_SENSOR_ID2 { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetID_SENSOR1Array() { return __p.__vector_as_array<byte>(22); }
+  /// Sensor 1 original identifier
+  public string ORIG_SENSOR_ID1 { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetORIG_SENSOR_ID2Bytes() { return __p.__vector_as_span<byte>(20, 1); }
+  public Span<byte> GetORIG_SENSOR_ID1Bytes() { return __p.__vector_as_span<byte>(24, 1); }
 #else
-  public ArraySegment<byte>? GetORIG_SENSOR_ID2Bytes() { return __p.__vector_as_arraysegment(20); }
+  public ArraySegment<byte>? GetORIG_SENSOR_ID1Bytes() { return __p.__vector_as_arraysegment(24); }
 #endif
-  public byte[] GetORIG_SENSOR_ID2Array() { return __p.__vector_as_array<byte>(20); }
-  public bool UCT { get { int o = __p.__offset(22); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  public double SENSOR1_DELAY { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SENSOR2_DELAY { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SENLAT { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SENLON { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SENALT { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SEN2LAT { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SEN2LON { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SEN2ALT { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double FREQUENCY { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double BANDWIDTH { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double DELTA_RANGE { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double DELTA_RANGE_UNC { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double DELTA_RANGE_RATE { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double DELTA_RANGE_RATE_UNC { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SNR { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double TDOA { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double TDOA_UNC { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double FDOA { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double FDOA_UNC { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string COLLECTION_MODE { get { int o = __p.__offset(62); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetORIG_SENSOR_ID1Array() { return __p.__vector_as_array<byte>(24); }
+  /// Sensor 1 latitude (degrees)
+  public double SENLAT { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sensor 1 longitude (degrees)
+  public double SENLON { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sensor 1 altitude (km)
+  public double SENALT { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sensor 1 processing delay (seconds)
+  public double SENSOR1_DELAY { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sensor 2 identifier
+  public string ID_SENSOR2 { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetCOLLECTION_MODEBytes() { return __p.__vector_as_span<byte>(62, 1); }
+  public Span<byte> GetID_SENSOR2Bytes() { return __p.__vector_as_span<byte>(34, 1); }
 #else
-  public ArraySegment<byte>? GetCOLLECTION_MODEBytes() { return __p.__vector_as_arraysegment(62); }
+  public ArraySegment<byte>? GetID_SENSOR2Bytes() { return __p.__vector_as_arraysegment(34); }
 #endif
-  public byte[] GetCOLLECTION_MODEArray() { return __p.__vector_as_array<byte>(62); }
-  public string RAW_FILE_URI { get { int o = __p.__offset(64); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetID_SENSOR2Array() { return __p.__vector_as_array<byte>(34); }
+  /// Sensor 2 original identifier
+  public string ORIG_SENSOR_ID2 { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetRAW_FILE_URIBytes() { return __p.__vector_as_span<byte>(64, 1); }
+  public Span<byte> GetORIG_SENSOR_ID2Bytes() { return __p.__vector_as_span<byte>(36, 1); }
 #else
-  public ArraySegment<byte>? GetRAW_FILE_URIBytes() { return __p.__vector_as_arraysegment(64); }
+  public ArraySegment<byte>? GetORIG_SENSOR_ID2Bytes() { return __p.__vector_as_arraysegment(36); }
 #endif
-  public byte[] GetRAW_FILE_URIArray() { return __p.__vector_as_array<byte>(64); }
-  public string TAGS(int j) { int o = __p.__offset(66); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int TAGSLength { get { int o = __p.__offset(66); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string ON_ORBIT { get { int o = __p.__offset(68); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetORIG_SENSOR_ID2Array() { return __p.__vector_as_array<byte>(36); }
+  /// Sensor 2 latitude (degrees)
+  public double SEN2LAT { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sensor 2 longitude (degrees)
+  public double SEN2LON { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sensor 2 altitude (km)
+  public double SEN2ALT { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sensor 2 processing delay (seconds)
+  public double SENSOR2_DELAY { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Measured frequency (MHz)
+  public double FREQUENCY { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Measurement bandwidth (MHz)
+  public double BANDWIDTH { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Signal-to-noise ratio (dB)
+  public double SNR { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Differential range (km)
+  public double DELTA_RANGE { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Differential range uncertainty (km, 1-sigma)
+  public double DELTA_RANGE_UNC { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Differential range rate (km/s)
+  public double DELTA_RANGE_RATE { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Differential range rate uncertainty (km/s, 1-sigma)
+  public double DELTA_RANGE_RATE_UNC { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Time difference of arrival (seconds)
+  public double TDOA { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// TDOA uncertainty (seconds, 1-sigma)
+  public double TDOA_UNC { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Frequency difference of arrival (Hz)
+  public double FDOA { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// FDOA uncertainty (Hz, 1-sigma)
+  public double FDOA_UNC { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Reference to raw data file
+  public string RAW_FILE_URI { get { int o = __p.__offset(68); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetON_ORBITBytes() { return __p.__vector_as_span<byte>(68, 1); }
+  public Span<byte> GetRAW_FILE_URIBytes() { return __p.__vector_as_span<byte>(68, 1); }
 #else
-  public ArraySegment<byte>? GetON_ORBITBytes() { return __p.__vector_as_arraysegment(68); }
+  public ArraySegment<byte>? GetRAW_FILE_URIBytes() { return __p.__vector_as_arraysegment(68); }
 #endif
-  public byte[] GetON_ORBITArray() { return __p.__vector_as_array<byte>(68); }
+  public byte[] GetRAW_FILE_URIArray() { return __p.__vector_as_array<byte>(68); }
+  /// Event descriptor
   public string DESCRIPTOR { get { int o = __p.__offset(70); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetDESCRIPTORBytes() { return __p.__vector_as_span<byte>(70, 1); }
@@ -126,85 +159,81 @@ public struct DOA : IFlatbufferObject
   public ArraySegment<byte>? GetDESCRIPTORBytes() { return __p.__vector_as_arraysegment(70); }
 #endif
   public byte[] GetDESCRIPTORArray() { return __p.__vector_as_array<byte>(70); }
-  public string TRANSACTION_ID { get { int o = __p.__offset(72); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetTRANSACTION_IDBytes() { return __p.__vector_as_span<byte>(72, 1); }
-#else
-  public ArraySegment<byte>? GetTRANSACTION_IDBytes() { return __p.__vector_as_arraysegment(72); }
-#endif
-  public byte[] GetTRANSACTION_IDArray() { return __p.__vector_as_array<byte>(72); }
+  /// Associated tags
+  public string TAGS(int j) { int o = __p.__offset(72); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int TAGSLength { get { int o = __p.__offset(72); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<DOA> CreateDOA(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
       StringOffset OB_TIMEOffset = default(StringOffset),
-      StringOffset ID_SENSOR1Offset = default(StringOffset),
-      StringOffset ID_SENSOR2Offset = default(StringOffset),
-      int SAT_NO = 0,
-      StringOffset TASK_IDOffset = default(StringOffset),
+      uint SAT_NO = 0,
       StringOffset ORIG_OBJECT_IDOffset = default(StringOffset),
-      StringOffset ORIG_SENSOR_ID1Offset = default(StringOffset),
-      StringOffset ORIG_SENSOR_ID2Offset = default(StringOffset),
+      StringOffset ON_ORBITOffset = default(StringOffset),
       bool UCT = false,
-      double SENSOR1_DELAY = 0.0,
-      double SENSOR2_DELAY = 0.0,
+      StringOffset TASK_IDOffset = default(StringOffset),
+      StringOffset TRANSACTION_IDOffset = default(StringOffset),
+      doaCollectionMode COLLECTION_MODE = doaCollectionMode.TDOA,
+      StringOffset ID_SENSOR1Offset = default(StringOffset),
+      StringOffset ORIG_SENSOR_ID1Offset = default(StringOffset),
       double SENLAT = 0.0,
       double SENLON = 0.0,
       double SENALT = 0.0,
+      double SENSOR1_DELAY = 0.0,
+      StringOffset ID_SENSOR2Offset = default(StringOffset),
+      StringOffset ORIG_SENSOR_ID2Offset = default(StringOffset),
       double SEN2LAT = 0.0,
       double SEN2LON = 0.0,
       double SEN2ALT = 0.0,
+      double SENSOR2_DELAY = 0.0,
       double FREQUENCY = 0.0,
       double BANDWIDTH = 0.0,
+      double SNR = 0.0,
       double DELTA_RANGE = 0.0,
       double DELTA_RANGE_UNC = 0.0,
       double DELTA_RANGE_RATE = 0.0,
       double DELTA_RANGE_RATE_UNC = 0.0,
-      double SNR = 0.0,
       double TDOA = 0.0,
       double TDOA_UNC = 0.0,
       double FDOA = 0.0,
       double FDOA_UNC = 0.0,
-      StringOffset COLLECTION_MODEOffset = default(StringOffset),
       StringOffset RAW_FILE_URIOffset = default(StringOffset),
-      VectorOffset TAGSOffset = default(VectorOffset),
-      StringOffset ON_ORBITOffset = default(StringOffset),
       StringOffset DESCRIPTOROffset = default(StringOffset),
-      StringOffset TRANSACTION_IDOffset = default(StringOffset)) {
+      VectorOffset TAGSOffset = default(VectorOffset)) {
     builder.StartTable(35);
     DOA.AddFDOA_UNC(builder, FDOA_UNC);
     DOA.AddFDOA(builder, FDOA);
     DOA.AddTDOA_UNC(builder, TDOA_UNC);
     DOA.AddTDOA(builder, TDOA);
-    DOA.AddSNR(builder, SNR);
     DOA.AddDELTA_RANGE_RATE_UNC(builder, DELTA_RANGE_RATE_UNC);
     DOA.AddDELTA_RANGE_RATE(builder, DELTA_RANGE_RATE);
     DOA.AddDELTA_RANGE_UNC(builder, DELTA_RANGE_UNC);
     DOA.AddDELTA_RANGE(builder, DELTA_RANGE);
+    DOA.AddSNR(builder, SNR);
     DOA.AddBANDWIDTH(builder, BANDWIDTH);
     DOA.AddFREQUENCY(builder, FREQUENCY);
+    DOA.AddSENSOR2_DELAY(builder, SENSOR2_DELAY);
     DOA.AddSEN2ALT(builder, SEN2ALT);
     DOA.AddSEN2LON(builder, SEN2LON);
     DOA.AddSEN2LAT(builder, SEN2LAT);
+    DOA.AddSENSOR1_DELAY(builder, SENSOR1_DELAY);
     DOA.AddSENALT(builder, SENALT);
     DOA.AddSENLON(builder, SENLON);
     DOA.AddSENLAT(builder, SENLAT);
-    DOA.AddSENSOR2_DELAY(builder, SENSOR2_DELAY);
-    DOA.AddSENSOR1_DELAY(builder, SENSOR1_DELAY);
-    DOA.AddTRANSACTION_ID(builder, TRANSACTION_IDOffset);
-    DOA.AddDESCRIPTOR(builder, DESCRIPTOROffset);
-    DOA.AddON_ORBIT(builder, ON_ORBITOffset);
     DOA.AddTAGS(builder, TAGSOffset);
+    DOA.AddDESCRIPTOR(builder, DESCRIPTOROffset);
     DOA.AddRAW_FILE_URI(builder, RAW_FILE_URIOffset);
-    DOA.AddCOLLECTION_MODE(builder, COLLECTION_MODEOffset);
     DOA.AddORIG_SENSOR_ID2(builder, ORIG_SENSOR_ID2Offset);
-    DOA.AddORIG_SENSOR_ID1(builder, ORIG_SENSOR_ID1Offset);
-    DOA.AddORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset);
-    DOA.AddTASK_ID(builder, TASK_IDOffset);
-    DOA.AddSAT_NO(builder, SAT_NO);
     DOA.AddID_SENSOR2(builder, ID_SENSOR2Offset);
+    DOA.AddORIG_SENSOR_ID1(builder, ORIG_SENSOR_ID1Offset);
     DOA.AddID_SENSOR1(builder, ID_SENSOR1Offset);
+    DOA.AddTRANSACTION_ID(builder, TRANSACTION_IDOffset);
+    DOA.AddTASK_ID(builder, TASK_IDOffset);
+    DOA.AddON_ORBIT(builder, ON_ORBITOffset);
+    DOA.AddORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset);
+    DOA.AddSAT_NO(builder, SAT_NO);
     DOA.AddOB_TIME(builder, OB_TIMEOffset);
     DOA.AddID(builder, IDOffset);
+    DOA.AddCOLLECTION_MODE(builder, COLLECTION_MODE);
     DOA.AddUCT(builder, UCT);
     return DOA.EndDOA(builder);
   }
@@ -212,44 +241,44 @@ public struct DOA : IFlatbufferObject
   public static void StartDOA(FlatBufferBuilder builder) { builder.StartTable(35); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddOB_TIME(FlatBufferBuilder builder, StringOffset OB_TIMEOffset) { builder.AddOffset(1, OB_TIMEOffset.Value, 0); }
-  public static void AddID_SENSOR1(FlatBufferBuilder builder, StringOffset ID_SENSOR1Offset) { builder.AddOffset(2, ID_SENSOR1Offset.Value, 0); }
-  public static void AddID_SENSOR2(FlatBufferBuilder builder, StringOffset ID_SENSOR2Offset) { builder.AddOffset(3, ID_SENSOR2Offset.Value, 0); }
-  public static void AddSAT_NO(FlatBufferBuilder builder, int SAT_NO) { builder.AddInt(4, SAT_NO, 0); }
-  public static void AddTASK_ID(FlatBufferBuilder builder, StringOffset TASK_IDOffset) { builder.AddOffset(5, TASK_IDOffset.Value, 0); }
-  public static void AddORIG_OBJECT_ID(FlatBufferBuilder builder, StringOffset ORIG_OBJECT_IDOffset) { builder.AddOffset(6, ORIG_OBJECT_IDOffset.Value, 0); }
-  public static void AddORIG_SENSOR_ID1(FlatBufferBuilder builder, StringOffset ORIG_SENSOR_ID1Offset) { builder.AddOffset(7, ORIG_SENSOR_ID1Offset.Value, 0); }
-  public static void AddORIG_SENSOR_ID2(FlatBufferBuilder builder, StringOffset ORIG_SENSOR_ID2Offset) { builder.AddOffset(8, ORIG_SENSOR_ID2Offset.Value, 0); }
-  public static void AddUCT(FlatBufferBuilder builder, bool UCT) { builder.AddBool(9, UCT, false); }
-  public static void AddSENSOR1_DELAY(FlatBufferBuilder builder, double SENSOR1_DELAY) { builder.AddDouble(10, SENSOR1_DELAY, 0.0); }
-  public static void AddSENSOR2_DELAY(FlatBufferBuilder builder, double SENSOR2_DELAY) { builder.AddDouble(11, SENSOR2_DELAY, 0.0); }
-  public static void AddSENLAT(FlatBufferBuilder builder, double SENLAT) { builder.AddDouble(12, SENLAT, 0.0); }
-  public static void AddSENLON(FlatBufferBuilder builder, double SENLON) { builder.AddDouble(13, SENLON, 0.0); }
-  public static void AddSENALT(FlatBufferBuilder builder, double SENALT) { builder.AddDouble(14, SENALT, 0.0); }
-  public static void AddSEN2LAT(FlatBufferBuilder builder, double SEN2LAT) { builder.AddDouble(15, SEN2LAT, 0.0); }
-  public static void AddSEN2LON(FlatBufferBuilder builder, double SEN2LON) { builder.AddDouble(16, SEN2LON, 0.0); }
-  public static void AddSEN2ALT(FlatBufferBuilder builder, double SEN2ALT) { builder.AddDouble(17, SEN2ALT, 0.0); }
-  public static void AddFREQUENCY(FlatBufferBuilder builder, double FREQUENCY) { builder.AddDouble(18, FREQUENCY, 0.0); }
-  public static void AddBANDWIDTH(FlatBufferBuilder builder, double BANDWIDTH) { builder.AddDouble(19, BANDWIDTH, 0.0); }
-  public static void AddDELTA_RANGE(FlatBufferBuilder builder, double DELTA_RANGE) { builder.AddDouble(20, DELTA_RANGE, 0.0); }
-  public static void AddDELTA_RANGE_UNC(FlatBufferBuilder builder, double DELTA_RANGE_UNC) { builder.AddDouble(21, DELTA_RANGE_UNC, 0.0); }
-  public static void AddDELTA_RANGE_RATE(FlatBufferBuilder builder, double DELTA_RANGE_RATE) { builder.AddDouble(22, DELTA_RANGE_RATE, 0.0); }
-  public static void AddDELTA_RANGE_RATE_UNC(FlatBufferBuilder builder, double DELTA_RANGE_RATE_UNC) { builder.AddDouble(23, DELTA_RANGE_RATE_UNC, 0.0); }
-  public static void AddSNR(FlatBufferBuilder builder, double SNR) { builder.AddDouble(24, SNR, 0.0); }
-  public static void AddTDOA(FlatBufferBuilder builder, double TDOA) { builder.AddDouble(25, TDOA, 0.0); }
-  public static void AddTDOA_UNC(FlatBufferBuilder builder, double TDOA_UNC) { builder.AddDouble(26, TDOA_UNC, 0.0); }
-  public static void AddFDOA(FlatBufferBuilder builder, double FDOA) { builder.AddDouble(27, FDOA, 0.0); }
-  public static void AddFDOA_UNC(FlatBufferBuilder builder, double FDOA_UNC) { builder.AddDouble(28, FDOA_UNC, 0.0); }
-  public static void AddCOLLECTION_MODE(FlatBufferBuilder builder, StringOffset COLLECTION_MODEOffset) { builder.AddOffset(29, COLLECTION_MODEOffset.Value, 0); }
-  public static void AddRAW_FILE_URI(FlatBufferBuilder builder, StringOffset RAW_FILE_URIOffset) { builder.AddOffset(30, RAW_FILE_URIOffset.Value, 0); }
-  public static void AddTAGS(FlatBufferBuilder builder, VectorOffset TAGSOffset) { builder.AddOffset(31, TAGSOffset.Value, 0); }
+  public static void AddSAT_NO(FlatBufferBuilder builder, uint SAT_NO) { builder.AddUint(2, SAT_NO, 0); }
+  public static void AddORIG_OBJECT_ID(FlatBufferBuilder builder, StringOffset ORIG_OBJECT_IDOffset) { builder.AddOffset(3, ORIG_OBJECT_IDOffset.Value, 0); }
+  public static void AddON_ORBIT(FlatBufferBuilder builder, StringOffset ON_ORBITOffset) { builder.AddOffset(4, ON_ORBITOffset.Value, 0); }
+  public static void AddUCT(FlatBufferBuilder builder, bool UCT) { builder.AddBool(5, UCT, false); }
+  public static void AddTASK_ID(FlatBufferBuilder builder, StringOffset TASK_IDOffset) { builder.AddOffset(6, TASK_IDOffset.Value, 0); }
+  public static void AddTRANSACTION_ID(FlatBufferBuilder builder, StringOffset TRANSACTION_IDOffset) { builder.AddOffset(7, TRANSACTION_IDOffset.Value, 0); }
+  public static void AddCOLLECTION_MODE(FlatBufferBuilder builder, doaCollectionMode COLLECTION_MODE) { builder.AddSbyte(8, (sbyte)COLLECTION_MODE, 0); }
+  public static void AddID_SENSOR1(FlatBufferBuilder builder, StringOffset ID_SENSOR1Offset) { builder.AddOffset(9, ID_SENSOR1Offset.Value, 0); }
+  public static void AddORIG_SENSOR_ID1(FlatBufferBuilder builder, StringOffset ORIG_SENSOR_ID1Offset) { builder.AddOffset(10, ORIG_SENSOR_ID1Offset.Value, 0); }
+  public static void AddSENLAT(FlatBufferBuilder builder, double SENLAT) { builder.AddDouble(11, SENLAT, 0.0); }
+  public static void AddSENLON(FlatBufferBuilder builder, double SENLON) { builder.AddDouble(12, SENLON, 0.0); }
+  public static void AddSENALT(FlatBufferBuilder builder, double SENALT) { builder.AddDouble(13, SENALT, 0.0); }
+  public static void AddSENSOR1_DELAY(FlatBufferBuilder builder, double SENSOR1_DELAY) { builder.AddDouble(14, SENSOR1_DELAY, 0.0); }
+  public static void AddID_SENSOR2(FlatBufferBuilder builder, StringOffset ID_SENSOR2Offset) { builder.AddOffset(15, ID_SENSOR2Offset.Value, 0); }
+  public static void AddORIG_SENSOR_ID2(FlatBufferBuilder builder, StringOffset ORIG_SENSOR_ID2Offset) { builder.AddOffset(16, ORIG_SENSOR_ID2Offset.Value, 0); }
+  public static void AddSEN2LAT(FlatBufferBuilder builder, double SEN2LAT) { builder.AddDouble(17, SEN2LAT, 0.0); }
+  public static void AddSEN2LON(FlatBufferBuilder builder, double SEN2LON) { builder.AddDouble(18, SEN2LON, 0.0); }
+  public static void AddSEN2ALT(FlatBufferBuilder builder, double SEN2ALT) { builder.AddDouble(19, SEN2ALT, 0.0); }
+  public static void AddSENSOR2_DELAY(FlatBufferBuilder builder, double SENSOR2_DELAY) { builder.AddDouble(20, SENSOR2_DELAY, 0.0); }
+  public static void AddFREQUENCY(FlatBufferBuilder builder, double FREQUENCY) { builder.AddDouble(21, FREQUENCY, 0.0); }
+  public static void AddBANDWIDTH(FlatBufferBuilder builder, double BANDWIDTH) { builder.AddDouble(22, BANDWIDTH, 0.0); }
+  public static void AddSNR(FlatBufferBuilder builder, double SNR) { builder.AddDouble(23, SNR, 0.0); }
+  public static void AddDELTA_RANGE(FlatBufferBuilder builder, double DELTA_RANGE) { builder.AddDouble(24, DELTA_RANGE, 0.0); }
+  public static void AddDELTA_RANGE_UNC(FlatBufferBuilder builder, double DELTA_RANGE_UNC) { builder.AddDouble(25, DELTA_RANGE_UNC, 0.0); }
+  public static void AddDELTA_RANGE_RATE(FlatBufferBuilder builder, double DELTA_RANGE_RATE) { builder.AddDouble(26, DELTA_RANGE_RATE, 0.0); }
+  public static void AddDELTA_RANGE_RATE_UNC(FlatBufferBuilder builder, double DELTA_RANGE_RATE_UNC) { builder.AddDouble(27, DELTA_RANGE_RATE_UNC, 0.0); }
+  public static void AddTDOA(FlatBufferBuilder builder, double TDOA) { builder.AddDouble(28, TDOA, 0.0); }
+  public static void AddTDOA_UNC(FlatBufferBuilder builder, double TDOA_UNC) { builder.AddDouble(29, TDOA_UNC, 0.0); }
+  public static void AddFDOA(FlatBufferBuilder builder, double FDOA) { builder.AddDouble(30, FDOA, 0.0); }
+  public static void AddFDOA_UNC(FlatBufferBuilder builder, double FDOA_UNC) { builder.AddDouble(31, FDOA_UNC, 0.0); }
+  public static void AddRAW_FILE_URI(FlatBufferBuilder builder, StringOffset RAW_FILE_URIOffset) { builder.AddOffset(32, RAW_FILE_URIOffset.Value, 0); }
+  public static void AddDESCRIPTOR(FlatBufferBuilder builder, StringOffset DESCRIPTOROffset) { builder.AddOffset(33, DESCRIPTOROffset.Value, 0); }
+  public static void AddTAGS(FlatBufferBuilder builder, VectorOffset TAGSOffset) { builder.AddOffset(34, TAGSOffset.Value, 0); }
   public static VectorOffset CreateTAGSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartTAGSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddON_ORBIT(FlatBufferBuilder builder, StringOffset ON_ORBITOffset) { builder.AddOffset(32, ON_ORBITOffset.Value, 0); }
-  public static void AddDESCRIPTOR(FlatBufferBuilder builder, StringOffset DESCRIPTOROffset) { builder.AddOffset(33, DESCRIPTOROffset.Value, 0); }
-  public static void AddTRANSACTION_ID(FlatBufferBuilder builder, StringOffset TRANSACTION_IDOffset) { builder.AddOffset(34, TRANSACTION_IDOffset.Value, 0); }
   public static Offset<DOA> EndDOA(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<DOA>(o);
@@ -264,99 +293,98 @@ public struct DOA : IFlatbufferObject
   public void UnPackTo(DOAT _o) {
     _o.ID = this.ID;
     _o.OB_TIME = this.OB_TIME;
-    _o.ID_SENSOR1 = this.ID_SENSOR1;
-    _o.ID_SENSOR2 = this.ID_SENSOR2;
     _o.SAT_NO = this.SAT_NO;
-    _o.TASK_ID = this.TASK_ID;
     _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID;
-    _o.ORIG_SENSOR_ID1 = this.ORIG_SENSOR_ID1;
-    _o.ORIG_SENSOR_ID2 = this.ORIG_SENSOR_ID2;
+    _o.ON_ORBIT = this.ON_ORBIT;
     _o.UCT = this.UCT;
-    _o.SENSOR1_DELAY = this.SENSOR1_DELAY;
-    _o.SENSOR2_DELAY = this.SENSOR2_DELAY;
+    _o.TASK_ID = this.TASK_ID;
+    _o.TRANSACTION_ID = this.TRANSACTION_ID;
+    _o.COLLECTION_MODE = this.COLLECTION_MODE;
+    _o.ID_SENSOR1 = this.ID_SENSOR1;
+    _o.ORIG_SENSOR_ID1 = this.ORIG_SENSOR_ID1;
     _o.SENLAT = this.SENLAT;
     _o.SENLON = this.SENLON;
     _o.SENALT = this.SENALT;
+    _o.SENSOR1_DELAY = this.SENSOR1_DELAY;
+    _o.ID_SENSOR2 = this.ID_SENSOR2;
+    _o.ORIG_SENSOR_ID2 = this.ORIG_SENSOR_ID2;
     _o.SEN2LAT = this.SEN2LAT;
     _o.SEN2LON = this.SEN2LON;
     _o.SEN2ALT = this.SEN2ALT;
+    _o.SENSOR2_DELAY = this.SENSOR2_DELAY;
     _o.FREQUENCY = this.FREQUENCY;
     _o.BANDWIDTH = this.BANDWIDTH;
+    _o.SNR = this.SNR;
     _o.DELTA_RANGE = this.DELTA_RANGE;
     _o.DELTA_RANGE_UNC = this.DELTA_RANGE_UNC;
     _o.DELTA_RANGE_RATE = this.DELTA_RANGE_RATE;
     _o.DELTA_RANGE_RATE_UNC = this.DELTA_RANGE_RATE_UNC;
-    _o.SNR = this.SNR;
     _o.TDOA = this.TDOA;
     _o.TDOA_UNC = this.TDOA_UNC;
     _o.FDOA = this.FDOA;
     _o.FDOA_UNC = this.FDOA_UNC;
-    _o.COLLECTION_MODE = this.COLLECTION_MODE;
     _o.RAW_FILE_URI = this.RAW_FILE_URI;
+    _o.DESCRIPTOR = this.DESCRIPTOR;
     _o.TAGS = new List<string>();
     for (var _j = 0; _j < this.TAGSLength; ++_j) {_o.TAGS.Add(this.TAGS(_j));}
-    _o.ON_ORBIT = this.ON_ORBIT;
-    _o.DESCRIPTOR = this.DESCRIPTOR;
-    _o.TRANSACTION_ID = this.TRANSACTION_ID;
   }
   public static Offset<DOA> Pack(FlatBufferBuilder builder, DOAT _o) {
     if (_o == null) return default(Offset<DOA>);
     var _ID = _o.ID == null ? default(StringOffset) : builder.CreateString(_o.ID);
     var _OB_TIME = _o.OB_TIME == null ? default(StringOffset) : builder.CreateString(_o.OB_TIME);
-    var _ID_SENSOR1 = _o.ID_SENSOR1 == null ? default(StringOffset) : builder.CreateString(_o.ID_SENSOR1);
-    var _ID_SENSOR2 = _o.ID_SENSOR2 == null ? default(StringOffset) : builder.CreateString(_o.ID_SENSOR2);
-    var _TASK_ID = _o.TASK_ID == null ? default(StringOffset) : builder.CreateString(_o.TASK_ID);
     var _ORIG_OBJECT_ID = _o.ORIG_OBJECT_ID == null ? default(StringOffset) : builder.CreateString(_o.ORIG_OBJECT_ID);
+    var _ON_ORBIT = _o.ON_ORBIT == null ? default(StringOffset) : builder.CreateString(_o.ON_ORBIT);
+    var _TASK_ID = _o.TASK_ID == null ? default(StringOffset) : builder.CreateString(_o.TASK_ID);
+    var _TRANSACTION_ID = _o.TRANSACTION_ID == null ? default(StringOffset) : builder.CreateString(_o.TRANSACTION_ID);
+    var _ID_SENSOR1 = _o.ID_SENSOR1 == null ? default(StringOffset) : builder.CreateString(_o.ID_SENSOR1);
     var _ORIG_SENSOR_ID1 = _o.ORIG_SENSOR_ID1 == null ? default(StringOffset) : builder.CreateString(_o.ORIG_SENSOR_ID1);
+    var _ID_SENSOR2 = _o.ID_SENSOR2 == null ? default(StringOffset) : builder.CreateString(_o.ID_SENSOR2);
     var _ORIG_SENSOR_ID2 = _o.ORIG_SENSOR_ID2 == null ? default(StringOffset) : builder.CreateString(_o.ORIG_SENSOR_ID2);
-    var _COLLECTION_MODE = _o.COLLECTION_MODE == null ? default(StringOffset) : builder.CreateString(_o.COLLECTION_MODE);
     var _RAW_FILE_URI = _o.RAW_FILE_URI == null ? default(StringOffset) : builder.CreateString(_o.RAW_FILE_URI);
+    var _DESCRIPTOR = _o.DESCRIPTOR == null ? default(StringOffset) : builder.CreateString(_o.DESCRIPTOR);
     var _TAGS = default(VectorOffset);
     if (_o.TAGS != null) {
       var __TAGS = new StringOffset[_o.TAGS.Count];
       for (var _j = 0; _j < __TAGS.Length; ++_j) { __TAGS[_j] = builder.CreateString(_o.TAGS[_j]); }
       _TAGS = CreateTAGSVector(builder, __TAGS);
     }
-    var _ON_ORBIT = _o.ON_ORBIT == null ? default(StringOffset) : builder.CreateString(_o.ON_ORBIT);
-    var _DESCRIPTOR = _o.DESCRIPTOR == null ? default(StringOffset) : builder.CreateString(_o.DESCRIPTOR);
-    var _TRANSACTION_ID = _o.TRANSACTION_ID == null ? default(StringOffset) : builder.CreateString(_o.TRANSACTION_ID);
     return CreateDOA(
       builder,
       _ID,
       _OB_TIME,
-      _ID_SENSOR1,
-      _ID_SENSOR2,
       _o.SAT_NO,
-      _TASK_ID,
       _ORIG_OBJECT_ID,
-      _ORIG_SENSOR_ID1,
-      _ORIG_SENSOR_ID2,
+      _ON_ORBIT,
       _o.UCT,
-      _o.SENSOR1_DELAY,
-      _o.SENSOR2_DELAY,
+      _TASK_ID,
+      _TRANSACTION_ID,
+      _o.COLLECTION_MODE,
+      _ID_SENSOR1,
+      _ORIG_SENSOR_ID1,
       _o.SENLAT,
       _o.SENLON,
       _o.SENALT,
+      _o.SENSOR1_DELAY,
+      _ID_SENSOR2,
+      _ORIG_SENSOR_ID2,
       _o.SEN2LAT,
       _o.SEN2LON,
       _o.SEN2ALT,
+      _o.SENSOR2_DELAY,
       _o.FREQUENCY,
       _o.BANDWIDTH,
+      _o.SNR,
       _o.DELTA_RANGE,
       _o.DELTA_RANGE_UNC,
       _o.DELTA_RANGE_RATE,
       _o.DELTA_RANGE_RATE_UNC,
-      _o.SNR,
       _o.TDOA,
       _o.TDOA_UNC,
       _o.FDOA,
       _o.FDOA_UNC,
-      _COLLECTION_MODE,
       _RAW_FILE_URI,
-      _TAGS,
-      _ON_ORBIT,
       _DESCRIPTOR,
-      _TRANSACTION_ID);
+      _TAGS);
   }
 }
 
@@ -364,76 +392,76 @@ public class DOAT
 {
   public string ID { get; set; }
   public string OB_TIME { get; set; }
-  public string ID_SENSOR1 { get; set; }
-  public string ID_SENSOR2 { get; set; }
-  public int SAT_NO { get; set; }
-  public string TASK_ID { get; set; }
+  public uint SAT_NO { get; set; }
   public string ORIG_OBJECT_ID { get; set; }
-  public string ORIG_SENSOR_ID1 { get; set; }
-  public string ORIG_SENSOR_ID2 { get; set; }
+  public string ON_ORBIT { get; set; }
   public bool UCT { get; set; }
-  public double SENSOR1_DELAY { get; set; }
-  public double SENSOR2_DELAY { get; set; }
+  public string TASK_ID { get; set; }
+  public string TRANSACTION_ID { get; set; }
+  public doaCollectionMode COLLECTION_MODE { get; set; }
+  public string ID_SENSOR1 { get; set; }
+  public string ORIG_SENSOR_ID1 { get; set; }
   public double SENLAT { get; set; }
   public double SENLON { get; set; }
   public double SENALT { get; set; }
+  public double SENSOR1_DELAY { get; set; }
+  public string ID_SENSOR2 { get; set; }
+  public string ORIG_SENSOR_ID2 { get; set; }
   public double SEN2LAT { get; set; }
   public double SEN2LON { get; set; }
   public double SEN2ALT { get; set; }
+  public double SENSOR2_DELAY { get; set; }
   public double FREQUENCY { get; set; }
   public double BANDWIDTH { get; set; }
+  public double SNR { get; set; }
   public double DELTA_RANGE { get; set; }
   public double DELTA_RANGE_UNC { get; set; }
   public double DELTA_RANGE_RATE { get; set; }
   public double DELTA_RANGE_RATE_UNC { get; set; }
-  public double SNR { get; set; }
   public double TDOA { get; set; }
   public double TDOA_UNC { get; set; }
   public double FDOA { get; set; }
   public double FDOA_UNC { get; set; }
-  public string COLLECTION_MODE { get; set; }
   public string RAW_FILE_URI { get; set; }
-  public List<string> TAGS { get; set; }
-  public string ON_ORBIT { get; set; }
   public string DESCRIPTOR { get; set; }
-  public string TRANSACTION_ID { get; set; }
+  public List<string> TAGS { get; set; }
 
   public DOAT() {
     this.ID = null;
     this.OB_TIME = null;
-    this.ID_SENSOR1 = null;
-    this.ID_SENSOR2 = null;
     this.SAT_NO = 0;
-    this.TASK_ID = null;
     this.ORIG_OBJECT_ID = null;
-    this.ORIG_SENSOR_ID1 = null;
-    this.ORIG_SENSOR_ID2 = null;
+    this.ON_ORBIT = null;
     this.UCT = false;
-    this.SENSOR1_DELAY = 0.0;
-    this.SENSOR2_DELAY = 0.0;
+    this.TASK_ID = null;
+    this.TRANSACTION_ID = null;
+    this.COLLECTION_MODE = doaCollectionMode.TDOA;
+    this.ID_SENSOR1 = null;
+    this.ORIG_SENSOR_ID1 = null;
     this.SENLAT = 0.0;
     this.SENLON = 0.0;
     this.SENALT = 0.0;
+    this.SENSOR1_DELAY = 0.0;
+    this.ID_SENSOR2 = null;
+    this.ORIG_SENSOR_ID2 = null;
     this.SEN2LAT = 0.0;
     this.SEN2LON = 0.0;
     this.SEN2ALT = 0.0;
+    this.SENSOR2_DELAY = 0.0;
     this.FREQUENCY = 0.0;
     this.BANDWIDTH = 0.0;
+    this.SNR = 0.0;
     this.DELTA_RANGE = 0.0;
     this.DELTA_RANGE_UNC = 0.0;
     this.DELTA_RANGE_RATE = 0.0;
     this.DELTA_RANGE_RATE_UNC = 0.0;
-    this.SNR = 0.0;
     this.TDOA = 0.0;
     this.TDOA_UNC = 0.0;
     this.FDOA = 0.0;
     this.FDOA_UNC = 0.0;
-    this.COLLECTION_MODE = null;
     this.RAW_FILE_URI = null;
-    this.TAGS = null;
-    this.ON_ORBIT = null;
     this.DESCRIPTOR = null;
-    this.TRANSACTION_ID = null;
+    this.TAGS = null;
   }
   public static DOAT DeserializeFromBinary(byte[] fbBuffer) {
     return DOA.GetRootAsDOA(new ByteBuffer(fbBuffer)).UnPack();
@@ -453,39 +481,39 @@ static public class DOAVerify
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*ID*/, false)
       && verifier.VerifyString(tablePos, 6 /*OB_TIME*/, false)
-      && verifier.VerifyString(tablePos, 8 /*ID_SENSOR1*/, false)
-      && verifier.VerifyString(tablePos, 10 /*ID_SENSOR2*/, false)
-      && verifier.VerifyField(tablePos, 12 /*SAT_NO*/, 4 /*int*/, 4, false)
-      && verifier.VerifyString(tablePos, 14 /*TASK_ID*/, false)
-      && verifier.VerifyString(tablePos, 16 /*ORIG_OBJECT_ID*/, false)
-      && verifier.VerifyString(tablePos, 18 /*ORIG_SENSOR_ID1*/, false)
-      && verifier.VerifyString(tablePos, 20 /*ORIG_SENSOR_ID2*/, false)
-      && verifier.VerifyField(tablePos, 22 /*UCT*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyField(tablePos, 24 /*SENSOR1_DELAY*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 26 /*SENSOR2_DELAY*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 28 /*SENLAT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 30 /*SENLON*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 32 /*SENALT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 34 /*SEN2LAT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 36 /*SEN2LON*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 38 /*SEN2ALT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 40 /*FREQUENCY*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 42 /*BANDWIDTH*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 44 /*DELTA_RANGE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 46 /*DELTA_RANGE_UNC*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 48 /*DELTA_RANGE_RATE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 50 /*DELTA_RANGE_RATE_UNC*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 52 /*SNR*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 54 /*TDOA*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 56 /*TDOA_UNC*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 58 /*FDOA*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 60 /*FDOA_UNC*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 62 /*COLLECTION_MODE*/, false)
-      && verifier.VerifyString(tablePos, 64 /*RAW_FILE_URI*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 66 /*TAGS*/, false)
-      && verifier.VerifyString(tablePos, 68 /*ON_ORBIT*/, false)
+      && verifier.VerifyField(tablePos, 8 /*SAT_NO*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 10 /*ORIG_OBJECT_ID*/, false)
+      && verifier.VerifyString(tablePos, 12 /*ON_ORBIT*/, false)
+      && verifier.VerifyField(tablePos, 14 /*UCT*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyString(tablePos, 16 /*TASK_ID*/, false)
+      && verifier.VerifyString(tablePos, 18 /*TRANSACTION_ID*/, false)
+      && verifier.VerifyField(tablePos, 20 /*COLLECTION_MODE*/, 1 /*doaCollectionMode*/, 1, false)
+      && verifier.VerifyString(tablePos, 22 /*ID_SENSOR1*/, false)
+      && verifier.VerifyString(tablePos, 24 /*ORIG_SENSOR_ID1*/, false)
+      && verifier.VerifyField(tablePos, 26 /*SENLAT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 28 /*SENLON*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 30 /*SENALT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 32 /*SENSOR1_DELAY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 34 /*ID_SENSOR2*/, false)
+      && verifier.VerifyString(tablePos, 36 /*ORIG_SENSOR_ID2*/, false)
+      && verifier.VerifyField(tablePos, 38 /*SEN2LAT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 40 /*SEN2LON*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 42 /*SEN2ALT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 44 /*SENSOR2_DELAY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 46 /*FREQUENCY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 48 /*BANDWIDTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 50 /*SNR*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 52 /*DELTA_RANGE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 54 /*DELTA_RANGE_UNC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 56 /*DELTA_RANGE_RATE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 58 /*DELTA_RANGE_RATE_UNC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 60 /*TDOA*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 62 /*TDOA_UNC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 64 /*FDOA*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 66 /*FDOA_UNC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 68 /*RAW_FILE_URI*/, false)
       && verifier.VerifyString(tablePos, 70 /*DESCRIPTOR*/, false)
-      && verifier.VerifyString(tablePos, 72 /*TRANSACTION_ID*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 72 /*TAGS*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

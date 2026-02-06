@@ -41,12 +41,14 @@ class STR extends Table
         return $this;
     }
 
+    /// Unique internal identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// CelesTrak Star catalog identifier
     /**
      * @return long
      */
@@ -56,15 +58,17 @@ class STR extends Table
         return $o != 0 ? $this->bb->getLong($o + $this->bb_pos) : 0;
     }
 
+    /// GNC star catalog identifier
     /**
-     * @return int
+     * @return uint
      */
     public function getGNC_CAT_ID()
     {
         $o = $this->__offset(8);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
+    /// Gaia DR3 source identifier
     /**
      * @return long
      */
@@ -74,144 +78,161 @@ class STR extends Table
         return $o != 0 ? $this->bb->getLong($o + $this->bb_pos) : 0;
     }
 
+    /// Hipparcos catalog identifier
     /**
-     * @return int
+     * @return uint
      */
     public function getHIP_CAT_ID()
     {
         $o = $this->__offset(12);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
+    /// Catalog version string
     public function getCAT_VERSION()
     {
         $o = $this->__offset(14);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /**
-     * @return double
-     */
-    public function getRA()
-    {
-        $o = $this->__offset(16);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getRA_UNC()
-    {
-        $o = $this->__offset(18);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getDEC()
-    {
-        $o = $this->__offset(20);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getDEC_UNC()
-    {
-        $o = $this->__offset(22);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getPOS_UNC_FLAG()
-    {
-        $o = $this->__offset(24);
-        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPARALLAX()
-    {
-        $o = $this->__offset(26);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPARALLAX_UNC()
-    {
-        $o = $this->__offset(28);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPMRA()
-    {
-        $o = $this->__offset(30);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPMRA_UNC()
-    {
-        $o = $this->__offset(32);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPMDEC()
-    {
-        $o = $this->__offset(34);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPMDEC_UNC()
-    {
-        $o = $this->__offset(36);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getPM_UNC_FLAG()
-    {
-        $o = $this->__offset(38);
-        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
-    }
-
+    /// Astrometry source description
     public function getASTROMETRY_ORIGIN()
     {
-        $o = $this->__offset(40);
+        $o = $this->__offset(16);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Epoch of stellar position (Julian years)
     /**
      * @return double
      */
     public function getSTAR_EPOCH()
     {
-        $o = $this->__offset(42);
+        $o = $this->__offset(18);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Right ascension (degrees, ICRS)
+    /**
+     * @return double
+     */
+    public function getRA()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Right ascension uncertainty (arcseconds)
+    /**
+     * @return double
+     */
+    public function getRA_UNC()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Declination (degrees, ICRS)
+    /**
+     * @return double
+     */
+    public function getDEC()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Declination uncertainty (arcseconds)
+    /**
+     * @return double
+     */
+    public function getDEC_UNC()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// True if position uncertainty is flagged
+    /**
+     * @return bool
+     */
+    public function getPOS_UNC_FLAG()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Parallax (milliarcseconds)
+    /**
+     * @return double
+     */
+    public function getPARALLAX()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Parallax uncertainty (milliarcseconds)
+    /**
+     * @return double
+     */
+    public function getPARALLAX_UNC()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Proper motion in RA (milliarcseconds/year)
+    /**
+     * @return double
+     */
+    public function getPMRA()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Proper motion in RA uncertainty (milliarcseconds/year)
+    /**
+     * @return double
+     */
+    public function getPMRA_UNC()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Proper motion in DEC (milliarcseconds/year)
+    /**
+     * @return double
+     */
+    public function getPMDEC()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Proper motion in DEC uncertainty (milliarcseconds/year)
+    /**
+     * @return double
+     */
+    public function getPMDEC_UNC()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// True if proper motion uncertainty is flagged
+    /**
+     * @return bool
+     */
+    public function getPM_UNC_FLAG()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Gaia G-band magnitude
     /**
      * @return double
      */
@@ -221,6 +242,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Gaia G-band magnitude uncertainty
     /**
      * @return double
      */
@@ -230,6 +252,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Gaia BP-band magnitude (blue photometer)
     /**
      * @return double
      */
@@ -239,6 +262,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Gaia BP-band magnitude uncertainty
     /**
      * @return double
      */
@@ -248,6 +272,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Gaia RP-band magnitude (red photometer)
     /**
      * @return double
      */
@@ -257,6 +282,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Gaia RP-band magnitude uncertainty
     /**
      * @return double
      */
@@ -266,6 +292,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// 2MASS J-band magnitude (1.25 um)
     /**
      * @return double
      */
@@ -275,6 +302,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// J-band magnitude uncertainty
     /**
      * @return double
      */
@@ -284,6 +312,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// 2MASS K-band magnitude (2.17 um)
     /**
      * @return double
      */
@@ -293,6 +322,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// K-band magnitude uncertainty
     /**
      * @return double
      */
@@ -302,6 +332,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// 2MASS H-band magnitude (1.65 um)
     /**
      * @return double
      */
@@ -311,6 +342,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// H-band magnitude uncertainty
     /**
      * @return double
      */
@@ -320,6 +352,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// True if star is variable
     /**
      * @return bool
      */
@@ -329,6 +362,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// True if star is in a multiple system
     /**
      * @return bool
      */
@@ -338,15 +372,17 @@ class STR extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Nearest neighbor catalog identifier
     /**
-     * @return int
+     * @return uint
      */
     public function getNEIGHBOR_ID()
     {
         $o = $this->__offset(72);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
+    /// True if nearest neighbor is within confusion radius
     /**
      * @return bool
      */
@@ -356,6 +392,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Distance to nearest neighbor (arcseconds)
     /**
      * @return double
      */
@@ -365,6 +402,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// True if position shift detected between catalogs
     /**
      * @return bool
      */
@@ -374,6 +412,7 @@ class STR extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Position shift magnitude (arcseconds)
     /**
      * @return double
      */
@@ -396,7 +435,7 @@ class STR extends Table
      * @param FlatBufferBuilder $builder
      * @return STR
      */
-    public static function createSTR(FlatBufferBuilder $builder, $ID, $CS_ID, $GNC_CAT_ID, $GAIADR3_CAT_ID, $HIP_CAT_ID, $CAT_VERSION, $RA, $RA_UNC, $DEC, $DEC_UNC, $POS_UNC_FLAG, $PARALLAX, $PARALLAX_UNC, $PMRA, $PMRA_UNC, $PMDEC, $PMDEC_UNC, $PM_UNC_FLAG, $ASTROMETRY_ORIGIN, $STAR_EPOCH, $GMAG, $GMAG_UNC, $BPMAG, $BPMAG_UNC, $RPMAG, $RPMAG_UNC, $JMAG, $JMAG_UNC, $KMAG, $KMAG_UNC, $HMAG, $HMAG_UNC, $VAR_FLAG, $MULT_FLAG, $NEIGHBOR_ID, $NEIGHBOR_FLAG, $NEIGHBOR_DISTANCE, $SHIFT_FLAG, $SHIFT)
+    public static function createSTR(FlatBufferBuilder $builder, $ID, $CS_ID, $GNC_CAT_ID, $GAIADR3_CAT_ID, $HIP_CAT_ID, $CAT_VERSION, $ASTROMETRY_ORIGIN, $STAR_EPOCH, $RA, $RA_UNC, $DEC, $DEC_UNC, $POS_UNC_FLAG, $PARALLAX, $PARALLAX_UNC, $PMRA, $PMRA_UNC, $PMDEC, $PMDEC_UNC, $PM_UNC_FLAG, $GMAG, $GMAG_UNC, $BPMAG, $BPMAG_UNC, $RPMAG, $RPMAG_UNC, $JMAG, $JMAG_UNC, $KMAG, $KMAG_UNC, $HMAG, $HMAG_UNC, $VAR_FLAG, $MULT_FLAG, $NEIGHBOR_ID, $NEIGHBOR_FLAG, $NEIGHBOR_DISTANCE, $SHIFT_FLAG, $SHIFT)
     {
         $builder->startObject(39);
         self::addID($builder, $ID);
@@ -405,6 +444,8 @@ class STR extends Table
         self::addGAIADR3_CAT_ID($builder, $GAIADR3_CAT_ID);
         self::addHIP_CAT_ID($builder, $HIP_CAT_ID);
         self::addCAT_VERSION($builder, $CAT_VERSION);
+        self::addASTROMETRY_ORIGIN($builder, $ASTROMETRY_ORIGIN);
+        self::addSTAR_EPOCH($builder, $STAR_EPOCH);
         self::addRA($builder, $RA);
         self::addRA_UNC($builder, $RA_UNC);
         self::addDEC($builder, $DEC);
@@ -417,8 +458,6 @@ class STR extends Table
         self::addPMDEC($builder, $PMDEC);
         self::addPMDEC_UNC($builder, $PMDEC_UNC);
         self::addPM_UNC_FLAG($builder, $PM_UNC_FLAG);
-        self::addASTROMETRY_ORIGIN($builder, $ASTROMETRY_ORIGIN);
-        self::addSTAR_EPOCH($builder, $STAR_EPOCH);
         self::addGMAG($builder, $GMAG);
         self::addGMAG_UNC($builder, $GMAG_UNC);
         self::addBPMAG($builder, $BPMAG);
@@ -464,12 +503,12 @@ class STR extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param uint
      * @return void
      */
     public static function addGNC_CAT_ID(FlatBufferBuilder $builder, $GNC_CAT_ID)
     {
-        $builder->addIntX(2, $GNC_CAT_ID, 0);
+        $builder->addUintX(2, $GNC_CAT_ID, 0);
     }
 
     /**
@@ -484,12 +523,12 @@ class STR extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param uint
      * @return void
      */
     public static function addHIP_CAT_ID(FlatBufferBuilder $builder, $HIP_CAT_ID)
     {
-        $builder->addIntX(4, $HIP_CAT_ID, 0);
+        $builder->addUintX(4, $HIP_CAT_ID, 0);
     }
 
     /**
@@ -504,132 +543,12 @@ class STR extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addRA(FlatBufferBuilder $builder, $RA)
-    {
-        $builder->addDoubleX(6, $RA, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addRA_UNC(FlatBufferBuilder $builder, $RA_UNC)
-    {
-        $builder->addDoubleX(7, $RA_UNC, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addDEC(FlatBufferBuilder $builder, $DEC)
-    {
-        $builder->addDoubleX(8, $DEC, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addDEC_UNC(FlatBufferBuilder $builder, $DEC_UNC)
-    {
-        $builder->addDoubleX(9, $DEC_UNC, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param bool
-     * @return void
-     */
-    public static function addPOS_UNC_FLAG(FlatBufferBuilder $builder, $POS_UNC_FLAG)
-    {
-        $builder->addBoolX(10, $POS_UNC_FLAG, false);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPARALLAX(FlatBufferBuilder $builder, $PARALLAX)
-    {
-        $builder->addDoubleX(11, $PARALLAX, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPARALLAX_UNC(FlatBufferBuilder $builder, $PARALLAX_UNC)
-    {
-        $builder->addDoubleX(12, $PARALLAX_UNC, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPMRA(FlatBufferBuilder $builder, $PMRA)
-    {
-        $builder->addDoubleX(13, $PMRA, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPMRA_UNC(FlatBufferBuilder $builder, $PMRA_UNC)
-    {
-        $builder->addDoubleX(14, $PMRA_UNC, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPMDEC(FlatBufferBuilder $builder, $PMDEC)
-    {
-        $builder->addDoubleX(15, $PMDEC, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPMDEC_UNC(FlatBufferBuilder $builder, $PMDEC_UNC)
-    {
-        $builder->addDoubleX(16, $PMDEC_UNC, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param bool
-     * @return void
-     */
-    public static function addPM_UNC_FLAG(FlatBufferBuilder $builder, $PM_UNC_FLAG)
-    {
-        $builder->addBoolX(17, $PM_UNC_FLAG, false);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
      * @param StringOffset
      * @return void
      */
     public static function addASTROMETRY_ORIGIN(FlatBufferBuilder $builder, $ASTROMETRY_ORIGIN)
     {
-        $builder->addOffsetX(18, $ASTROMETRY_ORIGIN, 0);
+        $builder->addOffsetX(6, $ASTROMETRY_ORIGIN, 0);
     }
 
     /**
@@ -639,7 +558,127 @@ class STR extends Table
      */
     public static function addSTAR_EPOCH(FlatBufferBuilder $builder, $STAR_EPOCH)
     {
-        $builder->addDoubleX(19, $STAR_EPOCH, 0.0);
+        $builder->addDoubleX(7, $STAR_EPOCH, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addRA(FlatBufferBuilder $builder, $RA)
+    {
+        $builder->addDoubleX(8, $RA, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addRA_UNC(FlatBufferBuilder $builder, $RA_UNC)
+    {
+        $builder->addDoubleX(9, $RA_UNC, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDEC(FlatBufferBuilder $builder, $DEC)
+    {
+        $builder->addDoubleX(10, $DEC, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDEC_UNC(FlatBufferBuilder $builder, $DEC_UNC)
+    {
+        $builder->addDoubleX(11, $DEC_UNC, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addPOS_UNC_FLAG(FlatBufferBuilder $builder, $POS_UNC_FLAG)
+    {
+        $builder->addBoolX(12, $POS_UNC_FLAG, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPARALLAX(FlatBufferBuilder $builder, $PARALLAX)
+    {
+        $builder->addDoubleX(13, $PARALLAX, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPARALLAX_UNC(FlatBufferBuilder $builder, $PARALLAX_UNC)
+    {
+        $builder->addDoubleX(14, $PARALLAX_UNC, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPMRA(FlatBufferBuilder $builder, $PMRA)
+    {
+        $builder->addDoubleX(15, $PMRA, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPMRA_UNC(FlatBufferBuilder $builder, $PMRA_UNC)
+    {
+        $builder->addDoubleX(16, $PMRA_UNC, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPMDEC(FlatBufferBuilder $builder, $PMDEC)
+    {
+        $builder->addDoubleX(17, $PMDEC, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPMDEC_UNC(FlatBufferBuilder $builder, $PMDEC_UNC)
+    {
+        $builder->addDoubleX(18, $PMDEC_UNC, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addPM_UNC_FLAG(FlatBufferBuilder $builder, $PM_UNC_FLAG)
+    {
+        $builder->addBoolX(19, $PM_UNC_FLAG, false);
     }
 
     /**
@@ -784,12 +823,12 @@ class STR extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param uint
      * @return void
      */
     public static function addNEIGHBOR_ID(FlatBufferBuilder $builder, $NEIGHBOR_ID)
     {
-        $builder->addIntX(34, $NEIGHBOR_ID, 0);
+        $builder->addUintX(34, $NEIGHBOR_ID, 0);
     }
 
     /**

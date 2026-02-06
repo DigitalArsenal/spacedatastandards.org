@@ -29,29 +29,138 @@ public final class DFH extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public DFH __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
-  public String EFFECTIVE_UNTIL() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer EFFECTIVE_UNTILAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
-  public ByteBuffer EFFECTIVE_UNTILInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
-  public double DRIFT_RATE() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Satellite number
+   */
+  public long SAT_NO() { int o = __offset(6); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Object designator
+   */
+  public String OBJECT_DESIGNATOR() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OBJECT_DESIGNATORAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
+  public ByteBuffer OBJECT_DESIGNATORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * Object common name
+   */
+  public String OBJECT_NAME() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OBJECT_NAMEAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer OBJECT_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * History start time (ISO 8601)
+   */
+  public String START_TIME() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer START_TIMEAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer START_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * History end time (ISO 8601)
+   */
+  public String END_TIME() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer END_TIMEAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer END_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * Current effective until date (ISO 8601)
+   */
+  public String EFFECTIVE_UNTIL() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EFFECTIVE_UNTILAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
+  public ByteBuffer EFFECTIVE_UNTILInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  /**
+   * Current drift rate in degrees/day
+   */
+  public double DRIFT_RATE() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Current mean longitude in degrees East
+   */
+  public double MEAN_LONGITUDE() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Longitude slot center in degrees East (if station-keeping)
+   */
+  public double SLOT_CENTER() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Longitude slot half-width in degrees
+   */
+  public double SLOT_HALF_WIDTH() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Whether object is actively station-keeping
+   */
+  public boolean STATION_KEEPING() { int o = __offset(26); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Historical drift records
+   */
+  public driftRecord RECORDS(int j) { return RECORDS(new driftRecord(), j); }
+  public driftRecord RECORDS(driftRecord obj, int j) { int o = __offset(28); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int RECORDSLength() { int o = __offset(28); return o != 0 ? __vector_len(o) : 0; }
+  public driftRecord.Vector recordsVector() { return recordsVector(new driftRecord.Vector()); }
+  public driftRecord.Vector recordsVector(driftRecord.Vector obj) { int o = __offset(28); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Number of records in history
+   */
+  public long NUM_RECORDS() { int o = __offset(30); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Additional notes
+   */
+  public String NOTES() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer NOTESAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
+  public ByteBuffer NOTESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
 
   public static int createDFH(FlatBufferBuilder builder,
       int IDOffset,
+      long SAT_NO,
+      int OBJECT_DESIGNATOROffset,
+      int OBJECT_NAMEOffset,
+      int START_TIMEOffset,
+      int END_TIMEOffset,
       int EFFECTIVE_UNTILOffset,
-      double DRIFT_RATE) {
-    builder.startTable(3);
+      double DRIFT_RATE,
+      double MEAN_LONGITUDE,
+      double SLOT_CENTER,
+      double SLOT_HALF_WIDTH,
+      boolean STATION_KEEPING,
+      int RECORDSOffset,
+      long NUM_RECORDS,
+      int NOTESOffset) {
+    builder.startTable(15);
+    DFH.addSlotHalfWidth(builder, SLOT_HALF_WIDTH);
+    DFH.addSlotCenter(builder, SLOT_CENTER);
+    DFH.addMeanLongitude(builder, MEAN_LONGITUDE);
     DFH.addDriftRate(builder, DRIFT_RATE);
+    DFH.addNotes(builder, NOTESOffset);
+    DFH.addNumRecords(builder, NUM_RECORDS);
+    DFH.addRecords(builder, RECORDSOffset);
     DFH.addEffectiveUntil(builder, EFFECTIVE_UNTILOffset);
+    DFH.addEndTime(builder, END_TIMEOffset);
+    DFH.addStartTime(builder, START_TIMEOffset);
+    DFH.addObjectName(builder, OBJECT_NAMEOffset);
+    DFH.addObjectDesignator(builder, OBJECT_DESIGNATOROffset);
+    DFH.addSatNo(builder, SAT_NO);
     DFH.addId(builder, IDOffset);
+    DFH.addStationKeeping(builder, STATION_KEEPING);
     return DFH.endDFH(builder);
   }
 
-  public static void startDFH(FlatBufferBuilder builder) { builder.startTable(3); }
+  public static void startDFH(FlatBufferBuilder builder) { builder.startTable(15); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
-  public static void addEffectiveUntil(FlatBufferBuilder builder, int EFFECTIVE_UNTILOffset) { builder.addOffset(1, EFFECTIVE_UNTILOffset, 0); }
-  public static void addDriftRate(FlatBufferBuilder builder, double DRIFT_RATE) { builder.addDouble(2, DRIFT_RATE, 0.0); }
+  public static void addSatNo(FlatBufferBuilder builder, long SAT_NO) { builder.addInt(1, (int) SAT_NO, (int) 0L); }
+  public static void addObjectDesignator(FlatBufferBuilder builder, int OBJECT_DESIGNATOROffset) { builder.addOffset(2, OBJECT_DESIGNATOROffset, 0); }
+  public static void addObjectName(FlatBufferBuilder builder, int OBJECT_NAMEOffset) { builder.addOffset(3, OBJECT_NAMEOffset, 0); }
+  public static void addStartTime(FlatBufferBuilder builder, int START_TIMEOffset) { builder.addOffset(4, START_TIMEOffset, 0); }
+  public static void addEndTime(FlatBufferBuilder builder, int END_TIMEOffset) { builder.addOffset(5, END_TIMEOffset, 0); }
+  public static void addEffectiveUntil(FlatBufferBuilder builder, int EFFECTIVE_UNTILOffset) { builder.addOffset(6, EFFECTIVE_UNTILOffset, 0); }
+  public static void addDriftRate(FlatBufferBuilder builder, double DRIFT_RATE) { builder.addDouble(7, DRIFT_RATE, 0.0); }
+  public static void addMeanLongitude(FlatBufferBuilder builder, double MEAN_LONGITUDE) { builder.addDouble(8, MEAN_LONGITUDE, 0.0); }
+  public static void addSlotCenter(FlatBufferBuilder builder, double SLOT_CENTER) { builder.addDouble(9, SLOT_CENTER, 0.0); }
+  public static void addSlotHalfWidth(FlatBufferBuilder builder, double SLOT_HALF_WIDTH) { builder.addDouble(10, SLOT_HALF_WIDTH, 0.0); }
+  public static void addStationKeeping(FlatBufferBuilder builder, boolean STATION_KEEPING) { builder.addBoolean(11, STATION_KEEPING, false); }
+  public static void addRecords(FlatBufferBuilder builder, int RECORDSOffset) { builder.addOffset(12, RECORDSOffset, 0); }
+  public static int createRecordsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startRecordsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addNumRecords(FlatBufferBuilder builder, long NUM_RECORDS) { builder.addInt(13, (int) NUM_RECORDS, (int) 0L); }
+  public static void addNotes(FlatBufferBuilder builder, int NOTESOffset) { builder.addOffset(14, NOTESOffset, 0); }
   public static int endDFH(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

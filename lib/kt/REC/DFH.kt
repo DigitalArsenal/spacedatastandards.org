@@ -29,6 +29,9 @@ class DFH : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Unique identifier
+     */
     val ID : String?
         get() {
             val o = __offset(4)
@@ -40,22 +43,162 @@ class DFH : Table() {
         }
     val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val EFFECTIVE_UNTIL : String?
+    /**
+     * Satellite number
+     */
+    val SAT_NO : UInt
         get() {
             val o = __offset(6)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Object designator
+     */
+    val OBJECT_DESIGNATOR : String?
+        get() {
+            val o = __offset(8)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val EFFECTIVE_UNTILAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun EFFECTIVE_UNTILInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    val OBJECT_DESIGNATORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
+    fun OBJECT_DESIGNATORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    /**
+     * Object common name
+     */
+    val OBJECT_NAME : String?
+        get() {
+            val o = __offset(10)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val OBJECT_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
+    fun OBJECT_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    /**
+     * History start time (ISO 8601)
+     */
+    val START_TIME : String?
+        get() {
+            val o = __offset(12)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val START_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
+    fun START_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * History end time (ISO 8601)
+     */
+    val END_TIME : String?
+        get() {
+            val o = __offset(14)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val END_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
+    fun END_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    /**
+     * Current effective until date (ISO 8601)
+     */
+    val EFFECTIVE_UNTIL : String?
+        get() {
+            val o = __offset(16)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val EFFECTIVE_UNTILAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
+    fun EFFECTIVE_UNTILInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    /**
+     * Current drift rate in degrees/day
+     */
     val DRIFT_RATE : Double
         get() {
-            val o = __offset(8)
+            val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Current mean longitude in degrees East
+     */
+    val MEAN_LONGITUDE : Double
+        get() {
+            val o = __offset(20)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Longitude slot center in degrees East (if station-keeping)
+     */
+    val SLOT_CENTER : Double
+        get() {
+            val o = __offset(22)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Longitude slot half-width in degrees
+     */
+    val SLOT_HALF_WIDTH : Double
+        get() {
+            val o = __offset(24)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Whether object is actively station-keeping
+     */
+    val STATION_KEEPING : Boolean
+        get() {
+            val o = __offset(26)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Historical drift records
+     */
+    fun RECORDS(j: Int) : driftRecord? = RECORDS(driftRecord(), j)
+    fun RECORDS(obj: driftRecord, j: Int) : driftRecord? {
+        val o = __offset(28)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val RECORDSLength : Int
+        get() {
+            val o = __offset(28); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Number of records in history
+     */
+    val NUM_RECORDS : UInt
+        get() {
+            val o = __offset(30)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Additional notes
+     */
+    val NOTES : String?
+        get() {
+            val o = __offset(32)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val NOTESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
+    fun NOTESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsDFH(_bb: ByteBuffer): DFH = getRootAsDFH(_bb, DFH())
@@ -64,17 +207,49 @@ class DFH : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun DFHBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$DFH")
-        fun createDFH(builder: FlatBufferBuilder, IDOffset: Int, EFFECTIVE_UNTILOffset: Int, DRIFT_RATE: Double) : Int {
-            builder.startTable(3)
+        fun createDFH(builder: FlatBufferBuilder, IDOffset: Int, SAT_NO: UInt, OBJECT_DESIGNATOROffset: Int, OBJECT_NAMEOffset: Int, START_TIMEOffset: Int, END_TIMEOffset: Int, EFFECTIVE_UNTILOffset: Int, DRIFT_RATE: Double, MEAN_LONGITUDE: Double, SLOT_CENTER: Double, SLOT_HALF_WIDTH: Double, STATION_KEEPING: Boolean, RECORDSOffset: Int, NUM_RECORDS: UInt, NOTESOffset: Int) : Int {
+            builder.startTable(15)
+            addSLOT_HALF_WIDTH(builder, SLOT_HALF_WIDTH)
+            addSLOT_CENTER(builder, SLOT_CENTER)
+            addMEAN_LONGITUDE(builder, MEAN_LONGITUDE)
             addDRIFT_RATE(builder, DRIFT_RATE)
+            addNOTES(builder, NOTESOffset)
+            addNUM_RECORDS(builder, NUM_RECORDS)
+            addRECORDS(builder, RECORDSOffset)
             addEFFECTIVE_UNTIL(builder, EFFECTIVE_UNTILOffset)
+            addEND_TIME(builder, END_TIMEOffset)
+            addSTART_TIME(builder, START_TIMEOffset)
+            addOBJECT_NAME(builder, OBJECT_NAMEOffset)
+            addOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOROffset)
+            addSAT_NO(builder, SAT_NO)
             addID(builder, IDOffset)
+            addSTATION_KEEPING(builder, STATION_KEEPING)
             return endDFH(builder)
         }
-        fun startDFH(builder: FlatBufferBuilder) = builder.startTable(3)
+        fun startDFH(builder: FlatBufferBuilder) = builder.startTable(15)
         fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addEFFECTIVE_UNTIL(builder: FlatBufferBuilder, EFFECTIVE_UNTIL: Int) = builder.addOffset(1, EFFECTIVE_UNTIL, 0)
-        fun addDRIFT_RATE(builder: FlatBufferBuilder, DRIFT_RATE: Double) = builder.addDouble(2, DRIFT_RATE, 0.0)
+        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: UInt) = builder.addInt(1, SAT_NO.toInt(), 0)
+        fun addOBJECT_DESIGNATOR(builder: FlatBufferBuilder, OBJECT_DESIGNATOR: Int) = builder.addOffset(2, OBJECT_DESIGNATOR, 0)
+        fun addOBJECT_NAME(builder: FlatBufferBuilder, OBJECT_NAME: Int) = builder.addOffset(3, OBJECT_NAME, 0)
+        fun addSTART_TIME(builder: FlatBufferBuilder, START_TIME: Int) = builder.addOffset(4, START_TIME, 0)
+        fun addEND_TIME(builder: FlatBufferBuilder, END_TIME: Int) = builder.addOffset(5, END_TIME, 0)
+        fun addEFFECTIVE_UNTIL(builder: FlatBufferBuilder, EFFECTIVE_UNTIL: Int) = builder.addOffset(6, EFFECTIVE_UNTIL, 0)
+        fun addDRIFT_RATE(builder: FlatBufferBuilder, DRIFT_RATE: Double) = builder.addDouble(7, DRIFT_RATE, 0.0)
+        fun addMEAN_LONGITUDE(builder: FlatBufferBuilder, MEAN_LONGITUDE: Double) = builder.addDouble(8, MEAN_LONGITUDE, 0.0)
+        fun addSLOT_CENTER(builder: FlatBufferBuilder, SLOT_CENTER: Double) = builder.addDouble(9, SLOT_CENTER, 0.0)
+        fun addSLOT_HALF_WIDTH(builder: FlatBufferBuilder, SLOT_HALF_WIDTH: Double) = builder.addDouble(10, SLOT_HALF_WIDTH, 0.0)
+        fun addSTATION_KEEPING(builder: FlatBufferBuilder, STATION_KEEPING: Boolean) = builder.addBoolean(11, STATION_KEEPING, false)
+        fun addRECORDS(builder: FlatBufferBuilder, RECORDS: Int) = builder.addOffset(12, RECORDS, 0)
+        fun createRecordsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startRecordsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addNUM_RECORDS(builder: FlatBufferBuilder, NUM_RECORDS: UInt) = builder.addInt(13, NUM_RECORDS.toInt(), 0)
+        fun addNOTES(builder: FlatBufferBuilder, NOTES: Int) = builder.addOffset(14, NOTES, 0)
         fun endDFH(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

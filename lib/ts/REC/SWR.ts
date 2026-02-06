@@ -7,7 +7,7 @@ import * as flatbuffers from 'flatbuffers';
 
 
 /**
- * Short-Wave Infrared
+ * Short-Wave Infrared Observation
  */
 export class SWR implements flatbuffers.IUnpackableObject<SWRT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -31,6 +31,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$SWR');
 }
 
+/**
+ * Unique identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,6 +41,9 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * On-orbit reference
+ */
 ON_ORBIT():string|null
 ON_ORBIT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ON_ORBIT(optionalEncoding?:any):string|Uint8Array|null {
@@ -45,104 +51,184 @@ ON_ORBIT(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-TS():string|null
-TS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-TS(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * International designator
+ */
+ORIG_OBJECT_ID():string|null
+ORIG_OBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ORIG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-SOLAR_PHASE_ANGLE():number {
+/**
+ * Satellite catalog number
+ */
+SAT_NO():number {
   const offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
-LAT():number {
+/**
+ * Observation timestamp (ISO 8601)
+ */
+TS():string|null
+TS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TS(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-LON():number {
+/**
+ * Solar phase angle (degrees)
+ */
+SOLAR_PHASE_ANGLE():number {
   const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Sub-observer latitude (degrees)
+ */
+LAT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Sub-observer longitude (degrees)
+ */
+LON():number {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Location name
+ */
 LOCATION_NAME():string|null
 LOCATION_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 LOCATION_NAME(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Bad wavelength flag or identifier
+ */
 BAD_WAVE():string|null
 BAD_WAVE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 BAD_WAVE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
+  const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-WAVELENGTHS(index: number):string
-WAVELENGTHS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-WAVELENGTHS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+/**
+ * Measured wavelengths (micrometers)
+ */
+WAVELENGTHS(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
 }
 
 wavelengthsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
+  const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-ABS_FLUXES(index: number):string
-ABS_FLUXES(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-ABS_FLUXES(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+wavelengthsArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Absolute flux values (W/m^2/um)
+ */
+ABS_FLUXES(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
 }
 
 absFluxesLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
+  const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-RATIO_WAVELENGTHS(index: number):string
-RATIO_WAVELENGTHS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-RATIO_WAVELENGTHS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+absFluxesArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Ratio reference wavelengths (micrometers)
+ */
+RATIO_WAVELENGTHS(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
 }
 
 ratioWavelengthsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
+  const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-FLUX_RATIOS(index: number):string
-FLUX_RATIOS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-FLUX_RATIOS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+ratioWavelengthsArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Flux ratios (normalized)
+ */
+FLUX_RATIOS(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
 }
 
 fluxRatiosLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
+  const offset = this.bb!.__offset(this.bb_pos, 30);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-ORIG_OBJECT_ID():string|null
-ORIG_OBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ORIG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 28);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+fluxRatiosArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
-SAT_NO():number {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+/**
+ * Effective temperature (Kelvin)
+ */
+TEMPERATURE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Signal-to-noise ratio
+ */
+SIGNAL_NOISE_RATIO():number {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Integration time (seconds)
+ */
+INTEGRATION_TIME():number {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Data quality (0-9, 9=best)
+ */
+QUALITY():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
 }
 
 static startSWR(builder:flatbuffers.Builder) {
-  builder.startObject(14);
+  builder.startObject(18);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -153,100 +239,136 @@ static addOnOrbit(builder:flatbuffers.Builder, ON_ORBITOffset:flatbuffers.Offset
   builder.addFieldOffset(1, ON_ORBITOffset, 0);
 }
 
+static addOrigObjectId(builder:flatbuffers.Builder, ORIG_OBJECT_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(2, ORIG_OBJECT_IDOffset, 0);
+}
+
+static addSatNo(builder:flatbuffers.Builder, SAT_NO:number) {
+  builder.addFieldInt32(3, SAT_NO, 0);
+}
+
 static addTs(builder:flatbuffers.Builder, TSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, TSOffset, 0);
+  builder.addFieldOffset(4, TSOffset, 0);
 }
 
 static addSolarPhaseAngle(builder:flatbuffers.Builder, SOLAR_PHASE_ANGLE:number) {
-  builder.addFieldFloat64(3, SOLAR_PHASE_ANGLE, 0.0);
+  builder.addFieldFloat64(5, SOLAR_PHASE_ANGLE, 0.0);
 }
 
 static addLat(builder:flatbuffers.Builder, LAT:number) {
-  builder.addFieldFloat64(4, LAT, 0.0);
+  builder.addFieldFloat64(6, LAT, 0.0);
 }
 
 static addLon(builder:flatbuffers.Builder, LON:number) {
-  builder.addFieldFloat64(5, LON, 0.0);
+  builder.addFieldFloat64(7, LON, 0.0);
 }
 
 static addLocationName(builder:flatbuffers.Builder, LOCATION_NAMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(6, LOCATION_NAMEOffset, 0);
+  builder.addFieldOffset(8, LOCATION_NAMEOffset, 0);
 }
 
 static addBadWave(builder:flatbuffers.Builder, BAD_WAVEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(7, BAD_WAVEOffset, 0);
+  builder.addFieldOffset(9, BAD_WAVEOffset, 0);
 }
 
 static addWavelengths(builder:flatbuffers.Builder, WAVELENGTHSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(8, WAVELENGTHSOffset, 0);
+  builder.addFieldOffset(10, WAVELENGTHSOffset, 0);
 }
 
-static createWavelengthsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static createWavelengthsVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createWavelengthsVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createWavelengthsVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
 static startWavelengthsVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+  builder.startVector(8, numElems, 8);
 }
 
 static addAbsFluxes(builder:flatbuffers.Builder, ABS_FLUXESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(9, ABS_FLUXESOffset, 0);
+  builder.addFieldOffset(11, ABS_FLUXESOffset, 0);
 }
 
-static createAbsFluxesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static createAbsFluxesVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createAbsFluxesVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createAbsFluxesVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
 static startAbsFluxesVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+  builder.startVector(8, numElems, 8);
 }
 
 static addRatioWavelengths(builder:flatbuffers.Builder, RATIO_WAVELENGTHSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(10, RATIO_WAVELENGTHSOffset, 0);
+  builder.addFieldOffset(12, RATIO_WAVELENGTHSOffset, 0);
 }
 
-static createRatioWavelengthsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static createRatioWavelengthsVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createRatioWavelengthsVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createRatioWavelengthsVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
 static startRatioWavelengthsVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+  builder.startVector(8, numElems, 8);
 }
 
 static addFluxRatios(builder:flatbuffers.Builder, FLUX_RATIOSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(11, FLUX_RATIOSOffset, 0);
+  builder.addFieldOffset(13, FLUX_RATIOSOffset, 0);
 }
 
-static createFluxRatiosVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static createFluxRatiosVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createFluxRatiosVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createFluxRatiosVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
 static startFluxRatiosVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+  builder.startVector(8, numElems, 8);
 }
 
-static addOrigObjectId(builder:flatbuffers.Builder, ORIG_OBJECT_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(12, ORIG_OBJECT_IDOffset, 0);
+static addTemperature(builder:flatbuffers.Builder, TEMPERATURE:number) {
+  builder.addFieldFloat64(14, TEMPERATURE, 0.0);
 }
 
-static addSatNo(builder:flatbuffers.Builder, SAT_NO:number) {
-  builder.addFieldInt32(13, SAT_NO, 0);
+static addSignalNoiseRatio(builder:flatbuffers.Builder, SIGNAL_NOISE_RATIO:number) {
+  builder.addFieldFloat64(15, SIGNAL_NOISE_RATIO, 0.0);
+}
+
+static addIntegrationTime(builder:flatbuffers.Builder, INTEGRATION_TIME:number) {
+  builder.addFieldFloat64(16, INTEGRATION_TIME, 0.0);
+}
+
+static addQuality(builder:flatbuffers.Builder, QUALITY:number) {
+  builder.addFieldInt8(17, QUALITY, 0);
 }
 
 static endSWR(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -262,10 +384,12 @@ static finishSizePrefixedSWRBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$SWR', true);
 }
 
-static createSWR(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset, TSOffset:flatbuffers.Offset, SOLAR_PHASE_ANGLE:number, LAT:number, LON:number, LOCATION_NAMEOffset:flatbuffers.Offset, BAD_WAVEOffset:flatbuffers.Offset, WAVELENGTHSOffset:flatbuffers.Offset, ABS_FLUXESOffset:flatbuffers.Offset, RATIO_WAVELENGTHSOffset:flatbuffers.Offset, FLUX_RATIOSOffset:flatbuffers.Offset, ORIG_OBJECT_IDOffset:flatbuffers.Offset, SAT_NO:number):flatbuffers.Offset {
+static createSWR(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset, ORIG_OBJECT_IDOffset:flatbuffers.Offset, SAT_NO:number, TSOffset:flatbuffers.Offset, SOLAR_PHASE_ANGLE:number, LAT:number, LON:number, LOCATION_NAMEOffset:flatbuffers.Offset, BAD_WAVEOffset:flatbuffers.Offset, WAVELENGTHSOffset:flatbuffers.Offset, ABS_FLUXESOffset:flatbuffers.Offset, RATIO_WAVELENGTHSOffset:flatbuffers.Offset, FLUX_RATIOSOffset:flatbuffers.Offset, TEMPERATURE:number, SIGNAL_NOISE_RATIO:number, INTEGRATION_TIME:number, QUALITY:number):flatbuffers.Offset {
   SWR.startSWR(builder);
   SWR.addId(builder, IDOffset);
   SWR.addOnOrbit(builder, ON_ORBITOffset);
+  SWR.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
+  SWR.addSatNo(builder, SAT_NO);
   SWR.addTs(builder, TSOffset);
   SWR.addSolarPhaseAngle(builder, SOLAR_PHASE_ANGLE);
   SWR.addLat(builder, LAT);
@@ -276,8 +400,10 @@ static createSWR(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ON_OR
   SWR.addAbsFluxes(builder, ABS_FLUXESOffset);
   SWR.addRatioWavelengths(builder, RATIO_WAVELENGTHSOffset);
   SWR.addFluxRatios(builder, FLUX_RATIOSOffset);
-  SWR.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
-  SWR.addSatNo(builder, SAT_NO);
+  SWR.addTemperature(builder, TEMPERATURE);
+  SWR.addSignalNoiseRatio(builder, SIGNAL_NOISE_RATIO);
+  SWR.addIntegrationTime(builder, INTEGRATION_TIME);
+  SWR.addQuality(builder, QUALITY);
   return SWR.endSWR(builder);
 }
 
@@ -285,18 +411,22 @@ unpack(): SWRT {
   return new SWRT(
     this.ID(),
     this.ON_ORBIT(),
+    this.ORIG_OBJECT_ID(),
+    this.SAT_NO(),
     this.TS(),
     this.SOLAR_PHASE_ANGLE(),
     this.LAT(),
     this.LON(),
     this.LOCATION_NAME(),
     this.BAD_WAVE(),
-    this.bb!.createScalarList<string>(this.WAVELENGTHS.bind(this), this.wavelengthsLength()),
-    this.bb!.createScalarList<string>(this.ABS_FLUXES.bind(this), this.absFluxesLength()),
-    this.bb!.createScalarList<string>(this.RATIO_WAVELENGTHS.bind(this), this.ratioWavelengthsLength()),
-    this.bb!.createScalarList<string>(this.FLUX_RATIOS.bind(this), this.fluxRatiosLength()),
-    this.ORIG_OBJECT_ID(),
-    this.SAT_NO()
+    this.bb!.createScalarList<number>(this.WAVELENGTHS.bind(this), this.wavelengthsLength()),
+    this.bb!.createScalarList<number>(this.ABS_FLUXES.bind(this), this.absFluxesLength()),
+    this.bb!.createScalarList<number>(this.RATIO_WAVELENGTHS.bind(this), this.ratioWavelengthsLength()),
+    this.bb!.createScalarList<number>(this.FLUX_RATIOS.bind(this), this.fluxRatiosLength()),
+    this.TEMPERATURE(),
+    this.SIGNAL_NOISE_RATIO(),
+    this.INTEGRATION_TIME(),
+    this.QUALITY()
   );
 }
 
@@ -304,18 +434,22 @@ unpack(): SWRT {
 unpackTo(_o: SWRT): void {
   _o.ID = this.ID();
   _o.ON_ORBIT = this.ON_ORBIT();
+  _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID();
+  _o.SAT_NO = this.SAT_NO();
   _o.TS = this.TS();
   _o.SOLAR_PHASE_ANGLE = this.SOLAR_PHASE_ANGLE();
   _o.LAT = this.LAT();
   _o.LON = this.LON();
   _o.LOCATION_NAME = this.LOCATION_NAME();
   _o.BAD_WAVE = this.BAD_WAVE();
-  _o.WAVELENGTHS = this.bb!.createScalarList<string>(this.WAVELENGTHS.bind(this), this.wavelengthsLength());
-  _o.ABS_FLUXES = this.bb!.createScalarList<string>(this.ABS_FLUXES.bind(this), this.absFluxesLength());
-  _o.RATIO_WAVELENGTHS = this.bb!.createScalarList<string>(this.RATIO_WAVELENGTHS.bind(this), this.ratioWavelengthsLength());
-  _o.FLUX_RATIOS = this.bb!.createScalarList<string>(this.FLUX_RATIOS.bind(this), this.fluxRatiosLength());
-  _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID();
-  _o.SAT_NO = this.SAT_NO();
+  _o.WAVELENGTHS = this.bb!.createScalarList<number>(this.WAVELENGTHS.bind(this), this.wavelengthsLength());
+  _o.ABS_FLUXES = this.bb!.createScalarList<number>(this.ABS_FLUXES.bind(this), this.absFluxesLength());
+  _o.RATIO_WAVELENGTHS = this.bb!.createScalarList<number>(this.RATIO_WAVELENGTHS.bind(this), this.ratioWavelengthsLength());
+  _o.FLUX_RATIOS = this.bb!.createScalarList<number>(this.FLUX_RATIOS.bind(this), this.fluxRatiosLength());
+  _o.TEMPERATURE = this.TEMPERATURE();
+  _o.SIGNAL_NOISE_RATIO = this.SIGNAL_NOISE_RATIO();
+  _o.INTEGRATION_TIME = this.INTEGRATION_TIME();
+  _o.QUALITY = this.QUALITY();
 }
 }
 
@@ -323,36 +457,42 @@ export class SWRT implements flatbuffers.IGeneratedObject {
 constructor(
   public ID: string|Uint8Array|null = null,
   public ON_ORBIT: string|Uint8Array|null = null,
+  public ORIG_OBJECT_ID: string|Uint8Array|null = null,
+  public SAT_NO: number = 0,
   public TS: string|Uint8Array|null = null,
   public SOLAR_PHASE_ANGLE: number = 0.0,
   public LAT: number = 0.0,
   public LON: number = 0.0,
   public LOCATION_NAME: string|Uint8Array|null = null,
   public BAD_WAVE: string|Uint8Array|null = null,
-  public WAVELENGTHS: (string)[] = [],
-  public ABS_FLUXES: (string)[] = [],
-  public RATIO_WAVELENGTHS: (string)[] = [],
-  public FLUX_RATIOS: (string)[] = [],
-  public ORIG_OBJECT_ID: string|Uint8Array|null = null,
-  public SAT_NO: number = 0
+  public WAVELENGTHS: (number)[] = [],
+  public ABS_FLUXES: (number)[] = [],
+  public RATIO_WAVELENGTHS: (number)[] = [],
+  public FLUX_RATIOS: (number)[] = [],
+  public TEMPERATURE: number = 0.0,
+  public SIGNAL_NOISE_RATIO: number = 0.0,
+  public INTEGRATION_TIME: number = 0.0,
+  public QUALITY: number = 0
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ID = (this.ID !== null ? builder.createString(this.ID!) : 0);
   const ON_ORBIT = (this.ON_ORBIT !== null ? builder.createString(this.ON_ORBIT!) : 0);
+  const ORIG_OBJECT_ID = (this.ORIG_OBJECT_ID !== null ? builder.createString(this.ORIG_OBJECT_ID!) : 0);
   const TS = (this.TS !== null ? builder.createString(this.TS!) : 0);
   const LOCATION_NAME = (this.LOCATION_NAME !== null ? builder.createString(this.LOCATION_NAME!) : 0);
   const BAD_WAVE = (this.BAD_WAVE !== null ? builder.createString(this.BAD_WAVE!) : 0);
-  const WAVELENGTHS = SWR.createWavelengthsVector(builder, builder.createObjectOffsetList(this.WAVELENGTHS));
-  const ABS_FLUXES = SWR.createAbsFluxesVector(builder, builder.createObjectOffsetList(this.ABS_FLUXES));
-  const RATIO_WAVELENGTHS = SWR.createRatioWavelengthsVector(builder, builder.createObjectOffsetList(this.RATIO_WAVELENGTHS));
-  const FLUX_RATIOS = SWR.createFluxRatiosVector(builder, builder.createObjectOffsetList(this.FLUX_RATIOS));
-  const ORIG_OBJECT_ID = (this.ORIG_OBJECT_ID !== null ? builder.createString(this.ORIG_OBJECT_ID!) : 0);
+  const WAVELENGTHS = SWR.createWavelengthsVector(builder, this.WAVELENGTHS);
+  const ABS_FLUXES = SWR.createAbsFluxesVector(builder, this.ABS_FLUXES);
+  const RATIO_WAVELENGTHS = SWR.createRatioWavelengthsVector(builder, this.RATIO_WAVELENGTHS);
+  const FLUX_RATIOS = SWR.createFluxRatiosVector(builder, this.FLUX_RATIOS);
 
   return SWR.createSWR(builder,
     ID,
     ON_ORBIT,
+    ORIG_OBJECT_ID,
+    this.SAT_NO,
     TS,
     this.SOLAR_PHASE_ANGLE,
     this.LAT,
@@ -363,8 +503,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     ABS_FLUXES,
     RATIO_WAVELENGTHS,
     FLUX_RATIOS,
-    ORIG_OBJECT_ID,
-    this.SAT_NO
+    this.TEMPERATURE,
+    this.SIGNAL_NOISE_RATIO,
+    this.INTEGRATION_TIME,
+    this.QUALITY
   );
 }
 }

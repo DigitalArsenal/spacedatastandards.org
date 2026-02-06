@@ -16,78 +16,226 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct GEO;
 struct GEOBuilder;
 
+enum geoStationKeeping : int8_t {
+  geoStationKeeping_ACTIVE = 0,
+  geoStationKeeping_DRIFTING = 1,
+  geoStationKeeping_INCLINED = 2,
+  geoStationKeeping_GRAVEYARD = 3,
+  geoStationKeeping_REPOSITIONING = 4,
+  geoStationKeeping_UNKNOWN = 5,
+  geoStationKeeping_MIN = geoStationKeeping_ACTIVE,
+  geoStationKeeping_MAX = geoStationKeeping_UNKNOWN
+};
+
+inline const geoStationKeeping (&EnumValuesgeoStationKeeping())[6] {
+  static const geoStationKeeping values[] = {
+    geoStationKeeping_ACTIVE,
+    geoStationKeeping_DRIFTING,
+    geoStationKeeping_INCLINED,
+    geoStationKeeping_GRAVEYARD,
+    geoStationKeeping_REPOSITIONING,
+    geoStationKeeping_UNKNOWN
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesgeoStationKeeping() {
+  static const char * const names[7] = {
+    "ACTIVE",
+    "DRIFTING",
+    "INCLINED",
+    "GRAVEYARD",
+    "REPOSITIONING",
+    "UNKNOWN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamegeoStationKeeping(geoStationKeeping e) {
+  if (::flatbuffers::IsOutRange(e, geoStationKeeping_ACTIVE, geoStationKeeping_UNKNOWN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesgeoStationKeeping()[index];
+}
+
+enum geoConfidence : int8_t {
+  geoConfidence_HIGH = 0,
+  geoConfidence_MEDIUM = 1,
+  geoConfidence_LOW = 2,
+  geoConfidence_TENTATIVE = 3,
+  geoConfidence_MIN = geoConfidence_HIGH,
+  geoConfidence_MAX = geoConfidence_TENTATIVE
+};
+
+inline const geoConfidence (&EnumValuesgeoConfidence())[4] {
+  static const geoConfidence values[] = {
+    geoConfidence_HIGH,
+    geoConfidence_MEDIUM,
+    geoConfidence_LOW,
+    geoConfidence_TENTATIVE
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesgeoConfidence() {
+  static const char * const names[5] = {
+    "HIGH",
+    "MEDIUM",
+    "LOW",
+    "TENTATIVE",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamegeoConfidence(geoConfidence e) {
+  if (::flatbuffers::IsOutRange(e, geoConfidence_HIGH, geoConfidence_TENTATIVE)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesgeoConfidence()[index];
+}
+
+enum troughType : int8_t {
+  troughType_EAST = 0,
+  troughType_WEST = 1,
+  troughType_NEITHER = 2,
+  troughType_MIN = troughType_EAST,
+  troughType_MAX = troughType_NEITHER
+};
+
+inline const troughType (&EnumValuestroughType())[3] {
+  static const troughType values[] = {
+    troughType_EAST,
+    troughType_WEST,
+    troughType_NEITHER
+  };
+  return values;
+}
+
+inline const char * const *EnumNamestroughType() {
+  static const char * const names[4] = {
+    "EAST",
+    "WEST",
+    "NEITHER",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNametroughType(troughType e) {
+  if (::flatbuffers::IsOutRange(e, troughType_EAST, troughType_NEITHER)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamestroughType()[index];
+}
+
 /// GEO Spacecraft Status
 struct GEO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef GEOBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
     VT_ORIG_OBJECT_ID = 6,
-    VT_SS = 8,
-    VT_SC = 10,
-    VT_RELATIVE_ENERGY = 12,
-    VT_LONGITUDE_RATE = 14,
-    VT_LONGITUDE_MIN = 16,
-    VT_LONGITUDE_MAX = 18,
-    VT_CONFIDENCE_LEVEL = 20,
-    VT_PLANE_CHANGE_STATUS = 22,
-    VT_TROUGH_TYPE = 24,
-    VT_LOST_FLAG = 26,
-    VT_SEMI_ANNUAL_CORR_FLAG = 28,
-    VT_OBJECT_STATUS = 30,
-    VT_RAW_FILE_URI = 32,
-    VT_ON_ORBIT = 34,
-    VT_SAT_NO = 36
+    VT_SAT_NO = 8,
+    VT_ON_ORBIT = 10,
+    VT_STATION_KEEPING = 12,
+    VT_SS = 14,
+    VT_SC = 16,
+    VT_RELATIVE_ENERGY = 18,
+    VT_LONGITUDE_RATE = 20,
+    VT_LONGITUDE_MIN = 22,
+    VT_LONGITUDE_MAX = 24,
+    VT_CONFIDENCE = 26,
+    VT_TROUGH = 28,
+    VT_PLANE_CHANGE_STATUS = 30,
+    VT_LOST_FLAG = 32,
+    VT_SEMI_ANNUAL_CORR_FLAG = 34,
+    VT_OBJECT_STATUS = 36,
+    VT_INCLINATION = 38,
+    VT_ECCENTRICITY = 40,
+    VT_EPOCH = 42,
+    VT_RAW_FILE_URI = 44
   };
+  /// Unique identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
+  /// International designator
   const ::flatbuffers::String *ORIG_OBJECT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIG_OBJECT_ID);
   }
-  double SS() const {
-    return GetField<double>(VT_SS, 0.0);
+  /// Satellite catalog number
+  uint32_t SAT_NO() const {
+    return GetField<uint32_t>(VT_SAT_NO, 0);
   }
-  double SC() const {
-    return GetField<double>(VT_SC, 0.0);
-  }
-  double RELATIVE_ENERGY() const {
-    return GetField<double>(VT_RELATIVE_ENERGY, 0.0);
-  }
-  double LONGITUDE_RATE() const {
-    return GetField<double>(VT_LONGITUDE_RATE, 0.0);
-  }
-  double LONGITUDE_MIN() const {
-    return GetField<double>(VT_LONGITUDE_MIN, 0.0);
-  }
-  double LONGITUDE_MAX() const {
-    return GetField<double>(VT_LONGITUDE_MAX, 0.0);
-  }
-  const ::flatbuffers::String *CONFIDENCE_LEVEL() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_CONFIDENCE_LEVEL);
-  }
-  const ::flatbuffers::String *PLANE_CHANGE_STATUS() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_PLANE_CHANGE_STATUS);
-  }
-  const ::flatbuffers::String *TROUGH_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TROUGH_TYPE);
-  }
-  bool LOST_FLAG() const {
-    return GetField<uint8_t>(VT_LOST_FLAG, 0) != 0;
-  }
-  bool SEMI_ANNUAL_CORR_FLAG() const {
-    return GetField<uint8_t>(VT_SEMI_ANNUAL_CORR_FLAG, 0) != 0;
-  }
-  const ::flatbuffers::String *OBJECT_STATUS() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_STATUS);
-  }
-  const ::flatbuffers::String *RAW_FILE_URI() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_RAW_FILE_URI);
-  }
+  /// On-orbit reference identifier
   const ::flatbuffers::String *ON_ORBIT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ON_ORBIT);
   }
-  int32_t SAT_NO() const {
-    return GetField<int32_t>(VT_SAT_NO, 0);
+  /// Station-keeping status
+  geoStationKeeping STATION_KEEPING() const {
+    return static_cast<geoStationKeeping>(GetField<int8_t>(VT_STATION_KEEPING, 0));
+  }
+  /// Subsatellite point longitude (degrees east)
+  double SS() const {
+    return GetField<double>(VT_SS, 0.0);
+  }
+  /// Longitude of ascending node (degrees)
+  double SC() const {
+    return GetField<double>(VT_SC, 0.0);
+  }
+  /// Relative energy (km^2/s^2)
+  double RELATIVE_ENERGY() const {
+    return GetField<double>(VT_RELATIVE_ENERGY, 0.0);
+  }
+  /// Longitude drift rate (degrees/day)
+  double LONGITUDE_RATE() const {
+    return GetField<double>(VT_LONGITUDE_RATE, 0.0);
+  }
+  /// Western longitude boundary of slot (degrees east)
+  double LONGITUDE_MIN() const {
+    return GetField<double>(VT_LONGITUDE_MIN, 0.0);
+  }
+  /// Eastern longitude boundary of slot (degrees east)
+  double LONGITUDE_MAX() const {
+    return GetField<double>(VT_LONGITUDE_MAX, 0.0);
+  }
+  /// Assessment confidence level
+  geoConfidence CONFIDENCE() const {
+    return static_cast<geoConfidence>(GetField<int8_t>(VT_CONFIDENCE, 0));
+  }
+  /// Trough type (east/west gravitational well)
+  troughType TROUGH() const {
+    return static_cast<troughType>(GetField<int8_t>(VT_TROUGH, 0));
+  }
+  /// Plane change status description
+  const ::flatbuffers::String *PLANE_CHANGE_STATUS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PLANE_CHANGE_STATUS);
+  }
+  /// True if object is lost/not tracked
+  bool LOST_FLAG() const {
+    return GetField<uint8_t>(VT_LOST_FLAG, 0) != 0;
+  }
+  /// True if semi-annual correction applied
+  bool SEMI_ANNUAL_CORR_FLAG() const {
+    return GetField<uint8_t>(VT_SEMI_ANNUAL_CORR_FLAG, 0) != 0;
+  }
+  /// Current operational status
+  const ::flatbuffers::String *OBJECT_STATUS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_STATUS);
+  }
+  /// Inclination (degrees)
+  double INCLINATION() const {
+    return GetField<double>(VT_INCLINATION, 0.0);
+  }
+  /// Eccentricity
+  double ECCENTRICITY() const {
+    return GetField<double>(VT_ECCENTRICITY, 0.0);
+  }
+  /// Epoch of status (ISO 8601)
+  const ::flatbuffers::String *EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
+  }
+  /// Reference to raw data file
+  const ::flatbuffers::String *RAW_FILE_URI() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_RAW_FILE_URI);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -95,27 +243,30 @@ struct GEO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(ID()) &&
            VerifyOffset(verifier, VT_ORIG_OBJECT_ID) &&
            verifier.VerifyString(ORIG_OBJECT_ID()) &&
+           VerifyField<uint32_t>(verifier, VT_SAT_NO, 4) &&
+           VerifyOffset(verifier, VT_ON_ORBIT) &&
+           verifier.VerifyString(ON_ORBIT()) &&
+           VerifyField<int8_t>(verifier, VT_STATION_KEEPING, 1) &&
            VerifyField<double>(verifier, VT_SS, 8) &&
            VerifyField<double>(verifier, VT_SC, 8) &&
            VerifyField<double>(verifier, VT_RELATIVE_ENERGY, 8) &&
            VerifyField<double>(verifier, VT_LONGITUDE_RATE, 8) &&
            VerifyField<double>(verifier, VT_LONGITUDE_MIN, 8) &&
            VerifyField<double>(verifier, VT_LONGITUDE_MAX, 8) &&
-           VerifyOffset(verifier, VT_CONFIDENCE_LEVEL) &&
-           verifier.VerifyString(CONFIDENCE_LEVEL()) &&
+           VerifyField<int8_t>(verifier, VT_CONFIDENCE, 1) &&
+           VerifyField<int8_t>(verifier, VT_TROUGH, 1) &&
            VerifyOffset(verifier, VT_PLANE_CHANGE_STATUS) &&
            verifier.VerifyString(PLANE_CHANGE_STATUS()) &&
-           VerifyOffset(verifier, VT_TROUGH_TYPE) &&
-           verifier.VerifyString(TROUGH_TYPE()) &&
            VerifyField<uint8_t>(verifier, VT_LOST_FLAG, 1) &&
            VerifyField<uint8_t>(verifier, VT_SEMI_ANNUAL_CORR_FLAG, 1) &&
            VerifyOffset(verifier, VT_OBJECT_STATUS) &&
            verifier.VerifyString(OBJECT_STATUS()) &&
+           VerifyField<double>(verifier, VT_INCLINATION, 8) &&
+           VerifyField<double>(verifier, VT_ECCENTRICITY, 8) &&
+           VerifyOffset(verifier, VT_EPOCH) &&
+           verifier.VerifyString(EPOCH()) &&
            VerifyOffset(verifier, VT_RAW_FILE_URI) &&
            verifier.VerifyString(RAW_FILE_URI()) &&
-           VerifyOffset(verifier, VT_ON_ORBIT) &&
-           verifier.VerifyString(ON_ORBIT()) &&
-           VerifyField<int32_t>(verifier, VT_SAT_NO, 4) &&
            verifier.EndTable();
   }
 };
@@ -129,6 +280,15 @@ struct GEOBuilder {
   }
   void add_ORIG_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID) {
     fbb_.AddOffset(GEO::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
+  }
+  void add_SAT_NO(uint32_t SAT_NO) {
+    fbb_.AddElement<uint32_t>(GEO::VT_SAT_NO, SAT_NO, 0);
+  }
+  void add_ON_ORBIT(::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT) {
+    fbb_.AddOffset(GEO::VT_ON_ORBIT, ON_ORBIT);
+  }
+  void add_STATION_KEEPING(geoStationKeeping STATION_KEEPING) {
+    fbb_.AddElement<int8_t>(GEO::VT_STATION_KEEPING, static_cast<int8_t>(STATION_KEEPING), 0);
   }
   void add_SS(double SS) {
     fbb_.AddElement<double>(GEO::VT_SS, SS, 0.0);
@@ -148,14 +308,14 @@ struct GEOBuilder {
   void add_LONGITUDE_MAX(double LONGITUDE_MAX) {
     fbb_.AddElement<double>(GEO::VT_LONGITUDE_MAX, LONGITUDE_MAX, 0.0);
   }
-  void add_CONFIDENCE_LEVEL(::flatbuffers::Offset<::flatbuffers::String> CONFIDENCE_LEVEL) {
-    fbb_.AddOffset(GEO::VT_CONFIDENCE_LEVEL, CONFIDENCE_LEVEL);
+  void add_CONFIDENCE(geoConfidence CONFIDENCE) {
+    fbb_.AddElement<int8_t>(GEO::VT_CONFIDENCE, static_cast<int8_t>(CONFIDENCE), 0);
+  }
+  void add_TROUGH(troughType TROUGH) {
+    fbb_.AddElement<int8_t>(GEO::VT_TROUGH, static_cast<int8_t>(TROUGH), 0);
   }
   void add_PLANE_CHANGE_STATUS(::flatbuffers::Offset<::flatbuffers::String> PLANE_CHANGE_STATUS) {
     fbb_.AddOffset(GEO::VT_PLANE_CHANGE_STATUS, PLANE_CHANGE_STATUS);
-  }
-  void add_TROUGH_TYPE(::flatbuffers::Offset<::flatbuffers::String> TROUGH_TYPE) {
-    fbb_.AddOffset(GEO::VT_TROUGH_TYPE, TROUGH_TYPE);
   }
   void add_LOST_FLAG(bool LOST_FLAG) {
     fbb_.AddElement<uint8_t>(GEO::VT_LOST_FLAG, static_cast<uint8_t>(LOST_FLAG), 0);
@@ -166,14 +326,17 @@ struct GEOBuilder {
   void add_OBJECT_STATUS(::flatbuffers::Offset<::flatbuffers::String> OBJECT_STATUS) {
     fbb_.AddOffset(GEO::VT_OBJECT_STATUS, OBJECT_STATUS);
   }
+  void add_INCLINATION(double INCLINATION) {
+    fbb_.AddElement<double>(GEO::VT_INCLINATION, INCLINATION, 0.0);
+  }
+  void add_ECCENTRICITY(double ECCENTRICITY) {
+    fbb_.AddElement<double>(GEO::VT_ECCENTRICITY, ECCENTRICITY, 0.0);
+  }
+  void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
+    fbb_.AddOffset(GEO::VT_EPOCH, EPOCH);
+  }
   void add_RAW_FILE_URI(::flatbuffers::Offset<::flatbuffers::String> RAW_FILE_URI) {
     fbb_.AddOffset(GEO::VT_RAW_FILE_URI, RAW_FILE_URI);
-  }
-  void add_ON_ORBIT(::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT) {
-    fbb_.AddOffset(GEO::VT_ON_ORBIT, ON_ORBIT);
-  }
-  void add_SAT_NO(int32_t SAT_NO) {
-    fbb_.AddElement<int32_t>(GEO::VT_SAT_NO, SAT_NO, 0);
   }
   explicit GEOBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -190,39 +353,47 @@ inline ::flatbuffers::Offset<GEO> CreateGEO(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID = 0,
+    uint32_t SAT_NO = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT = 0,
+    geoStationKeeping STATION_KEEPING = geoStationKeeping_ACTIVE,
     double SS = 0.0,
     double SC = 0.0,
     double RELATIVE_ENERGY = 0.0,
     double LONGITUDE_RATE = 0.0,
     double LONGITUDE_MIN = 0.0,
     double LONGITUDE_MAX = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::String> CONFIDENCE_LEVEL = 0,
+    geoConfidence CONFIDENCE = geoConfidence_HIGH,
+    troughType TROUGH = troughType_EAST,
     ::flatbuffers::Offset<::flatbuffers::String> PLANE_CHANGE_STATUS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TROUGH_TYPE = 0,
     bool LOST_FLAG = false,
     bool SEMI_ANNUAL_CORR_FLAG = false,
     ::flatbuffers::Offset<::flatbuffers::String> OBJECT_STATUS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> RAW_FILE_URI = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT = 0,
-    int32_t SAT_NO = 0) {
+    double INCLINATION = 0.0,
+    double ECCENTRICITY = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> RAW_FILE_URI = 0) {
   GEOBuilder builder_(_fbb);
+  builder_.add_ECCENTRICITY(ECCENTRICITY);
+  builder_.add_INCLINATION(INCLINATION);
   builder_.add_LONGITUDE_MAX(LONGITUDE_MAX);
   builder_.add_LONGITUDE_MIN(LONGITUDE_MIN);
   builder_.add_LONGITUDE_RATE(LONGITUDE_RATE);
   builder_.add_RELATIVE_ENERGY(RELATIVE_ENERGY);
   builder_.add_SC(SC);
   builder_.add_SS(SS);
-  builder_.add_SAT_NO(SAT_NO);
-  builder_.add_ON_ORBIT(ON_ORBIT);
   builder_.add_RAW_FILE_URI(RAW_FILE_URI);
+  builder_.add_EPOCH(EPOCH);
   builder_.add_OBJECT_STATUS(OBJECT_STATUS);
-  builder_.add_TROUGH_TYPE(TROUGH_TYPE);
   builder_.add_PLANE_CHANGE_STATUS(PLANE_CHANGE_STATUS);
-  builder_.add_CONFIDENCE_LEVEL(CONFIDENCE_LEVEL);
+  builder_.add_ON_ORBIT(ON_ORBIT);
+  builder_.add_SAT_NO(SAT_NO);
   builder_.add_ORIG_OBJECT_ID(ORIG_OBJECT_ID);
   builder_.add_ID(ID);
   builder_.add_SEMI_ANNUAL_CORR_FLAG(SEMI_ANNUAL_CORR_FLAG);
   builder_.add_LOST_FLAG(LOST_FLAG);
+  builder_.add_TROUGH(TROUGH);
+  builder_.add_CONFIDENCE(CONFIDENCE);
+  builder_.add_STATION_KEEPING(STATION_KEEPING);
   return builder_.Finish();
 }
 
@@ -230,48 +401,55 @@ inline ::flatbuffers::Offset<GEO> CreateGEODirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *ID = nullptr,
     const char *ORIG_OBJECT_ID = nullptr,
+    uint32_t SAT_NO = 0,
+    const char *ON_ORBIT = nullptr,
+    geoStationKeeping STATION_KEEPING = geoStationKeeping_ACTIVE,
     double SS = 0.0,
     double SC = 0.0,
     double RELATIVE_ENERGY = 0.0,
     double LONGITUDE_RATE = 0.0,
     double LONGITUDE_MIN = 0.0,
     double LONGITUDE_MAX = 0.0,
-    const char *CONFIDENCE_LEVEL = nullptr,
+    geoConfidence CONFIDENCE = geoConfidence_HIGH,
+    troughType TROUGH = troughType_EAST,
     const char *PLANE_CHANGE_STATUS = nullptr,
-    const char *TROUGH_TYPE = nullptr,
     bool LOST_FLAG = false,
     bool SEMI_ANNUAL_CORR_FLAG = false,
     const char *OBJECT_STATUS = nullptr,
-    const char *RAW_FILE_URI = nullptr,
-    const char *ON_ORBIT = nullptr,
-    int32_t SAT_NO = 0) {
+    double INCLINATION = 0.0,
+    double ECCENTRICITY = 0.0,
+    const char *EPOCH = nullptr,
+    const char *RAW_FILE_URI = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto ORIG_OBJECT_ID__ = ORIG_OBJECT_ID ? _fbb.CreateString(ORIG_OBJECT_ID) : 0;
-  auto CONFIDENCE_LEVEL__ = CONFIDENCE_LEVEL ? _fbb.CreateString(CONFIDENCE_LEVEL) : 0;
-  auto PLANE_CHANGE_STATUS__ = PLANE_CHANGE_STATUS ? _fbb.CreateString(PLANE_CHANGE_STATUS) : 0;
-  auto TROUGH_TYPE__ = TROUGH_TYPE ? _fbb.CreateString(TROUGH_TYPE) : 0;
-  auto OBJECT_STATUS__ = OBJECT_STATUS ? _fbb.CreateString(OBJECT_STATUS) : 0;
-  auto RAW_FILE_URI__ = RAW_FILE_URI ? _fbb.CreateString(RAW_FILE_URI) : 0;
   auto ON_ORBIT__ = ON_ORBIT ? _fbb.CreateString(ON_ORBIT) : 0;
+  auto PLANE_CHANGE_STATUS__ = PLANE_CHANGE_STATUS ? _fbb.CreateString(PLANE_CHANGE_STATUS) : 0;
+  auto OBJECT_STATUS__ = OBJECT_STATUS ? _fbb.CreateString(OBJECT_STATUS) : 0;
+  auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
+  auto RAW_FILE_URI__ = RAW_FILE_URI ? _fbb.CreateString(RAW_FILE_URI) : 0;
   return CreateGEO(
       _fbb,
       ID__,
       ORIG_OBJECT_ID__,
+      SAT_NO,
+      ON_ORBIT__,
+      STATION_KEEPING,
       SS,
       SC,
       RELATIVE_ENERGY,
       LONGITUDE_RATE,
       LONGITUDE_MIN,
       LONGITUDE_MAX,
-      CONFIDENCE_LEVEL__,
+      CONFIDENCE,
+      TROUGH,
       PLANE_CHANGE_STATUS__,
-      TROUGH_TYPE__,
       LOST_FLAG,
       SEMI_ANNUAL_CORR_FLAG,
       OBJECT_STATUS__,
-      RAW_FILE_URI__,
-      ON_ORBIT__,
-      SAT_NO);
+      INCLINATION,
+      ECCENTRICITY,
+      EPOCH__,
+      RAW_FILE_URI__);
 }
 
 inline const GEO *GetGEO(const void *buf) {

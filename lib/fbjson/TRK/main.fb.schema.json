@@ -1,154 +1,297 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "trackStatus": {
+      "type": "string",
+      "enum": [
+        "ACTIVE",
+        "DROPPED",
+        "TENTATIVE",
+        "CONFIRMED",
+        "COASTED",
+        "DEAD"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ACTIVE": {
+          "value": 0
+        },
+        "DROPPED": {
+          "value": 1
+        },
+        "TENTATIVE": {
+          "value": 2
+        },
+        "CONFIRMED": {
+          "value": 3
+        },
+        "COASTED": {
+          "value": 4
+        },
+        "DEAD": {
+          "value": 5
+        }
+      }
+    },
+    "trackEnvironment": {
+      "type": "string",
+      "enum": [
+        "SPACE",
+        "AIR",
+        "SURFACE",
+        "SUBSURFACE",
+        "LAND",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "SPACE": {
+          "value": 0
+        },
+        "AIR": {
+          "value": 1
+        },
+        "SURFACE": {
+          "value": 2
+        },
+        "SUBSURFACE": {
+          "value": 3
+        },
+        "LAND": {
+          "value": 4
+        },
+        "UNKNOWN": {
+          "value": 5
+        }
+      }
+    },
     "TRK": {
       "type": "object",
       "description": "Track",
       "properties": {
         "ID": {
           "type": "string",
+          "description": "Unique identifier",
           "x-flatbuffer-type": "string"
         },
         "CNTCT": {
           "type": "string",
+          "description": "Contact reference",
           "x-flatbuffer-type": "string"
         },
         "MSG_TS": {
           "type": "string",
+          "description": "Message timestamp (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "MSN_ID": {
           "type": "string",
+          "description": "Mission identifier",
           "x-flatbuffer-type": "string"
         },
         "ASSET_NAT": {
           "type": "string",
+          "description": "Asset nationality",
           "x-flatbuffer-type": "string"
         },
         "ASSET": {
           "type": "string",
+          "description": "Asset identifier",
           "x-flatbuffer-type": "string"
         },
-        "SEN": {
+        "SENSOR_ID": {
           "type": "string",
+          "description": "Sensor identifier",
           "x-flatbuffer-type": "string"
         },
         "SEN_QUAL": {
           "type": "string",
+          "description": "Sensor quality assessment",
           "x-flatbuffer-type": "string"
         },
         "TRK_ID": {
           "type": "string",
+          "description": "Track identifier",
           "x-flatbuffer-type": "string"
         },
         "TRK_NUM": {
           "type": "string",
+          "description": "Track number",
           "x-flatbuffer-type": "string"
         },
         "TRK_STAT": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
+          "$ref": "#/definitions/trackStatus",
+          "description": "Track status",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ACTIVE": {
+              "value": 0
+            },
+            "DROPPED": {
+              "value": 1
+            },
+            "TENTATIVE": {
+              "value": 2
+            },
+            "CONFIRMED": {
+              "value": 3
+            },
+            "COASTED": {
+              "value": 4
+            },
+            "DEAD": {
+              "value": 5
+            }
+          }
         },
         "OBJ_NAT": {
           "type": "string",
+          "description": "Object nationality",
           "x-flatbuffer-type": "string"
         },
         "OBJ_ID": {
           "type": "string",
+          "description": "Object identifier",
           "x-flatbuffer-type": "string"
         },
         "OBJ_TYPE": {
           "type": "string",
+          "description": "Object type classification",
           "x-flatbuffer-type": "string"
         },
         "OBJ_SPEC": {
           "type": "string",
+          "description": "Object specific type",
           "x-flatbuffer-type": "string"
         },
         "OBJ_PLAT": {
           "type": "string",
+          "description": "Object platform type",
           "x-flatbuffer-type": "string"
         },
         "OBJ_ACT": {
           "type": "string",
+          "description": "Object activity",
           "x-flatbuffer-type": "string"
         },
         "MOD_TYPE": {
           "type": "string",
+          "description": "Mode type",
           "x-flatbuffer-type": "string"
         },
         "TRK_ITM_ID": {
           "type": "string",
+          "description": "Track item identifier",
           "x-flatbuffer-type": "string"
         },
         "TS": {
           "type": "string",
+          "description": "Track point timestamp (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "TRK_QUAL": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Track quality (0-15)",
+          "x-flatbuffer-type": "uint8"
         },
         "TRK_PT_TYPE": {
           "type": "string",
+          "description": "Track point type",
           "x-flatbuffer-type": "string"
         },
         "OBJ_IDENT": {
           "type": "string",
+          "description": "Object identity assessment",
           "x-flatbuffer-type": "string"
         },
         "IDENT_CRED": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Identity credibility (1-6)",
+          "x-flatbuffer-type": "uint8"
         },
         "IDENT_REL": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Identity reliability (A-F)",
+          "x-flatbuffer-type": "uint8"
         },
         "IDENT_AMP": {
           "type": "string",
+          "description": "Identity amplification",
           "x-flatbuffer-type": "string"
         },
         "ENVIRONMENT": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
+          "$ref": "#/definitions/trackEnvironment",
+          "description": "Track environment",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "SPACE": {
+              "value": 0
+            },
+            "AIR": {
+              "value": 1
+            },
+            "SURFACE": {
+              "value": 2
+            },
+            "SUBSURFACE": {
+              "value": 3
+            },
+            "LAND": {
+              "value": 4
+            },
+            "UNKNOWN": {
+              "value": 5
+            }
+          }
         },
         "ENVIRONMENT_CONF": {
           "type": "number",
+          "description": "Environment confidence (0-1)",
           "x-flatbuffer-type": "double"
         },
         "TRK_CONF": {
           "type": "number",
+          "description": "Track confidence (0-1)",
           "x-flatbuffer-type": "double"
         },
         "LAT": {
           "type": "number",
+          "description": "Latitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "LON": {
           "type": "number",
+          "description": "Longitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "ALT": {
           "type": "number",
+          "description": "Altitude (km)",
           "x-flatbuffer-type": "double"
         },
         "SPD": {
           "type": "number",
+          "description": "Speed (km/s)",
           "x-flatbuffer-type": "double"
         },
         "HDNG": {
           "type": "number",
+          "description": "Heading (degrees from north)",
           "x-flatbuffer-type": "double"
         },
         "COURSE": {
           "type": "number",
+          "description": "Course (degrees from north)",
           "x-flatbuffer-type": "double"
         },
         "SRC_TYPS": {
@@ -156,6 +299,7 @@
           "items": {
             "type": "string"
           },
+          "description": "Source types",
           "x-flatbuffer-type": "[string]"
         },
         "SRC_IDS": {
@@ -163,84 +307,96 @@
           "items": {
             "type": "string"
           },
+          "description": "Source identifiers",
           "x-flatbuffer-type": "[string]"
         },
         "CALL_SIGN": {
           "type": "string",
+          "description": "Call sign",
           "x-flatbuffer-type": "string"
         },
         "MULTI_SOURCE": {
           "type": "boolean",
+          "description": "True if fused from multiple sources",
           "x-flatbuffer-type": "bool"
         },
         "J_SERIES": {
           "type": "string",
+          "description": "J-series message type",
           "x-flatbuffer-type": "string"
         },
         "STRENGTH": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Force strength indicator",
+          "x-flatbuffer-type": "uint16"
         },
         "M1": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Mode 1 code",
+          "x-flatbuffer-type": "uint16"
         },
         "M1V": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Mode 1 validity",
+          "x-flatbuffer-type": "uint8"
         },
         "M2": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Mode 2 code",
+          "x-flatbuffer-type": "uint16"
         },
         "M2V": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Mode 2 validity",
+          "x-flatbuffer-type": "uint8"
         },
         "M3A": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Mode 3A code",
+          "x-flatbuffer-type": "uint16"
         },
         "M3AV": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Mode 3A validity",
+          "x-flatbuffer-type": "uint8"
         },
         "TAGS": {
           "type": "array",
           "items": {
             "type": "string"
           },
+          "description": "Associated tags",
           "x-flatbuffer-type": "[string]"
         },
         "TRACK_START_TIME": {
           "type": "string",
-          "description": "Start time for track data (ISO 8601 UTC format).",
+          "description": "Start time for track data (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "TRACK_STEP_SIZE": {
           "type": "number",
-          "description": "Time interval between track points in seconds.",
+          "description": "Time interval between track points (seconds)",
           "x-flatbuffer-type": "double"
         },
         "TRACK_COMPONENTS": {
           "type": "integer",
           "minimum": 0,
           "maximum": 255,
-          "description": "Number of components per point (default 3 for X, Y, Z).",
+          "description": "Number of components per point (default 3 for X, Y, Z)",
           "x-flatbuffer-type": "uint8"
         },
         "ECEF_POS": {

@@ -50,6 +50,8 @@ const CATEGORY_MAP = {
   // Spacecraft/Payload
   'BOV': 'Spacecraft', 'PLD': 'Spacecraft', 'ROC': 'Spacecraft', 'SIT': 'Spacecraft',
   'SCM': 'Spacecraft', 'PRG': 'Spacecraft', 'MFE': 'Spacecraft',
+  'BUS': 'Spacecraft', 'OOA': 'Spacecraft', 'OOB': 'Spacecraft',
+  'OOS': 'Spacecraft', 'OOT': 'Spacecraft',
 
   // Communications
   'COM': 'Communications', 'CHN': 'Communications', 'SPP': 'Communications',
@@ -58,6 +60,7 @@ const CATEGORY_MAP = {
 
   // Sensors/Devices
   'IDM': 'Sensors', 'SNR': 'Sensors', 'SEO': 'Sensors', 'SEV': 'Sensors',
+  'ANI': 'Sensors', 'SEN': 'Sensors',
 
   // Attitude
   'AEM': 'Attitude', 'APM': 'Attitude', 'ACR': 'Attitude', 'ATD': 'Attitude',
@@ -68,7 +71,7 @@ const CATEGORY_MAP = {
 
   // Physical/Environment
   'PHY': 'Physical', 'ENV': 'Physical', 'GEO': 'Physical', 'GNO': 'Physical',
-  'SPW': 'Physical', 'WTH': 'Physical', 'IRO': 'Physical',
+  'SPW': 'Physical', 'WTH': 'Physical', 'IRO': 'Physical', 'ION': 'Physical',
 
   // Military/Weapons
   'ARM': 'Military', 'BAL': 'Military', 'BEM': 'Military', 'BMC': 'Military',
@@ -148,48 +151,46 @@ function main() {
     sortedSchemaList[key] = schemaList[key];
   }
 
-  // Generate the JavaScript object string
-  // Format: {OMM:{description:"...",category:"..."},...}
+  // Generate the category map string
+  // Format matches the Svelte component: {OMM:"Orbital",OEM:"Orbital",...}
   const entries = Object.entries(sortedSchemaList).map(([key, value]) => {
-    const desc = value.description.replace(/"/g, '\\"');
-    return `${key}:{description:"${desc}",category:"${value.category}"}`;
+    return `${key}:"${value.category}"`;
   });
-  const newSchemaListStr = `{${entries.join(',')}}`;
+  const newCategoryMapStr = `{${entries.join(',')}}`;
 
   // Read index.html
   let indexHtml = fs.readFileSync(INDEX_PATH, 'utf-8');
 
-  // Find and replace the schema list pattern
-  // The pattern looks like: const i={OMM:{description:"...",category:"..."},...}
-  // or similar variable assignments with schema objects
-  const schemaListPattern = /const\s+[a-z]=\{([A-Z]{2,5}:\{description:"[^"]*",category:"[^"]*"\},?)+\}/g;
+  // Find and replace the category map pattern in the Svelte component
+  // The pattern looks like: const a={OMM:"Orbital",OEM:"Orbital",...}
+  const categoryMapPattern = /const\s+([a-z])=\{([A-Z]{2,5}:"[A-Za-z]+",?)+\}/g;
 
   let replaced = false;
   let matchCount = 0;
 
-  const updatedHtml = indexHtml.replace(schemaListPattern, (match) => {
+  const updatedHtml = indexHtml.replace(categoryMapPattern, (match) => {
     matchCount++;
-    // Only replace if it looks like our schema list (has OMM and description/category)
-    if (match.includes('OMM:{description:') && match.includes('category:')) {
-      // Extract the variable name (const X=)
+    // Only replace if it looks like our category map (has OMM:"Orbital")
+    if (match.includes('OMM:"Orbital"')) {
       const varMatch = match.match(/const\s+([a-z])=/);
       if (varMatch) {
         replaced = true;
-        return `const ${varMatch[1]}=${newSchemaListStr}`;
+        return `const ${varMatch[1]}=${newCategoryMapStr}`;
       }
     }
     return match;
   });
 
   if (!replaced) {
-    console.log('Could not find schema list pattern in index.html');
+    console.log('Could not find category map pattern in index.html');
     console.log(`Found ${matchCount} potential matches but none matched expected format`);
-    process.exit(1);
+    // Exit gracefully - schemas are loaded dynamically from manifest.json
+    process.exit(0);
   }
 
   // Write updated index.html
   fs.writeFileSync(INDEX_PATH, updatedHtml);
-  console.log(`Updated schema list with ${Object.keys(sortedSchemaList).length} schemas in index.html`);
+  console.log(`Updated category map with ${Object.keys(sortedSchemaList).length} schemas in index.html`);
 }
 
 main();

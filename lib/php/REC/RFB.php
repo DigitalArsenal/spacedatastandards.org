@@ -6,7 +6,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// RF Band
+/// RF Band Specification
 class RFB extends Table
 {
     /**
@@ -41,42 +41,52 @@ class RFB extends Table
         return $this;
     }
 
+    /// Unique identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Parent entity identifier
     public function getID_ENTITY()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Band name or designation
     public function getNAME()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// RF band designation
+    /**
+     * @return sbyte
+     */
     public function getBAND()
     {
         $o = $this->__offset(10);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \rfBandDesignation::UHF;
     }
 
+    /// Operating mode
     public function getMODE()
     {
         $o = $this->__offset(12);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Band purpose (e.g., TT&C, PAYLOAD, BEACON)
     public function getPURPOSE()
     {
         $o = $this->__offset(14);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Minimum frequency (MHz)
     /**
      * @return double
      */
@@ -86,6 +96,7 @@ class RFB extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Maximum frequency (MHz)
     /**
      * @return double
      */
@@ -95,6 +106,7 @@ class RFB extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Center frequency (MHz)
     /**
      * @return double
      */
@@ -104,33 +116,37 @@ class RFB extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /**
-     * @return double
-     */
-    public function getPEAK_GAIN()
-    {
-        $o = $this->__offset(22);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getEDGE_GAIN()
-    {
-        $o = $this->__offset(24);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
+    /// Bandwidth (MHz)
     /**
      * @return double
      */
     public function getBANDWIDTH()
     {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Peak antenna gain (dBi)
+    /**
+     * @return double
+     */
+    public function getPEAK_GAIN()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Edge-of-coverage gain (dBi)
+    /**
+     * @return double
+     */
+    public function getEDGE_GAIN()
+    {
         $o = $this->__offset(26);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Antenna beamwidth (degrees)
     /**
      * @return double
      */
@@ -140,12 +156,17 @@ class RFB extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Polarization
+    /**
+     * @return sbyte
+     */
     public function getPOLARIZATION()
     {
         $o = $this->__offset(30);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \rfPolarization::LHCP;
     }
 
+    /// Effective radiated power (dBW)
     /**
      * @return double
      */
@@ -155,6 +176,7 @@ class RFB extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Effective isotropic radiated power (dBW)
     /**
      * @return double
      */
@@ -177,7 +199,7 @@ class RFB extends Table
      * @param FlatBufferBuilder $builder
      * @return RFB
      */
-    public static function createRFB(FlatBufferBuilder $builder, $ID, $ID_ENTITY, $NAME, $BAND, $MODE, $PURPOSE, $FREQ_MIN, $FREQ_MAX, $CENTER_FREQ, $PEAK_GAIN, $EDGE_GAIN, $BANDWIDTH, $BEAMWIDTH, $POLARIZATION, $ERP, $EIRP)
+    public static function createRFB(FlatBufferBuilder $builder, $ID, $ID_ENTITY, $NAME, $BAND, $MODE, $PURPOSE, $FREQ_MIN, $FREQ_MAX, $CENTER_FREQ, $BANDWIDTH, $PEAK_GAIN, $EDGE_GAIN, $BEAMWIDTH, $POLARIZATION, $ERP, $EIRP)
     {
         $builder->startObject(16);
         self::addID($builder, $ID);
@@ -189,9 +211,9 @@ class RFB extends Table
         self::addFREQ_MIN($builder, $FREQ_MIN);
         self::addFREQ_MAX($builder, $FREQ_MAX);
         self::addCENTER_FREQ($builder, $CENTER_FREQ);
+        self::addBANDWIDTH($builder, $BANDWIDTH);
         self::addPEAK_GAIN($builder, $PEAK_GAIN);
         self::addEDGE_GAIN($builder, $EDGE_GAIN);
-        self::addBANDWIDTH($builder, $BANDWIDTH);
         self::addBEAMWIDTH($builder, $BEAMWIDTH);
         self::addPOLARIZATION($builder, $POLARIZATION);
         self::addERP($builder, $ERP);
@@ -232,12 +254,12 @@ class RFB extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addBAND(FlatBufferBuilder $builder, $BAND)
     {
-        $builder->addOffsetX(3, $BAND, 0);
+        $builder->addSbyteX(3, $BAND, 0);
     }
 
     /**
@@ -295,9 +317,19 @@ class RFB extends Table
      * @param double
      * @return void
      */
+    public static function addBANDWIDTH(FlatBufferBuilder $builder, $BANDWIDTH)
+    {
+        $builder->addDoubleX(9, $BANDWIDTH, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
     public static function addPEAK_GAIN(FlatBufferBuilder $builder, $PEAK_GAIN)
     {
-        $builder->addDoubleX(9, $PEAK_GAIN, 0.0);
+        $builder->addDoubleX(10, $PEAK_GAIN, 0.0);
     }
 
     /**
@@ -307,17 +339,7 @@ class RFB extends Table
      */
     public static function addEDGE_GAIN(FlatBufferBuilder $builder, $EDGE_GAIN)
     {
-        $builder->addDoubleX(10, $EDGE_GAIN, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addBANDWIDTH(FlatBufferBuilder $builder, $BANDWIDTH)
-    {
-        $builder->addDoubleX(11, $BANDWIDTH, 0.0);
+        $builder->addDoubleX(11, $EDGE_GAIN, 0.0);
     }
 
     /**
@@ -332,12 +354,12 @@ class RFB extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addPOLARIZATION(FlatBufferBuilder $builder, $POLARIZATION)
     {
-        $builder->addOffsetX(13, $POLARIZATION, 0);
+        $builder->addSbyteX(13, $POLARIZATION, 0);
     }
 
     /**

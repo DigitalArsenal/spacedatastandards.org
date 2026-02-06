@@ -4,6 +4,22 @@
 
 import FlatBuffers
 
+public enum radarObsType: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case detection = 0
+  case track = 1
+  case metric = 2
+  case signature = 3
+  case searchFence = 4
+  case unknown = 5
+
+  public static var max: radarObsType { return .unknown }
+  public static var min: radarObsType { return .detection }
+}
+
+
 ///  Radar Observation
 public struct RDO: FlatBufferObject, Verifiable {
 
@@ -20,140 +36,194 @@ public struct RDO: FlatBufferObject, Verifiable {
     case ID = 4
     case OB_TIME = 6
     case ID_SENSOR = 8
-    case SAT_NO = 10
-    case TASK_ID = 12
-    case TRANSACTION_ID = 14
-    case TRACK_ID = 16
-    case OB_POSITION = 18
-    case ORIG_OBJECT_ID = 20
-    case ORIG_SENSOR_ID = 22
-    case UCT = 24
-    case AZIMUTH = 26
-    case AZIMUTH_UNC = 28
-    case AZIMUTH_BIAS = 30
-    case AZIMUTH_RATE = 32
-    case ELEVATION = 34
-    case ELEVATION_UNC = 36
-    case ELEVATION_BIAS = 38
-    case ELEVATION_RATE = 40
-    case RANGE = 42
-    case RANGE_ACCEL = 44
-    case RANGE_ACCEL_UNC = 46
-    case RANGE_UNC = 48
-    case RANGE_BIAS = 50
-    case RANGE_RATE = 52
-    case RANGE_RATE_UNC = 54
-    case DOPPLER = 56
-    case DOPPLER_UNC = 58
-    case RA = 60
-    case DECLINATION = 62
-    case X = 64
-    case Y = 66
-    case Z = 68
-    case XVEL = 70
-    case YVEL = 72
-    case ZVEL = 74
-    case SENX = 76
-    case SENY = 78
-    case SENZ = 80
-    case RCS = 82
-    case RCS_UNC = 84
-    case ORTHOGONAL_RCS = 86
-    case ORTHOGONAL_RCS_UNC = 88
-    case SNR = 90
-    case BEAM = 92
-    case TIMING_BIAS = 94
-    case RAW_FILE_URI = 96
-    case TAGS = 98
-    case ON_ORBIT = 100
-    case SEN_REFERENCE_FRAME = 102
+    case ORIG_SENSOR_ID = 10
+    case SAT_NO = 12
+    case ORIG_OBJECT_ID = 14
+    case ON_ORBIT = 16
+    case UCT = 18
+    case OBS_TYPE = 20
+    case TASK_ID = 22
+    case TRANSACTION_ID = 24
+    case TRACK_ID = 26
+    case OB_POSITION = 28
+    case SEN_REFERENCE_FRAME = 30
+    case AZIMUTH = 32
+    case AZIMUTH_UNC = 34
+    case AZIMUTH_BIAS = 36
+    case AZIMUTH_RATE = 38
+    case ELEVATION = 40
+    case ELEVATION_UNC = 42
+    case ELEVATION_BIAS = 44
+    case ELEVATION_RATE = 46
+    case RANGE = 48
+    case RANGE_UNC = 50
+    case RANGE_BIAS = 52
+    case RANGE_RATE = 54
+    case RANGE_RATE_UNC = 56
+    case RANGE_ACCEL = 58
+    case RANGE_ACCEL_UNC = 60
+    case DOPPLER = 62
+    case DOPPLER_UNC = 64
+    case RA = 66
+    case DECLINATION = 68
+    case X = 70
+    case Y = 72
+    case Z = 74
+    case XVEL = 76
+    case YVEL = 78
+    case ZVEL = 80
+    case SENX = 82
+    case SENY = 84
+    case SENZ = 86
+    case RCS = 88
+    case RCS_UNC = 90
+    case ORTHOGONAL_RCS = 92
+    case ORTHOGONAL_RCS_UNC = 94
+    case SNR = 96
+    case BEAM = 98
+    case TIMING_BIAS = 100
+    case RAW_FILE_URI = 102
     case DESCRIPTOR = 104
-    case TYPE = 106
+    case TAGS = 106
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
+  ///  Unique identifier
   public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  ///  Observation time (ISO 8601)
   public var OB_TIME: String? { let o = _accessor.offset(VTOFFSET.OB_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OB_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OB_TIME.v) }
+  ///  Sensor identifier
   public var ID_SENSOR: String? { let o = _accessor.offset(VTOFFSET.ID_SENSOR.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ID_SENSORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_SENSOR.v) }
-  public var SAT_NO: Int32 { let o = _accessor.offset(VTOFFSET.SAT_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var TASK_ID: String? { let o = _accessor.offset(VTOFFSET.TASK_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TASK_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TASK_ID.v) }
-  public var TRANSACTION_ID: String? { let o = _accessor.offset(VTOFFSET.TRANSACTION_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRANSACTION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRANSACTION_ID.v) }
-  public var TRACK_ID: String? { let o = _accessor.offset(VTOFFSET.TRACK_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRACK_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRACK_ID.v) }
-  public var OB_POSITION: String? { let o = _accessor.offset(VTOFFSET.OB_POSITION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OB_POSITIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OB_POSITION.v) }
-  public var ORIG_OBJECT_ID: String? { let o = _accessor.offset(VTOFFSET.ORIG_OBJECT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ORIG_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_OBJECT_ID.v) }
+  ///  Original sensor identifier
   public var ORIG_SENSOR_ID: String? { let o = _accessor.offset(VTOFFSET.ORIG_SENSOR_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ORIG_SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_SENSOR_ID.v) }
+  ///  Satellite catalog number
+  public var SAT_NO: UInt32 { let o = _accessor.offset(VTOFFSET.SAT_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  International designator
+  public var ORIG_OBJECT_ID: String? { let o = _accessor.offset(VTOFFSET.ORIG_OBJECT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIG_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_OBJECT_ID.v) }
+  ///  On-orbit reference
+  public var ON_ORBIT: String? { let o = _accessor.offset(VTOFFSET.ON_ORBIT.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ON_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ON_ORBIT.v) }
+  ///  True if uncorrelated target
   public var UCT: Bool { let o = _accessor.offset(VTOFFSET.UCT.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Observation type
+  public var OBS_TYPE: radarObsType { let o = _accessor.offset(VTOFFSET.OBS_TYPE.v); return o == 0 ? .detection : radarObsType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .detection }
+  ///  Task identifier
+  public var TASK_ID: String? { let o = _accessor.offset(VTOFFSET.TASK_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TASK_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TASK_ID.v) }
+  ///  Transaction identifier
+  public var TRANSACTION_ID: String? { let o = _accessor.offset(VTOFFSET.TRANSACTION_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRANSACTION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRANSACTION_ID.v) }
+  ///  Track identifier
+  public var TRACK_ID: String? { let o = _accessor.offset(VTOFFSET.TRACK_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRACK_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRACK_ID.v) }
+  ///  Observation position identifier
+  public var OB_POSITION: String? { let o = _accessor.offset(VTOFFSET.OB_POSITION.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OB_POSITIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OB_POSITION.v) }
+  ///  Sensor reference frame
+  public var SEN_REFERENCE_FRAME: String? { let o = _accessor.offset(VTOFFSET.SEN_REFERENCE_FRAME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SEN_REFERENCE_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SEN_REFERENCE_FRAME.v) }
+  ///  Azimuth angle (degrees)
   public var AZIMUTH: Double { let o = _accessor.offset(VTOFFSET.AZIMUTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Azimuth uncertainty (degrees, 1-sigma)
   public var AZIMUTH_UNC: Double { let o = _accessor.offset(VTOFFSET.AZIMUTH_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Azimuth bias (degrees)
   public var AZIMUTH_BIAS: Double { let o = _accessor.offset(VTOFFSET.AZIMUTH_BIAS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Azimuth rate (degrees/s)
   public var AZIMUTH_RATE: Double { let o = _accessor.offset(VTOFFSET.AZIMUTH_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Elevation angle (degrees)
   public var ELEVATION: Double { let o = _accessor.offset(VTOFFSET.ELEVATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Elevation uncertainty (degrees, 1-sigma)
   public var ELEVATION_UNC: Double { let o = _accessor.offset(VTOFFSET.ELEVATION_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Elevation bias (degrees)
   public var ELEVATION_BIAS: Double { let o = _accessor.offset(VTOFFSET.ELEVATION_BIAS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Elevation rate (degrees/s)
   public var ELEVATION_RATE: Double { let o = _accessor.offset(VTOFFSET.ELEVATION_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Slant range (km)
   public var RANGE: Double { let o = _accessor.offset(VTOFFSET.RANGE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var RANGE_ACCEL: Double { let o = _accessor.offset(VTOFFSET.RANGE_ACCEL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var RANGE_ACCEL_UNC: Double { let o = _accessor.offset(VTOFFSET.RANGE_ACCEL_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Range uncertainty (km, 1-sigma)
   public var RANGE_UNC: Double { let o = _accessor.offset(VTOFFSET.RANGE_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Range bias (km)
   public var RANGE_BIAS: Double { let o = _accessor.offset(VTOFFSET.RANGE_BIAS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Range rate (km/s)
   public var RANGE_RATE: Double { let o = _accessor.offset(VTOFFSET.RANGE_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Range rate uncertainty (km/s, 1-sigma)
   public var RANGE_RATE_UNC: Double { let o = _accessor.offset(VTOFFSET.RANGE_RATE_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Range acceleration (km/s^2)
+  public var RANGE_ACCEL: Double { let o = _accessor.offset(VTOFFSET.RANGE_ACCEL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Range acceleration uncertainty (km/s^2, 1-sigma)
+  public var RANGE_ACCEL_UNC: Double { let o = _accessor.offset(VTOFFSET.RANGE_ACCEL_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Doppler shift (Hz)
   public var DOPPLER: Double { let o = _accessor.offset(VTOFFSET.DOPPLER.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Doppler uncertainty (Hz, 1-sigma)
   public var DOPPLER_UNC: Double { let o = _accessor.offset(VTOFFSET.DOPPLER_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Right ascension (degrees)
   public var RA: Double { let o = _accessor.offset(VTOFFSET.RA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Declination (degrees)
   public var DECLINATION: Double { let o = _accessor.offset(VTOFFSET.DECLINATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Target position X (km, ECI)
   public var X: Double { let o = _accessor.offset(VTOFFSET.X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Target position Y (km, ECI)
   public var Y: Double { let o = _accessor.offset(VTOFFSET.Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Target position Z (km, ECI)
   public var Z: Double { let o = _accessor.offset(VTOFFSET.Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Target velocity X (km/s, ECI)
   public var XVEL: Double { let o = _accessor.offset(VTOFFSET.XVEL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Target velocity Y (km/s, ECI)
   public var YVEL: Double { let o = _accessor.offset(VTOFFSET.YVEL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Target velocity Z (km/s, ECI)
   public var ZVEL: Double { let o = _accessor.offset(VTOFFSET.ZVEL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Sensor position X (km, ECEF)
   public var SENX: Double { let o = _accessor.offset(VTOFFSET.SENX.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Sensor position Y (km, ECEF)
   public var SENY: Double { let o = _accessor.offset(VTOFFSET.SENY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Sensor position Z (km, ECEF)
   public var SENZ: Double { let o = _accessor.offset(VTOFFSET.SENZ.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Radar cross-section (dBsm)
   public var RCS: Double { let o = _accessor.offset(VTOFFSET.RCS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  RCS uncertainty (dBsm, 1-sigma)
   public var RCS_UNC: Double { let o = _accessor.offset(VTOFFSET.RCS_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Orthogonal polarization RCS (dBsm)
   public var ORTHOGONAL_RCS: Double { let o = _accessor.offset(VTOFFSET.ORTHOGONAL_RCS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Orthogonal RCS uncertainty (dBsm, 1-sigma)
   public var ORTHOGONAL_RCS_UNC: Double { let o = _accessor.offset(VTOFFSET.ORTHOGONAL_RCS_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Signal-to-noise ratio (dB)
   public var SNR: Double { let o = _accessor.offset(VTOFFSET.SNR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Beam identifier
   public var BEAM: Double { let o = _accessor.offset(VTOFFSET.BEAM.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Timing bias (seconds)
   public var TIMING_BIAS: Double { let o = _accessor.offset(VTOFFSET.TIMING_BIAS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Reference to raw data file
   public var RAW_FILE_URI: String? { let o = _accessor.offset(VTOFFSET.RAW_FILE_URI.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var RAW_FILE_URISegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.RAW_FILE_URI.v) }
+  ///  Event descriptor
+  public var DESCRIPTOR: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTOR.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTOR.v) }
+  ///  Associated tags
   public var hasTags: Bool { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? false : true }
   public var TAGSCount: Int32 { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func TAGS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public var ON_ORBIT: String? { let o = _accessor.offset(VTOFFSET.ON_ORBIT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ON_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ON_ORBIT.v) }
-  public var SEN_REFERENCE_FRAME: String? { let o = _accessor.offset(VTOFFSET.SEN_REFERENCE_FRAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SEN_REFERENCE_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SEN_REFERENCE_FRAME.v) }
-  public var DESCRIPTOR: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTOR.v) }
-  public var TYPE: String? { let o = _accessor.offset(VTOFFSET.TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TYPE.v) }
   public static func startRDO(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 52) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(OB_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_TIME, at: VTOFFSET.OB_TIME.p) }
   public static func add(ID_SENSOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_SENSOR, at: VTOFFSET.ID_SENSOR.p) }
-  public static func add(SAT_NO: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }
+  public static func add(ORIG_SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_SENSOR_ID, at: VTOFFSET.ORIG_SENSOR_ID.p) }
+  public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }
+  public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VTOFFSET.ORIG_OBJECT_ID.p) }
+  public static func add(ON_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ON_ORBIT, at: VTOFFSET.ON_ORBIT.p) }
+  public static func add(UCT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UCT, def: false,
+   at: VTOFFSET.UCT.p) }
+  public static func add(OBS_TYPE: radarObsType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBS_TYPE.rawValue, def: 0, at: VTOFFSET.OBS_TYPE.p) }
   public static func add(TASK_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TASK_ID, at: VTOFFSET.TASK_ID.p) }
   public static func add(TRANSACTION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSACTION_ID, at: VTOFFSET.TRANSACTION_ID.p) }
   public static func add(TRACK_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACK_ID, at: VTOFFSET.TRACK_ID.p) }
   public static func add(OB_POSITION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_POSITION, at: VTOFFSET.OB_POSITION.p) }
-  public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VTOFFSET.ORIG_OBJECT_ID.p) }
-  public static func add(ORIG_SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_SENSOR_ID, at: VTOFFSET.ORIG_SENSOR_ID.p) }
-  public static func add(UCT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UCT, def: false,
-   at: VTOFFSET.UCT.p) }
+  public static func add(SEN_REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEN_REFERENCE_FRAME, at: VTOFFSET.SEN_REFERENCE_FRAME.p) }
   public static func add(AZIMUTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZIMUTH, def: 0.0, at: VTOFFSET.AZIMUTH.p) }
   public static func add(AZIMUTH_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZIMUTH_UNC, def: 0.0, at: VTOFFSET.AZIMUTH_UNC.p) }
   public static func add(AZIMUTH_BIAS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZIMUTH_BIAS, def: 0.0, at: VTOFFSET.AZIMUTH_BIAS.p) }
@@ -163,12 +233,12 @@ public struct RDO: FlatBufferObject, Verifiable {
   public static func add(ELEVATION_BIAS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION_BIAS, def: 0.0, at: VTOFFSET.ELEVATION_BIAS.p) }
   public static func add(ELEVATION_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION_RATE, def: 0.0, at: VTOFFSET.ELEVATION_RATE.p) }
   public static func add(RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE, def: 0.0, at: VTOFFSET.RANGE.p) }
-  public static func add(RANGE_ACCEL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE_ACCEL, def: 0.0, at: VTOFFSET.RANGE_ACCEL.p) }
-  public static func add(RANGE_ACCEL_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE_ACCEL_UNC, def: 0.0, at: VTOFFSET.RANGE_ACCEL_UNC.p) }
   public static func add(RANGE_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE_UNC, def: 0.0, at: VTOFFSET.RANGE_UNC.p) }
   public static func add(RANGE_BIAS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE_BIAS, def: 0.0, at: VTOFFSET.RANGE_BIAS.p) }
   public static func add(RANGE_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE_RATE, def: 0.0, at: VTOFFSET.RANGE_RATE.p) }
   public static func add(RANGE_RATE_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE_RATE_UNC, def: 0.0, at: VTOFFSET.RANGE_RATE_UNC.p) }
+  public static func add(RANGE_ACCEL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE_ACCEL, def: 0.0, at: VTOFFSET.RANGE_ACCEL.p) }
+  public static func add(RANGE_ACCEL_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE_ACCEL_UNC, def: 0.0, at: VTOFFSET.RANGE_ACCEL_UNC.p) }
   public static func add(DOPPLER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DOPPLER, def: 0.0, at: VTOFFSET.DOPPLER.p) }
   public static func add(DOPPLER_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DOPPLER_UNC, def: 0.0, at: VTOFFSET.DOPPLER_UNC.p) }
   public static func add(RA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RA, def: 0.0, at: VTOFFSET.RA.p) }
@@ -190,25 +260,25 @@ public struct RDO: FlatBufferObject, Verifiable {
   public static func add(BEAM: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BEAM, def: 0.0, at: VTOFFSET.BEAM.p) }
   public static func add(TIMING_BIAS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIMING_BIAS, def: 0.0, at: VTOFFSET.TIMING_BIAS.p) }
   public static func add(RAW_FILE_URI: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: RAW_FILE_URI, at: VTOFFSET.RAW_FILE_URI.p) }
-  public static func addVectorOf(TAGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAGS, at: VTOFFSET.TAGS.p) }
-  public static func add(ON_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ON_ORBIT, at: VTOFFSET.ON_ORBIT.p) }
-  public static func add(SEN_REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEN_REFERENCE_FRAME, at: VTOFFSET.SEN_REFERENCE_FRAME.p) }
   public static func add(DESCRIPTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTOR, at: VTOFFSET.DESCRIPTOR.p) }
-  public static func add(TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE, at: VTOFFSET.TYPE.p) }
+  public static func addVectorOf(TAGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAGS, at: VTOFFSET.TAGS.p) }
   public static func endRDO(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createRDO(
     _ fbb: inout FlatBufferBuilder,
     IDOffset ID: Offset = Offset(),
     OB_TIMEOffset OB_TIME: Offset = Offset(),
     ID_SENSOROffset ID_SENSOR: Offset = Offset(),
-    SAT_NO: Int32 = 0,
+    ORIG_SENSOR_IDOffset ORIG_SENSOR_ID: Offset = Offset(),
+    SAT_NO: UInt32 = 0,
+    ORIG_OBJECT_IDOffset ORIG_OBJECT_ID: Offset = Offset(),
+    ON_ORBITOffset ON_ORBIT: Offset = Offset(),
+    UCT: Bool = false,
+    OBS_TYPE: radarObsType = .detection,
     TASK_IDOffset TASK_ID: Offset = Offset(),
     TRANSACTION_IDOffset TRANSACTION_ID: Offset = Offset(),
     TRACK_IDOffset TRACK_ID: Offset = Offset(),
     OB_POSITIONOffset OB_POSITION: Offset = Offset(),
-    ORIG_OBJECT_IDOffset ORIG_OBJECT_ID: Offset = Offset(),
-    ORIG_SENSOR_IDOffset ORIG_SENSOR_ID: Offset = Offset(),
-    UCT: Bool = false,
+    SEN_REFERENCE_FRAMEOffset SEN_REFERENCE_FRAME: Offset = Offset(),
     AZIMUTH: Double = 0.0,
     AZIMUTH_UNC: Double = 0.0,
     AZIMUTH_BIAS: Double = 0.0,
@@ -218,12 +288,12 @@ public struct RDO: FlatBufferObject, Verifiable {
     ELEVATION_BIAS: Double = 0.0,
     ELEVATION_RATE: Double = 0.0,
     RANGE: Double = 0.0,
-    RANGE_ACCEL: Double = 0.0,
-    RANGE_ACCEL_UNC: Double = 0.0,
     RANGE_UNC: Double = 0.0,
     RANGE_BIAS: Double = 0.0,
     RANGE_RATE: Double = 0.0,
     RANGE_RATE_UNC: Double = 0.0,
+    RANGE_ACCEL: Double = 0.0,
+    RANGE_ACCEL_UNC: Double = 0.0,
     DOPPLER: Double = 0.0,
     DOPPLER_UNC: Double = 0.0,
     RA: Double = 0.0,
@@ -245,24 +315,24 @@ public struct RDO: FlatBufferObject, Verifiable {
     BEAM: Double = 0.0,
     TIMING_BIAS: Double = 0.0,
     RAW_FILE_URIOffset RAW_FILE_URI: Offset = Offset(),
-    TAGSVectorOffset TAGS: Offset = Offset(),
-    ON_ORBITOffset ON_ORBIT: Offset = Offset(),
-    SEN_REFERENCE_FRAMEOffset SEN_REFERENCE_FRAME: Offset = Offset(),
     DESCRIPTOROffset DESCRIPTOR: Offset = Offset(),
-    TYPEOffset TYPE: Offset = Offset()
+    TAGSVectorOffset TAGS: Offset = Offset()
   ) -> Offset {
     let __start = RDO.startRDO(&fbb)
     RDO.add(ID: ID, &fbb)
     RDO.add(OB_TIME: OB_TIME, &fbb)
     RDO.add(ID_SENSOR: ID_SENSOR, &fbb)
+    RDO.add(ORIG_SENSOR_ID: ORIG_SENSOR_ID, &fbb)
     RDO.add(SAT_NO: SAT_NO, &fbb)
+    RDO.add(ORIG_OBJECT_ID: ORIG_OBJECT_ID, &fbb)
+    RDO.add(ON_ORBIT: ON_ORBIT, &fbb)
+    RDO.add(UCT: UCT, &fbb)
+    RDO.add(OBS_TYPE: OBS_TYPE, &fbb)
     RDO.add(TASK_ID: TASK_ID, &fbb)
     RDO.add(TRANSACTION_ID: TRANSACTION_ID, &fbb)
     RDO.add(TRACK_ID: TRACK_ID, &fbb)
     RDO.add(OB_POSITION: OB_POSITION, &fbb)
-    RDO.add(ORIG_OBJECT_ID: ORIG_OBJECT_ID, &fbb)
-    RDO.add(ORIG_SENSOR_ID: ORIG_SENSOR_ID, &fbb)
-    RDO.add(UCT: UCT, &fbb)
+    RDO.add(SEN_REFERENCE_FRAME: SEN_REFERENCE_FRAME, &fbb)
     RDO.add(AZIMUTH: AZIMUTH, &fbb)
     RDO.add(AZIMUTH_UNC: AZIMUTH_UNC, &fbb)
     RDO.add(AZIMUTH_BIAS: AZIMUTH_BIAS, &fbb)
@@ -272,12 +342,12 @@ public struct RDO: FlatBufferObject, Verifiable {
     RDO.add(ELEVATION_BIAS: ELEVATION_BIAS, &fbb)
     RDO.add(ELEVATION_RATE: ELEVATION_RATE, &fbb)
     RDO.add(RANGE: RANGE, &fbb)
-    RDO.add(RANGE_ACCEL: RANGE_ACCEL, &fbb)
-    RDO.add(RANGE_ACCEL_UNC: RANGE_ACCEL_UNC, &fbb)
     RDO.add(RANGE_UNC: RANGE_UNC, &fbb)
     RDO.add(RANGE_BIAS: RANGE_BIAS, &fbb)
     RDO.add(RANGE_RATE: RANGE_RATE, &fbb)
     RDO.add(RANGE_RATE_UNC: RANGE_RATE_UNC, &fbb)
+    RDO.add(RANGE_ACCEL: RANGE_ACCEL, &fbb)
+    RDO.add(RANGE_ACCEL_UNC: RANGE_ACCEL_UNC, &fbb)
     RDO.add(DOPPLER: DOPPLER, &fbb)
     RDO.add(DOPPLER_UNC: DOPPLER_UNC, &fbb)
     RDO.add(RA: RA, &fbb)
@@ -299,11 +369,8 @@ public struct RDO: FlatBufferObject, Verifiable {
     RDO.add(BEAM: BEAM, &fbb)
     RDO.add(TIMING_BIAS: TIMING_BIAS, &fbb)
     RDO.add(RAW_FILE_URI: RAW_FILE_URI, &fbb)
-    RDO.addVectorOf(TAGS: TAGS, &fbb)
-    RDO.add(ON_ORBIT: ON_ORBIT, &fbb)
-    RDO.add(SEN_REFERENCE_FRAME: SEN_REFERENCE_FRAME, &fbb)
     RDO.add(DESCRIPTOR: DESCRIPTOR, &fbb)
-    RDO.add(TYPE: TYPE, &fbb)
+    RDO.addVectorOf(TAGS: TAGS, &fbb)
     return RDO.endRDO(&fbb, start: __start)
   }
 
@@ -312,14 +379,17 @@ public struct RDO: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.OB_TIME.p, fieldName: "OB_TIME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ID_SENSOR.p, fieldName: "ID_SENSOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SAT_NO.p, fieldName: "SAT_NO", required: false, type: Int32.self)
+    try _v.visit(field: VTOFFSET.ORIG_SENSOR_ID.p, fieldName: "ORIG_SENSOR_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.SAT_NO.p, fieldName: "SAT_NO", required: false, type: UInt32.self)
+    try _v.visit(field: VTOFFSET.ORIG_OBJECT_ID.p, fieldName: "ORIG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.ON_ORBIT.p, fieldName: "ON_ORBIT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.UCT.p, fieldName: "UCT", required: false, type: Bool.self)
+    try _v.visit(field: VTOFFSET.OBS_TYPE.p, fieldName: "OBS_TYPE", required: false, type: radarObsType.self)
     try _v.visit(field: VTOFFSET.TASK_ID.p, fieldName: "TASK_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.TRANSACTION_ID.p, fieldName: "TRANSACTION_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.TRACK_ID.p, fieldName: "TRACK_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.OB_POSITION.p, fieldName: "OB_POSITION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ORIG_OBJECT_ID.p, fieldName: "ORIG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ORIG_SENSOR_ID.p, fieldName: "ORIG_SENSOR_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.UCT.p, fieldName: "UCT", required: false, type: Bool.self)
+    try _v.visit(field: VTOFFSET.SEN_REFERENCE_FRAME.p, fieldName: "SEN_REFERENCE_FRAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.AZIMUTH.p, fieldName: "AZIMUTH", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.AZIMUTH_UNC.p, fieldName: "AZIMUTH_UNC", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.AZIMUTH_BIAS.p, fieldName: "AZIMUTH_BIAS", required: false, type: Double.self)
@@ -329,12 +399,12 @@ public struct RDO: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.ELEVATION_BIAS.p, fieldName: "ELEVATION_BIAS", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.ELEVATION_RATE.p, fieldName: "ELEVATION_RATE", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.RANGE.p, fieldName: "RANGE", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RANGE_ACCEL.p, fieldName: "RANGE_ACCEL", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.RANGE_ACCEL_UNC.p, fieldName: "RANGE_ACCEL_UNC", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.RANGE_UNC.p, fieldName: "RANGE_UNC", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.RANGE_BIAS.p, fieldName: "RANGE_BIAS", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.RANGE_RATE.p, fieldName: "RANGE_RATE", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.RANGE_RATE_UNC.p, fieldName: "RANGE_RATE_UNC", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.RANGE_ACCEL.p, fieldName: "RANGE_ACCEL", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.RANGE_ACCEL_UNC.p, fieldName: "RANGE_ACCEL_UNC", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.DOPPLER.p, fieldName: "DOPPLER", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.DOPPLER_UNC.p, fieldName: "DOPPLER_UNC", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.RA.p, fieldName: "RA", required: false, type: Double.self)
@@ -356,11 +426,8 @@ public struct RDO: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.BEAM.p, fieldName: "BEAM", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.TIMING_BIAS.p, fieldName: "TIMING_BIAS", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.RAW_FILE_URI.p, fieldName: "RAW_FILE_URI", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TAGS.p, fieldName: "TAGS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.ON_ORBIT.p, fieldName: "ON_ORBIT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SEN_REFERENCE_FRAME.p, fieldName: "SEN_REFERENCE_FRAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.DESCRIPTOR.p, fieldName: "DESCRIPTOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TYPE.p, fieldName: "TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.TAGS.p, fieldName: "TAGS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     _v.finish()
   }
 }

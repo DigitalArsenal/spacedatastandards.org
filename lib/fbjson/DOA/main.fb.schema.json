@@ -1,134 +1,234 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "doaCollectionMode": {
+      "type": "string",
+      "enum": [
+        "TDOA",
+        "FDOA",
+        "TDOA_FDOA",
+        "AOA",
+        "COMBINED",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "TDOA": {
+          "value": 0
+        },
+        "FDOA": {
+          "value": 1
+        },
+        "TDOA_FDOA": {
+          "value": 2
+        },
+        "AOA": {
+          "value": 3
+        },
+        "COMBINED": {
+          "value": 4
+        },
+        "UNKNOWN": {
+          "value": 5
+        }
+      }
+    },
     "DOA": {
       "type": "object",
-      "description": "Difference of Arrival",
+      "description": "Difference of Arrival Geolocation",
       "properties": {
         "ID": {
           "type": "string",
+          "description": "Unique identifier",
           "x-flatbuffer-type": "string"
         },
         "OB_TIME": {
           "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "ID_SENSOR1": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "ID_SENSOR2": {
-          "type": "string",
+          "description": "Observation time (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "SAT_NO": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
-        },
-        "TASK_ID": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Satellite catalog number",
+          "x-flatbuffer-type": "uint32"
         },
         "ORIG_OBJECT_ID": {
           "type": "string",
+          "description": "International designator",
           "x-flatbuffer-type": "string"
         },
-        "ORIG_SENSOR_ID1": {
+        "ON_ORBIT": {
           "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "ORIG_SENSOR_ID2": {
-          "type": "string",
+          "description": "On-orbit reference",
           "x-flatbuffer-type": "string"
         },
         "UCT": {
           "type": "boolean",
+          "description": "True if uncorrelated target",
           "x-flatbuffer-type": "bool"
         },
-        "SENSOR1_DELAY": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
+        "TASK_ID": {
+          "type": "string",
+          "description": "Task identifier",
+          "x-flatbuffer-type": "string"
         },
-        "SENSOR2_DELAY": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
+        "TRANSACTION_ID": {
+          "type": "string",
+          "description": "Transaction identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "COLLECTION_MODE": {
+          "$ref": "#/definitions/doaCollectionMode",
+          "description": "Collection mode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "TDOA": {
+              "value": 0
+            },
+            "FDOA": {
+              "value": 1
+            },
+            "TDOA_FDOA": {
+              "value": 2
+            },
+            "AOA": {
+              "value": 3
+            },
+            "COMBINED": {
+              "value": 4
+            },
+            "UNKNOWN": {
+              "value": 5
+            }
+          }
+        },
+        "ID_SENSOR1": {
+          "type": "string",
+          "description": "Sensor 1 identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIG_SENSOR_ID1": {
+          "type": "string",
+          "description": "Sensor 1 original identifier",
+          "x-flatbuffer-type": "string"
         },
         "SENLAT": {
           "type": "number",
+          "description": "Sensor 1 latitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "SENLON": {
           "type": "number",
+          "description": "Sensor 1 longitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "SENALT": {
           "type": "number",
+          "description": "Sensor 1 altitude (km)",
           "x-flatbuffer-type": "double"
+        },
+        "SENSOR1_DELAY": {
+          "type": "number",
+          "description": "Sensor 1 processing delay (seconds)",
+          "x-flatbuffer-type": "double"
+        },
+        "ID_SENSOR2": {
+          "type": "string",
+          "description": "Sensor 2 identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIG_SENSOR_ID2": {
+          "type": "string",
+          "description": "Sensor 2 original identifier",
+          "x-flatbuffer-type": "string"
         },
         "SEN2LAT": {
           "type": "number",
+          "description": "Sensor 2 latitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "SEN2LON": {
           "type": "number",
+          "description": "Sensor 2 longitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "SEN2ALT": {
           "type": "number",
+          "description": "Sensor 2 altitude (km)",
+          "x-flatbuffer-type": "double"
+        },
+        "SENSOR2_DELAY": {
+          "type": "number",
+          "description": "Sensor 2 processing delay (seconds)",
           "x-flatbuffer-type": "double"
         },
         "FREQUENCY": {
           "type": "number",
+          "description": "Measured frequency (MHz)",
           "x-flatbuffer-type": "double"
         },
         "BANDWIDTH": {
           "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "DELTA_RANGE": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "DELTA_RANGE_UNC": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "DELTA_RANGE_RATE": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "DELTA_RANGE_RATE_UNC": {
-          "type": "number",
+          "description": "Measurement bandwidth (MHz)",
           "x-flatbuffer-type": "double"
         },
         "SNR": {
           "type": "number",
+          "description": "Signal-to-noise ratio (dB)",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_RANGE": {
+          "type": "number",
+          "description": "Differential range (km)",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_RANGE_UNC": {
+          "type": "number",
+          "description": "Differential range uncertainty (km, 1-sigma)",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_RANGE_RATE": {
+          "type": "number",
+          "description": "Differential range rate (km/s)",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_RANGE_RATE_UNC": {
+          "type": "number",
+          "description": "Differential range rate uncertainty (km/s, 1-sigma)",
           "x-flatbuffer-type": "double"
         },
         "TDOA": {
           "type": "number",
+          "description": "Time difference of arrival (seconds)",
           "x-flatbuffer-type": "double"
         },
         "TDOA_UNC": {
           "type": "number",
+          "description": "TDOA uncertainty (seconds, 1-sigma)",
           "x-flatbuffer-type": "double"
         },
         "FDOA": {
           "type": "number",
+          "description": "Frequency difference of arrival (Hz)",
           "x-flatbuffer-type": "double"
         },
         "FDOA_UNC": {
           "type": "number",
+          "description": "FDOA uncertainty (Hz, 1-sigma)",
           "x-flatbuffer-type": "double"
-        },
-        "COLLECTION_MODE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
         },
         "RAW_FILE_URI": {
           "type": "string",
+          "description": "Reference to raw data file",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTOR": {
+          "type": "string",
+          "description": "Event descriptor",
           "x-flatbuffer-type": "string"
         },
         "TAGS": {
@@ -136,19 +236,8 @@
           "items": {
             "type": "string"
           },
+          "description": "Associated tags",
           "x-flatbuffer-type": "[string]"
-        },
-        "ON_ORBIT": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "DESCRIPTOR": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "TRANSACTION_ID": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

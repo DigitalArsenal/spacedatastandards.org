@@ -1,33 +1,226 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "reentryDisposition" : {
+      "type" : "string",
+      "enum": ["CONTROLLED", "UNCONTROLLED", "SEMI_CONTROLLED"]
+    },
+    "reentryReason" : {
+      "type" : "string",
+      "enum": ["NATURAL_DECAY", "COMMANDED_DEORBIT", "PROPULSION_FAILURE", "COLLISION", "FRAGMENTATION", "UNKNOWN"]
+    },
+    "reentryStateVector" : {
+      "type" : "object",
+      "description" : "Reentry State Vector",
+      "properties" : {
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch (ISO 8601)"
+              },
+        "REF_FRAME" : {
+                "type" : "string",
+                "description" : "Reference frame"
+              },
+        "X" : {
+                "type" : "number",
+                "description" : "Position X in km"
+              },
+        "Y" : {
+                "type" : "number",
+                "description" : "Position Y in km"
+              },
+        "Z" : {
+                "type" : "number",
+                "description" : "Position Z in km"
+              },
+        "X_DOT" : {
+                "type" : "number",
+                "description" : "Velocity X in km/s"
+              },
+        "Y_DOT" : {
+                "type" : "number",
+                "description" : "Velocity Y in km/s"
+              },
+        "Z_DOT" : {
+                "type" : "number",
+                "description" : "Velocity Z in km/s"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "reentryImpact" : {
+      "type" : "object",
+      "description" : "Reentry Ground Impact Prediction",
+      "properties" : {
+        "IMPACT_EPOCH" : {
+                "type" : "string",
+                "description" : "Predicted impact epoch (ISO 8601)"
+              },
+        "EPOCH_UNCERTAINTY" : {
+                "type" : "number",
+                "description" : "Epoch uncertainty window in seconds"
+              },
+        "LATITUDE" : {
+                "type" : "number",
+                "description" : "Impact latitude in degrees"
+              },
+        "LONGITUDE" : {
+                "type" : "number",
+                "description" : "Impact longitude in degrees"
+              },
+        "ALONG_TRACK_UNC" : {
+                "type" : "number",
+                "description" : "Along-track uncertainty in km"
+              },
+        "CROSS_TRACK_UNC" : {
+                "type" : "number",
+                "description" : "Cross-track uncertainty in km"
+              },
+        "IMPACT_PROBABILITY" : {
+                "type" : "number",
+                "description" : "Impact probability (0.0-1.0)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "survivingDebris" : {
+      "type" : "object",
+      "description" : "Surviving Debris Prediction",
+      "properties" : {
+        "FRAGMENT_ID" : {
+                "type" : "string",
+                "description" : "Fragment identifier"
+              },
+        "MATERIAL" : {
+                "type" : "string",
+                "description" : "Material type"
+              },
+        "MASS" : {
+                "type" : "number",
+                "description" : "Fragment mass in kg"
+              },
+        "CASUALTY_AREA" : {
+                "type" : "number",
+                "description" : "Casualty area in m^2"
+              },
+        "SURVIVAL_PROBABILITY" : {
+                "type" : "number",
+                "description" : "Survival probability (0.0-1.0)"
+              }
+      },
+      "additionalProperties" : false
+    },
     "RDM" : {
       "type" : "object",
       "description" : "Reentry Data Message",
       "properties" : {
         "CCSDS_RDM_VERS" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "CCSDS RDM version"
               },
         "CREATION_DATE" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Message creation date (ISO 8601)"
               },
         "ORIGINATOR" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Creating organization"
               },
         "OBJECT_NAME" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Object name"
               },
         "OBJECT_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "International designator"
+              },
+        "NORAD_CAT_ID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "NORAD catalog number"
+              },
+        "OBJECT_TYPE" : {
+                "type" : "string",
+                "description" : "Object type (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN)"
+              },
+        "DISPOSITION" : {
+                "$ref" : "#/definitions/reentryDisposition",
+                "description" : "Reentry disposition"
+              },
+        "REASON" : {
+                "$ref" : "#/definitions/reentryReason",
+                "description" : "Reentry reason"
               },
         "REENTRY_EPOCH" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Predicted reentry epoch (ISO 8601)"
+              },
+        "REENTRY_EPOCH_UNC" : {
+                "type" : "number",
+                "description" : "Reentry epoch uncertainty window in hours"
               },
         "REENTRY_LATITUDE" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Reentry latitude in degrees"
               },
         "REENTRY_LONGITUDE" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Reentry longitude in degrees"
+              },
+        "REENTRY_ALTITUDE" : {
+                "type" : "number",
+                "description" : "Reentry altitude in km"
+              },
+        "TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time system"
+              },
+        "PREV_PREDICTION_EPOCH" : {
+                "type" : "string",
+                "description" : "Previous predicted reentry epoch for comparison (ISO 8601)"
+              },
+        "BALLISTIC_COEFF" : {
+                "type" : "number",
+                "description" : "Ballistic coefficient in kg/m^2"
+              },
+        "MASS" : {
+                "type" : "number",
+                "description" : "Object mass in kg"
+              },
+        "SOLAR_RAD_AREA" : {
+                "type" : "number",
+                "description" : "Solar radiation pressure area in m^2"
+              },
+        "DRAG_AREA" : {
+                "type" : "number",
+                "description" : "Drag area in m^2"
+              },
+        "INITIAL_STATE" : {
+                "$ref" : "#/definitions/reentryStateVector",
+                "description" : "Initial state vector"
+              },
+        "IMPACT_PREDICTIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/reentryImpact"},
+                "description" : "Ground impact predictions"
+              },
+        "SURVIVING_DEBRIS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/survivingDebris"},
+                "description" : "Predicted surviving debris"
+              },
+        "CASUALTY_EXPECTATION" : {
+                "type" : "number",
+                "description" : "Casualty expectation"
+              },
+        "NUM_FRAGMENTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of breakup fragments predicted"
+              },
+        "SURVIVING_MASS" : {
+                "type" : "number",
+                "description" : "Total surviving mass in kg"
+              },
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "Additional comments"
               }
       },
       "additionalProperties" : false

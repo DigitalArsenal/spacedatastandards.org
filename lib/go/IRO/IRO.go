@@ -54,6 +54,7 @@ func (rcv *IRO) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Unique identifier
 func (rcv *IRO) ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -62,6 +63,8 @@ func (rcv *IRO) ID() []byte {
 	return nil
 }
 
+/// Unique identifier
+/// Reference to source entity
 func (rcv *IRO) ID_ENTITY() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -70,6 +73,8 @@ func (rcv *IRO) ID_ENTITY() []byte {
 	return nil
 }
 
+/// Reference to source entity
+/// Sensor or observation name
 func (rcv *IRO) NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -78,6 +83,8 @@ func (rcv *IRO) NAME() []byte {
 	return nil
 }
 
+/// Sensor or observation name
+/// Description of observation
 func (rcv *IRO) DESCRIPTION() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -86,6 +93,8 @@ func (rcv *IRO) DESCRIPTION() []byte {
 	return nil
 }
 
+/// Description of observation
+/// Source entity designator
 func (rcv *IRO) ENTITY() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -94,8 +103,371 @@ func (rcv *IRO) ENTITY() []byte {
 	return nil
 }
 
+/// Source entity designator
+/// Observation epoch (ISO 8601)
+func (rcv *IRO) EPOCH() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Observation epoch (ISO 8601)
+/// Sensor identifier
+func (rcv *IRO) SENSOR_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Sensor identifier
+/// Target satellite number (if identified)
+func (rcv *IRO) SAT_NO() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Target satellite number (if identified)
+func (rcv *IRO) MutateSAT_NO(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(18, n)
+}
+
+/// Target object designator
+func (rcv *IRO) OBJECT_DESIGNATOR() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Target object designator
+/// IR spectral band
+func (rcv *IRO) BAND() irBand {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return irBand(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// IR spectral band
+func (rcv *IRO) MutateBAND(n irBand) bool {
+	return rcv._tab.MutateInt8Slot(22, int8(n))
+}
+
+/// Detection type
+func (rcv *IRO) DETECTION_TYPE() irDetectionType {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return irDetectionType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// Detection type
+func (rcv *IRO) MutateDETECTION_TYPE(n irDetectionType) bool {
+	return rcv._tab.MutateInt8Slot(24, int8(n))
+}
+
+/// Right ascension in degrees
+func (rcv *IRO) RA() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Right ascension in degrees
+func (rcv *IRO) MutateRA(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+/// Declination in degrees
+func (rcv *IRO) DEC() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Declination in degrees
+func (rcv *IRO) MutateDEC(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+/// Right ascension uncertainty in arcseconds
+func (rcv *IRO) RA_UNC() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Right ascension uncertainty in arcseconds
+func (rcv *IRO) MutateRA_UNC(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+/// Declination uncertainty in arcseconds
+func (rcv *IRO) DEC_UNC() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Declination uncertainty in arcseconds
+func (rcv *IRO) MutateDEC_UNC(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+/// Azimuth angle in degrees
+func (rcv *IRO) AZIMUTH() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Azimuth angle in degrees
+func (rcv *IRO) MutateAZIMUTH(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+/// Elevation angle in degrees
+func (rcv *IRO) ELEVATION() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Elevation angle in degrees
+func (rcv *IRO) MutateELEVATION(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+/// Range in km (if available)
+func (rcv *IRO) RANGE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Range in km (if available)
+func (rcv *IRO) MutateRANGE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+/// Irradiance in W/m^2
+func (rcv *IRO) IRRADIANCE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Irradiance in W/m^2
+func (rcv *IRO) MutateIRRADIANCE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+/// Irradiance uncertainty in W/m^2
+func (rcv *IRO) IRRADIANCE_UNC() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Irradiance uncertainty in W/m^2
+func (rcv *IRO) MutateIRRADIANCE_UNC(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+/// Apparent IR magnitude
+func (rcv *IRO) IR_MAG() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Apparent IR magnitude
+func (rcv *IRO) MutateIR_MAG(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+/// Magnitude uncertainty
+func (rcv *IRO) MAG_UNC() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Magnitude uncertainty
+func (rcv *IRO) MutateMAG_UNC(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(46, n)
+}
+
+/// Effective temperature in Kelvin
+func (rcv *IRO) TEMPERATURE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Effective temperature in Kelvin
+func (rcv *IRO) MutateTEMPERATURE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(48, n)
+}
+
+/// Integration time in seconds
+func (rcv *IRO) INTEGRATION_TIME() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Integration time in seconds
+func (rcv *IRO) MutateINTEGRATION_TIME(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(50, n)
+}
+
+/// Background irradiance in W/m^2/sr
+func (rcv *IRO) BACKGROUND() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Background irradiance in W/m^2/sr
+func (rcv *IRO) MutateBACKGROUND(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(52, n)
+}
+
+/// Signal-to-noise ratio
+func (rcv *IRO) SNR() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Signal-to-noise ratio
+func (rcv *IRO) MutateSNR(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(54, n)
+}
+
+/// Spectral data wavelengths in micrometers
+func (rcv *IRO) WAVELENGTHS(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *IRO) WAVELENGTHSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Spectral data wavelengths in micrometers
+func (rcv *IRO) MutateWAVELENGTHS(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// Spectral data values in W/m^2/um
+func (rcv *IRO) SPECTRAL_VALUES(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *IRO) SPECTRAL_VALUESLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Spectral data values in W/m^2/um
+func (rcv *IRO) MutateSPECTRAL_VALUES(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// Data quality indicator (0-9, 9=best)
+func (rcv *IRO) QUALITY() byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
+	if o != 0 {
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Data quality indicator (0-9, 9=best)
+func (rcv *IRO) MutateQUALITY(n byte) bool {
+	return rcv._tab.MutateByteSlot(60, n)
+}
+
+/// Additional notes
+func (rcv *IRO) NOTES() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Additional notes
 func IROStart(builder *flatbuffers.Builder) {
-	builder.StartObject(5)
+	builder.StartObject(30)
 }
 func IROAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
@@ -111,6 +483,87 @@ func IROAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOf
 }
 func IROAddENTITY(builder *flatbuffers.Builder, ENTITY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ENTITY), 0)
+}
+func IROAddEPOCH(builder *flatbuffers.Builder, EPOCH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(EPOCH), 0)
+}
+func IROAddSENSOR_ID(builder *flatbuffers.Builder, SENSOR_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(SENSOR_ID), 0)
+}
+func IROAddSAT_NO(builder *flatbuffers.Builder, SAT_NO uint32) {
+	builder.PrependUint32Slot(7, SAT_NO, 0)
+}
+func IROAddOBJECT_DESIGNATOR(builder *flatbuffers.Builder, OBJECT_DESIGNATOR flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(OBJECT_DESIGNATOR), 0)
+}
+func IROAddBAND(builder *flatbuffers.Builder, BAND irBand) {
+	builder.PrependInt8Slot(9, int8(BAND), 0)
+}
+func IROAddDETECTION_TYPE(builder *flatbuffers.Builder, DETECTION_TYPE irDetectionType) {
+	builder.PrependInt8Slot(10, int8(DETECTION_TYPE), 0)
+}
+func IROAddRA(builder *flatbuffers.Builder, RA float64) {
+	builder.PrependFloat64Slot(11, RA, 0.0)
+}
+func IROAddDEC(builder *flatbuffers.Builder, DEC float64) {
+	builder.PrependFloat64Slot(12, DEC, 0.0)
+}
+func IROAddRA_UNC(builder *flatbuffers.Builder, RA_UNC float64) {
+	builder.PrependFloat64Slot(13, RA_UNC, 0.0)
+}
+func IROAddDEC_UNC(builder *flatbuffers.Builder, DEC_UNC float64) {
+	builder.PrependFloat64Slot(14, DEC_UNC, 0.0)
+}
+func IROAddAZIMUTH(builder *flatbuffers.Builder, AZIMUTH float64) {
+	builder.PrependFloat64Slot(15, AZIMUTH, 0.0)
+}
+func IROAddELEVATION(builder *flatbuffers.Builder, ELEVATION float64) {
+	builder.PrependFloat64Slot(16, ELEVATION, 0.0)
+}
+func IROAddRANGE(builder *flatbuffers.Builder, RANGE float64) {
+	builder.PrependFloat64Slot(17, RANGE, 0.0)
+}
+func IROAddIRRADIANCE(builder *flatbuffers.Builder, IRRADIANCE float64) {
+	builder.PrependFloat64Slot(18, IRRADIANCE, 0.0)
+}
+func IROAddIRRADIANCE_UNC(builder *flatbuffers.Builder, IRRADIANCE_UNC float64) {
+	builder.PrependFloat64Slot(19, IRRADIANCE_UNC, 0.0)
+}
+func IROAddIR_MAG(builder *flatbuffers.Builder, IR_MAG float64) {
+	builder.PrependFloat64Slot(20, IR_MAG, 0.0)
+}
+func IROAddMAG_UNC(builder *flatbuffers.Builder, MAG_UNC float64) {
+	builder.PrependFloat64Slot(21, MAG_UNC, 0.0)
+}
+func IROAddTEMPERATURE(builder *flatbuffers.Builder, TEMPERATURE float64) {
+	builder.PrependFloat64Slot(22, TEMPERATURE, 0.0)
+}
+func IROAddINTEGRATION_TIME(builder *flatbuffers.Builder, INTEGRATION_TIME float64) {
+	builder.PrependFloat64Slot(23, INTEGRATION_TIME, 0.0)
+}
+func IROAddBACKGROUND(builder *flatbuffers.Builder, BACKGROUND float64) {
+	builder.PrependFloat64Slot(24, BACKGROUND, 0.0)
+}
+func IROAddSNR(builder *flatbuffers.Builder, SNR float64) {
+	builder.PrependFloat64Slot(25, SNR, 0.0)
+}
+func IROAddWAVELENGTHS(builder *flatbuffers.Builder, WAVELENGTHS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(WAVELENGTHS), 0)
+}
+func IROStartWAVELENGTHSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func IROAddSPECTRAL_VALUES(builder *flatbuffers.Builder, SPECTRAL_VALUES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(27, flatbuffers.UOffsetT(SPECTRAL_VALUES), 0)
+}
+func IROStartSPECTRAL_VALUESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func IROAddQUALITY(builder *flatbuffers.Builder, QUALITY byte) {
+	builder.PrependByteSlot(28, QUALITY, 0)
+}
+func IROAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(NOTES), 0)
 }
 func IROEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

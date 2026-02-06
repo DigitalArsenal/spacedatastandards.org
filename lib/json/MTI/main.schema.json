@@ -1,51 +1,73 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "mtiStandard" : {
+      "type" : "string",
+      "enum": ["STANAG_4607", "STANAG_4545", "CUSTOM", "UNKNOWN"]
+    },
     "MTI" : {
       "type" : "object",
       "description" : "Moving Target Indicator",
       "properties" : {
         "ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique identifier"
+              },
+        "STANDARD" : {
+                "$ref" : "#/definitions/mtiStandard",
+                "description" : "MTI standard (e.g., STANAG 4607)"
               },
         "P3" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Platform type (P3 field)"
               },
         "P6" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Platform activity (P6 field)"
               },
         "P7" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Sensor type (P7 field)"
               },
         "P8" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Sensor model (P8 field)"
               },
         "P9" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Reference time code (P9)"
               },
         "P10" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Security classification (P10)"
               },
         "MISSIONS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Mission segment identifiers"
               },
         "DWELLS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Dwell segment data references"
               },
         "HRRS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "High range resolution profile references"
               },
         "JOB_DEFS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Job definition references"
               },
         "FREE_TEXTS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Free text entries"
               },
         "PLATFORM_LOCS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Platform location data references"
               },
         "JOB_REQUESTS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Job request references"
               }
       },
       "additionalProperties" : false

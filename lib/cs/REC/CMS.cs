@@ -19,6 +19,7 @@ public struct CMS : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public CMS __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Unique identifier
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,6 +27,7 @@ public struct CMS : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
+  /// Reference to parent entity
   public string ID_ENTITY { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetID_ENTITYBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -33,6 +35,7 @@ public struct CMS : IFlatbufferObject
   public ArraySegment<byte>? GetID_ENTITYBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetID_ENTITYArray() { return __p.__vector_as_array<byte>(6); }
+  /// Communications payload name
   public string NAME { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetNAMEBytes() { return __p.__vector_as_span<byte>(8, 1); }
@@ -40,6 +43,7 @@ public struct CMS : IFlatbufferObject
   public ArraySegment<byte>? GetNAMEBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetNAMEArray() { return __p.__vector_as_array<byte>(8); }
+  /// Description
   public string DESCRIPTION { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetDESCRIPTIONBytes() { return __p.__vector_as_span<byte>(10, 1); }
@@ -47,6 +51,7 @@ public struct CMS : IFlatbufferObject
   public ArraySegment<byte>? GetDESCRIPTIONBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
   public byte[] GetDESCRIPTIONArray() { return __p.__vector_as_array<byte>(10); }
+  /// Parent entity designator
   public string ENTITY { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetENTITYBytes() { return __p.__vector_as_span<byte>(12, 1); }
@@ -54,8 +59,45 @@ public struct CMS : IFlatbufferObject
   public ArraySegment<byte>? GetENTITYBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
   public byte[] GetENTITYArray() { return __p.__vector_as_array<byte>(12); }
-  public string TRANSPONDERS(int j) { int o = __p.__offset(14); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int TRANSPONDERSLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Satellite number
+  public uint SAT_NO { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Number of transponders
+  public uint NUM_TRANSPONDERS { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Transponders
+  public commsTransponder? TRANSPONDERS(int j) { int o = __p.__offset(18); return o != 0 ? (commsTransponder?)(new commsTransponder()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int TRANSPONDERSLength { get { int o = __p.__offset(18); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Total payload power in Watts
+  public double TOTAL_POWER { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Total payload mass in kg
+  public double TOTAL_MASS { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Total aggregate bandwidth in MHz
+  public double TOTAL_BANDWIDTH { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Primary mission (e.g., FIXED_SAT, BROADCAST, MOBILE, RELAY, MILSATCOM)
+  public string MISSION { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetMISSIONBytes() { return __p.__vector_as_span<byte>(26, 1); }
+#else
+  public ArraySegment<byte>? GetMISSIONBytes() { return __p.__vector_as_arraysegment(26); }
+#endif
+  public byte[] GetMISSIONArray() { return __p.__vector_as_array<byte>(26); }
+  /// Coverage region description
+  public string COVERAGE { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCOVERAGEBytes() { return __p.__vector_as_span<byte>(28, 1); }
+#else
+  public ArraySegment<byte>? GetCOVERAGEBytes() { return __p.__vector_as_arraysegment(28); }
+#endif
+  public byte[] GetCOVERAGEArray() { return __p.__vector_as_array<byte>(28); }
+  /// Design lifetime in years
+  public double DESIGN_LIFE { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Additional notes
+  public string NOTES { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetNOTESBytes() { return __p.__vector_as_span<byte>(32, 1); }
+#else
+  public ArraySegment<byte>? GetNOTESBytes() { return __p.__vector_as_arraysegment(32); }
+#endif
+  public byte[] GetNOTESArray() { return __p.__vector_as_array<byte>(32); }
 
   public static Offset<CMS> CreateCMS(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
@@ -63,9 +105,27 @@ public struct CMS : IFlatbufferObject
       StringOffset NAMEOffset = default(StringOffset),
       StringOffset DESCRIPTIONOffset = default(StringOffset),
       StringOffset ENTITYOffset = default(StringOffset),
-      VectorOffset TRANSPONDERSOffset = default(VectorOffset)) {
-    builder.StartTable(6);
+      uint SAT_NO = 0,
+      uint NUM_TRANSPONDERS = 0,
+      VectorOffset TRANSPONDERSOffset = default(VectorOffset),
+      double TOTAL_POWER = 0.0,
+      double TOTAL_MASS = 0.0,
+      double TOTAL_BANDWIDTH = 0.0,
+      StringOffset MISSIONOffset = default(StringOffset),
+      StringOffset COVERAGEOffset = default(StringOffset),
+      double DESIGN_LIFE = 0.0,
+      StringOffset NOTESOffset = default(StringOffset)) {
+    builder.StartTable(15);
+    CMS.AddDESIGN_LIFE(builder, DESIGN_LIFE);
+    CMS.AddTOTAL_BANDWIDTH(builder, TOTAL_BANDWIDTH);
+    CMS.AddTOTAL_MASS(builder, TOTAL_MASS);
+    CMS.AddTOTAL_POWER(builder, TOTAL_POWER);
+    CMS.AddNOTES(builder, NOTESOffset);
+    CMS.AddCOVERAGE(builder, COVERAGEOffset);
+    CMS.AddMISSION(builder, MISSIONOffset);
     CMS.AddTRANSPONDERS(builder, TRANSPONDERSOffset);
+    CMS.AddNUM_TRANSPONDERS(builder, NUM_TRANSPONDERS);
+    CMS.AddSAT_NO(builder, SAT_NO);
     CMS.AddENTITY(builder, ENTITYOffset);
     CMS.AddDESCRIPTION(builder, DESCRIPTIONOffset);
     CMS.AddNAME(builder, NAMEOffset);
@@ -74,18 +134,27 @@ public struct CMS : IFlatbufferObject
     return CMS.EndCMS(builder);
   }
 
-  public static void StartCMS(FlatBufferBuilder builder) { builder.StartTable(6); }
+  public static void StartCMS(FlatBufferBuilder builder) { builder.StartTable(15); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddID_ENTITY(FlatBufferBuilder builder, StringOffset ID_ENTITYOffset) { builder.AddOffset(1, ID_ENTITYOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(2, NAMEOffset.Value, 0); }
   public static void AddDESCRIPTION(FlatBufferBuilder builder, StringOffset DESCRIPTIONOffset) { builder.AddOffset(3, DESCRIPTIONOffset.Value, 0); }
   public static void AddENTITY(FlatBufferBuilder builder, StringOffset ENTITYOffset) { builder.AddOffset(4, ENTITYOffset.Value, 0); }
-  public static void AddTRANSPONDERS(FlatBufferBuilder builder, VectorOffset TRANSPONDERSOffset) { builder.AddOffset(5, TRANSPONDERSOffset.Value, 0); }
-  public static VectorOffset CreateTRANSPONDERSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateTRANSPONDERSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateTRANSPONDERSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateTRANSPONDERSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void AddSAT_NO(FlatBufferBuilder builder, uint SAT_NO) { builder.AddUint(5, SAT_NO, 0); }
+  public static void AddNUM_TRANSPONDERS(FlatBufferBuilder builder, uint NUM_TRANSPONDERS) { builder.AddUint(6, NUM_TRANSPONDERS, 0); }
+  public static void AddTRANSPONDERS(FlatBufferBuilder builder, VectorOffset TRANSPONDERSOffset) { builder.AddOffset(7, TRANSPONDERSOffset.Value, 0); }
+  public static VectorOffset CreateTRANSPONDERSVector(FlatBufferBuilder builder, Offset<commsTransponder>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateTRANSPONDERSVectorBlock(FlatBufferBuilder builder, Offset<commsTransponder>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTRANSPONDERSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<commsTransponder>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTRANSPONDERSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<commsTransponder>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartTRANSPONDERSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddTOTAL_POWER(FlatBufferBuilder builder, double TOTAL_POWER) { builder.AddDouble(8, TOTAL_POWER, 0.0); }
+  public static void AddTOTAL_MASS(FlatBufferBuilder builder, double TOTAL_MASS) { builder.AddDouble(9, TOTAL_MASS, 0.0); }
+  public static void AddTOTAL_BANDWIDTH(FlatBufferBuilder builder, double TOTAL_BANDWIDTH) { builder.AddDouble(10, TOTAL_BANDWIDTH, 0.0); }
+  public static void AddMISSION(FlatBufferBuilder builder, StringOffset MISSIONOffset) { builder.AddOffset(11, MISSIONOffset.Value, 0); }
+  public static void AddCOVERAGE(FlatBufferBuilder builder, StringOffset COVERAGEOffset) { builder.AddOffset(12, COVERAGEOffset.Value, 0); }
+  public static void AddDESIGN_LIFE(FlatBufferBuilder builder, double DESIGN_LIFE) { builder.AddDouble(13, DESIGN_LIFE, 0.0); }
+  public static void AddNOTES(FlatBufferBuilder builder, StringOffset NOTESOffset) { builder.AddOffset(14, NOTESOffset.Value, 0); }
   public static Offset<CMS> EndCMS(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<CMS>(o);
@@ -103,8 +172,17 @@ public struct CMS : IFlatbufferObject
     _o.NAME = this.NAME;
     _o.DESCRIPTION = this.DESCRIPTION;
     _o.ENTITY = this.ENTITY;
-    _o.TRANSPONDERS = new List<string>();
-    for (var _j = 0; _j < this.TRANSPONDERSLength; ++_j) {_o.TRANSPONDERS.Add(this.TRANSPONDERS(_j));}
+    _o.SAT_NO = this.SAT_NO;
+    _o.NUM_TRANSPONDERS = this.NUM_TRANSPONDERS;
+    _o.TRANSPONDERS = new List<commsTransponderT>();
+    for (var _j = 0; _j < this.TRANSPONDERSLength; ++_j) {_o.TRANSPONDERS.Add(this.TRANSPONDERS(_j).HasValue ? this.TRANSPONDERS(_j).Value.UnPack() : null);}
+    _o.TOTAL_POWER = this.TOTAL_POWER;
+    _o.TOTAL_MASS = this.TOTAL_MASS;
+    _o.TOTAL_BANDWIDTH = this.TOTAL_BANDWIDTH;
+    _o.MISSION = this.MISSION;
+    _o.COVERAGE = this.COVERAGE;
+    _o.DESIGN_LIFE = this.DESIGN_LIFE;
+    _o.NOTES = this.NOTES;
   }
   public static Offset<CMS> Pack(FlatBufferBuilder builder, CMST _o) {
     if (_o == null) return default(Offset<CMS>);
@@ -115,10 +193,13 @@ public struct CMS : IFlatbufferObject
     var _ENTITY = _o.ENTITY == null ? default(StringOffset) : builder.CreateString(_o.ENTITY);
     var _TRANSPONDERS = default(VectorOffset);
     if (_o.TRANSPONDERS != null) {
-      var __TRANSPONDERS = new StringOffset[_o.TRANSPONDERS.Count];
-      for (var _j = 0; _j < __TRANSPONDERS.Length; ++_j) { __TRANSPONDERS[_j] = builder.CreateString(_o.TRANSPONDERS[_j]); }
+      var __TRANSPONDERS = new Offset<commsTransponder>[_o.TRANSPONDERS.Count];
+      for (var _j = 0; _j < __TRANSPONDERS.Length; ++_j) { __TRANSPONDERS[_j] = commsTransponder.Pack(builder, _o.TRANSPONDERS[_j]); }
       _TRANSPONDERS = CreateTRANSPONDERSVector(builder, __TRANSPONDERS);
     }
+    var _MISSION = _o.MISSION == null ? default(StringOffset) : builder.CreateString(_o.MISSION);
+    var _COVERAGE = _o.COVERAGE == null ? default(StringOffset) : builder.CreateString(_o.COVERAGE);
+    var _NOTES = _o.NOTES == null ? default(StringOffset) : builder.CreateString(_o.NOTES);
     return CreateCMS(
       builder,
       _ID,
@@ -126,7 +207,16 @@ public struct CMS : IFlatbufferObject
       _NAME,
       _DESCRIPTION,
       _ENTITY,
-      _TRANSPONDERS);
+      _o.SAT_NO,
+      _o.NUM_TRANSPONDERS,
+      _TRANSPONDERS,
+      _o.TOTAL_POWER,
+      _o.TOTAL_MASS,
+      _o.TOTAL_BANDWIDTH,
+      _MISSION,
+      _COVERAGE,
+      _o.DESIGN_LIFE,
+      _NOTES);
   }
 }
 
@@ -137,7 +227,16 @@ public class CMST
   public string NAME { get; set; }
   public string DESCRIPTION { get; set; }
   public string ENTITY { get; set; }
-  public List<string> TRANSPONDERS { get; set; }
+  public uint SAT_NO { get; set; }
+  public uint NUM_TRANSPONDERS { get; set; }
+  public List<commsTransponderT> TRANSPONDERS { get; set; }
+  public double TOTAL_POWER { get; set; }
+  public double TOTAL_MASS { get; set; }
+  public double TOTAL_BANDWIDTH { get; set; }
+  public string MISSION { get; set; }
+  public string COVERAGE { get; set; }
+  public double DESIGN_LIFE { get; set; }
+  public string NOTES { get; set; }
 
   public CMST() {
     this.ID = null;
@@ -145,7 +244,16 @@ public class CMST
     this.NAME = null;
     this.DESCRIPTION = null;
     this.ENTITY = null;
+    this.SAT_NO = 0;
+    this.NUM_TRANSPONDERS = 0;
     this.TRANSPONDERS = null;
+    this.TOTAL_POWER = 0.0;
+    this.TOTAL_MASS = 0.0;
+    this.TOTAL_BANDWIDTH = 0.0;
+    this.MISSION = null;
+    this.COVERAGE = null;
+    this.DESIGN_LIFE = 0.0;
+    this.NOTES = null;
   }
   public static CMST DeserializeFromBinary(byte[] fbBuffer) {
     return CMS.GetRootAsCMS(new ByteBuffer(fbBuffer)).UnPack();
@@ -168,7 +276,16 @@ static public class CMSVerify
       && verifier.VerifyString(tablePos, 8 /*NAME*/, false)
       && verifier.VerifyString(tablePos, 10 /*DESCRIPTION*/, false)
       && verifier.VerifyString(tablePos, 12 /*ENTITY*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 14 /*TRANSPONDERS*/, false)
+      && verifier.VerifyField(tablePos, 14 /*SAT_NO*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 16 /*NUM_TRANSPONDERS*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyVectorOfTables(tablePos, 18 /*TRANSPONDERS*/, commsTransponderVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 20 /*TOTAL_POWER*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 22 /*TOTAL_MASS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 24 /*TOTAL_BANDWIDTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 26 /*MISSION*/, false)
+      && verifier.VerifyString(tablePos, 28 /*COVERAGE*/, false)
+      && verifier.VerifyField(tablePos, 30 /*DESIGN_LIFE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 32 /*NOTES*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

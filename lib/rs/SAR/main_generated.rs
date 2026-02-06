@@ -9,6 +9,228 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_SAR_MODE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_SAR_MODE: i8 = 7;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_SAR_MODE: [sarMode; 8] = [
+  sarMode::STRIPMAP,
+  sarMode::SPOTLIGHT,
+  sarMode::SCANSAR,
+  sarMode::TOPSAR,
+  sarMode::ISAR,
+  sarMode::GMTI,
+  sarMode::MARITIME,
+  sarMode::UNKNOWN,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct sarMode(pub i8);
+#[allow(non_upper_case_globals)]
+impl sarMode {
+  pub const STRIPMAP: Self = Self(0);
+  pub const SPOTLIGHT: Self = Self(1);
+  pub const SCANSAR: Self = Self(2);
+  pub const TOPSAR: Self = Self(3);
+  pub const ISAR: Self = Self(4);
+  pub const GMTI: Self = Self(5);
+  pub const MARITIME: Self = Self(6);
+  pub const UNKNOWN: Self = Self(7);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 7;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::STRIPMAP,
+    Self::SPOTLIGHT,
+    Self::SCANSAR,
+    Self::TOPSAR,
+    Self::ISAR,
+    Self::GMTI,
+    Self::MARITIME,
+    Self::UNKNOWN,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::STRIPMAP => Some("STRIPMAP"),
+      Self::SPOTLIGHT => Some("SPOTLIGHT"),
+      Self::SCANSAR => Some("SCANSAR"),
+      Self::TOPSAR => Some("TOPSAR"),
+      Self::ISAR => Some("ISAR"),
+      Self::GMTI => Some("GMTI"),
+      Self::MARITIME => Some("MARITIME"),
+      Self::UNKNOWN => Some("UNKNOWN"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for sarMode {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for sarMode {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for sarMode {
+    type Output = sarMode;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for sarMode {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for sarMode {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for sarMode {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_SAR_POLARIZATION: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_SAR_POLARIZATION: i8 = 8;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_SAR_POLARIZATION: [sarPolarization; 9] = [
+  sarPolarization::HH,
+  sarPolarization::VV,
+  sarPolarization::HV,
+  sarPolarization::VH,
+  sarPolarization::DUAL_HH_VV,
+  sarPolarization::DUAL_HH_HV,
+  sarPolarization::DUAL_VV_VH,
+  sarPolarization::QUAD,
+  sarPolarization::COMPACT,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct sarPolarization(pub i8);
+#[allow(non_upper_case_globals)]
+impl sarPolarization {
+  pub const HH: Self = Self(0);
+  pub const VV: Self = Self(1);
+  pub const HV: Self = Self(2);
+  pub const VH: Self = Self(3);
+  pub const DUAL_HH_VV: Self = Self(4);
+  pub const DUAL_HH_HV: Self = Self(5);
+  pub const DUAL_VV_VH: Self = Self(6);
+  pub const QUAD: Self = Self(7);
+  pub const COMPACT: Self = Self(8);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 8;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::HH,
+    Self::VV,
+    Self::HV,
+    Self::VH,
+    Self::DUAL_HH_VV,
+    Self::DUAL_HH_HV,
+    Self::DUAL_VV_VH,
+    Self::QUAD,
+    Self::COMPACT,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::HH => Some("HH"),
+      Self::VV => Some("VV"),
+      Self::HV => Some("HV"),
+      Self::VH => Some("VH"),
+      Self::DUAL_HH_VV => Some("DUAL_HH_VV"),
+      Self::DUAL_HH_HV => Some("DUAL_HH_HV"),
+      Self::DUAL_VV_VH => Some("DUAL_VV_VH"),
+      Self::QUAD => Some("QUAD"),
+      Self::COMPACT => Some("COMPACT"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for sarPolarization {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for sarPolarization {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for sarPolarization {
+    type Output = sarPolarization;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for sarPolarization {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for sarPolarization {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for sarPolarization {}
 pub enum SAROffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -29,64 +251,61 @@ impl<'a> SAR<'a> {
   pub const VT_ID: flatbuffers::VOffsetT = 4;
   pub const VT_SAT_NO: flatbuffers::VOffsetT = 6;
   pub const VT_ORIG_OBJECT_ID: flatbuffers::VOffsetT = 8;
-  pub const VT_ID_SENSOR: flatbuffers::VOffsetT = 10;
-  pub const VT_ORIG_SENSOR_ID: flatbuffers::VOffsetT = 12;
-  pub const VT_EXTERNAL_ID: flatbuffers::VOffsetT = 14;
-  pub const VT_COLLECTION_ID: flatbuffers::VOffsetT = 16;
-  pub const VT_DETECTION_ID: flatbuffers::VOffsetT = 18;
-  pub const VT_COLLECTION_START: flatbuffers::VOffsetT = 20;
-  pub const VT_COLLECTION_END: flatbuffers::VOffsetT = 22;
-  pub const VT_CENTER_TIME: flatbuffers::VOffsetT = 24;
-  pub const VT_DETECTION_START: flatbuffers::VOffsetT = 26;
-  pub const VT_DETECTION_END: flatbuffers::VOffsetT = 28;
-  pub const VT_DWELL_TIME: flatbuffers::VOffsetT = 30;
-  pub const VT_ORBIT_STATE: flatbuffers::VOffsetT = 32;
-  pub const VT_SAR_MODE: flatbuffers::VOffsetT = 34;
-  pub const VT_OPERATING_BAND: flatbuffers::VOffsetT = 36;
-  pub const VT_OPERATING_FREQ: flatbuffers::VOffsetT = 38;
-  pub const VT_SNR: flatbuffers::VOffsetT = 40;
-  pub const VT_TX_POLARIZATION: flatbuffers::VOffsetT = 42;
-  pub const VT_RX_POLARIZATION: flatbuffers::VOffsetT = 44;
-  pub const VT_GRAZE_ANGLE: flatbuffers::VOffsetT = 46;
-  pub const VT_INCIDENCE_ANGLE: flatbuffers::VOffsetT = 48;
-  pub const VT_SQUINT_ANGLE: flatbuffers::VOffsetT = 50;
-  pub const VT_PULSE_BANDWIDTH: flatbuffers::VOffsetT = 52;
-  pub const VT_PULSE_DURATION: flatbuffers::VOffsetT = 54;
-  pub const VT_CONTINUOUS_SPOT_ANGLE: flatbuffers::VOffsetT = 56;
-  pub const VT_SLANT_RANGE: flatbuffers::VOffsetT = 58;
-  pub const VT_NEAR_RANGE: flatbuffers::VOffsetT = 60;
-  pub const VT_FAR_RANGE: flatbuffers::VOffsetT = 62;
-  pub const VT_SWATH_LENGTH: flatbuffers::VOffsetT = 64;
-  pub const VT_AREA: flatbuffers::VOffsetT = 66;
-  pub const VT_ATEXT: flatbuffers::VOffsetT = 68;
-  pub const VT_AGJSON: flatbuffers::VOffsetT = 70;
+  pub const VT_ON_ORBIT: flatbuffers::VOffsetT = 10;
+  pub const VT_ID_SENSOR: flatbuffers::VOffsetT = 12;
+  pub const VT_ORIG_SENSOR_ID: flatbuffers::VOffsetT = 14;
+  pub const VT_EXTERNAL_ID: flatbuffers::VOffsetT = 16;
+  pub const VT_COLLECTION_ID: flatbuffers::VOffsetT = 18;
+  pub const VT_DETECTION_ID: flatbuffers::VOffsetT = 20;
+  pub const VT_COLLECTION_START: flatbuffers::VOffsetT = 22;
+  pub const VT_COLLECTION_END: flatbuffers::VOffsetT = 24;
+  pub const VT_CENTER_TIME: flatbuffers::VOffsetT = 26;
+  pub const VT_DETECTION_START: flatbuffers::VOffsetT = 28;
+  pub const VT_DETECTION_END: flatbuffers::VOffsetT = 30;
+  pub const VT_DWELL_TIME: flatbuffers::VOffsetT = 32;
+  pub const VT_ORBIT_STATE: flatbuffers::VOffsetT = 34;
+  pub const VT_SAR_MODE: flatbuffers::VOffsetT = 36;
+  pub const VT_OPERATING_BAND: flatbuffers::VOffsetT = 38;
+  pub const VT_OPERATING_FREQ: flatbuffers::VOffsetT = 40;
+  pub const VT_SNR: flatbuffers::VOffsetT = 42;
+  pub const VT_TX_POLARIZATION: flatbuffers::VOffsetT = 44;
+  pub const VT_RX_POLARIZATION: flatbuffers::VOffsetT = 46;
+  pub const VT_GRAZE_ANGLE: flatbuffers::VOffsetT = 48;
+  pub const VT_INCIDENCE_ANGLE: flatbuffers::VOffsetT = 50;
+  pub const VT_SQUINT_ANGLE: flatbuffers::VOffsetT = 52;
+  pub const VT_PULSE_BANDWIDTH: flatbuffers::VOffsetT = 54;
+  pub const VT_PULSE_DURATION: flatbuffers::VOffsetT = 56;
+  pub const VT_CONTINUOUS_SPOT_ANGLE: flatbuffers::VOffsetT = 58;
+  pub const VT_SLANT_RANGE: flatbuffers::VOffsetT = 60;
+  pub const VT_NEAR_RANGE: flatbuffers::VOffsetT = 62;
+  pub const VT_FAR_RANGE: flatbuffers::VOffsetT = 64;
+  pub const VT_SWATH_LENGTH: flatbuffers::VOffsetT = 66;
+  pub const VT_AGJSON: flatbuffers::VOffsetT = 68;
+  pub const VT_ATEXT: flatbuffers::VOffsetT = 70;
   pub const VT_ATYPE: flatbuffers::VOffsetT = 72;
-  pub const VT_ANDIMS: flatbuffers::VOffsetT = 74;
-  pub const VT_ASRID: flatbuffers::VOffsetT = 76;
-  pub const VT_SPACING_RANGE: flatbuffers::VOffsetT = 78;
-  pub const VT_SPACING_AZIMUTH: flatbuffers::VOffsetT = 80;
-  pub const VT_LOOKS_AZIMUTH: flatbuffers::VOffsetT = 82;
-  pub const VT_LOOKS_RANGE: flatbuffers::VOffsetT = 84;
-  pub const VT_RESOLUTION_RANGE: flatbuffers::VOffsetT = 86;
-  pub const VT_RESOLUTION_AZIMUTH: flatbuffers::VOffsetT = 88;
-  pub const VT_OB_DIRECTION: flatbuffers::VOffsetT = 90;
-  pub const VT_COORD_SYS: flatbuffers::VOffsetT = 92;
-  pub const VT_TARGETPOSX: flatbuffers::VOffsetT = 94;
-  pub const VT_TARGETPOSY: flatbuffers::VOffsetT = 96;
-  pub const VT_TARGETPOSZ: flatbuffers::VOffsetT = 98;
-  pub const VT_SENALT: flatbuffers::VOffsetT = 100;
-  pub const VT_SENVELX: flatbuffers::VOffsetT = 102;
-  pub const VT_SENVELY: flatbuffers::VOffsetT = 104;
-  pub const VT_SENVELZ: flatbuffers::VOffsetT = 106;
-  pub const VT_SENLAT_START: flatbuffers::VOffsetT = 108;
-  pub const VT_SENLON_START: flatbuffers::VOffsetT = 110;
-  pub const VT_SENLAT_END: flatbuffers::VOffsetT = 112;
-  pub const VT_SENLON_END: flatbuffers::VOffsetT = 114;
-  pub const VT_TRANSACTION_ID: flatbuffers::VOffsetT = 116;
-  pub const VT_TAGS: flatbuffers::VOffsetT = 118;
-  pub const VT_SRC_TYPS: flatbuffers::VOffsetT = 120;
-  pub const VT_SRC_IDS: flatbuffers::VOffsetT = 122;
-  pub const VT_ON_ORBIT: flatbuffers::VOffsetT = 124;
+  pub const VT_COORD_SYS: flatbuffers::VOffsetT = 74;
+  pub const VT_SPACING_RANGE: flatbuffers::VOffsetT = 76;
+  pub const VT_SPACING_AZIMUTH: flatbuffers::VOffsetT = 78;
+  pub const VT_LOOKS_AZIMUTH: flatbuffers::VOffsetT = 80;
+  pub const VT_LOOKS_RANGE: flatbuffers::VOffsetT = 82;
+  pub const VT_RESOLUTION_RANGE: flatbuffers::VOffsetT = 84;
+  pub const VT_RESOLUTION_AZIMUTH: flatbuffers::VOffsetT = 86;
+  pub const VT_OB_DIRECTION: flatbuffers::VOffsetT = 88;
+  pub const VT_TARGETPOSX: flatbuffers::VOffsetT = 90;
+  pub const VT_TARGETPOSY: flatbuffers::VOffsetT = 92;
+  pub const VT_TARGETPOSZ: flatbuffers::VOffsetT = 94;
+  pub const VT_SENALT: flatbuffers::VOffsetT = 96;
+  pub const VT_SENVELX: flatbuffers::VOffsetT = 98;
+  pub const VT_SENVELY: flatbuffers::VOffsetT = 100;
+  pub const VT_SENVELZ: flatbuffers::VOffsetT = 102;
+  pub const VT_SENLAT_START: flatbuffers::VOffsetT = 104;
+  pub const VT_SENLON_START: flatbuffers::VOffsetT = 106;
+  pub const VT_SENLAT_END: flatbuffers::VOffsetT = 108;
+  pub const VT_SENLON_END: flatbuffers::VOffsetT = 110;
+  pub const VT_TRANSACTION_ID: flatbuffers::VOffsetT = 112;
+  pub const VT_TAGS: flatbuffers::VOffsetT = 114;
+  pub const VT_SRC_TYPS: flatbuffers::VOffsetT = 116;
+  pub const VT_SRC_IDS: flatbuffers::VOffsetT = 118;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -126,25 +345,16 @@ impl<'a> SAR<'a> {
     builder.add_SNR(args.SNR);
     builder.add_OPERATING_FREQ(args.OPERATING_FREQ);
     builder.add_DWELL_TIME(args.DWELL_TIME);
-    if let Some(x) = args.ON_ORBIT { builder.add_ON_ORBIT(x); }
     if let Some(x) = args.SRC_IDS { builder.add_SRC_IDS(x); }
     if let Some(x) = args.SRC_TYPS { builder.add_SRC_TYPS(x); }
     if let Some(x) = args.TAGS { builder.add_TAGS(x); }
     if let Some(x) = args.TRANSACTION_ID { builder.add_TRANSACTION_ID(x); }
-    if let Some(x) = args.COORD_SYS { builder.add_COORD_SYS(x); }
     if let Some(x) = args.OB_DIRECTION { builder.add_OB_DIRECTION(x); }
-    builder.add_LOOKS_RANGE(args.LOOKS_RANGE);
-    builder.add_LOOKS_AZIMUTH(args.LOOKS_AZIMUTH);
-    builder.add_ASRID(args.ASRID);
-    builder.add_ANDIMS(args.ANDIMS);
+    if let Some(x) = args.COORD_SYS { builder.add_COORD_SYS(x); }
     if let Some(x) = args.ATYPE { builder.add_ATYPE(x); }
-    if let Some(x) = args.AGJSON { builder.add_AGJSON(x); }
     if let Some(x) = args.ATEXT { builder.add_ATEXT(x); }
-    if let Some(x) = args.AREA { builder.add_AREA(x); }
-    if let Some(x) = args.RX_POLARIZATION { builder.add_RX_POLARIZATION(x); }
-    if let Some(x) = args.TX_POLARIZATION { builder.add_TX_POLARIZATION(x); }
+    if let Some(x) = args.AGJSON { builder.add_AGJSON(x); }
     if let Some(x) = args.OPERATING_BAND { builder.add_OPERATING_BAND(x); }
-    if let Some(x) = args.SAR_MODE { builder.add_SAR_MODE(x); }
     if let Some(x) = args.ORBIT_STATE { builder.add_ORBIT_STATE(x); }
     if let Some(x) = args.DETECTION_END { builder.add_DETECTION_END(x); }
     if let Some(x) = args.DETECTION_START { builder.add_DETECTION_START(x); }
@@ -156,9 +366,15 @@ impl<'a> SAR<'a> {
     if let Some(x) = args.EXTERNAL_ID { builder.add_EXTERNAL_ID(x); }
     if let Some(x) = args.ORIG_SENSOR_ID { builder.add_ORIG_SENSOR_ID(x); }
     if let Some(x) = args.ID_SENSOR { builder.add_ID_SENSOR(x); }
+    if let Some(x) = args.ON_ORBIT { builder.add_ON_ORBIT(x); }
     if let Some(x) = args.ORIG_OBJECT_ID { builder.add_ORIG_OBJECT_ID(x); }
     builder.add_SAT_NO(args.SAT_NO);
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_LOOKS_RANGE(args.LOOKS_RANGE);
+    builder.add_LOOKS_AZIMUTH(args.LOOKS_AZIMUTH);
+    builder.add_RX_POLARIZATION(args.RX_POLARIZATION);
+    builder.add_TX_POLARIZATION(args.TX_POLARIZATION);
+    builder.add_SAR_MODE(args.SAR_MODE);
     builder.finish()
   }
 
@@ -168,6 +384,9 @@ impl<'a> SAR<'a> {
     });
     let SAT_NO = self.SAT_NO();
     let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID().map(|x| {
+      x.to_string()
+    });
+    let ON_ORBIT = self.ON_ORBIT().map(|x| {
       x.to_string()
     });
     let ID_SENSOR = self.ID_SENSOR().map(|x| {
@@ -204,20 +423,14 @@ impl<'a> SAR<'a> {
     let ORBIT_STATE = self.ORBIT_STATE().map(|x| {
       x.to_string()
     });
-    let SAR_MODE = self.SAR_MODE().map(|x| {
-      x.to_string()
-    });
+    let SAR_MODE = self.SAR_MODE();
     let OPERATING_BAND = self.OPERATING_BAND().map(|x| {
       x.to_string()
     });
     let OPERATING_FREQ = self.OPERATING_FREQ();
     let SNR = self.SNR();
-    let TX_POLARIZATION = self.TX_POLARIZATION().map(|x| {
-      x.to_string()
-    });
-    let RX_POLARIZATION = self.RX_POLARIZATION().map(|x| {
-      x.to_string()
-    });
+    let TX_POLARIZATION = self.TX_POLARIZATION();
+    let RX_POLARIZATION = self.RX_POLARIZATION();
     let GRAZE_ANGLE = self.GRAZE_ANGLE();
     let INCIDENCE_ANGLE = self.INCIDENCE_ANGLE();
     let SQUINT_ANGLE = self.SQUINT_ANGLE();
@@ -228,20 +441,18 @@ impl<'a> SAR<'a> {
     let NEAR_RANGE = self.NEAR_RANGE();
     let FAR_RANGE = self.FAR_RANGE();
     let SWATH_LENGTH = self.SWATH_LENGTH();
-    let AREA = self.AREA().map(|x| {
+    let AGJSON = self.AGJSON().map(|x| {
       x.to_string()
     });
     let ATEXT = self.ATEXT().map(|x| {
       x.to_string()
     });
-    let AGJSON = self.AGJSON().map(|x| {
-      x.to_string()
-    });
     let ATYPE = self.ATYPE().map(|x| {
       x.to_string()
     });
-    let ANDIMS = self.ANDIMS();
-    let ASRID = self.ASRID();
+    let COORD_SYS = self.COORD_SYS().map(|x| {
+      x.to_string()
+    });
     let SPACING_RANGE = self.SPACING_RANGE();
     let SPACING_AZIMUTH = self.SPACING_AZIMUTH();
     let LOOKS_AZIMUTH = self.LOOKS_AZIMUTH();
@@ -249,9 +460,6 @@ impl<'a> SAR<'a> {
     let RESOLUTION_RANGE = self.RESOLUTION_RANGE();
     let RESOLUTION_AZIMUTH = self.RESOLUTION_AZIMUTH();
     let OB_DIRECTION = self.OB_DIRECTION().map(|x| {
-      x.to_string()
-    });
-    let COORD_SYS = self.COORD_SYS().map(|x| {
       x.to_string()
     });
     let TARGETPOSX = self.TARGETPOSX();
@@ -277,13 +485,11 @@ impl<'a> SAR<'a> {
     let SRC_IDS = self.SRC_IDS().map(|x| {
       x.iter().map(|s| s.to_string()).collect()
     });
-    let ON_ORBIT = self.ON_ORBIT().map(|x| {
-      x.to_string()
-    });
     SART {
       ID,
       SAT_NO,
       ORIG_OBJECT_ID,
+      ON_ORBIT,
       ID_SENSOR,
       ORIG_SENSOR_ID,
       EXTERNAL_ID,
@@ -312,12 +518,10 @@ impl<'a> SAR<'a> {
       NEAR_RANGE,
       FAR_RANGE,
       SWATH_LENGTH,
-      AREA,
-      ATEXT,
       AGJSON,
+      ATEXT,
       ATYPE,
-      ANDIMS,
-      ASRID,
+      COORD_SYS,
       SPACING_RANGE,
       SPACING_AZIMUTH,
       LOOKS_AZIMUTH,
@@ -325,7 +529,6 @@ impl<'a> SAR<'a> {
       RESOLUTION_RANGE,
       RESOLUTION_AZIMUTH,
       OB_DIRECTION,
-      COORD_SYS,
       TARGETPOSX,
       TARGETPOSY,
       TARGETPOSZ,
@@ -341,10 +544,10 @@ impl<'a> SAR<'a> {
       TAGS,
       SRC_TYPS,
       SRC_IDS,
-      ON_ORBIT,
     }
   }
 
+  /// Unique identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -352,13 +555,15 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_ID, None)}
   }
+  /// Satellite catalog number (of SAR platform)
   #[inline]
-  pub fn SAT_NO(&self) -> i32 {
+  pub fn SAT_NO(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(SAR::VT_SAT_NO, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u32>(SAR::VT_SAT_NO, Some(0)).unwrap()}
   }
+  /// International designator
   #[inline]
   pub fn ORIG_OBJECT_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -366,6 +571,15 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_ORIG_OBJECT_ID, None)}
   }
+  /// On-orbit reference
+  #[inline]
+  pub fn ON_ORBIT(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_ON_ORBIT, None)}
+  }
+  /// Sensor identifier
   #[inline]
   pub fn ID_SENSOR(&self) -> Option<&'a str> {
     // Safety:
@@ -373,6 +587,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_ID_SENSOR, None)}
   }
+  /// Original sensor identifier
   #[inline]
   pub fn ORIG_SENSOR_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -380,6 +595,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_ORIG_SENSOR_ID, None)}
   }
+  /// External reference identifier
   #[inline]
   pub fn EXTERNAL_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -387,6 +603,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_EXTERNAL_ID, None)}
   }
+  /// Collection identifier
   #[inline]
   pub fn COLLECTION_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -394,6 +611,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_COLLECTION_ID, None)}
   }
+  /// Detection identifier
   #[inline]
   pub fn DETECTION_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -401,6 +619,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_DETECTION_ID, None)}
   }
+  /// Collection start time (ISO 8601)
   #[inline]
   pub fn COLLECTION_START(&self) -> Option<&'a str> {
     // Safety:
@@ -408,6 +627,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_COLLECTION_START, None)}
   }
+  /// Collection end time (ISO 8601)
   #[inline]
   pub fn COLLECTION_END(&self) -> Option<&'a str> {
     // Safety:
@@ -415,6 +635,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_COLLECTION_END, None)}
   }
+  /// Center time of observation (ISO 8601)
   #[inline]
   pub fn CENTER_TIME(&self) -> Option<&'a str> {
     // Safety:
@@ -422,6 +643,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_CENTER_TIME, None)}
   }
+  /// Detection start time (ISO 8601)
   #[inline]
   pub fn DETECTION_START(&self) -> Option<&'a str> {
     // Safety:
@@ -429,6 +651,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_DETECTION_START, None)}
   }
+  /// Detection end time (ISO 8601)
   #[inline]
   pub fn DETECTION_END(&self) -> Option<&'a str> {
     // Safety:
@@ -436,6 +659,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_DETECTION_END, None)}
   }
+  /// Integration/dwell time (seconds)
   #[inline]
   pub fn DWELL_TIME(&self) -> f64 {
     // Safety:
@@ -443,6 +667,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SAR::VT_DWELL_TIME, Some(0.0)).unwrap()}
   }
+  /// Orbit state description
   #[inline]
   pub fn ORBIT_STATE(&self) -> Option<&'a str> {
     // Safety:
@@ -450,13 +675,15 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_ORBIT_STATE, None)}
   }
+  /// SAR imaging mode
   #[inline]
-  pub fn SAR_MODE(&self) -> Option<&'a str> {
+  pub fn SAR_MODE(&self) -> sarMode {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_SAR_MODE, None)}
+    unsafe { self._tab.get::<sarMode>(SAR::VT_SAR_MODE, Some(sarMode::STRIPMAP)).unwrap()}
   }
+  /// Operating RF band (e.g., X, C, L, S, P)
   #[inline]
   pub fn OPERATING_BAND(&self) -> Option<&'a str> {
     // Safety:
@@ -464,6 +691,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_OPERATING_BAND, None)}
   }
+  /// Operating frequency (GHz)
   #[inline]
   pub fn OPERATING_FREQ(&self) -> f64 {
     // Safety:
@@ -471,6 +699,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SAR::VT_OPERATING_FREQ, Some(0.0)).unwrap()}
   }
+  /// Signal-to-noise ratio (dB)
   #[inline]
   pub fn SNR(&self) -> f64 {
     // Safety:
@@ -478,20 +707,23 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SAR::VT_SNR, Some(0.0)).unwrap()}
   }
+  /// Transmit polarization
   #[inline]
-  pub fn TX_POLARIZATION(&self) -> Option<&'a str> {
+  pub fn TX_POLARIZATION(&self) -> sarPolarization {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_TX_POLARIZATION, None)}
+    unsafe { self._tab.get::<sarPolarization>(SAR::VT_TX_POLARIZATION, Some(sarPolarization::HH)).unwrap()}
   }
+  /// Receive polarization
   #[inline]
-  pub fn RX_POLARIZATION(&self) -> Option<&'a str> {
+  pub fn RX_POLARIZATION(&self) -> sarPolarization {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_RX_POLARIZATION, None)}
+    unsafe { self._tab.get::<sarPolarization>(SAR::VT_RX_POLARIZATION, Some(sarPolarization::HH)).unwrap()}
   }
+  /// Grazing angle (degrees)
   #[inline]
   pub fn GRAZE_ANGLE(&self) -> f64 {
     // Safety:
@@ -499,6 +731,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SAR::VT_GRAZE_ANGLE, Some(0.0)).unwrap()}
   }
+  /// Incidence angle (degrees)
   #[inline]
   pub fn INCIDENCE_ANGLE(&self) -> f64 {
     // Safety:
@@ -506,6 +739,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SAR::VT_INCIDENCE_ANGLE, Some(0.0)).unwrap()}
   }
+  /// Squint angle (degrees)
   #[inline]
   pub fn SQUINT_ANGLE(&self) -> f64 {
     // Safety:
@@ -513,6 +747,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SAR::VT_SQUINT_ANGLE, Some(0.0)).unwrap()}
   }
+  /// Pulse bandwidth (MHz)
   #[inline]
   pub fn PULSE_BANDWIDTH(&self) -> f64 {
     // Safety:
@@ -520,6 +755,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SAR::VT_PULSE_BANDWIDTH, Some(0.0)).unwrap()}
   }
+  /// Pulse duration (microseconds)
   #[inline]
   pub fn PULSE_DURATION(&self) -> f64 {
     // Safety:
@@ -527,6 +763,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SAR::VT_PULSE_DURATION, Some(0.0)).unwrap()}
   }
+  /// Continuous spot angle (degrees)
   #[inline]
   pub fn CONTINUOUS_SPOT_ANGLE(&self) -> f64 {
     // Safety:
@@ -534,6 +771,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SAR::VT_CONTINUOUS_SPOT_ANGLE, Some(0.0)).unwrap()}
   }
+  /// Slant range to target (km)
   #[inline]
   pub fn SLANT_RANGE(&self) -> f64 {
     // Safety:
@@ -541,6 +779,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SAR::VT_SLANT_RANGE, Some(0.0)).unwrap()}
   }
+  /// Near range (km)
   #[inline]
   pub fn NEAR_RANGE(&self) -> f64 {
     // Safety:
@@ -548,6 +787,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SAR::VT_NEAR_RANGE, Some(0.0)).unwrap()}
   }
+  /// Far range (km)
   #[inline]
   pub fn FAR_RANGE(&self) -> f64 {
     // Safety:
@@ -555,6 +795,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SAR::VT_FAR_RANGE, Some(0.0)).unwrap()}
   }
+  /// Swath length (km)
   #[inline]
   pub fn SWATH_LENGTH(&self) -> f64 {
     // Safety:
@@ -562,20 +803,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SAR::VT_SWATH_LENGTH, Some(0.0)).unwrap()}
   }
-  #[inline]
-  pub fn AREA(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_AREA, None)}
-  }
-  #[inline]
-  pub fn ATEXT(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_ATEXT, None)}
-  }
+  /// Image area GeoJSON
   #[inline]
   pub fn AGJSON(&self) -> Option<&'a str> {
     // Safety:
@@ -583,6 +811,15 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_AGJSON, None)}
   }
+  /// Image area text description
+  #[inline]
+  pub fn ATEXT(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_ATEXT, None)}
+  }
+  /// Area type
   #[inline]
   pub fn ATYPE(&self) -> Option<&'a str> {
     // Safety:
@@ -590,69 +827,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_ATYPE, None)}
   }
-  #[inline]
-  pub fn ANDIMS(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(SAR::VT_ANDIMS, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn ASRID(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(SAR::VT_ASRID, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn SPACING_RANGE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SAR::VT_SPACING_RANGE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SPACING_AZIMUTH(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SAR::VT_SPACING_AZIMUTH, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn LOOKS_AZIMUTH(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(SAR::VT_LOOKS_AZIMUTH, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn LOOKS_RANGE(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(SAR::VT_LOOKS_RANGE, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn RESOLUTION_RANGE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SAR::VT_RESOLUTION_RANGE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn RESOLUTION_AZIMUTH(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SAR::VT_RESOLUTION_AZIMUTH, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn OB_DIRECTION(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_OB_DIRECTION, None)}
-  }
+  /// Coordinate system
   #[inline]
   pub fn COORD_SYS(&self) -> Option<&'a str> {
     // Safety:
@@ -660,6 +835,63 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_COORD_SYS, None)}
   }
+  /// Range pixel spacing (meters)
+  #[inline]
+  pub fn SPACING_RANGE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SAR::VT_SPACING_RANGE, Some(0.0)).unwrap()}
+  }
+  /// Azimuth pixel spacing (meters)
+  #[inline]
+  pub fn SPACING_AZIMUTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SAR::VT_SPACING_AZIMUTH, Some(0.0)).unwrap()}
+  }
+  /// Number of azimuth looks
+  #[inline]
+  pub fn LOOKS_AZIMUTH(&self) -> u8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u8>(SAR::VT_LOOKS_AZIMUTH, Some(0)).unwrap()}
+  }
+  /// Number of range looks
+  #[inline]
+  pub fn LOOKS_RANGE(&self) -> u8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u8>(SAR::VT_LOOKS_RANGE, Some(0)).unwrap()}
+  }
+  /// Range resolution (meters)
+  #[inline]
+  pub fn RESOLUTION_RANGE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SAR::VT_RESOLUTION_RANGE, Some(0.0)).unwrap()}
+  }
+  /// Azimuth resolution (meters)
+  #[inline]
+  pub fn RESOLUTION_AZIMUTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SAR::VT_RESOLUTION_AZIMUTH, Some(0.0)).unwrap()}
+  }
+  /// Observation direction (ASCENDING/DESCENDING)
+  #[inline]
+  pub fn OB_DIRECTION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_OB_DIRECTION, None)}
+  }
+  /// Target position X (km)
   #[inline]
   pub fn TARGETPOSX(&self) -> f64 {
     // Safety:
@@ -667,6 +899,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SAR::VT_TARGETPOSX, Some(0.0)).unwrap()}
   }
+  /// Target position Y (km)
   #[inline]
   pub fn TARGETPOSY(&self) -> f64 {
     // Safety:
@@ -674,6 +907,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SAR::VT_TARGETPOSY, Some(0.0)).unwrap()}
   }
+  /// Target position Z (km)
   #[inline]
   pub fn TARGETPOSZ(&self) -> f64 {
     // Safety:
@@ -681,6 +915,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SAR::VT_TARGETPOSZ, Some(0.0)).unwrap()}
   }
+  /// Sensor altitude (km)
   #[inline]
   pub fn SENALT(&self) -> f64 {
     // Safety:
@@ -688,6 +923,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SAR::VT_SENALT, Some(0.0)).unwrap()}
   }
+  /// Sensor velocity X (km/s)
   #[inline]
   pub fn SENVELX(&self) -> f64 {
     // Safety:
@@ -695,6 +931,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SAR::VT_SENVELX, Some(0.0)).unwrap()}
   }
+  /// Sensor velocity Y (km/s)
   #[inline]
   pub fn SENVELY(&self) -> f64 {
     // Safety:
@@ -702,6 +939,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SAR::VT_SENVELY, Some(0.0)).unwrap()}
   }
+  /// Sensor velocity Z (km/s)
   #[inline]
   pub fn SENVELZ(&self) -> f64 {
     // Safety:
@@ -709,6 +947,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SAR::VT_SENVELZ, Some(0.0)).unwrap()}
   }
+  /// Sensor latitude at start (degrees)
   #[inline]
   pub fn SENLAT_START(&self) -> f64 {
     // Safety:
@@ -716,6 +955,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SAR::VT_SENLAT_START, Some(0.0)).unwrap()}
   }
+  /// Sensor longitude at start (degrees)
   #[inline]
   pub fn SENLON_START(&self) -> f64 {
     // Safety:
@@ -723,6 +963,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SAR::VT_SENLON_START, Some(0.0)).unwrap()}
   }
+  /// Sensor latitude at end (degrees)
   #[inline]
   pub fn SENLAT_END(&self) -> f64 {
     // Safety:
@@ -730,6 +971,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SAR::VT_SENLAT_END, Some(0.0)).unwrap()}
   }
+  /// Sensor longitude at end (degrees)
   #[inline]
   pub fn SENLON_END(&self) -> f64 {
     // Safety:
@@ -737,6 +979,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SAR::VT_SENLON_END, Some(0.0)).unwrap()}
   }
+  /// Transaction identifier
   #[inline]
   pub fn TRANSACTION_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -744,6 +987,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_TRANSACTION_ID, None)}
   }
+  /// Associated tags
   #[inline]
   pub fn TAGS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -751,6 +995,7 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(SAR::VT_TAGS, None)}
   }
+  /// Source types
   #[inline]
   pub fn SRC_TYPS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -758,19 +1003,13 @@ impl<'a> SAR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(SAR::VT_SRC_TYPS, None)}
   }
+  /// Source identifiers
   #[inline]
   pub fn SRC_IDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(SAR::VT_SRC_IDS, None)}
-  }
-  #[inline]
-  pub fn ON_ORBIT(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SAR::VT_ON_ORBIT, None)}
   }
 }
 
@@ -782,8 +1021,9 @@ impl flatbuffers::Verifiable for SAR<'_> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
-     .visit_field::<i32>("SAT_NO", Self::VT_SAT_NO, false)?
+     .visit_field::<u32>("SAT_NO", Self::VT_SAT_NO, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_OBJECT_ID", Self::VT_ORIG_OBJECT_ID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ON_ORBIT", Self::VT_ON_ORBIT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID_SENSOR", Self::VT_ID_SENSOR, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_SENSOR_ID", Self::VT_ORIG_SENSOR_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EXTERNAL_ID", Self::VT_EXTERNAL_ID, false)?
@@ -796,12 +1036,12 @@ impl flatbuffers::Verifiable for SAR<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DETECTION_END", Self::VT_DETECTION_END, false)?
      .visit_field::<f64>("DWELL_TIME", Self::VT_DWELL_TIME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORBIT_STATE", Self::VT_ORBIT_STATE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SAR_MODE", Self::VT_SAR_MODE, false)?
+     .visit_field::<sarMode>("SAR_MODE", Self::VT_SAR_MODE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OPERATING_BAND", Self::VT_OPERATING_BAND, false)?
      .visit_field::<f64>("OPERATING_FREQ", Self::VT_OPERATING_FREQ, false)?
      .visit_field::<f64>("SNR", Self::VT_SNR, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TX_POLARIZATION", Self::VT_TX_POLARIZATION, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("RX_POLARIZATION", Self::VT_RX_POLARIZATION, false)?
+     .visit_field::<sarPolarization>("TX_POLARIZATION", Self::VT_TX_POLARIZATION, false)?
+     .visit_field::<sarPolarization>("RX_POLARIZATION", Self::VT_RX_POLARIZATION, false)?
      .visit_field::<f64>("GRAZE_ANGLE", Self::VT_GRAZE_ANGLE, false)?
      .visit_field::<f64>("INCIDENCE_ANGLE", Self::VT_INCIDENCE_ANGLE, false)?
      .visit_field::<f64>("SQUINT_ANGLE", Self::VT_SQUINT_ANGLE, false)?
@@ -812,20 +1052,17 @@ impl flatbuffers::Verifiable for SAR<'_> {
      .visit_field::<f64>("NEAR_RANGE", Self::VT_NEAR_RANGE, false)?
      .visit_field::<f64>("FAR_RANGE", Self::VT_FAR_RANGE, false)?
      .visit_field::<f64>("SWATH_LENGTH", Self::VT_SWATH_LENGTH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("AREA", Self::VT_AREA, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ATEXT", Self::VT_ATEXT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("AGJSON", Self::VT_AGJSON, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ATEXT", Self::VT_ATEXT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ATYPE", Self::VT_ATYPE, false)?
-     .visit_field::<i32>("ANDIMS", Self::VT_ANDIMS, false)?
-     .visit_field::<i32>("ASRID", Self::VT_ASRID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COORD_SYS", Self::VT_COORD_SYS, false)?
      .visit_field::<f64>("SPACING_RANGE", Self::VT_SPACING_RANGE, false)?
      .visit_field::<f64>("SPACING_AZIMUTH", Self::VT_SPACING_AZIMUTH, false)?
-     .visit_field::<i32>("LOOKS_AZIMUTH", Self::VT_LOOKS_AZIMUTH, false)?
-     .visit_field::<i32>("LOOKS_RANGE", Self::VT_LOOKS_RANGE, false)?
+     .visit_field::<u8>("LOOKS_AZIMUTH", Self::VT_LOOKS_AZIMUTH, false)?
+     .visit_field::<u8>("LOOKS_RANGE", Self::VT_LOOKS_RANGE, false)?
      .visit_field::<f64>("RESOLUTION_RANGE", Self::VT_RESOLUTION_RANGE, false)?
      .visit_field::<f64>("RESOLUTION_AZIMUTH", Self::VT_RESOLUTION_AZIMUTH, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OB_DIRECTION", Self::VT_OB_DIRECTION, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COORD_SYS", Self::VT_COORD_SYS, false)?
      .visit_field::<f64>("TARGETPOSX", Self::VT_TARGETPOSX, false)?
      .visit_field::<f64>("TARGETPOSY", Self::VT_TARGETPOSY, false)?
      .visit_field::<f64>("TARGETPOSZ", Self::VT_TARGETPOSZ, false)?
@@ -841,15 +1078,15 @@ impl flatbuffers::Verifiable for SAR<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("TAGS", Self::VT_TAGS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("SRC_TYPS", Self::VT_SRC_TYPS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("SRC_IDS", Self::VT_SRC_IDS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ON_ORBIT", Self::VT_ON_ORBIT, false)?
      .finish();
     Ok(())
   }
 }
 pub struct SARArgs<'a> {
     pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SAT_NO: i32,
+    pub SAT_NO: u32,
     pub ORIG_OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ON_ORBIT: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ID_SENSOR: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ORIG_SENSOR_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub EXTERNAL_ID: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -862,12 +1099,12 @@ pub struct SARArgs<'a> {
     pub DETECTION_END: Option<flatbuffers::WIPOffset<&'a str>>,
     pub DWELL_TIME: f64,
     pub ORBIT_STATE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SAR_MODE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SAR_MODE: sarMode,
     pub OPERATING_BAND: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OPERATING_FREQ: f64,
     pub SNR: f64,
-    pub TX_POLARIZATION: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub RX_POLARIZATION: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub TX_POLARIZATION: sarPolarization,
+    pub RX_POLARIZATION: sarPolarization,
     pub GRAZE_ANGLE: f64,
     pub INCIDENCE_ANGLE: f64,
     pub SQUINT_ANGLE: f64,
@@ -878,20 +1115,17 @@ pub struct SARArgs<'a> {
     pub NEAR_RANGE: f64,
     pub FAR_RANGE: f64,
     pub SWATH_LENGTH: f64,
-    pub AREA: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ATEXT: Option<flatbuffers::WIPOffset<&'a str>>,
     pub AGJSON: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ATEXT: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ATYPE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ANDIMS: i32,
-    pub ASRID: i32,
+    pub COORD_SYS: Option<flatbuffers::WIPOffset<&'a str>>,
     pub SPACING_RANGE: f64,
     pub SPACING_AZIMUTH: f64,
-    pub LOOKS_AZIMUTH: i32,
-    pub LOOKS_RANGE: i32,
+    pub LOOKS_AZIMUTH: u8,
+    pub LOOKS_RANGE: u8,
     pub RESOLUTION_RANGE: f64,
     pub RESOLUTION_AZIMUTH: f64,
     pub OB_DIRECTION: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub COORD_SYS: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TARGETPOSX: f64,
     pub TARGETPOSY: f64,
     pub TARGETPOSZ: f64,
@@ -907,7 +1141,6 @@ pub struct SARArgs<'a> {
     pub TAGS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub SRC_TYPS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub SRC_IDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub ON_ORBIT: Option<flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for SARArgs<'a> {
   #[inline]
@@ -916,6 +1149,7 @@ impl<'a> Default for SARArgs<'a> {
       ID: None,
       SAT_NO: 0,
       ORIG_OBJECT_ID: None,
+      ON_ORBIT: None,
       ID_SENSOR: None,
       ORIG_SENSOR_ID: None,
       EXTERNAL_ID: None,
@@ -928,12 +1162,12 @@ impl<'a> Default for SARArgs<'a> {
       DETECTION_END: None,
       DWELL_TIME: 0.0,
       ORBIT_STATE: None,
-      SAR_MODE: None,
+      SAR_MODE: sarMode::STRIPMAP,
       OPERATING_BAND: None,
       OPERATING_FREQ: 0.0,
       SNR: 0.0,
-      TX_POLARIZATION: None,
-      RX_POLARIZATION: None,
+      TX_POLARIZATION: sarPolarization::HH,
+      RX_POLARIZATION: sarPolarization::HH,
       GRAZE_ANGLE: 0.0,
       INCIDENCE_ANGLE: 0.0,
       SQUINT_ANGLE: 0.0,
@@ -944,12 +1178,10 @@ impl<'a> Default for SARArgs<'a> {
       NEAR_RANGE: 0.0,
       FAR_RANGE: 0.0,
       SWATH_LENGTH: 0.0,
-      AREA: None,
-      ATEXT: None,
       AGJSON: None,
+      ATEXT: None,
       ATYPE: None,
-      ANDIMS: 0,
-      ASRID: 0,
+      COORD_SYS: None,
       SPACING_RANGE: 0.0,
       SPACING_AZIMUTH: 0.0,
       LOOKS_AZIMUTH: 0,
@@ -957,7 +1189,6 @@ impl<'a> Default for SARArgs<'a> {
       RESOLUTION_RANGE: 0.0,
       RESOLUTION_AZIMUTH: 0.0,
       OB_DIRECTION: None,
-      COORD_SYS: None,
       TARGETPOSX: 0.0,
       TARGETPOSY: 0.0,
       TARGETPOSZ: 0.0,
@@ -973,7 +1204,6 @@ impl<'a> Default for SARArgs<'a> {
       TAGS: None,
       SRC_TYPS: None,
       SRC_IDS: None,
-      ON_ORBIT: None,
     }
   }
 }
@@ -988,12 +1218,16 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SARBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SAR::VT_ID, ID);
   }
   #[inline]
-  pub fn add_SAT_NO(&mut self, SAT_NO: i32) {
-    self.fbb_.push_slot::<i32>(SAR::VT_SAT_NO, SAT_NO, 0);
+  pub fn add_SAT_NO(&mut self, SAT_NO: u32) {
+    self.fbb_.push_slot::<u32>(SAR::VT_SAT_NO, SAT_NO, 0);
   }
   #[inline]
   pub fn add_ORIG_OBJECT_ID(&mut self, ORIG_OBJECT_ID: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SAR::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
+  }
+  #[inline]
+  pub fn add_ON_ORBIT(&mut self, ON_ORBIT: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SAR::VT_ON_ORBIT, ON_ORBIT);
   }
   #[inline]
   pub fn add_ID_SENSOR(&mut self, ID_SENSOR: flatbuffers::WIPOffset<&'b  str>) {
@@ -1044,8 +1278,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SARBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SAR::VT_ORBIT_STATE, ORBIT_STATE);
   }
   #[inline]
-  pub fn add_SAR_MODE(&mut self, SAR_MODE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SAR::VT_SAR_MODE, SAR_MODE);
+  pub fn add_SAR_MODE(&mut self, SAR_MODE: sarMode) {
+    self.fbb_.push_slot::<sarMode>(SAR::VT_SAR_MODE, SAR_MODE, sarMode::STRIPMAP);
   }
   #[inline]
   pub fn add_OPERATING_BAND(&mut self, OPERATING_BAND: flatbuffers::WIPOffset<&'b  str>) {
@@ -1060,12 +1294,12 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SARBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(SAR::VT_SNR, SNR, 0.0);
   }
   #[inline]
-  pub fn add_TX_POLARIZATION(&mut self, TX_POLARIZATION: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SAR::VT_TX_POLARIZATION, TX_POLARIZATION);
+  pub fn add_TX_POLARIZATION(&mut self, TX_POLARIZATION: sarPolarization) {
+    self.fbb_.push_slot::<sarPolarization>(SAR::VT_TX_POLARIZATION, TX_POLARIZATION, sarPolarization::HH);
   }
   #[inline]
-  pub fn add_RX_POLARIZATION(&mut self, RX_POLARIZATION: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SAR::VT_RX_POLARIZATION, RX_POLARIZATION);
+  pub fn add_RX_POLARIZATION(&mut self, RX_POLARIZATION: sarPolarization) {
+    self.fbb_.push_slot::<sarPolarization>(SAR::VT_RX_POLARIZATION, RX_POLARIZATION, sarPolarization::HH);
   }
   #[inline]
   pub fn add_GRAZE_ANGLE(&mut self, GRAZE_ANGLE: f64) {
@@ -1108,28 +1342,20 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SARBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(SAR::VT_SWATH_LENGTH, SWATH_LENGTH, 0.0);
   }
   #[inline]
-  pub fn add_AREA(&mut self, AREA: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SAR::VT_AREA, AREA);
+  pub fn add_AGJSON(&mut self, AGJSON: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SAR::VT_AGJSON, AGJSON);
   }
   #[inline]
   pub fn add_ATEXT(&mut self, ATEXT: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SAR::VT_ATEXT, ATEXT);
   }
   #[inline]
-  pub fn add_AGJSON(&mut self, AGJSON: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SAR::VT_AGJSON, AGJSON);
-  }
-  #[inline]
   pub fn add_ATYPE(&mut self, ATYPE: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SAR::VT_ATYPE, ATYPE);
   }
   #[inline]
-  pub fn add_ANDIMS(&mut self, ANDIMS: i32) {
-    self.fbb_.push_slot::<i32>(SAR::VT_ANDIMS, ANDIMS, 0);
-  }
-  #[inline]
-  pub fn add_ASRID(&mut self, ASRID: i32) {
-    self.fbb_.push_slot::<i32>(SAR::VT_ASRID, ASRID, 0);
+  pub fn add_COORD_SYS(&mut self, COORD_SYS: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SAR::VT_COORD_SYS, COORD_SYS);
   }
   #[inline]
   pub fn add_SPACING_RANGE(&mut self, SPACING_RANGE: f64) {
@@ -1140,12 +1366,12 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SARBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(SAR::VT_SPACING_AZIMUTH, SPACING_AZIMUTH, 0.0);
   }
   #[inline]
-  pub fn add_LOOKS_AZIMUTH(&mut self, LOOKS_AZIMUTH: i32) {
-    self.fbb_.push_slot::<i32>(SAR::VT_LOOKS_AZIMUTH, LOOKS_AZIMUTH, 0);
+  pub fn add_LOOKS_AZIMUTH(&mut self, LOOKS_AZIMUTH: u8) {
+    self.fbb_.push_slot::<u8>(SAR::VT_LOOKS_AZIMUTH, LOOKS_AZIMUTH, 0);
   }
   #[inline]
-  pub fn add_LOOKS_RANGE(&mut self, LOOKS_RANGE: i32) {
-    self.fbb_.push_slot::<i32>(SAR::VT_LOOKS_RANGE, LOOKS_RANGE, 0);
+  pub fn add_LOOKS_RANGE(&mut self, LOOKS_RANGE: u8) {
+    self.fbb_.push_slot::<u8>(SAR::VT_LOOKS_RANGE, LOOKS_RANGE, 0);
   }
   #[inline]
   pub fn add_RESOLUTION_RANGE(&mut self, RESOLUTION_RANGE: f64) {
@@ -1158,10 +1384,6 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SARBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_OB_DIRECTION(&mut self, OB_DIRECTION: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SAR::VT_OB_DIRECTION, OB_DIRECTION);
-  }
-  #[inline]
-  pub fn add_COORD_SYS(&mut self, COORD_SYS: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SAR::VT_COORD_SYS, COORD_SYS);
   }
   #[inline]
   pub fn add_TARGETPOSX(&mut self, TARGETPOSX: f64) {
@@ -1224,10 +1446,6 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SARBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SAR::VT_SRC_IDS, SRC_IDS);
   }
   #[inline]
-  pub fn add_ON_ORBIT(&mut self, ON_ORBIT: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SAR::VT_ON_ORBIT, ON_ORBIT);
-  }
-  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> SARBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     SARBuilder {
@@ -1248,6 +1466,7 @@ impl core::fmt::Debug for SAR<'_> {
       ds.field("ID", &self.ID());
       ds.field("SAT_NO", &self.SAT_NO());
       ds.field("ORIG_OBJECT_ID", &self.ORIG_OBJECT_ID());
+      ds.field("ON_ORBIT", &self.ON_ORBIT());
       ds.field("ID_SENSOR", &self.ID_SENSOR());
       ds.field("ORIG_SENSOR_ID", &self.ORIG_SENSOR_ID());
       ds.field("EXTERNAL_ID", &self.EXTERNAL_ID());
@@ -1276,12 +1495,10 @@ impl core::fmt::Debug for SAR<'_> {
       ds.field("NEAR_RANGE", &self.NEAR_RANGE());
       ds.field("FAR_RANGE", &self.FAR_RANGE());
       ds.field("SWATH_LENGTH", &self.SWATH_LENGTH());
-      ds.field("AREA", &self.AREA());
-      ds.field("ATEXT", &self.ATEXT());
       ds.field("AGJSON", &self.AGJSON());
+      ds.field("ATEXT", &self.ATEXT());
       ds.field("ATYPE", &self.ATYPE());
-      ds.field("ANDIMS", &self.ANDIMS());
-      ds.field("ASRID", &self.ASRID());
+      ds.field("COORD_SYS", &self.COORD_SYS());
       ds.field("SPACING_RANGE", &self.SPACING_RANGE());
       ds.field("SPACING_AZIMUTH", &self.SPACING_AZIMUTH());
       ds.field("LOOKS_AZIMUTH", &self.LOOKS_AZIMUTH());
@@ -1289,7 +1506,6 @@ impl core::fmt::Debug for SAR<'_> {
       ds.field("RESOLUTION_RANGE", &self.RESOLUTION_RANGE());
       ds.field("RESOLUTION_AZIMUTH", &self.RESOLUTION_AZIMUTH());
       ds.field("OB_DIRECTION", &self.OB_DIRECTION());
-      ds.field("COORD_SYS", &self.COORD_SYS());
       ds.field("TARGETPOSX", &self.TARGETPOSX());
       ds.field("TARGETPOSY", &self.TARGETPOSY());
       ds.field("TARGETPOSZ", &self.TARGETPOSZ());
@@ -1305,7 +1521,6 @@ impl core::fmt::Debug for SAR<'_> {
       ds.field("TAGS", &self.TAGS());
       ds.field("SRC_TYPS", &self.SRC_TYPS());
       ds.field("SRC_IDS", &self.SRC_IDS());
-      ds.field("ON_ORBIT", &self.ON_ORBIT());
       ds.finish()
   }
 }
@@ -1313,8 +1528,9 @@ impl core::fmt::Debug for SAR<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct SART {
   pub ID: Option<String>,
-  pub SAT_NO: i32,
+  pub SAT_NO: u32,
   pub ORIG_OBJECT_ID: Option<String>,
+  pub ON_ORBIT: Option<String>,
   pub ID_SENSOR: Option<String>,
   pub ORIG_SENSOR_ID: Option<String>,
   pub EXTERNAL_ID: Option<String>,
@@ -1327,12 +1543,12 @@ pub struct SART {
   pub DETECTION_END: Option<String>,
   pub DWELL_TIME: f64,
   pub ORBIT_STATE: Option<String>,
-  pub SAR_MODE: Option<String>,
+  pub SAR_MODE: sarMode,
   pub OPERATING_BAND: Option<String>,
   pub OPERATING_FREQ: f64,
   pub SNR: f64,
-  pub TX_POLARIZATION: Option<String>,
-  pub RX_POLARIZATION: Option<String>,
+  pub TX_POLARIZATION: sarPolarization,
+  pub RX_POLARIZATION: sarPolarization,
   pub GRAZE_ANGLE: f64,
   pub INCIDENCE_ANGLE: f64,
   pub SQUINT_ANGLE: f64,
@@ -1343,20 +1559,17 @@ pub struct SART {
   pub NEAR_RANGE: f64,
   pub FAR_RANGE: f64,
   pub SWATH_LENGTH: f64,
-  pub AREA: Option<String>,
-  pub ATEXT: Option<String>,
   pub AGJSON: Option<String>,
+  pub ATEXT: Option<String>,
   pub ATYPE: Option<String>,
-  pub ANDIMS: i32,
-  pub ASRID: i32,
+  pub COORD_SYS: Option<String>,
   pub SPACING_RANGE: f64,
   pub SPACING_AZIMUTH: f64,
-  pub LOOKS_AZIMUTH: i32,
-  pub LOOKS_RANGE: i32,
+  pub LOOKS_AZIMUTH: u8,
+  pub LOOKS_RANGE: u8,
   pub RESOLUTION_RANGE: f64,
   pub RESOLUTION_AZIMUTH: f64,
   pub OB_DIRECTION: Option<String>,
-  pub COORD_SYS: Option<String>,
   pub TARGETPOSX: f64,
   pub TARGETPOSY: f64,
   pub TARGETPOSZ: f64,
@@ -1372,7 +1585,6 @@ pub struct SART {
   pub TAGS: Option<Vec<String>>,
   pub SRC_TYPS: Option<Vec<String>>,
   pub SRC_IDS: Option<Vec<String>>,
-  pub ON_ORBIT: Option<String>,
 }
 impl Default for SART {
   fn default() -> Self {
@@ -1380,6 +1592,7 @@ impl Default for SART {
       ID: None,
       SAT_NO: 0,
       ORIG_OBJECT_ID: None,
+      ON_ORBIT: None,
       ID_SENSOR: None,
       ORIG_SENSOR_ID: None,
       EXTERNAL_ID: None,
@@ -1392,12 +1605,12 @@ impl Default for SART {
       DETECTION_END: None,
       DWELL_TIME: 0.0,
       ORBIT_STATE: None,
-      SAR_MODE: None,
+      SAR_MODE: sarMode::STRIPMAP,
       OPERATING_BAND: None,
       OPERATING_FREQ: 0.0,
       SNR: 0.0,
-      TX_POLARIZATION: None,
-      RX_POLARIZATION: None,
+      TX_POLARIZATION: sarPolarization::HH,
+      RX_POLARIZATION: sarPolarization::HH,
       GRAZE_ANGLE: 0.0,
       INCIDENCE_ANGLE: 0.0,
       SQUINT_ANGLE: 0.0,
@@ -1408,12 +1621,10 @@ impl Default for SART {
       NEAR_RANGE: 0.0,
       FAR_RANGE: 0.0,
       SWATH_LENGTH: 0.0,
-      AREA: None,
-      ATEXT: None,
       AGJSON: None,
+      ATEXT: None,
       ATYPE: None,
-      ANDIMS: 0,
-      ASRID: 0,
+      COORD_SYS: None,
       SPACING_RANGE: 0.0,
       SPACING_AZIMUTH: 0.0,
       LOOKS_AZIMUTH: 0,
@@ -1421,7 +1632,6 @@ impl Default for SART {
       RESOLUTION_RANGE: 0.0,
       RESOLUTION_AZIMUTH: 0.0,
       OB_DIRECTION: None,
-      COORD_SYS: None,
       TARGETPOSX: 0.0,
       TARGETPOSY: 0.0,
       TARGETPOSZ: 0.0,
@@ -1437,7 +1647,6 @@ impl Default for SART {
       TAGS: None,
       SRC_TYPS: None,
       SRC_IDS: None,
-      ON_ORBIT: None,
     }
   }
 }
@@ -1451,6 +1660,9 @@ impl SART {
     });
     let SAT_NO = self.SAT_NO;
     let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ON_ORBIT = self.ON_ORBIT.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let ID_SENSOR = self.ID_SENSOR.as_ref().map(|x|{
@@ -1487,20 +1699,14 @@ impl SART {
     let ORBIT_STATE = self.ORBIT_STATE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let SAR_MODE = self.SAR_MODE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+    let SAR_MODE = self.SAR_MODE;
     let OPERATING_BAND = self.OPERATING_BAND.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let OPERATING_FREQ = self.OPERATING_FREQ;
     let SNR = self.SNR;
-    let TX_POLARIZATION = self.TX_POLARIZATION.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let RX_POLARIZATION = self.RX_POLARIZATION.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+    let TX_POLARIZATION = self.TX_POLARIZATION;
+    let RX_POLARIZATION = self.RX_POLARIZATION;
     let GRAZE_ANGLE = self.GRAZE_ANGLE;
     let INCIDENCE_ANGLE = self.INCIDENCE_ANGLE;
     let SQUINT_ANGLE = self.SQUINT_ANGLE;
@@ -1511,20 +1717,18 @@ impl SART {
     let NEAR_RANGE = self.NEAR_RANGE;
     let FAR_RANGE = self.FAR_RANGE;
     let SWATH_LENGTH = self.SWATH_LENGTH;
-    let AREA = self.AREA.as_ref().map(|x|{
+    let AGJSON = self.AGJSON.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let ATEXT = self.ATEXT.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let AGJSON = self.AGJSON.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
     let ATYPE = self.ATYPE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let ANDIMS = self.ANDIMS;
-    let ASRID = self.ASRID;
+    let COORD_SYS = self.COORD_SYS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     let SPACING_RANGE = self.SPACING_RANGE;
     let SPACING_AZIMUTH = self.SPACING_AZIMUTH;
     let LOOKS_AZIMUTH = self.LOOKS_AZIMUTH;
@@ -1532,9 +1736,6 @@ impl SART {
     let RESOLUTION_RANGE = self.RESOLUTION_RANGE;
     let RESOLUTION_AZIMUTH = self.RESOLUTION_AZIMUTH;
     let OB_DIRECTION = self.OB_DIRECTION.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let COORD_SYS = self.COORD_SYS.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let TARGETPOSX = self.TARGETPOSX;
@@ -1560,13 +1761,11 @@ impl SART {
     let SRC_IDS = self.SRC_IDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
-    let ON_ORBIT = self.ON_ORBIT.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
     SAR::create(_fbb, &SARArgs{
       ID,
       SAT_NO,
       ORIG_OBJECT_ID,
+      ON_ORBIT,
       ID_SENSOR,
       ORIG_SENSOR_ID,
       EXTERNAL_ID,
@@ -1595,12 +1794,10 @@ impl SART {
       NEAR_RANGE,
       FAR_RANGE,
       SWATH_LENGTH,
-      AREA,
-      ATEXT,
       AGJSON,
+      ATEXT,
       ATYPE,
-      ANDIMS,
-      ASRID,
+      COORD_SYS,
       SPACING_RANGE,
       SPACING_AZIMUTH,
       LOOKS_AZIMUTH,
@@ -1608,7 +1805,6 @@ impl SART {
       RESOLUTION_RANGE,
       RESOLUTION_AZIMUTH,
       OB_DIRECTION,
-      COORD_SYS,
       TARGETPOSX,
       TARGETPOSY,
       TARGETPOSZ,
@@ -1624,7 +1820,6 @@ impl SART {
       TAGS,
       SRC_TYPS,
       SRC_IDS,
-      ON_ORBIT,
     })
   }
 }

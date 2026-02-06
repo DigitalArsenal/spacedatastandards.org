@@ -41,25 +41,143 @@ class DFH extends Table
         return $this;
     }
 
+    /// Unique identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getEFFECTIVE_UNTIL()
+    /// Satellite number
+    /**
+     * @return uint
+     */
+    public function getSAT_NO()
     {
         $o = $this->__offset(6);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Object designator
+    public function getOBJECT_DESIGNATOR()
+    {
+        $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Object common name
+    public function getOBJECT_NAME()
+    {
+        $o = $this->__offset(10);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// History start time (ISO 8601)
+    public function getSTART_TIME()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// History end time (ISO 8601)
+    public function getEND_TIME()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Current effective until date (ISO 8601)
+    public function getEFFECTIVE_UNTIL()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Current drift rate in degrees/day
     /**
      * @return double
      */
     public function getDRIFT_RATE()
     {
-        $o = $this->__offset(8);
+        $o = $this->__offset(18);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Current mean longitude in degrees East
+    /**
+     * @return double
+     */
+    public function getMEAN_LONGITUDE()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Longitude slot center in degrees East (if station-keeping)
+    /**
+     * @return double
+     */
+    public function getSLOT_CENTER()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Longitude slot half-width in degrees
+    /**
+     * @return double
+     */
+    public function getSLOT_HALF_WIDTH()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Whether object is actively station-keeping
+    /**
+     * @return bool
+     */
+    public function getSTATION_KEEPING()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Historical drift records
+    /**
+     * @returnVectorOffset
+     */
+    public function getRECORDS($j)
+    {
+        $o = $this->__offset(28);
+        $obj = new DriftRecord();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRECORDSLength()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Number of records in history
+    /**
+     * @return uint
+     */
+    public function getNUM_RECORDS()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Additional notes
+    public function getNOTES()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /**
@@ -68,19 +186,31 @@ class DFH extends Table
      */
     public static function startDFH(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(3);
+        $builder->StartObject(15);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return DFH
      */
-    public static function createDFH(FlatBufferBuilder $builder, $ID, $EFFECTIVE_UNTIL, $DRIFT_RATE)
+    public static function createDFH(FlatBufferBuilder $builder, $ID, $SAT_NO, $OBJECT_DESIGNATOR, $OBJECT_NAME, $START_TIME, $END_TIME, $EFFECTIVE_UNTIL, $DRIFT_RATE, $MEAN_LONGITUDE, $SLOT_CENTER, $SLOT_HALF_WIDTH, $STATION_KEEPING, $RECORDS, $NUM_RECORDS, $NOTES)
     {
-        $builder->startObject(3);
+        $builder->startObject(15);
         self::addID($builder, $ID);
+        self::addSAT_NO($builder, $SAT_NO);
+        self::addOBJECT_DESIGNATOR($builder, $OBJECT_DESIGNATOR);
+        self::addOBJECT_NAME($builder, $OBJECT_NAME);
+        self::addSTART_TIME($builder, $START_TIME);
+        self::addEND_TIME($builder, $END_TIME);
         self::addEFFECTIVE_UNTIL($builder, $EFFECTIVE_UNTIL);
         self::addDRIFT_RATE($builder, $DRIFT_RATE);
+        self::addMEAN_LONGITUDE($builder, $MEAN_LONGITUDE);
+        self::addSLOT_CENTER($builder, $SLOT_CENTER);
+        self::addSLOT_HALF_WIDTH($builder, $SLOT_HALF_WIDTH);
+        self::addSTATION_KEEPING($builder, $STATION_KEEPING);
+        self::addRECORDS($builder, $RECORDS);
+        self::addNUM_RECORDS($builder, $NUM_RECORDS);
+        self::addNOTES($builder, $NOTES);
         $o = $builder->endObject();
         return $o;
     }
@@ -97,12 +227,62 @@ class DFH extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addSAT_NO(FlatBufferBuilder $builder, $SAT_NO)
+    {
+        $builder->addUintX(1, $SAT_NO, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addOBJECT_DESIGNATOR(FlatBufferBuilder $builder, $OBJECT_DESIGNATOR)
+    {
+        $builder->addOffsetX(2, $OBJECT_DESIGNATOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addOBJECT_NAME(FlatBufferBuilder $builder, $OBJECT_NAME)
+    {
+        $builder->addOffsetX(3, $OBJECT_NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSTART_TIME(FlatBufferBuilder $builder, $START_TIME)
+    {
+        $builder->addOffsetX(4, $START_TIME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEND_TIME(FlatBufferBuilder $builder, $END_TIME)
+    {
+        $builder->addOffsetX(5, $END_TIME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param StringOffset
      * @return void
      */
     public static function addEFFECTIVE_UNTIL(FlatBufferBuilder $builder, $EFFECTIVE_UNTIL)
     {
-        $builder->addOffsetX(1, $EFFECTIVE_UNTIL, 0);
+        $builder->addOffsetX(6, $EFFECTIVE_UNTIL, 0);
     }
 
     /**
@@ -112,7 +292,101 @@ class DFH extends Table
      */
     public static function addDRIFT_RATE(FlatBufferBuilder $builder, $DRIFT_RATE)
     {
-        $builder->addDoubleX(2, $DRIFT_RATE, 0.0);
+        $builder->addDoubleX(7, $DRIFT_RATE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addMEAN_LONGITUDE(FlatBufferBuilder $builder, $MEAN_LONGITUDE)
+    {
+        $builder->addDoubleX(8, $MEAN_LONGITUDE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addSLOT_CENTER(FlatBufferBuilder $builder, $SLOT_CENTER)
+    {
+        $builder->addDoubleX(9, $SLOT_CENTER, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addSLOT_HALF_WIDTH(FlatBufferBuilder $builder, $SLOT_HALF_WIDTH)
+    {
+        $builder->addDoubleX(10, $SLOT_HALF_WIDTH, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addSTATION_KEEPING(FlatBufferBuilder $builder, $STATION_KEEPING)
+    {
+        $builder->addBoolX(11, $STATION_KEEPING, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addRECORDS(FlatBufferBuilder $builder, $RECORDS)
+    {
+        $builder->addOffsetX(12, $RECORDS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createRECORDSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startRECORDSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addNUM_RECORDS(FlatBufferBuilder $builder, $NUM_RECORDS)
+    {
+        $builder->addUintX(13, $NUM_RECORDS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addNOTES(FlatBufferBuilder $builder, $NOTES)
+    {
+        $builder->addOffsetX(14, $NOTES, 0);
     }
 
     /**

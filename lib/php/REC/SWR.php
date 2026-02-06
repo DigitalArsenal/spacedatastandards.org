@@ -6,7 +6,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Short-Wave Infrared
+/// Short-Wave Infrared Observation
 class SWR extends Table
 {
     /**
@@ -41,71 +41,97 @@ class SWR extends Table
         return $this;
     }
 
+    /// Unique identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// On-orbit reference
     public function getON_ORBIT()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getTS()
+    /// International designator
+    public function getORIG_OBJECT_ID()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Satellite catalog number
+    /**
+     * @return uint
+     */
+    public function getSAT_NO()
+    {
+        $o = $this->__offset(10);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Observation timestamp (ISO 8601)
+    public function getTS()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Solar phase angle (degrees)
     /**
      * @return double
      */
     public function getSOLAR_PHASE_ANGLE()
     {
-        $o = $this->__offset(10);
+        $o = $this->__offset(14);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sub-observer latitude (degrees)
     /**
      * @return double
      */
     public function getLAT()
     {
-        $o = $this->__offset(12);
+        $o = $this->__offset(16);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sub-observer longitude (degrees)
     /**
      * @return double
      */
     public function getLON()
     {
-        $o = $this->__offset(14);
+        $o = $this->__offset(18);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Location name
     public function getLOCATION_NAME()
     {
-        $o = $this->__offset(16);
+        $o = $this->__offset(20);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Bad wavelength flag or identifier
     public function getBAD_WAVE()
     {
-        $o = $this->__offset(18);
+        $o = $this->__offset(22);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Measured wavelengths (micrometers)
     /**
      * @param int offset
-     * @return string
+     * @return double
      */
     public function getWAVELENGTHS($j)
     {
-        $o = $this->__offset(20);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
@@ -113,18 +139,19 @@ class SWR extends Table
      */
     public function getWAVELENGTHSLength()
     {
-        $o = $this->__offset(20);
+        $o = $this->__offset(24);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Absolute flux values (W/m^2/um)
     /**
      * @param int offset
-     * @return string
+     * @return double
      */
     public function getABS_FLUXES($j)
     {
-        $o = $this->__offset(22);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
@@ -132,18 +159,19 @@ class SWR extends Table
      */
     public function getABS_FLUXESLength()
     {
-        $o = $this->__offset(22);
+        $o = $this->__offset(26);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Ratio reference wavelengths (micrometers)
     /**
      * @param int offset
-     * @return string
+     * @return double
      */
     public function getRATIO_WAVELENGTHS($j)
     {
-        $o = $this->__offset(24);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
@@ -151,18 +179,19 @@ class SWR extends Table
      */
     public function getRATIO_WAVELENGTHSLength()
     {
-        $o = $this->__offset(24);
+        $o = $this->__offset(28);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Flux ratios (normalized)
     /**
      * @param int offset
-     * @return string
+     * @return double
      */
     public function getFLUX_RATIOS($j)
     {
-        $o = $this->__offset(26);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
@@ -170,23 +199,48 @@ class SWR extends Table
      */
     public function getFLUX_RATIOSLength()
     {
-        $o = $this->__offset(26);
+        $o = $this->__offset(30);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    public function getORIG_OBJECT_ID()
+    /// Effective temperature (Kelvin)
+    /**
+     * @return double
+     */
+    public function getTEMPERATURE()
     {
-        $o = $this->__offset(28);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Signal-to-noise ratio
     /**
-     * @return int
+     * @return double
      */
-    public function getSAT_NO()
+    public function getSIGNAL_NOISE_RATIO()
     {
-        $o = $this->__offset(30);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Integration time (seconds)
+    /**
+     * @return double
+     */
+    public function getINTEGRATION_TIME()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Data quality (0-9, 9=best)
+    /**
+     * @return byte
+     */
+    public function getQUALITY()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
     }
 
     /**
@@ -195,18 +249,20 @@ class SWR extends Table
      */
     public static function startSWR(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(14);
+        $builder->StartObject(18);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SWR
      */
-    public static function createSWR(FlatBufferBuilder $builder, $ID, $ON_ORBIT, $TS, $SOLAR_PHASE_ANGLE, $LAT, $LON, $LOCATION_NAME, $BAD_WAVE, $WAVELENGTHS, $ABS_FLUXES, $RATIO_WAVELENGTHS, $FLUX_RATIOS, $ORIG_OBJECT_ID, $SAT_NO)
+    public static function createSWR(FlatBufferBuilder $builder, $ID, $ON_ORBIT, $ORIG_OBJECT_ID, $SAT_NO, $TS, $SOLAR_PHASE_ANGLE, $LAT, $LON, $LOCATION_NAME, $BAD_WAVE, $WAVELENGTHS, $ABS_FLUXES, $RATIO_WAVELENGTHS, $FLUX_RATIOS, $TEMPERATURE, $SIGNAL_NOISE_RATIO, $INTEGRATION_TIME, $QUALITY)
     {
-        $builder->startObject(14);
+        $builder->startObject(18);
         self::addID($builder, $ID);
         self::addON_ORBIT($builder, $ON_ORBIT);
+        self::addORIG_OBJECT_ID($builder, $ORIG_OBJECT_ID);
+        self::addSAT_NO($builder, $SAT_NO);
         self::addTS($builder, $TS);
         self::addSOLAR_PHASE_ANGLE($builder, $SOLAR_PHASE_ANGLE);
         self::addLAT($builder, $LAT);
@@ -217,8 +273,10 @@ class SWR extends Table
         self::addABS_FLUXES($builder, $ABS_FLUXES);
         self::addRATIO_WAVELENGTHS($builder, $RATIO_WAVELENGTHS);
         self::addFLUX_RATIOS($builder, $FLUX_RATIOS);
-        self::addORIG_OBJECT_ID($builder, $ORIG_OBJECT_ID);
-        self::addSAT_NO($builder, $SAT_NO);
+        self::addTEMPERATURE($builder, $TEMPERATURE);
+        self::addSIGNAL_NOISE_RATIO($builder, $SIGNAL_NOISE_RATIO);
+        self::addINTEGRATION_TIME($builder, $INTEGRATION_TIME);
+        self::addQUALITY($builder, $QUALITY);
         $o = $builder->endObject();
         return $o;
     }
@@ -248,9 +306,29 @@ class SWR extends Table
      * @param StringOffset
      * @return void
      */
+    public static function addORIG_OBJECT_ID(FlatBufferBuilder $builder, $ORIG_OBJECT_ID)
+    {
+        $builder->addOffsetX(2, $ORIG_OBJECT_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addSAT_NO(FlatBufferBuilder $builder, $SAT_NO)
+    {
+        $builder->addUintX(3, $SAT_NO, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
     public static function addTS(FlatBufferBuilder $builder, $TS)
     {
-        $builder->addOffsetX(2, $TS, 0);
+        $builder->addOffsetX(4, $TS, 0);
     }
 
     /**
@@ -260,7 +338,7 @@ class SWR extends Table
      */
     public static function addSOLAR_PHASE_ANGLE(FlatBufferBuilder $builder, $SOLAR_PHASE_ANGLE)
     {
-        $builder->addDoubleX(3, $SOLAR_PHASE_ANGLE, 0.0);
+        $builder->addDoubleX(5, $SOLAR_PHASE_ANGLE, 0.0);
     }
 
     /**
@@ -270,7 +348,7 @@ class SWR extends Table
      */
     public static function addLAT(FlatBufferBuilder $builder, $LAT)
     {
-        $builder->addDoubleX(4, $LAT, 0.0);
+        $builder->addDoubleX(6, $LAT, 0.0);
     }
 
     /**
@@ -280,7 +358,7 @@ class SWR extends Table
      */
     public static function addLON(FlatBufferBuilder $builder, $LON)
     {
-        $builder->addDoubleX(5, $LON, 0.0);
+        $builder->addDoubleX(7, $LON, 0.0);
     }
 
     /**
@@ -290,7 +368,7 @@ class SWR extends Table
      */
     public static function addLOCATION_NAME(FlatBufferBuilder $builder, $LOCATION_NAME)
     {
-        $builder->addOffsetX(6, $LOCATION_NAME, 0);
+        $builder->addOffsetX(8, $LOCATION_NAME, 0);
     }
 
     /**
@@ -300,7 +378,7 @@ class SWR extends Table
      */
     public static function addBAD_WAVE(FlatBufferBuilder $builder, $BAD_WAVE)
     {
-        $builder->addOffsetX(7, $BAD_WAVE, 0);
+        $builder->addOffsetX(9, $BAD_WAVE, 0);
     }
 
     /**
@@ -310,7 +388,7 @@ class SWR extends Table
      */
     public static function addWAVELENGTHS(FlatBufferBuilder $builder, $WAVELENGTHS)
     {
-        $builder->addOffsetX(8, $WAVELENGTHS, 0);
+        $builder->addOffsetX(10, $WAVELENGTHS, 0);
     }
 
     /**
@@ -320,9 +398,9 @@ class SWR extends Table
      */
     public static function createWAVELENGTHSVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -334,7 +412,7 @@ class SWR extends Table
      */
     public static function startWAVELENGTHSVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**
@@ -344,7 +422,7 @@ class SWR extends Table
      */
     public static function addABS_FLUXES(FlatBufferBuilder $builder, $ABS_FLUXES)
     {
-        $builder->addOffsetX(9, $ABS_FLUXES, 0);
+        $builder->addOffsetX(11, $ABS_FLUXES, 0);
     }
 
     /**
@@ -354,9 +432,9 @@ class SWR extends Table
      */
     public static function createABS_FLUXESVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -368,7 +446,7 @@ class SWR extends Table
      */
     public static function startABS_FLUXESVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**
@@ -378,7 +456,7 @@ class SWR extends Table
      */
     public static function addRATIO_WAVELENGTHS(FlatBufferBuilder $builder, $RATIO_WAVELENGTHS)
     {
-        $builder->addOffsetX(10, $RATIO_WAVELENGTHS, 0);
+        $builder->addOffsetX(12, $RATIO_WAVELENGTHS, 0);
     }
 
     /**
@@ -388,9 +466,9 @@ class SWR extends Table
      */
     public static function createRATIO_WAVELENGTHSVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -402,7 +480,7 @@ class SWR extends Table
      */
     public static function startRATIO_WAVELENGTHSVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**
@@ -412,7 +490,7 @@ class SWR extends Table
      */
     public static function addFLUX_RATIOS(FlatBufferBuilder $builder, $FLUX_RATIOS)
     {
-        $builder->addOffsetX(11, $FLUX_RATIOS, 0);
+        $builder->addOffsetX(13, $FLUX_RATIOS, 0);
     }
 
     /**
@@ -422,9 +500,9 @@ class SWR extends Table
      */
     public static function createFLUX_RATIOSVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -436,27 +514,47 @@ class SWR extends Table
      */
     public static function startFLUX_RATIOSVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param double
      * @return void
      */
-    public static function addORIG_OBJECT_ID(FlatBufferBuilder $builder, $ORIG_OBJECT_ID)
+    public static function addTEMPERATURE(FlatBufferBuilder $builder, $TEMPERATURE)
     {
-        $builder->addOffsetX(12, $ORIG_OBJECT_ID, 0);
+        $builder->addDoubleX(14, $TEMPERATURE, 0.0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param double
      * @return void
      */
-    public static function addSAT_NO(FlatBufferBuilder $builder, $SAT_NO)
+    public static function addSIGNAL_NOISE_RATIO(FlatBufferBuilder $builder, $SIGNAL_NOISE_RATIO)
     {
-        $builder->addIntX(13, $SAT_NO, 0);
+        $builder->addDoubleX(15, $SIGNAL_NOISE_RATIO, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addINTEGRATION_TIME(FlatBufferBuilder $builder, $INTEGRATION_TIME)
+    {
+        $builder->addDoubleX(16, $INTEGRATION_TIME, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addQUALITY(FlatBufferBuilder $builder, $QUALITY)
+    {
+        $builder->addByteX(17, $QUALITY, 0);
     }
 
     /**

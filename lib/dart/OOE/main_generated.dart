@@ -5,6 +5,116 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class EventCategory {
+  final int value;
+  const EventCategory._(this.value);
+
+  factory EventCategory.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum EventCategory');
+    }
+    return result;
+  }
+
+  static EventCategory? _createOrNull(int? value) => 
+      value == null ? null : EventCategory.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 8;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const EventCategory ANOMALY = EventCategory._(0);
+  static const EventCategory FAILURE = EventCategory._(1);
+  static const EventCategory RETIREMENT = EventCategory._(2);
+  static const EventCategory DEORBIT = EventCategory._(3);
+  static const EventCategory BREAKUP = EventCategory._(4);
+  static const EventCategory COLLISION = EventCategory._(5);
+  static const EventCategory STATUS_CHANGE = EventCategory._(6);
+  static const EventCategory REPOSITIONING = EventCategory._(7);
+  static const EventCategory UNKNOWN = EventCategory._(8);
+  static const Map<int, EventCategory> values = {
+    0: ANOMALY,
+    1: FAILURE,
+    2: RETIREMENT,
+    3: DEORBIT,
+    4: BREAKUP,
+    5: COLLISION,
+    6: STATUS_CHANGE,
+    7: REPOSITIONING,
+    8: UNKNOWN};
+
+  static const fb.Reader<EventCategory> reader = _EventCategoryReader();
+
+  @override
+  String toString() {
+    return 'EventCategory{value: $value}';
+  }
+}
+
+class _EventCategoryReader extends fb.Reader<EventCategory> {
+  const _EventCategoryReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  EventCategory read(fb.BufferContext bc, int offset) =>
+      EventCategory.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class EventResult {
+  final int value;
+  const EventResult._(this.value);
+
+  factory EventResult.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum EventResult');
+    }
+    return result;
+  }
+
+  static EventResult? _createOrNull(int? value) => 
+      value == null ? null : EventResult.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 5;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const EventResult TOTAL_LOSS = EventResult._(0);
+  static const EventResult PARTIAL_LOSS = EventResult._(1);
+  static const EventResult DEGRADED = EventResult._(2);
+  static const EventResult RECOVERED = EventResult._(3);
+  static const EventResult NOMINAL = EventResult._(4);
+  static const EventResult PENDING = EventResult._(5);
+  static const Map<int, EventResult> values = {
+    0: TOTAL_LOSS,
+    1: PARTIAL_LOSS,
+    2: DEGRADED,
+    3: RECOVERED,
+    4: NOMINAL,
+    5: PENDING};
+
+  static const fb.Reader<EventResult> reader = _EventResultReader();
+
+  @override
+  String toString() {
+    return 'EventResult{value: $value}';
+  }
+}
+
+class _EventResultReader extends fb.Reader<EventResult> {
+  const _EventResultReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  EventResult read(fb.BufferContext bc, int offset) =>
+      EventResult.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 ///  On-Orbit Event
 class OOE {
   OOE._(this._bc, this._bcOffset);
@@ -18,57 +128,98 @@ class OOE {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get DERIVED_FROM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get DECLASSIFICATION_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get DECLASSIFICATION_STRING => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  int get SAT_NO => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 12, 0);
-  String? get ORIG_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Satellite catalog number
+  int get SAT_NO => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  ///  International designator
+  String? get ORIG_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Source record this was derived from
+  String? get DERIVED_FROM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Classification date (ISO 8601)
+  String? get DECLASSIFICATION_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Classification marking
+  String? get DECLASSIFICATION_STRING => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Event time (ISO 8601)
   String? get EVENT_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Notes on event time accuracy
   String? get EVENT_TIME_NOTES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  String? get OPERATOR_ORG_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  String? get OWNER_ORG_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  String? get LESSEE_ORG_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
-  String? get OPERATED_ON_BEHALF_OF_ORG_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
-  double get GEO_POSITION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
-  String? get PLANE_SLOT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
-  String? get PLANE_NUMBER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
-  String? get POSITION_STATUS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
-  String? get UNTIL_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
-  String? get OFFICIAL_LOSS_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
-  double get NET_AMOUNT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
-  String? get UNDERLYING_CAUSE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
-  double get CAPABILITY_LOSS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
-  double get CAPACITY_LOSS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
-  double get INSURANCE_LOSS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
-  double get THIRD_PARTY_INSURANCE_LOSS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
-  int get INJURED => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 52, 0);
-  int get KILLED => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 54, 0);
-  double get LIFE_LOST => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, 0.0);
-  double get AGE_AT_EVENT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
-  String? get ACHIEVED_FLIGHT_PHASE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 60);
-  String? get OCCURRENCE_FLIGHT_PHASE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 62);
-  String? get STAGE_AT_FAULT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 64);
-  String? get EQUIPMENT_AT_FAULT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 66);
-  String? get EQUIPMENT_TYPE_AT_FAULT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 68);
-  String? get EQUIPMENT_PART_AT_FAULT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 70);
-  String? get CONSEQUENTIAL_EQUIPMENT_FAILURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 72);
-  bool get INCLINED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 74, false);
-  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 76);
-  String? get REMARKS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 78);
-  String? get INSURANCE_LOSS_NOTES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 80);
-  String? get CAPABILITY_LOSS_NOTES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 82);
-  String? get INSURANCE_CARRIED_NOTES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 84);
-  String? get EQUIPMENT_CAUSING_LOSS_NOTES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 86);
-  String? get EVENT_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 88);
-  String? get EVENT_RESULT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 90);
-  String? get OBJECT_STATUS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 92);
-  String? get SATELLITE_POSITION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 94);
-  String? get ON_ORBIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 96);
+  ///  Event category
+  EventCategory get CATEGORY => EventCategory.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 0));
+  ///  Event result/outcome
+  EventResult get RESULT => EventResult.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 22, 0));
+  ///  Event type detail
+  String? get EVENT_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Operator organization identifier
+  String? get OPERATOR_ORG_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Owner organization identifier
+  String? get OWNER_ORG_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Lessee organization identifier
+  String? get LESSEE_ORG_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  ///  Operated on behalf of organization
+  String? get OPERATED_ON_BEHALF_OF_ORG_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  ///  GEO longitude at event time (degrees east)
+  double get GEO_POSITION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  ///  Orbital plane slot
+  String? get PLANE_SLOT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  ///  Orbital plane number
+  String? get PLANE_NUMBER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  ///  Position status at event time
+  String? get POSITION_STATUS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+  ///  Time until expected recovery (ISO 8601)
+  String? get UNTIL_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
+  ///  Official loss date (ISO 8601)
+  String? get OFFICIAL_LOSS_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
+  ///  Financial loss amount (USD)
+  double get NET_AMOUNT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
+  ///  Root cause description
+  String? get UNDERLYING_CAUSE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
+  ///  Capability loss fraction (0-1)
+  double get CAPABILITY_LOSS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
+  ///  Capacity loss fraction (0-1)
+  double get CAPACITY_LOSS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
+  ///  Insurance loss amount (USD)
+  double get INSURANCE_LOSS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
+  ///  Third-party insurance loss (USD)
+  double get THIRD_PARTY_INSURANCE_LOSS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, 0.0);
+  ///  Number of personnel injured
+  int get INJURED => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 58, 0);
+  ///  Number of fatalities
+  int get KILLED => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 60, 0);
+  ///  Spacecraft age at event (years)
+  double get AGE_AT_EVENT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
+  ///  Design life remaining at event (years)
+  double get LIFE_LOST => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
+  ///  Flight phase achieved
+  String? get ACHIEVED_FLIGHT_PHASE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 66);
+  ///  Flight phase at occurrence
+  String? get OCCURRENCE_FLIGHT_PHASE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 68);
+  ///  Stage at fault
+  String? get STAGE_AT_FAULT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 70);
+  ///  Equipment at fault
+  String? get EQUIPMENT_AT_FAULT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 72);
+  ///  Equipment type at fault
+  String? get EQUIPMENT_TYPE_AT_FAULT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 74);
+  ///  Equipment part at fault
+  String? get EQUIPMENT_PART_AT_FAULT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 76);
+  ///  Consequential equipment failure
+  String? get CONSEQUENTIAL_EQUIPMENT_FAILURE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 78);
+  ///  True if orbit is inclined
+  bool get INCLINED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 80, false);
+  ///  Event description
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 82);
+  ///  Additional remarks
+  String? get REMARKS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 84);
+  ///  Object status after event
+  String? get OBJECT_STATUS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 86);
+  ///  Satellite position after event
+  String? get SATELLITE_POSITION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 88);
+  ///  On-orbit reference
+  String? get ON_ORBIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 90);
 
   @override
   String toString() {
-    return 'OOE{ID: ${ID}, DERIVED_FROM: ${DERIVED_FROM}, DECLASSIFICATION_DATE: ${DECLASSIFICATION_DATE}, DECLASSIFICATION_STRING: ${DECLASSIFICATION_STRING}, SAT_NO: ${SAT_NO}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, EVENT_TIME: ${EVENT_TIME}, EVENT_TIME_NOTES: ${EVENT_TIME_NOTES}, OPERATOR_ORG_ID: ${OPERATOR_ORG_ID}, OWNER_ORG_ID: ${OWNER_ORG_ID}, LESSEE_ORG_ID: ${LESSEE_ORG_ID}, OPERATED_ON_BEHALF_OF_ORG_ID: ${OPERATED_ON_BEHALF_OF_ORG_ID}, GEO_POSITION: ${GEO_POSITION}, PLANE_SLOT: ${PLANE_SLOT}, PLANE_NUMBER: ${PLANE_NUMBER}, POSITION_STATUS: ${POSITION_STATUS}, UNTIL_TIME: ${UNTIL_TIME}, OFFICIAL_LOSS_DATE: ${OFFICIAL_LOSS_DATE}, NET_AMOUNT: ${NET_AMOUNT}, UNDERLYING_CAUSE: ${UNDERLYING_CAUSE}, CAPABILITY_LOSS: ${CAPABILITY_LOSS}, CAPACITY_LOSS: ${CAPACITY_LOSS}, INSURANCE_LOSS: ${INSURANCE_LOSS}, THIRD_PARTY_INSURANCE_LOSS: ${THIRD_PARTY_INSURANCE_LOSS}, INJURED: ${INJURED}, KILLED: ${KILLED}, LIFE_LOST: ${LIFE_LOST}, AGE_AT_EVENT: ${AGE_AT_EVENT}, ACHIEVED_FLIGHT_PHASE: ${ACHIEVED_FLIGHT_PHASE}, OCCURRENCE_FLIGHT_PHASE: ${OCCURRENCE_FLIGHT_PHASE}, STAGE_AT_FAULT: ${STAGE_AT_FAULT}, EQUIPMENT_AT_FAULT: ${EQUIPMENT_AT_FAULT}, EQUIPMENT_TYPE_AT_FAULT: ${EQUIPMENT_TYPE_AT_FAULT}, EQUIPMENT_PART_AT_FAULT: ${EQUIPMENT_PART_AT_FAULT}, CONSEQUENTIAL_EQUIPMENT_FAILURE: ${CONSEQUENTIAL_EQUIPMENT_FAILURE}, INCLINED: ${INCLINED}, DESCRIPTION: ${DESCRIPTION}, REMARKS: ${REMARKS}, INSURANCE_LOSS_NOTES: ${INSURANCE_LOSS_NOTES}, CAPABILITY_LOSS_NOTES: ${CAPABILITY_LOSS_NOTES}, INSURANCE_CARRIED_NOTES: ${INSURANCE_CARRIED_NOTES}, EQUIPMENT_CAUSING_LOSS_NOTES: ${EQUIPMENT_CAUSING_LOSS_NOTES}, EVENT_TYPE: ${EVENT_TYPE}, EVENT_RESULT: ${EVENT_RESULT}, OBJECT_STATUS: ${OBJECT_STATUS}, SATELLITE_POSITION: ${SATELLITE_POSITION}, ON_ORBIT: ${ON_ORBIT}}';
+    return 'OOE{ID: ${ID}, SAT_NO: ${SAT_NO}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, DERIVED_FROM: ${DERIVED_FROM}, DECLASSIFICATION_DATE: ${DECLASSIFICATION_DATE}, DECLASSIFICATION_STRING: ${DECLASSIFICATION_STRING}, EVENT_TIME: ${EVENT_TIME}, EVENT_TIME_NOTES: ${EVENT_TIME_NOTES}, CATEGORY: ${CATEGORY}, RESULT: ${RESULT}, EVENT_TYPE: ${EVENT_TYPE}, OPERATOR_ORG_ID: ${OPERATOR_ORG_ID}, OWNER_ORG_ID: ${OWNER_ORG_ID}, LESSEE_ORG_ID: ${LESSEE_ORG_ID}, OPERATED_ON_BEHALF_OF_ORG_ID: ${OPERATED_ON_BEHALF_OF_ORG_ID}, GEO_POSITION: ${GEO_POSITION}, PLANE_SLOT: ${PLANE_SLOT}, PLANE_NUMBER: ${PLANE_NUMBER}, POSITION_STATUS: ${POSITION_STATUS}, UNTIL_TIME: ${UNTIL_TIME}, OFFICIAL_LOSS_DATE: ${OFFICIAL_LOSS_DATE}, NET_AMOUNT: ${NET_AMOUNT}, UNDERLYING_CAUSE: ${UNDERLYING_CAUSE}, CAPABILITY_LOSS: ${CAPABILITY_LOSS}, CAPACITY_LOSS: ${CAPACITY_LOSS}, INSURANCE_LOSS: ${INSURANCE_LOSS}, THIRD_PARTY_INSURANCE_LOSS: ${THIRD_PARTY_INSURANCE_LOSS}, INJURED: ${INJURED}, KILLED: ${KILLED}, AGE_AT_EVENT: ${AGE_AT_EVENT}, LIFE_LOST: ${LIFE_LOST}, ACHIEVED_FLIGHT_PHASE: ${ACHIEVED_FLIGHT_PHASE}, OCCURRENCE_FLIGHT_PHASE: ${OCCURRENCE_FLIGHT_PHASE}, STAGE_AT_FAULT: ${STAGE_AT_FAULT}, EQUIPMENT_AT_FAULT: ${EQUIPMENT_AT_FAULT}, EQUIPMENT_TYPE_AT_FAULT: ${EQUIPMENT_TYPE_AT_FAULT}, EQUIPMENT_PART_AT_FAULT: ${EQUIPMENT_PART_AT_FAULT}, CONSEQUENTIAL_EQUIPMENT_FAILURE: ${CONSEQUENTIAL_EQUIPMENT_FAILURE}, INCLINED: ${INCLINED}, DESCRIPTION: ${DESCRIPTION}, REMARKS: ${REMARKS}, OBJECT_STATUS: ${OBJECT_STATUS}, SATELLITE_POSITION: ${SATELLITE_POSITION}, ON_ORBIT: ${ON_ORBIT}}';
   }
 }
 
@@ -86,30 +237,30 @@ class OOEBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(47);
+    fbBuilder.startTable(44);
   }
 
   int addIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addDerivedFromOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addDeclassificationDateOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addDeclassificationStringOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
   int addSatNo(int? SAT_NO) {
-    fbBuilder.addInt32(4, SAT_NO);
+    fbBuilder.addUint32(1, SAT_NO);
     return fbBuilder.offset;
   }
   int addOrigObjectIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addDerivedFromOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addDeclassificationDateOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addDeclassificationStringOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
@@ -121,160 +272,148 @@ class OOEBuilder {
     fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addOperatorOrgIdOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
+  int addCategory(EventCategory? CATEGORY) {
+    fbBuilder.addInt8(8, CATEGORY?.value);
     return fbBuilder.offset;
   }
-  int addOwnerOrgIdOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
-    return fbBuilder.offset;
-  }
-  int addLesseeOrgIdOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
-    return fbBuilder.offset;
-  }
-  int addOperatedOnBehalfOfOrgIdOffset(int? offset) {
-    fbBuilder.addOffset(11, offset);
-    return fbBuilder.offset;
-  }
-  int addGeoPosition(double? GEO_POSITION) {
-    fbBuilder.addFloat64(12, GEO_POSITION);
-    return fbBuilder.offset;
-  }
-  int addPlaneSlotOffset(int? offset) {
-    fbBuilder.addOffset(13, offset);
-    return fbBuilder.offset;
-  }
-  int addPlaneNumberOffset(int? offset) {
-    fbBuilder.addOffset(14, offset);
-    return fbBuilder.offset;
-  }
-  int addPositionStatusOffset(int? offset) {
-    fbBuilder.addOffset(15, offset);
-    return fbBuilder.offset;
-  }
-  int addUntilTimeOffset(int? offset) {
-    fbBuilder.addOffset(16, offset);
-    return fbBuilder.offset;
-  }
-  int addOfficialLossDateOffset(int? offset) {
-    fbBuilder.addOffset(17, offset);
-    return fbBuilder.offset;
-  }
-  int addNetAmount(double? NET_AMOUNT) {
-    fbBuilder.addFloat64(18, NET_AMOUNT);
-    return fbBuilder.offset;
-  }
-  int addUnderlyingCauseOffset(int? offset) {
-    fbBuilder.addOffset(19, offset);
-    return fbBuilder.offset;
-  }
-  int addCapabilityLoss(double? CAPABILITY_LOSS) {
-    fbBuilder.addFloat64(20, CAPABILITY_LOSS);
-    return fbBuilder.offset;
-  }
-  int addCapacityLoss(double? CAPACITY_LOSS) {
-    fbBuilder.addFloat64(21, CAPACITY_LOSS);
-    return fbBuilder.offset;
-  }
-  int addInsuranceLoss(double? INSURANCE_LOSS) {
-    fbBuilder.addFloat64(22, INSURANCE_LOSS);
-    return fbBuilder.offset;
-  }
-  int addThirdPartyInsuranceLoss(double? THIRD_PARTY_INSURANCE_LOSS) {
-    fbBuilder.addFloat64(23, THIRD_PARTY_INSURANCE_LOSS);
-    return fbBuilder.offset;
-  }
-  int addInjured(int? INJURED) {
-    fbBuilder.addInt32(24, INJURED);
-    return fbBuilder.offset;
-  }
-  int addKilled(int? KILLED) {
-    fbBuilder.addInt32(25, KILLED);
-    return fbBuilder.offset;
-  }
-  int addLifeLost(double? LIFE_LOST) {
-    fbBuilder.addFloat64(26, LIFE_LOST);
-    return fbBuilder.offset;
-  }
-  int addAgeAtEvent(double? AGE_AT_EVENT) {
-    fbBuilder.addFloat64(27, AGE_AT_EVENT);
-    return fbBuilder.offset;
-  }
-  int addAchievedFlightPhaseOffset(int? offset) {
-    fbBuilder.addOffset(28, offset);
-    return fbBuilder.offset;
-  }
-  int addOccurrenceFlightPhaseOffset(int? offset) {
-    fbBuilder.addOffset(29, offset);
-    return fbBuilder.offset;
-  }
-  int addStageAtFaultOffset(int? offset) {
-    fbBuilder.addOffset(30, offset);
-    return fbBuilder.offset;
-  }
-  int addEquipmentAtFaultOffset(int? offset) {
-    fbBuilder.addOffset(31, offset);
-    return fbBuilder.offset;
-  }
-  int addEquipmentTypeAtFaultOffset(int? offset) {
-    fbBuilder.addOffset(32, offset);
-    return fbBuilder.offset;
-  }
-  int addEquipmentPartAtFaultOffset(int? offset) {
-    fbBuilder.addOffset(33, offset);
-    return fbBuilder.offset;
-  }
-  int addConsequentialEquipmentFailureOffset(int? offset) {
-    fbBuilder.addOffset(34, offset);
-    return fbBuilder.offset;
-  }
-  int addInclined(bool? INCLINED) {
-    fbBuilder.addBool(35, INCLINED);
-    return fbBuilder.offset;
-  }
-  int addDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(36, offset);
-    return fbBuilder.offset;
-  }
-  int addRemarksOffset(int? offset) {
-    fbBuilder.addOffset(37, offset);
-    return fbBuilder.offset;
-  }
-  int addInsuranceLossNotesOffset(int? offset) {
-    fbBuilder.addOffset(38, offset);
-    return fbBuilder.offset;
-  }
-  int addCapabilityLossNotesOffset(int? offset) {
-    fbBuilder.addOffset(39, offset);
-    return fbBuilder.offset;
-  }
-  int addInsuranceCarriedNotesOffset(int? offset) {
-    fbBuilder.addOffset(40, offset);
-    return fbBuilder.offset;
-  }
-  int addEquipmentCausingLossNotesOffset(int? offset) {
-    fbBuilder.addOffset(41, offset);
+  int addResult(EventResult? RESULT) {
+    fbBuilder.addInt8(9, RESULT?.value);
     return fbBuilder.offset;
   }
   int addEventTypeOffset(int? offset) {
-    fbBuilder.addOffset(42, offset);
+    fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
-  int addEventResultOffset(int? offset) {
-    fbBuilder.addOffset(43, offset);
+  int addOperatorOrgIdOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addOwnerOrgIdOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addLesseeOrgIdOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addOperatedOnBehalfOfOrgIdOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addGeoPosition(double? GEO_POSITION) {
+    fbBuilder.addFloat64(15, GEO_POSITION);
+    return fbBuilder.offset;
+  }
+  int addPlaneSlotOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addPlaneNumberOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addPositionStatusOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addUntilTimeOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addOfficialLossDateOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addNetAmount(double? NET_AMOUNT) {
+    fbBuilder.addFloat64(21, NET_AMOUNT);
+    return fbBuilder.offset;
+  }
+  int addUnderlyingCauseOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addCapabilityLoss(double? CAPABILITY_LOSS) {
+    fbBuilder.addFloat64(23, CAPABILITY_LOSS);
+    return fbBuilder.offset;
+  }
+  int addCapacityLoss(double? CAPACITY_LOSS) {
+    fbBuilder.addFloat64(24, CAPACITY_LOSS);
+    return fbBuilder.offset;
+  }
+  int addInsuranceLoss(double? INSURANCE_LOSS) {
+    fbBuilder.addFloat64(25, INSURANCE_LOSS);
+    return fbBuilder.offset;
+  }
+  int addThirdPartyInsuranceLoss(double? THIRD_PARTY_INSURANCE_LOSS) {
+    fbBuilder.addFloat64(26, THIRD_PARTY_INSURANCE_LOSS);
+    return fbBuilder.offset;
+  }
+  int addInjured(int? INJURED) {
+    fbBuilder.addUint16(27, INJURED);
+    return fbBuilder.offset;
+  }
+  int addKilled(int? KILLED) {
+    fbBuilder.addUint16(28, KILLED);
+    return fbBuilder.offset;
+  }
+  int addAgeAtEvent(double? AGE_AT_EVENT) {
+    fbBuilder.addFloat64(29, AGE_AT_EVENT);
+    return fbBuilder.offset;
+  }
+  int addLifeLost(double? LIFE_LOST) {
+    fbBuilder.addFloat64(30, LIFE_LOST);
+    return fbBuilder.offset;
+  }
+  int addAchievedFlightPhaseOffset(int? offset) {
+    fbBuilder.addOffset(31, offset);
+    return fbBuilder.offset;
+  }
+  int addOccurrenceFlightPhaseOffset(int? offset) {
+    fbBuilder.addOffset(32, offset);
+    return fbBuilder.offset;
+  }
+  int addStageAtFaultOffset(int? offset) {
+    fbBuilder.addOffset(33, offset);
+    return fbBuilder.offset;
+  }
+  int addEquipmentAtFaultOffset(int? offset) {
+    fbBuilder.addOffset(34, offset);
+    return fbBuilder.offset;
+  }
+  int addEquipmentTypeAtFaultOffset(int? offset) {
+    fbBuilder.addOffset(35, offset);
+    return fbBuilder.offset;
+  }
+  int addEquipmentPartAtFaultOffset(int? offset) {
+    fbBuilder.addOffset(36, offset);
+    return fbBuilder.offset;
+  }
+  int addConsequentialEquipmentFailureOffset(int? offset) {
+    fbBuilder.addOffset(37, offset);
+    return fbBuilder.offset;
+  }
+  int addInclined(bool? INCLINED) {
+    fbBuilder.addBool(38, INCLINED);
+    return fbBuilder.offset;
+  }
+  int addDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(39, offset);
+    return fbBuilder.offset;
+  }
+  int addRemarksOffset(int? offset) {
+    fbBuilder.addOffset(40, offset);
     return fbBuilder.offset;
   }
   int addObjectStatusOffset(int? offset) {
-    fbBuilder.addOffset(44, offset);
+    fbBuilder.addOffset(41, offset);
     return fbBuilder.offset;
   }
   int addSatellitePositionOffset(int? offset) {
-    fbBuilder.addOffset(45, offset);
+    fbBuilder.addOffset(42, offset);
     return fbBuilder.offset;
   }
   int addOnOrbitOffset(int? offset) {
-    fbBuilder.addOffset(46, offset);
+    fbBuilder.addOffset(43, offset);
     return fbBuilder.offset;
   }
 
@@ -285,13 +424,16 @@ class OOEBuilder {
 
 class OOEObjectBuilder extends fb.ObjectBuilder {
   final String? _ID;
+  final int? _SAT_NO;
+  final String? _ORIG_OBJECT_ID;
   final String? _DERIVED_FROM;
   final String? _DECLASSIFICATION_DATE;
   final String? _DECLASSIFICATION_STRING;
-  final int? _SAT_NO;
-  final String? _ORIG_OBJECT_ID;
   final String? _EVENT_TIME;
   final String? _EVENT_TIME_NOTES;
+  final EventCategory? _CATEGORY;
+  final EventResult? _RESULT;
+  final String? _EVENT_TYPE;
   final String? _OPERATOR_ORG_ID;
   final String? _OWNER_ORG_ID;
   final String? _LESSEE_ORG_ID;
@@ -310,8 +452,8 @@ class OOEObjectBuilder extends fb.ObjectBuilder {
   final double? _THIRD_PARTY_INSURANCE_LOSS;
   final int? _INJURED;
   final int? _KILLED;
-  final double? _LIFE_LOST;
   final double? _AGE_AT_EVENT;
+  final double? _LIFE_LOST;
   final String? _ACHIEVED_FLIGHT_PHASE;
   final String? _OCCURRENCE_FLIGHT_PHASE;
   final String? _STAGE_AT_FAULT;
@@ -322,25 +464,22 @@ class OOEObjectBuilder extends fb.ObjectBuilder {
   final bool? _INCLINED;
   final String? _DESCRIPTION;
   final String? _REMARKS;
-  final String? _INSURANCE_LOSS_NOTES;
-  final String? _CAPABILITY_LOSS_NOTES;
-  final String? _INSURANCE_CARRIED_NOTES;
-  final String? _EQUIPMENT_CAUSING_LOSS_NOTES;
-  final String? _EVENT_TYPE;
-  final String? _EVENT_RESULT;
   final String? _OBJECT_STATUS;
   final String? _SATELLITE_POSITION;
   final String? _ON_ORBIT;
 
   OOEObjectBuilder({
     String? ID,
+    int? SAT_NO,
+    String? ORIG_OBJECT_ID,
     String? DERIVED_FROM,
     String? DECLASSIFICATION_DATE,
     String? DECLASSIFICATION_STRING,
-    int? SAT_NO,
-    String? ORIG_OBJECT_ID,
     String? EVENT_TIME,
     String? EVENT_TIME_NOTES,
+    EventCategory? CATEGORY,
+    EventResult? RESULT,
+    String? EVENT_TYPE,
     String? OPERATOR_ORG_ID,
     String? OWNER_ORG_ID,
     String? LESSEE_ORG_ID,
@@ -359,8 +498,8 @@ class OOEObjectBuilder extends fb.ObjectBuilder {
     double? THIRD_PARTY_INSURANCE_LOSS,
     int? INJURED,
     int? KILLED,
-    double? LIFE_LOST,
     double? AGE_AT_EVENT,
+    double? LIFE_LOST,
     String? ACHIEVED_FLIGHT_PHASE,
     String? OCCURRENCE_FLIGHT_PHASE,
     String? STAGE_AT_FAULT,
@@ -371,24 +510,21 @@ class OOEObjectBuilder extends fb.ObjectBuilder {
     bool? INCLINED,
     String? DESCRIPTION,
     String? REMARKS,
-    String? INSURANCE_LOSS_NOTES,
-    String? CAPABILITY_LOSS_NOTES,
-    String? INSURANCE_CARRIED_NOTES,
-    String? EQUIPMENT_CAUSING_LOSS_NOTES,
-    String? EVENT_TYPE,
-    String? EVENT_RESULT,
     String? OBJECT_STATUS,
     String? SATELLITE_POSITION,
     String? ON_ORBIT,
   })
       : _ID = ID,
+        _SAT_NO = SAT_NO,
+        _ORIG_OBJECT_ID = ORIG_OBJECT_ID,
         _DERIVED_FROM = DERIVED_FROM,
         _DECLASSIFICATION_DATE = DECLASSIFICATION_DATE,
         _DECLASSIFICATION_STRING = DECLASSIFICATION_STRING,
-        _SAT_NO = SAT_NO,
-        _ORIG_OBJECT_ID = ORIG_OBJECT_ID,
         _EVENT_TIME = EVENT_TIME,
         _EVENT_TIME_NOTES = EVENT_TIME_NOTES,
+        _CATEGORY = CATEGORY,
+        _RESULT = RESULT,
+        _EVENT_TYPE = EVENT_TYPE,
         _OPERATOR_ORG_ID = OPERATOR_ORG_ID,
         _OWNER_ORG_ID = OWNER_ORG_ID,
         _LESSEE_ORG_ID = LESSEE_ORG_ID,
@@ -407,8 +543,8 @@ class OOEObjectBuilder extends fb.ObjectBuilder {
         _THIRD_PARTY_INSURANCE_LOSS = THIRD_PARTY_INSURANCE_LOSS,
         _INJURED = INJURED,
         _KILLED = KILLED,
-        _LIFE_LOST = LIFE_LOST,
         _AGE_AT_EVENT = AGE_AT_EVENT,
+        _LIFE_LOST = LIFE_LOST,
         _ACHIEVED_FLIGHT_PHASE = ACHIEVED_FLIGHT_PHASE,
         _OCCURRENCE_FLIGHT_PHASE = OCCURRENCE_FLIGHT_PHASE,
         _STAGE_AT_FAULT = STAGE_AT_FAULT,
@@ -419,12 +555,6 @@ class OOEObjectBuilder extends fb.ObjectBuilder {
         _INCLINED = INCLINED,
         _DESCRIPTION = DESCRIPTION,
         _REMARKS = REMARKS,
-        _INSURANCE_LOSS_NOTES = INSURANCE_LOSS_NOTES,
-        _CAPABILITY_LOSS_NOTES = CAPABILITY_LOSS_NOTES,
-        _INSURANCE_CARRIED_NOTES = INSURANCE_CARRIED_NOTES,
-        _EQUIPMENT_CAUSING_LOSS_NOTES = EQUIPMENT_CAUSING_LOSS_NOTES,
-        _EVENT_TYPE = EVENT_TYPE,
-        _EVENT_RESULT = EVENT_RESULT,
         _OBJECT_STATUS = OBJECT_STATUS,
         _SATELLITE_POSITION = SATELLITE_POSITION,
         _ON_ORBIT = ON_ORBIT;
@@ -434,18 +564,20 @@ class OOEObjectBuilder extends fb.ObjectBuilder {
   int finish(fb.Builder fbBuilder) {
     final int? IDOffset = _ID == null ? null
         : fbBuilder.writeString(_ID!);
+    final int? ORIG_OBJECT_IDOffset = _ORIG_OBJECT_ID == null ? null
+        : fbBuilder.writeString(_ORIG_OBJECT_ID!);
     final int? DERIVED_FROMOffset = _DERIVED_FROM == null ? null
         : fbBuilder.writeString(_DERIVED_FROM!);
     final int? DECLASSIFICATION_DATEOffset = _DECLASSIFICATION_DATE == null ? null
         : fbBuilder.writeString(_DECLASSIFICATION_DATE!);
     final int? DECLASSIFICATION_STRINGOffset = _DECLASSIFICATION_STRING == null ? null
         : fbBuilder.writeString(_DECLASSIFICATION_STRING!);
-    final int? ORIG_OBJECT_IDOffset = _ORIG_OBJECT_ID == null ? null
-        : fbBuilder.writeString(_ORIG_OBJECT_ID!);
     final int? EVENT_TIMEOffset = _EVENT_TIME == null ? null
         : fbBuilder.writeString(_EVENT_TIME!);
     final int? EVENT_TIME_NOTESOffset = _EVENT_TIME_NOTES == null ? null
         : fbBuilder.writeString(_EVENT_TIME_NOTES!);
+    final int? EVENT_TYPEOffset = _EVENT_TYPE == null ? null
+        : fbBuilder.writeString(_EVENT_TYPE!);
     final int? OPERATOR_ORG_IDOffset = _OPERATOR_ORG_ID == null ? null
         : fbBuilder.writeString(_OPERATOR_ORG_ID!);
     final int? OWNER_ORG_IDOffset = _OWNER_ORG_ID == null ? null
@@ -484,72 +616,57 @@ class OOEObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_DESCRIPTION!);
     final int? REMARKSOffset = _REMARKS == null ? null
         : fbBuilder.writeString(_REMARKS!);
-    final int? INSURANCE_LOSS_NOTESOffset = _INSURANCE_LOSS_NOTES == null ? null
-        : fbBuilder.writeString(_INSURANCE_LOSS_NOTES!);
-    final int? CAPABILITY_LOSS_NOTESOffset = _CAPABILITY_LOSS_NOTES == null ? null
-        : fbBuilder.writeString(_CAPABILITY_LOSS_NOTES!);
-    final int? INSURANCE_CARRIED_NOTESOffset = _INSURANCE_CARRIED_NOTES == null ? null
-        : fbBuilder.writeString(_INSURANCE_CARRIED_NOTES!);
-    final int? EQUIPMENT_CAUSING_LOSS_NOTESOffset = _EQUIPMENT_CAUSING_LOSS_NOTES == null ? null
-        : fbBuilder.writeString(_EQUIPMENT_CAUSING_LOSS_NOTES!);
-    final int? EVENT_TYPEOffset = _EVENT_TYPE == null ? null
-        : fbBuilder.writeString(_EVENT_TYPE!);
-    final int? EVENT_RESULTOffset = _EVENT_RESULT == null ? null
-        : fbBuilder.writeString(_EVENT_RESULT!);
     final int? OBJECT_STATUSOffset = _OBJECT_STATUS == null ? null
         : fbBuilder.writeString(_OBJECT_STATUS!);
     final int? SATELLITE_POSITIONOffset = _SATELLITE_POSITION == null ? null
         : fbBuilder.writeString(_SATELLITE_POSITION!);
     final int? ON_ORBITOffset = _ON_ORBIT == null ? null
         : fbBuilder.writeString(_ON_ORBIT!);
-    fbBuilder.startTable(47);
+    fbBuilder.startTable(44);
     fbBuilder.addOffset(0, IDOffset);
-    fbBuilder.addOffset(1, DERIVED_FROMOffset);
-    fbBuilder.addOffset(2, DECLASSIFICATION_DATEOffset);
-    fbBuilder.addOffset(3, DECLASSIFICATION_STRINGOffset);
-    fbBuilder.addInt32(4, _SAT_NO);
-    fbBuilder.addOffset(5, ORIG_OBJECT_IDOffset);
+    fbBuilder.addUint32(1, _SAT_NO);
+    fbBuilder.addOffset(2, ORIG_OBJECT_IDOffset);
+    fbBuilder.addOffset(3, DERIVED_FROMOffset);
+    fbBuilder.addOffset(4, DECLASSIFICATION_DATEOffset);
+    fbBuilder.addOffset(5, DECLASSIFICATION_STRINGOffset);
     fbBuilder.addOffset(6, EVENT_TIMEOffset);
     fbBuilder.addOffset(7, EVENT_TIME_NOTESOffset);
-    fbBuilder.addOffset(8, OPERATOR_ORG_IDOffset);
-    fbBuilder.addOffset(9, OWNER_ORG_IDOffset);
-    fbBuilder.addOffset(10, LESSEE_ORG_IDOffset);
-    fbBuilder.addOffset(11, OPERATED_ON_BEHALF_OF_ORG_IDOffset);
-    fbBuilder.addFloat64(12, _GEO_POSITION);
-    fbBuilder.addOffset(13, PLANE_SLOTOffset);
-    fbBuilder.addOffset(14, PLANE_NUMBEROffset);
-    fbBuilder.addOffset(15, POSITION_STATUSOffset);
-    fbBuilder.addOffset(16, UNTIL_TIMEOffset);
-    fbBuilder.addOffset(17, OFFICIAL_LOSS_DATEOffset);
-    fbBuilder.addFloat64(18, _NET_AMOUNT);
-    fbBuilder.addOffset(19, UNDERLYING_CAUSEOffset);
-    fbBuilder.addFloat64(20, _CAPABILITY_LOSS);
-    fbBuilder.addFloat64(21, _CAPACITY_LOSS);
-    fbBuilder.addFloat64(22, _INSURANCE_LOSS);
-    fbBuilder.addFloat64(23, _THIRD_PARTY_INSURANCE_LOSS);
-    fbBuilder.addInt32(24, _INJURED);
-    fbBuilder.addInt32(25, _KILLED);
-    fbBuilder.addFloat64(26, _LIFE_LOST);
-    fbBuilder.addFloat64(27, _AGE_AT_EVENT);
-    fbBuilder.addOffset(28, ACHIEVED_FLIGHT_PHASEOffset);
-    fbBuilder.addOffset(29, OCCURRENCE_FLIGHT_PHASEOffset);
-    fbBuilder.addOffset(30, STAGE_AT_FAULTOffset);
-    fbBuilder.addOffset(31, EQUIPMENT_AT_FAULTOffset);
-    fbBuilder.addOffset(32, EQUIPMENT_TYPE_AT_FAULTOffset);
-    fbBuilder.addOffset(33, EQUIPMENT_PART_AT_FAULTOffset);
-    fbBuilder.addOffset(34, CONSEQUENTIAL_EQUIPMENT_FAILUREOffset);
-    fbBuilder.addBool(35, _INCLINED);
-    fbBuilder.addOffset(36, DESCRIPTIONOffset);
-    fbBuilder.addOffset(37, REMARKSOffset);
-    fbBuilder.addOffset(38, INSURANCE_LOSS_NOTESOffset);
-    fbBuilder.addOffset(39, CAPABILITY_LOSS_NOTESOffset);
-    fbBuilder.addOffset(40, INSURANCE_CARRIED_NOTESOffset);
-    fbBuilder.addOffset(41, EQUIPMENT_CAUSING_LOSS_NOTESOffset);
-    fbBuilder.addOffset(42, EVENT_TYPEOffset);
-    fbBuilder.addOffset(43, EVENT_RESULTOffset);
-    fbBuilder.addOffset(44, OBJECT_STATUSOffset);
-    fbBuilder.addOffset(45, SATELLITE_POSITIONOffset);
-    fbBuilder.addOffset(46, ON_ORBITOffset);
+    fbBuilder.addInt8(8, _CATEGORY?.value);
+    fbBuilder.addInt8(9, _RESULT?.value);
+    fbBuilder.addOffset(10, EVENT_TYPEOffset);
+    fbBuilder.addOffset(11, OPERATOR_ORG_IDOffset);
+    fbBuilder.addOffset(12, OWNER_ORG_IDOffset);
+    fbBuilder.addOffset(13, LESSEE_ORG_IDOffset);
+    fbBuilder.addOffset(14, OPERATED_ON_BEHALF_OF_ORG_IDOffset);
+    fbBuilder.addFloat64(15, _GEO_POSITION);
+    fbBuilder.addOffset(16, PLANE_SLOTOffset);
+    fbBuilder.addOffset(17, PLANE_NUMBEROffset);
+    fbBuilder.addOffset(18, POSITION_STATUSOffset);
+    fbBuilder.addOffset(19, UNTIL_TIMEOffset);
+    fbBuilder.addOffset(20, OFFICIAL_LOSS_DATEOffset);
+    fbBuilder.addFloat64(21, _NET_AMOUNT);
+    fbBuilder.addOffset(22, UNDERLYING_CAUSEOffset);
+    fbBuilder.addFloat64(23, _CAPABILITY_LOSS);
+    fbBuilder.addFloat64(24, _CAPACITY_LOSS);
+    fbBuilder.addFloat64(25, _INSURANCE_LOSS);
+    fbBuilder.addFloat64(26, _THIRD_PARTY_INSURANCE_LOSS);
+    fbBuilder.addUint16(27, _INJURED);
+    fbBuilder.addUint16(28, _KILLED);
+    fbBuilder.addFloat64(29, _AGE_AT_EVENT);
+    fbBuilder.addFloat64(30, _LIFE_LOST);
+    fbBuilder.addOffset(31, ACHIEVED_FLIGHT_PHASEOffset);
+    fbBuilder.addOffset(32, OCCURRENCE_FLIGHT_PHASEOffset);
+    fbBuilder.addOffset(33, STAGE_AT_FAULTOffset);
+    fbBuilder.addOffset(34, EQUIPMENT_AT_FAULTOffset);
+    fbBuilder.addOffset(35, EQUIPMENT_TYPE_AT_FAULTOffset);
+    fbBuilder.addOffset(36, EQUIPMENT_PART_AT_FAULTOffset);
+    fbBuilder.addOffset(37, CONSEQUENTIAL_EQUIPMENT_FAILUREOffset);
+    fbBuilder.addBool(38, _INCLINED);
+    fbBuilder.addOffset(39, DESCRIPTIONOffset);
+    fbBuilder.addOffset(40, REMARKSOffset);
+    fbBuilder.addOffset(41, OBJECT_STATUSOffset);
+    fbBuilder.addOffset(42, SATELLITE_POSITIONOffset);
+    fbBuilder.addOffset(43, ON_ORBITOffset);
     return fbBuilder.endTable();
   }
 

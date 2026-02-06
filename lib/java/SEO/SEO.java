@@ -29,113 +29,227 @@ public final class SEO extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public SEO __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * Message type code
+   */
   public String MSG_TYPE() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer MSG_TYPEAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer MSG_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  /**
+   * Generating system
+   */
   public String GEN_SYSTEM() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer GEN_SYSTEMAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer GEN_SYSTEMInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * External reference identifier
+   */
   public String EXTERNAL_ID() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer EXTERNAL_IDAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
   public ByteBuffer EXTERNAL_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
-  public String DATA_TYPE() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer DATA_TYPEAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
-  public ByteBuffer DATA_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * Type of environmental data
+   */
+  public byte DATA_TYPE() { int o = __offset(12); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Generation time (ISO 8601)
+   */
   public String GEN_TIME() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer GEN_TIMEAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
   public ByteBuffer GEN_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * True if this is a forecast
+   */
   public boolean FORECAST() { int o = __offset(16); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * True if derived from other measurements
+   */
   public boolean DERIVED() { int o = __offset(18); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public int SAT_NO() { int o = __offset(20); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Satellite catalog number (if space-based)
+   */
+  public long SAT_NO() { int o = __offset(20); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * International designator
+   */
   public String ORIG_OBJECT_ID() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ORIG_OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
   public ByteBuffer ORIG_OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
+  /**
+   * Sensor identifier
+   */
   public String ID_SENSOR() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ID_SENSORAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
   public ByteBuffer ID_SENSORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
+  /**
+   * Original sensor identifier
+   */
   public String ORIG_SENSOR_ID() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ORIG_SENSOR_IDAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
   public ByteBuffer ORIG_SENSOR_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
-  public String OBSERVATORY_TYPE() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer OBSERVATORY_TYPEAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
-  public ByteBuffer OBSERVATORY_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
+  /**
+   * Observatory type
+   */
+  public byte OBSERVATORY_TYPE() { int o = __offset(28); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Observatory name
+   */
   public String OBSERVATORY_NAME() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer OBSERVATORY_NAMEAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
   public ByteBuffer OBSERVATORY_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
+  /**
+   * Observatory notes
+   */
   public String OBSERVATORY_NOTES() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer OBSERVATORY_NOTESAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
   public ByteBuffer OBSERVATORY_NOTESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
+  /**
+   * Instrument type description
+   */
   public String INSTRUMENT_TYPE() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer INSTRUMENT_TYPEAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
   public ByteBuffer INSTRUMENT_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  /**
+   * Observatory latitude (degrees)
+   */
   public double LAT() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Observatory longitude (degrees)
+   */
   public double LON() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Observatory altitude (km)
+   */
   public double ALT() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sensor reference frame
+   */
   public String SEN_REFERENCE_FRAME() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer SEN_REFERENCE_FRAMEAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
   public ByteBuffer SEN_REFERENCE_FRAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
-  public String SEN_POS(int j) { int o = __offset(44); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  /**
+   * Sensor position (km, 3 components)
+   */
+  public double SEN_POS(int j) { int o = __offset(44); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
   public int SEN_POSLength() { int o = __offset(44); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector senPosVector() { return senPosVector(new StringVector()); }
-  public StringVector senPosVector(StringVector obj) { int o = __offset(44); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String SEN_VEL(int j) { int o = __offset(46); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public DoubleVector senPosVector() { return senPosVector(new DoubleVector()); }
+  public DoubleVector senPosVector(DoubleVector obj) { int o = __offset(44); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer SEN_POSAsByteBuffer() { return __vector_as_bytebuffer(44, 8); }
+  public ByteBuffer SEN_POSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 44, 8); }
+  /**
+   * Sensor velocity (km/s, 3 components)
+   */
+  public double SEN_VEL(int j) { int o = __offset(46); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
   public int SEN_VELLength() { int o = __offset(46); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector senVelVector() { return senVelVector(new StringVector()); }
-  public StringVector senVelVector(StringVector obj) { int o = __offset(46); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public DoubleVector senVelVector() { return senVelVector(new DoubleVector()); }
+  public DoubleVector senVelVector(DoubleVector obj) { int o = __offset(46); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer SEN_VELAsByteBuffer() { return __vector_as_bytebuffer(46, 8); }
+  public ByteBuffer SEN_VELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 46, 8); }
+  /**
+   * Measurement type description
+   */
   public String MEAS_TYPE() { int o = __offset(48); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer MEAS_TYPEAsByteBuffer() { return __vector_as_bytebuffer(48, 1); }
   public ByteBuffer MEAS_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 48, 1); }
-  public String SEN_ENERGY_LEVEL() { int o = __offset(50); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SEN_ENERGY_LEVELAsByteBuffer() { return __vector_as_bytebuffer(50, 1); }
-  public ByteBuffer SEN_ENERGY_LEVELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 50, 1); }
-  public String OB_SET_ID() { int o = __offset(52); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer OB_SET_IDAsByteBuffer() { return __vector_as_bytebuffer(52, 1); }
-  public ByteBuffer OB_SET_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 52, 1); }
-  public String PARTICLE_TYPE() { int o = __offset(54); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer PARTICLE_TYPEAsByteBuffer() { return __vector_as_bytebuffer(54, 1); }
-  public ByteBuffer PARTICLE_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 54, 1); }
+  /**
+   * Particle type measured
+   */
+  public byte PARTICLE_TYPE() { int o = __offset(50); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Energy level or range (keV or MeV)
+   */
+  public String SEN_ENERGY_LEVEL() { int o = __offset(52); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SEN_ENERGY_LEVELAsByteBuffer() { return __vector_as_bytebuffer(52, 1); }
+  public ByteBuffer SEN_ENERGY_LEVELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 52, 1); }
+  /**
+   * Observation set identifier
+   */
+  public String OB_SET_ID() { int o = __offset(54); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OB_SET_IDAsByteBuffer() { return __vector_as_bytebuffer(54, 1); }
+  public ByteBuffer OB_SET_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 54, 1); }
+  /**
+   * Observation time (ISO 8601)
+   */
   public String OB_TIME() { int o = __offset(56); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer OB_TIMEAsByteBuffer() { return __vector_as_bytebuffer(56, 1); }
   public ByteBuffer OB_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 56, 1); }
-  public String SEO_LIST(int j) { int o = __offset(58); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int SEO_LISTLength() { int o = __offset(58); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector seoListVector() { return seoListVector(new StringVector()); }
-  public StringVector seoListVector(StringVector obj) { int o = __offset(58); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String QUALITY() { int o = __offset(60); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer QUALITYAsByteBuffer() { return __vector_as_bytebuffer(60, 1); }
-  public ByteBuffer QUALITYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 60, 1); }
-  public String DESCRIPTION() { int o = __offset(62); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer DESCRIPTIONAsByteBuffer() { return __vector_as_bytebuffer(62, 1); }
-  public ByteBuffer DESCRIPTIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 62, 1); }
-  public String DESCRIPTOR() { int o = __offset(64); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer DESCRIPTORAsByteBuffer() { return __vector_as_bytebuffer(64, 1); }
-  public ByteBuffer DESCRIPTORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 64, 1); }
-  public String SRC_TYPS(int j) { int o = __offset(66); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int SRC_TYPSLength() { int o = __offset(66); return o != 0 ? __vector_len(o) : 0; }
+  /**
+   * Measurement values
+   */
+  public double VALUES(int j) { int o = __offset(58); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int VALUESLength() { int o = __offset(58); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector valuesVector() { return valuesVector(new DoubleVector()); }
+  public DoubleVector valuesVector(DoubleVector obj) { int o = __offset(58); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer VALUESAsByteBuffer() { return __vector_as_bytebuffer(58, 8); }
+  public ByteBuffer VALUESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 58, 8); }
+  /**
+   * Measurement uncertainties
+   */
+  public double UNCERTAINTIES(int j) { int o = __offset(60); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int UNCERTAINTIESLength() { int o = __offset(60); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector uncertaintiesVector() { return uncertaintiesVector(new DoubleVector()); }
+  public DoubleVector uncertaintiesVector(DoubleVector obj) { int o = __offset(60); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer UNCERTAINTIESAsByteBuffer() { return __vector_as_bytebuffer(60, 8); }
+  public ByteBuffer UNCERTAINTIESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 60, 8); }
+  /**
+   * Units for measurement values
+   */
+  public String UNITS() { int o = __offset(62); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer UNITSAsByteBuffer() { return __vector_as_bytebuffer(62, 1); }
+  public ByteBuffer UNITSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 62, 1); }
+  /**
+   * Data quality indicator
+   */
+  public String QUALITY() { int o = __offset(64); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer QUALITYAsByteBuffer() { return __vector_as_bytebuffer(64, 1); }
+  public ByteBuffer QUALITYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 64, 1); }
+  /**
+   * Description
+   */
+  public String DESCRIPTION() { int o = __offset(66); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DESCRIPTIONAsByteBuffer() { return __vector_as_bytebuffer(66, 1); }
+  public ByteBuffer DESCRIPTIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 66, 1); }
+  /**
+   * Event descriptor
+   */
+  public String DESCRIPTOR() { int o = __offset(68); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DESCRIPTORAsByteBuffer() { return __vector_as_bytebuffer(68, 1); }
+  public ByteBuffer DESCRIPTORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 68, 1); }
+  /**
+   * Source types
+   */
+  public String SRC_TYPS(int j) { int o = __offset(70); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int SRC_TYPSLength() { int o = __offset(70); return o != 0 ? __vector_len(o) : 0; }
   public StringVector srcTypsVector() { return srcTypsVector(new StringVector()); }
-  public StringVector srcTypsVector(StringVector obj) { int o = __offset(66); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String SRC_IDS(int j) { int o = __offset(68); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int SRC_IDSLength() { int o = __offset(68); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector srcTypsVector(StringVector obj) { int o = __offset(70); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Source identifiers
+   */
+  public String SRC_IDS(int j) { int o = __offset(72); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int SRC_IDSLength() { int o = __offset(72); return o != 0 ? __vector_len(o) : 0; }
   public StringVector srcIdsVector() { return srcIdsVector(new StringVector()); }
-  public StringVector srcIdsVector(StringVector obj) { int o = __offset(68); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public StringVector srcIdsVector(StringVector obj) { int o = __offset(72); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createSEO(FlatBufferBuilder builder,
       int IDOffset,
       int MSG_TYPEOffset,
       int GEN_SYSTEMOffset,
       int EXTERNAL_IDOffset,
-      int DATA_TYPEOffset,
+      byte DATA_TYPE,
       int GEN_TIMEOffset,
       boolean FORECAST,
       boolean DERIVED,
-      int SAT_NO,
+      long SAT_NO,
       int ORIG_OBJECT_IDOffset,
       int ID_SENSOROffset,
       int ORIG_SENSOR_IDOffset,
-      int OBSERVATORY_TYPEOffset,
+      byte OBSERVATORY_TYPE,
       int OBSERVATORY_NAMEOffset,
       int OBSERVATORY_NOTESOffset,
       int INSTRUMENT_TYPEOffset,
@@ -146,17 +260,19 @@ public final class SEO extends Table {
       int SEN_POSOffset,
       int SEN_VELOffset,
       int MEAS_TYPEOffset,
+      byte PARTICLE_TYPE,
       int SEN_ENERGY_LEVELOffset,
       int OB_SET_IDOffset,
-      int PARTICLE_TYPEOffset,
       int OB_TIMEOffset,
-      int SEO_LISTOffset,
+      int VALUESOffset,
+      int UNCERTAINTIESOffset,
+      int UNITSOffset,
       int QUALITYOffset,
       int DESCRIPTIONOffset,
       int DESCRIPTOROffset,
       int SRC_TYPSOffset,
       int SRC_IDSOffset) {
-    builder.startTable(33);
+    builder.startTable(35);
     SEO.addAlt(builder, ALT);
     SEO.addLon(builder, LON);
     SEO.addLat(builder, LAT);
@@ -165,9 +281,10 @@ public final class SEO extends Table {
     SEO.addDescriptor(builder, DESCRIPTOROffset);
     SEO.addDescription(builder, DESCRIPTIONOffset);
     SEO.addQuality(builder, QUALITYOffset);
-    SEO.addSeoList(builder, SEO_LISTOffset);
+    SEO.addUnits(builder, UNITSOffset);
+    SEO.addUncertainties(builder, UNCERTAINTIESOffset);
+    SEO.addValues(builder, VALUESOffset);
     SEO.addObTime(builder, OB_TIMEOffset);
-    SEO.addParticleType(builder, PARTICLE_TYPEOffset);
     SEO.addObSetId(builder, OB_SET_IDOffset);
     SEO.addSenEnergyLevel(builder, SEN_ENERGY_LEVELOffset);
     SEO.addMeasType(builder, MEAS_TYPEOffset);
@@ -177,36 +294,37 @@ public final class SEO extends Table {
     SEO.addInstrumentType(builder, INSTRUMENT_TYPEOffset);
     SEO.addObservatoryNotes(builder, OBSERVATORY_NOTESOffset);
     SEO.addObservatoryName(builder, OBSERVATORY_NAMEOffset);
-    SEO.addObservatoryType(builder, OBSERVATORY_TYPEOffset);
     SEO.addOrigSensorId(builder, ORIG_SENSOR_IDOffset);
     SEO.addIdSensor(builder, ID_SENSOROffset);
     SEO.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
     SEO.addSatNo(builder, SAT_NO);
     SEO.addGenTime(builder, GEN_TIMEOffset);
-    SEO.addDataType(builder, DATA_TYPEOffset);
     SEO.addExternalId(builder, EXTERNAL_IDOffset);
     SEO.addGenSystem(builder, GEN_SYSTEMOffset);
     SEO.addMsgType(builder, MSG_TYPEOffset);
     SEO.addId(builder, IDOffset);
+    SEO.addParticleType(builder, PARTICLE_TYPE);
+    SEO.addObservatoryType(builder, OBSERVATORY_TYPE);
     SEO.addDerived(builder, DERIVED);
     SEO.addForecast(builder, FORECAST);
+    SEO.addDataType(builder, DATA_TYPE);
     return SEO.endSEO(builder);
   }
 
-  public static void startSEO(FlatBufferBuilder builder) { builder.startTable(33); }
+  public static void startSEO(FlatBufferBuilder builder) { builder.startTable(35); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addMsgType(FlatBufferBuilder builder, int MSG_TYPEOffset) { builder.addOffset(1, MSG_TYPEOffset, 0); }
   public static void addGenSystem(FlatBufferBuilder builder, int GEN_SYSTEMOffset) { builder.addOffset(2, GEN_SYSTEMOffset, 0); }
   public static void addExternalId(FlatBufferBuilder builder, int EXTERNAL_IDOffset) { builder.addOffset(3, EXTERNAL_IDOffset, 0); }
-  public static void addDataType(FlatBufferBuilder builder, int DATA_TYPEOffset) { builder.addOffset(4, DATA_TYPEOffset, 0); }
+  public static void addDataType(FlatBufferBuilder builder, byte DATA_TYPE) { builder.addByte(4, DATA_TYPE, 0); }
   public static void addGenTime(FlatBufferBuilder builder, int GEN_TIMEOffset) { builder.addOffset(5, GEN_TIMEOffset, 0); }
   public static void addForecast(FlatBufferBuilder builder, boolean FORECAST) { builder.addBoolean(6, FORECAST, false); }
   public static void addDerived(FlatBufferBuilder builder, boolean DERIVED) { builder.addBoolean(7, DERIVED, false); }
-  public static void addSatNo(FlatBufferBuilder builder, int SAT_NO) { builder.addInt(8, SAT_NO, 0); }
+  public static void addSatNo(FlatBufferBuilder builder, long SAT_NO) { builder.addInt(8, (int) SAT_NO, (int) 0L); }
   public static void addOrigObjectId(FlatBufferBuilder builder, int ORIG_OBJECT_IDOffset) { builder.addOffset(9, ORIG_OBJECT_IDOffset, 0); }
   public static void addIdSensor(FlatBufferBuilder builder, int ID_SENSOROffset) { builder.addOffset(10, ID_SENSOROffset, 0); }
   public static void addOrigSensorId(FlatBufferBuilder builder, int ORIG_SENSOR_IDOffset) { builder.addOffset(11, ORIG_SENSOR_IDOffset, 0); }
-  public static void addObservatoryType(FlatBufferBuilder builder, int OBSERVATORY_TYPEOffset) { builder.addOffset(12, OBSERVATORY_TYPEOffset, 0); }
+  public static void addObservatoryType(FlatBufferBuilder builder, byte OBSERVATORY_TYPE) { builder.addByte(12, OBSERVATORY_TYPE, 0); }
   public static void addObservatoryName(FlatBufferBuilder builder, int OBSERVATORY_NAMEOffset) { builder.addOffset(13, OBSERVATORY_NAMEOffset, 0); }
   public static void addObservatoryNotes(FlatBufferBuilder builder, int OBSERVATORY_NOTESOffset) { builder.addOffset(14, OBSERVATORY_NOTESOffset, 0); }
   public static void addInstrumentType(FlatBufferBuilder builder, int INSTRUMENT_TYPEOffset) { builder.addOffset(15, INSTRUMENT_TYPEOffset, 0); }
@@ -215,26 +333,30 @@ public final class SEO extends Table {
   public static void addAlt(FlatBufferBuilder builder, double ALT) { builder.addDouble(18, ALT, 0.0); }
   public static void addSenReferenceFrame(FlatBufferBuilder builder, int SEN_REFERENCE_FRAMEOffset) { builder.addOffset(19, SEN_REFERENCE_FRAMEOffset, 0); }
   public static void addSenPos(FlatBufferBuilder builder, int SEN_POSOffset) { builder.addOffset(20, SEN_POSOffset, 0); }
-  public static int createSenPosVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startSenPosVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static int createSenPosVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startSenPosVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
   public static void addSenVel(FlatBufferBuilder builder, int SEN_VELOffset) { builder.addOffset(21, SEN_VELOffset, 0); }
-  public static int createSenVelVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startSenVelVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static int createSenVelVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startSenVelVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
   public static void addMeasType(FlatBufferBuilder builder, int MEAS_TYPEOffset) { builder.addOffset(22, MEAS_TYPEOffset, 0); }
-  public static void addSenEnergyLevel(FlatBufferBuilder builder, int SEN_ENERGY_LEVELOffset) { builder.addOffset(23, SEN_ENERGY_LEVELOffset, 0); }
-  public static void addObSetId(FlatBufferBuilder builder, int OB_SET_IDOffset) { builder.addOffset(24, OB_SET_IDOffset, 0); }
-  public static void addParticleType(FlatBufferBuilder builder, int PARTICLE_TYPEOffset) { builder.addOffset(25, PARTICLE_TYPEOffset, 0); }
+  public static void addParticleType(FlatBufferBuilder builder, byte PARTICLE_TYPE) { builder.addByte(23, PARTICLE_TYPE, 0); }
+  public static void addSenEnergyLevel(FlatBufferBuilder builder, int SEN_ENERGY_LEVELOffset) { builder.addOffset(24, SEN_ENERGY_LEVELOffset, 0); }
+  public static void addObSetId(FlatBufferBuilder builder, int OB_SET_IDOffset) { builder.addOffset(25, OB_SET_IDOffset, 0); }
   public static void addObTime(FlatBufferBuilder builder, int OB_TIMEOffset) { builder.addOffset(26, OB_TIMEOffset, 0); }
-  public static void addSeoList(FlatBufferBuilder builder, int SEO_LISTOffset) { builder.addOffset(27, SEO_LISTOffset, 0); }
-  public static int createSeoListVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startSeoListVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addQuality(FlatBufferBuilder builder, int QUALITYOffset) { builder.addOffset(28, QUALITYOffset, 0); }
-  public static void addDescription(FlatBufferBuilder builder, int DESCRIPTIONOffset) { builder.addOffset(29, DESCRIPTIONOffset, 0); }
-  public static void addDescriptor(FlatBufferBuilder builder, int DESCRIPTOROffset) { builder.addOffset(30, DESCRIPTOROffset, 0); }
-  public static void addSrcTyps(FlatBufferBuilder builder, int SRC_TYPSOffset) { builder.addOffset(31, SRC_TYPSOffset, 0); }
+  public static void addValues(FlatBufferBuilder builder, int VALUESOffset) { builder.addOffset(27, VALUESOffset, 0); }
+  public static int createValuesVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startValuesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addUncertainties(FlatBufferBuilder builder, int UNCERTAINTIESOffset) { builder.addOffset(28, UNCERTAINTIESOffset, 0); }
+  public static int createUncertaintiesVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startUncertaintiesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addUnits(FlatBufferBuilder builder, int UNITSOffset) { builder.addOffset(29, UNITSOffset, 0); }
+  public static void addQuality(FlatBufferBuilder builder, int QUALITYOffset) { builder.addOffset(30, QUALITYOffset, 0); }
+  public static void addDescription(FlatBufferBuilder builder, int DESCRIPTIONOffset) { builder.addOffset(31, DESCRIPTIONOffset, 0); }
+  public static void addDescriptor(FlatBufferBuilder builder, int DESCRIPTOROffset) { builder.addOffset(32, DESCRIPTOROffset, 0); }
+  public static void addSrcTyps(FlatBufferBuilder builder, int SRC_TYPSOffset) { builder.addOffset(33, SRC_TYPSOffset, 0); }
   public static int createSrcTypsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startSrcTypsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addSrcIds(FlatBufferBuilder builder, int SRC_IDSOffset) { builder.addOffset(32, SRC_IDSOffset, 0); }
+  public static void addSrcIds(FlatBufferBuilder builder, int SRC_IDSOffset) { builder.addOffset(34, SRC_IDSOffset, 0); }
   public static int createSrcIdsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startSrcIdsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endSEO(FlatBufferBuilder builder) {

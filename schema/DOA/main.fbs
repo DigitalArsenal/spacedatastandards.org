@@ -1,43 +1,87 @@
-// Hash: ff3aef29252ed39a04ec890473c56369c070e67399b7e90191fc1f963d805deb
-// Version: 0.0.2
+// Hash: 7a667bc6a35a0d0690f422baaf432117b9b8c4441b3141ae1e36de0ea67bb5c9
+// Version: 0.0.3
 // -----------------------------------END_HEADER
-/// Difference of Arrival
+enum doaCollectionMode : byte {
+  TDOA,
+  FDOA,
+  TDOA_FDOA,
+  AOA,
+  COMBINED,
+  UNKNOWN
+}
+
+/// Difference of Arrival Geolocation
 table DOA {
+  /// Unique identifier
   ID:string;
+  /// Observation time (ISO 8601)
   OB_TIME:string;
-  ID_SENSOR1:string;
-  ID_SENSOR2:string;
-  SAT_NO:int;
-  TASK_ID:string;
+  /// Satellite catalog number
+  SAT_NO:uint32;
+  /// International designator
   ORIG_OBJECT_ID:string;
-  ORIG_SENSOR_ID1:string;
-  ORIG_SENSOR_ID2:string;
-  UCT:bool;
-  SENSOR1_DELAY:double;
-  SENSOR2_DELAY:double;
-  SENLAT:double;
-  SENLON:double;
-  SENALT:double;
-  SEN2LAT:double;
-  SEN2LON:double;
-  SEN2ALT:double;
-  FREQUENCY:double;
-  BANDWIDTH:double;
-  DELTA_RANGE:double;
-  DELTA_RANGE_UNC:double;
-  DELTA_RANGE_RATE:double;
-  DELTA_RANGE_RATE_UNC:double;
-  SNR:double;
-  TDOA:double;
-  TDOA_UNC:double;
-  FDOA:double;
-  FDOA_UNC:double;
-  COLLECTION_MODE:string;
-  RAW_FILE_URI:string;
-  TAGS:[string];
+  /// On-orbit reference
   ON_ORBIT:string;
-  DESCRIPTOR:string;
+  /// True if uncorrelated target
+  UCT:bool;
+  /// Task identifier
+  TASK_ID:string;
+  /// Transaction identifier
   TRANSACTION_ID:string;
+  /// Collection mode
+  COLLECTION_MODE:doaCollectionMode;
+  /// Sensor 1 identifier
+  ID_SENSOR1:string;
+  /// Sensor 1 original identifier
+  ORIG_SENSOR_ID1:string;
+  /// Sensor 1 latitude (degrees)
+  SENLAT:double;
+  /// Sensor 1 longitude (degrees)
+  SENLON:double;
+  /// Sensor 1 altitude (km)
+  SENALT:double;
+  /// Sensor 1 processing delay (seconds)
+  SENSOR1_DELAY:double;
+  /// Sensor 2 identifier
+  ID_SENSOR2:string;
+  /// Sensor 2 original identifier
+  ORIG_SENSOR_ID2:string;
+  /// Sensor 2 latitude (degrees)
+  SEN2LAT:double;
+  /// Sensor 2 longitude (degrees)
+  SEN2LON:double;
+  /// Sensor 2 altitude (km)
+  SEN2ALT:double;
+  /// Sensor 2 processing delay (seconds)
+  SENSOR2_DELAY:double;
+  /// Measured frequency (MHz)
+  FREQUENCY:double;
+  /// Measurement bandwidth (MHz)
+  BANDWIDTH:double;
+  /// Signal-to-noise ratio (dB)
+  SNR:double;
+  /// Differential range (km)
+  DELTA_RANGE:double;
+  /// Differential range uncertainty (km, 1-sigma)
+  DELTA_RANGE_UNC:double;
+  /// Differential range rate (km/s)
+  DELTA_RANGE_RATE:double;
+  /// Differential range rate uncertainty (km/s, 1-sigma)
+  DELTA_RANGE_RATE_UNC:double;
+  /// Time difference of arrival (seconds)
+  TDOA:double;
+  /// TDOA uncertainty (seconds, 1-sigma)
+  TDOA_UNC:double;
+  /// Frequency difference of arrival (Hz)
+  FDOA:double;
+  /// FDOA uncertainty (Hz, 1-sigma)
+  FDOA_UNC:double;
+  /// Reference to raw data file
+  RAW_FILE_URI:string;
+  /// Event descriptor
+  DESCRIPTOR:string;
+  /// Associated tags
+  TAGS:[string];
 }
 
 root_type DOA;

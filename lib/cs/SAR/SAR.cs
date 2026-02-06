@@ -19,6 +19,7 @@ public struct SAR : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public SAR __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Unique identifier
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,7 +27,9 @@ public struct SAR : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
-  public int SAT_NO { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  /// Satellite catalog number (of SAR platform)
+  public uint SAT_NO { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// International designator
   public string ORIG_OBJECT_ID { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetORIG_OBJECT_IDBytes() { return __p.__vector_as_span<byte>(8, 1); }
@@ -34,145 +37,159 @@ public struct SAR : IFlatbufferObject
   public ArraySegment<byte>? GetORIG_OBJECT_IDBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetORIG_OBJECT_IDArray() { return __p.__vector_as_array<byte>(8); }
-  public string ID_SENSOR { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// On-orbit reference
+  public string ON_ORBIT { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetID_SENSORBytes() { return __p.__vector_as_span<byte>(10, 1); }
+  public Span<byte> GetON_ORBITBytes() { return __p.__vector_as_span<byte>(10, 1); }
 #else
-  public ArraySegment<byte>? GetID_SENSORBytes() { return __p.__vector_as_arraysegment(10); }
+  public ArraySegment<byte>? GetON_ORBITBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
-  public byte[] GetID_SENSORArray() { return __p.__vector_as_array<byte>(10); }
-  public string ORIG_SENSOR_ID { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetON_ORBITArray() { return __p.__vector_as_array<byte>(10); }
+  /// Sensor identifier
+  public string ID_SENSOR { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetORIG_SENSOR_IDBytes() { return __p.__vector_as_span<byte>(12, 1); }
+  public Span<byte> GetID_SENSORBytes() { return __p.__vector_as_span<byte>(12, 1); }
 #else
-  public ArraySegment<byte>? GetORIG_SENSOR_IDBytes() { return __p.__vector_as_arraysegment(12); }
+  public ArraySegment<byte>? GetID_SENSORBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
-  public byte[] GetORIG_SENSOR_IDArray() { return __p.__vector_as_array<byte>(12); }
-  public string EXTERNAL_ID { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetID_SENSORArray() { return __p.__vector_as_array<byte>(12); }
+  /// Original sensor identifier
+  public string ORIG_SENSOR_ID { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetEXTERNAL_IDBytes() { return __p.__vector_as_span<byte>(14, 1); }
+  public Span<byte> GetORIG_SENSOR_IDBytes() { return __p.__vector_as_span<byte>(14, 1); }
 #else
-  public ArraySegment<byte>? GetEXTERNAL_IDBytes() { return __p.__vector_as_arraysegment(14); }
+  public ArraySegment<byte>? GetORIG_SENSOR_IDBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
-  public byte[] GetEXTERNAL_IDArray() { return __p.__vector_as_array<byte>(14); }
-  public string COLLECTION_ID { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetORIG_SENSOR_IDArray() { return __p.__vector_as_array<byte>(14); }
+  /// External reference identifier
+  public string EXTERNAL_ID { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetCOLLECTION_IDBytes() { return __p.__vector_as_span<byte>(16, 1); }
+  public Span<byte> GetEXTERNAL_IDBytes() { return __p.__vector_as_span<byte>(16, 1); }
 #else
-  public ArraySegment<byte>? GetCOLLECTION_IDBytes() { return __p.__vector_as_arraysegment(16); }
+  public ArraySegment<byte>? GetEXTERNAL_IDBytes() { return __p.__vector_as_arraysegment(16); }
 #endif
-  public byte[] GetCOLLECTION_IDArray() { return __p.__vector_as_array<byte>(16); }
-  public string DETECTION_ID { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetEXTERNAL_IDArray() { return __p.__vector_as_array<byte>(16); }
+  /// Collection identifier
+  public string COLLECTION_ID { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDETECTION_IDBytes() { return __p.__vector_as_span<byte>(18, 1); }
+  public Span<byte> GetCOLLECTION_IDBytes() { return __p.__vector_as_span<byte>(18, 1); }
 #else
-  public ArraySegment<byte>? GetDETECTION_IDBytes() { return __p.__vector_as_arraysegment(18); }
+  public ArraySegment<byte>? GetCOLLECTION_IDBytes() { return __p.__vector_as_arraysegment(18); }
 #endif
-  public byte[] GetDETECTION_IDArray() { return __p.__vector_as_array<byte>(18); }
-  public string COLLECTION_START { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetCOLLECTION_IDArray() { return __p.__vector_as_array<byte>(18); }
+  /// Detection identifier
+  public string DETECTION_ID { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetCOLLECTION_STARTBytes() { return __p.__vector_as_span<byte>(20, 1); }
+  public Span<byte> GetDETECTION_IDBytes() { return __p.__vector_as_span<byte>(20, 1); }
 #else
-  public ArraySegment<byte>? GetCOLLECTION_STARTBytes() { return __p.__vector_as_arraysegment(20); }
+  public ArraySegment<byte>? GetDETECTION_IDBytes() { return __p.__vector_as_arraysegment(20); }
 #endif
-  public byte[] GetCOLLECTION_STARTArray() { return __p.__vector_as_array<byte>(20); }
-  public string COLLECTION_END { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetDETECTION_IDArray() { return __p.__vector_as_array<byte>(20); }
+  /// Collection start time (ISO 8601)
+  public string COLLECTION_START { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetCOLLECTION_ENDBytes() { return __p.__vector_as_span<byte>(22, 1); }
+  public Span<byte> GetCOLLECTION_STARTBytes() { return __p.__vector_as_span<byte>(22, 1); }
 #else
-  public ArraySegment<byte>? GetCOLLECTION_ENDBytes() { return __p.__vector_as_arraysegment(22); }
+  public ArraySegment<byte>? GetCOLLECTION_STARTBytes() { return __p.__vector_as_arraysegment(22); }
 #endif
-  public byte[] GetCOLLECTION_ENDArray() { return __p.__vector_as_array<byte>(22); }
-  public string CENTER_TIME { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetCOLLECTION_STARTArray() { return __p.__vector_as_array<byte>(22); }
+  /// Collection end time (ISO 8601)
+  public string COLLECTION_END { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetCENTER_TIMEBytes() { return __p.__vector_as_span<byte>(24, 1); }
+  public Span<byte> GetCOLLECTION_ENDBytes() { return __p.__vector_as_span<byte>(24, 1); }
 #else
-  public ArraySegment<byte>? GetCENTER_TIMEBytes() { return __p.__vector_as_arraysegment(24); }
+  public ArraySegment<byte>? GetCOLLECTION_ENDBytes() { return __p.__vector_as_arraysegment(24); }
 #endif
-  public byte[] GetCENTER_TIMEArray() { return __p.__vector_as_array<byte>(24); }
-  public string DETECTION_START { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetCOLLECTION_ENDArray() { return __p.__vector_as_array<byte>(24); }
+  /// Center time of observation (ISO 8601)
+  public string CENTER_TIME { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDETECTION_STARTBytes() { return __p.__vector_as_span<byte>(26, 1); }
+  public Span<byte> GetCENTER_TIMEBytes() { return __p.__vector_as_span<byte>(26, 1); }
 #else
-  public ArraySegment<byte>? GetDETECTION_STARTBytes() { return __p.__vector_as_arraysegment(26); }
+  public ArraySegment<byte>? GetCENTER_TIMEBytes() { return __p.__vector_as_arraysegment(26); }
 #endif
-  public byte[] GetDETECTION_STARTArray() { return __p.__vector_as_array<byte>(26); }
-  public string DETECTION_END { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetCENTER_TIMEArray() { return __p.__vector_as_array<byte>(26); }
+  /// Detection start time (ISO 8601)
+  public string DETECTION_START { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDETECTION_ENDBytes() { return __p.__vector_as_span<byte>(28, 1); }
+  public Span<byte> GetDETECTION_STARTBytes() { return __p.__vector_as_span<byte>(28, 1); }
 #else
-  public ArraySegment<byte>? GetDETECTION_ENDBytes() { return __p.__vector_as_arraysegment(28); }
+  public ArraySegment<byte>? GetDETECTION_STARTBytes() { return __p.__vector_as_arraysegment(28); }
 #endif
-  public byte[] GetDETECTION_ENDArray() { return __p.__vector_as_array<byte>(28); }
-  public double DWELL_TIME { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string ORBIT_STATE { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetDETECTION_STARTArray() { return __p.__vector_as_array<byte>(28); }
+  /// Detection end time (ISO 8601)
+  public string DETECTION_END { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetORBIT_STATEBytes() { return __p.__vector_as_span<byte>(32, 1); }
+  public Span<byte> GetDETECTION_ENDBytes() { return __p.__vector_as_span<byte>(30, 1); }
 #else
-  public ArraySegment<byte>? GetORBIT_STATEBytes() { return __p.__vector_as_arraysegment(32); }
+  public ArraySegment<byte>? GetDETECTION_ENDBytes() { return __p.__vector_as_arraysegment(30); }
 #endif
-  public byte[] GetORBIT_STATEArray() { return __p.__vector_as_array<byte>(32); }
-  public string SAR_MODE { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetDETECTION_ENDArray() { return __p.__vector_as_array<byte>(30); }
+  /// Integration/dwell time (seconds)
+  public double DWELL_TIME { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Orbit state description
+  public string ORBIT_STATE { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSAR_MODEBytes() { return __p.__vector_as_span<byte>(34, 1); }
+  public Span<byte> GetORBIT_STATEBytes() { return __p.__vector_as_span<byte>(34, 1); }
 #else
-  public ArraySegment<byte>? GetSAR_MODEBytes() { return __p.__vector_as_arraysegment(34); }
+  public ArraySegment<byte>? GetORBIT_STATEBytes() { return __p.__vector_as_arraysegment(34); }
 #endif
-  public byte[] GetSAR_MODEArray() { return __p.__vector_as_array<byte>(34); }
-  public string OPERATING_BAND { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetORBIT_STATEArray() { return __p.__vector_as_array<byte>(34); }
+  /// SAR imaging mode
+  public sarMode SAR_MODE { get { int o = __p.__offset(36); return o != 0 ? (sarMode)__p.bb.GetSbyte(o + __p.bb_pos) : sarMode.STRIPMAP; } }
+  /// Operating RF band (e.g., X, C, L, S, P)
+  public string OPERATING_BAND { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetOPERATING_BANDBytes() { return __p.__vector_as_span<byte>(36, 1); }
+  public Span<byte> GetOPERATING_BANDBytes() { return __p.__vector_as_span<byte>(38, 1); }
 #else
-  public ArraySegment<byte>? GetOPERATING_BANDBytes() { return __p.__vector_as_arraysegment(36); }
+  public ArraySegment<byte>? GetOPERATING_BANDBytes() { return __p.__vector_as_arraysegment(38); }
 #endif
-  public byte[] GetOPERATING_BANDArray() { return __p.__vector_as_array<byte>(36); }
-  public double OPERATING_FREQ { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SNR { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string TX_POLARIZATION { get { int o = __p.__offset(42); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetOPERATING_BANDArray() { return __p.__vector_as_array<byte>(38); }
+  /// Operating frequency (GHz)
+  public double OPERATING_FREQ { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Signal-to-noise ratio (dB)
+  public double SNR { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Transmit polarization
+  public sarPolarization TX_POLARIZATION { get { int o = __p.__offset(44); return o != 0 ? (sarPolarization)__p.bb.GetSbyte(o + __p.bb_pos) : sarPolarization.HH; } }
+  /// Receive polarization
+  public sarPolarization RX_POLARIZATION { get { int o = __p.__offset(46); return o != 0 ? (sarPolarization)__p.bb.GetSbyte(o + __p.bb_pos) : sarPolarization.HH; } }
+  /// Grazing angle (degrees)
+  public double GRAZE_ANGLE { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Incidence angle (degrees)
+  public double INCIDENCE_ANGLE { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Squint angle (degrees)
+  public double SQUINT_ANGLE { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Pulse bandwidth (MHz)
+  public double PULSE_BANDWIDTH { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Pulse duration (microseconds)
+  public double PULSE_DURATION { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Continuous spot angle (degrees)
+  public double CONTINUOUS_SPOT_ANGLE { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Slant range to target (km)
+  public double SLANT_RANGE { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Near range (km)
+  public double NEAR_RANGE { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Far range (km)
+  public double FAR_RANGE { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Swath length (km)
+  public double SWATH_LENGTH { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Image area GeoJSON
+  public string AGJSON { get { int o = __p.__offset(68); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTX_POLARIZATIONBytes() { return __p.__vector_as_span<byte>(42, 1); }
+  public Span<byte> GetAGJSONBytes() { return __p.__vector_as_span<byte>(68, 1); }
 #else
-  public ArraySegment<byte>? GetTX_POLARIZATIONBytes() { return __p.__vector_as_arraysegment(42); }
+  public ArraySegment<byte>? GetAGJSONBytes() { return __p.__vector_as_arraysegment(68); }
 #endif
-  public byte[] GetTX_POLARIZATIONArray() { return __p.__vector_as_array<byte>(42); }
-  public string RX_POLARIZATION { get { int o = __p.__offset(44); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetAGJSONArray() { return __p.__vector_as_array<byte>(68); }
+  /// Image area text description
+  public string ATEXT { get { int o = __p.__offset(70); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetRX_POLARIZATIONBytes() { return __p.__vector_as_span<byte>(44, 1); }
+  public Span<byte> GetATEXTBytes() { return __p.__vector_as_span<byte>(70, 1); }
 #else
-  public ArraySegment<byte>? GetRX_POLARIZATIONBytes() { return __p.__vector_as_arraysegment(44); }
+  public ArraySegment<byte>? GetATEXTBytes() { return __p.__vector_as_arraysegment(70); }
 #endif
-  public byte[] GetRX_POLARIZATIONArray() { return __p.__vector_as_array<byte>(44); }
-  public double GRAZE_ANGLE { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double INCIDENCE_ANGLE { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SQUINT_ANGLE { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double PULSE_BANDWIDTH { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double PULSE_DURATION { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double CONTINUOUS_SPOT_ANGLE { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SLANT_RANGE { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double NEAR_RANGE { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double FAR_RANGE { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SWATH_LENGTH { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string AREA { get { int o = __p.__offset(66); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetAREABytes() { return __p.__vector_as_span<byte>(66, 1); }
-#else
-  public ArraySegment<byte>? GetAREABytes() { return __p.__vector_as_arraysegment(66); }
-#endif
-  public byte[] GetAREAArray() { return __p.__vector_as_array<byte>(66); }
-  public string ATEXT { get { int o = __p.__offset(68); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetATEXTBytes() { return __p.__vector_as_span<byte>(68, 1); }
-#else
-  public ArraySegment<byte>? GetATEXTBytes() { return __p.__vector_as_arraysegment(68); }
-#endif
-  public byte[] GetATEXTArray() { return __p.__vector_as_array<byte>(68); }
-  public string AGJSON { get { int o = __p.__offset(70); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetAGJSONBytes() { return __p.__vector_as_span<byte>(70, 1); }
-#else
-  public ArraySegment<byte>? GetAGJSONBytes() { return __p.__vector_as_arraysegment(70); }
-#endif
-  public byte[] GetAGJSONArray() { return __p.__vector_as_array<byte>(70); }
+  public byte[] GetATEXTArray() { return __p.__vector_as_array<byte>(70); }
+  /// Area type
   public string ATYPE { get { int o = __p.__offset(72); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetATYPEBytes() { return __p.__vector_as_span<byte>(72, 1); }
@@ -180,64 +197,79 @@ public struct SAR : IFlatbufferObject
   public ArraySegment<byte>? GetATYPEBytes() { return __p.__vector_as_arraysegment(72); }
 #endif
   public byte[] GetATYPEArray() { return __p.__vector_as_array<byte>(72); }
-  public int ANDIMS { get { int o = __p.__offset(74); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int ASRID { get { int o = __p.__offset(76); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public double SPACING_RANGE { get { int o = __p.__offset(78); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SPACING_AZIMUTH { get { int o = __p.__offset(80); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public int LOOKS_AZIMUTH { get { int o = __p.__offset(82); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int LOOKS_RANGE { get { int o = __p.__offset(84); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public double RESOLUTION_RANGE { get { int o = __p.__offset(86); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double RESOLUTION_AZIMUTH { get { int o = __p.__offset(88); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string OB_DIRECTION { get { int o = __p.__offset(90); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Coordinate system
+  public string COORD_SYS { get { int o = __p.__offset(74); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetOB_DIRECTIONBytes() { return __p.__vector_as_span<byte>(90, 1); }
+  public Span<byte> GetCOORD_SYSBytes() { return __p.__vector_as_span<byte>(74, 1); }
 #else
-  public ArraySegment<byte>? GetOB_DIRECTIONBytes() { return __p.__vector_as_arraysegment(90); }
+  public ArraySegment<byte>? GetCOORD_SYSBytes() { return __p.__vector_as_arraysegment(74); }
 #endif
-  public byte[] GetOB_DIRECTIONArray() { return __p.__vector_as_array<byte>(90); }
-  public string COORD_SYS { get { int o = __p.__offset(92); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetCOORD_SYSArray() { return __p.__vector_as_array<byte>(74); }
+  /// Range pixel spacing (meters)
+  public double SPACING_RANGE { get { int o = __p.__offset(76); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Azimuth pixel spacing (meters)
+  public double SPACING_AZIMUTH { get { int o = __p.__offset(78); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Number of azimuth looks
+  public byte LOOKS_AZIMUTH { get { int o = __p.__offset(80); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  /// Number of range looks
+  public byte LOOKS_RANGE { get { int o = __p.__offset(82); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  /// Range resolution (meters)
+  public double RESOLUTION_RANGE { get { int o = __p.__offset(84); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Azimuth resolution (meters)
+  public double RESOLUTION_AZIMUTH { get { int o = __p.__offset(86); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Observation direction (ASCENDING/DESCENDING)
+  public string OB_DIRECTION { get { int o = __p.__offset(88); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetCOORD_SYSBytes() { return __p.__vector_as_span<byte>(92, 1); }
+  public Span<byte> GetOB_DIRECTIONBytes() { return __p.__vector_as_span<byte>(88, 1); }
 #else
-  public ArraySegment<byte>? GetCOORD_SYSBytes() { return __p.__vector_as_arraysegment(92); }
+  public ArraySegment<byte>? GetOB_DIRECTIONBytes() { return __p.__vector_as_arraysegment(88); }
 #endif
-  public byte[] GetCOORD_SYSArray() { return __p.__vector_as_array<byte>(92); }
-  public double TARGETPOSX { get { int o = __p.__offset(94); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double TARGETPOSY { get { int o = __p.__offset(96); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double TARGETPOSZ { get { int o = __p.__offset(98); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SENALT { get { int o = __p.__offset(100); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SENVELX { get { int o = __p.__offset(102); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SENVELY { get { int o = __p.__offset(104); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SENVELZ { get { int o = __p.__offset(106); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SENLAT_START { get { int o = __p.__offset(108); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SENLON_START { get { int o = __p.__offset(110); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SENLAT_END { get { int o = __p.__offset(112); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SENLON_END { get { int o = __p.__offset(114); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string TRANSACTION_ID { get { int o = __p.__offset(116); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetOB_DIRECTIONArray() { return __p.__vector_as_array<byte>(88); }
+  /// Target position X (km)
+  public double TARGETPOSX { get { int o = __p.__offset(90); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Target position Y (km)
+  public double TARGETPOSY { get { int o = __p.__offset(92); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Target position Z (km)
+  public double TARGETPOSZ { get { int o = __p.__offset(94); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sensor altitude (km)
+  public double SENALT { get { int o = __p.__offset(96); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sensor velocity X (km/s)
+  public double SENVELX { get { int o = __p.__offset(98); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sensor velocity Y (km/s)
+  public double SENVELY { get { int o = __p.__offset(100); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sensor velocity Z (km/s)
+  public double SENVELZ { get { int o = __p.__offset(102); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sensor latitude at start (degrees)
+  public double SENLAT_START { get { int o = __p.__offset(104); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sensor longitude at start (degrees)
+  public double SENLON_START { get { int o = __p.__offset(106); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sensor latitude at end (degrees)
+  public double SENLAT_END { get { int o = __p.__offset(108); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sensor longitude at end (degrees)
+  public double SENLON_END { get { int o = __p.__offset(110); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Transaction identifier
+  public string TRANSACTION_ID { get { int o = __p.__offset(112); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTRANSACTION_IDBytes() { return __p.__vector_as_span<byte>(116, 1); }
+  public Span<byte> GetTRANSACTION_IDBytes() { return __p.__vector_as_span<byte>(112, 1); }
 #else
-  public ArraySegment<byte>? GetTRANSACTION_IDBytes() { return __p.__vector_as_arraysegment(116); }
+  public ArraySegment<byte>? GetTRANSACTION_IDBytes() { return __p.__vector_as_arraysegment(112); }
 #endif
-  public byte[] GetTRANSACTION_IDArray() { return __p.__vector_as_array<byte>(116); }
-  public string TAGS(int j) { int o = __p.__offset(118); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int TAGSLength { get { int o = __p.__offset(118); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string SRC_TYPS(int j) { int o = __p.__offset(120); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int SRC_TYPSLength { get { int o = __p.__offset(120); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string SRC_IDS(int j) { int o = __p.__offset(122); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int SRC_IDSLength { get { int o = __p.__offset(122); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string ON_ORBIT { get { int o = __p.__offset(124); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetON_ORBITBytes() { return __p.__vector_as_span<byte>(124, 1); }
-#else
-  public ArraySegment<byte>? GetON_ORBITBytes() { return __p.__vector_as_arraysegment(124); }
-#endif
-  public byte[] GetON_ORBITArray() { return __p.__vector_as_array<byte>(124); }
+  public byte[] GetTRANSACTION_IDArray() { return __p.__vector_as_array<byte>(112); }
+  /// Associated tags
+  public string TAGS(int j) { int o = __p.__offset(114); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int TAGSLength { get { int o = __p.__offset(114); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Source types
+  public string SRC_TYPS(int j) { int o = __p.__offset(116); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int SRC_TYPSLength { get { int o = __p.__offset(116); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Source identifiers
+  public string SRC_IDS(int j) { int o = __p.__offset(118); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int SRC_IDSLength { get { int o = __p.__offset(118); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<SAR> CreateSAR(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
-      int SAT_NO = 0,
+      uint SAT_NO = 0,
       StringOffset ORIG_OBJECT_IDOffset = default(StringOffset),
+      StringOffset ON_ORBITOffset = default(StringOffset),
       StringOffset ID_SENSOROffset = default(StringOffset),
       StringOffset ORIG_SENSOR_IDOffset = default(StringOffset),
       StringOffset EXTERNAL_IDOffset = default(StringOffset),
@@ -250,12 +282,12 @@ public struct SAR : IFlatbufferObject
       StringOffset DETECTION_ENDOffset = default(StringOffset),
       double DWELL_TIME = 0.0,
       StringOffset ORBIT_STATEOffset = default(StringOffset),
-      StringOffset SAR_MODEOffset = default(StringOffset),
+      sarMode SAR_MODE = sarMode.STRIPMAP,
       StringOffset OPERATING_BANDOffset = default(StringOffset),
       double OPERATING_FREQ = 0.0,
       double SNR = 0.0,
-      StringOffset TX_POLARIZATIONOffset = default(StringOffset),
-      StringOffset RX_POLARIZATIONOffset = default(StringOffset),
+      sarPolarization TX_POLARIZATION = sarPolarization.HH,
+      sarPolarization RX_POLARIZATION = sarPolarization.HH,
       double GRAZE_ANGLE = 0.0,
       double INCIDENCE_ANGLE = 0.0,
       double SQUINT_ANGLE = 0.0,
@@ -266,20 +298,17 @@ public struct SAR : IFlatbufferObject
       double NEAR_RANGE = 0.0,
       double FAR_RANGE = 0.0,
       double SWATH_LENGTH = 0.0,
-      StringOffset AREAOffset = default(StringOffset),
-      StringOffset ATEXTOffset = default(StringOffset),
       StringOffset AGJSONOffset = default(StringOffset),
+      StringOffset ATEXTOffset = default(StringOffset),
       StringOffset ATYPEOffset = default(StringOffset),
-      int ANDIMS = 0,
-      int ASRID = 0,
+      StringOffset COORD_SYSOffset = default(StringOffset),
       double SPACING_RANGE = 0.0,
       double SPACING_AZIMUTH = 0.0,
-      int LOOKS_AZIMUTH = 0,
-      int LOOKS_RANGE = 0,
+      byte LOOKS_AZIMUTH = 0,
+      byte LOOKS_RANGE = 0,
       double RESOLUTION_RANGE = 0.0,
       double RESOLUTION_AZIMUTH = 0.0,
       StringOffset OB_DIRECTIONOffset = default(StringOffset),
-      StringOffset COORD_SYSOffset = default(StringOffset),
       double TARGETPOSX = 0.0,
       double TARGETPOSY = 0.0,
       double TARGETPOSZ = 0.0,
@@ -294,9 +323,8 @@ public struct SAR : IFlatbufferObject
       StringOffset TRANSACTION_IDOffset = default(StringOffset),
       VectorOffset TAGSOffset = default(VectorOffset),
       VectorOffset SRC_TYPSOffset = default(VectorOffset),
-      VectorOffset SRC_IDSOffset = default(VectorOffset),
-      StringOffset ON_ORBITOffset = default(StringOffset)) {
-    builder.StartTable(61);
+      VectorOffset SRC_IDSOffset = default(VectorOffset)) {
+    builder.StartTable(58);
     SAR.AddSENLON_END(builder, SENLON_END);
     SAR.AddSENLAT_END(builder, SENLAT_END);
     SAR.AddSENLON_START(builder, SENLON_START);
@@ -325,25 +353,16 @@ public struct SAR : IFlatbufferObject
     SAR.AddSNR(builder, SNR);
     SAR.AddOPERATING_FREQ(builder, OPERATING_FREQ);
     SAR.AddDWELL_TIME(builder, DWELL_TIME);
-    SAR.AddON_ORBIT(builder, ON_ORBITOffset);
     SAR.AddSRC_IDS(builder, SRC_IDSOffset);
     SAR.AddSRC_TYPS(builder, SRC_TYPSOffset);
     SAR.AddTAGS(builder, TAGSOffset);
     SAR.AddTRANSACTION_ID(builder, TRANSACTION_IDOffset);
-    SAR.AddCOORD_SYS(builder, COORD_SYSOffset);
     SAR.AddOB_DIRECTION(builder, OB_DIRECTIONOffset);
-    SAR.AddLOOKS_RANGE(builder, LOOKS_RANGE);
-    SAR.AddLOOKS_AZIMUTH(builder, LOOKS_AZIMUTH);
-    SAR.AddASRID(builder, ASRID);
-    SAR.AddANDIMS(builder, ANDIMS);
+    SAR.AddCOORD_SYS(builder, COORD_SYSOffset);
     SAR.AddATYPE(builder, ATYPEOffset);
-    SAR.AddAGJSON(builder, AGJSONOffset);
     SAR.AddATEXT(builder, ATEXTOffset);
-    SAR.AddAREA(builder, AREAOffset);
-    SAR.AddRX_POLARIZATION(builder, RX_POLARIZATIONOffset);
-    SAR.AddTX_POLARIZATION(builder, TX_POLARIZATIONOffset);
+    SAR.AddAGJSON(builder, AGJSONOffset);
     SAR.AddOPERATING_BAND(builder, OPERATING_BANDOffset);
-    SAR.AddSAR_MODE(builder, SAR_MODEOffset);
     SAR.AddORBIT_STATE(builder, ORBIT_STATEOffset);
     SAR.AddDETECTION_END(builder, DETECTION_ENDOffset);
     SAR.AddDETECTION_START(builder, DETECTION_STARTOffset);
@@ -355,89 +374,92 @@ public struct SAR : IFlatbufferObject
     SAR.AddEXTERNAL_ID(builder, EXTERNAL_IDOffset);
     SAR.AddORIG_SENSOR_ID(builder, ORIG_SENSOR_IDOffset);
     SAR.AddID_SENSOR(builder, ID_SENSOROffset);
+    SAR.AddON_ORBIT(builder, ON_ORBITOffset);
     SAR.AddORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset);
     SAR.AddSAT_NO(builder, SAT_NO);
     SAR.AddID(builder, IDOffset);
+    SAR.AddLOOKS_RANGE(builder, LOOKS_RANGE);
+    SAR.AddLOOKS_AZIMUTH(builder, LOOKS_AZIMUTH);
+    SAR.AddRX_POLARIZATION(builder, RX_POLARIZATION);
+    SAR.AddTX_POLARIZATION(builder, TX_POLARIZATION);
+    SAR.AddSAR_MODE(builder, SAR_MODE);
     return SAR.EndSAR(builder);
   }
 
-  public static void StartSAR(FlatBufferBuilder builder) { builder.StartTable(61); }
+  public static void StartSAR(FlatBufferBuilder builder) { builder.StartTable(58); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
-  public static void AddSAT_NO(FlatBufferBuilder builder, int SAT_NO) { builder.AddInt(1, SAT_NO, 0); }
+  public static void AddSAT_NO(FlatBufferBuilder builder, uint SAT_NO) { builder.AddUint(1, SAT_NO, 0); }
   public static void AddORIG_OBJECT_ID(FlatBufferBuilder builder, StringOffset ORIG_OBJECT_IDOffset) { builder.AddOffset(2, ORIG_OBJECT_IDOffset.Value, 0); }
-  public static void AddID_SENSOR(FlatBufferBuilder builder, StringOffset ID_SENSOROffset) { builder.AddOffset(3, ID_SENSOROffset.Value, 0); }
-  public static void AddORIG_SENSOR_ID(FlatBufferBuilder builder, StringOffset ORIG_SENSOR_IDOffset) { builder.AddOffset(4, ORIG_SENSOR_IDOffset.Value, 0); }
-  public static void AddEXTERNAL_ID(FlatBufferBuilder builder, StringOffset EXTERNAL_IDOffset) { builder.AddOffset(5, EXTERNAL_IDOffset.Value, 0); }
-  public static void AddCOLLECTION_ID(FlatBufferBuilder builder, StringOffset COLLECTION_IDOffset) { builder.AddOffset(6, COLLECTION_IDOffset.Value, 0); }
-  public static void AddDETECTION_ID(FlatBufferBuilder builder, StringOffset DETECTION_IDOffset) { builder.AddOffset(7, DETECTION_IDOffset.Value, 0); }
-  public static void AddCOLLECTION_START(FlatBufferBuilder builder, StringOffset COLLECTION_STARTOffset) { builder.AddOffset(8, COLLECTION_STARTOffset.Value, 0); }
-  public static void AddCOLLECTION_END(FlatBufferBuilder builder, StringOffset COLLECTION_ENDOffset) { builder.AddOffset(9, COLLECTION_ENDOffset.Value, 0); }
-  public static void AddCENTER_TIME(FlatBufferBuilder builder, StringOffset CENTER_TIMEOffset) { builder.AddOffset(10, CENTER_TIMEOffset.Value, 0); }
-  public static void AddDETECTION_START(FlatBufferBuilder builder, StringOffset DETECTION_STARTOffset) { builder.AddOffset(11, DETECTION_STARTOffset.Value, 0); }
-  public static void AddDETECTION_END(FlatBufferBuilder builder, StringOffset DETECTION_ENDOffset) { builder.AddOffset(12, DETECTION_ENDOffset.Value, 0); }
-  public static void AddDWELL_TIME(FlatBufferBuilder builder, double DWELL_TIME) { builder.AddDouble(13, DWELL_TIME, 0.0); }
-  public static void AddORBIT_STATE(FlatBufferBuilder builder, StringOffset ORBIT_STATEOffset) { builder.AddOffset(14, ORBIT_STATEOffset.Value, 0); }
-  public static void AddSAR_MODE(FlatBufferBuilder builder, StringOffset SAR_MODEOffset) { builder.AddOffset(15, SAR_MODEOffset.Value, 0); }
-  public static void AddOPERATING_BAND(FlatBufferBuilder builder, StringOffset OPERATING_BANDOffset) { builder.AddOffset(16, OPERATING_BANDOffset.Value, 0); }
-  public static void AddOPERATING_FREQ(FlatBufferBuilder builder, double OPERATING_FREQ) { builder.AddDouble(17, OPERATING_FREQ, 0.0); }
-  public static void AddSNR(FlatBufferBuilder builder, double SNR) { builder.AddDouble(18, SNR, 0.0); }
-  public static void AddTX_POLARIZATION(FlatBufferBuilder builder, StringOffset TX_POLARIZATIONOffset) { builder.AddOffset(19, TX_POLARIZATIONOffset.Value, 0); }
-  public static void AddRX_POLARIZATION(FlatBufferBuilder builder, StringOffset RX_POLARIZATIONOffset) { builder.AddOffset(20, RX_POLARIZATIONOffset.Value, 0); }
-  public static void AddGRAZE_ANGLE(FlatBufferBuilder builder, double GRAZE_ANGLE) { builder.AddDouble(21, GRAZE_ANGLE, 0.0); }
-  public static void AddINCIDENCE_ANGLE(FlatBufferBuilder builder, double INCIDENCE_ANGLE) { builder.AddDouble(22, INCIDENCE_ANGLE, 0.0); }
-  public static void AddSQUINT_ANGLE(FlatBufferBuilder builder, double SQUINT_ANGLE) { builder.AddDouble(23, SQUINT_ANGLE, 0.0); }
-  public static void AddPULSE_BANDWIDTH(FlatBufferBuilder builder, double PULSE_BANDWIDTH) { builder.AddDouble(24, PULSE_BANDWIDTH, 0.0); }
-  public static void AddPULSE_DURATION(FlatBufferBuilder builder, double PULSE_DURATION) { builder.AddDouble(25, PULSE_DURATION, 0.0); }
-  public static void AddCONTINUOUS_SPOT_ANGLE(FlatBufferBuilder builder, double CONTINUOUS_SPOT_ANGLE) { builder.AddDouble(26, CONTINUOUS_SPOT_ANGLE, 0.0); }
-  public static void AddSLANT_RANGE(FlatBufferBuilder builder, double SLANT_RANGE) { builder.AddDouble(27, SLANT_RANGE, 0.0); }
-  public static void AddNEAR_RANGE(FlatBufferBuilder builder, double NEAR_RANGE) { builder.AddDouble(28, NEAR_RANGE, 0.0); }
-  public static void AddFAR_RANGE(FlatBufferBuilder builder, double FAR_RANGE) { builder.AddDouble(29, FAR_RANGE, 0.0); }
-  public static void AddSWATH_LENGTH(FlatBufferBuilder builder, double SWATH_LENGTH) { builder.AddDouble(30, SWATH_LENGTH, 0.0); }
-  public static void AddAREA(FlatBufferBuilder builder, StringOffset AREAOffset) { builder.AddOffset(31, AREAOffset.Value, 0); }
-  public static void AddATEXT(FlatBufferBuilder builder, StringOffset ATEXTOffset) { builder.AddOffset(32, ATEXTOffset.Value, 0); }
-  public static void AddAGJSON(FlatBufferBuilder builder, StringOffset AGJSONOffset) { builder.AddOffset(33, AGJSONOffset.Value, 0); }
+  public static void AddON_ORBIT(FlatBufferBuilder builder, StringOffset ON_ORBITOffset) { builder.AddOffset(3, ON_ORBITOffset.Value, 0); }
+  public static void AddID_SENSOR(FlatBufferBuilder builder, StringOffset ID_SENSOROffset) { builder.AddOffset(4, ID_SENSOROffset.Value, 0); }
+  public static void AddORIG_SENSOR_ID(FlatBufferBuilder builder, StringOffset ORIG_SENSOR_IDOffset) { builder.AddOffset(5, ORIG_SENSOR_IDOffset.Value, 0); }
+  public static void AddEXTERNAL_ID(FlatBufferBuilder builder, StringOffset EXTERNAL_IDOffset) { builder.AddOffset(6, EXTERNAL_IDOffset.Value, 0); }
+  public static void AddCOLLECTION_ID(FlatBufferBuilder builder, StringOffset COLLECTION_IDOffset) { builder.AddOffset(7, COLLECTION_IDOffset.Value, 0); }
+  public static void AddDETECTION_ID(FlatBufferBuilder builder, StringOffset DETECTION_IDOffset) { builder.AddOffset(8, DETECTION_IDOffset.Value, 0); }
+  public static void AddCOLLECTION_START(FlatBufferBuilder builder, StringOffset COLLECTION_STARTOffset) { builder.AddOffset(9, COLLECTION_STARTOffset.Value, 0); }
+  public static void AddCOLLECTION_END(FlatBufferBuilder builder, StringOffset COLLECTION_ENDOffset) { builder.AddOffset(10, COLLECTION_ENDOffset.Value, 0); }
+  public static void AddCENTER_TIME(FlatBufferBuilder builder, StringOffset CENTER_TIMEOffset) { builder.AddOffset(11, CENTER_TIMEOffset.Value, 0); }
+  public static void AddDETECTION_START(FlatBufferBuilder builder, StringOffset DETECTION_STARTOffset) { builder.AddOffset(12, DETECTION_STARTOffset.Value, 0); }
+  public static void AddDETECTION_END(FlatBufferBuilder builder, StringOffset DETECTION_ENDOffset) { builder.AddOffset(13, DETECTION_ENDOffset.Value, 0); }
+  public static void AddDWELL_TIME(FlatBufferBuilder builder, double DWELL_TIME) { builder.AddDouble(14, DWELL_TIME, 0.0); }
+  public static void AddORBIT_STATE(FlatBufferBuilder builder, StringOffset ORBIT_STATEOffset) { builder.AddOffset(15, ORBIT_STATEOffset.Value, 0); }
+  public static void AddSAR_MODE(FlatBufferBuilder builder, sarMode SAR_MODE) { builder.AddSbyte(16, (sbyte)SAR_MODE, 0); }
+  public static void AddOPERATING_BAND(FlatBufferBuilder builder, StringOffset OPERATING_BANDOffset) { builder.AddOffset(17, OPERATING_BANDOffset.Value, 0); }
+  public static void AddOPERATING_FREQ(FlatBufferBuilder builder, double OPERATING_FREQ) { builder.AddDouble(18, OPERATING_FREQ, 0.0); }
+  public static void AddSNR(FlatBufferBuilder builder, double SNR) { builder.AddDouble(19, SNR, 0.0); }
+  public static void AddTX_POLARIZATION(FlatBufferBuilder builder, sarPolarization TX_POLARIZATION) { builder.AddSbyte(20, (sbyte)TX_POLARIZATION, 0); }
+  public static void AddRX_POLARIZATION(FlatBufferBuilder builder, sarPolarization RX_POLARIZATION) { builder.AddSbyte(21, (sbyte)RX_POLARIZATION, 0); }
+  public static void AddGRAZE_ANGLE(FlatBufferBuilder builder, double GRAZE_ANGLE) { builder.AddDouble(22, GRAZE_ANGLE, 0.0); }
+  public static void AddINCIDENCE_ANGLE(FlatBufferBuilder builder, double INCIDENCE_ANGLE) { builder.AddDouble(23, INCIDENCE_ANGLE, 0.0); }
+  public static void AddSQUINT_ANGLE(FlatBufferBuilder builder, double SQUINT_ANGLE) { builder.AddDouble(24, SQUINT_ANGLE, 0.0); }
+  public static void AddPULSE_BANDWIDTH(FlatBufferBuilder builder, double PULSE_BANDWIDTH) { builder.AddDouble(25, PULSE_BANDWIDTH, 0.0); }
+  public static void AddPULSE_DURATION(FlatBufferBuilder builder, double PULSE_DURATION) { builder.AddDouble(26, PULSE_DURATION, 0.0); }
+  public static void AddCONTINUOUS_SPOT_ANGLE(FlatBufferBuilder builder, double CONTINUOUS_SPOT_ANGLE) { builder.AddDouble(27, CONTINUOUS_SPOT_ANGLE, 0.0); }
+  public static void AddSLANT_RANGE(FlatBufferBuilder builder, double SLANT_RANGE) { builder.AddDouble(28, SLANT_RANGE, 0.0); }
+  public static void AddNEAR_RANGE(FlatBufferBuilder builder, double NEAR_RANGE) { builder.AddDouble(29, NEAR_RANGE, 0.0); }
+  public static void AddFAR_RANGE(FlatBufferBuilder builder, double FAR_RANGE) { builder.AddDouble(30, FAR_RANGE, 0.0); }
+  public static void AddSWATH_LENGTH(FlatBufferBuilder builder, double SWATH_LENGTH) { builder.AddDouble(31, SWATH_LENGTH, 0.0); }
+  public static void AddAGJSON(FlatBufferBuilder builder, StringOffset AGJSONOffset) { builder.AddOffset(32, AGJSONOffset.Value, 0); }
+  public static void AddATEXT(FlatBufferBuilder builder, StringOffset ATEXTOffset) { builder.AddOffset(33, ATEXTOffset.Value, 0); }
   public static void AddATYPE(FlatBufferBuilder builder, StringOffset ATYPEOffset) { builder.AddOffset(34, ATYPEOffset.Value, 0); }
-  public static void AddANDIMS(FlatBufferBuilder builder, int ANDIMS) { builder.AddInt(35, ANDIMS, 0); }
-  public static void AddASRID(FlatBufferBuilder builder, int ASRID) { builder.AddInt(36, ASRID, 0); }
-  public static void AddSPACING_RANGE(FlatBufferBuilder builder, double SPACING_RANGE) { builder.AddDouble(37, SPACING_RANGE, 0.0); }
-  public static void AddSPACING_AZIMUTH(FlatBufferBuilder builder, double SPACING_AZIMUTH) { builder.AddDouble(38, SPACING_AZIMUTH, 0.0); }
-  public static void AddLOOKS_AZIMUTH(FlatBufferBuilder builder, int LOOKS_AZIMUTH) { builder.AddInt(39, LOOKS_AZIMUTH, 0); }
-  public static void AddLOOKS_RANGE(FlatBufferBuilder builder, int LOOKS_RANGE) { builder.AddInt(40, LOOKS_RANGE, 0); }
-  public static void AddRESOLUTION_RANGE(FlatBufferBuilder builder, double RESOLUTION_RANGE) { builder.AddDouble(41, RESOLUTION_RANGE, 0.0); }
-  public static void AddRESOLUTION_AZIMUTH(FlatBufferBuilder builder, double RESOLUTION_AZIMUTH) { builder.AddDouble(42, RESOLUTION_AZIMUTH, 0.0); }
-  public static void AddOB_DIRECTION(FlatBufferBuilder builder, StringOffset OB_DIRECTIONOffset) { builder.AddOffset(43, OB_DIRECTIONOffset.Value, 0); }
-  public static void AddCOORD_SYS(FlatBufferBuilder builder, StringOffset COORD_SYSOffset) { builder.AddOffset(44, COORD_SYSOffset.Value, 0); }
-  public static void AddTARGETPOSX(FlatBufferBuilder builder, double TARGETPOSX) { builder.AddDouble(45, TARGETPOSX, 0.0); }
-  public static void AddTARGETPOSY(FlatBufferBuilder builder, double TARGETPOSY) { builder.AddDouble(46, TARGETPOSY, 0.0); }
-  public static void AddTARGETPOSZ(FlatBufferBuilder builder, double TARGETPOSZ) { builder.AddDouble(47, TARGETPOSZ, 0.0); }
-  public static void AddSENALT(FlatBufferBuilder builder, double SENALT) { builder.AddDouble(48, SENALT, 0.0); }
-  public static void AddSENVELX(FlatBufferBuilder builder, double SENVELX) { builder.AddDouble(49, SENVELX, 0.0); }
-  public static void AddSENVELY(FlatBufferBuilder builder, double SENVELY) { builder.AddDouble(50, SENVELY, 0.0); }
-  public static void AddSENVELZ(FlatBufferBuilder builder, double SENVELZ) { builder.AddDouble(51, SENVELZ, 0.0); }
-  public static void AddSENLAT_START(FlatBufferBuilder builder, double SENLAT_START) { builder.AddDouble(52, SENLAT_START, 0.0); }
-  public static void AddSENLON_START(FlatBufferBuilder builder, double SENLON_START) { builder.AddDouble(53, SENLON_START, 0.0); }
-  public static void AddSENLAT_END(FlatBufferBuilder builder, double SENLAT_END) { builder.AddDouble(54, SENLAT_END, 0.0); }
-  public static void AddSENLON_END(FlatBufferBuilder builder, double SENLON_END) { builder.AddDouble(55, SENLON_END, 0.0); }
-  public static void AddTRANSACTION_ID(FlatBufferBuilder builder, StringOffset TRANSACTION_IDOffset) { builder.AddOffset(56, TRANSACTION_IDOffset.Value, 0); }
-  public static void AddTAGS(FlatBufferBuilder builder, VectorOffset TAGSOffset) { builder.AddOffset(57, TAGSOffset.Value, 0); }
+  public static void AddCOORD_SYS(FlatBufferBuilder builder, StringOffset COORD_SYSOffset) { builder.AddOffset(35, COORD_SYSOffset.Value, 0); }
+  public static void AddSPACING_RANGE(FlatBufferBuilder builder, double SPACING_RANGE) { builder.AddDouble(36, SPACING_RANGE, 0.0); }
+  public static void AddSPACING_AZIMUTH(FlatBufferBuilder builder, double SPACING_AZIMUTH) { builder.AddDouble(37, SPACING_AZIMUTH, 0.0); }
+  public static void AddLOOKS_AZIMUTH(FlatBufferBuilder builder, byte LOOKS_AZIMUTH) { builder.AddByte(38, LOOKS_AZIMUTH, 0); }
+  public static void AddLOOKS_RANGE(FlatBufferBuilder builder, byte LOOKS_RANGE) { builder.AddByte(39, LOOKS_RANGE, 0); }
+  public static void AddRESOLUTION_RANGE(FlatBufferBuilder builder, double RESOLUTION_RANGE) { builder.AddDouble(40, RESOLUTION_RANGE, 0.0); }
+  public static void AddRESOLUTION_AZIMUTH(FlatBufferBuilder builder, double RESOLUTION_AZIMUTH) { builder.AddDouble(41, RESOLUTION_AZIMUTH, 0.0); }
+  public static void AddOB_DIRECTION(FlatBufferBuilder builder, StringOffset OB_DIRECTIONOffset) { builder.AddOffset(42, OB_DIRECTIONOffset.Value, 0); }
+  public static void AddTARGETPOSX(FlatBufferBuilder builder, double TARGETPOSX) { builder.AddDouble(43, TARGETPOSX, 0.0); }
+  public static void AddTARGETPOSY(FlatBufferBuilder builder, double TARGETPOSY) { builder.AddDouble(44, TARGETPOSY, 0.0); }
+  public static void AddTARGETPOSZ(FlatBufferBuilder builder, double TARGETPOSZ) { builder.AddDouble(45, TARGETPOSZ, 0.0); }
+  public static void AddSENALT(FlatBufferBuilder builder, double SENALT) { builder.AddDouble(46, SENALT, 0.0); }
+  public static void AddSENVELX(FlatBufferBuilder builder, double SENVELX) { builder.AddDouble(47, SENVELX, 0.0); }
+  public static void AddSENVELY(FlatBufferBuilder builder, double SENVELY) { builder.AddDouble(48, SENVELY, 0.0); }
+  public static void AddSENVELZ(FlatBufferBuilder builder, double SENVELZ) { builder.AddDouble(49, SENVELZ, 0.0); }
+  public static void AddSENLAT_START(FlatBufferBuilder builder, double SENLAT_START) { builder.AddDouble(50, SENLAT_START, 0.0); }
+  public static void AddSENLON_START(FlatBufferBuilder builder, double SENLON_START) { builder.AddDouble(51, SENLON_START, 0.0); }
+  public static void AddSENLAT_END(FlatBufferBuilder builder, double SENLAT_END) { builder.AddDouble(52, SENLAT_END, 0.0); }
+  public static void AddSENLON_END(FlatBufferBuilder builder, double SENLON_END) { builder.AddDouble(53, SENLON_END, 0.0); }
+  public static void AddTRANSACTION_ID(FlatBufferBuilder builder, StringOffset TRANSACTION_IDOffset) { builder.AddOffset(54, TRANSACTION_IDOffset.Value, 0); }
+  public static void AddTAGS(FlatBufferBuilder builder, VectorOffset TAGSOffset) { builder.AddOffset(55, TAGSOffset.Value, 0); }
   public static VectorOffset CreateTAGSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartTAGSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddSRC_TYPS(FlatBufferBuilder builder, VectorOffset SRC_TYPSOffset) { builder.AddOffset(58, SRC_TYPSOffset.Value, 0); }
+  public static void AddSRC_TYPS(FlatBufferBuilder builder, VectorOffset SRC_TYPSOffset) { builder.AddOffset(56, SRC_TYPSOffset.Value, 0); }
   public static VectorOffset CreateSRC_TYPSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateSRC_TYPSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSRC_TYPSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSRC_TYPSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartSRC_TYPSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddSRC_IDS(FlatBufferBuilder builder, VectorOffset SRC_IDSOffset) { builder.AddOffset(59, SRC_IDSOffset.Value, 0); }
+  public static void AddSRC_IDS(FlatBufferBuilder builder, VectorOffset SRC_IDSOffset) { builder.AddOffset(57, SRC_IDSOffset.Value, 0); }
   public static VectorOffset CreateSRC_IDSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateSRC_IDSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSRC_IDSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSRC_IDSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartSRC_IDSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddON_ORBIT(FlatBufferBuilder builder, StringOffset ON_ORBITOffset) { builder.AddOffset(60, ON_ORBITOffset.Value, 0); }
   public static Offset<SAR> EndSAR(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<SAR>(o);
@@ -453,6 +475,7 @@ public struct SAR : IFlatbufferObject
     _o.ID = this.ID;
     _o.SAT_NO = this.SAT_NO;
     _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID;
+    _o.ON_ORBIT = this.ON_ORBIT;
     _o.ID_SENSOR = this.ID_SENSOR;
     _o.ORIG_SENSOR_ID = this.ORIG_SENSOR_ID;
     _o.EXTERNAL_ID = this.EXTERNAL_ID;
@@ -481,12 +504,10 @@ public struct SAR : IFlatbufferObject
     _o.NEAR_RANGE = this.NEAR_RANGE;
     _o.FAR_RANGE = this.FAR_RANGE;
     _o.SWATH_LENGTH = this.SWATH_LENGTH;
-    _o.AREA = this.AREA;
-    _o.ATEXT = this.ATEXT;
     _o.AGJSON = this.AGJSON;
+    _o.ATEXT = this.ATEXT;
     _o.ATYPE = this.ATYPE;
-    _o.ANDIMS = this.ANDIMS;
-    _o.ASRID = this.ASRID;
+    _o.COORD_SYS = this.COORD_SYS;
     _o.SPACING_RANGE = this.SPACING_RANGE;
     _o.SPACING_AZIMUTH = this.SPACING_AZIMUTH;
     _o.LOOKS_AZIMUTH = this.LOOKS_AZIMUTH;
@@ -494,7 +515,6 @@ public struct SAR : IFlatbufferObject
     _o.RESOLUTION_RANGE = this.RESOLUTION_RANGE;
     _o.RESOLUTION_AZIMUTH = this.RESOLUTION_AZIMUTH;
     _o.OB_DIRECTION = this.OB_DIRECTION;
-    _o.COORD_SYS = this.COORD_SYS;
     _o.TARGETPOSX = this.TARGETPOSX;
     _o.TARGETPOSY = this.TARGETPOSY;
     _o.TARGETPOSZ = this.TARGETPOSZ;
@@ -513,12 +533,12 @@ public struct SAR : IFlatbufferObject
     for (var _j = 0; _j < this.SRC_TYPSLength; ++_j) {_o.SRC_TYPS.Add(this.SRC_TYPS(_j));}
     _o.SRC_IDS = new List<string>();
     for (var _j = 0; _j < this.SRC_IDSLength; ++_j) {_o.SRC_IDS.Add(this.SRC_IDS(_j));}
-    _o.ON_ORBIT = this.ON_ORBIT;
   }
   public static Offset<SAR> Pack(FlatBufferBuilder builder, SART _o) {
     if (_o == null) return default(Offset<SAR>);
     var _ID = _o.ID == null ? default(StringOffset) : builder.CreateString(_o.ID);
     var _ORIG_OBJECT_ID = _o.ORIG_OBJECT_ID == null ? default(StringOffset) : builder.CreateString(_o.ORIG_OBJECT_ID);
+    var _ON_ORBIT = _o.ON_ORBIT == null ? default(StringOffset) : builder.CreateString(_o.ON_ORBIT);
     var _ID_SENSOR = _o.ID_SENSOR == null ? default(StringOffset) : builder.CreateString(_o.ID_SENSOR);
     var _ORIG_SENSOR_ID = _o.ORIG_SENSOR_ID == null ? default(StringOffset) : builder.CreateString(_o.ORIG_SENSOR_ID);
     var _EXTERNAL_ID = _o.EXTERNAL_ID == null ? default(StringOffset) : builder.CreateString(_o.EXTERNAL_ID);
@@ -530,16 +550,12 @@ public struct SAR : IFlatbufferObject
     var _DETECTION_START = _o.DETECTION_START == null ? default(StringOffset) : builder.CreateString(_o.DETECTION_START);
     var _DETECTION_END = _o.DETECTION_END == null ? default(StringOffset) : builder.CreateString(_o.DETECTION_END);
     var _ORBIT_STATE = _o.ORBIT_STATE == null ? default(StringOffset) : builder.CreateString(_o.ORBIT_STATE);
-    var _SAR_MODE = _o.SAR_MODE == null ? default(StringOffset) : builder.CreateString(_o.SAR_MODE);
     var _OPERATING_BAND = _o.OPERATING_BAND == null ? default(StringOffset) : builder.CreateString(_o.OPERATING_BAND);
-    var _TX_POLARIZATION = _o.TX_POLARIZATION == null ? default(StringOffset) : builder.CreateString(_o.TX_POLARIZATION);
-    var _RX_POLARIZATION = _o.RX_POLARIZATION == null ? default(StringOffset) : builder.CreateString(_o.RX_POLARIZATION);
-    var _AREA = _o.AREA == null ? default(StringOffset) : builder.CreateString(_o.AREA);
-    var _ATEXT = _o.ATEXT == null ? default(StringOffset) : builder.CreateString(_o.ATEXT);
     var _AGJSON = _o.AGJSON == null ? default(StringOffset) : builder.CreateString(_o.AGJSON);
+    var _ATEXT = _o.ATEXT == null ? default(StringOffset) : builder.CreateString(_o.ATEXT);
     var _ATYPE = _o.ATYPE == null ? default(StringOffset) : builder.CreateString(_o.ATYPE);
-    var _OB_DIRECTION = _o.OB_DIRECTION == null ? default(StringOffset) : builder.CreateString(_o.OB_DIRECTION);
     var _COORD_SYS = _o.COORD_SYS == null ? default(StringOffset) : builder.CreateString(_o.COORD_SYS);
+    var _OB_DIRECTION = _o.OB_DIRECTION == null ? default(StringOffset) : builder.CreateString(_o.OB_DIRECTION);
     var _TRANSACTION_ID = _o.TRANSACTION_ID == null ? default(StringOffset) : builder.CreateString(_o.TRANSACTION_ID);
     var _TAGS = default(VectorOffset);
     if (_o.TAGS != null) {
@@ -559,12 +575,12 @@ public struct SAR : IFlatbufferObject
       for (var _j = 0; _j < __SRC_IDS.Length; ++_j) { __SRC_IDS[_j] = builder.CreateString(_o.SRC_IDS[_j]); }
       _SRC_IDS = CreateSRC_IDSVector(builder, __SRC_IDS);
     }
-    var _ON_ORBIT = _o.ON_ORBIT == null ? default(StringOffset) : builder.CreateString(_o.ON_ORBIT);
     return CreateSAR(
       builder,
       _ID,
       _o.SAT_NO,
       _ORIG_OBJECT_ID,
+      _ON_ORBIT,
       _ID_SENSOR,
       _ORIG_SENSOR_ID,
       _EXTERNAL_ID,
@@ -577,12 +593,12 @@ public struct SAR : IFlatbufferObject
       _DETECTION_END,
       _o.DWELL_TIME,
       _ORBIT_STATE,
-      _SAR_MODE,
+      _o.SAR_MODE,
       _OPERATING_BAND,
       _o.OPERATING_FREQ,
       _o.SNR,
-      _TX_POLARIZATION,
-      _RX_POLARIZATION,
+      _o.TX_POLARIZATION,
+      _o.RX_POLARIZATION,
       _o.GRAZE_ANGLE,
       _o.INCIDENCE_ANGLE,
       _o.SQUINT_ANGLE,
@@ -593,12 +609,10 @@ public struct SAR : IFlatbufferObject
       _o.NEAR_RANGE,
       _o.FAR_RANGE,
       _o.SWATH_LENGTH,
-      _AREA,
-      _ATEXT,
       _AGJSON,
+      _ATEXT,
       _ATYPE,
-      _o.ANDIMS,
-      _o.ASRID,
+      _COORD_SYS,
       _o.SPACING_RANGE,
       _o.SPACING_AZIMUTH,
       _o.LOOKS_AZIMUTH,
@@ -606,7 +620,6 @@ public struct SAR : IFlatbufferObject
       _o.RESOLUTION_RANGE,
       _o.RESOLUTION_AZIMUTH,
       _OB_DIRECTION,
-      _COORD_SYS,
       _o.TARGETPOSX,
       _o.TARGETPOSY,
       _o.TARGETPOSZ,
@@ -621,16 +634,16 @@ public struct SAR : IFlatbufferObject
       _TRANSACTION_ID,
       _TAGS,
       _SRC_TYPS,
-      _SRC_IDS,
-      _ON_ORBIT);
+      _SRC_IDS);
   }
 }
 
 public class SART
 {
   public string ID { get; set; }
-  public int SAT_NO { get; set; }
+  public uint SAT_NO { get; set; }
   public string ORIG_OBJECT_ID { get; set; }
+  public string ON_ORBIT { get; set; }
   public string ID_SENSOR { get; set; }
   public string ORIG_SENSOR_ID { get; set; }
   public string EXTERNAL_ID { get; set; }
@@ -643,12 +656,12 @@ public class SART
   public string DETECTION_END { get; set; }
   public double DWELL_TIME { get; set; }
   public string ORBIT_STATE { get; set; }
-  public string SAR_MODE { get; set; }
+  public sarMode SAR_MODE { get; set; }
   public string OPERATING_BAND { get; set; }
   public double OPERATING_FREQ { get; set; }
   public double SNR { get; set; }
-  public string TX_POLARIZATION { get; set; }
-  public string RX_POLARIZATION { get; set; }
+  public sarPolarization TX_POLARIZATION { get; set; }
+  public sarPolarization RX_POLARIZATION { get; set; }
   public double GRAZE_ANGLE { get; set; }
   public double INCIDENCE_ANGLE { get; set; }
   public double SQUINT_ANGLE { get; set; }
@@ -659,20 +672,17 @@ public class SART
   public double NEAR_RANGE { get; set; }
   public double FAR_RANGE { get; set; }
   public double SWATH_LENGTH { get; set; }
-  public string AREA { get; set; }
-  public string ATEXT { get; set; }
   public string AGJSON { get; set; }
+  public string ATEXT { get; set; }
   public string ATYPE { get; set; }
-  public int ANDIMS { get; set; }
-  public int ASRID { get; set; }
+  public string COORD_SYS { get; set; }
   public double SPACING_RANGE { get; set; }
   public double SPACING_AZIMUTH { get; set; }
-  public int LOOKS_AZIMUTH { get; set; }
-  public int LOOKS_RANGE { get; set; }
+  public byte LOOKS_AZIMUTH { get; set; }
+  public byte LOOKS_RANGE { get; set; }
   public double RESOLUTION_RANGE { get; set; }
   public double RESOLUTION_AZIMUTH { get; set; }
   public string OB_DIRECTION { get; set; }
-  public string COORD_SYS { get; set; }
   public double TARGETPOSX { get; set; }
   public double TARGETPOSY { get; set; }
   public double TARGETPOSZ { get; set; }
@@ -688,12 +698,12 @@ public class SART
   public List<string> TAGS { get; set; }
   public List<string> SRC_TYPS { get; set; }
   public List<string> SRC_IDS { get; set; }
-  public string ON_ORBIT { get; set; }
 
   public SART() {
     this.ID = null;
     this.SAT_NO = 0;
     this.ORIG_OBJECT_ID = null;
+    this.ON_ORBIT = null;
     this.ID_SENSOR = null;
     this.ORIG_SENSOR_ID = null;
     this.EXTERNAL_ID = null;
@@ -706,12 +716,12 @@ public class SART
     this.DETECTION_END = null;
     this.DWELL_TIME = 0.0;
     this.ORBIT_STATE = null;
-    this.SAR_MODE = null;
+    this.SAR_MODE = sarMode.STRIPMAP;
     this.OPERATING_BAND = null;
     this.OPERATING_FREQ = 0.0;
     this.SNR = 0.0;
-    this.TX_POLARIZATION = null;
-    this.RX_POLARIZATION = null;
+    this.TX_POLARIZATION = sarPolarization.HH;
+    this.RX_POLARIZATION = sarPolarization.HH;
     this.GRAZE_ANGLE = 0.0;
     this.INCIDENCE_ANGLE = 0.0;
     this.SQUINT_ANGLE = 0.0;
@@ -722,12 +732,10 @@ public class SART
     this.NEAR_RANGE = 0.0;
     this.FAR_RANGE = 0.0;
     this.SWATH_LENGTH = 0.0;
-    this.AREA = null;
-    this.ATEXT = null;
     this.AGJSON = null;
+    this.ATEXT = null;
     this.ATYPE = null;
-    this.ANDIMS = 0;
-    this.ASRID = 0;
+    this.COORD_SYS = null;
     this.SPACING_RANGE = 0.0;
     this.SPACING_AZIMUTH = 0.0;
     this.LOOKS_AZIMUTH = 0;
@@ -735,7 +743,6 @@ public class SART
     this.RESOLUTION_RANGE = 0.0;
     this.RESOLUTION_AZIMUTH = 0.0;
     this.OB_DIRECTION = null;
-    this.COORD_SYS = null;
     this.TARGETPOSX = 0.0;
     this.TARGETPOSY = 0.0;
     this.TARGETPOSZ = 0.0;
@@ -751,7 +758,6 @@ public class SART
     this.TAGS = null;
     this.SRC_TYPS = null;
     this.SRC_IDS = null;
-    this.ON_ORBIT = null;
   }
   public static SART DeserializeFromBinary(byte[] fbBuffer) {
     return SAR.GetRootAsSAR(new ByteBuffer(fbBuffer)).UnPack();
@@ -770,66 +776,63 @@ static public class SARVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*ID*/, false)
-      && verifier.VerifyField(tablePos, 6 /*SAT_NO*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 6 /*SAT_NO*/, 4 /*uint*/, 4, false)
       && verifier.VerifyString(tablePos, 8 /*ORIG_OBJECT_ID*/, false)
-      && verifier.VerifyString(tablePos, 10 /*ID_SENSOR*/, false)
-      && verifier.VerifyString(tablePos, 12 /*ORIG_SENSOR_ID*/, false)
-      && verifier.VerifyString(tablePos, 14 /*EXTERNAL_ID*/, false)
-      && verifier.VerifyString(tablePos, 16 /*COLLECTION_ID*/, false)
-      && verifier.VerifyString(tablePos, 18 /*DETECTION_ID*/, false)
-      && verifier.VerifyString(tablePos, 20 /*COLLECTION_START*/, false)
-      && verifier.VerifyString(tablePos, 22 /*COLLECTION_END*/, false)
-      && verifier.VerifyString(tablePos, 24 /*CENTER_TIME*/, false)
-      && verifier.VerifyString(tablePos, 26 /*DETECTION_START*/, false)
-      && verifier.VerifyString(tablePos, 28 /*DETECTION_END*/, false)
-      && verifier.VerifyField(tablePos, 30 /*DWELL_TIME*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 32 /*ORBIT_STATE*/, false)
-      && verifier.VerifyString(tablePos, 34 /*SAR_MODE*/, false)
-      && verifier.VerifyString(tablePos, 36 /*OPERATING_BAND*/, false)
-      && verifier.VerifyField(tablePos, 38 /*OPERATING_FREQ*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 40 /*SNR*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 42 /*TX_POLARIZATION*/, false)
-      && verifier.VerifyString(tablePos, 44 /*RX_POLARIZATION*/, false)
-      && verifier.VerifyField(tablePos, 46 /*GRAZE_ANGLE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 48 /*INCIDENCE_ANGLE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 50 /*SQUINT_ANGLE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 52 /*PULSE_BANDWIDTH*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 54 /*PULSE_DURATION*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 56 /*CONTINUOUS_SPOT_ANGLE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 58 /*SLANT_RANGE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 60 /*NEAR_RANGE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 62 /*FAR_RANGE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 64 /*SWATH_LENGTH*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 66 /*AREA*/, false)
-      && verifier.VerifyString(tablePos, 68 /*ATEXT*/, false)
-      && verifier.VerifyString(tablePos, 70 /*AGJSON*/, false)
+      && verifier.VerifyString(tablePos, 10 /*ON_ORBIT*/, false)
+      && verifier.VerifyString(tablePos, 12 /*ID_SENSOR*/, false)
+      && verifier.VerifyString(tablePos, 14 /*ORIG_SENSOR_ID*/, false)
+      && verifier.VerifyString(tablePos, 16 /*EXTERNAL_ID*/, false)
+      && verifier.VerifyString(tablePos, 18 /*COLLECTION_ID*/, false)
+      && verifier.VerifyString(tablePos, 20 /*DETECTION_ID*/, false)
+      && verifier.VerifyString(tablePos, 22 /*COLLECTION_START*/, false)
+      && verifier.VerifyString(tablePos, 24 /*COLLECTION_END*/, false)
+      && verifier.VerifyString(tablePos, 26 /*CENTER_TIME*/, false)
+      && verifier.VerifyString(tablePos, 28 /*DETECTION_START*/, false)
+      && verifier.VerifyString(tablePos, 30 /*DETECTION_END*/, false)
+      && verifier.VerifyField(tablePos, 32 /*DWELL_TIME*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 34 /*ORBIT_STATE*/, false)
+      && verifier.VerifyField(tablePos, 36 /*SAR_MODE*/, 1 /*sarMode*/, 1, false)
+      && verifier.VerifyString(tablePos, 38 /*OPERATING_BAND*/, false)
+      && verifier.VerifyField(tablePos, 40 /*OPERATING_FREQ*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 42 /*SNR*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 44 /*TX_POLARIZATION*/, 1 /*sarPolarization*/, 1, false)
+      && verifier.VerifyField(tablePos, 46 /*RX_POLARIZATION*/, 1 /*sarPolarization*/, 1, false)
+      && verifier.VerifyField(tablePos, 48 /*GRAZE_ANGLE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 50 /*INCIDENCE_ANGLE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 52 /*SQUINT_ANGLE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 54 /*PULSE_BANDWIDTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 56 /*PULSE_DURATION*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 58 /*CONTINUOUS_SPOT_ANGLE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 60 /*SLANT_RANGE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 62 /*NEAR_RANGE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 64 /*FAR_RANGE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 66 /*SWATH_LENGTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 68 /*AGJSON*/, false)
+      && verifier.VerifyString(tablePos, 70 /*ATEXT*/, false)
       && verifier.VerifyString(tablePos, 72 /*ATYPE*/, false)
-      && verifier.VerifyField(tablePos, 74 /*ANDIMS*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 76 /*ASRID*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 78 /*SPACING_RANGE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 80 /*SPACING_AZIMUTH*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 82 /*LOOKS_AZIMUTH*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 84 /*LOOKS_RANGE*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 86 /*RESOLUTION_RANGE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 88 /*RESOLUTION_AZIMUTH*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 90 /*OB_DIRECTION*/, false)
-      && verifier.VerifyString(tablePos, 92 /*COORD_SYS*/, false)
-      && verifier.VerifyField(tablePos, 94 /*TARGETPOSX*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 96 /*TARGETPOSY*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 98 /*TARGETPOSZ*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 100 /*SENALT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 102 /*SENVELX*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 104 /*SENVELY*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 106 /*SENVELZ*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 108 /*SENLAT_START*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 110 /*SENLON_START*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 112 /*SENLAT_END*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 114 /*SENLON_END*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 116 /*TRANSACTION_ID*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 118 /*TAGS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 120 /*SRC_TYPS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 122 /*SRC_IDS*/, false)
-      && verifier.VerifyString(tablePos, 124 /*ON_ORBIT*/, false)
+      && verifier.VerifyString(tablePos, 74 /*COORD_SYS*/, false)
+      && verifier.VerifyField(tablePos, 76 /*SPACING_RANGE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 78 /*SPACING_AZIMUTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 80 /*LOOKS_AZIMUTH*/, 1 /*byte*/, 1, false)
+      && verifier.VerifyField(tablePos, 82 /*LOOKS_RANGE*/, 1 /*byte*/, 1, false)
+      && verifier.VerifyField(tablePos, 84 /*RESOLUTION_RANGE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 86 /*RESOLUTION_AZIMUTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 88 /*OB_DIRECTION*/, false)
+      && verifier.VerifyField(tablePos, 90 /*TARGETPOSX*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 92 /*TARGETPOSY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 94 /*TARGETPOSZ*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 96 /*SENALT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 98 /*SENVELX*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 100 /*SENVELY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 102 /*SENVELZ*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 104 /*SENLAT_START*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 106 /*SENLON_START*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 108 /*SENLAT_END*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 110 /*SENLON_END*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 112 /*TRANSACTION_ID*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 114 /*TAGS*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 116 /*SRC_TYPS*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 118 /*SRC_IDS*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

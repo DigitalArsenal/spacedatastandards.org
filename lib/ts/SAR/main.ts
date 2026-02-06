@@ -3,3 +3,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export { SAR, SART } from './SAR.js';
+export { sarMode } from './sarMode.js';
+export { sarPolarization } from './sarPolarization.js';

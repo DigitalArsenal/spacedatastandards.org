@@ -1,109 +1,241 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "linkType": {
+      "type": "string",
+      "enum": [
+        "UPLINK",
+        "DOWNLINK",
+        "CROSSLINK",
+        "INTER_SATELLITE",
+        "GROUND_TO_GROUND",
+        "RELAY"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UPLINK": {
+          "value": 0
+        },
+        "DOWNLINK": {
+          "value": 1
+        },
+        "CROSSLINK": {
+          "value": 2
+        },
+        "INTER_SATELLITE": {
+          "value": 3
+        },
+        "GROUND_TO_GROUND": {
+          "value": 4
+        },
+        "RELAY": {
+          "value": 5
+        }
+      }
+    },
+    "linkState": {
+      "type": "string",
+      "enum": [
+        "ESTABLISHED",
+        "DEGRADED",
+        "INTERRUPTED",
+        "PLANNED",
+        "TERMINATED",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ESTABLISHED": {
+          "value": 0
+        },
+        "DEGRADED": {
+          "value": 1
+        },
+        "INTERRUPTED": {
+          "value": 2
+        },
+        "PLANNED": {
+          "value": 3
+        },
+        "TERMINATED": {
+          "value": 4
+        },
+        "UNKNOWN": {
+          "value": 5
+        }
+      }
+    },
     "LKS": {
       "type": "object",
       "description": "Link Status",
       "properties": {
         "ID": {
           "type": "string",
+          "description": "Unique identifier",
           "x-flatbuffer-type": "string"
         },
         "ID_ON_ORBIT1": {
           "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "ID_ON_ORBIT2": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "LINK_START_TIME": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "LINK_STOP_TIME": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "CONSTELLATION": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "LINK_NAME": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "LINK_TYPE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "BAND": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "ID_BEAM1": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "END_POINT1_NAME": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "END_POINT1_LAT": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "END_POINT1_LON": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "ID_BEAM2": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "END_POINT2_NAME": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "END_POINT2_LAT": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "END_POINT2_LON": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "DATA_RATE1_TO2": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "DATA_RATE2_TO1": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "LINK_STATE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "SYS_CAP": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "OPS_CAP": {
-          "type": "string",
+          "description": "First endpoint on-orbit identifier",
           "x-flatbuffer-type": "string"
         },
         "SAT_NO1": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "First endpoint satellite catalog number",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ID_ON_ORBIT2": {
+          "type": "string",
+          "description": "Second endpoint on-orbit identifier",
+          "x-flatbuffer-type": "string"
         },
         "SAT_NO2": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Second endpoint satellite catalog number",
+          "x-flatbuffer-type": "uint32"
+        },
+        "CONSTELLATION": {
+          "type": "string",
+          "description": "Constellation name",
+          "x-flatbuffer-type": "string"
+        },
+        "LINK_NAME": {
+          "type": "string",
+          "description": "Link name or identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "LINK_TYPE": {
+          "$ref": "#/definitions/linkType",
+          "description": "Link type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UPLINK": {
+              "value": 0
+            },
+            "DOWNLINK": {
+              "value": 1
+            },
+            "CROSSLINK": {
+              "value": 2
+            },
+            "INTER_SATELLITE": {
+              "value": 3
+            },
+            "GROUND_TO_GROUND": {
+              "value": 4
+            },
+            "RELAY": {
+              "value": 5
+            }
+          }
+        },
+        "LINK_STATE": {
+          "$ref": "#/definitions/linkState",
+          "description": "Link state",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ESTABLISHED": {
+              "value": 0
+            },
+            "DEGRADED": {
+              "value": 1
+            },
+            "INTERRUPTED": {
+              "value": 2
+            },
+            "PLANNED": {
+              "value": 3
+            },
+            "TERMINATED": {
+              "value": 4
+            },
+            "UNKNOWN": {
+              "value": 5
+            }
+          }
+        },
+        "BAND": {
+          "type": "string",
+          "description": "RF band",
+          "x-flatbuffer-type": "string"
+        },
+        "LINK_START_TIME": {
+          "type": "string",
+          "description": "Link start time (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "LINK_STOP_TIME": {
+          "type": "string",
+          "description": "Link stop time (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_BEAM1": {
+          "type": "string",
+          "description": "First endpoint beam identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "END_POINT1_NAME": {
+          "type": "string",
+          "description": "First endpoint name",
+          "x-flatbuffer-type": "string"
+        },
+        "END_POINT1_LAT": {
+          "type": "number",
+          "description": "First endpoint latitude (degrees)",
+          "x-flatbuffer-type": "double"
+        },
+        "END_POINT1_LON": {
+          "type": "number",
+          "description": "First endpoint longitude (degrees)",
+          "x-flatbuffer-type": "double"
+        },
+        "ID_BEAM2": {
+          "type": "string",
+          "description": "Second endpoint beam identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "END_POINT2_NAME": {
+          "type": "string",
+          "description": "Second endpoint name",
+          "x-flatbuffer-type": "string"
+        },
+        "END_POINT2_LAT": {
+          "type": "number",
+          "description": "Second endpoint latitude (degrees)",
+          "x-flatbuffer-type": "double"
+        },
+        "END_POINT2_LON": {
+          "type": "number",
+          "description": "Second endpoint longitude (degrees)",
+          "x-flatbuffer-type": "double"
+        },
+        "DATA_RATE1_TO2": {
+          "type": "number",
+          "description": "Data rate from endpoint 1 to 2 (Mbps)",
+          "x-flatbuffer-type": "double"
+        },
+        "DATA_RATE2_TO1": {
+          "type": "number",
+          "description": "Data rate from endpoint 2 to 1 (Mbps)",
+          "x-flatbuffer-type": "double"
+        },
+        "SYS_CAP": {
+          "type": "string",
+          "description": "System capability status",
+          "x-flatbuffer-type": "string"
+        },
+        "OPS_CAP": {
+          "type": "string",
+          "description": "Operational capability status",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

@@ -1,24 +1,171 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "gnssConstellation" : {
+      "type" : "string",
+      "enum": ["GPS", "GLONASS", "GALILEO", "BEIDOU", "QZSS", "IRNSS", "SBAS", "MIXED"]
+    },
+    "gnssObsType" : {
+      "type" : "string",
+      "enum": ["PSEUDORANGE", "CARRIER_PHASE", "DOPPLER", "SNR", "RAW_IF"]
+    },
+    "gnssObsData" : {
+      "type" : "object",
+      "description" : "GNSS Observation Data Point",
+      "properties" : {
+        "SIGNAL" : {
+                "type" : "string",
+                "description" : "Signal type code (e.g., L1C, L2P, L5Q, E1B)"
+              },
+        "OBS_TYPE" : {
+                "$ref" : "#/definitions/gnssObsType",
+                "description" : "Observation type"
+              },
+        "VALUE" : {
+                "type" : "number",
+                "description" : "Observation value (units depend on type: m, cycles, Hz, dB-Hz)"
+              },
+        "LLI" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Loss of lock indicator"
+              },
+        "SSI" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Signal strength indicator (1-9)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "gnssSatObs" : {
+      "type" : "object",
+      "description" : "GNSS Satellite Observation",
+      "properties" : {
+        "GNSS_SAT_ID" : {
+                "type" : "string",
+                "description" : "GNSS satellite identifier (e.g., G01, R24, E05, C03)"
+              },
+        "CONSTELLATION" : {
+                "$ref" : "#/definitions/gnssConstellation",
+                "description" : "Constellation"
+              },
+        "ELEVATION" : {
+                "type" : "number",
+                "description" : "Elevation angle in degrees"
+              },
+        "AZIMUTH" : {
+                "type" : "number",
+                "description" : "Azimuth angle in degrees"
+              },
+        "TRACKING_STATUS" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Tracking status (0=not tracked, 1=tracking, 2=locked)"
+              },
+        "AGC_STATE" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "AGC state"
+              },
+        "OBSERVATIONS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/gnssObsData"},
+                "description" : "Observations for this satellite"
+              }
+      },
+      "additionalProperties" : false
+    },
     "GNO" : {
       "type" : "object",
       "description" : "GNSS Observation",
       "properties" : {
-        "GNSS_SAT_ID" : {
-                "type" : "string"
+        "ID" : {
+                "type" : "string",
+                "description" : "Unique identifier"
               },
-        "TRACKING_STATUS" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+        "RECEIVER_ID" : {
+                "type" : "string",
+                "description" : "Receiver identifier"
               },
-        "AGC_STATE" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+        "RECEIVER_TYPE" : {
+                "type" : "string",
+                "description" : "Receiver type/model"
+              },
+        "ANTENNA_ID" : {
+                "type" : "string",
+                "description" : "Antenna identifier"
+              },
+        "ANTENNA_TYPE" : {
+                "type" : "string",
+                "description" : "Antenna type/model"
+              },
+        "FIRMWARE_VERSION" : {
+                "type" : "string",
+                "description" : "Receiver firmware version"
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Observation epoch (ISO 8601)"
+              },
+        "CLOCK_OFFSET" : {
+                "type" : "number",
+                "description" : "Receiver clock offset in seconds"
+              },
+        "CLOCK_DRIFT" : {
+                "type" : "number",
+                "description" : "Receiver clock drift in seconds/second"
+              },
+        "LATITUDE" : {
+                "type" : "number",
+                "description" : "Receiver geodetic latitude in degrees"
+              },
+        "LONGITUDE" : {
+                "type" : "number",
+                "description" : "Receiver geodetic longitude in degrees"
+              },
+        "ALTITUDE" : {
+                "type" : "number",
+                "description" : "Receiver altitude in meters above WGS-84"
+              },
+        "APPROX_X" : {
+                "type" : "number",
+                "description" : "Approximate position X in meters (ECEF)"
+              },
+        "APPROX_Y" : {
+                "type" : "number",
+                "description" : "Approximate position Y in meters (ECEF)"
+              },
+        "APPROX_Z" : {
+                "type" : "number",
+                "description" : "Approximate position Z in meters (ECEF)"
+              },
+        "INTERVAL" : {
+                "type" : "number",
+                "description" : "Observation interval in seconds"
+              },
+        "NUM_SATS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of satellites observed"
+              },
+        "PDOP" : {
+                "type" : "number",
+                "description" : "PDOP"
+              },
+        "HDOP" : {
+                "type" : "number",
+                "description" : "HDOP"
+              },
+        "VDOP" : {
+                "type" : "number",
+                "description" : "VDOP"
+              },
+        "SAT_OBS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/gnssSatObs"},
+                "description" : "Satellite observations"
               },
         "OBS_CODE_SET" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Observation code set identifiers"
               },
-        "OB" : {
-                "type" : "array", "items" : {"type" : "string"}
+        "NOTES" : {
+                "type" : "string",
+                "description" : "Additional notes"
               }
       },
       "additionalProperties" : false

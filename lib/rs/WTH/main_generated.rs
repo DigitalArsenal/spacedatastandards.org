@@ -30,19 +30,19 @@ impl<'a> WTH<'a> {
   pub const VT_ID_SENSOR: flatbuffers::VOffsetT = 6;
   pub const VT_ORIG_SENSOR_ID: flatbuffers::VOffsetT = 8;
   pub const VT_OB_TIME: flatbuffers::VOffsetT = 10;
-  pub const VT_SIG_PWRS: flatbuffers::VOffsetT = 12;
-  pub const VT_NOISE_LVLS: flatbuffers::VOffsetT = 14;
-  pub const VT_SPEC_WIDTHS: flatbuffers::VOffsetT = 16;
-  pub const VT_FIRST_GUESS_AVGS: flatbuffers::VOffsetT = 18;
-  pub const VT_QC_VALUE: flatbuffers::VOffsetT = 20;
-  pub const VT_FILE_CREATION: flatbuffers::VOffsetT = 22;
-  pub const VT_TERM_ALT: flatbuffers::VOffsetT = 24;
-  pub const VT_AVG_TX_PWR: flatbuffers::VOffsetT = 26;
-  pub const VT_AVG_REF_PWR: flatbuffers::VOffsetT = 28;
-  pub const VT_SECTOR_NUM: flatbuffers::VOffsetT = 30;
-  pub const VT_NUM_ELEMENTS: flatbuffers::VOffsetT = 32;
-  pub const VT_TD_AVG_SAMPLE_NUMS: flatbuffers::VOffsetT = 34;
-  pub const VT_CHECKSUM: flatbuffers::VOffsetT = 36;
+  pub const VT_FILE_CREATION: flatbuffers::VOffsetT = 12;
+  pub const VT_QC_VALUE: flatbuffers::VOffsetT = 14;
+  pub const VT_TERM_ALT: flatbuffers::VOffsetT = 16;
+  pub const VT_AVG_TX_PWR: flatbuffers::VOffsetT = 18;
+  pub const VT_AVG_REF_PWR: flatbuffers::VOffsetT = 20;
+  pub const VT_SECTOR_NUM: flatbuffers::VOffsetT = 22;
+  pub const VT_NUM_ELEMENTS: flatbuffers::VOffsetT = 24;
+  pub const VT_CHECKSUM: flatbuffers::VOffsetT = 26;
+  pub const VT_SIG_PWRS: flatbuffers::VOffsetT = 28;
+  pub const VT_NOISE_LVLS: flatbuffers::VOffsetT = 30;
+  pub const VT_SPEC_WIDTHS: flatbuffers::VOffsetT = 32;
+  pub const VT_FIRST_GUESS_AVGS: flatbuffers::VOffsetT = 34;
+  pub const VT_TD_AVG_SAMPLE_NUMS: flatbuffers::VOffsetT = 36;
   pub const VT_CO_INTEGS: flatbuffers::VOffsetT = 38;
   pub const VT_SPEC_AVGS: flatbuffers::VOffsetT = 40;
   pub const VT_INTERPULSE_PERIODS: flatbuffers::VOffsetT = 42;
@@ -87,20 +87,20 @@ impl<'a> WTH<'a> {
     if let Some(x) = args.INTERPULSE_PERIODS { builder.add_INTERPULSE_PERIODS(x); }
     if let Some(x) = args.SPEC_AVGS { builder.add_SPEC_AVGS(x); }
     if let Some(x) = args.CO_INTEGS { builder.add_CO_INTEGS(x); }
-    builder.add_CHECKSUM(args.CHECKSUM);
     if let Some(x) = args.TD_AVG_SAMPLE_NUMS { builder.add_TD_AVG_SAMPLE_NUMS(x); }
-    builder.add_NUM_ELEMENTS(args.NUM_ELEMENTS);
-    builder.add_SECTOR_NUM(args.SECTOR_NUM);
-    if let Some(x) = args.FILE_CREATION { builder.add_FILE_CREATION(x); }
-    builder.add_QC_VALUE(args.QC_VALUE);
     if let Some(x) = args.FIRST_GUESS_AVGS { builder.add_FIRST_GUESS_AVGS(x); }
     if let Some(x) = args.SPEC_WIDTHS { builder.add_SPEC_WIDTHS(x); }
     if let Some(x) = args.NOISE_LVLS { builder.add_NOISE_LVLS(x); }
     if let Some(x) = args.SIG_PWRS { builder.add_SIG_PWRS(x); }
+    builder.add_CHECKSUM(args.CHECKSUM);
+    if let Some(x) = args.FILE_CREATION { builder.add_FILE_CREATION(x); }
     if let Some(x) = args.OB_TIME { builder.add_OB_TIME(x); }
     if let Some(x) = args.ORIG_SENSOR_ID { builder.add_ORIG_SENSOR_ID(x); }
     if let Some(x) = args.ID_SENSOR { builder.add_ID_SENSOR(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_NUM_ELEMENTS(args.NUM_ELEMENTS);
+    builder.add_SECTOR_NUM(args.SECTOR_NUM);
+    builder.add_QC_VALUE(args.QC_VALUE);
     builder.finish()
   }
 
@@ -117,48 +117,48 @@ impl<'a> WTH<'a> {
     let OB_TIME = self.OB_TIME().map(|x| {
       x.to_string()
     });
-    let SIG_PWRS = self.SIG_PWRS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
-    let NOISE_LVLS = self.NOISE_LVLS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
-    let SPEC_WIDTHS = self.SPEC_WIDTHS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
-    let FIRST_GUESS_AVGS = self.FIRST_GUESS_AVGS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
-    let QC_VALUE = self.QC_VALUE();
     let FILE_CREATION = self.FILE_CREATION().map(|x| {
       x.to_string()
     });
+    let QC_VALUE = self.QC_VALUE();
     let TERM_ALT = self.TERM_ALT();
     let AVG_TX_PWR = self.AVG_TX_PWR();
     let AVG_REF_PWR = self.AVG_REF_PWR();
     let SECTOR_NUM = self.SECTOR_NUM();
     let NUM_ELEMENTS = self.NUM_ELEMENTS();
-    let TD_AVG_SAMPLE_NUMS = self.TD_AVG_SAMPLE_NUMS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
     let CHECKSUM = self.CHECKSUM();
+    let SIG_PWRS = self.SIG_PWRS().map(|x| {
+      x.into_iter().collect()
+    });
+    let NOISE_LVLS = self.NOISE_LVLS().map(|x| {
+      x.into_iter().collect()
+    });
+    let SPEC_WIDTHS = self.SPEC_WIDTHS().map(|x| {
+      x.into_iter().collect()
+    });
+    let FIRST_GUESS_AVGS = self.FIRST_GUESS_AVGS().map(|x| {
+      x.into_iter().collect()
+    });
+    let TD_AVG_SAMPLE_NUMS = self.TD_AVG_SAMPLE_NUMS().map(|x| {
+      x.into_iter().collect()
+    });
     let CO_INTEGS = self.CO_INTEGS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
+      x.into_iter().collect()
     });
     let SPEC_AVGS = self.SPEC_AVGS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
+      x.into_iter().collect()
     });
     let INTERPULSE_PERIODS = self.INTERPULSE_PERIODS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
+      x.into_iter().collect()
     });
     let DOPP_VELS = self.DOPP_VELS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
+      x.into_iter().collect()
     });
     let CONS_RECS = self.CONS_RECS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
+      x.into_iter().collect()
     });
     let SNRS = self.SNRS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
+      x.into_iter().collect()
     });
     let SIG_STRENGTH = self.SIG_STRENGTH();
     let SEMI_MAJOR_AXIS = self.SEMI_MAJOR_AXIS();
@@ -180,19 +180,19 @@ impl<'a> WTH<'a> {
       ID_SENSOR,
       ORIG_SENSOR_ID,
       OB_TIME,
-      SIG_PWRS,
-      NOISE_LVLS,
-      SPEC_WIDTHS,
-      FIRST_GUESS_AVGS,
-      QC_VALUE,
       FILE_CREATION,
+      QC_VALUE,
       TERM_ALT,
       AVG_TX_PWR,
       AVG_REF_PWR,
       SECTOR_NUM,
       NUM_ELEMENTS,
-      TD_AVG_SAMPLE_NUMS,
       CHECKSUM,
+      SIG_PWRS,
+      NOISE_LVLS,
+      SPEC_WIDTHS,
+      FIRST_GUESS_AVGS,
+      TD_AVG_SAMPLE_NUMS,
       CO_INTEGS,
       SPEC_AVGS,
       INTERPULSE_PERIODS,
@@ -211,6 +211,7 @@ impl<'a> WTH<'a> {
     }
   }
 
+  /// Unique identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -218,6 +219,7 @@ impl<'a> WTH<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(WTH::VT_ID, None)}
   }
+  /// Sensor identifier
   #[inline]
   pub fn ID_SENSOR(&self) -> Option<&'a str> {
     // Safety:
@@ -225,6 +227,7 @@ impl<'a> WTH<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(WTH::VT_ID_SENSOR, None)}
   }
+  /// Original sensor identifier
   #[inline]
   pub fn ORIG_SENSOR_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -232,6 +235,7 @@ impl<'a> WTH<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(WTH::VT_ORIG_SENSOR_ID, None)}
   }
+  /// Observation time (ISO 8601)
   #[inline]
   pub fn OB_TIME(&self) -> Option<&'a str> {
     // Safety:
@@ -239,41 +243,7 @@ impl<'a> WTH<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(WTH::VT_OB_TIME, None)}
   }
-  #[inline]
-  pub fn SIG_PWRS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(WTH::VT_SIG_PWRS, None)}
-  }
-  #[inline]
-  pub fn NOISE_LVLS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(WTH::VT_NOISE_LVLS, None)}
-  }
-  #[inline]
-  pub fn SPEC_WIDTHS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(WTH::VT_SPEC_WIDTHS, None)}
-  }
-  #[inline]
-  pub fn FIRST_GUESS_AVGS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(WTH::VT_FIRST_GUESS_AVGS, None)}
-  }
-  #[inline]
-  pub fn QC_VALUE(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(WTH::VT_QC_VALUE, Some(0)).unwrap()}
-  }
+  /// File creation time (ISO 8601)
   #[inline]
   pub fn FILE_CREATION(&self) -> Option<&'a str> {
     // Safety:
@@ -281,6 +251,15 @@ impl<'a> WTH<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(WTH::VT_FILE_CREATION, None)}
   }
+  /// Quality control value
+  #[inline]
+  pub fn QC_VALUE(&self) -> u8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u8>(WTH::VT_QC_VALUE, Some(0)).unwrap()}
+  }
+  /// Terminal altitude (km)
   #[inline]
   pub fn TERM_ALT(&self) -> f64 {
     // Safety:
@@ -288,6 +267,7 @@ impl<'a> WTH<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(WTH::VT_TERM_ALT, Some(0.0)).unwrap()}
   }
+  /// Average transmit power (dBm)
   #[inline]
   pub fn AVG_TX_PWR(&self) -> f64 {
     // Safety:
@@ -295,6 +275,7 @@ impl<'a> WTH<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(WTH::VT_AVG_TX_PWR, Some(0.0)).unwrap()}
   }
+  /// Average reflected power (dBm)
   #[inline]
   pub fn AVG_REF_PWR(&self) -> f64 {
     // Safety:
@@ -302,76 +283,119 @@ impl<'a> WTH<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(WTH::VT_AVG_REF_PWR, Some(0.0)).unwrap()}
   }
+  /// Sector number
   #[inline]
-  pub fn SECTOR_NUM(&self) -> i32 {
+  pub fn SECTOR_NUM(&self) -> u16 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(WTH::VT_SECTOR_NUM, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u16>(WTH::VT_SECTOR_NUM, Some(0)).unwrap()}
   }
+  /// Number of data elements
   #[inline]
-  pub fn NUM_ELEMENTS(&self) -> i32 {
+  pub fn NUM_ELEMENTS(&self) -> u16 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(WTH::VT_NUM_ELEMENTS, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u16>(WTH::VT_NUM_ELEMENTS, Some(0)).unwrap()}
   }
+  /// Checksum
   #[inline]
-  pub fn TD_AVG_SAMPLE_NUMS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+  pub fn CHECKSUM(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(WTH::VT_TD_AVG_SAMPLE_NUMS, None)}
+    unsafe { self._tab.get::<u32>(WTH::VT_CHECKSUM, Some(0)).unwrap()}
   }
+  /// Signal power values (dBm)
   #[inline]
-  pub fn CHECKSUM(&self) -> i32 {
+  pub fn SIG_PWRS(&self) -> Option<flatbuffers::Vector<'a, f64>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(WTH::VT_CHECKSUM, Some(0)).unwrap()}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(WTH::VT_SIG_PWRS, None)}
   }
+  /// Noise level values (dBm)
   #[inline]
-  pub fn CO_INTEGS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+  pub fn NOISE_LVLS(&self) -> Option<flatbuffers::Vector<'a, f64>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(WTH::VT_CO_INTEGS, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(WTH::VT_NOISE_LVLS, None)}
   }
+  /// Spectral width values (m/s)
   #[inline]
-  pub fn SPEC_AVGS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+  pub fn SPEC_WIDTHS(&self) -> Option<flatbuffers::Vector<'a, f64>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(WTH::VT_SPEC_AVGS, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(WTH::VT_SPEC_WIDTHS, None)}
   }
+  /// First guess average values
   #[inline]
-  pub fn INTERPULSE_PERIODS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+  pub fn FIRST_GUESS_AVGS(&self) -> Option<flatbuffers::Vector<'a, f64>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(WTH::VT_INTERPULSE_PERIODS, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(WTH::VT_FIRST_GUESS_AVGS, None)}
   }
+  /// Time domain average sample numbers
   #[inline]
-  pub fn DOPP_VELS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+  pub fn TD_AVG_SAMPLE_NUMS(&self) -> Option<flatbuffers::Vector<'a, f64>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(WTH::VT_DOPP_VELS, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(WTH::VT_TD_AVG_SAMPLE_NUMS, None)}
   }
+  /// Co-integration values
   #[inline]
-  pub fn CONS_RECS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+  pub fn CO_INTEGS(&self) -> Option<flatbuffers::Vector<'a, f64>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(WTH::VT_CONS_RECS, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(WTH::VT_CO_INTEGS, None)}
   }
+  /// Spectral average values
   #[inline]
-  pub fn SNRS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+  pub fn SPEC_AVGS(&self) -> Option<flatbuffers::Vector<'a, f64>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(WTH::VT_SNRS, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(WTH::VT_SPEC_AVGS, None)}
   }
+  /// Interpulse periods (microseconds)
+  #[inline]
+  pub fn INTERPULSE_PERIODS(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(WTH::VT_INTERPULSE_PERIODS, None)}
+  }
+  /// Doppler velocities (m/s)
+  #[inline]
+  pub fn DOPP_VELS(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(WTH::VT_DOPP_VELS, None)}
+  }
+  /// Consecutive records count
+  #[inline]
+  pub fn CONS_RECS(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(WTH::VT_CONS_RECS, None)}
+  }
+  /// Signal-to-noise ratios (dB)
+  #[inline]
+  pub fn SNRS(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(WTH::VT_SNRS, None)}
+  }
+  /// Signal strength (dBm)
   #[inline]
   pub fn SIG_STRENGTH(&self) -> f64 {
     // Safety:
@@ -379,6 +403,7 @@ impl<'a> WTH<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(WTH::VT_SIG_STRENGTH, Some(0.0)).unwrap()}
   }
+  /// Error ellipse semi-major axis (km)
   #[inline]
   pub fn SEMI_MAJOR_AXIS(&self) -> f64 {
     // Safety:
@@ -386,6 +411,7 @@ impl<'a> WTH<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(WTH::VT_SEMI_MAJOR_AXIS, Some(0.0)).unwrap()}
   }
+  /// Error ellipse semi-minor axis (km)
   #[inline]
   pub fn SEMI_MINOR_AXIS(&self) -> f64 {
     // Safety:
@@ -393,6 +419,7 @@ impl<'a> WTH<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(WTH::VT_SEMI_MINOR_AXIS, Some(0.0)).unwrap()}
   }
+  /// Error ellipse orientation angle (degrees)
   #[inline]
   pub fn ANGLE_ORIENTATION(&self) -> f64 {
     // Safety:
@@ -400,13 +427,15 @@ impl<'a> WTH<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(WTH::VT_ANGLE_ORIENTATION, Some(0.0)).unwrap()}
   }
+  /// Lightning event number
   #[inline]
-  pub fn LIGHT_EVENT_NUM(&self) -> i32 {
+  pub fn LIGHT_EVENT_NUM(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(WTH::VT_LIGHT_EVENT_NUM, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u32>(WTH::VT_LIGHT_EVENT_NUM, Some(0)).unwrap()}
   }
+  /// Lightning detection sensor identifiers
   #[inline]
   pub fn LIGHT_DET_SENSORS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -414,6 +443,7 @@ impl<'a> WTH<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(WTH::VT_LIGHT_DET_SENSORS, None)}
   }
+  /// Position confidence (0-1)
   #[inline]
   pub fn POS_CONFIDENCE(&self) -> f64 {
     // Safety:
@@ -421,6 +451,7 @@ impl<'a> WTH<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(WTH::VT_POS_CONFIDENCE, Some(0.0)).unwrap()}
   }
+  /// Source types
   #[inline]
   pub fn SRC_TYPS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -428,6 +459,7 @@ impl<'a> WTH<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(WTH::VT_SRC_TYPS, None)}
   }
+  /// Source identifiers
   #[inline]
   pub fn SRC_IDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -448,30 +480,30 @@ impl flatbuffers::Verifiable for WTH<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID_SENSOR", Self::VT_ID_SENSOR, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_SENSOR_ID", Self::VT_ORIG_SENSOR_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OB_TIME", Self::VT_OB_TIME, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("SIG_PWRS", Self::VT_SIG_PWRS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("NOISE_LVLS", Self::VT_NOISE_LVLS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("SPEC_WIDTHS", Self::VT_SPEC_WIDTHS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("FIRST_GUESS_AVGS", Self::VT_FIRST_GUESS_AVGS, false)?
-     .visit_field::<i32>("QC_VALUE", Self::VT_QC_VALUE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("FILE_CREATION", Self::VT_FILE_CREATION, false)?
+     .visit_field::<u8>("QC_VALUE", Self::VT_QC_VALUE, false)?
      .visit_field::<f64>("TERM_ALT", Self::VT_TERM_ALT, false)?
      .visit_field::<f64>("AVG_TX_PWR", Self::VT_AVG_TX_PWR, false)?
      .visit_field::<f64>("AVG_REF_PWR", Self::VT_AVG_REF_PWR, false)?
-     .visit_field::<i32>("SECTOR_NUM", Self::VT_SECTOR_NUM, false)?
-     .visit_field::<i32>("NUM_ELEMENTS", Self::VT_NUM_ELEMENTS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("TD_AVG_SAMPLE_NUMS", Self::VT_TD_AVG_SAMPLE_NUMS, false)?
-     .visit_field::<i32>("CHECKSUM", Self::VT_CHECKSUM, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("CO_INTEGS", Self::VT_CO_INTEGS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("SPEC_AVGS", Self::VT_SPEC_AVGS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("INTERPULSE_PERIODS", Self::VT_INTERPULSE_PERIODS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("DOPP_VELS", Self::VT_DOPP_VELS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("CONS_RECS", Self::VT_CONS_RECS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("SNRS", Self::VT_SNRS, false)?
+     .visit_field::<u16>("SECTOR_NUM", Self::VT_SECTOR_NUM, false)?
+     .visit_field::<u16>("NUM_ELEMENTS", Self::VT_NUM_ELEMENTS, false)?
+     .visit_field::<u32>("CHECKSUM", Self::VT_CHECKSUM, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("SIG_PWRS", Self::VT_SIG_PWRS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("NOISE_LVLS", Self::VT_NOISE_LVLS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("SPEC_WIDTHS", Self::VT_SPEC_WIDTHS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("FIRST_GUESS_AVGS", Self::VT_FIRST_GUESS_AVGS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("TD_AVG_SAMPLE_NUMS", Self::VT_TD_AVG_SAMPLE_NUMS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("CO_INTEGS", Self::VT_CO_INTEGS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("SPEC_AVGS", Self::VT_SPEC_AVGS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("INTERPULSE_PERIODS", Self::VT_INTERPULSE_PERIODS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("DOPP_VELS", Self::VT_DOPP_VELS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("CONS_RECS", Self::VT_CONS_RECS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("SNRS", Self::VT_SNRS, false)?
      .visit_field::<f64>("SIG_STRENGTH", Self::VT_SIG_STRENGTH, false)?
      .visit_field::<f64>("SEMI_MAJOR_AXIS", Self::VT_SEMI_MAJOR_AXIS, false)?
      .visit_field::<f64>("SEMI_MINOR_AXIS", Self::VT_SEMI_MINOR_AXIS, false)?
      .visit_field::<f64>("ANGLE_ORIENTATION", Self::VT_ANGLE_ORIENTATION, false)?
-     .visit_field::<i32>("LIGHT_EVENT_NUM", Self::VT_LIGHT_EVENT_NUM, false)?
+     .visit_field::<u32>("LIGHT_EVENT_NUM", Self::VT_LIGHT_EVENT_NUM, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("LIGHT_DET_SENSORS", Self::VT_LIGHT_DET_SENSORS, false)?
      .visit_field::<f64>("POS_CONFIDENCE", Self::VT_POS_CONFIDENCE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("SRC_TYPS", Self::VT_SRC_TYPS, false)?
@@ -485,30 +517,30 @@ pub struct WTHArgs<'a> {
     pub ID_SENSOR: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ORIG_SENSOR_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OB_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SIG_PWRS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub NOISE_LVLS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub SPEC_WIDTHS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub FIRST_GUESS_AVGS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub QC_VALUE: i32,
     pub FILE_CREATION: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub QC_VALUE: u8,
     pub TERM_ALT: f64,
     pub AVG_TX_PWR: f64,
     pub AVG_REF_PWR: f64,
-    pub SECTOR_NUM: i32,
-    pub NUM_ELEMENTS: i32,
-    pub TD_AVG_SAMPLE_NUMS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub CHECKSUM: i32,
-    pub CO_INTEGS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub SPEC_AVGS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub INTERPULSE_PERIODS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub DOPP_VELS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub CONS_RECS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub SNRS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub SECTOR_NUM: u16,
+    pub NUM_ELEMENTS: u16,
+    pub CHECKSUM: u32,
+    pub SIG_PWRS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub NOISE_LVLS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub SPEC_WIDTHS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub FIRST_GUESS_AVGS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub TD_AVG_SAMPLE_NUMS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub CO_INTEGS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub SPEC_AVGS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub INTERPULSE_PERIODS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub DOPP_VELS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub CONS_RECS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub SNRS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
     pub SIG_STRENGTH: f64,
     pub SEMI_MAJOR_AXIS: f64,
     pub SEMI_MINOR_AXIS: f64,
     pub ANGLE_ORIENTATION: f64,
-    pub LIGHT_EVENT_NUM: i32,
+    pub LIGHT_EVENT_NUM: u32,
     pub LIGHT_DET_SENSORS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub POS_CONFIDENCE: f64,
     pub SRC_TYPS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
@@ -522,19 +554,19 @@ impl<'a> Default for WTHArgs<'a> {
       ID_SENSOR: None,
       ORIG_SENSOR_ID: None,
       OB_TIME: None,
-      SIG_PWRS: None,
-      NOISE_LVLS: None,
-      SPEC_WIDTHS: None,
-      FIRST_GUESS_AVGS: None,
-      QC_VALUE: 0,
       FILE_CREATION: None,
+      QC_VALUE: 0,
       TERM_ALT: 0.0,
       AVG_TX_PWR: 0.0,
       AVG_REF_PWR: 0.0,
       SECTOR_NUM: 0,
       NUM_ELEMENTS: 0,
-      TD_AVG_SAMPLE_NUMS: None,
       CHECKSUM: 0,
+      SIG_PWRS: None,
+      NOISE_LVLS: None,
+      SPEC_WIDTHS: None,
+      FIRST_GUESS_AVGS: None,
+      TD_AVG_SAMPLE_NUMS: None,
       CO_INTEGS: None,
       SPEC_AVGS: None,
       INTERPULSE_PERIODS: None,
@@ -576,28 +608,12 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> WTHBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(WTH::VT_OB_TIME, OB_TIME);
   }
   #[inline]
-  pub fn add_SIG_PWRS(&mut self, SIG_PWRS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(WTH::VT_SIG_PWRS, SIG_PWRS);
-  }
-  #[inline]
-  pub fn add_NOISE_LVLS(&mut self, NOISE_LVLS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(WTH::VT_NOISE_LVLS, NOISE_LVLS);
-  }
-  #[inline]
-  pub fn add_SPEC_WIDTHS(&mut self, SPEC_WIDTHS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(WTH::VT_SPEC_WIDTHS, SPEC_WIDTHS);
-  }
-  #[inline]
-  pub fn add_FIRST_GUESS_AVGS(&mut self, FIRST_GUESS_AVGS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(WTH::VT_FIRST_GUESS_AVGS, FIRST_GUESS_AVGS);
-  }
-  #[inline]
-  pub fn add_QC_VALUE(&mut self, QC_VALUE: i32) {
-    self.fbb_.push_slot::<i32>(WTH::VT_QC_VALUE, QC_VALUE, 0);
-  }
-  #[inline]
   pub fn add_FILE_CREATION(&mut self, FILE_CREATION: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(WTH::VT_FILE_CREATION, FILE_CREATION);
+  }
+  #[inline]
+  pub fn add_QC_VALUE(&mut self, QC_VALUE: u8) {
+    self.fbb_.push_slot::<u8>(WTH::VT_QC_VALUE, QC_VALUE, 0);
   }
   #[inline]
   pub fn add_TERM_ALT(&mut self, TERM_ALT: f64) {
@@ -612,43 +628,59 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> WTHBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(WTH::VT_AVG_REF_PWR, AVG_REF_PWR, 0.0);
   }
   #[inline]
-  pub fn add_SECTOR_NUM(&mut self, SECTOR_NUM: i32) {
-    self.fbb_.push_slot::<i32>(WTH::VT_SECTOR_NUM, SECTOR_NUM, 0);
+  pub fn add_SECTOR_NUM(&mut self, SECTOR_NUM: u16) {
+    self.fbb_.push_slot::<u16>(WTH::VT_SECTOR_NUM, SECTOR_NUM, 0);
   }
   #[inline]
-  pub fn add_NUM_ELEMENTS(&mut self, NUM_ELEMENTS: i32) {
-    self.fbb_.push_slot::<i32>(WTH::VT_NUM_ELEMENTS, NUM_ELEMENTS, 0);
+  pub fn add_NUM_ELEMENTS(&mut self, NUM_ELEMENTS: u16) {
+    self.fbb_.push_slot::<u16>(WTH::VT_NUM_ELEMENTS, NUM_ELEMENTS, 0);
   }
   #[inline]
-  pub fn add_TD_AVG_SAMPLE_NUMS(&mut self, TD_AVG_SAMPLE_NUMS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+  pub fn add_CHECKSUM(&mut self, CHECKSUM: u32) {
+    self.fbb_.push_slot::<u32>(WTH::VT_CHECKSUM, CHECKSUM, 0);
+  }
+  #[inline]
+  pub fn add_SIG_PWRS(&mut self, SIG_PWRS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(WTH::VT_SIG_PWRS, SIG_PWRS);
+  }
+  #[inline]
+  pub fn add_NOISE_LVLS(&mut self, NOISE_LVLS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(WTH::VT_NOISE_LVLS, NOISE_LVLS);
+  }
+  #[inline]
+  pub fn add_SPEC_WIDTHS(&mut self, SPEC_WIDTHS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(WTH::VT_SPEC_WIDTHS, SPEC_WIDTHS);
+  }
+  #[inline]
+  pub fn add_FIRST_GUESS_AVGS(&mut self, FIRST_GUESS_AVGS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(WTH::VT_FIRST_GUESS_AVGS, FIRST_GUESS_AVGS);
+  }
+  #[inline]
+  pub fn add_TD_AVG_SAMPLE_NUMS(&mut self, TD_AVG_SAMPLE_NUMS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(WTH::VT_TD_AVG_SAMPLE_NUMS, TD_AVG_SAMPLE_NUMS);
   }
   #[inline]
-  pub fn add_CHECKSUM(&mut self, CHECKSUM: i32) {
-    self.fbb_.push_slot::<i32>(WTH::VT_CHECKSUM, CHECKSUM, 0);
-  }
-  #[inline]
-  pub fn add_CO_INTEGS(&mut self, CO_INTEGS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+  pub fn add_CO_INTEGS(&mut self, CO_INTEGS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(WTH::VT_CO_INTEGS, CO_INTEGS);
   }
   #[inline]
-  pub fn add_SPEC_AVGS(&mut self, SPEC_AVGS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+  pub fn add_SPEC_AVGS(&mut self, SPEC_AVGS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(WTH::VT_SPEC_AVGS, SPEC_AVGS);
   }
   #[inline]
-  pub fn add_INTERPULSE_PERIODS(&mut self, INTERPULSE_PERIODS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+  pub fn add_INTERPULSE_PERIODS(&mut self, INTERPULSE_PERIODS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(WTH::VT_INTERPULSE_PERIODS, INTERPULSE_PERIODS);
   }
   #[inline]
-  pub fn add_DOPP_VELS(&mut self, DOPP_VELS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+  pub fn add_DOPP_VELS(&mut self, DOPP_VELS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(WTH::VT_DOPP_VELS, DOPP_VELS);
   }
   #[inline]
-  pub fn add_CONS_RECS(&mut self, CONS_RECS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+  pub fn add_CONS_RECS(&mut self, CONS_RECS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(WTH::VT_CONS_RECS, CONS_RECS);
   }
   #[inline]
-  pub fn add_SNRS(&mut self, SNRS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+  pub fn add_SNRS(&mut self, SNRS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(WTH::VT_SNRS, SNRS);
   }
   #[inline]
@@ -668,8 +700,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> WTHBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(WTH::VT_ANGLE_ORIENTATION, ANGLE_ORIENTATION, 0.0);
   }
   #[inline]
-  pub fn add_LIGHT_EVENT_NUM(&mut self, LIGHT_EVENT_NUM: i32) {
-    self.fbb_.push_slot::<i32>(WTH::VT_LIGHT_EVENT_NUM, LIGHT_EVENT_NUM, 0);
+  pub fn add_LIGHT_EVENT_NUM(&mut self, LIGHT_EVENT_NUM: u32) {
+    self.fbb_.push_slot::<u32>(WTH::VT_LIGHT_EVENT_NUM, LIGHT_EVENT_NUM, 0);
   }
   #[inline]
   pub fn add_LIGHT_DET_SENSORS(&mut self, LIGHT_DET_SENSORS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
@@ -709,19 +741,19 @@ impl core::fmt::Debug for WTH<'_> {
       ds.field("ID_SENSOR", &self.ID_SENSOR());
       ds.field("ORIG_SENSOR_ID", &self.ORIG_SENSOR_ID());
       ds.field("OB_TIME", &self.OB_TIME());
-      ds.field("SIG_PWRS", &self.SIG_PWRS());
-      ds.field("NOISE_LVLS", &self.NOISE_LVLS());
-      ds.field("SPEC_WIDTHS", &self.SPEC_WIDTHS());
-      ds.field("FIRST_GUESS_AVGS", &self.FIRST_GUESS_AVGS());
-      ds.field("QC_VALUE", &self.QC_VALUE());
       ds.field("FILE_CREATION", &self.FILE_CREATION());
+      ds.field("QC_VALUE", &self.QC_VALUE());
       ds.field("TERM_ALT", &self.TERM_ALT());
       ds.field("AVG_TX_PWR", &self.AVG_TX_PWR());
       ds.field("AVG_REF_PWR", &self.AVG_REF_PWR());
       ds.field("SECTOR_NUM", &self.SECTOR_NUM());
       ds.field("NUM_ELEMENTS", &self.NUM_ELEMENTS());
-      ds.field("TD_AVG_SAMPLE_NUMS", &self.TD_AVG_SAMPLE_NUMS());
       ds.field("CHECKSUM", &self.CHECKSUM());
+      ds.field("SIG_PWRS", &self.SIG_PWRS());
+      ds.field("NOISE_LVLS", &self.NOISE_LVLS());
+      ds.field("SPEC_WIDTHS", &self.SPEC_WIDTHS());
+      ds.field("FIRST_GUESS_AVGS", &self.FIRST_GUESS_AVGS());
+      ds.field("TD_AVG_SAMPLE_NUMS", &self.TD_AVG_SAMPLE_NUMS());
       ds.field("CO_INTEGS", &self.CO_INTEGS());
       ds.field("SPEC_AVGS", &self.SPEC_AVGS());
       ds.field("INTERPULSE_PERIODS", &self.INTERPULSE_PERIODS());
@@ -747,30 +779,30 @@ pub struct WTHT {
   pub ID_SENSOR: Option<String>,
   pub ORIG_SENSOR_ID: Option<String>,
   pub OB_TIME: Option<String>,
-  pub SIG_PWRS: Option<Vec<String>>,
-  pub NOISE_LVLS: Option<Vec<String>>,
-  pub SPEC_WIDTHS: Option<Vec<String>>,
-  pub FIRST_GUESS_AVGS: Option<Vec<String>>,
-  pub QC_VALUE: i32,
   pub FILE_CREATION: Option<String>,
+  pub QC_VALUE: u8,
   pub TERM_ALT: f64,
   pub AVG_TX_PWR: f64,
   pub AVG_REF_PWR: f64,
-  pub SECTOR_NUM: i32,
-  pub NUM_ELEMENTS: i32,
-  pub TD_AVG_SAMPLE_NUMS: Option<Vec<String>>,
-  pub CHECKSUM: i32,
-  pub CO_INTEGS: Option<Vec<String>>,
-  pub SPEC_AVGS: Option<Vec<String>>,
-  pub INTERPULSE_PERIODS: Option<Vec<String>>,
-  pub DOPP_VELS: Option<Vec<String>>,
-  pub CONS_RECS: Option<Vec<String>>,
-  pub SNRS: Option<Vec<String>>,
+  pub SECTOR_NUM: u16,
+  pub NUM_ELEMENTS: u16,
+  pub CHECKSUM: u32,
+  pub SIG_PWRS: Option<Vec<f64>>,
+  pub NOISE_LVLS: Option<Vec<f64>>,
+  pub SPEC_WIDTHS: Option<Vec<f64>>,
+  pub FIRST_GUESS_AVGS: Option<Vec<f64>>,
+  pub TD_AVG_SAMPLE_NUMS: Option<Vec<f64>>,
+  pub CO_INTEGS: Option<Vec<f64>>,
+  pub SPEC_AVGS: Option<Vec<f64>>,
+  pub INTERPULSE_PERIODS: Option<Vec<f64>>,
+  pub DOPP_VELS: Option<Vec<f64>>,
+  pub CONS_RECS: Option<Vec<f64>>,
+  pub SNRS: Option<Vec<f64>>,
   pub SIG_STRENGTH: f64,
   pub SEMI_MAJOR_AXIS: f64,
   pub SEMI_MINOR_AXIS: f64,
   pub ANGLE_ORIENTATION: f64,
-  pub LIGHT_EVENT_NUM: i32,
+  pub LIGHT_EVENT_NUM: u32,
   pub LIGHT_DET_SENSORS: Option<Vec<String>>,
   pub POS_CONFIDENCE: f64,
   pub SRC_TYPS: Option<Vec<String>>,
@@ -783,19 +815,19 @@ impl Default for WTHT {
       ID_SENSOR: None,
       ORIG_SENSOR_ID: None,
       OB_TIME: None,
-      SIG_PWRS: None,
-      NOISE_LVLS: None,
-      SPEC_WIDTHS: None,
-      FIRST_GUESS_AVGS: None,
-      QC_VALUE: 0,
       FILE_CREATION: None,
+      QC_VALUE: 0,
       TERM_ALT: 0.0,
       AVG_TX_PWR: 0.0,
       AVG_REF_PWR: 0.0,
       SECTOR_NUM: 0,
       NUM_ELEMENTS: 0,
-      TD_AVG_SAMPLE_NUMS: None,
       CHECKSUM: 0,
+      SIG_PWRS: None,
+      NOISE_LVLS: None,
+      SPEC_WIDTHS: None,
+      FIRST_GUESS_AVGS: None,
+      TD_AVG_SAMPLE_NUMS: None,
       CO_INTEGS: None,
       SPEC_AVGS: None,
       INTERPULSE_PERIODS: None,
@@ -831,48 +863,48 @@ impl WTHT {
     let OB_TIME = self.OB_TIME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let SIG_PWRS = self.SIG_PWRS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    let NOISE_LVLS = self.NOISE_LVLS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    let SPEC_WIDTHS = self.SPEC_WIDTHS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    let FIRST_GUESS_AVGS = self.FIRST_GUESS_AVGS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    let QC_VALUE = self.QC_VALUE;
     let FILE_CREATION = self.FILE_CREATION.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let QC_VALUE = self.QC_VALUE;
     let TERM_ALT = self.TERM_ALT;
     let AVG_TX_PWR = self.AVG_TX_PWR;
     let AVG_REF_PWR = self.AVG_REF_PWR;
     let SECTOR_NUM = self.SECTOR_NUM;
     let NUM_ELEMENTS = self.NUM_ELEMENTS;
-    let TD_AVG_SAMPLE_NUMS = self.TD_AVG_SAMPLE_NUMS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
     let CHECKSUM = self.CHECKSUM;
+    let SIG_PWRS = self.SIG_PWRS.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let NOISE_LVLS = self.NOISE_LVLS.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let SPEC_WIDTHS = self.SPEC_WIDTHS.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let FIRST_GUESS_AVGS = self.FIRST_GUESS_AVGS.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let TD_AVG_SAMPLE_NUMS = self.TD_AVG_SAMPLE_NUMS.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
     let CO_INTEGS = self.CO_INTEGS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+      _fbb.create_vector(x)
     });
     let SPEC_AVGS = self.SPEC_AVGS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+      _fbb.create_vector(x)
     });
     let INTERPULSE_PERIODS = self.INTERPULSE_PERIODS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+      _fbb.create_vector(x)
     });
     let DOPP_VELS = self.DOPP_VELS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+      _fbb.create_vector(x)
     });
     let CONS_RECS = self.CONS_RECS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+      _fbb.create_vector(x)
     });
     let SNRS = self.SNRS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+      _fbb.create_vector(x)
     });
     let SIG_STRENGTH = self.SIG_STRENGTH;
     let SEMI_MAJOR_AXIS = self.SEMI_MAJOR_AXIS;
@@ -894,19 +926,19 @@ impl WTHT {
       ID_SENSOR,
       ORIG_SENSOR_ID,
       OB_TIME,
-      SIG_PWRS,
-      NOISE_LVLS,
-      SPEC_WIDTHS,
-      FIRST_GUESS_AVGS,
-      QC_VALUE,
       FILE_CREATION,
+      QC_VALUE,
       TERM_ALT,
       AVG_TX_PWR,
       AVG_REF_PWR,
       SECTOR_NUM,
       NUM_ELEMENTS,
-      TD_AVG_SAMPLE_NUMS,
       CHECKSUM,
+      SIG_PWRS,
+      NOISE_LVLS,
+      SPEC_WIDTHS,
+      FIRST_GUESS_AVGS,
+      TD_AVG_SAMPLE_NUMS,
       CO_INTEGS,
       SPEC_AVGS,
       INTERPULSE_PERIODS,

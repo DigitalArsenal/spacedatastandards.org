@@ -1,246 +1,462 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "sarMode": {
+      "type": "string",
+      "enum": [
+        "STRIPMAP",
+        "SPOTLIGHT",
+        "SCANSAR",
+        "TOPSAR",
+        "ISAR",
+        "GMTI",
+        "MARITIME",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "STRIPMAP": {
+          "value": 0
+        },
+        "SPOTLIGHT": {
+          "value": 1
+        },
+        "SCANSAR": {
+          "value": 2
+        },
+        "TOPSAR": {
+          "value": 3
+        },
+        "ISAR": {
+          "value": 4
+        },
+        "GMTI": {
+          "value": 5
+        },
+        "MARITIME": {
+          "value": 6
+        },
+        "UNKNOWN": {
+          "value": 7
+        }
+      }
+    },
+    "sarPolarization": {
+      "type": "string",
+      "enum": [
+        "HH",
+        "VV",
+        "HV",
+        "VH",
+        "DUAL_HH_VV",
+        "DUAL_HH_HV",
+        "DUAL_VV_VH",
+        "QUAD",
+        "COMPACT"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "HH": {
+          "value": 0
+        },
+        "VV": {
+          "value": 1
+        },
+        "HV": {
+          "value": 2
+        },
+        "VH": {
+          "value": 3
+        },
+        "DUAL_HH_VV": {
+          "value": 4
+        },
+        "DUAL_HH_HV": {
+          "value": 5
+        },
+        "DUAL_VV_VH": {
+          "value": 6
+        },
+        "QUAD": {
+          "value": 7
+        },
+        "COMPACT": {
+          "value": 8
+        }
+      }
+    },
     "SAR": {
       "type": "object",
       "description": "SAR Observation",
       "properties": {
         "ID": {
           "type": "string",
+          "description": "Unique identifier",
           "x-flatbuffer-type": "string"
         },
         "SAT_NO": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Satellite catalog number (of SAR platform)",
+          "x-flatbuffer-type": "uint32"
         },
         "ORIG_OBJECT_ID": {
           "type": "string",
+          "description": "International designator",
+          "x-flatbuffer-type": "string"
+        },
+        "ON_ORBIT": {
+          "type": "string",
+          "description": "On-orbit reference",
           "x-flatbuffer-type": "string"
         },
         "ID_SENSOR": {
           "type": "string",
+          "description": "Sensor identifier",
           "x-flatbuffer-type": "string"
         },
         "ORIG_SENSOR_ID": {
           "type": "string",
+          "description": "Original sensor identifier",
           "x-flatbuffer-type": "string"
         },
         "EXTERNAL_ID": {
           "type": "string",
+          "description": "External reference identifier",
           "x-flatbuffer-type": "string"
         },
         "COLLECTION_ID": {
           "type": "string",
+          "description": "Collection identifier",
           "x-flatbuffer-type": "string"
         },
         "DETECTION_ID": {
           "type": "string",
+          "description": "Detection identifier",
           "x-flatbuffer-type": "string"
         },
         "COLLECTION_START": {
           "type": "string",
+          "description": "Collection start time (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "COLLECTION_END": {
           "type": "string",
+          "description": "Collection end time (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "CENTER_TIME": {
           "type": "string",
+          "description": "Center time of observation (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "DETECTION_START": {
           "type": "string",
+          "description": "Detection start time (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "DETECTION_END": {
           "type": "string",
+          "description": "Detection end time (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "DWELL_TIME": {
           "type": "number",
+          "description": "Integration/dwell time (seconds)",
           "x-flatbuffer-type": "double"
         },
         "ORBIT_STATE": {
           "type": "string",
+          "description": "Orbit state description",
           "x-flatbuffer-type": "string"
         },
         "SAR_MODE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
+          "$ref": "#/definitions/sarMode",
+          "description": "SAR imaging mode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "STRIPMAP": {
+              "value": 0
+            },
+            "SPOTLIGHT": {
+              "value": 1
+            },
+            "SCANSAR": {
+              "value": 2
+            },
+            "TOPSAR": {
+              "value": 3
+            },
+            "ISAR": {
+              "value": 4
+            },
+            "GMTI": {
+              "value": 5
+            },
+            "MARITIME": {
+              "value": 6
+            },
+            "UNKNOWN": {
+              "value": 7
+            }
+          }
         },
         "OPERATING_BAND": {
           "type": "string",
+          "description": "Operating RF band (e.g., X, C, L, S, P)",
           "x-flatbuffer-type": "string"
         },
         "OPERATING_FREQ": {
           "type": "number",
+          "description": "Operating frequency (GHz)",
           "x-flatbuffer-type": "double"
         },
         "SNR": {
           "type": "number",
+          "description": "Signal-to-noise ratio (dB)",
           "x-flatbuffer-type": "double"
         },
         "TX_POLARIZATION": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
+          "$ref": "#/definitions/sarPolarization",
+          "description": "Transmit polarization",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "HH": {
+              "value": 0
+            },
+            "VV": {
+              "value": 1
+            },
+            "HV": {
+              "value": 2
+            },
+            "VH": {
+              "value": 3
+            },
+            "DUAL_HH_VV": {
+              "value": 4
+            },
+            "DUAL_HH_HV": {
+              "value": 5
+            },
+            "DUAL_VV_VH": {
+              "value": 6
+            },
+            "QUAD": {
+              "value": 7
+            },
+            "COMPACT": {
+              "value": 8
+            }
+          }
         },
         "RX_POLARIZATION": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
+          "$ref": "#/definitions/sarPolarization",
+          "description": "Receive polarization",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "HH": {
+              "value": 0
+            },
+            "VV": {
+              "value": 1
+            },
+            "HV": {
+              "value": 2
+            },
+            "VH": {
+              "value": 3
+            },
+            "DUAL_HH_VV": {
+              "value": 4
+            },
+            "DUAL_HH_HV": {
+              "value": 5
+            },
+            "DUAL_VV_VH": {
+              "value": 6
+            },
+            "QUAD": {
+              "value": 7
+            },
+            "COMPACT": {
+              "value": 8
+            }
+          }
         },
         "GRAZE_ANGLE": {
           "type": "number",
+          "description": "Grazing angle (degrees)",
           "x-flatbuffer-type": "double"
         },
         "INCIDENCE_ANGLE": {
           "type": "number",
+          "description": "Incidence angle (degrees)",
           "x-flatbuffer-type": "double"
         },
         "SQUINT_ANGLE": {
           "type": "number",
+          "description": "Squint angle (degrees)",
           "x-flatbuffer-type": "double"
         },
         "PULSE_BANDWIDTH": {
           "type": "number",
+          "description": "Pulse bandwidth (MHz)",
           "x-flatbuffer-type": "double"
         },
         "PULSE_DURATION": {
           "type": "number",
+          "description": "Pulse duration (microseconds)",
           "x-flatbuffer-type": "double"
         },
         "CONTINUOUS_SPOT_ANGLE": {
           "type": "number",
+          "description": "Continuous spot angle (degrees)",
           "x-flatbuffer-type": "double"
         },
         "SLANT_RANGE": {
           "type": "number",
+          "description": "Slant range to target (km)",
           "x-flatbuffer-type": "double"
         },
         "NEAR_RANGE": {
           "type": "number",
+          "description": "Near range (km)",
           "x-flatbuffer-type": "double"
         },
         "FAR_RANGE": {
           "type": "number",
+          "description": "Far range (km)",
           "x-flatbuffer-type": "double"
         },
         "SWATH_LENGTH": {
           "type": "number",
+          "description": "Swath length (km)",
           "x-flatbuffer-type": "double"
         },
-        "AREA": {
+        "AGJSON": {
           "type": "string",
+          "description": "Image area GeoJSON",
           "x-flatbuffer-type": "string"
         },
         "ATEXT": {
           "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "AGJSON": {
-          "type": "string",
+          "description": "Image area text description",
           "x-flatbuffer-type": "string"
         },
         "ATYPE": {
           "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "ANDIMS": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
-        },
-        "ASRID": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
-        },
-        "SPACING_RANGE": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "SPACING_AZIMUTH": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "LOOKS_AZIMUTH": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
-        },
-        "LOOKS_RANGE": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
-        },
-        "RESOLUTION_RANGE": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "RESOLUTION_AZIMUTH": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "OB_DIRECTION": {
-          "type": "string",
+          "description": "Area type",
           "x-flatbuffer-type": "string"
         },
         "COORD_SYS": {
           "type": "string",
+          "description": "Coordinate system",
+          "x-flatbuffer-type": "string"
+        },
+        "SPACING_RANGE": {
+          "type": "number",
+          "description": "Range pixel spacing (meters)",
+          "x-flatbuffer-type": "double"
+        },
+        "SPACING_AZIMUTH": {
+          "type": "number",
+          "description": "Azimuth pixel spacing (meters)",
+          "x-flatbuffer-type": "double"
+        },
+        "LOOKS_AZIMUTH": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Number of azimuth looks",
+          "x-flatbuffer-type": "uint8"
+        },
+        "LOOKS_RANGE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Number of range looks",
+          "x-flatbuffer-type": "uint8"
+        },
+        "RESOLUTION_RANGE": {
+          "type": "number",
+          "description": "Range resolution (meters)",
+          "x-flatbuffer-type": "double"
+        },
+        "RESOLUTION_AZIMUTH": {
+          "type": "number",
+          "description": "Azimuth resolution (meters)",
+          "x-flatbuffer-type": "double"
+        },
+        "OB_DIRECTION": {
+          "type": "string",
+          "description": "Observation direction (ASCENDING/DESCENDING)",
           "x-flatbuffer-type": "string"
         },
         "TARGETPOSX": {
           "type": "number",
+          "description": "Target position X (km)",
           "x-flatbuffer-type": "double"
         },
         "TARGETPOSY": {
           "type": "number",
+          "description": "Target position Y (km)",
           "x-flatbuffer-type": "double"
         },
         "TARGETPOSZ": {
           "type": "number",
+          "description": "Target position Z (km)",
           "x-flatbuffer-type": "double"
         },
         "SENALT": {
           "type": "number",
+          "description": "Sensor altitude (km)",
           "x-flatbuffer-type": "double"
         },
         "SENVELX": {
           "type": "number",
+          "description": "Sensor velocity X (km/s)",
           "x-flatbuffer-type": "double"
         },
         "SENVELY": {
           "type": "number",
+          "description": "Sensor velocity Y (km/s)",
           "x-flatbuffer-type": "double"
         },
         "SENVELZ": {
           "type": "number",
+          "description": "Sensor velocity Z (km/s)",
           "x-flatbuffer-type": "double"
         },
         "SENLAT_START": {
           "type": "number",
+          "description": "Sensor latitude at start (degrees)",
           "x-flatbuffer-type": "double"
         },
         "SENLON_START": {
           "type": "number",
+          "description": "Sensor longitude at start (degrees)",
           "x-flatbuffer-type": "double"
         },
         "SENLAT_END": {
           "type": "number",
+          "description": "Sensor latitude at end (degrees)",
           "x-flatbuffer-type": "double"
         },
         "SENLON_END": {
           "type": "number",
+          "description": "Sensor longitude at end (degrees)",
           "x-flatbuffer-type": "double"
         },
         "TRANSACTION_ID": {
           "type": "string",
+          "description": "Transaction identifier",
           "x-flatbuffer-type": "string"
         },
         "TAGS": {
@@ -248,6 +464,7 @@
           "items": {
             "type": "string"
           },
+          "description": "Associated tags",
           "x-flatbuffer-type": "[string]"
         },
         "SRC_TYPS": {
@@ -255,6 +472,7 @@
           "items": {
             "type": "string"
           },
+          "description": "Source types",
           "x-flatbuffer-type": "[string]"
         },
         "SRC_IDS": {
@@ -262,11 +480,8 @@
           "items": {
             "type": "string"
           },
+          "description": "Source identifiers",
           "x-flatbuffer-type": "[string]"
-        },
-        "ON_ORBIT": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

@@ -2,4 +2,4 @@
 
 # namespace: 
 
-# NOTE StabilizationType.py does not declare any structs or enums
+# NOTE stabilizationType.py does not declare any structs or enums

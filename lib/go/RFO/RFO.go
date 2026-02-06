@@ -54,6 +54,7 @@ func (rcv *RFO) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Unique identifier
 func (rcv *RFO) ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -62,6 +63,8 @@ func (rcv *RFO) ID() []byte {
 	return nil
 }
 
+/// Unique identifier
+/// Observation time (ISO 8601)
 func (rcv *RFO) OB_TIME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -70,6 +73,8 @@ func (rcv *RFO) OB_TIME() []byte {
 	return nil
 }
 
+/// Observation time (ISO 8601)
+/// Sensor identifier
 func (rcv *RFO) ID_SENSOR() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -78,7 +83,9 @@ func (rcv *RFO) ID_SENSOR() []byte {
 	return nil
 }
 
-func (rcv *RFO) TYPE() []byte {
+/// Sensor identifier
+/// Original sensor identifier
+func (rcv *RFO) ORIG_SENSOR_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -86,27 +93,37 @@ func (rcv *RFO) TYPE() []byte {
 	return nil
 }
 
-func (rcv *RFO) SAT_NO() int32 {
+/// Original sensor identifier
+/// Observation type
+func (rcv *RFO) OBS_TYPE() rfObsType {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rfObsType(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *RFO) MutateSAT_NO(n int32) bool {
-	return rcv._tab.MutateInt32Slot(12, n)
+/// Observation type
+func (rcv *RFO) MutateOBS_TYPE(n rfObsType) bool {
+	return rcv._tab.MutateInt8Slot(12, int8(n))
 }
 
-func (rcv *RFO) TASK_ID() []byte {
+/// Satellite catalog number
+func (rcv *RFO) SAT_NO() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
 	}
-	return nil
+	return 0
 }
 
-func (rcv *RFO) TRANSACTION_ID() []byte {
+/// Satellite catalog number
+func (rcv *RFO) MutateSAT_NO(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(14, n)
+}
+
+/// International designator
+func (rcv *RFO) ORIG_OBJECT_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -114,7 +131,9 @@ func (rcv *RFO) TRANSACTION_ID() []byte {
 	return nil
 }
 
-func (rcv *RFO) TRACK_ID() []byte {
+/// International designator
+/// On-orbit reference
+func (rcv *RFO) ON_ORBIT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -122,15 +141,23 @@ func (rcv *RFO) TRACK_ID() []byte {
 	return nil
 }
 
-func (rcv *RFO) ORIG_OBJECT_ID() []byte {
+/// On-orbit reference
+/// True if uncorrelated target
+func (rcv *RFO) UCT() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
 	}
-	return nil
+	return false
 }
 
-func (rcv *RFO) ORIG_SENSOR_ID() []byte {
+/// True if uncorrelated target
+func (rcv *RFO) MutateUCT(n bool) bool {
+	return rcv._tab.MutateBoolSlot(20, n)
+}
+
+/// Task identifier
+func (rcv *RFO) TASK_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -138,19 +165,19 @@ func (rcv *RFO) ORIG_SENSOR_ID() []byte {
 	return nil
 }
 
-func (rcv *RFO) UCT() bool {
+/// Task identifier
+/// Transaction identifier
+func (rcv *RFO) TRANSACTION_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
-		return rcv._tab.GetBool(o + rcv._tab.Pos)
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
-	return false
+	return nil
 }
 
-func (rcv *RFO) MutateUCT(n bool) bool {
-	return rcv._tab.MutateBoolSlot(24, n)
-}
-
-func (rcv *RFO) TRANSPONDER() []byte {
+/// Transaction identifier
+/// Track identifier
+func (rcv *RFO) TRACK_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -158,31 +185,33 @@ func (rcv *RFO) TRANSPONDER() []byte {
 	return nil
 }
 
-func (rcv *RFO) AZIMUTH() float64 {
+/// Track identifier
+/// Transponder identifier
+func (rcv *RFO) TRANSPONDER() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
-	return 0.0
+	return nil
 }
 
-func (rcv *RFO) MutateAZIMUTH(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(28, n)
-}
-
-func (rcv *RFO) AZIMUTH_UNC() float64 {
+/// Transponder identifier
+/// Detection status
+func (rcv *RFO) DETECTION_STATUS() rfDetectionStatus {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		return rfDetectionStatus(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
-	return 0.0
+	return 0
 }
 
-func (rcv *RFO) MutateAZIMUTH_UNC(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(30, n)
+/// Detection status
+func (rcv *RFO) MutateDETECTION_STATUS(n rfDetectionStatus) bool {
+	return rcv._tab.MutateInt8Slot(30, int8(n))
 }
 
-func (rcv *RFO) AZIMUTH_RATE() float64 {
+/// Azimuth angle (degrees)
+func (rcv *RFO) AZIMUTH() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -190,11 +219,13 @@ func (rcv *RFO) AZIMUTH_RATE() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateAZIMUTH_RATE(n float64) bool {
+/// Azimuth angle (degrees)
+func (rcv *RFO) MutateAZIMUTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
 }
 
-func (rcv *RFO) ELEVATION() float64 {
+/// Azimuth uncertainty (degrees, 1-sigma)
+func (rcv *RFO) AZIMUTH_UNC() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -202,11 +233,13 @@ func (rcv *RFO) ELEVATION() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateELEVATION(n float64) bool {
+/// Azimuth uncertainty (degrees, 1-sigma)
+func (rcv *RFO) MutateAZIMUTH_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
 }
 
-func (rcv *RFO) ELEVATION_UNC() float64 {
+/// Azimuth rate (degrees/s)
+func (rcv *RFO) AZIMUTH_RATE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -214,11 +247,13 @@ func (rcv *RFO) ELEVATION_UNC() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateELEVATION_UNC(n float64) bool {
+/// Azimuth rate (degrees/s)
+func (rcv *RFO) MutateAZIMUTH_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
 }
 
-func (rcv *RFO) ELEVATION_RATE() float64 {
+/// Elevation angle (degrees)
+func (rcv *RFO) ELEVATION() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -226,11 +261,13 @@ func (rcv *RFO) ELEVATION_RATE() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateELEVATION_RATE(n float64) bool {
+/// Elevation angle (degrees)
+func (rcv *RFO) MutateELEVATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
 }
 
-func (rcv *RFO) RANGE() float64 {
+/// Elevation uncertainty (degrees, 1-sigma)
+func (rcv *RFO) ELEVATION_UNC() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -238,11 +275,13 @@ func (rcv *RFO) RANGE() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateRANGE(n float64) bool {
+/// Elevation uncertainty (degrees, 1-sigma)
+func (rcv *RFO) MutateELEVATION_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
 }
 
-func (rcv *RFO) RANGE_UNC() float64 {
+/// Elevation rate (degrees/s)
+func (rcv *RFO) ELEVATION_RATE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -250,11 +289,13 @@ func (rcv *RFO) RANGE_UNC() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateRANGE_UNC(n float64) bool {
+/// Elevation rate (degrees/s)
+func (rcv *RFO) MutateELEVATION_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
 }
 
-func (rcv *RFO) RANGE_RATE() float64 {
+/// Slant range (km)
+func (rcv *RFO) RANGE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -262,11 +303,13 @@ func (rcv *RFO) RANGE_RATE() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateRANGE_RATE(n float64) bool {
+/// Slant range (km)
+func (rcv *RFO) MutateRANGE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
 }
 
-func (rcv *RFO) RANGE_RATE_UNC() float64 {
+/// Range uncertainty (km, 1-sigma)
+func (rcv *RFO) RANGE_UNC() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -274,11 +317,13 @@ func (rcv *RFO) RANGE_RATE_UNC() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateRANGE_RATE_UNC(n float64) bool {
+/// Range uncertainty (km, 1-sigma)
+func (rcv *RFO) MutateRANGE_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
 }
 
-func (rcv *RFO) TRACK_RANGE() float64 {
+/// Range rate (km/s)
+func (rcv *RFO) RANGE_RATE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -286,11 +331,13 @@ func (rcv *RFO) TRACK_RANGE() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateTRACK_RANGE(n float64) bool {
+/// Range rate (km/s)
+func (rcv *RFO) MutateRANGE_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(48, n)
 }
 
-func (rcv *RFO) SENLAT() float64 {
+/// Range rate uncertainty (km/s, 1-sigma)
+func (rcv *RFO) RANGE_RATE_UNC() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -298,11 +345,13 @@ func (rcv *RFO) SENLAT() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateSENLAT(n float64) bool {
+/// Range rate uncertainty (km/s, 1-sigma)
+func (rcv *RFO) MutateRANGE_RATE_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(50, n)
 }
 
-func (rcv *RFO) SENLON() float64 {
+/// Track range (km)
+func (rcv *RFO) TRACK_RANGE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -310,11 +359,13 @@ func (rcv *RFO) SENLON() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateSENLON(n float64) bool {
+/// Track range (km)
+func (rcv *RFO) MutateTRACK_RANGE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(52, n)
 }
 
-func (rcv *RFO) SENALT() float64 {
+/// Sensor latitude (degrees)
+func (rcv *RFO) SENLAT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -322,19 +373,27 @@ func (rcv *RFO) SENALT() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateSENALT(n float64) bool {
+/// Sensor latitude (degrees)
+func (rcv *RFO) MutateSENLAT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(54, n)
 }
 
-func (rcv *RFO) ELNOT() []byte {
+/// Sensor longitude (degrees)
+func (rcv *RFO) SENLON() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
-	return nil
+	return 0.0
 }
 
-func (rcv *RFO) FREQUENCY() float64 {
+/// Sensor longitude (degrees)
+func (rcv *RFO) MutateSENLON(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(56, n)
+}
+
+/// Sensor altitude (km)
+func (rcv *RFO) SENALT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -342,47 +401,43 @@ func (rcv *RFO) FREQUENCY() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateFREQUENCY(n float64) bool {
+/// Sensor altitude (km)
+func (rcv *RFO) MutateSENALT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(58, n)
 }
 
-func (rcv *RFO) NOMINAL_FREQUENCY() float64 {
+/// ELNOT (Electronic Intelligence Notation)
+func (rcv *RFO) ELNOT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
-	return 0.0
+	return nil
 }
 
-func (rcv *RFO) MutateNOMINAL_FREQUENCY(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(60, n)
-}
-
-func (rcv *RFO) START_FREQUENCY() float64 {
+/// ELNOT (Electronic Intelligence Notation)
+/// Antenna name
+func (rcv *RFO) ANTENNA_NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
-	return 0.0
+	return nil
 }
 
-func (rcv *RFO) MutateSTART_FREQUENCY(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(62, n)
-}
-
-func (rcv *RFO) END_FREQUENCY() float64 {
+/// Antenna name
+/// Collection mode
+func (rcv *RFO) COLLECTION_MODE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
-	return 0.0
+	return nil
 }
 
-func (rcv *RFO) MutateEND_FREQUENCY(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(64, n)
-}
-
-func (rcv *RFO) RELATIVE_CARRIER_POWER() float64 {
+/// Collection mode
+/// Measured center frequency (MHz)
+func (rcv *RFO) FREQUENCY() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -390,11 +445,13 @@ func (rcv *RFO) RELATIVE_CARRIER_POWER() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateRELATIVE_CARRIER_POWER(n float64) bool {
+/// Measured center frequency (MHz)
+func (rcv *RFO) MutateFREQUENCY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(66, n)
 }
 
-func (rcv *RFO) SPECTRUM_ANALYZER_POWER() float64 {
+/// Nominal center frequency (MHz)
+func (rcv *RFO) NOMINAL_FREQUENCY() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -402,11 +459,13 @@ func (rcv *RFO) SPECTRUM_ANALYZER_POWER() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateSPECTRUM_ANALYZER_POWER(n float64) bool {
+/// Nominal center frequency (MHz)
+func (rcv *RFO) MutateNOMINAL_FREQUENCY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(68, n)
 }
 
-func (rcv *RFO) RELATIVE_NOISE_FLOOR() float64 {
+/// Start frequency of emission (MHz)
+func (rcv *RFO) START_FREQUENCY() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -414,11 +473,13 @@ func (rcv *RFO) RELATIVE_NOISE_FLOOR() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateRELATIVE_NOISE_FLOOR(n float64) bool {
+/// Start frequency of emission (MHz)
+func (rcv *RFO) MutateSTART_FREQUENCY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(70, n)
 }
 
-func (rcv *RFO) REFERENCE_LEVEL() float64 {
+/// End frequency of emission (MHz)
+func (rcv *RFO) END_FREQUENCY() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -426,11 +487,13 @@ func (rcv *RFO) REFERENCE_LEVEL() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateREFERENCE_LEVEL(n float64) bool {
+/// End frequency of emission (MHz)
+func (rcv *RFO) MutateEND_FREQUENCY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(72, n)
 }
 
-func (rcv *RFO) PGRI() float64 {
+/// Frequency shift from nominal (MHz)
+func (rcv *RFO) FREQUENCY_SHIFT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -438,11 +501,13 @@ func (rcv *RFO) PGRI() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutatePGRI(n float64) bool {
+/// Frequency shift from nominal (MHz)
+func (rcv *RFO) MutateFREQUENCY_SHIFT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(74, n)
 }
 
-func (rcv *RFO) CONFIDENCE() float64 {
+/// Measured bandwidth (MHz)
+func (rcv *RFO) BANDWIDTH() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -450,35 +515,41 @@ func (rcv *RFO) CONFIDENCE() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateCONFIDENCE(n float64) bool {
+/// Measured bandwidth (MHz)
+func (rcv *RFO) MutateBANDWIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(76, n)
 }
 
-func (rcv *RFO) INCOMING() bool {
+/// Nominal bandwidth (MHz)
+func (rcv *RFO) NOMINAL_BANDWIDTH() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
 	if o != 0 {
-		return rcv._tab.GetBool(o + rcv._tab.Pos)
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
-	return false
+	return 0.0
 }
 
-func (rcv *RFO) MutateINCOMING(n bool) bool {
-	return rcv._tab.MutateBoolSlot(78, n)
+/// Nominal bandwidth (MHz)
+func (rcv *RFO) MutateNOMINAL_BANDWIDTH(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(78, n)
 }
 
-func (rcv *RFO) SWITCH_POINT() int32 {
+/// Resolution bandwidth (MHz)
+func (rcv *RFO) RESOLUTION_BANDWIDTH() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
-	return 0
+	return 0.0
 }
 
-func (rcv *RFO) MutateSWITCH_POINT(n int32) bool {
-	return rcv._tab.MutateInt32Slot(80, n)
+/// Resolution bandwidth (MHz)
+func (rcv *RFO) MutateRESOLUTION_BANDWIDTH(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(80, n)
 }
 
-func (rcv *RFO) BAUD_RATE() float64 {
+/// Video bandwidth (MHz)
+func (rcv *RFO) VIDEO_BANDWIDTH() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -486,11 +557,13 @@ func (rcv *RFO) BAUD_RATE() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateBAUD_RATE(n float64) bool {
+/// Video bandwidth (MHz)
+func (rcv *RFO) MutateVIDEO_BANDWIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(82, n)
 }
 
-func (rcv *RFO) SNR() float64 {
+/// Relative carrier power (dBm)
+func (rcv *RFO) RELATIVE_CARRIER_POWER() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -498,11 +571,13 @@ func (rcv *RFO) SNR() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateSNR(n float64) bool {
+/// Relative carrier power (dBm)
+func (rcv *RFO) MutateRELATIVE_CARRIER_POWER(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(84, n)
 }
 
-func (rcv *RFO) NOMINAL_SNR() float64 {
+/// Spectrum analyzer power (dBm)
+func (rcv *RFO) SPECTRUM_ANALYZER_POWER() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -510,11 +585,13 @@ func (rcv *RFO) NOMINAL_SNR() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateNOMINAL_SNR(n float64) bool {
+/// Spectrum analyzer power (dBm)
+func (rcv *RFO) MutateSPECTRUM_ANALYZER_POWER(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(86, n)
 }
 
-func (rcv *RFO) POLARITY() float64 {
+/// Relative noise floor (dBm)
+func (rcv *RFO) RELATIVE_NOISE_FLOOR() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -522,31 +599,41 @@ func (rcv *RFO) POLARITY() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutatePOLARITY(n float64) bool {
+/// Relative noise floor (dBm)
+func (rcv *RFO) MutateRELATIVE_NOISE_FLOOR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(88, n)
 }
 
-func (rcv *RFO) POLARITY_TYPE() []byte {
+/// Reference level (dBm)
+func (rcv *RFO) REFERENCE_LEVEL() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
-	return nil
+	return 0.0
 }
 
-func (rcv *RFO) CHANNEL() int32 {
+/// Reference level (dBm)
+func (rcv *RFO) MutateREFERENCE_LEVEL(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(90, n)
+}
+
+/// Noise power density (dBm/Hz)
+func (rcv *RFO) NOISE_PWR_DENSITY() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
-	return 0
+	return 0.0
 }
 
-func (rcv *RFO) MutateCHANNEL(n int32) bool {
-	return rcv._tab.MutateInt32Slot(92, n)
+/// Noise power density (dBm/Hz)
+func (rcv *RFO) MutateNOISE_PWR_DENSITY(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(92, n)
 }
 
-func (rcv *RFO) POWER_OVER_NOISE() float64 {
+/// PGRI (Pulse Group Repetition Interval, microseconds)
+func (rcv *RFO) PGRI() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -554,11 +641,13 @@ func (rcv *RFO) POWER_OVER_NOISE() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutatePOWER_OVER_NOISE(n float64) bool {
+/// PGRI (Pulse Group Repetition Interval, microseconds)
+func (rcv *RFO) MutatePGRI(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(94, n)
 }
 
-func (rcv *RFO) NOMINAL_POWER_OVER_NOISE() float64 {
+/// Effective isotropic radiated power (dBW)
+func (rcv *RFO) EIRP() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -566,11 +655,13 @@ func (rcv *RFO) NOMINAL_POWER_OVER_NOISE() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateNOMINAL_POWER_OVER_NOISE(n float64) bool {
+/// Effective isotropic radiated power (dBW)
+func (rcv *RFO) MutateEIRP(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(96, n)
 }
 
-func (rcv *RFO) BANDWIDTH() float64 {
+/// Nominal EIRP (dBW)
+func (rcv *RFO) NOMINAL_EIRP() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -578,11 +669,13 @@ func (rcv *RFO) BANDWIDTH() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateBANDWIDTH(n float64) bool {
+/// Nominal EIRP (dBW)
+func (rcv *RFO) MutateNOMINAL_EIRP(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(98, n)
 }
 
-func (rcv *RFO) NOMINAL_BANDWIDTH() float64 {
+/// Minimum power spectral density (dBm/Hz)
+func (rcv *RFO) MIN_PSD() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -590,11 +683,13 @@ func (rcv *RFO) NOMINAL_BANDWIDTH() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateNOMINAL_BANDWIDTH(n float64) bool {
+/// Minimum power spectral density (dBm/Hz)
+func (rcv *RFO) MutateMIN_PSD(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(100, n)
 }
 
-func (rcv *RFO) RESOLUTION_BANDWIDTH() float64 {
+/// Maximum power spectral density (dBm/Hz)
+func (rcv *RFO) MAX_PSD() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -602,11 +697,13 @@ func (rcv *RFO) RESOLUTION_BANDWIDTH() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateRESOLUTION_BANDWIDTH(n float64) bool {
+/// Maximum power spectral density (dBm/Hz)
+func (rcv *RFO) MutateMAX_PSD(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(102, n)
 }
 
-func (rcv *RFO) VIDEO_BANDWIDTH() float64 {
+/// Signal-to-noise ratio (dB)
+func (rcv *RFO) SNR() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -614,11 +711,13 @@ func (rcv *RFO) VIDEO_BANDWIDTH() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateVIDEO_BANDWIDTH(n float64) bool {
+/// Signal-to-noise ratio (dB)
+func (rcv *RFO) MutateSNR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(104, n)
 }
 
-func (rcv *RFO) EIRP() float64 {
+/// Nominal SNR (dB)
+func (rcv *RFO) NOMINAL_SNR() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -626,11 +725,13 @@ func (rcv *RFO) EIRP() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateEIRP(n float64) bool {
+/// Nominal SNR (dB)
+func (rcv *RFO) MutateNOMINAL_SNR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(106, n)
 }
 
-func (rcv *RFO) NOMINAL_EIRP() float64 {
+/// Power over noise (dB)
+func (rcv *RFO) POWER_OVER_NOISE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -638,11 +739,13 @@ func (rcv *RFO) NOMINAL_EIRP() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateNOMINAL_EIRP(n float64) bool {
+/// Power over noise (dB)
+func (rcv *RFO) MutatePOWER_OVER_NOISE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(108, n)
 }
 
-func (rcv *RFO) MIN_PSD() float64 {
+/// Nominal power over noise (dB)
+func (rcv *RFO) NOMINAL_POWER_OVER_NOISE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -650,11 +753,13 @@ func (rcv *RFO) MIN_PSD() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateMIN_PSD(n float64) bool {
+/// Nominal power over noise (dB)
+func (rcv *RFO) MutateNOMINAL_POWER_OVER_NOISE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(110, n)
 }
 
-func (rcv *RFO) MAX_PSD() float64 {
+/// Polarity angle (degrees)
+func (rcv *RFO) POLARITY() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(112))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -662,68 +767,238 @@ func (rcv *RFO) MAX_PSD() float64 {
 	return 0.0
 }
 
-func (rcv *RFO) MutateMAX_PSD(n float64) bool {
+/// Polarity angle (degrees)
+func (rcv *RFO) MutatePOLARITY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(112, n)
 }
 
-func (rcv *RFO) FREQUENCY_SHIFT() float64 {
+/// Polarization type (e.g., LHCP, RHCP, LINEAR)
+func (rcv *RFO) POLARITY_TYPE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Polarization type (e.g., LHCP, RHCP, LINEAR)
+/// Channel number
+func (rcv *RFO) CHANNEL() uint16 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
+	if o != 0 {
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Channel number
+func (rcv *RFO) MutateCHANNEL(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(116, n)
+}
+
+/// Baud rate (symbols/s)
+func (rcv *RFO) BAUD_RATE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
 	return 0.0
 }
 
-func (rcv *RFO) MutateFREQUENCY_SHIFT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(114, n)
+/// Baud rate (symbols/s)
+func (rcv *RFO) MutateBAUD_RATE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(118, n)
 }
 
+/// Symbol-to-noise ratio (dB)
+func (rcv *RFO) SYMBOL_TO_NOISE_RATIO() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(120))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Symbol-to-noise ratio (dB)
+func (rcv *RFO) MutateSYMBOL_TO_NOISE_RATIO(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(120, n)
+}
+
+/// Bit error rate
+func (rcv *RFO) BIT_ERROR_RATE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(122))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Bit error rate
+func (rcv *RFO) MutateBIT_ERROR_RATE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(122, n)
+}
+
+/// True if peak measurement
 func (rcv *RFO) PEAK() bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(124))
 	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
 	}
 	return false
 }
 
+/// True if peak measurement
 func (rcv *RFO) MutatePEAK(n bool) bool {
-	return rcv._tab.MutateBoolSlot(116, n)
+	return rcv._tab.MutateBoolSlot(124, n)
 }
 
-func (rcv *RFO) ANTENNA_NAME() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-func (rcv *RFO) DETECTION_STATUS() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(120))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-func (rcv *RFO) COLLECTION_MODE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(122))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-func (rcv *RFO) RAW_FILE_URI() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(124))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-func (rcv *RFO) TAGS(j int) []byte {
+/// True if incoming signal
+func (rcv *RFO) INCOMING() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(126))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+/// True if incoming signal
+func (rcv *RFO) MutateINCOMING(n bool) bool {
+	return rcv._tab.MutateBoolSlot(126, n)
+}
+
+/// Switch point number
+func (rcv *RFO) SWITCH_POINT() uint16 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(128))
+	if o != 0 {
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Switch point number
+func (rcv *RFO) MutateSWITCH_POINT(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(128, n)
+}
+
+/// Confidence score (0-1)
+func (rcv *RFO) CONFIDENCE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(130))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Confidence score (0-1)
+func (rcv *RFO) MutateCONFIDENCE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(130, n)
+}
+
+/// Carrier standard (e.g., DVB-S, DVB-S2)
+func (rcv *RFO) CARRIER_STANDARD() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(132))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Carrier standard (e.g., DVB-S, DVB-S2)
+/// Modulation type
+func (rcv *RFO) MODULATION() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(134))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Modulation type
+/// Inner FEC coding rate denominator
+func (rcv *RFO) INNER_CODING_RATE() byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(136))
+	if o != 0 {
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Inner FEC coding rate denominator
+func (rcv *RFO) MutateINNER_CODING_RATE(n byte) bool {
+	return rcv._tab.MutateByteSlot(136, n)
+}
+
+/// Outer FEC coding rate denominator
+func (rcv *RFO) OUTER_CODING_RATE() byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(138))
+	if o != 0 {
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Outer FEC coding rate denominator
+func (rcv *RFO) MutateOUTER_CODING_RATE(n byte) bool {
+	return rcv._tab.MutateByteSlot(138, n)
+}
+
+/// Transmit filter type
+func (rcv *RFO) TRANSMIT_FILTER_TYPE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(140))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Transmit filter type
+/// Transmit filter roll-off factor
+func (rcv *RFO) TRANSMIT_FILTER_ROLL_OFF() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(142))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Transmit filter roll-off factor
+func (rcv *RFO) MutateTRANSMIT_FILTER_ROLL_OFF(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(142, n)
+}
+
+/// Reference to raw data file
+func (rcv *RFO) RAW_FILE_URI() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(144))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Reference to raw data file
+/// Event descriptor
+func (rcv *RFO) DESCRIPTOR() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(146))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Event descriptor
+/// Reference URL
+func (rcv *RFO) URL() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(148))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Reference URL
+/// Associated tags
+func (rcv *RFO) TAGS(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(150))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -732,133 +1007,14 @@ func (rcv *RFO) TAGS(j int) []byte {
 }
 
 func (rcv *RFO) TAGSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(126))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(150))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
-func (rcv *RFO) NOISE_PWR_DENSITY() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(128))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *RFO) MutateNOISE_PWR_DENSITY(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(128, n)
-}
-
-func (rcv *RFO) CARRIER_STANDARD() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(130))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-func (rcv *RFO) MODULATION() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(132))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-func (rcv *RFO) INNER_CODING_RATE() int32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(134))
-	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-func (rcv *RFO) MutateINNER_CODING_RATE(n int32) bool {
-	return rcv._tab.MutateInt32Slot(134, n)
-}
-
-func (rcv *RFO) OUTER_CODING_RATE() int32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(136))
-	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-func (rcv *RFO) MutateOUTER_CODING_RATE(n int32) bool {
-	return rcv._tab.MutateInt32Slot(136, n)
-}
-
-func (rcv *RFO) TRANSMIT_FILTER_TYPE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(138))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-func (rcv *RFO) TRANSMIT_FILTER_ROLL_OFF() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(140))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *RFO) MutateTRANSMIT_FILTER_ROLL_OFF(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(140, n)
-}
-
-func (rcv *RFO) SYMBOL_TO_NOISE_RATIO() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(142))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *RFO) MutateSYMBOL_TO_NOISE_RATIO(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(142, n)
-}
-
-func (rcv *RFO) BIT_ERROR_RATE() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(144))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *RFO) MutateBIT_ERROR_RATE(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(144, n)
-}
-
-func (rcv *RFO) ON_ORBIT() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(146))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-func (rcv *RFO) DESCRIPTOR() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(148))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-func (rcv *RFO) URL() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(150))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
+/// Associated tags
 func RFOStart(builder *flatbuffers.Builder) {
 	builder.StartObject(74)
 }
@@ -871,221 +1027,221 @@ func RFOAddOB_TIME(builder *flatbuffers.Builder, OB_TIME flatbuffers.UOffsetT) {
 func RFOAddID_SENSOR(builder *flatbuffers.Builder, ID_SENSOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ID_SENSOR), 0)
 }
-func RFOAddTYPE(builder *flatbuffers.Builder, TYPE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(TYPE), 0)
+func RFOAddORIG_SENSOR_ID(builder *flatbuffers.Builder, ORIG_SENSOR_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ORIG_SENSOR_ID), 0)
 }
-func RFOAddSAT_NO(builder *flatbuffers.Builder, SAT_NO int32) {
-	builder.PrependInt32Slot(4, SAT_NO, 0)
+func RFOAddOBS_TYPE(builder *flatbuffers.Builder, OBS_TYPE rfObsType) {
+	builder.PrependInt8Slot(4, int8(OBS_TYPE), 0)
 }
-func RFOAddTASK_ID(builder *flatbuffers.Builder, TASK_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(TASK_ID), 0)
-}
-func RFOAddTRANSACTION_ID(builder *flatbuffers.Builder, TRANSACTION_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(TRANSACTION_ID), 0)
-}
-func RFOAddTRACK_ID(builder *flatbuffers.Builder, TRACK_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(TRACK_ID), 0)
+func RFOAddSAT_NO(builder *flatbuffers.Builder, SAT_NO uint32) {
+	builder.PrependUint32Slot(5, SAT_NO, 0)
 }
 func RFOAddORIG_OBJECT_ID(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(ORIG_OBJECT_ID), 0)
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(ORIG_OBJECT_ID), 0)
 }
-func RFOAddORIG_SENSOR_ID(builder *flatbuffers.Builder, ORIG_SENSOR_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(ORIG_SENSOR_ID), 0)
+func RFOAddON_ORBIT(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(ON_ORBIT), 0)
 }
 func RFOAddUCT(builder *flatbuffers.Builder, UCT bool) {
-	builder.PrependBoolSlot(10, UCT, false)
+	builder.PrependBoolSlot(8, UCT, false)
+}
+func RFOAddTASK_ID(builder *flatbuffers.Builder, TASK_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(TASK_ID), 0)
+}
+func RFOAddTRANSACTION_ID(builder *flatbuffers.Builder, TRANSACTION_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(TRANSACTION_ID), 0)
+}
+func RFOAddTRACK_ID(builder *flatbuffers.Builder, TRACK_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(TRACK_ID), 0)
 }
 func RFOAddTRANSPONDER(builder *flatbuffers.Builder, TRANSPONDER flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(TRANSPONDER), 0)
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(TRANSPONDER), 0)
+}
+func RFOAddDETECTION_STATUS(builder *flatbuffers.Builder, DETECTION_STATUS rfDetectionStatus) {
+	builder.PrependInt8Slot(13, int8(DETECTION_STATUS), 0)
 }
 func RFOAddAZIMUTH(builder *flatbuffers.Builder, AZIMUTH float64) {
-	builder.PrependFloat64Slot(12, AZIMUTH, 0.0)
+	builder.PrependFloat64Slot(14, AZIMUTH, 0.0)
 }
 func RFOAddAZIMUTH_UNC(builder *flatbuffers.Builder, AZIMUTH_UNC float64) {
-	builder.PrependFloat64Slot(13, AZIMUTH_UNC, 0.0)
+	builder.PrependFloat64Slot(15, AZIMUTH_UNC, 0.0)
 }
 func RFOAddAZIMUTH_RATE(builder *flatbuffers.Builder, AZIMUTH_RATE float64) {
-	builder.PrependFloat64Slot(14, AZIMUTH_RATE, 0.0)
+	builder.PrependFloat64Slot(16, AZIMUTH_RATE, 0.0)
 }
 func RFOAddELEVATION(builder *flatbuffers.Builder, ELEVATION float64) {
-	builder.PrependFloat64Slot(15, ELEVATION, 0.0)
+	builder.PrependFloat64Slot(17, ELEVATION, 0.0)
 }
 func RFOAddELEVATION_UNC(builder *flatbuffers.Builder, ELEVATION_UNC float64) {
-	builder.PrependFloat64Slot(16, ELEVATION_UNC, 0.0)
+	builder.PrependFloat64Slot(18, ELEVATION_UNC, 0.0)
 }
 func RFOAddELEVATION_RATE(builder *flatbuffers.Builder, ELEVATION_RATE float64) {
-	builder.PrependFloat64Slot(17, ELEVATION_RATE, 0.0)
+	builder.PrependFloat64Slot(19, ELEVATION_RATE, 0.0)
 }
 func RFOAddRANGE(builder *flatbuffers.Builder, RANGE float64) {
-	builder.PrependFloat64Slot(18, RANGE, 0.0)
+	builder.PrependFloat64Slot(20, RANGE, 0.0)
 }
 func RFOAddRANGE_UNC(builder *flatbuffers.Builder, RANGE_UNC float64) {
-	builder.PrependFloat64Slot(19, RANGE_UNC, 0.0)
+	builder.PrependFloat64Slot(21, RANGE_UNC, 0.0)
 }
 func RFOAddRANGE_RATE(builder *flatbuffers.Builder, RANGE_RATE float64) {
-	builder.PrependFloat64Slot(20, RANGE_RATE, 0.0)
+	builder.PrependFloat64Slot(22, RANGE_RATE, 0.0)
 }
 func RFOAddRANGE_RATE_UNC(builder *flatbuffers.Builder, RANGE_RATE_UNC float64) {
-	builder.PrependFloat64Slot(21, RANGE_RATE_UNC, 0.0)
+	builder.PrependFloat64Slot(23, RANGE_RATE_UNC, 0.0)
 }
 func RFOAddTRACK_RANGE(builder *flatbuffers.Builder, TRACK_RANGE float64) {
-	builder.PrependFloat64Slot(22, TRACK_RANGE, 0.0)
+	builder.PrependFloat64Slot(24, TRACK_RANGE, 0.0)
 }
 func RFOAddSENLAT(builder *flatbuffers.Builder, SENLAT float64) {
-	builder.PrependFloat64Slot(23, SENLAT, 0.0)
+	builder.PrependFloat64Slot(25, SENLAT, 0.0)
 }
 func RFOAddSENLON(builder *flatbuffers.Builder, SENLON float64) {
-	builder.PrependFloat64Slot(24, SENLON, 0.0)
+	builder.PrependFloat64Slot(26, SENLON, 0.0)
 }
 func RFOAddSENALT(builder *flatbuffers.Builder, SENALT float64) {
-	builder.PrependFloat64Slot(25, SENALT, 0.0)
+	builder.PrependFloat64Slot(27, SENALT, 0.0)
 }
 func RFOAddELNOT(builder *flatbuffers.Builder, ELNOT flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(ELNOT), 0)
-}
-func RFOAddFREQUENCY(builder *flatbuffers.Builder, FREQUENCY float64) {
-	builder.PrependFloat64Slot(27, FREQUENCY, 0.0)
-}
-func RFOAddNOMINAL_FREQUENCY(builder *flatbuffers.Builder, NOMINAL_FREQUENCY float64) {
-	builder.PrependFloat64Slot(28, NOMINAL_FREQUENCY, 0.0)
-}
-func RFOAddSTART_FREQUENCY(builder *flatbuffers.Builder, START_FREQUENCY float64) {
-	builder.PrependFloat64Slot(29, START_FREQUENCY, 0.0)
-}
-func RFOAddEND_FREQUENCY(builder *flatbuffers.Builder, END_FREQUENCY float64) {
-	builder.PrependFloat64Slot(30, END_FREQUENCY, 0.0)
-}
-func RFOAddRELATIVE_CARRIER_POWER(builder *flatbuffers.Builder, RELATIVE_CARRIER_POWER float64) {
-	builder.PrependFloat64Slot(31, RELATIVE_CARRIER_POWER, 0.0)
-}
-func RFOAddSPECTRUM_ANALYZER_POWER(builder *flatbuffers.Builder, SPECTRUM_ANALYZER_POWER float64) {
-	builder.PrependFloat64Slot(32, SPECTRUM_ANALYZER_POWER, 0.0)
-}
-func RFOAddRELATIVE_NOISE_FLOOR(builder *flatbuffers.Builder, RELATIVE_NOISE_FLOOR float64) {
-	builder.PrependFloat64Slot(33, RELATIVE_NOISE_FLOOR, 0.0)
-}
-func RFOAddREFERENCE_LEVEL(builder *flatbuffers.Builder, REFERENCE_LEVEL float64) {
-	builder.PrependFloat64Slot(34, REFERENCE_LEVEL, 0.0)
-}
-func RFOAddPGRI(builder *flatbuffers.Builder, PGRI float64) {
-	builder.PrependFloat64Slot(35, PGRI, 0.0)
-}
-func RFOAddCONFIDENCE(builder *flatbuffers.Builder, CONFIDENCE float64) {
-	builder.PrependFloat64Slot(36, CONFIDENCE, 0.0)
-}
-func RFOAddINCOMING(builder *flatbuffers.Builder, INCOMING bool) {
-	builder.PrependBoolSlot(37, INCOMING, false)
-}
-func RFOAddSWITCH_POINT(builder *flatbuffers.Builder, SWITCH_POINT int32) {
-	builder.PrependInt32Slot(38, SWITCH_POINT, 0)
-}
-func RFOAddBAUD_RATE(builder *flatbuffers.Builder, BAUD_RATE float64) {
-	builder.PrependFloat64Slot(39, BAUD_RATE, 0.0)
-}
-func RFOAddSNR(builder *flatbuffers.Builder, SNR float64) {
-	builder.PrependFloat64Slot(40, SNR, 0.0)
-}
-func RFOAddNOMINAL_SNR(builder *flatbuffers.Builder, NOMINAL_SNR float64) {
-	builder.PrependFloat64Slot(41, NOMINAL_SNR, 0.0)
-}
-func RFOAddPOLARITY(builder *flatbuffers.Builder, POLARITY float64) {
-	builder.PrependFloat64Slot(42, POLARITY, 0.0)
-}
-func RFOAddPOLARITY_TYPE(builder *flatbuffers.Builder, POLARITY_TYPE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(43, flatbuffers.UOffsetT(POLARITY_TYPE), 0)
-}
-func RFOAddCHANNEL(builder *flatbuffers.Builder, CHANNEL int32) {
-	builder.PrependInt32Slot(44, CHANNEL, 0)
-}
-func RFOAddPOWER_OVER_NOISE(builder *flatbuffers.Builder, POWER_OVER_NOISE float64) {
-	builder.PrependFloat64Slot(45, POWER_OVER_NOISE, 0.0)
-}
-func RFOAddNOMINAL_POWER_OVER_NOISE(builder *flatbuffers.Builder, NOMINAL_POWER_OVER_NOISE float64) {
-	builder.PrependFloat64Slot(46, NOMINAL_POWER_OVER_NOISE, 0.0)
-}
-func RFOAddBANDWIDTH(builder *flatbuffers.Builder, BANDWIDTH float64) {
-	builder.PrependFloat64Slot(47, BANDWIDTH, 0.0)
-}
-func RFOAddNOMINAL_BANDWIDTH(builder *flatbuffers.Builder, NOMINAL_BANDWIDTH float64) {
-	builder.PrependFloat64Slot(48, NOMINAL_BANDWIDTH, 0.0)
-}
-func RFOAddRESOLUTION_BANDWIDTH(builder *flatbuffers.Builder, RESOLUTION_BANDWIDTH float64) {
-	builder.PrependFloat64Slot(49, RESOLUTION_BANDWIDTH, 0.0)
-}
-func RFOAddVIDEO_BANDWIDTH(builder *flatbuffers.Builder, VIDEO_BANDWIDTH float64) {
-	builder.PrependFloat64Slot(50, VIDEO_BANDWIDTH, 0.0)
-}
-func RFOAddEIRP(builder *flatbuffers.Builder, EIRP float64) {
-	builder.PrependFloat64Slot(51, EIRP, 0.0)
-}
-func RFOAddNOMINAL_EIRP(builder *flatbuffers.Builder, NOMINAL_EIRP float64) {
-	builder.PrependFloat64Slot(52, NOMINAL_EIRP, 0.0)
-}
-func RFOAddMIN_PSD(builder *flatbuffers.Builder, MIN_PSD float64) {
-	builder.PrependFloat64Slot(53, MIN_PSD, 0.0)
-}
-func RFOAddMAX_PSD(builder *flatbuffers.Builder, MAX_PSD float64) {
-	builder.PrependFloat64Slot(54, MAX_PSD, 0.0)
-}
-func RFOAddFREQUENCY_SHIFT(builder *flatbuffers.Builder, FREQUENCY_SHIFT float64) {
-	builder.PrependFloat64Slot(55, FREQUENCY_SHIFT, 0.0)
-}
-func RFOAddPEAK(builder *flatbuffers.Builder, PEAK bool) {
-	builder.PrependBoolSlot(56, PEAK, false)
+	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(ELNOT), 0)
 }
 func RFOAddANTENNA_NAME(builder *flatbuffers.Builder, ANTENNA_NAME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(57, flatbuffers.UOffsetT(ANTENNA_NAME), 0)
-}
-func RFOAddDETECTION_STATUS(builder *flatbuffers.Builder, DETECTION_STATUS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(58, flatbuffers.UOffsetT(DETECTION_STATUS), 0)
+	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(ANTENNA_NAME), 0)
 }
 func RFOAddCOLLECTION_MODE(builder *flatbuffers.Builder, COLLECTION_MODE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(59, flatbuffers.UOffsetT(COLLECTION_MODE), 0)
+	builder.PrependUOffsetTSlot(30, flatbuffers.UOffsetT(COLLECTION_MODE), 0)
+}
+func RFOAddFREQUENCY(builder *flatbuffers.Builder, FREQUENCY float64) {
+	builder.PrependFloat64Slot(31, FREQUENCY, 0.0)
+}
+func RFOAddNOMINAL_FREQUENCY(builder *flatbuffers.Builder, NOMINAL_FREQUENCY float64) {
+	builder.PrependFloat64Slot(32, NOMINAL_FREQUENCY, 0.0)
+}
+func RFOAddSTART_FREQUENCY(builder *flatbuffers.Builder, START_FREQUENCY float64) {
+	builder.PrependFloat64Slot(33, START_FREQUENCY, 0.0)
+}
+func RFOAddEND_FREQUENCY(builder *flatbuffers.Builder, END_FREQUENCY float64) {
+	builder.PrependFloat64Slot(34, END_FREQUENCY, 0.0)
+}
+func RFOAddFREQUENCY_SHIFT(builder *flatbuffers.Builder, FREQUENCY_SHIFT float64) {
+	builder.PrependFloat64Slot(35, FREQUENCY_SHIFT, 0.0)
+}
+func RFOAddBANDWIDTH(builder *flatbuffers.Builder, BANDWIDTH float64) {
+	builder.PrependFloat64Slot(36, BANDWIDTH, 0.0)
+}
+func RFOAddNOMINAL_BANDWIDTH(builder *flatbuffers.Builder, NOMINAL_BANDWIDTH float64) {
+	builder.PrependFloat64Slot(37, NOMINAL_BANDWIDTH, 0.0)
+}
+func RFOAddRESOLUTION_BANDWIDTH(builder *flatbuffers.Builder, RESOLUTION_BANDWIDTH float64) {
+	builder.PrependFloat64Slot(38, RESOLUTION_BANDWIDTH, 0.0)
+}
+func RFOAddVIDEO_BANDWIDTH(builder *flatbuffers.Builder, VIDEO_BANDWIDTH float64) {
+	builder.PrependFloat64Slot(39, VIDEO_BANDWIDTH, 0.0)
+}
+func RFOAddRELATIVE_CARRIER_POWER(builder *flatbuffers.Builder, RELATIVE_CARRIER_POWER float64) {
+	builder.PrependFloat64Slot(40, RELATIVE_CARRIER_POWER, 0.0)
+}
+func RFOAddSPECTRUM_ANALYZER_POWER(builder *flatbuffers.Builder, SPECTRUM_ANALYZER_POWER float64) {
+	builder.PrependFloat64Slot(41, SPECTRUM_ANALYZER_POWER, 0.0)
+}
+func RFOAddRELATIVE_NOISE_FLOOR(builder *flatbuffers.Builder, RELATIVE_NOISE_FLOOR float64) {
+	builder.PrependFloat64Slot(42, RELATIVE_NOISE_FLOOR, 0.0)
+}
+func RFOAddREFERENCE_LEVEL(builder *flatbuffers.Builder, REFERENCE_LEVEL float64) {
+	builder.PrependFloat64Slot(43, REFERENCE_LEVEL, 0.0)
+}
+func RFOAddNOISE_PWR_DENSITY(builder *flatbuffers.Builder, NOISE_PWR_DENSITY float64) {
+	builder.PrependFloat64Slot(44, NOISE_PWR_DENSITY, 0.0)
+}
+func RFOAddPGRI(builder *flatbuffers.Builder, PGRI float64) {
+	builder.PrependFloat64Slot(45, PGRI, 0.0)
+}
+func RFOAddEIRP(builder *flatbuffers.Builder, EIRP float64) {
+	builder.PrependFloat64Slot(46, EIRP, 0.0)
+}
+func RFOAddNOMINAL_EIRP(builder *flatbuffers.Builder, NOMINAL_EIRP float64) {
+	builder.PrependFloat64Slot(47, NOMINAL_EIRP, 0.0)
+}
+func RFOAddMIN_PSD(builder *flatbuffers.Builder, MIN_PSD float64) {
+	builder.PrependFloat64Slot(48, MIN_PSD, 0.0)
+}
+func RFOAddMAX_PSD(builder *flatbuffers.Builder, MAX_PSD float64) {
+	builder.PrependFloat64Slot(49, MAX_PSD, 0.0)
+}
+func RFOAddSNR(builder *flatbuffers.Builder, SNR float64) {
+	builder.PrependFloat64Slot(50, SNR, 0.0)
+}
+func RFOAddNOMINAL_SNR(builder *flatbuffers.Builder, NOMINAL_SNR float64) {
+	builder.PrependFloat64Slot(51, NOMINAL_SNR, 0.0)
+}
+func RFOAddPOWER_OVER_NOISE(builder *flatbuffers.Builder, POWER_OVER_NOISE float64) {
+	builder.PrependFloat64Slot(52, POWER_OVER_NOISE, 0.0)
+}
+func RFOAddNOMINAL_POWER_OVER_NOISE(builder *flatbuffers.Builder, NOMINAL_POWER_OVER_NOISE float64) {
+	builder.PrependFloat64Slot(53, NOMINAL_POWER_OVER_NOISE, 0.0)
+}
+func RFOAddPOLARITY(builder *flatbuffers.Builder, POLARITY float64) {
+	builder.PrependFloat64Slot(54, POLARITY, 0.0)
+}
+func RFOAddPOLARITY_TYPE(builder *flatbuffers.Builder, POLARITY_TYPE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(55, flatbuffers.UOffsetT(POLARITY_TYPE), 0)
+}
+func RFOAddCHANNEL(builder *flatbuffers.Builder, CHANNEL uint16) {
+	builder.PrependUint16Slot(56, CHANNEL, 0)
+}
+func RFOAddBAUD_RATE(builder *flatbuffers.Builder, BAUD_RATE float64) {
+	builder.PrependFloat64Slot(57, BAUD_RATE, 0.0)
+}
+func RFOAddSYMBOL_TO_NOISE_RATIO(builder *flatbuffers.Builder, SYMBOL_TO_NOISE_RATIO float64) {
+	builder.PrependFloat64Slot(58, SYMBOL_TO_NOISE_RATIO, 0.0)
+}
+func RFOAddBIT_ERROR_RATE(builder *flatbuffers.Builder, BIT_ERROR_RATE float64) {
+	builder.PrependFloat64Slot(59, BIT_ERROR_RATE, 0.0)
+}
+func RFOAddPEAK(builder *flatbuffers.Builder, PEAK bool) {
+	builder.PrependBoolSlot(60, PEAK, false)
+}
+func RFOAddINCOMING(builder *flatbuffers.Builder, INCOMING bool) {
+	builder.PrependBoolSlot(61, INCOMING, false)
+}
+func RFOAddSWITCH_POINT(builder *flatbuffers.Builder, SWITCH_POINT uint16) {
+	builder.PrependUint16Slot(62, SWITCH_POINT, 0)
+}
+func RFOAddCONFIDENCE(builder *flatbuffers.Builder, CONFIDENCE float64) {
+	builder.PrependFloat64Slot(63, CONFIDENCE, 0.0)
+}
+func RFOAddCARRIER_STANDARD(builder *flatbuffers.Builder, CARRIER_STANDARD flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(64, flatbuffers.UOffsetT(CARRIER_STANDARD), 0)
+}
+func RFOAddMODULATION(builder *flatbuffers.Builder, MODULATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(65, flatbuffers.UOffsetT(MODULATION), 0)
+}
+func RFOAddINNER_CODING_RATE(builder *flatbuffers.Builder, INNER_CODING_RATE byte) {
+	builder.PrependByteSlot(66, INNER_CODING_RATE, 0)
+}
+func RFOAddOUTER_CODING_RATE(builder *flatbuffers.Builder, OUTER_CODING_RATE byte) {
+	builder.PrependByteSlot(67, OUTER_CODING_RATE, 0)
+}
+func RFOAddTRANSMIT_FILTER_TYPE(builder *flatbuffers.Builder, TRANSMIT_FILTER_TYPE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(68, flatbuffers.UOffsetT(TRANSMIT_FILTER_TYPE), 0)
+}
+func RFOAddTRANSMIT_FILTER_ROLL_OFF(builder *flatbuffers.Builder, TRANSMIT_FILTER_ROLL_OFF float64) {
+	builder.PrependFloat64Slot(69, TRANSMIT_FILTER_ROLL_OFF, 0.0)
 }
 func RFOAddRAW_FILE_URI(builder *flatbuffers.Builder, RAW_FILE_URI flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(60, flatbuffers.UOffsetT(RAW_FILE_URI), 0)
+	builder.PrependUOffsetTSlot(70, flatbuffers.UOffsetT(RAW_FILE_URI), 0)
+}
+func RFOAddDESCRIPTOR(builder *flatbuffers.Builder, DESCRIPTOR flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(71, flatbuffers.UOffsetT(DESCRIPTOR), 0)
+}
+func RFOAddURL(builder *flatbuffers.Builder, URL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(72, flatbuffers.UOffsetT(URL), 0)
 }
 func RFOAddTAGS(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(61, flatbuffers.UOffsetT(TAGS), 0)
+	builder.PrependUOffsetTSlot(73, flatbuffers.UOffsetT(TAGS), 0)
 }
 func RFOStartTAGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
-}
-func RFOAddNOISE_PWR_DENSITY(builder *flatbuffers.Builder, NOISE_PWR_DENSITY float64) {
-	builder.PrependFloat64Slot(62, NOISE_PWR_DENSITY, 0.0)
-}
-func RFOAddCARRIER_STANDARD(builder *flatbuffers.Builder, CARRIER_STANDARD flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(63, flatbuffers.UOffsetT(CARRIER_STANDARD), 0)
-}
-func RFOAddMODULATION(builder *flatbuffers.Builder, MODULATION flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(64, flatbuffers.UOffsetT(MODULATION), 0)
-}
-func RFOAddINNER_CODING_RATE(builder *flatbuffers.Builder, INNER_CODING_RATE int32) {
-	builder.PrependInt32Slot(65, INNER_CODING_RATE, 0)
-}
-func RFOAddOUTER_CODING_RATE(builder *flatbuffers.Builder, OUTER_CODING_RATE int32) {
-	builder.PrependInt32Slot(66, OUTER_CODING_RATE, 0)
-}
-func RFOAddTRANSMIT_FILTER_TYPE(builder *flatbuffers.Builder, TRANSMIT_FILTER_TYPE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(67, flatbuffers.UOffsetT(TRANSMIT_FILTER_TYPE), 0)
-}
-func RFOAddTRANSMIT_FILTER_ROLL_OFF(builder *flatbuffers.Builder, TRANSMIT_FILTER_ROLL_OFF float64) {
-	builder.PrependFloat64Slot(68, TRANSMIT_FILTER_ROLL_OFF, 0.0)
-}
-func RFOAddSYMBOL_TO_NOISE_RATIO(builder *flatbuffers.Builder, SYMBOL_TO_NOISE_RATIO float64) {
-	builder.PrependFloat64Slot(69, SYMBOL_TO_NOISE_RATIO, 0.0)
-}
-func RFOAddBIT_ERROR_RATE(builder *flatbuffers.Builder, BIT_ERROR_RATE float64) {
-	builder.PrependFloat64Slot(70, BIT_ERROR_RATE, 0.0)
-}
-func RFOAddON_ORBIT(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(71, flatbuffers.UOffsetT(ON_ORBIT), 0)
-}
-func RFOAddDESCRIPTOR(builder *flatbuffers.Builder, DESCRIPTOR flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(72, flatbuffers.UOffsetT(DESCRIPTOR), 0)
-}
-func RFOAddURL(builder *flatbuffers.Builder, URL flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(73, flatbuffers.UOffsetT(URL), 0)
 }
 func RFOEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

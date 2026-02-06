@@ -16,6 +16,129 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct MST;
 struct MSTBuilder;
 
+enum missileStatus : int8_t {
+  missileStatus_BOOSTING = 0,
+  missileStatus_MIDCOURSE = 1,
+  missileStatus_TERMINAL = 2,
+  missileStatus_IMPACT = 3,
+  missileStatus_BURNOUT = 4,
+  missileStatus_INTERCEPTED = 5,
+  missileStatus_LOST = 6,
+  missileStatus_UNKNOWN = 7,
+  missileStatus_MIN = missileStatus_BOOSTING,
+  missileStatus_MAX = missileStatus_UNKNOWN
+};
+
+inline const missileStatus (&EnumValuesmissileStatus())[8] {
+  static const missileStatus values[] = {
+    missileStatus_BOOSTING,
+    missileStatus_MIDCOURSE,
+    missileStatus_TERMINAL,
+    missileStatus_IMPACT,
+    missileStatus_BURNOUT,
+    missileStatus_INTERCEPTED,
+    missileStatus_LOST,
+    missileStatus_UNKNOWN
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesmissileStatus() {
+  static const char * const names[9] = {
+    "BOOSTING",
+    "MIDCOURSE",
+    "TERMINAL",
+    "IMPACT",
+    "BURNOUT",
+    "INTERCEPTED",
+    "LOST",
+    "UNKNOWN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamemissileStatus(missileStatus e) {
+  if (::flatbuffers::IsOutRange(e, missileStatus_BOOSTING, missileStatus_UNKNOWN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesmissileStatus()[index];
+}
+
+enum missileEnvironment : int8_t {
+  missileEnvironment_SPACE = 0,
+  missileEnvironment_ENDO_ATMOSPHERIC = 1,
+  missileEnvironment_EXO_ATMOSPHERIC = 2,
+  missileEnvironment_TRANSITIONAL = 3,
+  missileEnvironment_UNKNOWN = 4,
+  missileEnvironment_MIN = missileEnvironment_SPACE,
+  missileEnvironment_MAX = missileEnvironment_UNKNOWN
+};
+
+inline const missileEnvironment (&EnumValuesmissileEnvironment())[5] {
+  static const missileEnvironment values[] = {
+    missileEnvironment_SPACE,
+    missileEnvironment_ENDO_ATMOSPHERIC,
+    missileEnvironment_EXO_ATMOSPHERIC,
+    missileEnvironment_TRANSITIONAL,
+    missileEnvironment_UNKNOWN
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesmissileEnvironment() {
+  static const char * const names[6] = {
+    "SPACE",
+    "ENDO_ATMOSPHERIC",
+    "EXO_ATMOSPHERIC",
+    "TRANSITIONAL",
+    "UNKNOWN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamemissileEnvironment(missileEnvironment e) {
+  if (::flatbuffers::IsOutRange(e, missileEnvironment_SPACE, missileEnvironment_UNKNOWN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesmissileEnvironment()[index];
+}
+
+enum aouReportType : int8_t {
+  aouReportType_CIRCULAR = 0,
+  aouReportType_ELLIPTICAL = 1,
+  aouReportType_RECTANGULAR = 2,
+  aouReportType_NONE = 3,
+  aouReportType_MIN = aouReportType_CIRCULAR,
+  aouReportType_MAX = aouReportType_NONE
+};
+
+inline const aouReportType (&EnumValuesaouReportType())[4] {
+  static const aouReportType values[] = {
+    aouReportType_CIRCULAR,
+    aouReportType_ELLIPTICAL,
+    aouReportType_RECTANGULAR,
+    aouReportType_NONE
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesaouReportType() {
+  static const char * const names[5] = {
+    "CIRCULAR",
+    "ELLIPTICAL",
+    "RECTANGULAR",
+    "NONE",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameaouReportType(aouReportType e) {
+  if (::flatbuffers::IsOutRange(e, aouReportType_CIRCULAR, aouReportType_NONE)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesaouReportType()[index];
+}
+
 /// Missile Track
 struct MST FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef MSTBuilder Builder;
@@ -30,32 +153,32 @@ struct MST FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_OBJ_PLAT = 18,
     VT_OBJ_IDENT = 20,
     VT_SPACE_AMP = 22,
-    VT_OBJ_ACT = 24,
-    VT_SPACE_SPEC_TYPE = 26,
-    VT_ACFT_SUB_TYPE = 28,
-    VT_NAME = 30,
-    VT_CALL_SIGN = 32,
-    VT_LOST_TRK_IND = 34,
-    VT_TRACK_ID = 36,
-    VT_PARENT_TRACK_ID = 38,
-    VT_MUID_SRC_TRK = 40,
-    VT_MUID_SRC = 42,
-    VT_ALERT = 44,
-    VT_MSL_STATUS = 46,
-    VT_TS = 48,
-    VT_AOU_RPT_TYPE = 50,
-    VT_CONTAINMENT = 52,
-    VT_TRK_CONF = 54,
-    VT_TRK_QUAL = 56,
-    VT_ANG_ELEV = 58,
-    VT_SEN_MODE = 60,
-    VT_INFO_SOURCE = 62,
-    VT_BOOSTING = 64,
-    VT_POLAR_SING_LOC_LAT = 66,
-    VT_POLAR_SING_LOC_LON = 68,
-    VT_EMG_IND = 70,
-    VT_DROP_PT_IND = 72,
-    VT_SPACE_AMP_CONF = 74,
+    VT_SPACE_AMP_CONF = 24,
+    VT_OBJ_ACT = 26,
+    VT_SPACE_SPEC_TYPE = 28,
+    VT_ACFT_SUB_TYPE = 30,
+    VT_NAME = 32,
+    VT_CALL_SIGN = 34,
+    VT_LOST_TRK_IND = 36,
+    VT_TRACK_ID = 38,
+    VT_PARENT_TRACK_ID = 40,
+    VT_MUID_SRC_TRK = 42,
+    VT_MUID_SRC = 44,
+    VT_ALERT = 46,
+    VT_MSL_STATUS = 48,
+    VT_TS = 50,
+    VT_AOU_RPT_TYPE = 52,
+    VT_CONTAINMENT = 54,
+    VT_TRK_CONF = 56,
+    VT_TRK_QUAL = 58,
+    VT_ANG_ELEV = 60,
+    VT_SEN_MODE = 62,
+    VT_INFO_SOURCE = 64,
+    VT_BOOSTING = 66,
+    VT_POLAR_SING_LOC_LAT = 68,
+    VT_POLAR_SING_LOC_LON = 70,
+    VT_EMG_IND = 72,
+    VT_DROP_PT_IND = 74,
     VT_LAUNCH_TIME = 76,
     VT_LAUNCH_LAT = 78,
     VT_LAUNCH_LON = 80,
@@ -74,153 +197,199 @@ struct MST FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_LAUNCH_AOU = 106,
     VT_IMPACT_AOU = 108
   };
+  /// Unique identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
+  /// Message type code
   const ::flatbuffers::String *MSG_TYPE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_MSG_TYPE);
   }
+  /// Message sub-type
   const ::flatbuffers::String *MSG_SUB_TYPE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_MSG_SUB_TYPE);
   }
+  /// Message creation date (ISO 8601)
   const ::flatbuffers::String *MSG_CREATE_DATE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_MSG_CREATE_DATE);
   }
-  const ::flatbuffers::String *ENVIRONMENT() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ENVIRONMENT);
+  /// Track environment
+  missileEnvironment ENVIRONMENT() const {
+    return static_cast<missileEnvironment>(GetField<int8_t>(VT_ENVIRONMENT, 0));
   }
+  /// Object type classification
   const ::flatbuffers::String *OBJ_TYPE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBJ_TYPE);
   }
-  int32_t OBJ_TYPE_CONF() const {
-    return GetField<int32_t>(VT_OBJ_TYPE_CONF, 0);
+  /// Object type confidence (0-100)
+  uint8_t OBJ_TYPE_CONF() const {
+    return GetField<uint8_t>(VT_OBJ_TYPE_CONF, 0);
   }
+  /// Object platform type
   const ::flatbuffers::String *OBJ_PLAT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBJ_PLAT);
   }
+  /// Object identity assessment
   const ::flatbuffers::String *OBJ_IDENT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBJ_IDENT);
   }
+  /// Space amplification data
   const ::flatbuffers::String *SPACE_AMP() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SPACE_AMP);
   }
+  /// Space amplification confidence (0-100)
+  uint8_t SPACE_AMP_CONF() const {
+    return GetField<uint8_t>(VT_SPACE_AMP_CONF, 0);
+  }
+  /// Object activity
   const ::flatbuffers::String *OBJ_ACT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBJ_ACT);
   }
+  /// Space specific type
   const ::flatbuffers::String *SPACE_SPEC_TYPE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SPACE_SPEC_TYPE);
   }
+  /// Aircraft sub-type (if applicable)
   const ::flatbuffers::String *ACFT_SUB_TYPE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ACFT_SUB_TYPE);
   }
+  /// Object name
   const ::flatbuffers::String *NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NAME);
   }
+  /// Call sign
   const ::flatbuffers::String *CALL_SIGN() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CALL_SIGN);
   }
+  /// True if track is lost
   bool LOST_TRK_IND() const {
     return GetField<uint8_t>(VT_LOST_TRK_IND, 0) != 0;
   }
+  /// Track identifier
   const ::flatbuffers::String *TRACK_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TRACK_ID);
   }
+  /// Parent track identifier
   const ::flatbuffers::String *PARENT_TRACK_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_PARENT_TRACK_ID);
   }
+  /// Multi-unit identifier (source track)
   const ::flatbuffers::String *MUID_SRC_TRK() const {
     return GetPointer<const ::flatbuffers::String *>(VT_MUID_SRC_TRK);
   }
+  /// Multi-unit identifier (source)
   const ::flatbuffers::String *MUID_SRC() const {
     return GetPointer<const ::flatbuffers::String *>(VT_MUID_SRC);
   }
+  /// Alert classification
   const ::flatbuffers::String *ALERT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ALERT);
   }
-  const ::flatbuffers::String *MSL_STATUS() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_MSL_STATUS);
+  /// Missile engagement status
+  missileStatus MSL_STATUS() const {
+    return static_cast<missileStatus>(GetField<int8_t>(VT_MSL_STATUS, 0));
   }
+  /// Track timestamp (ISO 8601)
   const ::flatbuffers::String *TS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TS);
   }
-  const ::flatbuffers::String *AOU_RPT_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_AOU_RPT_TYPE);
+  /// AOU report type
+  aouReportType AOU_RPT_TYPE() const {
+    return static_cast<aouReportType>(GetField<int8_t>(VT_AOU_RPT_TYPE, 0));
   }
+  /// Containment probability (0-1)
   double CONTAINMENT() const {
     return GetField<double>(VT_CONTAINMENT, 0.0);
   }
+  /// Track confidence (0-1)
   double TRK_CONF() const {
     return GetField<double>(VT_TRK_CONF, 0.0);
   }
-  int32_t TRK_QUAL() const {
-    return GetField<int32_t>(VT_TRK_QUAL, 0);
+  /// Track quality (0-15)
+  uint8_t TRK_QUAL() const {
+    return GetField<uint8_t>(VT_TRK_QUAL, 0);
   }
+  /// Elevation angle (degrees)
   double ANG_ELEV() const {
     return GetField<double>(VT_ANG_ELEV, 0.0);
   }
+  /// Sensor mode
   const ::flatbuffers::String *SEN_MODE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SEN_MODE);
   }
+  /// Information source
   const ::flatbuffers::String *INFO_SOURCE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_INFO_SOURCE);
   }
+  /// True if object is in boost phase
   bool BOOSTING() const {
     return GetField<uint8_t>(VT_BOOSTING, 0) != 0;
   }
+  /// Polar singularity latitude (degrees)
   double POLAR_SING_LOC_LAT() const {
     return GetField<double>(VT_POLAR_SING_LOC_LAT, 0.0);
   }
+  /// Polar singularity longitude (degrees)
   double POLAR_SING_LOC_LON() const {
     return GetField<double>(VT_POLAR_SING_LOC_LON, 0.0);
   }
+  /// True if emergency indicator set
   bool EMG_IND() const {
     return GetField<uint8_t>(VT_EMG_IND, 0) != 0;
   }
+  /// True if drop point indicator set
   bool DROP_PT_IND() const {
     return GetField<uint8_t>(VT_DROP_PT_IND, 0) != 0;
   }
-  int32_t SPACE_AMP_CONF() const {
-    return GetField<int32_t>(VT_SPACE_AMP_CONF, 0);
-  }
+  /// Launch time (ISO 8601)
   const ::flatbuffers::String *LAUNCH_TIME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_LAUNCH_TIME);
   }
+  /// Launch latitude (degrees)
   double LAUNCH_LAT() const {
     return GetField<double>(VT_LAUNCH_LAT, 0.0);
   }
+  /// Launch longitude (degrees)
   double LAUNCH_LON() const {
     return GetField<double>(VT_LAUNCH_LON, 0.0);
   }
+  /// Azimuth correction (degrees)
   double AZ_CORR() const {
     return GetField<double>(VT_AZ_CORR, 0.0);
   }
+  /// Burnout altitude (km)
   double BURNOUT_ALT() const {
     return GetField<double>(VT_BURNOUT_ALT, 0.0);
   }
-  const ::flatbuffers::String *LAUNCH_AOU_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_LAUNCH_AOU_TYPE);
+  /// Launch AOU type
+  aouReportType LAUNCH_AOU_TYPE() const {
+    return static_cast<aouReportType>(GetField<int8_t>(VT_LAUNCH_AOU_TYPE, 0));
   }
+  /// Predicted impact time (ISO 8601)
   const ::flatbuffers::String *IMPACT_TIME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_IMPACT_TIME);
   }
+  /// Predicted impact latitude (degrees)
   double IMPACT_LAT() const {
     return GetField<double>(VT_IMPACT_LAT, 0.0);
   }
+  /// Predicted impact longitude (degrees)
   double IMPACT_LON() const {
     return GetField<double>(VT_IMPACT_LON, 0.0);
   }
-  const ::flatbuffers::String *IMPACT_AOU_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_IMPACT_AOU_TYPE);
+  /// Impact AOU type
+  aouReportType IMPACT_AOU_TYPE() const {
+    return static_cast<aouReportType>(GetField<int8_t>(VT_IMPACT_AOU_TYPE, 0));
   }
-  /// Start time for vector data (ISO 8601 UTC format).
+  /// Start time for vector data (ISO 8601)
   const ::flatbuffers::String *VECTOR_START_TIME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_VECTOR_START_TIME);
   }
-  /// Time interval between vector points in seconds.
+  /// Time interval between vector points (seconds)
   double VECTOR_STEP_SIZE() const {
     return GetField<double>(VT_VECTOR_STEP_SIZE, 0.0);
   }
-  /// Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).
+  /// Number of components per vector (default 6: X, Y, Z, VX, VY, VZ)
   uint8_t VECTOR_COMPONENTS() const {
     return GetField<uint8_t>(VT_VECTOR_COMPONENTS, 6);
   }
@@ -228,15 +397,15 @@ struct MST FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   const ::flatbuffers::Vector<double> *VECTORS() const {
     return GetPointer<const ::flatbuffers::Vector<double> *>(VT_VECTORS);
   }
-  /// AOU report data as flat array (layout depends on AOU_RPT_TYPE).
+  /// AOU report data as flat array
   const ::flatbuffers::Vector<double> *AOU_RPT() const {
     return GetPointer<const ::flatbuffers::Vector<double> *>(VT_AOU_RPT);
   }
-  /// Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).
+  /// Launch AOU data as flat array
   const ::flatbuffers::Vector<double> *LAUNCH_AOU() const {
     return GetPointer<const ::flatbuffers::Vector<double> *>(VT_LAUNCH_AOU);
   }
-  /// Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).
+  /// Impact AOU data as flat array
   const ::flatbuffers::Vector<double> *IMPACT_AOU() const {
     return GetPointer<const ::flatbuffers::Vector<double> *>(VT_IMPACT_AOU);
   }
@@ -250,17 +419,17 @@ struct MST FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(MSG_SUB_TYPE()) &&
            VerifyOffset(verifier, VT_MSG_CREATE_DATE) &&
            verifier.VerifyString(MSG_CREATE_DATE()) &&
-           VerifyOffset(verifier, VT_ENVIRONMENT) &&
-           verifier.VerifyString(ENVIRONMENT()) &&
+           VerifyField<int8_t>(verifier, VT_ENVIRONMENT, 1) &&
            VerifyOffset(verifier, VT_OBJ_TYPE) &&
            verifier.VerifyString(OBJ_TYPE()) &&
-           VerifyField<int32_t>(verifier, VT_OBJ_TYPE_CONF, 4) &&
+           VerifyField<uint8_t>(verifier, VT_OBJ_TYPE_CONF, 1) &&
            VerifyOffset(verifier, VT_OBJ_PLAT) &&
            verifier.VerifyString(OBJ_PLAT()) &&
            VerifyOffset(verifier, VT_OBJ_IDENT) &&
            verifier.VerifyString(OBJ_IDENT()) &&
            VerifyOffset(verifier, VT_SPACE_AMP) &&
            verifier.VerifyString(SPACE_AMP()) &&
+           VerifyField<uint8_t>(verifier, VT_SPACE_AMP_CONF, 1) &&
            VerifyOffset(verifier, VT_OBJ_ACT) &&
            verifier.VerifyString(OBJ_ACT()) &&
            VerifyOffset(verifier, VT_SPACE_SPEC_TYPE) &&
@@ -282,15 +451,13 @@ struct MST FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(MUID_SRC()) &&
            VerifyOffset(verifier, VT_ALERT) &&
            verifier.VerifyString(ALERT()) &&
-           VerifyOffset(verifier, VT_MSL_STATUS) &&
-           verifier.VerifyString(MSL_STATUS()) &&
+           VerifyField<int8_t>(verifier, VT_MSL_STATUS, 1) &&
            VerifyOffset(verifier, VT_TS) &&
            verifier.VerifyString(TS()) &&
-           VerifyOffset(verifier, VT_AOU_RPT_TYPE) &&
-           verifier.VerifyString(AOU_RPT_TYPE()) &&
+           VerifyField<int8_t>(verifier, VT_AOU_RPT_TYPE, 1) &&
            VerifyField<double>(verifier, VT_CONTAINMENT, 8) &&
            VerifyField<double>(verifier, VT_TRK_CONF, 8) &&
-           VerifyField<int32_t>(verifier, VT_TRK_QUAL, 4) &&
+           VerifyField<uint8_t>(verifier, VT_TRK_QUAL, 1) &&
            VerifyField<double>(verifier, VT_ANG_ELEV, 8) &&
            VerifyOffset(verifier, VT_SEN_MODE) &&
            verifier.VerifyString(SEN_MODE()) &&
@@ -301,21 +468,18 @@ struct MST FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_POLAR_SING_LOC_LON, 8) &&
            VerifyField<uint8_t>(verifier, VT_EMG_IND, 1) &&
            VerifyField<uint8_t>(verifier, VT_DROP_PT_IND, 1) &&
-           VerifyField<int32_t>(verifier, VT_SPACE_AMP_CONF, 4) &&
            VerifyOffset(verifier, VT_LAUNCH_TIME) &&
            verifier.VerifyString(LAUNCH_TIME()) &&
            VerifyField<double>(verifier, VT_LAUNCH_LAT, 8) &&
            VerifyField<double>(verifier, VT_LAUNCH_LON, 8) &&
            VerifyField<double>(verifier, VT_AZ_CORR, 8) &&
            VerifyField<double>(verifier, VT_BURNOUT_ALT, 8) &&
-           VerifyOffset(verifier, VT_LAUNCH_AOU_TYPE) &&
-           verifier.VerifyString(LAUNCH_AOU_TYPE()) &&
+           VerifyField<int8_t>(verifier, VT_LAUNCH_AOU_TYPE, 1) &&
            VerifyOffset(verifier, VT_IMPACT_TIME) &&
            verifier.VerifyString(IMPACT_TIME()) &&
            VerifyField<double>(verifier, VT_IMPACT_LAT, 8) &&
            VerifyField<double>(verifier, VT_IMPACT_LON, 8) &&
-           VerifyOffset(verifier, VT_IMPACT_AOU_TYPE) &&
-           verifier.VerifyString(IMPACT_AOU_TYPE()) &&
+           VerifyField<int8_t>(verifier, VT_IMPACT_AOU_TYPE, 1) &&
            VerifyOffset(verifier, VT_VECTOR_START_TIME) &&
            verifier.VerifyString(VECTOR_START_TIME()) &&
            VerifyField<double>(verifier, VT_VECTOR_STEP_SIZE, 8) &&
@@ -348,14 +512,14 @@ struct MSTBuilder {
   void add_MSG_CREATE_DATE(::flatbuffers::Offset<::flatbuffers::String> MSG_CREATE_DATE) {
     fbb_.AddOffset(MST::VT_MSG_CREATE_DATE, MSG_CREATE_DATE);
   }
-  void add_ENVIRONMENT(::flatbuffers::Offset<::flatbuffers::String> ENVIRONMENT) {
-    fbb_.AddOffset(MST::VT_ENVIRONMENT, ENVIRONMENT);
+  void add_ENVIRONMENT(missileEnvironment ENVIRONMENT) {
+    fbb_.AddElement<int8_t>(MST::VT_ENVIRONMENT, static_cast<int8_t>(ENVIRONMENT), 0);
   }
   void add_OBJ_TYPE(::flatbuffers::Offset<::flatbuffers::String> OBJ_TYPE) {
     fbb_.AddOffset(MST::VT_OBJ_TYPE, OBJ_TYPE);
   }
-  void add_OBJ_TYPE_CONF(int32_t OBJ_TYPE_CONF) {
-    fbb_.AddElement<int32_t>(MST::VT_OBJ_TYPE_CONF, OBJ_TYPE_CONF, 0);
+  void add_OBJ_TYPE_CONF(uint8_t OBJ_TYPE_CONF) {
+    fbb_.AddElement<uint8_t>(MST::VT_OBJ_TYPE_CONF, OBJ_TYPE_CONF, 0);
   }
   void add_OBJ_PLAT(::flatbuffers::Offset<::flatbuffers::String> OBJ_PLAT) {
     fbb_.AddOffset(MST::VT_OBJ_PLAT, OBJ_PLAT);
@@ -365,6 +529,9 @@ struct MSTBuilder {
   }
   void add_SPACE_AMP(::flatbuffers::Offset<::flatbuffers::String> SPACE_AMP) {
     fbb_.AddOffset(MST::VT_SPACE_AMP, SPACE_AMP);
+  }
+  void add_SPACE_AMP_CONF(uint8_t SPACE_AMP_CONF) {
+    fbb_.AddElement<uint8_t>(MST::VT_SPACE_AMP_CONF, SPACE_AMP_CONF, 0);
   }
   void add_OBJ_ACT(::flatbuffers::Offset<::flatbuffers::String> OBJ_ACT) {
     fbb_.AddOffset(MST::VT_OBJ_ACT, OBJ_ACT);
@@ -399,14 +566,14 @@ struct MSTBuilder {
   void add_ALERT(::flatbuffers::Offset<::flatbuffers::String> ALERT) {
     fbb_.AddOffset(MST::VT_ALERT, ALERT);
   }
-  void add_MSL_STATUS(::flatbuffers::Offset<::flatbuffers::String> MSL_STATUS) {
-    fbb_.AddOffset(MST::VT_MSL_STATUS, MSL_STATUS);
+  void add_MSL_STATUS(missileStatus MSL_STATUS) {
+    fbb_.AddElement<int8_t>(MST::VT_MSL_STATUS, static_cast<int8_t>(MSL_STATUS), 0);
   }
   void add_TS(::flatbuffers::Offset<::flatbuffers::String> TS) {
     fbb_.AddOffset(MST::VT_TS, TS);
   }
-  void add_AOU_RPT_TYPE(::flatbuffers::Offset<::flatbuffers::String> AOU_RPT_TYPE) {
-    fbb_.AddOffset(MST::VT_AOU_RPT_TYPE, AOU_RPT_TYPE);
+  void add_AOU_RPT_TYPE(aouReportType AOU_RPT_TYPE) {
+    fbb_.AddElement<int8_t>(MST::VT_AOU_RPT_TYPE, static_cast<int8_t>(AOU_RPT_TYPE), 0);
   }
   void add_CONTAINMENT(double CONTAINMENT) {
     fbb_.AddElement<double>(MST::VT_CONTAINMENT, CONTAINMENT, 0.0);
@@ -414,8 +581,8 @@ struct MSTBuilder {
   void add_TRK_CONF(double TRK_CONF) {
     fbb_.AddElement<double>(MST::VT_TRK_CONF, TRK_CONF, 0.0);
   }
-  void add_TRK_QUAL(int32_t TRK_QUAL) {
-    fbb_.AddElement<int32_t>(MST::VT_TRK_QUAL, TRK_QUAL, 0);
+  void add_TRK_QUAL(uint8_t TRK_QUAL) {
+    fbb_.AddElement<uint8_t>(MST::VT_TRK_QUAL, TRK_QUAL, 0);
   }
   void add_ANG_ELEV(double ANG_ELEV) {
     fbb_.AddElement<double>(MST::VT_ANG_ELEV, ANG_ELEV, 0.0);
@@ -441,9 +608,6 @@ struct MSTBuilder {
   void add_DROP_PT_IND(bool DROP_PT_IND) {
     fbb_.AddElement<uint8_t>(MST::VT_DROP_PT_IND, static_cast<uint8_t>(DROP_PT_IND), 0);
   }
-  void add_SPACE_AMP_CONF(int32_t SPACE_AMP_CONF) {
-    fbb_.AddElement<int32_t>(MST::VT_SPACE_AMP_CONF, SPACE_AMP_CONF, 0);
-  }
   void add_LAUNCH_TIME(::flatbuffers::Offset<::flatbuffers::String> LAUNCH_TIME) {
     fbb_.AddOffset(MST::VT_LAUNCH_TIME, LAUNCH_TIME);
   }
@@ -459,8 +623,8 @@ struct MSTBuilder {
   void add_BURNOUT_ALT(double BURNOUT_ALT) {
     fbb_.AddElement<double>(MST::VT_BURNOUT_ALT, BURNOUT_ALT, 0.0);
   }
-  void add_LAUNCH_AOU_TYPE(::flatbuffers::Offset<::flatbuffers::String> LAUNCH_AOU_TYPE) {
-    fbb_.AddOffset(MST::VT_LAUNCH_AOU_TYPE, LAUNCH_AOU_TYPE);
+  void add_LAUNCH_AOU_TYPE(aouReportType LAUNCH_AOU_TYPE) {
+    fbb_.AddElement<int8_t>(MST::VT_LAUNCH_AOU_TYPE, static_cast<int8_t>(LAUNCH_AOU_TYPE), 0);
   }
   void add_IMPACT_TIME(::flatbuffers::Offset<::flatbuffers::String> IMPACT_TIME) {
     fbb_.AddOffset(MST::VT_IMPACT_TIME, IMPACT_TIME);
@@ -471,8 +635,8 @@ struct MSTBuilder {
   void add_IMPACT_LON(double IMPACT_LON) {
     fbb_.AddElement<double>(MST::VT_IMPACT_LON, IMPACT_LON, 0.0);
   }
-  void add_IMPACT_AOU_TYPE(::flatbuffers::Offset<::flatbuffers::String> IMPACT_AOU_TYPE) {
-    fbb_.AddOffset(MST::VT_IMPACT_AOU_TYPE, IMPACT_AOU_TYPE);
+  void add_IMPACT_AOU_TYPE(aouReportType IMPACT_AOU_TYPE) {
+    fbb_.AddElement<int8_t>(MST::VT_IMPACT_AOU_TYPE, static_cast<int8_t>(IMPACT_AOU_TYPE), 0);
   }
   void add_VECTOR_START_TIME(::flatbuffers::Offset<::flatbuffers::String> VECTOR_START_TIME) {
     fbb_.AddOffset(MST::VT_VECTOR_START_TIME, VECTOR_START_TIME);
@@ -512,12 +676,13 @@ inline ::flatbuffers::Offset<MST> CreateMST(
     ::flatbuffers::Offset<::flatbuffers::String> MSG_TYPE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> MSG_SUB_TYPE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> MSG_CREATE_DATE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ENVIRONMENT = 0,
+    missileEnvironment ENVIRONMENT = missileEnvironment_SPACE,
     ::flatbuffers::Offset<::flatbuffers::String> OBJ_TYPE = 0,
-    int32_t OBJ_TYPE_CONF = 0,
+    uint8_t OBJ_TYPE_CONF = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OBJ_PLAT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OBJ_IDENT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SPACE_AMP = 0,
+    uint8_t SPACE_AMP_CONF = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OBJ_ACT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SPACE_SPEC_TYPE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ACFT_SUB_TYPE = 0,
@@ -529,12 +694,12 @@ inline ::flatbuffers::Offset<MST> CreateMST(
     ::flatbuffers::Offset<::flatbuffers::String> MUID_SRC_TRK = 0,
     ::flatbuffers::Offset<::flatbuffers::String> MUID_SRC = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ALERT = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> MSL_STATUS = 0,
+    missileStatus MSL_STATUS = missileStatus_BOOSTING,
     ::flatbuffers::Offset<::flatbuffers::String> TS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> AOU_RPT_TYPE = 0,
+    aouReportType AOU_RPT_TYPE = aouReportType_CIRCULAR,
     double CONTAINMENT = 0.0,
     double TRK_CONF = 0.0,
-    int32_t TRK_QUAL = 0,
+    uint8_t TRK_QUAL = 0,
     double ANG_ELEV = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> SEN_MODE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> INFO_SOURCE = 0,
@@ -543,17 +708,16 @@ inline ::flatbuffers::Offset<MST> CreateMST(
     double POLAR_SING_LOC_LON = 0.0,
     bool EMG_IND = false,
     bool DROP_PT_IND = false,
-    int32_t SPACE_AMP_CONF = 0,
     ::flatbuffers::Offset<::flatbuffers::String> LAUNCH_TIME = 0,
     double LAUNCH_LAT = 0.0,
     double LAUNCH_LON = 0.0,
     double AZ_CORR = 0.0,
     double BURNOUT_ALT = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::String> LAUNCH_AOU_TYPE = 0,
+    aouReportType LAUNCH_AOU_TYPE = aouReportType_CIRCULAR,
     ::flatbuffers::Offset<::flatbuffers::String> IMPACT_TIME = 0,
     double IMPACT_LAT = 0.0,
     double IMPACT_LON = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::String> IMPACT_AOU_TYPE = 0,
+    aouReportType IMPACT_AOU_TYPE = aouReportType_CIRCULAR,
     ::flatbuffers::Offset<::flatbuffers::String> VECTOR_START_TIME = 0,
     double VECTOR_STEP_SIZE = 0.0,
     uint8_t VECTOR_COMPONENTS = 6,
@@ -579,17 +743,11 @@ inline ::flatbuffers::Offset<MST> CreateMST(
   builder_.add_AOU_RPT(AOU_RPT);
   builder_.add_VECTORS(VECTORS);
   builder_.add_VECTOR_START_TIME(VECTOR_START_TIME);
-  builder_.add_IMPACT_AOU_TYPE(IMPACT_AOU_TYPE);
   builder_.add_IMPACT_TIME(IMPACT_TIME);
-  builder_.add_LAUNCH_AOU_TYPE(LAUNCH_AOU_TYPE);
   builder_.add_LAUNCH_TIME(LAUNCH_TIME);
-  builder_.add_SPACE_AMP_CONF(SPACE_AMP_CONF);
   builder_.add_INFO_SOURCE(INFO_SOURCE);
   builder_.add_SEN_MODE(SEN_MODE);
-  builder_.add_TRK_QUAL(TRK_QUAL);
-  builder_.add_AOU_RPT_TYPE(AOU_RPT_TYPE);
   builder_.add_TS(TS);
-  builder_.add_MSL_STATUS(MSL_STATUS);
   builder_.add_ALERT(ALERT);
   builder_.add_MUID_SRC(MUID_SRC);
   builder_.add_MUID_SRC_TRK(MUID_SRC_TRK);
@@ -603,18 +761,24 @@ inline ::flatbuffers::Offset<MST> CreateMST(
   builder_.add_SPACE_AMP(SPACE_AMP);
   builder_.add_OBJ_IDENT(OBJ_IDENT);
   builder_.add_OBJ_PLAT(OBJ_PLAT);
-  builder_.add_OBJ_TYPE_CONF(OBJ_TYPE_CONF);
   builder_.add_OBJ_TYPE(OBJ_TYPE);
-  builder_.add_ENVIRONMENT(ENVIRONMENT);
   builder_.add_MSG_CREATE_DATE(MSG_CREATE_DATE);
   builder_.add_MSG_SUB_TYPE(MSG_SUB_TYPE);
   builder_.add_MSG_TYPE(MSG_TYPE);
   builder_.add_ID(ID);
   builder_.add_VECTOR_COMPONENTS(VECTOR_COMPONENTS);
+  builder_.add_IMPACT_AOU_TYPE(IMPACT_AOU_TYPE);
+  builder_.add_LAUNCH_AOU_TYPE(LAUNCH_AOU_TYPE);
   builder_.add_DROP_PT_IND(DROP_PT_IND);
   builder_.add_EMG_IND(EMG_IND);
   builder_.add_BOOSTING(BOOSTING);
+  builder_.add_TRK_QUAL(TRK_QUAL);
+  builder_.add_AOU_RPT_TYPE(AOU_RPT_TYPE);
+  builder_.add_MSL_STATUS(MSL_STATUS);
   builder_.add_LOST_TRK_IND(LOST_TRK_IND);
+  builder_.add_SPACE_AMP_CONF(SPACE_AMP_CONF);
+  builder_.add_OBJ_TYPE_CONF(OBJ_TYPE_CONF);
+  builder_.add_ENVIRONMENT(ENVIRONMENT);
   return builder_.Finish();
 }
 
@@ -624,12 +788,13 @@ inline ::flatbuffers::Offset<MST> CreateMSTDirect(
     const char *MSG_TYPE = nullptr,
     const char *MSG_SUB_TYPE = nullptr,
     const char *MSG_CREATE_DATE = nullptr,
-    const char *ENVIRONMENT = nullptr,
+    missileEnvironment ENVIRONMENT = missileEnvironment_SPACE,
     const char *OBJ_TYPE = nullptr,
-    int32_t OBJ_TYPE_CONF = 0,
+    uint8_t OBJ_TYPE_CONF = 0,
     const char *OBJ_PLAT = nullptr,
     const char *OBJ_IDENT = nullptr,
     const char *SPACE_AMP = nullptr,
+    uint8_t SPACE_AMP_CONF = 0,
     const char *OBJ_ACT = nullptr,
     const char *SPACE_SPEC_TYPE = nullptr,
     const char *ACFT_SUB_TYPE = nullptr,
@@ -641,12 +806,12 @@ inline ::flatbuffers::Offset<MST> CreateMSTDirect(
     const char *MUID_SRC_TRK = nullptr,
     const char *MUID_SRC = nullptr,
     const char *ALERT = nullptr,
-    const char *MSL_STATUS = nullptr,
+    missileStatus MSL_STATUS = missileStatus_BOOSTING,
     const char *TS = nullptr,
-    const char *AOU_RPT_TYPE = nullptr,
+    aouReportType AOU_RPT_TYPE = aouReportType_CIRCULAR,
     double CONTAINMENT = 0.0,
     double TRK_CONF = 0.0,
-    int32_t TRK_QUAL = 0,
+    uint8_t TRK_QUAL = 0,
     double ANG_ELEV = 0.0,
     const char *SEN_MODE = nullptr,
     const char *INFO_SOURCE = nullptr,
@@ -655,17 +820,16 @@ inline ::flatbuffers::Offset<MST> CreateMSTDirect(
     double POLAR_SING_LOC_LON = 0.0,
     bool EMG_IND = false,
     bool DROP_PT_IND = false,
-    int32_t SPACE_AMP_CONF = 0,
     const char *LAUNCH_TIME = nullptr,
     double LAUNCH_LAT = 0.0,
     double LAUNCH_LON = 0.0,
     double AZ_CORR = 0.0,
     double BURNOUT_ALT = 0.0,
-    const char *LAUNCH_AOU_TYPE = nullptr,
+    aouReportType LAUNCH_AOU_TYPE = aouReportType_CIRCULAR,
     const char *IMPACT_TIME = nullptr,
     double IMPACT_LAT = 0.0,
     double IMPACT_LON = 0.0,
-    const char *IMPACT_AOU_TYPE = nullptr,
+    aouReportType IMPACT_AOU_TYPE = aouReportType_CIRCULAR,
     const char *VECTOR_START_TIME = nullptr,
     double VECTOR_STEP_SIZE = 0.0,
     uint8_t VECTOR_COMPONENTS = 6,
@@ -677,7 +841,6 @@ inline ::flatbuffers::Offset<MST> CreateMSTDirect(
   auto MSG_TYPE__ = MSG_TYPE ? _fbb.CreateString(MSG_TYPE) : 0;
   auto MSG_SUB_TYPE__ = MSG_SUB_TYPE ? _fbb.CreateString(MSG_SUB_TYPE) : 0;
   auto MSG_CREATE_DATE__ = MSG_CREATE_DATE ? _fbb.CreateString(MSG_CREATE_DATE) : 0;
-  auto ENVIRONMENT__ = ENVIRONMENT ? _fbb.CreateString(ENVIRONMENT) : 0;
   auto OBJ_TYPE__ = OBJ_TYPE ? _fbb.CreateString(OBJ_TYPE) : 0;
   auto OBJ_PLAT__ = OBJ_PLAT ? _fbb.CreateString(OBJ_PLAT) : 0;
   auto OBJ_IDENT__ = OBJ_IDENT ? _fbb.CreateString(OBJ_IDENT) : 0;
@@ -692,15 +855,11 @@ inline ::flatbuffers::Offset<MST> CreateMSTDirect(
   auto MUID_SRC_TRK__ = MUID_SRC_TRK ? _fbb.CreateString(MUID_SRC_TRK) : 0;
   auto MUID_SRC__ = MUID_SRC ? _fbb.CreateString(MUID_SRC) : 0;
   auto ALERT__ = ALERT ? _fbb.CreateString(ALERT) : 0;
-  auto MSL_STATUS__ = MSL_STATUS ? _fbb.CreateString(MSL_STATUS) : 0;
   auto TS__ = TS ? _fbb.CreateString(TS) : 0;
-  auto AOU_RPT_TYPE__ = AOU_RPT_TYPE ? _fbb.CreateString(AOU_RPT_TYPE) : 0;
   auto SEN_MODE__ = SEN_MODE ? _fbb.CreateString(SEN_MODE) : 0;
   auto INFO_SOURCE__ = INFO_SOURCE ? _fbb.CreateString(INFO_SOURCE) : 0;
   auto LAUNCH_TIME__ = LAUNCH_TIME ? _fbb.CreateString(LAUNCH_TIME) : 0;
-  auto LAUNCH_AOU_TYPE__ = LAUNCH_AOU_TYPE ? _fbb.CreateString(LAUNCH_AOU_TYPE) : 0;
   auto IMPACT_TIME__ = IMPACT_TIME ? _fbb.CreateString(IMPACT_TIME) : 0;
-  auto IMPACT_AOU_TYPE__ = IMPACT_AOU_TYPE ? _fbb.CreateString(IMPACT_AOU_TYPE) : 0;
   auto VECTOR_START_TIME__ = VECTOR_START_TIME ? _fbb.CreateString(VECTOR_START_TIME) : 0;
   auto VECTORS__ = VECTORS ? _fbb.CreateVector<double>(*VECTORS) : 0;
   auto AOU_RPT__ = AOU_RPT ? _fbb.CreateVector<double>(*AOU_RPT) : 0;
@@ -712,12 +871,13 @@ inline ::flatbuffers::Offset<MST> CreateMSTDirect(
       MSG_TYPE__,
       MSG_SUB_TYPE__,
       MSG_CREATE_DATE__,
-      ENVIRONMENT__,
+      ENVIRONMENT,
       OBJ_TYPE__,
       OBJ_TYPE_CONF,
       OBJ_PLAT__,
       OBJ_IDENT__,
       SPACE_AMP__,
+      SPACE_AMP_CONF,
       OBJ_ACT__,
       SPACE_SPEC_TYPE__,
       ACFT_SUB_TYPE__,
@@ -729,9 +889,9 @@ inline ::flatbuffers::Offset<MST> CreateMSTDirect(
       MUID_SRC_TRK__,
       MUID_SRC__,
       ALERT__,
-      MSL_STATUS__,
+      MSL_STATUS,
       TS__,
-      AOU_RPT_TYPE__,
+      AOU_RPT_TYPE,
       CONTAINMENT,
       TRK_CONF,
       TRK_QUAL,
@@ -743,17 +903,16 @@ inline ::flatbuffers::Offset<MST> CreateMSTDirect(
       POLAR_SING_LOC_LON,
       EMG_IND,
       DROP_PT_IND,
-      SPACE_AMP_CONF,
       LAUNCH_TIME__,
       LAUNCH_LAT,
       LAUNCH_LON,
       AZ_CORR,
       BURNOUT_ALT,
-      LAUNCH_AOU_TYPE__,
+      LAUNCH_AOU_TYPE,
       IMPACT_TIME__,
       IMPACT_LAT,
       IMPACT_LON,
-      IMPACT_AOU_TYPE__,
+      IMPACT_AOU_TYPE,
       VECTOR_START_TIME__,
       VECTOR_STEP_SIZE,
       VECTOR_COMPONENTS,

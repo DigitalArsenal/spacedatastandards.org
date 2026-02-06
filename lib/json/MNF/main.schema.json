@@ -1,24 +1,164 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "manifoldStatus" : {
+      "type" : "string",
+      "enum": ["CANDIDATE", "CONFIRMED", "REJECTED", "CORRELATED", "EXPIRED"]
+    },
+    "manifoldElset" : {
+      "type" : "object",
+      "description" : "Manifold Element Set",
+      "properties" : {
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of element set (ISO 8601)"
+              },
+        "SEMI_MAJOR_AXIS" : {
+                "type" : "number",
+                "description" : "Semi-major axis in km"
+              },
+        "ECCENTRICITY" : {
+                "type" : "number",
+                "description" : "Eccentricity"
+              },
+        "INCLINATION" : {
+                "type" : "number",
+                "description" : "Inclination in degrees"
+              },
+        "RA_OF_ASC_NODE" : {
+                "type" : "number",
+                "description" : "Right ascension of ascending node in degrees"
+              },
+        "ARG_OF_PERICENTER" : {
+                "type" : "number",
+                "description" : "Argument of pericenter in degrees"
+              },
+        "MEAN_ANOMALY" : {
+                "type" : "number",
+                "description" : "Mean anomaly in degrees"
+              },
+        "DELTA_V" : {
+                "type" : "number",
+                "description" : "Applied delta-V in m/s"
+              },
+        "DELTA_T" : {
+                "type" : "number",
+                "description" : "Applied delta-T in seconds"
+              },
+        "DV_X" : {
+                "type" : "number",
+                "description" : "Delta-V direction X (unit vector)"
+              },
+        "DV_Y" : {
+                "type" : "number",
+                "description" : "Delta-V direction Y (unit vector)"
+              },
+        "DV_Z" : {
+                "type" : "number",
+                "description" : "Delta-V direction Z (unit vector)"
+              },
+        "WEIGHT" : {
+                "type" : "number",
+                "description" : "Probability weight (0.0-1.0)"
+              },
+        "APOGEE" : {
+                "type" : "number",
+                "description" : "Apogee altitude in km"
+              },
+        "PERIGEE" : {
+                "type" : "number",
+                "description" : "Perigee altitude in km"
+              },
+        "PERIOD" : {
+                "type" : "number",
+                "description" : "Period in minutes"
+              }
+      },
+      "additionalProperties" : false
+    },
     "MNF" : {
       "type" : "object",
       "description" : "Orbit Manifold",
       "properties" : {
         "ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique manifold identifier"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Parent object satellite number"
+              },
+        "OBJECT_DESIGNATOR" : {
+                "type" : "string",
+                "description" : "Object designator"
               },
         "STATUS" : {
-                "type" : "string"
+                "$ref" : "#/definitions/manifoldStatus",
+                "description" : "Manifold status"
               },
-        "WEIGHT" : {
-                "type" : "number"
+        "EVENT_EPOCH" : {
+                "type" : "string",
+                "description" : "Event epoch that spawned the manifold (ISO 8601)"
               },
-        "DELTA_V" : {
-                "type" : "number"
+        "SOURCE" : {
+                "type" : "string",
+                "description" : "Source of detection (sensor ID or method)"
               },
-        "DELTA_T" : {
-                "type" : "number"
+        "REF_FRAME" : {
+                "type" : "string",
+                "description" : "Reference frame"
+              },
+        "ORIG_SEMI_MAJOR_AXIS" : {
+                "type" : "number",
+                "description" : "Original pre-event semi-major axis in km"
+              },
+        "ORIG_ECCENTRICITY" : {
+                "type" : "number",
+                "description" : "Original pre-event eccentricity"
+              },
+        "ORIG_INCLINATION" : {
+                "type" : "number",
+                "description" : "Original pre-event inclination in degrees"
+              },
+        "DELTA_V_MIN" : {
+                "type" : "number",
+                "description" : "Minimum delta-V sampled in m/s"
+              },
+        "DELTA_V_MAX" : {
+                "type" : "number",
+                "description" : "Maximum delta-V sampled in m/s"
+              },
+        "DELTA_V_STEP" : {
+                "type" : "number",
+                "description" : "Delta-V step size in m/s"
+              },
+        "DELTA_T_MIN" : {
+                "type" : "number",
+                "description" : "Minimum delta-T sampled in seconds"
+              },
+        "DELTA_T_MAX" : {
+                "type" : "number",
+                "description" : "Maximum delta-T sampled in seconds"
+              },
+        "DELTA_T_STEP" : {
+                "type" : "number",
+                "description" : "Delta-T step size in seconds"
+              },
+        "NUM_ELEMENTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Total number of manifold elements"
+              },
+        "ELEMENTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/manifoldElset"},
+                "description" : "Theoretical element sets"
+              },
+        "CORRELATED_ID" : {
+                "type" : "string",
+                "description" : "Correlated catalog object ID (if matched)"
+              },
+        "NOTES" : {
+                "type" : "string",
+                "description" : "Additional notes"
               }
       },
       "additionalProperties" : false

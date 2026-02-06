@@ -54,6 +54,7 @@ func (rcv *CMS) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Unique identifier
 func (rcv *CMS) ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -62,6 +63,8 @@ func (rcv *CMS) ID() []byte {
 	return nil
 }
 
+/// Unique identifier
+/// Reference to parent entity
 func (rcv *CMS) ID_ENTITY() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -70,6 +73,8 @@ func (rcv *CMS) ID_ENTITY() []byte {
 	return nil
 }
 
+/// Reference to parent entity
+/// Communications payload name
 func (rcv *CMS) NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -78,6 +83,8 @@ func (rcv *CMS) NAME() []byte {
 	return nil
 }
 
+/// Communications payload name
+/// Description
 func (rcv *CMS) DESCRIPTION() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -86,6 +93,8 @@ func (rcv *CMS) DESCRIPTION() []byte {
 	return nil
 }
 
+/// Description
+/// Parent entity designator
 func (rcv *CMS) ENTITY() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -94,25 +103,145 @@ func (rcv *CMS) ENTITY() []byte {
 	return nil
 }
 
-func (rcv *CMS) TRANSPONDERS(j int) []byte {
+/// Parent entity designator
+/// Satellite number
+func (rcv *CMS) SAT_NO() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
 	}
-	return nil
+	return 0
+}
+
+/// Satellite number
+func (rcv *CMS) MutateSAT_NO(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(14, n)
+}
+
+/// Number of transponders
+func (rcv *CMS) NUM_TRANSPONDERS() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Number of transponders
+func (rcv *CMS) MutateNUM_TRANSPONDERS(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(16, n)
+}
+
+/// Transponders
+func (rcv *CMS) TRANSPONDERS(obj *commsTransponder, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
 }
 
 func (rcv *CMS) TRANSPONDERSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
+/// Transponders
+/// Total payload power in Watts
+func (rcv *CMS) TOTAL_POWER() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Total payload power in Watts
+func (rcv *CMS) MutateTOTAL_POWER(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+/// Total payload mass in kg
+func (rcv *CMS) TOTAL_MASS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Total payload mass in kg
+func (rcv *CMS) MutateTOTAL_MASS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+/// Total aggregate bandwidth in MHz
+func (rcv *CMS) TOTAL_BANDWIDTH() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Total aggregate bandwidth in MHz
+func (rcv *CMS) MutateTOTAL_BANDWIDTH(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+/// Primary mission (e.g., FIXED_SAT, BROADCAST, MOBILE, RELAY, MILSATCOM)
+func (rcv *CMS) MISSION() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Primary mission (e.g., FIXED_SAT, BROADCAST, MOBILE, RELAY, MILSATCOM)
+/// Coverage region description
+func (rcv *CMS) COVERAGE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Coverage region description
+/// Design lifetime in years
+func (rcv *CMS) DESIGN_LIFE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Design lifetime in years
+func (rcv *CMS) MutateDESIGN_LIFE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+/// Additional notes
+func (rcv *CMS) NOTES() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Additional notes
 func CMSStart(builder *flatbuffers.Builder) {
-	builder.StartObject(6)
+	builder.StartObject(15)
 }
 func CMSAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
@@ -129,11 +258,38 @@ func CMSAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOf
 func CMSAddENTITY(builder *flatbuffers.Builder, ENTITY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ENTITY), 0)
 }
+func CMSAddSAT_NO(builder *flatbuffers.Builder, SAT_NO uint32) {
+	builder.PrependUint32Slot(5, SAT_NO, 0)
+}
+func CMSAddNUM_TRANSPONDERS(builder *flatbuffers.Builder, NUM_TRANSPONDERS uint32) {
+	builder.PrependUint32Slot(6, NUM_TRANSPONDERS, 0)
+}
 func CMSAddTRANSPONDERS(builder *flatbuffers.Builder, TRANSPONDERS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(TRANSPONDERS), 0)
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(TRANSPONDERS), 0)
 }
 func CMSStartTRANSPONDERSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func CMSAddTOTAL_POWER(builder *flatbuffers.Builder, TOTAL_POWER float64) {
+	builder.PrependFloat64Slot(8, TOTAL_POWER, 0.0)
+}
+func CMSAddTOTAL_MASS(builder *flatbuffers.Builder, TOTAL_MASS float64) {
+	builder.PrependFloat64Slot(9, TOTAL_MASS, 0.0)
+}
+func CMSAddTOTAL_BANDWIDTH(builder *flatbuffers.Builder, TOTAL_BANDWIDTH float64) {
+	builder.PrependFloat64Slot(10, TOTAL_BANDWIDTH, 0.0)
+}
+func CMSAddMISSION(builder *flatbuffers.Builder, MISSION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(MISSION), 0)
+}
+func CMSAddCOVERAGE(builder *flatbuffers.Builder, COVERAGE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(COVERAGE), 0)
+}
+func CMSAddDESIGN_LIFE(builder *flatbuffers.Builder, DESIGN_LIFE float64) {
+	builder.PrependFloat64Slot(13, DESIGN_LIFE, 0.0)
+}
+func CMSAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(NOTES), 0)
 }
 func CMSEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

@@ -4,6 +4,38 @@
 
 import FlatBuffers
 
+public enum trackStatus: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case active = 0
+  case dropped = 1
+  case tentative = 2
+  case confirmed = 3
+  case coasted = 4
+  case dead = 5
+
+  public static var max: trackStatus { return .dead }
+  public static var min: trackStatus { return .active }
+}
+
+
+public enum trackEnvironment: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case space = 0
+  case air = 1
+  case surface = 2
+  case subsurface = 3
+  case land = 4
+  case unknown = 5
+
+  public static var max: trackEnvironment { return .unknown }
+  public static var min: trackEnvironment { return .space }
+}
+
+
 ///  Track
 public struct TRK: FlatBufferObject, Verifiable {
 
@@ -23,7 +55,7 @@ public struct TRK: FlatBufferObject, Verifiable {
     case MSN_ID = 10
     case ASSET_NAT = 12
     case ASSET = 14
-    case SEN = 16
+    case SENSOR_ID = 16
     case SEN_QUAL = 18
     case TRK_ID = 20
     case TRK_NUM = 22
@@ -80,92 +112,138 @@ public struct TRK: FlatBufferObject, Verifiable {
     var p: VOffset { self.rawValue }
   }
 
+  ///  Unique identifier
   public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  ///  Contact reference
   public var CNTCT: String? { let o = _accessor.offset(VTOFFSET.CNTCT.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CNTCTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CNTCT.v) }
+  ///  Message timestamp (ISO 8601)
   public var MSG_TS: String? { let o = _accessor.offset(VTOFFSET.MSG_TS.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var MSG_TSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MSG_TS.v) }
+  ///  Mission identifier
   public var MSN_ID: String? { let o = _accessor.offset(VTOFFSET.MSN_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var MSN_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MSN_ID.v) }
+  ///  Asset nationality
   public var ASSET_NAT: String? { let o = _accessor.offset(VTOFFSET.ASSET_NAT.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ASSET_NATSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ASSET_NAT.v) }
+  ///  Asset identifier
   public var ASSET: String? { let o = _accessor.offset(VTOFFSET.ASSET.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ASSETSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ASSET.v) }
-  public var SEN: String? { let o = _accessor.offset(VTOFFSET.SEN.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SENSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SEN.v) }
+  ///  Sensor identifier
+  public var SENSOR_ID: String? { let o = _accessor.offset(VTOFFSET.SENSOR_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SENSOR_ID.v) }
+  ///  Sensor quality assessment
   public var SEN_QUAL: String? { let o = _accessor.offset(VTOFFSET.SEN_QUAL.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SEN_QUALSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SEN_QUAL.v) }
+  ///  Track identifier
   public var TRK_ID: String? { let o = _accessor.offset(VTOFFSET.TRK_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var TRK_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRK_ID.v) }
+  ///  Track number
   public var TRK_NUM: String? { let o = _accessor.offset(VTOFFSET.TRK_NUM.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var TRK_NUMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRK_NUM.v) }
-  public var TRK_STAT: String? { let o = _accessor.offset(VTOFFSET.TRK_STAT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TRK_STATSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRK_STAT.v) }
+  ///  Track status
+  public var TRK_STAT: trackStatus { let o = _accessor.offset(VTOFFSET.TRK_STAT.v); return o == 0 ? .active : trackStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .active }
+  ///  Object nationality
   public var OBJ_NAT: String? { let o = _accessor.offset(VTOFFSET.OBJ_NAT.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OBJ_NATSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJ_NAT.v) }
+  ///  Object identifier
   public var OBJ_ID: String? { let o = _accessor.offset(VTOFFSET.OBJ_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OBJ_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJ_ID.v) }
+  ///  Object type classification
   public var OBJ_TYPE: String? { let o = _accessor.offset(VTOFFSET.OBJ_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OBJ_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJ_TYPE.v) }
+  ///  Object specific type
   public var OBJ_SPEC: String? { let o = _accessor.offset(VTOFFSET.OBJ_SPEC.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OBJ_SPECSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJ_SPEC.v) }
+  ///  Object platform type
   public var OBJ_PLAT: String? { let o = _accessor.offset(VTOFFSET.OBJ_PLAT.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OBJ_PLATSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJ_PLAT.v) }
+  ///  Object activity
   public var OBJ_ACT: String? { let o = _accessor.offset(VTOFFSET.OBJ_ACT.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OBJ_ACTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJ_ACT.v) }
+  ///  Mode type
   public var MOD_TYPE: String? { let o = _accessor.offset(VTOFFSET.MOD_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var MOD_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MOD_TYPE.v) }
+  ///  Track item identifier
   public var TRK_ITM_ID: String? { let o = _accessor.offset(VTOFFSET.TRK_ITM_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var TRK_ITM_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRK_ITM_ID.v) }
+  ///  Track point timestamp (ISO 8601)
   public var TS: String? { let o = _accessor.offset(VTOFFSET.TS.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var TSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TS.v) }
-  public var TRK_QUAL: Int32 { let o = _accessor.offset(VTOFFSET.TRK_QUAL.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Track quality (0-15)
+  public var TRK_QUAL: UInt8 { let o = _accessor.offset(VTOFFSET.TRK_QUAL.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Track point type
   public var TRK_PT_TYPE: String? { let o = _accessor.offset(VTOFFSET.TRK_PT_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var TRK_PT_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRK_PT_TYPE.v) }
+  ///  Object identity assessment
   public var OBJ_IDENT: String? { let o = _accessor.offset(VTOFFSET.OBJ_IDENT.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OBJ_IDENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJ_IDENT.v) }
-  public var IDENT_CRED: Int32 { let o = _accessor.offset(VTOFFSET.IDENT_CRED.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var IDENT_REL: Int32 { let o = _accessor.offset(VTOFFSET.IDENT_REL.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Identity credibility (1-6)
+  public var IDENT_CRED: UInt8 { let o = _accessor.offset(VTOFFSET.IDENT_CRED.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Identity reliability (A-F)
+  public var IDENT_REL: UInt8 { let o = _accessor.offset(VTOFFSET.IDENT_REL.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Identity amplification
   public var IDENT_AMP: String? { let o = _accessor.offset(VTOFFSET.IDENT_AMP.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDENT_AMPSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.IDENT_AMP.v) }
-  public var ENVIRONMENT: String? { let o = _accessor.offset(VTOFFSET.ENVIRONMENT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ENVIRONMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ENVIRONMENT.v) }
+  ///  Track environment
+  public var ENVIRONMENT: trackEnvironment { let o = _accessor.offset(VTOFFSET.ENVIRONMENT.v); return o == 0 ? .space : trackEnvironment(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .space }
+  ///  Environment confidence (0-1)
   public var ENVIRONMENT_CONF: Double { let o = _accessor.offset(VTOFFSET.ENVIRONMENT_CONF.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Track confidence (0-1)
   public var TRK_CONF: Double { let o = _accessor.offset(VTOFFSET.TRK_CONF.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Latitude (degrees)
   public var LAT: Double { let o = _accessor.offset(VTOFFSET.LAT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Longitude (degrees)
   public var LON: Double { let o = _accessor.offset(VTOFFSET.LON.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Altitude (km)
   public var ALT: Double { let o = _accessor.offset(VTOFFSET.ALT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Speed (km/s)
   public var SPD: Double { let o = _accessor.offset(VTOFFSET.SPD.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Heading (degrees from north)
   public var HDNG: Double { let o = _accessor.offset(VTOFFSET.HDNG.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Course (degrees from north)
   public var COURSE: Double { let o = _accessor.offset(VTOFFSET.COURSE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Source types
   public var hasSrcTyps: Bool { let o = _accessor.offset(VTOFFSET.SRC_TYPS.v); return o == 0 ? false : true }
   public var SRC_TYPSCount: Int32 { let o = _accessor.offset(VTOFFSET.SRC_TYPS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func SRC_TYPS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.SRC_TYPS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  ///  Source identifiers
   public var hasSrcIds: Bool { let o = _accessor.offset(VTOFFSET.SRC_IDS.v); return o == 0 ? false : true }
   public var SRC_IDSCount: Int32 { let o = _accessor.offset(VTOFFSET.SRC_IDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func SRC_IDS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.SRC_IDS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  ///  Call sign
   public var CALL_SIGN: String? { let o = _accessor.offset(VTOFFSET.CALL_SIGN.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CALL_SIGNSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CALL_SIGN.v) }
+  ///  True if fused from multiple sources
   public var MULTI_SOURCE: Bool { let o = _accessor.offset(VTOFFSET.MULTI_SOURCE.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  J-series message type
   public var J_SERIES: String? { let o = _accessor.offset(VTOFFSET.J_SERIES.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var J_SERIESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.J_SERIES.v) }
-  public var STRENGTH: Int32 { let o = _accessor.offset(VTOFFSET.STRENGTH.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var M1: Int32 { let o = _accessor.offset(VTOFFSET.M1.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var M1V: Int32 { let o = _accessor.offset(VTOFFSET.M1V.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var M2: Int32 { let o = _accessor.offset(VTOFFSET.M2.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var M2V: Int32 { let o = _accessor.offset(VTOFFSET.M2V.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var M3A: Int32 { let o = _accessor.offset(VTOFFSET.M3A.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var M3AV: Int32 { let o = _accessor.offset(VTOFFSET.M3AV.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Force strength indicator
+  public var STRENGTH: UInt16 { let o = _accessor.offset(VTOFFSET.STRENGTH.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Mode 1 code
+  public var M1: UInt16 { let o = _accessor.offset(VTOFFSET.M1.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Mode 1 validity
+  public var M1V: UInt8 { let o = _accessor.offset(VTOFFSET.M1V.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Mode 2 code
+  public var M2: UInt16 { let o = _accessor.offset(VTOFFSET.M2.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Mode 2 validity
+  public var M2V: UInt8 { let o = _accessor.offset(VTOFFSET.M2V.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Mode 3A code
+  public var M3A: UInt16 { let o = _accessor.offset(VTOFFSET.M3A.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Mode 3A validity
+  public var M3AV: UInt8 { let o = _accessor.offset(VTOFFSET.M3AV.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Associated tags
   public var hasTags: Bool { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? false : true }
   public var TAGSCount: Int32 { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func TAGS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  ///  Start time for track data (ISO 8601 UTC format).
+  ///  Start time for track data (ISO 8601)
   public var TRACK_START_TIME: String? { let o = _accessor.offset(VTOFFSET.TRACK_START_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var TRACK_START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRACK_START_TIME.v) }
-  ///  Time interval between track points in seconds.
+  ///  Time interval between track points (seconds)
   public var TRACK_STEP_SIZE: Double { let o = _accessor.offset(VTOFFSET.TRACK_STEP_SIZE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  ///  Number of components per point (default 3 for X, Y, Z).
+  ///  Number of components per point (default 3 for X, Y, Z)
   public var TRACK_COMPONENTS: UInt8 { let o = _accessor.offset(VTOFFSET.TRACK_COMPONENTS.v); return o == 0 ? 3 : _accessor.readBuffer(of: UInt8.self, at: o) }
   ///  ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]
   public var hasEcefPos: Bool { let o = _accessor.offset(VTOFFSET.ECEF_POS.v); return o == 0 ? false : true }
@@ -214,11 +292,11 @@ public struct TRK: FlatBufferObject, Verifiable {
   public static func add(MSN_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MSN_ID, at: VTOFFSET.MSN_ID.p) }
   public static func add(ASSET_NAT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ASSET_NAT, at: VTOFFSET.ASSET_NAT.p) }
   public static func add(ASSET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ASSET, at: VTOFFSET.ASSET.p) }
-  public static func add(SEN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEN, at: VTOFFSET.SEN.p) }
+  public static func add(SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SENSOR_ID, at: VTOFFSET.SENSOR_ID.p) }
   public static func add(SEN_QUAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEN_QUAL, at: VTOFFSET.SEN_QUAL.p) }
   public static func add(TRK_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRK_ID, at: VTOFFSET.TRK_ID.p) }
   public static func add(TRK_NUM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRK_NUM, at: VTOFFSET.TRK_NUM.p) }
-  public static func add(TRK_STAT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRK_STAT, at: VTOFFSET.TRK_STAT.p) }
+  public static func add(TRK_STAT: trackStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRK_STAT.rawValue, def: 0, at: VTOFFSET.TRK_STAT.p) }
   public static func add(OBJ_NAT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJ_NAT, at: VTOFFSET.OBJ_NAT.p) }
   public static func add(OBJ_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJ_ID, at: VTOFFSET.OBJ_ID.p) }
   public static func add(OBJ_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJ_TYPE, at: VTOFFSET.OBJ_TYPE.p) }
@@ -228,13 +306,13 @@ public struct TRK: FlatBufferObject, Verifiable {
   public static func add(MOD_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MOD_TYPE, at: VTOFFSET.MOD_TYPE.p) }
   public static func add(TRK_ITM_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRK_ITM_ID, at: VTOFFSET.TRK_ITM_ID.p) }
   public static func add(TS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TS, at: VTOFFSET.TS.p) }
-  public static func add(TRK_QUAL: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRK_QUAL, def: 0, at: VTOFFSET.TRK_QUAL.p) }
+  public static func add(TRK_QUAL: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRK_QUAL, def: 0, at: VTOFFSET.TRK_QUAL.p) }
   public static func add(TRK_PT_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRK_PT_TYPE, at: VTOFFSET.TRK_PT_TYPE.p) }
   public static func add(OBJ_IDENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJ_IDENT, at: VTOFFSET.OBJ_IDENT.p) }
-  public static func add(IDENT_CRED: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IDENT_CRED, def: 0, at: VTOFFSET.IDENT_CRED.p) }
-  public static func add(IDENT_REL: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IDENT_REL, def: 0, at: VTOFFSET.IDENT_REL.p) }
+  public static func add(IDENT_CRED: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IDENT_CRED, def: 0, at: VTOFFSET.IDENT_CRED.p) }
+  public static func add(IDENT_REL: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IDENT_REL, def: 0, at: VTOFFSET.IDENT_REL.p) }
   public static func add(IDENT_AMP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IDENT_AMP, at: VTOFFSET.IDENT_AMP.p) }
-  public static func add(ENVIRONMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENVIRONMENT, at: VTOFFSET.ENVIRONMENT.p) }
+  public static func add(ENVIRONMENT: trackEnvironment, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENVIRONMENT.rawValue, def: 0, at: VTOFFSET.ENVIRONMENT.p) }
   public static func add(ENVIRONMENT_CONF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENVIRONMENT_CONF, def: 0.0, at: VTOFFSET.ENVIRONMENT_CONF.p) }
   public static func add(TRK_CONF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRK_CONF, def: 0.0, at: VTOFFSET.TRK_CONF.p) }
   public static func add(LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAT, def: 0.0, at: VTOFFSET.LAT.p) }
@@ -249,13 +327,13 @@ public struct TRK: FlatBufferObject, Verifiable {
   public static func add(MULTI_SOURCE: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MULTI_SOURCE, def: false,
    at: VTOFFSET.MULTI_SOURCE.p) }
   public static func add(J_SERIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: J_SERIES, at: VTOFFSET.J_SERIES.p) }
-  public static func add(STRENGTH: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STRENGTH, def: 0, at: VTOFFSET.STRENGTH.p) }
-  public static func add(M1: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M1, def: 0, at: VTOFFSET.M1.p) }
-  public static func add(M1V: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M1V, def: 0, at: VTOFFSET.M1V.p) }
-  public static func add(M2: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M2, def: 0, at: VTOFFSET.M2.p) }
-  public static func add(M2V: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M2V, def: 0, at: VTOFFSET.M2V.p) }
-  public static func add(M3A: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M3A, def: 0, at: VTOFFSET.M3A.p) }
-  public static func add(M3AV: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M3AV, def: 0, at: VTOFFSET.M3AV.p) }
+  public static func add(STRENGTH: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STRENGTH, def: 0, at: VTOFFSET.STRENGTH.p) }
+  public static func add(M1: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M1, def: 0, at: VTOFFSET.M1.p) }
+  public static func add(M1V: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M1V, def: 0, at: VTOFFSET.M1V.p) }
+  public static func add(M2: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M2, def: 0, at: VTOFFSET.M2.p) }
+  public static func add(M2V: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M2V, def: 0, at: VTOFFSET.M2V.p) }
+  public static func add(M3A: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M3A, def: 0, at: VTOFFSET.M3A.p) }
+  public static func add(M3AV: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: M3AV, def: 0, at: VTOFFSET.M3AV.p) }
   public static func addVectorOf(TAGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAGS, at: VTOFFSET.TAGS.p) }
   public static func add(TRACK_START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRACK_START_TIME, at: VTOFFSET.TRACK_START_TIME.p) }
   public static func add(TRACK_STEP_SIZE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TRACK_STEP_SIZE, def: 0.0, at: VTOFFSET.TRACK_STEP_SIZE.p) }
@@ -277,11 +355,11 @@ public struct TRK: FlatBufferObject, Verifiable {
     MSN_IDOffset MSN_ID: Offset = Offset(),
     ASSET_NATOffset ASSET_NAT: Offset = Offset(),
     ASSETOffset ASSET: Offset = Offset(),
-    SENOffset SEN: Offset = Offset(),
+    SENSOR_IDOffset SENSOR_ID: Offset = Offset(),
     SEN_QUALOffset SEN_QUAL: Offset = Offset(),
     TRK_IDOffset TRK_ID: Offset = Offset(),
     TRK_NUMOffset TRK_NUM: Offset = Offset(),
-    TRK_STATOffset TRK_STAT: Offset = Offset(),
+    TRK_STAT: trackStatus = .active,
     OBJ_NATOffset OBJ_NAT: Offset = Offset(),
     OBJ_IDOffset OBJ_ID: Offset = Offset(),
     OBJ_TYPEOffset OBJ_TYPE: Offset = Offset(),
@@ -291,13 +369,13 @@ public struct TRK: FlatBufferObject, Verifiable {
     MOD_TYPEOffset MOD_TYPE: Offset = Offset(),
     TRK_ITM_IDOffset TRK_ITM_ID: Offset = Offset(),
     TSOffset TS: Offset = Offset(),
-    TRK_QUAL: Int32 = 0,
+    TRK_QUAL: UInt8 = 0,
     TRK_PT_TYPEOffset TRK_PT_TYPE: Offset = Offset(),
     OBJ_IDENTOffset OBJ_IDENT: Offset = Offset(),
-    IDENT_CRED: Int32 = 0,
-    IDENT_REL: Int32 = 0,
+    IDENT_CRED: UInt8 = 0,
+    IDENT_REL: UInt8 = 0,
     IDENT_AMPOffset IDENT_AMP: Offset = Offset(),
-    ENVIRONMENTOffset ENVIRONMENT: Offset = Offset(),
+    ENVIRONMENT: trackEnvironment = .space,
     ENVIRONMENT_CONF: Double = 0.0,
     TRK_CONF: Double = 0.0,
     LAT: Double = 0.0,
@@ -311,13 +389,13 @@ public struct TRK: FlatBufferObject, Verifiable {
     CALL_SIGNOffset CALL_SIGN: Offset = Offset(),
     MULTI_SOURCE: Bool = false,
     J_SERIESOffset J_SERIES: Offset = Offset(),
-    STRENGTH: Int32 = 0,
-    M1: Int32 = 0,
-    M1V: Int32 = 0,
-    M2: Int32 = 0,
-    M2V: Int32 = 0,
-    M3A: Int32 = 0,
-    M3AV: Int32 = 0,
+    STRENGTH: UInt16 = 0,
+    M1: UInt16 = 0,
+    M1V: UInt8 = 0,
+    M2: UInt16 = 0,
+    M2V: UInt8 = 0,
+    M3A: UInt16 = 0,
+    M3AV: UInt8 = 0,
     TAGSVectorOffset TAGS: Offset = Offset(),
     TRACK_START_TIMEOffset TRACK_START_TIME: Offset = Offset(),
     TRACK_STEP_SIZE: Double = 0.0,
@@ -338,7 +416,7 @@ public struct TRK: FlatBufferObject, Verifiable {
     TRK.add(MSN_ID: MSN_ID, &fbb)
     TRK.add(ASSET_NAT: ASSET_NAT, &fbb)
     TRK.add(ASSET: ASSET, &fbb)
-    TRK.add(SEN: SEN, &fbb)
+    TRK.add(SENSOR_ID: SENSOR_ID, &fbb)
     TRK.add(SEN_QUAL: SEN_QUAL, &fbb)
     TRK.add(TRK_ID: TRK_ID, &fbb)
     TRK.add(TRK_NUM: TRK_NUM, &fbb)
@@ -402,11 +480,11 @@ public struct TRK: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.MSN_ID.p, fieldName: "MSN_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ASSET_NAT.p, fieldName: "ASSET_NAT", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ASSET.p, fieldName: "ASSET", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SEN.p, fieldName: "SEN", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.SENSOR_ID.p, fieldName: "SENSOR_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.SEN_QUAL.p, fieldName: "SEN_QUAL", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.TRK_ID.p, fieldName: "TRK_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.TRK_NUM.p, fieldName: "TRK_NUM", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TRK_STAT.p, fieldName: "TRK_STAT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.TRK_STAT.p, fieldName: "TRK_STAT", required: false, type: trackStatus.self)
     try _v.visit(field: VTOFFSET.OBJ_NAT.p, fieldName: "OBJ_NAT", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.OBJ_ID.p, fieldName: "OBJ_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.OBJ_TYPE.p, fieldName: "OBJ_TYPE", required: false, type: ForwardOffset<String>.self)
@@ -416,13 +494,13 @@ public struct TRK: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.MOD_TYPE.p, fieldName: "MOD_TYPE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.TRK_ITM_ID.p, fieldName: "TRK_ITM_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.TS.p, fieldName: "TS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TRK_QUAL.p, fieldName: "TRK_QUAL", required: false, type: Int32.self)
+    try _v.visit(field: VTOFFSET.TRK_QUAL.p, fieldName: "TRK_QUAL", required: false, type: UInt8.self)
     try _v.visit(field: VTOFFSET.TRK_PT_TYPE.p, fieldName: "TRK_PT_TYPE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.OBJ_IDENT.p, fieldName: "OBJ_IDENT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.IDENT_CRED.p, fieldName: "IDENT_CRED", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.IDENT_REL.p, fieldName: "IDENT_REL", required: false, type: Int32.self)
+    try _v.visit(field: VTOFFSET.IDENT_CRED.p, fieldName: "IDENT_CRED", required: false, type: UInt8.self)
+    try _v.visit(field: VTOFFSET.IDENT_REL.p, fieldName: "IDENT_REL", required: false, type: UInt8.self)
     try _v.visit(field: VTOFFSET.IDENT_AMP.p, fieldName: "IDENT_AMP", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ENVIRONMENT.p, fieldName: "ENVIRONMENT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.ENVIRONMENT.p, fieldName: "ENVIRONMENT", required: false, type: trackEnvironment.self)
     try _v.visit(field: VTOFFSET.ENVIRONMENT_CONF.p, fieldName: "ENVIRONMENT_CONF", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.TRK_CONF.p, fieldName: "TRK_CONF", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.LAT.p, fieldName: "LAT", required: false, type: Double.self)
@@ -436,13 +514,13 @@ public struct TRK: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.CALL_SIGN.p, fieldName: "CALL_SIGN", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.MULTI_SOURCE.p, fieldName: "MULTI_SOURCE", required: false, type: Bool.self)
     try _v.visit(field: VTOFFSET.J_SERIES.p, fieldName: "J_SERIES", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.STRENGTH.p, fieldName: "STRENGTH", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.M1.p, fieldName: "M1", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.M1V.p, fieldName: "M1V", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.M2.p, fieldName: "M2", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.M2V.p, fieldName: "M2V", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.M3A.p, fieldName: "M3A", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.M3AV.p, fieldName: "M3AV", required: false, type: Int32.self)
+    try _v.visit(field: VTOFFSET.STRENGTH.p, fieldName: "STRENGTH", required: false, type: UInt16.self)
+    try _v.visit(field: VTOFFSET.M1.p, fieldName: "M1", required: false, type: UInt16.self)
+    try _v.visit(field: VTOFFSET.M1V.p, fieldName: "M1V", required: false, type: UInt8.self)
+    try _v.visit(field: VTOFFSET.M2.p, fieldName: "M2", required: false, type: UInt16.self)
+    try _v.visit(field: VTOFFSET.M2V.p, fieldName: "M2V", required: false, type: UInt8.self)
+    try _v.visit(field: VTOFFSET.M3A.p, fieldName: "M3A", required: false, type: UInt16.self)
+    try _v.visit(field: VTOFFSET.M3AV.p, fieldName: "M3AV", required: false, type: UInt8.self)
     try _v.visit(field: VTOFFSET.TAGS.p, fieldName: "TAGS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VTOFFSET.TRACK_START_TIME.p, fieldName: "TRACK_START_TIME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.TRACK_STEP_SIZE.p, fieldName: "TRACK_STEP_SIZE", required: false, type: Double.self)

@@ -18,49 +18,88 @@ class STR {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique internal identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  CelesTrak Star catalog identifier
   int get CS_ID => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  int get GNC_CAT_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  ///  GNC star catalog identifier
+  int get GNC_CAT_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  ///  Gaia DR3 source identifier
   int get GAIADR3_CAT_ID => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 10, 0);
-  int get HIP_CAT_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  ///  Hipparcos catalog identifier
+  int get HIP_CAT_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  ///  Catalog version string
   String? get CAT_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  double get RA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
-  double get RA_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
-  double get DEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
-  double get DEC_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
-  bool get POS_UNC_FLAG => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
-  double get PARALLAX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
-  double get PARALLAX_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
-  double get PMRA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
-  double get PMRA_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
-  double get PMDEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
-  double get PMDEC_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
-  bool get PM_UNC_FLAG => const fb.BoolReader().vTableGet(_bc, _bcOffset, 38, false);
-  String? get ASTROMETRY_ORIGIN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
-  double get STAR_EPOCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  ///  Astrometry source description
+  String? get ASTROMETRY_ORIGIN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Epoch of stellar position (Julian years)
+  double get STAR_EPOCH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  ///  Right ascension (degrees, ICRS)
+  double get RA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  Right ascension uncertainty (arcseconds)
+  double get RA_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Declination (degrees, ICRS)
+  double get DEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  ///  Declination uncertainty (arcseconds)
+  double get DEC_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  ///  True if position uncertainty is flagged
+  bool get POS_UNC_FLAG => const fb.BoolReader().vTableGet(_bc, _bcOffset, 28, false);
+  ///  Parallax (milliarcseconds)
+  double get PARALLAX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  ///  Parallax uncertainty (milliarcseconds)
+  double get PARALLAX_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  ///  Proper motion in RA (milliarcseconds/year)
+  double get PMRA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  ///  Proper motion in RA uncertainty (milliarcseconds/year)
+  double get PMRA_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  ///  Proper motion in DEC (milliarcseconds/year)
+  double get PMDEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  ///  Proper motion in DEC uncertainty (milliarcseconds/year)
+  double get PMDEC_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  ///  True if proper motion uncertainty is flagged
+  bool get PM_UNC_FLAG => const fb.BoolReader().vTableGet(_bc, _bcOffset, 42, false);
+  ///  Gaia G-band magnitude
   double get GMAG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  ///  Gaia G-band magnitude uncertainty
   double get GMAG_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
+  ///  Gaia BP-band magnitude (blue photometer)
   double get BPMAG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
+  ///  Gaia BP-band magnitude uncertainty
   double get BPMAG_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
+  ///  Gaia RP-band magnitude (red photometer)
   double get RPMAG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
+  ///  Gaia RP-band magnitude uncertainty
   double get RPMAG_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
+  ///  2MASS J-band magnitude (1.25 um)
   double get JMAG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, 0.0);
+  ///  J-band magnitude uncertainty
   double get JMAG_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
+  ///  2MASS K-band magnitude (2.17 um)
   double get KMAG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 60, 0.0);
+  ///  K-band magnitude uncertainty
   double get KMAG_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
+  ///  2MASS H-band magnitude (1.65 um)
   double get HMAG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
+  ///  H-band magnitude uncertainty
   double get HMAG_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, 0.0);
+  ///  True if star is variable
   bool get VAR_FLAG => const fb.BoolReader().vTableGet(_bc, _bcOffset, 68, false);
+  ///  True if star is in a multiple system
   bool get MULT_FLAG => const fb.BoolReader().vTableGet(_bc, _bcOffset, 70, false);
-  int get NEIGHBOR_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 72, 0);
+  ///  Nearest neighbor catalog identifier
+  int get NEIGHBOR_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 72, 0);
+  ///  True if nearest neighbor is within confusion radius
   bool get NEIGHBOR_FLAG => const fb.BoolReader().vTableGet(_bc, _bcOffset, 74, false);
+  ///  Distance to nearest neighbor (arcseconds)
   double get NEIGHBOR_DISTANCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 76, 0.0);
+  ///  True if position shift detected between catalogs
   bool get SHIFT_FLAG => const fb.BoolReader().vTableGet(_bc, _bcOffset, 78, false);
+  ///  Position shift magnitude (arcseconds)
   double get SHIFT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 80, 0.0);
 
   @override
   String toString() {
-    return 'STR{ID: ${ID}, CS_ID: ${CS_ID}, GNC_CAT_ID: ${GNC_CAT_ID}, GAIADR3_CAT_ID: ${GAIADR3_CAT_ID}, HIP_CAT_ID: ${HIP_CAT_ID}, CAT_VERSION: ${CAT_VERSION}, RA: ${RA}, RA_UNC: ${RA_UNC}, DEC: ${DEC}, DEC_UNC: ${DEC_UNC}, POS_UNC_FLAG: ${POS_UNC_FLAG}, PARALLAX: ${PARALLAX}, PARALLAX_UNC: ${PARALLAX_UNC}, PMRA: ${PMRA}, PMRA_UNC: ${PMRA_UNC}, PMDEC: ${PMDEC}, PMDEC_UNC: ${PMDEC_UNC}, PM_UNC_FLAG: ${PM_UNC_FLAG}, ASTROMETRY_ORIGIN: ${ASTROMETRY_ORIGIN}, STAR_EPOCH: ${STAR_EPOCH}, GMAG: ${GMAG}, GMAG_UNC: ${GMAG_UNC}, BPMAG: ${BPMAG}, BPMAG_UNC: ${BPMAG_UNC}, RPMAG: ${RPMAG}, RPMAG_UNC: ${RPMAG_UNC}, JMAG: ${JMAG}, JMAG_UNC: ${JMAG_UNC}, KMAG: ${KMAG}, KMAG_UNC: ${KMAG_UNC}, HMAG: ${HMAG}, HMAG_UNC: ${HMAG_UNC}, VAR_FLAG: ${VAR_FLAG}, MULT_FLAG: ${MULT_FLAG}, NEIGHBOR_ID: ${NEIGHBOR_ID}, NEIGHBOR_FLAG: ${NEIGHBOR_FLAG}, NEIGHBOR_DISTANCE: ${NEIGHBOR_DISTANCE}, SHIFT_FLAG: ${SHIFT_FLAG}, SHIFT: ${SHIFT}}';
+    return 'STR{ID: ${ID}, CS_ID: ${CS_ID}, GNC_CAT_ID: ${GNC_CAT_ID}, GAIADR3_CAT_ID: ${GAIADR3_CAT_ID}, HIP_CAT_ID: ${HIP_CAT_ID}, CAT_VERSION: ${CAT_VERSION}, ASTROMETRY_ORIGIN: ${ASTROMETRY_ORIGIN}, STAR_EPOCH: ${STAR_EPOCH}, RA: ${RA}, RA_UNC: ${RA_UNC}, DEC: ${DEC}, DEC_UNC: ${DEC_UNC}, POS_UNC_FLAG: ${POS_UNC_FLAG}, PARALLAX: ${PARALLAX}, PARALLAX_UNC: ${PARALLAX_UNC}, PMRA: ${PMRA}, PMRA_UNC: ${PMRA_UNC}, PMDEC: ${PMDEC}, PMDEC_UNC: ${PMDEC_UNC}, PM_UNC_FLAG: ${PM_UNC_FLAG}, GMAG: ${GMAG}, GMAG_UNC: ${GMAG_UNC}, BPMAG: ${BPMAG}, BPMAG_UNC: ${BPMAG_UNC}, RPMAG: ${RPMAG}, RPMAG_UNC: ${RPMAG_UNC}, JMAG: ${JMAG}, JMAG_UNC: ${JMAG_UNC}, KMAG: ${KMAG}, KMAG_UNC: ${KMAG_UNC}, HMAG: ${HMAG}, HMAG_UNC: ${HMAG_UNC}, VAR_FLAG: ${VAR_FLAG}, MULT_FLAG: ${MULT_FLAG}, NEIGHBOR_ID: ${NEIGHBOR_ID}, NEIGHBOR_FLAG: ${NEIGHBOR_FLAG}, NEIGHBOR_DISTANCE: ${NEIGHBOR_DISTANCE}, SHIFT_FLAG: ${SHIFT_FLAG}, SHIFT: ${SHIFT}}';
   }
 }
 
@@ -90,7 +129,7 @@ class STRBuilder {
     return fbBuilder.offset;
   }
   int addGncCatId(int? GNC_CAT_ID) {
-    fbBuilder.addInt32(2, GNC_CAT_ID);
+    fbBuilder.addUint32(2, GNC_CAT_ID);
     return fbBuilder.offset;
   }
   int addGaiadr3CatId(int? GAIADR3_CAT_ID) {
@@ -98,67 +137,67 @@ class STRBuilder {
     return fbBuilder.offset;
   }
   int addHipCatId(int? HIP_CAT_ID) {
-    fbBuilder.addInt32(4, HIP_CAT_ID);
+    fbBuilder.addUint32(4, HIP_CAT_ID);
     return fbBuilder.offset;
   }
   int addCatVersionOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addRa(double? RA) {
-    fbBuilder.addFloat64(6, RA);
-    return fbBuilder.offset;
-  }
-  int addRaUnc(double? RA_UNC) {
-    fbBuilder.addFloat64(7, RA_UNC);
-    return fbBuilder.offset;
-  }
-  int addDec(double? DEC) {
-    fbBuilder.addFloat64(8, DEC);
-    return fbBuilder.offset;
-  }
-  int addDecUnc(double? DEC_UNC) {
-    fbBuilder.addFloat64(9, DEC_UNC);
-    return fbBuilder.offset;
-  }
-  int addPosUncFlag(bool? POS_UNC_FLAG) {
-    fbBuilder.addBool(10, POS_UNC_FLAG);
-    return fbBuilder.offset;
-  }
-  int addParallax(double? PARALLAX) {
-    fbBuilder.addFloat64(11, PARALLAX);
-    return fbBuilder.offset;
-  }
-  int addParallaxUnc(double? PARALLAX_UNC) {
-    fbBuilder.addFloat64(12, PARALLAX_UNC);
-    return fbBuilder.offset;
-  }
-  int addPmra(double? PMRA) {
-    fbBuilder.addFloat64(13, PMRA);
-    return fbBuilder.offset;
-  }
-  int addPmraUnc(double? PMRA_UNC) {
-    fbBuilder.addFloat64(14, PMRA_UNC);
-    return fbBuilder.offset;
-  }
-  int addPmdec(double? PMDEC) {
-    fbBuilder.addFloat64(15, PMDEC);
-    return fbBuilder.offset;
-  }
-  int addPmdecUnc(double? PMDEC_UNC) {
-    fbBuilder.addFloat64(16, PMDEC_UNC);
-    return fbBuilder.offset;
-  }
-  int addPmUncFlag(bool? PM_UNC_FLAG) {
-    fbBuilder.addBool(17, PM_UNC_FLAG);
-    return fbBuilder.offset;
-  }
   int addAstrometryOriginOffset(int? offset) {
-    fbBuilder.addOffset(18, offset);
+    fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
   int addStarEpoch(double? STAR_EPOCH) {
-    fbBuilder.addFloat64(19, STAR_EPOCH);
+    fbBuilder.addFloat64(7, STAR_EPOCH);
+    return fbBuilder.offset;
+  }
+  int addRa(double? RA) {
+    fbBuilder.addFloat64(8, RA);
+    return fbBuilder.offset;
+  }
+  int addRaUnc(double? RA_UNC) {
+    fbBuilder.addFloat64(9, RA_UNC);
+    return fbBuilder.offset;
+  }
+  int addDec(double? DEC) {
+    fbBuilder.addFloat64(10, DEC);
+    return fbBuilder.offset;
+  }
+  int addDecUnc(double? DEC_UNC) {
+    fbBuilder.addFloat64(11, DEC_UNC);
+    return fbBuilder.offset;
+  }
+  int addPosUncFlag(bool? POS_UNC_FLAG) {
+    fbBuilder.addBool(12, POS_UNC_FLAG);
+    return fbBuilder.offset;
+  }
+  int addParallax(double? PARALLAX) {
+    fbBuilder.addFloat64(13, PARALLAX);
+    return fbBuilder.offset;
+  }
+  int addParallaxUnc(double? PARALLAX_UNC) {
+    fbBuilder.addFloat64(14, PARALLAX_UNC);
+    return fbBuilder.offset;
+  }
+  int addPmra(double? PMRA) {
+    fbBuilder.addFloat64(15, PMRA);
+    return fbBuilder.offset;
+  }
+  int addPmraUnc(double? PMRA_UNC) {
+    fbBuilder.addFloat64(16, PMRA_UNC);
+    return fbBuilder.offset;
+  }
+  int addPmdec(double? PMDEC) {
+    fbBuilder.addFloat64(17, PMDEC);
+    return fbBuilder.offset;
+  }
+  int addPmdecUnc(double? PMDEC_UNC) {
+    fbBuilder.addFloat64(18, PMDEC_UNC);
+    return fbBuilder.offset;
+  }
+  int addPmUncFlag(bool? PM_UNC_FLAG) {
+    fbBuilder.addBool(19, PM_UNC_FLAG);
     return fbBuilder.offset;
   }
   int addGmag(double? GMAG) {
@@ -218,7 +257,7 @@ class STRBuilder {
     return fbBuilder.offset;
   }
   int addNeighborId(int? NEIGHBOR_ID) {
-    fbBuilder.addInt32(34, NEIGHBOR_ID);
+    fbBuilder.addUint32(34, NEIGHBOR_ID);
     return fbBuilder.offset;
   }
   int addNeighborFlag(bool? NEIGHBOR_FLAG) {
@@ -250,6 +289,8 @@ class STRObjectBuilder extends fb.ObjectBuilder {
   final int? _GAIADR3_CAT_ID;
   final int? _HIP_CAT_ID;
   final String? _CAT_VERSION;
+  final String? _ASTROMETRY_ORIGIN;
+  final double? _STAR_EPOCH;
   final double? _RA;
   final double? _RA_UNC;
   final double? _DEC;
@@ -262,8 +303,6 @@ class STRObjectBuilder extends fb.ObjectBuilder {
   final double? _PMDEC;
   final double? _PMDEC_UNC;
   final bool? _PM_UNC_FLAG;
-  final String? _ASTROMETRY_ORIGIN;
-  final double? _STAR_EPOCH;
   final double? _GMAG;
   final double? _GMAG_UNC;
   final double? _BPMAG;
@@ -291,6 +330,8 @@ class STRObjectBuilder extends fb.ObjectBuilder {
     int? GAIADR3_CAT_ID,
     int? HIP_CAT_ID,
     String? CAT_VERSION,
+    String? ASTROMETRY_ORIGIN,
+    double? STAR_EPOCH,
     double? RA,
     double? RA_UNC,
     double? DEC,
@@ -303,8 +344,6 @@ class STRObjectBuilder extends fb.ObjectBuilder {
     double? PMDEC,
     double? PMDEC_UNC,
     bool? PM_UNC_FLAG,
-    String? ASTROMETRY_ORIGIN,
-    double? STAR_EPOCH,
     double? GMAG,
     double? GMAG_UNC,
     double? BPMAG,
@@ -331,6 +370,8 @@ class STRObjectBuilder extends fb.ObjectBuilder {
         _GAIADR3_CAT_ID = GAIADR3_CAT_ID,
         _HIP_CAT_ID = HIP_CAT_ID,
         _CAT_VERSION = CAT_VERSION,
+        _ASTROMETRY_ORIGIN = ASTROMETRY_ORIGIN,
+        _STAR_EPOCH = STAR_EPOCH,
         _RA = RA,
         _RA_UNC = RA_UNC,
         _DEC = DEC,
@@ -343,8 +384,6 @@ class STRObjectBuilder extends fb.ObjectBuilder {
         _PMDEC = PMDEC,
         _PMDEC_UNC = PMDEC_UNC,
         _PM_UNC_FLAG = PM_UNC_FLAG,
-        _ASTROMETRY_ORIGIN = ASTROMETRY_ORIGIN,
-        _STAR_EPOCH = STAR_EPOCH,
         _GMAG = GMAG,
         _GMAG_UNC = GMAG_UNC,
         _BPMAG = BPMAG,
@@ -377,24 +416,24 @@ class STRObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.startTable(39);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addInt64(1, _CS_ID);
-    fbBuilder.addInt32(2, _GNC_CAT_ID);
+    fbBuilder.addUint32(2, _GNC_CAT_ID);
     fbBuilder.addInt64(3, _GAIADR3_CAT_ID);
-    fbBuilder.addInt32(4, _HIP_CAT_ID);
+    fbBuilder.addUint32(4, _HIP_CAT_ID);
     fbBuilder.addOffset(5, CAT_VERSIONOffset);
-    fbBuilder.addFloat64(6, _RA);
-    fbBuilder.addFloat64(7, _RA_UNC);
-    fbBuilder.addFloat64(8, _DEC);
-    fbBuilder.addFloat64(9, _DEC_UNC);
-    fbBuilder.addBool(10, _POS_UNC_FLAG);
-    fbBuilder.addFloat64(11, _PARALLAX);
-    fbBuilder.addFloat64(12, _PARALLAX_UNC);
-    fbBuilder.addFloat64(13, _PMRA);
-    fbBuilder.addFloat64(14, _PMRA_UNC);
-    fbBuilder.addFloat64(15, _PMDEC);
-    fbBuilder.addFloat64(16, _PMDEC_UNC);
-    fbBuilder.addBool(17, _PM_UNC_FLAG);
-    fbBuilder.addOffset(18, ASTROMETRY_ORIGINOffset);
-    fbBuilder.addFloat64(19, _STAR_EPOCH);
+    fbBuilder.addOffset(6, ASTROMETRY_ORIGINOffset);
+    fbBuilder.addFloat64(7, _STAR_EPOCH);
+    fbBuilder.addFloat64(8, _RA);
+    fbBuilder.addFloat64(9, _RA_UNC);
+    fbBuilder.addFloat64(10, _DEC);
+    fbBuilder.addFloat64(11, _DEC_UNC);
+    fbBuilder.addBool(12, _POS_UNC_FLAG);
+    fbBuilder.addFloat64(13, _PARALLAX);
+    fbBuilder.addFloat64(14, _PARALLAX_UNC);
+    fbBuilder.addFloat64(15, _PMRA);
+    fbBuilder.addFloat64(16, _PMRA_UNC);
+    fbBuilder.addFloat64(17, _PMDEC);
+    fbBuilder.addFloat64(18, _PMDEC_UNC);
+    fbBuilder.addBool(19, _PM_UNC_FLAG);
     fbBuilder.addFloat64(20, _GMAG);
     fbBuilder.addFloat64(21, _GMAG_UNC);
     fbBuilder.addFloat64(22, _BPMAG);
@@ -409,7 +448,7 @@ class STRObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(31, _HMAG_UNC);
     fbBuilder.addBool(32, _VAR_FLAG);
     fbBuilder.addBool(33, _MULT_FLAG);
-    fbBuilder.addInt32(34, _NEIGHBOR_ID);
+    fbBuilder.addUint32(34, _NEIGHBOR_ID);
     fbBuilder.addBool(35, _NEIGHBOR_FLAG);
     fbBuilder.addFloat64(36, _NEIGHBOR_DISTANCE);
     fbBuilder.addBool(37, _SHIFT_FLAG);

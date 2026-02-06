@@ -19,6 +19,7 @@ public struct GDI : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public GDI __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Unique identifier
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,6 +27,7 @@ public struct GDI : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
+  /// Sensor identifier
   public string ID_SENSOR { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetID_SENSORBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -33,181 +35,193 @@ public struct GDI : IFlatbufferObject
   public ArraySegment<byte>? GetID_SENSORBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetID_SENSORArray() { return __p.__vector_as_array<byte>(6); }
-  public string IMAGE_TIME { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Original sensor identifier
+  public string ORIG_SENSOR_ID { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetIMAGE_TIMEBytes() { return __p.__vector_as_span<byte>(8, 1); }
+  public Span<byte> GetORIG_SENSOR_IDBytes() { return __p.__vector_as_span<byte>(8, 1); }
 #else
-  public ArraySegment<byte>? GetIMAGE_TIMEBytes() { return __p.__vector_as_arraysegment(8); }
+  public ArraySegment<byte>? GetORIG_SENSOR_IDBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
-  public byte[] GetIMAGE_TIMEArray() { return __p.__vector_as_array<byte>(8); }
-  public string FILENAME { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetORIG_SENSOR_IDArray() { return __p.__vector_as_array<byte>(8); }
+  /// Image capture time (ISO 8601)
+  public string IMAGE_TIME { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetFILENAMEBytes() { return __p.__vector_as_span<byte>(10, 1); }
+  public Span<byte> GetIMAGE_TIMEBytes() { return __p.__vector_as_span<byte>(10, 1); }
 #else
-  public ArraySegment<byte>? GetFILENAMEBytes() { return __p.__vector_as_arraysegment(10); }
+  public ArraySegment<byte>? GetIMAGE_TIMEBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
-  public byte[] GetFILENAMEArray() { return __p.__vector_as_array<byte>(10); }
-  public string REGION { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetIMAGE_TIMEArray() { return __p.__vector_as_array<byte>(10); }
+  /// Image filename
+  public string FILENAME { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetREGIONBytes() { return __p.__vector_as_span<byte>(12, 1); }
+  public Span<byte> GetFILENAMEBytes() { return __p.__vector_as_span<byte>(12, 1); }
 #else
-  public ArraySegment<byte>? GetREGIONBytes() { return __p.__vector_as_arraysegment(12); }
+  public ArraySegment<byte>? GetFILENAMEBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
-  public byte[] GetREGIONArray() { return __p.__vector_as_array<byte>(12); }
-  public string REGION_TEXT { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetFILENAMEArray() { return __p.__vector_as_array<byte>(12); }
+  /// Image format
+  public imageFormat FORMAT { get { int o = __p.__offset(14); return o != 0 ? (imageFormat)__p.bb.GetSbyte(o + __p.bb_pos) : imageFormat.FITS; } }
+  /// File size (bytes)
+  public long FILESIZE { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
+  /// File checksum value
+  public string CHECKSUM_VALUE { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetREGION_TEXTBytes() { return __p.__vector_as_span<byte>(14, 1); }
+  public Span<byte> GetCHECKSUM_VALUEBytes() { return __p.__vector_as_span<byte>(18, 1); }
 #else
-  public ArraySegment<byte>? GetREGION_TEXTBytes() { return __p.__vector_as_arraysegment(14); }
+  public ArraySegment<byte>? GetCHECKSUM_VALUEBytes() { return __p.__vector_as_arraysegment(18); }
 #endif
-  public byte[] GetREGION_TEXTArray() { return __p.__vector_as_array<byte>(14); }
-  public string REGION_GEO_JSON { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetCHECKSUM_VALUEArray() { return __p.__vector_as_array<byte>(18); }
+  /// Region GeoJSON boundary
+  public string REGION_GEO_JSON { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetREGION_GEO_JSONBytes() { return __p.__vector_as_span<byte>(16, 1); }
+  public Span<byte> GetREGION_GEO_JSONBytes() { return __p.__vector_as_span<byte>(20, 1); }
 #else
-  public ArraySegment<byte>? GetREGION_GEO_JSONBytes() { return __p.__vector_as_arraysegment(16); }
+  public ArraySegment<byte>? GetREGION_GEO_JSONBytes() { return __p.__vector_as_arraysegment(20); }
 #endif
-  public byte[] GetREGION_GEO_JSONArray() { return __p.__vector_as_array<byte>(16); }
-  public string REGION_TYPE { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetREGION_GEO_JSONArray() { return __p.__vector_as_array<byte>(20); }
+  /// Region text description
+  public string REGION_TEXT { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetREGION_TYPEBytes() { return __p.__vector_as_span<byte>(18, 1); }
+  public Span<byte> GetREGION_TEXTBytes() { return __p.__vector_as_span<byte>(22, 1); }
 #else
-  public ArraySegment<byte>? GetREGION_TYPEBytes() { return __p.__vector_as_arraysegment(18); }
+  public ArraySegment<byte>? GetREGION_TEXTBytes() { return __p.__vector_as_arraysegment(22); }
 #endif
-  public byte[] GetREGION_TYPEArray() { return __p.__vector_as_array<byte>(18); }
-  public int REGION_NDIMS { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int REGION_SRID { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public string ORIG_SENSOR_ID { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetREGION_TEXTArray() { return __p.__vector_as_array<byte>(22); }
+  /// Region name
+  public string REGION { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetORIG_SENSOR_IDBytes() { return __p.__vector_as_span<byte>(24, 1); }
+  public Span<byte> GetREGIONBytes() { return __p.__vector_as_span<byte>(24, 1); }
 #else
-  public ArraySegment<byte>? GetORIG_SENSOR_IDBytes() { return __p.__vector_as_arraysegment(24); }
+  public ArraySegment<byte>? GetREGIONBytes() { return __p.__vector_as_arraysegment(24); }
 #endif
-  public byte[] GetORIG_SENSOR_IDArray() { return __p.__vector_as_array<byte>(24); }
-  public string SUBJECT_ID { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetREGIONArray() { return __p.__vector_as_array<byte>(24); }
+  /// Region type
+  public string REGION_TYPE { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSUBJECT_IDBytes() { return __p.__vector_as_span<byte>(26, 1); }
+  public Span<byte> GetREGION_TYPEBytes() { return __p.__vector_as_span<byte>(26, 1); }
 #else
-  public ArraySegment<byte>? GetSUBJECT_IDBytes() { return __p.__vector_as_arraysegment(26); }
+  public ArraySegment<byte>? GetREGION_TYPEBytes() { return __p.__vector_as_arraysegment(26); }
 #endif
-  public byte[] GetSUBJECT_IDArray() { return __p.__vector_as_array<byte>(26); }
-  public string NAME { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetREGION_TYPEArray() { return __p.__vector_as_array<byte>(26); }
+  /// Region geometry dimensions
+  public byte REGION_NDIMS { get { int o = __p.__offset(28); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  /// Region spatial reference ID
+  public ushort REGION_SRID { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  /// Subject object identifier
+  public string SUBJECT_ID { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetNAMEBytes() { return __p.__vector_as_span<byte>(28, 1); }
+  public Span<byte> GetSUBJECT_IDBytes() { return __p.__vector_as_span<byte>(32, 1); }
 #else
-  public ArraySegment<byte>? GetNAMEBytes() { return __p.__vector_as_arraysegment(28); }
+  public ArraySegment<byte>? GetSUBJECT_IDBytes() { return __p.__vector_as_arraysegment(32); }
 #endif
-  public byte[] GetNAMEArray() { return __p.__vector_as_array<byte>(28); }
-  public string TRANSACTION_ID { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetSUBJECT_IDArray() { return __p.__vector_as_array<byte>(32); }
+  /// Image name or title
+  public string NAME { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTRANSACTION_IDBytes() { return __p.__vector_as_span<byte>(30, 1); }
+  public Span<byte> GetNAMEBytes() { return __p.__vector_as_span<byte>(34, 1); }
 #else
-  public ArraySegment<byte>? GetTRANSACTION_IDBytes() { return __p.__vector_as_arraysegment(30); }
+  public ArraySegment<byte>? GetNAMEBytes() { return __p.__vector_as_arraysegment(34); }
 #endif
-  public byte[] GetTRANSACTION_IDArray() { return __p.__vector_as_array<byte>(30); }
-  public string TAGS(int j) { int o = __p.__offset(32); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int TAGSLength { get { int o = __p.__offset(32); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string KEYWORDS(int j) { int o = __p.__offset(34); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int KEYWORDSLength { get { int o = __p.__offset(34); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string NOTES { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetNAMEArray() { return __p.__vector_as_array<byte>(34); }
+  /// Transaction identifier
+  public string TRANSACTION_ID { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetNOTESBytes() { return __p.__vector_as_span<byte>(36, 1); }
+  public Span<byte> GetTRANSACTION_IDBytes() { return __p.__vector_as_span<byte>(36, 1); }
 #else
-  public ArraySegment<byte>? GetNOTESBytes() { return __p.__vector_as_arraysegment(36); }
+  public ArraySegment<byte>? GetTRANSACTION_IDBytes() { return __p.__vector_as_arraysegment(36); }
 #endif
-  public byte[] GetNOTESArray() { return __p.__vector_as_array<byte>(36); }
-  public string FORMAT { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetTRANSACTION_IDArray() { return __p.__vector_as_array<byte>(36); }
+  /// Associated tags
+  public string TAGS(int j) { int o = __p.__offset(38); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int TAGSLength { get { int o = __p.__offset(38); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Keywords for search/classification
+  public string KEYWORDS(int j) { int o = __p.__offset(40); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int KEYWORDSLength { get { int o = __p.__offset(40); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Notes
+  public string NOTES { get { int o = __p.__offset(42); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetFORMATBytes() { return __p.__vector_as_span<byte>(38, 1); }
+  public Span<byte> GetNOTESBytes() { return __p.__vector_as_span<byte>(42, 1); }
 #else
-  public ArraySegment<byte>? GetFORMATBytes() { return __p.__vector_as_arraysegment(38); }
+  public ArraySegment<byte>? GetNOTESBytes() { return __p.__vector_as_arraysegment(42); }
 #endif
-  public byte[] GetFORMATArray() { return __p.__vector_as_array<byte>(38); }
-  public long FILESIZE { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
-  public string CHECKSUM_VALUE { get { int o = __p.__offset(42); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetCHECKSUM_VALUEBytes() { return __p.__vector_as_span<byte>(42, 1); }
-#else
-  public ArraySegment<byte>? GetCHECKSUM_VALUEBytes() { return __p.__vector_as_arraysegment(42); }
-#endif
-  public byte[] GetCHECKSUM_VALUEArray() { return __p.__vector_as_array<byte>(42); }
+  public byte[] GetNOTESArray() { return __p.__vector_as_array<byte>(42); }
 
   public static Offset<GDI> CreateGDI(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
       StringOffset ID_SENSOROffset = default(StringOffset),
+      StringOffset ORIG_SENSOR_IDOffset = default(StringOffset),
       StringOffset IMAGE_TIMEOffset = default(StringOffset),
       StringOffset FILENAMEOffset = default(StringOffset),
-      StringOffset REGIONOffset = default(StringOffset),
-      StringOffset REGION_TEXTOffset = default(StringOffset),
+      imageFormat FORMAT = imageFormat.FITS,
+      long FILESIZE = 0,
+      StringOffset CHECKSUM_VALUEOffset = default(StringOffset),
       StringOffset REGION_GEO_JSONOffset = default(StringOffset),
+      StringOffset REGION_TEXTOffset = default(StringOffset),
+      StringOffset REGIONOffset = default(StringOffset),
       StringOffset REGION_TYPEOffset = default(StringOffset),
-      int REGION_NDIMS = 0,
-      int REGION_SRID = 0,
-      StringOffset ORIG_SENSOR_IDOffset = default(StringOffset),
+      byte REGION_NDIMS = 0,
+      ushort REGION_SRID = 0,
       StringOffset SUBJECT_IDOffset = default(StringOffset),
       StringOffset NAMEOffset = default(StringOffset),
       StringOffset TRANSACTION_IDOffset = default(StringOffset),
       VectorOffset TAGSOffset = default(VectorOffset),
       VectorOffset KEYWORDSOffset = default(VectorOffset),
-      StringOffset NOTESOffset = default(StringOffset),
-      StringOffset FORMATOffset = default(StringOffset),
-      long FILESIZE = 0,
-      StringOffset CHECKSUM_VALUEOffset = default(StringOffset)) {
+      StringOffset NOTESOffset = default(StringOffset)) {
     builder.StartTable(20);
     GDI.AddFILESIZE(builder, FILESIZE);
-    GDI.AddCHECKSUM_VALUE(builder, CHECKSUM_VALUEOffset);
-    GDI.AddFORMAT(builder, FORMATOffset);
     GDI.AddNOTES(builder, NOTESOffset);
     GDI.AddKEYWORDS(builder, KEYWORDSOffset);
     GDI.AddTAGS(builder, TAGSOffset);
     GDI.AddTRANSACTION_ID(builder, TRANSACTION_IDOffset);
     GDI.AddNAME(builder, NAMEOffset);
     GDI.AddSUBJECT_ID(builder, SUBJECT_IDOffset);
-    GDI.AddORIG_SENSOR_ID(builder, ORIG_SENSOR_IDOffset);
-    GDI.AddREGION_SRID(builder, REGION_SRID);
-    GDI.AddREGION_NDIMS(builder, REGION_NDIMS);
     GDI.AddREGION_TYPE(builder, REGION_TYPEOffset);
-    GDI.AddREGION_GEO_JSON(builder, REGION_GEO_JSONOffset);
-    GDI.AddREGION_TEXT(builder, REGION_TEXTOffset);
     GDI.AddREGION(builder, REGIONOffset);
+    GDI.AddREGION_TEXT(builder, REGION_TEXTOffset);
+    GDI.AddREGION_GEO_JSON(builder, REGION_GEO_JSONOffset);
+    GDI.AddCHECKSUM_VALUE(builder, CHECKSUM_VALUEOffset);
     GDI.AddFILENAME(builder, FILENAMEOffset);
     GDI.AddIMAGE_TIME(builder, IMAGE_TIMEOffset);
+    GDI.AddORIG_SENSOR_ID(builder, ORIG_SENSOR_IDOffset);
     GDI.AddID_SENSOR(builder, ID_SENSOROffset);
     GDI.AddID(builder, IDOffset);
+    GDI.AddREGION_SRID(builder, REGION_SRID);
+    GDI.AddREGION_NDIMS(builder, REGION_NDIMS);
+    GDI.AddFORMAT(builder, FORMAT);
     return GDI.EndGDI(builder);
   }
 
   public static void StartGDI(FlatBufferBuilder builder) { builder.StartTable(20); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddID_SENSOR(FlatBufferBuilder builder, StringOffset ID_SENSOROffset) { builder.AddOffset(1, ID_SENSOROffset.Value, 0); }
-  public static void AddIMAGE_TIME(FlatBufferBuilder builder, StringOffset IMAGE_TIMEOffset) { builder.AddOffset(2, IMAGE_TIMEOffset.Value, 0); }
-  public static void AddFILENAME(FlatBufferBuilder builder, StringOffset FILENAMEOffset) { builder.AddOffset(3, FILENAMEOffset.Value, 0); }
-  public static void AddREGION(FlatBufferBuilder builder, StringOffset REGIONOffset) { builder.AddOffset(4, REGIONOffset.Value, 0); }
-  public static void AddREGION_TEXT(FlatBufferBuilder builder, StringOffset REGION_TEXTOffset) { builder.AddOffset(5, REGION_TEXTOffset.Value, 0); }
-  public static void AddREGION_GEO_JSON(FlatBufferBuilder builder, StringOffset REGION_GEO_JSONOffset) { builder.AddOffset(6, REGION_GEO_JSONOffset.Value, 0); }
-  public static void AddREGION_TYPE(FlatBufferBuilder builder, StringOffset REGION_TYPEOffset) { builder.AddOffset(7, REGION_TYPEOffset.Value, 0); }
-  public static void AddREGION_NDIMS(FlatBufferBuilder builder, int REGION_NDIMS) { builder.AddInt(8, REGION_NDIMS, 0); }
-  public static void AddREGION_SRID(FlatBufferBuilder builder, int REGION_SRID) { builder.AddInt(9, REGION_SRID, 0); }
-  public static void AddORIG_SENSOR_ID(FlatBufferBuilder builder, StringOffset ORIG_SENSOR_IDOffset) { builder.AddOffset(10, ORIG_SENSOR_IDOffset.Value, 0); }
-  public static void AddSUBJECT_ID(FlatBufferBuilder builder, StringOffset SUBJECT_IDOffset) { builder.AddOffset(11, SUBJECT_IDOffset.Value, 0); }
-  public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(12, NAMEOffset.Value, 0); }
-  public static void AddTRANSACTION_ID(FlatBufferBuilder builder, StringOffset TRANSACTION_IDOffset) { builder.AddOffset(13, TRANSACTION_IDOffset.Value, 0); }
-  public static void AddTAGS(FlatBufferBuilder builder, VectorOffset TAGSOffset) { builder.AddOffset(14, TAGSOffset.Value, 0); }
+  public static void AddORIG_SENSOR_ID(FlatBufferBuilder builder, StringOffset ORIG_SENSOR_IDOffset) { builder.AddOffset(2, ORIG_SENSOR_IDOffset.Value, 0); }
+  public static void AddIMAGE_TIME(FlatBufferBuilder builder, StringOffset IMAGE_TIMEOffset) { builder.AddOffset(3, IMAGE_TIMEOffset.Value, 0); }
+  public static void AddFILENAME(FlatBufferBuilder builder, StringOffset FILENAMEOffset) { builder.AddOffset(4, FILENAMEOffset.Value, 0); }
+  public static void AddFORMAT(FlatBufferBuilder builder, imageFormat FORMAT) { builder.AddSbyte(5, (sbyte)FORMAT, 0); }
+  public static void AddFILESIZE(FlatBufferBuilder builder, long FILESIZE) { builder.AddLong(6, FILESIZE, 0); }
+  public static void AddCHECKSUM_VALUE(FlatBufferBuilder builder, StringOffset CHECKSUM_VALUEOffset) { builder.AddOffset(7, CHECKSUM_VALUEOffset.Value, 0); }
+  public static void AddREGION_GEO_JSON(FlatBufferBuilder builder, StringOffset REGION_GEO_JSONOffset) { builder.AddOffset(8, REGION_GEO_JSONOffset.Value, 0); }
+  public static void AddREGION_TEXT(FlatBufferBuilder builder, StringOffset REGION_TEXTOffset) { builder.AddOffset(9, REGION_TEXTOffset.Value, 0); }
+  public static void AddREGION(FlatBufferBuilder builder, StringOffset REGIONOffset) { builder.AddOffset(10, REGIONOffset.Value, 0); }
+  public static void AddREGION_TYPE(FlatBufferBuilder builder, StringOffset REGION_TYPEOffset) { builder.AddOffset(11, REGION_TYPEOffset.Value, 0); }
+  public static void AddREGION_NDIMS(FlatBufferBuilder builder, byte REGION_NDIMS) { builder.AddByte(12, REGION_NDIMS, 0); }
+  public static void AddREGION_SRID(FlatBufferBuilder builder, ushort REGION_SRID) { builder.AddUshort(13, REGION_SRID, 0); }
+  public static void AddSUBJECT_ID(FlatBufferBuilder builder, StringOffset SUBJECT_IDOffset) { builder.AddOffset(14, SUBJECT_IDOffset.Value, 0); }
+  public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(15, NAMEOffset.Value, 0); }
+  public static void AddTRANSACTION_ID(FlatBufferBuilder builder, StringOffset TRANSACTION_IDOffset) { builder.AddOffset(16, TRANSACTION_IDOffset.Value, 0); }
+  public static void AddTAGS(FlatBufferBuilder builder, VectorOffset TAGSOffset) { builder.AddOffset(17, TAGSOffset.Value, 0); }
   public static VectorOffset CreateTAGSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartTAGSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddKEYWORDS(FlatBufferBuilder builder, VectorOffset KEYWORDSOffset) { builder.AddOffset(15, KEYWORDSOffset.Value, 0); }
+  public static void AddKEYWORDS(FlatBufferBuilder builder, VectorOffset KEYWORDSOffset) { builder.AddOffset(18, KEYWORDSOffset.Value, 0); }
   public static VectorOffset CreateKEYWORDSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateKEYWORDSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateKEYWORDSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateKEYWORDSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartKEYWORDSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddNOTES(FlatBufferBuilder builder, StringOffset NOTESOffset) { builder.AddOffset(16, NOTESOffset.Value, 0); }
-  public static void AddFORMAT(FlatBufferBuilder builder, StringOffset FORMATOffset) { builder.AddOffset(17, FORMATOffset.Value, 0); }
-  public static void AddFILESIZE(FlatBufferBuilder builder, long FILESIZE) { builder.AddLong(18, FILESIZE, 0); }
-  public static void AddCHECKSUM_VALUE(FlatBufferBuilder builder, StringOffset CHECKSUM_VALUEOffset) { builder.AddOffset(19, CHECKSUM_VALUEOffset.Value, 0); }
+  public static void AddNOTES(FlatBufferBuilder builder, StringOffset NOTESOffset) { builder.AddOffset(19, NOTESOffset.Value, 0); }
   public static Offset<GDI> EndGDI(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<GDI>(o);
@@ -222,15 +236,18 @@ public struct GDI : IFlatbufferObject
   public void UnPackTo(GDIT _o) {
     _o.ID = this.ID;
     _o.ID_SENSOR = this.ID_SENSOR;
+    _o.ORIG_SENSOR_ID = this.ORIG_SENSOR_ID;
     _o.IMAGE_TIME = this.IMAGE_TIME;
     _o.FILENAME = this.FILENAME;
-    _o.REGION = this.REGION;
-    _o.REGION_TEXT = this.REGION_TEXT;
+    _o.FORMAT = this.FORMAT;
+    _o.FILESIZE = this.FILESIZE;
+    _o.CHECKSUM_VALUE = this.CHECKSUM_VALUE;
     _o.REGION_GEO_JSON = this.REGION_GEO_JSON;
+    _o.REGION_TEXT = this.REGION_TEXT;
+    _o.REGION = this.REGION;
     _o.REGION_TYPE = this.REGION_TYPE;
     _o.REGION_NDIMS = this.REGION_NDIMS;
     _o.REGION_SRID = this.REGION_SRID;
-    _o.ORIG_SENSOR_ID = this.ORIG_SENSOR_ID;
     _o.SUBJECT_ID = this.SUBJECT_ID;
     _o.NAME = this.NAME;
     _o.TRANSACTION_ID = this.TRANSACTION_ID;
@@ -239,21 +256,19 @@ public struct GDI : IFlatbufferObject
     _o.KEYWORDS = new List<string>();
     for (var _j = 0; _j < this.KEYWORDSLength; ++_j) {_o.KEYWORDS.Add(this.KEYWORDS(_j));}
     _o.NOTES = this.NOTES;
-    _o.FORMAT = this.FORMAT;
-    _o.FILESIZE = this.FILESIZE;
-    _o.CHECKSUM_VALUE = this.CHECKSUM_VALUE;
   }
   public static Offset<GDI> Pack(FlatBufferBuilder builder, GDIT _o) {
     if (_o == null) return default(Offset<GDI>);
     var _ID = _o.ID == null ? default(StringOffset) : builder.CreateString(_o.ID);
     var _ID_SENSOR = _o.ID_SENSOR == null ? default(StringOffset) : builder.CreateString(_o.ID_SENSOR);
+    var _ORIG_SENSOR_ID = _o.ORIG_SENSOR_ID == null ? default(StringOffset) : builder.CreateString(_o.ORIG_SENSOR_ID);
     var _IMAGE_TIME = _o.IMAGE_TIME == null ? default(StringOffset) : builder.CreateString(_o.IMAGE_TIME);
     var _FILENAME = _o.FILENAME == null ? default(StringOffset) : builder.CreateString(_o.FILENAME);
-    var _REGION = _o.REGION == null ? default(StringOffset) : builder.CreateString(_o.REGION);
-    var _REGION_TEXT = _o.REGION_TEXT == null ? default(StringOffset) : builder.CreateString(_o.REGION_TEXT);
+    var _CHECKSUM_VALUE = _o.CHECKSUM_VALUE == null ? default(StringOffset) : builder.CreateString(_o.CHECKSUM_VALUE);
     var _REGION_GEO_JSON = _o.REGION_GEO_JSON == null ? default(StringOffset) : builder.CreateString(_o.REGION_GEO_JSON);
+    var _REGION_TEXT = _o.REGION_TEXT == null ? default(StringOffset) : builder.CreateString(_o.REGION_TEXT);
+    var _REGION = _o.REGION == null ? default(StringOffset) : builder.CreateString(_o.REGION);
     var _REGION_TYPE = _o.REGION_TYPE == null ? default(StringOffset) : builder.CreateString(_o.REGION_TYPE);
-    var _ORIG_SENSOR_ID = _o.ORIG_SENSOR_ID == null ? default(StringOffset) : builder.CreateString(_o.ORIG_SENSOR_ID);
     var _SUBJECT_ID = _o.SUBJECT_ID == null ? default(StringOffset) : builder.CreateString(_o.SUBJECT_ID);
     var _NAME = _o.NAME == null ? default(StringOffset) : builder.CreateString(_o.NAME);
     var _TRANSACTION_ID = _o.TRANSACTION_ID == null ? default(StringOffset) : builder.CreateString(_o.TRANSACTION_ID);
@@ -270,30 +285,28 @@ public struct GDI : IFlatbufferObject
       _KEYWORDS = CreateKEYWORDSVector(builder, __KEYWORDS);
     }
     var _NOTES = _o.NOTES == null ? default(StringOffset) : builder.CreateString(_o.NOTES);
-    var _FORMAT = _o.FORMAT == null ? default(StringOffset) : builder.CreateString(_o.FORMAT);
-    var _CHECKSUM_VALUE = _o.CHECKSUM_VALUE == null ? default(StringOffset) : builder.CreateString(_o.CHECKSUM_VALUE);
     return CreateGDI(
       builder,
       _ID,
       _ID_SENSOR,
+      _ORIG_SENSOR_ID,
       _IMAGE_TIME,
       _FILENAME,
-      _REGION,
-      _REGION_TEXT,
+      _o.FORMAT,
+      _o.FILESIZE,
+      _CHECKSUM_VALUE,
       _REGION_GEO_JSON,
+      _REGION_TEXT,
+      _REGION,
       _REGION_TYPE,
       _o.REGION_NDIMS,
       _o.REGION_SRID,
-      _ORIG_SENSOR_ID,
       _SUBJECT_ID,
       _NAME,
       _TRANSACTION_ID,
       _TAGS,
       _KEYWORDS,
-      _NOTES,
-      _FORMAT,
-      _o.FILESIZE,
-      _CHECKSUM_VALUE);
+      _NOTES);
   }
 }
 
@@ -301,46 +314,46 @@ public class GDIT
 {
   public string ID { get; set; }
   public string ID_SENSOR { get; set; }
+  public string ORIG_SENSOR_ID { get; set; }
   public string IMAGE_TIME { get; set; }
   public string FILENAME { get; set; }
-  public string REGION { get; set; }
-  public string REGION_TEXT { get; set; }
+  public imageFormat FORMAT { get; set; }
+  public long FILESIZE { get; set; }
+  public string CHECKSUM_VALUE { get; set; }
   public string REGION_GEO_JSON { get; set; }
+  public string REGION_TEXT { get; set; }
+  public string REGION { get; set; }
   public string REGION_TYPE { get; set; }
-  public int REGION_NDIMS { get; set; }
-  public int REGION_SRID { get; set; }
-  public string ORIG_SENSOR_ID { get; set; }
+  public byte REGION_NDIMS { get; set; }
+  public ushort REGION_SRID { get; set; }
   public string SUBJECT_ID { get; set; }
   public string NAME { get; set; }
   public string TRANSACTION_ID { get; set; }
   public List<string> TAGS { get; set; }
   public List<string> KEYWORDS { get; set; }
   public string NOTES { get; set; }
-  public string FORMAT { get; set; }
-  public long FILESIZE { get; set; }
-  public string CHECKSUM_VALUE { get; set; }
 
   public GDIT() {
     this.ID = null;
     this.ID_SENSOR = null;
+    this.ORIG_SENSOR_ID = null;
     this.IMAGE_TIME = null;
     this.FILENAME = null;
-    this.REGION = null;
-    this.REGION_TEXT = null;
+    this.FORMAT = imageFormat.FITS;
+    this.FILESIZE = 0;
+    this.CHECKSUM_VALUE = null;
     this.REGION_GEO_JSON = null;
+    this.REGION_TEXT = null;
+    this.REGION = null;
     this.REGION_TYPE = null;
     this.REGION_NDIMS = 0;
     this.REGION_SRID = 0;
-    this.ORIG_SENSOR_ID = null;
     this.SUBJECT_ID = null;
     this.NAME = null;
     this.TRANSACTION_ID = null;
     this.TAGS = null;
     this.KEYWORDS = null;
     this.NOTES = null;
-    this.FORMAT = null;
-    this.FILESIZE = 0;
-    this.CHECKSUM_VALUE = null;
   }
   public static GDIT DeserializeFromBinary(byte[] fbBuffer) {
     return GDI.GetRootAsGDI(new ByteBuffer(fbBuffer)).UnPack();
@@ -360,24 +373,24 @@ static public class GDIVerify
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*ID*/, false)
       && verifier.VerifyString(tablePos, 6 /*ID_SENSOR*/, false)
-      && verifier.VerifyString(tablePos, 8 /*IMAGE_TIME*/, false)
-      && verifier.VerifyString(tablePos, 10 /*FILENAME*/, false)
-      && verifier.VerifyString(tablePos, 12 /*REGION*/, false)
-      && verifier.VerifyString(tablePos, 14 /*REGION_TEXT*/, false)
-      && verifier.VerifyString(tablePos, 16 /*REGION_GEO_JSON*/, false)
-      && verifier.VerifyString(tablePos, 18 /*REGION_TYPE*/, false)
-      && verifier.VerifyField(tablePos, 20 /*REGION_NDIMS*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 22 /*REGION_SRID*/, 4 /*int*/, 4, false)
-      && verifier.VerifyString(tablePos, 24 /*ORIG_SENSOR_ID*/, false)
-      && verifier.VerifyString(tablePos, 26 /*SUBJECT_ID*/, false)
-      && verifier.VerifyString(tablePos, 28 /*NAME*/, false)
-      && verifier.VerifyString(tablePos, 30 /*TRANSACTION_ID*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 32 /*TAGS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 34 /*KEYWORDS*/, false)
-      && verifier.VerifyString(tablePos, 36 /*NOTES*/, false)
-      && verifier.VerifyString(tablePos, 38 /*FORMAT*/, false)
-      && verifier.VerifyField(tablePos, 40 /*FILESIZE*/, 8 /*long*/, 8, false)
-      && verifier.VerifyString(tablePos, 42 /*CHECKSUM_VALUE*/, false)
+      && verifier.VerifyString(tablePos, 8 /*ORIG_SENSOR_ID*/, false)
+      && verifier.VerifyString(tablePos, 10 /*IMAGE_TIME*/, false)
+      && verifier.VerifyString(tablePos, 12 /*FILENAME*/, false)
+      && verifier.VerifyField(tablePos, 14 /*FORMAT*/, 1 /*imageFormat*/, 1, false)
+      && verifier.VerifyField(tablePos, 16 /*FILESIZE*/, 8 /*long*/, 8, false)
+      && verifier.VerifyString(tablePos, 18 /*CHECKSUM_VALUE*/, false)
+      && verifier.VerifyString(tablePos, 20 /*REGION_GEO_JSON*/, false)
+      && verifier.VerifyString(tablePos, 22 /*REGION_TEXT*/, false)
+      && verifier.VerifyString(tablePos, 24 /*REGION*/, false)
+      && verifier.VerifyString(tablePos, 26 /*REGION_TYPE*/, false)
+      && verifier.VerifyField(tablePos, 28 /*REGION_NDIMS*/, 1 /*byte*/, 1, false)
+      && verifier.VerifyField(tablePos, 30 /*REGION_SRID*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyString(tablePos, 32 /*SUBJECT_ID*/, false)
+      && verifier.VerifyString(tablePos, 34 /*NAME*/, false)
+      && verifier.VerifyString(tablePos, 36 /*TRANSACTION_ID*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 38 /*TAGS*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 40 /*KEYWORDS*/, false)
+      && verifier.VerifyString(tablePos, 42 /*NOTES*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

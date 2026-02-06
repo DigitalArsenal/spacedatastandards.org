@@ -1,0 +1,340 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ionoLayer": {
+      "type": "string",
+      "enum": [
+        "D",
+        "E",
+        "ES",
+        "F",
+        "F1",
+        "F2",
+        "TOPSIDE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "D": {
+          "value": 0
+        },
+        "E": {
+          "value": 1
+        },
+        "ES": {
+          "value": 2
+        },
+        "F": {
+          "value": 3
+        },
+        "F1": {
+          "value": 4
+        },
+        "F2": {
+          "value": 5
+        },
+        "TOPSIDE": {
+          "value": 6
+        }
+      }
+    },
+    "ionoSource": {
+      "type": "string",
+      "enum": [
+        "IONOSONDE",
+        "GPS_TEC",
+        "BEACON",
+        "ISR",
+        "ALTIMETER",
+        "RADIO_OCCULTATION",
+        "MODEL"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "IONOSONDE": {
+          "value": 0
+        },
+        "GPS_TEC": {
+          "value": 1
+        },
+        "BEACON": {
+          "value": 2
+        },
+        "ISR": {
+          "value": 3
+        },
+        "ALTIMETER": {
+          "value": 4
+        },
+        "RADIO_OCCULTATION": {
+          "value": 5
+        },
+        "MODEL": {
+          "value": 6
+        }
+      }
+    },
+    "ionoDataPoint": {
+      "type": "object",
+      "description": "Ionospheric Observation Data Point",
+      "properties": {
+        "EPOCH": {
+          "type": "string",
+          "description": "Observation epoch (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "LAYER": {
+          "$ref": "#/definitions/ionoLayer",
+          "description": "Ionospheric layer",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "D": {
+              "value": 0
+            },
+            "E": {
+              "value": 1
+            },
+            "ES": {
+              "value": 2
+            },
+            "F": {
+              "value": 3
+            },
+            "F1": {
+              "value": 4
+            },
+            "F2": {
+              "value": 5
+            },
+            "TOPSIDE": {
+              "value": 6
+            }
+          }
+        },
+        "CRITICAL_FREQ": {
+          "type": "number",
+          "description": "Critical frequency in MHz",
+          "x-flatbuffer-type": "double"
+        },
+        "VIRTUAL_HEIGHT": {
+          "type": "number",
+          "description": "Virtual height in km",
+          "x-flatbuffer-type": "double"
+        },
+        "TRUE_HEIGHT": {
+          "type": "number",
+          "description": "True height in km",
+          "x-flatbuffer-type": "double"
+        },
+        "PEAK_DENSITY": {
+          "type": "number",
+          "description": "Peak electron density in electrons/m^3",
+          "x-flatbuffer-type": "double"
+        },
+        "TEC": {
+          "type": "number",
+          "description": "Total electron content in TECU",
+          "x-flatbuffer-type": "double"
+        },
+        "TEC_UNCERTAINTY": {
+          "type": "number",
+          "description": "TEC uncertainty in TECU",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ionoDensityProfile": {
+      "type": "object",
+      "description": "Ionospheric Electron Density Profile",
+      "properties": {
+        "EPOCH": {
+          "type": "string",
+          "description": "Observation epoch (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "ALTITUDES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Altitudes in km",
+          "x-flatbuffer-type": "[double]"
+        },
+        "DENSITIES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Electron densities at each altitude in electrons/m^3",
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ION": {
+      "type": "object",
+      "description": "Ionospheric Observation",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Unique identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE": {
+          "$ref": "#/definitions/ionoSource",
+          "description": "Data source type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "IONOSONDE": {
+              "value": 0
+            },
+            "GPS_TEC": {
+              "value": 1
+            },
+            "BEACON": {
+              "value": 2
+            },
+            "ISR": {
+              "value": 3
+            },
+            "ALTIMETER": {
+              "value": 4
+            },
+            "RADIO_OCCULTATION": {
+              "value": 5
+            },
+            "MODEL": {
+              "value": 6
+            }
+          }
+        },
+        "STATION_ID": {
+          "type": "string",
+          "description": "Station or sensor identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "STATION_NAME": {
+          "type": "string",
+          "description": "Station name",
+          "x-flatbuffer-type": "string"
+        },
+        "LATITUDE": {
+          "type": "number",
+          "description": "Station geodetic latitude in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE": {
+          "type": "number",
+          "description": "Station geodetic longitude in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "ALTITUDE": {
+          "type": "number",
+          "description": "Station altitude in meters",
+          "x-flatbuffer-type": "double"
+        },
+        "START_TIME": {
+          "type": "string",
+          "description": "Observation start time (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "STOP_TIME": {
+          "type": "string",
+          "description": "Observation stop time (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "FOF2": {
+          "type": "number",
+          "description": "foF2 critical frequency in MHz",
+          "x-flatbuffer-type": "double"
+        },
+        "FOF1": {
+          "type": "number",
+          "description": "foF1 critical frequency in MHz",
+          "x-flatbuffer-type": "double"
+        },
+        "FOE": {
+          "type": "number",
+          "description": "foE critical frequency in MHz",
+          "x-flatbuffer-type": "double"
+        },
+        "FOES": {
+          "type": "number",
+          "description": "foEs sporadic E critical frequency in MHz",
+          "x-flatbuffer-type": "double"
+        },
+        "HMF2": {
+          "type": "number",
+          "description": "hmF2 peak height of F2 layer in km",
+          "x-flatbuffer-type": "double"
+        },
+        "HMF1": {
+          "type": "number",
+          "description": "hmF1 peak height of F1 layer in km",
+          "x-flatbuffer-type": "double"
+        },
+        "HME": {
+          "type": "number",
+          "description": "hmE peak height of E layer in km",
+          "x-flatbuffer-type": "double"
+        },
+        "NMF2": {
+          "type": "number",
+          "description": "NmF2 peak density of F2 layer in electrons/m^3",
+          "x-flatbuffer-type": "double"
+        },
+        "VTEC": {
+          "type": "number",
+          "description": "Vertical TEC in TECU",
+          "x-flatbuffer-type": "double"
+        },
+        "STEC": {
+          "type": "number",
+          "description": "Slant TEC in TECU",
+          "x-flatbuffer-type": "double"
+        },
+        "S4": {
+          "type": "number",
+          "description": "Scintillation index S4",
+          "x-flatbuffer-type": "double"
+        },
+        "DATA_POINTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ionoDataPoint"
+          },
+          "description": "Observation data points",
+          "x-flatbuffer-type": "[ionoDataPoint]"
+        },
+        "DENSITY_PROFILES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ionoDensityProfile"
+          },
+          "description": "Electron density profiles",
+          "x-flatbuffer-type": "[ionoDensityProfile]"
+        },
+        "QUALITY": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Data quality indicator (0-9, 9=best)",
+          "x-flatbuffer-type": "uint8"
+        },
+        "NOTES": {
+          "type": "string",
+          "description": "Additional notes",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/ION",
+  "x-flatbuffer-root-type": "ION",
+  "x-flatbuffer-file-identifier": "$ION"
+}

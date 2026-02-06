@@ -9,6 +9,196 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_ATT_MOTION_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_ATT_MOTION_TYPE: i8 = 4;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_ATT_MOTION_TYPE: [attMotionType; 5] = [
+  attMotionType::STABILIZED,
+  attMotionType::SPINNING,
+  attMotionType::TUMBLING,
+  attMotionType::PRECESSING,
+  attMotionType::UNKNOWN,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct attMotionType(pub i8);
+#[allow(non_upper_case_globals)]
+impl attMotionType {
+  pub const STABILIZED: Self = Self(0);
+  pub const SPINNING: Self = Self(1);
+  pub const TUMBLING: Self = Self(2);
+  pub const PRECESSING: Self = Self(3);
+  pub const UNKNOWN: Self = Self(4);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 4;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::STABILIZED,
+    Self::SPINNING,
+    Self::TUMBLING,
+    Self::PRECESSING,
+    Self::UNKNOWN,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::STABILIZED => Some("STABILIZED"),
+      Self::SPINNING => Some("SPINNING"),
+      Self::TUMBLING => Some("TUMBLING"),
+      Self::PRECESSING => Some("PRECESSING"),
+      Self::UNKNOWN => Some("UNKNOWN"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for attMotionType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for attMotionType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for attMotionType {
+    type Output = attMotionType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for attMotionType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for attMotionType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for attMotionType {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_ATT_REPRESENTATION: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_ATT_REPRESENTATION: i8 = 3;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_ATT_REPRESENTATION: [attRepresentation; 4] = [
+  attRepresentation::QUATERNION,
+  attRepresentation::EULER,
+  attRepresentation::SPIN,
+  attRepresentation::DIRECTION_COSINE,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct attRepresentation(pub i8);
+#[allow(non_upper_case_globals)]
+impl attRepresentation {
+  pub const QUATERNION: Self = Self(0);
+  pub const EULER: Self = Self(1);
+  pub const SPIN: Self = Self(2);
+  pub const DIRECTION_COSINE: Self = Self(3);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 3;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::QUATERNION,
+    Self::EULER,
+    Self::SPIN,
+    Self::DIRECTION_COSINE,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::QUATERNION => Some("QUATERNION"),
+      Self::EULER => Some("EULER"),
+      Self::SPIN => Some("SPIN"),
+      Self::DIRECTION_COSINE => Some("DIRECTION_COSINE"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for attRepresentation {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for attRepresentation {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for attRepresentation {
+    type Output = attRepresentation;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for attRepresentation {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for attRepresentation {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for attRepresentation {}
 pub enum ATDOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -30,27 +220,33 @@ impl<'a> ATD<'a> {
   pub const VT_AS_ID: flatbuffers::VOffsetT = 6;
   pub const VT_SAT_NO: flatbuffers::VOffsetT = 8;
   pub const VT_ORIG_OBJECT_ID: flatbuffers::VOffsetT = 10;
-  pub const VT_TS: flatbuffers::VOffsetT = 12;
-  pub const VT_MOTION_TYPE: flatbuffers::VOffsetT = 14;
-  pub const VT_Q1: flatbuffers::VOffsetT = 16;
-  pub const VT_Q2: flatbuffers::VOffsetT = 18;
-  pub const VT_Q3: flatbuffers::VOffsetT = 20;
-  pub const VT_QC: flatbuffers::VOffsetT = 22;
-  pub const VT_Q1_DOT: flatbuffers::VOffsetT = 24;
-  pub const VT_Q2_DOT: flatbuffers::VOffsetT = 26;
-  pub const VT_Q3_DOT: flatbuffers::VOffsetT = 28;
-  pub const VT_QC_DOT: flatbuffers::VOffsetT = 30;
-  pub const VT_X_ANGLE: flatbuffers::VOffsetT = 32;
-  pub const VT_Y_ANGLE: flatbuffers::VOffsetT = 34;
-  pub const VT_Z_ANGLE: flatbuffers::VOffsetT = 36;
-  pub const VT_X_RATE: flatbuffers::VOffsetT = 38;
-  pub const VT_Y_RATE: flatbuffers::VOffsetT = 40;
-  pub const VT_Z_RATE: flatbuffers::VOffsetT = 42;
-  pub const VT_RA: flatbuffers::VOffsetT = 44;
-  pub const VT_DECLINATION: flatbuffers::VOffsetT = 46;
-  pub const VT_CONING_ANGLE: flatbuffers::VOffsetT = 48;
-  pub const VT_PREC_PERIOD: flatbuffers::VOffsetT = 50;
-  pub const VT_SPIN_PERIOD: flatbuffers::VOffsetT = 52;
+  pub const VT_EPOCH: flatbuffers::VOffsetT = 12;
+  pub const VT_REPRESENTATION: flatbuffers::VOffsetT = 14;
+  pub const VT_MOTION_TYPE: flatbuffers::VOffsetT = 16;
+  pub const VT_QC: flatbuffers::VOffsetT = 18;
+  pub const VT_Q1: flatbuffers::VOffsetT = 20;
+  pub const VT_Q2: flatbuffers::VOffsetT = 22;
+  pub const VT_Q3: flatbuffers::VOffsetT = 24;
+  pub const VT_QC_DOT: flatbuffers::VOffsetT = 26;
+  pub const VT_Q1_DOT: flatbuffers::VOffsetT = 28;
+  pub const VT_Q2_DOT: flatbuffers::VOffsetT = 30;
+  pub const VT_Q3_DOT: flatbuffers::VOffsetT = 32;
+  pub const VT_X_ANGLE: flatbuffers::VOffsetT = 34;
+  pub const VT_Y_ANGLE: flatbuffers::VOffsetT = 36;
+  pub const VT_Z_ANGLE: flatbuffers::VOffsetT = 38;
+  pub const VT_X_RATE: flatbuffers::VOffsetT = 40;
+  pub const VT_Y_RATE: flatbuffers::VOffsetT = 42;
+  pub const VT_Z_RATE: flatbuffers::VOffsetT = 44;
+  pub const VT_RA: flatbuffers::VOffsetT = 46;
+  pub const VT_DECLINATION: flatbuffers::VOffsetT = 48;
+  pub const VT_CONING_ANGLE: flatbuffers::VOffsetT = 50;
+  pub const VT_PREC_PERIOD: flatbuffers::VOffsetT = 52;
+  pub const VT_SPIN_PERIOD: flatbuffers::VOffsetT = 54;
+  pub const VT_ATTITUDE_UNC: flatbuffers::VOffsetT = 56;
+  pub const VT_RATE_UNC: flatbuffers::VOffsetT = 58;
+  pub const VT_QUALITY: flatbuffers::VOffsetT = 60;
+  pub const VT_REF_FRAME: flatbuffers::VOffsetT = 62;
+  pub const VT_SENSOR_ID: flatbuffers::VOffsetT = 64;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -62,31 +258,37 @@ impl<'a> ATD<'a> {
     args: &'args ATDArgs<'args>
   ) -> flatbuffers::WIPOffset<ATD<'bldr>> {
     let mut builder = ATDBuilder::new(_fbb);
+    builder.add_RATE_UNC(args.RATE_UNC);
+    builder.add_ATTITUDE_UNC(args.ATTITUDE_UNC);
     builder.add_SPIN_PERIOD(args.SPIN_PERIOD);
     builder.add_PREC_PERIOD(args.PREC_PERIOD);
     builder.add_CONING_ANGLE(args.CONING_ANGLE);
     builder.add_DECLINATION(args.DECLINATION);
     builder.add_RA(args.RA);
-    builder.add_QC_DOT(args.QC_DOT);
+    builder.add_Z_RATE(args.Z_RATE);
+    builder.add_Y_RATE(args.Y_RATE);
+    builder.add_X_RATE(args.X_RATE);
+    builder.add_Z_ANGLE(args.Z_ANGLE);
+    builder.add_Y_ANGLE(args.Y_ANGLE);
+    builder.add_X_ANGLE(args.X_ANGLE);
     builder.add_Q3_DOT(args.Q3_DOT);
     builder.add_Q2_DOT(args.Q2_DOT);
     builder.add_Q1_DOT(args.Q1_DOT);
-    builder.add_QC(args.QC);
+    builder.add_QC_DOT(args.QC_DOT);
     builder.add_Q3(args.Q3);
     builder.add_Q2(args.Q2);
     builder.add_Q1(args.Q1);
-    if let Some(x) = args.Z_RATE { builder.add_Z_RATE(x); }
-    if let Some(x) = args.Y_RATE { builder.add_Y_RATE(x); }
-    if let Some(x) = args.X_RATE { builder.add_X_RATE(x); }
-    if let Some(x) = args.Z_ANGLE { builder.add_Z_ANGLE(x); }
-    if let Some(x) = args.Y_ANGLE { builder.add_Y_ANGLE(x); }
-    if let Some(x) = args.X_ANGLE { builder.add_X_ANGLE(x); }
-    if let Some(x) = args.MOTION_TYPE { builder.add_MOTION_TYPE(x); }
-    if let Some(x) = args.TS { builder.add_TS(x); }
+    builder.add_QC(args.QC);
+    if let Some(x) = args.SENSOR_ID { builder.add_SENSOR_ID(x); }
+    if let Some(x) = args.REF_FRAME { builder.add_REF_FRAME(x); }
+    if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
     if let Some(x) = args.ORIG_OBJECT_ID { builder.add_ORIG_OBJECT_ID(x); }
     builder.add_SAT_NO(args.SAT_NO);
     if let Some(x) = args.AS_ID { builder.add_AS_ID(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_QUALITY(args.QUALITY);
+    builder.add_MOTION_TYPE(args.MOTION_TYPE);
+    builder.add_REPRESENTATION(args.REPRESENTATION);
     builder.finish()
   }
 
@@ -101,58 +303,55 @@ impl<'a> ATD<'a> {
     let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID().map(|x| {
       x.to_string()
     });
-    let TS = self.TS().map(|x| {
+    let EPOCH = self.EPOCH().map(|x| {
       x.to_string()
     });
-    let MOTION_TYPE = self.MOTION_TYPE().map(|x| {
-      x.to_string()
-    });
+    let REPRESENTATION = self.REPRESENTATION();
+    let MOTION_TYPE = self.MOTION_TYPE();
+    let QC = self.QC();
     let Q1 = self.Q1();
     let Q2 = self.Q2();
     let Q3 = self.Q3();
-    let QC = self.QC();
+    let QC_DOT = self.QC_DOT();
     let Q1_DOT = self.Q1_DOT();
     let Q2_DOT = self.Q2_DOT();
     let Q3_DOT = self.Q3_DOT();
-    let QC_DOT = self.QC_DOT();
-    let X_ANGLE = self.X_ANGLE().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
-    let Y_ANGLE = self.Y_ANGLE().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
-    let Z_ANGLE = self.Z_ANGLE().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
-    let X_RATE = self.X_RATE().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
-    let Y_RATE = self.Y_RATE().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
-    let Z_RATE = self.Z_RATE().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
+    let X_ANGLE = self.X_ANGLE();
+    let Y_ANGLE = self.Y_ANGLE();
+    let Z_ANGLE = self.Z_ANGLE();
+    let X_RATE = self.X_RATE();
+    let Y_RATE = self.Y_RATE();
+    let Z_RATE = self.Z_RATE();
     let RA = self.RA();
     let DECLINATION = self.DECLINATION();
     let CONING_ANGLE = self.CONING_ANGLE();
     let PREC_PERIOD = self.PREC_PERIOD();
     let SPIN_PERIOD = self.SPIN_PERIOD();
+    let ATTITUDE_UNC = self.ATTITUDE_UNC();
+    let RATE_UNC = self.RATE_UNC();
+    let QUALITY = self.QUALITY();
+    let REF_FRAME = self.REF_FRAME().map(|x| {
+      x.to_string()
+    });
+    let SENSOR_ID = self.SENSOR_ID().map(|x| {
+      x.to_string()
+    });
     ATDT {
       ID,
       AS_ID,
       SAT_NO,
       ORIG_OBJECT_ID,
-      TS,
+      EPOCH,
+      REPRESENTATION,
       MOTION_TYPE,
+      QC,
       Q1,
       Q2,
       Q3,
-      QC,
+      QC_DOT,
       Q1_DOT,
       Q2_DOT,
       Q3_DOT,
-      QC_DOT,
       X_ANGLE,
       Y_ANGLE,
       Z_ANGLE,
@@ -164,9 +363,15 @@ impl<'a> ATD<'a> {
       CONING_ANGLE,
       PREC_PERIOD,
       SPIN_PERIOD,
+      ATTITUDE_UNC,
+      RATE_UNC,
+      QUALITY,
+      REF_FRAME,
+      SENSOR_ID,
     }
   }
 
+  /// Unique identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -174,6 +379,7 @@ impl<'a> ATD<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ATD::VT_ID, None)}
   }
+  /// Attitude set identifier (groups time-series points)
   #[inline]
   pub fn AS_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -181,13 +387,15 @@ impl<'a> ATD<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ATD::VT_AS_ID, None)}
   }
+  /// Satellite catalog number
   #[inline]
-  pub fn SAT_NO(&self) -> i32 {
+  pub fn SAT_NO(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(ATD::VT_SAT_NO, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u32>(ATD::VT_SAT_NO, Some(0)).unwrap()}
   }
+  /// International designator
   #[inline]
   pub fn ORIG_OBJECT_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -195,41 +403,31 @@ impl<'a> ATD<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ATD::VT_ORIG_OBJECT_ID, None)}
   }
+  /// Observation epoch (ISO 8601)
   #[inline]
-  pub fn TS(&self) -> Option<&'a str> {
+  pub fn EPOCH(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ATD::VT_TS, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ATD::VT_EPOCH, None)}
   }
+  /// Attitude representation used
   #[inline]
-  pub fn MOTION_TYPE(&self) -> Option<&'a str> {
+  pub fn REPRESENTATION(&self) -> attRepresentation {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ATD::VT_MOTION_TYPE, None)}
+    unsafe { self._tab.get::<attRepresentation>(ATD::VT_REPRESENTATION, Some(attRepresentation::QUATERNION)).unwrap()}
   }
+  /// Motion characterization
   #[inline]
-  pub fn Q1(&self) -> f64 {
+  pub fn MOTION_TYPE(&self) -> attMotionType {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(ATD::VT_Q1, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<attMotionType>(ATD::VT_MOTION_TYPE, Some(attMotionType::STABILIZED)).unwrap()}
   }
-  #[inline]
-  pub fn Q2(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(ATD::VT_Q2, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn Q3(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(ATD::VT_Q3, Some(0.0)).unwrap()}
-  }
+  /// Quaternion scalar component (q0 or qc)
   #[inline]
   pub fn QC(&self) -> f64 {
     // Safety:
@@ -237,27 +435,31 @@ impl<'a> ATD<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(ATD::VT_QC, Some(0.0)).unwrap()}
   }
+  /// Quaternion vector component 1
   #[inline]
-  pub fn Q1_DOT(&self) -> f64 {
+  pub fn Q1(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(ATD::VT_Q1_DOT, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f64>(ATD::VT_Q1, Some(0.0)).unwrap()}
   }
+  /// Quaternion vector component 2
   #[inline]
-  pub fn Q2_DOT(&self) -> f64 {
+  pub fn Q2(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(ATD::VT_Q2_DOT, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f64>(ATD::VT_Q2, Some(0.0)).unwrap()}
   }
+  /// Quaternion vector component 3
   #[inline]
-  pub fn Q3_DOT(&self) -> f64 {
+  pub fn Q3(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(ATD::VT_Q3_DOT, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f64>(ATD::VT_Q3, Some(0.0)).unwrap()}
   }
+  /// Quaternion scalar rate (rad/s)
   #[inline]
   pub fn QC_DOT(&self) -> f64 {
     // Safety:
@@ -265,48 +467,79 @@ impl<'a> ATD<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(ATD::VT_QC_DOT, Some(0.0)).unwrap()}
   }
+  /// Quaternion vector rate 1 (rad/s)
   #[inline]
-  pub fn X_ANGLE(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+  pub fn Q1_DOT(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(ATD::VT_X_ANGLE, None)}
+    unsafe { self._tab.get::<f64>(ATD::VT_Q1_DOT, Some(0.0)).unwrap()}
   }
+  /// Quaternion vector rate 2 (rad/s)
   #[inline]
-  pub fn Y_ANGLE(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+  pub fn Q2_DOT(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(ATD::VT_Y_ANGLE, None)}
+    unsafe { self._tab.get::<f64>(ATD::VT_Q2_DOT, Some(0.0)).unwrap()}
   }
+  /// Quaternion vector rate 3 (rad/s)
   #[inline]
-  pub fn Z_ANGLE(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+  pub fn Q3_DOT(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(ATD::VT_Z_ANGLE, None)}
+    unsafe { self._tab.get::<f64>(ATD::VT_Q3_DOT, Some(0.0)).unwrap()}
   }
+  /// Euler angle X (degrees)
   #[inline]
-  pub fn X_RATE(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+  pub fn X_ANGLE(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(ATD::VT_X_RATE, None)}
+    unsafe { self._tab.get::<f64>(ATD::VT_X_ANGLE, Some(0.0)).unwrap()}
   }
+  /// Euler angle Y (degrees)
   #[inline]
-  pub fn Y_RATE(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+  pub fn Y_ANGLE(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(ATD::VT_Y_RATE, None)}
+    unsafe { self._tab.get::<f64>(ATD::VT_Y_ANGLE, Some(0.0)).unwrap()}
   }
+  /// Euler angle Z (degrees)
   #[inline]
-  pub fn Z_RATE(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+  pub fn Z_ANGLE(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(ATD::VT_Z_RATE, None)}
+    unsafe { self._tab.get::<f64>(ATD::VT_Z_ANGLE, Some(0.0)).unwrap()}
   }
+  /// Angular rate about X (deg/s)
+  #[inline]
+  pub fn X_RATE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(ATD::VT_X_RATE, Some(0.0)).unwrap()}
+  }
+  /// Angular rate about Y (deg/s)
+  #[inline]
+  pub fn Y_RATE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(ATD::VT_Y_RATE, Some(0.0)).unwrap()}
+  }
+  /// Angular rate about Z (deg/s)
+  #[inline]
+  pub fn Z_RATE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(ATD::VT_Z_RATE, Some(0.0)).unwrap()}
+  }
+  /// Right ascension of spin axis (degrees)
   #[inline]
   pub fn RA(&self) -> f64 {
     // Safety:
@@ -314,6 +547,7 @@ impl<'a> ATD<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(ATD::VT_RA, Some(0.0)).unwrap()}
   }
+  /// Declination of spin axis (degrees)
   #[inline]
   pub fn DECLINATION(&self) -> f64 {
     // Safety:
@@ -321,6 +555,7 @@ impl<'a> ATD<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(ATD::VT_DECLINATION, Some(0.0)).unwrap()}
   }
+  /// Coning half-angle (degrees)
   #[inline]
   pub fn CONING_ANGLE(&self) -> f64 {
     // Safety:
@@ -328,6 +563,7 @@ impl<'a> ATD<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(ATD::VT_CONING_ANGLE, Some(0.0)).unwrap()}
   }
+  /// Precession period (seconds)
   #[inline]
   pub fn PREC_PERIOD(&self) -> f64 {
     // Safety:
@@ -335,12 +571,53 @@ impl<'a> ATD<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(ATD::VT_PREC_PERIOD, Some(0.0)).unwrap()}
   }
+  /// Spin period (seconds)
   #[inline]
   pub fn SPIN_PERIOD(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(ATD::VT_SPIN_PERIOD, Some(0.0)).unwrap()}
+  }
+  /// Attitude uncertainty (degrees, 1-sigma)
+  #[inline]
+  pub fn ATTITUDE_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(ATD::VT_ATTITUDE_UNC, Some(0.0)).unwrap()}
+  }
+  /// Rate uncertainty (deg/s, 1-sigma)
+  #[inline]
+  pub fn RATE_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(ATD::VT_RATE_UNC, Some(0.0)).unwrap()}
+  }
+  /// Data quality (0-9, 9=best)
+  #[inline]
+  pub fn QUALITY(&self) -> u8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u8>(ATD::VT_QUALITY, Some(0)).unwrap()}
+  }
+  /// Reference frame for attitude
+  #[inline]
+  pub fn REF_FRAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ATD::VT_REF_FRAME, None)}
+  }
+  /// Sensor identifier providing the observation
+  #[inline]
+  pub fn SENSOR_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ATD::VT_SENSOR_ID, None)}
   }
 }
 
@@ -353,29 +630,35 @@ impl flatbuffers::Verifiable for ATD<'_> {
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("AS_ID", Self::VT_AS_ID, false)?
-     .visit_field::<i32>("SAT_NO", Self::VT_SAT_NO, false)?
+     .visit_field::<u32>("SAT_NO", Self::VT_SAT_NO, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_OBJECT_ID", Self::VT_ORIG_OBJECT_ID, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TS", Self::VT_TS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MOTION_TYPE", Self::VT_MOTION_TYPE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
+     .visit_field::<attRepresentation>("REPRESENTATION", Self::VT_REPRESENTATION, false)?
+     .visit_field::<attMotionType>("MOTION_TYPE", Self::VT_MOTION_TYPE, false)?
+     .visit_field::<f64>("QC", Self::VT_QC, false)?
      .visit_field::<f64>("Q1", Self::VT_Q1, false)?
      .visit_field::<f64>("Q2", Self::VT_Q2, false)?
      .visit_field::<f64>("Q3", Self::VT_Q3, false)?
-     .visit_field::<f64>("QC", Self::VT_QC, false)?
+     .visit_field::<f64>("QC_DOT", Self::VT_QC_DOT, false)?
      .visit_field::<f64>("Q1_DOT", Self::VT_Q1_DOT, false)?
      .visit_field::<f64>("Q2_DOT", Self::VT_Q2_DOT, false)?
      .visit_field::<f64>("Q3_DOT", Self::VT_Q3_DOT, false)?
-     .visit_field::<f64>("QC_DOT", Self::VT_QC_DOT, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("X_ANGLE", Self::VT_X_ANGLE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("Y_ANGLE", Self::VT_Y_ANGLE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("Z_ANGLE", Self::VT_Z_ANGLE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("X_RATE", Self::VT_X_RATE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("Y_RATE", Self::VT_Y_RATE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("Z_RATE", Self::VT_Z_RATE, false)?
+     .visit_field::<f64>("X_ANGLE", Self::VT_X_ANGLE, false)?
+     .visit_field::<f64>("Y_ANGLE", Self::VT_Y_ANGLE, false)?
+     .visit_field::<f64>("Z_ANGLE", Self::VT_Z_ANGLE, false)?
+     .visit_field::<f64>("X_RATE", Self::VT_X_RATE, false)?
+     .visit_field::<f64>("Y_RATE", Self::VT_Y_RATE, false)?
+     .visit_field::<f64>("Z_RATE", Self::VT_Z_RATE, false)?
      .visit_field::<f64>("RA", Self::VT_RA, false)?
      .visit_field::<f64>("DECLINATION", Self::VT_DECLINATION, false)?
      .visit_field::<f64>("CONING_ANGLE", Self::VT_CONING_ANGLE, false)?
      .visit_field::<f64>("PREC_PERIOD", Self::VT_PREC_PERIOD, false)?
      .visit_field::<f64>("SPIN_PERIOD", Self::VT_SPIN_PERIOD, false)?
+     .visit_field::<f64>("ATTITUDE_UNC", Self::VT_ATTITUDE_UNC, false)?
+     .visit_field::<f64>("RATE_UNC", Self::VT_RATE_UNC, false)?
+     .visit_field::<u8>("QUALITY", Self::VT_QUALITY, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REF_FRAME", Self::VT_REF_FRAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SENSOR_ID", Self::VT_SENSOR_ID, false)?
      .finish();
     Ok(())
   }
@@ -383,29 +666,35 @@ impl flatbuffers::Verifiable for ATD<'_> {
 pub struct ATDArgs<'a> {
     pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub AS_ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SAT_NO: i32,
+    pub SAT_NO: u32,
     pub ORIG_OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub TS: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub MOTION_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub REPRESENTATION: attRepresentation,
+    pub MOTION_TYPE: attMotionType,
+    pub QC: f64,
     pub Q1: f64,
     pub Q2: f64,
     pub Q3: f64,
-    pub QC: f64,
+    pub QC_DOT: f64,
     pub Q1_DOT: f64,
     pub Q2_DOT: f64,
     pub Q3_DOT: f64,
-    pub QC_DOT: f64,
-    pub X_ANGLE: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub Y_ANGLE: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub Z_ANGLE: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub X_RATE: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub Y_RATE: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub Z_RATE: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub X_ANGLE: f64,
+    pub Y_ANGLE: f64,
+    pub Z_ANGLE: f64,
+    pub X_RATE: f64,
+    pub Y_RATE: f64,
+    pub Z_RATE: f64,
     pub RA: f64,
     pub DECLINATION: f64,
     pub CONING_ANGLE: f64,
     pub PREC_PERIOD: f64,
     pub SPIN_PERIOD: f64,
+    pub ATTITUDE_UNC: f64,
+    pub RATE_UNC: f64,
+    pub QUALITY: u8,
+    pub REF_FRAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SENSOR_ID: Option<flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for ATDArgs<'a> {
   #[inline]
@@ -415,27 +704,33 @@ impl<'a> Default for ATDArgs<'a> {
       AS_ID: None,
       SAT_NO: 0,
       ORIG_OBJECT_ID: None,
-      TS: None,
-      MOTION_TYPE: None,
+      EPOCH: None,
+      REPRESENTATION: attRepresentation::QUATERNION,
+      MOTION_TYPE: attMotionType::STABILIZED,
+      QC: 0.0,
       Q1: 0.0,
       Q2: 0.0,
       Q3: 0.0,
-      QC: 0.0,
+      QC_DOT: 0.0,
       Q1_DOT: 0.0,
       Q2_DOT: 0.0,
       Q3_DOT: 0.0,
-      QC_DOT: 0.0,
-      X_ANGLE: None,
-      Y_ANGLE: None,
-      Z_ANGLE: None,
-      X_RATE: None,
-      Y_RATE: None,
-      Z_RATE: None,
+      X_ANGLE: 0.0,
+      Y_ANGLE: 0.0,
+      Z_ANGLE: 0.0,
+      X_RATE: 0.0,
+      Y_RATE: 0.0,
+      Z_RATE: 0.0,
       RA: 0.0,
       DECLINATION: 0.0,
       CONING_ANGLE: 0.0,
       PREC_PERIOD: 0.0,
       SPIN_PERIOD: 0.0,
+      ATTITUDE_UNC: 0.0,
+      RATE_UNC: 0.0,
+      QUALITY: 0,
+      REF_FRAME: None,
+      SENSOR_ID: None,
     }
   }
 }
@@ -454,20 +749,28 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> ATDBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ATD::VT_AS_ID, AS_ID);
   }
   #[inline]
-  pub fn add_SAT_NO(&mut self, SAT_NO: i32) {
-    self.fbb_.push_slot::<i32>(ATD::VT_SAT_NO, SAT_NO, 0);
+  pub fn add_SAT_NO(&mut self, SAT_NO: u32) {
+    self.fbb_.push_slot::<u32>(ATD::VT_SAT_NO, SAT_NO, 0);
   }
   #[inline]
   pub fn add_ORIG_OBJECT_ID(&mut self, ORIG_OBJECT_ID: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ATD::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
   }
   #[inline]
-  pub fn add_TS(&mut self, TS: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ATD::VT_TS, TS);
+  pub fn add_EPOCH(&mut self, EPOCH: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ATD::VT_EPOCH, EPOCH);
   }
   #[inline]
-  pub fn add_MOTION_TYPE(&mut self, MOTION_TYPE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ATD::VT_MOTION_TYPE, MOTION_TYPE);
+  pub fn add_REPRESENTATION(&mut self, REPRESENTATION: attRepresentation) {
+    self.fbb_.push_slot::<attRepresentation>(ATD::VT_REPRESENTATION, REPRESENTATION, attRepresentation::QUATERNION);
+  }
+  #[inline]
+  pub fn add_MOTION_TYPE(&mut self, MOTION_TYPE: attMotionType) {
+    self.fbb_.push_slot::<attMotionType>(ATD::VT_MOTION_TYPE, MOTION_TYPE, attMotionType::STABILIZED);
+  }
+  #[inline]
+  pub fn add_QC(&mut self, QC: f64) {
+    self.fbb_.push_slot::<f64>(ATD::VT_QC, QC, 0.0);
   }
   #[inline]
   pub fn add_Q1(&mut self, Q1: f64) {
@@ -482,8 +785,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> ATDBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(ATD::VT_Q3, Q3, 0.0);
   }
   #[inline]
-  pub fn add_QC(&mut self, QC: f64) {
-    self.fbb_.push_slot::<f64>(ATD::VT_QC, QC, 0.0);
+  pub fn add_QC_DOT(&mut self, QC_DOT: f64) {
+    self.fbb_.push_slot::<f64>(ATD::VT_QC_DOT, QC_DOT, 0.0);
   }
   #[inline]
   pub fn add_Q1_DOT(&mut self, Q1_DOT: f64) {
@@ -498,32 +801,28 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> ATDBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(ATD::VT_Q3_DOT, Q3_DOT, 0.0);
   }
   #[inline]
-  pub fn add_QC_DOT(&mut self, QC_DOT: f64) {
-    self.fbb_.push_slot::<f64>(ATD::VT_QC_DOT, QC_DOT, 0.0);
+  pub fn add_X_ANGLE(&mut self, X_ANGLE: f64) {
+    self.fbb_.push_slot::<f64>(ATD::VT_X_ANGLE, X_ANGLE, 0.0);
   }
   #[inline]
-  pub fn add_X_ANGLE(&mut self, X_ANGLE: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ATD::VT_X_ANGLE, X_ANGLE);
+  pub fn add_Y_ANGLE(&mut self, Y_ANGLE: f64) {
+    self.fbb_.push_slot::<f64>(ATD::VT_Y_ANGLE, Y_ANGLE, 0.0);
   }
   #[inline]
-  pub fn add_Y_ANGLE(&mut self, Y_ANGLE: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ATD::VT_Y_ANGLE, Y_ANGLE);
+  pub fn add_Z_ANGLE(&mut self, Z_ANGLE: f64) {
+    self.fbb_.push_slot::<f64>(ATD::VT_Z_ANGLE, Z_ANGLE, 0.0);
   }
   #[inline]
-  pub fn add_Z_ANGLE(&mut self, Z_ANGLE: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ATD::VT_Z_ANGLE, Z_ANGLE);
+  pub fn add_X_RATE(&mut self, X_RATE: f64) {
+    self.fbb_.push_slot::<f64>(ATD::VT_X_RATE, X_RATE, 0.0);
   }
   #[inline]
-  pub fn add_X_RATE(&mut self, X_RATE: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ATD::VT_X_RATE, X_RATE);
+  pub fn add_Y_RATE(&mut self, Y_RATE: f64) {
+    self.fbb_.push_slot::<f64>(ATD::VT_Y_RATE, Y_RATE, 0.0);
   }
   #[inline]
-  pub fn add_Y_RATE(&mut self, Y_RATE: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ATD::VT_Y_RATE, Y_RATE);
-  }
-  #[inline]
-  pub fn add_Z_RATE(&mut self, Z_RATE: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ATD::VT_Z_RATE, Z_RATE);
+  pub fn add_Z_RATE(&mut self, Z_RATE: f64) {
+    self.fbb_.push_slot::<f64>(ATD::VT_Z_RATE, Z_RATE, 0.0);
   }
   #[inline]
   pub fn add_RA(&mut self, RA: f64) {
@@ -544,6 +843,26 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> ATDBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_SPIN_PERIOD(&mut self, SPIN_PERIOD: f64) {
     self.fbb_.push_slot::<f64>(ATD::VT_SPIN_PERIOD, SPIN_PERIOD, 0.0);
+  }
+  #[inline]
+  pub fn add_ATTITUDE_UNC(&mut self, ATTITUDE_UNC: f64) {
+    self.fbb_.push_slot::<f64>(ATD::VT_ATTITUDE_UNC, ATTITUDE_UNC, 0.0);
+  }
+  #[inline]
+  pub fn add_RATE_UNC(&mut self, RATE_UNC: f64) {
+    self.fbb_.push_slot::<f64>(ATD::VT_RATE_UNC, RATE_UNC, 0.0);
+  }
+  #[inline]
+  pub fn add_QUALITY(&mut self, QUALITY: u8) {
+    self.fbb_.push_slot::<u8>(ATD::VT_QUALITY, QUALITY, 0);
+  }
+  #[inline]
+  pub fn add_REF_FRAME(&mut self, REF_FRAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ATD::VT_REF_FRAME, REF_FRAME);
+  }
+  #[inline]
+  pub fn add_SENSOR_ID(&mut self, SENSOR_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ATD::VT_SENSOR_ID, SENSOR_ID);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> ATDBuilder<'a, 'b, A> {
@@ -567,16 +886,17 @@ impl core::fmt::Debug for ATD<'_> {
       ds.field("AS_ID", &self.AS_ID());
       ds.field("SAT_NO", &self.SAT_NO());
       ds.field("ORIG_OBJECT_ID", &self.ORIG_OBJECT_ID());
-      ds.field("TS", &self.TS());
+      ds.field("EPOCH", &self.EPOCH());
+      ds.field("REPRESENTATION", &self.REPRESENTATION());
       ds.field("MOTION_TYPE", &self.MOTION_TYPE());
+      ds.field("QC", &self.QC());
       ds.field("Q1", &self.Q1());
       ds.field("Q2", &self.Q2());
       ds.field("Q3", &self.Q3());
-      ds.field("QC", &self.QC());
+      ds.field("QC_DOT", &self.QC_DOT());
       ds.field("Q1_DOT", &self.Q1_DOT());
       ds.field("Q2_DOT", &self.Q2_DOT());
       ds.field("Q3_DOT", &self.Q3_DOT());
-      ds.field("QC_DOT", &self.QC_DOT());
       ds.field("X_ANGLE", &self.X_ANGLE());
       ds.field("Y_ANGLE", &self.Y_ANGLE());
       ds.field("Z_ANGLE", &self.Z_ANGLE());
@@ -588,6 +908,11 @@ impl core::fmt::Debug for ATD<'_> {
       ds.field("CONING_ANGLE", &self.CONING_ANGLE());
       ds.field("PREC_PERIOD", &self.PREC_PERIOD());
       ds.field("SPIN_PERIOD", &self.SPIN_PERIOD());
+      ds.field("ATTITUDE_UNC", &self.ATTITUDE_UNC());
+      ds.field("RATE_UNC", &self.RATE_UNC());
+      ds.field("QUALITY", &self.QUALITY());
+      ds.field("REF_FRAME", &self.REF_FRAME());
+      ds.field("SENSOR_ID", &self.SENSOR_ID());
       ds.finish()
   }
 }
@@ -596,29 +921,35 @@ impl core::fmt::Debug for ATD<'_> {
 pub struct ATDT {
   pub ID: Option<String>,
   pub AS_ID: Option<String>,
-  pub SAT_NO: i32,
+  pub SAT_NO: u32,
   pub ORIG_OBJECT_ID: Option<String>,
-  pub TS: Option<String>,
-  pub MOTION_TYPE: Option<String>,
+  pub EPOCH: Option<String>,
+  pub REPRESENTATION: attRepresentation,
+  pub MOTION_TYPE: attMotionType,
+  pub QC: f64,
   pub Q1: f64,
   pub Q2: f64,
   pub Q3: f64,
-  pub QC: f64,
+  pub QC_DOT: f64,
   pub Q1_DOT: f64,
   pub Q2_DOT: f64,
   pub Q3_DOT: f64,
-  pub QC_DOT: f64,
-  pub X_ANGLE: Option<Vec<String>>,
-  pub Y_ANGLE: Option<Vec<String>>,
-  pub Z_ANGLE: Option<Vec<String>>,
-  pub X_RATE: Option<Vec<String>>,
-  pub Y_RATE: Option<Vec<String>>,
-  pub Z_RATE: Option<Vec<String>>,
+  pub X_ANGLE: f64,
+  pub Y_ANGLE: f64,
+  pub Z_ANGLE: f64,
+  pub X_RATE: f64,
+  pub Y_RATE: f64,
+  pub Z_RATE: f64,
   pub RA: f64,
   pub DECLINATION: f64,
   pub CONING_ANGLE: f64,
   pub PREC_PERIOD: f64,
   pub SPIN_PERIOD: f64,
+  pub ATTITUDE_UNC: f64,
+  pub RATE_UNC: f64,
+  pub QUALITY: u8,
+  pub REF_FRAME: Option<String>,
+  pub SENSOR_ID: Option<String>,
 }
 impl Default for ATDT {
   fn default() -> Self {
@@ -627,27 +958,33 @@ impl Default for ATDT {
       AS_ID: None,
       SAT_NO: 0,
       ORIG_OBJECT_ID: None,
-      TS: None,
-      MOTION_TYPE: None,
+      EPOCH: None,
+      REPRESENTATION: attRepresentation::QUATERNION,
+      MOTION_TYPE: attMotionType::STABILIZED,
+      QC: 0.0,
       Q1: 0.0,
       Q2: 0.0,
       Q3: 0.0,
-      QC: 0.0,
+      QC_DOT: 0.0,
       Q1_DOT: 0.0,
       Q2_DOT: 0.0,
       Q3_DOT: 0.0,
-      QC_DOT: 0.0,
-      X_ANGLE: None,
-      Y_ANGLE: None,
-      Z_ANGLE: None,
-      X_RATE: None,
-      Y_RATE: None,
-      Z_RATE: None,
+      X_ANGLE: 0.0,
+      Y_ANGLE: 0.0,
+      Z_ANGLE: 0.0,
+      X_RATE: 0.0,
+      Y_RATE: 0.0,
+      Z_RATE: 0.0,
       RA: 0.0,
       DECLINATION: 0.0,
       CONING_ANGLE: 0.0,
       PREC_PERIOD: 0.0,
       SPIN_PERIOD: 0.0,
+      ATTITUDE_UNC: 0.0,
+      RATE_UNC: 0.0,
+      QUALITY: 0,
+      REF_FRAME: None,
+      SENSOR_ID: None,
     }
   }
 }
@@ -666,58 +1003,55 @@ impl ATDT {
     let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let TS = self.TS.as_ref().map(|x|{
+    let EPOCH = self.EPOCH.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let MOTION_TYPE = self.MOTION_TYPE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+    let REPRESENTATION = self.REPRESENTATION;
+    let MOTION_TYPE = self.MOTION_TYPE;
+    let QC = self.QC;
     let Q1 = self.Q1;
     let Q2 = self.Q2;
     let Q3 = self.Q3;
-    let QC = self.QC;
+    let QC_DOT = self.QC_DOT;
     let Q1_DOT = self.Q1_DOT;
     let Q2_DOT = self.Q2_DOT;
     let Q3_DOT = self.Q3_DOT;
-    let QC_DOT = self.QC_DOT;
-    let X_ANGLE = self.X_ANGLE.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    let Y_ANGLE = self.Y_ANGLE.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    let Z_ANGLE = self.Z_ANGLE.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    let X_RATE = self.X_RATE.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    let Y_RATE = self.Y_RATE.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    let Z_RATE = self.Z_RATE.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
+    let X_ANGLE = self.X_ANGLE;
+    let Y_ANGLE = self.Y_ANGLE;
+    let Z_ANGLE = self.Z_ANGLE;
+    let X_RATE = self.X_RATE;
+    let Y_RATE = self.Y_RATE;
+    let Z_RATE = self.Z_RATE;
     let RA = self.RA;
     let DECLINATION = self.DECLINATION;
     let CONING_ANGLE = self.CONING_ANGLE;
     let PREC_PERIOD = self.PREC_PERIOD;
     let SPIN_PERIOD = self.SPIN_PERIOD;
+    let ATTITUDE_UNC = self.ATTITUDE_UNC;
+    let RATE_UNC = self.RATE_UNC;
+    let QUALITY = self.QUALITY;
+    let REF_FRAME = self.REF_FRAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SENSOR_ID = self.SENSOR_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     ATD::create(_fbb, &ATDArgs{
       ID,
       AS_ID,
       SAT_NO,
       ORIG_OBJECT_ID,
-      TS,
+      EPOCH,
+      REPRESENTATION,
       MOTION_TYPE,
+      QC,
       Q1,
       Q2,
       Q3,
-      QC,
+      QC_DOT,
       Q1_DOT,
       Q2_DOT,
       Q3_DOT,
-      QC_DOT,
       X_ANGLE,
       Y_ANGLE,
       Z_ANGLE,
@@ -729,6 +1063,11 @@ impl ATDT {
       CONING_ANGLE,
       PREC_PERIOD,
       SPIN_PERIOD,
+      ATTITUDE_UNC,
+      RATE_UNC,
+      QUALITY,
+      REF_FRAME,
+      SENSOR_ID,
     })
   }
 }

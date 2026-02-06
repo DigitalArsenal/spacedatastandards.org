@@ -16,67 +16,165 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct LNE;
 struct LNEBuilder;
 
+enum launchOutcome : int8_t {
+  launchOutcome_SUCCESS = 0,
+  launchOutcome_PARTIAL_SUCCESS = 1,
+  launchOutcome_FAILURE = 2,
+  launchOutcome_IN_PROGRESS = 3,
+  launchOutcome_UNKNOWN = 4,
+  launchOutcome_MIN = launchOutcome_SUCCESS,
+  launchOutcome_MAX = launchOutcome_UNKNOWN
+};
+
+inline const launchOutcome (&EnumValueslaunchOutcome())[5] {
+  static const launchOutcome values[] = {
+    launchOutcome_SUCCESS,
+    launchOutcome_PARTIAL_SUCCESS,
+    launchOutcome_FAILURE,
+    launchOutcome_IN_PROGRESS,
+    launchOutcome_UNKNOWN
+  };
+  return values;
+}
+
+inline const char * const *EnumNameslaunchOutcome() {
+  static const char * const names[6] = {
+    "SUCCESS",
+    "PARTIAL_SUCCESS",
+    "FAILURE",
+    "IN_PROGRESS",
+    "UNKNOWN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamelaunchOutcome(launchOutcome e) {
+  if (::flatbuffers::IsOutRange(e, launchOutcome_SUCCESS, launchOutcome_UNKNOWN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNameslaunchOutcome()[index];
+}
+
 /// Launch Event
 struct LNE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef LNEBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
-    VT_ORIG_OBJECT_ID = 6,
-    VT_DERIVED_FROM = 8,
-    VT_DECLASSIFICATION_DATE = 10,
-    VT_DECLASSIFICATION_STRING = 12,
-    VT_MSG_CREATE_DATE = 14,
-    VT_LAUNCH_FAILURE_CODE = 16,
+    VT_SAT_NO = 6,
+    VT_ORIG_OBJECT_ID = 8,
+    VT_DERIVED_FROM = 10,
+    VT_DECLASSIFICATION_DATE = 12,
+    VT_DECLASSIFICATION_STRING = 14,
+    VT_MSG_CREATE_DATE = 16,
     VT_LAUNCH_DATE = 18,
-    VT_BE_NUMBER = 20,
-    VT_O_SUFFIX = 22,
-    VT_LAUNCH_FACILITY_NAME = 24,
-    VT_ON_ORBIT = 26,
-    VT_SAT_NO = 28
+    VT_OUTCOME = 20,
+    VT_LAUNCH_FAILURE_CODE = 22,
+    VT_BE_NUMBER = 24,
+    VT_O_SUFFIX = 26,
+    VT_LAUNCH_FACILITY_NAME = 28,
+    VT_LAUNCH_FACILITY_CODE = 30,
+    VT_LAUNCH_VEHICLE = 32,
+    VT_LAUNCH_VEHICLE_CONFIG = 34,
+    VT_TARGET_ORBIT = 36,
+    VT_OBJECTS_ON_ORBIT = 38,
+    VT_ON_ORBIT = 40,
+    VT_LAUNCH_COUNTRY = 42,
+    VT_MISSION_NAME = 44,
+    VT_REMARKS = 46
   };
+  /// Unique identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
+  /// Satellite catalog number of launched object
+  uint32_t SAT_NO() const {
+    return GetField<uint32_t>(VT_SAT_NO, 0);
+  }
+  /// International designator (YYYY-NNNP)
   const ::flatbuffers::String *ORIG_OBJECT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIG_OBJECT_ID);
   }
+  /// Source record this event was derived from
   const ::flatbuffers::String *DERIVED_FROM() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DERIVED_FROM);
   }
+  /// Classification date (ISO 8601)
   const ::flatbuffers::String *DECLASSIFICATION_DATE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DECLASSIFICATION_DATE);
   }
+  /// Classification marking
   const ::flatbuffers::String *DECLASSIFICATION_STRING() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DECLASSIFICATION_STRING);
   }
+  /// Message creation time (ISO 8601)
   const ::flatbuffers::String *MSG_CREATE_DATE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_MSG_CREATE_DATE);
   }
-  const ::flatbuffers::String *LAUNCH_FAILURE_CODE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_LAUNCH_FAILURE_CODE);
-  }
+  /// Launch date and time (ISO 8601)
   const ::flatbuffers::String *LAUNCH_DATE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_LAUNCH_DATE);
   }
+  /// Launch outcome
+  launchOutcome OUTCOME() const {
+    return static_cast<launchOutcome>(GetField<int8_t>(VT_OUTCOME, 0));
+  }
+  /// Launch failure code (if applicable)
+  const ::flatbuffers::String *LAUNCH_FAILURE_CODE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LAUNCH_FAILURE_CODE);
+  }
+  /// Basic encyclopedia number
   const ::flatbuffers::String *BE_NUMBER() const {
     return GetPointer<const ::flatbuffers::String *>(VT_BE_NUMBER);
   }
+  /// Object suffix identifier
   const ::flatbuffers::String *O_SUFFIX() const {
     return GetPointer<const ::flatbuffers::String *>(VT_O_SUFFIX);
   }
+  /// Launch facility name
   const ::flatbuffers::String *LAUNCH_FACILITY_NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_LAUNCH_FACILITY_NAME);
   }
+  /// Launch facility code
+  const ::flatbuffers::String *LAUNCH_FACILITY_CODE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LAUNCH_FACILITY_CODE);
+  }
+  /// Launch vehicle type
+  const ::flatbuffers::String *LAUNCH_VEHICLE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LAUNCH_VEHICLE);
+  }
+  /// Launch vehicle configuration
+  const ::flatbuffers::String *LAUNCH_VEHICLE_CONFIG() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LAUNCH_VEHICLE_CONFIG);
+  }
+  /// Target orbit type (LEO, MEO, GEO, HEO, SSO, etc.)
+  const ::flatbuffers::String *TARGET_ORBIT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TARGET_ORBIT);
+  }
+  /// Number of objects placed on orbit
+  uint16_t OBJECTS_ON_ORBIT() const {
+    return GetField<uint16_t>(VT_OBJECTS_ON_ORBIT, 0);
+  }
+  /// On-orbit reference identifier
   const ::flatbuffers::String *ON_ORBIT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ON_ORBIT);
   }
-  int32_t SAT_NO() const {
-    return GetField<int32_t>(VT_SAT_NO, 0);
+  /// Launch country or operator
+  const ::flatbuffers::String *LAUNCH_COUNTRY() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LAUNCH_COUNTRY);
+  }
+  /// Mission name or payload description
+  const ::flatbuffers::String *MISSION_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MISSION_NAME);
+  }
+  /// Additional remarks
+  const ::flatbuffers::String *REMARKS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REMARKS);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
            verifier.VerifyString(ID()) &&
+           VerifyField<uint32_t>(verifier, VT_SAT_NO, 4) &&
            VerifyOffset(verifier, VT_ORIG_OBJECT_ID) &&
            verifier.VerifyString(ORIG_OBJECT_ID()) &&
            VerifyOffset(verifier, VT_DERIVED_FROM) &&
@@ -87,19 +185,34 @@ struct LNE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(DECLASSIFICATION_STRING()) &&
            VerifyOffset(verifier, VT_MSG_CREATE_DATE) &&
            verifier.VerifyString(MSG_CREATE_DATE()) &&
-           VerifyOffset(verifier, VT_LAUNCH_FAILURE_CODE) &&
-           verifier.VerifyString(LAUNCH_FAILURE_CODE()) &&
            VerifyOffset(verifier, VT_LAUNCH_DATE) &&
            verifier.VerifyString(LAUNCH_DATE()) &&
+           VerifyField<int8_t>(verifier, VT_OUTCOME, 1) &&
+           VerifyOffset(verifier, VT_LAUNCH_FAILURE_CODE) &&
+           verifier.VerifyString(LAUNCH_FAILURE_CODE()) &&
            VerifyOffset(verifier, VT_BE_NUMBER) &&
            verifier.VerifyString(BE_NUMBER()) &&
            VerifyOffset(verifier, VT_O_SUFFIX) &&
            verifier.VerifyString(O_SUFFIX()) &&
            VerifyOffset(verifier, VT_LAUNCH_FACILITY_NAME) &&
            verifier.VerifyString(LAUNCH_FACILITY_NAME()) &&
+           VerifyOffset(verifier, VT_LAUNCH_FACILITY_CODE) &&
+           verifier.VerifyString(LAUNCH_FACILITY_CODE()) &&
+           VerifyOffset(verifier, VT_LAUNCH_VEHICLE) &&
+           verifier.VerifyString(LAUNCH_VEHICLE()) &&
+           VerifyOffset(verifier, VT_LAUNCH_VEHICLE_CONFIG) &&
+           verifier.VerifyString(LAUNCH_VEHICLE_CONFIG()) &&
+           VerifyOffset(verifier, VT_TARGET_ORBIT) &&
+           verifier.VerifyString(TARGET_ORBIT()) &&
+           VerifyField<uint16_t>(verifier, VT_OBJECTS_ON_ORBIT, 2) &&
            VerifyOffset(verifier, VT_ON_ORBIT) &&
            verifier.VerifyString(ON_ORBIT()) &&
-           VerifyField<int32_t>(verifier, VT_SAT_NO, 4) &&
+           VerifyOffset(verifier, VT_LAUNCH_COUNTRY) &&
+           verifier.VerifyString(LAUNCH_COUNTRY()) &&
+           VerifyOffset(verifier, VT_MISSION_NAME) &&
+           verifier.VerifyString(MISSION_NAME()) &&
+           VerifyOffset(verifier, VT_REMARKS) &&
+           verifier.VerifyString(REMARKS()) &&
            verifier.EndTable();
   }
 };
@@ -110,6 +223,9 @@ struct LNEBuilder {
   ::flatbuffers::uoffset_t start_;
   void add_ID(::flatbuffers::Offset<::flatbuffers::String> ID) {
     fbb_.AddOffset(LNE::VT_ID, ID);
+  }
+  void add_SAT_NO(uint32_t SAT_NO) {
+    fbb_.AddElement<uint32_t>(LNE::VT_SAT_NO, SAT_NO, 0);
   }
   void add_ORIG_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID) {
     fbb_.AddOffset(LNE::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
@@ -126,11 +242,14 @@ struct LNEBuilder {
   void add_MSG_CREATE_DATE(::flatbuffers::Offset<::flatbuffers::String> MSG_CREATE_DATE) {
     fbb_.AddOffset(LNE::VT_MSG_CREATE_DATE, MSG_CREATE_DATE);
   }
-  void add_LAUNCH_FAILURE_CODE(::flatbuffers::Offset<::flatbuffers::String> LAUNCH_FAILURE_CODE) {
-    fbb_.AddOffset(LNE::VT_LAUNCH_FAILURE_CODE, LAUNCH_FAILURE_CODE);
-  }
   void add_LAUNCH_DATE(::flatbuffers::Offset<::flatbuffers::String> LAUNCH_DATE) {
     fbb_.AddOffset(LNE::VT_LAUNCH_DATE, LAUNCH_DATE);
+  }
+  void add_OUTCOME(launchOutcome OUTCOME) {
+    fbb_.AddElement<int8_t>(LNE::VT_OUTCOME, static_cast<int8_t>(OUTCOME), 0);
+  }
+  void add_LAUNCH_FAILURE_CODE(::flatbuffers::Offset<::flatbuffers::String> LAUNCH_FAILURE_CODE) {
+    fbb_.AddOffset(LNE::VT_LAUNCH_FAILURE_CODE, LAUNCH_FAILURE_CODE);
   }
   void add_BE_NUMBER(::flatbuffers::Offset<::flatbuffers::String> BE_NUMBER) {
     fbb_.AddOffset(LNE::VT_BE_NUMBER, BE_NUMBER);
@@ -141,11 +260,32 @@ struct LNEBuilder {
   void add_LAUNCH_FACILITY_NAME(::flatbuffers::Offset<::flatbuffers::String> LAUNCH_FACILITY_NAME) {
     fbb_.AddOffset(LNE::VT_LAUNCH_FACILITY_NAME, LAUNCH_FACILITY_NAME);
   }
+  void add_LAUNCH_FACILITY_CODE(::flatbuffers::Offset<::flatbuffers::String> LAUNCH_FACILITY_CODE) {
+    fbb_.AddOffset(LNE::VT_LAUNCH_FACILITY_CODE, LAUNCH_FACILITY_CODE);
+  }
+  void add_LAUNCH_VEHICLE(::flatbuffers::Offset<::flatbuffers::String> LAUNCH_VEHICLE) {
+    fbb_.AddOffset(LNE::VT_LAUNCH_VEHICLE, LAUNCH_VEHICLE);
+  }
+  void add_LAUNCH_VEHICLE_CONFIG(::flatbuffers::Offset<::flatbuffers::String> LAUNCH_VEHICLE_CONFIG) {
+    fbb_.AddOffset(LNE::VT_LAUNCH_VEHICLE_CONFIG, LAUNCH_VEHICLE_CONFIG);
+  }
+  void add_TARGET_ORBIT(::flatbuffers::Offset<::flatbuffers::String> TARGET_ORBIT) {
+    fbb_.AddOffset(LNE::VT_TARGET_ORBIT, TARGET_ORBIT);
+  }
+  void add_OBJECTS_ON_ORBIT(uint16_t OBJECTS_ON_ORBIT) {
+    fbb_.AddElement<uint16_t>(LNE::VT_OBJECTS_ON_ORBIT, OBJECTS_ON_ORBIT, 0);
+  }
   void add_ON_ORBIT(::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT) {
     fbb_.AddOffset(LNE::VT_ON_ORBIT, ON_ORBIT);
   }
-  void add_SAT_NO(int32_t SAT_NO) {
-    fbb_.AddElement<int32_t>(LNE::VT_SAT_NO, SAT_NO, 0);
+  void add_LAUNCH_COUNTRY(::flatbuffers::Offset<::flatbuffers::String> LAUNCH_COUNTRY) {
+    fbb_.AddOffset(LNE::VT_LAUNCH_COUNTRY, LAUNCH_COUNTRY);
+  }
+  void add_MISSION_NAME(::flatbuffers::Offset<::flatbuffers::String> MISSION_NAME) {
+    fbb_.AddOffset(LNE::VT_MISSION_NAME, MISSION_NAME);
+  }
+  void add_REMARKS(::flatbuffers::Offset<::flatbuffers::String> REMARKS) {
+    fbb_.AddOffset(LNE::VT_REMARKS, REMARKS);
   }
   explicit LNEBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -161,77 +301,120 @@ struct LNEBuilder {
 inline ::flatbuffers::Offset<LNE> CreateLNE(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
+    uint32_t SAT_NO = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> DERIVED_FROM = 0,
     ::flatbuffers::Offset<::flatbuffers::String> DECLASSIFICATION_DATE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> DECLASSIFICATION_STRING = 0,
     ::flatbuffers::Offset<::flatbuffers::String> MSG_CREATE_DATE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> LAUNCH_FAILURE_CODE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> LAUNCH_DATE = 0,
+    launchOutcome OUTCOME = launchOutcome_SUCCESS,
+    ::flatbuffers::Offset<::flatbuffers::String> LAUNCH_FAILURE_CODE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> BE_NUMBER = 0,
     ::flatbuffers::Offset<::flatbuffers::String> O_SUFFIX = 0,
     ::flatbuffers::Offset<::flatbuffers::String> LAUNCH_FACILITY_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> LAUNCH_FACILITY_CODE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> LAUNCH_VEHICLE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> LAUNCH_VEHICLE_CONFIG = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> TARGET_ORBIT = 0,
+    uint16_t OBJECTS_ON_ORBIT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT = 0,
-    int32_t SAT_NO = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> LAUNCH_COUNTRY = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MISSION_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REMARKS = 0) {
   LNEBuilder builder_(_fbb);
-  builder_.add_SAT_NO(SAT_NO);
+  builder_.add_REMARKS(REMARKS);
+  builder_.add_MISSION_NAME(MISSION_NAME);
+  builder_.add_LAUNCH_COUNTRY(LAUNCH_COUNTRY);
   builder_.add_ON_ORBIT(ON_ORBIT);
+  builder_.add_TARGET_ORBIT(TARGET_ORBIT);
+  builder_.add_LAUNCH_VEHICLE_CONFIG(LAUNCH_VEHICLE_CONFIG);
+  builder_.add_LAUNCH_VEHICLE(LAUNCH_VEHICLE);
+  builder_.add_LAUNCH_FACILITY_CODE(LAUNCH_FACILITY_CODE);
   builder_.add_LAUNCH_FACILITY_NAME(LAUNCH_FACILITY_NAME);
   builder_.add_O_SUFFIX(O_SUFFIX);
   builder_.add_BE_NUMBER(BE_NUMBER);
-  builder_.add_LAUNCH_DATE(LAUNCH_DATE);
   builder_.add_LAUNCH_FAILURE_CODE(LAUNCH_FAILURE_CODE);
+  builder_.add_LAUNCH_DATE(LAUNCH_DATE);
   builder_.add_MSG_CREATE_DATE(MSG_CREATE_DATE);
   builder_.add_DECLASSIFICATION_STRING(DECLASSIFICATION_STRING);
   builder_.add_DECLASSIFICATION_DATE(DECLASSIFICATION_DATE);
   builder_.add_DERIVED_FROM(DERIVED_FROM);
   builder_.add_ORIG_OBJECT_ID(ORIG_OBJECT_ID);
+  builder_.add_SAT_NO(SAT_NO);
   builder_.add_ID(ID);
+  builder_.add_OBJECTS_ON_ORBIT(OBJECTS_ON_ORBIT);
+  builder_.add_OUTCOME(OUTCOME);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<LNE> CreateLNEDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *ID = nullptr,
+    uint32_t SAT_NO = 0,
     const char *ORIG_OBJECT_ID = nullptr,
     const char *DERIVED_FROM = nullptr,
     const char *DECLASSIFICATION_DATE = nullptr,
     const char *DECLASSIFICATION_STRING = nullptr,
     const char *MSG_CREATE_DATE = nullptr,
-    const char *LAUNCH_FAILURE_CODE = nullptr,
     const char *LAUNCH_DATE = nullptr,
+    launchOutcome OUTCOME = launchOutcome_SUCCESS,
+    const char *LAUNCH_FAILURE_CODE = nullptr,
     const char *BE_NUMBER = nullptr,
     const char *O_SUFFIX = nullptr,
     const char *LAUNCH_FACILITY_NAME = nullptr,
+    const char *LAUNCH_FACILITY_CODE = nullptr,
+    const char *LAUNCH_VEHICLE = nullptr,
+    const char *LAUNCH_VEHICLE_CONFIG = nullptr,
+    const char *TARGET_ORBIT = nullptr,
+    uint16_t OBJECTS_ON_ORBIT = 0,
     const char *ON_ORBIT = nullptr,
-    int32_t SAT_NO = 0) {
+    const char *LAUNCH_COUNTRY = nullptr,
+    const char *MISSION_NAME = nullptr,
+    const char *REMARKS = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto ORIG_OBJECT_ID__ = ORIG_OBJECT_ID ? _fbb.CreateString(ORIG_OBJECT_ID) : 0;
   auto DERIVED_FROM__ = DERIVED_FROM ? _fbb.CreateString(DERIVED_FROM) : 0;
   auto DECLASSIFICATION_DATE__ = DECLASSIFICATION_DATE ? _fbb.CreateString(DECLASSIFICATION_DATE) : 0;
   auto DECLASSIFICATION_STRING__ = DECLASSIFICATION_STRING ? _fbb.CreateString(DECLASSIFICATION_STRING) : 0;
   auto MSG_CREATE_DATE__ = MSG_CREATE_DATE ? _fbb.CreateString(MSG_CREATE_DATE) : 0;
-  auto LAUNCH_FAILURE_CODE__ = LAUNCH_FAILURE_CODE ? _fbb.CreateString(LAUNCH_FAILURE_CODE) : 0;
   auto LAUNCH_DATE__ = LAUNCH_DATE ? _fbb.CreateString(LAUNCH_DATE) : 0;
+  auto LAUNCH_FAILURE_CODE__ = LAUNCH_FAILURE_CODE ? _fbb.CreateString(LAUNCH_FAILURE_CODE) : 0;
   auto BE_NUMBER__ = BE_NUMBER ? _fbb.CreateString(BE_NUMBER) : 0;
   auto O_SUFFIX__ = O_SUFFIX ? _fbb.CreateString(O_SUFFIX) : 0;
   auto LAUNCH_FACILITY_NAME__ = LAUNCH_FACILITY_NAME ? _fbb.CreateString(LAUNCH_FACILITY_NAME) : 0;
+  auto LAUNCH_FACILITY_CODE__ = LAUNCH_FACILITY_CODE ? _fbb.CreateString(LAUNCH_FACILITY_CODE) : 0;
+  auto LAUNCH_VEHICLE__ = LAUNCH_VEHICLE ? _fbb.CreateString(LAUNCH_VEHICLE) : 0;
+  auto LAUNCH_VEHICLE_CONFIG__ = LAUNCH_VEHICLE_CONFIG ? _fbb.CreateString(LAUNCH_VEHICLE_CONFIG) : 0;
+  auto TARGET_ORBIT__ = TARGET_ORBIT ? _fbb.CreateString(TARGET_ORBIT) : 0;
   auto ON_ORBIT__ = ON_ORBIT ? _fbb.CreateString(ON_ORBIT) : 0;
+  auto LAUNCH_COUNTRY__ = LAUNCH_COUNTRY ? _fbb.CreateString(LAUNCH_COUNTRY) : 0;
+  auto MISSION_NAME__ = MISSION_NAME ? _fbb.CreateString(MISSION_NAME) : 0;
+  auto REMARKS__ = REMARKS ? _fbb.CreateString(REMARKS) : 0;
   return CreateLNE(
       _fbb,
       ID__,
+      SAT_NO,
       ORIG_OBJECT_ID__,
       DERIVED_FROM__,
       DECLASSIFICATION_DATE__,
       DECLASSIFICATION_STRING__,
       MSG_CREATE_DATE__,
-      LAUNCH_FAILURE_CODE__,
       LAUNCH_DATE__,
+      OUTCOME,
+      LAUNCH_FAILURE_CODE__,
       BE_NUMBER__,
       O_SUFFIX__,
       LAUNCH_FACILITY_NAME__,
+      LAUNCH_FACILITY_CODE__,
+      LAUNCH_VEHICLE__,
+      LAUNCH_VEHICLE_CONFIG__,
+      TARGET_ORBIT__,
+      OBJECTS_ON_ORBIT,
       ON_ORBIT__,
-      SAT_NO);
+      LAUNCH_COUNTRY__,
+      MISSION_NAME__,
+      REMARKS__);
 }
 
 inline const LNE *GetLNE(const void *buf) {

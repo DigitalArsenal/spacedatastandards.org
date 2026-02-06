@@ -29,127 +29,267 @@ public final class TRK extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public TRK __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * Contact reference
+   */
   public String CNTCT() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CNTCTAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer CNTCTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  /**
+   * Message timestamp (ISO 8601)
+   */
   public String MSG_TS() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer MSG_TSAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer MSG_TSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * Mission identifier
+   */
   public String MSN_ID() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer MSN_IDAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
   public ByteBuffer MSN_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * Asset nationality
+   */
   public String ASSET_NAT() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ASSET_NATAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
   public ByteBuffer ASSET_NATInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * Asset identifier
+   */
   public String ASSET() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ASSETAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
   public ByteBuffer ASSETInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
-  public String SEN() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SENAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
-  public ByteBuffer SENInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  /**
+   * Sensor identifier
+   */
+  public String SENSOR_ID() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SENSOR_IDAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
+  public ByteBuffer SENSOR_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  /**
+   * Sensor quality assessment
+   */
   public String SEN_QUAL() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer SEN_QUALAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
   public ByteBuffer SEN_QUALInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
+  /**
+   * Track identifier
+   */
   public String TRK_ID() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer TRK_IDAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
   public ByteBuffer TRK_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
+  /**
+   * Track number
+   */
   public String TRK_NUM() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer TRK_NUMAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
   public ByteBuffer TRK_NUMInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
-  public String TRK_STAT() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer TRK_STATAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
-  public ByteBuffer TRK_STATInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
+  /**
+   * Track status
+   */
+  public byte TRK_STAT() { int o = __offset(24); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Object nationality
+   */
   public String OBJ_NAT() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer OBJ_NATAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
   public ByteBuffer OBJ_NATInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
+  /**
+   * Object identifier
+   */
   public String OBJ_ID() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer OBJ_IDAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
   public ByteBuffer OBJ_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
+  /**
+   * Object type classification
+   */
   public String OBJ_TYPE() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer OBJ_TYPEAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
   public ByteBuffer OBJ_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
+  /**
+   * Object specific type
+   */
   public String OBJ_SPEC() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer OBJ_SPECAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
   public ByteBuffer OBJ_SPECInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
+  /**
+   * Object platform type
+   */
   public String OBJ_PLAT() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer OBJ_PLATAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
   public ByteBuffer OBJ_PLATInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  /**
+   * Object activity
+   */
   public String OBJ_ACT() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer OBJ_ACTAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
   public ByteBuffer OBJ_ACTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
+  /**
+   * Mode type
+   */
   public String MOD_TYPE() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer MOD_TYPEAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
   public ByteBuffer MOD_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
+  /**
+   * Track item identifier
+   */
   public String TRK_ITM_ID() { int o = __offset(40); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer TRK_ITM_IDAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
   public ByteBuffer TRK_ITM_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
+  /**
+   * Track point timestamp (ISO 8601)
+   */
   public String TS() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer TSAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
   public ByteBuffer TSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
-  public int TRK_QUAL() { int o = __offset(44); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Track quality (0-15)
+   */
+  public int TRK_QUAL() { int o = __offset(44); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Track point type
+   */
   public String TRK_PT_TYPE() { int o = __offset(46); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer TRK_PT_TYPEAsByteBuffer() { return __vector_as_bytebuffer(46, 1); }
   public ByteBuffer TRK_PT_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 46, 1); }
+  /**
+   * Object identity assessment
+   */
   public String OBJ_IDENT() { int o = __offset(48); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer OBJ_IDENTAsByteBuffer() { return __vector_as_bytebuffer(48, 1); }
   public ByteBuffer OBJ_IDENTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 48, 1); }
-  public int IDENT_CRED() { int o = __offset(50); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public int IDENT_REL() { int o = __offset(52); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Identity credibility (1-6)
+   */
+  public int IDENT_CRED() { int o = __offset(50); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Identity reliability (A-F)
+   */
+  public int IDENT_REL() { int o = __offset(52); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Identity amplification
+   */
   public String IDENT_AMP() { int o = __offset(54); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDENT_AMPAsByteBuffer() { return __vector_as_bytebuffer(54, 1); }
   public ByteBuffer IDENT_AMPInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 54, 1); }
-  public String ENVIRONMENT() { int o = __offset(56); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ENVIRONMENTAsByteBuffer() { return __vector_as_bytebuffer(56, 1); }
-  public ByteBuffer ENVIRONMENTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 56, 1); }
+  /**
+   * Track environment
+   */
+  public byte ENVIRONMENT() { int o = __offset(56); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Environment confidence (0-1)
+   */
   public double ENVIRONMENT_CONF() { int o = __offset(58); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Track confidence (0-1)
+   */
   public double TRK_CONF() { int o = __offset(60); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Latitude (degrees)
+   */
   public double LAT() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Longitude (degrees)
+   */
   public double LON() { int o = __offset(64); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Altitude (km)
+   */
   public double ALT() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Speed (km/s)
+   */
   public double SPD() { int o = __offset(68); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Heading (degrees from north)
+   */
   public double HDNG() { int o = __offset(70); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Course (degrees from north)
+   */
   public double COURSE() { int o = __offset(72); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Source types
+   */
   public String SRC_TYPS(int j) { int o = __offset(74); return o != 0 ? __string(__vector(o) + j * 4) : null; }
   public int SRC_TYPSLength() { int o = __offset(74); return o != 0 ? __vector_len(o) : 0; }
   public StringVector srcTypsVector() { return srcTypsVector(new StringVector()); }
   public StringVector srcTypsVector(StringVector obj) { int o = __offset(74); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Source identifiers
+   */
   public String SRC_IDS(int j) { int o = __offset(76); return o != 0 ? __string(__vector(o) + j * 4) : null; }
   public int SRC_IDSLength() { int o = __offset(76); return o != 0 ? __vector_len(o) : 0; }
   public StringVector srcIdsVector() { return srcIdsVector(new StringVector()); }
   public StringVector srcIdsVector(StringVector obj) { int o = __offset(76); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Call sign
+   */
   public String CALL_SIGN() { int o = __offset(78); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CALL_SIGNAsByteBuffer() { return __vector_as_bytebuffer(78, 1); }
   public ByteBuffer CALL_SIGNInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 78, 1); }
+  /**
+   * True if fused from multiple sources
+   */
   public boolean MULTI_SOURCE() { int o = __offset(80); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * J-series message type
+   */
   public String J_SERIES() { int o = __offset(82); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer J_SERIESAsByteBuffer() { return __vector_as_bytebuffer(82, 1); }
   public ByteBuffer J_SERIESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 82, 1); }
-  public int STRENGTH() { int o = __offset(84); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public int M1() { int o = __offset(86); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public int M1V() { int o = __offset(88); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public int M2() { int o = __offset(90); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public int M2V() { int o = __offset(92); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public int M3A() { int o = __offset(94); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public int M3AV() { int o = __offset(96); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Force strength indicator
+   */
+  public int STRENGTH() { int o = __offset(84); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * Mode 1 code
+   */
+  public int M1() { int o = __offset(86); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * Mode 1 validity
+   */
+  public int M1V() { int o = __offset(88); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Mode 2 code
+   */
+  public int M2() { int o = __offset(90); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * Mode 2 validity
+   */
+  public int M2V() { int o = __offset(92); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Mode 3A code
+   */
+  public int M3A() { int o = __offset(94); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * Mode 3A validity
+   */
+  public int M3AV() { int o = __offset(96); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Associated tags
+   */
   public String TAGS(int j) { int o = __offset(98); return o != 0 ? __string(__vector(o) + j * 4) : null; }
   public int TAGSLength() { int o = __offset(98); return o != 0 ? __vector_len(o) : 0; }
   public StringVector tagsVector() { return tagsVector(new StringVector()); }
   public StringVector tagsVector(StringVector obj) { int o = __offset(98); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
   /**
-   * Start time for track data (ISO 8601 UTC format).
+   * Start time for track data (ISO 8601)
    */
   public String TRACK_START_TIME() { int o = __offset(100); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer TRACK_START_TIMEAsByteBuffer() { return __vector_as_bytebuffer(100, 1); }
   public ByteBuffer TRACK_START_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 100, 1); }
   /**
-   * Time interval between track points in seconds.
+   * Time interval between track points (seconds)
    */
   public double TRACK_STEP_SIZE() { int o = __offset(102); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Number of components per point (default 3 for X, Y, Z).
+   * Number of components per point (default 3 for X, Y, Z)
    */
   public int TRACK_COMPONENTS() { int o = __offset(104); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 3; }
   /**
@@ -232,11 +372,11 @@ public final class TRK extends Table {
       int MSN_IDOffset,
       int ASSET_NATOffset,
       int ASSETOffset,
-      int SENOffset,
+      int SENSOR_IDOffset,
       int SEN_QUALOffset,
       int TRK_IDOffset,
       int TRK_NUMOffset,
-      int TRK_STATOffset,
+      byte TRK_STAT,
       int OBJ_NATOffset,
       int OBJ_IDOffset,
       int OBJ_TYPEOffset,
@@ -252,7 +392,7 @@ public final class TRK extends Table {
       int IDENT_CRED,
       int IDENT_REL,
       int IDENT_AMPOffset,
-      int ENVIRONMENTOffset,
+      byte ENVIRONMENT,
       double ENVIRONMENT_CONF,
       double TRK_CONF,
       double LAT,
@@ -305,24 +445,13 @@ public final class TRK extends Table {
     TRK.addEcefPos(builder, ECEF_POSOffset);
     TRK.addTrackStartTime(builder, TRACK_START_TIMEOffset);
     TRK.addTags(builder, TAGSOffset);
-    TRK.addM3Av(builder, M3AV);
-    TRK.addM3A(builder, M3A);
-    TRK.addM2V(builder, M2V);
-    TRK.addM2(builder, M2);
-    TRK.addM1V(builder, M1V);
-    TRK.addM1(builder, M1);
-    TRK.addStrength(builder, STRENGTH);
     TRK.addJSeries(builder, J_SERIESOffset);
     TRK.addCallSign(builder, CALL_SIGNOffset);
     TRK.addSrcIds(builder, SRC_IDSOffset);
     TRK.addSrcTyps(builder, SRC_TYPSOffset);
-    TRK.addEnvironment(builder, ENVIRONMENTOffset);
     TRK.addIdentAmp(builder, IDENT_AMPOffset);
-    TRK.addIdentRel(builder, IDENT_REL);
-    TRK.addIdentCred(builder, IDENT_CRED);
     TRK.addObjIdent(builder, OBJ_IDENTOffset);
     TRK.addTrkPtType(builder, TRK_PT_TYPEOffset);
-    TRK.addTrkQual(builder, TRK_QUAL);
     TRK.addTs(builder, TSOffset);
     TRK.addTrkItmId(builder, TRK_ITM_IDOffset);
     TRK.addModType(builder, MOD_TYPEOffset);
@@ -332,19 +461,30 @@ public final class TRK extends Table {
     TRK.addObjType(builder, OBJ_TYPEOffset);
     TRK.addObjId(builder, OBJ_IDOffset);
     TRK.addObjNat(builder, OBJ_NATOffset);
-    TRK.addTrkStat(builder, TRK_STATOffset);
     TRK.addTrkNum(builder, TRK_NUMOffset);
     TRK.addTrkId(builder, TRK_IDOffset);
     TRK.addSenQual(builder, SEN_QUALOffset);
-    TRK.addSen(builder, SENOffset);
+    TRK.addSensorId(builder, SENSOR_IDOffset);
     TRK.addAsset(builder, ASSETOffset);
     TRK.addAssetNat(builder, ASSET_NATOffset);
     TRK.addMsnId(builder, MSN_IDOffset);
     TRK.addMsgTs(builder, MSG_TSOffset);
     TRK.addCntct(builder, CNTCTOffset);
     TRK.addId(builder, IDOffset);
+    TRK.addM3A(builder, M3A);
+    TRK.addM2(builder, M2);
+    TRK.addM1(builder, M1);
+    TRK.addStrength(builder, STRENGTH);
     TRK.addTrackComponents(builder, TRACK_COMPONENTS);
+    TRK.addM3Av(builder, M3AV);
+    TRK.addM2V(builder, M2V);
+    TRK.addM1V(builder, M1V);
     TRK.addMultiSource(builder, MULTI_SOURCE);
+    TRK.addEnvironment(builder, ENVIRONMENT);
+    TRK.addIdentRel(builder, IDENT_REL);
+    TRK.addIdentCred(builder, IDENT_CRED);
+    TRK.addTrkQual(builder, TRK_QUAL);
+    TRK.addTrkStat(builder, TRK_STAT);
     return TRK.endTRK(builder);
   }
 
@@ -355,11 +495,11 @@ public final class TRK extends Table {
   public static void addMsnId(FlatBufferBuilder builder, int MSN_IDOffset) { builder.addOffset(3, MSN_IDOffset, 0); }
   public static void addAssetNat(FlatBufferBuilder builder, int ASSET_NATOffset) { builder.addOffset(4, ASSET_NATOffset, 0); }
   public static void addAsset(FlatBufferBuilder builder, int ASSETOffset) { builder.addOffset(5, ASSETOffset, 0); }
-  public static void addSen(FlatBufferBuilder builder, int SENOffset) { builder.addOffset(6, SENOffset, 0); }
+  public static void addSensorId(FlatBufferBuilder builder, int SENSOR_IDOffset) { builder.addOffset(6, SENSOR_IDOffset, 0); }
   public static void addSenQual(FlatBufferBuilder builder, int SEN_QUALOffset) { builder.addOffset(7, SEN_QUALOffset, 0); }
   public static void addTrkId(FlatBufferBuilder builder, int TRK_IDOffset) { builder.addOffset(8, TRK_IDOffset, 0); }
   public static void addTrkNum(FlatBufferBuilder builder, int TRK_NUMOffset) { builder.addOffset(9, TRK_NUMOffset, 0); }
-  public static void addTrkStat(FlatBufferBuilder builder, int TRK_STATOffset) { builder.addOffset(10, TRK_STATOffset, 0); }
+  public static void addTrkStat(FlatBufferBuilder builder, byte TRK_STAT) { builder.addByte(10, TRK_STAT, 0); }
   public static void addObjNat(FlatBufferBuilder builder, int OBJ_NATOffset) { builder.addOffset(11, OBJ_NATOffset, 0); }
   public static void addObjId(FlatBufferBuilder builder, int OBJ_IDOffset) { builder.addOffset(12, OBJ_IDOffset, 0); }
   public static void addObjType(FlatBufferBuilder builder, int OBJ_TYPEOffset) { builder.addOffset(13, OBJ_TYPEOffset, 0); }
@@ -369,13 +509,13 @@ public final class TRK extends Table {
   public static void addModType(FlatBufferBuilder builder, int MOD_TYPEOffset) { builder.addOffset(17, MOD_TYPEOffset, 0); }
   public static void addTrkItmId(FlatBufferBuilder builder, int TRK_ITM_IDOffset) { builder.addOffset(18, TRK_ITM_IDOffset, 0); }
   public static void addTs(FlatBufferBuilder builder, int TSOffset) { builder.addOffset(19, TSOffset, 0); }
-  public static void addTrkQual(FlatBufferBuilder builder, int TRK_QUAL) { builder.addInt(20, TRK_QUAL, 0); }
+  public static void addTrkQual(FlatBufferBuilder builder, int TRK_QUAL) { builder.addByte(20, (byte) TRK_QUAL, (byte) 0); }
   public static void addTrkPtType(FlatBufferBuilder builder, int TRK_PT_TYPEOffset) { builder.addOffset(21, TRK_PT_TYPEOffset, 0); }
   public static void addObjIdent(FlatBufferBuilder builder, int OBJ_IDENTOffset) { builder.addOffset(22, OBJ_IDENTOffset, 0); }
-  public static void addIdentCred(FlatBufferBuilder builder, int IDENT_CRED) { builder.addInt(23, IDENT_CRED, 0); }
-  public static void addIdentRel(FlatBufferBuilder builder, int IDENT_REL) { builder.addInt(24, IDENT_REL, 0); }
+  public static void addIdentCred(FlatBufferBuilder builder, int IDENT_CRED) { builder.addByte(23, (byte) IDENT_CRED, (byte) 0); }
+  public static void addIdentRel(FlatBufferBuilder builder, int IDENT_REL) { builder.addByte(24, (byte) IDENT_REL, (byte) 0); }
   public static void addIdentAmp(FlatBufferBuilder builder, int IDENT_AMPOffset) { builder.addOffset(25, IDENT_AMPOffset, 0); }
-  public static void addEnvironment(FlatBufferBuilder builder, int ENVIRONMENTOffset) { builder.addOffset(26, ENVIRONMENTOffset, 0); }
+  public static void addEnvironment(FlatBufferBuilder builder, byte ENVIRONMENT) { builder.addByte(26, ENVIRONMENT, 0); }
   public static void addEnvironmentConf(FlatBufferBuilder builder, double ENVIRONMENT_CONF) { builder.addDouble(27, ENVIRONMENT_CONF, 0.0); }
   public static void addTrkConf(FlatBufferBuilder builder, double TRK_CONF) { builder.addDouble(28, TRK_CONF, 0.0); }
   public static void addLat(FlatBufferBuilder builder, double LAT) { builder.addDouble(29, LAT, 0.0); }
@@ -393,13 +533,13 @@ public final class TRK extends Table {
   public static void addCallSign(FlatBufferBuilder builder, int CALL_SIGNOffset) { builder.addOffset(37, CALL_SIGNOffset, 0); }
   public static void addMultiSource(FlatBufferBuilder builder, boolean MULTI_SOURCE) { builder.addBoolean(38, MULTI_SOURCE, false); }
   public static void addJSeries(FlatBufferBuilder builder, int J_SERIESOffset) { builder.addOffset(39, J_SERIESOffset, 0); }
-  public static void addStrength(FlatBufferBuilder builder, int STRENGTH) { builder.addInt(40, STRENGTH, 0); }
-  public static void addM1(FlatBufferBuilder builder, int M1) { builder.addInt(41, M1, 0); }
-  public static void addM1V(FlatBufferBuilder builder, int M1V) { builder.addInt(42, M1V, 0); }
-  public static void addM2(FlatBufferBuilder builder, int M2) { builder.addInt(43, M2, 0); }
-  public static void addM2V(FlatBufferBuilder builder, int M2V) { builder.addInt(44, M2V, 0); }
-  public static void addM3A(FlatBufferBuilder builder, int M3A) { builder.addInt(45, M3A, 0); }
-  public static void addM3Av(FlatBufferBuilder builder, int M3AV) { builder.addInt(46, M3AV, 0); }
+  public static void addStrength(FlatBufferBuilder builder, int STRENGTH) { builder.addShort(40, (short) STRENGTH, (short) 0); }
+  public static void addM1(FlatBufferBuilder builder, int M1) { builder.addShort(41, (short) M1, (short) 0); }
+  public static void addM1V(FlatBufferBuilder builder, int M1V) { builder.addByte(42, (byte) M1V, (byte) 0); }
+  public static void addM2(FlatBufferBuilder builder, int M2) { builder.addShort(43, (short) M2, (short) 0); }
+  public static void addM2V(FlatBufferBuilder builder, int M2V) { builder.addByte(44, (byte) M2V, (byte) 0); }
+  public static void addM3A(FlatBufferBuilder builder, int M3A) { builder.addShort(45, (short) M3A, (short) 0); }
+  public static void addM3Av(FlatBufferBuilder builder, int M3AV) { builder.addByte(46, (byte) M3AV, (byte) 0); }
   public static void addTags(FlatBufferBuilder builder, int TAGSOffset) { builder.addOffset(47, TAGSOffset, 0); }
   public static int createTagsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startTagsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }

@@ -41,614 +41,281 @@ class MNV extends Table
         return $this;
     }
 
+    /// Unique identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Satellite catalog number
     /**
-     * @return int
+     * @return uint
      */
     public function getSAT_NO()
     {
         $o = $this->__offset(6);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
-    public function getREPORT_TIME()
+    /// International designator
+    public function getORIG_OBJECT_ID()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getEVENT_START_TIME()
+    /// On-orbit reference
+    public function getON_ORBIT()
     {
         $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getEVENT_END_TIME()
+    /// Maneuver status
+    /**
+     * @return sbyte
+     */
+    public function getSTATUS()
     {
         $o = $this->__offset(12);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \maneuverStatus::DETECTED;
     }
 
+    /// Maneuver characterization
     /**
-     * @return double
+     * @return sbyte
      */
-    public function getTOTAL_BURN_TIME()
-    {
-        $o = $this->__offset(14);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    public function getOD_FIT_END_TIME()
-    {
-        $o = $this->__offset(16);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getID_SENSOR()
-    {
-        $o = $this->__offset(18);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getUCT()
-    {
-        $o = $this->__offset(20);
-        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
-    }
-
-    /**
-     * @return double
-     */
-    public function getMANEUVER_UNC()
-    {
-        $o = $this->__offset(22);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
     public function getCHARACTERIZATION()
     {
-        $o = $this->__offset(24);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \maneuverCharacterization::IN_PLANE;
     }
 
+    /// Characterization uncertainty (0-1)
     /**
      * @return double
      */
     public function getCHARACTERIZATION_UNC()
     {
-        $o = $this->__offset(26);
+        $o = $this->__offset(16);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    public function getEVENT_ID()
+    /// Detection report time (ISO 8601)
+    public function getREPORT_TIME()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Maneuver start time (ISO 8601)
+    public function getEVENT_START_TIME()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Maneuver end time (ISO 8601)
+    public function getEVENT_END_TIME()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Total burn time (seconds)
+    /**
+     * @return double
+     */
+    public function getTOTAL_BURN_TIME()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// OD fit end time (ISO 8601)
+    public function getOD_FIT_END_TIME()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Detecting sensor identifier
+    public function getID_SENSOR()
     {
         $o = $this->__offset(28);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getORIG_OBJECT_ID()
+    /// Original sensor identifier
+    public function getORIG_SENSOR_ID()
     {
         $o = $this->__offset(30);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getORIG_SENSOR_ID()
+    /// Maneuver event identifier
+    public function getEVENT_ID()
     {
         $o = $this->__offset(32);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getSTATUS()
+    /// True if object is uncorrelated
+    /**
+     * @return bool
+     */
+    public function getUCT()
     {
         $o = $this->__offset(34);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Maneuver detection uncertainty (km)
     /**
      * @return double
      */
-    public function getDELTA_POS()
+    public function getMANEUVER_UNC()
     {
         $o = $this->__offset(36);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /**
-     * @return double
-     */
-    public function getDELTA_POS_U()
-    {
-        $o = $this->__offset(38);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getDELTA_POS_V()
-    {
-        $o = $this->__offset(40);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getDELTA_POS_W()
-    {
-        $o = $this->__offset(42);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
+    /// Total delta-V magnitude (km/s)
     /**
      * @return double
      */
     public function getDELTA_VEL()
     {
-        $o = $this->__offset(44);
+        $o = $this->__offset(38);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Delta-V along-track/U component (km/s)
     /**
      * @return double
      */
     public function getDELTA_VEL_U()
     {
-        $o = $this->__offset(46);
+        $o = $this->__offset(40);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Delta-V cross-track/V component (km/s)
     /**
      * @return double
      */
     public function getDELTA_VEL_V()
     {
-        $o = $this->__offset(48);
+        $o = $this->__offset(42);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Delta-V radial/W component (km/s)
     /**
      * @return double
      */
     public function getDELTA_VEL_W()
     {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Total delta position (km)
+    /**
+     * @return double
+     */
+    public function getDELTA_POS()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Delta position U component (km)
+    /**
+     * @return double
+     */
+    public function getDELTA_POS_U()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Delta position V component (km)
+    /**
+     * @return double
+     */
+    public function getDELTA_POS_V()
+    {
         $o = $this->__offset(50);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Delta position W component (km)
     /**
      * @return double
      */
-    public function getDELTA_MASS()
+    public function getDELTA_POS_W()
     {
         $o = $this->__offset(52);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    public function getPRE_EVENT_ID_ELSET()
-    {
-        $o = $this->__offset(54);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getPRE_EVENT_ELSET()
-    {
-        $o = $this->__offset(56);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getPRE_EVENT_ID_STATE_VECTOR()
-    {
-        $o = $this->__offset(58);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getPRE_EVENT_STATE_VECTOR()
-    {
-        $o = $this->__offset(60);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
+    /// Propellant mass consumed (kg)
     /**
      * @return double
      */
-    public function getPRE_POS_X()
+    public function getDELTA_MASS()
+    {
+        $o = $this->__offset(54);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Pre-maneuver orbital state
+    public function getPRE_EVENT()
+    {
+        $obj = new MnvOrbitalState();
+        $o = $this->__offset(56);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Post-maneuver orbital state
+    public function getPOST_EVENT()
+    {
+        $obj = new MnvOrbitalState();
+        $o = $this->__offset(58);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Post-maneuver mass (kg)
+    /**
+     * @return double
+     */
+    public function getPOST_MASS()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Post-maneuver cross-sectional area (m^2)
+    /**
+     * @return double
+     */
+    public function getPOST_AREA()
     {
         $o = $this->__offset(62);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /**
-     * @return double
-     */
-    public function getPRE_POS_Y()
-    {
-        $o = $this->__offset(64);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPRE_POS_Z()
-    {
-        $o = $this->__offset(66);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPRE_VEL_X()
-    {
-        $o = $this->__offset(68);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPRE_VEL_Y()
-    {
-        $o = $this->__offset(70);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPRE_VEL_Z()
-    {
-        $o = $this->__offset(72);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPRE_RADIATION_PRESS_COEFF()
-    {
-        $o = $this->__offset(74);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPRE_BALLISTIC_COEFF()
-    {
-        $o = $this->__offset(76);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPRE_APOGEE()
-    {
-        $o = $this->__offset(78);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPRE_PERIGEE()
-    {
-        $o = $this->__offset(80);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPRE_INCLINATION()
-    {
-        $o = $this->__offset(82);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPRE_ECCENTRICITY()
-    {
-        $o = $this->__offset(84);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPRE_PERIOD()
-    {
-        $o = $this->__offset(86);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPRE_RAAN()
-    {
-        $o = $this->__offset(88);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPRE_SMA()
-    {
-        $o = $this->__offset(90);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPRE_GEO_LONGITUDE()
-    {
-        $o = $this->__offset(92);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPRE_DRIFT_RATE()
-    {
-        $o = $this->__offset(94);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPRE_SIGMA_U()
-    {
-        $o = $this->__offset(96);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPRE_SIGMA_V()
-    {
-        $o = $this->__offset(98);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPRE_SIGMA_W()
-    {
-        $o = $this->__offset(100);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    public function getPOST_EVENT_ID_ELSET()
-    {
-        $o = $this->__offset(102);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getPOST_EVENT_ELSET()
-    {
-        $o = $this->__offset(104);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getPOST_EVENT_ID_STATE_VECTOR()
-    {
-        $o = $this->__offset(106);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getPOST_EVENT_STATE_VECTOR()
-    {
-        $o = $this->__offset(108);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPOST_POS_X()
-    {
-        $o = $this->__offset(110);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPOST_POS_Y()
-    {
-        $o = $this->__offset(112);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPOST_POS_Z()
-    {
-        $o = $this->__offset(114);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPOST_VEL_X()
-    {
-        $o = $this->__offset(116);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPOST_VEL_Y()
-    {
-        $o = $this->__offset(118);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPOST_VEL_Z()
-    {
-        $o = $this->__offset(120);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPOST_RADIATION_PRESS_COEFF()
-    {
-        $o = $this->__offset(122);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPOST_BALLISTIC_COEFF()
-    {
-        $o = $this->__offset(124);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPOST_APOGEE()
-    {
-        $o = $this->__offset(126);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPOST_PERIGEE()
-    {
-        $o = $this->__offset(128);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPOST_INCLINATION()
-    {
-        $o = $this->__offset(130);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPOST_ECCENTRICITY()
-    {
-        $o = $this->__offset(132);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPOST_PERIOD()
-    {
-        $o = $this->__offset(134);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPOST_RAAN()
-    {
-        $o = $this->__offset(136);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPOST_SMA()
-    {
-        $o = $this->__offset(138);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPOST_GEO_LONGITUDE()
-    {
-        $o = $this->__offset(140);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPOST_DRIFT_RATE()
-    {
-        $o = $this->__offset(142);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPOST_SIGMA_U()
-    {
-        $o = $this->__offset(144);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPOST_SIGMA_V()
-    {
-        $o = $this->__offset(146);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPOST_SIGMA_W()
-    {
-        $o = $this->__offset(148);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
+    /// 6x6 covariance matrix (upper triangle, row-major)
     /**
      * @param int offset
-     * @return string
+     * @return double
      */
     public function getCOV($j)
     {
-        $o = $this->__offset(150);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
@@ -656,80 +323,55 @@ class MNV extends Table
      */
     public function getCOVLength()
     {
-        $o = $this->__offset(150);
+        $o = $this->__offset(64);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Number of observations used
     /**
-     * @return double
-     */
-    public function getPOST_MASS()
-    {
-        $o = $this->__offset(152);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPOST_AREA()
-    {
-        $o = $this->__offset(154);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return int
+     * @return uint
      */
     public function getNUM_OBS()
     {
-        $o = $this->__offset(156);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
-    public function getDESCRIPTION()
-    {
-        $o = $this->__offset(158);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getDESCRIPTOR()
-    {
-        $o = $this->__offset(160);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
+    /// State model used
     public function getSTATE_MODEL()
     {
-        $o = $this->__offset(162);
+        $o = $this->__offset(68);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// State model version
     /**
      * @return double
      */
     public function getSTATE_MODEL_VERSION()
     {
-        $o = $this->__offset(164);
+        $o = $this->__offset(70);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Number of acceleration profile points
     /**
-     * @return int
+     * @return ushort
      */
     public function getNUM_ACCEL_POINTS()
     {
-        $o = $this->__offset(166);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        $o = $this->__offset(72);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
     }
 
+    /// Acceleration profile times (ISO 8601)
     /**
      * @param int offset
      * @return string
      */
     public function getMNVR_ACCEL_TIMES($j)
     {
-        $o = $this->__offset(168);
+        $o = $this->__offset(74);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -738,18 +380,19 @@ class MNV extends Table
      */
     public function getMNVR_ACCEL_TIMESLength()
     {
-        $o = $this->__offset(168);
+        $o = $this->__offset(74);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Acceleration values (km/s^2, 3 components per point)
     /**
      * @param int offset
-     * @return string
+     * @return double
      */
     public function getMNVR_ACCELS($j)
     {
-        $o = $this->__offset(170);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        $o = $this->__offset(76);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
@@ -757,18 +400,19 @@ class MNV extends Table
      */
     public function getMNVR_ACCELSLength()
     {
-        $o = $this->__offset(170);
+        $o = $this->__offset(76);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Acceleration uncertainties (km/s^2)
     /**
      * @param int offset
-     * @return string
+     * @return double
      */
     public function getMNVR_ACCEL_UNCS($j)
     {
-        $o = $this->__offset(172);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        $o = $this->__offset(78);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
@@ -776,17 +420,39 @@ class MNV extends Table
      */
     public function getMNVR_ACCEL_UNCSLength()
     {
-        $o = $this->__offset(172);
+        $o = $this->__offset(78);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Description
+    public function getDESCRIPTION()
+    {
+        $o = $this->__offset(80);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Event descriptor
+    public function getDESCRIPTOR()
+    {
+        $o = $this->__offset(82);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Algorithm used for detection
+    public function getALGORITHM()
+    {
+        $o = $this->__offset(84);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Associated tags
     /**
      * @param int offset
      * @return string
      */
     public function getTAGS($j)
     {
-        $o = $this->__offset(174);
+        $o = $this->__offset(86);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -795,23 +461,18 @@ class MNV extends Table
      */
     public function getTAGSLength()
     {
-        $o = $this->__offset(174);
+        $o = $this->__offset(86);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    public function getALGORITHM()
-    {
-        $o = $this->__offset(176);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
+    /// Sourced data references
     /**
      * @param int offset
      * @return string
      */
     public function getSOURCED_DATA($j)
     {
-        $o = $this->__offset(178);
+        $o = $this->__offset(88);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -820,25 +481,21 @@ class MNV extends Table
      */
     public function getSOURCED_DATALength()
     {
-        $o = $this->__offset(178);
+        $o = $this->__offset(88);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Sourced data types
     public function getSOURCED_DATA_TYPES()
     {
-        $o = $this->__offset(180);
+        $o = $this->__offset(90);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getON_ORBIT()
-    {
-        $o = $this->__offset(182);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
+    /// Transaction identifier
     public function getTRANSACTION_ID()
     {
-        $o = $this->__offset(184);
+        $o = $this->__offset(92);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -848,106 +505,60 @@ class MNV extends Table
      */
     public static function startMNV(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(91);
+        $builder->StartObject(45);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return MNV
      */
-    public static function createMNV(FlatBufferBuilder $builder, $ID, $SAT_NO, $REPORT_TIME, $EVENT_START_TIME, $EVENT_END_TIME, $TOTAL_BURN_TIME, $OD_FIT_END_TIME, $ID_SENSOR, $UCT, $MANEUVER_UNC, $CHARACTERIZATION, $CHARACTERIZATION_UNC, $EVENT_ID, $ORIG_OBJECT_ID, $ORIG_SENSOR_ID, $STATUS, $DELTA_POS, $DELTA_POS_U, $DELTA_POS_V, $DELTA_POS_W, $DELTA_VEL, $DELTA_VEL_U, $DELTA_VEL_V, $DELTA_VEL_W, $DELTA_MASS, $PRE_EVENT_ID_ELSET, $PRE_EVENT_ELSET, $PRE_EVENT_ID_STATE_VECTOR, $PRE_EVENT_STATE_VECTOR, $PRE_POS_X, $PRE_POS_Y, $PRE_POS_Z, $PRE_VEL_X, $PRE_VEL_Y, $PRE_VEL_Z, $PRE_RADIATION_PRESS_COEFF, $PRE_BALLISTIC_COEFF, $PRE_APOGEE, $PRE_PERIGEE, $PRE_INCLINATION, $PRE_ECCENTRICITY, $PRE_PERIOD, $PRE_RAAN, $PRE_SMA, $PRE_GEO_LONGITUDE, $PRE_DRIFT_RATE, $PRE_SIGMA_U, $PRE_SIGMA_V, $PRE_SIGMA_W, $POST_EVENT_ID_ELSET, $POST_EVENT_ELSET, $POST_EVENT_ID_STATE_VECTOR, $POST_EVENT_STATE_VECTOR, $POST_POS_X, $POST_POS_Y, $POST_POS_Z, $POST_VEL_X, $POST_VEL_Y, $POST_VEL_Z, $POST_RADIATION_PRESS_COEFF, $POST_BALLISTIC_COEFF, $POST_APOGEE, $POST_PERIGEE, $POST_INCLINATION, $POST_ECCENTRICITY, $POST_PERIOD, $POST_RAAN, $POST_SMA, $POST_GEO_LONGITUDE, $POST_DRIFT_RATE, $POST_SIGMA_U, $POST_SIGMA_V, $POST_SIGMA_W, $COV, $POST_MASS, $POST_AREA, $NUM_OBS, $DESCRIPTION, $DESCRIPTOR, $STATE_MODEL, $STATE_MODEL_VERSION, $NUM_ACCEL_POINTS, $MNVR_ACCEL_TIMES, $MNVR_ACCELS, $MNVR_ACCEL_UNCS, $TAGS, $ALGORITHM, $SOURCED_DATA, $SOURCED_DATA_TYPES, $ON_ORBIT, $TRANSACTION_ID)
+    public static function createMNV(FlatBufferBuilder $builder, $ID, $SAT_NO, $ORIG_OBJECT_ID, $ON_ORBIT, $STATUS, $CHARACTERIZATION, $CHARACTERIZATION_UNC, $REPORT_TIME, $EVENT_START_TIME, $EVENT_END_TIME, $TOTAL_BURN_TIME, $OD_FIT_END_TIME, $ID_SENSOR, $ORIG_SENSOR_ID, $EVENT_ID, $UCT, $MANEUVER_UNC, $DELTA_VEL, $DELTA_VEL_U, $DELTA_VEL_V, $DELTA_VEL_W, $DELTA_POS, $DELTA_POS_U, $DELTA_POS_V, $DELTA_POS_W, $DELTA_MASS, $PRE_EVENT, $POST_EVENT, $POST_MASS, $POST_AREA, $COV, $NUM_OBS, $STATE_MODEL, $STATE_MODEL_VERSION, $NUM_ACCEL_POINTS, $MNVR_ACCEL_TIMES, $MNVR_ACCELS, $MNVR_ACCEL_UNCS, $DESCRIPTION, $DESCRIPTOR, $ALGORITHM, $TAGS, $SOURCED_DATA, $SOURCED_DATA_TYPES, $TRANSACTION_ID)
     {
-        $builder->startObject(91);
+        $builder->startObject(45);
         self::addID($builder, $ID);
         self::addSAT_NO($builder, $SAT_NO);
+        self::addORIG_OBJECT_ID($builder, $ORIG_OBJECT_ID);
+        self::addON_ORBIT($builder, $ON_ORBIT);
+        self::addSTATUS($builder, $STATUS);
+        self::addCHARACTERIZATION($builder, $CHARACTERIZATION);
+        self::addCHARACTERIZATION_UNC($builder, $CHARACTERIZATION_UNC);
         self::addREPORT_TIME($builder, $REPORT_TIME);
         self::addEVENT_START_TIME($builder, $EVENT_START_TIME);
         self::addEVENT_END_TIME($builder, $EVENT_END_TIME);
         self::addTOTAL_BURN_TIME($builder, $TOTAL_BURN_TIME);
         self::addOD_FIT_END_TIME($builder, $OD_FIT_END_TIME);
         self::addID_SENSOR($builder, $ID_SENSOR);
+        self::addORIG_SENSOR_ID($builder, $ORIG_SENSOR_ID);
+        self::addEVENT_ID($builder, $EVENT_ID);
         self::addUCT($builder, $UCT);
         self::addMANEUVER_UNC($builder, $MANEUVER_UNC);
-        self::addCHARACTERIZATION($builder, $CHARACTERIZATION);
-        self::addCHARACTERIZATION_UNC($builder, $CHARACTERIZATION_UNC);
-        self::addEVENT_ID($builder, $EVENT_ID);
-        self::addORIG_OBJECT_ID($builder, $ORIG_OBJECT_ID);
-        self::addORIG_SENSOR_ID($builder, $ORIG_SENSOR_ID);
-        self::addSTATUS($builder, $STATUS);
-        self::addDELTA_POS($builder, $DELTA_POS);
-        self::addDELTA_POS_U($builder, $DELTA_POS_U);
-        self::addDELTA_POS_V($builder, $DELTA_POS_V);
-        self::addDELTA_POS_W($builder, $DELTA_POS_W);
         self::addDELTA_VEL($builder, $DELTA_VEL);
         self::addDELTA_VEL_U($builder, $DELTA_VEL_U);
         self::addDELTA_VEL_V($builder, $DELTA_VEL_V);
         self::addDELTA_VEL_W($builder, $DELTA_VEL_W);
+        self::addDELTA_POS($builder, $DELTA_POS);
+        self::addDELTA_POS_U($builder, $DELTA_POS_U);
+        self::addDELTA_POS_V($builder, $DELTA_POS_V);
+        self::addDELTA_POS_W($builder, $DELTA_POS_W);
         self::addDELTA_MASS($builder, $DELTA_MASS);
-        self::addPRE_EVENT_ID_ELSET($builder, $PRE_EVENT_ID_ELSET);
-        self::addPRE_EVENT_ELSET($builder, $PRE_EVENT_ELSET);
-        self::addPRE_EVENT_ID_STATE_VECTOR($builder, $PRE_EVENT_ID_STATE_VECTOR);
-        self::addPRE_EVENT_STATE_VECTOR($builder, $PRE_EVENT_STATE_VECTOR);
-        self::addPRE_POS_X($builder, $PRE_POS_X);
-        self::addPRE_POS_Y($builder, $PRE_POS_Y);
-        self::addPRE_POS_Z($builder, $PRE_POS_Z);
-        self::addPRE_VEL_X($builder, $PRE_VEL_X);
-        self::addPRE_VEL_Y($builder, $PRE_VEL_Y);
-        self::addPRE_VEL_Z($builder, $PRE_VEL_Z);
-        self::addPRE_RADIATION_PRESS_COEFF($builder, $PRE_RADIATION_PRESS_COEFF);
-        self::addPRE_BALLISTIC_COEFF($builder, $PRE_BALLISTIC_COEFF);
-        self::addPRE_APOGEE($builder, $PRE_APOGEE);
-        self::addPRE_PERIGEE($builder, $PRE_PERIGEE);
-        self::addPRE_INCLINATION($builder, $PRE_INCLINATION);
-        self::addPRE_ECCENTRICITY($builder, $PRE_ECCENTRICITY);
-        self::addPRE_PERIOD($builder, $PRE_PERIOD);
-        self::addPRE_RAAN($builder, $PRE_RAAN);
-        self::addPRE_SMA($builder, $PRE_SMA);
-        self::addPRE_GEO_LONGITUDE($builder, $PRE_GEO_LONGITUDE);
-        self::addPRE_DRIFT_RATE($builder, $PRE_DRIFT_RATE);
-        self::addPRE_SIGMA_U($builder, $PRE_SIGMA_U);
-        self::addPRE_SIGMA_V($builder, $PRE_SIGMA_V);
-        self::addPRE_SIGMA_W($builder, $PRE_SIGMA_W);
-        self::addPOST_EVENT_ID_ELSET($builder, $POST_EVENT_ID_ELSET);
-        self::addPOST_EVENT_ELSET($builder, $POST_EVENT_ELSET);
-        self::addPOST_EVENT_ID_STATE_VECTOR($builder, $POST_EVENT_ID_STATE_VECTOR);
-        self::addPOST_EVENT_STATE_VECTOR($builder, $POST_EVENT_STATE_VECTOR);
-        self::addPOST_POS_X($builder, $POST_POS_X);
-        self::addPOST_POS_Y($builder, $POST_POS_Y);
-        self::addPOST_POS_Z($builder, $POST_POS_Z);
-        self::addPOST_VEL_X($builder, $POST_VEL_X);
-        self::addPOST_VEL_Y($builder, $POST_VEL_Y);
-        self::addPOST_VEL_Z($builder, $POST_VEL_Z);
-        self::addPOST_RADIATION_PRESS_COEFF($builder, $POST_RADIATION_PRESS_COEFF);
-        self::addPOST_BALLISTIC_COEFF($builder, $POST_BALLISTIC_COEFF);
-        self::addPOST_APOGEE($builder, $POST_APOGEE);
-        self::addPOST_PERIGEE($builder, $POST_PERIGEE);
-        self::addPOST_INCLINATION($builder, $POST_INCLINATION);
-        self::addPOST_ECCENTRICITY($builder, $POST_ECCENTRICITY);
-        self::addPOST_PERIOD($builder, $POST_PERIOD);
-        self::addPOST_RAAN($builder, $POST_RAAN);
-        self::addPOST_SMA($builder, $POST_SMA);
-        self::addPOST_GEO_LONGITUDE($builder, $POST_GEO_LONGITUDE);
-        self::addPOST_DRIFT_RATE($builder, $POST_DRIFT_RATE);
-        self::addPOST_SIGMA_U($builder, $POST_SIGMA_U);
-        self::addPOST_SIGMA_V($builder, $POST_SIGMA_V);
-        self::addPOST_SIGMA_W($builder, $POST_SIGMA_W);
-        self::addCOV($builder, $COV);
+        self::addPRE_EVENT($builder, $PRE_EVENT);
+        self::addPOST_EVENT($builder, $POST_EVENT);
         self::addPOST_MASS($builder, $POST_MASS);
         self::addPOST_AREA($builder, $POST_AREA);
+        self::addCOV($builder, $COV);
         self::addNUM_OBS($builder, $NUM_OBS);
-        self::addDESCRIPTION($builder, $DESCRIPTION);
-        self::addDESCRIPTOR($builder, $DESCRIPTOR);
         self::addSTATE_MODEL($builder, $STATE_MODEL);
         self::addSTATE_MODEL_VERSION($builder, $STATE_MODEL_VERSION);
         self::addNUM_ACCEL_POINTS($builder, $NUM_ACCEL_POINTS);
         self::addMNVR_ACCEL_TIMES($builder, $MNVR_ACCEL_TIMES);
         self::addMNVR_ACCELS($builder, $MNVR_ACCELS);
         self::addMNVR_ACCEL_UNCS($builder, $MNVR_ACCEL_UNCS);
-        self::addTAGS($builder, $TAGS);
+        self::addDESCRIPTION($builder, $DESCRIPTION);
+        self::addDESCRIPTOR($builder, $DESCRIPTOR);
         self::addALGORITHM($builder, $ALGORITHM);
+        self::addTAGS($builder, $TAGS);
         self::addSOURCED_DATA($builder, $SOURCED_DATA);
         self::addSOURCED_DATA_TYPES($builder, $SOURCED_DATA_TYPES);
-        self::addON_ORBIT($builder, $ON_ORBIT);
         self::addTRANSACTION_ID($builder, $TRANSACTION_ID);
         $o = $builder->endObject();
         return $o;
@@ -965,122 +576,12 @@ class MNV extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param uint
      * @return void
      */
     public static function addSAT_NO(FlatBufferBuilder $builder, $SAT_NO)
     {
-        $builder->addIntX(1, $SAT_NO, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addREPORT_TIME(FlatBufferBuilder $builder, $REPORT_TIME)
-    {
-        $builder->addOffsetX(2, $REPORT_TIME, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addEVENT_START_TIME(FlatBufferBuilder $builder, $EVENT_START_TIME)
-    {
-        $builder->addOffsetX(3, $EVENT_START_TIME, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addEVENT_END_TIME(FlatBufferBuilder $builder, $EVENT_END_TIME)
-    {
-        $builder->addOffsetX(4, $EVENT_END_TIME, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addTOTAL_BURN_TIME(FlatBufferBuilder $builder, $TOTAL_BURN_TIME)
-    {
-        $builder->addDoubleX(5, $TOTAL_BURN_TIME, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addOD_FIT_END_TIME(FlatBufferBuilder $builder, $OD_FIT_END_TIME)
-    {
-        $builder->addOffsetX(6, $OD_FIT_END_TIME, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addID_SENSOR(FlatBufferBuilder $builder, $ID_SENSOR)
-    {
-        $builder->addOffsetX(7, $ID_SENSOR, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param bool
-     * @return void
-     */
-    public static function addUCT(FlatBufferBuilder $builder, $UCT)
-    {
-        $builder->addBoolX(8, $UCT, false);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addMANEUVER_UNC(FlatBufferBuilder $builder, $MANEUVER_UNC)
-    {
-        $builder->addDoubleX(9, $MANEUVER_UNC, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addCHARACTERIZATION(FlatBufferBuilder $builder, $CHARACTERIZATION)
-    {
-        $builder->addOffsetX(10, $CHARACTERIZATION, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addCHARACTERIZATION_UNC(FlatBufferBuilder $builder, $CHARACTERIZATION_UNC)
-    {
-        $builder->addDoubleX(11, $CHARACTERIZATION_UNC, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addEVENT_ID(FlatBufferBuilder $builder, $EVENT_ID)
-    {
-        $builder->addOffsetX(12, $EVENT_ID, 0);
+        $builder->addUintX(1, $SAT_NO, 0);
     }
 
     /**
@@ -1090,7 +591,107 @@ class MNV extends Table
      */
     public static function addORIG_OBJECT_ID(FlatBufferBuilder $builder, $ORIG_OBJECT_ID)
     {
-        $builder->addOffsetX(13, $ORIG_OBJECT_ID, 0);
+        $builder->addOffsetX(2, $ORIG_OBJECT_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addON_ORBIT(FlatBufferBuilder $builder, $ON_ORBIT)
+    {
+        $builder->addOffsetX(3, $ON_ORBIT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addSTATUS(FlatBufferBuilder $builder, $STATUS)
+    {
+        $builder->addSbyteX(4, $STATUS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addCHARACTERIZATION(FlatBufferBuilder $builder, $CHARACTERIZATION)
+    {
+        $builder->addSbyteX(5, $CHARACTERIZATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCHARACTERIZATION_UNC(FlatBufferBuilder $builder, $CHARACTERIZATION_UNC)
+    {
+        $builder->addDoubleX(6, $CHARACTERIZATION_UNC, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addREPORT_TIME(FlatBufferBuilder $builder, $REPORT_TIME)
+    {
+        $builder->addOffsetX(7, $REPORT_TIME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEVENT_START_TIME(FlatBufferBuilder $builder, $EVENT_START_TIME)
+    {
+        $builder->addOffsetX(8, $EVENT_START_TIME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEVENT_END_TIME(FlatBufferBuilder $builder, $EVENT_END_TIME)
+    {
+        $builder->addOffsetX(9, $EVENT_END_TIME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTOTAL_BURN_TIME(FlatBufferBuilder $builder, $TOTAL_BURN_TIME)
+    {
+        $builder->addDoubleX(10, $TOTAL_BURN_TIME, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addOD_FIT_END_TIME(FlatBufferBuilder $builder, $OD_FIT_END_TIME)
+    {
+        $builder->addOffsetX(11, $OD_FIT_END_TIME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addID_SENSOR(FlatBufferBuilder $builder, $ID_SENSOR)
+    {
+        $builder->addOffsetX(12, $ID_SENSOR, 0);
     }
 
     /**
@@ -1100,7 +701,7 @@ class MNV extends Table
      */
     public static function addORIG_SENSOR_ID(FlatBufferBuilder $builder, $ORIG_SENSOR_ID)
     {
-        $builder->addOffsetX(14, $ORIG_SENSOR_ID, 0);
+        $builder->addOffsetX(13, $ORIG_SENSOR_ID, 0);
     }
 
     /**
@@ -1108,9 +709,19 @@ class MNV extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addSTATUS(FlatBufferBuilder $builder, $STATUS)
+    public static function addEVENT_ID(FlatBufferBuilder $builder, $EVENT_ID)
     {
-        $builder->addOffsetX(15, $STATUS, 0);
+        $builder->addOffsetX(14, $EVENT_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addUCT(FlatBufferBuilder $builder, $UCT)
+    {
+        $builder->addBoolX(15, $UCT, false);
     }
 
     /**
@@ -1118,39 +729,9 @@ class MNV extends Table
      * @param double
      * @return void
      */
-    public static function addDELTA_POS(FlatBufferBuilder $builder, $DELTA_POS)
+    public static function addMANEUVER_UNC(FlatBufferBuilder $builder, $MANEUVER_UNC)
     {
-        $builder->addDoubleX(16, $DELTA_POS, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addDELTA_POS_U(FlatBufferBuilder $builder, $DELTA_POS_U)
-    {
-        $builder->addDoubleX(17, $DELTA_POS_U, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addDELTA_POS_V(FlatBufferBuilder $builder, $DELTA_POS_V)
-    {
-        $builder->addDoubleX(18, $DELTA_POS_V, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addDELTA_POS_W(FlatBufferBuilder $builder, $DELTA_POS_W)
-    {
-        $builder->addDoubleX(19, $DELTA_POS_W, 0.0);
+        $builder->addDoubleX(16, $MANEUVER_UNC, 0.0);
     }
 
     /**
@@ -1160,7 +741,7 @@ class MNV extends Table
      */
     public static function addDELTA_VEL(FlatBufferBuilder $builder, $DELTA_VEL)
     {
-        $builder->addDoubleX(20, $DELTA_VEL, 0.0);
+        $builder->addDoubleX(17, $DELTA_VEL, 0.0);
     }
 
     /**
@@ -1170,7 +751,7 @@ class MNV extends Table
      */
     public static function addDELTA_VEL_U(FlatBufferBuilder $builder, $DELTA_VEL_U)
     {
-        $builder->addDoubleX(21, $DELTA_VEL_U, 0.0);
+        $builder->addDoubleX(18, $DELTA_VEL_U, 0.0);
     }
 
     /**
@@ -1180,7 +761,7 @@ class MNV extends Table
      */
     public static function addDELTA_VEL_V(FlatBufferBuilder $builder, $DELTA_VEL_V)
     {
-        $builder->addDoubleX(22, $DELTA_VEL_V, 0.0);
+        $builder->addDoubleX(19, $DELTA_VEL_V, 0.0);
     }
 
     /**
@@ -1190,7 +771,47 @@ class MNV extends Table
      */
     public static function addDELTA_VEL_W(FlatBufferBuilder $builder, $DELTA_VEL_W)
     {
-        $builder->addDoubleX(23, $DELTA_VEL_W, 0.0);
+        $builder->addDoubleX(20, $DELTA_VEL_W, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDELTA_POS(FlatBufferBuilder $builder, $DELTA_POS)
+    {
+        $builder->addDoubleX(21, $DELTA_POS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDELTA_POS_U(FlatBufferBuilder $builder, $DELTA_POS_U)
+    {
+        $builder->addDoubleX(22, $DELTA_POS_U, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDELTA_POS_V(FlatBufferBuilder $builder, $DELTA_POS_V)
+    {
+        $builder->addDoubleX(23, $DELTA_POS_V, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDELTA_POS_W(FlatBufferBuilder $builder, $DELTA_POS_W)
+    {
+        $builder->addDoubleX(24, $DELTA_POS_W, 0.0);
     }
 
     /**
@@ -1200,47 +821,27 @@ class MNV extends Table
      */
     public static function addDELTA_MASS(FlatBufferBuilder $builder, $DELTA_MASS)
     {
-        $builder->addDoubleX(24, $DELTA_MASS, 0.0);
+        $builder->addDoubleX(25, $DELTA_MASS, 0.0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param VectorOffset
      * @return void
      */
-    public static function addPRE_EVENT_ID_ELSET(FlatBufferBuilder $builder, $PRE_EVENT_ID_ELSET)
+    public static function addPRE_EVENT(FlatBufferBuilder $builder, $PRE_EVENT)
     {
-        $builder->addOffsetX(25, $PRE_EVENT_ID_ELSET, 0);
+        $builder->addOffsetX(26, $PRE_EVENT, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param VectorOffset
      * @return void
      */
-    public static function addPRE_EVENT_ELSET(FlatBufferBuilder $builder, $PRE_EVENT_ELSET)
+    public static function addPOST_EVENT(FlatBufferBuilder $builder, $POST_EVENT)
     {
-        $builder->addOffsetX(26, $PRE_EVENT_ELSET, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addPRE_EVENT_ID_STATE_VECTOR(FlatBufferBuilder $builder, $PRE_EVENT_ID_STATE_VECTOR)
-    {
-        $builder->addOffsetX(27, $PRE_EVENT_ID_STATE_VECTOR, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addPRE_EVENT_STATE_VECTOR(FlatBufferBuilder $builder, $PRE_EVENT_STATE_VECTOR)
-    {
-        $builder->addOffsetX(28, $PRE_EVENT_STATE_VECTOR, 0);
+        $builder->addOffsetX(27, $POST_EVENT, 0);
     }
 
     /**
@@ -1248,9 +849,9 @@ class MNV extends Table
      * @param double
      * @return void
      */
-    public static function addPRE_POS_X(FlatBufferBuilder $builder, $PRE_POS_X)
+    public static function addPOST_MASS(FlatBufferBuilder $builder, $POST_MASS)
     {
-        $builder->addDoubleX(29, $PRE_POS_X, 0.0);
+        $builder->addDoubleX(28, $POST_MASS, 0.0);
     }
 
     /**
@@ -1258,429 +859,9 @@ class MNV extends Table
      * @param double
      * @return void
      */
-    public static function addPRE_POS_Y(FlatBufferBuilder $builder, $PRE_POS_Y)
+    public static function addPOST_AREA(FlatBufferBuilder $builder, $POST_AREA)
     {
-        $builder->addDoubleX(30, $PRE_POS_Y, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPRE_POS_Z(FlatBufferBuilder $builder, $PRE_POS_Z)
-    {
-        $builder->addDoubleX(31, $PRE_POS_Z, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPRE_VEL_X(FlatBufferBuilder $builder, $PRE_VEL_X)
-    {
-        $builder->addDoubleX(32, $PRE_VEL_X, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPRE_VEL_Y(FlatBufferBuilder $builder, $PRE_VEL_Y)
-    {
-        $builder->addDoubleX(33, $PRE_VEL_Y, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPRE_VEL_Z(FlatBufferBuilder $builder, $PRE_VEL_Z)
-    {
-        $builder->addDoubleX(34, $PRE_VEL_Z, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPRE_RADIATION_PRESS_COEFF(FlatBufferBuilder $builder, $PRE_RADIATION_PRESS_COEFF)
-    {
-        $builder->addDoubleX(35, $PRE_RADIATION_PRESS_COEFF, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPRE_BALLISTIC_COEFF(FlatBufferBuilder $builder, $PRE_BALLISTIC_COEFF)
-    {
-        $builder->addDoubleX(36, $PRE_BALLISTIC_COEFF, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPRE_APOGEE(FlatBufferBuilder $builder, $PRE_APOGEE)
-    {
-        $builder->addDoubleX(37, $PRE_APOGEE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPRE_PERIGEE(FlatBufferBuilder $builder, $PRE_PERIGEE)
-    {
-        $builder->addDoubleX(38, $PRE_PERIGEE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPRE_INCLINATION(FlatBufferBuilder $builder, $PRE_INCLINATION)
-    {
-        $builder->addDoubleX(39, $PRE_INCLINATION, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPRE_ECCENTRICITY(FlatBufferBuilder $builder, $PRE_ECCENTRICITY)
-    {
-        $builder->addDoubleX(40, $PRE_ECCENTRICITY, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPRE_PERIOD(FlatBufferBuilder $builder, $PRE_PERIOD)
-    {
-        $builder->addDoubleX(41, $PRE_PERIOD, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPRE_RAAN(FlatBufferBuilder $builder, $PRE_RAAN)
-    {
-        $builder->addDoubleX(42, $PRE_RAAN, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPRE_SMA(FlatBufferBuilder $builder, $PRE_SMA)
-    {
-        $builder->addDoubleX(43, $PRE_SMA, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPRE_GEO_LONGITUDE(FlatBufferBuilder $builder, $PRE_GEO_LONGITUDE)
-    {
-        $builder->addDoubleX(44, $PRE_GEO_LONGITUDE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPRE_DRIFT_RATE(FlatBufferBuilder $builder, $PRE_DRIFT_RATE)
-    {
-        $builder->addDoubleX(45, $PRE_DRIFT_RATE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPRE_SIGMA_U(FlatBufferBuilder $builder, $PRE_SIGMA_U)
-    {
-        $builder->addDoubleX(46, $PRE_SIGMA_U, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPRE_SIGMA_V(FlatBufferBuilder $builder, $PRE_SIGMA_V)
-    {
-        $builder->addDoubleX(47, $PRE_SIGMA_V, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPRE_SIGMA_W(FlatBufferBuilder $builder, $PRE_SIGMA_W)
-    {
-        $builder->addDoubleX(48, $PRE_SIGMA_W, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addPOST_EVENT_ID_ELSET(FlatBufferBuilder $builder, $POST_EVENT_ID_ELSET)
-    {
-        $builder->addOffsetX(49, $POST_EVENT_ID_ELSET, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addPOST_EVENT_ELSET(FlatBufferBuilder $builder, $POST_EVENT_ELSET)
-    {
-        $builder->addOffsetX(50, $POST_EVENT_ELSET, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addPOST_EVENT_ID_STATE_VECTOR(FlatBufferBuilder $builder, $POST_EVENT_ID_STATE_VECTOR)
-    {
-        $builder->addOffsetX(51, $POST_EVENT_ID_STATE_VECTOR, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addPOST_EVENT_STATE_VECTOR(FlatBufferBuilder $builder, $POST_EVENT_STATE_VECTOR)
-    {
-        $builder->addOffsetX(52, $POST_EVENT_STATE_VECTOR, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPOST_POS_X(FlatBufferBuilder $builder, $POST_POS_X)
-    {
-        $builder->addDoubleX(53, $POST_POS_X, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPOST_POS_Y(FlatBufferBuilder $builder, $POST_POS_Y)
-    {
-        $builder->addDoubleX(54, $POST_POS_Y, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPOST_POS_Z(FlatBufferBuilder $builder, $POST_POS_Z)
-    {
-        $builder->addDoubleX(55, $POST_POS_Z, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPOST_VEL_X(FlatBufferBuilder $builder, $POST_VEL_X)
-    {
-        $builder->addDoubleX(56, $POST_VEL_X, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPOST_VEL_Y(FlatBufferBuilder $builder, $POST_VEL_Y)
-    {
-        $builder->addDoubleX(57, $POST_VEL_Y, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPOST_VEL_Z(FlatBufferBuilder $builder, $POST_VEL_Z)
-    {
-        $builder->addDoubleX(58, $POST_VEL_Z, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPOST_RADIATION_PRESS_COEFF(FlatBufferBuilder $builder, $POST_RADIATION_PRESS_COEFF)
-    {
-        $builder->addDoubleX(59, $POST_RADIATION_PRESS_COEFF, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPOST_BALLISTIC_COEFF(FlatBufferBuilder $builder, $POST_BALLISTIC_COEFF)
-    {
-        $builder->addDoubleX(60, $POST_BALLISTIC_COEFF, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPOST_APOGEE(FlatBufferBuilder $builder, $POST_APOGEE)
-    {
-        $builder->addDoubleX(61, $POST_APOGEE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPOST_PERIGEE(FlatBufferBuilder $builder, $POST_PERIGEE)
-    {
-        $builder->addDoubleX(62, $POST_PERIGEE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPOST_INCLINATION(FlatBufferBuilder $builder, $POST_INCLINATION)
-    {
-        $builder->addDoubleX(63, $POST_INCLINATION, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPOST_ECCENTRICITY(FlatBufferBuilder $builder, $POST_ECCENTRICITY)
-    {
-        $builder->addDoubleX(64, $POST_ECCENTRICITY, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPOST_PERIOD(FlatBufferBuilder $builder, $POST_PERIOD)
-    {
-        $builder->addDoubleX(65, $POST_PERIOD, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPOST_RAAN(FlatBufferBuilder $builder, $POST_RAAN)
-    {
-        $builder->addDoubleX(66, $POST_RAAN, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPOST_SMA(FlatBufferBuilder $builder, $POST_SMA)
-    {
-        $builder->addDoubleX(67, $POST_SMA, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPOST_GEO_LONGITUDE(FlatBufferBuilder $builder, $POST_GEO_LONGITUDE)
-    {
-        $builder->addDoubleX(68, $POST_GEO_LONGITUDE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPOST_DRIFT_RATE(FlatBufferBuilder $builder, $POST_DRIFT_RATE)
-    {
-        $builder->addDoubleX(69, $POST_DRIFT_RATE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPOST_SIGMA_U(FlatBufferBuilder $builder, $POST_SIGMA_U)
-    {
-        $builder->addDoubleX(70, $POST_SIGMA_U, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPOST_SIGMA_V(FlatBufferBuilder $builder, $POST_SIGMA_V)
-    {
-        $builder->addDoubleX(71, $POST_SIGMA_V, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPOST_SIGMA_W(FlatBufferBuilder $builder, $POST_SIGMA_W)
-    {
-        $builder->addDoubleX(72, $POST_SIGMA_W, 0.0);
+        $builder->addDoubleX(29, $POST_AREA, 0.0);
     }
 
     /**
@@ -1690,7 +871,7 @@ class MNV extends Table
      */
     public static function addCOV(FlatBufferBuilder $builder, $COV)
     {
-        $builder->addOffsetX(73, $COV, 0);
+        $builder->addOffsetX(30, $COV, 0);
     }
 
     /**
@@ -1700,9 +881,9 @@ class MNV extends Table
      */
     public static function createCOVVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -1714,57 +895,17 @@ class MNV extends Table
      */
     public static function startCOVVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPOST_MASS(FlatBufferBuilder $builder, $POST_MASS)
-    {
-        $builder->addDoubleX(74, $POST_MASS, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPOST_AREA(FlatBufferBuilder $builder, $POST_AREA)
-    {
-        $builder->addDoubleX(75, $POST_AREA, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int
+     * @param uint
      * @return void
      */
     public static function addNUM_OBS(FlatBufferBuilder $builder, $NUM_OBS)
     {
-        $builder->addIntX(76, $NUM_OBS, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addDESCRIPTION(FlatBufferBuilder $builder, $DESCRIPTION)
-    {
-        $builder->addOffsetX(77, $DESCRIPTION, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addDESCRIPTOR(FlatBufferBuilder $builder, $DESCRIPTOR)
-    {
-        $builder->addOffsetX(78, $DESCRIPTOR, 0);
+        $builder->addUintX(31, $NUM_OBS, 0);
     }
 
     /**
@@ -1774,7 +915,7 @@ class MNV extends Table
      */
     public static function addSTATE_MODEL(FlatBufferBuilder $builder, $STATE_MODEL)
     {
-        $builder->addOffsetX(79, $STATE_MODEL, 0);
+        $builder->addOffsetX(32, $STATE_MODEL, 0);
     }
 
     /**
@@ -1784,17 +925,17 @@ class MNV extends Table
      */
     public static function addSTATE_MODEL_VERSION(FlatBufferBuilder $builder, $STATE_MODEL_VERSION)
     {
-        $builder->addDoubleX(80, $STATE_MODEL_VERSION, 0.0);
+        $builder->addDoubleX(33, $STATE_MODEL_VERSION, 0.0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param ushort
      * @return void
      */
     public static function addNUM_ACCEL_POINTS(FlatBufferBuilder $builder, $NUM_ACCEL_POINTS)
     {
-        $builder->addIntX(81, $NUM_ACCEL_POINTS, 0);
+        $builder->addUshortX(34, $NUM_ACCEL_POINTS, 0);
     }
 
     /**
@@ -1804,7 +945,7 @@ class MNV extends Table
      */
     public static function addMNVR_ACCEL_TIMES(FlatBufferBuilder $builder, $MNVR_ACCEL_TIMES)
     {
-        $builder->addOffsetX(82, $MNVR_ACCEL_TIMES, 0);
+        $builder->addOffsetX(35, $MNVR_ACCEL_TIMES, 0);
     }
 
     /**
@@ -1838,7 +979,7 @@ class MNV extends Table
      */
     public static function addMNVR_ACCELS(FlatBufferBuilder $builder, $MNVR_ACCELS)
     {
-        $builder->addOffsetX(83, $MNVR_ACCELS, 0);
+        $builder->addOffsetX(36, $MNVR_ACCELS, 0);
     }
 
     /**
@@ -1848,9 +989,9 @@ class MNV extends Table
      */
     public static function createMNVR_ACCELSVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -1862,7 +1003,7 @@ class MNV extends Table
      */
     public static function startMNVR_ACCELSVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**
@@ -1872,7 +1013,7 @@ class MNV extends Table
      */
     public static function addMNVR_ACCEL_UNCS(FlatBufferBuilder $builder, $MNVR_ACCEL_UNCS)
     {
-        $builder->addOffsetX(84, $MNVR_ACCEL_UNCS, 0);
+        $builder->addOffsetX(37, $MNVR_ACCEL_UNCS, 0);
     }
 
     /**
@@ -1882,9 +1023,9 @@ class MNV extends Table
      */
     public static function createMNVR_ACCEL_UNCSVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -1896,7 +1037,37 @@ class MNV extends Table
      */
     public static function startMNVR_ACCEL_UNCSVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDESCRIPTION(FlatBufferBuilder $builder, $DESCRIPTION)
+    {
+        $builder->addOffsetX(38, $DESCRIPTION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDESCRIPTOR(FlatBufferBuilder $builder, $DESCRIPTOR)
+    {
+        $builder->addOffsetX(39, $DESCRIPTOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addALGORITHM(FlatBufferBuilder $builder, $ALGORITHM)
+    {
+        $builder->addOffsetX(40, $ALGORITHM, 0);
     }
 
     /**
@@ -1906,7 +1077,7 @@ class MNV extends Table
      */
     public static function addTAGS(FlatBufferBuilder $builder, $TAGS)
     {
-        $builder->addOffsetX(85, $TAGS, 0);
+        $builder->addOffsetX(41, $TAGS, 0);
     }
 
     /**
@@ -1935,22 +1106,12 @@ class MNV extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addALGORITHM(FlatBufferBuilder $builder, $ALGORITHM)
-    {
-        $builder->addOffsetX(86, $ALGORITHM, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
      * @param VectorOffset
      * @return void
      */
     public static function addSOURCED_DATA(FlatBufferBuilder $builder, $SOURCED_DATA)
     {
-        $builder->addOffsetX(87, $SOURCED_DATA, 0);
+        $builder->addOffsetX(42, $SOURCED_DATA, 0);
     }
 
     /**
@@ -1984,17 +1145,7 @@ class MNV extends Table
      */
     public static function addSOURCED_DATA_TYPES(FlatBufferBuilder $builder, $SOURCED_DATA_TYPES)
     {
-        $builder->addOffsetX(88, $SOURCED_DATA_TYPES, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addON_ORBIT(FlatBufferBuilder $builder, $ON_ORBIT)
-    {
-        $builder->addOffsetX(89, $ON_ORBIT, 0);
+        $builder->addOffsetX(43, $SOURCED_DATA_TYPES, 0);
     }
 
     /**
@@ -2004,7 +1155,7 @@ class MNV extends Table
      */
     public static function addTRANSACTION_ID(FlatBufferBuilder $builder, $TRANSACTION_ID)
     {
-        $builder->addOffsetX(90, $TRANSACTION_ID, 0);
+        $builder->addOffsetX(44, $TRANSACTION_ID, 0);
     }
 
     /**

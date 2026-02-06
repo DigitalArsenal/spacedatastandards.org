@@ -19,6 +19,7 @@ public struct MNF : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public MNF __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Unique manifold identifier
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,38 +27,153 @@ public struct MNF : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
-  public string STATUS { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Parent object satellite number
+  public uint SAT_NO { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Object designator
+  public string OBJECT_DESIGNATOR { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSTATUSBytes() { return __p.__vector_as_span<byte>(6, 1); }
+  public Span<byte> GetOBJECT_DESIGNATORBytes() { return __p.__vector_as_span<byte>(8, 1); }
 #else
-  public ArraySegment<byte>? GetSTATUSBytes() { return __p.__vector_as_arraysegment(6); }
+  public ArraySegment<byte>? GetOBJECT_DESIGNATORBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
-  public byte[] GetSTATUSArray() { return __p.__vector_as_array<byte>(6); }
-  public double WEIGHT { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double DELTA_V { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double DELTA_T { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public byte[] GetOBJECT_DESIGNATORArray() { return __p.__vector_as_array<byte>(8); }
+  /// Manifold status
+  public manifoldStatus STATUS { get { int o = __p.__offset(10); return o != 0 ? (manifoldStatus)__p.bb.GetSbyte(o + __p.bb_pos) : manifoldStatus.CANDIDATE; } }
+  /// Event epoch that spawned the manifold (ISO 8601)
+  public string EVENT_EPOCH { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetEVENT_EPOCHBytes() { return __p.__vector_as_span<byte>(12, 1); }
+#else
+  public ArraySegment<byte>? GetEVENT_EPOCHBytes() { return __p.__vector_as_arraysegment(12); }
+#endif
+  public byte[] GetEVENT_EPOCHArray() { return __p.__vector_as_array<byte>(12); }
+  /// Source of detection (sensor ID or method)
+  public string SOURCE { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSOURCEBytes() { return __p.__vector_as_span<byte>(14, 1); }
+#else
+  public ArraySegment<byte>? GetSOURCEBytes() { return __p.__vector_as_arraysegment(14); }
+#endif
+  public byte[] GetSOURCEArray() { return __p.__vector_as_array<byte>(14); }
+  /// Reference frame
+  public string REF_FRAME { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetREF_FRAMEBytes() { return __p.__vector_as_span<byte>(16, 1); }
+#else
+  public ArraySegment<byte>? GetREF_FRAMEBytes() { return __p.__vector_as_arraysegment(16); }
+#endif
+  public byte[] GetREF_FRAMEArray() { return __p.__vector_as_array<byte>(16); }
+  /// Original pre-event semi-major axis in km
+  public double ORIG_SEMI_MAJOR_AXIS { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Original pre-event eccentricity
+  public double ORIG_ECCENTRICITY { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Original pre-event inclination in degrees
+  public double ORIG_INCLINATION { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Minimum delta-V sampled in m/s
+  public double DELTA_V_MIN { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Maximum delta-V sampled in m/s
+  public double DELTA_V_MAX { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Delta-V step size in m/s
+  public double DELTA_V_STEP { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Minimum delta-T sampled in seconds
+  public double DELTA_T_MIN { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Maximum delta-T sampled in seconds
+  public double DELTA_T_MAX { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Delta-T step size in seconds
+  public double DELTA_T_STEP { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Total number of manifold elements
+  public uint NUM_ELEMENTS { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Theoretical element sets
+  public manifoldElset? ELEMENTS(int j) { int o = __p.__offset(38); return o != 0 ? (manifoldElset?)(new manifoldElset()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int ELEMENTSLength { get { int o = __p.__offset(38); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Correlated catalog object ID (if matched)
+  public string CORRELATED_ID { get { int o = __p.__offset(40); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCORRELATED_IDBytes() { return __p.__vector_as_span<byte>(40, 1); }
+#else
+  public ArraySegment<byte>? GetCORRELATED_IDBytes() { return __p.__vector_as_arraysegment(40); }
+#endif
+  public byte[] GetCORRELATED_IDArray() { return __p.__vector_as_array<byte>(40); }
+  /// Additional notes
+  public string NOTES { get { int o = __p.__offset(42); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetNOTESBytes() { return __p.__vector_as_span<byte>(42, 1); }
+#else
+  public ArraySegment<byte>? GetNOTESBytes() { return __p.__vector_as_arraysegment(42); }
+#endif
+  public byte[] GetNOTESArray() { return __p.__vector_as_array<byte>(42); }
 
   public static Offset<MNF> CreateMNF(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
-      StringOffset STATUSOffset = default(StringOffset),
-      double WEIGHT = 0.0,
-      double DELTA_V = 0.0,
-      double DELTA_T = 0.0) {
-    builder.StartTable(5);
-    MNF.AddDELTA_T(builder, DELTA_T);
-    MNF.AddDELTA_V(builder, DELTA_V);
-    MNF.AddWEIGHT(builder, WEIGHT);
-    MNF.AddSTATUS(builder, STATUSOffset);
+      uint SAT_NO = 0,
+      StringOffset OBJECT_DESIGNATOROffset = default(StringOffset),
+      manifoldStatus STATUS = manifoldStatus.CANDIDATE,
+      StringOffset EVENT_EPOCHOffset = default(StringOffset),
+      StringOffset SOURCEOffset = default(StringOffset),
+      StringOffset REF_FRAMEOffset = default(StringOffset),
+      double ORIG_SEMI_MAJOR_AXIS = 0.0,
+      double ORIG_ECCENTRICITY = 0.0,
+      double ORIG_INCLINATION = 0.0,
+      double DELTA_V_MIN = 0.0,
+      double DELTA_V_MAX = 0.0,
+      double DELTA_V_STEP = 0.0,
+      double DELTA_T_MIN = 0.0,
+      double DELTA_T_MAX = 0.0,
+      double DELTA_T_STEP = 0.0,
+      uint NUM_ELEMENTS = 0,
+      VectorOffset ELEMENTSOffset = default(VectorOffset),
+      StringOffset CORRELATED_IDOffset = default(StringOffset),
+      StringOffset NOTESOffset = default(StringOffset)) {
+    builder.StartTable(20);
+    MNF.AddDELTA_T_STEP(builder, DELTA_T_STEP);
+    MNF.AddDELTA_T_MAX(builder, DELTA_T_MAX);
+    MNF.AddDELTA_T_MIN(builder, DELTA_T_MIN);
+    MNF.AddDELTA_V_STEP(builder, DELTA_V_STEP);
+    MNF.AddDELTA_V_MAX(builder, DELTA_V_MAX);
+    MNF.AddDELTA_V_MIN(builder, DELTA_V_MIN);
+    MNF.AddORIG_INCLINATION(builder, ORIG_INCLINATION);
+    MNF.AddORIG_ECCENTRICITY(builder, ORIG_ECCENTRICITY);
+    MNF.AddORIG_SEMI_MAJOR_AXIS(builder, ORIG_SEMI_MAJOR_AXIS);
+    MNF.AddNOTES(builder, NOTESOffset);
+    MNF.AddCORRELATED_ID(builder, CORRELATED_IDOffset);
+    MNF.AddELEMENTS(builder, ELEMENTSOffset);
+    MNF.AddNUM_ELEMENTS(builder, NUM_ELEMENTS);
+    MNF.AddREF_FRAME(builder, REF_FRAMEOffset);
+    MNF.AddSOURCE(builder, SOURCEOffset);
+    MNF.AddEVENT_EPOCH(builder, EVENT_EPOCHOffset);
+    MNF.AddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOROffset);
+    MNF.AddSAT_NO(builder, SAT_NO);
     MNF.AddID(builder, IDOffset);
+    MNF.AddSTATUS(builder, STATUS);
     return MNF.EndMNF(builder);
   }
 
-  public static void StartMNF(FlatBufferBuilder builder) { builder.StartTable(5); }
+  public static void StartMNF(FlatBufferBuilder builder) { builder.StartTable(20); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
-  public static void AddSTATUS(FlatBufferBuilder builder, StringOffset STATUSOffset) { builder.AddOffset(1, STATUSOffset.Value, 0); }
-  public static void AddWEIGHT(FlatBufferBuilder builder, double WEIGHT) { builder.AddDouble(2, WEIGHT, 0.0); }
-  public static void AddDELTA_V(FlatBufferBuilder builder, double DELTA_V) { builder.AddDouble(3, DELTA_V, 0.0); }
-  public static void AddDELTA_T(FlatBufferBuilder builder, double DELTA_T) { builder.AddDouble(4, DELTA_T, 0.0); }
+  public static void AddSAT_NO(FlatBufferBuilder builder, uint SAT_NO) { builder.AddUint(1, SAT_NO, 0); }
+  public static void AddOBJECT_DESIGNATOR(FlatBufferBuilder builder, StringOffset OBJECT_DESIGNATOROffset) { builder.AddOffset(2, OBJECT_DESIGNATOROffset.Value, 0); }
+  public static void AddSTATUS(FlatBufferBuilder builder, manifoldStatus STATUS) { builder.AddSbyte(3, (sbyte)STATUS, 0); }
+  public static void AddEVENT_EPOCH(FlatBufferBuilder builder, StringOffset EVENT_EPOCHOffset) { builder.AddOffset(4, EVENT_EPOCHOffset.Value, 0); }
+  public static void AddSOURCE(FlatBufferBuilder builder, StringOffset SOURCEOffset) { builder.AddOffset(5, SOURCEOffset.Value, 0); }
+  public static void AddREF_FRAME(FlatBufferBuilder builder, StringOffset REF_FRAMEOffset) { builder.AddOffset(6, REF_FRAMEOffset.Value, 0); }
+  public static void AddORIG_SEMI_MAJOR_AXIS(FlatBufferBuilder builder, double ORIG_SEMI_MAJOR_AXIS) { builder.AddDouble(7, ORIG_SEMI_MAJOR_AXIS, 0.0); }
+  public static void AddORIG_ECCENTRICITY(FlatBufferBuilder builder, double ORIG_ECCENTRICITY) { builder.AddDouble(8, ORIG_ECCENTRICITY, 0.0); }
+  public static void AddORIG_INCLINATION(FlatBufferBuilder builder, double ORIG_INCLINATION) { builder.AddDouble(9, ORIG_INCLINATION, 0.0); }
+  public static void AddDELTA_V_MIN(FlatBufferBuilder builder, double DELTA_V_MIN) { builder.AddDouble(10, DELTA_V_MIN, 0.0); }
+  public static void AddDELTA_V_MAX(FlatBufferBuilder builder, double DELTA_V_MAX) { builder.AddDouble(11, DELTA_V_MAX, 0.0); }
+  public static void AddDELTA_V_STEP(FlatBufferBuilder builder, double DELTA_V_STEP) { builder.AddDouble(12, DELTA_V_STEP, 0.0); }
+  public static void AddDELTA_T_MIN(FlatBufferBuilder builder, double DELTA_T_MIN) { builder.AddDouble(13, DELTA_T_MIN, 0.0); }
+  public static void AddDELTA_T_MAX(FlatBufferBuilder builder, double DELTA_T_MAX) { builder.AddDouble(14, DELTA_T_MAX, 0.0); }
+  public static void AddDELTA_T_STEP(FlatBufferBuilder builder, double DELTA_T_STEP) { builder.AddDouble(15, DELTA_T_STEP, 0.0); }
+  public static void AddNUM_ELEMENTS(FlatBufferBuilder builder, uint NUM_ELEMENTS) { builder.AddUint(16, NUM_ELEMENTS, 0); }
+  public static void AddELEMENTS(FlatBufferBuilder builder, VectorOffset ELEMENTSOffset) { builder.AddOffset(17, ELEMENTSOffset.Value, 0); }
+  public static VectorOffset CreateELEMENTSVector(FlatBufferBuilder builder, Offset<manifoldElset>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateELEMENTSVectorBlock(FlatBufferBuilder builder, Offset<manifoldElset>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateELEMENTSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<manifoldElset>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateELEMENTSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<manifoldElset>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartELEMENTSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddCORRELATED_ID(FlatBufferBuilder builder, StringOffset CORRELATED_IDOffset) { builder.AddOffset(18, CORRELATED_IDOffset.Value, 0); }
+  public static void AddNOTES(FlatBufferBuilder builder, StringOffset NOTESOffset) { builder.AddOffset(19, NOTESOffset.Value, 0); }
   public static Offset<MNF> EndMNF(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<MNF>(o);
@@ -71,39 +187,111 @@ public struct MNF : IFlatbufferObject
   }
   public void UnPackTo(MNFT _o) {
     _o.ID = this.ID;
+    _o.SAT_NO = this.SAT_NO;
+    _o.OBJECT_DESIGNATOR = this.OBJECT_DESIGNATOR;
     _o.STATUS = this.STATUS;
-    _o.WEIGHT = this.WEIGHT;
-    _o.DELTA_V = this.DELTA_V;
-    _o.DELTA_T = this.DELTA_T;
+    _o.EVENT_EPOCH = this.EVENT_EPOCH;
+    _o.SOURCE = this.SOURCE;
+    _o.REF_FRAME = this.REF_FRAME;
+    _o.ORIG_SEMI_MAJOR_AXIS = this.ORIG_SEMI_MAJOR_AXIS;
+    _o.ORIG_ECCENTRICITY = this.ORIG_ECCENTRICITY;
+    _o.ORIG_INCLINATION = this.ORIG_INCLINATION;
+    _o.DELTA_V_MIN = this.DELTA_V_MIN;
+    _o.DELTA_V_MAX = this.DELTA_V_MAX;
+    _o.DELTA_V_STEP = this.DELTA_V_STEP;
+    _o.DELTA_T_MIN = this.DELTA_T_MIN;
+    _o.DELTA_T_MAX = this.DELTA_T_MAX;
+    _o.DELTA_T_STEP = this.DELTA_T_STEP;
+    _o.NUM_ELEMENTS = this.NUM_ELEMENTS;
+    _o.ELEMENTS = new List<manifoldElsetT>();
+    for (var _j = 0; _j < this.ELEMENTSLength; ++_j) {_o.ELEMENTS.Add(this.ELEMENTS(_j).HasValue ? this.ELEMENTS(_j).Value.UnPack() : null);}
+    _o.CORRELATED_ID = this.CORRELATED_ID;
+    _o.NOTES = this.NOTES;
   }
   public static Offset<MNF> Pack(FlatBufferBuilder builder, MNFT _o) {
     if (_o == null) return default(Offset<MNF>);
     var _ID = _o.ID == null ? default(StringOffset) : builder.CreateString(_o.ID);
-    var _STATUS = _o.STATUS == null ? default(StringOffset) : builder.CreateString(_o.STATUS);
+    var _OBJECT_DESIGNATOR = _o.OBJECT_DESIGNATOR == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_DESIGNATOR);
+    var _EVENT_EPOCH = _o.EVENT_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.EVENT_EPOCH);
+    var _SOURCE = _o.SOURCE == null ? default(StringOffset) : builder.CreateString(_o.SOURCE);
+    var _REF_FRAME = _o.REF_FRAME == null ? default(StringOffset) : builder.CreateString(_o.REF_FRAME);
+    var _ELEMENTS = default(VectorOffset);
+    if (_o.ELEMENTS != null) {
+      var __ELEMENTS = new Offset<manifoldElset>[_o.ELEMENTS.Count];
+      for (var _j = 0; _j < __ELEMENTS.Length; ++_j) { __ELEMENTS[_j] = manifoldElset.Pack(builder, _o.ELEMENTS[_j]); }
+      _ELEMENTS = CreateELEMENTSVector(builder, __ELEMENTS);
+    }
+    var _CORRELATED_ID = _o.CORRELATED_ID == null ? default(StringOffset) : builder.CreateString(_o.CORRELATED_ID);
+    var _NOTES = _o.NOTES == null ? default(StringOffset) : builder.CreateString(_o.NOTES);
     return CreateMNF(
       builder,
       _ID,
-      _STATUS,
-      _o.WEIGHT,
-      _o.DELTA_V,
-      _o.DELTA_T);
+      _o.SAT_NO,
+      _OBJECT_DESIGNATOR,
+      _o.STATUS,
+      _EVENT_EPOCH,
+      _SOURCE,
+      _REF_FRAME,
+      _o.ORIG_SEMI_MAJOR_AXIS,
+      _o.ORIG_ECCENTRICITY,
+      _o.ORIG_INCLINATION,
+      _o.DELTA_V_MIN,
+      _o.DELTA_V_MAX,
+      _o.DELTA_V_STEP,
+      _o.DELTA_T_MIN,
+      _o.DELTA_T_MAX,
+      _o.DELTA_T_STEP,
+      _o.NUM_ELEMENTS,
+      _ELEMENTS,
+      _CORRELATED_ID,
+      _NOTES);
   }
 }
 
 public class MNFT
 {
   public string ID { get; set; }
-  public string STATUS { get; set; }
-  public double WEIGHT { get; set; }
-  public double DELTA_V { get; set; }
-  public double DELTA_T { get; set; }
+  public uint SAT_NO { get; set; }
+  public string OBJECT_DESIGNATOR { get; set; }
+  public manifoldStatus STATUS { get; set; }
+  public string EVENT_EPOCH { get; set; }
+  public string SOURCE { get; set; }
+  public string REF_FRAME { get; set; }
+  public double ORIG_SEMI_MAJOR_AXIS { get; set; }
+  public double ORIG_ECCENTRICITY { get; set; }
+  public double ORIG_INCLINATION { get; set; }
+  public double DELTA_V_MIN { get; set; }
+  public double DELTA_V_MAX { get; set; }
+  public double DELTA_V_STEP { get; set; }
+  public double DELTA_T_MIN { get; set; }
+  public double DELTA_T_MAX { get; set; }
+  public double DELTA_T_STEP { get; set; }
+  public uint NUM_ELEMENTS { get; set; }
+  public List<manifoldElsetT> ELEMENTS { get; set; }
+  public string CORRELATED_ID { get; set; }
+  public string NOTES { get; set; }
 
   public MNFT() {
     this.ID = null;
-    this.STATUS = null;
-    this.WEIGHT = 0.0;
-    this.DELTA_V = 0.0;
-    this.DELTA_T = 0.0;
+    this.SAT_NO = 0;
+    this.OBJECT_DESIGNATOR = null;
+    this.STATUS = manifoldStatus.CANDIDATE;
+    this.EVENT_EPOCH = null;
+    this.SOURCE = null;
+    this.REF_FRAME = null;
+    this.ORIG_SEMI_MAJOR_AXIS = 0.0;
+    this.ORIG_ECCENTRICITY = 0.0;
+    this.ORIG_INCLINATION = 0.0;
+    this.DELTA_V_MIN = 0.0;
+    this.DELTA_V_MAX = 0.0;
+    this.DELTA_V_STEP = 0.0;
+    this.DELTA_T_MIN = 0.0;
+    this.DELTA_T_MAX = 0.0;
+    this.DELTA_T_STEP = 0.0;
+    this.NUM_ELEMENTS = 0;
+    this.ELEMENTS = null;
+    this.CORRELATED_ID = null;
+    this.NOTES = null;
   }
   public static MNFT DeserializeFromBinary(byte[] fbBuffer) {
     return MNF.GetRootAsMNF(new ByteBuffer(fbBuffer)).UnPack();
@@ -122,10 +310,25 @@ static public class MNFVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*ID*/, false)
-      && verifier.VerifyString(tablePos, 6 /*STATUS*/, false)
-      && verifier.VerifyField(tablePos, 8 /*WEIGHT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 10 /*DELTA_V*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 12 /*DELTA_T*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 6 /*SAT_NO*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 8 /*OBJECT_DESIGNATOR*/, false)
+      && verifier.VerifyField(tablePos, 10 /*STATUS*/, 1 /*manifoldStatus*/, 1, false)
+      && verifier.VerifyString(tablePos, 12 /*EVENT_EPOCH*/, false)
+      && verifier.VerifyString(tablePos, 14 /*SOURCE*/, false)
+      && verifier.VerifyString(tablePos, 16 /*REF_FRAME*/, false)
+      && verifier.VerifyField(tablePos, 18 /*ORIG_SEMI_MAJOR_AXIS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 20 /*ORIG_ECCENTRICITY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 22 /*ORIG_INCLINATION*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 24 /*DELTA_V_MIN*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 26 /*DELTA_V_MAX*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 28 /*DELTA_V_STEP*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 30 /*DELTA_T_MIN*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 32 /*DELTA_T_MAX*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 34 /*DELTA_T_STEP*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 36 /*NUM_ELEMENTS*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyVectorOfTables(tablePos, 38 /*ELEMENTS*/, manifoldElsetVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 40 /*CORRELATED_ID*/, false)
+      && verifier.VerifyString(tablePos, 42 /*NOTES*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -9,6 +9,107 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_LAUNCH_DETECTION_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_LAUNCH_DETECTION_TYPE: i8 = 5;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_LAUNCH_DETECTION_TYPE: [launchDetectionType; 6] = [
+  launchDetectionType::IR_DETECT,
+  launchDetectionType::RADAR_DETECT,
+  launchDetectionType::OPTICAL_DETECT,
+  launchDetectionType::ELINT_DETECT,
+  launchDetectionType::COMBINED,
+  launchDetectionType::UNKNOWN,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct launchDetectionType(pub i8);
+#[allow(non_upper_case_globals)]
+impl launchDetectionType {
+  pub const IR_DETECT: Self = Self(0);
+  pub const RADAR_DETECT: Self = Self(1);
+  pub const OPTICAL_DETECT: Self = Self(2);
+  pub const ELINT_DETECT: Self = Self(3);
+  pub const COMBINED: Self = Self(4);
+  pub const UNKNOWN: Self = Self(5);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 5;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::IR_DETECT,
+    Self::RADAR_DETECT,
+    Self::OPTICAL_DETECT,
+    Self::ELINT_DETECT,
+    Self::COMBINED,
+    Self::UNKNOWN,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::IR_DETECT => Some("IR_DETECT"),
+      Self::RADAR_DETECT => Some("RADAR_DETECT"),
+      Self::OPTICAL_DETECT => Some("OPTICAL_DETECT"),
+      Self::ELINT_DETECT => Some("ELINT_DETECT"),
+      Self::COMBINED => Some("COMBINED"),
+      Self::UNKNOWN => Some("UNKNOWN"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for launchDetectionType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for launchDetectionType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for launchDetectionType {
+    type Output = launchDetectionType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for launchDetectionType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for launchDetectionType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for launchDetectionType {}
 pub enum LNDOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -27,23 +128,28 @@ impl<'a> flatbuffers::Follow<'a> for LND<'a> {
 
 impl<'a> LND<'a> {
   pub const VT_ID: flatbuffers::VOffsetT = 4;
-  pub const VT_LAUNCH_TIME: flatbuffers::VOffsetT = 6;
-  pub const VT_MESSAGE_TYPE: flatbuffers::VOffsetT = 8;
-  pub const VT_LAUNCH_LATITUDE: flatbuffers::VOffsetT = 10;
-  pub const VT_LAUNCH_LONGITUDE: flatbuffers::VOffsetT = 12;
-  pub const VT_LAUNCH_AZIMUTH: flatbuffers::VOffsetT = 14;
-  pub const VT_RAAN: flatbuffers::VOffsetT = 16;
-  pub const VT_INCLINATION: flatbuffers::VOffsetT = 18;
-  pub const VT_OBSERVATION_TIME: flatbuffers::VOffsetT = 20;
-  pub const VT_OBSERVATION_LATITUDE: flatbuffers::VOffsetT = 22;
-  pub const VT_OBSERVATION_LONGITUDE: flatbuffers::VOffsetT = 24;
-  pub const VT_OBSERVATION_ALTITUDE: flatbuffers::VOffsetT = 26;
-  pub const VT_STEREO_FLAG: flatbuffers::VOffsetT = 28;
-  pub const VT_HIGH_ZENITH_AZIMUTH: flatbuffers::VOffsetT = 30;
-  pub const VT_SEQUENCE_NUMBER: flatbuffers::VOffsetT = 32;
-  pub const VT_EVENT_ID: flatbuffers::VOffsetT = 34;
-  pub const VT_DESCRIPTOR: flatbuffers::VOffsetT = 36;
-  pub const VT_TAGS: flatbuffers::VOffsetT = 38;
+  pub const VT_EVENT_ID: flatbuffers::VOffsetT = 6;
+  pub const VT_DETECTION_TYPE: flatbuffers::VOffsetT = 8;
+  pub const VT_MESSAGE_TYPE: flatbuffers::VOffsetT = 10;
+  pub const VT_LAUNCH_TIME: flatbuffers::VOffsetT = 12;
+  pub const VT_LAUNCH_LATITUDE: flatbuffers::VOffsetT = 14;
+  pub const VT_LAUNCH_LONGITUDE: flatbuffers::VOffsetT = 16;
+  pub const VT_LAUNCH_AZIMUTH: flatbuffers::VOffsetT = 18;
+  pub const VT_RAAN: flatbuffers::VOffsetT = 20;
+  pub const VT_INCLINATION: flatbuffers::VOffsetT = 22;
+  pub const VT_OBSERVATION_TIME: flatbuffers::VOffsetT = 24;
+  pub const VT_OBSERVATION_LATITUDE: flatbuffers::VOffsetT = 26;
+  pub const VT_OBSERVATION_LONGITUDE: flatbuffers::VOffsetT = 28;
+  pub const VT_OBSERVATION_ALTITUDE: flatbuffers::VOffsetT = 30;
+  pub const VT_STEREO_FLAG: flatbuffers::VOffsetT = 32;
+  pub const VT_HIGH_ZENITH_AZIMUTH: flatbuffers::VOffsetT = 34;
+  pub const VT_SEQUENCE_NUMBER: flatbuffers::VOffsetT = 36;
+  pub const VT_LAUNCH_SITE_ID: flatbuffers::VOffsetT = 38;
+  pub const VT_LAUNCH_VEHICLE: flatbuffers::VOffsetT = 40;
+  pub const VT_TRAJECTORY_TYPE: flatbuffers::VOffsetT = 42;
+  pub const VT_CONFIDENCE: flatbuffers::VOffsetT = 44;
+  pub const VT_DESCRIPTOR: flatbuffers::VOffsetT = 46;
+  pub const VT_TAGS: flatbuffers::VOffsetT = 48;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -55,6 +161,7 @@ impl<'a> LND<'a> {
     args: &'args LNDArgs<'args>
   ) -> flatbuffers::WIPOffset<LND<'bldr>> {
     let mut builder = LNDBuilder::new(_fbb);
+    builder.add_CONFIDENCE(args.CONFIDENCE);
     builder.add_OBSERVATION_ALTITUDE(args.OBSERVATION_ALTITUDE);
     builder.add_OBSERVATION_LONGITUDE(args.OBSERVATION_LONGITUDE);
     builder.add_OBSERVATION_LATITUDE(args.OBSERVATION_LATITUDE);
@@ -65,14 +172,18 @@ impl<'a> LND<'a> {
     builder.add_LAUNCH_LATITUDE(args.LAUNCH_LATITUDE);
     if let Some(x) = args.TAGS { builder.add_TAGS(x); }
     if let Some(x) = args.DESCRIPTOR { builder.add_DESCRIPTOR(x); }
-    if let Some(x) = args.EVENT_ID { builder.add_EVENT_ID(x); }
-    builder.add_SEQUENCE_NUMBER(args.SEQUENCE_NUMBER);
+    if let Some(x) = args.TRAJECTORY_TYPE { builder.add_TRAJECTORY_TYPE(x); }
+    if let Some(x) = args.LAUNCH_VEHICLE { builder.add_LAUNCH_VEHICLE(x); }
+    if let Some(x) = args.LAUNCH_SITE_ID { builder.add_LAUNCH_SITE_ID(x); }
     if let Some(x) = args.OBSERVATION_TIME { builder.add_OBSERVATION_TIME(x); }
-    if let Some(x) = args.MESSAGE_TYPE { builder.add_MESSAGE_TYPE(x); }
     if let Some(x) = args.LAUNCH_TIME { builder.add_LAUNCH_TIME(x); }
+    if let Some(x) = args.MESSAGE_TYPE { builder.add_MESSAGE_TYPE(x); }
+    if let Some(x) = args.EVENT_ID { builder.add_EVENT_ID(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_SEQUENCE_NUMBER(args.SEQUENCE_NUMBER);
     builder.add_HIGH_ZENITH_AZIMUTH(args.HIGH_ZENITH_AZIMUTH);
     builder.add_STEREO_FLAG(args.STEREO_FLAG);
+    builder.add_DETECTION_TYPE(args.DETECTION_TYPE);
     builder.finish()
   }
 
@@ -80,10 +191,14 @@ impl<'a> LND<'a> {
     let ID = self.ID().map(|x| {
       x.to_string()
     });
-    let LAUNCH_TIME = self.LAUNCH_TIME().map(|x| {
+    let EVENT_ID = self.EVENT_ID().map(|x| {
       x.to_string()
     });
+    let DETECTION_TYPE = self.DETECTION_TYPE();
     let MESSAGE_TYPE = self.MESSAGE_TYPE().map(|x| {
+      x.to_string()
+    });
+    let LAUNCH_TIME = self.LAUNCH_TIME().map(|x| {
       x.to_string()
     });
     let LAUNCH_LATITUDE = self.LAUNCH_LATITUDE();
@@ -100,9 +215,16 @@ impl<'a> LND<'a> {
     let STEREO_FLAG = self.STEREO_FLAG();
     let HIGH_ZENITH_AZIMUTH = self.HIGH_ZENITH_AZIMUTH();
     let SEQUENCE_NUMBER = self.SEQUENCE_NUMBER();
-    let EVENT_ID = self.EVENT_ID().map(|x| {
+    let LAUNCH_SITE_ID = self.LAUNCH_SITE_ID().map(|x| {
       x.to_string()
     });
+    let LAUNCH_VEHICLE = self.LAUNCH_VEHICLE().map(|x| {
+      x.to_string()
+    });
+    let TRAJECTORY_TYPE = self.TRAJECTORY_TYPE().map(|x| {
+      x.to_string()
+    });
+    let CONFIDENCE = self.CONFIDENCE();
     let DESCRIPTOR = self.DESCRIPTOR().map(|x| {
       x.to_string()
     });
@@ -111,8 +233,10 @@ impl<'a> LND<'a> {
     });
     LNDT {
       ID,
-      LAUNCH_TIME,
+      EVENT_ID,
+      DETECTION_TYPE,
       MESSAGE_TYPE,
+      LAUNCH_TIME,
       LAUNCH_LATITUDE,
       LAUNCH_LONGITUDE,
       LAUNCH_AZIMUTH,
@@ -125,12 +249,16 @@ impl<'a> LND<'a> {
       STEREO_FLAG,
       HIGH_ZENITH_AZIMUTH,
       SEQUENCE_NUMBER,
-      EVENT_ID,
+      LAUNCH_SITE_ID,
+      LAUNCH_VEHICLE,
+      TRAJECTORY_TYPE,
+      CONFIDENCE,
       DESCRIPTOR,
       TAGS,
     }
   }
 
+  /// Unique identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -138,104 +266,7 @@ impl<'a> LND<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LND::VT_ID, None)}
   }
-  #[inline]
-  pub fn LAUNCH_TIME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LND::VT_LAUNCH_TIME, None)}
-  }
-  #[inline]
-  pub fn MESSAGE_TYPE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LND::VT_MESSAGE_TYPE, None)}
-  }
-  #[inline]
-  pub fn LAUNCH_LATITUDE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(LND::VT_LAUNCH_LATITUDE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn LAUNCH_LONGITUDE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(LND::VT_LAUNCH_LONGITUDE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn LAUNCH_AZIMUTH(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(LND::VT_LAUNCH_AZIMUTH, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn RAAN(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(LND::VT_RAAN, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn INCLINATION(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(LND::VT_INCLINATION, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn OBSERVATION_TIME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LND::VT_OBSERVATION_TIME, None)}
-  }
-  #[inline]
-  pub fn OBSERVATION_LATITUDE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(LND::VT_OBSERVATION_LATITUDE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn OBSERVATION_LONGITUDE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(LND::VT_OBSERVATION_LONGITUDE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn OBSERVATION_ALTITUDE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(LND::VT_OBSERVATION_ALTITUDE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn STEREO_FLAG(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(LND::VT_STEREO_FLAG, Some(false)).unwrap()}
-  }
-  #[inline]
-  pub fn HIGH_ZENITH_AZIMUTH(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(LND::VT_HIGH_ZENITH_AZIMUTH, Some(false)).unwrap()}
-  }
-  #[inline]
-  pub fn SEQUENCE_NUMBER(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(LND::VT_SEQUENCE_NUMBER, Some(0)).unwrap()}
-  }
+  /// Detection event identifier
   #[inline]
   pub fn EVENT_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -243,6 +274,159 @@ impl<'a> LND<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LND::VT_EVENT_ID, None)}
   }
+  /// Detection type
+  #[inline]
+  pub fn DETECTION_TYPE(&self) -> launchDetectionType {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<launchDetectionType>(LND::VT_DETECTION_TYPE, Some(launchDetectionType::IR_DETECT)).unwrap()}
+  }
+  /// Detection message type code
+  #[inline]
+  pub fn MESSAGE_TYPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LND::VT_MESSAGE_TYPE, None)}
+  }
+  /// Time of launch detection (ISO 8601)
+  #[inline]
+  pub fn LAUNCH_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LND::VT_LAUNCH_TIME, None)}
+  }
+  /// Launch site latitude (degrees)
+  #[inline]
+  pub fn LAUNCH_LATITUDE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(LND::VT_LAUNCH_LATITUDE, Some(0.0)).unwrap()}
+  }
+  /// Launch site longitude (degrees)
+  #[inline]
+  pub fn LAUNCH_LONGITUDE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(LND::VT_LAUNCH_LONGITUDE, Some(0.0)).unwrap()}
+  }
+  /// Launch azimuth (degrees from north)
+  #[inline]
+  pub fn LAUNCH_AZIMUTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(LND::VT_LAUNCH_AZIMUTH, Some(0.0)).unwrap()}
+  }
+  /// Estimated RAAN (degrees)
+  #[inline]
+  pub fn RAAN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(LND::VT_RAAN, Some(0.0)).unwrap()}
+  }
+  /// Estimated inclination (degrees)
+  #[inline]
+  pub fn INCLINATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(LND::VT_INCLINATION, Some(0.0)).unwrap()}
+  }
+  /// Time of trajectory observation (ISO 8601)
+  #[inline]
+  pub fn OBSERVATION_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LND::VT_OBSERVATION_TIME, None)}
+  }
+  /// Observation point latitude (degrees)
+  #[inline]
+  pub fn OBSERVATION_LATITUDE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(LND::VT_OBSERVATION_LATITUDE, Some(0.0)).unwrap()}
+  }
+  /// Observation point longitude (degrees)
+  #[inline]
+  pub fn OBSERVATION_LONGITUDE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(LND::VT_OBSERVATION_LONGITUDE, Some(0.0)).unwrap()}
+  }
+  /// Observation point altitude (km)
+  #[inline]
+  pub fn OBSERVATION_ALTITUDE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(LND::VT_OBSERVATION_ALTITUDE, Some(0.0)).unwrap()}
+  }
+  /// True if stereo observation (multiple sensors)
+  #[inline]
+  pub fn STEREO_FLAG(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(LND::VT_STEREO_FLAG, Some(false)).unwrap()}
+  }
+  /// True if high zenith angle observation
+  #[inline]
+  pub fn HIGH_ZENITH_AZIMUTH(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(LND::VT_HIGH_ZENITH_AZIMUTH, Some(false)).unwrap()}
+  }
+  /// Sequence number in detection chain
+  #[inline]
+  pub fn SEQUENCE_NUMBER(&self) -> u16 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u16>(LND::VT_SEQUENCE_NUMBER, Some(0)).unwrap()}
+  }
+  /// Launch site identifier
+  #[inline]
+  pub fn LAUNCH_SITE_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LND::VT_LAUNCH_SITE_ID, None)}
+  }
+  /// Launch vehicle type (if identified)
+  #[inline]
+  pub fn LAUNCH_VEHICLE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LND::VT_LAUNCH_VEHICLE, None)}
+  }
+  /// Estimated trajectory type
+  #[inline]
+  pub fn TRAJECTORY_TYPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LND::VT_TRAJECTORY_TYPE, None)}
+  }
+  /// Detection confidence (0-1)
+  #[inline]
+  pub fn CONFIDENCE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(LND::VT_CONFIDENCE, Some(0.0)).unwrap()}
+  }
+  /// Event descriptor
   #[inline]
   pub fn DESCRIPTOR(&self) -> Option<&'a str> {
     // Safety:
@@ -250,6 +434,7 @@ impl<'a> LND<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LND::VT_DESCRIPTOR, None)}
   }
+  /// Associated tags
   #[inline]
   pub fn TAGS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -267,8 +452,10 @@ impl flatbuffers::Verifiable for LND<'_> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LAUNCH_TIME", Self::VT_LAUNCH_TIME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EVENT_ID", Self::VT_EVENT_ID, false)?
+     .visit_field::<launchDetectionType>("DETECTION_TYPE", Self::VT_DETECTION_TYPE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MESSAGE_TYPE", Self::VT_MESSAGE_TYPE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LAUNCH_TIME", Self::VT_LAUNCH_TIME, false)?
      .visit_field::<f64>("LAUNCH_LATITUDE", Self::VT_LAUNCH_LATITUDE, false)?
      .visit_field::<f64>("LAUNCH_LONGITUDE", Self::VT_LAUNCH_LONGITUDE, false)?
      .visit_field::<f64>("LAUNCH_AZIMUTH", Self::VT_LAUNCH_AZIMUTH, false)?
@@ -280,8 +467,11 @@ impl flatbuffers::Verifiable for LND<'_> {
      .visit_field::<f64>("OBSERVATION_ALTITUDE", Self::VT_OBSERVATION_ALTITUDE, false)?
      .visit_field::<bool>("STEREO_FLAG", Self::VT_STEREO_FLAG, false)?
      .visit_field::<bool>("HIGH_ZENITH_AZIMUTH", Self::VT_HIGH_ZENITH_AZIMUTH, false)?
-     .visit_field::<i32>("SEQUENCE_NUMBER", Self::VT_SEQUENCE_NUMBER, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EVENT_ID", Self::VT_EVENT_ID, false)?
+     .visit_field::<u16>("SEQUENCE_NUMBER", Self::VT_SEQUENCE_NUMBER, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LAUNCH_SITE_ID", Self::VT_LAUNCH_SITE_ID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LAUNCH_VEHICLE", Self::VT_LAUNCH_VEHICLE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRAJECTORY_TYPE", Self::VT_TRAJECTORY_TYPE, false)?
+     .visit_field::<f64>("CONFIDENCE", Self::VT_CONFIDENCE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DESCRIPTOR", Self::VT_DESCRIPTOR, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("TAGS", Self::VT_TAGS, false)?
      .finish();
@@ -290,8 +480,10 @@ impl flatbuffers::Verifiable for LND<'_> {
 }
 pub struct LNDArgs<'a> {
     pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub LAUNCH_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub EVENT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub DETECTION_TYPE: launchDetectionType,
     pub MESSAGE_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub LAUNCH_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub LAUNCH_LATITUDE: f64,
     pub LAUNCH_LONGITUDE: f64,
     pub LAUNCH_AZIMUTH: f64,
@@ -303,8 +495,11 @@ pub struct LNDArgs<'a> {
     pub OBSERVATION_ALTITUDE: f64,
     pub STEREO_FLAG: bool,
     pub HIGH_ZENITH_AZIMUTH: bool,
-    pub SEQUENCE_NUMBER: i32,
-    pub EVENT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SEQUENCE_NUMBER: u16,
+    pub LAUNCH_SITE_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub LAUNCH_VEHICLE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub TRAJECTORY_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub CONFIDENCE: f64,
     pub DESCRIPTOR: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TAGS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
 }
@@ -313,8 +508,10 @@ impl<'a> Default for LNDArgs<'a> {
   fn default() -> Self {
     LNDArgs {
       ID: None,
-      LAUNCH_TIME: None,
+      EVENT_ID: None,
+      DETECTION_TYPE: launchDetectionType::IR_DETECT,
       MESSAGE_TYPE: None,
+      LAUNCH_TIME: None,
       LAUNCH_LATITUDE: 0.0,
       LAUNCH_LONGITUDE: 0.0,
       LAUNCH_AZIMUTH: 0.0,
@@ -327,7 +524,10 @@ impl<'a> Default for LNDArgs<'a> {
       STEREO_FLAG: false,
       HIGH_ZENITH_AZIMUTH: false,
       SEQUENCE_NUMBER: 0,
-      EVENT_ID: None,
+      LAUNCH_SITE_ID: None,
+      LAUNCH_VEHICLE: None,
+      TRAJECTORY_TYPE: None,
+      CONFIDENCE: 0.0,
       DESCRIPTOR: None,
       TAGS: None,
     }
@@ -344,12 +544,20 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> LNDBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LND::VT_ID, ID);
   }
   #[inline]
-  pub fn add_LAUNCH_TIME(&mut self, LAUNCH_TIME: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LND::VT_LAUNCH_TIME, LAUNCH_TIME);
+  pub fn add_EVENT_ID(&mut self, EVENT_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LND::VT_EVENT_ID, EVENT_ID);
+  }
+  #[inline]
+  pub fn add_DETECTION_TYPE(&mut self, DETECTION_TYPE: launchDetectionType) {
+    self.fbb_.push_slot::<launchDetectionType>(LND::VT_DETECTION_TYPE, DETECTION_TYPE, launchDetectionType::IR_DETECT);
   }
   #[inline]
   pub fn add_MESSAGE_TYPE(&mut self, MESSAGE_TYPE: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LND::VT_MESSAGE_TYPE, MESSAGE_TYPE);
+  }
+  #[inline]
+  pub fn add_LAUNCH_TIME(&mut self, LAUNCH_TIME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LND::VT_LAUNCH_TIME, LAUNCH_TIME);
   }
   #[inline]
   pub fn add_LAUNCH_LATITUDE(&mut self, LAUNCH_LATITUDE: f64) {
@@ -396,12 +604,24 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> LNDBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<bool>(LND::VT_HIGH_ZENITH_AZIMUTH, HIGH_ZENITH_AZIMUTH, false);
   }
   #[inline]
-  pub fn add_SEQUENCE_NUMBER(&mut self, SEQUENCE_NUMBER: i32) {
-    self.fbb_.push_slot::<i32>(LND::VT_SEQUENCE_NUMBER, SEQUENCE_NUMBER, 0);
+  pub fn add_SEQUENCE_NUMBER(&mut self, SEQUENCE_NUMBER: u16) {
+    self.fbb_.push_slot::<u16>(LND::VT_SEQUENCE_NUMBER, SEQUENCE_NUMBER, 0);
   }
   #[inline]
-  pub fn add_EVENT_ID(&mut self, EVENT_ID: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LND::VT_EVENT_ID, EVENT_ID);
+  pub fn add_LAUNCH_SITE_ID(&mut self, LAUNCH_SITE_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LND::VT_LAUNCH_SITE_ID, LAUNCH_SITE_ID);
+  }
+  #[inline]
+  pub fn add_LAUNCH_VEHICLE(&mut self, LAUNCH_VEHICLE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LND::VT_LAUNCH_VEHICLE, LAUNCH_VEHICLE);
+  }
+  #[inline]
+  pub fn add_TRAJECTORY_TYPE(&mut self, TRAJECTORY_TYPE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LND::VT_TRAJECTORY_TYPE, TRAJECTORY_TYPE);
+  }
+  #[inline]
+  pub fn add_CONFIDENCE(&mut self, CONFIDENCE: f64) {
+    self.fbb_.push_slot::<f64>(LND::VT_CONFIDENCE, CONFIDENCE, 0.0);
   }
   #[inline]
   pub fn add_DESCRIPTOR(&mut self, DESCRIPTOR: flatbuffers::WIPOffset<&'b  str>) {
@@ -430,8 +650,10 @@ impl core::fmt::Debug for LND<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
     let mut ds = f.debug_struct("LND");
       ds.field("ID", &self.ID());
-      ds.field("LAUNCH_TIME", &self.LAUNCH_TIME());
+      ds.field("EVENT_ID", &self.EVENT_ID());
+      ds.field("DETECTION_TYPE", &self.DETECTION_TYPE());
       ds.field("MESSAGE_TYPE", &self.MESSAGE_TYPE());
+      ds.field("LAUNCH_TIME", &self.LAUNCH_TIME());
       ds.field("LAUNCH_LATITUDE", &self.LAUNCH_LATITUDE());
       ds.field("LAUNCH_LONGITUDE", &self.LAUNCH_LONGITUDE());
       ds.field("LAUNCH_AZIMUTH", &self.LAUNCH_AZIMUTH());
@@ -444,7 +666,10 @@ impl core::fmt::Debug for LND<'_> {
       ds.field("STEREO_FLAG", &self.STEREO_FLAG());
       ds.field("HIGH_ZENITH_AZIMUTH", &self.HIGH_ZENITH_AZIMUTH());
       ds.field("SEQUENCE_NUMBER", &self.SEQUENCE_NUMBER());
-      ds.field("EVENT_ID", &self.EVENT_ID());
+      ds.field("LAUNCH_SITE_ID", &self.LAUNCH_SITE_ID());
+      ds.field("LAUNCH_VEHICLE", &self.LAUNCH_VEHICLE());
+      ds.field("TRAJECTORY_TYPE", &self.TRAJECTORY_TYPE());
+      ds.field("CONFIDENCE", &self.CONFIDENCE());
       ds.field("DESCRIPTOR", &self.DESCRIPTOR());
       ds.field("TAGS", &self.TAGS());
       ds.finish()
@@ -454,8 +679,10 @@ impl core::fmt::Debug for LND<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct LNDT {
   pub ID: Option<String>,
-  pub LAUNCH_TIME: Option<String>,
+  pub EVENT_ID: Option<String>,
+  pub DETECTION_TYPE: launchDetectionType,
   pub MESSAGE_TYPE: Option<String>,
+  pub LAUNCH_TIME: Option<String>,
   pub LAUNCH_LATITUDE: f64,
   pub LAUNCH_LONGITUDE: f64,
   pub LAUNCH_AZIMUTH: f64,
@@ -467,8 +694,11 @@ pub struct LNDT {
   pub OBSERVATION_ALTITUDE: f64,
   pub STEREO_FLAG: bool,
   pub HIGH_ZENITH_AZIMUTH: bool,
-  pub SEQUENCE_NUMBER: i32,
-  pub EVENT_ID: Option<String>,
+  pub SEQUENCE_NUMBER: u16,
+  pub LAUNCH_SITE_ID: Option<String>,
+  pub LAUNCH_VEHICLE: Option<String>,
+  pub TRAJECTORY_TYPE: Option<String>,
+  pub CONFIDENCE: f64,
   pub DESCRIPTOR: Option<String>,
   pub TAGS: Option<Vec<String>>,
 }
@@ -476,8 +706,10 @@ impl Default for LNDT {
   fn default() -> Self {
     Self {
       ID: None,
-      LAUNCH_TIME: None,
+      EVENT_ID: None,
+      DETECTION_TYPE: launchDetectionType::IR_DETECT,
       MESSAGE_TYPE: None,
+      LAUNCH_TIME: None,
       LAUNCH_LATITUDE: 0.0,
       LAUNCH_LONGITUDE: 0.0,
       LAUNCH_AZIMUTH: 0.0,
@@ -490,7 +722,10 @@ impl Default for LNDT {
       STEREO_FLAG: false,
       HIGH_ZENITH_AZIMUTH: false,
       SEQUENCE_NUMBER: 0,
-      EVENT_ID: None,
+      LAUNCH_SITE_ID: None,
+      LAUNCH_VEHICLE: None,
+      TRAJECTORY_TYPE: None,
+      CONFIDENCE: 0.0,
       DESCRIPTOR: None,
       TAGS: None,
     }
@@ -504,10 +739,14 @@ impl LNDT {
     let ID = self.ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let LAUNCH_TIME = self.LAUNCH_TIME.as_ref().map(|x|{
+    let EVENT_ID = self.EVENT_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let DETECTION_TYPE = self.DETECTION_TYPE;
     let MESSAGE_TYPE = self.MESSAGE_TYPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let LAUNCH_TIME = self.LAUNCH_TIME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let LAUNCH_LATITUDE = self.LAUNCH_LATITUDE;
@@ -524,9 +763,16 @@ impl LNDT {
     let STEREO_FLAG = self.STEREO_FLAG;
     let HIGH_ZENITH_AZIMUTH = self.HIGH_ZENITH_AZIMUTH;
     let SEQUENCE_NUMBER = self.SEQUENCE_NUMBER;
-    let EVENT_ID = self.EVENT_ID.as_ref().map(|x|{
+    let LAUNCH_SITE_ID = self.LAUNCH_SITE_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let LAUNCH_VEHICLE = self.LAUNCH_VEHICLE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TRAJECTORY_TYPE = self.TRAJECTORY_TYPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CONFIDENCE = self.CONFIDENCE;
     let DESCRIPTOR = self.DESCRIPTOR.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -535,8 +781,10 @@ impl LNDT {
     });
     LND::create(_fbb, &LNDArgs{
       ID,
-      LAUNCH_TIME,
+      EVENT_ID,
+      DETECTION_TYPE,
       MESSAGE_TYPE,
+      LAUNCH_TIME,
       LAUNCH_LATITUDE,
       LAUNCH_LONGITUDE,
       LAUNCH_AZIMUTH,
@@ -549,7 +797,10 @@ impl LNDT {
       STEREO_FLAG,
       HIGH_ZENITH_AZIMUTH,
       SEQUENCE_NUMBER,
-      EVENT_ID,
+      LAUNCH_SITE_ID,
+      LAUNCH_VEHICLE,
+      TRAJECTORY_TYPE,
+      CONFIDENCE,
       DESCRIPTOR,
       TAGS,
     })

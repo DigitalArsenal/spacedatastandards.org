@@ -1,108 +1,161 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "seoDataType" : {
+      "type" : "string",
+      "enum": ["PARTICLE_COUNT", "MAGNETIC_FIELD", "RADIATION_DOSE", "PLASMA_DENSITY", "ENERGETIC_PARTICLE", "SOLAR_WIND", "CHARGING", "UNKNOWN"]
+    },
+    "seoParticleType" : {
+      "type" : "string",
+      "enum": ["PROTON", "ELECTRON", "ALPHA", "HEAVY_ION", "NEUTRON", "COSMIC_RAY", "MIXED"]
+    },
+    "seoObservatoryType" : {
+      "type" : "string",
+      "enum": ["GROUND", "LEO", "GEO", "L1", "L2", "INTERPLANETARY", "SOLAR"]
+    },
     "SEO" : {
       "type" : "object",
       "description" : "Space Environment Observation",
       "properties" : {
         "ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique identifier"
               },
         "MSG_TYPE" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Message type code"
               },
         "GEN_SYSTEM" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Generating system"
               },
         "EXTERNAL_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "External reference identifier"
               },
         "DATA_TYPE" : {
-                "type" : "string"
+                "$ref" : "#/definitions/seoDataType",
+                "description" : "Type of environmental data"
               },
         "GEN_TIME" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Generation time (ISO 8601)"
               },
         "FORECAST" : {
-                "type" : "boolean"
+                "type" : "boolean",
+                "description" : "True if this is a forecast"
               },
         "DERIVED" : {
-                "type" : "boolean"
+                "type" : "boolean",
+                "description" : "True if derived from other measurements"
               },
         "SAT_NO" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Satellite catalog number (if space-based)"
               },
         "ORIG_OBJECT_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "International designator"
               },
         "ID_SENSOR" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Sensor identifier"
               },
         "ORIG_SENSOR_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Original sensor identifier"
               },
         "OBSERVATORY_TYPE" : {
-                "type" : "string"
+                "$ref" : "#/definitions/seoObservatoryType",
+                "description" : "Observatory type"
               },
         "OBSERVATORY_NAME" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Observatory name"
               },
         "OBSERVATORY_NOTES" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Observatory notes"
               },
         "INSTRUMENT_TYPE" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Instrument type description"
               },
         "LAT" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Observatory latitude (degrees)"
               },
         "LON" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Observatory longitude (degrees)"
               },
         "ALT" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Observatory altitude (km)"
               },
         "SEN_REFERENCE_FRAME" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Sensor reference frame"
               },
         "SEN_POS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Sensor position (km, 3 components)"
               },
         "SEN_VEL" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Sensor velocity (km/s, 3 components)"
               },
         "MEAS_TYPE" : {
-                "type" : "string"
-              },
-        "SEN_ENERGY_LEVEL" : {
-                "type" : "string"
-              },
-        "OB_SET_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Measurement type description"
               },
         "PARTICLE_TYPE" : {
-                "type" : "string"
+                "$ref" : "#/definitions/seoParticleType",
+                "description" : "Particle type measured"
+              },
+        "SEN_ENERGY_LEVEL" : {
+                "type" : "string",
+                "description" : "Energy level or range (keV or MeV)"
+              },
+        "OB_SET_ID" : {
+                "type" : "string",
+                "description" : "Observation set identifier"
               },
         "OB_TIME" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Observation time (ISO 8601)"
               },
-        "SEO_LIST" : {
-                "type" : "array", "items" : {"type" : "string"}
+        "VALUES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Measurement values"
+              },
+        "UNCERTAINTIES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Measurement uncertainties"
+              },
+        "UNITS" : {
+                "type" : "string",
+                "description" : "Units for measurement values"
               },
         "QUALITY" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Data quality indicator"
               },
         "DESCRIPTION" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Description"
               },
         "DESCRIPTOR" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Event descriptor"
               },
         "SRC_TYPS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Source types"
               },
         "SRC_IDS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Source identifiers"
               }
       },
       "additionalProperties" : false

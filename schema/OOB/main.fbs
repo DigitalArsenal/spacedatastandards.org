@@ -1,0 +1,37 @@
+// Hash: 0c29672d1582910dd443ea3d2c79156fc68dfafe189683459d2be29d6e580692
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+/// On-Orbit Battery
+table OOB {
+  /// Unique identifier
+  ID:string;
+  /// Reference to parent on-orbit object
+  ID_ON_ORBIT:string;
+  /// Reference to battery specification
+  ID_BATTERY:string;
+  /// Battery name or designation
+  NAME:string;
+  /// Battery chemistry (e.g., LI_ION, NICD, NIMH, LIPO, SILVER_ZINC)
+  CHEMISTRY:string;
+  /// Number of batteries of this type
+  QUANTITY:uint;
+  /// Nominal voltage in Volts
+  VOLTAGE:double;
+  /// Capacity in Amp-hours
+  CAPACITY_AH:double;
+  /// Energy capacity in Watt-hours
+  ENERGY_WH:double;
+  /// Maximum depth of discharge as fraction (0.0-1.0)
+  MAX_DOD:double;
+  /// Number of charge/discharge cycles rated
+  CYCLE_LIFE:uint;
+  /// Battery mass in kg
+  MASS:double;
+  /// Current state of health as fraction (0.0-1.0)
+  STATE_OF_HEALTH:double;
+  /// Additional notes
+  NOTES:string;
+}
+
+root_type OOB;
+file_identifier "$OOB";

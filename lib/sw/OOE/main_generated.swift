@@ -4,6 +4,41 @@
 
 import FlatBuffers
 
+public enum eventCategory: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case anomaly = 0
+  case failure = 1
+  case retirement = 2
+  case deorbit = 3
+  case breakup = 4
+  case collision = 5
+  case statusChange = 6
+  case repositioning = 7
+  case unknown = 8
+
+  public static var max: eventCategory { return .unknown }
+  public static var min: eventCategory { return .anomaly }
+}
+
+
+public enum eventResult: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case totalLoss = 0
+  case partialLoss = 1
+  case degraded = 2
+  case recovered = 3
+  case nominal = 4
+  case pending = 5
+
+  public static var max: eventResult { return .pending }
+  public static var min: eventResult { return .totalLoss }
+}
+
+
 ///  On-Orbit Event
 public struct OOE: FlatBufferObject, Verifiable {
 
@@ -18,147 +53,183 @@ public struct OOE: FlatBufferObject, Verifiable {
 
   private enum VTOFFSET: VOffset {
     case ID = 4
-    case DERIVED_FROM = 6
-    case DECLASSIFICATION_DATE = 8
-    case DECLASSIFICATION_STRING = 10
-    case SAT_NO = 12
-    case ORIG_OBJECT_ID = 14
+    case SAT_NO = 6
+    case ORIG_OBJECT_ID = 8
+    case DERIVED_FROM = 10
+    case DECLASSIFICATION_DATE = 12
+    case DECLASSIFICATION_STRING = 14
     case EVENT_TIME = 16
     case EVENT_TIME_NOTES = 18
-    case OPERATOR_ORG_ID = 20
-    case OWNER_ORG_ID = 22
-    case LESSEE_ORG_ID = 24
-    case OPERATED_ON_BEHALF_OF_ORG_ID = 26
-    case GEO_POSITION = 28
-    case PLANE_SLOT = 30
-    case PLANE_NUMBER = 32
-    case POSITION_STATUS = 34
-    case UNTIL_TIME = 36
-    case OFFICIAL_LOSS_DATE = 38
-    case NET_AMOUNT = 40
-    case UNDERLYING_CAUSE = 42
-    case CAPABILITY_LOSS = 44
-    case CAPACITY_LOSS = 46
-    case INSURANCE_LOSS = 48
-    case THIRD_PARTY_INSURANCE_LOSS = 50
-    case INJURED = 52
-    case KILLED = 54
-    case LIFE_LOST = 56
-    case AGE_AT_EVENT = 58
-    case ACHIEVED_FLIGHT_PHASE = 60
-    case OCCURRENCE_FLIGHT_PHASE = 62
-    case STAGE_AT_FAULT = 64
-    case EQUIPMENT_AT_FAULT = 66
-    case EQUIPMENT_TYPE_AT_FAULT = 68
-    case EQUIPMENT_PART_AT_FAULT = 70
-    case CONSEQUENTIAL_EQUIPMENT_FAILURE = 72
-    case INCLINED = 74
-    case DESCRIPTION = 76
-    case REMARKS = 78
-    case INSURANCE_LOSS_NOTES = 80
-    case CAPABILITY_LOSS_NOTES = 82
-    case INSURANCE_CARRIED_NOTES = 84
-    case EQUIPMENT_CAUSING_LOSS_NOTES = 86
-    case EVENT_TYPE = 88
-    case EVENT_RESULT = 90
-    case OBJECT_STATUS = 92
-    case SATELLITE_POSITION = 94
-    case ON_ORBIT = 96
+    case CATEGORY = 20
+    case RESULT = 22
+    case EVENT_TYPE = 24
+    case OPERATOR_ORG_ID = 26
+    case OWNER_ORG_ID = 28
+    case LESSEE_ORG_ID = 30
+    case OPERATED_ON_BEHALF_OF_ORG_ID = 32
+    case GEO_POSITION = 34
+    case PLANE_SLOT = 36
+    case PLANE_NUMBER = 38
+    case POSITION_STATUS = 40
+    case UNTIL_TIME = 42
+    case OFFICIAL_LOSS_DATE = 44
+    case NET_AMOUNT = 46
+    case UNDERLYING_CAUSE = 48
+    case CAPABILITY_LOSS = 50
+    case CAPACITY_LOSS = 52
+    case INSURANCE_LOSS = 54
+    case THIRD_PARTY_INSURANCE_LOSS = 56
+    case INJURED = 58
+    case KILLED = 60
+    case AGE_AT_EVENT = 62
+    case LIFE_LOST = 64
+    case ACHIEVED_FLIGHT_PHASE = 66
+    case OCCURRENCE_FLIGHT_PHASE = 68
+    case STAGE_AT_FAULT = 70
+    case EQUIPMENT_AT_FAULT = 72
+    case EQUIPMENT_TYPE_AT_FAULT = 74
+    case EQUIPMENT_PART_AT_FAULT = 76
+    case CONSEQUENTIAL_EQUIPMENT_FAILURE = 78
+    case INCLINED = 80
+    case DESCRIPTION = 82
+    case REMARKS = 84
+    case OBJECT_STATUS = 86
+    case SATELLITE_POSITION = 88
+    case ON_ORBIT = 90
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
+  ///  Unique identifier
   public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
-  public var DERIVED_FROM: String? { let o = _accessor.offset(VTOFFSET.DERIVED_FROM.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DERIVED_FROMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DERIVED_FROM.v) }
-  public var DECLASSIFICATION_DATE: String? { let o = _accessor.offset(VTOFFSET.DECLASSIFICATION_DATE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DECLASSIFICATION_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DECLASSIFICATION_DATE.v) }
-  public var DECLASSIFICATION_STRING: String? { let o = _accessor.offset(VTOFFSET.DECLASSIFICATION_STRING.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DECLASSIFICATION_STRINGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DECLASSIFICATION_STRING.v) }
-  public var SAT_NO: Int32 { let o = _accessor.offset(VTOFFSET.SAT_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Satellite catalog number
+  public var SAT_NO: UInt32 { let o = _accessor.offset(VTOFFSET.SAT_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  International designator
   public var ORIG_OBJECT_ID: String? { let o = _accessor.offset(VTOFFSET.ORIG_OBJECT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ORIG_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_OBJECT_ID.v) }
+  ///  Source record this was derived from
+  public var DERIVED_FROM: String? { let o = _accessor.offset(VTOFFSET.DERIVED_FROM.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DERIVED_FROMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DERIVED_FROM.v) }
+  ///  Classification date (ISO 8601)
+  public var DECLASSIFICATION_DATE: String? { let o = _accessor.offset(VTOFFSET.DECLASSIFICATION_DATE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DECLASSIFICATION_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DECLASSIFICATION_DATE.v) }
+  ///  Classification marking
+  public var DECLASSIFICATION_STRING: String? { let o = _accessor.offset(VTOFFSET.DECLASSIFICATION_STRING.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DECLASSIFICATION_STRINGSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DECLASSIFICATION_STRING.v) }
+  ///  Event time (ISO 8601)
   public var EVENT_TIME: String? { let o = _accessor.offset(VTOFFSET.EVENT_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var EVENT_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EVENT_TIME.v) }
+  ///  Notes on event time accuracy
   public var EVENT_TIME_NOTES: String? { let o = _accessor.offset(VTOFFSET.EVENT_TIME_NOTES.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var EVENT_TIME_NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EVENT_TIME_NOTES.v) }
-  public var OPERATOR_ORG_ID: String? { let o = _accessor.offset(VTOFFSET.OPERATOR_ORG_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OPERATOR_ORG_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OPERATOR_ORG_ID.v) }
-  public var OWNER_ORG_ID: String? { let o = _accessor.offset(VTOFFSET.OWNER_ORG_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OWNER_ORG_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OWNER_ORG_ID.v) }
-  public var LESSEE_ORG_ID: String? { let o = _accessor.offset(VTOFFSET.LESSEE_ORG_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LESSEE_ORG_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LESSEE_ORG_ID.v) }
-  public var OPERATED_ON_BEHALF_OF_ORG_ID: String? { let o = _accessor.offset(VTOFFSET.OPERATED_ON_BEHALF_OF_ORG_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OPERATED_ON_BEHALF_OF_ORG_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OPERATED_ON_BEHALF_OF_ORG_ID.v) }
-  public var GEO_POSITION: Double { let o = _accessor.offset(VTOFFSET.GEO_POSITION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var PLANE_SLOT: String? { let o = _accessor.offset(VTOFFSET.PLANE_SLOT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PLANE_SLOTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PLANE_SLOT.v) }
-  public var PLANE_NUMBER: String? { let o = _accessor.offset(VTOFFSET.PLANE_NUMBER.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PLANE_NUMBERSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PLANE_NUMBER.v) }
-  public var POSITION_STATUS: String? { let o = _accessor.offset(VTOFFSET.POSITION_STATUS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var POSITION_STATUSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.POSITION_STATUS.v) }
-  public var UNTIL_TIME: String? { let o = _accessor.offset(VTOFFSET.UNTIL_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var UNTIL_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.UNTIL_TIME.v) }
-  public var OFFICIAL_LOSS_DATE: String? { let o = _accessor.offset(VTOFFSET.OFFICIAL_LOSS_DATE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OFFICIAL_LOSS_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OFFICIAL_LOSS_DATE.v) }
-  public var NET_AMOUNT: Double { let o = _accessor.offset(VTOFFSET.NET_AMOUNT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var UNDERLYING_CAUSE: String? { let o = _accessor.offset(VTOFFSET.UNDERLYING_CAUSE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var UNDERLYING_CAUSESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.UNDERLYING_CAUSE.v) }
-  public var CAPABILITY_LOSS: Double { let o = _accessor.offset(VTOFFSET.CAPABILITY_LOSS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var CAPACITY_LOSS: Double { let o = _accessor.offset(VTOFFSET.CAPACITY_LOSS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var INSURANCE_LOSS: Double { let o = _accessor.offset(VTOFFSET.INSURANCE_LOSS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var THIRD_PARTY_INSURANCE_LOSS: Double { let o = _accessor.offset(VTOFFSET.THIRD_PARTY_INSURANCE_LOSS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var INJURED: Int32 { let o = _accessor.offset(VTOFFSET.INJURED.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var KILLED: Int32 { let o = _accessor.offset(VTOFFSET.KILLED.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var LIFE_LOST: Double { let o = _accessor.offset(VTOFFSET.LIFE_LOST.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var AGE_AT_EVENT: Double { let o = _accessor.offset(VTOFFSET.AGE_AT_EVENT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var ACHIEVED_FLIGHT_PHASE: String? { let o = _accessor.offset(VTOFFSET.ACHIEVED_FLIGHT_PHASE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ACHIEVED_FLIGHT_PHASESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ACHIEVED_FLIGHT_PHASE.v) }
-  public var OCCURRENCE_FLIGHT_PHASE: String? { let o = _accessor.offset(VTOFFSET.OCCURRENCE_FLIGHT_PHASE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OCCURRENCE_FLIGHT_PHASESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OCCURRENCE_FLIGHT_PHASE.v) }
-  public var STAGE_AT_FAULT: String? { let o = _accessor.offset(VTOFFSET.STAGE_AT_FAULT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var STAGE_AT_FAULTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STAGE_AT_FAULT.v) }
-  public var EQUIPMENT_AT_FAULT: String? { let o = _accessor.offset(VTOFFSET.EQUIPMENT_AT_FAULT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EQUIPMENT_AT_FAULTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EQUIPMENT_AT_FAULT.v) }
-  public var EQUIPMENT_TYPE_AT_FAULT: String? { let o = _accessor.offset(VTOFFSET.EQUIPMENT_TYPE_AT_FAULT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EQUIPMENT_TYPE_AT_FAULTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EQUIPMENT_TYPE_AT_FAULT.v) }
-  public var EQUIPMENT_PART_AT_FAULT: String? { let o = _accessor.offset(VTOFFSET.EQUIPMENT_PART_AT_FAULT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EQUIPMENT_PART_AT_FAULTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EQUIPMENT_PART_AT_FAULT.v) }
-  public var CONSEQUENTIAL_EQUIPMENT_FAILURE: String? { let o = _accessor.offset(VTOFFSET.CONSEQUENTIAL_EQUIPMENT_FAILURE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CONSEQUENTIAL_EQUIPMENT_FAILURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CONSEQUENTIAL_EQUIPMENT_FAILURE.v) }
-  public var INCLINED: Bool { let o = _accessor.offset(VTOFFSET.INCLINED.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
-  public var REMARKS: String? { let o = _accessor.offset(VTOFFSET.REMARKS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REMARKSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REMARKS.v) }
-  public var INSURANCE_LOSS_NOTES: String? { let o = _accessor.offset(VTOFFSET.INSURANCE_LOSS_NOTES.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INSURANCE_LOSS_NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INSURANCE_LOSS_NOTES.v) }
-  public var CAPABILITY_LOSS_NOTES: String? { let o = _accessor.offset(VTOFFSET.CAPABILITY_LOSS_NOTES.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CAPABILITY_LOSS_NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CAPABILITY_LOSS_NOTES.v) }
-  public var INSURANCE_CARRIED_NOTES: String? { let o = _accessor.offset(VTOFFSET.INSURANCE_CARRIED_NOTES.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var INSURANCE_CARRIED_NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INSURANCE_CARRIED_NOTES.v) }
-  public var EQUIPMENT_CAUSING_LOSS_NOTES: String? { let o = _accessor.offset(VTOFFSET.EQUIPMENT_CAUSING_LOSS_NOTES.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EQUIPMENT_CAUSING_LOSS_NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EQUIPMENT_CAUSING_LOSS_NOTES.v) }
+  ///  Event category
+  public var CATEGORY: eventCategory { let o = _accessor.offset(VTOFFSET.CATEGORY.v); return o == 0 ? .anomaly : eventCategory(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .anomaly }
+  ///  Event result/outcome
+  public var RESULT: eventResult { let o = _accessor.offset(VTOFFSET.RESULT.v); return o == 0 ? .totalLoss : eventResult(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .totalLoss }
+  ///  Event type detail
   public var EVENT_TYPE: String? { let o = _accessor.offset(VTOFFSET.EVENT_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var EVENT_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EVENT_TYPE.v) }
-  public var EVENT_RESULT: String? { let o = _accessor.offset(VTOFFSET.EVENT_RESULT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EVENT_RESULTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EVENT_RESULT.v) }
+  ///  Operator organization identifier
+  public var OPERATOR_ORG_ID: String? { let o = _accessor.offset(VTOFFSET.OPERATOR_ORG_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OPERATOR_ORG_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OPERATOR_ORG_ID.v) }
+  ///  Owner organization identifier
+  public var OWNER_ORG_ID: String? { let o = _accessor.offset(VTOFFSET.OWNER_ORG_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OWNER_ORG_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OWNER_ORG_ID.v) }
+  ///  Lessee organization identifier
+  public var LESSEE_ORG_ID: String? { let o = _accessor.offset(VTOFFSET.LESSEE_ORG_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LESSEE_ORG_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LESSEE_ORG_ID.v) }
+  ///  Operated on behalf of organization
+  public var OPERATED_ON_BEHALF_OF_ORG_ID: String? { let o = _accessor.offset(VTOFFSET.OPERATED_ON_BEHALF_OF_ORG_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OPERATED_ON_BEHALF_OF_ORG_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OPERATED_ON_BEHALF_OF_ORG_ID.v) }
+  ///  GEO longitude at event time (degrees east)
+  public var GEO_POSITION: Double { let o = _accessor.offset(VTOFFSET.GEO_POSITION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Orbital plane slot
+  public var PLANE_SLOT: String? { let o = _accessor.offset(VTOFFSET.PLANE_SLOT.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PLANE_SLOTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PLANE_SLOT.v) }
+  ///  Orbital plane number
+  public var PLANE_NUMBER: String? { let o = _accessor.offset(VTOFFSET.PLANE_NUMBER.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PLANE_NUMBERSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PLANE_NUMBER.v) }
+  ///  Position status at event time
+  public var POSITION_STATUS: String? { let o = _accessor.offset(VTOFFSET.POSITION_STATUS.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var POSITION_STATUSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.POSITION_STATUS.v) }
+  ///  Time until expected recovery (ISO 8601)
+  public var UNTIL_TIME: String? { let o = _accessor.offset(VTOFFSET.UNTIL_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var UNTIL_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.UNTIL_TIME.v) }
+  ///  Official loss date (ISO 8601)
+  public var OFFICIAL_LOSS_DATE: String? { let o = _accessor.offset(VTOFFSET.OFFICIAL_LOSS_DATE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OFFICIAL_LOSS_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OFFICIAL_LOSS_DATE.v) }
+  ///  Financial loss amount (USD)
+  public var NET_AMOUNT: Double { let o = _accessor.offset(VTOFFSET.NET_AMOUNT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Root cause description
+  public var UNDERLYING_CAUSE: String? { let o = _accessor.offset(VTOFFSET.UNDERLYING_CAUSE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var UNDERLYING_CAUSESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.UNDERLYING_CAUSE.v) }
+  ///  Capability loss fraction (0-1)
+  public var CAPABILITY_LOSS: Double { let o = _accessor.offset(VTOFFSET.CAPABILITY_LOSS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Capacity loss fraction (0-1)
+  public var CAPACITY_LOSS: Double { let o = _accessor.offset(VTOFFSET.CAPACITY_LOSS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Insurance loss amount (USD)
+  public var INSURANCE_LOSS: Double { let o = _accessor.offset(VTOFFSET.INSURANCE_LOSS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Third-party insurance loss (USD)
+  public var THIRD_PARTY_INSURANCE_LOSS: Double { let o = _accessor.offset(VTOFFSET.THIRD_PARTY_INSURANCE_LOSS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Number of personnel injured
+  public var INJURED: UInt16 { let o = _accessor.offset(VTOFFSET.INJURED.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Number of fatalities
+  public var KILLED: UInt16 { let o = _accessor.offset(VTOFFSET.KILLED.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Spacecraft age at event (years)
+  public var AGE_AT_EVENT: Double { let o = _accessor.offset(VTOFFSET.AGE_AT_EVENT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Design life remaining at event (years)
+  public var LIFE_LOST: Double { let o = _accessor.offset(VTOFFSET.LIFE_LOST.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Flight phase achieved
+  public var ACHIEVED_FLIGHT_PHASE: String? { let o = _accessor.offset(VTOFFSET.ACHIEVED_FLIGHT_PHASE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ACHIEVED_FLIGHT_PHASESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ACHIEVED_FLIGHT_PHASE.v) }
+  ///  Flight phase at occurrence
+  public var OCCURRENCE_FLIGHT_PHASE: String? { let o = _accessor.offset(VTOFFSET.OCCURRENCE_FLIGHT_PHASE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OCCURRENCE_FLIGHT_PHASESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OCCURRENCE_FLIGHT_PHASE.v) }
+  ///  Stage at fault
+  public var STAGE_AT_FAULT: String? { let o = _accessor.offset(VTOFFSET.STAGE_AT_FAULT.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var STAGE_AT_FAULTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STAGE_AT_FAULT.v) }
+  ///  Equipment at fault
+  public var EQUIPMENT_AT_FAULT: String? { let o = _accessor.offset(VTOFFSET.EQUIPMENT_AT_FAULT.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EQUIPMENT_AT_FAULTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EQUIPMENT_AT_FAULT.v) }
+  ///  Equipment type at fault
+  public var EQUIPMENT_TYPE_AT_FAULT: String? { let o = _accessor.offset(VTOFFSET.EQUIPMENT_TYPE_AT_FAULT.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EQUIPMENT_TYPE_AT_FAULTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EQUIPMENT_TYPE_AT_FAULT.v) }
+  ///  Equipment part at fault
+  public var EQUIPMENT_PART_AT_FAULT: String? { let o = _accessor.offset(VTOFFSET.EQUIPMENT_PART_AT_FAULT.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EQUIPMENT_PART_AT_FAULTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EQUIPMENT_PART_AT_FAULT.v) }
+  ///  Consequential equipment failure
+  public var CONSEQUENTIAL_EQUIPMENT_FAILURE: String? { let o = _accessor.offset(VTOFFSET.CONSEQUENTIAL_EQUIPMENT_FAILURE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONSEQUENTIAL_EQUIPMENT_FAILURESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CONSEQUENTIAL_EQUIPMENT_FAILURE.v) }
+  ///  True if orbit is inclined
+  public var INCLINED: Bool { let o = _accessor.offset(VTOFFSET.INCLINED.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Event description
+  public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
+  ///  Additional remarks
+  public var REMARKS: String? { let o = _accessor.offset(VTOFFSET.REMARKS.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REMARKSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REMARKS.v) }
+  ///  Object status after event
   public var OBJECT_STATUS: String? { let o = _accessor.offset(VTOFFSET.OBJECT_STATUS.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OBJECT_STATUSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJECT_STATUS.v) }
+  ///  Satellite position after event
   public var SATELLITE_POSITION: String? { let o = _accessor.offset(VTOFFSET.SATELLITE_POSITION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SATELLITE_POSITIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SATELLITE_POSITION.v) }
+  ///  On-orbit reference
   public var ON_ORBIT: String? { let o = _accessor.offset(VTOFFSET.ON_ORBIT.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ON_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ON_ORBIT.v) }
-  public static func startOOE(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 47) }
+  public static func startOOE(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 44) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
+  public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }
+  public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VTOFFSET.ORIG_OBJECT_ID.p) }
   public static func add(DERIVED_FROM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DERIVED_FROM, at: VTOFFSET.DERIVED_FROM.p) }
   public static func add(DECLASSIFICATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DECLASSIFICATION_DATE, at: VTOFFSET.DECLASSIFICATION_DATE.p) }
   public static func add(DECLASSIFICATION_STRING: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DECLASSIFICATION_STRING, at: VTOFFSET.DECLASSIFICATION_STRING.p) }
-  public static func add(SAT_NO: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }
-  public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VTOFFSET.ORIG_OBJECT_ID.p) }
   public static func add(EVENT_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT_TIME, at: VTOFFSET.EVENT_TIME.p) }
   public static func add(EVENT_TIME_NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT_TIME_NOTES, at: VTOFFSET.EVENT_TIME_NOTES.p) }
+  public static func add(CATEGORY: eventCategory, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CATEGORY.rawValue, def: 0, at: VTOFFSET.CATEGORY.p) }
+  public static func add(RESULT: eventResult, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RESULT.rawValue, def: 0, at: VTOFFSET.RESULT.p) }
+  public static func add(EVENT_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT_TYPE, at: VTOFFSET.EVENT_TYPE.p) }
   public static func add(OPERATOR_ORG_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OPERATOR_ORG_ID, at: VTOFFSET.OPERATOR_ORG_ID.p) }
   public static func add(OWNER_ORG_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OWNER_ORG_ID, at: VTOFFSET.OWNER_ORG_ID.p) }
   public static func add(LESSEE_ORG_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LESSEE_ORG_ID, at: VTOFFSET.LESSEE_ORG_ID.p) }
@@ -175,10 +246,10 @@ public struct OOE: FlatBufferObject, Verifiable {
   public static func add(CAPACITY_LOSS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CAPACITY_LOSS, def: 0.0, at: VTOFFSET.CAPACITY_LOSS.p) }
   public static func add(INSURANCE_LOSS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INSURANCE_LOSS, def: 0.0, at: VTOFFSET.INSURANCE_LOSS.p) }
   public static func add(THIRD_PARTY_INSURANCE_LOSS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: THIRD_PARTY_INSURANCE_LOSS, def: 0.0, at: VTOFFSET.THIRD_PARTY_INSURANCE_LOSS.p) }
-  public static func add(INJURED: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INJURED, def: 0, at: VTOFFSET.INJURED.p) }
-  public static func add(KILLED: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KILLED, def: 0, at: VTOFFSET.KILLED.p) }
-  public static func add(LIFE_LOST: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LIFE_LOST, def: 0.0, at: VTOFFSET.LIFE_LOST.p) }
+  public static func add(INJURED: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INJURED, def: 0, at: VTOFFSET.INJURED.p) }
+  public static func add(KILLED: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: KILLED, def: 0, at: VTOFFSET.KILLED.p) }
   public static func add(AGE_AT_EVENT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AGE_AT_EVENT, def: 0.0, at: VTOFFSET.AGE_AT_EVENT.p) }
+  public static func add(LIFE_LOST: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LIFE_LOST, def: 0.0, at: VTOFFSET.LIFE_LOST.p) }
   public static func add(ACHIEVED_FLIGHT_PHASE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACHIEVED_FLIGHT_PHASE, at: VTOFFSET.ACHIEVED_FLIGHT_PHASE.p) }
   public static func add(OCCURRENCE_FLIGHT_PHASE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OCCURRENCE_FLIGHT_PHASE, at: VTOFFSET.OCCURRENCE_FLIGHT_PHASE.p) }
   public static func add(STAGE_AT_FAULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STAGE_AT_FAULT, at: VTOFFSET.STAGE_AT_FAULT.p) }
@@ -190,12 +261,6 @@ public struct OOE: FlatBufferObject, Verifiable {
    at: VTOFFSET.INCLINED.p) }
   public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
   public static func add(REMARKS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REMARKS, at: VTOFFSET.REMARKS.p) }
-  public static func add(INSURANCE_LOSS_NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INSURANCE_LOSS_NOTES, at: VTOFFSET.INSURANCE_LOSS_NOTES.p) }
-  public static func add(CAPABILITY_LOSS_NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAPABILITY_LOSS_NOTES, at: VTOFFSET.CAPABILITY_LOSS_NOTES.p) }
-  public static func add(INSURANCE_CARRIED_NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INSURANCE_CARRIED_NOTES, at: VTOFFSET.INSURANCE_CARRIED_NOTES.p) }
-  public static func add(EQUIPMENT_CAUSING_LOSS_NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EQUIPMENT_CAUSING_LOSS_NOTES, at: VTOFFSET.EQUIPMENT_CAUSING_LOSS_NOTES.p) }
-  public static func add(EVENT_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT_TYPE, at: VTOFFSET.EVENT_TYPE.p) }
-  public static func add(EVENT_RESULT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT_RESULT, at: VTOFFSET.EVENT_RESULT.p) }
   public static func add(OBJECT_STATUS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_STATUS, at: VTOFFSET.OBJECT_STATUS.p) }
   public static func add(SATELLITE_POSITION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SATELLITE_POSITION, at: VTOFFSET.SATELLITE_POSITION.p) }
   public static func add(ON_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ON_ORBIT, at: VTOFFSET.ON_ORBIT.p) }
@@ -203,13 +268,16 @@ public struct OOE: FlatBufferObject, Verifiable {
   public static func createOOE(
     _ fbb: inout FlatBufferBuilder,
     IDOffset ID: Offset = Offset(),
+    SAT_NO: UInt32 = 0,
+    ORIG_OBJECT_IDOffset ORIG_OBJECT_ID: Offset = Offset(),
     DERIVED_FROMOffset DERIVED_FROM: Offset = Offset(),
     DECLASSIFICATION_DATEOffset DECLASSIFICATION_DATE: Offset = Offset(),
     DECLASSIFICATION_STRINGOffset DECLASSIFICATION_STRING: Offset = Offset(),
-    SAT_NO: Int32 = 0,
-    ORIG_OBJECT_IDOffset ORIG_OBJECT_ID: Offset = Offset(),
     EVENT_TIMEOffset EVENT_TIME: Offset = Offset(),
     EVENT_TIME_NOTESOffset EVENT_TIME_NOTES: Offset = Offset(),
+    CATEGORY: eventCategory = .anomaly,
+    RESULT: eventResult = .totalLoss,
+    EVENT_TYPEOffset EVENT_TYPE: Offset = Offset(),
     OPERATOR_ORG_IDOffset OPERATOR_ORG_ID: Offset = Offset(),
     OWNER_ORG_IDOffset OWNER_ORG_ID: Offset = Offset(),
     LESSEE_ORG_IDOffset LESSEE_ORG_ID: Offset = Offset(),
@@ -226,10 +294,10 @@ public struct OOE: FlatBufferObject, Verifiable {
     CAPACITY_LOSS: Double = 0.0,
     INSURANCE_LOSS: Double = 0.0,
     THIRD_PARTY_INSURANCE_LOSS: Double = 0.0,
-    INJURED: Int32 = 0,
-    KILLED: Int32 = 0,
-    LIFE_LOST: Double = 0.0,
+    INJURED: UInt16 = 0,
+    KILLED: UInt16 = 0,
     AGE_AT_EVENT: Double = 0.0,
+    LIFE_LOST: Double = 0.0,
     ACHIEVED_FLIGHT_PHASEOffset ACHIEVED_FLIGHT_PHASE: Offset = Offset(),
     OCCURRENCE_FLIGHT_PHASEOffset OCCURRENCE_FLIGHT_PHASE: Offset = Offset(),
     STAGE_AT_FAULTOffset STAGE_AT_FAULT: Offset = Offset(),
@@ -240,25 +308,22 @@ public struct OOE: FlatBufferObject, Verifiable {
     INCLINED: Bool = false,
     DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
     REMARKSOffset REMARKS: Offset = Offset(),
-    INSURANCE_LOSS_NOTESOffset INSURANCE_LOSS_NOTES: Offset = Offset(),
-    CAPABILITY_LOSS_NOTESOffset CAPABILITY_LOSS_NOTES: Offset = Offset(),
-    INSURANCE_CARRIED_NOTESOffset INSURANCE_CARRIED_NOTES: Offset = Offset(),
-    EQUIPMENT_CAUSING_LOSS_NOTESOffset EQUIPMENT_CAUSING_LOSS_NOTES: Offset = Offset(),
-    EVENT_TYPEOffset EVENT_TYPE: Offset = Offset(),
-    EVENT_RESULTOffset EVENT_RESULT: Offset = Offset(),
     OBJECT_STATUSOffset OBJECT_STATUS: Offset = Offset(),
     SATELLITE_POSITIONOffset SATELLITE_POSITION: Offset = Offset(),
     ON_ORBITOffset ON_ORBIT: Offset = Offset()
   ) -> Offset {
     let __start = OOE.startOOE(&fbb)
     OOE.add(ID: ID, &fbb)
+    OOE.add(SAT_NO: SAT_NO, &fbb)
+    OOE.add(ORIG_OBJECT_ID: ORIG_OBJECT_ID, &fbb)
     OOE.add(DERIVED_FROM: DERIVED_FROM, &fbb)
     OOE.add(DECLASSIFICATION_DATE: DECLASSIFICATION_DATE, &fbb)
     OOE.add(DECLASSIFICATION_STRING: DECLASSIFICATION_STRING, &fbb)
-    OOE.add(SAT_NO: SAT_NO, &fbb)
-    OOE.add(ORIG_OBJECT_ID: ORIG_OBJECT_ID, &fbb)
     OOE.add(EVENT_TIME: EVENT_TIME, &fbb)
     OOE.add(EVENT_TIME_NOTES: EVENT_TIME_NOTES, &fbb)
+    OOE.add(CATEGORY: CATEGORY, &fbb)
+    OOE.add(RESULT: RESULT, &fbb)
+    OOE.add(EVENT_TYPE: EVENT_TYPE, &fbb)
     OOE.add(OPERATOR_ORG_ID: OPERATOR_ORG_ID, &fbb)
     OOE.add(OWNER_ORG_ID: OWNER_ORG_ID, &fbb)
     OOE.add(LESSEE_ORG_ID: LESSEE_ORG_ID, &fbb)
@@ -277,8 +342,8 @@ public struct OOE: FlatBufferObject, Verifiable {
     OOE.add(THIRD_PARTY_INSURANCE_LOSS: THIRD_PARTY_INSURANCE_LOSS, &fbb)
     OOE.add(INJURED: INJURED, &fbb)
     OOE.add(KILLED: KILLED, &fbb)
-    OOE.add(LIFE_LOST: LIFE_LOST, &fbb)
     OOE.add(AGE_AT_EVENT: AGE_AT_EVENT, &fbb)
+    OOE.add(LIFE_LOST: LIFE_LOST, &fbb)
     OOE.add(ACHIEVED_FLIGHT_PHASE: ACHIEVED_FLIGHT_PHASE, &fbb)
     OOE.add(OCCURRENCE_FLIGHT_PHASE: OCCURRENCE_FLIGHT_PHASE, &fbb)
     OOE.add(STAGE_AT_FAULT: STAGE_AT_FAULT, &fbb)
@@ -289,12 +354,6 @@ public struct OOE: FlatBufferObject, Verifiable {
     OOE.add(INCLINED: INCLINED, &fbb)
     OOE.add(DESCRIPTION: DESCRIPTION, &fbb)
     OOE.add(REMARKS: REMARKS, &fbb)
-    OOE.add(INSURANCE_LOSS_NOTES: INSURANCE_LOSS_NOTES, &fbb)
-    OOE.add(CAPABILITY_LOSS_NOTES: CAPABILITY_LOSS_NOTES, &fbb)
-    OOE.add(INSURANCE_CARRIED_NOTES: INSURANCE_CARRIED_NOTES, &fbb)
-    OOE.add(EQUIPMENT_CAUSING_LOSS_NOTES: EQUIPMENT_CAUSING_LOSS_NOTES, &fbb)
-    OOE.add(EVENT_TYPE: EVENT_TYPE, &fbb)
-    OOE.add(EVENT_RESULT: EVENT_RESULT, &fbb)
     OOE.add(OBJECT_STATUS: OBJECT_STATUS, &fbb)
     OOE.add(SATELLITE_POSITION: SATELLITE_POSITION, &fbb)
     OOE.add(ON_ORBIT: ON_ORBIT, &fbb)
@@ -304,13 +363,16 @@ public struct OOE: FlatBufferObject, Verifiable {
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.SAT_NO.p, fieldName: "SAT_NO", required: false, type: UInt32.self)
+    try _v.visit(field: VTOFFSET.ORIG_OBJECT_ID.p, fieldName: "ORIG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.DERIVED_FROM.p, fieldName: "DERIVED_FROM", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.DECLASSIFICATION_DATE.p, fieldName: "DECLASSIFICATION_DATE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.DECLASSIFICATION_STRING.p, fieldName: "DECLASSIFICATION_STRING", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SAT_NO.p, fieldName: "SAT_NO", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.ORIG_OBJECT_ID.p, fieldName: "ORIG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.EVENT_TIME.p, fieldName: "EVENT_TIME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.EVENT_TIME_NOTES.p, fieldName: "EVENT_TIME_NOTES", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.CATEGORY.p, fieldName: "CATEGORY", required: false, type: eventCategory.self)
+    try _v.visit(field: VTOFFSET.RESULT.p, fieldName: "RESULT", required: false, type: eventResult.self)
+    try _v.visit(field: VTOFFSET.EVENT_TYPE.p, fieldName: "EVENT_TYPE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.OPERATOR_ORG_ID.p, fieldName: "OPERATOR_ORG_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.OWNER_ORG_ID.p, fieldName: "OWNER_ORG_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.LESSEE_ORG_ID.p, fieldName: "LESSEE_ORG_ID", required: false, type: ForwardOffset<String>.self)
@@ -327,10 +389,10 @@ public struct OOE: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.CAPACITY_LOSS.p, fieldName: "CAPACITY_LOSS", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.INSURANCE_LOSS.p, fieldName: "INSURANCE_LOSS", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.THIRD_PARTY_INSURANCE_LOSS.p, fieldName: "THIRD_PARTY_INSURANCE_LOSS", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.INJURED.p, fieldName: "INJURED", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.KILLED.p, fieldName: "KILLED", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.LIFE_LOST.p, fieldName: "LIFE_LOST", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.INJURED.p, fieldName: "INJURED", required: false, type: UInt16.self)
+    try _v.visit(field: VTOFFSET.KILLED.p, fieldName: "KILLED", required: false, type: UInt16.self)
     try _v.visit(field: VTOFFSET.AGE_AT_EVENT.p, fieldName: "AGE_AT_EVENT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.LIFE_LOST.p, fieldName: "LIFE_LOST", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.ACHIEVED_FLIGHT_PHASE.p, fieldName: "ACHIEVED_FLIGHT_PHASE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.OCCURRENCE_FLIGHT_PHASE.p, fieldName: "OCCURRENCE_FLIGHT_PHASE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.STAGE_AT_FAULT.p, fieldName: "STAGE_AT_FAULT", required: false, type: ForwardOffset<String>.self)
@@ -341,12 +403,6 @@ public struct OOE: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.INCLINED.p, fieldName: "INCLINED", required: false, type: Bool.self)
     try _v.visit(field: VTOFFSET.DESCRIPTION.p, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.REMARKS.p, fieldName: "REMARKS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.INSURANCE_LOSS_NOTES.p, fieldName: "INSURANCE_LOSS_NOTES", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CAPABILITY_LOSS_NOTES.p, fieldName: "CAPABILITY_LOSS_NOTES", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.INSURANCE_CARRIED_NOTES.p, fieldName: "INSURANCE_CARRIED_NOTES", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EQUIPMENT_CAUSING_LOSS_NOTES.p, fieldName: "EQUIPMENT_CAUSING_LOSS_NOTES", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EVENT_TYPE.p, fieldName: "EVENT_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.EVENT_RESULT.p, fieldName: "EVENT_RESULT", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.OBJECT_STATUS.p, fieldName: "OBJECT_STATUS", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.SATELLITE_POSITION.p, fieldName: "SATELLITE_POSITION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ON_ORBIT.p, fieldName: "ON_ORBIT", required: false, type: ForwardOffset<String>.self)

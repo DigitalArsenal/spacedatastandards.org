@@ -29,6 +29,9 @@ class SOI : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Unique identifier
+     */
     val ID : String?
         get() {
             val o = __offset(4)
@@ -40,6 +43,9 @@ class SOI : Table() {
         }
     val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    /**
+     * Message creation date (ISO 8601)
+     */
     val MSG_CREATE_DATE : String?
         get() {
             val o = __offset(6)
@@ -51,6 +57,9 @@ class SOI : Table() {
         }
     val MSG_CREATE_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
     fun MSG_CREATE_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    /**
+     * Sensor identifier
+     */
     val ID_SENSOR : String?
         get() {
             val o = __offset(8)
@@ -62,6 +71,9 @@ class SOI : Table() {
         }
     val ID_SENSORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
     fun ID_SENSORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    /**
+     * Original sensor identifier
+     */
     val ORIG_SENSOR_ID : String?
         get() {
             val o = __offset(10)
@@ -73,6 +85,9 @@ class SOI : Table() {
         }
     val ORIG_SENSOR_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
     fun ORIG_SENSOR_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    /**
+     * Sensor observation set identifier
+     */
     val SENSOR_AS_ID : String?
         get() {
             val o = __offset(12)
@@ -84,11 +99,17 @@ class SOI : Table() {
         }
     val SENSOR_AS_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
     fun SENSOR_AS_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
-    val SAT_NO : Int
+    /**
+     * Satellite catalog number
+     */
+    val SAT_NO : UInt
         get() {
             val o = __offset(14)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
+    /**
+     * International designator
+     */
     val ORIG_OBJECT_ID : String?
         get() {
             val o = __offset(16)
@@ -100,100 +121,148 @@ class SOI : Table() {
         }
     val ORIG_OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
     fun ORIG_OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
-    val SENLAT : Double
+    /**
+     * Satellite common name
+     */
+    val SATELLITE_NAME : String?
         get() {
             val o = __offset(18)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
-    val SENLON : Double
+    val SATELLITE_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
+    fun SATELLITE_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    /**
+     * True if uncorrelated target
+     */
+    val UCT : Boolean
         get() {
             val o = __offset(20)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val SENALT : Double
+    /**
+     * Sensor geodetic latitude (degrees)
+     */
+    val SENLAT : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SENX : Double
+    /**
+     * Sensor geodetic longitude (degrees)
+     */
+    val SENLON : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SENY : Double
+    /**
+     * Sensor altitude (km)
+     */
+    val SENALT : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SENZ : Double
+    /**
+     * Sensor ECEF X position (km)
+     */
+    val SENX : Double
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SENVELX : Double
+    /**
+     * Sensor ECEF Y position (km)
+     */
+    val SENY : Double
         get() {
             val o = __offset(30)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SENVELY : Double
+    /**
+     * Sensor ECEF Z position (km)
+     */
+    val SENZ : Double
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SENVELZ : Double
+    /**
+     * Sensor ECEF X velocity (km/s)
+     */
+    val SENVELX : Double
         get() {
             val o = __offset(34)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val START_TIME : String?
+    /**
+     * Sensor ECEF Y velocity (km/s)
+     */
+    val SENVELY : Double
         get() {
             val o = __offset(36)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val START_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
-    fun START_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
-    val END_TIME : String?
+    /**
+     * Sensor ECEF Z velocity (km/s)
+     */
+    val SENVELZ : Double
         get() {
             val o = __offset(38)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val END_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 1)
-    fun END_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 1)
-    val NUM_OBS : Int
+    /**
+     * Sensor reference frame
+     */
+    val SEN_REFERENCE_FRAME : String?
         get() {
             val o = __offset(40)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
-        }
-    val TYPE : String?
-        get() {
-            val o = __offset(42)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(42, 1)
-    fun TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 42, 1)
-    val POLAR_ANGLE_START : Double
+    val SEN_REFERENCE_FRAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(40, 1)
+    fun SEN_REFERENCE_FRAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 40, 1)
+    /**
+     * Observation type
+     */
+    val OBS_TYPE : Byte
+        get() {
+            val o = __offset(42)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Collection mode
+     */
+    val COLLECTION_MODE : Byte
         get() {
             val o = __offset(44)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val POLAR_ANGLE_END : Double
+    /**
+     * Observation start time (ISO 8601)
+     */
+    val START_TIME : String?
         get() {
             val o = __offset(46)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
-    val REFERENCE_FRAME : String?
+    val START_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(46, 1)
+    fun START_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 46, 1)
+    /**
+     * Observation end time (ISO 8601)
+     */
+    val END_TIME : String?
         get() {
             val o = __offset(48)
             return if (o != 0) {
@@ -202,66 +271,123 @@ class SOI : Table() {
                 null
             }
         }
-    val REFERENCE_FRAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(48, 1)
-    fun REFERENCE_FRAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 48, 1)
-    val SEN_REFERENCE_FRAME : String?
+    val END_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(48, 1)
+    fun END_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 48, 1)
+    /**
+     * Number of observations in set
+     */
+    val NUM_OBS : UInt
         get() {
             val o = __offset(50)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Observation reference frame
+     */
+    val REFERENCE_FRAME : String?
+        get() {
+            val o = __offset(52)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val SEN_REFERENCE_FRAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(50, 1)
-    fun SEN_REFERENCE_FRAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 50, 1)
-    val LOS_DECLINATION_START : Double
-        get() {
-            val o = __offset(52)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val LOS_DECLINATION_END : Double
+    val REFERENCE_FRAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(52, 1)
+    fun REFERENCE_FRAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 52, 1)
+    /**
+     * Polar angle at start (degrees)
+     */
+    val POLAR_ANGLE_START : Double
         get() {
             val o = __offset(54)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val POINTING_ANGLE_AZ_START : Double
+    /**
+     * Polar angle at end (degrees)
+     */
+    val POLAR_ANGLE_END : Double
         get() {
             val o = __offset(56)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val POINTING_ANGLE_AZ_END : Double
+    /**
+     * Line-of-sight declination at start (degrees)
+     */
+    val LOS_DECLINATION_START : Double
         get() {
             val o = __offset(58)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val POINTING_ANGLE_EL_START : Double
+    /**
+     * Line-of-sight declination at end (degrees)
+     */
+    val LOS_DECLINATION_END : Double
         get() {
             val o = __offset(60)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val POINTING_ANGLE_EL_END : Double
+    /**
+     * Pointing azimuth at start (degrees)
+     */
+    val POINTING_ANGLE_AZ_START : Double
         get() {
             val o = __offset(62)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val PIXEL_ARRAY_WIDTH : Int
+    /**
+     * Pointing azimuth at end (degrees)
+     */
+    val POINTING_ANGLE_AZ_END : Double
         get() {
             val o = __offset(64)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val PIXEL_ARRAY_HEIGHT : Int
+    /**
+     * Pointing elevation at start (degrees)
+     */
+    val POINTING_ANGLE_EL_START : Double
         get() {
             val o = __offset(66)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val NUM_SPECTRAL_FILTERS : Int
+    /**
+     * Pointing elevation at end (degrees)
+     */
+    val POINTING_ANGLE_EL_END : Double
         get() {
             val o = __offset(68)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Focal plane array width (pixels)
+     */
+    val PIXEL_ARRAY_WIDTH : UShort
+        get() {
+            val o = __offset(70)
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
+        }
+    /**
+     * Focal plane array height (pixels)
+     */
+    val PIXEL_ARRAY_HEIGHT : UShort
+        get() {
+            val o = __offset(72)
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
+        }
+    /**
+     * Number of spectral filters used
+     */
+    val NUM_SPECTRAL_FILTERS : UByte
+        get() {
+            val o = __offset(74)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * Spectral filter identifiers
+     */
     fun SPECTRAL_FILTERS(j: Int) : String? {
-        val o = __offset(70)
+        val o = __offset(76)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -270,72 +396,60 @@ class SOI : Table() {
     }
     val SPECTRAL_FILTERSLength : Int
         get() {
-            val o = __offset(70); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(76); return if (o != 0) __vector_len(o) else 0
         }
-    val COLLECTION_MODE : String?
-        get() {
-            val o = __offset(72)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val COLLECTION_MODEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(72, 1)
-    fun COLLECTION_MODEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 72, 1)
+    /**
+     * Detector gain setting
+     */
     val GAIN : Double
         get() {
-            val o = __offset(74)
+            val o = __offset(78)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val BINNING_HORIZ : Int
-        get() {
-            val o = __offset(76)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
-        }
-    val BINNING_VERT : Int
-        get() {
-            val o = __offset(78)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
-        }
-    val SOLAR_MAG : Double
+    /**
+     * Horizontal binning factor
+     */
+    val BINNING_HORIZ : UByte
         get() {
             val o = __offset(80)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val PIXEL_MIN : Int
+    /**
+     * Vertical binning factor
+     */
+    val BINNING_VERT : UByte
         get() {
             val o = __offset(82)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val PIXEL_MAX : Int
+    /**
+     * Solar visual magnitude
+     */
+    val SOLAR_MAG : Double
         get() {
             val o = __offset(84)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SOFTWARE_VERSION : String?
+    /**
+     * Minimum pixel value in observation
+     */
+    val PIXEL_MIN : Int
         get() {
             val o = __offset(86)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
-    val SOFTWARE_VERSIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(86, 1)
-    fun SOFTWARE_VERSIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 86, 1)
-    val SATELLITE_NAME : String?
+    /**
+     * Maximum pixel value in observation
+     */
+    val PIXEL_MAX : Int
         get() {
             val o = __offset(88)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.getInt(o + bb_pos) else 0
         }
-    val SATELLITE_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(88, 1)
-    fun SATELLITE_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 88, 1)
-    val STAR_CAT_NAME : String?
+    /**
+     * Processing software version
+     */
+    val SOFTWARE_VERSION : String?
         get() {
             val o = __offset(90)
             return if (o != 0) {
@@ -344,30 +458,42 @@ class SOI : Table() {
                 null
             }
         }
-    val STAR_CAT_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(90, 1)
-    fun STAR_CAT_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 90, 1)
-    val CORR_QUALITY : Double
+    val SOFTWARE_VERSIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(90, 1)
+    fun SOFTWARE_VERSIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 90, 1)
+    /**
+     * Star catalog used for calibration
+     */
+    val STAR_CAT_NAME : String?
         get() {
             val o = __offset(92)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val UCT : Boolean
-        get() {
-            val o = __offset(94)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
-        }
-    val VALID_CALIBRATIONS : String?
-        get() {
-            val o = __offset(96)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val VALID_CALIBRATIONSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(96, 1)
-    fun VALID_CALIBRATIONSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 96, 1)
-    val CALIBRATION_TYPE : String?
+    val STAR_CAT_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(92, 1)
+    fun STAR_CAT_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 92, 1)
+    /**
+     * Correlation quality score
+     */
+    val CORR_QUALITY : Double
+        get() {
+            val o = __offset(94)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Calibration type
+     */
+    val CALIBRATION_TYPE : Byte
+        get() {
+            val o = __offset(96)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Valid calibration identifiers
+     */
+    val VALID_CALIBRATIONS : String?
         get() {
             val o = __offset(98)
             return if (o != 0) {
@@ -376,33 +502,51 @@ class SOI : Table() {
                 null
             }
         }
-    val CALIBRATION_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(98, 1)
-    fun CALIBRATION_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 98, 1)
+    val VALID_CALIBRATIONSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(98, 1)
+    fun VALID_CALIBRATIONSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 98, 1)
+    /**
+     * Percent saturation threshold
+     */
     val PERCENT_SAT_THRESHOLD : Double
         get() {
             val o = __offset(100)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * True if change detected from baseline
+     */
     val CHANGE_DETECTED : Boolean
         get() {
             val o = __offset(102)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * True if periodicity change detected
+     */
     val PERIODICITY_CHANGE_DETECTED : Boolean
         get() {
             val o = __offset(104)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * True if brightness variance change detected
+     */
     val BRIGHTNESS_VARIANCE_CHANGE_DETECTED : Boolean
         get() {
             val o = __offset(106)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * True if solar phase angle brightness change detected
+     */
     val SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED : Boolean
         get() {
             val o = __offset(108)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * Change confidence assessment
+     */
     val CHANGE_CONF : String?
         get() {
             val o = __offset(110)
@@ -414,6 +558,9 @@ class SOI : Table() {
         }
     val CHANGE_CONFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(110, 1)
     fun CHANGE_CONFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 110, 1)
+    /**
+     * Collection density confidence
+     */
     val COLLECTION_DENSITY_CONF : String?
         get() {
             val o = __offset(112)
@@ -425,6 +572,9 @@ class SOI : Table() {
         }
     val COLLECTION_DENSITY_CONFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(112, 1)
     fun COLLECTION_DENSITY_CONFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 112, 1)
+    /**
+     * Periodicity sampling confidence
+     */
     val PERIODICITY_SAMPLING_CONF : String?
         get() {
             val o = __offset(114)
@@ -436,6 +586,9 @@ class SOI : Table() {
         }
     val PERIODICITY_SAMPLING_CONFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(114, 1)
     fun PERIODICITY_SAMPLING_CONFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 114, 1)
+    /**
+     * Periodicity detection confidence
+     */
     val PERIODICITY_DETECTION_CONF : String?
         get() {
             val o = __offset(116)
@@ -447,6 +600,9 @@ class SOI : Table() {
         }
     val PERIODICITY_DETECTION_CONFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(116, 1)
     fun PERIODICITY_DETECTION_CONFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 116, 1)
+    /**
+     * Collection identifier
+     */
     val COLLECTION_ID : String?
         get() {
             val o = __offset(118)
@@ -458,6 +614,9 @@ class SOI : Table() {
         }
     val COLLECTION_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(118, 1)
     fun COLLECTION_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 118, 1)
+    /**
+     * Calibration record references
+     */
     fun CALIBRATIONS(j: Int) : String? {
         val o = __offset(120)
         return if (o != 0) {
@@ -470,6 +629,9 @@ class SOI : Table() {
         get() {
             val o = __offset(120); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Associated tags
+     */
     fun TAGS(j: Int) : String? {
         val o = __offset(122)
         return if (o != 0) {
@@ -482,6 +644,9 @@ class SOI : Table() {
         get() {
             val o = __offset(122); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Transaction identifier
+     */
     val TRANSACTION_ID : String?
         get() {
             val o = __offset(124)
@@ -493,6 +658,9 @@ class SOI : Table() {
         }
     val TRANSACTION_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(124, 1)
     fun TRANSACTION_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 124, 1)
+    /**
+     * Optical SOI observation references
+     */
     fun OPTICAL_SOIOBSERVATION_LIST(j: Int) : String? {
         val o = __offset(126)
         return if (o != 0) {
@@ -505,6 +673,9 @@ class SOI : Table() {
         get() {
             val o = __offset(126); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Radar SOI observation references
+     */
     fun RADAR_SOIOBSERVATION_LIST(j: Int) : String? {
         val o = __offset(128)
         return if (o != 0) {
@@ -525,7 +696,7 @@ class SOI : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SOIBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SOI")
-        fun createSOI(builder: FlatBufferBuilder, IDOffset: Int, MSG_CREATE_DATEOffset: Int, ID_SENSOROffset: Int, ORIG_SENSOR_IDOffset: Int, SENSOR_AS_IDOffset: Int, SAT_NO: Int, ORIG_OBJECT_IDOffset: Int, SENLAT: Double, SENLON: Double, SENALT: Double, SENX: Double, SENY: Double, SENZ: Double, SENVELX: Double, SENVELY: Double, SENVELZ: Double, START_TIMEOffset: Int, END_TIMEOffset: Int, NUM_OBS: Int, TYPEOffset: Int, POLAR_ANGLE_START: Double, POLAR_ANGLE_END: Double, REFERENCE_FRAMEOffset: Int, SEN_REFERENCE_FRAMEOffset: Int, LOS_DECLINATION_START: Double, LOS_DECLINATION_END: Double, POINTING_ANGLE_AZ_START: Double, POINTING_ANGLE_AZ_END: Double, POINTING_ANGLE_EL_START: Double, POINTING_ANGLE_EL_END: Double, PIXEL_ARRAY_WIDTH: Int, PIXEL_ARRAY_HEIGHT: Int, NUM_SPECTRAL_FILTERS: Int, SPECTRAL_FILTERSOffset: Int, COLLECTION_MODEOffset: Int, GAIN: Double, BINNING_HORIZ: Int, BINNING_VERT: Int, SOLAR_MAG: Double, PIXEL_MIN: Int, PIXEL_MAX: Int, SOFTWARE_VERSIONOffset: Int, SATELLITE_NAMEOffset: Int, STAR_CAT_NAMEOffset: Int, CORR_QUALITY: Double, UCT: Boolean, VALID_CALIBRATIONSOffset: Int, CALIBRATION_TYPEOffset: Int, PERCENT_SAT_THRESHOLD: Double, CHANGE_DETECTED: Boolean, PERIODICITY_CHANGE_DETECTED: Boolean, BRIGHTNESS_VARIANCE_CHANGE_DETECTED: Boolean, SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED: Boolean, CHANGE_CONFOffset: Int, COLLECTION_DENSITY_CONFOffset: Int, PERIODICITY_SAMPLING_CONFOffset: Int, PERIODICITY_DETECTION_CONFOffset: Int, COLLECTION_IDOffset: Int, CALIBRATIONSOffset: Int, TAGSOffset: Int, TRANSACTION_IDOffset: Int, OPTICAL_SOIOBSERVATION_LISTOffset: Int, RADAR_SOIOBSERVATION_LISTOffset: Int) : Int {
+        fun createSOI(builder: FlatBufferBuilder, IDOffset: Int, MSG_CREATE_DATEOffset: Int, ID_SENSOROffset: Int, ORIG_SENSOR_IDOffset: Int, SENSOR_AS_IDOffset: Int, SAT_NO: UInt, ORIG_OBJECT_IDOffset: Int, SATELLITE_NAMEOffset: Int, UCT: Boolean, SENLAT: Double, SENLON: Double, SENALT: Double, SENX: Double, SENY: Double, SENZ: Double, SENVELX: Double, SENVELY: Double, SENVELZ: Double, SEN_REFERENCE_FRAMEOffset: Int, OBS_TYPE: Byte, COLLECTION_MODE: Byte, START_TIMEOffset: Int, END_TIMEOffset: Int, NUM_OBS: UInt, REFERENCE_FRAMEOffset: Int, POLAR_ANGLE_START: Double, POLAR_ANGLE_END: Double, LOS_DECLINATION_START: Double, LOS_DECLINATION_END: Double, POINTING_ANGLE_AZ_START: Double, POINTING_ANGLE_AZ_END: Double, POINTING_ANGLE_EL_START: Double, POINTING_ANGLE_EL_END: Double, PIXEL_ARRAY_WIDTH: UShort, PIXEL_ARRAY_HEIGHT: UShort, NUM_SPECTRAL_FILTERS: UByte, SPECTRAL_FILTERSOffset: Int, GAIN: Double, BINNING_HORIZ: UByte, BINNING_VERT: UByte, SOLAR_MAG: Double, PIXEL_MIN: Int, PIXEL_MAX: Int, SOFTWARE_VERSIONOffset: Int, STAR_CAT_NAMEOffset: Int, CORR_QUALITY: Double, CALIBRATION_TYPE: Byte, VALID_CALIBRATIONSOffset: Int, PERCENT_SAT_THRESHOLD: Double, CHANGE_DETECTED: Boolean, PERIODICITY_CHANGE_DETECTED: Boolean, BRIGHTNESS_VARIANCE_CHANGE_DETECTED: Boolean, SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED: Boolean, CHANGE_CONFOffset: Int, COLLECTION_DENSITY_CONFOffset: Int, PERIODICITY_SAMPLING_CONFOffset: Int, PERIODICITY_DETECTION_CONFOffset: Int, COLLECTION_IDOffset: Int, CALIBRATIONSOffset: Int, TAGSOffset: Int, TRANSACTION_IDOffset: Int, OPTICAL_SOIOBSERVATION_LISTOffset: Int, RADAR_SOIOBSERVATION_LISTOffset: Int) : Int {
             builder.startTable(63)
             addPERCENT_SAT_THRESHOLD(builder, PERCENT_SAT_THRESHOLD)
             addCORR_QUALITY(builder, CORR_QUALITY)
@@ -558,26 +729,18 @@ class SOI : Table() {
             addPERIODICITY_SAMPLING_CONF(builder, PERIODICITY_SAMPLING_CONFOffset)
             addCOLLECTION_DENSITY_CONF(builder, COLLECTION_DENSITY_CONFOffset)
             addCHANGE_CONF(builder, CHANGE_CONFOffset)
-            addCALIBRATION_TYPE(builder, CALIBRATION_TYPEOffset)
             addVALID_CALIBRATIONS(builder, VALID_CALIBRATIONSOffset)
             addSTAR_CAT_NAME(builder, STAR_CAT_NAMEOffset)
-            addSATELLITE_NAME(builder, SATELLITE_NAMEOffset)
             addSOFTWARE_VERSION(builder, SOFTWARE_VERSIONOffset)
             addPIXEL_MAX(builder, PIXEL_MAX)
             addPIXEL_MIN(builder, PIXEL_MIN)
-            addBINNING_VERT(builder, BINNING_VERT)
-            addBINNING_HORIZ(builder, BINNING_HORIZ)
-            addCOLLECTION_MODE(builder, COLLECTION_MODEOffset)
             addSPECTRAL_FILTERS(builder, SPECTRAL_FILTERSOffset)
-            addNUM_SPECTRAL_FILTERS(builder, NUM_SPECTRAL_FILTERS)
-            addPIXEL_ARRAY_HEIGHT(builder, PIXEL_ARRAY_HEIGHT)
-            addPIXEL_ARRAY_WIDTH(builder, PIXEL_ARRAY_WIDTH)
-            addSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAMEOffset)
             addREFERENCE_FRAME(builder, REFERENCE_FRAMEOffset)
-            addTYPE(builder, TYPEOffset)
             addNUM_OBS(builder, NUM_OBS)
             addEND_TIME(builder, END_TIMEOffset)
             addSTART_TIME(builder, START_TIMEOffset)
+            addSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAMEOffset)
+            addSATELLITE_NAME(builder, SATELLITE_NAMEOffset)
             addORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset)
             addSAT_NO(builder, SAT_NO)
             addSENSOR_AS_ID(builder, SENSOR_AS_IDOffset)
@@ -585,10 +748,18 @@ class SOI : Table() {
             addID_SENSOR(builder, ID_SENSOROffset)
             addMSG_CREATE_DATE(builder, MSG_CREATE_DATEOffset)
             addID(builder, IDOffset)
+            addPIXEL_ARRAY_HEIGHT(builder, PIXEL_ARRAY_HEIGHT)
+            addPIXEL_ARRAY_WIDTH(builder, PIXEL_ARRAY_WIDTH)
             addSOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED(builder, SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED)
             addBRIGHTNESS_VARIANCE_CHANGE_DETECTED(builder, BRIGHTNESS_VARIANCE_CHANGE_DETECTED)
             addPERIODICITY_CHANGE_DETECTED(builder, PERIODICITY_CHANGE_DETECTED)
             addCHANGE_DETECTED(builder, CHANGE_DETECTED)
+            addCALIBRATION_TYPE(builder, CALIBRATION_TYPE)
+            addBINNING_VERT(builder, BINNING_VERT)
+            addBINNING_HORIZ(builder, BINNING_HORIZ)
+            addNUM_SPECTRAL_FILTERS(builder, NUM_SPECTRAL_FILTERS)
+            addCOLLECTION_MODE(builder, COLLECTION_MODE)
+            addOBS_TYPE(builder, OBS_TYPE)
             addUCT(builder, UCT)
             return endSOI(builder)
         }
@@ -598,35 +769,38 @@ class SOI : Table() {
         fun addID_SENSOR(builder: FlatBufferBuilder, ID_SENSOR: Int) = builder.addOffset(2, ID_SENSOR, 0)
         fun addORIG_SENSOR_ID(builder: FlatBufferBuilder, ORIG_SENSOR_ID: Int) = builder.addOffset(3, ORIG_SENSOR_ID, 0)
         fun addSENSOR_AS_ID(builder: FlatBufferBuilder, SENSOR_AS_ID: Int) = builder.addOffset(4, SENSOR_AS_ID, 0)
-        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: Int) = builder.addInt(5, SAT_NO, 0)
+        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: UInt) = builder.addInt(5, SAT_NO.toInt(), 0)
         fun addORIG_OBJECT_ID(builder: FlatBufferBuilder, ORIG_OBJECT_ID: Int) = builder.addOffset(6, ORIG_OBJECT_ID, 0)
-        fun addSENLAT(builder: FlatBufferBuilder, SENLAT: Double) = builder.addDouble(7, SENLAT, 0.0)
-        fun addSENLON(builder: FlatBufferBuilder, SENLON: Double) = builder.addDouble(8, SENLON, 0.0)
-        fun addSENALT(builder: FlatBufferBuilder, SENALT: Double) = builder.addDouble(9, SENALT, 0.0)
-        fun addSENX(builder: FlatBufferBuilder, SENX: Double) = builder.addDouble(10, SENX, 0.0)
-        fun addSENY(builder: FlatBufferBuilder, SENY: Double) = builder.addDouble(11, SENY, 0.0)
-        fun addSENZ(builder: FlatBufferBuilder, SENZ: Double) = builder.addDouble(12, SENZ, 0.0)
-        fun addSENVELX(builder: FlatBufferBuilder, SENVELX: Double) = builder.addDouble(13, SENVELX, 0.0)
-        fun addSENVELY(builder: FlatBufferBuilder, SENVELY: Double) = builder.addDouble(14, SENVELY, 0.0)
-        fun addSENVELZ(builder: FlatBufferBuilder, SENVELZ: Double) = builder.addDouble(15, SENVELZ, 0.0)
-        fun addSTART_TIME(builder: FlatBufferBuilder, START_TIME: Int) = builder.addOffset(16, START_TIME, 0)
-        fun addEND_TIME(builder: FlatBufferBuilder, END_TIME: Int) = builder.addOffset(17, END_TIME, 0)
-        fun addNUM_OBS(builder: FlatBufferBuilder, NUM_OBS: Int) = builder.addInt(18, NUM_OBS, 0)
-        fun addTYPE(builder: FlatBufferBuilder, TYPE: Int) = builder.addOffset(19, TYPE, 0)
-        fun addPOLAR_ANGLE_START(builder: FlatBufferBuilder, POLAR_ANGLE_START: Double) = builder.addDouble(20, POLAR_ANGLE_START, 0.0)
-        fun addPOLAR_ANGLE_END(builder: FlatBufferBuilder, POLAR_ANGLE_END: Double) = builder.addDouble(21, POLAR_ANGLE_END, 0.0)
-        fun addREFERENCE_FRAME(builder: FlatBufferBuilder, REFERENCE_FRAME: Int) = builder.addOffset(22, REFERENCE_FRAME, 0)
-        fun addSEN_REFERENCE_FRAME(builder: FlatBufferBuilder, SEN_REFERENCE_FRAME: Int) = builder.addOffset(23, SEN_REFERENCE_FRAME, 0)
-        fun addLOS_DECLINATION_START(builder: FlatBufferBuilder, LOS_DECLINATION_START: Double) = builder.addDouble(24, LOS_DECLINATION_START, 0.0)
-        fun addLOS_DECLINATION_END(builder: FlatBufferBuilder, LOS_DECLINATION_END: Double) = builder.addDouble(25, LOS_DECLINATION_END, 0.0)
-        fun addPOINTING_ANGLE_AZ_START(builder: FlatBufferBuilder, POINTING_ANGLE_AZ_START: Double) = builder.addDouble(26, POINTING_ANGLE_AZ_START, 0.0)
-        fun addPOINTING_ANGLE_AZ_END(builder: FlatBufferBuilder, POINTING_ANGLE_AZ_END: Double) = builder.addDouble(27, POINTING_ANGLE_AZ_END, 0.0)
-        fun addPOINTING_ANGLE_EL_START(builder: FlatBufferBuilder, POINTING_ANGLE_EL_START: Double) = builder.addDouble(28, POINTING_ANGLE_EL_START, 0.0)
-        fun addPOINTING_ANGLE_EL_END(builder: FlatBufferBuilder, POINTING_ANGLE_EL_END: Double) = builder.addDouble(29, POINTING_ANGLE_EL_END, 0.0)
-        fun addPIXEL_ARRAY_WIDTH(builder: FlatBufferBuilder, PIXEL_ARRAY_WIDTH: Int) = builder.addInt(30, PIXEL_ARRAY_WIDTH, 0)
-        fun addPIXEL_ARRAY_HEIGHT(builder: FlatBufferBuilder, PIXEL_ARRAY_HEIGHT: Int) = builder.addInt(31, PIXEL_ARRAY_HEIGHT, 0)
-        fun addNUM_SPECTRAL_FILTERS(builder: FlatBufferBuilder, NUM_SPECTRAL_FILTERS: Int) = builder.addInt(32, NUM_SPECTRAL_FILTERS, 0)
-        fun addSPECTRAL_FILTERS(builder: FlatBufferBuilder, SPECTRAL_FILTERS: Int) = builder.addOffset(33, SPECTRAL_FILTERS, 0)
+        fun addSATELLITE_NAME(builder: FlatBufferBuilder, SATELLITE_NAME: Int) = builder.addOffset(7, SATELLITE_NAME, 0)
+        fun addUCT(builder: FlatBufferBuilder, UCT: Boolean) = builder.addBoolean(8, UCT, false)
+        fun addSENLAT(builder: FlatBufferBuilder, SENLAT: Double) = builder.addDouble(9, SENLAT, 0.0)
+        fun addSENLON(builder: FlatBufferBuilder, SENLON: Double) = builder.addDouble(10, SENLON, 0.0)
+        fun addSENALT(builder: FlatBufferBuilder, SENALT: Double) = builder.addDouble(11, SENALT, 0.0)
+        fun addSENX(builder: FlatBufferBuilder, SENX: Double) = builder.addDouble(12, SENX, 0.0)
+        fun addSENY(builder: FlatBufferBuilder, SENY: Double) = builder.addDouble(13, SENY, 0.0)
+        fun addSENZ(builder: FlatBufferBuilder, SENZ: Double) = builder.addDouble(14, SENZ, 0.0)
+        fun addSENVELX(builder: FlatBufferBuilder, SENVELX: Double) = builder.addDouble(15, SENVELX, 0.0)
+        fun addSENVELY(builder: FlatBufferBuilder, SENVELY: Double) = builder.addDouble(16, SENVELY, 0.0)
+        fun addSENVELZ(builder: FlatBufferBuilder, SENVELZ: Double) = builder.addDouble(17, SENVELZ, 0.0)
+        fun addSEN_REFERENCE_FRAME(builder: FlatBufferBuilder, SEN_REFERENCE_FRAME: Int) = builder.addOffset(18, SEN_REFERENCE_FRAME, 0)
+        fun addOBS_TYPE(builder: FlatBufferBuilder, OBS_TYPE: Byte) = builder.addByte(19, OBS_TYPE, 0)
+        fun addCOLLECTION_MODE(builder: FlatBufferBuilder, COLLECTION_MODE: Byte) = builder.addByte(20, COLLECTION_MODE, 0)
+        fun addSTART_TIME(builder: FlatBufferBuilder, START_TIME: Int) = builder.addOffset(21, START_TIME, 0)
+        fun addEND_TIME(builder: FlatBufferBuilder, END_TIME: Int) = builder.addOffset(22, END_TIME, 0)
+        fun addNUM_OBS(builder: FlatBufferBuilder, NUM_OBS: UInt) = builder.addInt(23, NUM_OBS.toInt(), 0)
+        fun addREFERENCE_FRAME(builder: FlatBufferBuilder, REFERENCE_FRAME: Int) = builder.addOffset(24, REFERENCE_FRAME, 0)
+        fun addPOLAR_ANGLE_START(builder: FlatBufferBuilder, POLAR_ANGLE_START: Double) = builder.addDouble(25, POLAR_ANGLE_START, 0.0)
+        fun addPOLAR_ANGLE_END(builder: FlatBufferBuilder, POLAR_ANGLE_END: Double) = builder.addDouble(26, POLAR_ANGLE_END, 0.0)
+        fun addLOS_DECLINATION_START(builder: FlatBufferBuilder, LOS_DECLINATION_START: Double) = builder.addDouble(27, LOS_DECLINATION_START, 0.0)
+        fun addLOS_DECLINATION_END(builder: FlatBufferBuilder, LOS_DECLINATION_END: Double) = builder.addDouble(28, LOS_DECLINATION_END, 0.0)
+        fun addPOINTING_ANGLE_AZ_START(builder: FlatBufferBuilder, POINTING_ANGLE_AZ_START: Double) = builder.addDouble(29, POINTING_ANGLE_AZ_START, 0.0)
+        fun addPOINTING_ANGLE_AZ_END(builder: FlatBufferBuilder, POINTING_ANGLE_AZ_END: Double) = builder.addDouble(30, POINTING_ANGLE_AZ_END, 0.0)
+        fun addPOINTING_ANGLE_EL_START(builder: FlatBufferBuilder, POINTING_ANGLE_EL_START: Double) = builder.addDouble(31, POINTING_ANGLE_EL_START, 0.0)
+        fun addPOINTING_ANGLE_EL_END(builder: FlatBufferBuilder, POINTING_ANGLE_EL_END: Double) = builder.addDouble(32, POINTING_ANGLE_EL_END, 0.0)
+        fun addPIXEL_ARRAY_WIDTH(builder: FlatBufferBuilder, PIXEL_ARRAY_WIDTH: UShort) = builder.addShort(33, PIXEL_ARRAY_WIDTH.toShort(), 0)
+        fun addPIXEL_ARRAY_HEIGHT(builder: FlatBufferBuilder, PIXEL_ARRAY_HEIGHT: UShort) = builder.addShort(34, PIXEL_ARRAY_HEIGHT.toShort(), 0)
+        fun addNUM_SPECTRAL_FILTERS(builder: FlatBufferBuilder, NUM_SPECTRAL_FILTERS: UByte) = builder.addByte(35, NUM_SPECTRAL_FILTERS.toByte(), 0)
+        fun addSPECTRAL_FILTERS(builder: FlatBufferBuilder, SPECTRAL_FILTERS: Int) = builder.addOffset(36, SPECTRAL_FILTERS, 0)
         fun createSpectralFiltersVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -635,20 +809,17 @@ class SOI : Table() {
             return builder.endVector()
         }
         fun startSpectralFiltersVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addCOLLECTION_MODE(builder: FlatBufferBuilder, COLLECTION_MODE: Int) = builder.addOffset(34, COLLECTION_MODE, 0)
-        fun addGAIN(builder: FlatBufferBuilder, GAIN: Double) = builder.addDouble(35, GAIN, 0.0)
-        fun addBINNING_HORIZ(builder: FlatBufferBuilder, BINNING_HORIZ: Int) = builder.addInt(36, BINNING_HORIZ, 0)
-        fun addBINNING_VERT(builder: FlatBufferBuilder, BINNING_VERT: Int) = builder.addInt(37, BINNING_VERT, 0)
-        fun addSOLAR_MAG(builder: FlatBufferBuilder, SOLAR_MAG: Double) = builder.addDouble(38, SOLAR_MAG, 0.0)
-        fun addPIXEL_MIN(builder: FlatBufferBuilder, PIXEL_MIN: Int) = builder.addInt(39, PIXEL_MIN, 0)
-        fun addPIXEL_MAX(builder: FlatBufferBuilder, PIXEL_MAX: Int) = builder.addInt(40, PIXEL_MAX, 0)
-        fun addSOFTWARE_VERSION(builder: FlatBufferBuilder, SOFTWARE_VERSION: Int) = builder.addOffset(41, SOFTWARE_VERSION, 0)
-        fun addSATELLITE_NAME(builder: FlatBufferBuilder, SATELLITE_NAME: Int) = builder.addOffset(42, SATELLITE_NAME, 0)
-        fun addSTAR_CAT_NAME(builder: FlatBufferBuilder, STAR_CAT_NAME: Int) = builder.addOffset(43, STAR_CAT_NAME, 0)
-        fun addCORR_QUALITY(builder: FlatBufferBuilder, CORR_QUALITY: Double) = builder.addDouble(44, CORR_QUALITY, 0.0)
-        fun addUCT(builder: FlatBufferBuilder, UCT: Boolean) = builder.addBoolean(45, UCT, false)
-        fun addVALID_CALIBRATIONS(builder: FlatBufferBuilder, VALID_CALIBRATIONS: Int) = builder.addOffset(46, VALID_CALIBRATIONS, 0)
-        fun addCALIBRATION_TYPE(builder: FlatBufferBuilder, CALIBRATION_TYPE: Int) = builder.addOffset(47, CALIBRATION_TYPE, 0)
+        fun addGAIN(builder: FlatBufferBuilder, GAIN: Double) = builder.addDouble(37, GAIN, 0.0)
+        fun addBINNING_HORIZ(builder: FlatBufferBuilder, BINNING_HORIZ: UByte) = builder.addByte(38, BINNING_HORIZ.toByte(), 0)
+        fun addBINNING_VERT(builder: FlatBufferBuilder, BINNING_VERT: UByte) = builder.addByte(39, BINNING_VERT.toByte(), 0)
+        fun addSOLAR_MAG(builder: FlatBufferBuilder, SOLAR_MAG: Double) = builder.addDouble(40, SOLAR_MAG, 0.0)
+        fun addPIXEL_MIN(builder: FlatBufferBuilder, PIXEL_MIN: Int) = builder.addInt(41, PIXEL_MIN, 0)
+        fun addPIXEL_MAX(builder: FlatBufferBuilder, PIXEL_MAX: Int) = builder.addInt(42, PIXEL_MAX, 0)
+        fun addSOFTWARE_VERSION(builder: FlatBufferBuilder, SOFTWARE_VERSION: Int) = builder.addOffset(43, SOFTWARE_VERSION, 0)
+        fun addSTAR_CAT_NAME(builder: FlatBufferBuilder, STAR_CAT_NAME: Int) = builder.addOffset(44, STAR_CAT_NAME, 0)
+        fun addCORR_QUALITY(builder: FlatBufferBuilder, CORR_QUALITY: Double) = builder.addDouble(45, CORR_QUALITY, 0.0)
+        fun addCALIBRATION_TYPE(builder: FlatBufferBuilder, CALIBRATION_TYPE: Byte) = builder.addByte(46, CALIBRATION_TYPE, 0)
+        fun addVALID_CALIBRATIONS(builder: FlatBufferBuilder, VALID_CALIBRATIONS: Int) = builder.addOffset(47, VALID_CALIBRATIONS, 0)
         fun addPERCENT_SAT_THRESHOLD(builder: FlatBufferBuilder, PERCENT_SAT_THRESHOLD: Double) = builder.addDouble(48, PERCENT_SAT_THRESHOLD, 0.0)
         fun addCHANGE_DETECTED(builder: FlatBufferBuilder, CHANGE_DETECTED: Boolean) = builder.addBoolean(49, CHANGE_DETECTED, false)
         fun addPERIODICITY_CHANGE_DETECTED(builder: FlatBufferBuilder, PERIODICITY_CHANGE_DETECTED: Boolean) = builder.addBoolean(50, PERIODICITY_CHANGE_DETECTED, false)

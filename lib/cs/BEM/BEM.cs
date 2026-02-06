@@ -19,6 +19,7 @@ public struct BEM : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public BEM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Unique beam identifier
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,6 +27,7 @@ public struct BEM : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
+  /// Beam name or designation
   public string BEAM_NAME { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetBEAM_NAMEBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -33,39 +35,118 @@ public struct BEM : IFlatbufferObject
   public ArraySegment<byte>? GetBEAM_NAMEBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetBEAM_NAMEArray() { return __p.__vector_as_array<byte>(6); }
-  public string NOTES { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Reference to parent entity (satellite/transponder)
+  public string ID_ENTITY { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetNOTESBytes() { return __p.__vector_as_span<byte>(8, 1); }
+  public Span<byte> GetID_ENTITYBytes() { return __p.__vector_as_span<byte>(8, 1); }
 #else
-  public ArraySegment<byte>? GetNOTESBytes() { return __p.__vector_as_arraysegment(8); }
+  public ArraySegment<byte>? GetID_ENTITYBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
-  public byte[] GetNOTESArray() { return __p.__vector_as_array<byte>(8); }
-  public string BEAM_CONTOURS(int j) { int o = __p.__offset(10); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int BEAM_CONTOURSLength { get { int o = __p.__offset(10); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public byte[] GetID_ENTITYArray() { return __p.__vector_as_array<byte>(8); }
+  /// Reference to parent antenna
+  public string ID_ANTENNA { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetID_ANTENNABytes() { return __p.__vector_as_span<byte>(10, 1); }
+#else
+  public ArraySegment<byte>? GetID_ANTENNABytes() { return __p.__vector_as_arraysegment(10); }
+#endif
+  public byte[] GetID_ANTENNAArray() { return __p.__vector_as_array<byte>(10); }
+  /// Beam type
+  public beamType TYPE { get { int o = __p.__offset(12); return o != 0 ? (beamType)__p.bb.GetSbyte(o + __p.bb_pos) : beamType.SPOT; } }
+  /// Beam polarization
+  public beamPolarization POLARIZATION { get { int o = __p.__offset(14); return o != 0 ? (beamPolarization)__p.bb.GetSbyte(o + __p.bb_pos) : beamPolarization.RHCP; } }
+  /// Peak gain in dBi
+  public double PEAK_GAIN { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Edge-of-coverage gain in dBi
+  public double EOC_GAIN { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Beam center latitude in degrees
+  public double CENTER_LATITUDE { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Beam center longitude in degrees
+  public double CENTER_LONGITUDE { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Beamwidth (3dB) in degrees
+  public double BEAMWIDTH { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Operating frequency in MHz
+  public double FREQUENCY { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// EIRP at beam center in dBW
+  public double EIRP { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// G/T at beam center in dB/K
+  public double G_OVER_T { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Beam footprint area in km^2
+  public double FOOTPRINT_AREA { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Beam contour definitions
+  public beamContour? BEAM_CONTOURS(int j) { int o = __p.__offset(34); return o != 0 ? (beamContour?)(new beamContour()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int BEAM_CONTOURSLength { get { int o = __p.__offset(34); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Additional notes
+  public string NOTES { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetNOTESBytes() { return __p.__vector_as_span<byte>(36, 1); }
+#else
+  public ArraySegment<byte>? GetNOTESBytes() { return __p.__vector_as_arraysegment(36); }
+#endif
+  public byte[] GetNOTESArray() { return __p.__vector_as_array<byte>(36); }
 
   public static Offset<BEM> CreateBEM(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
       StringOffset BEAM_NAMEOffset = default(StringOffset),
-      StringOffset NOTESOffset = default(StringOffset),
-      VectorOffset BEAM_CONTOURSOffset = default(VectorOffset)) {
-    builder.StartTable(4);
-    BEM.AddBEAM_CONTOURS(builder, BEAM_CONTOURSOffset);
+      StringOffset ID_ENTITYOffset = default(StringOffset),
+      StringOffset ID_ANTENNAOffset = default(StringOffset),
+      beamType TYPE = beamType.SPOT,
+      beamPolarization POLARIZATION = beamPolarization.RHCP,
+      double PEAK_GAIN = 0.0,
+      double EOC_GAIN = 0.0,
+      double CENTER_LATITUDE = 0.0,
+      double CENTER_LONGITUDE = 0.0,
+      double BEAMWIDTH = 0.0,
+      double FREQUENCY = 0.0,
+      double EIRP = 0.0,
+      double G_OVER_T = 0.0,
+      double FOOTPRINT_AREA = 0.0,
+      VectorOffset BEAM_CONTOURSOffset = default(VectorOffset),
+      StringOffset NOTESOffset = default(StringOffset)) {
+    builder.StartTable(17);
+    BEM.AddFOOTPRINT_AREA(builder, FOOTPRINT_AREA);
+    BEM.AddG_OVER_T(builder, G_OVER_T);
+    BEM.AddEIRP(builder, EIRP);
+    BEM.AddFREQUENCY(builder, FREQUENCY);
+    BEM.AddBEAMWIDTH(builder, BEAMWIDTH);
+    BEM.AddCENTER_LONGITUDE(builder, CENTER_LONGITUDE);
+    BEM.AddCENTER_LATITUDE(builder, CENTER_LATITUDE);
+    BEM.AddEOC_GAIN(builder, EOC_GAIN);
+    BEM.AddPEAK_GAIN(builder, PEAK_GAIN);
     BEM.AddNOTES(builder, NOTESOffset);
+    BEM.AddBEAM_CONTOURS(builder, BEAM_CONTOURSOffset);
+    BEM.AddID_ANTENNA(builder, ID_ANTENNAOffset);
+    BEM.AddID_ENTITY(builder, ID_ENTITYOffset);
     BEM.AddBEAM_NAME(builder, BEAM_NAMEOffset);
     BEM.AddID(builder, IDOffset);
+    BEM.AddPOLARIZATION(builder, POLARIZATION);
+    BEM.AddTYPE(builder, TYPE);
     return BEM.EndBEM(builder);
   }
 
-  public static void StartBEM(FlatBufferBuilder builder) { builder.StartTable(4); }
+  public static void StartBEM(FlatBufferBuilder builder) { builder.StartTable(17); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddBEAM_NAME(FlatBufferBuilder builder, StringOffset BEAM_NAMEOffset) { builder.AddOffset(1, BEAM_NAMEOffset.Value, 0); }
-  public static void AddNOTES(FlatBufferBuilder builder, StringOffset NOTESOffset) { builder.AddOffset(2, NOTESOffset.Value, 0); }
-  public static void AddBEAM_CONTOURS(FlatBufferBuilder builder, VectorOffset BEAM_CONTOURSOffset) { builder.AddOffset(3, BEAM_CONTOURSOffset.Value, 0); }
-  public static VectorOffset CreateBEAM_CONTOURSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateBEAM_CONTOURSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateBEAM_CONTOURSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateBEAM_CONTOURSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void AddID_ENTITY(FlatBufferBuilder builder, StringOffset ID_ENTITYOffset) { builder.AddOffset(2, ID_ENTITYOffset.Value, 0); }
+  public static void AddID_ANTENNA(FlatBufferBuilder builder, StringOffset ID_ANTENNAOffset) { builder.AddOffset(3, ID_ANTENNAOffset.Value, 0); }
+  public static void AddTYPE(FlatBufferBuilder builder, beamType TYPE) { builder.AddSbyte(4, (sbyte)TYPE, 0); }
+  public static void AddPOLARIZATION(FlatBufferBuilder builder, beamPolarization POLARIZATION) { builder.AddSbyte(5, (sbyte)POLARIZATION, 0); }
+  public static void AddPEAK_GAIN(FlatBufferBuilder builder, double PEAK_GAIN) { builder.AddDouble(6, PEAK_GAIN, 0.0); }
+  public static void AddEOC_GAIN(FlatBufferBuilder builder, double EOC_GAIN) { builder.AddDouble(7, EOC_GAIN, 0.0); }
+  public static void AddCENTER_LATITUDE(FlatBufferBuilder builder, double CENTER_LATITUDE) { builder.AddDouble(8, CENTER_LATITUDE, 0.0); }
+  public static void AddCENTER_LONGITUDE(FlatBufferBuilder builder, double CENTER_LONGITUDE) { builder.AddDouble(9, CENTER_LONGITUDE, 0.0); }
+  public static void AddBEAMWIDTH(FlatBufferBuilder builder, double BEAMWIDTH) { builder.AddDouble(10, BEAMWIDTH, 0.0); }
+  public static void AddFREQUENCY(FlatBufferBuilder builder, double FREQUENCY) { builder.AddDouble(11, FREQUENCY, 0.0); }
+  public static void AddEIRP(FlatBufferBuilder builder, double EIRP) { builder.AddDouble(12, EIRP, 0.0); }
+  public static void AddG_OVER_T(FlatBufferBuilder builder, double G_OVER_T) { builder.AddDouble(13, G_OVER_T, 0.0); }
+  public static void AddFOOTPRINT_AREA(FlatBufferBuilder builder, double FOOTPRINT_AREA) { builder.AddDouble(14, FOOTPRINT_AREA, 0.0); }
+  public static void AddBEAM_CONTOURS(FlatBufferBuilder builder, VectorOffset BEAM_CONTOURSOffset) { builder.AddOffset(15, BEAM_CONTOURSOffset.Value, 0); }
+  public static VectorOffset CreateBEAM_CONTOURSVector(FlatBufferBuilder builder, Offset<beamContour>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateBEAM_CONTOURSVectorBlock(FlatBufferBuilder builder, Offset<beamContour>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateBEAM_CONTOURSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<beamContour>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateBEAM_CONTOURSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<beamContour>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartBEAM_CONTOURSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddNOTES(FlatBufferBuilder builder, StringOffset NOTESOffset) { builder.AddOffset(16, NOTESOffset.Value, 0); }
   public static Offset<BEM> EndBEM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<BEM>(o);
@@ -80,27 +161,55 @@ public struct BEM : IFlatbufferObject
   public void UnPackTo(BEMT _o) {
     _o.ID = this.ID;
     _o.BEAM_NAME = this.BEAM_NAME;
+    _o.ID_ENTITY = this.ID_ENTITY;
+    _o.ID_ANTENNA = this.ID_ANTENNA;
+    _o.TYPE = this.TYPE;
+    _o.POLARIZATION = this.POLARIZATION;
+    _o.PEAK_GAIN = this.PEAK_GAIN;
+    _o.EOC_GAIN = this.EOC_GAIN;
+    _o.CENTER_LATITUDE = this.CENTER_LATITUDE;
+    _o.CENTER_LONGITUDE = this.CENTER_LONGITUDE;
+    _o.BEAMWIDTH = this.BEAMWIDTH;
+    _o.FREQUENCY = this.FREQUENCY;
+    _o.EIRP = this.EIRP;
+    _o.G_OVER_T = this.G_OVER_T;
+    _o.FOOTPRINT_AREA = this.FOOTPRINT_AREA;
+    _o.BEAM_CONTOURS = new List<beamContourT>();
+    for (var _j = 0; _j < this.BEAM_CONTOURSLength; ++_j) {_o.BEAM_CONTOURS.Add(this.BEAM_CONTOURS(_j).HasValue ? this.BEAM_CONTOURS(_j).Value.UnPack() : null);}
     _o.NOTES = this.NOTES;
-    _o.BEAM_CONTOURS = new List<string>();
-    for (var _j = 0; _j < this.BEAM_CONTOURSLength; ++_j) {_o.BEAM_CONTOURS.Add(this.BEAM_CONTOURS(_j));}
   }
   public static Offset<BEM> Pack(FlatBufferBuilder builder, BEMT _o) {
     if (_o == null) return default(Offset<BEM>);
     var _ID = _o.ID == null ? default(StringOffset) : builder.CreateString(_o.ID);
     var _BEAM_NAME = _o.BEAM_NAME == null ? default(StringOffset) : builder.CreateString(_o.BEAM_NAME);
-    var _NOTES = _o.NOTES == null ? default(StringOffset) : builder.CreateString(_o.NOTES);
+    var _ID_ENTITY = _o.ID_ENTITY == null ? default(StringOffset) : builder.CreateString(_o.ID_ENTITY);
+    var _ID_ANTENNA = _o.ID_ANTENNA == null ? default(StringOffset) : builder.CreateString(_o.ID_ANTENNA);
     var _BEAM_CONTOURS = default(VectorOffset);
     if (_o.BEAM_CONTOURS != null) {
-      var __BEAM_CONTOURS = new StringOffset[_o.BEAM_CONTOURS.Count];
-      for (var _j = 0; _j < __BEAM_CONTOURS.Length; ++_j) { __BEAM_CONTOURS[_j] = builder.CreateString(_o.BEAM_CONTOURS[_j]); }
+      var __BEAM_CONTOURS = new Offset<beamContour>[_o.BEAM_CONTOURS.Count];
+      for (var _j = 0; _j < __BEAM_CONTOURS.Length; ++_j) { __BEAM_CONTOURS[_j] = beamContour.Pack(builder, _o.BEAM_CONTOURS[_j]); }
       _BEAM_CONTOURS = CreateBEAM_CONTOURSVector(builder, __BEAM_CONTOURS);
     }
+    var _NOTES = _o.NOTES == null ? default(StringOffset) : builder.CreateString(_o.NOTES);
     return CreateBEM(
       builder,
       _ID,
       _BEAM_NAME,
-      _NOTES,
-      _BEAM_CONTOURS);
+      _ID_ENTITY,
+      _ID_ANTENNA,
+      _o.TYPE,
+      _o.POLARIZATION,
+      _o.PEAK_GAIN,
+      _o.EOC_GAIN,
+      _o.CENTER_LATITUDE,
+      _o.CENTER_LONGITUDE,
+      _o.BEAMWIDTH,
+      _o.FREQUENCY,
+      _o.EIRP,
+      _o.G_OVER_T,
+      _o.FOOTPRINT_AREA,
+      _BEAM_CONTOURS,
+      _NOTES);
   }
 }
 
@@ -108,14 +217,40 @@ public class BEMT
 {
   public string ID { get; set; }
   public string BEAM_NAME { get; set; }
+  public string ID_ENTITY { get; set; }
+  public string ID_ANTENNA { get; set; }
+  public beamType TYPE { get; set; }
+  public beamPolarization POLARIZATION { get; set; }
+  public double PEAK_GAIN { get; set; }
+  public double EOC_GAIN { get; set; }
+  public double CENTER_LATITUDE { get; set; }
+  public double CENTER_LONGITUDE { get; set; }
+  public double BEAMWIDTH { get; set; }
+  public double FREQUENCY { get; set; }
+  public double EIRP { get; set; }
+  public double G_OVER_T { get; set; }
+  public double FOOTPRINT_AREA { get; set; }
+  public List<beamContourT> BEAM_CONTOURS { get; set; }
   public string NOTES { get; set; }
-  public List<string> BEAM_CONTOURS { get; set; }
 
   public BEMT() {
     this.ID = null;
     this.BEAM_NAME = null;
-    this.NOTES = null;
+    this.ID_ENTITY = null;
+    this.ID_ANTENNA = null;
+    this.TYPE = beamType.SPOT;
+    this.POLARIZATION = beamPolarization.RHCP;
+    this.PEAK_GAIN = 0.0;
+    this.EOC_GAIN = 0.0;
+    this.CENTER_LATITUDE = 0.0;
+    this.CENTER_LONGITUDE = 0.0;
+    this.BEAMWIDTH = 0.0;
+    this.FREQUENCY = 0.0;
+    this.EIRP = 0.0;
+    this.G_OVER_T = 0.0;
+    this.FOOTPRINT_AREA = 0.0;
     this.BEAM_CONTOURS = null;
+    this.NOTES = null;
   }
   public static BEMT DeserializeFromBinary(byte[] fbBuffer) {
     return BEM.GetRootAsBEM(new ByteBuffer(fbBuffer)).UnPack();
@@ -135,8 +270,21 @@ static public class BEMVerify
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*ID*/, false)
       && verifier.VerifyString(tablePos, 6 /*BEAM_NAME*/, false)
-      && verifier.VerifyString(tablePos, 8 /*NOTES*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 10 /*BEAM_CONTOURS*/, false)
+      && verifier.VerifyString(tablePos, 8 /*ID_ENTITY*/, false)
+      && verifier.VerifyString(tablePos, 10 /*ID_ANTENNA*/, false)
+      && verifier.VerifyField(tablePos, 12 /*TYPE*/, 1 /*beamType*/, 1, false)
+      && verifier.VerifyField(tablePos, 14 /*POLARIZATION*/, 1 /*beamPolarization*/, 1, false)
+      && verifier.VerifyField(tablePos, 16 /*PEAK_GAIN*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 18 /*EOC_GAIN*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 20 /*CENTER_LATITUDE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 22 /*CENTER_LONGITUDE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 24 /*BEAMWIDTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 26 /*FREQUENCY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 28 /*EIRP*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 30 /*G_OVER_T*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 32 /*FOOTPRINT_AREA*/, 8 /*double*/, 8, false)
+      && verifier.VerifyVectorOfTables(tablePos, 34 /*BEAM_CONTOURS*/, beamContourVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 36 /*NOTES*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

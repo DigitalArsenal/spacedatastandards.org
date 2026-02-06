@@ -3,51 +3,77 @@ import flatbuffers
 
 class SWR
 
-/// Short-Wave Infrared
+/// Short-Wave Infrared Observation
 class SWR : flatbuffers.handle
+    /// Unique identifier
     def ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
+    /// On-orbit reference
     def ON_ORBIT() -> string:
         return flatbuffers.field_string(buf_, pos_, 6)
-    def TS() -> string:
-        return flatbuffers.field_string(buf_, pos_, 8)
-    def SOLAR_PHASE_ANGLE() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 10, 0.0)
-    def LAT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 12, 0.0)
-    def LON() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
-    def LOCATION_NAME() -> string:
-        return flatbuffers.field_string(buf_, pos_, 16)
-    def BAD_WAVE() -> string:
-        return flatbuffers.field_string(buf_, pos_, 18)
-    def WAVELENGTHS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 20) + i * 4)
-    def WAVELENGTHS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 20)
-    def ABS_FLUXES(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 22) + i * 4)
-    def ABS_FLUXES_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 22)
-    def RATIO_WAVELENGTHS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 24) + i * 4)
-    def RATIO_WAVELENGTHS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 24)
-    def FLUX_RATIOS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 26) + i * 4)
-    def FLUX_RATIOS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 26)
+    /// International designator
     def ORIG_OBJECT_ID() -> string:
-        return flatbuffers.field_string(buf_, pos_, 28)
+        return flatbuffers.field_string(buf_, pos_, 8)
+    /// Satellite catalog number
     def SAT_NO() -> int:
-        return flatbuffers.field_int32(buf_, pos_, 30, 0)
+        return flatbuffers.field_uint32(buf_, pos_, 10, 0)
+    /// Observation timestamp (ISO 8601)
+    def TS() -> string:
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// Solar phase angle (degrees)
+    def SOLAR_PHASE_ANGLE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 14, 0.0)
+    /// Sub-observer latitude (degrees)
+    def LAT() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+    /// Sub-observer longitude (degrees)
+    def LON() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
+    /// Location name
+    def LOCATION_NAME() -> string:
+        return flatbuffers.field_string(buf_, pos_, 20)
+    /// Bad wavelength flag or identifier
+    def BAD_WAVE() -> string:
+        return flatbuffers.field_string(buf_, pos_, 22)
+    /// Measured wavelengths (micrometers)
+    def WAVELENGTHS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 24) + i * 8)
+    def WAVELENGTHS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 24)
+    /// Absolute flux values (W/m^2/um)
+    def ABS_FLUXES(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 26) + i * 8)
+    def ABS_FLUXES_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 26)
+    /// Ratio reference wavelengths (micrometers)
+    def RATIO_WAVELENGTHS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 28) + i * 8)
+    def RATIO_WAVELENGTHS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 28)
+    /// Flux ratios (normalized)
+    def FLUX_RATIOS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 30) + i * 8)
+    def FLUX_RATIOS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 30)
+    /// Effective temperature (Kelvin)
+    def TEMPERATURE() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 32, 0.0)
+    /// Signal-to-noise ratio
+    def SIGNAL_NOISE_RATIO() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 34, 0.0)
+    /// Integration time (seconds)
+    def INTEGRATION_TIME() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 36, 0.0)
+    /// Data quality (0-9, 9=best)
+    def QUALITY() -> int:
+        return flatbuffers.field_uint8(buf_, pos_, 38, 0)
 
 def GetRootAsSWR(buf:string): return SWR { buf, flatbuffers.indirect(buf, 0) }
 
 struct SWRBuilder:
     b_:flatbuffers.builder
     def start():
-        b_.StartObject(14)
+        b_.StartObject(18)
         return this
     def add_ID(ID:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(0, ID)
@@ -55,70 +81,82 @@ struct SWRBuilder:
     def add_ON_ORBIT(ON_ORBIT:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(1, ON_ORBIT)
         return this
-    def add_TS(TS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(2, TS)
-        return this
-    def add_SOLAR_PHASE_ANGLE(SOLAR_PHASE_ANGLE:float):
-        b_.PrependFloat64Slot(3, SOLAR_PHASE_ANGLE, 0.0)
-        return this
-    def add_LAT(LAT:float):
-        b_.PrependFloat64Slot(4, LAT, 0.0)
-        return this
-    def add_LON(LON:float):
-        b_.PrependFloat64Slot(5, LON, 0.0)
-        return this
-    def add_LOCATION_NAME(LOCATION_NAME:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(6, LOCATION_NAME)
-        return this
-    def add_BAD_WAVE(BAD_WAVE:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(7, BAD_WAVE)
-        return this
-    def add_WAVELENGTHS(WAVELENGTHS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(8, WAVELENGTHS)
-        return this
-    def add_ABS_FLUXES(ABS_FLUXES:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(9, ABS_FLUXES)
-        return this
-    def add_RATIO_WAVELENGTHS(RATIO_WAVELENGTHS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(10, RATIO_WAVELENGTHS)
-        return this
-    def add_FLUX_RATIOS(FLUX_RATIOS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(11, FLUX_RATIOS)
-        return this
     def add_ORIG_OBJECT_ID(ORIG_OBJECT_ID:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(12, ORIG_OBJECT_ID)
+        b_.PrependUOffsetTRelativeSlot(2, ORIG_OBJECT_ID)
         return this
     def add_SAT_NO(SAT_NO:int):
-        b_.PrependInt32Slot(13, SAT_NO, 0)
+        b_.PrependUint32Slot(3, SAT_NO, 0)
+        return this
+    def add_TS(TS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, TS)
+        return this
+    def add_SOLAR_PHASE_ANGLE(SOLAR_PHASE_ANGLE:float):
+        b_.PrependFloat64Slot(5, SOLAR_PHASE_ANGLE, 0.0)
+        return this
+    def add_LAT(LAT:float):
+        b_.PrependFloat64Slot(6, LAT, 0.0)
+        return this
+    def add_LON(LON:float):
+        b_.PrependFloat64Slot(7, LON, 0.0)
+        return this
+    def add_LOCATION_NAME(LOCATION_NAME:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(8, LOCATION_NAME)
+        return this
+    def add_BAD_WAVE(BAD_WAVE:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(9, BAD_WAVE)
+        return this
+    def add_WAVELENGTHS(WAVELENGTHS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(10, WAVELENGTHS)
+        return this
+    def add_ABS_FLUXES(ABS_FLUXES:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(11, ABS_FLUXES)
+        return this
+    def add_RATIO_WAVELENGTHS(RATIO_WAVELENGTHS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(12, RATIO_WAVELENGTHS)
+        return this
+    def add_FLUX_RATIOS(FLUX_RATIOS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(13, FLUX_RATIOS)
+        return this
+    def add_TEMPERATURE(TEMPERATURE:float):
+        b_.PrependFloat64Slot(14, TEMPERATURE, 0.0)
+        return this
+    def add_SIGNAL_NOISE_RATIO(SIGNAL_NOISE_RATIO:float):
+        b_.PrependFloat64Slot(15, SIGNAL_NOISE_RATIO, 0.0)
+        return this
+    def add_INTEGRATION_TIME(INTEGRATION_TIME:float):
+        b_.PrependFloat64Slot(16, INTEGRATION_TIME, 0.0)
+        return this
+    def add_QUALITY(QUALITY:int):
+        b_.PrependUint8Slot(17, QUALITY, 0)
         return this
     def end():
         return b_.EndObject()
 
 def SWRStartWAVELENGTHSVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def SWRCreateWAVELENGTHSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    b_.StartVector(8, n_, 8)
+def SWRCreateWAVELENGTHSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
 def SWRStartABS_FLUXESVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def SWRCreateABS_FLUXESVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    b_.StartVector(8, n_, 8)
+def SWRCreateABS_FLUXESVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
 def SWRStartRATIO_WAVELENGTHSVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def SWRCreateRATIO_WAVELENGTHSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    b_.StartVector(8, n_, 8)
+def SWRCreateRATIO_WAVELENGTHSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
 def SWRStartFLUX_RATIOSVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def SWRCreateFLUX_RATIOSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    b_.StartVector(8, n_, 8)
+def SWRCreateFLUX_RATIOSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 

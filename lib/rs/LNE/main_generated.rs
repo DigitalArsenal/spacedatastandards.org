@@ -9,6 +9,103 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_LAUNCH_OUTCOME: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_LAUNCH_OUTCOME: i8 = 4;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_LAUNCH_OUTCOME: [launchOutcome; 5] = [
+  launchOutcome::SUCCESS,
+  launchOutcome::PARTIAL_SUCCESS,
+  launchOutcome::FAILURE,
+  launchOutcome::IN_PROGRESS,
+  launchOutcome::UNKNOWN,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct launchOutcome(pub i8);
+#[allow(non_upper_case_globals)]
+impl launchOutcome {
+  pub const SUCCESS: Self = Self(0);
+  pub const PARTIAL_SUCCESS: Self = Self(1);
+  pub const FAILURE: Self = Self(2);
+  pub const IN_PROGRESS: Self = Self(3);
+  pub const UNKNOWN: Self = Self(4);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 4;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::SUCCESS,
+    Self::PARTIAL_SUCCESS,
+    Self::FAILURE,
+    Self::IN_PROGRESS,
+    Self::UNKNOWN,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::SUCCESS => Some("SUCCESS"),
+      Self::PARTIAL_SUCCESS => Some("PARTIAL_SUCCESS"),
+      Self::FAILURE => Some("FAILURE"),
+      Self::IN_PROGRESS => Some("IN_PROGRESS"),
+      Self::UNKNOWN => Some("UNKNOWN"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for launchOutcome {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for launchOutcome {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for launchOutcome {
+    type Output = launchOutcome;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for launchOutcome {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for launchOutcome {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for launchOutcome {}
 pub enum LNEOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -27,18 +124,27 @@ impl<'a> flatbuffers::Follow<'a> for LNE<'a> {
 
 impl<'a> LNE<'a> {
   pub const VT_ID: flatbuffers::VOffsetT = 4;
-  pub const VT_ORIG_OBJECT_ID: flatbuffers::VOffsetT = 6;
-  pub const VT_DERIVED_FROM: flatbuffers::VOffsetT = 8;
-  pub const VT_DECLASSIFICATION_DATE: flatbuffers::VOffsetT = 10;
-  pub const VT_DECLASSIFICATION_STRING: flatbuffers::VOffsetT = 12;
-  pub const VT_MSG_CREATE_DATE: flatbuffers::VOffsetT = 14;
-  pub const VT_LAUNCH_FAILURE_CODE: flatbuffers::VOffsetT = 16;
+  pub const VT_SAT_NO: flatbuffers::VOffsetT = 6;
+  pub const VT_ORIG_OBJECT_ID: flatbuffers::VOffsetT = 8;
+  pub const VT_DERIVED_FROM: flatbuffers::VOffsetT = 10;
+  pub const VT_DECLASSIFICATION_DATE: flatbuffers::VOffsetT = 12;
+  pub const VT_DECLASSIFICATION_STRING: flatbuffers::VOffsetT = 14;
+  pub const VT_MSG_CREATE_DATE: flatbuffers::VOffsetT = 16;
   pub const VT_LAUNCH_DATE: flatbuffers::VOffsetT = 18;
-  pub const VT_BE_NUMBER: flatbuffers::VOffsetT = 20;
-  pub const VT_O_SUFFIX: flatbuffers::VOffsetT = 22;
-  pub const VT_LAUNCH_FACILITY_NAME: flatbuffers::VOffsetT = 24;
-  pub const VT_ON_ORBIT: flatbuffers::VOffsetT = 26;
-  pub const VT_SAT_NO: flatbuffers::VOffsetT = 28;
+  pub const VT_OUTCOME: flatbuffers::VOffsetT = 20;
+  pub const VT_LAUNCH_FAILURE_CODE: flatbuffers::VOffsetT = 22;
+  pub const VT_BE_NUMBER: flatbuffers::VOffsetT = 24;
+  pub const VT_O_SUFFIX: flatbuffers::VOffsetT = 26;
+  pub const VT_LAUNCH_FACILITY_NAME: flatbuffers::VOffsetT = 28;
+  pub const VT_LAUNCH_FACILITY_CODE: flatbuffers::VOffsetT = 30;
+  pub const VT_LAUNCH_VEHICLE: flatbuffers::VOffsetT = 32;
+  pub const VT_LAUNCH_VEHICLE_CONFIG: flatbuffers::VOffsetT = 34;
+  pub const VT_TARGET_ORBIT: flatbuffers::VOffsetT = 36;
+  pub const VT_OBJECTS_ON_ORBIT: flatbuffers::VOffsetT = 38;
+  pub const VT_ON_ORBIT: flatbuffers::VOffsetT = 40;
+  pub const VT_LAUNCH_COUNTRY: flatbuffers::VOffsetT = 42;
+  pub const VT_MISSION_NAME: flatbuffers::VOffsetT = 44;
+  pub const VT_REMARKS: flatbuffers::VOffsetT = 46;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -50,19 +156,28 @@ impl<'a> LNE<'a> {
     args: &'args LNEArgs<'args>
   ) -> flatbuffers::WIPOffset<LNE<'bldr>> {
     let mut builder = LNEBuilder::new(_fbb);
-    builder.add_SAT_NO(args.SAT_NO);
+    if let Some(x) = args.REMARKS { builder.add_REMARKS(x); }
+    if let Some(x) = args.MISSION_NAME { builder.add_MISSION_NAME(x); }
+    if let Some(x) = args.LAUNCH_COUNTRY { builder.add_LAUNCH_COUNTRY(x); }
     if let Some(x) = args.ON_ORBIT { builder.add_ON_ORBIT(x); }
+    if let Some(x) = args.TARGET_ORBIT { builder.add_TARGET_ORBIT(x); }
+    if let Some(x) = args.LAUNCH_VEHICLE_CONFIG { builder.add_LAUNCH_VEHICLE_CONFIG(x); }
+    if let Some(x) = args.LAUNCH_VEHICLE { builder.add_LAUNCH_VEHICLE(x); }
+    if let Some(x) = args.LAUNCH_FACILITY_CODE { builder.add_LAUNCH_FACILITY_CODE(x); }
     if let Some(x) = args.LAUNCH_FACILITY_NAME { builder.add_LAUNCH_FACILITY_NAME(x); }
     if let Some(x) = args.O_SUFFIX { builder.add_O_SUFFIX(x); }
     if let Some(x) = args.BE_NUMBER { builder.add_BE_NUMBER(x); }
-    if let Some(x) = args.LAUNCH_DATE { builder.add_LAUNCH_DATE(x); }
     if let Some(x) = args.LAUNCH_FAILURE_CODE { builder.add_LAUNCH_FAILURE_CODE(x); }
+    if let Some(x) = args.LAUNCH_DATE { builder.add_LAUNCH_DATE(x); }
     if let Some(x) = args.MSG_CREATE_DATE { builder.add_MSG_CREATE_DATE(x); }
     if let Some(x) = args.DECLASSIFICATION_STRING { builder.add_DECLASSIFICATION_STRING(x); }
     if let Some(x) = args.DECLASSIFICATION_DATE { builder.add_DECLASSIFICATION_DATE(x); }
     if let Some(x) = args.DERIVED_FROM { builder.add_DERIVED_FROM(x); }
     if let Some(x) = args.ORIG_OBJECT_ID { builder.add_ORIG_OBJECT_ID(x); }
+    builder.add_SAT_NO(args.SAT_NO);
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_OBJECTS_ON_ORBIT(args.OBJECTS_ON_ORBIT);
+    builder.add_OUTCOME(args.OUTCOME);
     builder.finish()
   }
 
@@ -70,6 +185,7 @@ impl<'a> LNE<'a> {
     let ID = self.ID().map(|x| {
       x.to_string()
     });
+    let SAT_NO = self.SAT_NO();
     let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID().map(|x| {
       x.to_string()
     });
@@ -85,10 +201,11 @@ impl<'a> LNE<'a> {
     let MSG_CREATE_DATE = self.MSG_CREATE_DATE().map(|x| {
       x.to_string()
     });
-    let LAUNCH_FAILURE_CODE = self.LAUNCH_FAILURE_CODE().map(|x| {
+    let LAUNCH_DATE = self.LAUNCH_DATE().map(|x| {
       x.to_string()
     });
-    let LAUNCH_DATE = self.LAUNCH_DATE().map(|x| {
+    let OUTCOME = self.OUTCOME();
+    let LAUNCH_FAILURE_CODE = self.LAUNCH_FAILURE_CODE().map(|x| {
       x.to_string()
     });
     let BE_NUMBER = self.BE_NUMBER().map(|x| {
@@ -100,27 +217,58 @@ impl<'a> LNE<'a> {
     let LAUNCH_FACILITY_NAME = self.LAUNCH_FACILITY_NAME().map(|x| {
       x.to_string()
     });
+    let LAUNCH_FACILITY_CODE = self.LAUNCH_FACILITY_CODE().map(|x| {
+      x.to_string()
+    });
+    let LAUNCH_VEHICLE = self.LAUNCH_VEHICLE().map(|x| {
+      x.to_string()
+    });
+    let LAUNCH_VEHICLE_CONFIG = self.LAUNCH_VEHICLE_CONFIG().map(|x| {
+      x.to_string()
+    });
+    let TARGET_ORBIT = self.TARGET_ORBIT().map(|x| {
+      x.to_string()
+    });
+    let OBJECTS_ON_ORBIT = self.OBJECTS_ON_ORBIT();
     let ON_ORBIT = self.ON_ORBIT().map(|x| {
       x.to_string()
     });
-    let SAT_NO = self.SAT_NO();
+    let LAUNCH_COUNTRY = self.LAUNCH_COUNTRY().map(|x| {
+      x.to_string()
+    });
+    let MISSION_NAME = self.MISSION_NAME().map(|x| {
+      x.to_string()
+    });
+    let REMARKS = self.REMARKS().map(|x| {
+      x.to_string()
+    });
     LNET {
       ID,
+      SAT_NO,
       ORIG_OBJECT_ID,
       DERIVED_FROM,
       DECLASSIFICATION_DATE,
       DECLASSIFICATION_STRING,
       MSG_CREATE_DATE,
-      LAUNCH_FAILURE_CODE,
       LAUNCH_DATE,
+      OUTCOME,
+      LAUNCH_FAILURE_CODE,
       BE_NUMBER,
       O_SUFFIX,
       LAUNCH_FACILITY_NAME,
+      LAUNCH_FACILITY_CODE,
+      LAUNCH_VEHICLE,
+      LAUNCH_VEHICLE_CONFIG,
+      TARGET_ORBIT,
+      OBJECTS_ON_ORBIT,
       ON_ORBIT,
-      SAT_NO,
+      LAUNCH_COUNTRY,
+      MISSION_NAME,
+      REMARKS,
     }
   }
 
+  /// Unique identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -128,6 +276,15 @@ impl<'a> LNE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LNE::VT_ID, None)}
   }
+  /// Satellite catalog number of launched object
+  #[inline]
+  pub fn SAT_NO(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(LNE::VT_SAT_NO, Some(0)).unwrap()}
+  }
+  /// International designator (YYYY-NNNP)
   #[inline]
   pub fn ORIG_OBJECT_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -135,6 +292,7 @@ impl<'a> LNE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LNE::VT_ORIG_OBJECT_ID, None)}
   }
+  /// Source record this event was derived from
   #[inline]
   pub fn DERIVED_FROM(&self) -> Option<&'a str> {
     // Safety:
@@ -142,6 +300,7 @@ impl<'a> LNE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LNE::VT_DERIVED_FROM, None)}
   }
+  /// Classification date (ISO 8601)
   #[inline]
   pub fn DECLASSIFICATION_DATE(&self) -> Option<&'a str> {
     // Safety:
@@ -149,6 +308,7 @@ impl<'a> LNE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LNE::VT_DECLASSIFICATION_DATE, None)}
   }
+  /// Classification marking
   #[inline]
   pub fn DECLASSIFICATION_STRING(&self) -> Option<&'a str> {
     // Safety:
@@ -156,6 +316,7 @@ impl<'a> LNE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LNE::VT_DECLASSIFICATION_STRING, None)}
   }
+  /// Message creation time (ISO 8601)
   #[inline]
   pub fn MSG_CREATE_DATE(&self) -> Option<&'a str> {
     // Safety:
@@ -163,13 +324,7 @@ impl<'a> LNE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LNE::VT_MSG_CREATE_DATE, None)}
   }
-  #[inline]
-  pub fn LAUNCH_FAILURE_CODE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LNE::VT_LAUNCH_FAILURE_CODE, None)}
-  }
+  /// Launch date and time (ISO 8601)
   #[inline]
   pub fn LAUNCH_DATE(&self) -> Option<&'a str> {
     // Safety:
@@ -177,6 +332,23 @@ impl<'a> LNE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LNE::VT_LAUNCH_DATE, None)}
   }
+  /// Launch outcome
+  #[inline]
+  pub fn OUTCOME(&self) -> launchOutcome {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<launchOutcome>(LNE::VT_OUTCOME, Some(launchOutcome::SUCCESS)).unwrap()}
+  }
+  /// Launch failure code (if applicable)
+  #[inline]
+  pub fn LAUNCH_FAILURE_CODE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LNE::VT_LAUNCH_FAILURE_CODE, None)}
+  }
+  /// Basic encyclopedia number
   #[inline]
   pub fn BE_NUMBER(&self) -> Option<&'a str> {
     // Safety:
@@ -184,6 +356,7 @@ impl<'a> LNE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LNE::VT_BE_NUMBER, None)}
   }
+  /// Object suffix identifier
   #[inline]
   pub fn O_SUFFIX(&self) -> Option<&'a str> {
     // Safety:
@@ -191,6 +364,7 @@ impl<'a> LNE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LNE::VT_O_SUFFIX, None)}
   }
+  /// Launch facility name
   #[inline]
   pub fn LAUNCH_FACILITY_NAME(&self) -> Option<&'a str> {
     // Safety:
@@ -198,6 +372,47 @@ impl<'a> LNE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LNE::VT_LAUNCH_FACILITY_NAME, None)}
   }
+  /// Launch facility code
+  #[inline]
+  pub fn LAUNCH_FACILITY_CODE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LNE::VT_LAUNCH_FACILITY_CODE, None)}
+  }
+  /// Launch vehicle type
+  #[inline]
+  pub fn LAUNCH_VEHICLE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LNE::VT_LAUNCH_VEHICLE, None)}
+  }
+  /// Launch vehicle configuration
+  #[inline]
+  pub fn LAUNCH_VEHICLE_CONFIG(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LNE::VT_LAUNCH_VEHICLE_CONFIG, None)}
+  }
+  /// Target orbit type (LEO, MEO, GEO, HEO, SSO, etc.)
+  #[inline]
+  pub fn TARGET_ORBIT(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LNE::VT_TARGET_ORBIT, None)}
+  }
+  /// Number of objects placed on orbit
+  #[inline]
+  pub fn OBJECTS_ON_ORBIT(&self) -> u16 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u16>(LNE::VT_OBJECTS_ON_ORBIT, Some(0)).unwrap()}
+  }
+  /// On-orbit reference identifier
   #[inline]
   pub fn ON_ORBIT(&self) -> Option<&'a str> {
     // Safety:
@@ -205,12 +420,29 @@ impl<'a> LNE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LNE::VT_ON_ORBIT, None)}
   }
+  /// Launch country or operator
   #[inline]
-  pub fn SAT_NO(&self) -> i32 {
+  pub fn LAUNCH_COUNTRY(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(LNE::VT_SAT_NO, Some(0)).unwrap()}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LNE::VT_LAUNCH_COUNTRY, None)}
+  }
+  /// Mission name or payload description
+  #[inline]
+  pub fn MISSION_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LNE::VT_MISSION_NAME, None)}
+  }
+  /// Additional remarks
+  #[inline]
+  pub fn REMARKS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LNE::VT_REMARKS, None)}
   }
 }
 
@@ -222,54 +454,81 @@ impl flatbuffers::Verifiable for LNE<'_> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
+     .visit_field::<u32>("SAT_NO", Self::VT_SAT_NO, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_OBJECT_ID", Self::VT_ORIG_OBJECT_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DERIVED_FROM", Self::VT_DERIVED_FROM, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DECLASSIFICATION_DATE", Self::VT_DECLASSIFICATION_DATE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DECLASSIFICATION_STRING", Self::VT_DECLASSIFICATION_STRING, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MSG_CREATE_DATE", Self::VT_MSG_CREATE_DATE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LAUNCH_FAILURE_CODE", Self::VT_LAUNCH_FAILURE_CODE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LAUNCH_DATE", Self::VT_LAUNCH_DATE, false)?
+     .visit_field::<launchOutcome>("OUTCOME", Self::VT_OUTCOME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LAUNCH_FAILURE_CODE", Self::VT_LAUNCH_FAILURE_CODE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("BE_NUMBER", Self::VT_BE_NUMBER, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("O_SUFFIX", Self::VT_O_SUFFIX, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LAUNCH_FACILITY_NAME", Self::VT_LAUNCH_FACILITY_NAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LAUNCH_FACILITY_CODE", Self::VT_LAUNCH_FACILITY_CODE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LAUNCH_VEHICLE", Self::VT_LAUNCH_VEHICLE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LAUNCH_VEHICLE_CONFIG", Self::VT_LAUNCH_VEHICLE_CONFIG, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TARGET_ORBIT", Self::VT_TARGET_ORBIT, false)?
+     .visit_field::<u16>("OBJECTS_ON_ORBIT", Self::VT_OBJECTS_ON_ORBIT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ON_ORBIT", Self::VT_ON_ORBIT, false)?
-     .visit_field::<i32>("SAT_NO", Self::VT_SAT_NO, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LAUNCH_COUNTRY", Self::VT_LAUNCH_COUNTRY, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MISSION_NAME", Self::VT_MISSION_NAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REMARKS", Self::VT_REMARKS, false)?
      .finish();
     Ok(())
   }
 }
 pub struct LNEArgs<'a> {
     pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SAT_NO: u32,
     pub ORIG_OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub DERIVED_FROM: Option<flatbuffers::WIPOffset<&'a str>>,
     pub DECLASSIFICATION_DATE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub DECLASSIFICATION_STRING: Option<flatbuffers::WIPOffset<&'a str>>,
     pub MSG_CREATE_DATE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub LAUNCH_FAILURE_CODE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub LAUNCH_DATE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub OUTCOME: launchOutcome,
+    pub LAUNCH_FAILURE_CODE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub BE_NUMBER: Option<flatbuffers::WIPOffset<&'a str>>,
     pub O_SUFFIX: Option<flatbuffers::WIPOffset<&'a str>>,
     pub LAUNCH_FACILITY_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub LAUNCH_FACILITY_CODE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub LAUNCH_VEHICLE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub LAUNCH_VEHICLE_CONFIG: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub TARGET_ORBIT: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub OBJECTS_ON_ORBIT: u16,
     pub ON_ORBIT: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SAT_NO: i32,
+    pub LAUNCH_COUNTRY: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub MISSION_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub REMARKS: Option<flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for LNEArgs<'a> {
   #[inline]
   fn default() -> Self {
     LNEArgs {
       ID: None,
+      SAT_NO: 0,
       ORIG_OBJECT_ID: None,
       DERIVED_FROM: None,
       DECLASSIFICATION_DATE: None,
       DECLASSIFICATION_STRING: None,
       MSG_CREATE_DATE: None,
-      LAUNCH_FAILURE_CODE: None,
       LAUNCH_DATE: None,
+      OUTCOME: launchOutcome::SUCCESS,
+      LAUNCH_FAILURE_CODE: None,
       BE_NUMBER: None,
       O_SUFFIX: None,
       LAUNCH_FACILITY_NAME: None,
+      LAUNCH_FACILITY_CODE: None,
+      LAUNCH_VEHICLE: None,
+      LAUNCH_VEHICLE_CONFIG: None,
+      TARGET_ORBIT: None,
+      OBJECTS_ON_ORBIT: 0,
       ON_ORBIT: None,
-      SAT_NO: 0,
+      LAUNCH_COUNTRY: None,
+      MISSION_NAME: None,
+      REMARKS: None,
     }
   }
 }
@@ -282,6 +541,10 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> LNEBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_ID(&mut self, ID: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LNE::VT_ID, ID);
+  }
+  #[inline]
+  pub fn add_SAT_NO(&mut self, SAT_NO: u32) {
+    self.fbb_.push_slot::<u32>(LNE::VT_SAT_NO, SAT_NO, 0);
   }
   #[inline]
   pub fn add_ORIG_OBJECT_ID(&mut self, ORIG_OBJECT_ID: flatbuffers::WIPOffset<&'b  str>) {
@@ -304,12 +567,16 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> LNEBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LNE::VT_MSG_CREATE_DATE, MSG_CREATE_DATE);
   }
   #[inline]
-  pub fn add_LAUNCH_FAILURE_CODE(&mut self, LAUNCH_FAILURE_CODE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LNE::VT_LAUNCH_FAILURE_CODE, LAUNCH_FAILURE_CODE);
-  }
-  #[inline]
   pub fn add_LAUNCH_DATE(&mut self, LAUNCH_DATE: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LNE::VT_LAUNCH_DATE, LAUNCH_DATE);
+  }
+  #[inline]
+  pub fn add_OUTCOME(&mut self, OUTCOME: launchOutcome) {
+    self.fbb_.push_slot::<launchOutcome>(LNE::VT_OUTCOME, OUTCOME, launchOutcome::SUCCESS);
+  }
+  #[inline]
+  pub fn add_LAUNCH_FAILURE_CODE(&mut self, LAUNCH_FAILURE_CODE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LNE::VT_LAUNCH_FAILURE_CODE, LAUNCH_FAILURE_CODE);
   }
   #[inline]
   pub fn add_BE_NUMBER(&mut self, BE_NUMBER: flatbuffers::WIPOffset<&'b  str>) {
@@ -324,12 +591,40 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> LNEBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LNE::VT_LAUNCH_FACILITY_NAME, LAUNCH_FACILITY_NAME);
   }
   #[inline]
+  pub fn add_LAUNCH_FACILITY_CODE(&mut self, LAUNCH_FACILITY_CODE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LNE::VT_LAUNCH_FACILITY_CODE, LAUNCH_FACILITY_CODE);
+  }
+  #[inline]
+  pub fn add_LAUNCH_VEHICLE(&mut self, LAUNCH_VEHICLE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LNE::VT_LAUNCH_VEHICLE, LAUNCH_VEHICLE);
+  }
+  #[inline]
+  pub fn add_LAUNCH_VEHICLE_CONFIG(&mut self, LAUNCH_VEHICLE_CONFIG: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LNE::VT_LAUNCH_VEHICLE_CONFIG, LAUNCH_VEHICLE_CONFIG);
+  }
+  #[inline]
+  pub fn add_TARGET_ORBIT(&mut self, TARGET_ORBIT: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LNE::VT_TARGET_ORBIT, TARGET_ORBIT);
+  }
+  #[inline]
+  pub fn add_OBJECTS_ON_ORBIT(&mut self, OBJECTS_ON_ORBIT: u16) {
+    self.fbb_.push_slot::<u16>(LNE::VT_OBJECTS_ON_ORBIT, OBJECTS_ON_ORBIT, 0);
+  }
+  #[inline]
   pub fn add_ON_ORBIT(&mut self, ON_ORBIT: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LNE::VT_ON_ORBIT, ON_ORBIT);
   }
   #[inline]
-  pub fn add_SAT_NO(&mut self, SAT_NO: i32) {
-    self.fbb_.push_slot::<i32>(LNE::VT_SAT_NO, SAT_NO, 0);
+  pub fn add_LAUNCH_COUNTRY(&mut self, LAUNCH_COUNTRY: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LNE::VT_LAUNCH_COUNTRY, LAUNCH_COUNTRY);
+  }
+  #[inline]
+  pub fn add_MISSION_NAME(&mut self, MISSION_NAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LNE::VT_MISSION_NAME, MISSION_NAME);
+  }
+  #[inline]
+  pub fn add_REMARKS(&mut self, REMARKS: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LNE::VT_REMARKS, REMARKS);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> LNEBuilder<'a, 'b, A> {
@@ -350,18 +645,27 @@ impl core::fmt::Debug for LNE<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
     let mut ds = f.debug_struct("LNE");
       ds.field("ID", &self.ID());
+      ds.field("SAT_NO", &self.SAT_NO());
       ds.field("ORIG_OBJECT_ID", &self.ORIG_OBJECT_ID());
       ds.field("DERIVED_FROM", &self.DERIVED_FROM());
       ds.field("DECLASSIFICATION_DATE", &self.DECLASSIFICATION_DATE());
       ds.field("DECLASSIFICATION_STRING", &self.DECLASSIFICATION_STRING());
       ds.field("MSG_CREATE_DATE", &self.MSG_CREATE_DATE());
-      ds.field("LAUNCH_FAILURE_CODE", &self.LAUNCH_FAILURE_CODE());
       ds.field("LAUNCH_DATE", &self.LAUNCH_DATE());
+      ds.field("OUTCOME", &self.OUTCOME());
+      ds.field("LAUNCH_FAILURE_CODE", &self.LAUNCH_FAILURE_CODE());
       ds.field("BE_NUMBER", &self.BE_NUMBER());
       ds.field("O_SUFFIX", &self.O_SUFFIX());
       ds.field("LAUNCH_FACILITY_NAME", &self.LAUNCH_FACILITY_NAME());
+      ds.field("LAUNCH_FACILITY_CODE", &self.LAUNCH_FACILITY_CODE());
+      ds.field("LAUNCH_VEHICLE", &self.LAUNCH_VEHICLE());
+      ds.field("LAUNCH_VEHICLE_CONFIG", &self.LAUNCH_VEHICLE_CONFIG());
+      ds.field("TARGET_ORBIT", &self.TARGET_ORBIT());
+      ds.field("OBJECTS_ON_ORBIT", &self.OBJECTS_ON_ORBIT());
       ds.field("ON_ORBIT", &self.ON_ORBIT());
-      ds.field("SAT_NO", &self.SAT_NO());
+      ds.field("LAUNCH_COUNTRY", &self.LAUNCH_COUNTRY());
+      ds.field("MISSION_NAME", &self.MISSION_NAME());
+      ds.field("REMARKS", &self.REMARKS());
       ds.finish()
   }
 }
@@ -369,35 +673,53 @@ impl core::fmt::Debug for LNE<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct LNET {
   pub ID: Option<String>,
+  pub SAT_NO: u32,
   pub ORIG_OBJECT_ID: Option<String>,
   pub DERIVED_FROM: Option<String>,
   pub DECLASSIFICATION_DATE: Option<String>,
   pub DECLASSIFICATION_STRING: Option<String>,
   pub MSG_CREATE_DATE: Option<String>,
-  pub LAUNCH_FAILURE_CODE: Option<String>,
   pub LAUNCH_DATE: Option<String>,
+  pub OUTCOME: launchOutcome,
+  pub LAUNCH_FAILURE_CODE: Option<String>,
   pub BE_NUMBER: Option<String>,
   pub O_SUFFIX: Option<String>,
   pub LAUNCH_FACILITY_NAME: Option<String>,
+  pub LAUNCH_FACILITY_CODE: Option<String>,
+  pub LAUNCH_VEHICLE: Option<String>,
+  pub LAUNCH_VEHICLE_CONFIG: Option<String>,
+  pub TARGET_ORBIT: Option<String>,
+  pub OBJECTS_ON_ORBIT: u16,
   pub ON_ORBIT: Option<String>,
-  pub SAT_NO: i32,
+  pub LAUNCH_COUNTRY: Option<String>,
+  pub MISSION_NAME: Option<String>,
+  pub REMARKS: Option<String>,
 }
 impl Default for LNET {
   fn default() -> Self {
     Self {
       ID: None,
+      SAT_NO: 0,
       ORIG_OBJECT_ID: None,
       DERIVED_FROM: None,
       DECLASSIFICATION_DATE: None,
       DECLASSIFICATION_STRING: None,
       MSG_CREATE_DATE: None,
-      LAUNCH_FAILURE_CODE: None,
       LAUNCH_DATE: None,
+      OUTCOME: launchOutcome::SUCCESS,
+      LAUNCH_FAILURE_CODE: None,
       BE_NUMBER: None,
       O_SUFFIX: None,
       LAUNCH_FACILITY_NAME: None,
+      LAUNCH_FACILITY_CODE: None,
+      LAUNCH_VEHICLE: None,
+      LAUNCH_VEHICLE_CONFIG: None,
+      TARGET_ORBIT: None,
+      OBJECTS_ON_ORBIT: 0,
       ON_ORBIT: None,
-      SAT_NO: 0,
+      LAUNCH_COUNTRY: None,
+      MISSION_NAME: None,
+      REMARKS: None,
     }
   }
 }
@@ -409,6 +731,7 @@ impl LNET {
     let ID = self.ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let SAT_NO = self.SAT_NO;
     let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -424,10 +747,11 @@ impl LNET {
     let MSG_CREATE_DATE = self.MSG_CREATE_DATE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let LAUNCH_FAILURE_CODE = self.LAUNCH_FAILURE_CODE.as_ref().map(|x|{
+    let LAUNCH_DATE = self.LAUNCH_DATE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let LAUNCH_DATE = self.LAUNCH_DATE.as_ref().map(|x|{
+    let OUTCOME = self.OUTCOME;
+    let LAUNCH_FAILURE_CODE = self.LAUNCH_FAILURE_CODE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let BE_NUMBER = self.BE_NUMBER.as_ref().map(|x|{
@@ -439,24 +763,54 @@ impl LNET {
     let LAUNCH_FACILITY_NAME = self.LAUNCH_FACILITY_NAME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let LAUNCH_FACILITY_CODE = self.LAUNCH_FACILITY_CODE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let LAUNCH_VEHICLE = self.LAUNCH_VEHICLE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let LAUNCH_VEHICLE_CONFIG = self.LAUNCH_VEHICLE_CONFIG.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TARGET_ORBIT = self.TARGET_ORBIT.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OBJECTS_ON_ORBIT = self.OBJECTS_ON_ORBIT;
     let ON_ORBIT = self.ON_ORBIT.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let SAT_NO = self.SAT_NO;
+    let LAUNCH_COUNTRY = self.LAUNCH_COUNTRY.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MISSION_NAME = self.MISSION_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let REMARKS = self.REMARKS.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     LNE::create(_fbb, &LNEArgs{
       ID,
+      SAT_NO,
       ORIG_OBJECT_ID,
       DERIVED_FROM,
       DECLASSIFICATION_DATE,
       DECLASSIFICATION_STRING,
       MSG_CREATE_DATE,
-      LAUNCH_FAILURE_CODE,
       LAUNCH_DATE,
+      OUTCOME,
+      LAUNCH_FAILURE_CODE,
       BE_NUMBER,
       O_SUFFIX,
       LAUNCH_FACILITY_NAME,
+      LAUNCH_FACILITY_CODE,
+      LAUNCH_VEHICLE,
+      LAUNCH_VEHICLE_CONFIG,
+      TARGET_ORBIT,
+      OBJECTS_ON_ORBIT,
       ON_ORBIT,
-      SAT_NO,
+      LAUNCH_COUNTRY,
+      MISSION_NAME,
+      REMARKS,
     })
   }
 }

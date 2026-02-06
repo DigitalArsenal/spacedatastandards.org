@@ -4,6 +4,11 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { reentryDisposition } from './reentryDisposition.js';
+import { reentryImpact, reentryImpactT } from './reentryImpact.js';
+import { reentryReason } from './reentryReason.js';
+import { reentryStateVector, reentryStateVectorT } from './reentryStateVector.js';
+import { survivingDebris, survivingDebrisT } from './survivingDebris.js';
 
 
 /**
@@ -31,6 +36,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$RDM');
 }
 
+/**
+ * CCSDS RDM version
+ */
 CCSDS_RDM_VERS():string|null
 CCSDS_RDM_VERS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 CCSDS_RDM_VERS(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,6 +46,9 @@ CCSDS_RDM_VERS(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Message creation date (ISO 8601)
+ */
 CREATION_DATE():string|null
 CREATION_DATE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 CREATION_DATE(optionalEncoding?:any):string|Uint8Array|null {
@@ -45,6 +56,9 @@ CREATION_DATE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Creating organization
+ */
 ORIGINATOR():string|null
 ORIGINATOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ORIGINATOR(optionalEncoding?:any):string|Uint8Array|null {
@@ -52,6 +66,9 @@ ORIGINATOR(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Object name
+ */
 OBJECT_NAME():string|null
 OBJECT_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 OBJECT_NAME(optionalEncoding?:any):string|Uint8Array|null {
@@ -59,6 +76,9 @@ OBJECT_NAME(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * International designator
+ */
 OBJECT_ID():string|null
 OBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -66,25 +86,204 @@ OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-REENTRY_EPOCH():string|null
-REENTRY_EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-REENTRY_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * NORAD catalog number
+ */
+NORAD_CAT_ID():number {
   const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Object type (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN)
+ */
+OBJECT_TYPE():string|null
+OBJECT_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OBJECT_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-REENTRY_LATITUDE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
+/**
+ * Reentry disposition
+ */
+DISPOSITION():reentryDisposition {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : reentryDisposition.CONTROLLED;
+}
+
+/**
+ * Reentry reason
+ */
+REASON():reentryReason {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : reentryReason.NATURAL_DECAY;
+}
+
+/**
+ * Predicted reentry epoch (ISO 8601)
+ */
+REENTRY_EPOCH():string|null
+REENTRY_EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+REENTRY_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Reentry epoch uncertainty window in hours
+ */
+REENTRY_EPOCH_UNC():number {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-REENTRY_LONGITUDE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
+/**
+ * Reentry latitude in degrees
+ */
+REENTRY_LATITUDE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Reentry longitude in degrees
+ */
+REENTRY_LONGITUDE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Reentry altitude in km
+ */
+REENTRY_ALTITUDE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Time system
+ */
+TIME_SYSTEM():string|null
+TIME_SYSTEM(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TIME_SYSTEM(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Previous predicted reentry epoch for comparison (ISO 8601)
+ */
+PREV_PREDICTION_EPOCH():string|null
+PREV_PREDICTION_EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PREV_PREDICTION_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Ballistic coefficient in kg/m^2
+ */
+BALLISTIC_COEFF():number {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Object mass in kg
+ */
+MASS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Solar radiation pressure area in m^2
+ */
+SOLAR_RAD_AREA():number {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Drag area in m^2
+ */
+DRAG_AREA():number {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Initial state vector
+ */
+INITIAL_STATE(obj?:reentryStateVector):reentryStateVector|null {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? (obj || new reentryStateVector()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Ground impact predictions
+ */
+IMPACT_PREDICTIONS(index: number, obj?:reentryImpact):reentryImpact|null {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? (obj || new reentryImpact()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+impactPredictionsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Predicted surviving debris
+ */
+SURVIVING_DEBRIS(index: number, obj?:survivingDebris):survivingDebris|null {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? (obj || new survivingDebris()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+survivingDebrisLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Casualty expectation
+ */
+CASUALTY_EXPECTATION():number {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Number of breakup fragments predicted
+ */
+NUM_FRAGMENTS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Total surviving mass in kg
+ */
+SURVIVING_MASS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 54);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Additional comments
+ */
+COMMENT():string|null
+COMMENT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+COMMENT(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 static startRDM(builder:flatbuffers.Builder) {
-  builder.startObject(8);
+  builder.startObject(27);
 }
 
 static addCcsdsRdmVers(builder:flatbuffers.Builder, CCSDS_RDM_VERSOffset:flatbuffers.Offset) {
@@ -107,16 +306,116 @@ static addObjectId(builder:flatbuffers.Builder, OBJECT_IDOffset:flatbuffers.Offs
   builder.addFieldOffset(4, OBJECT_IDOffset, 0);
 }
 
+static addNoradCatId(builder:flatbuffers.Builder, NORAD_CAT_ID:number) {
+  builder.addFieldInt32(5, NORAD_CAT_ID, 0);
+}
+
+static addObjectType(builder:flatbuffers.Builder, OBJECT_TYPEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, OBJECT_TYPEOffset, 0);
+}
+
+static addDisposition(builder:flatbuffers.Builder, DISPOSITION:reentryDisposition) {
+  builder.addFieldInt8(7, DISPOSITION, reentryDisposition.CONTROLLED);
+}
+
+static addReason(builder:flatbuffers.Builder, REASON:reentryReason) {
+  builder.addFieldInt8(8, REASON, reentryReason.NATURAL_DECAY);
+}
+
 static addReentryEpoch(builder:flatbuffers.Builder, REENTRY_EPOCHOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, REENTRY_EPOCHOffset, 0);
+  builder.addFieldOffset(9, REENTRY_EPOCHOffset, 0);
+}
+
+static addReentryEpochUnc(builder:flatbuffers.Builder, REENTRY_EPOCH_UNC:number) {
+  builder.addFieldFloat64(10, REENTRY_EPOCH_UNC, 0.0);
 }
 
 static addReentryLatitude(builder:flatbuffers.Builder, REENTRY_LATITUDE:number) {
-  builder.addFieldFloat64(6, REENTRY_LATITUDE, 0.0);
+  builder.addFieldFloat64(11, REENTRY_LATITUDE, 0.0);
 }
 
 static addReentryLongitude(builder:flatbuffers.Builder, REENTRY_LONGITUDE:number) {
-  builder.addFieldFloat64(7, REENTRY_LONGITUDE, 0.0);
+  builder.addFieldFloat64(12, REENTRY_LONGITUDE, 0.0);
+}
+
+static addReentryAltitude(builder:flatbuffers.Builder, REENTRY_ALTITUDE:number) {
+  builder.addFieldFloat64(13, REENTRY_ALTITUDE, 0.0);
+}
+
+static addTimeSystem(builder:flatbuffers.Builder, TIME_SYSTEMOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, TIME_SYSTEMOffset, 0);
+}
+
+static addPrevPredictionEpoch(builder:flatbuffers.Builder, PREV_PREDICTION_EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(15, PREV_PREDICTION_EPOCHOffset, 0);
+}
+
+static addBallisticCoeff(builder:flatbuffers.Builder, BALLISTIC_COEFF:number) {
+  builder.addFieldFloat64(16, BALLISTIC_COEFF, 0.0);
+}
+
+static addMass(builder:flatbuffers.Builder, MASS:number) {
+  builder.addFieldFloat64(17, MASS, 0.0);
+}
+
+static addSolarRadArea(builder:flatbuffers.Builder, SOLAR_RAD_AREA:number) {
+  builder.addFieldFloat64(18, SOLAR_RAD_AREA, 0.0);
+}
+
+static addDragArea(builder:flatbuffers.Builder, DRAG_AREA:number) {
+  builder.addFieldFloat64(19, DRAG_AREA, 0.0);
+}
+
+static addInitialState(builder:flatbuffers.Builder, INITIAL_STATEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(20, INITIAL_STATEOffset, 0);
+}
+
+static addImpactPredictions(builder:flatbuffers.Builder, IMPACT_PREDICTIONSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(21, IMPACT_PREDICTIONSOffset, 0);
+}
+
+static createImpactPredictionsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startImpactPredictionsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addSurvivingDebris(builder:flatbuffers.Builder, SURVIVING_DEBRISOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(22, SURVIVING_DEBRISOffset, 0);
+}
+
+static createSurvivingDebrisVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startSurvivingDebrisVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addCasualtyExpectation(builder:flatbuffers.Builder, CASUALTY_EXPECTATION:number) {
+  builder.addFieldFloat64(23, CASUALTY_EXPECTATION, 0.0);
+}
+
+static addNumFragments(builder:flatbuffers.Builder, NUM_FRAGMENTS:number) {
+  builder.addFieldInt32(24, NUM_FRAGMENTS, 0);
+}
+
+static addSurvivingMass(builder:flatbuffers.Builder, SURVIVING_MASS:number) {
+  builder.addFieldFloat64(25, SURVIVING_MASS, 0.0);
+}
+
+static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(26, COMMENTOffset, 0);
 }
 
 static endRDM(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -132,18 +431,6 @@ static finishSizePrefixedRDMBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$RDM', true);
 }
 
-static createRDM(builder:flatbuffers.Builder, CCSDS_RDM_VERSOffset:flatbuffers.Offset, CREATION_DATEOffset:flatbuffers.Offset, ORIGINATOROffset:flatbuffers.Offset, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset, REENTRY_EPOCHOffset:flatbuffers.Offset, REENTRY_LATITUDE:number, REENTRY_LONGITUDE:number):flatbuffers.Offset {
-  RDM.startRDM(builder);
-  RDM.addCcsdsRdmVers(builder, CCSDS_RDM_VERSOffset);
-  RDM.addCreationDate(builder, CREATION_DATEOffset);
-  RDM.addOriginator(builder, ORIGINATOROffset);
-  RDM.addObjectName(builder, OBJECT_NAMEOffset);
-  RDM.addObjectId(builder, OBJECT_IDOffset);
-  RDM.addReentryEpoch(builder, REENTRY_EPOCHOffset);
-  RDM.addReentryLatitude(builder, REENTRY_LATITUDE);
-  RDM.addReentryLongitude(builder, REENTRY_LONGITUDE);
-  return RDM.endRDM(builder);
-}
 
 unpack(): RDMT {
   return new RDMT(
@@ -152,9 +439,28 @@ unpack(): RDMT {
     this.ORIGINATOR(),
     this.OBJECT_NAME(),
     this.OBJECT_ID(),
+    this.NORAD_CAT_ID(),
+    this.OBJECT_TYPE(),
+    this.DISPOSITION(),
+    this.REASON(),
     this.REENTRY_EPOCH(),
+    this.REENTRY_EPOCH_UNC(),
     this.REENTRY_LATITUDE(),
-    this.REENTRY_LONGITUDE()
+    this.REENTRY_LONGITUDE(),
+    this.REENTRY_ALTITUDE(),
+    this.TIME_SYSTEM(),
+    this.PREV_PREDICTION_EPOCH(),
+    this.BALLISTIC_COEFF(),
+    this.MASS(),
+    this.SOLAR_RAD_AREA(),
+    this.DRAG_AREA(),
+    (this.INITIAL_STATE() !== null ? this.INITIAL_STATE()!.unpack() : null),
+    this.bb!.createObjList<reentryImpact, reentryImpactT>(this.IMPACT_PREDICTIONS.bind(this), this.impactPredictionsLength()),
+    this.bb!.createObjList<survivingDebris, survivingDebrisT>(this.SURVIVING_DEBRIS.bind(this), this.survivingDebrisLength()),
+    this.CASUALTY_EXPECTATION(),
+    this.NUM_FRAGMENTS(),
+    this.SURVIVING_MASS(),
+    this.COMMENT()
   );
 }
 
@@ -165,9 +471,28 @@ unpackTo(_o: RDMT): void {
   _o.ORIGINATOR = this.ORIGINATOR();
   _o.OBJECT_NAME = this.OBJECT_NAME();
   _o.OBJECT_ID = this.OBJECT_ID();
+  _o.NORAD_CAT_ID = this.NORAD_CAT_ID();
+  _o.OBJECT_TYPE = this.OBJECT_TYPE();
+  _o.DISPOSITION = this.DISPOSITION();
+  _o.REASON = this.REASON();
   _o.REENTRY_EPOCH = this.REENTRY_EPOCH();
+  _o.REENTRY_EPOCH_UNC = this.REENTRY_EPOCH_UNC();
   _o.REENTRY_LATITUDE = this.REENTRY_LATITUDE();
   _o.REENTRY_LONGITUDE = this.REENTRY_LONGITUDE();
+  _o.REENTRY_ALTITUDE = this.REENTRY_ALTITUDE();
+  _o.TIME_SYSTEM = this.TIME_SYSTEM();
+  _o.PREV_PREDICTION_EPOCH = this.PREV_PREDICTION_EPOCH();
+  _o.BALLISTIC_COEFF = this.BALLISTIC_COEFF();
+  _o.MASS = this.MASS();
+  _o.SOLAR_RAD_AREA = this.SOLAR_RAD_AREA();
+  _o.DRAG_AREA = this.DRAG_AREA();
+  _o.INITIAL_STATE = (this.INITIAL_STATE() !== null ? this.INITIAL_STATE()!.unpack() : null);
+  _o.IMPACT_PREDICTIONS = this.bb!.createObjList<reentryImpact, reentryImpactT>(this.IMPACT_PREDICTIONS.bind(this), this.impactPredictionsLength());
+  _o.SURVIVING_DEBRIS = this.bb!.createObjList<survivingDebris, survivingDebrisT>(this.SURVIVING_DEBRIS.bind(this), this.survivingDebrisLength());
+  _o.CASUALTY_EXPECTATION = this.CASUALTY_EXPECTATION();
+  _o.NUM_FRAGMENTS = this.NUM_FRAGMENTS();
+  _o.SURVIVING_MASS = this.SURVIVING_MASS();
+  _o.COMMENT = this.COMMENT();
 }
 }
 
@@ -178,9 +503,28 @@ constructor(
   public ORIGINATOR: string|Uint8Array|null = null,
   public OBJECT_NAME: string|Uint8Array|null = null,
   public OBJECT_ID: string|Uint8Array|null = null,
+  public NORAD_CAT_ID: number = 0,
+  public OBJECT_TYPE: string|Uint8Array|null = null,
+  public DISPOSITION: reentryDisposition = reentryDisposition.CONTROLLED,
+  public REASON: reentryReason = reentryReason.NATURAL_DECAY,
   public REENTRY_EPOCH: string|Uint8Array|null = null,
+  public REENTRY_EPOCH_UNC: number = 0.0,
   public REENTRY_LATITUDE: number = 0.0,
-  public REENTRY_LONGITUDE: number = 0.0
+  public REENTRY_LONGITUDE: number = 0.0,
+  public REENTRY_ALTITUDE: number = 0.0,
+  public TIME_SYSTEM: string|Uint8Array|null = null,
+  public PREV_PREDICTION_EPOCH: string|Uint8Array|null = null,
+  public BALLISTIC_COEFF: number = 0.0,
+  public MASS: number = 0.0,
+  public SOLAR_RAD_AREA: number = 0.0,
+  public DRAG_AREA: number = 0.0,
+  public INITIAL_STATE: reentryStateVectorT|null = null,
+  public IMPACT_PREDICTIONS: (reentryImpactT)[] = [],
+  public SURVIVING_DEBRIS: (survivingDebrisT)[] = [],
+  public CASUALTY_EXPECTATION: number = 0.0,
+  public NUM_FRAGMENTS: number = 0,
+  public SURVIVING_MASS: number = 0.0,
+  public COMMENT: string|Uint8Array|null = null
 ){}
 
 
@@ -190,17 +534,44 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ORIGINATOR = (this.ORIGINATOR !== null ? builder.createString(this.ORIGINATOR!) : 0);
   const OBJECT_NAME = (this.OBJECT_NAME !== null ? builder.createString(this.OBJECT_NAME!) : 0);
   const OBJECT_ID = (this.OBJECT_ID !== null ? builder.createString(this.OBJECT_ID!) : 0);
+  const OBJECT_TYPE = (this.OBJECT_TYPE !== null ? builder.createString(this.OBJECT_TYPE!) : 0);
   const REENTRY_EPOCH = (this.REENTRY_EPOCH !== null ? builder.createString(this.REENTRY_EPOCH!) : 0);
+  const TIME_SYSTEM = (this.TIME_SYSTEM !== null ? builder.createString(this.TIME_SYSTEM!) : 0);
+  const PREV_PREDICTION_EPOCH = (this.PREV_PREDICTION_EPOCH !== null ? builder.createString(this.PREV_PREDICTION_EPOCH!) : 0);
+  const INITIAL_STATE = (this.INITIAL_STATE !== null ? this.INITIAL_STATE!.pack(builder) : 0);
+  const IMPACT_PREDICTIONS = RDM.createImpactPredictionsVector(builder, builder.createObjectOffsetList(this.IMPACT_PREDICTIONS));
+  const SURVIVING_DEBRIS = RDM.createSurvivingDebrisVector(builder, builder.createObjectOffsetList(this.SURVIVING_DEBRIS));
+  const COMMENT = (this.COMMENT !== null ? builder.createString(this.COMMENT!) : 0);
 
-  return RDM.createRDM(builder,
-    CCSDS_RDM_VERS,
-    CREATION_DATE,
-    ORIGINATOR,
-    OBJECT_NAME,
-    OBJECT_ID,
-    REENTRY_EPOCH,
-    this.REENTRY_LATITUDE,
-    this.REENTRY_LONGITUDE
-  );
+  RDM.startRDM(builder);
+  RDM.addCcsdsRdmVers(builder, CCSDS_RDM_VERS);
+  RDM.addCreationDate(builder, CREATION_DATE);
+  RDM.addOriginator(builder, ORIGINATOR);
+  RDM.addObjectName(builder, OBJECT_NAME);
+  RDM.addObjectId(builder, OBJECT_ID);
+  RDM.addNoradCatId(builder, this.NORAD_CAT_ID);
+  RDM.addObjectType(builder, OBJECT_TYPE);
+  RDM.addDisposition(builder, this.DISPOSITION);
+  RDM.addReason(builder, this.REASON);
+  RDM.addReentryEpoch(builder, REENTRY_EPOCH);
+  RDM.addReentryEpochUnc(builder, this.REENTRY_EPOCH_UNC);
+  RDM.addReentryLatitude(builder, this.REENTRY_LATITUDE);
+  RDM.addReentryLongitude(builder, this.REENTRY_LONGITUDE);
+  RDM.addReentryAltitude(builder, this.REENTRY_ALTITUDE);
+  RDM.addTimeSystem(builder, TIME_SYSTEM);
+  RDM.addPrevPredictionEpoch(builder, PREV_PREDICTION_EPOCH);
+  RDM.addBallisticCoeff(builder, this.BALLISTIC_COEFF);
+  RDM.addMass(builder, this.MASS);
+  RDM.addSolarRadArea(builder, this.SOLAR_RAD_AREA);
+  RDM.addDragArea(builder, this.DRAG_AREA);
+  RDM.addInitialState(builder, INITIAL_STATE);
+  RDM.addImpactPredictions(builder, IMPACT_PREDICTIONS);
+  RDM.addSurvivingDebris(builder, SURVIVING_DEBRIS);
+  RDM.addCasualtyExpectation(builder, this.CASUALTY_EXPECTATION);
+  RDM.addNumFragments(builder, this.NUM_FRAGMENTS);
+  RDM.addSurvivingMass(builder, this.SURVIVING_MASS);
+  RDM.addComment(builder, COMMENT);
+
+  return RDM.endRDM(builder);
 }
 }

@@ -1,23 +1,65 @@
-// Hash: 6c4311afa33e0d798fd33ecbe268e40a71544cb06cd9b188c9056239cd17d408
-// Version: 0.0.2
+// Hash: dcf36e9b75490fdbbac2e3075176538b91ff26b8ee0f9ad75d32e7e5e30aaf76
+// Version: 0.0.3
 // -----------------------------------END_HEADER
-/// RF Band
+enum rfBandDesignation : byte {
+  UHF,
+  L,
+  S,
+  C,
+  X,
+  KU,
+  K,
+  KA,
+  V,
+  W,
+  Q,
+  EHF,
+  OTHER
+}
+
+enum rfPolarization : byte {
+  LHCP,
+  RHCP,
+  LINEAR_H,
+  LINEAR_V,
+  DUAL,
+  CROSS,
+  UNKNOWN
+}
+
+/// RF Band Specification
 table RFB {
+  /// Unique identifier
   ID:string;
+  /// Parent entity identifier
   ID_ENTITY:string;
+  /// Band name or designation
   NAME:string;
-  BAND:string;
+  /// RF band designation
+  BAND:rfBandDesignation;
+  /// Operating mode
   MODE:string;
+  /// Band purpose (e.g., TT&C, PAYLOAD, BEACON)
   PURPOSE:string;
+  /// Minimum frequency (MHz)
   FREQ_MIN:double;
+  /// Maximum frequency (MHz)
   FREQ_MAX:double;
+  /// Center frequency (MHz)
   CENTER_FREQ:double;
-  PEAK_GAIN:double;
-  EDGE_GAIN:double;
+  /// Bandwidth (MHz)
   BANDWIDTH:double;
+  /// Peak antenna gain (dBi)
+  PEAK_GAIN:double;
+  /// Edge-of-coverage gain (dBi)
+  EDGE_GAIN:double;
+  /// Antenna beamwidth (degrees)
   BEAMWIDTH:double;
-  POLARIZATION:string;
+  /// Polarization
+  POLARIZATION:rfPolarization;
+  /// Effective radiated power (dBW)
   ERP:double;
+  /// Effective isotropic radiated power (dBW)
   EIRP:double;
 }
 

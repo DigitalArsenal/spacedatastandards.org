@@ -3,3 +3,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export { MNF, MNFT } from './MNF.js';
+export { manifoldElset, manifoldElsetT } from './manifoldElset.js';
+export { manifoldStatus } from './manifoldStatus.js';

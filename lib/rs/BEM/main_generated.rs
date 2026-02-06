@@ -9,6 +9,572 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_BEAM_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_BEAM_TYPE: i8 = 5;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_BEAM_TYPE: [beamType; 6] = [
+  beamType::SPOT,
+  beamType::REGIONAL,
+  beamType::GLOBAL,
+  beamType::SHAPED,
+  beamType::STEERABLE,
+  beamType::HOPPING,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct beamType(pub i8);
+#[allow(non_upper_case_globals)]
+impl beamType {
+  pub const SPOT: Self = Self(0);
+  pub const REGIONAL: Self = Self(1);
+  pub const GLOBAL: Self = Self(2);
+  pub const SHAPED: Self = Self(3);
+  pub const STEERABLE: Self = Self(4);
+  pub const HOPPING: Self = Self(5);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 5;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::SPOT,
+    Self::REGIONAL,
+    Self::GLOBAL,
+    Self::SHAPED,
+    Self::STEERABLE,
+    Self::HOPPING,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::SPOT => Some("SPOT"),
+      Self::REGIONAL => Some("REGIONAL"),
+      Self::GLOBAL => Some("GLOBAL"),
+      Self::SHAPED => Some("SHAPED"),
+      Self::STEERABLE => Some("STEERABLE"),
+      Self::HOPPING => Some("HOPPING"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for beamType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for beamType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for beamType {
+    type Output = beamType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for beamType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for beamType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for beamType {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_BEAM_POLARIZATION: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_BEAM_POLARIZATION: i8 = 6;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_BEAM_POLARIZATION: [beamPolarization; 7] = [
+  beamPolarization::RHCP,
+  beamPolarization::LHCP,
+  beamPolarization::LINEAR_H,
+  beamPolarization::LINEAR_V,
+  beamPolarization::DUAL_CIRCULAR,
+  beamPolarization::DUAL_LINEAR,
+  beamPolarization::CROSS_POL,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct beamPolarization(pub i8);
+#[allow(non_upper_case_globals)]
+impl beamPolarization {
+  pub const RHCP: Self = Self(0);
+  pub const LHCP: Self = Self(1);
+  pub const LINEAR_H: Self = Self(2);
+  pub const LINEAR_V: Self = Self(3);
+  pub const DUAL_CIRCULAR: Self = Self(4);
+  pub const DUAL_LINEAR: Self = Self(5);
+  pub const CROSS_POL: Self = Self(6);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 6;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::RHCP,
+    Self::LHCP,
+    Self::LINEAR_H,
+    Self::LINEAR_V,
+    Self::DUAL_CIRCULAR,
+    Self::DUAL_LINEAR,
+    Self::CROSS_POL,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::RHCP => Some("RHCP"),
+      Self::LHCP => Some("LHCP"),
+      Self::LINEAR_H => Some("LINEAR_H"),
+      Self::LINEAR_V => Some("LINEAR_V"),
+      Self::DUAL_CIRCULAR => Some("DUAL_CIRCULAR"),
+      Self::DUAL_LINEAR => Some("DUAL_LINEAR"),
+      Self::CROSS_POL => Some("CROSS_POL"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for beamPolarization {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for beamPolarization {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for beamPolarization {
+    type Output = beamPolarization;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for beamPolarization {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for beamPolarization {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for beamPolarization {}
+pub enum beamContourPointOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Beam Contour Point (gain pattern boundary)
+pub struct beamContourPoint<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for beamContourPoint<'a> {
+  type Inner = beamContourPoint<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> beamContourPoint<'a> {
+  pub const VT_LATITUDE: flatbuffers::VOffsetT = 4;
+  pub const VT_LONGITUDE: flatbuffers::VOffsetT = 6;
+  pub const VT_GAIN: flatbuffers::VOffsetT = 8;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    beamContourPoint { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args beamContourPointArgs
+  ) -> flatbuffers::WIPOffset<beamContourPoint<'bldr>> {
+    let mut builder = beamContourPointBuilder::new(_fbb);
+    builder.add_GAIN(args.GAIN);
+    builder.add_LONGITUDE(args.LONGITUDE);
+    builder.add_LATITUDE(args.LATITUDE);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> beamContourPointT {
+    let LATITUDE = self.LATITUDE();
+    let LONGITUDE = self.LONGITUDE();
+    let GAIN = self.GAIN();
+    beamContourPointT {
+      LATITUDE,
+      LONGITUDE,
+      GAIN,
+    }
+  }
+
+  /// Latitude in degrees
+  #[inline]
+  pub fn LATITUDE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(beamContourPoint::VT_LATITUDE, Some(0.0)).unwrap()}
+  }
+  /// Longitude in degrees
+  #[inline]
+  pub fn LONGITUDE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(beamContourPoint::VT_LONGITUDE, Some(0.0)).unwrap()}
+  }
+  /// Gain level in dBi at this contour
+  #[inline]
+  pub fn GAIN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(beamContourPoint::VT_GAIN, Some(0.0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for beamContourPoint<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<f64>("LATITUDE", Self::VT_LATITUDE, false)?
+     .visit_field::<f64>("LONGITUDE", Self::VT_LONGITUDE, false)?
+     .visit_field::<f64>("GAIN", Self::VT_GAIN, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct beamContourPointArgs {
+    pub LATITUDE: f64,
+    pub LONGITUDE: f64,
+    pub GAIN: f64,
+}
+impl<'a> Default for beamContourPointArgs {
+  #[inline]
+  fn default() -> Self {
+    beamContourPointArgs {
+      LATITUDE: 0.0,
+      LONGITUDE: 0.0,
+      GAIN: 0.0,
+    }
+  }
+}
+
+pub struct beamContourPointBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> beamContourPointBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_LATITUDE(&mut self, LATITUDE: f64) {
+    self.fbb_.push_slot::<f64>(beamContourPoint::VT_LATITUDE, LATITUDE, 0.0);
+  }
+  #[inline]
+  pub fn add_LONGITUDE(&mut self, LONGITUDE: f64) {
+    self.fbb_.push_slot::<f64>(beamContourPoint::VT_LONGITUDE, LONGITUDE, 0.0);
+  }
+  #[inline]
+  pub fn add_GAIN(&mut self, GAIN: f64) {
+    self.fbb_.push_slot::<f64>(beamContourPoint::VT_GAIN, GAIN, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> beamContourPointBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    beamContourPointBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<beamContourPoint<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for beamContourPoint<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("beamContourPoint");
+      ds.field("LATITUDE", &self.LATITUDE());
+      ds.field("LONGITUDE", &self.LONGITUDE());
+      ds.field("GAIN", &self.GAIN());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct beamContourPointT {
+  pub LATITUDE: f64,
+  pub LONGITUDE: f64,
+  pub GAIN: f64,
+}
+impl Default for beamContourPointT {
+  fn default() -> Self {
+    Self {
+      LATITUDE: 0.0,
+      LONGITUDE: 0.0,
+      GAIN: 0.0,
+    }
+  }
+}
+impl beamContourPointT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<beamContourPoint<'b>> {
+    let LATITUDE = self.LATITUDE;
+    let LONGITUDE = self.LONGITUDE;
+    let GAIN = self.GAIN;
+    beamContourPoint::create(_fbb, &beamContourPointArgs{
+      LATITUDE,
+      LONGITUDE,
+      GAIN,
+    })
+  }
+}
+pub enum beamContourOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Beam Contour (iso-gain boundary)
+pub struct beamContour<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for beamContour<'a> {
+  type Inner = beamContour<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> beamContour<'a> {
+  pub const VT_CONTOUR_ID: flatbuffers::VOffsetT = 4;
+  pub const VT_GAIN_LEVEL: flatbuffers::VOffsetT = 6;
+  pub const VT_POINTS: flatbuffers::VOffsetT = 8;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    beamContour { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args beamContourArgs<'args>
+  ) -> flatbuffers::WIPOffset<beamContour<'bldr>> {
+    let mut builder = beamContourBuilder::new(_fbb);
+    builder.add_GAIN_LEVEL(args.GAIN_LEVEL);
+    if let Some(x) = args.POINTS { builder.add_POINTS(x); }
+    if let Some(x) = args.CONTOUR_ID { builder.add_CONTOUR_ID(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> beamContourT {
+    let CONTOUR_ID = self.CONTOUR_ID().map(|x| {
+      x.to_string()
+    });
+    let GAIN_LEVEL = self.GAIN_LEVEL();
+    let POINTS = self.POINTS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    beamContourT {
+      CONTOUR_ID,
+      GAIN_LEVEL,
+      POINTS,
+    }
+  }
+
+  /// Contour level identifier
+  #[inline]
+  pub fn CONTOUR_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(beamContour::VT_CONTOUR_ID, None)}
+  }
+  /// Gain level in dBi
+  #[inline]
+  pub fn GAIN_LEVEL(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(beamContour::VT_GAIN_LEVEL, Some(0.0)).unwrap()}
+  }
+  /// Contour boundary points
+  #[inline]
+  pub fn POINTS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<beamContourPoint<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<beamContourPoint>>>>(beamContour::VT_POINTS, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for beamContour<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CONTOUR_ID", Self::VT_CONTOUR_ID, false)?
+     .visit_field::<f64>("GAIN_LEVEL", Self::VT_GAIN_LEVEL, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<beamContourPoint>>>>("POINTS", Self::VT_POINTS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct beamContourArgs<'a> {
+    pub CONTOUR_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub GAIN_LEVEL: f64,
+    pub POINTS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<beamContourPoint<'a>>>>>,
+}
+impl<'a> Default for beamContourArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    beamContourArgs {
+      CONTOUR_ID: None,
+      GAIN_LEVEL: 0.0,
+      POINTS: None,
+    }
+  }
+}
+
+pub struct beamContourBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> beamContourBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_CONTOUR_ID(&mut self, CONTOUR_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(beamContour::VT_CONTOUR_ID, CONTOUR_ID);
+  }
+  #[inline]
+  pub fn add_GAIN_LEVEL(&mut self, GAIN_LEVEL: f64) {
+    self.fbb_.push_slot::<f64>(beamContour::VT_GAIN_LEVEL, GAIN_LEVEL, 0.0);
+  }
+  #[inline]
+  pub fn add_POINTS(&mut self, POINTS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<beamContourPoint<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(beamContour::VT_POINTS, POINTS);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> beamContourBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    beamContourBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<beamContour<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for beamContour<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("beamContour");
+      ds.field("CONTOUR_ID", &self.CONTOUR_ID());
+      ds.field("GAIN_LEVEL", &self.GAIN_LEVEL());
+      ds.field("POINTS", &self.POINTS());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct beamContourT {
+  pub CONTOUR_ID: Option<String>,
+  pub GAIN_LEVEL: f64,
+  pub POINTS: Option<Vec<beamContourPointT>>,
+}
+impl Default for beamContourT {
+  fn default() -> Self {
+    Self {
+      CONTOUR_ID: None,
+      GAIN_LEVEL: 0.0,
+      POINTS: None,
+    }
+  }
+}
+impl beamContourT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<beamContour<'b>> {
+    let CONTOUR_ID = self.CONTOUR_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let GAIN_LEVEL = self.GAIN_LEVEL;
+    let POINTS = self.POINTS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    beamContour::create(_fbb, &beamContourArgs{
+      CONTOUR_ID,
+      GAIN_LEVEL,
+      POINTS,
+    })
+  }
+}
 pub enum BEMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -28,8 +594,21 @@ impl<'a> flatbuffers::Follow<'a> for BEM<'a> {
 impl<'a> BEM<'a> {
   pub const VT_ID: flatbuffers::VOffsetT = 4;
   pub const VT_BEAM_NAME: flatbuffers::VOffsetT = 6;
-  pub const VT_NOTES: flatbuffers::VOffsetT = 8;
-  pub const VT_BEAM_CONTOURS: flatbuffers::VOffsetT = 10;
+  pub const VT_ID_ENTITY: flatbuffers::VOffsetT = 8;
+  pub const VT_ID_ANTENNA: flatbuffers::VOffsetT = 10;
+  pub const VT_TYPE: flatbuffers::VOffsetT = 12;
+  pub const VT_POLARIZATION: flatbuffers::VOffsetT = 14;
+  pub const VT_PEAK_GAIN: flatbuffers::VOffsetT = 16;
+  pub const VT_EOC_GAIN: flatbuffers::VOffsetT = 18;
+  pub const VT_CENTER_LATITUDE: flatbuffers::VOffsetT = 20;
+  pub const VT_CENTER_LONGITUDE: flatbuffers::VOffsetT = 22;
+  pub const VT_BEAMWIDTH: flatbuffers::VOffsetT = 24;
+  pub const VT_FREQUENCY: flatbuffers::VOffsetT = 26;
+  pub const VT_EIRP: flatbuffers::VOffsetT = 28;
+  pub const VT_G_OVER_T: flatbuffers::VOffsetT = 30;
+  pub const VT_FOOTPRINT_AREA: flatbuffers::VOffsetT = 32;
+  pub const VT_BEAM_CONTOURS: flatbuffers::VOffsetT = 34;
+  pub const VT_NOTES: flatbuffers::VOffsetT = 36;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -41,10 +620,23 @@ impl<'a> BEM<'a> {
     args: &'args BEMArgs<'args>
   ) -> flatbuffers::WIPOffset<BEM<'bldr>> {
     let mut builder = BEMBuilder::new(_fbb);
-    if let Some(x) = args.BEAM_CONTOURS { builder.add_BEAM_CONTOURS(x); }
+    builder.add_FOOTPRINT_AREA(args.FOOTPRINT_AREA);
+    builder.add_G_OVER_T(args.G_OVER_T);
+    builder.add_EIRP(args.EIRP);
+    builder.add_FREQUENCY(args.FREQUENCY);
+    builder.add_BEAMWIDTH(args.BEAMWIDTH);
+    builder.add_CENTER_LONGITUDE(args.CENTER_LONGITUDE);
+    builder.add_CENTER_LATITUDE(args.CENTER_LATITUDE);
+    builder.add_EOC_GAIN(args.EOC_GAIN);
+    builder.add_PEAK_GAIN(args.PEAK_GAIN);
     if let Some(x) = args.NOTES { builder.add_NOTES(x); }
+    if let Some(x) = args.BEAM_CONTOURS { builder.add_BEAM_CONTOURS(x); }
+    if let Some(x) = args.ID_ANTENNA { builder.add_ID_ANTENNA(x); }
+    if let Some(x) = args.ID_ENTITY { builder.add_ID_ENTITY(x); }
     if let Some(x) = args.BEAM_NAME { builder.add_BEAM_NAME(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_POLARIZATION(args.POLARIZATION);
+    builder.add_TYPE(args.TYPE);
     builder.finish()
   }
 
@@ -55,20 +647,51 @@ impl<'a> BEM<'a> {
     let BEAM_NAME = self.BEAM_NAME().map(|x| {
       x.to_string()
     });
-    let NOTES = self.NOTES().map(|x| {
+    let ID_ENTITY = self.ID_ENTITY().map(|x| {
       x.to_string()
     });
+    let ID_ANTENNA = self.ID_ANTENNA().map(|x| {
+      x.to_string()
+    });
+    let TYPE = self.TYPE();
+    let POLARIZATION = self.POLARIZATION();
+    let PEAK_GAIN = self.PEAK_GAIN();
+    let EOC_GAIN = self.EOC_GAIN();
+    let CENTER_LATITUDE = self.CENTER_LATITUDE();
+    let CENTER_LONGITUDE = self.CENTER_LONGITUDE();
+    let BEAMWIDTH = self.BEAMWIDTH();
+    let FREQUENCY = self.FREQUENCY();
+    let EIRP = self.EIRP();
+    let G_OVER_T = self.G_OVER_T();
+    let FOOTPRINT_AREA = self.FOOTPRINT_AREA();
     let BEAM_CONTOURS = self.BEAM_CONTOURS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let NOTES = self.NOTES().map(|x| {
+      x.to_string()
     });
     BEMT {
       ID,
       BEAM_NAME,
-      NOTES,
+      ID_ENTITY,
+      ID_ANTENNA,
+      TYPE,
+      POLARIZATION,
+      PEAK_GAIN,
+      EOC_GAIN,
+      CENTER_LATITUDE,
+      CENTER_LONGITUDE,
+      BEAMWIDTH,
+      FREQUENCY,
+      EIRP,
+      G_OVER_T,
+      FOOTPRINT_AREA,
       BEAM_CONTOURS,
+      NOTES,
     }
   }
 
+  /// Unique beam identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -76,6 +699,7 @@ impl<'a> BEM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(BEM::VT_ID, None)}
   }
+  /// Beam name or designation
   #[inline]
   pub fn BEAM_NAME(&self) -> Option<&'a str> {
     // Safety:
@@ -83,19 +707,125 @@ impl<'a> BEM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(BEM::VT_BEAM_NAME, None)}
   }
+  /// Reference to parent entity (satellite/transponder)
+  #[inline]
+  pub fn ID_ENTITY(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(BEM::VT_ID_ENTITY, None)}
+  }
+  /// Reference to parent antenna
+  #[inline]
+  pub fn ID_ANTENNA(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(BEM::VT_ID_ANTENNA, None)}
+  }
+  /// Beam type
+  #[inline]
+  pub fn TYPE(&self) -> beamType {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<beamType>(BEM::VT_TYPE, Some(beamType::SPOT)).unwrap()}
+  }
+  /// Beam polarization
+  #[inline]
+  pub fn POLARIZATION(&self) -> beamPolarization {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<beamPolarization>(BEM::VT_POLARIZATION, Some(beamPolarization::RHCP)).unwrap()}
+  }
+  /// Peak gain in dBi
+  #[inline]
+  pub fn PEAK_GAIN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(BEM::VT_PEAK_GAIN, Some(0.0)).unwrap()}
+  }
+  /// Edge-of-coverage gain in dBi
+  #[inline]
+  pub fn EOC_GAIN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(BEM::VT_EOC_GAIN, Some(0.0)).unwrap()}
+  }
+  /// Beam center latitude in degrees
+  #[inline]
+  pub fn CENTER_LATITUDE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(BEM::VT_CENTER_LATITUDE, Some(0.0)).unwrap()}
+  }
+  /// Beam center longitude in degrees
+  #[inline]
+  pub fn CENTER_LONGITUDE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(BEM::VT_CENTER_LONGITUDE, Some(0.0)).unwrap()}
+  }
+  /// Beamwidth (3dB) in degrees
+  #[inline]
+  pub fn BEAMWIDTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(BEM::VT_BEAMWIDTH, Some(0.0)).unwrap()}
+  }
+  /// Operating frequency in MHz
+  #[inline]
+  pub fn FREQUENCY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(BEM::VT_FREQUENCY, Some(0.0)).unwrap()}
+  }
+  /// EIRP at beam center in dBW
+  #[inline]
+  pub fn EIRP(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(BEM::VT_EIRP, Some(0.0)).unwrap()}
+  }
+  /// G/T at beam center in dB/K
+  #[inline]
+  pub fn G_OVER_T(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(BEM::VT_G_OVER_T, Some(0.0)).unwrap()}
+  }
+  /// Beam footprint area in km^2
+  #[inline]
+  pub fn FOOTPRINT_AREA(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(BEM::VT_FOOTPRINT_AREA, Some(0.0)).unwrap()}
+  }
+  /// Beam contour definitions
+  #[inline]
+  pub fn BEAM_CONTOURS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<beamContour<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<beamContour>>>>(BEM::VT_BEAM_CONTOURS, None)}
+  }
+  /// Additional notes
   #[inline]
   pub fn NOTES(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(BEM::VT_NOTES, None)}
-  }
-  #[inline]
-  pub fn BEAM_CONTOURS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(BEM::VT_BEAM_CONTOURS, None)}
   }
 }
 
@@ -108,8 +838,21 @@ impl flatbuffers::Verifiable for BEM<'_> {
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("BEAM_NAME", Self::VT_BEAM_NAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID_ENTITY", Self::VT_ID_ENTITY, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID_ANTENNA", Self::VT_ID_ANTENNA, false)?
+     .visit_field::<beamType>("TYPE", Self::VT_TYPE, false)?
+     .visit_field::<beamPolarization>("POLARIZATION", Self::VT_POLARIZATION, false)?
+     .visit_field::<f64>("PEAK_GAIN", Self::VT_PEAK_GAIN, false)?
+     .visit_field::<f64>("EOC_GAIN", Self::VT_EOC_GAIN, false)?
+     .visit_field::<f64>("CENTER_LATITUDE", Self::VT_CENTER_LATITUDE, false)?
+     .visit_field::<f64>("CENTER_LONGITUDE", Self::VT_CENTER_LONGITUDE, false)?
+     .visit_field::<f64>("BEAMWIDTH", Self::VT_BEAMWIDTH, false)?
+     .visit_field::<f64>("FREQUENCY", Self::VT_FREQUENCY, false)?
+     .visit_field::<f64>("EIRP", Self::VT_EIRP, false)?
+     .visit_field::<f64>("G_OVER_T", Self::VT_G_OVER_T, false)?
+     .visit_field::<f64>("FOOTPRINT_AREA", Self::VT_FOOTPRINT_AREA, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<beamContour>>>>("BEAM_CONTOURS", Self::VT_BEAM_CONTOURS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NOTES", Self::VT_NOTES, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("BEAM_CONTOURS", Self::VT_BEAM_CONTOURS, false)?
      .finish();
     Ok(())
   }
@@ -117,8 +860,21 @@ impl flatbuffers::Verifiable for BEM<'_> {
 pub struct BEMArgs<'a> {
     pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub BEAM_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ID_ENTITY: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ID_ANTENNA: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub TYPE: beamType,
+    pub POLARIZATION: beamPolarization,
+    pub PEAK_GAIN: f64,
+    pub EOC_GAIN: f64,
+    pub CENTER_LATITUDE: f64,
+    pub CENTER_LONGITUDE: f64,
+    pub BEAMWIDTH: f64,
+    pub FREQUENCY: f64,
+    pub EIRP: f64,
+    pub G_OVER_T: f64,
+    pub FOOTPRINT_AREA: f64,
+    pub BEAM_CONTOURS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<beamContour<'a>>>>>,
     pub NOTES: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub BEAM_CONTOURS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
 }
 impl<'a> Default for BEMArgs<'a> {
   #[inline]
@@ -126,8 +882,21 @@ impl<'a> Default for BEMArgs<'a> {
     BEMArgs {
       ID: None,
       BEAM_NAME: None,
-      NOTES: None,
+      ID_ENTITY: None,
+      ID_ANTENNA: None,
+      TYPE: beamType::SPOT,
+      POLARIZATION: beamPolarization::RHCP,
+      PEAK_GAIN: 0.0,
+      EOC_GAIN: 0.0,
+      CENTER_LATITUDE: 0.0,
+      CENTER_LONGITUDE: 0.0,
+      BEAMWIDTH: 0.0,
+      FREQUENCY: 0.0,
+      EIRP: 0.0,
+      G_OVER_T: 0.0,
+      FOOTPRINT_AREA: 0.0,
       BEAM_CONTOURS: None,
+      NOTES: None,
     }
   }
 }
@@ -146,12 +915,64 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> BEMBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(BEM::VT_BEAM_NAME, BEAM_NAME);
   }
   #[inline]
-  pub fn add_NOTES(&mut self, NOTES: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(BEM::VT_NOTES, NOTES);
+  pub fn add_ID_ENTITY(&mut self, ID_ENTITY: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(BEM::VT_ID_ENTITY, ID_ENTITY);
   }
   #[inline]
-  pub fn add_BEAM_CONTOURS(&mut self, BEAM_CONTOURS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+  pub fn add_ID_ANTENNA(&mut self, ID_ANTENNA: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(BEM::VT_ID_ANTENNA, ID_ANTENNA);
+  }
+  #[inline]
+  pub fn add_TYPE(&mut self, TYPE: beamType) {
+    self.fbb_.push_slot::<beamType>(BEM::VT_TYPE, TYPE, beamType::SPOT);
+  }
+  #[inline]
+  pub fn add_POLARIZATION(&mut self, POLARIZATION: beamPolarization) {
+    self.fbb_.push_slot::<beamPolarization>(BEM::VT_POLARIZATION, POLARIZATION, beamPolarization::RHCP);
+  }
+  #[inline]
+  pub fn add_PEAK_GAIN(&mut self, PEAK_GAIN: f64) {
+    self.fbb_.push_slot::<f64>(BEM::VT_PEAK_GAIN, PEAK_GAIN, 0.0);
+  }
+  #[inline]
+  pub fn add_EOC_GAIN(&mut self, EOC_GAIN: f64) {
+    self.fbb_.push_slot::<f64>(BEM::VT_EOC_GAIN, EOC_GAIN, 0.0);
+  }
+  #[inline]
+  pub fn add_CENTER_LATITUDE(&mut self, CENTER_LATITUDE: f64) {
+    self.fbb_.push_slot::<f64>(BEM::VT_CENTER_LATITUDE, CENTER_LATITUDE, 0.0);
+  }
+  #[inline]
+  pub fn add_CENTER_LONGITUDE(&mut self, CENTER_LONGITUDE: f64) {
+    self.fbb_.push_slot::<f64>(BEM::VT_CENTER_LONGITUDE, CENTER_LONGITUDE, 0.0);
+  }
+  #[inline]
+  pub fn add_BEAMWIDTH(&mut self, BEAMWIDTH: f64) {
+    self.fbb_.push_slot::<f64>(BEM::VT_BEAMWIDTH, BEAMWIDTH, 0.0);
+  }
+  #[inline]
+  pub fn add_FREQUENCY(&mut self, FREQUENCY: f64) {
+    self.fbb_.push_slot::<f64>(BEM::VT_FREQUENCY, FREQUENCY, 0.0);
+  }
+  #[inline]
+  pub fn add_EIRP(&mut self, EIRP: f64) {
+    self.fbb_.push_slot::<f64>(BEM::VT_EIRP, EIRP, 0.0);
+  }
+  #[inline]
+  pub fn add_G_OVER_T(&mut self, G_OVER_T: f64) {
+    self.fbb_.push_slot::<f64>(BEM::VT_G_OVER_T, G_OVER_T, 0.0);
+  }
+  #[inline]
+  pub fn add_FOOTPRINT_AREA(&mut self, FOOTPRINT_AREA: f64) {
+    self.fbb_.push_slot::<f64>(BEM::VT_FOOTPRINT_AREA, FOOTPRINT_AREA, 0.0);
+  }
+  #[inline]
+  pub fn add_BEAM_CONTOURS(&mut self, BEAM_CONTOURS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<beamContour<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(BEM::VT_BEAM_CONTOURS, BEAM_CONTOURS);
+  }
+  #[inline]
+  pub fn add_NOTES(&mut self, NOTES: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(BEM::VT_NOTES, NOTES);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> BEMBuilder<'a, 'b, A> {
@@ -173,8 +994,21 @@ impl core::fmt::Debug for BEM<'_> {
     let mut ds = f.debug_struct("BEM");
       ds.field("ID", &self.ID());
       ds.field("BEAM_NAME", &self.BEAM_NAME());
-      ds.field("NOTES", &self.NOTES());
+      ds.field("ID_ENTITY", &self.ID_ENTITY());
+      ds.field("ID_ANTENNA", &self.ID_ANTENNA());
+      ds.field("TYPE", &self.TYPE());
+      ds.field("POLARIZATION", &self.POLARIZATION());
+      ds.field("PEAK_GAIN", &self.PEAK_GAIN());
+      ds.field("EOC_GAIN", &self.EOC_GAIN());
+      ds.field("CENTER_LATITUDE", &self.CENTER_LATITUDE());
+      ds.field("CENTER_LONGITUDE", &self.CENTER_LONGITUDE());
+      ds.field("BEAMWIDTH", &self.BEAMWIDTH());
+      ds.field("FREQUENCY", &self.FREQUENCY());
+      ds.field("EIRP", &self.EIRP());
+      ds.field("G_OVER_T", &self.G_OVER_T());
+      ds.field("FOOTPRINT_AREA", &self.FOOTPRINT_AREA());
       ds.field("BEAM_CONTOURS", &self.BEAM_CONTOURS());
+      ds.field("NOTES", &self.NOTES());
       ds.finish()
   }
 }
@@ -183,16 +1017,42 @@ impl core::fmt::Debug for BEM<'_> {
 pub struct BEMT {
   pub ID: Option<String>,
   pub BEAM_NAME: Option<String>,
+  pub ID_ENTITY: Option<String>,
+  pub ID_ANTENNA: Option<String>,
+  pub TYPE: beamType,
+  pub POLARIZATION: beamPolarization,
+  pub PEAK_GAIN: f64,
+  pub EOC_GAIN: f64,
+  pub CENTER_LATITUDE: f64,
+  pub CENTER_LONGITUDE: f64,
+  pub BEAMWIDTH: f64,
+  pub FREQUENCY: f64,
+  pub EIRP: f64,
+  pub G_OVER_T: f64,
+  pub FOOTPRINT_AREA: f64,
+  pub BEAM_CONTOURS: Option<Vec<beamContourT>>,
   pub NOTES: Option<String>,
-  pub BEAM_CONTOURS: Option<Vec<String>>,
 }
 impl Default for BEMT {
   fn default() -> Self {
     Self {
       ID: None,
       BEAM_NAME: None,
-      NOTES: None,
+      ID_ENTITY: None,
+      ID_ANTENNA: None,
+      TYPE: beamType::SPOT,
+      POLARIZATION: beamPolarization::RHCP,
+      PEAK_GAIN: 0.0,
+      EOC_GAIN: 0.0,
+      CENTER_LATITUDE: 0.0,
+      CENTER_LONGITUDE: 0.0,
+      BEAMWIDTH: 0.0,
+      FREQUENCY: 0.0,
+      EIRP: 0.0,
+      G_OVER_T: 0.0,
+      FOOTPRINT_AREA: 0.0,
       BEAM_CONTOURS: None,
+      NOTES: None,
     }
   }
 }
@@ -207,17 +1067,47 @@ impl BEMT {
     let BEAM_NAME = self.BEAM_NAME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let NOTES = self.NOTES.as_ref().map(|x|{
+    let ID_ENTITY = self.ID_ENTITY.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let ID_ANTENNA = self.ID_ANTENNA.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TYPE = self.TYPE;
+    let POLARIZATION = self.POLARIZATION;
+    let PEAK_GAIN = self.PEAK_GAIN;
+    let EOC_GAIN = self.EOC_GAIN;
+    let CENTER_LATITUDE = self.CENTER_LATITUDE;
+    let CENTER_LONGITUDE = self.CENTER_LONGITUDE;
+    let BEAMWIDTH = self.BEAMWIDTH;
+    let FREQUENCY = self.FREQUENCY;
+    let EIRP = self.EIRP;
+    let G_OVER_T = self.G_OVER_T;
+    let FOOTPRINT_AREA = self.FOOTPRINT_AREA;
     let BEAM_CONTOURS = self.BEAM_CONTOURS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let NOTES = self.NOTES.as_ref().map(|x|{
+      _fbb.create_string(x)
     });
     BEM::create(_fbb, &BEMArgs{
       ID,
       BEAM_NAME,
-      NOTES,
+      ID_ENTITY,
+      ID_ANTENNA,
+      TYPE,
+      POLARIZATION,
+      PEAK_GAIN,
+      EOC_GAIN,
+      CENTER_LATITUDE,
+      CENTER_LONGITUDE,
+      BEAMWIDTH,
+      FREQUENCY,
+      EIRP,
+      G_OVER_T,
+      FOOTPRINT_AREA,
       BEAM_CONTOURS,
+      NOTES,
     })
   }
 }

@@ -53,6 +53,50 @@ const generateOMMData = async () => {
 generateOMMData();
 ```
 
+## WASM CCSDS Message Parsers
+
+This package includes WebAssembly-based parsers for CCSDS and XTCE standard message formats. The parsers support round-trip conversion between KVN, XML, and FlatBuffers formats.
+
+### Supported Message Types
+
+| Type | KVN | XML | Description |
+|------|-----|-----|-------------|
+| OMM  | Yes | Yes | Orbit Mean-Elements Message |
+| OEM  | Yes | Yes | Orbit Ephemeris Message |
+| CDM  | Yes | -   | Conjunction Data Message |
+| OPM  | Yes | Yes | Orbit Parameters Message |
+| AEM  | Yes | -   | Attitude Ephemeris Message |
+| TDM  | Yes | Yes | Tracking Data Message |
+| XTCE | -   | Yes | XML Telemetric & Command Exchange (1.2) |
+
+### Usage
+
+```javascript
+import { init } from 'spacedatastandards.org/wasm/node/index.mjs';
+
+const sds = await init();
+
+// Auto-detect format and convert
+const xml = sds.convert(kvnString, 'xml');
+
+// Direct round-trip functions
+const result = sds.ommKvnRoundtrip(kvnInput);
+const xtce = sds.xtceXmlRoundtrip(xtceXml);
+
+// Format detection
+sds.detectFormat(input);   // 'kvn', 'xml', or 'json'
+sds.detectKvnType(input);  // 'OMM', 'OEM', 'CDM', etc.
+sds.detectXmlType(input);  // 'OMM', 'XTCE', etc.
+```
+
+### Building WASM
+
+Requires [Emscripten](https://emscripten.org/):
+
+```bash
+npm run build:wasm
+```
+
 ## Website Link
 
 [SpaceDataStandards.org](https://spacedatastandards.org)
@@ -61,7 +105,11 @@ generateOMMData();
 
 The repository is structured to facilitate easy access and collaboration:
 
-- **dist/**: This directory contains the generated source code files from Flatbuffer IDLs, ready for use in various programming environments.
+- **schema/**: FlatBuffers IDL schema definitions for all space data standards
+- **dist/**: Generated source code archives from FlatBuffer IDLs for all supported languages
+- **lib/**: Generated source code organized by language (ts, js, py, java, go, cpp, cs, kt, rs, dart, php, sw, lob)
+- **src/cpp/**: C++ CCSDS/XTCE message parsers (compiled to WASM)
+- **wasm/**: WebAssembly module and Node.js wrapper for message parsing
 
 ## Purpose
 

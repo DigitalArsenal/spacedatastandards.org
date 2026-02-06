@@ -5,6 +5,54 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class MtiStandard {
+  final int value;
+  const MtiStandard._(this.value);
+
+  factory MtiStandard.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum MtiStandard');
+    }
+    return result;
+  }
+
+  static MtiStandard? _createOrNull(int? value) => 
+      value == null ? null : MtiStandard.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const MtiStandard STANAG_4607 = MtiStandard._(0);
+  static const MtiStandard STANAG_4545 = MtiStandard._(1);
+  static const MtiStandard CUSTOM = MtiStandard._(2);
+  static const MtiStandard UNKNOWN = MtiStandard._(3);
+  static const Map<int, MtiStandard> values = {
+    0: STANAG_4607,
+    1: STANAG_4545,
+    2: CUSTOM,
+    3: UNKNOWN};
+
+  static const fb.Reader<MtiStandard> reader = _MtiStandardReader();
+
+  @override
+  String toString() {
+    return 'MtiStandard{value: $value}';
+  }
+}
+
+class _MtiStandardReader extends fb.Reader<MtiStandard> {
+  const _MtiStandardReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  MtiStandard read(fb.BufferContext bc, int offset) =>
+      MtiStandard.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 ///  Moving Target Indicator
 class MTI {
   MTI._(this._bc, this._bcOffset);
@@ -18,24 +66,40 @@ class MTI {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get P3 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get P6 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get P7 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get P8 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  int get P9 => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 14, 0);
-  int get P10 => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 16, 0);
-  List<String>? get MISSIONS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 18);
-  List<String>? get DWELLS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 20);
-  List<String>? get HRRS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 22);
-  List<String>? get JOB_DEFS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 24);
-  List<String>? get FREE_TEXTS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 26);
-  List<String>? get PLATFORM_LOCS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 28);
-  List<String>? get JOB_REQUESTS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 30);
+  ///  MTI standard (e.g., STANAG 4607)
+  MtiStandard get STANDARD => MtiStandard.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  ///  Platform type (P3 field)
+  String? get P3 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Platform activity (P6 field)
+  String? get P6 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Sensor type (P7 field)
+  String? get P7 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Sensor model (P8 field)
+  String? get P8 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Reference time code (P9)
+  int get P9 => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 16, 0);
+  ///  Security classification (P10)
+  int get P10 => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 18, 0);
+  ///  Mission segment identifiers
+  List<String>? get MISSIONS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 20);
+  ///  Dwell segment data references
+  List<String>? get DWELLS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 22);
+  ///  High range resolution profile references
+  List<String>? get HRRS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Job definition references
+  List<String>? get JOB_DEFS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Free text entries
+  List<String>? get FREE_TEXTS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Platform location data references
+  List<String>? get PLATFORM_LOCS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 30);
+  ///  Job request references
+  List<String>? get JOB_REQUESTS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 32);
 
   @override
   String toString() {
-    return 'MTI{ID: ${ID}, P3: ${P3}, P6: ${P6}, P7: ${P7}, P8: ${P8}, P9: ${P9}, P10: ${P10}, MISSIONS: ${MISSIONS}, DWELLS: ${DWELLS}, HRRS: ${HRRS}, JOB_DEFS: ${JOB_DEFS}, FREE_TEXTS: ${FREE_TEXTS}, PLATFORM_LOCS: ${PLATFORM_LOCS}, JOB_REQUESTS: ${JOB_REQUESTS}}';
+    return 'MTI{ID: ${ID}, STANDARD: ${STANDARD}, P3: ${P3}, P6: ${P6}, P7: ${P7}, P8: ${P8}, P9: ${P9}, P10: ${P10}, MISSIONS: ${MISSIONS}, DWELLS: ${DWELLS}, HRRS: ${HRRS}, JOB_DEFS: ${JOB_DEFS}, FREE_TEXTS: ${FREE_TEXTS}, PLATFORM_LOCS: ${PLATFORM_LOCS}, JOB_REQUESTS: ${JOB_REQUESTS}}';
   }
 }
 
@@ -53,63 +117,67 @@ class MTIBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(14);
+    fbBuilder.startTable(15);
   }
 
   int addIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addP3Offset(int? offset) {
-    fbBuilder.addOffset(1, offset);
+  int addStandard(MtiStandard? STANDARD) {
+    fbBuilder.addInt8(1, STANDARD?.value);
     return fbBuilder.offset;
   }
-  int addP6Offset(int? offset) {
+  int addP3Offset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addP7Offset(int? offset) {
+  int addP6Offset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addP8Offset(int? offset) {
+  int addP7Offset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
+  int addP8Offset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
   int addP9(int? P9) {
-    fbBuilder.addInt32(5, P9);
+    fbBuilder.addUint32(6, P9);
     return fbBuilder.offset;
   }
   int addP10(int? P10) {
-    fbBuilder.addInt32(6, P10);
+    fbBuilder.addUint16(7, P10);
     return fbBuilder.offset;
   }
   int addMissionsOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addDwellsOffset(int? offset) {
     fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
-  int addHrrsOffset(int? offset) {
+  int addDwellsOffset(int? offset) {
     fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
-  int addJobDefsOffset(int? offset) {
+  int addHrrsOffset(int? offset) {
     fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
-  int addFreeTextsOffset(int? offset) {
+  int addJobDefsOffset(int? offset) {
     fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
-  int addPlatformLocsOffset(int? offset) {
+  int addFreeTextsOffset(int? offset) {
     fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
-  int addJobRequestsOffset(int? offset) {
+  int addPlatformLocsOffset(int? offset) {
     fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addJobRequestsOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
     return fbBuilder.offset;
   }
 
@@ -120,6 +188,7 @@ class MTIBuilder {
 
 class MTIObjectBuilder extends fb.ObjectBuilder {
   final String? _ID;
+  final MtiStandard? _STANDARD;
   final String? _P3;
   final String? _P6;
   final String? _P7;
@@ -136,6 +205,7 @@ class MTIObjectBuilder extends fb.ObjectBuilder {
 
   MTIObjectBuilder({
     String? ID,
+    MtiStandard? STANDARD,
     String? P3,
     String? P6,
     String? P7,
@@ -151,6 +221,7 @@ class MTIObjectBuilder extends fb.ObjectBuilder {
     List<String>? JOB_REQUESTS,
   })
       : _ID = ID,
+        _STANDARD = STANDARD,
         _P3 = P3,
         _P6 = P6,
         _P7 = P7,
@@ -192,21 +263,22 @@ class MTIObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_PLATFORM_LOCS!.map(fbBuilder.writeString).toList());
     final int? JOB_REQUESTSOffset = _JOB_REQUESTS == null ? null
         : fbBuilder.writeList(_JOB_REQUESTS!.map(fbBuilder.writeString).toList());
-    fbBuilder.startTable(14);
+    fbBuilder.startTable(15);
     fbBuilder.addOffset(0, IDOffset);
-    fbBuilder.addOffset(1, P3Offset);
-    fbBuilder.addOffset(2, P6Offset);
-    fbBuilder.addOffset(3, P7Offset);
-    fbBuilder.addOffset(4, P8Offset);
-    fbBuilder.addInt32(5, _P9);
-    fbBuilder.addInt32(6, _P10);
-    fbBuilder.addOffset(7, MISSIONSOffset);
-    fbBuilder.addOffset(8, DWELLSOffset);
-    fbBuilder.addOffset(9, HRRSOffset);
-    fbBuilder.addOffset(10, JOB_DEFSOffset);
-    fbBuilder.addOffset(11, FREE_TEXTSOffset);
-    fbBuilder.addOffset(12, PLATFORM_LOCSOffset);
-    fbBuilder.addOffset(13, JOB_REQUESTSOffset);
+    fbBuilder.addInt8(1, _STANDARD?.value);
+    fbBuilder.addOffset(2, P3Offset);
+    fbBuilder.addOffset(3, P6Offset);
+    fbBuilder.addOffset(4, P7Offset);
+    fbBuilder.addOffset(5, P8Offset);
+    fbBuilder.addUint32(6, _P9);
+    fbBuilder.addUint16(7, _P10);
+    fbBuilder.addOffset(8, MISSIONSOffset);
+    fbBuilder.addOffset(9, DWELLSOffset);
+    fbBuilder.addOffset(10, HRRSOffset);
+    fbBuilder.addOffset(11, JOB_DEFSOffset);
+    fbBuilder.addOffset(12, FREE_TEXTSOffset);
+    fbBuilder.addOffset(13, PLATFORM_LOCSOffset);
+    fbBuilder.addOffset(14, JOB_REQUESTSOffset);
     return fbBuilder.endTable();
   }
 

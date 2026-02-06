@@ -3,3 +3,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export { OOI, OOIT } from './OOI.js';
+export { ooiPriority } from './ooiPriority.js';
+export { ooiStatus } from './ooiStatus.js';

@@ -17,7 +17,7 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * RF Band
+ * RF Band Specification
  */
 @Suppress("unused")
 class RFB : Table() {
@@ -29,6 +29,9 @@ class RFB : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Unique identifier
+     */
     val ID : String?
         get() {
             val o = __offset(4)
@@ -40,6 +43,9 @@ class RFB : Table() {
         }
     val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    /**
+     * Parent entity identifier
+     */
     val ID_ENTITY : String?
         get() {
             val o = __offset(6)
@@ -51,6 +57,9 @@ class RFB : Table() {
         }
     val ID_ENTITYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
     fun ID_ENTITYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    /**
+     * Band name or designation
+     */
     val NAME : String?
         get() {
             val o = __offset(8)
@@ -62,17 +71,17 @@ class RFB : Table() {
         }
     val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
     fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val BAND : String?
+    /**
+     * RF band designation
+     */
+    val BAND : Byte
         get() {
             val o = __offset(10)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val BANDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun BANDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    /**
+     * Operating mode
+     */
     val MODE : String?
         get() {
             val o = __offset(12)
@@ -84,6 +93,9 @@ class RFB : Table() {
         }
     val MODEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
     fun MODEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * Band purpose (e.g., TT&C, PAYLOAD, BEACON)
+     */
     val PURPOSE : String?
         get() {
             val o = __offset(14)
@@ -95,57 +107,81 @@ class RFB : Table() {
         }
     val PURPOSEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
     fun PURPOSEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    /**
+     * Minimum frequency (MHz)
+     */
     val FREQ_MIN : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Maximum frequency (MHz)
+     */
     val FREQ_MAX : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Center frequency (MHz)
+     */
     val CENTER_FREQ : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val PEAK_GAIN : Double
+    /**
+     * Bandwidth (MHz)
+     */
+    val BANDWIDTH : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val EDGE_GAIN : Double
+    /**
+     * Peak antenna gain (dBi)
+     */
+    val PEAK_GAIN : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val BANDWIDTH : Double
+    /**
+     * Edge-of-coverage gain (dBi)
+     */
+    val EDGE_GAIN : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Antenna beamwidth (degrees)
+     */
     val BEAMWIDTH : Double
         get() {
             val o = __offset(28)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val POLARIZATION : String?
+    /**
+     * Polarization
+     */
+    val POLARIZATION : Byte
         get() {
             val o = __offset(30)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val POLARIZATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
-    fun POLARIZATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    /**
+     * Effective radiated power (dBW)
+     */
     val ERP : Double
         get() {
             val o = __offset(32)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Effective isotropic radiated power (dBW)
+     */
     val EIRP : Double
         get() {
             val o = __offset(34)
@@ -159,41 +195,41 @@ class RFB : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun RFBBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$RFB")
-        fun createRFB(builder: FlatBufferBuilder, IDOffset: Int, ID_ENTITYOffset: Int, NAMEOffset: Int, BANDOffset: Int, MODEOffset: Int, PURPOSEOffset: Int, FREQ_MIN: Double, FREQ_MAX: Double, CENTER_FREQ: Double, PEAK_GAIN: Double, EDGE_GAIN: Double, BANDWIDTH: Double, BEAMWIDTH: Double, POLARIZATIONOffset: Int, ERP: Double, EIRP: Double) : Int {
+        fun createRFB(builder: FlatBufferBuilder, IDOffset: Int, ID_ENTITYOffset: Int, NAMEOffset: Int, BAND: Byte, MODEOffset: Int, PURPOSEOffset: Int, FREQ_MIN: Double, FREQ_MAX: Double, CENTER_FREQ: Double, BANDWIDTH: Double, PEAK_GAIN: Double, EDGE_GAIN: Double, BEAMWIDTH: Double, POLARIZATION: Byte, ERP: Double, EIRP: Double) : Int {
             builder.startTable(16)
             addEIRP(builder, EIRP)
             addERP(builder, ERP)
             addBEAMWIDTH(builder, BEAMWIDTH)
-            addBANDWIDTH(builder, BANDWIDTH)
             addEDGE_GAIN(builder, EDGE_GAIN)
             addPEAK_GAIN(builder, PEAK_GAIN)
+            addBANDWIDTH(builder, BANDWIDTH)
             addCENTER_FREQ(builder, CENTER_FREQ)
             addFREQ_MAX(builder, FREQ_MAX)
             addFREQ_MIN(builder, FREQ_MIN)
-            addPOLARIZATION(builder, POLARIZATIONOffset)
             addPURPOSE(builder, PURPOSEOffset)
             addMODE(builder, MODEOffset)
-            addBAND(builder, BANDOffset)
             addNAME(builder, NAMEOffset)
             addID_ENTITY(builder, ID_ENTITYOffset)
             addID(builder, IDOffset)
+            addPOLARIZATION(builder, POLARIZATION)
+            addBAND(builder, BAND)
             return endRFB(builder)
         }
         fun startRFB(builder: FlatBufferBuilder) = builder.startTable(16)
         fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
         fun addID_ENTITY(builder: FlatBufferBuilder, ID_ENTITY: Int) = builder.addOffset(1, ID_ENTITY, 0)
         fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(2, NAME, 0)
-        fun addBAND(builder: FlatBufferBuilder, BAND: Int) = builder.addOffset(3, BAND, 0)
+        fun addBAND(builder: FlatBufferBuilder, BAND: Byte) = builder.addByte(3, BAND, 0)
         fun addMODE(builder: FlatBufferBuilder, MODE: Int) = builder.addOffset(4, MODE, 0)
         fun addPURPOSE(builder: FlatBufferBuilder, PURPOSE: Int) = builder.addOffset(5, PURPOSE, 0)
         fun addFREQ_MIN(builder: FlatBufferBuilder, FREQ_MIN: Double) = builder.addDouble(6, FREQ_MIN, 0.0)
         fun addFREQ_MAX(builder: FlatBufferBuilder, FREQ_MAX: Double) = builder.addDouble(7, FREQ_MAX, 0.0)
         fun addCENTER_FREQ(builder: FlatBufferBuilder, CENTER_FREQ: Double) = builder.addDouble(8, CENTER_FREQ, 0.0)
-        fun addPEAK_GAIN(builder: FlatBufferBuilder, PEAK_GAIN: Double) = builder.addDouble(9, PEAK_GAIN, 0.0)
-        fun addEDGE_GAIN(builder: FlatBufferBuilder, EDGE_GAIN: Double) = builder.addDouble(10, EDGE_GAIN, 0.0)
-        fun addBANDWIDTH(builder: FlatBufferBuilder, BANDWIDTH: Double) = builder.addDouble(11, BANDWIDTH, 0.0)
+        fun addBANDWIDTH(builder: FlatBufferBuilder, BANDWIDTH: Double) = builder.addDouble(9, BANDWIDTH, 0.0)
+        fun addPEAK_GAIN(builder: FlatBufferBuilder, PEAK_GAIN: Double) = builder.addDouble(10, PEAK_GAIN, 0.0)
+        fun addEDGE_GAIN(builder: FlatBufferBuilder, EDGE_GAIN: Double) = builder.addDouble(11, EDGE_GAIN, 0.0)
         fun addBEAMWIDTH(builder: FlatBufferBuilder, BEAMWIDTH: Double) = builder.addDouble(12, BEAMWIDTH, 0.0)
-        fun addPOLARIZATION(builder: FlatBufferBuilder, POLARIZATION: Int) = builder.addOffset(13, POLARIZATION, 0)
+        fun addPOLARIZATION(builder: FlatBufferBuilder, POLARIZATION: Byte) = builder.addByte(13, POLARIZATION, 0)
         fun addERP(builder: FlatBufferBuilder, ERP: Double) = builder.addDouble(14, ERP, 0.0)
         fun addEIRP(builder: FlatBufferBuilder, EIRP: Double) = builder.addDouble(15, EIRP, 0.0)
         fun endRFB(builder: FlatBufferBuilder) : Int {

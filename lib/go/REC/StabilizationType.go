@@ -4,29 +4,38 @@ package REC
 
 import "strconv"
 
-type StabilizationType int8
+type stabilizationType int8
 
 const (
-	StabilizationTypeSPIN StabilizationType = 0
-	StabilizationTypeFIN  StabilizationType = 1
-	StabilizationTypeDUAL StabilizationType = 2
+	stabilizationTypeTHREE_AXIS       stabilizationType = 0
+	stabilizationTypeSPIN             stabilizationType = 1
+	stabilizationTypeGRAVITY_GRADIENT stabilizationType = 2
+	stabilizationTypeMAGNETIC         stabilizationType = 3
+	stabilizationTypeDUAL_SPIN        stabilizationType = 4
+	stabilizationTypeNONE             stabilizationType = 5
 )
 
-var EnumNamesStabilizationType = map[StabilizationType]string{
-	StabilizationTypeSPIN: "SPIN",
-	StabilizationTypeFIN:  "FIN",
-	StabilizationTypeDUAL: "DUAL",
+var EnumNamesstabilizationType = map[stabilizationType]string{
+	stabilizationTypeTHREE_AXIS:       "THREE_AXIS",
+	stabilizationTypeSPIN:             "SPIN",
+	stabilizationTypeGRAVITY_GRADIENT: "GRAVITY_GRADIENT",
+	stabilizationTypeMAGNETIC:         "MAGNETIC",
+	stabilizationTypeDUAL_SPIN:        "DUAL_SPIN",
+	stabilizationTypeNONE:             "NONE",
 }
 
-var EnumValuesStabilizationType = map[string]StabilizationType{
-	"SPIN": StabilizationTypeSPIN,
-	"FIN":  StabilizationTypeFIN,
-	"DUAL": StabilizationTypeDUAL,
+var EnumValuesstabilizationType = map[string]stabilizationType{
+	"THREE_AXIS":       stabilizationTypeTHREE_AXIS,
+	"SPIN":             stabilizationTypeSPIN,
+	"GRAVITY_GRADIENT": stabilizationTypeGRAVITY_GRADIENT,
+	"MAGNETIC":         stabilizationTypeMAGNETIC,
+	"DUAL_SPIN":        stabilizationTypeDUAL_SPIN,
+	"NONE":             stabilizationTypeNONE,
 }
 
-func (v StabilizationType) String() string {
-	if s, ok := EnumNamesStabilizationType[v]; ok {
+func (v stabilizationType) String() string {
+	if s, ok := EnumNamesstabilizationType[v]; ok {
 		return s
 	}
-	return "StabilizationType(" + strconv.FormatInt(int64(v), 10) + ")"
+	return "stabilizationType(" + strconv.FormatInt(int64(v), 10) + ")"
 }

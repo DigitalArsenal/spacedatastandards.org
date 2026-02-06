@@ -261,6 +261,175 @@ The `udl_schemas` branch also modifies existing schemas on `main`:
 
 ---
 
+## Round-Trip Conversion Tests (C++ / WASM)
+
+All format converters **MUST** be written in C++ and compiled to WebAssembly (WASM). This produces a single streaming runtime that can be consumed from **all** target languages (JavaScript/TypeScript, Python, Go, Rust, Java, C#, etc.) rather than maintaining per-language parser implementations.
+
+### Architecture
+
+```
+C++ source (src/cpp/)
+  ├── parsers/
+  │   ├── kvn_parser.{h,cpp}       — Base KVN tokenizer, block grouper, writer
+  │   ├── xml_sax_parser.{h,cpp}   — Lightweight XML parser & writer (no external deps)
+  │   ├── kvn_writer.{h,cpp}       — KVN serialization
+  │   ├── xml_writer.{h,cpp}       — XML serialization
+  │   ├── omm_parser.{h,cpp}       — OMM ↔ KVN/XML/FlatBuffer
+  │   ├── oem_parser.{h,cpp}       — OEM ↔ KVN/XML/FlatBuffer
+  │   ├── cdm_parser.{h,cpp}       — CDM ↔ KVN/XML/FlatBuffer
+  │   ├── opm_parser.{h,cpp}       — OPM ↔ KVN/XML/FlatBuffer
+  │   ├── aem_parser.{h,cpp}       — AEM ↔ KVN/XML/FlatBuffer
+  │   └── ...                       — Additional message types as needed
+  ├── wasm_api.cpp                  — Emscripten bindings (embind/val)
+  └── CMakeLists.txt
+           │
+           ▼  (emcc / emscripten)
+     dist/sds_parsers.wasm + sds_parsers.js   — WASM module + JS glue
+```
+
+### Existing C++ Reference
+
+The OrbPro2-ModSim project (`../OrbPro2-ModSim/packages/space-data-parsers/ccsds/`) already contains C++ implementations of:
+- `kvn_parser.{h,cpp}` — KVN tokenizer and block grouper
+- `kvn_writer.{h,cpp}` — KVN serializer
+- `xml_sax_parser.{h,cpp}` — XML parser
+- `xml_writer.{h,cpp}` — XML writer
+- `navigation/omm_parser.{h,cpp}` — OMM KVN/XML parse + write
+- `navigation/oem_parser.{h,cpp}` — OEM KVN/XML parse + write
+- `navigation/cdm_parser.{h,cpp}` — CDM KVN/XML parse + write
+- `navigation/opm_parser.{h,cpp}` — OPM KVN/XML parse + write
+- `navigation/aem_parser.{h,cpp}` — AEM KVN/XML parse + write
+- `navigation/tdm_parser.{h,cpp}` — TDM KVN/XML parse + write
+
+These should be ported/adapted into this project and compiled to WASM.
+
+### Required Round-Trip Tests
+
+| Test | Flow |
+|------|------|
+| KVN → FlatBuffer → KVN | Parse KVN text → pack to FlatBuffer binary → unpack → serialize back to KVN → compare |
+| XML → FlatBuffer → XML | Parse XML text → pack to FlatBuffer binary → unpack → serialize back to XML → compare |
+| JSON → FlatBuffer → JSON | Parse JSON → pack to FlatBuffer → unpack → serialize to JSON → compare |
+| JSON → FB → JSON → FB → JSON | Chain round-trip: JSON → FlatBuffer → JSON → FlatBuffer → JSON → compare first and last |
+
+### WASM Streaming API
+
+The WASM module should expose a **streaming** interface so that:
+1. Input data can be fed in chunks (not requiring the full message in memory)
+2. Output FlatBuffers are emitted as they complete
+3. The same WASM binary runs in Node.js, browsers, Deno, and can be loaded from Python/Go/Rust/Java/C# via their respective WASM runtimes (wasmtime, wasmer, wazero, etc.)
+
+### Key Requirements
+
+- **Zero external dependencies** in the C++ code (no libxml2, no protobuf, etc.) — only the FlatBuffers header-only library and standard C++17
+- **Header-only FlatBuffers** — use the `flatbuffers/flatbuffers.h` include from the FlatBuffers project
+- **Emscripten compilation** — use `emcc` with `-s WASM=1 -s MODULARIZE=1 -s EXPORT_ES6=1` for ES module output
+- **Streaming support** — use `embind` or raw WASM exports to expose parse/write functions that work on `Uint8Array` / byte buffers
+- **All CCSDS navigation message types** — OMM, OEM, CDM, OPM, AEM, TDM (and later ACM, RDM, APM, OCM)
+
+---
+
+## Multi-Language WASM Test Harnesses
+
+The core idea: **write once in C++, compile to WASM, run everywhere**. Every language with a WASM runtime gets a wrapper module and test harness that exercises the same WASM binary. This follows the pattern established in `../flatbuffers/wasm/examples/e2e-crypto-test/runners/`.
+
+### Architecture
+
+```
+dist/sds_parsers.wasm              — Single compiled WASM module (from C++)
+  │
+  ├── wasm/node/                   — Node.js (native WebAssembly API)
+  │   ├── sds_wasm.mjs            — Wrapper: load WASM, expose parse/write API
+  │   └── test.mjs                — Round-trip tests using mocha/chai
+  │
+  ├── wasm/go/                     — Go (wazero runtime)
+  │   ├── sds_wasm.go             — Wrapper: load WASM via wazero, expose Go API
+  │   ├── sds_wasm_test.go        — Round-trip tests using testing package
+  │   └── go.mod
+  │
+  ├── wasm/python/                 — Python (wasmer or wasmtime)
+  │   ├── sds_wasm.py             — Wrapper: load WASM, expose Pythonic API
+  │   ├── test_sds.py             — Round-trip tests using pytest
+  │   └── requirements.txt
+  │
+  ├── wasm/rust/                   — Rust (wasmer crate)
+  │   ├── src/lib.rs              — Wrapper: load WASM via wasmer, expose Rust API
+  │   ├── tests/roundtrip.rs      — Round-trip tests
+  │   └── Cargo.toml
+  │
+  ├── wasm/java/                   — Java (Chicory runtime)
+  │   ├── src/.../SdsWasm.java    — Wrapper: load WASM via Chicory
+  │   ├── src/.../SdsWasmTest.java — Round-trip tests using JUnit
+  │   └── pom.xml
+  │
+  ├── wasm/csharp/                 — C# (Wasmtime.NET)
+  │   ├── SdsWasm.cs              — Wrapper: load WASM via Wasmtime
+  │   ├── SdsWasmTest.cs          — Round-trip tests using xUnit
+  │   └── SdsWasm.csproj
+  │
+  ├── wasm/swift/                  — Swift (WasmKit)
+  │   ├── Sources/SdsWasm.swift   — Wrapper: load WASM via WasmKit
+  │   ├── Tests/SdsWasmTests.swift — Round-trip tests using XCTest
+  │   └── Package.swift
+  │
+  ├── wasm/kotlin/                 — Kotlin (Chicory runtime)
+  │   ├── src/.../SdsWasm.kt      — Wrapper: load WASM via Chicory
+  │   ├── src/.../SdsWasmTest.kt  — Round-trip tests using JUnit
+  │   └── build.gradle.kts
+  │
+  └── wasm/fixtures/               — Shared test vectors (all languages use these)
+      ├── omm-sample.kvn
+      ├── omm-sample.xml
+      ├── omm-sample.json
+      ├── oem-sample.kvn
+      ├── oem-sample.xml
+      ├── cdm-sample.kvn
+      ├── cdm-sample.xml
+      ├── opm-sample.kvn
+      ├── opm-sample.xml
+      ├── aem-sample.kvn
+      ├── aem-sample.xml
+      ├── tdm-sample.kvn
+      └── tdm-sample.xml
+```
+
+### Language-Specific WASM Runtimes
+
+| Language | Runtime | Notes |
+|----------|---------|-------|
+| Node.js / Browser | Native `WebAssembly` API | Also works in Deno, Bun |
+| Go | [wazero](https://github.com/tetratelabs/wazero) | Pure Go, no CGo required. Needs invoke_* trampolines for C++ exception handling. |
+| Python | [wasmer-python](https://github.com/wasmerio/wasmer-python) or [wasmtime-py](https://github.com/bytecodealliance/wasmtime-py) | wasmer preferred for WASI support |
+| Rust | [wasmer](https://crates.io/crates/wasmer) | Native performance, excellent WASI support |
+| Java | [Chicory](https://github.com/nicovank/chicory) | Pure Java WASM interpreter, no JNI |
+| C# / .NET | [Wasmtime .NET](https://github.com/bytecodealliance/wasmtime-dotnet) | Official Bytecode Alliance binding |
+| Swift | [WasmKit](https://github.com/nicovank/WasmKit) | Pure Swift WASM runtime |
+| Kotlin | [Chicory](https://github.com/nicovank/chicory) | Same as Java, runs on JVM |
+
+### Per-Language Wrapper Pattern
+
+Each language wrapper should:
+1. **Load** the WASM binary (`dist/sds_parsers.wasm`)
+2. **Allocate** memory in WASM linear memory for input data
+3. **Call** exported WASM functions (e.g., `parse_kvn_to_fb`, `write_fb_to_kvn`)
+4. **Read** results from WASM linear memory
+5. **Expose** a clean, idiomatic API in that language
+
+### Shared Test Vectors
+
+All test fixtures live in `wasm/fixtures/` and are used by every language's test harness. Each test:
+1. Reads a fixture file (KVN, XML, or JSON)
+2. Calls the WASM module to convert it to FlatBuffer binary
+3. Calls the WASM module to convert back to the original format
+4. Compares input and output for semantic equivalence
+5. Optionally performs the chain test: JSON → FB → JSON → FB → JSON
+
+### Cross-Language Binary Verification
+
+A key validation: FlatBuffer binaries produced by one language's wrapper must be readable by all other languages. This ensures the WASM module produces consistent output regardless of host language.
+
+---
+
 ## Notes
 
 - All CCSDS-sourced standards have established blue book references and should be high priority.

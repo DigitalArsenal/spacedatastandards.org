@@ -4,6 +4,8 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { aouType } from './aouType.js';
+import { orbitObjectType } from './orbitObjectType.js';
 
 
 /**
@@ -31,6 +33,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$OBT');
 }
 
+/**
+ * Unique identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,25 +43,37 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Satellite catalog number
+ */
 SAT_NO():number {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
-ON_ORBIT():string|null
-ON_ORBIT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ON_ORBIT(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * International designator
+ */
+ORIG_OBJECT_ID():string|null
+ORIG_OBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ORIG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-ORIG_OBJECT_ID():string|null
-ORIG_OBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ORIG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * On-orbit reference
+ */
+ON_ORBIT():string|null
+ON_ORBIT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ON_ORBIT(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Track point timestamp (ISO 8601)
+ */
 TS():string|null
 TS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 TS(optionalEncoding?:any):string|Uint8Array|null {
@@ -64,198 +81,293 @@ TS(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Latitude (degrees)
+ */
 LAT():number {
   const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Longitude (degrees)
+ */
 LON():number {
   const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Altitude (km)
+ */
 ALT():number {
   const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-RDF_RF():number {
+/**
+ * Speed (km/s)
+ */
+SPD():number {
   const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Elevation angle from observer (degrees)
+ */
+ANG_ELEV():number {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Radar data fusion RF value
+ */
+RDF_RF():number {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Call sign
+ */
 CALL_SIGN():string|null
 CALL_SIGN(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 CALL_SIGN(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-RPT_NUM():string|null
-RPT_NUM(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-RPT_NUM(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-OBJ_IDENT():string|null
-OBJ_IDENT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-OBJ_IDENT(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-IDENT_AMP():string|null
-IDENT_AMP(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-IDENT_AMP(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Report number
+ */
+RPT_NUM():string|null
+RPT_NUM(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+RPT_NUM(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-SAT_STATUS():string|null
-SAT_STATUS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-SAT_STATUS(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Track identifier
+ */
+TRK_ID():string|null
+TRK_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TRK_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 30);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-OBJECT_TYPE():string|null
-OBJECT_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-OBJECT_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Object identity assessment
+ */
+OBJ_IDENT():string|null
+OBJ_IDENT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OBJ_IDENT(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-COUNTRY_CODE():string|null
-COUNTRY_CODE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-COUNTRY_CODE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Identity amplification
+ */
+IDENT_AMP():string|null
+IDENT_AMP(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+IDENT_AMP(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 34);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-DECAY():number {
+/**
+ * Satellite operational status
+ */
+SAT_STATUS():string|null
+SAT_STATUS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SAT_STATUS(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 36);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-CHARLIE_LINE():string|null
-CHARLIE_LINE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-CHARLIE_LINE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 38);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-AOU_TYPE():string|null
-AOU_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-AOU_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Object type
+ */
+OBJ_TYPE():orbitObjectType {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : orbitObjectType.PAYLOAD;
+}
+
+/**
+ * Country code (ISO 3166)
+ */
+COUNTRY_CODE():string|null
+COUNTRY_CODE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+COUNTRY_CODE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 40);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-AOU_DATA(index: number):string
-AOU_DATA(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-AOU_DATA(index: number,optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Orbit decay rate (km/day)
+ */
+DECAY():number {
   const offset = this.bb!.__offset(this.bb_pos, 42);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-aouDataLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 42);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-SPD():number {
+/**
+ * Charlie line data (amplification text)
+ */
+CHARLIE_LINE():string|null
+CHARLIE_LINE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CHARLIE_LINE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 44);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-ANG_ELEV():number {
-  const offset = this.bb!.__offset(this.bb_pos, 46);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-CNTNMNT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 48);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-XREF():string|null
-XREF(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-XREF(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 50);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-CH_XREF():string|null
-CH_XREF(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-CH_XREF(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Area of uncertainty type
+ */
+AOU_TYPE():aouType {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : aouType.CIRCULAR;
+}
+
+/**
+ * Area of uncertainty data
+ */
+AOU_DATA(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+aouDataLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+aouDataArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Containment probability (0-1)
+ */
+CNTNMNT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Cross-reference identifier
+ */
+XREF():string|null
+XREF(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+XREF(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 52);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-AMPLIFICATION():string|null
-AMPLIFICATION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-AMPLIFICATION(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Charlie cross-reference
+ */
+CH_XREF():string|null
+CH_XREF(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CH_XREF(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 54);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-IFF():string|null
-IFF(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-IFF(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Additional amplification text
+ */
+AMPLIFICATION():string|null
+AMPLIFICATION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+AMPLIFICATION(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 56);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-REINFORCED():boolean {
+/**
+ * IFF mode/code
+ */
+IFF():string|null
+IFF(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+IFF(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 58);
-  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-REDUCED():boolean {
+/**
+ * Vehicle type
+ */
+VEH_TYPE():string|null
+VEH_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+VEH_TYPE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 60);
-  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-HQ():boolean {
+/**
+ * True if reinforced unit
+ */
+REINFORCED():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 62);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
-DUMMY():boolean {
+/**
+ * True if reduced unit
+ */
+REDUCED():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 64);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
-TASK_FORCE():boolean {
+/**
+ * True if headquarters element
+ */
+HQ():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 66);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
-FEINT():boolean {
+/**
+ * True if dummy/exercise track
+ */
+DUMMY():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 68);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
-INSTALLATION():boolean {
+/**
+ * True if task force
+ */
+TASK_FORCE():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 70);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
-VEH_TYPE():string|null
-VEH_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-VEH_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * True if feint
+ */
+FEINT():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 72);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
-TRK_ID():string|null
-TRK_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-TRK_ID(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * True if installation (not mobile)
+ */
+INSTALLATION():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 74);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Contributing track sensors
+ */
 TRACK_SENSORS(index: number):string
 TRACK_SENSORS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 TRACK_SENSORS(index: number,optionalEncoding?:any):string|Uint8Array|null {
@@ -280,12 +392,12 @@ static addSatNo(builder:flatbuffers.Builder, SAT_NO:number) {
   builder.addFieldInt32(1, SAT_NO, 0);
 }
 
-static addOnOrbit(builder:flatbuffers.Builder, ON_ORBITOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, ON_ORBITOffset, 0);
+static addOrigObjectId(builder:flatbuffers.Builder, ORIG_OBJECT_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(2, ORIG_OBJECT_IDOffset, 0);
 }
 
-static addOrigObjectId(builder:flatbuffers.Builder, ORIG_OBJECT_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, ORIG_OBJECT_IDOffset, 0);
+static addOnOrbit(builder:flatbuffers.Builder, ON_ORBITOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(3, ON_ORBITOffset, 0);
 }
 
 static addTs(builder:flatbuffers.Builder, TSOffset:flatbuffers.Offset) {
@@ -304,128 +416,133 @@ static addAlt(builder:flatbuffers.Builder, ALT:number) {
   builder.addFieldFloat64(7, ALT, 0.0);
 }
 
+static addSpd(builder:flatbuffers.Builder, SPD:number) {
+  builder.addFieldFloat64(8, SPD, 0.0);
+}
+
+static addAngElev(builder:flatbuffers.Builder, ANG_ELEV:number) {
+  builder.addFieldFloat64(9, ANG_ELEV, 0.0);
+}
+
 static addRdfRf(builder:flatbuffers.Builder, RDF_RF:number) {
-  builder.addFieldFloat64(8, RDF_RF, 0.0);
+  builder.addFieldFloat64(10, RDF_RF, 0.0);
 }
 
 static addCallSign(builder:flatbuffers.Builder, CALL_SIGNOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(9, CALL_SIGNOffset, 0);
+  builder.addFieldOffset(11, CALL_SIGNOffset, 0);
 }
 
 static addRptNum(builder:flatbuffers.Builder, RPT_NUMOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(10, RPT_NUMOffset, 0);
+  builder.addFieldOffset(12, RPT_NUMOffset, 0);
+}
+
+static addTrkId(builder:flatbuffers.Builder, TRK_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, TRK_IDOffset, 0);
 }
 
 static addObjIdent(builder:flatbuffers.Builder, OBJ_IDENTOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(11, OBJ_IDENTOffset, 0);
+  builder.addFieldOffset(14, OBJ_IDENTOffset, 0);
 }
 
 static addIdentAmp(builder:flatbuffers.Builder, IDENT_AMPOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(12, IDENT_AMPOffset, 0);
+  builder.addFieldOffset(15, IDENT_AMPOffset, 0);
 }
 
 static addSatStatus(builder:flatbuffers.Builder, SAT_STATUSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(13, SAT_STATUSOffset, 0);
+  builder.addFieldOffset(16, SAT_STATUSOffset, 0);
 }
 
-static addObjectType(builder:flatbuffers.Builder, OBJECT_TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(14, OBJECT_TYPEOffset, 0);
+static addObjType(builder:flatbuffers.Builder, OBJ_TYPE:orbitObjectType) {
+  builder.addFieldInt8(17, OBJ_TYPE, orbitObjectType.PAYLOAD);
 }
 
 static addCountryCode(builder:flatbuffers.Builder, COUNTRY_CODEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(15, COUNTRY_CODEOffset, 0);
+  builder.addFieldOffset(18, COUNTRY_CODEOffset, 0);
 }
 
 static addDecay(builder:flatbuffers.Builder, DECAY:number) {
-  builder.addFieldFloat64(16, DECAY, 0.0);
+  builder.addFieldFloat64(19, DECAY, 0.0);
 }
 
 static addCharlieLine(builder:flatbuffers.Builder, CHARLIE_LINEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(17, CHARLIE_LINEOffset, 0);
+  builder.addFieldOffset(20, CHARLIE_LINEOffset, 0);
 }
 
-static addAouType(builder:flatbuffers.Builder, AOU_TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(18, AOU_TYPEOffset, 0);
+static addAouType(builder:flatbuffers.Builder, AOU_TYPE:aouType) {
+  builder.addFieldInt8(21, AOU_TYPE, aouType.CIRCULAR);
 }
 
 static addAouData(builder:flatbuffers.Builder, AOU_DATAOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(19, AOU_DATAOffset, 0);
+  builder.addFieldOffset(22, AOU_DATAOffset, 0);
 }
 
-static createAouDataVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static createAouDataVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createAouDataVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createAouDataVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
 static startAouDataVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
-static addSpd(builder:flatbuffers.Builder, SPD:number) {
-  builder.addFieldFloat64(20, SPD, 0.0);
-}
-
-static addAngElev(builder:flatbuffers.Builder, ANG_ELEV:number) {
-  builder.addFieldFloat64(21, ANG_ELEV, 0.0);
+  builder.startVector(8, numElems, 8);
 }
 
 static addCntnmnt(builder:flatbuffers.Builder, CNTNMNT:number) {
-  builder.addFieldFloat64(22, CNTNMNT, 0.0);
+  builder.addFieldFloat64(23, CNTNMNT, 0.0);
 }
 
 static addXref(builder:flatbuffers.Builder, XREFOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(23, XREFOffset, 0);
+  builder.addFieldOffset(24, XREFOffset, 0);
 }
 
 static addChXref(builder:flatbuffers.Builder, CH_XREFOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(24, CH_XREFOffset, 0);
+  builder.addFieldOffset(25, CH_XREFOffset, 0);
 }
 
 static addAmplification(builder:flatbuffers.Builder, AMPLIFICATIONOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(25, AMPLIFICATIONOffset, 0);
+  builder.addFieldOffset(26, AMPLIFICATIONOffset, 0);
 }
 
 static addIff(builder:flatbuffers.Builder, IFFOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(26, IFFOffset, 0);
-}
-
-static addReinforced(builder:flatbuffers.Builder, REINFORCED:boolean) {
-  builder.addFieldInt8(27, +REINFORCED, +false);
-}
-
-static addReduced(builder:flatbuffers.Builder, REDUCED:boolean) {
-  builder.addFieldInt8(28, +REDUCED, +false);
-}
-
-static addHq(builder:flatbuffers.Builder, HQ:boolean) {
-  builder.addFieldInt8(29, +HQ, +false);
-}
-
-static addDummy(builder:flatbuffers.Builder, DUMMY:boolean) {
-  builder.addFieldInt8(30, +DUMMY, +false);
-}
-
-static addTaskForce(builder:flatbuffers.Builder, TASK_FORCE:boolean) {
-  builder.addFieldInt8(31, +TASK_FORCE, +false);
-}
-
-static addFeint(builder:flatbuffers.Builder, FEINT:boolean) {
-  builder.addFieldInt8(32, +FEINT, +false);
-}
-
-static addInstallation(builder:flatbuffers.Builder, INSTALLATION:boolean) {
-  builder.addFieldInt8(33, +INSTALLATION, +false);
+  builder.addFieldOffset(27, IFFOffset, 0);
 }
 
 static addVehType(builder:flatbuffers.Builder, VEH_TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(34, VEH_TYPEOffset, 0);
+  builder.addFieldOffset(28, VEH_TYPEOffset, 0);
 }
 
-static addTrkId(builder:flatbuffers.Builder, TRK_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(35, TRK_IDOffset, 0);
+static addReinforced(builder:flatbuffers.Builder, REINFORCED:boolean) {
+  builder.addFieldInt8(29, +REINFORCED, +false);
+}
+
+static addReduced(builder:flatbuffers.Builder, REDUCED:boolean) {
+  builder.addFieldInt8(30, +REDUCED, +false);
+}
+
+static addHq(builder:flatbuffers.Builder, HQ:boolean) {
+  builder.addFieldInt8(31, +HQ, +false);
+}
+
+static addDummy(builder:flatbuffers.Builder, DUMMY:boolean) {
+  builder.addFieldInt8(32, +DUMMY, +false);
+}
+
+static addTaskForce(builder:flatbuffers.Builder, TASK_FORCE:boolean) {
+  builder.addFieldInt8(33, +TASK_FORCE, +false);
+}
+
+static addFeint(builder:flatbuffers.Builder, FEINT:boolean) {
+  builder.addFieldInt8(34, +FEINT, +false);
+}
+
+static addInstallation(builder:flatbuffers.Builder, INSTALLATION:boolean) {
+  builder.addFieldInt8(35, +INSTALLATION, +false);
 }
 
 static addTrackSensors(builder:flatbuffers.Builder, TRACK_SENSORSOffset:flatbuffers.Offset) {
@@ -457,35 +574,37 @@ static finishSizePrefixedOBTBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$OBT', true);
 }
 
-static createOBT(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, SAT_NO:number, ON_ORBITOffset:flatbuffers.Offset, ORIG_OBJECT_IDOffset:flatbuffers.Offset, TSOffset:flatbuffers.Offset, LAT:number, LON:number, ALT:number, RDF_RF:number, CALL_SIGNOffset:flatbuffers.Offset, RPT_NUMOffset:flatbuffers.Offset, OBJ_IDENTOffset:flatbuffers.Offset, IDENT_AMPOffset:flatbuffers.Offset, SAT_STATUSOffset:flatbuffers.Offset, OBJECT_TYPEOffset:flatbuffers.Offset, COUNTRY_CODEOffset:flatbuffers.Offset, DECAY:number, CHARLIE_LINEOffset:flatbuffers.Offset, AOU_TYPEOffset:flatbuffers.Offset, AOU_DATAOffset:flatbuffers.Offset, SPD:number, ANG_ELEV:number, CNTNMNT:number, XREFOffset:flatbuffers.Offset, CH_XREFOffset:flatbuffers.Offset, AMPLIFICATIONOffset:flatbuffers.Offset, IFFOffset:flatbuffers.Offset, REINFORCED:boolean, REDUCED:boolean, HQ:boolean, DUMMY:boolean, TASK_FORCE:boolean, FEINT:boolean, INSTALLATION:boolean, VEH_TYPEOffset:flatbuffers.Offset, TRK_IDOffset:flatbuffers.Offset, TRACK_SENSORSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createOBT(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, SAT_NO:number, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset, TSOffset:flatbuffers.Offset, LAT:number, LON:number, ALT:number, SPD:number, ANG_ELEV:number, RDF_RF:number, CALL_SIGNOffset:flatbuffers.Offset, RPT_NUMOffset:flatbuffers.Offset, TRK_IDOffset:flatbuffers.Offset, OBJ_IDENTOffset:flatbuffers.Offset, IDENT_AMPOffset:flatbuffers.Offset, SAT_STATUSOffset:flatbuffers.Offset, OBJ_TYPE:orbitObjectType, COUNTRY_CODEOffset:flatbuffers.Offset, DECAY:number, CHARLIE_LINEOffset:flatbuffers.Offset, AOU_TYPE:aouType, AOU_DATAOffset:flatbuffers.Offset, CNTNMNT:number, XREFOffset:flatbuffers.Offset, CH_XREFOffset:flatbuffers.Offset, AMPLIFICATIONOffset:flatbuffers.Offset, IFFOffset:flatbuffers.Offset, VEH_TYPEOffset:flatbuffers.Offset, REINFORCED:boolean, REDUCED:boolean, HQ:boolean, DUMMY:boolean, TASK_FORCE:boolean, FEINT:boolean, INSTALLATION:boolean, TRACK_SENSORSOffset:flatbuffers.Offset):flatbuffers.Offset {
   OBT.startOBT(builder);
   OBT.addId(builder, IDOffset);
   OBT.addSatNo(builder, SAT_NO);
-  OBT.addOnOrbit(builder, ON_ORBITOffset);
   OBT.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
+  OBT.addOnOrbit(builder, ON_ORBITOffset);
   OBT.addTs(builder, TSOffset);
   OBT.addLat(builder, LAT);
   OBT.addLon(builder, LON);
   OBT.addAlt(builder, ALT);
+  OBT.addSpd(builder, SPD);
+  OBT.addAngElev(builder, ANG_ELEV);
   OBT.addRdfRf(builder, RDF_RF);
   OBT.addCallSign(builder, CALL_SIGNOffset);
   OBT.addRptNum(builder, RPT_NUMOffset);
+  OBT.addTrkId(builder, TRK_IDOffset);
   OBT.addObjIdent(builder, OBJ_IDENTOffset);
   OBT.addIdentAmp(builder, IDENT_AMPOffset);
   OBT.addSatStatus(builder, SAT_STATUSOffset);
-  OBT.addObjectType(builder, OBJECT_TYPEOffset);
+  OBT.addObjType(builder, OBJ_TYPE);
   OBT.addCountryCode(builder, COUNTRY_CODEOffset);
   OBT.addDecay(builder, DECAY);
   OBT.addCharlieLine(builder, CHARLIE_LINEOffset);
-  OBT.addAouType(builder, AOU_TYPEOffset);
+  OBT.addAouType(builder, AOU_TYPE);
   OBT.addAouData(builder, AOU_DATAOffset);
-  OBT.addSpd(builder, SPD);
-  OBT.addAngElev(builder, ANG_ELEV);
   OBT.addCntnmnt(builder, CNTNMNT);
   OBT.addXref(builder, XREFOffset);
   OBT.addChXref(builder, CH_XREFOffset);
   OBT.addAmplification(builder, AMPLIFICATIONOffset);
   OBT.addIff(builder, IFFOffset);
+  OBT.addVehType(builder, VEH_TYPEOffset);
   OBT.addReinforced(builder, REINFORCED);
   OBT.addReduced(builder, REDUCED);
   OBT.addHq(builder, HQ);
@@ -493,8 +612,6 @@ static createOBT(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, SAT_N
   OBT.addTaskForce(builder, TASK_FORCE);
   OBT.addFeint(builder, FEINT);
   OBT.addInstallation(builder, INSTALLATION);
-  OBT.addVehType(builder, VEH_TYPEOffset);
-  OBT.addTrkId(builder, TRK_IDOffset);
   OBT.addTrackSensors(builder, TRACK_SENSORSOffset);
   return OBT.endOBT(builder);
 }
@@ -503,31 +620,33 @@ unpack(): OBTT {
   return new OBTT(
     this.ID(),
     this.SAT_NO(),
-    this.ON_ORBIT(),
     this.ORIG_OBJECT_ID(),
+    this.ON_ORBIT(),
     this.TS(),
     this.LAT(),
     this.LON(),
     this.ALT(),
+    this.SPD(),
+    this.ANG_ELEV(),
     this.RDF_RF(),
     this.CALL_SIGN(),
     this.RPT_NUM(),
+    this.TRK_ID(),
     this.OBJ_IDENT(),
     this.IDENT_AMP(),
     this.SAT_STATUS(),
-    this.OBJECT_TYPE(),
+    this.OBJ_TYPE(),
     this.COUNTRY_CODE(),
     this.DECAY(),
     this.CHARLIE_LINE(),
     this.AOU_TYPE(),
-    this.bb!.createScalarList<string>(this.AOU_DATA.bind(this), this.aouDataLength()),
-    this.SPD(),
-    this.ANG_ELEV(),
+    this.bb!.createScalarList<number>(this.AOU_DATA.bind(this), this.aouDataLength()),
     this.CNTNMNT(),
     this.XREF(),
     this.CH_XREF(),
     this.AMPLIFICATION(),
     this.IFF(),
+    this.VEH_TYPE(),
     this.REINFORCED(),
     this.REDUCED(),
     this.HQ(),
@@ -535,8 +654,6 @@ unpack(): OBTT {
     this.TASK_FORCE(),
     this.FEINT(),
     this.INSTALLATION(),
-    this.VEH_TYPE(),
-    this.TRK_ID(),
     this.bb!.createScalarList<string>(this.TRACK_SENSORS.bind(this), this.trackSensorsLength())
   );
 }
@@ -545,31 +662,33 @@ unpack(): OBTT {
 unpackTo(_o: OBTT): void {
   _o.ID = this.ID();
   _o.SAT_NO = this.SAT_NO();
-  _o.ON_ORBIT = this.ON_ORBIT();
   _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID();
+  _o.ON_ORBIT = this.ON_ORBIT();
   _o.TS = this.TS();
   _o.LAT = this.LAT();
   _o.LON = this.LON();
   _o.ALT = this.ALT();
+  _o.SPD = this.SPD();
+  _o.ANG_ELEV = this.ANG_ELEV();
   _o.RDF_RF = this.RDF_RF();
   _o.CALL_SIGN = this.CALL_SIGN();
   _o.RPT_NUM = this.RPT_NUM();
+  _o.TRK_ID = this.TRK_ID();
   _o.OBJ_IDENT = this.OBJ_IDENT();
   _o.IDENT_AMP = this.IDENT_AMP();
   _o.SAT_STATUS = this.SAT_STATUS();
-  _o.OBJECT_TYPE = this.OBJECT_TYPE();
+  _o.OBJ_TYPE = this.OBJ_TYPE();
   _o.COUNTRY_CODE = this.COUNTRY_CODE();
   _o.DECAY = this.DECAY();
   _o.CHARLIE_LINE = this.CHARLIE_LINE();
   _o.AOU_TYPE = this.AOU_TYPE();
-  _o.AOU_DATA = this.bb!.createScalarList<string>(this.AOU_DATA.bind(this), this.aouDataLength());
-  _o.SPD = this.SPD();
-  _o.ANG_ELEV = this.ANG_ELEV();
+  _o.AOU_DATA = this.bb!.createScalarList<number>(this.AOU_DATA.bind(this), this.aouDataLength());
   _o.CNTNMNT = this.CNTNMNT();
   _o.XREF = this.XREF();
   _o.CH_XREF = this.CH_XREF();
   _o.AMPLIFICATION = this.AMPLIFICATION();
   _o.IFF = this.IFF();
+  _o.VEH_TYPE = this.VEH_TYPE();
   _o.REINFORCED = this.REINFORCED();
   _o.REDUCED = this.REDUCED();
   _o.HQ = this.HQ();
@@ -577,8 +696,6 @@ unpackTo(_o: OBTT): void {
   _o.TASK_FORCE = this.TASK_FORCE();
   _o.FEINT = this.FEINT();
   _o.INSTALLATION = this.INSTALLATION();
-  _o.VEH_TYPE = this.VEH_TYPE();
-  _o.TRK_ID = this.TRK_ID();
   _o.TRACK_SENSORS = this.bb!.createScalarList<string>(this.TRACK_SENSORS.bind(this), this.trackSensorsLength());
 }
 }
@@ -587,31 +704,33 @@ export class OBTT implements flatbuffers.IGeneratedObject {
 constructor(
   public ID: string|Uint8Array|null = null,
   public SAT_NO: number = 0,
-  public ON_ORBIT: string|Uint8Array|null = null,
   public ORIG_OBJECT_ID: string|Uint8Array|null = null,
+  public ON_ORBIT: string|Uint8Array|null = null,
   public TS: string|Uint8Array|null = null,
   public LAT: number = 0.0,
   public LON: number = 0.0,
   public ALT: number = 0.0,
+  public SPD: number = 0.0,
+  public ANG_ELEV: number = 0.0,
   public RDF_RF: number = 0.0,
   public CALL_SIGN: string|Uint8Array|null = null,
   public RPT_NUM: string|Uint8Array|null = null,
+  public TRK_ID: string|Uint8Array|null = null,
   public OBJ_IDENT: string|Uint8Array|null = null,
   public IDENT_AMP: string|Uint8Array|null = null,
   public SAT_STATUS: string|Uint8Array|null = null,
-  public OBJECT_TYPE: string|Uint8Array|null = null,
+  public OBJ_TYPE: orbitObjectType = orbitObjectType.PAYLOAD,
   public COUNTRY_CODE: string|Uint8Array|null = null,
   public DECAY: number = 0.0,
   public CHARLIE_LINE: string|Uint8Array|null = null,
-  public AOU_TYPE: string|Uint8Array|null = null,
-  public AOU_DATA: (string)[] = [],
-  public SPD: number = 0.0,
-  public ANG_ELEV: number = 0.0,
+  public AOU_TYPE: aouType = aouType.CIRCULAR,
+  public AOU_DATA: (number)[] = [],
   public CNTNMNT: number = 0.0,
   public XREF: string|Uint8Array|null = null,
   public CH_XREF: string|Uint8Array|null = null,
   public AMPLIFICATION: string|Uint8Array|null = null,
   public IFF: string|Uint8Array|null = null,
+  public VEH_TYPE: string|Uint8Array|null = null,
   public REINFORCED: boolean = false,
   public REDUCED: boolean = false,
   public HQ: boolean = false,
@@ -619,63 +738,61 @@ constructor(
   public TASK_FORCE: boolean = false,
   public FEINT: boolean = false,
   public INSTALLATION: boolean = false,
-  public VEH_TYPE: string|Uint8Array|null = null,
-  public TRK_ID: string|Uint8Array|null = null,
   public TRACK_SENSORS: (string)[] = []
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ID = (this.ID !== null ? builder.createString(this.ID!) : 0);
-  const ON_ORBIT = (this.ON_ORBIT !== null ? builder.createString(this.ON_ORBIT!) : 0);
   const ORIG_OBJECT_ID = (this.ORIG_OBJECT_ID !== null ? builder.createString(this.ORIG_OBJECT_ID!) : 0);
+  const ON_ORBIT = (this.ON_ORBIT !== null ? builder.createString(this.ON_ORBIT!) : 0);
   const TS = (this.TS !== null ? builder.createString(this.TS!) : 0);
   const CALL_SIGN = (this.CALL_SIGN !== null ? builder.createString(this.CALL_SIGN!) : 0);
   const RPT_NUM = (this.RPT_NUM !== null ? builder.createString(this.RPT_NUM!) : 0);
+  const TRK_ID = (this.TRK_ID !== null ? builder.createString(this.TRK_ID!) : 0);
   const OBJ_IDENT = (this.OBJ_IDENT !== null ? builder.createString(this.OBJ_IDENT!) : 0);
   const IDENT_AMP = (this.IDENT_AMP !== null ? builder.createString(this.IDENT_AMP!) : 0);
   const SAT_STATUS = (this.SAT_STATUS !== null ? builder.createString(this.SAT_STATUS!) : 0);
-  const OBJECT_TYPE = (this.OBJECT_TYPE !== null ? builder.createString(this.OBJECT_TYPE!) : 0);
   const COUNTRY_CODE = (this.COUNTRY_CODE !== null ? builder.createString(this.COUNTRY_CODE!) : 0);
   const CHARLIE_LINE = (this.CHARLIE_LINE !== null ? builder.createString(this.CHARLIE_LINE!) : 0);
-  const AOU_TYPE = (this.AOU_TYPE !== null ? builder.createString(this.AOU_TYPE!) : 0);
-  const AOU_DATA = OBT.createAouDataVector(builder, builder.createObjectOffsetList(this.AOU_DATA));
+  const AOU_DATA = OBT.createAouDataVector(builder, this.AOU_DATA);
   const XREF = (this.XREF !== null ? builder.createString(this.XREF!) : 0);
   const CH_XREF = (this.CH_XREF !== null ? builder.createString(this.CH_XREF!) : 0);
   const AMPLIFICATION = (this.AMPLIFICATION !== null ? builder.createString(this.AMPLIFICATION!) : 0);
   const IFF = (this.IFF !== null ? builder.createString(this.IFF!) : 0);
   const VEH_TYPE = (this.VEH_TYPE !== null ? builder.createString(this.VEH_TYPE!) : 0);
-  const TRK_ID = (this.TRK_ID !== null ? builder.createString(this.TRK_ID!) : 0);
   const TRACK_SENSORS = OBT.createTrackSensorsVector(builder, builder.createObjectOffsetList(this.TRACK_SENSORS));
 
   return OBT.createOBT(builder,
     ID,
     this.SAT_NO,
-    ON_ORBIT,
     ORIG_OBJECT_ID,
+    ON_ORBIT,
     TS,
     this.LAT,
     this.LON,
     this.ALT,
+    this.SPD,
+    this.ANG_ELEV,
     this.RDF_RF,
     CALL_SIGN,
     RPT_NUM,
+    TRK_ID,
     OBJ_IDENT,
     IDENT_AMP,
     SAT_STATUS,
-    OBJECT_TYPE,
+    this.OBJ_TYPE,
     COUNTRY_CODE,
     this.DECAY,
     CHARLIE_LINE,
-    AOU_TYPE,
+    this.AOU_TYPE,
     AOU_DATA,
-    this.SPD,
-    this.ANG_ELEV,
     this.CNTNMNT,
     XREF,
     CH_XREF,
     AMPLIFICATION,
     IFF,
+    VEH_TYPE,
     this.REINFORCED,
     this.REDUCED,
     this.HQ,
@@ -683,8 +800,6 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.TASK_FORCE,
     this.FEINT,
     this.INSTALLATION,
-    VEH_TYPE,
-    TRK_ID,
     TRACK_SENSORS
   );
 }

@@ -1,12 +1,81 @@
-// Hash: 5db69c90383740a79e731a66223eed764edf703792c04448e179e65851fb25e4
-// Version: 0.0.2
+// Hash: 72cf435f921e72c07bf5705a4fe7fc476915aca497c7549eed01bad6c3198b55
+// Version: 0.0.3
 // -----------------------------------END_HEADER
+enum beamType : byte {
+  SPOT,
+  REGIONAL,
+  GLOBAL,
+  SHAPED,
+  STEERABLE,
+  HOPPING
+}
+
+enum beamPolarization : byte {
+  RHCP,
+  LHCP,
+  LINEAR_H,
+  LINEAR_V,
+  DUAL_CIRCULAR,
+  DUAL_LINEAR,
+  CROSS_POL
+}
+
+/// Beam Contour Point (gain pattern boundary)
+table beamContourPoint {
+  /// Latitude in degrees
+  LATITUDE:double;
+  /// Longitude in degrees
+  LONGITUDE:double;
+  /// Gain level in dBi at this contour
+  GAIN:double;
+}
+
+/// Beam Contour (iso-gain boundary)
+table beamContour {
+  /// Contour level identifier
+  CONTOUR_ID:string;
+  /// Gain level in dBi
+  GAIN_LEVEL:double;
+  /// Contour boundary points
+  POINTS:[beamContourPoint];
+}
+
 /// Antenna Beam
 table BEM {
+  /// Unique beam identifier
   ID:string;
+  /// Beam name or designation
   BEAM_NAME:string;
+  /// Reference to parent entity (satellite/transponder)
+  ID_ENTITY:string;
+  /// Reference to parent antenna
+  ID_ANTENNA:string;
+  /// Beam type
+  TYPE:beamType;
+  /// Beam polarization
+  POLARIZATION:beamPolarization;
+  /// Peak gain in dBi
+  PEAK_GAIN:double;
+  /// Edge-of-coverage gain in dBi
+  EOC_GAIN:double;
+  /// Beam center latitude in degrees
+  CENTER_LATITUDE:double;
+  /// Beam center longitude in degrees
+  CENTER_LONGITUDE:double;
+  /// Beamwidth (3dB) in degrees
+  BEAMWIDTH:double;
+  /// Operating frequency in MHz
+  FREQUENCY:double;
+  /// EIRP at beam center in dBW
+  EIRP:double;
+  /// G/T at beam center in dB/K
+  G_OVER_T:double;
+  /// Beam footprint area in km^2
+  FOOTPRINT_AREA:double;
+  /// Beam contour definitions
+  BEAM_CONTOURS:[beamContour];
+  /// Additional notes
   NOTES:string;
-  BEAM_CONTOURS:[string];
 }
 
 root_type BEM;

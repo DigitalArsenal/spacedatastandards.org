@@ -19,6 +19,7 @@ public struct OOI : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public OOI __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Unique identifier
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,7 +27,9 @@ public struct OOI : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
-  public int SAT_NO { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  /// Satellite catalog number
+  public uint SAT_NO { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Object name or designator
   public string NAME { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetNAMEBytes() { return __p.__vector_as_span<byte>(8, 1); }
@@ -34,120 +37,160 @@ public struct OOI : IFlatbufferObject
   public ArraySegment<byte>? GetNAMEBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetNAMEArray() { return __p.__vector_as_array<byte>(8); }
-  public string SENSOR_TASKING_START_TIME { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// On-orbit reference
+  public string ON_ORBIT { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSENSOR_TASKING_START_TIMEBytes() { return __p.__vector_as_span<byte>(10, 1); }
+  public Span<byte> GetON_ORBITBytes() { return __p.__vector_as_span<byte>(10, 1); }
 #else
-  public ArraySegment<byte>? GetSENSOR_TASKING_START_TIMEBytes() { return __p.__vector_as_arraysegment(10); }
+  public ArraySegment<byte>? GetON_ORBITBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
-  public byte[] GetSENSOR_TASKING_START_TIMEArray() { return __p.__vector_as_array<byte>(10); }
-  public string SENSOR_TASKING_STOP_TIME { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetON_ORBITArray() { return __p.__vector_as_array<byte>(10); }
+  /// Tasking status
+  public ooiStatus STATUS { get { int o = __p.__offset(12); return o != 0 ? (ooiStatus)__p.bb.GetSbyte(o + __p.bb_pos) : ooiStatus.ACTIVE; } }
+  /// Status update date (ISO 8601)
+  public string STATUS_DATE { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSENSOR_TASKING_STOP_TIMEBytes() { return __p.__vector_as_span<byte>(12, 1); }
+  public Span<byte> GetSTATUS_DATEBytes() { return __p.__vector_as_span<byte>(14, 1); }
 #else
-  public ArraySegment<byte>? GetSENSOR_TASKING_STOP_TIMEBytes() { return __p.__vector_as_arraysegment(12); }
+  public ArraySegment<byte>? GetSTATUS_DATEBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
-  public byte[] GetSENSOR_TASKING_STOP_TIMEArray() { return __p.__vector_as_array<byte>(12); }
-  public int PRIORITY { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public string STATUS { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetSTATUS_DATEArray() { return __p.__vector_as_array<byte>(14); }
+  /// Collection priority
+  public ooiPriority PRIORITY { get { int o = __p.__offset(16); return o != 0 ? (ooiPriority)__p.bb.GetSbyte(o + __p.bb_pos) : ooiPriority.CRITICAL; } }
+  /// Description of why object is of interest
+  public string DESCRIPTION { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSTATUSBytes() { return __p.__vector_as_span<byte>(16, 1); }
+  public Span<byte> GetDESCRIPTIONBytes() { return __p.__vector_as_span<byte>(18, 1); }
 #else
-  public ArraySegment<byte>? GetSTATUSBytes() { return __p.__vector_as_arraysegment(16); }
+  public ArraySegment<byte>? GetDESCRIPTIONBytes() { return __p.__vector_as_arraysegment(18); }
 #endif
-  public byte[] GetSTATUSArray() { return __p.__vector_as_array<byte>(16); }
-  public string STATUS_DATE { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetDESCRIPTIONArray() { return __p.__vector_as_array<byte>(18); }
+  /// Sensor tasking start time (ISO 8601)
+  public string SENSOR_TASKING_START_TIME { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSTATUS_DATEBytes() { return __p.__vector_as_span<byte>(18, 1); }
+  public Span<byte> GetSENSOR_TASKING_START_TIMEBytes() { return __p.__vector_as_span<byte>(20, 1); }
 #else
-  public ArraySegment<byte>? GetSTATUS_DATEBytes() { return __p.__vector_as_arraysegment(18); }
+  public ArraySegment<byte>? GetSENSOR_TASKING_START_TIMEBytes() { return __p.__vector_as_arraysegment(20); }
 #endif
-  public byte[] GetSTATUS_DATEArray() { return __p.__vector_as_array<byte>(18); }
-  public string DESCRIPTION { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetSENSOR_TASKING_START_TIMEArray() { return __p.__vector_as_array<byte>(20); }
+  /// Sensor tasking stop time (ISO 8601)
+  public string SENSOR_TASKING_STOP_TIME { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDESCRIPTIONBytes() { return __p.__vector_as_span<byte>(20, 1); }
+  public Span<byte> GetSENSOR_TASKING_STOP_TIMEBytes() { return __p.__vector_as_span<byte>(22, 1); }
 #else
-  public ArraySegment<byte>? GetDESCRIPTIONBytes() { return __p.__vector_as_arraysegment(20); }
+  public ArraySegment<byte>? GetSENSOR_TASKING_STOP_TIMEBytes() { return __p.__vector_as_arraysegment(22); }
 #endif
-  public byte[] GetDESCRIPTIONArray() { return __p.__vector_as_array<byte>(20); }
-  public string LAST_OB_TIME { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetSENSOR_TASKING_STOP_TIMEArray() { return __p.__vector_as_array<byte>(22); }
+  /// Last observation time (ISO 8601)
+  public string LAST_OB_TIME { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetLAST_OB_TIMEBytes() { return __p.__vector_as_span<byte>(22, 1); }
+  public Span<byte> GetLAST_OB_TIMEBytes() { return __p.__vector_as_span<byte>(24, 1); }
 #else
-  public ArraySegment<byte>? GetLAST_OB_TIMEBytes() { return __p.__vector_as_arraysegment(22); }
+  public ArraySegment<byte>? GetLAST_OB_TIMEBytes() { return __p.__vector_as_arraysegment(24); }
 #endif
-  public byte[] GetLAST_OB_TIMEArray() { return __p.__vector_as_array<byte>(22); }
-  public string MISSED_OB_TIME { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetLAST_OB_TIMEArray() { return __p.__vector_as_array<byte>(24); }
+  /// Last missed observation time (ISO 8601)
+  public string MISSED_OB_TIME { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetMISSED_OB_TIMEBytes() { return __p.__vector_as_span<byte>(24, 1); }
+  public Span<byte> GetMISSED_OB_TIMEBytes() { return __p.__vector_as_span<byte>(26, 1); }
 #else
-  public ArraySegment<byte>? GetMISSED_OB_TIMEBytes() { return __p.__vector_as_arraysegment(24); }
+  public ArraySegment<byte>? GetMISSED_OB_TIMEBytes() { return __p.__vector_as_arraysegment(26); }
 #endif
-  public byte[] GetMISSED_OB_TIMEArray() { return __p.__vector_as_array<byte>(24); }
-  public string DELTA_VS(int j) { int o = __p.__offset(26); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int DELTA_VSLength { get { int o = __p.__offset(26); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string DELTA_TS(int j) { int o = __p.__offset(28); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int DELTA_TSLength { get { int o = __p.__offset(28); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string SV_EPOCH { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetMISSED_OB_TIMEArray() { return __p.__vector_as_array<byte>(26); }
+  /// State vector epoch (ISO 8601)
+  public string SV_EPOCH { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSV_EPOCHBytes() { return __p.__vector_as_span<byte>(30, 1); }
+  public Span<byte> GetSV_EPOCHBytes() { return __p.__vector_as_span<byte>(28, 1); }
 #else
-  public ArraySegment<byte>? GetSV_EPOCHBytes() { return __p.__vector_as_arraysegment(30); }
+  public ArraySegment<byte>? GetSV_EPOCHBytes() { return __p.__vector_as_arraysegment(28); }
 #endif
-  public byte[] GetSV_EPOCHArray() { return __p.__vector_as_array<byte>(30); }
-  public double X { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double Y { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double Z { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double XVEL { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double YVEL { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double ZVEL { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string ELSET_EPOCH { get { int o = __p.__offset(44); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetSV_EPOCHArray() { return __p.__vector_as_array<byte>(28); }
+  /// Position X (km, TEME)
+  public double X { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Position Y (km, TEME)
+  public double Y { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Position Z (km, TEME)
+  public double Z { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Velocity X (km/s, TEME)
+  public double XVEL { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Velocity Y (km/s, TEME)
+  public double YVEL { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Velocity Z (km/s, TEME)
+  public double ZVEL { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Element set epoch (ISO 8601)
+  public string ELSET_EPOCH { get { int o = __p.__offset(42); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetELSET_EPOCHBytes() { return __p.__vector_as_span<byte>(44, 1); }
+  public Span<byte> GetELSET_EPOCHBytes() { return __p.__vector_as_span<byte>(42, 1); }
 #else
-  public ArraySegment<byte>? GetELSET_EPOCHBytes() { return __p.__vector_as_arraysegment(44); }
+  public ArraySegment<byte>? GetELSET_EPOCHBytes() { return __p.__vector_as_arraysegment(42); }
 #endif
-  public byte[] GetELSET_EPOCHArray() { return __p.__vector_as_array<byte>(44); }
-  public double MEAN_MOTION { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double ECCENTRICITY { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double INCLINATION { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double RAAN { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double ARG_OF_PERIGEE { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double MEAN_ANOMALY { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public int REV_NO { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public double B_STAR { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double MEAN_MOTION_DOT { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double MEAN_MOTION_DDOT { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SEMI_MAJOR_AXIS { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double PERIOD { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double APOGEE { get { int o = __p.__offset(70); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double PERIGEE { get { int o = __p.__offset(72); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string AFFECTED_OBJECTS(int j) { int o = __p.__offset(74); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int AFFECTED_OBJECTSLength { get { int o = __p.__offset(74); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string ON_ORBIT { get { int o = __p.__offset(76); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetELSET_EPOCHArray() { return __p.__vector_as_array<byte>(42); }
+  /// Mean motion (rev/day)
+  public double MEAN_MOTION { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Eccentricity
+  public double ECCENTRICITY { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Inclination (degrees)
+  public double INCLINATION { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Right ascension of ascending node (degrees)
+  public double RAAN { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Argument of perigee (degrees)
+  public double ARG_OF_PERIGEE { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Mean anomaly (degrees)
+  public double MEAN_ANOMALY { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Revolution number at epoch
+  public uint REV_NO { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// BSTAR drag term (1/Earth radii)
+  public double B_STAR { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Mean motion first derivative (rev/day^2)
+  public double MEAN_MOTION_DOT { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Mean motion second derivative (rev/day^3)
+  public double MEAN_MOTION_DDOT { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Semi-major axis (km)
+  public double SEMI_MAJOR_AXIS { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Orbital period (minutes)
+  public double PERIOD { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Apogee altitude (km)
+  public double APOGEE { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Perigee altitude (km)
+  public double PERIGEE { get { int o = __p.__offset(70); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Delta-V estimates for maneuver hypotheses (m/s)
+  public double DELTA_VS(int j) { int o = __p.__offset(72); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int DELTA_VSLength { get { int o = __p.__offset(72); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetON_ORBITBytes() { return __p.__vector_as_span<byte>(76, 1); }
+  public Span<double> GetDELTA_VSBytes() { return __p.__vector_as_span<double>(72, 8); }
 #else
-  public ArraySegment<byte>? GetON_ORBITBytes() { return __p.__vector_as_arraysegment(76); }
+  public ArraySegment<byte>? GetDELTA_VSBytes() { return __p.__vector_as_arraysegment(72); }
 #endif
-  public byte[] GetON_ORBITArray() { return __p.__vector_as_array<byte>(76); }
+  public double[] GetDELTA_VSArray() { return __p.__vector_as_array<double>(72); }
+  /// Delta-T estimates for maneuver timing (seconds)
+  public double DELTA_TS(int j) { int o = __p.__offset(74); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int DELTA_TSLength { get { int o = __p.__offset(74); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetDELTA_TSBytes() { return __p.__vector_as_span<double>(74, 8); }
+#else
+  public ArraySegment<byte>? GetDELTA_TSBytes() { return __p.__vector_as_arraysegment(74); }
+#endif
+  public double[] GetDELTA_TSArray() { return __p.__vector_as_array<double>(74); }
+  /// Other affected satellite catalog numbers
+  public string AFFECTED_OBJECTS(int j) { int o = __p.__offset(76); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int AFFECTED_OBJECTSLength { get { int o = __p.__offset(76); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Associated orbit manifold identifiers
   public string MANIFOLDS(int j) { int o = __p.__offset(78); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int MANIFOLDSLength { get { int o = __p.__offset(78); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<OOI> CreateOOI(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
-      int SAT_NO = 0,
+      uint SAT_NO = 0,
       StringOffset NAMEOffset = default(StringOffset),
+      StringOffset ON_ORBITOffset = default(StringOffset),
+      ooiStatus STATUS = ooiStatus.ACTIVE,
+      StringOffset STATUS_DATEOffset = default(StringOffset),
+      ooiPriority PRIORITY = ooiPriority.CRITICAL,
+      StringOffset DESCRIPTIONOffset = default(StringOffset),
       StringOffset SENSOR_TASKING_START_TIMEOffset = default(StringOffset),
       StringOffset SENSOR_TASKING_STOP_TIMEOffset = default(StringOffset),
-      int PRIORITY = 0,
-      StringOffset STATUSOffset = default(StringOffset),
-      StringOffset STATUS_DATEOffset = default(StringOffset),
-      StringOffset DESCRIPTIONOffset = default(StringOffset),
       StringOffset LAST_OB_TIMEOffset = default(StringOffset),
       StringOffset MISSED_OB_TIMEOffset = default(StringOffset),
-      VectorOffset DELTA_VSOffset = default(VectorOffset),
-      VectorOffset DELTA_TSOffset = default(VectorOffset),
       StringOffset SV_EPOCHOffset = default(StringOffset),
       double X = 0.0,
       double Y = 0.0,
@@ -162,7 +205,7 @@ public struct OOI : IFlatbufferObject
       double RAAN = 0.0,
       double ARG_OF_PERIGEE = 0.0,
       double MEAN_ANOMALY = 0.0,
-      int REV_NO = 0,
+      uint REV_NO = 0,
       double B_STAR = 0.0,
       double MEAN_MOTION_DOT = 0.0,
       double MEAN_MOTION_DDOT = 0.0,
@@ -170,8 +213,9 @@ public struct OOI : IFlatbufferObject
       double PERIOD = 0.0,
       double APOGEE = 0.0,
       double PERIGEE = 0.0,
+      VectorOffset DELTA_VSOffset = default(VectorOffset),
+      VectorOffset DELTA_TSOffset = default(VectorOffset),
       VectorOffset AFFECTED_OBJECTSOffset = default(VectorOffset),
-      StringOffset ON_ORBITOffset = default(StringOffset),
       VectorOffset MANIFOLDSOffset = default(VectorOffset)) {
     builder.StartTable(38);
     OOI.AddPERIGEE(builder, PERIGEE);
@@ -194,80 +238,80 @@ public struct OOI : IFlatbufferObject
     OOI.AddY(builder, Y);
     OOI.AddX(builder, X);
     OOI.AddMANIFOLDS(builder, MANIFOLDSOffset);
-    OOI.AddON_ORBIT(builder, ON_ORBITOffset);
     OOI.AddAFFECTED_OBJECTS(builder, AFFECTED_OBJECTSOffset);
+    OOI.AddDELTA_TS(builder, DELTA_TSOffset);
+    OOI.AddDELTA_VS(builder, DELTA_VSOffset);
     OOI.AddREV_NO(builder, REV_NO);
     OOI.AddELSET_EPOCH(builder, ELSET_EPOCHOffset);
     OOI.AddSV_EPOCH(builder, SV_EPOCHOffset);
-    OOI.AddDELTA_TS(builder, DELTA_TSOffset);
-    OOI.AddDELTA_VS(builder, DELTA_VSOffset);
     OOI.AddMISSED_OB_TIME(builder, MISSED_OB_TIMEOffset);
     OOI.AddLAST_OB_TIME(builder, LAST_OB_TIMEOffset);
-    OOI.AddDESCRIPTION(builder, DESCRIPTIONOffset);
-    OOI.AddSTATUS_DATE(builder, STATUS_DATEOffset);
-    OOI.AddSTATUS(builder, STATUSOffset);
-    OOI.AddPRIORITY(builder, PRIORITY);
     OOI.AddSENSOR_TASKING_STOP_TIME(builder, SENSOR_TASKING_STOP_TIMEOffset);
     OOI.AddSENSOR_TASKING_START_TIME(builder, SENSOR_TASKING_START_TIMEOffset);
+    OOI.AddDESCRIPTION(builder, DESCRIPTIONOffset);
+    OOI.AddSTATUS_DATE(builder, STATUS_DATEOffset);
+    OOI.AddON_ORBIT(builder, ON_ORBITOffset);
     OOI.AddNAME(builder, NAMEOffset);
     OOI.AddSAT_NO(builder, SAT_NO);
     OOI.AddID(builder, IDOffset);
+    OOI.AddPRIORITY(builder, PRIORITY);
+    OOI.AddSTATUS(builder, STATUS);
     return OOI.EndOOI(builder);
   }
 
   public static void StartOOI(FlatBufferBuilder builder) { builder.StartTable(38); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
-  public static void AddSAT_NO(FlatBufferBuilder builder, int SAT_NO) { builder.AddInt(1, SAT_NO, 0); }
+  public static void AddSAT_NO(FlatBufferBuilder builder, uint SAT_NO) { builder.AddUint(1, SAT_NO, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(2, NAMEOffset.Value, 0); }
-  public static void AddSENSOR_TASKING_START_TIME(FlatBufferBuilder builder, StringOffset SENSOR_TASKING_START_TIMEOffset) { builder.AddOffset(3, SENSOR_TASKING_START_TIMEOffset.Value, 0); }
-  public static void AddSENSOR_TASKING_STOP_TIME(FlatBufferBuilder builder, StringOffset SENSOR_TASKING_STOP_TIMEOffset) { builder.AddOffset(4, SENSOR_TASKING_STOP_TIMEOffset.Value, 0); }
-  public static void AddPRIORITY(FlatBufferBuilder builder, int PRIORITY) { builder.AddInt(5, PRIORITY, 0); }
-  public static void AddSTATUS(FlatBufferBuilder builder, StringOffset STATUSOffset) { builder.AddOffset(6, STATUSOffset.Value, 0); }
-  public static void AddSTATUS_DATE(FlatBufferBuilder builder, StringOffset STATUS_DATEOffset) { builder.AddOffset(7, STATUS_DATEOffset.Value, 0); }
-  public static void AddDESCRIPTION(FlatBufferBuilder builder, StringOffset DESCRIPTIONOffset) { builder.AddOffset(8, DESCRIPTIONOffset.Value, 0); }
-  public static void AddLAST_OB_TIME(FlatBufferBuilder builder, StringOffset LAST_OB_TIMEOffset) { builder.AddOffset(9, LAST_OB_TIMEOffset.Value, 0); }
-  public static void AddMISSED_OB_TIME(FlatBufferBuilder builder, StringOffset MISSED_OB_TIMEOffset) { builder.AddOffset(10, MISSED_OB_TIMEOffset.Value, 0); }
-  public static void AddDELTA_VS(FlatBufferBuilder builder, VectorOffset DELTA_VSOffset) { builder.AddOffset(11, DELTA_VSOffset.Value, 0); }
-  public static VectorOffset CreateDELTA_VSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateDELTA_VSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateDELTA_VSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateDELTA_VSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartDELTA_VSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddDELTA_TS(FlatBufferBuilder builder, VectorOffset DELTA_TSOffset) { builder.AddOffset(12, DELTA_TSOffset.Value, 0); }
-  public static VectorOffset CreateDELTA_TSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateDELTA_TSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateDELTA_TSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateDELTA_TSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartDELTA_TSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddSV_EPOCH(FlatBufferBuilder builder, StringOffset SV_EPOCHOffset) { builder.AddOffset(13, SV_EPOCHOffset.Value, 0); }
-  public static void AddX(FlatBufferBuilder builder, double X) { builder.AddDouble(14, X, 0.0); }
-  public static void AddY(FlatBufferBuilder builder, double Y) { builder.AddDouble(15, Y, 0.0); }
-  public static void AddZ(FlatBufferBuilder builder, double Z) { builder.AddDouble(16, Z, 0.0); }
-  public static void AddXVEL(FlatBufferBuilder builder, double XVEL) { builder.AddDouble(17, XVEL, 0.0); }
-  public static void AddYVEL(FlatBufferBuilder builder, double YVEL) { builder.AddDouble(18, YVEL, 0.0); }
-  public static void AddZVEL(FlatBufferBuilder builder, double ZVEL) { builder.AddDouble(19, ZVEL, 0.0); }
-  public static void AddELSET_EPOCH(FlatBufferBuilder builder, StringOffset ELSET_EPOCHOffset) { builder.AddOffset(20, ELSET_EPOCHOffset.Value, 0); }
-  public static void AddMEAN_MOTION(FlatBufferBuilder builder, double MEAN_MOTION) { builder.AddDouble(21, MEAN_MOTION, 0.0); }
-  public static void AddECCENTRICITY(FlatBufferBuilder builder, double ECCENTRICITY) { builder.AddDouble(22, ECCENTRICITY, 0.0); }
-  public static void AddINCLINATION(FlatBufferBuilder builder, double INCLINATION) { builder.AddDouble(23, INCLINATION, 0.0); }
-  public static void AddRAAN(FlatBufferBuilder builder, double RAAN) { builder.AddDouble(24, RAAN, 0.0); }
-  public static void AddARG_OF_PERIGEE(FlatBufferBuilder builder, double ARG_OF_PERIGEE) { builder.AddDouble(25, ARG_OF_PERIGEE, 0.0); }
-  public static void AddMEAN_ANOMALY(FlatBufferBuilder builder, double MEAN_ANOMALY) { builder.AddDouble(26, MEAN_ANOMALY, 0.0); }
-  public static void AddREV_NO(FlatBufferBuilder builder, int REV_NO) { builder.AddInt(27, REV_NO, 0); }
-  public static void AddB_STAR(FlatBufferBuilder builder, double B_STAR) { builder.AddDouble(28, B_STAR, 0.0); }
-  public static void AddMEAN_MOTION_DOT(FlatBufferBuilder builder, double MEAN_MOTION_DOT) { builder.AddDouble(29, MEAN_MOTION_DOT, 0.0); }
-  public static void AddMEAN_MOTION_DDOT(FlatBufferBuilder builder, double MEAN_MOTION_DDOT) { builder.AddDouble(30, MEAN_MOTION_DDOT, 0.0); }
-  public static void AddSEMI_MAJOR_AXIS(FlatBufferBuilder builder, double SEMI_MAJOR_AXIS) { builder.AddDouble(31, SEMI_MAJOR_AXIS, 0.0); }
-  public static void AddPERIOD(FlatBufferBuilder builder, double PERIOD) { builder.AddDouble(32, PERIOD, 0.0); }
-  public static void AddAPOGEE(FlatBufferBuilder builder, double APOGEE) { builder.AddDouble(33, APOGEE, 0.0); }
-  public static void AddPERIGEE(FlatBufferBuilder builder, double PERIGEE) { builder.AddDouble(34, PERIGEE, 0.0); }
-  public static void AddAFFECTED_OBJECTS(FlatBufferBuilder builder, VectorOffset AFFECTED_OBJECTSOffset) { builder.AddOffset(35, AFFECTED_OBJECTSOffset.Value, 0); }
+  public static void AddON_ORBIT(FlatBufferBuilder builder, StringOffset ON_ORBITOffset) { builder.AddOffset(3, ON_ORBITOffset.Value, 0); }
+  public static void AddSTATUS(FlatBufferBuilder builder, ooiStatus STATUS) { builder.AddSbyte(4, (sbyte)STATUS, 0); }
+  public static void AddSTATUS_DATE(FlatBufferBuilder builder, StringOffset STATUS_DATEOffset) { builder.AddOffset(5, STATUS_DATEOffset.Value, 0); }
+  public static void AddPRIORITY(FlatBufferBuilder builder, ooiPriority PRIORITY) { builder.AddSbyte(6, (sbyte)PRIORITY, 0); }
+  public static void AddDESCRIPTION(FlatBufferBuilder builder, StringOffset DESCRIPTIONOffset) { builder.AddOffset(7, DESCRIPTIONOffset.Value, 0); }
+  public static void AddSENSOR_TASKING_START_TIME(FlatBufferBuilder builder, StringOffset SENSOR_TASKING_START_TIMEOffset) { builder.AddOffset(8, SENSOR_TASKING_START_TIMEOffset.Value, 0); }
+  public static void AddSENSOR_TASKING_STOP_TIME(FlatBufferBuilder builder, StringOffset SENSOR_TASKING_STOP_TIMEOffset) { builder.AddOffset(9, SENSOR_TASKING_STOP_TIMEOffset.Value, 0); }
+  public static void AddLAST_OB_TIME(FlatBufferBuilder builder, StringOffset LAST_OB_TIMEOffset) { builder.AddOffset(10, LAST_OB_TIMEOffset.Value, 0); }
+  public static void AddMISSED_OB_TIME(FlatBufferBuilder builder, StringOffset MISSED_OB_TIMEOffset) { builder.AddOffset(11, MISSED_OB_TIMEOffset.Value, 0); }
+  public static void AddSV_EPOCH(FlatBufferBuilder builder, StringOffset SV_EPOCHOffset) { builder.AddOffset(12, SV_EPOCHOffset.Value, 0); }
+  public static void AddX(FlatBufferBuilder builder, double X) { builder.AddDouble(13, X, 0.0); }
+  public static void AddY(FlatBufferBuilder builder, double Y) { builder.AddDouble(14, Y, 0.0); }
+  public static void AddZ(FlatBufferBuilder builder, double Z) { builder.AddDouble(15, Z, 0.0); }
+  public static void AddXVEL(FlatBufferBuilder builder, double XVEL) { builder.AddDouble(16, XVEL, 0.0); }
+  public static void AddYVEL(FlatBufferBuilder builder, double YVEL) { builder.AddDouble(17, YVEL, 0.0); }
+  public static void AddZVEL(FlatBufferBuilder builder, double ZVEL) { builder.AddDouble(18, ZVEL, 0.0); }
+  public static void AddELSET_EPOCH(FlatBufferBuilder builder, StringOffset ELSET_EPOCHOffset) { builder.AddOffset(19, ELSET_EPOCHOffset.Value, 0); }
+  public static void AddMEAN_MOTION(FlatBufferBuilder builder, double MEAN_MOTION) { builder.AddDouble(20, MEAN_MOTION, 0.0); }
+  public static void AddECCENTRICITY(FlatBufferBuilder builder, double ECCENTRICITY) { builder.AddDouble(21, ECCENTRICITY, 0.0); }
+  public static void AddINCLINATION(FlatBufferBuilder builder, double INCLINATION) { builder.AddDouble(22, INCLINATION, 0.0); }
+  public static void AddRAAN(FlatBufferBuilder builder, double RAAN) { builder.AddDouble(23, RAAN, 0.0); }
+  public static void AddARG_OF_PERIGEE(FlatBufferBuilder builder, double ARG_OF_PERIGEE) { builder.AddDouble(24, ARG_OF_PERIGEE, 0.0); }
+  public static void AddMEAN_ANOMALY(FlatBufferBuilder builder, double MEAN_ANOMALY) { builder.AddDouble(25, MEAN_ANOMALY, 0.0); }
+  public static void AddREV_NO(FlatBufferBuilder builder, uint REV_NO) { builder.AddUint(26, REV_NO, 0); }
+  public static void AddB_STAR(FlatBufferBuilder builder, double B_STAR) { builder.AddDouble(27, B_STAR, 0.0); }
+  public static void AddMEAN_MOTION_DOT(FlatBufferBuilder builder, double MEAN_MOTION_DOT) { builder.AddDouble(28, MEAN_MOTION_DOT, 0.0); }
+  public static void AddMEAN_MOTION_DDOT(FlatBufferBuilder builder, double MEAN_MOTION_DDOT) { builder.AddDouble(29, MEAN_MOTION_DDOT, 0.0); }
+  public static void AddSEMI_MAJOR_AXIS(FlatBufferBuilder builder, double SEMI_MAJOR_AXIS) { builder.AddDouble(30, SEMI_MAJOR_AXIS, 0.0); }
+  public static void AddPERIOD(FlatBufferBuilder builder, double PERIOD) { builder.AddDouble(31, PERIOD, 0.0); }
+  public static void AddAPOGEE(FlatBufferBuilder builder, double APOGEE) { builder.AddDouble(32, APOGEE, 0.0); }
+  public static void AddPERIGEE(FlatBufferBuilder builder, double PERIGEE) { builder.AddDouble(33, PERIGEE, 0.0); }
+  public static void AddDELTA_VS(FlatBufferBuilder builder, VectorOffset DELTA_VSOffset) { builder.AddOffset(34, DELTA_VSOffset.Value, 0); }
+  public static VectorOffset CreateDELTA_VSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateDELTA_VSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDELTA_VSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDELTA_VSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartDELTA_VSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddDELTA_TS(FlatBufferBuilder builder, VectorOffset DELTA_TSOffset) { builder.AddOffset(35, DELTA_TSOffset.Value, 0); }
+  public static VectorOffset CreateDELTA_TSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateDELTA_TSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDELTA_TSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDELTA_TSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartDELTA_TSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddAFFECTED_OBJECTS(FlatBufferBuilder builder, VectorOffset AFFECTED_OBJECTSOffset) { builder.AddOffset(36, AFFECTED_OBJECTSOffset.Value, 0); }
   public static VectorOffset CreateAFFECTED_OBJECTSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateAFFECTED_OBJECTSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateAFFECTED_OBJECTSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateAFFECTED_OBJECTSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartAFFECTED_OBJECTSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddON_ORBIT(FlatBufferBuilder builder, StringOffset ON_ORBITOffset) { builder.AddOffset(36, ON_ORBITOffset.Value, 0); }
   public static void AddMANIFOLDS(FlatBufferBuilder builder, VectorOffset MANIFOLDSOffset) { builder.AddOffset(37, MANIFOLDSOffset.Value, 0); }
   public static VectorOffset CreateMANIFOLDSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateMANIFOLDSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
@@ -289,18 +333,15 @@ public struct OOI : IFlatbufferObject
     _o.ID = this.ID;
     _o.SAT_NO = this.SAT_NO;
     _o.NAME = this.NAME;
-    _o.SENSOR_TASKING_START_TIME = this.SENSOR_TASKING_START_TIME;
-    _o.SENSOR_TASKING_STOP_TIME = this.SENSOR_TASKING_STOP_TIME;
-    _o.PRIORITY = this.PRIORITY;
+    _o.ON_ORBIT = this.ON_ORBIT;
     _o.STATUS = this.STATUS;
     _o.STATUS_DATE = this.STATUS_DATE;
+    _o.PRIORITY = this.PRIORITY;
     _o.DESCRIPTION = this.DESCRIPTION;
+    _o.SENSOR_TASKING_START_TIME = this.SENSOR_TASKING_START_TIME;
+    _o.SENSOR_TASKING_STOP_TIME = this.SENSOR_TASKING_STOP_TIME;
     _o.LAST_OB_TIME = this.LAST_OB_TIME;
     _o.MISSED_OB_TIME = this.MISSED_OB_TIME;
-    _o.DELTA_VS = new List<string>();
-    for (var _j = 0; _j < this.DELTA_VSLength; ++_j) {_o.DELTA_VS.Add(this.DELTA_VS(_j));}
-    _o.DELTA_TS = new List<string>();
-    for (var _j = 0; _j < this.DELTA_TSLength; ++_j) {_o.DELTA_TS.Add(this.DELTA_TS(_j));}
     _o.SV_EPOCH = this.SV_EPOCH;
     _o.X = this.X;
     _o.Y = this.Y;
@@ -323,9 +364,12 @@ public struct OOI : IFlatbufferObject
     _o.PERIOD = this.PERIOD;
     _o.APOGEE = this.APOGEE;
     _o.PERIGEE = this.PERIGEE;
+    _o.DELTA_VS = new List<double>();
+    for (var _j = 0; _j < this.DELTA_VSLength; ++_j) {_o.DELTA_VS.Add(this.DELTA_VS(_j));}
+    _o.DELTA_TS = new List<double>();
+    for (var _j = 0; _j < this.DELTA_TSLength; ++_j) {_o.DELTA_TS.Add(this.DELTA_TS(_j));}
     _o.AFFECTED_OBJECTS = new List<string>();
     for (var _j = 0; _j < this.AFFECTED_OBJECTSLength; ++_j) {_o.AFFECTED_OBJECTS.Add(this.AFFECTED_OBJECTS(_j));}
-    _o.ON_ORBIT = this.ON_ORBIT;
     _o.MANIFOLDS = new List<string>();
     for (var _j = 0; _j < this.MANIFOLDSLength; ++_j) {_o.MANIFOLDS.Add(this.MANIFOLDS(_j));}
   }
@@ -333,34 +377,31 @@ public struct OOI : IFlatbufferObject
     if (_o == null) return default(Offset<OOI>);
     var _ID = _o.ID == null ? default(StringOffset) : builder.CreateString(_o.ID);
     var _NAME = _o.NAME == null ? default(StringOffset) : builder.CreateString(_o.NAME);
-    var _SENSOR_TASKING_START_TIME = _o.SENSOR_TASKING_START_TIME == null ? default(StringOffset) : builder.CreateString(_o.SENSOR_TASKING_START_TIME);
-    var _SENSOR_TASKING_STOP_TIME = _o.SENSOR_TASKING_STOP_TIME == null ? default(StringOffset) : builder.CreateString(_o.SENSOR_TASKING_STOP_TIME);
-    var _STATUS = _o.STATUS == null ? default(StringOffset) : builder.CreateString(_o.STATUS);
+    var _ON_ORBIT = _o.ON_ORBIT == null ? default(StringOffset) : builder.CreateString(_o.ON_ORBIT);
     var _STATUS_DATE = _o.STATUS_DATE == null ? default(StringOffset) : builder.CreateString(_o.STATUS_DATE);
     var _DESCRIPTION = _o.DESCRIPTION == null ? default(StringOffset) : builder.CreateString(_o.DESCRIPTION);
+    var _SENSOR_TASKING_START_TIME = _o.SENSOR_TASKING_START_TIME == null ? default(StringOffset) : builder.CreateString(_o.SENSOR_TASKING_START_TIME);
+    var _SENSOR_TASKING_STOP_TIME = _o.SENSOR_TASKING_STOP_TIME == null ? default(StringOffset) : builder.CreateString(_o.SENSOR_TASKING_STOP_TIME);
     var _LAST_OB_TIME = _o.LAST_OB_TIME == null ? default(StringOffset) : builder.CreateString(_o.LAST_OB_TIME);
     var _MISSED_OB_TIME = _o.MISSED_OB_TIME == null ? default(StringOffset) : builder.CreateString(_o.MISSED_OB_TIME);
+    var _SV_EPOCH = _o.SV_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.SV_EPOCH);
+    var _ELSET_EPOCH = _o.ELSET_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.ELSET_EPOCH);
     var _DELTA_VS = default(VectorOffset);
     if (_o.DELTA_VS != null) {
-      var __DELTA_VS = new StringOffset[_o.DELTA_VS.Count];
-      for (var _j = 0; _j < __DELTA_VS.Length; ++_j) { __DELTA_VS[_j] = builder.CreateString(_o.DELTA_VS[_j]); }
+      var __DELTA_VS = _o.DELTA_VS.ToArray();
       _DELTA_VS = CreateDELTA_VSVector(builder, __DELTA_VS);
     }
     var _DELTA_TS = default(VectorOffset);
     if (_o.DELTA_TS != null) {
-      var __DELTA_TS = new StringOffset[_o.DELTA_TS.Count];
-      for (var _j = 0; _j < __DELTA_TS.Length; ++_j) { __DELTA_TS[_j] = builder.CreateString(_o.DELTA_TS[_j]); }
+      var __DELTA_TS = _o.DELTA_TS.ToArray();
       _DELTA_TS = CreateDELTA_TSVector(builder, __DELTA_TS);
     }
-    var _SV_EPOCH = _o.SV_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.SV_EPOCH);
-    var _ELSET_EPOCH = _o.ELSET_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.ELSET_EPOCH);
     var _AFFECTED_OBJECTS = default(VectorOffset);
     if (_o.AFFECTED_OBJECTS != null) {
       var __AFFECTED_OBJECTS = new StringOffset[_o.AFFECTED_OBJECTS.Count];
       for (var _j = 0; _j < __AFFECTED_OBJECTS.Length; ++_j) { __AFFECTED_OBJECTS[_j] = builder.CreateString(_o.AFFECTED_OBJECTS[_j]); }
       _AFFECTED_OBJECTS = CreateAFFECTED_OBJECTSVector(builder, __AFFECTED_OBJECTS);
     }
-    var _ON_ORBIT = _o.ON_ORBIT == null ? default(StringOffset) : builder.CreateString(_o.ON_ORBIT);
     var _MANIFOLDS = default(VectorOffset);
     if (_o.MANIFOLDS != null) {
       var __MANIFOLDS = new StringOffset[_o.MANIFOLDS.Count];
@@ -372,16 +413,15 @@ public struct OOI : IFlatbufferObject
       _ID,
       _o.SAT_NO,
       _NAME,
+      _ON_ORBIT,
+      _o.STATUS,
+      _STATUS_DATE,
+      _o.PRIORITY,
+      _DESCRIPTION,
       _SENSOR_TASKING_START_TIME,
       _SENSOR_TASKING_STOP_TIME,
-      _o.PRIORITY,
-      _STATUS,
-      _STATUS_DATE,
-      _DESCRIPTION,
       _LAST_OB_TIME,
       _MISSED_OB_TIME,
-      _DELTA_VS,
-      _DELTA_TS,
       _SV_EPOCH,
       _o.X,
       _o.Y,
@@ -404,8 +444,9 @@ public struct OOI : IFlatbufferObject
       _o.PERIOD,
       _o.APOGEE,
       _o.PERIGEE,
+      _DELTA_VS,
+      _DELTA_TS,
       _AFFECTED_OBJECTS,
-      _ON_ORBIT,
       _MANIFOLDS);
   }
 }
@@ -413,18 +454,17 @@ public struct OOI : IFlatbufferObject
 public class OOIT
 {
   public string ID { get; set; }
-  public int SAT_NO { get; set; }
+  public uint SAT_NO { get; set; }
   public string NAME { get; set; }
+  public string ON_ORBIT { get; set; }
+  public ooiStatus STATUS { get; set; }
+  public string STATUS_DATE { get; set; }
+  public ooiPriority PRIORITY { get; set; }
+  public string DESCRIPTION { get; set; }
   public string SENSOR_TASKING_START_TIME { get; set; }
   public string SENSOR_TASKING_STOP_TIME { get; set; }
-  public int PRIORITY { get; set; }
-  public string STATUS { get; set; }
-  public string STATUS_DATE { get; set; }
-  public string DESCRIPTION { get; set; }
   public string LAST_OB_TIME { get; set; }
   public string MISSED_OB_TIME { get; set; }
-  public List<string> DELTA_VS { get; set; }
-  public List<string> DELTA_TS { get; set; }
   public string SV_EPOCH { get; set; }
   public double X { get; set; }
   public double Y { get; set; }
@@ -439,7 +479,7 @@ public class OOIT
   public double RAAN { get; set; }
   public double ARG_OF_PERIGEE { get; set; }
   public double MEAN_ANOMALY { get; set; }
-  public int REV_NO { get; set; }
+  public uint REV_NO { get; set; }
   public double B_STAR { get; set; }
   public double MEAN_MOTION_DOT { get; set; }
   public double MEAN_MOTION_DDOT { get; set; }
@@ -447,24 +487,24 @@ public class OOIT
   public double PERIOD { get; set; }
   public double APOGEE { get; set; }
   public double PERIGEE { get; set; }
+  public List<double> DELTA_VS { get; set; }
+  public List<double> DELTA_TS { get; set; }
   public List<string> AFFECTED_OBJECTS { get; set; }
-  public string ON_ORBIT { get; set; }
   public List<string> MANIFOLDS { get; set; }
 
   public OOIT() {
     this.ID = null;
     this.SAT_NO = 0;
     this.NAME = null;
+    this.ON_ORBIT = null;
+    this.STATUS = ooiStatus.ACTIVE;
+    this.STATUS_DATE = null;
+    this.PRIORITY = ooiPriority.CRITICAL;
+    this.DESCRIPTION = null;
     this.SENSOR_TASKING_START_TIME = null;
     this.SENSOR_TASKING_STOP_TIME = null;
-    this.PRIORITY = 0;
-    this.STATUS = null;
-    this.STATUS_DATE = null;
-    this.DESCRIPTION = null;
     this.LAST_OB_TIME = null;
     this.MISSED_OB_TIME = null;
-    this.DELTA_VS = null;
-    this.DELTA_TS = null;
     this.SV_EPOCH = null;
     this.X = 0.0;
     this.Y = 0.0;
@@ -487,8 +527,9 @@ public class OOIT
     this.PERIOD = 0.0;
     this.APOGEE = 0.0;
     this.PERIGEE = 0.0;
+    this.DELTA_VS = null;
+    this.DELTA_TS = null;
     this.AFFECTED_OBJECTS = null;
-    this.ON_ORBIT = null;
     this.MANIFOLDS = null;
   }
   public static OOIT DeserializeFromBinary(byte[] fbBuffer) {
@@ -508,42 +549,42 @@ static public class OOIVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*ID*/, false)
-      && verifier.VerifyField(tablePos, 6 /*SAT_NO*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 6 /*SAT_NO*/, 4 /*uint*/, 4, false)
       && verifier.VerifyString(tablePos, 8 /*NAME*/, false)
-      && verifier.VerifyString(tablePos, 10 /*SENSOR_TASKING_START_TIME*/, false)
-      && verifier.VerifyString(tablePos, 12 /*SENSOR_TASKING_STOP_TIME*/, false)
-      && verifier.VerifyField(tablePos, 14 /*PRIORITY*/, 4 /*int*/, 4, false)
-      && verifier.VerifyString(tablePos, 16 /*STATUS*/, false)
-      && verifier.VerifyString(tablePos, 18 /*STATUS_DATE*/, false)
-      && verifier.VerifyString(tablePos, 20 /*DESCRIPTION*/, false)
-      && verifier.VerifyString(tablePos, 22 /*LAST_OB_TIME*/, false)
-      && verifier.VerifyString(tablePos, 24 /*MISSED_OB_TIME*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 26 /*DELTA_VS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 28 /*DELTA_TS*/, false)
-      && verifier.VerifyString(tablePos, 30 /*SV_EPOCH*/, false)
-      && verifier.VerifyField(tablePos, 32 /*X*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 34 /*Y*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 36 /*Z*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 38 /*XVEL*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 40 /*YVEL*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 42 /*ZVEL*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 44 /*ELSET_EPOCH*/, false)
-      && verifier.VerifyField(tablePos, 46 /*MEAN_MOTION*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 48 /*ECCENTRICITY*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 50 /*INCLINATION*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 52 /*RAAN*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 54 /*ARG_OF_PERIGEE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 56 /*MEAN_ANOMALY*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 58 /*REV_NO*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 60 /*B_STAR*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 62 /*MEAN_MOTION_DOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 64 /*MEAN_MOTION_DDOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 66 /*SEMI_MAJOR_AXIS*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 68 /*PERIOD*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 70 /*APOGEE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 72 /*PERIGEE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 74 /*AFFECTED_OBJECTS*/, false)
-      && verifier.VerifyString(tablePos, 76 /*ON_ORBIT*/, false)
+      && verifier.VerifyString(tablePos, 10 /*ON_ORBIT*/, false)
+      && verifier.VerifyField(tablePos, 12 /*STATUS*/, 1 /*ooiStatus*/, 1, false)
+      && verifier.VerifyString(tablePos, 14 /*STATUS_DATE*/, false)
+      && verifier.VerifyField(tablePos, 16 /*PRIORITY*/, 1 /*ooiPriority*/, 1, false)
+      && verifier.VerifyString(tablePos, 18 /*DESCRIPTION*/, false)
+      && verifier.VerifyString(tablePos, 20 /*SENSOR_TASKING_START_TIME*/, false)
+      && verifier.VerifyString(tablePos, 22 /*SENSOR_TASKING_STOP_TIME*/, false)
+      && verifier.VerifyString(tablePos, 24 /*LAST_OB_TIME*/, false)
+      && verifier.VerifyString(tablePos, 26 /*MISSED_OB_TIME*/, false)
+      && verifier.VerifyString(tablePos, 28 /*SV_EPOCH*/, false)
+      && verifier.VerifyField(tablePos, 30 /*X*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 32 /*Y*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 34 /*Z*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 36 /*XVEL*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 38 /*YVEL*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 40 /*ZVEL*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 42 /*ELSET_EPOCH*/, false)
+      && verifier.VerifyField(tablePos, 44 /*MEAN_MOTION*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 46 /*ECCENTRICITY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 48 /*INCLINATION*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 50 /*RAAN*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 52 /*ARG_OF_PERIGEE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 54 /*MEAN_ANOMALY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 56 /*REV_NO*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 58 /*B_STAR*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 60 /*MEAN_MOTION_DOT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 62 /*MEAN_MOTION_DDOT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 64 /*SEMI_MAJOR_AXIS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 66 /*PERIOD*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 68 /*APOGEE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 70 /*PERIGEE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyVectorOfData(tablePos, 72 /*DELTA_VS*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 74 /*DELTA_TS*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 76 /*AFFECTED_OBJECTS*/, false)
       && verifier.VerifyVectorOfStrings(tablePos, 78 /*MANIFOLDS*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }

@@ -9,6 +9,1068 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_MODULATION_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_MODULATION_TYPE: i8 = 14;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_MODULATION_TYPE: [modulationType; 15] = [
+  modulationType::BPSK,
+  modulationType::QPSK,
+  modulationType::OQPSK,
+  modulationType::PSK8,
+  modulationType::QAM16,
+  modulationType::QAM64,
+  modulationType::FSK,
+  modulationType::MSK,
+  modulationType::GMSK,
+  modulationType::AM,
+  modulationType::FM,
+  modulationType::PM,
+  modulationType::SPREAD_SPECTRUM,
+  modulationType::DVB_S2,
+  modulationType::DVB_S2X,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct modulationType(pub i8);
+#[allow(non_upper_case_globals)]
+impl modulationType {
+  pub const BPSK: Self = Self(0);
+  pub const QPSK: Self = Self(1);
+  pub const OQPSK: Self = Self(2);
+  pub const PSK8: Self = Self(3);
+  pub const QAM16: Self = Self(4);
+  pub const QAM64: Self = Self(5);
+  pub const FSK: Self = Self(6);
+  pub const MSK: Self = Self(7);
+  pub const GMSK: Self = Self(8);
+  pub const AM: Self = Self(9);
+  pub const FM: Self = Self(10);
+  pub const PM: Self = Self(11);
+  pub const SPREAD_SPECTRUM: Self = Self(12);
+  pub const DVB_S2: Self = Self(13);
+  pub const DVB_S2X: Self = Self(14);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 14;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::BPSK,
+    Self::QPSK,
+    Self::OQPSK,
+    Self::PSK8,
+    Self::QAM16,
+    Self::QAM64,
+    Self::FSK,
+    Self::MSK,
+    Self::GMSK,
+    Self::AM,
+    Self::FM,
+    Self::PM,
+    Self::SPREAD_SPECTRUM,
+    Self::DVB_S2,
+    Self::DVB_S2X,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::BPSK => Some("BPSK"),
+      Self::QPSK => Some("QPSK"),
+      Self::OQPSK => Some("OQPSK"),
+      Self::PSK8 => Some("PSK8"),
+      Self::QAM16 => Some("QAM16"),
+      Self::QAM64 => Some("QAM64"),
+      Self::FSK => Some("FSK"),
+      Self::MSK => Some("MSK"),
+      Self::GMSK => Some("GMSK"),
+      Self::AM => Some("AM"),
+      Self::FM => Some("FM"),
+      Self::PM => Some("PM"),
+      Self::SPREAD_SPECTRUM => Some("SPREAD_SPECTRUM"),
+      Self::DVB_S2 => Some("DVB_S2"),
+      Self::DVB_S2X => Some("DVB_S2X"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for modulationType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for modulationType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for modulationType {
+    type Output = modulationType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for modulationType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for modulationType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for modulationType {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_ENCRYPTION_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_ENCRYPTION_TYPE: i8 = 7;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_ENCRYPTION_TYPE: [encryptionType; 8] = [
+  encryptionType::NONE,
+  encryptionType::DES,
+  encryptionType::TRIPLE_DES,
+  encryptionType::AES_128,
+  encryptionType::AES_256,
+  encryptionType::TYPE_1,
+  encryptionType::TYPE_2,
+  encryptionType::CUSTOM,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct encryptionType(pub i8);
+#[allow(non_upper_case_globals)]
+impl encryptionType {
+  pub const NONE: Self = Self(0);
+  pub const DES: Self = Self(1);
+  pub const TRIPLE_DES: Self = Self(2);
+  pub const AES_128: Self = Self(3);
+  pub const AES_256: Self = Self(4);
+  pub const TYPE_1: Self = Self(5);
+  pub const TYPE_2: Self = Self(6);
+  pub const CUSTOM: Self = Self(7);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 7;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::NONE,
+    Self::DES,
+    Self::TRIPLE_DES,
+    Self::AES_128,
+    Self::AES_256,
+    Self::TYPE_1,
+    Self::TYPE_2,
+    Self::CUSTOM,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::NONE => Some("NONE"),
+      Self::DES => Some("DES"),
+      Self::TRIPLE_DES => Some("TRIPLE_DES"),
+      Self::AES_128 => Some("AES_128"),
+      Self::AES_256 => Some("AES_256"),
+      Self::TYPE_1 => Some("TYPE_1"),
+      Self::TYPE_2 => Some("TYPE_2"),
+      Self::CUSTOM => Some("CUSTOM"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for encryptionType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for encryptionType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for encryptionType {
+    type Output = encryptionType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for encryptionType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for encryptionType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for encryptionType {}
+pub enum commsChannelOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Transponder Channel
+pub struct commsChannel<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for commsChannel<'a> {
+  type Inner = commsChannel<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> commsChannel<'a> {
+  pub const VT_CHANNEL_ID: flatbuffers::VOffsetT = 4;
+  pub const VT_NAME: flatbuffers::VOffsetT = 6;
+  pub const VT_UPLINK_FREQ: flatbuffers::VOffsetT = 8;
+  pub const VT_DOWNLINK_FREQ: flatbuffers::VOffsetT = 10;
+  pub const VT_BANDWIDTH: flatbuffers::VOffsetT = 12;
+  pub const VT_MODULATION: flatbuffers::VOffsetT = 14;
+  pub const VT_DATA_RATE: flatbuffers::VOffsetT = 16;
+  pub const VT_ENCRYPTION: flatbuffers::VOffsetT = 18;
+  pub const VT_FEC_RATE: flatbuffers::VOffsetT = 20;
+  pub const VT_POWER: flatbuffers::VOffsetT = 22;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    commsChannel { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args commsChannelArgs<'args>
+  ) -> flatbuffers::WIPOffset<commsChannel<'bldr>> {
+    let mut builder = commsChannelBuilder::new(_fbb);
+    builder.add_POWER(args.POWER);
+    builder.add_FEC_RATE(args.FEC_RATE);
+    builder.add_DATA_RATE(args.DATA_RATE);
+    builder.add_BANDWIDTH(args.BANDWIDTH);
+    builder.add_DOWNLINK_FREQ(args.DOWNLINK_FREQ);
+    builder.add_UPLINK_FREQ(args.UPLINK_FREQ);
+    if let Some(x) = args.NAME { builder.add_NAME(x); }
+    if let Some(x) = args.CHANNEL_ID { builder.add_CHANNEL_ID(x); }
+    builder.add_ENCRYPTION(args.ENCRYPTION);
+    builder.add_MODULATION(args.MODULATION);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> commsChannelT {
+    let CHANNEL_ID = self.CHANNEL_ID().map(|x| {
+      x.to_string()
+    });
+    let NAME = self.NAME().map(|x| {
+      x.to_string()
+    });
+    let UPLINK_FREQ = self.UPLINK_FREQ();
+    let DOWNLINK_FREQ = self.DOWNLINK_FREQ();
+    let BANDWIDTH = self.BANDWIDTH();
+    let MODULATION = self.MODULATION();
+    let DATA_RATE = self.DATA_RATE();
+    let ENCRYPTION = self.ENCRYPTION();
+    let FEC_RATE = self.FEC_RATE();
+    let POWER = self.POWER();
+    commsChannelT {
+      CHANNEL_ID,
+      NAME,
+      UPLINK_FREQ,
+      DOWNLINK_FREQ,
+      BANDWIDTH,
+      MODULATION,
+      DATA_RATE,
+      ENCRYPTION,
+      FEC_RATE,
+      POWER,
+    }
+  }
+
+  /// Channel identifier
+  #[inline]
+  pub fn CHANNEL_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(commsChannel::VT_CHANNEL_ID, None)}
+  }
+  /// Channel name
+  #[inline]
+  pub fn NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(commsChannel::VT_NAME, None)}
+  }
+  /// Uplink frequency in MHz
+  #[inline]
+  pub fn UPLINK_FREQ(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(commsChannel::VT_UPLINK_FREQ, Some(0.0)).unwrap()}
+  }
+  /// Downlink frequency in MHz
+  #[inline]
+  pub fn DOWNLINK_FREQ(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(commsChannel::VT_DOWNLINK_FREQ, Some(0.0)).unwrap()}
+  }
+  /// Channel bandwidth in MHz
+  #[inline]
+  pub fn BANDWIDTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(commsChannel::VT_BANDWIDTH, Some(0.0)).unwrap()}
+  }
+  /// Modulation type
+  #[inline]
+  pub fn MODULATION(&self) -> modulationType {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<modulationType>(commsChannel::VT_MODULATION, Some(modulationType::BPSK)).unwrap()}
+  }
+  /// Data rate in Mbps
+  #[inline]
+  pub fn DATA_RATE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(commsChannel::VT_DATA_RATE, Some(0.0)).unwrap()}
+  }
+  /// Encryption method
+  #[inline]
+  pub fn ENCRYPTION(&self) -> encryptionType {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<encryptionType>(commsChannel::VT_ENCRYPTION, Some(encryptionType::NONE)).unwrap()}
+  }
+  /// Forward error correction coding rate (e.g., 0.5, 0.75)
+  #[inline]
+  pub fn FEC_RATE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(commsChannel::VT_FEC_RATE, Some(0.0)).unwrap()}
+  }
+  /// Channel power in dBW
+  #[inline]
+  pub fn POWER(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(commsChannel::VT_POWER, Some(0.0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for commsChannel<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CHANNEL_ID", Self::VT_CHANNEL_ID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
+     .visit_field::<f64>("UPLINK_FREQ", Self::VT_UPLINK_FREQ, false)?
+     .visit_field::<f64>("DOWNLINK_FREQ", Self::VT_DOWNLINK_FREQ, false)?
+     .visit_field::<f64>("BANDWIDTH", Self::VT_BANDWIDTH, false)?
+     .visit_field::<modulationType>("MODULATION", Self::VT_MODULATION, false)?
+     .visit_field::<f64>("DATA_RATE", Self::VT_DATA_RATE, false)?
+     .visit_field::<encryptionType>("ENCRYPTION", Self::VT_ENCRYPTION, false)?
+     .visit_field::<f64>("FEC_RATE", Self::VT_FEC_RATE, false)?
+     .visit_field::<f64>("POWER", Self::VT_POWER, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct commsChannelArgs<'a> {
+    pub CHANNEL_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub NAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub UPLINK_FREQ: f64,
+    pub DOWNLINK_FREQ: f64,
+    pub BANDWIDTH: f64,
+    pub MODULATION: modulationType,
+    pub DATA_RATE: f64,
+    pub ENCRYPTION: encryptionType,
+    pub FEC_RATE: f64,
+    pub POWER: f64,
+}
+impl<'a> Default for commsChannelArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    commsChannelArgs {
+      CHANNEL_ID: None,
+      NAME: None,
+      UPLINK_FREQ: 0.0,
+      DOWNLINK_FREQ: 0.0,
+      BANDWIDTH: 0.0,
+      MODULATION: modulationType::BPSK,
+      DATA_RATE: 0.0,
+      ENCRYPTION: encryptionType::NONE,
+      FEC_RATE: 0.0,
+      POWER: 0.0,
+    }
+  }
+}
+
+pub struct commsChannelBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> commsChannelBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_CHANNEL_ID(&mut self, CHANNEL_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(commsChannel::VT_CHANNEL_ID, CHANNEL_ID);
+  }
+  #[inline]
+  pub fn add_NAME(&mut self, NAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(commsChannel::VT_NAME, NAME);
+  }
+  #[inline]
+  pub fn add_UPLINK_FREQ(&mut self, UPLINK_FREQ: f64) {
+    self.fbb_.push_slot::<f64>(commsChannel::VT_UPLINK_FREQ, UPLINK_FREQ, 0.0);
+  }
+  #[inline]
+  pub fn add_DOWNLINK_FREQ(&mut self, DOWNLINK_FREQ: f64) {
+    self.fbb_.push_slot::<f64>(commsChannel::VT_DOWNLINK_FREQ, DOWNLINK_FREQ, 0.0);
+  }
+  #[inline]
+  pub fn add_BANDWIDTH(&mut self, BANDWIDTH: f64) {
+    self.fbb_.push_slot::<f64>(commsChannel::VT_BANDWIDTH, BANDWIDTH, 0.0);
+  }
+  #[inline]
+  pub fn add_MODULATION(&mut self, MODULATION: modulationType) {
+    self.fbb_.push_slot::<modulationType>(commsChannel::VT_MODULATION, MODULATION, modulationType::BPSK);
+  }
+  #[inline]
+  pub fn add_DATA_RATE(&mut self, DATA_RATE: f64) {
+    self.fbb_.push_slot::<f64>(commsChannel::VT_DATA_RATE, DATA_RATE, 0.0);
+  }
+  #[inline]
+  pub fn add_ENCRYPTION(&mut self, ENCRYPTION: encryptionType) {
+    self.fbb_.push_slot::<encryptionType>(commsChannel::VT_ENCRYPTION, ENCRYPTION, encryptionType::NONE);
+  }
+  #[inline]
+  pub fn add_FEC_RATE(&mut self, FEC_RATE: f64) {
+    self.fbb_.push_slot::<f64>(commsChannel::VT_FEC_RATE, FEC_RATE, 0.0);
+  }
+  #[inline]
+  pub fn add_POWER(&mut self, POWER: f64) {
+    self.fbb_.push_slot::<f64>(commsChannel::VT_POWER, POWER, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> commsChannelBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    commsChannelBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<commsChannel<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for commsChannel<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("commsChannel");
+      ds.field("CHANNEL_ID", &self.CHANNEL_ID());
+      ds.field("NAME", &self.NAME());
+      ds.field("UPLINK_FREQ", &self.UPLINK_FREQ());
+      ds.field("DOWNLINK_FREQ", &self.DOWNLINK_FREQ());
+      ds.field("BANDWIDTH", &self.BANDWIDTH());
+      ds.field("MODULATION", &self.MODULATION());
+      ds.field("DATA_RATE", &self.DATA_RATE());
+      ds.field("ENCRYPTION", &self.ENCRYPTION());
+      ds.field("FEC_RATE", &self.FEC_RATE());
+      ds.field("POWER", &self.POWER());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct commsChannelT {
+  pub CHANNEL_ID: Option<String>,
+  pub NAME: Option<String>,
+  pub UPLINK_FREQ: f64,
+  pub DOWNLINK_FREQ: f64,
+  pub BANDWIDTH: f64,
+  pub MODULATION: modulationType,
+  pub DATA_RATE: f64,
+  pub ENCRYPTION: encryptionType,
+  pub FEC_RATE: f64,
+  pub POWER: f64,
+}
+impl Default for commsChannelT {
+  fn default() -> Self {
+    Self {
+      CHANNEL_ID: None,
+      NAME: None,
+      UPLINK_FREQ: 0.0,
+      DOWNLINK_FREQ: 0.0,
+      BANDWIDTH: 0.0,
+      MODULATION: modulationType::BPSK,
+      DATA_RATE: 0.0,
+      ENCRYPTION: encryptionType::NONE,
+      FEC_RATE: 0.0,
+      POWER: 0.0,
+    }
+  }
+}
+impl commsChannelT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<commsChannel<'b>> {
+    let CHANNEL_ID = self.CHANNEL_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let NAME = self.NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let UPLINK_FREQ = self.UPLINK_FREQ;
+    let DOWNLINK_FREQ = self.DOWNLINK_FREQ;
+    let BANDWIDTH = self.BANDWIDTH;
+    let MODULATION = self.MODULATION;
+    let DATA_RATE = self.DATA_RATE;
+    let ENCRYPTION = self.ENCRYPTION;
+    let FEC_RATE = self.FEC_RATE;
+    let POWER = self.POWER;
+    commsChannel::create(_fbb, &commsChannelArgs{
+      CHANNEL_ID,
+      NAME,
+      UPLINK_FREQ,
+      DOWNLINK_FREQ,
+      BANDWIDTH,
+      MODULATION,
+      DATA_RATE,
+      ENCRYPTION,
+      FEC_RATE,
+      POWER,
+    })
+  }
+}
+pub enum commsTransponderOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Transponder
+pub struct commsTransponder<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for commsTransponder<'a> {
+  type Inner = commsTransponder<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> commsTransponder<'a> {
+  pub const VT_TRANSPONDER_ID: flatbuffers::VOffsetT = 4;
+  pub const VT_NAME: flatbuffers::VOffsetT = 6;
+  pub const VT_TYPE: flatbuffers::VOffsetT = 8;
+  pub const VT_BAND: flatbuffers::VOffsetT = 10;
+  pub const VT_UPLINK_FREQ_MIN: flatbuffers::VOffsetT = 12;
+  pub const VT_UPLINK_FREQ_MAX: flatbuffers::VOffsetT = 14;
+  pub const VT_DOWNLINK_FREQ_MIN: flatbuffers::VOffsetT = 16;
+  pub const VT_DOWNLINK_FREQ_MAX: flatbuffers::VOffsetT = 18;
+  pub const VT_EIRP: flatbuffers::VOffsetT = 20;
+  pub const VT_G_OVER_T: flatbuffers::VOffsetT = 22;
+  pub const VT_BANDWIDTH: flatbuffers::VOffsetT = 24;
+  pub const VT_NUM_CHANNELS: flatbuffers::VOffsetT = 26;
+  pub const VT_CHANNELS: flatbuffers::VOffsetT = 28;
+  pub const VT_POLARIZATION: flatbuffers::VOffsetT = 30;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    commsTransponder { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args commsTransponderArgs<'args>
+  ) -> flatbuffers::WIPOffset<commsTransponder<'bldr>> {
+    let mut builder = commsTransponderBuilder::new(_fbb);
+    builder.add_BANDWIDTH(args.BANDWIDTH);
+    builder.add_G_OVER_T(args.G_OVER_T);
+    builder.add_EIRP(args.EIRP);
+    builder.add_DOWNLINK_FREQ_MAX(args.DOWNLINK_FREQ_MAX);
+    builder.add_DOWNLINK_FREQ_MIN(args.DOWNLINK_FREQ_MIN);
+    builder.add_UPLINK_FREQ_MAX(args.UPLINK_FREQ_MAX);
+    builder.add_UPLINK_FREQ_MIN(args.UPLINK_FREQ_MIN);
+    if let Some(x) = args.POLARIZATION { builder.add_POLARIZATION(x); }
+    if let Some(x) = args.CHANNELS { builder.add_CHANNELS(x); }
+    builder.add_NUM_CHANNELS(args.NUM_CHANNELS);
+    if let Some(x) = args.BAND { builder.add_BAND(x); }
+    if let Some(x) = args.TYPE { builder.add_TYPE(x); }
+    if let Some(x) = args.NAME { builder.add_NAME(x); }
+    if let Some(x) = args.TRANSPONDER_ID { builder.add_TRANSPONDER_ID(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> commsTransponderT {
+    let TRANSPONDER_ID = self.TRANSPONDER_ID().map(|x| {
+      x.to_string()
+    });
+    let NAME = self.NAME().map(|x| {
+      x.to_string()
+    });
+    let TYPE = self.TYPE().map(|x| {
+      x.to_string()
+    });
+    let BAND = self.BAND().map(|x| {
+      x.to_string()
+    });
+    let UPLINK_FREQ_MIN = self.UPLINK_FREQ_MIN();
+    let UPLINK_FREQ_MAX = self.UPLINK_FREQ_MAX();
+    let DOWNLINK_FREQ_MIN = self.DOWNLINK_FREQ_MIN();
+    let DOWNLINK_FREQ_MAX = self.DOWNLINK_FREQ_MAX();
+    let EIRP = self.EIRP();
+    let G_OVER_T = self.G_OVER_T();
+    let BANDWIDTH = self.BANDWIDTH();
+    let NUM_CHANNELS = self.NUM_CHANNELS();
+    let CHANNELS = self.CHANNELS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let POLARIZATION = self.POLARIZATION().map(|x| {
+      x.to_string()
+    });
+    commsTransponderT {
+      TRANSPONDER_ID,
+      NAME,
+      TYPE,
+      BAND,
+      UPLINK_FREQ_MIN,
+      UPLINK_FREQ_MAX,
+      DOWNLINK_FREQ_MIN,
+      DOWNLINK_FREQ_MAX,
+      EIRP,
+      G_OVER_T,
+      BANDWIDTH,
+      NUM_CHANNELS,
+      CHANNELS,
+      POLARIZATION,
+    }
+  }
+
+  /// Transponder identifier
+  #[inline]
+  pub fn TRANSPONDER_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(commsTransponder::VT_TRANSPONDER_ID, None)}
+  }
+  /// Transponder name
+  #[inline]
+  pub fn NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(commsTransponder::VT_NAME, None)}
+  }
+  /// Transponder type (e.g., BENT_PIPE, REGENERATIVE, OBP)
+  #[inline]
+  pub fn TYPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(commsTransponder::VT_TYPE, None)}
+  }
+  /// Operating band (e.g., C, Ku, Ka, L, S, X)
+  #[inline]
+  pub fn BAND(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(commsTransponder::VT_BAND, None)}
+  }
+  /// Uplink frequency range minimum in MHz
+  #[inline]
+  pub fn UPLINK_FREQ_MIN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(commsTransponder::VT_UPLINK_FREQ_MIN, Some(0.0)).unwrap()}
+  }
+  /// Uplink frequency range maximum in MHz
+  #[inline]
+  pub fn UPLINK_FREQ_MAX(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(commsTransponder::VT_UPLINK_FREQ_MAX, Some(0.0)).unwrap()}
+  }
+  /// Downlink frequency range minimum in MHz
+  #[inline]
+  pub fn DOWNLINK_FREQ_MIN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(commsTransponder::VT_DOWNLINK_FREQ_MIN, Some(0.0)).unwrap()}
+  }
+  /// Downlink frequency range maximum in MHz
+  #[inline]
+  pub fn DOWNLINK_FREQ_MAX(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(commsTransponder::VT_DOWNLINK_FREQ_MAX, Some(0.0)).unwrap()}
+  }
+  /// Saturated EIRP in dBW
+  #[inline]
+  pub fn EIRP(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(commsTransponder::VT_EIRP, Some(0.0)).unwrap()}
+  }
+  /// G/T in dB/K
+  #[inline]
+  pub fn G_OVER_T(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(commsTransponder::VT_G_OVER_T, Some(0.0)).unwrap()}
+  }
+  /// Total bandwidth in MHz
+  #[inline]
+  pub fn BANDWIDTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(commsTransponder::VT_BANDWIDTH, Some(0.0)).unwrap()}
+  }
+  /// Number of channels
+  #[inline]
+  pub fn NUM_CHANNELS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(commsTransponder::VT_NUM_CHANNELS, Some(0)).unwrap()}
+  }
+  /// Channels on this transponder
+  #[inline]
+  pub fn CHANNELS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<commsChannel<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<commsChannel>>>>(commsTransponder::VT_CHANNELS, None)}
+  }
+  /// Polarization (e.g., RHCP, LHCP, LINEAR_H, LINEAR_V)
+  #[inline]
+  pub fn POLARIZATION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(commsTransponder::VT_POLARIZATION, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for commsTransponder<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRANSPONDER_ID", Self::VT_TRANSPONDER_ID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TYPE", Self::VT_TYPE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("BAND", Self::VT_BAND, false)?
+     .visit_field::<f64>("UPLINK_FREQ_MIN", Self::VT_UPLINK_FREQ_MIN, false)?
+     .visit_field::<f64>("UPLINK_FREQ_MAX", Self::VT_UPLINK_FREQ_MAX, false)?
+     .visit_field::<f64>("DOWNLINK_FREQ_MIN", Self::VT_DOWNLINK_FREQ_MIN, false)?
+     .visit_field::<f64>("DOWNLINK_FREQ_MAX", Self::VT_DOWNLINK_FREQ_MAX, false)?
+     .visit_field::<f64>("EIRP", Self::VT_EIRP, false)?
+     .visit_field::<f64>("G_OVER_T", Self::VT_G_OVER_T, false)?
+     .visit_field::<f64>("BANDWIDTH", Self::VT_BANDWIDTH, false)?
+     .visit_field::<u32>("NUM_CHANNELS", Self::VT_NUM_CHANNELS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<commsChannel>>>>("CHANNELS", Self::VT_CHANNELS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("POLARIZATION", Self::VT_POLARIZATION, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct commsTransponderArgs<'a> {
+    pub TRANSPONDER_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub NAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub BAND: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub UPLINK_FREQ_MIN: f64,
+    pub UPLINK_FREQ_MAX: f64,
+    pub DOWNLINK_FREQ_MIN: f64,
+    pub DOWNLINK_FREQ_MAX: f64,
+    pub EIRP: f64,
+    pub G_OVER_T: f64,
+    pub BANDWIDTH: f64,
+    pub NUM_CHANNELS: u32,
+    pub CHANNELS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<commsChannel<'a>>>>>,
+    pub POLARIZATION: Option<flatbuffers::WIPOffset<&'a str>>,
+}
+impl<'a> Default for commsTransponderArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    commsTransponderArgs {
+      TRANSPONDER_ID: None,
+      NAME: None,
+      TYPE: None,
+      BAND: None,
+      UPLINK_FREQ_MIN: 0.0,
+      UPLINK_FREQ_MAX: 0.0,
+      DOWNLINK_FREQ_MIN: 0.0,
+      DOWNLINK_FREQ_MAX: 0.0,
+      EIRP: 0.0,
+      G_OVER_T: 0.0,
+      BANDWIDTH: 0.0,
+      NUM_CHANNELS: 0,
+      CHANNELS: None,
+      POLARIZATION: None,
+    }
+  }
+}
+
+pub struct commsTransponderBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> commsTransponderBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_TRANSPONDER_ID(&mut self, TRANSPONDER_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(commsTransponder::VT_TRANSPONDER_ID, TRANSPONDER_ID);
+  }
+  #[inline]
+  pub fn add_NAME(&mut self, NAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(commsTransponder::VT_NAME, NAME);
+  }
+  #[inline]
+  pub fn add_TYPE(&mut self, TYPE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(commsTransponder::VT_TYPE, TYPE);
+  }
+  #[inline]
+  pub fn add_BAND(&mut self, BAND: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(commsTransponder::VT_BAND, BAND);
+  }
+  #[inline]
+  pub fn add_UPLINK_FREQ_MIN(&mut self, UPLINK_FREQ_MIN: f64) {
+    self.fbb_.push_slot::<f64>(commsTransponder::VT_UPLINK_FREQ_MIN, UPLINK_FREQ_MIN, 0.0);
+  }
+  #[inline]
+  pub fn add_UPLINK_FREQ_MAX(&mut self, UPLINK_FREQ_MAX: f64) {
+    self.fbb_.push_slot::<f64>(commsTransponder::VT_UPLINK_FREQ_MAX, UPLINK_FREQ_MAX, 0.0);
+  }
+  #[inline]
+  pub fn add_DOWNLINK_FREQ_MIN(&mut self, DOWNLINK_FREQ_MIN: f64) {
+    self.fbb_.push_slot::<f64>(commsTransponder::VT_DOWNLINK_FREQ_MIN, DOWNLINK_FREQ_MIN, 0.0);
+  }
+  #[inline]
+  pub fn add_DOWNLINK_FREQ_MAX(&mut self, DOWNLINK_FREQ_MAX: f64) {
+    self.fbb_.push_slot::<f64>(commsTransponder::VT_DOWNLINK_FREQ_MAX, DOWNLINK_FREQ_MAX, 0.0);
+  }
+  #[inline]
+  pub fn add_EIRP(&mut self, EIRP: f64) {
+    self.fbb_.push_slot::<f64>(commsTransponder::VT_EIRP, EIRP, 0.0);
+  }
+  #[inline]
+  pub fn add_G_OVER_T(&mut self, G_OVER_T: f64) {
+    self.fbb_.push_slot::<f64>(commsTransponder::VT_G_OVER_T, G_OVER_T, 0.0);
+  }
+  #[inline]
+  pub fn add_BANDWIDTH(&mut self, BANDWIDTH: f64) {
+    self.fbb_.push_slot::<f64>(commsTransponder::VT_BANDWIDTH, BANDWIDTH, 0.0);
+  }
+  #[inline]
+  pub fn add_NUM_CHANNELS(&mut self, NUM_CHANNELS: u32) {
+    self.fbb_.push_slot::<u32>(commsTransponder::VT_NUM_CHANNELS, NUM_CHANNELS, 0);
+  }
+  #[inline]
+  pub fn add_CHANNELS(&mut self, CHANNELS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<commsChannel<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(commsTransponder::VT_CHANNELS, CHANNELS);
+  }
+  #[inline]
+  pub fn add_POLARIZATION(&mut self, POLARIZATION: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(commsTransponder::VT_POLARIZATION, POLARIZATION);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> commsTransponderBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    commsTransponderBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<commsTransponder<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for commsTransponder<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("commsTransponder");
+      ds.field("TRANSPONDER_ID", &self.TRANSPONDER_ID());
+      ds.field("NAME", &self.NAME());
+      ds.field("TYPE", &self.TYPE());
+      ds.field("BAND", &self.BAND());
+      ds.field("UPLINK_FREQ_MIN", &self.UPLINK_FREQ_MIN());
+      ds.field("UPLINK_FREQ_MAX", &self.UPLINK_FREQ_MAX());
+      ds.field("DOWNLINK_FREQ_MIN", &self.DOWNLINK_FREQ_MIN());
+      ds.field("DOWNLINK_FREQ_MAX", &self.DOWNLINK_FREQ_MAX());
+      ds.field("EIRP", &self.EIRP());
+      ds.field("G_OVER_T", &self.G_OVER_T());
+      ds.field("BANDWIDTH", &self.BANDWIDTH());
+      ds.field("NUM_CHANNELS", &self.NUM_CHANNELS());
+      ds.field("CHANNELS", &self.CHANNELS());
+      ds.field("POLARIZATION", &self.POLARIZATION());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct commsTransponderT {
+  pub TRANSPONDER_ID: Option<String>,
+  pub NAME: Option<String>,
+  pub TYPE: Option<String>,
+  pub BAND: Option<String>,
+  pub UPLINK_FREQ_MIN: f64,
+  pub UPLINK_FREQ_MAX: f64,
+  pub DOWNLINK_FREQ_MIN: f64,
+  pub DOWNLINK_FREQ_MAX: f64,
+  pub EIRP: f64,
+  pub G_OVER_T: f64,
+  pub BANDWIDTH: f64,
+  pub NUM_CHANNELS: u32,
+  pub CHANNELS: Option<Vec<commsChannelT>>,
+  pub POLARIZATION: Option<String>,
+}
+impl Default for commsTransponderT {
+  fn default() -> Self {
+    Self {
+      TRANSPONDER_ID: None,
+      NAME: None,
+      TYPE: None,
+      BAND: None,
+      UPLINK_FREQ_MIN: 0.0,
+      UPLINK_FREQ_MAX: 0.0,
+      DOWNLINK_FREQ_MIN: 0.0,
+      DOWNLINK_FREQ_MAX: 0.0,
+      EIRP: 0.0,
+      G_OVER_T: 0.0,
+      BANDWIDTH: 0.0,
+      NUM_CHANNELS: 0,
+      CHANNELS: None,
+      POLARIZATION: None,
+    }
+  }
+}
+impl commsTransponderT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<commsTransponder<'b>> {
+    let TRANSPONDER_ID = self.TRANSPONDER_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let NAME = self.NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TYPE = self.TYPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let BAND = self.BAND.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let UPLINK_FREQ_MIN = self.UPLINK_FREQ_MIN;
+    let UPLINK_FREQ_MAX = self.UPLINK_FREQ_MAX;
+    let DOWNLINK_FREQ_MIN = self.DOWNLINK_FREQ_MIN;
+    let DOWNLINK_FREQ_MAX = self.DOWNLINK_FREQ_MAX;
+    let EIRP = self.EIRP;
+    let G_OVER_T = self.G_OVER_T;
+    let BANDWIDTH = self.BANDWIDTH;
+    let NUM_CHANNELS = self.NUM_CHANNELS;
+    let CHANNELS = self.CHANNELS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let POLARIZATION = self.POLARIZATION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    commsTransponder::create(_fbb, &commsTransponderArgs{
+      TRANSPONDER_ID,
+      NAME,
+      TYPE,
+      BAND,
+      UPLINK_FREQ_MIN,
+      UPLINK_FREQ_MAX,
+      DOWNLINK_FREQ_MIN,
+      DOWNLINK_FREQ_MAX,
+      EIRP,
+      G_OVER_T,
+      BANDWIDTH,
+      NUM_CHANNELS,
+      CHANNELS,
+      POLARIZATION,
+    })
+  }
+}
 pub enum CMSOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -31,7 +1093,16 @@ impl<'a> CMS<'a> {
   pub const VT_NAME: flatbuffers::VOffsetT = 8;
   pub const VT_DESCRIPTION: flatbuffers::VOffsetT = 10;
   pub const VT_ENTITY: flatbuffers::VOffsetT = 12;
-  pub const VT_TRANSPONDERS: flatbuffers::VOffsetT = 14;
+  pub const VT_SAT_NO: flatbuffers::VOffsetT = 14;
+  pub const VT_NUM_TRANSPONDERS: flatbuffers::VOffsetT = 16;
+  pub const VT_TRANSPONDERS: flatbuffers::VOffsetT = 18;
+  pub const VT_TOTAL_POWER: flatbuffers::VOffsetT = 20;
+  pub const VT_TOTAL_MASS: flatbuffers::VOffsetT = 22;
+  pub const VT_TOTAL_BANDWIDTH: flatbuffers::VOffsetT = 24;
+  pub const VT_MISSION: flatbuffers::VOffsetT = 26;
+  pub const VT_COVERAGE: flatbuffers::VOffsetT = 28;
+  pub const VT_DESIGN_LIFE: flatbuffers::VOffsetT = 30;
+  pub const VT_NOTES: flatbuffers::VOffsetT = 32;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -43,7 +1114,16 @@ impl<'a> CMS<'a> {
     args: &'args CMSArgs<'args>
   ) -> flatbuffers::WIPOffset<CMS<'bldr>> {
     let mut builder = CMSBuilder::new(_fbb);
+    builder.add_DESIGN_LIFE(args.DESIGN_LIFE);
+    builder.add_TOTAL_BANDWIDTH(args.TOTAL_BANDWIDTH);
+    builder.add_TOTAL_MASS(args.TOTAL_MASS);
+    builder.add_TOTAL_POWER(args.TOTAL_POWER);
+    if let Some(x) = args.NOTES { builder.add_NOTES(x); }
+    if let Some(x) = args.COVERAGE { builder.add_COVERAGE(x); }
+    if let Some(x) = args.MISSION { builder.add_MISSION(x); }
     if let Some(x) = args.TRANSPONDERS { builder.add_TRANSPONDERS(x); }
+    builder.add_NUM_TRANSPONDERS(args.NUM_TRANSPONDERS);
+    builder.add_SAT_NO(args.SAT_NO);
     if let Some(x) = args.ENTITY { builder.add_ENTITY(x); }
     if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
     if let Some(x) = args.NAME { builder.add_NAME(x); }
@@ -68,8 +1148,23 @@ impl<'a> CMS<'a> {
     let ENTITY = self.ENTITY().map(|x| {
       x.to_string()
     });
+    let SAT_NO = self.SAT_NO();
+    let NUM_TRANSPONDERS = self.NUM_TRANSPONDERS();
     let TRANSPONDERS = self.TRANSPONDERS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let TOTAL_POWER = self.TOTAL_POWER();
+    let TOTAL_MASS = self.TOTAL_MASS();
+    let TOTAL_BANDWIDTH = self.TOTAL_BANDWIDTH();
+    let MISSION = self.MISSION().map(|x| {
+      x.to_string()
+    });
+    let COVERAGE = self.COVERAGE().map(|x| {
+      x.to_string()
+    });
+    let DESIGN_LIFE = self.DESIGN_LIFE();
+    let NOTES = self.NOTES().map(|x| {
+      x.to_string()
     });
     CMST {
       ID,
@@ -77,10 +1172,20 @@ impl<'a> CMS<'a> {
       NAME,
       DESCRIPTION,
       ENTITY,
+      SAT_NO,
+      NUM_TRANSPONDERS,
       TRANSPONDERS,
+      TOTAL_POWER,
+      TOTAL_MASS,
+      TOTAL_BANDWIDTH,
+      MISSION,
+      COVERAGE,
+      DESIGN_LIFE,
+      NOTES,
     }
   }
 
+  /// Unique identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -88,6 +1193,7 @@ impl<'a> CMS<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CMS::VT_ID, None)}
   }
+  /// Reference to parent entity
   #[inline]
   pub fn ID_ENTITY(&self) -> Option<&'a str> {
     // Safety:
@@ -95,6 +1201,7 @@ impl<'a> CMS<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CMS::VT_ID_ENTITY, None)}
   }
+  /// Communications payload name
   #[inline]
   pub fn NAME(&self) -> Option<&'a str> {
     // Safety:
@@ -102,6 +1209,7 @@ impl<'a> CMS<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CMS::VT_NAME, None)}
   }
+  /// Description
   #[inline]
   pub fn DESCRIPTION(&self) -> Option<&'a str> {
     // Safety:
@@ -109,6 +1217,7 @@ impl<'a> CMS<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CMS::VT_DESCRIPTION, None)}
   }
+  /// Parent entity designator
   #[inline]
   pub fn ENTITY(&self) -> Option<&'a str> {
     // Safety:
@@ -116,12 +1225,85 @@ impl<'a> CMS<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CMS::VT_ENTITY, None)}
   }
+  /// Satellite number
   #[inline]
-  pub fn TRANSPONDERS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+  pub fn SAT_NO(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(CMS::VT_TRANSPONDERS, None)}
+    unsafe { self._tab.get::<u32>(CMS::VT_SAT_NO, Some(0)).unwrap()}
+  }
+  /// Number of transponders
+  #[inline]
+  pub fn NUM_TRANSPONDERS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(CMS::VT_NUM_TRANSPONDERS, Some(0)).unwrap()}
+  }
+  /// Transponders
+  #[inline]
+  pub fn TRANSPONDERS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<commsTransponder<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<commsTransponder>>>>(CMS::VT_TRANSPONDERS, None)}
+  }
+  /// Total payload power in Watts
+  #[inline]
+  pub fn TOTAL_POWER(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CMS::VT_TOTAL_POWER, Some(0.0)).unwrap()}
+  }
+  /// Total payload mass in kg
+  #[inline]
+  pub fn TOTAL_MASS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CMS::VT_TOTAL_MASS, Some(0.0)).unwrap()}
+  }
+  /// Total aggregate bandwidth in MHz
+  #[inline]
+  pub fn TOTAL_BANDWIDTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CMS::VT_TOTAL_BANDWIDTH, Some(0.0)).unwrap()}
+  }
+  /// Primary mission (e.g., FIXED_SAT, BROADCAST, MOBILE, RELAY, MILSATCOM)
+  #[inline]
+  pub fn MISSION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CMS::VT_MISSION, None)}
+  }
+  /// Coverage region description
+  #[inline]
+  pub fn COVERAGE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CMS::VT_COVERAGE, None)}
+  }
+  /// Design lifetime in years
+  #[inline]
+  pub fn DESIGN_LIFE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(CMS::VT_DESIGN_LIFE, Some(0.0)).unwrap()}
+  }
+  /// Additional notes
+  #[inline]
+  pub fn NOTES(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(CMS::VT_NOTES, None)}
   }
 }
 
@@ -137,7 +1319,16 @@ impl flatbuffers::Verifiable for CMS<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ENTITY", Self::VT_ENTITY, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("TRANSPONDERS", Self::VT_TRANSPONDERS, false)?
+     .visit_field::<u32>("SAT_NO", Self::VT_SAT_NO, false)?
+     .visit_field::<u32>("NUM_TRANSPONDERS", Self::VT_NUM_TRANSPONDERS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<commsTransponder>>>>("TRANSPONDERS", Self::VT_TRANSPONDERS, false)?
+     .visit_field::<f64>("TOTAL_POWER", Self::VT_TOTAL_POWER, false)?
+     .visit_field::<f64>("TOTAL_MASS", Self::VT_TOTAL_MASS, false)?
+     .visit_field::<f64>("TOTAL_BANDWIDTH", Self::VT_TOTAL_BANDWIDTH, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MISSION", Self::VT_MISSION, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COVERAGE", Self::VT_COVERAGE, false)?
+     .visit_field::<f64>("DESIGN_LIFE", Self::VT_DESIGN_LIFE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NOTES", Self::VT_NOTES, false)?
      .finish();
     Ok(())
   }
@@ -148,7 +1339,16 @@ pub struct CMSArgs<'a> {
     pub NAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub DESCRIPTION: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ENTITY: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub TRANSPONDERS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub SAT_NO: u32,
+    pub NUM_TRANSPONDERS: u32,
+    pub TRANSPONDERS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<commsTransponder<'a>>>>>,
+    pub TOTAL_POWER: f64,
+    pub TOTAL_MASS: f64,
+    pub TOTAL_BANDWIDTH: f64,
+    pub MISSION: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub COVERAGE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub DESIGN_LIFE: f64,
+    pub NOTES: Option<flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for CMSArgs<'a> {
   #[inline]
@@ -159,7 +1359,16 @@ impl<'a> Default for CMSArgs<'a> {
       NAME: None,
       DESCRIPTION: None,
       ENTITY: None,
+      SAT_NO: 0,
+      NUM_TRANSPONDERS: 0,
       TRANSPONDERS: None,
+      TOTAL_POWER: 0.0,
+      TOTAL_MASS: 0.0,
+      TOTAL_BANDWIDTH: 0.0,
+      MISSION: None,
+      COVERAGE: None,
+      DESIGN_LIFE: 0.0,
+      NOTES: None,
     }
   }
 }
@@ -190,8 +1399,44 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> CMSBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CMS::VT_ENTITY, ENTITY);
   }
   #[inline]
-  pub fn add_TRANSPONDERS(&mut self, TRANSPONDERS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+  pub fn add_SAT_NO(&mut self, SAT_NO: u32) {
+    self.fbb_.push_slot::<u32>(CMS::VT_SAT_NO, SAT_NO, 0);
+  }
+  #[inline]
+  pub fn add_NUM_TRANSPONDERS(&mut self, NUM_TRANSPONDERS: u32) {
+    self.fbb_.push_slot::<u32>(CMS::VT_NUM_TRANSPONDERS, NUM_TRANSPONDERS, 0);
+  }
+  #[inline]
+  pub fn add_TRANSPONDERS(&mut self, TRANSPONDERS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<commsTransponder<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CMS::VT_TRANSPONDERS, TRANSPONDERS);
+  }
+  #[inline]
+  pub fn add_TOTAL_POWER(&mut self, TOTAL_POWER: f64) {
+    self.fbb_.push_slot::<f64>(CMS::VT_TOTAL_POWER, TOTAL_POWER, 0.0);
+  }
+  #[inline]
+  pub fn add_TOTAL_MASS(&mut self, TOTAL_MASS: f64) {
+    self.fbb_.push_slot::<f64>(CMS::VT_TOTAL_MASS, TOTAL_MASS, 0.0);
+  }
+  #[inline]
+  pub fn add_TOTAL_BANDWIDTH(&mut self, TOTAL_BANDWIDTH: f64) {
+    self.fbb_.push_slot::<f64>(CMS::VT_TOTAL_BANDWIDTH, TOTAL_BANDWIDTH, 0.0);
+  }
+  #[inline]
+  pub fn add_MISSION(&mut self, MISSION: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CMS::VT_MISSION, MISSION);
+  }
+  #[inline]
+  pub fn add_COVERAGE(&mut self, COVERAGE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CMS::VT_COVERAGE, COVERAGE);
+  }
+  #[inline]
+  pub fn add_DESIGN_LIFE(&mut self, DESIGN_LIFE: f64) {
+    self.fbb_.push_slot::<f64>(CMS::VT_DESIGN_LIFE, DESIGN_LIFE, 0.0);
+  }
+  #[inline]
+  pub fn add_NOTES(&mut self, NOTES: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(CMS::VT_NOTES, NOTES);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> CMSBuilder<'a, 'b, A> {
@@ -216,7 +1461,16 @@ impl core::fmt::Debug for CMS<'_> {
       ds.field("NAME", &self.NAME());
       ds.field("DESCRIPTION", &self.DESCRIPTION());
       ds.field("ENTITY", &self.ENTITY());
+      ds.field("SAT_NO", &self.SAT_NO());
+      ds.field("NUM_TRANSPONDERS", &self.NUM_TRANSPONDERS());
       ds.field("TRANSPONDERS", &self.TRANSPONDERS());
+      ds.field("TOTAL_POWER", &self.TOTAL_POWER());
+      ds.field("TOTAL_MASS", &self.TOTAL_MASS());
+      ds.field("TOTAL_BANDWIDTH", &self.TOTAL_BANDWIDTH());
+      ds.field("MISSION", &self.MISSION());
+      ds.field("COVERAGE", &self.COVERAGE());
+      ds.field("DESIGN_LIFE", &self.DESIGN_LIFE());
+      ds.field("NOTES", &self.NOTES());
       ds.finish()
   }
 }
@@ -228,7 +1482,16 @@ pub struct CMST {
   pub NAME: Option<String>,
   pub DESCRIPTION: Option<String>,
   pub ENTITY: Option<String>,
-  pub TRANSPONDERS: Option<Vec<String>>,
+  pub SAT_NO: u32,
+  pub NUM_TRANSPONDERS: u32,
+  pub TRANSPONDERS: Option<Vec<commsTransponderT>>,
+  pub TOTAL_POWER: f64,
+  pub TOTAL_MASS: f64,
+  pub TOTAL_BANDWIDTH: f64,
+  pub MISSION: Option<String>,
+  pub COVERAGE: Option<String>,
+  pub DESIGN_LIFE: f64,
+  pub NOTES: Option<String>,
 }
 impl Default for CMST {
   fn default() -> Self {
@@ -238,7 +1501,16 @@ impl Default for CMST {
       NAME: None,
       DESCRIPTION: None,
       ENTITY: None,
+      SAT_NO: 0,
+      NUM_TRANSPONDERS: 0,
       TRANSPONDERS: None,
+      TOTAL_POWER: 0.0,
+      TOTAL_MASS: 0.0,
+      TOTAL_BANDWIDTH: 0.0,
+      MISSION: None,
+      COVERAGE: None,
+      DESIGN_LIFE: 0.0,
+      NOTES: None,
     }
   }
 }
@@ -262,8 +1534,23 @@ impl CMST {
     let ENTITY = self.ENTITY.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let SAT_NO = self.SAT_NO;
+    let NUM_TRANSPONDERS = self.NUM_TRANSPONDERS;
     let TRANSPONDERS = self.TRANSPONDERS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let TOTAL_POWER = self.TOTAL_POWER;
+    let TOTAL_MASS = self.TOTAL_MASS;
+    let TOTAL_BANDWIDTH = self.TOTAL_BANDWIDTH;
+    let MISSION = self.MISSION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let COVERAGE = self.COVERAGE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DESIGN_LIFE = self.DESIGN_LIFE;
+    let NOTES = self.NOTES.as_ref().map(|x|{
+      _fbb.create_string(x)
     });
     CMS::create(_fbb, &CMSArgs{
       ID,
@@ -271,7 +1558,16 @@ impl CMST {
       NAME,
       DESCRIPTION,
       ENTITY,
+      SAT_NO,
+      NUM_TRANSPONDERS,
       TRANSPONDERS,
+      TOTAL_POWER,
+      TOTAL_MASS,
+      TOTAL_BANDWIDTH,
+      MISSION,
+      COVERAGE,
+      DESIGN_LIFE,
+      NOTES,
     })
   }
 }

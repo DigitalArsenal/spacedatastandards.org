@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { imageType } from './imageType.js';
 
 
 /**
@@ -31,6 +32,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$SKI');
 }
 
+/**
+ * Unique identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,6 +42,9 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * On-orbit reference
+ */
 ON_ORBIT():string|null
 ON_ORBIT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ON_ORBIT(optionalEncoding?:any):string|Uint8Array|null {
@@ -45,6 +52,9 @@ ON_ORBIT(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * International designator
+ */
 ORIG_OBJECT_ID():string|null
 ORIG_OBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ORIG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -52,18 +62,27 @@ ORIG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Satellite catalog number
+ */
+SAT_NO():number {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Sensor identifier
+ */
 ID_SENSOR():string|null
 ID_SENSOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID_SENSOR(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 10);
+  const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-SAT_NO():number {
-  const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
-}
-
+/**
+ * Original sensor identifier
+ */
 ORIG_SENSOR_ID():string|null
 ORIG_SENSOR_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ORIG_SENSOR_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -71,41 +90,60 @@ ORIG_SENSOR_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Sensor geodetic latitude (degrees)
+ */
 SENLAT():number {
   const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Sensor geodetic longitude (degrees)
+ */
 SENLON():number {
   const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Sensor altitude (km)
+ */
 SENALT():number {
   const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Sensor ECEF X position (km)
+ */
 SENX():number {
   const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Sensor ECEF Y position (km)
+ */
 SENY():number {
   const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Sensor ECEF Z position (km)
+ */
 SENZ():number {
   const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SEN_QUAT(index: number):string
-SEN_QUAT(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-SEN_QUAT(index: number,optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Sensor quaternion (scalar-last: q1, q2, q3, q0)
+ */
+SEN_QUAT(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 28);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
 }
 
 senQuatLength():number {
@@ -113,11 +151,17 @@ senQuatLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-SEN_QUAT_DOT(index: number):string
-SEN_QUAT_DOT(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-SEN_QUAT_DOT(index: number,optionalEncoding?:any):string|Uint8Array|null {
+senQuatArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Sensor quaternion rate
+ */
+SEN_QUAT_DOT(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 30);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
 }
 
 senQuatDotLength():number {
@@ -125,13 +169,22 @@ senQuatDotLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-IMAGE_TYPE():string|null
-IMAGE_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-IMAGE_TYPE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 32);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+senQuatDotArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
+/**
+ * Image type
+ */
+IMAGE_TYPE():imageType {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : imageType.VISIBLE;
+}
+
+/**
+ * Exposure start time (ISO 8601)
+ */
 EXP_START_TIME():string|null
 EXP_START_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 EXP_START_TIME(optionalEncoding?:any):string|Uint8Array|null {
@@ -139,6 +192,9 @@ EXP_START_TIME(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Exposure end time (ISO 8601)
+ */
 EXP_END_TIME():string|null
 EXP_END_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 EXP_END_TIME(optionalEncoding?:any):string|Uint8Array|null {
@@ -146,6 +202,9 @@ EXP_END_TIME(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Image source information
+ */
 IMAGE_SOURCE_INFO():string|null
 IMAGE_SOURCE_INFO(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 IMAGE_SOURCE_INFO(optionalEncoding?:any):string|Uint8Array|null {
@@ -153,26 +212,41 @@ IMAGE_SOURCE_INFO(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Top-left corner start azimuth (degrees)
+ */
 TOP_LEFT_START_AZ():number {
   const offset = this.bb!.__offset(this.bb_pos, 40);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Top-left corner start elevation (degrees)
+ */
 TOP_LEFT_START_EL():number {
   const offset = this.bb!.__offset(this.bb_pos, 42);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Top-left corner stop azimuth (degrees)
+ */
 TOP_LEFT_STOP_AZ():number {
   const offset = this.bb!.__offset(this.bb_pos, 44);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Top-left corner stop elevation (degrees)
+ */
 TOP_LEFT_STOP_EL():number {
   const offset = this.bb!.__offset(this.bb_pos, 46);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Image set identifier
+ */
 IMAGE_SET_ID():string|null
 IMAGE_SET_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 IMAGE_SET_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -180,51 +254,81 @@ IMAGE_SET_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Number of images in set
+ */
 IMAGE_SET_LENGTH():number {
   const offset = this.bb!.__offset(this.bb_pos, 50);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Sequence number within set
+ */
 SEQUENCE_ID():number {
   const offset = this.bb!.__offset(this.bb_pos, 52);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Frame field-of-view width (degrees)
+ */
 FRAME_FOVWIDTH():number {
   const offset = this.bb!.__offset(this.bb_pos, 54);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Frame field-of-view height (degrees)
+ */
 FRAME_FOVHEIGHT():number {
   const offset = this.bb!.__offset(this.bb_pos, 56);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Pixel field-of-view width (arcseconds)
+ */
 PIXEL_FOVWIDTH():number {
   const offset = this.bb!.__offset(this.bb_pos, 58);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Pixel field-of-view height (arcseconds)
+ */
 PIXEL_FOVHEIGHT():number {
   const offset = this.bb!.__offset(this.bb_pos, 60);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Frame width (pixels)
+ */
 FRAME_WIDTH_PIXELS():number {
   const offset = this.bb!.__offset(this.bb_pos, 62);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Frame height (pixels)
+ */
 FRAME_HEIGHT_PIXELS():number {
   const offset = this.bb!.__offset(this.bb_pos, 64);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Pixel bit depth
+ */
 PIXEL_BIT_DEPTH():number {
   const offset = this.bb!.__offset(this.bb_pos, 66);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Annotation key reference
+ */
 ANNOTATION_KEY():string|null
 ANNOTATION_KEY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ANNOTATION_KEY(optionalEncoding?:any):string|Uint8Array|null {
@@ -232,6 +336,9 @@ ANNOTATION_KEY(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Calibration key reference
+ */
 CALIBRATION_KEY():string|null
 CALIBRATION_KEY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 CALIBRATION_KEY(optionalEncoding?:any):string|Uint8Array|null {
@@ -239,6 +346,9 @@ CALIBRATION_KEY(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Image filename
+ */
 FILENAME():string|null
 FILENAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 FILENAME(optionalEncoding?:any):string|Uint8Array|null {
@@ -246,11 +356,17 @@ FILENAME(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * File size (bytes)
+ */
 FILESIZE():bigint {
   const offset = this.bb!.__offset(this.bb_pos, 74);
   return offset ? this.bb!.readInt64(this.bb_pos + offset) : BigInt('0');
 }
 
+/**
+ * File checksum value
+ */
 CHECKSUM_VALUE():string|null
 CHECKSUM_VALUE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 CHECKSUM_VALUE(optionalEncoding?:any):string|Uint8Array|null {
@@ -258,6 +374,9 @@ CHECKSUM_VALUE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Transaction identifier
+ */
 TRANSACTION_ID():string|null
 TRANSACTION_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 TRANSACTION_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -265,6 +384,9 @@ TRANSACTION_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Associated tags
+ */
 TAGS(index: number):string
 TAGS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 TAGS(index: number,optionalEncoding?:any):string|Uint8Array|null {
@@ -277,6 +399,9 @@ tagsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Description
+ */
 DESCRIPTION():string|null
 DESCRIPTION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 DESCRIPTION(optionalEncoding?:any):string|Uint8Array|null {
@@ -284,6 +409,9 @@ DESCRIPTION(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Associated EO observation references
+ */
 EO_OBSERVATIONS(index: number):string
 EO_OBSERVATIONS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 EO_OBSERVATIONS(index: number,optionalEncoding?:any):string|Uint8Array|null {
@@ -312,12 +440,12 @@ static addOrigObjectId(builder:flatbuffers.Builder, ORIG_OBJECT_IDOffset:flatbuf
   builder.addFieldOffset(2, ORIG_OBJECT_IDOffset, 0);
 }
 
-static addIdSensor(builder:flatbuffers.Builder, ID_SENSOROffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, ID_SENSOROffset, 0);
+static addSatNo(builder:flatbuffers.Builder, SAT_NO:number) {
+  builder.addFieldInt32(3, SAT_NO, 0);
 }
 
-static addSatNo(builder:flatbuffers.Builder, SAT_NO:number) {
-  builder.addFieldInt32(4, SAT_NO, 0);
+static addIdSensor(builder:flatbuffers.Builder, ID_SENSOROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(4, ID_SENSOROffset, 0);
 }
 
 static addOrigSensorId(builder:flatbuffers.Builder, ORIG_SENSOR_IDOffset:flatbuffers.Offset) {
@@ -352,36 +480,46 @@ static addSenQuat(builder:flatbuffers.Builder, SEN_QUATOffset:flatbuffers.Offset
   builder.addFieldOffset(12, SEN_QUATOffset, 0);
 }
 
-static createSenQuatVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static createSenQuatVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createSenQuatVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createSenQuatVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
 static startSenQuatVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+  builder.startVector(8, numElems, 8);
 }
 
 static addSenQuatDot(builder:flatbuffers.Builder, SEN_QUAT_DOTOffset:flatbuffers.Offset) {
   builder.addFieldOffset(13, SEN_QUAT_DOTOffset, 0);
 }
 
-static createSenQuatDotVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static createSenQuatDotVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createSenQuatDotVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createSenQuatDotVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
 static startSenQuatDotVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+  builder.startVector(8, numElems, 8);
 }
 
-static addImageType(builder:flatbuffers.Builder, IMAGE_TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(14, IMAGE_TYPEOffset, 0);
+static addImageType(builder:flatbuffers.Builder, IMAGE_TYPE:imageType) {
+  builder.addFieldInt8(14, IMAGE_TYPE, imageType.VISIBLE);
 }
 
 static addExpStartTime(builder:flatbuffers.Builder, EXP_START_TIMEOffset:flatbuffers.Offset) {
@@ -417,11 +555,11 @@ static addImageSetId(builder:flatbuffers.Builder, IMAGE_SET_IDOffset:flatbuffers
 }
 
 static addImageSetLength(builder:flatbuffers.Builder, IMAGE_SET_LENGTH:number) {
-  builder.addFieldInt32(23, IMAGE_SET_LENGTH, 0);
+  builder.addFieldInt16(23, IMAGE_SET_LENGTH, 0);
 }
 
 static addSequenceId(builder:flatbuffers.Builder, SEQUENCE_ID:number) {
-  builder.addFieldInt32(24, SEQUENCE_ID, 0);
+  builder.addFieldInt16(24, SEQUENCE_ID, 0);
 }
 
 static addFrameFovwidth(builder:flatbuffers.Builder, FRAME_FOVWIDTH:number) {
@@ -441,15 +579,15 @@ static addPixelFovheight(builder:flatbuffers.Builder, PIXEL_FOVHEIGHT:number) {
 }
 
 static addFrameWidthPixels(builder:flatbuffers.Builder, FRAME_WIDTH_PIXELS:number) {
-  builder.addFieldInt32(29, FRAME_WIDTH_PIXELS, 0);
+  builder.addFieldInt16(29, FRAME_WIDTH_PIXELS, 0);
 }
 
 static addFrameHeightPixels(builder:flatbuffers.Builder, FRAME_HEIGHT_PIXELS:number) {
-  builder.addFieldInt32(30, FRAME_HEIGHT_PIXELS, 0);
+  builder.addFieldInt16(30, FRAME_HEIGHT_PIXELS, 0);
 }
 
 static addPixelBitDepth(builder:flatbuffers.Builder, PIXEL_BIT_DEPTH:number) {
-  builder.addFieldInt32(31, PIXEL_BIT_DEPTH, 0);
+  builder.addFieldInt8(31, PIXEL_BIT_DEPTH, 0);
 }
 
 static addAnnotationKey(builder:flatbuffers.Builder, ANNOTATION_KEYOffset:flatbuffers.Offset) {
@@ -525,13 +663,13 @@ static finishSizePrefixedSKIBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$SKI', true);
 }
 
-static createSKI(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ID_SENSOROffset:flatbuffers.Offset, SAT_NO:number, ORIG_SENSOR_IDOffset:flatbuffers.Offset, SENLAT:number, SENLON:number, SENALT:number, SENX:number, SENY:number, SENZ:number, SEN_QUATOffset:flatbuffers.Offset, SEN_QUAT_DOTOffset:flatbuffers.Offset, IMAGE_TYPEOffset:flatbuffers.Offset, EXP_START_TIMEOffset:flatbuffers.Offset, EXP_END_TIMEOffset:flatbuffers.Offset, IMAGE_SOURCE_INFOOffset:flatbuffers.Offset, TOP_LEFT_START_AZ:number, TOP_LEFT_START_EL:number, TOP_LEFT_STOP_AZ:number, TOP_LEFT_STOP_EL:number, IMAGE_SET_IDOffset:flatbuffers.Offset, IMAGE_SET_LENGTH:number, SEQUENCE_ID:number, FRAME_FOVWIDTH:number, FRAME_FOVHEIGHT:number, PIXEL_FOVWIDTH:number, PIXEL_FOVHEIGHT:number, FRAME_WIDTH_PIXELS:number, FRAME_HEIGHT_PIXELS:number, PIXEL_BIT_DEPTH:number, ANNOTATION_KEYOffset:flatbuffers.Offset, CALIBRATION_KEYOffset:flatbuffers.Offset, FILENAMEOffset:flatbuffers.Offset, FILESIZE:bigint, CHECKSUM_VALUEOffset:flatbuffers.Offset, TRANSACTION_IDOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, EO_OBSERVATIONSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createSKI(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset, ORIG_OBJECT_IDOffset:flatbuffers.Offset, SAT_NO:number, ID_SENSOROffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, SENLAT:number, SENLON:number, SENALT:number, SENX:number, SENY:number, SENZ:number, SEN_QUATOffset:flatbuffers.Offset, SEN_QUAT_DOTOffset:flatbuffers.Offset, IMAGE_TYPE:imageType, EXP_START_TIMEOffset:flatbuffers.Offset, EXP_END_TIMEOffset:flatbuffers.Offset, IMAGE_SOURCE_INFOOffset:flatbuffers.Offset, TOP_LEFT_START_AZ:number, TOP_LEFT_START_EL:number, TOP_LEFT_STOP_AZ:number, TOP_LEFT_STOP_EL:number, IMAGE_SET_IDOffset:flatbuffers.Offset, IMAGE_SET_LENGTH:number, SEQUENCE_ID:number, FRAME_FOVWIDTH:number, FRAME_FOVHEIGHT:number, PIXEL_FOVWIDTH:number, PIXEL_FOVHEIGHT:number, FRAME_WIDTH_PIXELS:number, FRAME_HEIGHT_PIXELS:number, PIXEL_BIT_DEPTH:number, ANNOTATION_KEYOffset:flatbuffers.Offset, CALIBRATION_KEYOffset:flatbuffers.Offset, FILENAMEOffset:flatbuffers.Offset, FILESIZE:bigint, CHECKSUM_VALUEOffset:flatbuffers.Offset, TRANSACTION_IDOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, EO_OBSERVATIONSOffset:flatbuffers.Offset):flatbuffers.Offset {
   SKI.startSKI(builder);
   SKI.addId(builder, IDOffset);
   SKI.addOnOrbit(builder, ON_ORBITOffset);
   SKI.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
-  SKI.addIdSensor(builder, ID_SENSOROffset);
   SKI.addSatNo(builder, SAT_NO);
+  SKI.addIdSensor(builder, ID_SENSOROffset);
   SKI.addOrigSensorId(builder, ORIG_SENSOR_IDOffset);
   SKI.addSenlat(builder, SENLAT);
   SKI.addSenlon(builder, SENLON);
@@ -541,7 +679,7 @@ static createSKI(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ON_OR
   SKI.addSenz(builder, SENZ);
   SKI.addSenQuat(builder, SEN_QUATOffset);
   SKI.addSenQuatDot(builder, SEN_QUAT_DOTOffset);
-  SKI.addImageType(builder, IMAGE_TYPEOffset);
+  SKI.addImageType(builder, IMAGE_TYPE);
   SKI.addExpStartTime(builder, EXP_START_TIMEOffset);
   SKI.addExpEndTime(builder, EXP_END_TIMEOffset);
   SKI.addImageSourceInfo(builder, IMAGE_SOURCE_INFOOffset);
@@ -576,8 +714,8 @@ unpack(): SKIT {
     this.ID(),
     this.ON_ORBIT(),
     this.ORIG_OBJECT_ID(),
-    this.ID_SENSOR(),
     this.SAT_NO(),
+    this.ID_SENSOR(),
     this.ORIG_SENSOR_ID(),
     this.SENLAT(),
     this.SENLON(),
@@ -585,8 +723,8 @@ unpack(): SKIT {
     this.SENX(),
     this.SENY(),
     this.SENZ(),
-    this.bb!.createScalarList<string>(this.SEN_QUAT.bind(this), this.senQuatLength()),
-    this.bb!.createScalarList<string>(this.SEN_QUAT_DOT.bind(this), this.senQuatDotLength()),
+    this.bb!.createScalarList<number>(this.SEN_QUAT.bind(this), this.senQuatLength()),
+    this.bb!.createScalarList<number>(this.SEN_QUAT_DOT.bind(this), this.senQuatDotLength()),
     this.IMAGE_TYPE(),
     this.EXP_START_TIME(),
     this.EXP_END_TIME(),
@@ -622,8 +760,8 @@ unpackTo(_o: SKIT): void {
   _o.ID = this.ID();
   _o.ON_ORBIT = this.ON_ORBIT();
   _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID();
-  _o.ID_SENSOR = this.ID_SENSOR();
   _o.SAT_NO = this.SAT_NO();
+  _o.ID_SENSOR = this.ID_SENSOR();
   _o.ORIG_SENSOR_ID = this.ORIG_SENSOR_ID();
   _o.SENLAT = this.SENLAT();
   _o.SENLON = this.SENLON();
@@ -631,8 +769,8 @@ unpackTo(_o: SKIT): void {
   _o.SENX = this.SENX();
   _o.SENY = this.SENY();
   _o.SENZ = this.SENZ();
-  _o.SEN_QUAT = this.bb!.createScalarList<string>(this.SEN_QUAT.bind(this), this.senQuatLength());
-  _o.SEN_QUAT_DOT = this.bb!.createScalarList<string>(this.SEN_QUAT_DOT.bind(this), this.senQuatDotLength());
+  _o.SEN_QUAT = this.bb!.createScalarList<number>(this.SEN_QUAT.bind(this), this.senQuatLength());
+  _o.SEN_QUAT_DOT = this.bb!.createScalarList<number>(this.SEN_QUAT_DOT.bind(this), this.senQuatDotLength());
   _o.IMAGE_TYPE = this.IMAGE_TYPE();
   _o.EXP_START_TIME = this.EXP_START_TIME();
   _o.EXP_END_TIME = this.EXP_END_TIME();
@@ -668,8 +806,8 @@ constructor(
   public ID: string|Uint8Array|null = null,
   public ON_ORBIT: string|Uint8Array|null = null,
   public ORIG_OBJECT_ID: string|Uint8Array|null = null,
-  public ID_SENSOR: string|Uint8Array|null = null,
   public SAT_NO: number = 0,
+  public ID_SENSOR: string|Uint8Array|null = null,
   public ORIG_SENSOR_ID: string|Uint8Array|null = null,
   public SENLAT: number = 0.0,
   public SENLON: number = 0.0,
@@ -677,9 +815,9 @@ constructor(
   public SENX: number = 0.0,
   public SENY: number = 0.0,
   public SENZ: number = 0.0,
-  public SEN_QUAT: (string)[] = [],
-  public SEN_QUAT_DOT: (string)[] = [],
-  public IMAGE_TYPE: string|Uint8Array|null = null,
+  public SEN_QUAT: (number)[] = [],
+  public SEN_QUAT_DOT: (number)[] = [],
+  public IMAGE_TYPE: imageType = imageType.VISIBLE,
   public EXP_START_TIME: string|Uint8Array|null = null,
   public EXP_END_TIME: string|Uint8Array|null = null,
   public IMAGE_SOURCE_INFO: string|Uint8Array|null = null,
@@ -715,9 +853,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ORIG_OBJECT_ID = (this.ORIG_OBJECT_ID !== null ? builder.createString(this.ORIG_OBJECT_ID!) : 0);
   const ID_SENSOR = (this.ID_SENSOR !== null ? builder.createString(this.ID_SENSOR!) : 0);
   const ORIG_SENSOR_ID = (this.ORIG_SENSOR_ID !== null ? builder.createString(this.ORIG_SENSOR_ID!) : 0);
-  const SEN_QUAT = SKI.createSenQuatVector(builder, builder.createObjectOffsetList(this.SEN_QUAT));
-  const SEN_QUAT_DOT = SKI.createSenQuatDotVector(builder, builder.createObjectOffsetList(this.SEN_QUAT_DOT));
-  const IMAGE_TYPE = (this.IMAGE_TYPE !== null ? builder.createString(this.IMAGE_TYPE!) : 0);
+  const SEN_QUAT = SKI.createSenQuatVector(builder, this.SEN_QUAT);
+  const SEN_QUAT_DOT = SKI.createSenQuatDotVector(builder, this.SEN_QUAT_DOT);
   const EXP_START_TIME = (this.EXP_START_TIME !== null ? builder.createString(this.EXP_START_TIME!) : 0);
   const EXP_END_TIME = (this.EXP_END_TIME !== null ? builder.createString(this.EXP_END_TIME!) : 0);
   const IMAGE_SOURCE_INFO = (this.IMAGE_SOURCE_INFO !== null ? builder.createString(this.IMAGE_SOURCE_INFO!) : 0);
@@ -735,8 +872,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     ID,
     ON_ORBIT,
     ORIG_OBJECT_ID,
-    ID_SENSOR,
     this.SAT_NO,
+    ID_SENSOR,
     ORIG_SENSOR_ID,
     this.SENLAT,
     this.SENLON,
@@ -746,7 +883,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.SENZ,
     SEN_QUAT,
     SEN_QUAT_DOT,
-    IMAGE_TYPE,
+    this.IMAGE_TYPE,
     EXP_START_TIME,
     EXP_END_TIME,
     IMAGE_SOURCE_INFO,

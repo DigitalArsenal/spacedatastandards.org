@@ -29,6 +29,9 @@ class LNE : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Unique identifier
+     */
     val ID : String?
         get() {
             val o = __offset(4)
@@ -40,18 +43,18 @@ class LNE : Table() {
         }
     val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val ORIG_OBJECT_ID : String?
+    /**
+     * Satellite catalog number of launched object
+     */
+    val SAT_NO : UInt
         get() {
             val o = __offset(6)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
-    val ORIG_OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun ORIG_OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val DERIVED_FROM : String?
+    /**
+     * International designator (YYYY-NNNP)
+     */
+    val ORIG_OBJECT_ID : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -60,9 +63,12 @@ class LNE : Table() {
                 null
             }
         }
-    val DERIVED_FROMAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun DERIVED_FROMInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val DECLASSIFICATION_DATE : String?
+    val ORIG_OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
+    fun ORIG_OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    /**
+     * Source record this event was derived from
+     */
+    val DERIVED_FROM : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -71,9 +77,12 @@ class LNE : Table() {
                 null
             }
         }
-    val DECLASSIFICATION_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun DECLASSIFICATION_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    val DECLASSIFICATION_STRING : String?
+    val DERIVED_FROMAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
+    fun DERIVED_FROMInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    /**
+     * Classification date (ISO 8601)
+     */
+    val DECLASSIFICATION_DATE : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -82,9 +91,12 @@ class LNE : Table() {
                 null
             }
         }
-    val DECLASSIFICATION_STRINGAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun DECLASSIFICATION_STRINGInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
-    val MSG_CREATE_DATE : String?
+    val DECLASSIFICATION_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
+    fun DECLASSIFICATION_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * Classification marking
+     */
+    val DECLASSIFICATION_STRING : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -93,9 +105,12 @@ class LNE : Table() {
                 null
             }
         }
-    val MSG_CREATE_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun MSG_CREATE_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
-    val LAUNCH_FAILURE_CODE : String?
+    val DECLASSIFICATION_STRINGAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
+    fun DECLASSIFICATION_STRINGInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    /**
+     * Message creation time (ISO 8601)
+     */
+    val MSG_CREATE_DATE : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -104,8 +119,11 @@ class LNE : Table() {
                 null
             }
         }
-    val LAUNCH_FAILURE_CODEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun LAUNCH_FAILURE_CODEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val MSG_CREATE_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
+    fun MSG_CREATE_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    /**
+     * Launch date and time (ISO 8601)
+     */
     val LAUNCH_DATE : String?
         get() {
             val o = __offset(18)
@@ -117,18 +135,18 @@ class LNE : Table() {
         }
     val LAUNCH_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
     fun LAUNCH_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
-    val BE_NUMBER : String?
+    /**
+     * Launch outcome
+     */
+    val OUTCOME : Byte
         get() {
             val o = __offset(20)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val BE_NUMBERAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun BE_NUMBERInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
-    val O_SUFFIX : String?
+    /**
+     * Launch failure code (if applicable)
+     */
+    val LAUNCH_FAILURE_CODE : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -137,9 +155,12 @@ class LNE : Table() {
                 null
             }
         }
-    val O_SUFFIXAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun O_SUFFIXInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
-    val LAUNCH_FACILITY_NAME : String?
+    val LAUNCH_FAILURE_CODEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
+    fun LAUNCH_FAILURE_CODEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    /**
+     * Basic encyclopedia number
+     */
+    val BE_NUMBER : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -148,9 +169,12 @@ class LNE : Table() {
                 null
             }
         }
-    val LAUNCH_FACILITY_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun LAUNCH_FACILITY_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
-    val ON_ORBIT : String?
+    val BE_NUMBERAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
+    fun BE_NUMBERInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    /**
+     * Object suffix identifier
+     */
+    val O_SUFFIX : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -159,13 +183,142 @@ class LNE : Table() {
                 null
             }
         }
-    val ON_ORBITAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun ON_ORBITInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
-    val SAT_NO : Int
+    val O_SUFFIXAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
+    fun O_SUFFIXInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    /**
+     * Launch facility name
+     */
+    val LAUNCH_FACILITY_NAME : String?
         get() {
             val o = __offset(28)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
+    val LAUNCH_FACILITY_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
+    fun LAUNCH_FACILITY_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    /**
+     * Launch facility code
+     */
+    val LAUNCH_FACILITY_CODE : String?
+        get() {
+            val o = __offset(30)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val LAUNCH_FACILITY_CODEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
+    fun LAUNCH_FACILITY_CODEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    /**
+     * Launch vehicle type
+     */
+    val LAUNCH_VEHICLE : String?
+        get() {
+            val o = __offset(32)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val LAUNCH_VEHICLEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
+    fun LAUNCH_VEHICLEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
+    /**
+     * Launch vehicle configuration
+     */
+    val LAUNCH_VEHICLE_CONFIG : String?
+        get() {
+            val o = __offset(34)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val LAUNCH_VEHICLE_CONFIGAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
+    fun LAUNCH_VEHICLE_CONFIGInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    /**
+     * Target orbit type (LEO, MEO, GEO, HEO, SSO, etc.)
+     */
+    val TARGET_ORBIT : String?
+        get() {
+            val o = __offset(36)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val TARGET_ORBITAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
+    fun TARGET_ORBITInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
+    /**
+     * Number of objects placed on orbit
+     */
+    val OBJECTS_ON_ORBIT : UShort
+        get() {
+            val o = __offset(38)
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
+        }
+    /**
+     * On-orbit reference identifier
+     */
+    val ON_ORBIT : String?
+        get() {
+            val o = __offset(40)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val ON_ORBITAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(40, 1)
+    fun ON_ORBITInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 40, 1)
+    /**
+     * Launch country or operator
+     */
+    val LAUNCH_COUNTRY : String?
+        get() {
+            val o = __offset(42)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val LAUNCH_COUNTRYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(42, 1)
+    fun LAUNCH_COUNTRYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 42, 1)
+    /**
+     * Mission name or payload description
+     */
+    val MISSION_NAME : String?
+        get() {
+            val o = __offset(44)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val MISSION_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(44, 1)
+    fun MISSION_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 44, 1)
+    /**
+     * Additional remarks
+     */
+    val REMARKS : String?
+        get() {
+            val o = __offset(46)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val REMARKSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(46, 1)
+    fun REMARKSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 46, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsLNE(_bb: ByteBuffer): LNE = getRootAsLNE(_bb, LNE())
@@ -174,37 +327,55 @@ class LNE : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun LNEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LNE")
-        fun createLNE(builder: FlatBufferBuilder, IDOffset: Int, ORIG_OBJECT_IDOffset: Int, DERIVED_FROMOffset: Int, DECLASSIFICATION_DATEOffset: Int, DECLASSIFICATION_STRINGOffset: Int, MSG_CREATE_DATEOffset: Int, LAUNCH_FAILURE_CODEOffset: Int, LAUNCH_DATEOffset: Int, BE_NUMBEROffset: Int, O_SUFFIXOffset: Int, LAUNCH_FACILITY_NAMEOffset: Int, ON_ORBITOffset: Int, SAT_NO: Int) : Int {
-            builder.startTable(13)
-            addSAT_NO(builder, SAT_NO)
+        fun createLNE(builder: FlatBufferBuilder, IDOffset: Int, SAT_NO: UInt, ORIG_OBJECT_IDOffset: Int, DERIVED_FROMOffset: Int, DECLASSIFICATION_DATEOffset: Int, DECLASSIFICATION_STRINGOffset: Int, MSG_CREATE_DATEOffset: Int, LAUNCH_DATEOffset: Int, OUTCOME: Byte, LAUNCH_FAILURE_CODEOffset: Int, BE_NUMBEROffset: Int, O_SUFFIXOffset: Int, LAUNCH_FACILITY_NAMEOffset: Int, LAUNCH_FACILITY_CODEOffset: Int, LAUNCH_VEHICLEOffset: Int, LAUNCH_VEHICLE_CONFIGOffset: Int, TARGET_ORBITOffset: Int, OBJECTS_ON_ORBIT: UShort, ON_ORBITOffset: Int, LAUNCH_COUNTRYOffset: Int, MISSION_NAMEOffset: Int, REMARKSOffset: Int) : Int {
+            builder.startTable(22)
+            addREMARKS(builder, REMARKSOffset)
+            addMISSION_NAME(builder, MISSION_NAMEOffset)
+            addLAUNCH_COUNTRY(builder, LAUNCH_COUNTRYOffset)
             addON_ORBIT(builder, ON_ORBITOffset)
+            addTARGET_ORBIT(builder, TARGET_ORBITOffset)
+            addLAUNCH_VEHICLE_CONFIG(builder, LAUNCH_VEHICLE_CONFIGOffset)
+            addLAUNCH_VEHICLE(builder, LAUNCH_VEHICLEOffset)
+            addLAUNCH_FACILITY_CODE(builder, LAUNCH_FACILITY_CODEOffset)
             addLAUNCH_FACILITY_NAME(builder, LAUNCH_FACILITY_NAMEOffset)
             addO_SUFFIX(builder, O_SUFFIXOffset)
             addBE_NUMBER(builder, BE_NUMBEROffset)
-            addLAUNCH_DATE(builder, LAUNCH_DATEOffset)
             addLAUNCH_FAILURE_CODE(builder, LAUNCH_FAILURE_CODEOffset)
+            addLAUNCH_DATE(builder, LAUNCH_DATEOffset)
             addMSG_CREATE_DATE(builder, MSG_CREATE_DATEOffset)
             addDECLASSIFICATION_STRING(builder, DECLASSIFICATION_STRINGOffset)
             addDECLASSIFICATION_DATE(builder, DECLASSIFICATION_DATEOffset)
             addDERIVED_FROM(builder, DERIVED_FROMOffset)
             addORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset)
+            addSAT_NO(builder, SAT_NO)
             addID(builder, IDOffset)
+            addOBJECTS_ON_ORBIT(builder, OBJECTS_ON_ORBIT)
+            addOUTCOME(builder, OUTCOME)
             return endLNE(builder)
         }
-        fun startLNE(builder: FlatBufferBuilder) = builder.startTable(13)
+        fun startLNE(builder: FlatBufferBuilder) = builder.startTable(22)
         fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addORIG_OBJECT_ID(builder: FlatBufferBuilder, ORIG_OBJECT_ID: Int) = builder.addOffset(1, ORIG_OBJECT_ID, 0)
-        fun addDERIVED_FROM(builder: FlatBufferBuilder, DERIVED_FROM: Int) = builder.addOffset(2, DERIVED_FROM, 0)
-        fun addDECLASSIFICATION_DATE(builder: FlatBufferBuilder, DECLASSIFICATION_DATE: Int) = builder.addOffset(3, DECLASSIFICATION_DATE, 0)
-        fun addDECLASSIFICATION_STRING(builder: FlatBufferBuilder, DECLASSIFICATION_STRING: Int) = builder.addOffset(4, DECLASSIFICATION_STRING, 0)
-        fun addMSG_CREATE_DATE(builder: FlatBufferBuilder, MSG_CREATE_DATE: Int) = builder.addOffset(5, MSG_CREATE_DATE, 0)
-        fun addLAUNCH_FAILURE_CODE(builder: FlatBufferBuilder, LAUNCH_FAILURE_CODE: Int) = builder.addOffset(6, LAUNCH_FAILURE_CODE, 0)
+        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: UInt) = builder.addInt(1, SAT_NO.toInt(), 0)
+        fun addORIG_OBJECT_ID(builder: FlatBufferBuilder, ORIG_OBJECT_ID: Int) = builder.addOffset(2, ORIG_OBJECT_ID, 0)
+        fun addDERIVED_FROM(builder: FlatBufferBuilder, DERIVED_FROM: Int) = builder.addOffset(3, DERIVED_FROM, 0)
+        fun addDECLASSIFICATION_DATE(builder: FlatBufferBuilder, DECLASSIFICATION_DATE: Int) = builder.addOffset(4, DECLASSIFICATION_DATE, 0)
+        fun addDECLASSIFICATION_STRING(builder: FlatBufferBuilder, DECLASSIFICATION_STRING: Int) = builder.addOffset(5, DECLASSIFICATION_STRING, 0)
+        fun addMSG_CREATE_DATE(builder: FlatBufferBuilder, MSG_CREATE_DATE: Int) = builder.addOffset(6, MSG_CREATE_DATE, 0)
         fun addLAUNCH_DATE(builder: FlatBufferBuilder, LAUNCH_DATE: Int) = builder.addOffset(7, LAUNCH_DATE, 0)
-        fun addBE_NUMBER(builder: FlatBufferBuilder, BE_NUMBER: Int) = builder.addOffset(8, BE_NUMBER, 0)
-        fun addO_SUFFIX(builder: FlatBufferBuilder, O_SUFFIX: Int) = builder.addOffset(9, O_SUFFIX, 0)
-        fun addLAUNCH_FACILITY_NAME(builder: FlatBufferBuilder, LAUNCH_FACILITY_NAME: Int) = builder.addOffset(10, LAUNCH_FACILITY_NAME, 0)
-        fun addON_ORBIT(builder: FlatBufferBuilder, ON_ORBIT: Int) = builder.addOffset(11, ON_ORBIT, 0)
-        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: Int) = builder.addInt(12, SAT_NO, 0)
+        fun addOUTCOME(builder: FlatBufferBuilder, OUTCOME: Byte) = builder.addByte(8, OUTCOME, 0)
+        fun addLAUNCH_FAILURE_CODE(builder: FlatBufferBuilder, LAUNCH_FAILURE_CODE: Int) = builder.addOffset(9, LAUNCH_FAILURE_CODE, 0)
+        fun addBE_NUMBER(builder: FlatBufferBuilder, BE_NUMBER: Int) = builder.addOffset(10, BE_NUMBER, 0)
+        fun addO_SUFFIX(builder: FlatBufferBuilder, O_SUFFIX: Int) = builder.addOffset(11, O_SUFFIX, 0)
+        fun addLAUNCH_FACILITY_NAME(builder: FlatBufferBuilder, LAUNCH_FACILITY_NAME: Int) = builder.addOffset(12, LAUNCH_FACILITY_NAME, 0)
+        fun addLAUNCH_FACILITY_CODE(builder: FlatBufferBuilder, LAUNCH_FACILITY_CODE: Int) = builder.addOffset(13, LAUNCH_FACILITY_CODE, 0)
+        fun addLAUNCH_VEHICLE(builder: FlatBufferBuilder, LAUNCH_VEHICLE: Int) = builder.addOffset(14, LAUNCH_VEHICLE, 0)
+        fun addLAUNCH_VEHICLE_CONFIG(builder: FlatBufferBuilder, LAUNCH_VEHICLE_CONFIG: Int) = builder.addOffset(15, LAUNCH_VEHICLE_CONFIG, 0)
+        fun addTARGET_ORBIT(builder: FlatBufferBuilder, TARGET_ORBIT: Int) = builder.addOffset(16, TARGET_ORBIT, 0)
+        fun addOBJECTS_ON_ORBIT(builder: FlatBufferBuilder, OBJECTS_ON_ORBIT: UShort) = builder.addShort(17, OBJECTS_ON_ORBIT.toShort(), 0)
+        fun addON_ORBIT(builder: FlatBufferBuilder, ON_ORBIT: Int) = builder.addOffset(18, ON_ORBIT, 0)
+        fun addLAUNCH_COUNTRY(builder: FlatBufferBuilder, LAUNCH_COUNTRY: Int) = builder.addOffset(19, LAUNCH_COUNTRY, 0)
+        fun addMISSION_NAME(builder: FlatBufferBuilder, MISSION_NAME: Int) = builder.addOffset(20, MISSION_NAME, 0)
+        fun addREMARKS(builder: FlatBufferBuilder, REMARKS: Int) = builder.addOffset(21, REMARKS, 0)
         fun endLNE(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

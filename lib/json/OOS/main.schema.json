@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "OOS" : {
+      "type" : "object",
+      "description" : "On-Orbit Solar Array",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Unique identifier"
+              },
+        "ID_ON_ORBIT" : {
+                "type" : "string",
+                "description" : "Reference to parent on-orbit object"
+              },
+        "ID_SOLAR_ARRAY" : {
+                "type" : "string",
+                "description" : "Reference to solar array specification"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Solar array name or designation"
+              },
+        "CELL_TYPE" : {
+                "type" : "string",
+                "description" : "Solar cell type (e.g., SILICON, GAAS, MULTI_JUNCTION, THIN_FILM, PEROVSKITE)"
+              },
+        "QUANTITY" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of solar arrays of this type"
+              },
+        "AREA" : {
+                "type" : "number",
+                "description" : "Total array area in square meters"
+              },
+        "POWER_BOL" : {
+                "type" : "number",
+                "description" : "Beginning of life power output in Watts"
+              },
+        "POWER_EOL" : {
+                "type" : "number",
+                "description" : "End of life power output in Watts"
+              },
+        "EFFICIENCY" : {
+                "type" : "number",
+                "description" : "Conversion efficiency as fraction (0.0-1.0)"
+              },
+        "DEGRADATION_RATE" : {
+                "type" : "number",
+                "description" : "Degradation rate per year as fraction"
+              },
+        "NUM_PANELS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of panels per array"
+              },
+        "DEPLOYABLE" : {
+                "type" : "boolean",
+                "description" : "Whether the array is deployable"
+              },
+        "TRACKING" : {
+                "type" : "boolean",
+                "description" : "Whether the array is articulable/tracking"
+              },
+        "MASS" : {
+                "type" : "number",
+                "description" : "Array mass in kg"
+              },
+        "NOTES" : {
+                "type" : "string",
+                "description" : "Additional notes"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/OOS"
+}

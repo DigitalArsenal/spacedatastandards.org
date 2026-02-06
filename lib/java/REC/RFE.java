@@ -29,52 +29,183 @@ public final class RFE extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public RFE __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique emitter identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * Reference to parent entity
+   */
   public String ID_ENTITY() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ID_ENTITYAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer ID_ENTITYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  /**
+   * Emitter name or designation
+   */
   public String NAME() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer NAMEAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
-  public String TYPE() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer TYPEAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
-  public ByteBuffer TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * Emitter type
+   */
+  public byte TYPE() { int o = __offset(10); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Parent entity designator
+   */
   public String ENTITY() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ENTITYAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
   public ByteBuffer ENTITYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
-  public String RF_EMITTER_DETAILS(int j) { int o = __offset(14); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int RF_EMITTER_DETAILSLength() { int o = __offset(14); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector rfEmitterDetailsVector() { return rfEmitterDetailsVector(new StringVector()); }
-  public StringVector rfEmitterDetailsVector(StringVector obj) { int o = __offset(14); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * ELNOT (Electronic Notation)
+   */
+  public String ELNOT() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ELNOTAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer ELNOTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * NATO reporting name
+   */
+  public String NATO_NAME() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer NATO_NAMEAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
+  public ByteBuffer NATO_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  /**
+   * Platform type (e.g., SHIP, AIRCRAFT, GROUND, SATELLITE)
+   */
+  public String PLATFORM_TYPE() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PLATFORM_TYPEAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
+  public ByteBuffer PLATFORM_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
+  /**
+   * Country of origin
+   */
+  public String COUNTRY() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer COUNTRYAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
+  public ByteBuffer COUNTRYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
+  /**
+   * Primary function description
+   */
+  public String FUNCTION() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer FUNCTIONAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
+  public ByteBuffer FUNCTIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
+  /**
+   * Operating band (e.g., HF, VHF, UHF, L, S, C, X, Ku, Ka)
+   */
+  public String BAND() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer BANDAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
+  public ByteBuffer BANDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
+  /**
+   * Minimum operating frequency in MHz
+   */
+  public double FREQ_MIN() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Maximum operating frequency in MHz
+   */
+  public double FREQ_MAX() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Peak power in kW
+   */
+  public double PEAK_POWER() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Average power in kW
+   */
+  public double AVG_POWER() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Antenna gain in dBi
+   */
+  public double ANTENNA_GAIN() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Number of operating modes
+   */
+  public long NUM_MODES() { int o = __offset(36); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Emitter operating mode details
+   */
+  public rfEmitterDetail RF_EMITTER_DETAILS(int j) { return RF_EMITTER_DETAILS(new rfEmitterDetail(), j); }
+  public rfEmitterDetail RF_EMITTER_DETAILS(rfEmitterDetail obj, int j) { int o = __offset(38); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int RF_EMITTER_DETAILSLength() { int o = __offset(38); return o != 0 ? __vector_len(o) : 0; }
+  public rfEmitterDetail.Vector rfEmitterDetailsVector() { return rfEmitterDetailsVector(new rfEmitterDetail.Vector()); }
+  public rfEmitterDetail.Vector rfEmitterDetailsVector(rfEmitterDetail.Vector obj) { int o = __offset(38); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Threat level assessment
+   */
+  public String THREAT_LEVEL() { int o = __offset(40); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer THREAT_LEVELAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
+  public ByteBuffer THREAT_LEVELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
+  /**
+   * Additional notes
+   */
+  public String NOTES() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer NOTESAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
+  public ByteBuffer NOTESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
 
   public static int createRFE(FlatBufferBuilder builder,
       int IDOffset,
       int ID_ENTITYOffset,
       int NAMEOffset,
-      int TYPEOffset,
+      byte TYPE,
       int ENTITYOffset,
-      int RF_EMITTER_DETAILSOffset) {
-    builder.startTable(6);
+      int ELNOTOffset,
+      int NATO_NAMEOffset,
+      int PLATFORM_TYPEOffset,
+      int COUNTRYOffset,
+      int FUNCTIONOffset,
+      int BANDOffset,
+      double FREQ_MIN,
+      double FREQ_MAX,
+      double PEAK_POWER,
+      double AVG_POWER,
+      double ANTENNA_GAIN,
+      long NUM_MODES,
+      int RF_EMITTER_DETAILSOffset,
+      int THREAT_LEVELOffset,
+      int NOTESOffset) {
+    builder.startTable(20);
+    RFE.addAntennaGain(builder, ANTENNA_GAIN);
+    RFE.addAvgPower(builder, AVG_POWER);
+    RFE.addPeakPower(builder, PEAK_POWER);
+    RFE.addFreqMax(builder, FREQ_MAX);
+    RFE.addFreqMin(builder, FREQ_MIN);
+    RFE.addNotes(builder, NOTESOffset);
+    RFE.addThreatLevel(builder, THREAT_LEVELOffset);
     RFE.addRfEmitterDetails(builder, RF_EMITTER_DETAILSOffset);
+    RFE.addNumModes(builder, NUM_MODES);
+    RFE.addBand(builder, BANDOffset);
+    RFE.addFunction(builder, FUNCTIONOffset);
+    RFE.addCountry(builder, COUNTRYOffset);
+    RFE.addPlatformType(builder, PLATFORM_TYPEOffset);
+    RFE.addNatoName(builder, NATO_NAMEOffset);
+    RFE.addElnot(builder, ELNOTOffset);
     RFE.addEntity(builder, ENTITYOffset);
-    RFE.addType(builder, TYPEOffset);
     RFE.addName(builder, NAMEOffset);
     RFE.addIdEntity(builder, ID_ENTITYOffset);
     RFE.addId(builder, IDOffset);
+    RFE.addType(builder, TYPE);
     return RFE.endRFE(builder);
   }
 
-  public static void startRFE(FlatBufferBuilder builder) { builder.startTable(6); }
+  public static void startRFE(FlatBufferBuilder builder) { builder.startTable(20); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addIdEntity(FlatBufferBuilder builder, int ID_ENTITYOffset) { builder.addOffset(1, ID_ENTITYOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(2, NAMEOffset, 0); }
-  public static void addType(FlatBufferBuilder builder, int TYPEOffset) { builder.addOffset(3, TYPEOffset, 0); }
+  public static void addType(FlatBufferBuilder builder, byte TYPE) { builder.addByte(3, TYPE, 0); }
   public static void addEntity(FlatBufferBuilder builder, int ENTITYOffset) { builder.addOffset(4, ENTITYOffset, 0); }
-  public static void addRfEmitterDetails(FlatBufferBuilder builder, int RF_EMITTER_DETAILSOffset) { builder.addOffset(5, RF_EMITTER_DETAILSOffset, 0); }
+  public static void addElnot(FlatBufferBuilder builder, int ELNOTOffset) { builder.addOffset(5, ELNOTOffset, 0); }
+  public static void addNatoName(FlatBufferBuilder builder, int NATO_NAMEOffset) { builder.addOffset(6, NATO_NAMEOffset, 0); }
+  public static void addPlatformType(FlatBufferBuilder builder, int PLATFORM_TYPEOffset) { builder.addOffset(7, PLATFORM_TYPEOffset, 0); }
+  public static void addCountry(FlatBufferBuilder builder, int COUNTRYOffset) { builder.addOffset(8, COUNTRYOffset, 0); }
+  public static void addFunction(FlatBufferBuilder builder, int FUNCTIONOffset) { builder.addOffset(9, FUNCTIONOffset, 0); }
+  public static void addBand(FlatBufferBuilder builder, int BANDOffset) { builder.addOffset(10, BANDOffset, 0); }
+  public static void addFreqMin(FlatBufferBuilder builder, double FREQ_MIN) { builder.addDouble(11, FREQ_MIN, 0.0); }
+  public static void addFreqMax(FlatBufferBuilder builder, double FREQ_MAX) { builder.addDouble(12, FREQ_MAX, 0.0); }
+  public static void addPeakPower(FlatBufferBuilder builder, double PEAK_POWER) { builder.addDouble(13, PEAK_POWER, 0.0); }
+  public static void addAvgPower(FlatBufferBuilder builder, double AVG_POWER) { builder.addDouble(14, AVG_POWER, 0.0); }
+  public static void addAntennaGain(FlatBufferBuilder builder, double ANTENNA_GAIN) { builder.addDouble(15, ANTENNA_GAIN, 0.0); }
+  public static void addNumModes(FlatBufferBuilder builder, long NUM_MODES) { builder.addInt(16, (int) NUM_MODES, (int) 0L); }
+  public static void addRfEmitterDetails(FlatBufferBuilder builder, int RF_EMITTER_DETAILSOffset) { builder.addOffset(17, RF_EMITTER_DETAILSOffset, 0); }
   public static int createRfEmitterDetailsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startRfEmitterDetailsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addThreatLevel(FlatBufferBuilder builder, int THREAT_LEVELOffset) { builder.addOffset(18, THREAT_LEVELOffset, 0); }
+  public static void addNotes(FlatBufferBuilder builder, int NOTESOffset) { builder.addOffset(19, NOTESOffset, 0); }
   public static int endRFE(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

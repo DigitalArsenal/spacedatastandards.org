@@ -29,6 +29,7 @@ class DFH(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Unique identifier
     # DFH
     def ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,22 +37,138 @@ class DFH(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Satellite number
     # DFH
-    def EFFECTIVE_UNTIL(self):
+    def SAT_NO(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Object designator
+    # DFH
+    def OBJECT_DESIGNATOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Object common name
+    # DFH
+    def OBJECT_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # History start time (ISO 8601)
+    # DFH
+    def START_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # History end time (ISO 8601)
+    # DFH
+    def END_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Current effective until date (ISO 8601)
+    # DFH
+    def EFFECTIVE_UNTIL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Current drift rate in degrees/day
     # DFH
     def DRIFT_RATE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Current mean longitude in degrees East
+    # DFH
+    def MEAN_LONGITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Longitude slot center in degrees East (if station-keeping)
+    # DFH
+    def SLOT_CENTER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Longitude slot half-width in degrees
+    # DFH
+    def SLOT_HALF_WIDTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Whether object is actively station-keeping
+    # DFH
+    def STATION_KEEPING(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Historical drift records
+    # DFH
+    def RECORDS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from driftRecord import driftRecord
+            obj = driftRecord()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # DFH
+    def RECORDSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # DFH
+    def RECORDSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        return o == 0
+
+    # Number of records in history
+    # DFH
+    def NUM_RECORDS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Additional notes
+    # DFH
+    def NOTES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def DFHStart(builder):
-    builder.StartObject(3)
+    builder.StartObject(15)
 
 def Start(builder):
     DFHStart(builder)
@@ -62,17 +179,95 @@ def DFHAddID(builder, ID):
 def AddID(builder, ID):
     DFHAddID(builder, ID)
 
+def DFHAddSAT_NO(builder, SAT_NO):
+    builder.PrependUint32Slot(1, SAT_NO, 0)
+
+def AddSAT_NO(builder, SAT_NO):
+    DFHAddSAT_NO(builder, SAT_NO)
+
+def DFHAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_DESIGNATOR), 0)
+
+def AddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR):
+    DFHAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR)
+
+def DFHAddOBJECT_NAME(builder, OBJECT_NAME):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_NAME), 0)
+
+def AddOBJECT_NAME(builder, OBJECT_NAME):
+    DFHAddOBJECT_NAME(builder, OBJECT_NAME)
+
+def DFHAddSTART_TIME(builder, START_TIME):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(START_TIME), 0)
+
+def AddSTART_TIME(builder, START_TIME):
+    DFHAddSTART_TIME(builder, START_TIME)
+
+def DFHAddEND_TIME(builder, END_TIME):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(END_TIME), 0)
+
+def AddEND_TIME(builder, END_TIME):
+    DFHAddEND_TIME(builder, END_TIME)
+
 def DFHAddEFFECTIVE_UNTIL(builder, EFFECTIVE_UNTIL):
-    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(EFFECTIVE_UNTIL), 0)
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(EFFECTIVE_UNTIL), 0)
 
 def AddEFFECTIVE_UNTIL(builder, EFFECTIVE_UNTIL):
     DFHAddEFFECTIVE_UNTIL(builder, EFFECTIVE_UNTIL)
 
 def DFHAddDRIFT_RATE(builder, DRIFT_RATE):
-    builder.PrependFloat64Slot(2, DRIFT_RATE, 0.0)
+    builder.PrependFloat64Slot(7, DRIFT_RATE, 0.0)
 
 def AddDRIFT_RATE(builder, DRIFT_RATE):
     DFHAddDRIFT_RATE(builder, DRIFT_RATE)
+
+def DFHAddMEAN_LONGITUDE(builder, MEAN_LONGITUDE):
+    builder.PrependFloat64Slot(8, MEAN_LONGITUDE, 0.0)
+
+def AddMEAN_LONGITUDE(builder, MEAN_LONGITUDE):
+    DFHAddMEAN_LONGITUDE(builder, MEAN_LONGITUDE)
+
+def DFHAddSLOT_CENTER(builder, SLOT_CENTER):
+    builder.PrependFloat64Slot(9, SLOT_CENTER, 0.0)
+
+def AddSLOT_CENTER(builder, SLOT_CENTER):
+    DFHAddSLOT_CENTER(builder, SLOT_CENTER)
+
+def DFHAddSLOT_HALF_WIDTH(builder, SLOT_HALF_WIDTH):
+    builder.PrependFloat64Slot(10, SLOT_HALF_WIDTH, 0.0)
+
+def AddSLOT_HALF_WIDTH(builder, SLOT_HALF_WIDTH):
+    DFHAddSLOT_HALF_WIDTH(builder, SLOT_HALF_WIDTH)
+
+def DFHAddSTATION_KEEPING(builder, STATION_KEEPING):
+    builder.PrependBoolSlot(11, STATION_KEEPING, 0)
+
+def AddSTATION_KEEPING(builder, STATION_KEEPING):
+    DFHAddSTATION_KEEPING(builder, STATION_KEEPING)
+
+def DFHAddRECORDS(builder, RECORDS):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(RECORDS), 0)
+
+def AddRECORDS(builder, RECORDS):
+    DFHAddRECORDS(builder, RECORDS)
+
+def DFHStartRECORDSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartRECORDSVector(builder, numElems):
+    return DFHStartRECORDSVector(builder, numElems)
+
+def DFHAddNUM_RECORDS(builder, NUM_RECORDS):
+    builder.PrependUint32Slot(13, NUM_RECORDS, 0)
+
+def AddNUM_RECORDS(builder, NUM_RECORDS):
+    DFHAddNUM_RECORDS(builder, NUM_RECORDS)
+
+def DFHAddNOTES(builder, NOTES):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(NOTES), 0)
+
+def AddNOTES(builder, NOTES):
+    DFHAddNOTES(builder, NOTES)
 
 def DFHEnd(builder):
     return builder.EndObject()
@@ -80,14 +275,31 @@ def DFHEnd(builder):
 def End(builder):
     return DFHEnd(builder)
 
+import driftRecord
+try:
+    from typing import List
+except:
+    pass
 
 class DFHT(object):
 
     # DFHT
     def __init__(self):
         self.ID = None  # type: str
+        self.SAT_NO = 0  # type: int
+        self.OBJECT_DESIGNATOR = None  # type: str
+        self.OBJECT_NAME = None  # type: str
+        self.START_TIME = None  # type: str
+        self.END_TIME = None  # type: str
         self.EFFECTIVE_UNTIL = None  # type: str
         self.DRIFT_RATE = 0.0  # type: float
+        self.MEAN_LONGITUDE = 0.0  # type: float
+        self.SLOT_CENTER = 0.0  # type: float
+        self.SLOT_HALF_WIDTH = 0.0  # type: float
+        self.STATION_KEEPING = False  # type: bool
+        self.RECORDS = None  # type: List[driftRecord.driftRecordT]
+        self.NUM_RECORDS = 0  # type: int
+        self.NOTES = None  # type: str
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -111,20 +323,75 @@ class DFHT(object):
         if DFH is None:
             return
         self.ID = DFH.ID()
+        self.SAT_NO = DFH.SAT_NO()
+        self.OBJECT_DESIGNATOR = DFH.OBJECT_DESIGNATOR()
+        self.OBJECT_NAME = DFH.OBJECT_NAME()
+        self.START_TIME = DFH.START_TIME()
+        self.END_TIME = DFH.END_TIME()
         self.EFFECTIVE_UNTIL = DFH.EFFECTIVE_UNTIL()
         self.DRIFT_RATE = DFH.DRIFT_RATE()
+        self.MEAN_LONGITUDE = DFH.MEAN_LONGITUDE()
+        self.SLOT_CENTER = DFH.SLOT_CENTER()
+        self.SLOT_HALF_WIDTH = DFH.SLOT_HALF_WIDTH()
+        self.STATION_KEEPING = DFH.STATION_KEEPING()
+        if not DFH.RECORDSIsNone():
+            self.RECORDS = []
+            for i in range(DFH.RECORDSLength()):
+                if DFH.RECORDS(i) is None:
+                    self.RECORDS.append(None)
+                else:
+                    driftRecord_ = driftRecord.driftRecordT.InitFromObj(DFH.RECORDS(i))
+                    self.RECORDS.append(driftRecord_)
+        self.NUM_RECORDS = DFH.NUM_RECORDS()
+        self.NOTES = DFH.NOTES()
 
     # DFHT
     def Pack(self, builder):
         if self.ID is not None:
             ID = builder.CreateString(self.ID)
+        if self.OBJECT_DESIGNATOR is not None:
+            OBJECT_DESIGNATOR = builder.CreateString(self.OBJECT_DESIGNATOR)
+        if self.OBJECT_NAME is not None:
+            OBJECT_NAME = builder.CreateString(self.OBJECT_NAME)
+        if self.START_TIME is not None:
+            START_TIME = builder.CreateString(self.START_TIME)
+        if self.END_TIME is not None:
+            END_TIME = builder.CreateString(self.END_TIME)
         if self.EFFECTIVE_UNTIL is not None:
             EFFECTIVE_UNTIL = builder.CreateString(self.EFFECTIVE_UNTIL)
+        if self.RECORDS is not None:
+            RECORDSlist = []
+            for i in range(len(self.RECORDS)):
+                RECORDSlist.append(self.RECORDS[i].Pack(builder))
+            DFHStartRECORDSVector(builder, len(self.RECORDS))
+            for i in reversed(range(len(self.RECORDS))):
+                builder.PrependUOffsetTRelative(RECORDSlist[i])
+            RECORDS = builder.EndVector()
+        if self.NOTES is not None:
+            NOTES = builder.CreateString(self.NOTES)
         DFHStart(builder)
         if self.ID is not None:
             DFHAddID(builder, ID)
+        DFHAddSAT_NO(builder, self.SAT_NO)
+        if self.OBJECT_DESIGNATOR is not None:
+            DFHAddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOR)
+        if self.OBJECT_NAME is not None:
+            DFHAddOBJECT_NAME(builder, OBJECT_NAME)
+        if self.START_TIME is not None:
+            DFHAddSTART_TIME(builder, START_TIME)
+        if self.END_TIME is not None:
+            DFHAddEND_TIME(builder, END_TIME)
         if self.EFFECTIVE_UNTIL is not None:
             DFHAddEFFECTIVE_UNTIL(builder, EFFECTIVE_UNTIL)
         DFHAddDRIFT_RATE(builder, self.DRIFT_RATE)
+        DFHAddMEAN_LONGITUDE(builder, self.MEAN_LONGITUDE)
+        DFHAddSLOT_CENTER(builder, self.SLOT_CENTER)
+        DFHAddSLOT_HALF_WIDTH(builder, self.SLOT_HALF_WIDTH)
+        DFHAddSTATION_KEEPING(builder, self.STATION_KEEPING)
+        if self.RECORDS is not None:
+            DFHAddRECORDS(builder, RECORDS)
+        DFHAddNUM_RECORDS(builder, self.NUM_RECORDS)
+        if self.NOTES is not None:
+            DFHAddNOTES(builder, NOTES)
         DFH = DFHEnd(builder)
         return DFH

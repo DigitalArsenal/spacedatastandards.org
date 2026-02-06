@@ -5,6 +5,170 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class SeoDataType {
+  final int value;
+  const SeoDataType._(this.value);
+
+  factory SeoDataType.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum SeoDataType');
+    }
+    return result;
+  }
+
+  static SeoDataType? _createOrNull(int? value) => 
+      value == null ? null : SeoDataType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 7;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const SeoDataType PARTICLE_COUNT = SeoDataType._(0);
+  static const SeoDataType MAGNETIC_FIELD = SeoDataType._(1);
+  static const SeoDataType RADIATION_DOSE = SeoDataType._(2);
+  static const SeoDataType PLASMA_DENSITY = SeoDataType._(3);
+  static const SeoDataType ENERGETIC_PARTICLE = SeoDataType._(4);
+  static const SeoDataType SOLAR_WIND = SeoDataType._(5);
+  static const SeoDataType CHARGING = SeoDataType._(6);
+  static const SeoDataType UNKNOWN = SeoDataType._(7);
+  static const Map<int, SeoDataType> values = {
+    0: PARTICLE_COUNT,
+    1: MAGNETIC_FIELD,
+    2: RADIATION_DOSE,
+    3: PLASMA_DENSITY,
+    4: ENERGETIC_PARTICLE,
+    5: SOLAR_WIND,
+    6: CHARGING,
+    7: UNKNOWN};
+
+  static const fb.Reader<SeoDataType> reader = _SeoDataTypeReader();
+
+  @override
+  String toString() {
+    return 'SeoDataType{value: $value}';
+  }
+}
+
+class _SeoDataTypeReader extends fb.Reader<SeoDataType> {
+  const _SeoDataTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  SeoDataType read(fb.BufferContext bc, int offset) =>
+      SeoDataType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class SeoParticleType {
+  final int value;
+  const SeoParticleType._(this.value);
+
+  factory SeoParticleType.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum SeoParticleType');
+    }
+    return result;
+  }
+
+  static SeoParticleType? _createOrNull(int? value) => 
+      value == null ? null : SeoParticleType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 6;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const SeoParticleType PROTON = SeoParticleType._(0);
+  static const SeoParticleType ELECTRON = SeoParticleType._(1);
+  static const SeoParticleType ALPHA = SeoParticleType._(2);
+  static const SeoParticleType HEAVY_ION = SeoParticleType._(3);
+  static const SeoParticleType NEUTRON = SeoParticleType._(4);
+  static const SeoParticleType COSMIC_RAY = SeoParticleType._(5);
+  static const SeoParticleType MIXED = SeoParticleType._(6);
+  static const Map<int, SeoParticleType> values = {
+    0: PROTON,
+    1: ELECTRON,
+    2: ALPHA,
+    3: HEAVY_ION,
+    4: NEUTRON,
+    5: COSMIC_RAY,
+    6: MIXED};
+
+  static const fb.Reader<SeoParticleType> reader = _SeoParticleTypeReader();
+
+  @override
+  String toString() {
+    return 'SeoParticleType{value: $value}';
+  }
+}
+
+class _SeoParticleTypeReader extends fb.Reader<SeoParticleType> {
+  const _SeoParticleTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  SeoParticleType read(fb.BufferContext bc, int offset) =>
+      SeoParticleType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class SeoObservatoryType {
+  final int value;
+  const SeoObservatoryType._(this.value);
+
+  factory SeoObservatoryType.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum SeoObservatoryType');
+    }
+    return result;
+  }
+
+  static SeoObservatoryType? _createOrNull(int? value) => 
+      value == null ? null : SeoObservatoryType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 6;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const SeoObservatoryType GROUND = SeoObservatoryType._(0);
+  static const SeoObservatoryType LEO = SeoObservatoryType._(1);
+  static const SeoObservatoryType GEO = SeoObservatoryType._(2);
+  static const SeoObservatoryType L1 = SeoObservatoryType._(3);
+  static const SeoObservatoryType L2 = SeoObservatoryType._(4);
+  static const SeoObservatoryType INTERPLANETARY = SeoObservatoryType._(5);
+  static const SeoObservatoryType SOLAR = SeoObservatoryType._(6);
+  static const Map<int, SeoObservatoryType> values = {
+    0: GROUND,
+    1: LEO,
+    2: GEO,
+    3: L1,
+    4: L2,
+    5: INTERPLANETARY,
+    6: SOLAR};
+
+  static const fb.Reader<SeoObservatoryType> reader = _SeoObservatoryTypeReader();
+
+  @override
+  String toString() {
+    return 'SeoObservatoryType{value: $value}';
+  }
+}
+
+class _SeoObservatoryTypeReader extends fb.Reader<SeoObservatoryType> {
+  const _SeoObservatoryTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  SeoObservatoryType read(fb.BufferContext bc, int offset) =>
+      SeoObservatoryType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 ///  Space Environment Observation
 class SEO {
   SEO._(this._bc, this._bcOffset);
@@ -18,43 +182,80 @@ class SEO {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Message type code
   String? get MSG_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Generating system
   String? get GEN_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  External reference identifier
   String? get EXTERNAL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get DATA_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Type of environmental data
+  SeoDataType get DATA_TYPE => SeoDataType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  ///  Generation time (ISO 8601)
   String? get GEN_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  True if this is a forecast
   bool get FORECAST => const fb.BoolReader().vTableGet(_bc, _bcOffset, 16, false);
+  ///  True if derived from other measurements
   bool get DERIVED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, false);
-  int get SAT_NO => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 20, 0);
+  ///  Satellite catalog number (if space-based)
+  int get SAT_NO => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 20, 0);
+  ///  International designator
   String? get ORIG_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Sensor identifier
   String? get ID_SENSOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Original sensor identifier
   String? get ORIG_SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
-  String? get OBSERVATORY_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Observatory type
+  SeoObservatoryType get OBSERVATORY_TYPE => SeoObservatoryType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 28, 0));
+  ///  Observatory name
   String? get OBSERVATORY_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  ///  Observatory notes
   String? get OBSERVATORY_NOTES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  ///  Instrument type description
   String? get INSTRUMENT_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  ///  Observatory latitude (degrees)
   double get LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  ///  Observatory longitude (degrees)
   double get LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  ///  Observatory altitude (km)
   double get ALT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  ///  Sensor reference frame
   String? get SEN_REFERENCE_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
-  List<String>? get SEN_POS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 44);
-  List<String>? get SEN_VEL => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 46);
+  ///  Sensor position (km, 3 components)
+  List<double>? get SEN_POS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 44);
+  ///  Sensor velocity (km/s, 3 components)
+  List<double>? get SEN_VEL => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 46);
+  ///  Measurement type description
   String? get MEAS_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
-  String? get SEN_ENERGY_LEVEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 50);
-  String? get OB_SET_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 52);
-  String? get PARTICLE_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 54);
+  ///  Particle type measured
+  SeoParticleType get PARTICLE_TYPE => SeoParticleType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 50, 0));
+  ///  Energy level or range (keV or MeV)
+  String? get SEN_ENERGY_LEVEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 52);
+  ///  Observation set identifier
+  String? get OB_SET_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 54);
+  ///  Observation time (ISO 8601)
   String? get OB_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 56);
-  List<String>? get SEO_LIST => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 58);
-  String? get QUALITY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 60);
-  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 62);
-  String? get DESCRIPTOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 64);
-  List<String>? get SRC_TYPS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 66);
-  List<String>? get SRC_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 68);
+  ///  Measurement values
+  List<double>? get VALUES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 58);
+  ///  Measurement uncertainties
+  List<double>? get UNCERTAINTIES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 60);
+  ///  Units for measurement values
+  String? get UNITS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 62);
+  ///  Data quality indicator
+  String? get QUALITY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 64);
+  ///  Description
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 66);
+  ///  Event descriptor
+  String? get DESCRIPTOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 68);
+  ///  Source types
+  List<String>? get SRC_TYPS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 70);
+  ///  Source identifiers
+  List<String>? get SRC_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 72);
 
   @override
   String toString() {
-    return 'SEO{ID: ${ID}, MSG_TYPE: ${MSG_TYPE}, GEN_SYSTEM: ${GEN_SYSTEM}, EXTERNAL_ID: ${EXTERNAL_ID}, DATA_TYPE: ${DATA_TYPE}, GEN_TIME: ${GEN_TIME}, FORECAST: ${FORECAST}, DERIVED: ${DERIVED}, SAT_NO: ${SAT_NO}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, ID_SENSOR: ${ID_SENSOR}, ORIG_SENSOR_ID: ${ORIG_SENSOR_ID}, OBSERVATORY_TYPE: ${OBSERVATORY_TYPE}, OBSERVATORY_NAME: ${OBSERVATORY_NAME}, OBSERVATORY_NOTES: ${OBSERVATORY_NOTES}, INSTRUMENT_TYPE: ${INSTRUMENT_TYPE}, LAT: ${LAT}, LON: ${LON}, ALT: ${ALT}, SEN_REFERENCE_FRAME: ${SEN_REFERENCE_FRAME}, SEN_POS: ${SEN_POS}, SEN_VEL: ${SEN_VEL}, MEAS_TYPE: ${MEAS_TYPE}, SEN_ENERGY_LEVEL: ${SEN_ENERGY_LEVEL}, OB_SET_ID: ${OB_SET_ID}, PARTICLE_TYPE: ${PARTICLE_TYPE}, OB_TIME: ${OB_TIME}, SEO_LIST: ${SEO_LIST}, QUALITY: ${QUALITY}, DESCRIPTION: ${DESCRIPTION}, DESCRIPTOR: ${DESCRIPTOR}, SRC_TYPS: ${SRC_TYPS}, SRC_IDS: ${SRC_IDS}}';
+    return 'SEO{ID: ${ID}, MSG_TYPE: ${MSG_TYPE}, GEN_SYSTEM: ${GEN_SYSTEM}, EXTERNAL_ID: ${EXTERNAL_ID}, DATA_TYPE: ${DATA_TYPE}, GEN_TIME: ${GEN_TIME}, FORECAST: ${FORECAST}, DERIVED: ${DERIVED}, SAT_NO: ${SAT_NO}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, ID_SENSOR: ${ID_SENSOR}, ORIG_SENSOR_ID: ${ORIG_SENSOR_ID}, OBSERVATORY_TYPE: ${OBSERVATORY_TYPE}, OBSERVATORY_NAME: ${OBSERVATORY_NAME}, OBSERVATORY_NOTES: ${OBSERVATORY_NOTES}, INSTRUMENT_TYPE: ${INSTRUMENT_TYPE}, LAT: ${LAT}, LON: ${LON}, ALT: ${ALT}, SEN_REFERENCE_FRAME: ${SEN_REFERENCE_FRAME}, SEN_POS: ${SEN_POS}, SEN_VEL: ${SEN_VEL}, MEAS_TYPE: ${MEAS_TYPE}, PARTICLE_TYPE: ${PARTICLE_TYPE}, SEN_ENERGY_LEVEL: ${SEN_ENERGY_LEVEL}, OB_SET_ID: ${OB_SET_ID}, OB_TIME: ${OB_TIME}, VALUES: ${VALUES}, UNCERTAINTIES: ${UNCERTAINTIES}, UNITS: ${UNITS}, QUALITY: ${QUALITY}, DESCRIPTION: ${DESCRIPTION}, DESCRIPTOR: ${DESCRIPTOR}, SRC_TYPS: ${SRC_TYPS}, SRC_IDS: ${SRC_IDS}}';
   }
 }
 
@@ -72,7 +273,7 @@ class SEOBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(33);
+    fbBuilder.startTable(35);
   }
 
   int addIdOffset(int? offset) {
@@ -91,8 +292,8 @@ class SEOBuilder {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addDataTypeOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
+  int addDataType(SeoDataType? DATA_TYPE) {
+    fbBuilder.addInt8(4, DATA_TYPE?.value);
     return fbBuilder.offset;
   }
   int addGenTimeOffset(int? offset) {
@@ -108,7 +309,7 @@ class SEOBuilder {
     return fbBuilder.offset;
   }
   int addSatNo(int? SAT_NO) {
-    fbBuilder.addInt32(8, SAT_NO);
+    fbBuilder.addUint32(8, SAT_NO);
     return fbBuilder.offset;
   }
   int addOrigObjectIdOffset(int? offset) {
@@ -123,8 +324,8 @@ class SEOBuilder {
     fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
-  int addObservatoryTypeOffset(int? offset) {
-    fbBuilder.addOffset(12, offset);
+  int addObservatoryType(SeoObservatoryType? OBSERVATORY_TYPE) {
+    fbBuilder.addInt8(12, OBSERVATORY_TYPE?.value);
     return fbBuilder.offset;
   }
   int addObservatoryNameOffset(int? offset) {
@@ -167,15 +368,15 @@ class SEOBuilder {
     fbBuilder.addOffset(22, offset);
     return fbBuilder.offset;
   }
-  int addSenEnergyLevelOffset(int? offset) {
-    fbBuilder.addOffset(23, offset);
+  int addParticleType(SeoParticleType? PARTICLE_TYPE) {
+    fbBuilder.addInt8(23, PARTICLE_TYPE?.value);
     return fbBuilder.offset;
   }
-  int addObSetIdOffset(int? offset) {
+  int addSenEnergyLevelOffset(int? offset) {
     fbBuilder.addOffset(24, offset);
     return fbBuilder.offset;
   }
-  int addParticleTypeOffset(int? offset) {
+  int addObSetIdOffset(int? offset) {
     fbBuilder.addOffset(25, offset);
     return fbBuilder.offset;
   }
@@ -183,28 +384,36 @@ class SEOBuilder {
     fbBuilder.addOffset(26, offset);
     return fbBuilder.offset;
   }
-  int addSeoListOffset(int? offset) {
+  int addValuesOffset(int? offset) {
     fbBuilder.addOffset(27, offset);
     return fbBuilder.offset;
   }
-  int addQualityOffset(int? offset) {
+  int addUncertaintiesOffset(int? offset) {
     fbBuilder.addOffset(28, offset);
     return fbBuilder.offset;
   }
-  int addDescriptionOffset(int? offset) {
+  int addUnitsOffset(int? offset) {
     fbBuilder.addOffset(29, offset);
     return fbBuilder.offset;
   }
-  int addDescriptorOffset(int? offset) {
+  int addQualityOffset(int? offset) {
     fbBuilder.addOffset(30, offset);
     return fbBuilder.offset;
   }
-  int addSrcTypsOffset(int? offset) {
+  int addDescriptionOffset(int? offset) {
     fbBuilder.addOffset(31, offset);
     return fbBuilder.offset;
   }
-  int addSrcIdsOffset(int? offset) {
+  int addDescriptorOffset(int? offset) {
     fbBuilder.addOffset(32, offset);
+    return fbBuilder.offset;
+  }
+  int addSrcTypsOffset(int? offset) {
+    fbBuilder.addOffset(33, offset);
+    return fbBuilder.offset;
+  }
+  int addSrcIdsOffset(int? offset) {
+    fbBuilder.addOffset(34, offset);
     return fbBuilder.offset;
   }
 
@@ -218,7 +427,7 @@ class SEOObjectBuilder extends fb.ObjectBuilder {
   final String? _MSG_TYPE;
   final String? _GEN_SYSTEM;
   final String? _EXTERNAL_ID;
-  final String? _DATA_TYPE;
+  final SeoDataType? _DATA_TYPE;
   final String? _GEN_TIME;
   final bool? _FORECAST;
   final bool? _DERIVED;
@@ -226,7 +435,7 @@ class SEOObjectBuilder extends fb.ObjectBuilder {
   final String? _ORIG_OBJECT_ID;
   final String? _ID_SENSOR;
   final String? _ORIG_SENSOR_ID;
-  final String? _OBSERVATORY_TYPE;
+  final SeoObservatoryType? _OBSERVATORY_TYPE;
   final String? _OBSERVATORY_NAME;
   final String? _OBSERVATORY_NOTES;
   final String? _INSTRUMENT_TYPE;
@@ -234,14 +443,16 @@ class SEOObjectBuilder extends fb.ObjectBuilder {
   final double? _LON;
   final double? _ALT;
   final String? _SEN_REFERENCE_FRAME;
-  final List<String>? _SEN_POS;
-  final List<String>? _SEN_VEL;
+  final List<double>? _SEN_POS;
+  final List<double>? _SEN_VEL;
   final String? _MEAS_TYPE;
+  final SeoParticleType? _PARTICLE_TYPE;
   final String? _SEN_ENERGY_LEVEL;
   final String? _OB_SET_ID;
-  final String? _PARTICLE_TYPE;
   final String? _OB_TIME;
-  final List<String>? _SEO_LIST;
+  final List<double>? _VALUES;
+  final List<double>? _UNCERTAINTIES;
+  final String? _UNITS;
   final String? _QUALITY;
   final String? _DESCRIPTION;
   final String? _DESCRIPTOR;
@@ -253,7 +464,7 @@ class SEOObjectBuilder extends fb.ObjectBuilder {
     String? MSG_TYPE,
     String? GEN_SYSTEM,
     String? EXTERNAL_ID,
-    String? DATA_TYPE,
+    SeoDataType? DATA_TYPE,
     String? GEN_TIME,
     bool? FORECAST,
     bool? DERIVED,
@@ -261,7 +472,7 @@ class SEOObjectBuilder extends fb.ObjectBuilder {
     String? ORIG_OBJECT_ID,
     String? ID_SENSOR,
     String? ORIG_SENSOR_ID,
-    String? OBSERVATORY_TYPE,
+    SeoObservatoryType? OBSERVATORY_TYPE,
     String? OBSERVATORY_NAME,
     String? OBSERVATORY_NOTES,
     String? INSTRUMENT_TYPE,
@@ -269,14 +480,16 @@ class SEOObjectBuilder extends fb.ObjectBuilder {
     double? LON,
     double? ALT,
     String? SEN_REFERENCE_FRAME,
-    List<String>? SEN_POS,
-    List<String>? SEN_VEL,
+    List<double>? SEN_POS,
+    List<double>? SEN_VEL,
     String? MEAS_TYPE,
+    SeoParticleType? PARTICLE_TYPE,
     String? SEN_ENERGY_LEVEL,
     String? OB_SET_ID,
-    String? PARTICLE_TYPE,
     String? OB_TIME,
-    List<String>? SEO_LIST,
+    List<double>? VALUES,
+    List<double>? UNCERTAINTIES,
+    String? UNITS,
     String? QUALITY,
     String? DESCRIPTION,
     String? DESCRIPTOR,
@@ -306,11 +519,13 @@ class SEOObjectBuilder extends fb.ObjectBuilder {
         _SEN_POS = SEN_POS,
         _SEN_VEL = SEN_VEL,
         _MEAS_TYPE = MEAS_TYPE,
+        _PARTICLE_TYPE = PARTICLE_TYPE,
         _SEN_ENERGY_LEVEL = SEN_ENERGY_LEVEL,
         _OB_SET_ID = OB_SET_ID,
-        _PARTICLE_TYPE = PARTICLE_TYPE,
         _OB_TIME = OB_TIME,
-        _SEO_LIST = SEO_LIST,
+        _VALUES = VALUES,
+        _UNCERTAINTIES = UNCERTAINTIES,
+        _UNITS = UNITS,
         _QUALITY = QUALITY,
         _DESCRIPTION = DESCRIPTION,
         _DESCRIPTOR = DESCRIPTOR,
@@ -328,8 +543,6 @@ class SEOObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_GEN_SYSTEM!);
     final int? EXTERNAL_IDOffset = _EXTERNAL_ID == null ? null
         : fbBuilder.writeString(_EXTERNAL_ID!);
-    final int? DATA_TYPEOffset = _DATA_TYPE == null ? null
-        : fbBuilder.writeString(_DATA_TYPE!);
     final int? GEN_TIMEOffset = _GEN_TIME == null ? null
         : fbBuilder.writeString(_GEN_TIME!);
     final int? ORIG_OBJECT_IDOffset = _ORIG_OBJECT_ID == null ? null
@@ -338,8 +551,6 @@ class SEOObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ID_SENSOR!);
     final int? ORIG_SENSOR_IDOffset = _ORIG_SENSOR_ID == null ? null
         : fbBuilder.writeString(_ORIG_SENSOR_ID!);
-    final int? OBSERVATORY_TYPEOffset = _OBSERVATORY_TYPE == null ? null
-        : fbBuilder.writeString(_OBSERVATORY_TYPE!);
     final int? OBSERVATORY_NAMEOffset = _OBSERVATORY_NAME == null ? null
         : fbBuilder.writeString(_OBSERVATORY_NAME!);
     final int? OBSERVATORY_NOTESOffset = _OBSERVATORY_NOTES == null ? null
@@ -349,21 +560,23 @@ class SEOObjectBuilder extends fb.ObjectBuilder {
     final int? SEN_REFERENCE_FRAMEOffset = _SEN_REFERENCE_FRAME == null ? null
         : fbBuilder.writeString(_SEN_REFERENCE_FRAME!);
     final int? SEN_POSOffset = _SEN_POS == null ? null
-        : fbBuilder.writeList(_SEN_POS!.map(fbBuilder.writeString).toList());
+        : fbBuilder.writeListFloat64(_SEN_POS!);
     final int? SEN_VELOffset = _SEN_VEL == null ? null
-        : fbBuilder.writeList(_SEN_VEL!.map(fbBuilder.writeString).toList());
+        : fbBuilder.writeListFloat64(_SEN_VEL!);
     final int? MEAS_TYPEOffset = _MEAS_TYPE == null ? null
         : fbBuilder.writeString(_MEAS_TYPE!);
     final int? SEN_ENERGY_LEVELOffset = _SEN_ENERGY_LEVEL == null ? null
         : fbBuilder.writeString(_SEN_ENERGY_LEVEL!);
     final int? OB_SET_IDOffset = _OB_SET_ID == null ? null
         : fbBuilder.writeString(_OB_SET_ID!);
-    final int? PARTICLE_TYPEOffset = _PARTICLE_TYPE == null ? null
-        : fbBuilder.writeString(_PARTICLE_TYPE!);
     final int? OB_TIMEOffset = _OB_TIME == null ? null
         : fbBuilder.writeString(_OB_TIME!);
-    final int? SEO_LISTOffset = _SEO_LIST == null ? null
-        : fbBuilder.writeList(_SEO_LIST!.map(fbBuilder.writeString).toList());
+    final int? VALUESOffset = _VALUES == null ? null
+        : fbBuilder.writeListFloat64(_VALUES!);
+    final int? UNCERTAINTIESOffset = _UNCERTAINTIES == null ? null
+        : fbBuilder.writeListFloat64(_UNCERTAINTIES!);
+    final int? UNITSOffset = _UNITS == null ? null
+        : fbBuilder.writeString(_UNITS!);
     final int? QUALITYOffset = _QUALITY == null ? null
         : fbBuilder.writeString(_QUALITY!);
     final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
@@ -374,20 +587,20 @@ class SEOObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_SRC_TYPS!.map(fbBuilder.writeString).toList());
     final int? SRC_IDSOffset = _SRC_IDS == null ? null
         : fbBuilder.writeList(_SRC_IDS!.map(fbBuilder.writeString).toList());
-    fbBuilder.startTable(33);
+    fbBuilder.startTable(35);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, MSG_TYPEOffset);
     fbBuilder.addOffset(2, GEN_SYSTEMOffset);
     fbBuilder.addOffset(3, EXTERNAL_IDOffset);
-    fbBuilder.addOffset(4, DATA_TYPEOffset);
+    fbBuilder.addInt8(4, _DATA_TYPE?.value);
     fbBuilder.addOffset(5, GEN_TIMEOffset);
     fbBuilder.addBool(6, _FORECAST);
     fbBuilder.addBool(7, _DERIVED);
-    fbBuilder.addInt32(8, _SAT_NO);
+    fbBuilder.addUint32(8, _SAT_NO);
     fbBuilder.addOffset(9, ORIG_OBJECT_IDOffset);
     fbBuilder.addOffset(10, ID_SENSOROffset);
     fbBuilder.addOffset(11, ORIG_SENSOR_IDOffset);
-    fbBuilder.addOffset(12, OBSERVATORY_TYPEOffset);
+    fbBuilder.addInt8(12, _OBSERVATORY_TYPE?.value);
     fbBuilder.addOffset(13, OBSERVATORY_NAMEOffset);
     fbBuilder.addOffset(14, OBSERVATORY_NOTESOffset);
     fbBuilder.addOffset(15, INSTRUMENT_TYPEOffset);
@@ -398,16 +611,18 @@ class SEOObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(20, SEN_POSOffset);
     fbBuilder.addOffset(21, SEN_VELOffset);
     fbBuilder.addOffset(22, MEAS_TYPEOffset);
-    fbBuilder.addOffset(23, SEN_ENERGY_LEVELOffset);
-    fbBuilder.addOffset(24, OB_SET_IDOffset);
-    fbBuilder.addOffset(25, PARTICLE_TYPEOffset);
+    fbBuilder.addInt8(23, _PARTICLE_TYPE?.value);
+    fbBuilder.addOffset(24, SEN_ENERGY_LEVELOffset);
+    fbBuilder.addOffset(25, OB_SET_IDOffset);
     fbBuilder.addOffset(26, OB_TIMEOffset);
-    fbBuilder.addOffset(27, SEO_LISTOffset);
-    fbBuilder.addOffset(28, QUALITYOffset);
-    fbBuilder.addOffset(29, DESCRIPTIONOffset);
-    fbBuilder.addOffset(30, DESCRIPTOROffset);
-    fbBuilder.addOffset(31, SRC_TYPSOffset);
-    fbBuilder.addOffset(32, SRC_IDSOffset);
+    fbBuilder.addOffset(27, VALUESOffset);
+    fbBuilder.addOffset(28, UNCERTAINTIESOffset);
+    fbBuilder.addOffset(29, UNITSOffset);
+    fbBuilder.addOffset(30, QUALITYOffset);
+    fbBuilder.addOffset(31, DESCRIPTIONOffset);
+    fbBuilder.addOffset(32, DESCRIPTOROffset);
+    fbBuilder.addOffset(33, SRC_TYPSOffset);
+    fbBuilder.addOffset(34, SRC_IDSOffset);
     return fbBuilder.endTable();
   }
 

@@ -19,6 +19,7 @@ public struct SEO : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public SEO __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Unique identifier
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,6 +27,7 @@ public struct SEO : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
+  /// Message type code
   public string MSG_TYPE { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetMSG_TYPEBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -33,6 +35,7 @@ public struct SEO : IFlatbufferObject
   public ArraySegment<byte>? GetMSG_TYPEBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetMSG_TYPEArray() { return __p.__vector_as_array<byte>(6); }
+  /// Generating system
   public string GEN_SYSTEM { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetGEN_SYSTEMBytes() { return __p.__vector_as_span<byte>(8, 1); }
@@ -40,6 +43,7 @@ public struct SEO : IFlatbufferObject
   public ArraySegment<byte>? GetGEN_SYSTEMBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetGEN_SYSTEMArray() { return __p.__vector_as_array<byte>(8); }
+  /// External reference identifier
   public string EXTERNAL_ID { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetEXTERNAL_IDBytes() { return __p.__vector_as_span<byte>(10, 1); }
@@ -47,13 +51,9 @@ public struct SEO : IFlatbufferObject
   public ArraySegment<byte>? GetEXTERNAL_IDBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
   public byte[] GetEXTERNAL_IDArray() { return __p.__vector_as_array<byte>(10); }
-  public string DATA_TYPE { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetDATA_TYPEBytes() { return __p.__vector_as_span<byte>(12, 1); }
-#else
-  public ArraySegment<byte>? GetDATA_TYPEBytes() { return __p.__vector_as_arraysegment(12); }
-#endif
-  public byte[] GetDATA_TYPEArray() { return __p.__vector_as_array<byte>(12); }
+  /// Type of environmental data
+  public seoDataType DATA_TYPE { get { int o = __p.__offset(12); return o != 0 ? (seoDataType)__p.bb.GetSbyte(o + __p.bb_pos) : seoDataType.PARTICLE_COUNT; } }
+  /// Generation time (ISO 8601)
   public string GEN_TIME { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetGEN_TIMEBytes() { return __p.__vector_as_span<byte>(14, 1); }
@@ -61,9 +61,13 @@ public struct SEO : IFlatbufferObject
   public ArraySegment<byte>? GetGEN_TIMEBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
   public byte[] GetGEN_TIMEArray() { return __p.__vector_as_array<byte>(14); }
+  /// True if this is a forecast
   public bool FORECAST { get { int o = __p.__offset(16); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// True if derived from other measurements
   public bool DERIVED { get { int o = __p.__offset(18); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  public int SAT_NO { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  /// Satellite catalog number (if space-based)
+  public uint SAT_NO { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// International designator
   public string ORIG_OBJECT_ID { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetORIG_OBJECT_IDBytes() { return __p.__vector_as_span<byte>(22, 1); }
@@ -71,6 +75,7 @@ public struct SEO : IFlatbufferObject
   public ArraySegment<byte>? GetORIG_OBJECT_IDBytes() { return __p.__vector_as_arraysegment(22); }
 #endif
   public byte[] GetORIG_OBJECT_IDArray() { return __p.__vector_as_array<byte>(22); }
+  /// Sensor identifier
   public string ID_SENSOR { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetID_SENSORBytes() { return __p.__vector_as_span<byte>(24, 1); }
@@ -78,6 +83,7 @@ public struct SEO : IFlatbufferObject
   public ArraySegment<byte>? GetID_SENSORBytes() { return __p.__vector_as_arraysegment(24); }
 #endif
   public byte[] GetID_SENSORArray() { return __p.__vector_as_array<byte>(24); }
+  /// Original sensor identifier
   public string ORIG_SENSOR_ID { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetORIG_SENSOR_IDBytes() { return __p.__vector_as_span<byte>(26, 1); }
@@ -85,13 +91,9 @@ public struct SEO : IFlatbufferObject
   public ArraySegment<byte>? GetORIG_SENSOR_IDBytes() { return __p.__vector_as_arraysegment(26); }
 #endif
   public byte[] GetORIG_SENSOR_IDArray() { return __p.__vector_as_array<byte>(26); }
-  public string OBSERVATORY_TYPE { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetOBSERVATORY_TYPEBytes() { return __p.__vector_as_span<byte>(28, 1); }
-#else
-  public ArraySegment<byte>? GetOBSERVATORY_TYPEBytes() { return __p.__vector_as_arraysegment(28); }
-#endif
-  public byte[] GetOBSERVATORY_TYPEArray() { return __p.__vector_as_array<byte>(28); }
+  /// Observatory type
+  public seoObservatoryType OBSERVATORY_TYPE { get { int o = __p.__offset(28); return o != 0 ? (seoObservatoryType)__p.bb.GetSbyte(o + __p.bb_pos) : seoObservatoryType.GROUND; } }
+  /// Observatory name
   public string OBSERVATORY_NAME { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetOBSERVATORY_NAMEBytes() { return __p.__vector_as_span<byte>(30, 1); }
@@ -99,6 +101,7 @@ public struct SEO : IFlatbufferObject
   public ArraySegment<byte>? GetOBSERVATORY_NAMEBytes() { return __p.__vector_as_arraysegment(30); }
 #endif
   public byte[] GetOBSERVATORY_NAMEArray() { return __p.__vector_as_array<byte>(30); }
+  /// Observatory notes
   public string OBSERVATORY_NOTES { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetOBSERVATORY_NOTESBytes() { return __p.__vector_as_span<byte>(32, 1); }
@@ -106,6 +109,7 @@ public struct SEO : IFlatbufferObject
   public ArraySegment<byte>? GetOBSERVATORY_NOTESBytes() { return __p.__vector_as_arraysegment(32); }
 #endif
   public byte[] GetOBSERVATORY_NOTESArray() { return __p.__vector_as_array<byte>(32); }
+  /// Instrument type description
   public string INSTRUMENT_TYPE { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetINSTRUMENT_TYPEBytes() { return __p.__vector_as_span<byte>(34, 1); }
@@ -113,9 +117,13 @@ public struct SEO : IFlatbufferObject
   public ArraySegment<byte>? GetINSTRUMENT_TYPEBytes() { return __p.__vector_as_arraysegment(34); }
 #endif
   public byte[] GetINSTRUMENT_TYPEArray() { return __p.__vector_as_array<byte>(34); }
+  /// Observatory latitude (degrees)
   public double LAT { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Observatory longitude (degrees)
   public double LON { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Observatory altitude (km)
   public double ALT { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sensor reference frame
   public string SEN_REFERENCE_FRAME { get { int o = __p.__offset(42); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetSEN_REFERENCE_FRAMEBytes() { return __p.__vector_as_span<byte>(42, 1); }
@@ -123,10 +131,25 @@ public struct SEO : IFlatbufferObject
   public ArraySegment<byte>? GetSEN_REFERENCE_FRAMEBytes() { return __p.__vector_as_arraysegment(42); }
 #endif
   public byte[] GetSEN_REFERENCE_FRAMEArray() { return __p.__vector_as_array<byte>(42); }
-  public string SEN_POS(int j) { int o = __p.__offset(44); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  /// Sensor position (km, 3 components)
+  public double SEN_POS(int j) { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
   public int SEN_POSLength { get { int o = __p.__offset(44); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string SEN_VEL(int j) { int o = __p.__offset(46); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+#if ENABLE_SPAN_T
+  public Span<double> GetSEN_POSBytes() { return __p.__vector_as_span<double>(44, 8); }
+#else
+  public ArraySegment<byte>? GetSEN_POSBytes() { return __p.__vector_as_arraysegment(44); }
+#endif
+  public double[] GetSEN_POSArray() { return __p.__vector_as_array<double>(44); }
+  /// Sensor velocity (km/s, 3 components)
+  public double SEN_VEL(int j) { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
   public int SEN_VELLength { get { int o = __p.__offset(46); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetSEN_VELBytes() { return __p.__vector_as_span<double>(46, 8); }
+#else
+  public ArraySegment<byte>? GetSEN_VELBytes() { return __p.__vector_as_arraysegment(46); }
+#endif
+  public double[] GetSEN_VELArray() { return __p.__vector_as_array<double>(46); }
+  /// Measurement type description
   public string MEAS_TYPE { get { int o = __p.__offset(48); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetMEAS_TYPEBytes() { return __p.__vector_as_span<byte>(48, 1); }
@@ -134,27 +157,25 @@ public struct SEO : IFlatbufferObject
   public ArraySegment<byte>? GetMEAS_TYPEBytes() { return __p.__vector_as_arraysegment(48); }
 #endif
   public byte[] GetMEAS_TYPEArray() { return __p.__vector_as_array<byte>(48); }
-  public string SEN_ENERGY_LEVEL { get { int o = __p.__offset(50); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Particle type measured
+  public seoParticleType PARTICLE_TYPE { get { int o = __p.__offset(50); return o != 0 ? (seoParticleType)__p.bb.GetSbyte(o + __p.bb_pos) : seoParticleType.PROTON; } }
+  /// Energy level or range (keV or MeV)
+  public string SEN_ENERGY_LEVEL { get { int o = __p.__offset(52); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSEN_ENERGY_LEVELBytes() { return __p.__vector_as_span<byte>(50, 1); }
+  public Span<byte> GetSEN_ENERGY_LEVELBytes() { return __p.__vector_as_span<byte>(52, 1); }
 #else
-  public ArraySegment<byte>? GetSEN_ENERGY_LEVELBytes() { return __p.__vector_as_arraysegment(50); }
+  public ArraySegment<byte>? GetSEN_ENERGY_LEVELBytes() { return __p.__vector_as_arraysegment(52); }
 #endif
-  public byte[] GetSEN_ENERGY_LEVELArray() { return __p.__vector_as_array<byte>(50); }
-  public string OB_SET_ID { get { int o = __p.__offset(52); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetSEN_ENERGY_LEVELArray() { return __p.__vector_as_array<byte>(52); }
+  /// Observation set identifier
+  public string OB_SET_ID { get { int o = __p.__offset(54); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetOB_SET_IDBytes() { return __p.__vector_as_span<byte>(52, 1); }
+  public Span<byte> GetOB_SET_IDBytes() { return __p.__vector_as_span<byte>(54, 1); }
 #else
-  public ArraySegment<byte>? GetOB_SET_IDBytes() { return __p.__vector_as_arraysegment(52); }
+  public ArraySegment<byte>? GetOB_SET_IDBytes() { return __p.__vector_as_arraysegment(54); }
 #endif
-  public byte[] GetOB_SET_IDArray() { return __p.__vector_as_array<byte>(52); }
-  public string PARTICLE_TYPE { get { int o = __p.__offset(54); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetPARTICLE_TYPEBytes() { return __p.__vector_as_span<byte>(54, 1); }
-#else
-  public ArraySegment<byte>? GetPARTICLE_TYPEBytes() { return __p.__vector_as_arraysegment(54); }
-#endif
-  public byte[] GetPARTICLE_TYPEArray() { return __p.__vector_as_array<byte>(54); }
+  public byte[] GetOB_SET_IDArray() { return __p.__vector_as_array<byte>(54); }
+  /// Observation time (ISO 8601)
   public string OB_TIME { get { int o = __p.__offset(56); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetOB_TIMEBytes() { return __p.__vector_as_span<byte>(56, 1); }
@@ -162,48 +183,77 @@ public struct SEO : IFlatbufferObject
   public ArraySegment<byte>? GetOB_TIMEBytes() { return __p.__vector_as_arraysegment(56); }
 #endif
   public byte[] GetOB_TIMEArray() { return __p.__vector_as_array<byte>(56); }
-  public string SEO_LIST(int j) { int o = __p.__offset(58); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int SEO_LISTLength { get { int o = __p.__offset(58); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string QUALITY { get { int o = __p.__offset(60); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Measurement values
+  public double VALUES(int j) { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int VALUESLength { get { int o = __p.__offset(58); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetQUALITYBytes() { return __p.__vector_as_span<byte>(60, 1); }
+  public Span<double> GetVALUESBytes() { return __p.__vector_as_span<double>(58, 8); }
 #else
-  public ArraySegment<byte>? GetQUALITYBytes() { return __p.__vector_as_arraysegment(60); }
+  public ArraySegment<byte>? GetVALUESBytes() { return __p.__vector_as_arraysegment(58); }
 #endif
-  public byte[] GetQUALITYArray() { return __p.__vector_as_array<byte>(60); }
-  public string DESCRIPTION { get { int o = __p.__offset(62); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public double[] GetVALUESArray() { return __p.__vector_as_array<double>(58); }
+  /// Measurement uncertainties
+  public double UNCERTAINTIES(int j) { int o = __p.__offset(60); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int UNCERTAINTIESLength { get { int o = __p.__offset(60); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDESCRIPTIONBytes() { return __p.__vector_as_span<byte>(62, 1); }
+  public Span<double> GetUNCERTAINTIESBytes() { return __p.__vector_as_span<double>(60, 8); }
 #else
-  public ArraySegment<byte>? GetDESCRIPTIONBytes() { return __p.__vector_as_arraysegment(62); }
+  public ArraySegment<byte>? GetUNCERTAINTIESBytes() { return __p.__vector_as_arraysegment(60); }
 #endif
-  public byte[] GetDESCRIPTIONArray() { return __p.__vector_as_array<byte>(62); }
-  public string DESCRIPTOR { get { int o = __p.__offset(64); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public double[] GetUNCERTAINTIESArray() { return __p.__vector_as_array<double>(60); }
+  /// Units for measurement values
+  public string UNITS { get { int o = __p.__offset(62); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDESCRIPTORBytes() { return __p.__vector_as_span<byte>(64, 1); }
+  public Span<byte> GetUNITSBytes() { return __p.__vector_as_span<byte>(62, 1); }
 #else
-  public ArraySegment<byte>? GetDESCRIPTORBytes() { return __p.__vector_as_arraysegment(64); }
+  public ArraySegment<byte>? GetUNITSBytes() { return __p.__vector_as_arraysegment(62); }
 #endif
-  public byte[] GetDESCRIPTORArray() { return __p.__vector_as_array<byte>(64); }
-  public string SRC_TYPS(int j) { int o = __p.__offset(66); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int SRC_TYPSLength { get { int o = __p.__offset(66); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string SRC_IDS(int j) { int o = __p.__offset(68); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int SRC_IDSLength { get { int o = __p.__offset(68); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public byte[] GetUNITSArray() { return __p.__vector_as_array<byte>(62); }
+  /// Data quality indicator
+  public string QUALITY { get { int o = __p.__offset(64); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetQUALITYBytes() { return __p.__vector_as_span<byte>(64, 1); }
+#else
+  public ArraySegment<byte>? GetQUALITYBytes() { return __p.__vector_as_arraysegment(64); }
+#endif
+  public byte[] GetQUALITYArray() { return __p.__vector_as_array<byte>(64); }
+  /// Description
+  public string DESCRIPTION { get { int o = __p.__offset(66); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDESCRIPTIONBytes() { return __p.__vector_as_span<byte>(66, 1); }
+#else
+  public ArraySegment<byte>? GetDESCRIPTIONBytes() { return __p.__vector_as_arraysegment(66); }
+#endif
+  public byte[] GetDESCRIPTIONArray() { return __p.__vector_as_array<byte>(66); }
+  /// Event descriptor
+  public string DESCRIPTOR { get { int o = __p.__offset(68); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDESCRIPTORBytes() { return __p.__vector_as_span<byte>(68, 1); }
+#else
+  public ArraySegment<byte>? GetDESCRIPTORBytes() { return __p.__vector_as_arraysegment(68); }
+#endif
+  public byte[] GetDESCRIPTORArray() { return __p.__vector_as_array<byte>(68); }
+  /// Source types
+  public string SRC_TYPS(int j) { int o = __p.__offset(70); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int SRC_TYPSLength { get { int o = __p.__offset(70); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Source identifiers
+  public string SRC_IDS(int j) { int o = __p.__offset(72); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int SRC_IDSLength { get { int o = __p.__offset(72); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<SEO> CreateSEO(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
       StringOffset MSG_TYPEOffset = default(StringOffset),
       StringOffset GEN_SYSTEMOffset = default(StringOffset),
       StringOffset EXTERNAL_IDOffset = default(StringOffset),
-      StringOffset DATA_TYPEOffset = default(StringOffset),
+      seoDataType DATA_TYPE = seoDataType.PARTICLE_COUNT,
       StringOffset GEN_TIMEOffset = default(StringOffset),
       bool FORECAST = false,
       bool DERIVED = false,
-      int SAT_NO = 0,
+      uint SAT_NO = 0,
       StringOffset ORIG_OBJECT_IDOffset = default(StringOffset),
       StringOffset ID_SENSOROffset = default(StringOffset),
       StringOffset ORIG_SENSOR_IDOffset = default(StringOffset),
-      StringOffset OBSERVATORY_TYPEOffset = default(StringOffset),
+      seoObservatoryType OBSERVATORY_TYPE = seoObservatoryType.GROUND,
       StringOffset OBSERVATORY_NAMEOffset = default(StringOffset),
       StringOffset OBSERVATORY_NOTESOffset = default(StringOffset),
       StringOffset INSTRUMENT_TYPEOffset = default(StringOffset),
@@ -214,17 +264,19 @@ public struct SEO : IFlatbufferObject
       VectorOffset SEN_POSOffset = default(VectorOffset),
       VectorOffset SEN_VELOffset = default(VectorOffset),
       StringOffset MEAS_TYPEOffset = default(StringOffset),
+      seoParticleType PARTICLE_TYPE = seoParticleType.PROTON,
       StringOffset SEN_ENERGY_LEVELOffset = default(StringOffset),
       StringOffset OB_SET_IDOffset = default(StringOffset),
-      StringOffset PARTICLE_TYPEOffset = default(StringOffset),
       StringOffset OB_TIMEOffset = default(StringOffset),
-      VectorOffset SEO_LISTOffset = default(VectorOffset),
+      VectorOffset VALUESOffset = default(VectorOffset),
+      VectorOffset UNCERTAINTIESOffset = default(VectorOffset),
+      StringOffset UNITSOffset = default(StringOffset),
       StringOffset QUALITYOffset = default(StringOffset),
       StringOffset DESCRIPTIONOffset = default(StringOffset),
       StringOffset DESCRIPTOROffset = default(StringOffset),
       VectorOffset SRC_TYPSOffset = default(VectorOffset),
       VectorOffset SRC_IDSOffset = default(VectorOffset)) {
-    builder.StartTable(33);
+    builder.StartTable(35);
     SEO.AddALT(builder, ALT);
     SEO.AddLON(builder, LON);
     SEO.AddLAT(builder, LAT);
@@ -233,9 +285,10 @@ public struct SEO : IFlatbufferObject
     SEO.AddDESCRIPTOR(builder, DESCRIPTOROffset);
     SEO.AddDESCRIPTION(builder, DESCRIPTIONOffset);
     SEO.AddQUALITY(builder, QUALITYOffset);
-    SEO.AddSEO_LIST(builder, SEO_LISTOffset);
+    SEO.AddUNITS(builder, UNITSOffset);
+    SEO.AddUNCERTAINTIES(builder, UNCERTAINTIESOffset);
+    SEO.AddVALUES(builder, VALUESOffset);
     SEO.AddOB_TIME(builder, OB_TIMEOffset);
-    SEO.AddPARTICLE_TYPE(builder, PARTICLE_TYPEOffset);
     SEO.AddOB_SET_ID(builder, OB_SET_IDOffset);
     SEO.AddSEN_ENERGY_LEVEL(builder, SEN_ENERGY_LEVELOffset);
     SEO.AddMEAS_TYPE(builder, MEAS_TYPEOffset);
@@ -245,36 +298,37 @@ public struct SEO : IFlatbufferObject
     SEO.AddINSTRUMENT_TYPE(builder, INSTRUMENT_TYPEOffset);
     SEO.AddOBSERVATORY_NOTES(builder, OBSERVATORY_NOTESOffset);
     SEO.AddOBSERVATORY_NAME(builder, OBSERVATORY_NAMEOffset);
-    SEO.AddOBSERVATORY_TYPE(builder, OBSERVATORY_TYPEOffset);
     SEO.AddORIG_SENSOR_ID(builder, ORIG_SENSOR_IDOffset);
     SEO.AddID_SENSOR(builder, ID_SENSOROffset);
     SEO.AddORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset);
     SEO.AddSAT_NO(builder, SAT_NO);
     SEO.AddGEN_TIME(builder, GEN_TIMEOffset);
-    SEO.AddDATA_TYPE(builder, DATA_TYPEOffset);
     SEO.AddEXTERNAL_ID(builder, EXTERNAL_IDOffset);
     SEO.AddGEN_SYSTEM(builder, GEN_SYSTEMOffset);
     SEO.AddMSG_TYPE(builder, MSG_TYPEOffset);
     SEO.AddID(builder, IDOffset);
+    SEO.AddPARTICLE_TYPE(builder, PARTICLE_TYPE);
+    SEO.AddOBSERVATORY_TYPE(builder, OBSERVATORY_TYPE);
     SEO.AddDERIVED(builder, DERIVED);
     SEO.AddFORECAST(builder, FORECAST);
+    SEO.AddDATA_TYPE(builder, DATA_TYPE);
     return SEO.EndSEO(builder);
   }
 
-  public static void StartSEO(FlatBufferBuilder builder) { builder.StartTable(33); }
+  public static void StartSEO(FlatBufferBuilder builder) { builder.StartTable(35); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddMSG_TYPE(FlatBufferBuilder builder, StringOffset MSG_TYPEOffset) { builder.AddOffset(1, MSG_TYPEOffset.Value, 0); }
   public static void AddGEN_SYSTEM(FlatBufferBuilder builder, StringOffset GEN_SYSTEMOffset) { builder.AddOffset(2, GEN_SYSTEMOffset.Value, 0); }
   public static void AddEXTERNAL_ID(FlatBufferBuilder builder, StringOffset EXTERNAL_IDOffset) { builder.AddOffset(3, EXTERNAL_IDOffset.Value, 0); }
-  public static void AddDATA_TYPE(FlatBufferBuilder builder, StringOffset DATA_TYPEOffset) { builder.AddOffset(4, DATA_TYPEOffset.Value, 0); }
+  public static void AddDATA_TYPE(FlatBufferBuilder builder, seoDataType DATA_TYPE) { builder.AddSbyte(4, (sbyte)DATA_TYPE, 0); }
   public static void AddGEN_TIME(FlatBufferBuilder builder, StringOffset GEN_TIMEOffset) { builder.AddOffset(5, GEN_TIMEOffset.Value, 0); }
   public static void AddFORECAST(FlatBufferBuilder builder, bool FORECAST) { builder.AddBool(6, FORECAST, false); }
   public static void AddDERIVED(FlatBufferBuilder builder, bool DERIVED) { builder.AddBool(7, DERIVED, false); }
-  public static void AddSAT_NO(FlatBufferBuilder builder, int SAT_NO) { builder.AddInt(8, SAT_NO, 0); }
+  public static void AddSAT_NO(FlatBufferBuilder builder, uint SAT_NO) { builder.AddUint(8, SAT_NO, 0); }
   public static void AddORIG_OBJECT_ID(FlatBufferBuilder builder, StringOffset ORIG_OBJECT_IDOffset) { builder.AddOffset(9, ORIG_OBJECT_IDOffset.Value, 0); }
   public static void AddID_SENSOR(FlatBufferBuilder builder, StringOffset ID_SENSOROffset) { builder.AddOffset(10, ID_SENSOROffset.Value, 0); }
   public static void AddORIG_SENSOR_ID(FlatBufferBuilder builder, StringOffset ORIG_SENSOR_IDOffset) { builder.AddOffset(11, ORIG_SENSOR_IDOffset.Value, 0); }
-  public static void AddOBSERVATORY_TYPE(FlatBufferBuilder builder, StringOffset OBSERVATORY_TYPEOffset) { builder.AddOffset(12, OBSERVATORY_TYPEOffset.Value, 0); }
+  public static void AddOBSERVATORY_TYPE(FlatBufferBuilder builder, seoObservatoryType OBSERVATORY_TYPE) { builder.AddSbyte(12, (sbyte)OBSERVATORY_TYPE, 0); }
   public static void AddOBSERVATORY_NAME(FlatBufferBuilder builder, StringOffset OBSERVATORY_NAMEOffset) { builder.AddOffset(13, OBSERVATORY_NAMEOffset.Value, 0); }
   public static void AddOBSERVATORY_NOTES(FlatBufferBuilder builder, StringOffset OBSERVATORY_NOTESOffset) { builder.AddOffset(14, OBSERVATORY_NOTESOffset.Value, 0); }
   public static void AddINSTRUMENT_TYPE(FlatBufferBuilder builder, StringOffset INSTRUMENT_TYPEOffset) { builder.AddOffset(15, INSTRUMENT_TYPEOffset.Value, 0); }
@@ -283,38 +337,45 @@ public struct SEO : IFlatbufferObject
   public static void AddALT(FlatBufferBuilder builder, double ALT) { builder.AddDouble(18, ALT, 0.0); }
   public static void AddSEN_REFERENCE_FRAME(FlatBufferBuilder builder, StringOffset SEN_REFERENCE_FRAMEOffset) { builder.AddOffset(19, SEN_REFERENCE_FRAMEOffset.Value, 0); }
   public static void AddSEN_POS(FlatBufferBuilder builder, VectorOffset SEN_POSOffset) { builder.AddOffset(20, SEN_POSOffset.Value, 0); }
-  public static VectorOffset CreateSEN_POSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateSEN_POSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateSEN_POSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateSEN_POSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartSEN_POSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static VectorOffset CreateSEN_POSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateSEN_POSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSEN_POSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSEN_POSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSEN_POSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
   public static void AddSEN_VEL(FlatBufferBuilder builder, VectorOffset SEN_VELOffset) { builder.AddOffset(21, SEN_VELOffset.Value, 0); }
-  public static VectorOffset CreateSEN_VELVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateSEN_VELVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateSEN_VELVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateSEN_VELVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartSEN_VELVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static VectorOffset CreateSEN_VELVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateSEN_VELVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSEN_VELVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSEN_VELVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSEN_VELVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
   public static void AddMEAS_TYPE(FlatBufferBuilder builder, StringOffset MEAS_TYPEOffset) { builder.AddOffset(22, MEAS_TYPEOffset.Value, 0); }
-  public static void AddSEN_ENERGY_LEVEL(FlatBufferBuilder builder, StringOffset SEN_ENERGY_LEVELOffset) { builder.AddOffset(23, SEN_ENERGY_LEVELOffset.Value, 0); }
-  public static void AddOB_SET_ID(FlatBufferBuilder builder, StringOffset OB_SET_IDOffset) { builder.AddOffset(24, OB_SET_IDOffset.Value, 0); }
-  public static void AddPARTICLE_TYPE(FlatBufferBuilder builder, StringOffset PARTICLE_TYPEOffset) { builder.AddOffset(25, PARTICLE_TYPEOffset.Value, 0); }
+  public static void AddPARTICLE_TYPE(FlatBufferBuilder builder, seoParticleType PARTICLE_TYPE) { builder.AddSbyte(23, (sbyte)PARTICLE_TYPE, 0); }
+  public static void AddSEN_ENERGY_LEVEL(FlatBufferBuilder builder, StringOffset SEN_ENERGY_LEVELOffset) { builder.AddOffset(24, SEN_ENERGY_LEVELOffset.Value, 0); }
+  public static void AddOB_SET_ID(FlatBufferBuilder builder, StringOffset OB_SET_IDOffset) { builder.AddOffset(25, OB_SET_IDOffset.Value, 0); }
   public static void AddOB_TIME(FlatBufferBuilder builder, StringOffset OB_TIMEOffset) { builder.AddOffset(26, OB_TIMEOffset.Value, 0); }
-  public static void AddSEO_LIST(FlatBufferBuilder builder, VectorOffset SEO_LISTOffset) { builder.AddOffset(27, SEO_LISTOffset.Value, 0); }
-  public static VectorOffset CreateSEO_LISTVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateSEO_LISTVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateSEO_LISTVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateSEO_LISTVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartSEO_LISTVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddQUALITY(FlatBufferBuilder builder, StringOffset QUALITYOffset) { builder.AddOffset(28, QUALITYOffset.Value, 0); }
-  public static void AddDESCRIPTION(FlatBufferBuilder builder, StringOffset DESCRIPTIONOffset) { builder.AddOffset(29, DESCRIPTIONOffset.Value, 0); }
-  public static void AddDESCRIPTOR(FlatBufferBuilder builder, StringOffset DESCRIPTOROffset) { builder.AddOffset(30, DESCRIPTOROffset.Value, 0); }
-  public static void AddSRC_TYPS(FlatBufferBuilder builder, VectorOffset SRC_TYPSOffset) { builder.AddOffset(31, SRC_TYPSOffset.Value, 0); }
+  public static void AddVALUES(FlatBufferBuilder builder, VectorOffset VALUESOffset) { builder.AddOffset(27, VALUESOffset.Value, 0); }
+  public static VectorOffset CreateVALUESVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateVALUESVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateVALUESVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateVALUESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartVALUESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddUNCERTAINTIES(FlatBufferBuilder builder, VectorOffset UNCERTAINTIESOffset) { builder.AddOffset(28, UNCERTAINTIESOffset.Value, 0); }
+  public static VectorOffset CreateUNCERTAINTIESVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateUNCERTAINTIESVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateUNCERTAINTIESVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateUNCERTAINTIESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartUNCERTAINTIESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddUNITS(FlatBufferBuilder builder, StringOffset UNITSOffset) { builder.AddOffset(29, UNITSOffset.Value, 0); }
+  public static void AddQUALITY(FlatBufferBuilder builder, StringOffset QUALITYOffset) { builder.AddOffset(30, QUALITYOffset.Value, 0); }
+  public static void AddDESCRIPTION(FlatBufferBuilder builder, StringOffset DESCRIPTIONOffset) { builder.AddOffset(31, DESCRIPTIONOffset.Value, 0); }
+  public static void AddDESCRIPTOR(FlatBufferBuilder builder, StringOffset DESCRIPTOROffset) { builder.AddOffset(32, DESCRIPTOROffset.Value, 0); }
+  public static void AddSRC_TYPS(FlatBufferBuilder builder, VectorOffset SRC_TYPSOffset) { builder.AddOffset(33, SRC_TYPSOffset.Value, 0); }
   public static VectorOffset CreateSRC_TYPSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateSRC_TYPSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSRC_TYPSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSRC_TYPSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartSRC_TYPSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddSRC_IDS(FlatBufferBuilder builder, VectorOffset SRC_IDSOffset) { builder.AddOffset(32, SRC_IDSOffset.Value, 0); }
+  public static void AddSRC_IDS(FlatBufferBuilder builder, VectorOffset SRC_IDSOffset) { builder.AddOffset(34, SRC_IDSOffset.Value, 0); }
   public static VectorOffset CreateSRC_IDSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateSRC_IDSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateSRC_IDSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
@@ -352,17 +413,20 @@ public struct SEO : IFlatbufferObject
     _o.LON = this.LON;
     _o.ALT = this.ALT;
     _o.SEN_REFERENCE_FRAME = this.SEN_REFERENCE_FRAME;
-    _o.SEN_POS = new List<string>();
+    _o.SEN_POS = new List<double>();
     for (var _j = 0; _j < this.SEN_POSLength; ++_j) {_o.SEN_POS.Add(this.SEN_POS(_j));}
-    _o.SEN_VEL = new List<string>();
+    _o.SEN_VEL = new List<double>();
     for (var _j = 0; _j < this.SEN_VELLength; ++_j) {_o.SEN_VEL.Add(this.SEN_VEL(_j));}
     _o.MEAS_TYPE = this.MEAS_TYPE;
+    _o.PARTICLE_TYPE = this.PARTICLE_TYPE;
     _o.SEN_ENERGY_LEVEL = this.SEN_ENERGY_LEVEL;
     _o.OB_SET_ID = this.OB_SET_ID;
-    _o.PARTICLE_TYPE = this.PARTICLE_TYPE;
     _o.OB_TIME = this.OB_TIME;
-    _o.SEO_LIST = new List<string>();
-    for (var _j = 0; _j < this.SEO_LISTLength; ++_j) {_o.SEO_LIST.Add(this.SEO_LIST(_j));}
+    _o.VALUES = new List<double>();
+    for (var _j = 0; _j < this.VALUESLength; ++_j) {_o.VALUES.Add(this.VALUES(_j));}
+    _o.UNCERTAINTIES = new List<double>();
+    for (var _j = 0; _j < this.UNCERTAINTIESLength; ++_j) {_o.UNCERTAINTIES.Add(this.UNCERTAINTIES(_j));}
+    _o.UNITS = this.UNITS;
     _o.QUALITY = this.QUALITY;
     _o.DESCRIPTION = this.DESCRIPTION;
     _o.DESCRIPTOR = this.DESCRIPTOR;
@@ -377,39 +441,39 @@ public struct SEO : IFlatbufferObject
     var _MSG_TYPE = _o.MSG_TYPE == null ? default(StringOffset) : builder.CreateString(_o.MSG_TYPE);
     var _GEN_SYSTEM = _o.GEN_SYSTEM == null ? default(StringOffset) : builder.CreateString(_o.GEN_SYSTEM);
     var _EXTERNAL_ID = _o.EXTERNAL_ID == null ? default(StringOffset) : builder.CreateString(_o.EXTERNAL_ID);
-    var _DATA_TYPE = _o.DATA_TYPE == null ? default(StringOffset) : builder.CreateString(_o.DATA_TYPE);
     var _GEN_TIME = _o.GEN_TIME == null ? default(StringOffset) : builder.CreateString(_o.GEN_TIME);
     var _ORIG_OBJECT_ID = _o.ORIG_OBJECT_ID == null ? default(StringOffset) : builder.CreateString(_o.ORIG_OBJECT_ID);
     var _ID_SENSOR = _o.ID_SENSOR == null ? default(StringOffset) : builder.CreateString(_o.ID_SENSOR);
     var _ORIG_SENSOR_ID = _o.ORIG_SENSOR_ID == null ? default(StringOffset) : builder.CreateString(_o.ORIG_SENSOR_ID);
-    var _OBSERVATORY_TYPE = _o.OBSERVATORY_TYPE == null ? default(StringOffset) : builder.CreateString(_o.OBSERVATORY_TYPE);
     var _OBSERVATORY_NAME = _o.OBSERVATORY_NAME == null ? default(StringOffset) : builder.CreateString(_o.OBSERVATORY_NAME);
     var _OBSERVATORY_NOTES = _o.OBSERVATORY_NOTES == null ? default(StringOffset) : builder.CreateString(_o.OBSERVATORY_NOTES);
     var _INSTRUMENT_TYPE = _o.INSTRUMENT_TYPE == null ? default(StringOffset) : builder.CreateString(_o.INSTRUMENT_TYPE);
     var _SEN_REFERENCE_FRAME = _o.SEN_REFERENCE_FRAME == null ? default(StringOffset) : builder.CreateString(_o.SEN_REFERENCE_FRAME);
     var _SEN_POS = default(VectorOffset);
     if (_o.SEN_POS != null) {
-      var __SEN_POS = new StringOffset[_o.SEN_POS.Count];
-      for (var _j = 0; _j < __SEN_POS.Length; ++_j) { __SEN_POS[_j] = builder.CreateString(_o.SEN_POS[_j]); }
+      var __SEN_POS = _o.SEN_POS.ToArray();
       _SEN_POS = CreateSEN_POSVector(builder, __SEN_POS);
     }
     var _SEN_VEL = default(VectorOffset);
     if (_o.SEN_VEL != null) {
-      var __SEN_VEL = new StringOffset[_o.SEN_VEL.Count];
-      for (var _j = 0; _j < __SEN_VEL.Length; ++_j) { __SEN_VEL[_j] = builder.CreateString(_o.SEN_VEL[_j]); }
+      var __SEN_VEL = _o.SEN_VEL.ToArray();
       _SEN_VEL = CreateSEN_VELVector(builder, __SEN_VEL);
     }
     var _MEAS_TYPE = _o.MEAS_TYPE == null ? default(StringOffset) : builder.CreateString(_o.MEAS_TYPE);
     var _SEN_ENERGY_LEVEL = _o.SEN_ENERGY_LEVEL == null ? default(StringOffset) : builder.CreateString(_o.SEN_ENERGY_LEVEL);
     var _OB_SET_ID = _o.OB_SET_ID == null ? default(StringOffset) : builder.CreateString(_o.OB_SET_ID);
-    var _PARTICLE_TYPE = _o.PARTICLE_TYPE == null ? default(StringOffset) : builder.CreateString(_o.PARTICLE_TYPE);
     var _OB_TIME = _o.OB_TIME == null ? default(StringOffset) : builder.CreateString(_o.OB_TIME);
-    var _SEO_LIST = default(VectorOffset);
-    if (_o.SEO_LIST != null) {
-      var __SEO_LIST = new StringOffset[_o.SEO_LIST.Count];
-      for (var _j = 0; _j < __SEO_LIST.Length; ++_j) { __SEO_LIST[_j] = builder.CreateString(_o.SEO_LIST[_j]); }
-      _SEO_LIST = CreateSEO_LISTVector(builder, __SEO_LIST);
+    var _VALUES = default(VectorOffset);
+    if (_o.VALUES != null) {
+      var __VALUES = _o.VALUES.ToArray();
+      _VALUES = CreateVALUESVector(builder, __VALUES);
     }
+    var _UNCERTAINTIES = default(VectorOffset);
+    if (_o.UNCERTAINTIES != null) {
+      var __UNCERTAINTIES = _o.UNCERTAINTIES.ToArray();
+      _UNCERTAINTIES = CreateUNCERTAINTIESVector(builder, __UNCERTAINTIES);
+    }
+    var _UNITS = _o.UNITS == null ? default(StringOffset) : builder.CreateString(_o.UNITS);
     var _QUALITY = _o.QUALITY == null ? default(StringOffset) : builder.CreateString(_o.QUALITY);
     var _DESCRIPTION = _o.DESCRIPTION == null ? default(StringOffset) : builder.CreateString(_o.DESCRIPTION);
     var _DESCRIPTOR = _o.DESCRIPTOR == null ? default(StringOffset) : builder.CreateString(_o.DESCRIPTOR);
@@ -431,7 +495,7 @@ public struct SEO : IFlatbufferObject
       _MSG_TYPE,
       _GEN_SYSTEM,
       _EXTERNAL_ID,
-      _DATA_TYPE,
+      _o.DATA_TYPE,
       _GEN_TIME,
       _o.FORECAST,
       _o.DERIVED,
@@ -439,7 +503,7 @@ public struct SEO : IFlatbufferObject
       _ORIG_OBJECT_ID,
       _ID_SENSOR,
       _ORIG_SENSOR_ID,
-      _OBSERVATORY_TYPE,
+      _o.OBSERVATORY_TYPE,
       _OBSERVATORY_NAME,
       _OBSERVATORY_NOTES,
       _INSTRUMENT_TYPE,
@@ -450,11 +514,13 @@ public struct SEO : IFlatbufferObject
       _SEN_POS,
       _SEN_VEL,
       _MEAS_TYPE,
+      _o.PARTICLE_TYPE,
       _SEN_ENERGY_LEVEL,
       _OB_SET_ID,
-      _PARTICLE_TYPE,
       _OB_TIME,
-      _SEO_LIST,
+      _VALUES,
+      _UNCERTAINTIES,
+      _UNITS,
       _QUALITY,
       _DESCRIPTION,
       _DESCRIPTOR,
@@ -469,15 +535,15 @@ public class SEOT
   public string MSG_TYPE { get; set; }
   public string GEN_SYSTEM { get; set; }
   public string EXTERNAL_ID { get; set; }
-  public string DATA_TYPE { get; set; }
+  public seoDataType DATA_TYPE { get; set; }
   public string GEN_TIME { get; set; }
   public bool FORECAST { get; set; }
   public bool DERIVED { get; set; }
-  public int SAT_NO { get; set; }
+  public uint SAT_NO { get; set; }
   public string ORIG_OBJECT_ID { get; set; }
   public string ID_SENSOR { get; set; }
   public string ORIG_SENSOR_ID { get; set; }
-  public string OBSERVATORY_TYPE { get; set; }
+  public seoObservatoryType OBSERVATORY_TYPE { get; set; }
   public string OBSERVATORY_NAME { get; set; }
   public string OBSERVATORY_NOTES { get; set; }
   public string INSTRUMENT_TYPE { get; set; }
@@ -485,14 +551,16 @@ public class SEOT
   public double LON { get; set; }
   public double ALT { get; set; }
   public string SEN_REFERENCE_FRAME { get; set; }
-  public List<string> SEN_POS { get; set; }
-  public List<string> SEN_VEL { get; set; }
+  public List<double> SEN_POS { get; set; }
+  public List<double> SEN_VEL { get; set; }
   public string MEAS_TYPE { get; set; }
+  public seoParticleType PARTICLE_TYPE { get; set; }
   public string SEN_ENERGY_LEVEL { get; set; }
   public string OB_SET_ID { get; set; }
-  public string PARTICLE_TYPE { get; set; }
   public string OB_TIME { get; set; }
-  public List<string> SEO_LIST { get; set; }
+  public List<double> VALUES { get; set; }
+  public List<double> UNCERTAINTIES { get; set; }
+  public string UNITS { get; set; }
   public string QUALITY { get; set; }
   public string DESCRIPTION { get; set; }
   public string DESCRIPTOR { get; set; }
@@ -504,7 +572,7 @@ public class SEOT
     this.MSG_TYPE = null;
     this.GEN_SYSTEM = null;
     this.EXTERNAL_ID = null;
-    this.DATA_TYPE = null;
+    this.DATA_TYPE = seoDataType.PARTICLE_COUNT;
     this.GEN_TIME = null;
     this.FORECAST = false;
     this.DERIVED = false;
@@ -512,7 +580,7 @@ public class SEOT
     this.ORIG_OBJECT_ID = null;
     this.ID_SENSOR = null;
     this.ORIG_SENSOR_ID = null;
-    this.OBSERVATORY_TYPE = null;
+    this.OBSERVATORY_TYPE = seoObservatoryType.GROUND;
     this.OBSERVATORY_NAME = null;
     this.OBSERVATORY_NOTES = null;
     this.INSTRUMENT_TYPE = null;
@@ -523,11 +591,13 @@ public class SEOT
     this.SEN_POS = null;
     this.SEN_VEL = null;
     this.MEAS_TYPE = null;
+    this.PARTICLE_TYPE = seoParticleType.PROTON;
     this.SEN_ENERGY_LEVEL = null;
     this.OB_SET_ID = null;
-    this.PARTICLE_TYPE = null;
     this.OB_TIME = null;
-    this.SEO_LIST = null;
+    this.VALUES = null;
+    this.UNCERTAINTIES = null;
+    this.UNITS = null;
     this.QUALITY = null;
     this.DESCRIPTION = null;
     this.DESCRIPTOR = null;
@@ -554,15 +624,15 @@ static public class SEOVerify
       && verifier.VerifyString(tablePos, 6 /*MSG_TYPE*/, false)
       && verifier.VerifyString(tablePos, 8 /*GEN_SYSTEM*/, false)
       && verifier.VerifyString(tablePos, 10 /*EXTERNAL_ID*/, false)
-      && verifier.VerifyString(tablePos, 12 /*DATA_TYPE*/, false)
+      && verifier.VerifyField(tablePos, 12 /*DATA_TYPE*/, 1 /*seoDataType*/, 1, false)
       && verifier.VerifyString(tablePos, 14 /*GEN_TIME*/, false)
       && verifier.VerifyField(tablePos, 16 /*FORECAST*/, 1 /*bool*/, 1, false)
       && verifier.VerifyField(tablePos, 18 /*DERIVED*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyField(tablePos, 20 /*SAT_NO*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 20 /*SAT_NO*/, 4 /*uint*/, 4, false)
       && verifier.VerifyString(tablePos, 22 /*ORIG_OBJECT_ID*/, false)
       && verifier.VerifyString(tablePos, 24 /*ID_SENSOR*/, false)
       && verifier.VerifyString(tablePos, 26 /*ORIG_SENSOR_ID*/, false)
-      && verifier.VerifyString(tablePos, 28 /*OBSERVATORY_TYPE*/, false)
+      && verifier.VerifyField(tablePos, 28 /*OBSERVATORY_TYPE*/, 1 /*seoObservatoryType*/, 1, false)
       && verifier.VerifyString(tablePos, 30 /*OBSERVATORY_NAME*/, false)
       && verifier.VerifyString(tablePos, 32 /*OBSERVATORY_NOTES*/, false)
       && verifier.VerifyString(tablePos, 34 /*INSTRUMENT_TYPE*/, false)
@@ -570,19 +640,21 @@ static public class SEOVerify
       && verifier.VerifyField(tablePos, 38 /*LON*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 40 /*ALT*/, 8 /*double*/, 8, false)
       && verifier.VerifyString(tablePos, 42 /*SEN_REFERENCE_FRAME*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 44 /*SEN_POS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 46 /*SEN_VEL*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 44 /*SEN_POS*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 46 /*SEN_VEL*/, 8 /*double*/, false)
       && verifier.VerifyString(tablePos, 48 /*MEAS_TYPE*/, false)
-      && verifier.VerifyString(tablePos, 50 /*SEN_ENERGY_LEVEL*/, false)
-      && verifier.VerifyString(tablePos, 52 /*OB_SET_ID*/, false)
-      && verifier.VerifyString(tablePos, 54 /*PARTICLE_TYPE*/, false)
+      && verifier.VerifyField(tablePos, 50 /*PARTICLE_TYPE*/, 1 /*seoParticleType*/, 1, false)
+      && verifier.VerifyString(tablePos, 52 /*SEN_ENERGY_LEVEL*/, false)
+      && verifier.VerifyString(tablePos, 54 /*OB_SET_ID*/, false)
       && verifier.VerifyString(tablePos, 56 /*OB_TIME*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 58 /*SEO_LIST*/, false)
-      && verifier.VerifyString(tablePos, 60 /*QUALITY*/, false)
-      && verifier.VerifyString(tablePos, 62 /*DESCRIPTION*/, false)
-      && verifier.VerifyString(tablePos, 64 /*DESCRIPTOR*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 66 /*SRC_TYPS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 68 /*SRC_IDS*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 58 /*VALUES*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 60 /*UNCERTAINTIES*/, 8 /*double*/, false)
+      && verifier.VerifyString(tablePos, 62 /*UNITS*/, false)
+      && verifier.VerifyString(tablePos, 64 /*QUALITY*/, false)
+      && verifier.VerifyString(tablePos, 66 /*DESCRIPTION*/, false)
+      && verifier.VerifyString(tablePos, 68 /*DESCRIPTOR*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 70 /*SRC_TYPS*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 72 /*SRC_IDS*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

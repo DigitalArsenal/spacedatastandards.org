@@ -9,6 +9,258 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+pub enum driftRecordOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// GEO Drift History Record
+pub struct driftRecord<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for driftRecord<'a> {
+  type Inner = driftRecord<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> driftRecord<'a> {
+  pub const VT_EPOCH: flatbuffers::VOffsetT = 4;
+  pub const VT_DRIFT_RATE: flatbuffers::VOffsetT = 6;
+  pub const VT_MEAN_LONGITUDE: flatbuffers::VOffsetT = 8;
+  pub const VT_LONGITUDE_AMPLITUDE: flatbuffers::VOffsetT = 10;
+  pub const VT_ECCENTRICITY: flatbuffers::VOffsetT = 12;
+  pub const VT_INCLINATION: flatbuffers::VOffsetT = 14;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    driftRecord { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args driftRecordArgs<'args>
+  ) -> flatbuffers::WIPOffset<driftRecord<'bldr>> {
+    let mut builder = driftRecordBuilder::new(_fbb);
+    builder.add_INCLINATION(args.INCLINATION);
+    builder.add_ECCENTRICITY(args.ECCENTRICITY);
+    builder.add_LONGITUDE_AMPLITUDE(args.LONGITUDE_AMPLITUDE);
+    builder.add_MEAN_LONGITUDE(args.MEAN_LONGITUDE);
+    builder.add_DRIFT_RATE(args.DRIFT_RATE);
+    if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> driftRecordT {
+    let EPOCH = self.EPOCH().map(|x| {
+      x.to_string()
+    });
+    let DRIFT_RATE = self.DRIFT_RATE();
+    let MEAN_LONGITUDE = self.MEAN_LONGITUDE();
+    let LONGITUDE_AMPLITUDE = self.LONGITUDE_AMPLITUDE();
+    let ECCENTRICITY = self.ECCENTRICITY();
+    let INCLINATION = self.INCLINATION();
+    driftRecordT {
+      EPOCH,
+      DRIFT_RATE,
+      MEAN_LONGITUDE,
+      LONGITUDE_AMPLITUDE,
+      ECCENTRICITY,
+      INCLINATION,
+    }
+  }
+
+  /// Epoch of drift measurement (ISO 8601)
+  #[inline]
+  pub fn EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(driftRecord::VT_EPOCH, None)}
+  }
+  /// Longitude drift rate in degrees/day
+  #[inline]
+  pub fn DRIFT_RATE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(driftRecord::VT_DRIFT_RATE, Some(0.0)).unwrap()}
+  }
+  /// Mean longitude in degrees East
+  #[inline]
+  pub fn MEAN_LONGITUDE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(driftRecord::VT_MEAN_LONGITUDE, Some(0.0)).unwrap()}
+  }
+  /// Longitude oscillation amplitude in degrees
+  #[inline]
+  pub fn LONGITUDE_AMPLITUDE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(driftRecord::VT_LONGITUDE_AMPLITUDE, Some(0.0)).unwrap()}
+  }
+  /// Eccentricity
+  #[inline]
+  pub fn ECCENTRICITY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(driftRecord::VT_ECCENTRICITY, Some(0.0)).unwrap()}
+  }
+  /// Inclination in degrees
+  #[inline]
+  pub fn INCLINATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(driftRecord::VT_INCLINATION, Some(0.0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for driftRecord<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
+     .visit_field::<f64>("DRIFT_RATE", Self::VT_DRIFT_RATE, false)?
+     .visit_field::<f64>("MEAN_LONGITUDE", Self::VT_MEAN_LONGITUDE, false)?
+     .visit_field::<f64>("LONGITUDE_AMPLITUDE", Self::VT_LONGITUDE_AMPLITUDE, false)?
+     .visit_field::<f64>("ECCENTRICITY", Self::VT_ECCENTRICITY, false)?
+     .visit_field::<f64>("INCLINATION", Self::VT_INCLINATION, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct driftRecordArgs<'a> {
+    pub EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub DRIFT_RATE: f64,
+    pub MEAN_LONGITUDE: f64,
+    pub LONGITUDE_AMPLITUDE: f64,
+    pub ECCENTRICITY: f64,
+    pub INCLINATION: f64,
+}
+impl<'a> Default for driftRecordArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    driftRecordArgs {
+      EPOCH: None,
+      DRIFT_RATE: 0.0,
+      MEAN_LONGITUDE: 0.0,
+      LONGITUDE_AMPLITUDE: 0.0,
+      ECCENTRICITY: 0.0,
+      INCLINATION: 0.0,
+    }
+  }
+}
+
+pub struct driftRecordBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> driftRecordBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_EPOCH(&mut self, EPOCH: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(driftRecord::VT_EPOCH, EPOCH);
+  }
+  #[inline]
+  pub fn add_DRIFT_RATE(&mut self, DRIFT_RATE: f64) {
+    self.fbb_.push_slot::<f64>(driftRecord::VT_DRIFT_RATE, DRIFT_RATE, 0.0);
+  }
+  #[inline]
+  pub fn add_MEAN_LONGITUDE(&mut self, MEAN_LONGITUDE: f64) {
+    self.fbb_.push_slot::<f64>(driftRecord::VT_MEAN_LONGITUDE, MEAN_LONGITUDE, 0.0);
+  }
+  #[inline]
+  pub fn add_LONGITUDE_AMPLITUDE(&mut self, LONGITUDE_AMPLITUDE: f64) {
+    self.fbb_.push_slot::<f64>(driftRecord::VT_LONGITUDE_AMPLITUDE, LONGITUDE_AMPLITUDE, 0.0);
+  }
+  #[inline]
+  pub fn add_ECCENTRICITY(&mut self, ECCENTRICITY: f64) {
+    self.fbb_.push_slot::<f64>(driftRecord::VT_ECCENTRICITY, ECCENTRICITY, 0.0);
+  }
+  #[inline]
+  pub fn add_INCLINATION(&mut self, INCLINATION: f64) {
+    self.fbb_.push_slot::<f64>(driftRecord::VT_INCLINATION, INCLINATION, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> driftRecordBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    driftRecordBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<driftRecord<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for driftRecord<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("driftRecord");
+      ds.field("EPOCH", &self.EPOCH());
+      ds.field("DRIFT_RATE", &self.DRIFT_RATE());
+      ds.field("MEAN_LONGITUDE", &self.MEAN_LONGITUDE());
+      ds.field("LONGITUDE_AMPLITUDE", &self.LONGITUDE_AMPLITUDE());
+      ds.field("ECCENTRICITY", &self.ECCENTRICITY());
+      ds.field("INCLINATION", &self.INCLINATION());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct driftRecordT {
+  pub EPOCH: Option<String>,
+  pub DRIFT_RATE: f64,
+  pub MEAN_LONGITUDE: f64,
+  pub LONGITUDE_AMPLITUDE: f64,
+  pub ECCENTRICITY: f64,
+  pub INCLINATION: f64,
+}
+impl Default for driftRecordT {
+  fn default() -> Self {
+    Self {
+      EPOCH: None,
+      DRIFT_RATE: 0.0,
+      MEAN_LONGITUDE: 0.0,
+      LONGITUDE_AMPLITUDE: 0.0,
+      ECCENTRICITY: 0.0,
+      INCLINATION: 0.0,
+    }
+  }
+}
+impl driftRecordT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<driftRecord<'b>> {
+    let EPOCH = self.EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DRIFT_RATE = self.DRIFT_RATE;
+    let MEAN_LONGITUDE = self.MEAN_LONGITUDE;
+    let LONGITUDE_AMPLITUDE = self.LONGITUDE_AMPLITUDE;
+    let ECCENTRICITY = self.ECCENTRICITY;
+    let INCLINATION = self.INCLINATION;
+    driftRecord::create(_fbb, &driftRecordArgs{
+      EPOCH,
+      DRIFT_RATE,
+      MEAN_LONGITUDE,
+      LONGITUDE_AMPLITUDE,
+      ECCENTRICITY,
+      INCLINATION,
+    })
+  }
+}
 pub enum DFHOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -27,8 +279,20 @@ impl<'a> flatbuffers::Follow<'a> for DFH<'a> {
 
 impl<'a> DFH<'a> {
   pub const VT_ID: flatbuffers::VOffsetT = 4;
-  pub const VT_EFFECTIVE_UNTIL: flatbuffers::VOffsetT = 6;
-  pub const VT_DRIFT_RATE: flatbuffers::VOffsetT = 8;
+  pub const VT_SAT_NO: flatbuffers::VOffsetT = 6;
+  pub const VT_OBJECT_DESIGNATOR: flatbuffers::VOffsetT = 8;
+  pub const VT_OBJECT_NAME: flatbuffers::VOffsetT = 10;
+  pub const VT_START_TIME: flatbuffers::VOffsetT = 12;
+  pub const VT_END_TIME: flatbuffers::VOffsetT = 14;
+  pub const VT_EFFECTIVE_UNTIL: flatbuffers::VOffsetT = 16;
+  pub const VT_DRIFT_RATE: flatbuffers::VOffsetT = 18;
+  pub const VT_MEAN_LONGITUDE: flatbuffers::VOffsetT = 20;
+  pub const VT_SLOT_CENTER: flatbuffers::VOffsetT = 22;
+  pub const VT_SLOT_HALF_WIDTH: flatbuffers::VOffsetT = 24;
+  pub const VT_STATION_KEEPING: flatbuffers::VOffsetT = 26;
+  pub const VT_RECORDS: flatbuffers::VOffsetT = 28;
+  pub const VT_NUM_RECORDS: flatbuffers::VOffsetT = 30;
+  pub const VT_NOTES: flatbuffers::VOffsetT = 32;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -40,9 +304,21 @@ impl<'a> DFH<'a> {
     args: &'args DFHArgs<'args>
   ) -> flatbuffers::WIPOffset<DFH<'bldr>> {
     let mut builder = DFHBuilder::new(_fbb);
+    builder.add_SLOT_HALF_WIDTH(args.SLOT_HALF_WIDTH);
+    builder.add_SLOT_CENTER(args.SLOT_CENTER);
+    builder.add_MEAN_LONGITUDE(args.MEAN_LONGITUDE);
     builder.add_DRIFT_RATE(args.DRIFT_RATE);
+    if let Some(x) = args.NOTES { builder.add_NOTES(x); }
+    builder.add_NUM_RECORDS(args.NUM_RECORDS);
+    if let Some(x) = args.RECORDS { builder.add_RECORDS(x); }
     if let Some(x) = args.EFFECTIVE_UNTIL { builder.add_EFFECTIVE_UNTIL(x); }
+    if let Some(x) = args.END_TIME { builder.add_END_TIME(x); }
+    if let Some(x) = args.START_TIME { builder.add_START_TIME(x); }
+    if let Some(x) = args.OBJECT_NAME { builder.add_OBJECT_NAME(x); }
+    if let Some(x) = args.OBJECT_DESIGNATOR { builder.add_OBJECT_DESIGNATOR(x); }
+    builder.add_SAT_NO(args.SAT_NO);
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_STATION_KEEPING(args.STATION_KEEPING);
     builder.finish()
   }
 
@@ -50,17 +326,54 @@ impl<'a> DFH<'a> {
     let ID = self.ID().map(|x| {
       x.to_string()
     });
+    let SAT_NO = self.SAT_NO();
+    let OBJECT_DESIGNATOR = self.OBJECT_DESIGNATOR().map(|x| {
+      x.to_string()
+    });
+    let OBJECT_NAME = self.OBJECT_NAME().map(|x| {
+      x.to_string()
+    });
+    let START_TIME = self.START_TIME().map(|x| {
+      x.to_string()
+    });
+    let END_TIME = self.END_TIME().map(|x| {
+      x.to_string()
+    });
     let EFFECTIVE_UNTIL = self.EFFECTIVE_UNTIL().map(|x| {
       x.to_string()
     });
     let DRIFT_RATE = self.DRIFT_RATE();
+    let MEAN_LONGITUDE = self.MEAN_LONGITUDE();
+    let SLOT_CENTER = self.SLOT_CENTER();
+    let SLOT_HALF_WIDTH = self.SLOT_HALF_WIDTH();
+    let STATION_KEEPING = self.STATION_KEEPING();
+    let RECORDS = self.RECORDS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let NUM_RECORDS = self.NUM_RECORDS();
+    let NOTES = self.NOTES().map(|x| {
+      x.to_string()
+    });
     DFHT {
       ID,
+      SAT_NO,
+      OBJECT_DESIGNATOR,
+      OBJECT_NAME,
+      START_TIME,
+      END_TIME,
       EFFECTIVE_UNTIL,
       DRIFT_RATE,
+      MEAN_LONGITUDE,
+      SLOT_CENTER,
+      SLOT_HALF_WIDTH,
+      STATION_KEEPING,
+      RECORDS,
+      NUM_RECORDS,
+      NOTES,
     }
   }
 
+  /// Unique identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -68,6 +381,47 @@ impl<'a> DFH<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DFH::VT_ID, None)}
   }
+  /// Satellite number
+  #[inline]
+  pub fn SAT_NO(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(DFH::VT_SAT_NO, Some(0)).unwrap()}
+  }
+  /// Object designator
+  #[inline]
+  pub fn OBJECT_DESIGNATOR(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DFH::VT_OBJECT_DESIGNATOR, None)}
+  }
+  /// Object common name
+  #[inline]
+  pub fn OBJECT_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DFH::VT_OBJECT_NAME, None)}
+  }
+  /// History start time (ISO 8601)
+  #[inline]
+  pub fn START_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DFH::VT_START_TIME, None)}
+  }
+  /// History end time (ISO 8601)
+  #[inline]
+  pub fn END_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DFH::VT_END_TIME, None)}
+  }
+  /// Current effective until date (ISO 8601)
   #[inline]
   pub fn EFFECTIVE_UNTIL(&self) -> Option<&'a str> {
     // Safety:
@@ -75,12 +429,69 @@ impl<'a> DFH<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DFH::VT_EFFECTIVE_UNTIL, None)}
   }
+  /// Current drift rate in degrees/day
   #[inline]
   pub fn DRIFT_RATE(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(DFH::VT_DRIFT_RATE, Some(0.0)).unwrap()}
+  }
+  /// Current mean longitude in degrees East
+  #[inline]
+  pub fn MEAN_LONGITUDE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(DFH::VT_MEAN_LONGITUDE, Some(0.0)).unwrap()}
+  }
+  /// Longitude slot center in degrees East (if station-keeping)
+  #[inline]
+  pub fn SLOT_CENTER(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(DFH::VT_SLOT_CENTER, Some(0.0)).unwrap()}
+  }
+  /// Longitude slot half-width in degrees
+  #[inline]
+  pub fn SLOT_HALF_WIDTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(DFH::VT_SLOT_HALF_WIDTH, Some(0.0)).unwrap()}
+  }
+  /// Whether object is actively station-keeping
+  #[inline]
+  pub fn STATION_KEEPING(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(DFH::VT_STATION_KEEPING, Some(false)).unwrap()}
+  }
+  /// Historical drift records
+  #[inline]
+  pub fn RECORDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<driftRecord<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<driftRecord>>>>(DFH::VT_RECORDS, None)}
+  }
+  /// Number of records in history
+  #[inline]
+  pub fn NUM_RECORDS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(DFH::VT_NUM_RECORDS, Some(0)).unwrap()}
+  }
+  /// Additional notes
+  #[inline]
+  pub fn NOTES(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DFH::VT_NOTES, None)}
   }
 }
 
@@ -92,24 +503,60 @@ impl flatbuffers::Verifiable for DFH<'_> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
+     .visit_field::<u32>("SAT_NO", Self::VT_SAT_NO, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJECT_DESIGNATOR", Self::VT_OBJECT_DESIGNATOR, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJECT_NAME", Self::VT_OBJECT_NAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("START_TIME", Self::VT_START_TIME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("END_TIME", Self::VT_END_TIME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EFFECTIVE_UNTIL", Self::VT_EFFECTIVE_UNTIL, false)?
      .visit_field::<f64>("DRIFT_RATE", Self::VT_DRIFT_RATE, false)?
+     .visit_field::<f64>("MEAN_LONGITUDE", Self::VT_MEAN_LONGITUDE, false)?
+     .visit_field::<f64>("SLOT_CENTER", Self::VT_SLOT_CENTER, false)?
+     .visit_field::<f64>("SLOT_HALF_WIDTH", Self::VT_SLOT_HALF_WIDTH, false)?
+     .visit_field::<bool>("STATION_KEEPING", Self::VT_STATION_KEEPING, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<driftRecord>>>>("RECORDS", Self::VT_RECORDS, false)?
+     .visit_field::<u32>("NUM_RECORDS", Self::VT_NUM_RECORDS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NOTES", Self::VT_NOTES, false)?
      .finish();
     Ok(())
   }
 }
 pub struct DFHArgs<'a> {
     pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SAT_NO: u32,
+    pub OBJECT_DESIGNATOR: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub OBJECT_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub START_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub END_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub EFFECTIVE_UNTIL: Option<flatbuffers::WIPOffset<&'a str>>,
     pub DRIFT_RATE: f64,
+    pub MEAN_LONGITUDE: f64,
+    pub SLOT_CENTER: f64,
+    pub SLOT_HALF_WIDTH: f64,
+    pub STATION_KEEPING: bool,
+    pub RECORDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<driftRecord<'a>>>>>,
+    pub NUM_RECORDS: u32,
+    pub NOTES: Option<flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for DFHArgs<'a> {
   #[inline]
   fn default() -> Self {
     DFHArgs {
       ID: None,
+      SAT_NO: 0,
+      OBJECT_DESIGNATOR: None,
+      OBJECT_NAME: None,
+      START_TIME: None,
+      END_TIME: None,
       EFFECTIVE_UNTIL: None,
       DRIFT_RATE: 0.0,
+      MEAN_LONGITUDE: 0.0,
+      SLOT_CENTER: 0.0,
+      SLOT_HALF_WIDTH: 0.0,
+      STATION_KEEPING: false,
+      RECORDS: None,
+      NUM_RECORDS: 0,
+      NOTES: None,
     }
   }
 }
@@ -124,12 +571,60 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> DFHBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DFH::VT_ID, ID);
   }
   #[inline]
+  pub fn add_SAT_NO(&mut self, SAT_NO: u32) {
+    self.fbb_.push_slot::<u32>(DFH::VT_SAT_NO, SAT_NO, 0);
+  }
+  #[inline]
+  pub fn add_OBJECT_DESIGNATOR(&mut self, OBJECT_DESIGNATOR: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DFH::VT_OBJECT_DESIGNATOR, OBJECT_DESIGNATOR);
+  }
+  #[inline]
+  pub fn add_OBJECT_NAME(&mut self, OBJECT_NAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DFH::VT_OBJECT_NAME, OBJECT_NAME);
+  }
+  #[inline]
+  pub fn add_START_TIME(&mut self, START_TIME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DFH::VT_START_TIME, START_TIME);
+  }
+  #[inline]
+  pub fn add_END_TIME(&mut self, END_TIME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DFH::VT_END_TIME, END_TIME);
+  }
+  #[inline]
   pub fn add_EFFECTIVE_UNTIL(&mut self, EFFECTIVE_UNTIL: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DFH::VT_EFFECTIVE_UNTIL, EFFECTIVE_UNTIL);
   }
   #[inline]
   pub fn add_DRIFT_RATE(&mut self, DRIFT_RATE: f64) {
     self.fbb_.push_slot::<f64>(DFH::VT_DRIFT_RATE, DRIFT_RATE, 0.0);
+  }
+  #[inline]
+  pub fn add_MEAN_LONGITUDE(&mut self, MEAN_LONGITUDE: f64) {
+    self.fbb_.push_slot::<f64>(DFH::VT_MEAN_LONGITUDE, MEAN_LONGITUDE, 0.0);
+  }
+  #[inline]
+  pub fn add_SLOT_CENTER(&mut self, SLOT_CENTER: f64) {
+    self.fbb_.push_slot::<f64>(DFH::VT_SLOT_CENTER, SLOT_CENTER, 0.0);
+  }
+  #[inline]
+  pub fn add_SLOT_HALF_WIDTH(&mut self, SLOT_HALF_WIDTH: f64) {
+    self.fbb_.push_slot::<f64>(DFH::VT_SLOT_HALF_WIDTH, SLOT_HALF_WIDTH, 0.0);
+  }
+  #[inline]
+  pub fn add_STATION_KEEPING(&mut self, STATION_KEEPING: bool) {
+    self.fbb_.push_slot::<bool>(DFH::VT_STATION_KEEPING, STATION_KEEPING, false);
+  }
+  #[inline]
+  pub fn add_RECORDS(&mut self, RECORDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<driftRecord<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DFH::VT_RECORDS, RECORDS);
+  }
+  #[inline]
+  pub fn add_NUM_RECORDS(&mut self, NUM_RECORDS: u32) {
+    self.fbb_.push_slot::<u32>(DFH::VT_NUM_RECORDS, NUM_RECORDS, 0);
+  }
+  #[inline]
+  pub fn add_NOTES(&mut self, NOTES: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DFH::VT_NOTES, NOTES);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> DFHBuilder<'a, 'b, A> {
@@ -150,8 +645,20 @@ impl core::fmt::Debug for DFH<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
     let mut ds = f.debug_struct("DFH");
       ds.field("ID", &self.ID());
+      ds.field("SAT_NO", &self.SAT_NO());
+      ds.field("OBJECT_DESIGNATOR", &self.OBJECT_DESIGNATOR());
+      ds.field("OBJECT_NAME", &self.OBJECT_NAME());
+      ds.field("START_TIME", &self.START_TIME());
+      ds.field("END_TIME", &self.END_TIME());
       ds.field("EFFECTIVE_UNTIL", &self.EFFECTIVE_UNTIL());
       ds.field("DRIFT_RATE", &self.DRIFT_RATE());
+      ds.field("MEAN_LONGITUDE", &self.MEAN_LONGITUDE());
+      ds.field("SLOT_CENTER", &self.SLOT_CENTER());
+      ds.field("SLOT_HALF_WIDTH", &self.SLOT_HALF_WIDTH());
+      ds.field("STATION_KEEPING", &self.STATION_KEEPING());
+      ds.field("RECORDS", &self.RECORDS());
+      ds.field("NUM_RECORDS", &self.NUM_RECORDS());
+      ds.field("NOTES", &self.NOTES());
       ds.finish()
   }
 }
@@ -159,15 +666,39 @@ impl core::fmt::Debug for DFH<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct DFHT {
   pub ID: Option<String>,
+  pub SAT_NO: u32,
+  pub OBJECT_DESIGNATOR: Option<String>,
+  pub OBJECT_NAME: Option<String>,
+  pub START_TIME: Option<String>,
+  pub END_TIME: Option<String>,
   pub EFFECTIVE_UNTIL: Option<String>,
   pub DRIFT_RATE: f64,
+  pub MEAN_LONGITUDE: f64,
+  pub SLOT_CENTER: f64,
+  pub SLOT_HALF_WIDTH: f64,
+  pub STATION_KEEPING: bool,
+  pub RECORDS: Option<Vec<driftRecordT>>,
+  pub NUM_RECORDS: u32,
+  pub NOTES: Option<String>,
 }
 impl Default for DFHT {
   fn default() -> Self {
     Self {
       ID: None,
+      SAT_NO: 0,
+      OBJECT_DESIGNATOR: None,
+      OBJECT_NAME: None,
+      START_TIME: None,
+      END_TIME: None,
       EFFECTIVE_UNTIL: None,
       DRIFT_RATE: 0.0,
+      MEAN_LONGITUDE: 0.0,
+      SLOT_CENTER: 0.0,
+      SLOT_HALF_WIDTH: 0.0,
+      STATION_KEEPING: false,
+      RECORDS: None,
+      NUM_RECORDS: 0,
+      NOTES: None,
     }
   }
 }
@@ -179,14 +710,50 @@ impl DFHT {
     let ID = self.ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let SAT_NO = self.SAT_NO;
+    let OBJECT_DESIGNATOR = self.OBJECT_DESIGNATOR.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OBJECT_NAME = self.OBJECT_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let START_TIME = self.START_TIME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let END_TIME = self.END_TIME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     let EFFECTIVE_UNTIL = self.EFFECTIVE_UNTIL.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let DRIFT_RATE = self.DRIFT_RATE;
+    let MEAN_LONGITUDE = self.MEAN_LONGITUDE;
+    let SLOT_CENTER = self.SLOT_CENTER;
+    let SLOT_HALF_WIDTH = self.SLOT_HALF_WIDTH;
+    let STATION_KEEPING = self.STATION_KEEPING;
+    let RECORDS = self.RECORDS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let NUM_RECORDS = self.NUM_RECORDS;
+    let NOTES = self.NOTES.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     DFH::create(_fbb, &DFHArgs{
       ID,
+      SAT_NO,
+      OBJECT_DESIGNATOR,
+      OBJECT_NAME,
+      START_TIME,
+      END_TIME,
       EFFECTIVE_UNTIL,
       DRIFT_RATE,
+      MEAN_LONGITUDE,
+      SLOT_CENTER,
+      SLOT_HALF_WIDTH,
+      STATION_KEEPING,
+      RECORDS,
+      NUM_RECORDS,
+      NOTES,
     })
   }
 }

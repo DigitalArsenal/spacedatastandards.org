@@ -6,7 +6,7 @@ use \Google\FlatBuffers\Table;
 use \Google\FlatBuffers\ByteBuffer;
 use \Google\FlatBuffers\FlatBufferBuilder;
 
-/// Difference of Arrival
+/// Difference of Arrival Geolocation
 class DOA extends Table
 {
     /**
@@ -41,262 +41,318 @@ class DOA extends Table
         return $this;
     }
 
+    /// Unique identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Observation time (ISO 8601)
     public function getOB_TIME()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getID_SENSOR1()
+    /// Satellite catalog number
+    /**
+     * @return uint
+     */
+    public function getSAT_NO()
     {
         $o = $this->__offset(8);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
-    public function getID_SENSOR2()
+    /// International designator
+    public function getORIG_OBJECT_ID()
     {
         $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /**
-     * @return int
-     */
-    public function getSAT_NO()
+    /// On-orbit reference
+    public function getON_ORBIT()
     {
         $o = $this->__offset(12);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
-    }
-
-    public function getTASK_ID()
-    {
-        $o = $this->__offset(14);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getORIG_OBJECT_ID()
-    {
-        $o = $this->__offset(16);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getORIG_SENSOR_ID1()
-    {
-        $o = $this->__offset(18);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getORIG_SENSOR_ID2()
-    {
-        $o = $this->__offset(20);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
+    /// True if uncorrelated target
     /**
      * @return bool
      */
     public function getUCT()
     {
-        $o = $this->__offset(22);
+        $o = $this->__offset(14);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Task identifier
+    public function getTASK_ID()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Transaction identifier
+    public function getTRANSACTION_ID()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Collection mode
     /**
-     * @return double
+     * @return sbyte
      */
-    public function getSENSOR1_DELAY()
+    public function getCOLLECTION_MODE()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \doaCollectionMode::TDOA;
+    }
+
+    /// Sensor 1 identifier
+    public function getID_SENSOR1()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Sensor 1 original identifier
+    public function getORIG_SENSOR_ID1()
     {
         $o = $this->__offset(24);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /**
-     * @return double
-     */
-    public function getSENSOR2_DELAY()
-    {
-        $o = $this->__offset(26);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
+    /// Sensor 1 latitude (degrees)
     /**
      * @return double
      */
     public function getSENLAT()
     {
-        $o = $this->__offset(28);
+        $o = $this->__offset(26);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor 1 longitude (degrees)
     /**
      * @return double
      */
     public function getSENLON()
     {
-        $o = $this->__offset(30);
+        $o = $this->__offset(28);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor 1 altitude (km)
     /**
      * @return double
      */
     public function getSENALT()
     {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Sensor 1 processing delay (seconds)
+    /**
+     * @return double
+     */
+    public function getSENSOR1_DELAY()
+    {
         $o = $this->__offset(32);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor 2 identifier
+    public function getID_SENSOR2()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Sensor 2 original identifier
+    public function getORIG_SENSOR_ID2()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Sensor 2 latitude (degrees)
     /**
      * @return double
      */
     public function getSEN2LAT()
     {
-        $o = $this->__offset(34);
+        $o = $this->__offset(38);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor 2 longitude (degrees)
     /**
      * @return double
      */
     public function getSEN2LON()
     {
-        $o = $this->__offset(36);
+        $o = $this->__offset(40);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor 2 altitude (km)
     /**
      * @return double
      */
     public function getSEN2ALT()
     {
-        $o = $this->__offset(38);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getFREQUENCY()
-    {
-        $o = $this->__offset(40);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getBANDWIDTH()
-    {
         $o = $this->__offset(42);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor 2 processing delay (seconds)
     /**
      * @return double
      */
-    public function getDELTA_RANGE()
+    public function getSENSOR2_DELAY()
     {
         $o = $this->__offset(44);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Measured frequency (MHz)
     /**
      * @return double
      */
-    public function getDELTA_RANGE_UNC()
+    public function getFREQUENCY()
     {
         $o = $this->__offset(46);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Measurement bandwidth (MHz)
     /**
      * @return double
      */
-    public function getDELTA_RANGE_RATE()
+    public function getBANDWIDTH()
     {
         $o = $this->__offset(48);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /**
-     * @return double
-     */
-    public function getDELTA_RANGE_RATE_UNC()
-    {
-        $o = $this->__offset(50);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
+    /// Signal-to-noise ratio (dB)
     /**
      * @return double
      */
     public function getSNR()
     {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Differential range (km)
+    /**
+     * @return double
+     */
+    public function getDELTA_RANGE()
+    {
         $o = $this->__offset(52);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Differential range uncertainty (km, 1-sigma)
     /**
      * @return double
      */
-    public function getTDOA()
+    public function getDELTA_RANGE_UNC()
     {
         $o = $this->__offset(54);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Differential range rate (km/s)
     /**
      * @return double
      */
-    public function getTDOA_UNC()
+    public function getDELTA_RANGE_RATE()
     {
         $o = $this->__offset(56);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Differential range rate uncertainty (km/s, 1-sigma)
     /**
      * @return double
      */
-    public function getFDOA()
+    public function getDELTA_RANGE_RATE_UNC()
     {
         $o = $this->__offset(58);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Time difference of arrival (seconds)
     /**
      * @return double
      */
-    public function getFDOA_UNC()
+    public function getTDOA()
     {
         $o = $this->__offset(60);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    public function getCOLLECTION_MODE()
+    /// TDOA uncertainty (seconds, 1-sigma)
+    /**
+     * @return double
+     */
+    public function getTDOA_UNC()
     {
         $o = $this->__offset(62);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    public function getRAW_FILE_URI()
+    /// Frequency difference of arrival (Hz)
+    /**
+     * @return double
+     */
+    public function getFDOA()
     {
         $o = $this->__offset(64);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// FDOA uncertainty (Hz, 1-sigma)
+    /**
+     * @return double
+     */
+    public function getFDOA_UNC()
+    {
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Reference to raw data file
+    public function getRAW_FILE_URI()
+    {
+        $o = $this->__offset(68);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Event descriptor
+    public function getDESCRIPTOR()
+    {
+        $o = $this->__offset(70);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Associated tags
     /**
      * @param int offset
      * @return string
      */
     public function getTAGS($j)
     {
-        $o = $this->__offset(66);
+        $o = $this->__offset(72);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -305,26 +361,8 @@ class DOA extends Table
      */
     public function getTAGSLength()
     {
-        $o = $this->__offset(66);
-        return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
-    public function getON_ORBIT()
-    {
-        $o = $this->__offset(68);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getDESCRIPTOR()
-    {
-        $o = $this->__offset(70);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getTRANSACTION_ID()
-    {
         $o = $this->__offset(72);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
     /**
@@ -340,44 +378,44 @@ class DOA extends Table
      * @param FlatBufferBuilder $builder
      * @return DOA
      */
-    public static function createDOA(FlatBufferBuilder $builder, $ID, $OB_TIME, $ID_SENSOR1, $ID_SENSOR2, $SAT_NO, $TASK_ID, $ORIG_OBJECT_ID, $ORIG_SENSOR_ID1, $ORIG_SENSOR_ID2, $UCT, $SENSOR1_DELAY, $SENSOR2_DELAY, $SENLAT, $SENLON, $SENALT, $SEN2LAT, $SEN2LON, $SEN2ALT, $FREQUENCY, $BANDWIDTH, $DELTA_RANGE, $DELTA_RANGE_UNC, $DELTA_RANGE_RATE, $DELTA_RANGE_RATE_UNC, $SNR, $TDOA, $TDOA_UNC, $FDOA, $FDOA_UNC, $COLLECTION_MODE, $RAW_FILE_URI, $TAGS, $ON_ORBIT, $DESCRIPTOR, $TRANSACTION_ID)
+    public static function createDOA(FlatBufferBuilder $builder, $ID, $OB_TIME, $SAT_NO, $ORIG_OBJECT_ID, $ON_ORBIT, $UCT, $TASK_ID, $TRANSACTION_ID, $COLLECTION_MODE, $ID_SENSOR1, $ORIG_SENSOR_ID1, $SENLAT, $SENLON, $SENALT, $SENSOR1_DELAY, $ID_SENSOR2, $ORIG_SENSOR_ID2, $SEN2LAT, $SEN2LON, $SEN2ALT, $SENSOR2_DELAY, $FREQUENCY, $BANDWIDTH, $SNR, $DELTA_RANGE, $DELTA_RANGE_UNC, $DELTA_RANGE_RATE, $DELTA_RANGE_RATE_UNC, $TDOA, $TDOA_UNC, $FDOA, $FDOA_UNC, $RAW_FILE_URI, $DESCRIPTOR, $TAGS)
     {
         $builder->startObject(35);
         self::addID($builder, $ID);
         self::addOB_TIME($builder, $OB_TIME);
-        self::addID_SENSOR1($builder, $ID_SENSOR1);
-        self::addID_SENSOR2($builder, $ID_SENSOR2);
         self::addSAT_NO($builder, $SAT_NO);
-        self::addTASK_ID($builder, $TASK_ID);
         self::addORIG_OBJECT_ID($builder, $ORIG_OBJECT_ID);
-        self::addORIG_SENSOR_ID1($builder, $ORIG_SENSOR_ID1);
-        self::addORIG_SENSOR_ID2($builder, $ORIG_SENSOR_ID2);
+        self::addON_ORBIT($builder, $ON_ORBIT);
         self::addUCT($builder, $UCT);
-        self::addSENSOR1_DELAY($builder, $SENSOR1_DELAY);
-        self::addSENSOR2_DELAY($builder, $SENSOR2_DELAY);
+        self::addTASK_ID($builder, $TASK_ID);
+        self::addTRANSACTION_ID($builder, $TRANSACTION_ID);
+        self::addCOLLECTION_MODE($builder, $COLLECTION_MODE);
+        self::addID_SENSOR1($builder, $ID_SENSOR1);
+        self::addORIG_SENSOR_ID1($builder, $ORIG_SENSOR_ID1);
         self::addSENLAT($builder, $SENLAT);
         self::addSENLON($builder, $SENLON);
         self::addSENALT($builder, $SENALT);
+        self::addSENSOR1_DELAY($builder, $SENSOR1_DELAY);
+        self::addID_SENSOR2($builder, $ID_SENSOR2);
+        self::addORIG_SENSOR_ID2($builder, $ORIG_SENSOR_ID2);
         self::addSEN2LAT($builder, $SEN2LAT);
         self::addSEN2LON($builder, $SEN2LON);
         self::addSEN2ALT($builder, $SEN2ALT);
+        self::addSENSOR2_DELAY($builder, $SENSOR2_DELAY);
         self::addFREQUENCY($builder, $FREQUENCY);
         self::addBANDWIDTH($builder, $BANDWIDTH);
+        self::addSNR($builder, $SNR);
         self::addDELTA_RANGE($builder, $DELTA_RANGE);
         self::addDELTA_RANGE_UNC($builder, $DELTA_RANGE_UNC);
         self::addDELTA_RANGE_RATE($builder, $DELTA_RANGE_RATE);
         self::addDELTA_RANGE_RATE_UNC($builder, $DELTA_RANGE_RATE_UNC);
-        self::addSNR($builder, $SNR);
         self::addTDOA($builder, $TDOA);
         self::addTDOA_UNC($builder, $TDOA_UNC);
         self::addFDOA($builder, $FDOA);
         self::addFDOA_UNC($builder, $FDOA_UNC);
-        self::addCOLLECTION_MODE($builder, $COLLECTION_MODE);
         self::addRAW_FILE_URI($builder, $RAW_FILE_URI);
-        self::addTAGS($builder, $TAGS);
-        self::addON_ORBIT($builder, $ON_ORBIT);
         self::addDESCRIPTOR($builder, $DESCRIPTOR);
-        self::addTRANSACTION_ID($builder, $TRANSACTION_ID);
+        self::addTAGS($builder, $TAGS);
         $o = $builder->endObject();
         return $o;
     }
@@ -404,42 +442,12 @@ class DOA extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addID_SENSOR1(FlatBufferBuilder $builder, $ID_SENSOR1)
-    {
-        $builder->addOffsetX(2, $ID_SENSOR1, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addID_SENSOR2(FlatBufferBuilder $builder, $ID_SENSOR2)
-    {
-        $builder->addOffsetX(3, $ID_SENSOR2, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int
+     * @param uint
      * @return void
      */
     public static function addSAT_NO(FlatBufferBuilder $builder, $SAT_NO)
     {
-        $builder->addIntX(4, $SAT_NO, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addTASK_ID(FlatBufferBuilder $builder, $TASK_ID)
-    {
-        $builder->addOffsetX(5, $TASK_ID, 0);
+        $builder->addUintX(2, $SAT_NO, 0);
     }
 
     /**
@@ -449,7 +457,7 @@ class DOA extends Table
      */
     public static function addORIG_OBJECT_ID(FlatBufferBuilder $builder, $ORIG_OBJECT_ID)
     {
-        $builder->addOffsetX(6, $ORIG_OBJECT_ID, 0);
+        $builder->addOffsetX(3, $ORIG_OBJECT_ID, 0);
     }
 
     /**
@@ -457,19 +465,9 @@ class DOA extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addORIG_SENSOR_ID1(FlatBufferBuilder $builder, $ORIG_SENSOR_ID1)
+    public static function addON_ORBIT(FlatBufferBuilder $builder, $ON_ORBIT)
     {
-        $builder->addOffsetX(7, $ORIG_SENSOR_ID1, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addORIG_SENSOR_ID2(FlatBufferBuilder $builder, $ORIG_SENSOR_ID2)
-    {
-        $builder->addOffsetX(8, $ORIG_SENSOR_ID2, 0);
+        $builder->addOffsetX(4, $ON_ORBIT, 0);
     }
 
     /**
@@ -479,27 +477,57 @@ class DOA extends Table
      */
     public static function addUCT(FlatBufferBuilder $builder, $UCT)
     {
-        $builder->addBoolX(9, $UCT, false);
+        $builder->addBoolX(5, $UCT, false);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param double
+     * @param StringOffset
      * @return void
      */
-    public static function addSENSOR1_DELAY(FlatBufferBuilder $builder, $SENSOR1_DELAY)
+    public static function addTASK_ID(FlatBufferBuilder $builder, $TASK_ID)
     {
-        $builder->addDoubleX(10, $SENSOR1_DELAY, 0.0);
+        $builder->addOffsetX(6, $TASK_ID, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param double
+     * @param StringOffset
      * @return void
      */
-    public static function addSENSOR2_DELAY(FlatBufferBuilder $builder, $SENSOR2_DELAY)
+    public static function addTRANSACTION_ID(FlatBufferBuilder $builder, $TRANSACTION_ID)
     {
-        $builder->addDoubleX(11, $SENSOR2_DELAY, 0.0);
+        $builder->addOffsetX(7, $TRANSACTION_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addCOLLECTION_MODE(FlatBufferBuilder $builder, $COLLECTION_MODE)
+    {
+        $builder->addSbyteX(8, $COLLECTION_MODE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addID_SENSOR1(FlatBufferBuilder $builder, $ID_SENSOR1)
+    {
+        $builder->addOffsetX(9, $ID_SENSOR1, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addORIG_SENSOR_ID1(FlatBufferBuilder $builder, $ORIG_SENSOR_ID1)
+    {
+        $builder->addOffsetX(10, $ORIG_SENSOR_ID1, 0);
     }
 
     /**
@@ -509,7 +537,7 @@ class DOA extends Table
      */
     public static function addSENLAT(FlatBufferBuilder $builder, $SENLAT)
     {
-        $builder->addDoubleX(12, $SENLAT, 0.0);
+        $builder->addDoubleX(11, $SENLAT, 0.0);
     }
 
     /**
@@ -519,7 +547,7 @@ class DOA extends Table
      */
     public static function addSENLON(FlatBufferBuilder $builder, $SENLON)
     {
-        $builder->addDoubleX(13, $SENLON, 0.0);
+        $builder->addDoubleX(12, $SENLON, 0.0);
     }
 
     /**
@@ -529,7 +557,37 @@ class DOA extends Table
      */
     public static function addSENALT(FlatBufferBuilder $builder, $SENALT)
     {
-        $builder->addDoubleX(14, $SENALT, 0.0);
+        $builder->addDoubleX(13, $SENALT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addSENSOR1_DELAY(FlatBufferBuilder $builder, $SENSOR1_DELAY)
+    {
+        $builder->addDoubleX(14, $SENSOR1_DELAY, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addID_SENSOR2(FlatBufferBuilder $builder, $ID_SENSOR2)
+    {
+        $builder->addOffsetX(15, $ID_SENSOR2, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addORIG_SENSOR_ID2(FlatBufferBuilder $builder, $ORIG_SENSOR_ID2)
+    {
+        $builder->addOffsetX(16, $ORIG_SENSOR_ID2, 0);
     }
 
     /**
@@ -539,7 +597,7 @@ class DOA extends Table
      */
     public static function addSEN2LAT(FlatBufferBuilder $builder, $SEN2LAT)
     {
-        $builder->addDoubleX(15, $SEN2LAT, 0.0);
+        $builder->addDoubleX(17, $SEN2LAT, 0.0);
     }
 
     /**
@@ -549,7 +607,7 @@ class DOA extends Table
      */
     public static function addSEN2LON(FlatBufferBuilder $builder, $SEN2LON)
     {
-        $builder->addDoubleX(16, $SEN2LON, 0.0);
+        $builder->addDoubleX(18, $SEN2LON, 0.0);
     }
 
     /**
@@ -559,7 +617,17 @@ class DOA extends Table
      */
     public static function addSEN2ALT(FlatBufferBuilder $builder, $SEN2ALT)
     {
-        $builder->addDoubleX(17, $SEN2ALT, 0.0);
+        $builder->addDoubleX(19, $SEN2ALT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addSENSOR2_DELAY(FlatBufferBuilder $builder, $SENSOR2_DELAY)
+    {
+        $builder->addDoubleX(20, $SENSOR2_DELAY, 0.0);
     }
 
     /**
@@ -569,7 +637,7 @@ class DOA extends Table
      */
     public static function addFREQUENCY(FlatBufferBuilder $builder, $FREQUENCY)
     {
-        $builder->addDoubleX(18, $FREQUENCY, 0.0);
+        $builder->addDoubleX(21, $FREQUENCY, 0.0);
     }
 
     /**
@@ -579,47 +647,7 @@ class DOA extends Table
      */
     public static function addBANDWIDTH(FlatBufferBuilder $builder, $BANDWIDTH)
     {
-        $builder->addDoubleX(19, $BANDWIDTH, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addDELTA_RANGE(FlatBufferBuilder $builder, $DELTA_RANGE)
-    {
-        $builder->addDoubleX(20, $DELTA_RANGE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addDELTA_RANGE_UNC(FlatBufferBuilder $builder, $DELTA_RANGE_UNC)
-    {
-        $builder->addDoubleX(21, $DELTA_RANGE_UNC, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addDELTA_RANGE_RATE(FlatBufferBuilder $builder, $DELTA_RANGE_RATE)
-    {
-        $builder->addDoubleX(22, $DELTA_RANGE_RATE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addDELTA_RANGE_RATE_UNC(FlatBufferBuilder $builder, $DELTA_RANGE_RATE_UNC)
-    {
-        $builder->addDoubleX(23, $DELTA_RANGE_RATE_UNC, 0.0);
+        $builder->addDoubleX(22, $BANDWIDTH, 0.0);
     }
 
     /**
@@ -629,7 +657,47 @@ class DOA extends Table
      */
     public static function addSNR(FlatBufferBuilder $builder, $SNR)
     {
-        $builder->addDoubleX(24, $SNR, 0.0);
+        $builder->addDoubleX(23, $SNR, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDELTA_RANGE(FlatBufferBuilder $builder, $DELTA_RANGE)
+    {
+        $builder->addDoubleX(24, $DELTA_RANGE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDELTA_RANGE_UNC(FlatBufferBuilder $builder, $DELTA_RANGE_UNC)
+    {
+        $builder->addDoubleX(25, $DELTA_RANGE_UNC, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDELTA_RANGE_RATE(FlatBufferBuilder $builder, $DELTA_RANGE_RATE)
+    {
+        $builder->addDoubleX(26, $DELTA_RANGE_RATE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDELTA_RANGE_RATE_UNC(FlatBufferBuilder $builder, $DELTA_RANGE_RATE_UNC)
+    {
+        $builder->addDoubleX(27, $DELTA_RANGE_RATE_UNC, 0.0);
     }
 
     /**
@@ -639,7 +707,7 @@ class DOA extends Table
      */
     public static function addTDOA(FlatBufferBuilder $builder, $TDOA)
     {
-        $builder->addDoubleX(25, $TDOA, 0.0);
+        $builder->addDoubleX(28, $TDOA, 0.0);
     }
 
     /**
@@ -649,7 +717,7 @@ class DOA extends Table
      */
     public static function addTDOA_UNC(FlatBufferBuilder $builder, $TDOA_UNC)
     {
-        $builder->addDoubleX(26, $TDOA_UNC, 0.0);
+        $builder->addDoubleX(29, $TDOA_UNC, 0.0);
     }
 
     /**
@@ -659,7 +727,7 @@ class DOA extends Table
      */
     public static function addFDOA(FlatBufferBuilder $builder, $FDOA)
     {
-        $builder->addDoubleX(27, $FDOA, 0.0);
+        $builder->addDoubleX(30, $FDOA, 0.0);
     }
 
     /**
@@ -669,17 +737,7 @@ class DOA extends Table
      */
     public static function addFDOA_UNC(FlatBufferBuilder $builder, $FDOA_UNC)
     {
-        $builder->addDoubleX(28, $FDOA_UNC, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addCOLLECTION_MODE(FlatBufferBuilder $builder, $COLLECTION_MODE)
-    {
-        $builder->addOffsetX(29, $COLLECTION_MODE, 0);
+        $builder->addDoubleX(31, $FDOA_UNC, 0.0);
     }
 
     /**
@@ -689,7 +747,17 @@ class DOA extends Table
      */
     public static function addRAW_FILE_URI(FlatBufferBuilder $builder, $RAW_FILE_URI)
     {
-        $builder->addOffsetX(30, $RAW_FILE_URI, 0);
+        $builder->addOffsetX(32, $RAW_FILE_URI, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDESCRIPTOR(FlatBufferBuilder $builder, $DESCRIPTOR)
+    {
+        $builder->addOffsetX(33, $DESCRIPTOR, 0);
     }
 
     /**
@@ -699,7 +767,7 @@ class DOA extends Table
      */
     public static function addTAGS(FlatBufferBuilder $builder, $TAGS)
     {
-        $builder->addOffsetX(31, $TAGS, 0);
+        $builder->addOffsetX(34, $TAGS, 0);
     }
 
     /**
@@ -724,36 +792,6 @@ class DOA extends Table
     public static function startTAGSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addON_ORBIT(FlatBufferBuilder $builder, $ON_ORBIT)
-    {
-        $builder->addOffsetX(32, $ON_ORBIT, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addDESCRIPTOR(FlatBufferBuilder $builder, $DESCRIPTOR)
-    {
-        $builder->addOffsetX(33, $DESCRIPTOR, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addTRANSACTION_ID(FlatBufferBuilder $builder, $TRANSACTION_ID)
-    {
-        $builder->addOffsetX(34, $TRANSACTION_ID, 0);
     }
 
     /**

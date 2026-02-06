@@ -19,6 +19,7 @@ public struct ATD : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public ATD __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Unique identifier
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,6 +27,7 @@ public struct ATD : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
+  /// Attitude set identifier (groups time-series points)
   public string AS_ID { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetAS_IDBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -33,7 +35,9 @@ public struct ATD : IFlatbufferObject
   public ArraySegment<byte>? GetAS_IDBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetAS_IDArray() { return __p.__vector_as_array<byte>(6); }
-  public int SAT_NO { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  /// Satellite catalog number
+  public uint SAT_NO { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// International designator
   public string ORIG_OBJECT_ID { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetORIG_OBJECT_IDBytes() { return __p.__vector_as_span<byte>(10, 1); }
@@ -41,157 +45,178 @@ public struct ATD : IFlatbufferObject
   public ArraySegment<byte>? GetORIG_OBJECT_IDBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
   public byte[] GetORIG_OBJECT_IDArray() { return __p.__vector_as_array<byte>(10); }
-  public string TS { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Observation epoch (ISO 8601)
+  public string EPOCH { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTSBytes() { return __p.__vector_as_span<byte>(12, 1); }
+  public Span<byte> GetEPOCHBytes() { return __p.__vector_as_span<byte>(12, 1); }
 #else
-  public ArraySegment<byte>? GetTSBytes() { return __p.__vector_as_arraysegment(12); }
+  public ArraySegment<byte>? GetEPOCHBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
-  public byte[] GetTSArray() { return __p.__vector_as_array<byte>(12); }
-  public string MOTION_TYPE { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetEPOCHArray() { return __p.__vector_as_array<byte>(12); }
+  /// Attitude representation used
+  public attRepresentation REPRESENTATION { get { int o = __p.__offset(14); return o != 0 ? (attRepresentation)__p.bb.GetSbyte(o + __p.bb_pos) : attRepresentation.QUATERNION; } }
+  /// Motion characterization
+  public attMotionType MOTION_TYPE { get { int o = __p.__offset(16); return o != 0 ? (attMotionType)__p.bb.GetSbyte(o + __p.bb_pos) : attMotionType.STABILIZED; } }
+  /// Quaternion scalar component (q0 or qc)
+  public double QC { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Quaternion vector component 1
+  public double Q1 { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Quaternion vector component 2
+  public double Q2 { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Quaternion vector component 3
+  public double Q3 { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Quaternion scalar rate (rad/s)
+  public double QC_DOT { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Quaternion vector rate 1 (rad/s)
+  public double Q1_DOT { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Quaternion vector rate 2 (rad/s)
+  public double Q2_DOT { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Quaternion vector rate 3 (rad/s)
+  public double Q3_DOT { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Euler angle X (degrees)
+  public double X_ANGLE { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Euler angle Y (degrees)
+  public double Y_ANGLE { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Euler angle Z (degrees)
+  public double Z_ANGLE { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Angular rate about X (deg/s)
+  public double X_RATE { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Angular rate about Y (deg/s)
+  public double Y_RATE { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Angular rate about Z (deg/s)
+  public double Z_RATE { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Right ascension of spin axis (degrees)
+  public double RA { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Declination of spin axis (degrees)
+  public double DECLINATION { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Coning half-angle (degrees)
+  public double CONING_ANGLE { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Precession period (seconds)
+  public double PREC_PERIOD { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Spin period (seconds)
+  public double SPIN_PERIOD { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Attitude uncertainty (degrees, 1-sigma)
+  public double ATTITUDE_UNC { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Rate uncertainty (deg/s, 1-sigma)
+  public double RATE_UNC { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Data quality (0-9, 9=best)
+  public byte QUALITY { get { int o = __p.__offset(60); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  /// Reference frame for attitude
+  public string REF_FRAME { get { int o = __p.__offset(62); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetMOTION_TYPEBytes() { return __p.__vector_as_span<byte>(14, 1); }
+  public Span<byte> GetREF_FRAMEBytes() { return __p.__vector_as_span<byte>(62, 1); }
 #else
-  public ArraySegment<byte>? GetMOTION_TYPEBytes() { return __p.__vector_as_arraysegment(14); }
+  public ArraySegment<byte>? GetREF_FRAMEBytes() { return __p.__vector_as_arraysegment(62); }
 #endif
-  public byte[] GetMOTION_TYPEArray() { return __p.__vector_as_array<byte>(14); }
-  public double Q1 { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double Q2 { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double Q3 { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double QC { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double Q1_DOT { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double Q2_DOT { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double Q3_DOT { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double QC_DOT { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string X_ANGLE(int j) { int o = __p.__offset(32); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int X_ANGLELength { get { int o = __p.__offset(32); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string Y_ANGLE(int j) { int o = __p.__offset(34); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int Y_ANGLELength { get { int o = __p.__offset(34); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string Z_ANGLE(int j) { int o = __p.__offset(36); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int Z_ANGLELength { get { int o = __p.__offset(36); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string X_RATE(int j) { int o = __p.__offset(38); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int X_RATELength { get { int o = __p.__offset(38); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string Y_RATE(int j) { int o = __p.__offset(40); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int Y_RATELength { get { int o = __p.__offset(40); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string Z_RATE(int j) { int o = __p.__offset(42); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int Z_RATELength { get { int o = __p.__offset(42); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public double RA { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double DECLINATION { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double CONING_ANGLE { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double PREC_PERIOD { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SPIN_PERIOD { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public byte[] GetREF_FRAMEArray() { return __p.__vector_as_array<byte>(62); }
+  /// Sensor identifier providing the observation
+  public string SENSOR_ID { get { int o = __p.__offset(64); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSENSOR_IDBytes() { return __p.__vector_as_span<byte>(64, 1); }
+#else
+  public ArraySegment<byte>? GetSENSOR_IDBytes() { return __p.__vector_as_arraysegment(64); }
+#endif
+  public byte[] GetSENSOR_IDArray() { return __p.__vector_as_array<byte>(64); }
 
   public static Offset<ATD> CreateATD(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
       StringOffset AS_IDOffset = default(StringOffset),
-      int SAT_NO = 0,
+      uint SAT_NO = 0,
       StringOffset ORIG_OBJECT_IDOffset = default(StringOffset),
-      StringOffset TSOffset = default(StringOffset),
-      StringOffset MOTION_TYPEOffset = default(StringOffset),
+      StringOffset EPOCHOffset = default(StringOffset),
+      attRepresentation REPRESENTATION = attRepresentation.QUATERNION,
+      attMotionType MOTION_TYPE = attMotionType.STABILIZED,
+      double QC = 0.0,
       double Q1 = 0.0,
       double Q2 = 0.0,
       double Q3 = 0.0,
-      double QC = 0.0,
+      double QC_DOT = 0.0,
       double Q1_DOT = 0.0,
       double Q2_DOT = 0.0,
       double Q3_DOT = 0.0,
-      double QC_DOT = 0.0,
-      VectorOffset X_ANGLEOffset = default(VectorOffset),
-      VectorOffset Y_ANGLEOffset = default(VectorOffset),
-      VectorOffset Z_ANGLEOffset = default(VectorOffset),
-      VectorOffset X_RATEOffset = default(VectorOffset),
-      VectorOffset Y_RATEOffset = default(VectorOffset),
-      VectorOffset Z_RATEOffset = default(VectorOffset),
+      double X_ANGLE = 0.0,
+      double Y_ANGLE = 0.0,
+      double Z_ANGLE = 0.0,
+      double X_RATE = 0.0,
+      double Y_RATE = 0.0,
+      double Z_RATE = 0.0,
       double RA = 0.0,
       double DECLINATION = 0.0,
       double CONING_ANGLE = 0.0,
       double PREC_PERIOD = 0.0,
-      double SPIN_PERIOD = 0.0) {
-    builder.StartTable(25);
+      double SPIN_PERIOD = 0.0,
+      double ATTITUDE_UNC = 0.0,
+      double RATE_UNC = 0.0,
+      byte QUALITY = 0,
+      StringOffset REF_FRAMEOffset = default(StringOffset),
+      StringOffset SENSOR_IDOffset = default(StringOffset)) {
+    builder.StartTable(31);
+    ATD.AddRATE_UNC(builder, RATE_UNC);
+    ATD.AddATTITUDE_UNC(builder, ATTITUDE_UNC);
     ATD.AddSPIN_PERIOD(builder, SPIN_PERIOD);
     ATD.AddPREC_PERIOD(builder, PREC_PERIOD);
     ATD.AddCONING_ANGLE(builder, CONING_ANGLE);
     ATD.AddDECLINATION(builder, DECLINATION);
     ATD.AddRA(builder, RA);
-    ATD.AddQC_DOT(builder, QC_DOT);
+    ATD.AddZ_RATE(builder, Z_RATE);
+    ATD.AddY_RATE(builder, Y_RATE);
+    ATD.AddX_RATE(builder, X_RATE);
+    ATD.AddZ_ANGLE(builder, Z_ANGLE);
+    ATD.AddY_ANGLE(builder, Y_ANGLE);
+    ATD.AddX_ANGLE(builder, X_ANGLE);
     ATD.AddQ3_DOT(builder, Q3_DOT);
     ATD.AddQ2_DOT(builder, Q2_DOT);
     ATD.AddQ1_DOT(builder, Q1_DOT);
-    ATD.AddQC(builder, QC);
+    ATD.AddQC_DOT(builder, QC_DOT);
     ATD.AddQ3(builder, Q3);
     ATD.AddQ2(builder, Q2);
     ATD.AddQ1(builder, Q1);
-    ATD.AddZ_RATE(builder, Z_RATEOffset);
-    ATD.AddY_RATE(builder, Y_RATEOffset);
-    ATD.AddX_RATE(builder, X_RATEOffset);
-    ATD.AddZ_ANGLE(builder, Z_ANGLEOffset);
-    ATD.AddY_ANGLE(builder, Y_ANGLEOffset);
-    ATD.AddX_ANGLE(builder, X_ANGLEOffset);
-    ATD.AddMOTION_TYPE(builder, MOTION_TYPEOffset);
-    ATD.AddTS(builder, TSOffset);
+    ATD.AddQC(builder, QC);
+    ATD.AddSENSOR_ID(builder, SENSOR_IDOffset);
+    ATD.AddREF_FRAME(builder, REF_FRAMEOffset);
+    ATD.AddEPOCH(builder, EPOCHOffset);
     ATD.AddORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset);
     ATD.AddSAT_NO(builder, SAT_NO);
     ATD.AddAS_ID(builder, AS_IDOffset);
     ATD.AddID(builder, IDOffset);
+    ATD.AddQUALITY(builder, QUALITY);
+    ATD.AddMOTION_TYPE(builder, MOTION_TYPE);
+    ATD.AddREPRESENTATION(builder, REPRESENTATION);
     return ATD.EndATD(builder);
   }
 
-  public static void StartATD(FlatBufferBuilder builder) { builder.StartTable(25); }
+  public static void StartATD(FlatBufferBuilder builder) { builder.StartTable(31); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddAS_ID(FlatBufferBuilder builder, StringOffset AS_IDOffset) { builder.AddOffset(1, AS_IDOffset.Value, 0); }
-  public static void AddSAT_NO(FlatBufferBuilder builder, int SAT_NO) { builder.AddInt(2, SAT_NO, 0); }
+  public static void AddSAT_NO(FlatBufferBuilder builder, uint SAT_NO) { builder.AddUint(2, SAT_NO, 0); }
   public static void AddORIG_OBJECT_ID(FlatBufferBuilder builder, StringOffset ORIG_OBJECT_IDOffset) { builder.AddOffset(3, ORIG_OBJECT_IDOffset.Value, 0); }
-  public static void AddTS(FlatBufferBuilder builder, StringOffset TSOffset) { builder.AddOffset(4, TSOffset.Value, 0); }
-  public static void AddMOTION_TYPE(FlatBufferBuilder builder, StringOffset MOTION_TYPEOffset) { builder.AddOffset(5, MOTION_TYPEOffset.Value, 0); }
-  public static void AddQ1(FlatBufferBuilder builder, double Q1) { builder.AddDouble(6, Q1, 0.0); }
-  public static void AddQ2(FlatBufferBuilder builder, double Q2) { builder.AddDouble(7, Q2, 0.0); }
-  public static void AddQ3(FlatBufferBuilder builder, double Q3) { builder.AddDouble(8, Q3, 0.0); }
-  public static void AddQC(FlatBufferBuilder builder, double QC) { builder.AddDouble(9, QC, 0.0); }
-  public static void AddQ1_DOT(FlatBufferBuilder builder, double Q1_DOT) { builder.AddDouble(10, Q1_DOT, 0.0); }
-  public static void AddQ2_DOT(FlatBufferBuilder builder, double Q2_DOT) { builder.AddDouble(11, Q2_DOT, 0.0); }
-  public static void AddQ3_DOT(FlatBufferBuilder builder, double Q3_DOT) { builder.AddDouble(12, Q3_DOT, 0.0); }
-  public static void AddQC_DOT(FlatBufferBuilder builder, double QC_DOT) { builder.AddDouble(13, QC_DOT, 0.0); }
-  public static void AddX_ANGLE(FlatBufferBuilder builder, VectorOffset X_ANGLEOffset) { builder.AddOffset(14, X_ANGLEOffset.Value, 0); }
-  public static VectorOffset CreateX_ANGLEVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateX_ANGLEVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateX_ANGLEVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateX_ANGLEVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartX_ANGLEVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddY_ANGLE(FlatBufferBuilder builder, VectorOffset Y_ANGLEOffset) { builder.AddOffset(15, Y_ANGLEOffset.Value, 0); }
-  public static VectorOffset CreateY_ANGLEVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateY_ANGLEVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateY_ANGLEVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateY_ANGLEVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartY_ANGLEVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddZ_ANGLE(FlatBufferBuilder builder, VectorOffset Z_ANGLEOffset) { builder.AddOffset(16, Z_ANGLEOffset.Value, 0); }
-  public static VectorOffset CreateZ_ANGLEVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateZ_ANGLEVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateZ_ANGLEVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateZ_ANGLEVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartZ_ANGLEVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddX_RATE(FlatBufferBuilder builder, VectorOffset X_RATEOffset) { builder.AddOffset(17, X_RATEOffset.Value, 0); }
-  public static VectorOffset CreateX_RATEVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateX_RATEVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateX_RATEVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateX_RATEVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartX_RATEVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddY_RATE(FlatBufferBuilder builder, VectorOffset Y_RATEOffset) { builder.AddOffset(18, Y_RATEOffset.Value, 0); }
-  public static VectorOffset CreateY_RATEVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateY_RATEVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateY_RATEVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateY_RATEVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartY_RATEVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddZ_RATE(FlatBufferBuilder builder, VectorOffset Z_RATEOffset) { builder.AddOffset(19, Z_RATEOffset.Value, 0); }
-  public static VectorOffset CreateZ_RATEVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateZ_RATEVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateZ_RATEVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateZ_RATEVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartZ_RATEVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddRA(FlatBufferBuilder builder, double RA) { builder.AddDouble(20, RA, 0.0); }
-  public static void AddDECLINATION(FlatBufferBuilder builder, double DECLINATION) { builder.AddDouble(21, DECLINATION, 0.0); }
-  public static void AddCONING_ANGLE(FlatBufferBuilder builder, double CONING_ANGLE) { builder.AddDouble(22, CONING_ANGLE, 0.0); }
-  public static void AddPREC_PERIOD(FlatBufferBuilder builder, double PREC_PERIOD) { builder.AddDouble(23, PREC_PERIOD, 0.0); }
-  public static void AddSPIN_PERIOD(FlatBufferBuilder builder, double SPIN_PERIOD) { builder.AddDouble(24, SPIN_PERIOD, 0.0); }
+  public static void AddEPOCH(FlatBufferBuilder builder, StringOffset EPOCHOffset) { builder.AddOffset(4, EPOCHOffset.Value, 0); }
+  public static void AddREPRESENTATION(FlatBufferBuilder builder, attRepresentation REPRESENTATION) { builder.AddSbyte(5, (sbyte)REPRESENTATION, 0); }
+  public static void AddMOTION_TYPE(FlatBufferBuilder builder, attMotionType MOTION_TYPE) { builder.AddSbyte(6, (sbyte)MOTION_TYPE, 0); }
+  public static void AddQC(FlatBufferBuilder builder, double QC) { builder.AddDouble(7, QC, 0.0); }
+  public static void AddQ1(FlatBufferBuilder builder, double Q1) { builder.AddDouble(8, Q1, 0.0); }
+  public static void AddQ2(FlatBufferBuilder builder, double Q2) { builder.AddDouble(9, Q2, 0.0); }
+  public static void AddQ3(FlatBufferBuilder builder, double Q3) { builder.AddDouble(10, Q3, 0.0); }
+  public static void AddQC_DOT(FlatBufferBuilder builder, double QC_DOT) { builder.AddDouble(11, QC_DOT, 0.0); }
+  public static void AddQ1_DOT(FlatBufferBuilder builder, double Q1_DOT) { builder.AddDouble(12, Q1_DOT, 0.0); }
+  public static void AddQ2_DOT(FlatBufferBuilder builder, double Q2_DOT) { builder.AddDouble(13, Q2_DOT, 0.0); }
+  public static void AddQ3_DOT(FlatBufferBuilder builder, double Q3_DOT) { builder.AddDouble(14, Q3_DOT, 0.0); }
+  public static void AddX_ANGLE(FlatBufferBuilder builder, double X_ANGLE) { builder.AddDouble(15, X_ANGLE, 0.0); }
+  public static void AddY_ANGLE(FlatBufferBuilder builder, double Y_ANGLE) { builder.AddDouble(16, Y_ANGLE, 0.0); }
+  public static void AddZ_ANGLE(FlatBufferBuilder builder, double Z_ANGLE) { builder.AddDouble(17, Z_ANGLE, 0.0); }
+  public static void AddX_RATE(FlatBufferBuilder builder, double X_RATE) { builder.AddDouble(18, X_RATE, 0.0); }
+  public static void AddY_RATE(FlatBufferBuilder builder, double Y_RATE) { builder.AddDouble(19, Y_RATE, 0.0); }
+  public static void AddZ_RATE(FlatBufferBuilder builder, double Z_RATE) { builder.AddDouble(20, Z_RATE, 0.0); }
+  public static void AddRA(FlatBufferBuilder builder, double RA) { builder.AddDouble(21, RA, 0.0); }
+  public static void AddDECLINATION(FlatBufferBuilder builder, double DECLINATION) { builder.AddDouble(22, DECLINATION, 0.0); }
+  public static void AddCONING_ANGLE(FlatBufferBuilder builder, double CONING_ANGLE) { builder.AddDouble(23, CONING_ANGLE, 0.0); }
+  public static void AddPREC_PERIOD(FlatBufferBuilder builder, double PREC_PERIOD) { builder.AddDouble(24, PREC_PERIOD, 0.0); }
+  public static void AddSPIN_PERIOD(FlatBufferBuilder builder, double SPIN_PERIOD) { builder.AddDouble(25, SPIN_PERIOD, 0.0); }
+  public static void AddATTITUDE_UNC(FlatBufferBuilder builder, double ATTITUDE_UNC) { builder.AddDouble(26, ATTITUDE_UNC, 0.0); }
+  public static void AddRATE_UNC(FlatBufferBuilder builder, double RATE_UNC) { builder.AddDouble(27, RATE_UNC, 0.0); }
+  public static void AddQUALITY(FlatBufferBuilder builder, byte QUALITY) { builder.AddByte(28, QUALITY, 0); }
+  public static void AddREF_FRAME(FlatBufferBuilder builder, StringOffset REF_FRAMEOffset) { builder.AddOffset(29, REF_FRAMEOffset.Value, 0); }
+  public static void AddSENSOR_ID(FlatBufferBuilder builder, StringOffset SENSOR_IDOffset) { builder.AddOffset(30, SENSOR_IDOffset.Value, 0); }
   public static Offset<ATD> EndATD(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<ATD>(o);
@@ -208,104 +233,75 @@ public struct ATD : IFlatbufferObject
     _o.AS_ID = this.AS_ID;
     _o.SAT_NO = this.SAT_NO;
     _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID;
-    _o.TS = this.TS;
+    _o.EPOCH = this.EPOCH;
+    _o.REPRESENTATION = this.REPRESENTATION;
     _o.MOTION_TYPE = this.MOTION_TYPE;
+    _o.QC = this.QC;
     _o.Q1 = this.Q1;
     _o.Q2 = this.Q2;
     _o.Q3 = this.Q3;
-    _o.QC = this.QC;
+    _o.QC_DOT = this.QC_DOT;
     _o.Q1_DOT = this.Q1_DOT;
     _o.Q2_DOT = this.Q2_DOT;
     _o.Q3_DOT = this.Q3_DOT;
-    _o.QC_DOT = this.QC_DOT;
-    _o.X_ANGLE = new List<string>();
-    for (var _j = 0; _j < this.X_ANGLELength; ++_j) {_o.X_ANGLE.Add(this.X_ANGLE(_j));}
-    _o.Y_ANGLE = new List<string>();
-    for (var _j = 0; _j < this.Y_ANGLELength; ++_j) {_o.Y_ANGLE.Add(this.Y_ANGLE(_j));}
-    _o.Z_ANGLE = new List<string>();
-    for (var _j = 0; _j < this.Z_ANGLELength; ++_j) {_o.Z_ANGLE.Add(this.Z_ANGLE(_j));}
-    _o.X_RATE = new List<string>();
-    for (var _j = 0; _j < this.X_RATELength; ++_j) {_o.X_RATE.Add(this.X_RATE(_j));}
-    _o.Y_RATE = new List<string>();
-    for (var _j = 0; _j < this.Y_RATELength; ++_j) {_o.Y_RATE.Add(this.Y_RATE(_j));}
-    _o.Z_RATE = new List<string>();
-    for (var _j = 0; _j < this.Z_RATELength; ++_j) {_o.Z_RATE.Add(this.Z_RATE(_j));}
+    _o.X_ANGLE = this.X_ANGLE;
+    _o.Y_ANGLE = this.Y_ANGLE;
+    _o.Z_ANGLE = this.Z_ANGLE;
+    _o.X_RATE = this.X_RATE;
+    _o.Y_RATE = this.Y_RATE;
+    _o.Z_RATE = this.Z_RATE;
     _o.RA = this.RA;
     _o.DECLINATION = this.DECLINATION;
     _o.CONING_ANGLE = this.CONING_ANGLE;
     _o.PREC_PERIOD = this.PREC_PERIOD;
     _o.SPIN_PERIOD = this.SPIN_PERIOD;
+    _o.ATTITUDE_UNC = this.ATTITUDE_UNC;
+    _o.RATE_UNC = this.RATE_UNC;
+    _o.QUALITY = this.QUALITY;
+    _o.REF_FRAME = this.REF_FRAME;
+    _o.SENSOR_ID = this.SENSOR_ID;
   }
   public static Offset<ATD> Pack(FlatBufferBuilder builder, ATDT _o) {
     if (_o == null) return default(Offset<ATD>);
     var _ID = _o.ID == null ? default(StringOffset) : builder.CreateString(_o.ID);
     var _AS_ID = _o.AS_ID == null ? default(StringOffset) : builder.CreateString(_o.AS_ID);
     var _ORIG_OBJECT_ID = _o.ORIG_OBJECT_ID == null ? default(StringOffset) : builder.CreateString(_o.ORIG_OBJECT_ID);
-    var _TS = _o.TS == null ? default(StringOffset) : builder.CreateString(_o.TS);
-    var _MOTION_TYPE = _o.MOTION_TYPE == null ? default(StringOffset) : builder.CreateString(_o.MOTION_TYPE);
-    var _X_ANGLE = default(VectorOffset);
-    if (_o.X_ANGLE != null) {
-      var __X_ANGLE = new StringOffset[_o.X_ANGLE.Count];
-      for (var _j = 0; _j < __X_ANGLE.Length; ++_j) { __X_ANGLE[_j] = builder.CreateString(_o.X_ANGLE[_j]); }
-      _X_ANGLE = CreateX_ANGLEVector(builder, __X_ANGLE);
-    }
-    var _Y_ANGLE = default(VectorOffset);
-    if (_o.Y_ANGLE != null) {
-      var __Y_ANGLE = new StringOffset[_o.Y_ANGLE.Count];
-      for (var _j = 0; _j < __Y_ANGLE.Length; ++_j) { __Y_ANGLE[_j] = builder.CreateString(_o.Y_ANGLE[_j]); }
-      _Y_ANGLE = CreateY_ANGLEVector(builder, __Y_ANGLE);
-    }
-    var _Z_ANGLE = default(VectorOffset);
-    if (_o.Z_ANGLE != null) {
-      var __Z_ANGLE = new StringOffset[_o.Z_ANGLE.Count];
-      for (var _j = 0; _j < __Z_ANGLE.Length; ++_j) { __Z_ANGLE[_j] = builder.CreateString(_o.Z_ANGLE[_j]); }
-      _Z_ANGLE = CreateZ_ANGLEVector(builder, __Z_ANGLE);
-    }
-    var _X_RATE = default(VectorOffset);
-    if (_o.X_RATE != null) {
-      var __X_RATE = new StringOffset[_o.X_RATE.Count];
-      for (var _j = 0; _j < __X_RATE.Length; ++_j) { __X_RATE[_j] = builder.CreateString(_o.X_RATE[_j]); }
-      _X_RATE = CreateX_RATEVector(builder, __X_RATE);
-    }
-    var _Y_RATE = default(VectorOffset);
-    if (_o.Y_RATE != null) {
-      var __Y_RATE = new StringOffset[_o.Y_RATE.Count];
-      for (var _j = 0; _j < __Y_RATE.Length; ++_j) { __Y_RATE[_j] = builder.CreateString(_o.Y_RATE[_j]); }
-      _Y_RATE = CreateY_RATEVector(builder, __Y_RATE);
-    }
-    var _Z_RATE = default(VectorOffset);
-    if (_o.Z_RATE != null) {
-      var __Z_RATE = new StringOffset[_o.Z_RATE.Count];
-      for (var _j = 0; _j < __Z_RATE.Length; ++_j) { __Z_RATE[_j] = builder.CreateString(_o.Z_RATE[_j]); }
-      _Z_RATE = CreateZ_RATEVector(builder, __Z_RATE);
-    }
+    var _EPOCH = _o.EPOCH == null ? default(StringOffset) : builder.CreateString(_o.EPOCH);
+    var _REF_FRAME = _o.REF_FRAME == null ? default(StringOffset) : builder.CreateString(_o.REF_FRAME);
+    var _SENSOR_ID = _o.SENSOR_ID == null ? default(StringOffset) : builder.CreateString(_o.SENSOR_ID);
     return CreateATD(
       builder,
       _ID,
       _AS_ID,
       _o.SAT_NO,
       _ORIG_OBJECT_ID,
-      _TS,
-      _MOTION_TYPE,
+      _EPOCH,
+      _o.REPRESENTATION,
+      _o.MOTION_TYPE,
+      _o.QC,
       _o.Q1,
       _o.Q2,
       _o.Q3,
-      _o.QC,
+      _o.QC_DOT,
       _o.Q1_DOT,
       _o.Q2_DOT,
       _o.Q3_DOT,
-      _o.QC_DOT,
-      _X_ANGLE,
-      _Y_ANGLE,
-      _Z_ANGLE,
-      _X_RATE,
-      _Y_RATE,
-      _Z_RATE,
+      _o.X_ANGLE,
+      _o.Y_ANGLE,
+      _o.Z_ANGLE,
+      _o.X_RATE,
+      _o.Y_RATE,
+      _o.Z_RATE,
       _o.RA,
       _o.DECLINATION,
       _o.CONING_ANGLE,
       _o.PREC_PERIOD,
-      _o.SPIN_PERIOD);
+      _o.SPIN_PERIOD,
+      _o.ATTITUDE_UNC,
+      _o.RATE_UNC,
+      _o.QUALITY,
+      _REF_FRAME,
+      _SENSOR_ID);
   }
 }
 
@@ -313,56 +309,68 @@ public class ATDT
 {
   public string ID { get; set; }
   public string AS_ID { get; set; }
-  public int SAT_NO { get; set; }
+  public uint SAT_NO { get; set; }
   public string ORIG_OBJECT_ID { get; set; }
-  public string TS { get; set; }
-  public string MOTION_TYPE { get; set; }
+  public string EPOCH { get; set; }
+  public attRepresentation REPRESENTATION { get; set; }
+  public attMotionType MOTION_TYPE { get; set; }
+  public double QC { get; set; }
   public double Q1 { get; set; }
   public double Q2 { get; set; }
   public double Q3 { get; set; }
-  public double QC { get; set; }
+  public double QC_DOT { get; set; }
   public double Q1_DOT { get; set; }
   public double Q2_DOT { get; set; }
   public double Q3_DOT { get; set; }
-  public double QC_DOT { get; set; }
-  public List<string> X_ANGLE { get; set; }
-  public List<string> Y_ANGLE { get; set; }
-  public List<string> Z_ANGLE { get; set; }
-  public List<string> X_RATE { get; set; }
-  public List<string> Y_RATE { get; set; }
-  public List<string> Z_RATE { get; set; }
+  public double X_ANGLE { get; set; }
+  public double Y_ANGLE { get; set; }
+  public double Z_ANGLE { get; set; }
+  public double X_RATE { get; set; }
+  public double Y_RATE { get; set; }
+  public double Z_RATE { get; set; }
   public double RA { get; set; }
   public double DECLINATION { get; set; }
   public double CONING_ANGLE { get; set; }
   public double PREC_PERIOD { get; set; }
   public double SPIN_PERIOD { get; set; }
+  public double ATTITUDE_UNC { get; set; }
+  public double RATE_UNC { get; set; }
+  public byte QUALITY { get; set; }
+  public string REF_FRAME { get; set; }
+  public string SENSOR_ID { get; set; }
 
   public ATDT() {
     this.ID = null;
     this.AS_ID = null;
     this.SAT_NO = 0;
     this.ORIG_OBJECT_ID = null;
-    this.TS = null;
-    this.MOTION_TYPE = null;
+    this.EPOCH = null;
+    this.REPRESENTATION = attRepresentation.QUATERNION;
+    this.MOTION_TYPE = attMotionType.STABILIZED;
+    this.QC = 0.0;
     this.Q1 = 0.0;
     this.Q2 = 0.0;
     this.Q3 = 0.0;
-    this.QC = 0.0;
+    this.QC_DOT = 0.0;
     this.Q1_DOT = 0.0;
     this.Q2_DOT = 0.0;
     this.Q3_DOT = 0.0;
-    this.QC_DOT = 0.0;
-    this.X_ANGLE = null;
-    this.Y_ANGLE = null;
-    this.Z_ANGLE = null;
-    this.X_RATE = null;
-    this.Y_RATE = null;
-    this.Z_RATE = null;
+    this.X_ANGLE = 0.0;
+    this.Y_ANGLE = 0.0;
+    this.Z_ANGLE = 0.0;
+    this.X_RATE = 0.0;
+    this.Y_RATE = 0.0;
+    this.Z_RATE = 0.0;
     this.RA = 0.0;
     this.DECLINATION = 0.0;
     this.CONING_ANGLE = 0.0;
     this.PREC_PERIOD = 0.0;
     this.SPIN_PERIOD = 0.0;
+    this.ATTITUDE_UNC = 0.0;
+    this.RATE_UNC = 0.0;
+    this.QUALITY = 0;
+    this.REF_FRAME = null;
+    this.SENSOR_ID = null;
   }
   public static ATDT DeserializeFromBinary(byte[] fbBuffer) {
     return ATD.GetRootAsATD(new ByteBuffer(fbBuffer)).UnPack();
@@ -382,29 +390,35 @@ static public class ATDVerify
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*ID*/, false)
       && verifier.VerifyString(tablePos, 6 /*AS_ID*/, false)
-      && verifier.VerifyField(tablePos, 8 /*SAT_NO*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 8 /*SAT_NO*/, 4 /*uint*/, 4, false)
       && verifier.VerifyString(tablePos, 10 /*ORIG_OBJECT_ID*/, false)
-      && verifier.VerifyString(tablePos, 12 /*TS*/, false)
-      && verifier.VerifyString(tablePos, 14 /*MOTION_TYPE*/, false)
-      && verifier.VerifyField(tablePos, 16 /*Q1*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 18 /*Q2*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 20 /*Q3*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 22 /*QC*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 24 /*Q1_DOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 26 /*Q2_DOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 28 /*Q3_DOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 30 /*QC_DOT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 32 /*X_ANGLE*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 34 /*Y_ANGLE*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 36 /*Z_ANGLE*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 38 /*X_RATE*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 40 /*Y_RATE*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 42 /*Z_RATE*/, false)
-      && verifier.VerifyField(tablePos, 44 /*RA*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 46 /*DECLINATION*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 48 /*CONING_ANGLE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 50 /*PREC_PERIOD*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 52 /*SPIN_PERIOD*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 12 /*EPOCH*/, false)
+      && verifier.VerifyField(tablePos, 14 /*REPRESENTATION*/, 1 /*attRepresentation*/, 1, false)
+      && verifier.VerifyField(tablePos, 16 /*MOTION_TYPE*/, 1 /*attMotionType*/, 1, false)
+      && verifier.VerifyField(tablePos, 18 /*QC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 20 /*Q1*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 22 /*Q2*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 24 /*Q3*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 26 /*QC_DOT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 28 /*Q1_DOT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 30 /*Q2_DOT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 32 /*Q3_DOT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 34 /*X_ANGLE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 36 /*Y_ANGLE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 38 /*Z_ANGLE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 40 /*X_RATE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 42 /*Y_RATE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 44 /*Z_RATE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 46 /*RA*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 48 /*DECLINATION*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 50 /*CONING_ANGLE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 52 /*PREC_PERIOD*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 54 /*SPIN_PERIOD*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 56 /*ATTITUDE_UNC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 58 /*RATE_UNC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 60 /*QUALITY*/, 1 /*byte*/, 1, false)
+      && verifier.VerifyString(tablePos, 62 /*REF_FRAME*/, false)
+      && verifier.VerifyString(tablePos, 64 /*SENSOR_ID*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

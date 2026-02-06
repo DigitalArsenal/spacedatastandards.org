@@ -1,120 +1,165 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "orbitObjectType" : {
+      "type" : "string",
+      "enum": ["PAYLOAD", "ROCKET_BODY", "DEBRIS", "TBA", "UNKNOWN"]
+    },
+    "aouType" : {
+      "type" : "string",
+      "enum": ["CIRCULAR", "ELLIPTICAL", "RECTANGULAR", "NONE"]
+    },
     "OBT" : {
       "type" : "object",
       "description" : "Orbit Track",
       "properties" : {
         "ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique identifier"
               },
         "SAT_NO" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "ON_ORBIT" : {
-                "type" : "string"
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Satellite catalog number"
               },
         "ORIG_OBJECT_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "International designator"
+              },
+        "ON_ORBIT" : {
+                "type" : "string",
+                "description" : "On-orbit reference"
               },
         "TS" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Track point timestamp (ISO 8601)"
               },
         "LAT" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Latitude (degrees)"
               },
         "LON" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Longitude (degrees)"
               },
         "ALT" : {
-                "type" : "number"
-              },
-        "RDF_RF" : {
-                "type" : "number"
-              },
-        "CALL_SIGN" : {
-                "type" : "string"
-              },
-        "RPT_NUM" : {
-                "type" : "string"
-              },
-        "OBJ_IDENT" : {
-                "type" : "string"
-              },
-        "IDENT_AMP" : {
-                "type" : "string"
-              },
-        "SAT_STATUS" : {
-                "type" : "string"
-              },
-        "OBJECT_TYPE" : {
-                "type" : "string"
-              },
-        "COUNTRY_CODE" : {
-                "type" : "string"
-              },
-        "DECAY" : {
-                "type" : "number"
-              },
-        "CHARLIE_LINE" : {
-                "type" : "string"
-              },
-        "AOU_TYPE" : {
-                "type" : "string"
-              },
-        "AOU_DATA" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "number",
+                "description" : "Altitude (km)"
               },
         "SPD" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Speed (km/s)"
               },
         "ANG_ELEV" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Elevation angle from observer (degrees)"
               },
-        "CNTNMNT" : {
-                "type" : "number"
+        "RDF_RF" : {
+                "type" : "number",
+                "description" : "Radar data fusion RF value"
               },
-        "XREF" : {
-                "type" : "string"
+        "CALL_SIGN" : {
+                "type" : "string",
+                "description" : "Call sign"
               },
-        "CH_XREF" : {
-                "type" : "string"
-              },
-        "AMPLIFICATION" : {
-                "type" : "string"
-              },
-        "IFF" : {
-                "type" : "string"
-              },
-        "REINFORCED" : {
-                "type" : "boolean"
-              },
-        "REDUCED" : {
-                "type" : "boolean"
-              },
-        "HQ" : {
-                "type" : "boolean"
-              },
-        "DUMMY" : {
-                "type" : "boolean"
-              },
-        "TASK_FORCE" : {
-                "type" : "boolean"
-              },
-        "FEINT" : {
-                "type" : "boolean"
-              },
-        "INSTALLATION" : {
-                "type" : "boolean"
-              },
-        "VEH_TYPE" : {
-                "type" : "string"
+        "RPT_NUM" : {
+                "type" : "string",
+                "description" : "Report number"
               },
         "TRK_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Track identifier"
+              },
+        "OBJ_IDENT" : {
+                "type" : "string",
+                "description" : "Object identity assessment"
+              },
+        "IDENT_AMP" : {
+                "type" : "string",
+                "description" : "Identity amplification"
+              },
+        "SAT_STATUS" : {
+                "type" : "string",
+                "description" : "Satellite operational status"
+              },
+        "OBJ_TYPE" : {
+                "$ref" : "#/definitions/orbitObjectType",
+                "description" : "Object type"
+              },
+        "COUNTRY_CODE" : {
+                "type" : "string",
+                "description" : "Country code (ISO 3166)"
+              },
+        "DECAY" : {
+                "type" : "number",
+                "description" : "Orbit decay rate (km/day)"
+              },
+        "CHARLIE_LINE" : {
+                "type" : "string",
+                "description" : "Charlie line data (amplification text)"
+              },
+        "AOU_TYPE" : {
+                "$ref" : "#/definitions/aouType",
+                "description" : "Area of uncertainty type"
+              },
+        "AOU_DATA" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Area of uncertainty data"
+              },
+        "CNTNMNT" : {
+                "type" : "number",
+                "description" : "Containment probability (0-1)"
+              },
+        "XREF" : {
+                "type" : "string",
+                "description" : "Cross-reference identifier"
+              },
+        "CH_XREF" : {
+                "type" : "string",
+                "description" : "Charlie cross-reference"
+              },
+        "AMPLIFICATION" : {
+                "type" : "string",
+                "description" : "Additional amplification text"
+              },
+        "IFF" : {
+                "type" : "string",
+                "description" : "IFF mode/code"
+              },
+        "VEH_TYPE" : {
+                "type" : "string",
+                "description" : "Vehicle type"
+              },
+        "REINFORCED" : {
+                "type" : "boolean",
+                "description" : "True if reinforced unit"
+              },
+        "REDUCED" : {
+                "type" : "boolean",
+                "description" : "True if reduced unit"
+              },
+        "HQ" : {
+                "type" : "boolean",
+                "description" : "True if headquarters element"
+              },
+        "DUMMY" : {
+                "type" : "boolean",
+                "description" : "True if dummy/exercise track"
+              },
+        "TASK_FORCE" : {
+                "type" : "boolean",
+                "description" : "True if task force"
+              },
+        "FEINT" : {
+                "type" : "boolean",
+                "description" : "True if feint"
+              },
+        "INSTALLATION" : {
+                "type" : "boolean",
+                "description" : "True if installation (not mobile)"
               },
         "TRACK_SENSORS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Contributing track sensors"
               }
       },
       "additionalProperties" : false

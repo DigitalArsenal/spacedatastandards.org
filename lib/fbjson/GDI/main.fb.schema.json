@@ -1,68 +1,167 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "imageFormat": {
+      "type": "string",
+      "enum": [
+        "FITS",
+        "JPEG",
+        "PNG",
+        "TIFF",
+        "RAW",
+        "NITF",
+        "GEOTIFF",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "FITS": {
+          "value": 0
+        },
+        "JPEG": {
+          "value": 1
+        },
+        "PNG": {
+          "value": 2
+        },
+        "TIFF": {
+          "value": 3
+        },
+        "RAW": {
+          "value": 4
+        },
+        "NITF": {
+          "value": 5
+        },
+        "GEOTIFF": {
+          "value": 6
+        },
+        "OTHER": {
+          "value": 7
+        }
+      }
+    },
     "GDI": {
       "type": "object",
       "description": "Ground Imagery",
       "properties": {
         "ID": {
           "type": "string",
+          "description": "Unique identifier",
           "x-flatbuffer-type": "string"
         },
         "ID_SENSOR": {
           "type": "string",
+          "description": "Sensor identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIG_SENSOR_ID": {
+          "type": "string",
+          "description": "Original sensor identifier",
           "x-flatbuffer-type": "string"
         },
         "IMAGE_TIME": {
           "type": "string",
+          "description": "Image capture time (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "FILENAME": {
           "type": "string",
+          "description": "Image filename",
           "x-flatbuffer-type": "string"
         },
-        "REGION": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
+        "FORMAT": {
+          "$ref": "#/definitions/imageFormat",
+          "description": "Image format",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "FITS": {
+              "value": 0
+            },
+            "JPEG": {
+              "value": 1
+            },
+            "PNG": {
+              "value": 2
+            },
+            "TIFF": {
+              "value": 3
+            },
+            "RAW": {
+              "value": 4
+            },
+            "NITF": {
+              "value": 5
+            },
+            "GEOTIFF": {
+              "value": 6
+            },
+            "OTHER": {
+              "value": 7
+            }
+          }
         },
-        "REGION_TEXT": {
+        "FILESIZE": {
+          "type": "integer",
+          "minimum": -9223372036854775808,
+          "maximum": 9223372036854775807,
+          "description": "File size (bytes)",
+          "x-flatbuffer-type": "long"
+        },
+        "CHECKSUM_VALUE": {
           "type": "string",
+          "description": "File checksum value",
           "x-flatbuffer-type": "string"
         },
         "REGION_GEO_JSON": {
           "type": "string",
+          "description": "Region GeoJSON boundary",
+          "x-flatbuffer-type": "string"
+        },
+        "REGION_TEXT": {
+          "type": "string",
+          "description": "Region text description",
+          "x-flatbuffer-type": "string"
+        },
+        "REGION": {
+          "type": "string",
+          "description": "Region name",
           "x-flatbuffer-type": "string"
         },
         "REGION_TYPE": {
           "type": "string",
+          "description": "Region type",
           "x-flatbuffer-type": "string"
         },
         "REGION_NDIMS": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Region geometry dimensions",
+          "x-flatbuffer-type": "uint8"
         },
         "REGION_SRID": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
-        },
-        "ORIG_SENSOR_ID": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Region spatial reference ID",
+          "x-flatbuffer-type": "uint16"
         },
         "SUBJECT_ID": {
           "type": "string",
+          "description": "Subject object identifier",
           "x-flatbuffer-type": "string"
         },
         "NAME": {
           "type": "string",
+          "description": "Image name or title",
           "x-flatbuffer-type": "string"
         },
         "TRANSACTION_ID": {
           "type": "string",
+          "description": "Transaction identifier",
           "x-flatbuffer-type": "string"
         },
         "TAGS": {
@@ -70,6 +169,7 @@
           "items": {
             "type": "string"
           },
+          "description": "Associated tags",
           "x-flatbuffer-type": "[string]"
         },
         "KEYWORDS": {
@@ -77,24 +177,12 @@
           "items": {
             "type": "string"
           },
+          "description": "Keywords for search/classification",
           "x-flatbuffer-type": "[string]"
         },
         "NOTES": {
           "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "FORMAT": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "FILESIZE": {
-          "type": "integer",
-          "minimum": -9223372036854775808,
-          "maximum": 9223372036854775807,
-          "x-flatbuffer-type": "long"
-        },
-        "CHECKSUM_VALUE": {
-          "type": "string",
+          "description": "Notes",
           "x-flatbuffer-type": "string"
         }
       },

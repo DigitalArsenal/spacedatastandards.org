@@ -29,6 +29,7 @@ class GEO(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Unique identifier
     # GEO
     def ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +37,7 @@ class GEO(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # International designator
     # GEO
     def ORIG_OBJECT_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -43,113 +45,160 @@ class GEO(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Satellite catalog number
     # GEO
-    def SS(self):
+    def SAT_NO(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
 
+    # On-orbit reference identifier
     # GEO
-    def SC(self):
+    def ON_ORBIT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
+    # Station-keeping status
     # GEO
-    def RELATIVE_ENERGY(self):
+    def STATION_KEEPING(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
+    # Subsatellite point longitude (degrees east)
     # GEO
-    def LONGITUDE_RATE(self):
+    def SS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Longitude of ascending node (degrees)
     # GEO
-    def LONGITUDE_MIN(self):
+    def SC(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Relative energy (km^2/s^2)
     # GEO
-    def LONGITUDE_MAX(self):
+    def RELATIVE_ENERGY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Longitude drift rate (degrees/day)
     # GEO
-    def CONFIDENCE_LEVEL(self):
+    def LONGITUDE_RATE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
 
+    # Western longitude boundary of slot (degrees east)
     # GEO
-    def PLANE_CHANGE_STATUS(self):
+    def LONGITUDE_MIN(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
 
+    # Eastern longitude boundary of slot (degrees east)
     # GEO
-    def TROUGH_TYPE(self):
+    def LONGITUDE_MAX(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
 
+    # Assessment confidence level
     # GEO
-    def LOST_FLAG(self):
+    def CONFIDENCE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
+    # Trough type (east/west gravitational well)
     # GEO
-    def SEMI_ANNUAL_CORR_FLAG(self):
+    def TROUGH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
+    # Plane change status description
     # GEO
-    def OBJECT_STATUS(self):
+    def PLANE_CHANGE_STATUS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # True if object is lost/not tracked
     # GEO
-    def RAW_FILE_URI(self):
+    def LOST_FLAG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
 
+    # True if semi-annual correction applied
     # GEO
-    def ON_ORBIT(self):
+    def SEMI_ANNUAL_CORR_FLAG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Current operational status
+    # GEO
+    def OBJECT_STATUS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Inclination (degrees)
     # GEO
-    def SAT_NO(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+    def INCLINATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Eccentricity
+    # GEO
+    def ECCENTRICITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Epoch of status (ISO 8601)
+    # GEO
+    def EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Reference to raw data file
+    # GEO
+    def RAW_FILE_URI(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
 def GEOStart(builder):
-    builder.StartObject(17)
+    builder.StartObject(21)
 
 def Start(builder):
     GEOStart(builder)
@@ -166,95 +215,119 @@ def GEOAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
 def AddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
     GEOAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
 
+def GEOAddSAT_NO(builder, SAT_NO):
+    builder.PrependUint32Slot(2, SAT_NO, 0)
+
+def AddSAT_NO(builder, SAT_NO):
+    GEOAddSAT_NO(builder, SAT_NO)
+
+def GEOAddON_ORBIT(builder, ON_ORBIT):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ON_ORBIT), 0)
+
+def AddON_ORBIT(builder, ON_ORBIT):
+    GEOAddON_ORBIT(builder, ON_ORBIT)
+
+def GEOAddSTATION_KEEPING(builder, STATION_KEEPING):
+    builder.PrependInt8Slot(4, STATION_KEEPING, 0)
+
+def AddSTATION_KEEPING(builder, STATION_KEEPING):
+    GEOAddSTATION_KEEPING(builder, STATION_KEEPING)
+
 def GEOAddSS(builder, SS):
-    builder.PrependFloat64Slot(2, SS, 0.0)
+    builder.PrependFloat64Slot(5, SS, 0.0)
 
 def AddSS(builder, SS):
     GEOAddSS(builder, SS)
 
 def GEOAddSC(builder, SC):
-    builder.PrependFloat64Slot(3, SC, 0.0)
+    builder.PrependFloat64Slot(6, SC, 0.0)
 
 def AddSC(builder, SC):
     GEOAddSC(builder, SC)
 
 def GEOAddRELATIVE_ENERGY(builder, RELATIVE_ENERGY):
-    builder.PrependFloat64Slot(4, RELATIVE_ENERGY, 0.0)
+    builder.PrependFloat64Slot(7, RELATIVE_ENERGY, 0.0)
 
 def AddRELATIVE_ENERGY(builder, RELATIVE_ENERGY):
     GEOAddRELATIVE_ENERGY(builder, RELATIVE_ENERGY)
 
 def GEOAddLONGITUDE_RATE(builder, LONGITUDE_RATE):
-    builder.PrependFloat64Slot(5, LONGITUDE_RATE, 0.0)
+    builder.PrependFloat64Slot(8, LONGITUDE_RATE, 0.0)
 
 def AddLONGITUDE_RATE(builder, LONGITUDE_RATE):
     GEOAddLONGITUDE_RATE(builder, LONGITUDE_RATE)
 
 def GEOAddLONGITUDE_MIN(builder, LONGITUDE_MIN):
-    builder.PrependFloat64Slot(6, LONGITUDE_MIN, 0.0)
+    builder.PrependFloat64Slot(9, LONGITUDE_MIN, 0.0)
 
 def AddLONGITUDE_MIN(builder, LONGITUDE_MIN):
     GEOAddLONGITUDE_MIN(builder, LONGITUDE_MIN)
 
 def GEOAddLONGITUDE_MAX(builder, LONGITUDE_MAX):
-    builder.PrependFloat64Slot(7, LONGITUDE_MAX, 0.0)
+    builder.PrependFloat64Slot(10, LONGITUDE_MAX, 0.0)
 
 def AddLONGITUDE_MAX(builder, LONGITUDE_MAX):
     GEOAddLONGITUDE_MAX(builder, LONGITUDE_MAX)
 
-def GEOAddCONFIDENCE_LEVEL(builder, CONFIDENCE_LEVEL):
-    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(CONFIDENCE_LEVEL), 0)
+def GEOAddCONFIDENCE(builder, CONFIDENCE):
+    builder.PrependInt8Slot(11, CONFIDENCE, 0)
 
-def AddCONFIDENCE_LEVEL(builder, CONFIDENCE_LEVEL):
-    GEOAddCONFIDENCE_LEVEL(builder, CONFIDENCE_LEVEL)
+def AddCONFIDENCE(builder, CONFIDENCE):
+    GEOAddCONFIDENCE(builder, CONFIDENCE)
+
+def GEOAddTROUGH(builder, TROUGH):
+    builder.PrependInt8Slot(12, TROUGH, 0)
+
+def AddTROUGH(builder, TROUGH):
+    GEOAddTROUGH(builder, TROUGH)
 
 def GEOAddPLANE_CHANGE_STATUS(builder, PLANE_CHANGE_STATUS):
-    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(PLANE_CHANGE_STATUS), 0)
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(PLANE_CHANGE_STATUS), 0)
 
 def AddPLANE_CHANGE_STATUS(builder, PLANE_CHANGE_STATUS):
     GEOAddPLANE_CHANGE_STATUS(builder, PLANE_CHANGE_STATUS)
 
-def GEOAddTROUGH_TYPE(builder, TROUGH_TYPE):
-    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(TROUGH_TYPE), 0)
-
-def AddTROUGH_TYPE(builder, TROUGH_TYPE):
-    GEOAddTROUGH_TYPE(builder, TROUGH_TYPE)
-
 def GEOAddLOST_FLAG(builder, LOST_FLAG):
-    builder.PrependBoolSlot(11, LOST_FLAG, 0)
+    builder.PrependBoolSlot(14, LOST_FLAG, 0)
 
 def AddLOST_FLAG(builder, LOST_FLAG):
     GEOAddLOST_FLAG(builder, LOST_FLAG)
 
 def GEOAddSEMI_ANNUAL_CORR_FLAG(builder, SEMI_ANNUAL_CORR_FLAG):
-    builder.PrependBoolSlot(12, SEMI_ANNUAL_CORR_FLAG, 0)
+    builder.PrependBoolSlot(15, SEMI_ANNUAL_CORR_FLAG, 0)
 
 def AddSEMI_ANNUAL_CORR_FLAG(builder, SEMI_ANNUAL_CORR_FLAG):
     GEOAddSEMI_ANNUAL_CORR_FLAG(builder, SEMI_ANNUAL_CORR_FLAG)
 
 def GEOAddOBJECT_STATUS(builder, OBJECT_STATUS):
-    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_STATUS), 0)
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_STATUS), 0)
 
 def AddOBJECT_STATUS(builder, OBJECT_STATUS):
     GEOAddOBJECT_STATUS(builder, OBJECT_STATUS)
 
+def GEOAddINCLINATION(builder, INCLINATION):
+    builder.PrependFloat64Slot(17, INCLINATION, 0.0)
+
+def AddINCLINATION(builder, INCLINATION):
+    GEOAddINCLINATION(builder, INCLINATION)
+
+def GEOAddECCENTRICITY(builder, ECCENTRICITY):
+    builder.PrependFloat64Slot(18, ECCENTRICITY, 0.0)
+
+def AddECCENTRICITY(builder, ECCENTRICITY):
+    GEOAddECCENTRICITY(builder, ECCENTRICITY)
+
+def GEOAddEPOCH(builder, EPOCH):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH), 0)
+
+def AddEPOCH(builder, EPOCH):
+    GEOAddEPOCH(builder, EPOCH)
+
 def GEOAddRAW_FILE_URI(builder, RAW_FILE_URI):
-    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(RAW_FILE_URI), 0)
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(RAW_FILE_URI), 0)
 
 def AddRAW_FILE_URI(builder, RAW_FILE_URI):
     GEOAddRAW_FILE_URI(builder, RAW_FILE_URI)
-
-def GEOAddON_ORBIT(builder, ON_ORBIT):
-    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(ON_ORBIT), 0)
-
-def AddON_ORBIT(builder, ON_ORBIT):
-    GEOAddON_ORBIT(builder, ON_ORBIT)
-
-def GEOAddSAT_NO(builder, SAT_NO):
-    builder.PrependInt32Slot(16, SAT_NO, 0)
-
-def AddSAT_NO(builder, SAT_NO):
-    GEOAddSAT_NO(builder, SAT_NO)
 
 def GEOEnd(builder):
     return builder.EndObject()
@@ -269,21 +342,25 @@ class GEOT(object):
     def __init__(self):
         self.ID = None  # type: str
         self.ORIG_OBJECT_ID = None  # type: str
+        self.SAT_NO = 0  # type: int
+        self.ON_ORBIT = None  # type: str
+        self.STATION_KEEPING = 0  # type: int
         self.SS = 0.0  # type: float
         self.SC = 0.0  # type: float
         self.RELATIVE_ENERGY = 0.0  # type: float
         self.LONGITUDE_RATE = 0.0  # type: float
         self.LONGITUDE_MIN = 0.0  # type: float
         self.LONGITUDE_MAX = 0.0  # type: float
-        self.CONFIDENCE_LEVEL = None  # type: str
+        self.CONFIDENCE = 0  # type: int
+        self.TROUGH = 0  # type: int
         self.PLANE_CHANGE_STATUS = None  # type: str
-        self.TROUGH_TYPE = None  # type: str
         self.LOST_FLAG = False  # type: bool
         self.SEMI_ANNUAL_CORR_FLAG = False  # type: bool
         self.OBJECT_STATUS = None  # type: str
+        self.INCLINATION = 0.0  # type: float
+        self.ECCENTRICITY = 0.0  # type: float
+        self.EPOCH = None  # type: str
         self.RAW_FILE_URI = None  # type: str
-        self.ON_ORBIT = None  # type: str
-        self.SAT_NO = 0  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -308,21 +385,25 @@ class GEOT(object):
             return
         self.ID = GEO.ID()
         self.ORIG_OBJECT_ID = GEO.ORIG_OBJECT_ID()
+        self.SAT_NO = GEO.SAT_NO()
+        self.ON_ORBIT = GEO.ON_ORBIT()
+        self.STATION_KEEPING = GEO.STATION_KEEPING()
         self.SS = GEO.SS()
         self.SC = GEO.SC()
         self.RELATIVE_ENERGY = GEO.RELATIVE_ENERGY()
         self.LONGITUDE_RATE = GEO.LONGITUDE_RATE()
         self.LONGITUDE_MIN = GEO.LONGITUDE_MIN()
         self.LONGITUDE_MAX = GEO.LONGITUDE_MAX()
-        self.CONFIDENCE_LEVEL = GEO.CONFIDENCE_LEVEL()
+        self.CONFIDENCE = GEO.CONFIDENCE()
+        self.TROUGH = GEO.TROUGH()
         self.PLANE_CHANGE_STATUS = GEO.PLANE_CHANGE_STATUS()
-        self.TROUGH_TYPE = GEO.TROUGH_TYPE()
         self.LOST_FLAG = GEO.LOST_FLAG()
         self.SEMI_ANNUAL_CORR_FLAG = GEO.SEMI_ANNUAL_CORR_FLAG()
         self.OBJECT_STATUS = GEO.OBJECT_STATUS()
+        self.INCLINATION = GEO.INCLINATION()
+        self.ECCENTRICITY = GEO.ECCENTRICITY()
+        self.EPOCH = GEO.EPOCH()
         self.RAW_FILE_URI = GEO.RAW_FILE_URI()
-        self.ON_ORBIT = GEO.ON_ORBIT()
-        self.SAT_NO = GEO.SAT_NO()
 
     # GEOT
     def Pack(self, builder):
@@ -330,43 +411,44 @@ class GEOT(object):
             ID = builder.CreateString(self.ID)
         if self.ORIG_OBJECT_ID is not None:
             ORIG_OBJECT_ID = builder.CreateString(self.ORIG_OBJECT_ID)
-        if self.CONFIDENCE_LEVEL is not None:
-            CONFIDENCE_LEVEL = builder.CreateString(self.CONFIDENCE_LEVEL)
-        if self.PLANE_CHANGE_STATUS is not None:
-            PLANE_CHANGE_STATUS = builder.CreateString(self.PLANE_CHANGE_STATUS)
-        if self.TROUGH_TYPE is not None:
-            TROUGH_TYPE = builder.CreateString(self.TROUGH_TYPE)
-        if self.OBJECT_STATUS is not None:
-            OBJECT_STATUS = builder.CreateString(self.OBJECT_STATUS)
-        if self.RAW_FILE_URI is not None:
-            RAW_FILE_URI = builder.CreateString(self.RAW_FILE_URI)
         if self.ON_ORBIT is not None:
             ON_ORBIT = builder.CreateString(self.ON_ORBIT)
+        if self.PLANE_CHANGE_STATUS is not None:
+            PLANE_CHANGE_STATUS = builder.CreateString(self.PLANE_CHANGE_STATUS)
+        if self.OBJECT_STATUS is not None:
+            OBJECT_STATUS = builder.CreateString(self.OBJECT_STATUS)
+        if self.EPOCH is not None:
+            EPOCH = builder.CreateString(self.EPOCH)
+        if self.RAW_FILE_URI is not None:
+            RAW_FILE_URI = builder.CreateString(self.RAW_FILE_URI)
         GEOStart(builder)
         if self.ID is not None:
             GEOAddID(builder, ID)
         if self.ORIG_OBJECT_ID is not None:
             GEOAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+        GEOAddSAT_NO(builder, self.SAT_NO)
+        if self.ON_ORBIT is not None:
+            GEOAddON_ORBIT(builder, ON_ORBIT)
+        GEOAddSTATION_KEEPING(builder, self.STATION_KEEPING)
         GEOAddSS(builder, self.SS)
         GEOAddSC(builder, self.SC)
         GEOAddRELATIVE_ENERGY(builder, self.RELATIVE_ENERGY)
         GEOAddLONGITUDE_RATE(builder, self.LONGITUDE_RATE)
         GEOAddLONGITUDE_MIN(builder, self.LONGITUDE_MIN)
         GEOAddLONGITUDE_MAX(builder, self.LONGITUDE_MAX)
-        if self.CONFIDENCE_LEVEL is not None:
-            GEOAddCONFIDENCE_LEVEL(builder, CONFIDENCE_LEVEL)
+        GEOAddCONFIDENCE(builder, self.CONFIDENCE)
+        GEOAddTROUGH(builder, self.TROUGH)
         if self.PLANE_CHANGE_STATUS is not None:
             GEOAddPLANE_CHANGE_STATUS(builder, PLANE_CHANGE_STATUS)
-        if self.TROUGH_TYPE is not None:
-            GEOAddTROUGH_TYPE(builder, TROUGH_TYPE)
         GEOAddLOST_FLAG(builder, self.LOST_FLAG)
         GEOAddSEMI_ANNUAL_CORR_FLAG(builder, self.SEMI_ANNUAL_CORR_FLAG)
         if self.OBJECT_STATUS is not None:
             GEOAddOBJECT_STATUS(builder, OBJECT_STATUS)
+        GEOAddINCLINATION(builder, self.INCLINATION)
+        GEOAddECCENTRICITY(builder, self.ECCENTRICITY)
+        if self.EPOCH is not None:
+            GEOAddEPOCH(builder, EPOCH)
         if self.RAW_FILE_URI is not None:
             GEOAddRAW_FILE_URI(builder, RAW_FILE_URI)
-        if self.ON_ORBIT is not None:
-            GEOAddON_ORBIT(builder, ON_ORBIT)
-        GEOAddSAT_NO(builder, self.SAT_NO)
         GEO = GEOEnd(builder)
         return GEO

@@ -1,396 +1,527 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "maneuverStatus": {
+      "type": "string",
+      "enum": [
+        "DETECTED",
+        "CONFIRMED",
+        "PREDICTED",
+        "PLANNED",
+        "EXECUTED",
+        "CANCELLED",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "DETECTED": {
+          "value": 0
+        },
+        "CONFIRMED": {
+          "value": 1
+        },
+        "PREDICTED": {
+          "value": 2
+        },
+        "PLANNED": {
+          "value": 3
+        },
+        "EXECUTED": {
+          "value": 4
+        },
+        "CANCELLED": {
+          "value": 5
+        },
+        "UNKNOWN": {
+          "value": 6
+        }
+      }
+    },
+    "maneuverCharacterization": {
+      "type": "string",
+      "enum": [
+        "IN_PLANE",
+        "OUT_OF_PLANE",
+        "COMBINED",
+        "STATION_KEEPING",
+        "ORBIT_RAISING",
+        "ORBIT_LOWERING",
+        "PHASING",
+        "DEORBIT",
+        "COLLISION_AVOIDANCE",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "IN_PLANE": {
+          "value": 0
+        },
+        "OUT_OF_PLANE": {
+          "value": 1
+        },
+        "COMBINED": {
+          "value": 2
+        },
+        "STATION_KEEPING": {
+          "value": 3
+        },
+        "ORBIT_RAISING": {
+          "value": 4
+        },
+        "ORBIT_LOWERING": {
+          "value": 5
+        },
+        "PHASING": {
+          "value": 6
+        },
+        "DEORBIT": {
+          "value": 7
+        },
+        "COLLISION_AVOIDANCE": {
+          "value": 8
+        },
+        "UNKNOWN": {
+          "value": 9
+        }
+      }
+    },
+    "mnvOrbitalState": {
+      "type": "object",
+      "description": "Pre/post-maneuver orbital state",
+      "properties": {
+        "ID_ELSET": {
+          "type": "string",
+          "description": "Element set identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "ELSET": {
+          "type": "string",
+          "description": "Element set data reference",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_STATE_VECTOR": {
+          "type": "string",
+          "description": "State vector identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "STATE_VECTOR": {
+          "type": "string",
+          "description": "State vector data reference",
+          "x-flatbuffer-type": "string"
+        },
+        "POS_X": {
+          "type": "number",
+          "description": "Position X (km)",
+          "x-flatbuffer-type": "double"
+        },
+        "POS_Y": {
+          "type": "number",
+          "description": "Position Y (km)",
+          "x-flatbuffer-type": "double"
+        },
+        "POS_Z": {
+          "type": "number",
+          "description": "Position Z (km)",
+          "x-flatbuffer-type": "double"
+        },
+        "VEL_X": {
+          "type": "number",
+          "description": "Velocity X (km/s)",
+          "x-flatbuffer-type": "double"
+        },
+        "VEL_Y": {
+          "type": "number",
+          "description": "Velocity Y (km/s)",
+          "x-flatbuffer-type": "double"
+        },
+        "VEL_Z": {
+          "type": "number",
+          "description": "Velocity Z (km/s)",
+          "x-flatbuffer-type": "double"
+        },
+        "RADIATION_PRESS_COEFF": {
+          "type": "number",
+          "description": "Radiation pressure coefficient (Cr)",
+          "x-flatbuffer-type": "double"
+        },
+        "BALLISTIC_COEFF": {
+          "type": "number",
+          "description": "Ballistic coefficient (m^2/kg)",
+          "x-flatbuffer-type": "double"
+        },
+        "APOGEE": {
+          "type": "number",
+          "description": "Apogee altitude (km)",
+          "x-flatbuffer-type": "double"
+        },
+        "PERIGEE": {
+          "type": "number",
+          "description": "Perigee altitude (km)",
+          "x-flatbuffer-type": "double"
+        },
+        "INCLINATION": {
+          "type": "number",
+          "description": "Inclination (degrees)",
+          "x-flatbuffer-type": "double"
+        },
+        "ECCENTRICITY": {
+          "type": "number",
+          "description": "Eccentricity",
+          "x-flatbuffer-type": "double"
+        },
+        "PERIOD": {
+          "type": "number",
+          "description": "Orbital period (minutes)",
+          "x-flatbuffer-type": "double"
+        },
+        "RAAN": {
+          "type": "number",
+          "description": "Right ascension of ascending node (degrees)",
+          "x-flatbuffer-type": "double"
+        },
+        "SMA": {
+          "type": "number",
+          "description": "Semi-major axis (km)",
+          "x-flatbuffer-type": "double"
+        },
+        "GEO_LONGITUDE": {
+          "type": "number",
+          "description": "GEO longitude (degrees east)",
+          "x-flatbuffer-type": "double"
+        },
+        "DRIFT_RATE": {
+          "type": "number",
+          "description": "Longitude drift rate (degrees/day)",
+          "x-flatbuffer-type": "double"
+        },
+        "SIGMA_U": {
+          "type": "number",
+          "description": "Position uncertainty U (km, 1-sigma)",
+          "x-flatbuffer-type": "double"
+        },
+        "SIGMA_V": {
+          "type": "number",
+          "description": "Position uncertainty V (km, 1-sigma)",
+          "x-flatbuffer-type": "double"
+        },
+        "SIGMA_W": {
+          "type": "number",
+          "description": "Position uncertainty W (km, 1-sigma)",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
     "MNV": {
       "type": "object",
       "description": "Spacecraft Maneuver",
       "properties": {
         "ID": {
           "type": "string",
+          "description": "Unique identifier",
           "x-flatbuffer-type": "string"
         },
         "SAT_NO": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Satellite catalog number",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ORIG_OBJECT_ID": {
+          "type": "string",
+          "description": "International designator",
+          "x-flatbuffer-type": "string"
+        },
+        "ON_ORBIT": {
+          "type": "string",
+          "description": "On-orbit reference",
+          "x-flatbuffer-type": "string"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/maneuverStatus",
+          "description": "Maneuver status",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "DETECTED": {
+              "value": 0
+            },
+            "CONFIRMED": {
+              "value": 1
+            },
+            "PREDICTED": {
+              "value": 2
+            },
+            "PLANNED": {
+              "value": 3
+            },
+            "EXECUTED": {
+              "value": 4
+            },
+            "CANCELLED": {
+              "value": 5
+            },
+            "UNKNOWN": {
+              "value": 6
+            }
+          }
+        },
+        "CHARACTERIZATION": {
+          "$ref": "#/definitions/maneuverCharacterization",
+          "description": "Maneuver characterization",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "IN_PLANE": {
+              "value": 0
+            },
+            "OUT_OF_PLANE": {
+              "value": 1
+            },
+            "COMBINED": {
+              "value": 2
+            },
+            "STATION_KEEPING": {
+              "value": 3
+            },
+            "ORBIT_RAISING": {
+              "value": 4
+            },
+            "ORBIT_LOWERING": {
+              "value": 5
+            },
+            "PHASING": {
+              "value": 6
+            },
+            "DEORBIT": {
+              "value": 7
+            },
+            "COLLISION_AVOIDANCE": {
+              "value": 8
+            },
+            "UNKNOWN": {
+              "value": 9
+            }
+          }
+        },
+        "CHARACTERIZATION_UNC": {
+          "type": "number",
+          "description": "Characterization uncertainty (0-1)",
+          "x-flatbuffer-type": "double"
         },
         "REPORT_TIME": {
           "type": "string",
+          "description": "Detection report time (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "EVENT_START_TIME": {
           "type": "string",
+          "description": "Maneuver start time (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "EVENT_END_TIME": {
           "type": "string",
+          "description": "Maneuver end time (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "TOTAL_BURN_TIME": {
           "type": "number",
+          "description": "Total burn time (seconds)",
           "x-flatbuffer-type": "double"
         },
         "OD_FIT_END_TIME": {
           "type": "string",
+          "description": "OD fit end time (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "ID_SENSOR": {
           "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "UCT": {
-          "type": "boolean",
-          "x-flatbuffer-type": "bool"
-        },
-        "MANEUVER_UNC": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "CHARACTERIZATION": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "CHARACTERIZATION_UNC": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "EVENT_ID": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "ORIG_OBJECT_ID": {
-          "type": "string",
+          "description": "Detecting sensor identifier",
           "x-flatbuffer-type": "string"
         },
         "ORIG_SENSOR_ID": {
           "type": "string",
+          "description": "Original sensor identifier",
           "x-flatbuffer-type": "string"
         },
-        "STATUS": {
+        "EVENT_ID": {
           "type": "string",
+          "description": "Maneuver event identifier",
           "x-flatbuffer-type": "string"
         },
-        "DELTA_POS": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
+        "UCT": {
+          "type": "boolean",
+          "description": "True if object is uncorrelated",
+          "x-flatbuffer-type": "bool"
         },
-        "DELTA_POS_U": {
+        "MANEUVER_UNC": {
           "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "DELTA_POS_V": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "DELTA_POS_W": {
-          "type": "number",
+          "description": "Maneuver detection uncertainty (km)",
           "x-flatbuffer-type": "double"
         },
         "DELTA_VEL": {
           "type": "number",
+          "description": "Total delta-V magnitude (km/s)",
           "x-flatbuffer-type": "double"
         },
         "DELTA_VEL_U": {
           "type": "number",
+          "description": "Delta-V along-track/U component (km/s)",
           "x-flatbuffer-type": "double"
         },
         "DELTA_VEL_V": {
           "type": "number",
+          "description": "Delta-V cross-track/V component (km/s)",
           "x-flatbuffer-type": "double"
         },
         "DELTA_VEL_W": {
           "type": "number",
+          "description": "Delta-V radial/W component (km/s)",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_POS": {
+          "type": "number",
+          "description": "Total delta position (km)",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_POS_U": {
+          "type": "number",
+          "description": "Delta position U component (km)",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_POS_V": {
+          "type": "number",
+          "description": "Delta position V component (km)",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_POS_W": {
+          "type": "number",
+          "description": "Delta position W component (km)",
           "x-flatbuffer-type": "double"
         },
         "DELTA_MASS": {
           "type": "number",
+          "description": "Propellant mass consumed (kg)",
           "x-flatbuffer-type": "double"
         },
-        "PRE_EVENT_ID_ELSET": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
+        "PRE_EVENT": {
+          "$ref": "#/definitions/mnvOrbitalState",
+          "description": "Pre-maneuver orbital state",
+          "x-flatbuffer-type": "mnvOrbitalState"
         },
-        "PRE_EVENT_ELSET": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
+        "POST_EVENT": {
+          "$ref": "#/definitions/mnvOrbitalState",
+          "description": "Post-maneuver orbital state",
+          "x-flatbuffer-type": "mnvOrbitalState"
         },
-        "PRE_EVENT_ID_STATE_VECTOR": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "PRE_EVENT_STATE_VECTOR": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "PRE_POS_X": {
+        "POST_MASS": {
           "type": "number",
+          "description": "Post-maneuver mass (kg)",
           "x-flatbuffer-type": "double"
         },
-        "PRE_POS_Y": {
+        "POST_AREA": {
           "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "PRE_POS_Z": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "PRE_VEL_X": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "PRE_VEL_Y": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "PRE_VEL_Z": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "PRE_RADIATION_PRESS_COEFF": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "PRE_BALLISTIC_COEFF": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "PRE_APOGEE": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "PRE_PERIGEE": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "PRE_INCLINATION": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "PRE_ECCENTRICITY": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "PRE_PERIOD": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "PRE_RAAN": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "PRE_SMA": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "PRE_GEO_LONGITUDE": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "PRE_DRIFT_RATE": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "PRE_SIGMA_U": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "PRE_SIGMA_V": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "PRE_SIGMA_W": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "POST_EVENT_ID_ELSET": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "POST_EVENT_ELSET": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "POST_EVENT_ID_STATE_VECTOR": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "POST_EVENT_STATE_VECTOR": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "POST_POS_X": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "POST_POS_Y": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "POST_POS_Z": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "POST_VEL_X": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "POST_VEL_Y": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "POST_VEL_Z": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "POST_RADIATION_PRESS_COEFF": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "POST_BALLISTIC_COEFF": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "POST_APOGEE": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "POST_PERIGEE": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "POST_INCLINATION": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "POST_ECCENTRICITY": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "POST_PERIOD": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "POST_RAAN": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "POST_SMA": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "POST_GEO_LONGITUDE": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "POST_DRIFT_RATE": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "POST_SIGMA_U": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "POST_SIGMA_V": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "POST_SIGMA_W": {
-          "type": "number",
+          "description": "Post-maneuver cross-sectional area (m^2)",
           "x-flatbuffer-type": "double"
         },
         "COV": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "number"
           },
-          "x-flatbuffer-type": "[string]"
-        },
-        "POST_MASS": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "POST_AREA": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
+          "description": "6x6 covariance matrix (upper triangle, row-major)",
+          "x-flatbuffer-type": "[double]"
         },
         "NUM_OBS": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
-        },
-        "DESCRIPTION": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "DESCRIPTOR": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of observations used",
+          "x-flatbuffer-type": "uint32"
         },
         "STATE_MODEL": {
           "type": "string",
+          "description": "State model used",
           "x-flatbuffer-type": "string"
         },
         "STATE_MODEL_VERSION": {
           "type": "number",
+          "description": "State model version",
           "x-flatbuffer-type": "double"
         },
         "NUM_ACCEL_POINTS": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Number of acceleration profile points",
+          "x-flatbuffer-type": "uint16"
         },
         "MNVR_ACCEL_TIMES": {
           "type": "array",
           "items": {
             "type": "string"
           },
+          "description": "Acceleration profile times (ISO 8601)",
           "x-flatbuffer-type": "[string]"
         },
         "MNVR_ACCELS": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "number"
           },
-          "x-flatbuffer-type": "[string]"
+          "description": "Acceleration values (km/s^2, 3 components per point)",
+          "x-flatbuffer-type": "[double]"
         },
         "MNVR_ACCEL_UNCS": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "number"
           },
-          "x-flatbuffer-type": "[string]"
+          "description": "Acceleration uncertainties (km/s^2)",
+          "x-flatbuffer-type": "[double]"
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Description",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTOR": {
+          "type": "string",
+          "description": "Event descriptor",
+          "x-flatbuffer-type": "string"
+        },
+        "ALGORITHM": {
+          "type": "string",
+          "description": "Algorithm used for detection",
+          "x-flatbuffer-type": "string"
         },
         "TAGS": {
           "type": "array",
           "items": {
             "type": "string"
           },
+          "description": "Associated tags",
           "x-flatbuffer-type": "[string]"
-        },
-        "ALGORITHM": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
         },
         "SOURCED_DATA": {
           "type": "array",
           "items": {
             "type": "string"
           },
+          "description": "Sourced data references",
           "x-flatbuffer-type": "[string]"
         },
         "SOURCED_DATA_TYPES": {
           "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "ON_ORBIT": {
-          "type": "string",
+          "description": "Sourced data types",
           "x-flatbuffer-type": "string"
         },
         "TRANSACTION_ID": {
           "type": "string",
+          "description": "Transaction identifier",
           "x-flatbuffer-type": "string"
         }
       },

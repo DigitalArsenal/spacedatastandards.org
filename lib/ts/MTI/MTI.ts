@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { mtiStandard } from './mtiStandard.js';
 
 
 /**
@@ -31,6 +32,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$MTI');
 }
 
+/**
+ * Unique identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,162 +42,213 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * MTI standard (e.g., STANAG 4607)
+ */
+STANDARD():mtiStandard {
+  const offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : mtiStandard.STANAG_4607;
+}
+
+/**
+ * Platform type (P3 field)
+ */
 P3():string|null
 P3(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 P3(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-P6():string|null
-P6(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-P6(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-P7():string|null
-P7(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-P7(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Platform activity (P6 field)
+ */
+P6():string|null
+P6(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+P6(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-P8():string|null
-P8(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-P8(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Sensor type (P7 field)
+ */
+P7():string|null
+P7(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+P7(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-P9():number {
+/**
+ * Sensor model (P8 field)
+ */
+P8():string|null
+P8(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+P8(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-P10():number {
+/**
+ * Reference time code (P9)
+ */
+P9():number {
   const offset = this.bb!.__offset(this.bb_pos, 16);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Security classification (P10)
+ */
+P10():number {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Mission segment identifiers
+ */
 MISSIONS(index: number):string
 MISSIONS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 MISSIONS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 missionsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Dwell segment data references
+ */
 DWELLS(index: number):string
 DWELLS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 DWELLS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
+  const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 dwellsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
+  const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * High range resolution profile references
+ */
 HRRS(index: number):string
 HRRS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 HRRS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
+  const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 hrrsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
+  const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Job definition references
+ */
 JOB_DEFS(index: number):string
 JOB_DEFS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 JOB_DEFS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
+  const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 jobDefsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
+  const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Free text entries
+ */
 FREE_TEXTS(index: number):string
 FREE_TEXTS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 FREE_TEXTS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
+  const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 freeTextsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
+  const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Platform location data references
+ */
 PLATFORM_LOCS(index: number):string
 PLATFORM_LOCS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 PLATFORM_LOCS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 28);
+  const offset = this.bb!.__offset(this.bb_pos, 30);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 platformLocsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 28);
+  const offset = this.bb!.__offset(this.bb_pos, 30);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Job request references
+ */
 JOB_REQUESTS(index: number):string
 JOB_REQUESTS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 JOB_REQUESTS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
+  const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 jobRequestsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
+  const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 static startMTI(builder:flatbuffers.Builder) {
-  builder.startObject(14);
+  builder.startObject(15);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
   builder.addFieldOffset(0, IDOffset, 0);
 }
 
+static addStandard(builder:flatbuffers.Builder, STANDARD:mtiStandard) {
+  builder.addFieldInt8(1, STANDARD, mtiStandard.STANAG_4607);
+}
+
 static addP3(builder:flatbuffers.Builder, P3Offset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, P3Offset, 0);
+  builder.addFieldOffset(2, P3Offset, 0);
 }
 
 static addP6(builder:flatbuffers.Builder, P6Offset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, P6Offset, 0);
+  builder.addFieldOffset(3, P6Offset, 0);
 }
 
 static addP7(builder:flatbuffers.Builder, P7Offset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, P7Offset, 0);
+  builder.addFieldOffset(4, P7Offset, 0);
 }
 
 static addP8(builder:flatbuffers.Builder, P8Offset:flatbuffers.Offset) {
-  builder.addFieldOffset(4, P8Offset, 0);
+  builder.addFieldOffset(5, P8Offset, 0);
 }
 
 static addP9(builder:flatbuffers.Builder, P9:number) {
-  builder.addFieldInt32(5, P9, 0);
+  builder.addFieldInt32(6, P9, 0);
 }
 
 static addP10(builder:flatbuffers.Builder, P10:number) {
-  builder.addFieldInt32(6, P10, 0);
+  builder.addFieldInt16(7, P10, 0);
 }
 
 static addMissions(builder:flatbuffers.Builder, MISSIONSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(7, MISSIONSOffset, 0);
+  builder.addFieldOffset(8, MISSIONSOffset, 0);
 }
 
 static createMissionsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -209,7 +264,7 @@ static startMissionsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addDwells(builder:flatbuffers.Builder, DWELLSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(8, DWELLSOffset, 0);
+  builder.addFieldOffset(9, DWELLSOffset, 0);
 }
 
 static createDwellsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -225,7 +280,7 @@ static startDwellsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addHrrs(builder:flatbuffers.Builder, HRRSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(9, HRRSOffset, 0);
+  builder.addFieldOffset(10, HRRSOffset, 0);
 }
 
 static createHrrsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -241,7 +296,7 @@ static startHrrsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addJobDefs(builder:flatbuffers.Builder, JOB_DEFSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(10, JOB_DEFSOffset, 0);
+  builder.addFieldOffset(11, JOB_DEFSOffset, 0);
 }
 
 static createJobDefsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -257,7 +312,7 @@ static startJobDefsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addFreeTexts(builder:flatbuffers.Builder, FREE_TEXTSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(11, FREE_TEXTSOffset, 0);
+  builder.addFieldOffset(12, FREE_TEXTSOffset, 0);
 }
 
 static createFreeTextsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -273,7 +328,7 @@ static startFreeTextsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addPlatformLocs(builder:flatbuffers.Builder, PLATFORM_LOCSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(12, PLATFORM_LOCSOffset, 0);
+  builder.addFieldOffset(13, PLATFORM_LOCSOffset, 0);
 }
 
 static createPlatformLocsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -289,7 +344,7 @@ static startPlatformLocsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addJobRequests(builder:flatbuffers.Builder, JOB_REQUESTSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(13, JOB_REQUESTSOffset, 0);
+  builder.addFieldOffset(14, JOB_REQUESTSOffset, 0);
 }
 
 static createJobRequestsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -317,9 +372,10 @@ static finishSizePrefixedMTIBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$MTI', true);
 }
 
-static createMTI(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, P3Offset:flatbuffers.Offset, P6Offset:flatbuffers.Offset, P7Offset:flatbuffers.Offset, P8Offset:flatbuffers.Offset, P9:number, P10:number, MISSIONSOffset:flatbuffers.Offset, DWELLSOffset:flatbuffers.Offset, HRRSOffset:flatbuffers.Offset, JOB_DEFSOffset:flatbuffers.Offset, FREE_TEXTSOffset:flatbuffers.Offset, PLATFORM_LOCSOffset:flatbuffers.Offset, JOB_REQUESTSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createMTI(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, STANDARD:mtiStandard, P3Offset:flatbuffers.Offset, P6Offset:flatbuffers.Offset, P7Offset:flatbuffers.Offset, P8Offset:flatbuffers.Offset, P9:number, P10:number, MISSIONSOffset:flatbuffers.Offset, DWELLSOffset:flatbuffers.Offset, HRRSOffset:flatbuffers.Offset, JOB_DEFSOffset:flatbuffers.Offset, FREE_TEXTSOffset:flatbuffers.Offset, PLATFORM_LOCSOffset:flatbuffers.Offset, JOB_REQUESTSOffset:flatbuffers.Offset):flatbuffers.Offset {
   MTI.startMTI(builder);
   MTI.addId(builder, IDOffset);
+  MTI.addStandard(builder, STANDARD);
   MTI.addP3(builder, P3Offset);
   MTI.addP6(builder, P6Offset);
   MTI.addP7(builder, P7Offset);
@@ -339,6 +395,7 @@ static createMTI(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, P3Off
 unpack(): MTIT {
   return new MTIT(
     this.ID(),
+    this.STANDARD(),
     this.P3(),
     this.P6(),
     this.P7(),
@@ -358,6 +415,7 @@ unpack(): MTIT {
 
 unpackTo(_o: MTIT): void {
   _o.ID = this.ID();
+  _o.STANDARD = this.STANDARD();
   _o.P3 = this.P3();
   _o.P6 = this.P6();
   _o.P7 = this.P7();
@@ -377,6 +435,7 @@ unpackTo(_o: MTIT): void {
 export class MTIT implements flatbuffers.IGeneratedObject {
 constructor(
   public ID: string|Uint8Array|null = null,
+  public STANDARD: mtiStandard = mtiStandard.STANAG_4607,
   public P3: string|Uint8Array|null = null,
   public P6: string|Uint8Array|null = null,
   public P7: string|Uint8Array|null = null,
@@ -409,6 +468,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
 
   return MTI.createMTI(builder,
     ID,
+    this.STANDARD,
     P3,
     P6,
     P7,

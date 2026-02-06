@@ -2,4 +2,4 @@
 
 # namespace: 
 
-# NOTE TrackStatus.py does not declare any structs or enums
+# NOTE trackStatus.py does not declare any structs or enums

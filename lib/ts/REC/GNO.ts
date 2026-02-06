@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { gnssSatObs, gnssSatObsT } from './gnssSatObs.js';
 
 
 /**
@@ -31,65 +32,320 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$GNO');
 }
 
-GNSS_SAT_ID():string|null
-GNSS_SAT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-GNSS_SAT_ID(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Unique identifier
+ */
+ID():string|null
+ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 4);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-TRACKING_STATUS():number {
+/**
+ * Receiver identifier
+ */
+RECEIVER_ID():string|null
+RECEIVER_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+RECEIVER_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-AGC_STATE():number {
+/**
+ * Receiver type/model
+ */
+RECEIVER_TYPE():string|null
+RECEIVER_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+RECEIVER_TYPE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Antenna identifier
+ */
+ANTENNA_ID():string|null
+ANTENNA_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ANTENNA_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Antenna type/model
+ */
+ANTENNA_TYPE():string|null
+ANTENNA_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ANTENNA_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Receiver firmware version
+ */
+FIRMWARE_VERSION():string|null
+FIRMWARE_VERSION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+FIRMWARE_VERSION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Observation epoch (ISO 8601)
+ */
+EPOCH():string|null
+EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Receiver clock offset in seconds
+ */
+CLOCK_OFFSET():number {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Receiver clock drift in seconds/second
+ */
+CLOCK_DRIFT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Receiver geodetic latitude in degrees
+ */
+LATITUDE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Receiver geodetic longitude in degrees
+ */
+LONGITUDE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Receiver altitude in meters above WGS-84
+ */
+ALTITUDE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Approximate position X in meters (ECEF)
+ */
+APPROX_X():number {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Approximate position Y in meters (ECEF)
+ */
+APPROX_Y():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Approximate position Z in meters (ECEF)
+ */
+APPROX_Z():number {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Observation interval in seconds
+ */
+INTERVAL():number {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Number of satellites observed
+ */
+NUM_SATS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * PDOP
+ */
+PDOP():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * HDOP
+ */
+HDOP():number {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * VDOP
+ */
+VDOP():number {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Satellite observations
+ */
+SAT_OBS(index: number, obj?:gnssSatObs):gnssSatObs|null {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? (obj || new gnssSatObs()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+satObsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Observation code set identifiers
+ */
 OBS_CODE_SET(index: number):string
 OBS_CODE_SET(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 OBS_CODE_SET(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 10);
+  const offset = this.bb!.__offset(this.bb_pos, 46);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 obsCodeSetLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 10);
+  const offset = this.bb!.__offset(this.bb_pos, 46);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-OB(index: number):string
-OB(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-OB(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
-}
-
-obLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+/**
+ * Additional notes
+ */
+NOTES():string|null
+NOTES(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+NOTES(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 static startGNO(builder:flatbuffers.Builder) {
-  builder.startObject(5);
+  builder.startObject(23);
 }
 
-static addGnssSatId(builder:flatbuffers.Builder, GNSS_SAT_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(0, GNSS_SAT_IDOffset, 0);
+static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(0, IDOffset, 0);
 }
 
-static addTrackingStatus(builder:flatbuffers.Builder, TRACKING_STATUS:number) {
-  builder.addFieldInt32(1, TRACKING_STATUS, 0);
+static addReceiverId(builder:flatbuffers.Builder, RECEIVER_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, RECEIVER_IDOffset, 0);
 }
 
-static addAgcState(builder:flatbuffers.Builder, AGC_STATE:number) {
-  builder.addFieldInt32(2, AGC_STATE, 0);
+static addReceiverType(builder:flatbuffers.Builder, RECEIVER_TYPEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(2, RECEIVER_TYPEOffset, 0);
+}
+
+static addAntennaId(builder:flatbuffers.Builder, ANTENNA_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(3, ANTENNA_IDOffset, 0);
+}
+
+static addAntennaType(builder:flatbuffers.Builder, ANTENNA_TYPEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(4, ANTENNA_TYPEOffset, 0);
+}
+
+static addFirmwareVersion(builder:flatbuffers.Builder, FIRMWARE_VERSIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, FIRMWARE_VERSIONOffset, 0);
+}
+
+static addEpoch(builder:flatbuffers.Builder, EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, EPOCHOffset, 0);
+}
+
+static addClockOffset(builder:flatbuffers.Builder, CLOCK_OFFSET:number) {
+  builder.addFieldFloat64(7, CLOCK_OFFSET, 0.0);
+}
+
+static addClockDrift(builder:flatbuffers.Builder, CLOCK_DRIFT:number) {
+  builder.addFieldFloat64(8, CLOCK_DRIFT, 0.0);
+}
+
+static addLatitude(builder:flatbuffers.Builder, LATITUDE:number) {
+  builder.addFieldFloat64(9, LATITUDE, 0.0);
+}
+
+static addLongitude(builder:flatbuffers.Builder, LONGITUDE:number) {
+  builder.addFieldFloat64(10, LONGITUDE, 0.0);
+}
+
+static addAltitude(builder:flatbuffers.Builder, ALTITUDE:number) {
+  builder.addFieldFloat64(11, ALTITUDE, 0.0);
+}
+
+static addApproxX(builder:flatbuffers.Builder, APPROX_X:number) {
+  builder.addFieldFloat64(12, APPROX_X, 0.0);
+}
+
+static addApproxY(builder:flatbuffers.Builder, APPROX_Y:number) {
+  builder.addFieldFloat64(13, APPROX_Y, 0.0);
+}
+
+static addApproxZ(builder:flatbuffers.Builder, APPROX_Z:number) {
+  builder.addFieldFloat64(14, APPROX_Z, 0.0);
+}
+
+static addInterval(builder:flatbuffers.Builder, INTERVAL:number) {
+  builder.addFieldFloat64(15, INTERVAL, 0.0);
+}
+
+static addNumSats(builder:flatbuffers.Builder, NUM_SATS:number) {
+  builder.addFieldInt32(16, NUM_SATS, 0);
+}
+
+static addPdop(builder:flatbuffers.Builder, PDOP:number) {
+  builder.addFieldFloat64(17, PDOP, 0.0);
+}
+
+static addHdop(builder:flatbuffers.Builder, HDOP:number) {
+  builder.addFieldFloat64(18, HDOP, 0.0);
+}
+
+static addVdop(builder:flatbuffers.Builder, VDOP:number) {
+  builder.addFieldFloat64(19, VDOP, 0.0);
+}
+
+static addSatObs(builder:flatbuffers.Builder, SAT_OBSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(20, SAT_OBSOffset, 0);
+}
+
+static createSatObsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startSatObsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
 }
 
 static addObsCodeSet(builder:flatbuffers.Builder, OBS_CODE_SETOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, OBS_CODE_SETOffset, 0);
+  builder.addFieldOffset(21, OBS_CODE_SETOffset, 0);
 }
 
 static createObsCodeSetVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -104,20 +360,8 @@ static startObsCodeSetVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
 }
 
-static addOb(builder:flatbuffers.Builder, OBOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(4, OBOffset, 0);
-}
-
-static createObVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startObVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+static addNotes(builder:flatbuffers.Builder, NOTESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(22, NOTESOffset, 0);
 }
 
 static endGNO(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -133,57 +377,154 @@ static finishSizePrefixedGNOBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$GNO', true);
 }
 
-static createGNO(builder:flatbuffers.Builder, GNSS_SAT_IDOffset:flatbuffers.Offset, TRACKING_STATUS:number, AGC_STATE:number, OBS_CODE_SETOffset:flatbuffers.Offset, OBOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createGNO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, RECEIVER_IDOffset:flatbuffers.Offset, RECEIVER_TYPEOffset:flatbuffers.Offset, ANTENNA_IDOffset:flatbuffers.Offset, ANTENNA_TYPEOffset:flatbuffers.Offset, FIRMWARE_VERSIONOffset:flatbuffers.Offset, EPOCHOffset:flatbuffers.Offset, CLOCK_OFFSET:number, CLOCK_DRIFT:number, LATITUDE:number, LONGITUDE:number, ALTITUDE:number, APPROX_X:number, APPROX_Y:number, APPROX_Z:number, INTERVAL:number, NUM_SATS:number, PDOP:number, HDOP:number, VDOP:number, SAT_OBSOffset:flatbuffers.Offset, OBS_CODE_SETOffset:flatbuffers.Offset, NOTESOffset:flatbuffers.Offset):flatbuffers.Offset {
   GNO.startGNO(builder);
-  GNO.addGnssSatId(builder, GNSS_SAT_IDOffset);
-  GNO.addTrackingStatus(builder, TRACKING_STATUS);
-  GNO.addAgcState(builder, AGC_STATE);
+  GNO.addId(builder, IDOffset);
+  GNO.addReceiverId(builder, RECEIVER_IDOffset);
+  GNO.addReceiverType(builder, RECEIVER_TYPEOffset);
+  GNO.addAntennaId(builder, ANTENNA_IDOffset);
+  GNO.addAntennaType(builder, ANTENNA_TYPEOffset);
+  GNO.addFirmwareVersion(builder, FIRMWARE_VERSIONOffset);
+  GNO.addEpoch(builder, EPOCHOffset);
+  GNO.addClockOffset(builder, CLOCK_OFFSET);
+  GNO.addClockDrift(builder, CLOCK_DRIFT);
+  GNO.addLatitude(builder, LATITUDE);
+  GNO.addLongitude(builder, LONGITUDE);
+  GNO.addAltitude(builder, ALTITUDE);
+  GNO.addApproxX(builder, APPROX_X);
+  GNO.addApproxY(builder, APPROX_Y);
+  GNO.addApproxZ(builder, APPROX_Z);
+  GNO.addInterval(builder, INTERVAL);
+  GNO.addNumSats(builder, NUM_SATS);
+  GNO.addPdop(builder, PDOP);
+  GNO.addHdop(builder, HDOP);
+  GNO.addVdop(builder, VDOP);
+  GNO.addSatObs(builder, SAT_OBSOffset);
   GNO.addObsCodeSet(builder, OBS_CODE_SETOffset);
-  GNO.addOb(builder, OBOffset);
+  GNO.addNotes(builder, NOTESOffset);
   return GNO.endGNO(builder);
 }
 
 unpack(): GNOT {
   return new GNOT(
-    this.GNSS_SAT_ID(),
-    this.TRACKING_STATUS(),
-    this.AGC_STATE(),
+    this.ID(),
+    this.RECEIVER_ID(),
+    this.RECEIVER_TYPE(),
+    this.ANTENNA_ID(),
+    this.ANTENNA_TYPE(),
+    this.FIRMWARE_VERSION(),
+    this.EPOCH(),
+    this.CLOCK_OFFSET(),
+    this.CLOCK_DRIFT(),
+    this.LATITUDE(),
+    this.LONGITUDE(),
+    this.ALTITUDE(),
+    this.APPROX_X(),
+    this.APPROX_Y(),
+    this.APPROX_Z(),
+    this.INTERVAL(),
+    this.NUM_SATS(),
+    this.PDOP(),
+    this.HDOP(),
+    this.VDOP(),
+    this.bb!.createObjList<gnssSatObs, gnssSatObsT>(this.SAT_OBS.bind(this), this.satObsLength()),
     this.bb!.createScalarList<string>(this.OBS_CODE_SET.bind(this), this.obsCodeSetLength()),
-    this.bb!.createScalarList<string>(this.OB.bind(this), this.obLength())
+    this.NOTES()
   );
 }
 
 
 unpackTo(_o: GNOT): void {
-  _o.GNSS_SAT_ID = this.GNSS_SAT_ID();
-  _o.TRACKING_STATUS = this.TRACKING_STATUS();
-  _o.AGC_STATE = this.AGC_STATE();
+  _o.ID = this.ID();
+  _o.RECEIVER_ID = this.RECEIVER_ID();
+  _o.RECEIVER_TYPE = this.RECEIVER_TYPE();
+  _o.ANTENNA_ID = this.ANTENNA_ID();
+  _o.ANTENNA_TYPE = this.ANTENNA_TYPE();
+  _o.FIRMWARE_VERSION = this.FIRMWARE_VERSION();
+  _o.EPOCH = this.EPOCH();
+  _o.CLOCK_OFFSET = this.CLOCK_OFFSET();
+  _o.CLOCK_DRIFT = this.CLOCK_DRIFT();
+  _o.LATITUDE = this.LATITUDE();
+  _o.LONGITUDE = this.LONGITUDE();
+  _o.ALTITUDE = this.ALTITUDE();
+  _o.APPROX_X = this.APPROX_X();
+  _o.APPROX_Y = this.APPROX_Y();
+  _o.APPROX_Z = this.APPROX_Z();
+  _o.INTERVAL = this.INTERVAL();
+  _o.NUM_SATS = this.NUM_SATS();
+  _o.PDOP = this.PDOP();
+  _o.HDOP = this.HDOP();
+  _o.VDOP = this.VDOP();
+  _o.SAT_OBS = this.bb!.createObjList<gnssSatObs, gnssSatObsT>(this.SAT_OBS.bind(this), this.satObsLength());
   _o.OBS_CODE_SET = this.bb!.createScalarList<string>(this.OBS_CODE_SET.bind(this), this.obsCodeSetLength());
-  _o.OB = this.bb!.createScalarList<string>(this.OB.bind(this), this.obLength());
+  _o.NOTES = this.NOTES();
 }
 }
 
 export class GNOT implements flatbuffers.IGeneratedObject {
 constructor(
-  public GNSS_SAT_ID: string|Uint8Array|null = null,
-  public TRACKING_STATUS: number = 0,
-  public AGC_STATE: number = 0,
+  public ID: string|Uint8Array|null = null,
+  public RECEIVER_ID: string|Uint8Array|null = null,
+  public RECEIVER_TYPE: string|Uint8Array|null = null,
+  public ANTENNA_ID: string|Uint8Array|null = null,
+  public ANTENNA_TYPE: string|Uint8Array|null = null,
+  public FIRMWARE_VERSION: string|Uint8Array|null = null,
+  public EPOCH: string|Uint8Array|null = null,
+  public CLOCK_OFFSET: number = 0.0,
+  public CLOCK_DRIFT: number = 0.0,
+  public LATITUDE: number = 0.0,
+  public LONGITUDE: number = 0.0,
+  public ALTITUDE: number = 0.0,
+  public APPROX_X: number = 0.0,
+  public APPROX_Y: number = 0.0,
+  public APPROX_Z: number = 0.0,
+  public INTERVAL: number = 0.0,
+  public NUM_SATS: number = 0,
+  public PDOP: number = 0.0,
+  public HDOP: number = 0.0,
+  public VDOP: number = 0.0,
+  public SAT_OBS: (gnssSatObsT)[] = [],
   public OBS_CODE_SET: (string)[] = [],
-  public OB: (string)[] = []
+  public NOTES: string|Uint8Array|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
-  const GNSS_SAT_ID = (this.GNSS_SAT_ID !== null ? builder.createString(this.GNSS_SAT_ID!) : 0);
+  const ID = (this.ID !== null ? builder.createString(this.ID!) : 0);
+  const RECEIVER_ID = (this.RECEIVER_ID !== null ? builder.createString(this.RECEIVER_ID!) : 0);
+  const RECEIVER_TYPE = (this.RECEIVER_TYPE !== null ? builder.createString(this.RECEIVER_TYPE!) : 0);
+  const ANTENNA_ID = (this.ANTENNA_ID !== null ? builder.createString(this.ANTENNA_ID!) : 0);
+  const ANTENNA_TYPE = (this.ANTENNA_TYPE !== null ? builder.createString(this.ANTENNA_TYPE!) : 0);
+  const FIRMWARE_VERSION = (this.FIRMWARE_VERSION !== null ? builder.createString(this.FIRMWARE_VERSION!) : 0);
+  const EPOCH = (this.EPOCH !== null ? builder.createString(this.EPOCH!) : 0);
+  const SAT_OBS = GNO.createSatObsVector(builder, builder.createObjectOffsetList(this.SAT_OBS));
   const OBS_CODE_SET = GNO.createObsCodeSetVector(builder, builder.createObjectOffsetList(this.OBS_CODE_SET));
-  const OB = GNO.createObVector(builder, builder.createObjectOffsetList(this.OB));
+  const NOTES = (this.NOTES !== null ? builder.createString(this.NOTES!) : 0);
 
   return GNO.createGNO(builder,
-    GNSS_SAT_ID,
-    this.TRACKING_STATUS,
-    this.AGC_STATE,
+    ID,
+    RECEIVER_ID,
+    RECEIVER_TYPE,
+    ANTENNA_ID,
+    ANTENNA_TYPE,
+    FIRMWARE_VERSION,
+    EPOCH,
+    this.CLOCK_OFFSET,
+    this.CLOCK_DRIFT,
+    this.LATITUDE,
+    this.LONGITUDE,
+    this.ALTITUDE,
+    this.APPROX_X,
+    this.APPROX_Y,
+    this.APPROX_Z,
+    this.INTERVAL,
+    this.NUM_SATS,
+    this.PDOP,
+    this.HDOP,
+    this.VDOP,
+    SAT_OBS,
     OBS_CODE_SET,
-    OB
+    NOTES
   );
 }
 }

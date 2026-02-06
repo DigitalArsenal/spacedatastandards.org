@@ -41,406 +41,485 @@ class RDO extends Table
         return $this;
     }
 
+    /// Unique identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Observation time (ISO 8601)
     public function getOB_TIME()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Sensor identifier
     public function getID_SENSOR()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /**
-     * @return int
-     */
-    public function getSAT_NO()
+    /// Original sensor identifier
+    public function getORIG_SENSOR_ID()
     {
         $o = $this->__offset(10);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
-    }
-
-    public function getTASK_ID()
-    {
-        $o = $this->__offset(12);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getTRANSACTION_ID()
+    /// Satellite catalog number
+    /**
+     * @return uint
+     */
+    public function getSAT_NO()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// International designator
+    public function getORIG_OBJECT_ID()
     {
         $o = $this->__offset(14);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getTRACK_ID()
+    /// On-orbit reference
+    public function getON_ORBIT()
     {
         $o = $this->__offset(16);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getOB_POSITION()
-    {
-        $o = $this->__offset(18);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getORIG_OBJECT_ID()
-    {
-        $o = $this->__offset(20);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getORIG_SENSOR_ID()
-    {
-        $o = $this->__offset(22);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
+    /// True if uncorrelated target
     /**
      * @return bool
      */
     public function getUCT()
     {
-        $o = $this->__offset(24);
+        $o = $this->__offset(18);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Observation type
+    /**
+     * @return sbyte
+     */
+    public function getOBS_TYPE()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \radarObsType::DETECTION;
+    }
+
+    /// Task identifier
+    public function getTASK_ID()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Transaction identifier
+    public function getTRANSACTION_ID()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Track identifier
+    public function getTRACK_ID()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Observation position identifier
+    public function getOB_POSITION()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Sensor reference frame
+    public function getSEN_REFERENCE_FRAME()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Azimuth angle (degrees)
     /**
      * @return double
      */
     public function getAZIMUTH()
     {
-        $o = $this->__offset(26);
+        $o = $this->__offset(32);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Azimuth uncertainty (degrees, 1-sigma)
     /**
      * @return double
      */
     public function getAZIMUTH_UNC()
     {
-        $o = $this->__offset(28);
+        $o = $this->__offset(34);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Azimuth bias (degrees)
     /**
      * @return double
      */
     public function getAZIMUTH_BIAS()
     {
-        $o = $this->__offset(30);
+        $o = $this->__offset(36);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Azimuth rate (degrees/s)
     /**
      * @return double
      */
     public function getAZIMUTH_RATE()
     {
-        $o = $this->__offset(32);
+        $o = $this->__offset(38);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Elevation angle (degrees)
     /**
      * @return double
      */
     public function getELEVATION()
     {
-        $o = $this->__offset(34);
+        $o = $this->__offset(40);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Elevation uncertainty (degrees, 1-sigma)
     /**
      * @return double
      */
     public function getELEVATION_UNC()
     {
-        $o = $this->__offset(36);
+        $o = $this->__offset(42);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Elevation bias (degrees)
     /**
      * @return double
      */
     public function getELEVATION_BIAS()
     {
-        $o = $this->__offset(38);
+        $o = $this->__offset(44);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Elevation rate (degrees/s)
     /**
      * @return double
      */
     public function getELEVATION_RATE()
     {
-        $o = $this->__offset(40);
+        $o = $this->__offset(46);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Slant range (km)
     /**
      * @return double
      */
     public function getRANGE()
     {
-        $o = $this->__offset(42);
+        $o = $this->__offset(48);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /**
-     * @return double
-     */
-    public function getRANGE_ACCEL()
-    {
-        $o = $this->__offset(44);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getRANGE_ACCEL_UNC()
-    {
-        $o = $this->__offset(46);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
+    /// Range uncertainty (km, 1-sigma)
     /**
      * @return double
      */
     public function getRANGE_UNC()
     {
-        $o = $this->__offset(48);
+        $o = $this->__offset(50);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Range bias (km)
     /**
      * @return double
      */
     public function getRANGE_BIAS()
     {
-        $o = $this->__offset(50);
+        $o = $this->__offset(52);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Range rate (km/s)
     /**
      * @return double
      */
     public function getRANGE_RATE()
     {
-        $o = $this->__offset(52);
+        $o = $this->__offset(54);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Range rate uncertainty (km/s, 1-sigma)
     /**
      * @return double
      */
     public function getRANGE_RATE_UNC()
     {
-        $o = $this->__offset(54);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getDOPPLER()
-    {
         $o = $this->__offset(56);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Range acceleration (km/s^2)
     /**
      * @return double
      */
-    public function getDOPPLER_UNC()
+    public function getRANGE_ACCEL()
     {
         $o = $this->__offset(58);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Range acceleration uncertainty (km/s^2, 1-sigma)
     /**
      * @return double
      */
-    public function getRA()
+    public function getRANGE_ACCEL_UNC()
     {
         $o = $this->__offset(60);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Doppler shift (Hz)
     /**
      * @return double
      */
-    public function getDECLINATION()
+    public function getDOPPLER()
     {
         $o = $this->__offset(62);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Doppler uncertainty (Hz, 1-sigma)
     /**
      * @return double
      */
-    public function getX()
+    public function getDOPPLER_UNC()
     {
         $o = $this->__offset(64);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Right ascension (degrees)
     /**
      * @return double
      */
-    public function getY()
+    public function getRA()
     {
         $o = $this->__offset(66);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Declination (degrees)
     /**
      * @return double
      */
-    public function getZ()
+    public function getDECLINATION()
     {
         $o = $this->__offset(68);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Target position X (km, ECI)
     /**
      * @return double
      */
-    public function getXVEL()
+    public function getX()
     {
         $o = $this->__offset(70);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Target position Y (km, ECI)
     /**
      * @return double
      */
-    public function getYVEL()
+    public function getY()
     {
         $o = $this->__offset(72);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Target position Z (km, ECI)
     /**
      * @return double
      */
-    public function getZVEL()
+    public function getZ()
     {
         $o = $this->__offset(74);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Target velocity X (km/s, ECI)
     /**
      * @return double
      */
-    public function getSENX()
+    public function getXVEL()
     {
         $o = $this->__offset(76);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Target velocity Y (km/s, ECI)
     /**
      * @return double
      */
-    public function getSENY()
+    public function getYVEL()
     {
         $o = $this->__offset(78);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Target velocity Z (km/s, ECI)
     /**
      * @return double
      */
-    public function getSENZ()
+    public function getZVEL()
     {
         $o = $this->__offset(80);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor position X (km, ECEF)
     /**
      * @return double
      */
-    public function getRCS()
+    public function getSENX()
     {
         $o = $this->__offset(82);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor position Y (km, ECEF)
     /**
      * @return double
      */
-    public function getRCS_UNC()
+    public function getSENY()
     {
         $o = $this->__offset(84);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor position Z (km, ECEF)
     /**
      * @return double
      */
-    public function getORTHOGONAL_RCS()
+    public function getSENZ()
     {
         $o = $this->__offset(86);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Radar cross-section (dBsm)
     /**
      * @return double
      */
-    public function getORTHOGONAL_RCS_UNC()
+    public function getRCS()
     {
         $o = $this->__offset(88);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// RCS uncertainty (dBsm, 1-sigma)
     /**
      * @return double
      */
-    public function getSNR()
+    public function getRCS_UNC()
     {
         $o = $this->__offset(90);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Orthogonal polarization RCS (dBsm)
     /**
      * @return double
      */
-    public function getBEAM()
+    public function getORTHOGONAL_RCS()
     {
         $o = $this->__offset(92);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Orthogonal RCS uncertainty (dBsm, 1-sigma)
     /**
      * @return double
      */
-    public function getTIMING_BIAS()
+    public function getORTHOGONAL_RCS_UNC()
     {
         $o = $this->__offset(94);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    public function getRAW_FILE_URI()
+    /// Signal-to-noise ratio (dB)
+    /**
+     * @return double
+     */
+    public function getSNR()
     {
         $o = $this->__offset(96);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Beam identifier
+    /**
+     * @return double
+     */
+    public function getBEAM()
+    {
+        $o = $this->__offset(98);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Timing bias (seconds)
+    /**
+     * @return double
+     */
+    public function getTIMING_BIAS()
+    {
+        $o = $this->__offset(100);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Reference to raw data file
+    public function getRAW_FILE_URI()
+    {
+        $o = $this->__offset(102);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Event descriptor
+    public function getDESCRIPTOR()
+    {
+        $o = $this->__offset(104);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Associated tags
     /**
      * @param int offset
      * @return string
      */
     public function getTAGS($j)
     {
-        $o = $this->__offset(98);
+        $o = $this->__offset(106);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -449,32 +528,8 @@ class RDO extends Table
      */
     public function getTAGSLength()
     {
-        $o = $this->__offset(98);
-        return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
-    public function getON_ORBIT()
-    {
-        $o = $this->__offset(100);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getSEN_REFERENCE_FRAME()
-    {
-        $o = $this->__offset(102);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getDESCRIPTOR()
-    {
-        $o = $this->__offset(104);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getTYPE()
-    {
         $o = $this->__offset(106);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
     /**
@@ -490,20 +545,23 @@ class RDO extends Table
      * @param FlatBufferBuilder $builder
      * @return RDO
      */
-    public static function createRDO(FlatBufferBuilder $builder, $ID, $OB_TIME, $ID_SENSOR, $SAT_NO, $TASK_ID, $TRANSACTION_ID, $TRACK_ID, $OB_POSITION, $ORIG_OBJECT_ID, $ORIG_SENSOR_ID, $UCT, $AZIMUTH, $AZIMUTH_UNC, $AZIMUTH_BIAS, $AZIMUTH_RATE, $ELEVATION, $ELEVATION_UNC, $ELEVATION_BIAS, $ELEVATION_RATE, $RANGE, $RANGE_ACCEL, $RANGE_ACCEL_UNC, $RANGE_UNC, $RANGE_BIAS, $RANGE_RATE, $RANGE_RATE_UNC, $DOPPLER, $DOPPLER_UNC, $RA, $DECLINATION, $X, $Y, $Z, $XVEL, $YVEL, $ZVEL, $SENX, $SENY, $SENZ, $RCS, $RCS_UNC, $ORTHOGONAL_RCS, $ORTHOGONAL_RCS_UNC, $SNR, $BEAM, $TIMING_BIAS, $RAW_FILE_URI, $TAGS, $ON_ORBIT, $SEN_REFERENCE_FRAME, $DESCRIPTOR, $TYPE)
+    public static function createRDO(FlatBufferBuilder $builder, $ID, $OB_TIME, $ID_SENSOR, $ORIG_SENSOR_ID, $SAT_NO, $ORIG_OBJECT_ID, $ON_ORBIT, $UCT, $OBS_TYPE, $TASK_ID, $TRANSACTION_ID, $TRACK_ID, $OB_POSITION, $SEN_REFERENCE_FRAME, $AZIMUTH, $AZIMUTH_UNC, $AZIMUTH_BIAS, $AZIMUTH_RATE, $ELEVATION, $ELEVATION_UNC, $ELEVATION_BIAS, $ELEVATION_RATE, $RANGE, $RANGE_UNC, $RANGE_BIAS, $RANGE_RATE, $RANGE_RATE_UNC, $RANGE_ACCEL, $RANGE_ACCEL_UNC, $DOPPLER, $DOPPLER_UNC, $RA, $DECLINATION, $X, $Y, $Z, $XVEL, $YVEL, $ZVEL, $SENX, $SENY, $SENZ, $RCS, $RCS_UNC, $ORTHOGONAL_RCS, $ORTHOGONAL_RCS_UNC, $SNR, $BEAM, $TIMING_BIAS, $RAW_FILE_URI, $DESCRIPTOR, $TAGS)
     {
         $builder->startObject(52);
         self::addID($builder, $ID);
         self::addOB_TIME($builder, $OB_TIME);
         self::addID_SENSOR($builder, $ID_SENSOR);
+        self::addORIG_SENSOR_ID($builder, $ORIG_SENSOR_ID);
         self::addSAT_NO($builder, $SAT_NO);
+        self::addORIG_OBJECT_ID($builder, $ORIG_OBJECT_ID);
+        self::addON_ORBIT($builder, $ON_ORBIT);
+        self::addUCT($builder, $UCT);
+        self::addOBS_TYPE($builder, $OBS_TYPE);
         self::addTASK_ID($builder, $TASK_ID);
         self::addTRANSACTION_ID($builder, $TRANSACTION_ID);
         self::addTRACK_ID($builder, $TRACK_ID);
         self::addOB_POSITION($builder, $OB_POSITION);
-        self::addORIG_OBJECT_ID($builder, $ORIG_OBJECT_ID);
-        self::addORIG_SENSOR_ID($builder, $ORIG_SENSOR_ID);
-        self::addUCT($builder, $UCT);
+        self::addSEN_REFERENCE_FRAME($builder, $SEN_REFERENCE_FRAME);
         self::addAZIMUTH($builder, $AZIMUTH);
         self::addAZIMUTH_UNC($builder, $AZIMUTH_UNC);
         self::addAZIMUTH_BIAS($builder, $AZIMUTH_BIAS);
@@ -513,12 +571,12 @@ class RDO extends Table
         self::addELEVATION_BIAS($builder, $ELEVATION_BIAS);
         self::addELEVATION_RATE($builder, $ELEVATION_RATE);
         self::addRANGE($builder, $RANGE);
-        self::addRANGE_ACCEL($builder, $RANGE_ACCEL);
-        self::addRANGE_ACCEL_UNC($builder, $RANGE_ACCEL_UNC);
         self::addRANGE_UNC($builder, $RANGE_UNC);
         self::addRANGE_BIAS($builder, $RANGE_BIAS);
         self::addRANGE_RATE($builder, $RANGE_RATE);
         self::addRANGE_RATE_UNC($builder, $RANGE_RATE_UNC);
+        self::addRANGE_ACCEL($builder, $RANGE_ACCEL);
+        self::addRANGE_ACCEL_UNC($builder, $RANGE_ACCEL_UNC);
         self::addDOPPLER($builder, $DOPPLER);
         self::addDOPPLER_UNC($builder, $DOPPLER_UNC);
         self::addRA($builder, $RA);
@@ -540,11 +598,8 @@ class RDO extends Table
         self::addBEAM($builder, $BEAM);
         self::addTIMING_BIAS($builder, $TIMING_BIAS);
         self::addRAW_FILE_URI($builder, $RAW_FILE_URI);
-        self::addTAGS($builder, $TAGS);
-        self::addON_ORBIT($builder, $ON_ORBIT);
-        self::addSEN_REFERENCE_FRAME($builder, $SEN_REFERENCE_FRAME);
         self::addDESCRIPTOR($builder, $DESCRIPTOR);
-        self::addTYPE($builder, $TYPE);
+        self::addTAGS($builder, $TAGS);
         $o = $builder->endObject();
         return $o;
     }
@@ -581,52 +636,22 @@ class RDO extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param StringOffset
+     * @return void
+     */
+    public static function addORIG_SENSOR_ID(FlatBufferBuilder $builder, $ORIG_SENSOR_ID)
+    {
+        $builder->addOffsetX(3, $ORIG_SENSOR_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
      * @return void
      */
     public static function addSAT_NO(FlatBufferBuilder $builder, $SAT_NO)
     {
-        $builder->addIntX(3, $SAT_NO, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addTASK_ID(FlatBufferBuilder $builder, $TASK_ID)
-    {
-        $builder->addOffsetX(4, $TASK_ID, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addTRANSACTION_ID(FlatBufferBuilder $builder, $TRANSACTION_ID)
-    {
-        $builder->addOffsetX(5, $TRANSACTION_ID, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addTRACK_ID(FlatBufferBuilder $builder, $TRACK_ID)
-    {
-        $builder->addOffsetX(6, $TRACK_ID, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addOB_POSITION(FlatBufferBuilder $builder, $OB_POSITION)
-    {
-        $builder->addOffsetX(7, $OB_POSITION, 0);
+        $builder->addUintX(4, $SAT_NO, 0);
     }
 
     /**
@@ -636,7 +661,7 @@ class RDO extends Table
      */
     public static function addORIG_OBJECT_ID(FlatBufferBuilder $builder, $ORIG_OBJECT_ID)
     {
-        $builder->addOffsetX(8, $ORIG_OBJECT_ID, 0);
+        $builder->addOffsetX(5, $ORIG_OBJECT_ID, 0);
     }
 
     /**
@@ -644,9 +669,9 @@ class RDO extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addORIG_SENSOR_ID(FlatBufferBuilder $builder, $ORIG_SENSOR_ID)
+    public static function addON_ORBIT(FlatBufferBuilder $builder, $ON_ORBIT)
     {
-        $builder->addOffsetX(9, $ORIG_SENSOR_ID, 0);
+        $builder->addOffsetX(6, $ON_ORBIT, 0);
     }
 
     /**
@@ -656,7 +681,67 @@ class RDO extends Table
      */
     public static function addUCT(FlatBufferBuilder $builder, $UCT)
     {
-        $builder->addBoolX(10, $UCT, false);
+        $builder->addBoolX(7, $UCT, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addOBS_TYPE(FlatBufferBuilder $builder, $OBS_TYPE)
+    {
+        $builder->addSbyteX(8, $OBS_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addTASK_ID(FlatBufferBuilder $builder, $TASK_ID)
+    {
+        $builder->addOffsetX(9, $TASK_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addTRANSACTION_ID(FlatBufferBuilder $builder, $TRANSACTION_ID)
+    {
+        $builder->addOffsetX(10, $TRANSACTION_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addTRACK_ID(FlatBufferBuilder $builder, $TRACK_ID)
+    {
+        $builder->addOffsetX(11, $TRACK_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addOB_POSITION(FlatBufferBuilder $builder, $OB_POSITION)
+    {
+        $builder->addOffsetX(12, $OB_POSITION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSEN_REFERENCE_FRAME(FlatBufferBuilder $builder, $SEN_REFERENCE_FRAME)
+    {
+        $builder->addOffsetX(13, $SEN_REFERENCE_FRAME, 0);
     }
 
     /**
@@ -666,7 +751,7 @@ class RDO extends Table
      */
     public static function addAZIMUTH(FlatBufferBuilder $builder, $AZIMUTH)
     {
-        $builder->addDoubleX(11, $AZIMUTH, 0.0);
+        $builder->addDoubleX(14, $AZIMUTH, 0.0);
     }
 
     /**
@@ -676,7 +761,7 @@ class RDO extends Table
      */
     public static function addAZIMUTH_UNC(FlatBufferBuilder $builder, $AZIMUTH_UNC)
     {
-        $builder->addDoubleX(12, $AZIMUTH_UNC, 0.0);
+        $builder->addDoubleX(15, $AZIMUTH_UNC, 0.0);
     }
 
     /**
@@ -686,7 +771,7 @@ class RDO extends Table
      */
     public static function addAZIMUTH_BIAS(FlatBufferBuilder $builder, $AZIMUTH_BIAS)
     {
-        $builder->addDoubleX(13, $AZIMUTH_BIAS, 0.0);
+        $builder->addDoubleX(16, $AZIMUTH_BIAS, 0.0);
     }
 
     /**
@@ -696,7 +781,7 @@ class RDO extends Table
      */
     public static function addAZIMUTH_RATE(FlatBufferBuilder $builder, $AZIMUTH_RATE)
     {
-        $builder->addDoubleX(14, $AZIMUTH_RATE, 0.0);
+        $builder->addDoubleX(17, $AZIMUTH_RATE, 0.0);
     }
 
     /**
@@ -706,7 +791,7 @@ class RDO extends Table
      */
     public static function addELEVATION(FlatBufferBuilder $builder, $ELEVATION)
     {
-        $builder->addDoubleX(15, $ELEVATION, 0.0);
+        $builder->addDoubleX(18, $ELEVATION, 0.0);
     }
 
     /**
@@ -716,7 +801,7 @@ class RDO extends Table
      */
     public static function addELEVATION_UNC(FlatBufferBuilder $builder, $ELEVATION_UNC)
     {
-        $builder->addDoubleX(16, $ELEVATION_UNC, 0.0);
+        $builder->addDoubleX(19, $ELEVATION_UNC, 0.0);
     }
 
     /**
@@ -726,7 +811,7 @@ class RDO extends Table
      */
     public static function addELEVATION_BIAS(FlatBufferBuilder $builder, $ELEVATION_BIAS)
     {
-        $builder->addDoubleX(17, $ELEVATION_BIAS, 0.0);
+        $builder->addDoubleX(20, $ELEVATION_BIAS, 0.0);
     }
 
     /**
@@ -736,7 +821,7 @@ class RDO extends Table
      */
     public static function addELEVATION_RATE(FlatBufferBuilder $builder, $ELEVATION_RATE)
     {
-        $builder->addDoubleX(18, $ELEVATION_RATE, 0.0);
+        $builder->addDoubleX(21, $ELEVATION_RATE, 0.0);
     }
 
     /**
@@ -746,27 +831,7 @@ class RDO extends Table
      */
     public static function addRANGE(FlatBufferBuilder $builder, $RANGE)
     {
-        $builder->addDoubleX(19, $RANGE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addRANGE_ACCEL(FlatBufferBuilder $builder, $RANGE_ACCEL)
-    {
-        $builder->addDoubleX(20, $RANGE_ACCEL, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addRANGE_ACCEL_UNC(FlatBufferBuilder $builder, $RANGE_ACCEL_UNC)
-    {
-        $builder->addDoubleX(21, $RANGE_ACCEL_UNC, 0.0);
+        $builder->addDoubleX(22, $RANGE, 0.0);
     }
 
     /**
@@ -776,7 +841,7 @@ class RDO extends Table
      */
     public static function addRANGE_UNC(FlatBufferBuilder $builder, $RANGE_UNC)
     {
-        $builder->addDoubleX(22, $RANGE_UNC, 0.0);
+        $builder->addDoubleX(23, $RANGE_UNC, 0.0);
     }
 
     /**
@@ -786,7 +851,7 @@ class RDO extends Table
      */
     public static function addRANGE_BIAS(FlatBufferBuilder $builder, $RANGE_BIAS)
     {
-        $builder->addDoubleX(23, $RANGE_BIAS, 0.0);
+        $builder->addDoubleX(24, $RANGE_BIAS, 0.0);
     }
 
     /**
@@ -796,7 +861,7 @@ class RDO extends Table
      */
     public static function addRANGE_RATE(FlatBufferBuilder $builder, $RANGE_RATE)
     {
-        $builder->addDoubleX(24, $RANGE_RATE, 0.0);
+        $builder->addDoubleX(25, $RANGE_RATE, 0.0);
     }
 
     /**
@@ -806,7 +871,27 @@ class RDO extends Table
      */
     public static function addRANGE_RATE_UNC(FlatBufferBuilder $builder, $RANGE_RATE_UNC)
     {
-        $builder->addDoubleX(25, $RANGE_RATE_UNC, 0.0);
+        $builder->addDoubleX(26, $RANGE_RATE_UNC, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addRANGE_ACCEL(FlatBufferBuilder $builder, $RANGE_ACCEL)
+    {
+        $builder->addDoubleX(27, $RANGE_ACCEL, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addRANGE_ACCEL_UNC(FlatBufferBuilder $builder, $RANGE_ACCEL_UNC)
+    {
+        $builder->addDoubleX(28, $RANGE_ACCEL_UNC, 0.0);
     }
 
     /**
@@ -816,7 +901,7 @@ class RDO extends Table
      */
     public static function addDOPPLER(FlatBufferBuilder $builder, $DOPPLER)
     {
-        $builder->addDoubleX(26, $DOPPLER, 0.0);
+        $builder->addDoubleX(29, $DOPPLER, 0.0);
     }
 
     /**
@@ -826,7 +911,7 @@ class RDO extends Table
      */
     public static function addDOPPLER_UNC(FlatBufferBuilder $builder, $DOPPLER_UNC)
     {
-        $builder->addDoubleX(27, $DOPPLER_UNC, 0.0);
+        $builder->addDoubleX(30, $DOPPLER_UNC, 0.0);
     }
 
     /**
@@ -836,7 +921,7 @@ class RDO extends Table
      */
     public static function addRA(FlatBufferBuilder $builder, $RA)
     {
-        $builder->addDoubleX(28, $RA, 0.0);
+        $builder->addDoubleX(31, $RA, 0.0);
     }
 
     /**
@@ -846,7 +931,7 @@ class RDO extends Table
      */
     public static function addDECLINATION(FlatBufferBuilder $builder, $DECLINATION)
     {
-        $builder->addDoubleX(29, $DECLINATION, 0.0);
+        $builder->addDoubleX(32, $DECLINATION, 0.0);
     }
 
     /**
@@ -856,7 +941,7 @@ class RDO extends Table
      */
     public static function addX(FlatBufferBuilder $builder, $X)
     {
-        $builder->addDoubleX(30, $X, 0.0);
+        $builder->addDoubleX(33, $X, 0.0);
     }
 
     /**
@@ -866,7 +951,7 @@ class RDO extends Table
      */
     public static function addY(FlatBufferBuilder $builder, $Y)
     {
-        $builder->addDoubleX(31, $Y, 0.0);
+        $builder->addDoubleX(34, $Y, 0.0);
     }
 
     /**
@@ -876,7 +961,7 @@ class RDO extends Table
      */
     public static function addZ(FlatBufferBuilder $builder, $Z)
     {
-        $builder->addDoubleX(32, $Z, 0.0);
+        $builder->addDoubleX(35, $Z, 0.0);
     }
 
     /**
@@ -886,7 +971,7 @@ class RDO extends Table
      */
     public static function addXVEL(FlatBufferBuilder $builder, $XVEL)
     {
-        $builder->addDoubleX(33, $XVEL, 0.0);
+        $builder->addDoubleX(36, $XVEL, 0.0);
     }
 
     /**
@@ -896,7 +981,7 @@ class RDO extends Table
      */
     public static function addYVEL(FlatBufferBuilder $builder, $YVEL)
     {
-        $builder->addDoubleX(34, $YVEL, 0.0);
+        $builder->addDoubleX(37, $YVEL, 0.0);
     }
 
     /**
@@ -906,7 +991,7 @@ class RDO extends Table
      */
     public static function addZVEL(FlatBufferBuilder $builder, $ZVEL)
     {
-        $builder->addDoubleX(35, $ZVEL, 0.0);
+        $builder->addDoubleX(38, $ZVEL, 0.0);
     }
 
     /**
@@ -916,7 +1001,7 @@ class RDO extends Table
      */
     public static function addSENX(FlatBufferBuilder $builder, $SENX)
     {
-        $builder->addDoubleX(36, $SENX, 0.0);
+        $builder->addDoubleX(39, $SENX, 0.0);
     }
 
     /**
@@ -926,7 +1011,7 @@ class RDO extends Table
      */
     public static function addSENY(FlatBufferBuilder $builder, $SENY)
     {
-        $builder->addDoubleX(37, $SENY, 0.0);
+        $builder->addDoubleX(40, $SENY, 0.0);
     }
 
     /**
@@ -936,7 +1021,7 @@ class RDO extends Table
      */
     public static function addSENZ(FlatBufferBuilder $builder, $SENZ)
     {
-        $builder->addDoubleX(38, $SENZ, 0.0);
+        $builder->addDoubleX(41, $SENZ, 0.0);
     }
 
     /**
@@ -946,7 +1031,7 @@ class RDO extends Table
      */
     public static function addRCS(FlatBufferBuilder $builder, $RCS)
     {
-        $builder->addDoubleX(39, $RCS, 0.0);
+        $builder->addDoubleX(42, $RCS, 0.0);
     }
 
     /**
@@ -956,7 +1041,7 @@ class RDO extends Table
      */
     public static function addRCS_UNC(FlatBufferBuilder $builder, $RCS_UNC)
     {
-        $builder->addDoubleX(40, $RCS_UNC, 0.0);
+        $builder->addDoubleX(43, $RCS_UNC, 0.0);
     }
 
     /**
@@ -966,7 +1051,7 @@ class RDO extends Table
      */
     public static function addORTHOGONAL_RCS(FlatBufferBuilder $builder, $ORTHOGONAL_RCS)
     {
-        $builder->addDoubleX(41, $ORTHOGONAL_RCS, 0.0);
+        $builder->addDoubleX(44, $ORTHOGONAL_RCS, 0.0);
     }
 
     /**
@@ -976,7 +1061,7 @@ class RDO extends Table
      */
     public static function addORTHOGONAL_RCS_UNC(FlatBufferBuilder $builder, $ORTHOGONAL_RCS_UNC)
     {
-        $builder->addDoubleX(42, $ORTHOGONAL_RCS_UNC, 0.0);
+        $builder->addDoubleX(45, $ORTHOGONAL_RCS_UNC, 0.0);
     }
 
     /**
@@ -986,7 +1071,7 @@ class RDO extends Table
      */
     public static function addSNR(FlatBufferBuilder $builder, $SNR)
     {
-        $builder->addDoubleX(43, $SNR, 0.0);
+        $builder->addDoubleX(46, $SNR, 0.0);
     }
 
     /**
@@ -996,7 +1081,7 @@ class RDO extends Table
      */
     public static function addBEAM(FlatBufferBuilder $builder, $BEAM)
     {
-        $builder->addDoubleX(44, $BEAM, 0.0);
+        $builder->addDoubleX(47, $BEAM, 0.0);
     }
 
     /**
@@ -1006,7 +1091,7 @@ class RDO extends Table
      */
     public static function addTIMING_BIAS(FlatBufferBuilder $builder, $TIMING_BIAS)
     {
-        $builder->addDoubleX(45, $TIMING_BIAS, 0.0);
+        $builder->addDoubleX(48, $TIMING_BIAS, 0.0);
     }
 
     /**
@@ -1016,7 +1101,17 @@ class RDO extends Table
      */
     public static function addRAW_FILE_URI(FlatBufferBuilder $builder, $RAW_FILE_URI)
     {
-        $builder->addOffsetX(46, $RAW_FILE_URI, 0);
+        $builder->addOffsetX(49, $RAW_FILE_URI, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDESCRIPTOR(FlatBufferBuilder $builder, $DESCRIPTOR)
+    {
+        $builder->addOffsetX(50, $DESCRIPTOR, 0);
     }
 
     /**
@@ -1026,7 +1121,7 @@ class RDO extends Table
      */
     public static function addTAGS(FlatBufferBuilder $builder, $TAGS)
     {
-        $builder->addOffsetX(47, $TAGS, 0);
+        $builder->addOffsetX(51, $TAGS, 0);
     }
 
     /**
@@ -1051,46 +1146,6 @@ class RDO extends Table
     public static function startTAGSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addON_ORBIT(FlatBufferBuilder $builder, $ON_ORBIT)
-    {
-        $builder->addOffsetX(48, $ON_ORBIT, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addSEN_REFERENCE_FRAME(FlatBufferBuilder $builder, $SEN_REFERENCE_FRAME)
-    {
-        $builder->addOffsetX(49, $SEN_REFERENCE_FRAME, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addDESCRIPTOR(FlatBufferBuilder $builder, $DESCRIPTOR)
-    {
-        $builder->addOffsetX(50, $DESCRIPTOR, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addTYPE(FlatBufferBuilder $builder, $TYPE)
-    {
-        $builder->addOffsetX(51, $TYPE, 0);
     }
 
     /**

@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "sensorStatus" : {
+      "type" : "string",
+      "enum": ["OPERATIONAL", "DEGRADED", "MAINTENANCE", "OFFLINE", "CALIBRATING", "TESTING", "DECOMMISSIONED"]
+    },
+    "maintenanceType" : {
+      "type" : "string",
+      "enum": ["SCHEDULED", "UNSCHEDULED", "CORRECTIVE", "PREVENTIVE", "CALIBRATION", "UPGRADE", "INSPECTION"]
+    },
+    "sensorMaintenanceEvent" : {
+      "type" : "object",
+      "description" : "Sensor Maintenance Event",
+      "properties" : {
+        "START_TIME" : {
+                "type" : "string",
+                "description" : "Maintenance start time (ISO 8601)"
+              },
+        "END_TIME" : {
+                "type" : "string",
+                "description" : "Maintenance end time (ISO 8601)"
+              },
+        "TYPE" : {
+                "$ref" : "#/definitions/maintenanceType",
+                "description" : "Type of maintenance"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Description of maintenance performed"
+              },
+        "COMPONENTS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Components affected"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "sensorPlan" : {
+      "type" : "object",
+      "description" : "Sensor Tasking Plan",
+      "properties" : {
+        "START_TIME" : {
+                "type" : "string",
+                "description" : "Plan start time (ISO 8601)"
+              },
+        "END_TIME" : {
+                "type" : "string",
+                "description" : "Plan end time (ISO 8601)"
+              },
+        "TARGET_ID" : {
+                "type" : "string",
+                "description" : "Target satellite number or designator"
+              },
+        "PRIORITY" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Priority level (1=highest)"
+              },
+        "MODE" : {
+                "type" : "string",
+                "description" : "Requested observation mode"
+              },
+        "MIN_ELEVATION" : {
+                "type" : "number",
+                "description" : "Minimum elevation in degrees"
+              },
+        "MAX_RANGE" : {
+                "type" : "number",
+                "description" : "Maximum range in km"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "sensorStats" : {
+      "type" : "object",
+      "description" : "Sensor Operational Statistics",
+      "properties" : {
+        "PERIOD_START" : {
+                "type" : "string",
+                "description" : "Statistics period start (ISO 8601)"
+              },
+        "PERIOD_END" : {
+                "type" : "string",
+                "description" : "Statistics period end (ISO 8601)"
+              },
+        "OBS_ATTEMPTED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Total observation attempts"
+              },
+        "OBS_SUCCESSFUL" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Successful observations"
+              },
+        "OBS_FAILED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Failed observations"
+              },
+        "UPTIME" : {
+                "type" : "number",
+                "description" : "Uptime fraction (0.0-1.0)"
+              },
+        "AVG_ACCURACY" : {
+                "type" : "number",
+                "description" : "Average tracking accuracy in arcseconds"
+              },
+        "DETECTIONS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Detected objects count"
+              },
+        "UCT_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Uncorrelated tracks count"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "SEN" : {
+      "type" : "object",
+      "description" : "Sensor Management",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Unique sensor identifier"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Sensor name"
+              },
+        "TYPE" : {
+                "type" : "string",
+                "description" : "Sensor type"
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/sensorStatus",
+                "description" : "Current operational status"
+              },
+        "SITE_ID" : {
+                "type" : "string",
+                "description" : "Site identifier"
+              },
+        "LATITUDE" : {
+                "type" : "number",
+                "description" : "Geodetic latitude in degrees"
+              },
+        "LONGITUDE" : {
+                "type" : "number",
+                "description" : "Geodetic longitude in degrees"
+              },
+        "ALTITUDE" : {
+                "type" : "number",
+                "description" : "Altitude in meters above WGS-84"
+              },
+        "STATUS_TIME" : {
+                "type" : "string",
+                "description" : "Last status update (ISO 8601)"
+              },
+        "MAINTENANCE" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/sensorMaintenanceEvent"},
+                "description" : "Maintenance history"
+              },
+        "PLANS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/sensorPlan"},
+                "description" : "Observation plans/taskings"
+              },
+        "STATISTICS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/sensorStats"},
+                "description" : "Operational statistics"
+              },
+        "NOTES" : {
+                "type" : "string",
+                "description" : "Additional notes"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/SEN"
+}

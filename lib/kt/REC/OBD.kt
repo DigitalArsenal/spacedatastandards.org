@@ -29,6 +29,9 @@ class OBD : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Unique identifier
+     */
     val ID : String?
         get() {
             val o = __offset(4)
@@ -40,18 +43,18 @@ class OBD : Table() {
         }
     val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val START_TIME : String?
+    /**
+     * Satellite catalog number
+     */
+    val SAT_NO : UInt
         get() {
             val o = __offset(6)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
-    val START_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun START_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val END_TIME : String?
+    /**
+     * International designator
+     */
+    val ORIG_OBJECT_ID : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -60,9 +63,12 @@ class OBD : Table() {
                 null
             }
         }
-    val END_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun END_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val ORIG_OBJECT_ID : String?
+    val ORIG_OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
+    fun ORIG_OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    /**
+     * On-orbit reference
+     */
+    val ON_ORBIT : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -71,14 +77,26 @@ class OBD : Table() {
                 null
             }
         }
-    val ORIG_OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun ORIG_OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    val SAT_NO : Int
+    val ON_ORBITAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
+    fun ON_ORBITInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    /**
+     * OD fit start time (ISO 8601)
+     */
+    val START_TIME : String?
         get() {
             val o = __offset(12)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
-    val APRIORI_ID_ELSET : String?
+    val START_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
+    fun START_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * OD fit end time (ISO 8601)
+     */
+    val END_TIME : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -87,20 +105,20 @@ class OBD : Table() {
                 null
             }
         }
-    val APRIORI_ID_ELSETAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun APRIORI_ID_ELSETInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
-    val APRIORI_ELSET : String?
+    val END_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
+    fun END_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    /**
+     * OD method used
+     */
+    val METHOD : Byte
         get() {
             val o = __offset(16)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val APRIORI_ELSETAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun APRIORI_ELSETInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
-    val APRIORI_ID_STATE_VECTOR : String?
+    /**
+     * Method source or software
+     */
+    val METHOD_SOURCE : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -109,25 +127,34 @@ class OBD : Table() {
                 null
             }
         }
-    val APRIORI_ID_STATE_VECTORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun APRIORI_ID_STATE_VECTORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
-    val APRIORI_STATE_VECTOR : String?
+    val METHOD_SOURCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
+    fun METHOD_SOURCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    /**
+     * True if this is an initial orbit determination
+     */
+    val INITIAL_OD : Boolean
         get() {
             val o = __offset(20)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * A priori element set identifier
+     */
+    val APRIORI_ID_ELSET : String?
+        get() {
+            val o = __offset(22)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val APRIORI_STATE_VECTORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun APRIORI_STATE_VECTORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
-    val INITIAL_OD : Boolean
-        get() {
-            val o = __offset(22)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
-        }
-    val LAST_OB_START : String?
+    val APRIORI_ID_ELSETAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
+    fun APRIORI_ID_ELSETInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    /**
+     * A priori element set data reference
+     */
+    val APRIORI_ELSET : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -136,9 +163,12 @@ class OBD : Table() {
                 null
             }
         }
-    val LAST_OB_STARTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun LAST_OB_STARTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
-    val LAST_OB_END : String?
+    val APRIORI_ELSETAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
+    fun APRIORI_ELSETInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    /**
+     * A priori state vector identifier
+     */
+    val APRIORI_ID_STATE_VECTOR : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -147,14 +177,26 @@ class OBD : Table() {
                 null
             }
         }
-    val LAST_OB_ENDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun LAST_OB_ENDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
-    val TIME_SPAN : Double
+    val APRIORI_ID_STATE_VECTORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
+    fun APRIORI_ID_STATE_VECTORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    /**
+     * A priori state vector data reference
+     */
+    val APRIORI_STATE_VECTOR : String?
         get() {
             val o = __offset(28)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
-    val EFFECTIVE_FROM : String?
+    val APRIORI_STATE_VECTORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
+    fun APRIORI_STATE_VECTORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    /**
+     * Start of last observation arc (ISO 8601)
+     */
+    val LAST_OB_START : String?
         get() {
             val o = __offset(30)
             return if (o != 0) {
@@ -163,9 +205,12 @@ class OBD : Table() {
                 null
             }
         }
-    val EFFECTIVE_FROMAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
-    fun EFFECTIVE_FROMInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
-    val EFFECTIVE_UNTIL : String?
+    val LAST_OB_STARTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
+    fun LAST_OB_STARTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    /**
+     * End of last observation arc (ISO 8601)
+     */
+    val LAST_OB_END : String?
         get() {
             val o = __offset(32)
             return if (o != 0) {
@@ -174,109 +219,197 @@ class OBD : Table() {
                 null
             }
         }
-    val EFFECTIVE_UNTILAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
-    fun EFFECTIVE_UNTILInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
-    val WRMS : Double
+    val LAST_OB_ENDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
+    fun LAST_OB_ENDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
+    /**
+     * Observation time span (days)
+     */
+    val TIME_SPAN : Double
         get() {
             val o = __offset(34)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val PREVIOUS_WRMS : Double
+    /**
+     * Fit span in days
+     */
+    val FIT_SPAN : Double
         get() {
             val o = __offset(36)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val FIRST_PASS_WRMS : Double
+    /**
+     * Solution effective from (ISO 8601)
+     */
+    val EFFECTIVE_FROM : String?
         get() {
             val o = __offset(38)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
-    val BEST_PASS_WRMS : Double
+    val EFFECTIVE_FROMAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 1)
+    fun EFFECTIVE_FROMInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 1)
+    /**
+     * Solution effective until (ISO 8601)
+     */
+    val EFFECTIVE_UNTIL : String?
         get() {
             val o = __offset(40)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
-    val ERROR_GROWTH_RATE : Double
+    val EFFECTIVE_UNTILAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(40, 1)
+    fun EFFECTIVE_UNTILInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 40, 1)
+    /**
+     * Weighted RMS of residuals
+     */
+    val WRMS : Double
         get() {
             val o = __offset(42)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val EDR : Double
+    /**
+     * Previous solution WRMS
+     */
+    val PREVIOUS_WRMS : Double
         get() {
             val o = __offset(44)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val METHOD : String?
+    /**
+     * First pass WRMS
+     */
+    val FIRST_PASS_WRMS : Double
         get() {
             val o = __offset(46)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val METHODAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(46, 1)
-    fun METHODInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 46, 1)
-    val METHOD_SOURCE : String?
+    /**
+     * Best pass WRMS
+     */
+    val BEST_PASS_WRMS : Double
         get() {
             val o = __offset(48)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val METHOD_SOURCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(48, 1)
-    fun METHOD_SOURCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 48, 1)
-    val FIT_SPAN : Double
+    /**
+     * Error growth rate (km/day)
+     */
+    val ERROR_GROWTH_RATE : Double
         get() {
             val o = __offset(50)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val BALLISTIC_COEFF_EST : Boolean
+    /**
+     * Energy dissipation rate
+     */
+    val EDR : Double
         get() {
             val o = __offset(52)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
-        }
-    val BALLISTIC_COEFF_MODEL : String?
-        get() {
-            val o = __offset(54)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val BALLISTIC_COEFF_MODELAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(54, 1)
-    fun BALLISTIC_COEFF_MODELInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 54, 1)
-    val AGOM_EST : Boolean
-        get() {
-            val o = __offset(56)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
-        }
-    val AGOM_MODEL : String?
-        get() {
-            val o = __offset(58)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val AGOM_MODELAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(58, 1)
-    fun AGOM_MODELInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 58, 1)
-    val RMS_CONVERGENCE_CRITERIA : Double
-        get() {
-            val o = __offset(60)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val NUM_ITERATIONS : Int
+    /**
+     * True if ballistic coefficient was estimated
+     */
+    val BALLISTIC_COEFF_EST : Boolean
+        get() {
+            val o = __offset(54)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Ballistic coefficient model
+     */
+    val BALLISTIC_COEFF_MODEL : String?
+        get() {
+            val o = __offset(56)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val BALLISTIC_COEFF_MODELAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(56, 1)
+    fun BALLISTIC_COEFF_MODELInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 56, 1)
+    /**
+     * True if area-to-mass ratio was estimated
+     */
+    val AGOM_EST : Boolean
+        get() {
+            val o = __offset(58)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Area-to-mass ratio model
+     */
+    val AGOM_MODEL : String?
+        get() {
+            val o = __offset(60)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val AGOM_MODELAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(60, 1)
+    fun AGOM_MODELInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 60, 1)
+    /**
+     * RMS convergence criteria
+     */
+    val RMS_CONVERGENCE_CRITERIA : Double
         get() {
             val o = __offset(62)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Number of iterations to converge
+     */
+    val NUM_ITERATIONS : UShort
+        get() {
+            val o = __offset(64)
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
+        }
+    /**
+     * Total accepted observations
+     */
+    val NUM_ACCEPTED_OBS : UInt
+        get() {
+            val o = __offset(66)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Total rejected observations
+     */
+    val NUM_REJECTED_OBS : UInt
+        get() {
+            val o = __offset(68)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Sensor contributions to this solution
+     */
+    fun SENSORS(j: Int) : odSensorContribution? = SENSORS(odSensorContribution(), j)
+    fun SENSORS(obj: odSensorContribution, j: Int) : odSensorContribution? {
+        val o = __offset(70)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val SENSORSLength : Int
+        get() {
+            val o = __offset(70); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Accepted observation types
+     */
     fun ACCEPTED_OB_TYPS(j: Int) : String? {
-        val o = __offset(64)
+        val o = __offset(72)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -285,10 +418,13 @@ class OBD : Table() {
     }
     val ACCEPTED_OB_TYPSLength : Int
         get() {
-            val o = __offset(64); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(72); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Accepted observation identifiers
+     */
     fun ACCEPTED_OB_IDS(j: Int) : String? {
-        val o = __offset(66)
+        val o = __offset(74)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -297,10 +433,13 @@ class OBD : Table() {
     }
     val ACCEPTED_OB_IDSLength : Int
         get() {
-            val o = __offset(66); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(74); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Rejected observation types
+     */
     fun REJECTED_OB_TYPS(j: Int) : String? {
-        val o = __offset(68)
+        val o = __offset(76)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -309,10 +448,13 @@ class OBD : Table() {
     }
     val REJECTED_OB_TYPSLength : Int
         get() {
-            val o = __offset(68); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(76); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Rejected observation identifiers
+     */
     fun REJECTED_OB_IDS(j: Int) : String? {
-        val o = __offset(70)
+        val o = __offset(78)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -321,31 +463,8 @@ class OBD : Table() {
     }
     val REJECTED_OB_IDSLength : Int
         get() {
-            val o = __offset(70); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(78); return if (o != 0) __vector_len(o) else 0
         }
-    fun SENSOR_IDS(j: Int) : String? {
-        val o = __offset(72)
-        return if (o != 0) {
-            __string(__vector(o) + j * 4)
-        } else {
-            null
-        }
-    }
-    val SENSOR_IDSLength : Int
-        get() {
-            val o = __offset(72); return if (o != 0) __vector_len(o) else 0
-        }
-    val ON_ORBIT : String?
-        get() {
-            val o = __offset(74)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val ON_ORBITAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(74, 1)
-    fun ON_ORBITInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 74, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsOBD(_bb: ByteBuffer): OBD = getRootAsOBD(_bb, OBD())
@@ -354,28 +473,26 @@ class OBD : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OBDBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OBD")
-        fun createOBD(builder: FlatBufferBuilder, IDOffset: Int, START_TIMEOffset: Int, END_TIMEOffset: Int, ORIG_OBJECT_IDOffset: Int, SAT_NO: Int, APRIORI_ID_ELSETOffset: Int, APRIORI_ELSETOffset: Int, APRIORI_ID_STATE_VECTOROffset: Int, APRIORI_STATE_VECTOROffset: Int, INITIAL_OD: Boolean, LAST_OB_STARTOffset: Int, LAST_OB_ENDOffset: Int, TIME_SPAN: Double, EFFECTIVE_FROMOffset: Int, EFFECTIVE_UNTILOffset: Int, WRMS: Double, PREVIOUS_WRMS: Double, FIRST_PASS_WRMS: Double, BEST_PASS_WRMS: Double, ERROR_GROWTH_RATE: Double, EDR: Double, METHODOffset: Int, METHOD_SOURCEOffset: Int, FIT_SPAN: Double, BALLISTIC_COEFF_EST: Boolean, BALLISTIC_COEFF_MODELOffset: Int, AGOM_EST: Boolean, AGOM_MODELOffset: Int, RMS_CONVERGENCE_CRITERIA: Double, NUM_ITERATIONS: Int, ACCEPTED_OB_TYPSOffset: Int, ACCEPTED_OB_IDSOffset: Int, REJECTED_OB_TYPSOffset: Int, REJECTED_OB_IDSOffset: Int, SENSOR_IDSOffset: Int, ON_ORBITOffset: Int) : Int {
-            builder.startTable(36)
+        fun createOBD(builder: FlatBufferBuilder, IDOffset: Int, SAT_NO: UInt, ORIG_OBJECT_IDOffset: Int, ON_ORBITOffset: Int, START_TIMEOffset: Int, END_TIMEOffset: Int, METHOD: Byte, METHOD_SOURCEOffset: Int, INITIAL_OD: Boolean, APRIORI_ID_ELSETOffset: Int, APRIORI_ELSETOffset: Int, APRIORI_ID_STATE_VECTOROffset: Int, APRIORI_STATE_VECTOROffset: Int, LAST_OB_STARTOffset: Int, LAST_OB_ENDOffset: Int, TIME_SPAN: Double, FIT_SPAN: Double, EFFECTIVE_FROMOffset: Int, EFFECTIVE_UNTILOffset: Int, WRMS: Double, PREVIOUS_WRMS: Double, FIRST_PASS_WRMS: Double, BEST_PASS_WRMS: Double, ERROR_GROWTH_RATE: Double, EDR: Double, BALLISTIC_COEFF_EST: Boolean, BALLISTIC_COEFF_MODELOffset: Int, AGOM_EST: Boolean, AGOM_MODELOffset: Int, RMS_CONVERGENCE_CRITERIA: Double, NUM_ITERATIONS: UShort, NUM_ACCEPTED_OBS: UInt, NUM_REJECTED_OBS: UInt, SENSORSOffset: Int, ACCEPTED_OB_TYPSOffset: Int, ACCEPTED_OB_IDSOffset: Int, REJECTED_OB_TYPSOffset: Int, REJECTED_OB_IDSOffset: Int) : Int {
+            builder.startTable(38)
             addRMS_CONVERGENCE_CRITERIA(builder, RMS_CONVERGENCE_CRITERIA)
-            addFIT_SPAN(builder, FIT_SPAN)
             addEDR(builder, EDR)
             addERROR_GROWTH_RATE(builder, ERROR_GROWTH_RATE)
             addBEST_PASS_WRMS(builder, BEST_PASS_WRMS)
             addFIRST_PASS_WRMS(builder, FIRST_PASS_WRMS)
             addPREVIOUS_WRMS(builder, PREVIOUS_WRMS)
             addWRMS(builder, WRMS)
+            addFIT_SPAN(builder, FIT_SPAN)
             addTIME_SPAN(builder, TIME_SPAN)
-            addON_ORBIT(builder, ON_ORBITOffset)
-            addSENSOR_IDS(builder, SENSOR_IDSOffset)
             addREJECTED_OB_IDS(builder, REJECTED_OB_IDSOffset)
             addREJECTED_OB_TYPS(builder, REJECTED_OB_TYPSOffset)
             addACCEPTED_OB_IDS(builder, ACCEPTED_OB_IDSOffset)
             addACCEPTED_OB_TYPS(builder, ACCEPTED_OB_TYPSOffset)
-            addNUM_ITERATIONS(builder, NUM_ITERATIONS)
+            addSENSORS(builder, SENSORSOffset)
+            addNUM_REJECTED_OBS(builder, NUM_REJECTED_OBS)
+            addNUM_ACCEPTED_OBS(builder, NUM_ACCEPTED_OBS)
             addAGOM_MODEL(builder, AGOM_MODELOffset)
             addBALLISTIC_COEFF_MODEL(builder, BALLISTIC_COEFF_MODELOffset)
-            addMETHOD_SOURCE(builder, METHOD_SOURCEOffset)
-            addMETHOD(builder, METHODOffset)
             addEFFECTIVE_UNTIL(builder, EFFECTIVE_UNTILOffset)
             addEFFECTIVE_FROM(builder, EFFECTIVE_FROMOffset)
             addLAST_OB_END(builder, LAST_OB_ENDOffset)
@@ -384,48 +501,64 @@ class OBD : Table() {
             addAPRIORI_ID_STATE_VECTOR(builder, APRIORI_ID_STATE_VECTOROffset)
             addAPRIORI_ELSET(builder, APRIORI_ELSETOffset)
             addAPRIORI_ID_ELSET(builder, APRIORI_ID_ELSETOffset)
-            addSAT_NO(builder, SAT_NO)
-            addORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset)
+            addMETHOD_SOURCE(builder, METHOD_SOURCEOffset)
             addEND_TIME(builder, END_TIMEOffset)
             addSTART_TIME(builder, START_TIMEOffset)
+            addON_ORBIT(builder, ON_ORBITOffset)
+            addORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset)
+            addSAT_NO(builder, SAT_NO)
             addID(builder, IDOffset)
+            addNUM_ITERATIONS(builder, NUM_ITERATIONS)
             addAGOM_EST(builder, AGOM_EST)
             addBALLISTIC_COEFF_EST(builder, BALLISTIC_COEFF_EST)
             addINITIAL_OD(builder, INITIAL_OD)
+            addMETHOD(builder, METHOD)
             return endOBD(builder)
         }
-        fun startOBD(builder: FlatBufferBuilder) = builder.startTable(36)
+        fun startOBD(builder: FlatBufferBuilder) = builder.startTable(38)
         fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addSTART_TIME(builder: FlatBufferBuilder, START_TIME: Int) = builder.addOffset(1, START_TIME, 0)
-        fun addEND_TIME(builder: FlatBufferBuilder, END_TIME: Int) = builder.addOffset(2, END_TIME, 0)
-        fun addORIG_OBJECT_ID(builder: FlatBufferBuilder, ORIG_OBJECT_ID: Int) = builder.addOffset(3, ORIG_OBJECT_ID, 0)
-        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: Int) = builder.addInt(4, SAT_NO, 0)
-        fun addAPRIORI_ID_ELSET(builder: FlatBufferBuilder, APRIORI_ID_ELSET: Int) = builder.addOffset(5, APRIORI_ID_ELSET, 0)
-        fun addAPRIORI_ELSET(builder: FlatBufferBuilder, APRIORI_ELSET: Int) = builder.addOffset(6, APRIORI_ELSET, 0)
-        fun addAPRIORI_ID_STATE_VECTOR(builder: FlatBufferBuilder, APRIORI_ID_STATE_VECTOR: Int) = builder.addOffset(7, APRIORI_ID_STATE_VECTOR, 0)
-        fun addAPRIORI_STATE_VECTOR(builder: FlatBufferBuilder, APRIORI_STATE_VECTOR: Int) = builder.addOffset(8, APRIORI_STATE_VECTOR, 0)
-        fun addINITIAL_OD(builder: FlatBufferBuilder, INITIAL_OD: Boolean) = builder.addBoolean(9, INITIAL_OD, false)
-        fun addLAST_OB_START(builder: FlatBufferBuilder, LAST_OB_START: Int) = builder.addOffset(10, LAST_OB_START, 0)
-        fun addLAST_OB_END(builder: FlatBufferBuilder, LAST_OB_END: Int) = builder.addOffset(11, LAST_OB_END, 0)
-        fun addTIME_SPAN(builder: FlatBufferBuilder, TIME_SPAN: Double) = builder.addDouble(12, TIME_SPAN, 0.0)
-        fun addEFFECTIVE_FROM(builder: FlatBufferBuilder, EFFECTIVE_FROM: Int) = builder.addOffset(13, EFFECTIVE_FROM, 0)
-        fun addEFFECTIVE_UNTIL(builder: FlatBufferBuilder, EFFECTIVE_UNTIL: Int) = builder.addOffset(14, EFFECTIVE_UNTIL, 0)
-        fun addWRMS(builder: FlatBufferBuilder, WRMS: Double) = builder.addDouble(15, WRMS, 0.0)
-        fun addPREVIOUS_WRMS(builder: FlatBufferBuilder, PREVIOUS_WRMS: Double) = builder.addDouble(16, PREVIOUS_WRMS, 0.0)
-        fun addFIRST_PASS_WRMS(builder: FlatBufferBuilder, FIRST_PASS_WRMS: Double) = builder.addDouble(17, FIRST_PASS_WRMS, 0.0)
-        fun addBEST_PASS_WRMS(builder: FlatBufferBuilder, BEST_PASS_WRMS: Double) = builder.addDouble(18, BEST_PASS_WRMS, 0.0)
-        fun addERROR_GROWTH_RATE(builder: FlatBufferBuilder, ERROR_GROWTH_RATE: Double) = builder.addDouble(19, ERROR_GROWTH_RATE, 0.0)
-        fun addEDR(builder: FlatBufferBuilder, EDR: Double) = builder.addDouble(20, EDR, 0.0)
-        fun addMETHOD(builder: FlatBufferBuilder, METHOD: Int) = builder.addOffset(21, METHOD, 0)
-        fun addMETHOD_SOURCE(builder: FlatBufferBuilder, METHOD_SOURCE: Int) = builder.addOffset(22, METHOD_SOURCE, 0)
-        fun addFIT_SPAN(builder: FlatBufferBuilder, FIT_SPAN: Double) = builder.addDouble(23, FIT_SPAN, 0.0)
-        fun addBALLISTIC_COEFF_EST(builder: FlatBufferBuilder, BALLISTIC_COEFF_EST: Boolean) = builder.addBoolean(24, BALLISTIC_COEFF_EST, false)
-        fun addBALLISTIC_COEFF_MODEL(builder: FlatBufferBuilder, BALLISTIC_COEFF_MODEL: Int) = builder.addOffset(25, BALLISTIC_COEFF_MODEL, 0)
-        fun addAGOM_EST(builder: FlatBufferBuilder, AGOM_EST: Boolean) = builder.addBoolean(26, AGOM_EST, false)
-        fun addAGOM_MODEL(builder: FlatBufferBuilder, AGOM_MODEL: Int) = builder.addOffset(27, AGOM_MODEL, 0)
-        fun addRMS_CONVERGENCE_CRITERIA(builder: FlatBufferBuilder, RMS_CONVERGENCE_CRITERIA: Double) = builder.addDouble(28, RMS_CONVERGENCE_CRITERIA, 0.0)
-        fun addNUM_ITERATIONS(builder: FlatBufferBuilder, NUM_ITERATIONS: Int) = builder.addInt(29, NUM_ITERATIONS, 0)
-        fun addACCEPTED_OB_TYPS(builder: FlatBufferBuilder, ACCEPTED_OB_TYPS: Int) = builder.addOffset(30, ACCEPTED_OB_TYPS, 0)
+        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: UInt) = builder.addInt(1, SAT_NO.toInt(), 0)
+        fun addORIG_OBJECT_ID(builder: FlatBufferBuilder, ORIG_OBJECT_ID: Int) = builder.addOffset(2, ORIG_OBJECT_ID, 0)
+        fun addON_ORBIT(builder: FlatBufferBuilder, ON_ORBIT: Int) = builder.addOffset(3, ON_ORBIT, 0)
+        fun addSTART_TIME(builder: FlatBufferBuilder, START_TIME: Int) = builder.addOffset(4, START_TIME, 0)
+        fun addEND_TIME(builder: FlatBufferBuilder, END_TIME: Int) = builder.addOffset(5, END_TIME, 0)
+        fun addMETHOD(builder: FlatBufferBuilder, METHOD: Byte) = builder.addByte(6, METHOD, 0)
+        fun addMETHOD_SOURCE(builder: FlatBufferBuilder, METHOD_SOURCE: Int) = builder.addOffset(7, METHOD_SOURCE, 0)
+        fun addINITIAL_OD(builder: FlatBufferBuilder, INITIAL_OD: Boolean) = builder.addBoolean(8, INITIAL_OD, false)
+        fun addAPRIORI_ID_ELSET(builder: FlatBufferBuilder, APRIORI_ID_ELSET: Int) = builder.addOffset(9, APRIORI_ID_ELSET, 0)
+        fun addAPRIORI_ELSET(builder: FlatBufferBuilder, APRIORI_ELSET: Int) = builder.addOffset(10, APRIORI_ELSET, 0)
+        fun addAPRIORI_ID_STATE_VECTOR(builder: FlatBufferBuilder, APRIORI_ID_STATE_VECTOR: Int) = builder.addOffset(11, APRIORI_ID_STATE_VECTOR, 0)
+        fun addAPRIORI_STATE_VECTOR(builder: FlatBufferBuilder, APRIORI_STATE_VECTOR: Int) = builder.addOffset(12, APRIORI_STATE_VECTOR, 0)
+        fun addLAST_OB_START(builder: FlatBufferBuilder, LAST_OB_START: Int) = builder.addOffset(13, LAST_OB_START, 0)
+        fun addLAST_OB_END(builder: FlatBufferBuilder, LAST_OB_END: Int) = builder.addOffset(14, LAST_OB_END, 0)
+        fun addTIME_SPAN(builder: FlatBufferBuilder, TIME_SPAN: Double) = builder.addDouble(15, TIME_SPAN, 0.0)
+        fun addFIT_SPAN(builder: FlatBufferBuilder, FIT_SPAN: Double) = builder.addDouble(16, FIT_SPAN, 0.0)
+        fun addEFFECTIVE_FROM(builder: FlatBufferBuilder, EFFECTIVE_FROM: Int) = builder.addOffset(17, EFFECTIVE_FROM, 0)
+        fun addEFFECTIVE_UNTIL(builder: FlatBufferBuilder, EFFECTIVE_UNTIL: Int) = builder.addOffset(18, EFFECTIVE_UNTIL, 0)
+        fun addWRMS(builder: FlatBufferBuilder, WRMS: Double) = builder.addDouble(19, WRMS, 0.0)
+        fun addPREVIOUS_WRMS(builder: FlatBufferBuilder, PREVIOUS_WRMS: Double) = builder.addDouble(20, PREVIOUS_WRMS, 0.0)
+        fun addFIRST_PASS_WRMS(builder: FlatBufferBuilder, FIRST_PASS_WRMS: Double) = builder.addDouble(21, FIRST_PASS_WRMS, 0.0)
+        fun addBEST_PASS_WRMS(builder: FlatBufferBuilder, BEST_PASS_WRMS: Double) = builder.addDouble(22, BEST_PASS_WRMS, 0.0)
+        fun addERROR_GROWTH_RATE(builder: FlatBufferBuilder, ERROR_GROWTH_RATE: Double) = builder.addDouble(23, ERROR_GROWTH_RATE, 0.0)
+        fun addEDR(builder: FlatBufferBuilder, EDR: Double) = builder.addDouble(24, EDR, 0.0)
+        fun addBALLISTIC_COEFF_EST(builder: FlatBufferBuilder, BALLISTIC_COEFF_EST: Boolean) = builder.addBoolean(25, BALLISTIC_COEFF_EST, false)
+        fun addBALLISTIC_COEFF_MODEL(builder: FlatBufferBuilder, BALLISTIC_COEFF_MODEL: Int) = builder.addOffset(26, BALLISTIC_COEFF_MODEL, 0)
+        fun addAGOM_EST(builder: FlatBufferBuilder, AGOM_EST: Boolean) = builder.addBoolean(27, AGOM_EST, false)
+        fun addAGOM_MODEL(builder: FlatBufferBuilder, AGOM_MODEL: Int) = builder.addOffset(28, AGOM_MODEL, 0)
+        fun addRMS_CONVERGENCE_CRITERIA(builder: FlatBufferBuilder, RMS_CONVERGENCE_CRITERIA: Double) = builder.addDouble(29, RMS_CONVERGENCE_CRITERIA, 0.0)
+        fun addNUM_ITERATIONS(builder: FlatBufferBuilder, NUM_ITERATIONS: UShort) = builder.addShort(30, NUM_ITERATIONS.toShort(), 0)
+        fun addNUM_ACCEPTED_OBS(builder: FlatBufferBuilder, NUM_ACCEPTED_OBS: UInt) = builder.addInt(31, NUM_ACCEPTED_OBS.toInt(), 0)
+        fun addNUM_REJECTED_OBS(builder: FlatBufferBuilder, NUM_REJECTED_OBS: UInt) = builder.addInt(32, NUM_REJECTED_OBS.toInt(), 0)
+        fun addSENSORS(builder: FlatBufferBuilder, SENSORS: Int) = builder.addOffset(33, SENSORS, 0)
+        fun createSensorsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startSensorsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addACCEPTED_OB_TYPS(builder: FlatBufferBuilder, ACCEPTED_OB_TYPS: Int) = builder.addOffset(34, ACCEPTED_OB_TYPS, 0)
         fun createAcceptedObTypsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -434,7 +567,7 @@ class OBD : Table() {
             return builder.endVector()
         }
         fun startAcceptedObTypsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addACCEPTED_OB_IDS(builder: FlatBufferBuilder, ACCEPTED_OB_IDS: Int) = builder.addOffset(31, ACCEPTED_OB_IDS, 0)
+        fun addACCEPTED_OB_IDS(builder: FlatBufferBuilder, ACCEPTED_OB_IDS: Int) = builder.addOffset(35, ACCEPTED_OB_IDS, 0)
         fun createAcceptedObIdsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -443,7 +576,7 @@ class OBD : Table() {
             return builder.endVector()
         }
         fun startAcceptedObIdsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addREJECTED_OB_TYPS(builder: FlatBufferBuilder, REJECTED_OB_TYPS: Int) = builder.addOffset(32, REJECTED_OB_TYPS, 0)
+        fun addREJECTED_OB_TYPS(builder: FlatBufferBuilder, REJECTED_OB_TYPS: Int) = builder.addOffset(36, REJECTED_OB_TYPS, 0)
         fun createRejectedObTypsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -452,7 +585,7 @@ class OBD : Table() {
             return builder.endVector()
         }
         fun startRejectedObTypsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addREJECTED_OB_IDS(builder: FlatBufferBuilder, REJECTED_OB_IDS: Int) = builder.addOffset(33, REJECTED_OB_IDS, 0)
+        fun addREJECTED_OB_IDS(builder: FlatBufferBuilder, REJECTED_OB_IDS: Int) = builder.addOffset(37, REJECTED_OB_IDS, 0)
         fun createRejectedObIdsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -461,16 +594,6 @@ class OBD : Table() {
             return builder.endVector()
         }
         fun startRejectedObIdsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSENSOR_IDS(builder: FlatBufferBuilder, SENSOR_IDS: Int) = builder.addOffset(34, SENSOR_IDS, 0)
-        fun createSensorIdsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
-            for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
-            }
-            return builder.endVector()
-        }
-        fun startSensorIdsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addON_ORBIT(builder: FlatBufferBuilder, ON_ORBIT: Int) = builder.addOffset(35, ON_ORBIT, 0)
         fun endOBD(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

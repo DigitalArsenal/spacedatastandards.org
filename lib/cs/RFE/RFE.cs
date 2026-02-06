@@ -19,6 +19,7 @@ public struct RFE : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public RFE __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Unique emitter identifier
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,6 +27,7 @@ public struct RFE : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
+  /// Reference to parent entity
   public string ID_ENTITY { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetID_ENTITYBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -33,6 +35,7 @@ public struct RFE : IFlatbufferObject
   public ArraySegment<byte>? GetID_ENTITYBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetID_ENTITYArray() { return __p.__vector_as_array<byte>(6); }
+  /// Emitter name or designation
   public string NAME { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetNAMEBytes() { return __p.__vector_as_span<byte>(8, 1); }
@@ -40,13 +43,9 @@ public struct RFE : IFlatbufferObject
   public ArraySegment<byte>? GetNAMEBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetNAMEArray() { return __p.__vector_as_array<byte>(8); }
-  public string TYPE { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetTYPEBytes() { return __p.__vector_as_span<byte>(10, 1); }
-#else
-  public ArraySegment<byte>? GetTYPEBytes() { return __p.__vector_as_arraysegment(10); }
-#endif
-  public byte[] GetTYPEArray() { return __p.__vector_as_array<byte>(10); }
+  /// Emitter type
+  public emitterType TYPE { get { int o = __p.__offset(10); return o != 0 ? (emitterType)__p.bb.GetSbyte(o + __p.bb_pos) : emitterType.RADAR; } }
+  /// Parent entity designator
   public string ENTITY { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetENTITYBytes() { return __p.__vector_as_span<byte>(12, 1); }
@@ -54,38 +53,157 @@ public struct RFE : IFlatbufferObject
   public ArraySegment<byte>? GetENTITYBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
   public byte[] GetENTITYArray() { return __p.__vector_as_array<byte>(12); }
-  public string RF_EMITTER_DETAILS(int j) { int o = __p.__offset(14); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int RF_EMITTER_DETAILSLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// ELNOT (Electronic Notation)
+  public string ELNOT { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetELNOTBytes() { return __p.__vector_as_span<byte>(14, 1); }
+#else
+  public ArraySegment<byte>? GetELNOTBytes() { return __p.__vector_as_arraysegment(14); }
+#endif
+  public byte[] GetELNOTArray() { return __p.__vector_as_array<byte>(14); }
+  /// NATO reporting name
+  public string NATO_NAME { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetNATO_NAMEBytes() { return __p.__vector_as_span<byte>(16, 1); }
+#else
+  public ArraySegment<byte>? GetNATO_NAMEBytes() { return __p.__vector_as_arraysegment(16); }
+#endif
+  public byte[] GetNATO_NAMEArray() { return __p.__vector_as_array<byte>(16); }
+  /// Platform type (e.g., SHIP, AIRCRAFT, GROUND, SATELLITE)
+  public string PLATFORM_TYPE { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPLATFORM_TYPEBytes() { return __p.__vector_as_span<byte>(18, 1); }
+#else
+  public ArraySegment<byte>? GetPLATFORM_TYPEBytes() { return __p.__vector_as_arraysegment(18); }
+#endif
+  public byte[] GetPLATFORM_TYPEArray() { return __p.__vector_as_array<byte>(18); }
+  /// Country of origin
+  public string COUNTRY { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCOUNTRYBytes() { return __p.__vector_as_span<byte>(20, 1); }
+#else
+  public ArraySegment<byte>? GetCOUNTRYBytes() { return __p.__vector_as_arraysegment(20); }
+#endif
+  public byte[] GetCOUNTRYArray() { return __p.__vector_as_array<byte>(20); }
+  /// Primary function description
+  public string FUNCTION { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetFUNCTIONBytes() { return __p.__vector_as_span<byte>(22, 1); }
+#else
+  public ArraySegment<byte>? GetFUNCTIONBytes() { return __p.__vector_as_arraysegment(22); }
+#endif
+  public byte[] GetFUNCTIONArray() { return __p.__vector_as_array<byte>(22); }
+  /// Operating band (e.g., HF, VHF, UHF, L, S, C, X, Ku, Ka)
+  public string BAND { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetBANDBytes() { return __p.__vector_as_span<byte>(24, 1); }
+#else
+  public ArraySegment<byte>? GetBANDBytes() { return __p.__vector_as_arraysegment(24); }
+#endif
+  public byte[] GetBANDArray() { return __p.__vector_as_array<byte>(24); }
+  /// Minimum operating frequency in MHz
+  public double FREQ_MIN { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Maximum operating frequency in MHz
+  public double FREQ_MAX { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Peak power in kW
+  public double PEAK_POWER { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Average power in kW
+  public double AVG_POWER { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Antenna gain in dBi
+  public double ANTENNA_GAIN { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Number of operating modes
+  public uint NUM_MODES { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Emitter operating mode details
+  public rfEmitterDetail? RF_EMITTER_DETAILS(int j) { int o = __p.__offset(38); return o != 0 ? (rfEmitterDetail?)(new rfEmitterDetail()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int RF_EMITTER_DETAILSLength { get { int o = __p.__offset(38); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Threat level assessment
+  public string THREAT_LEVEL { get { int o = __p.__offset(40); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetTHREAT_LEVELBytes() { return __p.__vector_as_span<byte>(40, 1); }
+#else
+  public ArraySegment<byte>? GetTHREAT_LEVELBytes() { return __p.__vector_as_arraysegment(40); }
+#endif
+  public byte[] GetTHREAT_LEVELArray() { return __p.__vector_as_array<byte>(40); }
+  /// Additional notes
+  public string NOTES { get { int o = __p.__offset(42); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetNOTESBytes() { return __p.__vector_as_span<byte>(42, 1); }
+#else
+  public ArraySegment<byte>? GetNOTESBytes() { return __p.__vector_as_arraysegment(42); }
+#endif
+  public byte[] GetNOTESArray() { return __p.__vector_as_array<byte>(42); }
 
   public static Offset<RFE> CreateRFE(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
       StringOffset ID_ENTITYOffset = default(StringOffset),
       StringOffset NAMEOffset = default(StringOffset),
-      StringOffset TYPEOffset = default(StringOffset),
+      emitterType TYPE = emitterType.RADAR,
       StringOffset ENTITYOffset = default(StringOffset),
-      VectorOffset RF_EMITTER_DETAILSOffset = default(VectorOffset)) {
-    builder.StartTable(6);
+      StringOffset ELNOTOffset = default(StringOffset),
+      StringOffset NATO_NAMEOffset = default(StringOffset),
+      StringOffset PLATFORM_TYPEOffset = default(StringOffset),
+      StringOffset COUNTRYOffset = default(StringOffset),
+      StringOffset FUNCTIONOffset = default(StringOffset),
+      StringOffset BANDOffset = default(StringOffset),
+      double FREQ_MIN = 0.0,
+      double FREQ_MAX = 0.0,
+      double PEAK_POWER = 0.0,
+      double AVG_POWER = 0.0,
+      double ANTENNA_GAIN = 0.0,
+      uint NUM_MODES = 0,
+      VectorOffset RF_EMITTER_DETAILSOffset = default(VectorOffset),
+      StringOffset THREAT_LEVELOffset = default(StringOffset),
+      StringOffset NOTESOffset = default(StringOffset)) {
+    builder.StartTable(20);
+    RFE.AddANTENNA_GAIN(builder, ANTENNA_GAIN);
+    RFE.AddAVG_POWER(builder, AVG_POWER);
+    RFE.AddPEAK_POWER(builder, PEAK_POWER);
+    RFE.AddFREQ_MAX(builder, FREQ_MAX);
+    RFE.AddFREQ_MIN(builder, FREQ_MIN);
+    RFE.AddNOTES(builder, NOTESOffset);
+    RFE.AddTHREAT_LEVEL(builder, THREAT_LEVELOffset);
     RFE.AddRF_EMITTER_DETAILS(builder, RF_EMITTER_DETAILSOffset);
+    RFE.AddNUM_MODES(builder, NUM_MODES);
+    RFE.AddBAND(builder, BANDOffset);
+    RFE.AddFUNCTION(builder, FUNCTIONOffset);
+    RFE.AddCOUNTRY(builder, COUNTRYOffset);
+    RFE.AddPLATFORM_TYPE(builder, PLATFORM_TYPEOffset);
+    RFE.AddNATO_NAME(builder, NATO_NAMEOffset);
+    RFE.AddELNOT(builder, ELNOTOffset);
     RFE.AddENTITY(builder, ENTITYOffset);
-    RFE.AddTYPE(builder, TYPEOffset);
     RFE.AddNAME(builder, NAMEOffset);
     RFE.AddID_ENTITY(builder, ID_ENTITYOffset);
     RFE.AddID(builder, IDOffset);
+    RFE.AddTYPE(builder, TYPE);
     return RFE.EndRFE(builder);
   }
 
-  public static void StartRFE(FlatBufferBuilder builder) { builder.StartTable(6); }
+  public static void StartRFE(FlatBufferBuilder builder) { builder.StartTable(20); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddID_ENTITY(FlatBufferBuilder builder, StringOffset ID_ENTITYOffset) { builder.AddOffset(1, ID_ENTITYOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(2, NAMEOffset.Value, 0); }
-  public static void AddTYPE(FlatBufferBuilder builder, StringOffset TYPEOffset) { builder.AddOffset(3, TYPEOffset.Value, 0); }
+  public static void AddTYPE(FlatBufferBuilder builder, emitterType TYPE) { builder.AddSbyte(3, (sbyte)TYPE, 0); }
   public static void AddENTITY(FlatBufferBuilder builder, StringOffset ENTITYOffset) { builder.AddOffset(4, ENTITYOffset.Value, 0); }
-  public static void AddRF_EMITTER_DETAILS(FlatBufferBuilder builder, VectorOffset RF_EMITTER_DETAILSOffset) { builder.AddOffset(5, RF_EMITTER_DETAILSOffset.Value, 0); }
-  public static VectorOffset CreateRF_EMITTER_DETAILSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateRF_EMITTER_DETAILSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateRF_EMITTER_DETAILSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateRF_EMITTER_DETAILSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void AddELNOT(FlatBufferBuilder builder, StringOffset ELNOTOffset) { builder.AddOffset(5, ELNOTOffset.Value, 0); }
+  public static void AddNATO_NAME(FlatBufferBuilder builder, StringOffset NATO_NAMEOffset) { builder.AddOffset(6, NATO_NAMEOffset.Value, 0); }
+  public static void AddPLATFORM_TYPE(FlatBufferBuilder builder, StringOffset PLATFORM_TYPEOffset) { builder.AddOffset(7, PLATFORM_TYPEOffset.Value, 0); }
+  public static void AddCOUNTRY(FlatBufferBuilder builder, StringOffset COUNTRYOffset) { builder.AddOffset(8, COUNTRYOffset.Value, 0); }
+  public static void AddFUNCTION(FlatBufferBuilder builder, StringOffset FUNCTIONOffset) { builder.AddOffset(9, FUNCTIONOffset.Value, 0); }
+  public static void AddBAND(FlatBufferBuilder builder, StringOffset BANDOffset) { builder.AddOffset(10, BANDOffset.Value, 0); }
+  public static void AddFREQ_MIN(FlatBufferBuilder builder, double FREQ_MIN) { builder.AddDouble(11, FREQ_MIN, 0.0); }
+  public static void AddFREQ_MAX(FlatBufferBuilder builder, double FREQ_MAX) { builder.AddDouble(12, FREQ_MAX, 0.0); }
+  public static void AddPEAK_POWER(FlatBufferBuilder builder, double PEAK_POWER) { builder.AddDouble(13, PEAK_POWER, 0.0); }
+  public static void AddAVG_POWER(FlatBufferBuilder builder, double AVG_POWER) { builder.AddDouble(14, AVG_POWER, 0.0); }
+  public static void AddANTENNA_GAIN(FlatBufferBuilder builder, double ANTENNA_GAIN) { builder.AddDouble(15, ANTENNA_GAIN, 0.0); }
+  public static void AddNUM_MODES(FlatBufferBuilder builder, uint NUM_MODES) { builder.AddUint(16, NUM_MODES, 0); }
+  public static void AddRF_EMITTER_DETAILS(FlatBufferBuilder builder, VectorOffset RF_EMITTER_DETAILSOffset) { builder.AddOffset(17, RF_EMITTER_DETAILSOffset.Value, 0); }
+  public static VectorOffset CreateRF_EMITTER_DETAILSVector(FlatBufferBuilder builder, Offset<rfEmitterDetail>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateRF_EMITTER_DETAILSVectorBlock(FlatBufferBuilder builder, Offset<rfEmitterDetail>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateRF_EMITTER_DETAILSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<rfEmitterDetail>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateRF_EMITTER_DETAILSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<rfEmitterDetail>>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartRF_EMITTER_DETAILSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddTHREAT_LEVEL(FlatBufferBuilder builder, StringOffset THREAT_LEVELOffset) { builder.AddOffset(18, THREAT_LEVELOffset.Value, 0); }
+  public static void AddNOTES(FlatBufferBuilder builder, StringOffset NOTESOffset) { builder.AddOffset(19, NOTESOffset.Value, 0); }
   public static Offset<RFE> EndRFE(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<RFE>(o);
@@ -103,30 +221,65 @@ public struct RFE : IFlatbufferObject
     _o.NAME = this.NAME;
     _o.TYPE = this.TYPE;
     _o.ENTITY = this.ENTITY;
-    _o.RF_EMITTER_DETAILS = new List<string>();
-    for (var _j = 0; _j < this.RF_EMITTER_DETAILSLength; ++_j) {_o.RF_EMITTER_DETAILS.Add(this.RF_EMITTER_DETAILS(_j));}
+    _o.ELNOT = this.ELNOT;
+    _o.NATO_NAME = this.NATO_NAME;
+    _o.PLATFORM_TYPE = this.PLATFORM_TYPE;
+    _o.COUNTRY = this.COUNTRY;
+    _o.FUNCTION = this.FUNCTION;
+    _o.BAND = this.BAND;
+    _o.FREQ_MIN = this.FREQ_MIN;
+    _o.FREQ_MAX = this.FREQ_MAX;
+    _o.PEAK_POWER = this.PEAK_POWER;
+    _o.AVG_POWER = this.AVG_POWER;
+    _o.ANTENNA_GAIN = this.ANTENNA_GAIN;
+    _o.NUM_MODES = this.NUM_MODES;
+    _o.RF_EMITTER_DETAILS = new List<rfEmitterDetailT>();
+    for (var _j = 0; _j < this.RF_EMITTER_DETAILSLength; ++_j) {_o.RF_EMITTER_DETAILS.Add(this.RF_EMITTER_DETAILS(_j).HasValue ? this.RF_EMITTER_DETAILS(_j).Value.UnPack() : null);}
+    _o.THREAT_LEVEL = this.THREAT_LEVEL;
+    _o.NOTES = this.NOTES;
   }
   public static Offset<RFE> Pack(FlatBufferBuilder builder, RFET _o) {
     if (_o == null) return default(Offset<RFE>);
     var _ID = _o.ID == null ? default(StringOffset) : builder.CreateString(_o.ID);
     var _ID_ENTITY = _o.ID_ENTITY == null ? default(StringOffset) : builder.CreateString(_o.ID_ENTITY);
     var _NAME = _o.NAME == null ? default(StringOffset) : builder.CreateString(_o.NAME);
-    var _TYPE = _o.TYPE == null ? default(StringOffset) : builder.CreateString(_o.TYPE);
     var _ENTITY = _o.ENTITY == null ? default(StringOffset) : builder.CreateString(_o.ENTITY);
+    var _ELNOT = _o.ELNOT == null ? default(StringOffset) : builder.CreateString(_o.ELNOT);
+    var _NATO_NAME = _o.NATO_NAME == null ? default(StringOffset) : builder.CreateString(_o.NATO_NAME);
+    var _PLATFORM_TYPE = _o.PLATFORM_TYPE == null ? default(StringOffset) : builder.CreateString(_o.PLATFORM_TYPE);
+    var _COUNTRY = _o.COUNTRY == null ? default(StringOffset) : builder.CreateString(_o.COUNTRY);
+    var _FUNCTION = _o.FUNCTION == null ? default(StringOffset) : builder.CreateString(_o.FUNCTION);
+    var _BAND = _o.BAND == null ? default(StringOffset) : builder.CreateString(_o.BAND);
     var _RF_EMITTER_DETAILS = default(VectorOffset);
     if (_o.RF_EMITTER_DETAILS != null) {
-      var __RF_EMITTER_DETAILS = new StringOffset[_o.RF_EMITTER_DETAILS.Count];
-      for (var _j = 0; _j < __RF_EMITTER_DETAILS.Length; ++_j) { __RF_EMITTER_DETAILS[_j] = builder.CreateString(_o.RF_EMITTER_DETAILS[_j]); }
+      var __RF_EMITTER_DETAILS = new Offset<rfEmitterDetail>[_o.RF_EMITTER_DETAILS.Count];
+      for (var _j = 0; _j < __RF_EMITTER_DETAILS.Length; ++_j) { __RF_EMITTER_DETAILS[_j] = rfEmitterDetail.Pack(builder, _o.RF_EMITTER_DETAILS[_j]); }
       _RF_EMITTER_DETAILS = CreateRF_EMITTER_DETAILSVector(builder, __RF_EMITTER_DETAILS);
     }
+    var _THREAT_LEVEL = _o.THREAT_LEVEL == null ? default(StringOffset) : builder.CreateString(_o.THREAT_LEVEL);
+    var _NOTES = _o.NOTES == null ? default(StringOffset) : builder.CreateString(_o.NOTES);
     return CreateRFE(
       builder,
       _ID,
       _ID_ENTITY,
       _NAME,
-      _TYPE,
+      _o.TYPE,
       _ENTITY,
-      _RF_EMITTER_DETAILS);
+      _ELNOT,
+      _NATO_NAME,
+      _PLATFORM_TYPE,
+      _COUNTRY,
+      _FUNCTION,
+      _BAND,
+      _o.FREQ_MIN,
+      _o.FREQ_MAX,
+      _o.PEAK_POWER,
+      _o.AVG_POWER,
+      _o.ANTENNA_GAIN,
+      _o.NUM_MODES,
+      _RF_EMITTER_DETAILS,
+      _THREAT_LEVEL,
+      _NOTES);
   }
 }
 
@@ -135,17 +288,45 @@ public class RFET
   public string ID { get; set; }
   public string ID_ENTITY { get; set; }
   public string NAME { get; set; }
-  public string TYPE { get; set; }
+  public emitterType TYPE { get; set; }
   public string ENTITY { get; set; }
-  public List<string> RF_EMITTER_DETAILS { get; set; }
+  public string ELNOT { get; set; }
+  public string NATO_NAME { get; set; }
+  public string PLATFORM_TYPE { get; set; }
+  public string COUNTRY { get; set; }
+  public string FUNCTION { get; set; }
+  public string BAND { get; set; }
+  public double FREQ_MIN { get; set; }
+  public double FREQ_MAX { get; set; }
+  public double PEAK_POWER { get; set; }
+  public double AVG_POWER { get; set; }
+  public double ANTENNA_GAIN { get; set; }
+  public uint NUM_MODES { get; set; }
+  public List<rfEmitterDetailT> RF_EMITTER_DETAILS { get; set; }
+  public string THREAT_LEVEL { get; set; }
+  public string NOTES { get; set; }
 
   public RFET() {
     this.ID = null;
     this.ID_ENTITY = null;
     this.NAME = null;
-    this.TYPE = null;
+    this.TYPE = emitterType.RADAR;
     this.ENTITY = null;
+    this.ELNOT = null;
+    this.NATO_NAME = null;
+    this.PLATFORM_TYPE = null;
+    this.COUNTRY = null;
+    this.FUNCTION = null;
+    this.BAND = null;
+    this.FREQ_MIN = 0.0;
+    this.FREQ_MAX = 0.0;
+    this.PEAK_POWER = 0.0;
+    this.AVG_POWER = 0.0;
+    this.ANTENNA_GAIN = 0.0;
+    this.NUM_MODES = 0;
     this.RF_EMITTER_DETAILS = null;
+    this.THREAT_LEVEL = null;
+    this.NOTES = null;
   }
   public static RFET DeserializeFromBinary(byte[] fbBuffer) {
     return RFE.GetRootAsRFE(new ByteBuffer(fbBuffer)).UnPack();
@@ -166,9 +347,23 @@ static public class RFEVerify
       && verifier.VerifyString(tablePos, 4 /*ID*/, false)
       && verifier.VerifyString(tablePos, 6 /*ID_ENTITY*/, false)
       && verifier.VerifyString(tablePos, 8 /*NAME*/, false)
-      && verifier.VerifyString(tablePos, 10 /*TYPE*/, false)
+      && verifier.VerifyField(tablePos, 10 /*TYPE*/, 1 /*emitterType*/, 1, false)
       && verifier.VerifyString(tablePos, 12 /*ENTITY*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 14 /*RF_EMITTER_DETAILS*/, false)
+      && verifier.VerifyString(tablePos, 14 /*ELNOT*/, false)
+      && verifier.VerifyString(tablePos, 16 /*NATO_NAME*/, false)
+      && verifier.VerifyString(tablePos, 18 /*PLATFORM_TYPE*/, false)
+      && verifier.VerifyString(tablePos, 20 /*COUNTRY*/, false)
+      && verifier.VerifyString(tablePos, 22 /*FUNCTION*/, false)
+      && verifier.VerifyString(tablePos, 24 /*BAND*/, false)
+      && verifier.VerifyField(tablePos, 26 /*FREQ_MIN*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 28 /*FREQ_MAX*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 30 /*PEAK_POWER*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 32 /*AVG_POWER*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 34 /*ANTENNA_GAIN*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 36 /*NUM_MODES*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyVectorOfTables(tablePos, 38 /*RF_EMITTER_DETAILS*/, rfEmitterDetailVerify.Verify, false)
+      && verifier.VerifyString(tablePos, 40 /*THREAT_LEVEL*/, false)
+      && verifier.VerifyString(tablePos, 42 /*NOTES*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

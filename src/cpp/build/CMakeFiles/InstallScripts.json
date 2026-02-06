@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/Users/tj/software/spacedatastandards.org/src/cpp/build/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

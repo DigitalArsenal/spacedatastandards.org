@@ -5,6 +5,160 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class MissileStatus {
+  final int value;
+  const MissileStatus._(this.value);
+
+  factory MissileStatus.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum MissileStatus');
+    }
+    return result;
+  }
+
+  static MissileStatus? _createOrNull(int? value) => 
+      value == null ? null : MissileStatus.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 7;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const MissileStatus BOOSTING = MissileStatus._(0);
+  static const MissileStatus MIDCOURSE = MissileStatus._(1);
+  static const MissileStatus TERMINAL = MissileStatus._(2);
+  static const MissileStatus IMPACT = MissileStatus._(3);
+  static const MissileStatus BURNOUT = MissileStatus._(4);
+  static const MissileStatus INTERCEPTED = MissileStatus._(5);
+  static const MissileStatus LOST = MissileStatus._(6);
+  static const MissileStatus UNKNOWN = MissileStatus._(7);
+  static const Map<int, MissileStatus> values = {
+    0: BOOSTING,
+    1: MIDCOURSE,
+    2: TERMINAL,
+    3: IMPACT,
+    4: BURNOUT,
+    5: INTERCEPTED,
+    6: LOST,
+    7: UNKNOWN};
+
+  static const fb.Reader<MissileStatus> reader = _MissileStatusReader();
+
+  @override
+  String toString() {
+    return 'MissileStatus{value: $value}';
+  }
+}
+
+class _MissileStatusReader extends fb.Reader<MissileStatus> {
+  const _MissileStatusReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  MissileStatus read(fb.BufferContext bc, int offset) =>
+      MissileStatus.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class MissileEnvironment {
+  final int value;
+  const MissileEnvironment._(this.value);
+
+  factory MissileEnvironment.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum MissileEnvironment');
+    }
+    return result;
+  }
+
+  static MissileEnvironment? _createOrNull(int? value) => 
+      value == null ? null : MissileEnvironment.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const MissileEnvironment SPACE = MissileEnvironment._(0);
+  static const MissileEnvironment ENDO_ATMOSPHERIC = MissileEnvironment._(1);
+  static const MissileEnvironment EXO_ATMOSPHERIC = MissileEnvironment._(2);
+  static const MissileEnvironment TRANSITIONAL = MissileEnvironment._(3);
+  static const MissileEnvironment UNKNOWN = MissileEnvironment._(4);
+  static const Map<int, MissileEnvironment> values = {
+    0: SPACE,
+    1: ENDO_ATMOSPHERIC,
+    2: EXO_ATMOSPHERIC,
+    3: TRANSITIONAL,
+    4: UNKNOWN};
+
+  static const fb.Reader<MissileEnvironment> reader = _MissileEnvironmentReader();
+
+  @override
+  String toString() {
+    return 'MissileEnvironment{value: $value}';
+  }
+}
+
+class _MissileEnvironmentReader extends fb.Reader<MissileEnvironment> {
+  const _MissileEnvironmentReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  MissileEnvironment read(fb.BufferContext bc, int offset) =>
+      MissileEnvironment.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class AouReportType {
+  final int value;
+  const AouReportType._(this.value);
+
+  factory AouReportType.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum AouReportType');
+    }
+    return result;
+  }
+
+  static AouReportType? _createOrNull(int? value) => 
+      value == null ? null : AouReportType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const AouReportType CIRCULAR = AouReportType._(0);
+  static const AouReportType ELLIPTICAL = AouReportType._(1);
+  static const AouReportType RECTANGULAR = AouReportType._(2);
+  static const AouReportType NONE = AouReportType._(3);
+  static const Map<int, AouReportType> values = {
+    0: CIRCULAR,
+    1: ELLIPTICAL,
+    2: RECTANGULAR,
+    3: NONE};
+
+  static const fb.Reader<AouReportType> reader = _AouReportTypeReader();
+
+  @override
+  String toString() {
+    return 'AouReportType{value: $value}';
+  }
+}
+
+class _AouReportTypeReader extends fb.Reader<AouReportType> {
+  const _AouReportTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  AouReportType read(fb.BufferContext bc, int offset) =>
+      AouReportType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 ///  Missile Track
 class MST {
   MST._(this._bc, this._bcOffset);
@@ -18,70 +172,116 @@ class MST {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Message type code
   String? get MSG_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Message sub-type
   String? get MSG_SUB_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Message creation date (ISO 8601)
   String? get MSG_CREATE_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get ENVIRONMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Track environment
+  MissileEnvironment get ENVIRONMENT => MissileEnvironment.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  ///  Object type classification
   String? get OBJ_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  int get OBJ_TYPE_CONF => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 16, 0);
+  ///  Object type confidence (0-100)
+  int get OBJ_TYPE_CONF => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 16, 0);
+  ///  Object platform type
   String? get OBJ_PLAT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Object identity assessment
   String? get OBJ_IDENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  ///  Space amplification data
   String? get SPACE_AMP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  String? get OBJ_ACT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
-  String? get SPACE_SPEC_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
-  String? get ACFT_SUB_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
-  String? get CALL_SIGN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
-  bool get LOST_TRK_IND => const fb.BoolReader().vTableGet(_bc, _bcOffset, 34, false);
-  String? get TRACK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
-  String? get PARENT_TRACK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
-  String? get MUID_SRC_TRK => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
-  String? get MUID_SRC => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
-  String? get ALERT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
-  String? get MSL_STATUS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
-  String? get TS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
-  String? get AOU_RPT_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 50);
-  double get CONTAINMENT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
-  double get TRK_CONF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
-  int get TRK_QUAL => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 56, 0);
-  double get ANG_ELEV => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
-  String? get SEN_MODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 60);
-  String? get INFO_SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 62);
-  bool get BOOSTING => const fb.BoolReader().vTableGet(_bc, _bcOffset, 64, false);
-  double get POLAR_SING_LOC_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, 0.0);
-  double get POLAR_SING_LOC_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, 0.0);
-  bool get EMG_IND => const fb.BoolReader().vTableGet(_bc, _bcOffset, 70, false);
-  bool get DROP_PT_IND => const fb.BoolReader().vTableGet(_bc, _bcOffset, 72, false);
-  int get SPACE_AMP_CONF => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 74, 0);
+  ///  Space amplification confidence (0-100)
+  int get SPACE_AMP_CONF => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 24, 0);
+  ///  Object activity
+  String? get OBJ_ACT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Space specific type
+  String? get SPACE_SPEC_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Aircraft sub-type (if applicable)
+  String? get ACFT_SUB_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  ///  Object name
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  ///  Call sign
+  String? get CALL_SIGN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  ///  True if track is lost
+  bool get LOST_TRK_IND => const fb.BoolReader().vTableGet(_bc, _bcOffset, 36, false);
+  ///  Track identifier
+  String? get TRACK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  ///  Parent track identifier
+  String? get PARENT_TRACK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+  ///  Multi-unit identifier (source track)
+  String? get MUID_SRC_TRK => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
+  ///  Multi-unit identifier (source)
+  String? get MUID_SRC => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
+  ///  Alert classification
+  String? get ALERT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
+  ///  Missile engagement status
+  MissileStatus get MSL_STATUS => MissileStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 48, 0));
+  ///  Track timestamp (ISO 8601)
+  String? get TS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 50);
+  ///  AOU report type
+  AouReportType get AOU_RPT_TYPE => AouReportType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 52, 0));
+  ///  Containment probability (0-1)
+  double get CONTAINMENT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
+  ///  Track confidence (0-1)
+  double get TRK_CONF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, 0.0);
+  ///  Track quality (0-15)
+  int get TRK_QUAL => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 58, 0);
+  ///  Elevation angle (degrees)
+  double get ANG_ELEV => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 60, 0.0);
+  ///  Sensor mode
+  String? get SEN_MODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 62);
+  ///  Information source
+  String? get INFO_SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 64);
+  ///  True if object is in boost phase
+  bool get BOOSTING => const fb.BoolReader().vTableGet(_bc, _bcOffset, 66, false);
+  ///  Polar singularity latitude (degrees)
+  double get POLAR_SING_LOC_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, 0.0);
+  ///  Polar singularity longitude (degrees)
+  double get POLAR_SING_LOC_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 70, 0.0);
+  ///  True if emergency indicator set
+  bool get EMG_IND => const fb.BoolReader().vTableGet(_bc, _bcOffset, 72, false);
+  ///  True if drop point indicator set
+  bool get DROP_PT_IND => const fb.BoolReader().vTableGet(_bc, _bcOffset, 74, false);
+  ///  Launch time (ISO 8601)
   String? get LAUNCH_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 76);
+  ///  Launch latitude (degrees)
   double get LAUNCH_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 78, 0.0);
+  ///  Launch longitude (degrees)
   double get LAUNCH_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 80, 0.0);
+  ///  Azimuth correction (degrees)
   double get AZ_CORR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 82, 0.0);
+  ///  Burnout altitude (km)
   double get BURNOUT_ALT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 84, 0.0);
-  String? get LAUNCH_AOU_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 86);
+  ///  Launch AOU type
+  AouReportType get LAUNCH_AOU_TYPE => AouReportType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 86, 0));
+  ///  Predicted impact time (ISO 8601)
   String? get IMPACT_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 88);
+  ///  Predicted impact latitude (degrees)
   double get IMPACT_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 90, 0.0);
+  ///  Predicted impact longitude (degrees)
   double get IMPACT_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 92, 0.0);
-  String? get IMPACT_AOU_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 94);
-  ///  Start time for vector data (ISO 8601 UTC format).
+  ///  Impact AOU type
+  AouReportType get IMPACT_AOU_TYPE => AouReportType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 94, 0));
+  ///  Start time for vector data (ISO 8601)
   String? get VECTOR_START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 96);
-  ///  Time interval between vector points in seconds.
+  ///  Time interval between vector points (seconds)
   double get VECTOR_STEP_SIZE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 98, 0.0);
-  ///  Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).
+  ///  Number of components per vector (default 6: X, Y, Z, VX, VY, VZ)
   int get VECTOR_COMPONENTS => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 100, 6);
   ///  Vector data as flat array [X0, Y0, Z0, VX0, VY0, VZ0, X1, ...]
   List<double>? get VECTORS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 102);
-  ///  AOU report data as flat array (layout depends on AOU_RPT_TYPE).
+  ///  AOU report data as flat array
   List<double>? get AOU_RPT => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 104);
-  ///  Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).
+  ///  Launch AOU data as flat array
   List<double>? get LAUNCH_AOU => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 106);
-  ///  Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).
+  ///  Impact AOU data as flat array
   List<double>? get IMPACT_AOU => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 108);
 
   @override
   String toString() {
-    return 'MST{ID: ${ID}, MSG_TYPE: ${MSG_TYPE}, MSG_SUB_TYPE: ${MSG_SUB_TYPE}, MSG_CREATE_DATE: ${MSG_CREATE_DATE}, ENVIRONMENT: ${ENVIRONMENT}, OBJ_TYPE: ${OBJ_TYPE}, OBJ_TYPE_CONF: ${OBJ_TYPE_CONF}, OBJ_PLAT: ${OBJ_PLAT}, OBJ_IDENT: ${OBJ_IDENT}, SPACE_AMP: ${SPACE_AMP}, OBJ_ACT: ${OBJ_ACT}, SPACE_SPEC_TYPE: ${SPACE_SPEC_TYPE}, ACFT_SUB_TYPE: ${ACFT_SUB_TYPE}, NAME: ${NAME}, CALL_SIGN: ${CALL_SIGN}, LOST_TRK_IND: ${LOST_TRK_IND}, TRACK_ID: ${TRACK_ID}, PARENT_TRACK_ID: ${PARENT_TRACK_ID}, MUID_SRC_TRK: ${MUID_SRC_TRK}, MUID_SRC: ${MUID_SRC}, ALERT: ${ALERT}, MSL_STATUS: ${MSL_STATUS}, TS: ${TS}, AOU_RPT_TYPE: ${AOU_RPT_TYPE}, CONTAINMENT: ${CONTAINMENT}, TRK_CONF: ${TRK_CONF}, TRK_QUAL: ${TRK_QUAL}, ANG_ELEV: ${ANG_ELEV}, SEN_MODE: ${SEN_MODE}, INFO_SOURCE: ${INFO_SOURCE}, BOOSTING: ${BOOSTING}, POLAR_SING_LOC_LAT: ${POLAR_SING_LOC_LAT}, POLAR_SING_LOC_LON: ${POLAR_SING_LOC_LON}, EMG_IND: ${EMG_IND}, DROP_PT_IND: ${DROP_PT_IND}, SPACE_AMP_CONF: ${SPACE_AMP_CONF}, LAUNCH_TIME: ${LAUNCH_TIME}, LAUNCH_LAT: ${LAUNCH_LAT}, LAUNCH_LON: ${LAUNCH_LON}, AZ_CORR: ${AZ_CORR}, BURNOUT_ALT: ${BURNOUT_ALT}, LAUNCH_AOU_TYPE: ${LAUNCH_AOU_TYPE}, IMPACT_TIME: ${IMPACT_TIME}, IMPACT_LAT: ${IMPACT_LAT}, IMPACT_LON: ${IMPACT_LON}, IMPACT_AOU_TYPE: ${IMPACT_AOU_TYPE}, VECTOR_START_TIME: ${VECTOR_START_TIME}, VECTOR_STEP_SIZE: ${VECTOR_STEP_SIZE}, VECTOR_COMPONENTS: ${VECTOR_COMPONENTS}, VECTORS: ${VECTORS}, AOU_RPT: ${AOU_RPT}, LAUNCH_AOU: ${LAUNCH_AOU}, IMPACT_AOU: ${IMPACT_AOU}}';
+    return 'MST{ID: ${ID}, MSG_TYPE: ${MSG_TYPE}, MSG_SUB_TYPE: ${MSG_SUB_TYPE}, MSG_CREATE_DATE: ${MSG_CREATE_DATE}, ENVIRONMENT: ${ENVIRONMENT}, OBJ_TYPE: ${OBJ_TYPE}, OBJ_TYPE_CONF: ${OBJ_TYPE_CONF}, OBJ_PLAT: ${OBJ_PLAT}, OBJ_IDENT: ${OBJ_IDENT}, SPACE_AMP: ${SPACE_AMP}, SPACE_AMP_CONF: ${SPACE_AMP_CONF}, OBJ_ACT: ${OBJ_ACT}, SPACE_SPEC_TYPE: ${SPACE_SPEC_TYPE}, ACFT_SUB_TYPE: ${ACFT_SUB_TYPE}, NAME: ${NAME}, CALL_SIGN: ${CALL_SIGN}, LOST_TRK_IND: ${LOST_TRK_IND}, TRACK_ID: ${TRACK_ID}, PARENT_TRACK_ID: ${PARENT_TRACK_ID}, MUID_SRC_TRK: ${MUID_SRC_TRK}, MUID_SRC: ${MUID_SRC}, ALERT: ${ALERT}, MSL_STATUS: ${MSL_STATUS}, TS: ${TS}, AOU_RPT_TYPE: ${AOU_RPT_TYPE}, CONTAINMENT: ${CONTAINMENT}, TRK_CONF: ${TRK_CONF}, TRK_QUAL: ${TRK_QUAL}, ANG_ELEV: ${ANG_ELEV}, SEN_MODE: ${SEN_MODE}, INFO_SOURCE: ${INFO_SOURCE}, BOOSTING: ${BOOSTING}, POLAR_SING_LOC_LAT: ${POLAR_SING_LOC_LAT}, POLAR_SING_LOC_LON: ${POLAR_SING_LOC_LON}, EMG_IND: ${EMG_IND}, DROP_PT_IND: ${DROP_PT_IND}, LAUNCH_TIME: ${LAUNCH_TIME}, LAUNCH_LAT: ${LAUNCH_LAT}, LAUNCH_LON: ${LAUNCH_LON}, AZ_CORR: ${AZ_CORR}, BURNOUT_ALT: ${BURNOUT_ALT}, LAUNCH_AOU_TYPE: ${LAUNCH_AOU_TYPE}, IMPACT_TIME: ${IMPACT_TIME}, IMPACT_LAT: ${IMPACT_LAT}, IMPACT_LON: ${IMPACT_LON}, IMPACT_AOU_TYPE: ${IMPACT_AOU_TYPE}, VECTOR_START_TIME: ${VECTOR_START_TIME}, VECTOR_STEP_SIZE: ${VECTOR_STEP_SIZE}, VECTOR_COMPONENTS: ${VECTOR_COMPONENTS}, VECTORS: ${VECTORS}, AOU_RPT: ${AOU_RPT}, LAUNCH_AOU: ${LAUNCH_AOU}, IMPACT_AOU: ${IMPACT_AOU}}';
   }
 }
 
@@ -118,8 +318,8 @@ class MSTBuilder {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addEnvironmentOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
+  int addEnvironment(MissileEnvironment? ENVIRONMENT) {
+    fbBuilder.addInt8(4, ENVIRONMENT?.value);
     return fbBuilder.offset;
   }
   int addObjTypeOffset(int? offset) {
@@ -127,7 +327,7 @@ class MSTBuilder {
     return fbBuilder.offset;
   }
   int addObjTypeConf(int? OBJ_TYPE_CONF) {
-    fbBuilder.addInt32(6, OBJ_TYPE_CONF);
+    fbBuilder.addUint8(6, OBJ_TYPE_CONF);
     return fbBuilder.offset;
   }
   int addObjPlatOffset(int? offset) {
@@ -142,108 +342,108 @@ class MSTBuilder {
     fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
-  int addObjActOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
+  int addSpaceAmpConf(int? SPACE_AMP_CONF) {
+    fbBuilder.addUint8(10, SPACE_AMP_CONF);
     return fbBuilder.offset;
   }
-  int addSpaceSpecTypeOffset(int? offset) {
+  int addObjActOffset(int? offset) {
     fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
-  int addAcftSubTypeOffset(int? offset) {
+  int addSpaceSpecTypeOffset(int? offset) {
     fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
-  int addNameOffset(int? offset) {
+  int addAcftSubTypeOffset(int? offset) {
     fbBuilder.addOffset(13, offset);
     return fbBuilder.offset;
   }
-  int addCallSignOffset(int? offset) {
+  int addNameOffset(int? offset) {
     fbBuilder.addOffset(14, offset);
     return fbBuilder.offset;
   }
+  int addCallSignOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
   int addLostTrkInd(bool? LOST_TRK_IND) {
-    fbBuilder.addBool(15, LOST_TRK_IND);
+    fbBuilder.addBool(16, LOST_TRK_IND);
     return fbBuilder.offset;
   }
   int addTrackIdOffset(int? offset) {
-    fbBuilder.addOffset(16, offset);
-    return fbBuilder.offset;
-  }
-  int addParentTrackIdOffset(int? offset) {
     fbBuilder.addOffset(17, offset);
     return fbBuilder.offset;
   }
-  int addMuidSrcTrkOffset(int? offset) {
+  int addParentTrackIdOffset(int? offset) {
     fbBuilder.addOffset(18, offset);
     return fbBuilder.offset;
   }
-  int addMuidSrcOffset(int? offset) {
+  int addMuidSrcTrkOffset(int? offset) {
     fbBuilder.addOffset(19, offset);
     return fbBuilder.offset;
   }
-  int addAlertOffset(int? offset) {
+  int addMuidSrcOffset(int? offset) {
     fbBuilder.addOffset(20, offset);
     return fbBuilder.offset;
   }
-  int addMslStatusOffset(int? offset) {
+  int addAlertOffset(int? offset) {
     fbBuilder.addOffset(21, offset);
     return fbBuilder.offset;
   }
-  int addTsOffset(int? offset) {
-    fbBuilder.addOffset(22, offset);
+  int addMslStatus(MissileStatus? MSL_STATUS) {
+    fbBuilder.addInt8(22, MSL_STATUS?.value);
     return fbBuilder.offset;
   }
-  int addAouRptTypeOffset(int? offset) {
+  int addTsOffset(int? offset) {
     fbBuilder.addOffset(23, offset);
     return fbBuilder.offset;
   }
+  int addAouRptType(AouReportType? AOU_RPT_TYPE) {
+    fbBuilder.addInt8(24, AOU_RPT_TYPE?.value);
+    return fbBuilder.offset;
+  }
   int addContainment(double? CONTAINMENT) {
-    fbBuilder.addFloat64(24, CONTAINMENT);
+    fbBuilder.addFloat64(25, CONTAINMENT);
     return fbBuilder.offset;
   }
   int addTrkConf(double? TRK_CONF) {
-    fbBuilder.addFloat64(25, TRK_CONF);
+    fbBuilder.addFloat64(26, TRK_CONF);
     return fbBuilder.offset;
   }
   int addTrkQual(int? TRK_QUAL) {
-    fbBuilder.addInt32(26, TRK_QUAL);
+    fbBuilder.addUint8(27, TRK_QUAL);
     return fbBuilder.offset;
   }
   int addAngElev(double? ANG_ELEV) {
-    fbBuilder.addFloat64(27, ANG_ELEV);
+    fbBuilder.addFloat64(28, ANG_ELEV);
     return fbBuilder.offset;
   }
   int addSenModeOffset(int? offset) {
-    fbBuilder.addOffset(28, offset);
-    return fbBuilder.offset;
-  }
-  int addInfoSourceOffset(int? offset) {
     fbBuilder.addOffset(29, offset);
     return fbBuilder.offset;
   }
+  int addInfoSourceOffset(int? offset) {
+    fbBuilder.addOffset(30, offset);
+    return fbBuilder.offset;
+  }
   int addBoosting(bool? BOOSTING) {
-    fbBuilder.addBool(30, BOOSTING);
+    fbBuilder.addBool(31, BOOSTING);
     return fbBuilder.offset;
   }
   int addPolarSingLocLat(double? POLAR_SING_LOC_LAT) {
-    fbBuilder.addFloat64(31, POLAR_SING_LOC_LAT);
+    fbBuilder.addFloat64(32, POLAR_SING_LOC_LAT);
     return fbBuilder.offset;
   }
   int addPolarSingLocLon(double? POLAR_SING_LOC_LON) {
-    fbBuilder.addFloat64(32, POLAR_SING_LOC_LON);
+    fbBuilder.addFloat64(33, POLAR_SING_LOC_LON);
     return fbBuilder.offset;
   }
   int addEmgInd(bool? EMG_IND) {
-    fbBuilder.addBool(33, EMG_IND);
+    fbBuilder.addBool(34, EMG_IND);
     return fbBuilder.offset;
   }
   int addDropPtInd(bool? DROP_PT_IND) {
-    fbBuilder.addBool(34, DROP_PT_IND);
-    return fbBuilder.offset;
-  }
-  int addSpaceAmpConf(int? SPACE_AMP_CONF) {
-    fbBuilder.addInt32(35, SPACE_AMP_CONF);
+    fbBuilder.addBool(35, DROP_PT_IND);
     return fbBuilder.offset;
   }
   int addLaunchTimeOffset(int? offset) {
@@ -266,8 +466,8 @@ class MSTBuilder {
     fbBuilder.addFloat64(40, BURNOUT_ALT);
     return fbBuilder.offset;
   }
-  int addLaunchAouTypeOffset(int? offset) {
-    fbBuilder.addOffset(41, offset);
+  int addLaunchAouType(AouReportType? LAUNCH_AOU_TYPE) {
+    fbBuilder.addInt8(41, LAUNCH_AOU_TYPE?.value);
     return fbBuilder.offset;
   }
   int addImpactTimeOffset(int? offset) {
@@ -282,8 +482,8 @@ class MSTBuilder {
     fbBuilder.addFloat64(44, IMPACT_LON);
     return fbBuilder.offset;
   }
-  int addImpactAouTypeOffset(int? offset) {
-    fbBuilder.addOffset(45, offset);
+  int addImpactAouType(AouReportType? IMPACT_AOU_TYPE) {
+    fbBuilder.addInt8(45, IMPACT_AOU_TYPE?.value);
     return fbBuilder.offset;
   }
   int addVectorStartTimeOffset(int? offset) {
@@ -325,12 +525,13 @@ class MSTObjectBuilder extends fb.ObjectBuilder {
   final String? _MSG_TYPE;
   final String? _MSG_SUB_TYPE;
   final String? _MSG_CREATE_DATE;
-  final String? _ENVIRONMENT;
+  final MissileEnvironment? _ENVIRONMENT;
   final String? _OBJ_TYPE;
   final int? _OBJ_TYPE_CONF;
   final String? _OBJ_PLAT;
   final String? _OBJ_IDENT;
   final String? _SPACE_AMP;
+  final int? _SPACE_AMP_CONF;
   final String? _OBJ_ACT;
   final String? _SPACE_SPEC_TYPE;
   final String? _ACFT_SUB_TYPE;
@@ -342,9 +543,9 @@ class MSTObjectBuilder extends fb.ObjectBuilder {
   final String? _MUID_SRC_TRK;
   final String? _MUID_SRC;
   final String? _ALERT;
-  final String? _MSL_STATUS;
+  final MissileStatus? _MSL_STATUS;
   final String? _TS;
-  final String? _AOU_RPT_TYPE;
+  final AouReportType? _AOU_RPT_TYPE;
   final double? _CONTAINMENT;
   final double? _TRK_CONF;
   final int? _TRK_QUAL;
@@ -356,17 +557,16 @@ class MSTObjectBuilder extends fb.ObjectBuilder {
   final double? _POLAR_SING_LOC_LON;
   final bool? _EMG_IND;
   final bool? _DROP_PT_IND;
-  final int? _SPACE_AMP_CONF;
   final String? _LAUNCH_TIME;
   final double? _LAUNCH_LAT;
   final double? _LAUNCH_LON;
   final double? _AZ_CORR;
   final double? _BURNOUT_ALT;
-  final String? _LAUNCH_AOU_TYPE;
+  final AouReportType? _LAUNCH_AOU_TYPE;
   final String? _IMPACT_TIME;
   final double? _IMPACT_LAT;
   final double? _IMPACT_LON;
-  final String? _IMPACT_AOU_TYPE;
+  final AouReportType? _IMPACT_AOU_TYPE;
   final String? _VECTOR_START_TIME;
   final double? _VECTOR_STEP_SIZE;
   final int? _VECTOR_COMPONENTS;
@@ -380,12 +580,13 @@ class MSTObjectBuilder extends fb.ObjectBuilder {
     String? MSG_TYPE,
     String? MSG_SUB_TYPE,
     String? MSG_CREATE_DATE,
-    String? ENVIRONMENT,
+    MissileEnvironment? ENVIRONMENT,
     String? OBJ_TYPE,
     int? OBJ_TYPE_CONF,
     String? OBJ_PLAT,
     String? OBJ_IDENT,
     String? SPACE_AMP,
+    int? SPACE_AMP_CONF,
     String? OBJ_ACT,
     String? SPACE_SPEC_TYPE,
     String? ACFT_SUB_TYPE,
@@ -397,9 +598,9 @@ class MSTObjectBuilder extends fb.ObjectBuilder {
     String? MUID_SRC_TRK,
     String? MUID_SRC,
     String? ALERT,
-    String? MSL_STATUS,
+    MissileStatus? MSL_STATUS,
     String? TS,
-    String? AOU_RPT_TYPE,
+    AouReportType? AOU_RPT_TYPE,
     double? CONTAINMENT,
     double? TRK_CONF,
     int? TRK_QUAL,
@@ -411,17 +612,16 @@ class MSTObjectBuilder extends fb.ObjectBuilder {
     double? POLAR_SING_LOC_LON,
     bool? EMG_IND,
     bool? DROP_PT_IND,
-    int? SPACE_AMP_CONF,
     String? LAUNCH_TIME,
     double? LAUNCH_LAT,
     double? LAUNCH_LON,
     double? AZ_CORR,
     double? BURNOUT_ALT,
-    String? LAUNCH_AOU_TYPE,
+    AouReportType? LAUNCH_AOU_TYPE,
     String? IMPACT_TIME,
     double? IMPACT_LAT,
     double? IMPACT_LON,
-    String? IMPACT_AOU_TYPE,
+    AouReportType? IMPACT_AOU_TYPE,
     String? VECTOR_START_TIME,
     double? VECTOR_STEP_SIZE,
     int? VECTOR_COMPONENTS,
@@ -440,6 +640,7 @@ class MSTObjectBuilder extends fb.ObjectBuilder {
         _OBJ_PLAT = OBJ_PLAT,
         _OBJ_IDENT = OBJ_IDENT,
         _SPACE_AMP = SPACE_AMP,
+        _SPACE_AMP_CONF = SPACE_AMP_CONF,
         _OBJ_ACT = OBJ_ACT,
         _SPACE_SPEC_TYPE = SPACE_SPEC_TYPE,
         _ACFT_SUB_TYPE = ACFT_SUB_TYPE,
@@ -465,7 +666,6 @@ class MSTObjectBuilder extends fb.ObjectBuilder {
         _POLAR_SING_LOC_LON = POLAR_SING_LOC_LON,
         _EMG_IND = EMG_IND,
         _DROP_PT_IND = DROP_PT_IND,
-        _SPACE_AMP_CONF = SPACE_AMP_CONF,
         _LAUNCH_TIME = LAUNCH_TIME,
         _LAUNCH_LAT = LAUNCH_LAT,
         _LAUNCH_LON = LAUNCH_LON,
@@ -495,8 +695,6 @@ class MSTObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_MSG_SUB_TYPE!);
     final int? MSG_CREATE_DATEOffset = _MSG_CREATE_DATE == null ? null
         : fbBuilder.writeString(_MSG_CREATE_DATE!);
-    final int? ENVIRONMENTOffset = _ENVIRONMENT == null ? null
-        : fbBuilder.writeString(_ENVIRONMENT!);
     final int? OBJ_TYPEOffset = _OBJ_TYPE == null ? null
         : fbBuilder.writeString(_OBJ_TYPE!);
     final int? OBJ_PLATOffset = _OBJ_PLAT == null ? null
@@ -525,24 +723,16 @@ class MSTObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_MUID_SRC!);
     final int? ALERTOffset = _ALERT == null ? null
         : fbBuilder.writeString(_ALERT!);
-    final int? MSL_STATUSOffset = _MSL_STATUS == null ? null
-        : fbBuilder.writeString(_MSL_STATUS!);
     final int? TSOffset = _TS == null ? null
         : fbBuilder.writeString(_TS!);
-    final int? AOU_RPT_TYPEOffset = _AOU_RPT_TYPE == null ? null
-        : fbBuilder.writeString(_AOU_RPT_TYPE!);
     final int? SEN_MODEOffset = _SEN_MODE == null ? null
         : fbBuilder.writeString(_SEN_MODE!);
     final int? INFO_SOURCEOffset = _INFO_SOURCE == null ? null
         : fbBuilder.writeString(_INFO_SOURCE!);
     final int? LAUNCH_TIMEOffset = _LAUNCH_TIME == null ? null
         : fbBuilder.writeString(_LAUNCH_TIME!);
-    final int? LAUNCH_AOU_TYPEOffset = _LAUNCH_AOU_TYPE == null ? null
-        : fbBuilder.writeString(_LAUNCH_AOU_TYPE!);
     final int? IMPACT_TIMEOffset = _IMPACT_TIME == null ? null
         : fbBuilder.writeString(_IMPACT_TIME!);
-    final int? IMPACT_AOU_TYPEOffset = _IMPACT_AOU_TYPE == null ? null
-        : fbBuilder.writeString(_IMPACT_AOU_TYPE!);
     final int? VECTOR_START_TIMEOffset = _VECTOR_START_TIME == null ? null
         : fbBuilder.writeString(_VECTOR_START_TIME!);
     final int? VECTORSOffset = _VECTORS == null ? null
@@ -558,48 +748,48 @@ class MSTObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(1, MSG_TYPEOffset);
     fbBuilder.addOffset(2, MSG_SUB_TYPEOffset);
     fbBuilder.addOffset(3, MSG_CREATE_DATEOffset);
-    fbBuilder.addOffset(4, ENVIRONMENTOffset);
+    fbBuilder.addInt8(4, _ENVIRONMENT?.value);
     fbBuilder.addOffset(5, OBJ_TYPEOffset);
-    fbBuilder.addInt32(6, _OBJ_TYPE_CONF);
+    fbBuilder.addUint8(6, _OBJ_TYPE_CONF);
     fbBuilder.addOffset(7, OBJ_PLATOffset);
     fbBuilder.addOffset(8, OBJ_IDENTOffset);
     fbBuilder.addOffset(9, SPACE_AMPOffset);
-    fbBuilder.addOffset(10, OBJ_ACTOffset);
-    fbBuilder.addOffset(11, SPACE_SPEC_TYPEOffset);
-    fbBuilder.addOffset(12, ACFT_SUB_TYPEOffset);
-    fbBuilder.addOffset(13, NAMEOffset);
-    fbBuilder.addOffset(14, CALL_SIGNOffset);
-    fbBuilder.addBool(15, _LOST_TRK_IND);
-    fbBuilder.addOffset(16, TRACK_IDOffset);
-    fbBuilder.addOffset(17, PARENT_TRACK_IDOffset);
-    fbBuilder.addOffset(18, MUID_SRC_TRKOffset);
-    fbBuilder.addOffset(19, MUID_SRCOffset);
-    fbBuilder.addOffset(20, ALERTOffset);
-    fbBuilder.addOffset(21, MSL_STATUSOffset);
-    fbBuilder.addOffset(22, TSOffset);
-    fbBuilder.addOffset(23, AOU_RPT_TYPEOffset);
-    fbBuilder.addFloat64(24, _CONTAINMENT);
-    fbBuilder.addFloat64(25, _TRK_CONF);
-    fbBuilder.addInt32(26, _TRK_QUAL);
-    fbBuilder.addFloat64(27, _ANG_ELEV);
-    fbBuilder.addOffset(28, SEN_MODEOffset);
-    fbBuilder.addOffset(29, INFO_SOURCEOffset);
-    fbBuilder.addBool(30, _BOOSTING);
-    fbBuilder.addFloat64(31, _POLAR_SING_LOC_LAT);
-    fbBuilder.addFloat64(32, _POLAR_SING_LOC_LON);
-    fbBuilder.addBool(33, _EMG_IND);
-    fbBuilder.addBool(34, _DROP_PT_IND);
-    fbBuilder.addInt32(35, _SPACE_AMP_CONF);
+    fbBuilder.addUint8(10, _SPACE_AMP_CONF);
+    fbBuilder.addOffset(11, OBJ_ACTOffset);
+    fbBuilder.addOffset(12, SPACE_SPEC_TYPEOffset);
+    fbBuilder.addOffset(13, ACFT_SUB_TYPEOffset);
+    fbBuilder.addOffset(14, NAMEOffset);
+    fbBuilder.addOffset(15, CALL_SIGNOffset);
+    fbBuilder.addBool(16, _LOST_TRK_IND);
+    fbBuilder.addOffset(17, TRACK_IDOffset);
+    fbBuilder.addOffset(18, PARENT_TRACK_IDOffset);
+    fbBuilder.addOffset(19, MUID_SRC_TRKOffset);
+    fbBuilder.addOffset(20, MUID_SRCOffset);
+    fbBuilder.addOffset(21, ALERTOffset);
+    fbBuilder.addInt8(22, _MSL_STATUS?.value);
+    fbBuilder.addOffset(23, TSOffset);
+    fbBuilder.addInt8(24, _AOU_RPT_TYPE?.value);
+    fbBuilder.addFloat64(25, _CONTAINMENT);
+    fbBuilder.addFloat64(26, _TRK_CONF);
+    fbBuilder.addUint8(27, _TRK_QUAL);
+    fbBuilder.addFloat64(28, _ANG_ELEV);
+    fbBuilder.addOffset(29, SEN_MODEOffset);
+    fbBuilder.addOffset(30, INFO_SOURCEOffset);
+    fbBuilder.addBool(31, _BOOSTING);
+    fbBuilder.addFloat64(32, _POLAR_SING_LOC_LAT);
+    fbBuilder.addFloat64(33, _POLAR_SING_LOC_LON);
+    fbBuilder.addBool(34, _EMG_IND);
+    fbBuilder.addBool(35, _DROP_PT_IND);
     fbBuilder.addOffset(36, LAUNCH_TIMEOffset);
     fbBuilder.addFloat64(37, _LAUNCH_LAT);
     fbBuilder.addFloat64(38, _LAUNCH_LON);
     fbBuilder.addFloat64(39, _AZ_CORR);
     fbBuilder.addFloat64(40, _BURNOUT_ALT);
-    fbBuilder.addOffset(41, LAUNCH_AOU_TYPEOffset);
+    fbBuilder.addInt8(41, _LAUNCH_AOU_TYPE?.value);
     fbBuilder.addOffset(42, IMPACT_TIMEOffset);
     fbBuilder.addFloat64(43, _IMPACT_LAT);
     fbBuilder.addFloat64(44, _IMPACT_LON);
-    fbBuilder.addOffset(45, IMPACT_AOU_TYPEOffset);
+    fbBuilder.addInt8(45, _IMPACT_AOU_TYPE?.value);
     fbBuilder.addOffset(46, VECTOR_START_TIMEOffset);
     fbBuilder.addFloat64(47, _VECTOR_STEP_SIZE);
     fbBuilder.addUint8(48, _VECTOR_COMPONENTS);

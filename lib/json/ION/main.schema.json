@@ -1,0 +1,175 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "ionoLayer" : {
+      "type" : "string",
+      "enum": ["D", "E", "ES", "F", "F1", "F2", "TOPSIDE"]
+    },
+    "ionoSource" : {
+      "type" : "string",
+      "enum": ["IONOSONDE", "GPS_TEC", "BEACON", "ISR", "ALTIMETER", "RADIO_OCCULTATION", "MODEL"]
+    },
+    "ionoDataPoint" : {
+      "type" : "object",
+      "description" : "Ionospheric Observation Data Point",
+      "properties" : {
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Observation epoch (ISO 8601)"
+              },
+        "LAYER" : {
+                "$ref" : "#/definitions/ionoLayer",
+                "description" : "Ionospheric layer"
+              },
+        "CRITICAL_FREQ" : {
+                "type" : "number",
+                "description" : "Critical frequency in MHz"
+              },
+        "VIRTUAL_HEIGHT" : {
+                "type" : "number",
+                "description" : "Virtual height in km"
+              },
+        "TRUE_HEIGHT" : {
+                "type" : "number",
+                "description" : "True height in km"
+              },
+        "PEAK_DENSITY" : {
+                "type" : "number",
+                "description" : "Peak electron density in electrons/m^3"
+              },
+        "TEC" : {
+                "type" : "number",
+                "description" : "Total electron content in TECU"
+              },
+        "TEC_UNCERTAINTY" : {
+                "type" : "number",
+                "description" : "TEC uncertainty in TECU"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ionoDensityProfile" : {
+      "type" : "object",
+      "description" : "Ionospheric Electron Density Profile",
+      "properties" : {
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Observation epoch (ISO 8601)"
+              },
+        "ALTITUDES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Altitudes in km"
+              },
+        "DENSITIES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Electron densities at each altitude in electrons/m^3"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "ION" : {
+      "type" : "object",
+      "description" : "Ionospheric Observation",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Unique identifier"
+              },
+        "SOURCE" : {
+                "$ref" : "#/definitions/ionoSource",
+                "description" : "Data source type"
+              },
+        "STATION_ID" : {
+                "type" : "string",
+                "description" : "Station or sensor identifier"
+              },
+        "STATION_NAME" : {
+                "type" : "string",
+                "description" : "Station name"
+              },
+        "LATITUDE" : {
+                "type" : "number",
+                "description" : "Station geodetic latitude in degrees"
+              },
+        "LONGITUDE" : {
+                "type" : "number",
+                "description" : "Station geodetic longitude in degrees"
+              },
+        "ALTITUDE" : {
+                "type" : "number",
+                "description" : "Station altitude in meters"
+              },
+        "START_TIME" : {
+                "type" : "string",
+                "description" : "Observation start time (ISO 8601)"
+              },
+        "STOP_TIME" : {
+                "type" : "string",
+                "description" : "Observation stop time (ISO 8601)"
+              },
+        "FOF2" : {
+                "type" : "number",
+                "description" : "foF2 critical frequency in MHz"
+              },
+        "FOF1" : {
+                "type" : "number",
+                "description" : "foF1 critical frequency in MHz"
+              },
+        "FOE" : {
+                "type" : "number",
+                "description" : "foE critical frequency in MHz"
+              },
+        "FOES" : {
+                "type" : "number",
+                "description" : "foEs sporadic E critical frequency in MHz"
+              },
+        "HMF2" : {
+                "type" : "number",
+                "description" : "hmF2 peak height of F2 layer in km"
+              },
+        "HMF1" : {
+                "type" : "number",
+                "description" : "hmF1 peak height of F1 layer in km"
+              },
+        "HME" : {
+                "type" : "number",
+                "description" : "hmE peak height of E layer in km"
+              },
+        "NMF2" : {
+                "type" : "number",
+                "description" : "NmF2 peak density of F2 layer in electrons/m^3"
+              },
+        "VTEC" : {
+                "type" : "number",
+                "description" : "Vertical TEC in TECU"
+              },
+        "STEC" : {
+                "type" : "number",
+                "description" : "Slant TEC in TECU"
+              },
+        "S4" : {
+                "type" : "number",
+                "description" : "Scintillation index S4"
+              },
+        "DATA_POINTS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ionoDataPoint"},
+                "description" : "Observation data points"
+              },
+        "DENSITY_PROFILES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/ionoDensityProfile"},
+                "description" : "Electron density profiles"
+              },
+        "QUALITY" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Data quality indicator (0-9, 9=best)"
+              },
+        "NOTES" : {
+                "type" : "string",
+                "description" : "Additional notes"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/ION"
+}

@@ -41,61 +41,79 @@ class MTI extends Table
         return $this;
     }
 
+    /// Unique identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getP3()
+    /// MTI standard (e.g., STANAG 4607)
+    /**
+     * @return sbyte
+     */
+    public function getSTANDARD()
     {
         $o = $this->__offset(6);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \mtiStandard::STANAG_4607;
     }
 
-    public function getP6()
+    /// Platform type (P3 field)
+    public function getP3()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getP7()
+    /// Platform activity (P6 field)
+    public function getP6()
     {
         $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getP8()
+    /// Sensor type (P7 field)
+    public function getP7()
     {
         $o = $this->__offset(12);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Sensor model (P8 field)
+    public function getP8()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Reference time code (P9)
     /**
-     * @return int
+     * @return uint
      */
     public function getP9()
     {
-        $o = $this->__offset(14);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
+    /// Security classification (P10)
     /**
-     * @return int
+     * @return ushort
      */
     public function getP10()
     {
-        $o = $this->__offset(16);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
     }
 
+    /// Mission segment identifiers
     /**
      * @param int offset
      * @return string
      */
     public function getMISSIONS($j)
     {
-        $o = $this->__offset(18);
+        $o = $this->__offset(20);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -104,17 +122,18 @@ class MTI extends Table
      */
     public function getMISSIONSLength()
     {
-        $o = $this->__offset(18);
+        $o = $this->__offset(20);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Dwell segment data references
     /**
      * @param int offset
      * @return string
      */
     public function getDWELLS($j)
     {
-        $o = $this->__offset(20);
+        $o = $this->__offset(22);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -123,17 +142,18 @@ class MTI extends Table
      */
     public function getDWELLSLength()
     {
-        $o = $this->__offset(20);
+        $o = $this->__offset(22);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// High range resolution profile references
     /**
      * @param int offset
      * @return string
      */
     public function getHRRS($j)
     {
-        $o = $this->__offset(22);
+        $o = $this->__offset(24);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -142,17 +162,18 @@ class MTI extends Table
      */
     public function getHRRSLength()
     {
-        $o = $this->__offset(22);
+        $o = $this->__offset(24);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Job definition references
     /**
      * @param int offset
      * @return string
      */
     public function getJOB_DEFS($j)
     {
-        $o = $this->__offset(24);
+        $o = $this->__offset(26);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -161,17 +182,18 @@ class MTI extends Table
      */
     public function getJOB_DEFSLength()
     {
-        $o = $this->__offset(24);
+        $o = $this->__offset(26);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Free text entries
     /**
      * @param int offset
      * @return string
      */
     public function getFREE_TEXTS($j)
     {
-        $o = $this->__offset(26);
+        $o = $this->__offset(28);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -180,17 +202,18 @@ class MTI extends Table
      */
     public function getFREE_TEXTSLength()
     {
-        $o = $this->__offset(26);
+        $o = $this->__offset(28);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Platform location data references
     /**
      * @param int offset
      * @return string
      */
     public function getPLATFORM_LOCS($j)
     {
-        $o = $this->__offset(28);
+        $o = $this->__offset(30);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -199,17 +222,18 @@ class MTI extends Table
      */
     public function getPLATFORM_LOCSLength()
     {
-        $o = $this->__offset(28);
+        $o = $this->__offset(30);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Job request references
     /**
      * @param int offset
      * @return string
      */
     public function getJOB_REQUESTS($j)
     {
-        $o = $this->__offset(30);
+        $o = $this->__offset(32);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -218,7 +242,7 @@ class MTI extends Table
      */
     public function getJOB_REQUESTSLength()
     {
-        $o = $this->__offset(30);
+        $o = $this->__offset(32);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -228,17 +252,18 @@ class MTI extends Table
      */
     public static function startMTI(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(14);
+        $builder->StartObject(15);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return MTI
      */
-    public static function createMTI(FlatBufferBuilder $builder, $ID, $P3, $P6, $P7, $P8, $P9, $P10, $MISSIONS, $DWELLS, $HRRS, $JOB_DEFS, $FREE_TEXTS, $PLATFORM_LOCS, $JOB_REQUESTS)
+    public static function createMTI(FlatBufferBuilder $builder, $ID, $STANDARD, $P3, $P6, $P7, $P8, $P9, $P10, $MISSIONS, $DWELLS, $HRRS, $JOB_DEFS, $FREE_TEXTS, $PLATFORM_LOCS, $JOB_REQUESTS)
     {
-        $builder->startObject(14);
+        $builder->startObject(15);
         self::addID($builder, $ID);
+        self::addSTANDARD($builder, $STANDARD);
         self::addP3($builder, $P3);
         self::addP6($builder, $P6);
         self::addP7($builder, $P7);
@@ -268,12 +293,22 @@ class MTI extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addSTANDARD(FlatBufferBuilder $builder, $STANDARD)
+    {
+        $builder->addSbyteX(1, $STANDARD, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param StringOffset
      * @return void
      */
     public static function addP3(FlatBufferBuilder $builder, $P3)
     {
-        $builder->addOffsetX(1, $P3, 0);
+        $builder->addOffsetX(2, $P3, 0);
     }
 
     /**
@@ -283,7 +318,7 @@ class MTI extends Table
      */
     public static function addP6(FlatBufferBuilder $builder, $P6)
     {
-        $builder->addOffsetX(2, $P6, 0);
+        $builder->addOffsetX(3, $P6, 0);
     }
 
     /**
@@ -293,7 +328,7 @@ class MTI extends Table
      */
     public static function addP7(FlatBufferBuilder $builder, $P7)
     {
-        $builder->addOffsetX(3, $P7, 0);
+        $builder->addOffsetX(4, $P7, 0);
     }
 
     /**
@@ -303,27 +338,27 @@ class MTI extends Table
      */
     public static function addP8(FlatBufferBuilder $builder, $P8)
     {
-        $builder->addOffsetX(4, $P8, 0);
+        $builder->addOffsetX(5, $P8, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param uint
      * @return void
      */
     public static function addP9(FlatBufferBuilder $builder, $P9)
     {
-        $builder->addIntX(5, $P9, 0);
+        $builder->addUintX(6, $P9, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param ushort
      * @return void
      */
     public static function addP10(FlatBufferBuilder $builder, $P10)
     {
-        $builder->addIntX(6, $P10, 0);
+        $builder->addUshortX(7, $P10, 0);
     }
 
     /**
@@ -333,7 +368,7 @@ class MTI extends Table
      */
     public static function addMISSIONS(FlatBufferBuilder $builder, $MISSIONS)
     {
-        $builder->addOffsetX(7, $MISSIONS, 0);
+        $builder->addOffsetX(8, $MISSIONS, 0);
     }
 
     /**
@@ -367,7 +402,7 @@ class MTI extends Table
      */
     public static function addDWELLS(FlatBufferBuilder $builder, $DWELLS)
     {
-        $builder->addOffsetX(8, $DWELLS, 0);
+        $builder->addOffsetX(9, $DWELLS, 0);
     }
 
     /**
@@ -401,7 +436,7 @@ class MTI extends Table
      */
     public static function addHRRS(FlatBufferBuilder $builder, $HRRS)
     {
-        $builder->addOffsetX(9, $HRRS, 0);
+        $builder->addOffsetX(10, $HRRS, 0);
     }
 
     /**
@@ -435,7 +470,7 @@ class MTI extends Table
      */
     public static function addJOB_DEFS(FlatBufferBuilder $builder, $JOB_DEFS)
     {
-        $builder->addOffsetX(10, $JOB_DEFS, 0);
+        $builder->addOffsetX(11, $JOB_DEFS, 0);
     }
 
     /**
@@ -469,7 +504,7 @@ class MTI extends Table
      */
     public static function addFREE_TEXTS(FlatBufferBuilder $builder, $FREE_TEXTS)
     {
-        $builder->addOffsetX(11, $FREE_TEXTS, 0);
+        $builder->addOffsetX(12, $FREE_TEXTS, 0);
     }
 
     /**
@@ -503,7 +538,7 @@ class MTI extends Table
      */
     public static function addPLATFORM_LOCS(FlatBufferBuilder $builder, $PLATFORM_LOCS)
     {
-        $builder->addOffsetX(12, $PLATFORM_LOCS, 0);
+        $builder->addOffsetX(13, $PLATFORM_LOCS, 0);
     }
 
     /**
@@ -537,7 +572,7 @@ class MTI extends Table
      */
     public static function addJOB_REQUESTS(FlatBufferBuilder $builder, $JOB_REQUESTS)
     {
-        $builder->addOffsetX(13, $JOB_REQUESTS, 0);
+        $builder->addOffsetX(14, $JOB_REQUESTS, 0);
     }
 
     /**

@@ -9,6 +9,107 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_IMAGE_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_IMAGE_TYPE: i8 = 5;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_IMAGE_TYPE: [imageType; 6] = [
+  imageType::VISIBLE,
+  imageType::INFRARED,
+  imageType::MULTISPECTRAL,
+  imageType::HYPERSPECTRAL,
+  imageType::UV,
+  imageType::BROADBAND,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct imageType(pub i8);
+#[allow(non_upper_case_globals)]
+impl imageType {
+  pub const VISIBLE: Self = Self(0);
+  pub const INFRARED: Self = Self(1);
+  pub const MULTISPECTRAL: Self = Self(2);
+  pub const HYPERSPECTRAL: Self = Self(3);
+  pub const UV: Self = Self(4);
+  pub const BROADBAND: Self = Self(5);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 5;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::VISIBLE,
+    Self::INFRARED,
+    Self::MULTISPECTRAL,
+    Self::HYPERSPECTRAL,
+    Self::UV,
+    Self::BROADBAND,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::VISIBLE => Some("VISIBLE"),
+      Self::INFRARED => Some("INFRARED"),
+      Self::MULTISPECTRAL => Some("MULTISPECTRAL"),
+      Self::HYPERSPECTRAL => Some("HYPERSPECTRAL"),
+      Self::UV => Some("UV"),
+      Self::BROADBAND => Some("BROADBAND"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for imageType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for imageType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for imageType {
+    type Output = imageType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for imageType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for imageType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for imageType {}
 pub enum SKIOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -29,8 +130,8 @@ impl<'a> SKI<'a> {
   pub const VT_ID: flatbuffers::VOffsetT = 4;
   pub const VT_ON_ORBIT: flatbuffers::VOffsetT = 6;
   pub const VT_ORIG_OBJECT_ID: flatbuffers::VOffsetT = 8;
-  pub const VT_ID_SENSOR: flatbuffers::VOffsetT = 10;
-  pub const VT_SAT_NO: flatbuffers::VOffsetT = 12;
+  pub const VT_SAT_NO: flatbuffers::VOffsetT = 10;
+  pub const VT_ID_SENSOR: flatbuffers::VOffsetT = 12;
   pub const VT_ORIG_SENSOR_ID: flatbuffers::VOffsetT = 14;
   pub const VT_SENLAT: flatbuffers::VOffsetT = 16;
   pub const VT_SENLON: flatbuffers::VOffsetT = 18;
@@ -101,24 +202,24 @@ impl<'a> SKI<'a> {
     if let Some(x) = args.FILENAME { builder.add_FILENAME(x); }
     if let Some(x) = args.CALIBRATION_KEY { builder.add_CALIBRATION_KEY(x); }
     if let Some(x) = args.ANNOTATION_KEY { builder.add_ANNOTATION_KEY(x); }
-    builder.add_PIXEL_BIT_DEPTH(args.PIXEL_BIT_DEPTH);
-    builder.add_FRAME_HEIGHT_PIXELS(args.FRAME_HEIGHT_PIXELS);
-    builder.add_FRAME_WIDTH_PIXELS(args.FRAME_WIDTH_PIXELS);
-    builder.add_SEQUENCE_ID(args.SEQUENCE_ID);
-    builder.add_IMAGE_SET_LENGTH(args.IMAGE_SET_LENGTH);
     if let Some(x) = args.IMAGE_SET_ID { builder.add_IMAGE_SET_ID(x); }
     if let Some(x) = args.IMAGE_SOURCE_INFO { builder.add_IMAGE_SOURCE_INFO(x); }
     if let Some(x) = args.EXP_END_TIME { builder.add_EXP_END_TIME(x); }
     if let Some(x) = args.EXP_START_TIME { builder.add_EXP_START_TIME(x); }
-    if let Some(x) = args.IMAGE_TYPE { builder.add_IMAGE_TYPE(x); }
     if let Some(x) = args.SEN_QUAT_DOT { builder.add_SEN_QUAT_DOT(x); }
     if let Some(x) = args.SEN_QUAT { builder.add_SEN_QUAT(x); }
     if let Some(x) = args.ORIG_SENSOR_ID { builder.add_ORIG_SENSOR_ID(x); }
-    builder.add_SAT_NO(args.SAT_NO);
     if let Some(x) = args.ID_SENSOR { builder.add_ID_SENSOR(x); }
+    builder.add_SAT_NO(args.SAT_NO);
     if let Some(x) = args.ORIG_OBJECT_ID { builder.add_ORIG_OBJECT_ID(x); }
     if let Some(x) = args.ON_ORBIT { builder.add_ON_ORBIT(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_FRAME_HEIGHT_PIXELS(args.FRAME_HEIGHT_PIXELS);
+    builder.add_FRAME_WIDTH_PIXELS(args.FRAME_WIDTH_PIXELS);
+    builder.add_SEQUENCE_ID(args.SEQUENCE_ID);
+    builder.add_IMAGE_SET_LENGTH(args.IMAGE_SET_LENGTH);
+    builder.add_PIXEL_BIT_DEPTH(args.PIXEL_BIT_DEPTH);
+    builder.add_IMAGE_TYPE(args.IMAGE_TYPE);
     builder.finish()
   }
 
@@ -132,10 +233,10 @@ impl<'a> SKI<'a> {
     let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID().map(|x| {
       x.to_string()
     });
+    let SAT_NO = self.SAT_NO();
     let ID_SENSOR = self.ID_SENSOR().map(|x| {
       x.to_string()
     });
-    let SAT_NO = self.SAT_NO();
     let ORIG_SENSOR_ID = self.ORIG_SENSOR_ID().map(|x| {
       x.to_string()
     });
@@ -146,14 +247,12 @@ impl<'a> SKI<'a> {
     let SENY = self.SENY();
     let SENZ = self.SENZ();
     let SEN_QUAT = self.SEN_QUAT().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
+      x.into_iter().collect()
     });
     let SEN_QUAT_DOT = self.SEN_QUAT_DOT().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
+      x.into_iter().collect()
     });
-    let IMAGE_TYPE = self.IMAGE_TYPE().map(|x| {
-      x.to_string()
-    });
+    let IMAGE_TYPE = self.IMAGE_TYPE();
     let EXP_START_TIME = self.EXP_START_TIME().map(|x| {
       x.to_string()
     });
@@ -208,8 +307,8 @@ impl<'a> SKI<'a> {
       ID,
       ON_ORBIT,
       ORIG_OBJECT_ID,
-      ID_SENSOR,
       SAT_NO,
+      ID_SENSOR,
       ORIG_SENSOR_ID,
       SENLAT,
       SENLON,
@@ -249,6 +348,7 @@ impl<'a> SKI<'a> {
     }
   }
 
+  /// Unique identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -256,6 +356,7 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SKI::VT_ID, None)}
   }
+  /// On-orbit reference
   #[inline]
   pub fn ON_ORBIT(&self) -> Option<&'a str> {
     // Safety:
@@ -263,6 +364,7 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SKI::VT_ON_ORBIT, None)}
   }
+  /// International designator
   #[inline]
   pub fn ORIG_OBJECT_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -270,6 +372,15 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SKI::VT_ORIG_OBJECT_ID, None)}
   }
+  /// Satellite catalog number
+  #[inline]
+  pub fn SAT_NO(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SKI::VT_SAT_NO, Some(0)).unwrap()}
+  }
+  /// Sensor identifier
   #[inline]
   pub fn ID_SENSOR(&self) -> Option<&'a str> {
     // Safety:
@@ -277,13 +388,7 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SKI::VT_ID_SENSOR, None)}
   }
-  #[inline]
-  pub fn SAT_NO(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(SKI::VT_SAT_NO, Some(0)).unwrap()}
-  }
+  /// Original sensor identifier
   #[inline]
   pub fn ORIG_SENSOR_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -291,6 +396,7 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SKI::VT_ORIG_SENSOR_ID, None)}
   }
+  /// Sensor geodetic latitude (degrees)
   #[inline]
   pub fn SENLAT(&self) -> f64 {
     // Safety:
@@ -298,6 +404,7 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SKI::VT_SENLAT, Some(0.0)).unwrap()}
   }
+  /// Sensor geodetic longitude (degrees)
   #[inline]
   pub fn SENLON(&self) -> f64 {
     // Safety:
@@ -305,6 +412,7 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SKI::VT_SENLON, Some(0.0)).unwrap()}
   }
+  /// Sensor altitude (km)
   #[inline]
   pub fn SENALT(&self) -> f64 {
     // Safety:
@@ -312,6 +420,7 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SKI::VT_SENALT, Some(0.0)).unwrap()}
   }
+  /// Sensor ECEF X position (km)
   #[inline]
   pub fn SENX(&self) -> f64 {
     // Safety:
@@ -319,6 +428,7 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SKI::VT_SENX, Some(0.0)).unwrap()}
   }
+  /// Sensor ECEF Y position (km)
   #[inline]
   pub fn SENY(&self) -> f64 {
     // Safety:
@@ -326,6 +436,7 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SKI::VT_SENY, Some(0.0)).unwrap()}
   }
+  /// Sensor ECEF Z position (km)
   #[inline]
   pub fn SENZ(&self) -> f64 {
     // Safety:
@@ -333,27 +444,31 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SKI::VT_SENZ, Some(0.0)).unwrap()}
   }
+  /// Sensor quaternion (scalar-last: q1, q2, q3, q0)
   #[inline]
-  pub fn SEN_QUAT(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+  pub fn SEN_QUAT(&self) -> Option<flatbuffers::Vector<'a, f64>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(SKI::VT_SEN_QUAT, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(SKI::VT_SEN_QUAT, None)}
   }
+  /// Sensor quaternion rate
   #[inline]
-  pub fn SEN_QUAT_DOT(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+  pub fn SEN_QUAT_DOT(&self) -> Option<flatbuffers::Vector<'a, f64>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(SKI::VT_SEN_QUAT_DOT, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(SKI::VT_SEN_QUAT_DOT, None)}
   }
+  /// Image type
   #[inline]
-  pub fn IMAGE_TYPE(&self) -> Option<&'a str> {
+  pub fn IMAGE_TYPE(&self) -> imageType {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SKI::VT_IMAGE_TYPE, None)}
+    unsafe { self._tab.get::<imageType>(SKI::VT_IMAGE_TYPE, Some(imageType::VISIBLE)).unwrap()}
   }
+  /// Exposure start time (ISO 8601)
   #[inline]
   pub fn EXP_START_TIME(&self) -> Option<&'a str> {
     // Safety:
@@ -361,6 +476,7 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SKI::VT_EXP_START_TIME, None)}
   }
+  /// Exposure end time (ISO 8601)
   #[inline]
   pub fn EXP_END_TIME(&self) -> Option<&'a str> {
     // Safety:
@@ -368,6 +484,7 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SKI::VT_EXP_END_TIME, None)}
   }
+  /// Image source information
   #[inline]
   pub fn IMAGE_SOURCE_INFO(&self) -> Option<&'a str> {
     // Safety:
@@ -375,6 +492,7 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SKI::VT_IMAGE_SOURCE_INFO, None)}
   }
+  /// Top-left corner start azimuth (degrees)
   #[inline]
   pub fn TOP_LEFT_START_AZ(&self) -> f64 {
     // Safety:
@@ -382,6 +500,7 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SKI::VT_TOP_LEFT_START_AZ, Some(0.0)).unwrap()}
   }
+  /// Top-left corner start elevation (degrees)
   #[inline]
   pub fn TOP_LEFT_START_EL(&self) -> f64 {
     // Safety:
@@ -389,6 +508,7 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SKI::VT_TOP_LEFT_START_EL, Some(0.0)).unwrap()}
   }
+  /// Top-left corner stop azimuth (degrees)
   #[inline]
   pub fn TOP_LEFT_STOP_AZ(&self) -> f64 {
     // Safety:
@@ -396,6 +516,7 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SKI::VT_TOP_LEFT_STOP_AZ, Some(0.0)).unwrap()}
   }
+  /// Top-left corner stop elevation (degrees)
   #[inline]
   pub fn TOP_LEFT_STOP_EL(&self) -> f64 {
     // Safety:
@@ -403,6 +524,7 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SKI::VT_TOP_LEFT_STOP_EL, Some(0.0)).unwrap()}
   }
+  /// Image set identifier
   #[inline]
   pub fn IMAGE_SET_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -410,20 +532,23 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SKI::VT_IMAGE_SET_ID, None)}
   }
+  /// Number of images in set
   #[inline]
-  pub fn IMAGE_SET_LENGTH(&self) -> i32 {
+  pub fn IMAGE_SET_LENGTH(&self) -> u16 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(SKI::VT_IMAGE_SET_LENGTH, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u16>(SKI::VT_IMAGE_SET_LENGTH, Some(0)).unwrap()}
   }
+  /// Sequence number within set
   #[inline]
-  pub fn SEQUENCE_ID(&self) -> i32 {
+  pub fn SEQUENCE_ID(&self) -> u16 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(SKI::VT_SEQUENCE_ID, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u16>(SKI::VT_SEQUENCE_ID, Some(0)).unwrap()}
   }
+  /// Frame field-of-view width (degrees)
   #[inline]
   pub fn FRAME_FOVWIDTH(&self) -> f64 {
     // Safety:
@@ -431,6 +556,7 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SKI::VT_FRAME_FOVWIDTH, Some(0.0)).unwrap()}
   }
+  /// Frame field-of-view height (degrees)
   #[inline]
   pub fn FRAME_FOVHEIGHT(&self) -> f64 {
     // Safety:
@@ -438,6 +564,7 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SKI::VT_FRAME_FOVHEIGHT, Some(0.0)).unwrap()}
   }
+  /// Pixel field-of-view width (arcseconds)
   #[inline]
   pub fn PIXEL_FOVWIDTH(&self) -> f64 {
     // Safety:
@@ -445,6 +572,7 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SKI::VT_PIXEL_FOVWIDTH, Some(0.0)).unwrap()}
   }
+  /// Pixel field-of-view height (arcseconds)
   #[inline]
   pub fn PIXEL_FOVHEIGHT(&self) -> f64 {
     // Safety:
@@ -452,27 +580,31 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SKI::VT_PIXEL_FOVHEIGHT, Some(0.0)).unwrap()}
   }
+  /// Frame width (pixels)
   #[inline]
-  pub fn FRAME_WIDTH_PIXELS(&self) -> i32 {
+  pub fn FRAME_WIDTH_PIXELS(&self) -> u16 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(SKI::VT_FRAME_WIDTH_PIXELS, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u16>(SKI::VT_FRAME_WIDTH_PIXELS, Some(0)).unwrap()}
   }
+  /// Frame height (pixels)
   #[inline]
-  pub fn FRAME_HEIGHT_PIXELS(&self) -> i32 {
+  pub fn FRAME_HEIGHT_PIXELS(&self) -> u16 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(SKI::VT_FRAME_HEIGHT_PIXELS, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u16>(SKI::VT_FRAME_HEIGHT_PIXELS, Some(0)).unwrap()}
   }
+  /// Pixel bit depth
   #[inline]
-  pub fn PIXEL_BIT_DEPTH(&self) -> i32 {
+  pub fn PIXEL_BIT_DEPTH(&self) -> u8 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(SKI::VT_PIXEL_BIT_DEPTH, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u8>(SKI::VT_PIXEL_BIT_DEPTH, Some(0)).unwrap()}
   }
+  /// Annotation key reference
   #[inline]
   pub fn ANNOTATION_KEY(&self) -> Option<&'a str> {
     // Safety:
@@ -480,6 +612,7 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SKI::VT_ANNOTATION_KEY, None)}
   }
+  /// Calibration key reference
   #[inline]
   pub fn CALIBRATION_KEY(&self) -> Option<&'a str> {
     // Safety:
@@ -487,6 +620,7 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SKI::VT_CALIBRATION_KEY, None)}
   }
+  /// Image filename
   #[inline]
   pub fn FILENAME(&self) -> Option<&'a str> {
     // Safety:
@@ -494,6 +628,7 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SKI::VT_FILENAME, None)}
   }
+  /// File size (bytes)
   #[inline]
   pub fn FILESIZE(&self) -> i64 {
     // Safety:
@@ -501,6 +636,7 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<i64>(SKI::VT_FILESIZE, Some(0)).unwrap()}
   }
+  /// File checksum value
   #[inline]
   pub fn CHECKSUM_VALUE(&self) -> Option<&'a str> {
     // Safety:
@@ -508,6 +644,7 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SKI::VT_CHECKSUM_VALUE, None)}
   }
+  /// Transaction identifier
   #[inline]
   pub fn TRANSACTION_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -515,6 +652,7 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SKI::VT_TRANSACTION_ID, None)}
   }
+  /// Associated tags
   #[inline]
   pub fn TAGS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -522,6 +660,7 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(SKI::VT_TAGS, None)}
   }
+  /// Description
   #[inline]
   pub fn DESCRIPTION(&self) -> Option<&'a str> {
     // Safety:
@@ -529,6 +668,7 @@ impl<'a> SKI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SKI::VT_DESCRIPTION, None)}
   }
+  /// Associated EO observation references
   #[inline]
   pub fn EO_OBSERVATIONS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -548,8 +688,8 @@ impl flatbuffers::Verifiable for SKI<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ON_ORBIT", Self::VT_ON_ORBIT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_OBJECT_ID", Self::VT_ORIG_OBJECT_ID, false)?
+     .visit_field::<u32>("SAT_NO", Self::VT_SAT_NO, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID_SENSOR", Self::VT_ID_SENSOR, false)?
-     .visit_field::<i32>("SAT_NO", Self::VT_SAT_NO, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_SENSOR_ID", Self::VT_ORIG_SENSOR_ID, false)?
      .visit_field::<f64>("SENLAT", Self::VT_SENLAT, false)?
      .visit_field::<f64>("SENLON", Self::VT_SENLON, false)?
@@ -557,9 +697,9 @@ impl flatbuffers::Verifiable for SKI<'_> {
      .visit_field::<f64>("SENX", Self::VT_SENX, false)?
      .visit_field::<f64>("SENY", Self::VT_SENY, false)?
      .visit_field::<f64>("SENZ", Self::VT_SENZ, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("SEN_QUAT", Self::VT_SEN_QUAT, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("SEN_QUAT_DOT", Self::VT_SEN_QUAT_DOT, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("IMAGE_TYPE", Self::VT_IMAGE_TYPE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("SEN_QUAT", Self::VT_SEN_QUAT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("SEN_QUAT_DOT", Self::VT_SEN_QUAT_DOT, false)?
+     .visit_field::<imageType>("IMAGE_TYPE", Self::VT_IMAGE_TYPE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EXP_START_TIME", Self::VT_EXP_START_TIME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EXP_END_TIME", Self::VT_EXP_END_TIME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("IMAGE_SOURCE_INFO", Self::VT_IMAGE_SOURCE_INFO, false)?
@@ -568,15 +708,15 @@ impl flatbuffers::Verifiable for SKI<'_> {
      .visit_field::<f64>("TOP_LEFT_STOP_AZ", Self::VT_TOP_LEFT_STOP_AZ, false)?
      .visit_field::<f64>("TOP_LEFT_STOP_EL", Self::VT_TOP_LEFT_STOP_EL, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("IMAGE_SET_ID", Self::VT_IMAGE_SET_ID, false)?
-     .visit_field::<i32>("IMAGE_SET_LENGTH", Self::VT_IMAGE_SET_LENGTH, false)?
-     .visit_field::<i32>("SEQUENCE_ID", Self::VT_SEQUENCE_ID, false)?
+     .visit_field::<u16>("IMAGE_SET_LENGTH", Self::VT_IMAGE_SET_LENGTH, false)?
+     .visit_field::<u16>("SEQUENCE_ID", Self::VT_SEQUENCE_ID, false)?
      .visit_field::<f64>("FRAME_FOVWIDTH", Self::VT_FRAME_FOVWIDTH, false)?
      .visit_field::<f64>("FRAME_FOVHEIGHT", Self::VT_FRAME_FOVHEIGHT, false)?
      .visit_field::<f64>("PIXEL_FOVWIDTH", Self::VT_PIXEL_FOVWIDTH, false)?
      .visit_field::<f64>("PIXEL_FOVHEIGHT", Self::VT_PIXEL_FOVHEIGHT, false)?
-     .visit_field::<i32>("FRAME_WIDTH_PIXELS", Self::VT_FRAME_WIDTH_PIXELS, false)?
-     .visit_field::<i32>("FRAME_HEIGHT_PIXELS", Self::VT_FRAME_HEIGHT_PIXELS, false)?
-     .visit_field::<i32>("PIXEL_BIT_DEPTH", Self::VT_PIXEL_BIT_DEPTH, false)?
+     .visit_field::<u16>("FRAME_WIDTH_PIXELS", Self::VT_FRAME_WIDTH_PIXELS, false)?
+     .visit_field::<u16>("FRAME_HEIGHT_PIXELS", Self::VT_FRAME_HEIGHT_PIXELS, false)?
+     .visit_field::<u8>("PIXEL_BIT_DEPTH", Self::VT_PIXEL_BIT_DEPTH, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ANNOTATION_KEY", Self::VT_ANNOTATION_KEY, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CALIBRATION_KEY", Self::VT_CALIBRATION_KEY, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("FILENAME", Self::VT_FILENAME, false)?
@@ -594,8 +734,8 @@ pub struct SKIArgs<'a> {
     pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ON_ORBIT: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ORIG_OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SAT_NO: u32,
     pub ID_SENSOR: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SAT_NO: i32,
     pub ORIG_SENSOR_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub SENLAT: f64,
     pub SENLON: f64,
@@ -603,9 +743,9 @@ pub struct SKIArgs<'a> {
     pub SENX: f64,
     pub SENY: f64,
     pub SENZ: f64,
-    pub SEN_QUAT: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub SEN_QUAT_DOT: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub IMAGE_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SEN_QUAT: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub SEN_QUAT_DOT: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub IMAGE_TYPE: imageType,
     pub EXP_START_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub EXP_END_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub IMAGE_SOURCE_INFO: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -614,15 +754,15 @@ pub struct SKIArgs<'a> {
     pub TOP_LEFT_STOP_AZ: f64,
     pub TOP_LEFT_STOP_EL: f64,
     pub IMAGE_SET_ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub IMAGE_SET_LENGTH: i32,
-    pub SEQUENCE_ID: i32,
+    pub IMAGE_SET_LENGTH: u16,
+    pub SEQUENCE_ID: u16,
     pub FRAME_FOVWIDTH: f64,
     pub FRAME_FOVHEIGHT: f64,
     pub PIXEL_FOVWIDTH: f64,
     pub PIXEL_FOVHEIGHT: f64,
-    pub FRAME_WIDTH_PIXELS: i32,
-    pub FRAME_HEIGHT_PIXELS: i32,
-    pub PIXEL_BIT_DEPTH: i32,
+    pub FRAME_WIDTH_PIXELS: u16,
+    pub FRAME_HEIGHT_PIXELS: u16,
+    pub PIXEL_BIT_DEPTH: u8,
     pub ANNOTATION_KEY: Option<flatbuffers::WIPOffset<&'a str>>,
     pub CALIBRATION_KEY: Option<flatbuffers::WIPOffset<&'a str>>,
     pub FILENAME: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -640,8 +780,8 @@ impl<'a> Default for SKIArgs<'a> {
       ID: None,
       ON_ORBIT: None,
       ORIG_OBJECT_ID: None,
-      ID_SENSOR: None,
       SAT_NO: 0,
+      ID_SENSOR: None,
       ORIG_SENSOR_ID: None,
       SENLAT: 0.0,
       SENLON: 0.0,
@@ -651,7 +791,7 @@ impl<'a> Default for SKIArgs<'a> {
       SENZ: 0.0,
       SEN_QUAT: None,
       SEN_QUAT_DOT: None,
-      IMAGE_TYPE: None,
+      IMAGE_TYPE: imageType::VISIBLE,
       EXP_START_TIME: None,
       EXP_END_TIME: None,
       IMAGE_SOURCE_INFO: None,
@@ -700,12 +840,12 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SKIBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SKI::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
   }
   #[inline]
-  pub fn add_ID_SENSOR(&mut self, ID_SENSOR: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SKI::VT_ID_SENSOR, ID_SENSOR);
+  pub fn add_SAT_NO(&mut self, SAT_NO: u32) {
+    self.fbb_.push_slot::<u32>(SKI::VT_SAT_NO, SAT_NO, 0);
   }
   #[inline]
-  pub fn add_SAT_NO(&mut self, SAT_NO: i32) {
-    self.fbb_.push_slot::<i32>(SKI::VT_SAT_NO, SAT_NO, 0);
+  pub fn add_ID_SENSOR(&mut self, ID_SENSOR: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SKI::VT_ID_SENSOR, ID_SENSOR);
   }
   #[inline]
   pub fn add_ORIG_SENSOR_ID(&mut self, ORIG_SENSOR_ID: flatbuffers::WIPOffset<&'b  str>) {
@@ -736,16 +876,16 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SKIBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(SKI::VT_SENZ, SENZ, 0.0);
   }
   #[inline]
-  pub fn add_SEN_QUAT(&mut self, SEN_QUAT: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+  pub fn add_SEN_QUAT(&mut self, SEN_QUAT: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SKI::VT_SEN_QUAT, SEN_QUAT);
   }
   #[inline]
-  pub fn add_SEN_QUAT_DOT(&mut self, SEN_QUAT_DOT: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+  pub fn add_SEN_QUAT_DOT(&mut self, SEN_QUAT_DOT: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SKI::VT_SEN_QUAT_DOT, SEN_QUAT_DOT);
   }
   #[inline]
-  pub fn add_IMAGE_TYPE(&mut self, IMAGE_TYPE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SKI::VT_IMAGE_TYPE, IMAGE_TYPE);
+  pub fn add_IMAGE_TYPE(&mut self, IMAGE_TYPE: imageType) {
+    self.fbb_.push_slot::<imageType>(SKI::VT_IMAGE_TYPE, IMAGE_TYPE, imageType::VISIBLE);
   }
   #[inline]
   pub fn add_EXP_START_TIME(&mut self, EXP_START_TIME: flatbuffers::WIPOffset<&'b  str>) {
@@ -780,12 +920,12 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SKIBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SKI::VT_IMAGE_SET_ID, IMAGE_SET_ID);
   }
   #[inline]
-  pub fn add_IMAGE_SET_LENGTH(&mut self, IMAGE_SET_LENGTH: i32) {
-    self.fbb_.push_slot::<i32>(SKI::VT_IMAGE_SET_LENGTH, IMAGE_SET_LENGTH, 0);
+  pub fn add_IMAGE_SET_LENGTH(&mut self, IMAGE_SET_LENGTH: u16) {
+    self.fbb_.push_slot::<u16>(SKI::VT_IMAGE_SET_LENGTH, IMAGE_SET_LENGTH, 0);
   }
   #[inline]
-  pub fn add_SEQUENCE_ID(&mut self, SEQUENCE_ID: i32) {
-    self.fbb_.push_slot::<i32>(SKI::VT_SEQUENCE_ID, SEQUENCE_ID, 0);
+  pub fn add_SEQUENCE_ID(&mut self, SEQUENCE_ID: u16) {
+    self.fbb_.push_slot::<u16>(SKI::VT_SEQUENCE_ID, SEQUENCE_ID, 0);
   }
   #[inline]
   pub fn add_FRAME_FOVWIDTH(&mut self, FRAME_FOVWIDTH: f64) {
@@ -804,16 +944,16 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SKIBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(SKI::VT_PIXEL_FOVHEIGHT, PIXEL_FOVHEIGHT, 0.0);
   }
   #[inline]
-  pub fn add_FRAME_WIDTH_PIXELS(&mut self, FRAME_WIDTH_PIXELS: i32) {
-    self.fbb_.push_slot::<i32>(SKI::VT_FRAME_WIDTH_PIXELS, FRAME_WIDTH_PIXELS, 0);
+  pub fn add_FRAME_WIDTH_PIXELS(&mut self, FRAME_WIDTH_PIXELS: u16) {
+    self.fbb_.push_slot::<u16>(SKI::VT_FRAME_WIDTH_PIXELS, FRAME_WIDTH_PIXELS, 0);
   }
   #[inline]
-  pub fn add_FRAME_HEIGHT_PIXELS(&mut self, FRAME_HEIGHT_PIXELS: i32) {
-    self.fbb_.push_slot::<i32>(SKI::VT_FRAME_HEIGHT_PIXELS, FRAME_HEIGHT_PIXELS, 0);
+  pub fn add_FRAME_HEIGHT_PIXELS(&mut self, FRAME_HEIGHT_PIXELS: u16) {
+    self.fbb_.push_slot::<u16>(SKI::VT_FRAME_HEIGHT_PIXELS, FRAME_HEIGHT_PIXELS, 0);
   }
   #[inline]
-  pub fn add_PIXEL_BIT_DEPTH(&mut self, PIXEL_BIT_DEPTH: i32) {
-    self.fbb_.push_slot::<i32>(SKI::VT_PIXEL_BIT_DEPTH, PIXEL_BIT_DEPTH, 0);
+  pub fn add_PIXEL_BIT_DEPTH(&mut self, PIXEL_BIT_DEPTH: u8) {
+    self.fbb_.push_slot::<u8>(SKI::VT_PIXEL_BIT_DEPTH, PIXEL_BIT_DEPTH, 0);
   }
   #[inline]
   pub fn add_ANNOTATION_KEY(&mut self, ANNOTATION_KEY: flatbuffers::WIPOffset<&'b  str>) {
@@ -872,8 +1012,8 @@ impl core::fmt::Debug for SKI<'_> {
       ds.field("ID", &self.ID());
       ds.field("ON_ORBIT", &self.ON_ORBIT());
       ds.field("ORIG_OBJECT_ID", &self.ORIG_OBJECT_ID());
-      ds.field("ID_SENSOR", &self.ID_SENSOR());
       ds.field("SAT_NO", &self.SAT_NO());
+      ds.field("ID_SENSOR", &self.ID_SENSOR());
       ds.field("ORIG_SENSOR_ID", &self.ORIG_SENSOR_ID());
       ds.field("SENLAT", &self.SENLAT());
       ds.field("SENLON", &self.SENLON());
@@ -919,8 +1059,8 @@ pub struct SKIT {
   pub ID: Option<String>,
   pub ON_ORBIT: Option<String>,
   pub ORIG_OBJECT_ID: Option<String>,
+  pub SAT_NO: u32,
   pub ID_SENSOR: Option<String>,
-  pub SAT_NO: i32,
   pub ORIG_SENSOR_ID: Option<String>,
   pub SENLAT: f64,
   pub SENLON: f64,
@@ -928,9 +1068,9 @@ pub struct SKIT {
   pub SENX: f64,
   pub SENY: f64,
   pub SENZ: f64,
-  pub SEN_QUAT: Option<Vec<String>>,
-  pub SEN_QUAT_DOT: Option<Vec<String>>,
-  pub IMAGE_TYPE: Option<String>,
+  pub SEN_QUAT: Option<Vec<f64>>,
+  pub SEN_QUAT_DOT: Option<Vec<f64>>,
+  pub IMAGE_TYPE: imageType,
   pub EXP_START_TIME: Option<String>,
   pub EXP_END_TIME: Option<String>,
   pub IMAGE_SOURCE_INFO: Option<String>,
@@ -939,15 +1079,15 @@ pub struct SKIT {
   pub TOP_LEFT_STOP_AZ: f64,
   pub TOP_LEFT_STOP_EL: f64,
   pub IMAGE_SET_ID: Option<String>,
-  pub IMAGE_SET_LENGTH: i32,
-  pub SEQUENCE_ID: i32,
+  pub IMAGE_SET_LENGTH: u16,
+  pub SEQUENCE_ID: u16,
   pub FRAME_FOVWIDTH: f64,
   pub FRAME_FOVHEIGHT: f64,
   pub PIXEL_FOVWIDTH: f64,
   pub PIXEL_FOVHEIGHT: f64,
-  pub FRAME_WIDTH_PIXELS: i32,
-  pub FRAME_HEIGHT_PIXELS: i32,
-  pub PIXEL_BIT_DEPTH: i32,
+  pub FRAME_WIDTH_PIXELS: u16,
+  pub FRAME_HEIGHT_PIXELS: u16,
+  pub PIXEL_BIT_DEPTH: u8,
   pub ANNOTATION_KEY: Option<String>,
   pub CALIBRATION_KEY: Option<String>,
   pub FILENAME: Option<String>,
@@ -964,8 +1104,8 @@ impl Default for SKIT {
       ID: None,
       ON_ORBIT: None,
       ORIG_OBJECT_ID: None,
-      ID_SENSOR: None,
       SAT_NO: 0,
+      ID_SENSOR: None,
       ORIG_SENSOR_ID: None,
       SENLAT: 0.0,
       SENLON: 0.0,
@@ -975,7 +1115,7 @@ impl Default for SKIT {
       SENZ: 0.0,
       SEN_QUAT: None,
       SEN_QUAT_DOT: None,
-      IMAGE_TYPE: None,
+      IMAGE_TYPE: imageType::VISIBLE,
       EXP_START_TIME: None,
       EXP_END_TIME: None,
       IMAGE_SOURCE_INFO: None,
@@ -1019,10 +1159,10 @@ impl SKIT {
     let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let SAT_NO = self.SAT_NO;
     let ID_SENSOR = self.ID_SENSOR.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let SAT_NO = self.SAT_NO;
     let ORIG_SENSOR_ID = self.ORIG_SENSOR_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -1033,14 +1173,12 @@ impl SKIT {
     let SENY = self.SENY;
     let SENZ = self.SENZ;
     let SEN_QUAT = self.SEN_QUAT.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+      _fbb.create_vector(x)
     });
     let SEN_QUAT_DOT = self.SEN_QUAT_DOT.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+      _fbb.create_vector(x)
     });
-    let IMAGE_TYPE = self.IMAGE_TYPE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+    let IMAGE_TYPE = self.IMAGE_TYPE;
     let EXP_START_TIME = self.EXP_START_TIME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -1095,8 +1233,8 @@ impl SKIT {
       ID,
       ON_ORBIT,
       ORIG_OBJECT_ID,
-      ID_SENSOR,
       SAT_NO,
+      ID_SENSOR,
       ORIG_SENSOR_ID,
       SENLAT,
       SENLON,

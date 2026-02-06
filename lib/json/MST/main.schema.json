@@ -1,159 +1,217 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "missileStatus" : {
+      "type" : "string",
+      "enum": ["BOOSTING", "MIDCOURSE", "TERMINAL", "IMPACT", "BURNOUT", "INTERCEPTED", "LOST", "UNKNOWN"]
+    },
+    "missileEnvironment" : {
+      "type" : "string",
+      "enum": ["SPACE", "ENDO_ATMOSPHERIC", "EXO_ATMOSPHERIC", "TRANSITIONAL", "UNKNOWN"]
+    },
+    "aouReportType" : {
+      "type" : "string",
+      "enum": ["CIRCULAR", "ELLIPTICAL", "RECTANGULAR", "NONE"]
+    },
     "MST" : {
       "type" : "object",
       "description" : "Missile Track",
       "properties" : {
         "ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique identifier"
               },
         "MSG_TYPE" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Message type code"
               },
         "MSG_SUB_TYPE" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Message sub-type"
               },
         "MSG_CREATE_DATE" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Message creation date (ISO 8601)"
               },
         "ENVIRONMENT" : {
-                "type" : "string"
+                "$ref" : "#/definitions/missileEnvironment",
+                "description" : "Track environment"
               },
         "OBJ_TYPE" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Object type classification"
               },
         "OBJ_TYPE_CONF" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Object type confidence (0-100)"
               },
         "OBJ_PLAT" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Object platform type"
               },
         "OBJ_IDENT" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Object identity assessment"
               },
         "SPACE_AMP" : {
-                "type" : "string"
-              },
-        "OBJ_ACT" : {
-                "type" : "string"
-              },
-        "SPACE_SPEC_TYPE" : {
-                "type" : "string"
-              },
-        "ACFT_SUB_TYPE" : {
-                "type" : "string"
-              },
-        "NAME" : {
-                "type" : "string"
-              },
-        "CALL_SIGN" : {
-                "type" : "string"
-              },
-        "LOST_TRK_IND" : {
-                "type" : "boolean"
-              },
-        "TRACK_ID" : {
-                "type" : "string"
-              },
-        "PARENT_TRACK_ID" : {
-                "type" : "string"
-              },
-        "MUID_SRC_TRK" : {
-                "type" : "string"
-              },
-        "MUID_SRC" : {
-                "type" : "string"
-              },
-        "ALERT" : {
-                "type" : "string"
-              },
-        "MSL_STATUS" : {
-                "type" : "string"
-              },
-        "TS" : {
-                "type" : "string"
-              },
-        "AOU_RPT_TYPE" : {
-                "type" : "string"
-              },
-        "CONTAINMENT" : {
-                "type" : "number"
-              },
-        "TRK_CONF" : {
-                "type" : "number"
-              },
-        "TRK_QUAL" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "ANG_ELEV" : {
-                "type" : "number"
-              },
-        "SEN_MODE" : {
-                "type" : "string"
-              },
-        "INFO_SOURCE" : {
-                "type" : "string"
-              },
-        "BOOSTING" : {
-                "type" : "boolean"
-              },
-        "POLAR_SING_LOC_LAT" : {
-                "type" : "number"
-              },
-        "POLAR_SING_LOC_LON" : {
-                "type" : "number"
-              },
-        "EMG_IND" : {
-                "type" : "boolean"
-              },
-        "DROP_PT_IND" : {
-                "type" : "boolean"
+                "type" : "string",
+                "description" : "Space amplification data"
               },
         "SPACE_AMP_CONF" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Space amplification confidence (0-100)"
+              },
+        "OBJ_ACT" : {
+                "type" : "string",
+                "description" : "Object activity"
+              },
+        "SPACE_SPEC_TYPE" : {
+                "type" : "string",
+                "description" : "Space specific type"
+              },
+        "ACFT_SUB_TYPE" : {
+                "type" : "string",
+                "description" : "Aircraft sub-type (if applicable)"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Object name"
+              },
+        "CALL_SIGN" : {
+                "type" : "string",
+                "description" : "Call sign"
+              },
+        "LOST_TRK_IND" : {
+                "type" : "boolean",
+                "description" : "True if track is lost"
+              },
+        "TRACK_ID" : {
+                "type" : "string",
+                "description" : "Track identifier"
+              },
+        "PARENT_TRACK_ID" : {
+                "type" : "string",
+                "description" : "Parent track identifier"
+              },
+        "MUID_SRC_TRK" : {
+                "type" : "string",
+                "description" : "Multi-unit identifier (source track)"
+              },
+        "MUID_SRC" : {
+                "type" : "string",
+                "description" : "Multi-unit identifier (source)"
+              },
+        "ALERT" : {
+                "type" : "string",
+                "description" : "Alert classification"
+              },
+        "MSL_STATUS" : {
+                "$ref" : "#/definitions/missileStatus",
+                "description" : "Missile engagement status"
+              },
+        "TS" : {
+                "type" : "string",
+                "description" : "Track timestamp (ISO 8601)"
+              },
+        "AOU_RPT_TYPE" : {
+                "$ref" : "#/definitions/aouReportType",
+                "description" : "AOU report type"
+              },
+        "CONTAINMENT" : {
+                "type" : "number",
+                "description" : "Containment probability (0-1)"
+              },
+        "TRK_CONF" : {
+                "type" : "number",
+                "description" : "Track confidence (0-1)"
+              },
+        "TRK_QUAL" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Track quality (0-15)"
+              },
+        "ANG_ELEV" : {
+                "type" : "number",
+                "description" : "Elevation angle (degrees)"
+              },
+        "SEN_MODE" : {
+                "type" : "string",
+                "description" : "Sensor mode"
+              },
+        "INFO_SOURCE" : {
+                "type" : "string",
+                "description" : "Information source"
+              },
+        "BOOSTING" : {
+                "type" : "boolean",
+                "description" : "True if object is in boost phase"
+              },
+        "POLAR_SING_LOC_LAT" : {
+                "type" : "number",
+                "description" : "Polar singularity latitude (degrees)"
+              },
+        "POLAR_SING_LOC_LON" : {
+                "type" : "number",
+                "description" : "Polar singularity longitude (degrees)"
+              },
+        "EMG_IND" : {
+                "type" : "boolean",
+                "description" : "True if emergency indicator set"
+              },
+        "DROP_PT_IND" : {
+                "type" : "boolean",
+                "description" : "True if drop point indicator set"
               },
         "LAUNCH_TIME" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Launch time (ISO 8601)"
               },
         "LAUNCH_LAT" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Launch latitude (degrees)"
               },
         "LAUNCH_LON" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Launch longitude (degrees)"
               },
         "AZ_CORR" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Azimuth correction (degrees)"
               },
         "BURNOUT_ALT" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Burnout altitude (km)"
               },
         "LAUNCH_AOU_TYPE" : {
-                "type" : "string"
+                "$ref" : "#/definitions/aouReportType",
+                "description" : "Launch AOU type"
               },
         "IMPACT_TIME" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Predicted impact time (ISO 8601)"
               },
         "IMPACT_LAT" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Predicted impact latitude (degrees)"
               },
         "IMPACT_LON" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Predicted impact longitude (degrees)"
               },
         "IMPACT_AOU_TYPE" : {
-                "type" : "string"
+                "$ref" : "#/definitions/aouReportType",
+                "description" : "Impact AOU type"
               },
         "VECTOR_START_TIME" : {
                 "type" : "string",
-                "description" : "Start time for vector data (ISO 8601 UTC format)."
+                "description" : "Start time for vector data (ISO 8601)"
               },
         "VECTOR_STEP_SIZE" : {
                 "type" : "number",
-                "description" : "Time interval between vector points in seconds."
+                "description" : "Time interval between vector points (seconds)"
               },
         "VECTOR_COMPONENTS" : {
                 "type" : "integer", "minimum" : 0, "maximum" :255,
-                "description" : "Number of components per vector (default 6: X, Y, Z, VX, VY, VZ)."
+                "description" : "Number of components per vector (default 6: X, Y, Z, VX, VY, VZ)"
               },
         "VECTORS" : {
                 "type" : "array", "items" : {"type" : "number"},
@@ -161,15 +219,15 @@
               },
         "AOU_RPT" : {
                 "type" : "array", "items" : {"type" : "number"},
-                "description" : "AOU report data as flat array (layout depends on AOU_RPT_TYPE)."
+                "description" : "AOU report data as flat array"
               },
         "LAUNCH_AOU" : {
                 "type" : "array", "items" : {"type" : "number"},
-                "description" : "Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE)."
+                "description" : "Launch AOU data as flat array"
               },
         "IMPACT_AOU" : {
                 "type" : "array", "items" : {"type" : "number"},
-                "description" : "Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE)."
+                "description" : "Impact AOU data as flat array"
               }
       },
       "additionalProperties" : false

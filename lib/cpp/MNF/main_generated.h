@@ -13,43 +13,435 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
               FLATBUFFERS_VERSION_REVISION == 25,
              "Non-compatible flatbuffers version included");
 
+struct manifoldElset;
+struct manifoldElsetBuilder;
+
 struct MNF;
 struct MNFBuilder;
+
+enum manifoldStatus : int8_t {
+  manifoldStatus_CANDIDATE = 0,
+  manifoldStatus_CONFIRMED = 1,
+  manifoldStatus_REJECTED = 2,
+  manifoldStatus_CORRELATED = 3,
+  manifoldStatus_EXPIRED = 4,
+  manifoldStatus_MIN = manifoldStatus_CANDIDATE,
+  manifoldStatus_MAX = manifoldStatus_EXPIRED
+};
+
+inline const manifoldStatus (&EnumValuesmanifoldStatus())[5] {
+  static const manifoldStatus values[] = {
+    manifoldStatus_CANDIDATE,
+    manifoldStatus_CONFIRMED,
+    manifoldStatus_REJECTED,
+    manifoldStatus_CORRELATED,
+    manifoldStatus_EXPIRED
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesmanifoldStatus() {
+  static const char * const names[6] = {
+    "CANDIDATE",
+    "CONFIRMED",
+    "REJECTED",
+    "CORRELATED",
+    "EXPIRED",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamemanifoldStatus(manifoldStatus e) {
+  if (::flatbuffers::IsOutRange(e, manifoldStatus_CANDIDATE, manifoldStatus_EXPIRED)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesmanifoldStatus()[index];
+}
+
+/// Manifold Element Set
+struct manifoldElset FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef manifoldElsetBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_EPOCH = 4,
+    VT_SEMI_MAJOR_AXIS = 6,
+    VT_ECCENTRICITY = 8,
+    VT_INCLINATION = 10,
+    VT_RA_OF_ASC_NODE = 12,
+    VT_ARG_OF_PERICENTER = 14,
+    VT_MEAN_ANOMALY = 16,
+    VT_DELTA_V = 18,
+    VT_DELTA_T = 20,
+    VT_DV_X = 22,
+    VT_DV_Y = 24,
+    VT_DV_Z = 26,
+    VT_WEIGHT = 28,
+    VT_APOGEE = 30,
+    VT_PERIGEE = 32,
+    VT_PERIOD = 34
+  };
+  /// Epoch of element set (ISO 8601)
+  const ::flatbuffers::String *EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
+  }
+  /// Semi-major axis in km
+  double SEMI_MAJOR_AXIS() const {
+    return GetField<double>(VT_SEMI_MAJOR_AXIS, 0.0);
+  }
+  /// Eccentricity
+  double ECCENTRICITY() const {
+    return GetField<double>(VT_ECCENTRICITY, 0.0);
+  }
+  /// Inclination in degrees
+  double INCLINATION() const {
+    return GetField<double>(VT_INCLINATION, 0.0);
+  }
+  /// Right ascension of ascending node in degrees
+  double RA_OF_ASC_NODE() const {
+    return GetField<double>(VT_RA_OF_ASC_NODE, 0.0);
+  }
+  /// Argument of pericenter in degrees
+  double ARG_OF_PERICENTER() const {
+    return GetField<double>(VT_ARG_OF_PERICENTER, 0.0);
+  }
+  /// Mean anomaly in degrees
+  double MEAN_ANOMALY() const {
+    return GetField<double>(VT_MEAN_ANOMALY, 0.0);
+  }
+  /// Applied delta-V in m/s
+  double DELTA_V() const {
+    return GetField<double>(VT_DELTA_V, 0.0);
+  }
+  /// Applied delta-T in seconds
+  double DELTA_T() const {
+    return GetField<double>(VT_DELTA_T, 0.0);
+  }
+  /// Delta-V direction X (unit vector)
+  double DV_X() const {
+    return GetField<double>(VT_DV_X, 0.0);
+  }
+  /// Delta-V direction Y (unit vector)
+  double DV_Y() const {
+    return GetField<double>(VT_DV_Y, 0.0);
+  }
+  /// Delta-V direction Z (unit vector)
+  double DV_Z() const {
+    return GetField<double>(VT_DV_Z, 0.0);
+  }
+  /// Probability weight (0.0-1.0)
+  double WEIGHT() const {
+    return GetField<double>(VT_WEIGHT, 0.0);
+  }
+  /// Apogee altitude in km
+  double APOGEE() const {
+    return GetField<double>(VT_APOGEE, 0.0);
+  }
+  /// Perigee altitude in km
+  double PERIGEE() const {
+    return GetField<double>(VT_PERIGEE, 0.0);
+  }
+  /// Period in minutes
+  double PERIOD() const {
+    return GetField<double>(VT_PERIOD, 0.0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_EPOCH) &&
+           verifier.VerifyString(EPOCH()) &&
+           VerifyField<double>(verifier, VT_SEMI_MAJOR_AXIS, 8) &&
+           VerifyField<double>(verifier, VT_ECCENTRICITY, 8) &&
+           VerifyField<double>(verifier, VT_INCLINATION, 8) &&
+           VerifyField<double>(verifier, VT_RA_OF_ASC_NODE, 8) &&
+           VerifyField<double>(verifier, VT_ARG_OF_PERICENTER, 8) &&
+           VerifyField<double>(verifier, VT_MEAN_ANOMALY, 8) &&
+           VerifyField<double>(verifier, VT_DELTA_V, 8) &&
+           VerifyField<double>(verifier, VT_DELTA_T, 8) &&
+           VerifyField<double>(verifier, VT_DV_X, 8) &&
+           VerifyField<double>(verifier, VT_DV_Y, 8) &&
+           VerifyField<double>(verifier, VT_DV_Z, 8) &&
+           VerifyField<double>(verifier, VT_WEIGHT, 8) &&
+           VerifyField<double>(verifier, VT_APOGEE, 8) &&
+           VerifyField<double>(verifier, VT_PERIGEE, 8) &&
+           VerifyField<double>(verifier, VT_PERIOD, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct manifoldElsetBuilder {
+  typedef manifoldElset Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
+    fbb_.AddOffset(manifoldElset::VT_EPOCH, EPOCH);
+  }
+  void add_SEMI_MAJOR_AXIS(double SEMI_MAJOR_AXIS) {
+    fbb_.AddElement<double>(manifoldElset::VT_SEMI_MAJOR_AXIS, SEMI_MAJOR_AXIS, 0.0);
+  }
+  void add_ECCENTRICITY(double ECCENTRICITY) {
+    fbb_.AddElement<double>(manifoldElset::VT_ECCENTRICITY, ECCENTRICITY, 0.0);
+  }
+  void add_INCLINATION(double INCLINATION) {
+    fbb_.AddElement<double>(manifoldElset::VT_INCLINATION, INCLINATION, 0.0);
+  }
+  void add_RA_OF_ASC_NODE(double RA_OF_ASC_NODE) {
+    fbb_.AddElement<double>(manifoldElset::VT_RA_OF_ASC_NODE, RA_OF_ASC_NODE, 0.0);
+  }
+  void add_ARG_OF_PERICENTER(double ARG_OF_PERICENTER) {
+    fbb_.AddElement<double>(manifoldElset::VT_ARG_OF_PERICENTER, ARG_OF_PERICENTER, 0.0);
+  }
+  void add_MEAN_ANOMALY(double MEAN_ANOMALY) {
+    fbb_.AddElement<double>(manifoldElset::VT_MEAN_ANOMALY, MEAN_ANOMALY, 0.0);
+  }
+  void add_DELTA_V(double DELTA_V) {
+    fbb_.AddElement<double>(manifoldElset::VT_DELTA_V, DELTA_V, 0.0);
+  }
+  void add_DELTA_T(double DELTA_T) {
+    fbb_.AddElement<double>(manifoldElset::VT_DELTA_T, DELTA_T, 0.0);
+  }
+  void add_DV_X(double DV_X) {
+    fbb_.AddElement<double>(manifoldElset::VT_DV_X, DV_X, 0.0);
+  }
+  void add_DV_Y(double DV_Y) {
+    fbb_.AddElement<double>(manifoldElset::VT_DV_Y, DV_Y, 0.0);
+  }
+  void add_DV_Z(double DV_Z) {
+    fbb_.AddElement<double>(manifoldElset::VT_DV_Z, DV_Z, 0.0);
+  }
+  void add_WEIGHT(double WEIGHT) {
+    fbb_.AddElement<double>(manifoldElset::VT_WEIGHT, WEIGHT, 0.0);
+  }
+  void add_APOGEE(double APOGEE) {
+    fbb_.AddElement<double>(manifoldElset::VT_APOGEE, APOGEE, 0.0);
+  }
+  void add_PERIGEE(double PERIGEE) {
+    fbb_.AddElement<double>(manifoldElset::VT_PERIGEE, PERIGEE, 0.0);
+  }
+  void add_PERIOD(double PERIOD) {
+    fbb_.AddElement<double>(manifoldElset::VT_PERIOD, PERIOD, 0.0);
+  }
+  explicit manifoldElsetBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<manifoldElset> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<manifoldElset>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<manifoldElset> CreatemanifoldElset(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
+    double SEMI_MAJOR_AXIS = 0.0,
+    double ECCENTRICITY = 0.0,
+    double INCLINATION = 0.0,
+    double RA_OF_ASC_NODE = 0.0,
+    double ARG_OF_PERICENTER = 0.0,
+    double MEAN_ANOMALY = 0.0,
+    double DELTA_V = 0.0,
+    double DELTA_T = 0.0,
+    double DV_X = 0.0,
+    double DV_Y = 0.0,
+    double DV_Z = 0.0,
+    double WEIGHT = 0.0,
+    double APOGEE = 0.0,
+    double PERIGEE = 0.0,
+    double PERIOD = 0.0) {
+  manifoldElsetBuilder builder_(_fbb);
+  builder_.add_PERIOD(PERIOD);
+  builder_.add_PERIGEE(PERIGEE);
+  builder_.add_APOGEE(APOGEE);
+  builder_.add_WEIGHT(WEIGHT);
+  builder_.add_DV_Z(DV_Z);
+  builder_.add_DV_Y(DV_Y);
+  builder_.add_DV_X(DV_X);
+  builder_.add_DELTA_T(DELTA_T);
+  builder_.add_DELTA_V(DELTA_V);
+  builder_.add_MEAN_ANOMALY(MEAN_ANOMALY);
+  builder_.add_ARG_OF_PERICENTER(ARG_OF_PERICENTER);
+  builder_.add_RA_OF_ASC_NODE(RA_OF_ASC_NODE);
+  builder_.add_INCLINATION(INCLINATION);
+  builder_.add_ECCENTRICITY(ECCENTRICITY);
+  builder_.add_SEMI_MAJOR_AXIS(SEMI_MAJOR_AXIS);
+  builder_.add_EPOCH(EPOCH);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<manifoldElset> CreatemanifoldElsetDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *EPOCH = nullptr,
+    double SEMI_MAJOR_AXIS = 0.0,
+    double ECCENTRICITY = 0.0,
+    double INCLINATION = 0.0,
+    double RA_OF_ASC_NODE = 0.0,
+    double ARG_OF_PERICENTER = 0.0,
+    double MEAN_ANOMALY = 0.0,
+    double DELTA_V = 0.0,
+    double DELTA_T = 0.0,
+    double DV_X = 0.0,
+    double DV_Y = 0.0,
+    double DV_Z = 0.0,
+    double WEIGHT = 0.0,
+    double APOGEE = 0.0,
+    double PERIGEE = 0.0,
+    double PERIOD = 0.0) {
+  auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
+  return CreatemanifoldElset(
+      _fbb,
+      EPOCH__,
+      SEMI_MAJOR_AXIS,
+      ECCENTRICITY,
+      INCLINATION,
+      RA_OF_ASC_NODE,
+      ARG_OF_PERICENTER,
+      MEAN_ANOMALY,
+      DELTA_V,
+      DELTA_T,
+      DV_X,
+      DV_Y,
+      DV_Z,
+      WEIGHT,
+      APOGEE,
+      PERIGEE,
+      PERIOD);
+}
 
 /// Orbit Manifold
 struct MNF FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef MNFBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
-    VT_STATUS = 6,
-    VT_WEIGHT = 8,
-    VT_DELTA_V = 10,
-    VT_DELTA_T = 12
+    VT_SAT_NO = 6,
+    VT_OBJECT_DESIGNATOR = 8,
+    VT_STATUS = 10,
+    VT_EVENT_EPOCH = 12,
+    VT_SOURCE = 14,
+    VT_REF_FRAME = 16,
+    VT_ORIG_SEMI_MAJOR_AXIS = 18,
+    VT_ORIG_ECCENTRICITY = 20,
+    VT_ORIG_INCLINATION = 22,
+    VT_DELTA_V_MIN = 24,
+    VT_DELTA_V_MAX = 26,
+    VT_DELTA_V_STEP = 28,
+    VT_DELTA_T_MIN = 30,
+    VT_DELTA_T_MAX = 32,
+    VT_DELTA_T_STEP = 34,
+    VT_NUM_ELEMENTS = 36,
+    VT_ELEMENTS = 38,
+    VT_CORRELATED_ID = 40,
+    VT_NOTES = 42
   };
+  /// Unique manifold identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
-  const ::flatbuffers::String *STATUS() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_STATUS);
+  /// Parent object satellite number
+  uint32_t SAT_NO() const {
+    return GetField<uint32_t>(VT_SAT_NO, 0);
   }
-  double WEIGHT() const {
-    return GetField<double>(VT_WEIGHT, 0.0);
+  /// Object designator
+  const ::flatbuffers::String *OBJECT_DESIGNATOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_DESIGNATOR);
   }
-  double DELTA_V() const {
-    return GetField<double>(VT_DELTA_V, 0.0);
+  /// Manifold status
+  manifoldStatus STATUS() const {
+    return static_cast<manifoldStatus>(GetField<int8_t>(VT_STATUS, 0));
   }
-  double DELTA_T() const {
-    return GetField<double>(VT_DELTA_T, 0.0);
+  /// Event epoch that spawned the manifold (ISO 8601)
+  const ::flatbuffers::String *EVENT_EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EVENT_EPOCH);
+  }
+  /// Source of detection (sensor ID or method)
+  const ::flatbuffers::String *SOURCE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SOURCE);
+  }
+  /// Reference frame
+  const ::flatbuffers::String *REF_FRAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REF_FRAME);
+  }
+  /// Original pre-event semi-major axis in km
+  double ORIG_SEMI_MAJOR_AXIS() const {
+    return GetField<double>(VT_ORIG_SEMI_MAJOR_AXIS, 0.0);
+  }
+  /// Original pre-event eccentricity
+  double ORIG_ECCENTRICITY() const {
+    return GetField<double>(VT_ORIG_ECCENTRICITY, 0.0);
+  }
+  /// Original pre-event inclination in degrees
+  double ORIG_INCLINATION() const {
+    return GetField<double>(VT_ORIG_INCLINATION, 0.0);
+  }
+  /// Minimum delta-V sampled in m/s
+  double DELTA_V_MIN() const {
+    return GetField<double>(VT_DELTA_V_MIN, 0.0);
+  }
+  /// Maximum delta-V sampled in m/s
+  double DELTA_V_MAX() const {
+    return GetField<double>(VT_DELTA_V_MAX, 0.0);
+  }
+  /// Delta-V step size in m/s
+  double DELTA_V_STEP() const {
+    return GetField<double>(VT_DELTA_V_STEP, 0.0);
+  }
+  /// Minimum delta-T sampled in seconds
+  double DELTA_T_MIN() const {
+    return GetField<double>(VT_DELTA_T_MIN, 0.0);
+  }
+  /// Maximum delta-T sampled in seconds
+  double DELTA_T_MAX() const {
+    return GetField<double>(VT_DELTA_T_MAX, 0.0);
+  }
+  /// Delta-T step size in seconds
+  double DELTA_T_STEP() const {
+    return GetField<double>(VT_DELTA_T_STEP, 0.0);
+  }
+  /// Total number of manifold elements
+  uint32_t NUM_ELEMENTS() const {
+    return GetField<uint32_t>(VT_NUM_ELEMENTS, 0);
+  }
+  /// Theoretical element sets
+  const ::flatbuffers::Vector<::flatbuffers::Offset<manifoldElset>> *ELEMENTS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<manifoldElset>> *>(VT_ELEMENTS);
+  }
+  /// Correlated catalog object ID (if matched)
+  const ::flatbuffers::String *CORRELATED_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CORRELATED_ID);
+  }
+  /// Additional notes
+  const ::flatbuffers::String *NOTES() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NOTES);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
            verifier.VerifyString(ID()) &&
-           VerifyOffset(verifier, VT_STATUS) &&
-           verifier.VerifyString(STATUS()) &&
-           VerifyField<double>(verifier, VT_WEIGHT, 8) &&
-           VerifyField<double>(verifier, VT_DELTA_V, 8) &&
-           VerifyField<double>(verifier, VT_DELTA_T, 8) &&
+           VerifyField<uint32_t>(verifier, VT_SAT_NO, 4) &&
+           VerifyOffset(verifier, VT_OBJECT_DESIGNATOR) &&
+           verifier.VerifyString(OBJECT_DESIGNATOR()) &&
+           VerifyField<int8_t>(verifier, VT_STATUS, 1) &&
+           VerifyOffset(verifier, VT_EVENT_EPOCH) &&
+           verifier.VerifyString(EVENT_EPOCH()) &&
+           VerifyOffset(verifier, VT_SOURCE) &&
+           verifier.VerifyString(SOURCE()) &&
+           VerifyOffset(verifier, VT_REF_FRAME) &&
+           verifier.VerifyString(REF_FRAME()) &&
+           VerifyField<double>(verifier, VT_ORIG_SEMI_MAJOR_AXIS, 8) &&
+           VerifyField<double>(verifier, VT_ORIG_ECCENTRICITY, 8) &&
+           VerifyField<double>(verifier, VT_ORIG_INCLINATION, 8) &&
+           VerifyField<double>(verifier, VT_DELTA_V_MIN, 8) &&
+           VerifyField<double>(verifier, VT_DELTA_V_MAX, 8) &&
+           VerifyField<double>(verifier, VT_DELTA_V_STEP, 8) &&
+           VerifyField<double>(verifier, VT_DELTA_T_MIN, 8) &&
+           VerifyField<double>(verifier, VT_DELTA_T_MAX, 8) &&
+           VerifyField<double>(verifier, VT_DELTA_T_STEP, 8) &&
+           VerifyField<uint32_t>(verifier, VT_NUM_ELEMENTS, 4) &&
+           VerifyOffset(verifier, VT_ELEMENTS) &&
+           verifier.VerifyVector(ELEMENTS()) &&
+           verifier.VerifyVectorOfTables(ELEMENTS()) &&
+           VerifyOffset(verifier, VT_CORRELATED_ID) &&
+           verifier.VerifyString(CORRELATED_ID()) &&
+           VerifyOffset(verifier, VT_NOTES) &&
+           verifier.VerifyString(NOTES()) &&
            verifier.EndTable();
   }
 };
@@ -61,17 +453,62 @@ struct MNFBuilder {
   void add_ID(::flatbuffers::Offset<::flatbuffers::String> ID) {
     fbb_.AddOffset(MNF::VT_ID, ID);
   }
-  void add_STATUS(::flatbuffers::Offset<::flatbuffers::String> STATUS) {
-    fbb_.AddOffset(MNF::VT_STATUS, STATUS);
+  void add_SAT_NO(uint32_t SAT_NO) {
+    fbb_.AddElement<uint32_t>(MNF::VT_SAT_NO, SAT_NO, 0);
   }
-  void add_WEIGHT(double WEIGHT) {
-    fbb_.AddElement<double>(MNF::VT_WEIGHT, WEIGHT, 0.0);
+  void add_OBJECT_DESIGNATOR(::flatbuffers::Offset<::flatbuffers::String> OBJECT_DESIGNATOR) {
+    fbb_.AddOffset(MNF::VT_OBJECT_DESIGNATOR, OBJECT_DESIGNATOR);
   }
-  void add_DELTA_V(double DELTA_V) {
-    fbb_.AddElement<double>(MNF::VT_DELTA_V, DELTA_V, 0.0);
+  void add_STATUS(manifoldStatus STATUS) {
+    fbb_.AddElement<int8_t>(MNF::VT_STATUS, static_cast<int8_t>(STATUS), 0);
   }
-  void add_DELTA_T(double DELTA_T) {
-    fbb_.AddElement<double>(MNF::VT_DELTA_T, DELTA_T, 0.0);
+  void add_EVENT_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EVENT_EPOCH) {
+    fbb_.AddOffset(MNF::VT_EVENT_EPOCH, EVENT_EPOCH);
+  }
+  void add_SOURCE(::flatbuffers::Offset<::flatbuffers::String> SOURCE) {
+    fbb_.AddOffset(MNF::VT_SOURCE, SOURCE);
+  }
+  void add_REF_FRAME(::flatbuffers::Offset<::flatbuffers::String> REF_FRAME) {
+    fbb_.AddOffset(MNF::VT_REF_FRAME, REF_FRAME);
+  }
+  void add_ORIG_SEMI_MAJOR_AXIS(double ORIG_SEMI_MAJOR_AXIS) {
+    fbb_.AddElement<double>(MNF::VT_ORIG_SEMI_MAJOR_AXIS, ORIG_SEMI_MAJOR_AXIS, 0.0);
+  }
+  void add_ORIG_ECCENTRICITY(double ORIG_ECCENTRICITY) {
+    fbb_.AddElement<double>(MNF::VT_ORIG_ECCENTRICITY, ORIG_ECCENTRICITY, 0.0);
+  }
+  void add_ORIG_INCLINATION(double ORIG_INCLINATION) {
+    fbb_.AddElement<double>(MNF::VT_ORIG_INCLINATION, ORIG_INCLINATION, 0.0);
+  }
+  void add_DELTA_V_MIN(double DELTA_V_MIN) {
+    fbb_.AddElement<double>(MNF::VT_DELTA_V_MIN, DELTA_V_MIN, 0.0);
+  }
+  void add_DELTA_V_MAX(double DELTA_V_MAX) {
+    fbb_.AddElement<double>(MNF::VT_DELTA_V_MAX, DELTA_V_MAX, 0.0);
+  }
+  void add_DELTA_V_STEP(double DELTA_V_STEP) {
+    fbb_.AddElement<double>(MNF::VT_DELTA_V_STEP, DELTA_V_STEP, 0.0);
+  }
+  void add_DELTA_T_MIN(double DELTA_T_MIN) {
+    fbb_.AddElement<double>(MNF::VT_DELTA_T_MIN, DELTA_T_MIN, 0.0);
+  }
+  void add_DELTA_T_MAX(double DELTA_T_MAX) {
+    fbb_.AddElement<double>(MNF::VT_DELTA_T_MAX, DELTA_T_MAX, 0.0);
+  }
+  void add_DELTA_T_STEP(double DELTA_T_STEP) {
+    fbb_.AddElement<double>(MNF::VT_DELTA_T_STEP, DELTA_T_STEP, 0.0);
+  }
+  void add_NUM_ELEMENTS(uint32_t NUM_ELEMENTS) {
+    fbb_.AddElement<uint32_t>(MNF::VT_NUM_ELEMENTS, NUM_ELEMENTS, 0);
+  }
+  void add_ELEMENTS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<manifoldElset>>> ELEMENTS) {
+    fbb_.AddOffset(MNF::VT_ELEMENTS, ELEMENTS);
+  }
+  void add_CORRELATED_ID(::flatbuffers::Offset<::flatbuffers::String> CORRELATED_ID) {
+    fbb_.AddOffset(MNF::VT_CORRELATED_ID, CORRELATED_ID);
+  }
+  void add_NOTES(::flatbuffers::Offset<::flatbuffers::String> NOTES) {
+    fbb_.AddOffset(MNF::VT_NOTES, NOTES);
   }
   explicit MNFBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -87,35 +524,101 @@ struct MNFBuilder {
 inline ::flatbuffers::Offset<MNF> CreateMNF(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> STATUS = 0,
-    double WEIGHT = 0.0,
-    double DELTA_V = 0.0,
-    double DELTA_T = 0.0) {
+    uint32_t SAT_NO = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_DESIGNATOR = 0,
+    manifoldStatus STATUS = manifoldStatus_CANDIDATE,
+    ::flatbuffers::Offset<::flatbuffers::String> EVENT_EPOCH = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SOURCE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REF_FRAME = 0,
+    double ORIG_SEMI_MAJOR_AXIS = 0.0,
+    double ORIG_ECCENTRICITY = 0.0,
+    double ORIG_INCLINATION = 0.0,
+    double DELTA_V_MIN = 0.0,
+    double DELTA_V_MAX = 0.0,
+    double DELTA_V_STEP = 0.0,
+    double DELTA_T_MIN = 0.0,
+    double DELTA_T_MAX = 0.0,
+    double DELTA_T_STEP = 0.0,
+    uint32_t NUM_ELEMENTS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<manifoldElset>>> ELEMENTS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CORRELATED_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> NOTES = 0) {
   MNFBuilder builder_(_fbb);
-  builder_.add_DELTA_T(DELTA_T);
-  builder_.add_DELTA_V(DELTA_V);
-  builder_.add_WEIGHT(WEIGHT);
-  builder_.add_STATUS(STATUS);
+  builder_.add_DELTA_T_STEP(DELTA_T_STEP);
+  builder_.add_DELTA_T_MAX(DELTA_T_MAX);
+  builder_.add_DELTA_T_MIN(DELTA_T_MIN);
+  builder_.add_DELTA_V_STEP(DELTA_V_STEP);
+  builder_.add_DELTA_V_MAX(DELTA_V_MAX);
+  builder_.add_DELTA_V_MIN(DELTA_V_MIN);
+  builder_.add_ORIG_INCLINATION(ORIG_INCLINATION);
+  builder_.add_ORIG_ECCENTRICITY(ORIG_ECCENTRICITY);
+  builder_.add_ORIG_SEMI_MAJOR_AXIS(ORIG_SEMI_MAJOR_AXIS);
+  builder_.add_NOTES(NOTES);
+  builder_.add_CORRELATED_ID(CORRELATED_ID);
+  builder_.add_ELEMENTS(ELEMENTS);
+  builder_.add_NUM_ELEMENTS(NUM_ELEMENTS);
+  builder_.add_REF_FRAME(REF_FRAME);
+  builder_.add_SOURCE(SOURCE);
+  builder_.add_EVENT_EPOCH(EVENT_EPOCH);
+  builder_.add_OBJECT_DESIGNATOR(OBJECT_DESIGNATOR);
+  builder_.add_SAT_NO(SAT_NO);
   builder_.add_ID(ID);
+  builder_.add_STATUS(STATUS);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<MNF> CreateMNFDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *ID = nullptr,
-    const char *STATUS = nullptr,
-    double WEIGHT = 0.0,
-    double DELTA_V = 0.0,
-    double DELTA_T = 0.0) {
+    uint32_t SAT_NO = 0,
+    const char *OBJECT_DESIGNATOR = nullptr,
+    manifoldStatus STATUS = manifoldStatus_CANDIDATE,
+    const char *EVENT_EPOCH = nullptr,
+    const char *SOURCE = nullptr,
+    const char *REF_FRAME = nullptr,
+    double ORIG_SEMI_MAJOR_AXIS = 0.0,
+    double ORIG_ECCENTRICITY = 0.0,
+    double ORIG_INCLINATION = 0.0,
+    double DELTA_V_MIN = 0.0,
+    double DELTA_V_MAX = 0.0,
+    double DELTA_V_STEP = 0.0,
+    double DELTA_T_MIN = 0.0,
+    double DELTA_T_MAX = 0.0,
+    double DELTA_T_STEP = 0.0,
+    uint32_t NUM_ELEMENTS = 0,
+    const std::vector<::flatbuffers::Offset<manifoldElset>> *ELEMENTS = nullptr,
+    const char *CORRELATED_ID = nullptr,
+    const char *NOTES = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
-  auto STATUS__ = STATUS ? _fbb.CreateString(STATUS) : 0;
+  auto OBJECT_DESIGNATOR__ = OBJECT_DESIGNATOR ? _fbb.CreateString(OBJECT_DESIGNATOR) : 0;
+  auto EVENT_EPOCH__ = EVENT_EPOCH ? _fbb.CreateString(EVENT_EPOCH) : 0;
+  auto SOURCE__ = SOURCE ? _fbb.CreateString(SOURCE) : 0;
+  auto REF_FRAME__ = REF_FRAME ? _fbb.CreateString(REF_FRAME) : 0;
+  auto ELEMENTS__ = ELEMENTS ? _fbb.CreateVector<::flatbuffers::Offset<manifoldElset>>(*ELEMENTS) : 0;
+  auto CORRELATED_ID__ = CORRELATED_ID ? _fbb.CreateString(CORRELATED_ID) : 0;
+  auto NOTES__ = NOTES ? _fbb.CreateString(NOTES) : 0;
   return CreateMNF(
       _fbb,
       ID__,
-      STATUS__,
-      WEIGHT,
-      DELTA_V,
-      DELTA_T);
+      SAT_NO,
+      OBJECT_DESIGNATOR__,
+      STATUS,
+      EVENT_EPOCH__,
+      SOURCE__,
+      REF_FRAME__,
+      ORIG_SEMI_MAJOR_AXIS,
+      ORIG_ECCENTRICITY,
+      ORIG_INCLINATION,
+      DELTA_V_MIN,
+      DELTA_V_MAX,
+      DELTA_V_STEP,
+      DELTA_T_MIN,
+      DELTA_T_MAX,
+      DELTA_T_STEP,
+      NUM_ELEMENTS,
+      ELEMENTS__,
+      CORRELATED_ID__,
+      NOTES__);
 }
 
 inline const MNF *GetMNF(const void *buf) {

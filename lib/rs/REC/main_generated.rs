@@ -121,6 +121,14 @@ use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
 use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
+use crate::main_generated::*;
 use core::mem;
 use core::cmp::Ordering;
 
@@ -130,15 +138,16 @@ use self::flatbuffers::{EndianScalar, Follow};
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 pub const ENUM_MIN_RECORD_TYPE: u8 = 0;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
-pub const ENUM_MAX_RECORD_TYPE: u8 = 118;
+pub const ENUM_MAX_RECORD_TYPE: u8 = 126;
 #[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
 #[allow(non_camel_case_types)]
-pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 119] = [
+pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 127] = [
   RecordType::NONE,
   RecordType::ACL,
   RecordType::ACM,
   RecordType::ACR,
   RecordType::AEM,
+  RecordType::ANI,
   RecordType::AOF,
   RecordType::APM,
   RecordType::ARM,
@@ -149,6 +158,7 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 119] = [
   RecordType::BEM,
   RecordType::BMC,
   RecordType::BOV,
+  RecordType::BUS,
   RecordType::CAT,
   RecordType::CDM,
   RecordType::CFP,
@@ -179,6 +189,7 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 119] = [
   RecordType::HEL,
   RecordType::HYP,
   RecordType::IDM,
+  RecordType::ION,
   RecordType::IRO,
   RecordType::LCC,
   RecordType::LDM,
@@ -199,11 +210,15 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 119] = [
   RecordType::OCM,
   RecordType::OEM,
   RecordType::OMM,
+  RecordType::OOA,
+  RecordType::OOB,
   RecordType::OOD,
   RecordType::OOE,
   RecordType::OOI,
   RecordType::OOL,
   RecordType::OON,
+  RecordType::OOS,
+  RecordType::OOT,
   RecordType::OPM,
   RecordType::OSM,
   RecordType::PCF,
@@ -227,6 +242,7 @@ pub const ENUM_VALUES_RECORD_TYPE: [RecordType; 119] = [
   RecordType::SAR,
   RecordType::SCM,
   RecordType::SDL,
+  RecordType::SEN,
   RecordType::SEO,
   RecordType::SEV,
   RecordType::SIT,
@@ -265,129 +281,138 @@ impl RecordType {
   pub const ACM: Self = Self(2);
   pub const ACR: Self = Self(3);
   pub const AEM: Self = Self(4);
-  pub const AOF: Self = Self(5);
-  pub const APM: Self = Self(6);
-  pub const ARM: Self = Self(7);
-  pub const AST: Self = Self(8);
-  pub const ATD: Self = Self(9);
-  pub const ATM: Self = Self(10);
-  pub const BAL: Self = Self(11);
-  pub const BEM: Self = Self(12);
-  pub const BMC: Self = Self(13);
-  pub const BOV: Self = Self(14);
-  pub const CAT: Self = Self(15);
-  pub const CDM: Self = Self(16);
-  pub const CFP: Self = Self(17);
-  pub const CHN: Self = Self(18);
-  pub const CLT: Self = Self(19);
-  pub const CMS: Self = Self(20);
-  pub const COM: Self = Self(21);
-  pub const CRD: Self = Self(22);
-  pub const CRM: Self = Self(23);
-  pub const CSM: Self = Self(24);
-  pub const CTR: Self = Self(25);
-  pub const DFH: Self = Self(26);
-  pub const DMG: Self = Self(27);
-  pub const DOA: Self = Self(28);
-  pub const EME: Self = Self(29);
-  pub const ENC: Self = Self(30);
-  pub const ENV: Self = Self(31);
-  pub const EOO: Self = Self(32);
-  pub const EOP: Self = Self(33);
-  pub const EPM: Self = Self(34);
-  pub const EWR: Self = Self(35);
-  pub const FCS: Self = Self(36);
-  pub const GDI: Self = Self(37);
-  pub const GEO: Self = Self(38);
-  pub const GNO: Self = Self(39);
-  pub const GRV: Self = Self(40);
-  pub const GVH: Self = Self(41);
-  pub const HEL: Self = Self(42);
-  pub const HYP: Self = Self(43);
-  pub const IDM: Self = Self(44);
-  pub const IRO: Self = Self(45);
-  pub const LCC: Self = Self(46);
-  pub const LDM: Self = Self(47);
-  pub const LKS: Self = Self(48);
-  pub const LND: Self = Self(49);
-  pub const LNE: Self = Self(50);
-  pub const MET: Self = Self(51);
-  pub const MFE: Self = Self(52);
-  pub const MNF: Self = Self(53);
-  pub const MNV: Self = Self(54);
-  pub const MPE: Self = Self(55);
-  pub const MSL: Self = Self(56);
-  pub const MST: Self = Self(57);
-  pub const MTI: Self = Self(58);
-  pub const NAV: Self = Self(59);
-  pub const OBD: Self = Self(60);
-  pub const OBT: Self = Self(61);
-  pub const OCM: Self = Self(62);
-  pub const OEM: Self = Self(63);
-  pub const OMM: Self = Self(64);
-  pub const OOD: Self = Self(65);
-  pub const OOE: Self = Self(66);
-  pub const OOI: Self = Self(67);
-  pub const OOL: Self = Self(68);
-  pub const OON: Self = Self(69);
-  pub const OPM: Self = Self(70);
-  pub const OSM: Self = Self(71);
-  pub const PCF: Self = Self(72);
-  pub const PHY: Self = Self(73);
-  pub const PLD: Self = Self(74);
-  pub const PLG: Self = Self(75);
-  pub const PLK: Self = Self(76);
-  pub const PNM: Self = Self(77);
-  pub const PRG: Self = Self(78);
-  pub const PUR: Self = Self(79);
-  pub const RAF: Self = Self(80);
-  pub const RCF: Self = Self(81);
-  pub const RDM: Self = Self(82);
-  pub const RDO: Self = Self(83);
-  pub const REV: Self = Self(84);
-  pub const RFB: Self = Self(85);
-  pub const RFE: Self = Self(86);
-  pub const RFM: Self = Self(87);
-  pub const RFO: Self = Self(88);
-  pub const ROC: Self = Self(89);
-  pub const SAR: Self = Self(90);
-  pub const SCM: Self = Self(91);
-  pub const SDL: Self = Self(92);
-  pub const SEO: Self = Self(93);
-  pub const SEV: Self = Self(94);
-  pub const SIT: Self = Self(95);
-  pub const SKI: Self = Self(96);
-  pub const SNR: Self = Self(97);
-  pub const SOI: Self = Self(98);
-  pub const SON: Self = Self(99);
-  pub const SPP: Self = Self(100);
-  pub const SPW: Self = Self(101);
-  pub const STF: Self = Self(102);
-  pub const STR: Self = Self(103);
-  pub const STV: Self = Self(104);
-  pub const SWR: Self = Self(105);
-  pub const TCF: Self = Self(106);
-  pub const TDM: Self = Self(107);
-  pub const TIM: Self = Self(108);
-  pub const TKG: Self = Self(109);
-  pub const TME: Self = Self(110);
-  pub const TMF: Self = Self(111);
-  pub const TPN: Self = Self(112);
-  pub const TRK: Self = Self(113);
-  pub const TRN: Self = Self(114);
-  pub const VCM: Self = Self(115);
-  pub const WPN: Self = Self(116);
-  pub const WTH: Self = Self(117);
-  pub const XTC: Self = Self(118);
+  pub const ANI: Self = Self(5);
+  pub const AOF: Self = Self(6);
+  pub const APM: Self = Self(7);
+  pub const ARM: Self = Self(8);
+  pub const AST: Self = Self(9);
+  pub const ATD: Self = Self(10);
+  pub const ATM: Self = Self(11);
+  pub const BAL: Self = Self(12);
+  pub const BEM: Self = Self(13);
+  pub const BMC: Self = Self(14);
+  pub const BOV: Self = Self(15);
+  pub const BUS: Self = Self(16);
+  pub const CAT: Self = Self(17);
+  pub const CDM: Self = Self(18);
+  pub const CFP: Self = Self(19);
+  pub const CHN: Self = Self(20);
+  pub const CLT: Self = Self(21);
+  pub const CMS: Self = Self(22);
+  pub const COM: Self = Self(23);
+  pub const CRD: Self = Self(24);
+  pub const CRM: Self = Self(25);
+  pub const CSM: Self = Self(26);
+  pub const CTR: Self = Self(27);
+  pub const DFH: Self = Self(28);
+  pub const DMG: Self = Self(29);
+  pub const DOA: Self = Self(30);
+  pub const EME: Self = Self(31);
+  pub const ENC: Self = Self(32);
+  pub const ENV: Self = Self(33);
+  pub const EOO: Self = Self(34);
+  pub const EOP: Self = Self(35);
+  pub const EPM: Self = Self(36);
+  pub const EWR: Self = Self(37);
+  pub const FCS: Self = Self(38);
+  pub const GDI: Self = Self(39);
+  pub const GEO: Self = Self(40);
+  pub const GNO: Self = Self(41);
+  pub const GRV: Self = Self(42);
+  pub const GVH: Self = Self(43);
+  pub const HEL: Self = Self(44);
+  pub const HYP: Self = Self(45);
+  pub const IDM: Self = Self(46);
+  pub const ION: Self = Self(47);
+  pub const IRO: Self = Self(48);
+  pub const LCC: Self = Self(49);
+  pub const LDM: Self = Self(50);
+  pub const LKS: Self = Self(51);
+  pub const LND: Self = Self(52);
+  pub const LNE: Self = Self(53);
+  pub const MET: Self = Self(54);
+  pub const MFE: Self = Self(55);
+  pub const MNF: Self = Self(56);
+  pub const MNV: Self = Self(57);
+  pub const MPE: Self = Self(58);
+  pub const MSL: Self = Self(59);
+  pub const MST: Self = Self(60);
+  pub const MTI: Self = Self(61);
+  pub const NAV: Self = Self(62);
+  pub const OBD: Self = Self(63);
+  pub const OBT: Self = Self(64);
+  pub const OCM: Self = Self(65);
+  pub const OEM: Self = Self(66);
+  pub const OMM: Self = Self(67);
+  pub const OOA: Self = Self(68);
+  pub const OOB: Self = Self(69);
+  pub const OOD: Self = Self(70);
+  pub const OOE: Self = Self(71);
+  pub const OOI: Self = Self(72);
+  pub const OOL: Self = Self(73);
+  pub const OON: Self = Self(74);
+  pub const OOS: Self = Self(75);
+  pub const OOT: Self = Self(76);
+  pub const OPM: Self = Self(77);
+  pub const OSM: Self = Self(78);
+  pub const PCF: Self = Self(79);
+  pub const PHY: Self = Self(80);
+  pub const PLD: Self = Self(81);
+  pub const PLG: Self = Self(82);
+  pub const PLK: Self = Self(83);
+  pub const PNM: Self = Self(84);
+  pub const PRG: Self = Self(85);
+  pub const PUR: Self = Self(86);
+  pub const RAF: Self = Self(87);
+  pub const RCF: Self = Self(88);
+  pub const RDM: Self = Self(89);
+  pub const RDO: Self = Self(90);
+  pub const REV: Self = Self(91);
+  pub const RFB: Self = Self(92);
+  pub const RFE: Self = Self(93);
+  pub const RFM: Self = Self(94);
+  pub const RFO: Self = Self(95);
+  pub const ROC: Self = Self(96);
+  pub const SAR: Self = Self(97);
+  pub const SCM: Self = Self(98);
+  pub const SDL: Self = Self(99);
+  pub const SEN: Self = Self(100);
+  pub const SEO: Self = Self(101);
+  pub const SEV: Self = Self(102);
+  pub const SIT: Self = Self(103);
+  pub const SKI: Self = Self(104);
+  pub const SNR: Self = Self(105);
+  pub const SOI: Self = Self(106);
+  pub const SON: Self = Self(107);
+  pub const SPP: Self = Self(108);
+  pub const SPW: Self = Self(109);
+  pub const STF: Self = Self(110);
+  pub const STR: Self = Self(111);
+  pub const STV: Self = Self(112);
+  pub const SWR: Self = Self(113);
+  pub const TCF: Self = Self(114);
+  pub const TDM: Self = Self(115);
+  pub const TIM: Self = Self(116);
+  pub const TKG: Self = Self(117);
+  pub const TME: Self = Self(118);
+  pub const TMF: Self = Self(119);
+  pub const TPN: Self = Self(120);
+  pub const TRK: Self = Self(121);
+  pub const TRN: Self = Self(122);
+  pub const VCM: Self = Self(123);
+  pub const WPN: Self = Self(124);
+  pub const WTH: Self = Self(125);
+  pub const XTC: Self = Self(126);
 
   pub const ENUM_MIN: u8 = 0;
-  pub const ENUM_MAX: u8 = 118;
+  pub const ENUM_MAX: u8 = 126;
   pub const ENUM_VALUES: &'static [Self] = &[
     Self::NONE,
     Self::ACL,
     Self::ACM,
     Self::ACR,
     Self::AEM,
+    Self::ANI,
     Self::AOF,
     Self::APM,
     Self::ARM,
@@ -398,6 +423,7 @@ impl RecordType {
     Self::BEM,
     Self::BMC,
     Self::BOV,
+    Self::BUS,
     Self::CAT,
     Self::CDM,
     Self::CFP,
@@ -428,6 +454,7 @@ impl RecordType {
     Self::HEL,
     Self::HYP,
     Self::IDM,
+    Self::ION,
     Self::IRO,
     Self::LCC,
     Self::LDM,
@@ -448,11 +475,15 @@ impl RecordType {
     Self::OCM,
     Self::OEM,
     Self::OMM,
+    Self::OOA,
+    Self::OOB,
     Self::OOD,
     Self::OOE,
     Self::OOI,
     Self::OOL,
     Self::OON,
+    Self::OOS,
+    Self::OOT,
     Self::OPM,
     Self::OSM,
     Self::PCF,
@@ -476,6 +507,7 @@ impl RecordType {
     Self::SAR,
     Self::SCM,
     Self::SDL,
+    Self::SEN,
     Self::SEO,
     Self::SEV,
     Self::SIT,
@@ -511,6 +543,7 @@ impl RecordType {
       Self::ACM => Some("ACM"),
       Self::ACR => Some("ACR"),
       Self::AEM => Some("AEM"),
+      Self::ANI => Some("ANI"),
       Self::AOF => Some("AOF"),
       Self::APM => Some("APM"),
       Self::ARM => Some("ARM"),
@@ -521,6 +554,7 @@ impl RecordType {
       Self::BEM => Some("BEM"),
       Self::BMC => Some("BMC"),
       Self::BOV => Some("BOV"),
+      Self::BUS => Some("BUS"),
       Self::CAT => Some("CAT"),
       Self::CDM => Some("CDM"),
       Self::CFP => Some("CFP"),
@@ -551,6 +585,7 @@ impl RecordType {
       Self::HEL => Some("HEL"),
       Self::HYP => Some("HYP"),
       Self::IDM => Some("IDM"),
+      Self::ION => Some("ION"),
       Self::IRO => Some("IRO"),
       Self::LCC => Some("LCC"),
       Self::LDM => Some("LDM"),
@@ -571,11 +606,15 @@ impl RecordType {
       Self::OCM => Some("OCM"),
       Self::OEM => Some("OEM"),
       Self::OMM => Some("OMM"),
+      Self::OOA => Some("OOA"),
+      Self::OOB => Some("OOB"),
       Self::OOD => Some("OOD"),
       Self::OOE => Some("OOE"),
       Self::OOI => Some("OOI"),
       Self::OOL => Some("OOL"),
       Self::OON => Some("OON"),
+      Self::OOS => Some("OOS"),
+      Self::OOT => Some("OOT"),
       Self::OPM => Some("OPM"),
       Self::OSM => Some("OSM"),
       Self::PCF => Some("PCF"),
@@ -599,6 +638,7 @@ impl RecordType {
       Self::SAR => Some("SAR"),
       Self::SCM => Some("SCM"),
       Self::SDL => Some("SDL"),
+      Self::SEN => Some("SEN"),
       Self::SEO => Some("SEO"),
       Self::SEV => Some("SEV"),
       Self::SIT => Some("SIT"),
@@ -691,6 +731,7 @@ pub enum RecordTypeT {
   ACM(Box<ACMT>),
   ACR(Box<ACRT>),
   AEM(Box<AEMT>),
+  ANI(Box<ANIT>),
   AOF(Box<AOFT>),
   APM(Box<APMT>),
   ARM(Box<ARMT>),
@@ -701,6 +742,7 @@ pub enum RecordTypeT {
   BEM(Box<BEMT>),
   BMC(Box<BMCT>),
   BOV(Box<BOVT>),
+  BUS(Box<BUST>),
   CAT(Box<CATT>),
   CDM(Box<CDMT>),
   CFP(Box<CFPT>),
@@ -731,6 +773,7 @@ pub enum RecordTypeT {
   HEL(Box<HELT>),
   HYP(Box<HYPT>),
   IDM(Box<IDMT>),
+  ION(Box<IONT>),
   IRO(Box<IROT>),
   LCC(Box<LCCT>),
   LDM(Box<LDMT>),
@@ -751,11 +794,15 @@ pub enum RecordTypeT {
   OCM(Box<OCMT>),
   OEM(Box<OEMT>),
   OMM(Box<OMMT>),
+  OOA(Box<OOAT>),
+  OOB(Box<OOBT>),
   OOD(Box<OODT>),
   OOE(Box<OOET>),
   OOI(Box<OOIT>),
   OOL(Box<OOLT>),
   OON(Box<OONT>),
+  OOS(Box<OOST>),
+  OOT(Box<OOTT>),
   OPM(Box<OPMT>),
   OSM(Box<OSMT>),
   PCF(Box<PCFT>),
@@ -779,6 +826,7 @@ pub enum RecordTypeT {
   SAR(Box<SART>),
   SCM(Box<SCMT>),
   SDL(Box<SDLT>),
+  SEN(Box<SENT>),
   SEO(Box<SEOT>),
   SEV(Box<SEVT>),
   SIT(Box<SITT>),
@@ -819,6 +867,7 @@ impl RecordTypeT {
       Self::ACM(_) => RecordType::ACM,
       Self::ACR(_) => RecordType::ACR,
       Self::AEM(_) => RecordType::AEM,
+      Self::ANI(_) => RecordType::ANI,
       Self::AOF(_) => RecordType::AOF,
       Self::APM(_) => RecordType::APM,
       Self::ARM(_) => RecordType::ARM,
@@ -829,6 +878,7 @@ impl RecordTypeT {
       Self::BEM(_) => RecordType::BEM,
       Self::BMC(_) => RecordType::BMC,
       Self::BOV(_) => RecordType::BOV,
+      Self::BUS(_) => RecordType::BUS,
       Self::CAT(_) => RecordType::CAT,
       Self::CDM(_) => RecordType::CDM,
       Self::CFP(_) => RecordType::CFP,
@@ -859,6 +909,7 @@ impl RecordTypeT {
       Self::HEL(_) => RecordType::HEL,
       Self::HYP(_) => RecordType::HYP,
       Self::IDM(_) => RecordType::IDM,
+      Self::ION(_) => RecordType::ION,
       Self::IRO(_) => RecordType::IRO,
       Self::LCC(_) => RecordType::LCC,
       Self::LDM(_) => RecordType::LDM,
@@ -879,11 +930,15 @@ impl RecordTypeT {
       Self::OCM(_) => RecordType::OCM,
       Self::OEM(_) => RecordType::OEM,
       Self::OMM(_) => RecordType::OMM,
+      Self::OOA(_) => RecordType::OOA,
+      Self::OOB(_) => RecordType::OOB,
       Self::OOD(_) => RecordType::OOD,
       Self::OOE(_) => RecordType::OOE,
       Self::OOI(_) => RecordType::OOI,
       Self::OOL(_) => RecordType::OOL,
       Self::OON(_) => RecordType::OON,
+      Self::OOS(_) => RecordType::OOS,
+      Self::OOT(_) => RecordType::OOT,
       Self::OPM(_) => RecordType::OPM,
       Self::OSM(_) => RecordType::OSM,
       Self::PCF(_) => RecordType::PCF,
@@ -907,6 +962,7 @@ impl RecordTypeT {
       Self::SAR(_) => RecordType::SAR,
       Self::SCM(_) => RecordType::SCM,
       Self::SDL(_) => RecordType::SDL,
+      Self::SEN(_) => RecordType::SEN,
       Self::SEO(_) => RecordType::SEO,
       Self::SEV(_) => RecordType::SEV,
       Self::SIT(_) => RecordType::SIT,
@@ -942,6 +998,7 @@ impl RecordTypeT {
       Self::ACM(v) => Some(v.pack(fbb).as_union_value()),
       Self::ACR(v) => Some(v.pack(fbb).as_union_value()),
       Self::AEM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::ANI(v) => Some(v.pack(fbb).as_union_value()),
       Self::AOF(v) => Some(v.pack(fbb).as_union_value()),
       Self::APM(v) => Some(v.pack(fbb).as_union_value()),
       Self::ARM(v) => Some(v.pack(fbb).as_union_value()),
@@ -952,6 +1009,7 @@ impl RecordTypeT {
       Self::BEM(v) => Some(v.pack(fbb).as_union_value()),
       Self::BMC(v) => Some(v.pack(fbb).as_union_value()),
       Self::BOV(v) => Some(v.pack(fbb).as_union_value()),
+      Self::BUS(v) => Some(v.pack(fbb).as_union_value()),
       Self::CAT(v) => Some(v.pack(fbb).as_union_value()),
       Self::CDM(v) => Some(v.pack(fbb).as_union_value()),
       Self::CFP(v) => Some(v.pack(fbb).as_union_value()),
@@ -982,6 +1040,7 @@ impl RecordTypeT {
       Self::HEL(v) => Some(v.pack(fbb).as_union_value()),
       Self::HYP(v) => Some(v.pack(fbb).as_union_value()),
       Self::IDM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::ION(v) => Some(v.pack(fbb).as_union_value()),
       Self::IRO(v) => Some(v.pack(fbb).as_union_value()),
       Self::LCC(v) => Some(v.pack(fbb).as_union_value()),
       Self::LDM(v) => Some(v.pack(fbb).as_union_value()),
@@ -1002,11 +1061,15 @@ impl RecordTypeT {
       Self::OCM(v) => Some(v.pack(fbb).as_union_value()),
       Self::OEM(v) => Some(v.pack(fbb).as_union_value()),
       Self::OMM(v) => Some(v.pack(fbb).as_union_value()),
+      Self::OOA(v) => Some(v.pack(fbb).as_union_value()),
+      Self::OOB(v) => Some(v.pack(fbb).as_union_value()),
       Self::OOD(v) => Some(v.pack(fbb).as_union_value()),
       Self::OOE(v) => Some(v.pack(fbb).as_union_value()),
       Self::OOI(v) => Some(v.pack(fbb).as_union_value()),
       Self::OOL(v) => Some(v.pack(fbb).as_union_value()),
       Self::OON(v) => Some(v.pack(fbb).as_union_value()),
+      Self::OOS(v) => Some(v.pack(fbb).as_union_value()),
+      Self::OOT(v) => Some(v.pack(fbb).as_union_value()),
       Self::OPM(v) => Some(v.pack(fbb).as_union_value()),
       Self::OSM(v) => Some(v.pack(fbb).as_union_value()),
       Self::PCF(v) => Some(v.pack(fbb).as_union_value()),
@@ -1030,6 +1093,7 @@ impl RecordTypeT {
       Self::SAR(v) => Some(v.pack(fbb).as_union_value()),
       Self::SCM(v) => Some(v.pack(fbb).as_union_value()),
       Self::SDL(v) => Some(v.pack(fbb).as_union_value()),
+      Self::SEN(v) => Some(v.pack(fbb).as_union_value()),
       Self::SEO(v) => Some(v.pack(fbb).as_union_value()),
       Self::SEV(v) => Some(v.pack(fbb).as_union_value()),
       Self::SIT(v) => Some(v.pack(fbb).as_union_value()),
@@ -1141,6 +1205,27 @@ impl RecordTypeT {
   /// If the union variant matches, return a mutable reference to the AEMT.
   pub fn as_AEM_mut(&mut self) -> Option<&mut AEMT> {
     if let Self::AEM(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned ANIT, setting the union to NONE.
+  pub fn take_ANI(&mut self) -> Option<Box<ANIT>> {
+    if let Self::ANI(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::ANI(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the ANIT.
+  pub fn as_ANI(&self) -> Option<&ANIT> {
+    if let Self::ANI(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the ANIT.
+  pub fn as_ANI_mut(&mut self) -> Option<&mut ANIT> {
+    if let Self::ANI(v) = self { Some(v.as_mut()) } else { None }
   }
   /// If the union variant matches, return the owned AOFT, setting the union to NONE.
   pub fn take_AOF(&mut self) -> Option<Box<AOFT>> {
@@ -1351,6 +1436,27 @@ impl RecordTypeT {
   /// If the union variant matches, return a mutable reference to the BOVT.
   pub fn as_BOV_mut(&mut self) -> Option<&mut BOVT> {
     if let Self::BOV(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned BUST, setting the union to NONE.
+  pub fn take_BUS(&mut self) -> Option<Box<BUST>> {
+    if let Self::BUS(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::BUS(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the BUST.
+  pub fn as_BUS(&self) -> Option<&BUST> {
+    if let Self::BUS(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the BUST.
+  pub fn as_BUS_mut(&mut self) -> Option<&mut BUST> {
+    if let Self::BUS(v) = self { Some(v.as_mut()) } else { None }
   }
   /// If the union variant matches, return the owned CATT, setting the union to NONE.
   pub fn take_CAT(&mut self) -> Option<Box<CATT>> {
@@ -1982,6 +2088,27 @@ impl RecordTypeT {
   pub fn as_IDM_mut(&mut self) -> Option<&mut IDMT> {
     if let Self::IDM(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned IONT, setting the union to NONE.
+  pub fn take_ION(&mut self) -> Option<Box<IONT>> {
+    if let Self::ION(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::ION(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the IONT.
+  pub fn as_ION(&self) -> Option<&IONT> {
+    if let Self::ION(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the IONT.
+  pub fn as_ION_mut(&mut self) -> Option<&mut IONT> {
+    if let Self::ION(v) = self { Some(v.as_mut()) } else { None }
+  }
   /// If the union variant matches, return the owned IROT, setting the union to NONE.
   pub fn take_IRO(&mut self) -> Option<Box<IROT>> {
     if let Self::IRO(_) = self {
@@ -2402,6 +2529,48 @@ impl RecordTypeT {
   pub fn as_OMM_mut(&mut self) -> Option<&mut OMMT> {
     if let Self::OMM(v) = self { Some(v.as_mut()) } else { None }
   }
+  /// If the union variant matches, return the owned OOAT, setting the union to NONE.
+  pub fn take_OOA(&mut self) -> Option<Box<OOAT>> {
+    if let Self::OOA(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::OOA(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the OOAT.
+  pub fn as_OOA(&self) -> Option<&OOAT> {
+    if let Self::OOA(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the OOAT.
+  pub fn as_OOA_mut(&mut self) -> Option<&mut OOAT> {
+    if let Self::OOA(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned OOBT, setting the union to NONE.
+  pub fn take_OOB(&mut self) -> Option<Box<OOBT>> {
+    if let Self::OOB(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::OOB(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the OOBT.
+  pub fn as_OOB(&self) -> Option<&OOBT> {
+    if let Self::OOB(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the OOBT.
+  pub fn as_OOB_mut(&mut self) -> Option<&mut OOBT> {
+    if let Self::OOB(v) = self { Some(v.as_mut()) } else { None }
+  }
   /// If the union variant matches, return the owned OODT, setting the union to NONE.
   pub fn take_OOD(&mut self) -> Option<Box<OODT>> {
     if let Self::OOD(_) = self {
@@ -2506,6 +2675,48 @@ impl RecordTypeT {
   /// If the union variant matches, return a mutable reference to the OONT.
   pub fn as_OON_mut(&mut self) -> Option<&mut OONT> {
     if let Self::OON(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned OOST, setting the union to NONE.
+  pub fn take_OOS(&mut self) -> Option<Box<OOST>> {
+    if let Self::OOS(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::OOS(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the OOST.
+  pub fn as_OOS(&self) -> Option<&OOST> {
+    if let Self::OOS(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the OOST.
+  pub fn as_OOS_mut(&mut self) -> Option<&mut OOST> {
+    if let Self::OOS(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned OOTT, setting the union to NONE.
+  pub fn take_OOT(&mut self) -> Option<Box<OOTT>> {
+    if let Self::OOT(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::OOT(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the OOTT.
+  pub fn as_OOT(&self) -> Option<&OOTT> {
+    if let Self::OOT(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the OOTT.
+  pub fn as_OOT_mut(&mut self) -> Option<&mut OOTT> {
+    if let Self::OOT(v) = self { Some(v.as_mut()) } else { None }
   }
   /// If the union variant matches, return the owned OPMT, setting the union to NONE.
   pub fn take_OPM(&mut self) -> Option<Box<OPMT>> {
@@ -2989,6 +3200,27 @@ impl RecordTypeT {
   /// If the union variant matches, return a mutable reference to the SDLT.
   pub fn as_SDL_mut(&mut self) -> Option<&mut SDLT> {
     if let Self::SDL(v) = self { Some(v.as_mut()) } else { None }
+  }
+  /// If the union variant matches, return the owned SENT, setting the union to NONE.
+  pub fn take_SEN(&mut self) -> Option<Box<SENT>> {
+    if let Self::SEN(_) = self {
+      let v = core::mem::replace(self, Self::NONE);
+      if let Self::SEN(w) = v {
+        Some(w)
+      } else {
+        unreachable!()
+      }
+    } else {
+      None
+    }
+  }
+  /// If the union variant matches, return a reference to the SENT.
+  pub fn as_SEN(&self) -> Option<&SENT> {
+    if let Self::SEN(v) = self { Some(v.as_ref()) } else { None }
+  }
+  /// If the union variant matches, return a mutable reference to the SENT.
+  pub fn as_SEN_mut(&mut self) -> Option<&mut SENT> {
+    if let Self::SEN(v) = self { Some(v.as_mut()) } else { None }
   }
   /// If the union variant matches, return the owned SEOT, setting the union to NONE.
   pub fn take_SEO(&mut self) -> Option<Box<SEOT>> {
@@ -3597,6 +3829,11 @@ impl<'a> Record<'a> {
             .expect("Invalid union table, expected `RecordType::AEM`.")
             .unpack()
       )),
+      RecordType::ANI => RecordTypeT::ANI(Box::new(
+        self.value_as_ANI()
+            .expect("Invalid union table, expected `RecordType::ANI`.")
+            .unpack()
+      )),
       RecordType::AOF => RecordTypeT::AOF(Box::new(
         self.value_as_AOF()
             .expect("Invalid union table, expected `RecordType::AOF`.")
@@ -3645,6 +3882,11 @@ impl<'a> Record<'a> {
       RecordType::BOV => RecordTypeT::BOV(Box::new(
         self.value_as_BOV()
             .expect("Invalid union table, expected `RecordType::BOV`.")
+            .unpack()
+      )),
+      RecordType::BUS => RecordTypeT::BUS(Box::new(
+        self.value_as_BUS()
+            .expect("Invalid union table, expected `RecordType::BUS`.")
             .unpack()
       )),
       RecordType::CAT => RecordTypeT::CAT(Box::new(
@@ -3797,6 +4039,11 @@ impl<'a> Record<'a> {
             .expect("Invalid union table, expected `RecordType::IDM`.")
             .unpack()
       )),
+      RecordType::ION => RecordTypeT::ION(Box::new(
+        self.value_as_ION()
+            .expect("Invalid union table, expected `RecordType::ION`.")
+            .unpack()
+      )),
       RecordType::IRO => RecordTypeT::IRO(Box::new(
         self.value_as_IRO()
             .expect("Invalid union table, expected `RecordType::IRO`.")
@@ -3897,6 +4144,16 @@ impl<'a> Record<'a> {
             .expect("Invalid union table, expected `RecordType::OMM`.")
             .unpack()
       )),
+      RecordType::OOA => RecordTypeT::OOA(Box::new(
+        self.value_as_OOA()
+            .expect("Invalid union table, expected `RecordType::OOA`.")
+            .unpack()
+      )),
+      RecordType::OOB => RecordTypeT::OOB(Box::new(
+        self.value_as_OOB()
+            .expect("Invalid union table, expected `RecordType::OOB`.")
+            .unpack()
+      )),
       RecordType::OOD => RecordTypeT::OOD(Box::new(
         self.value_as_OOD()
             .expect("Invalid union table, expected `RecordType::OOD`.")
@@ -3920,6 +4177,16 @@ impl<'a> Record<'a> {
       RecordType::OON => RecordTypeT::OON(Box::new(
         self.value_as_OON()
             .expect("Invalid union table, expected `RecordType::OON`.")
+            .unpack()
+      )),
+      RecordType::OOS => RecordTypeT::OOS(Box::new(
+        self.value_as_OOS()
+            .expect("Invalid union table, expected `RecordType::OOS`.")
+            .unpack()
+      )),
+      RecordType::OOT => RecordTypeT::OOT(Box::new(
+        self.value_as_OOT()
+            .expect("Invalid union table, expected `RecordType::OOT`.")
             .unpack()
       )),
       RecordType::OPM => RecordTypeT::OPM(Box::new(
@@ -4035,6 +4302,11 @@ impl<'a> Record<'a> {
       RecordType::SDL => RecordTypeT::SDL(Box::new(
         self.value_as_SDL()
             .expect("Invalid union table, expected `RecordType::SDL`.")
+            .unpack()
+      )),
+      RecordType::SEN => RecordTypeT::SEN(Box::new(
+        self.value_as_SEN()
+            .expect("Invalid union table, expected `RecordType::SEN`.")
             .unpack()
       )),
       RecordType::SEO => RecordTypeT::SEO(Box::new(
@@ -4263,6 +4535,21 @@ impl<'a> Record<'a> {
 
   #[inline]
   #[allow(non_snake_case)]
+  pub fn value_as_ANI(&self) -> Option<ANI<'a>> {
+    if self.value_type() == RecordType::ANI {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { ANI::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
   pub fn value_as_AOF(&self) -> Option<AOF<'a>> {
     if self.value_type() == RecordType::AOF {
       self.value().map(|t| {
@@ -4405,6 +4692,21 @@ impl<'a> Record<'a> {
        // Created from a valid Table for this object
        // Which contains a valid union in this slot
        unsafe { BOV::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_BUS(&self) -> Option<BUS<'a>> {
+    if self.value_type() == RecordType::BUS {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { BUS::init_from_table(t) }
      })
     } else {
       None
@@ -4863,6 +5165,21 @@ impl<'a> Record<'a> {
 
   #[inline]
   #[allow(non_snake_case)]
+  pub fn value_as_ION(&self) -> Option<ION<'a>> {
+    if self.value_type() == RecordType::ION {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { ION::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
   pub fn value_as_IRO(&self) -> Option<IRO<'a>> {
     if self.value_type() == RecordType::IRO {
       self.value().map(|t| {
@@ -5163,6 +5480,36 @@ impl<'a> Record<'a> {
 
   #[inline]
   #[allow(non_snake_case)]
+  pub fn value_as_OOA(&self) -> Option<OOA<'a>> {
+    if self.value_type() == RecordType::OOA {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { OOA::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_OOB(&self) -> Option<OOB<'a>> {
+    if self.value_type() == RecordType::OOB {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { OOB::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
   pub fn value_as_OOD(&self) -> Option<OOD<'a>> {
     if self.value_type() == RecordType::OOD {
       self.value().map(|t| {
@@ -5230,6 +5577,36 @@ impl<'a> Record<'a> {
        // Created from a valid Table for this object
        // Which contains a valid union in this slot
        unsafe { OON::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_OOS(&self) -> Option<OOS<'a>> {
+    if self.value_type() == RecordType::OOS {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { OOS::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_OOT(&self) -> Option<OOT<'a>> {
+    if self.value_type() == RecordType::OOT {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { OOT::init_from_table(t) }
      })
     } else {
       None
@@ -5575,6 +5952,21 @@ impl<'a> Record<'a> {
        // Created from a valid Table for this object
        // Which contains a valid union in this slot
        unsafe { SDL::init_from_table(t) }
+     })
+    } else {
+      None
+    }
+  }
+
+  #[inline]
+  #[allow(non_snake_case)]
+  pub fn value_as_SEN(&self) -> Option<SEN<'a>> {
+    if self.value_type() == RecordType::SEN {
+      self.value().map(|t| {
+       // Safety:
+       // Created from a valid Table for this object
+       // Which contains a valid union in this slot
+       unsafe { SEN::init_from_table(t) }
      })
     } else {
       None
@@ -5986,6 +6378,7 @@ impl flatbuffers::Verifiable for Record<'_> {
           RecordType::ACM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<ACM>>("RecordType::ACM", pos),
           RecordType::ACR => v.verify_union_variant::<flatbuffers::ForwardsUOffset<ACR>>("RecordType::ACR", pos),
           RecordType::AEM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<AEM>>("RecordType::AEM", pos),
+          RecordType::ANI => v.verify_union_variant::<flatbuffers::ForwardsUOffset<ANI>>("RecordType::ANI", pos),
           RecordType::AOF => v.verify_union_variant::<flatbuffers::ForwardsUOffset<AOF>>("RecordType::AOF", pos),
           RecordType::APM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<APM>>("RecordType::APM", pos),
           RecordType::ARM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<ARM>>("RecordType::ARM", pos),
@@ -5996,6 +6389,7 @@ impl flatbuffers::Verifiable for Record<'_> {
           RecordType::BEM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<BEM>>("RecordType::BEM", pos),
           RecordType::BMC => v.verify_union_variant::<flatbuffers::ForwardsUOffset<BMC>>("RecordType::BMC", pos),
           RecordType::BOV => v.verify_union_variant::<flatbuffers::ForwardsUOffset<BOV>>("RecordType::BOV", pos),
+          RecordType::BUS => v.verify_union_variant::<flatbuffers::ForwardsUOffset<BUS>>("RecordType::BUS", pos),
           RecordType::CAT => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CAT>>("RecordType::CAT", pos),
           RecordType::CDM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CDM>>("RecordType::CDM", pos),
           RecordType::CFP => v.verify_union_variant::<flatbuffers::ForwardsUOffset<CFP>>("RecordType::CFP", pos),
@@ -6026,6 +6420,7 @@ impl flatbuffers::Verifiable for Record<'_> {
           RecordType::HEL => v.verify_union_variant::<flatbuffers::ForwardsUOffset<HEL>>("RecordType::HEL", pos),
           RecordType::HYP => v.verify_union_variant::<flatbuffers::ForwardsUOffset<HYP>>("RecordType::HYP", pos),
           RecordType::IDM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<IDM>>("RecordType::IDM", pos),
+          RecordType::ION => v.verify_union_variant::<flatbuffers::ForwardsUOffset<ION>>("RecordType::ION", pos),
           RecordType::IRO => v.verify_union_variant::<flatbuffers::ForwardsUOffset<IRO>>("RecordType::IRO", pos),
           RecordType::LCC => v.verify_union_variant::<flatbuffers::ForwardsUOffset<LCC>>("RecordType::LCC", pos),
           RecordType::LDM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<LDM>>("RecordType::LDM", pos),
@@ -6046,11 +6441,15 @@ impl flatbuffers::Verifiable for Record<'_> {
           RecordType::OCM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OCM>>("RecordType::OCM", pos),
           RecordType::OEM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OEM>>("RecordType::OEM", pos),
           RecordType::OMM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OMM>>("RecordType::OMM", pos),
+          RecordType::OOA => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OOA>>("RecordType::OOA", pos),
+          RecordType::OOB => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OOB>>("RecordType::OOB", pos),
           RecordType::OOD => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OOD>>("RecordType::OOD", pos),
           RecordType::OOE => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OOE>>("RecordType::OOE", pos),
           RecordType::OOI => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OOI>>("RecordType::OOI", pos),
           RecordType::OOL => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OOL>>("RecordType::OOL", pos),
           RecordType::OON => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OON>>("RecordType::OON", pos),
+          RecordType::OOS => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OOS>>("RecordType::OOS", pos),
+          RecordType::OOT => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OOT>>("RecordType::OOT", pos),
           RecordType::OPM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OPM>>("RecordType::OPM", pos),
           RecordType::OSM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<OSM>>("RecordType::OSM", pos),
           RecordType::PCF => v.verify_union_variant::<flatbuffers::ForwardsUOffset<PCF>>("RecordType::PCF", pos),
@@ -6074,6 +6473,7 @@ impl flatbuffers::Verifiable for Record<'_> {
           RecordType::SAR => v.verify_union_variant::<flatbuffers::ForwardsUOffset<SAR>>("RecordType::SAR", pos),
           RecordType::SCM => v.verify_union_variant::<flatbuffers::ForwardsUOffset<SCM>>("RecordType::SCM", pos),
           RecordType::SDL => v.verify_union_variant::<flatbuffers::ForwardsUOffset<SDL>>("RecordType::SDL", pos),
+          RecordType::SEN => v.verify_union_variant::<flatbuffers::ForwardsUOffset<SEN>>("RecordType::SEN", pos),
           RecordType::SEO => v.verify_union_variant::<flatbuffers::ForwardsUOffset<SEO>>("RecordType::SEO", pos),
           RecordType::SEV => v.verify_union_variant::<flatbuffers::ForwardsUOffset<SEV>>("RecordType::SEV", pos),
           RecordType::SIT => v.verify_union_variant::<flatbuffers::ForwardsUOffset<SIT>>("RecordType::SIT", pos),
@@ -6189,6 +6589,13 @@ impl core::fmt::Debug for Record<'_> {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
           }
         },
+        RecordType::ANI => {
+          if let Some(x) = self.value_as_ANI() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
         RecordType::AOF => {
           if let Some(x) = self.value_as_AOF() {
             ds.field("value", &x)
@@ -6254,6 +6661,13 @@ impl core::fmt::Debug for Record<'_> {
         },
         RecordType::BOV => {
           if let Some(x) = self.value_as_BOV() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::BUS => {
+          if let Some(x) = self.value_as_BUS() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
@@ -6469,6 +6883,13 @@ impl core::fmt::Debug for Record<'_> {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
           }
         },
+        RecordType::ION => {
+          if let Some(x) = self.value_as_ION() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
         RecordType::IRO => {
           if let Some(x) = self.value_as_IRO() {
             ds.field("value", &x)
@@ -6609,6 +7030,20 @@ impl core::fmt::Debug for Record<'_> {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
           }
         },
+        RecordType::OOA => {
+          if let Some(x) = self.value_as_OOA() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::OOB => {
+          if let Some(x) = self.value_as_OOB() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
         RecordType::OOD => {
           if let Some(x) = self.value_as_OOD() {
             ds.field("value", &x)
@@ -6639,6 +7074,20 @@ impl core::fmt::Debug for Record<'_> {
         },
         RecordType::OON => {
           if let Some(x) = self.value_as_OON() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::OOS => {
+          if let Some(x) = self.value_as_OOS() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::OOT => {
+          if let Some(x) = self.value_as_OOT() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
@@ -6800,6 +7249,13 @@ impl core::fmt::Debug for Record<'_> {
         },
         RecordType::SDL => {
           if let Some(x) = self.value_as_SDL() {
+            ds.field("value", &x)
+          } else {
+            ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")
+          }
+        },
+        RecordType::SEN => {
+          if let Some(x) = self.value_as_SEN() {
             ds.field("value", &x)
           } else {
             ds.field("value", &"InvalidFlatbuffer: Union discriminant does not match value.")

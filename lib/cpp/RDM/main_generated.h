@@ -13,8 +13,476 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
               FLATBUFFERS_VERSION_REVISION == 25,
              "Non-compatible flatbuffers version included");
 
+struct reentryStateVector;
+struct reentryStateVectorBuilder;
+
+struct reentryImpact;
+struct reentryImpactBuilder;
+
+struct survivingDebris;
+struct survivingDebrisBuilder;
+
 struct RDM;
 struct RDMBuilder;
+
+enum reentryDisposition : int8_t {
+  reentryDisposition_CONTROLLED = 0,
+  reentryDisposition_UNCONTROLLED = 1,
+  reentryDisposition_SEMI_CONTROLLED = 2,
+  reentryDisposition_MIN = reentryDisposition_CONTROLLED,
+  reentryDisposition_MAX = reentryDisposition_SEMI_CONTROLLED
+};
+
+inline const reentryDisposition (&EnumValuesreentryDisposition())[3] {
+  static const reentryDisposition values[] = {
+    reentryDisposition_CONTROLLED,
+    reentryDisposition_UNCONTROLLED,
+    reentryDisposition_SEMI_CONTROLLED
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesreentryDisposition() {
+  static const char * const names[4] = {
+    "CONTROLLED",
+    "UNCONTROLLED",
+    "SEMI_CONTROLLED",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamereentryDisposition(reentryDisposition e) {
+  if (::flatbuffers::IsOutRange(e, reentryDisposition_CONTROLLED, reentryDisposition_SEMI_CONTROLLED)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesreentryDisposition()[index];
+}
+
+enum reentryReason : int8_t {
+  reentryReason_NATURAL_DECAY = 0,
+  reentryReason_COMMANDED_DEORBIT = 1,
+  reentryReason_PROPULSION_FAILURE = 2,
+  reentryReason_COLLISION = 3,
+  reentryReason_FRAGMENTATION = 4,
+  reentryReason_UNKNOWN = 5,
+  reentryReason_MIN = reentryReason_NATURAL_DECAY,
+  reentryReason_MAX = reentryReason_UNKNOWN
+};
+
+inline const reentryReason (&EnumValuesreentryReason())[6] {
+  static const reentryReason values[] = {
+    reentryReason_NATURAL_DECAY,
+    reentryReason_COMMANDED_DEORBIT,
+    reentryReason_PROPULSION_FAILURE,
+    reentryReason_COLLISION,
+    reentryReason_FRAGMENTATION,
+    reentryReason_UNKNOWN
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesreentryReason() {
+  static const char * const names[7] = {
+    "NATURAL_DECAY",
+    "COMMANDED_DEORBIT",
+    "PROPULSION_FAILURE",
+    "COLLISION",
+    "FRAGMENTATION",
+    "UNKNOWN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamereentryReason(reentryReason e) {
+  if (::flatbuffers::IsOutRange(e, reentryReason_NATURAL_DECAY, reentryReason_UNKNOWN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesreentryReason()[index];
+}
+
+/// Reentry State Vector
+struct reentryStateVector FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef reentryStateVectorBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_EPOCH = 4,
+    VT_REF_FRAME = 6,
+    VT_X = 8,
+    VT_Y = 10,
+    VT_Z = 12,
+    VT_X_DOT = 14,
+    VT_Y_DOT = 16,
+    VT_Z_DOT = 18
+  };
+  /// Epoch (ISO 8601)
+  const ::flatbuffers::String *EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
+  }
+  /// Reference frame
+  const ::flatbuffers::String *REF_FRAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REF_FRAME);
+  }
+  /// Position X in km
+  double X() const {
+    return GetField<double>(VT_X, 0.0);
+  }
+  /// Position Y in km
+  double Y() const {
+    return GetField<double>(VT_Y, 0.0);
+  }
+  /// Position Z in km
+  double Z() const {
+    return GetField<double>(VT_Z, 0.0);
+  }
+  /// Velocity X in km/s
+  double X_DOT() const {
+    return GetField<double>(VT_X_DOT, 0.0);
+  }
+  /// Velocity Y in km/s
+  double Y_DOT() const {
+    return GetField<double>(VT_Y_DOT, 0.0);
+  }
+  /// Velocity Z in km/s
+  double Z_DOT() const {
+    return GetField<double>(VT_Z_DOT, 0.0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_EPOCH) &&
+           verifier.VerifyString(EPOCH()) &&
+           VerifyOffset(verifier, VT_REF_FRAME) &&
+           verifier.VerifyString(REF_FRAME()) &&
+           VerifyField<double>(verifier, VT_X, 8) &&
+           VerifyField<double>(verifier, VT_Y, 8) &&
+           VerifyField<double>(verifier, VT_Z, 8) &&
+           VerifyField<double>(verifier, VT_X_DOT, 8) &&
+           VerifyField<double>(verifier, VT_Y_DOT, 8) &&
+           VerifyField<double>(verifier, VT_Z_DOT, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct reentryStateVectorBuilder {
+  typedef reentryStateVector Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
+    fbb_.AddOffset(reentryStateVector::VT_EPOCH, EPOCH);
+  }
+  void add_REF_FRAME(::flatbuffers::Offset<::flatbuffers::String> REF_FRAME) {
+    fbb_.AddOffset(reentryStateVector::VT_REF_FRAME, REF_FRAME);
+  }
+  void add_X(double X) {
+    fbb_.AddElement<double>(reentryStateVector::VT_X, X, 0.0);
+  }
+  void add_Y(double Y) {
+    fbb_.AddElement<double>(reentryStateVector::VT_Y, Y, 0.0);
+  }
+  void add_Z(double Z) {
+    fbb_.AddElement<double>(reentryStateVector::VT_Z, Z, 0.0);
+  }
+  void add_X_DOT(double X_DOT) {
+    fbb_.AddElement<double>(reentryStateVector::VT_X_DOT, X_DOT, 0.0);
+  }
+  void add_Y_DOT(double Y_DOT) {
+    fbb_.AddElement<double>(reentryStateVector::VT_Y_DOT, Y_DOT, 0.0);
+  }
+  void add_Z_DOT(double Z_DOT) {
+    fbb_.AddElement<double>(reentryStateVector::VT_Z_DOT, Z_DOT, 0.0);
+  }
+  explicit reentryStateVectorBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<reentryStateVector> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<reentryStateVector>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<reentryStateVector> CreatereentryStateVector(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REF_FRAME = 0,
+    double X = 0.0,
+    double Y = 0.0,
+    double Z = 0.0,
+    double X_DOT = 0.0,
+    double Y_DOT = 0.0,
+    double Z_DOT = 0.0) {
+  reentryStateVectorBuilder builder_(_fbb);
+  builder_.add_Z_DOT(Z_DOT);
+  builder_.add_Y_DOT(Y_DOT);
+  builder_.add_X_DOT(X_DOT);
+  builder_.add_Z(Z);
+  builder_.add_Y(Y);
+  builder_.add_X(X);
+  builder_.add_REF_FRAME(REF_FRAME);
+  builder_.add_EPOCH(EPOCH);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<reentryStateVector> CreatereentryStateVectorDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *EPOCH = nullptr,
+    const char *REF_FRAME = nullptr,
+    double X = 0.0,
+    double Y = 0.0,
+    double Z = 0.0,
+    double X_DOT = 0.0,
+    double Y_DOT = 0.0,
+    double Z_DOT = 0.0) {
+  auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
+  auto REF_FRAME__ = REF_FRAME ? _fbb.CreateString(REF_FRAME) : 0;
+  return CreatereentryStateVector(
+      _fbb,
+      EPOCH__,
+      REF_FRAME__,
+      X,
+      Y,
+      Z,
+      X_DOT,
+      Y_DOT,
+      Z_DOT);
+}
+
+/// Reentry Ground Impact Prediction
+struct reentryImpact FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef reentryImpactBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_IMPACT_EPOCH = 4,
+    VT_EPOCH_UNCERTAINTY = 6,
+    VT_LATITUDE = 8,
+    VT_LONGITUDE = 10,
+    VT_ALONG_TRACK_UNC = 12,
+    VT_CROSS_TRACK_UNC = 14,
+    VT_IMPACT_PROBABILITY = 16
+  };
+  /// Predicted impact epoch (ISO 8601)
+  const ::flatbuffers::String *IMPACT_EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_IMPACT_EPOCH);
+  }
+  /// Epoch uncertainty window in seconds
+  double EPOCH_UNCERTAINTY() const {
+    return GetField<double>(VT_EPOCH_UNCERTAINTY, 0.0);
+  }
+  /// Impact latitude in degrees
+  double LATITUDE() const {
+    return GetField<double>(VT_LATITUDE, 0.0);
+  }
+  /// Impact longitude in degrees
+  double LONGITUDE() const {
+    return GetField<double>(VT_LONGITUDE, 0.0);
+  }
+  /// Along-track uncertainty in km
+  double ALONG_TRACK_UNC() const {
+    return GetField<double>(VT_ALONG_TRACK_UNC, 0.0);
+  }
+  /// Cross-track uncertainty in km
+  double CROSS_TRACK_UNC() const {
+    return GetField<double>(VT_CROSS_TRACK_UNC, 0.0);
+  }
+  /// Impact probability (0.0-1.0)
+  double IMPACT_PROBABILITY() const {
+    return GetField<double>(VT_IMPACT_PROBABILITY, 0.0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_IMPACT_EPOCH) &&
+           verifier.VerifyString(IMPACT_EPOCH()) &&
+           VerifyField<double>(verifier, VT_EPOCH_UNCERTAINTY, 8) &&
+           VerifyField<double>(verifier, VT_LATITUDE, 8) &&
+           VerifyField<double>(verifier, VT_LONGITUDE, 8) &&
+           VerifyField<double>(verifier, VT_ALONG_TRACK_UNC, 8) &&
+           VerifyField<double>(verifier, VT_CROSS_TRACK_UNC, 8) &&
+           VerifyField<double>(verifier, VT_IMPACT_PROBABILITY, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct reentryImpactBuilder {
+  typedef reentryImpact Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_IMPACT_EPOCH(::flatbuffers::Offset<::flatbuffers::String> IMPACT_EPOCH) {
+    fbb_.AddOffset(reentryImpact::VT_IMPACT_EPOCH, IMPACT_EPOCH);
+  }
+  void add_EPOCH_UNCERTAINTY(double EPOCH_UNCERTAINTY) {
+    fbb_.AddElement<double>(reentryImpact::VT_EPOCH_UNCERTAINTY, EPOCH_UNCERTAINTY, 0.0);
+  }
+  void add_LATITUDE(double LATITUDE) {
+    fbb_.AddElement<double>(reentryImpact::VT_LATITUDE, LATITUDE, 0.0);
+  }
+  void add_LONGITUDE(double LONGITUDE) {
+    fbb_.AddElement<double>(reentryImpact::VT_LONGITUDE, LONGITUDE, 0.0);
+  }
+  void add_ALONG_TRACK_UNC(double ALONG_TRACK_UNC) {
+    fbb_.AddElement<double>(reentryImpact::VT_ALONG_TRACK_UNC, ALONG_TRACK_UNC, 0.0);
+  }
+  void add_CROSS_TRACK_UNC(double CROSS_TRACK_UNC) {
+    fbb_.AddElement<double>(reentryImpact::VT_CROSS_TRACK_UNC, CROSS_TRACK_UNC, 0.0);
+  }
+  void add_IMPACT_PROBABILITY(double IMPACT_PROBABILITY) {
+    fbb_.AddElement<double>(reentryImpact::VT_IMPACT_PROBABILITY, IMPACT_PROBABILITY, 0.0);
+  }
+  explicit reentryImpactBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<reentryImpact> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<reentryImpact>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<reentryImpact> CreatereentryImpact(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> IMPACT_EPOCH = 0,
+    double EPOCH_UNCERTAINTY = 0.0,
+    double LATITUDE = 0.0,
+    double LONGITUDE = 0.0,
+    double ALONG_TRACK_UNC = 0.0,
+    double CROSS_TRACK_UNC = 0.0,
+    double IMPACT_PROBABILITY = 0.0) {
+  reentryImpactBuilder builder_(_fbb);
+  builder_.add_IMPACT_PROBABILITY(IMPACT_PROBABILITY);
+  builder_.add_CROSS_TRACK_UNC(CROSS_TRACK_UNC);
+  builder_.add_ALONG_TRACK_UNC(ALONG_TRACK_UNC);
+  builder_.add_LONGITUDE(LONGITUDE);
+  builder_.add_LATITUDE(LATITUDE);
+  builder_.add_EPOCH_UNCERTAINTY(EPOCH_UNCERTAINTY);
+  builder_.add_IMPACT_EPOCH(IMPACT_EPOCH);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<reentryImpact> CreatereentryImpactDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *IMPACT_EPOCH = nullptr,
+    double EPOCH_UNCERTAINTY = 0.0,
+    double LATITUDE = 0.0,
+    double LONGITUDE = 0.0,
+    double ALONG_TRACK_UNC = 0.0,
+    double CROSS_TRACK_UNC = 0.0,
+    double IMPACT_PROBABILITY = 0.0) {
+  auto IMPACT_EPOCH__ = IMPACT_EPOCH ? _fbb.CreateString(IMPACT_EPOCH) : 0;
+  return CreatereentryImpact(
+      _fbb,
+      IMPACT_EPOCH__,
+      EPOCH_UNCERTAINTY,
+      LATITUDE,
+      LONGITUDE,
+      ALONG_TRACK_UNC,
+      CROSS_TRACK_UNC,
+      IMPACT_PROBABILITY);
+}
+
+/// Surviving Debris Prediction
+struct survivingDebris FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef survivingDebrisBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_FRAGMENT_ID = 4,
+    VT_MATERIAL = 6,
+    VT_MASS = 8,
+    VT_CASUALTY_AREA = 10,
+    VT_SURVIVAL_PROBABILITY = 12
+  };
+  /// Fragment identifier
+  const ::flatbuffers::String *FRAGMENT_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_FRAGMENT_ID);
+  }
+  /// Material type
+  const ::flatbuffers::String *MATERIAL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MATERIAL);
+  }
+  /// Fragment mass in kg
+  double MASS() const {
+    return GetField<double>(VT_MASS, 0.0);
+  }
+  /// Casualty area in m^2
+  double CASUALTY_AREA() const {
+    return GetField<double>(VT_CASUALTY_AREA, 0.0);
+  }
+  /// Survival probability (0.0-1.0)
+  double SURVIVAL_PROBABILITY() const {
+    return GetField<double>(VT_SURVIVAL_PROBABILITY, 0.0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_FRAGMENT_ID) &&
+           verifier.VerifyString(FRAGMENT_ID()) &&
+           VerifyOffset(verifier, VT_MATERIAL) &&
+           verifier.VerifyString(MATERIAL()) &&
+           VerifyField<double>(verifier, VT_MASS, 8) &&
+           VerifyField<double>(verifier, VT_CASUALTY_AREA, 8) &&
+           VerifyField<double>(verifier, VT_SURVIVAL_PROBABILITY, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct survivingDebrisBuilder {
+  typedef survivingDebris Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_FRAGMENT_ID(::flatbuffers::Offset<::flatbuffers::String> FRAGMENT_ID) {
+    fbb_.AddOffset(survivingDebris::VT_FRAGMENT_ID, FRAGMENT_ID);
+  }
+  void add_MATERIAL(::flatbuffers::Offset<::flatbuffers::String> MATERIAL) {
+    fbb_.AddOffset(survivingDebris::VT_MATERIAL, MATERIAL);
+  }
+  void add_MASS(double MASS) {
+    fbb_.AddElement<double>(survivingDebris::VT_MASS, MASS, 0.0);
+  }
+  void add_CASUALTY_AREA(double CASUALTY_AREA) {
+    fbb_.AddElement<double>(survivingDebris::VT_CASUALTY_AREA, CASUALTY_AREA, 0.0);
+  }
+  void add_SURVIVAL_PROBABILITY(double SURVIVAL_PROBABILITY) {
+    fbb_.AddElement<double>(survivingDebris::VT_SURVIVAL_PROBABILITY, SURVIVAL_PROBABILITY, 0.0);
+  }
+  explicit survivingDebrisBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<survivingDebris> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<survivingDebris>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<survivingDebris> CreatesurvivingDebris(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> FRAGMENT_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MATERIAL = 0,
+    double MASS = 0.0,
+    double CASUALTY_AREA = 0.0,
+    double SURVIVAL_PROBABILITY = 0.0) {
+  survivingDebrisBuilder builder_(_fbb);
+  builder_.add_SURVIVAL_PROBABILITY(SURVIVAL_PROBABILITY);
+  builder_.add_CASUALTY_AREA(CASUALTY_AREA);
+  builder_.add_MASS(MASS);
+  builder_.add_MATERIAL(MATERIAL);
+  builder_.add_FRAGMENT_ID(FRAGMENT_ID);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<survivingDebris> CreatesurvivingDebrisDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *FRAGMENT_ID = nullptr,
+    const char *MATERIAL = nullptr,
+    double MASS = 0.0,
+    double CASUALTY_AREA = 0.0,
+    double SURVIVAL_PROBABILITY = 0.0) {
+  auto FRAGMENT_ID__ = FRAGMENT_ID ? _fbb.CreateString(FRAGMENT_ID) : 0;
+  auto MATERIAL__ = MATERIAL ? _fbb.CreateString(MATERIAL) : 0;
+  return CreatesurvivingDebris(
+      _fbb,
+      FRAGMENT_ID__,
+      MATERIAL__,
+      MASS,
+      CASUALTY_AREA,
+      SURVIVAL_PROBABILITY);
+}
 
 /// Reentry Data Message
 struct RDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
@@ -25,33 +493,136 @@ struct RDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ORIGINATOR = 8,
     VT_OBJECT_NAME = 10,
     VT_OBJECT_ID = 12,
-    VT_REENTRY_EPOCH = 14,
-    VT_REENTRY_LATITUDE = 16,
-    VT_REENTRY_LONGITUDE = 18
+    VT_NORAD_CAT_ID = 14,
+    VT_OBJECT_TYPE = 16,
+    VT_DISPOSITION = 18,
+    VT_REASON = 20,
+    VT_REENTRY_EPOCH = 22,
+    VT_REENTRY_EPOCH_UNC = 24,
+    VT_REENTRY_LATITUDE = 26,
+    VT_REENTRY_LONGITUDE = 28,
+    VT_REENTRY_ALTITUDE = 30,
+    VT_TIME_SYSTEM = 32,
+    VT_PREV_PREDICTION_EPOCH = 34,
+    VT_BALLISTIC_COEFF = 36,
+    VT_MASS = 38,
+    VT_SOLAR_RAD_AREA = 40,
+    VT_DRAG_AREA = 42,
+    VT_INITIAL_STATE = 44,
+    VT_IMPACT_PREDICTIONS = 46,
+    VT_SURVIVING_DEBRIS = 48,
+    VT_CASUALTY_EXPECTATION = 50,
+    VT_NUM_FRAGMENTS = 52,
+    VT_SURVIVING_MASS = 54,
+    VT_COMMENT = 56
   };
+  /// CCSDS RDM version
   const ::flatbuffers::String *CCSDS_RDM_VERS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CCSDS_RDM_VERS);
   }
+  /// Message creation date (ISO 8601)
   const ::flatbuffers::String *CREATION_DATE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CREATION_DATE);
   }
+  /// Creating organization
   const ::flatbuffers::String *ORIGINATOR() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIGINATOR);
   }
+  /// Object name
   const ::flatbuffers::String *OBJECT_NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_NAME);
   }
+  /// International designator
   const ::flatbuffers::String *OBJECT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_ID);
   }
+  /// NORAD catalog number
+  uint32_t NORAD_CAT_ID() const {
+    return GetField<uint32_t>(VT_NORAD_CAT_ID, 0);
+  }
+  /// Object type (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN)
+  const ::flatbuffers::String *OBJECT_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_TYPE);
+  }
+  /// Reentry disposition
+  reentryDisposition DISPOSITION() const {
+    return static_cast<reentryDisposition>(GetField<int8_t>(VT_DISPOSITION, 0));
+  }
+  /// Reentry reason
+  reentryReason REASON() const {
+    return static_cast<reentryReason>(GetField<int8_t>(VT_REASON, 0));
+  }
+  /// Predicted reentry epoch (ISO 8601)
   const ::flatbuffers::String *REENTRY_EPOCH() const {
     return GetPointer<const ::flatbuffers::String *>(VT_REENTRY_EPOCH);
   }
+  /// Reentry epoch uncertainty window in hours
+  double REENTRY_EPOCH_UNC() const {
+    return GetField<double>(VT_REENTRY_EPOCH_UNC, 0.0);
+  }
+  /// Reentry latitude in degrees
   double REENTRY_LATITUDE() const {
     return GetField<double>(VT_REENTRY_LATITUDE, 0.0);
   }
+  /// Reentry longitude in degrees
   double REENTRY_LONGITUDE() const {
     return GetField<double>(VT_REENTRY_LONGITUDE, 0.0);
+  }
+  /// Reentry altitude in km
+  double REENTRY_ALTITUDE() const {
+    return GetField<double>(VT_REENTRY_ALTITUDE, 0.0);
+  }
+  /// Time system
+  const ::flatbuffers::String *TIME_SYSTEM() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TIME_SYSTEM);
+  }
+  /// Previous predicted reentry epoch for comparison (ISO 8601)
+  const ::flatbuffers::String *PREV_PREDICTION_EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PREV_PREDICTION_EPOCH);
+  }
+  /// Ballistic coefficient in kg/m^2
+  double BALLISTIC_COEFF() const {
+    return GetField<double>(VT_BALLISTIC_COEFF, 0.0);
+  }
+  /// Object mass in kg
+  double MASS() const {
+    return GetField<double>(VT_MASS, 0.0);
+  }
+  /// Solar radiation pressure area in m^2
+  double SOLAR_RAD_AREA() const {
+    return GetField<double>(VT_SOLAR_RAD_AREA, 0.0);
+  }
+  /// Drag area in m^2
+  double DRAG_AREA() const {
+    return GetField<double>(VT_DRAG_AREA, 0.0);
+  }
+  /// Initial state vector
+  const reentryStateVector *INITIAL_STATE() const {
+    return GetPointer<const reentryStateVector *>(VT_INITIAL_STATE);
+  }
+  /// Ground impact predictions
+  const ::flatbuffers::Vector<::flatbuffers::Offset<reentryImpact>> *IMPACT_PREDICTIONS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<reentryImpact>> *>(VT_IMPACT_PREDICTIONS);
+  }
+  /// Predicted surviving debris
+  const ::flatbuffers::Vector<::flatbuffers::Offset<survivingDebris>> *SURVIVING_DEBRIS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<survivingDebris>> *>(VT_SURVIVING_DEBRIS);
+  }
+  /// Casualty expectation
+  double CASUALTY_EXPECTATION() const {
+    return GetField<double>(VT_CASUALTY_EXPECTATION, 0.0);
+  }
+  /// Number of breakup fragments predicted
+  uint32_t NUM_FRAGMENTS() const {
+    return GetField<uint32_t>(VT_NUM_FRAGMENTS, 0);
+  }
+  /// Total surviving mass in kg
+  double SURVIVING_MASS() const {
+    return GetField<double>(VT_SURVIVING_MASS, 0.0);
+  }
+  /// Additional comments
+  const ::flatbuffers::String *COMMENT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COMMENT);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -65,10 +636,38 @@ struct RDM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(OBJECT_NAME()) &&
            VerifyOffset(verifier, VT_OBJECT_ID) &&
            verifier.VerifyString(OBJECT_ID()) &&
+           VerifyField<uint32_t>(verifier, VT_NORAD_CAT_ID, 4) &&
+           VerifyOffset(verifier, VT_OBJECT_TYPE) &&
+           verifier.VerifyString(OBJECT_TYPE()) &&
+           VerifyField<int8_t>(verifier, VT_DISPOSITION, 1) &&
+           VerifyField<int8_t>(verifier, VT_REASON, 1) &&
            VerifyOffset(verifier, VT_REENTRY_EPOCH) &&
            verifier.VerifyString(REENTRY_EPOCH()) &&
+           VerifyField<double>(verifier, VT_REENTRY_EPOCH_UNC, 8) &&
            VerifyField<double>(verifier, VT_REENTRY_LATITUDE, 8) &&
            VerifyField<double>(verifier, VT_REENTRY_LONGITUDE, 8) &&
+           VerifyField<double>(verifier, VT_REENTRY_ALTITUDE, 8) &&
+           VerifyOffset(verifier, VT_TIME_SYSTEM) &&
+           verifier.VerifyString(TIME_SYSTEM()) &&
+           VerifyOffset(verifier, VT_PREV_PREDICTION_EPOCH) &&
+           verifier.VerifyString(PREV_PREDICTION_EPOCH()) &&
+           VerifyField<double>(verifier, VT_BALLISTIC_COEFF, 8) &&
+           VerifyField<double>(verifier, VT_MASS, 8) &&
+           VerifyField<double>(verifier, VT_SOLAR_RAD_AREA, 8) &&
+           VerifyField<double>(verifier, VT_DRAG_AREA, 8) &&
+           VerifyOffset(verifier, VT_INITIAL_STATE) &&
+           verifier.VerifyTable(INITIAL_STATE()) &&
+           VerifyOffset(verifier, VT_IMPACT_PREDICTIONS) &&
+           verifier.VerifyVector(IMPACT_PREDICTIONS()) &&
+           verifier.VerifyVectorOfTables(IMPACT_PREDICTIONS()) &&
+           VerifyOffset(verifier, VT_SURVIVING_DEBRIS) &&
+           verifier.VerifyVector(SURVIVING_DEBRIS()) &&
+           verifier.VerifyVectorOfTables(SURVIVING_DEBRIS()) &&
+           VerifyField<double>(verifier, VT_CASUALTY_EXPECTATION, 8) &&
+           VerifyField<uint32_t>(verifier, VT_NUM_FRAGMENTS, 4) &&
+           VerifyField<double>(verifier, VT_SURVIVING_MASS, 8) &&
+           VerifyOffset(verifier, VT_COMMENT) &&
+           verifier.VerifyString(COMMENT()) &&
            verifier.EndTable();
   }
 };
@@ -92,14 +691,71 @@ struct RDMBuilder {
   void add_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> OBJECT_ID) {
     fbb_.AddOffset(RDM::VT_OBJECT_ID, OBJECT_ID);
   }
+  void add_NORAD_CAT_ID(uint32_t NORAD_CAT_ID) {
+    fbb_.AddElement<uint32_t>(RDM::VT_NORAD_CAT_ID, NORAD_CAT_ID, 0);
+  }
+  void add_OBJECT_TYPE(::flatbuffers::Offset<::flatbuffers::String> OBJECT_TYPE) {
+    fbb_.AddOffset(RDM::VT_OBJECT_TYPE, OBJECT_TYPE);
+  }
+  void add_DISPOSITION(reentryDisposition DISPOSITION) {
+    fbb_.AddElement<int8_t>(RDM::VT_DISPOSITION, static_cast<int8_t>(DISPOSITION), 0);
+  }
+  void add_REASON(reentryReason REASON) {
+    fbb_.AddElement<int8_t>(RDM::VT_REASON, static_cast<int8_t>(REASON), 0);
+  }
   void add_REENTRY_EPOCH(::flatbuffers::Offset<::flatbuffers::String> REENTRY_EPOCH) {
     fbb_.AddOffset(RDM::VT_REENTRY_EPOCH, REENTRY_EPOCH);
+  }
+  void add_REENTRY_EPOCH_UNC(double REENTRY_EPOCH_UNC) {
+    fbb_.AddElement<double>(RDM::VT_REENTRY_EPOCH_UNC, REENTRY_EPOCH_UNC, 0.0);
   }
   void add_REENTRY_LATITUDE(double REENTRY_LATITUDE) {
     fbb_.AddElement<double>(RDM::VT_REENTRY_LATITUDE, REENTRY_LATITUDE, 0.0);
   }
   void add_REENTRY_LONGITUDE(double REENTRY_LONGITUDE) {
     fbb_.AddElement<double>(RDM::VT_REENTRY_LONGITUDE, REENTRY_LONGITUDE, 0.0);
+  }
+  void add_REENTRY_ALTITUDE(double REENTRY_ALTITUDE) {
+    fbb_.AddElement<double>(RDM::VT_REENTRY_ALTITUDE, REENTRY_ALTITUDE, 0.0);
+  }
+  void add_TIME_SYSTEM(::flatbuffers::Offset<::flatbuffers::String> TIME_SYSTEM) {
+    fbb_.AddOffset(RDM::VT_TIME_SYSTEM, TIME_SYSTEM);
+  }
+  void add_PREV_PREDICTION_EPOCH(::flatbuffers::Offset<::flatbuffers::String> PREV_PREDICTION_EPOCH) {
+    fbb_.AddOffset(RDM::VT_PREV_PREDICTION_EPOCH, PREV_PREDICTION_EPOCH);
+  }
+  void add_BALLISTIC_COEFF(double BALLISTIC_COEFF) {
+    fbb_.AddElement<double>(RDM::VT_BALLISTIC_COEFF, BALLISTIC_COEFF, 0.0);
+  }
+  void add_MASS(double MASS) {
+    fbb_.AddElement<double>(RDM::VT_MASS, MASS, 0.0);
+  }
+  void add_SOLAR_RAD_AREA(double SOLAR_RAD_AREA) {
+    fbb_.AddElement<double>(RDM::VT_SOLAR_RAD_AREA, SOLAR_RAD_AREA, 0.0);
+  }
+  void add_DRAG_AREA(double DRAG_AREA) {
+    fbb_.AddElement<double>(RDM::VT_DRAG_AREA, DRAG_AREA, 0.0);
+  }
+  void add_INITIAL_STATE(::flatbuffers::Offset<reentryStateVector> INITIAL_STATE) {
+    fbb_.AddOffset(RDM::VT_INITIAL_STATE, INITIAL_STATE);
+  }
+  void add_IMPACT_PREDICTIONS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<reentryImpact>>> IMPACT_PREDICTIONS) {
+    fbb_.AddOffset(RDM::VT_IMPACT_PREDICTIONS, IMPACT_PREDICTIONS);
+  }
+  void add_SURVIVING_DEBRIS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<survivingDebris>>> SURVIVING_DEBRIS) {
+    fbb_.AddOffset(RDM::VT_SURVIVING_DEBRIS, SURVIVING_DEBRIS);
+  }
+  void add_CASUALTY_EXPECTATION(double CASUALTY_EXPECTATION) {
+    fbb_.AddElement<double>(RDM::VT_CASUALTY_EXPECTATION, CASUALTY_EXPECTATION, 0.0);
+  }
+  void add_NUM_FRAGMENTS(uint32_t NUM_FRAGMENTS) {
+    fbb_.AddElement<uint32_t>(RDM::VT_NUM_FRAGMENTS, NUM_FRAGMENTS, 0);
+  }
+  void add_SURVIVING_MASS(double SURVIVING_MASS) {
+    fbb_.AddElement<double>(RDM::VT_SURVIVING_MASS, SURVIVING_MASS, 0.0);
+  }
+  void add_COMMENT(::flatbuffers::Offset<::flatbuffers::String> COMMENT) {
+    fbb_.AddOffset(RDM::VT_COMMENT, COMMENT);
   }
   explicit RDMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -119,18 +775,56 @@ inline ::flatbuffers::Offset<RDM> CreateRDM(
     ::flatbuffers::Offset<::flatbuffers::String> ORIGINATOR = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OBJECT_NAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OBJECT_ID = 0,
+    uint32_t NORAD_CAT_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_TYPE = 0,
+    reentryDisposition DISPOSITION = reentryDisposition_CONTROLLED,
+    reentryReason REASON = reentryReason_NATURAL_DECAY,
     ::flatbuffers::Offset<::flatbuffers::String> REENTRY_EPOCH = 0,
+    double REENTRY_EPOCH_UNC = 0.0,
     double REENTRY_LATITUDE = 0.0,
-    double REENTRY_LONGITUDE = 0.0) {
+    double REENTRY_LONGITUDE = 0.0,
+    double REENTRY_ALTITUDE = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> TIME_SYSTEM = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PREV_PREDICTION_EPOCH = 0,
+    double BALLISTIC_COEFF = 0.0,
+    double MASS = 0.0,
+    double SOLAR_RAD_AREA = 0.0,
+    double DRAG_AREA = 0.0,
+    ::flatbuffers::Offset<reentryStateVector> INITIAL_STATE = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<reentryImpact>>> IMPACT_PREDICTIONS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<survivingDebris>>> SURVIVING_DEBRIS = 0,
+    double CASUALTY_EXPECTATION = 0.0,
+    uint32_t NUM_FRAGMENTS = 0,
+    double SURVIVING_MASS = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> COMMENT = 0) {
   RDMBuilder builder_(_fbb);
+  builder_.add_SURVIVING_MASS(SURVIVING_MASS);
+  builder_.add_CASUALTY_EXPECTATION(CASUALTY_EXPECTATION);
+  builder_.add_DRAG_AREA(DRAG_AREA);
+  builder_.add_SOLAR_RAD_AREA(SOLAR_RAD_AREA);
+  builder_.add_MASS(MASS);
+  builder_.add_BALLISTIC_COEFF(BALLISTIC_COEFF);
+  builder_.add_REENTRY_ALTITUDE(REENTRY_ALTITUDE);
   builder_.add_REENTRY_LONGITUDE(REENTRY_LONGITUDE);
   builder_.add_REENTRY_LATITUDE(REENTRY_LATITUDE);
+  builder_.add_REENTRY_EPOCH_UNC(REENTRY_EPOCH_UNC);
+  builder_.add_COMMENT(COMMENT);
+  builder_.add_NUM_FRAGMENTS(NUM_FRAGMENTS);
+  builder_.add_SURVIVING_DEBRIS(SURVIVING_DEBRIS);
+  builder_.add_IMPACT_PREDICTIONS(IMPACT_PREDICTIONS);
+  builder_.add_INITIAL_STATE(INITIAL_STATE);
+  builder_.add_PREV_PREDICTION_EPOCH(PREV_PREDICTION_EPOCH);
+  builder_.add_TIME_SYSTEM(TIME_SYSTEM);
   builder_.add_REENTRY_EPOCH(REENTRY_EPOCH);
+  builder_.add_OBJECT_TYPE(OBJECT_TYPE);
+  builder_.add_NORAD_CAT_ID(NORAD_CAT_ID);
   builder_.add_OBJECT_ID(OBJECT_ID);
   builder_.add_OBJECT_NAME(OBJECT_NAME);
   builder_.add_ORIGINATOR(ORIGINATOR);
   builder_.add_CREATION_DATE(CREATION_DATE);
   builder_.add_CCSDS_RDM_VERS(CCSDS_RDM_VERS);
+  builder_.add_REASON(REASON);
+  builder_.add_DISPOSITION(DISPOSITION);
   return builder_.Finish();
 }
 
@@ -141,15 +835,40 @@ inline ::flatbuffers::Offset<RDM> CreateRDMDirect(
     const char *ORIGINATOR = nullptr,
     const char *OBJECT_NAME = nullptr,
     const char *OBJECT_ID = nullptr,
+    uint32_t NORAD_CAT_ID = 0,
+    const char *OBJECT_TYPE = nullptr,
+    reentryDisposition DISPOSITION = reentryDisposition_CONTROLLED,
+    reentryReason REASON = reentryReason_NATURAL_DECAY,
     const char *REENTRY_EPOCH = nullptr,
+    double REENTRY_EPOCH_UNC = 0.0,
     double REENTRY_LATITUDE = 0.0,
-    double REENTRY_LONGITUDE = 0.0) {
+    double REENTRY_LONGITUDE = 0.0,
+    double REENTRY_ALTITUDE = 0.0,
+    const char *TIME_SYSTEM = nullptr,
+    const char *PREV_PREDICTION_EPOCH = nullptr,
+    double BALLISTIC_COEFF = 0.0,
+    double MASS = 0.0,
+    double SOLAR_RAD_AREA = 0.0,
+    double DRAG_AREA = 0.0,
+    ::flatbuffers::Offset<reentryStateVector> INITIAL_STATE = 0,
+    const std::vector<::flatbuffers::Offset<reentryImpact>> *IMPACT_PREDICTIONS = nullptr,
+    const std::vector<::flatbuffers::Offset<survivingDebris>> *SURVIVING_DEBRIS = nullptr,
+    double CASUALTY_EXPECTATION = 0.0,
+    uint32_t NUM_FRAGMENTS = 0,
+    double SURVIVING_MASS = 0.0,
+    const char *COMMENT = nullptr) {
   auto CCSDS_RDM_VERS__ = CCSDS_RDM_VERS ? _fbb.CreateString(CCSDS_RDM_VERS) : 0;
   auto CREATION_DATE__ = CREATION_DATE ? _fbb.CreateString(CREATION_DATE) : 0;
   auto ORIGINATOR__ = ORIGINATOR ? _fbb.CreateString(ORIGINATOR) : 0;
   auto OBJECT_NAME__ = OBJECT_NAME ? _fbb.CreateString(OBJECT_NAME) : 0;
   auto OBJECT_ID__ = OBJECT_ID ? _fbb.CreateString(OBJECT_ID) : 0;
+  auto OBJECT_TYPE__ = OBJECT_TYPE ? _fbb.CreateString(OBJECT_TYPE) : 0;
   auto REENTRY_EPOCH__ = REENTRY_EPOCH ? _fbb.CreateString(REENTRY_EPOCH) : 0;
+  auto TIME_SYSTEM__ = TIME_SYSTEM ? _fbb.CreateString(TIME_SYSTEM) : 0;
+  auto PREV_PREDICTION_EPOCH__ = PREV_PREDICTION_EPOCH ? _fbb.CreateString(PREV_PREDICTION_EPOCH) : 0;
+  auto IMPACT_PREDICTIONS__ = IMPACT_PREDICTIONS ? _fbb.CreateVector<::flatbuffers::Offset<reentryImpact>>(*IMPACT_PREDICTIONS) : 0;
+  auto SURVIVING_DEBRIS__ = SURVIVING_DEBRIS ? _fbb.CreateVector<::flatbuffers::Offset<survivingDebris>>(*SURVIVING_DEBRIS) : 0;
+  auto COMMENT__ = COMMENT ? _fbb.CreateString(COMMENT) : 0;
   return CreateRDM(
       _fbb,
       CCSDS_RDM_VERS__,
@@ -157,9 +876,28 @@ inline ::flatbuffers::Offset<RDM> CreateRDMDirect(
       ORIGINATOR__,
       OBJECT_NAME__,
       OBJECT_ID__,
+      NORAD_CAT_ID,
+      OBJECT_TYPE__,
+      DISPOSITION,
+      REASON,
       REENTRY_EPOCH__,
+      REENTRY_EPOCH_UNC,
       REENTRY_LATITUDE,
-      REENTRY_LONGITUDE);
+      REENTRY_LONGITUDE,
+      REENTRY_ALTITUDE,
+      TIME_SYSTEM__,
+      PREV_PREDICTION_EPOCH__,
+      BALLISTIC_COEFF,
+      MASS,
+      SOLAR_RAD_AREA,
+      DRAG_AREA,
+      INITIAL_STATE,
+      IMPACT_PREDICTIONS__,
+      SURVIVING_DEBRIS__,
+      CASUALTY_EXPECTATION,
+      NUM_FRAGMENTS,
+      SURVIVING_MASS,
+      COMMENT__);
 }
 
 inline const RDM *GetRDM(const void *buf) {

@@ -1,39 +1,332 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
-    "GNO": {
+    "gnssConstellation": {
+      "type": "string",
+      "enum": [
+        "GPS",
+        "GLONASS",
+        "GALILEO",
+        "BEIDOU",
+        "QZSS",
+        "IRNSS",
+        "SBAS",
+        "MIXED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "GPS": {
+          "value": 0
+        },
+        "GLONASS": {
+          "value": 1
+        },
+        "GALILEO": {
+          "value": 2
+        },
+        "BEIDOU": {
+          "value": 3
+        },
+        "QZSS": {
+          "value": 4
+        },
+        "IRNSS": {
+          "value": 5
+        },
+        "SBAS": {
+          "value": 6
+        },
+        "MIXED": {
+          "value": 7
+        }
+      }
+    },
+    "gnssObsType": {
+      "type": "string",
+      "enum": [
+        "PSEUDORANGE",
+        "CARRIER_PHASE",
+        "DOPPLER",
+        "SNR",
+        "RAW_IF"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "PSEUDORANGE": {
+          "value": 0
+        },
+        "CARRIER_PHASE": {
+          "value": 1
+        },
+        "DOPPLER": {
+          "value": 2
+        },
+        "SNR": {
+          "value": 3
+        },
+        "RAW_IF": {
+          "value": 4
+        }
+      }
+    },
+    "gnssObsData": {
       "type": "object",
-      "description": "GNSS Observation",
+      "description": "GNSS Observation Data Point",
+      "properties": {
+        "SIGNAL": {
+          "type": "string",
+          "description": "Signal type code (e.g., L1C, L2P, L5Q, E1B)",
+          "x-flatbuffer-type": "string"
+        },
+        "OBS_TYPE": {
+          "$ref": "#/definitions/gnssObsType",
+          "description": "Observation type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "PSEUDORANGE": {
+              "value": 0
+            },
+            "CARRIER_PHASE": {
+              "value": 1
+            },
+            "DOPPLER": {
+              "value": 2
+            },
+            "SNR": {
+              "value": 3
+            },
+            "RAW_IF": {
+              "value": 4
+            }
+          }
+        },
+        "VALUE": {
+          "type": "number",
+          "description": "Observation value (units depend on type: m, cycles, Hz, dB-Hz)",
+          "x-flatbuffer-type": "double"
+        },
+        "LLI": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Loss of lock indicator",
+          "x-flatbuffer-type": "uint8"
+        },
+        "SSI": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Signal strength indicator (1-9)",
+          "x-flatbuffer-type": "uint8"
+        }
+      },
+      "additionalProperties": false
+    },
+    "gnssSatObs": {
+      "type": "object",
+      "description": "GNSS Satellite Observation",
       "properties": {
         "GNSS_SAT_ID": {
           "type": "string",
+          "description": "GNSS satellite identifier (e.g., G01, R24, E05, C03)",
           "x-flatbuffer-type": "string"
+        },
+        "CONSTELLATION": {
+          "$ref": "#/definitions/gnssConstellation",
+          "description": "Constellation",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "GPS": {
+              "value": 0
+            },
+            "GLONASS": {
+              "value": 1
+            },
+            "GALILEO": {
+              "value": 2
+            },
+            "BEIDOU": {
+              "value": 3
+            },
+            "QZSS": {
+              "value": 4
+            },
+            "IRNSS": {
+              "value": 5
+            },
+            "SBAS": {
+              "value": 6
+            },
+            "MIXED": {
+              "value": 7
+            }
+          }
+        },
+        "ELEVATION": {
+          "type": "number",
+          "description": "Elevation angle in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "AZIMUTH": {
+          "type": "number",
+          "description": "Azimuth angle in degrees",
+          "x-flatbuffer-type": "double"
         },
         "TRACKING_STATUS": {
           "type": "integer",
           "minimum": -2147483648,
           "maximum": 2147483647,
+          "description": "Tracking status (0=not tracked, 1=tracking, 2=locked)",
           "x-flatbuffer-type": "int"
         },
         "AGC_STATE": {
           "type": "integer",
           "minimum": -2147483648,
           "maximum": 2147483647,
+          "description": "AGC state",
           "x-flatbuffer-type": "int"
+        },
+        "OBSERVATIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gnssObsData"
+          },
+          "description": "Observations for this satellite",
+          "x-flatbuffer-type": "[gnssObsData]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GNO": {
+      "type": "object",
+      "description": "GNSS Observation",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Unique identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "RECEIVER_ID": {
+          "type": "string",
+          "description": "Receiver identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "RECEIVER_TYPE": {
+          "type": "string",
+          "description": "Receiver type/model",
+          "x-flatbuffer-type": "string"
+        },
+        "ANTENNA_ID": {
+          "type": "string",
+          "description": "Antenna identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "ANTENNA_TYPE": {
+          "type": "string",
+          "description": "Antenna type/model",
+          "x-flatbuffer-type": "string"
+        },
+        "FIRMWARE_VERSION": {
+          "type": "string",
+          "description": "Receiver firmware version",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH": {
+          "type": "string",
+          "description": "Observation epoch (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "CLOCK_OFFSET": {
+          "type": "number",
+          "description": "Receiver clock offset in seconds",
+          "x-flatbuffer-type": "double"
+        },
+        "CLOCK_DRIFT": {
+          "type": "number",
+          "description": "Receiver clock drift in seconds/second",
+          "x-flatbuffer-type": "double"
+        },
+        "LATITUDE": {
+          "type": "number",
+          "description": "Receiver geodetic latitude in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE": {
+          "type": "number",
+          "description": "Receiver geodetic longitude in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "ALTITUDE": {
+          "type": "number",
+          "description": "Receiver altitude in meters above WGS-84",
+          "x-flatbuffer-type": "double"
+        },
+        "APPROX_X": {
+          "type": "number",
+          "description": "Approximate position X in meters (ECEF)",
+          "x-flatbuffer-type": "double"
+        },
+        "APPROX_Y": {
+          "type": "number",
+          "description": "Approximate position Y in meters (ECEF)",
+          "x-flatbuffer-type": "double"
+        },
+        "APPROX_Z": {
+          "type": "number",
+          "description": "Approximate position Z in meters (ECEF)",
+          "x-flatbuffer-type": "double"
+        },
+        "INTERVAL": {
+          "type": "number",
+          "description": "Observation interval in seconds",
+          "x-flatbuffer-type": "double"
+        },
+        "NUM_SATS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of satellites observed",
+          "x-flatbuffer-type": "uint"
+        },
+        "PDOP": {
+          "type": "number",
+          "description": "PDOP",
+          "x-flatbuffer-type": "double"
+        },
+        "HDOP": {
+          "type": "number",
+          "description": "HDOP",
+          "x-flatbuffer-type": "double"
+        },
+        "VDOP": {
+          "type": "number",
+          "description": "VDOP",
+          "x-flatbuffer-type": "double"
+        },
+        "SAT_OBS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gnssSatObs"
+          },
+          "description": "Satellite observations",
+          "x-flatbuffer-type": "[gnssSatObs]"
         },
         "OBS_CODE_SET": {
           "type": "array",
           "items": {
             "type": "string"
           },
+          "description": "Observation code set identifiers",
           "x-flatbuffer-type": "[string]"
         },
-        "OB": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
+        "NOTES": {
+          "type": "string",
+          "description": "Additional notes",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

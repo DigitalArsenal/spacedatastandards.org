@@ -4,6 +4,38 @@
 
 import FlatBuffers
 
+public enum linkType: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case uplink = 0
+  case downlink = 1
+  case crosslink = 2
+  case interSatellite = 3
+  case groundToGround = 4
+  case relay = 5
+
+  public static var max: linkType { return .relay }
+  public static var min: linkType { return .uplink }
+}
+
+
+public enum linkState: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case established = 0
+  case degraded = 1
+  case interrupted = 2
+  case planned = 3
+  case terminated = 4
+  case unknown = 5
+
+  public static var max: linkState { return .unknown }
+  public static var min: linkState { return .established }
+}
+
+
 ///  Link Status
 public struct LKS: FlatBufferObject, Verifiable {
 
@@ -19,82 +51,107 @@ public struct LKS: FlatBufferObject, Verifiable {
   private enum VTOFFSET: VOffset {
     case ID = 4
     case ID_ON_ORBIT1 = 6
-    case ID_ON_ORBIT2 = 8
-    case LINK_START_TIME = 10
-    case LINK_STOP_TIME = 12
+    case SAT_NO1 = 8
+    case ID_ON_ORBIT2 = 10
+    case SAT_NO2 = 12
     case CONSTELLATION = 14
     case LINK_NAME = 16
     case LINK_TYPE = 18
-    case BAND = 20
-    case ID_BEAM1 = 22
-    case END_POINT1_NAME = 24
-    case END_POINT1_LAT = 26
-    case END_POINT1_LON = 28
-    case ID_BEAM2 = 30
-    case END_POINT2_NAME = 32
-    case END_POINT2_LAT = 34
-    case END_POINT2_LON = 36
-    case DATA_RATE1_TO2 = 38
-    case DATA_RATE2_TO1 = 40
-    case LINK_STATE = 42
-    case SYS_CAP = 44
-    case OPS_CAP = 46
-    case SAT_NO1 = 48
-    case SAT_NO2 = 50
+    case LINK_STATE = 20
+    case BAND = 22
+    case LINK_START_TIME = 24
+    case LINK_STOP_TIME = 26
+    case ID_BEAM1 = 28
+    case END_POINT1_NAME = 30
+    case END_POINT1_LAT = 32
+    case END_POINT1_LON = 34
+    case ID_BEAM2 = 36
+    case END_POINT2_NAME = 38
+    case END_POINT2_LAT = 40
+    case END_POINT2_LON = 42
+    case DATA_RATE1_TO2 = 44
+    case DATA_RATE2_TO1 = 46
+    case SYS_CAP = 48
+    case OPS_CAP = 50
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
+  ///  Unique identifier
   public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  ///  First endpoint on-orbit identifier
   public var ID_ON_ORBIT1: String? { let o = _accessor.offset(VTOFFSET.ID_ON_ORBIT1.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ID_ON_ORBIT1SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_ON_ORBIT1.v) }
+  ///  First endpoint satellite catalog number
+  public var SAT_NO1: UInt32 { let o = _accessor.offset(VTOFFSET.SAT_NO1.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Second endpoint on-orbit identifier
   public var ID_ON_ORBIT2: String? { let o = _accessor.offset(VTOFFSET.ID_ON_ORBIT2.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ID_ON_ORBIT2SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_ON_ORBIT2.v) }
-  public var LINK_START_TIME: String? { let o = _accessor.offset(VTOFFSET.LINK_START_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LINK_START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LINK_START_TIME.v) }
-  public var LINK_STOP_TIME: String? { let o = _accessor.offset(VTOFFSET.LINK_STOP_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LINK_STOP_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LINK_STOP_TIME.v) }
+  ///  Second endpoint satellite catalog number
+  public var SAT_NO2: UInt32 { let o = _accessor.offset(VTOFFSET.SAT_NO2.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Constellation name
   public var CONSTELLATION: String? { let o = _accessor.offset(VTOFFSET.CONSTELLATION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CONSTELLATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CONSTELLATION.v) }
+  ///  Link name or identifier
   public var LINK_NAME: String? { let o = _accessor.offset(VTOFFSET.LINK_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var LINK_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LINK_NAME.v) }
-  public var LINK_TYPE: String? { let o = _accessor.offset(VTOFFSET.LINK_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LINK_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LINK_TYPE.v) }
+  ///  Link type
+  public var LINK_TYPE: linkType { let o = _accessor.offset(VTOFFSET.LINK_TYPE.v); return o == 0 ? .uplink : linkType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .uplink }
+  ///  Link state
+  public var LINK_STATE: linkState { let o = _accessor.offset(VTOFFSET.LINK_STATE.v); return o == 0 ? .established : linkState(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .established }
+  ///  RF band
   public var BAND: String? { let o = _accessor.offset(VTOFFSET.BAND.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var BANDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BAND.v) }
+  ///  Link start time (ISO 8601)
+  public var LINK_START_TIME: String? { let o = _accessor.offset(VTOFFSET.LINK_START_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LINK_START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LINK_START_TIME.v) }
+  ///  Link stop time (ISO 8601)
+  public var LINK_STOP_TIME: String? { let o = _accessor.offset(VTOFFSET.LINK_STOP_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LINK_STOP_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LINK_STOP_TIME.v) }
+  ///  First endpoint beam identifier
   public var ID_BEAM1: String? { let o = _accessor.offset(VTOFFSET.ID_BEAM1.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ID_BEAM1SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_BEAM1.v) }
+  ///  First endpoint name
   public var END_POINT1_NAME: String? { let o = _accessor.offset(VTOFFSET.END_POINT1_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var END_POINT1_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.END_POINT1_NAME.v) }
+  ///  First endpoint latitude (degrees)
   public var END_POINT1_LAT: Double { let o = _accessor.offset(VTOFFSET.END_POINT1_LAT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  First endpoint longitude (degrees)
   public var END_POINT1_LON: Double { let o = _accessor.offset(VTOFFSET.END_POINT1_LON.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Second endpoint beam identifier
   public var ID_BEAM2: String? { let o = _accessor.offset(VTOFFSET.ID_BEAM2.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ID_BEAM2SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_BEAM2.v) }
+  ///  Second endpoint name
   public var END_POINT2_NAME: String? { let o = _accessor.offset(VTOFFSET.END_POINT2_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var END_POINT2_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.END_POINT2_NAME.v) }
+  ///  Second endpoint latitude (degrees)
   public var END_POINT2_LAT: Double { let o = _accessor.offset(VTOFFSET.END_POINT2_LAT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Second endpoint longitude (degrees)
   public var END_POINT2_LON: Double { let o = _accessor.offset(VTOFFSET.END_POINT2_LON.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Data rate from endpoint 1 to 2 (Mbps)
   public var DATA_RATE1_TO2: Double { let o = _accessor.offset(VTOFFSET.DATA_RATE1_TO2.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Data rate from endpoint 2 to 1 (Mbps)
   public var DATA_RATE2_TO1: Double { let o = _accessor.offset(VTOFFSET.DATA_RATE2_TO1.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var LINK_STATE: String? { let o = _accessor.offset(VTOFFSET.LINK_STATE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LINK_STATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LINK_STATE.v) }
+  ///  System capability status
   public var SYS_CAP: String? { let o = _accessor.offset(VTOFFSET.SYS_CAP.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SYS_CAPSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SYS_CAP.v) }
+  ///  Operational capability status
   public var OPS_CAP: String? { let o = _accessor.offset(VTOFFSET.OPS_CAP.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OPS_CAPSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OPS_CAP.v) }
-  public var SAT_NO1: Int32 { let o = _accessor.offset(VTOFFSET.SAT_NO1.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var SAT_NO2: Int32 { let o = _accessor.offset(VTOFFSET.SAT_NO2.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
   public static func startLKS(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 24) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(ID_ON_ORBIT1: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_ON_ORBIT1, at: VTOFFSET.ID_ON_ORBIT1.p) }
+  public static func add(SAT_NO1: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO1, def: 0, at: VTOFFSET.SAT_NO1.p) }
   public static func add(ID_ON_ORBIT2: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_ON_ORBIT2, at: VTOFFSET.ID_ON_ORBIT2.p) }
-  public static func add(LINK_START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_START_TIME, at: VTOFFSET.LINK_START_TIME.p) }
-  public static func add(LINK_STOP_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_STOP_TIME, at: VTOFFSET.LINK_STOP_TIME.p) }
+  public static func add(SAT_NO2: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO2, def: 0, at: VTOFFSET.SAT_NO2.p) }
   public static func add(CONSTELLATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONSTELLATION, at: VTOFFSET.CONSTELLATION.p) }
   public static func add(LINK_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_NAME, at: VTOFFSET.LINK_NAME.p) }
-  public static func add(LINK_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_TYPE, at: VTOFFSET.LINK_TYPE.p) }
+  public static func add(LINK_TYPE: linkType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LINK_TYPE.rawValue, def: 0, at: VTOFFSET.LINK_TYPE.p) }
+  public static func add(LINK_STATE: linkState, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LINK_STATE.rawValue, def: 0, at: VTOFFSET.LINK_STATE.p) }
   public static func add(BAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BAND, at: VTOFFSET.BAND.p) }
+  public static func add(LINK_START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_START_TIME, at: VTOFFSET.LINK_START_TIME.p) }
+  public static func add(LINK_STOP_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_STOP_TIME, at: VTOFFSET.LINK_STOP_TIME.p) }
   public static func add(ID_BEAM1: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_BEAM1, at: VTOFFSET.ID_BEAM1.p) }
   public static func add(END_POINT1_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: END_POINT1_NAME, at: VTOFFSET.END_POINT1_NAME.p) }
   public static func add(END_POINT1_LAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: END_POINT1_LAT, def: 0.0, at: VTOFFSET.END_POINT1_LAT.p) }
@@ -105,23 +162,23 @@ public struct LKS: FlatBufferObject, Verifiable {
   public static func add(END_POINT2_LON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: END_POINT2_LON, def: 0.0, at: VTOFFSET.END_POINT2_LON.p) }
   public static func add(DATA_RATE1_TO2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_RATE1_TO2, def: 0.0, at: VTOFFSET.DATA_RATE1_TO2.p) }
   public static func add(DATA_RATE2_TO1: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_RATE2_TO1, def: 0.0, at: VTOFFSET.DATA_RATE2_TO1.p) }
-  public static func add(LINK_STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LINK_STATE, at: VTOFFSET.LINK_STATE.p) }
   public static func add(SYS_CAP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SYS_CAP, at: VTOFFSET.SYS_CAP.p) }
   public static func add(OPS_CAP: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OPS_CAP, at: VTOFFSET.OPS_CAP.p) }
-  public static func add(SAT_NO1: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO1, def: 0, at: VTOFFSET.SAT_NO1.p) }
-  public static func add(SAT_NO2: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO2, def: 0, at: VTOFFSET.SAT_NO2.p) }
   public static func endLKS(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createLKS(
     _ fbb: inout FlatBufferBuilder,
     IDOffset ID: Offset = Offset(),
     ID_ON_ORBIT1Offset ID_ON_ORBIT1: Offset = Offset(),
+    SAT_NO1: UInt32 = 0,
     ID_ON_ORBIT2Offset ID_ON_ORBIT2: Offset = Offset(),
-    LINK_START_TIMEOffset LINK_START_TIME: Offset = Offset(),
-    LINK_STOP_TIMEOffset LINK_STOP_TIME: Offset = Offset(),
+    SAT_NO2: UInt32 = 0,
     CONSTELLATIONOffset CONSTELLATION: Offset = Offset(),
     LINK_NAMEOffset LINK_NAME: Offset = Offset(),
-    LINK_TYPEOffset LINK_TYPE: Offset = Offset(),
+    LINK_TYPE: linkType = .uplink,
+    LINK_STATE: linkState = .established,
     BANDOffset BAND: Offset = Offset(),
+    LINK_START_TIMEOffset LINK_START_TIME: Offset = Offset(),
+    LINK_STOP_TIMEOffset LINK_STOP_TIME: Offset = Offset(),
     ID_BEAM1Offset ID_BEAM1: Offset = Offset(),
     END_POINT1_NAMEOffset END_POINT1_NAME: Offset = Offset(),
     END_POINT1_LAT: Double = 0.0,
@@ -132,22 +189,22 @@ public struct LKS: FlatBufferObject, Verifiable {
     END_POINT2_LON: Double = 0.0,
     DATA_RATE1_TO2: Double = 0.0,
     DATA_RATE2_TO1: Double = 0.0,
-    LINK_STATEOffset LINK_STATE: Offset = Offset(),
     SYS_CAPOffset SYS_CAP: Offset = Offset(),
-    OPS_CAPOffset OPS_CAP: Offset = Offset(),
-    SAT_NO1: Int32 = 0,
-    SAT_NO2: Int32 = 0
+    OPS_CAPOffset OPS_CAP: Offset = Offset()
   ) -> Offset {
     let __start = LKS.startLKS(&fbb)
     LKS.add(ID: ID, &fbb)
     LKS.add(ID_ON_ORBIT1: ID_ON_ORBIT1, &fbb)
+    LKS.add(SAT_NO1: SAT_NO1, &fbb)
     LKS.add(ID_ON_ORBIT2: ID_ON_ORBIT2, &fbb)
-    LKS.add(LINK_START_TIME: LINK_START_TIME, &fbb)
-    LKS.add(LINK_STOP_TIME: LINK_STOP_TIME, &fbb)
+    LKS.add(SAT_NO2: SAT_NO2, &fbb)
     LKS.add(CONSTELLATION: CONSTELLATION, &fbb)
     LKS.add(LINK_NAME: LINK_NAME, &fbb)
     LKS.add(LINK_TYPE: LINK_TYPE, &fbb)
+    LKS.add(LINK_STATE: LINK_STATE, &fbb)
     LKS.add(BAND: BAND, &fbb)
+    LKS.add(LINK_START_TIME: LINK_START_TIME, &fbb)
+    LKS.add(LINK_STOP_TIME: LINK_STOP_TIME, &fbb)
     LKS.add(ID_BEAM1: ID_BEAM1, &fbb)
     LKS.add(END_POINT1_NAME: END_POINT1_NAME, &fbb)
     LKS.add(END_POINT1_LAT: END_POINT1_LAT, &fbb)
@@ -158,11 +215,8 @@ public struct LKS: FlatBufferObject, Verifiable {
     LKS.add(END_POINT2_LON: END_POINT2_LON, &fbb)
     LKS.add(DATA_RATE1_TO2: DATA_RATE1_TO2, &fbb)
     LKS.add(DATA_RATE2_TO1: DATA_RATE2_TO1, &fbb)
-    LKS.add(LINK_STATE: LINK_STATE, &fbb)
     LKS.add(SYS_CAP: SYS_CAP, &fbb)
     LKS.add(OPS_CAP: OPS_CAP, &fbb)
-    LKS.add(SAT_NO1: SAT_NO1, &fbb)
-    LKS.add(SAT_NO2: SAT_NO2, &fbb)
     return LKS.endLKS(&fbb, start: __start)
   }
 
@@ -170,13 +224,16 @@ public struct LKS: FlatBufferObject, Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ID_ON_ORBIT1.p, fieldName: "ID_ON_ORBIT1", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.SAT_NO1.p, fieldName: "SAT_NO1", required: false, type: UInt32.self)
     try _v.visit(field: VTOFFSET.ID_ON_ORBIT2.p, fieldName: "ID_ON_ORBIT2", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LINK_START_TIME.p, fieldName: "LINK_START_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LINK_STOP_TIME.p, fieldName: "LINK_STOP_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.SAT_NO2.p, fieldName: "SAT_NO2", required: false, type: UInt32.self)
     try _v.visit(field: VTOFFSET.CONSTELLATION.p, fieldName: "CONSTELLATION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.LINK_NAME.p, fieldName: "LINK_NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LINK_TYPE.p, fieldName: "LINK_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.LINK_TYPE.p, fieldName: "LINK_TYPE", required: false, type: linkType.self)
+    try _v.visit(field: VTOFFSET.LINK_STATE.p, fieldName: "LINK_STATE", required: false, type: linkState.self)
     try _v.visit(field: VTOFFSET.BAND.p, fieldName: "BAND", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.LINK_START_TIME.p, fieldName: "LINK_START_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.LINK_STOP_TIME.p, fieldName: "LINK_STOP_TIME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ID_BEAM1.p, fieldName: "ID_BEAM1", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.END_POINT1_NAME.p, fieldName: "END_POINT1_NAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.END_POINT1_LAT.p, fieldName: "END_POINT1_LAT", required: false, type: Double.self)
@@ -187,11 +244,8 @@ public struct LKS: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.END_POINT2_LON.p, fieldName: "END_POINT2_LON", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.DATA_RATE1_TO2.p, fieldName: "DATA_RATE1_TO2", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.DATA_RATE2_TO1.p, fieldName: "DATA_RATE2_TO1", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.LINK_STATE.p, fieldName: "LINK_STATE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.SYS_CAP.p, fieldName: "SYS_CAP", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.OPS_CAP.p, fieldName: "OPS_CAP", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SAT_NO1.p, fieldName: "SAT_NO1", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.SAT_NO2.p, fieldName: "SAT_NO2", required: false, type: Int32.self)
     _v.finish()
   }
 }

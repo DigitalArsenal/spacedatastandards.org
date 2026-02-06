@@ -16,6 +16,87 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct RFO;
 struct RFOBuilder;
 
+enum rfObsType : int8_t {
+  rfObsType_EMISSION = 0,
+  rfObsType_TRANSPONDER = 1,
+  rfObsType_INTERFERENCE = 2,
+  rfObsType_BEACON = 3,
+  rfObsType_TELEMETRY = 4,
+  rfObsType_UNKNOWN = 5,
+  rfObsType_MIN = rfObsType_EMISSION,
+  rfObsType_MAX = rfObsType_UNKNOWN
+};
+
+inline const rfObsType (&EnumValuesrfObsType())[6] {
+  static const rfObsType values[] = {
+    rfObsType_EMISSION,
+    rfObsType_TRANSPONDER,
+    rfObsType_INTERFERENCE,
+    rfObsType_BEACON,
+    rfObsType_TELEMETRY,
+    rfObsType_UNKNOWN
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesrfObsType() {
+  static const char * const names[7] = {
+    "EMISSION",
+    "TRANSPONDER",
+    "INTERFERENCE",
+    "BEACON",
+    "TELEMETRY",
+    "UNKNOWN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamerfObsType(rfObsType e) {
+  if (::flatbuffers::IsOutRange(e, rfObsType_EMISSION, rfObsType_UNKNOWN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesrfObsType()[index];
+}
+
+enum rfDetectionStatus : int8_t {
+  rfDetectionStatus_DETECTED = 0,
+  rfDetectionStatus_CONFIRMED = 1,
+  rfDetectionStatus_TENTATIVE = 2,
+  rfDetectionStatus_LOST = 3,
+  rfDetectionStatus_INTERFERENCE_ONLY = 4,
+  rfDetectionStatus_MIN = rfDetectionStatus_DETECTED,
+  rfDetectionStatus_MAX = rfDetectionStatus_INTERFERENCE_ONLY
+};
+
+inline const rfDetectionStatus (&EnumValuesrfDetectionStatus())[5] {
+  static const rfDetectionStatus values[] = {
+    rfDetectionStatus_DETECTED,
+    rfDetectionStatus_CONFIRMED,
+    rfDetectionStatus_TENTATIVE,
+    rfDetectionStatus_LOST,
+    rfDetectionStatus_INTERFERENCE_ONLY
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesrfDetectionStatus() {
+  static const char * const names[6] = {
+    "DETECTED",
+    "CONFIRMED",
+    "TENTATIVE",
+    "LOST",
+    "INTERFERENCE_ONLY",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamerfDetectionStatus(rfDetectionStatus e) {
+  if (::flatbuffers::IsOutRange(e, rfDetectionStatus_DETECTED, rfDetectionStatus_INTERFERENCE_ONLY)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesrfDetectionStatus()[index];
+}
+
 /// RF Observation
 struct RFO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef RFOBuilder Builder;
@@ -23,299 +104,373 @@ struct RFO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ID = 4,
     VT_OB_TIME = 6,
     VT_ID_SENSOR = 8,
-    VT_TYPE = 10,
-    VT_SAT_NO = 12,
-    VT_TASK_ID = 14,
-    VT_TRANSACTION_ID = 16,
-    VT_TRACK_ID = 18,
-    VT_ORIG_OBJECT_ID = 20,
-    VT_ORIG_SENSOR_ID = 22,
-    VT_UCT = 24,
-    VT_TRANSPONDER = 26,
-    VT_AZIMUTH = 28,
-    VT_AZIMUTH_UNC = 30,
-    VT_AZIMUTH_RATE = 32,
-    VT_ELEVATION = 34,
-    VT_ELEVATION_UNC = 36,
-    VT_ELEVATION_RATE = 38,
-    VT_RANGE = 40,
-    VT_RANGE_UNC = 42,
-    VT_RANGE_RATE = 44,
-    VT_RANGE_RATE_UNC = 46,
-    VT_TRACK_RANGE = 48,
-    VT_SENLAT = 50,
-    VT_SENLON = 52,
-    VT_SENALT = 54,
-    VT_ELNOT = 56,
-    VT_FREQUENCY = 58,
-    VT_NOMINAL_FREQUENCY = 60,
-    VT_START_FREQUENCY = 62,
-    VT_END_FREQUENCY = 64,
-    VT_RELATIVE_CARRIER_POWER = 66,
-    VT_SPECTRUM_ANALYZER_POWER = 68,
-    VT_RELATIVE_NOISE_FLOOR = 70,
-    VT_REFERENCE_LEVEL = 72,
-    VT_PGRI = 74,
-    VT_CONFIDENCE = 76,
-    VT_INCOMING = 78,
-    VT_SWITCH_POINT = 80,
-    VT_BAUD_RATE = 82,
-    VT_SNR = 84,
-    VT_NOMINAL_SNR = 86,
-    VT_POLARITY = 88,
-    VT_POLARITY_TYPE = 90,
-    VT_CHANNEL = 92,
-    VT_POWER_OVER_NOISE = 94,
-    VT_NOMINAL_POWER_OVER_NOISE = 96,
-    VT_BANDWIDTH = 98,
-    VT_NOMINAL_BANDWIDTH = 100,
-    VT_RESOLUTION_BANDWIDTH = 102,
-    VT_VIDEO_BANDWIDTH = 104,
-    VT_EIRP = 106,
-    VT_NOMINAL_EIRP = 108,
-    VT_MIN_PSD = 110,
-    VT_MAX_PSD = 112,
-    VT_FREQUENCY_SHIFT = 114,
-    VT_PEAK = 116,
-    VT_ANTENNA_NAME = 118,
-    VT_DETECTION_STATUS = 120,
-    VT_COLLECTION_MODE = 122,
-    VT_RAW_FILE_URI = 124,
-    VT_TAGS = 126,
-    VT_NOISE_PWR_DENSITY = 128,
-    VT_CARRIER_STANDARD = 130,
-    VT_MODULATION = 132,
-    VT_INNER_CODING_RATE = 134,
-    VT_OUTER_CODING_RATE = 136,
-    VT_TRANSMIT_FILTER_TYPE = 138,
-    VT_TRANSMIT_FILTER_ROLL_OFF = 140,
-    VT_SYMBOL_TO_NOISE_RATIO = 142,
-    VT_BIT_ERROR_RATE = 144,
-    VT_ON_ORBIT = 146,
-    VT_DESCRIPTOR = 148,
-    VT_URL = 150
+    VT_ORIG_SENSOR_ID = 10,
+    VT_OBS_TYPE = 12,
+    VT_SAT_NO = 14,
+    VT_ORIG_OBJECT_ID = 16,
+    VT_ON_ORBIT = 18,
+    VT_UCT = 20,
+    VT_TASK_ID = 22,
+    VT_TRANSACTION_ID = 24,
+    VT_TRACK_ID = 26,
+    VT_TRANSPONDER = 28,
+    VT_DETECTION_STATUS = 30,
+    VT_AZIMUTH = 32,
+    VT_AZIMUTH_UNC = 34,
+    VT_AZIMUTH_RATE = 36,
+    VT_ELEVATION = 38,
+    VT_ELEVATION_UNC = 40,
+    VT_ELEVATION_RATE = 42,
+    VT_RANGE = 44,
+    VT_RANGE_UNC = 46,
+    VT_RANGE_RATE = 48,
+    VT_RANGE_RATE_UNC = 50,
+    VT_TRACK_RANGE = 52,
+    VT_SENLAT = 54,
+    VT_SENLON = 56,
+    VT_SENALT = 58,
+    VT_ELNOT = 60,
+    VT_ANTENNA_NAME = 62,
+    VT_COLLECTION_MODE = 64,
+    VT_FREQUENCY = 66,
+    VT_NOMINAL_FREQUENCY = 68,
+    VT_START_FREQUENCY = 70,
+    VT_END_FREQUENCY = 72,
+    VT_FREQUENCY_SHIFT = 74,
+    VT_BANDWIDTH = 76,
+    VT_NOMINAL_BANDWIDTH = 78,
+    VT_RESOLUTION_BANDWIDTH = 80,
+    VT_VIDEO_BANDWIDTH = 82,
+    VT_RELATIVE_CARRIER_POWER = 84,
+    VT_SPECTRUM_ANALYZER_POWER = 86,
+    VT_RELATIVE_NOISE_FLOOR = 88,
+    VT_REFERENCE_LEVEL = 90,
+    VT_NOISE_PWR_DENSITY = 92,
+    VT_PGRI = 94,
+    VT_EIRP = 96,
+    VT_NOMINAL_EIRP = 98,
+    VT_MIN_PSD = 100,
+    VT_MAX_PSD = 102,
+    VT_SNR = 104,
+    VT_NOMINAL_SNR = 106,
+    VT_POWER_OVER_NOISE = 108,
+    VT_NOMINAL_POWER_OVER_NOISE = 110,
+    VT_POLARITY = 112,
+    VT_POLARITY_TYPE = 114,
+    VT_CHANNEL = 116,
+    VT_BAUD_RATE = 118,
+    VT_SYMBOL_TO_NOISE_RATIO = 120,
+    VT_BIT_ERROR_RATE = 122,
+    VT_PEAK = 124,
+    VT_INCOMING = 126,
+    VT_SWITCH_POINT = 128,
+    VT_CONFIDENCE = 130,
+    VT_CARRIER_STANDARD = 132,
+    VT_MODULATION = 134,
+    VT_INNER_CODING_RATE = 136,
+    VT_OUTER_CODING_RATE = 138,
+    VT_TRANSMIT_FILTER_TYPE = 140,
+    VT_TRANSMIT_FILTER_ROLL_OFF = 142,
+    VT_RAW_FILE_URI = 144,
+    VT_DESCRIPTOR = 146,
+    VT_URL = 148,
+    VT_TAGS = 150
   };
+  /// Unique identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
+  /// Observation time (ISO 8601)
   const ::flatbuffers::String *OB_TIME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OB_TIME);
   }
+  /// Sensor identifier
   const ::flatbuffers::String *ID_SENSOR() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID_SENSOR);
   }
-  const ::flatbuffers::String *TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TYPE);
-  }
-  int32_t SAT_NO() const {
-    return GetField<int32_t>(VT_SAT_NO, 0);
-  }
-  const ::flatbuffers::String *TASK_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TASK_ID);
-  }
-  const ::flatbuffers::String *TRANSACTION_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TRANSACTION_ID);
-  }
-  const ::flatbuffers::String *TRACK_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TRACK_ID);
-  }
-  const ::flatbuffers::String *ORIG_OBJECT_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ORIG_OBJECT_ID);
-  }
+  /// Original sensor identifier
   const ::flatbuffers::String *ORIG_SENSOR_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIG_SENSOR_ID);
   }
-  bool UCT() const {
-    return GetField<uint8_t>(VT_UCT, 0) != 0;
+  /// Observation type
+  rfObsType OBS_TYPE() const {
+    return static_cast<rfObsType>(GetField<int8_t>(VT_OBS_TYPE, 0));
   }
-  const ::flatbuffers::String *TRANSPONDER() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TRANSPONDER);
+  /// Satellite catalog number
+  uint32_t SAT_NO() const {
+    return GetField<uint32_t>(VT_SAT_NO, 0);
   }
-  double AZIMUTH() const {
-    return GetField<double>(VT_AZIMUTH, 0.0);
+  /// International designator
+  const ::flatbuffers::String *ORIG_OBJECT_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ORIG_OBJECT_ID);
   }
-  double AZIMUTH_UNC() const {
-    return GetField<double>(VT_AZIMUTH_UNC, 0.0);
-  }
-  double AZIMUTH_RATE() const {
-    return GetField<double>(VT_AZIMUTH_RATE, 0.0);
-  }
-  double ELEVATION() const {
-    return GetField<double>(VT_ELEVATION, 0.0);
-  }
-  double ELEVATION_UNC() const {
-    return GetField<double>(VT_ELEVATION_UNC, 0.0);
-  }
-  double ELEVATION_RATE() const {
-    return GetField<double>(VT_ELEVATION_RATE, 0.0);
-  }
-  double RANGE() const {
-    return GetField<double>(VT_RANGE, 0.0);
-  }
-  double RANGE_UNC() const {
-    return GetField<double>(VT_RANGE_UNC, 0.0);
-  }
-  double RANGE_RATE() const {
-    return GetField<double>(VT_RANGE_RATE, 0.0);
-  }
-  double RANGE_RATE_UNC() const {
-    return GetField<double>(VT_RANGE_RATE_UNC, 0.0);
-  }
-  double TRACK_RANGE() const {
-    return GetField<double>(VT_TRACK_RANGE, 0.0);
-  }
-  double SENLAT() const {
-    return GetField<double>(VT_SENLAT, 0.0);
-  }
-  double SENLON() const {
-    return GetField<double>(VT_SENLON, 0.0);
-  }
-  double SENALT() const {
-    return GetField<double>(VT_SENALT, 0.0);
-  }
-  const ::flatbuffers::String *ELNOT() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ELNOT);
-  }
-  double FREQUENCY() const {
-    return GetField<double>(VT_FREQUENCY, 0.0);
-  }
-  double NOMINAL_FREQUENCY() const {
-    return GetField<double>(VT_NOMINAL_FREQUENCY, 0.0);
-  }
-  double START_FREQUENCY() const {
-    return GetField<double>(VT_START_FREQUENCY, 0.0);
-  }
-  double END_FREQUENCY() const {
-    return GetField<double>(VT_END_FREQUENCY, 0.0);
-  }
-  double RELATIVE_CARRIER_POWER() const {
-    return GetField<double>(VT_RELATIVE_CARRIER_POWER, 0.0);
-  }
-  double SPECTRUM_ANALYZER_POWER() const {
-    return GetField<double>(VT_SPECTRUM_ANALYZER_POWER, 0.0);
-  }
-  double RELATIVE_NOISE_FLOOR() const {
-    return GetField<double>(VT_RELATIVE_NOISE_FLOOR, 0.0);
-  }
-  double REFERENCE_LEVEL() const {
-    return GetField<double>(VT_REFERENCE_LEVEL, 0.0);
-  }
-  double PGRI() const {
-    return GetField<double>(VT_PGRI, 0.0);
-  }
-  double CONFIDENCE() const {
-    return GetField<double>(VT_CONFIDENCE, 0.0);
-  }
-  bool INCOMING() const {
-    return GetField<uint8_t>(VT_INCOMING, 0) != 0;
-  }
-  int32_t SWITCH_POINT() const {
-    return GetField<int32_t>(VT_SWITCH_POINT, 0);
-  }
-  double BAUD_RATE() const {
-    return GetField<double>(VT_BAUD_RATE, 0.0);
-  }
-  double SNR() const {
-    return GetField<double>(VT_SNR, 0.0);
-  }
-  double NOMINAL_SNR() const {
-    return GetField<double>(VT_NOMINAL_SNR, 0.0);
-  }
-  double POLARITY() const {
-    return GetField<double>(VT_POLARITY, 0.0);
-  }
-  const ::flatbuffers::String *POLARITY_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_POLARITY_TYPE);
-  }
-  int32_t CHANNEL() const {
-    return GetField<int32_t>(VT_CHANNEL, 0);
-  }
-  double POWER_OVER_NOISE() const {
-    return GetField<double>(VT_POWER_OVER_NOISE, 0.0);
-  }
-  double NOMINAL_POWER_OVER_NOISE() const {
-    return GetField<double>(VT_NOMINAL_POWER_OVER_NOISE, 0.0);
-  }
-  double BANDWIDTH() const {
-    return GetField<double>(VT_BANDWIDTH, 0.0);
-  }
-  double NOMINAL_BANDWIDTH() const {
-    return GetField<double>(VT_NOMINAL_BANDWIDTH, 0.0);
-  }
-  double RESOLUTION_BANDWIDTH() const {
-    return GetField<double>(VT_RESOLUTION_BANDWIDTH, 0.0);
-  }
-  double VIDEO_BANDWIDTH() const {
-    return GetField<double>(VT_VIDEO_BANDWIDTH, 0.0);
-  }
-  double EIRP() const {
-    return GetField<double>(VT_EIRP, 0.0);
-  }
-  double NOMINAL_EIRP() const {
-    return GetField<double>(VT_NOMINAL_EIRP, 0.0);
-  }
-  double MIN_PSD() const {
-    return GetField<double>(VT_MIN_PSD, 0.0);
-  }
-  double MAX_PSD() const {
-    return GetField<double>(VT_MAX_PSD, 0.0);
-  }
-  double FREQUENCY_SHIFT() const {
-    return GetField<double>(VT_FREQUENCY_SHIFT, 0.0);
-  }
-  bool PEAK() const {
-    return GetField<uint8_t>(VT_PEAK, 0) != 0;
-  }
-  const ::flatbuffers::String *ANTENNA_NAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ANTENNA_NAME);
-  }
-  const ::flatbuffers::String *DETECTION_STATUS() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_DETECTION_STATUS);
-  }
-  const ::flatbuffers::String *COLLECTION_MODE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_COLLECTION_MODE);
-  }
-  const ::flatbuffers::String *RAW_FILE_URI() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_RAW_FILE_URI);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_TAGS);
-  }
-  double NOISE_PWR_DENSITY() const {
-    return GetField<double>(VT_NOISE_PWR_DENSITY, 0.0);
-  }
-  const ::flatbuffers::String *CARRIER_STANDARD() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_CARRIER_STANDARD);
-  }
-  const ::flatbuffers::String *MODULATION() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_MODULATION);
-  }
-  int32_t INNER_CODING_RATE() const {
-    return GetField<int32_t>(VT_INNER_CODING_RATE, 0);
-  }
-  int32_t OUTER_CODING_RATE() const {
-    return GetField<int32_t>(VT_OUTER_CODING_RATE, 0);
-  }
-  const ::flatbuffers::String *TRANSMIT_FILTER_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TRANSMIT_FILTER_TYPE);
-  }
-  double TRANSMIT_FILTER_ROLL_OFF() const {
-    return GetField<double>(VT_TRANSMIT_FILTER_ROLL_OFF, 0.0);
-  }
-  double SYMBOL_TO_NOISE_RATIO() const {
-    return GetField<double>(VT_SYMBOL_TO_NOISE_RATIO, 0.0);
-  }
-  double BIT_ERROR_RATE() const {
-    return GetField<double>(VT_BIT_ERROR_RATE, 0.0);
-  }
+  /// On-orbit reference
   const ::flatbuffers::String *ON_ORBIT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ON_ORBIT);
   }
+  /// True if uncorrelated target
+  bool UCT() const {
+    return GetField<uint8_t>(VT_UCT, 0) != 0;
+  }
+  /// Task identifier
+  const ::flatbuffers::String *TASK_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TASK_ID);
+  }
+  /// Transaction identifier
+  const ::flatbuffers::String *TRANSACTION_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TRANSACTION_ID);
+  }
+  /// Track identifier
+  const ::flatbuffers::String *TRACK_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TRACK_ID);
+  }
+  /// Transponder identifier
+  const ::flatbuffers::String *TRANSPONDER() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TRANSPONDER);
+  }
+  /// Detection status
+  rfDetectionStatus DETECTION_STATUS() const {
+    return static_cast<rfDetectionStatus>(GetField<int8_t>(VT_DETECTION_STATUS, 0));
+  }
+  /// Azimuth angle (degrees)
+  double AZIMUTH() const {
+    return GetField<double>(VT_AZIMUTH, 0.0);
+  }
+  /// Azimuth uncertainty (degrees, 1-sigma)
+  double AZIMUTH_UNC() const {
+    return GetField<double>(VT_AZIMUTH_UNC, 0.0);
+  }
+  /// Azimuth rate (degrees/s)
+  double AZIMUTH_RATE() const {
+    return GetField<double>(VT_AZIMUTH_RATE, 0.0);
+  }
+  /// Elevation angle (degrees)
+  double ELEVATION() const {
+    return GetField<double>(VT_ELEVATION, 0.0);
+  }
+  /// Elevation uncertainty (degrees, 1-sigma)
+  double ELEVATION_UNC() const {
+    return GetField<double>(VT_ELEVATION_UNC, 0.0);
+  }
+  /// Elevation rate (degrees/s)
+  double ELEVATION_RATE() const {
+    return GetField<double>(VT_ELEVATION_RATE, 0.0);
+  }
+  /// Slant range (km)
+  double RANGE() const {
+    return GetField<double>(VT_RANGE, 0.0);
+  }
+  /// Range uncertainty (km, 1-sigma)
+  double RANGE_UNC() const {
+    return GetField<double>(VT_RANGE_UNC, 0.0);
+  }
+  /// Range rate (km/s)
+  double RANGE_RATE() const {
+    return GetField<double>(VT_RANGE_RATE, 0.0);
+  }
+  /// Range rate uncertainty (km/s, 1-sigma)
+  double RANGE_RATE_UNC() const {
+    return GetField<double>(VT_RANGE_RATE_UNC, 0.0);
+  }
+  /// Track range (km)
+  double TRACK_RANGE() const {
+    return GetField<double>(VT_TRACK_RANGE, 0.0);
+  }
+  /// Sensor latitude (degrees)
+  double SENLAT() const {
+    return GetField<double>(VT_SENLAT, 0.0);
+  }
+  /// Sensor longitude (degrees)
+  double SENLON() const {
+    return GetField<double>(VT_SENLON, 0.0);
+  }
+  /// Sensor altitude (km)
+  double SENALT() const {
+    return GetField<double>(VT_SENALT, 0.0);
+  }
+  /// ELNOT (Electronic Intelligence Notation)
+  const ::flatbuffers::String *ELNOT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ELNOT);
+  }
+  /// Antenna name
+  const ::flatbuffers::String *ANTENNA_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ANTENNA_NAME);
+  }
+  /// Collection mode
+  const ::flatbuffers::String *COLLECTION_MODE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COLLECTION_MODE);
+  }
+  /// Measured center frequency (MHz)
+  double FREQUENCY() const {
+    return GetField<double>(VT_FREQUENCY, 0.0);
+  }
+  /// Nominal center frequency (MHz)
+  double NOMINAL_FREQUENCY() const {
+    return GetField<double>(VT_NOMINAL_FREQUENCY, 0.0);
+  }
+  /// Start frequency of emission (MHz)
+  double START_FREQUENCY() const {
+    return GetField<double>(VT_START_FREQUENCY, 0.0);
+  }
+  /// End frequency of emission (MHz)
+  double END_FREQUENCY() const {
+    return GetField<double>(VT_END_FREQUENCY, 0.0);
+  }
+  /// Frequency shift from nominal (MHz)
+  double FREQUENCY_SHIFT() const {
+    return GetField<double>(VT_FREQUENCY_SHIFT, 0.0);
+  }
+  /// Measured bandwidth (MHz)
+  double BANDWIDTH() const {
+    return GetField<double>(VT_BANDWIDTH, 0.0);
+  }
+  /// Nominal bandwidth (MHz)
+  double NOMINAL_BANDWIDTH() const {
+    return GetField<double>(VT_NOMINAL_BANDWIDTH, 0.0);
+  }
+  /// Resolution bandwidth (MHz)
+  double RESOLUTION_BANDWIDTH() const {
+    return GetField<double>(VT_RESOLUTION_BANDWIDTH, 0.0);
+  }
+  /// Video bandwidth (MHz)
+  double VIDEO_BANDWIDTH() const {
+    return GetField<double>(VT_VIDEO_BANDWIDTH, 0.0);
+  }
+  /// Relative carrier power (dBm)
+  double RELATIVE_CARRIER_POWER() const {
+    return GetField<double>(VT_RELATIVE_CARRIER_POWER, 0.0);
+  }
+  /// Spectrum analyzer power (dBm)
+  double SPECTRUM_ANALYZER_POWER() const {
+    return GetField<double>(VT_SPECTRUM_ANALYZER_POWER, 0.0);
+  }
+  /// Relative noise floor (dBm)
+  double RELATIVE_NOISE_FLOOR() const {
+    return GetField<double>(VT_RELATIVE_NOISE_FLOOR, 0.0);
+  }
+  /// Reference level (dBm)
+  double REFERENCE_LEVEL() const {
+    return GetField<double>(VT_REFERENCE_LEVEL, 0.0);
+  }
+  /// Noise power density (dBm/Hz)
+  double NOISE_PWR_DENSITY() const {
+    return GetField<double>(VT_NOISE_PWR_DENSITY, 0.0);
+  }
+  /// PGRI (Pulse Group Repetition Interval, microseconds)
+  double PGRI() const {
+    return GetField<double>(VT_PGRI, 0.0);
+  }
+  /// Effective isotropic radiated power (dBW)
+  double EIRP() const {
+    return GetField<double>(VT_EIRP, 0.0);
+  }
+  /// Nominal EIRP (dBW)
+  double NOMINAL_EIRP() const {
+    return GetField<double>(VT_NOMINAL_EIRP, 0.0);
+  }
+  /// Minimum power spectral density (dBm/Hz)
+  double MIN_PSD() const {
+    return GetField<double>(VT_MIN_PSD, 0.0);
+  }
+  /// Maximum power spectral density (dBm/Hz)
+  double MAX_PSD() const {
+    return GetField<double>(VT_MAX_PSD, 0.0);
+  }
+  /// Signal-to-noise ratio (dB)
+  double SNR() const {
+    return GetField<double>(VT_SNR, 0.0);
+  }
+  /// Nominal SNR (dB)
+  double NOMINAL_SNR() const {
+    return GetField<double>(VT_NOMINAL_SNR, 0.0);
+  }
+  /// Power over noise (dB)
+  double POWER_OVER_NOISE() const {
+    return GetField<double>(VT_POWER_OVER_NOISE, 0.0);
+  }
+  /// Nominal power over noise (dB)
+  double NOMINAL_POWER_OVER_NOISE() const {
+    return GetField<double>(VT_NOMINAL_POWER_OVER_NOISE, 0.0);
+  }
+  /// Polarity angle (degrees)
+  double POLARITY() const {
+    return GetField<double>(VT_POLARITY, 0.0);
+  }
+  /// Polarization type (e.g., LHCP, RHCP, LINEAR)
+  const ::flatbuffers::String *POLARITY_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_POLARITY_TYPE);
+  }
+  /// Channel number
+  uint16_t CHANNEL() const {
+    return GetField<uint16_t>(VT_CHANNEL, 0);
+  }
+  /// Baud rate (symbols/s)
+  double BAUD_RATE() const {
+    return GetField<double>(VT_BAUD_RATE, 0.0);
+  }
+  /// Symbol-to-noise ratio (dB)
+  double SYMBOL_TO_NOISE_RATIO() const {
+    return GetField<double>(VT_SYMBOL_TO_NOISE_RATIO, 0.0);
+  }
+  /// Bit error rate
+  double BIT_ERROR_RATE() const {
+    return GetField<double>(VT_BIT_ERROR_RATE, 0.0);
+  }
+  /// True if peak measurement
+  bool PEAK() const {
+    return GetField<uint8_t>(VT_PEAK, 0) != 0;
+  }
+  /// True if incoming signal
+  bool INCOMING() const {
+    return GetField<uint8_t>(VT_INCOMING, 0) != 0;
+  }
+  /// Switch point number
+  uint16_t SWITCH_POINT() const {
+    return GetField<uint16_t>(VT_SWITCH_POINT, 0);
+  }
+  /// Confidence score (0-1)
+  double CONFIDENCE() const {
+    return GetField<double>(VT_CONFIDENCE, 0.0);
+  }
+  /// Carrier standard (e.g., DVB-S, DVB-S2)
+  const ::flatbuffers::String *CARRIER_STANDARD() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CARRIER_STANDARD);
+  }
+  /// Modulation type
+  const ::flatbuffers::String *MODULATION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MODULATION);
+  }
+  /// Inner FEC coding rate denominator
+  uint8_t INNER_CODING_RATE() const {
+    return GetField<uint8_t>(VT_INNER_CODING_RATE, 0);
+  }
+  /// Outer FEC coding rate denominator
+  uint8_t OUTER_CODING_RATE() const {
+    return GetField<uint8_t>(VT_OUTER_CODING_RATE, 0);
+  }
+  /// Transmit filter type
+  const ::flatbuffers::String *TRANSMIT_FILTER_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TRANSMIT_FILTER_TYPE);
+  }
+  /// Transmit filter roll-off factor
+  double TRANSMIT_FILTER_ROLL_OFF() const {
+    return GetField<double>(VT_TRANSMIT_FILTER_ROLL_OFF, 0.0);
+  }
+  /// Reference to raw data file
+  const ::flatbuffers::String *RAW_FILE_URI() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_RAW_FILE_URI);
+  }
+  /// Event descriptor
   const ::flatbuffers::String *DESCRIPTOR() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTOR);
   }
+  /// Reference URL
   const ::flatbuffers::String *URL() const {
     return GetPointer<const ::flatbuffers::String *>(VT_URL);
+  }
+  /// Associated tags
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_TAGS);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -325,22 +480,24 @@ struct RFO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(OB_TIME()) &&
            VerifyOffset(verifier, VT_ID_SENSOR) &&
            verifier.VerifyString(ID_SENSOR()) &&
-           VerifyOffset(verifier, VT_TYPE) &&
-           verifier.VerifyString(TYPE()) &&
-           VerifyField<int32_t>(verifier, VT_SAT_NO, 4) &&
+           VerifyOffset(verifier, VT_ORIG_SENSOR_ID) &&
+           verifier.VerifyString(ORIG_SENSOR_ID()) &&
+           VerifyField<int8_t>(verifier, VT_OBS_TYPE, 1) &&
+           VerifyField<uint32_t>(verifier, VT_SAT_NO, 4) &&
+           VerifyOffset(verifier, VT_ORIG_OBJECT_ID) &&
+           verifier.VerifyString(ORIG_OBJECT_ID()) &&
+           VerifyOffset(verifier, VT_ON_ORBIT) &&
+           verifier.VerifyString(ON_ORBIT()) &&
+           VerifyField<uint8_t>(verifier, VT_UCT, 1) &&
            VerifyOffset(verifier, VT_TASK_ID) &&
            verifier.VerifyString(TASK_ID()) &&
            VerifyOffset(verifier, VT_TRANSACTION_ID) &&
            verifier.VerifyString(TRANSACTION_ID()) &&
            VerifyOffset(verifier, VT_TRACK_ID) &&
            verifier.VerifyString(TRACK_ID()) &&
-           VerifyOffset(verifier, VT_ORIG_OBJECT_ID) &&
-           verifier.VerifyString(ORIG_OBJECT_ID()) &&
-           VerifyOffset(verifier, VT_ORIG_SENSOR_ID) &&
-           verifier.VerifyString(ORIG_SENSOR_ID()) &&
-           VerifyField<uint8_t>(verifier, VT_UCT, 1) &&
            VerifyOffset(verifier, VT_TRANSPONDER) &&
            verifier.VerifyString(TRANSPONDER()) &&
+           VerifyField<int8_t>(verifier, VT_DETECTION_STATUS, 1) &&
            VerifyField<double>(verifier, VT_AZIMUTH, 8) &&
            VerifyField<double>(verifier, VT_AZIMUTH_UNC, 8) &&
            VerifyField<double>(verifier, VT_AZIMUTH_RATE, 8) &&
@@ -357,66 +514,62 @@ struct RFO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_SENALT, 8) &&
            VerifyOffset(verifier, VT_ELNOT) &&
            verifier.VerifyString(ELNOT()) &&
+           VerifyOffset(verifier, VT_ANTENNA_NAME) &&
+           verifier.VerifyString(ANTENNA_NAME()) &&
+           VerifyOffset(verifier, VT_COLLECTION_MODE) &&
+           verifier.VerifyString(COLLECTION_MODE()) &&
            VerifyField<double>(verifier, VT_FREQUENCY, 8) &&
            VerifyField<double>(verifier, VT_NOMINAL_FREQUENCY, 8) &&
            VerifyField<double>(verifier, VT_START_FREQUENCY, 8) &&
            VerifyField<double>(verifier, VT_END_FREQUENCY, 8) &&
-           VerifyField<double>(verifier, VT_RELATIVE_CARRIER_POWER, 8) &&
-           VerifyField<double>(verifier, VT_SPECTRUM_ANALYZER_POWER, 8) &&
-           VerifyField<double>(verifier, VT_RELATIVE_NOISE_FLOOR, 8) &&
-           VerifyField<double>(verifier, VT_REFERENCE_LEVEL, 8) &&
-           VerifyField<double>(verifier, VT_PGRI, 8) &&
-           VerifyField<double>(verifier, VT_CONFIDENCE, 8) &&
-           VerifyField<uint8_t>(verifier, VT_INCOMING, 1) &&
-           VerifyField<int32_t>(verifier, VT_SWITCH_POINT, 4) &&
-           VerifyField<double>(verifier, VT_BAUD_RATE, 8) &&
-           VerifyField<double>(verifier, VT_SNR, 8) &&
-           VerifyField<double>(verifier, VT_NOMINAL_SNR, 8) &&
-           VerifyField<double>(verifier, VT_POLARITY, 8) &&
-           VerifyOffset(verifier, VT_POLARITY_TYPE) &&
-           verifier.VerifyString(POLARITY_TYPE()) &&
-           VerifyField<int32_t>(verifier, VT_CHANNEL, 4) &&
-           VerifyField<double>(verifier, VT_POWER_OVER_NOISE, 8) &&
-           VerifyField<double>(verifier, VT_NOMINAL_POWER_OVER_NOISE, 8) &&
+           VerifyField<double>(verifier, VT_FREQUENCY_SHIFT, 8) &&
            VerifyField<double>(verifier, VT_BANDWIDTH, 8) &&
            VerifyField<double>(verifier, VT_NOMINAL_BANDWIDTH, 8) &&
            VerifyField<double>(verifier, VT_RESOLUTION_BANDWIDTH, 8) &&
            VerifyField<double>(verifier, VT_VIDEO_BANDWIDTH, 8) &&
+           VerifyField<double>(verifier, VT_RELATIVE_CARRIER_POWER, 8) &&
+           VerifyField<double>(verifier, VT_SPECTRUM_ANALYZER_POWER, 8) &&
+           VerifyField<double>(verifier, VT_RELATIVE_NOISE_FLOOR, 8) &&
+           VerifyField<double>(verifier, VT_REFERENCE_LEVEL, 8) &&
+           VerifyField<double>(verifier, VT_NOISE_PWR_DENSITY, 8) &&
+           VerifyField<double>(verifier, VT_PGRI, 8) &&
            VerifyField<double>(verifier, VT_EIRP, 8) &&
            VerifyField<double>(verifier, VT_NOMINAL_EIRP, 8) &&
            VerifyField<double>(verifier, VT_MIN_PSD, 8) &&
            VerifyField<double>(verifier, VT_MAX_PSD, 8) &&
-           VerifyField<double>(verifier, VT_FREQUENCY_SHIFT, 8) &&
+           VerifyField<double>(verifier, VT_SNR, 8) &&
+           VerifyField<double>(verifier, VT_NOMINAL_SNR, 8) &&
+           VerifyField<double>(verifier, VT_POWER_OVER_NOISE, 8) &&
+           VerifyField<double>(verifier, VT_NOMINAL_POWER_OVER_NOISE, 8) &&
+           VerifyField<double>(verifier, VT_POLARITY, 8) &&
+           VerifyOffset(verifier, VT_POLARITY_TYPE) &&
+           verifier.VerifyString(POLARITY_TYPE()) &&
+           VerifyField<uint16_t>(verifier, VT_CHANNEL, 2) &&
+           VerifyField<double>(verifier, VT_BAUD_RATE, 8) &&
+           VerifyField<double>(verifier, VT_SYMBOL_TO_NOISE_RATIO, 8) &&
+           VerifyField<double>(verifier, VT_BIT_ERROR_RATE, 8) &&
            VerifyField<uint8_t>(verifier, VT_PEAK, 1) &&
-           VerifyOffset(verifier, VT_ANTENNA_NAME) &&
-           verifier.VerifyString(ANTENNA_NAME()) &&
-           VerifyOffset(verifier, VT_DETECTION_STATUS) &&
-           verifier.VerifyString(DETECTION_STATUS()) &&
-           VerifyOffset(verifier, VT_COLLECTION_MODE) &&
-           verifier.VerifyString(COLLECTION_MODE()) &&
-           VerifyOffset(verifier, VT_RAW_FILE_URI) &&
-           verifier.VerifyString(RAW_FILE_URI()) &&
-           VerifyOffset(verifier, VT_TAGS) &&
-           verifier.VerifyVector(TAGS()) &&
-           verifier.VerifyVectorOfStrings(TAGS()) &&
-           VerifyField<double>(verifier, VT_NOISE_PWR_DENSITY, 8) &&
+           VerifyField<uint8_t>(verifier, VT_INCOMING, 1) &&
+           VerifyField<uint16_t>(verifier, VT_SWITCH_POINT, 2) &&
+           VerifyField<double>(verifier, VT_CONFIDENCE, 8) &&
            VerifyOffset(verifier, VT_CARRIER_STANDARD) &&
            verifier.VerifyString(CARRIER_STANDARD()) &&
            VerifyOffset(verifier, VT_MODULATION) &&
            verifier.VerifyString(MODULATION()) &&
-           VerifyField<int32_t>(verifier, VT_INNER_CODING_RATE, 4) &&
-           VerifyField<int32_t>(verifier, VT_OUTER_CODING_RATE, 4) &&
+           VerifyField<uint8_t>(verifier, VT_INNER_CODING_RATE, 1) &&
+           VerifyField<uint8_t>(verifier, VT_OUTER_CODING_RATE, 1) &&
            VerifyOffset(verifier, VT_TRANSMIT_FILTER_TYPE) &&
            verifier.VerifyString(TRANSMIT_FILTER_TYPE()) &&
            VerifyField<double>(verifier, VT_TRANSMIT_FILTER_ROLL_OFF, 8) &&
-           VerifyField<double>(verifier, VT_SYMBOL_TO_NOISE_RATIO, 8) &&
-           VerifyField<double>(verifier, VT_BIT_ERROR_RATE, 8) &&
-           VerifyOffset(verifier, VT_ON_ORBIT) &&
-           verifier.VerifyString(ON_ORBIT()) &&
+           VerifyOffset(verifier, VT_RAW_FILE_URI) &&
+           verifier.VerifyString(RAW_FILE_URI()) &&
            VerifyOffset(verifier, VT_DESCRIPTOR) &&
            verifier.VerifyString(DESCRIPTOR()) &&
            VerifyOffset(verifier, VT_URL) &&
            verifier.VerifyString(URL()) &&
+           VerifyOffset(verifier, VT_TAGS) &&
+           verifier.VerifyVector(TAGS()) &&
+           verifier.VerifyVectorOfStrings(TAGS()) &&
            verifier.EndTable();
   }
 };
@@ -434,11 +587,23 @@ struct RFOBuilder {
   void add_ID_SENSOR(::flatbuffers::Offset<::flatbuffers::String> ID_SENSOR) {
     fbb_.AddOffset(RFO::VT_ID_SENSOR, ID_SENSOR);
   }
-  void add_TYPE(::flatbuffers::Offset<::flatbuffers::String> TYPE) {
-    fbb_.AddOffset(RFO::VT_TYPE, TYPE);
+  void add_ORIG_SENSOR_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID) {
+    fbb_.AddOffset(RFO::VT_ORIG_SENSOR_ID, ORIG_SENSOR_ID);
   }
-  void add_SAT_NO(int32_t SAT_NO) {
-    fbb_.AddElement<int32_t>(RFO::VT_SAT_NO, SAT_NO, 0);
+  void add_OBS_TYPE(rfObsType OBS_TYPE) {
+    fbb_.AddElement<int8_t>(RFO::VT_OBS_TYPE, static_cast<int8_t>(OBS_TYPE), 0);
+  }
+  void add_SAT_NO(uint32_t SAT_NO) {
+    fbb_.AddElement<uint32_t>(RFO::VT_SAT_NO, SAT_NO, 0);
+  }
+  void add_ORIG_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID) {
+    fbb_.AddOffset(RFO::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
+  }
+  void add_ON_ORBIT(::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT) {
+    fbb_.AddOffset(RFO::VT_ON_ORBIT, ON_ORBIT);
+  }
+  void add_UCT(bool UCT) {
+    fbb_.AddElement<uint8_t>(RFO::VT_UCT, static_cast<uint8_t>(UCT), 0);
   }
   void add_TASK_ID(::flatbuffers::Offset<::flatbuffers::String> TASK_ID) {
     fbb_.AddOffset(RFO::VT_TASK_ID, TASK_ID);
@@ -449,17 +614,11 @@ struct RFOBuilder {
   void add_TRACK_ID(::flatbuffers::Offset<::flatbuffers::String> TRACK_ID) {
     fbb_.AddOffset(RFO::VT_TRACK_ID, TRACK_ID);
   }
-  void add_ORIG_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID) {
-    fbb_.AddOffset(RFO::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
-  }
-  void add_ORIG_SENSOR_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID) {
-    fbb_.AddOffset(RFO::VT_ORIG_SENSOR_ID, ORIG_SENSOR_ID);
-  }
-  void add_UCT(bool UCT) {
-    fbb_.AddElement<uint8_t>(RFO::VT_UCT, static_cast<uint8_t>(UCT), 0);
-  }
   void add_TRANSPONDER(::flatbuffers::Offset<::flatbuffers::String> TRANSPONDER) {
     fbb_.AddOffset(RFO::VT_TRANSPONDER, TRANSPONDER);
+  }
+  void add_DETECTION_STATUS(rfDetectionStatus DETECTION_STATUS) {
+    fbb_.AddElement<int8_t>(RFO::VT_DETECTION_STATUS, static_cast<int8_t>(DETECTION_STATUS), 0);
   }
   void add_AZIMUTH(double AZIMUTH) {
     fbb_.AddElement<double>(RFO::VT_AZIMUTH, AZIMUTH, 0.0);
@@ -506,6 +665,12 @@ struct RFOBuilder {
   void add_ELNOT(::flatbuffers::Offset<::flatbuffers::String> ELNOT) {
     fbb_.AddOffset(RFO::VT_ELNOT, ELNOT);
   }
+  void add_ANTENNA_NAME(::flatbuffers::Offset<::flatbuffers::String> ANTENNA_NAME) {
+    fbb_.AddOffset(RFO::VT_ANTENNA_NAME, ANTENNA_NAME);
+  }
+  void add_COLLECTION_MODE(::flatbuffers::Offset<::flatbuffers::String> COLLECTION_MODE) {
+    fbb_.AddOffset(RFO::VT_COLLECTION_MODE, COLLECTION_MODE);
+  }
   void add_FREQUENCY(double FREQUENCY) {
     fbb_.AddElement<double>(RFO::VT_FREQUENCY, FREQUENCY, 0.0);
   }
@@ -518,53 +683,8 @@ struct RFOBuilder {
   void add_END_FREQUENCY(double END_FREQUENCY) {
     fbb_.AddElement<double>(RFO::VT_END_FREQUENCY, END_FREQUENCY, 0.0);
   }
-  void add_RELATIVE_CARRIER_POWER(double RELATIVE_CARRIER_POWER) {
-    fbb_.AddElement<double>(RFO::VT_RELATIVE_CARRIER_POWER, RELATIVE_CARRIER_POWER, 0.0);
-  }
-  void add_SPECTRUM_ANALYZER_POWER(double SPECTRUM_ANALYZER_POWER) {
-    fbb_.AddElement<double>(RFO::VT_SPECTRUM_ANALYZER_POWER, SPECTRUM_ANALYZER_POWER, 0.0);
-  }
-  void add_RELATIVE_NOISE_FLOOR(double RELATIVE_NOISE_FLOOR) {
-    fbb_.AddElement<double>(RFO::VT_RELATIVE_NOISE_FLOOR, RELATIVE_NOISE_FLOOR, 0.0);
-  }
-  void add_REFERENCE_LEVEL(double REFERENCE_LEVEL) {
-    fbb_.AddElement<double>(RFO::VT_REFERENCE_LEVEL, REFERENCE_LEVEL, 0.0);
-  }
-  void add_PGRI(double PGRI) {
-    fbb_.AddElement<double>(RFO::VT_PGRI, PGRI, 0.0);
-  }
-  void add_CONFIDENCE(double CONFIDENCE) {
-    fbb_.AddElement<double>(RFO::VT_CONFIDENCE, CONFIDENCE, 0.0);
-  }
-  void add_INCOMING(bool INCOMING) {
-    fbb_.AddElement<uint8_t>(RFO::VT_INCOMING, static_cast<uint8_t>(INCOMING), 0);
-  }
-  void add_SWITCH_POINT(int32_t SWITCH_POINT) {
-    fbb_.AddElement<int32_t>(RFO::VT_SWITCH_POINT, SWITCH_POINT, 0);
-  }
-  void add_BAUD_RATE(double BAUD_RATE) {
-    fbb_.AddElement<double>(RFO::VT_BAUD_RATE, BAUD_RATE, 0.0);
-  }
-  void add_SNR(double SNR) {
-    fbb_.AddElement<double>(RFO::VT_SNR, SNR, 0.0);
-  }
-  void add_NOMINAL_SNR(double NOMINAL_SNR) {
-    fbb_.AddElement<double>(RFO::VT_NOMINAL_SNR, NOMINAL_SNR, 0.0);
-  }
-  void add_POLARITY(double POLARITY) {
-    fbb_.AddElement<double>(RFO::VT_POLARITY, POLARITY, 0.0);
-  }
-  void add_POLARITY_TYPE(::flatbuffers::Offset<::flatbuffers::String> POLARITY_TYPE) {
-    fbb_.AddOffset(RFO::VT_POLARITY_TYPE, POLARITY_TYPE);
-  }
-  void add_CHANNEL(int32_t CHANNEL) {
-    fbb_.AddElement<int32_t>(RFO::VT_CHANNEL, CHANNEL, 0);
-  }
-  void add_POWER_OVER_NOISE(double POWER_OVER_NOISE) {
-    fbb_.AddElement<double>(RFO::VT_POWER_OVER_NOISE, POWER_OVER_NOISE, 0.0);
-  }
-  void add_NOMINAL_POWER_OVER_NOISE(double NOMINAL_POWER_OVER_NOISE) {
-    fbb_.AddElement<double>(RFO::VT_NOMINAL_POWER_OVER_NOISE, NOMINAL_POWER_OVER_NOISE, 0.0);
+  void add_FREQUENCY_SHIFT(double FREQUENCY_SHIFT) {
+    fbb_.AddElement<double>(RFO::VT_FREQUENCY_SHIFT, FREQUENCY_SHIFT, 0.0);
   }
   void add_BANDWIDTH(double BANDWIDTH) {
     fbb_.AddElement<double>(RFO::VT_BANDWIDTH, BANDWIDTH, 0.0);
@@ -578,6 +698,24 @@ struct RFOBuilder {
   void add_VIDEO_BANDWIDTH(double VIDEO_BANDWIDTH) {
     fbb_.AddElement<double>(RFO::VT_VIDEO_BANDWIDTH, VIDEO_BANDWIDTH, 0.0);
   }
+  void add_RELATIVE_CARRIER_POWER(double RELATIVE_CARRIER_POWER) {
+    fbb_.AddElement<double>(RFO::VT_RELATIVE_CARRIER_POWER, RELATIVE_CARRIER_POWER, 0.0);
+  }
+  void add_SPECTRUM_ANALYZER_POWER(double SPECTRUM_ANALYZER_POWER) {
+    fbb_.AddElement<double>(RFO::VT_SPECTRUM_ANALYZER_POWER, SPECTRUM_ANALYZER_POWER, 0.0);
+  }
+  void add_RELATIVE_NOISE_FLOOR(double RELATIVE_NOISE_FLOOR) {
+    fbb_.AddElement<double>(RFO::VT_RELATIVE_NOISE_FLOOR, RELATIVE_NOISE_FLOOR, 0.0);
+  }
+  void add_REFERENCE_LEVEL(double REFERENCE_LEVEL) {
+    fbb_.AddElement<double>(RFO::VT_REFERENCE_LEVEL, REFERENCE_LEVEL, 0.0);
+  }
+  void add_NOISE_PWR_DENSITY(double NOISE_PWR_DENSITY) {
+    fbb_.AddElement<double>(RFO::VT_NOISE_PWR_DENSITY, NOISE_PWR_DENSITY, 0.0);
+  }
+  void add_PGRI(double PGRI) {
+    fbb_.AddElement<double>(RFO::VT_PGRI, PGRI, 0.0);
+  }
   void add_EIRP(double EIRP) {
     fbb_.AddElement<double>(RFO::VT_EIRP, EIRP, 0.0);
   }
@@ -590,47 +728,29 @@ struct RFOBuilder {
   void add_MAX_PSD(double MAX_PSD) {
     fbb_.AddElement<double>(RFO::VT_MAX_PSD, MAX_PSD, 0.0);
   }
-  void add_FREQUENCY_SHIFT(double FREQUENCY_SHIFT) {
-    fbb_.AddElement<double>(RFO::VT_FREQUENCY_SHIFT, FREQUENCY_SHIFT, 0.0);
+  void add_SNR(double SNR) {
+    fbb_.AddElement<double>(RFO::VT_SNR, SNR, 0.0);
   }
-  void add_PEAK(bool PEAK) {
-    fbb_.AddElement<uint8_t>(RFO::VT_PEAK, static_cast<uint8_t>(PEAK), 0);
+  void add_NOMINAL_SNR(double NOMINAL_SNR) {
+    fbb_.AddElement<double>(RFO::VT_NOMINAL_SNR, NOMINAL_SNR, 0.0);
   }
-  void add_ANTENNA_NAME(::flatbuffers::Offset<::flatbuffers::String> ANTENNA_NAME) {
-    fbb_.AddOffset(RFO::VT_ANTENNA_NAME, ANTENNA_NAME);
+  void add_POWER_OVER_NOISE(double POWER_OVER_NOISE) {
+    fbb_.AddElement<double>(RFO::VT_POWER_OVER_NOISE, POWER_OVER_NOISE, 0.0);
   }
-  void add_DETECTION_STATUS(::flatbuffers::Offset<::flatbuffers::String> DETECTION_STATUS) {
-    fbb_.AddOffset(RFO::VT_DETECTION_STATUS, DETECTION_STATUS);
+  void add_NOMINAL_POWER_OVER_NOISE(double NOMINAL_POWER_OVER_NOISE) {
+    fbb_.AddElement<double>(RFO::VT_NOMINAL_POWER_OVER_NOISE, NOMINAL_POWER_OVER_NOISE, 0.0);
   }
-  void add_COLLECTION_MODE(::flatbuffers::Offset<::flatbuffers::String> COLLECTION_MODE) {
-    fbb_.AddOffset(RFO::VT_COLLECTION_MODE, COLLECTION_MODE);
+  void add_POLARITY(double POLARITY) {
+    fbb_.AddElement<double>(RFO::VT_POLARITY, POLARITY, 0.0);
   }
-  void add_RAW_FILE_URI(::flatbuffers::Offset<::flatbuffers::String> RAW_FILE_URI) {
-    fbb_.AddOffset(RFO::VT_RAW_FILE_URI, RAW_FILE_URI);
+  void add_POLARITY_TYPE(::flatbuffers::Offset<::flatbuffers::String> POLARITY_TYPE) {
+    fbb_.AddOffset(RFO::VT_POLARITY_TYPE, POLARITY_TYPE);
   }
-  void add_TAGS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS) {
-    fbb_.AddOffset(RFO::VT_TAGS, TAGS);
+  void add_CHANNEL(uint16_t CHANNEL) {
+    fbb_.AddElement<uint16_t>(RFO::VT_CHANNEL, CHANNEL, 0);
   }
-  void add_NOISE_PWR_DENSITY(double NOISE_PWR_DENSITY) {
-    fbb_.AddElement<double>(RFO::VT_NOISE_PWR_DENSITY, NOISE_PWR_DENSITY, 0.0);
-  }
-  void add_CARRIER_STANDARD(::flatbuffers::Offset<::flatbuffers::String> CARRIER_STANDARD) {
-    fbb_.AddOffset(RFO::VT_CARRIER_STANDARD, CARRIER_STANDARD);
-  }
-  void add_MODULATION(::flatbuffers::Offset<::flatbuffers::String> MODULATION) {
-    fbb_.AddOffset(RFO::VT_MODULATION, MODULATION);
-  }
-  void add_INNER_CODING_RATE(int32_t INNER_CODING_RATE) {
-    fbb_.AddElement<int32_t>(RFO::VT_INNER_CODING_RATE, INNER_CODING_RATE, 0);
-  }
-  void add_OUTER_CODING_RATE(int32_t OUTER_CODING_RATE) {
-    fbb_.AddElement<int32_t>(RFO::VT_OUTER_CODING_RATE, OUTER_CODING_RATE, 0);
-  }
-  void add_TRANSMIT_FILTER_TYPE(::flatbuffers::Offset<::flatbuffers::String> TRANSMIT_FILTER_TYPE) {
-    fbb_.AddOffset(RFO::VT_TRANSMIT_FILTER_TYPE, TRANSMIT_FILTER_TYPE);
-  }
-  void add_TRANSMIT_FILTER_ROLL_OFF(double TRANSMIT_FILTER_ROLL_OFF) {
-    fbb_.AddElement<double>(RFO::VT_TRANSMIT_FILTER_ROLL_OFF, TRANSMIT_FILTER_ROLL_OFF, 0.0);
+  void add_BAUD_RATE(double BAUD_RATE) {
+    fbb_.AddElement<double>(RFO::VT_BAUD_RATE, BAUD_RATE, 0.0);
   }
   void add_SYMBOL_TO_NOISE_RATIO(double SYMBOL_TO_NOISE_RATIO) {
     fbb_.AddElement<double>(RFO::VT_SYMBOL_TO_NOISE_RATIO, SYMBOL_TO_NOISE_RATIO, 0.0);
@@ -638,14 +758,47 @@ struct RFOBuilder {
   void add_BIT_ERROR_RATE(double BIT_ERROR_RATE) {
     fbb_.AddElement<double>(RFO::VT_BIT_ERROR_RATE, BIT_ERROR_RATE, 0.0);
   }
-  void add_ON_ORBIT(::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT) {
-    fbb_.AddOffset(RFO::VT_ON_ORBIT, ON_ORBIT);
+  void add_PEAK(bool PEAK) {
+    fbb_.AddElement<uint8_t>(RFO::VT_PEAK, static_cast<uint8_t>(PEAK), 0);
+  }
+  void add_INCOMING(bool INCOMING) {
+    fbb_.AddElement<uint8_t>(RFO::VT_INCOMING, static_cast<uint8_t>(INCOMING), 0);
+  }
+  void add_SWITCH_POINT(uint16_t SWITCH_POINT) {
+    fbb_.AddElement<uint16_t>(RFO::VT_SWITCH_POINT, SWITCH_POINT, 0);
+  }
+  void add_CONFIDENCE(double CONFIDENCE) {
+    fbb_.AddElement<double>(RFO::VT_CONFIDENCE, CONFIDENCE, 0.0);
+  }
+  void add_CARRIER_STANDARD(::flatbuffers::Offset<::flatbuffers::String> CARRIER_STANDARD) {
+    fbb_.AddOffset(RFO::VT_CARRIER_STANDARD, CARRIER_STANDARD);
+  }
+  void add_MODULATION(::flatbuffers::Offset<::flatbuffers::String> MODULATION) {
+    fbb_.AddOffset(RFO::VT_MODULATION, MODULATION);
+  }
+  void add_INNER_CODING_RATE(uint8_t INNER_CODING_RATE) {
+    fbb_.AddElement<uint8_t>(RFO::VT_INNER_CODING_RATE, INNER_CODING_RATE, 0);
+  }
+  void add_OUTER_CODING_RATE(uint8_t OUTER_CODING_RATE) {
+    fbb_.AddElement<uint8_t>(RFO::VT_OUTER_CODING_RATE, OUTER_CODING_RATE, 0);
+  }
+  void add_TRANSMIT_FILTER_TYPE(::flatbuffers::Offset<::flatbuffers::String> TRANSMIT_FILTER_TYPE) {
+    fbb_.AddOffset(RFO::VT_TRANSMIT_FILTER_TYPE, TRANSMIT_FILTER_TYPE);
+  }
+  void add_TRANSMIT_FILTER_ROLL_OFF(double TRANSMIT_FILTER_ROLL_OFF) {
+    fbb_.AddElement<double>(RFO::VT_TRANSMIT_FILTER_ROLL_OFF, TRANSMIT_FILTER_ROLL_OFF, 0.0);
+  }
+  void add_RAW_FILE_URI(::flatbuffers::Offset<::flatbuffers::String> RAW_FILE_URI) {
+    fbb_.AddOffset(RFO::VT_RAW_FILE_URI, RAW_FILE_URI);
   }
   void add_DESCRIPTOR(::flatbuffers::Offset<::flatbuffers::String> DESCRIPTOR) {
     fbb_.AddOffset(RFO::VT_DESCRIPTOR, DESCRIPTOR);
   }
   void add_URL(::flatbuffers::Offset<::flatbuffers::String> URL) {
     fbb_.AddOffset(RFO::VT_URL, URL);
+  }
+  void add_TAGS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS) {
+    fbb_.AddOffset(RFO::VT_TAGS, TAGS);
   }
   explicit RFOBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -663,15 +816,17 @@ inline ::flatbuffers::Offset<RFO> CreateRFO(
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OB_TIME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ID_SENSOR = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TYPE = 0,
-    int32_t SAT_NO = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID = 0,
+    rfObsType OBS_TYPE = rfObsType_EMISSION,
+    uint32_t SAT_NO = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT = 0,
+    bool UCT = false,
     ::flatbuffers::Offset<::flatbuffers::String> TASK_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TRANSACTION_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TRACK_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID = 0,
-    bool UCT = false,
     ::flatbuffers::Offset<::flatbuffers::String> TRANSPONDER = 0,
+    rfDetectionStatus DETECTION_STATUS = rfDetectionStatus_DETECTED,
     double AZIMUTH = 0.0,
     double AZIMUTH_UNC = 0.0,
     double AZIMUTH_RATE = 0.0,
@@ -687,79 +842,77 @@ inline ::flatbuffers::Offset<RFO> CreateRFO(
     double SENLON = 0.0,
     double SENALT = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> ELNOT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ANTENNA_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> COLLECTION_MODE = 0,
     double FREQUENCY = 0.0,
     double NOMINAL_FREQUENCY = 0.0,
     double START_FREQUENCY = 0.0,
     double END_FREQUENCY = 0.0,
-    double RELATIVE_CARRIER_POWER = 0.0,
-    double SPECTRUM_ANALYZER_POWER = 0.0,
-    double RELATIVE_NOISE_FLOOR = 0.0,
-    double REFERENCE_LEVEL = 0.0,
-    double PGRI = 0.0,
-    double CONFIDENCE = 0.0,
-    bool INCOMING = false,
-    int32_t SWITCH_POINT = 0,
-    double BAUD_RATE = 0.0,
-    double SNR = 0.0,
-    double NOMINAL_SNR = 0.0,
-    double POLARITY = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::String> POLARITY_TYPE = 0,
-    int32_t CHANNEL = 0,
-    double POWER_OVER_NOISE = 0.0,
-    double NOMINAL_POWER_OVER_NOISE = 0.0,
+    double FREQUENCY_SHIFT = 0.0,
     double BANDWIDTH = 0.0,
     double NOMINAL_BANDWIDTH = 0.0,
     double RESOLUTION_BANDWIDTH = 0.0,
     double VIDEO_BANDWIDTH = 0.0,
+    double RELATIVE_CARRIER_POWER = 0.0,
+    double SPECTRUM_ANALYZER_POWER = 0.0,
+    double RELATIVE_NOISE_FLOOR = 0.0,
+    double REFERENCE_LEVEL = 0.0,
+    double NOISE_PWR_DENSITY = 0.0,
+    double PGRI = 0.0,
     double EIRP = 0.0,
     double NOMINAL_EIRP = 0.0,
     double MIN_PSD = 0.0,
     double MAX_PSD = 0.0,
-    double FREQUENCY_SHIFT = 0.0,
-    bool PEAK = false,
-    ::flatbuffers::Offset<::flatbuffers::String> ANTENNA_NAME = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> DETECTION_STATUS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> COLLECTION_MODE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> RAW_FILE_URI = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS = 0,
-    double NOISE_PWR_DENSITY = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::String> CARRIER_STANDARD = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> MODULATION = 0,
-    int32_t INNER_CODING_RATE = 0,
-    int32_t OUTER_CODING_RATE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TRANSMIT_FILTER_TYPE = 0,
-    double TRANSMIT_FILTER_ROLL_OFF = 0.0,
+    double SNR = 0.0,
+    double NOMINAL_SNR = 0.0,
+    double POWER_OVER_NOISE = 0.0,
+    double NOMINAL_POWER_OVER_NOISE = 0.0,
+    double POLARITY = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> POLARITY_TYPE = 0,
+    uint16_t CHANNEL = 0,
+    double BAUD_RATE = 0.0,
     double SYMBOL_TO_NOISE_RATIO = 0.0,
     double BIT_ERROR_RATE = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT = 0,
+    bool PEAK = false,
+    bool INCOMING = false,
+    uint16_t SWITCH_POINT = 0,
+    double CONFIDENCE = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> CARRIER_STANDARD = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> MODULATION = 0,
+    uint8_t INNER_CODING_RATE = 0,
+    uint8_t OUTER_CODING_RATE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> TRANSMIT_FILTER_TYPE = 0,
+    double TRANSMIT_FILTER_ROLL_OFF = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> RAW_FILE_URI = 0,
     ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTOR = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> URL = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> URL = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS = 0) {
   RFOBuilder builder_(_fbb);
+  builder_.add_TRANSMIT_FILTER_ROLL_OFF(TRANSMIT_FILTER_ROLL_OFF);
+  builder_.add_CONFIDENCE(CONFIDENCE);
   builder_.add_BIT_ERROR_RATE(BIT_ERROR_RATE);
   builder_.add_SYMBOL_TO_NOISE_RATIO(SYMBOL_TO_NOISE_RATIO);
-  builder_.add_TRANSMIT_FILTER_ROLL_OFF(TRANSMIT_FILTER_ROLL_OFF);
-  builder_.add_NOISE_PWR_DENSITY(NOISE_PWR_DENSITY);
-  builder_.add_FREQUENCY_SHIFT(FREQUENCY_SHIFT);
+  builder_.add_BAUD_RATE(BAUD_RATE);
+  builder_.add_POLARITY(POLARITY);
+  builder_.add_NOMINAL_POWER_OVER_NOISE(NOMINAL_POWER_OVER_NOISE);
+  builder_.add_POWER_OVER_NOISE(POWER_OVER_NOISE);
+  builder_.add_NOMINAL_SNR(NOMINAL_SNR);
+  builder_.add_SNR(SNR);
   builder_.add_MAX_PSD(MAX_PSD);
   builder_.add_MIN_PSD(MIN_PSD);
   builder_.add_NOMINAL_EIRP(NOMINAL_EIRP);
   builder_.add_EIRP(EIRP);
-  builder_.add_VIDEO_BANDWIDTH(VIDEO_BANDWIDTH);
-  builder_.add_RESOLUTION_BANDWIDTH(RESOLUTION_BANDWIDTH);
-  builder_.add_NOMINAL_BANDWIDTH(NOMINAL_BANDWIDTH);
-  builder_.add_BANDWIDTH(BANDWIDTH);
-  builder_.add_NOMINAL_POWER_OVER_NOISE(NOMINAL_POWER_OVER_NOISE);
-  builder_.add_POWER_OVER_NOISE(POWER_OVER_NOISE);
-  builder_.add_POLARITY(POLARITY);
-  builder_.add_NOMINAL_SNR(NOMINAL_SNR);
-  builder_.add_SNR(SNR);
-  builder_.add_BAUD_RATE(BAUD_RATE);
-  builder_.add_CONFIDENCE(CONFIDENCE);
   builder_.add_PGRI(PGRI);
+  builder_.add_NOISE_PWR_DENSITY(NOISE_PWR_DENSITY);
   builder_.add_REFERENCE_LEVEL(REFERENCE_LEVEL);
   builder_.add_RELATIVE_NOISE_FLOOR(RELATIVE_NOISE_FLOOR);
   builder_.add_SPECTRUM_ANALYZER_POWER(SPECTRUM_ANALYZER_POWER);
   builder_.add_RELATIVE_CARRIER_POWER(RELATIVE_CARRIER_POWER);
+  builder_.add_VIDEO_BANDWIDTH(VIDEO_BANDWIDTH);
+  builder_.add_RESOLUTION_BANDWIDTH(RESOLUTION_BANDWIDTH);
+  builder_.add_NOMINAL_BANDWIDTH(NOMINAL_BANDWIDTH);
+  builder_.add_BANDWIDTH(BANDWIDTH);
+  builder_.add_FREQUENCY_SHIFT(FREQUENCY_SHIFT);
   builder_.add_END_FREQUENCY(END_FREQUENCY);
   builder_.add_START_FREQUENCY(START_FREQUENCY);
   builder_.add_NOMINAL_FREQUENCY(NOMINAL_FREQUENCY);
@@ -778,37 +931,37 @@ inline ::flatbuffers::Offset<RFO> CreateRFO(
   builder_.add_AZIMUTH_RATE(AZIMUTH_RATE);
   builder_.add_AZIMUTH_UNC(AZIMUTH_UNC);
   builder_.add_AZIMUTH(AZIMUTH);
+  builder_.add_TAGS(TAGS);
   builder_.add_URL(URL);
   builder_.add_DESCRIPTOR(DESCRIPTOR);
-  builder_.add_ON_ORBIT(ON_ORBIT);
+  builder_.add_RAW_FILE_URI(RAW_FILE_URI);
   builder_.add_TRANSMIT_FILTER_TYPE(TRANSMIT_FILTER_TYPE);
-  builder_.add_OUTER_CODING_RATE(OUTER_CODING_RATE);
-  builder_.add_INNER_CODING_RATE(INNER_CODING_RATE);
   builder_.add_MODULATION(MODULATION);
   builder_.add_CARRIER_STANDARD(CARRIER_STANDARD);
-  builder_.add_TAGS(TAGS);
-  builder_.add_RAW_FILE_URI(RAW_FILE_URI);
-  builder_.add_COLLECTION_MODE(COLLECTION_MODE);
-  builder_.add_DETECTION_STATUS(DETECTION_STATUS);
-  builder_.add_ANTENNA_NAME(ANTENNA_NAME);
-  builder_.add_CHANNEL(CHANNEL);
   builder_.add_POLARITY_TYPE(POLARITY_TYPE);
-  builder_.add_SWITCH_POINT(SWITCH_POINT);
+  builder_.add_COLLECTION_MODE(COLLECTION_MODE);
+  builder_.add_ANTENNA_NAME(ANTENNA_NAME);
   builder_.add_ELNOT(ELNOT);
   builder_.add_TRANSPONDER(TRANSPONDER);
-  builder_.add_ORIG_SENSOR_ID(ORIG_SENSOR_ID);
-  builder_.add_ORIG_OBJECT_ID(ORIG_OBJECT_ID);
   builder_.add_TRACK_ID(TRACK_ID);
   builder_.add_TRANSACTION_ID(TRANSACTION_ID);
   builder_.add_TASK_ID(TASK_ID);
+  builder_.add_ON_ORBIT(ON_ORBIT);
+  builder_.add_ORIG_OBJECT_ID(ORIG_OBJECT_ID);
   builder_.add_SAT_NO(SAT_NO);
-  builder_.add_TYPE(TYPE);
+  builder_.add_ORIG_SENSOR_ID(ORIG_SENSOR_ID);
   builder_.add_ID_SENSOR(ID_SENSOR);
   builder_.add_OB_TIME(OB_TIME);
   builder_.add_ID(ID);
-  builder_.add_PEAK(PEAK);
+  builder_.add_SWITCH_POINT(SWITCH_POINT);
+  builder_.add_CHANNEL(CHANNEL);
+  builder_.add_OUTER_CODING_RATE(OUTER_CODING_RATE);
+  builder_.add_INNER_CODING_RATE(INNER_CODING_RATE);
   builder_.add_INCOMING(INCOMING);
+  builder_.add_PEAK(PEAK);
+  builder_.add_DETECTION_STATUS(DETECTION_STATUS);
   builder_.add_UCT(UCT);
+  builder_.add_OBS_TYPE(OBS_TYPE);
   return builder_.Finish();
 }
 
@@ -817,15 +970,17 @@ inline ::flatbuffers::Offset<RFO> CreateRFODirect(
     const char *ID = nullptr,
     const char *OB_TIME = nullptr,
     const char *ID_SENSOR = nullptr,
-    const char *TYPE = nullptr,
-    int32_t SAT_NO = 0,
+    const char *ORIG_SENSOR_ID = nullptr,
+    rfObsType OBS_TYPE = rfObsType_EMISSION,
+    uint32_t SAT_NO = 0,
+    const char *ORIG_OBJECT_ID = nullptr,
+    const char *ON_ORBIT = nullptr,
+    bool UCT = false,
     const char *TASK_ID = nullptr,
     const char *TRANSACTION_ID = nullptr,
     const char *TRACK_ID = nullptr,
-    const char *ORIG_OBJECT_ID = nullptr,
-    const char *ORIG_SENSOR_ID = nullptr,
-    bool UCT = false,
     const char *TRANSPONDER = nullptr,
+    rfDetectionStatus DETECTION_STATUS = rfDetectionStatus_DETECTED,
     double AZIMUTH = 0.0,
     double AZIMUTH_UNC = 0.0,
     double AZIMUTH_RATE = 0.0,
@@ -841,90 +996,88 @@ inline ::flatbuffers::Offset<RFO> CreateRFODirect(
     double SENLON = 0.0,
     double SENALT = 0.0,
     const char *ELNOT = nullptr,
+    const char *ANTENNA_NAME = nullptr,
+    const char *COLLECTION_MODE = nullptr,
     double FREQUENCY = 0.0,
     double NOMINAL_FREQUENCY = 0.0,
     double START_FREQUENCY = 0.0,
     double END_FREQUENCY = 0.0,
-    double RELATIVE_CARRIER_POWER = 0.0,
-    double SPECTRUM_ANALYZER_POWER = 0.0,
-    double RELATIVE_NOISE_FLOOR = 0.0,
-    double REFERENCE_LEVEL = 0.0,
-    double PGRI = 0.0,
-    double CONFIDENCE = 0.0,
-    bool INCOMING = false,
-    int32_t SWITCH_POINT = 0,
-    double BAUD_RATE = 0.0,
-    double SNR = 0.0,
-    double NOMINAL_SNR = 0.0,
-    double POLARITY = 0.0,
-    const char *POLARITY_TYPE = nullptr,
-    int32_t CHANNEL = 0,
-    double POWER_OVER_NOISE = 0.0,
-    double NOMINAL_POWER_OVER_NOISE = 0.0,
+    double FREQUENCY_SHIFT = 0.0,
     double BANDWIDTH = 0.0,
     double NOMINAL_BANDWIDTH = 0.0,
     double RESOLUTION_BANDWIDTH = 0.0,
     double VIDEO_BANDWIDTH = 0.0,
+    double RELATIVE_CARRIER_POWER = 0.0,
+    double SPECTRUM_ANALYZER_POWER = 0.0,
+    double RELATIVE_NOISE_FLOOR = 0.0,
+    double REFERENCE_LEVEL = 0.0,
+    double NOISE_PWR_DENSITY = 0.0,
+    double PGRI = 0.0,
     double EIRP = 0.0,
     double NOMINAL_EIRP = 0.0,
     double MIN_PSD = 0.0,
     double MAX_PSD = 0.0,
-    double FREQUENCY_SHIFT = 0.0,
-    bool PEAK = false,
-    const char *ANTENNA_NAME = nullptr,
-    const char *DETECTION_STATUS = nullptr,
-    const char *COLLECTION_MODE = nullptr,
-    const char *RAW_FILE_URI = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS = nullptr,
-    double NOISE_PWR_DENSITY = 0.0,
-    const char *CARRIER_STANDARD = nullptr,
-    const char *MODULATION = nullptr,
-    int32_t INNER_CODING_RATE = 0,
-    int32_t OUTER_CODING_RATE = 0,
-    const char *TRANSMIT_FILTER_TYPE = nullptr,
-    double TRANSMIT_FILTER_ROLL_OFF = 0.0,
+    double SNR = 0.0,
+    double NOMINAL_SNR = 0.0,
+    double POWER_OVER_NOISE = 0.0,
+    double NOMINAL_POWER_OVER_NOISE = 0.0,
+    double POLARITY = 0.0,
+    const char *POLARITY_TYPE = nullptr,
+    uint16_t CHANNEL = 0,
+    double BAUD_RATE = 0.0,
     double SYMBOL_TO_NOISE_RATIO = 0.0,
     double BIT_ERROR_RATE = 0.0,
-    const char *ON_ORBIT = nullptr,
+    bool PEAK = false,
+    bool INCOMING = false,
+    uint16_t SWITCH_POINT = 0,
+    double CONFIDENCE = 0.0,
+    const char *CARRIER_STANDARD = nullptr,
+    const char *MODULATION = nullptr,
+    uint8_t INNER_CODING_RATE = 0,
+    uint8_t OUTER_CODING_RATE = 0,
+    const char *TRANSMIT_FILTER_TYPE = nullptr,
+    double TRANSMIT_FILTER_ROLL_OFF = 0.0,
+    const char *RAW_FILE_URI = nullptr,
     const char *DESCRIPTOR = nullptr,
-    const char *URL = nullptr) {
+    const char *URL = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto OB_TIME__ = OB_TIME ? _fbb.CreateString(OB_TIME) : 0;
   auto ID_SENSOR__ = ID_SENSOR ? _fbb.CreateString(ID_SENSOR) : 0;
-  auto TYPE__ = TYPE ? _fbb.CreateString(TYPE) : 0;
+  auto ORIG_SENSOR_ID__ = ORIG_SENSOR_ID ? _fbb.CreateString(ORIG_SENSOR_ID) : 0;
+  auto ORIG_OBJECT_ID__ = ORIG_OBJECT_ID ? _fbb.CreateString(ORIG_OBJECT_ID) : 0;
+  auto ON_ORBIT__ = ON_ORBIT ? _fbb.CreateString(ON_ORBIT) : 0;
   auto TASK_ID__ = TASK_ID ? _fbb.CreateString(TASK_ID) : 0;
   auto TRANSACTION_ID__ = TRANSACTION_ID ? _fbb.CreateString(TRANSACTION_ID) : 0;
   auto TRACK_ID__ = TRACK_ID ? _fbb.CreateString(TRACK_ID) : 0;
-  auto ORIG_OBJECT_ID__ = ORIG_OBJECT_ID ? _fbb.CreateString(ORIG_OBJECT_ID) : 0;
-  auto ORIG_SENSOR_ID__ = ORIG_SENSOR_ID ? _fbb.CreateString(ORIG_SENSOR_ID) : 0;
   auto TRANSPONDER__ = TRANSPONDER ? _fbb.CreateString(TRANSPONDER) : 0;
   auto ELNOT__ = ELNOT ? _fbb.CreateString(ELNOT) : 0;
-  auto POLARITY_TYPE__ = POLARITY_TYPE ? _fbb.CreateString(POLARITY_TYPE) : 0;
   auto ANTENNA_NAME__ = ANTENNA_NAME ? _fbb.CreateString(ANTENNA_NAME) : 0;
-  auto DETECTION_STATUS__ = DETECTION_STATUS ? _fbb.CreateString(DETECTION_STATUS) : 0;
   auto COLLECTION_MODE__ = COLLECTION_MODE ? _fbb.CreateString(COLLECTION_MODE) : 0;
-  auto RAW_FILE_URI__ = RAW_FILE_URI ? _fbb.CreateString(RAW_FILE_URI) : 0;
-  auto TAGS__ = TAGS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*TAGS) : 0;
+  auto POLARITY_TYPE__ = POLARITY_TYPE ? _fbb.CreateString(POLARITY_TYPE) : 0;
   auto CARRIER_STANDARD__ = CARRIER_STANDARD ? _fbb.CreateString(CARRIER_STANDARD) : 0;
   auto MODULATION__ = MODULATION ? _fbb.CreateString(MODULATION) : 0;
   auto TRANSMIT_FILTER_TYPE__ = TRANSMIT_FILTER_TYPE ? _fbb.CreateString(TRANSMIT_FILTER_TYPE) : 0;
-  auto ON_ORBIT__ = ON_ORBIT ? _fbb.CreateString(ON_ORBIT) : 0;
+  auto RAW_FILE_URI__ = RAW_FILE_URI ? _fbb.CreateString(RAW_FILE_URI) : 0;
   auto DESCRIPTOR__ = DESCRIPTOR ? _fbb.CreateString(DESCRIPTOR) : 0;
   auto URL__ = URL ? _fbb.CreateString(URL) : 0;
+  auto TAGS__ = TAGS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*TAGS) : 0;
   return CreateRFO(
       _fbb,
       ID__,
       OB_TIME__,
       ID_SENSOR__,
-      TYPE__,
+      ORIG_SENSOR_ID__,
+      OBS_TYPE,
       SAT_NO,
+      ORIG_OBJECT_ID__,
+      ON_ORBIT__,
+      UCT,
       TASK_ID__,
       TRANSACTION_ID__,
       TRACK_ID__,
-      ORIG_OBJECT_ID__,
-      ORIG_SENSOR_ID__,
-      UCT,
       TRANSPONDER__,
+      DETECTION_STATUS,
       AZIMUTH,
       AZIMUTH_UNC,
       AZIMUTH_RATE,
@@ -940,53 +1093,51 @@ inline ::flatbuffers::Offset<RFO> CreateRFODirect(
       SENLON,
       SENALT,
       ELNOT__,
+      ANTENNA_NAME__,
+      COLLECTION_MODE__,
       FREQUENCY,
       NOMINAL_FREQUENCY,
       START_FREQUENCY,
       END_FREQUENCY,
-      RELATIVE_CARRIER_POWER,
-      SPECTRUM_ANALYZER_POWER,
-      RELATIVE_NOISE_FLOOR,
-      REFERENCE_LEVEL,
-      PGRI,
-      CONFIDENCE,
-      INCOMING,
-      SWITCH_POINT,
-      BAUD_RATE,
-      SNR,
-      NOMINAL_SNR,
-      POLARITY,
-      POLARITY_TYPE__,
-      CHANNEL,
-      POWER_OVER_NOISE,
-      NOMINAL_POWER_OVER_NOISE,
+      FREQUENCY_SHIFT,
       BANDWIDTH,
       NOMINAL_BANDWIDTH,
       RESOLUTION_BANDWIDTH,
       VIDEO_BANDWIDTH,
+      RELATIVE_CARRIER_POWER,
+      SPECTRUM_ANALYZER_POWER,
+      RELATIVE_NOISE_FLOOR,
+      REFERENCE_LEVEL,
+      NOISE_PWR_DENSITY,
+      PGRI,
       EIRP,
       NOMINAL_EIRP,
       MIN_PSD,
       MAX_PSD,
-      FREQUENCY_SHIFT,
+      SNR,
+      NOMINAL_SNR,
+      POWER_OVER_NOISE,
+      NOMINAL_POWER_OVER_NOISE,
+      POLARITY,
+      POLARITY_TYPE__,
+      CHANNEL,
+      BAUD_RATE,
+      SYMBOL_TO_NOISE_RATIO,
+      BIT_ERROR_RATE,
       PEAK,
-      ANTENNA_NAME__,
-      DETECTION_STATUS__,
-      COLLECTION_MODE__,
-      RAW_FILE_URI__,
-      TAGS__,
-      NOISE_PWR_DENSITY,
+      INCOMING,
+      SWITCH_POINT,
+      CONFIDENCE,
       CARRIER_STANDARD__,
       MODULATION__,
       INNER_CODING_RATE,
       OUTER_CODING_RATE,
       TRANSMIT_FILTER_TYPE__,
       TRANSMIT_FILTER_ROLL_OFF,
-      SYMBOL_TO_NOISE_RATIO,
-      BIT_ERROR_RATE,
-      ON_ORBIT__,
+      RAW_FILE_URI__,
       DESCRIPTOR__,
-      URL__);
+      URL__,
+      TAGS__);
 }
 
 inline const RFO *GetRFO(const void *buf) {

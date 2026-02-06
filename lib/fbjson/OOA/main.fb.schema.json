@@ -1,0 +1,102 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "OOA": {
+      "type": "object",
+      "description": "On-Orbit Antenna",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Unique identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_ON_ORBIT": {
+          "type": "string",
+          "description": "Reference to parent on-orbit object",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_ANTENNA": {
+          "type": "string",
+          "description": "Reference to antenna specification",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Antenna name or designation",
+          "x-flatbuffer-type": "string"
+        },
+        "ANTENNA_TYPE": {
+          "type": "string",
+          "description": "Antenna type (e.g., PARABOLIC, PHASED_ARRAY, HORN, HELICAL, DIPOLE, PATCH, YAGI)",
+          "x-flatbuffer-type": "string"
+        },
+        "QUANTITY": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of antennas of this type",
+          "x-flatbuffer-type": "uint"
+        },
+        "BAND": {
+          "type": "string",
+          "description": "Operating frequency band (e.g., UHF, L, S, C, X, Ku, Ka, V, W)",
+          "x-flatbuffer-type": "string"
+        },
+        "FREQ_MIN": {
+          "type": "number",
+          "description": "Minimum operating frequency in MHz",
+          "x-flatbuffer-type": "double"
+        },
+        "FREQ_MAX": {
+          "type": "number",
+          "description": "Maximum operating frequency in MHz",
+          "x-flatbuffer-type": "double"
+        },
+        "GAIN": {
+          "type": "number",
+          "description": "Antenna gain in dBi",
+          "x-flatbuffer-type": "double"
+        },
+        "APERTURE": {
+          "type": "number",
+          "description": "Antenna diameter or aperture in meters",
+          "x-flatbuffer-type": "double"
+        },
+        "BEAMWIDTH": {
+          "type": "number",
+          "description": "Beamwidth in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "POLARIZATION": {
+          "type": "string",
+          "description": "Polarization type (e.g., LINEAR, CIRCULAR, DUAL, RHCP, LHCP)",
+          "x-flatbuffer-type": "string"
+        },
+        "STEERABLE": {
+          "type": "boolean",
+          "description": "Whether the antenna is steerable",
+          "x-flatbuffer-type": "bool"
+        },
+        "SLEW_RATE": {
+          "type": "number",
+          "description": "Maximum slew rate in degrees per second",
+          "x-flatbuffer-type": "double"
+        },
+        "PURPOSE": {
+          "type": "string",
+          "description": "Purpose or function (e.g., TT_C, PAYLOAD, CROSSLINK, GPS)",
+          "x-flatbuffer-type": "string"
+        },
+        "NOTES": {
+          "type": "string",
+          "description": "Additional notes",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/OOA",
+  "x-flatbuffer-root-type": "OOA",
+  "x-flatbuffer-file-identifier": "$OOA"
+}

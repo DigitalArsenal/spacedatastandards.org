@@ -9,10 +9,111 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_DOA_COLLECTION_MODE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_DOA_COLLECTION_MODE: i8 = 5;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_DOA_COLLECTION_MODE: [doaCollectionMode; 6] = [
+  doaCollectionMode::TDOA,
+  doaCollectionMode::FDOA,
+  doaCollectionMode::TDOA_FDOA,
+  doaCollectionMode::AOA,
+  doaCollectionMode::COMBINED,
+  doaCollectionMode::UNKNOWN,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct doaCollectionMode(pub i8);
+#[allow(non_upper_case_globals)]
+impl doaCollectionMode {
+  pub const TDOA: Self = Self(0);
+  pub const FDOA: Self = Self(1);
+  pub const TDOA_FDOA: Self = Self(2);
+  pub const AOA: Self = Self(3);
+  pub const COMBINED: Self = Self(4);
+  pub const UNKNOWN: Self = Self(5);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 5;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::TDOA,
+    Self::FDOA,
+    Self::TDOA_FDOA,
+    Self::AOA,
+    Self::COMBINED,
+    Self::UNKNOWN,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::TDOA => Some("TDOA"),
+      Self::FDOA => Some("FDOA"),
+      Self::TDOA_FDOA => Some("TDOA_FDOA"),
+      Self::AOA => Some("AOA"),
+      Self::COMBINED => Some("COMBINED"),
+      Self::UNKNOWN => Some("UNKNOWN"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for doaCollectionMode {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for doaCollectionMode {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for doaCollectionMode {
+    type Output = doaCollectionMode;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for doaCollectionMode {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for doaCollectionMode {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for doaCollectionMode {}
 pub enum DOAOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Difference of Arrival
+/// Difference of Arrival Geolocation
 pub struct DOA<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }
@@ -28,39 +129,39 @@ impl<'a> flatbuffers::Follow<'a> for DOA<'a> {
 impl<'a> DOA<'a> {
   pub const VT_ID: flatbuffers::VOffsetT = 4;
   pub const VT_OB_TIME: flatbuffers::VOffsetT = 6;
-  pub const VT_ID_SENSOR1: flatbuffers::VOffsetT = 8;
-  pub const VT_ID_SENSOR2: flatbuffers::VOffsetT = 10;
-  pub const VT_SAT_NO: flatbuffers::VOffsetT = 12;
-  pub const VT_TASK_ID: flatbuffers::VOffsetT = 14;
-  pub const VT_ORIG_OBJECT_ID: flatbuffers::VOffsetT = 16;
-  pub const VT_ORIG_SENSOR_ID1: flatbuffers::VOffsetT = 18;
-  pub const VT_ORIG_SENSOR_ID2: flatbuffers::VOffsetT = 20;
-  pub const VT_UCT: flatbuffers::VOffsetT = 22;
-  pub const VT_SENSOR1_DELAY: flatbuffers::VOffsetT = 24;
-  pub const VT_SENSOR2_DELAY: flatbuffers::VOffsetT = 26;
-  pub const VT_SENLAT: flatbuffers::VOffsetT = 28;
-  pub const VT_SENLON: flatbuffers::VOffsetT = 30;
-  pub const VT_SENALT: flatbuffers::VOffsetT = 32;
-  pub const VT_SEN2LAT: flatbuffers::VOffsetT = 34;
-  pub const VT_SEN2LON: flatbuffers::VOffsetT = 36;
-  pub const VT_SEN2ALT: flatbuffers::VOffsetT = 38;
-  pub const VT_FREQUENCY: flatbuffers::VOffsetT = 40;
-  pub const VT_BANDWIDTH: flatbuffers::VOffsetT = 42;
-  pub const VT_DELTA_RANGE: flatbuffers::VOffsetT = 44;
-  pub const VT_DELTA_RANGE_UNC: flatbuffers::VOffsetT = 46;
-  pub const VT_DELTA_RANGE_RATE: flatbuffers::VOffsetT = 48;
-  pub const VT_DELTA_RANGE_RATE_UNC: flatbuffers::VOffsetT = 50;
-  pub const VT_SNR: flatbuffers::VOffsetT = 52;
-  pub const VT_TDOA: flatbuffers::VOffsetT = 54;
-  pub const VT_TDOA_UNC: flatbuffers::VOffsetT = 56;
-  pub const VT_FDOA: flatbuffers::VOffsetT = 58;
-  pub const VT_FDOA_UNC: flatbuffers::VOffsetT = 60;
-  pub const VT_COLLECTION_MODE: flatbuffers::VOffsetT = 62;
-  pub const VT_RAW_FILE_URI: flatbuffers::VOffsetT = 64;
-  pub const VT_TAGS: flatbuffers::VOffsetT = 66;
-  pub const VT_ON_ORBIT: flatbuffers::VOffsetT = 68;
+  pub const VT_SAT_NO: flatbuffers::VOffsetT = 8;
+  pub const VT_ORIG_OBJECT_ID: flatbuffers::VOffsetT = 10;
+  pub const VT_ON_ORBIT: flatbuffers::VOffsetT = 12;
+  pub const VT_UCT: flatbuffers::VOffsetT = 14;
+  pub const VT_TASK_ID: flatbuffers::VOffsetT = 16;
+  pub const VT_TRANSACTION_ID: flatbuffers::VOffsetT = 18;
+  pub const VT_COLLECTION_MODE: flatbuffers::VOffsetT = 20;
+  pub const VT_ID_SENSOR1: flatbuffers::VOffsetT = 22;
+  pub const VT_ORIG_SENSOR_ID1: flatbuffers::VOffsetT = 24;
+  pub const VT_SENLAT: flatbuffers::VOffsetT = 26;
+  pub const VT_SENLON: flatbuffers::VOffsetT = 28;
+  pub const VT_SENALT: flatbuffers::VOffsetT = 30;
+  pub const VT_SENSOR1_DELAY: flatbuffers::VOffsetT = 32;
+  pub const VT_ID_SENSOR2: flatbuffers::VOffsetT = 34;
+  pub const VT_ORIG_SENSOR_ID2: flatbuffers::VOffsetT = 36;
+  pub const VT_SEN2LAT: flatbuffers::VOffsetT = 38;
+  pub const VT_SEN2LON: flatbuffers::VOffsetT = 40;
+  pub const VT_SEN2ALT: flatbuffers::VOffsetT = 42;
+  pub const VT_SENSOR2_DELAY: flatbuffers::VOffsetT = 44;
+  pub const VT_FREQUENCY: flatbuffers::VOffsetT = 46;
+  pub const VT_BANDWIDTH: flatbuffers::VOffsetT = 48;
+  pub const VT_SNR: flatbuffers::VOffsetT = 50;
+  pub const VT_DELTA_RANGE: flatbuffers::VOffsetT = 52;
+  pub const VT_DELTA_RANGE_UNC: flatbuffers::VOffsetT = 54;
+  pub const VT_DELTA_RANGE_RATE: flatbuffers::VOffsetT = 56;
+  pub const VT_DELTA_RANGE_RATE_UNC: flatbuffers::VOffsetT = 58;
+  pub const VT_TDOA: flatbuffers::VOffsetT = 60;
+  pub const VT_TDOA_UNC: flatbuffers::VOffsetT = 62;
+  pub const VT_FDOA: flatbuffers::VOffsetT = 64;
+  pub const VT_FDOA_UNC: flatbuffers::VOffsetT = 66;
+  pub const VT_RAW_FILE_URI: flatbuffers::VOffsetT = 68;
   pub const VT_DESCRIPTOR: flatbuffers::VOffsetT = 70;
-  pub const VT_TRANSACTION_ID: flatbuffers::VOffsetT = 72;
+  pub const VT_TAGS: flatbuffers::VOffsetT = 72;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -76,36 +177,36 @@ impl<'a> DOA<'a> {
     builder.add_FDOA(args.FDOA);
     builder.add_TDOA_UNC(args.TDOA_UNC);
     builder.add_TDOA(args.TDOA);
-    builder.add_SNR(args.SNR);
     builder.add_DELTA_RANGE_RATE_UNC(args.DELTA_RANGE_RATE_UNC);
     builder.add_DELTA_RANGE_RATE(args.DELTA_RANGE_RATE);
     builder.add_DELTA_RANGE_UNC(args.DELTA_RANGE_UNC);
     builder.add_DELTA_RANGE(args.DELTA_RANGE);
+    builder.add_SNR(args.SNR);
     builder.add_BANDWIDTH(args.BANDWIDTH);
     builder.add_FREQUENCY(args.FREQUENCY);
+    builder.add_SENSOR2_DELAY(args.SENSOR2_DELAY);
     builder.add_SEN2ALT(args.SEN2ALT);
     builder.add_SEN2LON(args.SEN2LON);
     builder.add_SEN2LAT(args.SEN2LAT);
+    builder.add_SENSOR1_DELAY(args.SENSOR1_DELAY);
     builder.add_SENALT(args.SENALT);
     builder.add_SENLON(args.SENLON);
     builder.add_SENLAT(args.SENLAT);
-    builder.add_SENSOR2_DELAY(args.SENSOR2_DELAY);
-    builder.add_SENSOR1_DELAY(args.SENSOR1_DELAY);
-    if let Some(x) = args.TRANSACTION_ID { builder.add_TRANSACTION_ID(x); }
-    if let Some(x) = args.DESCRIPTOR { builder.add_DESCRIPTOR(x); }
-    if let Some(x) = args.ON_ORBIT { builder.add_ON_ORBIT(x); }
     if let Some(x) = args.TAGS { builder.add_TAGS(x); }
+    if let Some(x) = args.DESCRIPTOR { builder.add_DESCRIPTOR(x); }
     if let Some(x) = args.RAW_FILE_URI { builder.add_RAW_FILE_URI(x); }
-    if let Some(x) = args.COLLECTION_MODE { builder.add_COLLECTION_MODE(x); }
     if let Some(x) = args.ORIG_SENSOR_ID2 { builder.add_ORIG_SENSOR_ID2(x); }
-    if let Some(x) = args.ORIG_SENSOR_ID1 { builder.add_ORIG_SENSOR_ID1(x); }
-    if let Some(x) = args.ORIG_OBJECT_ID { builder.add_ORIG_OBJECT_ID(x); }
-    if let Some(x) = args.TASK_ID { builder.add_TASK_ID(x); }
-    builder.add_SAT_NO(args.SAT_NO);
     if let Some(x) = args.ID_SENSOR2 { builder.add_ID_SENSOR2(x); }
+    if let Some(x) = args.ORIG_SENSOR_ID1 { builder.add_ORIG_SENSOR_ID1(x); }
     if let Some(x) = args.ID_SENSOR1 { builder.add_ID_SENSOR1(x); }
+    if let Some(x) = args.TRANSACTION_ID { builder.add_TRANSACTION_ID(x); }
+    if let Some(x) = args.TASK_ID { builder.add_TASK_ID(x); }
+    if let Some(x) = args.ON_ORBIT { builder.add_ON_ORBIT(x); }
+    if let Some(x) = args.ORIG_OBJECT_ID { builder.add_ORIG_OBJECT_ID(x); }
+    builder.add_SAT_NO(args.SAT_NO);
     if let Some(x) = args.OB_TIME { builder.add_OB_TIME(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_COLLECTION_MODE(args.COLLECTION_MODE);
     builder.add_UCT(args.UCT);
     builder.finish()
   }
@@ -117,102 +218,101 @@ impl<'a> DOA<'a> {
     let OB_TIME = self.OB_TIME().map(|x| {
       x.to_string()
     });
-    let ID_SENSOR1 = self.ID_SENSOR1().map(|x| {
-      x.to_string()
-    });
-    let ID_SENSOR2 = self.ID_SENSOR2().map(|x| {
-      x.to_string()
-    });
     let SAT_NO = self.SAT_NO();
-    let TASK_ID = self.TASK_ID().map(|x| {
-      x.to_string()
-    });
     let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID().map(|x| {
       x.to_string()
-    });
-    let ORIG_SENSOR_ID1 = self.ORIG_SENSOR_ID1().map(|x| {
-      x.to_string()
-    });
-    let ORIG_SENSOR_ID2 = self.ORIG_SENSOR_ID2().map(|x| {
-      x.to_string()
-    });
-    let UCT = self.UCT();
-    let SENSOR1_DELAY = self.SENSOR1_DELAY();
-    let SENSOR2_DELAY = self.SENSOR2_DELAY();
-    let SENLAT = self.SENLAT();
-    let SENLON = self.SENLON();
-    let SENALT = self.SENALT();
-    let SEN2LAT = self.SEN2LAT();
-    let SEN2LON = self.SEN2LON();
-    let SEN2ALT = self.SEN2ALT();
-    let FREQUENCY = self.FREQUENCY();
-    let BANDWIDTH = self.BANDWIDTH();
-    let DELTA_RANGE = self.DELTA_RANGE();
-    let DELTA_RANGE_UNC = self.DELTA_RANGE_UNC();
-    let DELTA_RANGE_RATE = self.DELTA_RANGE_RATE();
-    let DELTA_RANGE_RATE_UNC = self.DELTA_RANGE_RATE_UNC();
-    let SNR = self.SNR();
-    let TDOA = self.TDOA();
-    let TDOA_UNC = self.TDOA_UNC();
-    let FDOA = self.FDOA();
-    let FDOA_UNC = self.FDOA_UNC();
-    let COLLECTION_MODE = self.COLLECTION_MODE().map(|x| {
-      x.to_string()
-    });
-    let RAW_FILE_URI = self.RAW_FILE_URI().map(|x| {
-      x.to_string()
-    });
-    let TAGS = self.TAGS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
     });
     let ON_ORBIT = self.ON_ORBIT().map(|x| {
       x.to_string()
     });
-    let DESCRIPTOR = self.DESCRIPTOR().map(|x| {
+    let UCT = self.UCT();
+    let TASK_ID = self.TASK_ID().map(|x| {
       x.to_string()
     });
     let TRANSACTION_ID = self.TRANSACTION_ID().map(|x| {
       x.to_string()
     });
+    let COLLECTION_MODE = self.COLLECTION_MODE();
+    let ID_SENSOR1 = self.ID_SENSOR1().map(|x| {
+      x.to_string()
+    });
+    let ORIG_SENSOR_ID1 = self.ORIG_SENSOR_ID1().map(|x| {
+      x.to_string()
+    });
+    let SENLAT = self.SENLAT();
+    let SENLON = self.SENLON();
+    let SENALT = self.SENALT();
+    let SENSOR1_DELAY = self.SENSOR1_DELAY();
+    let ID_SENSOR2 = self.ID_SENSOR2().map(|x| {
+      x.to_string()
+    });
+    let ORIG_SENSOR_ID2 = self.ORIG_SENSOR_ID2().map(|x| {
+      x.to_string()
+    });
+    let SEN2LAT = self.SEN2LAT();
+    let SEN2LON = self.SEN2LON();
+    let SEN2ALT = self.SEN2ALT();
+    let SENSOR2_DELAY = self.SENSOR2_DELAY();
+    let FREQUENCY = self.FREQUENCY();
+    let BANDWIDTH = self.BANDWIDTH();
+    let SNR = self.SNR();
+    let DELTA_RANGE = self.DELTA_RANGE();
+    let DELTA_RANGE_UNC = self.DELTA_RANGE_UNC();
+    let DELTA_RANGE_RATE = self.DELTA_RANGE_RATE();
+    let DELTA_RANGE_RATE_UNC = self.DELTA_RANGE_RATE_UNC();
+    let TDOA = self.TDOA();
+    let TDOA_UNC = self.TDOA_UNC();
+    let FDOA = self.FDOA();
+    let FDOA_UNC = self.FDOA_UNC();
+    let RAW_FILE_URI = self.RAW_FILE_URI().map(|x| {
+      x.to_string()
+    });
+    let DESCRIPTOR = self.DESCRIPTOR().map(|x| {
+      x.to_string()
+    });
+    let TAGS = self.TAGS().map(|x| {
+      x.iter().map(|s| s.to_string()).collect()
+    });
     DOAT {
       ID,
       OB_TIME,
-      ID_SENSOR1,
-      ID_SENSOR2,
       SAT_NO,
-      TASK_ID,
       ORIG_OBJECT_ID,
-      ORIG_SENSOR_ID1,
-      ORIG_SENSOR_ID2,
+      ON_ORBIT,
       UCT,
-      SENSOR1_DELAY,
-      SENSOR2_DELAY,
+      TASK_ID,
+      TRANSACTION_ID,
+      COLLECTION_MODE,
+      ID_SENSOR1,
+      ORIG_SENSOR_ID1,
       SENLAT,
       SENLON,
       SENALT,
+      SENSOR1_DELAY,
+      ID_SENSOR2,
+      ORIG_SENSOR_ID2,
       SEN2LAT,
       SEN2LON,
       SEN2ALT,
+      SENSOR2_DELAY,
       FREQUENCY,
       BANDWIDTH,
+      SNR,
       DELTA_RANGE,
       DELTA_RANGE_UNC,
       DELTA_RANGE_RATE,
       DELTA_RANGE_RATE_UNC,
-      SNR,
       TDOA,
       TDOA_UNC,
       FDOA,
       FDOA_UNC,
-      COLLECTION_MODE,
       RAW_FILE_URI,
-      TAGS,
-      ON_ORBIT,
       DESCRIPTOR,
-      TRANSACTION_ID,
+      TAGS,
     }
   }
 
+  /// Unique identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -220,6 +320,7 @@ impl<'a> DOA<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DOA::VT_ID, None)}
   }
+  /// Observation time (ISO 8601)
   #[inline]
   pub fn OB_TIME(&self) -> Option<&'a str> {
     // Safety:
@@ -227,34 +328,15 @@ impl<'a> DOA<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DOA::VT_OB_TIME, None)}
   }
+  /// Satellite catalog number
   #[inline]
-  pub fn ID_SENSOR1(&self) -> Option<&'a str> {
+  pub fn SAT_NO(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DOA::VT_ID_SENSOR1, None)}
+    unsafe { self._tab.get::<u32>(DOA::VT_SAT_NO, Some(0)).unwrap()}
   }
-  #[inline]
-  pub fn ID_SENSOR2(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DOA::VT_ID_SENSOR2, None)}
-  }
-  #[inline]
-  pub fn SAT_NO(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(DOA::VT_SAT_NO, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn TASK_ID(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DOA::VT_TASK_ID, None)}
-  }
+  /// International designator
   #[inline]
   pub fn ORIG_OBJECT_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -262,181 +344,7 @@ impl<'a> DOA<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DOA::VT_ORIG_OBJECT_ID, None)}
   }
-  #[inline]
-  pub fn ORIG_SENSOR_ID1(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DOA::VT_ORIG_SENSOR_ID1, None)}
-  }
-  #[inline]
-  pub fn ORIG_SENSOR_ID2(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DOA::VT_ORIG_SENSOR_ID2, None)}
-  }
-  #[inline]
-  pub fn UCT(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(DOA::VT_UCT, Some(false)).unwrap()}
-  }
-  #[inline]
-  pub fn SENSOR1_DELAY(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(DOA::VT_SENSOR1_DELAY, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SENSOR2_DELAY(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(DOA::VT_SENSOR2_DELAY, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SENLAT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(DOA::VT_SENLAT, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SENLON(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(DOA::VT_SENLON, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SENALT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(DOA::VT_SENALT, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SEN2LAT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(DOA::VT_SEN2LAT, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SEN2LON(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(DOA::VT_SEN2LON, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SEN2ALT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(DOA::VT_SEN2ALT, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn FREQUENCY(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(DOA::VT_FREQUENCY, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn BANDWIDTH(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(DOA::VT_BANDWIDTH, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn DELTA_RANGE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(DOA::VT_DELTA_RANGE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn DELTA_RANGE_UNC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(DOA::VT_DELTA_RANGE_UNC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn DELTA_RANGE_RATE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(DOA::VT_DELTA_RANGE_RATE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn DELTA_RANGE_RATE_UNC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(DOA::VT_DELTA_RANGE_RATE_UNC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SNR(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(DOA::VT_SNR, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn TDOA(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(DOA::VT_TDOA, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn TDOA_UNC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(DOA::VT_TDOA_UNC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn FDOA(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(DOA::VT_FDOA, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn FDOA_UNC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(DOA::VT_FDOA_UNC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn COLLECTION_MODE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DOA::VT_COLLECTION_MODE, None)}
-  }
-  #[inline]
-  pub fn RAW_FILE_URI(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DOA::VT_RAW_FILE_URI, None)}
-  }
-  #[inline]
-  pub fn TAGS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(DOA::VT_TAGS, None)}
-  }
+  /// On-orbit reference
   #[inline]
   pub fn ON_ORBIT(&self) -> Option<&'a str> {
     // Safety:
@@ -444,6 +352,231 @@ impl<'a> DOA<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DOA::VT_ON_ORBIT, None)}
   }
+  /// True if uncorrelated target
+  #[inline]
+  pub fn UCT(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(DOA::VT_UCT, Some(false)).unwrap()}
+  }
+  /// Task identifier
+  #[inline]
+  pub fn TASK_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DOA::VT_TASK_ID, None)}
+  }
+  /// Transaction identifier
+  #[inline]
+  pub fn TRANSACTION_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DOA::VT_TRANSACTION_ID, None)}
+  }
+  /// Collection mode
+  #[inline]
+  pub fn COLLECTION_MODE(&self) -> doaCollectionMode {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<doaCollectionMode>(DOA::VT_COLLECTION_MODE, Some(doaCollectionMode::TDOA)).unwrap()}
+  }
+  /// Sensor 1 identifier
+  #[inline]
+  pub fn ID_SENSOR1(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DOA::VT_ID_SENSOR1, None)}
+  }
+  /// Sensor 1 original identifier
+  #[inline]
+  pub fn ORIG_SENSOR_ID1(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DOA::VT_ORIG_SENSOR_ID1, None)}
+  }
+  /// Sensor 1 latitude (degrees)
+  #[inline]
+  pub fn SENLAT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(DOA::VT_SENLAT, Some(0.0)).unwrap()}
+  }
+  /// Sensor 1 longitude (degrees)
+  #[inline]
+  pub fn SENLON(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(DOA::VT_SENLON, Some(0.0)).unwrap()}
+  }
+  /// Sensor 1 altitude (km)
+  #[inline]
+  pub fn SENALT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(DOA::VT_SENALT, Some(0.0)).unwrap()}
+  }
+  /// Sensor 1 processing delay (seconds)
+  #[inline]
+  pub fn SENSOR1_DELAY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(DOA::VT_SENSOR1_DELAY, Some(0.0)).unwrap()}
+  }
+  /// Sensor 2 identifier
+  #[inline]
+  pub fn ID_SENSOR2(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DOA::VT_ID_SENSOR2, None)}
+  }
+  /// Sensor 2 original identifier
+  #[inline]
+  pub fn ORIG_SENSOR_ID2(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DOA::VT_ORIG_SENSOR_ID2, None)}
+  }
+  /// Sensor 2 latitude (degrees)
+  #[inline]
+  pub fn SEN2LAT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(DOA::VT_SEN2LAT, Some(0.0)).unwrap()}
+  }
+  /// Sensor 2 longitude (degrees)
+  #[inline]
+  pub fn SEN2LON(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(DOA::VT_SEN2LON, Some(0.0)).unwrap()}
+  }
+  /// Sensor 2 altitude (km)
+  #[inline]
+  pub fn SEN2ALT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(DOA::VT_SEN2ALT, Some(0.0)).unwrap()}
+  }
+  /// Sensor 2 processing delay (seconds)
+  #[inline]
+  pub fn SENSOR2_DELAY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(DOA::VT_SENSOR2_DELAY, Some(0.0)).unwrap()}
+  }
+  /// Measured frequency (MHz)
+  #[inline]
+  pub fn FREQUENCY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(DOA::VT_FREQUENCY, Some(0.0)).unwrap()}
+  }
+  /// Measurement bandwidth (MHz)
+  #[inline]
+  pub fn BANDWIDTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(DOA::VT_BANDWIDTH, Some(0.0)).unwrap()}
+  }
+  /// Signal-to-noise ratio (dB)
+  #[inline]
+  pub fn SNR(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(DOA::VT_SNR, Some(0.0)).unwrap()}
+  }
+  /// Differential range (km)
+  #[inline]
+  pub fn DELTA_RANGE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(DOA::VT_DELTA_RANGE, Some(0.0)).unwrap()}
+  }
+  /// Differential range uncertainty (km, 1-sigma)
+  #[inline]
+  pub fn DELTA_RANGE_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(DOA::VT_DELTA_RANGE_UNC, Some(0.0)).unwrap()}
+  }
+  /// Differential range rate (km/s)
+  #[inline]
+  pub fn DELTA_RANGE_RATE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(DOA::VT_DELTA_RANGE_RATE, Some(0.0)).unwrap()}
+  }
+  /// Differential range rate uncertainty (km/s, 1-sigma)
+  #[inline]
+  pub fn DELTA_RANGE_RATE_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(DOA::VT_DELTA_RANGE_RATE_UNC, Some(0.0)).unwrap()}
+  }
+  /// Time difference of arrival (seconds)
+  #[inline]
+  pub fn TDOA(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(DOA::VT_TDOA, Some(0.0)).unwrap()}
+  }
+  /// TDOA uncertainty (seconds, 1-sigma)
+  #[inline]
+  pub fn TDOA_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(DOA::VT_TDOA_UNC, Some(0.0)).unwrap()}
+  }
+  /// Frequency difference of arrival (Hz)
+  #[inline]
+  pub fn FDOA(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(DOA::VT_FDOA, Some(0.0)).unwrap()}
+  }
+  /// FDOA uncertainty (Hz, 1-sigma)
+  #[inline]
+  pub fn FDOA_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(DOA::VT_FDOA_UNC, Some(0.0)).unwrap()}
+  }
+  /// Reference to raw data file
+  #[inline]
+  pub fn RAW_FILE_URI(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DOA::VT_RAW_FILE_URI, None)}
+  }
+  /// Event descriptor
   #[inline]
   pub fn DESCRIPTOR(&self) -> Option<&'a str> {
     // Safety:
@@ -451,12 +584,13 @@ impl<'a> DOA<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DOA::VT_DESCRIPTOR, None)}
   }
+  /// Associated tags
   #[inline]
-  pub fn TRANSACTION_ID(&self) -> Option<&'a str> {
+  pub fn TAGS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(DOA::VT_TRANSACTION_ID, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(DOA::VT_TAGS, None)}
   }
 }
 
@@ -469,39 +603,39 @@ impl flatbuffers::Verifiable for DOA<'_> {
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OB_TIME", Self::VT_OB_TIME, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID_SENSOR1", Self::VT_ID_SENSOR1, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID_SENSOR2", Self::VT_ID_SENSOR2, false)?
-     .visit_field::<i32>("SAT_NO", Self::VT_SAT_NO, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TASK_ID", Self::VT_TASK_ID, false)?
+     .visit_field::<u32>("SAT_NO", Self::VT_SAT_NO, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_OBJECT_ID", Self::VT_ORIG_OBJECT_ID, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_SENSOR_ID1", Self::VT_ORIG_SENSOR_ID1, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_SENSOR_ID2", Self::VT_ORIG_SENSOR_ID2, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ON_ORBIT", Self::VT_ON_ORBIT, false)?
      .visit_field::<bool>("UCT", Self::VT_UCT, false)?
-     .visit_field::<f64>("SENSOR1_DELAY", Self::VT_SENSOR1_DELAY, false)?
-     .visit_field::<f64>("SENSOR2_DELAY", Self::VT_SENSOR2_DELAY, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TASK_ID", Self::VT_TASK_ID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRANSACTION_ID", Self::VT_TRANSACTION_ID, false)?
+     .visit_field::<doaCollectionMode>("COLLECTION_MODE", Self::VT_COLLECTION_MODE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID_SENSOR1", Self::VT_ID_SENSOR1, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_SENSOR_ID1", Self::VT_ORIG_SENSOR_ID1, false)?
      .visit_field::<f64>("SENLAT", Self::VT_SENLAT, false)?
      .visit_field::<f64>("SENLON", Self::VT_SENLON, false)?
      .visit_field::<f64>("SENALT", Self::VT_SENALT, false)?
+     .visit_field::<f64>("SENSOR1_DELAY", Self::VT_SENSOR1_DELAY, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID_SENSOR2", Self::VT_ID_SENSOR2, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_SENSOR_ID2", Self::VT_ORIG_SENSOR_ID2, false)?
      .visit_field::<f64>("SEN2LAT", Self::VT_SEN2LAT, false)?
      .visit_field::<f64>("SEN2LON", Self::VT_SEN2LON, false)?
      .visit_field::<f64>("SEN2ALT", Self::VT_SEN2ALT, false)?
+     .visit_field::<f64>("SENSOR2_DELAY", Self::VT_SENSOR2_DELAY, false)?
      .visit_field::<f64>("FREQUENCY", Self::VT_FREQUENCY, false)?
      .visit_field::<f64>("BANDWIDTH", Self::VT_BANDWIDTH, false)?
+     .visit_field::<f64>("SNR", Self::VT_SNR, false)?
      .visit_field::<f64>("DELTA_RANGE", Self::VT_DELTA_RANGE, false)?
      .visit_field::<f64>("DELTA_RANGE_UNC", Self::VT_DELTA_RANGE_UNC, false)?
      .visit_field::<f64>("DELTA_RANGE_RATE", Self::VT_DELTA_RANGE_RATE, false)?
      .visit_field::<f64>("DELTA_RANGE_RATE_UNC", Self::VT_DELTA_RANGE_RATE_UNC, false)?
-     .visit_field::<f64>("SNR", Self::VT_SNR, false)?
      .visit_field::<f64>("TDOA", Self::VT_TDOA, false)?
      .visit_field::<f64>("TDOA_UNC", Self::VT_TDOA_UNC, false)?
      .visit_field::<f64>("FDOA", Self::VT_FDOA, false)?
      .visit_field::<f64>("FDOA_UNC", Self::VT_FDOA_UNC, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COLLECTION_MODE", Self::VT_COLLECTION_MODE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("RAW_FILE_URI", Self::VT_RAW_FILE_URI, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("TAGS", Self::VT_TAGS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ON_ORBIT", Self::VT_ON_ORBIT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DESCRIPTOR", Self::VT_DESCRIPTOR, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRANSACTION_ID", Self::VT_TRANSACTION_ID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("TAGS", Self::VT_TAGS, false)?
      .finish();
     Ok(())
   }
@@ -509,39 +643,39 @@ impl flatbuffers::Verifiable for DOA<'_> {
 pub struct DOAArgs<'a> {
     pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OB_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ID_SENSOR1: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ID_SENSOR2: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SAT_NO: i32,
-    pub TASK_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SAT_NO: u32,
     pub ORIG_OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ORIG_SENSOR_ID1: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ORIG_SENSOR_ID2: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ON_ORBIT: Option<flatbuffers::WIPOffset<&'a str>>,
     pub UCT: bool,
-    pub SENSOR1_DELAY: f64,
-    pub SENSOR2_DELAY: f64,
+    pub TASK_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub TRANSACTION_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub COLLECTION_MODE: doaCollectionMode,
+    pub ID_SENSOR1: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ORIG_SENSOR_ID1: Option<flatbuffers::WIPOffset<&'a str>>,
     pub SENLAT: f64,
     pub SENLON: f64,
     pub SENALT: f64,
+    pub SENSOR1_DELAY: f64,
+    pub ID_SENSOR2: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ORIG_SENSOR_ID2: Option<flatbuffers::WIPOffset<&'a str>>,
     pub SEN2LAT: f64,
     pub SEN2LON: f64,
     pub SEN2ALT: f64,
+    pub SENSOR2_DELAY: f64,
     pub FREQUENCY: f64,
     pub BANDWIDTH: f64,
+    pub SNR: f64,
     pub DELTA_RANGE: f64,
     pub DELTA_RANGE_UNC: f64,
     pub DELTA_RANGE_RATE: f64,
     pub DELTA_RANGE_RATE_UNC: f64,
-    pub SNR: f64,
     pub TDOA: f64,
     pub TDOA_UNC: f64,
     pub FDOA: f64,
     pub FDOA_UNC: f64,
-    pub COLLECTION_MODE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub RAW_FILE_URI: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub TAGS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub ON_ORBIT: Option<flatbuffers::WIPOffset<&'a str>>,
     pub DESCRIPTOR: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub TRANSACTION_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub TAGS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
 }
 impl<'a> Default for DOAArgs<'a> {
   #[inline]
@@ -549,39 +683,39 @@ impl<'a> Default for DOAArgs<'a> {
     DOAArgs {
       ID: None,
       OB_TIME: None,
-      ID_SENSOR1: None,
-      ID_SENSOR2: None,
       SAT_NO: 0,
-      TASK_ID: None,
       ORIG_OBJECT_ID: None,
-      ORIG_SENSOR_ID1: None,
-      ORIG_SENSOR_ID2: None,
+      ON_ORBIT: None,
       UCT: false,
-      SENSOR1_DELAY: 0.0,
-      SENSOR2_DELAY: 0.0,
+      TASK_ID: None,
+      TRANSACTION_ID: None,
+      COLLECTION_MODE: doaCollectionMode::TDOA,
+      ID_SENSOR1: None,
+      ORIG_SENSOR_ID1: None,
       SENLAT: 0.0,
       SENLON: 0.0,
       SENALT: 0.0,
+      SENSOR1_DELAY: 0.0,
+      ID_SENSOR2: None,
+      ORIG_SENSOR_ID2: None,
       SEN2LAT: 0.0,
       SEN2LON: 0.0,
       SEN2ALT: 0.0,
+      SENSOR2_DELAY: 0.0,
       FREQUENCY: 0.0,
       BANDWIDTH: 0.0,
+      SNR: 0.0,
       DELTA_RANGE: 0.0,
       DELTA_RANGE_UNC: 0.0,
       DELTA_RANGE_RATE: 0.0,
       DELTA_RANGE_RATE_UNC: 0.0,
-      SNR: 0.0,
       TDOA: 0.0,
       TDOA_UNC: 0.0,
       FDOA: 0.0,
       FDOA_UNC: 0.0,
-      COLLECTION_MODE: None,
       RAW_FILE_URI: None,
-      TAGS: None,
-      ON_ORBIT: None,
       DESCRIPTOR: None,
-      TRANSACTION_ID: None,
+      TAGS: None,
     }
   }
 }
@@ -600,44 +734,40 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> DOABuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DOA::VT_OB_TIME, OB_TIME);
   }
   #[inline]
-  pub fn add_ID_SENSOR1(&mut self, ID_SENSOR1: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DOA::VT_ID_SENSOR1, ID_SENSOR1);
-  }
-  #[inline]
-  pub fn add_ID_SENSOR2(&mut self, ID_SENSOR2: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DOA::VT_ID_SENSOR2, ID_SENSOR2);
-  }
-  #[inline]
-  pub fn add_SAT_NO(&mut self, SAT_NO: i32) {
-    self.fbb_.push_slot::<i32>(DOA::VT_SAT_NO, SAT_NO, 0);
-  }
-  #[inline]
-  pub fn add_TASK_ID(&mut self, TASK_ID: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DOA::VT_TASK_ID, TASK_ID);
+  pub fn add_SAT_NO(&mut self, SAT_NO: u32) {
+    self.fbb_.push_slot::<u32>(DOA::VT_SAT_NO, SAT_NO, 0);
   }
   #[inline]
   pub fn add_ORIG_OBJECT_ID(&mut self, ORIG_OBJECT_ID: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DOA::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
   }
   #[inline]
-  pub fn add_ORIG_SENSOR_ID1(&mut self, ORIG_SENSOR_ID1: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DOA::VT_ORIG_SENSOR_ID1, ORIG_SENSOR_ID1);
-  }
-  #[inline]
-  pub fn add_ORIG_SENSOR_ID2(&mut self, ORIG_SENSOR_ID2: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DOA::VT_ORIG_SENSOR_ID2, ORIG_SENSOR_ID2);
+  pub fn add_ON_ORBIT(&mut self, ON_ORBIT: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DOA::VT_ON_ORBIT, ON_ORBIT);
   }
   #[inline]
   pub fn add_UCT(&mut self, UCT: bool) {
     self.fbb_.push_slot::<bool>(DOA::VT_UCT, UCT, false);
   }
   #[inline]
-  pub fn add_SENSOR1_DELAY(&mut self, SENSOR1_DELAY: f64) {
-    self.fbb_.push_slot::<f64>(DOA::VT_SENSOR1_DELAY, SENSOR1_DELAY, 0.0);
+  pub fn add_TASK_ID(&mut self, TASK_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DOA::VT_TASK_ID, TASK_ID);
   }
   #[inline]
-  pub fn add_SENSOR2_DELAY(&mut self, SENSOR2_DELAY: f64) {
-    self.fbb_.push_slot::<f64>(DOA::VT_SENSOR2_DELAY, SENSOR2_DELAY, 0.0);
+  pub fn add_TRANSACTION_ID(&mut self, TRANSACTION_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DOA::VT_TRANSACTION_ID, TRANSACTION_ID);
+  }
+  #[inline]
+  pub fn add_COLLECTION_MODE(&mut self, COLLECTION_MODE: doaCollectionMode) {
+    self.fbb_.push_slot::<doaCollectionMode>(DOA::VT_COLLECTION_MODE, COLLECTION_MODE, doaCollectionMode::TDOA);
+  }
+  #[inline]
+  pub fn add_ID_SENSOR1(&mut self, ID_SENSOR1: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DOA::VT_ID_SENSOR1, ID_SENSOR1);
+  }
+  #[inline]
+  pub fn add_ORIG_SENSOR_ID1(&mut self, ORIG_SENSOR_ID1: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DOA::VT_ORIG_SENSOR_ID1, ORIG_SENSOR_ID1);
   }
   #[inline]
   pub fn add_SENLAT(&mut self, SENLAT: f64) {
@@ -652,6 +782,18 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> DOABuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(DOA::VT_SENALT, SENALT, 0.0);
   }
   #[inline]
+  pub fn add_SENSOR1_DELAY(&mut self, SENSOR1_DELAY: f64) {
+    self.fbb_.push_slot::<f64>(DOA::VT_SENSOR1_DELAY, SENSOR1_DELAY, 0.0);
+  }
+  #[inline]
+  pub fn add_ID_SENSOR2(&mut self, ID_SENSOR2: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DOA::VT_ID_SENSOR2, ID_SENSOR2);
+  }
+  #[inline]
+  pub fn add_ORIG_SENSOR_ID2(&mut self, ORIG_SENSOR_ID2: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DOA::VT_ORIG_SENSOR_ID2, ORIG_SENSOR_ID2);
+  }
+  #[inline]
   pub fn add_SEN2LAT(&mut self, SEN2LAT: f64) {
     self.fbb_.push_slot::<f64>(DOA::VT_SEN2LAT, SEN2LAT, 0.0);
   }
@@ -664,12 +806,20 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> DOABuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(DOA::VT_SEN2ALT, SEN2ALT, 0.0);
   }
   #[inline]
+  pub fn add_SENSOR2_DELAY(&mut self, SENSOR2_DELAY: f64) {
+    self.fbb_.push_slot::<f64>(DOA::VT_SENSOR2_DELAY, SENSOR2_DELAY, 0.0);
+  }
+  #[inline]
   pub fn add_FREQUENCY(&mut self, FREQUENCY: f64) {
     self.fbb_.push_slot::<f64>(DOA::VT_FREQUENCY, FREQUENCY, 0.0);
   }
   #[inline]
   pub fn add_BANDWIDTH(&mut self, BANDWIDTH: f64) {
     self.fbb_.push_slot::<f64>(DOA::VT_BANDWIDTH, BANDWIDTH, 0.0);
+  }
+  #[inline]
+  pub fn add_SNR(&mut self, SNR: f64) {
+    self.fbb_.push_slot::<f64>(DOA::VT_SNR, SNR, 0.0);
   }
   #[inline]
   pub fn add_DELTA_RANGE(&mut self, DELTA_RANGE: f64) {
@@ -688,10 +838,6 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> DOABuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(DOA::VT_DELTA_RANGE_RATE_UNC, DELTA_RANGE_RATE_UNC, 0.0);
   }
   #[inline]
-  pub fn add_SNR(&mut self, SNR: f64) {
-    self.fbb_.push_slot::<f64>(DOA::VT_SNR, SNR, 0.0);
-  }
-  #[inline]
   pub fn add_TDOA(&mut self, TDOA: f64) {
     self.fbb_.push_slot::<f64>(DOA::VT_TDOA, TDOA, 0.0);
   }
@@ -708,28 +854,16 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> DOABuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(DOA::VT_FDOA_UNC, FDOA_UNC, 0.0);
   }
   #[inline]
-  pub fn add_COLLECTION_MODE(&mut self, COLLECTION_MODE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DOA::VT_COLLECTION_MODE, COLLECTION_MODE);
-  }
-  #[inline]
   pub fn add_RAW_FILE_URI(&mut self, RAW_FILE_URI: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DOA::VT_RAW_FILE_URI, RAW_FILE_URI);
-  }
-  #[inline]
-  pub fn add_TAGS(&mut self, TAGS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DOA::VT_TAGS, TAGS);
-  }
-  #[inline]
-  pub fn add_ON_ORBIT(&mut self, ON_ORBIT: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DOA::VT_ON_ORBIT, ON_ORBIT);
   }
   #[inline]
   pub fn add_DESCRIPTOR(&mut self, DESCRIPTOR: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DOA::VT_DESCRIPTOR, DESCRIPTOR);
   }
   #[inline]
-  pub fn add_TRANSACTION_ID(&mut self, TRANSACTION_ID: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DOA::VT_TRANSACTION_ID, TRANSACTION_ID);
+  pub fn add_TAGS(&mut self, TAGS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(DOA::VT_TAGS, TAGS);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> DOABuilder<'a, 'b, A> {
@@ -751,39 +885,39 @@ impl core::fmt::Debug for DOA<'_> {
     let mut ds = f.debug_struct("DOA");
       ds.field("ID", &self.ID());
       ds.field("OB_TIME", &self.OB_TIME());
-      ds.field("ID_SENSOR1", &self.ID_SENSOR1());
-      ds.field("ID_SENSOR2", &self.ID_SENSOR2());
       ds.field("SAT_NO", &self.SAT_NO());
-      ds.field("TASK_ID", &self.TASK_ID());
       ds.field("ORIG_OBJECT_ID", &self.ORIG_OBJECT_ID());
-      ds.field("ORIG_SENSOR_ID1", &self.ORIG_SENSOR_ID1());
-      ds.field("ORIG_SENSOR_ID2", &self.ORIG_SENSOR_ID2());
+      ds.field("ON_ORBIT", &self.ON_ORBIT());
       ds.field("UCT", &self.UCT());
-      ds.field("SENSOR1_DELAY", &self.SENSOR1_DELAY());
-      ds.field("SENSOR2_DELAY", &self.SENSOR2_DELAY());
+      ds.field("TASK_ID", &self.TASK_ID());
+      ds.field("TRANSACTION_ID", &self.TRANSACTION_ID());
+      ds.field("COLLECTION_MODE", &self.COLLECTION_MODE());
+      ds.field("ID_SENSOR1", &self.ID_SENSOR1());
+      ds.field("ORIG_SENSOR_ID1", &self.ORIG_SENSOR_ID1());
       ds.field("SENLAT", &self.SENLAT());
       ds.field("SENLON", &self.SENLON());
       ds.field("SENALT", &self.SENALT());
+      ds.field("SENSOR1_DELAY", &self.SENSOR1_DELAY());
+      ds.field("ID_SENSOR2", &self.ID_SENSOR2());
+      ds.field("ORIG_SENSOR_ID2", &self.ORIG_SENSOR_ID2());
       ds.field("SEN2LAT", &self.SEN2LAT());
       ds.field("SEN2LON", &self.SEN2LON());
       ds.field("SEN2ALT", &self.SEN2ALT());
+      ds.field("SENSOR2_DELAY", &self.SENSOR2_DELAY());
       ds.field("FREQUENCY", &self.FREQUENCY());
       ds.field("BANDWIDTH", &self.BANDWIDTH());
+      ds.field("SNR", &self.SNR());
       ds.field("DELTA_RANGE", &self.DELTA_RANGE());
       ds.field("DELTA_RANGE_UNC", &self.DELTA_RANGE_UNC());
       ds.field("DELTA_RANGE_RATE", &self.DELTA_RANGE_RATE());
       ds.field("DELTA_RANGE_RATE_UNC", &self.DELTA_RANGE_RATE_UNC());
-      ds.field("SNR", &self.SNR());
       ds.field("TDOA", &self.TDOA());
       ds.field("TDOA_UNC", &self.TDOA_UNC());
       ds.field("FDOA", &self.FDOA());
       ds.field("FDOA_UNC", &self.FDOA_UNC());
-      ds.field("COLLECTION_MODE", &self.COLLECTION_MODE());
       ds.field("RAW_FILE_URI", &self.RAW_FILE_URI());
-      ds.field("TAGS", &self.TAGS());
-      ds.field("ON_ORBIT", &self.ON_ORBIT());
       ds.field("DESCRIPTOR", &self.DESCRIPTOR());
-      ds.field("TRANSACTION_ID", &self.TRANSACTION_ID());
+      ds.field("TAGS", &self.TAGS());
       ds.finish()
   }
 }
@@ -792,78 +926,78 @@ impl core::fmt::Debug for DOA<'_> {
 pub struct DOAT {
   pub ID: Option<String>,
   pub OB_TIME: Option<String>,
-  pub ID_SENSOR1: Option<String>,
-  pub ID_SENSOR2: Option<String>,
-  pub SAT_NO: i32,
-  pub TASK_ID: Option<String>,
+  pub SAT_NO: u32,
   pub ORIG_OBJECT_ID: Option<String>,
-  pub ORIG_SENSOR_ID1: Option<String>,
-  pub ORIG_SENSOR_ID2: Option<String>,
+  pub ON_ORBIT: Option<String>,
   pub UCT: bool,
-  pub SENSOR1_DELAY: f64,
-  pub SENSOR2_DELAY: f64,
+  pub TASK_ID: Option<String>,
+  pub TRANSACTION_ID: Option<String>,
+  pub COLLECTION_MODE: doaCollectionMode,
+  pub ID_SENSOR1: Option<String>,
+  pub ORIG_SENSOR_ID1: Option<String>,
   pub SENLAT: f64,
   pub SENLON: f64,
   pub SENALT: f64,
+  pub SENSOR1_DELAY: f64,
+  pub ID_SENSOR2: Option<String>,
+  pub ORIG_SENSOR_ID2: Option<String>,
   pub SEN2LAT: f64,
   pub SEN2LON: f64,
   pub SEN2ALT: f64,
+  pub SENSOR2_DELAY: f64,
   pub FREQUENCY: f64,
   pub BANDWIDTH: f64,
+  pub SNR: f64,
   pub DELTA_RANGE: f64,
   pub DELTA_RANGE_UNC: f64,
   pub DELTA_RANGE_RATE: f64,
   pub DELTA_RANGE_RATE_UNC: f64,
-  pub SNR: f64,
   pub TDOA: f64,
   pub TDOA_UNC: f64,
   pub FDOA: f64,
   pub FDOA_UNC: f64,
-  pub COLLECTION_MODE: Option<String>,
   pub RAW_FILE_URI: Option<String>,
-  pub TAGS: Option<Vec<String>>,
-  pub ON_ORBIT: Option<String>,
   pub DESCRIPTOR: Option<String>,
-  pub TRANSACTION_ID: Option<String>,
+  pub TAGS: Option<Vec<String>>,
 }
 impl Default for DOAT {
   fn default() -> Self {
     Self {
       ID: None,
       OB_TIME: None,
-      ID_SENSOR1: None,
-      ID_SENSOR2: None,
       SAT_NO: 0,
-      TASK_ID: None,
       ORIG_OBJECT_ID: None,
-      ORIG_SENSOR_ID1: None,
-      ORIG_SENSOR_ID2: None,
+      ON_ORBIT: None,
       UCT: false,
-      SENSOR1_DELAY: 0.0,
-      SENSOR2_DELAY: 0.0,
+      TASK_ID: None,
+      TRANSACTION_ID: None,
+      COLLECTION_MODE: doaCollectionMode::TDOA,
+      ID_SENSOR1: None,
+      ORIG_SENSOR_ID1: None,
       SENLAT: 0.0,
       SENLON: 0.0,
       SENALT: 0.0,
+      SENSOR1_DELAY: 0.0,
+      ID_SENSOR2: None,
+      ORIG_SENSOR_ID2: None,
       SEN2LAT: 0.0,
       SEN2LON: 0.0,
       SEN2ALT: 0.0,
+      SENSOR2_DELAY: 0.0,
       FREQUENCY: 0.0,
       BANDWIDTH: 0.0,
+      SNR: 0.0,
       DELTA_RANGE: 0.0,
       DELTA_RANGE_UNC: 0.0,
       DELTA_RANGE_RATE: 0.0,
       DELTA_RANGE_RATE_UNC: 0.0,
-      SNR: 0.0,
       TDOA: 0.0,
       TDOA_UNC: 0.0,
       FDOA: 0.0,
       FDOA_UNC: 0.0,
-      COLLECTION_MODE: None,
       RAW_FILE_URI: None,
-      TAGS: None,
-      ON_ORBIT: None,
       DESCRIPTOR: None,
-      TRANSACTION_ID: None,
+      TAGS: None,
     }
   }
 }
@@ -878,99 +1012,97 @@ impl DOAT {
     let OB_TIME = self.OB_TIME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let ID_SENSOR1 = self.ID_SENSOR1.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let ID_SENSOR2 = self.ID_SENSOR2.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
     let SAT_NO = self.SAT_NO;
-    let TASK_ID = self.TASK_ID.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
     let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID.as_ref().map(|x|{
       _fbb.create_string(x)
-    });
-    let ORIG_SENSOR_ID1 = self.ORIG_SENSOR_ID1.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let ORIG_SENSOR_ID2 = self.ORIG_SENSOR_ID2.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let UCT = self.UCT;
-    let SENSOR1_DELAY = self.SENSOR1_DELAY;
-    let SENSOR2_DELAY = self.SENSOR2_DELAY;
-    let SENLAT = self.SENLAT;
-    let SENLON = self.SENLON;
-    let SENALT = self.SENALT;
-    let SEN2LAT = self.SEN2LAT;
-    let SEN2LON = self.SEN2LON;
-    let SEN2ALT = self.SEN2ALT;
-    let FREQUENCY = self.FREQUENCY;
-    let BANDWIDTH = self.BANDWIDTH;
-    let DELTA_RANGE = self.DELTA_RANGE;
-    let DELTA_RANGE_UNC = self.DELTA_RANGE_UNC;
-    let DELTA_RANGE_RATE = self.DELTA_RANGE_RATE;
-    let DELTA_RANGE_RATE_UNC = self.DELTA_RANGE_RATE_UNC;
-    let SNR = self.SNR;
-    let TDOA = self.TDOA;
-    let TDOA_UNC = self.TDOA_UNC;
-    let FDOA = self.FDOA;
-    let FDOA_UNC = self.FDOA_UNC;
-    let COLLECTION_MODE = self.COLLECTION_MODE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let RAW_FILE_URI = self.RAW_FILE_URI.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let TAGS = self.TAGS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
     let ON_ORBIT = self.ON_ORBIT.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let DESCRIPTOR = self.DESCRIPTOR.as_ref().map(|x|{
+    let UCT = self.UCT;
+    let TASK_ID = self.TASK_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let TRANSACTION_ID = self.TRANSACTION_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let COLLECTION_MODE = self.COLLECTION_MODE;
+    let ID_SENSOR1 = self.ID_SENSOR1.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ORIG_SENSOR_ID1 = self.ORIG_SENSOR_ID1.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SENLAT = self.SENLAT;
+    let SENLON = self.SENLON;
+    let SENALT = self.SENALT;
+    let SENSOR1_DELAY = self.SENSOR1_DELAY;
+    let ID_SENSOR2 = self.ID_SENSOR2.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ORIG_SENSOR_ID2 = self.ORIG_SENSOR_ID2.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SEN2LAT = self.SEN2LAT;
+    let SEN2LON = self.SEN2LON;
+    let SEN2ALT = self.SEN2ALT;
+    let SENSOR2_DELAY = self.SENSOR2_DELAY;
+    let FREQUENCY = self.FREQUENCY;
+    let BANDWIDTH = self.BANDWIDTH;
+    let SNR = self.SNR;
+    let DELTA_RANGE = self.DELTA_RANGE;
+    let DELTA_RANGE_UNC = self.DELTA_RANGE_UNC;
+    let DELTA_RANGE_RATE = self.DELTA_RANGE_RATE;
+    let DELTA_RANGE_RATE_UNC = self.DELTA_RANGE_RATE_UNC;
+    let TDOA = self.TDOA;
+    let TDOA_UNC = self.TDOA_UNC;
+    let FDOA = self.FDOA;
+    let FDOA_UNC = self.FDOA_UNC;
+    let RAW_FILE_URI = self.RAW_FILE_URI.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DESCRIPTOR = self.DESCRIPTOR.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TAGS = self.TAGS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
     DOA::create(_fbb, &DOAArgs{
       ID,
       OB_TIME,
-      ID_SENSOR1,
-      ID_SENSOR2,
       SAT_NO,
-      TASK_ID,
       ORIG_OBJECT_ID,
-      ORIG_SENSOR_ID1,
-      ORIG_SENSOR_ID2,
+      ON_ORBIT,
       UCT,
-      SENSOR1_DELAY,
-      SENSOR2_DELAY,
+      TASK_ID,
+      TRANSACTION_ID,
+      COLLECTION_MODE,
+      ID_SENSOR1,
+      ORIG_SENSOR_ID1,
       SENLAT,
       SENLON,
       SENALT,
+      SENSOR1_DELAY,
+      ID_SENSOR2,
+      ORIG_SENSOR_ID2,
       SEN2LAT,
       SEN2LON,
       SEN2ALT,
+      SENSOR2_DELAY,
       FREQUENCY,
       BANDWIDTH,
+      SNR,
       DELTA_RANGE,
       DELTA_RANGE_UNC,
       DELTA_RANGE_RATE,
       DELTA_RANGE_RATE_UNC,
-      SNR,
       TDOA,
       TDOA_UNC,
       FDOA,
       FDOA_UNC,
-      COLLECTION_MODE,
       RAW_FILE_URI,
-      TAGS,
-      ON_ORBIT,
       DESCRIPTOR,
-      TRANSACTION_ID,
+      TAGS,
     })
   }
 }

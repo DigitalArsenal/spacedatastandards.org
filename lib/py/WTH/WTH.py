@@ -29,6 +29,7 @@ class WTH(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Unique identifier
     # WTH
     def ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +37,7 @@ class WTH(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Sensor identifier
     # WTH
     def ID_SENSOR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -43,6 +45,7 @@ class WTH(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Original sensor identifier
     # WTH
     def ORIG_SENSOR_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -50,6 +53,7 @@ class WTH(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Observation time (ISO 8601)
     # WTH
     def OB_TIME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
@@ -57,169 +61,225 @@ class WTH(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # File creation time (ISO 8601)
     # WTH
-    def SIG_PWRS(self, j):
+    def FILE_CREATION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Quality control value
+    # WTH
+    def QC_VALUE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Terminal altitude (km)
+    # WTH
+    def TERM_ALT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Average transmit power (dBm)
+    # WTH
+    def AVG_TX_PWR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Average reflected power (dBm)
+    # WTH
+    def AVG_REF_PWR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Sector number
+    # WTH
+    def SECTOR_NUM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Number of data elements
+    # WTH
+    def NUM_ELEMENTS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Checksum
+    # WTH
+    def CHECKSUM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Signal power values (dBm)
+    # WTH
+    def SIG_PWRS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
             a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # WTH
+    def SIG_PWRSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
 
     # WTH
     def SIG_PWRSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # WTH
     def SIG_PWRSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         return o == 0
 
+    # Noise level values (dBm)
     # WTH
     def NOISE_LVLS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # WTH
+    def NOISE_LVLSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
 
     # WTH
     def NOISE_LVLSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # WTH
     def NOISE_LVLSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         return o == 0
 
+    # Spectral width values (m/s)
     # WTH
     def SPEC_WIDTHS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # WTH
+    def SPEC_WIDTHSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
 
     # WTH
     def SPEC_WIDTHSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # WTH
     def SPEC_WIDTHSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         return o == 0
 
+    # First guess average values
     # WTH
     def FIRST_GUESS_AVGS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # WTH
+    def FIRST_GUESS_AVGSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
 
     # WTH
     def FIRST_GUESS_AVGSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # WTH
     def FIRST_GUESS_AVGSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         return o == 0
 
-    # WTH
-    def QC_VALUE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
-    # WTH
-    def FILE_CREATION(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # WTH
-    def TERM_ALT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # WTH
-    def AVG_TX_PWR(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # WTH
-    def AVG_REF_PWR(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # WTH
-    def SECTOR_NUM(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
-    # WTH
-    def NUM_ELEMENTS(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
+    # Time domain average sample numbers
     # WTH
     def TD_AVG_SAMPLE_NUMS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
             a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # WTH
+    def TD_AVG_SAMPLE_NUMSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
 
     # WTH
     def TD_AVG_SAMPLE_NUMSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # WTH
     def TD_AVG_SAMPLE_NUMSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         return o == 0
 
-    # WTH
-    def CHECKSUM(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
+    # Co-integration values
     # WTH
     def CO_INTEGS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # WTH
+    def CO_INTEGSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
 
     # WTH
     def CO_INTEGSLength(self):
@@ -233,13 +293,21 @@ class WTH(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         return o == 0
 
+    # Spectral average values
     # WTH
     def SPEC_AVGS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # WTH
+    def SPEC_AVGSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
 
     # WTH
     def SPEC_AVGSLength(self):
@@ -253,13 +321,21 @@ class WTH(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         return o == 0
 
+    # Interpulse periods (microseconds)
     # WTH
     def INTERPULSE_PERIODS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         if o != 0:
             a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # WTH
+    def INTERPULSE_PERIODSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
 
     # WTH
     def INTERPULSE_PERIODSLength(self):
@@ -273,13 +349,21 @@ class WTH(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         return o == 0
 
+    # Doppler velocities (m/s)
     # WTH
     def DOPP_VELS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
         if o != 0:
             a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # WTH
+    def DOPP_VELSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
 
     # WTH
     def DOPP_VELSLength(self):
@@ -293,13 +377,21 @@ class WTH(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
         return o == 0
 
+    # Consecutive records count
     # WTH
     def CONS_RECS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # WTH
+    def CONS_RECSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
 
     # WTH
     def CONS_RECSLength(self):
@@ -313,13 +405,21 @@ class WTH(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         return o == 0
 
+    # Signal-to-noise ratios (dB)
     # WTH
     def SNRS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
             a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # WTH
+    def SNRSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
 
     # WTH
     def SNRSLength(self):
@@ -333,6 +433,7 @@ class WTH(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         return o == 0
 
+    # Signal strength (dBm)
     # WTH
     def SIG_STRENGTH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
@@ -340,6 +441,7 @@ class WTH(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Error ellipse semi-major axis (km)
     # WTH
     def SEMI_MAJOR_AXIS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
@@ -347,6 +449,7 @@ class WTH(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Error ellipse semi-minor axis (km)
     # WTH
     def SEMI_MINOR_AXIS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
@@ -354,6 +457,7 @@ class WTH(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Error ellipse orientation angle (degrees)
     # WTH
     def ANGLE_ORIENTATION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
@@ -361,13 +465,15 @@ class WTH(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Lightning event number
     # WTH
     def LIGHT_EVENT_NUM(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
+    # Lightning detection sensor identifiers
     # WTH
     def LIGHT_DET_SENSORS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
@@ -388,6 +494,7 @@ class WTH(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
         return o == 0
 
+    # Position confidence (0-1)
     # WTH
     def POS_CONFIDENCE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
@@ -395,6 +502,7 @@ class WTH(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Source types
     # WTH
     def SRC_TYPS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
@@ -415,6 +523,7 @@ class WTH(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
         return o == 0
 
+    # Source identifiers
     # WTH
     def SRC_IDS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
@@ -465,113 +574,113 @@ def WTHAddOB_TIME(builder, OB_TIME):
 def AddOB_TIME(builder, OB_TIME):
     WTHAddOB_TIME(builder, OB_TIME)
 
-def WTHAddSIG_PWRS(builder, SIG_PWRS):
-    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(SIG_PWRS), 0)
-
-def AddSIG_PWRS(builder, SIG_PWRS):
-    WTHAddSIG_PWRS(builder, SIG_PWRS)
-
-def WTHStartSIG_PWRSVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
-
-def StartSIG_PWRSVector(builder, numElems):
-    return WTHStartSIG_PWRSVector(builder, numElems)
-
-def WTHAddNOISE_LVLS(builder, NOISE_LVLS):
-    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(NOISE_LVLS), 0)
-
-def AddNOISE_LVLS(builder, NOISE_LVLS):
-    WTHAddNOISE_LVLS(builder, NOISE_LVLS)
-
-def WTHStartNOISE_LVLSVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
-
-def StartNOISE_LVLSVector(builder, numElems):
-    return WTHStartNOISE_LVLSVector(builder, numElems)
-
-def WTHAddSPEC_WIDTHS(builder, SPEC_WIDTHS):
-    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(SPEC_WIDTHS), 0)
-
-def AddSPEC_WIDTHS(builder, SPEC_WIDTHS):
-    WTHAddSPEC_WIDTHS(builder, SPEC_WIDTHS)
-
-def WTHStartSPEC_WIDTHSVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
-
-def StartSPEC_WIDTHSVector(builder, numElems):
-    return WTHStartSPEC_WIDTHSVector(builder, numElems)
-
-def WTHAddFIRST_GUESS_AVGS(builder, FIRST_GUESS_AVGS):
-    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(FIRST_GUESS_AVGS), 0)
-
-def AddFIRST_GUESS_AVGS(builder, FIRST_GUESS_AVGS):
-    WTHAddFIRST_GUESS_AVGS(builder, FIRST_GUESS_AVGS)
-
-def WTHStartFIRST_GUESS_AVGSVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
-
-def StartFIRST_GUESS_AVGSVector(builder, numElems):
-    return WTHStartFIRST_GUESS_AVGSVector(builder, numElems)
-
-def WTHAddQC_VALUE(builder, QC_VALUE):
-    builder.PrependInt32Slot(8, QC_VALUE, 0)
-
-def AddQC_VALUE(builder, QC_VALUE):
-    WTHAddQC_VALUE(builder, QC_VALUE)
-
 def WTHAddFILE_CREATION(builder, FILE_CREATION):
-    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(FILE_CREATION), 0)
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(FILE_CREATION), 0)
 
 def AddFILE_CREATION(builder, FILE_CREATION):
     WTHAddFILE_CREATION(builder, FILE_CREATION)
 
+def WTHAddQC_VALUE(builder, QC_VALUE):
+    builder.PrependUint8Slot(5, QC_VALUE, 0)
+
+def AddQC_VALUE(builder, QC_VALUE):
+    WTHAddQC_VALUE(builder, QC_VALUE)
+
 def WTHAddTERM_ALT(builder, TERM_ALT):
-    builder.PrependFloat64Slot(10, TERM_ALT, 0.0)
+    builder.PrependFloat64Slot(6, TERM_ALT, 0.0)
 
 def AddTERM_ALT(builder, TERM_ALT):
     WTHAddTERM_ALT(builder, TERM_ALT)
 
 def WTHAddAVG_TX_PWR(builder, AVG_TX_PWR):
-    builder.PrependFloat64Slot(11, AVG_TX_PWR, 0.0)
+    builder.PrependFloat64Slot(7, AVG_TX_PWR, 0.0)
 
 def AddAVG_TX_PWR(builder, AVG_TX_PWR):
     WTHAddAVG_TX_PWR(builder, AVG_TX_PWR)
 
 def WTHAddAVG_REF_PWR(builder, AVG_REF_PWR):
-    builder.PrependFloat64Slot(12, AVG_REF_PWR, 0.0)
+    builder.PrependFloat64Slot(8, AVG_REF_PWR, 0.0)
 
 def AddAVG_REF_PWR(builder, AVG_REF_PWR):
     WTHAddAVG_REF_PWR(builder, AVG_REF_PWR)
 
 def WTHAddSECTOR_NUM(builder, SECTOR_NUM):
-    builder.PrependInt32Slot(13, SECTOR_NUM, 0)
+    builder.PrependUint16Slot(9, SECTOR_NUM, 0)
 
 def AddSECTOR_NUM(builder, SECTOR_NUM):
     WTHAddSECTOR_NUM(builder, SECTOR_NUM)
 
 def WTHAddNUM_ELEMENTS(builder, NUM_ELEMENTS):
-    builder.PrependInt32Slot(14, NUM_ELEMENTS, 0)
+    builder.PrependUint16Slot(10, NUM_ELEMENTS, 0)
 
 def AddNUM_ELEMENTS(builder, NUM_ELEMENTS):
     WTHAddNUM_ELEMENTS(builder, NUM_ELEMENTS)
 
+def WTHAddCHECKSUM(builder, CHECKSUM):
+    builder.PrependUint32Slot(11, CHECKSUM, 0)
+
+def AddCHECKSUM(builder, CHECKSUM):
+    WTHAddCHECKSUM(builder, CHECKSUM)
+
+def WTHAddSIG_PWRS(builder, SIG_PWRS):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(SIG_PWRS), 0)
+
+def AddSIG_PWRS(builder, SIG_PWRS):
+    WTHAddSIG_PWRS(builder, SIG_PWRS)
+
+def WTHStartSIG_PWRSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartSIG_PWRSVector(builder, numElems):
+    return WTHStartSIG_PWRSVector(builder, numElems)
+
+def WTHAddNOISE_LVLS(builder, NOISE_LVLS):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(NOISE_LVLS), 0)
+
+def AddNOISE_LVLS(builder, NOISE_LVLS):
+    WTHAddNOISE_LVLS(builder, NOISE_LVLS)
+
+def WTHStartNOISE_LVLSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartNOISE_LVLSVector(builder, numElems):
+    return WTHStartNOISE_LVLSVector(builder, numElems)
+
+def WTHAddSPEC_WIDTHS(builder, SPEC_WIDTHS):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(SPEC_WIDTHS), 0)
+
+def AddSPEC_WIDTHS(builder, SPEC_WIDTHS):
+    WTHAddSPEC_WIDTHS(builder, SPEC_WIDTHS)
+
+def WTHStartSPEC_WIDTHSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartSPEC_WIDTHSVector(builder, numElems):
+    return WTHStartSPEC_WIDTHSVector(builder, numElems)
+
+def WTHAddFIRST_GUESS_AVGS(builder, FIRST_GUESS_AVGS):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(FIRST_GUESS_AVGS), 0)
+
+def AddFIRST_GUESS_AVGS(builder, FIRST_GUESS_AVGS):
+    WTHAddFIRST_GUESS_AVGS(builder, FIRST_GUESS_AVGS)
+
+def WTHStartFIRST_GUESS_AVGSVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartFIRST_GUESS_AVGSVector(builder, numElems):
+    return WTHStartFIRST_GUESS_AVGSVector(builder, numElems)
+
 def WTHAddTD_AVG_SAMPLE_NUMS(builder, TD_AVG_SAMPLE_NUMS):
-    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(TD_AVG_SAMPLE_NUMS), 0)
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(TD_AVG_SAMPLE_NUMS), 0)
 
 def AddTD_AVG_SAMPLE_NUMS(builder, TD_AVG_SAMPLE_NUMS):
     WTHAddTD_AVG_SAMPLE_NUMS(builder, TD_AVG_SAMPLE_NUMS)
 
 def WTHStartTD_AVG_SAMPLE_NUMSVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
+    return builder.StartVector(8, numElems, 8)
 
 def StartTD_AVG_SAMPLE_NUMSVector(builder, numElems):
     return WTHStartTD_AVG_SAMPLE_NUMSVector(builder, numElems)
-
-def WTHAddCHECKSUM(builder, CHECKSUM):
-    builder.PrependInt32Slot(16, CHECKSUM, 0)
-
-def AddCHECKSUM(builder, CHECKSUM):
-    WTHAddCHECKSUM(builder, CHECKSUM)
 
 def WTHAddCO_INTEGS(builder, CO_INTEGS):
     builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(CO_INTEGS), 0)
@@ -580,7 +689,7 @@ def AddCO_INTEGS(builder, CO_INTEGS):
     WTHAddCO_INTEGS(builder, CO_INTEGS)
 
 def WTHStartCO_INTEGSVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
+    return builder.StartVector(8, numElems, 8)
 
 def StartCO_INTEGSVector(builder, numElems):
     return WTHStartCO_INTEGSVector(builder, numElems)
@@ -592,7 +701,7 @@ def AddSPEC_AVGS(builder, SPEC_AVGS):
     WTHAddSPEC_AVGS(builder, SPEC_AVGS)
 
 def WTHStartSPEC_AVGSVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
+    return builder.StartVector(8, numElems, 8)
 
 def StartSPEC_AVGSVector(builder, numElems):
     return WTHStartSPEC_AVGSVector(builder, numElems)
@@ -604,7 +713,7 @@ def AddINTERPULSE_PERIODS(builder, INTERPULSE_PERIODS):
     WTHAddINTERPULSE_PERIODS(builder, INTERPULSE_PERIODS)
 
 def WTHStartINTERPULSE_PERIODSVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
+    return builder.StartVector(8, numElems, 8)
 
 def StartINTERPULSE_PERIODSVector(builder, numElems):
     return WTHStartINTERPULSE_PERIODSVector(builder, numElems)
@@ -616,7 +725,7 @@ def AddDOPP_VELS(builder, DOPP_VELS):
     WTHAddDOPP_VELS(builder, DOPP_VELS)
 
 def WTHStartDOPP_VELSVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
+    return builder.StartVector(8, numElems, 8)
 
 def StartDOPP_VELSVector(builder, numElems):
     return WTHStartDOPP_VELSVector(builder, numElems)
@@ -628,7 +737,7 @@ def AddCONS_RECS(builder, CONS_RECS):
     WTHAddCONS_RECS(builder, CONS_RECS)
 
 def WTHStartCONS_RECSVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
+    return builder.StartVector(8, numElems, 8)
 
 def StartCONS_RECSVector(builder, numElems):
     return WTHStartCONS_RECSVector(builder, numElems)
@@ -640,7 +749,7 @@ def AddSNRS(builder, SNRS):
     WTHAddSNRS(builder, SNRS)
 
 def WTHStartSNRSVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
+    return builder.StartVector(8, numElems, 8)
 
 def StartSNRSVector(builder, numElems):
     return WTHStartSNRSVector(builder, numElems)
@@ -670,7 +779,7 @@ def AddANGLE_ORIENTATION(builder, ANGLE_ORIENTATION):
     WTHAddANGLE_ORIENTATION(builder, ANGLE_ORIENTATION)
 
 def WTHAddLIGHT_EVENT_NUM(builder, LIGHT_EVENT_NUM):
-    builder.PrependInt32Slot(27, LIGHT_EVENT_NUM, 0)
+    builder.PrependUint32Slot(27, LIGHT_EVENT_NUM, 0)
 
 def AddLIGHT_EVENT_NUM(builder, LIGHT_EVENT_NUM):
     WTHAddLIGHT_EVENT_NUM(builder, LIGHT_EVENT_NUM)
@@ -736,25 +845,25 @@ class WTHT(object):
         self.ID_SENSOR = None  # type: str
         self.ORIG_SENSOR_ID = None  # type: str
         self.OB_TIME = None  # type: str
-        self.SIG_PWRS = None  # type: List[str]
-        self.NOISE_LVLS = None  # type: List[str]
-        self.SPEC_WIDTHS = None  # type: List[str]
-        self.FIRST_GUESS_AVGS = None  # type: List[str]
-        self.QC_VALUE = 0  # type: int
         self.FILE_CREATION = None  # type: str
+        self.QC_VALUE = 0  # type: int
         self.TERM_ALT = 0.0  # type: float
         self.AVG_TX_PWR = 0.0  # type: float
         self.AVG_REF_PWR = 0.0  # type: float
         self.SECTOR_NUM = 0  # type: int
         self.NUM_ELEMENTS = 0  # type: int
-        self.TD_AVG_SAMPLE_NUMS = None  # type: List[str]
         self.CHECKSUM = 0  # type: int
-        self.CO_INTEGS = None  # type: List[str]
-        self.SPEC_AVGS = None  # type: List[str]
-        self.INTERPULSE_PERIODS = None  # type: List[str]
-        self.DOPP_VELS = None  # type: List[str]
-        self.CONS_RECS = None  # type: List[str]
-        self.SNRS = None  # type: List[str]
+        self.SIG_PWRS = None  # type: List[float]
+        self.NOISE_LVLS = None  # type: List[float]
+        self.SPEC_WIDTHS = None  # type: List[float]
+        self.FIRST_GUESS_AVGS = None  # type: List[float]
+        self.TD_AVG_SAMPLE_NUMS = None  # type: List[float]
+        self.CO_INTEGS = None  # type: List[float]
+        self.SPEC_AVGS = None  # type: List[float]
+        self.INTERPULSE_PERIODS = None  # type: List[float]
+        self.DOPP_VELS = None  # type: List[float]
+        self.CONS_RECS = None  # type: List[float]
+        self.SNRS = None  # type: List[float]
         self.SIG_STRENGTH = 0.0  # type: float
         self.SEMI_MAJOR_AXIS = 0.0  # type: float
         self.SEMI_MINOR_AXIS = 0.0  # type: float
@@ -790,58 +899,91 @@ class WTHT(object):
         self.ID_SENSOR = WTH.ID_SENSOR()
         self.ORIG_SENSOR_ID = WTH.ORIG_SENSOR_ID()
         self.OB_TIME = WTH.OB_TIME()
-        if not WTH.SIG_PWRSIsNone():
-            self.SIG_PWRS = []
-            for i in range(WTH.SIG_PWRSLength()):
-                self.SIG_PWRS.append(WTH.SIG_PWRS(i))
-        if not WTH.NOISE_LVLSIsNone():
-            self.NOISE_LVLS = []
-            for i in range(WTH.NOISE_LVLSLength()):
-                self.NOISE_LVLS.append(WTH.NOISE_LVLS(i))
-        if not WTH.SPEC_WIDTHSIsNone():
-            self.SPEC_WIDTHS = []
-            for i in range(WTH.SPEC_WIDTHSLength()):
-                self.SPEC_WIDTHS.append(WTH.SPEC_WIDTHS(i))
-        if not WTH.FIRST_GUESS_AVGSIsNone():
-            self.FIRST_GUESS_AVGS = []
-            for i in range(WTH.FIRST_GUESS_AVGSLength()):
-                self.FIRST_GUESS_AVGS.append(WTH.FIRST_GUESS_AVGS(i))
-        self.QC_VALUE = WTH.QC_VALUE()
         self.FILE_CREATION = WTH.FILE_CREATION()
+        self.QC_VALUE = WTH.QC_VALUE()
         self.TERM_ALT = WTH.TERM_ALT()
         self.AVG_TX_PWR = WTH.AVG_TX_PWR()
         self.AVG_REF_PWR = WTH.AVG_REF_PWR()
         self.SECTOR_NUM = WTH.SECTOR_NUM()
         self.NUM_ELEMENTS = WTH.NUM_ELEMENTS()
-        if not WTH.TD_AVG_SAMPLE_NUMSIsNone():
-            self.TD_AVG_SAMPLE_NUMS = []
-            for i in range(WTH.TD_AVG_SAMPLE_NUMSLength()):
-                self.TD_AVG_SAMPLE_NUMS.append(WTH.TD_AVG_SAMPLE_NUMS(i))
         self.CHECKSUM = WTH.CHECKSUM()
+        if not WTH.SIG_PWRSIsNone():
+            if np is None:
+                self.SIG_PWRS = []
+                for i in range(WTH.SIG_PWRSLength()):
+                    self.SIG_PWRS.append(WTH.SIG_PWRS(i))
+            else:
+                self.SIG_PWRS = WTH.SIG_PWRSAsNumpy()
+        if not WTH.NOISE_LVLSIsNone():
+            if np is None:
+                self.NOISE_LVLS = []
+                for i in range(WTH.NOISE_LVLSLength()):
+                    self.NOISE_LVLS.append(WTH.NOISE_LVLS(i))
+            else:
+                self.NOISE_LVLS = WTH.NOISE_LVLSAsNumpy()
+        if not WTH.SPEC_WIDTHSIsNone():
+            if np is None:
+                self.SPEC_WIDTHS = []
+                for i in range(WTH.SPEC_WIDTHSLength()):
+                    self.SPEC_WIDTHS.append(WTH.SPEC_WIDTHS(i))
+            else:
+                self.SPEC_WIDTHS = WTH.SPEC_WIDTHSAsNumpy()
+        if not WTH.FIRST_GUESS_AVGSIsNone():
+            if np is None:
+                self.FIRST_GUESS_AVGS = []
+                for i in range(WTH.FIRST_GUESS_AVGSLength()):
+                    self.FIRST_GUESS_AVGS.append(WTH.FIRST_GUESS_AVGS(i))
+            else:
+                self.FIRST_GUESS_AVGS = WTH.FIRST_GUESS_AVGSAsNumpy()
+        if not WTH.TD_AVG_SAMPLE_NUMSIsNone():
+            if np is None:
+                self.TD_AVG_SAMPLE_NUMS = []
+                for i in range(WTH.TD_AVG_SAMPLE_NUMSLength()):
+                    self.TD_AVG_SAMPLE_NUMS.append(WTH.TD_AVG_SAMPLE_NUMS(i))
+            else:
+                self.TD_AVG_SAMPLE_NUMS = WTH.TD_AVG_SAMPLE_NUMSAsNumpy()
         if not WTH.CO_INTEGSIsNone():
-            self.CO_INTEGS = []
-            for i in range(WTH.CO_INTEGSLength()):
-                self.CO_INTEGS.append(WTH.CO_INTEGS(i))
+            if np is None:
+                self.CO_INTEGS = []
+                for i in range(WTH.CO_INTEGSLength()):
+                    self.CO_INTEGS.append(WTH.CO_INTEGS(i))
+            else:
+                self.CO_INTEGS = WTH.CO_INTEGSAsNumpy()
         if not WTH.SPEC_AVGSIsNone():
-            self.SPEC_AVGS = []
-            for i in range(WTH.SPEC_AVGSLength()):
-                self.SPEC_AVGS.append(WTH.SPEC_AVGS(i))
+            if np is None:
+                self.SPEC_AVGS = []
+                for i in range(WTH.SPEC_AVGSLength()):
+                    self.SPEC_AVGS.append(WTH.SPEC_AVGS(i))
+            else:
+                self.SPEC_AVGS = WTH.SPEC_AVGSAsNumpy()
         if not WTH.INTERPULSE_PERIODSIsNone():
-            self.INTERPULSE_PERIODS = []
-            for i in range(WTH.INTERPULSE_PERIODSLength()):
-                self.INTERPULSE_PERIODS.append(WTH.INTERPULSE_PERIODS(i))
+            if np is None:
+                self.INTERPULSE_PERIODS = []
+                for i in range(WTH.INTERPULSE_PERIODSLength()):
+                    self.INTERPULSE_PERIODS.append(WTH.INTERPULSE_PERIODS(i))
+            else:
+                self.INTERPULSE_PERIODS = WTH.INTERPULSE_PERIODSAsNumpy()
         if not WTH.DOPP_VELSIsNone():
-            self.DOPP_VELS = []
-            for i in range(WTH.DOPP_VELSLength()):
-                self.DOPP_VELS.append(WTH.DOPP_VELS(i))
+            if np is None:
+                self.DOPP_VELS = []
+                for i in range(WTH.DOPP_VELSLength()):
+                    self.DOPP_VELS.append(WTH.DOPP_VELS(i))
+            else:
+                self.DOPP_VELS = WTH.DOPP_VELSAsNumpy()
         if not WTH.CONS_RECSIsNone():
-            self.CONS_RECS = []
-            for i in range(WTH.CONS_RECSLength()):
-                self.CONS_RECS.append(WTH.CONS_RECS(i))
+            if np is None:
+                self.CONS_RECS = []
+                for i in range(WTH.CONS_RECSLength()):
+                    self.CONS_RECS.append(WTH.CONS_RECS(i))
+            else:
+                self.CONS_RECS = WTH.CONS_RECSAsNumpy()
         if not WTH.SNRSIsNone():
-            self.SNRS = []
-            for i in range(WTH.SNRSLength()):
-                self.SNRS.append(WTH.SNRS(i))
+            if np is None:
+                self.SNRS = []
+                for i in range(WTH.SNRSLength()):
+                    self.SNRS.append(WTH.SNRS(i))
+            else:
+                self.SNRS = WTH.SNRSAsNumpy()
         self.SIG_STRENGTH = WTH.SIG_STRENGTH()
         self.SEMI_MAJOR_AXIS = WTH.SEMI_MAJOR_AXIS()
         self.SEMI_MINOR_AXIS = WTH.SEMI_MINOR_AXIS()
@@ -871,96 +1013,96 @@ class WTHT(object):
             ORIG_SENSOR_ID = builder.CreateString(self.ORIG_SENSOR_ID)
         if self.OB_TIME is not None:
             OB_TIME = builder.CreateString(self.OB_TIME)
-        if self.SIG_PWRS is not None:
-            SIG_PWRSlist = []
-            for i in range(len(self.SIG_PWRS)):
-                SIG_PWRSlist.append(builder.CreateString(self.SIG_PWRS[i]))
-            WTHStartSIG_PWRSVector(builder, len(self.SIG_PWRS))
-            for i in reversed(range(len(self.SIG_PWRS))):
-                builder.PrependUOffsetTRelative(SIG_PWRSlist[i])
-            SIG_PWRS = builder.EndVector()
-        if self.NOISE_LVLS is not None:
-            NOISE_LVLSlist = []
-            for i in range(len(self.NOISE_LVLS)):
-                NOISE_LVLSlist.append(builder.CreateString(self.NOISE_LVLS[i]))
-            WTHStartNOISE_LVLSVector(builder, len(self.NOISE_LVLS))
-            for i in reversed(range(len(self.NOISE_LVLS))):
-                builder.PrependUOffsetTRelative(NOISE_LVLSlist[i])
-            NOISE_LVLS = builder.EndVector()
-        if self.SPEC_WIDTHS is not None:
-            SPEC_WIDTHSlist = []
-            for i in range(len(self.SPEC_WIDTHS)):
-                SPEC_WIDTHSlist.append(builder.CreateString(self.SPEC_WIDTHS[i]))
-            WTHStartSPEC_WIDTHSVector(builder, len(self.SPEC_WIDTHS))
-            for i in reversed(range(len(self.SPEC_WIDTHS))):
-                builder.PrependUOffsetTRelative(SPEC_WIDTHSlist[i])
-            SPEC_WIDTHS = builder.EndVector()
-        if self.FIRST_GUESS_AVGS is not None:
-            FIRST_GUESS_AVGSlist = []
-            for i in range(len(self.FIRST_GUESS_AVGS)):
-                FIRST_GUESS_AVGSlist.append(builder.CreateString(self.FIRST_GUESS_AVGS[i]))
-            WTHStartFIRST_GUESS_AVGSVector(builder, len(self.FIRST_GUESS_AVGS))
-            for i in reversed(range(len(self.FIRST_GUESS_AVGS))):
-                builder.PrependUOffsetTRelative(FIRST_GUESS_AVGSlist[i])
-            FIRST_GUESS_AVGS = builder.EndVector()
         if self.FILE_CREATION is not None:
             FILE_CREATION = builder.CreateString(self.FILE_CREATION)
+        if self.SIG_PWRS is not None:
+            if np is not None and type(self.SIG_PWRS) is np.ndarray:
+                SIG_PWRS = builder.CreateNumpyVector(self.SIG_PWRS)
+            else:
+                WTHStartSIG_PWRSVector(builder, len(self.SIG_PWRS))
+                for i in reversed(range(len(self.SIG_PWRS))):
+                    builder.PrependFloat64(self.SIG_PWRS[i])
+                SIG_PWRS = builder.EndVector()
+        if self.NOISE_LVLS is not None:
+            if np is not None and type(self.NOISE_LVLS) is np.ndarray:
+                NOISE_LVLS = builder.CreateNumpyVector(self.NOISE_LVLS)
+            else:
+                WTHStartNOISE_LVLSVector(builder, len(self.NOISE_LVLS))
+                for i in reversed(range(len(self.NOISE_LVLS))):
+                    builder.PrependFloat64(self.NOISE_LVLS[i])
+                NOISE_LVLS = builder.EndVector()
+        if self.SPEC_WIDTHS is not None:
+            if np is not None and type(self.SPEC_WIDTHS) is np.ndarray:
+                SPEC_WIDTHS = builder.CreateNumpyVector(self.SPEC_WIDTHS)
+            else:
+                WTHStartSPEC_WIDTHSVector(builder, len(self.SPEC_WIDTHS))
+                for i in reversed(range(len(self.SPEC_WIDTHS))):
+                    builder.PrependFloat64(self.SPEC_WIDTHS[i])
+                SPEC_WIDTHS = builder.EndVector()
+        if self.FIRST_GUESS_AVGS is not None:
+            if np is not None and type(self.FIRST_GUESS_AVGS) is np.ndarray:
+                FIRST_GUESS_AVGS = builder.CreateNumpyVector(self.FIRST_GUESS_AVGS)
+            else:
+                WTHStartFIRST_GUESS_AVGSVector(builder, len(self.FIRST_GUESS_AVGS))
+                for i in reversed(range(len(self.FIRST_GUESS_AVGS))):
+                    builder.PrependFloat64(self.FIRST_GUESS_AVGS[i])
+                FIRST_GUESS_AVGS = builder.EndVector()
         if self.TD_AVG_SAMPLE_NUMS is not None:
-            TD_AVG_SAMPLE_NUMSlist = []
-            for i in range(len(self.TD_AVG_SAMPLE_NUMS)):
-                TD_AVG_SAMPLE_NUMSlist.append(builder.CreateString(self.TD_AVG_SAMPLE_NUMS[i]))
-            WTHStartTD_AVG_SAMPLE_NUMSVector(builder, len(self.TD_AVG_SAMPLE_NUMS))
-            for i in reversed(range(len(self.TD_AVG_SAMPLE_NUMS))):
-                builder.PrependUOffsetTRelative(TD_AVG_SAMPLE_NUMSlist[i])
-            TD_AVG_SAMPLE_NUMS = builder.EndVector()
+            if np is not None and type(self.TD_AVG_SAMPLE_NUMS) is np.ndarray:
+                TD_AVG_SAMPLE_NUMS = builder.CreateNumpyVector(self.TD_AVG_SAMPLE_NUMS)
+            else:
+                WTHStartTD_AVG_SAMPLE_NUMSVector(builder, len(self.TD_AVG_SAMPLE_NUMS))
+                for i in reversed(range(len(self.TD_AVG_SAMPLE_NUMS))):
+                    builder.PrependFloat64(self.TD_AVG_SAMPLE_NUMS[i])
+                TD_AVG_SAMPLE_NUMS = builder.EndVector()
         if self.CO_INTEGS is not None:
-            CO_INTEGSlist = []
-            for i in range(len(self.CO_INTEGS)):
-                CO_INTEGSlist.append(builder.CreateString(self.CO_INTEGS[i]))
-            WTHStartCO_INTEGSVector(builder, len(self.CO_INTEGS))
-            for i in reversed(range(len(self.CO_INTEGS))):
-                builder.PrependUOffsetTRelative(CO_INTEGSlist[i])
-            CO_INTEGS = builder.EndVector()
+            if np is not None and type(self.CO_INTEGS) is np.ndarray:
+                CO_INTEGS = builder.CreateNumpyVector(self.CO_INTEGS)
+            else:
+                WTHStartCO_INTEGSVector(builder, len(self.CO_INTEGS))
+                for i in reversed(range(len(self.CO_INTEGS))):
+                    builder.PrependFloat64(self.CO_INTEGS[i])
+                CO_INTEGS = builder.EndVector()
         if self.SPEC_AVGS is not None:
-            SPEC_AVGSlist = []
-            for i in range(len(self.SPEC_AVGS)):
-                SPEC_AVGSlist.append(builder.CreateString(self.SPEC_AVGS[i]))
-            WTHStartSPEC_AVGSVector(builder, len(self.SPEC_AVGS))
-            for i in reversed(range(len(self.SPEC_AVGS))):
-                builder.PrependUOffsetTRelative(SPEC_AVGSlist[i])
-            SPEC_AVGS = builder.EndVector()
+            if np is not None and type(self.SPEC_AVGS) is np.ndarray:
+                SPEC_AVGS = builder.CreateNumpyVector(self.SPEC_AVGS)
+            else:
+                WTHStartSPEC_AVGSVector(builder, len(self.SPEC_AVGS))
+                for i in reversed(range(len(self.SPEC_AVGS))):
+                    builder.PrependFloat64(self.SPEC_AVGS[i])
+                SPEC_AVGS = builder.EndVector()
         if self.INTERPULSE_PERIODS is not None:
-            INTERPULSE_PERIODSlist = []
-            for i in range(len(self.INTERPULSE_PERIODS)):
-                INTERPULSE_PERIODSlist.append(builder.CreateString(self.INTERPULSE_PERIODS[i]))
-            WTHStartINTERPULSE_PERIODSVector(builder, len(self.INTERPULSE_PERIODS))
-            for i in reversed(range(len(self.INTERPULSE_PERIODS))):
-                builder.PrependUOffsetTRelative(INTERPULSE_PERIODSlist[i])
-            INTERPULSE_PERIODS = builder.EndVector()
+            if np is not None and type(self.INTERPULSE_PERIODS) is np.ndarray:
+                INTERPULSE_PERIODS = builder.CreateNumpyVector(self.INTERPULSE_PERIODS)
+            else:
+                WTHStartINTERPULSE_PERIODSVector(builder, len(self.INTERPULSE_PERIODS))
+                for i in reversed(range(len(self.INTERPULSE_PERIODS))):
+                    builder.PrependFloat64(self.INTERPULSE_PERIODS[i])
+                INTERPULSE_PERIODS = builder.EndVector()
         if self.DOPP_VELS is not None:
-            DOPP_VELSlist = []
-            for i in range(len(self.DOPP_VELS)):
-                DOPP_VELSlist.append(builder.CreateString(self.DOPP_VELS[i]))
-            WTHStartDOPP_VELSVector(builder, len(self.DOPP_VELS))
-            for i in reversed(range(len(self.DOPP_VELS))):
-                builder.PrependUOffsetTRelative(DOPP_VELSlist[i])
-            DOPP_VELS = builder.EndVector()
+            if np is not None and type(self.DOPP_VELS) is np.ndarray:
+                DOPP_VELS = builder.CreateNumpyVector(self.DOPP_VELS)
+            else:
+                WTHStartDOPP_VELSVector(builder, len(self.DOPP_VELS))
+                for i in reversed(range(len(self.DOPP_VELS))):
+                    builder.PrependFloat64(self.DOPP_VELS[i])
+                DOPP_VELS = builder.EndVector()
         if self.CONS_RECS is not None:
-            CONS_RECSlist = []
-            for i in range(len(self.CONS_RECS)):
-                CONS_RECSlist.append(builder.CreateString(self.CONS_RECS[i]))
-            WTHStartCONS_RECSVector(builder, len(self.CONS_RECS))
-            for i in reversed(range(len(self.CONS_RECS))):
-                builder.PrependUOffsetTRelative(CONS_RECSlist[i])
-            CONS_RECS = builder.EndVector()
+            if np is not None and type(self.CONS_RECS) is np.ndarray:
+                CONS_RECS = builder.CreateNumpyVector(self.CONS_RECS)
+            else:
+                WTHStartCONS_RECSVector(builder, len(self.CONS_RECS))
+                for i in reversed(range(len(self.CONS_RECS))):
+                    builder.PrependFloat64(self.CONS_RECS[i])
+                CONS_RECS = builder.EndVector()
         if self.SNRS is not None:
-            SNRSlist = []
-            for i in range(len(self.SNRS)):
-                SNRSlist.append(builder.CreateString(self.SNRS[i]))
-            WTHStartSNRSVector(builder, len(self.SNRS))
-            for i in reversed(range(len(self.SNRS))):
-                builder.PrependUOffsetTRelative(SNRSlist[i])
-            SNRS = builder.EndVector()
+            if np is not None and type(self.SNRS) is np.ndarray:
+                SNRS = builder.CreateNumpyVector(self.SNRS)
+            else:
+                WTHStartSNRSVector(builder, len(self.SNRS))
+                for i in reversed(range(len(self.SNRS))):
+                    builder.PrependFloat64(self.SNRS[i])
+                SNRS = builder.EndVector()
         if self.LIGHT_DET_SENSORS is not None:
             LIGHT_DET_SENSORSlist = []
             for i in range(len(self.LIGHT_DET_SENSORS)):
@@ -994,6 +1136,15 @@ class WTHT(object):
             WTHAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
         if self.OB_TIME is not None:
             WTHAddOB_TIME(builder, OB_TIME)
+        if self.FILE_CREATION is not None:
+            WTHAddFILE_CREATION(builder, FILE_CREATION)
+        WTHAddQC_VALUE(builder, self.QC_VALUE)
+        WTHAddTERM_ALT(builder, self.TERM_ALT)
+        WTHAddAVG_TX_PWR(builder, self.AVG_TX_PWR)
+        WTHAddAVG_REF_PWR(builder, self.AVG_REF_PWR)
+        WTHAddSECTOR_NUM(builder, self.SECTOR_NUM)
+        WTHAddNUM_ELEMENTS(builder, self.NUM_ELEMENTS)
+        WTHAddCHECKSUM(builder, self.CHECKSUM)
         if self.SIG_PWRS is not None:
             WTHAddSIG_PWRS(builder, SIG_PWRS)
         if self.NOISE_LVLS is not None:
@@ -1002,17 +1153,8 @@ class WTHT(object):
             WTHAddSPEC_WIDTHS(builder, SPEC_WIDTHS)
         if self.FIRST_GUESS_AVGS is not None:
             WTHAddFIRST_GUESS_AVGS(builder, FIRST_GUESS_AVGS)
-        WTHAddQC_VALUE(builder, self.QC_VALUE)
-        if self.FILE_CREATION is not None:
-            WTHAddFILE_CREATION(builder, FILE_CREATION)
-        WTHAddTERM_ALT(builder, self.TERM_ALT)
-        WTHAddAVG_TX_PWR(builder, self.AVG_TX_PWR)
-        WTHAddAVG_REF_PWR(builder, self.AVG_REF_PWR)
-        WTHAddSECTOR_NUM(builder, self.SECTOR_NUM)
-        WTHAddNUM_ELEMENTS(builder, self.NUM_ELEMENTS)
         if self.TD_AVG_SAMPLE_NUMS is not None:
             WTHAddTD_AVG_SAMPLE_NUMS(builder, TD_AVG_SAMPLE_NUMS)
-        WTHAddCHECKSUM(builder, self.CHECKSUM)
         if self.CO_INTEGS is not None:
             WTHAddCO_INTEGS(builder, CO_INTEGS)
         if self.SPEC_AVGS is not None:

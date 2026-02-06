@@ -29,43 +29,148 @@ public final class ACM extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public ACM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * CCSDS ACM version
+   */
   public String CCSDS_ACM_VERS() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CCSDS_ACM_VERSAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer CCSDS_ACM_VERSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * Message creation date (ISO 8601)
+   */
   public String CREATION_DATE() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CREATION_DATEAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer CREATION_DATEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  /**
+   * Creating organization
+   */
   public String ORIGINATOR() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ORIGINATORAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer ORIGINATORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * Object name
+   */
   public String OBJECT_NAME() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer OBJECT_NAMEAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
   public ByteBuffer OBJECT_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * International designator
+   */
   public String OBJECT_ID() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
   public ByteBuffer OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * Catalog name
+   */
+  public String CATALOG_NAME() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CATALOG_NAMEAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer CATALOG_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * Epoch of state (ISO 8601)
+   */
+  public String EPOCH() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EPOCHAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
+  public ByteBuffer EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  /**
+   * Time system
+   */
+  public String TIME_SYSTEM() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TIME_SYSTEMAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
+  public ByteBuffer TIME_SYSTEMInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
+  /**
+   * Attitude states
+   */
+  public attitudeState ATT_STATES(int j) { return ATT_STATES(new attitudeState(), j); }
+  public attitudeState ATT_STATES(attitudeState obj, int j) { int o = __offset(20); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int ATT_STATESLength() { int o = __offset(20); return o != 0 ? __vector_len(o) : 0; }
+  public attitudeState.Vector attStatesVector() { return attStatesVector(new attitudeState.Vector()); }
+  public attitudeState.Vector attStatesVector(attitudeState.Vector obj) { int o = __offset(20); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Physical properties
+   */
+  public attPhysicalProperties PHYS_PROPERTIES() { return PHYS_PROPERTIES(new attPhysicalProperties()); }
+  public attPhysicalProperties PHYS_PROPERTIES(attPhysicalProperties obj) { int o = __offset(22); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Attitude covariance data
+   */
+  public attCovariance COV_DATA(int j) { return COV_DATA(new attCovariance(), j); }
+  public attCovariance COV_DATA(attCovariance obj, int j) { int o = __offset(24); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int COV_DATALength() { int o = __offset(24); return o != 0 ? __vector_len(o) : 0; }
+  public attCovariance.Vector covDataVector() { return covDataVector(new attCovariance.Vector()); }
+  public attCovariance.Vector covDataVector(attCovariance.Vector obj) { int o = __offset(24); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Attitude maneuvers
+   */
+  public attManeuver MANEUVERS(int j) { return MANEUVERS(new attManeuver(), j); }
+  public attManeuver MANEUVERS(attManeuver obj, int j) { int o = __offset(26); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int MANEUVERSLength() { int o = __offset(26); return o != 0 ? __vector_len(o) : 0; }
+  public attManeuver.Vector maneuversVector() { return maneuversVector(new attManeuver.Vector()); }
+  public attManeuver.Vector maneuversVector(attManeuver.Vector obj) { int o = __offset(26); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Maneuverability status
+   */
+  public byte MANEUVERABLE() { int o = __offset(28); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Additional comments
+   */
+  public String COMMENT() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer COMMENTAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
+  public ByteBuffer COMMENTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
 
   public static int createACM(FlatBufferBuilder builder,
       int CCSDS_ACM_VERSOffset,
       int CREATION_DATEOffset,
       int ORIGINATOROffset,
       int OBJECT_NAMEOffset,
-      int OBJECT_IDOffset) {
-    builder.startTable(5);
+      int OBJECT_IDOffset,
+      int CATALOG_NAMEOffset,
+      int EPOCHOffset,
+      int TIME_SYSTEMOffset,
+      int ATT_STATESOffset,
+      int PHYS_PROPERTIESOffset,
+      int COV_DATAOffset,
+      int MANEUVERSOffset,
+      byte MANEUVERABLE,
+      int COMMENTOffset) {
+    builder.startTable(14);
+    ACM.addComment(builder, COMMENTOffset);
+    ACM.addManeuvers(builder, MANEUVERSOffset);
+    ACM.addCovData(builder, COV_DATAOffset);
+    ACM.addPhysProperties(builder, PHYS_PROPERTIESOffset);
+    ACM.addAttStates(builder, ATT_STATESOffset);
+    ACM.addTimeSystem(builder, TIME_SYSTEMOffset);
+    ACM.addEpoch(builder, EPOCHOffset);
+    ACM.addCatalogName(builder, CATALOG_NAMEOffset);
     ACM.addObjectId(builder, OBJECT_IDOffset);
     ACM.addObjectName(builder, OBJECT_NAMEOffset);
     ACM.addOriginator(builder, ORIGINATOROffset);
     ACM.addCreationDate(builder, CREATION_DATEOffset);
     ACM.addCcsdsAcmVers(builder, CCSDS_ACM_VERSOffset);
+    ACM.addManeuverable(builder, MANEUVERABLE);
     return ACM.endACM(builder);
   }
 
-  public static void startACM(FlatBufferBuilder builder) { builder.startTable(5); }
+  public static void startACM(FlatBufferBuilder builder) { builder.startTable(14); }
   public static void addCcsdsAcmVers(FlatBufferBuilder builder, int CCSDS_ACM_VERSOffset) { builder.addOffset(0, CCSDS_ACM_VERSOffset, 0); }
   public static void addCreationDate(FlatBufferBuilder builder, int CREATION_DATEOffset) { builder.addOffset(1, CREATION_DATEOffset, 0); }
   public static void addOriginator(FlatBufferBuilder builder, int ORIGINATOROffset) { builder.addOffset(2, ORIGINATOROffset, 0); }
   public static void addObjectName(FlatBufferBuilder builder, int OBJECT_NAMEOffset) { builder.addOffset(3, OBJECT_NAMEOffset, 0); }
   public static void addObjectId(FlatBufferBuilder builder, int OBJECT_IDOffset) { builder.addOffset(4, OBJECT_IDOffset, 0); }
+  public static void addCatalogName(FlatBufferBuilder builder, int CATALOG_NAMEOffset) { builder.addOffset(5, CATALOG_NAMEOffset, 0); }
+  public static void addEpoch(FlatBufferBuilder builder, int EPOCHOffset) { builder.addOffset(6, EPOCHOffset, 0); }
+  public static void addTimeSystem(FlatBufferBuilder builder, int TIME_SYSTEMOffset) { builder.addOffset(7, TIME_SYSTEMOffset, 0); }
+  public static void addAttStates(FlatBufferBuilder builder, int ATT_STATESOffset) { builder.addOffset(8, ATT_STATESOffset, 0); }
+  public static int createAttStatesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startAttStatesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addPhysProperties(FlatBufferBuilder builder, int PHYS_PROPERTIESOffset) { builder.addOffset(9, PHYS_PROPERTIESOffset, 0); }
+  public static void addCovData(FlatBufferBuilder builder, int COV_DATAOffset) { builder.addOffset(10, COV_DATAOffset, 0); }
+  public static int createCovDataVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startCovDataVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addManeuvers(FlatBufferBuilder builder, int MANEUVERSOffset) { builder.addOffset(11, MANEUVERSOffset, 0); }
+  public static int createManeuversVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startManeuversVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addManeuverable(FlatBufferBuilder builder, byte MANEUVERABLE) { builder.addByte(12, MANEUVERABLE, 0); }
+  public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(13, COMMENTOffset, 0); }
   public static int endACM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

@@ -1,24 +1,293 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "attitudeStateType" : {
+      "type" : "string",
+      "enum": ["QUATERNION", "EULER_ANGLES", "SPIN", "DIRECTION_COSINE"]
+    },
+    "attCovType" : {
+      "type" : "string",
+      "enum": ["ANGLE", "ANGLE_GYROBIAS", "ANGLE_ANGVEL", "QUATERNION_COV"]
+    },
+    "maneuverableFlag" : {
+      "type" : "string",
+      "enum": ["YES", "NO", "UNKNOWN"]
+    },
+    "attitudeState" : {
+      "type" : "object",
+      "description" : "Attitude State Data",
+      "properties" : {
+        "ATT_TYPE" : {
+                "$ref" : "#/definitions/attitudeStateType",
+                "description" : "Attitude state type"
+              },
+        "REF_FRAME_A" : {
+                "type" : "string",
+                "description" : "Reference frame A"
+              },
+        "REF_FRAME_B" : {
+                "type" : "string",
+                "description" : "Reference frame B"
+              },
+        "ATT_DIR" : {
+                "type" : "string",
+                "description" : "Attitude direction (A2B or B2A)"
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch (ISO 8601)"
+              },
+        "Q1" : {
+                "type" : "number",
+                "description" : "Quaternion scalar component (q0 or qc)"
+              },
+        "Q2" : {
+                "type" : "number",
+                "description" : "Quaternion vector component i"
+              },
+        "Q3" : {
+                "type" : "number",
+                "description" : "Quaternion vector component j"
+              },
+        "QC" : {
+                "type" : "number",
+                "description" : "Quaternion vector component k"
+              },
+        "ANGLE_1" : {
+                "type" : "number",
+                "description" : "Euler angle X in degrees"
+              },
+        "ANGLE_2" : {
+                "type" : "number",
+                "description" : "Euler angle Y in degrees"
+              },
+        "ANGLE_3" : {
+                "type" : "number",
+                "description" : "Euler angle Z in degrees"
+              },
+        "EULER_ROT_SEQ" : {
+                "type" : "string",
+                "description" : "Euler rotation sequence (e.g., 321, 313)"
+              },
+        "ANGVEL_X" : {
+                "type" : "number",
+                "description" : "Angular velocity X in deg/s"
+              },
+        "ANGVEL_Y" : {
+                "type" : "number",
+                "description" : "Angular velocity Y in deg/s"
+              },
+        "ANGVEL_Z" : {
+                "type" : "number",
+                "description" : "Angular velocity Z in deg/s"
+              },
+        "SPIN_ALPHA" : {
+                "type" : "number",
+                "description" : "Spin alpha in degrees"
+              },
+        "SPIN_DELTA" : {
+                "type" : "number",
+                "description" : "Spin delta in degrees"
+              },
+        "SPIN_ANGLE" : {
+                "type" : "number",
+                "description" : "Spin angle in degrees"
+              },
+        "SPIN_ANGLE_VEL" : {
+                "type" : "number",
+                "description" : "Spin angle velocity in deg/s"
+              },
+        "NUTATION" : {
+                "type" : "number",
+                "description" : "Nutation angle in degrees"
+              },
+        "NUTATION_PERIOD" : {
+                "type" : "number",
+                "description" : "Nutation period in seconds"
+              },
+        "NUTATION_PHASE" : {
+                "type" : "number",
+                "description" : "Nutation phase in degrees"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "attPhysicalProperties" : {
+      "type" : "object",
+      "description" : "Attitude Physical Characteristics",
+      "properties" : {
+        "DRAG_COEFF" : {
+                "type" : "number",
+                "description" : "Drag coefficient"
+              },
+        "WET_MASS" : {
+                "type" : "number",
+                "description" : "Wet mass in kg"
+              },
+        "DRY_MASS" : {
+                "type" : "number",
+                "description" : "Dry mass in kg"
+              },
+        "CP_REF_FRAME" : {
+                "type" : "string",
+                "description" : "Center of pressure reference frame"
+              },
+        "CP_X" : {
+                "type" : "number",
+                "description" : "Center of pressure X in m"
+              },
+        "CP_Y" : {
+                "type" : "number",
+                "description" : "Center of pressure Y in m"
+              },
+        "CP_Z" : {
+                "type" : "number",
+                "description" : "Center of pressure Z in m"
+              },
+        "INERTIA_REF_FRAME" : {
+                "type" : "string",
+                "description" : "Inertia reference frame"
+              },
+        "IXX" : {
+                "type" : "number",
+                "description" : "Moment of inertia about X axis in kg*m^2"
+              },
+        "IYY" : {
+                "type" : "number",
+                "description" : "Moment of inertia about Y axis in kg*m^2"
+              },
+        "IZZ" : {
+                "type" : "number",
+                "description" : "Moment of inertia about Z axis in kg*m^2"
+              },
+        "IXY" : {
+                "type" : "number",
+                "description" : "Product of inertia XY in kg*m^2"
+              },
+        "IXZ" : {
+                "type" : "number",
+                "description" : "Product of inertia XZ in kg*m^2"
+              },
+        "IYZ" : {
+                "type" : "number",
+                "description" : "Product of inertia YZ in kg*m^2"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "attCovariance" : {
+      "type" : "object",
+      "description" : "Attitude Covariance",
+      "properties" : {
+        "COV_TYPE" : {
+                "$ref" : "#/definitions/attCovType",
+                "description" : "Covariance type"
+              },
+        "COV_REF_FRAME" : {
+                "type" : "string",
+                "description" : "Reference frame"
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch (ISO 8601)"
+              },
+        "COV" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Upper-triangular covariance matrix elements (row-major)"
+              }
+      },
+      "additionalProperties" : false
+    },
+    "attManeuver" : {
+      "type" : "object",
+      "description" : "Attitude Maneuver",
+      "properties" : {
+        "MAN_EPOCH_START" : {
+                "type" : "string",
+                "description" : "Maneuver epoch start (ISO 8601)"
+              },
+        "DURATION" : {
+                "type" : "number",
+                "description" : "Duration in seconds"
+              },
+        "REF_FRAME" : {
+                "type" : "string",
+                "description" : "Reference frame"
+              },
+        "TOR_1" : {
+                "type" : "number",
+                "description" : "Torque about body X in N*m"
+              },
+        "TOR_2" : {
+                "type" : "number",
+                "description" : "Torque about body Y in N*m"
+              },
+        "TOR_3" : {
+                "type" : "number",
+                "description" : "Torque about body Z in N*m"
+              }
+      },
+      "additionalProperties" : false
+    },
     "ACM" : {
       "type" : "object",
       "description" : "Attitude Comprehensive Message",
       "properties" : {
         "CCSDS_ACM_VERS" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "CCSDS ACM version"
               },
         "CREATION_DATE" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Message creation date (ISO 8601)"
               },
         "ORIGINATOR" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Creating organization"
               },
         "OBJECT_NAME" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Object name"
               },
         "OBJECT_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "International designator"
+              },
+        "CATALOG_NAME" : {
+                "type" : "string",
+                "description" : "Catalog name"
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of state (ISO 8601)"
+              },
+        "TIME_SYSTEM" : {
+                "type" : "string",
+                "description" : "Time system"
+              },
+        "ATT_STATES" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/attitudeState"},
+                "description" : "Attitude states"
+              },
+        "PHYS_PROPERTIES" : {
+                "$ref" : "#/definitions/attPhysicalProperties",
+                "description" : "Physical properties"
+              },
+        "COV_DATA" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/attCovariance"},
+                "description" : "Attitude covariance data"
+              },
+        "MANEUVERS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/attManeuver"},
+                "description" : "Attitude maneuvers"
+              },
+        "MANEUVERABLE" : {
+                "$ref" : "#/definitions/maneuverableFlag",
+                "description" : "Maneuverability status"
+              },
+        "COMMENT" : {
+                "type" : "string",
+                "description" : "Additional comments"
               }
       },
       "additionalProperties" : false

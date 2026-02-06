@@ -9,6 +9,1873 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_ATTITUDE_STATE_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_ATTITUDE_STATE_TYPE: i8 = 3;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_ATTITUDE_STATE_TYPE: [attitudeStateType; 4] = [
+  attitudeStateType::QUATERNION,
+  attitudeStateType::EULER_ANGLES,
+  attitudeStateType::SPIN,
+  attitudeStateType::DIRECTION_COSINE,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct attitudeStateType(pub i8);
+#[allow(non_upper_case_globals)]
+impl attitudeStateType {
+  pub const QUATERNION: Self = Self(0);
+  pub const EULER_ANGLES: Self = Self(1);
+  pub const SPIN: Self = Self(2);
+  pub const DIRECTION_COSINE: Self = Self(3);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 3;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::QUATERNION,
+    Self::EULER_ANGLES,
+    Self::SPIN,
+    Self::DIRECTION_COSINE,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::QUATERNION => Some("QUATERNION"),
+      Self::EULER_ANGLES => Some("EULER_ANGLES"),
+      Self::SPIN => Some("SPIN"),
+      Self::DIRECTION_COSINE => Some("DIRECTION_COSINE"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for attitudeStateType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for attitudeStateType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for attitudeStateType {
+    type Output = attitudeStateType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for attitudeStateType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for attitudeStateType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for attitudeStateType {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_ATT_COV_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_ATT_COV_TYPE: i8 = 3;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_ATT_COV_TYPE: [attCovType; 4] = [
+  attCovType::ANGLE,
+  attCovType::ANGLE_GYROBIAS,
+  attCovType::ANGLE_ANGVEL,
+  attCovType::QUATERNION_COV,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct attCovType(pub i8);
+#[allow(non_upper_case_globals)]
+impl attCovType {
+  pub const ANGLE: Self = Self(0);
+  pub const ANGLE_GYROBIAS: Self = Self(1);
+  pub const ANGLE_ANGVEL: Self = Self(2);
+  pub const QUATERNION_COV: Self = Self(3);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 3;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::ANGLE,
+    Self::ANGLE_GYROBIAS,
+    Self::ANGLE_ANGVEL,
+    Self::QUATERNION_COV,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::ANGLE => Some("ANGLE"),
+      Self::ANGLE_GYROBIAS => Some("ANGLE_GYROBIAS"),
+      Self::ANGLE_ANGVEL => Some("ANGLE_ANGVEL"),
+      Self::QUATERNION_COV => Some("QUATERNION_COV"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for attCovType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for attCovType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for attCovType {
+    type Output = attCovType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for attCovType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for attCovType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for attCovType {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_MANEUVERABLE_FLAG: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_MANEUVERABLE_FLAG: i8 = 2;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_MANEUVERABLE_FLAG: [maneuverableFlag; 3] = [
+  maneuverableFlag::YES,
+  maneuverableFlag::NO,
+  maneuverableFlag::UNKNOWN,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct maneuverableFlag(pub i8);
+#[allow(non_upper_case_globals)]
+impl maneuverableFlag {
+  pub const YES: Self = Self(0);
+  pub const NO: Self = Self(1);
+  pub const UNKNOWN: Self = Self(2);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 2;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::YES,
+    Self::NO,
+    Self::UNKNOWN,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::YES => Some("YES"),
+      Self::NO => Some("NO"),
+      Self::UNKNOWN => Some("UNKNOWN"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for maneuverableFlag {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for maneuverableFlag {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for maneuverableFlag {
+    type Output = maneuverableFlag;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for maneuverableFlag {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for maneuverableFlag {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for maneuverableFlag {}
+pub enum attitudeStateOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Attitude State Data
+pub struct attitudeState<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for attitudeState<'a> {
+  type Inner = attitudeState<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> attitudeState<'a> {
+  pub const VT_ATT_TYPE: flatbuffers::VOffsetT = 4;
+  pub const VT_REF_FRAME_A: flatbuffers::VOffsetT = 6;
+  pub const VT_REF_FRAME_B: flatbuffers::VOffsetT = 8;
+  pub const VT_ATT_DIR: flatbuffers::VOffsetT = 10;
+  pub const VT_EPOCH: flatbuffers::VOffsetT = 12;
+  pub const VT_Q1: flatbuffers::VOffsetT = 14;
+  pub const VT_Q2: flatbuffers::VOffsetT = 16;
+  pub const VT_Q3: flatbuffers::VOffsetT = 18;
+  pub const VT_QC: flatbuffers::VOffsetT = 20;
+  pub const VT_ANGLE_1: flatbuffers::VOffsetT = 22;
+  pub const VT_ANGLE_2: flatbuffers::VOffsetT = 24;
+  pub const VT_ANGLE_3: flatbuffers::VOffsetT = 26;
+  pub const VT_EULER_ROT_SEQ: flatbuffers::VOffsetT = 28;
+  pub const VT_ANGVEL_X: flatbuffers::VOffsetT = 30;
+  pub const VT_ANGVEL_Y: flatbuffers::VOffsetT = 32;
+  pub const VT_ANGVEL_Z: flatbuffers::VOffsetT = 34;
+  pub const VT_SPIN_ALPHA: flatbuffers::VOffsetT = 36;
+  pub const VT_SPIN_DELTA: flatbuffers::VOffsetT = 38;
+  pub const VT_SPIN_ANGLE: flatbuffers::VOffsetT = 40;
+  pub const VT_SPIN_ANGLE_VEL: flatbuffers::VOffsetT = 42;
+  pub const VT_NUTATION: flatbuffers::VOffsetT = 44;
+  pub const VT_NUTATION_PERIOD: flatbuffers::VOffsetT = 46;
+  pub const VT_NUTATION_PHASE: flatbuffers::VOffsetT = 48;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    attitudeState { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args attitudeStateArgs<'args>
+  ) -> flatbuffers::WIPOffset<attitudeState<'bldr>> {
+    let mut builder = attitudeStateBuilder::new(_fbb);
+    builder.add_NUTATION_PHASE(args.NUTATION_PHASE);
+    builder.add_NUTATION_PERIOD(args.NUTATION_PERIOD);
+    builder.add_NUTATION(args.NUTATION);
+    builder.add_SPIN_ANGLE_VEL(args.SPIN_ANGLE_VEL);
+    builder.add_SPIN_ANGLE(args.SPIN_ANGLE);
+    builder.add_SPIN_DELTA(args.SPIN_DELTA);
+    builder.add_SPIN_ALPHA(args.SPIN_ALPHA);
+    builder.add_ANGVEL_Z(args.ANGVEL_Z);
+    builder.add_ANGVEL_Y(args.ANGVEL_Y);
+    builder.add_ANGVEL_X(args.ANGVEL_X);
+    builder.add_ANGLE_3(args.ANGLE_3);
+    builder.add_ANGLE_2(args.ANGLE_2);
+    builder.add_ANGLE_1(args.ANGLE_1);
+    builder.add_QC(args.QC);
+    builder.add_Q3(args.Q3);
+    builder.add_Q2(args.Q2);
+    builder.add_Q1(args.Q1);
+    if let Some(x) = args.EULER_ROT_SEQ { builder.add_EULER_ROT_SEQ(x); }
+    if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
+    if let Some(x) = args.ATT_DIR { builder.add_ATT_DIR(x); }
+    if let Some(x) = args.REF_FRAME_B { builder.add_REF_FRAME_B(x); }
+    if let Some(x) = args.REF_FRAME_A { builder.add_REF_FRAME_A(x); }
+    builder.add_ATT_TYPE(args.ATT_TYPE);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> attitudeStateT {
+    let ATT_TYPE = self.ATT_TYPE();
+    let REF_FRAME_A = self.REF_FRAME_A().map(|x| {
+      x.to_string()
+    });
+    let REF_FRAME_B = self.REF_FRAME_B().map(|x| {
+      x.to_string()
+    });
+    let ATT_DIR = self.ATT_DIR().map(|x| {
+      x.to_string()
+    });
+    let EPOCH = self.EPOCH().map(|x| {
+      x.to_string()
+    });
+    let Q1 = self.Q1();
+    let Q2 = self.Q2();
+    let Q3 = self.Q3();
+    let QC = self.QC();
+    let ANGLE_1 = self.ANGLE_1();
+    let ANGLE_2 = self.ANGLE_2();
+    let ANGLE_3 = self.ANGLE_3();
+    let EULER_ROT_SEQ = self.EULER_ROT_SEQ().map(|x| {
+      x.to_string()
+    });
+    let ANGVEL_X = self.ANGVEL_X();
+    let ANGVEL_Y = self.ANGVEL_Y();
+    let ANGVEL_Z = self.ANGVEL_Z();
+    let SPIN_ALPHA = self.SPIN_ALPHA();
+    let SPIN_DELTA = self.SPIN_DELTA();
+    let SPIN_ANGLE = self.SPIN_ANGLE();
+    let SPIN_ANGLE_VEL = self.SPIN_ANGLE_VEL();
+    let NUTATION = self.NUTATION();
+    let NUTATION_PERIOD = self.NUTATION_PERIOD();
+    let NUTATION_PHASE = self.NUTATION_PHASE();
+    attitudeStateT {
+      ATT_TYPE,
+      REF_FRAME_A,
+      REF_FRAME_B,
+      ATT_DIR,
+      EPOCH,
+      Q1,
+      Q2,
+      Q3,
+      QC,
+      ANGLE_1,
+      ANGLE_2,
+      ANGLE_3,
+      EULER_ROT_SEQ,
+      ANGVEL_X,
+      ANGVEL_Y,
+      ANGVEL_Z,
+      SPIN_ALPHA,
+      SPIN_DELTA,
+      SPIN_ANGLE,
+      SPIN_ANGLE_VEL,
+      NUTATION,
+      NUTATION_PERIOD,
+      NUTATION_PHASE,
+    }
+  }
+
+  /// Attitude state type
+  #[inline]
+  pub fn ATT_TYPE(&self) -> attitudeStateType {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<attitudeStateType>(attitudeState::VT_ATT_TYPE, Some(attitudeStateType::QUATERNION)).unwrap()}
+  }
+  /// Reference frame A
+  #[inline]
+  pub fn REF_FRAME_A(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(attitudeState::VT_REF_FRAME_A, None)}
+  }
+  /// Reference frame B
+  #[inline]
+  pub fn REF_FRAME_B(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(attitudeState::VT_REF_FRAME_B, None)}
+  }
+  /// Attitude direction (A2B or B2A)
+  #[inline]
+  pub fn ATT_DIR(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(attitudeState::VT_ATT_DIR, None)}
+  }
+  /// Epoch (ISO 8601)
+  #[inline]
+  pub fn EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(attitudeState::VT_EPOCH, None)}
+  }
+  /// Quaternion scalar component (q0 or qc)
+  #[inline]
+  pub fn Q1(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeState::VT_Q1, Some(0.0)).unwrap()}
+  }
+  /// Quaternion vector component i
+  #[inline]
+  pub fn Q2(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeState::VT_Q2, Some(0.0)).unwrap()}
+  }
+  /// Quaternion vector component j
+  #[inline]
+  pub fn Q3(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeState::VT_Q3, Some(0.0)).unwrap()}
+  }
+  /// Quaternion vector component k
+  #[inline]
+  pub fn QC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeState::VT_QC, Some(0.0)).unwrap()}
+  }
+  /// Euler angle X in degrees
+  #[inline]
+  pub fn ANGLE_1(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeState::VT_ANGLE_1, Some(0.0)).unwrap()}
+  }
+  /// Euler angle Y in degrees
+  #[inline]
+  pub fn ANGLE_2(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeState::VT_ANGLE_2, Some(0.0)).unwrap()}
+  }
+  /// Euler angle Z in degrees
+  #[inline]
+  pub fn ANGLE_3(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeState::VT_ANGLE_3, Some(0.0)).unwrap()}
+  }
+  /// Euler rotation sequence (e.g., 321, 313)
+  #[inline]
+  pub fn EULER_ROT_SEQ(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(attitudeState::VT_EULER_ROT_SEQ, None)}
+  }
+  /// Angular velocity X in deg/s
+  #[inline]
+  pub fn ANGVEL_X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeState::VT_ANGVEL_X, Some(0.0)).unwrap()}
+  }
+  /// Angular velocity Y in deg/s
+  #[inline]
+  pub fn ANGVEL_Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeState::VT_ANGVEL_Y, Some(0.0)).unwrap()}
+  }
+  /// Angular velocity Z in deg/s
+  #[inline]
+  pub fn ANGVEL_Z(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeState::VT_ANGVEL_Z, Some(0.0)).unwrap()}
+  }
+  /// Spin alpha in degrees
+  #[inline]
+  pub fn SPIN_ALPHA(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeState::VT_SPIN_ALPHA, Some(0.0)).unwrap()}
+  }
+  /// Spin delta in degrees
+  #[inline]
+  pub fn SPIN_DELTA(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeState::VT_SPIN_DELTA, Some(0.0)).unwrap()}
+  }
+  /// Spin angle in degrees
+  #[inline]
+  pub fn SPIN_ANGLE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeState::VT_SPIN_ANGLE, Some(0.0)).unwrap()}
+  }
+  /// Spin angle velocity in deg/s
+  #[inline]
+  pub fn SPIN_ANGLE_VEL(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeState::VT_SPIN_ANGLE_VEL, Some(0.0)).unwrap()}
+  }
+  /// Nutation angle in degrees
+  #[inline]
+  pub fn NUTATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeState::VT_NUTATION, Some(0.0)).unwrap()}
+  }
+  /// Nutation period in seconds
+  #[inline]
+  pub fn NUTATION_PERIOD(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeState::VT_NUTATION_PERIOD, Some(0.0)).unwrap()}
+  }
+  /// Nutation phase in degrees
+  #[inline]
+  pub fn NUTATION_PHASE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attitudeState::VT_NUTATION_PHASE, Some(0.0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for attitudeState<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<attitudeStateType>("ATT_TYPE", Self::VT_ATT_TYPE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REF_FRAME_A", Self::VT_REF_FRAME_A, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REF_FRAME_B", Self::VT_REF_FRAME_B, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ATT_DIR", Self::VT_ATT_DIR, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
+     .visit_field::<f64>("Q1", Self::VT_Q1, false)?
+     .visit_field::<f64>("Q2", Self::VT_Q2, false)?
+     .visit_field::<f64>("Q3", Self::VT_Q3, false)?
+     .visit_field::<f64>("QC", Self::VT_QC, false)?
+     .visit_field::<f64>("ANGLE_1", Self::VT_ANGLE_1, false)?
+     .visit_field::<f64>("ANGLE_2", Self::VT_ANGLE_2, false)?
+     .visit_field::<f64>("ANGLE_3", Self::VT_ANGLE_3, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EULER_ROT_SEQ", Self::VT_EULER_ROT_SEQ, false)?
+     .visit_field::<f64>("ANGVEL_X", Self::VT_ANGVEL_X, false)?
+     .visit_field::<f64>("ANGVEL_Y", Self::VT_ANGVEL_Y, false)?
+     .visit_field::<f64>("ANGVEL_Z", Self::VT_ANGVEL_Z, false)?
+     .visit_field::<f64>("SPIN_ALPHA", Self::VT_SPIN_ALPHA, false)?
+     .visit_field::<f64>("SPIN_DELTA", Self::VT_SPIN_DELTA, false)?
+     .visit_field::<f64>("SPIN_ANGLE", Self::VT_SPIN_ANGLE, false)?
+     .visit_field::<f64>("SPIN_ANGLE_VEL", Self::VT_SPIN_ANGLE_VEL, false)?
+     .visit_field::<f64>("NUTATION", Self::VT_NUTATION, false)?
+     .visit_field::<f64>("NUTATION_PERIOD", Self::VT_NUTATION_PERIOD, false)?
+     .visit_field::<f64>("NUTATION_PHASE", Self::VT_NUTATION_PHASE, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct attitudeStateArgs<'a> {
+    pub ATT_TYPE: attitudeStateType,
+    pub REF_FRAME_A: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub REF_FRAME_B: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ATT_DIR: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub Q1: f64,
+    pub Q2: f64,
+    pub Q3: f64,
+    pub QC: f64,
+    pub ANGLE_1: f64,
+    pub ANGLE_2: f64,
+    pub ANGLE_3: f64,
+    pub EULER_ROT_SEQ: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ANGVEL_X: f64,
+    pub ANGVEL_Y: f64,
+    pub ANGVEL_Z: f64,
+    pub SPIN_ALPHA: f64,
+    pub SPIN_DELTA: f64,
+    pub SPIN_ANGLE: f64,
+    pub SPIN_ANGLE_VEL: f64,
+    pub NUTATION: f64,
+    pub NUTATION_PERIOD: f64,
+    pub NUTATION_PHASE: f64,
+}
+impl<'a> Default for attitudeStateArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    attitudeStateArgs {
+      ATT_TYPE: attitudeStateType::QUATERNION,
+      REF_FRAME_A: None,
+      REF_FRAME_B: None,
+      ATT_DIR: None,
+      EPOCH: None,
+      Q1: 0.0,
+      Q2: 0.0,
+      Q3: 0.0,
+      QC: 0.0,
+      ANGLE_1: 0.0,
+      ANGLE_2: 0.0,
+      ANGLE_3: 0.0,
+      EULER_ROT_SEQ: None,
+      ANGVEL_X: 0.0,
+      ANGVEL_Y: 0.0,
+      ANGVEL_Z: 0.0,
+      SPIN_ALPHA: 0.0,
+      SPIN_DELTA: 0.0,
+      SPIN_ANGLE: 0.0,
+      SPIN_ANGLE_VEL: 0.0,
+      NUTATION: 0.0,
+      NUTATION_PERIOD: 0.0,
+      NUTATION_PHASE: 0.0,
+    }
+  }
+}
+
+pub struct attitudeStateBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> attitudeStateBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_ATT_TYPE(&mut self, ATT_TYPE: attitudeStateType) {
+    self.fbb_.push_slot::<attitudeStateType>(attitudeState::VT_ATT_TYPE, ATT_TYPE, attitudeStateType::QUATERNION);
+  }
+  #[inline]
+  pub fn add_REF_FRAME_A(&mut self, REF_FRAME_A: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(attitudeState::VT_REF_FRAME_A, REF_FRAME_A);
+  }
+  #[inline]
+  pub fn add_REF_FRAME_B(&mut self, REF_FRAME_B: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(attitudeState::VT_REF_FRAME_B, REF_FRAME_B);
+  }
+  #[inline]
+  pub fn add_ATT_DIR(&mut self, ATT_DIR: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(attitudeState::VT_ATT_DIR, ATT_DIR);
+  }
+  #[inline]
+  pub fn add_EPOCH(&mut self, EPOCH: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(attitudeState::VT_EPOCH, EPOCH);
+  }
+  #[inline]
+  pub fn add_Q1(&mut self, Q1: f64) {
+    self.fbb_.push_slot::<f64>(attitudeState::VT_Q1, Q1, 0.0);
+  }
+  #[inline]
+  pub fn add_Q2(&mut self, Q2: f64) {
+    self.fbb_.push_slot::<f64>(attitudeState::VT_Q2, Q2, 0.0);
+  }
+  #[inline]
+  pub fn add_Q3(&mut self, Q3: f64) {
+    self.fbb_.push_slot::<f64>(attitudeState::VT_Q3, Q3, 0.0);
+  }
+  #[inline]
+  pub fn add_QC(&mut self, QC: f64) {
+    self.fbb_.push_slot::<f64>(attitudeState::VT_QC, QC, 0.0);
+  }
+  #[inline]
+  pub fn add_ANGLE_1(&mut self, ANGLE_1: f64) {
+    self.fbb_.push_slot::<f64>(attitudeState::VT_ANGLE_1, ANGLE_1, 0.0);
+  }
+  #[inline]
+  pub fn add_ANGLE_2(&mut self, ANGLE_2: f64) {
+    self.fbb_.push_slot::<f64>(attitudeState::VT_ANGLE_2, ANGLE_2, 0.0);
+  }
+  #[inline]
+  pub fn add_ANGLE_3(&mut self, ANGLE_3: f64) {
+    self.fbb_.push_slot::<f64>(attitudeState::VT_ANGLE_3, ANGLE_3, 0.0);
+  }
+  #[inline]
+  pub fn add_EULER_ROT_SEQ(&mut self, EULER_ROT_SEQ: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(attitudeState::VT_EULER_ROT_SEQ, EULER_ROT_SEQ);
+  }
+  #[inline]
+  pub fn add_ANGVEL_X(&mut self, ANGVEL_X: f64) {
+    self.fbb_.push_slot::<f64>(attitudeState::VT_ANGVEL_X, ANGVEL_X, 0.0);
+  }
+  #[inline]
+  pub fn add_ANGVEL_Y(&mut self, ANGVEL_Y: f64) {
+    self.fbb_.push_slot::<f64>(attitudeState::VT_ANGVEL_Y, ANGVEL_Y, 0.0);
+  }
+  #[inline]
+  pub fn add_ANGVEL_Z(&mut self, ANGVEL_Z: f64) {
+    self.fbb_.push_slot::<f64>(attitudeState::VT_ANGVEL_Z, ANGVEL_Z, 0.0);
+  }
+  #[inline]
+  pub fn add_SPIN_ALPHA(&mut self, SPIN_ALPHA: f64) {
+    self.fbb_.push_slot::<f64>(attitudeState::VT_SPIN_ALPHA, SPIN_ALPHA, 0.0);
+  }
+  #[inline]
+  pub fn add_SPIN_DELTA(&mut self, SPIN_DELTA: f64) {
+    self.fbb_.push_slot::<f64>(attitudeState::VT_SPIN_DELTA, SPIN_DELTA, 0.0);
+  }
+  #[inline]
+  pub fn add_SPIN_ANGLE(&mut self, SPIN_ANGLE: f64) {
+    self.fbb_.push_slot::<f64>(attitudeState::VT_SPIN_ANGLE, SPIN_ANGLE, 0.0);
+  }
+  #[inline]
+  pub fn add_SPIN_ANGLE_VEL(&mut self, SPIN_ANGLE_VEL: f64) {
+    self.fbb_.push_slot::<f64>(attitudeState::VT_SPIN_ANGLE_VEL, SPIN_ANGLE_VEL, 0.0);
+  }
+  #[inline]
+  pub fn add_NUTATION(&mut self, NUTATION: f64) {
+    self.fbb_.push_slot::<f64>(attitudeState::VT_NUTATION, NUTATION, 0.0);
+  }
+  #[inline]
+  pub fn add_NUTATION_PERIOD(&mut self, NUTATION_PERIOD: f64) {
+    self.fbb_.push_slot::<f64>(attitudeState::VT_NUTATION_PERIOD, NUTATION_PERIOD, 0.0);
+  }
+  #[inline]
+  pub fn add_NUTATION_PHASE(&mut self, NUTATION_PHASE: f64) {
+    self.fbb_.push_slot::<f64>(attitudeState::VT_NUTATION_PHASE, NUTATION_PHASE, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> attitudeStateBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    attitudeStateBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<attitudeState<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for attitudeState<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("attitudeState");
+      ds.field("ATT_TYPE", &self.ATT_TYPE());
+      ds.field("REF_FRAME_A", &self.REF_FRAME_A());
+      ds.field("REF_FRAME_B", &self.REF_FRAME_B());
+      ds.field("ATT_DIR", &self.ATT_DIR());
+      ds.field("EPOCH", &self.EPOCH());
+      ds.field("Q1", &self.Q1());
+      ds.field("Q2", &self.Q2());
+      ds.field("Q3", &self.Q3());
+      ds.field("QC", &self.QC());
+      ds.field("ANGLE_1", &self.ANGLE_1());
+      ds.field("ANGLE_2", &self.ANGLE_2());
+      ds.field("ANGLE_3", &self.ANGLE_3());
+      ds.field("EULER_ROT_SEQ", &self.EULER_ROT_SEQ());
+      ds.field("ANGVEL_X", &self.ANGVEL_X());
+      ds.field("ANGVEL_Y", &self.ANGVEL_Y());
+      ds.field("ANGVEL_Z", &self.ANGVEL_Z());
+      ds.field("SPIN_ALPHA", &self.SPIN_ALPHA());
+      ds.field("SPIN_DELTA", &self.SPIN_DELTA());
+      ds.field("SPIN_ANGLE", &self.SPIN_ANGLE());
+      ds.field("SPIN_ANGLE_VEL", &self.SPIN_ANGLE_VEL());
+      ds.field("NUTATION", &self.NUTATION());
+      ds.field("NUTATION_PERIOD", &self.NUTATION_PERIOD());
+      ds.field("NUTATION_PHASE", &self.NUTATION_PHASE());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct attitudeStateT {
+  pub ATT_TYPE: attitudeStateType,
+  pub REF_FRAME_A: Option<String>,
+  pub REF_FRAME_B: Option<String>,
+  pub ATT_DIR: Option<String>,
+  pub EPOCH: Option<String>,
+  pub Q1: f64,
+  pub Q2: f64,
+  pub Q3: f64,
+  pub QC: f64,
+  pub ANGLE_1: f64,
+  pub ANGLE_2: f64,
+  pub ANGLE_3: f64,
+  pub EULER_ROT_SEQ: Option<String>,
+  pub ANGVEL_X: f64,
+  pub ANGVEL_Y: f64,
+  pub ANGVEL_Z: f64,
+  pub SPIN_ALPHA: f64,
+  pub SPIN_DELTA: f64,
+  pub SPIN_ANGLE: f64,
+  pub SPIN_ANGLE_VEL: f64,
+  pub NUTATION: f64,
+  pub NUTATION_PERIOD: f64,
+  pub NUTATION_PHASE: f64,
+}
+impl Default for attitudeStateT {
+  fn default() -> Self {
+    Self {
+      ATT_TYPE: attitudeStateType::QUATERNION,
+      REF_FRAME_A: None,
+      REF_FRAME_B: None,
+      ATT_DIR: None,
+      EPOCH: None,
+      Q1: 0.0,
+      Q2: 0.0,
+      Q3: 0.0,
+      QC: 0.0,
+      ANGLE_1: 0.0,
+      ANGLE_2: 0.0,
+      ANGLE_3: 0.0,
+      EULER_ROT_SEQ: None,
+      ANGVEL_X: 0.0,
+      ANGVEL_Y: 0.0,
+      ANGVEL_Z: 0.0,
+      SPIN_ALPHA: 0.0,
+      SPIN_DELTA: 0.0,
+      SPIN_ANGLE: 0.0,
+      SPIN_ANGLE_VEL: 0.0,
+      NUTATION: 0.0,
+      NUTATION_PERIOD: 0.0,
+      NUTATION_PHASE: 0.0,
+    }
+  }
+}
+impl attitudeStateT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<attitudeState<'b>> {
+    let ATT_TYPE = self.ATT_TYPE;
+    let REF_FRAME_A = self.REF_FRAME_A.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let REF_FRAME_B = self.REF_FRAME_B.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ATT_DIR = self.ATT_DIR.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EPOCH = self.EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let Q1 = self.Q1;
+    let Q2 = self.Q2;
+    let Q3 = self.Q3;
+    let QC = self.QC;
+    let ANGLE_1 = self.ANGLE_1;
+    let ANGLE_2 = self.ANGLE_2;
+    let ANGLE_3 = self.ANGLE_3;
+    let EULER_ROT_SEQ = self.EULER_ROT_SEQ.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ANGVEL_X = self.ANGVEL_X;
+    let ANGVEL_Y = self.ANGVEL_Y;
+    let ANGVEL_Z = self.ANGVEL_Z;
+    let SPIN_ALPHA = self.SPIN_ALPHA;
+    let SPIN_DELTA = self.SPIN_DELTA;
+    let SPIN_ANGLE = self.SPIN_ANGLE;
+    let SPIN_ANGLE_VEL = self.SPIN_ANGLE_VEL;
+    let NUTATION = self.NUTATION;
+    let NUTATION_PERIOD = self.NUTATION_PERIOD;
+    let NUTATION_PHASE = self.NUTATION_PHASE;
+    attitudeState::create(_fbb, &attitudeStateArgs{
+      ATT_TYPE,
+      REF_FRAME_A,
+      REF_FRAME_B,
+      ATT_DIR,
+      EPOCH,
+      Q1,
+      Q2,
+      Q3,
+      QC,
+      ANGLE_1,
+      ANGLE_2,
+      ANGLE_3,
+      EULER_ROT_SEQ,
+      ANGVEL_X,
+      ANGVEL_Y,
+      ANGVEL_Z,
+      SPIN_ALPHA,
+      SPIN_DELTA,
+      SPIN_ANGLE,
+      SPIN_ANGLE_VEL,
+      NUTATION,
+      NUTATION_PERIOD,
+      NUTATION_PHASE,
+    })
+  }
+}
+pub enum attPhysicalPropertiesOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Attitude Physical Characteristics
+pub struct attPhysicalProperties<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for attPhysicalProperties<'a> {
+  type Inner = attPhysicalProperties<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> attPhysicalProperties<'a> {
+  pub const VT_DRAG_COEFF: flatbuffers::VOffsetT = 4;
+  pub const VT_WET_MASS: flatbuffers::VOffsetT = 6;
+  pub const VT_DRY_MASS: flatbuffers::VOffsetT = 8;
+  pub const VT_CP_REF_FRAME: flatbuffers::VOffsetT = 10;
+  pub const VT_CP_X: flatbuffers::VOffsetT = 12;
+  pub const VT_CP_Y: flatbuffers::VOffsetT = 14;
+  pub const VT_CP_Z: flatbuffers::VOffsetT = 16;
+  pub const VT_INERTIA_REF_FRAME: flatbuffers::VOffsetT = 18;
+  pub const VT_IXX: flatbuffers::VOffsetT = 20;
+  pub const VT_IYY: flatbuffers::VOffsetT = 22;
+  pub const VT_IZZ: flatbuffers::VOffsetT = 24;
+  pub const VT_IXY: flatbuffers::VOffsetT = 26;
+  pub const VT_IXZ: flatbuffers::VOffsetT = 28;
+  pub const VT_IYZ: flatbuffers::VOffsetT = 30;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    attPhysicalProperties { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args attPhysicalPropertiesArgs<'args>
+  ) -> flatbuffers::WIPOffset<attPhysicalProperties<'bldr>> {
+    let mut builder = attPhysicalPropertiesBuilder::new(_fbb);
+    builder.add_IYZ(args.IYZ);
+    builder.add_IXZ(args.IXZ);
+    builder.add_IXY(args.IXY);
+    builder.add_IZZ(args.IZZ);
+    builder.add_IYY(args.IYY);
+    builder.add_IXX(args.IXX);
+    builder.add_CP_Z(args.CP_Z);
+    builder.add_CP_Y(args.CP_Y);
+    builder.add_CP_X(args.CP_X);
+    builder.add_DRY_MASS(args.DRY_MASS);
+    builder.add_WET_MASS(args.WET_MASS);
+    builder.add_DRAG_COEFF(args.DRAG_COEFF);
+    if let Some(x) = args.INERTIA_REF_FRAME { builder.add_INERTIA_REF_FRAME(x); }
+    if let Some(x) = args.CP_REF_FRAME { builder.add_CP_REF_FRAME(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> attPhysicalPropertiesT {
+    let DRAG_COEFF = self.DRAG_COEFF();
+    let WET_MASS = self.WET_MASS();
+    let DRY_MASS = self.DRY_MASS();
+    let CP_REF_FRAME = self.CP_REF_FRAME().map(|x| {
+      x.to_string()
+    });
+    let CP_X = self.CP_X();
+    let CP_Y = self.CP_Y();
+    let CP_Z = self.CP_Z();
+    let INERTIA_REF_FRAME = self.INERTIA_REF_FRAME().map(|x| {
+      x.to_string()
+    });
+    let IXX = self.IXX();
+    let IYY = self.IYY();
+    let IZZ = self.IZZ();
+    let IXY = self.IXY();
+    let IXZ = self.IXZ();
+    let IYZ = self.IYZ();
+    attPhysicalPropertiesT {
+      DRAG_COEFF,
+      WET_MASS,
+      DRY_MASS,
+      CP_REF_FRAME,
+      CP_X,
+      CP_Y,
+      CP_Z,
+      INERTIA_REF_FRAME,
+      IXX,
+      IYY,
+      IZZ,
+      IXY,
+      IXZ,
+      IYZ,
+    }
+  }
+
+  /// Drag coefficient
+  #[inline]
+  pub fn DRAG_COEFF(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attPhysicalProperties::VT_DRAG_COEFF, Some(0.0)).unwrap()}
+  }
+  /// Wet mass in kg
+  #[inline]
+  pub fn WET_MASS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attPhysicalProperties::VT_WET_MASS, Some(0.0)).unwrap()}
+  }
+  /// Dry mass in kg
+  #[inline]
+  pub fn DRY_MASS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attPhysicalProperties::VT_DRY_MASS, Some(0.0)).unwrap()}
+  }
+  /// Center of pressure reference frame
+  #[inline]
+  pub fn CP_REF_FRAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(attPhysicalProperties::VT_CP_REF_FRAME, None)}
+  }
+  /// Center of pressure X in m
+  #[inline]
+  pub fn CP_X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attPhysicalProperties::VT_CP_X, Some(0.0)).unwrap()}
+  }
+  /// Center of pressure Y in m
+  #[inline]
+  pub fn CP_Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attPhysicalProperties::VT_CP_Y, Some(0.0)).unwrap()}
+  }
+  /// Center of pressure Z in m
+  #[inline]
+  pub fn CP_Z(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attPhysicalProperties::VT_CP_Z, Some(0.0)).unwrap()}
+  }
+  /// Inertia reference frame
+  #[inline]
+  pub fn INERTIA_REF_FRAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(attPhysicalProperties::VT_INERTIA_REF_FRAME, None)}
+  }
+  /// Moment of inertia about X axis in kg*m^2
+  #[inline]
+  pub fn IXX(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attPhysicalProperties::VT_IXX, Some(0.0)).unwrap()}
+  }
+  /// Moment of inertia about Y axis in kg*m^2
+  #[inline]
+  pub fn IYY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attPhysicalProperties::VT_IYY, Some(0.0)).unwrap()}
+  }
+  /// Moment of inertia about Z axis in kg*m^2
+  #[inline]
+  pub fn IZZ(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attPhysicalProperties::VT_IZZ, Some(0.0)).unwrap()}
+  }
+  /// Product of inertia XY in kg*m^2
+  #[inline]
+  pub fn IXY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attPhysicalProperties::VT_IXY, Some(0.0)).unwrap()}
+  }
+  /// Product of inertia XZ in kg*m^2
+  #[inline]
+  pub fn IXZ(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attPhysicalProperties::VT_IXZ, Some(0.0)).unwrap()}
+  }
+  /// Product of inertia YZ in kg*m^2
+  #[inline]
+  pub fn IYZ(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attPhysicalProperties::VT_IYZ, Some(0.0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for attPhysicalProperties<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<f64>("DRAG_COEFF", Self::VT_DRAG_COEFF, false)?
+     .visit_field::<f64>("WET_MASS", Self::VT_WET_MASS, false)?
+     .visit_field::<f64>("DRY_MASS", Self::VT_DRY_MASS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CP_REF_FRAME", Self::VT_CP_REF_FRAME, false)?
+     .visit_field::<f64>("CP_X", Self::VT_CP_X, false)?
+     .visit_field::<f64>("CP_Y", Self::VT_CP_Y, false)?
+     .visit_field::<f64>("CP_Z", Self::VT_CP_Z, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("INERTIA_REF_FRAME", Self::VT_INERTIA_REF_FRAME, false)?
+     .visit_field::<f64>("IXX", Self::VT_IXX, false)?
+     .visit_field::<f64>("IYY", Self::VT_IYY, false)?
+     .visit_field::<f64>("IZZ", Self::VT_IZZ, false)?
+     .visit_field::<f64>("IXY", Self::VT_IXY, false)?
+     .visit_field::<f64>("IXZ", Self::VT_IXZ, false)?
+     .visit_field::<f64>("IYZ", Self::VT_IYZ, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct attPhysicalPropertiesArgs<'a> {
+    pub DRAG_COEFF: f64,
+    pub WET_MASS: f64,
+    pub DRY_MASS: f64,
+    pub CP_REF_FRAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub CP_X: f64,
+    pub CP_Y: f64,
+    pub CP_Z: f64,
+    pub INERTIA_REF_FRAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub IXX: f64,
+    pub IYY: f64,
+    pub IZZ: f64,
+    pub IXY: f64,
+    pub IXZ: f64,
+    pub IYZ: f64,
+}
+impl<'a> Default for attPhysicalPropertiesArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    attPhysicalPropertiesArgs {
+      DRAG_COEFF: 0.0,
+      WET_MASS: 0.0,
+      DRY_MASS: 0.0,
+      CP_REF_FRAME: None,
+      CP_X: 0.0,
+      CP_Y: 0.0,
+      CP_Z: 0.0,
+      INERTIA_REF_FRAME: None,
+      IXX: 0.0,
+      IYY: 0.0,
+      IZZ: 0.0,
+      IXY: 0.0,
+      IXZ: 0.0,
+      IYZ: 0.0,
+    }
+  }
+}
+
+pub struct attPhysicalPropertiesBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> attPhysicalPropertiesBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_DRAG_COEFF(&mut self, DRAG_COEFF: f64) {
+    self.fbb_.push_slot::<f64>(attPhysicalProperties::VT_DRAG_COEFF, DRAG_COEFF, 0.0);
+  }
+  #[inline]
+  pub fn add_WET_MASS(&mut self, WET_MASS: f64) {
+    self.fbb_.push_slot::<f64>(attPhysicalProperties::VT_WET_MASS, WET_MASS, 0.0);
+  }
+  #[inline]
+  pub fn add_DRY_MASS(&mut self, DRY_MASS: f64) {
+    self.fbb_.push_slot::<f64>(attPhysicalProperties::VT_DRY_MASS, DRY_MASS, 0.0);
+  }
+  #[inline]
+  pub fn add_CP_REF_FRAME(&mut self, CP_REF_FRAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(attPhysicalProperties::VT_CP_REF_FRAME, CP_REF_FRAME);
+  }
+  #[inline]
+  pub fn add_CP_X(&mut self, CP_X: f64) {
+    self.fbb_.push_slot::<f64>(attPhysicalProperties::VT_CP_X, CP_X, 0.0);
+  }
+  #[inline]
+  pub fn add_CP_Y(&mut self, CP_Y: f64) {
+    self.fbb_.push_slot::<f64>(attPhysicalProperties::VT_CP_Y, CP_Y, 0.0);
+  }
+  #[inline]
+  pub fn add_CP_Z(&mut self, CP_Z: f64) {
+    self.fbb_.push_slot::<f64>(attPhysicalProperties::VT_CP_Z, CP_Z, 0.0);
+  }
+  #[inline]
+  pub fn add_INERTIA_REF_FRAME(&mut self, INERTIA_REF_FRAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(attPhysicalProperties::VT_INERTIA_REF_FRAME, INERTIA_REF_FRAME);
+  }
+  #[inline]
+  pub fn add_IXX(&mut self, IXX: f64) {
+    self.fbb_.push_slot::<f64>(attPhysicalProperties::VT_IXX, IXX, 0.0);
+  }
+  #[inline]
+  pub fn add_IYY(&mut self, IYY: f64) {
+    self.fbb_.push_slot::<f64>(attPhysicalProperties::VT_IYY, IYY, 0.0);
+  }
+  #[inline]
+  pub fn add_IZZ(&mut self, IZZ: f64) {
+    self.fbb_.push_slot::<f64>(attPhysicalProperties::VT_IZZ, IZZ, 0.0);
+  }
+  #[inline]
+  pub fn add_IXY(&mut self, IXY: f64) {
+    self.fbb_.push_slot::<f64>(attPhysicalProperties::VT_IXY, IXY, 0.0);
+  }
+  #[inline]
+  pub fn add_IXZ(&mut self, IXZ: f64) {
+    self.fbb_.push_slot::<f64>(attPhysicalProperties::VT_IXZ, IXZ, 0.0);
+  }
+  #[inline]
+  pub fn add_IYZ(&mut self, IYZ: f64) {
+    self.fbb_.push_slot::<f64>(attPhysicalProperties::VT_IYZ, IYZ, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> attPhysicalPropertiesBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    attPhysicalPropertiesBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<attPhysicalProperties<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for attPhysicalProperties<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("attPhysicalProperties");
+      ds.field("DRAG_COEFF", &self.DRAG_COEFF());
+      ds.field("WET_MASS", &self.WET_MASS());
+      ds.field("DRY_MASS", &self.DRY_MASS());
+      ds.field("CP_REF_FRAME", &self.CP_REF_FRAME());
+      ds.field("CP_X", &self.CP_X());
+      ds.field("CP_Y", &self.CP_Y());
+      ds.field("CP_Z", &self.CP_Z());
+      ds.field("INERTIA_REF_FRAME", &self.INERTIA_REF_FRAME());
+      ds.field("IXX", &self.IXX());
+      ds.field("IYY", &self.IYY());
+      ds.field("IZZ", &self.IZZ());
+      ds.field("IXY", &self.IXY());
+      ds.field("IXZ", &self.IXZ());
+      ds.field("IYZ", &self.IYZ());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct attPhysicalPropertiesT {
+  pub DRAG_COEFF: f64,
+  pub WET_MASS: f64,
+  pub DRY_MASS: f64,
+  pub CP_REF_FRAME: Option<String>,
+  pub CP_X: f64,
+  pub CP_Y: f64,
+  pub CP_Z: f64,
+  pub INERTIA_REF_FRAME: Option<String>,
+  pub IXX: f64,
+  pub IYY: f64,
+  pub IZZ: f64,
+  pub IXY: f64,
+  pub IXZ: f64,
+  pub IYZ: f64,
+}
+impl Default for attPhysicalPropertiesT {
+  fn default() -> Self {
+    Self {
+      DRAG_COEFF: 0.0,
+      WET_MASS: 0.0,
+      DRY_MASS: 0.0,
+      CP_REF_FRAME: None,
+      CP_X: 0.0,
+      CP_Y: 0.0,
+      CP_Z: 0.0,
+      INERTIA_REF_FRAME: None,
+      IXX: 0.0,
+      IYY: 0.0,
+      IZZ: 0.0,
+      IXY: 0.0,
+      IXZ: 0.0,
+      IYZ: 0.0,
+    }
+  }
+}
+impl attPhysicalPropertiesT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<attPhysicalProperties<'b>> {
+    let DRAG_COEFF = self.DRAG_COEFF;
+    let WET_MASS = self.WET_MASS;
+    let DRY_MASS = self.DRY_MASS;
+    let CP_REF_FRAME = self.CP_REF_FRAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CP_X = self.CP_X;
+    let CP_Y = self.CP_Y;
+    let CP_Z = self.CP_Z;
+    let INERTIA_REF_FRAME = self.INERTIA_REF_FRAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let IXX = self.IXX;
+    let IYY = self.IYY;
+    let IZZ = self.IZZ;
+    let IXY = self.IXY;
+    let IXZ = self.IXZ;
+    let IYZ = self.IYZ;
+    attPhysicalProperties::create(_fbb, &attPhysicalPropertiesArgs{
+      DRAG_COEFF,
+      WET_MASS,
+      DRY_MASS,
+      CP_REF_FRAME,
+      CP_X,
+      CP_Y,
+      CP_Z,
+      INERTIA_REF_FRAME,
+      IXX,
+      IYY,
+      IZZ,
+      IXY,
+      IXZ,
+      IYZ,
+    })
+  }
+}
+pub enum attCovarianceOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Attitude Covariance
+pub struct attCovariance<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for attCovariance<'a> {
+  type Inner = attCovariance<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> attCovariance<'a> {
+  pub const VT_COV_TYPE: flatbuffers::VOffsetT = 4;
+  pub const VT_COV_REF_FRAME: flatbuffers::VOffsetT = 6;
+  pub const VT_EPOCH: flatbuffers::VOffsetT = 8;
+  pub const VT_COV: flatbuffers::VOffsetT = 10;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    attCovariance { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args attCovarianceArgs<'args>
+  ) -> flatbuffers::WIPOffset<attCovariance<'bldr>> {
+    let mut builder = attCovarianceBuilder::new(_fbb);
+    if let Some(x) = args.COV { builder.add_COV(x); }
+    if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
+    if let Some(x) = args.COV_REF_FRAME { builder.add_COV_REF_FRAME(x); }
+    builder.add_COV_TYPE(args.COV_TYPE);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> attCovarianceT {
+    let COV_TYPE = self.COV_TYPE();
+    let COV_REF_FRAME = self.COV_REF_FRAME().map(|x| {
+      x.to_string()
+    });
+    let EPOCH = self.EPOCH().map(|x| {
+      x.to_string()
+    });
+    let COV = self.COV().map(|x| {
+      x.into_iter().collect()
+    });
+    attCovarianceT {
+      COV_TYPE,
+      COV_REF_FRAME,
+      EPOCH,
+      COV,
+    }
+  }
+
+  /// Covariance type
+  #[inline]
+  pub fn COV_TYPE(&self) -> attCovType {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<attCovType>(attCovariance::VT_COV_TYPE, Some(attCovType::ANGLE)).unwrap()}
+  }
+  /// Reference frame
+  #[inline]
+  pub fn COV_REF_FRAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(attCovariance::VT_COV_REF_FRAME, None)}
+  }
+  /// Epoch (ISO 8601)
+  #[inline]
+  pub fn EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(attCovariance::VT_EPOCH, None)}
+  }
+  /// Upper-triangular covariance matrix elements (row-major)
+  #[inline]
+  pub fn COV(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(attCovariance::VT_COV, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for attCovariance<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<attCovType>("COV_TYPE", Self::VT_COV_TYPE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COV_REF_FRAME", Self::VT_COV_REF_FRAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("COV", Self::VT_COV, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct attCovarianceArgs<'a> {
+    pub COV_TYPE: attCovType,
+    pub COV_REF_FRAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub COV: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+}
+impl<'a> Default for attCovarianceArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    attCovarianceArgs {
+      COV_TYPE: attCovType::ANGLE,
+      COV_REF_FRAME: None,
+      EPOCH: None,
+      COV: None,
+    }
+  }
+}
+
+pub struct attCovarianceBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> attCovarianceBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_COV_TYPE(&mut self, COV_TYPE: attCovType) {
+    self.fbb_.push_slot::<attCovType>(attCovariance::VT_COV_TYPE, COV_TYPE, attCovType::ANGLE);
+  }
+  #[inline]
+  pub fn add_COV_REF_FRAME(&mut self, COV_REF_FRAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(attCovariance::VT_COV_REF_FRAME, COV_REF_FRAME);
+  }
+  #[inline]
+  pub fn add_EPOCH(&mut self, EPOCH: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(attCovariance::VT_EPOCH, EPOCH);
+  }
+  #[inline]
+  pub fn add_COV(&mut self, COV: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(attCovariance::VT_COV, COV);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> attCovarianceBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    attCovarianceBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<attCovariance<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for attCovariance<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("attCovariance");
+      ds.field("COV_TYPE", &self.COV_TYPE());
+      ds.field("COV_REF_FRAME", &self.COV_REF_FRAME());
+      ds.field("EPOCH", &self.EPOCH());
+      ds.field("COV", &self.COV());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct attCovarianceT {
+  pub COV_TYPE: attCovType,
+  pub COV_REF_FRAME: Option<String>,
+  pub EPOCH: Option<String>,
+  pub COV: Option<Vec<f64>>,
+}
+impl Default for attCovarianceT {
+  fn default() -> Self {
+    Self {
+      COV_TYPE: attCovType::ANGLE,
+      COV_REF_FRAME: None,
+      EPOCH: None,
+      COV: None,
+    }
+  }
+}
+impl attCovarianceT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<attCovariance<'b>> {
+    let COV_TYPE = self.COV_TYPE;
+    let COV_REF_FRAME = self.COV_REF_FRAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EPOCH = self.EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let COV = self.COV.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    attCovariance::create(_fbb, &attCovarianceArgs{
+      COV_TYPE,
+      COV_REF_FRAME,
+      EPOCH,
+      COV,
+    })
+  }
+}
+pub enum attManeuverOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Attitude Maneuver
+pub struct attManeuver<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for attManeuver<'a> {
+  type Inner = attManeuver<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> attManeuver<'a> {
+  pub const VT_MAN_EPOCH_START: flatbuffers::VOffsetT = 4;
+  pub const VT_DURATION: flatbuffers::VOffsetT = 6;
+  pub const VT_REF_FRAME: flatbuffers::VOffsetT = 8;
+  pub const VT_TOR_1: flatbuffers::VOffsetT = 10;
+  pub const VT_TOR_2: flatbuffers::VOffsetT = 12;
+  pub const VT_TOR_3: flatbuffers::VOffsetT = 14;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    attManeuver { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args attManeuverArgs<'args>
+  ) -> flatbuffers::WIPOffset<attManeuver<'bldr>> {
+    let mut builder = attManeuverBuilder::new(_fbb);
+    builder.add_TOR_3(args.TOR_3);
+    builder.add_TOR_2(args.TOR_2);
+    builder.add_TOR_1(args.TOR_1);
+    builder.add_DURATION(args.DURATION);
+    if let Some(x) = args.REF_FRAME { builder.add_REF_FRAME(x); }
+    if let Some(x) = args.MAN_EPOCH_START { builder.add_MAN_EPOCH_START(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> attManeuverT {
+    let MAN_EPOCH_START = self.MAN_EPOCH_START().map(|x| {
+      x.to_string()
+    });
+    let DURATION = self.DURATION();
+    let REF_FRAME = self.REF_FRAME().map(|x| {
+      x.to_string()
+    });
+    let TOR_1 = self.TOR_1();
+    let TOR_2 = self.TOR_2();
+    let TOR_3 = self.TOR_3();
+    attManeuverT {
+      MAN_EPOCH_START,
+      DURATION,
+      REF_FRAME,
+      TOR_1,
+      TOR_2,
+      TOR_3,
+    }
+  }
+
+  /// Maneuver epoch start (ISO 8601)
+  #[inline]
+  pub fn MAN_EPOCH_START(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(attManeuver::VT_MAN_EPOCH_START, None)}
+  }
+  /// Duration in seconds
+  #[inline]
+  pub fn DURATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attManeuver::VT_DURATION, Some(0.0)).unwrap()}
+  }
+  /// Reference frame
+  #[inline]
+  pub fn REF_FRAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(attManeuver::VT_REF_FRAME, None)}
+  }
+  /// Torque about body X in N*m
+  #[inline]
+  pub fn TOR_1(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attManeuver::VT_TOR_1, Some(0.0)).unwrap()}
+  }
+  /// Torque about body Y in N*m
+  #[inline]
+  pub fn TOR_2(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attManeuver::VT_TOR_2, Some(0.0)).unwrap()}
+  }
+  /// Torque about body Z in N*m
+  #[inline]
+  pub fn TOR_3(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(attManeuver::VT_TOR_3, Some(0.0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for attManeuver<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MAN_EPOCH_START", Self::VT_MAN_EPOCH_START, false)?
+     .visit_field::<f64>("DURATION", Self::VT_DURATION, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REF_FRAME", Self::VT_REF_FRAME, false)?
+     .visit_field::<f64>("TOR_1", Self::VT_TOR_1, false)?
+     .visit_field::<f64>("TOR_2", Self::VT_TOR_2, false)?
+     .visit_field::<f64>("TOR_3", Self::VT_TOR_3, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct attManeuverArgs<'a> {
+    pub MAN_EPOCH_START: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub DURATION: f64,
+    pub REF_FRAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub TOR_1: f64,
+    pub TOR_2: f64,
+    pub TOR_3: f64,
+}
+impl<'a> Default for attManeuverArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    attManeuverArgs {
+      MAN_EPOCH_START: None,
+      DURATION: 0.0,
+      REF_FRAME: None,
+      TOR_1: 0.0,
+      TOR_2: 0.0,
+      TOR_3: 0.0,
+    }
+  }
+}
+
+pub struct attManeuverBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> attManeuverBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_MAN_EPOCH_START(&mut self, MAN_EPOCH_START: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(attManeuver::VT_MAN_EPOCH_START, MAN_EPOCH_START);
+  }
+  #[inline]
+  pub fn add_DURATION(&mut self, DURATION: f64) {
+    self.fbb_.push_slot::<f64>(attManeuver::VT_DURATION, DURATION, 0.0);
+  }
+  #[inline]
+  pub fn add_REF_FRAME(&mut self, REF_FRAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(attManeuver::VT_REF_FRAME, REF_FRAME);
+  }
+  #[inline]
+  pub fn add_TOR_1(&mut self, TOR_1: f64) {
+    self.fbb_.push_slot::<f64>(attManeuver::VT_TOR_1, TOR_1, 0.0);
+  }
+  #[inline]
+  pub fn add_TOR_2(&mut self, TOR_2: f64) {
+    self.fbb_.push_slot::<f64>(attManeuver::VT_TOR_2, TOR_2, 0.0);
+  }
+  #[inline]
+  pub fn add_TOR_3(&mut self, TOR_3: f64) {
+    self.fbb_.push_slot::<f64>(attManeuver::VT_TOR_3, TOR_3, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> attManeuverBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    attManeuverBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<attManeuver<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for attManeuver<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("attManeuver");
+      ds.field("MAN_EPOCH_START", &self.MAN_EPOCH_START());
+      ds.field("DURATION", &self.DURATION());
+      ds.field("REF_FRAME", &self.REF_FRAME());
+      ds.field("TOR_1", &self.TOR_1());
+      ds.field("TOR_2", &self.TOR_2());
+      ds.field("TOR_3", &self.TOR_3());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct attManeuverT {
+  pub MAN_EPOCH_START: Option<String>,
+  pub DURATION: f64,
+  pub REF_FRAME: Option<String>,
+  pub TOR_1: f64,
+  pub TOR_2: f64,
+  pub TOR_3: f64,
+}
+impl Default for attManeuverT {
+  fn default() -> Self {
+    Self {
+      MAN_EPOCH_START: None,
+      DURATION: 0.0,
+      REF_FRAME: None,
+      TOR_1: 0.0,
+      TOR_2: 0.0,
+      TOR_3: 0.0,
+    }
+  }
+}
+impl attManeuverT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<attManeuver<'b>> {
+    let MAN_EPOCH_START = self.MAN_EPOCH_START.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DURATION = self.DURATION;
+    let REF_FRAME = self.REF_FRAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TOR_1 = self.TOR_1;
+    let TOR_2 = self.TOR_2;
+    let TOR_3 = self.TOR_3;
+    attManeuver::create(_fbb, &attManeuverArgs{
+      MAN_EPOCH_START,
+      DURATION,
+      REF_FRAME,
+      TOR_1,
+      TOR_2,
+      TOR_3,
+    })
+  }
+}
 pub enum ACMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -31,6 +1898,15 @@ impl<'a> ACM<'a> {
   pub const VT_ORIGINATOR: flatbuffers::VOffsetT = 8;
   pub const VT_OBJECT_NAME: flatbuffers::VOffsetT = 10;
   pub const VT_OBJECT_ID: flatbuffers::VOffsetT = 12;
+  pub const VT_CATALOG_NAME: flatbuffers::VOffsetT = 14;
+  pub const VT_EPOCH: flatbuffers::VOffsetT = 16;
+  pub const VT_TIME_SYSTEM: flatbuffers::VOffsetT = 18;
+  pub const VT_ATT_STATES: flatbuffers::VOffsetT = 20;
+  pub const VT_PHYS_PROPERTIES: flatbuffers::VOffsetT = 22;
+  pub const VT_COV_DATA: flatbuffers::VOffsetT = 24;
+  pub const VT_MANEUVERS: flatbuffers::VOffsetT = 26;
+  pub const VT_MANEUVERABLE: flatbuffers::VOffsetT = 28;
+  pub const VT_COMMENT: flatbuffers::VOffsetT = 30;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -42,11 +1918,20 @@ impl<'a> ACM<'a> {
     args: &'args ACMArgs<'args>
   ) -> flatbuffers::WIPOffset<ACM<'bldr>> {
     let mut builder = ACMBuilder::new(_fbb);
+    if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
+    if let Some(x) = args.MANEUVERS { builder.add_MANEUVERS(x); }
+    if let Some(x) = args.COV_DATA { builder.add_COV_DATA(x); }
+    if let Some(x) = args.PHYS_PROPERTIES { builder.add_PHYS_PROPERTIES(x); }
+    if let Some(x) = args.ATT_STATES { builder.add_ATT_STATES(x); }
+    if let Some(x) = args.TIME_SYSTEM { builder.add_TIME_SYSTEM(x); }
+    if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
+    if let Some(x) = args.CATALOG_NAME { builder.add_CATALOG_NAME(x); }
     if let Some(x) = args.OBJECT_ID { builder.add_OBJECT_ID(x); }
     if let Some(x) = args.OBJECT_NAME { builder.add_OBJECT_NAME(x); }
     if let Some(x) = args.ORIGINATOR { builder.add_ORIGINATOR(x); }
     if let Some(x) = args.CREATION_DATE { builder.add_CREATION_DATE(x); }
     if let Some(x) = args.CCSDS_ACM_VERS { builder.add_CCSDS_ACM_VERS(x); }
+    builder.add_MANEUVERABLE(args.MANEUVERABLE);
     builder.finish()
   }
 
@@ -66,15 +1951,50 @@ impl<'a> ACM<'a> {
     let OBJECT_ID = self.OBJECT_ID().map(|x| {
       x.to_string()
     });
+    let CATALOG_NAME = self.CATALOG_NAME().map(|x| {
+      x.to_string()
+    });
+    let EPOCH = self.EPOCH().map(|x| {
+      x.to_string()
+    });
+    let TIME_SYSTEM = self.TIME_SYSTEM().map(|x| {
+      x.to_string()
+    });
+    let ATT_STATES = self.ATT_STATES().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let PHYS_PROPERTIES = self.PHYS_PROPERTIES().map(|x| {
+      Box::new(x.unpack())
+    });
+    let COV_DATA = self.COV_DATA().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let MANEUVERS = self.MANEUVERS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let MANEUVERABLE = self.MANEUVERABLE();
+    let COMMENT = self.COMMENT().map(|x| {
+      x.to_string()
+    });
     ACMT {
       CCSDS_ACM_VERS,
       CREATION_DATE,
       ORIGINATOR,
       OBJECT_NAME,
       OBJECT_ID,
+      CATALOG_NAME,
+      EPOCH,
+      TIME_SYSTEM,
+      ATT_STATES,
+      PHYS_PROPERTIES,
+      COV_DATA,
+      MANEUVERS,
+      MANEUVERABLE,
+      COMMENT,
     }
   }
 
+  /// CCSDS ACM version
   #[inline]
   pub fn CCSDS_ACM_VERS(&self) -> Option<&'a str> {
     // Safety:
@@ -82,6 +2002,7 @@ impl<'a> ACM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ACM::VT_CCSDS_ACM_VERS, None)}
   }
+  /// Message creation date (ISO 8601)
   #[inline]
   pub fn CREATION_DATE(&self) -> Option<&'a str> {
     // Safety:
@@ -89,6 +2010,7 @@ impl<'a> ACM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ACM::VT_CREATION_DATE, None)}
   }
+  /// Creating organization
   #[inline]
   pub fn ORIGINATOR(&self) -> Option<&'a str> {
     // Safety:
@@ -96,6 +2018,7 @@ impl<'a> ACM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ACM::VT_ORIGINATOR, None)}
   }
+  /// Object name
   #[inline]
   pub fn OBJECT_NAME(&self) -> Option<&'a str> {
     // Safety:
@@ -103,12 +2026,85 @@ impl<'a> ACM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ACM::VT_OBJECT_NAME, None)}
   }
+  /// International designator
   #[inline]
   pub fn OBJECT_ID(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ACM::VT_OBJECT_ID, None)}
+  }
+  /// Catalog name
+  #[inline]
+  pub fn CATALOG_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ACM::VT_CATALOG_NAME, None)}
+  }
+  /// Epoch of state (ISO 8601)
+  #[inline]
+  pub fn EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ACM::VT_EPOCH, None)}
+  }
+  /// Time system
+  #[inline]
+  pub fn TIME_SYSTEM(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ACM::VT_TIME_SYSTEM, None)}
+  }
+  /// Attitude states
+  #[inline]
+  pub fn ATT_STATES(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<attitudeState<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<attitudeState>>>>(ACM::VT_ATT_STATES, None)}
+  }
+  /// Physical properties
+  #[inline]
+  pub fn PHYS_PROPERTIES(&self) -> Option<attPhysicalProperties<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<attPhysicalProperties>>(ACM::VT_PHYS_PROPERTIES, None)}
+  }
+  /// Attitude covariance data
+  #[inline]
+  pub fn COV_DATA(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<attCovariance<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<attCovariance>>>>(ACM::VT_COV_DATA, None)}
+  }
+  /// Attitude maneuvers
+  #[inline]
+  pub fn MANEUVERS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<attManeuver<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<attManeuver>>>>(ACM::VT_MANEUVERS, None)}
+  }
+  /// Maneuverability status
+  #[inline]
+  pub fn MANEUVERABLE(&self) -> maneuverableFlag {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<maneuverableFlag>(ACM::VT_MANEUVERABLE, Some(maneuverableFlag::YES)).unwrap()}
+  }
+  /// Additional comments
+  #[inline]
+  pub fn COMMENT(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(ACM::VT_COMMENT, None)}
   }
 }
 
@@ -124,6 +2120,15 @@ impl flatbuffers::Verifiable for ACM<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIGINATOR", Self::VT_ORIGINATOR, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJECT_NAME", Self::VT_OBJECT_NAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJECT_ID", Self::VT_OBJECT_ID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CATALOG_NAME", Self::VT_CATALOG_NAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TIME_SYSTEM", Self::VT_TIME_SYSTEM, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<attitudeState>>>>("ATT_STATES", Self::VT_ATT_STATES, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<attPhysicalProperties>>("PHYS_PROPERTIES", Self::VT_PHYS_PROPERTIES, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<attCovariance>>>>("COV_DATA", Self::VT_COV_DATA, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<attManeuver>>>>("MANEUVERS", Self::VT_MANEUVERS, false)?
+     .visit_field::<maneuverableFlag>("MANEUVERABLE", Self::VT_MANEUVERABLE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COMMENT", Self::VT_COMMENT, false)?
      .finish();
     Ok(())
   }
@@ -134,6 +2139,15 @@ pub struct ACMArgs<'a> {
     pub ORIGINATOR: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OBJECT_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub CATALOG_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub TIME_SYSTEM: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ATT_STATES: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<attitudeState<'a>>>>>,
+    pub PHYS_PROPERTIES: Option<flatbuffers::WIPOffset<attPhysicalProperties<'a>>>,
+    pub COV_DATA: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<attCovariance<'a>>>>>,
+    pub MANEUVERS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<attManeuver<'a>>>>>,
+    pub MANEUVERABLE: maneuverableFlag,
+    pub COMMENT: Option<flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for ACMArgs<'a> {
   #[inline]
@@ -144,6 +2158,15 @@ impl<'a> Default for ACMArgs<'a> {
       ORIGINATOR: None,
       OBJECT_NAME: None,
       OBJECT_ID: None,
+      CATALOG_NAME: None,
+      EPOCH: None,
+      TIME_SYSTEM: None,
+      ATT_STATES: None,
+      PHYS_PROPERTIES: None,
+      COV_DATA: None,
+      MANEUVERS: None,
+      MANEUVERABLE: maneuverableFlag::YES,
+      COMMENT: None,
     }
   }
 }
@@ -174,6 +2197,42 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> ACMBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ACM::VT_OBJECT_ID, OBJECT_ID);
   }
   #[inline]
+  pub fn add_CATALOG_NAME(&mut self, CATALOG_NAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ACM::VT_CATALOG_NAME, CATALOG_NAME);
+  }
+  #[inline]
+  pub fn add_EPOCH(&mut self, EPOCH: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ACM::VT_EPOCH, EPOCH);
+  }
+  #[inline]
+  pub fn add_TIME_SYSTEM(&mut self, TIME_SYSTEM: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ACM::VT_TIME_SYSTEM, TIME_SYSTEM);
+  }
+  #[inline]
+  pub fn add_ATT_STATES(&mut self, ATT_STATES: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<attitudeState<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ACM::VT_ATT_STATES, ATT_STATES);
+  }
+  #[inline]
+  pub fn add_PHYS_PROPERTIES(&mut self, PHYS_PROPERTIES: flatbuffers::WIPOffset<attPhysicalProperties<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<attPhysicalProperties>>(ACM::VT_PHYS_PROPERTIES, PHYS_PROPERTIES);
+  }
+  #[inline]
+  pub fn add_COV_DATA(&mut self, COV_DATA: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<attCovariance<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ACM::VT_COV_DATA, COV_DATA);
+  }
+  #[inline]
+  pub fn add_MANEUVERS(&mut self, MANEUVERS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<attManeuver<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ACM::VT_MANEUVERS, MANEUVERS);
+  }
+  #[inline]
+  pub fn add_MANEUVERABLE(&mut self, MANEUVERABLE: maneuverableFlag) {
+    self.fbb_.push_slot::<maneuverableFlag>(ACM::VT_MANEUVERABLE, MANEUVERABLE, maneuverableFlag::YES);
+  }
+  #[inline]
+  pub fn add_COMMENT(&mut self, COMMENT: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(ACM::VT_COMMENT, COMMENT);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> ACMBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     ACMBuilder {
@@ -196,6 +2255,15 @@ impl core::fmt::Debug for ACM<'_> {
       ds.field("ORIGINATOR", &self.ORIGINATOR());
       ds.field("OBJECT_NAME", &self.OBJECT_NAME());
       ds.field("OBJECT_ID", &self.OBJECT_ID());
+      ds.field("CATALOG_NAME", &self.CATALOG_NAME());
+      ds.field("EPOCH", &self.EPOCH());
+      ds.field("TIME_SYSTEM", &self.TIME_SYSTEM());
+      ds.field("ATT_STATES", &self.ATT_STATES());
+      ds.field("PHYS_PROPERTIES", &self.PHYS_PROPERTIES());
+      ds.field("COV_DATA", &self.COV_DATA());
+      ds.field("MANEUVERS", &self.MANEUVERS());
+      ds.field("MANEUVERABLE", &self.MANEUVERABLE());
+      ds.field("COMMENT", &self.COMMENT());
       ds.finish()
   }
 }
@@ -207,6 +2275,15 @@ pub struct ACMT {
   pub ORIGINATOR: Option<String>,
   pub OBJECT_NAME: Option<String>,
   pub OBJECT_ID: Option<String>,
+  pub CATALOG_NAME: Option<String>,
+  pub EPOCH: Option<String>,
+  pub TIME_SYSTEM: Option<String>,
+  pub ATT_STATES: Option<Vec<attitudeStateT>>,
+  pub PHYS_PROPERTIES: Option<Box<attPhysicalPropertiesT>>,
+  pub COV_DATA: Option<Vec<attCovarianceT>>,
+  pub MANEUVERS: Option<Vec<attManeuverT>>,
+  pub MANEUVERABLE: maneuverableFlag,
+  pub COMMENT: Option<String>,
 }
 impl Default for ACMT {
   fn default() -> Self {
@@ -216,6 +2293,15 @@ impl Default for ACMT {
       ORIGINATOR: None,
       OBJECT_NAME: None,
       OBJECT_ID: None,
+      CATALOG_NAME: None,
+      EPOCH: None,
+      TIME_SYSTEM: None,
+      ATT_STATES: None,
+      PHYS_PROPERTIES: None,
+      COV_DATA: None,
+      MANEUVERS: None,
+      MANEUVERABLE: maneuverableFlag::YES,
+      COMMENT: None,
     }
   }
 }
@@ -239,12 +2325,46 @@ impl ACMT {
     let OBJECT_ID = self.OBJECT_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let CATALOG_NAME = self.CATALOG_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EPOCH = self.EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TIME_SYSTEM = self.TIME_SYSTEM.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ATT_STATES = self.ATT_STATES.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let PHYS_PROPERTIES = self.PHYS_PROPERTIES.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let COV_DATA = self.COV_DATA.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let MANEUVERS = self.MANEUVERS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let MANEUVERABLE = self.MANEUVERABLE;
+    let COMMENT = self.COMMENT.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     ACM::create(_fbb, &ACMArgs{
       CCSDS_ACM_VERS,
       CREATION_DATE,
       ORIGINATOR,
       OBJECT_NAME,
       OBJECT_ID,
+      CATALOG_NAME,
+      EPOCH,
+      TIME_SYSTEM,
+      ATT_STATES,
+      PHYS_PROPERTIES,
+      COV_DATA,
+      MANEUVERS,
+      MANEUVERABLE,
+      COMMENT,
     })
   }
 }

@@ -1,21 +1,128 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "driftRecord": {
+      "type": "object",
+      "description": "GEO Drift History Record",
+      "properties": {
+        "EPOCH": {
+          "type": "string",
+          "description": "Epoch of drift measurement (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "DRIFT_RATE": {
+          "type": "number",
+          "description": "Longitude drift rate in degrees/day",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_LONGITUDE": {
+          "type": "number",
+          "description": "Mean longitude in degrees East",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE_AMPLITUDE": {
+          "type": "number",
+          "description": "Longitude oscillation amplitude in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "ECCENTRICITY": {
+          "type": "number",
+          "description": "Eccentricity",
+          "x-flatbuffer-type": "double"
+        },
+        "INCLINATION": {
+          "type": "number",
+          "description": "Inclination in degrees",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
     "DFH": {
       "type": "object",
       "description": "GEO Drift History",
       "properties": {
         "ID": {
           "type": "string",
+          "description": "Unique identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "SAT_NO": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Satellite number",
+          "x-flatbuffer-type": "uint32"
+        },
+        "OBJECT_DESIGNATOR": {
+          "type": "string",
+          "description": "Object designator",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECT_NAME": {
+          "type": "string",
+          "description": "Object common name",
+          "x-flatbuffer-type": "string"
+        },
+        "START_TIME": {
+          "type": "string",
+          "description": "History start time (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "END_TIME": {
+          "type": "string",
+          "description": "History end time (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "EFFECTIVE_UNTIL": {
           "type": "string",
+          "description": "Current effective until date (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "DRIFT_RATE": {
           "type": "number",
+          "description": "Current drift rate in degrees/day",
           "x-flatbuffer-type": "double"
+        },
+        "MEAN_LONGITUDE": {
+          "type": "number",
+          "description": "Current mean longitude in degrees East",
+          "x-flatbuffer-type": "double"
+        },
+        "SLOT_CENTER": {
+          "type": "number",
+          "description": "Longitude slot center in degrees East (if station-keeping)",
+          "x-flatbuffer-type": "double"
+        },
+        "SLOT_HALF_WIDTH": {
+          "type": "number",
+          "description": "Longitude slot half-width in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "STATION_KEEPING": {
+          "type": "boolean",
+          "description": "Whether object is actively station-keeping",
+          "x-flatbuffer-type": "bool"
+        },
+        "RECORDS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/driftRecord"
+          },
+          "description": "Historical drift records",
+          "x-flatbuffer-type": "[driftRecord]"
+        },
+        "NUM_RECORDS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of records in history",
+          "x-flatbuffer-type": "uint"
+        },
+        "NOTES": {
+          "type": "string",
+          "description": "Additional notes",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

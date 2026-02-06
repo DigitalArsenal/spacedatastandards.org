@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "analyticType" : {
+      "type" : "string",
+      "enum": ["SPECTRAL", "PHOTOMETRIC", "ASTROMETRIC", "RADIOMETRIC", "SIGNATURE", "FEATURE_EXTRACTION", "CHANGE_DETECTION", "CLASSIFICATION", "FUSION"]
+    },
+    "ANI" : {
+      "type" : "object",
+      "description" : "Analytic Imagery Product",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Unique identifier"
+              },
+        "SOURCE_ID" : {
+                "type" : "string",
+                "description" : "Reference to source imagery (e.g., SKI, GDI, EOO)"
+              },
+        "SOURCE_TYPE" : {
+                "type" : "string",
+                "description" : "Source imagery type"
+              },
+        "ANALYTIC_TYPE" : {
+                "$ref" : "#/definitions/analyticType",
+                "description" : "Analytic product type"
+              },
+        "ALGORITHM" : {
+                "type" : "string",
+                "description" : "Processing algorithm or pipeline name"
+              },
+        "ALGORITHM_VERSION" : {
+                "type" : "string",
+                "description" : "Algorithm version"
+              },
+        "PROCESSING_TIME" : {
+                "type" : "string",
+                "description" : "Processing epoch (ISO 8601)"
+              },
+        "OBS_TIME" : {
+                "type" : "string",
+                "description" : "Original observation epoch (ISO 8601)"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Target satellite number (if applicable)"
+              },
+        "OBJECT_DESIGNATOR" : {
+                "type" : "string",
+                "description" : "Target object designator"
+              },
+        "RA" : {
+                "type" : "number",
+                "description" : "Center right ascension in degrees"
+              },
+        "DEC" : {
+                "type" : "number",
+                "description" : "Center declination in degrees"
+              },
+        "FOV" : {
+                "type" : "number",
+                "description" : "Field of view in degrees"
+              },
+        "VISUAL_MAG" : {
+                "type" : "number",
+                "description" : "Visual magnitude estimate"
+              },
+        "MAG_UNCERTAINTY" : {
+                "type" : "number",
+                "description" : "Magnitude uncertainty"
+              },
+        "OBJECT_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Detected object count"
+              },
+        "LABELS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Classification labels"
+              },
+        "CONFIDENCE" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Classification confidence scores (0.0-1.0)"
+              },
+        "FEATURES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Feature vector or extracted parameters"
+              },
+        "QUALITY" : {
+                "type" : "number",
+                "description" : "Quality score (0.0-1.0)"
+              },
+        "NOTES" : {
+                "type" : "string",
+                "description" : "Additional notes"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/ANI"
+}

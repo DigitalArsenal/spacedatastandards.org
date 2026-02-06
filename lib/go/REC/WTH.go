@@ -54,6 +54,7 @@ func (rcv *WTH) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Unique identifier
 func (rcv *WTH) ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -62,6 +63,8 @@ func (rcv *WTH) ID() []byte {
 	return nil
 }
 
+/// Unique identifier
+/// Sensor identifier
 func (rcv *WTH) ID_SENSOR() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -70,6 +73,8 @@ func (rcv *WTH) ID_SENSOR() []byte {
 	return nil
 }
 
+/// Sensor identifier
+/// Original sensor identifier
 func (rcv *WTH) ORIG_SENSOR_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -78,6 +83,8 @@ func (rcv *WTH) ORIG_SENSOR_ID() []byte {
 	return nil
 }
 
+/// Original sensor identifier
+/// Observation time (ISO 8601)
 func (rcv *WTH) OB_TIME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -86,164 +93,210 @@ func (rcv *WTH) OB_TIME() []byte {
 	return nil
 }
 
-func (rcv *WTH) SIG_PWRS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
-	}
-	return nil
-}
-
-func (rcv *WTH) SIG_PWRSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *WTH) NOISE_LVLS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
-	}
-	return nil
-}
-
-func (rcv *WTH) NOISE_LVLSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *WTH) SPEC_WIDTHS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
-	}
-	return nil
-}
-
-func (rcv *WTH) SPEC_WIDTHSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *WTH) FIRST_GUESS_AVGS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
-	}
-	return nil
-}
-
-func (rcv *WTH) FIRST_GUESS_AVGSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *WTH) QC_VALUE() int32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
-	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-func (rcv *WTH) MutateQC_VALUE(n int32) bool {
-	return rcv._tab.MutateInt32Slot(20, n)
-}
-
+/// Observation time (ISO 8601)
+/// File creation time (ISO 8601)
 func (rcv *WTH) FILE_CREATION() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
 }
 
+/// File creation time (ISO 8601)
+/// Quality control value
+func (rcv *WTH) QC_VALUE() byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Quality control value
+func (rcv *WTH) MutateQC_VALUE(n byte) bool {
+	return rcv._tab.MutateByteSlot(14, n)
+}
+
+/// Terminal altitude (km)
 func (rcv *WTH) TERM_ALT() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Terminal altitude (km)
+func (rcv *WTH) MutateTERM_ALT(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+/// Average transmit power (dBm)
+func (rcv *WTH) AVG_TX_PWR() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Average transmit power (dBm)
+func (rcv *WTH) MutateAVG_TX_PWR(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+/// Average reflected power (dBm)
+func (rcv *WTH) AVG_REF_PWR() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Average reflected power (dBm)
+func (rcv *WTH) MutateAVG_REF_PWR(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+/// Sector number
+func (rcv *WTH) SECTOR_NUM() uint16 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Sector number
+func (rcv *WTH) MutateSECTOR_NUM(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(22, n)
+}
+
+/// Number of data elements
+func (rcv *WTH) NUM_ELEMENTS() uint16 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
 	}
-	return 0.0
+	return 0
 }
 
-func (rcv *WTH) MutateTERM_ALT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(24, n)
+/// Number of data elements
+func (rcv *WTH) MutateNUM_ELEMENTS(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(24, n)
 }
 
-func (rcv *WTH) AVG_TX_PWR() float64 {
+/// Checksum
+func (rcv *WTH) CHECKSUM() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
 	}
-	return 0.0
+	return 0
 }
 
-func (rcv *WTH) MutateAVG_TX_PWR(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(26, n)
+/// Checksum
+func (rcv *WTH) MutateCHECKSUM(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(26, n)
 }
 
-func (rcv *WTH) AVG_REF_PWR() float64 {
+/// Signal power values (dBm)
+func (rcv *WTH) SIG_PWRS(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
 	}
-	return 0.0
+	return 0
 }
 
-func (rcv *WTH) MutateAVG_REF_PWR(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(28, n)
+func (rcv *WTH) SIG_PWRSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
 }
 
-func (rcv *WTH) SECTOR_NUM() int32 {
+/// Signal power values (dBm)
+func (rcv *WTH) MutateSIG_PWRS(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// Noise level values (dBm)
+func (rcv *WTH) NOISE_LVLS(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
 	}
 	return 0
 }
 
-func (rcv *WTH) MutateSECTOR_NUM(n int32) bool {
-	return rcv._tab.MutateInt32Slot(30, n)
+func (rcv *WTH) NOISE_LVLSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
 }
 
-func (rcv *WTH) NUM_ELEMENTS() int32 {
+/// Noise level values (dBm)
+func (rcv *WTH) MutateNOISE_LVLS(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// Spectral width values (m/s)
+func (rcv *WTH) SPEC_WIDTHS(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
 	}
 	return 0
 }
 
-func (rcv *WTH) MutateNUM_ELEMENTS(n int32) bool {
-	return rcv._tab.MutateInt32Slot(32, n)
+func (rcv *WTH) SPEC_WIDTHSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
 }
 
-func (rcv *WTH) TD_AVG_SAMPLE_NUMS(j int) []byte {
+/// Spectral width values (m/s)
+func (rcv *WTH) MutateSPEC_WIDTHS(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// First guess average values
+func (rcv *WTH) FIRST_GUESS_AVGS(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
 	}
-	return nil
+	return 0
 }
 
-func (rcv *WTH) TD_AVG_SAMPLE_NUMSLength() int {
+func (rcv *WTH) FIRST_GUESS_AVGSLength() int {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
@@ -251,25 +304,52 @@ func (rcv *WTH) TD_AVG_SAMPLE_NUMSLength() int {
 	return 0
 }
 
-func (rcv *WTH) CHECKSUM() int32 {
+/// First guess average values
+func (rcv *WTH) MutateFIRST_GUESS_AVGS(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// Time domain average sample numbers
+func (rcv *WTH) TD_AVG_SAMPLE_NUMS(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
 	}
 	return 0
 }
 
-func (rcv *WTH) MutateCHECKSUM(n int32) bool {
-	return rcv._tab.MutateInt32Slot(36, n)
+func (rcv *WTH) TD_AVG_SAMPLE_NUMSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
 }
 
-func (rcv *WTH) CO_INTEGS(j int) []byte {
+/// Time domain average sample numbers
+func (rcv *WTH) MutateTD_AVG_SAMPLE_NUMS(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// Co-integration values
+func (rcv *WTH) CO_INTEGS(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
 	}
-	return nil
+	return 0
 }
 
 func (rcv *WTH) CO_INTEGSLength() int {
@@ -280,13 +360,24 @@ func (rcv *WTH) CO_INTEGSLength() int {
 	return 0
 }
 
-func (rcv *WTH) SPEC_AVGS(j int) []byte {
+/// Co-integration values
+func (rcv *WTH) MutateCO_INTEGS(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// Spectral average values
+func (rcv *WTH) SPEC_AVGS(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
 	}
-	return nil
+	return 0
 }
 
 func (rcv *WTH) SPEC_AVGSLength() int {
@@ -297,13 +388,24 @@ func (rcv *WTH) SPEC_AVGSLength() int {
 	return 0
 }
 
-func (rcv *WTH) INTERPULSE_PERIODS(j int) []byte {
+/// Spectral average values
+func (rcv *WTH) MutateSPEC_AVGS(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// Interpulse periods (microseconds)
+func (rcv *WTH) INTERPULSE_PERIODS(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
 	}
-	return nil
+	return 0
 }
 
 func (rcv *WTH) INTERPULSE_PERIODSLength() int {
@@ -314,13 +416,24 @@ func (rcv *WTH) INTERPULSE_PERIODSLength() int {
 	return 0
 }
 
-func (rcv *WTH) DOPP_VELS(j int) []byte {
+/// Interpulse periods (microseconds)
+func (rcv *WTH) MutateINTERPULSE_PERIODS(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// Doppler velocities (m/s)
+func (rcv *WTH) DOPP_VELS(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
 	}
-	return nil
+	return 0
 }
 
 func (rcv *WTH) DOPP_VELSLength() int {
@@ -331,13 +444,24 @@ func (rcv *WTH) DOPP_VELSLength() int {
 	return 0
 }
 
-func (rcv *WTH) CONS_RECS(j int) []byte {
+/// Doppler velocities (m/s)
+func (rcv *WTH) MutateDOPP_VELS(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// Consecutive records count
+func (rcv *WTH) CONS_RECS(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
 	}
-	return nil
+	return 0
 }
 
 func (rcv *WTH) CONS_RECSLength() int {
@@ -348,13 +472,24 @@ func (rcv *WTH) CONS_RECSLength() int {
 	return 0
 }
 
-func (rcv *WTH) SNRS(j int) []byte {
+/// Consecutive records count
+func (rcv *WTH) MutateCONS_RECS(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// Signal-to-noise ratios (dB)
+func (rcv *WTH) SNRS(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
 	}
-	return nil
+	return 0
 }
 
 func (rcv *WTH) SNRSLength() int {
@@ -365,6 +500,17 @@ func (rcv *WTH) SNRSLength() int {
 	return 0
 }
 
+/// Signal-to-noise ratios (dB)
+func (rcv *WTH) MutateSNRS(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// Signal strength (dBm)
 func (rcv *WTH) SIG_STRENGTH() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
 	if o != 0 {
@@ -373,10 +519,12 @@ func (rcv *WTH) SIG_STRENGTH() float64 {
 	return 0.0
 }
 
+/// Signal strength (dBm)
 func (rcv *WTH) MutateSIG_STRENGTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(50, n)
 }
 
+/// Error ellipse semi-major axis (km)
 func (rcv *WTH) SEMI_MAJOR_AXIS() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
 	if o != 0 {
@@ -385,10 +533,12 @@ func (rcv *WTH) SEMI_MAJOR_AXIS() float64 {
 	return 0.0
 }
 
+/// Error ellipse semi-major axis (km)
 func (rcv *WTH) MutateSEMI_MAJOR_AXIS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(52, n)
 }
 
+/// Error ellipse semi-minor axis (km)
 func (rcv *WTH) SEMI_MINOR_AXIS() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
 	if o != 0 {
@@ -397,10 +547,12 @@ func (rcv *WTH) SEMI_MINOR_AXIS() float64 {
 	return 0.0
 }
 
+/// Error ellipse semi-minor axis (km)
 func (rcv *WTH) MutateSEMI_MINOR_AXIS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(54, n)
 }
 
+/// Error ellipse orientation angle (degrees)
 func (rcv *WTH) ANGLE_ORIENTATION() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
 	if o != 0 {
@@ -409,22 +561,26 @@ func (rcv *WTH) ANGLE_ORIENTATION() float64 {
 	return 0.0
 }
 
+/// Error ellipse orientation angle (degrees)
 func (rcv *WTH) MutateANGLE_ORIENTATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(56, n)
 }
 
-func (rcv *WTH) LIGHT_EVENT_NUM() int32 {
+/// Lightning event number
+func (rcv *WTH) LIGHT_EVENT_NUM() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *WTH) MutateLIGHT_EVENT_NUM(n int32) bool {
-	return rcv._tab.MutateInt32Slot(58, n)
+/// Lightning event number
+func (rcv *WTH) MutateLIGHT_EVENT_NUM(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(58, n)
 }
 
+/// Lightning detection sensor identifiers
 func (rcv *WTH) LIGHT_DET_SENSORS(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
 	if o != 0 {
@@ -442,6 +598,8 @@ func (rcv *WTH) LIGHT_DET_SENSORSLength() int {
 	return 0
 }
 
+/// Lightning detection sensor identifiers
+/// Position confidence (0-1)
 func (rcv *WTH) POS_CONFIDENCE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
 	if o != 0 {
@@ -450,10 +608,12 @@ func (rcv *WTH) POS_CONFIDENCE() float64 {
 	return 0.0
 }
 
+/// Position confidence (0-1)
 func (rcv *WTH) MutatePOS_CONFIDENCE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(62, n)
 }
 
+/// Source types
 func (rcv *WTH) SRC_TYPS(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
 	if o != 0 {
@@ -471,6 +631,8 @@ func (rcv *WTH) SRC_TYPSLength() int {
 	return 0
 }
 
+/// Source types
+/// Source identifiers
 func (rcv *WTH) SRC_IDS(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
 	if o != 0 {
@@ -488,6 +650,7 @@ func (rcv *WTH) SRC_IDSLength() int {
 	return 0
 }
 
+/// Source identifiers
 func WTHStart(builder *flatbuffers.Builder) {
 	builder.StartObject(32)
 }
@@ -503,95 +666,95 @@ func WTHAddORIG_SENSOR_ID(builder *flatbuffers.Builder, ORIG_SENSOR_ID flatbuffe
 func WTHAddOB_TIME(builder *flatbuffers.Builder, OB_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(OB_TIME), 0)
 }
-func WTHAddSIG_PWRS(builder *flatbuffers.Builder, SIG_PWRS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(SIG_PWRS), 0)
-}
-func WTHStartSIG_PWRSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func WTHAddNOISE_LVLS(builder *flatbuffers.Builder, NOISE_LVLS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(NOISE_LVLS), 0)
-}
-func WTHStartNOISE_LVLSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func WTHAddSPEC_WIDTHS(builder *flatbuffers.Builder, SPEC_WIDTHS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(SPEC_WIDTHS), 0)
-}
-func WTHStartSPEC_WIDTHSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func WTHAddFIRST_GUESS_AVGS(builder *flatbuffers.Builder, FIRST_GUESS_AVGS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(FIRST_GUESS_AVGS), 0)
-}
-func WTHStartFIRST_GUESS_AVGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func WTHAddQC_VALUE(builder *flatbuffers.Builder, QC_VALUE int32) {
-	builder.PrependInt32Slot(8, QC_VALUE, 0)
-}
 func WTHAddFILE_CREATION(builder *flatbuffers.Builder, FILE_CREATION flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(FILE_CREATION), 0)
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(FILE_CREATION), 0)
+}
+func WTHAddQC_VALUE(builder *flatbuffers.Builder, QC_VALUE byte) {
+	builder.PrependByteSlot(5, QC_VALUE, 0)
 }
 func WTHAddTERM_ALT(builder *flatbuffers.Builder, TERM_ALT float64) {
-	builder.PrependFloat64Slot(10, TERM_ALT, 0.0)
+	builder.PrependFloat64Slot(6, TERM_ALT, 0.0)
 }
 func WTHAddAVG_TX_PWR(builder *flatbuffers.Builder, AVG_TX_PWR float64) {
-	builder.PrependFloat64Slot(11, AVG_TX_PWR, 0.0)
+	builder.PrependFloat64Slot(7, AVG_TX_PWR, 0.0)
 }
 func WTHAddAVG_REF_PWR(builder *flatbuffers.Builder, AVG_REF_PWR float64) {
-	builder.PrependFloat64Slot(12, AVG_REF_PWR, 0.0)
+	builder.PrependFloat64Slot(8, AVG_REF_PWR, 0.0)
 }
-func WTHAddSECTOR_NUM(builder *flatbuffers.Builder, SECTOR_NUM int32) {
-	builder.PrependInt32Slot(13, SECTOR_NUM, 0)
+func WTHAddSECTOR_NUM(builder *flatbuffers.Builder, SECTOR_NUM uint16) {
+	builder.PrependUint16Slot(9, SECTOR_NUM, 0)
 }
-func WTHAddNUM_ELEMENTS(builder *flatbuffers.Builder, NUM_ELEMENTS int32) {
-	builder.PrependInt32Slot(14, NUM_ELEMENTS, 0)
+func WTHAddNUM_ELEMENTS(builder *flatbuffers.Builder, NUM_ELEMENTS uint16) {
+	builder.PrependUint16Slot(10, NUM_ELEMENTS, 0)
+}
+func WTHAddCHECKSUM(builder *flatbuffers.Builder, CHECKSUM uint32) {
+	builder.PrependUint32Slot(11, CHECKSUM, 0)
+}
+func WTHAddSIG_PWRS(builder *flatbuffers.Builder, SIG_PWRS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(SIG_PWRS), 0)
+}
+func WTHStartSIG_PWRSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func WTHAddNOISE_LVLS(builder *flatbuffers.Builder, NOISE_LVLS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(NOISE_LVLS), 0)
+}
+func WTHStartNOISE_LVLSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func WTHAddSPEC_WIDTHS(builder *flatbuffers.Builder, SPEC_WIDTHS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(SPEC_WIDTHS), 0)
+}
+func WTHStartSPEC_WIDTHSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func WTHAddFIRST_GUESS_AVGS(builder *flatbuffers.Builder, FIRST_GUESS_AVGS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(FIRST_GUESS_AVGS), 0)
+}
+func WTHStartFIRST_GUESS_AVGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
 }
 func WTHAddTD_AVG_SAMPLE_NUMS(builder *flatbuffers.Builder, TD_AVG_SAMPLE_NUMS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(TD_AVG_SAMPLE_NUMS), 0)
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(TD_AVG_SAMPLE_NUMS), 0)
 }
 func WTHStartTD_AVG_SAMPLE_NUMSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func WTHAddCHECKSUM(builder *flatbuffers.Builder, CHECKSUM int32) {
-	builder.PrependInt32Slot(16, CHECKSUM, 0)
+	return builder.StartVector(8, numElems, 8)
 }
 func WTHAddCO_INTEGS(builder *flatbuffers.Builder, CO_INTEGS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(CO_INTEGS), 0)
 }
 func WTHStartCO_INTEGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
+	return builder.StartVector(8, numElems, 8)
 }
 func WTHAddSPEC_AVGS(builder *flatbuffers.Builder, SPEC_AVGS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(SPEC_AVGS), 0)
 }
 func WTHStartSPEC_AVGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
+	return builder.StartVector(8, numElems, 8)
 }
 func WTHAddINTERPULSE_PERIODS(builder *flatbuffers.Builder, INTERPULSE_PERIODS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(INTERPULSE_PERIODS), 0)
 }
 func WTHStartINTERPULSE_PERIODSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
+	return builder.StartVector(8, numElems, 8)
 }
 func WTHAddDOPP_VELS(builder *flatbuffers.Builder, DOPP_VELS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(DOPP_VELS), 0)
 }
 func WTHStartDOPP_VELSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
+	return builder.StartVector(8, numElems, 8)
 }
 func WTHAddCONS_RECS(builder *flatbuffers.Builder, CONS_RECS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(CONS_RECS), 0)
 }
 func WTHStartCONS_RECSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
+	return builder.StartVector(8, numElems, 8)
 }
 func WTHAddSNRS(builder *flatbuffers.Builder, SNRS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(SNRS), 0)
 }
 func WTHStartSNRSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
+	return builder.StartVector(8, numElems, 8)
 }
 func WTHAddSIG_STRENGTH(builder *flatbuffers.Builder, SIG_STRENGTH float64) {
 	builder.PrependFloat64Slot(23, SIG_STRENGTH, 0.0)
@@ -605,8 +768,8 @@ func WTHAddSEMI_MINOR_AXIS(builder *flatbuffers.Builder, SEMI_MINOR_AXIS float64
 func WTHAddANGLE_ORIENTATION(builder *flatbuffers.Builder, ANGLE_ORIENTATION float64) {
 	builder.PrependFloat64Slot(26, ANGLE_ORIENTATION, 0.0)
 }
-func WTHAddLIGHT_EVENT_NUM(builder *flatbuffers.Builder, LIGHT_EVENT_NUM int32) {
-	builder.PrependInt32Slot(27, LIGHT_EVENT_NUM, 0)
+func WTHAddLIGHT_EVENT_NUM(builder *flatbuffers.Builder, LIGHT_EVENT_NUM uint32) {
+	builder.PrependUint32Slot(27, LIGHT_EVENT_NUM, 0)
 }
 func WTHAddLIGHT_DET_SENSORS(builder *flatbuffers.Builder, LIGHT_DET_SENSORS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(LIGHT_DET_SENSORS), 0)

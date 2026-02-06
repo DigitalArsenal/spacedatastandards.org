@@ -54,6 +54,7 @@ func (rcv *MNF) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Unique manifold identifier
 func (rcv *MNF) ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -62,67 +63,322 @@ func (rcv *MNF) ID() []byte {
 	return nil
 }
 
-func (rcv *MNF) STATUS() []byte {
+/// Unique manifold identifier
+/// Parent object satellite number
+func (rcv *MNF) SAT_NO() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Parent object satellite number
+func (rcv *MNF) MutateSAT_NO(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(6, n)
+}
+
+/// Object designator
+func (rcv *MNF) OBJECT_DESIGNATOR() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
 }
 
-func (rcv *MNF) WEIGHT() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *MNF) MutateWEIGHT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(8, n)
-}
-
-func (rcv *MNF) DELTA_V() float64 {
+/// Object designator
+/// Manifold status
+func (rcv *MNF) STATUS() manifoldStatus {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		return manifoldStatus(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
-	return 0.0
+	return 0
 }
 
-func (rcv *MNF) MutateDELTA_V(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(10, n)
+/// Manifold status
+func (rcv *MNF) MutateSTATUS(n manifoldStatus) bool {
+	return rcv._tab.MutateInt8Slot(10, int8(n))
 }
 
-func (rcv *MNF) DELTA_T() float64 {
+/// Event epoch that spawned the manifold (ISO 8601)
+func (rcv *MNF) EVENT_EPOCH() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Event epoch that spawned the manifold (ISO 8601)
+/// Source of detection (sensor ID or method)
+func (rcv *MNF) SOURCE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Source of detection (sensor ID or method)
+/// Reference frame
+func (rcv *MNF) REF_FRAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Reference frame
+/// Original pre-event semi-major axis in km
+func (rcv *MNF) ORIG_SEMI_MAJOR_AXIS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
 	return 0.0
 }
 
-func (rcv *MNF) MutateDELTA_T(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(12, n)
+/// Original pre-event semi-major axis in km
+func (rcv *MNF) MutateORIG_SEMI_MAJOR_AXIS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(18, n)
 }
 
+/// Original pre-event eccentricity
+func (rcv *MNF) ORIG_ECCENTRICITY() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Original pre-event eccentricity
+func (rcv *MNF) MutateORIG_ECCENTRICITY(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+/// Original pre-event inclination in degrees
+func (rcv *MNF) ORIG_INCLINATION() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Original pre-event inclination in degrees
+func (rcv *MNF) MutateORIG_INCLINATION(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+/// Minimum delta-V sampled in m/s
+func (rcv *MNF) DELTA_V_MIN() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Minimum delta-V sampled in m/s
+func (rcv *MNF) MutateDELTA_V_MIN(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+/// Maximum delta-V sampled in m/s
+func (rcv *MNF) DELTA_V_MAX() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Maximum delta-V sampled in m/s
+func (rcv *MNF) MutateDELTA_V_MAX(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+/// Delta-V step size in m/s
+func (rcv *MNF) DELTA_V_STEP() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Delta-V step size in m/s
+func (rcv *MNF) MutateDELTA_V_STEP(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+/// Minimum delta-T sampled in seconds
+func (rcv *MNF) DELTA_T_MIN() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Minimum delta-T sampled in seconds
+func (rcv *MNF) MutateDELTA_T_MIN(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+/// Maximum delta-T sampled in seconds
+func (rcv *MNF) DELTA_T_MAX() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Maximum delta-T sampled in seconds
+func (rcv *MNF) MutateDELTA_T_MAX(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+/// Delta-T step size in seconds
+func (rcv *MNF) DELTA_T_STEP() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Delta-T step size in seconds
+func (rcv *MNF) MutateDELTA_T_STEP(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+/// Total number of manifold elements
+func (rcv *MNF) NUM_ELEMENTS() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Total number of manifold elements
+func (rcv *MNF) MutateNUM_ELEMENTS(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(36, n)
+}
+
+/// Theoretical element sets
+func (rcv *MNF) ELEMENTS(obj *manifoldElset, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *MNF) ELEMENTSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Theoretical element sets
+/// Correlated catalog object ID (if matched)
+func (rcv *MNF) CORRELATED_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Correlated catalog object ID (if matched)
+/// Additional notes
+func (rcv *MNF) NOTES() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Additional notes
 func MNFStart(builder *flatbuffers.Builder) {
-	builder.StartObject(5)
+	builder.StartObject(20)
 }
 func MNFAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
-func MNFAddSTATUS(builder *flatbuffers.Builder, STATUS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(STATUS), 0)
+func MNFAddSAT_NO(builder *flatbuffers.Builder, SAT_NO uint32) {
+	builder.PrependUint32Slot(1, SAT_NO, 0)
 }
-func MNFAddWEIGHT(builder *flatbuffers.Builder, WEIGHT float64) {
-	builder.PrependFloat64Slot(2, WEIGHT, 0.0)
+func MNFAddOBJECT_DESIGNATOR(builder *flatbuffers.Builder, OBJECT_DESIGNATOR flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(OBJECT_DESIGNATOR), 0)
 }
-func MNFAddDELTA_V(builder *flatbuffers.Builder, DELTA_V float64) {
-	builder.PrependFloat64Slot(3, DELTA_V, 0.0)
+func MNFAddSTATUS(builder *flatbuffers.Builder, STATUS manifoldStatus) {
+	builder.PrependInt8Slot(3, int8(STATUS), 0)
 }
-func MNFAddDELTA_T(builder *flatbuffers.Builder, DELTA_T float64) {
-	builder.PrependFloat64Slot(4, DELTA_T, 0.0)
+func MNFAddEVENT_EPOCH(builder *flatbuffers.Builder, EVENT_EPOCH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(EVENT_EPOCH), 0)
+}
+func MNFAddSOURCE(builder *flatbuffers.Builder, SOURCE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(SOURCE), 0)
+}
+func MNFAddREF_FRAME(builder *flatbuffers.Builder, REF_FRAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(REF_FRAME), 0)
+}
+func MNFAddORIG_SEMI_MAJOR_AXIS(builder *flatbuffers.Builder, ORIG_SEMI_MAJOR_AXIS float64) {
+	builder.PrependFloat64Slot(7, ORIG_SEMI_MAJOR_AXIS, 0.0)
+}
+func MNFAddORIG_ECCENTRICITY(builder *flatbuffers.Builder, ORIG_ECCENTRICITY float64) {
+	builder.PrependFloat64Slot(8, ORIG_ECCENTRICITY, 0.0)
+}
+func MNFAddORIG_INCLINATION(builder *flatbuffers.Builder, ORIG_INCLINATION float64) {
+	builder.PrependFloat64Slot(9, ORIG_INCLINATION, 0.0)
+}
+func MNFAddDELTA_V_MIN(builder *flatbuffers.Builder, DELTA_V_MIN float64) {
+	builder.PrependFloat64Slot(10, DELTA_V_MIN, 0.0)
+}
+func MNFAddDELTA_V_MAX(builder *flatbuffers.Builder, DELTA_V_MAX float64) {
+	builder.PrependFloat64Slot(11, DELTA_V_MAX, 0.0)
+}
+func MNFAddDELTA_V_STEP(builder *flatbuffers.Builder, DELTA_V_STEP float64) {
+	builder.PrependFloat64Slot(12, DELTA_V_STEP, 0.0)
+}
+func MNFAddDELTA_T_MIN(builder *flatbuffers.Builder, DELTA_T_MIN float64) {
+	builder.PrependFloat64Slot(13, DELTA_T_MIN, 0.0)
+}
+func MNFAddDELTA_T_MAX(builder *flatbuffers.Builder, DELTA_T_MAX float64) {
+	builder.PrependFloat64Slot(14, DELTA_T_MAX, 0.0)
+}
+func MNFAddDELTA_T_STEP(builder *flatbuffers.Builder, DELTA_T_STEP float64) {
+	builder.PrependFloat64Slot(15, DELTA_T_STEP, 0.0)
+}
+func MNFAddNUM_ELEMENTS(builder *flatbuffers.Builder, NUM_ELEMENTS uint32) {
+	builder.PrependUint32Slot(16, NUM_ELEMENTS, 0)
+}
+func MNFAddELEMENTS(builder *flatbuffers.Builder, ELEMENTS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(ELEMENTS), 0)
+}
+func MNFStartELEMENTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func MNFAddCORRELATED_ID(builder *flatbuffers.Builder, CORRELATED_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(CORRELATED_ID), 0)
+}
+func MNFAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(NOTES), 0)
 }
 func MNFEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

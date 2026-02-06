@@ -12,7 +12,7 @@ use self::flatbuffers::{EndianScalar, Follow};
 pub enum SWROffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// Short-Wave Infrared
+/// Short-Wave Infrared Observation
 pub struct SWR<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }
@@ -28,18 +28,22 @@ impl<'a> flatbuffers::Follow<'a> for SWR<'a> {
 impl<'a> SWR<'a> {
   pub const VT_ID: flatbuffers::VOffsetT = 4;
   pub const VT_ON_ORBIT: flatbuffers::VOffsetT = 6;
-  pub const VT_TS: flatbuffers::VOffsetT = 8;
-  pub const VT_SOLAR_PHASE_ANGLE: flatbuffers::VOffsetT = 10;
-  pub const VT_LAT: flatbuffers::VOffsetT = 12;
-  pub const VT_LON: flatbuffers::VOffsetT = 14;
-  pub const VT_LOCATION_NAME: flatbuffers::VOffsetT = 16;
-  pub const VT_BAD_WAVE: flatbuffers::VOffsetT = 18;
-  pub const VT_WAVELENGTHS: flatbuffers::VOffsetT = 20;
-  pub const VT_ABS_FLUXES: flatbuffers::VOffsetT = 22;
-  pub const VT_RATIO_WAVELENGTHS: flatbuffers::VOffsetT = 24;
-  pub const VT_FLUX_RATIOS: flatbuffers::VOffsetT = 26;
-  pub const VT_ORIG_OBJECT_ID: flatbuffers::VOffsetT = 28;
-  pub const VT_SAT_NO: flatbuffers::VOffsetT = 30;
+  pub const VT_ORIG_OBJECT_ID: flatbuffers::VOffsetT = 8;
+  pub const VT_SAT_NO: flatbuffers::VOffsetT = 10;
+  pub const VT_TS: flatbuffers::VOffsetT = 12;
+  pub const VT_SOLAR_PHASE_ANGLE: flatbuffers::VOffsetT = 14;
+  pub const VT_LAT: flatbuffers::VOffsetT = 16;
+  pub const VT_LON: flatbuffers::VOffsetT = 18;
+  pub const VT_LOCATION_NAME: flatbuffers::VOffsetT = 20;
+  pub const VT_BAD_WAVE: flatbuffers::VOffsetT = 22;
+  pub const VT_WAVELENGTHS: flatbuffers::VOffsetT = 24;
+  pub const VT_ABS_FLUXES: flatbuffers::VOffsetT = 26;
+  pub const VT_RATIO_WAVELENGTHS: flatbuffers::VOffsetT = 28;
+  pub const VT_FLUX_RATIOS: flatbuffers::VOffsetT = 30;
+  pub const VT_TEMPERATURE: flatbuffers::VOffsetT = 32;
+  pub const VT_SIGNAL_NOISE_RATIO: flatbuffers::VOffsetT = 34;
+  pub const VT_INTEGRATION_TIME: flatbuffers::VOffsetT = 36;
+  pub const VT_QUALITY: flatbuffers::VOffsetT = 38;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -51,11 +55,12 @@ impl<'a> SWR<'a> {
     args: &'args SWRArgs<'args>
   ) -> flatbuffers::WIPOffset<SWR<'bldr>> {
     let mut builder = SWRBuilder::new(_fbb);
+    builder.add_INTEGRATION_TIME(args.INTEGRATION_TIME);
+    builder.add_SIGNAL_NOISE_RATIO(args.SIGNAL_NOISE_RATIO);
+    builder.add_TEMPERATURE(args.TEMPERATURE);
     builder.add_LON(args.LON);
     builder.add_LAT(args.LAT);
     builder.add_SOLAR_PHASE_ANGLE(args.SOLAR_PHASE_ANGLE);
-    builder.add_SAT_NO(args.SAT_NO);
-    if let Some(x) = args.ORIG_OBJECT_ID { builder.add_ORIG_OBJECT_ID(x); }
     if let Some(x) = args.FLUX_RATIOS { builder.add_FLUX_RATIOS(x); }
     if let Some(x) = args.RATIO_WAVELENGTHS { builder.add_RATIO_WAVELENGTHS(x); }
     if let Some(x) = args.ABS_FLUXES { builder.add_ABS_FLUXES(x); }
@@ -63,8 +68,11 @@ impl<'a> SWR<'a> {
     if let Some(x) = args.BAD_WAVE { builder.add_BAD_WAVE(x); }
     if let Some(x) = args.LOCATION_NAME { builder.add_LOCATION_NAME(x); }
     if let Some(x) = args.TS { builder.add_TS(x); }
+    builder.add_SAT_NO(args.SAT_NO);
+    if let Some(x) = args.ORIG_OBJECT_ID { builder.add_ORIG_OBJECT_ID(x); }
     if let Some(x) = args.ON_ORBIT { builder.add_ON_ORBIT(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_QUALITY(args.QUALITY);
     builder.finish()
   }
 
@@ -75,6 +83,10 @@ impl<'a> SWR<'a> {
     let ON_ORBIT = self.ON_ORBIT().map(|x| {
       x.to_string()
     });
+    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID().map(|x| {
+      x.to_string()
+    });
+    let SAT_NO = self.SAT_NO();
     let TS = self.TS().map(|x| {
       x.to_string()
     });
@@ -88,24 +100,26 @@ impl<'a> SWR<'a> {
       x.to_string()
     });
     let WAVELENGTHS = self.WAVELENGTHS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
+      x.into_iter().collect()
     });
     let ABS_FLUXES = self.ABS_FLUXES().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
+      x.into_iter().collect()
     });
     let RATIO_WAVELENGTHS = self.RATIO_WAVELENGTHS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
+      x.into_iter().collect()
     });
     let FLUX_RATIOS = self.FLUX_RATIOS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
+      x.into_iter().collect()
     });
-    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID().map(|x| {
-      x.to_string()
-    });
-    let SAT_NO = self.SAT_NO();
+    let TEMPERATURE = self.TEMPERATURE();
+    let SIGNAL_NOISE_RATIO = self.SIGNAL_NOISE_RATIO();
+    let INTEGRATION_TIME = self.INTEGRATION_TIME();
+    let QUALITY = self.QUALITY();
     SWRT {
       ID,
       ON_ORBIT,
+      ORIG_OBJECT_ID,
+      SAT_NO,
       TS,
       SOLAR_PHASE_ANGLE,
       LAT,
@@ -116,11 +130,14 @@ impl<'a> SWR<'a> {
       ABS_FLUXES,
       RATIO_WAVELENGTHS,
       FLUX_RATIOS,
-      ORIG_OBJECT_ID,
-      SAT_NO,
+      TEMPERATURE,
+      SIGNAL_NOISE_RATIO,
+      INTEGRATION_TIME,
+      QUALITY,
     }
   }
 
+  /// Unique identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -128,6 +145,7 @@ impl<'a> SWR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SWR::VT_ID, None)}
   }
+  /// On-orbit reference
   #[inline]
   pub fn ON_ORBIT(&self) -> Option<&'a str> {
     // Safety:
@@ -135,76 +153,7 @@ impl<'a> SWR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SWR::VT_ON_ORBIT, None)}
   }
-  #[inline]
-  pub fn TS(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SWR::VT_TS, None)}
-  }
-  #[inline]
-  pub fn SOLAR_PHASE_ANGLE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SWR::VT_SOLAR_PHASE_ANGLE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn LAT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SWR::VT_LAT, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn LON(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SWR::VT_LON, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn LOCATION_NAME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SWR::VT_LOCATION_NAME, None)}
-  }
-  #[inline]
-  pub fn BAD_WAVE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SWR::VT_BAD_WAVE, None)}
-  }
-  #[inline]
-  pub fn WAVELENGTHS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(SWR::VT_WAVELENGTHS, None)}
-  }
-  #[inline]
-  pub fn ABS_FLUXES(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(SWR::VT_ABS_FLUXES, None)}
-  }
-  #[inline]
-  pub fn RATIO_WAVELENGTHS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(SWR::VT_RATIO_WAVELENGTHS, None)}
-  }
-  #[inline]
-  pub fn FLUX_RATIOS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(SWR::VT_FLUX_RATIOS, None)}
-  }
+  /// International designator
   #[inline]
   pub fn ORIG_OBJECT_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -212,12 +161,125 @@ impl<'a> SWR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SWR::VT_ORIG_OBJECT_ID, None)}
   }
+  /// Satellite catalog number
   #[inline]
-  pub fn SAT_NO(&self) -> i32 {
+  pub fn SAT_NO(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(SWR::VT_SAT_NO, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u32>(SWR::VT_SAT_NO, Some(0)).unwrap()}
+  }
+  /// Observation timestamp (ISO 8601)
+  #[inline]
+  pub fn TS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SWR::VT_TS, None)}
+  }
+  /// Solar phase angle (degrees)
+  #[inline]
+  pub fn SOLAR_PHASE_ANGLE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SWR::VT_SOLAR_PHASE_ANGLE, Some(0.0)).unwrap()}
+  }
+  /// Sub-observer latitude (degrees)
+  #[inline]
+  pub fn LAT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SWR::VT_LAT, Some(0.0)).unwrap()}
+  }
+  /// Sub-observer longitude (degrees)
+  #[inline]
+  pub fn LON(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SWR::VT_LON, Some(0.0)).unwrap()}
+  }
+  /// Location name
+  #[inline]
+  pub fn LOCATION_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SWR::VT_LOCATION_NAME, None)}
+  }
+  /// Bad wavelength flag or identifier
+  #[inline]
+  pub fn BAD_WAVE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SWR::VT_BAD_WAVE, None)}
+  }
+  /// Measured wavelengths (micrometers)
+  #[inline]
+  pub fn WAVELENGTHS(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(SWR::VT_WAVELENGTHS, None)}
+  }
+  /// Absolute flux values (W/m^2/um)
+  #[inline]
+  pub fn ABS_FLUXES(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(SWR::VT_ABS_FLUXES, None)}
+  }
+  /// Ratio reference wavelengths (micrometers)
+  #[inline]
+  pub fn RATIO_WAVELENGTHS(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(SWR::VT_RATIO_WAVELENGTHS, None)}
+  }
+  /// Flux ratios (normalized)
+  #[inline]
+  pub fn FLUX_RATIOS(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(SWR::VT_FLUX_RATIOS, None)}
+  }
+  /// Effective temperature (Kelvin)
+  #[inline]
+  pub fn TEMPERATURE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SWR::VT_TEMPERATURE, Some(0.0)).unwrap()}
+  }
+  /// Signal-to-noise ratio
+  #[inline]
+  pub fn SIGNAL_NOISE_RATIO(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SWR::VT_SIGNAL_NOISE_RATIO, Some(0.0)).unwrap()}
+  }
+  /// Integration time (seconds)
+  #[inline]
+  pub fn INTEGRATION_TIME(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SWR::VT_INTEGRATION_TIME, Some(0.0)).unwrap()}
+  }
+  /// Data quality (0-9, 9=best)
+  #[inline]
+  pub fn QUALITY(&self) -> u8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u8>(SWR::VT_QUALITY, Some(0)).unwrap()}
   }
 }
 
@@ -230,18 +292,22 @@ impl flatbuffers::Verifiable for SWR<'_> {
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ON_ORBIT", Self::VT_ON_ORBIT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_OBJECT_ID", Self::VT_ORIG_OBJECT_ID, false)?
+     .visit_field::<u32>("SAT_NO", Self::VT_SAT_NO, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TS", Self::VT_TS, false)?
      .visit_field::<f64>("SOLAR_PHASE_ANGLE", Self::VT_SOLAR_PHASE_ANGLE, false)?
      .visit_field::<f64>("LAT", Self::VT_LAT, false)?
      .visit_field::<f64>("LON", Self::VT_LON, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LOCATION_NAME", Self::VT_LOCATION_NAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("BAD_WAVE", Self::VT_BAD_WAVE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("WAVELENGTHS", Self::VT_WAVELENGTHS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("ABS_FLUXES", Self::VT_ABS_FLUXES, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("RATIO_WAVELENGTHS", Self::VT_RATIO_WAVELENGTHS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("FLUX_RATIOS", Self::VT_FLUX_RATIOS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_OBJECT_ID", Self::VT_ORIG_OBJECT_ID, false)?
-     .visit_field::<i32>("SAT_NO", Self::VT_SAT_NO, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("WAVELENGTHS", Self::VT_WAVELENGTHS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("ABS_FLUXES", Self::VT_ABS_FLUXES, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("RATIO_WAVELENGTHS", Self::VT_RATIO_WAVELENGTHS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("FLUX_RATIOS", Self::VT_FLUX_RATIOS, false)?
+     .visit_field::<f64>("TEMPERATURE", Self::VT_TEMPERATURE, false)?
+     .visit_field::<f64>("SIGNAL_NOISE_RATIO", Self::VT_SIGNAL_NOISE_RATIO, false)?
+     .visit_field::<f64>("INTEGRATION_TIME", Self::VT_INTEGRATION_TIME, false)?
+     .visit_field::<u8>("QUALITY", Self::VT_QUALITY, false)?
      .finish();
     Ok(())
   }
@@ -249,18 +315,22 @@ impl flatbuffers::Verifiable for SWR<'_> {
 pub struct SWRArgs<'a> {
     pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ON_ORBIT: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ORIG_OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SAT_NO: u32,
     pub TS: Option<flatbuffers::WIPOffset<&'a str>>,
     pub SOLAR_PHASE_ANGLE: f64,
     pub LAT: f64,
     pub LON: f64,
     pub LOCATION_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub BAD_WAVE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub WAVELENGTHS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub ABS_FLUXES: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub RATIO_WAVELENGTHS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub FLUX_RATIOS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub ORIG_OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SAT_NO: i32,
+    pub WAVELENGTHS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub ABS_FLUXES: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub RATIO_WAVELENGTHS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub FLUX_RATIOS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub TEMPERATURE: f64,
+    pub SIGNAL_NOISE_RATIO: f64,
+    pub INTEGRATION_TIME: f64,
+    pub QUALITY: u8,
 }
 impl<'a> Default for SWRArgs<'a> {
   #[inline]
@@ -268,6 +338,8 @@ impl<'a> Default for SWRArgs<'a> {
     SWRArgs {
       ID: None,
       ON_ORBIT: None,
+      ORIG_OBJECT_ID: None,
+      SAT_NO: 0,
       TS: None,
       SOLAR_PHASE_ANGLE: 0.0,
       LAT: 0.0,
@@ -278,8 +350,10 @@ impl<'a> Default for SWRArgs<'a> {
       ABS_FLUXES: None,
       RATIO_WAVELENGTHS: None,
       FLUX_RATIOS: None,
-      ORIG_OBJECT_ID: None,
-      SAT_NO: 0,
+      TEMPERATURE: 0.0,
+      SIGNAL_NOISE_RATIO: 0.0,
+      INTEGRATION_TIME: 0.0,
+      QUALITY: 0,
     }
   }
 }
@@ -296,6 +370,14 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SWRBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_ON_ORBIT(&mut self, ON_ORBIT: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SWR::VT_ON_ORBIT, ON_ORBIT);
+  }
+  #[inline]
+  pub fn add_ORIG_OBJECT_ID(&mut self, ORIG_OBJECT_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SWR::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
+  }
+  #[inline]
+  pub fn add_SAT_NO(&mut self, SAT_NO: u32) {
+    self.fbb_.push_slot::<u32>(SWR::VT_SAT_NO, SAT_NO, 0);
   }
   #[inline]
   pub fn add_TS(&mut self, TS: flatbuffers::WIPOffset<&'b  str>) {
@@ -322,28 +404,36 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SWRBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SWR::VT_BAD_WAVE, BAD_WAVE);
   }
   #[inline]
-  pub fn add_WAVELENGTHS(&mut self, WAVELENGTHS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+  pub fn add_WAVELENGTHS(&mut self, WAVELENGTHS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SWR::VT_WAVELENGTHS, WAVELENGTHS);
   }
   #[inline]
-  pub fn add_ABS_FLUXES(&mut self, ABS_FLUXES: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+  pub fn add_ABS_FLUXES(&mut self, ABS_FLUXES: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SWR::VT_ABS_FLUXES, ABS_FLUXES);
   }
   #[inline]
-  pub fn add_RATIO_WAVELENGTHS(&mut self, RATIO_WAVELENGTHS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+  pub fn add_RATIO_WAVELENGTHS(&mut self, RATIO_WAVELENGTHS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SWR::VT_RATIO_WAVELENGTHS, RATIO_WAVELENGTHS);
   }
   #[inline]
-  pub fn add_FLUX_RATIOS(&mut self, FLUX_RATIOS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+  pub fn add_FLUX_RATIOS(&mut self, FLUX_RATIOS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SWR::VT_FLUX_RATIOS, FLUX_RATIOS);
   }
   #[inline]
-  pub fn add_ORIG_OBJECT_ID(&mut self, ORIG_OBJECT_ID: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SWR::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
+  pub fn add_TEMPERATURE(&mut self, TEMPERATURE: f64) {
+    self.fbb_.push_slot::<f64>(SWR::VT_TEMPERATURE, TEMPERATURE, 0.0);
   }
   #[inline]
-  pub fn add_SAT_NO(&mut self, SAT_NO: i32) {
-    self.fbb_.push_slot::<i32>(SWR::VT_SAT_NO, SAT_NO, 0);
+  pub fn add_SIGNAL_NOISE_RATIO(&mut self, SIGNAL_NOISE_RATIO: f64) {
+    self.fbb_.push_slot::<f64>(SWR::VT_SIGNAL_NOISE_RATIO, SIGNAL_NOISE_RATIO, 0.0);
+  }
+  #[inline]
+  pub fn add_INTEGRATION_TIME(&mut self, INTEGRATION_TIME: f64) {
+    self.fbb_.push_slot::<f64>(SWR::VT_INTEGRATION_TIME, INTEGRATION_TIME, 0.0);
+  }
+  #[inline]
+  pub fn add_QUALITY(&mut self, QUALITY: u8) {
+    self.fbb_.push_slot::<u8>(SWR::VT_QUALITY, QUALITY, 0);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> SWRBuilder<'a, 'b, A> {
@@ -365,6 +455,8 @@ impl core::fmt::Debug for SWR<'_> {
     let mut ds = f.debug_struct("SWR");
       ds.field("ID", &self.ID());
       ds.field("ON_ORBIT", &self.ON_ORBIT());
+      ds.field("ORIG_OBJECT_ID", &self.ORIG_OBJECT_ID());
+      ds.field("SAT_NO", &self.SAT_NO());
       ds.field("TS", &self.TS());
       ds.field("SOLAR_PHASE_ANGLE", &self.SOLAR_PHASE_ANGLE());
       ds.field("LAT", &self.LAT());
@@ -375,8 +467,10 @@ impl core::fmt::Debug for SWR<'_> {
       ds.field("ABS_FLUXES", &self.ABS_FLUXES());
       ds.field("RATIO_WAVELENGTHS", &self.RATIO_WAVELENGTHS());
       ds.field("FLUX_RATIOS", &self.FLUX_RATIOS());
-      ds.field("ORIG_OBJECT_ID", &self.ORIG_OBJECT_ID());
-      ds.field("SAT_NO", &self.SAT_NO());
+      ds.field("TEMPERATURE", &self.TEMPERATURE());
+      ds.field("SIGNAL_NOISE_RATIO", &self.SIGNAL_NOISE_RATIO());
+      ds.field("INTEGRATION_TIME", &self.INTEGRATION_TIME());
+      ds.field("QUALITY", &self.QUALITY());
       ds.finish()
   }
 }
@@ -385,24 +479,30 @@ impl core::fmt::Debug for SWR<'_> {
 pub struct SWRT {
   pub ID: Option<String>,
   pub ON_ORBIT: Option<String>,
+  pub ORIG_OBJECT_ID: Option<String>,
+  pub SAT_NO: u32,
   pub TS: Option<String>,
   pub SOLAR_PHASE_ANGLE: f64,
   pub LAT: f64,
   pub LON: f64,
   pub LOCATION_NAME: Option<String>,
   pub BAD_WAVE: Option<String>,
-  pub WAVELENGTHS: Option<Vec<String>>,
-  pub ABS_FLUXES: Option<Vec<String>>,
-  pub RATIO_WAVELENGTHS: Option<Vec<String>>,
-  pub FLUX_RATIOS: Option<Vec<String>>,
-  pub ORIG_OBJECT_ID: Option<String>,
-  pub SAT_NO: i32,
+  pub WAVELENGTHS: Option<Vec<f64>>,
+  pub ABS_FLUXES: Option<Vec<f64>>,
+  pub RATIO_WAVELENGTHS: Option<Vec<f64>>,
+  pub FLUX_RATIOS: Option<Vec<f64>>,
+  pub TEMPERATURE: f64,
+  pub SIGNAL_NOISE_RATIO: f64,
+  pub INTEGRATION_TIME: f64,
+  pub QUALITY: u8,
 }
 impl Default for SWRT {
   fn default() -> Self {
     Self {
       ID: None,
       ON_ORBIT: None,
+      ORIG_OBJECT_ID: None,
+      SAT_NO: 0,
       TS: None,
       SOLAR_PHASE_ANGLE: 0.0,
       LAT: 0.0,
@@ -413,8 +513,10 @@ impl Default for SWRT {
       ABS_FLUXES: None,
       RATIO_WAVELENGTHS: None,
       FLUX_RATIOS: None,
-      ORIG_OBJECT_ID: None,
-      SAT_NO: 0,
+      TEMPERATURE: 0.0,
+      SIGNAL_NOISE_RATIO: 0.0,
+      INTEGRATION_TIME: 0.0,
+      QUALITY: 0,
     }
   }
 }
@@ -429,6 +531,10 @@ impl SWRT {
     let ON_ORBIT = self.ON_ORBIT.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SAT_NO = self.SAT_NO;
     let TS = self.TS.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -442,24 +548,26 @@ impl SWRT {
       _fbb.create_string(x)
     });
     let WAVELENGTHS = self.WAVELENGTHS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+      _fbb.create_vector(x)
     });
     let ABS_FLUXES = self.ABS_FLUXES.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+      _fbb.create_vector(x)
     });
     let RATIO_WAVELENGTHS = self.RATIO_WAVELENGTHS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+      _fbb.create_vector(x)
     });
     let FLUX_RATIOS = self.FLUX_RATIOS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+      _fbb.create_vector(x)
     });
-    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let SAT_NO = self.SAT_NO;
+    let TEMPERATURE = self.TEMPERATURE;
+    let SIGNAL_NOISE_RATIO = self.SIGNAL_NOISE_RATIO;
+    let INTEGRATION_TIME = self.INTEGRATION_TIME;
+    let QUALITY = self.QUALITY;
     SWR::create(_fbb, &SWRArgs{
       ID,
       ON_ORBIT,
+      ORIG_OBJECT_ID,
+      SAT_NO,
       TS,
       SOLAR_PHASE_ANGLE,
       LAT,
@@ -470,8 +578,10 @@ impl SWRT {
       ABS_FLUXES,
       RATIO_WAVELENGTHS,
       FLUX_RATIOS,
-      ORIG_OBJECT_ID,
-      SAT_NO,
+      TEMPERATURE,
+      SIGNAL_NOISE_RATIO,
+      INTEGRATION_TIME,
+      QUALITY,
     })
   }
 }

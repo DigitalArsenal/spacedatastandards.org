@@ -1,132 +1,177 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "imageType" : {
+      "type" : "string",
+      "enum": ["VISIBLE", "INFRARED", "MULTISPECTRAL", "HYPERSPECTRAL", "UV", "BROADBAND"]
+    },
     "SKI" : {
       "type" : "object",
       "description" : "Sky Imagery",
       "properties" : {
         "ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique identifier"
               },
         "ON_ORBIT" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "On-orbit reference"
               },
         "ORIG_OBJECT_ID" : {
-                "type" : "string"
-              },
-        "ID_SENSOR" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "International designator"
               },
         "SAT_NO" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Satellite catalog number"
+              },
+        "ID_SENSOR" : {
+                "type" : "string",
+                "description" : "Sensor identifier"
               },
         "ORIG_SENSOR_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Original sensor identifier"
               },
         "SENLAT" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Sensor geodetic latitude (degrees)"
               },
         "SENLON" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Sensor geodetic longitude (degrees)"
               },
         "SENALT" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Sensor altitude (km)"
               },
         "SENX" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Sensor ECEF X position (km)"
               },
         "SENY" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Sensor ECEF Y position (km)"
               },
         "SENZ" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Sensor ECEF Z position (km)"
               },
         "SEN_QUAT" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Sensor quaternion (scalar-last: q1, q2, q3, q0)"
               },
         "SEN_QUAT_DOT" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Sensor quaternion rate"
               },
         "IMAGE_TYPE" : {
-                "type" : "string"
+                "$ref" : "#/definitions/imageType",
+                "description" : "Image type"
               },
         "EXP_START_TIME" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Exposure start time (ISO 8601)"
               },
         "EXP_END_TIME" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Exposure end time (ISO 8601)"
               },
         "IMAGE_SOURCE_INFO" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Image source information"
               },
         "TOP_LEFT_START_AZ" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Top-left corner start azimuth (degrees)"
               },
         "TOP_LEFT_START_EL" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Top-left corner start elevation (degrees)"
               },
         "TOP_LEFT_STOP_AZ" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Top-left corner stop azimuth (degrees)"
               },
         "TOP_LEFT_STOP_EL" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Top-left corner stop elevation (degrees)"
               },
         "IMAGE_SET_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Image set identifier"
               },
         "IMAGE_SET_LENGTH" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Number of images in set"
               },
         "SEQUENCE_ID" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Sequence number within set"
               },
         "FRAME_FOVWIDTH" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Frame field-of-view width (degrees)"
               },
         "FRAME_FOVHEIGHT" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Frame field-of-view height (degrees)"
               },
         "PIXEL_FOVWIDTH" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Pixel field-of-view width (arcseconds)"
               },
         "PIXEL_FOVHEIGHT" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Pixel field-of-view height (arcseconds)"
               },
         "FRAME_WIDTH_PIXELS" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Frame width (pixels)"
               },
         "FRAME_HEIGHT_PIXELS" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Frame height (pixels)"
               },
         "PIXEL_BIT_DEPTH" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Pixel bit depth"
               },
         "ANNOTATION_KEY" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Annotation key reference"
               },
         "CALIBRATION_KEY" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Calibration key reference"
               },
         "FILENAME" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Image filename"
               },
         "FILESIZE" : {
-                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "File size (bytes)"
               },
         "CHECKSUM_VALUE" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "File checksum value"
               },
         "TRANSACTION_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Transaction identifier"
               },
         "TAGS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Associated tags"
               },
         "DESCRIPTION" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Description"
               },
         "EO_OBSERVATIONS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Associated EO observation references"
               }
       },
       "additionalProperties" : false

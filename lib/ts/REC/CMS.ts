@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { commsTransponder, commsTransponderT } from './commsTransponder.js';
 
 
 /**
@@ -31,6 +32,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$CMS');
 }
 
+/**
+ * Unique identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,6 +42,9 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Reference to parent entity
+ */
 ID_ENTITY():string|null
 ID_ENTITY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID_ENTITY(optionalEncoding?:any):string|Uint8Array|null {
@@ -45,6 +52,9 @@ ID_ENTITY(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Communications payload name
+ */
 NAME():string|null
 NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 NAME(optionalEncoding?:any):string|Uint8Array|null {
@@ -52,6 +62,9 @@ NAME(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Description
+ */
 DESCRIPTION():string|null
 DESCRIPTION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 DESCRIPTION(optionalEncoding?:any):string|Uint8Array|null {
@@ -59,6 +72,9 @@ DESCRIPTION(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Parent entity designator
+ */
 ENTITY():string|null
 ENTITY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ENTITY(optionalEncoding?:any):string|Uint8Array|null {
@@ -66,20 +82,99 @@ ENTITY(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-TRANSPONDERS(index: number):string
-TRANSPONDERS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-TRANSPONDERS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Satellite number
+ */
+SAT_NO():number {
   const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Number of transponders
+ */
+NUM_TRANSPONDERS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Transponders
+ */
+TRANSPONDERS(index: number, obj?:commsTransponder):commsTransponder|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? (obj || new commsTransponder()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 transpondersLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Total payload power in Watts
+ */
+TOTAL_POWER():number {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Total payload mass in kg
+ */
+TOTAL_MASS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Total aggregate bandwidth in MHz
+ */
+TOTAL_BANDWIDTH():number {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Primary mission (e.g., FIXED_SAT, BROADCAST, MOBILE, RELAY, MILSATCOM)
+ */
+MISSION():string|null
+MISSION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MISSION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Coverage region description
+ */
+COVERAGE():string|null
+COVERAGE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+COVERAGE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Design lifetime in years
+ */
+DESIGN_LIFE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Additional notes
+ */
+NOTES():string|null
+NOTES(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+NOTES(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startCMS(builder:flatbuffers.Builder) {
-  builder.startObject(6);
+  builder.startObject(15);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -102,8 +197,16 @@ static addEntity(builder:flatbuffers.Builder, ENTITYOffset:flatbuffers.Offset) {
   builder.addFieldOffset(4, ENTITYOffset, 0);
 }
 
+static addSatNo(builder:flatbuffers.Builder, SAT_NO:number) {
+  builder.addFieldInt32(5, SAT_NO, 0);
+}
+
+static addNumTransponders(builder:flatbuffers.Builder, NUM_TRANSPONDERS:number) {
+  builder.addFieldInt32(6, NUM_TRANSPONDERS, 0);
+}
+
 static addTransponders(builder:flatbuffers.Builder, TRANSPONDERSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, TRANSPONDERSOffset, 0);
+  builder.addFieldOffset(7, TRANSPONDERSOffset, 0);
 }
 
 static createTranspondersVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -116,6 +219,34 @@ static createTranspondersVector(builder:flatbuffers.Builder, data:flatbuffers.Of
 
 static startTranspondersVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
+}
+
+static addTotalPower(builder:flatbuffers.Builder, TOTAL_POWER:number) {
+  builder.addFieldFloat64(8, TOTAL_POWER, 0.0);
+}
+
+static addTotalMass(builder:flatbuffers.Builder, TOTAL_MASS:number) {
+  builder.addFieldFloat64(9, TOTAL_MASS, 0.0);
+}
+
+static addTotalBandwidth(builder:flatbuffers.Builder, TOTAL_BANDWIDTH:number) {
+  builder.addFieldFloat64(10, TOTAL_BANDWIDTH, 0.0);
+}
+
+static addMission(builder:flatbuffers.Builder, MISSIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, MISSIONOffset, 0);
+}
+
+static addCoverage(builder:flatbuffers.Builder, COVERAGEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(12, COVERAGEOffset, 0);
+}
+
+static addDesignLife(builder:flatbuffers.Builder, DESIGN_LIFE:number) {
+  builder.addFieldFloat64(13, DESIGN_LIFE, 0.0);
+}
+
+static addNotes(builder:flatbuffers.Builder, NOTESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, NOTESOffset, 0);
 }
 
 static endCMS(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -131,14 +262,23 @@ static finishSizePrefixedCMSBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$CMS', true);
 }
 
-static createCMS(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ID_ENTITYOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, ENTITYOffset:flatbuffers.Offset, TRANSPONDERSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createCMS(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ID_ENTITYOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, ENTITYOffset:flatbuffers.Offset, SAT_NO:number, NUM_TRANSPONDERS:number, TRANSPONDERSOffset:flatbuffers.Offset, TOTAL_POWER:number, TOTAL_MASS:number, TOTAL_BANDWIDTH:number, MISSIONOffset:flatbuffers.Offset, COVERAGEOffset:flatbuffers.Offset, DESIGN_LIFE:number, NOTESOffset:flatbuffers.Offset):flatbuffers.Offset {
   CMS.startCMS(builder);
   CMS.addId(builder, IDOffset);
   CMS.addIdEntity(builder, ID_ENTITYOffset);
   CMS.addName(builder, NAMEOffset);
   CMS.addDescription(builder, DESCRIPTIONOffset);
   CMS.addEntity(builder, ENTITYOffset);
+  CMS.addSatNo(builder, SAT_NO);
+  CMS.addNumTransponders(builder, NUM_TRANSPONDERS);
   CMS.addTransponders(builder, TRANSPONDERSOffset);
+  CMS.addTotalPower(builder, TOTAL_POWER);
+  CMS.addTotalMass(builder, TOTAL_MASS);
+  CMS.addTotalBandwidth(builder, TOTAL_BANDWIDTH);
+  CMS.addMission(builder, MISSIONOffset);
+  CMS.addCoverage(builder, COVERAGEOffset);
+  CMS.addDesignLife(builder, DESIGN_LIFE);
+  CMS.addNotes(builder, NOTESOffset);
   return CMS.endCMS(builder);
 }
 
@@ -149,7 +289,16 @@ unpack(): CMST {
     this.NAME(),
     this.DESCRIPTION(),
     this.ENTITY(),
-    this.bb!.createScalarList<string>(this.TRANSPONDERS.bind(this), this.transpondersLength())
+    this.SAT_NO(),
+    this.NUM_TRANSPONDERS(),
+    this.bb!.createObjList<commsTransponder, commsTransponderT>(this.TRANSPONDERS.bind(this), this.transpondersLength()),
+    this.TOTAL_POWER(),
+    this.TOTAL_MASS(),
+    this.TOTAL_BANDWIDTH(),
+    this.MISSION(),
+    this.COVERAGE(),
+    this.DESIGN_LIFE(),
+    this.NOTES()
   );
 }
 
@@ -160,7 +309,16 @@ unpackTo(_o: CMST): void {
   _o.NAME = this.NAME();
   _o.DESCRIPTION = this.DESCRIPTION();
   _o.ENTITY = this.ENTITY();
-  _o.TRANSPONDERS = this.bb!.createScalarList<string>(this.TRANSPONDERS.bind(this), this.transpondersLength());
+  _o.SAT_NO = this.SAT_NO();
+  _o.NUM_TRANSPONDERS = this.NUM_TRANSPONDERS();
+  _o.TRANSPONDERS = this.bb!.createObjList<commsTransponder, commsTransponderT>(this.TRANSPONDERS.bind(this), this.transpondersLength());
+  _o.TOTAL_POWER = this.TOTAL_POWER();
+  _o.TOTAL_MASS = this.TOTAL_MASS();
+  _o.TOTAL_BANDWIDTH = this.TOTAL_BANDWIDTH();
+  _o.MISSION = this.MISSION();
+  _o.COVERAGE = this.COVERAGE();
+  _o.DESIGN_LIFE = this.DESIGN_LIFE();
+  _o.NOTES = this.NOTES();
 }
 }
 
@@ -171,7 +329,16 @@ constructor(
   public NAME: string|Uint8Array|null = null,
   public DESCRIPTION: string|Uint8Array|null = null,
   public ENTITY: string|Uint8Array|null = null,
-  public TRANSPONDERS: (string)[] = []
+  public SAT_NO: number = 0,
+  public NUM_TRANSPONDERS: number = 0,
+  public TRANSPONDERS: (commsTransponderT)[] = [],
+  public TOTAL_POWER: number = 0.0,
+  public TOTAL_MASS: number = 0.0,
+  public TOTAL_BANDWIDTH: number = 0.0,
+  public MISSION: string|Uint8Array|null = null,
+  public COVERAGE: string|Uint8Array|null = null,
+  public DESIGN_LIFE: number = 0.0,
+  public NOTES: string|Uint8Array|null = null
 ){}
 
 
@@ -182,6 +349,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const DESCRIPTION = (this.DESCRIPTION !== null ? builder.createString(this.DESCRIPTION!) : 0);
   const ENTITY = (this.ENTITY !== null ? builder.createString(this.ENTITY!) : 0);
   const TRANSPONDERS = CMS.createTranspondersVector(builder, builder.createObjectOffsetList(this.TRANSPONDERS));
+  const MISSION = (this.MISSION !== null ? builder.createString(this.MISSION!) : 0);
+  const COVERAGE = (this.COVERAGE !== null ? builder.createString(this.COVERAGE!) : 0);
+  const NOTES = (this.NOTES !== null ? builder.createString(this.NOTES!) : 0);
 
   return CMS.createCMS(builder,
     ID,
@@ -189,7 +359,16 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     NAME,
     DESCRIPTION,
     ENTITY,
-    TRANSPONDERS
+    this.SAT_NO,
+    this.NUM_TRANSPONDERS,
+    TRANSPONDERS,
+    this.TOTAL_POWER,
+    this.TOTAL_MASS,
+    this.TOTAL_BANDWIDTH,
+    MISSION,
+    COVERAGE,
+    this.DESIGN_LIFE,
+    NOTES
   );
 }
 }

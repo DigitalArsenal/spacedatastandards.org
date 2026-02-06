@@ -1,46 +1,85 @@
-// Hash: 455561a82fa328ade311f09e3fc1c4b0f97cd1c0c5f089c9959a1040418ea92b
-// Version: 0.0.2
+// Hash: 77ed603b245aca902d8b88606337419ce328cd67c1b7d29b0194fb89781efb3e
+// Version: 0.0.3
 // -----------------------------------END_HEADER
 /// Star Catalog Entry
 table STR {
+  /// Unique internal identifier
   ID:string;
+  /// CelesTrak Star catalog identifier
   CS_ID:long;
-  GNC_CAT_ID:int;
+  /// GNC star catalog identifier
+  GNC_CAT_ID:uint32;
+  /// Gaia DR3 source identifier
   GAIADR3_CAT_ID:long;
-  HIP_CAT_ID:int;
+  /// Hipparcos catalog identifier
+  HIP_CAT_ID:uint32;
+  /// Catalog version string
   CAT_VERSION:string;
-  RA:double;
-  RA_UNC:double;
-  DEC:double;
-  DEC_UNC:double;
-  POS_UNC_FLAG:bool;
-  PARALLAX:double;
-  PARALLAX_UNC:double;
-  PMRA:double;
-  PMRA_UNC:double;
-  PMDEC:double;
-  PMDEC_UNC:double;
-  PM_UNC_FLAG:bool;
+  /// Astrometry source description
   ASTROMETRY_ORIGIN:string;
+  /// Epoch of stellar position (Julian years)
   STAR_EPOCH:double;
+  /// Right ascension (degrees, ICRS)
+  RA:double;
+  /// Right ascension uncertainty (arcseconds)
+  RA_UNC:double;
+  /// Declination (degrees, ICRS)
+  DEC:double;
+  /// Declination uncertainty (arcseconds)
+  DEC_UNC:double;
+  /// True if position uncertainty is flagged
+  POS_UNC_FLAG:bool;
+  /// Parallax (milliarcseconds)
+  PARALLAX:double;
+  /// Parallax uncertainty (milliarcseconds)
+  PARALLAX_UNC:double;
+  /// Proper motion in RA (milliarcseconds/year)
+  PMRA:double;
+  /// Proper motion in RA uncertainty (milliarcseconds/year)
+  PMRA_UNC:double;
+  /// Proper motion in DEC (milliarcseconds/year)
+  PMDEC:double;
+  /// Proper motion in DEC uncertainty (milliarcseconds/year)
+  PMDEC_UNC:double;
+  /// True if proper motion uncertainty is flagged
+  PM_UNC_FLAG:bool;
+  /// Gaia G-band magnitude
   GMAG:double;
+  /// Gaia G-band magnitude uncertainty
   GMAG_UNC:double;
+  /// Gaia BP-band magnitude (blue photometer)
   BPMAG:double;
+  /// Gaia BP-band magnitude uncertainty
   BPMAG_UNC:double;
+  /// Gaia RP-band magnitude (red photometer)
   RPMAG:double;
+  /// Gaia RP-band magnitude uncertainty
   RPMAG_UNC:double;
+  /// 2MASS J-band magnitude (1.25 um)
   JMAG:double;
+  /// J-band magnitude uncertainty
   JMAG_UNC:double;
+  /// 2MASS K-band magnitude (2.17 um)
   KMAG:double;
+  /// K-band magnitude uncertainty
   KMAG_UNC:double;
+  /// 2MASS H-band magnitude (1.65 um)
   HMAG:double;
+  /// H-band magnitude uncertainty
   HMAG_UNC:double;
+  /// True if star is variable
   VAR_FLAG:bool;
+  /// True if star is in a multiple system
   MULT_FLAG:bool;
-  NEIGHBOR_ID:int;
+  /// Nearest neighbor catalog identifier
+  NEIGHBOR_ID:uint32;
+  /// True if nearest neighbor is within confusion radius
   NEIGHBOR_FLAG:bool;
+  /// Distance to nearest neighbor (arcseconds)
   NEIGHBOR_DISTANCE:double;
+  /// True if position shift detected between catalogs
   SHIFT_FLAG:bool;
+  /// Position shift magnitude (arcseconds)
   SHIFT:double;
 }
 

@@ -4,6 +4,8 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { linkState } from './linkState.js';
+import { linkType } from './linkType.js';
 
 
 /**
@@ -31,6 +33,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$LKS');
 }
 
+/**
+ * Unique identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,6 +43,9 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * First endpoint on-orbit identifier
+ */
 ID_ON_ORBIT1():string|null
 ID_ON_ORBIT1(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID_ON_ORBIT1(optionalEncoding?:any):string|Uint8Array|null {
@@ -45,27 +53,35 @@ ID_ON_ORBIT1(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * First endpoint satellite catalog number
+ */
+SAT_NO1():number {
+  const offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Second endpoint on-orbit identifier
+ */
 ID_ON_ORBIT2():string|null
 ID_ON_ORBIT2(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID_ON_ORBIT2(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-LINK_START_TIME():string|null
-LINK_START_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-LINK_START_TIME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-LINK_STOP_TIME():string|null
-LINK_STOP_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-LINK_STOP_TIME(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Second endpoint satellite catalog number
+ */
+SAT_NO2():number {
   const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Constellation name
+ */
 CONSTELLATION():string|null
 CONSTELLATION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 CONSTELLATION(optionalEncoding?:any):string|Uint8Array|null {
@@ -73,6 +89,9 @@ CONSTELLATION(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Link name or identifier
+ */
 LINK_NAME():string|null
 LINK_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 LINK_NAME(optionalEncoding?:any):string|Uint8Array|null {
@@ -80,107 +99,158 @@ LINK_NAME(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-LINK_TYPE():string|null
-LINK_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-LINK_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Link type
+ */
+LINK_TYPE():linkType {
   const offset = this.bb!.__offset(this.bb_pos, 18);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : linkType.UPLINK;
 }
 
+/**
+ * Link state
+ */
+LINK_STATE():linkState {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : linkState.ESTABLISHED;
+}
+
+/**
+ * RF band
+ */
 BAND():string|null
 BAND(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 BAND(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-ID_BEAM1():string|null
-ID_BEAM1(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ID_BEAM1(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-END_POINT1_NAME():string|null
-END_POINT1_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-END_POINT1_NAME(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Link start time (ISO 8601)
+ */
+LINK_START_TIME():string|null
+LINK_START_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LINK_START_TIME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-END_POINT1_LAT():number {
+/**
+ * Link stop time (ISO 8601)
+ */
+LINK_STOP_TIME():string|null
+LINK_STOP_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LINK_STOP_TIME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 26);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-END_POINT1_LON():number {
+/**
+ * First endpoint beam identifier
+ */
+ID_BEAM1():string|null
+ID_BEAM1(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ID_BEAM1(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 28);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-ID_BEAM2():string|null
-ID_BEAM2(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ID_BEAM2(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * First endpoint name
+ */
+END_POINT1_NAME():string|null
+END_POINT1_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+END_POINT1_NAME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 30);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-END_POINT2_NAME():string|null
-END_POINT2_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-END_POINT2_NAME(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * First endpoint latitude (degrees)
+ */
+END_POINT1_LAT():number {
   const offset = this.bb!.__offset(this.bb_pos, 32);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-END_POINT2_LAT():number {
+/**
+ * First endpoint longitude (degrees)
+ */
+END_POINT1_LON():number {
   const offset = this.bb!.__offset(this.bb_pos, 34);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-END_POINT2_LON():number {
+/**
+ * Second endpoint beam identifier
+ */
+ID_BEAM2():string|null
+ID_BEAM2(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ID_BEAM2(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 36);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-DATA_RATE1_TO2():number {
+/**
+ * Second endpoint name
+ */
+END_POINT2_NAME():string|null
+END_POINT2_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+END_POINT2_NAME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 38);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-DATA_RATE2_TO1():number {
+/**
+ * Second endpoint latitude (degrees)
+ */
+END_POINT2_LAT():number {
   const offset = this.bb!.__offset(this.bb_pos, 40);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-LINK_STATE():string|null
-LINK_STATE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-LINK_STATE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Second endpoint longitude (degrees)
+ */
+END_POINT2_LON():number {
   const offset = this.bb!.__offset(this.bb_pos, 42);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Data rate from endpoint 1 to 2 (Mbps)
+ */
+DATA_RATE1_TO2():number {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Data rate from endpoint 2 to 1 (Mbps)
+ */
+DATA_RATE2_TO1():number {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * System capability status
+ */
 SYS_CAP():string|null
 SYS_CAP(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 SYS_CAP(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 44);
+  const offset = this.bb!.__offset(this.bb_pos, 48);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Operational capability status
+ */
 OPS_CAP():string|null
 OPS_CAP(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 OPS_CAP(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 46);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-SAT_NO1():number {
-  const offset = this.bb!.__offset(this.bb_pos, 48);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
-}
-
-SAT_NO2():number {
   const offset = this.bb!.__offset(this.bb_pos, 50);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 static startLKS(builder:flatbuffers.Builder) {
@@ -195,16 +265,16 @@ static addIdOnOrbit1(builder:flatbuffers.Builder, ID_ON_ORBIT1Offset:flatbuffers
   builder.addFieldOffset(1, ID_ON_ORBIT1Offset, 0);
 }
 
+static addSatNo1(builder:flatbuffers.Builder, SAT_NO1:number) {
+  builder.addFieldInt32(2, SAT_NO1, 0);
+}
+
 static addIdOnOrbit2(builder:flatbuffers.Builder, ID_ON_ORBIT2Offset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, ID_ON_ORBIT2Offset, 0);
+  builder.addFieldOffset(3, ID_ON_ORBIT2Offset, 0);
 }
 
-static addLinkStartTime(builder:flatbuffers.Builder, LINK_START_TIMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, LINK_START_TIMEOffset, 0);
-}
-
-static addLinkStopTime(builder:flatbuffers.Builder, LINK_STOP_TIMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(4, LINK_STOP_TIMEOffset, 0);
+static addSatNo2(builder:flatbuffers.Builder, SAT_NO2:number) {
+  builder.addFieldInt32(4, SAT_NO2, 0);
 }
 
 static addConstellation(builder:flatbuffers.Builder, CONSTELLATIONOffset:flatbuffers.Offset) {
@@ -215,72 +285,72 @@ static addLinkName(builder:flatbuffers.Builder, LINK_NAMEOffset:flatbuffers.Offs
   builder.addFieldOffset(6, LINK_NAMEOffset, 0);
 }
 
-static addLinkType(builder:flatbuffers.Builder, LINK_TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(7, LINK_TYPEOffset, 0);
+static addLinkType(builder:flatbuffers.Builder, LINK_TYPE:linkType) {
+  builder.addFieldInt8(7, LINK_TYPE, linkType.UPLINK);
+}
+
+static addLinkState(builder:flatbuffers.Builder, LINK_STATE:linkState) {
+  builder.addFieldInt8(8, LINK_STATE, linkState.ESTABLISHED);
 }
 
 static addBand(builder:flatbuffers.Builder, BANDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(8, BANDOffset, 0);
+  builder.addFieldOffset(9, BANDOffset, 0);
+}
+
+static addLinkStartTime(builder:flatbuffers.Builder, LINK_START_TIMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(10, LINK_START_TIMEOffset, 0);
+}
+
+static addLinkStopTime(builder:flatbuffers.Builder, LINK_STOP_TIMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, LINK_STOP_TIMEOffset, 0);
 }
 
 static addIdBeam1(builder:flatbuffers.Builder, ID_BEAM1Offset:flatbuffers.Offset) {
-  builder.addFieldOffset(9, ID_BEAM1Offset, 0);
+  builder.addFieldOffset(12, ID_BEAM1Offset, 0);
 }
 
 static addEndPoint1Name(builder:flatbuffers.Builder, END_POINT1_NAMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(10, END_POINT1_NAMEOffset, 0);
+  builder.addFieldOffset(13, END_POINT1_NAMEOffset, 0);
 }
 
 static addEndPoint1Lat(builder:flatbuffers.Builder, END_POINT1_LAT:number) {
-  builder.addFieldFloat64(11, END_POINT1_LAT, 0.0);
+  builder.addFieldFloat64(14, END_POINT1_LAT, 0.0);
 }
 
 static addEndPoint1Lon(builder:flatbuffers.Builder, END_POINT1_LON:number) {
-  builder.addFieldFloat64(12, END_POINT1_LON, 0.0);
+  builder.addFieldFloat64(15, END_POINT1_LON, 0.0);
 }
 
 static addIdBeam2(builder:flatbuffers.Builder, ID_BEAM2Offset:flatbuffers.Offset) {
-  builder.addFieldOffset(13, ID_BEAM2Offset, 0);
+  builder.addFieldOffset(16, ID_BEAM2Offset, 0);
 }
 
 static addEndPoint2Name(builder:flatbuffers.Builder, END_POINT2_NAMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(14, END_POINT2_NAMEOffset, 0);
+  builder.addFieldOffset(17, END_POINT2_NAMEOffset, 0);
 }
 
 static addEndPoint2Lat(builder:flatbuffers.Builder, END_POINT2_LAT:number) {
-  builder.addFieldFloat64(15, END_POINT2_LAT, 0.0);
+  builder.addFieldFloat64(18, END_POINT2_LAT, 0.0);
 }
 
 static addEndPoint2Lon(builder:flatbuffers.Builder, END_POINT2_LON:number) {
-  builder.addFieldFloat64(16, END_POINT2_LON, 0.0);
+  builder.addFieldFloat64(19, END_POINT2_LON, 0.0);
 }
 
 static addDataRate1To2(builder:flatbuffers.Builder, DATA_RATE1_TO2:number) {
-  builder.addFieldFloat64(17, DATA_RATE1_TO2, 0.0);
+  builder.addFieldFloat64(20, DATA_RATE1_TO2, 0.0);
 }
 
 static addDataRate2To1(builder:flatbuffers.Builder, DATA_RATE2_TO1:number) {
-  builder.addFieldFloat64(18, DATA_RATE2_TO1, 0.0);
-}
-
-static addLinkState(builder:flatbuffers.Builder, LINK_STATEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(19, LINK_STATEOffset, 0);
+  builder.addFieldFloat64(21, DATA_RATE2_TO1, 0.0);
 }
 
 static addSysCap(builder:flatbuffers.Builder, SYS_CAPOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(20, SYS_CAPOffset, 0);
+  builder.addFieldOffset(22, SYS_CAPOffset, 0);
 }
 
 static addOpsCap(builder:flatbuffers.Builder, OPS_CAPOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(21, OPS_CAPOffset, 0);
-}
-
-static addSatNo1(builder:flatbuffers.Builder, SAT_NO1:number) {
-  builder.addFieldInt32(22, SAT_NO1, 0);
-}
-
-static addSatNo2(builder:flatbuffers.Builder, SAT_NO2:number) {
-  builder.addFieldInt32(23, SAT_NO2, 0);
+  builder.addFieldOffset(23, OPS_CAPOffset, 0);
 }
 
 static endLKS(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -296,17 +366,20 @@ static finishSizePrefixedLKSBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$LKS', true);
 }
 
-static createLKS(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ID_ON_ORBIT1Offset:flatbuffers.Offset, ID_ON_ORBIT2Offset:flatbuffers.Offset, LINK_START_TIMEOffset:flatbuffers.Offset, LINK_STOP_TIMEOffset:flatbuffers.Offset, CONSTELLATIONOffset:flatbuffers.Offset, LINK_NAMEOffset:flatbuffers.Offset, LINK_TYPEOffset:flatbuffers.Offset, BANDOffset:flatbuffers.Offset, ID_BEAM1Offset:flatbuffers.Offset, END_POINT1_NAMEOffset:flatbuffers.Offset, END_POINT1_LAT:number, END_POINT1_LON:number, ID_BEAM2Offset:flatbuffers.Offset, END_POINT2_NAMEOffset:flatbuffers.Offset, END_POINT2_LAT:number, END_POINT2_LON:number, DATA_RATE1_TO2:number, DATA_RATE2_TO1:number, LINK_STATEOffset:flatbuffers.Offset, SYS_CAPOffset:flatbuffers.Offset, OPS_CAPOffset:flatbuffers.Offset, SAT_NO1:number, SAT_NO2:number):flatbuffers.Offset {
+static createLKS(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ID_ON_ORBIT1Offset:flatbuffers.Offset, SAT_NO1:number, ID_ON_ORBIT2Offset:flatbuffers.Offset, SAT_NO2:number, CONSTELLATIONOffset:flatbuffers.Offset, LINK_NAMEOffset:flatbuffers.Offset, LINK_TYPE:linkType, LINK_STATE:linkState, BANDOffset:flatbuffers.Offset, LINK_START_TIMEOffset:flatbuffers.Offset, LINK_STOP_TIMEOffset:flatbuffers.Offset, ID_BEAM1Offset:flatbuffers.Offset, END_POINT1_NAMEOffset:flatbuffers.Offset, END_POINT1_LAT:number, END_POINT1_LON:number, ID_BEAM2Offset:flatbuffers.Offset, END_POINT2_NAMEOffset:flatbuffers.Offset, END_POINT2_LAT:number, END_POINT2_LON:number, DATA_RATE1_TO2:number, DATA_RATE2_TO1:number, SYS_CAPOffset:flatbuffers.Offset, OPS_CAPOffset:flatbuffers.Offset):flatbuffers.Offset {
   LKS.startLKS(builder);
   LKS.addId(builder, IDOffset);
   LKS.addIdOnOrbit1(builder, ID_ON_ORBIT1Offset);
+  LKS.addSatNo1(builder, SAT_NO1);
   LKS.addIdOnOrbit2(builder, ID_ON_ORBIT2Offset);
-  LKS.addLinkStartTime(builder, LINK_START_TIMEOffset);
-  LKS.addLinkStopTime(builder, LINK_STOP_TIMEOffset);
+  LKS.addSatNo2(builder, SAT_NO2);
   LKS.addConstellation(builder, CONSTELLATIONOffset);
   LKS.addLinkName(builder, LINK_NAMEOffset);
-  LKS.addLinkType(builder, LINK_TYPEOffset);
+  LKS.addLinkType(builder, LINK_TYPE);
+  LKS.addLinkState(builder, LINK_STATE);
   LKS.addBand(builder, BANDOffset);
+  LKS.addLinkStartTime(builder, LINK_START_TIMEOffset);
+  LKS.addLinkStopTime(builder, LINK_STOP_TIMEOffset);
   LKS.addIdBeam1(builder, ID_BEAM1Offset);
   LKS.addEndPoint1Name(builder, END_POINT1_NAMEOffset);
   LKS.addEndPoint1Lat(builder, END_POINT1_LAT);
@@ -317,11 +390,8 @@ static createLKS(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ID_ON
   LKS.addEndPoint2Lon(builder, END_POINT2_LON);
   LKS.addDataRate1To2(builder, DATA_RATE1_TO2);
   LKS.addDataRate2To1(builder, DATA_RATE2_TO1);
-  LKS.addLinkState(builder, LINK_STATEOffset);
   LKS.addSysCap(builder, SYS_CAPOffset);
   LKS.addOpsCap(builder, OPS_CAPOffset);
-  LKS.addSatNo1(builder, SAT_NO1);
-  LKS.addSatNo2(builder, SAT_NO2);
   return LKS.endLKS(builder);
 }
 
@@ -329,13 +399,16 @@ unpack(): LKST {
   return new LKST(
     this.ID(),
     this.ID_ON_ORBIT1(),
+    this.SAT_NO1(),
     this.ID_ON_ORBIT2(),
-    this.LINK_START_TIME(),
-    this.LINK_STOP_TIME(),
+    this.SAT_NO2(),
     this.CONSTELLATION(),
     this.LINK_NAME(),
     this.LINK_TYPE(),
+    this.LINK_STATE(),
     this.BAND(),
+    this.LINK_START_TIME(),
+    this.LINK_STOP_TIME(),
     this.ID_BEAM1(),
     this.END_POINT1_NAME(),
     this.END_POINT1_LAT(),
@@ -346,11 +419,8 @@ unpack(): LKST {
     this.END_POINT2_LON(),
     this.DATA_RATE1_TO2(),
     this.DATA_RATE2_TO1(),
-    this.LINK_STATE(),
     this.SYS_CAP(),
-    this.OPS_CAP(),
-    this.SAT_NO1(),
-    this.SAT_NO2()
+    this.OPS_CAP()
   );
 }
 
@@ -358,13 +428,16 @@ unpack(): LKST {
 unpackTo(_o: LKST): void {
   _o.ID = this.ID();
   _o.ID_ON_ORBIT1 = this.ID_ON_ORBIT1();
+  _o.SAT_NO1 = this.SAT_NO1();
   _o.ID_ON_ORBIT2 = this.ID_ON_ORBIT2();
-  _o.LINK_START_TIME = this.LINK_START_TIME();
-  _o.LINK_STOP_TIME = this.LINK_STOP_TIME();
+  _o.SAT_NO2 = this.SAT_NO2();
   _o.CONSTELLATION = this.CONSTELLATION();
   _o.LINK_NAME = this.LINK_NAME();
   _o.LINK_TYPE = this.LINK_TYPE();
+  _o.LINK_STATE = this.LINK_STATE();
   _o.BAND = this.BAND();
+  _o.LINK_START_TIME = this.LINK_START_TIME();
+  _o.LINK_STOP_TIME = this.LINK_STOP_TIME();
   _o.ID_BEAM1 = this.ID_BEAM1();
   _o.END_POINT1_NAME = this.END_POINT1_NAME();
   _o.END_POINT1_LAT = this.END_POINT1_LAT();
@@ -375,11 +448,8 @@ unpackTo(_o: LKST): void {
   _o.END_POINT2_LON = this.END_POINT2_LON();
   _o.DATA_RATE1_TO2 = this.DATA_RATE1_TO2();
   _o.DATA_RATE2_TO1 = this.DATA_RATE2_TO1();
-  _o.LINK_STATE = this.LINK_STATE();
   _o.SYS_CAP = this.SYS_CAP();
   _o.OPS_CAP = this.OPS_CAP();
-  _o.SAT_NO1 = this.SAT_NO1();
-  _o.SAT_NO2 = this.SAT_NO2();
 }
 }
 
@@ -387,13 +457,16 @@ export class LKST implements flatbuffers.IGeneratedObject {
 constructor(
   public ID: string|Uint8Array|null = null,
   public ID_ON_ORBIT1: string|Uint8Array|null = null,
+  public SAT_NO1: number = 0,
   public ID_ON_ORBIT2: string|Uint8Array|null = null,
-  public LINK_START_TIME: string|Uint8Array|null = null,
-  public LINK_STOP_TIME: string|Uint8Array|null = null,
+  public SAT_NO2: number = 0,
   public CONSTELLATION: string|Uint8Array|null = null,
   public LINK_NAME: string|Uint8Array|null = null,
-  public LINK_TYPE: string|Uint8Array|null = null,
+  public LINK_TYPE: linkType = linkType.UPLINK,
+  public LINK_STATE: linkState = linkState.ESTABLISHED,
   public BAND: string|Uint8Array|null = null,
+  public LINK_START_TIME: string|Uint8Array|null = null,
+  public LINK_STOP_TIME: string|Uint8Array|null = null,
   public ID_BEAM1: string|Uint8Array|null = null,
   public END_POINT1_NAME: string|Uint8Array|null = null,
   public END_POINT1_LAT: number = 0.0,
@@ -404,11 +477,8 @@ constructor(
   public END_POINT2_LON: number = 0.0,
   public DATA_RATE1_TO2: number = 0.0,
   public DATA_RATE2_TO1: number = 0.0,
-  public LINK_STATE: string|Uint8Array|null = null,
   public SYS_CAP: string|Uint8Array|null = null,
-  public OPS_CAP: string|Uint8Array|null = null,
-  public SAT_NO1: number = 0,
-  public SAT_NO2: number = 0
+  public OPS_CAP: string|Uint8Array|null = null
 ){}
 
 
@@ -416,30 +486,31 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ID = (this.ID !== null ? builder.createString(this.ID!) : 0);
   const ID_ON_ORBIT1 = (this.ID_ON_ORBIT1 !== null ? builder.createString(this.ID_ON_ORBIT1!) : 0);
   const ID_ON_ORBIT2 = (this.ID_ON_ORBIT2 !== null ? builder.createString(this.ID_ON_ORBIT2!) : 0);
-  const LINK_START_TIME = (this.LINK_START_TIME !== null ? builder.createString(this.LINK_START_TIME!) : 0);
-  const LINK_STOP_TIME = (this.LINK_STOP_TIME !== null ? builder.createString(this.LINK_STOP_TIME!) : 0);
   const CONSTELLATION = (this.CONSTELLATION !== null ? builder.createString(this.CONSTELLATION!) : 0);
   const LINK_NAME = (this.LINK_NAME !== null ? builder.createString(this.LINK_NAME!) : 0);
-  const LINK_TYPE = (this.LINK_TYPE !== null ? builder.createString(this.LINK_TYPE!) : 0);
   const BAND = (this.BAND !== null ? builder.createString(this.BAND!) : 0);
+  const LINK_START_TIME = (this.LINK_START_TIME !== null ? builder.createString(this.LINK_START_TIME!) : 0);
+  const LINK_STOP_TIME = (this.LINK_STOP_TIME !== null ? builder.createString(this.LINK_STOP_TIME!) : 0);
   const ID_BEAM1 = (this.ID_BEAM1 !== null ? builder.createString(this.ID_BEAM1!) : 0);
   const END_POINT1_NAME = (this.END_POINT1_NAME !== null ? builder.createString(this.END_POINT1_NAME!) : 0);
   const ID_BEAM2 = (this.ID_BEAM2 !== null ? builder.createString(this.ID_BEAM2!) : 0);
   const END_POINT2_NAME = (this.END_POINT2_NAME !== null ? builder.createString(this.END_POINT2_NAME!) : 0);
-  const LINK_STATE = (this.LINK_STATE !== null ? builder.createString(this.LINK_STATE!) : 0);
   const SYS_CAP = (this.SYS_CAP !== null ? builder.createString(this.SYS_CAP!) : 0);
   const OPS_CAP = (this.OPS_CAP !== null ? builder.createString(this.OPS_CAP!) : 0);
 
   return LKS.createLKS(builder,
     ID,
     ID_ON_ORBIT1,
+    this.SAT_NO1,
     ID_ON_ORBIT2,
-    LINK_START_TIME,
-    LINK_STOP_TIME,
+    this.SAT_NO2,
     CONSTELLATION,
     LINK_NAME,
-    LINK_TYPE,
+    this.LINK_TYPE,
+    this.LINK_STATE,
     BAND,
+    LINK_START_TIME,
+    LINK_STOP_TIME,
     ID_BEAM1,
     END_POINT1_NAME,
     this.END_POINT1_LAT,
@@ -450,11 +521,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.END_POINT2_LON,
     this.DATA_RATE1_TO2,
     this.DATA_RATE2_TO1,
-    LINK_STATE,
     SYS_CAP,
-    OPS_CAP,
-    this.SAT_NO1,
-    this.SAT_NO2
+    OPS_CAP
   );
 }
 }

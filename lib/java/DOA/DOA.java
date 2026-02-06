@@ -18,7 +18,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Difference of Arrival
+ * Difference of Arrival Geolocation
  */
 @SuppressWarnings("unused")
 public final class DOA extends Table {
@@ -29,142 +29,245 @@ public final class DOA extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public DOA __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * Observation time (ISO 8601)
+   */
   public String OB_TIME() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer OB_TIMEAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer OB_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
-  public String ID_SENSOR1() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ID_SENSOR1AsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
-  public ByteBuffer ID_SENSOR1InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
-  public String ID_SENSOR2() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ID_SENSOR2AsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
-  public ByteBuffer ID_SENSOR2InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
-  public int SAT_NO() { int o = __offset(12); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public String TASK_ID() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer TASK_IDAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
-  public ByteBuffer TASK_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
-  public String ORIG_OBJECT_ID() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ORIG_OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
-  public ByteBuffer ORIG_OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
-  public String ORIG_SENSOR_ID1() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ORIG_SENSOR_ID1AsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
-  public ByteBuffer ORIG_SENSOR_ID1InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
-  public String ORIG_SENSOR_ID2() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ORIG_SENSOR_ID2AsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
-  public ByteBuffer ORIG_SENSOR_ID2InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
-  public boolean UCT() { int o = __offset(22); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public double SENSOR1_DELAY() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double SENSOR2_DELAY() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double SENLAT() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double SENLON() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double SENALT() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double SEN2LAT() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double SEN2LON() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double SEN2ALT() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double FREQUENCY() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double BANDWIDTH() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double DELTA_RANGE() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double DELTA_RANGE_UNC() { int o = __offset(46); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double DELTA_RANGE_RATE() { int o = __offset(48); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double DELTA_RANGE_RATE_UNC() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double SNR() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double TDOA() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double TDOA_UNC() { int o = __offset(56); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double FDOA() { int o = __offset(58); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double FDOA_UNC() { int o = __offset(60); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String COLLECTION_MODE() { int o = __offset(62); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer COLLECTION_MODEAsByteBuffer() { return __vector_as_bytebuffer(62, 1); }
-  public ByteBuffer COLLECTION_MODEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 62, 1); }
-  public String RAW_FILE_URI() { int o = __offset(64); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer RAW_FILE_URIAsByteBuffer() { return __vector_as_bytebuffer(64, 1); }
-  public ByteBuffer RAW_FILE_URIInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 64, 1); }
-  public String TAGS(int j) { int o = __offset(66); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int TAGSLength() { int o = __offset(66); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector tagsVector() { return tagsVector(new StringVector()); }
-  public StringVector tagsVector(StringVector obj) { int o = __offset(66); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String ON_ORBIT() { int o = __offset(68); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ON_ORBITAsByteBuffer() { return __vector_as_bytebuffer(68, 1); }
-  public ByteBuffer ON_ORBITInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 68, 1); }
+  /**
+   * Satellite catalog number
+   */
+  public long SAT_NO() { int o = __offset(8); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * International designator
+   */
+  public String ORIG_OBJECT_ID() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ORIG_OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer ORIG_OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * On-orbit reference
+   */
+  public String ON_ORBIT() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ON_ORBITAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer ON_ORBITInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * True if uncorrelated target
+   */
+  public boolean UCT() { int o = __offset(14); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Task identifier
+   */
+  public String TASK_ID() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TASK_IDAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
+  public ByteBuffer TASK_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  /**
+   * Transaction identifier
+   */
+  public String TRANSACTION_ID() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TRANSACTION_IDAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
+  public ByteBuffer TRANSACTION_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
+  /**
+   * Collection mode
+   */
+  public byte COLLECTION_MODE() { int o = __offset(20); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Sensor 1 identifier
+   */
+  public String ID_SENSOR1() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ID_SENSOR1AsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
+  public ByteBuffer ID_SENSOR1InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
+  /**
+   * Sensor 1 original identifier
+   */
+  public String ORIG_SENSOR_ID1() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ORIG_SENSOR_ID1AsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
+  public ByteBuffer ORIG_SENSOR_ID1InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
+  /**
+   * Sensor 1 latitude (degrees)
+   */
+  public double SENLAT() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sensor 1 longitude (degrees)
+   */
+  public double SENLON() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sensor 1 altitude (km)
+   */
+  public double SENALT() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sensor 1 processing delay (seconds)
+   */
+  public double SENSOR1_DELAY() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sensor 2 identifier
+   */
+  public String ID_SENSOR2() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ID_SENSOR2AsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
+  public ByteBuffer ID_SENSOR2InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  /**
+   * Sensor 2 original identifier
+   */
+  public String ORIG_SENSOR_ID2() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ORIG_SENSOR_ID2AsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
+  public ByteBuffer ORIG_SENSOR_ID2InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
+  /**
+   * Sensor 2 latitude (degrees)
+   */
+  public double SEN2LAT() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sensor 2 longitude (degrees)
+   */
+  public double SEN2LON() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sensor 2 altitude (km)
+   */
+  public double SEN2ALT() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sensor 2 processing delay (seconds)
+   */
+  public double SENSOR2_DELAY() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Measured frequency (MHz)
+   */
+  public double FREQUENCY() { int o = __offset(46); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Measurement bandwidth (MHz)
+   */
+  public double BANDWIDTH() { int o = __offset(48); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Signal-to-noise ratio (dB)
+   */
+  public double SNR() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Differential range (km)
+   */
+  public double DELTA_RANGE() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Differential range uncertainty (km, 1-sigma)
+   */
+  public double DELTA_RANGE_UNC() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Differential range rate (km/s)
+   */
+  public double DELTA_RANGE_RATE() { int o = __offset(56); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Differential range rate uncertainty (km/s, 1-sigma)
+   */
+  public double DELTA_RANGE_RATE_UNC() { int o = __offset(58); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Time difference of arrival (seconds)
+   */
+  public double TDOA() { int o = __offset(60); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * TDOA uncertainty (seconds, 1-sigma)
+   */
+  public double TDOA_UNC() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Frequency difference of arrival (Hz)
+   */
+  public double FDOA() { int o = __offset(64); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * FDOA uncertainty (Hz, 1-sigma)
+   */
+  public double FDOA_UNC() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Reference to raw data file
+   */
+  public String RAW_FILE_URI() { int o = __offset(68); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer RAW_FILE_URIAsByteBuffer() { return __vector_as_bytebuffer(68, 1); }
+  public ByteBuffer RAW_FILE_URIInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 68, 1); }
+  /**
+   * Event descriptor
+   */
   public String DESCRIPTOR() { int o = __offset(70); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer DESCRIPTORAsByteBuffer() { return __vector_as_bytebuffer(70, 1); }
   public ByteBuffer DESCRIPTORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 70, 1); }
-  public String TRANSACTION_ID() { int o = __offset(72); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer TRANSACTION_IDAsByteBuffer() { return __vector_as_bytebuffer(72, 1); }
-  public ByteBuffer TRANSACTION_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 72, 1); }
+  /**
+   * Associated tags
+   */
+  public String TAGS(int j) { int o = __offset(72); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int TAGSLength() { int o = __offset(72); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector tagsVector() { return tagsVector(new StringVector()); }
+  public StringVector tagsVector(StringVector obj) { int o = __offset(72); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createDOA(FlatBufferBuilder builder,
       int IDOffset,
       int OB_TIMEOffset,
-      int ID_SENSOR1Offset,
-      int ID_SENSOR2Offset,
-      int SAT_NO,
-      int TASK_IDOffset,
+      long SAT_NO,
       int ORIG_OBJECT_IDOffset,
-      int ORIG_SENSOR_ID1Offset,
-      int ORIG_SENSOR_ID2Offset,
+      int ON_ORBITOffset,
       boolean UCT,
-      double SENSOR1_DELAY,
-      double SENSOR2_DELAY,
+      int TASK_IDOffset,
+      int TRANSACTION_IDOffset,
+      byte COLLECTION_MODE,
+      int ID_SENSOR1Offset,
+      int ORIG_SENSOR_ID1Offset,
       double SENLAT,
       double SENLON,
       double SENALT,
+      double SENSOR1_DELAY,
+      int ID_SENSOR2Offset,
+      int ORIG_SENSOR_ID2Offset,
       double SEN2LAT,
       double SEN2LON,
       double SEN2ALT,
+      double SENSOR2_DELAY,
       double FREQUENCY,
       double BANDWIDTH,
+      double SNR,
       double DELTA_RANGE,
       double DELTA_RANGE_UNC,
       double DELTA_RANGE_RATE,
       double DELTA_RANGE_RATE_UNC,
-      double SNR,
       double TDOA,
       double TDOA_UNC,
       double FDOA,
       double FDOA_UNC,
-      int COLLECTION_MODEOffset,
       int RAW_FILE_URIOffset,
-      int TAGSOffset,
-      int ON_ORBITOffset,
       int DESCRIPTOROffset,
-      int TRANSACTION_IDOffset) {
+      int TAGSOffset) {
     builder.startTable(35);
     DOA.addFdoaUnc(builder, FDOA_UNC);
     DOA.addFdoa(builder, FDOA);
     DOA.addTdoaUnc(builder, TDOA_UNC);
     DOA.addTdoa(builder, TDOA);
-    DOA.addSnr(builder, SNR);
     DOA.addDeltaRangeRateUnc(builder, DELTA_RANGE_RATE_UNC);
     DOA.addDeltaRangeRate(builder, DELTA_RANGE_RATE);
     DOA.addDeltaRangeUnc(builder, DELTA_RANGE_UNC);
     DOA.addDeltaRange(builder, DELTA_RANGE);
+    DOA.addSnr(builder, SNR);
     DOA.addBandwidth(builder, BANDWIDTH);
     DOA.addFrequency(builder, FREQUENCY);
+    DOA.addSensor2Delay(builder, SENSOR2_DELAY);
     DOA.addSen2Alt(builder, SEN2ALT);
     DOA.addSen2Lon(builder, SEN2LON);
     DOA.addSen2Lat(builder, SEN2LAT);
+    DOA.addSensor1Delay(builder, SENSOR1_DELAY);
     DOA.addSenalt(builder, SENALT);
     DOA.addSenlon(builder, SENLON);
     DOA.addSenlat(builder, SENLAT);
-    DOA.addSensor2Delay(builder, SENSOR2_DELAY);
-    DOA.addSensor1Delay(builder, SENSOR1_DELAY);
-    DOA.addTransactionId(builder, TRANSACTION_IDOffset);
-    DOA.addDescriptor(builder, DESCRIPTOROffset);
-    DOA.addOnOrbit(builder, ON_ORBITOffset);
     DOA.addTags(builder, TAGSOffset);
+    DOA.addDescriptor(builder, DESCRIPTOROffset);
     DOA.addRawFileUri(builder, RAW_FILE_URIOffset);
-    DOA.addCollectionMode(builder, COLLECTION_MODEOffset);
     DOA.addOrigSensorId2(builder, ORIG_SENSOR_ID2Offset);
-    DOA.addOrigSensorId1(builder, ORIG_SENSOR_ID1Offset);
-    DOA.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
-    DOA.addTaskId(builder, TASK_IDOffset);
-    DOA.addSatNo(builder, SAT_NO);
     DOA.addIdSensor2(builder, ID_SENSOR2Offset);
+    DOA.addOrigSensorId1(builder, ORIG_SENSOR_ID1Offset);
     DOA.addIdSensor1(builder, ID_SENSOR1Offset);
+    DOA.addTransactionId(builder, TRANSACTION_IDOffset);
+    DOA.addTaskId(builder, TASK_IDOffset);
+    DOA.addOnOrbit(builder, ON_ORBITOffset);
+    DOA.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
+    DOA.addSatNo(builder, SAT_NO);
     DOA.addObTime(builder, OB_TIMEOffset);
     DOA.addId(builder, IDOffset);
+    DOA.addCollectionMode(builder, COLLECTION_MODE);
     DOA.addUct(builder, UCT);
     return DOA.endDOA(builder);
   }
@@ -172,41 +275,41 @@ public final class DOA extends Table {
   public static void startDOA(FlatBufferBuilder builder) { builder.startTable(35); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addObTime(FlatBufferBuilder builder, int OB_TIMEOffset) { builder.addOffset(1, OB_TIMEOffset, 0); }
-  public static void addIdSensor1(FlatBufferBuilder builder, int ID_SENSOR1Offset) { builder.addOffset(2, ID_SENSOR1Offset, 0); }
-  public static void addIdSensor2(FlatBufferBuilder builder, int ID_SENSOR2Offset) { builder.addOffset(3, ID_SENSOR2Offset, 0); }
-  public static void addSatNo(FlatBufferBuilder builder, int SAT_NO) { builder.addInt(4, SAT_NO, 0); }
-  public static void addTaskId(FlatBufferBuilder builder, int TASK_IDOffset) { builder.addOffset(5, TASK_IDOffset, 0); }
-  public static void addOrigObjectId(FlatBufferBuilder builder, int ORIG_OBJECT_IDOffset) { builder.addOffset(6, ORIG_OBJECT_IDOffset, 0); }
-  public static void addOrigSensorId1(FlatBufferBuilder builder, int ORIG_SENSOR_ID1Offset) { builder.addOffset(7, ORIG_SENSOR_ID1Offset, 0); }
-  public static void addOrigSensorId2(FlatBufferBuilder builder, int ORIG_SENSOR_ID2Offset) { builder.addOffset(8, ORIG_SENSOR_ID2Offset, 0); }
-  public static void addUct(FlatBufferBuilder builder, boolean UCT) { builder.addBoolean(9, UCT, false); }
-  public static void addSensor1Delay(FlatBufferBuilder builder, double SENSOR1_DELAY) { builder.addDouble(10, SENSOR1_DELAY, 0.0); }
-  public static void addSensor2Delay(FlatBufferBuilder builder, double SENSOR2_DELAY) { builder.addDouble(11, SENSOR2_DELAY, 0.0); }
-  public static void addSenlat(FlatBufferBuilder builder, double SENLAT) { builder.addDouble(12, SENLAT, 0.0); }
-  public static void addSenlon(FlatBufferBuilder builder, double SENLON) { builder.addDouble(13, SENLON, 0.0); }
-  public static void addSenalt(FlatBufferBuilder builder, double SENALT) { builder.addDouble(14, SENALT, 0.0); }
-  public static void addSen2Lat(FlatBufferBuilder builder, double SEN2LAT) { builder.addDouble(15, SEN2LAT, 0.0); }
-  public static void addSen2Lon(FlatBufferBuilder builder, double SEN2LON) { builder.addDouble(16, SEN2LON, 0.0); }
-  public static void addSen2Alt(FlatBufferBuilder builder, double SEN2ALT) { builder.addDouble(17, SEN2ALT, 0.0); }
-  public static void addFrequency(FlatBufferBuilder builder, double FREQUENCY) { builder.addDouble(18, FREQUENCY, 0.0); }
-  public static void addBandwidth(FlatBufferBuilder builder, double BANDWIDTH) { builder.addDouble(19, BANDWIDTH, 0.0); }
-  public static void addDeltaRange(FlatBufferBuilder builder, double DELTA_RANGE) { builder.addDouble(20, DELTA_RANGE, 0.0); }
-  public static void addDeltaRangeUnc(FlatBufferBuilder builder, double DELTA_RANGE_UNC) { builder.addDouble(21, DELTA_RANGE_UNC, 0.0); }
-  public static void addDeltaRangeRate(FlatBufferBuilder builder, double DELTA_RANGE_RATE) { builder.addDouble(22, DELTA_RANGE_RATE, 0.0); }
-  public static void addDeltaRangeRateUnc(FlatBufferBuilder builder, double DELTA_RANGE_RATE_UNC) { builder.addDouble(23, DELTA_RANGE_RATE_UNC, 0.0); }
-  public static void addSnr(FlatBufferBuilder builder, double SNR) { builder.addDouble(24, SNR, 0.0); }
-  public static void addTdoa(FlatBufferBuilder builder, double TDOA) { builder.addDouble(25, TDOA, 0.0); }
-  public static void addTdoaUnc(FlatBufferBuilder builder, double TDOA_UNC) { builder.addDouble(26, TDOA_UNC, 0.0); }
-  public static void addFdoa(FlatBufferBuilder builder, double FDOA) { builder.addDouble(27, FDOA, 0.0); }
-  public static void addFdoaUnc(FlatBufferBuilder builder, double FDOA_UNC) { builder.addDouble(28, FDOA_UNC, 0.0); }
-  public static void addCollectionMode(FlatBufferBuilder builder, int COLLECTION_MODEOffset) { builder.addOffset(29, COLLECTION_MODEOffset, 0); }
-  public static void addRawFileUri(FlatBufferBuilder builder, int RAW_FILE_URIOffset) { builder.addOffset(30, RAW_FILE_URIOffset, 0); }
-  public static void addTags(FlatBufferBuilder builder, int TAGSOffset) { builder.addOffset(31, TAGSOffset, 0); }
+  public static void addSatNo(FlatBufferBuilder builder, long SAT_NO) { builder.addInt(2, (int) SAT_NO, (int) 0L); }
+  public static void addOrigObjectId(FlatBufferBuilder builder, int ORIG_OBJECT_IDOffset) { builder.addOffset(3, ORIG_OBJECT_IDOffset, 0); }
+  public static void addOnOrbit(FlatBufferBuilder builder, int ON_ORBITOffset) { builder.addOffset(4, ON_ORBITOffset, 0); }
+  public static void addUct(FlatBufferBuilder builder, boolean UCT) { builder.addBoolean(5, UCT, false); }
+  public static void addTaskId(FlatBufferBuilder builder, int TASK_IDOffset) { builder.addOffset(6, TASK_IDOffset, 0); }
+  public static void addTransactionId(FlatBufferBuilder builder, int TRANSACTION_IDOffset) { builder.addOffset(7, TRANSACTION_IDOffset, 0); }
+  public static void addCollectionMode(FlatBufferBuilder builder, byte COLLECTION_MODE) { builder.addByte(8, COLLECTION_MODE, 0); }
+  public static void addIdSensor1(FlatBufferBuilder builder, int ID_SENSOR1Offset) { builder.addOffset(9, ID_SENSOR1Offset, 0); }
+  public static void addOrigSensorId1(FlatBufferBuilder builder, int ORIG_SENSOR_ID1Offset) { builder.addOffset(10, ORIG_SENSOR_ID1Offset, 0); }
+  public static void addSenlat(FlatBufferBuilder builder, double SENLAT) { builder.addDouble(11, SENLAT, 0.0); }
+  public static void addSenlon(FlatBufferBuilder builder, double SENLON) { builder.addDouble(12, SENLON, 0.0); }
+  public static void addSenalt(FlatBufferBuilder builder, double SENALT) { builder.addDouble(13, SENALT, 0.0); }
+  public static void addSensor1Delay(FlatBufferBuilder builder, double SENSOR1_DELAY) { builder.addDouble(14, SENSOR1_DELAY, 0.0); }
+  public static void addIdSensor2(FlatBufferBuilder builder, int ID_SENSOR2Offset) { builder.addOffset(15, ID_SENSOR2Offset, 0); }
+  public static void addOrigSensorId2(FlatBufferBuilder builder, int ORIG_SENSOR_ID2Offset) { builder.addOffset(16, ORIG_SENSOR_ID2Offset, 0); }
+  public static void addSen2Lat(FlatBufferBuilder builder, double SEN2LAT) { builder.addDouble(17, SEN2LAT, 0.0); }
+  public static void addSen2Lon(FlatBufferBuilder builder, double SEN2LON) { builder.addDouble(18, SEN2LON, 0.0); }
+  public static void addSen2Alt(FlatBufferBuilder builder, double SEN2ALT) { builder.addDouble(19, SEN2ALT, 0.0); }
+  public static void addSensor2Delay(FlatBufferBuilder builder, double SENSOR2_DELAY) { builder.addDouble(20, SENSOR2_DELAY, 0.0); }
+  public static void addFrequency(FlatBufferBuilder builder, double FREQUENCY) { builder.addDouble(21, FREQUENCY, 0.0); }
+  public static void addBandwidth(FlatBufferBuilder builder, double BANDWIDTH) { builder.addDouble(22, BANDWIDTH, 0.0); }
+  public static void addSnr(FlatBufferBuilder builder, double SNR) { builder.addDouble(23, SNR, 0.0); }
+  public static void addDeltaRange(FlatBufferBuilder builder, double DELTA_RANGE) { builder.addDouble(24, DELTA_RANGE, 0.0); }
+  public static void addDeltaRangeUnc(FlatBufferBuilder builder, double DELTA_RANGE_UNC) { builder.addDouble(25, DELTA_RANGE_UNC, 0.0); }
+  public static void addDeltaRangeRate(FlatBufferBuilder builder, double DELTA_RANGE_RATE) { builder.addDouble(26, DELTA_RANGE_RATE, 0.0); }
+  public static void addDeltaRangeRateUnc(FlatBufferBuilder builder, double DELTA_RANGE_RATE_UNC) { builder.addDouble(27, DELTA_RANGE_RATE_UNC, 0.0); }
+  public static void addTdoa(FlatBufferBuilder builder, double TDOA) { builder.addDouble(28, TDOA, 0.0); }
+  public static void addTdoaUnc(FlatBufferBuilder builder, double TDOA_UNC) { builder.addDouble(29, TDOA_UNC, 0.0); }
+  public static void addFdoa(FlatBufferBuilder builder, double FDOA) { builder.addDouble(30, FDOA, 0.0); }
+  public static void addFdoaUnc(FlatBufferBuilder builder, double FDOA_UNC) { builder.addDouble(31, FDOA_UNC, 0.0); }
+  public static void addRawFileUri(FlatBufferBuilder builder, int RAW_FILE_URIOffset) { builder.addOffset(32, RAW_FILE_URIOffset, 0); }
+  public static void addDescriptor(FlatBufferBuilder builder, int DESCRIPTOROffset) { builder.addOffset(33, DESCRIPTOROffset, 0); }
+  public static void addTags(FlatBufferBuilder builder, int TAGSOffset) { builder.addOffset(34, TAGSOffset, 0); }
   public static int createTagsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startTagsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addOnOrbit(FlatBufferBuilder builder, int ON_ORBITOffset) { builder.addOffset(32, ON_ORBITOffset, 0); }
-  public static void addDescriptor(FlatBufferBuilder builder, int DESCRIPTOROffset) { builder.addOffset(33, DESCRIPTOROffset, 0); }
-  public static void addTransactionId(FlatBufferBuilder builder, int TRANSACTION_IDOffset) { builder.addOffset(34, TRANSACTION_IDOffset, 0); }
   public static int endDOA(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

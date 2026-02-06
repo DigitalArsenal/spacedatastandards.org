@@ -5,6 +5,503 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class ReentryDisposition {
+  final int value;
+  const ReentryDisposition._(this.value);
+
+  factory ReentryDisposition.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum ReentryDisposition');
+    }
+    return result;
+  }
+
+  static ReentryDisposition? _createOrNull(int? value) => 
+      value == null ? null : ReentryDisposition.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const ReentryDisposition CONTROLLED = ReentryDisposition._(0);
+  static const ReentryDisposition UNCONTROLLED = ReentryDisposition._(1);
+  static const ReentryDisposition SEMI_CONTROLLED = ReentryDisposition._(2);
+  static const Map<int, ReentryDisposition> values = {
+    0: CONTROLLED,
+    1: UNCONTROLLED,
+    2: SEMI_CONTROLLED};
+
+  static const fb.Reader<ReentryDisposition> reader = _ReentryDispositionReader();
+
+  @override
+  String toString() {
+    return 'ReentryDisposition{value: $value}';
+  }
+}
+
+class _ReentryDispositionReader extends fb.Reader<ReentryDisposition> {
+  const _ReentryDispositionReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  ReentryDisposition read(fb.BufferContext bc, int offset) =>
+      ReentryDisposition.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class ReentryReason {
+  final int value;
+  const ReentryReason._(this.value);
+
+  factory ReentryReason.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum ReentryReason');
+    }
+    return result;
+  }
+
+  static ReentryReason? _createOrNull(int? value) => 
+      value == null ? null : ReentryReason.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 5;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const ReentryReason NATURAL_DECAY = ReentryReason._(0);
+  static const ReentryReason COMMANDED_DEORBIT = ReentryReason._(1);
+  static const ReentryReason PROPULSION_FAILURE = ReentryReason._(2);
+  static const ReentryReason COLLISION = ReentryReason._(3);
+  static const ReentryReason FRAGMENTATION = ReentryReason._(4);
+  static const ReentryReason UNKNOWN = ReentryReason._(5);
+  static const Map<int, ReentryReason> values = {
+    0: NATURAL_DECAY,
+    1: COMMANDED_DEORBIT,
+    2: PROPULSION_FAILURE,
+    3: COLLISION,
+    4: FRAGMENTATION,
+    5: UNKNOWN};
+
+  static const fb.Reader<ReentryReason> reader = _ReentryReasonReader();
+
+  @override
+  String toString() {
+    return 'ReentryReason{value: $value}';
+  }
+}
+
+class _ReentryReasonReader extends fb.Reader<ReentryReason> {
+  const _ReentryReasonReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  ReentryReason read(fb.BufferContext bc, int offset) =>
+      ReentryReason.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Reentry State Vector
+class ReentryStateVector {
+  ReentryStateVector._(this._bc, this._bcOffset);
+  factory ReentryStateVector(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<ReentryStateVector> reader = _ReentryStateVectorReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Epoch (ISO 8601)
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Reference frame
+  String? get REF_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Position X in km
+  double get X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Position Y in km
+  double get Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  Position Z in km
+  double get Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  Velocity X in km/s
+  double get X_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  ///  Velocity Y in km/s
+  double get Y_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Velocity Z in km/s
+  double get Z_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+
+  @override
+  String toString() {
+    return 'ReentryStateVector{EPOCH: ${EPOCH}, REF_FRAME: ${REF_FRAME}, X: ${X}, Y: ${Y}, Z: ${Z}, X_DOT: ${X_DOT}, Y_DOT: ${Y_DOT}, Z_DOT: ${Z_DOT}}';
+  }
+}
+
+class _ReentryStateVectorReader extends fb.TableReader<ReentryStateVector> {
+  const _ReentryStateVectorReader();
+
+  @override
+  ReentryStateVector createObject(fb.BufferContext bc, int offset) => 
+    ReentryStateVector._(bc, offset);
+}
+
+class ReentryStateVectorBuilder {
+  ReentryStateVectorBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(8);
+  }
+
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addRefFrameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addX(double? X) {
+    fbBuilder.addFloat64(2, X);
+    return fbBuilder.offset;
+  }
+  int addY(double? Y) {
+    fbBuilder.addFloat64(3, Y);
+    return fbBuilder.offset;
+  }
+  int addZ(double? Z) {
+    fbBuilder.addFloat64(4, Z);
+    return fbBuilder.offset;
+  }
+  int addXDot(double? X_DOT) {
+    fbBuilder.addFloat64(5, X_DOT);
+    return fbBuilder.offset;
+  }
+  int addYDot(double? Y_DOT) {
+    fbBuilder.addFloat64(6, Y_DOT);
+    return fbBuilder.offset;
+  }
+  int addZDot(double? Z_DOT) {
+    fbBuilder.addFloat64(7, Z_DOT);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class ReentryStateVectorObjectBuilder extends fb.ObjectBuilder {
+  final String? _EPOCH;
+  final String? _REF_FRAME;
+  final double? _X;
+  final double? _Y;
+  final double? _Z;
+  final double? _X_DOT;
+  final double? _Y_DOT;
+  final double? _Z_DOT;
+
+  ReentryStateVectorObjectBuilder({
+    String? EPOCH,
+    String? REF_FRAME,
+    double? X,
+    double? Y,
+    double? Z,
+    double? X_DOT,
+    double? Y_DOT,
+    double? Z_DOT,
+  })
+      : _EPOCH = EPOCH,
+        _REF_FRAME = REF_FRAME,
+        _X = X,
+        _Y = Y,
+        _Z = Z,
+        _X_DOT = X_DOT,
+        _Y_DOT = Y_DOT,
+        _Z_DOT = Z_DOT;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    final int? REF_FRAMEOffset = _REF_FRAME == null ? null
+        : fbBuilder.writeString(_REF_FRAME!);
+    fbBuilder.startTable(8);
+    fbBuilder.addOffset(0, EPOCHOffset);
+    fbBuilder.addOffset(1, REF_FRAMEOffset);
+    fbBuilder.addFloat64(2, _X);
+    fbBuilder.addFloat64(3, _Y);
+    fbBuilder.addFloat64(4, _Z);
+    fbBuilder.addFloat64(5, _X_DOT);
+    fbBuilder.addFloat64(6, _Y_DOT);
+    fbBuilder.addFloat64(7, _Z_DOT);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Reentry Ground Impact Prediction
+class ReentryImpact {
+  ReentryImpact._(this._bc, this._bcOffset);
+  factory ReentryImpact(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<ReentryImpact> reader = _ReentryImpactReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Predicted impact epoch (ISO 8601)
+  String? get IMPACT_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Epoch uncertainty window in seconds
+  double get EPOCH_UNCERTAINTY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Impact latitude in degrees
+  double get LATITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Impact longitude in degrees
+  double get LONGITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  Along-track uncertainty in km
+  double get ALONG_TRACK_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  Cross-track uncertainty in km
+  double get CROSS_TRACK_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  ///  Impact probability (0.0-1.0)
+  double get IMPACT_PROBABILITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+
+  @override
+  String toString() {
+    return 'ReentryImpact{IMPACT_EPOCH: ${IMPACT_EPOCH}, EPOCH_UNCERTAINTY: ${EPOCH_UNCERTAINTY}, LATITUDE: ${LATITUDE}, LONGITUDE: ${LONGITUDE}, ALONG_TRACK_UNC: ${ALONG_TRACK_UNC}, CROSS_TRACK_UNC: ${CROSS_TRACK_UNC}, IMPACT_PROBABILITY: ${IMPACT_PROBABILITY}}';
+  }
+}
+
+class _ReentryImpactReader extends fb.TableReader<ReentryImpact> {
+  const _ReentryImpactReader();
+
+  @override
+  ReentryImpact createObject(fb.BufferContext bc, int offset) => 
+    ReentryImpact._(bc, offset);
+}
+
+class ReentryImpactBuilder {
+  ReentryImpactBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(7);
+  }
+
+  int addImpactEpochOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addEpochUncertainty(double? EPOCH_UNCERTAINTY) {
+    fbBuilder.addFloat64(1, EPOCH_UNCERTAINTY);
+    return fbBuilder.offset;
+  }
+  int addLatitude(double? LATITUDE) {
+    fbBuilder.addFloat64(2, LATITUDE);
+    return fbBuilder.offset;
+  }
+  int addLongitude(double? LONGITUDE) {
+    fbBuilder.addFloat64(3, LONGITUDE);
+    return fbBuilder.offset;
+  }
+  int addAlongTrackUnc(double? ALONG_TRACK_UNC) {
+    fbBuilder.addFloat64(4, ALONG_TRACK_UNC);
+    return fbBuilder.offset;
+  }
+  int addCrossTrackUnc(double? CROSS_TRACK_UNC) {
+    fbBuilder.addFloat64(5, CROSS_TRACK_UNC);
+    return fbBuilder.offset;
+  }
+  int addImpactProbability(double? IMPACT_PROBABILITY) {
+    fbBuilder.addFloat64(6, IMPACT_PROBABILITY);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class ReentryImpactObjectBuilder extends fb.ObjectBuilder {
+  final String? _IMPACT_EPOCH;
+  final double? _EPOCH_UNCERTAINTY;
+  final double? _LATITUDE;
+  final double? _LONGITUDE;
+  final double? _ALONG_TRACK_UNC;
+  final double? _CROSS_TRACK_UNC;
+  final double? _IMPACT_PROBABILITY;
+
+  ReentryImpactObjectBuilder({
+    String? IMPACT_EPOCH,
+    double? EPOCH_UNCERTAINTY,
+    double? LATITUDE,
+    double? LONGITUDE,
+    double? ALONG_TRACK_UNC,
+    double? CROSS_TRACK_UNC,
+    double? IMPACT_PROBABILITY,
+  })
+      : _IMPACT_EPOCH = IMPACT_EPOCH,
+        _EPOCH_UNCERTAINTY = EPOCH_UNCERTAINTY,
+        _LATITUDE = LATITUDE,
+        _LONGITUDE = LONGITUDE,
+        _ALONG_TRACK_UNC = ALONG_TRACK_UNC,
+        _CROSS_TRACK_UNC = CROSS_TRACK_UNC,
+        _IMPACT_PROBABILITY = IMPACT_PROBABILITY;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? IMPACT_EPOCHOffset = _IMPACT_EPOCH == null ? null
+        : fbBuilder.writeString(_IMPACT_EPOCH!);
+    fbBuilder.startTable(7);
+    fbBuilder.addOffset(0, IMPACT_EPOCHOffset);
+    fbBuilder.addFloat64(1, _EPOCH_UNCERTAINTY);
+    fbBuilder.addFloat64(2, _LATITUDE);
+    fbBuilder.addFloat64(3, _LONGITUDE);
+    fbBuilder.addFloat64(4, _ALONG_TRACK_UNC);
+    fbBuilder.addFloat64(5, _CROSS_TRACK_UNC);
+    fbBuilder.addFloat64(6, _IMPACT_PROBABILITY);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Surviving Debris Prediction
+class SurvivingDebris {
+  SurvivingDebris._(this._bc, this._bcOffset);
+  factory SurvivingDebris(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<SurvivingDebris> reader = _SurvivingDebrisReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Fragment identifier
+  String? get FRAGMENT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Material type
+  String? get MATERIAL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Fragment mass in kg
+  double get MASS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Casualty area in m^2
+  double get CASUALTY_AREA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  Survival probability (0.0-1.0)
+  double get SURVIVAL_PROBABILITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+
+  @override
+  String toString() {
+    return 'SurvivingDebris{FRAGMENT_ID: ${FRAGMENT_ID}, MATERIAL: ${MATERIAL}, MASS: ${MASS}, CASUALTY_AREA: ${CASUALTY_AREA}, SURVIVAL_PROBABILITY: ${SURVIVAL_PROBABILITY}}';
+  }
+}
+
+class _SurvivingDebrisReader extends fb.TableReader<SurvivingDebris> {
+  const _SurvivingDebrisReader();
+
+  @override
+  SurvivingDebris createObject(fb.BufferContext bc, int offset) => 
+    SurvivingDebris._(bc, offset);
+}
+
+class SurvivingDebrisBuilder {
+  SurvivingDebrisBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addFragmentIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addMaterialOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addMass(double? MASS) {
+    fbBuilder.addFloat64(2, MASS);
+    return fbBuilder.offset;
+  }
+  int addCasualtyArea(double? CASUALTY_AREA) {
+    fbBuilder.addFloat64(3, CASUALTY_AREA);
+    return fbBuilder.offset;
+  }
+  int addSurvivalProbability(double? SURVIVAL_PROBABILITY) {
+    fbBuilder.addFloat64(4, SURVIVAL_PROBABILITY);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class SurvivingDebrisObjectBuilder extends fb.ObjectBuilder {
+  final String? _FRAGMENT_ID;
+  final String? _MATERIAL;
+  final double? _MASS;
+  final double? _CASUALTY_AREA;
+  final double? _SURVIVAL_PROBABILITY;
+
+  SurvivingDebrisObjectBuilder({
+    String? FRAGMENT_ID,
+    String? MATERIAL,
+    double? MASS,
+    double? CASUALTY_AREA,
+    double? SURVIVAL_PROBABILITY,
+  })
+      : _FRAGMENT_ID = FRAGMENT_ID,
+        _MATERIAL = MATERIAL,
+        _MASS = MASS,
+        _CASUALTY_AREA = CASUALTY_AREA,
+        _SURVIVAL_PROBABILITY = SURVIVAL_PROBABILITY;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? FRAGMENT_IDOffset = _FRAGMENT_ID == null ? null
+        : fbBuilder.writeString(_FRAGMENT_ID!);
+    final int? MATERIALOffset = _MATERIAL == null ? null
+        : fbBuilder.writeString(_MATERIAL!);
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, FRAGMENT_IDOffset);
+    fbBuilder.addOffset(1, MATERIALOffset);
+    fbBuilder.addFloat64(2, _MASS);
+    fbBuilder.addFloat64(3, _CASUALTY_AREA);
+    fbBuilder.addFloat64(4, _SURVIVAL_PROBABILITY);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Reentry Data Message
 class RDM {
   RDM._(this._bc, this._bcOffset);
@@ -18,18 +515,64 @@ class RDM {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  CCSDS RDM version
   String? get CCSDS_RDM_VERS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Message creation date (ISO 8601)
   String? get CREATION_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Creating organization
   String? get ORIGINATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Object name
   String? get OBJECT_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  International designator
   String? get OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get REENTRY_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  double get REENTRY_LATITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
-  double get REENTRY_LONGITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  ///  NORAD catalog number
+  int get NORAD_CAT_ID => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  ///  Object type (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN)
+  String? get OBJECT_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Reentry disposition
+  ReentryDisposition get DISPOSITION => ReentryDisposition.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 0));
+  ///  Reentry reason
+  ReentryReason get REASON => ReentryReason.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 0));
+  ///  Predicted reentry epoch (ISO 8601)
+  String? get REENTRY_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Reentry epoch uncertainty window in hours
+  double get REENTRY_EPOCH_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  ///  Reentry latitude in degrees
+  double get REENTRY_LATITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  ///  Reentry longitude in degrees
+  double get REENTRY_LONGITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  ///  Reentry altitude in km
+  double get REENTRY_ALTITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  ///  Time system
+  String? get TIME_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  ///  Previous predicted reentry epoch for comparison (ISO 8601)
+  String? get PREV_PREDICTION_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  ///  Ballistic coefficient in kg/m^2
+  double get BALLISTIC_COEFF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  ///  Object mass in kg
+  double get MASS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  ///  Solar radiation pressure area in m^2
+  double get SOLAR_RAD_AREA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  ///  Drag area in m^2
+  double get DRAG_AREA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  ///  Initial state vector
+  ReentryStateVector? get INITIAL_STATE => ReentryStateVector.reader.vTableGetNullable(_bc, _bcOffset, 44);
+  ///  Ground impact predictions
+  List<ReentryImpact>? get IMPACT_PREDICTIONS => const fb.ListReader<ReentryImpact>(ReentryImpact.reader).vTableGetNullable(_bc, _bcOffset, 46);
+  ///  Predicted surviving debris
+  List<SurvivingDebris>? get SURVIVING_DEBRIS => const fb.ListReader<SurvivingDebris>(SurvivingDebris.reader).vTableGetNullable(_bc, _bcOffset, 48);
+  ///  Casualty expectation
+  double get CASUALTY_EXPECTATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
+  ///  Number of breakup fragments predicted
+  int get NUM_FRAGMENTS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 52, 0);
+  ///  Total surviving mass in kg
+  double get SURVIVING_MASS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
+  ///  Additional comments
+  String? get COMMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 56);
 
   @override
   String toString() {
-    return 'RDM{CCSDS_RDM_VERS: ${CCSDS_RDM_VERS}, CREATION_DATE: ${CREATION_DATE}, ORIGINATOR: ${ORIGINATOR}, OBJECT_NAME: ${OBJECT_NAME}, OBJECT_ID: ${OBJECT_ID}, REENTRY_EPOCH: ${REENTRY_EPOCH}, REENTRY_LATITUDE: ${REENTRY_LATITUDE}, REENTRY_LONGITUDE: ${REENTRY_LONGITUDE}}';
+    return 'RDM{CCSDS_RDM_VERS: ${CCSDS_RDM_VERS}, CREATION_DATE: ${CREATION_DATE}, ORIGINATOR: ${ORIGINATOR}, OBJECT_NAME: ${OBJECT_NAME}, OBJECT_ID: ${OBJECT_ID}, NORAD_CAT_ID: ${NORAD_CAT_ID}, OBJECT_TYPE: ${OBJECT_TYPE}, DISPOSITION: ${DISPOSITION}, REASON: ${REASON}, REENTRY_EPOCH: ${REENTRY_EPOCH}, REENTRY_EPOCH_UNC: ${REENTRY_EPOCH_UNC}, REENTRY_LATITUDE: ${REENTRY_LATITUDE}, REENTRY_LONGITUDE: ${REENTRY_LONGITUDE}, REENTRY_ALTITUDE: ${REENTRY_ALTITUDE}, TIME_SYSTEM: ${TIME_SYSTEM}, PREV_PREDICTION_EPOCH: ${PREV_PREDICTION_EPOCH}, BALLISTIC_COEFF: ${BALLISTIC_COEFF}, MASS: ${MASS}, SOLAR_RAD_AREA: ${SOLAR_RAD_AREA}, DRAG_AREA: ${DRAG_AREA}, INITIAL_STATE: ${INITIAL_STATE}, IMPACT_PREDICTIONS: ${IMPACT_PREDICTIONS}, SURVIVING_DEBRIS: ${SURVIVING_DEBRIS}, CASUALTY_EXPECTATION: ${CASUALTY_EXPECTATION}, NUM_FRAGMENTS: ${NUM_FRAGMENTS}, SURVIVING_MASS: ${SURVIVING_MASS}, COMMENT: ${COMMENT}}';
   }
 }
 
@@ -47,7 +590,7 @@ class RDMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(8);
+    fbBuilder.startTable(27);
   }
 
   int addCcsdsRdmVersOffset(int? offset) {
@@ -70,16 +613,92 @@ class RDMBuilder {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
+  int addNoradCatId(int? NORAD_CAT_ID) {
+    fbBuilder.addUint32(5, NORAD_CAT_ID);
+    return fbBuilder.offset;
+  }
+  int addObjectTypeOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addDisposition(ReentryDisposition? DISPOSITION) {
+    fbBuilder.addInt8(7, DISPOSITION?.value);
+    return fbBuilder.offset;
+  }
+  int addReason(ReentryReason? REASON) {
+    fbBuilder.addInt8(8, REASON?.value);
+    return fbBuilder.offset;
+  }
   int addReentryEpochOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addReentryEpochUnc(double? REENTRY_EPOCH_UNC) {
+    fbBuilder.addFloat64(10, REENTRY_EPOCH_UNC);
     return fbBuilder.offset;
   }
   int addReentryLatitude(double? REENTRY_LATITUDE) {
-    fbBuilder.addFloat64(6, REENTRY_LATITUDE);
+    fbBuilder.addFloat64(11, REENTRY_LATITUDE);
     return fbBuilder.offset;
   }
   int addReentryLongitude(double? REENTRY_LONGITUDE) {
-    fbBuilder.addFloat64(7, REENTRY_LONGITUDE);
+    fbBuilder.addFloat64(12, REENTRY_LONGITUDE);
+    return fbBuilder.offset;
+  }
+  int addReentryAltitude(double? REENTRY_ALTITUDE) {
+    fbBuilder.addFloat64(13, REENTRY_ALTITUDE);
+    return fbBuilder.offset;
+  }
+  int addTimeSystemOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addPrevPredictionEpochOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addBallisticCoeff(double? BALLISTIC_COEFF) {
+    fbBuilder.addFloat64(16, BALLISTIC_COEFF);
+    return fbBuilder.offset;
+  }
+  int addMass(double? MASS) {
+    fbBuilder.addFloat64(17, MASS);
+    return fbBuilder.offset;
+  }
+  int addSolarRadArea(double? SOLAR_RAD_AREA) {
+    fbBuilder.addFloat64(18, SOLAR_RAD_AREA);
+    return fbBuilder.offset;
+  }
+  int addDragArea(double? DRAG_AREA) {
+    fbBuilder.addFloat64(19, DRAG_AREA);
+    return fbBuilder.offset;
+  }
+  int addInitialStateOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addImpactPredictionsOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addSurvivingDebrisOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addCasualtyExpectation(double? CASUALTY_EXPECTATION) {
+    fbBuilder.addFloat64(23, CASUALTY_EXPECTATION);
+    return fbBuilder.offset;
+  }
+  int addNumFragments(int? NUM_FRAGMENTS) {
+    fbBuilder.addUint32(24, NUM_FRAGMENTS);
+    return fbBuilder.offset;
+  }
+  int addSurvivingMass(double? SURVIVING_MASS) {
+    fbBuilder.addFloat64(25, SURVIVING_MASS);
+    return fbBuilder.offset;
+  }
+  int addCommentOffset(int? offset) {
+    fbBuilder.addOffset(26, offset);
     return fbBuilder.offset;
   }
 
@@ -94,9 +713,28 @@ class RDMObjectBuilder extends fb.ObjectBuilder {
   final String? _ORIGINATOR;
   final String? _OBJECT_NAME;
   final String? _OBJECT_ID;
+  final int? _NORAD_CAT_ID;
+  final String? _OBJECT_TYPE;
+  final ReentryDisposition? _DISPOSITION;
+  final ReentryReason? _REASON;
   final String? _REENTRY_EPOCH;
+  final double? _REENTRY_EPOCH_UNC;
   final double? _REENTRY_LATITUDE;
   final double? _REENTRY_LONGITUDE;
+  final double? _REENTRY_ALTITUDE;
+  final String? _TIME_SYSTEM;
+  final String? _PREV_PREDICTION_EPOCH;
+  final double? _BALLISTIC_COEFF;
+  final double? _MASS;
+  final double? _SOLAR_RAD_AREA;
+  final double? _DRAG_AREA;
+  final ReentryStateVectorObjectBuilder? _INITIAL_STATE;
+  final List<ReentryImpactObjectBuilder>? _IMPACT_PREDICTIONS;
+  final List<SurvivingDebrisObjectBuilder>? _SURVIVING_DEBRIS;
+  final double? _CASUALTY_EXPECTATION;
+  final int? _NUM_FRAGMENTS;
+  final double? _SURVIVING_MASS;
+  final String? _COMMENT;
 
   RDMObjectBuilder({
     String? CCSDS_RDM_VERS,
@@ -104,18 +742,56 @@ class RDMObjectBuilder extends fb.ObjectBuilder {
     String? ORIGINATOR,
     String? OBJECT_NAME,
     String? OBJECT_ID,
+    int? NORAD_CAT_ID,
+    String? OBJECT_TYPE,
+    ReentryDisposition? DISPOSITION,
+    ReentryReason? REASON,
     String? REENTRY_EPOCH,
+    double? REENTRY_EPOCH_UNC,
     double? REENTRY_LATITUDE,
     double? REENTRY_LONGITUDE,
+    double? REENTRY_ALTITUDE,
+    String? TIME_SYSTEM,
+    String? PREV_PREDICTION_EPOCH,
+    double? BALLISTIC_COEFF,
+    double? MASS,
+    double? SOLAR_RAD_AREA,
+    double? DRAG_AREA,
+    ReentryStateVectorObjectBuilder? INITIAL_STATE,
+    List<ReentryImpactObjectBuilder>? IMPACT_PREDICTIONS,
+    List<SurvivingDebrisObjectBuilder>? SURVIVING_DEBRIS,
+    double? CASUALTY_EXPECTATION,
+    int? NUM_FRAGMENTS,
+    double? SURVIVING_MASS,
+    String? COMMENT,
   })
       : _CCSDS_RDM_VERS = CCSDS_RDM_VERS,
         _CREATION_DATE = CREATION_DATE,
         _ORIGINATOR = ORIGINATOR,
         _OBJECT_NAME = OBJECT_NAME,
         _OBJECT_ID = OBJECT_ID,
+        _NORAD_CAT_ID = NORAD_CAT_ID,
+        _OBJECT_TYPE = OBJECT_TYPE,
+        _DISPOSITION = DISPOSITION,
+        _REASON = REASON,
         _REENTRY_EPOCH = REENTRY_EPOCH,
+        _REENTRY_EPOCH_UNC = REENTRY_EPOCH_UNC,
         _REENTRY_LATITUDE = REENTRY_LATITUDE,
-        _REENTRY_LONGITUDE = REENTRY_LONGITUDE;
+        _REENTRY_LONGITUDE = REENTRY_LONGITUDE,
+        _REENTRY_ALTITUDE = REENTRY_ALTITUDE,
+        _TIME_SYSTEM = TIME_SYSTEM,
+        _PREV_PREDICTION_EPOCH = PREV_PREDICTION_EPOCH,
+        _BALLISTIC_COEFF = BALLISTIC_COEFF,
+        _MASS = MASS,
+        _SOLAR_RAD_AREA = SOLAR_RAD_AREA,
+        _DRAG_AREA = DRAG_AREA,
+        _INITIAL_STATE = INITIAL_STATE,
+        _IMPACT_PREDICTIONS = IMPACT_PREDICTIONS,
+        _SURVIVING_DEBRIS = SURVIVING_DEBRIS,
+        _CASUALTY_EXPECTATION = CASUALTY_EXPECTATION,
+        _NUM_FRAGMENTS = NUM_FRAGMENTS,
+        _SURVIVING_MASS = SURVIVING_MASS,
+        _COMMENT = COMMENT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -130,17 +806,49 @@ class RDMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_OBJECT_NAME!);
     final int? OBJECT_IDOffset = _OBJECT_ID == null ? null
         : fbBuilder.writeString(_OBJECT_ID!);
+    final int? OBJECT_TYPEOffset = _OBJECT_TYPE == null ? null
+        : fbBuilder.writeString(_OBJECT_TYPE!);
     final int? REENTRY_EPOCHOffset = _REENTRY_EPOCH == null ? null
         : fbBuilder.writeString(_REENTRY_EPOCH!);
-    fbBuilder.startTable(8);
+    final int? TIME_SYSTEMOffset = _TIME_SYSTEM == null ? null
+        : fbBuilder.writeString(_TIME_SYSTEM!);
+    final int? PREV_PREDICTION_EPOCHOffset = _PREV_PREDICTION_EPOCH == null ? null
+        : fbBuilder.writeString(_PREV_PREDICTION_EPOCH!);
+    final int? INITIAL_STATEOffset = _INITIAL_STATE?.getOrCreateOffset(fbBuilder);
+    final int? IMPACT_PREDICTIONSOffset = _IMPACT_PREDICTIONS == null ? null
+        : fbBuilder.writeList(_IMPACT_PREDICTIONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? SURVIVING_DEBRISOffset = _SURVIVING_DEBRIS == null ? null
+        : fbBuilder.writeList(_SURVIVING_DEBRIS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeString(_COMMENT!);
+    fbBuilder.startTable(27);
     fbBuilder.addOffset(0, CCSDS_RDM_VERSOffset);
     fbBuilder.addOffset(1, CREATION_DATEOffset);
     fbBuilder.addOffset(2, ORIGINATOROffset);
     fbBuilder.addOffset(3, OBJECT_NAMEOffset);
     fbBuilder.addOffset(4, OBJECT_IDOffset);
-    fbBuilder.addOffset(5, REENTRY_EPOCHOffset);
-    fbBuilder.addFloat64(6, _REENTRY_LATITUDE);
-    fbBuilder.addFloat64(7, _REENTRY_LONGITUDE);
+    fbBuilder.addUint32(5, _NORAD_CAT_ID);
+    fbBuilder.addOffset(6, OBJECT_TYPEOffset);
+    fbBuilder.addInt8(7, _DISPOSITION?.value);
+    fbBuilder.addInt8(8, _REASON?.value);
+    fbBuilder.addOffset(9, REENTRY_EPOCHOffset);
+    fbBuilder.addFloat64(10, _REENTRY_EPOCH_UNC);
+    fbBuilder.addFloat64(11, _REENTRY_LATITUDE);
+    fbBuilder.addFloat64(12, _REENTRY_LONGITUDE);
+    fbBuilder.addFloat64(13, _REENTRY_ALTITUDE);
+    fbBuilder.addOffset(14, TIME_SYSTEMOffset);
+    fbBuilder.addOffset(15, PREV_PREDICTION_EPOCHOffset);
+    fbBuilder.addFloat64(16, _BALLISTIC_COEFF);
+    fbBuilder.addFloat64(17, _MASS);
+    fbBuilder.addFloat64(18, _SOLAR_RAD_AREA);
+    fbBuilder.addFloat64(19, _DRAG_AREA);
+    fbBuilder.addOffset(20, INITIAL_STATEOffset);
+    fbBuilder.addOffset(21, IMPACT_PREDICTIONSOffset);
+    fbBuilder.addOffset(22, SURVIVING_DEBRISOffset);
+    fbBuilder.addFloat64(23, _CASUALTY_EXPECTATION);
+    fbBuilder.addUint32(24, _NUM_FRAGMENTS);
+    fbBuilder.addFloat64(25, _SURVIVING_MASS);
+    fbBuilder.addOffset(26, COMMENTOffset);
     return fbBuilder.endTable();
   }
 

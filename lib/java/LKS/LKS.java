@@ -29,73 +29,144 @@ public final class LKS extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public LKS __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * First endpoint on-orbit identifier
+   */
   public String ID_ON_ORBIT1() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ID_ON_ORBIT1AsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer ID_ON_ORBIT1InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
-  public String ID_ON_ORBIT2() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ID_ON_ORBIT2AsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
-  public ByteBuffer ID_ON_ORBIT2InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
-  public String LINK_START_TIME() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer LINK_START_TIMEAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
-  public ByteBuffer LINK_START_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
-  public String LINK_STOP_TIME() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer LINK_STOP_TIMEAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
-  public ByteBuffer LINK_STOP_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * First endpoint satellite catalog number
+   */
+  public long SAT_NO1() { int o = __offset(8); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Second endpoint on-orbit identifier
+   */
+  public String ID_ON_ORBIT2() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ID_ON_ORBIT2AsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer ID_ON_ORBIT2InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * Second endpoint satellite catalog number
+   */
+  public long SAT_NO2() { int o = __offset(12); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Constellation name
+   */
   public String CONSTELLATION() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CONSTELLATIONAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
   public ByteBuffer CONSTELLATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * Link name or identifier
+   */
   public String LINK_NAME() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer LINK_NAMEAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
   public ByteBuffer LINK_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
-  public String LINK_TYPE() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer LINK_TYPEAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
-  public ByteBuffer LINK_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
-  public String BAND() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer BANDAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
-  public ByteBuffer BANDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
-  public String ID_BEAM1() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ID_BEAM1AsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
-  public ByteBuffer ID_BEAM1InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
-  public String END_POINT1_NAME() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer END_POINT1_NAMEAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
-  public ByteBuffer END_POINT1_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
-  public double END_POINT1_LAT() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double END_POINT1_LON() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String ID_BEAM2() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ID_BEAM2AsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
-  public ByteBuffer ID_BEAM2InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
-  public String END_POINT2_NAME() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer END_POINT2_NAMEAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
-  public ByteBuffer END_POINT2_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
-  public double END_POINT2_LAT() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double END_POINT2_LON() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double DATA_RATE1_TO2() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double DATA_RATE2_TO1() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String LINK_STATE() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer LINK_STATEAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
-  public ByteBuffer LINK_STATEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
-  public String SYS_CAP() { int o = __offset(44); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SYS_CAPAsByteBuffer() { return __vector_as_bytebuffer(44, 1); }
-  public ByteBuffer SYS_CAPInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 44, 1); }
-  public String OPS_CAP() { int o = __offset(46); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer OPS_CAPAsByteBuffer() { return __vector_as_bytebuffer(46, 1); }
-  public ByteBuffer OPS_CAPInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 46, 1); }
-  public int SAT_NO1() { int o = __offset(48); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public int SAT_NO2() { int o = __offset(50); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Link type
+   */
+  public byte LINK_TYPE() { int o = __offset(18); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Link state
+   */
+  public byte LINK_STATE() { int o = __offset(20); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * RF band
+   */
+  public String BAND() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer BANDAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
+  public ByteBuffer BANDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
+  /**
+   * Link start time (ISO 8601)
+   */
+  public String LINK_START_TIME() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LINK_START_TIMEAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
+  public ByteBuffer LINK_START_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
+  /**
+   * Link stop time (ISO 8601)
+   */
+  public String LINK_STOP_TIME() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LINK_STOP_TIMEAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
+  public ByteBuffer LINK_STOP_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
+  /**
+   * First endpoint beam identifier
+   */
+  public String ID_BEAM1() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ID_BEAM1AsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
+  public ByteBuffer ID_BEAM1InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
+  /**
+   * First endpoint name
+   */
+  public String END_POINT1_NAME() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer END_POINT1_NAMEAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
+  public ByteBuffer END_POINT1_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
+  /**
+   * First endpoint latitude (degrees)
+   */
+  public double END_POINT1_LAT() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * First endpoint longitude (degrees)
+   */
+  public double END_POINT1_LON() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Second endpoint beam identifier
+   */
+  public String ID_BEAM2() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ID_BEAM2AsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
+  public ByteBuffer ID_BEAM2InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
+  /**
+   * Second endpoint name
+   */
+  public String END_POINT2_NAME() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer END_POINT2_NAMEAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
+  public ByteBuffer END_POINT2_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
+  /**
+   * Second endpoint latitude (degrees)
+   */
+  public double END_POINT2_LAT() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Second endpoint longitude (degrees)
+   */
+  public double END_POINT2_LON() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Data rate from endpoint 1 to 2 (Mbps)
+   */
+  public double DATA_RATE1_TO2() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Data rate from endpoint 2 to 1 (Mbps)
+   */
+  public double DATA_RATE2_TO1() { int o = __offset(46); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * System capability status
+   */
+  public String SYS_CAP() { int o = __offset(48); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SYS_CAPAsByteBuffer() { return __vector_as_bytebuffer(48, 1); }
+  public ByteBuffer SYS_CAPInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 48, 1); }
+  /**
+   * Operational capability status
+   */
+  public String OPS_CAP() { int o = __offset(50); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OPS_CAPAsByteBuffer() { return __vector_as_bytebuffer(50, 1); }
+  public ByteBuffer OPS_CAPInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 50, 1); }
 
   public static int createLKS(FlatBufferBuilder builder,
       int IDOffset,
       int ID_ON_ORBIT1Offset,
+      long SAT_NO1,
       int ID_ON_ORBIT2Offset,
-      int LINK_START_TIMEOffset,
-      int LINK_STOP_TIMEOffset,
+      long SAT_NO2,
       int CONSTELLATIONOffset,
       int LINK_NAMEOffset,
-      int LINK_TYPEOffset,
+      byte LINK_TYPE,
+      byte LINK_STATE,
       int BANDOffset,
+      int LINK_START_TIMEOffset,
+      int LINK_STOP_TIMEOffset,
       int ID_BEAM1Offset,
       int END_POINT1_NAMEOffset,
       double END_POINT1_LAT,
@@ -106,11 +177,8 @@ public final class LKS extends Table {
       double END_POINT2_LON,
       double DATA_RATE1_TO2,
       double DATA_RATE2_TO1,
-      int LINK_STATEOffset,
       int SYS_CAPOffset,
-      int OPS_CAPOffset,
-      int SAT_NO1,
-      int SAT_NO2) {
+      int OPS_CAPOffset) {
     builder.startTable(24);
     LKS.addDataRate2To1(builder, DATA_RATE2_TO1);
     LKS.addDataRate1To2(builder, DATA_RATE1_TO2);
@@ -118,52 +186,52 @@ public final class LKS extends Table {
     LKS.addEndPoint2Lat(builder, END_POINT2_LAT);
     LKS.addEndPoint1Lon(builder, END_POINT1_LON);
     LKS.addEndPoint1Lat(builder, END_POINT1_LAT);
-    LKS.addSatNo2(builder, SAT_NO2);
-    LKS.addSatNo1(builder, SAT_NO1);
     LKS.addOpsCap(builder, OPS_CAPOffset);
     LKS.addSysCap(builder, SYS_CAPOffset);
-    LKS.addLinkState(builder, LINK_STATEOffset);
     LKS.addEndPoint2Name(builder, END_POINT2_NAMEOffset);
     LKS.addIdBeam2(builder, ID_BEAM2Offset);
     LKS.addEndPoint1Name(builder, END_POINT1_NAMEOffset);
     LKS.addIdBeam1(builder, ID_BEAM1Offset);
-    LKS.addBand(builder, BANDOffset);
-    LKS.addLinkType(builder, LINK_TYPEOffset);
-    LKS.addLinkName(builder, LINK_NAMEOffset);
-    LKS.addConstellation(builder, CONSTELLATIONOffset);
     LKS.addLinkStopTime(builder, LINK_STOP_TIMEOffset);
     LKS.addLinkStartTime(builder, LINK_START_TIMEOffset);
+    LKS.addBand(builder, BANDOffset);
+    LKS.addLinkName(builder, LINK_NAMEOffset);
+    LKS.addConstellation(builder, CONSTELLATIONOffset);
+    LKS.addSatNo2(builder, SAT_NO2);
     LKS.addIdOnOrbit2(builder, ID_ON_ORBIT2Offset);
+    LKS.addSatNo1(builder, SAT_NO1);
     LKS.addIdOnOrbit1(builder, ID_ON_ORBIT1Offset);
     LKS.addId(builder, IDOffset);
+    LKS.addLinkState(builder, LINK_STATE);
+    LKS.addLinkType(builder, LINK_TYPE);
     return LKS.endLKS(builder);
   }
 
   public static void startLKS(FlatBufferBuilder builder) { builder.startTable(24); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addIdOnOrbit1(FlatBufferBuilder builder, int ID_ON_ORBIT1Offset) { builder.addOffset(1, ID_ON_ORBIT1Offset, 0); }
-  public static void addIdOnOrbit2(FlatBufferBuilder builder, int ID_ON_ORBIT2Offset) { builder.addOffset(2, ID_ON_ORBIT2Offset, 0); }
-  public static void addLinkStartTime(FlatBufferBuilder builder, int LINK_START_TIMEOffset) { builder.addOffset(3, LINK_START_TIMEOffset, 0); }
-  public static void addLinkStopTime(FlatBufferBuilder builder, int LINK_STOP_TIMEOffset) { builder.addOffset(4, LINK_STOP_TIMEOffset, 0); }
+  public static void addSatNo1(FlatBufferBuilder builder, long SAT_NO1) { builder.addInt(2, (int) SAT_NO1, (int) 0L); }
+  public static void addIdOnOrbit2(FlatBufferBuilder builder, int ID_ON_ORBIT2Offset) { builder.addOffset(3, ID_ON_ORBIT2Offset, 0); }
+  public static void addSatNo2(FlatBufferBuilder builder, long SAT_NO2) { builder.addInt(4, (int) SAT_NO2, (int) 0L); }
   public static void addConstellation(FlatBufferBuilder builder, int CONSTELLATIONOffset) { builder.addOffset(5, CONSTELLATIONOffset, 0); }
   public static void addLinkName(FlatBufferBuilder builder, int LINK_NAMEOffset) { builder.addOffset(6, LINK_NAMEOffset, 0); }
-  public static void addLinkType(FlatBufferBuilder builder, int LINK_TYPEOffset) { builder.addOffset(7, LINK_TYPEOffset, 0); }
-  public static void addBand(FlatBufferBuilder builder, int BANDOffset) { builder.addOffset(8, BANDOffset, 0); }
-  public static void addIdBeam1(FlatBufferBuilder builder, int ID_BEAM1Offset) { builder.addOffset(9, ID_BEAM1Offset, 0); }
-  public static void addEndPoint1Name(FlatBufferBuilder builder, int END_POINT1_NAMEOffset) { builder.addOffset(10, END_POINT1_NAMEOffset, 0); }
-  public static void addEndPoint1Lat(FlatBufferBuilder builder, double END_POINT1_LAT) { builder.addDouble(11, END_POINT1_LAT, 0.0); }
-  public static void addEndPoint1Lon(FlatBufferBuilder builder, double END_POINT1_LON) { builder.addDouble(12, END_POINT1_LON, 0.0); }
-  public static void addIdBeam2(FlatBufferBuilder builder, int ID_BEAM2Offset) { builder.addOffset(13, ID_BEAM2Offset, 0); }
-  public static void addEndPoint2Name(FlatBufferBuilder builder, int END_POINT2_NAMEOffset) { builder.addOffset(14, END_POINT2_NAMEOffset, 0); }
-  public static void addEndPoint2Lat(FlatBufferBuilder builder, double END_POINT2_LAT) { builder.addDouble(15, END_POINT2_LAT, 0.0); }
-  public static void addEndPoint2Lon(FlatBufferBuilder builder, double END_POINT2_LON) { builder.addDouble(16, END_POINT2_LON, 0.0); }
-  public static void addDataRate1To2(FlatBufferBuilder builder, double DATA_RATE1_TO2) { builder.addDouble(17, DATA_RATE1_TO2, 0.0); }
-  public static void addDataRate2To1(FlatBufferBuilder builder, double DATA_RATE2_TO1) { builder.addDouble(18, DATA_RATE2_TO1, 0.0); }
-  public static void addLinkState(FlatBufferBuilder builder, int LINK_STATEOffset) { builder.addOffset(19, LINK_STATEOffset, 0); }
-  public static void addSysCap(FlatBufferBuilder builder, int SYS_CAPOffset) { builder.addOffset(20, SYS_CAPOffset, 0); }
-  public static void addOpsCap(FlatBufferBuilder builder, int OPS_CAPOffset) { builder.addOffset(21, OPS_CAPOffset, 0); }
-  public static void addSatNo1(FlatBufferBuilder builder, int SAT_NO1) { builder.addInt(22, SAT_NO1, 0); }
-  public static void addSatNo2(FlatBufferBuilder builder, int SAT_NO2) { builder.addInt(23, SAT_NO2, 0); }
+  public static void addLinkType(FlatBufferBuilder builder, byte LINK_TYPE) { builder.addByte(7, LINK_TYPE, 0); }
+  public static void addLinkState(FlatBufferBuilder builder, byte LINK_STATE) { builder.addByte(8, LINK_STATE, 0); }
+  public static void addBand(FlatBufferBuilder builder, int BANDOffset) { builder.addOffset(9, BANDOffset, 0); }
+  public static void addLinkStartTime(FlatBufferBuilder builder, int LINK_START_TIMEOffset) { builder.addOffset(10, LINK_START_TIMEOffset, 0); }
+  public static void addLinkStopTime(FlatBufferBuilder builder, int LINK_STOP_TIMEOffset) { builder.addOffset(11, LINK_STOP_TIMEOffset, 0); }
+  public static void addIdBeam1(FlatBufferBuilder builder, int ID_BEAM1Offset) { builder.addOffset(12, ID_BEAM1Offset, 0); }
+  public static void addEndPoint1Name(FlatBufferBuilder builder, int END_POINT1_NAMEOffset) { builder.addOffset(13, END_POINT1_NAMEOffset, 0); }
+  public static void addEndPoint1Lat(FlatBufferBuilder builder, double END_POINT1_LAT) { builder.addDouble(14, END_POINT1_LAT, 0.0); }
+  public static void addEndPoint1Lon(FlatBufferBuilder builder, double END_POINT1_LON) { builder.addDouble(15, END_POINT1_LON, 0.0); }
+  public static void addIdBeam2(FlatBufferBuilder builder, int ID_BEAM2Offset) { builder.addOffset(16, ID_BEAM2Offset, 0); }
+  public static void addEndPoint2Name(FlatBufferBuilder builder, int END_POINT2_NAMEOffset) { builder.addOffset(17, END_POINT2_NAMEOffset, 0); }
+  public static void addEndPoint2Lat(FlatBufferBuilder builder, double END_POINT2_LAT) { builder.addDouble(18, END_POINT2_LAT, 0.0); }
+  public static void addEndPoint2Lon(FlatBufferBuilder builder, double END_POINT2_LON) { builder.addDouble(19, END_POINT2_LON, 0.0); }
+  public static void addDataRate1To2(FlatBufferBuilder builder, double DATA_RATE1_TO2) { builder.addDouble(20, DATA_RATE1_TO2, 0.0); }
+  public static void addDataRate2To1(FlatBufferBuilder builder, double DATA_RATE2_TO1) { builder.addDouble(21, DATA_RATE2_TO1, 0.0); }
+  public static void addSysCap(FlatBufferBuilder builder, int SYS_CAPOffset) { builder.addOffset(22, SYS_CAPOffset, 0); }
+  public static void addOpsCap(FlatBufferBuilder builder, int OPS_CAPOffset) { builder.addOffset(23, OPS_CAPOffset, 0); }
   public static int endLKS(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

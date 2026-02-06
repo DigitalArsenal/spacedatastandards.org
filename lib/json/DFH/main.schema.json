@@ -1,18 +1,100 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "driftRecord" : {
+      "type" : "object",
+      "description" : "GEO Drift History Record",
+      "properties" : {
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of drift measurement (ISO 8601)"
+              },
+        "DRIFT_RATE" : {
+                "type" : "number",
+                "description" : "Longitude drift rate in degrees/day"
+              },
+        "MEAN_LONGITUDE" : {
+                "type" : "number",
+                "description" : "Mean longitude in degrees East"
+              },
+        "LONGITUDE_AMPLITUDE" : {
+                "type" : "number",
+                "description" : "Longitude oscillation amplitude in degrees"
+              },
+        "ECCENTRICITY" : {
+                "type" : "number",
+                "description" : "Eccentricity"
+              },
+        "INCLINATION" : {
+                "type" : "number",
+                "description" : "Inclination in degrees"
+              }
+      },
+      "additionalProperties" : false
+    },
     "DFH" : {
       "type" : "object",
       "description" : "GEO Drift History",
       "properties" : {
         "ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique identifier"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Satellite number"
+              },
+        "OBJECT_DESIGNATOR" : {
+                "type" : "string",
+                "description" : "Object designator"
+              },
+        "OBJECT_NAME" : {
+                "type" : "string",
+                "description" : "Object common name"
+              },
+        "START_TIME" : {
+                "type" : "string",
+                "description" : "History start time (ISO 8601)"
+              },
+        "END_TIME" : {
+                "type" : "string",
+                "description" : "History end time (ISO 8601)"
               },
         "EFFECTIVE_UNTIL" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Current effective until date (ISO 8601)"
               },
         "DRIFT_RATE" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Current drift rate in degrees/day"
+              },
+        "MEAN_LONGITUDE" : {
+                "type" : "number",
+                "description" : "Current mean longitude in degrees East"
+              },
+        "SLOT_CENTER" : {
+                "type" : "number",
+                "description" : "Longitude slot center in degrees East (if station-keeping)"
+              },
+        "SLOT_HALF_WIDTH" : {
+                "type" : "number",
+                "description" : "Longitude slot half-width in degrees"
+              },
+        "STATION_KEEPING" : {
+                "type" : "boolean",
+                "description" : "Whether object is actively station-keeping"
+              },
+        "RECORDS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/driftRecord"},
+                "description" : "Historical drift records"
+              },
+        "NUM_RECORDS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of records in history"
+              },
+        "NOTES" : {
+                "type" : "string",
+                "description" : "Additional notes"
               }
       },
       "additionalProperties" : false

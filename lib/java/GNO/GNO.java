@@ -29,45 +29,201 @@ public final class GNO extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public GNO __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
-  public String GNSS_SAT_ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer GNSS_SAT_IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
-  public ByteBuffer GNSS_SAT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
-  public int TRACKING_STATUS() { int o = __offset(6); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public int AGC_STATE() { int o = __offset(8); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public String OBS_CODE_SET(int j) { int o = __offset(10); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int OBS_CODE_SETLength() { int o = __offset(10); return o != 0 ? __vector_len(o) : 0; }
+  /**
+   * Unique identifier
+   */
+  public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
+  public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * Receiver identifier
+   */
+  public String RECEIVER_ID() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer RECEIVER_IDAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
+  public ByteBuffer RECEIVER_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  /**
+   * Receiver type/model
+   */
+  public String RECEIVER_TYPE() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer RECEIVER_TYPEAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
+  public ByteBuffer RECEIVER_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * Antenna identifier
+   */
+  public String ANTENNA_ID() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ANTENNA_IDAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer ANTENNA_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * Antenna type/model
+   */
+  public String ANTENNA_TYPE() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ANTENNA_TYPEAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer ANTENNA_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * Receiver firmware version
+   */
+  public String FIRMWARE_VERSION() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer FIRMWARE_VERSIONAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer FIRMWARE_VERSIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * Observation epoch (ISO 8601)
+   */
+  public String EPOCH() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EPOCHAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
+  public ByteBuffer EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  /**
+   * Receiver clock offset in seconds
+   */
+  public double CLOCK_OFFSET() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Receiver clock drift in seconds/second
+   */
+  public double CLOCK_DRIFT() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Receiver geodetic latitude in degrees
+   */
+  public double LATITUDE() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Receiver geodetic longitude in degrees
+   */
+  public double LONGITUDE() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Receiver altitude in meters above WGS-84
+   */
+  public double ALTITUDE() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Approximate position X in meters (ECEF)
+   */
+  public double APPROX_X() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Approximate position Y in meters (ECEF)
+   */
+  public double APPROX_Y() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Approximate position Z in meters (ECEF)
+   */
+  public double APPROX_Z() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Observation interval in seconds
+   */
+  public double INTERVAL() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Number of satellites observed
+   */
+  public long NUM_SATS() { int o = __offset(36); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * PDOP
+   */
+  public double PDOP() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * HDOP
+   */
+  public double HDOP() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * VDOP
+   */
+  public double VDOP() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Satellite observations
+   */
+  public gnssSatObs SAT_OBS(int j) { return SAT_OBS(new gnssSatObs(), j); }
+  public gnssSatObs SAT_OBS(gnssSatObs obj, int j) { int o = __offset(44); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int SAT_OBSLength() { int o = __offset(44); return o != 0 ? __vector_len(o) : 0; }
+  public gnssSatObs.Vector satObsVector() { return satObsVector(new gnssSatObs.Vector()); }
+  public gnssSatObs.Vector satObsVector(gnssSatObs.Vector obj) { int o = __offset(44); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Observation code set identifiers
+   */
+  public String OBS_CODE_SET(int j) { int o = __offset(46); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int OBS_CODE_SETLength() { int o = __offset(46); return o != 0 ? __vector_len(o) : 0; }
   public StringVector obsCodeSetVector() { return obsCodeSetVector(new StringVector()); }
-  public StringVector obsCodeSetVector(StringVector obj) { int o = __offset(10); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String OB(int j) { int o = __offset(12); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int OBLength() { int o = __offset(12); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector obVector() { return obVector(new StringVector()); }
-  public StringVector obVector(StringVector obj) { int o = __offset(12); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public StringVector obsCodeSetVector(StringVector obj) { int o = __offset(46); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Additional notes
+   */
+  public String NOTES() { int o = __offset(48); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer NOTESAsByteBuffer() { return __vector_as_bytebuffer(48, 1); }
+  public ByteBuffer NOTESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 48, 1); }
 
   public static int createGNO(FlatBufferBuilder builder,
-      int GNSS_SAT_IDOffset,
-      int TRACKING_STATUS,
-      int AGC_STATE,
+      int IDOffset,
+      int RECEIVER_IDOffset,
+      int RECEIVER_TYPEOffset,
+      int ANTENNA_IDOffset,
+      int ANTENNA_TYPEOffset,
+      int FIRMWARE_VERSIONOffset,
+      int EPOCHOffset,
+      double CLOCK_OFFSET,
+      double CLOCK_DRIFT,
+      double LATITUDE,
+      double LONGITUDE,
+      double ALTITUDE,
+      double APPROX_X,
+      double APPROX_Y,
+      double APPROX_Z,
+      double INTERVAL,
+      long NUM_SATS,
+      double PDOP,
+      double HDOP,
+      double VDOP,
+      int SAT_OBSOffset,
       int OBS_CODE_SETOffset,
-      int OBOffset) {
-    builder.startTable(5);
-    GNO.addOb(builder, OBOffset);
+      int NOTESOffset) {
+    builder.startTable(23);
+    GNO.addVdop(builder, VDOP);
+    GNO.addHdop(builder, HDOP);
+    GNO.addPdop(builder, PDOP);
+    GNO.addInterval(builder, INTERVAL);
+    GNO.addApproxZ(builder, APPROX_Z);
+    GNO.addApproxY(builder, APPROX_Y);
+    GNO.addApproxX(builder, APPROX_X);
+    GNO.addAltitude(builder, ALTITUDE);
+    GNO.addLongitude(builder, LONGITUDE);
+    GNO.addLatitude(builder, LATITUDE);
+    GNO.addClockDrift(builder, CLOCK_DRIFT);
+    GNO.addClockOffset(builder, CLOCK_OFFSET);
+    GNO.addNotes(builder, NOTESOffset);
     GNO.addObsCodeSet(builder, OBS_CODE_SETOffset);
-    GNO.addAgcState(builder, AGC_STATE);
-    GNO.addTrackingStatus(builder, TRACKING_STATUS);
-    GNO.addGnssSatId(builder, GNSS_SAT_IDOffset);
+    GNO.addSatObs(builder, SAT_OBSOffset);
+    GNO.addNumSats(builder, NUM_SATS);
+    GNO.addEpoch(builder, EPOCHOffset);
+    GNO.addFirmwareVersion(builder, FIRMWARE_VERSIONOffset);
+    GNO.addAntennaType(builder, ANTENNA_TYPEOffset);
+    GNO.addAntennaId(builder, ANTENNA_IDOffset);
+    GNO.addReceiverType(builder, RECEIVER_TYPEOffset);
+    GNO.addReceiverId(builder, RECEIVER_IDOffset);
+    GNO.addId(builder, IDOffset);
     return GNO.endGNO(builder);
   }
 
-  public static void startGNO(FlatBufferBuilder builder) { builder.startTable(5); }
-  public static void addGnssSatId(FlatBufferBuilder builder, int GNSS_SAT_IDOffset) { builder.addOffset(0, GNSS_SAT_IDOffset, 0); }
-  public static void addTrackingStatus(FlatBufferBuilder builder, int TRACKING_STATUS) { builder.addInt(1, TRACKING_STATUS, 0); }
-  public static void addAgcState(FlatBufferBuilder builder, int AGC_STATE) { builder.addInt(2, AGC_STATE, 0); }
-  public static void addObsCodeSet(FlatBufferBuilder builder, int OBS_CODE_SETOffset) { builder.addOffset(3, OBS_CODE_SETOffset, 0); }
+  public static void startGNO(FlatBufferBuilder builder) { builder.startTable(23); }
+  public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
+  public static void addReceiverId(FlatBufferBuilder builder, int RECEIVER_IDOffset) { builder.addOffset(1, RECEIVER_IDOffset, 0); }
+  public static void addReceiverType(FlatBufferBuilder builder, int RECEIVER_TYPEOffset) { builder.addOffset(2, RECEIVER_TYPEOffset, 0); }
+  public static void addAntennaId(FlatBufferBuilder builder, int ANTENNA_IDOffset) { builder.addOffset(3, ANTENNA_IDOffset, 0); }
+  public static void addAntennaType(FlatBufferBuilder builder, int ANTENNA_TYPEOffset) { builder.addOffset(4, ANTENNA_TYPEOffset, 0); }
+  public static void addFirmwareVersion(FlatBufferBuilder builder, int FIRMWARE_VERSIONOffset) { builder.addOffset(5, FIRMWARE_VERSIONOffset, 0); }
+  public static void addEpoch(FlatBufferBuilder builder, int EPOCHOffset) { builder.addOffset(6, EPOCHOffset, 0); }
+  public static void addClockOffset(FlatBufferBuilder builder, double CLOCK_OFFSET) { builder.addDouble(7, CLOCK_OFFSET, 0.0); }
+  public static void addClockDrift(FlatBufferBuilder builder, double CLOCK_DRIFT) { builder.addDouble(8, CLOCK_DRIFT, 0.0); }
+  public static void addLatitude(FlatBufferBuilder builder, double LATITUDE) { builder.addDouble(9, LATITUDE, 0.0); }
+  public static void addLongitude(FlatBufferBuilder builder, double LONGITUDE) { builder.addDouble(10, LONGITUDE, 0.0); }
+  public static void addAltitude(FlatBufferBuilder builder, double ALTITUDE) { builder.addDouble(11, ALTITUDE, 0.0); }
+  public static void addApproxX(FlatBufferBuilder builder, double APPROX_X) { builder.addDouble(12, APPROX_X, 0.0); }
+  public static void addApproxY(FlatBufferBuilder builder, double APPROX_Y) { builder.addDouble(13, APPROX_Y, 0.0); }
+  public static void addApproxZ(FlatBufferBuilder builder, double APPROX_Z) { builder.addDouble(14, APPROX_Z, 0.0); }
+  public static void addInterval(FlatBufferBuilder builder, double INTERVAL) { builder.addDouble(15, INTERVAL, 0.0); }
+  public static void addNumSats(FlatBufferBuilder builder, long NUM_SATS) { builder.addInt(16, (int) NUM_SATS, (int) 0L); }
+  public static void addPdop(FlatBufferBuilder builder, double PDOP) { builder.addDouble(17, PDOP, 0.0); }
+  public static void addHdop(FlatBufferBuilder builder, double HDOP) { builder.addDouble(18, HDOP, 0.0); }
+  public static void addVdop(FlatBufferBuilder builder, double VDOP) { builder.addDouble(19, VDOP, 0.0); }
+  public static void addSatObs(FlatBufferBuilder builder, int SAT_OBSOffset) { builder.addOffset(20, SAT_OBSOffset, 0); }
+  public static int createSatObsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startSatObsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addObsCodeSet(FlatBufferBuilder builder, int OBS_CODE_SETOffset) { builder.addOffset(21, OBS_CODE_SETOffset, 0); }
   public static int createObsCodeSetVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startObsCodeSetVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addOb(FlatBufferBuilder builder, int OBOffset) { builder.addOffset(4, OBOffset, 0); }
-  public static int createObVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startObVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addNotes(FlatBufferBuilder builder, int NOTESOffset) { builder.addOffset(22, NOTESOffset, 0); }
   public static int endGNO(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

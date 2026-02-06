@@ -29,6 +29,7 @@ class BEM(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Unique beam identifier
     # BEM
     def ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +37,7 @@ class BEM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Beam name or designation
     # BEM
     def BEAM_NAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -43,35 +45,146 @@ class BEM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Reference to parent entity (satellite/transponder)
     # BEM
-    def NOTES(self):
+    def ID_ENTITY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Reference to parent antenna
     # BEM
-    def BEAM_CONTOURS(self, j):
+    def ID_ANTENNA(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
-            a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Beam type
+    # BEM
+    def TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Beam polarization
+    # BEM
+    def POLARIZATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Peak gain in dBi
+    # BEM
+    def PEAK_GAIN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Edge-of-coverage gain in dBi
+    # BEM
+    def EOC_GAIN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Beam center latitude in degrees
+    # BEM
+    def CENTER_LATITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Beam center longitude in degrees
+    # BEM
+    def CENTER_LONGITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Beamwidth (3dB) in degrees
+    # BEM
+    def BEAMWIDTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Operating frequency in MHz
+    # BEM
+    def FREQUENCY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # EIRP at beam center in dBW
+    # BEM
+    def EIRP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # G/T at beam center in dB/K
+    # BEM
+    def G_OVER_T(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Beam footprint area in km^2
+    # BEM
+    def FOOTPRINT_AREA(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Beam contour definitions
+    # BEM
+    def BEAM_CONTOURS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from beamContour import beamContour
+            obj = beamContour()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
 
     # BEM
     def BEAM_CONTOURSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # BEM
     def BEAM_CONTOURSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         return o == 0
 
+    # Additional notes
+    # BEM
+    def NOTES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def BEMStart(builder):
-    builder.StartObject(4)
+    builder.StartObject(17)
 
 def Start(builder):
     BEMStart(builder)
@@ -88,14 +201,86 @@ def BEMAddBEAM_NAME(builder, BEAM_NAME):
 def AddBEAM_NAME(builder, BEAM_NAME):
     BEMAddBEAM_NAME(builder, BEAM_NAME)
 
-def BEMAddNOTES(builder, NOTES):
-    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(NOTES), 0)
+def BEMAddID_ENTITY(builder, ID_ENTITY):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ID_ENTITY), 0)
 
-def AddNOTES(builder, NOTES):
-    BEMAddNOTES(builder, NOTES)
+def AddID_ENTITY(builder, ID_ENTITY):
+    BEMAddID_ENTITY(builder, ID_ENTITY)
+
+def BEMAddID_ANTENNA(builder, ID_ANTENNA):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ID_ANTENNA), 0)
+
+def AddID_ANTENNA(builder, ID_ANTENNA):
+    BEMAddID_ANTENNA(builder, ID_ANTENNA)
+
+def BEMAddTYPE(builder, TYPE):
+    builder.PrependInt8Slot(4, TYPE, 0)
+
+def AddTYPE(builder, TYPE):
+    BEMAddTYPE(builder, TYPE)
+
+def BEMAddPOLARIZATION(builder, POLARIZATION):
+    builder.PrependInt8Slot(5, POLARIZATION, 0)
+
+def AddPOLARIZATION(builder, POLARIZATION):
+    BEMAddPOLARIZATION(builder, POLARIZATION)
+
+def BEMAddPEAK_GAIN(builder, PEAK_GAIN):
+    builder.PrependFloat64Slot(6, PEAK_GAIN, 0.0)
+
+def AddPEAK_GAIN(builder, PEAK_GAIN):
+    BEMAddPEAK_GAIN(builder, PEAK_GAIN)
+
+def BEMAddEOC_GAIN(builder, EOC_GAIN):
+    builder.PrependFloat64Slot(7, EOC_GAIN, 0.0)
+
+def AddEOC_GAIN(builder, EOC_GAIN):
+    BEMAddEOC_GAIN(builder, EOC_GAIN)
+
+def BEMAddCENTER_LATITUDE(builder, CENTER_LATITUDE):
+    builder.PrependFloat64Slot(8, CENTER_LATITUDE, 0.0)
+
+def AddCENTER_LATITUDE(builder, CENTER_LATITUDE):
+    BEMAddCENTER_LATITUDE(builder, CENTER_LATITUDE)
+
+def BEMAddCENTER_LONGITUDE(builder, CENTER_LONGITUDE):
+    builder.PrependFloat64Slot(9, CENTER_LONGITUDE, 0.0)
+
+def AddCENTER_LONGITUDE(builder, CENTER_LONGITUDE):
+    BEMAddCENTER_LONGITUDE(builder, CENTER_LONGITUDE)
+
+def BEMAddBEAMWIDTH(builder, BEAMWIDTH):
+    builder.PrependFloat64Slot(10, BEAMWIDTH, 0.0)
+
+def AddBEAMWIDTH(builder, BEAMWIDTH):
+    BEMAddBEAMWIDTH(builder, BEAMWIDTH)
+
+def BEMAddFREQUENCY(builder, FREQUENCY):
+    builder.PrependFloat64Slot(11, FREQUENCY, 0.0)
+
+def AddFREQUENCY(builder, FREQUENCY):
+    BEMAddFREQUENCY(builder, FREQUENCY)
+
+def BEMAddEIRP(builder, EIRP):
+    builder.PrependFloat64Slot(12, EIRP, 0.0)
+
+def AddEIRP(builder, EIRP):
+    BEMAddEIRP(builder, EIRP)
+
+def BEMAddG_OVER_T(builder, G_OVER_T):
+    builder.PrependFloat64Slot(13, G_OVER_T, 0.0)
+
+def AddG_OVER_T(builder, G_OVER_T):
+    BEMAddG_OVER_T(builder, G_OVER_T)
+
+def BEMAddFOOTPRINT_AREA(builder, FOOTPRINT_AREA):
+    builder.PrependFloat64Slot(14, FOOTPRINT_AREA, 0.0)
+
+def AddFOOTPRINT_AREA(builder, FOOTPRINT_AREA):
+    BEMAddFOOTPRINT_AREA(builder, FOOTPRINT_AREA)
 
 def BEMAddBEAM_CONTOURS(builder, BEAM_CONTOURS):
-    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(BEAM_CONTOURS), 0)
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(BEAM_CONTOURS), 0)
 
 def AddBEAM_CONTOURS(builder, BEAM_CONTOURS):
     BEMAddBEAM_CONTOURS(builder, BEAM_CONTOURS)
@@ -106,12 +291,19 @@ def BEMStartBEAM_CONTOURSVector(builder, numElems):
 def StartBEAM_CONTOURSVector(builder, numElems):
     return BEMStartBEAM_CONTOURSVector(builder, numElems)
 
+def BEMAddNOTES(builder, NOTES):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(NOTES), 0)
+
+def AddNOTES(builder, NOTES):
+    BEMAddNOTES(builder, NOTES)
+
 def BEMEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return BEMEnd(builder)
 
+import beamContour
 try:
     from typing import List
 except:
@@ -123,8 +315,21 @@ class BEMT(object):
     def __init__(self):
         self.ID = None  # type: str
         self.BEAM_NAME = None  # type: str
+        self.ID_ENTITY = None  # type: str
+        self.ID_ANTENNA = None  # type: str
+        self.TYPE = 0  # type: int
+        self.POLARIZATION = 0  # type: int
+        self.PEAK_GAIN = 0.0  # type: float
+        self.EOC_GAIN = 0.0  # type: float
+        self.CENTER_LATITUDE = 0.0  # type: float
+        self.CENTER_LONGITUDE = 0.0  # type: float
+        self.BEAMWIDTH = 0.0  # type: float
+        self.FREQUENCY = 0.0  # type: float
+        self.EIRP = 0.0  # type: float
+        self.G_OVER_T = 0.0  # type: float
+        self.FOOTPRINT_AREA = 0.0  # type: float
+        self.BEAM_CONTOURS = None  # type: List[beamContour.beamContourT]
         self.NOTES = None  # type: str
-        self.BEAM_CONTOURS = None  # type: List[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -149,11 +354,28 @@ class BEMT(object):
             return
         self.ID = BEM.ID()
         self.BEAM_NAME = BEM.BEAM_NAME()
-        self.NOTES = BEM.NOTES()
+        self.ID_ENTITY = BEM.ID_ENTITY()
+        self.ID_ANTENNA = BEM.ID_ANTENNA()
+        self.TYPE = BEM.TYPE()
+        self.POLARIZATION = BEM.POLARIZATION()
+        self.PEAK_GAIN = BEM.PEAK_GAIN()
+        self.EOC_GAIN = BEM.EOC_GAIN()
+        self.CENTER_LATITUDE = BEM.CENTER_LATITUDE()
+        self.CENTER_LONGITUDE = BEM.CENTER_LONGITUDE()
+        self.BEAMWIDTH = BEM.BEAMWIDTH()
+        self.FREQUENCY = BEM.FREQUENCY()
+        self.EIRP = BEM.EIRP()
+        self.G_OVER_T = BEM.G_OVER_T()
+        self.FOOTPRINT_AREA = BEM.FOOTPRINT_AREA()
         if not BEM.BEAM_CONTOURSIsNone():
             self.BEAM_CONTOURS = []
             for i in range(BEM.BEAM_CONTOURSLength()):
-                self.BEAM_CONTOURS.append(BEM.BEAM_CONTOURS(i))
+                if BEM.BEAM_CONTOURS(i) is None:
+                    self.BEAM_CONTOURS.append(None)
+                else:
+                    beamContour_ = beamContour.beamContourT.InitFromObj(BEM.BEAM_CONTOURS(i))
+                    self.BEAM_CONTOURS.append(beamContour_)
+        self.NOTES = BEM.NOTES()
 
     # BEMT
     def Pack(self, builder):
@@ -161,24 +383,43 @@ class BEMT(object):
             ID = builder.CreateString(self.ID)
         if self.BEAM_NAME is not None:
             BEAM_NAME = builder.CreateString(self.BEAM_NAME)
-        if self.NOTES is not None:
-            NOTES = builder.CreateString(self.NOTES)
+        if self.ID_ENTITY is not None:
+            ID_ENTITY = builder.CreateString(self.ID_ENTITY)
+        if self.ID_ANTENNA is not None:
+            ID_ANTENNA = builder.CreateString(self.ID_ANTENNA)
         if self.BEAM_CONTOURS is not None:
             BEAM_CONTOURSlist = []
             for i in range(len(self.BEAM_CONTOURS)):
-                BEAM_CONTOURSlist.append(builder.CreateString(self.BEAM_CONTOURS[i]))
+                BEAM_CONTOURSlist.append(self.BEAM_CONTOURS[i].Pack(builder))
             BEMStartBEAM_CONTOURSVector(builder, len(self.BEAM_CONTOURS))
             for i in reversed(range(len(self.BEAM_CONTOURS))):
                 builder.PrependUOffsetTRelative(BEAM_CONTOURSlist[i])
             BEAM_CONTOURS = builder.EndVector()
+        if self.NOTES is not None:
+            NOTES = builder.CreateString(self.NOTES)
         BEMStart(builder)
         if self.ID is not None:
             BEMAddID(builder, ID)
         if self.BEAM_NAME is not None:
             BEMAddBEAM_NAME(builder, BEAM_NAME)
-        if self.NOTES is not None:
-            BEMAddNOTES(builder, NOTES)
+        if self.ID_ENTITY is not None:
+            BEMAddID_ENTITY(builder, ID_ENTITY)
+        if self.ID_ANTENNA is not None:
+            BEMAddID_ANTENNA(builder, ID_ANTENNA)
+        BEMAddTYPE(builder, self.TYPE)
+        BEMAddPOLARIZATION(builder, self.POLARIZATION)
+        BEMAddPEAK_GAIN(builder, self.PEAK_GAIN)
+        BEMAddEOC_GAIN(builder, self.EOC_GAIN)
+        BEMAddCENTER_LATITUDE(builder, self.CENTER_LATITUDE)
+        BEMAddCENTER_LONGITUDE(builder, self.CENTER_LONGITUDE)
+        BEMAddBEAMWIDTH(builder, self.BEAMWIDTH)
+        BEMAddFREQUENCY(builder, self.FREQUENCY)
+        BEMAddEIRP(builder, self.EIRP)
+        BEMAddG_OVER_T(builder, self.G_OVER_T)
+        BEMAddFOOTPRINT_AREA(builder, self.FOOTPRINT_AREA)
         if self.BEAM_CONTOURS is not None:
             BEMAddBEAM_CONTOURS(builder, BEAM_CONTOURS)
+        if self.NOTES is not None:
+            BEMAddNOTES(builder, NOTES)
         BEM = BEMEnd(builder)
         return BEM

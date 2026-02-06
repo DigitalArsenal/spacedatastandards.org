@@ -5,6 +5,62 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class ImageFormat {
+  final int value;
+  const ImageFormat._(this.value);
+
+  factory ImageFormat.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum ImageFormat');
+    }
+    return result;
+  }
+
+  static ImageFormat? _createOrNull(int? value) => 
+      value == null ? null : ImageFormat.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 7;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const ImageFormat FITS = ImageFormat._(0);
+  static const ImageFormat JPEG = ImageFormat._(1);
+  static const ImageFormat PNG = ImageFormat._(2);
+  static const ImageFormat TIFF = ImageFormat._(3);
+  static const ImageFormat RAW = ImageFormat._(4);
+  static const ImageFormat NITF = ImageFormat._(5);
+  static const ImageFormat GEOTIFF = ImageFormat._(6);
+  static const ImageFormat OTHER = ImageFormat._(7);
+  static const Map<int, ImageFormat> values = {
+    0: FITS,
+    1: JPEG,
+    2: PNG,
+    3: TIFF,
+    4: RAW,
+    5: NITF,
+    6: GEOTIFF,
+    7: OTHER};
+
+  static const fb.Reader<ImageFormat> reader = _ImageFormatReader();
+
+  @override
+  String toString() {
+    return 'ImageFormat{value: $value}';
+  }
+}
+
+class _ImageFormatReader extends fb.Reader<ImageFormat> {
+  const _ImageFormatReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  ImageFormat read(fb.BufferContext bc, int offset) =>
+      ImageFormat.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 ///  Ground Imagery
 class GDI {
   GDI._(this._bc, this._bcOffset);
@@ -18,30 +74,50 @@ class GDI {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Sensor identifier
   String? get ID_SENSOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get IMAGE_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get FILENAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get REGION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get REGION_TEXT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get REGION_GEO_JSON => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  String? get REGION_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  int get REGION_NDIMS => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 20, 0);
-  int get REGION_SRID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 22, 0);
-  String? get ORIG_SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
-  String? get SUBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
-  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
-  String? get TRANSACTION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
-  List<String>? get TAGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 32);
-  List<String>? get KEYWORDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 34);
-  String? get NOTES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
-  String? get FORMAT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
-  int get FILESIZE => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 40, 0);
-  String? get CHECKSUM_VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
+  ///  Original sensor identifier
+  String? get ORIG_SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Image capture time (ISO 8601)
+  String? get IMAGE_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Image filename
+  String? get FILENAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Image format
+  ImageFormat get FORMAT => ImageFormat.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
+  ///  File size (bytes)
+  int get FILESIZE => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 16, 0);
+  ///  File checksum value
+  String? get CHECKSUM_VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Region GeoJSON boundary
+  String? get REGION_GEO_JSON => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  ///  Region text description
+  String? get REGION_TEXT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Region name
+  String? get REGION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Region type
+  String? get REGION_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Region geometry dimensions
+  int get REGION_NDIMS => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 28, 0);
+  ///  Region spatial reference ID
+  int get REGION_SRID => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 30, 0);
+  ///  Subject object identifier
+  String? get SUBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  ///  Image name or title
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  ///  Transaction identifier
+  String? get TRANSACTION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  ///  Associated tags
+  List<String>? get TAGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 38);
+  ///  Keywords for search/classification
+  List<String>? get KEYWORDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 40);
+  ///  Notes
+  String? get NOTES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
 
   @override
   String toString() {
-    return 'GDI{ID: ${ID}, ID_SENSOR: ${ID_SENSOR}, IMAGE_TIME: ${IMAGE_TIME}, FILENAME: ${FILENAME}, REGION: ${REGION}, REGION_TEXT: ${REGION_TEXT}, REGION_GEO_JSON: ${REGION_GEO_JSON}, REGION_TYPE: ${REGION_TYPE}, REGION_NDIMS: ${REGION_NDIMS}, REGION_SRID: ${REGION_SRID}, ORIG_SENSOR_ID: ${ORIG_SENSOR_ID}, SUBJECT_ID: ${SUBJECT_ID}, NAME: ${NAME}, TRANSACTION_ID: ${TRANSACTION_ID}, TAGS: ${TAGS}, KEYWORDS: ${KEYWORDS}, NOTES: ${NOTES}, FORMAT: ${FORMAT}, FILESIZE: ${FILESIZE}, CHECKSUM_VALUE: ${CHECKSUM_VALUE}}';
+    return 'GDI{ID: ${ID}, ID_SENSOR: ${ID_SENSOR}, ORIG_SENSOR_ID: ${ORIG_SENSOR_ID}, IMAGE_TIME: ${IMAGE_TIME}, FILENAME: ${FILENAME}, FORMAT: ${FORMAT}, FILESIZE: ${FILESIZE}, CHECKSUM_VALUE: ${CHECKSUM_VALUE}, REGION_GEO_JSON: ${REGION_GEO_JSON}, REGION_TEXT: ${REGION_TEXT}, REGION: ${REGION}, REGION_TYPE: ${REGION_TYPE}, REGION_NDIMS: ${REGION_NDIMS}, REGION_SRID: ${REGION_SRID}, SUBJECT_ID: ${SUBJECT_ID}, NAME: ${NAME}, TRANSACTION_ID: ${TRANSACTION_ID}, TAGS: ${TAGS}, KEYWORDS: ${KEYWORDS}, NOTES: ${NOTES}}';
   }
 }
 
@@ -70,75 +146,75 @@ class GDIBuilder {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addImageTimeOffset(int? offset) {
+  int addOrigSensorIdOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addFilenameOffset(int? offset) {
+  int addImageTimeOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addRegionOffset(int? offset) {
+  int addFilenameOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addRegionTextOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addRegionGeoJsonOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addRegionTypeOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addRegionNdims(int? REGION_NDIMS) {
-    fbBuilder.addInt32(8, REGION_NDIMS);
-    return fbBuilder.offset;
-  }
-  int addRegionSrid(int? REGION_SRID) {
-    fbBuilder.addInt32(9, REGION_SRID);
-    return fbBuilder.offset;
-  }
-  int addOrigSensorIdOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
-    return fbBuilder.offset;
-  }
-  int addSubjectIdOffset(int? offset) {
-    fbBuilder.addOffset(11, offset);
-    return fbBuilder.offset;
-  }
-  int addNameOffset(int? offset) {
-    fbBuilder.addOffset(12, offset);
-    return fbBuilder.offset;
-  }
-  int addTransactionIdOffset(int? offset) {
-    fbBuilder.addOffset(13, offset);
-    return fbBuilder.offset;
-  }
-  int addTagsOffset(int? offset) {
-    fbBuilder.addOffset(14, offset);
-    return fbBuilder.offset;
-  }
-  int addKeywordsOffset(int? offset) {
-    fbBuilder.addOffset(15, offset);
-    return fbBuilder.offset;
-  }
-  int addNotesOffset(int? offset) {
-    fbBuilder.addOffset(16, offset);
-    return fbBuilder.offset;
-  }
-  int addFormatOffset(int? offset) {
-    fbBuilder.addOffset(17, offset);
+  int addFormat(ImageFormat? FORMAT) {
+    fbBuilder.addInt8(5, FORMAT?.value);
     return fbBuilder.offset;
   }
   int addFilesize(int? FILESIZE) {
-    fbBuilder.addInt64(18, FILESIZE);
+    fbBuilder.addInt64(6, FILESIZE);
     return fbBuilder.offset;
   }
   int addChecksumValueOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addRegionGeoJsonOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addRegionTextOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addRegionOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addRegionTypeOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addRegionNdims(int? REGION_NDIMS) {
+    fbBuilder.addUint8(12, REGION_NDIMS);
+    return fbBuilder.offset;
+  }
+  int addRegionSrid(int? REGION_SRID) {
+    fbBuilder.addUint16(13, REGION_SRID);
+    return fbBuilder.offset;
+  }
+  int addSubjectIdOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addTransactionIdOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addTagsOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addKeywordsOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addNotesOffset(int? offset) {
     fbBuilder.addOffset(19, offset);
     return fbBuilder.offset;
   }
@@ -151,67 +227,67 @@ class GDIBuilder {
 class GDIObjectBuilder extends fb.ObjectBuilder {
   final String? _ID;
   final String? _ID_SENSOR;
+  final String? _ORIG_SENSOR_ID;
   final String? _IMAGE_TIME;
   final String? _FILENAME;
-  final String? _REGION;
-  final String? _REGION_TEXT;
+  final ImageFormat? _FORMAT;
+  final int? _FILESIZE;
+  final String? _CHECKSUM_VALUE;
   final String? _REGION_GEO_JSON;
+  final String? _REGION_TEXT;
+  final String? _REGION;
   final String? _REGION_TYPE;
   final int? _REGION_NDIMS;
   final int? _REGION_SRID;
-  final String? _ORIG_SENSOR_ID;
   final String? _SUBJECT_ID;
   final String? _NAME;
   final String? _TRANSACTION_ID;
   final List<String>? _TAGS;
   final List<String>? _KEYWORDS;
   final String? _NOTES;
-  final String? _FORMAT;
-  final int? _FILESIZE;
-  final String? _CHECKSUM_VALUE;
 
   GDIObjectBuilder({
     String? ID,
     String? ID_SENSOR,
+    String? ORIG_SENSOR_ID,
     String? IMAGE_TIME,
     String? FILENAME,
-    String? REGION,
-    String? REGION_TEXT,
+    ImageFormat? FORMAT,
+    int? FILESIZE,
+    String? CHECKSUM_VALUE,
     String? REGION_GEO_JSON,
+    String? REGION_TEXT,
+    String? REGION,
     String? REGION_TYPE,
     int? REGION_NDIMS,
     int? REGION_SRID,
-    String? ORIG_SENSOR_ID,
     String? SUBJECT_ID,
     String? NAME,
     String? TRANSACTION_ID,
     List<String>? TAGS,
     List<String>? KEYWORDS,
     String? NOTES,
-    String? FORMAT,
-    int? FILESIZE,
-    String? CHECKSUM_VALUE,
   })
       : _ID = ID,
         _ID_SENSOR = ID_SENSOR,
+        _ORIG_SENSOR_ID = ORIG_SENSOR_ID,
         _IMAGE_TIME = IMAGE_TIME,
         _FILENAME = FILENAME,
-        _REGION = REGION,
-        _REGION_TEXT = REGION_TEXT,
+        _FORMAT = FORMAT,
+        _FILESIZE = FILESIZE,
+        _CHECKSUM_VALUE = CHECKSUM_VALUE,
         _REGION_GEO_JSON = REGION_GEO_JSON,
+        _REGION_TEXT = REGION_TEXT,
+        _REGION = REGION,
         _REGION_TYPE = REGION_TYPE,
         _REGION_NDIMS = REGION_NDIMS,
         _REGION_SRID = REGION_SRID,
-        _ORIG_SENSOR_ID = ORIG_SENSOR_ID,
         _SUBJECT_ID = SUBJECT_ID,
         _NAME = NAME,
         _TRANSACTION_ID = TRANSACTION_ID,
         _TAGS = TAGS,
         _KEYWORDS = KEYWORDS,
-        _NOTES = NOTES,
-        _FORMAT = FORMAT,
-        _FILESIZE = FILESIZE,
-        _CHECKSUM_VALUE = CHECKSUM_VALUE;
+        _NOTES = NOTES;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -220,20 +296,22 @@ class GDIObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ID!);
     final int? ID_SENSOROffset = _ID_SENSOR == null ? null
         : fbBuilder.writeString(_ID_SENSOR!);
+    final int? ORIG_SENSOR_IDOffset = _ORIG_SENSOR_ID == null ? null
+        : fbBuilder.writeString(_ORIG_SENSOR_ID!);
     final int? IMAGE_TIMEOffset = _IMAGE_TIME == null ? null
         : fbBuilder.writeString(_IMAGE_TIME!);
     final int? FILENAMEOffset = _FILENAME == null ? null
         : fbBuilder.writeString(_FILENAME!);
-    final int? REGIONOffset = _REGION == null ? null
-        : fbBuilder.writeString(_REGION!);
-    final int? REGION_TEXTOffset = _REGION_TEXT == null ? null
-        : fbBuilder.writeString(_REGION_TEXT!);
+    final int? CHECKSUM_VALUEOffset = _CHECKSUM_VALUE == null ? null
+        : fbBuilder.writeString(_CHECKSUM_VALUE!);
     final int? REGION_GEO_JSONOffset = _REGION_GEO_JSON == null ? null
         : fbBuilder.writeString(_REGION_GEO_JSON!);
+    final int? REGION_TEXTOffset = _REGION_TEXT == null ? null
+        : fbBuilder.writeString(_REGION_TEXT!);
+    final int? REGIONOffset = _REGION == null ? null
+        : fbBuilder.writeString(_REGION!);
     final int? REGION_TYPEOffset = _REGION_TYPE == null ? null
         : fbBuilder.writeString(_REGION_TYPE!);
-    final int? ORIG_SENSOR_IDOffset = _ORIG_SENSOR_ID == null ? null
-        : fbBuilder.writeString(_ORIG_SENSOR_ID!);
     final int? SUBJECT_IDOffset = _SUBJECT_ID == null ? null
         : fbBuilder.writeString(_SUBJECT_ID!);
     final int? NAMEOffset = _NAME == null ? null
@@ -246,31 +324,27 @@ class GDIObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_KEYWORDS!.map(fbBuilder.writeString).toList());
     final int? NOTESOffset = _NOTES == null ? null
         : fbBuilder.writeString(_NOTES!);
-    final int? FORMATOffset = _FORMAT == null ? null
-        : fbBuilder.writeString(_FORMAT!);
-    final int? CHECKSUM_VALUEOffset = _CHECKSUM_VALUE == null ? null
-        : fbBuilder.writeString(_CHECKSUM_VALUE!);
     fbBuilder.startTable(20);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, ID_SENSOROffset);
-    fbBuilder.addOffset(2, IMAGE_TIMEOffset);
-    fbBuilder.addOffset(3, FILENAMEOffset);
-    fbBuilder.addOffset(4, REGIONOffset);
-    fbBuilder.addOffset(5, REGION_TEXTOffset);
-    fbBuilder.addOffset(6, REGION_GEO_JSONOffset);
-    fbBuilder.addOffset(7, REGION_TYPEOffset);
-    fbBuilder.addInt32(8, _REGION_NDIMS);
-    fbBuilder.addInt32(9, _REGION_SRID);
-    fbBuilder.addOffset(10, ORIG_SENSOR_IDOffset);
-    fbBuilder.addOffset(11, SUBJECT_IDOffset);
-    fbBuilder.addOffset(12, NAMEOffset);
-    fbBuilder.addOffset(13, TRANSACTION_IDOffset);
-    fbBuilder.addOffset(14, TAGSOffset);
-    fbBuilder.addOffset(15, KEYWORDSOffset);
-    fbBuilder.addOffset(16, NOTESOffset);
-    fbBuilder.addOffset(17, FORMATOffset);
-    fbBuilder.addInt64(18, _FILESIZE);
-    fbBuilder.addOffset(19, CHECKSUM_VALUEOffset);
+    fbBuilder.addOffset(2, ORIG_SENSOR_IDOffset);
+    fbBuilder.addOffset(3, IMAGE_TIMEOffset);
+    fbBuilder.addOffset(4, FILENAMEOffset);
+    fbBuilder.addInt8(5, _FORMAT?.value);
+    fbBuilder.addInt64(6, _FILESIZE);
+    fbBuilder.addOffset(7, CHECKSUM_VALUEOffset);
+    fbBuilder.addOffset(8, REGION_GEO_JSONOffset);
+    fbBuilder.addOffset(9, REGION_TEXTOffset);
+    fbBuilder.addOffset(10, REGIONOffset);
+    fbBuilder.addOffset(11, REGION_TYPEOffset);
+    fbBuilder.addUint8(12, _REGION_NDIMS);
+    fbBuilder.addUint16(13, _REGION_SRID);
+    fbBuilder.addOffset(14, SUBJECT_IDOffset);
+    fbBuilder.addOffset(15, NAMEOffset);
+    fbBuilder.addOffset(16, TRANSACTION_IDOffset);
+    fbBuilder.addOffset(17, TAGSOffset);
+    fbBuilder.addOffset(18, KEYWORDSOffset);
+    fbBuilder.addOffset(19, NOTESOffset);
     return fbBuilder.endTable();
   }
 

@@ -5,6 +5,120 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class SarMode {
+  final int value;
+  const SarMode._(this.value);
+
+  factory SarMode.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum SarMode');
+    }
+    return result;
+  }
+
+  static SarMode? _createOrNull(int? value) => 
+      value == null ? null : SarMode.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 7;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const SarMode STRIPMAP = SarMode._(0);
+  static const SarMode SPOTLIGHT = SarMode._(1);
+  static const SarMode SCANSAR = SarMode._(2);
+  static const SarMode TOPSAR = SarMode._(3);
+  static const SarMode ISAR = SarMode._(4);
+  static const SarMode GMTI = SarMode._(5);
+  static const SarMode MARITIME = SarMode._(6);
+  static const SarMode UNKNOWN = SarMode._(7);
+  static const Map<int, SarMode> values = {
+    0: STRIPMAP,
+    1: SPOTLIGHT,
+    2: SCANSAR,
+    3: TOPSAR,
+    4: ISAR,
+    5: GMTI,
+    6: MARITIME,
+    7: UNKNOWN};
+
+  static const fb.Reader<SarMode> reader = _SarModeReader();
+
+  @override
+  String toString() {
+    return 'SarMode{value: $value}';
+  }
+}
+
+class _SarModeReader extends fb.Reader<SarMode> {
+  const _SarModeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  SarMode read(fb.BufferContext bc, int offset) =>
+      SarMode.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class SarPolarization {
+  final int value;
+  const SarPolarization._(this.value);
+
+  factory SarPolarization.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum SarPolarization');
+    }
+    return result;
+  }
+
+  static SarPolarization? _createOrNull(int? value) => 
+      value == null ? null : SarPolarization.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 8;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const SarPolarization HH = SarPolarization._(0);
+  static const SarPolarization VV = SarPolarization._(1);
+  static const SarPolarization HV = SarPolarization._(2);
+  static const SarPolarization VH = SarPolarization._(3);
+  static const SarPolarization DUAL_HH_VV = SarPolarization._(4);
+  static const SarPolarization DUAL_HH_HV = SarPolarization._(5);
+  static const SarPolarization DUAL_VV_VH = SarPolarization._(6);
+  static const SarPolarization QUAD = SarPolarization._(7);
+  static const SarPolarization COMPACT = SarPolarization._(8);
+  static const Map<int, SarPolarization> values = {
+    0: HH,
+    1: VV,
+    2: HV,
+    3: VH,
+    4: DUAL_HH_VV,
+    5: DUAL_HH_HV,
+    6: DUAL_VV_VH,
+    7: QUAD,
+    8: COMPACT};
+
+  static const fb.Reader<SarPolarization> reader = _SarPolarizationReader();
+
+  @override
+  String toString() {
+    return 'SarPolarization{value: $value}';
+  }
+}
+
+class _SarPolarizationReader extends fb.Reader<SarPolarization> {
+  const _SarPolarizationReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  SarPolarization read(fb.BufferContext bc, int offset) =>
+      SarPolarization.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 ///  SAR Observation
 class SAR {
   SAR._(this._bc, this._bcOffset);
@@ -18,71 +132,126 @@ class SAR {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  int get SAT_NO => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  ///  Satellite catalog number (of SAR platform)
+  int get SAT_NO => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  ///  International designator
   String? get ORIG_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get ID_SENSOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get ORIG_SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get EXTERNAL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get COLLECTION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  String? get DETECTION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  String? get COLLECTION_START => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  String? get COLLECTION_END => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  String? get CENTER_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
-  String? get DETECTION_START => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
-  String? get DETECTION_END => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
-  double get DWELL_TIME => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
-  String? get ORBIT_STATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
-  String? get SAR_MODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
-  String? get OPERATING_BAND => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
-  double get OPERATING_FREQ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
-  double get SNR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
-  String? get TX_POLARIZATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
-  String? get RX_POLARIZATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
-  double get GRAZE_ANGLE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
-  double get INCIDENCE_ANGLE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
-  double get SQUINT_ANGLE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
-  double get PULSE_BANDWIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
-  double get PULSE_DURATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
-  double get CONTINUOUS_SPOT_ANGLE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, 0.0);
-  double get SLANT_RANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
-  double get NEAR_RANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 60, 0.0);
-  double get FAR_RANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
-  double get SWATH_LENGTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
-  String? get AREA => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 66);
-  String? get ATEXT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 68);
-  String? get AGJSON => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 70);
+  ///  On-orbit reference
+  String? get ON_ORBIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Sensor identifier
+  String? get ID_SENSOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Original sensor identifier
+  String? get ORIG_SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  External reference identifier
+  String? get EXTERNAL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Collection identifier
+  String? get COLLECTION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Detection identifier
+  String? get DETECTION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  ///  Collection start time (ISO 8601)
+  String? get COLLECTION_START => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Collection end time (ISO 8601)
+  String? get COLLECTION_END => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Center time of observation (ISO 8601)
+  String? get CENTER_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Detection start time (ISO 8601)
+  String? get DETECTION_START => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Detection end time (ISO 8601)
+  String? get DETECTION_END => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  ///  Integration/dwell time (seconds)
+  double get DWELL_TIME => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  ///  Orbit state description
+  String? get ORBIT_STATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  ///  SAR imaging mode
+  SarMode get SAR_MODE => SarMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 36, 0));
+  ///  Operating RF band (e.g., X, C, L, S, P)
+  String? get OPERATING_BAND => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  ///  Operating frequency (GHz)
+  double get OPERATING_FREQ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  ///  Signal-to-noise ratio (dB)
+  double get SNR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  ///  Transmit polarization
+  SarPolarization get TX_POLARIZATION => SarPolarization.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 44, 0));
+  ///  Receive polarization
+  SarPolarization get RX_POLARIZATION => SarPolarization.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 46, 0));
+  ///  Grazing angle (degrees)
+  double get GRAZE_ANGLE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
+  ///  Incidence angle (degrees)
+  double get INCIDENCE_ANGLE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
+  ///  Squint angle (degrees)
+  double get SQUINT_ANGLE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
+  ///  Pulse bandwidth (MHz)
+  double get PULSE_BANDWIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
+  ///  Pulse duration (microseconds)
+  double get PULSE_DURATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, 0.0);
+  ///  Continuous spot angle (degrees)
+  double get CONTINUOUS_SPOT_ANGLE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
+  ///  Slant range to target (km)
+  double get SLANT_RANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 60, 0.0);
+  ///  Near range (km)
+  double get NEAR_RANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
+  ///  Far range (km)
+  double get FAR_RANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
+  ///  Swath length (km)
+  double get SWATH_LENGTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, 0.0);
+  ///  Image area GeoJSON
+  String? get AGJSON => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 68);
+  ///  Image area text description
+  String? get ATEXT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 70);
+  ///  Area type
   String? get ATYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 72);
-  int get ANDIMS => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 74, 0);
-  int get ASRID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 76, 0);
-  double get SPACING_RANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 78, 0.0);
-  double get SPACING_AZIMUTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 80, 0.0);
-  int get LOOKS_AZIMUTH => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 82, 0);
-  int get LOOKS_RANGE => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 84, 0);
-  double get RESOLUTION_RANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 86, 0.0);
-  double get RESOLUTION_AZIMUTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 88, 0.0);
-  String? get OB_DIRECTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 90);
-  String? get COORD_SYS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 92);
-  double get TARGETPOSX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 94, 0.0);
-  double get TARGETPOSY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 96, 0.0);
-  double get TARGETPOSZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 98, 0.0);
-  double get SENALT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 100, 0.0);
-  double get SENVELX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 102, 0.0);
-  double get SENVELY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 104, 0.0);
-  double get SENVELZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 106, 0.0);
-  double get SENLAT_START => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 108, 0.0);
-  double get SENLON_START => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 110, 0.0);
-  double get SENLAT_END => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 112, 0.0);
-  double get SENLON_END => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 114, 0.0);
-  String? get TRANSACTION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 116);
-  List<String>? get TAGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 118);
-  List<String>? get SRC_TYPS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 120);
-  List<String>? get SRC_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 122);
-  String? get ON_ORBIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 124);
+  ///  Coordinate system
+  String? get COORD_SYS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 74);
+  ///  Range pixel spacing (meters)
+  double get SPACING_RANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 76, 0.0);
+  ///  Azimuth pixel spacing (meters)
+  double get SPACING_AZIMUTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 78, 0.0);
+  ///  Number of azimuth looks
+  int get LOOKS_AZIMUTH => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 80, 0);
+  ///  Number of range looks
+  int get LOOKS_RANGE => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 82, 0);
+  ///  Range resolution (meters)
+  double get RESOLUTION_RANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 84, 0.0);
+  ///  Azimuth resolution (meters)
+  double get RESOLUTION_AZIMUTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 86, 0.0);
+  ///  Observation direction (ASCENDING/DESCENDING)
+  String? get OB_DIRECTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 88);
+  ///  Target position X (km)
+  double get TARGETPOSX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 90, 0.0);
+  ///  Target position Y (km)
+  double get TARGETPOSY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 92, 0.0);
+  ///  Target position Z (km)
+  double get TARGETPOSZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 94, 0.0);
+  ///  Sensor altitude (km)
+  double get SENALT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 96, 0.0);
+  ///  Sensor velocity X (km/s)
+  double get SENVELX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 98, 0.0);
+  ///  Sensor velocity Y (km/s)
+  double get SENVELY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 100, 0.0);
+  ///  Sensor velocity Z (km/s)
+  double get SENVELZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 102, 0.0);
+  ///  Sensor latitude at start (degrees)
+  double get SENLAT_START => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 104, 0.0);
+  ///  Sensor longitude at start (degrees)
+  double get SENLON_START => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 106, 0.0);
+  ///  Sensor latitude at end (degrees)
+  double get SENLAT_END => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 108, 0.0);
+  ///  Sensor longitude at end (degrees)
+  double get SENLON_END => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 110, 0.0);
+  ///  Transaction identifier
+  String? get TRANSACTION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 112);
+  ///  Associated tags
+  List<String>? get TAGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 114);
+  ///  Source types
+  List<String>? get SRC_TYPS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 116);
+  ///  Source identifiers
+  List<String>? get SRC_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 118);
 
   @override
   String toString() {
-    return 'SAR{ID: ${ID}, SAT_NO: ${SAT_NO}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, ID_SENSOR: ${ID_SENSOR}, ORIG_SENSOR_ID: ${ORIG_SENSOR_ID}, EXTERNAL_ID: ${EXTERNAL_ID}, COLLECTION_ID: ${COLLECTION_ID}, DETECTION_ID: ${DETECTION_ID}, COLLECTION_START: ${COLLECTION_START}, COLLECTION_END: ${COLLECTION_END}, CENTER_TIME: ${CENTER_TIME}, DETECTION_START: ${DETECTION_START}, DETECTION_END: ${DETECTION_END}, DWELL_TIME: ${DWELL_TIME}, ORBIT_STATE: ${ORBIT_STATE}, SAR_MODE: ${SAR_MODE}, OPERATING_BAND: ${OPERATING_BAND}, OPERATING_FREQ: ${OPERATING_FREQ}, SNR: ${SNR}, TX_POLARIZATION: ${TX_POLARIZATION}, RX_POLARIZATION: ${RX_POLARIZATION}, GRAZE_ANGLE: ${GRAZE_ANGLE}, INCIDENCE_ANGLE: ${INCIDENCE_ANGLE}, SQUINT_ANGLE: ${SQUINT_ANGLE}, PULSE_BANDWIDTH: ${PULSE_BANDWIDTH}, PULSE_DURATION: ${PULSE_DURATION}, CONTINUOUS_SPOT_ANGLE: ${CONTINUOUS_SPOT_ANGLE}, SLANT_RANGE: ${SLANT_RANGE}, NEAR_RANGE: ${NEAR_RANGE}, FAR_RANGE: ${FAR_RANGE}, SWATH_LENGTH: ${SWATH_LENGTH}, AREA: ${AREA}, ATEXT: ${ATEXT}, AGJSON: ${AGJSON}, ATYPE: ${ATYPE}, ANDIMS: ${ANDIMS}, ASRID: ${ASRID}, SPACING_RANGE: ${SPACING_RANGE}, SPACING_AZIMUTH: ${SPACING_AZIMUTH}, LOOKS_AZIMUTH: ${LOOKS_AZIMUTH}, LOOKS_RANGE: ${LOOKS_RANGE}, RESOLUTION_RANGE: ${RESOLUTION_RANGE}, RESOLUTION_AZIMUTH: ${RESOLUTION_AZIMUTH}, OB_DIRECTION: ${OB_DIRECTION}, COORD_SYS: ${COORD_SYS}, TARGETPOSX: ${TARGETPOSX}, TARGETPOSY: ${TARGETPOSY}, TARGETPOSZ: ${TARGETPOSZ}, SENALT: ${SENALT}, SENVELX: ${SENVELX}, SENVELY: ${SENVELY}, SENVELZ: ${SENVELZ}, SENLAT_START: ${SENLAT_START}, SENLON_START: ${SENLON_START}, SENLAT_END: ${SENLAT_END}, SENLON_END: ${SENLON_END}, TRANSACTION_ID: ${TRANSACTION_ID}, TAGS: ${TAGS}, SRC_TYPS: ${SRC_TYPS}, SRC_IDS: ${SRC_IDS}, ON_ORBIT: ${ON_ORBIT}}';
+    return 'SAR{ID: ${ID}, SAT_NO: ${SAT_NO}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, ON_ORBIT: ${ON_ORBIT}, ID_SENSOR: ${ID_SENSOR}, ORIG_SENSOR_ID: ${ORIG_SENSOR_ID}, EXTERNAL_ID: ${EXTERNAL_ID}, COLLECTION_ID: ${COLLECTION_ID}, DETECTION_ID: ${DETECTION_ID}, COLLECTION_START: ${COLLECTION_START}, COLLECTION_END: ${COLLECTION_END}, CENTER_TIME: ${CENTER_TIME}, DETECTION_START: ${DETECTION_START}, DETECTION_END: ${DETECTION_END}, DWELL_TIME: ${DWELL_TIME}, ORBIT_STATE: ${ORBIT_STATE}, SAR_MODE: ${SAR_MODE}, OPERATING_BAND: ${OPERATING_BAND}, OPERATING_FREQ: ${OPERATING_FREQ}, SNR: ${SNR}, TX_POLARIZATION: ${TX_POLARIZATION}, RX_POLARIZATION: ${RX_POLARIZATION}, GRAZE_ANGLE: ${GRAZE_ANGLE}, INCIDENCE_ANGLE: ${INCIDENCE_ANGLE}, SQUINT_ANGLE: ${SQUINT_ANGLE}, PULSE_BANDWIDTH: ${PULSE_BANDWIDTH}, PULSE_DURATION: ${PULSE_DURATION}, CONTINUOUS_SPOT_ANGLE: ${CONTINUOUS_SPOT_ANGLE}, SLANT_RANGE: ${SLANT_RANGE}, NEAR_RANGE: ${NEAR_RANGE}, FAR_RANGE: ${FAR_RANGE}, SWATH_LENGTH: ${SWATH_LENGTH}, AGJSON: ${AGJSON}, ATEXT: ${ATEXT}, ATYPE: ${ATYPE}, COORD_SYS: ${COORD_SYS}, SPACING_RANGE: ${SPACING_RANGE}, SPACING_AZIMUTH: ${SPACING_AZIMUTH}, LOOKS_AZIMUTH: ${LOOKS_AZIMUTH}, LOOKS_RANGE: ${LOOKS_RANGE}, RESOLUTION_RANGE: ${RESOLUTION_RANGE}, RESOLUTION_AZIMUTH: ${RESOLUTION_AZIMUTH}, OB_DIRECTION: ${OB_DIRECTION}, TARGETPOSX: ${TARGETPOSX}, TARGETPOSY: ${TARGETPOSY}, TARGETPOSZ: ${TARGETPOSZ}, SENALT: ${SENALT}, SENVELX: ${SENVELX}, SENVELY: ${SENVELY}, SENVELZ: ${SENVELZ}, SENLAT_START: ${SENLAT_START}, SENLON_START: ${SENLON_START}, SENLAT_END: ${SENLAT_END}, SENLON_END: ${SENLON_END}, TRANSACTION_ID: ${TRANSACTION_ID}, TAGS: ${TAGS}, SRC_TYPS: ${SRC_TYPS}, SRC_IDS: ${SRC_IDS}}';
   }
 }
 
@@ -100,7 +269,7 @@ class SARBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(61);
+    fbBuilder.startTable(58);
   }
 
   int addIdOffset(int? offset) {
@@ -108,134 +277,134 @@ class SARBuilder {
     return fbBuilder.offset;
   }
   int addSatNo(int? SAT_NO) {
-    fbBuilder.addInt32(1, SAT_NO);
+    fbBuilder.addUint32(1, SAT_NO);
     return fbBuilder.offset;
   }
   int addOrigObjectIdOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addIdSensorOffset(int? offset) {
+  int addOnOrbitOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addOrigSensorIdOffset(int? offset) {
+  int addIdSensorOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addExternalIdOffset(int? offset) {
+  int addOrigSensorIdOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addCollectionIdOffset(int? offset) {
+  int addExternalIdOffset(int? offset) {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
-  int addDetectionIdOffset(int? offset) {
+  int addCollectionIdOffset(int? offset) {
     fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addCollectionStartOffset(int? offset) {
+  int addDetectionIdOffset(int? offset) {
     fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
-  int addCollectionEndOffset(int? offset) {
+  int addCollectionStartOffset(int? offset) {
     fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
-  int addCenterTimeOffset(int? offset) {
+  int addCollectionEndOffset(int? offset) {
     fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
-  int addDetectionStartOffset(int? offset) {
+  int addCenterTimeOffset(int? offset) {
     fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
-  int addDetectionEndOffset(int? offset) {
+  int addDetectionStartOffset(int? offset) {
     fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
+  int addDetectionEndOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
   int addDwellTime(double? DWELL_TIME) {
-    fbBuilder.addFloat64(13, DWELL_TIME);
+    fbBuilder.addFloat64(14, DWELL_TIME);
     return fbBuilder.offset;
   }
   int addOrbitStateOffset(int? offset) {
-    fbBuilder.addOffset(14, offset);
-    return fbBuilder.offset;
-  }
-  int addSarModeOffset(int? offset) {
     fbBuilder.addOffset(15, offset);
     return fbBuilder.offset;
   }
+  int addSarMode(SarMode? SAR_MODE) {
+    fbBuilder.addInt8(16, SAR_MODE?.value);
+    return fbBuilder.offset;
+  }
   int addOperatingBandOffset(int? offset) {
-    fbBuilder.addOffset(16, offset);
+    fbBuilder.addOffset(17, offset);
     return fbBuilder.offset;
   }
   int addOperatingFreq(double? OPERATING_FREQ) {
-    fbBuilder.addFloat64(17, OPERATING_FREQ);
+    fbBuilder.addFloat64(18, OPERATING_FREQ);
     return fbBuilder.offset;
   }
   int addSnr(double? SNR) {
-    fbBuilder.addFloat64(18, SNR);
+    fbBuilder.addFloat64(19, SNR);
     return fbBuilder.offset;
   }
-  int addTxPolarizationOffset(int? offset) {
-    fbBuilder.addOffset(19, offset);
+  int addTxPolarization(SarPolarization? TX_POLARIZATION) {
+    fbBuilder.addInt8(20, TX_POLARIZATION?.value);
     return fbBuilder.offset;
   }
-  int addRxPolarizationOffset(int? offset) {
-    fbBuilder.addOffset(20, offset);
+  int addRxPolarization(SarPolarization? RX_POLARIZATION) {
+    fbBuilder.addInt8(21, RX_POLARIZATION?.value);
     return fbBuilder.offset;
   }
   int addGrazeAngle(double? GRAZE_ANGLE) {
-    fbBuilder.addFloat64(21, GRAZE_ANGLE);
+    fbBuilder.addFloat64(22, GRAZE_ANGLE);
     return fbBuilder.offset;
   }
   int addIncidenceAngle(double? INCIDENCE_ANGLE) {
-    fbBuilder.addFloat64(22, INCIDENCE_ANGLE);
+    fbBuilder.addFloat64(23, INCIDENCE_ANGLE);
     return fbBuilder.offset;
   }
   int addSquintAngle(double? SQUINT_ANGLE) {
-    fbBuilder.addFloat64(23, SQUINT_ANGLE);
+    fbBuilder.addFloat64(24, SQUINT_ANGLE);
     return fbBuilder.offset;
   }
   int addPulseBandwidth(double? PULSE_BANDWIDTH) {
-    fbBuilder.addFloat64(24, PULSE_BANDWIDTH);
+    fbBuilder.addFloat64(25, PULSE_BANDWIDTH);
     return fbBuilder.offset;
   }
   int addPulseDuration(double? PULSE_DURATION) {
-    fbBuilder.addFloat64(25, PULSE_DURATION);
+    fbBuilder.addFloat64(26, PULSE_DURATION);
     return fbBuilder.offset;
   }
   int addContinuousSpotAngle(double? CONTINUOUS_SPOT_ANGLE) {
-    fbBuilder.addFloat64(26, CONTINUOUS_SPOT_ANGLE);
+    fbBuilder.addFloat64(27, CONTINUOUS_SPOT_ANGLE);
     return fbBuilder.offset;
   }
   int addSlantRange(double? SLANT_RANGE) {
-    fbBuilder.addFloat64(27, SLANT_RANGE);
+    fbBuilder.addFloat64(28, SLANT_RANGE);
     return fbBuilder.offset;
   }
   int addNearRange(double? NEAR_RANGE) {
-    fbBuilder.addFloat64(28, NEAR_RANGE);
+    fbBuilder.addFloat64(29, NEAR_RANGE);
     return fbBuilder.offset;
   }
   int addFarRange(double? FAR_RANGE) {
-    fbBuilder.addFloat64(29, FAR_RANGE);
+    fbBuilder.addFloat64(30, FAR_RANGE);
     return fbBuilder.offset;
   }
   int addSwathLength(double? SWATH_LENGTH) {
-    fbBuilder.addFloat64(30, SWATH_LENGTH);
-    return fbBuilder.offset;
-  }
-  int addAreaOffset(int? offset) {
-    fbBuilder.addOffset(31, offset);
-    return fbBuilder.offset;
-  }
-  int addAtextOffset(int? offset) {
-    fbBuilder.addOffset(32, offset);
+    fbBuilder.addFloat64(31, SWATH_LENGTH);
     return fbBuilder.offset;
   }
   int addAgjsonOffset(int? offset) {
+    fbBuilder.addOffset(32, offset);
+    return fbBuilder.offset;
+  }
+  int addAtextOffset(int? offset) {
     fbBuilder.addOffset(33, offset);
     return fbBuilder.offset;
   }
@@ -243,108 +412,96 @@ class SARBuilder {
     fbBuilder.addOffset(34, offset);
     return fbBuilder.offset;
   }
-  int addAndims(int? ANDIMS) {
-    fbBuilder.addInt32(35, ANDIMS);
-    return fbBuilder.offset;
-  }
-  int addAsrid(int? ASRID) {
-    fbBuilder.addInt32(36, ASRID);
+  int addCoordSysOffset(int? offset) {
+    fbBuilder.addOffset(35, offset);
     return fbBuilder.offset;
   }
   int addSpacingRange(double? SPACING_RANGE) {
-    fbBuilder.addFloat64(37, SPACING_RANGE);
+    fbBuilder.addFloat64(36, SPACING_RANGE);
     return fbBuilder.offset;
   }
   int addSpacingAzimuth(double? SPACING_AZIMUTH) {
-    fbBuilder.addFloat64(38, SPACING_AZIMUTH);
+    fbBuilder.addFloat64(37, SPACING_AZIMUTH);
     return fbBuilder.offset;
   }
   int addLooksAzimuth(int? LOOKS_AZIMUTH) {
-    fbBuilder.addInt32(39, LOOKS_AZIMUTH);
+    fbBuilder.addUint8(38, LOOKS_AZIMUTH);
     return fbBuilder.offset;
   }
   int addLooksRange(int? LOOKS_RANGE) {
-    fbBuilder.addInt32(40, LOOKS_RANGE);
+    fbBuilder.addUint8(39, LOOKS_RANGE);
     return fbBuilder.offset;
   }
   int addResolutionRange(double? RESOLUTION_RANGE) {
-    fbBuilder.addFloat64(41, RESOLUTION_RANGE);
+    fbBuilder.addFloat64(40, RESOLUTION_RANGE);
     return fbBuilder.offset;
   }
   int addResolutionAzimuth(double? RESOLUTION_AZIMUTH) {
-    fbBuilder.addFloat64(42, RESOLUTION_AZIMUTH);
+    fbBuilder.addFloat64(41, RESOLUTION_AZIMUTH);
     return fbBuilder.offset;
   }
   int addObDirectionOffset(int? offset) {
-    fbBuilder.addOffset(43, offset);
-    return fbBuilder.offset;
-  }
-  int addCoordSysOffset(int? offset) {
-    fbBuilder.addOffset(44, offset);
+    fbBuilder.addOffset(42, offset);
     return fbBuilder.offset;
   }
   int addTargetposx(double? TARGETPOSX) {
-    fbBuilder.addFloat64(45, TARGETPOSX);
+    fbBuilder.addFloat64(43, TARGETPOSX);
     return fbBuilder.offset;
   }
   int addTargetposy(double? TARGETPOSY) {
-    fbBuilder.addFloat64(46, TARGETPOSY);
+    fbBuilder.addFloat64(44, TARGETPOSY);
     return fbBuilder.offset;
   }
   int addTargetposz(double? TARGETPOSZ) {
-    fbBuilder.addFloat64(47, TARGETPOSZ);
+    fbBuilder.addFloat64(45, TARGETPOSZ);
     return fbBuilder.offset;
   }
   int addSenalt(double? SENALT) {
-    fbBuilder.addFloat64(48, SENALT);
+    fbBuilder.addFloat64(46, SENALT);
     return fbBuilder.offset;
   }
   int addSenvelx(double? SENVELX) {
-    fbBuilder.addFloat64(49, SENVELX);
+    fbBuilder.addFloat64(47, SENVELX);
     return fbBuilder.offset;
   }
   int addSenvely(double? SENVELY) {
-    fbBuilder.addFloat64(50, SENVELY);
+    fbBuilder.addFloat64(48, SENVELY);
     return fbBuilder.offset;
   }
   int addSenvelz(double? SENVELZ) {
-    fbBuilder.addFloat64(51, SENVELZ);
+    fbBuilder.addFloat64(49, SENVELZ);
     return fbBuilder.offset;
   }
   int addSenlatStart(double? SENLAT_START) {
-    fbBuilder.addFloat64(52, SENLAT_START);
+    fbBuilder.addFloat64(50, SENLAT_START);
     return fbBuilder.offset;
   }
   int addSenlonStart(double? SENLON_START) {
-    fbBuilder.addFloat64(53, SENLON_START);
+    fbBuilder.addFloat64(51, SENLON_START);
     return fbBuilder.offset;
   }
   int addSenlatEnd(double? SENLAT_END) {
-    fbBuilder.addFloat64(54, SENLAT_END);
+    fbBuilder.addFloat64(52, SENLAT_END);
     return fbBuilder.offset;
   }
   int addSenlonEnd(double? SENLON_END) {
-    fbBuilder.addFloat64(55, SENLON_END);
+    fbBuilder.addFloat64(53, SENLON_END);
     return fbBuilder.offset;
   }
   int addTransactionIdOffset(int? offset) {
-    fbBuilder.addOffset(56, offset);
+    fbBuilder.addOffset(54, offset);
     return fbBuilder.offset;
   }
   int addTagsOffset(int? offset) {
-    fbBuilder.addOffset(57, offset);
+    fbBuilder.addOffset(55, offset);
     return fbBuilder.offset;
   }
   int addSrcTypsOffset(int? offset) {
-    fbBuilder.addOffset(58, offset);
+    fbBuilder.addOffset(56, offset);
     return fbBuilder.offset;
   }
   int addSrcIdsOffset(int? offset) {
-    fbBuilder.addOffset(59, offset);
-    return fbBuilder.offset;
-  }
-  int addOnOrbitOffset(int? offset) {
-    fbBuilder.addOffset(60, offset);
+    fbBuilder.addOffset(57, offset);
     return fbBuilder.offset;
   }
 
@@ -357,6 +514,7 @@ class SARObjectBuilder extends fb.ObjectBuilder {
   final String? _ID;
   final int? _SAT_NO;
   final String? _ORIG_OBJECT_ID;
+  final String? _ON_ORBIT;
   final String? _ID_SENSOR;
   final String? _ORIG_SENSOR_ID;
   final String? _EXTERNAL_ID;
@@ -369,12 +527,12 @@ class SARObjectBuilder extends fb.ObjectBuilder {
   final String? _DETECTION_END;
   final double? _DWELL_TIME;
   final String? _ORBIT_STATE;
-  final String? _SAR_MODE;
+  final SarMode? _SAR_MODE;
   final String? _OPERATING_BAND;
   final double? _OPERATING_FREQ;
   final double? _SNR;
-  final String? _TX_POLARIZATION;
-  final String? _RX_POLARIZATION;
+  final SarPolarization? _TX_POLARIZATION;
+  final SarPolarization? _RX_POLARIZATION;
   final double? _GRAZE_ANGLE;
   final double? _INCIDENCE_ANGLE;
   final double? _SQUINT_ANGLE;
@@ -385,12 +543,10 @@ class SARObjectBuilder extends fb.ObjectBuilder {
   final double? _NEAR_RANGE;
   final double? _FAR_RANGE;
   final double? _SWATH_LENGTH;
-  final String? _AREA;
-  final String? _ATEXT;
   final String? _AGJSON;
+  final String? _ATEXT;
   final String? _ATYPE;
-  final int? _ANDIMS;
-  final int? _ASRID;
+  final String? _COORD_SYS;
   final double? _SPACING_RANGE;
   final double? _SPACING_AZIMUTH;
   final int? _LOOKS_AZIMUTH;
@@ -398,7 +554,6 @@ class SARObjectBuilder extends fb.ObjectBuilder {
   final double? _RESOLUTION_RANGE;
   final double? _RESOLUTION_AZIMUTH;
   final String? _OB_DIRECTION;
-  final String? _COORD_SYS;
   final double? _TARGETPOSX;
   final double? _TARGETPOSY;
   final double? _TARGETPOSZ;
@@ -414,12 +569,12 @@ class SARObjectBuilder extends fb.ObjectBuilder {
   final List<String>? _TAGS;
   final List<String>? _SRC_TYPS;
   final List<String>? _SRC_IDS;
-  final String? _ON_ORBIT;
 
   SARObjectBuilder({
     String? ID,
     int? SAT_NO,
     String? ORIG_OBJECT_ID,
+    String? ON_ORBIT,
     String? ID_SENSOR,
     String? ORIG_SENSOR_ID,
     String? EXTERNAL_ID,
@@ -432,12 +587,12 @@ class SARObjectBuilder extends fb.ObjectBuilder {
     String? DETECTION_END,
     double? DWELL_TIME,
     String? ORBIT_STATE,
-    String? SAR_MODE,
+    SarMode? SAR_MODE,
     String? OPERATING_BAND,
     double? OPERATING_FREQ,
     double? SNR,
-    String? TX_POLARIZATION,
-    String? RX_POLARIZATION,
+    SarPolarization? TX_POLARIZATION,
+    SarPolarization? RX_POLARIZATION,
     double? GRAZE_ANGLE,
     double? INCIDENCE_ANGLE,
     double? SQUINT_ANGLE,
@@ -448,12 +603,10 @@ class SARObjectBuilder extends fb.ObjectBuilder {
     double? NEAR_RANGE,
     double? FAR_RANGE,
     double? SWATH_LENGTH,
-    String? AREA,
-    String? ATEXT,
     String? AGJSON,
+    String? ATEXT,
     String? ATYPE,
-    int? ANDIMS,
-    int? ASRID,
+    String? COORD_SYS,
     double? SPACING_RANGE,
     double? SPACING_AZIMUTH,
     int? LOOKS_AZIMUTH,
@@ -461,7 +614,6 @@ class SARObjectBuilder extends fb.ObjectBuilder {
     double? RESOLUTION_RANGE,
     double? RESOLUTION_AZIMUTH,
     String? OB_DIRECTION,
-    String? COORD_SYS,
     double? TARGETPOSX,
     double? TARGETPOSY,
     double? TARGETPOSZ,
@@ -477,11 +629,11 @@ class SARObjectBuilder extends fb.ObjectBuilder {
     List<String>? TAGS,
     List<String>? SRC_TYPS,
     List<String>? SRC_IDS,
-    String? ON_ORBIT,
   })
       : _ID = ID,
         _SAT_NO = SAT_NO,
         _ORIG_OBJECT_ID = ORIG_OBJECT_ID,
+        _ON_ORBIT = ON_ORBIT,
         _ID_SENSOR = ID_SENSOR,
         _ORIG_SENSOR_ID = ORIG_SENSOR_ID,
         _EXTERNAL_ID = EXTERNAL_ID,
@@ -510,12 +662,10 @@ class SARObjectBuilder extends fb.ObjectBuilder {
         _NEAR_RANGE = NEAR_RANGE,
         _FAR_RANGE = FAR_RANGE,
         _SWATH_LENGTH = SWATH_LENGTH,
-        _AREA = AREA,
-        _ATEXT = ATEXT,
         _AGJSON = AGJSON,
+        _ATEXT = ATEXT,
         _ATYPE = ATYPE,
-        _ANDIMS = ANDIMS,
-        _ASRID = ASRID,
+        _COORD_SYS = COORD_SYS,
         _SPACING_RANGE = SPACING_RANGE,
         _SPACING_AZIMUTH = SPACING_AZIMUTH,
         _LOOKS_AZIMUTH = LOOKS_AZIMUTH,
@@ -523,7 +673,6 @@ class SARObjectBuilder extends fb.ObjectBuilder {
         _RESOLUTION_RANGE = RESOLUTION_RANGE,
         _RESOLUTION_AZIMUTH = RESOLUTION_AZIMUTH,
         _OB_DIRECTION = OB_DIRECTION,
-        _COORD_SYS = COORD_SYS,
         _TARGETPOSX = TARGETPOSX,
         _TARGETPOSY = TARGETPOSY,
         _TARGETPOSZ = TARGETPOSZ,
@@ -538,8 +687,7 @@ class SARObjectBuilder extends fb.ObjectBuilder {
         _TRANSACTION_ID = TRANSACTION_ID,
         _TAGS = TAGS,
         _SRC_TYPS = SRC_TYPS,
-        _SRC_IDS = SRC_IDS,
-        _ON_ORBIT = ON_ORBIT;
+        _SRC_IDS = SRC_IDS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -548,6 +696,8 @@ class SARObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ID!);
     final int? ORIG_OBJECT_IDOffset = _ORIG_OBJECT_ID == null ? null
         : fbBuilder.writeString(_ORIG_OBJECT_ID!);
+    final int? ON_ORBITOffset = _ON_ORBIT == null ? null
+        : fbBuilder.writeString(_ON_ORBIT!);
     final int? ID_SENSOROffset = _ID_SENSOR == null ? null
         : fbBuilder.writeString(_ID_SENSOR!);
     final int? ORIG_SENSOR_IDOffset = _ORIG_SENSOR_ID == null ? null
@@ -570,26 +720,18 @@ class SARObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_DETECTION_END!);
     final int? ORBIT_STATEOffset = _ORBIT_STATE == null ? null
         : fbBuilder.writeString(_ORBIT_STATE!);
-    final int? SAR_MODEOffset = _SAR_MODE == null ? null
-        : fbBuilder.writeString(_SAR_MODE!);
     final int? OPERATING_BANDOffset = _OPERATING_BAND == null ? null
         : fbBuilder.writeString(_OPERATING_BAND!);
-    final int? TX_POLARIZATIONOffset = _TX_POLARIZATION == null ? null
-        : fbBuilder.writeString(_TX_POLARIZATION!);
-    final int? RX_POLARIZATIONOffset = _RX_POLARIZATION == null ? null
-        : fbBuilder.writeString(_RX_POLARIZATION!);
-    final int? AREAOffset = _AREA == null ? null
-        : fbBuilder.writeString(_AREA!);
-    final int? ATEXTOffset = _ATEXT == null ? null
-        : fbBuilder.writeString(_ATEXT!);
     final int? AGJSONOffset = _AGJSON == null ? null
         : fbBuilder.writeString(_AGJSON!);
+    final int? ATEXTOffset = _ATEXT == null ? null
+        : fbBuilder.writeString(_ATEXT!);
     final int? ATYPEOffset = _ATYPE == null ? null
         : fbBuilder.writeString(_ATYPE!);
-    final int? OB_DIRECTIONOffset = _OB_DIRECTION == null ? null
-        : fbBuilder.writeString(_OB_DIRECTION!);
     final int? COORD_SYSOffset = _COORD_SYS == null ? null
         : fbBuilder.writeString(_COORD_SYS!);
+    final int? OB_DIRECTIONOffset = _OB_DIRECTION == null ? null
+        : fbBuilder.writeString(_OB_DIRECTION!);
     final int? TRANSACTION_IDOffset = _TRANSACTION_ID == null ? null
         : fbBuilder.writeString(_TRANSACTION_ID!);
     final int? TAGSOffset = _TAGS == null ? null
@@ -598,70 +740,65 @@ class SARObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_SRC_TYPS!.map(fbBuilder.writeString).toList());
     final int? SRC_IDSOffset = _SRC_IDS == null ? null
         : fbBuilder.writeList(_SRC_IDS!.map(fbBuilder.writeString).toList());
-    final int? ON_ORBITOffset = _ON_ORBIT == null ? null
-        : fbBuilder.writeString(_ON_ORBIT!);
-    fbBuilder.startTable(61);
+    fbBuilder.startTable(58);
     fbBuilder.addOffset(0, IDOffset);
-    fbBuilder.addInt32(1, _SAT_NO);
+    fbBuilder.addUint32(1, _SAT_NO);
     fbBuilder.addOffset(2, ORIG_OBJECT_IDOffset);
-    fbBuilder.addOffset(3, ID_SENSOROffset);
-    fbBuilder.addOffset(4, ORIG_SENSOR_IDOffset);
-    fbBuilder.addOffset(5, EXTERNAL_IDOffset);
-    fbBuilder.addOffset(6, COLLECTION_IDOffset);
-    fbBuilder.addOffset(7, DETECTION_IDOffset);
-    fbBuilder.addOffset(8, COLLECTION_STARTOffset);
-    fbBuilder.addOffset(9, COLLECTION_ENDOffset);
-    fbBuilder.addOffset(10, CENTER_TIMEOffset);
-    fbBuilder.addOffset(11, DETECTION_STARTOffset);
-    fbBuilder.addOffset(12, DETECTION_ENDOffset);
-    fbBuilder.addFloat64(13, _DWELL_TIME);
-    fbBuilder.addOffset(14, ORBIT_STATEOffset);
-    fbBuilder.addOffset(15, SAR_MODEOffset);
-    fbBuilder.addOffset(16, OPERATING_BANDOffset);
-    fbBuilder.addFloat64(17, _OPERATING_FREQ);
-    fbBuilder.addFloat64(18, _SNR);
-    fbBuilder.addOffset(19, TX_POLARIZATIONOffset);
-    fbBuilder.addOffset(20, RX_POLARIZATIONOffset);
-    fbBuilder.addFloat64(21, _GRAZE_ANGLE);
-    fbBuilder.addFloat64(22, _INCIDENCE_ANGLE);
-    fbBuilder.addFloat64(23, _SQUINT_ANGLE);
-    fbBuilder.addFloat64(24, _PULSE_BANDWIDTH);
-    fbBuilder.addFloat64(25, _PULSE_DURATION);
-    fbBuilder.addFloat64(26, _CONTINUOUS_SPOT_ANGLE);
-    fbBuilder.addFloat64(27, _SLANT_RANGE);
-    fbBuilder.addFloat64(28, _NEAR_RANGE);
-    fbBuilder.addFloat64(29, _FAR_RANGE);
-    fbBuilder.addFloat64(30, _SWATH_LENGTH);
-    fbBuilder.addOffset(31, AREAOffset);
-    fbBuilder.addOffset(32, ATEXTOffset);
-    fbBuilder.addOffset(33, AGJSONOffset);
+    fbBuilder.addOffset(3, ON_ORBITOffset);
+    fbBuilder.addOffset(4, ID_SENSOROffset);
+    fbBuilder.addOffset(5, ORIG_SENSOR_IDOffset);
+    fbBuilder.addOffset(6, EXTERNAL_IDOffset);
+    fbBuilder.addOffset(7, COLLECTION_IDOffset);
+    fbBuilder.addOffset(8, DETECTION_IDOffset);
+    fbBuilder.addOffset(9, COLLECTION_STARTOffset);
+    fbBuilder.addOffset(10, COLLECTION_ENDOffset);
+    fbBuilder.addOffset(11, CENTER_TIMEOffset);
+    fbBuilder.addOffset(12, DETECTION_STARTOffset);
+    fbBuilder.addOffset(13, DETECTION_ENDOffset);
+    fbBuilder.addFloat64(14, _DWELL_TIME);
+    fbBuilder.addOffset(15, ORBIT_STATEOffset);
+    fbBuilder.addInt8(16, _SAR_MODE?.value);
+    fbBuilder.addOffset(17, OPERATING_BANDOffset);
+    fbBuilder.addFloat64(18, _OPERATING_FREQ);
+    fbBuilder.addFloat64(19, _SNR);
+    fbBuilder.addInt8(20, _TX_POLARIZATION?.value);
+    fbBuilder.addInt8(21, _RX_POLARIZATION?.value);
+    fbBuilder.addFloat64(22, _GRAZE_ANGLE);
+    fbBuilder.addFloat64(23, _INCIDENCE_ANGLE);
+    fbBuilder.addFloat64(24, _SQUINT_ANGLE);
+    fbBuilder.addFloat64(25, _PULSE_BANDWIDTH);
+    fbBuilder.addFloat64(26, _PULSE_DURATION);
+    fbBuilder.addFloat64(27, _CONTINUOUS_SPOT_ANGLE);
+    fbBuilder.addFloat64(28, _SLANT_RANGE);
+    fbBuilder.addFloat64(29, _NEAR_RANGE);
+    fbBuilder.addFloat64(30, _FAR_RANGE);
+    fbBuilder.addFloat64(31, _SWATH_LENGTH);
+    fbBuilder.addOffset(32, AGJSONOffset);
+    fbBuilder.addOffset(33, ATEXTOffset);
     fbBuilder.addOffset(34, ATYPEOffset);
-    fbBuilder.addInt32(35, _ANDIMS);
-    fbBuilder.addInt32(36, _ASRID);
-    fbBuilder.addFloat64(37, _SPACING_RANGE);
-    fbBuilder.addFloat64(38, _SPACING_AZIMUTH);
-    fbBuilder.addInt32(39, _LOOKS_AZIMUTH);
-    fbBuilder.addInt32(40, _LOOKS_RANGE);
-    fbBuilder.addFloat64(41, _RESOLUTION_RANGE);
-    fbBuilder.addFloat64(42, _RESOLUTION_AZIMUTH);
-    fbBuilder.addOffset(43, OB_DIRECTIONOffset);
-    fbBuilder.addOffset(44, COORD_SYSOffset);
-    fbBuilder.addFloat64(45, _TARGETPOSX);
-    fbBuilder.addFloat64(46, _TARGETPOSY);
-    fbBuilder.addFloat64(47, _TARGETPOSZ);
-    fbBuilder.addFloat64(48, _SENALT);
-    fbBuilder.addFloat64(49, _SENVELX);
-    fbBuilder.addFloat64(50, _SENVELY);
-    fbBuilder.addFloat64(51, _SENVELZ);
-    fbBuilder.addFloat64(52, _SENLAT_START);
-    fbBuilder.addFloat64(53, _SENLON_START);
-    fbBuilder.addFloat64(54, _SENLAT_END);
-    fbBuilder.addFloat64(55, _SENLON_END);
-    fbBuilder.addOffset(56, TRANSACTION_IDOffset);
-    fbBuilder.addOffset(57, TAGSOffset);
-    fbBuilder.addOffset(58, SRC_TYPSOffset);
-    fbBuilder.addOffset(59, SRC_IDSOffset);
-    fbBuilder.addOffset(60, ON_ORBITOffset);
+    fbBuilder.addOffset(35, COORD_SYSOffset);
+    fbBuilder.addFloat64(36, _SPACING_RANGE);
+    fbBuilder.addFloat64(37, _SPACING_AZIMUTH);
+    fbBuilder.addUint8(38, _LOOKS_AZIMUTH);
+    fbBuilder.addUint8(39, _LOOKS_RANGE);
+    fbBuilder.addFloat64(40, _RESOLUTION_RANGE);
+    fbBuilder.addFloat64(41, _RESOLUTION_AZIMUTH);
+    fbBuilder.addOffset(42, OB_DIRECTIONOffset);
+    fbBuilder.addFloat64(43, _TARGETPOSX);
+    fbBuilder.addFloat64(44, _TARGETPOSY);
+    fbBuilder.addFloat64(45, _TARGETPOSZ);
+    fbBuilder.addFloat64(46, _SENALT);
+    fbBuilder.addFloat64(47, _SENVELX);
+    fbBuilder.addFloat64(48, _SENVELY);
+    fbBuilder.addFloat64(49, _SENVELZ);
+    fbBuilder.addFloat64(50, _SENLAT_START);
+    fbBuilder.addFloat64(51, _SENLON_START);
+    fbBuilder.addFloat64(52, _SENLAT_END);
+    fbBuilder.addFloat64(53, _SENLON_END);
+    fbBuilder.addOffset(54, TRANSACTION_IDOffset);
+    fbBuilder.addOffset(55, TAGSOffset);
+    fbBuilder.addOffset(56, SRC_TYPSOffset);
+    fbBuilder.addOffset(57, SRC_IDSOffset);
     return fbBuilder.endTable();
   }
 

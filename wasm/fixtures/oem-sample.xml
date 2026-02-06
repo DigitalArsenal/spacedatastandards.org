@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oem xmlns="urn:ccsds:recommendation:navigation:schema:ndmxml"
+     id="CCSDS_OEM_VERS" version="2.0">
+  <header>
+    <CREATION_DATE>2004-281T17:17:00</CREATION_DATE>
+    <ORIGINATOR>NASA/JPL</ORIGINATOR>
+  </header>
+  <body>
+    <segment>
+      <metadata>
+        <OBJECT_NAME>MARS GLOBAL SURVEYOR</OBJECT_NAME>
+        <OBJECT_ID>2001-006A</OBJECT_ID>
+        <CENTER_NAME>MARS BARYCENTER</CENTER_NAME>
+        <REF_FRAME>EME2000</REF_FRAME>
+        <TIME_SYSTEM>UTC</TIME_SYSTEM>
+        <START_TIME>2002-12-18T12:00:00.331</START_TIME>
+        <USEABLE_START_TIME>2002-12-18T12:10:00.331</USEABLE_START_TIME>
+        <USEABLE_STOP_TIME>2002-12-28T21:23:00.331</USEABLE_STOP_TIME>
+        <STOP_TIME>2002-12-28T21:28:00.331</STOP_TIME>
+        <INTERPOLATION>HERMITE</INTERPOLATION>
+        <INTERPOLATION_DEGREE>7</INTERPOLATION_DEGREE>
+      </metadata>
+      <data>
+        <stateVector>
+          <EPOCH>2002-12-18T12:00:00.331</EPOCH>
+          <X>2789.619</X>
+          <Y>-280.045</Y>
+          <Z>-1746.755</Z>
+          <X_DOT>4.73372</X_DOT>
+          <Y_DOT>-7.80783</Y_DOT>
+          <Z_DOT>-1.24313</Z_DOT>
+        </stateVector>
+        <stateVector>
+          <EPOCH>2002-12-18T12:01:00.331</EPOCH>
+          <X>2783.419</X>
+          <Y>-308.143</Y>
+          <Z>-1877.071</Z>
+          <X_DOT>5.18604</X_DOT>
+          <Y_DOT>-7.64279</Y_DOT>
+          <Z_DOT>-0.44066</Z_DOT>
+        </stateVector>
+        <stateVector>
+          <EPOCH>2002-12-18T12:02:00.331</EPOCH>
+          <X>2776.033</X>
+          <Y>-336.859</Y>
+          <Z>-2008.299</Z>
+          <X_DOT>5.63678</X_DOT>
+          <Y_DOT>-7.45775</Y_DOT>
+          <Z_DOT>0.37274</Z_DOT>
+        </stateVector>
+      </data>
+    </segment>
+  </body>
+</oem>

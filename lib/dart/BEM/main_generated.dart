@@ -5,6 +5,302 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class BeamType {
+  final int value;
+  const BeamType._(this.value);
+
+  factory BeamType.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum BeamType');
+    }
+    return result;
+  }
+
+  static BeamType? _createOrNull(int? value) => 
+      value == null ? null : BeamType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 5;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const BeamType SPOT = BeamType._(0);
+  static const BeamType REGIONAL = BeamType._(1);
+  static const BeamType GLOBAL = BeamType._(2);
+  static const BeamType SHAPED = BeamType._(3);
+  static const BeamType STEERABLE = BeamType._(4);
+  static const BeamType HOPPING = BeamType._(5);
+  static const Map<int, BeamType> values = {
+    0: SPOT,
+    1: REGIONAL,
+    2: GLOBAL,
+    3: SHAPED,
+    4: STEERABLE,
+    5: HOPPING};
+
+  static const fb.Reader<BeamType> reader = _BeamTypeReader();
+
+  @override
+  String toString() {
+    return 'BeamType{value: $value}';
+  }
+}
+
+class _BeamTypeReader extends fb.Reader<BeamType> {
+  const _BeamTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  BeamType read(fb.BufferContext bc, int offset) =>
+      BeamType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class BeamPolarization {
+  final int value;
+  const BeamPolarization._(this.value);
+
+  factory BeamPolarization.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum BeamPolarization');
+    }
+    return result;
+  }
+
+  static BeamPolarization? _createOrNull(int? value) => 
+      value == null ? null : BeamPolarization.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 6;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const BeamPolarization RHCP = BeamPolarization._(0);
+  static const BeamPolarization LHCP = BeamPolarization._(1);
+  static const BeamPolarization LINEAR_H = BeamPolarization._(2);
+  static const BeamPolarization LINEAR_V = BeamPolarization._(3);
+  static const BeamPolarization DUAL_CIRCULAR = BeamPolarization._(4);
+  static const BeamPolarization DUAL_LINEAR = BeamPolarization._(5);
+  static const BeamPolarization CROSS_POL = BeamPolarization._(6);
+  static const Map<int, BeamPolarization> values = {
+    0: RHCP,
+    1: LHCP,
+    2: LINEAR_H,
+    3: LINEAR_V,
+    4: DUAL_CIRCULAR,
+    5: DUAL_LINEAR,
+    6: CROSS_POL};
+
+  static const fb.Reader<BeamPolarization> reader = _BeamPolarizationReader();
+
+  @override
+  String toString() {
+    return 'BeamPolarization{value: $value}';
+  }
+}
+
+class _BeamPolarizationReader extends fb.Reader<BeamPolarization> {
+  const _BeamPolarizationReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  BeamPolarization read(fb.BufferContext bc, int offset) =>
+      BeamPolarization.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Beam Contour Point (gain pattern boundary)
+class BeamContourPoint {
+  BeamContourPoint._(this._bc, this._bcOffset);
+  factory BeamContourPoint(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<BeamContourPoint> reader = _BeamContourPointReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Latitude in degrees
+  double get LATITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  ///  Longitude in degrees
+  double get LONGITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Gain level in dBi at this contour
+  double get GAIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+
+  @override
+  String toString() {
+    return 'BeamContourPoint{LATITUDE: ${LATITUDE}, LONGITUDE: ${LONGITUDE}, GAIN: ${GAIN}}';
+  }
+}
+
+class _BeamContourPointReader extends fb.TableReader<BeamContourPoint> {
+  const _BeamContourPointReader();
+
+  @override
+  BeamContourPoint createObject(fb.BufferContext bc, int offset) => 
+    BeamContourPoint._(bc, offset);
+}
+
+class BeamContourPointBuilder {
+  BeamContourPointBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addLatitude(double? LATITUDE) {
+    fbBuilder.addFloat64(0, LATITUDE);
+    return fbBuilder.offset;
+  }
+  int addLongitude(double? LONGITUDE) {
+    fbBuilder.addFloat64(1, LONGITUDE);
+    return fbBuilder.offset;
+  }
+  int addGain(double? GAIN) {
+    fbBuilder.addFloat64(2, GAIN);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class BeamContourPointObjectBuilder extends fb.ObjectBuilder {
+  final double? _LATITUDE;
+  final double? _LONGITUDE;
+  final double? _GAIN;
+
+  BeamContourPointObjectBuilder({
+    double? LATITUDE,
+    double? LONGITUDE,
+    double? GAIN,
+  })
+      : _LATITUDE = LATITUDE,
+        _LONGITUDE = LONGITUDE,
+        _GAIN = GAIN;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    fbBuilder.startTable(3);
+    fbBuilder.addFloat64(0, _LATITUDE);
+    fbBuilder.addFloat64(1, _LONGITUDE);
+    fbBuilder.addFloat64(2, _GAIN);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Beam Contour (iso-gain boundary)
+class BeamContour {
+  BeamContour._(this._bc, this._bcOffset);
+  factory BeamContour(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<BeamContour> reader = _BeamContourReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Contour level identifier
+  String? get CONTOUR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Gain level in dBi
+  double get GAIN_LEVEL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Contour boundary points
+  List<BeamContourPoint>? get POINTS => const fb.ListReader<BeamContourPoint>(BeamContourPoint.reader).vTableGetNullable(_bc, _bcOffset, 8);
+
+  @override
+  String toString() {
+    return 'BeamContour{CONTOUR_ID: ${CONTOUR_ID}, GAIN_LEVEL: ${GAIN_LEVEL}, POINTS: ${POINTS}}';
+  }
+}
+
+class _BeamContourReader extends fb.TableReader<BeamContour> {
+  const _BeamContourReader();
+
+  @override
+  BeamContour createObject(fb.BufferContext bc, int offset) => 
+    BeamContour._(bc, offset);
+}
+
+class BeamContourBuilder {
+  BeamContourBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(3);
+  }
+
+  int addContourIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addGainLevel(double? GAIN_LEVEL) {
+    fbBuilder.addFloat64(1, GAIN_LEVEL);
+    return fbBuilder.offset;
+  }
+  int addPointsOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class BeamContourObjectBuilder extends fb.ObjectBuilder {
+  final String? _CONTOUR_ID;
+  final double? _GAIN_LEVEL;
+  final List<BeamContourPointObjectBuilder>? _POINTS;
+
+  BeamContourObjectBuilder({
+    String? CONTOUR_ID,
+    double? GAIN_LEVEL,
+    List<BeamContourPointObjectBuilder>? POINTS,
+  })
+      : _CONTOUR_ID = CONTOUR_ID,
+        _GAIN_LEVEL = GAIN_LEVEL,
+        _POINTS = POINTS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? CONTOUR_IDOffset = _CONTOUR_ID == null ? null
+        : fbBuilder.writeString(_CONTOUR_ID!);
+    final int? POINTSOffset = _POINTS == null ? null
+        : fbBuilder.writeList(_POINTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(3);
+    fbBuilder.addOffset(0, CONTOUR_IDOffset);
+    fbBuilder.addFloat64(1, _GAIN_LEVEL);
+    fbBuilder.addOffset(2, POINTSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Antenna Beam
 class BEM {
   BEM._(this._bc, this._bcOffset);
@@ -18,14 +314,44 @@ class BEM {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique beam identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Beam name or designation
   String? get BEAM_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get NOTES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  List<String>? get BEAM_CONTOURS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Reference to parent entity (satellite/transponder)
+  String? get ID_ENTITY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Reference to parent antenna
+  String? get ID_ANTENNA => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Beam type
+  BeamType get TYPE => BeamType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  ///  Beam polarization
+  BeamPolarization get POLARIZATION => BeamPolarization.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
+  ///  Peak gain in dBi
+  double get PEAK_GAIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Edge-of-coverage gain in dBi
+  double get EOC_GAIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  ///  Beam center latitude in degrees
+  double get CENTER_LATITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  Beam center longitude in degrees
+  double get CENTER_LONGITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Beamwidth (3dB) in degrees
+  double get BEAMWIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  ///  Operating frequency in MHz
+  double get FREQUENCY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  ///  EIRP at beam center in dBW
+  double get EIRP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  ///  G/T at beam center in dB/K
+  double get G_OVER_T => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  ///  Beam footprint area in km^2
+  double get FOOTPRINT_AREA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  ///  Beam contour definitions
+  List<BeamContour>? get BEAM_CONTOURS => const fb.ListReader<BeamContour>(BeamContour.reader).vTableGetNullable(_bc, _bcOffset, 34);
+  ///  Additional notes
+  String? get NOTES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
 
   @override
   String toString() {
-    return 'BEM{ID: ${ID}, BEAM_NAME: ${BEAM_NAME}, NOTES: ${NOTES}, BEAM_CONTOURS: ${BEAM_CONTOURS}}';
+    return 'BEM{ID: ${ID}, BEAM_NAME: ${BEAM_NAME}, ID_ENTITY: ${ID_ENTITY}, ID_ANTENNA: ${ID_ANTENNA}, TYPE: ${TYPE}, POLARIZATION: ${POLARIZATION}, PEAK_GAIN: ${PEAK_GAIN}, EOC_GAIN: ${EOC_GAIN}, CENTER_LATITUDE: ${CENTER_LATITUDE}, CENTER_LONGITUDE: ${CENTER_LONGITUDE}, BEAMWIDTH: ${BEAMWIDTH}, FREQUENCY: ${FREQUENCY}, EIRP: ${EIRP}, G_OVER_T: ${G_OVER_T}, FOOTPRINT_AREA: ${FOOTPRINT_AREA}, BEAM_CONTOURS: ${BEAM_CONTOURS}, NOTES: ${NOTES}}';
   }
 }
 
@@ -43,7 +369,7 @@ class BEMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(17);
   }
 
   int addIdOffset(int? offset) {
@@ -54,12 +380,64 @@ class BEMBuilder {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addNotesOffset(int? offset) {
+  int addIdEntityOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addBeamContoursOffset(int? offset) {
+  int addIdAntennaOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addType(BeamType? TYPE) {
+    fbBuilder.addInt8(4, TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addPolarization(BeamPolarization? POLARIZATION) {
+    fbBuilder.addInt8(5, POLARIZATION?.value);
+    return fbBuilder.offset;
+  }
+  int addPeakGain(double? PEAK_GAIN) {
+    fbBuilder.addFloat64(6, PEAK_GAIN);
+    return fbBuilder.offset;
+  }
+  int addEocGain(double? EOC_GAIN) {
+    fbBuilder.addFloat64(7, EOC_GAIN);
+    return fbBuilder.offset;
+  }
+  int addCenterLatitude(double? CENTER_LATITUDE) {
+    fbBuilder.addFloat64(8, CENTER_LATITUDE);
+    return fbBuilder.offset;
+  }
+  int addCenterLongitude(double? CENTER_LONGITUDE) {
+    fbBuilder.addFloat64(9, CENTER_LONGITUDE);
+    return fbBuilder.offset;
+  }
+  int addBeamwidth(double? BEAMWIDTH) {
+    fbBuilder.addFloat64(10, BEAMWIDTH);
+    return fbBuilder.offset;
+  }
+  int addFrequency(double? FREQUENCY) {
+    fbBuilder.addFloat64(11, FREQUENCY);
+    return fbBuilder.offset;
+  }
+  int addEirp(double? EIRP) {
+    fbBuilder.addFloat64(12, EIRP);
+    return fbBuilder.offset;
+  }
+  int addGOverT(double? G_OVER_T) {
+    fbBuilder.addFloat64(13, G_OVER_T);
+    return fbBuilder.offset;
+  }
+  int addFootprintArea(double? FOOTPRINT_AREA) {
+    fbBuilder.addFloat64(14, FOOTPRINT_AREA);
+    return fbBuilder.offset;
+  }
+  int addBeamContoursOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addNotesOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
     return fbBuilder.offset;
   }
 
@@ -71,19 +449,58 @@ class BEMBuilder {
 class BEMObjectBuilder extends fb.ObjectBuilder {
   final String? _ID;
   final String? _BEAM_NAME;
+  final String? _ID_ENTITY;
+  final String? _ID_ANTENNA;
+  final BeamType? _TYPE;
+  final BeamPolarization? _POLARIZATION;
+  final double? _PEAK_GAIN;
+  final double? _EOC_GAIN;
+  final double? _CENTER_LATITUDE;
+  final double? _CENTER_LONGITUDE;
+  final double? _BEAMWIDTH;
+  final double? _FREQUENCY;
+  final double? _EIRP;
+  final double? _G_OVER_T;
+  final double? _FOOTPRINT_AREA;
+  final List<BeamContourObjectBuilder>? _BEAM_CONTOURS;
   final String? _NOTES;
-  final List<String>? _BEAM_CONTOURS;
 
   BEMObjectBuilder({
     String? ID,
     String? BEAM_NAME,
+    String? ID_ENTITY,
+    String? ID_ANTENNA,
+    BeamType? TYPE,
+    BeamPolarization? POLARIZATION,
+    double? PEAK_GAIN,
+    double? EOC_GAIN,
+    double? CENTER_LATITUDE,
+    double? CENTER_LONGITUDE,
+    double? BEAMWIDTH,
+    double? FREQUENCY,
+    double? EIRP,
+    double? G_OVER_T,
+    double? FOOTPRINT_AREA,
+    List<BeamContourObjectBuilder>? BEAM_CONTOURS,
     String? NOTES,
-    List<String>? BEAM_CONTOURS,
   })
       : _ID = ID,
         _BEAM_NAME = BEAM_NAME,
-        _NOTES = NOTES,
-        _BEAM_CONTOURS = BEAM_CONTOURS;
+        _ID_ENTITY = ID_ENTITY,
+        _ID_ANTENNA = ID_ANTENNA,
+        _TYPE = TYPE,
+        _POLARIZATION = POLARIZATION,
+        _PEAK_GAIN = PEAK_GAIN,
+        _EOC_GAIN = EOC_GAIN,
+        _CENTER_LATITUDE = CENTER_LATITUDE,
+        _CENTER_LONGITUDE = CENTER_LONGITUDE,
+        _BEAMWIDTH = BEAMWIDTH,
+        _FREQUENCY = FREQUENCY,
+        _EIRP = EIRP,
+        _G_OVER_T = G_OVER_T,
+        _FOOTPRINT_AREA = FOOTPRINT_AREA,
+        _BEAM_CONTOURS = BEAM_CONTOURS,
+        _NOTES = NOTES;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -92,15 +509,32 @@ class BEMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ID!);
     final int? BEAM_NAMEOffset = _BEAM_NAME == null ? null
         : fbBuilder.writeString(_BEAM_NAME!);
+    final int? ID_ENTITYOffset = _ID_ENTITY == null ? null
+        : fbBuilder.writeString(_ID_ENTITY!);
+    final int? ID_ANTENNAOffset = _ID_ANTENNA == null ? null
+        : fbBuilder.writeString(_ID_ANTENNA!);
+    final int? BEAM_CONTOURSOffset = _BEAM_CONTOURS == null ? null
+        : fbBuilder.writeList(_BEAM_CONTOURS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? NOTESOffset = _NOTES == null ? null
         : fbBuilder.writeString(_NOTES!);
-    final int? BEAM_CONTOURSOffset = _BEAM_CONTOURS == null ? null
-        : fbBuilder.writeList(_BEAM_CONTOURS!.map(fbBuilder.writeString).toList());
-    fbBuilder.startTable(4);
+    fbBuilder.startTable(17);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, BEAM_NAMEOffset);
-    fbBuilder.addOffset(2, NOTESOffset);
-    fbBuilder.addOffset(3, BEAM_CONTOURSOffset);
+    fbBuilder.addOffset(2, ID_ENTITYOffset);
+    fbBuilder.addOffset(3, ID_ANTENNAOffset);
+    fbBuilder.addInt8(4, _TYPE?.value);
+    fbBuilder.addInt8(5, _POLARIZATION?.value);
+    fbBuilder.addFloat64(6, _PEAK_GAIN);
+    fbBuilder.addFloat64(7, _EOC_GAIN);
+    fbBuilder.addFloat64(8, _CENTER_LATITUDE);
+    fbBuilder.addFloat64(9, _CENTER_LONGITUDE);
+    fbBuilder.addFloat64(10, _BEAMWIDTH);
+    fbBuilder.addFloat64(11, _FREQUENCY);
+    fbBuilder.addFloat64(12, _EIRP);
+    fbBuilder.addFloat64(13, _G_OVER_T);
+    fbBuilder.addFloat64(14, _FOOTPRINT_AREA);
+    fbBuilder.addOffset(15, BEAM_CONTOURSOffset);
+    fbBuilder.addOffset(16, NOTESOffset);
     return fbBuilder.endTable();
   }
 

@@ -29,6 +29,9 @@ class RDM : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * CCSDS RDM version
+     */
     val CCSDS_RDM_VERS : String?
         get() {
             val o = __offset(4)
@@ -40,6 +43,9 @@ class RDM : Table() {
         }
     val CCSDS_RDM_VERSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun CCSDS_RDM_VERSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    /**
+     * Message creation date (ISO 8601)
+     */
     val CREATION_DATE : String?
         get() {
             val o = __offset(6)
@@ -51,6 +57,9 @@ class RDM : Table() {
         }
     val CREATION_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
     fun CREATION_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    /**
+     * Creating organization
+     */
     val ORIGINATOR : String?
         get() {
             val o = __offset(8)
@@ -62,6 +71,9 @@ class RDM : Table() {
         }
     val ORIGINATORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
     fun ORIGINATORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    /**
+     * Object name
+     */
     val OBJECT_NAME : String?
         get() {
             val o = __offset(10)
@@ -73,6 +85,9 @@ class RDM : Table() {
         }
     val OBJECT_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
     fun OBJECT_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    /**
+     * International designator
+     */
     val OBJECT_ID : String?
         get() {
             val o = __offset(12)
@@ -84,27 +99,232 @@ class RDM : Table() {
         }
     val OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
     fun OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
-    val REENTRY_EPOCH : String?
+    /**
+     * NORAD catalog number
+     */
+    val NORAD_CAT_ID : UInt
         get() {
             val o = __offset(14)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Object type (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN)
+     */
+    val OBJECT_TYPE : String?
+        get() {
+            val o = __offset(16)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val REENTRY_EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun REENTRY_EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
-    val REENTRY_LATITUDE : Double
-        get() {
-            val o = __offset(16)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val REENTRY_LONGITUDE : Double
+    val OBJECT_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
+    fun OBJECT_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    /**
+     * Reentry disposition
+     */
+    val DISPOSITION : Byte
         get() {
             val o = __offset(18)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Reentry reason
+     */
+    val REASON : Byte
+        get() {
+            val o = __offset(20)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Predicted reentry epoch (ISO 8601)
+     */
+    val REENTRY_EPOCH : String?
+        get() {
+            val o = __offset(22)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val REENTRY_EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
+    fun REENTRY_EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    /**
+     * Reentry epoch uncertainty window in hours
+     */
+    val REENTRY_EPOCH_UNC : Double
+        get() {
+            val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Reentry latitude in degrees
+     */
+    val REENTRY_LATITUDE : Double
+        get() {
+            val o = __offset(26)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Reentry longitude in degrees
+     */
+    val REENTRY_LONGITUDE : Double
+        get() {
+            val o = __offset(28)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Reentry altitude in km
+     */
+    val REENTRY_ALTITUDE : Double
+        get() {
+            val o = __offset(30)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Time system
+     */
+    val TIME_SYSTEM : String?
+        get() {
+            val o = __offset(32)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val TIME_SYSTEMAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
+    fun TIME_SYSTEMInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
+    /**
+     * Previous predicted reentry epoch for comparison (ISO 8601)
+     */
+    val PREV_PREDICTION_EPOCH : String?
+        get() {
+            val o = __offset(34)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val PREV_PREDICTION_EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
+    fun PREV_PREDICTION_EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    /**
+     * Ballistic coefficient in kg/m^2
+     */
+    val BALLISTIC_COEFF : Double
+        get() {
+            val o = __offset(36)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Object mass in kg
+     */
+    val MASS : Double
+        get() {
+            val o = __offset(38)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Solar radiation pressure area in m^2
+     */
+    val SOLAR_RAD_AREA : Double
+        get() {
+            val o = __offset(40)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Drag area in m^2
+     */
+    val DRAG_AREA : Double
+        get() {
+            val o = __offset(42)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Initial state vector
+     */
+    val INITIAL_STATE : reentryStateVector? get() = INITIAL_STATE(reentryStateVector())
+    fun INITIAL_STATE(obj: reentryStateVector) : reentryStateVector? {
+        val o = __offset(44)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Ground impact predictions
+     */
+    fun IMPACT_PREDICTIONS(j: Int) : reentryImpact? = IMPACT_PREDICTIONS(reentryImpact(), j)
+    fun IMPACT_PREDICTIONS(obj: reentryImpact, j: Int) : reentryImpact? {
+        val o = __offset(46)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val IMPACT_PREDICTIONSLength : Int
+        get() {
+            val o = __offset(46); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Predicted surviving debris
+     */
+    fun SURVIVING_DEBRIS(j: Int) : survivingDebris? = SURVIVING_DEBRIS(survivingDebris(), j)
+    fun SURVIVING_DEBRIS(obj: survivingDebris, j: Int) : survivingDebris? {
+        val o = __offset(48)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val SURVIVING_DEBRISLength : Int
+        get() {
+            val o = __offset(48); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Casualty expectation
+     */
+    val CASUALTY_EXPECTATION : Double
+        get() {
+            val o = __offset(50)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Number of breakup fragments predicted
+     */
+    val NUM_FRAGMENTS : UInt
+        get() {
+            val o = __offset(52)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Total surviving mass in kg
+     */
+    val SURVIVING_MASS : Double
+        get() {
+            val o = __offset(54)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Additional comments
+     */
+    val COMMENT : String?
+        get() {
+            val o = __offset(56)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val COMMENTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(56, 1)
+    fun COMMENTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 56, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsRDM(_bb: ByteBuffer): RDM = getRootAsRDM(_bb, RDM())
@@ -113,27 +333,81 @@ class RDM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun RDMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$RDM")
-        fun createRDM(builder: FlatBufferBuilder, CCSDS_RDM_VERSOffset: Int, CREATION_DATEOffset: Int, ORIGINATOROffset: Int, OBJECT_NAMEOffset: Int, OBJECT_IDOffset: Int, REENTRY_EPOCHOffset: Int, REENTRY_LATITUDE: Double, REENTRY_LONGITUDE: Double) : Int {
-            builder.startTable(8)
+        fun createRDM(builder: FlatBufferBuilder, CCSDS_RDM_VERSOffset: Int, CREATION_DATEOffset: Int, ORIGINATOROffset: Int, OBJECT_NAMEOffset: Int, OBJECT_IDOffset: Int, NORAD_CAT_ID: UInt, OBJECT_TYPEOffset: Int, DISPOSITION: Byte, REASON: Byte, REENTRY_EPOCHOffset: Int, REENTRY_EPOCH_UNC: Double, REENTRY_LATITUDE: Double, REENTRY_LONGITUDE: Double, REENTRY_ALTITUDE: Double, TIME_SYSTEMOffset: Int, PREV_PREDICTION_EPOCHOffset: Int, BALLISTIC_COEFF: Double, MASS: Double, SOLAR_RAD_AREA: Double, DRAG_AREA: Double, INITIAL_STATEOffset: Int, IMPACT_PREDICTIONSOffset: Int, SURVIVING_DEBRISOffset: Int, CASUALTY_EXPECTATION: Double, NUM_FRAGMENTS: UInt, SURVIVING_MASS: Double, COMMENTOffset: Int) : Int {
+            builder.startTable(27)
+            addSURVIVING_MASS(builder, SURVIVING_MASS)
+            addCASUALTY_EXPECTATION(builder, CASUALTY_EXPECTATION)
+            addDRAG_AREA(builder, DRAG_AREA)
+            addSOLAR_RAD_AREA(builder, SOLAR_RAD_AREA)
+            addMASS(builder, MASS)
+            addBALLISTIC_COEFF(builder, BALLISTIC_COEFF)
+            addREENTRY_ALTITUDE(builder, REENTRY_ALTITUDE)
             addREENTRY_LONGITUDE(builder, REENTRY_LONGITUDE)
             addREENTRY_LATITUDE(builder, REENTRY_LATITUDE)
+            addREENTRY_EPOCH_UNC(builder, REENTRY_EPOCH_UNC)
+            addCOMMENT(builder, COMMENTOffset)
+            addNUM_FRAGMENTS(builder, NUM_FRAGMENTS)
+            addSURVIVING_DEBRIS(builder, SURVIVING_DEBRISOffset)
+            addIMPACT_PREDICTIONS(builder, IMPACT_PREDICTIONSOffset)
+            addINITIAL_STATE(builder, INITIAL_STATEOffset)
+            addPREV_PREDICTION_EPOCH(builder, PREV_PREDICTION_EPOCHOffset)
+            addTIME_SYSTEM(builder, TIME_SYSTEMOffset)
             addREENTRY_EPOCH(builder, REENTRY_EPOCHOffset)
+            addOBJECT_TYPE(builder, OBJECT_TYPEOffset)
+            addNORAD_CAT_ID(builder, NORAD_CAT_ID)
             addOBJECT_ID(builder, OBJECT_IDOffset)
             addOBJECT_NAME(builder, OBJECT_NAMEOffset)
             addORIGINATOR(builder, ORIGINATOROffset)
             addCREATION_DATE(builder, CREATION_DATEOffset)
             addCCSDS_RDM_VERS(builder, CCSDS_RDM_VERSOffset)
+            addREASON(builder, REASON)
+            addDISPOSITION(builder, DISPOSITION)
             return endRDM(builder)
         }
-        fun startRDM(builder: FlatBufferBuilder) = builder.startTable(8)
+        fun startRDM(builder: FlatBufferBuilder) = builder.startTable(27)
         fun addCCSDS_RDM_VERS(builder: FlatBufferBuilder, CCSDS_RDM_VERS: Int) = builder.addOffset(0, CCSDS_RDM_VERS, 0)
         fun addCREATION_DATE(builder: FlatBufferBuilder, CREATION_DATE: Int) = builder.addOffset(1, CREATION_DATE, 0)
         fun addORIGINATOR(builder: FlatBufferBuilder, ORIGINATOR: Int) = builder.addOffset(2, ORIGINATOR, 0)
         fun addOBJECT_NAME(builder: FlatBufferBuilder, OBJECT_NAME: Int) = builder.addOffset(3, OBJECT_NAME, 0)
         fun addOBJECT_ID(builder: FlatBufferBuilder, OBJECT_ID: Int) = builder.addOffset(4, OBJECT_ID, 0)
-        fun addREENTRY_EPOCH(builder: FlatBufferBuilder, REENTRY_EPOCH: Int) = builder.addOffset(5, REENTRY_EPOCH, 0)
-        fun addREENTRY_LATITUDE(builder: FlatBufferBuilder, REENTRY_LATITUDE: Double) = builder.addDouble(6, REENTRY_LATITUDE, 0.0)
-        fun addREENTRY_LONGITUDE(builder: FlatBufferBuilder, REENTRY_LONGITUDE: Double) = builder.addDouble(7, REENTRY_LONGITUDE, 0.0)
+        fun addNORAD_CAT_ID(builder: FlatBufferBuilder, NORAD_CAT_ID: UInt) = builder.addInt(5, NORAD_CAT_ID.toInt(), 0)
+        fun addOBJECT_TYPE(builder: FlatBufferBuilder, OBJECT_TYPE: Int) = builder.addOffset(6, OBJECT_TYPE, 0)
+        fun addDISPOSITION(builder: FlatBufferBuilder, DISPOSITION: Byte) = builder.addByte(7, DISPOSITION, 0)
+        fun addREASON(builder: FlatBufferBuilder, REASON: Byte) = builder.addByte(8, REASON, 0)
+        fun addREENTRY_EPOCH(builder: FlatBufferBuilder, REENTRY_EPOCH: Int) = builder.addOffset(9, REENTRY_EPOCH, 0)
+        fun addREENTRY_EPOCH_UNC(builder: FlatBufferBuilder, REENTRY_EPOCH_UNC: Double) = builder.addDouble(10, REENTRY_EPOCH_UNC, 0.0)
+        fun addREENTRY_LATITUDE(builder: FlatBufferBuilder, REENTRY_LATITUDE: Double) = builder.addDouble(11, REENTRY_LATITUDE, 0.0)
+        fun addREENTRY_LONGITUDE(builder: FlatBufferBuilder, REENTRY_LONGITUDE: Double) = builder.addDouble(12, REENTRY_LONGITUDE, 0.0)
+        fun addREENTRY_ALTITUDE(builder: FlatBufferBuilder, REENTRY_ALTITUDE: Double) = builder.addDouble(13, REENTRY_ALTITUDE, 0.0)
+        fun addTIME_SYSTEM(builder: FlatBufferBuilder, TIME_SYSTEM: Int) = builder.addOffset(14, TIME_SYSTEM, 0)
+        fun addPREV_PREDICTION_EPOCH(builder: FlatBufferBuilder, PREV_PREDICTION_EPOCH: Int) = builder.addOffset(15, PREV_PREDICTION_EPOCH, 0)
+        fun addBALLISTIC_COEFF(builder: FlatBufferBuilder, BALLISTIC_COEFF: Double) = builder.addDouble(16, BALLISTIC_COEFF, 0.0)
+        fun addMASS(builder: FlatBufferBuilder, MASS: Double) = builder.addDouble(17, MASS, 0.0)
+        fun addSOLAR_RAD_AREA(builder: FlatBufferBuilder, SOLAR_RAD_AREA: Double) = builder.addDouble(18, SOLAR_RAD_AREA, 0.0)
+        fun addDRAG_AREA(builder: FlatBufferBuilder, DRAG_AREA: Double) = builder.addDouble(19, DRAG_AREA, 0.0)
+        fun addINITIAL_STATE(builder: FlatBufferBuilder, INITIAL_STATE: Int) = builder.addOffset(20, INITIAL_STATE, 0)
+        fun addIMPACT_PREDICTIONS(builder: FlatBufferBuilder, IMPACT_PREDICTIONS: Int) = builder.addOffset(21, IMPACT_PREDICTIONS, 0)
+        fun createImpactPredictionsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startImpactPredictionsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addSURVIVING_DEBRIS(builder: FlatBufferBuilder, SURVIVING_DEBRIS: Int) = builder.addOffset(22, SURVIVING_DEBRIS, 0)
+        fun createSurvivingDebrisVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startSurvivingDebrisVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addCASUALTY_EXPECTATION(builder: FlatBufferBuilder, CASUALTY_EXPECTATION: Double) = builder.addDouble(23, CASUALTY_EXPECTATION, 0.0)
+        fun addNUM_FRAGMENTS(builder: FlatBufferBuilder, NUM_FRAGMENTS: UInt) = builder.addInt(24, NUM_FRAGMENTS.toInt(), 0)
+        fun addSURVIVING_MASS(builder: FlatBufferBuilder, SURVIVING_MASS: Double) = builder.addDouble(25, SURVIVING_MASS, 0.0)
+        fun addCOMMENT(builder: FlatBufferBuilder, COMMENT: Int) = builder.addOffset(26, COMMENT, 0)
         fun endRDM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

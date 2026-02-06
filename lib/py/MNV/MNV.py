@@ -29,6 +29,7 @@ class MNV(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Unique identifier
     # MNV
     def ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,589 +37,310 @@ class MNV(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Satellite catalog number
     # MNV
     def SAT_NO(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
+    # International designator
     # MNV
-    def REPORT_TIME(self):
+    def ORIG_OBJECT_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # On-orbit reference
     # MNV
-    def EVENT_START_TIME(self):
+    def ON_ORBIT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Maneuver status
     # MNV
-    def EVENT_END_TIME(self):
+    def STATUS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
+    # Maneuver characterization
     # MNV
-    def TOTAL_BURN_TIME(self):
+    def CHARACTERIZATION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Characterization uncertainty (0-1)
+    # MNV
+    def CHARACTERIZATION_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Detection report time (ISO 8601)
     # MNV
-    def OD_FIT_END_TIME(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # MNV
-    def ID_SENSOR(self):
+    def REPORT_TIME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Maneuver start time (ISO 8601)
     # MNV
-    def UCT(self):
+    def EVENT_START_TIME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
-        if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
-
-    # MNV
-    def MANEUVER_UNC(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def CHARACTERIZATION(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Maneuver end time (ISO 8601)
     # MNV
-    def CHARACTERIZATION_UNC(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+    def EVENT_END_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Total burn time (seconds)
+    # MNV
+    def TOTAL_BURN_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # OD fit end time (ISO 8601)
     # MNV
-    def EVENT_ID(self):
+    def OD_FIT_END_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Detecting sensor identifier
+    # MNV
+    def ID_SENSOR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Original sensor identifier
     # MNV
-    def ORIG_OBJECT_ID(self):
+    def ORIG_SENSOR_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Maneuver event identifier
     # MNV
-    def ORIG_SENSOR_ID(self):
+    def EVENT_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # True if object is uncorrelated
     # MNV
-    def STATUS(self):
+    def UCT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
 
+    # Maneuver detection uncertainty (km)
     # MNV
-    def DELTA_POS(self):
+    def MANEUVER_UNC(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Total delta-V magnitude (km/s)
     # MNV
-    def DELTA_POS_U(self):
+    def DELTA_VEL(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Delta-V along-track/U component (km/s)
     # MNV
-    def DELTA_POS_V(self):
+    def DELTA_VEL_U(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Delta-V cross-track/V component (km/s)
     # MNV
-    def DELTA_POS_W(self):
+    def DELTA_VEL_V(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Delta-V radial/W component (km/s)
     # MNV
-    def DELTA_VEL(self):
+    def DELTA_VEL_W(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Total delta position (km)
     # MNV
-    def DELTA_VEL_U(self):
+    def DELTA_POS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Delta position U component (km)
     # MNV
-    def DELTA_VEL_V(self):
+    def DELTA_POS_U(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Delta position V component (km)
     # MNV
-    def DELTA_VEL_W(self):
+    def DELTA_POS_V(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Delta position W component (km)
     # MNV
-    def DELTA_MASS(self):
+    def DELTA_POS_W(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Propellant mass consumed (kg)
     # MNV
-    def PRE_EVENT_ID_ELSET(self):
+    def DELTA_MASS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
 
+    # Pre-maneuver orbital state
     # MNV
-    def PRE_EVENT_ELSET(self):
+    def PRE_EVENT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from mnvOrbitalState import mnvOrbitalState
+            obj = mnvOrbitalState()
+            obj.Init(self._tab.Bytes, x)
+            return obj
         return None
 
+    # Post-maneuver orbital state
     # MNV
-    def PRE_EVENT_ID_STATE_VECTOR(self):
+    def POST_EVENT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from mnvOrbitalState import mnvOrbitalState
+            obj = mnvOrbitalState()
+            obj.Init(self._tab.Bytes, x)
+            return obj
         return None
 
+    # Post-maneuver mass (kg)
     # MNV
-    def PRE_EVENT_STATE_VECTOR(self):
+    def POST_MASS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
 
+    # Post-maneuver cross-sectional area (m^2)
     # MNV
-    def PRE_POS_X(self):
+    def POST_AREA(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # MNV
-    def PRE_POS_Y(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def PRE_POS_Z(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def PRE_VEL_X(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def PRE_VEL_Y(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def PRE_VEL_Z(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def PRE_RADIATION_PRESS_COEFF(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def PRE_BALLISTIC_COEFF(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def PRE_APOGEE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def PRE_PERIGEE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def PRE_INCLINATION(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def PRE_ECCENTRICITY(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def PRE_PERIOD(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def PRE_RAAN(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def PRE_SMA(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def PRE_GEO_LONGITUDE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def PRE_DRIFT_RATE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def PRE_SIGMA_U(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def PRE_SIGMA_V(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def PRE_SIGMA_W(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def POST_EVENT_ID_ELSET(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # MNV
-    def POST_EVENT_ELSET(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # MNV
-    def POST_EVENT_ID_STATE_VECTOR(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # MNV
-    def POST_EVENT_STATE_VECTOR(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # MNV
-    def POST_POS_X(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def POST_POS_Y(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def POST_POS_Z(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def POST_VEL_X(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def POST_VEL_Y(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def POST_VEL_Z(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def POST_RADIATION_PRESS_COEFF(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(122))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def POST_BALLISTIC_COEFF(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(124))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def POST_APOGEE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(126))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def POST_PERIGEE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(128))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def POST_INCLINATION(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(130))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def POST_ECCENTRICITY(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(132))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def POST_PERIOD(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(134))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def POST_RAAN(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(136))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def POST_SMA(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(138))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def POST_GEO_LONGITUDE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(140))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def POST_DRIFT_RATE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(142))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def POST_SIGMA_U(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(144))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def POST_SIGMA_V(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(146))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def POST_SIGMA_W(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(148))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
+    # 6x6 covariance matrix (upper triangle, row-major)
     # MNV
     def COV(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(150))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
         if o != 0:
             a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # MNV
+    def COVAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
 
     # MNV
     def COVLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(150))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MNV
     def COVIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(150))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
         return o == 0
 
-    # MNV
-    def POST_MASS(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(152))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MNV
-    def POST_AREA(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(154))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
+    # Number of observations used
     # MNV
     def NUM_OBS(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(156))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
-    # MNV
-    def DESCRIPTION(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(158))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # MNV
-    def DESCRIPTOR(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(160))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
+    # State model used
     # MNV
     def STATE_MODEL(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(162))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # State model version
     # MNV
     def STATE_MODEL_VERSION(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(164))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Number of acceleration profile points
     # MNV
     def NUM_ACCEL_POINTS(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(166))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
         return 0
 
+    # Acceleration profile times (ISO 8601)
     # MNV
     def MNVR_ACCEL_TIMES(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(168))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -626,59 +348,100 @@ class MNV(object):
 
     # MNV
     def MNVR_ACCEL_TIMESLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(168))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MNV
     def MNVR_ACCEL_TIMESIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(168))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
         return o == 0
 
+    # Acceleration values (km/s^2, 3 components per point)
     # MNV
     def MNVR_ACCELS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(170))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
         if o != 0:
             a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # MNV
+    def MNVR_ACCELSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
 
     # MNV
     def MNVR_ACCELSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(170))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MNV
     def MNVR_ACCELSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(170))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
         return o == 0
 
+    # Acceleration uncertainties (km/s^2)
     # MNV
     def MNVR_ACCEL_UNCS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(172))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
         if o != 0:
             a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # MNV
+    def MNVR_ACCEL_UNCSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
 
     # MNV
     def MNVR_ACCEL_UNCSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(172))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MNV
     def MNVR_ACCEL_UNCSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(172))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
         return o == 0
 
+    # Description
+    # MNV
+    def DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Event descriptor
+    # MNV
+    def DESCRIPTOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Algorithm used for detection
+    # MNV
+    def ALGORITHM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Associated tags
     # MNV
     def TAGS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(174))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -686,26 +449,20 @@ class MNV(object):
 
     # MNV
     def TAGSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(174))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MNV
     def TAGSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(174))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
         return o == 0
 
-    # MNV
-    def ALGORITHM(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(176))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
+    # Sourced data references
     # MNV
     def SOURCED_DATA(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(178))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -713,39 +470,34 @@ class MNV(object):
 
     # MNV
     def SOURCED_DATALength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(178))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MNV
     def SOURCED_DATAIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(178))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
         return o == 0
 
+    # Sourced data types
     # MNV
     def SOURCED_DATA_TYPES(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(180))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # MNV
-    def ON_ORBIT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(182))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
+    # Transaction identifier
     # MNV
     def TRANSACTION_ID(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(184))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
 def MNVStart(builder):
-    builder.StartObject(91)
+    builder.StartObject(45)
 
 def Start(builder):
     MNVStart(builder)
@@ -757,499 +509,217 @@ def AddID(builder, ID):
     MNVAddID(builder, ID)
 
 def MNVAddSAT_NO(builder, SAT_NO):
-    builder.PrependInt32Slot(1, SAT_NO, 0)
+    builder.PrependUint32Slot(1, SAT_NO, 0)
 
 def AddSAT_NO(builder, SAT_NO):
     MNVAddSAT_NO(builder, SAT_NO)
 
-def MNVAddREPORT_TIME(builder, REPORT_TIME):
-    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(REPORT_TIME), 0)
+def MNVAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_OBJECT_ID), 0)
 
-def AddREPORT_TIME(builder, REPORT_TIME):
-    MNVAddREPORT_TIME(builder, REPORT_TIME)
+def AddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
+    MNVAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
 
-def MNVAddEVENT_START_TIME(builder, EVENT_START_TIME):
-    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(EVENT_START_TIME), 0)
+def MNVAddON_ORBIT(builder, ON_ORBIT):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ON_ORBIT), 0)
 
-def AddEVENT_START_TIME(builder, EVENT_START_TIME):
-    MNVAddEVENT_START_TIME(builder, EVENT_START_TIME)
+def AddON_ORBIT(builder, ON_ORBIT):
+    MNVAddON_ORBIT(builder, ON_ORBIT)
 
-def MNVAddEVENT_END_TIME(builder, EVENT_END_TIME):
-    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(EVENT_END_TIME), 0)
+def MNVAddSTATUS(builder, STATUS):
+    builder.PrependInt8Slot(4, STATUS, 0)
 
-def AddEVENT_END_TIME(builder, EVENT_END_TIME):
-    MNVAddEVENT_END_TIME(builder, EVENT_END_TIME)
-
-def MNVAddTOTAL_BURN_TIME(builder, TOTAL_BURN_TIME):
-    builder.PrependFloat64Slot(5, TOTAL_BURN_TIME, 0.0)
-
-def AddTOTAL_BURN_TIME(builder, TOTAL_BURN_TIME):
-    MNVAddTOTAL_BURN_TIME(builder, TOTAL_BURN_TIME)
-
-def MNVAddOD_FIT_END_TIME(builder, OD_FIT_END_TIME):
-    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(OD_FIT_END_TIME), 0)
-
-def AddOD_FIT_END_TIME(builder, OD_FIT_END_TIME):
-    MNVAddOD_FIT_END_TIME(builder, OD_FIT_END_TIME)
-
-def MNVAddID_SENSOR(builder, ID_SENSOR):
-    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(ID_SENSOR), 0)
-
-def AddID_SENSOR(builder, ID_SENSOR):
-    MNVAddID_SENSOR(builder, ID_SENSOR)
-
-def MNVAddUCT(builder, UCT):
-    builder.PrependBoolSlot(8, UCT, 0)
-
-def AddUCT(builder, UCT):
-    MNVAddUCT(builder, UCT)
-
-def MNVAddMANEUVER_UNC(builder, MANEUVER_UNC):
-    builder.PrependFloat64Slot(9, MANEUVER_UNC, 0.0)
-
-def AddMANEUVER_UNC(builder, MANEUVER_UNC):
-    MNVAddMANEUVER_UNC(builder, MANEUVER_UNC)
+def AddSTATUS(builder, STATUS):
+    MNVAddSTATUS(builder, STATUS)
 
 def MNVAddCHARACTERIZATION(builder, CHARACTERIZATION):
-    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(CHARACTERIZATION), 0)
+    builder.PrependInt8Slot(5, CHARACTERIZATION, 0)
 
 def AddCHARACTERIZATION(builder, CHARACTERIZATION):
     MNVAddCHARACTERIZATION(builder, CHARACTERIZATION)
 
 def MNVAddCHARACTERIZATION_UNC(builder, CHARACTERIZATION_UNC):
-    builder.PrependFloat64Slot(11, CHARACTERIZATION_UNC, 0.0)
+    builder.PrependFloat64Slot(6, CHARACTERIZATION_UNC, 0.0)
 
 def AddCHARACTERIZATION_UNC(builder, CHARACTERIZATION_UNC):
     MNVAddCHARACTERIZATION_UNC(builder, CHARACTERIZATION_UNC)
 
-def MNVAddEVENT_ID(builder, EVENT_ID):
-    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(EVENT_ID), 0)
+def MNVAddREPORT_TIME(builder, REPORT_TIME):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(REPORT_TIME), 0)
 
-def AddEVENT_ID(builder, EVENT_ID):
-    MNVAddEVENT_ID(builder, EVENT_ID)
+def AddREPORT_TIME(builder, REPORT_TIME):
+    MNVAddREPORT_TIME(builder, REPORT_TIME)
 
-def MNVAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
-    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_OBJECT_ID), 0)
+def MNVAddEVENT_START_TIME(builder, EVENT_START_TIME):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(EVENT_START_TIME), 0)
 
-def AddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
-    MNVAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+def AddEVENT_START_TIME(builder, EVENT_START_TIME):
+    MNVAddEVENT_START_TIME(builder, EVENT_START_TIME)
+
+def MNVAddEVENT_END_TIME(builder, EVENT_END_TIME):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(EVENT_END_TIME), 0)
+
+def AddEVENT_END_TIME(builder, EVENT_END_TIME):
+    MNVAddEVENT_END_TIME(builder, EVENT_END_TIME)
+
+def MNVAddTOTAL_BURN_TIME(builder, TOTAL_BURN_TIME):
+    builder.PrependFloat64Slot(10, TOTAL_BURN_TIME, 0.0)
+
+def AddTOTAL_BURN_TIME(builder, TOTAL_BURN_TIME):
+    MNVAddTOTAL_BURN_TIME(builder, TOTAL_BURN_TIME)
+
+def MNVAddOD_FIT_END_TIME(builder, OD_FIT_END_TIME):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(OD_FIT_END_TIME), 0)
+
+def AddOD_FIT_END_TIME(builder, OD_FIT_END_TIME):
+    MNVAddOD_FIT_END_TIME(builder, OD_FIT_END_TIME)
+
+def MNVAddID_SENSOR(builder, ID_SENSOR):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(ID_SENSOR), 0)
+
+def AddID_SENSOR(builder, ID_SENSOR):
+    MNVAddID_SENSOR(builder, ID_SENSOR)
 
 def MNVAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID):
-    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_SENSOR_ID), 0)
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_SENSOR_ID), 0)
 
 def AddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID):
     MNVAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
 
-def MNVAddSTATUS(builder, STATUS):
-    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(STATUS), 0)
+def MNVAddEVENT_ID(builder, EVENT_ID):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(EVENT_ID), 0)
 
-def AddSTATUS(builder, STATUS):
-    MNVAddSTATUS(builder, STATUS)
+def AddEVENT_ID(builder, EVENT_ID):
+    MNVAddEVENT_ID(builder, EVENT_ID)
 
-def MNVAddDELTA_POS(builder, DELTA_POS):
-    builder.PrependFloat64Slot(16, DELTA_POS, 0.0)
+def MNVAddUCT(builder, UCT):
+    builder.PrependBoolSlot(15, UCT, 0)
 
-def AddDELTA_POS(builder, DELTA_POS):
-    MNVAddDELTA_POS(builder, DELTA_POS)
+def AddUCT(builder, UCT):
+    MNVAddUCT(builder, UCT)
 
-def MNVAddDELTA_POS_U(builder, DELTA_POS_U):
-    builder.PrependFloat64Slot(17, DELTA_POS_U, 0.0)
+def MNVAddMANEUVER_UNC(builder, MANEUVER_UNC):
+    builder.PrependFloat64Slot(16, MANEUVER_UNC, 0.0)
 
-def AddDELTA_POS_U(builder, DELTA_POS_U):
-    MNVAddDELTA_POS_U(builder, DELTA_POS_U)
-
-def MNVAddDELTA_POS_V(builder, DELTA_POS_V):
-    builder.PrependFloat64Slot(18, DELTA_POS_V, 0.0)
-
-def AddDELTA_POS_V(builder, DELTA_POS_V):
-    MNVAddDELTA_POS_V(builder, DELTA_POS_V)
-
-def MNVAddDELTA_POS_W(builder, DELTA_POS_W):
-    builder.PrependFloat64Slot(19, DELTA_POS_W, 0.0)
-
-def AddDELTA_POS_W(builder, DELTA_POS_W):
-    MNVAddDELTA_POS_W(builder, DELTA_POS_W)
+def AddMANEUVER_UNC(builder, MANEUVER_UNC):
+    MNVAddMANEUVER_UNC(builder, MANEUVER_UNC)
 
 def MNVAddDELTA_VEL(builder, DELTA_VEL):
-    builder.PrependFloat64Slot(20, DELTA_VEL, 0.0)
+    builder.PrependFloat64Slot(17, DELTA_VEL, 0.0)
 
 def AddDELTA_VEL(builder, DELTA_VEL):
     MNVAddDELTA_VEL(builder, DELTA_VEL)
 
 def MNVAddDELTA_VEL_U(builder, DELTA_VEL_U):
-    builder.PrependFloat64Slot(21, DELTA_VEL_U, 0.0)
+    builder.PrependFloat64Slot(18, DELTA_VEL_U, 0.0)
 
 def AddDELTA_VEL_U(builder, DELTA_VEL_U):
     MNVAddDELTA_VEL_U(builder, DELTA_VEL_U)
 
 def MNVAddDELTA_VEL_V(builder, DELTA_VEL_V):
-    builder.PrependFloat64Slot(22, DELTA_VEL_V, 0.0)
+    builder.PrependFloat64Slot(19, DELTA_VEL_V, 0.0)
 
 def AddDELTA_VEL_V(builder, DELTA_VEL_V):
     MNVAddDELTA_VEL_V(builder, DELTA_VEL_V)
 
 def MNVAddDELTA_VEL_W(builder, DELTA_VEL_W):
-    builder.PrependFloat64Slot(23, DELTA_VEL_W, 0.0)
+    builder.PrependFloat64Slot(20, DELTA_VEL_W, 0.0)
 
 def AddDELTA_VEL_W(builder, DELTA_VEL_W):
     MNVAddDELTA_VEL_W(builder, DELTA_VEL_W)
 
+def MNVAddDELTA_POS(builder, DELTA_POS):
+    builder.PrependFloat64Slot(21, DELTA_POS, 0.0)
+
+def AddDELTA_POS(builder, DELTA_POS):
+    MNVAddDELTA_POS(builder, DELTA_POS)
+
+def MNVAddDELTA_POS_U(builder, DELTA_POS_U):
+    builder.PrependFloat64Slot(22, DELTA_POS_U, 0.0)
+
+def AddDELTA_POS_U(builder, DELTA_POS_U):
+    MNVAddDELTA_POS_U(builder, DELTA_POS_U)
+
+def MNVAddDELTA_POS_V(builder, DELTA_POS_V):
+    builder.PrependFloat64Slot(23, DELTA_POS_V, 0.0)
+
+def AddDELTA_POS_V(builder, DELTA_POS_V):
+    MNVAddDELTA_POS_V(builder, DELTA_POS_V)
+
+def MNVAddDELTA_POS_W(builder, DELTA_POS_W):
+    builder.PrependFloat64Slot(24, DELTA_POS_W, 0.0)
+
+def AddDELTA_POS_W(builder, DELTA_POS_W):
+    MNVAddDELTA_POS_W(builder, DELTA_POS_W)
+
 def MNVAddDELTA_MASS(builder, DELTA_MASS):
-    builder.PrependFloat64Slot(24, DELTA_MASS, 0.0)
+    builder.PrependFloat64Slot(25, DELTA_MASS, 0.0)
 
 def AddDELTA_MASS(builder, DELTA_MASS):
     MNVAddDELTA_MASS(builder, DELTA_MASS)
 
-def MNVAddPRE_EVENT_ID_ELSET(builder, PRE_EVENT_ID_ELSET):
-    builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(PRE_EVENT_ID_ELSET), 0)
+def MNVAddPRE_EVENT(builder, PRE_EVENT):
+    builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(PRE_EVENT), 0)
 
-def AddPRE_EVENT_ID_ELSET(builder, PRE_EVENT_ID_ELSET):
-    MNVAddPRE_EVENT_ID_ELSET(builder, PRE_EVENT_ID_ELSET)
+def AddPRE_EVENT(builder, PRE_EVENT):
+    MNVAddPRE_EVENT(builder, PRE_EVENT)
 
-def MNVAddPRE_EVENT_ELSET(builder, PRE_EVENT_ELSET):
-    builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(PRE_EVENT_ELSET), 0)
+def MNVAddPOST_EVENT(builder, POST_EVENT):
+    builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(POST_EVENT), 0)
 
-def AddPRE_EVENT_ELSET(builder, PRE_EVENT_ELSET):
-    MNVAddPRE_EVENT_ELSET(builder, PRE_EVENT_ELSET)
-
-def MNVAddPRE_EVENT_ID_STATE_VECTOR(builder, PRE_EVENT_ID_STATE_VECTOR):
-    builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(PRE_EVENT_ID_STATE_VECTOR), 0)
-
-def AddPRE_EVENT_ID_STATE_VECTOR(builder, PRE_EVENT_ID_STATE_VECTOR):
-    MNVAddPRE_EVENT_ID_STATE_VECTOR(builder, PRE_EVENT_ID_STATE_VECTOR)
-
-def MNVAddPRE_EVENT_STATE_VECTOR(builder, PRE_EVENT_STATE_VECTOR):
-    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(PRE_EVENT_STATE_VECTOR), 0)
-
-def AddPRE_EVENT_STATE_VECTOR(builder, PRE_EVENT_STATE_VECTOR):
-    MNVAddPRE_EVENT_STATE_VECTOR(builder, PRE_EVENT_STATE_VECTOR)
-
-def MNVAddPRE_POS_X(builder, PRE_POS_X):
-    builder.PrependFloat64Slot(29, PRE_POS_X, 0.0)
-
-def AddPRE_POS_X(builder, PRE_POS_X):
-    MNVAddPRE_POS_X(builder, PRE_POS_X)
-
-def MNVAddPRE_POS_Y(builder, PRE_POS_Y):
-    builder.PrependFloat64Slot(30, PRE_POS_Y, 0.0)
-
-def AddPRE_POS_Y(builder, PRE_POS_Y):
-    MNVAddPRE_POS_Y(builder, PRE_POS_Y)
-
-def MNVAddPRE_POS_Z(builder, PRE_POS_Z):
-    builder.PrependFloat64Slot(31, PRE_POS_Z, 0.0)
-
-def AddPRE_POS_Z(builder, PRE_POS_Z):
-    MNVAddPRE_POS_Z(builder, PRE_POS_Z)
-
-def MNVAddPRE_VEL_X(builder, PRE_VEL_X):
-    builder.PrependFloat64Slot(32, PRE_VEL_X, 0.0)
-
-def AddPRE_VEL_X(builder, PRE_VEL_X):
-    MNVAddPRE_VEL_X(builder, PRE_VEL_X)
-
-def MNVAddPRE_VEL_Y(builder, PRE_VEL_Y):
-    builder.PrependFloat64Slot(33, PRE_VEL_Y, 0.0)
-
-def AddPRE_VEL_Y(builder, PRE_VEL_Y):
-    MNVAddPRE_VEL_Y(builder, PRE_VEL_Y)
-
-def MNVAddPRE_VEL_Z(builder, PRE_VEL_Z):
-    builder.PrependFloat64Slot(34, PRE_VEL_Z, 0.0)
-
-def AddPRE_VEL_Z(builder, PRE_VEL_Z):
-    MNVAddPRE_VEL_Z(builder, PRE_VEL_Z)
-
-def MNVAddPRE_RADIATION_PRESS_COEFF(builder, PRE_RADIATION_PRESS_COEFF):
-    builder.PrependFloat64Slot(35, PRE_RADIATION_PRESS_COEFF, 0.0)
-
-def AddPRE_RADIATION_PRESS_COEFF(builder, PRE_RADIATION_PRESS_COEFF):
-    MNVAddPRE_RADIATION_PRESS_COEFF(builder, PRE_RADIATION_PRESS_COEFF)
-
-def MNVAddPRE_BALLISTIC_COEFF(builder, PRE_BALLISTIC_COEFF):
-    builder.PrependFloat64Slot(36, PRE_BALLISTIC_COEFF, 0.0)
-
-def AddPRE_BALLISTIC_COEFF(builder, PRE_BALLISTIC_COEFF):
-    MNVAddPRE_BALLISTIC_COEFF(builder, PRE_BALLISTIC_COEFF)
-
-def MNVAddPRE_APOGEE(builder, PRE_APOGEE):
-    builder.PrependFloat64Slot(37, PRE_APOGEE, 0.0)
-
-def AddPRE_APOGEE(builder, PRE_APOGEE):
-    MNVAddPRE_APOGEE(builder, PRE_APOGEE)
-
-def MNVAddPRE_PERIGEE(builder, PRE_PERIGEE):
-    builder.PrependFloat64Slot(38, PRE_PERIGEE, 0.0)
-
-def AddPRE_PERIGEE(builder, PRE_PERIGEE):
-    MNVAddPRE_PERIGEE(builder, PRE_PERIGEE)
-
-def MNVAddPRE_INCLINATION(builder, PRE_INCLINATION):
-    builder.PrependFloat64Slot(39, PRE_INCLINATION, 0.0)
-
-def AddPRE_INCLINATION(builder, PRE_INCLINATION):
-    MNVAddPRE_INCLINATION(builder, PRE_INCLINATION)
-
-def MNVAddPRE_ECCENTRICITY(builder, PRE_ECCENTRICITY):
-    builder.PrependFloat64Slot(40, PRE_ECCENTRICITY, 0.0)
-
-def AddPRE_ECCENTRICITY(builder, PRE_ECCENTRICITY):
-    MNVAddPRE_ECCENTRICITY(builder, PRE_ECCENTRICITY)
-
-def MNVAddPRE_PERIOD(builder, PRE_PERIOD):
-    builder.PrependFloat64Slot(41, PRE_PERIOD, 0.0)
-
-def AddPRE_PERIOD(builder, PRE_PERIOD):
-    MNVAddPRE_PERIOD(builder, PRE_PERIOD)
-
-def MNVAddPRE_RAAN(builder, PRE_RAAN):
-    builder.PrependFloat64Slot(42, PRE_RAAN, 0.0)
-
-def AddPRE_RAAN(builder, PRE_RAAN):
-    MNVAddPRE_RAAN(builder, PRE_RAAN)
-
-def MNVAddPRE_SMA(builder, PRE_SMA):
-    builder.PrependFloat64Slot(43, PRE_SMA, 0.0)
-
-def AddPRE_SMA(builder, PRE_SMA):
-    MNVAddPRE_SMA(builder, PRE_SMA)
-
-def MNVAddPRE_GEO_LONGITUDE(builder, PRE_GEO_LONGITUDE):
-    builder.PrependFloat64Slot(44, PRE_GEO_LONGITUDE, 0.0)
-
-def AddPRE_GEO_LONGITUDE(builder, PRE_GEO_LONGITUDE):
-    MNVAddPRE_GEO_LONGITUDE(builder, PRE_GEO_LONGITUDE)
-
-def MNVAddPRE_DRIFT_RATE(builder, PRE_DRIFT_RATE):
-    builder.PrependFloat64Slot(45, PRE_DRIFT_RATE, 0.0)
-
-def AddPRE_DRIFT_RATE(builder, PRE_DRIFT_RATE):
-    MNVAddPRE_DRIFT_RATE(builder, PRE_DRIFT_RATE)
-
-def MNVAddPRE_SIGMA_U(builder, PRE_SIGMA_U):
-    builder.PrependFloat64Slot(46, PRE_SIGMA_U, 0.0)
-
-def AddPRE_SIGMA_U(builder, PRE_SIGMA_U):
-    MNVAddPRE_SIGMA_U(builder, PRE_SIGMA_U)
-
-def MNVAddPRE_SIGMA_V(builder, PRE_SIGMA_V):
-    builder.PrependFloat64Slot(47, PRE_SIGMA_V, 0.0)
-
-def AddPRE_SIGMA_V(builder, PRE_SIGMA_V):
-    MNVAddPRE_SIGMA_V(builder, PRE_SIGMA_V)
-
-def MNVAddPRE_SIGMA_W(builder, PRE_SIGMA_W):
-    builder.PrependFloat64Slot(48, PRE_SIGMA_W, 0.0)
-
-def AddPRE_SIGMA_W(builder, PRE_SIGMA_W):
-    MNVAddPRE_SIGMA_W(builder, PRE_SIGMA_W)
-
-def MNVAddPOST_EVENT_ID_ELSET(builder, POST_EVENT_ID_ELSET):
-    builder.PrependUOffsetTRelativeSlot(49, flatbuffers.number_types.UOffsetTFlags.py_type(POST_EVENT_ID_ELSET), 0)
-
-def AddPOST_EVENT_ID_ELSET(builder, POST_EVENT_ID_ELSET):
-    MNVAddPOST_EVENT_ID_ELSET(builder, POST_EVENT_ID_ELSET)
-
-def MNVAddPOST_EVENT_ELSET(builder, POST_EVENT_ELSET):
-    builder.PrependUOffsetTRelativeSlot(50, flatbuffers.number_types.UOffsetTFlags.py_type(POST_EVENT_ELSET), 0)
-
-def AddPOST_EVENT_ELSET(builder, POST_EVENT_ELSET):
-    MNVAddPOST_EVENT_ELSET(builder, POST_EVENT_ELSET)
-
-def MNVAddPOST_EVENT_ID_STATE_VECTOR(builder, POST_EVENT_ID_STATE_VECTOR):
-    builder.PrependUOffsetTRelativeSlot(51, flatbuffers.number_types.UOffsetTFlags.py_type(POST_EVENT_ID_STATE_VECTOR), 0)
-
-def AddPOST_EVENT_ID_STATE_VECTOR(builder, POST_EVENT_ID_STATE_VECTOR):
-    MNVAddPOST_EVENT_ID_STATE_VECTOR(builder, POST_EVENT_ID_STATE_VECTOR)
-
-def MNVAddPOST_EVENT_STATE_VECTOR(builder, POST_EVENT_STATE_VECTOR):
-    builder.PrependUOffsetTRelativeSlot(52, flatbuffers.number_types.UOffsetTFlags.py_type(POST_EVENT_STATE_VECTOR), 0)
-
-def AddPOST_EVENT_STATE_VECTOR(builder, POST_EVENT_STATE_VECTOR):
-    MNVAddPOST_EVENT_STATE_VECTOR(builder, POST_EVENT_STATE_VECTOR)
-
-def MNVAddPOST_POS_X(builder, POST_POS_X):
-    builder.PrependFloat64Slot(53, POST_POS_X, 0.0)
-
-def AddPOST_POS_X(builder, POST_POS_X):
-    MNVAddPOST_POS_X(builder, POST_POS_X)
-
-def MNVAddPOST_POS_Y(builder, POST_POS_Y):
-    builder.PrependFloat64Slot(54, POST_POS_Y, 0.0)
-
-def AddPOST_POS_Y(builder, POST_POS_Y):
-    MNVAddPOST_POS_Y(builder, POST_POS_Y)
-
-def MNVAddPOST_POS_Z(builder, POST_POS_Z):
-    builder.PrependFloat64Slot(55, POST_POS_Z, 0.0)
-
-def AddPOST_POS_Z(builder, POST_POS_Z):
-    MNVAddPOST_POS_Z(builder, POST_POS_Z)
-
-def MNVAddPOST_VEL_X(builder, POST_VEL_X):
-    builder.PrependFloat64Slot(56, POST_VEL_X, 0.0)
-
-def AddPOST_VEL_X(builder, POST_VEL_X):
-    MNVAddPOST_VEL_X(builder, POST_VEL_X)
-
-def MNVAddPOST_VEL_Y(builder, POST_VEL_Y):
-    builder.PrependFloat64Slot(57, POST_VEL_Y, 0.0)
-
-def AddPOST_VEL_Y(builder, POST_VEL_Y):
-    MNVAddPOST_VEL_Y(builder, POST_VEL_Y)
-
-def MNVAddPOST_VEL_Z(builder, POST_VEL_Z):
-    builder.PrependFloat64Slot(58, POST_VEL_Z, 0.0)
-
-def AddPOST_VEL_Z(builder, POST_VEL_Z):
-    MNVAddPOST_VEL_Z(builder, POST_VEL_Z)
-
-def MNVAddPOST_RADIATION_PRESS_COEFF(builder, POST_RADIATION_PRESS_COEFF):
-    builder.PrependFloat64Slot(59, POST_RADIATION_PRESS_COEFF, 0.0)
-
-def AddPOST_RADIATION_PRESS_COEFF(builder, POST_RADIATION_PRESS_COEFF):
-    MNVAddPOST_RADIATION_PRESS_COEFF(builder, POST_RADIATION_PRESS_COEFF)
-
-def MNVAddPOST_BALLISTIC_COEFF(builder, POST_BALLISTIC_COEFF):
-    builder.PrependFloat64Slot(60, POST_BALLISTIC_COEFF, 0.0)
-
-def AddPOST_BALLISTIC_COEFF(builder, POST_BALLISTIC_COEFF):
-    MNVAddPOST_BALLISTIC_COEFF(builder, POST_BALLISTIC_COEFF)
-
-def MNVAddPOST_APOGEE(builder, POST_APOGEE):
-    builder.PrependFloat64Slot(61, POST_APOGEE, 0.0)
-
-def AddPOST_APOGEE(builder, POST_APOGEE):
-    MNVAddPOST_APOGEE(builder, POST_APOGEE)
-
-def MNVAddPOST_PERIGEE(builder, POST_PERIGEE):
-    builder.PrependFloat64Slot(62, POST_PERIGEE, 0.0)
-
-def AddPOST_PERIGEE(builder, POST_PERIGEE):
-    MNVAddPOST_PERIGEE(builder, POST_PERIGEE)
-
-def MNVAddPOST_INCLINATION(builder, POST_INCLINATION):
-    builder.PrependFloat64Slot(63, POST_INCLINATION, 0.0)
-
-def AddPOST_INCLINATION(builder, POST_INCLINATION):
-    MNVAddPOST_INCLINATION(builder, POST_INCLINATION)
-
-def MNVAddPOST_ECCENTRICITY(builder, POST_ECCENTRICITY):
-    builder.PrependFloat64Slot(64, POST_ECCENTRICITY, 0.0)
-
-def AddPOST_ECCENTRICITY(builder, POST_ECCENTRICITY):
-    MNVAddPOST_ECCENTRICITY(builder, POST_ECCENTRICITY)
-
-def MNVAddPOST_PERIOD(builder, POST_PERIOD):
-    builder.PrependFloat64Slot(65, POST_PERIOD, 0.0)
-
-def AddPOST_PERIOD(builder, POST_PERIOD):
-    MNVAddPOST_PERIOD(builder, POST_PERIOD)
-
-def MNVAddPOST_RAAN(builder, POST_RAAN):
-    builder.PrependFloat64Slot(66, POST_RAAN, 0.0)
-
-def AddPOST_RAAN(builder, POST_RAAN):
-    MNVAddPOST_RAAN(builder, POST_RAAN)
-
-def MNVAddPOST_SMA(builder, POST_SMA):
-    builder.PrependFloat64Slot(67, POST_SMA, 0.0)
-
-def AddPOST_SMA(builder, POST_SMA):
-    MNVAddPOST_SMA(builder, POST_SMA)
-
-def MNVAddPOST_GEO_LONGITUDE(builder, POST_GEO_LONGITUDE):
-    builder.PrependFloat64Slot(68, POST_GEO_LONGITUDE, 0.0)
-
-def AddPOST_GEO_LONGITUDE(builder, POST_GEO_LONGITUDE):
-    MNVAddPOST_GEO_LONGITUDE(builder, POST_GEO_LONGITUDE)
-
-def MNVAddPOST_DRIFT_RATE(builder, POST_DRIFT_RATE):
-    builder.PrependFloat64Slot(69, POST_DRIFT_RATE, 0.0)
-
-def AddPOST_DRIFT_RATE(builder, POST_DRIFT_RATE):
-    MNVAddPOST_DRIFT_RATE(builder, POST_DRIFT_RATE)
-
-def MNVAddPOST_SIGMA_U(builder, POST_SIGMA_U):
-    builder.PrependFloat64Slot(70, POST_SIGMA_U, 0.0)
-
-def AddPOST_SIGMA_U(builder, POST_SIGMA_U):
-    MNVAddPOST_SIGMA_U(builder, POST_SIGMA_U)
-
-def MNVAddPOST_SIGMA_V(builder, POST_SIGMA_V):
-    builder.PrependFloat64Slot(71, POST_SIGMA_V, 0.0)
-
-def AddPOST_SIGMA_V(builder, POST_SIGMA_V):
-    MNVAddPOST_SIGMA_V(builder, POST_SIGMA_V)
-
-def MNVAddPOST_SIGMA_W(builder, POST_SIGMA_W):
-    builder.PrependFloat64Slot(72, POST_SIGMA_W, 0.0)
-
-def AddPOST_SIGMA_W(builder, POST_SIGMA_W):
-    MNVAddPOST_SIGMA_W(builder, POST_SIGMA_W)
-
-def MNVAddCOV(builder, COV):
-    builder.PrependUOffsetTRelativeSlot(73, flatbuffers.number_types.UOffsetTFlags.py_type(COV), 0)
-
-def AddCOV(builder, COV):
-    MNVAddCOV(builder, COV)
-
-def MNVStartCOVVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
-
-def StartCOVVector(builder, numElems):
-    return MNVStartCOVVector(builder, numElems)
+def AddPOST_EVENT(builder, POST_EVENT):
+    MNVAddPOST_EVENT(builder, POST_EVENT)
 
 def MNVAddPOST_MASS(builder, POST_MASS):
-    builder.PrependFloat64Slot(74, POST_MASS, 0.0)
+    builder.PrependFloat64Slot(28, POST_MASS, 0.0)
 
 def AddPOST_MASS(builder, POST_MASS):
     MNVAddPOST_MASS(builder, POST_MASS)
 
 def MNVAddPOST_AREA(builder, POST_AREA):
-    builder.PrependFloat64Slot(75, POST_AREA, 0.0)
+    builder.PrependFloat64Slot(29, POST_AREA, 0.0)
 
 def AddPOST_AREA(builder, POST_AREA):
     MNVAddPOST_AREA(builder, POST_AREA)
 
+def MNVAddCOV(builder, COV):
+    builder.PrependUOffsetTRelativeSlot(30, flatbuffers.number_types.UOffsetTFlags.py_type(COV), 0)
+
+def AddCOV(builder, COV):
+    MNVAddCOV(builder, COV)
+
+def MNVStartCOVVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartCOVVector(builder, numElems):
+    return MNVStartCOVVector(builder, numElems)
+
 def MNVAddNUM_OBS(builder, NUM_OBS):
-    builder.PrependInt32Slot(76, NUM_OBS, 0)
+    builder.PrependUint32Slot(31, NUM_OBS, 0)
 
 def AddNUM_OBS(builder, NUM_OBS):
     MNVAddNUM_OBS(builder, NUM_OBS)
 
-def MNVAddDESCRIPTION(builder, DESCRIPTION):
-    builder.PrependUOffsetTRelativeSlot(77, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION), 0)
-
-def AddDESCRIPTION(builder, DESCRIPTION):
-    MNVAddDESCRIPTION(builder, DESCRIPTION)
-
-def MNVAddDESCRIPTOR(builder, DESCRIPTOR):
-    builder.PrependUOffsetTRelativeSlot(78, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTOR), 0)
-
-def AddDESCRIPTOR(builder, DESCRIPTOR):
-    MNVAddDESCRIPTOR(builder, DESCRIPTOR)
-
 def MNVAddSTATE_MODEL(builder, STATE_MODEL):
-    builder.PrependUOffsetTRelativeSlot(79, flatbuffers.number_types.UOffsetTFlags.py_type(STATE_MODEL), 0)
+    builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(STATE_MODEL), 0)
 
 def AddSTATE_MODEL(builder, STATE_MODEL):
     MNVAddSTATE_MODEL(builder, STATE_MODEL)
 
 def MNVAddSTATE_MODEL_VERSION(builder, STATE_MODEL_VERSION):
-    builder.PrependFloat64Slot(80, STATE_MODEL_VERSION, 0.0)
+    builder.PrependFloat64Slot(33, STATE_MODEL_VERSION, 0.0)
 
 def AddSTATE_MODEL_VERSION(builder, STATE_MODEL_VERSION):
     MNVAddSTATE_MODEL_VERSION(builder, STATE_MODEL_VERSION)
 
 def MNVAddNUM_ACCEL_POINTS(builder, NUM_ACCEL_POINTS):
-    builder.PrependInt32Slot(81, NUM_ACCEL_POINTS, 0)
+    builder.PrependUint16Slot(34, NUM_ACCEL_POINTS, 0)
 
 def AddNUM_ACCEL_POINTS(builder, NUM_ACCEL_POINTS):
     MNVAddNUM_ACCEL_POINTS(builder, NUM_ACCEL_POINTS)
 
 def MNVAddMNVR_ACCEL_TIMES(builder, MNVR_ACCEL_TIMES):
-    builder.PrependUOffsetTRelativeSlot(82, flatbuffers.number_types.UOffsetTFlags.py_type(MNVR_ACCEL_TIMES), 0)
+    builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(MNVR_ACCEL_TIMES), 0)
 
 def AddMNVR_ACCEL_TIMES(builder, MNVR_ACCEL_TIMES):
     MNVAddMNVR_ACCEL_TIMES(builder, MNVR_ACCEL_TIMES)
@@ -1261,31 +731,49 @@ def StartMNVR_ACCEL_TIMESVector(builder, numElems):
     return MNVStartMNVR_ACCEL_TIMESVector(builder, numElems)
 
 def MNVAddMNVR_ACCELS(builder, MNVR_ACCELS):
-    builder.PrependUOffsetTRelativeSlot(83, flatbuffers.number_types.UOffsetTFlags.py_type(MNVR_ACCELS), 0)
+    builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(MNVR_ACCELS), 0)
 
 def AddMNVR_ACCELS(builder, MNVR_ACCELS):
     MNVAddMNVR_ACCELS(builder, MNVR_ACCELS)
 
 def MNVStartMNVR_ACCELSVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
+    return builder.StartVector(8, numElems, 8)
 
 def StartMNVR_ACCELSVector(builder, numElems):
     return MNVStartMNVR_ACCELSVector(builder, numElems)
 
 def MNVAddMNVR_ACCEL_UNCS(builder, MNVR_ACCEL_UNCS):
-    builder.PrependUOffsetTRelativeSlot(84, flatbuffers.number_types.UOffsetTFlags.py_type(MNVR_ACCEL_UNCS), 0)
+    builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(MNVR_ACCEL_UNCS), 0)
 
 def AddMNVR_ACCEL_UNCS(builder, MNVR_ACCEL_UNCS):
     MNVAddMNVR_ACCEL_UNCS(builder, MNVR_ACCEL_UNCS)
 
 def MNVStartMNVR_ACCEL_UNCSVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
+    return builder.StartVector(8, numElems, 8)
 
 def StartMNVR_ACCEL_UNCSVector(builder, numElems):
     return MNVStartMNVR_ACCEL_UNCSVector(builder, numElems)
 
+def MNVAddDESCRIPTION(builder, DESCRIPTION):
+    builder.PrependUOffsetTRelativeSlot(38, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION), 0)
+
+def AddDESCRIPTION(builder, DESCRIPTION):
+    MNVAddDESCRIPTION(builder, DESCRIPTION)
+
+def MNVAddDESCRIPTOR(builder, DESCRIPTOR):
+    builder.PrependUOffsetTRelativeSlot(39, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTOR), 0)
+
+def AddDESCRIPTOR(builder, DESCRIPTOR):
+    MNVAddDESCRIPTOR(builder, DESCRIPTOR)
+
+def MNVAddALGORITHM(builder, ALGORITHM):
+    builder.PrependUOffsetTRelativeSlot(40, flatbuffers.number_types.UOffsetTFlags.py_type(ALGORITHM), 0)
+
+def AddALGORITHM(builder, ALGORITHM):
+    MNVAddALGORITHM(builder, ALGORITHM)
+
 def MNVAddTAGS(builder, TAGS):
-    builder.PrependUOffsetTRelativeSlot(85, flatbuffers.number_types.UOffsetTFlags.py_type(TAGS), 0)
+    builder.PrependUOffsetTRelativeSlot(41, flatbuffers.number_types.UOffsetTFlags.py_type(TAGS), 0)
 
 def AddTAGS(builder, TAGS):
     MNVAddTAGS(builder, TAGS)
@@ -1296,14 +784,8 @@ def MNVStartTAGSVector(builder, numElems):
 def StartTAGSVector(builder, numElems):
     return MNVStartTAGSVector(builder, numElems)
 
-def MNVAddALGORITHM(builder, ALGORITHM):
-    builder.PrependUOffsetTRelativeSlot(86, flatbuffers.number_types.UOffsetTFlags.py_type(ALGORITHM), 0)
-
-def AddALGORITHM(builder, ALGORITHM):
-    MNVAddALGORITHM(builder, ALGORITHM)
-
 def MNVAddSOURCED_DATA(builder, SOURCED_DATA):
-    builder.PrependUOffsetTRelativeSlot(87, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCED_DATA), 0)
+    builder.PrependUOffsetTRelativeSlot(42, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCED_DATA), 0)
 
 def AddSOURCED_DATA(builder, SOURCED_DATA):
     MNVAddSOURCED_DATA(builder, SOURCED_DATA)
@@ -1315,19 +797,13 @@ def StartSOURCED_DATAVector(builder, numElems):
     return MNVStartSOURCED_DATAVector(builder, numElems)
 
 def MNVAddSOURCED_DATA_TYPES(builder, SOURCED_DATA_TYPES):
-    builder.PrependUOffsetTRelativeSlot(88, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCED_DATA_TYPES), 0)
+    builder.PrependUOffsetTRelativeSlot(43, flatbuffers.number_types.UOffsetTFlags.py_type(SOURCED_DATA_TYPES), 0)
 
 def AddSOURCED_DATA_TYPES(builder, SOURCED_DATA_TYPES):
     MNVAddSOURCED_DATA_TYPES(builder, SOURCED_DATA_TYPES)
 
-def MNVAddON_ORBIT(builder, ON_ORBIT):
-    builder.PrependUOffsetTRelativeSlot(89, flatbuffers.number_types.UOffsetTFlags.py_type(ON_ORBIT), 0)
-
-def AddON_ORBIT(builder, ON_ORBIT):
-    MNVAddON_ORBIT(builder, ON_ORBIT)
-
 def MNVAddTRANSACTION_ID(builder, TRANSACTION_ID):
-    builder.PrependUOffsetTRelativeSlot(90, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSACTION_ID), 0)
+    builder.PrependUOffsetTRelativeSlot(44, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSACTION_ID), 0)
 
 def AddTRANSACTION_ID(builder, TRANSACTION_ID):
     MNVAddTRANSACTION_ID(builder, TRANSACTION_ID)
@@ -1338,8 +814,9 @@ def MNVEnd(builder):
 def End(builder):
     return MNVEnd(builder)
 
+import mnvOrbitalState
 try:
-    from typing import List
+    from typing import List, Optional
 except:
     pass
 
@@ -1349,94 +826,48 @@ class MNVT(object):
     def __init__(self):
         self.ID = None  # type: str
         self.SAT_NO = 0  # type: int
+        self.ORIG_OBJECT_ID = None  # type: str
+        self.ON_ORBIT = None  # type: str
+        self.STATUS = 0  # type: int
+        self.CHARACTERIZATION = 0  # type: int
+        self.CHARACTERIZATION_UNC = 0.0  # type: float
         self.REPORT_TIME = None  # type: str
         self.EVENT_START_TIME = None  # type: str
         self.EVENT_END_TIME = None  # type: str
         self.TOTAL_BURN_TIME = 0.0  # type: float
         self.OD_FIT_END_TIME = None  # type: str
         self.ID_SENSOR = None  # type: str
+        self.ORIG_SENSOR_ID = None  # type: str
+        self.EVENT_ID = None  # type: str
         self.UCT = False  # type: bool
         self.MANEUVER_UNC = 0.0  # type: float
-        self.CHARACTERIZATION = None  # type: str
-        self.CHARACTERIZATION_UNC = 0.0  # type: float
-        self.EVENT_ID = None  # type: str
-        self.ORIG_OBJECT_ID = None  # type: str
-        self.ORIG_SENSOR_ID = None  # type: str
-        self.STATUS = None  # type: str
-        self.DELTA_POS = 0.0  # type: float
-        self.DELTA_POS_U = 0.0  # type: float
-        self.DELTA_POS_V = 0.0  # type: float
-        self.DELTA_POS_W = 0.0  # type: float
         self.DELTA_VEL = 0.0  # type: float
         self.DELTA_VEL_U = 0.0  # type: float
         self.DELTA_VEL_V = 0.0  # type: float
         self.DELTA_VEL_W = 0.0  # type: float
+        self.DELTA_POS = 0.0  # type: float
+        self.DELTA_POS_U = 0.0  # type: float
+        self.DELTA_POS_V = 0.0  # type: float
+        self.DELTA_POS_W = 0.0  # type: float
         self.DELTA_MASS = 0.0  # type: float
-        self.PRE_EVENT_ID_ELSET = None  # type: str
-        self.PRE_EVENT_ELSET = None  # type: str
-        self.PRE_EVENT_ID_STATE_VECTOR = None  # type: str
-        self.PRE_EVENT_STATE_VECTOR = None  # type: str
-        self.PRE_POS_X = 0.0  # type: float
-        self.PRE_POS_Y = 0.0  # type: float
-        self.PRE_POS_Z = 0.0  # type: float
-        self.PRE_VEL_X = 0.0  # type: float
-        self.PRE_VEL_Y = 0.0  # type: float
-        self.PRE_VEL_Z = 0.0  # type: float
-        self.PRE_RADIATION_PRESS_COEFF = 0.0  # type: float
-        self.PRE_BALLISTIC_COEFF = 0.0  # type: float
-        self.PRE_APOGEE = 0.0  # type: float
-        self.PRE_PERIGEE = 0.0  # type: float
-        self.PRE_INCLINATION = 0.0  # type: float
-        self.PRE_ECCENTRICITY = 0.0  # type: float
-        self.PRE_PERIOD = 0.0  # type: float
-        self.PRE_RAAN = 0.0  # type: float
-        self.PRE_SMA = 0.0  # type: float
-        self.PRE_GEO_LONGITUDE = 0.0  # type: float
-        self.PRE_DRIFT_RATE = 0.0  # type: float
-        self.PRE_SIGMA_U = 0.0  # type: float
-        self.PRE_SIGMA_V = 0.0  # type: float
-        self.PRE_SIGMA_W = 0.0  # type: float
-        self.POST_EVENT_ID_ELSET = None  # type: str
-        self.POST_EVENT_ELSET = None  # type: str
-        self.POST_EVENT_ID_STATE_VECTOR = None  # type: str
-        self.POST_EVENT_STATE_VECTOR = None  # type: str
-        self.POST_POS_X = 0.0  # type: float
-        self.POST_POS_Y = 0.0  # type: float
-        self.POST_POS_Z = 0.0  # type: float
-        self.POST_VEL_X = 0.0  # type: float
-        self.POST_VEL_Y = 0.0  # type: float
-        self.POST_VEL_Z = 0.0  # type: float
-        self.POST_RADIATION_PRESS_COEFF = 0.0  # type: float
-        self.POST_BALLISTIC_COEFF = 0.0  # type: float
-        self.POST_APOGEE = 0.0  # type: float
-        self.POST_PERIGEE = 0.0  # type: float
-        self.POST_INCLINATION = 0.0  # type: float
-        self.POST_ECCENTRICITY = 0.0  # type: float
-        self.POST_PERIOD = 0.0  # type: float
-        self.POST_RAAN = 0.0  # type: float
-        self.POST_SMA = 0.0  # type: float
-        self.POST_GEO_LONGITUDE = 0.0  # type: float
-        self.POST_DRIFT_RATE = 0.0  # type: float
-        self.POST_SIGMA_U = 0.0  # type: float
-        self.POST_SIGMA_V = 0.0  # type: float
-        self.POST_SIGMA_W = 0.0  # type: float
-        self.COV = None  # type: List[str]
+        self.PRE_EVENT = None  # type: Optional[mnvOrbitalState.mnvOrbitalStateT]
+        self.POST_EVENT = None  # type: Optional[mnvOrbitalState.mnvOrbitalStateT]
         self.POST_MASS = 0.0  # type: float
         self.POST_AREA = 0.0  # type: float
+        self.COV = None  # type: List[float]
         self.NUM_OBS = 0  # type: int
-        self.DESCRIPTION = None  # type: str
-        self.DESCRIPTOR = None  # type: str
         self.STATE_MODEL = None  # type: str
         self.STATE_MODEL_VERSION = 0.0  # type: float
         self.NUM_ACCEL_POINTS = 0  # type: int
         self.MNVR_ACCEL_TIMES = None  # type: List[str]
-        self.MNVR_ACCELS = None  # type: List[str]
-        self.MNVR_ACCEL_UNCS = None  # type: List[str]
-        self.TAGS = None  # type: List[str]
+        self.MNVR_ACCELS = None  # type: List[float]
+        self.MNVR_ACCEL_UNCS = None  # type: List[float]
+        self.DESCRIPTION = None  # type: str
+        self.DESCRIPTOR = None  # type: str
         self.ALGORITHM = None  # type: str
+        self.TAGS = None  # type: List[str]
         self.SOURCED_DATA = None  # type: List[str]
         self.SOURCED_DATA_TYPES = None  # type: str
-        self.ON_ORBIT = None  # type: str
         self.TRANSACTION_ID = None  # type: str
 
     @classmethod
@@ -1462,86 +893,44 @@ class MNVT(object):
             return
         self.ID = MNV.ID()
         self.SAT_NO = MNV.SAT_NO()
+        self.ORIG_OBJECT_ID = MNV.ORIG_OBJECT_ID()
+        self.ON_ORBIT = MNV.ON_ORBIT()
+        self.STATUS = MNV.STATUS()
+        self.CHARACTERIZATION = MNV.CHARACTERIZATION()
+        self.CHARACTERIZATION_UNC = MNV.CHARACTERIZATION_UNC()
         self.REPORT_TIME = MNV.REPORT_TIME()
         self.EVENT_START_TIME = MNV.EVENT_START_TIME()
         self.EVENT_END_TIME = MNV.EVENT_END_TIME()
         self.TOTAL_BURN_TIME = MNV.TOTAL_BURN_TIME()
         self.OD_FIT_END_TIME = MNV.OD_FIT_END_TIME()
         self.ID_SENSOR = MNV.ID_SENSOR()
+        self.ORIG_SENSOR_ID = MNV.ORIG_SENSOR_ID()
+        self.EVENT_ID = MNV.EVENT_ID()
         self.UCT = MNV.UCT()
         self.MANEUVER_UNC = MNV.MANEUVER_UNC()
-        self.CHARACTERIZATION = MNV.CHARACTERIZATION()
-        self.CHARACTERIZATION_UNC = MNV.CHARACTERIZATION_UNC()
-        self.EVENT_ID = MNV.EVENT_ID()
-        self.ORIG_OBJECT_ID = MNV.ORIG_OBJECT_ID()
-        self.ORIG_SENSOR_ID = MNV.ORIG_SENSOR_ID()
-        self.STATUS = MNV.STATUS()
-        self.DELTA_POS = MNV.DELTA_POS()
-        self.DELTA_POS_U = MNV.DELTA_POS_U()
-        self.DELTA_POS_V = MNV.DELTA_POS_V()
-        self.DELTA_POS_W = MNV.DELTA_POS_W()
         self.DELTA_VEL = MNV.DELTA_VEL()
         self.DELTA_VEL_U = MNV.DELTA_VEL_U()
         self.DELTA_VEL_V = MNV.DELTA_VEL_V()
         self.DELTA_VEL_W = MNV.DELTA_VEL_W()
+        self.DELTA_POS = MNV.DELTA_POS()
+        self.DELTA_POS_U = MNV.DELTA_POS_U()
+        self.DELTA_POS_V = MNV.DELTA_POS_V()
+        self.DELTA_POS_W = MNV.DELTA_POS_W()
         self.DELTA_MASS = MNV.DELTA_MASS()
-        self.PRE_EVENT_ID_ELSET = MNV.PRE_EVENT_ID_ELSET()
-        self.PRE_EVENT_ELSET = MNV.PRE_EVENT_ELSET()
-        self.PRE_EVENT_ID_STATE_VECTOR = MNV.PRE_EVENT_ID_STATE_VECTOR()
-        self.PRE_EVENT_STATE_VECTOR = MNV.PRE_EVENT_STATE_VECTOR()
-        self.PRE_POS_X = MNV.PRE_POS_X()
-        self.PRE_POS_Y = MNV.PRE_POS_Y()
-        self.PRE_POS_Z = MNV.PRE_POS_Z()
-        self.PRE_VEL_X = MNV.PRE_VEL_X()
-        self.PRE_VEL_Y = MNV.PRE_VEL_Y()
-        self.PRE_VEL_Z = MNV.PRE_VEL_Z()
-        self.PRE_RADIATION_PRESS_COEFF = MNV.PRE_RADIATION_PRESS_COEFF()
-        self.PRE_BALLISTIC_COEFF = MNV.PRE_BALLISTIC_COEFF()
-        self.PRE_APOGEE = MNV.PRE_APOGEE()
-        self.PRE_PERIGEE = MNV.PRE_PERIGEE()
-        self.PRE_INCLINATION = MNV.PRE_INCLINATION()
-        self.PRE_ECCENTRICITY = MNV.PRE_ECCENTRICITY()
-        self.PRE_PERIOD = MNV.PRE_PERIOD()
-        self.PRE_RAAN = MNV.PRE_RAAN()
-        self.PRE_SMA = MNV.PRE_SMA()
-        self.PRE_GEO_LONGITUDE = MNV.PRE_GEO_LONGITUDE()
-        self.PRE_DRIFT_RATE = MNV.PRE_DRIFT_RATE()
-        self.PRE_SIGMA_U = MNV.PRE_SIGMA_U()
-        self.PRE_SIGMA_V = MNV.PRE_SIGMA_V()
-        self.PRE_SIGMA_W = MNV.PRE_SIGMA_W()
-        self.POST_EVENT_ID_ELSET = MNV.POST_EVENT_ID_ELSET()
-        self.POST_EVENT_ELSET = MNV.POST_EVENT_ELSET()
-        self.POST_EVENT_ID_STATE_VECTOR = MNV.POST_EVENT_ID_STATE_VECTOR()
-        self.POST_EVENT_STATE_VECTOR = MNV.POST_EVENT_STATE_VECTOR()
-        self.POST_POS_X = MNV.POST_POS_X()
-        self.POST_POS_Y = MNV.POST_POS_Y()
-        self.POST_POS_Z = MNV.POST_POS_Z()
-        self.POST_VEL_X = MNV.POST_VEL_X()
-        self.POST_VEL_Y = MNV.POST_VEL_Y()
-        self.POST_VEL_Z = MNV.POST_VEL_Z()
-        self.POST_RADIATION_PRESS_COEFF = MNV.POST_RADIATION_PRESS_COEFF()
-        self.POST_BALLISTIC_COEFF = MNV.POST_BALLISTIC_COEFF()
-        self.POST_APOGEE = MNV.POST_APOGEE()
-        self.POST_PERIGEE = MNV.POST_PERIGEE()
-        self.POST_INCLINATION = MNV.POST_INCLINATION()
-        self.POST_ECCENTRICITY = MNV.POST_ECCENTRICITY()
-        self.POST_PERIOD = MNV.POST_PERIOD()
-        self.POST_RAAN = MNV.POST_RAAN()
-        self.POST_SMA = MNV.POST_SMA()
-        self.POST_GEO_LONGITUDE = MNV.POST_GEO_LONGITUDE()
-        self.POST_DRIFT_RATE = MNV.POST_DRIFT_RATE()
-        self.POST_SIGMA_U = MNV.POST_SIGMA_U()
-        self.POST_SIGMA_V = MNV.POST_SIGMA_V()
-        self.POST_SIGMA_W = MNV.POST_SIGMA_W()
-        if not MNV.COVIsNone():
-            self.COV = []
-            for i in range(MNV.COVLength()):
-                self.COV.append(MNV.COV(i))
+        if MNV.PRE_EVENT() is not None:
+            self.PRE_EVENT = mnvOrbitalState.mnvOrbitalStateT.InitFromObj(MNV.PRE_EVENT())
+        if MNV.POST_EVENT() is not None:
+            self.POST_EVENT = mnvOrbitalState.mnvOrbitalStateT.InitFromObj(MNV.POST_EVENT())
         self.POST_MASS = MNV.POST_MASS()
         self.POST_AREA = MNV.POST_AREA()
+        if not MNV.COVIsNone():
+            if np is None:
+                self.COV = []
+                for i in range(MNV.COVLength()):
+                    self.COV.append(MNV.COV(i))
+            else:
+                self.COV = MNV.COVAsNumpy()
         self.NUM_OBS = MNV.NUM_OBS()
-        self.DESCRIPTION = MNV.DESCRIPTION()
-        self.DESCRIPTOR = MNV.DESCRIPTOR()
         self.STATE_MODEL = MNV.STATE_MODEL()
         self.STATE_MODEL_VERSION = MNV.STATE_MODEL_VERSION()
         self.NUM_ACCEL_POINTS = MNV.NUM_ACCEL_POINTS()
@@ -1550,30 +939,41 @@ class MNVT(object):
             for i in range(MNV.MNVR_ACCEL_TIMESLength()):
                 self.MNVR_ACCEL_TIMES.append(MNV.MNVR_ACCEL_TIMES(i))
         if not MNV.MNVR_ACCELSIsNone():
-            self.MNVR_ACCELS = []
-            for i in range(MNV.MNVR_ACCELSLength()):
-                self.MNVR_ACCELS.append(MNV.MNVR_ACCELS(i))
+            if np is None:
+                self.MNVR_ACCELS = []
+                for i in range(MNV.MNVR_ACCELSLength()):
+                    self.MNVR_ACCELS.append(MNV.MNVR_ACCELS(i))
+            else:
+                self.MNVR_ACCELS = MNV.MNVR_ACCELSAsNumpy()
         if not MNV.MNVR_ACCEL_UNCSIsNone():
-            self.MNVR_ACCEL_UNCS = []
-            for i in range(MNV.MNVR_ACCEL_UNCSLength()):
-                self.MNVR_ACCEL_UNCS.append(MNV.MNVR_ACCEL_UNCS(i))
+            if np is None:
+                self.MNVR_ACCEL_UNCS = []
+                for i in range(MNV.MNVR_ACCEL_UNCSLength()):
+                    self.MNVR_ACCEL_UNCS.append(MNV.MNVR_ACCEL_UNCS(i))
+            else:
+                self.MNVR_ACCEL_UNCS = MNV.MNVR_ACCEL_UNCSAsNumpy()
+        self.DESCRIPTION = MNV.DESCRIPTION()
+        self.DESCRIPTOR = MNV.DESCRIPTOR()
+        self.ALGORITHM = MNV.ALGORITHM()
         if not MNV.TAGSIsNone():
             self.TAGS = []
             for i in range(MNV.TAGSLength()):
                 self.TAGS.append(MNV.TAGS(i))
-        self.ALGORITHM = MNV.ALGORITHM()
         if not MNV.SOURCED_DATAIsNone():
             self.SOURCED_DATA = []
             for i in range(MNV.SOURCED_DATALength()):
                 self.SOURCED_DATA.append(MNV.SOURCED_DATA(i))
         self.SOURCED_DATA_TYPES = MNV.SOURCED_DATA_TYPES()
-        self.ON_ORBIT = MNV.ON_ORBIT()
         self.TRANSACTION_ID = MNV.TRANSACTION_ID()
 
     # MNVT
     def Pack(self, builder):
         if self.ID is not None:
             ID = builder.CreateString(self.ID)
+        if self.ORIG_OBJECT_ID is not None:
+            ORIG_OBJECT_ID = builder.CreateString(self.ORIG_OBJECT_ID)
+        if self.ON_ORBIT is not None:
+            ON_ORBIT = builder.CreateString(self.ON_ORBIT)
         if self.REPORT_TIME is not None:
             REPORT_TIME = builder.CreateString(self.REPORT_TIME)
         if self.EVENT_START_TIME is not None:
@@ -1584,44 +984,22 @@ class MNVT(object):
             OD_FIT_END_TIME = builder.CreateString(self.OD_FIT_END_TIME)
         if self.ID_SENSOR is not None:
             ID_SENSOR = builder.CreateString(self.ID_SENSOR)
-        if self.CHARACTERIZATION is not None:
-            CHARACTERIZATION = builder.CreateString(self.CHARACTERIZATION)
-        if self.EVENT_ID is not None:
-            EVENT_ID = builder.CreateString(self.EVENT_ID)
-        if self.ORIG_OBJECT_ID is not None:
-            ORIG_OBJECT_ID = builder.CreateString(self.ORIG_OBJECT_ID)
         if self.ORIG_SENSOR_ID is not None:
             ORIG_SENSOR_ID = builder.CreateString(self.ORIG_SENSOR_ID)
-        if self.STATUS is not None:
-            STATUS = builder.CreateString(self.STATUS)
-        if self.PRE_EVENT_ID_ELSET is not None:
-            PRE_EVENT_ID_ELSET = builder.CreateString(self.PRE_EVENT_ID_ELSET)
-        if self.PRE_EVENT_ELSET is not None:
-            PRE_EVENT_ELSET = builder.CreateString(self.PRE_EVENT_ELSET)
-        if self.PRE_EVENT_ID_STATE_VECTOR is not None:
-            PRE_EVENT_ID_STATE_VECTOR = builder.CreateString(self.PRE_EVENT_ID_STATE_VECTOR)
-        if self.PRE_EVENT_STATE_VECTOR is not None:
-            PRE_EVENT_STATE_VECTOR = builder.CreateString(self.PRE_EVENT_STATE_VECTOR)
-        if self.POST_EVENT_ID_ELSET is not None:
-            POST_EVENT_ID_ELSET = builder.CreateString(self.POST_EVENT_ID_ELSET)
-        if self.POST_EVENT_ELSET is not None:
-            POST_EVENT_ELSET = builder.CreateString(self.POST_EVENT_ELSET)
-        if self.POST_EVENT_ID_STATE_VECTOR is not None:
-            POST_EVENT_ID_STATE_VECTOR = builder.CreateString(self.POST_EVENT_ID_STATE_VECTOR)
-        if self.POST_EVENT_STATE_VECTOR is not None:
-            POST_EVENT_STATE_VECTOR = builder.CreateString(self.POST_EVENT_STATE_VECTOR)
+        if self.EVENT_ID is not None:
+            EVENT_ID = builder.CreateString(self.EVENT_ID)
+        if self.PRE_EVENT is not None:
+            PRE_EVENT = self.PRE_EVENT.Pack(builder)
+        if self.POST_EVENT is not None:
+            POST_EVENT = self.POST_EVENT.Pack(builder)
         if self.COV is not None:
-            COVlist = []
-            for i in range(len(self.COV)):
-                COVlist.append(builder.CreateString(self.COV[i]))
-            MNVStartCOVVector(builder, len(self.COV))
-            for i in reversed(range(len(self.COV))):
-                builder.PrependUOffsetTRelative(COVlist[i])
-            COV = builder.EndVector()
-        if self.DESCRIPTION is not None:
-            DESCRIPTION = builder.CreateString(self.DESCRIPTION)
-        if self.DESCRIPTOR is not None:
-            DESCRIPTOR = builder.CreateString(self.DESCRIPTOR)
+            if np is not None and type(self.COV) is np.ndarray:
+                COV = builder.CreateNumpyVector(self.COV)
+            else:
+                MNVStartCOVVector(builder, len(self.COV))
+                for i in reversed(range(len(self.COV))):
+                    builder.PrependFloat64(self.COV[i])
+                COV = builder.EndVector()
         if self.STATE_MODEL is not None:
             STATE_MODEL = builder.CreateString(self.STATE_MODEL)
         if self.MNVR_ACCEL_TIMES is not None:
@@ -1633,21 +1011,27 @@ class MNVT(object):
                 builder.PrependUOffsetTRelative(MNVR_ACCEL_TIMESlist[i])
             MNVR_ACCEL_TIMES = builder.EndVector()
         if self.MNVR_ACCELS is not None:
-            MNVR_ACCELSlist = []
-            for i in range(len(self.MNVR_ACCELS)):
-                MNVR_ACCELSlist.append(builder.CreateString(self.MNVR_ACCELS[i]))
-            MNVStartMNVR_ACCELSVector(builder, len(self.MNVR_ACCELS))
-            for i in reversed(range(len(self.MNVR_ACCELS))):
-                builder.PrependUOffsetTRelative(MNVR_ACCELSlist[i])
-            MNVR_ACCELS = builder.EndVector()
+            if np is not None and type(self.MNVR_ACCELS) is np.ndarray:
+                MNVR_ACCELS = builder.CreateNumpyVector(self.MNVR_ACCELS)
+            else:
+                MNVStartMNVR_ACCELSVector(builder, len(self.MNVR_ACCELS))
+                for i in reversed(range(len(self.MNVR_ACCELS))):
+                    builder.PrependFloat64(self.MNVR_ACCELS[i])
+                MNVR_ACCELS = builder.EndVector()
         if self.MNVR_ACCEL_UNCS is not None:
-            MNVR_ACCEL_UNCSlist = []
-            for i in range(len(self.MNVR_ACCEL_UNCS)):
-                MNVR_ACCEL_UNCSlist.append(builder.CreateString(self.MNVR_ACCEL_UNCS[i]))
-            MNVStartMNVR_ACCEL_UNCSVector(builder, len(self.MNVR_ACCEL_UNCS))
-            for i in reversed(range(len(self.MNVR_ACCEL_UNCS))):
-                builder.PrependUOffsetTRelative(MNVR_ACCEL_UNCSlist[i])
-            MNVR_ACCEL_UNCS = builder.EndVector()
+            if np is not None and type(self.MNVR_ACCEL_UNCS) is np.ndarray:
+                MNVR_ACCEL_UNCS = builder.CreateNumpyVector(self.MNVR_ACCEL_UNCS)
+            else:
+                MNVStartMNVR_ACCEL_UNCSVector(builder, len(self.MNVR_ACCEL_UNCS))
+                for i in reversed(range(len(self.MNVR_ACCEL_UNCS))):
+                    builder.PrependFloat64(self.MNVR_ACCEL_UNCS[i])
+                MNVR_ACCEL_UNCS = builder.EndVector()
+        if self.DESCRIPTION is not None:
+            DESCRIPTION = builder.CreateString(self.DESCRIPTION)
+        if self.DESCRIPTOR is not None:
+            DESCRIPTOR = builder.CreateString(self.DESCRIPTOR)
+        if self.ALGORITHM is not None:
+            ALGORITHM = builder.CreateString(self.ALGORITHM)
         if self.TAGS is not None:
             TAGSlist = []
             for i in range(len(self.TAGS)):
@@ -1656,8 +1040,6 @@ class MNVT(object):
             for i in reversed(range(len(self.TAGS))):
                 builder.PrependUOffsetTRelative(TAGSlist[i])
             TAGS = builder.EndVector()
-        if self.ALGORITHM is not None:
-            ALGORITHM = builder.CreateString(self.ALGORITHM)
         if self.SOURCED_DATA is not None:
             SOURCED_DATAlist = []
             for i in range(len(self.SOURCED_DATA)):
@@ -1668,14 +1050,19 @@ class MNVT(object):
             SOURCED_DATA = builder.EndVector()
         if self.SOURCED_DATA_TYPES is not None:
             SOURCED_DATA_TYPES = builder.CreateString(self.SOURCED_DATA_TYPES)
-        if self.ON_ORBIT is not None:
-            ON_ORBIT = builder.CreateString(self.ON_ORBIT)
         if self.TRANSACTION_ID is not None:
             TRANSACTION_ID = builder.CreateString(self.TRANSACTION_ID)
         MNVStart(builder)
         if self.ID is not None:
             MNVAddID(builder, ID)
         MNVAddSAT_NO(builder, self.SAT_NO)
+        if self.ORIG_OBJECT_ID is not None:
+            MNVAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+        if self.ON_ORBIT is not None:
+            MNVAddON_ORBIT(builder, ON_ORBIT)
+        MNVAddSTATUS(builder, self.STATUS)
+        MNVAddCHARACTERIZATION(builder, self.CHARACTERIZATION)
+        MNVAddCHARACTERIZATION_UNC(builder, self.CHARACTERIZATION_UNC)
         if self.REPORT_TIME is not None:
             MNVAddREPORT_TIME(builder, REPORT_TIME)
         if self.EVENT_START_TIME is not None:
@@ -1687,93 +1074,30 @@ class MNVT(object):
             MNVAddOD_FIT_END_TIME(builder, OD_FIT_END_TIME)
         if self.ID_SENSOR is not None:
             MNVAddID_SENSOR(builder, ID_SENSOR)
-        MNVAddUCT(builder, self.UCT)
-        MNVAddMANEUVER_UNC(builder, self.MANEUVER_UNC)
-        if self.CHARACTERIZATION is not None:
-            MNVAddCHARACTERIZATION(builder, CHARACTERIZATION)
-        MNVAddCHARACTERIZATION_UNC(builder, self.CHARACTERIZATION_UNC)
-        if self.EVENT_ID is not None:
-            MNVAddEVENT_ID(builder, EVENT_ID)
-        if self.ORIG_OBJECT_ID is not None:
-            MNVAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
         if self.ORIG_SENSOR_ID is not None:
             MNVAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
-        if self.STATUS is not None:
-            MNVAddSTATUS(builder, STATUS)
-        MNVAddDELTA_POS(builder, self.DELTA_POS)
-        MNVAddDELTA_POS_U(builder, self.DELTA_POS_U)
-        MNVAddDELTA_POS_V(builder, self.DELTA_POS_V)
-        MNVAddDELTA_POS_W(builder, self.DELTA_POS_W)
+        if self.EVENT_ID is not None:
+            MNVAddEVENT_ID(builder, EVENT_ID)
+        MNVAddUCT(builder, self.UCT)
+        MNVAddMANEUVER_UNC(builder, self.MANEUVER_UNC)
         MNVAddDELTA_VEL(builder, self.DELTA_VEL)
         MNVAddDELTA_VEL_U(builder, self.DELTA_VEL_U)
         MNVAddDELTA_VEL_V(builder, self.DELTA_VEL_V)
         MNVAddDELTA_VEL_W(builder, self.DELTA_VEL_W)
+        MNVAddDELTA_POS(builder, self.DELTA_POS)
+        MNVAddDELTA_POS_U(builder, self.DELTA_POS_U)
+        MNVAddDELTA_POS_V(builder, self.DELTA_POS_V)
+        MNVAddDELTA_POS_W(builder, self.DELTA_POS_W)
         MNVAddDELTA_MASS(builder, self.DELTA_MASS)
-        if self.PRE_EVENT_ID_ELSET is not None:
-            MNVAddPRE_EVENT_ID_ELSET(builder, PRE_EVENT_ID_ELSET)
-        if self.PRE_EVENT_ELSET is not None:
-            MNVAddPRE_EVENT_ELSET(builder, PRE_EVENT_ELSET)
-        if self.PRE_EVENT_ID_STATE_VECTOR is not None:
-            MNVAddPRE_EVENT_ID_STATE_VECTOR(builder, PRE_EVENT_ID_STATE_VECTOR)
-        if self.PRE_EVENT_STATE_VECTOR is not None:
-            MNVAddPRE_EVENT_STATE_VECTOR(builder, PRE_EVENT_STATE_VECTOR)
-        MNVAddPRE_POS_X(builder, self.PRE_POS_X)
-        MNVAddPRE_POS_Y(builder, self.PRE_POS_Y)
-        MNVAddPRE_POS_Z(builder, self.PRE_POS_Z)
-        MNVAddPRE_VEL_X(builder, self.PRE_VEL_X)
-        MNVAddPRE_VEL_Y(builder, self.PRE_VEL_Y)
-        MNVAddPRE_VEL_Z(builder, self.PRE_VEL_Z)
-        MNVAddPRE_RADIATION_PRESS_COEFF(builder, self.PRE_RADIATION_PRESS_COEFF)
-        MNVAddPRE_BALLISTIC_COEFF(builder, self.PRE_BALLISTIC_COEFF)
-        MNVAddPRE_APOGEE(builder, self.PRE_APOGEE)
-        MNVAddPRE_PERIGEE(builder, self.PRE_PERIGEE)
-        MNVAddPRE_INCLINATION(builder, self.PRE_INCLINATION)
-        MNVAddPRE_ECCENTRICITY(builder, self.PRE_ECCENTRICITY)
-        MNVAddPRE_PERIOD(builder, self.PRE_PERIOD)
-        MNVAddPRE_RAAN(builder, self.PRE_RAAN)
-        MNVAddPRE_SMA(builder, self.PRE_SMA)
-        MNVAddPRE_GEO_LONGITUDE(builder, self.PRE_GEO_LONGITUDE)
-        MNVAddPRE_DRIFT_RATE(builder, self.PRE_DRIFT_RATE)
-        MNVAddPRE_SIGMA_U(builder, self.PRE_SIGMA_U)
-        MNVAddPRE_SIGMA_V(builder, self.PRE_SIGMA_V)
-        MNVAddPRE_SIGMA_W(builder, self.PRE_SIGMA_W)
-        if self.POST_EVENT_ID_ELSET is not None:
-            MNVAddPOST_EVENT_ID_ELSET(builder, POST_EVENT_ID_ELSET)
-        if self.POST_EVENT_ELSET is not None:
-            MNVAddPOST_EVENT_ELSET(builder, POST_EVENT_ELSET)
-        if self.POST_EVENT_ID_STATE_VECTOR is not None:
-            MNVAddPOST_EVENT_ID_STATE_VECTOR(builder, POST_EVENT_ID_STATE_VECTOR)
-        if self.POST_EVENT_STATE_VECTOR is not None:
-            MNVAddPOST_EVENT_STATE_VECTOR(builder, POST_EVENT_STATE_VECTOR)
-        MNVAddPOST_POS_X(builder, self.POST_POS_X)
-        MNVAddPOST_POS_Y(builder, self.POST_POS_Y)
-        MNVAddPOST_POS_Z(builder, self.POST_POS_Z)
-        MNVAddPOST_VEL_X(builder, self.POST_VEL_X)
-        MNVAddPOST_VEL_Y(builder, self.POST_VEL_Y)
-        MNVAddPOST_VEL_Z(builder, self.POST_VEL_Z)
-        MNVAddPOST_RADIATION_PRESS_COEFF(builder, self.POST_RADIATION_PRESS_COEFF)
-        MNVAddPOST_BALLISTIC_COEFF(builder, self.POST_BALLISTIC_COEFF)
-        MNVAddPOST_APOGEE(builder, self.POST_APOGEE)
-        MNVAddPOST_PERIGEE(builder, self.POST_PERIGEE)
-        MNVAddPOST_INCLINATION(builder, self.POST_INCLINATION)
-        MNVAddPOST_ECCENTRICITY(builder, self.POST_ECCENTRICITY)
-        MNVAddPOST_PERIOD(builder, self.POST_PERIOD)
-        MNVAddPOST_RAAN(builder, self.POST_RAAN)
-        MNVAddPOST_SMA(builder, self.POST_SMA)
-        MNVAddPOST_GEO_LONGITUDE(builder, self.POST_GEO_LONGITUDE)
-        MNVAddPOST_DRIFT_RATE(builder, self.POST_DRIFT_RATE)
-        MNVAddPOST_SIGMA_U(builder, self.POST_SIGMA_U)
-        MNVAddPOST_SIGMA_V(builder, self.POST_SIGMA_V)
-        MNVAddPOST_SIGMA_W(builder, self.POST_SIGMA_W)
-        if self.COV is not None:
-            MNVAddCOV(builder, COV)
+        if self.PRE_EVENT is not None:
+            MNVAddPRE_EVENT(builder, PRE_EVENT)
+        if self.POST_EVENT is not None:
+            MNVAddPOST_EVENT(builder, POST_EVENT)
         MNVAddPOST_MASS(builder, self.POST_MASS)
         MNVAddPOST_AREA(builder, self.POST_AREA)
+        if self.COV is not None:
+            MNVAddCOV(builder, COV)
         MNVAddNUM_OBS(builder, self.NUM_OBS)
-        if self.DESCRIPTION is not None:
-            MNVAddDESCRIPTION(builder, DESCRIPTION)
-        if self.DESCRIPTOR is not None:
-            MNVAddDESCRIPTOR(builder, DESCRIPTOR)
         if self.STATE_MODEL is not None:
             MNVAddSTATE_MODEL(builder, STATE_MODEL)
         MNVAddSTATE_MODEL_VERSION(builder, self.STATE_MODEL_VERSION)
@@ -1784,16 +1108,18 @@ class MNVT(object):
             MNVAddMNVR_ACCELS(builder, MNVR_ACCELS)
         if self.MNVR_ACCEL_UNCS is not None:
             MNVAddMNVR_ACCEL_UNCS(builder, MNVR_ACCEL_UNCS)
-        if self.TAGS is not None:
-            MNVAddTAGS(builder, TAGS)
+        if self.DESCRIPTION is not None:
+            MNVAddDESCRIPTION(builder, DESCRIPTION)
+        if self.DESCRIPTOR is not None:
+            MNVAddDESCRIPTOR(builder, DESCRIPTOR)
         if self.ALGORITHM is not None:
             MNVAddALGORITHM(builder, ALGORITHM)
+        if self.TAGS is not None:
+            MNVAddTAGS(builder, TAGS)
         if self.SOURCED_DATA is not None:
             MNVAddSOURCED_DATA(builder, SOURCED_DATA)
         if self.SOURCED_DATA_TYPES is not None:
             MNVAddSOURCED_DATA_TYPES(builder, SOURCED_DATA_TYPES)
-        if self.ON_ORBIT is not None:
-            MNVAddON_ORBIT(builder, ON_ORBIT)
         if self.TRANSACTION_ID is not None:
             MNVAddTRANSACTION_ID(builder, TRANSACTION_ID)
         MNV = MNVEnd(builder)

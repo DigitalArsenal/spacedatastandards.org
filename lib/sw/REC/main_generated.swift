@@ -18,120 +18,128 @@ public enum RecordType: UInt8, UnionEnum {
   case acm = 2
   case acr = 3
   case aem = 4
-  case aof = 5
-  case apm = 6
-  case arm = 7
-  case ast = 8
-  case atd = 9
-  case atm = 10
-  case bal = 11
-  case bem = 12
-  case bmc = 13
-  case bov = 14
-  case cat = 15
-  case cdm = 16
-  case cfp = 17
-  case chn = 18
-  case clt = 19
-  case cms = 20
-  case com = 21
-  case crd = 22
-  case crm = 23
-  case csm = 24
-  case ctr = 25
-  case dfh = 26
-  case dmg = 27
-  case doa = 28
-  case eme = 29
-  case enc = 30
-  case env = 31
-  case eoo = 32
-  case eop = 33
-  case epm = 34
-  case ewr = 35
-  case fcs = 36
-  case gdi = 37
-  case geo = 38
-  case gno = 39
-  case grv = 40
-  case gvh = 41
-  case hel = 42
-  case hyp = 43
-  case idm = 44
-  case iro = 45
-  case lcc = 46
-  case ldm = 47
-  case lks = 48
-  case lnd = 49
-  case lne = 50
-  case met = 51
-  case mfe = 52
-  case mnf = 53
-  case mnv = 54
-  case mpe = 55
-  case msl = 56
-  case mst = 57
-  case mti = 58
-  case nav = 59
-  case obd = 60
-  case obt = 61
-  case ocm = 62
-  case oem = 63
-  case omm = 64
-  case ood = 65
-  case ooe = 66
-  case ooi = 67
-  case ool = 68
-  case oon = 69
-  case opm = 70
-  case osm = 71
-  case pcf = 72
-  case phy = 73
-  case pld = 74
-  case plg = 75
-  case plk = 76
-  case pnm = 77
-  case prg = 78
-  case pur = 79
-  case raf = 80
-  case rcf = 81
-  case rdm = 82
-  case rdo = 83
-  case rev = 84
-  case rfb = 85
-  case rfe = 86
-  case rfm = 87
-  case rfo = 88
-  case roc = 89
-  case sar = 90
-  case scm = 91
-  case sdl = 92
-  case seo = 93
-  case sev = 94
-  case sit = 95
-  case ski = 96
-  case snr = 97
-  case soi = 98
-  case son = 99
-  case spp = 100
-  case spw = 101
-  case stf = 102
-  case str = 103
-  case stv = 104
-  case swr = 105
-  case tcf = 106
-  case tdm = 107
-  case tim = 108
-  case tkg = 109
-  case tme = 110
-  case tmf = 111
-  case tpn = 112
-  case trk = 113
-  case trn = 114
-  case vcm = 115
-  case wpn = 116
-  case wth = 117
-  case xtc = 118
+  case ani = 5
+  case aof = 6
+  case apm = 7
+  case arm = 8
+  case ast = 9
+  case atd = 10
+  case atm = 11
+  case bal = 12
+  case bem = 13
+  case bmc = 14
+  case bov = 15
+  case bus = 16
+  case cat = 17
+  case cdm = 18
+  case cfp = 19
+  case chn = 20
+  case clt = 21
+  case cms = 22
+  case com = 23
+  case crd = 24
+  case crm = 25
+  case csm = 26
+  case ctr = 27
+  case dfh = 28
+  case dmg = 29
+  case doa = 30
+  case eme = 31
+  case enc = 32
+  case env = 33
+  case eoo = 34
+  case eop = 35
+  case epm = 36
+  case ewr = 37
+  case fcs = 38
+  case gdi = 39
+  case geo = 40
+  case gno = 41
+  case grv = 42
+  case gvh = 43
+  case hel = 44
+  case hyp = 45
+  case idm = 46
+  case ion = 47
+  case iro = 48
+  case lcc = 49
+  case ldm = 50
+  case lks = 51
+  case lnd = 52
+  case lne = 53
+  case met = 54
+  case mfe = 55
+  case mnf = 56
+  case mnv = 57
+  case mpe = 58
+  case msl = 59
+  case mst = 60
+  case mti = 61
+  case nav = 62
+  case obd = 63
+  case obt = 64
+  case ocm = 65
+  case oem = 66
+  case omm = 67
+  case ooa = 68
+  case oob = 69
+  case ood = 70
+  case ooe = 71
+  case ooi = 72
+  case ool = 73
+  case oon = 74
+  case oos = 75
+  case oot = 76
+  case opm = 77
+  case osm = 78
+  case pcf = 79
+  case phy = 80
+  case pld = 81
+  case plg = 82
+  case plk = 83
+  case pnm = 84
+  case prg = 85
+  case pur = 86
+  case raf = 87
+  case rcf = 88
+  case rdm = 89
+  case rdo = 90
+  case rev = 91
+  case rfb = 92
+  case rfe = 93
+  case rfm = 94
+  case rfo = 95
+  case roc = 96
+  case sar = 97
+  case scm = 98
+  case sdl = 99
+  case sen = 100
+  case seo = 101
+  case sev = 102
+  case sit = 103
+  case ski = 104
+  case snr = 105
+  case soi = 106
+  case son = 107
+  case spp = 108
+  case spw = 109
+  case stf = 110
+  case str = 111
+  case stv = 112
+  case swr = 113
+  case tcf = 114
+  case tdm = 115
+  case tim = 116
+  case tkg = 117
+  case tme = 118
+  case tmf = 119
+  case tpn = 120
+  case trk = 121
+  case trn = 122
+  case vcm = 123
+  case wpn = 124
+  case wth = 125
+  case xtc = 126
 
   public static var max: RecordType { return .xtc }
   public static var min: RecordType { return .none_ }
@@ -196,6 +204,8 @@ public struct Record: FlatBufferObject, Verifiable {
         try ForwardOffset<ACR>.verify(&verifier, at: pos, of: ACR.self)
       case .aem:
         try ForwardOffset<AEM>.verify(&verifier, at: pos, of: AEM.self)
+      case .ani:
+        try ForwardOffset<ANI>.verify(&verifier, at: pos, of: ANI.self)
       case .aof:
         try ForwardOffset<AOF>.verify(&verifier, at: pos, of: AOF.self)
       case .apm:
@@ -216,6 +226,8 @@ public struct Record: FlatBufferObject, Verifiable {
         try ForwardOffset<BMC>.verify(&verifier, at: pos, of: BMC.self)
       case .bov:
         try ForwardOffset<BOV>.verify(&verifier, at: pos, of: BOV.self)
+      case .bus:
+        try ForwardOffset<BUS>.verify(&verifier, at: pos, of: BUS.self)
       case .cat:
         try ForwardOffset<CAT>.verify(&verifier, at: pos, of: CAT.self)
       case .cdm:
@@ -276,6 +288,8 @@ public struct Record: FlatBufferObject, Verifiable {
         try ForwardOffset<HYP>.verify(&verifier, at: pos, of: HYP.self)
       case .idm:
         try ForwardOffset<IDM>.verify(&verifier, at: pos, of: IDM.self)
+      case .ion:
+        try ForwardOffset<ION>.verify(&verifier, at: pos, of: ION.self)
       case .iro:
         try ForwardOffset<IRO>.verify(&verifier, at: pos, of: IRO.self)
       case .lcc:
@@ -316,6 +330,10 @@ public struct Record: FlatBufferObject, Verifiable {
         try ForwardOffset<OEM>.verify(&verifier, at: pos, of: OEM.self)
       case .omm:
         try ForwardOffset<OMM>.verify(&verifier, at: pos, of: OMM.self)
+      case .ooa:
+        try ForwardOffset<OOA>.verify(&verifier, at: pos, of: OOA.self)
+      case .oob:
+        try ForwardOffset<OOB>.verify(&verifier, at: pos, of: OOB.self)
       case .ood:
         try ForwardOffset<OOD>.verify(&verifier, at: pos, of: OOD.self)
       case .ooe:
@@ -326,6 +344,10 @@ public struct Record: FlatBufferObject, Verifiable {
         try ForwardOffset<OOL>.verify(&verifier, at: pos, of: OOL.self)
       case .oon:
         try ForwardOffset<OON>.verify(&verifier, at: pos, of: OON.self)
+      case .oos:
+        try ForwardOffset<OOS>.verify(&verifier, at: pos, of: OOS.self)
+      case .oot:
+        try ForwardOffset<OOT>.verify(&verifier, at: pos, of: OOT.self)
       case .opm:
         try ForwardOffset<OPM>.verify(&verifier, at: pos, of: OPM.self)
       case .osm:
@@ -372,6 +394,8 @@ public struct Record: FlatBufferObject, Verifiable {
         try ForwardOffset<SCM>.verify(&verifier, at: pos, of: SCM.self)
       case .sdl:
         try ForwardOffset<SDL>.verify(&verifier, at: pos, of: SDL.self)
+      case .sen:
+        try ForwardOffset<SEN>.verify(&verifier, at: pos, of: SEN.self)
       case .seo:
         try ForwardOffset<SEO>.verify(&verifier, at: pos, of: SEO.self)
       case .sev:

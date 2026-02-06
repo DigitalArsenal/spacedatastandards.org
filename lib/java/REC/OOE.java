@@ -29,133 +29,255 @@ public final class OOE extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public OOE __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
-  public String DERIVED_FROM() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer DERIVED_FROMAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
-  public ByteBuffer DERIVED_FROMInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
-  public String DECLASSIFICATION_DATE() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer DECLASSIFICATION_DATEAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
-  public ByteBuffer DECLASSIFICATION_DATEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
-  public String DECLASSIFICATION_STRING() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer DECLASSIFICATION_STRINGAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
-  public ByteBuffer DECLASSIFICATION_STRINGInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
-  public int SAT_NO() { int o = __offset(12); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public String ORIG_OBJECT_ID() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ORIG_OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
-  public ByteBuffer ORIG_OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * Satellite catalog number
+   */
+  public long SAT_NO() { int o = __offset(6); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * International designator
+   */
+  public String ORIG_OBJECT_ID() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ORIG_OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
+  public ByteBuffer ORIG_OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * Source record this was derived from
+   */
+  public String DERIVED_FROM() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DERIVED_FROMAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer DERIVED_FROMInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * Classification date (ISO 8601)
+   */
+  public String DECLASSIFICATION_DATE() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DECLASSIFICATION_DATEAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer DECLASSIFICATION_DATEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * Classification marking
+   */
+  public String DECLASSIFICATION_STRING() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DECLASSIFICATION_STRINGAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer DECLASSIFICATION_STRINGInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * Event time (ISO 8601)
+   */
   public String EVENT_TIME() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer EVENT_TIMEAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
   public ByteBuffer EVENT_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  /**
+   * Notes on event time accuracy
+   */
   public String EVENT_TIME_NOTES() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer EVENT_TIME_NOTESAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
   public ByteBuffer EVENT_TIME_NOTESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
-  public String OPERATOR_ORG_ID() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer OPERATOR_ORG_IDAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
-  public ByteBuffer OPERATOR_ORG_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
-  public String OWNER_ORG_ID() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer OWNER_ORG_IDAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
-  public ByteBuffer OWNER_ORG_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
-  public String LESSEE_ORG_ID() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer LESSEE_ORG_IDAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
-  public ByteBuffer LESSEE_ORG_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
-  public String OPERATED_ON_BEHALF_OF_ORG_ID() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer OPERATED_ON_BEHALF_OF_ORG_IDAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
-  public ByteBuffer OPERATED_ON_BEHALF_OF_ORG_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
-  public double GEO_POSITION() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String PLANE_SLOT() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer PLANE_SLOTAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
-  public ByteBuffer PLANE_SLOTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
-  public String PLANE_NUMBER() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer PLANE_NUMBERAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
-  public ByteBuffer PLANE_NUMBERInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
-  public String POSITION_STATUS() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer POSITION_STATUSAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
-  public ByteBuffer POSITION_STATUSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
-  public String UNTIL_TIME() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer UNTIL_TIMEAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
-  public ByteBuffer UNTIL_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
-  public String OFFICIAL_LOSS_DATE() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer OFFICIAL_LOSS_DATEAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
-  public ByteBuffer OFFICIAL_LOSS_DATEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
-  public double NET_AMOUNT() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String UNDERLYING_CAUSE() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer UNDERLYING_CAUSEAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
-  public ByteBuffer UNDERLYING_CAUSEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
-  public double CAPABILITY_LOSS() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double CAPACITY_LOSS() { int o = __offset(46); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double INSURANCE_LOSS() { int o = __offset(48); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double THIRD_PARTY_INSURANCE_LOSS() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public int INJURED() { int o = __offset(52); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public int KILLED() { int o = __offset(54); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public double LIFE_LOST() { int o = __offset(56); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double AGE_AT_EVENT() { int o = __offset(58); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String ACHIEVED_FLIGHT_PHASE() { int o = __offset(60); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ACHIEVED_FLIGHT_PHASEAsByteBuffer() { return __vector_as_bytebuffer(60, 1); }
-  public ByteBuffer ACHIEVED_FLIGHT_PHASEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 60, 1); }
-  public String OCCURRENCE_FLIGHT_PHASE() { int o = __offset(62); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer OCCURRENCE_FLIGHT_PHASEAsByteBuffer() { return __vector_as_bytebuffer(62, 1); }
-  public ByteBuffer OCCURRENCE_FLIGHT_PHASEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 62, 1); }
-  public String STAGE_AT_FAULT() { int o = __offset(64); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer STAGE_AT_FAULTAsByteBuffer() { return __vector_as_bytebuffer(64, 1); }
-  public ByteBuffer STAGE_AT_FAULTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 64, 1); }
-  public String EQUIPMENT_AT_FAULT() { int o = __offset(66); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer EQUIPMENT_AT_FAULTAsByteBuffer() { return __vector_as_bytebuffer(66, 1); }
-  public ByteBuffer EQUIPMENT_AT_FAULTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 66, 1); }
-  public String EQUIPMENT_TYPE_AT_FAULT() { int o = __offset(68); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer EQUIPMENT_TYPE_AT_FAULTAsByteBuffer() { return __vector_as_bytebuffer(68, 1); }
-  public ByteBuffer EQUIPMENT_TYPE_AT_FAULTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 68, 1); }
-  public String EQUIPMENT_PART_AT_FAULT() { int o = __offset(70); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer EQUIPMENT_PART_AT_FAULTAsByteBuffer() { return __vector_as_bytebuffer(70, 1); }
-  public ByteBuffer EQUIPMENT_PART_AT_FAULTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 70, 1); }
-  public String CONSEQUENTIAL_EQUIPMENT_FAILURE() { int o = __offset(72); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer CONSEQUENTIAL_EQUIPMENT_FAILUREAsByteBuffer() { return __vector_as_bytebuffer(72, 1); }
-  public ByteBuffer CONSEQUENTIAL_EQUIPMENT_FAILUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 72, 1); }
-  public boolean INCLINED() { int o = __offset(74); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public String DESCRIPTION() { int o = __offset(76); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer DESCRIPTIONAsByteBuffer() { return __vector_as_bytebuffer(76, 1); }
-  public ByteBuffer DESCRIPTIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 76, 1); }
-  public String REMARKS() { int o = __offset(78); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer REMARKSAsByteBuffer() { return __vector_as_bytebuffer(78, 1); }
-  public ByteBuffer REMARKSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 78, 1); }
-  public String INSURANCE_LOSS_NOTES() { int o = __offset(80); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer INSURANCE_LOSS_NOTESAsByteBuffer() { return __vector_as_bytebuffer(80, 1); }
-  public ByteBuffer INSURANCE_LOSS_NOTESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 80, 1); }
-  public String CAPABILITY_LOSS_NOTES() { int o = __offset(82); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer CAPABILITY_LOSS_NOTESAsByteBuffer() { return __vector_as_bytebuffer(82, 1); }
-  public ByteBuffer CAPABILITY_LOSS_NOTESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 82, 1); }
-  public String INSURANCE_CARRIED_NOTES() { int o = __offset(84); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer INSURANCE_CARRIED_NOTESAsByteBuffer() { return __vector_as_bytebuffer(84, 1); }
-  public ByteBuffer INSURANCE_CARRIED_NOTESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 84, 1); }
-  public String EQUIPMENT_CAUSING_LOSS_NOTES() { int o = __offset(86); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer EQUIPMENT_CAUSING_LOSS_NOTESAsByteBuffer() { return __vector_as_bytebuffer(86, 1); }
-  public ByteBuffer EQUIPMENT_CAUSING_LOSS_NOTESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 86, 1); }
-  public String EVENT_TYPE() { int o = __offset(88); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer EVENT_TYPEAsByteBuffer() { return __vector_as_bytebuffer(88, 1); }
-  public ByteBuffer EVENT_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 88, 1); }
-  public String EVENT_RESULT() { int o = __offset(90); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer EVENT_RESULTAsByteBuffer() { return __vector_as_bytebuffer(90, 1); }
-  public ByteBuffer EVENT_RESULTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 90, 1); }
-  public String OBJECT_STATUS() { int o = __offset(92); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer OBJECT_STATUSAsByteBuffer() { return __vector_as_bytebuffer(92, 1); }
-  public ByteBuffer OBJECT_STATUSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 92, 1); }
-  public String SATELLITE_POSITION() { int o = __offset(94); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SATELLITE_POSITIONAsByteBuffer() { return __vector_as_bytebuffer(94, 1); }
-  public ByteBuffer SATELLITE_POSITIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 94, 1); }
-  public String ON_ORBIT() { int o = __offset(96); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ON_ORBITAsByteBuffer() { return __vector_as_bytebuffer(96, 1); }
-  public ByteBuffer ON_ORBITInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 96, 1); }
+  /**
+   * Event category
+   */
+  public byte CATEGORY() { int o = __offset(20); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Event result/outcome
+   */
+  public byte RESULT() { int o = __offset(22); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Event type detail
+   */
+  public String EVENT_TYPE() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EVENT_TYPEAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
+  public ByteBuffer EVENT_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
+  /**
+   * Operator organization identifier
+   */
+  public String OPERATOR_ORG_ID() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OPERATOR_ORG_IDAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
+  public ByteBuffer OPERATOR_ORG_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
+  /**
+   * Owner organization identifier
+   */
+  public String OWNER_ORG_ID() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OWNER_ORG_IDAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
+  public ByteBuffer OWNER_ORG_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
+  /**
+   * Lessee organization identifier
+   */
+  public String LESSEE_ORG_ID() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LESSEE_ORG_IDAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
+  public ByteBuffer LESSEE_ORG_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
+  /**
+   * Operated on behalf of organization
+   */
+  public String OPERATED_ON_BEHALF_OF_ORG_ID() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OPERATED_ON_BEHALF_OF_ORG_IDAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
+  public ByteBuffer OPERATED_ON_BEHALF_OF_ORG_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
+  /**
+   * GEO longitude at event time (degrees east)
+   */
+  public double GEO_POSITION() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Orbital plane slot
+   */
+  public String PLANE_SLOT() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PLANE_SLOTAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
+  public ByteBuffer PLANE_SLOTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
+  /**
+   * Orbital plane number
+   */
+  public String PLANE_NUMBER() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PLANE_NUMBERAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
+  public ByteBuffer PLANE_NUMBERInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
+  /**
+   * Position status at event time
+   */
+  public String POSITION_STATUS() { int o = __offset(40); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer POSITION_STATUSAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
+  public ByteBuffer POSITION_STATUSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
+  /**
+   * Time until expected recovery (ISO 8601)
+   */
+  public String UNTIL_TIME() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer UNTIL_TIMEAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
+  public ByteBuffer UNTIL_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
+  /**
+   * Official loss date (ISO 8601)
+   */
+  public String OFFICIAL_LOSS_DATE() { int o = __offset(44); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OFFICIAL_LOSS_DATEAsByteBuffer() { return __vector_as_bytebuffer(44, 1); }
+  public ByteBuffer OFFICIAL_LOSS_DATEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 44, 1); }
+  /**
+   * Financial loss amount (USD)
+   */
+  public double NET_AMOUNT() { int o = __offset(46); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Root cause description
+   */
+  public String UNDERLYING_CAUSE() { int o = __offset(48); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer UNDERLYING_CAUSEAsByteBuffer() { return __vector_as_bytebuffer(48, 1); }
+  public ByteBuffer UNDERLYING_CAUSEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 48, 1); }
+  /**
+   * Capability loss fraction (0-1)
+   */
+  public double CAPABILITY_LOSS() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Capacity loss fraction (0-1)
+   */
+  public double CAPACITY_LOSS() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Insurance loss amount (USD)
+   */
+  public double INSURANCE_LOSS() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Third-party insurance loss (USD)
+   */
+  public double THIRD_PARTY_INSURANCE_LOSS() { int o = __offset(56); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Number of personnel injured
+   */
+  public int INJURED() { int o = __offset(58); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * Number of fatalities
+   */
+  public int KILLED() { int o = __offset(60); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * Spacecraft age at event (years)
+   */
+  public double AGE_AT_EVENT() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Design life remaining at event (years)
+   */
+  public double LIFE_LOST() { int o = __offset(64); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Flight phase achieved
+   */
+  public String ACHIEVED_FLIGHT_PHASE() { int o = __offset(66); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ACHIEVED_FLIGHT_PHASEAsByteBuffer() { return __vector_as_bytebuffer(66, 1); }
+  public ByteBuffer ACHIEVED_FLIGHT_PHASEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 66, 1); }
+  /**
+   * Flight phase at occurrence
+   */
+  public String OCCURRENCE_FLIGHT_PHASE() { int o = __offset(68); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OCCURRENCE_FLIGHT_PHASEAsByteBuffer() { return __vector_as_bytebuffer(68, 1); }
+  public ByteBuffer OCCURRENCE_FLIGHT_PHASEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 68, 1); }
+  /**
+   * Stage at fault
+   */
+  public String STAGE_AT_FAULT() { int o = __offset(70); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer STAGE_AT_FAULTAsByteBuffer() { return __vector_as_bytebuffer(70, 1); }
+  public ByteBuffer STAGE_AT_FAULTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 70, 1); }
+  /**
+   * Equipment at fault
+   */
+  public String EQUIPMENT_AT_FAULT() { int o = __offset(72); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EQUIPMENT_AT_FAULTAsByteBuffer() { return __vector_as_bytebuffer(72, 1); }
+  public ByteBuffer EQUIPMENT_AT_FAULTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 72, 1); }
+  /**
+   * Equipment type at fault
+   */
+  public String EQUIPMENT_TYPE_AT_FAULT() { int o = __offset(74); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EQUIPMENT_TYPE_AT_FAULTAsByteBuffer() { return __vector_as_bytebuffer(74, 1); }
+  public ByteBuffer EQUIPMENT_TYPE_AT_FAULTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 74, 1); }
+  /**
+   * Equipment part at fault
+   */
+  public String EQUIPMENT_PART_AT_FAULT() { int o = __offset(76); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EQUIPMENT_PART_AT_FAULTAsByteBuffer() { return __vector_as_bytebuffer(76, 1); }
+  public ByteBuffer EQUIPMENT_PART_AT_FAULTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 76, 1); }
+  /**
+   * Consequential equipment failure
+   */
+  public String CONSEQUENTIAL_EQUIPMENT_FAILURE() { int o = __offset(78); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CONSEQUENTIAL_EQUIPMENT_FAILUREAsByteBuffer() { return __vector_as_bytebuffer(78, 1); }
+  public ByteBuffer CONSEQUENTIAL_EQUIPMENT_FAILUREInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 78, 1); }
+  /**
+   * True if orbit is inclined
+   */
+  public boolean INCLINED() { int o = __offset(80); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Event description
+   */
+  public String DESCRIPTION() { int o = __offset(82); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DESCRIPTIONAsByteBuffer() { return __vector_as_bytebuffer(82, 1); }
+  public ByteBuffer DESCRIPTIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 82, 1); }
+  /**
+   * Additional remarks
+   */
+  public String REMARKS() { int o = __offset(84); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer REMARKSAsByteBuffer() { return __vector_as_bytebuffer(84, 1); }
+  public ByteBuffer REMARKSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 84, 1); }
+  /**
+   * Object status after event
+   */
+  public String OBJECT_STATUS() { int o = __offset(86); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OBJECT_STATUSAsByteBuffer() { return __vector_as_bytebuffer(86, 1); }
+  public ByteBuffer OBJECT_STATUSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 86, 1); }
+  /**
+   * Satellite position after event
+   */
+  public String SATELLITE_POSITION() { int o = __offset(88); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SATELLITE_POSITIONAsByteBuffer() { return __vector_as_bytebuffer(88, 1); }
+  public ByteBuffer SATELLITE_POSITIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 88, 1); }
+  /**
+   * On-orbit reference
+   */
+  public String ON_ORBIT() { int o = __offset(90); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ON_ORBITAsByteBuffer() { return __vector_as_bytebuffer(90, 1); }
+  public ByteBuffer ON_ORBITInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 90, 1); }
 
   public static int createOOE(FlatBufferBuilder builder,
       int IDOffset,
+      long SAT_NO,
+      int ORIG_OBJECT_IDOffset,
       int DERIVED_FROMOffset,
       int DECLASSIFICATION_DATEOffset,
       int DECLASSIFICATION_STRINGOffset,
-      int SAT_NO,
-      int ORIG_OBJECT_IDOffset,
       int EVENT_TIMEOffset,
       int EVENT_TIME_NOTESOffset,
+      byte CATEGORY,
+      byte RESULT,
+      int EVENT_TYPEOffset,
       int OPERATOR_ORG_IDOffset,
       int OWNER_ORG_IDOffset,
       int LESSEE_ORG_IDOffset,
@@ -174,8 +296,8 @@ public final class OOE extends Table {
       double THIRD_PARTY_INSURANCE_LOSS,
       int INJURED,
       int KILLED,
-      double LIFE_LOST,
       double AGE_AT_EVENT,
+      double LIFE_LOST,
       int ACHIEVED_FLIGHT_PHASEOffset,
       int OCCURRENCE_FLIGHT_PHASEOffset,
       int STAGE_AT_FAULTOffset,
@@ -186,18 +308,12 @@ public final class OOE extends Table {
       boolean INCLINED,
       int DESCRIPTIONOffset,
       int REMARKSOffset,
-      int INSURANCE_LOSS_NOTESOffset,
-      int CAPABILITY_LOSS_NOTESOffset,
-      int INSURANCE_CARRIED_NOTESOffset,
-      int EQUIPMENT_CAUSING_LOSS_NOTESOffset,
-      int EVENT_TYPEOffset,
-      int EVENT_RESULTOffset,
       int OBJECT_STATUSOffset,
       int SATELLITE_POSITIONOffset,
       int ON_ORBITOffset) {
-    builder.startTable(47);
-    OOE.addAgeAtEvent(builder, AGE_AT_EVENT);
+    builder.startTable(44);
     OOE.addLifeLost(builder, LIFE_LOST);
+    OOE.addAgeAtEvent(builder, AGE_AT_EVENT);
     OOE.addThirdPartyInsuranceLoss(builder, THIRD_PARTY_INSURANCE_LOSS);
     OOE.addInsuranceLoss(builder, INSURANCE_LOSS);
     OOE.addCapacityLoss(builder, CAPACITY_LOSS);
@@ -207,12 +323,6 @@ public final class OOE extends Table {
     OOE.addOnOrbit(builder, ON_ORBITOffset);
     OOE.addSatellitePosition(builder, SATELLITE_POSITIONOffset);
     OOE.addObjectStatus(builder, OBJECT_STATUSOffset);
-    OOE.addEventResult(builder, EVENT_RESULTOffset);
-    OOE.addEventType(builder, EVENT_TYPEOffset);
-    OOE.addEquipmentCausingLossNotes(builder, EQUIPMENT_CAUSING_LOSS_NOTESOffset);
-    OOE.addInsuranceCarriedNotes(builder, INSURANCE_CARRIED_NOTESOffset);
-    OOE.addCapabilityLossNotes(builder, CAPABILITY_LOSS_NOTESOffset);
-    OOE.addInsuranceLossNotes(builder, INSURANCE_LOSS_NOTESOffset);
     OOE.addRemarks(builder, REMARKSOffset);
     OOE.addDescription(builder, DESCRIPTIONOffset);
     OOE.addConsequentialEquipmentFailure(builder, CONSEQUENTIAL_EQUIPMENT_FAILUREOffset);
@@ -222,8 +332,6 @@ public final class OOE extends Table {
     OOE.addStageAtFault(builder, STAGE_AT_FAULTOffset);
     OOE.addOccurrenceFlightPhase(builder, OCCURRENCE_FLIGHT_PHASEOffset);
     OOE.addAchievedFlightPhase(builder, ACHIEVED_FLIGHT_PHASEOffset);
-    OOE.addKilled(builder, KILLED);
-    OOE.addInjured(builder, INJURED);
     OOE.addUnderlyingCause(builder, UNDERLYING_CAUSEOffset);
     OOE.addOfficialLossDate(builder, OFFICIAL_LOSS_DATEOffset);
     OOE.addUntilTime(builder, UNTIL_TIMEOffset);
@@ -234,66 +342,68 @@ public final class OOE extends Table {
     OOE.addLesseeOrgId(builder, LESSEE_ORG_IDOffset);
     OOE.addOwnerOrgId(builder, OWNER_ORG_IDOffset);
     OOE.addOperatorOrgId(builder, OPERATOR_ORG_IDOffset);
+    OOE.addEventType(builder, EVENT_TYPEOffset);
     OOE.addEventTimeNotes(builder, EVENT_TIME_NOTESOffset);
     OOE.addEventTime(builder, EVENT_TIMEOffset);
-    OOE.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
-    OOE.addSatNo(builder, SAT_NO);
     OOE.addDeclassificationString(builder, DECLASSIFICATION_STRINGOffset);
     OOE.addDeclassificationDate(builder, DECLASSIFICATION_DATEOffset);
     OOE.addDerivedFrom(builder, DERIVED_FROMOffset);
+    OOE.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
+    OOE.addSatNo(builder, SAT_NO);
     OOE.addId(builder, IDOffset);
+    OOE.addKilled(builder, KILLED);
+    OOE.addInjured(builder, INJURED);
     OOE.addInclined(builder, INCLINED);
+    OOE.addResult(builder, RESULT);
+    OOE.addCategory(builder, CATEGORY);
     return OOE.endOOE(builder);
   }
 
-  public static void startOOE(FlatBufferBuilder builder) { builder.startTable(47); }
+  public static void startOOE(FlatBufferBuilder builder) { builder.startTable(44); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
-  public static void addDerivedFrom(FlatBufferBuilder builder, int DERIVED_FROMOffset) { builder.addOffset(1, DERIVED_FROMOffset, 0); }
-  public static void addDeclassificationDate(FlatBufferBuilder builder, int DECLASSIFICATION_DATEOffset) { builder.addOffset(2, DECLASSIFICATION_DATEOffset, 0); }
-  public static void addDeclassificationString(FlatBufferBuilder builder, int DECLASSIFICATION_STRINGOffset) { builder.addOffset(3, DECLASSIFICATION_STRINGOffset, 0); }
-  public static void addSatNo(FlatBufferBuilder builder, int SAT_NO) { builder.addInt(4, SAT_NO, 0); }
-  public static void addOrigObjectId(FlatBufferBuilder builder, int ORIG_OBJECT_IDOffset) { builder.addOffset(5, ORIG_OBJECT_IDOffset, 0); }
+  public static void addSatNo(FlatBufferBuilder builder, long SAT_NO) { builder.addInt(1, (int) SAT_NO, (int) 0L); }
+  public static void addOrigObjectId(FlatBufferBuilder builder, int ORIG_OBJECT_IDOffset) { builder.addOffset(2, ORIG_OBJECT_IDOffset, 0); }
+  public static void addDerivedFrom(FlatBufferBuilder builder, int DERIVED_FROMOffset) { builder.addOffset(3, DERIVED_FROMOffset, 0); }
+  public static void addDeclassificationDate(FlatBufferBuilder builder, int DECLASSIFICATION_DATEOffset) { builder.addOffset(4, DECLASSIFICATION_DATEOffset, 0); }
+  public static void addDeclassificationString(FlatBufferBuilder builder, int DECLASSIFICATION_STRINGOffset) { builder.addOffset(5, DECLASSIFICATION_STRINGOffset, 0); }
   public static void addEventTime(FlatBufferBuilder builder, int EVENT_TIMEOffset) { builder.addOffset(6, EVENT_TIMEOffset, 0); }
   public static void addEventTimeNotes(FlatBufferBuilder builder, int EVENT_TIME_NOTESOffset) { builder.addOffset(7, EVENT_TIME_NOTESOffset, 0); }
-  public static void addOperatorOrgId(FlatBufferBuilder builder, int OPERATOR_ORG_IDOffset) { builder.addOffset(8, OPERATOR_ORG_IDOffset, 0); }
-  public static void addOwnerOrgId(FlatBufferBuilder builder, int OWNER_ORG_IDOffset) { builder.addOffset(9, OWNER_ORG_IDOffset, 0); }
-  public static void addLesseeOrgId(FlatBufferBuilder builder, int LESSEE_ORG_IDOffset) { builder.addOffset(10, LESSEE_ORG_IDOffset, 0); }
-  public static void addOperatedOnBehalfOfOrgId(FlatBufferBuilder builder, int OPERATED_ON_BEHALF_OF_ORG_IDOffset) { builder.addOffset(11, OPERATED_ON_BEHALF_OF_ORG_IDOffset, 0); }
-  public static void addGeoPosition(FlatBufferBuilder builder, double GEO_POSITION) { builder.addDouble(12, GEO_POSITION, 0.0); }
-  public static void addPlaneSlot(FlatBufferBuilder builder, int PLANE_SLOTOffset) { builder.addOffset(13, PLANE_SLOTOffset, 0); }
-  public static void addPlaneNumber(FlatBufferBuilder builder, int PLANE_NUMBEROffset) { builder.addOffset(14, PLANE_NUMBEROffset, 0); }
-  public static void addPositionStatus(FlatBufferBuilder builder, int POSITION_STATUSOffset) { builder.addOffset(15, POSITION_STATUSOffset, 0); }
-  public static void addUntilTime(FlatBufferBuilder builder, int UNTIL_TIMEOffset) { builder.addOffset(16, UNTIL_TIMEOffset, 0); }
-  public static void addOfficialLossDate(FlatBufferBuilder builder, int OFFICIAL_LOSS_DATEOffset) { builder.addOffset(17, OFFICIAL_LOSS_DATEOffset, 0); }
-  public static void addNetAmount(FlatBufferBuilder builder, double NET_AMOUNT) { builder.addDouble(18, NET_AMOUNT, 0.0); }
-  public static void addUnderlyingCause(FlatBufferBuilder builder, int UNDERLYING_CAUSEOffset) { builder.addOffset(19, UNDERLYING_CAUSEOffset, 0); }
-  public static void addCapabilityLoss(FlatBufferBuilder builder, double CAPABILITY_LOSS) { builder.addDouble(20, CAPABILITY_LOSS, 0.0); }
-  public static void addCapacityLoss(FlatBufferBuilder builder, double CAPACITY_LOSS) { builder.addDouble(21, CAPACITY_LOSS, 0.0); }
-  public static void addInsuranceLoss(FlatBufferBuilder builder, double INSURANCE_LOSS) { builder.addDouble(22, INSURANCE_LOSS, 0.0); }
-  public static void addThirdPartyInsuranceLoss(FlatBufferBuilder builder, double THIRD_PARTY_INSURANCE_LOSS) { builder.addDouble(23, THIRD_PARTY_INSURANCE_LOSS, 0.0); }
-  public static void addInjured(FlatBufferBuilder builder, int INJURED) { builder.addInt(24, INJURED, 0); }
-  public static void addKilled(FlatBufferBuilder builder, int KILLED) { builder.addInt(25, KILLED, 0); }
-  public static void addLifeLost(FlatBufferBuilder builder, double LIFE_LOST) { builder.addDouble(26, LIFE_LOST, 0.0); }
-  public static void addAgeAtEvent(FlatBufferBuilder builder, double AGE_AT_EVENT) { builder.addDouble(27, AGE_AT_EVENT, 0.0); }
-  public static void addAchievedFlightPhase(FlatBufferBuilder builder, int ACHIEVED_FLIGHT_PHASEOffset) { builder.addOffset(28, ACHIEVED_FLIGHT_PHASEOffset, 0); }
-  public static void addOccurrenceFlightPhase(FlatBufferBuilder builder, int OCCURRENCE_FLIGHT_PHASEOffset) { builder.addOffset(29, OCCURRENCE_FLIGHT_PHASEOffset, 0); }
-  public static void addStageAtFault(FlatBufferBuilder builder, int STAGE_AT_FAULTOffset) { builder.addOffset(30, STAGE_AT_FAULTOffset, 0); }
-  public static void addEquipmentAtFault(FlatBufferBuilder builder, int EQUIPMENT_AT_FAULTOffset) { builder.addOffset(31, EQUIPMENT_AT_FAULTOffset, 0); }
-  public static void addEquipmentTypeAtFault(FlatBufferBuilder builder, int EQUIPMENT_TYPE_AT_FAULTOffset) { builder.addOffset(32, EQUIPMENT_TYPE_AT_FAULTOffset, 0); }
-  public static void addEquipmentPartAtFault(FlatBufferBuilder builder, int EQUIPMENT_PART_AT_FAULTOffset) { builder.addOffset(33, EQUIPMENT_PART_AT_FAULTOffset, 0); }
-  public static void addConsequentialEquipmentFailure(FlatBufferBuilder builder, int CONSEQUENTIAL_EQUIPMENT_FAILUREOffset) { builder.addOffset(34, CONSEQUENTIAL_EQUIPMENT_FAILUREOffset, 0); }
-  public static void addInclined(FlatBufferBuilder builder, boolean INCLINED) { builder.addBoolean(35, INCLINED, false); }
-  public static void addDescription(FlatBufferBuilder builder, int DESCRIPTIONOffset) { builder.addOffset(36, DESCRIPTIONOffset, 0); }
-  public static void addRemarks(FlatBufferBuilder builder, int REMARKSOffset) { builder.addOffset(37, REMARKSOffset, 0); }
-  public static void addInsuranceLossNotes(FlatBufferBuilder builder, int INSURANCE_LOSS_NOTESOffset) { builder.addOffset(38, INSURANCE_LOSS_NOTESOffset, 0); }
-  public static void addCapabilityLossNotes(FlatBufferBuilder builder, int CAPABILITY_LOSS_NOTESOffset) { builder.addOffset(39, CAPABILITY_LOSS_NOTESOffset, 0); }
-  public static void addInsuranceCarriedNotes(FlatBufferBuilder builder, int INSURANCE_CARRIED_NOTESOffset) { builder.addOffset(40, INSURANCE_CARRIED_NOTESOffset, 0); }
-  public static void addEquipmentCausingLossNotes(FlatBufferBuilder builder, int EQUIPMENT_CAUSING_LOSS_NOTESOffset) { builder.addOffset(41, EQUIPMENT_CAUSING_LOSS_NOTESOffset, 0); }
-  public static void addEventType(FlatBufferBuilder builder, int EVENT_TYPEOffset) { builder.addOffset(42, EVENT_TYPEOffset, 0); }
-  public static void addEventResult(FlatBufferBuilder builder, int EVENT_RESULTOffset) { builder.addOffset(43, EVENT_RESULTOffset, 0); }
-  public static void addObjectStatus(FlatBufferBuilder builder, int OBJECT_STATUSOffset) { builder.addOffset(44, OBJECT_STATUSOffset, 0); }
-  public static void addSatellitePosition(FlatBufferBuilder builder, int SATELLITE_POSITIONOffset) { builder.addOffset(45, SATELLITE_POSITIONOffset, 0); }
-  public static void addOnOrbit(FlatBufferBuilder builder, int ON_ORBITOffset) { builder.addOffset(46, ON_ORBITOffset, 0); }
+  public static void addCategory(FlatBufferBuilder builder, byte CATEGORY) { builder.addByte(8, CATEGORY, 0); }
+  public static void addResult(FlatBufferBuilder builder, byte RESULT) { builder.addByte(9, RESULT, 0); }
+  public static void addEventType(FlatBufferBuilder builder, int EVENT_TYPEOffset) { builder.addOffset(10, EVENT_TYPEOffset, 0); }
+  public static void addOperatorOrgId(FlatBufferBuilder builder, int OPERATOR_ORG_IDOffset) { builder.addOffset(11, OPERATOR_ORG_IDOffset, 0); }
+  public static void addOwnerOrgId(FlatBufferBuilder builder, int OWNER_ORG_IDOffset) { builder.addOffset(12, OWNER_ORG_IDOffset, 0); }
+  public static void addLesseeOrgId(FlatBufferBuilder builder, int LESSEE_ORG_IDOffset) { builder.addOffset(13, LESSEE_ORG_IDOffset, 0); }
+  public static void addOperatedOnBehalfOfOrgId(FlatBufferBuilder builder, int OPERATED_ON_BEHALF_OF_ORG_IDOffset) { builder.addOffset(14, OPERATED_ON_BEHALF_OF_ORG_IDOffset, 0); }
+  public static void addGeoPosition(FlatBufferBuilder builder, double GEO_POSITION) { builder.addDouble(15, GEO_POSITION, 0.0); }
+  public static void addPlaneSlot(FlatBufferBuilder builder, int PLANE_SLOTOffset) { builder.addOffset(16, PLANE_SLOTOffset, 0); }
+  public static void addPlaneNumber(FlatBufferBuilder builder, int PLANE_NUMBEROffset) { builder.addOffset(17, PLANE_NUMBEROffset, 0); }
+  public static void addPositionStatus(FlatBufferBuilder builder, int POSITION_STATUSOffset) { builder.addOffset(18, POSITION_STATUSOffset, 0); }
+  public static void addUntilTime(FlatBufferBuilder builder, int UNTIL_TIMEOffset) { builder.addOffset(19, UNTIL_TIMEOffset, 0); }
+  public static void addOfficialLossDate(FlatBufferBuilder builder, int OFFICIAL_LOSS_DATEOffset) { builder.addOffset(20, OFFICIAL_LOSS_DATEOffset, 0); }
+  public static void addNetAmount(FlatBufferBuilder builder, double NET_AMOUNT) { builder.addDouble(21, NET_AMOUNT, 0.0); }
+  public static void addUnderlyingCause(FlatBufferBuilder builder, int UNDERLYING_CAUSEOffset) { builder.addOffset(22, UNDERLYING_CAUSEOffset, 0); }
+  public static void addCapabilityLoss(FlatBufferBuilder builder, double CAPABILITY_LOSS) { builder.addDouble(23, CAPABILITY_LOSS, 0.0); }
+  public static void addCapacityLoss(FlatBufferBuilder builder, double CAPACITY_LOSS) { builder.addDouble(24, CAPACITY_LOSS, 0.0); }
+  public static void addInsuranceLoss(FlatBufferBuilder builder, double INSURANCE_LOSS) { builder.addDouble(25, INSURANCE_LOSS, 0.0); }
+  public static void addThirdPartyInsuranceLoss(FlatBufferBuilder builder, double THIRD_PARTY_INSURANCE_LOSS) { builder.addDouble(26, THIRD_PARTY_INSURANCE_LOSS, 0.0); }
+  public static void addInjured(FlatBufferBuilder builder, int INJURED) { builder.addShort(27, (short) INJURED, (short) 0); }
+  public static void addKilled(FlatBufferBuilder builder, int KILLED) { builder.addShort(28, (short) KILLED, (short) 0); }
+  public static void addAgeAtEvent(FlatBufferBuilder builder, double AGE_AT_EVENT) { builder.addDouble(29, AGE_AT_EVENT, 0.0); }
+  public static void addLifeLost(FlatBufferBuilder builder, double LIFE_LOST) { builder.addDouble(30, LIFE_LOST, 0.0); }
+  public static void addAchievedFlightPhase(FlatBufferBuilder builder, int ACHIEVED_FLIGHT_PHASEOffset) { builder.addOffset(31, ACHIEVED_FLIGHT_PHASEOffset, 0); }
+  public static void addOccurrenceFlightPhase(FlatBufferBuilder builder, int OCCURRENCE_FLIGHT_PHASEOffset) { builder.addOffset(32, OCCURRENCE_FLIGHT_PHASEOffset, 0); }
+  public static void addStageAtFault(FlatBufferBuilder builder, int STAGE_AT_FAULTOffset) { builder.addOffset(33, STAGE_AT_FAULTOffset, 0); }
+  public static void addEquipmentAtFault(FlatBufferBuilder builder, int EQUIPMENT_AT_FAULTOffset) { builder.addOffset(34, EQUIPMENT_AT_FAULTOffset, 0); }
+  public static void addEquipmentTypeAtFault(FlatBufferBuilder builder, int EQUIPMENT_TYPE_AT_FAULTOffset) { builder.addOffset(35, EQUIPMENT_TYPE_AT_FAULTOffset, 0); }
+  public static void addEquipmentPartAtFault(FlatBufferBuilder builder, int EQUIPMENT_PART_AT_FAULTOffset) { builder.addOffset(36, EQUIPMENT_PART_AT_FAULTOffset, 0); }
+  public static void addConsequentialEquipmentFailure(FlatBufferBuilder builder, int CONSEQUENTIAL_EQUIPMENT_FAILUREOffset) { builder.addOffset(37, CONSEQUENTIAL_EQUIPMENT_FAILUREOffset, 0); }
+  public static void addInclined(FlatBufferBuilder builder, boolean INCLINED) { builder.addBoolean(38, INCLINED, false); }
+  public static void addDescription(FlatBufferBuilder builder, int DESCRIPTIONOffset) { builder.addOffset(39, DESCRIPTIONOffset, 0); }
+  public static void addRemarks(FlatBufferBuilder builder, int REMARKSOffset) { builder.addOffset(40, REMARKSOffset, 0); }
+  public static void addObjectStatus(FlatBufferBuilder builder, int OBJECT_STATUSOffset) { builder.addOffset(41, OBJECT_STATUSOffset, 0); }
+  public static void addSatellitePosition(FlatBufferBuilder builder, int SATELLITE_POSITIONOffset) { builder.addOffset(42, SATELLITE_POSITIONOffset, 0); }
+  public static void addOnOrbit(FlatBufferBuilder builder, int ON_ORBITOffset) { builder.addOffset(43, ON_ORBITOffset, 0); }
   public static int endOOE(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

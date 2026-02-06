@@ -29,44 +29,126 @@ public final class LND extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public LND __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
-  public String LAUNCH_TIME() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer LAUNCH_TIMEAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
-  public ByteBuffer LAUNCH_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
-  public String MESSAGE_TYPE() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer MESSAGE_TYPEAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
-  public ByteBuffer MESSAGE_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
-  public double LAUNCH_LATITUDE() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double LAUNCH_LONGITUDE() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double LAUNCH_AZIMUTH() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double RAAN() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double INCLINATION() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String OBSERVATION_TIME() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer OBSERVATION_TIMEAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
-  public ByteBuffer OBSERVATION_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
-  public double OBSERVATION_LATITUDE() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double OBSERVATION_LONGITUDE() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double OBSERVATION_ALTITUDE() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public boolean STEREO_FLAG() { int o = __offset(28); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public boolean HIGH_ZENITH_AZIMUTH() { int o = __offset(30); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public int SEQUENCE_NUMBER() { int o = __offset(32); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public String EVENT_ID() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer EVENT_IDAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
-  public ByteBuffer EVENT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
-  public String DESCRIPTOR() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer DESCRIPTORAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
-  public ByteBuffer DESCRIPTORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
-  public String TAGS(int j) { int o = __offset(38); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int TAGSLength() { int o = __offset(38); return o != 0 ? __vector_len(o) : 0; }
+  /**
+   * Detection event identifier
+   */
+  public String EVENT_ID() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EVENT_IDAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
+  public ByteBuffer EVENT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  /**
+   * Detection type
+   */
+  public byte DETECTION_TYPE() { int o = __offset(8); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Detection message type code
+   */
+  public String MESSAGE_TYPE() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MESSAGE_TYPEAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer MESSAGE_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * Time of launch detection (ISO 8601)
+   */
+  public String LAUNCH_TIME() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LAUNCH_TIMEAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer LAUNCH_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * Launch site latitude (degrees)
+   */
+  public double LAUNCH_LATITUDE() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Launch site longitude (degrees)
+   */
+  public double LAUNCH_LONGITUDE() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Launch azimuth (degrees from north)
+   */
+  public double LAUNCH_AZIMUTH() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Estimated RAAN (degrees)
+   */
+  public double RAAN() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Estimated inclination (degrees)
+   */
+  public double INCLINATION() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Time of trajectory observation (ISO 8601)
+   */
+  public String OBSERVATION_TIME() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OBSERVATION_TIMEAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
+  public ByteBuffer OBSERVATION_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
+  /**
+   * Observation point latitude (degrees)
+   */
+  public double OBSERVATION_LATITUDE() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Observation point longitude (degrees)
+   */
+  public double OBSERVATION_LONGITUDE() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Observation point altitude (km)
+   */
+  public double OBSERVATION_ALTITUDE() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * True if stereo observation (multiple sensors)
+   */
+  public boolean STEREO_FLAG() { int o = __offset(32); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * True if high zenith angle observation
+   */
+  public boolean HIGH_ZENITH_AZIMUTH() { int o = __offset(34); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Sequence number in detection chain
+   */
+  public int SEQUENCE_NUMBER() { int o = __offset(36); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * Launch site identifier
+   */
+  public String LAUNCH_SITE_ID() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LAUNCH_SITE_IDAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
+  public ByteBuffer LAUNCH_SITE_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
+  /**
+   * Launch vehicle type (if identified)
+   */
+  public String LAUNCH_VEHICLE() { int o = __offset(40); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LAUNCH_VEHICLEAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
+  public ByteBuffer LAUNCH_VEHICLEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
+  /**
+   * Estimated trajectory type
+   */
+  public String TRAJECTORY_TYPE() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TRAJECTORY_TYPEAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
+  public ByteBuffer TRAJECTORY_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
+  /**
+   * Detection confidence (0-1)
+   */
+  public double CONFIDENCE() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Event descriptor
+   */
+  public String DESCRIPTOR() { int o = __offset(46); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DESCRIPTORAsByteBuffer() { return __vector_as_bytebuffer(46, 1); }
+  public ByteBuffer DESCRIPTORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 46, 1); }
+  /**
+   * Associated tags
+   */
+  public String TAGS(int j) { int o = __offset(48); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int TAGSLength() { int o = __offset(48); return o != 0 ? __vector_len(o) : 0; }
   public StringVector tagsVector() { return tagsVector(new StringVector()); }
-  public StringVector tagsVector(StringVector obj) { int o = __offset(38); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public StringVector tagsVector(StringVector obj) { int o = __offset(48); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createLND(FlatBufferBuilder builder,
       int IDOffset,
-      int LAUNCH_TIMEOffset,
+      int EVENT_IDOffset,
+      byte DETECTION_TYPE,
       int MESSAGE_TYPEOffset,
+      int LAUNCH_TIMEOffset,
       double LAUNCH_LATITUDE,
       double LAUNCH_LONGITUDE,
       double LAUNCH_AZIMUTH,
@@ -79,10 +161,14 @@ public final class LND extends Table {
       boolean STEREO_FLAG,
       boolean HIGH_ZENITH_AZIMUTH,
       int SEQUENCE_NUMBER,
-      int EVENT_IDOffset,
+      int LAUNCH_SITE_IDOffset,
+      int LAUNCH_VEHICLEOffset,
+      int TRAJECTORY_TYPEOffset,
+      double CONFIDENCE,
       int DESCRIPTOROffset,
       int TAGSOffset) {
-    builder.startTable(18);
+    builder.startTable(23);
+    LND.addConfidence(builder, CONFIDENCE);
     LND.addObservationAltitude(builder, OBSERVATION_ALTITUDE);
     LND.addObservationLongitude(builder, OBSERVATION_LONGITUDE);
     LND.addObservationLatitude(builder, OBSERVATION_LATITUDE);
@@ -93,36 +179,45 @@ public final class LND extends Table {
     LND.addLaunchLatitude(builder, LAUNCH_LATITUDE);
     LND.addTags(builder, TAGSOffset);
     LND.addDescriptor(builder, DESCRIPTOROffset);
-    LND.addEventId(builder, EVENT_IDOffset);
-    LND.addSequenceNumber(builder, SEQUENCE_NUMBER);
+    LND.addTrajectoryType(builder, TRAJECTORY_TYPEOffset);
+    LND.addLaunchVehicle(builder, LAUNCH_VEHICLEOffset);
+    LND.addLaunchSiteId(builder, LAUNCH_SITE_IDOffset);
     LND.addObservationTime(builder, OBSERVATION_TIMEOffset);
-    LND.addMessageType(builder, MESSAGE_TYPEOffset);
     LND.addLaunchTime(builder, LAUNCH_TIMEOffset);
+    LND.addMessageType(builder, MESSAGE_TYPEOffset);
+    LND.addEventId(builder, EVENT_IDOffset);
     LND.addId(builder, IDOffset);
+    LND.addSequenceNumber(builder, SEQUENCE_NUMBER);
     LND.addHighZenithAzimuth(builder, HIGH_ZENITH_AZIMUTH);
     LND.addStereoFlag(builder, STEREO_FLAG);
+    LND.addDetectionType(builder, DETECTION_TYPE);
     return LND.endLND(builder);
   }
 
-  public static void startLND(FlatBufferBuilder builder) { builder.startTable(18); }
+  public static void startLND(FlatBufferBuilder builder) { builder.startTable(23); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
-  public static void addLaunchTime(FlatBufferBuilder builder, int LAUNCH_TIMEOffset) { builder.addOffset(1, LAUNCH_TIMEOffset, 0); }
-  public static void addMessageType(FlatBufferBuilder builder, int MESSAGE_TYPEOffset) { builder.addOffset(2, MESSAGE_TYPEOffset, 0); }
-  public static void addLaunchLatitude(FlatBufferBuilder builder, double LAUNCH_LATITUDE) { builder.addDouble(3, LAUNCH_LATITUDE, 0.0); }
-  public static void addLaunchLongitude(FlatBufferBuilder builder, double LAUNCH_LONGITUDE) { builder.addDouble(4, LAUNCH_LONGITUDE, 0.0); }
-  public static void addLaunchAzimuth(FlatBufferBuilder builder, double LAUNCH_AZIMUTH) { builder.addDouble(5, LAUNCH_AZIMUTH, 0.0); }
-  public static void addRaan(FlatBufferBuilder builder, double RAAN) { builder.addDouble(6, RAAN, 0.0); }
-  public static void addInclination(FlatBufferBuilder builder, double INCLINATION) { builder.addDouble(7, INCLINATION, 0.0); }
-  public static void addObservationTime(FlatBufferBuilder builder, int OBSERVATION_TIMEOffset) { builder.addOffset(8, OBSERVATION_TIMEOffset, 0); }
-  public static void addObservationLatitude(FlatBufferBuilder builder, double OBSERVATION_LATITUDE) { builder.addDouble(9, OBSERVATION_LATITUDE, 0.0); }
-  public static void addObservationLongitude(FlatBufferBuilder builder, double OBSERVATION_LONGITUDE) { builder.addDouble(10, OBSERVATION_LONGITUDE, 0.0); }
-  public static void addObservationAltitude(FlatBufferBuilder builder, double OBSERVATION_ALTITUDE) { builder.addDouble(11, OBSERVATION_ALTITUDE, 0.0); }
-  public static void addStereoFlag(FlatBufferBuilder builder, boolean STEREO_FLAG) { builder.addBoolean(12, STEREO_FLAG, false); }
-  public static void addHighZenithAzimuth(FlatBufferBuilder builder, boolean HIGH_ZENITH_AZIMUTH) { builder.addBoolean(13, HIGH_ZENITH_AZIMUTH, false); }
-  public static void addSequenceNumber(FlatBufferBuilder builder, int SEQUENCE_NUMBER) { builder.addInt(14, SEQUENCE_NUMBER, 0); }
-  public static void addEventId(FlatBufferBuilder builder, int EVENT_IDOffset) { builder.addOffset(15, EVENT_IDOffset, 0); }
-  public static void addDescriptor(FlatBufferBuilder builder, int DESCRIPTOROffset) { builder.addOffset(16, DESCRIPTOROffset, 0); }
-  public static void addTags(FlatBufferBuilder builder, int TAGSOffset) { builder.addOffset(17, TAGSOffset, 0); }
+  public static void addEventId(FlatBufferBuilder builder, int EVENT_IDOffset) { builder.addOffset(1, EVENT_IDOffset, 0); }
+  public static void addDetectionType(FlatBufferBuilder builder, byte DETECTION_TYPE) { builder.addByte(2, DETECTION_TYPE, 0); }
+  public static void addMessageType(FlatBufferBuilder builder, int MESSAGE_TYPEOffset) { builder.addOffset(3, MESSAGE_TYPEOffset, 0); }
+  public static void addLaunchTime(FlatBufferBuilder builder, int LAUNCH_TIMEOffset) { builder.addOffset(4, LAUNCH_TIMEOffset, 0); }
+  public static void addLaunchLatitude(FlatBufferBuilder builder, double LAUNCH_LATITUDE) { builder.addDouble(5, LAUNCH_LATITUDE, 0.0); }
+  public static void addLaunchLongitude(FlatBufferBuilder builder, double LAUNCH_LONGITUDE) { builder.addDouble(6, LAUNCH_LONGITUDE, 0.0); }
+  public static void addLaunchAzimuth(FlatBufferBuilder builder, double LAUNCH_AZIMUTH) { builder.addDouble(7, LAUNCH_AZIMUTH, 0.0); }
+  public static void addRaan(FlatBufferBuilder builder, double RAAN) { builder.addDouble(8, RAAN, 0.0); }
+  public static void addInclination(FlatBufferBuilder builder, double INCLINATION) { builder.addDouble(9, INCLINATION, 0.0); }
+  public static void addObservationTime(FlatBufferBuilder builder, int OBSERVATION_TIMEOffset) { builder.addOffset(10, OBSERVATION_TIMEOffset, 0); }
+  public static void addObservationLatitude(FlatBufferBuilder builder, double OBSERVATION_LATITUDE) { builder.addDouble(11, OBSERVATION_LATITUDE, 0.0); }
+  public static void addObservationLongitude(FlatBufferBuilder builder, double OBSERVATION_LONGITUDE) { builder.addDouble(12, OBSERVATION_LONGITUDE, 0.0); }
+  public static void addObservationAltitude(FlatBufferBuilder builder, double OBSERVATION_ALTITUDE) { builder.addDouble(13, OBSERVATION_ALTITUDE, 0.0); }
+  public static void addStereoFlag(FlatBufferBuilder builder, boolean STEREO_FLAG) { builder.addBoolean(14, STEREO_FLAG, false); }
+  public static void addHighZenithAzimuth(FlatBufferBuilder builder, boolean HIGH_ZENITH_AZIMUTH) { builder.addBoolean(15, HIGH_ZENITH_AZIMUTH, false); }
+  public static void addSequenceNumber(FlatBufferBuilder builder, int SEQUENCE_NUMBER) { builder.addShort(16, (short) SEQUENCE_NUMBER, (short) 0); }
+  public static void addLaunchSiteId(FlatBufferBuilder builder, int LAUNCH_SITE_IDOffset) { builder.addOffset(17, LAUNCH_SITE_IDOffset, 0); }
+  public static void addLaunchVehicle(FlatBufferBuilder builder, int LAUNCH_VEHICLEOffset) { builder.addOffset(18, LAUNCH_VEHICLEOffset, 0); }
+  public static void addTrajectoryType(FlatBufferBuilder builder, int TRAJECTORY_TYPEOffset) { builder.addOffset(19, TRAJECTORY_TYPEOffset, 0); }
+  public static void addConfidence(FlatBufferBuilder builder, double CONFIDENCE) { builder.addDouble(20, CONFIDENCE, 0.0); }
+  public static void addDescriptor(FlatBufferBuilder builder, int DESCRIPTOROffset) { builder.addOffset(21, DESCRIPTOROffset, 0); }
+  public static void addTags(FlatBufferBuilder builder, int TAGSOffset) { builder.addOffset(22, TAGSOffset, 0); }
   public static int createTagsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startTagsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endLND(FlatBufferBuilder builder) {

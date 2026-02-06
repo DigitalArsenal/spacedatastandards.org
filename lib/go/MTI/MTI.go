@@ -54,6 +54,7 @@ func (rcv *MTI) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Unique identifier
 func (rcv *MTI) ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -62,15 +63,23 @@ func (rcv *MTI) ID() []byte {
 	return nil
 }
 
-func (rcv *MTI) P3() []byte {
+/// Unique identifier
+/// MTI standard (e.g., STANAG 4607)
+func (rcv *MTI) STANDARD() mtiStandard {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return mtiStandard(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
-	return nil
+	return 0
 }
 
-func (rcv *MTI) P6() []byte {
+/// MTI standard (e.g., STANAG 4607)
+func (rcv *MTI) MutateSTANDARD(n mtiStandard) bool {
+	return rcv._tab.MutateInt8Slot(6, int8(n))
+}
+
+/// Platform type (P3 field)
+func (rcv *MTI) P3() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -78,7 +87,9 @@ func (rcv *MTI) P6() []byte {
 	return nil
 }
 
-func (rcv *MTI) P7() []byte {
+/// Platform type (P3 field)
+/// Platform activity (P6 field)
+func (rcv *MTI) P6() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -86,7 +97,9 @@ func (rcv *MTI) P7() []byte {
 	return nil
 }
 
-func (rcv *MTI) P8() []byte {
+/// Platform activity (P6 field)
+/// Sensor type (P7 field)
+func (rcv *MTI) P7() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -94,32 +107,48 @@ func (rcv *MTI) P8() []byte {
 	return nil
 }
 
-func (rcv *MTI) P9() int32 {
+/// Sensor type (P7 field)
+/// Sensor model (P8 field)
+func (rcv *MTI) P8() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
-	return 0
+	return nil
 }
 
-func (rcv *MTI) MutateP9(n int32) bool {
-	return rcv._tab.MutateInt32Slot(14, n)
-}
-
-func (rcv *MTI) P10() int32 {
+/// Sensor model (P8 field)
+/// Reference time code (P9)
+func (rcv *MTI) P9() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *MTI) MutateP10(n int32) bool {
-	return rcv._tab.MutateInt32Slot(16, n)
+/// Reference time code (P9)
+func (rcv *MTI) MutateP9(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(16, n)
 }
 
-func (rcv *MTI) MISSIONS(j int) []byte {
+/// Security classification (P10)
+func (rcv *MTI) P10() uint16 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Security classification (P10)
+func (rcv *MTI) MutateP10(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(18, n)
+}
+
+/// Mission segment identifiers
+func (rcv *MTI) MISSIONS(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -128,15 +157,17 @@ func (rcv *MTI) MISSIONS(j int) []byte {
 }
 
 func (rcv *MTI) MISSIONSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
+/// Mission segment identifiers
+/// Dwell segment data references
 func (rcv *MTI) DWELLS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -145,15 +176,17 @@ func (rcv *MTI) DWELLS(j int) []byte {
 }
 
 func (rcv *MTI) DWELLSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
+/// Dwell segment data references
+/// High range resolution profile references
 func (rcv *MTI) HRRS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -162,15 +195,17 @@ func (rcv *MTI) HRRS(j int) []byte {
 }
 
 func (rcv *MTI) HRRSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
+/// High range resolution profile references
+/// Job definition references
 func (rcv *MTI) JOB_DEFS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -179,15 +214,17 @@ func (rcv *MTI) JOB_DEFS(j int) []byte {
 }
 
 func (rcv *MTI) JOB_DEFSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
+/// Job definition references
+/// Free text entries
 func (rcv *MTI) FREE_TEXTS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -196,15 +233,17 @@ func (rcv *MTI) FREE_TEXTS(j int) []byte {
 }
 
 func (rcv *MTI) FREE_TEXTSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
+/// Free text entries
+/// Platform location data references
 func (rcv *MTI) PLATFORM_LOCS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -213,15 +252,17 @@ func (rcv *MTI) PLATFORM_LOCS(j int) []byte {
 }
 
 func (rcv *MTI) PLATFORM_LOCSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
+/// Platform location data references
+/// Job request references
 func (rcv *MTI) JOB_REQUESTS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -230,75 +271,79 @@ func (rcv *MTI) JOB_REQUESTS(j int) []byte {
 }
 
 func (rcv *MTI) JOB_REQUESTSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
+/// Job request references
 func MTIStart(builder *flatbuffers.Builder) {
-	builder.StartObject(14)
+	builder.StartObject(15)
 }
 func MTIAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func MTIAddSTANDARD(builder *flatbuffers.Builder, STANDARD mtiStandard) {
+	builder.PrependInt8Slot(1, int8(STANDARD), 0)
+}
 func MTIAddP3(builder *flatbuffers.Builder, P3 flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(P3), 0)
+	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(P3), 0)
 }
 func MTIAddP6(builder *flatbuffers.Builder, P6 flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(P6), 0)
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(P6), 0)
 }
 func MTIAddP7(builder *flatbuffers.Builder, P7 flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(P7), 0)
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(P7), 0)
 }
 func MTIAddP8(builder *flatbuffers.Builder, P8 flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(P8), 0)
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(P8), 0)
 }
-func MTIAddP9(builder *flatbuffers.Builder, P9 int32) {
-	builder.PrependInt32Slot(5, P9, 0)
+func MTIAddP9(builder *flatbuffers.Builder, P9 uint32) {
+	builder.PrependUint32Slot(6, P9, 0)
 }
-func MTIAddP10(builder *flatbuffers.Builder, P10 int32) {
-	builder.PrependInt32Slot(6, P10, 0)
+func MTIAddP10(builder *flatbuffers.Builder, P10 uint16) {
+	builder.PrependUint16Slot(7, P10, 0)
 }
 func MTIAddMISSIONS(builder *flatbuffers.Builder, MISSIONS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(MISSIONS), 0)
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(MISSIONS), 0)
 }
 func MTIStartMISSIONSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
 func MTIAddDWELLS(builder *flatbuffers.Builder, DWELLS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(DWELLS), 0)
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(DWELLS), 0)
 }
 func MTIStartDWELLSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
 func MTIAddHRRS(builder *flatbuffers.Builder, HRRS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(HRRS), 0)
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(HRRS), 0)
 }
 func MTIStartHRRSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
 func MTIAddJOB_DEFS(builder *flatbuffers.Builder, JOB_DEFS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(JOB_DEFS), 0)
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(JOB_DEFS), 0)
 }
 func MTIStartJOB_DEFSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
 func MTIAddFREE_TEXTS(builder *flatbuffers.Builder, FREE_TEXTS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(FREE_TEXTS), 0)
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(FREE_TEXTS), 0)
 }
 func MTIStartFREE_TEXTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
 func MTIAddPLATFORM_LOCS(builder *flatbuffers.Builder, PLATFORM_LOCS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(PLATFORM_LOCS), 0)
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(PLATFORM_LOCS), 0)
 }
 func MTIStartPLATFORM_LOCSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
 func MTIAddJOB_REQUESTS(builder *flatbuffers.Builder, JOB_REQUESTS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(JOB_REQUESTS), 0)
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(JOB_REQUESTS), 0)
 }
 func MTIStartJOB_REQUESTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)

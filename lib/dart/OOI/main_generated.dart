@@ -5,6 +5,108 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class OoiStatus {
+  final int value;
+  const OoiStatus._(this.value);
+
+  factory OoiStatus.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum OoiStatus');
+    }
+    return result;
+  }
+
+  static OoiStatus? _createOrNull(int? value) => 
+      value == null ? null : OoiStatus.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 5;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const OoiStatus ACTIVE = OoiStatus._(0);
+  static const OoiStatus PENDING = OoiStatus._(1);
+  static const OoiStatus CLOSED = OoiStatus._(2);
+  static const OoiStatus MONITORING = OoiStatus._(3);
+  static const OoiStatus URGENT = OoiStatus._(4);
+  static const OoiStatus ARCHIVED = OoiStatus._(5);
+  static const Map<int, OoiStatus> values = {
+    0: ACTIVE,
+    1: PENDING,
+    2: CLOSED,
+    3: MONITORING,
+    4: URGENT,
+    5: ARCHIVED};
+
+  static const fb.Reader<OoiStatus> reader = _OoiStatusReader();
+
+  @override
+  String toString() {
+    return 'OoiStatus{value: $value}';
+  }
+}
+
+class _OoiStatusReader extends fb.Reader<OoiStatus> {
+  const _OoiStatusReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  OoiStatus read(fb.BufferContext bc, int offset) =>
+      OoiStatus.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class OoiPriority {
+  final int value;
+  const OoiPriority._(this.value);
+
+  factory OoiPriority.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum OoiPriority');
+    }
+    return result;
+  }
+
+  static OoiPriority? _createOrNull(int? value) => 
+      value == null ? null : OoiPriority.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const OoiPriority CRITICAL = OoiPriority._(0);
+  static const OoiPriority HIGH = OoiPriority._(1);
+  static const OoiPriority MEDIUM = OoiPriority._(2);
+  static const OoiPriority LOW = OoiPriority._(3);
+  static const OoiPriority ROUTINE = OoiPriority._(4);
+  static const Map<int, OoiPriority> values = {
+    0: CRITICAL,
+    1: HIGH,
+    2: MEDIUM,
+    3: LOW,
+    4: ROUTINE};
+
+  static const fb.Reader<OoiPriority> reader = _OoiPriorityReader();
+
+  @override
+  String toString() {
+    return 'OoiPriority{value: $value}';
+  }
+}
+
+class _OoiPriorityReader extends fb.Reader<OoiPriority> {
+  const _OoiPriorityReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  OoiPriority read(fb.BufferContext bc, int offset) =>
+      OoiPriority.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 ///  Object of Interest
 class OOI {
   OOI._(this._bc, this._bcOffset);
@@ -18,48 +120,86 @@ class OOI {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  int get SAT_NO => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  ///  Satellite catalog number
+  int get SAT_NO => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  ///  Object name or designator
   String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get SENSOR_TASKING_START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get SENSOR_TASKING_STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  int get PRIORITY => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 14, 0);
-  String? get STATUS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  String? get STATUS_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  String? get LAST_OB_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  String? get MISSED_OB_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
-  List<String>? get DELTA_VS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 26);
-  List<String>? get DELTA_TS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 28);
-  String? get SV_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
-  double get X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
-  double get Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
-  double get Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
-  double get XVEL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
-  double get YVEL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
-  double get ZVEL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
-  String? get ELSET_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
-  double get MEAN_MOTION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
-  double get ECCENTRICITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
-  double get INCLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
-  double get RAAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
-  double get ARG_OF_PERIGEE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
-  double get MEAN_ANOMALY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, 0.0);
-  int get REV_NO => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 58, 0);
-  double get B_STAR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 60, 0.0);
-  double get MEAN_MOTION_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
-  double get MEAN_MOTION_DDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
-  double get SEMI_MAJOR_AXIS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, 0.0);
-  double get PERIOD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, 0.0);
-  double get APOGEE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 70, 0.0);
-  double get PERIGEE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 72, 0.0);
-  List<String>? get AFFECTED_OBJECTS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 74);
-  String? get ON_ORBIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 76);
+  ///  On-orbit reference
+  String? get ON_ORBIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Tasking status
+  OoiStatus get STATUS => OoiStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  ///  Status update date (ISO 8601)
+  String? get STATUS_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Collection priority
+  OoiPriority get PRIORITY => OoiPriority.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 16, 0));
+  ///  Description of why object is of interest
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Sensor tasking start time (ISO 8601)
+  String? get SENSOR_TASKING_START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  ///  Sensor tasking stop time (ISO 8601)
+  String? get SENSOR_TASKING_STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Last observation time (ISO 8601)
+  String? get LAST_OB_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Last missed observation time (ISO 8601)
+  String? get MISSED_OB_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  ///  State vector epoch (ISO 8601)
+  String? get SV_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Position X (km, TEME)
+  double get X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  ///  Position Y (km, TEME)
+  double get Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  ///  Position Z (km, TEME)
+  double get Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  ///  Velocity X (km/s, TEME)
+  double get XVEL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  ///  Velocity Y (km/s, TEME)
+  double get YVEL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  ///  Velocity Z (km/s, TEME)
+  double get ZVEL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  ///  Element set epoch (ISO 8601)
+  String? get ELSET_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
+  ///  Mean motion (rev/day)
+  double get MEAN_MOTION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  ///  Eccentricity
+  double get ECCENTRICITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
+  ///  Inclination (degrees)
+  double get INCLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
+  ///  Right ascension of ascending node (degrees)
+  double get RAAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
+  ///  Argument of perigee (degrees)
+  double get ARG_OF_PERIGEE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
+  ///  Mean anomaly (degrees)
+  double get MEAN_ANOMALY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
+  ///  Revolution number at epoch
+  int get REV_NO => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 56, 0);
+  ///  BSTAR drag term (1/Earth radii)
+  double get B_STAR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
+  ///  Mean motion first derivative (rev/day^2)
+  double get MEAN_MOTION_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 60, 0.0);
+  ///  Mean motion second derivative (rev/day^3)
+  double get MEAN_MOTION_DDOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
+  ///  Semi-major axis (km)
+  double get SEMI_MAJOR_AXIS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
+  ///  Orbital period (minutes)
+  double get PERIOD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, 0.0);
+  ///  Apogee altitude (km)
+  double get APOGEE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, 0.0);
+  ///  Perigee altitude (km)
+  double get PERIGEE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 70, 0.0);
+  ///  Delta-V estimates for maneuver hypotheses (m/s)
+  List<double>? get DELTA_VS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 72);
+  ///  Delta-T estimates for maneuver timing (seconds)
+  List<double>? get DELTA_TS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 74);
+  ///  Other affected satellite catalog numbers
+  List<String>? get AFFECTED_OBJECTS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 76);
+  ///  Associated orbit manifold identifiers
   List<String>? get MANIFOLDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 78);
 
   @override
   String toString() {
-    return 'OOI{ID: ${ID}, SAT_NO: ${SAT_NO}, NAME: ${NAME}, SENSOR_TASKING_START_TIME: ${SENSOR_TASKING_START_TIME}, SENSOR_TASKING_STOP_TIME: ${SENSOR_TASKING_STOP_TIME}, PRIORITY: ${PRIORITY}, STATUS: ${STATUS}, STATUS_DATE: ${STATUS_DATE}, DESCRIPTION: ${DESCRIPTION}, LAST_OB_TIME: ${LAST_OB_TIME}, MISSED_OB_TIME: ${MISSED_OB_TIME}, DELTA_VS: ${DELTA_VS}, DELTA_TS: ${DELTA_TS}, SV_EPOCH: ${SV_EPOCH}, X: ${X}, Y: ${Y}, Z: ${Z}, XVEL: ${XVEL}, YVEL: ${YVEL}, ZVEL: ${ZVEL}, ELSET_EPOCH: ${ELSET_EPOCH}, MEAN_MOTION: ${MEAN_MOTION}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}, RAAN: ${RAAN}, ARG_OF_PERIGEE: ${ARG_OF_PERIGEE}, MEAN_ANOMALY: ${MEAN_ANOMALY}, REV_NO: ${REV_NO}, B_STAR: ${B_STAR}, MEAN_MOTION_DOT: ${MEAN_MOTION_DOT}, MEAN_MOTION_DDOT: ${MEAN_MOTION_DDOT}, SEMI_MAJOR_AXIS: ${SEMI_MAJOR_AXIS}, PERIOD: ${PERIOD}, APOGEE: ${APOGEE}, PERIGEE: ${PERIGEE}, AFFECTED_OBJECTS: ${AFFECTED_OBJECTS}, ON_ORBIT: ${ON_ORBIT}, MANIFOLDS: ${MANIFOLDS}}';
+    return 'OOI{ID: ${ID}, SAT_NO: ${SAT_NO}, NAME: ${NAME}, ON_ORBIT: ${ON_ORBIT}, STATUS: ${STATUS}, STATUS_DATE: ${STATUS_DATE}, PRIORITY: ${PRIORITY}, DESCRIPTION: ${DESCRIPTION}, SENSOR_TASKING_START_TIME: ${SENSOR_TASKING_START_TIME}, SENSOR_TASKING_STOP_TIME: ${SENSOR_TASKING_STOP_TIME}, LAST_OB_TIME: ${LAST_OB_TIME}, MISSED_OB_TIME: ${MISSED_OB_TIME}, SV_EPOCH: ${SV_EPOCH}, X: ${X}, Y: ${Y}, Z: ${Z}, XVEL: ${XVEL}, YVEL: ${YVEL}, ZVEL: ${ZVEL}, ELSET_EPOCH: ${ELSET_EPOCH}, MEAN_MOTION: ${MEAN_MOTION}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}, RAAN: ${RAAN}, ARG_OF_PERIGEE: ${ARG_OF_PERIGEE}, MEAN_ANOMALY: ${MEAN_ANOMALY}, REV_NO: ${REV_NO}, B_STAR: ${B_STAR}, MEAN_MOTION_DOT: ${MEAN_MOTION_DOT}, MEAN_MOTION_DDOT: ${MEAN_MOTION_DDOT}, SEMI_MAJOR_AXIS: ${SEMI_MAJOR_AXIS}, PERIOD: ${PERIOD}, APOGEE: ${APOGEE}, PERIGEE: ${PERIGEE}, DELTA_VS: ${DELTA_VS}, DELTA_TS: ${DELTA_TS}, AFFECTED_OBJECTS: ${AFFECTED_OBJECTS}, MANIFOLDS: ${MANIFOLDS}}';
   }
 }
 
@@ -85,146 +225,146 @@ class OOIBuilder {
     return fbBuilder.offset;
   }
   int addSatNo(int? SAT_NO) {
-    fbBuilder.addInt32(1, SAT_NO);
+    fbBuilder.addUint32(1, SAT_NO);
     return fbBuilder.offset;
   }
   int addNameOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addSensorTaskingStartTimeOffset(int? offset) {
+  int addOnOrbitOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addSensorTaskingStopTimeOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addPriority(int? PRIORITY) {
-    fbBuilder.addInt32(5, PRIORITY);
-    return fbBuilder.offset;
-  }
-  int addStatusOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
+  int addStatus(OoiStatus? STATUS) {
+    fbBuilder.addInt8(4, STATUS?.value);
     return fbBuilder.offset;
   }
   int addStatusDateOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addPriority(OoiPriority? PRIORITY) {
+    fbBuilder.addInt8(6, PRIORITY?.value);
     return fbBuilder.offset;
   }
   int addDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addSensorTaskingStartTimeOffset(int? offset) {
     fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
-  int addLastObTimeOffset(int? offset) {
+  int addSensorTaskingStopTimeOffset(int? offset) {
     fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
-  int addMissedObTimeOffset(int? offset) {
+  int addLastObTimeOffset(int? offset) {
     fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
-  int addDeltaVsOffset(int? offset) {
+  int addMissedObTimeOffset(int? offset) {
     fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
-  int addDeltaTsOffset(int? offset) {
+  int addSvEpochOffset(int? offset) {
     fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
-  int addSvEpochOffset(int? offset) {
-    fbBuilder.addOffset(13, offset);
-    return fbBuilder.offset;
-  }
   int addX(double? X) {
-    fbBuilder.addFloat64(14, X);
+    fbBuilder.addFloat64(13, X);
     return fbBuilder.offset;
   }
   int addY(double? Y) {
-    fbBuilder.addFloat64(15, Y);
+    fbBuilder.addFloat64(14, Y);
     return fbBuilder.offset;
   }
   int addZ(double? Z) {
-    fbBuilder.addFloat64(16, Z);
+    fbBuilder.addFloat64(15, Z);
     return fbBuilder.offset;
   }
   int addXvel(double? XVEL) {
-    fbBuilder.addFloat64(17, XVEL);
+    fbBuilder.addFloat64(16, XVEL);
     return fbBuilder.offset;
   }
   int addYvel(double? YVEL) {
-    fbBuilder.addFloat64(18, YVEL);
+    fbBuilder.addFloat64(17, YVEL);
     return fbBuilder.offset;
   }
   int addZvel(double? ZVEL) {
-    fbBuilder.addFloat64(19, ZVEL);
+    fbBuilder.addFloat64(18, ZVEL);
     return fbBuilder.offset;
   }
   int addElsetEpochOffset(int? offset) {
-    fbBuilder.addOffset(20, offset);
+    fbBuilder.addOffset(19, offset);
     return fbBuilder.offset;
   }
   int addMeanMotion(double? MEAN_MOTION) {
-    fbBuilder.addFloat64(21, MEAN_MOTION);
+    fbBuilder.addFloat64(20, MEAN_MOTION);
     return fbBuilder.offset;
   }
   int addEccentricity(double? ECCENTRICITY) {
-    fbBuilder.addFloat64(22, ECCENTRICITY);
+    fbBuilder.addFloat64(21, ECCENTRICITY);
     return fbBuilder.offset;
   }
   int addInclination(double? INCLINATION) {
-    fbBuilder.addFloat64(23, INCLINATION);
+    fbBuilder.addFloat64(22, INCLINATION);
     return fbBuilder.offset;
   }
   int addRaan(double? RAAN) {
-    fbBuilder.addFloat64(24, RAAN);
+    fbBuilder.addFloat64(23, RAAN);
     return fbBuilder.offset;
   }
   int addArgOfPerigee(double? ARG_OF_PERIGEE) {
-    fbBuilder.addFloat64(25, ARG_OF_PERIGEE);
+    fbBuilder.addFloat64(24, ARG_OF_PERIGEE);
     return fbBuilder.offset;
   }
   int addMeanAnomaly(double? MEAN_ANOMALY) {
-    fbBuilder.addFloat64(26, MEAN_ANOMALY);
+    fbBuilder.addFloat64(25, MEAN_ANOMALY);
     return fbBuilder.offset;
   }
   int addRevNo(int? REV_NO) {
-    fbBuilder.addInt32(27, REV_NO);
+    fbBuilder.addUint32(26, REV_NO);
     return fbBuilder.offset;
   }
   int addBStar(double? B_STAR) {
-    fbBuilder.addFloat64(28, B_STAR);
+    fbBuilder.addFloat64(27, B_STAR);
     return fbBuilder.offset;
   }
   int addMeanMotionDot(double? MEAN_MOTION_DOT) {
-    fbBuilder.addFloat64(29, MEAN_MOTION_DOT);
+    fbBuilder.addFloat64(28, MEAN_MOTION_DOT);
     return fbBuilder.offset;
   }
   int addMeanMotionDdot(double? MEAN_MOTION_DDOT) {
-    fbBuilder.addFloat64(30, MEAN_MOTION_DDOT);
+    fbBuilder.addFloat64(29, MEAN_MOTION_DDOT);
     return fbBuilder.offset;
   }
   int addSemiMajorAxis(double? SEMI_MAJOR_AXIS) {
-    fbBuilder.addFloat64(31, SEMI_MAJOR_AXIS);
+    fbBuilder.addFloat64(30, SEMI_MAJOR_AXIS);
     return fbBuilder.offset;
   }
   int addPeriod(double? PERIOD) {
-    fbBuilder.addFloat64(32, PERIOD);
+    fbBuilder.addFloat64(31, PERIOD);
     return fbBuilder.offset;
   }
   int addApogee(double? APOGEE) {
-    fbBuilder.addFloat64(33, APOGEE);
+    fbBuilder.addFloat64(32, APOGEE);
     return fbBuilder.offset;
   }
   int addPerigee(double? PERIGEE) {
-    fbBuilder.addFloat64(34, PERIGEE);
+    fbBuilder.addFloat64(33, PERIGEE);
     return fbBuilder.offset;
   }
-  int addAffectedObjectsOffset(int? offset) {
+  int addDeltaVsOffset(int? offset) {
+    fbBuilder.addOffset(34, offset);
+    return fbBuilder.offset;
+  }
+  int addDeltaTsOffset(int? offset) {
     fbBuilder.addOffset(35, offset);
     return fbBuilder.offset;
   }
-  int addOnOrbitOffset(int? offset) {
+  int addAffectedObjectsOffset(int? offset) {
     fbBuilder.addOffset(36, offset);
     return fbBuilder.offset;
   }
@@ -242,16 +382,15 @@ class OOIObjectBuilder extends fb.ObjectBuilder {
   final String? _ID;
   final int? _SAT_NO;
   final String? _NAME;
+  final String? _ON_ORBIT;
+  final OoiStatus? _STATUS;
+  final String? _STATUS_DATE;
+  final OoiPriority? _PRIORITY;
+  final String? _DESCRIPTION;
   final String? _SENSOR_TASKING_START_TIME;
   final String? _SENSOR_TASKING_STOP_TIME;
-  final int? _PRIORITY;
-  final String? _STATUS;
-  final String? _STATUS_DATE;
-  final String? _DESCRIPTION;
   final String? _LAST_OB_TIME;
   final String? _MISSED_OB_TIME;
-  final List<String>? _DELTA_VS;
-  final List<String>? _DELTA_TS;
   final String? _SV_EPOCH;
   final double? _X;
   final double? _Y;
@@ -274,24 +413,24 @@ class OOIObjectBuilder extends fb.ObjectBuilder {
   final double? _PERIOD;
   final double? _APOGEE;
   final double? _PERIGEE;
+  final List<double>? _DELTA_VS;
+  final List<double>? _DELTA_TS;
   final List<String>? _AFFECTED_OBJECTS;
-  final String? _ON_ORBIT;
   final List<String>? _MANIFOLDS;
 
   OOIObjectBuilder({
     String? ID,
     int? SAT_NO,
     String? NAME,
+    String? ON_ORBIT,
+    OoiStatus? STATUS,
+    String? STATUS_DATE,
+    OoiPriority? PRIORITY,
+    String? DESCRIPTION,
     String? SENSOR_TASKING_START_TIME,
     String? SENSOR_TASKING_STOP_TIME,
-    int? PRIORITY,
-    String? STATUS,
-    String? STATUS_DATE,
-    String? DESCRIPTION,
     String? LAST_OB_TIME,
     String? MISSED_OB_TIME,
-    List<String>? DELTA_VS,
-    List<String>? DELTA_TS,
     String? SV_EPOCH,
     double? X,
     double? Y,
@@ -314,23 +453,23 @@ class OOIObjectBuilder extends fb.ObjectBuilder {
     double? PERIOD,
     double? APOGEE,
     double? PERIGEE,
+    List<double>? DELTA_VS,
+    List<double>? DELTA_TS,
     List<String>? AFFECTED_OBJECTS,
-    String? ON_ORBIT,
     List<String>? MANIFOLDS,
   })
       : _ID = ID,
         _SAT_NO = SAT_NO,
         _NAME = NAME,
-        _SENSOR_TASKING_START_TIME = SENSOR_TASKING_START_TIME,
-        _SENSOR_TASKING_STOP_TIME = SENSOR_TASKING_STOP_TIME,
-        _PRIORITY = PRIORITY,
+        _ON_ORBIT = ON_ORBIT,
         _STATUS = STATUS,
         _STATUS_DATE = STATUS_DATE,
+        _PRIORITY = PRIORITY,
         _DESCRIPTION = DESCRIPTION,
+        _SENSOR_TASKING_START_TIME = SENSOR_TASKING_START_TIME,
+        _SENSOR_TASKING_STOP_TIME = SENSOR_TASKING_STOP_TIME,
         _LAST_OB_TIME = LAST_OB_TIME,
         _MISSED_OB_TIME = MISSED_OB_TIME,
-        _DELTA_VS = DELTA_VS,
-        _DELTA_TS = DELTA_TS,
         _SV_EPOCH = SV_EPOCH,
         _X = X,
         _Y = Y,
@@ -353,8 +492,9 @@ class OOIObjectBuilder extends fb.ObjectBuilder {
         _PERIOD = PERIOD,
         _APOGEE = APOGEE,
         _PERIGEE = PERIGEE,
+        _DELTA_VS = DELTA_VS,
+        _DELTA_TS = DELTA_TS,
         _AFFECTED_OBJECTS = AFFECTED_OBJECTS,
-        _ON_ORBIT = ON_ORBIT,
         _MANIFOLDS = MANIFOLDS;
 
   /// Finish building, and store into the [fbBuilder].
@@ -364,72 +504,70 @@ class OOIObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ID!);
     final int? NAMEOffset = _NAME == null ? null
         : fbBuilder.writeString(_NAME!);
-    final int? SENSOR_TASKING_START_TIMEOffset = _SENSOR_TASKING_START_TIME == null ? null
-        : fbBuilder.writeString(_SENSOR_TASKING_START_TIME!);
-    final int? SENSOR_TASKING_STOP_TIMEOffset = _SENSOR_TASKING_STOP_TIME == null ? null
-        : fbBuilder.writeString(_SENSOR_TASKING_STOP_TIME!);
-    final int? STATUSOffset = _STATUS == null ? null
-        : fbBuilder.writeString(_STATUS!);
+    final int? ON_ORBITOffset = _ON_ORBIT == null ? null
+        : fbBuilder.writeString(_ON_ORBIT!);
     final int? STATUS_DATEOffset = _STATUS_DATE == null ? null
         : fbBuilder.writeString(_STATUS_DATE!);
     final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
         : fbBuilder.writeString(_DESCRIPTION!);
+    final int? SENSOR_TASKING_START_TIMEOffset = _SENSOR_TASKING_START_TIME == null ? null
+        : fbBuilder.writeString(_SENSOR_TASKING_START_TIME!);
+    final int? SENSOR_TASKING_STOP_TIMEOffset = _SENSOR_TASKING_STOP_TIME == null ? null
+        : fbBuilder.writeString(_SENSOR_TASKING_STOP_TIME!);
     final int? LAST_OB_TIMEOffset = _LAST_OB_TIME == null ? null
         : fbBuilder.writeString(_LAST_OB_TIME!);
     final int? MISSED_OB_TIMEOffset = _MISSED_OB_TIME == null ? null
         : fbBuilder.writeString(_MISSED_OB_TIME!);
-    final int? DELTA_VSOffset = _DELTA_VS == null ? null
-        : fbBuilder.writeList(_DELTA_VS!.map(fbBuilder.writeString).toList());
-    final int? DELTA_TSOffset = _DELTA_TS == null ? null
-        : fbBuilder.writeList(_DELTA_TS!.map(fbBuilder.writeString).toList());
     final int? SV_EPOCHOffset = _SV_EPOCH == null ? null
         : fbBuilder.writeString(_SV_EPOCH!);
     final int? ELSET_EPOCHOffset = _ELSET_EPOCH == null ? null
         : fbBuilder.writeString(_ELSET_EPOCH!);
+    final int? DELTA_VSOffset = _DELTA_VS == null ? null
+        : fbBuilder.writeListFloat64(_DELTA_VS!);
+    final int? DELTA_TSOffset = _DELTA_TS == null ? null
+        : fbBuilder.writeListFloat64(_DELTA_TS!);
     final int? AFFECTED_OBJECTSOffset = _AFFECTED_OBJECTS == null ? null
         : fbBuilder.writeList(_AFFECTED_OBJECTS!.map(fbBuilder.writeString).toList());
-    final int? ON_ORBITOffset = _ON_ORBIT == null ? null
-        : fbBuilder.writeString(_ON_ORBIT!);
     final int? MANIFOLDSOffset = _MANIFOLDS == null ? null
         : fbBuilder.writeList(_MANIFOLDS!.map(fbBuilder.writeString).toList());
     fbBuilder.startTable(38);
     fbBuilder.addOffset(0, IDOffset);
-    fbBuilder.addInt32(1, _SAT_NO);
+    fbBuilder.addUint32(1, _SAT_NO);
     fbBuilder.addOffset(2, NAMEOffset);
-    fbBuilder.addOffset(3, SENSOR_TASKING_START_TIMEOffset);
-    fbBuilder.addOffset(4, SENSOR_TASKING_STOP_TIMEOffset);
-    fbBuilder.addInt32(5, _PRIORITY);
-    fbBuilder.addOffset(6, STATUSOffset);
-    fbBuilder.addOffset(7, STATUS_DATEOffset);
-    fbBuilder.addOffset(8, DESCRIPTIONOffset);
-    fbBuilder.addOffset(9, LAST_OB_TIMEOffset);
-    fbBuilder.addOffset(10, MISSED_OB_TIMEOffset);
-    fbBuilder.addOffset(11, DELTA_VSOffset);
-    fbBuilder.addOffset(12, DELTA_TSOffset);
-    fbBuilder.addOffset(13, SV_EPOCHOffset);
-    fbBuilder.addFloat64(14, _X);
-    fbBuilder.addFloat64(15, _Y);
-    fbBuilder.addFloat64(16, _Z);
-    fbBuilder.addFloat64(17, _XVEL);
-    fbBuilder.addFloat64(18, _YVEL);
-    fbBuilder.addFloat64(19, _ZVEL);
-    fbBuilder.addOffset(20, ELSET_EPOCHOffset);
-    fbBuilder.addFloat64(21, _MEAN_MOTION);
-    fbBuilder.addFloat64(22, _ECCENTRICITY);
-    fbBuilder.addFloat64(23, _INCLINATION);
-    fbBuilder.addFloat64(24, _RAAN);
-    fbBuilder.addFloat64(25, _ARG_OF_PERIGEE);
-    fbBuilder.addFloat64(26, _MEAN_ANOMALY);
-    fbBuilder.addInt32(27, _REV_NO);
-    fbBuilder.addFloat64(28, _B_STAR);
-    fbBuilder.addFloat64(29, _MEAN_MOTION_DOT);
-    fbBuilder.addFloat64(30, _MEAN_MOTION_DDOT);
-    fbBuilder.addFloat64(31, _SEMI_MAJOR_AXIS);
-    fbBuilder.addFloat64(32, _PERIOD);
-    fbBuilder.addFloat64(33, _APOGEE);
-    fbBuilder.addFloat64(34, _PERIGEE);
-    fbBuilder.addOffset(35, AFFECTED_OBJECTSOffset);
-    fbBuilder.addOffset(36, ON_ORBITOffset);
+    fbBuilder.addOffset(3, ON_ORBITOffset);
+    fbBuilder.addInt8(4, _STATUS?.value);
+    fbBuilder.addOffset(5, STATUS_DATEOffset);
+    fbBuilder.addInt8(6, _PRIORITY?.value);
+    fbBuilder.addOffset(7, DESCRIPTIONOffset);
+    fbBuilder.addOffset(8, SENSOR_TASKING_START_TIMEOffset);
+    fbBuilder.addOffset(9, SENSOR_TASKING_STOP_TIMEOffset);
+    fbBuilder.addOffset(10, LAST_OB_TIMEOffset);
+    fbBuilder.addOffset(11, MISSED_OB_TIMEOffset);
+    fbBuilder.addOffset(12, SV_EPOCHOffset);
+    fbBuilder.addFloat64(13, _X);
+    fbBuilder.addFloat64(14, _Y);
+    fbBuilder.addFloat64(15, _Z);
+    fbBuilder.addFloat64(16, _XVEL);
+    fbBuilder.addFloat64(17, _YVEL);
+    fbBuilder.addFloat64(18, _ZVEL);
+    fbBuilder.addOffset(19, ELSET_EPOCHOffset);
+    fbBuilder.addFloat64(20, _MEAN_MOTION);
+    fbBuilder.addFloat64(21, _ECCENTRICITY);
+    fbBuilder.addFloat64(22, _INCLINATION);
+    fbBuilder.addFloat64(23, _RAAN);
+    fbBuilder.addFloat64(24, _ARG_OF_PERIGEE);
+    fbBuilder.addFloat64(25, _MEAN_ANOMALY);
+    fbBuilder.addUint32(26, _REV_NO);
+    fbBuilder.addFloat64(27, _B_STAR);
+    fbBuilder.addFloat64(28, _MEAN_MOTION_DOT);
+    fbBuilder.addFloat64(29, _MEAN_MOTION_DDOT);
+    fbBuilder.addFloat64(30, _SEMI_MAJOR_AXIS);
+    fbBuilder.addFloat64(31, _PERIOD);
+    fbBuilder.addFloat64(32, _APOGEE);
+    fbBuilder.addFloat64(33, _PERIGEE);
+    fbBuilder.addOffset(34, DELTA_VSOffset);
+    fbBuilder.addOffset(35, DELTA_TSOffset);
+    fbBuilder.addOffset(36, AFFECTED_OBJECTSOffset);
     fbBuilder.addOffset(37, MANIFOLDSOffset);
     return fbBuilder.endTable();
   }

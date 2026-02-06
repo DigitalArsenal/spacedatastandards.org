@@ -29,6 +29,7 @@ class SOI(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Unique identifier
     # SOI
     def ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +37,7 @@ class SOI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Message creation date (ISO 8601)
     # SOI
     def MSG_CREATE_DATE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -43,6 +45,7 @@ class SOI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Sensor identifier
     # SOI
     def ID_SENSOR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -50,6 +53,7 @@ class SOI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Original sensor identifier
     # SOI
     def ORIG_SENSOR_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
@@ -57,6 +61,7 @@ class SOI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Sensor observation set identifier
     # SOI
     def SENSOR_AS_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -64,13 +69,15 @@ class SOI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Satellite catalog number
     # SOI
     def SAT_NO(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
+    # International designator
     # SOI
     def ORIG_OBJECT_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
@@ -78,191 +85,242 @@ class SOI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Satellite common name
     # SOI
-    def SENLAT(self):
+    def SATELLITE_NAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
+    # True if uncorrelated target
     # SOI
-    def SENLON(self):
+    def UCT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
 
+    # Sensor geodetic latitude (degrees)
     # SOI
-    def SENALT(self):
+    def SENLAT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor geodetic longitude (degrees)
     # SOI
-    def SENX(self):
+    def SENLON(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor altitude (km)
     # SOI
-    def SENY(self):
+    def SENALT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor ECEF X position (km)
     # SOI
-    def SENZ(self):
+    def SENX(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor ECEF Y position (km)
     # SOI
-    def SENVELX(self):
+    def SENY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor ECEF Z position (km)
     # SOI
-    def SENVELY(self):
+    def SENZ(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor ECEF X velocity (km/s)
     # SOI
-    def SENVELZ(self):
+    def SENVELX(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor ECEF Y velocity (km/s)
     # SOI
-    def START_TIME(self):
+    def SENVELY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
 
+    # Sensor ECEF Z velocity (km/s)
     # SOI
-    def END_TIME(self):
+    def SENVELZ(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
 
+    # Sensor reference frame
     # SOI
-    def NUM_OBS(self):
+    def SEN_REFERENCE_FRAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Observation type
+    # SOI
+    def OBS_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
         return 0
 
+    # Collection mode
     # SOI
-    def TYPE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+    def COLLECTION_MODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Observation start time (ISO 8601)
+    # SOI
+    def START_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Observation end time (ISO 8601)
     # SOI
-    def POLAR_ANGLE_START(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # SOI
-    def POLAR_ANGLE_END(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # SOI
-    def REFERENCE_FRAME(self):
+    def END_TIME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Number of observations in set
     # SOI
-    def SEN_REFERENCE_FRAME(self):
+    def NUM_OBS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Observation reference frame
+    # SOI
+    def REFERENCE_FRAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Polar angle at start (degrees)
     # SOI
-    def LOS_DECLINATION_START(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # SOI
-    def LOS_DECLINATION_END(self):
+    def POLAR_ANGLE_START(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Polar angle at end (degrees)
     # SOI
-    def POINTING_ANGLE_AZ_START(self):
+    def POLAR_ANGLE_END(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Line-of-sight declination at start (degrees)
     # SOI
-    def POINTING_ANGLE_AZ_END(self):
+    def LOS_DECLINATION_START(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Line-of-sight declination at end (degrees)
     # SOI
-    def POINTING_ANGLE_EL_START(self):
+    def LOS_DECLINATION_END(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Pointing azimuth at start (degrees)
     # SOI
-    def POINTING_ANGLE_EL_END(self):
+    def POINTING_ANGLE_AZ_START(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Pointing azimuth at end (degrees)
     # SOI
-    def PIXEL_ARRAY_WIDTH(self):
+    def POINTING_ANGLE_AZ_END(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
 
+    # Pointing elevation at start (degrees)
     # SOI
-    def PIXEL_ARRAY_HEIGHT(self):
+    def POINTING_ANGLE_EL_START(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
 
+    # Pointing elevation at end (degrees)
     # SOI
-    def NUM_SPECTRAL_FILTERS(self):
+    def POINTING_ANGLE_EL_END(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Focal plane array width (pixels)
+    # SOI
+    def PIXEL_ARRAY_WIDTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
         return 0
 
+    # Focal plane array height (pixels)
+    # SOI
+    def PIXEL_ARRAY_HEIGHT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Number of spectral filters used
+    # SOI
+    def NUM_SPECTRAL_FILTERS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Spectral filter identifiers
     # SOI
     def SPECTRAL_FILTERS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -270,114 +328,105 @@ class SOI(object):
 
     # SOI
     def SPECTRAL_FILTERSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # SOI
     def SPECTRAL_FILTERSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
         return o == 0
 
-    # SOI
-    def COLLECTION_MODE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
+    # Detector gain setting
     # SOI
     def GAIN(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # SOI
-    def BINNING_HORIZ(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
-    # SOI
-    def BINNING_VERT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Horizontal binning factor
+    # SOI
+    def BINNING_HORIZ(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
+    # Vertical binning factor
+    # SOI
+    def BINNING_VERT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Solar visual magnitude
     # SOI
     def SOLAR_MAG(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Minimum pixel value in observation
     # SOI
     def PIXEL_MIN(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
-    # SOI
-    def PIXEL_MAX(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
-    # SOI
-    def SOFTWARE_VERSION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
 
+    # Maximum pixel value in observation
     # SOI
-    def SATELLITE_NAME(self):
+    def PIXEL_MAX(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+        return 0
 
+    # Processing software version
     # SOI
-    def STAR_CAT_NAME(self):
+    def SOFTWARE_VERSION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Star catalog used for calibration
     # SOI
-    def CORR_QUALITY(self):
+    def STAR_CAT_NAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # SOI
-    def UCT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
-        if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
-
-    # SOI
-    def VALID_CALIBRATIONS(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Correlation quality score
+    # SOI
+    def CORR_QUALITY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Calibration type
     # SOI
     def CALIBRATION_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Valid calibration identifiers
+    # SOI
+    def VALID_CALIBRATIONS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Percent saturation threshold
     # SOI
     def PERCENT_SAT_THRESHOLD(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
@@ -385,6 +434,7 @@ class SOI(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # True if change detected from baseline
     # SOI
     def CHANGE_DETECTED(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
@@ -392,6 +442,7 @@ class SOI(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # True if periodicity change detected
     # SOI
     def PERIODICITY_CHANGE_DETECTED(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
@@ -399,6 +450,7 @@ class SOI(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # True if brightness variance change detected
     # SOI
     def BRIGHTNESS_VARIANCE_CHANGE_DETECTED(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
@@ -406,6 +458,7 @@ class SOI(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # True if solar phase angle brightness change detected
     # SOI
     def SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
@@ -413,6 +466,7 @@ class SOI(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # Change confidence assessment
     # SOI
     def CHANGE_CONF(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
@@ -420,6 +474,7 @@ class SOI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Collection density confidence
     # SOI
     def COLLECTION_DENSITY_CONF(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
@@ -427,6 +482,7 @@ class SOI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Periodicity sampling confidence
     # SOI
     def PERIODICITY_SAMPLING_CONF(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
@@ -434,6 +490,7 @@ class SOI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Periodicity detection confidence
     # SOI
     def PERIODICITY_DETECTION_CONF(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
@@ -441,6 +498,7 @@ class SOI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Collection identifier
     # SOI
     def COLLECTION_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
@@ -448,6 +506,7 @@ class SOI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Calibration record references
     # SOI
     def CALIBRATIONS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
@@ -468,6 +527,7 @@ class SOI(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
         return o == 0
 
+    # Associated tags
     # SOI
     def TAGS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(122))
@@ -488,6 +548,7 @@ class SOI(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(122))
         return o == 0
 
+    # Transaction identifier
     # SOI
     def TRANSACTION_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(124))
@@ -495,6 +556,7 @@ class SOI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Optical SOI observation references
     # SOI
     def OPTICAL_SOIOBSERVATION_LIST(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(126))
@@ -515,6 +577,7 @@ class SOI(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(126))
         return o == 0
 
+    # Radar SOI observation references
     # SOI
     def RADAR_SOIOBSERVATION_LIST(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(128))
@@ -572,7 +635,7 @@ def AddSENSOR_AS_ID(builder, SENSOR_AS_ID):
     SOIAddSENSOR_AS_ID(builder, SENSOR_AS_ID)
 
 def SOIAddSAT_NO(builder, SAT_NO):
-    builder.PrependInt32Slot(5, SAT_NO, 0)
+    builder.PrependUint32Slot(5, SAT_NO, 0)
 
 def AddSAT_NO(builder, SAT_NO):
     SOIAddSAT_NO(builder, SAT_NO)
@@ -583,164 +646,182 @@ def SOIAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
 def AddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
     SOIAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
 
+def SOIAddSATELLITE_NAME(builder, SATELLITE_NAME):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(SATELLITE_NAME), 0)
+
+def AddSATELLITE_NAME(builder, SATELLITE_NAME):
+    SOIAddSATELLITE_NAME(builder, SATELLITE_NAME)
+
+def SOIAddUCT(builder, UCT):
+    builder.PrependBoolSlot(8, UCT, 0)
+
+def AddUCT(builder, UCT):
+    SOIAddUCT(builder, UCT)
+
 def SOIAddSENLAT(builder, SENLAT):
-    builder.PrependFloat64Slot(7, SENLAT, 0.0)
+    builder.PrependFloat64Slot(9, SENLAT, 0.0)
 
 def AddSENLAT(builder, SENLAT):
     SOIAddSENLAT(builder, SENLAT)
 
 def SOIAddSENLON(builder, SENLON):
-    builder.PrependFloat64Slot(8, SENLON, 0.0)
+    builder.PrependFloat64Slot(10, SENLON, 0.0)
 
 def AddSENLON(builder, SENLON):
     SOIAddSENLON(builder, SENLON)
 
 def SOIAddSENALT(builder, SENALT):
-    builder.PrependFloat64Slot(9, SENALT, 0.0)
+    builder.PrependFloat64Slot(11, SENALT, 0.0)
 
 def AddSENALT(builder, SENALT):
     SOIAddSENALT(builder, SENALT)
 
 def SOIAddSENX(builder, SENX):
-    builder.PrependFloat64Slot(10, SENX, 0.0)
+    builder.PrependFloat64Slot(12, SENX, 0.0)
 
 def AddSENX(builder, SENX):
     SOIAddSENX(builder, SENX)
 
 def SOIAddSENY(builder, SENY):
-    builder.PrependFloat64Slot(11, SENY, 0.0)
+    builder.PrependFloat64Slot(13, SENY, 0.0)
 
 def AddSENY(builder, SENY):
     SOIAddSENY(builder, SENY)
 
 def SOIAddSENZ(builder, SENZ):
-    builder.PrependFloat64Slot(12, SENZ, 0.0)
+    builder.PrependFloat64Slot(14, SENZ, 0.0)
 
 def AddSENZ(builder, SENZ):
     SOIAddSENZ(builder, SENZ)
 
 def SOIAddSENVELX(builder, SENVELX):
-    builder.PrependFloat64Slot(13, SENVELX, 0.0)
+    builder.PrependFloat64Slot(15, SENVELX, 0.0)
 
 def AddSENVELX(builder, SENVELX):
     SOIAddSENVELX(builder, SENVELX)
 
 def SOIAddSENVELY(builder, SENVELY):
-    builder.PrependFloat64Slot(14, SENVELY, 0.0)
+    builder.PrependFloat64Slot(16, SENVELY, 0.0)
 
 def AddSENVELY(builder, SENVELY):
     SOIAddSENVELY(builder, SENVELY)
 
 def SOIAddSENVELZ(builder, SENVELZ):
-    builder.PrependFloat64Slot(15, SENVELZ, 0.0)
+    builder.PrependFloat64Slot(17, SENVELZ, 0.0)
 
 def AddSENVELZ(builder, SENVELZ):
     SOIAddSENVELZ(builder, SENVELZ)
 
+def SOIAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(SEN_REFERENCE_FRAME), 0)
+
+def AddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME):
+    SOIAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME)
+
+def SOIAddOBS_TYPE(builder, OBS_TYPE):
+    builder.PrependInt8Slot(19, OBS_TYPE, 0)
+
+def AddOBS_TYPE(builder, OBS_TYPE):
+    SOIAddOBS_TYPE(builder, OBS_TYPE)
+
+def SOIAddCOLLECTION_MODE(builder, COLLECTION_MODE):
+    builder.PrependInt8Slot(20, COLLECTION_MODE, 0)
+
+def AddCOLLECTION_MODE(builder, COLLECTION_MODE):
+    SOIAddCOLLECTION_MODE(builder, COLLECTION_MODE)
+
 def SOIAddSTART_TIME(builder, START_TIME):
-    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(START_TIME), 0)
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(START_TIME), 0)
 
 def AddSTART_TIME(builder, START_TIME):
     SOIAddSTART_TIME(builder, START_TIME)
 
 def SOIAddEND_TIME(builder, END_TIME):
-    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(END_TIME), 0)
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(END_TIME), 0)
 
 def AddEND_TIME(builder, END_TIME):
     SOIAddEND_TIME(builder, END_TIME)
 
 def SOIAddNUM_OBS(builder, NUM_OBS):
-    builder.PrependInt32Slot(18, NUM_OBS, 0)
+    builder.PrependUint32Slot(23, NUM_OBS, 0)
 
 def AddNUM_OBS(builder, NUM_OBS):
     SOIAddNUM_OBS(builder, NUM_OBS)
 
-def SOIAddTYPE(builder, TYPE):
-    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(TYPE), 0)
+def SOIAddREFERENCE_FRAME(builder, REFERENCE_FRAME):
+    builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(REFERENCE_FRAME), 0)
 
-def AddTYPE(builder, TYPE):
-    SOIAddTYPE(builder, TYPE)
+def AddREFERENCE_FRAME(builder, REFERENCE_FRAME):
+    SOIAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
 
 def SOIAddPOLAR_ANGLE_START(builder, POLAR_ANGLE_START):
-    builder.PrependFloat64Slot(20, POLAR_ANGLE_START, 0.0)
+    builder.PrependFloat64Slot(25, POLAR_ANGLE_START, 0.0)
 
 def AddPOLAR_ANGLE_START(builder, POLAR_ANGLE_START):
     SOIAddPOLAR_ANGLE_START(builder, POLAR_ANGLE_START)
 
 def SOIAddPOLAR_ANGLE_END(builder, POLAR_ANGLE_END):
-    builder.PrependFloat64Slot(21, POLAR_ANGLE_END, 0.0)
+    builder.PrependFloat64Slot(26, POLAR_ANGLE_END, 0.0)
 
 def AddPOLAR_ANGLE_END(builder, POLAR_ANGLE_END):
     SOIAddPOLAR_ANGLE_END(builder, POLAR_ANGLE_END)
 
-def SOIAddREFERENCE_FRAME(builder, REFERENCE_FRAME):
-    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(REFERENCE_FRAME), 0)
-
-def AddREFERENCE_FRAME(builder, REFERENCE_FRAME):
-    SOIAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
-
-def SOIAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME):
-    builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(SEN_REFERENCE_FRAME), 0)
-
-def AddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME):
-    SOIAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME)
-
 def SOIAddLOS_DECLINATION_START(builder, LOS_DECLINATION_START):
-    builder.PrependFloat64Slot(24, LOS_DECLINATION_START, 0.0)
+    builder.PrependFloat64Slot(27, LOS_DECLINATION_START, 0.0)
 
 def AddLOS_DECLINATION_START(builder, LOS_DECLINATION_START):
     SOIAddLOS_DECLINATION_START(builder, LOS_DECLINATION_START)
 
 def SOIAddLOS_DECLINATION_END(builder, LOS_DECLINATION_END):
-    builder.PrependFloat64Slot(25, LOS_DECLINATION_END, 0.0)
+    builder.PrependFloat64Slot(28, LOS_DECLINATION_END, 0.0)
 
 def AddLOS_DECLINATION_END(builder, LOS_DECLINATION_END):
     SOIAddLOS_DECLINATION_END(builder, LOS_DECLINATION_END)
 
 def SOIAddPOINTING_ANGLE_AZ_START(builder, POINTING_ANGLE_AZ_START):
-    builder.PrependFloat64Slot(26, POINTING_ANGLE_AZ_START, 0.0)
+    builder.PrependFloat64Slot(29, POINTING_ANGLE_AZ_START, 0.0)
 
 def AddPOINTING_ANGLE_AZ_START(builder, POINTING_ANGLE_AZ_START):
     SOIAddPOINTING_ANGLE_AZ_START(builder, POINTING_ANGLE_AZ_START)
 
 def SOIAddPOINTING_ANGLE_AZ_END(builder, POINTING_ANGLE_AZ_END):
-    builder.PrependFloat64Slot(27, POINTING_ANGLE_AZ_END, 0.0)
+    builder.PrependFloat64Slot(30, POINTING_ANGLE_AZ_END, 0.0)
 
 def AddPOINTING_ANGLE_AZ_END(builder, POINTING_ANGLE_AZ_END):
     SOIAddPOINTING_ANGLE_AZ_END(builder, POINTING_ANGLE_AZ_END)
 
 def SOIAddPOINTING_ANGLE_EL_START(builder, POINTING_ANGLE_EL_START):
-    builder.PrependFloat64Slot(28, POINTING_ANGLE_EL_START, 0.0)
+    builder.PrependFloat64Slot(31, POINTING_ANGLE_EL_START, 0.0)
 
 def AddPOINTING_ANGLE_EL_START(builder, POINTING_ANGLE_EL_START):
     SOIAddPOINTING_ANGLE_EL_START(builder, POINTING_ANGLE_EL_START)
 
 def SOIAddPOINTING_ANGLE_EL_END(builder, POINTING_ANGLE_EL_END):
-    builder.PrependFloat64Slot(29, POINTING_ANGLE_EL_END, 0.0)
+    builder.PrependFloat64Slot(32, POINTING_ANGLE_EL_END, 0.0)
 
 def AddPOINTING_ANGLE_EL_END(builder, POINTING_ANGLE_EL_END):
     SOIAddPOINTING_ANGLE_EL_END(builder, POINTING_ANGLE_EL_END)
 
 def SOIAddPIXEL_ARRAY_WIDTH(builder, PIXEL_ARRAY_WIDTH):
-    builder.PrependInt32Slot(30, PIXEL_ARRAY_WIDTH, 0)
+    builder.PrependUint16Slot(33, PIXEL_ARRAY_WIDTH, 0)
 
 def AddPIXEL_ARRAY_WIDTH(builder, PIXEL_ARRAY_WIDTH):
     SOIAddPIXEL_ARRAY_WIDTH(builder, PIXEL_ARRAY_WIDTH)
 
 def SOIAddPIXEL_ARRAY_HEIGHT(builder, PIXEL_ARRAY_HEIGHT):
-    builder.PrependInt32Slot(31, PIXEL_ARRAY_HEIGHT, 0)
+    builder.PrependUint16Slot(34, PIXEL_ARRAY_HEIGHT, 0)
 
 def AddPIXEL_ARRAY_HEIGHT(builder, PIXEL_ARRAY_HEIGHT):
     SOIAddPIXEL_ARRAY_HEIGHT(builder, PIXEL_ARRAY_HEIGHT)
 
 def SOIAddNUM_SPECTRAL_FILTERS(builder, NUM_SPECTRAL_FILTERS):
-    builder.PrependInt32Slot(32, NUM_SPECTRAL_FILTERS, 0)
+    builder.PrependUint8Slot(35, NUM_SPECTRAL_FILTERS, 0)
 
 def AddNUM_SPECTRAL_FILTERS(builder, NUM_SPECTRAL_FILTERS):
     SOIAddNUM_SPECTRAL_FILTERS(builder, NUM_SPECTRAL_FILTERS)
 
 def SOIAddSPECTRAL_FILTERS(builder, SPECTRAL_FILTERS):
-    builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(SPECTRAL_FILTERS), 0)
+    builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(SPECTRAL_FILTERS), 0)
 
 def AddSPECTRAL_FILTERS(builder, SPECTRAL_FILTERS):
     SOIAddSPECTRAL_FILTERS(builder, SPECTRAL_FILTERS)
@@ -751,89 +832,71 @@ def SOIStartSPECTRAL_FILTERSVector(builder, numElems):
 def StartSPECTRAL_FILTERSVector(builder, numElems):
     return SOIStartSPECTRAL_FILTERSVector(builder, numElems)
 
-def SOIAddCOLLECTION_MODE(builder, COLLECTION_MODE):
-    builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(COLLECTION_MODE), 0)
-
-def AddCOLLECTION_MODE(builder, COLLECTION_MODE):
-    SOIAddCOLLECTION_MODE(builder, COLLECTION_MODE)
-
 def SOIAddGAIN(builder, GAIN):
-    builder.PrependFloat64Slot(35, GAIN, 0.0)
+    builder.PrependFloat64Slot(37, GAIN, 0.0)
 
 def AddGAIN(builder, GAIN):
     SOIAddGAIN(builder, GAIN)
 
 def SOIAddBINNING_HORIZ(builder, BINNING_HORIZ):
-    builder.PrependInt32Slot(36, BINNING_HORIZ, 0)
+    builder.PrependUint8Slot(38, BINNING_HORIZ, 0)
 
 def AddBINNING_HORIZ(builder, BINNING_HORIZ):
     SOIAddBINNING_HORIZ(builder, BINNING_HORIZ)
 
 def SOIAddBINNING_VERT(builder, BINNING_VERT):
-    builder.PrependInt32Slot(37, BINNING_VERT, 0)
+    builder.PrependUint8Slot(39, BINNING_VERT, 0)
 
 def AddBINNING_VERT(builder, BINNING_VERT):
     SOIAddBINNING_VERT(builder, BINNING_VERT)
 
 def SOIAddSOLAR_MAG(builder, SOLAR_MAG):
-    builder.PrependFloat64Slot(38, SOLAR_MAG, 0.0)
+    builder.PrependFloat64Slot(40, SOLAR_MAG, 0.0)
 
 def AddSOLAR_MAG(builder, SOLAR_MAG):
     SOIAddSOLAR_MAG(builder, SOLAR_MAG)
 
 def SOIAddPIXEL_MIN(builder, PIXEL_MIN):
-    builder.PrependInt32Slot(39, PIXEL_MIN, 0)
+    builder.PrependInt32Slot(41, PIXEL_MIN, 0)
 
 def AddPIXEL_MIN(builder, PIXEL_MIN):
     SOIAddPIXEL_MIN(builder, PIXEL_MIN)
 
 def SOIAddPIXEL_MAX(builder, PIXEL_MAX):
-    builder.PrependInt32Slot(40, PIXEL_MAX, 0)
+    builder.PrependInt32Slot(42, PIXEL_MAX, 0)
 
 def AddPIXEL_MAX(builder, PIXEL_MAX):
     SOIAddPIXEL_MAX(builder, PIXEL_MAX)
 
 def SOIAddSOFTWARE_VERSION(builder, SOFTWARE_VERSION):
-    builder.PrependUOffsetTRelativeSlot(41, flatbuffers.number_types.UOffsetTFlags.py_type(SOFTWARE_VERSION), 0)
+    builder.PrependUOffsetTRelativeSlot(43, flatbuffers.number_types.UOffsetTFlags.py_type(SOFTWARE_VERSION), 0)
 
 def AddSOFTWARE_VERSION(builder, SOFTWARE_VERSION):
     SOIAddSOFTWARE_VERSION(builder, SOFTWARE_VERSION)
 
-def SOIAddSATELLITE_NAME(builder, SATELLITE_NAME):
-    builder.PrependUOffsetTRelativeSlot(42, flatbuffers.number_types.UOffsetTFlags.py_type(SATELLITE_NAME), 0)
-
-def AddSATELLITE_NAME(builder, SATELLITE_NAME):
-    SOIAddSATELLITE_NAME(builder, SATELLITE_NAME)
-
 def SOIAddSTAR_CAT_NAME(builder, STAR_CAT_NAME):
-    builder.PrependUOffsetTRelativeSlot(43, flatbuffers.number_types.UOffsetTFlags.py_type(STAR_CAT_NAME), 0)
+    builder.PrependUOffsetTRelativeSlot(44, flatbuffers.number_types.UOffsetTFlags.py_type(STAR_CAT_NAME), 0)
 
 def AddSTAR_CAT_NAME(builder, STAR_CAT_NAME):
     SOIAddSTAR_CAT_NAME(builder, STAR_CAT_NAME)
 
 def SOIAddCORR_QUALITY(builder, CORR_QUALITY):
-    builder.PrependFloat64Slot(44, CORR_QUALITY, 0.0)
+    builder.PrependFloat64Slot(45, CORR_QUALITY, 0.0)
 
 def AddCORR_QUALITY(builder, CORR_QUALITY):
     SOIAddCORR_QUALITY(builder, CORR_QUALITY)
 
-def SOIAddUCT(builder, UCT):
-    builder.PrependBoolSlot(45, UCT, 0)
-
-def AddUCT(builder, UCT):
-    SOIAddUCT(builder, UCT)
-
-def SOIAddVALID_CALIBRATIONS(builder, VALID_CALIBRATIONS):
-    builder.PrependUOffsetTRelativeSlot(46, flatbuffers.number_types.UOffsetTFlags.py_type(VALID_CALIBRATIONS), 0)
-
-def AddVALID_CALIBRATIONS(builder, VALID_CALIBRATIONS):
-    SOIAddVALID_CALIBRATIONS(builder, VALID_CALIBRATIONS)
-
 def SOIAddCALIBRATION_TYPE(builder, CALIBRATION_TYPE):
-    builder.PrependUOffsetTRelativeSlot(47, flatbuffers.number_types.UOffsetTFlags.py_type(CALIBRATION_TYPE), 0)
+    builder.PrependInt8Slot(46, CALIBRATION_TYPE, 0)
 
 def AddCALIBRATION_TYPE(builder, CALIBRATION_TYPE):
     SOIAddCALIBRATION_TYPE(builder, CALIBRATION_TYPE)
+
+def SOIAddVALID_CALIBRATIONS(builder, VALID_CALIBRATIONS):
+    builder.PrependUOffsetTRelativeSlot(47, flatbuffers.number_types.UOffsetTFlags.py_type(VALID_CALIBRATIONS), 0)
+
+def AddVALID_CALIBRATIONS(builder, VALID_CALIBRATIONS):
+    SOIAddVALID_CALIBRATIONS(builder, VALID_CALIBRATIONS)
 
 def SOIAddPERCENT_SAT_THRESHOLD(builder, PERCENT_SAT_THRESHOLD):
     builder.PrependFloat64Slot(48, PERCENT_SAT_THRESHOLD, 0.0)
@@ -971,6 +1034,8 @@ class SOIT(object):
         self.SENSOR_AS_ID = None  # type: str
         self.SAT_NO = 0  # type: int
         self.ORIG_OBJECT_ID = None  # type: str
+        self.SATELLITE_NAME = None  # type: str
+        self.UCT = False  # type: bool
         self.SENLAT = 0.0  # type: float
         self.SENLON = 0.0  # type: float
         self.SENALT = 0.0  # type: float
@@ -980,14 +1045,15 @@ class SOIT(object):
         self.SENVELX = 0.0  # type: float
         self.SENVELY = 0.0  # type: float
         self.SENVELZ = 0.0  # type: float
+        self.SEN_REFERENCE_FRAME = None  # type: str
+        self.OBS_TYPE = 0  # type: int
+        self.COLLECTION_MODE = 0  # type: int
         self.START_TIME = None  # type: str
         self.END_TIME = None  # type: str
         self.NUM_OBS = 0  # type: int
-        self.TYPE = None  # type: str
+        self.REFERENCE_FRAME = None  # type: str
         self.POLAR_ANGLE_START = 0.0  # type: float
         self.POLAR_ANGLE_END = 0.0  # type: float
-        self.REFERENCE_FRAME = None  # type: str
-        self.SEN_REFERENCE_FRAME = None  # type: str
         self.LOS_DECLINATION_START = 0.0  # type: float
         self.LOS_DECLINATION_END = 0.0  # type: float
         self.POINTING_ANGLE_AZ_START = 0.0  # type: float
@@ -998,7 +1064,6 @@ class SOIT(object):
         self.PIXEL_ARRAY_HEIGHT = 0  # type: int
         self.NUM_SPECTRAL_FILTERS = 0  # type: int
         self.SPECTRAL_FILTERS = None  # type: List[str]
-        self.COLLECTION_MODE = None  # type: str
         self.GAIN = 0.0  # type: float
         self.BINNING_HORIZ = 0  # type: int
         self.BINNING_VERT = 0  # type: int
@@ -1006,12 +1071,10 @@ class SOIT(object):
         self.PIXEL_MIN = 0  # type: int
         self.PIXEL_MAX = 0  # type: int
         self.SOFTWARE_VERSION = None  # type: str
-        self.SATELLITE_NAME = None  # type: str
         self.STAR_CAT_NAME = None  # type: str
         self.CORR_QUALITY = 0.0  # type: float
-        self.UCT = False  # type: bool
+        self.CALIBRATION_TYPE = 0  # type: int
         self.VALID_CALIBRATIONS = None  # type: str
-        self.CALIBRATION_TYPE = None  # type: str
         self.PERCENT_SAT_THRESHOLD = 0.0  # type: float
         self.CHANGE_DETECTED = False  # type: bool
         self.PERIODICITY_CHANGE_DETECTED = False  # type: bool
@@ -1056,6 +1119,8 @@ class SOIT(object):
         self.SENSOR_AS_ID = SOI.SENSOR_AS_ID()
         self.SAT_NO = SOI.SAT_NO()
         self.ORIG_OBJECT_ID = SOI.ORIG_OBJECT_ID()
+        self.SATELLITE_NAME = SOI.SATELLITE_NAME()
+        self.UCT = SOI.UCT()
         self.SENLAT = SOI.SENLAT()
         self.SENLON = SOI.SENLON()
         self.SENALT = SOI.SENALT()
@@ -1065,14 +1130,15 @@ class SOIT(object):
         self.SENVELX = SOI.SENVELX()
         self.SENVELY = SOI.SENVELY()
         self.SENVELZ = SOI.SENVELZ()
+        self.SEN_REFERENCE_FRAME = SOI.SEN_REFERENCE_FRAME()
+        self.OBS_TYPE = SOI.OBS_TYPE()
+        self.COLLECTION_MODE = SOI.COLLECTION_MODE()
         self.START_TIME = SOI.START_TIME()
         self.END_TIME = SOI.END_TIME()
         self.NUM_OBS = SOI.NUM_OBS()
-        self.TYPE = SOI.TYPE()
+        self.REFERENCE_FRAME = SOI.REFERENCE_FRAME()
         self.POLAR_ANGLE_START = SOI.POLAR_ANGLE_START()
         self.POLAR_ANGLE_END = SOI.POLAR_ANGLE_END()
-        self.REFERENCE_FRAME = SOI.REFERENCE_FRAME()
-        self.SEN_REFERENCE_FRAME = SOI.SEN_REFERENCE_FRAME()
         self.LOS_DECLINATION_START = SOI.LOS_DECLINATION_START()
         self.LOS_DECLINATION_END = SOI.LOS_DECLINATION_END()
         self.POINTING_ANGLE_AZ_START = SOI.POINTING_ANGLE_AZ_START()
@@ -1086,7 +1152,6 @@ class SOIT(object):
             self.SPECTRAL_FILTERS = []
             for i in range(SOI.SPECTRAL_FILTERSLength()):
                 self.SPECTRAL_FILTERS.append(SOI.SPECTRAL_FILTERS(i))
-        self.COLLECTION_MODE = SOI.COLLECTION_MODE()
         self.GAIN = SOI.GAIN()
         self.BINNING_HORIZ = SOI.BINNING_HORIZ()
         self.BINNING_VERT = SOI.BINNING_VERT()
@@ -1094,12 +1159,10 @@ class SOIT(object):
         self.PIXEL_MIN = SOI.PIXEL_MIN()
         self.PIXEL_MAX = SOI.PIXEL_MAX()
         self.SOFTWARE_VERSION = SOI.SOFTWARE_VERSION()
-        self.SATELLITE_NAME = SOI.SATELLITE_NAME()
         self.STAR_CAT_NAME = SOI.STAR_CAT_NAME()
         self.CORR_QUALITY = SOI.CORR_QUALITY()
-        self.UCT = SOI.UCT()
-        self.VALID_CALIBRATIONS = SOI.VALID_CALIBRATIONS()
         self.CALIBRATION_TYPE = SOI.CALIBRATION_TYPE()
+        self.VALID_CALIBRATIONS = SOI.VALID_CALIBRATIONS()
         self.PERCENT_SAT_THRESHOLD = SOI.PERCENT_SAT_THRESHOLD()
         self.CHANGE_DETECTED = SOI.CHANGE_DETECTED()
         self.PERIODICITY_CHANGE_DETECTED = SOI.PERIODICITY_CHANGE_DETECTED()
@@ -1142,16 +1205,16 @@ class SOIT(object):
             SENSOR_AS_ID = builder.CreateString(self.SENSOR_AS_ID)
         if self.ORIG_OBJECT_ID is not None:
             ORIG_OBJECT_ID = builder.CreateString(self.ORIG_OBJECT_ID)
+        if self.SATELLITE_NAME is not None:
+            SATELLITE_NAME = builder.CreateString(self.SATELLITE_NAME)
+        if self.SEN_REFERENCE_FRAME is not None:
+            SEN_REFERENCE_FRAME = builder.CreateString(self.SEN_REFERENCE_FRAME)
         if self.START_TIME is not None:
             START_TIME = builder.CreateString(self.START_TIME)
         if self.END_TIME is not None:
             END_TIME = builder.CreateString(self.END_TIME)
-        if self.TYPE is not None:
-            TYPE = builder.CreateString(self.TYPE)
         if self.REFERENCE_FRAME is not None:
             REFERENCE_FRAME = builder.CreateString(self.REFERENCE_FRAME)
-        if self.SEN_REFERENCE_FRAME is not None:
-            SEN_REFERENCE_FRAME = builder.CreateString(self.SEN_REFERENCE_FRAME)
         if self.SPECTRAL_FILTERS is not None:
             SPECTRAL_FILTERSlist = []
             for i in range(len(self.SPECTRAL_FILTERS)):
@@ -1160,18 +1223,12 @@ class SOIT(object):
             for i in reversed(range(len(self.SPECTRAL_FILTERS))):
                 builder.PrependUOffsetTRelative(SPECTRAL_FILTERSlist[i])
             SPECTRAL_FILTERS = builder.EndVector()
-        if self.COLLECTION_MODE is not None:
-            COLLECTION_MODE = builder.CreateString(self.COLLECTION_MODE)
         if self.SOFTWARE_VERSION is not None:
             SOFTWARE_VERSION = builder.CreateString(self.SOFTWARE_VERSION)
-        if self.SATELLITE_NAME is not None:
-            SATELLITE_NAME = builder.CreateString(self.SATELLITE_NAME)
         if self.STAR_CAT_NAME is not None:
             STAR_CAT_NAME = builder.CreateString(self.STAR_CAT_NAME)
         if self.VALID_CALIBRATIONS is not None:
             VALID_CALIBRATIONS = builder.CreateString(self.VALID_CALIBRATIONS)
-        if self.CALIBRATION_TYPE is not None:
-            CALIBRATION_TYPE = builder.CreateString(self.CALIBRATION_TYPE)
         if self.CHANGE_CONF is not None:
             CHANGE_CONF = builder.CreateString(self.CHANGE_CONF)
         if self.COLLECTION_DENSITY_CONF is not None:
@@ -1230,6 +1287,9 @@ class SOIT(object):
         SOIAddSAT_NO(builder, self.SAT_NO)
         if self.ORIG_OBJECT_ID is not None:
             SOIAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+        if self.SATELLITE_NAME is not None:
+            SOIAddSATELLITE_NAME(builder, SATELLITE_NAME)
+        SOIAddUCT(builder, self.UCT)
         SOIAddSENLAT(builder, self.SENLAT)
         SOIAddSENLON(builder, self.SENLON)
         SOIAddSENALT(builder, self.SENALT)
@@ -1239,19 +1299,19 @@ class SOIT(object):
         SOIAddSENVELX(builder, self.SENVELX)
         SOIAddSENVELY(builder, self.SENVELY)
         SOIAddSENVELZ(builder, self.SENVELZ)
+        if self.SEN_REFERENCE_FRAME is not None:
+            SOIAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME)
+        SOIAddOBS_TYPE(builder, self.OBS_TYPE)
+        SOIAddCOLLECTION_MODE(builder, self.COLLECTION_MODE)
         if self.START_TIME is not None:
             SOIAddSTART_TIME(builder, START_TIME)
         if self.END_TIME is not None:
             SOIAddEND_TIME(builder, END_TIME)
         SOIAddNUM_OBS(builder, self.NUM_OBS)
-        if self.TYPE is not None:
-            SOIAddTYPE(builder, TYPE)
-        SOIAddPOLAR_ANGLE_START(builder, self.POLAR_ANGLE_START)
-        SOIAddPOLAR_ANGLE_END(builder, self.POLAR_ANGLE_END)
         if self.REFERENCE_FRAME is not None:
             SOIAddREFERENCE_FRAME(builder, REFERENCE_FRAME)
-        if self.SEN_REFERENCE_FRAME is not None:
-            SOIAddSEN_REFERENCE_FRAME(builder, SEN_REFERENCE_FRAME)
+        SOIAddPOLAR_ANGLE_START(builder, self.POLAR_ANGLE_START)
+        SOIAddPOLAR_ANGLE_END(builder, self.POLAR_ANGLE_END)
         SOIAddLOS_DECLINATION_START(builder, self.LOS_DECLINATION_START)
         SOIAddLOS_DECLINATION_END(builder, self.LOS_DECLINATION_END)
         SOIAddPOINTING_ANGLE_AZ_START(builder, self.POINTING_ANGLE_AZ_START)
@@ -1263,8 +1323,6 @@ class SOIT(object):
         SOIAddNUM_SPECTRAL_FILTERS(builder, self.NUM_SPECTRAL_FILTERS)
         if self.SPECTRAL_FILTERS is not None:
             SOIAddSPECTRAL_FILTERS(builder, SPECTRAL_FILTERS)
-        if self.COLLECTION_MODE is not None:
-            SOIAddCOLLECTION_MODE(builder, COLLECTION_MODE)
         SOIAddGAIN(builder, self.GAIN)
         SOIAddBINNING_HORIZ(builder, self.BINNING_HORIZ)
         SOIAddBINNING_VERT(builder, self.BINNING_VERT)
@@ -1273,16 +1331,12 @@ class SOIT(object):
         SOIAddPIXEL_MAX(builder, self.PIXEL_MAX)
         if self.SOFTWARE_VERSION is not None:
             SOIAddSOFTWARE_VERSION(builder, SOFTWARE_VERSION)
-        if self.SATELLITE_NAME is not None:
-            SOIAddSATELLITE_NAME(builder, SATELLITE_NAME)
         if self.STAR_CAT_NAME is not None:
             SOIAddSTAR_CAT_NAME(builder, STAR_CAT_NAME)
         SOIAddCORR_QUALITY(builder, self.CORR_QUALITY)
-        SOIAddUCT(builder, self.UCT)
+        SOIAddCALIBRATION_TYPE(builder, self.CALIBRATION_TYPE)
         if self.VALID_CALIBRATIONS is not None:
             SOIAddVALID_CALIBRATIONS(builder, VALID_CALIBRATIONS)
-        if self.CALIBRATION_TYPE is not None:
-            SOIAddCALIBRATION_TYPE(builder, CALIBRATION_TYPE)
         SOIAddPERCENT_SAT_THRESHOLD(builder, self.PERCENT_SAT_THRESHOLD)
         SOIAddCHANGE_DETECTED(builder, self.CHANGE_DETECTED)
         SOIAddPERIODICITY_CHANGE_DETECTED(builder, self.PERIODICITY_CHANGE_DETECTED)

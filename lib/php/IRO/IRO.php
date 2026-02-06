@@ -41,33 +41,296 @@ class IRO extends Table
         return $this;
     }
 
+    /// Unique identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Reference to source entity
     public function getID_ENTITY()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Sensor or observation name
     public function getNAME()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Description of observation
     public function getDESCRIPTION()
     {
         $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Source entity designator
     public function getENTITY()
     {
         $o = $this->__offset(12);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Observation epoch (ISO 8601)
+    public function getEPOCH()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Sensor identifier
+    public function getSENSOR_ID()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Target satellite number (if identified)
+    /**
+     * @return uint
+     */
+    public function getSAT_NO()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Target object designator
+    public function getOBJECT_DESIGNATOR()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// IR spectral band
+    /**
+     * @return sbyte
+     */
+    public function getBAND()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \irBand::SWIR;
+    }
+
+    /// Detection type
+    /**
+     * @return sbyte
+     */
+    public function getDETECTION_TYPE()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \irDetectionType::POINT_SOURCE;
+    }
+
+    /// Right ascension in degrees
+    /**
+     * @return double
+     */
+    public function getRA()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Declination in degrees
+    /**
+     * @return double
+     */
+    public function getDEC()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Right ascension uncertainty in arcseconds
+    /**
+     * @return double
+     */
+    public function getRA_UNC()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Declination uncertainty in arcseconds
+    /**
+     * @return double
+     */
+    public function getDEC_UNC()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Azimuth angle in degrees
+    /**
+     * @return double
+     */
+    public function getAZIMUTH()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Elevation angle in degrees
+    /**
+     * @return double
+     */
+    public function getELEVATION()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Range in km (if available)
+    /**
+     * @return double
+     */
+    public function getRANGE()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Irradiance in W/m^2
+    /**
+     * @return double
+     */
+    public function getIRRADIANCE()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Irradiance uncertainty in W/m^2
+    /**
+     * @return double
+     */
+    public function getIRRADIANCE_UNC()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Apparent IR magnitude
+    /**
+     * @return double
+     */
+    public function getIR_MAG()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Magnitude uncertainty
+    /**
+     * @return double
+     */
+    public function getMAG_UNC()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Effective temperature in Kelvin
+    /**
+     * @return double
+     */
+    public function getTEMPERATURE()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Integration time in seconds
+    /**
+     * @return double
+     */
+    public function getINTEGRATION_TIME()
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Background irradiance in W/m^2/sr
+    /**
+     * @return double
+     */
+    public function getBACKGROUND()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Signal-to-noise ratio
+    /**
+     * @return double
+     */
+    public function getSNR()
+    {
+        $o = $this->__offset(54);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Spectral data wavelengths in micrometers
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getWAVELENGTHS($j)
+    {
+        $o = $this->__offset(56);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWAVELENGTHSLength()
+    {
+        $o = $this->__offset(56);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Spectral data values in W/m^2/um
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getSPECTRAL_VALUES($j)
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSPECTRAL_VALUESLength()
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Data quality indicator (0-9, 9=best)
+    /**
+     * @return byte
+     */
+    public function getQUALITY()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
+    }
+
+    /// Additional notes
+    public function getNOTES()
+    {
+        $o = $this->__offset(62);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -77,21 +340,46 @@ class IRO extends Table
      */
     public static function startIRO(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(5);
+        $builder->StartObject(30);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return IRO
      */
-    public static function createIRO(FlatBufferBuilder $builder, $ID, $ID_ENTITY, $NAME, $DESCRIPTION, $ENTITY)
+    public static function createIRO(FlatBufferBuilder $builder, $ID, $ID_ENTITY, $NAME, $DESCRIPTION, $ENTITY, $EPOCH, $SENSOR_ID, $SAT_NO, $OBJECT_DESIGNATOR, $BAND, $DETECTION_TYPE, $RA, $DEC, $RA_UNC, $DEC_UNC, $AZIMUTH, $ELEVATION, $RANGE, $IRRADIANCE, $IRRADIANCE_UNC, $IR_MAG, $MAG_UNC, $TEMPERATURE, $INTEGRATION_TIME, $BACKGROUND, $SNR, $WAVELENGTHS, $SPECTRAL_VALUES, $QUALITY, $NOTES)
     {
-        $builder->startObject(5);
+        $builder->startObject(30);
         self::addID($builder, $ID);
         self::addID_ENTITY($builder, $ID_ENTITY);
         self::addNAME($builder, $NAME);
         self::addDESCRIPTION($builder, $DESCRIPTION);
         self::addENTITY($builder, $ENTITY);
+        self::addEPOCH($builder, $EPOCH);
+        self::addSENSOR_ID($builder, $SENSOR_ID);
+        self::addSAT_NO($builder, $SAT_NO);
+        self::addOBJECT_DESIGNATOR($builder, $OBJECT_DESIGNATOR);
+        self::addBAND($builder, $BAND);
+        self::addDETECTION_TYPE($builder, $DETECTION_TYPE);
+        self::addRA($builder, $RA);
+        self::addDEC($builder, $DEC);
+        self::addRA_UNC($builder, $RA_UNC);
+        self::addDEC_UNC($builder, $DEC_UNC);
+        self::addAZIMUTH($builder, $AZIMUTH);
+        self::addELEVATION($builder, $ELEVATION);
+        self::addRANGE($builder, $RANGE);
+        self::addIRRADIANCE($builder, $IRRADIANCE);
+        self::addIRRADIANCE_UNC($builder, $IRRADIANCE_UNC);
+        self::addIR_MAG($builder, $IR_MAG);
+        self::addMAG_UNC($builder, $MAG_UNC);
+        self::addTEMPERATURE($builder, $TEMPERATURE);
+        self::addINTEGRATION_TIME($builder, $INTEGRATION_TIME);
+        self::addBACKGROUND($builder, $BACKGROUND);
+        self::addSNR($builder, $SNR);
+        self::addWAVELENGTHS($builder, $WAVELENGTHS);
+        self::addSPECTRAL_VALUES($builder, $SPECTRAL_VALUES);
+        self::addQUALITY($builder, $QUALITY);
+        self::addNOTES($builder, $NOTES);
         $o = $builder->endObject();
         return $o;
     }
@@ -144,6 +432,304 @@ class IRO extends Table
     public static function addENTITY(FlatBufferBuilder $builder, $ENTITY)
     {
         $builder->addOffsetX(4, $ENTITY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEPOCH(FlatBufferBuilder $builder, $EPOCH)
+    {
+        $builder->addOffsetX(5, $EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSENSOR_ID(FlatBufferBuilder $builder, $SENSOR_ID)
+    {
+        $builder->addOffsetX(6, $SENSOR_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addSAT_NO(FlatBufferBuilder $builder, $SAT_NO)
+    {
+        $builder->addUintX(7, $SAT_NO, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addOBJECT_DESIGNATOR(FlatBufferBuilder $builder, $OBJECT_DESIGNATOR)
+    {
+        $builder->addOffsetX(8, $OBJECT_DESIGNATOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addBAND(FlatBufferBuilder $builder, $BAND)
+    {
+        $builder->addSbyteX(9, $BAND, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addDETECTION_TYPE(FlatBufferBuilder $builder, $DETECTION_TYPE)
+    {
+        $builder->addSbyteX(10, $DETECTION_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addRA(FlatBufferBuilder $builder, $RA)
+    {
+        $builder->addDoubleX(11, $RA, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDEC(FlatBufferBuilder $builder, $DEC)
+    {
+        $builder->addDoubleX(12, $DEC, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addRA_UNC(FlatBufferBuilder $builder, $RA_UNC)
+    {
+        $builder->addDoubleX(13, $RA_UNC, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDEC_UNC(FlatBufferBuilder $builder, $DEC_UNC)
+    {
+        $builder->addDoubleX(14, $DEC_UNC, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addAZIMUTH(FlatBufferBuilder $builder, $AZIMUTH)
+    {
+        $builder->addDoubleX(15, $AZIMUTH, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addELEVATION(FlatBufferBuilder $builder, $ELEVATION)
+    {
+        $builder->addDoubleX(16, $ELEVATION, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addRANGE(FlatBufferBuilder $builder, $RANGE)
+    {
+        $builder->addDoubleX(17, $RANGE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIRRADIANCE(FlatBufferBuilder $builder, $IRRADIANCE)
+    {
+        $builder->addDoubleX(18, $IRRADIANCE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIRRADIANCE_UNC(FlatBufferBuilder $builder, $IRRADIANCE_UNC)
+    {
+        $builder->addDoubleX(19, $IRRADIANCE_UNC, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addIR_MAG(FlatBufferBuilder $builder, $IR_MAG)
+    {
+        $builder->addDoubleX(20, $IR_MAG, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addMAG_UNC(FlatBufferBuilder $builder, $MAG_UNC)
+    {
+        $builder->addDoubleX(21, $MAG_UNC, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTEMPERATURE(FlatBufferBuilder $builder, $TEMPERATURE)
+    {
+        $builder->addDoubleX(22, $TEMPERATURE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addINTEGRATION_TIME(FlatBufferBuilder $builder, $INTEGRATION_TIME)
+    {
+        $builder->addDoubleX(23, $INTEGRATION_TIME, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addBACKGROUND(FlatBufferBuilder $builder, $BACKGROUND)
+    {
+        $builder->addDoubleX(24, $BACKGROUND, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addSNR(FlatBufferBuilder $builder, $SNR)
+    {
+        $builder->addDoubleX(25, $SNR, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addWAVELENGTHS(FlatBufferBuilder $builder, $WAVELENGTHS)
+    {
+        $builder->addOffsetX(26, $WAVELENGTHS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createWAVELENGTHSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startWAVELENGTHSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSPECTRAL_VALUES(FlatBufferBuilder $builder, $SPECTRAL_VALUES)
+    {
+        $builder->addOffsetX(27, $SPECTRAL_VALUES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSPECTRAL_VALUESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSPECTRAL_VALUESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addQUALITY(FlatBufferBuilder $builder, $QUALITY)
+    {
+        $builder->addByteX(28, $QUALITY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addNOTES(FlatBufferBuilder $builder, $NOTES)
+    {
+        $builder->addOffsetX(29, $NOTES, 0);
     }
 
     /**

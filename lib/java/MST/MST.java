@@ -29,120 +29,248 @@ public final class MST extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public MST __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * Message type code
+   */
   public String MSG_TYPE() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer MSG_TYPEAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer MSG_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  /**
+   * Message sub-type
+   */
   public String MSG_SUB_TYPE() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer MSG_SUB_TYPEAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer MSG_SUB_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * Message creation date (ISO 8601)
+   */
   public String MSG_CREATE_DATE() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer MSG_CREATE_DATEAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
   public ByteBuffer MSG_CREATE_DATEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
-  public String ENVIRONMENT() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ENVIRONMENTAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
-  public ByteBuffer ENVIRONMENTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * Track environment
+   */
+  public byte ENVIRONMENT() { int o = __offset(12); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Object type classification
+   */
   public String OBJ_TYPE() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer OBJ_TYPEAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
   public ByteBuffer OBJ_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
-  public int OBJ_TYPE_CONF() { int o = __offset(16); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Object type confidence (0-100)
+   */
+  public int OBJ_TYPE_CONF() { int o = __offset(16); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Object platform type
+   */
   public String OBJ_PLAT() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer OBJ_PLATAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
   public ByteBuffer OBJ_PLATInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
+  /**
+   * Object identity assessment
+   */
   public String OBJ_IDENT() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer OBJ_IDENTAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
   public ByteBuffer OBJ_IDENTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
+  /**
+   * Space amplification data
+   */
   public String SPACE_AMP() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer SPACE_AMPAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
   public ByteBuffer SPACE_AMPInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
-  public String OBJ_ACT() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer OBJ_ACTAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
-  public ByteBuffer OBJ_ACTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
-  public String SPACE_SPEC_TYPE() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SPACE_SPEC_TYPEAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
-  public ByteBuffer SPACE_SPEC_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
-  public String ACFT_SUB_TYPE() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ACFT_SUB_TYPEAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
-  public ByteBuffer ACFT_SUB_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
-  public String NAME() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer NAMEAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
-  public ByteBuffer NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
-  public String CALL_SIGN() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer CALL_SIGNAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
-  public ByteBuffer CALL_SIGNInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
-  public boolean LOST_TRK_IND() { int o = __offset(34); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public String TRACK_ID() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer TRACK_IDAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
-  public ByteBuffer TRACK_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
-  public String PARENT_TRACK_ID() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer PARENT_TRACK_IDAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
-  public ByteBuffer PARENT_TRACK_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
-  public String MUID_SRC_TRK() { int o = __offset(40); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer MUID_SRC_TRKAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
-  public ByteBuffer MUID_SRC_TRKInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
-  public String MUID_SRC() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer MUID_SRCAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
-  public ByteBuffer MUID_SRCInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
-  public String ALERT() { int o = __offset(44); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ALERTAsByteBuffer() { return __vector_as_bytebuffer(44, 1); }
-  public ByteBuffer ALERTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 44, 1); }
-  public String MSL_STATUS() { int o = __offset(46); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer MSL_STATUSAsByteBuffer() { return __vector_as_bytebuffer(46, 1); }
-  public ByteBuffer MSL_STATUSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 46, 1); }
-  public String TS() { int o = __offset(48); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer TSAsByteBuffer() { return __vector_as_bytebuffer(48, 1); }
-  public ByteBuffer TSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 48, 1); }
-  public String AOU_RPT_TYPE() { int o = __offset(50); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer AOU_RPT_TYPEAsByteBuffer() { return __vector_as_bytebuffer(50, 1); }
-  public ByteBuffer AOU_RPT_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 50, 1); }
-  public double CONTAINMENT() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double TRK_CONF() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public int TRK_QUAL() { int o = __offset(56); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public double ANG_ELEV() { int o = __offset(58); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String SEN_MODE() { int o = __offset(60); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SEN_MODEAsByteBuffer() { return __vector_as_bytebuffer(60, 1); }
-  public ByteBuffer SEN_MODEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 60, 1); }
-  public String INFO_SOURCE() { int o = __offset(62); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer INFO_SOURCEAsByteBuffer() { return __vector_as_bytebuffer(62, 1); }
-  public ByteBuffer INFO_SOURCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 62, 1); }
-  public boolean BOOSTING() { int o = __offset(64); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public double POLAR_SING_LOC_LAT() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double POLAR_SING_LOC_LON() { int o = __offset(68); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public boolean EMG_IND() { int o = __offset(70); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public boolean DROP_PT_IND() { int o = __offset(72); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public int SPACE_AMP_CONF() { int o = __offset(74); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Space amplification confidence (0-100)
+   */
+  public int SPACE_AMP_CONF() { int o = __offset(24); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Object activity
+   */
+  public String OBJ_ACT() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OBJ_ACTAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
+  public ByteBuffer OBJ_ACTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
+  /**
+   * Space specific type
+   */
+  public String SPACE_SPEC_TYPE() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SPACE_SPEC_TYPEAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
+  public ByteBuffer SPACE_SPEC_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
+  /**
+   * Aircraft sub-type (if applicable)
+   */
+  public String ACFT_SUB_TYPE() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ACFT_SUB_TYPEAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
+  public ByteBuffer ACFT_SUB_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
+  /**
+   * Object name
+   */
+  public String NAME() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer NAMEAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
+  public ByteBuffer NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
+  /**
+   * Call sign
+   */
+  public String CALL_SIGN() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CALL_SIGNAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
+  public ByteBuffer CALL_SIGNInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  /**
+   * True if track is lost
+   */
+  public boolean LOST_TRK_IND() { int o = __offset(36); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Track identifier
+   */
+  public String TRACK_ID() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TRACK_IDAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
+  public ByteBuffer TRACK_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
+  /**
+   * Parent track identifier
+   */
+  public String PARENT_TRACK_ID() { int o = __offset(40); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PARENT_TRACK_IDAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
+  public ByteBuffer PARENT_TRACK_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
+  /**
+   * Multi-unit identifier (source track)
+   */
+  public String MUID_SRC_TRK() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MUID_SRC_TRKAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
+  public ByteBuffer MUID_SRC_TRKInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
+  /**
+   * Multi-unit identifier (source)
+   */
+  public String MUID_SRC() { int o = __offset(44); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MUID_SRCAsByteBuffer() { return __vector_as_bytebuffer(44, 1); }
+  public ByteBuffer MUID_SRCInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 44, 1); }
+  /**
+   * Alert classification
+   */
+  public String ALERT() { int o = __offset(46); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ALERTAsByteBuffer() { return __vector_as_bytebuffer(46, 1); }
+  public ByteBuffer ALERTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 46, 1); }
+  /**
+   * Missile engagement status
+   */
+  public byte MSL_STATUS() { int o = __offset(48); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Track timestamp (ISO 8601)
+   */
+  public String TS() { int o = __offset(50); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TSAsByteBuffer() { return __vector_as_bytebuffer(50, 1); }
+  public ByteBuffer TSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 50, 1); }
+  /**
+   * AOU report type
+   */
+  public byte AOU_RPT_TYPE() { int o = __offset(52); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Containment probability (0-1)
+   */
+  public double CONTAINMENT() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Track confidence (0-1)
+   */
+  public double TRK_CONF() { int o = __offset(56); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Track quality (0-15)
+   */
+  public int TRK_QUAL() { int o = __offset(58); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Elevation angle (degrees)
+   */
+  public double ANG_ELEV() { int o = __offset(60); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sensor mode
+   */
+  public String SEN_MODE() { int o = __offset(62); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SEN_MODEAsByteBuffer() { return __vector_as_bytebuffer(62, 1); }
+  public ByteBuffer SEN_MODEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 62, 1); }
+  /**
+   * Information source
+   */
+  public String INFO_SOURCE() { int o = __offset(64); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer INFO_SOURCEAsByteBuffer() { return __vector_as_bytebuffer(64, 1); }
+  public ByteBuffer INFO_SOURCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 64, 1); }
+  /**
+   * True if object is in boost phase
+   */
+  public boolean BOOSTING() { int o = __offset(66); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Polar singularity latitude (degrees)
+   */
+  public double POLAR_SING_LOC_LAT() { int o = __offset(68); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Polar singularity longitude (degrees)
+   */
+  public double POLAR_SING_LOC_LON() { int o = __offset(70); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * True if emergency indicator set
+   */
+  public boolean EMG_IND() { int o = __offset(72); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * True if drop point indicator set
+   */
+  public boolean DROP_PT_IND() { int o = __offset(74); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Launch time (ISO 8601)
+   */
   public String LAUNCH_TIME() { int o = __offset(76); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer LAUNCH_TIMEAsByteBuffer() { return __vector_as_bytebuffer(76, 1); }
   public ByteBuffer LAUNCH_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 76, 1); }
+  /**
+   * Launch latitude (degrees)
+   */
   public double LAUNCH_LAT() { int o = __offset(78); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Launch longitude (degrees)
+   */
   public double LAUNCH_LON() { int o = __offset(80); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Azimuth correction (degrees)
+   */
   public double AZ_CORR() { int o = __offset(82); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Burnout altitude (km)
+   */
   public double BURNOUT_ALT() { int o = __offset(84); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String LAUNCH_AOU_TYPE() { int o = __offset(86); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer LAUNCH_AOU_TYPEAsByteBuffer() { return __vector_as_bytebuffer(86, 1); }
-  public ByteBuffer LAUNCH_AOU_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 86, 1); }
+  /**
+   * Launch AOU type
+   */
+  public byte LAUNCH_AOU_TYPE() { int o = __offset(86); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Predicted impact time (ISO 8601)
+   */
   public String IMPACT_TIME() { int o = __offset(88); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IMPACT_TIMEAsByteBuffer() { return __vector_as_bytebuffer(88, 1); }
   public ByteBuffer IMPACT_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 88, 1); }
-  public double IMPACT_LAT() { int o = __offset(90); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double IMPACT_LON() { int o = __offset(92); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String IMPACT_AOU_TYPE() { int o = __offset(94); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer IMPACT_AOU_TYPEAsByteBuffer() { return __vector_as_bytebuffer(94, 1); }
-  public ByteBuffer IMPACT_AOU_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 94, 1); }
   /**
-   * Start time for vector data (ISO 8601 UTC format).
+   * Predicted impact latitude (degrees)
+   */
+  public double IMPACT_LAT() { int o = __offset(90); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Predicted impact longitude (degrees)
+   */
+  public double IMPACT_LON() { int o = __offset(92); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Impact AOU type
+   */
+  public byte IMPACT_AOU_TYPE() { int o = __offset(94); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Start time for vector data (ISO 8601)
    */
   public String VECTOR_START_TIME() { int o = __offset(96); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer VECTOR_START_TIMEAsByteBuffer() { return __vector_as_bytebuffer(96, 1); }
   public ByteBuffer VECTOR_START_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 96, 1); }
   /**
-   * Time interval between vector points in seconds.
+   * Time interval between vector points (seconds)
    */
   public double VECTOR_STEP_SIZE() { int o = __offset(98); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
   /**
-   * Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).
+   * Number of components per vector (default 6: X, Y, Z, VX, VY, VZ)
    */
   public int VECTOR_COMPONENTS() { int o = __offset(100); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 6; }
   /**
@@ -155,7 +283,7 @@ public final class MST extends Table {
   public ByteBuffer VECTORSAsByteBuffer() { return __vector_as_bytebuffer(102, 8); }
   public ByteBuffer VECTORSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 102, 8); }
   /**
-   * AOU report data as flat array (layout depends on AOU_RPT_TYPE).
+   * AOU report data as flat array
    */
   public double AOU_RPT(int j) { int o = __offset(104); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
   public int AOU_RPTLength() { int o = __offset(104); return o != 0 ? __vector_len(o) : 0; }
@@ -164,7 +292,7 @@ public final class MST extends Table {
   public ByteBuffer AOU_RPTAsByteBuffer() { return __vector_as_bytebuffer(104, 8); }
   public ByteBuffer AOU_RPTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 104, 8); }
   /**
-   * Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).
+   * Launch AOU data as flat array
    */
   public double LAUNCH_AOU(int j) { int o = __offset(106); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
   public int LAUNCH_AOULength() { int o = __offset(106); return o != 0 ? __vector_len(o) : 0; }
@@ -173,7 +301,7 @@ public final class MST extends Table {
   public ByteBuffer LAUNCH_AOUAsByteBuffer() { return __vector_as_bytebuffer(106, 8); }
   public ByteBuffer LAUNCH_AOUInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 106, 8); }
   /**
-   * Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).
+   * Impact AOU data as flat array
    */
   public double IMPACT_AOU(int j) { int o = __offset(108); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
   public int IMPACT_AOULength() { int o = __offset(108); return o != 0 ? __vector_len(o) : 0; }
@@ -187,12 +315,13 @@ public final class MST extends Table {
       int MSG_TYPEOffset,
       int MSG_SUB_TYPEOffset,
       int MSG_CREATE_DATEOffset,
-      int ENVIRONMENTOffset,
+      byte ENVIRONMENT,
       int OBJ_TYPEOffset,
       int OBJ_TYPE_CONF,
       int OBJ_PLATOffset,
       int OBJ_IDENTOffset,
       int SPACE_AMPOffset,
+      int SPACE_AMP_CONF,
       int OBJ_ACTOffset,
       int SPACE_SPEC_TYPEOffset,
       int ACFT_SUB_TYPEOffset,
@@ -204,9 +333,9 @@ public final class MST extends Table {
       int MUID_SRC_TRKOffset,
       int MUID_SRCOffset,
       int ALERTOffset,
-      int MSL_STATUSOffset,
+      byte MSL_STATUS,
       int TSOffset,
-      int AOU_RPT_TYPEOffset,
+      byte AOU_RPT_TYPE,
       double CONTAINMENT,
       double TRK_CONF,
       int TRK_QUAL,
@@ -218,17 +347,16 @@ public final class MST extends Table {
       double POLAR_SING_LOC_LON,
       boolean EMG_IND,
       boolean DROP_PT_IND,
-      int SPACE_AMP_CONF,
       int LAUNCH_TIMEOffset,
       double LAUNCH_LAT,
       double LAUNCH_LON,
       double AZ_CORR,
       double BURNOUT_ALT,
-      int LAUNCH_AOU_TYPEOffset,
+      byte LAUNCH_AOU_TYPE,
       int IMPACT_TIMEOffset,
       double IMPACT_LAT,
       double IMPACT_LON,
-      int IMPACT_AOU_TYPEOffset,
+      byte IMPACT_AOU_TYPE,
       int VECTOR_START_TIMEOffset,
       double VECTOR_STEP_SIZE,
       int VECTOR_COMPONENTS,
@@ -254,17 +382,11 @@ public final class MST extends Table {
     MST.addAouRpt(builder, AOU_RPTOffset);
     MST.addVectors(builder, VECTORSOffset);
     MST.addVectorStartTime(builder, VECTOR_START_TIMEOffset);
-    MST.addImpactAouType(builder, IMPACT_AOU_TYPEOffset);
     MST.addImpactTime(builder, IMPACT_TIMEOffset);
-    MST.addLaunchAouType(builder, LAUNCH_AOU_TYPEOffset);
     MST.addLaunchTime(builder, LAUNCH_TIMEOffset);
-    MST.addSpaceAmpConf(builder, SPACE_AMP_CONF);
     MST.addInfoSource(builder, INFO_SOURCEOffset);
     MST.addSenMode(builder, SEN_MODEOffset);
-    MST.addTrkQual(builder, TRK_QUAL);
-    MST.addAouRptType(builder, AOU_RPT_TYPEOffset);
     MST.addTs(builder, TSOffset);
-    MST.addMslStatus(builder, MSL_STATUSOffset);
     MST.addAlert(builder, ALERTOffset);
     MST.addMuidSrc(builder, MUID_SRCOffset);
     MST.addMuidSrcTrk(builder, MUID_SRC_TRKOffset);
@@ -278,18 +400,24 @@ public final class MST extends Table {
     MST.addSpaceAmp(builder, SPACE_AMPOffset);
     MST.addObjIdent(builder, OBJ_IDENTOffset);
     MST.addObjPlat(builder, OBJ_PLATOffset);
-    MST.addObjTypeConf(builder, OBJ_TYPE_CONF);
     MST.addObjType(builder, OBJ_TYPEOffset);
-    MST.addEnvironment(builder, ENVIRONMENTOffset);
     MST.addMsgCreateDate(builder, MSG_CREATE_DATEOffset);
     MST.addMsgSubType(builder, MSG_SUB_TYPEOffset);
     MST.addMsgType(builder, MSG_TYPEOffset);
     MST.addId(builder, IDOffset);
     MST.addVectorComponents(builder, VECTOR_COMPONENTS);
+    MST.addImpactAouType(builder, IMPACT_AOU_TYPE);
+    MST.addLaunchAouType(builder, LAUNCH_AOU_TYPE);
     MST.addDropPtInd(builder, DROP_PT_IND);
     MST.addEmgInd(builder, EMG_IND);
     MST.addBoosting(builder, BOOSTING);
+    MST.addTrkQual(builder, TRK_QUAL);
+    MST.addAouRptType(builder, AOU_RPT_TYPE);
+    MST.addMslStatus(builder, MSL_STATUS);
     MST.addLostTrkInd(builder, LOST_TRK_IND);
+    MST.addSpaceAmpConf(builder, SPACE_AMP_CONF);
+    MST.addObjTypeConf(builder, OBJ_TYPE_CONF);
+    MST.addEnvironment(builder, ENVIRONMENT);
     return MST.endMST(builder);
   }
 
@@ -298,48 +426,48 @@ public final class MST extends Table {
   public static void addMsgType(FlatBufferBuilder builder, int MSG_TYPEOffset) { builder.addOffset(1, MSG_TYPEOffset, 0); }
   public static void addMsgSubType(FlatBufferBuilder builder, int MSG_SUB_TYPEOffset) { builder.addOffset(2, MSG_SUB_TYPEOffset, 0); }
   public static void addMsgCreateDate(FlatBufferBuilder builder, int MSG_CREATE_DATEOffset) { builder.addOffset(3, MSG_CREATE_DATEOffset, 0); }
-  public static void addEnvironment(FlatBufferBuilder builder, int ENVIRONMENTOffset) { builder.addOffset(4, ENVIRONMENTOffset, 0); }
+  public static void addEnvironment(FlatBufferBuilder builder, byte ENVIRONMENT) { builder.addByte(4, ENVIRONMENT, 0); }
   public static void addObjType(FlatBufferBuilder builder, int OBJ_TYPEOffset) { builder.addOffset(5, OBJ_TYPEOffset, 0); }
-  public static void addObjTypeConf(FlatBufferBuilder builder, int OBJ_TYPE_CONF) { builder.addInt(6, OBJ_TYPE_CONF, 0); }
+  public static void addObjTypeConf(FlatBufferBuilder builder, int OBJ_TYPE_CONF) { builder.addByte(6, (byte) OBJ_TYPE_CONF, (byte) 0); }
   public static void addObjPlat(FlatBufferBuilder builder, int OBJ_PLATOffset) { builder.addOffset(7, OBJ_PLATOffset, 0); }
   public static void addObjIdent(FlatBufferBuilder builder, int OBJ_IDENTOffset) { builder.addOffset(8, OBJ_IDENTOffset, 0); }
   public static void addSpaceAmp(FlatBufferBuilder builder, int SPACE_AMPOffset) { builder.addOffset(9, SPACE_AMPOffset, 0); }
-  public static void addObjAct(FlatBufferBuilder builder, int OBJ_ACTOffset) { builder.addOffset(10, OBJ_ACTOffset, 0); }
-  public static void addSpaceSpecType(FlatBufferBuilder builder, int SPACE_SPEC_TYPEOffset) { builder.addOffset(11, SPACE_SPEC_TYPEOffset, 0); }
-  public static void addAcftSubType(FlatBufferBuilder builder, int ACFT_SUB_TYPEOffset) { builder.addOffset(12, ACFT_SUB_TYPEOffset, 0); }
-  public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(13, NAMEOffset, 0); }
-  public static void addCallSign(FlatBufferBuilder builder, int CALL_SIGNOffset) { builder.addOffset(14, CALL_SIGNOffset, 0); }
-  public static void addLostTrkInd(FlatBufferBuilder builder, boolean LOST_TRK_IND) { builder.addBoolean(15, LOST_TRK_IND, false); }
-  public static void addTrackId(FlatBufferBuilder builder, int TRACK_IDOffset) { builder.addOffset(16, TRACK_IDOffset, 0); }
-  public static void addParentTrackId(FlatBufferBuilder builder, int PARENT_TRACK_IDOffset) { builder.addOffset(17, PARENT_TRACK_IDOffset, 0); }
-  public static void addMuidSrcTrk(FlatBufferBuilder builder, int MUID_SRC_TRKOffset) { builder.addOffset(18, MUID_SRC_TRKOffset, 0); }
-  public static void addMuidSrc(FlatBufferBuilder builder, int MUID_SRCOffset) { builder.addOffset(19, MUID_SRCOffset, 0); }
-  public static void addAlert(FlatBufferBuilder builder, int ALERTOffset) { builder.addOffset(20, ALERTOffset, 0); }
-  public static void addMslStatus(FlatBufferBuilder builder, int MSL_STATUSOffset) { builder.addOffset(21, MSL_STATUSOffset, 0); }
-  public static void addTs(FlatBufferBuilder builder, int TSOffset) { builder.addOffset(22, TSOffset, 0); }
-  public static void addAouRptType(FlatBufferBuilder builder, int AOU_RPT_TYPEOffset) { builder.addOffset(23, AOU_RPT_TYPEOffset, 0); }
-  public static void addContainment(FlatBufferBuilder builder, double CONTAINMENT) { builder.addDouble(24, CONTAINMENT, 0.0); }
-  public static void addTrkConf(FlatBufferBuilder builder, double TRK_CONF) { builder.addDouble(25, TRK_CONF, 0.0); }
-  public static void addTrkQual(FlatBufferBuilder builder, int TRK_QUAL) { builder.addInt(26, TRK_QUAL, 0); }
-  public static void addAngElev(FlatBufferBuilder builder, double ANG_ELEV) { builder.addDouble(27, ANG_ELEV, 0.0); }
-  public static void addSenMode(FlatBufferBuilder builder, int SEN_MODEOffset) { builder.addOffset(28, SEN_MODEOffset, 0); }
-  public static void addInfoSource(FlatBufferBuilder builder, int INFO_SOURCEOffset) { builder.addOffset(29, INFO_SOURCEOffset, 0); }
-  public static void addBoosting(FlatBufferBuilder builder, boolean BOOSTING) { builder.addBoolean(30, BOOSTING, false); }
-  public static void addPolarSingLocLat(FlatBufferBuilder builder, double POLAR_SING_LOC_LAT) { builder.addDouble(31, POLAR_SING_LOC_LAT, 0.0); }
-  public static void addPolarSingLocLon(FlatBufferBuilder builder, double POLAR_SING_LOC_LON) { builder.addDouble(32, POLAR_SING_LOC_LON, 0.0); }
-  public static void addEmgInd(FlatBufferBuilder builder, boolean EMG_IND) { builder.addBoolean(33, EMG_IND, false); }
-  public static void addDropPtInd(FlatBufferBuilder builder, boolean DROP_PT_IND) { builder.addBoolean(34, DROP_PT_IND, false); }
-  public static void addSpaceAmpConf(FlatBufferBuilder builder, int SPACE_AMP_CONF) { builder.addInt(35, SPACE_AMP_CONF, 0); }
+  public static void addSpaceAmpConf(FlatBufferBuilder builder, int SPACE_AMP_CONF) { builder.addByte(10, (byte) SPACE_AMP_CONF, (byte) 0); }
+  public static void addObjAct(FlatBufferBuilder builder, int OBJ_ACTOffset) { builder.addOffset(11, OBJ_ACTOffset, 0); }
+  public static void addSpaceSpecType(FlatBufferBuilder builder, int SPACE_SPEC_TYPEOffset) { builder.addOffset(12, SPACE_SPEC_TYPEOffset, 0); }
+  public static void addAcftSubType(FlatBufferBuilder builder, int ACFT_SUB_TYPEOffset) { builder.addOffset(13, ACFT_SUB_TYPEOffset, 0); }
+  public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(14, NAMEOffset, 0); }
+  public static void addCallSign(FlatBufferBuilder builder, int CALL_SIGNOffset) { builder.addOffset(15, CALL_SIGNOffset, 0); }
+  public static void addLostTrkInd(FlatBufferBuilder builder, boolean LOST_TRK_IND) { builder.addBoolean(16, LOST_TRK_IND, false); }
+  public static void addTrackId(FlatBufferBuilder builder, int TRACK_IDOffset) { builder.addOffset(17, TRACK_IDOffset, 0); }
+  public static void addParentTrackId(FlatBufferBuilder builder, int PARENT_TRACK_IDOffset) { builder.addOffset(18, PARENT_TRACK_IDOffset, 0); }
+  public static void addMuidSrcTrk(FlatBufferBuilder builder, int MUID_SRC_TRKOffset) { builder.addOffset(19, MUID_SRC_TRKOffset, 0); }
+  public static void addMuidSrc(FlatBufferBuilder builder, int MUID_SRCOffset) { builder.addOffset(20, MUID_SRCOffset, 0); }
+  public static void addAlert(FlatBufferBuilder builder, int ALERTOffset) { builder.addOffset(21, ALERTOffset, 0); }
+  public static void addMslStatus(FlatBufferBuilder builder, byte MSL_STATUS) { builder.addByte(22, MSL_STATUS, 0); }
+  public static void addTs(FlatBufferBuilder builder, int TSOffset) { builder.addOffset(23, TSOffset, 0); }
+  public static void addAouRptType(FlatBufferBuilder builder, byte AOU_RPT_TYPE) { builder.addByte(24, AOU_RPT_TYPE, 0); }
+  public static void addContainment(FlatBufferBuilder builder, double CONTAINMENT) { builder.addDouble(25, CONTAINMENT, 0.0); }
+  public static void addTrkConf(FlatBufferBuilder builder, double TRK_CONF) { builder.addDouble(26, TRK_CONF, 0.0); }
+  public static void addTrkQual(FlatBufferBuilder builder, int TRK_QUAL) { builder.addByte(27, (byte) TRK_QUAL, (byte) 0); }
+  public static void addAngElev(FlatBufferBuilder builder, double ANG_ELEV) { builder.addDouble(28, ANG_ELEV, 0.0); }
+  public static void addSenMode(FlatBufferBuilder builder, int SEN_MODEOffset) { builder.addOffset(29, SEN_MODEOffset, 0); }
+  public static void addInfoSource(FlatBufferBuilder builder, int INFO_SOURCEOffset) { builder.addOffset(30, INFO_SOURCEOffset, 0); }
+  public static void addBoosting(FlatBufferBuilder builder, boolean BOOSTING) { builder.addBoolean(31, BOOSTING, false); }
+  public static void addPolarSingLocLat(FlatBufferBuilder builder, double POLAR_SING_LOC_LAT) { builder.addDouble(32, POLAR_SING_LOC_LAT, 0.0); }
+  public static void addPolarSingLocLon(FlatBufferBuilder builder, double POLAR_SING_LOC_LON) { builder.addDouble(33, POLAR_SING_LOC_LON, 0.0); }
+  public static void addEmgInd(FlatBufferBuilder builder, boolean EMG_IND) { builder.addBoolean(34, EMG_IND, false); }
+  public static void addDropPtInd(FlatBufferBuilder builder, boolean DROP_PT_IND) { builder.addBoolean(35, DROP_PT_IND, false); }
   public static void addLaunchTime(FlatBufferBuilder builder, int LAUNCH_TIMEOffset) { builder.addOffset(36, LAUNCH_TIMEOffset, 0); }
   public static void addLaunchLat(FlatBufferBuilder builder, double LAUNCH_LAT) { builder.addDouble(37, LAUNCH_LAT, 0.0); }
   public static void addLaunchLon(FlatBufferBuilder builder, double LAUNCH_LON) { builder.addDouble(38, LAUNCH_LON, 0.0); }
   public static void addAzCorr(FlatBufferBuilder builder, double AZ_CORR) { builder.addDouble(39, AZ_CORR, 0.0); }
   public static void addBurnoutAlt(FlatBufferBuilder builder, double BURNOUT_ALT) { builder.addDouble(40, BURNOUT_ALT, 0.0); }
-  public static void addLaunchAouType(FlatBufferBuilder builder, int LAUNCH_AOU_TYPEOffset) { builder.addOffset(41, LAUNCH_AOU_TYPEOffset, 0); }
+  public static void addLaunchAouType(FlatBufferBuilder builder, byte LAUNCH_AOU_TYPE) { builder.addByte(41, LAUNCH_AOU_TYPE, 0); }
   public static void addImpactTime(FlatBufferBuilder builder, int IMPACT_TIMEOffset) { builder.addOffset(42, IMPACT_TIMEOffset, 0); }
   public static void addImpactLat(FlatBufferBuilder builder, double IMPACT_LAT) { builder.addDouble(43, IMPACT_LAT, 0.0); }
   public static void addImpactLon(FlatBufferBuilder builder, double IMPACT_LON) { builder.addDouble(44, IMPACT_LON, 0.0); }
-  public static void addImpactAouType(FlatBufferBuilder builder, int IMPACT_AOU_TYPEOffset) { builder.addOffset(45, IMPACT_AOU_TYPEOffset, 0); }
+  public static void addImpactAouType(FlatBufferBuilder builder, byte IMPACT_AOU_TYPE) { builder.addByte(45, IMPACT_AOU_TYPE, 0); }
   public static void addVectorStartTime(FlatBufferBuilder builder, int VECTOR_START_TIMEOffset) { builder.addOffset(46, VECTOR_START_TIMEOffset, 0); }
   public static void addVectorStepSize(FlatBufferBuilder builder, double VECTOR_STEP_SIZE) { builder.addDouble(47, VECTOR_STEP_SIZE, 0.0); }
   public static void addVectorComponents(FlatBufferBuilder builder, int VECTOR_COMPONENTS) { builder.addByte(48, (byte) VECTOR_COMPONENTS, (byte) 6); }

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tdm xmlns="urn:ccsds:recommendation:navigation:schema:ndmxml"
+     id="CCSDS_TDM_VERS" version="1.0">
+  <header>
+    <CREATION_DATE>2007-09-20T12:00:00</CREATION_DATE>
+    <ORIGINATOR>NASA/GSFC</ORIGINATOR>
+  </header>
+  <body>
+    <segment>
+      <metadata>
+        <TIME_SYSTEM>UTC</TIME_SYSTEM>
+        <PARTICIPANT_1>DSS-25</PARTICIPANT_1>
+        <PARTICIPANT_2>MARS GLOBAL SURVEYOR</PARTICIPANT_2>
+        <MODE>SEQUENTIAL</MODE>
+        <PATH>1,2,1</PATH>
+        <TRANSMIT_BAND>X</TRANSMIT_BAND>
+        <RECEIVE_BAND>X</RECEIVE_BAND>
+        <INTEGRATION_INTERVAL units="s">1.000</INTEGRATION_INTERVAL>
+        <RANGE_UNITS>km</RANGE_UNITS>
+      </metadata>
+      <data>
+        <observation>
+          <EPOCH>2007-09-20T12:00:00</EPOCH>
+          <RECEIVE_FREQ_1>8420432073.6</RECEIVE_FREQ_1>
+        </observation>
+        <observation>
+          <EPOCH>2007-09-20T12:00:01</EPOCH>
+          <RECEIVE_FREQ_1>8420432074.2</RECEIVE_FREQ_1>
+        </observation>
+        <observation>
+          <EPOCH>2007-09-20T12:00:02</EPOCH>
+          <RECEIVE_FREQ_1>8420432074.8</RECEIVE_FREQ_1>
+        </observation>
+        <observation>
+          <EPOCH>2007-09-20T12:00:00</EPOCH>
+          <TRANSMIT_FREQ_1>7182990000.0</TRANSMIT_FREQ_1>
+        </observation>
+        <observation>
+          <EPOCH>2007-09-20T12:00:00</EPOCH>
+          <RANGE>243195622.219</RANGE>
+        </observation>
+        <observation>
+          <EPOCH>2007-09-20T12:00:01</EPOCH>
+          <RANGE>243195622.420</RANGE>
+        </observation>
+        <observation>
+          <EPOCH>2007-09-20T12:00:00</EPOCH>
+          <DOPPLER_INSTANTANEOUS>-1232.56</DOPPLER_INSTANTANEOUS>
+        </observation>
+        <observation>
+          <EPOCH>2007-09-20T12:00:01</EPOCH>
+          <DOPPLER_INSTANTANEOUS>-1232.58</DOPPLER_INSTANTANEOUS>
+        </observation>
+      </data>
+    </segment>
+  </body>
+</tdm>

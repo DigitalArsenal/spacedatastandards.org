@@ -19,6 +19,7 @@ public struct OOE : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public OOE __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Unique identifier
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,35 +27,41 @@ public struct OOE : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
-  public string DERIVED_FROM { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Satellite catalog number
+  public uint SAT_NO { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// International designator
+  public string ORIG_OBJECT_ID { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDERIVED_FROMBytes() { return __p.__vector_as_span<byte>(6, 1); }
+  public Span<byte> GetORIG_OBJECT_IDBytes() { return __p.__vector_as_span<byte>(8, 1); }
 #else
-  public ArraySegment<byte>? GetDERIVED_FROMBytes() { return __p.__vector_as_arraysegment(6); }
+  public ArraySegment<byte>? GetORIG_OBJECT_IDBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
-  public byte[] GetDERIVED_FROMArray() { return __p.__vector_as_array<byte>(6); }
-  public string DECLASSIFICATION_DATE { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetORIG_OBJECT_IDArray() { return __p.__vector_as_array<byte>(8); }
+  /// Source record this was derived from
+  public string DERIVED_FROM { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDECLASSIFICATION_DATEBytes() { return __p.__vector_as_span<byte>(8, 1); }
+  public Span<byte> GetDERIVED_FROMBytes() { return __p.__vector_as_span<byte>(10, 1); }
 #else
-  public ArraySegment<byte>? GetDECLASSIFICATION_DATEBytes() { return __p.__vector_as_arraysegment(8); }
+  public ArraySegment<byte>? GetDERIVED_FROMBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
-  public byte[] GetDECLASSIFICATION_DATEArray() { return __p.__vector_as_array<byte>(8); }
-  public string DECLASSIFICATION_STRING { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetDERIVED_FROMArray() { return __p.__vector_as_array<byte>(10); }
+  /// Classification date (ISO 8601)
+  public string DECLASSIFICATION_DATE { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDECLASSIFICATION_STRINGBytes() { return __p.__vector_as_span<byte>(10, 1); }
+  public Span<byte> GetDECLASSIFICATION_DATEBytes() { return __p.__vector_as_span<byte>(12, 1); }
 #else
-  public ArraySegment<byte>? GetDECLASSIFICATION_STRINGBytes() { return __p.__vector_as_arraysegment(10); }
+  public ArraySegment<byte>? GetDECLASSIFICATION_DATEBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
-  public byte[] GetDECLASSIFICATION_STRINGArray() { return __p.__vector_as_array<byte>(10); }
-  public int SAT_NO { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public string ORIG_OBJECT_ID { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetDECLASSIFICATION_DATEArray() { return __p.__vector_as_array<byte>(12); }
+  /// Classification marking
+  public string DECLASSIFICATION_STRING { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetORIG_OBJECT_IDBytes() { return __p.__vector_as_span<byte>(14, 1); }
+  public Span<byte> GetDECLASSIFICATION_STRINGBytes() { return __p.__vector_as_span<byte>(14, 1); }
 #else
-  public ArraySegment<byte>? GetORIG_OBJECT_IDBytes() { return __p.__vector_as_arraysegment(14); }
+  public ArraySegment<byte>? GetDECLASSIFICATION_STRINGBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
-  public byte[] GetORIG_OBJECT_IDArray() { return __p.__vector_as_array<byte>(14); }
+  public byte[] GetDECLASSIFICATION_STRINGArray() { return __p.__vector_as_array<byte>(14); }
+  /// Event time (ISO 8601)
   public string EVENT_TIME { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetEVENT_TIMEBytes() { return __p.__vector_as_span<byte>(16, 1); }
@@ -62,6 +69,7 @@ public struct OOE : IFlatbufferObject
   public ArraySegment<byte>? GetEVENT_TIMEBytes() { return __p.__vector_as_arraysegment(16); }
 #endif
   public byte[] GetEVENT_TIMEArray() { return __p.__vector_as_array<byte>(16); }
+  /// Notes on event time accuracy
   public string EVENT_TIME_NOTES { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetEVENT_TIME_NOTESBytes() { return __p.__vector_as_span<byte>(18, 1); }
@@ -69,223 +77,229 @@ public struct OOE : IFlatbufferObject
   public ArraySegment<byte>? GetEVENT_TIME_NOTESBytes() { return __p.__vector_as_arraysegment(18); }
 #endif
   public byte[] GetEVENT_TIME_NOTESArray() { return __p.__vector_as_array<byte>(18); }
-  public string OPERATOR_ORG_ID { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Event category
+  public eventCategory CATEGORY { get { int o = __p.__offset(20); return o != 0 ? (eventCategory)__p.bb.GetSbyte(o + __p.bb_pos) : eventCategory.ANOMALY; } }
+  /// Event result/outcome
+  public eventResult RESULT { get { int o = __p.__offset(22); return o != 0 ? (eventResult)__p.bb.GetSbyte(o + __p.bb_pos) : eventResult.TOTAL_LOSS; } }
+  /// Event type detail
+  public string EVENT_TYPE { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetOPERATOR_ORG_IDBytes() { return __p.__vector_as_span<byte>(20, 1); }
+  public Span<byte> GetEVENT_TYPEBytes() { return __p.__vector_as_span<byte>(24, 1); }
 #else
-  public ArraySegment<byte>? GetOPERATOR_ORG_IDBytes() { return __p.__vector_as_arraysegment(20); }
+  public ArraySegment<byte>? GetEVENT_TYPEBytes() { return __p.__vector_as_arraysegment(24); }
 #endif
-  public byte[] GetOPERATOR_ORG_IDArray() { return __p.__vector_as_array<byte>(20); }
-  public string OWNER_ORG_ID { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetEVENT_TYPEArray() { return __p.__vector_as_array<byte>(24); }
+  /// Operator organization identifier
+  public string OPERATOR_ORG_ID { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetOWNER_ORG_IDBytes() { return __p.__vector_as_span<byte>(22, 1); }
+  public Span<byte> GetOPERATOR_ORG_IDBytes() { return __p.__vector_as_span<byte>(26, 1); }
 #else
-  public ArraySegment<byte>? GetOWNER_ORG_IDBytes() { return __p.__vector_as_arraysegment(22); }
+  public ArraySegment<byte>? GetOPERATOR_ORG_IDBytes() { return __p.__vector_as_arraysegment(26); }
 #endif
-  public byte[] GetOWNER_ORG_IDArray() { return __p.__vector_as_array<byte>(22); }
-  public string LESSEE_ORG_ID { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetOPERATOR_ORG_IDArray() { return __p.__vector_as_array<byte>(26); }
+  /// Owner organization identifier
+  public string OWNER_ORG_ID { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetLESSEE_ORG_IDBytes() { return __p.__vector_as_span<byte>(24, 1); }
+  public Span<byte> GetOWNER_ORG_IDBytes() { return __p.__vector_as_span<byte>(28, 1); }
 #else
-  public ArraySegment<byte>? GetLESSEE_ORG_IDBytes() { return __p.__vector_as_arraysegment(24); }
+  public ArraySegment<byte>? GetOWNER_ORG_IDBytes() { return __p.__vector_as_arraysegment(28); }
 #endif
-  public byte[] GetLESSEE_ORG_IDArray() { return __p.__vector_as_array<byte>(24); }
-  public string OPERATED_ON_BEHALF_OF_ORG_ID { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetOWNER_ORG_IDArray() { return __p.__vector_as_array<byte>(28); }
+  /// Lessee organization identifier
+  public string LESSEE_ORG_ID { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetOPERATED_ON_BEHALF_OF_ORG_IDBytes() { return __p.__vector_as_span<byte>(26, 1); }
+  public Span<byte> GetLESSEE_ORG_IDBytes() { return __p.__vector_as_span<byte>(30, 1); }
 #else
-  public ArraySegment<byte>? GetOPERATED_ON_BEHALF_OF_ORG_IDBytes() { return __p.__vector_as_arraysegment(26); }
+  public ArraySegment<byte>? GetLESSEE_ORG_IDBytes() { return __p.__vector_as_arraysegment(30); }
 #endif
-  public byte[] GetOPERATED_ON_BEHALF_OF_ORG_IDArray() { return __p.__vector_as_array<byte>(26); }
-  public double GEO_POSITION { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string PLANE_SLOT { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetLESSEE_ORG_IDArray() { return __p.__vector_as_array<byte>(30); }
+  /// Operated on behalf of organization
+  public string OPERATED_ON_BEHALF_OF_ORG_ID { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetPLANE_SLOTBytes() { return __p.__vector_as_span<byte>(30, 1); }
+  public Span<byte> GetOPERATED_ON_BEHALF_OF_ORG_IDBytes() { return __p.__vector_as_span<byte>(32, 1); }
 #else
-  public ArraySegment<byte>? GetPLANE_SLOTBytes() { return __p.__vector_as_arraysegment(30); }
+  public ArraySegment<byte>? GetOPERATED_ON_BEHALF_OF_ORG_IDBytes() { return __p.__vector_as_arraysegment(32); }
 #endif
-  public byte[] GetPLANE_SLOTArray() { return __p.__vector_as_array<byte>(30); }
-  public string PLANE_NUMBER { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetOPERATED_ON_BEHALF_OF_ORG_IDArray() { return __p.__vector_as_array<byte>(32); }
+  /// GEO longitude at event time (degrees east)
+  public double GEO_POSITION { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Orbital plane slot
+  public string PLANE_SLOT { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetPLANE_NUMBERBytes() { return __p.__vector_as_span<byte>(32, 1); }
+  public Span<byte> GetPLANE_SLOTBytes() { return __p.__vector_as_span<byte>(36, 1); }
 #else
-  public ArraySegment<byte>? GetPLANE_NUMBERBytes() { return __p.__vector_as_arraysegment(32); }
+  public ArraySegment<byte>? GetPLANE_SLOTBytes() { return __p.__vector_as_arraysegment(36); }
 #endif
-  public byte[] GetPLANE_NUMBERArray() { return __p.__vector_as_array<byte>(32); }
-  public string POSITION_STATUS { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetPLANE_SLOTArray() { return __p.__vector_as_array<byte>(36); }
+  /// Orbital plane number
+  public string PLANE_NUMBER { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetPOSITION_STATUSBytes() { return __p.__vector_as_span<byte>(34, 1); }
+  public Span<byte> GetPLANE_NUMBERBytes() { return __p.__vector_as_span<byte>(38, 1); }
 #else
-  public ArraySegment<byte>? GetPOSITION_STATUSBytes() { return __p.__vector_as_arraysegment(34); }
+  public ArraySegment<byte>? GetPLANE_NUMBERBytes() { return __p.__vector_as_arraysegment(38); }
 #endif
-  public byte[] GetPOSITION_STATUSArray() { return __p.__vector_as_array<byte>(34); }
-  public string UNTIL_TIME { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetPLANE_NUMBERArray() { return __p.__vector_as_array<byte>(38); }
+  /// Position status at event time
+  public string POSITION_STATUS { get { int o = __p.__offset(40); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetUNTIL_TIMEBytes() { return __p.__vector_as_span<byte>(36, 1); }
+  public Span<byte> GetPOSITION_STATUSBytes() { return __p.__vector_as_span<byte>(40, 1); }
 #else
-  public ArraySegment<byte>? GetUNTIL_TIMEBytes() { return __p.__vector_as_arraysegment(36); }
+  public ArraySegment<byte>? GetPOSITION_STATUSBytes() { return __p.__vector_as_arraysegment(40); }
 #endif
-  public byte[] GetUNTIL_TIMEArray() { return __p.__vector_as_array<byte>(36); }
-  public string OFFICIAL_LOSS_DATE { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetPOSITION_STATUSArray() { return __p.__vector_as_array<byte>(40); }
+  /// Time until expected recovery (ISO 8601)
+  public string UNTIL_TIME { get { int o = __p.__offset(42); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetOFFICIAL_LOSS_DATEBytes() { return __p.__vector_as_span<byte>(38, 1); }
+  public Span<byte> GetUNTIL_TIMEBytes() { return __p.__vector_as_span<byte>(42, 1); }
 #else
-  public ArraySegment<byte>? GetOFFICIAL_LOSS_DATEBytes() { return __p.__vector_as_arraysegment(38); }
+  public ArraySegment<byte>? GetUNTIL_TIMEBytes() { return __p.__vector_as_arraysegment(42); }
 #endif
-  public byte[] GetOFFICIAL_LOSS_DATEArray() { return __p.__vector_as_array<byte>(38); }
-  public double NET_AMOUNT { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string UNDERLYING_CAUSE { get { int o = __p.__offset(42); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetUNTIL_TIMEArray() { return __p.__vector_as_array<byte>(42); }
+  /// Official loss date (ISO 8601)
+  public string OFFICIAL_LOSS_DATE { get { int o = __p.__offset(44); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetUNDERLYING_CAUSEBytes() { return __p.__vector_as_span<byte>(42, 1); }
+  public Span<byte> GetOFFICIAL_LOSS_DATEBytes() { return __p.__vector_as_span<byte>(44, 1); }
 #else
-  public ArraySegment<byte>? GetUNDERLYING_CAUSEBytes() { return __p.__vector_as_arraysegment(42); }
+  public ArraySegment<byte>? GetOFFICIAL_LOSS_DATEBytes() { return __p.__vector_as_arraysegment(44); }
 #endif
-  public byte[] GetUNDERLYING_CAUSEArray() { return __p.__vector_as_array<byte>(42); }
-  public double CAPABILITY_LOSS { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double CAPACITY_LOSS { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double INSURANCE_LOSS { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double THIRD_PARTY_INSURANCE_LOSS { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public int INJURED { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int KILLED { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public double LIFE_LOST { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double AGE_AT_EVENT { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string ACHIEVED_FLIGHT_PHASE { get { int o = __p.__offset(60); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetOFFICIAL_LOSS_DATEArray() { return __p.__vector_as_array<byte>(44); }
+  /// Financial loss amount (USD)
+  public double NET_AMOUNT { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Root cause description
+  public string UNDERLYING_CAUSE { get { int o = __p.__offset(48); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetACHIEVED_FLIGHT_PHASEBytes() { return __p.__vector_as_span<byte>(60, 1); }
+  public Span<byte> GetUNDERLYING_CAUSEBytes() { return __p.__vector_as_span<byte>(48, 1); }
 #else
-  public ArraySegment<byte>? GetACHIEVED_FLIGHT_PHASEBytes() { return __p.__vector_as_arraysegment(60); }
+  public ArraySegment<byte>? GetUNDERLYING_CAUSEBytes() { return __p.__vector_as_arraysegment(48); }
 #endif
-  public byte[] GetACHIEVED_FLIGHT_PHASEArray() { return __p.__vector_as_array<byte>(60); }
-  public string OCCURRENCE_FLIGHT_PHASE { get { int o = __p.__offset(62); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetUNDERLYING_CAUSEArray() { return __p.__vector_as_array<byte>(48); }
+  /// Capability loss fraction (0-1)
+  public double CAPABILITY_LOSS { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Capacity loss fraction (0-1)
+  public double CAPACITY_LOSS { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Insurance loss amount (USD)
+  public double INSURANCE_LOSS { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Third-party insurance loss (USD)
+  public double THIRD_PARTY_INSURANCE_LOSS { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Number of personnel injured
+  public ushort INJURED { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  /// Number of fatalities
+  public ushort KILLED { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  /// Spacecraft age at event (years)
+  public double AGE_AT_EVENT { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Design life remaining at event (years)
+  public double LIFE_LOST { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Flight phase achieved
+  public string ACHIEVED_FLIGHT_PHASE { get { int o = __p.__offset(66); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetOCCURRENCE_FLIGHT_PHASEBytes() { return __p.__vector_as_span<byte>(62, 1); }
+  public Span<byte> GetACHIEVED_FLIGHT_PHASEBytes() { return __p.__vector_as_span<byte>(66, 1); }
 #else
-  public ArraySegment<byte>? GetOCCURRENCE_FLIGHT_PHASEBytes() { return __p.__vector_as_arraysegment(62); }
+  public ArraySegment<byte>? GetACHIEVED_FLIGHT_PHASEBytes() { return __p.__vector_as_arraysegment(66); }
 #endif
-  public byte[] GetOCCURRENCE_FLIGHT_PHASEArray() { return __p.__vector_as_array<byte>(62); }
-  public string STAGE_AT_FAULT { get { int o = __p.__offset(64); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetACHIEVED_FLIGHT_PHASEArray() { return __p.__vector_as_array<byte>(66); }
+  /// Flight phase at occurrence
+  public string OCCURRENCE_FLIGHT_PHASE { get { int o = __p.__offset(68); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSTAGE_AT_FAULTBytes() { return __p.__vector_as_span<byte>(64, 1); }
+  public Span<byte> GetOCCURRENCE_FLIGHT_PHASEBytes() { return __p.__vector_as_span<byte>(68, 1); }
 #else
-  public ArraySegment<byte>? GetSTAGE_AT_FAULTBytes() { return __p.__vector_as_arraysegment(64); }
+  public ArraySegment<byte>? GetOCCURRENCE_FLIGHT_PHASEBytes() { return __p.__vector_as_arraysegment(68); }
 #endif
-  public byte[] GetSTAGE_AT_FAULTArray() { return __p.__vector_as_array<byte>(64); }
-  public string EQUIPMENT_AT_FAULT { get { int o = __p.__offset(66); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetOCCURRENCE_FLIGHT_PHASEArray() { return __p.__vector_as_array<byte>(68); }
+  /// Stage at fault
+  public string STAGE_AT_FAULT { get { int o = __p.__offset(70); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetEQUIPMENT_AT_FAULTBytes() { return __p.__vector_as_span<byte>(66, 1); }
+  public Span<byte> GetSTAGE_AT_FAULTBytes() { return __p.__vector_as_span<byte>(70, 1); }
 #else
-  public ArraySegment<byte>? GetEQUIPMENT_AT_FAULTBytes() { return __p.__vector_as_arraysegment(66); }
+  public ArraySegment<byte>? GetSTAGE_AT_FAULTBytes() { return __p.__vector_as_arraysegment(70); }
 #endif
-  public byte[] GetEQUIPMENT_AT_FAULTArray() { return __p.__vector_as_array<byte>(66); }
-  public string EQUIPMENT_TYPE_AT_FAULT { get { int o = __p.__offset(68); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetSTAGE_AT_FAULTArray() { return __p.__vector_as_array<byte>(70); }
+  /// Equipment at fault
+  public string EQUIPMENT_AT_FAULT { get { int o = __p.__offset(72); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetEQUIPMENT_TYPE_AT_FAULTBytes() { return __p.__vector_as_span<byte>(68, 1); }
+  public Span<byte> GetEQUIPMENT_AT_FAULTBytes() { return __p.__vector_as_span<byte>(72, 1); }
 #else
-  public ArraySegment<byte>? GetEQUIPMENT_TYPE_AT_FAULTBytes() { return __p.__vector_as_arraysegment(68); }
+  public ArraySegment<byte>? GetEQUIPMENT_AT_FAULTBytes() { return __p.__vector_as_arraysegment(72); }
 #endif
-  public byte[] GetEQUIPMENT_TYPE_AT_FAULTArray() { return __p.__vector_as_array<byte>(68); }
-  public string EQUIPMENT_PART_AT_FAULT { get { int o = __p.__offset(70); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetEQUIPMENT_AT_FAULTArray() { return __p.__vector_as_array<byte>(72); }
+  /// Equipment type at fault
+  public string EQUIPMENT_TYPE_AT_FAULT { get { int o = __p.__offset(74); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetEQUIPMENT_PART_AT_FAULTBytes() { return __p.__vector_as_span<byte>(70, 1); }
+  public Span<byte> GetEQUIPMENT_TYPE_AT_FAULTBytes() { return __p.__vector_as_span<byte>(74, 1); }
 #else
-  public ArraySegment<byte>? GetEQUIPMENT_PART_AT_FAULTBytes() { return __p.__vector_as_arraysegment(70); }
+  public ArraySegment<byte>? GetEQUIPMENT_TYPE_AT_FAULTBytes() { return __p.__vector_as_arraysegment(74); }
 #endif
-  public byte[] GetEQUIPMENT_PART_AT_FAULTArray() { return __p.__vector_as_array<byte>(70); }
-  public string CONSEQUENTIAL_EQUIPMENT_FAILURE { get { int o = __p.__offset(72); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetEQUIPMENT_TYPE_AT_FAULTArray() { return __p.__vector_as_array<byte>(74); }
+  /// Equipment part at fault
+  public string EQUIPMENT_PART_AT_FAULT { get { int o = __p.__offset(76); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetCONSEQUENTIAL_EQUIPMENT_FAILUREBytes() { return __p.__vector_as_span<byte>(72, 1); }
+  public Span<byte> GetEQUIPMENT_PART_AT_FAULTBytes() { return __p.__vector_as_span<byte>(76, 1); }
 #else
-  public ArraySegment<byte>? GetCONSEQUENTIAL_EQUIPMENT_FAILUREBytes() { return __p.__vector_as_arraysegment(72); }
+  public ArraySegment<byte>? GetEQUIPMENT_PART_AT_FAULTBytes() { return __p.__vector_as_arraysegment(76); }
 #endif
-  public byte[] GetCONSEQUENTIAL_EQUIPMENT_FAILUREArray() { return __p.__vector_as_array<byte>(72); }
-  public bool INCLINED { get { int o = __p.__offset(74); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  public string DESCRIPTION { get { int o = __p.__offset(76); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetEQUIPMENT_PART_AT_FAULTArray() { return __p.__vector_as_array<byte>(76); }
+  /// Consequential equipment failure
+  public string CONSEQUENTIAL_EQUIPMENT_FAILURE { get { int o = __p.__offset(78); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDESCRIPTIONBytes() { return __p.__vector_as_span<byte>(76, 1); }
+  public Span<byte> GetCONSEQUENTIAL_EQUIPMENT_FAILUREBytes() { return __p.__vector_as_span<byte>(78, 1); }
 #else
-  public ArraySegment<byte>? GetDESCRIPTIONBytes() { return __p.__vector_as_arraysegment(76); }
+  public ArraySegment<byte>? GetCONSEQUENTIAL_EQUIPMENT_FAILUREBytes() { return __p.__vector_as_arraysegment(78); }
 #endif
-  public byte[] GetDESCRIPTIONArray() { return __p.__vector_as_array<byte>(76); }
-  public string REMARKS { get { int o = __p.__offset(78); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetCONSEQUENTIAL_EQUIPMENT_FAILUREArray() { return __p.__vector_as_array<byte>(78); }
+  /// True if orbit is inclined
+  public bool INCLINED { get { int o = __p.__offset(80); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Event description
+  public string DESCRIPTION { get { int o = __p.__offset(82); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetREMARKSBytes() { return __p.__vector_as_span<byte>(78, 1); }
+  public Span<byte> GetDESCRIPTIONBytes() { return __p.__vector_as_span<byte>(82, 1); }
 #else
-  public ArraySegment<byte>? GetREMARKSBytes() { return __p.__vector_as_arraysegment(78); }
+  public ArraySegment<byte>? GetDESCRIPTIONBytes() { return __p.__vector_as_arraysegment(82); }
 #endif
-  public byte[] GetREMARKSArray() { return __p.__vector_as_array<byte>(78); }
-  public string INSURANCE_LOSS_NOTES { get { int o = __p.__offset(80); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetDESCRIPTIONArray() { return __p.__vector_as_array<byte>(82); }
+  /// Additional remarks
+  public string REMARKS { get { int o = __p.__offset(84); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetINSURANCE_LOSS_NOTESBytes() { return __p.__vector_as_span<byte>(80, 1); }
+  public Span<byte> GetREMARKSBytes() { return __p.__vector_as_span<byte>(84, 1); }
 #else
-  public ArraySegment<byte>? GetINSURANCE_LOSS_NOTESBytes() { return __p.__vector_as_arraysegment(80); }
+  public ArraySegment<byte>? GetREMARKSBytes() { return __p.__vector_as_arraysegment(84); }
 #endif
-  public byte[] GetINSURANCE_LOSS_NOTESArray() { return __p.__vector_as_array<byte>(80); }
-  public string CAPABILITY_LOSS_NOTES { get { int o = __p.__offset(82); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetREMARKSArray() { return __p.__vector_as_array<byte>(84); }
+  /// Object status after event
+  public string OBJECT_STATUS { get { int o = __p.__offset(86); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetCAPABILITY_LOSS_NOTESBytes() { return __p.__vector_as_span<byte>(82, 1); }
+  public Span<byte> GetOBJECT_STATUSBytes() { return __p.__vector_as_span<byte>(86, 1); }
 #else
-  public ArraySegment<byte>? GetCAPABILITY_LOSS_NOTESBytes() { return __p.__vector_as_arraysegment(82); }
+  public ArraySegment<byte>? GetOBJECT_STATUSBytes() { return __p.__vector_as_arraysegment(86); }
 #endif
-  public byte[] GetCAPABILITY_LOSS_NOTESArray() { return __p.__vector_as_array<byte>(82); }
-  public string INSURANCE_CARRIED_NOTES { get { int o = __p.__offset(84); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetOBJECT_STATUSArray() { return __p.__vector_as_array<byte>(86); }
+  /// Satellite position after event
+  public string SATELLITE_POSITION { get { int o = __p.__offset(88); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetINSURANCE_CARRIED_NOTESBytes() { return __p.__vector_as_span<byte>(84, 1); }
+  public Span<byte> GetSATELLITE_POSITIONBytes() { return __p.__vector_as_span<byte>(88, 1); }
 #else
-  public ArraySegment<byte>? GetINSURANCE_CARRIED_NOTESBytes() { return __p.__vector_as_arraysegment(84); }
+  public ArraySegment<byte>? GetSATELLITE_POSITIONBytes() { return __p.__vector_as_arraysegment(88); }
 #endif
-  public byte[] GetINSURANCE_CARRIED_NOTESArray() { return __p.__vector_as_array<byte>(84); }
-  public string EQUIPMENT_CAUSING_LOSS_NOTES { get { int o = __p.__offset(86); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetSATELLITE_POSITIONArray() { return __p.__vector_as_array<byte>(88); }
+  /// On-orbit reference
+  public string ON_ORBIT { get { int o = __p.__offset(90); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetEQUIPMENT_CAUSING_LOSS_NOTESBytes() { return __p.__vector_as_span<byte>(86, 1); }
+  public Span<byte> GetON_ORBITBytes() { return __p.__vector_as_span<byte>(90, 1); }
 #else
-  public ArraySegment<byte>? GetEQUIPMENT_CAUSING_LOSS_NOTESBytes() { return __p.__vector_as_arraysegment(86); }
+  public ArraySegment<byte>? GetON_ORBITBytes() { return __p.__vector_as_arraysegment(90); }
 #endif
-  public byte[] GetEQUIPMENT_CAUSING_LOSS_NOTESArray() { return __p.__vector_as_array<byte>(86); }
-  public string EVENT_TYPE { get { int o = __p.__offset(88); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetEVENT_TYPEBytes() { return __p.__vector_as_span<byte>(88, 1); }
-#else
-  public ArraySegment<byte>? GetEVENT_TYPEBytes() { return __p.__vector_as_arraysegment(88); }
-#endif
-  public byte[] GetEVENT_TYPEArray() { return __p.__vector_as_array<byte>(88); }
-  public string EVENT_RESULT { get { int o = __p.__offset(90); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetEVENT_RESULTBytes() { return __p.__vector_as_span<byte>(90, 1); }
-#else
-  public ArraySegment<byte>? GetEVENT_RESULTBytes() { return __p.__vector_as_arraysegment(90); }
-#endif
-  public byte[] GetEVENT_RESULTArray() { return __p.__vector_as_array<byte>(90); }
-  public string OBJECT_STATUS { get { int o = __p.__offset(92); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetOBJECT_STATUSBytes() { return __p.__vector_as_span<byte>(92, 1); }
-#else
-  public ArraySegment<byte>? GetOBJECT_STATUSBytes() { return __p.__vector_as_arraysegment(92); }
-#endif
-  public byte[] GetOBJECT_STATUSArray() { return __p.__vector_as_array<byte>(92); }
-  public string SATELLITE_POSITION { get { int o = __p.__offset(94); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetSATELLITE_POSITIONBytes() { return __p.__vector_as_span<byte>(94, 1); }
-#else
-  public ArraySegment<byte>? GetSATELLITE_POSITIONBytes() { return __p.__vector_as_arraysegment(94); }
-#endif
-  public byte[] GetSATELLITE_POSITIONArray() { return __p.__vector_as_array<byte>(94); }
-  public string ON_ORBIT { get { int o = __p.__offset(96); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetON_ORBITBytes() { return __p.__vector_as_span<byte>(96, 1); }
-#else
-  public ArraySegment<byte>? GetON_ORBITBytes() { return __p.__vector_as_arraysegment(96); }
-#endif
-  public byte[] GetON_ORBITArray() { return __p.__vector_as_array<byte>(96); }
+  public byte[] GetON_ORBITArray() { return __p.__vector_as_array<byte>(90); }
 
   public static Offset<OOE> CreateOOE(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
+      uint SAT_NO = 0,
+      StringOffset ORIG_OBJECT_IDOffset = default(StringOffset),
       StringOffset DERIVED_FROMOffset = default(StringOffset),
       StringOffset DECLASSIFICATION_DATEOffset = default(StringOffset),
       StringOffset DECLASSIFICATION_STRINGOffset = default(StringOffset),
-      int SAT_NO = 0,
-      StringOffset ORIG_OBJECT_IDOffset = default(StringOffset),
       StringOffset EVENT_TIMEOffset = default(StringOffset),
       StringOffset EVENT_TIME_NOTESOffset = default(StringOffset),
+      eventCategory CATEGORY = eventCategory.ANOMALY,
+      eventResult RESULT = eventResult.TOTAL_LOSS,
+      StringOffset EVENT_TYPEOffset = default(StringOffset),
       StringOffset OPERATOR_ORG_IDOffset = default(StringOffset),
       StringOffset OWNER_ORG_IDOffset = default(StringOffset),
       StringOffset LESSEE_ORG_IDOffset = default(StringOffset),
@@ -302,10 +316,10 @@ public struct OOE : IFlatbufferObject
       double CAPACITY_LOSS = 0.0,
       double INSURANCE_LOSS = 0.0,
       double THIRD_PARTY_INSURANCE_LOSS = 0.0,
-      int INJURED = 0,
-      int KILLED = 0,
-      double LIFE_LOST = 0.0,
+      ushort INJURED = 0,
+      ushort KILLED = 0,
       double AGE_AT_EVENT = 0.0,
+      double LIFE_LOST = 0.0,
       StringOffset ACHIEVED_FLIGHT_PHASEOffset = default(StringOffset),
       StringOffset OCCURRENCE_FLIGHT_PHASEOffset = default(StringOffset),
       StringOffset STAGE_AT_FAULTOffset = default(StringOffset),
@@ -316,18 +330,12 @@ public struct OOE : IFlatbufferObject
       bool INCLINED = false,
       StringOffset DESCRIPTIONOffset = default(StringOffset),
       StringOffset REMARKSOffset = default(StringOffset),
-      StringOffset INSURANCE_LOSS_NOTESOffset = default(StringOffset),
-      StringOffset CAPABILITY_LOSS_NOTESOffset = default(StringOffset),
-      StringOffset INSURANCE_CARRIED_NOTESOffset = default(StringOffset),
-      StringOffset EQUIPMENT_CAUSING_LOSS_NOTESOffset = default(StringOffset),
-      StringOffset EVENT_TYPEOffset = default(StringOffset),
-      StringOffset EVENT_RESULTOffset = default(StringOffset),
       StringOffset OBJECT_STATUSOffset = default(StringOffset),
       StringOffset SATELLITE_POSITIONOffset = default(StringOffset),
       StringOffset ON_ORBITOffset = default(StringOffset)) {
-    builder.StartTable(47);
-    OOE.AddAGE_AT_EVENT(builder, AGE_AT_EVENT);
+    builder.StartTable(44);
     OOE.AddLIFE_LOST(builder, LIFE_LOST);
+    OOE.AddAGE_AT_EVENT(builder, AGE_AT_EVENT);
     OOE.AddTHIRD_PARTY_INSURANCE_LOSS(builder, THIRD_PARTY_INSURANCE_LOSS);
     OOE.AddINSURANCE_LOSS(builder, INSURANCE_LOSS);
     OOE.AddCAPACITY_LOSS(builder, CAPACITY_LOSS);
@@ -337,12 +345,6 @@ public struct OOE : IFlatbufferObject
     OOE.AddON_ORBIT(builder, ON_ORBITOffset);
     OOE.AddSATELLITE_POSITION(builder, SATELLITE_POSITIONOffset);
     OOE.AddOBJECT_STATUS(builder, OBJECT_STATUSOffset);
-    OOE.AddEVENT_RESULT(builder, EVENT_RESULTOffset);
-    OOE.AddEVENT_TYPE(builder, EVENT_TYPEOffset);
-    OOE.AddEQUIPMENT_CAUSING_LOSS_NOTES(builder, EQUIPMENT_CAUSING_LOSS_NOTESOffset);
-    OOE.AddINSURANCE_CARRIED_NOTES(builder, INSURANCE_CARRIED_NOTESOffset);
-    OOE.AddCAPABILITY_LOSS_NOTES(builder, CAPABILITY_LOSS_NOTESOffset);
-    OOE.AddINSURANCE_LOSS_NOTES(builder, INSURANCE_LOSS_NOTESOffset);
     OOE.AddREMARKS(builder, REMARKSOffset);
     OOE.AddDESCRIPTION(builder, DESCRIPTIONOffset);
     OOE.AddCONSEQUENTIAL_EQUIPMENT_FAILURE(builder, CONSEQUENTIAL_EQUIPMENT_FAILUREOffset);
@@ -352,8 +354,6 @@ public struct OOE : IFlatbufferObject
     OOE.AddSTAGE_AT_FAULT(builder, STAGE_AT_FAULTOffset);
     OOE.AddOCCURRENCE_FLIGHT_PHASE(builder, OCCURRENCE_FLIGHT_PHASEOffset);
     OOE.AddACHIEVED_FLIGHT_PHASE(builder, ACHIEVED_FLIGHT_PHASEOffset);
-    OOE.AddKILLED(builder, KILLED);
-    OOE.AddINJURED(builder, INJURED);
     OOE.AddUNDERLYING_CAUSE(builder, UNDERLYING_CAUSEOffset);
     OOE.AddOFFICIAL_LOSS_DATE(builder, OFFICIAL_LOSS_DATEOffset);
     OOE.AddUNTIL_TIME(builder, UNTIL_TIMEOffset);
@@ -364,66 +364,68 @@ public struct OOE : IFlatbufferObject
     OOE.AddLESSEE_ORG_ID(builder, LESSEE_ORG_IDOffset);
     OOE.AddOWNER_ORG_ID(builder, OWNER_ORG_IDOffset);
     OOE.AddOPERATOR_ORG_ID(builder, OPERATOR_ORG_IDOffset);
+    OOE.AddEVENT_TYPE(builder, EVENT_TYPEOffset);
     OOE.AddEVENT_TIME_NOTES(builder, EVENT_TIME_NOTESOffset);
     OOE.AddEVENT_TIME(builder, EVENT_TIMEOffset);
-    OOE.AddORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset);
-    OOE.AddSAT_NO(builder, SAT_NO);
     OOE.AddDECLASSIFICATION_STRING(builder, DECLASSIFICATION_STRINGOffset);
     OOE.AddDECLASSIFICATION_DATE(builder, DECLASSIFICATION_DATEOffset);
     OOE.AddDERIVED_FROM(builder, DERIVED_FROMOffset);
+    OOE.AddORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset);
+    OOE.AddSAT_NO(builder, SAT_NO);
     OOE.AddID(builder, IDOffset);
+    OOE.AddKILLED(builder, KILLED);
+    OOE.AddINJURED(builder, INJURED);
     OOE.AddINCLINED(builder, INCLINED);
+    OOE.AddRESULT(builder, RESULT);
+    OOE.AddCATEGORY(builder, CATEGORY);
     return OOE.EndOOE(builder);
   }
 
-  public static void StartOOE(FlatBufferBuilder builder) { builder.StartTable(47); }
+  public static void StartOOE(FlatBufferBuilder builder) { builder.StartTable(44); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
-  public static void AddDERIVED_FROM(FlatBufferBuilder builder, StringOffset DERIVED_FROMOffset) { builder.AddOffset(1, DERIVED_FROMOffset.Value, 0); }
-  public static void AddDECLASSIFICATION_DATE(FlatBufferBuilder builder, StringOffset DECLASSIFICATION_DATEOffset) { builder.AddOffset(2, DECLASSIFICATION_DATEOffset.Value, 0); }
-  public static void AddDECLASSIFICATION_STRING(FlatBufferBuilder builder, StringOffset DECLASSIFICATION_STRINGOffset) { builder.AddOffset(3, DECLASSIFICATION_STRINGOffset.Value, 0); }
-  public static void AddSAT_NO(FlatBufferBuilder builder, int SAT_NO) { builder.AddInt(4, SAT_NO, 0); }
-  public static void AddORIG_OBJECT_ID(FlatBufferBuilder builder, StringOffset ORIG_OBJECT_IDOffset) { builder.AddOffset(5, ORIG_OBJECT_IDOffset.Value, 0); }
+  public static void AddSAT_NO(FlatBufferBuilder builder, uint SAT_NO) { builder.AddUint(1, SAT_NO, 0); }
+  public static void AddORIG_OBJECT_ID(FlatBufferBuilder builder, StringOffset ORIG_OBJECT_IDOffset) { builder.AddOffset(2, ORIG_OBJECT_IDOffset.Value, 0); }
+  public static void AddDERIVED_FROM(FlatBufferBuilder builder, StringOffset DERIVED_FROMOffset) { builder.AddOffset(3, DERIVED_FROMOffset.Value, 0); }
+  public static void AddDECLASSIFICATION_DATE(FlatBufferBuilder builder, StringOffset DECLASSIFICATION_DATEOffset) { builder.AddOffset(4, DECLASSIFICATION_DATEOffset.Value, 0); }
+  public static void AddDECLASSIFICATION_STRING(FlatBufferBuilder builder, StringOffset DECLASSIFICATION_STRINGOffset) { builder.AddOffset(5, DECLASSIFICATION_STRINGOffset.Value, 0); }
   public static void AddEVENT_TIME(FlatBufferBuilder builder, StringOffset EVENT_TIMEOffset) { builder.AddOffset(6, EVENT_TIMEOffset.Value, 0); }
   public static void AddEVENT_TIME_NOTES(FlatBufferBuilder builder, StringOffset EVENT_TIME_NOTESOffset) { builder.AddOffset(7, EVENT_TIME_NOTESOffset.Value, 0); }
-  public static void AddOPERATOR_ORG_ID(FlatBufferBuilder builder, StringOffset OPERATOR_ORG_IDOffset) { builder.AddOffset(8, OPERATOR_ORG_IDOffset.Value, 0); }
-  public static void AddOWNER_ORG_ID(FlatBufferBuilder builder, StringOffset OWNER_ORG_IDOffset) { builder.AddOffset(9, OWNER_ORG_IDOffset.Value, 0); }
-  public static void AddLESSEE_ORG_ID(FlatBufferBuilder builder, StringOffset LESSEE_ORG_IDOffset) { builder.AddOffset(10, LESSEE_ORG_IDOffset.Value, 0); }
-  public static void AddOPERATED_ON_BEHALF_OF_ORG_ID(FlatBufferBuilder builder, StringOffset OPERATED_ON_BEHALF_OF_ORG_IDOffset) { builder.AddOffset(11, OPERATED_ON_BEHALF_OF_ORG_IDOffset.Value, 0); }
-  public static void AddGEO_POSITION(FlatBufferBuilder builder, double GEO_POSITION) { builder.AddDouble(12, GEO_POSITION, 0.0); }
-  public static void AddPLANE_SLOT(FlatBufferBuilder builder, StringOffset PLANE_SLOTOffset) { builder.AddOffset(13, PLANE_SLOTOffset.Value, 0); }
-  public static void AddPLANE_NUMBER(FlatBufferBuilder builder, StringOffset PLANE_NUMBEROffset) { builder.AddOffset(14, PLANE_NUMBEROffset.Value, 0); }
-  public static void AddPOSITION_STATUS(FlatBufferBuilder builder, StringOffset POSITION_STATUSOffset) { builder.AddOffset(15, POSITION_STATUSOffset.Value, 0); }
-  public static void AddUNTIL_TIME(FlatBufferBuilder builder, StringOffset UNTIL_TIMEOffset) { builder.AddOffset(16, UNTIL_TIMEOffset.Value, 0); }
-  public static void AddOFFICIAL_LOSS_DATE(FlatBufferBuilder builder, StringOffset OFFICIAL_LOSS_DATEOffset) { builder.AddOffset(17, OFFICIAL_LOSS_DATEOffset.Value, 0); }
-  public static void AddNET_AMOUNT(FlatBufferBuilder builder, double NET_AMOUNT) { builder.AddDouble(18, NET_AMOUNT, 0.0); }
-  public static void AddUNDERLYING_CAUSE(FlatBufferBuilder builder, StringOffset UNDERLYING_CAUSEOffset) { builder.AddOffset(19, UNDERLYING_CAUSEOffset.Value, 0); }
-  public static void AddCAPABILITY_LOSS(FlatBufferBuilder builder, double CAPABILITY_LOSS) { builder.AddDouble(20, CAPABILITY_LOSS, 0.0); }
-  public static void AddCAPACITY_LOSS(FlatBufferBuilder builder, double CAPACITY_LOSS) { builder.AddDouble(21, CAPACITY_LOSS, 0.0); }
-  public static void AddINSURANCE_LOSS(FlatBufferBuilder builder, double INSURANCE_LOSS) { builder.AddDouble(22, INSURANCE_LOSS, 0.0); }
-  public static void AddTHIRD_PARTY_INSURANCE_LOSS(FlatBufferBuilder builder, double THIRD_PARTY_INSURANCE_LOSS) { builder.AddDouble(23, THIRD_PARTY_INSURANCE_LOSS, 0.0); }
-  public static void AddINJURED(FlatBufferBuilder builder, int INJURED) { builder.AddInt(24, INJURED, 0); }
-  public static void AddKILLED(FlatBufferBuilder builder, int KILLED) { builder.AddInt(25, KILLED, 0); }
-  public static void AddLIFE_LOST(FlatBufferBuilder builder, double LIFE_LOST) { builder.AddDouble(26, LIFE_LOST, 0.0); }
-  public static void AddAGE_AT_EVENT(FlatBufferBuilder builder, double AGE_AT_EVENT) { builder.AddDouble(27, AGE_AT_EVENT, 0.0); }
-  public static void AddACHIEVED_FLIGHT_PHASE(FlatBufferBuilder builder, StringOffset ACHIEVED_FLIGHT_PHASEOffset) { builder.AddOffset(28, ACHIEVED_FLIGHT_PHASEOffset.Value, 0); }
-  public static void AddOCCURRENCE_FLIGHT_PHASE(FlatBufferBuilder builder, StringOffset OCCURRENCE_FLIGHT_PHASEOffset) { builder.AddOffset(29, OCCURRENCE_FLIGHT_PHASEOffset.Value, 0); }
-  public static void AddSTAGE_AT_FAULT(FlatBufferBuilder builder, StringOffset STAGE_AT_FAULTOffset) { builder.AddOffset(30, STAGE_AT_FAULTOffset.Value, 0); }
-  public static void AddEQUIPMENT_AT_FAULT(FlatBufferBuilder builder, StringOffset EQUIPMENT_AT_FAULTOffset) { builder.AddOffset(31, EQUIPMENT_AT_FAULTOffset.Value, 0); }
-  public static void AddEQUIPMENT_TYPE_AT_FAULT(FlatBufferBuilder builder, StringOffset EQUIPMENT_TYPE_AT_FAULTOffset) { builder.AddOffset(32, EQUIPMENT_TYPE_AT_FAULTOffset.Value, 0); }
-  public static void AddEQUIPMENT_PART_AT_FAULT(FlatBufferBuilder builder, StringOffset EQUIPMENT_PART_AT_FAULTOffset) { builder.AddOffset(33, EQUIPMENT_PART_AT_FAULTOffset.Value, 0); }
-  public static void AddCONSEQUENTIAL_EQUIPMENT_FAILURE(FlatBufferBuilder builder, StringOffset CONSEQUENTIAL_EQUIPMENT_FAILUREOffset) { builder.AddOffset(34, CONSEQUENTIAL_EQUIPMENT_FAILUREOffset.Value, 0); }
-  public static void AddINCLINED(FlatBufferBuilder builder, bool INCLINED) { builder.AddBool(35, INCLINED, false); }
-  public static void AddDESCRIPTION(FlatBufferBuilder builder, StringOffset DESCRIPTIONOffset) { builder.AddOffset(36, DESCRIPTIONOffset.Value, 0); }
-  public static void AddREMARKS(FlatBufferBuilder builder, StringOffset REMARKSOffset) { builder.AddOffset(37, REMARKSOffset.Value, 0); }
-  public static void AddINSURANCE_LOSS_NOTES(FlatBufferBuilder builder, StringOffset INSURANCE_LOSS_NOTESOffset) { builder.AddOffset(38, INSURANCE_LOSS_NOTESOffset.Value, 0); }
-  public static void AddCAPABILITY_LOSS_NOTES(FlatBufferBuilder builder, StringOffset CAPABILITY_LOSS_NOTESOffset) { builder.AddOffset(39, CAPABILITY_LOSS_NOTESOffset.Value, 0); }
-  public static void AddINSURANCE_CARRIED_NOTES(FlatBufferBuilder builder, StringOffset INSURANCE_CARRIED_NOTESOffset) { builder.AddOffset(40, INSURANCE_CARRIED_NOTESOffset.Value, 0); }
-  public static void AddEQUIPMENT_CAUSING_LOSS_NOTES(FlatBufferBuilder builder, StringOffset EQUIPMENT_CAUSING_LOSS_NOTESOffset) { builder.AddOffset(41, EQUIPMENT_CAUSING_LOSS_NOTESOffset.Value, 0); }
-  public static void AddEVENT_TYPE(FlatBufferBuilder builder, StringOffset EVENT_TYPEOffset) { builder.AddOffset(42, EVENT_TYPEOffset.Value, 0); }
-  public static void AddEVENT_RESULT(FlatBufferBuilder builder, StringOffset EVENT_RESULTOffset) { builder.AddOffset(43, EVENT_RESULTOffset.Value, 0); }
-  public static void AddOBJECT_STATUS(FlatBufferBuilder builder, StringOffset OBJECT_STATUSOffset) { builder.AddOffset(44, OBJECT_STATUSOffset.Value, 0); }
-  public static void AddSATELLITE_POSITION(FlatBufferBuilder builder, StringOffset SATELLITE_POSITIONOffset) { builder.AddOffset(45, SATELLITE_POSITIONOffset.Value, 0); }
-  public static void AddON_ORBIT(FlatBufferBuilder builder, StringOffset ON_ORBITOffset) { builder.AddOffset(46, ON_ORBITOffset.Value, 0); }
+  public static void AddCATEGORY(FlatBufferBuilder builder, eventCategory CATEGORY) { builder.AddSbyte(8, (sbyte)CATEGORY, 0); }
+  public static void AddRESULT(FlatBufferBuilder builder, eventResult RESULT) { builder.AddSbyte(9, (sbyte)RESULT, 0); }
+  public static void AddEVENT_TYPE(FlatBufferBuilder builder, StringOffset EVENT_TYPEOffset) { builder.AddOffset(10, EVENT_TYPEOffset.Value, 0); }
+  public static void AddOPERATOR_ORG_ID(FlatBufferBuilder builder, StringOffset OPERATOR_ORG_IDOffset) { builder.AddOffset(11, OPERATOR_ORG_IDOffset.Value, 0); }
+  public static void AddOWNER_ORG_ID(FlatBufferBuilder builder, StringOffset OWNER_ORG_IDOffset) { builder.AddOffset(12, OWNER_ORG_IDOffset.Value, 0); }
+  public static void AddLESSEE_ORG_ID(FlatBufferBuilder builder, StringOffset LESSEE_ORG_IDOffset) { builder.AddOffset(13, LESSEE_ORG_IDOffset.Value, 0); }
+  public static void AddOPERATED_ON_BEHALF_OF_ORG_ID(FlatBufferBuilder builder, StringOffset OPERATED_ON_BEHALF_OF_ORG_IDOffset) { builder.AddOffset(14, OPERATED_ON_BEHALF_OF_ORG_IDOffset.Value, 0); }
+  public static void AddGEO_POSITION(FlatBufferBuilder builder, double GEO_POSITION) { builder.AddDouble(15, GEO_POSITION, 0.0); }
+  public static void AddPLANE_SLOT(FlatBufferBuilder builder, StringOffset PLANE_SLOTOffset) { builder.AddOffset(16, PLANE_SLOTOffset.Value, 0); }
+  public static void AddPLANE_NUMBER(FlatBufferBuilder builder, StringOffset PLANE_NUMBEROffset) { builder.AddOffset(17, PLANE_NUMBEROffset.Value, 0); }
+  public static void AddPOSITION_STATUS(FlatBufferBuilder builder, StringOffset POSITION_STATUSOffset) { builder.AddOffset(18, POSITION_STATUSOffset.Value, 0); }
+  public static void AddUNTIL_TIME(FlatBufferBuilder builder, StringOffset UNTIL_TIMEOffset) { builder.AddOffset(19, UNTIL_TIMEOffset.Value, 0); }
+  public static void AddOFFICIAL_LOSS_DATE(FlatBufferBuilder builder, StringOffset OFFICIAL_LOSS_DATEOffset) { builder.AddOffset(20, OFFICIAL_LOSS_DATEOffset.Value, 0); }
+  public static void AddNET_AMOUNT(FlatBufferBuilder builder, double NET_AMOUNT) { builder.AddDouble(21, NET_AMOUNT, 0.0); }
+  public static void AddUNDERLYING_CAUSE(FlatBufferBuilder builder, StringOffset UNDERLYING_CAUSEOffset) { builder.AddOffset(22, UNDERLYING_CAUSEOffset.Value, 0); }
+  public static void AddCAPABILITY_LOSS(FlatBufferBuilder builder, double CAPABILITY_LOSS) { builder.AddDouble(23, CAPABILITY_LOSS, 0.0); }
+  public static void AddCAPACITY_LOSS(FlatBufferBuilder builder, double CAPACITY_LOSS) { builder.AddDouble(24, CAPACITY_LOSS, 0.0); }
+  public static void AddINSURANCE_LOSS(FlatBufferBuilder builder, double INSURANCE_LOSS) { builder.AddDouble(25, INSURANCE_LOSS, 0.0); }
+  public static void AddTHIRD_PARTY_INSURANCE_LOSS(FlatBufferBuilder builder, double THIRD_PARTY_INSURANCE_LOSS) { builder.AddDouble(26, THIRD_PARTY_INSURANCE_LOSS, 0.0); }
+  public static void AddINJURED(FlatBufferBuilder builder, ushort INJURED) { builder.AddUshort(27, INJURED, 0); }
+  public static void AddKILLED(FlatBufferBuilder builder, ushort KILLED) { builder.AddUshort(28, KILLED, 0); }
+  public static void AddAGE_AT_EVENT(FlatBufferBuilder builder, double AGE_AT_EVENT) { builder.AddDouble(29, AGE_AT_EVENT, 0.0); }
+  public static void AddLIFE_LOST(FlatBufferBuilder builder, double LIFE_LOST) { builder.AddDouble(30, LIFE_LOST, 0.0); }
+  public static void AddACHIEVED_FLIGHT_PHASE(FlatBufferBuilder builder, StringOffset ACHIEVED_FLIGHT_PHASEOffset) { builder.AddOffset(31, ACHIEVED_FLIGHT_PHASEOffset.Value, 0); }
+  public static void AddOCCURRENCE_FLIGHT_PHASE(FlatBufferBuilder builder, StringOffset OCCURRENCE_FLIGHT_PHASEOffset) { builder.AddOffset(32, OCCURRENCE_FLIGHT_PHASEOffset.Value, 0); }
+  public static void AddSTAGE_AT_FAULT(FlatBufferBuilder builder, StringOffset STAGE_AT_FAULTOffset) { builder.AddOffset(33, STAGE_AT_FAULTOffset.Value, 0); }
+  public static void AddEQUIPMENT_AT_FAULT(FlatBufferBuilder builder, StringOffset EQUIPMENT_AT_FAULTOffset) { builder.AddOffset(34, EQUIPMENT_AT_FAULTOffset.Value, 0); }
+  public static void AddEQUIPMENT_TYPE_AT_FAULT(FlatBufferBuilder builder, StringOffset EQUIPMENT_TYPE_AT_FAULTOffset) { builder.AddOffset(35, EQUIPMENT_TYPE_AT_FAULTOffset.Value, 0); }
+  public static void AddEQUIPMENT_PART_AT_FAULT(FlatBufferBuilder builder, StringOffset EQUIPMENT_PART_AT_FAULTOffset) { builder.AddOffset(36, EQUIPMENT_PART_AT_FAULTOffset.Value, 0); }
+  public static void AddCONSEQUENTIAL_EQUIPMENT_FAILURE(FlatBufferBuilder builder, StringOffset CONSEQUENTIAL_EQUIPMENT_FAILUREOffset) { builder.AddOffset(37, CONSEQUENTIAL_EQUIPMENT_FAILUREOffset.Value, 0); }
+  public static void AddINCLINED(FlatBufferBuilder builder, bool INCLINED) { builder.AddBool(38, INCLINED, false); }
+  public static void AddDESCRIPTION(FlatBufferBuilder builder, StringOffset DESCRIPTIONOffset) { builder.AddOffset(39, DESCRIPTIONOffset.Value, 0); }
+  public static void AddREMARKS(FlatBufferBuilder builder, StringOffset REMARKSOffset) { builder.AddOffset(40, REMARKSOffset.Value, 0); }
+  public static void AddOBJECT_STATUS(FlatBufferBuilder builder, StringOffset OBJECT_STATUSOffset) { builder.AddOffset(41, OBJECT_STATUSOffset.Value, 0); }
+  public static void AddSATELLITE_POSITION(FlatBufferBuilder builder, StringOffset SATELLITE_POSITIONOffset) { builder.AddOffset(42, SATELLITE_POSITIONOffset.Value, 0); }
+  public static void AddON_ORBIT(FlatBufferBuilder builder, StringOffset ON_ORBITOffset) { builder.AddOffset(43, ON_ORBITOffset.Value, 0); }
   public static Offset<OOE> EndOOE(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<OOE>(o);
@@ -437,13 +439,16 @@ public struct OOE : IFlatbufferObject
   }
   public void UnPackTo(OOET _o) {
     _o.ID = this.ID;
+    _o.SAT_NO = this.SAT_NO;
+    _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID;
     _o.DERIVED_FROM = this.DERIVED_FROM;
     _o.DECLASSIFICATION_DATE = this.DECLASSIFICATION_DATE;
     _o.DECLASSIFICATION_STRING = this.DECLASSIFICATION_STRING;
-    _o.SAT_NO = this.SAT_NO;
-    _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID;
     _o.EVENT_TIME = this.EVENT_TIME;
     _o.EVENT_TIME_NOTES = this.EVENT_TIME_NOTES;
+    _o.CATEGORY = this.CATEGORY;
+    _o.RESULT = this.RESULT;
+    _o.EVENT_TYPE = this.EVENT_TYPE;
     _o.OPERATOR_ORG_ID = this.OPERATOR_ORG_ID;
     _o.OWNER_ORG_ID = this.OWNER_ORG_ID;
     _o.LESSEE_ORG_ID = this.LESSEE_ORG_ID;
@@ -462,8 +467,8 @@ public struct OOE : IFlatbufferObject
     _o.THIRD_PARTY_INSURANCE_LOSS = this.THIRD_PARTY_INSURANCE_LOSS;
     _o.INJURED = this.INJURED;
     _o.KILLED = this.KILLED;
-    _o.LIFE_LOST = this.LIFE_LOST;
     _o.AGE_AT_EVENT = this.AGE_AT_EVENT;
+    _o.LIFE_LOST = this.LIFE_LOST;
     _o.ACHIEVED_FLIGHT_PHASE = this.ACHIEVED_FLIGHT_PHASE;
     _o.OCCURRENCE_FLIGHT_PHASE = this.OCCURRENCE_FLIGHT_PHASE;
     _o.STAGE_AT_FAULT = this.STAGE_AT_FAULT;
@@ -474,12 +479,6 @@ public struct OOE : IFlatbufferObject
     _o.INCLINED = this.INCLINED;
     _o.DESCRIPTION = this.DESCRIPTION;
     _o.REMARKS = this.REMARKS;
-    _o.INSURANCE_LOSS_NOTES = this.INSURANCE_LOSS_NOTES;
-    _o.CAPABILITY_LOSS_NOTES = this.CAPABILITY_LOSS_NOTES;
-    _o.INSURANCE_CARRIED_NOTES = this.INSURANCE_CARRIED_NOTES;
-    _o.EQUIPMENT_CAUSING_LOSS_NOTES = this.EQUIPMENT_CAUSING_LOSS_NOTES;
-    _o.EVENT_TYPE = this.EVENT_TYPE;
-    _o.EVENT_RESULT = this.EVENT_RESULT;
     _o.OBJECT_STATUS = this.OBJECT_STATUS;
     _o.SATELLITE_POSITION = this.SATELLITE_POSITION;
     _o.ON_ORBIT = this.ON_ORBIT;
@@ -487,12 +486,13 @@ public struct OOE : IFlatbufferObject
   public static Offset<OOE> Pack(FlatBufferBuilder builder, OOET _o) {
     if (_o == null) return default(Offset<OOE>);
     var _ID = _o.ID == null ? default(StringOffset) : builder.CreateString(_o.ID);
+    var _ORIG_OBJECT_ID = _o.ORIG_OBJECT_ID == null ? default(StringOffset) : builder.CreateString(_o.ORIG_OBJECT_ID);
     var _DERIVED_FROM = _o.DERIVED_FROM == null ? default(StringOffset) : builder.CreateString(_o.DERIVED_FROM);
     var _DECLASSIFICATION_DATE = _o.DECLASSIFICATION_DATE == null ? default(StringOffset) : builder.CreateString(_o.DECLASSIFICATION_DATE);
     var _DECLASSIFICATION_STRING = _o.DECLASSIFICATION_STRING == null ? default(StringOffset) : builder.CreateString(_o.DECLASSIFICATION_STRING);
-    var _ORIG_OBJECT_ID = _o.ORIG_OBJECT_ID == null ? default(StringOffset) : builder.CreateString(_o.ORIG_OBJECT_ID);
     var _EVENT_TIME = _o.EVENT_TIME == null ? default(StringOffset) : builder.CreateString(_o.EVENT_TIME);
     var _EVENT_TIME_NOTES = _o.EVENT_TIME_NOTES == null ? default(StringOffset) : builder.CreateString(_o.EVENT_TIME_NOTES);
+    var _EVENT_TYPE = _o.EVENT_TYPE == null ? default(StringOffset) : builder.CreateString(_o.EVENT_TYPE);
     var _OPERATOR_ORG_ID = _o.OPERATOR_ORG_ID == null ? default(StringOffset) : builder.CreateString(_o.OPERATOR_ORG_ID);
     var _OWNER_ORG_ID = _o.OWNER_ORG_ID == null ? default(StringOffset) : builder.CreateString(_o.OWNER_ORG_ID);
     var _LESSEE_ORG_ID = _o.LESSEE_ORG_ID == null ? default(StringOffset) : builder.CreateString(_o.LESSEE_ORG_ID);
@@ -512,25 +512,22 @@ public struct OOE : IFlatbufferObject
     var _CONSEQUENTIAL_EQUIPMENT_FAILURE = _o.CONSEQUENTIAL_EQUIPMENT_FAILURE == null ? default(StringOffset) : builder.CreateString(_o.CONSEQUENTIAL_EQUIPMENT_FAILURE);
     var _DESCRIPTION = _o.DESCRIPTION == null ? default(StringOffset) : builder.CreateString(_o.DESCRIPTION);
     var _REMARKS = _o.REMARKS == null ? default(StringOffset) : builder.CreateString(_o.REMARKS);
-    var _INSURANCE_LOSS_NOTES = _o.INSURANCE_LOSS_NOTES == null ? default(StringOffset) : builder.CreateString(_o.INSURANCE_LOSS_NOTES);
-    var _CAPABILITY_LOSS_NOTES = _o.CAPABILITY_LOSS_NOTES == null ? default(StringOffset) : builder.CreateString(_o.CAPABILITY_LOSS_NOTES);
-    var _INSURANCE_CARRIED_NOTES = _o.INSURANCE_CARRIED_NOTES == null ? default(StringOffset) : builder.CreateString(_o.INSURANCE_CARRIED_NOTES);
-    var _EQUIPMENT_CAUSING_LOSS_NOTES = _o.EQUIPMENT_CAUSING_LOSS_NOTES == null ? default(StringOffset) : builder.CreateString(_o.EQUIPMENT_CAUSING_LOSS_NOTES);
-    var _EVENT_TYPE = _o.EVENT_TYPE == null ? default(StringOffset) : builder.CreateString(_o.EVENT_TYPE);
-    var _EVENT_RESULT = _o.EVENT_RESULT == null ? default(StringOffset) : builder.CreateString(_o.EVENT_RESULT);
     var _OBJECT_STATUS = _o.OBJECT_STATUS == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_STATUS);
     var _SATELLITE_POSITION = _o.SATELLITE_POSITION == null ? default(StringOffset) : builder.CreateString(_o.SATELLITE_POSITION);
     var _ON_ORBIT = _o.ON_ORBIT == null ? default(StringOffset) : builder.CreateString(_o.ON_ORBIT);
     return CreateOOE(
       builder,
       _ID,
+      _o.SAT_NO,
+      _ORIG_OBJECT_ID,
       _DERIVED_FROM,
       _DECLASSIFICATION_DATE,
       _DECLASSIFICATION_STRING,
-      _o.SAT_NO,
-      _ORIG_OBJECT_ID,
       _EVENT_TIME,
       _EVENT_TIME_NOTES,
+      _o.CATEGORY,
+      _o.RESULT,
+      _EVENT_TYPE,
       _OPERATOR_ORG_ID,
       _OWNER_ORG_ID,
       _LESSEE_ORG_ID,
@@ -549,8 +546,8 @@ public struct OOE : IFlatbufferObject
       _o.THIRD_PARTY_INSURANCE_LOSS,
       _o.INJURED,
       _o.KILLED,
-      _o.LIFE_LOST,
       _o.AGE_AT_EVENT,
+      _o.LIFE_LOST,
       _ACHIEVED_FLIGHT_PHASE,
       _OCCURRENCE_FLIGHT_PHASE,
       _STAGE_AT_FAULT,
@@ -561,12 +558,6 @@ public struct OOE : IFlatbufferObject
       _o.INCLINED,
       _DESCRIPTION,
       _REMARKS,
-      _INSURANCE_LOSS_NOTES,
-      _CAPABILITY_LOSS_NOTES,
-      _INSURANCE_CARRIED_NOTES,
-      _EQUIPMENT_CAUSING_LOSS_NOTES,
-      _EVENT_TYPE,
-      _EVENT_RESULT,
       _OBJECT_STATUS,
       _SATELLITE_POSITION,
       _ON_ORBIT);
@@ -576,13 +567,16 @@ public struct OOE : IFlatbufferObject
 public class OOET
 {
   public string ID { get; set; }
+  public uint SAT_NO { get; set; }
+  public string ORIG_OBJECT_ID { get; set; }
   public string DERIVED_FROM { get; set; }
   public string DECLASSIFICATION_DATE { get; set; }
   public string DECLASSIFICATION_STRING { get; set; }
-  public int SAT_NO { get; set; }
-  public string ORIG_OBJECT_ID { get; set; }
   public string EVENT_TIME { get; set; }
   public string EVENT_TIME_NOTES { get; set; }
+  public eventCategory CATEGORY { get; set; }
+  public eventResult RESULT { get; set; }
+  public string EVENT_TYPE { get; set; }
   public string OPERATOR_ORG_ID { get; set; }
   public string OWNER_ORG_ID { get; set; }
   public string LESSEE_ORG_ID { get; set; }
@@ -599,10 +593,10 @@ public class OOET
   public double CAPACITY_LOSS { get; set; }
   public double INSURANCE_LOSS { get; set; }
   public double THIRD_PARTY_INSURANCE_LOSS { get; set; }
-  public int INJURED { get; set; }
-  public int KILLED { get; set; }
-  public double LIFE_LOST { get; set; }
+  public ushort INJURED { get; set; }
+  public ushort KILLED { get; set; }
   public double AGE_AT_EVENT { get; set; }
+  public double LIFE_LOST { get; set; }
   public string ACHIEVED_FLIGHT_PHASE { get; set; }
   public string OCCURRENCE_FLIGHT_PHASE { get; set; }
   public string STAGE_AT_FAULT { get; set; }
@@ -613,25 +607,22 @@ public class OOET
   public bool INCLINED { get; set; }
   public string DESCRIPTION { get; set; }
   public string REMARKS { get; set; }
-  public string INSURANCE_LOSS_NOTES { get; set; }
-  public string CAPABILITY_LOSS_NOTES { get; set; }
-  public string INSURANCE_CARRIED_NOTES { get; set; }
-  public string EQUIPMENT_CAUSING_LOSS_NOTES { get; set; }
-  public string EVENT_TYPE { get; set; }
-  public string EVENT_RESULT { get; set; }
   public string OBJECT_STATUS { get; set; }
   public string SATELLITE_POSITION { get; set; }
   public string ON_ORBIT { get; set; }
 
   public OOET() {
     this.ID = null;
+    this.SAT_NO = 0;
+    this.ORIG_OBJECT_ID = null;
     this.DERIVED_FROM = null;
     this.DECLASSIFICATION_DATE = null;
     this.DECLASSIFICATION_STRING = null;
-    this.SAT_NO = 0;
-    this.ORIG_OBJECT_ID = null;
     this.EVENT_TIME = null;
     this.EVENT_TIME_NOTES = null;
+    this.CATEGORY = eventCategory.ANOMALY;
+    this.RESULT = eventResult.TOTAL_LOSS;
+    this.EVENT_TYPE = null;
     this.OPERATOR_ORG_ID = null;
     this.OWNER_ORG_ID = null;
     this.LESSEE_ORG_ID = null;
@@ -650,8 +641,8 @@ public class OOET
     this.THIRD_PARTY_INSURANCE_LOSS = 0.0;
     this.INJURED = 0;
     this.KILLED = 0;
-    this.LIFE_LOST = 0.0;
     this.AGE_AT_EVENT = 0.0;
+    this.LIFE_LOST = 0.0;
     this.ACHIEVED_FLIGHT_PHASE = null;
     this.OCCURRENCE_FLIGHT_PHASE = null;
     this.STAGE_AT_FAULT = null;
@@ -662,12 +653,6 @@ public class OOET
     this.INCLINED = false;
     this.DESCRIPTION = null;
     this.REMARKS = null;
-    this.INSURANCE_LOSS_NOTES = null;
-    this.CAPABILITY_LOSS_NOTES = null;
-    this.INSURANCE_CARRIED_NOTES = null;
-    this.EQUIPMENT_CAUSING_LOSS_NOTES = null;
-    this.EVENT_TYPE = null;
-    this.EVENT_RESULT = null;
     this.OBJECT_STATUS = null;
     this.SATELLITE_POSITION = null;
     this.ON_ORBIT = null;
@@ -689,52 +674,49 @@ static public class OOEVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*ID*/, false)
-      && verifier.VerifyString(tablePos, 6 /*DERIVED_FROM*/, false)
-      && verifier.VerifyString(tablePos, 8 /*DECLASSIFICATION_DATE*/, false)
-      && verifier.VerifyString(tablePos, 10 /*DECLASSIFICATION_STRING*/, false)
-      && verifier.VerifyField(tablePos, 12 /*SAT_NO*/, 4 /*int*/, 4, false)
-      && verifier.VerifyString(tablePos, 14 /*ORIG_OBJECT_ID*/, false)
+      && verifier.VerifyField(tablePos, 6 /*SAT_NO*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 8 /*ORIG_OBJECT_ID*/, false)
+      && verifier.VerifyString(tablePos, 10 /*DERIVED_FROM*/, false)
+      && verifier.VerifyString(tablePos, 12 /*DECLASSIFICATION_DATE*/, false)
+      && verifier.VerifyString(tablePos, 14 /*DECLASSIFICATION_STRING*/, false)
       && verifier.VerifyString(tablePos, 16 /*EVENT_TIME*/, false)
       && verifier.VerifyString(tablePos, 18 /*EVENT_TIME_NOTES*/, false)
-      && verifier.VerifyString(tablePos, 20 /*OPERATOR_ORG_ID*/, false)
-      && verifier.VerifyString(tablePos, 22 /*OWNER_ORG_ID*/, false)
-      && verifier.VerifyString(tablePos, 24 /*LESSEE_ORG_ID*/, false)
-      && verifier.VerifyString(tablePos, 26 /*OPERATED_ON_BEHALF_OF_ORG_ID*/, false)
-      && verifier.VerifyField(tablePos, 28 /*GEO_POSITION*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 30 /*PLANE_SLOT*/, false)
-      && verifier.VerifyString(tablePos, 32 /*PLANE_NUMBER*/, false)
-      && verifier.VerifyString(tablePos, 34 /*POSITION_STATUS*/, false)
-      && verifier.VerifyString(tablePos, 36 /*UNTIL_TIME*/, false)
-      && verifier.VerifyString(tablePos, 38 /*OFFICIAL_LOSS_DATE*/, false)
-      && verifier.VerifyField(tablePos, 40 /*NET_AMOUNT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 42 /*UNDERLYING_CAUSE*/, false)
-      && verifier.VerifyField(tablePos, 44 /*CAPABILITY_LOSS*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 46 /*CAPACITY_LOSS*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 48 /*INSURANCE_LOSS*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 50 /*THIRD_PARTY_INSURANCE_LOSS*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 52 /*INJURED*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 54 /*KILLED*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 56 /*LIFE_LOST*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 58 /*AGE_AT_EVENT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 60 /*ACHIEVED_FLIGHT_PHASE*/, false)
-      && verifier.VerifyString(tablePos, 62 /*OCCURRENCE_FLIGHT_PHASE*/, false)
-      && verifier.VerifyString(tablePos, 64 /*STAGE_AT_FAULT*/, false)
-      && verifier.VerifyString(tablePos, 66 /*EQUIPMENT_AT_FAULT*/, false)
-      && verifier.VerifyString(tablePos, 68 /*EQUIPMENT_TYPE_AT_FAULT*/, false)
-      && verifier.VerifyString(tablePos, 70 /*EQUIPMENT_PART_AT_FAULT*/, false)
-      && verifier.VerifyString(tablePos, 72 /*CONSEQUENTIAL_EQUIPMENT_FAILURE*/, false)
-      && verifier.VerifyField(tablePos, 74 /*INCLINED*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyString(tablePos, 76 /*DESCRIPTION*/, false)
-      && verifier.VerifyString(tablePos, 78 /*REMARKS*/, false)
-      && verifier.VerifyString(tablePos, 80 /*INSURANCE_LOSS_NOTES*/, false)
-      && verifier.VerifyString(tablePos, 82 /*CAPABILITY_LOSS_NOTES*/, false)
-      && verifier.VerifyString(tablePos, 84 /*INSURANCE_CARRIED_NOTES*/, false)
-      && verifier.VerifyString(tablePos, 86 /*EQUIPMENT_CAUSING_LOSS_NOTES*/, false)
-      && verifier.VerifyString(tablePos, 88 /*EVENT_TYPE*/, false)
-      && verifier.VerifyString(tablePos, 90 /*EVENT_RESULT*/, false)
-      && verifier.VerifyString(tablePos, 92 /*OBJECT_STATUS*/, false)
-      && verifier.VerifyString(tablePos, 94 /*SATELLITE_POSITION*/, false)
-      && verifier.VerifyString(tablePos, 96 /*ON_ORBIT*/, false)
+      && verifier.VerifyField(tablePos, 20 /*CATEGORY*/, 1 /*eventCategory*/, 1, false)
+      && verifier.VerifyField(tablePos, 22 /*RESULT*/, 1 /*eventResult*/, 1, false)
+      && verifier.VerifyString(tablePos, 24 /*EVENT_TYPE*/, false)
+      && verifier.VerifyString(tablePos, 26 /*OPERATOR_ORG_ID*/, false)
+      && verifier.VerifyString(tablePos, 28 /*OWNER_ORG_ID*/, false)
+      && verifier.VerifyString(tablePos, 30 /*LESSEE_ORG_ID*/, false)
+      && verifier.VerifyString(tablePos, 32 /*OPERATED_ON_BEHALF_OF_ORG_ID*/, false)
+      && verifier.VerifyField(tablePos, 34 /*GEO_POSITION*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 36 /*PLANE_SLOT*/, false)
+      && verifier.VerifyString(tablePos, 38 /*PLANE_NUMBER*/, false)
+      && verifier.VerifyString(tablePos, 40 /*POSITION_STATUS*/, false)
+      && verifier.VerifyString(tablePos, 42 /*UNTIL_TIME*/, false)
+      && verifier.VerifyString(tablePos, 44 /*OFFICIAL_LOSS_DATE*/, false)
+      && verifier.VerifyField(tablePos, 46 /*NET_AMOUNT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 48 /*UNDERLYING_CAUSE*/, false)
+      && verifier.VerifyField(tablePos, 50 /*CAPABILITY_LOSS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 52 /*CAPACITY_LOSS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 54 /*INSURANCE_LOSS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 56 /*THIRD_PARTY_INSURANCE_LOSS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 58 /*INJURED*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyField(tablePos, 60 /*KILLED*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyField(tablePos, 62 /*AGE_AT_EVENT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 64 /*LIFE_LOST*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 66 /*ACHIEVED_FLIGHT_PHASE*/, false)
+      && verifier.VerifyString(tablePos, 68 /*OCCURRENCE_FLIGHT_PHASE*/, false)
+      && verifier.VerifyString(tablePos, 70 /*STAGE_AT_FAULT*/, false)
+      && verifier.VerifyString(tablePos, 72 /*EQUIPMENT_AT_FAULT*/, false)
+      && verifier.VerifyString(tablePos, 74 /*EQUIPMENT_TYPE_AT_FAULT*/, false)
+      && verifier.VerifyString(tablePos, 76 /*EQUIPMENT_PART_AT_FAULT*/, false)
+      && verifier.VerifyString(tablePos, 78 /*CONSEQUENTIAL_EQUIPMENT_FAILURE*/, false)
+      && verifier.VerifyField(tablePos, 80 /*INCLINED*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyString(tablePos, 82 /*DESCRIPTION*/, false)
+      && verifier.VerifyString(tablePos, 84 /*REMARKS*/, false)
+      && verifier.VerifyString(tablePos, 86 /*OBJECT_STATUS*/, false)
+      && verifier.VerifyString(tablePos, 88 /*SATELLITE_POSITION*/, false)
+      && verifier.VerifyString(tablePos, 90 /*ON_ORBIT*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

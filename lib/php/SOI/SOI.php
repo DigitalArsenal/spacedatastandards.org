@@ -41,277 +41,341 @@ class SOI extends Table
         return $this;
     }
 
+    /// Unique identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Message creation date (ISO 8601)
     public function getMSG_CREATE_DATE()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Sensor identifier
     public function getID_SENSOR()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Original sensor identifier
     public function getORIG_SENSOR_ID()
     {
         $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Sensor observation set identifier
     public function getSENSOR_AS_ID()
     {
         $o = $this->__offset(12);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Satellite catalog number
     /**
-     * @return int
+     * @return uint
      */
     public function getSAT_NO()
     {
         $o = $this->__offset(14);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
+    /// International designator
     public function getORIG_OBJECT_ID()
     {
         $o = $this->__offset(16);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Satellite common name
+    public function getSATELLITE_NAME()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// True if uncorrelated target
+    /**
+     * @return bool
+     */
+    public function getUCT()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Sensor geodetic latitude (degrees)
     /**
      * @return double
      */
     public function getSENLAT()
     {
-        $o = $this->__offset(18);
+        $o = $this->__offset(22);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor geodetic longitude (degrees)
     /**
      * @return double
      */
     public function getSENLON()
     {
-        $o = $this->__offset(20);
+        $o = $this->__offset(24);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor altitude (km)
     /**
      * @return double
      */
     public function getSENALT()
     {
-        $o = $this->__offset(22);
+        $o = $this->__offset(26);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor ECEF X position (km)
     /**
      * @return double
      */
     public function getSENX()
     {
-        $o = $this->__offset(24);
+        $o = $this->__offset(28);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor ECEF Y position (km)
     /**
      * @return double
      */
     public function getSENY()
     {
-        $o = $this->__offset(26);
+        $o = $this->__offset(30);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor ECEF Z position (km)
     /**
      * @return double
      */
     public function getSENZ()
     {
-        $o = $this->__offset(28);
+        $o = $this->__offset(32);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor ECEF X velocity (km/s)
     /**
      * @return double
      */
     public function getSENVELX()
     {
-        $o = $this->__offset(30);
+        $o = $this->__offset(34);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor ECEF Y velocity (km/s)
     /**
      * @return double
      */
     public function getSENVELY()
     {
-        $o = $this->__offset(32);
+        $o = $this->__offset(36);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor ECEF Z velocity (km/s)
     /**
      * @return double
      */
     public function getSENVELZ()
     {
-        $o = $this->__offset(34);
+        $o = $this->__offset(38);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    public function getSTART_TIME()
-    {
-        $o = $this->__offset(36);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getEND_TIME()
-    {
-        $o = $this->__offset(38);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /**
-     * @return int
-     */
-    public function getNUM_OBS()
+    /// Sensor reference frame
+    public function getSEN_REFERENCE_FRAME()
     {
         $o = $this->__offset(40);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
-    }
-
-    public function getTYPE()
-    {
-        $o = $this->__offset(42);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Observation type
     /**
-     * @return double
+     * @return sbyte
      */
-    public function getPOLAR_ANGLE_START()
+    public function getOBS_TYPE()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \soiObsType::OPTICAL;
+    }
+
+    /// Collection mode
+    /**
+     * @return sbyte
+     */
+    public function getCOLLECTION_MODE()
     {
         $o = $this->__offset(44);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \soiCollectionMode::SIDEREAL;
     }
 
-    /**
-     * @return double
-     */
-    public function getPOLAR_ANGLE_END()
+    /// Observation start time (ISO 8601)
+    public function getSTART_TIME()
     {
         $o = $this->__offset(46);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getREFERENCE_FRAME()
+    /// Observation end time (ISO 8601)
+    public function getEND_TIME()
     {
         $o = $this->__offset(48);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getSEN_REFERENCE_FRAME()
+    /// Number of observations in set
+    /**
+     * @return uint
+     */
+    public function getNUM_OBS()
     {
         $o = $this->__offset(50);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Observation reference frame
+    public function getREFERENCE_FRAME()
+    {
+        $o = $this->__offset(52);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Polar angle at start (degrees)
     /**
      * @return double
      */
-    public function getLOS_DECLINATION_START()
-    {
-        $o = $this->__offset(52);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getLOS_DECLINATION_END()
+    public function getPOLAR_ANGLE_START()
     {
         $o = $this->__offset(54);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Polar angle at end (degrees)
     /**
      * @return double
      */
-    public function getPOINTING_ANGLE_AZ_START()
+    public function getPOLAR_ANGLE_END()
     {
         $o = $this->__offset(56);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Line-of-sight declination at start (degrees)
     /**
      * @return double
      */
-    public function getPOINTING_ANGLE_AZ_END()
+    public function getLOS_DECLINATION_START()
     {
         $o = $this->__offset(58);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Line-of-sight declination at end (degrees)
     /**
      * @return double
      */
-    public function getPOINTING_ANGLE_EL_START()
+    public function getLOS_DECLINATION_END()
     {
         $o = $this->__offset(60);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Pointing azimuth at start (degrees)
     /**
      * @return double
      */
-    public function getPOINTING_ANGLE_EL_END()
+    public function getPOINTING_ANGLE_AZ_START()
     {
         $o = $this->__offset(62);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Pointing azimuth at end (degrees)
     /**
-     * @return int
+     * @return double
+     */
+    public function getPOINTING_ANGLE_AZ_END()
+    {
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Pointing elevation at start (degrees)
+    /**
+     * @return double
+     */
+    public function getPOINTING_ANGLE_EL_START()
+    {
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Pointing elevation at end (degrees)
+    /**
+     * @return double
+     */
+    public function getPOINTING_ANGLE_EL_END()
+    {
+        $o = $this->__offset(68);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Focal plane array width (pixels)
+    /**
+     * @return ushort
      */
     public function getPIXEL_ARRAY_WIDTH()
     {
-        $o = $this->__offset(64);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        $o = $this->__offset(70);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
     }
 
+    /// Focal plane array height (pixels)
     /**
-     * @return int
+     * @return ushort
      */
     public function getPIXEL_ARRAY_HEIGHT()
     {
-        $o = $this->__offset(66);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        $o = $this->__offset(72);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
     }
 
+    /// Number of spectral filters used
     /**
-     * @return int
+     * @return byte
      */
     public function getNUM_SPECTRAL_FILTERS()
     {
-        $o = $this->__offset(68);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        $o = $this->__offset(74);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
     }
 
+    /// Spectral filter identifiers
     /**
      * @param int offset
      * @return string
      */
     public function getSPECTRAL_FILTERS($j)
     {
-        $o = $this->__offset(70);
+        $o = $this->__offset(76);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -320,118 +384,112 @@ class SOI extends Table
      */
     public function getSPECTRAL_FILTERSLength()
     {
-        $o = $this->__offset(70);
+        $o = $this->__offset(76);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    public function getCOLLECTION_MODE()
-    {
-        $o = $this->__offset(72);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
+    /// Detector gain setting
     /**
      * @return double
      */
     public function getGAIN()
     {
-        $o = $this->__offset(74);
+        $o = $this->__offset(78);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Horizontal binning factor
     /**
-     * @return int
+     * @return byte
      */
     public function getBINNING_HORIZ()
     {
-        $o = $this->__offset(76);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        $o = $this->__offset(80);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
     }
 
+    /// Vertical binning factor
     /**
-     * @return int
+     * @return byte
      */
     public function getBINNING_VERT()
     {
-        $o = $this->__offset(78);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        $o = $this->__offset(82);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
     }
 
+    /// Solar visual magnitude
     /**
      * @return double
      */
     public function getSOLAR_MAG()
     {
-        $o = $this->__offset(80);
+        $o = $this->__offset(84);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Minimum pixel value in observation
     /**
      * @return int
      */
     public function getPIXEL_MIN()
     {
-        $o = $this->__offset(82);
+        $o = $this->__offset(86);
         return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
     }
 
+    /// Maximum pixel value in observation
     /**
      * @return int
      */
     public function getPIXEL_MAX()
     {
-        $o = $this->__offset(84);
+        $o = $this->__offset(88);
         return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
     }
 
+    /// Processing software version
     public function getSOFTWARE_VERSION()
-    {
-        $o = $this->__offset(86);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getSATELLITE_NAME()
-    {
-        $o = $this->__offset(88);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getSTAR_CAT_NAME()
     {
         $o = $this->__offset(90);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Star catalog used for calibration
+    public function getSTAR_CAT_NAME()
+    {
+        $o = $this->__offset(92);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Correlation quality score
     /**
      * @return double
      */
     public function getCORR_QUALITY()
     {
-        $o = $this->__offset(92);
+        $o = $this->__offset(94);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Calibration type
     /**
-     * @return bool
+     * @return sbyte
      */
-    public function getUCT()
-    {
-        $o = $this->__offset(94);
-        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
-    }
-
-    public function getVALID_CALIBRATIONS()
+    public function getCALIBRATION_TYPE()
     {
         $o = $this->__offset(96);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \soiCalibrationType::PHOTOMETRIC;
     }
 
-    public function getCALIBRATION_TYPE()
+    /// Valid calibration identifiers
+    public function getVALID_CALIBRATIONS()
     {
         $o = $this->__offset(98);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Percent saturation threshold
     /**
      * @return double
      */
@@ -441,6 +499,7 @@ class SOI extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// True if change detected from baseline
     /**
      * @return bool
      */
@@ -450,6 +509,7 @@ class SOI extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// True if periodicity change detected
     /**
      * @return bool
      */
@@ -459,6 +519,7 @@ class SOI extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// True if brightness variance change detected
     /**
      * @return bool
      */
@@ -468,6 +529,7 @@ class SOI extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// True if solar phase angle brightness change detected
     /**
      * @return bool
      */
@@ -477,36 +539,42 @@ class SOI extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Change confidence assessment
     public function getCHANGE_CONF()
     {
         $o = $this->__offset(110);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Collection density confidence
     public function getCOLLECTION_DENSITY_CONF()
     {
         $o = $this->__offset(112);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Periodicity sampling confidence
     public function getPERIODICITY_SAMPLING_CONF()
     {
         $o = $this->__offset(114);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Periodicity detection confidence
     public function getPERIODICITY_DETECTION_CONF()
     {
         $o = $this->__offset(116);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Collection identifier
     public function getCOLLECTION_ID()
     {
         $o = $this->__offset(118);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Calibration record references
     /**
      * @param int offset
      * @return string
@@ -526,6 +594,7 @@ class SOI extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Associated tags
     /**
      * @param int offset
      * @return string
@@ -545,12 +614,14 @@ class SOI extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Transaction identifier
     public function getTRANSACTION_ID()
     {
         $o = $this->__offset(124);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Optical SOI observation references
     /**
      * @param int offset
      * @return string
@@ -570,6 +641,7 @@ class SOI extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Radar SOI observation references
     /**
      * @param int offset
      * @return string
@@ -602,7 +674,7 @@ class SOI extends Table
      * @param FlatBufferBuilder $builder
      * @return SOI
      */
-    public static function createSOI(FlatBufferBuilder $builder, $ID, $MSG_CREATE_DATE, $ID_SENSOR, $ORIG_SENSOR_ID, $SENSOR_AS_ID, $SAT_NO, $ORIG_OBJECT_ID, $SENLAT, $SENLON, $SENALT, $SENX, $SENY, $SENZ, $SENVELX, $SENVELY, $SENVELZ, $START_TIME, $END_TIME, $NUM_OBS, $TYPE, $POLAR_ANGLE_START, $POLAR_ANGLE_END, $REFERENCE_FRAME, $SEN_REFERENCE_FRAME, $LOS_DECLINATION_START, $LOS_DECLINATION_END, $POINTING_ANGLE_AZ_START, $POINTING_ANGLE_AZ_END, $POINTING_ANGLE_EL_START, $POINTING_ANGLE_EL_END, $PIXEL_ARRAY_WIDTH, $PIXEL_ARRAY_HEIGHT, $NUM_SPECTRAL_FILTERS, $SPECTRAL_FILTERS, $COLLECTION_MODE, $GAIN, $BINNING_HORIZ, $BINNING_VERT, $SOLAR_MAG, $PIXEL_MIN, $PIXEL_MAX, $SOFTWARE_VERSION, $SATELLITE_NAME, $STAR_CAT_NAME, $CORR_QUALITY, $UCT, $VALID_CALIBRATIONS, $CALIBRATION_TYPE, $PERCENT_SAT_THRESHOLD, $CHANGE_DETECTED, $PERIODICITY_CHANGE_DETECTED, $BRIGHTNESS_VARIANCE_CHANGE_DETECTED, $SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED, $CHANGE_CONF, $COLLECTION_DENSITY_CONF, $PERIODICITY_SAMPLING_CONF, $PERIODICITY_DETECTION_CONF, $COLLECTION_ID, $CALIBRATIONS, $TAGS, $TRANSACTION_ID, $OPTICAL_SOIOBSERVATION_LIST, $RADAR_SOIOBSERVATION_LIST)
+    public static function createSOI(FlatBufferBuilder $builder, $ID, $MSG_CREATE_DATE, $ID_SENSOR, $ORIG_SENSOR_ID, $SENSOR_AS_ID, $SAT_NO, $ORIG_OBJECT_ID, $SATELLITE_NAME, $UCT, $SENLAT, $SENLON, $SENALT, $SENX, $SENY, $SENZ, $SENVELX, $SENVELY, $SENVELZ, $SEN_REFERENCE_FRAME, $OBS_TYPE, $COLLECTION_MODE, $START_TIME, $END_TIME, $NUM_OBS, $REFERENCE_FRAME, $POLAR_ANGLE_START, $POLAR_ANGLE_END, $LOS_DECLINATION_START, $LOS_DECLINATION_END, $POINTING_ANGLE_AZ_START, $POINTING_ANGLE_AZ_END, $POINTING_ANGLE_EL_START, $POINTING_ANGLE_EL_END, $PIXEL_ARRAY_WIDTH, $PIXEL_ARRAY_HEIGHT, $NUM_SPECTRAL_FILTERS, $SPECTRAL_FILTERS, $GAIN, $BINNING_HORIZ, $BINNING_VERT, $SOLAR_MAG, $PIXEL_MIN, $PIXEL_MAX, $SOFTWARE_VERSION, $STAR_CAT_NAME, $CORR_QUALITY, $CALIBRATION_TYPE, $VALID_CALIBRATIONS, $PERCENT_SAT_THRESHOLD, $CHANGE_DETECTED, $PERIODICITY_CHANGE_DETECTED, $BRIGHTNESS_VARIANCE_CHANGE_DETECTED, $SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED, $CHANGE_CONF, $COLLECTION_DENSITY_CONF, $PERIODICITY_SAMPLING_CONF, $PERIODICITY_DETECTION_CONF, $COLLECTION_ID, $CALIBRATIONS, $TAGS, $TRANSACTION_ID, $OPTICAL_SOIOBSERVATION_LIST, $RADAR_SOIOBSERVATION_LIST)
     {
         $builder->startObject(63);
         self::addID($builder, $ID);
@@ -612,6 +684,8 @@ class SOI extends Table
         self::addSENSOR_AS_ID($builder, $SENSOR_AS_ID);
         self::addSAT_NO($builder, $SAT_NO);
         self::addORIG_OBJECT_ID($builder, $ORIG_OBJECT_ID);
+        self::addSATELLITE_NAME($builder, $SATELLITE_NAME);
+        self::addUCT($builder, $UCT);
         self::addSENLAT($builder, $SENLAT);
         self::addSENLON($builder, $SENLON);
         self::addSENALT($builder, $SENALT);
@@ -621,14 +695,15 @@ class SOI extends Table
         self::addSENVELX($builder, $SENVELX);
         self::addSENVELY($builder, $SENVELY);
         self::addSENVELZ($builder, $SENVELZ);
+        self::addSEN_REFERENCE_FRAME($builder, $SEN_REFERENCE_FRAME);
+        self::addOBS_TYPE($builder, $OBS_TYPE);
+        self::addCOLLECTION_MODE($builder, $COLLECTION_MODE);
         self::addSTART_TIME($builder, $START_TIME);
         self::addEND_TIME($builder, $END_TIME);
         self::addNUM_OBS($builder, $NUM_OBS);
-        self::addTYPE($builder, $TYPE);
+        self::addREFERENCE_FRAME($builder, $REFERENCE_FRAME);
         self::addPOLAR_ANGLE_START($builder, $POLAR_ANGLE_START);
         self::addPOLAR_ANGLE_END($builder, $POLAR_ANGLE_END);
-        self::addREFERENCE_FRAME($builder, $REFERENCE_FRAME);
-        self::addSEN_REFERENCE_FRAME($builder, $SEN_REFERENCE_FRAME);
         self::addLOS_DECLINATION_START($builder, $LOS_DECLINATION_START);
         self::addLOS_DECLINATION_END($builder, $LOS_DECLINATION_END);
         self::addPOINTING_ANGLE_AZ_START($builder, $POINTING_ANGLE_AZ_START);
@@ -639,7 +714,6 @@ class SOI extends Table
         self::addPIXEL_ARRAY_HEIGHT($builder, $PIXEL_ARRAY_HEIGHT);
         self::addNUM_SPECTRAL_FILTERS($builder, $NUM_SPECTRAL_FILTERS);
         self::addSPECTRAL_FILTERS($builder, $SPECTRAL_FILTERS);
-        self::addCOLLECTION_MODE($builder, $COLLECTION_MODE);
         self::addGAIN($builder, $GAIN);
         self::addBINNING_HORIZ($builder, $BINNING_HORIZ);
         self::addBINNING_VERT($builder, $BINNING_VERT);
@@ -647,12 +721,10 @@ class SOI extends Table
         self::addPIXEL_MIN($builder, $PIXEL_MIN);
         self::addPIXEL_MAX($builder, $PIXEL_MAX);
         self::addSOFTWARE_VERSION($builder, $SOFTWARE_VERSION);
-        self::addSATELLITE_NAME($builder, $SATELLITE_NAME);
         self::addSTAR_CAT_NAME($builder, $STAR_CAT_NAME);
         self::addCORR_QUALITY($builder, $CORR_QUALITY);
-        self::addUCT($builder, $UCT);
-        self::addVALID_CALIBRATIONS($builder, $VALID_CALIBRATIONS);
         self::addCALIBRATION_TYPE($builder, $CALIBRATION_TYPE);
+        self::addVALID_CALIBRATIONS($builder, $VALID_CALIBRATIONS);
         self::addPERCENT_SAT_THRESHOLD($builder, $PERCENT_SAT_THRESHOLD);
         self::addCHANGE_DETECTED($builder, $CHANGE_DETECTED);
         self::addPERIODICITY_CHANGE_DETECTED($builder, $PERIODICITY_CHANGE_DETECTED);
@@ -724,12 +796,12 @@ class SOI extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param uint
      * @return void
      */
     public static function addSAT_NO(FlatBufferBuilder $builder, $SAT_NO)
     {
-        $builder->addIntX(5, $SAT_NO, 0);
+        $builder->addUintX(5, $SAT_NO, 0);
     }
 
     /**
@@ -744,12 +816,32 @@ class SOI extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSATELLITE_NAME(FlatBufferBuilder $builder, $SATELLITE_NAME)
+    {
+        $builder->addOffsetX(7, $SATELLITE_NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addUCT(FlatBufferBuilder $builder, $UCT)
+    {
+        $builder->addBoolX(8, $UCT, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param double
      * @return void
      */
     public static function addSENLAT(FlatBufferBuilder $builder, $SENLAT)
     {
-        $builder->addDoubleX(7, $SENLAT, 0.0);
+        $builder->addDoubleX(9, $SENLAT, 0.0);
     }
 
     /**
@@ -759,7 +851,7 @@ class SOI extends Table
      */
     public static function addSENLON(FlatBufferBuilder $builder, $SENLON)
     {
-        $builder->addDoubleX(8, $SENLON, 0.0);
+        $builder->addDoubleX(10, $SENLON, 0.0);
     }
 
     /**
@@ -769,7 +861,7 @@ class SOI extends Table
      */
     public static function addSENALT(FlatBufferBuilder $builder, $SENALT)
     {
-        $builder->addDoubleX(9, $SENALT, 0.0);
+        $builder->addDoubleX(11, $SENALT, 0.0);
     }
 
     /**
@@ -779,7 +871,7 @@ class SOI extends Table
      */
     public static function addSENX(FlatBufferBuilder $builder, $SENX)
     {
-        $builder->addDoubleX(10, $SENX, 0.0);
+        $builder->addDoubleX(12, $SENX, 0.0);
     }
 
     /**
@@ -789,7 +881,7 @@ class SOI extends Table
      */
     public static function addSENY(FlatBufferBuilder $builder, $SENY)
     {
-        $builder->addDoubleX(11, $SENY, 0.0);
+        $builder->addDoubleX(13, $SENY, 0.0);
     }
 
     /**
@@ -799,7 +891,7 @@ class SOI extends Table
      */
     public static function addSENZ(FlatBufferBuilder $builder, $SENZ)
     {
-        $builder->addDoubleX(12, $SENZ, 0.0);
+        $builder->addDoubleX(14, $SENZ, 0.0);
     }
 
     /**
@@ -809,7 +901,7 @@ class SOI extends Table
      */
     public static function addSENVELX(FlatBufferBuilder $builder, $SENVELX)
     {
-        $builder->addDoubleX(13, $SENVELX, 0.0);
+        $builder->addDoubleX(15, $SENVELX, 0.0);
     }
 
     /**
@@ -819,7 +911,7 @@ class SOI extends Table
      */
     public static function addSENVELY(FlatBufferBuilder $builder, $SENVELY)
     {
-        $builder->addDoubleX(14, $SENVELY, 0.0);
+        $builder->addDoubleX(16, $SENVELY, 0.0);
     }
 
     /**
@@ -829,77 +921,7 @@ class SOI extends Table
      */
     public static function addSENVELZ(FlatBufferBuilder $builder, $SENVELZ)
     {
-        $builder->addDoubleX(15, $SENVELZ, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addSTART_TIME(FlatBufferBuilder $builder, $START_TIME)
-    {
-        $builder->addOffsetX(16, $START_TIME, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addEND_TIME(FlatBufferBuilder $builder, $END_TIME)
-    {
-        $builder->addOffsetX(17, $END_TIME, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int
-     * @return void
-     */
-    public static function addNUM_OBS(FlatBufferBuilder $builder, $NUM_OBS)
-    {
-        $builder->addIntX(18, $NUM_OBS, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addTYPE(FlatBufferBuilder $builder, $TYPE)
-    {
-        $builder->addOffsetX(19, $TYPE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPOLAR_ANGLE_START(FlatBufferBuilder $builder, $POLAR_ANGLE_START)
-    {
-        $builder->addDoubleX(20, $POLAR_ANGLE_START, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPOLAR_ANGLE_END(FlatBufferBuilder $builder, $POLAR_ANGLE_END)
-    {
-        $builder->addDoubleX(21, $POLAR_ANGLE_END, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addREFERENCE_FRAME(FlatBufferBuilder $builder, $REFERENCE_FRAME)
-    {
-        $builder->addOffsetX(22, $REFERENCE_FRAME, 0);
+        $builder->addDoubleX(17, $SENVELZ, 0.0);
     }
 
     /**
@@ -909,7 +931,87 @@ class SOI extends Table
      */
     public static function addSEN_REFERENCE_FRAME(FlatBufferBuilder $builder, $SEN_REFERENCE_FRAME)
     {
-        $builder->addOffsetX(23, $SEN_REFERENCE_FRAME, 0);
+        $builder->addOffsetX(18, $SEN_REFERENCE_FRAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addOBS_TYPE(FlatBufferBuilder $builder, $OBS_TYPE)
+    {
+        $builder->addSbyteX(19, $OBS_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addCOLLECTION_MODE(FlatBufferBuilder $builder, $COLLECTION_MODE)
+    {
+        $builder->addSbyteX(20, $COLLECTION_MODE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSTART_TIME(FlatBufferBuilder $builder, $START_TIME)
+    {
+        $builder->addOffsetX(21, $START_TIME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEND_TIME(FlatBufferBuilder $builder, $END_TIME)
+    {
+        $builder->addOffsetX(22, $END_TIME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addNUM_OBS(FlatBufferBuilder $builder, $NUM_OBS)
+    {
+        $builder->addUintX(23, $NUM_OBS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addREFERENCE_FRAME(FlatBufferBuilder $builder, $REFERENCE_FRAME)
+    {
+        $builder->addOffsetX(24, $REFERENCE_FRAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPOLAR_ANGLE_START(FlatBufferBuilder $builder, $POLAR_ANGLE_START)
+    {
+        $builder->addDoubleX(25, $POLAR_ANGLE_START, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPOLAR_ANGLE_END(FlatBufferBuilder $builder, $POLAR_ANGLE_END)
+    {
+        $builder->addDoubleX(26, $POLAR_ANGLE_END, 0.0);
     }
 
     /**
@@ -919,7 +1021,7 @@ class SOI extends Table
      */
     public static function addLOS_DECLINATION_START(FlatBufferBuilder $builder, $LOS_DECLINATION_START)
     {
-        $builder->addDoubleX(24, $LOS_DECLINATION_START, 0.0);
+        $builder->addDoubleX(27, $LOS_DECLINATION_START, 0.0);
     }
 
     /**
@@ -929,7 +1031,7 @@ class SOI extends Table
      */
     public static function addLOS_DECLINATION_END(FlatBufferBuilder $builder, $LOS_DECLINATION_END)
     {
-        $builder->addDoubleX(25, $LOS_DECLINATION_END, 0.0);
+        $builder->addDoubleX(28, $LOS_DECLINATION_END, 0.0);
     }
 
     /**
@@ -939,7 +1041,7 @@ class SOI extends Table
      */
     public static function addPOINTING_ANGLE_AZ_START(FlatBufferBuilder $builder, $POINTING_ANGLE_AZ_START)
     {
-        $builder->addDoubleX(26, $POINTING_ANGLE_AZ_START, 0.0);
+        $builder->addDoubleX(29, $POINTING_ANGLE_AZ_START, 0.0);
     }
 
     /**
@@ -949,7 +1051,7 @@ class SOI extends Table
      */
     public static function addPOINTING_ANGLE_AZ_END(FlatBufferBuilder $builder, $POINTING_ANGLE_AZ_END)
     {
-        $builder->addDoubleX(27, $POINTING_ANGLE_AZ_END, 0.0);
+        $builder->addDoubleX(30, $POINTING_ANGLE_AZ_END, 0.0);
     }
 
     /**
@@ -959,7 +1061,7 @@ class SOI extends Table
      */
     public static function addPOINTING_ANGLE_EL_START(FlatBufferBuilder $builder, $POINTING_ANGLE_EL_START)
     {
-        $builder->addDoubleX(28, $POINTING_ANGLE_EL_START, 0.0);
+        $builder->addDoubleX(31, $POINTING_ANGLE_EL_START, 0.0);
     }
 
     /**
@@ -969,37 +1071,37 @@ class SOI extends Table
      */
     public static function addPOINTING_ANGLE_EL_END(FlatBufferBuilder $builder, $POINTING_ANGLE_EL_END)
     {
-        $builder->addDoubleX(29, $POINTING_ANGLE_EL_END, 0.0);
+        $builder->addDoubleX(32, $POINTING_ANGLE_EL_END, 0.0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param ushort
      * @return void
      */
     public static function addPIXEL_ARRAY_WIDTH(FlatBufferBuilder $builder, $PIXEL_ARRAY_WIDTH)
     {
-        $builder->addIntX(30, $PIXEL_ARRAY_WIDTH, 0);
+        $builder->addUshortX(33, $PIXEL_ARRAY_WIDTH, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param ushort
      * @return void
      */
     public static function addPIXEL_ARRAY_HEIGHT(FlatBufferBuilder $builder, $PIXEL_ARRAY_HEIGHT)
     {
-        $builder->addIntX(31, $PIXEL_ARRAY_HEIGHT, 0);
+        $builder->addUshortX(34, $PIXEL_ARRAY_HEIGHT, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param byte
      * @return void
      */
     public static function addNUM_SPECTRAL_FILTERS(FlatBufferBuilder $builder, $NUM_SPECTRAL_FILTERS)
     {
-        $builder->addIntX(32, $NUM_SPECTRAL_FILTERS, 0);
+        $builder->addByteX(35, $NUM_SPECTRAL_FILTERS, 0);
     }
 
     /**
@@ -1009,7 +1111,7 @@ class SOI extends Table
      */
     public static function addSPECTRAL_FILTERS(FlatBufferBuilder $builder, $SPECTRAL_FILTERS)
     {
-        $builder->addOffsetX(33, $SPECTRAL_FILTERS, 0);
+        $builder->addOffsetX(36, $SPECTRAL_FILTERS, 0);
     }
 
     /**
@@ -1038,42 +1140,32 @@ class SOI extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addCOLLECTION_MODE(FlatBufferBuilder $builder, $COLLECTION_MODE)
-    {
-        $builder->addOffsetX(34, $COLLECTION_MODE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
      * @param double
      * @return void
      */
     public static function addGAIN(FlatBufferBuilder $builder, $GAIN)
     {
-        $builder->addDoubleX(35, $GAIN, 0.0);
+        $builder->addDoubleX(37, $GAIN, 0.0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param byte
      * @return void
      */
     public static function addBINNING_HORIZ(FlatBufferBuilder $builder, $BINNING_HORIZ)
     {
-        $builder->addIntX(36, $BINNING_HORIZ, 0);
+        $builder->addByteX(38, $BINNING_HORIZ, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param byte
      * @return void
      */
     public static function addBINNING_VERT(FlatBufferBuilder $builder, $BINNING_VERT)
     {
-        $builder->addIntX(37, $BINNING_VERT, 0);
+        $builder->addByteX(39, $BINNING_VERT, 0);
     }
 
     /**
@@ -1083,7 +1175,7 @@ class SOI extends Table
      */
     public static function addSOLAR_MAG(FlatBufferBuilder $builder, $SOLAR_MAG)
     {
-        $builder->addDoubleX(38, $SOLAR_MAG, 0.0);
+        $builder->addDoubleX(40, $SOLAR_MAG, 0.0);
     }
 
     /**
@@ -1093,7 +1185,7 @@ class SOI extends Table
      */
     public static function addPIXEL_MIN(FlatBufferBuilder $builder, $PIXEL_MIN)
     {
-        $builder->addIntX(39, $PIXEL_MIN, 0);
+        $builder->addIntX(41, $PIXEL_MIN, 0);
     }
 
     /**
@@ -1103,7 +1195,7 @@ class SOI extends Table
      */
     public static function addPIXEL_MAX(FlatBufferBuilder $builder, $PIXEL_MAX)
     {
-        $builder->addIntX(40, $PIXEL_MAX, 0);
+        $builder->addIntX(42, $PIXEL_MAX, 0);
     }
 
     /**
@@ -1113,17 +1205,7 @@ class SOI extends Table
      */
     public static function addSOFTWARE_VERSION(FlatBufferBuilder $builder, $SOFTWARE_VERSION)
     {
-        $builder->addOffsetX(41, $SOFTWARE_VERSION, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addSATELLITE_NAME(FlatBufferBuilder $builder, $SATELLITE_NAME)
-    {
-        $builder->addOffsetX(42, $SATELLITE_NAME, 0);
+        $builder->addOffsetX(43, $SOFTWARE_VERSION, 0);
     }
 
     /**
@@ -1133,7 +1215,7 @@ class SOI extends Table
      */
     public static function addSTAR_CAT_NAME(FlatBufferBuilder $builder, $STAR_CAT_NAME)
     {
-        $builder->addOffsetX(43, $STAR_CAT_NAME, 0);
+        $builder->addOffsetX(44, $STAR_CAT_NAME, 0);
     }
 
     /**
@@ -1143,17 +1225,17 @@ class SOI extends Table
      */
     public static function addCORR_QUALITY(FlatBufferBuilder $builder, $CORR_QUALITY)
     {
-        $builder->addDoubleX(44, $CORR_QUALITY, 0.0);
+        $builder->addDoubleX(45, $CORR_QUALITY, 0.0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param bool
+     * @param sbyte
      * @return void
      */
-    public static function addUCT(FlatBufferBuilder $builder, $UCT)
+    public static function addCALIBRATION_TYPE(FlatBufferBuilder $builder, $CALIBRATION_TYPE)
     {
-        $builder->addBoolX(45, $UCT, false);
+        $builder->addSbyteX(46, $CALIBRATION_TYPE, 0);
     }
 
     /**
@@ -1163,17 +1245,7 @@ class SOI extends Table
      */
     public static function addVALID_CALIBRATIONS(FlatBufferBuilder $builder, $VALID_CALIBRATIONS)
     {
-        $builder->addOffsetX(46, $VALID_CALIBRATIONS, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addCALIBRATION_TYPE(FlatBufferBuilder $builder, $CALIBRATION_TYPE)
-    {
-        $builder->addOffsetX(47, $CALIBRATION_TYPE, 0);
+        $builder->addOffsetX(47, $VALID_CALIBRATIONS, 0);
     }
 
     /**

@@ -1,28 +1,466 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "attitudeStateType": {
+      "type": "string",
+      "enum": [
+        "QUATERNION",
+        "EULER_ANGLES",
+        "SPIN",
+        "DIRECTION_COSINE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "QUATERNION": {
+          "value": 0
+        },
+        "EULER_ANGLES": {
+          "value": 1
+        },
+        "SPIN": {
+          "value": 2
+        },
+        "DIRECTION_COSINE": {
+          "value": 3
+        }
+      }
+    },
+    "attCovType": {
+      "type": "string",
+      "enum": [
+        "ANGLE",
+        "ANGLE_GYROBIAS",
+        "ANGLE_ANGVEL",
+        "QUATERNION_COV"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ANGLE": {
+          "value": 0
+        },
+        "ANGLE_GYROBIAS": {
+          "value": 1
+        },
+        "ANGLE_ANGVEL": {
+          "value": 2
+        },
+        "QUATERNION_COV": {
+          "value": 3
+        }
+      }
+    },
+    "maneuverableFlag": {
+      "type": "string",
+      "enum": [
+        "YES",
+        "NO",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "YES": {
+          "value": 0
+        },
+        "NO": {
+          "value": 1
+        },
+        "UNKNOWN": {
+          "value": 2
+        }
+      }
+    },
+    "attitudeState": {
+      "type": "object",
+      "description": "Attitude State Data",
+      "properties": {
+        "ATT_TYPE": {
+          "$ref": "#/definitions/attitudeStateType",
+          "description": "Attitude state type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "QUATERNION": {
+              "value": 0
+            },
+            "EULER_ANGLES": {
+              "value": 1
+            },
+            "SPIN": {
+              "value": 2
+            },
+            "DIRECTION_COSINE": {
+              "value": 3
+            }
+          }
+        },
+        "REF_FRAME_A": {
+          "type": "string",
+          "description": "Reference frame A",
+          "x-flatbuffer-type": "string"
+        },
+        "REF_FRAME_B": {
+          "type": "string",
+          "description": "Reference frame B",
+          "x-flatbuffer-type": "string"
+        },
+        "ATT_DIR": {
+          "type": "string",
+          "description": "Attitude direction (A2B or B2A)",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH": {
+          "type": "string",
+          "description": "Epoch (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "Q1": {
+          "type": "number",
+          "description": "Quaternion scalar component (q0 or qc)",
+          "x-flatbuffer-type": "double"
+        },
+        "Q2": {
+          "type": "number",
+          "description": "Quaternion vector component i",
+          "x-flatbuffer-type": "double"
+        },
+        "Q3": {
+          "type": "number",
+          "description": "Quaternion vector component j",
+          "x-flatbuffer-type": "double"
+        },
+        "QC": {
+          "type": "number",
+          "description": "Quaternion vector component k",
+          "x-flatbuffer-type": "double"
+        },
+        "ANGLE_1": {
+          "type": "number",
+          "description": "Euler angle X in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "ANGLE_2": {
+          "type": "number",
+          "description": "Euler angle Y in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "ANGLE_3": {
+          "type": "number",
+          "description": "Euler angle Z in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "EULER_ROT_SEQ": {
+          "type": "string",
+          "description": "Euler rotation sequence (e.g., 321, 313)",
+          "x-flatbuffer-type": "string"
+        },
+        "ANGVEL_X": {
+          "type": "number",
+          "description": "Angular velocity X in deg/s",
+          "x-flatbuffer-type": "double"
+        },
+        "ANGVEL_Y": {
+          "type": "number",
+          "description": "Angular velocity Y in deg/s",
+          "x-flatbuffer-type": "double"
+        },
+        "ANGVEL_Z": {
+          "type": "number",
+          "description": "Angular velocity Z in deg/s",
+          "x-flatbuffer-type": "double"
+        },
+        "SPIN_ALPHA": {
+          "type": "number",
+          "description": "Spin alpha in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "SPIN_DELTA": {
+          "type": "number",
+          "description": "Spin delta in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "SPIN_ANGLE": {
+          "type": "number",
+          "description": "Spin angle in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "SPIN_ANGLE_VEL": {
+          "type": "number",
+          "description": "Spin angle velocity in deg/s",
+          "x-flatbuffer-type": "double"
+        },
+        "NUTATION": {
+          "type": "number",
+          "description": "Nutation angle in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "NUTATION_PERIOD": {
+          "type": "number",
+          "description": "Nutation period in seconds",
+          "x-flatbuffer-type": "double"
+        },
+        "NUTATION_PHASE": {
+          "type": "number",
+          "description": "Nutation phase in degrees",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "attPhysicalProperties": {
+      "type": "object",
+      "description": "Attitude Physical Characteristics",
+      "properties": {
+        "DRAG_COEFF": {
+          "type": "number",
+          "description": "Drag coefficient",
+          "x-flatbuffer-type": "double"
+        },
+        "WET_MASS": {
+          "type": "number",
+          "description": "Wet mass in kg",
+          "x-flatbuffer-type": "double"
+        },
+        "DRY_MASS": {
+          "type": "number",
+          "description": "Dry mass in kg",
+          "x-flatbuffer-type": "double"
+        },
+        "CP_REF_FRAME": {
+          "type": "string",
+          "description": "Center of pressure reference frame",
+          "x-flatbuffer-type": "string"
+        },
+        "CP_X": {
+          "type": "number",
+          "description": "Center of pressure X in m",
+          "x-flatbuffer-type": "double"
+        },
+        "CP_Y": {
+          "type": "number",
+          "description": "Center of pressure Y in m",
+          "x-flatbuffer-type": "double"
+        },
+        "CP_Z": {
+          "type": "number",
+          "description": "Center of pressure Z in m",
+          "x-flatbuffer-type": "double"
+        },
+        "INERTIA_REF_FRAME": {
+          "type": "string",
+          "description": "Inertia reference frame",
+          "x-flatbuffer-type": "string"
+        },
+        "IXX": {
+          "type": "number",
+          "description": "Moment of inertia about X axis in kg*m^2",
+          "x-flatbuffer-type": "double"
+        },
+        "IYY": {
+          "type": "number",
+          "description": "Moment of inertia about Y axis in kg*m^2",
+          "x-flatbuffer-type": "double"
+        },
+        "IZZ": {
+          "type": "number",
+          "description": "Moment of inertia about Z axis in kg*m^2",
+          "x-flatbuffer-type": "double"
+        },
+        "IXY": {
+          "type": "number",
+          "description": "Product of inertia XY in kg*m^2",
+          "x-flatbuffer-type": "double"
+        },
+        "IXZ": {
+          "type": "number",
+          "description": "Product of inertia XZ in kg*m^2",
+          "x-flatbuffer-type": "double"
+        },
+        "IYZ": {
+          "type": "number",
+          "description": "Product of inertia YZ in kg*m^2",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "attCovariance": {
+      "type": "object",
+      "description": "Attitude Covariance",
+      "properties": {
+        "COV_TYPE": {
+          "$ref": "#/definitions/attCovType",
+          "description": "Covariance type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ANGLE": {
+              "value": 0
+            },
+            "ANGLE_GYROBIAS": {
+              "value": 1
+            },
+            "ANGLE_ANGVEL": {
+              "value": 2
+            },
+            "QUATERNION_COV": {
+              "value": 3
+            }
+          }
+        },
+        "COV_REF_FRAME": {
+          "type": "string",
+          "description": "Reference frame",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH": {
+          "type": "string",
+          "description": "Epoch (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "COV": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Upper-triangular covariance matrix elements (row-major)",
+          "x-flatbuffer-type": "[double]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "attManeuver": {
+      "type": "object",
+      "description": "Attitude Maneuver",
+      "properties": {
+        "MAN_EPOCH_START": {
+          "type": "string",
+          "description": "Maneuver epoch start (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "DURATION": {
+          "type": "number",
+          "description": "Duration in seconds",
+          "x-flatbuffer-type": "double"
+        },
+        "REF_FRAME": {
+          "type": "string",
+          "description": "Reference frame",
+          "x-flatbuffer-type": "string"
+        },
+        "TOR_1": {
+          "type": "number",
+          "description": "Torque about body X in N*m",
+          "x-flatbuffer-type": "double"
+        },
+        "TOR_2": {
+          "type": "number",
+          "description": "Torque about body Y in N*m",
+          "x-flatbuffer-type": "double"
+        },
+        "TOR_3": {
+          "type": "number",
+          "description": "Torque about body Z in N*m",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
     "ACM": {
       "type": "object",
       "description": "Attitude Comprehensive Message",
       "properties": {
         "CCSDS_ACM_VERS": {
           "type": "string",
+          "description": "CCSDS ACM version",
           "x-flatbuffer-type": "string"
         },
         "CREATION_DATE": {
           "type": "string",
+          "description": "Message creation date (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "ORIGINATOR": {
           "type": "string",
+          "description": "Creating organization",
           "x-flatbuffer-type": "string"
         },
         "OBJECT_NAME": {
           "type": "string",
+          "description": "Object name",
           "x-flatbuffer-type": "string"
         },
         "OBJECT_ID": {
           "type": "string",
+          "description": "International designator",
+          "x-flatbuffer-type": "string"
+        },
+        "CATALOG_NAME": {
+          "type": "string",
+          "description": "Catalog name",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH": {
+          "type": "string",
+          "description": "Epoch of state (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "TIME_SYSTEM": {
+          "type": "string",
+          "description": "Time system",
+          "x-flatbuffer-type": "string"
+        },
+        "ATT_STATES": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/attitudeState"
+          },
+          "description": "Attitude states",
+          "x-flatbuffer-type": "[attitudeState]"
+        },
+        "PHYS_PROPERTIES": {
+          "$ref": "#/definitions/attPhysicalProperties",
+          "description": "Physical properties",
+          "x-flatbuffer-type": "attPhysicalProperties"
+        },
+        "COV_DATA": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/attCovariance"
+          },
+          "description": "Attitude covariance data",
+          "x-flatbuffer-type": "[attCovariance]"
+        },
+        "MANEUVERS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/attManeuver"
+          },
+          "description": "Attitude maneuvers",
+          "x-flatbuffer-type": "[attManeuver]"
+        },
+        "MANEUVERABLE": {
+          "$ref": "#/definitions/maneuverableFlag",
+          "description": "Maneuverability status",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "YES": {
+              "value": 0
+            },
+            "NO": {
+              "value": 1
+            },
+            "UNKNOWN": {
+              "value": 2
+            }
+          }
+        },
+        "COMMENT": {
+          "type": "string",
+          "description": "Additional comments",
           "x-flatbuffer-type": "string"
         }
       },

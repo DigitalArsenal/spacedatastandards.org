@@ -41,39 +41,45 @@ class OBT extends Table
         return $this;
     }
 
+    /// Unique identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Satellite catalog number
     /**
-     * @return int
+     * @return uint
      */
     public function getSAT_NO()
     {
         $o = $this->__offset(6);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
-    public function getON_ORBIT()
+    /// International designator
+    public function getORIG_OBJECT_ID()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getORIG_OBJECT_ID()
+    /// On-orbit reference
+    public function getON_ORBIT()
     {
         $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Track point timestamp (ISO 8601)
     public function getTS()
     {
         $o = $this->__offset(12);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Latitude (degrees)
     /**
      * @return double
      */
@@ -83,6 +89,7 @@ class OBT extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Longitude (degrees)
     /**
      * @return double
      */
@@ -92,6 +99,7 @@ class OBT extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Altitude (km)
     /**
      * @return double
      */
@@ -101,86 +109,131 @@ class OBT extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Speed (km/s)
     /**
      * @return double
      */
-    public function getRDF_RF()
+    public function getSPD()
     {
         $o = $this->__offset(20);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    public function getCALL_SIGN()
+    /// Elevation angle from observer (degrees)
+    /**
+     * @return double
+     */
+    public function getANG_ELEV()
     {
         $o = $this->__offset(22);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    public function getRPT_NUM()
+    /// Radar data fusion RF value
+    /**
+     * @return double
+     */
+    public function getRDF_RF()
     {
         $o = $this->__offset(24);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    public function getOBJ_IDENT()
+    /// Call sign
+    public function getCALL_SIGN()
     {
         $o = $this->__offset(26);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getIDENT_AMP()
+    /// Report number
+    public function getRPT_NUM()
     {
         $o = $this->__offset(28);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getSAT_STATUS()
+    /// Track identifier
+    public function getTRK_ID()
     {
         $o = $this->__offset(30);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getOBJECT_TYPE()
+    /// Object identity assessment
+    public function getOBJ_IDENT()
     {
         $o = $this->__offset(32);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getCOUNTRY_CODE()
+    /// Identity amplification
+    public function getIDENT_AMP()
     {
         $o = $this->__offset(34);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /**
-     * @return double
-     */
-    public function getDECAY()
+    /// Satellite operational status
+    public function getSAT_STATUS()
     {
         $o = $this->__offset(36);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    public function getCHARLIE_LINE()
-    {
-        $o = $this->__offset(38);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getAOU_TYPE()
+    /// Object type
+    /**
+     * @return sbyte
+     */
+    public function getOBJ_TYPE()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \orbitObjectType::PAYLOAD;
+    }
+
+    /// Country code (ISO 3166)
+    public function getCOUNTRY_CODE()
     {
         $o = $this->__offset(40);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Orbit decay rate (km/day)
+    /**
+     * @return double
+     */
+    public function getDECAY()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Charlie line data (amplification text)
+    public function getCHARLIE_LINE()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Area of uncertainty type
+    /**
+     * @return sbyte
+     */
+    public function getAOU_TYPE()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \aouType::CIRCULAR;
+    }
+
+    /// Area of uncertainty data
     /**
      * @param int offset
-     * @return string
+     * @return double
      */
     public function getAOU_DATA($j)
     {
-        $o = $this->__offset(42);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
@@ -188,136 +241,126 @@ class OBT extends Table
      */
     public function getAOU_DATALength()
     {
-        $o = $this->__offset(42);
+        $o = $this->__offset(48);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    /**
-     * @return double
-     */
-    public function getSPD()
-    {
-        $o = $this->__offset(44);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getANG_ELEV()
-    {
-        $o = $this->__offset(46);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
+    /// Containment probability (0-1)
     /**
      * @return double
      */
     public function getCNTNMNT()
     {
-        $o = $this->__offset(48);
+        $o = $this->__offset(50);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Cross-reference identifier
     public function getXREF()
-    {
-        $o = $this->__offset(50);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getCH_XREF()
     {
         $o = $this->__offset(52);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getAMPLIFICATION()
+    /// Charlie cross-reference
+    public function getCH_XREF()
     {
         $o = $this->__offset(54);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getIFF()
+    /// Additional amplification text
+    public function getAMPLIFICATION()
     {
         $o = $this->__offset(56);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// IFF mode/code
+    public function getIFF()
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Vehicle type
+    public function getVEH_TYPE()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// True if reinforced unit
     /**
      * @return bool
      */
     public function getREINFORCED()
     {
-        $o = $this->__offset(58);
+        $o = $this->__offset(62);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// True if reduced unit
     /**
      * @return bool
      */
     public function getREDUCED()
     {
-        $o = $this->__offset(60);
+        $o = $this->__offset(64);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// True if headquarters element
     /**
      * @return bool
      */
     public function getHQ()
     {
-        $o = $this->__offset(62);
+        $o = $this->__offset(66);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// True if dummy/exercise track
     /**
      * @return bool
      */
     public function getDUMMY()
     {
-        $o = $this->__offset(64);
+        $o = $this->__offset(68);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// True if task force
     /**
      * @return bool
      */
     public function getTASK_FORCE()
     {
-        $o = $this->__offset(66);
+        $o = $this->__offset(70);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// True if feint
     /**
      * @return bool
      */
     public function getFEINT()
     {
-        $o = $this->__offset(68);
+        $o = $this->__offset(72);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// True if installation (not mobile)
     /**
      * @return bool
      */
     public function getINSTALLATION()
     {
-        $o = $this->__offset(70);
+        $o = $this->__offset(74);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
-    public function getVEH_TYPE()
-    {
-        $o = $this->__offset(72);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getTRK_ID()
-    {
-        $o = $this->__offset(74);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
+    /// Contributing track sensors
     /**
      * @param int offset
      * @return string
@@ -350,36 +393,38 @@ class OBT extends Table
      * @param FlatBufferBuilder $builder
      * @return OBT
      */
-    public static function createOBT(FlatBufferBuilder $builder, $ID, $SAT_NO, $ON_ORBIT, $ORIG_OBJECT_ID, $TS, $LAT, $LON, $ALT, $RDF_RF, $CALL_SIGN, $RPT_NUM, $OBJ_IDENT, $IDENT_AMP, $SAT_STATUS, $OBJECT_TYPE, $COUNTRY_CODE, $DECAY, $CHARLIE_LINE, $AOU_TYPE, $AOU_DATA, $SPD, $ANG_ELEV, $CNTNMNT, $XREF, $CH_XREF, $AMPLIFICATION, $IFF, $REINFORCED, $REDUCED, $HQ, $DUMMY, $TASK_FORCE, $FEINT, $INSTALLATION, $VEH_TYPE, $TRK_ID, $TRACK_SENSORS)
+    public static function createOBT(FlatBufferBuilder $builder, $ID, $SAT_NO, $ORIG_OBJECT_ID, $ON_ORBIT, $TS, $LAT, $LON, $ALT, $SPD, $ANG_ELEV, $RDF_RF, $CALL_SIGN, $RPT_NUM, $TRK_ID, $OBJ_IDENT, $IDENT_AMP, $SAT_STATUS, $OBJ_TYPE, $COUNTRY_CODE, $DECAY, $CHARLIE_LINE, $AOU_TYPE, $AOU_DATA, $CNTNMNT, $XREF, $CH_XREF, $AMPLIFICATION, $IFF, $VEH_TYPE, $REINFORCED, $REDUCED, $HQ, $DUMMY, $TASK_FORCE, $FEINT, $INSTALLATION, $TRACK_SENSORS)
     {
         $builder->startObject(37);
         self::addID($builder, $ID);
         self::addSAT_NO($builder, $SAT_NO);
-        self::addON_ORBIT($builder, $ON_ORBIT);
         self::addORIG_OBJECT_ID($builder, $ORIG_OBJECT_ID);
+        self::addON_ORBIT($builder, $ON_ORBIT);
         self::addTS($builder, $TS);
         self::addLAT($builder, $LAT);
         self::addLON($builder, $LON);
         self::addALT($builder, $ALT);
+        self::addSPD($builder, $SPD);
+        self::addANG_ELEV($builder, $ANG_ELEV);
         self::addRDF_RF($builder, $RDF_RF);
         self::addCALL_SIGN($builder, $CALL_SIGN);
         self::addRPT_NUM($builder, $RPT_NUM);
+        self::addTRK_ID($builder, $TRK_ID);
         self::addOBJ_IDENT($builder, $OBJ_IDENT);
         self::addIDENT_AMP($builder, $IDENT_AMP);
         self::addSAT_STATUS($builder, $SAT_STATUS);
-        self::addOBJECT_TYPE($builder, $OBJECT_TYPE);
+        self::addOBJ_TYPE($builder, $OBJ_TYPE);
         self::addCOUNTRY_CODE($builder, $COUNTRY_CODE);
         self::addDECAY($builder, $DECAY);
         self::addCHARLIE_LINE($builder, $CHARLIE_LINE);
         self::addAOU_TYPE($builder, $AOU_TYPE);
         self::addAOU_DATA($builder, $AOU_DATA);
-        self::addSPD($builder, $SPD);
-        self::addANG_ELEV($builder, $ANG_ELEV);
         self::addCNTNMNT($builder, $CNTNMNT);
         self::addXREF($builder, $XREF);
         self::addCH_XREF($builder, $CH_XREF);
         self::addAMPLIFICATION($builder, $AMPLIFICATION);
         self::addIFF($builder, $IFF);
+        self::addVEH_TYPE($builder, $VEH_TYPE);
         self::addREINFORCED($builder, $REINFORCED);
         self::addREDUCED($builder, $REDUCED);
         self::addHQ($builder, $HQ);
@@ -387,8 +432,6 @@ class OBT extends Table
         self::addTASK_FORCE($builder, $TASK_FORCE);
         self::addFEINT($builder, $FEINT);
         self::addINSTALLATION($builder, $INSTALLATION);
-        self::addVEH_TYPE($builder, $VEH_TYPE);
-        self::addTRK_ID($builder, $TRK_ID);
         self::addTRACK_SENSORS($builder, $TRACK_SENSORS);
         $o = $builder->endObject();
         return $o;
@@ -406,22 +449,12 @@ class OBT extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param uint
      * @return void
      */
     public static function addSAT_NO(FlatBufferBuilder $builder, $SAT_NO)
     {
-        $builder->addIntX(1, $SAT_NO, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addON_ORBIT(FlatBufferBuilder $builder, $ON_ORBIT)
-    {
-        $builder->addOffsetX(2, $ON_ORBIT, 0);
+        $builder->addUintX(1, $SAT_NO, 0);
     }
 
     /**
@@ -431,7 +464,17 @@ class OBT extends Table
      */
     public static function addORIG_OBJECT_ID(FlatBufferBuilder $builder, $ORIG_OBJECT_ID)
     {
-        $builder->addOffsetX(3, $ORIG_OBJECT_ID, 0);
+        $builder->addOffsetX(2, $ORIG_OBJECT_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addON_ORBIT(FlatBufferBuilder $builder, $ON_ORBIT)
+    {
+        $builder->addOffsetX(3, $ON_ORBIT, 0);
     }
 
     /**
@@ -479,9 +522,29 @@ class OBT extends Table
      * @param double
      * @return void
      */
+    public static function addSPD(FlatBufferBuilder $builder, $SPD)
+    {
+        $builder->addDoubleX(8, $SPD, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addANG_ELEV(FlatBufferBuilder $builder, $ANG_ELEV)
+    {
+        $builder->addDoubleX(9, $ANG_ELEV, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
     public static function addRDF_RF(FlatBufferBuilder $builder, $RDF_RF)
     {
-        $builder->addDoubleX(8, $RDF_RF, 0.0);
+        $builder->addDoubleX(10, $RDF_RF, 0.0);
     }
 
     /**
@@ -491,7 +554,7 @@ class OBT extends Table
      */
     public static function addCALL_SIGN(FlatBufferBuilder $builder, $CALL_SIGN)
     {
-        $builder->addOffsetX(9, $CALL_SIGN, 0);
+        $builder->addOffsetX(11, $CALL_SIGN, 0);
     }
 
     /**
@@ -501,7 +564,17 @@ class OBT extends Table
      */
     public static function addRPT_NUM(FlatBufferBuilder $builder, $RPT_NUM)
     {
-        $builder->addOffsetX(10, $RPT_NUM, 0);
+        $builder->addOffsetX(12, $RPT_NUM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addTRK_ID(FlatBufferBuilder $builder, $TRK_ID)
+    {
+        $builder->addOffsetX(13, $TRK_ID, 0);
     }
 
     /**
@@ -511,7 +584,7 @@ class OBT extends Table
      */
     public static function addOBJ_IDENT(FlatBufferBuilder $builder, $OBJ_IDENT)
     {
-        $builder->addOffsetX(11, $OBJ_IDENT, 0);
+        $builder->addOffsetX(14, $OBJ_IDENT, 0);
     }
 
     /**
@@ -521,7 +594,7 @@ class OBT extends Table
      */
     public static function addIDENT_AMP(FlatBufferBuilder $builder, $IDENT_AMP)
     {
-        $builder->addOffsetX(12, $IDENT_AMP, 0);
+        $builder->addOffsetX(15, $IDENT_AMP, 0);
     }
 
     /**
@@ -531,17 +604,17 @@ class OBT extends Table
      */
     public static function addSAT_STATUS(FlatBufferBuilder $builder, $SAT_STATUS)
     {
-        $builder->addOffsetX(13, $SAT_STATUS, 0);
+        $builder->addOffsetX(16, $SAT_STATUS, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
-    public static function addOBJECT_TYPE(FlatBufferBuilder $builder, $OBJECT_TYPE)
+    public static function addOBJ_TYPE(FlatBufferBuilder $builder, $OBJ_TYPE)
     {
-        $builder->addOffsetX(14, $OBJECT_TYPE, 0);
+        $builder->addSbyteX(17, $OBJ_TYPE, 0);
     }
 
     /**
@@ -551,7 +624,7 @@ class OBT extends Table
      */
     public static function addCOUNTRY_CODE(FlatBufferBuilder $builder, $COUNTRY_CODE)
     {
-        $builder->addOffsetX(15, $COUNTRY_CODE, 0);
+        $builder->addOffsetX(18, $COUNTRY_CODE, 0);
     }
 
     /**
@@ -561,7 +634,7 @@ class OBT extends Table
      */
     public static function addDECAY(FlatBufferBuilder $builder, $DECAY)
     {
-        $builder->addDoubleX(16, $DECAY, 0.0);
+        $builder->addDoubleX(19, $DECAY, 0.0);
     }
 
     /**
@@ -571,17 +644,17 @@ class OBT extends Table
      */
     public static function addCHARLIE_LINE(FlatBufferBuilder $builder, $CHARLIE_LINE)
     {
-        $builder->addOffsetX(17, $CHARLIE_LINE, 0);
+        $builder->addOffsetX(20, $CHARLIE_LINE, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addAOU_TYPE(FlatBufferBuilder $builder, $AOU_TYPE)
     {
-        $builder->addOffsetX(18, $AOU_TYPE, 0);
+        $builder->addSbyteX(21, $AOU_TYPE, 0);
     }
 
     /**
@@ -591,7 +664,7 @@ class OBT extends Table
      */
     public static function addAOU_DATA(FlatBufferBuilder $builder, $AOU_DATA)
     {
-        $builder->addOffsetX(19, $AOU_DATA, 0);
+        $builder->addOffsetX(22, $AOU_DATA, 0);
     }
 
     /**
@@ -601,9 +674,9 @@ class OBT extends Table
      */
     public static function createAOU_DATAVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -615,27 +688,7 @@ class OBT extends Table
      */
     public static function startAOU_DATAVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addSPD(FlatBufferBuilder $builder, $SPD)
-    {
-        $builder->addDoubleX(20, $SPD, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addANG_ELEV(FlatBufferBuilder $builder, $ANG_ELEV)
-    {
-        $builder->addDoubleX(21, $ANG_ELEV, 0.0);
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**
@@ -645,7 +698,7 @@ class OBT extends Table
      */
     public static function addCNTNMNT(FlatBufferBuilder $builder, $CNTNMNT)
     {
-        $builder->addDoubleX(22, $CNTNMNT, 0.0);
+        $builder->addDoubleX(23, $CNTNMNT, 0.0);
     }
 
     /**
@@ -655,7 +708,7 @@ class OBT extends Table
      */
     public static function addXREF(FlatBufferBuilder $builder, $XREF)
     {
-        $builder->addOffsetX(23, $XREF, 0);
+        $builder->addOffsetX(24, $XREF, 0);
     }
 
     /**
@@ -665,7 +718,7 @@ class OBT extends Table
      */
     public static function addCH_XREF(FlatBufferBuilder $builder, $CH_XREF)
     {
-        $builder->addOffsetX(24, $CH_XREF, 0);
+        $builder->addOffsetX(25, $CH_XREF, 0);
     }
 
     /**
@@ -675,7 +728,7 @@ class OBT extends Table
      */
     public static function addAMPLIFICATION(FlatBufferBuilder $builder, $AMPLIFICATION)
     {
-        $builder->addOffsetX(25, $AMPLIFICATION, 0);
+        $builder->addOffsetX(26, $AMPLIFICATION, 0);
     }
 
     /**
@@ -685,77 +738,7 @@ class OBT extends Table
      */
     public static function addIFF(FlatBufferBuilder $builder, $IFF)
     {
-        $builder->addOffsetX(26, $IFF, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param bool
-     * @return void
-     */
-    public static function addREINFORCED(FlatBufferBuilder $builder, $REINFORCED)
-    {
-        $builder->addBoolX(27, $REINFORCED, false);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param bool
-     * @return void
-     */
-    public static function addREDUCED(FlatBufferBuilder $builder, $REDUCED)
-    {
-        $builder->addBoolX(28, $REDUCED, false);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param bool
-     * @return void
-     */
-    public static function addHQ(FlatBufferBuilder $builder, $HQ)
-    {
-        $builder->addBoolX(29, $HQ, false);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param bool
-     * @return void
-     */
-    public static function addDUMMY(FlatBufferBuilder $builder, $DUMMY)
-    {
-        $builder->addBoolX(30, $DUMMY, false);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param bool
-     * @return void
-     */
-    public static function addTASK_FORCE(FlatBufferBuilder $builder, $TASK_FORCE)
-    {
-        $builder->addBoolX(31, $TASK_FORCE, false);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param bool
-     * @return void
-     */
-    public static function addFEINT(FlatBufferBuilder $builder, $FEINT)
-    {
-        $builder->addBoolX(32, $FEINT, false);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param bool
-     * @return void
-     */
-    public static function addINSTALLATION(FlatBufferBuilder $builder, $INSTALLATION)
-    {
-        $builder->addBoolX(33, $INSTALLATION, false);
+        $builder->addOffsetX(27, $IFF, 0);
     }
 
     /**
@@ -765,17 +748,77 @@ class OBT extends Table
      */
     public static function addVEH_TYPE(FlatBufferBuilder $builder, $VEH_TYPE)
     {
-        $builder->addOffsetX(34, $VEH_TYPE, 0);
+        $builder->addOffsetX(28, $VEH_TYPE, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param bool
      * @return void
      */
-    public static function addTRK_ID(FlatBufferBuilder $builder, $TRK_ID)
+    public static function addREINFORCED(FlatBufferBuilder $builder, $REINFORCED)
     {
-        $builder->addOffsetX(35, $TRK_ID, 0);
+        $builder->addBoolX(29, $REINFORCED, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addREDUCED(FlatBufferBuilder $builder, $REDUCED)
+    {
+        $builder->addBoolX(30, $REDUCED, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addHQ(FlatBufferBuilder $builder, $HQ)
+    {
+        $builder->addBoolX(31, $HQ, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addDUMMY(FlatBufferBuilder $builder, $DUMMY)
+    {
+        $builder->addBoolX(32, $DUMMY, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addTASK_FORCE(FlatBufferBuilder $builder, $TASK_FORCE)
+    {
+        $builder->addBoolX(33, $TASK_FORCE, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addFEINT(FlatBufferBuilder $builder, $FEINT)
+    {
+        $builder->addBoolX(34, $FEINT, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addINSTALLATION(FlatBufferBuilder $builder, $INSTALLATION)
+    {
+        $builder->addBoolX(35, $INSTALLATION, false);
     }
 
     /**

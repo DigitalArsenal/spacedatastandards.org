@@ -3,3 +3,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export { TRK, TRKT } from './TRK.js';
+export { trackEnvironment } from './trackEnvironment.js';
+export { trackStatus } from './trackStatus.js';

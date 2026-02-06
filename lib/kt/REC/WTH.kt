@@ -29,6 +29,9 @@ class WTH : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Unique identifier
+     */
     val ID : String?
         get() {
             val o = __offset(4)
@@ -40,6 +43,9 @@ class WTH : Table() {
         }
     val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    /**
+     * Sensor identifier
+     */
     val ID_SENSOR : String?
         get() {
             val o = __offset(6)
@@ -51,6 +57,9 @@ class WTH : Table() {
         }
     val ID_SENSORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
     fun ID_SENSORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    /**
+     * Original sensor identifier
+     */
     val ORIG_SENSOR_ID : String?
         get() {
             val o = __offset(8)
@@ -62,6 +71,9 @@ class WTH : Table() {
         }
     val ORIG_SENSOR_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
     fun ORIG_SENSOR_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    /**
+     * Observation time (ISO 8601)
+     */
     val OB_TIME : String?
         get() {
             val o = __offset(10)
@@ -73,209 +85,306 @@ class WTH : Table() {
         }
     val OB_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
     fun OB_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    fun SIG_PWRS(j: Int) : String? {
-        val o = __offset(12)
-        return if (o != 0) {
-            __string(__vector(o) + j * 4)
-        } else {
-            null
-        }
-    }
-    val SIG_PWRSLength : Int
-        get() {
-            val o = __offset(12); return if (o != 0) __vector_len(o) else 0
-        }
-    fun NOISE_LVLS(j: Int) : String? {
-        val o = __offset(14)
-        return if (o != 0) {
-            __string(__vector(o) + j * 4)
-        } else {
-            null
-        }
-    }
-    val NOISE_LVLSLength : Int
-        get() {
-            val o = __offset(14); return if (o != 0) __vector_len(o) else 0
-        }
-    fun SPEC_WIDTHS(j: Int) : String? {
-        val o = __offset(16)
-        return if (o != 0) {
-            __string(__vector(o) + j * 4)
-        } else {
-            null
-        }
-    }
-    val SPEC_WIDTHSLength : Int
-        get() {
-            val o = __offset(16); return if (o != 0) __vector_len(o) else 0
-        }
-    fun FIRST_GUESS_AVGS(j: Int) : String? {
-        val o = __offset(18)
-        return if (o != 0) {
-            __string(__vector(o) + j * 4)
-        } else {
-            null
-        }
-    }
-    val FIRST_GUESS_AVGSLength : Int
-        get() {
-            val o = __offset(18); return if (o != 0) __vector_len(o) else 0
-        }
-    val QC_VALUE : Int
-        get() {
-            val o = __offset(20)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
-        }
+    /**
+     * File creation time (ISO 8601)
+     */
     val FILE_CREATION : String?
         get() {
-            val o = __offset(22)
+            val o = __offset(12)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val FILE_CREATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun FILE_CREATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    val FILE_CREATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
+    fun FILE_CREATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * Quality control value
+     */
+    val QC_VALUE : UByte
+        get() {
+            val o = __offset(14)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * Terminal altitude (km)
+     */
     val TERM_ALT : Double
         get() {
-            val o = __offset(24)
+            val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Average transmit power (dBm)
+     */
     val AVG_TX_PWR : Double
         get() {
-            val o = __offset(26)
+            val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Average reflected power (dBm)
+     */
     val AVG_REF_PWR : Double
         get() {
-            val o = __offset(28)
+            val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SECTOR_NUM : Int
+    /**
+     * Sector number
+     */
+    val SECTOR_NUM : UShort
         get() {
-            val o = __offset(30)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            val o = __offset(22)
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
-    val NUM_ELEMENTS : Int
+    /**
+     * Number of data elements
+     */
+    val NUM_ELEMENTS : UShort
         get() {
-            val o = __offset(32)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            val o = __offset(24)
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
-    fun TD_AVG_SAMPLE_NUMS(j: Int) : String? {
+    /**
+     * Checksum
+     */
+    val CHECKSUM : UInt
+        get() {
+            val o = __offset(26)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Signal power values (dBm)
+     */
+    fun SIG_PWRS(j: Int) : Double {
+        val o = __offset(28)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val SIG_PWRSLength : Int
+        get() {
+            val o = __offset(28); return if (o != 0) __vector_len(o) else 0
+        }
+    val SIG_PWRSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 8)
+    fun SIG_PWRSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 8)
+    /**
+     * Noise level values (dBm)
+     */
+    fun NOISE_LVLS(j: Int) : Double {
+        val o = __offset(30)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val NOISE_LVLSLength : Int
+        get() {
+            val o = __offset(30); return if (o != 0) __vector_len(o) else 0
+        }
+    val NOISE_LVLSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 8)
+    fun NOISE_LVLSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 8)
+    /**
+     * Spectral width values (m/s)
+     */
+    fun SPEC_WIDTHS(j: Int) : Double {
+        val o = __offset(32)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val SPEC_WIDTHSLength : Int
+        get() {
+            val o = __offset(32); return if (o != 0) __vector_len(o) else 0
+        }
+    val SPEC_WIDTHSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 8)
+    fun SPEC_WIDTHSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 8)
+    /**
+     * First guess average values
+     */
+    fun FIRST_GUESS_AVGS(j: Int) : Double {
         val o = __offset(34)
         return if (o != 0) {
-            __string(__vector(o) + j * 4)
+            bb.getDouble(__vector(o) + j * 8)
         } else {
-            null
+            0.0
+        }
+    }
+    val FIRST_GUESS_AVGSLength : Int
+        get() {
+            val o = __offset(34); return if (o != 0) __vector_len(o) else 0
+        }
+    val FIRST_GUESS_AVGSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 8)
+    fun FIRST_GUESS_AVGSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 8)
+    /**
+     * Time domain average sample numbers
+     */
+    fun TD_AVG_SAMPLE_NUMS(j: Int) : Double {
+        val o = __offset(36)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
         }
     }
     val TD_AVG_SAMPLE_NUMSLength : Int
         get() {
-            val o = __offset(34); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(36); return if (o != 0) __vector_len(o) else 0
         }
-    val CHECKSUM : Int
-        get() {
-            val o = __offset(36)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
-        }
-    fun CO_INTEGS(j: Int) : String? {
+    val TD_AVG_SAMPLE_NUMSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 8)
+    fun TD_AVG_SAMPLE_NUMSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 8)
+    /**
+     * Co-integration values
+     */
+    fun CO_INTEGS(j: Int) : Double {
         val o = __offset(38)
         return if (o != 0) {
-            __string(__vector(o) + j * 4)
+            bb.getDouble(__vector(o) + j * 8)
         } else {
-            null
+            0.0
         }
     }
     val CO_INTEGSLength : Int
         get() {
             val o = __offset(38); return if (o != 0) __vector_len(o) else 0
         }
-    fun SPEC_AVGS(j: Int) : String? {
+    val CO_INTEGSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 8)
+    fun CO_INTEGSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 8)
+    /**
+     * Spectral average values
+     */
+    fun SPEC_AVGS(j: Int) : Double {
         val o = __offset(40)
         return if (o != 0) {
-            __string(__vector(o) + j * 4)
+            bb.getDouble(__vector(o) + j * 8)
         } else {
-            null
+            0.0
         }
     }
     val SPEC_AVGSLength : Int
         get() {
             val o = __offset(40); return if (o != 0) __vector_len(o) else 0
         }
-    fun INTERPULSE_PERIODS(j: Int) : String? {
+    val SPEC_AVGSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(40, 8)
+    fun SPEC_AVGSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 40, 8)
+    /**
+     * Interpulse periods (microseconds)
+     */
+    fun INTERPULSE_PERIODS(j: Int) : Double {
         val o = __offset(42)
         return if (o != 0) {
-            __string(__vector(o) + j * 4)
+            bb.getDouble(__vector(o) + j * 8)
         } else {
-            null
+            0.0
         }
     }
     val INTERPULSE_PERIODSLength : Int
         get() {
             val o = __offset(42); return if (o != 0) __vector_len(o) else 0
         }
-    fun DOPP_VELS(j: Int) : String? {
+    val INTERPULSE_PERIODSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(42, 8)
+    fun INTERPULSE_PERIODSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 42, 8)
+    /**
+     * Doppler velocities (m/s)
+     */
+    fun DOPP_VELS(j: Int) : Double {
         val o = __offset(44)
         return if (o != 0) {
-            __string(__vector(o) + j * 4)
+            bb.getDouble(__vector(o) + j * 8)
         } else {
-            null
+            0.0
         }
     }
     val DOPP_VELSLength : Int
         get() {
             val o = __offset(44); return if (o != 0) __vector_len(o) else 0
         }
-    fun CONS_RECS(j: Int) : String? {
+    val DOPP_VELSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(44, 8)
+    fun DOPP_VELSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 44, 8)
+    /**
+     * Consecutive records count
+     */
+    fun CONS_RECS(j: Int) : Double {
         val o = __offset(46)
         return if (o != 0) {
-            __string(__vector(o) + j * 4)
+            bb.getDouble(__vector(o) + j * 8)
         } else {
-            null
+            0.0
         }
     }
     val CONS_RECSLength : Int
         get() {
             val o = __offset(46); return if (o != 0) __vector_len(o) else 0
         }
-    fun SNRS(j: Int) : String? {
+    val CONS_RECSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(46, 8)
+    fun CONS_RECSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 46, 8)
+    /**
+     * Signal-to-noise ratios (dB)
+     */
+    fun SNRS(j: Int) : Double {
         val o = __offset(48)
         return if (o != 0) {
-            __string(__vector(o) + j * 4)
+            bb.getDouble(__vector(o) + j * 8)
         } else {
-            null
+            0.0
         }
     }
     val SNRSLength : Int
         get() {
             val o = __offset(48); return if (o != 0) __vector_len(o) else 0
         }
+    val SNRSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(48, 8)
+    fun SNRSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 48, 8)
+    /**
+     * Signal strength (dBm)
+     */
     val SIG_STRENGTH : Double
         get() {
             val o = __offset(50)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Error ellipse semi-major axis (km)
+     */
     val SEMI_MAJOR_AXIS : Double
         get() {
             val o = __offset(52)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Error ellipse semi-minor axis (km)
+     */
     val SEMI_MINOR_AXIS : Double
         get() {
             val o = __offset(54)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Error ellipse orientation angle (degrees)
+     */
     val ANGLE_ORIENTATION : Double
         get() {
             val o = __offset(56)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val LIGHT_EVENT_NUM : Int
+    /**
+     * Lightning event number
+     */
+    val LIGHT_EVENT_NUM : UInt
         get() {
             val o = __offset(58)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
+    /**
+     * Lightning detection sensor identifiers
+     */
     fun LIGHT_DET_SENSORS(j: Int) : String? {
         val o = __offset(60)
         return if (o != 0) {
@@ -288,11 +397,17 @@ class WTH : Table() {
         get() {
             val o = __offset(60); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Position confidence (0-1)
+     */
     val POS_CONFIDENCE : Double
         get() {
             val o = __offset(62)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Source types
+     */
     fun SRC_TYPS(j: Int) : String? {
         val o = __offset(64)
         return if (o != 0) {
@@ -305,6 +420,9 @@ class WTH : Table() {
         get() {
             val o = __offset(64); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Source identifiers
+     */
     fun SRC_IDS(j: Int) : String? {
         val o = __offset(66)
         return if (o != 0) {
@@ -325,7 +443,7 @@ class WTH : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun WTHBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$WTH")
-        fun createWTH(builder: FlatBufferBuilder, IDOffset: Int, ID_SENSOROffset: Int, ORIG_SENSOR_IDOffset: Int, OB_TIMEOffset: Int, SIG_PWRSOffset: Int, NOISE_LVLSOffset: Int, SPEC_WIDTHSOffset: Int, FIRST_GUESS_AVGSOffset: Int, QC_VALUE: Int, FILE_CREATIONOffset: Int, TERM_ALT: Double, AVG_TX_PWR: Double, AVG_REF_PWR: Double, SECTOR_NUM: Int, NUM_ELEMENTS: Int, TD_AVG_SAMPLE_NUMSOffset: Int, CHECKSUM: Int, CO_INTEGSOffset: Int, SPEC_AVGSOffset: Int, INTERPULSE_PERIODSOffset: Int, DOPP_VELSOffset: Int, CONS_RECSOffset: Int, SNRSOffset: Int, SIG_STRENGTH: Double, SEMI_MAJOR_AXIS: Double, SEMI_MINOR_AXIS: Double, ANGLE_ORIENTATION: Double, LIGHT_EVENT_NUM: Int, LIGHT_DET_SENSORSOffset: Int, POS_CONFIDENCE: Double, SRC_TYPSOffset: Int, SRC_IDSOffset: Int) : Int {
+        fun createWTH(builder: FlatBufferBuilder, IDOffset: Int, ID_SENSOROffset: Int, ORIG_SENSOR_IDOffset: Int, OB_TIMEOffset: Int, FILE_CREATIONOffset: Int, QC_VALUE: UByte, TERM_ALT: Double, AVG_TX_PWR: Double, AVG_REF_PWR: Double, SECTOR_NUM: UShort, NUM_ELEMENTS: UShort, CHECKSUM: UInt, SIG_PWRSOffset: Int, NOISE_LVLSOffset: Int, SPEC_WIDTHSOffset: Int, FIRST_GUESS_AVGSOffset: Int, TD_AVG_SAMPLE_NUMSOffset: Int, CO_INTEGSOffset: Int, SPEC_AVGSOffset: Int, INTERPULSE_PERIODSOffset: Int, DOPP_VELSOffset: Int, CONS_RECSOffset: Int, SNRSOffset: Int, SIG_STRENGTH: Double, SEMI_MAJOR_AXIS: Double, SEMI_MINOR_AXIS: Double, ANGLE_ORIENTATION: Double, LIGHT_EVENT_NUM: UInt, LIGHT_DET_SENSORSOffset: Int, POS_CONFIDENCE: Double, SRC_TYPSOffset: Int, SRC_IDSOffset: Int) : Int {
             builder.startTable(32)
             addPOS_CONFIDENCE(builder, POS_CONFIDENCE)
             addANGLE_ORIENTATION(builder, ANGLE_ORIENTATION)
@@ -345,20 +463,20 @@ class WTH : Table() {
             addINTERPULSE_PERIODS(builder, INTERPULSE_PERIODSOffset)
             addSPEC_AVGS(builder, SPEC_AVGSOffset)
             addCO_INTEGS(builder, CO_INTEGSOffset)
-            addCHECKSUM(builder, CHECKSUM)
             addTD_AVG_SAMPLE_NUMS(builder, TD_AVG_SAMPLE_NUMSOffset)
-            addNUM_ELEMENTS(builder, NUM_ELEMENTS)
-            addSECTOR_NUM(builder, SECTOR_NUM)
-            addFILE_CREATION(builder, FILE_CREATIONOffset)
-            addQC_VALUE(builder, QC_VALUE)
             addFIRST_GUESS_AVGS(builder, FIRST_GUESS_AVGSOffset)
             addSPEC_WIDTHS(builder, SPEC_WIDTHSOffset)
             addNOISE_LVLS(builder, NOISE_LVLSOffset)
             addSIG_PWRS(builder, SIG_PWRSOffset)
+            addCHECKSUM(builder, CHECKSUM)
+            addFILE_CREATION(builder, FILE_CREATIONOffset)
             addOB_TIME(builder, OB_TIMEOffset)
             addORIG_SENSOR_ID(builder, ORIG_SENSOR_IDOffset)
             addID_SENSOR(builder, ID_SENSOROffset)
             addID(builder, IDOffset)
+            addNUM_ELEMENTS(builder, NUM_ELEMENTS)
+            addSECTOR_NUM(builder, SECTOR_NUM)
+            addQC_VALUE(builder, QC_VALUE)
             return endWTH(builder)
         }
         fun startWTH(builder: FlatBufferBuilder) = builder.startTable(32)
@@ -366,118 +484,118 @@ class WTH : Table() {
         fun addID_SENSOR(builder: FlatBufferBuilder, ID_SENSOR: Int) = builder.addOffset(1, ID_SENSOR, 0)
         fun addORIG_SENSOR_ID(builder: FlatBufferBuilder, ORIG_SENSOR_ID: Int) = builder.addOffset(2, ORIG_SENSOR_ID, 0)
         fun addOB_TIME(builder: FlatBufferBuilder, OB_TIME: Int) = builder.addOffset(3, OB_TIME, 0)
-        fun addSIG_PWRS(builder: FlatBufferBuilder, SIG_PWRS: Int) = builder.addOffset(4, SIG_PWRS, 0)
-        fun createSigPwrsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
+        fun addFILE_CREATION(builder: FlatBufferBuilder, FILE_CREATION: Int) = builder.addOffset(4, FILE_CREATION, 0)
+        fun addQC_VALUE(builder: FlatBufferBuilder, QC_VALUE: UByte) = builder.addByte(5, QC_VALUE.toByte(), 0)
+        fun addTERM_ALT(builder: FlatBufferBuilder, TERM_ALT: Double) = builder.addDouble(6, TERM_ALT, 0.0)
+        fun addAVG_TX_PWR(builder: FlatBufferBuilder, AVG_TX_PWR: Double) = builder.addDouble(7, AVG_TX_PWR, 0.0)
+        fun addAVG_REF_PWR(builder: FlatBufferBuilder, AVG_REF_PWR: Double) = builder.addDouble(8, AVG_REF_PWR, 0.0)
+        fun addSECTOR_NUM(builder: FlatBufferBuilder, SECTOR_NUM: UShort) = builder.addShort(9, SECTOR_NUM.toShort(), 0)
+        fun addNUM_ELEMENTS(builder: FlatBufferBuilder, NUM_ELEMENTS: UShort) = builder.addShort(10, NUM_ELEMENTS.toShort(), 0)
+        fun addCHECKSUM(builder: FlatBufferBuilder, CHECKSUM: UInt) = builder.addInt(11, CHECKSUM.toInt(), 0)
+        fun addSIG_PWRS(builder: FlatBufferBuilder, SIG_PWRS: Int) = builder.addOffset(12, SIG_PWRS, 0)
+        fun createSigPwrsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
+                builder.addDouble(data[i])
             }
             return builder.endVector()
         }
-        fun startSigPwrsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addNOISE_LVLS(builder: FlatBufferBuilder, NOISE_LVLS: Int) = builder.addOffset(5, NOISE_LVLS, 0)
-        fun createNoiseLvlsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
+        fun startSigPwrsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addNOISE_LVLS(builder: FlatBufferBuilder, NOISE_LVLS: Int) = builder.addOffset(13, NOISE_LVLS, 0)
+        fun createNoiseLvlsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
+                builder.addDouble(data[i])
             }
             return builder.endVector()
         }
-        fun startNoiseLvlsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSPEC_WIDTHS(builder: FlatBufferBuilder, SPEC_WIDTHS: Int) = builder.addOffset(6, SPEC_WIDTHS, 0)
-        fun createSpecWidthsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
+        fun startNoiseLvlsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addSPEC_WIDTHS(builder: FlatBufferBuilder, SPEC_WIDTHS: Int) = builder.addOffset(14, SPEC_WIDTHS, 0)
+        fun createSpecWidthsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
+                builder.addDouble(data[i])
             }
             return builder.endVector()
         }
-        fun startSpecWidthsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addFIRST_GUESS_AVGS(builder: FlatBufferBuilder, FIRST_GUESS_AVGS: Int) = builder.addOffset(7, FIRST_GUESS_AVGS, 0)
-        fun createFirstGuessAvgsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
+        fun startSpecWidthsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addFIRST_GUESS_AVGS(builder: FlatBufferBuilder, FIRST_GUESS_AVGS: Int) = builder.addOffset(15, FIRST_GUESS_AVGS, 0)
+        fun createFirstGuessAvgsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
+                builder.addDouble(data[i])
             }
             return builder.endVector()
         }
-        fun startFirstGuessAvgsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addQC_VALUE(builder: FlatBufferBuilder, QC_VALUE: Int) = builder.addInt(8, QC_VALUE, 0)
-        fun addFILE_CREATION(builder: FlatBufferBuilder, FILE_CREATION: Int) = builder.addOffset(9, FILE_CREATION, 0)
-        fun addTERM_ALT(builder: FlatBufferBuilder, TERM_ALT: Double) = builder.addDouble(10, TERM_ALT, 0.0)
-        fun addAVG_TX_PWR(builder: FlatBufferBuilder, AVG_TX_PWR: Double) = builder.addDouble(11, AVG_TX_PWR, 0.0)
-        fun addAVG_REF_PWR(builder: FlatBufferBuilder, AVG_REF_PWR: Double) = builder.addDouble(12, AVG_REF_PWR, 0.0)
-        fun addSECTOR_NUM(builder: FlatBufferBuilder, SECTOR_NUM: Int) = builder.addInt(13, SECTOR_NUM, 0)
-        fun addNUM_ELEMENTS(builder: FlatBufferBuilder, NUM_ELEMENTS: Int) = builder.addInt(14, NUM_ELEMENTS, 0)
-        fun addTD_AVG_SAMPLE_NUMS(builder: FlatBufferBuilder, TD_AVG_SAMPLE_NUMS: Int) = builder.addOffset(15, TD_AVG_SAMPLE_NUMS, 0)
-        fun createTdAvgSampleNumsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
+        fun startFirstGuessAvgsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addTD_AVG_SAMPLE_NUMS(builder: FlatBufferBuilder, TD_AVG_SAMPLE_NUMS: Int) = builder.addOffset(16, TD_AVG_SAMPLE_NUMS, 0)
+        fun createTdAvgSampleNumsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
+                builder.addDouble(data[i])
             }
             return builder.endVector()
         }
-        fun startTdAvgSampleNumsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addCHECKSUM(builder: FlatBufferBuilder, CHECKSUM: Int) = builder.addInt(16, CHECKSUM, 0)
+        fun startTdAvgSampleNumsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
         fun addCO_INTEGS(builder: FlatBufferBuilder, CO_INTEGS: Int) = builder.addOffset(17, CO_INTEGS, 0)
-        fun createCoIntegsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
+        fun createCoIntegsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
+                builder.addDouble(data[i])
             }
             return builder.endVector()
         }
-        fun startCoIntegsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun startCoIntegsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
         fun addSPEC_AVGS(builder: FlatBufferBuilder, SPEC_AVGS: Int) = builder.addOffset(18, SPEC_AVGS, 0)
-        fun createSpecAvgsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
+        fun createSpecAvgsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
+                builder.addDouble(data[i])
             }
             return builder.endVector()
         }
-        fun startSpecAvgsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun startSpecAvgsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
         fun addINTERPULSE_PERIODS(builder: FlatBufferBuilder, INTERPULSE_PERIODS: Int) = builder.addOffset(19, INTERPULSE_PERIODS, 0)
-        fun createInterpulsePeriodsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
+        fun createInterpulsePeriodsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
+                builder.addDouble(data[i])
             }
             return builder.endVector()
         }
-        fun startInterpulsePeriodsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun startInterpulsePeriodsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
         fun addDOPP_VELS(builder: FlatBufferBuilder, DOPP_VELS: Int) = builder.addOffset(20, DOPP_VELS, 0)
-        fun createDoppVelsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
+        fun createDoppVelsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
+                builder.addDouble(data[i])
             }
             return builder.endVector()
         }
-        fun startDoppVelsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun startDoppVelsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
         fun addCONS_RECS(builder: FlatBufferBuilder, CONS_RECS: Int) = builder.addOffset(21, CONS_RECS, 0)
-        fun createConsRecsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
+        fun createConsRecsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
+                builder.addDouble(data[i])
             }
             return builder.endVector()
         }
-        fun startConsRecsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun startConsRecsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
         fun addSNRS(builder: FlatBufferBuilder, SNRS: Int) = builder.addOffset(22, SNRS, 0)
-        fun createSnrsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
+        fun createSnrsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
+                builder.addDouble(data[i])
             }
             return builder.endVector()
         }
-        fun startSnrsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun startSnrsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
         fun addSIG_STRENGTH(builder: FlatBufferBuilder, SIG_STRENGTH: Double) = builder.addDouble(23, SIG_STRENGTH, 0.0)
         fun addSEMI_MAJOR_AXIS(builder: FlatBufferBuilder, SEMI_MAJOR_AXIS: Double) = builder.addDouble(24, SEMI_MAJOR_AXIS, 0.0)
         fun addSEMI_MINOR_AXIS(builder: FlatBufferBuilder, SEMI_MINOR_AXIS: Double) = builder.addDouble(25, SEMI_MINOR_AXIS, 0.0)
         fun addANGLE_ORIENTATION(builder: FlatBufferBuilder, ANGLE_ORIENTATION: Double) = builder.addDouble(26, ANGLE_ORIENTATION, 0.0)
-        fun addLIGHT_EVENT_NUM(builder: FlatBufferBuilder, LIGHT_EVENT_NUM: Int) = builder.addInt(27, LIGHT_EVENT_NUM, 0)
+        fun addLIGHT_EVENT_NUM(builder: FlatBufferBuilder, LIGHT_EVENT_NUM: UInt) = builder.addInt(27, LIGHT_EVENT_NUM.toInt(), 0)
         fun addLIGHT_DET_SENSORS(builder: FlatBufferBuilder, LIGHT_DET_SENSORS: Int) = builder.addOffset(28, LIGHT_DET_SENSORS, 0)
         fun createLightDetSensorsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)

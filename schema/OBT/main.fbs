@@ -1,44 +1,96 @@
-// Hash: fe2a089c603908ab964abd243d6e81f9ad658e6998bdf86469404a6dcc433b5c
-// Version: 0.0.2
+// Hash: cd2c9ca3e60d8e68aa80c7eafb546878c5380a2485816c1b4012123440cc938e
+// Version: 0.0.3
 // -----------------------------------END_HEADER
+enum orbitObjectType : byte {
+  PAYLOAD,
+  ROCKET_BODY,
+  DEBRIS,
+  TBA,
+  UNKNOWN
+}
+
+enum aouType : byte {
+  CIRCULAR,
+  ELLIPTICAL,
+  RECTANGULAR,
+  NONE
+}
+
 /// Orbit Track
 table OBT {
+  /// Unique identifier
   ID:string;
-  SAT_NO:int;
-  ON_ORBIT:string;
+  /// Satellite catalog number
+  SAT_NO:uint32;
+  /// International designator
   ORIG_OBJECT_ID:string;
+  /// On-orbit reference
+  ON_ORBIT:string;
+  /// Track point timestamp (ISO 8601)
   TS:string;
+  /// Latitude (degrees)
   LAT:double;
+  /// Longitude (degrees)
   LON:double;
+  /// Altitude (km)
   ALT:double;
-  RDF_RF:double;
-  CALL_SIGN:string;
-  RPT_NUM:string;
-  OBJ_IDENT:string;
-  IDENT_AMP:string;
-  SAT_STATUS:string;
-  OBJECT_TYPE:string;
-  COUNTRY_CODE:string;
-  DECAY:double;
-  CHARLIE_LINE:string;
-  AOU_TYPE:string;
-  AOU_DATA:[string];
+  /// Speed (km/s)
   SPD:double;
+  /// Elevation angle from observer (degrees)
   ANG_ELEV:double;
-  CNTNMNT:double;
-  XREF:string;
-  CH_XREF:string;
-  AMPLIFICATION:string;
-  IFF:string;
-  REINFORCED:bool;
-  REDUCED:bool;
-  HQ:bool;
-  DUMMY:bool;
-  TASK_FORCE:bool;
-  FEINT:bool;
-  INSTALLATION:bool;
-  VEH_TYPE:string;
+  /// Radar data fusion RF value
+  RDF_RF:double;
+  /// Call sign
+  CALL_SIGN:string;
+  /// Report number
+  RPT_NUM:string;
+  /// Track identifier
   TRK_ID:string;
+  /// Object identity assessment
+  OBJ_IDENT:string;
+  /// Identity amplification
+  IDENT_AMP:string;
+  /// Satellite operational status
+  SAT_STATUS:string;
+  /// Object type
+  OBJ_TYPE:orbitObjectType;
+  /// Country code (ISO 3166)
+  COUNTRY_CODE:string;
+  /// Orbit decay rate (km/day)
+  DECAY:double;
+  /// Charlie line data (amplification text)
+  CHARLIE_LINE:string;
+  /// Area of uncertainty type
+  AOU_TYPE:aouType;
+  /// Area of uncertainty data
+  AOU_DATA:[double];
+  /// Containment probability (0-1)
+  CNTNMNT:double;
+  /// Cross-reference identifier
+  XREF:string;
+  /// Charlie cross-reference
+  CH_XREF:string;
+  /// Additional amplification text
+  AMPLIFICATION:string;
+  /// IFF mode/code
+  IFF:string;
+  /// Vehicle type
+  VEH_TYPE:string;
+  /// True if reinforced unit
+  REINFORCED:bool;
+  /// True if reduced unit
+  REDUCED:bool;
+  /// True if headquarters element
+  HQ:bool;
+  /// True if dummy/exercise track
+  DUMMY:bool;
+  /// True if task force
+  TASK_FORCE:bool;
+  /// True if feint
+  FEINT:bool;
+  /// True if installation (not mobile)
+  INSTALLATION:bool;
+  /// Contributing track sensors
   TRACK_SENSORS:[string];
 }
 

@@ -54,6 +54,7 @@ func (rcv *RDO) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Unique identifier
 func (rcv *RDO) ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -62,6 +63,8 @@ func (rcv *RDO) ID() []byte {
 	return nil
 }
 
+/// Unique identifier
+/// Observation time (ISO 8601)
 func (rcv *RDO) OB_TIME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -70,6 +73,8 @@ func (rcv *RDO) OB_TIME() []byte {
 	return nil
 }
 
+/// Observation time (ISO 8601)
+/// Sensor identifier
 func (rcv *RDO) ID_SENSOR() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -78,27 +83,33 @@ func (rcv *RDO) ID_SENSOR() []byte {
 	return nil
 }
 
-func (rcv *RDO) SAT_NO() int32 {
+/// Sensor identifier
+/// Original sensor identifier
+func (rcv *RDO) ORIG_SENSOR_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
-	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-func (rcv *RDO) MutateSAT_NO(n int32) bool {
-	return rcv._tab.MutateInt32Slot(10, n)
-}
-
-func (rcv *RDO) TASK_ID() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
 }
 
-func (rcv *RDO) TRANSACTION_ID() []byte {
+/// Original sensor identifier
+/// Satellite catalog number
+func (rcv *RDO) SAT_NO() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Satellite catalog number
+func (rcv *RDO) MutateSAT_NO(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(12, n)
+}
+
+/// International designator
+func (rcv *RDO) ORIG_OBJECT_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -106,7 +117,9 @@ func (rcv *RDO) TRANSACTION_ID() []byte {
 	return nil
 }
 
-func (rcv *RDO) TRACK_ID() []byte {
+/// International designator
+/// On-orbit reference
+func (rcv *RDO) ON_ORBIT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -114,23 +127,37 @@ func (rcv *RDO) TRACK_ID() []byte {
 	return nil
 }
 
-func (rcv *RDO) OB_POSITION() []byte {
+/// On-orbit reference
+/// True if uncorrelated target
+func (rcv *RDO) UCT() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
 	}
-	return nil
+	return false
 }
 
-func (rcv *RDO) ORIG_OBJECT_ID() []byte {
+/// True if uncorrelated target
+func (rcv *RDO) MutateUCT(n bool) bool {
+	return rcv._tab.MutateBoolSlot(18, n)
+}
+
+/// Observation type
+func (rcv *RDO) OBS_TYPE() radarObsType {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return radarObsType(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
-	return nil
+	return 0
 }
 
-func (rcv *RDO) ORIG_SENSOR_ID() []byte {
+/// Observation type
+func (rcv *RDO) MutateOBS_TYPE(n radarObsType) bool {
+	return rcv._tab.MutateInt8Slot(20, int8(n))
+}
+
+/// Task identifier
+func (rcv *RDO) TASK_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -138,55 +165,49 @@ func (rcv *RDO) ORIG_SENSOR_ID() []byte {
 	return nil
 }
 
-func (rcv *RDO) UCT() bool {
+/// Task identifier
+/// Transaction identifier
+func (rcv *RDO) TRANSACTION_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
-		return rcv._tab.GetBool(o + rcv._tab.Pos)
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
-	return false
+	return nil
 }
 
-func (rcv *RDO) MutateUCT(n bool) bool {
-	return rcv._tab.MutateBoolSlot(24, n)
-}
-
-func (rcv *RDO) AZIMUTH() float64 {
+/// Transaction identifier
+/// Track identifier
+func (rcv *RDO) TRACK_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
-	return 0.0
+	return nil
 }
 
-func (rcv *RDO) MutateAZIMUTH(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(26, n)
-}
-
-func (rcv *RDO) AZIMUTH_UNC() float64 {
+/// Track identifier
+/// Observation position identifier
+func (rcv *RDO) OB_POSITION() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
-	return 0.0
+	return nil
 }
 
-func (rcv *RDO) MutateAZIMUTH_UNC(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(28, n)
-}
-
-func (rcv *RDO) AZIMUTH_BIAS() float64 {
+/// Observation position identifier
+/// Sensor reference frame
+func (rcv *RDO) SEN_REFERENCE_FRAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
-	return 0.0
+	return nil
 }
 
-func (rcv *RDO) MutateAZIMUTH_BIAS(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(30, n)
-}
-
-func (rcv *RDO) AZIMUTH_RATE() float64 {
+/// Sensor reference frame
+/// Azimuth angle (degrees)
+func (rcv *RDO) AZIMUTH() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -194,11 +215,13 @@ func (rcv *RDO) AZIMUTH_RATE() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateAZIMUTH_RATE(n float64) bool {
+/// Azimuth angle (degrees)
+func (rcv *RDO) MutateAZIMUTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
 }
 
-func (rcv *RDO) ELEVATION() float64 {
+/// Azimuth uncertainty (degrees, 1-sigma)
+func (rcv *RDO) AZIMUTH_UNC() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -206,11 +229,13 @@ func (rcv *RDO) ELEVATION() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateELEVATION(n float64) bool {
+/// Azimuth uncertainty (degrees, 1-sigma)
+func (rcv *RDO) MutateAZIMUTH_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
 }
 
-func (rcv *RDO) ELEVATION_UNC() float64 {
+/// Azimuth bias (degrees)
+func (rcv *RDO) AZIMUTH_BIAS() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -218,11 +243,13 @@ func (rcv *RDO) ELEVATION_UNC() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateELEVATION_UNC(n float64) bool {
+/// Azimuth bias (degrees)
+func (rcv *RDO) MutateAZIMUTH_BIAS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
 }
 
-func (rcv *RDO) ELEVATION_BIAS() float64 {
+/// Azimuth rate (degrees/s)
+func (rcv *RDO) AZIMUTH_RATE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -230,11 +257,13 @@ func (rcv *RDO) ELEVATION_BIAS() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateELEVATION_BIAS(n float64) bool {
+/// Azimuth rate (degrees/s)
+func (rcv *RDO) MutateAZIMUTH_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
 }
 
-func (rcv *RDO) ELEVATION_RATE() float64 {
+/// Elevation angle (degrees)
+func (rcv *RDO) ELEVATION() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -242,11 +271,13 @@ func (rcv *RDO) ELEVATION_RATE() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateELEVATION_RATE(n float64) bool {
+/// Elevation angle (degrees)
+func (rcv *RDO) MutateELEVATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
 }
 
-func (rcv *RDO) RANGE() float64 {
+/// Elevation uncertainty (degrees, 1-sigma)
+func (rcv *RDO) ELEVATION_UNC() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -254,11 +285,13 @@ func (rcv *RDO) RANGE() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateRANGE(n float64) bool {
+/// Elevation uncertainty (degrees, 1-sigma)
+func (rcv *RDO) MutateELEVATION_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
 }
 
-func (rcv *RDO) RANGE_ACCEL() float64 {
+/// Elevation bias (degrees)
+func (rcv *RDO) ELEVATION_BIAS() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -266,11 +299,13 @@ func (rcv *RDO) RANGE_ACCEL() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateRANGE_ACCEL(n float64) bool {
+/// Elevation bias (degrees)
+func (rcv *RDO) MutateELEVATION_BIAS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
 }
 
-func (rcv *RDO) RANGE_ACCEL_UNC() float64 {
+/// Elevation rate (degrees/s)
+func (rcv *RDO) ELEVATION_RATE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -278,11 +313,13 @@ func (rcv *RDO) RANGE_ACCEL_UNC() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateRANGE_ACCEL_UNC(n float64) bool {
+/// Elevation rate (degrees/s)
+func (rcv *RDO) MutateELEVATION_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
 }
 
-func (rcv *RDO) RANGE_UNC() float64 {
+/// Slant range (km)
+func (rcv *RDO) RANGE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -290,11 +327,13 @@ func (rcv *RDO) RANGE_UNC() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateRANGE_UNC(n float64) bool {
+/// Slant range (km)
+func (rcv *RDO) MutateRANGE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(48, n)
 }
 
-func (rcv *RDO) RANGE_BIAS() float64 {
+/// Range uncertainty (km, 1-sigma)
+func (rcv *RDO) RANGE_UNC() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -302,11 +341,13 @@ func (rcv *RDO) RANGE_BIAS() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateRANGE_BIAS(n float64) bool {
+/// Range uncertainty (km, 1-sigma)
+func (rcv *RDO) MutateRANGE_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(50, n)
 }
 
-func (rcv *RDO) RANGE_RATE() float64 {
+/// Range bias (km)
+func (rcv *RDO) RANGE_BIAS() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -314,11 +355,13 @@ func (rcv *RDO) RANGE_RATE() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateRANGE_RATE(n float64) bool {
+/// Range bias (km)
+func (rcv *RDO) MutateRANGE_BIAS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(52, n)
 }
 
-func (rcv *RDO) RANGE_RATE_UNC() float64 {
+/// Range rate (km/s)
+func (rcv *RDO) RANGE_RATE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -326,11 +369,13 @@ func (rcv *RDO) RANGE_RATE_UNC() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateRANGE_RATE_UNC(n float64) bool {
+/// Range rate (km/s)
+func (rcv *RDO) MutateRANGE_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(54, n)
 }
 
-func (rcv *RDO) DOPPLER() float64 {
+/// Range rate uncertainty (km/s, 1-sigma)
+func (rcv *RDO) RANGE_RATE_UNC() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -338,11 +383,13 @@ func (rcv *RDO) DOPPLER() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateDOPPLER(n float64) bool {
+/// Range rate uncertainty (km/s, 1-sigma)
+func (rcv *RDO) MutateRANGE_RATE_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(56, n)
 }
 
-func (rcv *RDO) DOPPLER_UNC() float64 {
+/// Range acceleration (km/s^2)
+func (rcv *RDO) RANGE_ACCEL() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -350,11 +397,13 @@ func (rcv *RDO) DOPPLER_UNC() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateDOPPLER_UNC(n float64) bool {
+/// Range acceleration (km/s^2)
+func (rcv *RDO) MutateRANGE_ACCEL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(58, n)
 }
 
-func (rcv *RDO) RA() float64 {
+/// Range acceleration uncertainty (km/s^2, 1-sigma)
+func (rcv *RDO) RANGE_ACCEL_UNC() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -362,11 +411,13 @@ func (rcv *RDO) RA() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateRA(n float64) bool {
+/// Range acceleration uncertainty (km/s^2, 1-sigma)
+func (rcv *RDO) MutateRANGE_ACCEL_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(60, n)
 }
 
-func (rcv *RDO) DECLINATION() float64 {
+/// Doppler shift (Hz)
+func (rcv *RDO) DOPPLER() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -374,11 +425,13 @@ func (rcv *RDO) DECLINATION() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateDECLINATION(n float64) bool {
+/// Doppler shift (Hz)
+func (rcv *RDO) MutateDOPPLER(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(62, n)
 }
 
-func (rcv *RDO) X() float64 {
+/// Doppler uncertainty (Hz, 1-sigma)
+func (rcv *RDO) DOPPLER_UNC() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -386,11 +439,13 @@ func (rcv *RDO) X() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateX(n float64) bool {
+/// Doppler uncertainty (Hz, 1-sigma)
+func (rcv *RDO) MutateDOPPLER_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(64, n)
 }
 
-func (rcv *RDO) Y() float64 {
+/// Right ascension (degrees)
+func (rcv *RDO) RA() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -398,11 +453,13 @@ func (rcv *RDO) Y() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateY(n float64) bool {
+/// Right ascension (degrees)
+func (rcv *RDO) MutateRA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(66, n)
 }
 
-func (rcv *RDO) Z() float64 {
+/// Declination (degrees)
+func (rcv *RDO) DECLINATION() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -410,11 +467,13 @@ func (rcv *RDO) Z() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateZ(n float64) bool {
+/// Declination (degrees)
+func (rcv *RDO) MutateDECLINATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(68, n)
 }
 
-func (rcv *RDO) XVEL() float64 {
+/// Target position X (km, ECI)
+func (rcv *RDO) X() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -422,11 +481,13 @@ func (rcv *RDO) XVEL() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateXVEL(n float64) bool {
+/// Target position X (km, ECI)
+func (rcv *RDO) MutateX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(70, n)
 }
 
-func (rcv *RDO) YVEL() float64 {
+/// Target position Y (km, ECI)
+func (rcv *RDO) Y() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -434,11 +495,13 @@ func (rcv *RDO) YVEL() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateYVEL(n float64) bool {
+/// Target position Y (km, ECI)
+func (rcv *RDO) MutateY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(72, n)
 }
 
-func (rcv *RDO) ZVEL() float64 {
+/// Target position Z (km, ECI)
+func (rcv *RDO) Z() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -446,11 +509,13 @@ func (rcv *RDO) ZVEL() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateZVEL(n float64) bool {
+/// Target position Z (km, ECI)
+func (rcv *RDO) MutateZ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(74, n)
 }
 
-func (rcv *RDO) SENX() float64 {
+/// Target velocity X (km/s, ECI)
+func (rcv *RDO) XVEL() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -458,11 +523,13 @@ func (rcv *RDO) SENX() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateSENX(n float64) bool {
+/// Target velocity X (km/s, ECI)
+func (rcv *RDO) MutateXVEL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(76, n)
 }
 
-func (rcv *RDO) SENY() float64 {
+/// Target velocity Y (km/s, ECI)
+func (rcv *RDO) YVEL() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -470,11 +537,13 @@ func (rcv *RDO) SENY() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateSENY(n float64) bool {
+/// Target velocity Y (km/s, ECI)
+func (rcv *RDO) MutateYVEL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(78, n)
 }
 
-func (rcv *RDO) SENZ() float64 {
+/// Target velocity Z (km/s, ECI)
+func (rcv *RDO) ZVEL() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -482,11 +551,13 @@ func (rcv *RDO) SENZ() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateSENZ(n float64) bool {
+/// Target velocity Z (km/s, ECI)
+func (rcv *RDO) MutateZVEL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(80, n)
 }
 
-func (rcv *RDO) RCS() float64 {
+/// Sensor position X (km, ECEF)
+func (rcv *RDO) SENX() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -494,11 +565,13 @@ func (rcv *RDO) RCS() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateRCS(n float64) bool {
+/// Sensor position X (km, ECEF)
+func (rcv *RDO) MutateSENX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(82, n)
 }
 
-func (rcv *RDO) RCS_UNC() float64 {
+/// Sensor position Y (km, ECEF)
+func (rcv *RDO) SENY() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -506,11 +579,13 @@ func (rcv *RDO) RCS_UNC() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateRCS_UNC(n float64) bool {
+/// Sensor position Y (km, ECEF)
+func (rcv *RDO) MutateSENY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(84, n)
 }
 
-func (rcv *RDO) ORTHOGONAL_RCS() float64 {
+/// Sensor position Z (km, ECEF)
+func (rcv *RDO) SENZ() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -518,11 +593,13 @@ func (rcv *RDO) ORTHOGONAL_RCS() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateORTHOGONAL_RCS(n float64) bool {
+/// Sensor position Z (km, ECEF)
+func (rcv *RDO) MutateSENZ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(86, n)
 }
 
-func (rcv *RDO) ORTHOGONAL_RCS_UNC() float64 {
+/// Radar cross-section (dBsm)
+func (rcv *RDO) RCS() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -530,11 +607,13 @@ func (rcv *RDO) ORTHOGONAL_RCS_UNC() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateORTHOGONAL_RCS_UNC(n float64) bool {
+/// Radar cross-section (dBsm)
+func (rcv *RDO) MutateRCS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(88, n)
 }
 
-func (rcv *RDO) SNR() float64 {
+/// RCS uncertainty (dBsm, 1-sigma)
+func (rcv *RDO) RCS_UNC() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -542,11 +621,13 @@ func (rcv *RDO) SNR() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateSNR(n float64) bool {
+/// RCS uncertainty (dBsm, 1-sigma)
+func (rcv *RDO) MutateRCS_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(90, n)
 }
 
-func (rcv *RDO) BEAM() float64 {
+/// Orthogonal polarization RCS (dBsm)
+func (rcv *RDO) ORTHOGONAL_RCS() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -554,11 +635,13 @@ func (rcv *RDO) BEAM() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateBEAM(n float64) bool {
+/// Orthogonal polarization RCS (dBsm)
+func (rcv *RDO) MutateORTHOGONAL_RCS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(92, n)
 }
 
-func (rcv *RDO) TIMING_BIAS() float64 {
+/// Orthogonal RCS uncertainty (dBsm, 1-sigma)
+func (rcv *RDO) ORTHOGONAL_RCS_UNC() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -566,44 +649,55 @@ func (rcv *RDO) TIMING_BIAS() float64 {
 	return 0.0
 }
 
-func (rcv *RDO) MutateTIMING_BIAS(n float64) bool {
+/// Orthogonal RCS uncertainty (dBsm, 1-sigma)
+func (rcv *RDO) MutateORTHOGONAL_RCS_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(94, n)
 }
 
-func (rcv *RDO) RAW_FILE_URI() []byte {
+/// Signal-to-noise ratio (dB)
+func (rcv *RDO) SNR() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
-	return nil
+	return 0.0
 }
 
-func (rcv *RDO) TAGS(j int) []byte {
+/// Signal-to-noise ratio (dB)
+func (rcv *RDO) MutateSNR(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(96, n)
+}
+
+/// Beam identifier
+func (rcv *RDO) BEAM() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
 	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
-	return nil
+	return 0.0
 }
 
-func (rcv *RDO) TAGSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
+/// Beam identifier
+func (rcv *RDO) MutateBEAM(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(98, n)
 }
 
-func (rcv *RDO) ON_ORBIT() []byte {
+/// Timing bias (seconds)
+func (rcv *RDO) TIMING_BIAS() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
-	return nil
+	return 0.0
 }
 
-func (rcv *RDO) SEN_REFERENCE_FRAME() []byte {
+/// Timing bias (seconds)
+func (rcv *RDO) MutateTIMING_BIAS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(100, n)
+}
+
+/// Reference to raw data file
+func (rcv *RDO) RAW_FILE_URI() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -611,6 +705,8 @@ func (rcv *RDO) SEN_REFERENCE_FRAME() []byte {
 	return nil
 }
 
+/// Reference to raw data file
+/// Event descriptor
 func (rcv *RDO) DESCRIPTOR() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
 	if o != 0 {
@@ -619,14 +715,26 @@ func (rcv *RDO) DESCRIPTOR() []byte {
 	return nil
 }
 
-func (rcv *RDO) TYPE() []byte {
+/// Event descriptor
+/// Associated tags
+func (rcv *RDO) TAGS(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
 	}
 	return nil
 }
 
+func (rcv *RDO) TAGSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Associated tags
 func RDOStart(builder *flatbuffers.Builder) {
 	builder.StartObject(52)
 }
@@ -639,155 +747,155 @@ func RDOAddOB_TIME(builder *flatbuffers.Builder, OB_TIME flatbuffers.UOffsetT) {
 func RDOAddID_SENSOR(builder *flatbuffers.Builder, ID_SENSOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ID_SENSOR), 0)
 }
-func RDOAddSAT_NO(builder *flatbuffers.Builder, SAT_NO int32) {
-	builder.PrependInt32Slot(3, SAT_NO, 0)
+func RDOAddORIG_SENSOR_ID(builder *flatbuffers.Builder, ORIG_SENSOR_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ORIG_SENSOR_ID), 0)
 }
-func RDOAddTASK_ID(builder *flatbuffers.Builder, TASK_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(TASK_ID), 0)
-}
-func RDOAddTRANSACTION_ID(builder *flatbuffers.Builder, TRANSACTION_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(TRANSACTION_ID), 0)
-}
-func RDOAddTRACK_ID(builder *flatbuffers.Builder, TRACK_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(TRACK_ID), 0)
-}
-func RDOAddOB_POSITION(builder *flatbuffers.Builder, OB_POSITION flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(OB_POSITION), 0)
+func RDOAddSAT_NO(builder *flatbuffers.Builder, SAT_NO uint32) {
+	builder.PrependUint32Slot(4, SAT_NO, 0)
 }
 func RDOAddORIG_OBJECT_ID(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(ORIG_OBJECT_ID), 0)
-}
-func RDOAddORIG_SENSOR_ID(builder *flatbuffers.Builder, ORIG_SENSOR_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(ORIG_SENSOR_ID), 0)
-}
-func RDOAddUCT(builder *flatbuffers.Builder, UCT bool) {
-	builder.PrependBoolSlot(10, UCT, false)
-}
-func RDOAddAZIMUTH(builder *flatbuffers.Builder, AZIMUTH float64) {
-	builder.PrependFloat64Slot(11, AZIMUTH, 0.0)
-}
-func RDOAddAZIMUTH_UNC(builder *flatbuffers.Builder, AZIMUTH_UNC float64) {
-	builder.PrependFloat64Slot(12, AZIMUTH_UNC, 0.0)
-}
-func RDOAddAZIMUTH_BIAS(builder *flatbuffers.Builder, AZIMUTH_BIAS float64) {
-	builder.PrependFloat64Slot(13, AZIMUTH_BIAS, 0.0)
-}
-func RDOAddAZIMUTH_RATE(builder *flatbuffers.Builder, AZIMUTH_RATE float64) {
-	builder.PrependFloat64Slot(14, AZIMUTH_RATE, 0.0)
-}
-func RDOAddELEVATION(builder *flatbuffers.Builder, ELEVATION float64) {
-	builder.PrependFloat64Slot(15, ELEVATION, 0.0)
-}
-func RDOAddELEVATION_UNC(builder *flatbuffers.Builder, ELEVATION_UNC float64) {
-	builder.PrependFloat64Slot(16, ELEVATION_UNC, 0.0)
-}
-func RDOAddELEVATION_BIAS(builder *flatbuffers.Builder, ELEVATION_BIAS float64) {
-	builder.PrependFloat64Slot(17, ELEVATION_BIAS, 0.0)
-}
-func RDOAddELEVATION_RATE(builder *flatbuffers.Builder, ELEVATION_RATE float64) {
-	builder.PrependFloat64Slot(18, ELEVATION_RATE, 0.0)
-}
-func RDOAddRANGE(builder *flatbuffers.Builder, RANGE float64) {
-	builder.PrependFloat64Slot(19, RANGE, 0.0)
-}
-func RDOAddRANGE_ACCEL(builder *flatbuffers.Builder, RANGE_ACCEL float64) {
-	builder.PrependFloat64Slot(20, RANGE_ACCEL, 0.0)
-}
-func RDOAddRANGE_ACCEL_UNC(builder *flatbuffers.Builder, RANGE_ACCEL_UNC float64) {
-	builder.PrependFloat64Slot(21, RANGE_ACCEL_UNC, 0.0)
-}
-func RDOAddRANGE_UNC(builder *flatbuffers.Builder, RANGE_UNC float64) {
-	builder.PrependFloat64Slot(22, RANGE_UNC, 0.0)
-}
-func RDOAddRANGE_BIAS(builder *flatbuffers.Builder, RANGE_BIAS float64) {
-	builder.PrependFloat64Slot(23, RANGE_BIAS, 0.0)
-}
-func RDOAddRANGE_RATE(builder *flatbuffers.Builder, RANGE_RATE float64) {
-	builder.PrependFloat64Slot(24, RANGE_RATE, 0.0)
-}
-func RDOAddRANGE_RATE_UNC(builder *flatbuffers.Builder, RANGE_RATE_UNC float64) {
-	builder.PrependFloat64Slot(25, RANGE_RATE_UNC, 0.0)
-}
-func RDOAddDOPPLER(builder *flatbuffers.Builder, DOPPLER float64) {
-	builder.PrependFloat64Slot(26, DOPPLER, 0.0)
-}
-func RDOAddDOPPLER_UNC(builder *flatbuffers.Builder, DOPPLER_UNC float64) {
-	builder.PrependFloat64Slot(27, DOPPLER_UNC, 0.0)
-}
-func RDOAddRA(builder *flatbuffers.Builder, RA float64) {
-	builder.PrependFloat64Slot(28, RA, 0.0)
-}
-func RDOAddDECLINATION(builder *flatbuffers.Builder, DECLINATION float64) {
-	builder.PrependFloat64Slot(29, DECLINATION, 0.0)
-}
-func RDOAddX(builder *flatbuffers.Builder, X float64) {
-	builder.PrependFloat64Slot(30, X, 0.0)
-}
-func RDOAddY(builder *flatbuffers.Builder, Y float64) {
-	builder.PrependFloat64Slot(31, Y, 0.0)
-}
-func RDOAddZ(builder *flatbuffers.Builder, Z float64) {
-	builder.PrependFloat64Slot(32, Z, 0.0)
-}
-func RDOAddXVEL(builder *flatbuffers.Builder, XVEL float64) {
-	builder.PrependFloat64Slot(33, XVEL, 0.0)
-}
-func RDOAddYVEL(builder *flatbuffers.Builder, YVEL float64) {
-	builder.PrependFloat64Slot(34, YVEL, 0.0)
-}
-func RDOAddZVEL(builder *flatbuffers.Builder, ZVEL float64) {
-	builder.PrependFloat64Slot(35, ZVEL, 0.0)
-}
-func RDOAddSENX(builder *flatbuffers.Builder, SENX float64) {
-	builder.PrependFloat64Slot(36, SENX, 0.0)
-}
-func RDOAddSENY(builder *flatbuffers.Builder, SENY float64) {
-	builder.PrependFloat64Slot(37, SENY, 0.0)
-}
-func RDOAddSENZ(builder *flatbuffers.Builder, SENZ float64) {
-	builder.PrependFloat64Slot(38, SENZ, 0.0)
-}
-func RDOAddRCS(builder *flatbuffers.Builder, RCS float64) {
-	builder.PrependFloat64Slot(39, RCS, 0.0)
-}
-func RDOAddRCS_UNC(builder *flatbuffers.Builder, RCS_UNC float64) {
-	builder.PrependFloat64Slot(40, RCS_UNC, 0.0)
-}
-func RDOAddORTHOGONAL_RCS(builder *flatbuffers.Builder, ORTHOGONAL_RCS float64) {
-	builder.PrependFloat64Slot(41, ORTHOGONAL_RCS, 0.0)
-}
-func RDOAddORTHOGONAL_RCS_UNC(builder *flatbuffers.Builder, ORTHOGONAL_RCS_UNC float64) {
-	builder.PrependFloat64Slot(42, ORTHOGONAL_RCS_UNC, 0.0)
-}
-func RDOAddSNR(builder *flatbuffers.Builder, SNR float64) {
-	builder.PrependFloat64Slot(43, SNR, 0.0)
-}
-func RDOAddBEAM(builder *flatbuffers.Builder, BEAM float64) {
-	builder.PrependFloat64Slot(44, BEAM, 0.0)
-}
-func RDOAddTIMING_BIAS(builder *flatbuffers.Builder, TIMING_BIAS float64) {
-	builder.PrependFloat64Slot(45, TIMING_BIAS, 0.0)
-}
-func RDOAddRAW_FILE_URI(builder *flatbuffers.Builder, RAW_FILE_URI flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(46, flatbuffers.UOffsetT(RAW_FILE_URI), 0)
-}
-func RDOAddTAGS(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(47, flatbuffers.UOffsetT(TAGS), 0)
-}
-func RDOStartTAGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(ORIG_OBJECT_ID), 0)
 }
 func RDOAddON_ORBIT(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(48, flatbuffers.UOffsetT(ON_ORBIT), 0)
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(ON_ORBIT), 0)
+}
+func RDOAddUCT(builder *flatbuffers.Builder, UCT bool) {
+	builder.PrependBoolSlot(7, UCT, false)
+}
+func RDOAddOBS_TYPE(builder *flatbuffers.Builder, OBS_TYPE radarObsType) {
+	builder.PrependInt8Slot(8, int8(OBS_TYPE), 0)
+}
+func RDOAddTASK_ID(builder *flatbuffers.Builder, TASK_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(TASK_ID), 0)
+}
+func RDOAddTRANSACTION_ID(builder *flatbuffers.Builder, TRANSACTION_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(TRANSACTION_ID), 0)
+}
+func RDOAddTRACK_ID(builder *flatbuffers.Builder, TRACK_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(TRACK_ID), 0)
+}
+func RDOAddOB_POSITION(builder *flatbuffers.Builder, OB_POSITION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(OB_POSITION), 0)
 }
 func RDOAddSEN_REFERENCE_FRAME(builder *flatbuffers.Builder, SEN_REFERENCE_FRAME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(49, flatbuffers.UOffsetT(SEN_REFERENCE_FRAME), 0)
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(SEN_REFERENCE_FRAME), 0)
+}
+func RDOAddAZIMUTH(builder *flatbuffers.Builder, AZIMUTH float64) {
+	builder.PrependFloat64Slot(14, AZIMUTH, 0.0)
+}
+func RDOAddAZIMUTH_UNC(builder *flatbuffers.Builder, AZIMUTH_UNC float64) {
+	builder.PrependFloat64Slot(15, AZIMUTH_UNC, 0.0)
+}
+func RDOAddAZIMUTH_BIAS(builder *flatbuffers.Builder, AZIMUTH_BIAS float64) {
+	builder.PrependFloat64Slot(16, AZIMUTH_BIAS, 0.0)
+}
+func RDOAddAZIMUTH_RATE(builder *flatbuffers.Builder, AZIMUTH_RATE float64) {
+	builder.PrependFloat64Slot(17, AZIMUTH_RATE, 0.0)
+}
+func RDOAddELEVATION(builder *flatbuffers.Builder, ELEVATION float64) {
+	builder.PrependFloat64Slot(18, ELEVATION, 0.0)
+}
+func RDOAddELEVATION_UNC(builder *flatbuffers.Builder, ELEVATION_UNC float64) {
+	builder.PrependFloat64Slot(19, ELEVATION_UNC, 0.0)
+}
+func RDOAddELEVATION_BIAS(builder *flatbuffers.Builder, ELEVATION_BIAS float64) {
+	builder.PrependFloat64Slot(20, ELEVATION_BIAS, 0.0)
+}
+func RDOAddELEVATION_RATE(builder *flatbuffers.Builder, ELEVATION_RATE float64) {
+	builder.PrependFloat64Slot(21, ELEVATION_RATE, 0.0)
+}
+func RDOAddRANGE(builder *flatbuffers.Builder, RANGE float64) {
+	builder.PrependFloat64Slot(22, RANGE, 0.0)
+}
+func RDOAddRANGE_UNC(builder *flatbuffers.Builder, RANGE_UNC float64) {
+	builder.PrependFloat64Slot(23, RANGE_UNC, 0.0)
+}
+func RDOAddRANGE_BIAS(builder *flatbuffers.Builder, RANGE_BIAS float64) {
+	builder.PrependFloat64Slot(24, RANGE_BIAS, 0.0)
+}
+func RDOAddRANGE_RATE(builder *flatbuffers.Builder, RANGE_RATE float64) {
+	builder.PrependFloat64Slot(25, RANGE_RATE, 0.0)
+}
+func RDOAddRANGE_RATE_UNC(builder *flatbuffers.Builder, RANGE_RATE_UNC float64) {
+	builder.PrependFloat64Slot(26, RANGE_RATE_UNC, 0.0)
+}
+func RDOAddRANGE_ACCEL(builder *flatbuffers.Builder, RANGE_ACCEL float64) {
+	builder.PrependFloat64Slot(27, RANGE_ACCEL, 0.0)
+}
+func RDOAddRANGE_ACCEL_UNC(builder *flatbuffers.Builder, RANGE_ACCEL_UNC float64) {
+	builder.PrependFloat64Slot(28, RANGE_ACCEL_UNC, 0.0)
+}
+func RDOAddDOPPLER(builder *flatbuffers.Builder, DOPPLER float64) {
+	builder.PrependFloat64Slot(29, DOPPLER, 0.0)
+}
+func RDOAddDOPPLER_UNC(builder *flatbuffers.Builder, DOPPLER_UNC float64) {
+	builder.PrependFloat64Slot(30, DOPPLER_UNC, 0.0)
+}
+func RDOAddRA(builder *flatbuffers.Builder, RA float64) {
+	builder.PrependFloat64Slot(31, RA, 0.0)
+}
+func RDOAddDECLINATION(builder *flatbuffers.Builder, DECLINATION float64) {
+	builder.PrependFloat64Slot(32, DECLINATION, 0.0)
+}
+func RDOAddX(builder *flatbuffers.Builder, X float64) {
+	builder.PrependFloat64Slot(33, X, 0.0)
+}
+func RDOAddY(builder *flatbuffers.Builder, Y float64) {
+	builder.PrependFloat64Slot(34, Y, 0.0)
+}
+func RDOAddZ(builder *flatbuffers.Builder, Z float64) {
+	builder.PrependFloat64Slot(35, Z, 0.0)
+}
+func RDOAddXVEL(builder *flatbuffers.Builder, XVEL float64) {
+	builder.PrependFloat64Slot(36, XVEL, 0.0)
+}
+func RDOAddYVEL(builder *flatbuffers.Builder, YVEL float64) {
+	builder.PrependFloat64Slot(37, YVEL, 0.0)
+}
+func RDOAddZVEL(builder *flatbuffers.Builder, ZVEL float64) {
+	builder.PrependFloat64Slot(38, ZVEL, 0.0)
+}
+func RDOAddSENX(builder *flatbuffers.Builder, SENX float64) {
+	builder.PrependFloat64Slot(39, SENX, 0.0)
+}
+func RDOAddSENY(builder *flatbuffers.Builder, SENY float64) {
+	builder.PrependFloat64Slot(40, SENY, 0.0)
+}
+func RDOAddSENZ(builder *flatbuffers.Builder, SENZ float64) {
+	builder.PrependFloat64Slot(41, SENZ, 0.0)
+}
+func RDOAddRCS(builder *flatbuffers.Builder, RCS float64) {
+	builder.PrependFloat64Slot(42, RCS, 0.0)
+}
+func RDOAddRCS_UNC(builder *flatbuffers.Builder, RCS_UNC float64) {
+	builder.PrependFloat64Slot(43, RCS_UNC, 0.0)
+}
+func RDOAddORTHOGONAL_RCS(builder *flatbuffers.Builder, ORTHOGONAL_RCS float64) {
+	builder.PrependFloat64Slot(44, ORTHOGONAL_RCS, 0.0)
+}
+func RDOAddORTHOGONAL_RCS_UNC(builder *flatbuffers.Builder, ORTHOGONAL_RCS_UNC float64) {
+	builder.PrependFloat64Slot(45, ORTHOGONAL_RCS_UNC, 0.0)
+}
+func RDOAddSNR(builder *flatbuffers.Builder, SNR float64) {
+	builder.PrependFloat64Slot(46, SNR, 0.0)
+}
+func RDOAddBEAM(builder *flatbuffers.Builder, BEAM float64) {
+	builder.PrependFloat64Slot(47, BEAM, 0.0)
+}
+func RDOAddTIMING_BIAS(builder *flatbuffers.Builder, TIMING_BIAS float64) {
+	builder.PrependFloat64Slot(48, TIMING_BIAS, 0.0)
+}
+func RDOAddRAW_FILE_URI(builder *flatbuffers.Builder, RAW_FILE_URI flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(49, flatbuffers.UOffsetT(RAW_FILE_URI), 0)
 }
 func RDOAddDESCRIPTOR(builder *flatbuffers.Builder, DESCRIPTOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(50, flatbuffers.UOffsetT(DESCRIPTOR), 0)
 }
-func RDOAddTYPE(builder *flatbuffers.Builder, TYPE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(51, flatbuffers.UOffsetT(TYPE), 0)
+func RDOAddTAGS(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(51, flatbuffers.UOffsetT(TAGS), 0)
+}
+func RDOStartTAGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
 }
 func RDOEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

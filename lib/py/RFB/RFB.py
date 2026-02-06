@@ -6,7 +6,7 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# RF Band
+# RF Band Specification
 class RFB(object):
     __slots__ = ['_tab']
 
@@ -29,6 +29,7 @@ class RFB(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Unique identifier
     # RFB
     def ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +37,7 @@ class RFB(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Parent entity identifier
     # RFB
     def ID_ENTITY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -43,6 +45,7 @@ class RFB(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Band name or designation
     # RFB
     def NAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -50,13 +53,15 @@ class RFB(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # RF band designation
     # RFB
     def BAND(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
+    # Operating mode
     # RFB
     def MODE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -64,6 +69,7 @@ class RFB(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Band purpose (e.g., TT&C, PAYLOAD, BEACON)
     # RFB
     def PURPOSE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
@@ -71,6 +77,7 @@ class RFB(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Minimum frequency (MHz)
     # RFB
     def FREQ_MIN(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
@@ -78,6 +85,7 @@ class RFB(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Maximum frequency (MHz)
     # RFB
     def FREQ_MAX(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
@@ -85,6 +93,7 @@ class RFB(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Center frequency (MHz)
     # RFB
     def CENTER_FREQ(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
@@ -92,27 +101,31 @@ class RFB(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Bandwidth (MHz)
     # RFB
-    def PEAK_GAIN(self):
+    def BANDWIDTH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Peak antenna gain (dBi)
     # RFB
-    def EDGE_GAIN(self):
+    def PEAK_GAIN(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Edge-of-coverage gain (dBi)
     # RFB
-    def BANDWIDTH(self):
+    def EDGE_GAIN(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Antenna beamwidth (degrees)
     # RFB
     def BEAMWIDTH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
@@ -120,13 +133,15 @@ class RFB(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Polarization
     # RFB
     def POLARIZATION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
+    # Effective radiated power (dBW)
     # RFB
     def ERP(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
@@ -134,6 +149,7 @@ class RFB(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Effective isotropic radiated power (dBW)
     # RFB
     def EIRP(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
@@ -166,7 +182,7 @@ def AddNAME(builder, NAME):
     RFBAddNAME(builder, NAME)
 
 def RFBAddBAND(builder, BAND):
-    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(BAND), 0)
+    builder.PrependInt8Slot(3, BAND, 0)
 
 def AddBAND(builder, BAND):
     RFBAddBAND(builder, BAND)
@@ -201,23 +217,23 @@ def RFBAddCENTER_FREQ(builder, CENTER_FREQ):
 def AddCENTER_FREQ(builder, CENTER_FREQ):
     RFBAddCENTER_FREQ(builder, CENTER_FREQ)
 
+def RFBAddBANDWIDTH(builder, BANDWIDTH):
+    builder.PrependFloat64Slot(9, BANDWIDTH, 0.0)
+
+def AddBANDWIDTH(builder, BANDWIDTH):
+    RFBAddBANDWIDTH(builder, BANDWIDTH)
+
 def RFBAddPEAK_GAIN(builder, PEAK_GAIN):
-    builder.PrependFloat64Slot(9, PEAK_GAIN, 0.0)
+    builder.PrependFloat64Slot(10, PEAK_GAIN, 0.0)
 
 def AddPEAK_GAIN(builder, PEAK_GAIN):
     RFBAddPEAK_GAIN(builder, PEAK_GAIN)
 
 def RFBAddEDGE_GAIN(builder, EDGE_GAIN):
-    builder.PrependFloat64Slot(10, EDGE_GAIN, 0.0)
+    builder.PrependFloat64Slot(11, EDGE_GAIN, 0.0)
 
 def AddEDGE_GAIN(builder, EDGE_GAIN):
     RFBAddEDGE_GAIN(builder, EDGE_GAIN)
-
-def RFBAddBANDWIDTH(builder, BANDWIDTH):
-    builder.PrependFloat64Slot(11, BANDWIDTH, 0.0)
-
-def AddBANDWIDTH(builder, BANDWIDTH):
-    RFBAddBANDWIDTH(builder, BANDWIDTH)
 
 def RFBAddBEAMWIDTH(builder, BEAMWIDTH):
     builder.PrependFloat64Slot(12, BEAMWIDTH, 0.0)
@@ -226,7 +242,7 @@ def AddBEAMWIDTH(builder, BEAMWIDTH):
     RFBAddBEAMWIDTH(builder, BEAMWIDTH)
 
 def RFBAddPOLARIZATION(builder, POLARIZATION):
-    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(POLARIZATION), 0)
+    builder.PrependInt8Slot(13, POLARIZATION, 0)
 
 def AddPOLARIZATION(builder, POLARIZATION):
     RFBAddPOLARIZATION(builder, POLARIZATION)
@@ -257,17 +273,17 @@ class RFBT(object):
         self.ID = None  # type: str
         self.ID_ENTITY = None  # type: str
         self.NAME = None  # type: str
-        self.BAND = None  # type: str
+        self.BAND = 0  # type: int
         self.MODE = None  # type: str
         self.PURPOSE = None  # type: str
         self.FREQ_MIN = 0.0  # type: float
         self.FREQ_MAX = 0.0  # type: float
         self.CENTER_FREQ = 0.0  # type: float
+        self.BANDWIDTH = 0.0  # type: float
         self.PEAK_GAIN = 0.0  # type: float
         self.EDGE_GAIN = 0.0  # type: float
-        self.BANDWIDTH = 0.0  # type: float
         self.BEAMWIDTH = 0.0  # type: float
-        self.POLARIZATION = None  # type: str
+        self.POLARIZATION = 0  # type: int
         self.ERP = 0.0  # type: float
         self.EIRP = 0.0  # type: float
 
@@ -301,9 +317,9 @@ class RFBT(object):
         self.FREQ_MIN = RFB.FREQ_MIN()
         self.FREQ_MAX = RFB.FREQ_MAX()
         self.CENTER_FREQ = RFB.CENTER_FREQ()
+        self.BANDWIDTH = RFB.BANDWIDTH()
         self.PEAK_GAIN = RFB.PEAK_GAIN()
         self.EDGE_GAIN = RFB.EDGE_GAIN()
-        self.BANDWIDTH = RFB.BANDWIDTH()
         self.BEAMWIDTH = RFB.BEAMWIDTH()
         self.POLARIZATION = RFB.POLARIZATION()
         self.ERP = RFB.ERP()
@@ -317,14 +333,10 @@ class RFBT(object):
             ID_ENTITY = builder.CreateString(self.ID_ENTITY)
         if self.NAME is not None:
             NAME = builder.CreateString(self.NAME)
-        if self.BAND is not None:
-            BAND = builder.CreateString(self.BAND)
         if self.MODE is not None:
             MODE = builder.CreateString(self.MODE)
         if self.PURPOSE is not None:
             PURPOSE = builder.CreateString(self.PURPOSE)
-        if self.POLARIZATION is not None:
-            POLARIZATION = builder.CreateString(self.POLARIZATION)
         RFBStart(builder)
         if self.ID is not None:
             RFBAddID(builder, ID)
@@ -332,8 +344,7 @@ class RFBT(object):
             RFBAddID_ENTITY(builder, ID_ENTITY)
         if self.NAME is not None:
             RFBAddNAME(builder, NAME)
-        if self.BAND is not None:
-            RFBAddBAND(builder, BAND)
+        RFBAddBAND(builder, self.BAND)
         if self.MODE is not None:
             RFBAddMODE(builder, MODE)
         if self.PURPOSE is not None:
@@ -341,12 +352,11 @@ class RFBT(object):
         RFBAddFREQ_MIN(builder, self.FREQ_MIN)
         RFBAddFREQ_MAX(builder, self.FREQ_MAX)
         RFBAddCENTER_FREQ(builder, self.CENTER_FREQ)
+        RFBAddBANDWIDTH(builder, self.BANDWIDTH)
         RFBAddPEAK_GAIN(builder, self.PEAK_GAIN)
         RFBAddEDGE_GAIN(builder, self.EDGE_GAIN)
-        RFBAddBANDWIDTH(builder, self.BANDWIDTH)
         RFBAddBEAMWIDTH(builder, self.BEAMWIDTH)
-        if self.POLARIZATION is not None:
-            RFBAddPOLARIZATION(builder, POLARIZATION)
+        RFBAddPOLARIZATION(builder, self.POLARIZATION)
         RFBAddERP(builder, self.ERP)
         RFBAddEIRP(builder, self.EIRP)
         RFB = RFBEnd(builder)

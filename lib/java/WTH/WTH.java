@@ -29,86 +29,204 @@ public final class WTH extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public WTH __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * Sensor identifier
+   */
   public String ID_SENSOR() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ID_SENSORAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer ID_SENSORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  /**
+   * Original sensor identifier
+   */
   public String ORIG_SENSOR_ID() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ORIG_SENSOR_IDAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer ORIG_SENSOR_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * Observation time (ISO 8601)
+   */
   public String OB_TIME() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer OB_TIMEAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
   public ByteBuffer OB_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
-  public String SIG_PWRS(int j) { int o = __offset(12); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int SIG_PWRSLength() { int o = __offset(12); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector sigPwrsVector() { return sigPwrsVector(new StringVector()); }
-  public StringVector sigPwrsVector(StringVector obj) { int o = __offset(12); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String NOISE_LVLS(int j) { int o = __offset(14); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int NOISE_LVLSLength() { int o = __offset(14); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector noiseLvlsVector() { return noiseLvlsVector(new StringVector()); }
-  public StringVector noiseLvlsVector(StringVector obj) { int o = __offset(14); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String SPEC_WIDTHS(int j) { int o = __offset(16); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int SPEC_WIDTHSLength() { int o = __offset(16); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector specWidthsVector() { return specWidthsVector(new StringVector()); }
-  public StringVector specWidthsVector(StringVector obj) { int o = __offset(16); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String FIRST_GUESS_AVGS(int j) { int o = __offset(18); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int FIRST_GUESS_AVGSLength() { int o = __offset(18); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector firstGuessAvgsVector() { return firstGuessAvgsVector(new StringVector()); }
-  public StringVector firstGuessAvgsVector(StringVector obj) { int o = __offset(18); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public int QC_VALUE() { int o = __offset(20); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public String FILE_CREATION() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer FILE_CREATIONAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
-  public ByteBuffer FILE_CREATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
-  public double TERM_ALT() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double AVG_TX_PWR() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double AVG_REF_PWR() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public int SECTOR_NUM() { int o = __offset(30); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public int NUM_ELEMENTS() { int o = __offset(32); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public String TD_AVG_SAMPLE_NUMS(int j) { int o = __offset(34); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int TD_AVG_SAMPLE_NUMSLength() { int o = __offset(34); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector tdAvgSampleNumsVector() { return tdAvgSampleNumsVector(new StringVector()); }
-  public StringVector tdAvgSampleNumsVector(StringVector obj) { int o = __offset(34); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public int CHECKSUM() { int o = __offset(36); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public String CO_INTEGS(int j) { int o = __offset(38); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  /**
+   * File creation time (ISO 8601)
+   */
+  public String FILE_CREATION() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer FILE_CREATIONAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer FILE_CREATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * Quality control value
+   */
+  public int QC_VALUE() { int o = __offset(14); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Terminal altitude (km)
+   */
+  public double TERM_ALT() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Average transmit power (dBm)
+   */
+  public double AVG_TX_PWR() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Average reflected power (dBm)
+   */
+  public double AVG_REF_PWR() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sector number
+   */
+  public int SECTOR_NUM() { int o = __offset(22); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * Number of data elements
+   */
+  public int NUM_ELEMENTS() { int o = __offset(24); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * Checksum
+   */
+  public long CHECKSUM() { int o = __offset(26); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Signal power values (dBm)
+   */
+  public double SIG_PWRS(int j) { int o = __offset(28); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int SIG_PWRSLength() { int o = __offset(28); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector sigPwrsVector() { return sigPwrsVector(new DoubleVector()); }
+  public DoubleVector sigPwrsVector(DoubleVector obj) { int o = __offset(28); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer SIG_PWRSAsByteBuffer() { return __vector_as_bytebuffer(28, 8); }
+  public ByteBuffer SIG_PWRSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 8); }
+  /**
+   * Noise level values (dBm)
+   */
+  public double NOISE_LVLS(int j) { int o = __offset(30); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int NOISE_LVLSLength() { int o = __offset(30); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector noiseLvlsVector() { return noiseLvlsVector(new DoubleVector()); }
+  public DoubleVector noiseLvlsVector(DoubleVector obj) { int o = __offset(30); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer NOISE_LVLSAsByteBuffer() { return __vector_as_bytebuffer(30, 8); }
+  public ByteBuffer NOISE_LVLSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 8); }
+  /**
+   * Spectral width values (m/s)
+   */
+  public double SPEC_WIDTHS(int j) { int o = __offset(32); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int SPEC_WIDTHSLength() { int o = __offset(32); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector specWidthsVector() { return specWidthsVector(new DoubleVector()); }
+  public DoubleVector specWidthsVector(DoubleVector obj) { int o = __offset(32); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer SPEC_WIDTHSAsByteBuffer() { return __vector_as_bytebuffer(32, 8); }
+  public ByteBuffer SPEC_WIDTHSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 8); }
+  /**
+   * First guess average values
+   */
+  public double FIRST_GUESS_AVGS(int j) { int o = __offset(34); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int FIRST_GUESS_AVGSLength() { int o = __offset(34); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector firstGuessAvgsVector() { return firstGuessAvgsVector(new DoubleVector()); }
+  public DoubleVector firstGuessAvgsVector(DoubleVector obj) { int o = __offset(34); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer FIRST_GUESS_AVGSAsByteBuffer() { return __vector_as_bytebuffer(34, 8); }
+  public ByteBuffer FIRST_GUESS_AVGSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 8); }
+  /**
+   * Time domain average sample numbers
+   */
+  public double TD_AVG_SAMPLE_NUMS(int j) { int o = __offset(36); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int TD_AVG_SAMPLE_NUMSLength() { int o = __offset(36); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector tdAvgSampleNumsVector() { return tdAvgSampleNumsVector(new DoubleVector()); }
+  public DoubleVector tdAvgSampleNumsVector(DoubleVector obj) { int o = __offset(36); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer TD_AVG_SAMPLE_NUMSAsByteBuffer() { return __vector_as_bytebuffer(36, 8); }
+  public ByteBuffer TD_AVG_SAMPLE_NUMSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 8); }
+  /**
+   * Co-integration values
+   */
+  public double CO_INTEGS(int j) { int o = __offset(38); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
   public int CO_INTEGSLength() { int o = __offset(38); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector coIntegsVector() { return coIntegsVector(new StringVector()); }
-  public StringVector coIntegsVector(StringVector obj) { int o = __offset(38); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String SPEC_AVGS(int j) { int o = __offset(40); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public DoubleVector coIntegsVector() { return coIntegsVector(new DoubleVector()); }
+  public DoubleVector coIntegsVector(DoubleVector obj) { int o = __offset(38); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer CO_INTEGSAsByteBuffer() { return __vector_as_bytebuffer(38, 8); }
+  public ByteBuffer CO_INTEGSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 8); }
+  /**
+   * Spectral average values
+   */
+  public double SPEC_AVGS(int j) { int o = __offset(40); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
   public int SPEC_AVGSLength() { int o = __offset(40); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector specAvgsVector() { return specAvgsVector(new StringVector()); }
-  public StringVector specAvgsVector(StringVector obj) { int o = __offset(40); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String INTERPULSE_PERIODS(int j) { int o = __offset(42); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public DoubleVector specAvgsVector() { return specAvgsVector(new DoubleVector()); }
+  public DoubleVector specAvgsVector(DoubleVector obj) { int o = __offset(40); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer SPEC_AVGSAsByteBuffer() { return __vector_as_bytebuffer(40, 8); }
+  public ByteBuffer SPEC_AVGSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 8); }
+  /**
+   * Interpulse periods (microseconds)
+   */
+  public double INTERPULSE_PERIODS(int j) { int o = __offset(42); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
   public int INTERPULSE_PERIODSLength() { int o = __offset(42); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector interpulsePeriodsVector() { return interpulsePeriodsVector(new StringVector()); }
-  public StringVector interpulsePeriodsVector(StringVector obj) { int o = __offset(42); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String DOPP_VELS(int j) { int o = __offset(44); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public DoubleVector interpulsePeriodsVector() { return interpulsePeriodsVector(new DoubleVector()); }
+  public DoubleVector interpulsePeriodsVector(DoubleVector obj) { int o = __offset(42); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer INTERPULSE_PERIODSAsByteBuffer() { return __vector_as_bytebuffer(42, 8); }
+  public ByteBuffer INTERPULSE_PERIODSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 8); }
+  /**
+   * Doppler velocities (m/s)
+   */
+  public double DOPP_VELS(int j) { int o = __offset(44); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
   public int DOPP_VELSLength() { int o = __offset(44); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector doppVelsVector() { return doppVelsVector(new StringVector()); }
-  public StringVector doppVelsVector(StringVector obj) { int o = __offset(44); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String CONS_RECS(int j) { int o = __offset(46); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public DoubleVector doppVelsVector() { return doppVelsVector(new DoubleVector()); }
+  public DoubleVector doppVelsVector(DoubleVector obj) { int o = __offset(44); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer DOPP_VELSAsByteBuffer() { return __vector_as_bytebuffer(44, 8); }
+  public ByteBuffer DOPP_VELSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 44, 8); }
+  /**
+   * Consecutive records count
+   */
+  public double CONS_RECS(int j) { int o = __offset(46); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
   public int CONS_RECSLength() { int o = __offset(46); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector consRecsVector() { return consRecsVector(new StringVector()); }
-  public StringVector consRecsVector(StringVector obj) { int o = __offset(46); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String SNRS(int j) { int o = __offset(48); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public DoubleVector consRecsVector() { return consRecsVector(new DoubleVector()); }
+  public DoubleVector consRecsVector(DoubleVector obj) { int o = __offset(46); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer CONS_RECSAsByteBuffer() { return __vector_as_bytebuffer(46, 8); }
+  public ByteBuffer CONS_RECSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 46, 8); }
+  /**
+   * Signal-to-noise ratios (dB)
+   */
+  public double SNRS(int j) { int o = __offset(48); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
   public int SNRSLength() { int o = __offset(48); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector snrsVector() { return snrsVector(new StringVector()); }
-  public StringVector snrsVector(StringVector obj) { int o = __offset(48); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public DoubleVector snrsVector() { return snrsVector(new DoubleVector()); }
+  public DoubleVector snrsVector(DoubleVector obj) { int o = __offset(48); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer SNRSAsByteBuffer() { return __vector_as_bytebuffer(48, 8); }
+  public ByteBuffer SNRSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 48, 8); }
+  /**
+   * Signal strength (dBm)
+   */
   public double SIG_STRENGTH() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Error ellipse semi-major axis (km)
+   */
   public double SEMI_MAJOR_AXIS() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Error ellipse semi-minor axis (km)
+   */
   public double SEMI_MINOR_AXIS() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Error ellipse orientation angle (degrees)
+   */
   public double ANGLE_ORIENTATION() { int o = __offset(56); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public int LIGHT_EVENT_NUM() { int o = __offset(58); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Lightning event number
+   */
+  public long LIGHT_EVENT_NUM() { int o = __offset(58); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Lightning detection sensor identifiers
+   */
   public String LIGHT_DET_SENSORS(int j) { int o = __offset(60); return o != 0 ? __string(__vector(o) + j * 4) : null; }
   public int LIGHT_DET_SENSORSLength() { int o = __offset(60); return o != 0 ? __vector_len(o) : 0; }
   public StringVector lightDetSensorsVector() { return lightDetSensorsVector(new StringVector()); }
   public StringVector lightDetSensorsVector(StringVector obj) { int o = __offset(60); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Position confidence (0-1)
+   */
   public double POS_CONFIDENCE() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Source types
+   */
   public String SRC_TYPS(int j) { int o = __offset(64); return o != 0 ? __string(__vector(o) + j * 4) : null; }
   public int SRC_TYPSLength() { int o = __offset(64); return o != 0 ? __vector_len(o) : 0; }
   public StringVector srcTypsVector() { return srcTypsVector(new StringVector()); }
   public StringVector srcTypsVector(StringVector obj) { int o = __offset(64); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Source identifiers
+   */
   public String SRC_IDS(int j) { int o = __offset(66); return o != 0 ? __string(__vector(o) + j * 4) : null; }
   public int SRC_IDSLength() { int o = __offset(66); return o != 0 ? __vector_len(o) : 0; }
   public StringVector srcIdsVector() { return srcIdsVector(new StringVector()); }
@@ -119,19 +237,19 @@ public final class WTH extends Table {
       int ID_SENSOROffset,
       int ORIG_SENSOR_IDOffset,
       int OB_TIMEOffset,
-      int SIG_PWRSOffset,
-      int NOISE_LVLSOffset,
-      int SPEC_WIDTHSOffset,
-      int FIRST_GUESS_AVGSOffset,
-      int QC_VALUE,
       int FILE_CREATIONOffset,
+      int QC_VALUE,
       double TERM_ALT,
       double AVG_TX_PWR,
       double AVG_REF_PWR,
       int SECTOR_NUM,
       int NUM_ELEMENTS,
+      long CHECKSUM,
+      int SIG_PWRSOffset,
+      int NOISE_LVLSOffset,
+      int SPEC_WIDTHSOffset,
+      int FIRST_GUESS_AVGSOffset,
       int TD_AVG_SAMPLE_NUMSOffset,
-      int CHECKSUM,
       int CO_INTEGSOffset,
       int SPEC_AVGSOffset,
       int INTERPULSE_PERIODSOffset,
@@ -142,7 +260,7 @@ public final class WTH extends Table {
       double SEMI_MAJOR_AXIS,
       double SEMI_MINOR_AXIS,
       double ANGLE_ORIENTATION,
-      int LIGHT_EVENT_NUM,
+      long LIGHT_EVENT_NUM,
       int LIGHT_DET_SENSORSOffset,
       double POS_CONFIDENCE,
       int SRC_TYPSOffset,
@@ -166,20 +284,20 @@ public final class WTH extends Table {
     WTH.addInterpulsePeriods(builder, INTERPULSE_PERIODSOffset);
     WTH.addSpecAvgs(builder, SPEC_AVGSOffset);
     WTH.addCoIntegs(builder, CO_INTEGSOffset);
-    WTH.addChecksum(builder, CHECKSUM);
     WTH.addTdAvgSampleNums(builder, TD_AVG_SAMPLE_NUMSOffset);
-    WTH.addNumElements(builder, NUM_ELEMENTS);
-    WTH.addSectorNum(builder, SECTOR_NUM);
-    WTH.addFileCreation(builder, FILE_CREATIONOffset);
-    WTH.addQcValue(builder, QC_VALUE);
     WTH.addFirstGuessAvgs(builder, FIRST_GUESS_AVGSOffset);
     WTH.addSpecWidths(builder, SPEC_WIDTHSOffset);
     WTH.addNoiseLvls(builder, NOISE_LVLSOffset);
     WTH.addSigPwrs(builder, SIG_PWRSOffset);
+    WTH.addChecksum(builder, CHECKSUM);
+    WTH.addFileCreation(builder, FILE_CREATIONOffset);
     WTH.addObTime(builder, OB_TIMEOffset);
     WTH.addOrigSensorId(builder, ORIG_SENSOR_IDOffset);
     WTH.addIdSensor(builder, ID_SENSOROffset);
     WTH.addId(builder, IDOffset);
+    WTH.addNumElements(builder, NUM_ELEMENTS);
+    WTH.addSectorNum(builder, SECTOR_NUM);
+    WTH.addQcValue(builder, QC_VALUE);
     return WTH.endWTH(builder);
   }
 
@@ -188,52 +306,52 @@ public final class WTH extends Table {
   public static void addIdSensor(FlatBufferBuilder builder, int ID_SENSOROffset) { builder.addOffset(1, ID_SENSOROffset, 0); }
   public static void addOrigSensorId(FlatBufferBuilder builder, int ORIG_SENSOR_IDOffset) { builder.addOffset(2, ORIG_SENSOR_IDOffset, 0); }
   public static void addObTime(FlatBufferBuilder builder, int OB_TIMEOffset) { builder.addOffset(3, OB_TIMEOffset, 0); }
-  public static void addSigPwrs(FlatBufferBuilder builder, int SIG_PWRSOffset) { builder.addOffset(4, SIG_PWRSOffset, 0); }
-  public static int createSigPwrsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startSigPwrsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addNoiseLvls(FlatBufferBuilder builder, int NOISE_LVLSOffset) { builder.addOffset(5, NOISE_LVLSOffset, 0); }
-  public static int createNoiseLvlsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startNoiseLvlsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addSpecWidths(FlatBufferBuilder builder, int SPEC_WIDTHSOffset) { builder.addOffset(6, SPEC_WIDTHSOffset, 0); }
-  public static int createSpecWidthsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startSpecWidthsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addFirstGuessAvgs(FlatBufferBuilder builder, int FIRST_GUESS_AVGSOffset) { builder.addOffset(7, FIRST_GUESS_AVGSOffset, 0); }
-  public static int createFirstGuessAvgsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startFirstGuessAvgsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addQcValue(FlatBufferBuilder builder, int QC_VALUE) { builder.addInt(8, QC_VALUE, 0); }
-  public static void addFileCreation(FlatBufferBuilder builder, int FILE_CREATIONOffset) { builder.addOffset(9, FILE_CREATIONOffset, 0); }
-  public static void addTermAlt(FlatBufferBuilder builder, double TERM_ALT) { builder.addDouble(10, TERM_ALT, 0.0); }
-  public static void addAvgTxPwr(FlatBufferBuilder builder, double AVG_TX_PWR) { builder.addDouble(11, AVG_TX_PWR, 0.0); }
-  public static void addAvgRefPwr(FlatBufferBuilder builder, double AVG_REF_PWR) { builder.addDouble(12, AVG_REF_PWR, 0.0); }
-  public static void addSectorNum(FlatBufferBuilder builder, int SECTOR_NUM) { builder.addInt(13, SECTOR_NUM, 0); }
-  public static void addNumElements(FlatBufferBuilder builder, int NUM_ELEMENTS) { builder.addInt(14, NUM_ELEMENTS, 0); }
-  public static void addTdAvgSampleNums(FlatBufferBuilder builder, int TD_AVG_SAMPLE_NUMSOffset) { builder.addOffset(15, TD_AVG_SAMPLE_NUMSOffset, 0); }
-  public static int createTdAvgSampleNumsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startTdAvgSampleNumsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addChecksum(FlatBufferBuilder builder, int CHECKSUM) { builder.addInt(16, CHECKSUM, 0); }
+  public static void addFileCreation(FlatBufferBuilder builder, int FILE_CREATIONOffset) { builder.addOffset(4, FILE_CREATIONOffset, 0); }
+  public static void addQcValue(FlatBufferBuilder builder, int QC_VALUE) { builder.addByte(5, (byte) QC_VALUE, (byte) 0); }
+  public static void addTermAlt(FlatBufferBuilder builder, double TERM_ALT) { builder.addDouble(6, TERM_ALT, 0.0); }
+  public static void addAvgTxPwr(FlatBufferBuilder builder, double AVG_TX_PWR) { builder.addDouble(7, AVG_TX_PWR, 0.0); }
+  public static void addAvgRefPwr(FlatBufferBuilder builder, double AVG_REF_PWR) { builder.addDouble(8, AVG_REF_PWR, 0.0); }
+  public static void addSectorNum(FlatBufferBuilder builder, int SECTOR_NUM) { builder.addShort(9, (short) SECTOR_NUM, (short) 0); }
+  public static void addNumElements(FlatBufferBuilder builder, int NUM_ELEMENTS) { builder.addShort(10, (short) NUM_ELEMENTS, (short) 0); }
+  public static void addChecksum(FlatBufferBuilder builder, long CHECKSUM) { builder.addInt(11, (int) CHECKSUM, (int) 0L); }
+  public static void addSigPwrs(FlatBufferBuilder builder, int SIG_PWRSOffset) { builder.addOffset(12, SIG_PWRSOffset, 0); }
+  public static int createSigPwrsVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startSigPwrsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addNoiseLvls(FlatBufferBuilder builder, int NOISE_LVLSOffset) { builder.addOffset(13, NOISE_LVLSOffset, 0); }
+  public static int createNoiseLvlsVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startNoiseLvlsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addSpecWidths(FlatBufferBuilder builder, int SPEC_WIDTHSOffset) { builder.addOffset(14, SPEC_WIDTHSOffset, 0); }
+  public static int createSpecWidthsVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startSpecWidthsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addFirstGuessAvgs(FlatBufferBuilder builder, int FIRST_GUESS_AVGSOffset) { builder.addOffset(15, FIRST_GUESS_AVGSOffset, 0); }
+  public static int createFirstGuessAvgsVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startFirstGuessAvgsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addTdAvgSampleNums(FlatBufferBuilder builder, int TD_AVG_SAMPLE_NUMSOffset) { builder.addOffset(16, TD_AVG_SAMPLE_NUMSOffset, 0); }
+  public static int createTdAvgSampleNumsVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startTdAvgSampleNumsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
   public static void addCoIntegs(FlatBufferBuilder builder, int CO_INTEGSOffset) { builder.addOffset(17, CO_INTEGSOffset, 0); }
-  public static int createCoIntegsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startCoIntegsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static int createCoIntegsVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startCoIntegsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
   public static void addSpecAvgs(FlatBufferBuilder builder, int SPEC_AVGSOffset) { builder.addOffset(18, SPEC_AVGSOffset, 0); }
-  public static int createSpecAvgsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startSpecAvgsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static int createSpecAvgsVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startSpecAvgsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
   public static void addInterpulsePeriods(FlatBufferBuilder builder, int INTERPULSE_PERIODSOffset) { builder.addOffset(19, INTERPULSE_PERIODSOffset, 0); }
-  public static int createInterpulsePeriodsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startInterpulsePeriodsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static int createInterpulsePeriodsVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startInterpulsePeriodsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
   public static void addDoppVels(FlatBufferBuilder builder, int DOPP_VELSOffset) { builder.addOffset(20, DOPP_VELSOffset, 0); }
-  public static int createDoppVelsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startDoppVelsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static int createDoppVelsVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startDoppVelsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
   public static void addConsRecs(FlatBufferBuilder builder, int CONS_RECSOffset) { builder.addOffset(21, CONS_RECSOffset, 0); }
-  public static int createConsRecsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startConsRecsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static int createConsRecsVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startConsRecsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
   public static void addSnrs(FlatBufferBuilder builder, int SNRSOffset) { builder.addOffset(22, SNRSOffset, 0); }
-  public static int createSnrsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startSnrsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static int createSnrsVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startSnrsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
   public static void addSigStrength(FlatBufferBuilder builder, double SIG_STRENGTH) { builder.addDouble(23, SIG_STRENGTH, 0.0); }
   public static void addSemiMajorAxis(FlatBufferBuilder builder, double SEMI_MAJOR_AXIS) { builder.addDouble(24, SEMI_MAJOR_AXIS, 0.0); }
   public static void addSemiMinorAxis(FlatBufferBuilder builder, double SEMI_MINOR_AXIS) { builder.addDouble(25, SEMI_MINOR_AXIS, 0.0); }
   public static void addAngleOrientation(FlatBufferBuilder builder, double ANGLE_ORIENTATION) { builder.addDouble(26, ANGLE_ORIENTATION, 0.0); }
-  public static void addLightEventNum(FlatBufferBuilder builder, int LIGHT_EVENT_NUM) { builder.addInt(27, LIGHT_EVENT_NUM, 0); }
+  public static void addLightEventNum(FlatBufferBuilder builder, long LIGHT_EVENT_NUM) { builder.addInt(27, (int) LIGHT_EVENT_NUM, (int) 0L); }
   public static void addLightDetSensors(FlatBufferBuilder builder, int LIGHT_DET_SENSORSOffset) { builder.addOffset(28, LIGHT_DET_SENSORSOffset, 0); }
   public static int createLightDetSensorsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startLightDetSensorsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }

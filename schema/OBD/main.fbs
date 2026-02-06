@@ -1,44 +1,111 @@
-// Hash: 39965ec1bd915c0147503b1dbf6ad7a90dbfa6d5417496145c467cb1257bbada
-// Version: 0.0.2
+// Hash: 54d8bd485b48986b3676eb09b38043c3adad42a6b442821b8779f578b734053e
+// Version: 0.0.3
 // -----------------------------------END_HEADER
+enum odMethod : byte {
+  BATCH_LEAST_SQUARES,
+  SEQUENTIAL_LEAST_SQUARES,
+  EXTENDED_KALMAN,
+  UNSCENTED_KALMAN,
+  SPECIAL_PERTURBATIONS,
+  GENERAL_PERTURBATIONS,
+  DIFFERENTIAL_CORRECTION,
+  UNKNOWN
+}
+
+/// Sensor contribution to an orbit determination solution
+table odSensorContribution {
+  /// Sensor identifier
+  SENSOR_ID:string;
+  /// Original sensor identifier
+  ORIG_SENSOR_ID:string;
+  /// Number of accepted observations from this sensor
+  NUM_ACCEPTED:uint32;
+  /// Number of rejected observations from this sensor
+  NUM_REJECTED:uint32;
+  /// Weighted RMS for this sensor's observations
+  WRMS:double;
+  /// Observation types from this sensor
+  OB_TYPES:[string];
+}
+
 /// Orbit Determination Results
 table OBD {
+  /// Unique identifier
   ID:string;
-  START_TIME:string;
-  END_TIME:string;
+  /// Satellite catalog number
+  SAT_NO:uint32;
+  /// International designator
   ORIG_OBJECT_ID:string;
-  SAT_NO:int;
-  APRIORI_ID_ELSET:string;
-  APRIORI_ELSET:string;
-  APRIORI_ID_STATE_VECTOR:string;
-  APRIORI_STATE_VECTOR:string;
-  INITIAL_OD:bool;
-  LAST_OB_START:string;
-  LAST_OB_END:string;
-  TIME_SPAN:double;
-  EFFECTIVE_FROM:string;
-  EFFECTIVE_UNTIL:string;
-  WRMS:double;
-  PREVIOUS_WRMS:double;
-  FIRST_PASS_WRMS:double;
-  BEST_PASS_WRMS:double;
-  ERROR_GROWTH_RATE:double;
-  EDR:double;
-  METHOD:string;
-  METHOD_SOURCE:string;
-  FIT_SPAN:double;
-  BALLISTIC_COEFF_EST:bool;
-  BALLISTIC_COEFF_MODEL:string;
-  AGOM_EST:bool;
-  AGOM_MODEL:string;
-  RMS_CONVERGENCE_CRITERIA:double;
-  NUM_ITERATIONS:int;
-  ACCEPTED_OB_TYPS:[string];
-  ACCEPTED_OB_IDS:[string];
-  REJECTED_OB_TYPS:[string];
-  REJECTED_OB_IDS:[string];
-  SENSOR_IDS:[string];
+  /// On-orbit reference
   ON_ORBIT:string;
+  /// OD fit start time (ISO 8601)
+  START_TIME:string;
+  /// OD fit end time (ISO 8601)
+  END_TIME:string;
+  /// OD method used
+  METHOD:odMethod;
+  /// Method source or software
+  METHOD_SOURCE:string;
+  /// True if this is an initial orbit determination
+  INITIAL_OD:bool;
+  /// A priori element set identifier
+  APRIORI_ID_ELSET:string;
+  /// A priori element set data reference
+  APRIORI_ELSET:string;
+  /// A priori state vector identifier
+  APRIORI_ID_STATE_VECTOR:string;
+  /// A priori state vector data reference
+  APRIORI_STATE_VECTOR:string;
+  /// Start of last observation arc (ISO 8601)
+  LAST_OB_START:string;
+  /// End of last observation arc (ISO 8601)
+  LAST_OB_END:string;
+  /// Observation time span (days)
+  TIME_SPAN:double;
+  /// Fit span in days
+  FIT_SPAN:double;
+  /// Solution effective from (ISO 8601)
+  EFFECTIVE_FROM:string;
+  /// Solution effective until (ISO 8601)
+  EFFECTIVE_UNTIL:string;
+  /// Weighted RMS of residuals
+  WRMS:double;
+  /// Previous solution WRMS
+  PREVIOUS_WRMS:double;
+  /// First pass WRMS
+  FIRST_PASS_WRMS:double;
+  /// Best pass WRMS
+  BEST_PASS_WRMS:double;
+  /// Error growth rate (km/day)
+  ERROR_GROWTH_RATE:double;
+  /// Energy dissipation rate
+  EDR:double;
+  /// True if ballistic coefficient was estimated
+  BALLISTIC_COEFF_EST:bool;
+  /// Ballistic coefficient model
+  BALLISTIC_COEFF_MODEL:string;
+  /// True if area-to-mass ratio was estimated
+  AGOM_EST:bool;
+  /// Area-to-mass ratio model
+  AGOM_MODEL:string;
+  /// RMS convergence criteria
+  RMS_CONVERGENCE_CRITERIA:double;
+  /// Number of iterations to converge
+  NUM_ITERATIONS:uint16;
+  /// Total accepted observations
+  NUM_ACCEPTED_OBS:uint32;
+  /// Total rejected observations
+  NUM_REJECTED_OBS:uint32;
+  /// Sensor contributions to this solution
+  SENSORS:[odSensorContribution];
+  /// Accepted observation types
+  ACCEPTED_OB_TYPS:[string];
+  /// Accepted observation identifiers
+  ACCEPTED_OB_IDS:[string];
+  /// Rejected observation types
+  REJECTED_OB_TYPS:[string];
+  /// Rejected observation identifiers
+  REJECTED_OB_IDS:[string];
 }
 
 root_type OBD;

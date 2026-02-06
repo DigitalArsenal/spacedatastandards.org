@@ -3,49 +3,79 @@
   "definitions": {
     "SWR" : {
       "type" : "object",
-      "description" : "Short-Wave Infrared",
+      "description" : "Short-Wave Infrared Observation",
       "properties" : {
         "ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique identifier"
               },
         "ON_ORBIT" : {
-                "type" : "string"
-              },
-        "TS" : {
-                "type" : "string"
-              },
-        "SOLAR_PHASE_ANGLE" : {
-                "type" : "number"
-              },
-        "LAT" : {
-                "type" : "number"
-              },
-        "LON" : {
-                "type" : "number"
-              },
-        "LOCATION_NAME" : {
-                "type" : "string"
-              },
-        "BAD_WAVE" : {
-                "type" : "string"
-              },
-        "WAVELENGTHS" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
-        "ABS_FLUXES" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
-        "RATIO_WAVELENGTHS" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
-        "FLUX_RATIOS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "string",
+                "description" : "On-orbit reference"
               },
         "ORIG_OBJECT_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "International designator"
               },
         "SAT_NO" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Satellite catalog number"
+              },
+        "TS" : {
+                "type" : "string",
+                "description" : "Observation timestamp (ISO 8601)"
+              },
+        "SOLAR_PHASE_ANGLE" : {
+                "type" : "number",
+                "description" : "Solar phase angle (degrees)"
+              },
+        "LAT" : {
+                "type" : "number",
+                "description" : "Sub-observer latitude (degrees)"
+              },
+        "LON" : {
+                "type" : "number",
+                "description" : "Sub-observer longitude (degrees)"
+              },
+        "LOCATION_NAME" : {
+                "type" : "string",
+                "description" : "Location name"
+              },
+        "BAD_WAVE" : {
+                "type" : "string",
+                "description" : "Bad wavelength flag or identifier"
+              },
+        "WAVELENGTHS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Measured wavelengths (micrometers)"
+              },
+        "ABS_FLUXES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Absolute flux values (W/m^2/um)"
+              },
+        "RATIO_WAVELENGTHS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Ratio reference wavelengths (micrometers)"
+              },
+        "FLUX_RATIOS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Flux ratios (normalized)"
+              },
+        "TEMPERATURE" : {
+                "type" : "number",
+                "description" : "Effective temperature (Kelvin)"
+              },
+        "SIGNAL_NOISE_RATIO" : {
+                "type" : "number",
+                "description" : "Signal-to-noise ratio"
+              },
+        "INTEGRATION_TIME" : {
+                "type" : "number",
+                "description" : "Integration time (seconds)"
+              },
+        "QUALITY" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Data quality (0-9, 9=best)"
               }
       },
       "additionalProperties" : false

@@ -16,64 +16,119 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct MTI;
 struct MTIBuilder;
 
+enum mtiStandard : int8_t {
+  mtiStandard_STANAG_4607 = 0,
+  mtiStandard_STANAG_4545 = 1,
+  mtiStandard_CUSTOM = 2,
+  mtiStandard_UNKNOWN = 3,
+  mtiStandard_MIN = mtiStandard_STANAG_4607,
+  mtiStandard_MAX = mtiStandard_UNKNOWN
+};
+
+inline const mtiStandard (&EnumValuesmtiStandard())[4] {
+  static const mtiStandard values[] = {
+    mtiStandard_STANAG_4607,
+    mtiStandard_STANAG_4545,
+    mtiStandard_CUSTOM,
+    mtiStandard_UNKNOWN
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesmtiStandard() {
+  static const char * const names[5] = {
+    "STANAG_4607",
+    "STANAG_4545",
+    "CUSTOM",
+    "UNKNOWN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamemtiStandard(mtiStandard e) {
+  if (::flatbuffers::IsOutRange(e, mtiStandard_STANAG_4607, mtiStandard_UNKNOWN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesmtiStandard()[index];
+}
+
 /// Moving Target Indicator
 struct MTI FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef MTIBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
-    VT_P3 = 6,
-    VT_P6 = 8,
-    VT_P7 = 10,
-    VT_P8 = 12,
-    VT_P9 = 14,
-    VT_P10 = 16,
-    VT_MISSIONS = 18,
-    VT_DWELLS = 20,
-    VT_HRRS = 22,
-    VT_JOB_DEFS = 24,
-    VT_FREE_TEXTS = 26,
-    VT_PLATFORM_LOCS = 28,
-    VT_JOB_REQUESTS = 30
+    VT_STANDARD = 6,
+    VT_P3 = 8,
+    VT_P6 = 10,
+    VT_P7 = 12,
+    VT_P8 = 14,
+    VT_P9 = 16,
+    VT_P10 = 18,
+    VT_MISSIONS = 20,
+    VT_DWELLS = 22,
+    VT_HRRS = 24,
+    VT_JOB_DEFS = 26,
+    VT_FREE_TEXTS = 28,
+    VT_PLATFORM_LOCS = 30,
+    VT_JOB_REQUESTS = 32
   };
+  /// Unique identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
+  /// MTI standard (e.g., STANAG 4607)
+  mtiStandard STANDARD() const {
+    return static_cast<mtiStandard>(GetField<int8_t>(VT_STANDARD, 0));
+  }
+  /// Platform type (P3 field)
   const ::flatbuffers::String *P3() const {
     return GetPointer<const ::flatbuffers::String *>(VT_P3);
   }
+  /// Platform activity (P6 field)
   const ::flatbuffers::String *P6() const {
     return GetPointer<const ::flatbuffers::String *>(VT_P6);
   }
+  /// Sensor type (P7 field)
   const ::flatbuffers::String *P7() const {
     return GetPointer<const ::flatbuffers::String *>(VT_P7);
   }
+  /// Sensor model (P8 field)
   const ::flatbuffers::String *P8() const {
     return GetPointer<const ::flatbuffers::String *>(VT_P8);
   }
-  int32_t P9() const {
-    return GetField<int32_t>(VT_P9, 0);
+  /// Reference time code (P9)
+  uint32_t P9() const {
+    return GetField<uint32_t>(VT_P9, 0);
   }
-  int32_t P10() const {
-    return GetField<int32_t>(VT_P10, 0);
+  /// Security classification (P10)
+  uint16_t P10() const {
+    return GetField<uint16_t>(VT_P10, 0);
   }
+  /// Mission segment identifiers
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *MISSIONS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_MISSIONS);
   }
+  /// Dwell segment data references
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *DWELLS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_DWELLS);
   }
+  /// High range resolution profile references
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *HRRS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_HRRS);
   }
+  /// Job definition references
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *JOB_DEFS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_JOB_DEFS);
   }
+  /// Free text entries
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *FREE_TEXTS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_FREE_TEXTS);
   }
+  /// Platform location data references
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *PLATFORM_LOCS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_PLATFORM_LOCS);
   }
+  /// Job request references
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *JOB_REQUESTS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_JOB_REQUESTS);
   }
@@ -81,6 +136,7 @@ struct MTI FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
            verifier.VerifyString(ID()) &&
+           VerifyField<int8_t>(verifier, VT_STANDARD, 1) &&
            VerifyOffset(verifier, VT_P3) &&
            verifier.VerifyString(P3()) &&
            VerifyOffset(verifier, VT_P6) &&
@@ -89,8 +145,8 @@ struct MTI FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(P7()) &&
            VerifyOffset(verifier, VT_P8) &&
            verifier.VerifyString(P8()) &&
-           VerifyField<int32_t>(verifier, VT_P9, 4) &&
-           VerifyField<int32_t>(verifier, VT_P10, 4) &&
+           VerifyField<uint32_t>(verifier, VT_P9, 4) &&
+           VerifyField<uint16_t>(verifier, VT_P10, 2) &&
            VerifyOffset(verifier, VT_MISSIONS) &&
            verifier.VerifyVector(MISSIONS()) &&
            verifier.VerifyVectorOfStrings(MISSIONS()) &&
@@ -123,6 +179,9 @@ struct MTIBuilder {
   void add_ID(::flatbuffers::Offset<::flatbuffers::String> ID) {
     fbb_.AddOffset(MTI::VT_ID, ID);
   }
+  void add_STANDARD(mtiStandard STANDARD) {
+    fbb_.AddElement<int8_t>(MTI::VT_STANDARD, static_cast<int8_t>(STANDARD), 0);
+  }
   void add_P3(::flatbuffers::Offset<::flatbuffers::String> P3) {
     fbb_.AddOffset(MTI::VT_P3, P3);
   }
@@ -135,11 +194,11 @@ struct MTIBuilder {
   void add_P8(::flatbuffers::Offset<::flatbuffers::String> P8) {
     fbb_.AddOffset(MTI::VT_P8, P8);
   }
-  void add_P9(int32_t P9) {
-    fbb_.AddElement<int32_t>(MTI::VT_P9, P9, 0);
+  void add_P9(uint32_t P9) {
+    fbb_.AddElement<uint32_t>(MTI::VT_P9, P9, 0);
   }
-  void add_P10(int32_t P10) {
-    fbb_.AddElement<int32_t>(MTI::VT_P10, P10, 0);
+  void add_P10(uint16_t P10) {
+    fbb_.AddElement<uint16_t>(MTI::VT_P10, P10, 0);
   }
   void add_MISSIONS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> MISSIONS) {
     fbb_.AddOffset(MTI::VT_MISSIONS, MISSIONS);
@@ -176,12 +235,13 @@ struct MTIBuilder {
 inline ::flatbuffers::Offset<MTI> CreateMTI(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
+    mtiStandard STANDARD = mtiStandard_STANAG_4607,
     ::flatbuffers::Offset<::flatbuffers::String> P3 = 0,
     ::flatbuffers::Offset<::flatbuffers::String> P6 = 0,
     ::flatbuffers::Offset<::flatbuffers::String> P7 = 0,
     ::flatbuffers::Offset<::flatbuffers::String> P8 = 0,
-    int32_t P9 = 0,
-    int32_t P10 = 0,
+    uint32_t P9 = 0,
+    uint16_t P10 = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> MISSIONS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> DWELLS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> HRRS = 0,
@@ -197,25 +257,27 @@ inline ::flatbuffers::Offset<MTI> CreateMTI(
   builder_.add_HRRS(HRRS);
   builder_.add_DWELLS(DWELLS);
   builder_.add_MISSIONS(MISSIONS);
-  builder_.add_P10(P10);
   builder_.add_P9(P9);
   builder_.add_P8(P8);
   builder_.add_P7(P7);
   builder_.add_P6(P6);
   builder_.add_P3(P3);
   builder_.add_ID(ID);
+  builder_.add_P10(P10);
+  builder_.add_STANDARD(STANDARD);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<MTI> CreateMTIDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *ID = nullptr,
+    mtiStandard STANDARD = mtiStandard_STANAG_4607,
     const char *P3 = nullptr,
     const char *P6 = nullptr,
     const char *P7 = nullptr,
     const char *P8 = nullptr,
-    int32_t P9 = 0,
-    int32_t P10 = 0,
+    uint32_t P9 = 0,
+    uint16_t P10 = 0,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *MISSIONS = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *DWELLS = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *HRRS = nullptr,
@@ -238,6 +300,7 @@ inline ::flatbuffers::Offset<MTI> CreateMTIDirect(
   return CreateMTI(
       _fbb,
       ID__,
+      STANDARD,
       P3__,
       P6__,
       P7__,

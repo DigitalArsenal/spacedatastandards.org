@@ -1,98 +1,172 @@
-// Hash: 34ac48f9a52c7224634c2cc2b80207e8fd62dd29de5712f53d37ff36a2cf0afb
-// Version: 0.0.2
+// Hash: 6245430eb6515f363baafa50fc2c523843407b8aea05e1fa5bc7383eff9a4257
+// Version: 0.0.3
 // -----------------------------------END_HEADER
+enum maneuverStatus : byte {
+  DETECTED,
+  CONFIRMED,
+  PREDICTED,
+  PLANNED,
+  EXECUTED,
+  CANCELLED,
+  UNKNOWN
+}
+
+enum maneuverCharacterization : byte {
+  IN_PLANE,
+  OUT_OF_PLANE,
+  COMBINED,
+  STATION_KEEPING,
+  ORBIT_RAISING,
+  ORBIT_LOWERING,
+  PHASING,
+  DEORBIT,
+  COLLISION_AVOIDANCE,
+  UNKNOWN
+}
+
+/// Pre/post-maneuver orbital state
+table mnvOrbitalState {
+  /// Element set identifier
+  ID_ELSET:string;
+  /// Element set data reference
+  ELSET:string;
+  /// State vector identifier
+  ID_STATE_VECTOR:string;
+  /// State vector data reference
+  STATE_VECTOR:string;
+  /// Position X (km)
+  POS_X:double;
+  /// Position Y (km)
+  POS_Y:double;
+  /// Position Z (km)
+  POS_Z:double;
+  /// Velocity X (km/s)
+  VEL_X:double;
+  /// Velocity Y (km/s)
+  VEL_Y:double;
+  /// Velocity Z (km/s)
+  VEL_Z:double;
+  /// Radiation pressure coefficient (Cr)
+  RADIATION_PRESS_COEFF:double;
+  /// Ballistic coefficient (m^2/kg)
+  BALLISTIC_COEFF:double;
+  /// Apogee altitude (km)
+  APOGEE:double;
+  /// Perigee altitude (km)
+  PERIGEE:double;
+  /// Inclination (degrees)
+  INCLINATION:double;
+  /// Eccentricity
+  ECCENTRICITY:double;
+  /// Orbital period (minutes)
+  PERIOD:double;
+  /// Right ascension of ascending node (degrees)
+  RAAN:double;
+  /// Semi-major axis (km)
+  SMA:double;
+  /// GEO longitude (degrees east)
+  GEO_LONGITUDE:double;
+  /// Longitude drift rate (degrees/day)
+  DRIFT_RATE:double;
+  /// Position uncertainty U (km, 1-sigma)
+  SIGMA_U:double;
+  /// Position uncertainty V (km, 1-sigma)
+  SIGMA_V:double;
+  /// Position uncertainty W (km, 1-sigma)
+  SIGMA_W:double;
+}
+
 /// Spacecraft Maneuver
 table MNV {
+  /// Unique identifier
   ID:string;
-  SAT_NO:int;
-  REPORT_TIME:string;
-  EVENT_START_TIME:string;
-  EVENT_END_TIME:string;
-  TOTAL_BURN_TIME:double;
-  OD_FIT_END_TIME:string;
-  ID_SENSOR:string;
-  UCT:bool;
-  MANEUVER_UNC:double;
-  CHARACTERIZATION:string;
-  CHARACTERIZATION_UNC:double;
-  EVENT_ID:string;
+  /// Satellite catalog number
+  SAT_NO:uint32;
+  /// International designator
   ORIG_OBJECT_ID:string;
-  ORIG_SENSOR_ID:string;
-  STATUS:string;
-  DELTA_POS:double;
-  DELTA_POS_U:double;
-  DELTA_POS_V:double;
-  DELTA_POS_W:double;
-  DELTA_VEL:double;
-  DELTA_VEL_U:double;
-  DELTA_VEL_V:double;
-  DELTA_VEL_W:double;
-  DELTA_MASS:double;
-  PRE_EVENT_ID_ELSET:string;
-  PRE_EVENT_ELSET:string;
-  PRE_EVENT_ID_STATE_VECTOR:string;
-  PRE_EVENT_STATE_VECTOR:string;
-  PRE_POS_X:double;
-  PRE_POS_Y:double;
-  PRE_POS_Z:double;
-  PRE_VEL_X:double;
-  PRE_VEL_Y:double;
-  PRE_VEL_Z:double;
-  PRE_RADIATION_PRESS_COEFF:double;
-  PRE_BALLISTIC_COEFF:double;
-  PRE_APOGEE:double;
-  PRE_PERIGEE:double;
-  PRE_INCLINATION:double;
-  PRE_ECCENTRICITY:double;
-  PRE_PERIOD:double;
-  PRE_RAAN:double;
-  PRE_SMA:double;
-  PRE_GEO_LONGITUDE:double;
-  PRE_DRIFT_RATE:double;
-  PRE_SIGMA_U:double;
-  PRE_SIGMA_V:double;
-  PRE_SIGMA_W:double;
-  POST_EVENT_ID_ELSET:string;
-  POST_EVENT_ELSET:string;
-  POST_EVENT_ID_STATE_VECTOR:string;
-  POST_EVENT_STATE_VECTOR:string;
-  POST_POS_X:double;
-  POST_POS_Y:double;
-  POST_POS_Z:double;
-  POST_VEL_X:double;
-  POST_VEL_Y:double;
-  POST_VEL_Z:double;
-  POST_RADIATION_PRESS_COEFF:double;
-  POST_BALLISTIC_COEFF:double;
-  POST_APOGEE:double;
-  POST_PERIGEE:double;
-  POST_INCLINATION:double;
-  POST_ECCENTRICITY:double;
-  POST_PERIOD:double;
-  POST_RAAN:double;
-  POST_SMA:double;
-  POST_GEO_LONGITUDE:double;
-  POST_DRIFT_RATE:double;
-  POST_SIGMA_U:double;
-  POST_SIGMA_V:double;
-  POST_SIGMA_W:double;
-  COV:[string];
-  POST_MASS:double;
-  POST_AREA:double;
-  NUM_OBS:int;
-  DESCRIPTION:string;
-  DESCRIPTOR:string;
-  STATE_MODEL:string;
-  STATE_MODEL_VERSION:double;
-  NUM_ACCEL_POINTS:int;
-  MNVR_ACCEL_TIMES:[string];
-  MNVR_ACCELS:[string];
-  MNVR_ACCEL_UNCS:[string];
-  TAGS:[string];
-  ALGORITHM:string;
-  SOURCED_DATA:[string];
-  SOURCED_DATA_TYPES:string;
+  /// On-orbit reference
   ON_ORBIT:string;
+  /// Maneuver status
+  STATUS:maneuverStatus;
+  /// Maneuver characterization
+  CHARACTERIZATION:maneuverCharacterization;
+  /// Characterization uncertainty (0-1)
+  CHARACTERIZATION_UNC:double;
+  /// Detection report time (ISO 8601)
+  REPORT_TIME:string;
+  /// Maneuver start time (ISO 8601)
+  EVENT_START_TIME:string;
+  /// Maneuver end time (ISO 8601)
+  EVENT_END_TIME:string;
+  /// Total burn time (seconds)
+  TOTAL_BURN_TIME:double;
+  /// OD fit end time (ISO 8601)
+  OD_FIT_END_TIME:string;
+  /// Detecting sensor identifier
+  ID_SENSOR:string;
+  /// Original sensor identifier
+  ORIG_SENSOR_ID:string;
+  /// Maneuver event identifier
+  EVENT_ID:string;
+  /// True if object is uncorrelated
+  UCT:bool;
+  /// Maneuver detection uncertainty (km)
+  MANEUVER_UNC:double;
+  /// Total delta-V magnitude (km/s)
+  DELTA_VEL:double;
+  /// Delta-V along-track/U component (km/s)
+  DELTA_VEL_U:double;
+  /// Delta-V cross-track/V component (km/s)
+  DELTA_VEL_V:double;
+  /// Delta-V radial/W component (km/s)
+  DELTA_VEL_W:double;
+  /// Total delta position (km)
+  DELTA_POS:double;
+  /// Delta position U component (km)
+  DELTA_POS_U:double;
+  /// Delta position V component (km)
+  DELTA_POS_V:double;
+  /// Delta position W component (km)
+  DELTA_POS_W:double;
+  /// Propellant mass consumed (kg)
+  DELTA_MASS:double;
+  /// Pre-maneuver orbital state
+  PRE_EVENT:mnvOrbitalState;
+  /// Post-maneuver orbital state
+  POST_EVENT:mnvOrbitalState;
+  /// Post-maneuver mass (kg)
+  POST_MASS:double;
+  /// Post-maneuver cross-sectional area (m^2)
+  POST_AREA:double;
+  /// 6x6 covariance matrix (upper triangle, row-major)
+  COV:[double];
+  /// Number of observations used
+  NUM_OBS:uint32;
+  /// State model used
+  STATE_MODEL:string;
+  /// State model version
+  STATE_MODEL_VERSION:double;
+  /// Number of acceleration profile points
+  NUM_ACCEL_POINTS:uint16;
+  /// Acceleration profile times (ISO 8601)
+  MNVR_ACCEL_TIMES:[string];
+  /// Acceleration values (km/s^2, 3 components per point)
+  MNVR_ACCELS:[double];
+  /// Acceleration uncertainties (km/s^2)
+  MNVR_ACCEL_UNCS:[double];
+  /// Description
+  DESCRIPTION:string;
+  /// Event descriptor
+  DESCRIPTOR:string;
+  /// Algorithm used for detection
+  ALGORITHM:string;
+  /// Associated tags
+  TAGS:[string];
+  /// Sourced data references
+  SOURCED_DATA:[string];
+  /// Sourced data types
+  SOURCED_DATA_TYPES:string;
+  /// Transaction identifier
   TRANSACTION_ID:string;
 }
 

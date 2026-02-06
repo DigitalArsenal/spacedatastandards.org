@@ -4,6 +4,24 @@
 
 import FlatBuffers
 
+public enum imageFormat: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case fits = 0
+  case jpeg = 1
+  case png = 2
+  case tiff = 3
+  case raw = 4
+  case nitf = 5
+  case geotiff = 6
+  case other = 7
+
+  public static var max: imageFormat { return .other }
+  public static var min: imageFormat { return .fits }
+}
+
+
 ///  Ground Imagery
 public struct GDI: FlatBufferObject, Verifiable {
 
@@ -19,133 +37,152 @@ public struct GDI: FlatBufferObject, Verifiable {
   private enum VTOFFSET: VOffset {
     case ID = 4
     case ID_SENSOR = 6
-    case IMAGE_TIME = 8
-    case FILENAME = 10
-    case REGION = 12
-    case REGION_TEXT = 14
-    case REGION_GEO_JSON = 16
-    case REGION_TYPE = 18
-    case REGION_NDIMS = 20
-    case REGION_SRID = 22
-    case ORIG_SENSOR_ID = 24
-    case SUBJECT_ID = 26
-    case NAME = 28
-    case TRANSACTION_ID = 30
-    case TAGS = 32
-    case KEYWORDS = 34
-    case NOTES = 36
-    case FORMAT = 38
-    case FILESIZE = 40
-    case CHECKSUM_VALUE = 42
+    case ORIG_SENSOR_ID = 8
+    case IMAGE_TIME = 10
+    case FILENAME = 12
+    case FORMAT = 14
+    case FILESIZE = 16
+    case CHECKSUM_VALUE = 18
+    case REGION_GEO_JSON = 20
+    case REGION_TEXT = 22
+    case REGION = 24
+    case REGION_TYPE = 26
+    case REGION_NDIMS = 28
+    case REGION_SRID = 30
+    case SUBJECT_ID = 32
+    case NAME = 34
+    case TRANSACTION_ID = 36
+    case TAGS = 38
+    case KEYWORDS = 40
+    case NOTES = 42
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
+  ///  Unique identifier
   public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  ///  Sensor identifier
   public var ID_SENSOR: String? { let o = _accessor.offset(VTOFFSET.ID_SENSOR.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ID_SENSORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_SENSOR.v) }
-  public var IMAGE_TIME: String? { let o = _accessor.offset(VTOFFSET.IMAGE_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var IMAGE_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.IMAGE_TIME.v) }
-  public var FILENAME: String? { let o = _accessor.offset(VTOFFSET.FILENAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FILENAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FILENAME.v) }
-  public var REGION: String? { let o = _accessor.offset(VTOFFSET.REGION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REGIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REGION.v) }
-  public var REGION_TEXT: String? { let o = _accessor.offset(VTOFFSET.REGION_TEXT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REGION_TEXTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REGION_TEXT.v) }
-  public var REGION_GEO_JSON: String? { let o = _accessor.offset(VTOFFSET.REGION_GEO_JSON.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REGION_GEO_JSONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REGION_GEO_JSON.v) }
-  public var REGION_TYPE: String? { let o = _accessor.offset(VTOFFSET.REGION_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REGION_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REGION_TYPE.v) }
-  public var REGION_NDIMS: Int32 { let o = _accessor.offset(VTOFFSET.REGION_NDIMS.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var REGION_SRID: Int32 { let o = _accessor.offset(VTOFFSET.REGION_SRID.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Original sensor identifier
   public var ORIG_SENSOR_ID: String? { let o = _accessor.offset(VTOFFSET.ORIG_SENSOR_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ORIG_SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_SENSOR_ID.v) }
+  ///  Image capture time (ISO 8601)
+  public var IMAGE_TIME: String? { let o = _accessor.offset(VTOFFSET.IMAGE_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IMAGE_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.IMAGE_TIME.v) }
+  ///  Image filename
+  public var FILENAME: String? { let o = _accessor.offset(VTOFFSET.FILENAME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FILENAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FILENAME.v) }
+  ///  Image format
+  public var FORMAT: imageFormat { let o = _accessor.offset(VTOFFSET.FORMAT.v); return o == 0 ? .fits : imageFormat(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .fits }
+  ///  File size (bytes)
+  public var FILESIZE: Int64 { let o = _accessor.offset(VTOFFSET.FILESIZE.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
+  ///  File checksum value
+  public var CHECKSUM_VALUE: String? { let o = _accessor.offset(VTOFFSET.CHECKSUM_VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CHECKSUM_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CHECKSUM_VALUE.v) }
+  ///  Region GeoJSON boundary
+  public var REGION_GEO_JSON: String? { let o = _accessor.offset(VTOFFSET.REGION_GEO_JSON.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REGION_GEO_JSONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REGION_GEO_JSON.v) }
+  ///  Region text description
+  public var REGION_TEXT: String? { let o = _accessor.offset(VTOFFSET.REGION_TEXT.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REGION_TEXTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REGION_TEXT.v) }
+  ///  Region name
+  public var REGION: String? { let o = _accessor.offset(VTOFFSET.REGION.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REGIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REGION.v) }
+  ///  Region type
+  public var REGION_TYPE: String? { let o = _accessor.offset(VTOFFSET.REGION_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REGION_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REGION_TYPE.v) }
+  ///  Region geometry dimensions
+  public var REGION_NDIMS: UInt8 { let o = _accessor.offset(VTOFFSET.REGION_NDIMS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Region spatial reference ID
+  public var REGION_SRID: UInt16 { let o = _accessor.offset(VTOFFSET.REGION_SRID.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Subject object identifier
   public var SUBJECT_ID: String? { let o = _accessor.offset(VTOFFSET.SUBJECT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SUBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SUBJECT_ID.v) }
+  ///  Image name or title
   public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  ///  Transaction identifier
   public var TRANSACTION_ID: String? { let o = _accessor.offset(VTOFFSET.TRANSACTION_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var TRANSACTION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRANSACTION_ID.v) }
+  ///  Associated tags
   public var hasTags: Bool { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? false : true }
   public var TAGSCount: Int32 { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func TAGS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  ///  Keywords for search/classification
   public var hasKeywords: Bool { let o = _accessor.offset(VTOFFSET.KEYWORDS.v); return o == 0 ? false : true }
   public var KEYWORDSCount: Int32 { let o = _accessor.offset(VTOFFSET.KEYWORDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func KEYWORDS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.KEYWORDS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  ///  Notes
   public var NOTES: String? { let o = _accessor.offset(VTOFFSET.NOTES.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NOTES.v) }
-  public var FORMAT: String? { let o = _accessor.offset(VTOFFSET.FORMAT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var FORMATSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FORMAT.v) }
-  public var FILESIZE: Int64 { let o = _accessor.offset(VTOFFSET.FILESIZE.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
-  public var CHECKSUM_VALUE: String? { let o = _accessor.offset(VTOFFSET.CHECKSUM_VALUE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CHECKSUM_VALUESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CHECKSUM_VALUE.v) }
   public static func startGDI(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 20) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(ID_SENSOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_SENSOR, at: VTOFFSET.ID_SENSOR.p) }
+  public static func add(ORIG_SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_SENSOR_ID, at: VTOFFSET.ORIG_SENSOR_ID.p) }
   public static func add(IMAGE_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMAGE_TIME, at: VTOFFSET.IMAGE_TIME.p) }
   public static func add(FILENAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FILENAME, at: VTOFFSET.FILENAME.p) }
-  public static func add(REGION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REGION, at: VTOFFSET.REGION.p) }
-  public static func add(REGION_TEXT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REGION_TEXT, at: VTOFFSET.REGION_TEXT.p) }
+  public static func add(FORMAT: imageFormat, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FORMAT.rawValue, def: 0, at: VTOFFSET.FORMAT.p) }
+  public static func add(FILESIZE: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FILESIZE, def: 0, at: VTOFFSET.FILESIZE.p) }
+  public static func add(CHECKSUM_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHECKSUM_VALUE, at: VTOFFSET.CHECKSUM_VALUE.p) }
   public static func add(REGION_GEO_JSON: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REGION_GEO_JSON, at: VTOFFSET.REGION_GEO_JSON.p) }
+  public static func add(REGION_TEXT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REGION_TEXT, at: VTOFFSET.REGION_TEXT.p) }
+  public static func add(REGION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REGION, at: VTOFFSET.REGION.p) }
   public static func add(REGION_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REGION_TYPE, at: VTOFFSET.REGION_TYPE.p) }
-  public static func add(REGION_NDIMS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REGION_NDIMS, def: 0, at: VTOFFSET.REGION_NDIMS.p) }
-  public static func add(REGION_SRID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REGION_SRID, def: 0, at: VTOFFSET.REGION_SRID.p) }
-  public static func add(ORIG_SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_SENSOR_ID, at: VTOFFSET.ORIG_SENSOR_ID.p) }
+  public static func add(REGION_NDIMS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REGION_NDIMS, def: 0, at: VTOFFSET.REGION_NDIMS.p) }
+  public static func add(REGION_SRID: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REGION_SRID, def: 0, at: VTOFFSET.REGION_SRID.p) }
   public static func add(SUBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SUBJECT_ID, at: VTOFFSET.SUBJECT_ID.p) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func add(TRANSACTION_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSACTION_ID, at: VTOFFSET.TRANSACTION_ID.p) }
   public static func addVectorOf(TAGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAGS, at: VTOFFSET.TAGS.p) }
   public static func addVectorOf(KEYWORDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: KEYWORDS, at: VTOFFSET.KEYWORDS.p) }
   public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VTOFFSET.NOTES.p) }
-  public static func add(FORMAT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FORMAT, at: VTOFFSET.FORMAT.p) }
-  public static func add(FILESIZE: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FILESIZE, def: 0, at: VTOFFSET.FILESIZE.p) }
-  public static func add(CHECKSUM_VALUE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHECKSUM_VALUE, at: VTOFFSET.CHECKSUM_VALUE.p) }
   public static func endGDI(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createGDI(
     _ fbb: inout FlatBufferBuilder,
     IDOffset ID: Offset = Offset(),
     ID_SENSOROffset ID_SENSOR: Offset = Offset(),
+    ORIG_SENSOR_IDOffset ORIG_SENSOR_ID: Offset = Offset(),
     IMAGE_TIMEOffset IMAGE_TIME: Offset = Offset(),
     FILENAMEOffset FILENAME: Offset = Offset(),
-    REGIONOffset REGION: Offset = Offset(),
-    REGION_TEXTOffset REGION_TEXT: Offset = Offset(),
+    FORMAT: imageFormat = .fits,
+    FILESIZE: Int64 = 0,
+    CHECKSUM_VALUEOffset CHECKSUM_VALUE: Offset = Offset(),
     REGION_GEO_JSONOffset REGION_GEO_JSON: Offset = Offset(),
+    REGION_TEXTOffset REGION_TEXT: Offset = Offset(),
+    REGIONOffset REGION: Offset = Offset(),
     REGION_TYPEOffset REGION_TYPE: Offset = Offset(),
-    REGION_NDIMS: Int32 = 0,
-    REGION_SRID: Int32 = 0,
-    ORIG_SENSOR_IDOffset ORIG_SENSOR_ID: Offset = Offset(),
+    REGION_NDIMS: UInt8 = 0,
+    REGION_SRID: UInt16 = 0,
     SUBJECT_IDOffset SUBJECT_ID: Offset = Offset(),
     NAMEOffset NAME: Offset = Offset(),
     TRANSACTION_IDOffset TRANSACTION_ID: Offset = Offset(),
     TAGSVectorOffset TAGS: Offset = Offset(),
     KEYWORDSVectorOffset KEYWORDS: Offset = Offset(),
-    NOTESOffset NOTES: Offset = Offset(),
-    FORMATOffset FORMAT: Offset = Offset(),
-    FILESIZE: Int64 = 0,
-    CHECKSUM_VALUEOffset CHECKSUM_VALUE: Offset = Offset()
+    NOTESOffset NOTES: Offset = Offset()
   ) -> Offset {
     let __start = GDI.startGDI(&fbb)
     GDI.add(ID: ID, &fbb)
     GDI.add(ID_SENSOR: ID_SENSOR, &fbb)
+    GDI.add(ORIG_SENSOR_ID: ORIG_SENSOR_ID, &fbb)
     GDI.add(IMAGE_TIME: IMAGE_TIME, &fbb)
     GDI.add(FILENAME: FILENAME, &fbb)
-    GDI.add(REGION: REGION, &fbb)
-    GDI.add(REGION_TEXT: REGION_TEXT, &fbb)
+    GDI.add(FORMAT: FORMAT, &fbb)
+    GDI.add(FILESIZE: FILESIZE, &fbb)
+    GDI.add(CHECKSUM_VALUE: CHECKSUM_VALUE, &fbb)
     GDI.add(REGION_GEO_JSON: REGION_GEO_JSON, &fbb)
+    GDI.add(REGION_TEXT: REGION_TEXT, &fbb)
+    GDI.add(REGION: REGION, &fbb)
     GDI.add(REGION_TYPE: REGION_TYPE, &fbb)
     GDI.add(REGION_NDIMS: REGION_NDIMS, &fbb)
     GDI.add(REGION_SRID: REGION_SRID, &fbb)
-    GDI.add(ORIG_SENSOR_ID: ORIG_SENSOR_ID, &fbb)
     GDI.add(SUBJECT_ID: SUBJECT_ID, &fbb)
     GDI.add(NAME: NAME, &fbb)
     GDI.add(TRANSACTION_ID: TRANSACTION_ID, &fbb)
     GDI.addVectorOf(TAGS: TAGS, &fbb)
     GDI.addVectorOf(KEYWORDS: KEYWORDS, &fbb)
     GDI.add(NOTES: NOTES, &fbb)
-    GDI.add(FORMAT: FORMAT, &fbb)
-    GDI.add(FILESIZE: FILESIZE, &fbb)
-    GDI.add(CHECKSUM_VALUE: CHECKSUM_VALUE, &fbb)
     return GDI.endGDI(&fbb, start: __start)
   }
 
@@ -153,24 +190,24 @@ public struct GDI: FlatBufferObject, Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ID_SENSOR.p, fieldName: "ID_SENSOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.ORIG_SENSOR_ID.p, fieldName: "ORIG_SENSOR_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.IMAGE_TIME.p, fieldName: "IMAGE_TIME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.FILENAME.p, fieldName: "FILENAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.REGION.p, fieldName: "REGION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.REGION_TEXT.p, fieldName: "REGION_TEXT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.FORMAT.p, fieldName: "FORMAT", required: false, type: imageFormat.self)
+    try _v.visit(field: VTOFFSET.FILESIZE.p, fieldName: "FILESIZE", required: false, type: Int64.self)
+    try _v.visit(field: VTOFFSET.CHECKSUM_VALUE.p, fieldName: "CHECKSUM_VALUE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.REGION_GEO_JSON.p, fieldName: "REGION_GEO_JSON", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.REGION_TEXT.p, fieldName: "REGION_TEXT", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.REGION.p, fieldName: "REGION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.REGION_TYPE.p, fieldName: "REGION_TYPE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.REGION_NDIMS.p, fieldName: "REGION_NDIMS", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.REGION_SRID.p, fieldName: "REGION_SRID", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.ORIG_SENSOR_ID.p, fieldName: "ORIG_SENSOR_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.REGION_NDIMS.p, fieldName: "REGION_NDIMS", required: false, type: UInt8.self)
+    try _v.visit(field: VTOFFSET.REGION_SRID.p, fieldName: "REGION_SRID", required: false, type: UInt16.self)
     try _v.visit(field: VTOFFSET.SUBJECT_ID.p, fieldName: "SUBJECT_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.TRANSACTION_ID.p, fieldName: "TRANSACTION_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.TAGS.p, fieldName: "TAGS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VTOFFSET.KEYWORDS.p, fieldName: "KEYWORDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VTOFFSET.NOTES.p, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FORMAT.p, fieldName: "FORMAT", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FILESIZE.p, fieldName: "FILESIZE", required: false, type: Int64.self)
-    try _v.visit(field: VTOFFSET.CHECKSUM_VALUE.p, fieldName: "CHECKSUM_VALUE", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

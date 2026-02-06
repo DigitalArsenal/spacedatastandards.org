@@ -3,3 +3,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export { SKI, SKIT } from './SKI.js';
+export { imageType } from './imageType.js';

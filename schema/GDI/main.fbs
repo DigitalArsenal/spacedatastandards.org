@@ -1,28 +1,59 @@
-// Hash: 6bf101bb9d71a9b451270963c30cef924c63add49d8f14fe2856cf2e037d7815
-// Version: 0.0.2
+// Hash: f1301470086aaf899793d338692276f4f0a0aaf22c4d8a5f13535f66d2c3f5e5
+// Version: 0.0.3
 // -----------------------------------END_HEADER
+enum imageFormat : byte {
+  FITS,
+  JPEG,
+  PNG,
+  TIFF,
+  RAW,
+  NITF,
+  GEOTIFF,
+  OTHER
+}
+
 /// Ground Imagery
 table GDI {
+  /// Unique identifier
   ID:string;
+  /// Sensor identifier
   ID_SENSOR:string;
-  IMAGE_TIME:string;
-  FILENAME:string;
-  REGION:string;
-  REGION_TEXT:string;
-  REGION_GEO_JSON:string;
-  REGION_TYPE:string;
-  REGION_NDIMS:int;
-  REGION_SRID:int;
+  /// Original sensor identifier
   ORIG_SENSOR_ID:string;
-  SUBJECT_ID:string;
-  NAME:string;
-  TRANSACTION_ID:string;
-  TAGS:[string];
-  KEYWORDS:[string];
-  NOTES:string;
-  FORMAT:string;
+  /// Image capture time (ISO 8601)
+  IMAGE_TIME:string;
+  /// Image filename
+  FILENAME:string;
+  /// Image format
+  FORMAT:imageFormat;
+  /// File size (bytes)
   FILESIZE:long;
+  /// File checksum value
   CHECKSUM_VALUE:string;
+  /// Region GeoJSON boundary
+  REGION_GEO_JSON:string;
+  /// Region text description
+  REGION_TEXT:string;
+  /// Region name
+  REGION:string;
+  /// Region type
+  REGION_TYPE:string;
+  /// Region geometry dimensions
+  REGION_NDIMS:uint8;
+  /// Region spatial reference ID
+  REGION_SRID:uint16;
+  /// Subject object identifier
+  SUBJECT_ID:string;
+  /// Image name or title
+  NAME:string;
+  /// Transaction identifier
+  TRANSACTION_ID:string;
+  /// Associated tags
+  TAGS:[string];
+  /// Keywords for search/classification
+  KEYWORDS:[string];
+  /// Notes
+  NOTES:string;
 }
 
 root_type GDI;

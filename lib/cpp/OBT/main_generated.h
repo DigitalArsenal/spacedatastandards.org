@@ -16,156 +16,268 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct OBT;
 struct OBTBuilder;
 
+enum orbitObjectType : int8_t {
+  orbitObjectType_PAYLOAD = 0,
+  orbitObjectType_ROCKET_BODY = 1,
+  orbitObjectType_DEBRIS = 2,
+  orbitObjectType_TBA = 3,
+  orbitObjectType_UNKNOWN = 4,
+  orbitObjectType_MIN = orbitObjectType_PAYLOAD,
+  orbitObjectType_MAX = orbitObjectType_UNKNOWN
+};
+
+inline const orbitObjectType (&EnumValuesorbitObjectType())[5] {
+  static const orbitObjectType values[] = {
+    orbitObjectType_PAYLOAD,
+    orbitObjectType_ROCKET_BODY,
+    orbitObjectType_DEBRIS,
+    orbitObjectType_TBA,
+    orbitObjectType_UNKNOWN
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesorbitObjectType() {
+  static const char * const names[6] = {
+    "PAYLOAD",
+    "ROCKET_BODY",
+    "DEBRIS",
+    "TBA",
+    "UNKNOWN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameorbitObjectType(orbitObjectType e) {
+  if (::flatbuffers::IsOutRange(e, orbitObjectType_PAYLOAD, orbitObjectType_UNKNOWN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesorbitObjectType()[index];
+}
+
+enum aouType : int8_t {
+  aouType_CIRCULAR = 0,
+  aouType_ELLIPTICAL = 1,
+  aouType_RECTANGULAR = 2,
+  aouType_NONE = 3,
+  aouType_MIN = aouType_CIRCULAR,
+  aouType_MAX = aouType_NONE
+};
+
+inline const aouType (&EnumValuesaouType())[4] {
+  static const aouType values[] = {
+    aouType_CIRCULAR,
+    aouType_ELLIPTICAL,
+    aouType_RECTANGULAR,
+    aouType_NONE
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesaouType() {
+  static const char * const names[5] = {
+    "CIRCULAR",
+    "ELLIPTICAL",
+    "RECTANGULAR",
+    "NONE",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameaouType(aouType e) {
+  if (::flatbuffers::IsOutRange(e, aouType_CIRCULAR, aouType_NONE)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesaouType()[index];
+}
+
 /// Orbit Track
 struct OBT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef OBTBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
     VT_SAT_NO = 6,
-    VT_ON_ORBIT = 8,
-    VT_ORIG_OBJECT_ID = 10,
+    VT_ORIG_OBJECT_ID = 8,
+    VT_ON_ORBIT = 10,
     VT_TS = 12,
     VT_LAT = 14,
     VT_LON = 16,
     VT_ALT = 18,
-    VT_RDF_RF = 20,
-    VT_CALL_SIGN = 22,
-    VT_RPT_NUM = 24,
-    VT_OBJ_IDENT = 26,
-    VT_IDENT_AMP = 28,
-    VT_SAT_STATUS = 30,
-    VT_OBJECT_TYPE = 32,
-    VT_COUNTRY_CODE = 34,
-    VT_DECAY = 36,
-    VT_CHARLIE_LINE = 38,
-    VT_AOU_TYPE = 40,
-    VT_AOU_DATA = 42,
-    VT_SPD = 44,
-    VT_ANG_ELEV = 46,
-    VT_CNTNMNT = 48,
-    VT_XREF = 50,
-    VT_CH_XREF = 52,
-    VT_AMPLIFICATION = 54,
-    VT_IFF = 56,
-    VT_REINFORCED = 58,
-    VT_REDUCED = 60,
-    VT_HQ = 62,
-    VT_DUMMY = 64,
-    VT_TASK_FORCE = 66,
-    VT_FEINT = 68,
-    VT_INSTALLATION = 70,
-    VT_VEH_TYPE = 72,
-    VT_TRK_ID = 74,
+    VT_SPD = 20,
+    VT_ANG_ELEV = 22,
+    VT_RDF_RF = 24,
+    VT_CALL_SIGN = 26,
+    VT_RPT_NUM = 28,
+    VT_TRK_ID = 30,
+    VT_OBJ_IDENT = 32,
+    VT_IDENT_AMP = 34,
+    VT_SAT_STATUS = 36,
+    VT_OBJ_TYPE = 38,
+    VT_COUNTRY_CODE = 40,
+    VT_DECAY = 42,
+    VT_CHARLIE_LINE = 44,
+    VT_AOU_TYPE = 46,
+    VT_AOU_DATA = 48,
+    VT_CNTNMNT = 50,
+    VT_XREF = 52,
+    VT_CH_XREF = 54,
+    VT_AMPLIFICATION = 56,
+    VT_IFF = 58,
+    VT_VEH_TYPE = 60,
+    VT_REINFORCED = 62,
+    VT_REDUCED = 64,
+    VT_HQ = 66,
+    VT_DUMMY = 68,
+    VT_TASK_FORCE = 70,
+    VT_FEINT = 72,
+    VT_INSTALLATION = 74,
     VT_TRACK_SENSORS = 76
   };
+  /// Unique identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
-  int32_t SAT_NO() const {
-    return GetField<int32_t>(VT_SAT_NO, 0);
+  /// Satellite catalog number
+  uint32_t SAT_NO() const {
+    return GetField<uint32_t>(VT_SAT_NO, 0);
   }
-  const ::flatbuffers::String *ON_ORBIT() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ON_ORBIT);
-  }
+  /// International designator
   const ::flatbuffers::String *ORIG_OBJECT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIG_OBJECT_ID);
   }
+  /// On-orbit reference
+  const ::flatbuffers::String *ON_ORBIT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ON_ORBIT);
+  }
+  /// Track point timestamp (ISO 8601)
   const ::flatbuffers::String *TS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TS);
   }
+  /// Latitude (degrees)
   double LAT() const {
     return GetField<double>(VT_LAT, 0.0);
   }
+  /// Longitude (degrees)
   double LON() const {
     return GetField<double>(VT_LON, 0.0);
   }
+  /// Altitude (km)
   double ALT() const {
     return GetField<double>(VT_ALT, 0.0);
   }
-  double RDF_RF() const {
-    return GetField<double>(VT_RDF_RF, 0.0);
-  }
-  const ::flatbuffers::String *CALL_SIGN() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_CALL_SIGN);
-  }
-  const ::flatbuffers::String *RPT_NUM() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_RPT_NUM);
-  }
-  const ::flatbuffers::String *OBJ_IDENT() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OBJ_IDENT);
-  }
-  const ::flatbuffers::String *IDENT_AMP() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_IDENT_AMP);
-  }
-  const ::flatbuffers::String *SAT_STATUS() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SAT_STATUS);
-  }
-  const ::flatbuffers::String *OBJECT_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_TYPE);
-  }
-  const ::flatbuffers::String *COUNTRY_CODE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_COUNTRY_CODE);
-  }
-  double DECAY() const {
-    return GetField<double>(VT_DECAY, 0.0);
-  }
-  const ::flatbuffers::String *CHARLIE_LINE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_CHARLIE_LINE);
-  }
-  const ::flatbuffers::String *AOU_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_AOU_TYPE);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *AOU_DATA() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_AOU_DATA);
-  }
+  /// Speed (km/s)
   double SPD() const {
     return GetField<double>(VT_SPD, 0.0);
   }
+  /// Elevation angle from observer (degrees)
   double ANG_ELEV() const {
     return GetField<double>(VT_ANG_ELEV, 0.0);
   }
-  double CNTNMNT() const {
-    return GetField<double>(VT_CNTNMNT, 0.0);
+  /// Radar data fusion RF value
+  double RDF_RF() const {
+    return GetField<double>(VT_RDF_RF, 0.0);
   }
-  const ::flatbuffers::String *XREF() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_XREF);
+  /// Call sign
+  const ::flatbuffers::String *CALL_SIGN() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CALL_SIGN);
   }
-  const ::flatbuffers::String *CH_XREF() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_CH_XREF);
+  /// Report number
+  const ::flatbuffers::String *RPT_NUM() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_RPT_NUM);
   }
-  const ::flatbuffers::String *AMPLIFICATION() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_AMPLIFICATION);
-  }
-  const ::flatbuffers::String *IFF() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_IFF);
-  }
-  bool REINFORCED() const {
-    return GetField<uint8_t>(VT_REINFORCED, 0) != 0;
-  }
-  bool REDUCED() const {
-    return GetField<uint8_t>(VT_REDUCED, 0) != 0;
-  }
-  bool HQ() const {
-    return GetField<uint8_t>(VT_HQ, 0) != 0;
-  }
-  bool DUMMY() const {
-    return GetField<uint8_t>(VT_DUMMY, 0) != 0;
-  }
-  bool TASK_FORCE() const {
-    return GetField<uint8_t>(VT_TASK_FORCE, 0) != 0;
-  }
-  bool FEINT() const {
-    return GetField<uint8_t>(VT_FEINT, 0) != 0;
-  }
-  bool INSTALLATION() const {
-    return GetField<uint8_t>(VT_INSTALLATION, 0) != 0;
-  }
-  const ::flatbuffers::String *VEH_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_VEH_TYPE);
-  }
+  /// Track identifier
   const ::flatbuffers::String *TRK_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TRK_ID);
   }
+  /// Object identity assessment
+  const ::flatbuffers::String *OBJ_IDENT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OBJ_IDENT);
+  }
+  /// Identity amplification
+  const ::flatbuffers::String *IDENT_AMP() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_IDENT_AMP);
+  }
+  /// Satellite operational status
+  const ::flatbuffers::String *SAT_STATUS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SAT_STATUS);
+  }
+  /// Object type
+  orbitObjectType OBJ_TYPE() const {
+    return static_cast<orbitObjectType>(GetField<int8_t>(VT_OBJ_TYPE, 0));
+  }
+  /// Country code (ISO 3166)
+  const ::flatbuffers::String *COUNTRY_CODE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COUNTRY_CODE);
+  }
+  /// Orbit decay rate (km/day)
+  double DECAY() const {
+    return GetField<double>(VT_DECAY, 0.0);
+  }
+  /// Charlie line data (amplification text)
+  const ::flatbuffers::String *CHARLIE_LINE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CHARLIE_LINE);
+  }
+  /// Area of uncertainty type
+  aouType AOU_TYPE() const {
+    return static_cast<aouType>(GetField<int8_t>(VT_AOU_TYPE, 0));
+  }
+  /// Area of uncertainty data
+  const ::flatbuffers::Vector<double> *AOU_DATA() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_AOU_DATA);
+  }
+  /// Containment probability (0-1)
+  double CNTNMNT() const {
+    return GetField<double>(VT_CNTNMNT, 0.0);
+  }
+  /// Cross-reference identifier
+  const ::flatbuffers::String *XREF() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_XREF);
+  }
+  /// Charlie cross-reference
+  const ::flatbuffers::String *CH_XREF() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CH_XREF);
+  }
+  /// Additional amplification text
+  const ::flatbuffers::String *AMPLIFICATION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_AMPLIFICATION);
+  }
+  /// IFF mode/code
+  const ::flatbuffers::String *IFF() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_IFF);
+  }
+  /// Vehicle type
+  const ::flatbuffers::String *VEH_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_VEH_TYPE);
+  }
+  /// True if reinforced unit
+  bool REINFORCED() const {
+    return GetField<uint8_t>(VT_REINFORCED, 0) != 0;
+  }
+  /// True if reduced unit
+  bool REDUCED() const {
+    return GetField<uint8_t>(VT_REDUCED, 0) != 0;
+  }
+  /// True if headquarters element
+  bool HQ() const {
+    return GetField<uint8_t>(VT_HQ, 0) != 0;
+  }
+  /// True if dummy/exercise track
+  bool DUMMY() const {
+    return GetField<uint8_t>(VT_DUMMY, 0) != 0;
+  }
+  /// True if task force
+  bool TASK_FORCE() const {
+    return GetField<uint8_t>(VT_TASK_FORCE, 0) != 0;
+  }
+  /// True if feint
+  bool FEINT() const {
+    return GetField<uint8_t>(VT_FEINT, 0) != 0;
+  }
+  /// True if installation (not mobile)
+  bool INSTALLATION() const {
+    return GetField<uint8_t>(VT_INSTALLATION, 0) != 0;
+  }
+  /// Contributing track sensors
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *TRACK_SENSORS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_TRACK_SENSORS);
   }
@@ -173,41 +285,40 @@ struct OBT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
            verifier.VerifyString(ID()) &&
-           VerifyField<int32_t>(verifier, VT_SAT_NO, 4) &&
-           VerifyOffset(verifier, VT_ON_ORBIT) &&
-           verifier.VerifyString(ON_ORBIT()) &&
+           VerifyField<uint32_t>(verifier, VT_SAT_NO, 4) &&
            VerifyOffset(verifier, VT_ORIG_OBJECT_ID) &&
            verifier.VerifyString(ORIG_OBJECT_ID()) &&
+           VerifyOffset(verifier, VT_ON_ORBIT) &&
+           verifier.VerifyString(ON_ORBIT()) &&
            VerifyOffset(verifier, VT_TS) &&
            verifier.VerifyString(TS()) &&
            VerifyField<double>(verifier, VT_LAT, 8) &&
            VerifyField<double>(verifier, VT_LON, 8) &&
            VerifyField<double>(verifier, VT_ALT, 8) &&
+           VerifyField<double>(verifier, VT_SPD, 8) &&
+           VerifyField<double>(verifier, VT_ANG_ELEV, 8) &&
            VerifyField<double>(verifier, VT_RDF_RF, 8) &&
            VerifyOffset(verifier, VT_CALL_SIGN) &&
            verifier.VerifyString(CALL_SIGN()) &&
            VerifyOffset(verifier, VT_RPT_NUM) &&
            verifier.VerifyString(RPT_NUM()) &&
+           VerifyOffset(verifier, VT_TRK_ID) &&
+           verifier.VerifyString(TRK_ID()) &&
            VerifyOffset(verifier, VT_OBJ_IDENT) &&
            verifier.VerifyString(OBJ_IDENT()) &&
            VerifyOffset(verifier, VT_IDENT_AMP) &&
            verifier.VerifyString(IDENT_AMP()) &&
            VerifyOffset(verifier, VT_SAT_STATUS) &&
            verifier.VerifyString(SAT_STATUS()) &&
-           VerifyOffset(verifier, VT_OBJECT_TYPE) &&
-           verifier.VerifyString(OBJECT_TYPE()) &&
+           VerifyField<int8_t>(verifier, VT_OBJ_TYPE, 1) &&
            VerifyOffset(verifier, VT_COUNTRY_CODE) &&
            verifier.VerifyString(COUNTRY_CODE()) &&
            VerifyField<double>(verifier, VT_DECAY, 8) &&
            VerifyOffset(verifier, VT_CHARLIE_LINE) &&
            verifier.VerifyString(CHARLIE_LINE()) &&
-           VerifyOffset(verifier, VT_AOU_TYPE) &&
-           verifier.VerifyString(AOU_TYPE()) &&
+           VerifyField<int8_t>(verifier, VT_AOU_TYPE, 1) &&
            VerifyOffset(verifier, VT_AOU_DATA) &&
            verifier.VerifyVector(AOU_DATA()) &&
-           verifier.VerifyVectorOfStrings(AOU_DATA()) &&
-           VerifyField<double>(verifier, VT_SPD, 8) &&
-           VerifyField<double>(verifier, VT_ANG_ELEV, 8) &&
            VerifyField<double>(verifier, VT_CNTNMNT, 8) &&
            VerifyOffset(verifier, VT_XREF) &&
            verifier.VerifyString(XREF()) &&
@@ -217,6 +328,8 @@ struct OBT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(AMPLIFICATION()) &&
            VerifyOffset(verifier, VT_IFF) &&
            verifier.VerifyString(IFF()) &&
+           VerifyOffset(verifier, VT_VEH_TYPE) &&
+           verifier.VerifyString(VEH_TYPE()) &&
            VerifyField<uint8_t>(verifier, VT_REINFORCED, 1) &&
            VerifyField<uint8_t>(verifier, VT_REDUCED, 1) &&
            VerifyField<uint8_t>(verifier, VT_HQ, 1) &&
@@ -224,10 +337,6 @@ struct OBT FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint8_t>(verifier, VT_TASK_FORCE, 1) &&
            VerifyField<uint8_t>(verifier, VT_FEINT, 1) &&
            VerifyField<uint8_t>(verifier, VT_INSTALLATION, 1) &&
-           VerifyOffset(verifier, VT_VEH_TYPE) &&
-           verifier.VerifyString(VEH_TYPE()) &&
-           VerifyOffset(verifier, VT_TRK_ID) &&
-           verifier.VerifyString(TRK_ID()) &&
            VerifyOffset(verifier, VT_TRACK_SENSORS) &&
            verifier.VerifyVector(TRACK_SENSORS()) &&
            verifier.VerifyVectorOfStrings(TRACK_SENSORS()) &&
@@ -242,14 +351,14 @@ struct OBTBuilder {
   void add_ID(::flatbuffers::Offset<::flatbuffers::String> ID) {
     fbb_.AddOffset(OBT::VT_ID, ID);
   }
-  void add_SAT_NO(int32_t SAT_NO) {
-    fbb_.AddElement<int32_t>(OBT::VT_SAT_NO, SAT_NO, 0);
-  }
-  void add_ON_ORBIT(::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT) {
-    fbb_.AddOffset(OBT::VT_ON_ORBIT, ON_ORBIT);
+  void add_SAT_NO(uint32_t SAT_NO) {
+    fbb_.AddElement<uint32_t>(OBT::VT_SAT_NO, SAT_NO, 0);
   }
   void add_ORIG_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID) {
     fbb_.AddOffset(OBT::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
+  }
+  void add_ON_ORBIT(::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT) {
+    fbb_.AddOffset(OBT::VT_ON_ORBIT, ON_ORBIT);
   }
   void add_TS(::flatbuffers::Offset<::flatbuffers::String> TS) {
     fbb_.AddOffset(OBT::VT_TS, TS);
@@ -263,6 +372,12 @@ struct OBTBuilder {
   void add_ALT(double ALT) {
     fbb_.AddElement<double>(OBT::VT_ALT, ALT, 0.0);
   }
+  void add_SPD(double SPD) {
+    fbb_.AddElement<double>(OBT::VT_SPD, SPD, 0.0);
+  }
+  void add_ANG_ELEV(double ANG_ELEV) {
+    fbb_.AddElement<double>(OBT::VT_ANG_ELEV, ANG_ELEV, 0.0);
+  }
   void add_RDF_RF(double RDF_RF) {
     fbb_.AddElement<double>(OBT::VT_RDF_RF, RDF_RF, 0.0);
   }
@@ -271,6 +386,9 @@ struct OBTBuilder {
   }
   void add_RPT_NUM(::flatbuffers::Offset<::flatbuffers::String> RPT_NUM) {
     fbb_.AddOffset(OBT::VT_RPT_NUM, RPT_NUM);
+  }
+  void add_TRK_ID(::flatbuffers::Offset<::flatbuffers::String> TRK_ID) {
+    fbb_.AddOffset(OBT::VT_TRK_ID, TRK_ID);
   }
   void add_OBJ_IDENT(::flatbuffers::Offset<::flatbuffers::String> OBJ_IDENT) {
     fbb_.AddOffset(OBT::VT_OBJ_IDENT, OBJ_IDENT);
@@ -281,8 +399,8 @@ struct OBTBuilder {
   void add_SAT_STATUS(::flatbuffers::Offset<::flatbuffers::String> SAT_STATUS) {
     fbb_.AddOffset(OBT::VT_SAT_STATUS, SAT_STATUS);
   }
-  void add_OBJECT_TYPE(::flatbuffers::Offset<::flatbuffers::String> OBJECT_TYPE) {
-    fbb_.AddOffset(OBT::VT_OBJECT_TYPE, OBJECT_TYPE);
+  void add_OBJ_TYPE(orbitObjectType OBJ_TYPE) {
+    fbb_.AddElement<int8_t>(OBT::VT_OBJ_TYPE, static_cast<int8_t>(OBJ_TYPE), 0);
   }
   void add_COUNTRY_CODE(::flatbuffers::Offset<::flatbuffers::String> COUNTRY_CODE) {
     fbb_.AddOffset(OBT::VT_COUNTRY_CODE, COUNTRY_CODE);
@@ -293,17 +411,11 @@ struct OBTBuilder {
   void add_CHARLIE_LINE(::flatbuffers::Offset<::flatbuffers::String> CHARLIE_LINE) {
     fbb_.AddOffset(OBT::VT_CHARLIE_LINE, CHARLIE_LINE);
   }
-  void add_AOU_TYPE(::flatbuffers::Offset<::flatbuffers::String> AOU_TYPE) {
-    fbb_.AddOffset(OBT::VT_AOU_TYPE, AOU_TYPE);
+  void add_AOU_TYPE(aouType AOU_TYPE) {
+    fbb_.AddElement<int8_t>(OBT::VT_AOU_TYPE, static_cast<int8_t>(AOU_TYPE), 0);
   }
-  void add_AOU_DATA(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> AOU_DATA) {
+  void add_AOU_DATA(::flatbuffers::Offset<::flatbuffers::Vector<double>> AOU_DATA) {
     fbb_.AddOffset(OBT::VT_AOU_DATA, AOU_DATA);
-  }
-  void add_SPD(double SPD) {
-    fbb_.AddElement<double>(OBT::VT_SPD, SPD, 0.0);
-  }
-  void add_ANG_ELEV(double ANG_ELEV) {
-    fbb_.AddElement<double>(OBT::VT_ANG_ELEV, ANG_ELEV, 0.0);
   }
   void add_CNTNMNT(double CNTNMNT) {
     fbb_.AddElement<double>(OBT::VT_CNTNMNT, CNTNMNT, 0.0);
@@ -319,6 +431,9 @@ struct OBTBuilder {
   }
   void add_IFF(::flatbuffers::Offset<::flatbuffers::String> IFF) {
     fbb_.AddOffset(OBT::VT_IFF, IFF);
+  }
+  void add_VEH_TYPE(::flatbuffers::Offset<::flatbuffers::String> VEH_TYPE) {
+    fbb_.AddOffset(OBT::VT_VEH_TYPE, VEH_TYPE);
   }
   void add_REINFORCED(bool REINFORCED) {
     fbb_.AddElement<uint8_t>(OBT::VT_REINFORCED, static_cast<uint8_t>(REINFORCED), 0);
@@ -341,12 +456,6 @@ struct OBTBuilder {
   void add_INSTALLATION(bool INSTALLATION) {
     fbb_.AddElement<uint8_t>(OBT::VT_INSTALLATION, static_cast<uint8_t>(INSTALLATION), 0);
   }
-  void add_VEH_TYPE(::flatbuffers::Offset<::flatbuffers::String> VEH_TYPE) {
-    fbb_.AddOffset(OBT::VT_VEH_TYPE, VEH_TYPE);
-  }
-  void add_TRK_ID(::flatbuffers::Offset<::flatbuffers::String> TRK_ID) {
-    fbb_.AddOffset(OBT::VT_TRK_ID, TRK_ID);
-  }
   void add_TRACK_SENSORS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TRACK_SENSORS) {
     fbb_.AddOffset(OBT::VT_TRACK_SENSORS, TRACK_SENSORS);
   }
@@ -364,32 +473,34 @@ struct OBTBuilder {
 inline ::flatbuffers::Offset<OBT> CreateOBT(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
-    int32_t SAT_NO = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT = 0,
+    uint32_t SAT_NO = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TS = 0,
     double LAT = 0.0,
     double LON = 0.0,
     double ALT = 0.0,
+    double SPD = 0.0,
+    double ANG_ELEV = 0.0,
     double RDF_RF = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> CALL_SIGN = 0,
     ::flatbuffers::Offset<::flatbuffers::String> RPT_NUM = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> TRK_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OBJ_IDENT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> IDENT_AMP = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SAT_STATUS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_TYPE = 0,
+    orbitObjectType OBJ_TYPE = orbitObjectType_PAYLOAD,
     ::flatbuffers::Offset<::flatbuffers::String> COUNTRY_CODE = 0,
     double DECAY = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> CHARLIE_LINE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> AOU_TYPE = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> AOU_DATA = 0,
-    double SPD = 0.0,
-    double ANG_ELEV = 0.0,
+    aouType AOU_TYPE = aouType_CIRCULAR,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> AOU_DATA = 0,
     double CNTNMNT = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> XREF = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CH_XREF = 0,
     ::flatbuffers::Offset<::flatbuffers::String> AMPLIFICATION = 0,
     ::flatbuffers::Offset<::flatbuffers::String> IFF = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> VEH_TYPE = 0,
     bool REINFORCED = false,
     bool REDUCED = false,
     bool HQ = false,
@@ -397,38 +508,34 @@ inline ::flatbuffers::Offset<OBT> CreateOBT(
     bool TASK_FORCE = false,
     bool FEINT = false,
     bool INSTALLATION = false,
-    ::flatbuffers::Offset<::flatbuffers::String> VEH_TYPE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TRK_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TRACK_SENSORS = 0) {
   OBTBuilder builder_(_fbb);
   builder_.add_CNTNMNT(CNTNMNT);
-  builder_.add_ANG_ELEV(ANG_ELEV);
-  builder_.add_SPD(SPD);
   builder_.add_DECAY(DECAY);
   builder_.add_RDF_RF(RDF_RF);
+  builder_.add_ANG_ELEV(ANG_ELEV);
+  builder_.add_SPD(SPD);
   builder_.add_ALT(ALT);
   builder_.add_LON(LON);
   builder_.add_LAT(LAT);
   builder_.add_TRACK_SENSORS(TRACK_SENSORS);
-  builder_.add_TRK_ID(TRK_ID);
   builder_.add_VEH_TYPE(VEH_TYPE);
   builder_.add_IFF(IFF);
   builder_.add_AMPLIFICATION(AMPLIFICATION);
   builder_.add_CH_XREF(CH_XREF);
   builder_.add_XREF(XREF);
   builder_.add_AOU_DATA(AOU_DATA);
-  builder_.add_AOU_TYPE(AOU_TYPE);
   builder_.add_CHARLIE_LINE(CHARLIE_LINE);
   builder_.add_COUNTRY_CODE(COUNTRY_CODE);
-  builder_.add_OBJECT_TYPE(OBJECT_TYPE);
   builder_.add_SAT_STATUS(SAT_STATUS);
   builder_.add_IDENT_AMP(IDENT_AMP);
   builder_.add_OBJ_IDENT(OBJ_IDENT);
+  builder_.add_TRK_ID(TRK_ID);
   builder_.add_RPT_NUM(RPT_NUM);
   builder_.add_CALL_SIGN(CALL_SIGN);
   builder_.add_TS(TS);
-  builder_.add_ORIG_OBJECT_ID(ORIG_OBJECT_ID);
   builder_.add_ON_ORBIT(ON_ORBIT);
+  builder_.add_ORIG_OBJECT_ID(ORIG_OBJECT_ID);
   builder_.add_SAT_NO(SAT_NO);
   builder_.add_ID(ID);
   builder_.add_INSTALLATION(INSTALLATION);
@@ -438,38 +545,42 @@ inline ::flatbuffers::Offset<OBT> CreateOBT(
   builder_.add_HQ(HQ);
   builder_.add_REDUCED(REDUCED);
   builder_.add_REINFORCED(REINFORCED);
+  builder_.add_AOU_TYPE(AOU_TYPE);
+  builder_.add_OBJ_TYPE(OBJ_TYPE);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<OBT> CreateOBTDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *ID = nullptr,
-    int32_t SAT_NO = 0,
-    const char *ON_ORBIT = nullptr,
+    uint32_t SAT_NO = 0,
     const char *ORIG_OBJECT_ID = nullptr,
+    const char *ON_ORBIT = nullptr,
     const char *TS = nullptr,
     double LAT = 0.0,
     double LON = 0.0,
     double ALT = 0.0,
+    double SPD = 0.0,
+    double ANG_ELEV = 0.0,
     double RDF_RF = 0.0,
     const char *CALL_SIGN = nullptr,
     const char *RPT_NUM = nullptr,
+    const char *TRK_ID = nullptr,
     const char *OBJ_IDENT = nullptr,
     const char *IDENT_AMP = nullptr,
     const char *SAT_STATUS = nullptr,
-    const char *OBJECT_TYPE = nullptr,
+    orbitObjectType OBJ_TYPE = orbitObjectType_PAYLOAD,
     const char *COUNTRY_CODE = nullptr,
     double DECAY = 0.0,
     const char *CHARLIE_LINE = nullptr,
-    const char *AOU_TYPE = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *AOU_DATA = nullptr,
-    double SPD = 0.0,
-    double ANG_ELEV = 0.0,
+    aouType AOU_TYPE = aouType_CIRCULAR,
+    const std::vector<double> *AOU_DATA = nullptr,
     double CNTNMNT = 0.0,
     const char *XREF = nullptr,
     const char *CH_XREF = nullptr,
     const char *AMPLIFICATION = nullptr,
     const char *IFF = nullptr,
+    const char *VEH_TYPE = nullptr,
     bool REINFORCED = false,
     bool REDUCED = false,
     bool HQ = false,
@@ -477,59 +588,57 @@ inline ::flatbuffers::Offset<OBT> CreateOBTDirect(
     bool TASK_FORCE = false,
     bool FEINT = false,
     bool INSTALLATION = false,
-    const char *VEH_TYPE = nullptr,
-    const char *TRK_ID = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *TRACK_SENSORS = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
-  auto ON_ORBIT__ = ON_ORBIT ? _fbb.CreateString(ON_ORBIT) : 0;
   auto ORIG_OBJECT_ID__ = ORIG_OBJECT_ID ? _fbb.CreateString(ORIG_OBJECT_ID) : 0;
+  auto ON_ORBIT__ = ON_ORBIT ? _fbb.CreateString(ON_ORBIT) : 0;
   auto TS__ = TS ? _fbb.CreateString(TS) : 0;
   auto CALL_SIGN__ = CALL_SIGN ? _fbb.CreateString(CALL_SIGN) : 0;
   auto RPT_NUM__ = RPT_NUM ? _fbb.CreateString(RPT_NUM) : 0;
+  auto TRK_ID__ = TRK_ID ? _fbb.CreateString(TRK_ID) : 0;
   auto OBJ_IDENT__ = OBJ_IDENT ? _fbb.CreateString(OBJ_IDENT) : 0;
   auto IDENT_AMP__ = IDENT_AMP ? _fbb.CreateString(IDENT_AMP) : 0;
   auto SAT_STATUS__ = SAT_STATUS ? _fbb.CreateString(SAT_STATUS) : 0;
-  auto OBJECT_TYPE__ = OBJECT_TYPE ? _fbb.CreateString(OBJECT_TYPE) : 0;
   auto COUNTRY_CODE__ = COUNTRY_CODE ? _fbb.CreateString(COUNTRY_CODE) : 0;
   auto CHARLIE_LINE__ = CHARLIE_LINE ? _fbb.CreateString(CHARLIE_LINE) : 0;
-  auto AOU_TYPE__ = AOU_TYPE ? _fbb.CreateString(AOU_TYPE) : 0;
-  auto AOU_DATA__ = AOU_DATA ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*AOU_DATA) : 0;
+  auto AOU_DATA__ = AOU_DATA ? _fbb.CreateVector<double>(*AOU_DATA) : 0;
   auto XREF__ = XREF ? _fbb.CreateString(XREF) : 0;
   auto CH_XREF__ = CH_XREF ? _fbb.CreateString(CH_XREF) : 0;
   auto AMPLIFICATION__ = AMPLIFICATION ? _fbb.CreateString(AMPLIFICATION) : 0;
   auto IFF__ = IFF ? _fbb.CreateString(IFF) : 0;
   auto VEH_TYPE__ = VEH_TYPE ? _fbb.CreateString(VEH_TYPE) : 0;
-  auto TRK_ID__ = TRK_ID ? _fbb.CreateString(TRK_ID) : 0;
   auto TRACK_SENSORS__ = TRACK_SENSORS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*TRACK_SENSORS) : 0;
   return CreateOBT(
       _fbb,
       ID__,
       SAT_NO,
-      ON_ORBIT__,
       ORIG_OBJECT_ID__,
+      ON_ORBIT__,
       TS__,
       LAT,
       LON,
       ALT,
+      SPD,
+      ANG_ELEV,
       RDF_RF,
       CALL_SIGN__,
       RPT_NUM__,
+      TRK_ID__,
       OBJ_IDENT__,
       IDENT_AMP__,
       SAT_STATUS__,
-      OBJECT_TYPE__,
+      OBJ_TYPE,
       COUNTRY_CODE__,
       DECAY,
       CHARLIE_LINE__,
-      AOU_TYPE__,
+      AOU_TYPE,
       AOU_DATA__,
-      SPD,
-      ANG_ELEV,
       CNTNMNT,
       XREF__,
       CH_XREF__,
       AMPLIFICATION__,
       IFF__,
+      VEH_TYPE__,
       REINFORCED,
       REDUCED,
       HQ,
@@ -537,8 +646,6 @@ inline ::flatbuffers::Offset<OBT> CreateOBTDirect(
       TASK_FORCE,
       FEINT,
       INSTALLATION,
-      VEH_TYPE__,
-      TRK_ID__,
       TRACK_SENSORS__);
 }
 

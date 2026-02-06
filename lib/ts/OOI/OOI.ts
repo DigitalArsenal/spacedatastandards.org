@@ -4,6 +4,8 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { ooiPriority } from './ooiPriority.js';
+import { ooiStatus } from './ooiStatus.js';
 
 
 /**
@@ -31,6 +33,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$OOI');
 }
 
+/**
+ * Unique identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,11 +43,17 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Satellite catalog number
+ */
 SAT_NO():number {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Object name or designator
+ */
 NAME():string|null
 NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 NAME(optionalEncoding?:any):string|Uint8Array|null {
@@ -50,217 +61,326 @@ NAME(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-SENSOR_TASKING_START_TIME():string|null
-SENSOR_TASKING_START_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-SENSOR_TASKING_START_TIME(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * On-orbit reference
+ */
+ON_ORBIT():string|null
+ON_ORBIT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ON_ORBIT(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-SENSOR_TASKING_STOP_TIME():string|null
-SENSOR_TASKING_STOP_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-SENSOR_TASKING_STOP_TIME(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Tasking status
+ */
+STATUS():ooiStatus {
   const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : ooiStatus.ACTIVE;
 }
 
-PRIORITY():number {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
-}
-
-STATUS():string|null
-STATUS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-STATUS(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
+/**
+ * Status update date (ISO 8601)
+ */
 STATUS_DATE():string|null
 STATUS_DATE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 STATUS_DATE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Collection priority
+ */
+PRIORITY():ooiPriority {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : ooiPriority.CRITICAL;
+}
+
+/**
+ * Description of why object is of interest
+ */
+DESCRIPTION():string|null
+DESCRIPTION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DESCRIPTION(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-DESCRIPTION():string|null
-DESCRIPTION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-DESCRIPTION(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Sensor tasking start time (ISO 8601)
+ */
+SENSOR_TASKING_START_TIME():string|null
+SENSOR_TASKING_START_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SENSOR_TASKING_START_TIME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-LAST_OB_TIME():string|null
-LAST_OB_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-LAST_OB_TIME(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Sensor tasking stop time (ISO 8601)
+ */
+SENSOR_TASKING_STOP_TIME():string|null
+SENSOR_TASKING_STOP_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SENSOR_TASKING_STOP_TIME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-MISSED_OB_TIME():string|null
-MISSED_OB_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-MISSED_OB_TIME(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Last observation time (ISO 8601)
+ */
+LAST_OB_TIME():string|null
+LAST_OB_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LAST_OB_TIME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-DELTA_VS(index: number):string
-DELTA_VS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-DELTA_VS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Last missed observation time (ISO 8601)
+ */
+MISSED_OB_TIME():string|null
+MISSED_OB_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MISSED_OB_TIME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 26);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
-}
-
-deltaVsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-DELTA_TS(index: number):string
-DELTA_TS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-DELTA_TS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 28);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
-}
-
-deltaTsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 28);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-SV_EPOCH():string|null
-SV_EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-SV_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * State vector epoch (ISO 8601)
+ */
+SV_EPOCH():string|null
+SV_EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SV_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Position X (km, TEME)
+ */
 X():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Position Y (km, TEME)
+ */
+Y():number {
   const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-Y():number {
+/**
+ * Position Z (km, TEME)
+ */
+Z():number {
   const offset = this.bb!.__offset(this.bb_pos, 34);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-Z():number {
+/**
+ * Velocity X (km/s, TEME)
+ */
+XVEL():number {
   const offset = this.bb!.__offset(this.bb_pos, 36);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-XVEL():number {
+/**
+ * Velocity Y (km/s, TEME)
+ */
+YVEL():number {
   const offset = this.bb!.__offset(this.bb_pos, 38);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-YVEL():number {
+/**
+ * Velocity Z (km/s, TEME)
+ */
+ZVEL():number {
   const offset = this.bb!.__offset(this.bb_pos, 40);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-ZVEL():number {
-  const offset = this.bb!.__offset(this.bb_pos, 42);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
+/**
+ * Element set epoch (ISO 8601)
+ */
 ELSET_EPOCH():string|null
 ELSET_EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ELSET_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 44);
+  const offset = this.bb!.__offset(this.bb_pos, 42);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Mean motion (rev/day)
+ */
 MEAN_MOTION():number {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Eccentricity
+ */
+ECCENTRICITY():number {
   const offset = this.bb!.__offset(this.bb_pos, 46);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-ECCENTRICITY():number {
+/**
+ * Inclination (degrees)
+ */
+INCLINATION():number {
   const offset = this.bb!.__offset(this.bb_pos, 48);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-INCLINATION():number {
+/**
+ * Right ascension of ascending node (degrees)
+ */
+RAAN():number {
   const offset = this.bb!.__offset(this.bb_pos, 50);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-RAAN():number {
+/**
+ * Argument of perigee (degrees)
+ */
+ARG_OF_PERIGEE():number {
   const offset = this.bb!.__offset(this.bb_pos, 52);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-ARG_OF_PERIGEE():number {
+/**
+ * Mean anomaly (degrees)
+ */
+MEAN_ANOMALY():number {
   const offset = this.bb!.__offset(this.bb_pos, 54);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-MEAN_ANOMALY():number {
+/**
+ * Revolution number at epoch
+ */
+REV_NO():number {
   const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * BSTAR drag term (1/Earth radii)
+ */
+B_STAR():number {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-REV_NO():number {
-  const offset = this.bb!.__offset(this.bb_pos, 58);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
-}
-
-B_STAR():number {
+/**
+ * Mean motion first derivative (rev/day^2)
+ */
+MEAN_MOTION_DOT():number {
   const offset = this.bb!.__offset(this.bb_pos, 60);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-MEAN_MOTION_DOT():number {
+/**
+ * Mean motion second derivative (rev/day^3)
+ */
+MEAN_MOTION_DDOT():number {
   const offset = this.bb!.__offset(this.bb_pos, 62);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-MEAN_MOTION_DDOT():number {
+/**
+ * Semi-major axis (km)
+ */
+SEMI_MAJOR_AXIS():number {
   const offset = this.bb!.__offset(this.bb_pos, 64);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SEMI_MAJOR_AXIS():number {
+/**
+ * Orbital period (minutes)
+ */
+PERIOD():number {
   const offset = this.bb!.__offset(this.bb_pos, 66);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-PERIOD():number {
+/**
+ * Apogee altitude (km)
+ */
+APOGEE():number {
   const offset = this.bb!.__offset(this.bb_pos, 68);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-APOGEE():number {
+/**
+ * Perigee altitude (km)
+ */
+PERIGEE():number {
   const offset = this.bb!.__offset(this.bb_pos, 70);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-PERIGEE():number {
+/**
+ * Delta-V estimates for maneuver hypotheses (m/s)
+ */
+DELTA_VS(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 72);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
 }
 
-AFFECTED_OBJECTS(index: number):string
-AFFECTED_OBJECTS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-AFFECTED_OBJECTS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+deltaVsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 72);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+deltaVsArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 72);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Delta-T estimates for maneuver timing (seconds)
+ */
+DELTA_TS(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 74);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
 }
 
-affectedObjectsLength():number {
+deltaTsLength():number {
   const offset = this.bb!.__offset(this.bb_pos, 74);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-ON_ORBIT():string|null
-ON_ORBIT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ON_ORBIT(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 76);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+deltaTsArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 74);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
+/**
+ * Other affected satellite catalog numbers
+ */
+AFFECTED_OBJECTS(index: number):string
+AFFECTED_OBJECTS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+AFFECTED_OBJECTS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 76);
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+affectedObjectsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 76);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Associated orbit manifold identifiers
+ */
 MANIFOLDS(index: number):string
 MANIFOLDS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 MANIFOLDS(index: number,optionalEncoding?:any):string|Uint8Array|null {
@@ -289,160 +409,174 @@ static addName(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset) {
   builder.addFieldOffset(2, NAMEOffset, 0);
 }
 
-static addSensorTaskingStartTime(builder:flatbuffers.Builder, SENSOR_TASKING_START_TIMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, SENSOR_TASKING_START_TIMEOffset, 0);
+static addOnOrbit(builder:flatbuffers.Builder, ON_ORBITOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(3, ON_ORBITOffset, 0);
 }
 
-static addSensorTaskingStopTime(builder:flatbuffers.Builder, SENSOR_TASKING_STOP_TIMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(4, SENSOR_TASKING_STOP_TIMEOffset, 0);
-}
-
-static addPriority(builder:flatbuffers.Builder, PRIORITY:number) {
-  builder.addFieldInt32(5, PRIORITY, 0);
-}
-
-static addStatus(builder:flatbuffers.Builder, STATUSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(6, STATUSOffset, 0);
+static addStatus(builder:flatbuffers.Builder, STATUS:ooiStatus) {
+  builder.addFieldInt8(4, STATUS, ooiStatus.ACTIVE);
 }
 
 static addStatusDate(builder:flatbuffers.Builder, STATUS_DATEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(7, STATUS_DATEOffset, 0);
+  builder.addFieldOffset(5, STATUS_DATEOffset, 0);
+}
+
+static addPriority(builder:flatbuffers.Builder, PRIORITY:ooiPriority) {
+  builder.addFieldInt8(6, PRIORITY, ooiPriority.CRITICAL);
 }
 
 static addDescription(builder:flatbuffers.Builder, DESCRIPTIONOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(8, DESCRIPTIONOffset, 0);
+  builder.addFieldOffset(7, DESCRIPTIONOffset, 0);
+}
+
+static addSensorTaskingStartTime(builder:flatbuffers.Builder, SENSOR_TASKING_START_TIMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(8, SENSOR_TASKING_START_TIMEOffset, 0);
+}
+
+static addSensorTaskingStopTime(builder:flatbuffers.Builder, SENSOR_TASKING_STOP_TIMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, SENSOR_TASKING_STOP_TIMEOffset, 0);
 }
 
 static addLastObTime(builder:flatbuffers.Builder, LAST_OB_TIMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(9, LAST_OB_TIMEOffset, 0);
+  builder.addFieldOffset(10, LAST_OB_TIMEOffset, 0);
 }
 
 static addMissedObTime(builder:flatbuffers.Builder, MISSED_OB_TIMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(10, MISSED_OB_TIMEOffset, 0);
+  builder.addFieldOffset(11, MISSED_OB_TIMEOffset, 0);
+}
+
+static addSvEpoch(builder:flatbuffers.Builder, SV_EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(12, SV_EPOCHOffset, 0);
+}
+
+static addX(builder:flatbuffers.Builder, X:number) {
+  builder.addFieldFloat64(13, X, 0.0);
+}
+
+static addY(builder:flatbuffers.Builder, Y:number) {
+  builder.addFieldFloat64(14, Y, 0.0);
+}
+
+static addZ(builder:flatbuffers.Builder, Z:number) {
+  builder.addFieldFloat64(15, Z, 0.0);
+}
+
+static addXvel(builder:flatbuffers.Builder, XVEL:number) {
+  builder.addFieldFloat64(16, XVEL, 0.0);
+}
+
+static addYvel(builder:flatbuffers.Builder, YVEL:number) {
+  builder.addFieldFloat64(17, YVEL, 0.0);
+}
+
+static addZvel(builder:flatbuffers.Builder, ZVEL:number) {
+  builder.addFieldFloat64(18, ZVEL, 0.0);
+}
+
+static addElsetEpoch(builder:flatbuffers.Builder, ELSET_EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(19, ELSET_EPOCHOffset, 0);
+}
+
+static addMeanMotion(builder:flatbuffers.Builder, MEAN_MOTION:number) {
+  builder.addFieldFloat64(20, MEAN_MOTION, 0.0);
+}
+
+static addEccentricity(builder:flatbuffers.Builder, ECCENTRICITY:number) {
+  builder.addFieldFloat64(21, ECCENTRICITY, 0.0);
+}
+
+static addInclination(builder:flatbuffers.Builder, INCLINATION:number) {
+  builder.addFieldFloat64(22, INCLINATION, 0.0);
+}
+
+static addRaan(builder:flatbuffers.Builder, RAAN:number) {
+  builder.addFieldFloat64(23, RAAN, 0.0);
+}
+
+static addArgOfPerigee(builder:flatbuffers.Builder, ARG_OF_PERIGEE:number) {
+  builder.addFieldFloat64(24, ARG_OF_PERIGEE, 0.0);
+}
+
+static addMeanAnomaly(builder:flatbuffers.Builder, MEAN_ANOMALY:number) {
+  builder.addFieldFloat64(25, MEAN_ANOMALY, 0.0);
+}
+
+static addRevNo(builder:flatbuffers.Builder, REV_NO:number) {
+  builder.addFieldInt32(26, REV_NO, 0);
+}
+
+static addBStar(builder:flatbuffers.Builder, B_STAR:number) {
+  builder.addFieldFloat64(27, B_STAR, 0.0);
+}
+
+static addMeanMotionDot(builder:flatbuffers.Builder, MEAN_MOTION_DOT:number) {
+  builder.addFieldFloat64(28, MEAN_MOTION_DOT, 0.0);
+}
+
+static addMeanMotionDdot(builder:flatbuffers.Builder, MEAN_MOTION_DDOT:number) {
+  builder.addFieldFloat64(29, MEAN_MOTION_DDOT, 0.0);
+}
+
+static addSemiMajorAxis(builder:flatbuffers.Builder, SEMI_MAJOR_AXIS:number) {
+  builder.addFieldFloat64(30, SEMI_MAJOR_AXIS, 0.0);
+}
+
+static addPeriod(builder:flatbuffers.Builder, PERIOD:number) {
+  builder.addFieldFloat64(31, PERIOD, 0.0);
+}
+
+static addApogee(builder:flatbuffers.Builder, APOGEE:number) {
+  builder.addFieldFloat64(32, APOGEE, 0.0);
+}
+
+static addPerigee(builder:flatbuffers.Builder, PERIGEE:number) {
+  builder.addFieldFloat64(33, PERIGEE, 0.0);
 }
 
 static addDeltaVs(builder:flatbuffers.Builder, DELTA_VSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(11, DELTA_VSOffset, 0);
+  builder.addFieldOffset(34, DELTA_VSOffset, 0);
 }
 
-static createDeltaVsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static createDeltaVsVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createDeltaVsVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createDeltaVsVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
 static startDeltaVsVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+  builder.startVector(8, numElems, 8);
 }
 
 static addDeltaTs(builder:flatbuffers.Builder, DELTA_TSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(12, DELTA_TSOffset, 0);
+  builder.addFieldOffset(35, DELTA_TSOffset, 0);
 }
 
-static createDeltaTsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static createDeltaTsVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createDeltaTsVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createDeltaTsVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
 static startDeltaTsVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
-static addSvEpoch(builder:flatbuffers.Builder, SV_EPOCHOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(13, SV_EPOCHOffset, 0);
-}
-
-static addX(builder:flatbuffers.Builder, X:number) {
-  builder.addFieldFloat64(14, X, 0.0);
-}
-
-static addY(builder:flatbuffers.Builder, Y:number) {
-  builder.addFieldFloat64(15, Y, 0.0);
-}
-
-static addZ(builder:flatbuffers.Builder, Z:number) {
-  builder.addFieldFloat64(16, Z, 0.0);
-}
-
-static addXvel(builder:flatbuffers.Builder, XVEL:number) {
-  builder.addFieldFloat64(17, XVEL, 0.0);
-}
-
-static addYvel(builder:flatbuffers.Builder, YVEL:number) {
-  builder.addFieldFloat64(18, YVEL, 0.0);
-}
-
-static addZvel(builder:flatbuffers.Builder, ZVEL:number) {
-  builder.addFieldFloat64(19, ZVEL, 0.0);
-}
-
-static addElsetEpoch(builder:flatbuffers.Builder, ELSET_EPOCHOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(20, ELSET_EPOCHOffset, 0);
-}
-
-static addMeanMotion(builder:flatbuffers.Builder, MEAN_MOTION:number) {
-  builder.addFieldFloat64(21, MEAN_MOTION, 0.0);
-}
-
-static addEccentricity(builder:flatbuffers.Builder, ECCENTRICITY:number) {
-  builder.addFieldFloat64(22, ECCENTRICITY, 0.0);
-}
-
-static addInclination(builder:flatbuffers.Builder, INCLINATION:number) {
-  builder.addFieldFloat64(23, INCLINATION, 0.0);
-}
-
-static addRaan(builder:flatbuffers.Builder, RAAN:number) {
-  builder.addFieldFloat64(24, RAAN, 0.0);
-}
-
-static addArgOfPerigee(builder:flatbuffers.Builder, ARG_OF_PERIGEE:number) {
-  builder.addFieldFloat64(25, ARG_OF_PERIGEE, 0.0);
-}
-
-static addMeanAnomaly(builder:flatbuffers.Builder, MEAN_ANOMALY:number) {
-  builder.addFieldFloat64(26, MEAN_ANOMALY, 0.0);
-}
-
-static addRevNo(builder:flatbuffers.Builder, REV_NO:number) {
-  builder.addFieldInt32(27, REV_NO, 0);
-}
-
-static addBStar(builder:flatbuffers.Builder, B_STAR:number) {
-  builder.addFieldFloat64(28, B_STAR, 0.0);
-}
-
-static addMeanMotionDot(builder:flatbuffers.Builder, MEAN_MOTION_DOT:number) {
-  builder.addFieldFloat64(29, MEAN_MOTION_DOT, 0.0);
-}
-
-static addMeanMotionDdot(builder:flatbuffers.Builder, MEAN_MOTION_DDOT:number) {
-  builder.addFieldFloat64(30, MEAN_MOTION_DDOT, 0.0);
-}
-
-static addSemiMajorAxis(builder:flatbuffers.Builder, SEMI_MAJOR_AXIS:number) {
-  builder.addFieldFloat64(31, SEMI_MAJOR_AXIS, 0.0);
-}
-
-static addPeriod(builder:flatbuffers.Builder, PERIOD:number) {
-  builder.addFieldFloat64(32, PERIOD, 0.0);
-}
-
-static addApogee(builder:flatbuffers.Builder, APOGEE:number) {
-  builder.addFieldFloat64(33, APOGEE, 0.0);
-}
-
-static addPerigee(builder:flatbuffers.Builder, PERIGEE:number) {
-  builder.addFieldFloat64(34, PERIGEE, 0.0);
+  builder.startVector(8, numElems, 8);
 }
 
 static addAffectedObjects(builder:flatbuffers.Builder, AFFECTED_OBJECTSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(35, AFFECTED_OBJECTSOffset, 0);
+  builder.addFieldOffset(36, AFFECTED_OBJECTSOffset, 0);
 }
 
 static createAffectedObjectsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -455,10 +589,6 @@ static createAffectedObjectsVector(builder:flatbuffers.Builder, data:flatbuffers
 
 static startAffectedObjectsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
-}
-
-static addOnOrbit(builder:flatbuffers.Builder, ON_ORBITOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(36, ON_ORBITOffset, 0);
 }
 
 static addManifolds(builder:flatbuffers.Builder, MANIFOLDSOffset:flatbuffers.Offset) {
@@ -490,21 +620,20 @@ static finishSizePrefixedOOIBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$OOI', true);
 }
 
-static createOOI(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, SAT_NO:number, NAMEOffset:flatbuffers.Offset, SENSOR_TASKING_START_TIMEOffset:flatbuffers.Offset, SENSOR_TASKING_STOP_TIMEOffset:flatbuffers.Offset, PRIORITY:number, STATUSOffset:flatbuffers.Offset, STATUS_DATEOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, LAST_OB_TIMEOffset:flatbuffers.Offset, MISSED_OB_TIMEOffset:flatbuffers.Offset, DELTA_VSOffset:flatbuffers.Offset, DELTA_TSOffset:flatbuffers.Offset, SV_EPOCHOffset:flatbuffers.Offset, X:number, Y:number, Z:number, XVEL:number, YVEL:number, ZVEL:number, ELSET_EPOCHOffset:flatbuffers.Offset, MEAN_MOTION:number, ECCENTRICITY:number, INCLINATION:number, RAAN:number, ARG_OF_PERIGEE:number, MEAN_ANOMALY:number, REV_NO:number, B_STAR:number, MEAN_MOTION_DOT:number, MEAN_MOTION_DDOT:number, SEMI_MAJOR_AXIS:number, PERIOD:number, APOGEE:number, PERIGEE:number, AFFECTED_OBJECTSOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset, MANIFOLDSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createOOI(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, SAT_NO:number, NAMEOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset, STATUS:ooiStatus, STATUS_DATEOffset:flatbuffers.Offset, PRIORITY:ooiPriority, DESCRIPTIONOffset:flatbuffers.Offset, SENSOR_TASKING_START_TIMEOffset:flatbuffers.Offset, SENSOR_TASKING_STOP_TIMEOffset:flatbuffers.Offset, LAST_OB_TIMEOffset:flatbuffers.Offset, MISSED_OB_TIMEOffset:flatbuffers.Offset, SV_EPOCHOffset:flatbuffers.Offset, X:number, Y:number, Z:number, XVEL:number, YVEL:number, ZVEL:number, ELSET_EPOCHOffset:flatbuffers.Offset, MEAN_MOTION:number, ECCENTRICITY:number, INCLINATION:number, RAAN:number, ARG_OF_PERIGEE:number, MEAN_ANOMALY:number, REV_NO:number, B_STAR:number, MEAN_MOTION_DOT:number, MEAN_MOTION_DDOT:number, SEMI_MAJOR_AXIS:number, PERIOD:number, APOGEE:number, PERIGEE:number, DELTA_VSOffset:flatbuffers.Offset, DELTA_TSOffset:flatbuffers.Offset, AFFECTED_OBJECTSOffset:flatbuffers.Offset, MANIFOLDSOffset:flatbuffers.Offset):flatbuffers.Offset {
   OOI.startOOI(builder);
   OOI.addId(builder, IDOffset);
   OOI.addSatNo(builder, SAT_NO);
   OOI.addName(builder, NAMEOffset);
+  OOI.addOnOrbit(builder, ON_ORBITOffset);
+  OOI.addStatus(builder, STATUS);
+  OOI.addStatusDate(builder, STATUS_DATEOffset);
+  OOI.addPriority(builder, PRIORITY);
+  OOI.addDescription(builder, DESCRIPTIONOffset);
   OOI.addSensorTaskingStartTime(builder, SENSOR_TASKING_START_TIMEOffset);
   OOI.addSensorTaskingStopTime(builder, SENSOR_TASKING_STOP_TIMEOffset);
-  OOI.addPriority(builder, PRIORITY);
-  OOI.addStatus(builder, STATUSOffset);
-  OOI.addStatusDate(builder, STATUS_DATEOffset);
-  OOI.addDescription(builder, DESCRIPTIONOffset);
   OOI.addLastObTime(builder, LAST_OB_TIMEOffset);
   OOI.addMissedObTime(builder, MISSED_OB_TIMEOffset);
-  OOI.addDeltaVs(builder, DELTA_VSOffset);
-  OOI.addDeltaTs(builder, DELTA_TSOffset);
   OOI.addSvEpoch(builder, SV_EPOCHOffset);
   OOI.addX(builder, X);
   OOI.addY(builder, Y);
@@ -527,8 +656,9 @@ static createOOI(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, SAT_N
   OOI.addPeriod(builder, PERIOD);
   OOI.addApogee(builder, APOGEE);
   OOI.addPerigee(builder, PERIGEE);
+  OOI.addDeltaVs(builder, DELTA_VSOffset);
+  OOI.addDeltaTs(builder, DELTA_TSOffset);
   OOI.addAffectedObjects(builder, AFFECTED_OBJECTSOffset);
-  OOI.addOnOrbit(builder, ON_ORBITOffset);
   OOI.addManifolds(builder, MANIFOLDSOffset);
   return OOI.endOOI(builder);
 }
@@ -538,16 +668,15 @@ unpack(): OOIT {
     this.ID(),
     this.SAT_NO(),
     this.NAME(),
-    this.SENSOR_TASKING_START_TIME(),
-    this.SENSOR_TASKING_STOP_TIME(),
-    this.PRIORITY(),
+    this.ON_ORBIT(),
     this.STATUS(),
     this.STATUS_DATE(),
+    this.PRIORITY(),
     this.DESCRIPTION(),
+    this.SENSOR_TASKING_START_TIME(),
+    this.SENSOR_TASKING_STOP_TIME(),
     this.LAST_OB_TIME(),
     this.MISSED_OB_TIME(),
-    this.bb!.createScalarList<string>(this.DELTA_VS.bind(this), this.deltaVsLength()),
-    this.bb!.createScalarList<string>(this.DELTA_TS.bind(this), this.deltaTsLength()),
     this.SV_EPOCH(),
     this.X(),
     this.Y(),
@@ -570,8 +699,9 @@ unpack(): OOIT {
     this.PERIOD(),
     this.APOGEE(),
     this.PERIGEE(),
+    this.bb!.createScalarList<number>(this.DELTA_VS.bind(this), this.deltaVsLength()),
+    this.bb!.createScalarList<number>(this.DELTA_TS.bind(this), this.deltaTsLength()),
     this.bb!.createScalarList<string>(this.AFFECTED_OBJECTS.bind(this), this.affectedObjectsLength()),
-    this.ON_ORBIT(),
     this.bb!.createScalarList<string>(this.MANIFOLDS.bind(this), this.manifoldsLength())
   );
 }
@@ -581,16 +711,15 @@ unpackTo(_o: OOIT): void {
   _o.ID = this.ID();
   _o.SAT_NO = this.SAT_NO();
   _o.NAME = this.NAME();
-  _o.SENSOR_TASKING_START_TIME = this.SENSOR_TASKING_START_TIME();
-  _o.SENSOR_TASKING_STOP_TIME = this.SENSOR_TASKING_STOP_TIME();
-  _o.PRIORITY = this.PRIORITY();
+  _o.ON_ORBIT = this.ON_ORBIT();
   _o.STATUS = this.STATUS();
   _o.STATUS_DATE = this.STATUS_DATE();
+  _o.PRIORITY = this.PRIORITY();
   _o.DESCRIPTION = this.DESCRIPTION();
+  _o.SENSOR_TASKING_START_TIME = this.SENSOR_TASKING_START_TIME();
+  _o.SENSOR_TASKING_STOP_TIME = this.SENSOR_TASKING_STOP_TIME();
   _o.LAST_OB_TIME = this.LAST_OB_TIME();
   _o.MISSED_OB_TIME = this.MISSED_OB_TIME();
-  _o.DELTA_VS = this.bb!.createScalarList<string>(this.DELTA_VS.bind(this), this.deltaVsLength());
-  _o.DELTA_TS = this.bb!.createScalarList<string>(this.DELTA_TS.bind(this), this.deltaTsLength());
   _o.SV_EPOCH = this.SV_EPOCH();
   _o.X = this.X();
   _o.Y = this.Y();
@@ -613,8 +742,9 @@ unpackTo(_o: OOIT): void {
   _o.PERIOD = this.PERIOD();
   _o.APOGEE = this.APOGEE();
   _o.PERIGEE = this.PERIGEE();
+  _o.DELTA_VS = this.bb!.createScalarList<number>(this.DELTA_VS.bind(this), this.deltaVsLength());
+  _o.DELTA_TS = this.bb!.createScalarList<number>(this.DELTA_TS.bind(this), this.deltaTsLength());
   _o.AFFECTED_OBJECTS = this.bb!.createScalarList<string>(this.AFFECTED_OBJECTS.bind(this), this.affectedObjectsLength());
-  _o.ON_ORBIT = this.ON_ORBIT();
   _o.MANIFOLDS = this.bb!.createScalarList<string>(this.MANIFOLDS.bind(this), this.manifoldsLength());
 }
 }
@@ -624,16 +754,15 @@ constructor(
   public ID: string|Uint8Array|null = null,
   public SAT_NO: number = 0,
   public NAME: string|Uint8Array|null = null,
+  public ON_ORBIT: string|Uint8Array|null = null,
+  public STATUS: ooiStatus = ooiStatus.ACTIVE,
+  public STATUS_DATE: string|Uint8Array|null = null,
+  public PRIORITY: ooiPriority = ooiPriority.CRITICAL,
+  public DESCRIPTION: string|Uint8Array|null = null,
   public SENSOR_TASKING_START_TIME: string|Uint8Array|null = null,
   public SENSOR_TASKING_STOP_TIME: string|Uint8Array|null = null,
-  public PRIORITY: number = 0,
-  public STATUS: string|Uint8Array|null = null,
-  public STATUS_DATE: string|Uint8Array|null = null,
-  public DESCRIPTION: string|Uint8Array|null = null,
   public LAST_OB_TIME: string|Uint8Array|null = null,
   public MISSED_OB_TIME: string|Uint8Array|null = null,
-  public DELTA_VS: (string)[] = [],
-  public DELTA_TS: (string)[] = [],
   public SV_EPOCH: string|Uint8Array|null = null,
   public X: number = 0.0,
   public Y: number = 0.0,
@@ -656,8 +785,9 @@ constructor(
   public PERIOD: number = 0.0,
   public APOGEE: number = 0.0,
   public PERIGEE: number = 0.0,
+  public DELTA_VS: (number)[] = [],
+  public DELTA_TS: (number)[] = [],
   public AFFECTED_OBJECTS: (string)[] = [],
-  public ON_ORBIT: string|Uint8Array|null = null,
   public MANIFOLDS: (string)[] = []
 ){}
 
@@ -665,35 +795,33 @@ constructor(
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ID = (this.ID !== null ? builder.createString(this.ID!) : 0);
   const NAME = (this.NAME !== null ? builder.createString(this.NAME!) : 0);
-  const SENSOR_TASKING_START_TIME = (this.SENSOR_TASKING_START_TIME !== null ? builder.createString(this.SENSOR_TASKING_START_TIME!) : 0);
-  const SENSOR_TASKING_STOP_TIME = (this.SENSOR_TASKING_STOP_TIME !== null ? builder.createString(this.SENSOR_TASKING_STOP_TIME!) : 0);
-  const STATUS = (this.STATUS !== null ? builder.createString(this.STATUS!) : 0);
+  const ON_ORBIT = (this.ON_ORBIT !== null ? builder.createString(this.ON_ORBIT!) : 0);
   const STATUS_DATE = (this.STATUS_DATE !== null ? builder.createString(this.STATUS_DATE!) : 0);
   const DESCRIPTION = (this.DESCRIPTION !== null ? builder.createString(this.DESCRIPTION!) : 0);
+  const SENSOR_TASKING_START_TIME = (this.SENSOR_TASKING_START_TIME !== null ? builder.createString(this.SENSOR_TASKING_START_TIME!) : 0);
+  const SENSOR_TASKING_STOP_TIME = (this.SENSOR_TASKING_STOP_TIME !== null ? builder.createString(this.SENSOR_TASKING_STOP_TIME!) : 0);
   const LAST_OB_TIME = (this.LAST_OB_TIME !== null ? builder.createString(this.LAST_OB_TIME!) : 0);
   const MISSED_OB_TIME = (this.MISSED_OB_TIME !== null ? builder.createString(this.MISSED_OB_TIME!) : 0);
-  const DELTA_VS = OOI.createDeltaVsVector(builder, builder.createObjectOffsetList(this.DELTA_VS));
-  const DELTA_TS = OOI.createDeltaTsVector(builder, builder.createObjectOffsetList(this.DELTA_TS));
   const SV_EPOCH = (this.SV_EPOCH !== null ? builder.createString(this.SV_EPOCH!) : 0);
   const ELSET_EPOCH = (this.ELSET_EPOCH !== null ? builder.createString(this.ELSET_EPOCH!) : 0);
+  const DELTA_VS = OOI.createDeltaVsVector(builder, this.DELTA_VS);
+  const DELTA_TS = OOI.createDeltaTsVector(builder, this.DELTA_TS);
   const AFFECTED_OBJECTS = OOI.createAffectedObjectsVector(builder, builder.createObjectOffsetList(this.AFFECTED_OBJECTS));
-  const ON_ORBIT = (this.ON_ORBIT !== null ? builder.createString(this.ON_ORBIT!) : 0);
   const MANIFOLDS = OOI.createManifoldsVector(builder, builder.createObjectOffsetList(this.MANIFOLDS));
 
   return OOI.createOOI(builder,
     ID,
     this.SAT_NO,
     NAME,
+    ON_ORBIT,
+    this.STATUS,
+    STATUS_DATE,
+    this.PRIORITY,
+    DESCRIPTION,
     SENSOR_TASKING_START_TIME,
     SENSOR_TASKING_STOP_TIME,
-    this.PRIORITY,
-    STATUS,
-    STATUS_DATE,
-    DESCRIPTION,
     LAST_OB_TIME,
     MISSED_OB_TIME,
-    DELTA_VS,
-    DELTA_TS,
     SV_EPOCH,
     this.X,
     this.Y,
@@ -716,8 +844,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.PERIOD,
     this.APOGEE,
     this.PERIGEE,
+    DELTA_VS,
+    DELTA_TS,
     AFFECTED_OBJECTS,
-    ON_ORBIT,
     MANIFOLDS
   );
 }

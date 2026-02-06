@@ -41,172 +41,202 @@ class LKS extends Table
         return $this;
     }
 
+    /// Unique identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// First endpoint on-orbit identifier
     public function getID_ON_ORBIT1()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getID_ON_ORBIT2()
+    /// First endpoint satellite catalog number
+    /**
+     * @return uint
+     */
+    public function getSAT_NO1()
     {
         $o = $this->__offset(8);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
-    public function getLINK_START_TIME()
+    /// Second endpoint on-orbit identifier
+    public function getID_ON_ORBIT2()
     {
         $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getLINK_STOP_TIME()
+    /// Second endpoint satellite catalog number
+    /**
+     * @return uint
+     */
+    public function getSAT_NO2()
     {
         $o = $this->__offset(12);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
+    /// Constellation name
     public function getCONSTELLATION()
     {
         $o = $this->__offset(14);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Link name or identifier
     public function getLINK_NAME()
     {
         $o = $this->__offset(16);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Link type
+    /**
+     * @return sbyte
+     */
     public function getLINK_TYPE()
     {
         $o = $this->__offset(18);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \linkType::UPLINK;
     }
 
-    public function getBAND()
+    /// Link state
+    /**
+     * @return sbyte
+     */
+    public function getLINK_STATE()
     {
         $o = $this->__offset(20);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \linkState::ESTABLISHED;
     }
 
-    public function getID_BEAM1()
+    /// RF band
+    public function getBAND()
     {
         $o = $this->__offset(22);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getEND_POINT1_NAME()
+    /// Link start time (ISO 8601)
+    public function getLINK_START_TIME()
     {
         $o = $this->__offset(24);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /**
-     * @return double
-     */
-    public function getEND_POINT1_LAT()
+    /// Link stop time (ISO 8601)
+    public function getLINK_STOP_TIME()
     {
         $o = $this->__offset(26);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /**
-     * @return double
-     */
-    public function getEND_POINT1_LON()
+    /// First endpoint beam identifier
+    public function getID_BEAM1()
     {
         $o = $this->__offset(28);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getID_BEAM2()
+    /// First endpoint name
+    public function getEND_POINT1_NAME()
     {
         $o = $this->__offset(30);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getEND_POINT2_NAME()
-    {
-        $o = $this->__offset(32);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
+    /// First endpoint latitude (degrees)
     /**
      * @return double
      */
-    public function getEND_POINT2_LAT()
+    public function getEND_POINT1_LAT()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// First endpoint longitude (degrees)
+    /**
+     * @return double
+     */
+    public function getEND_POINT1_LON()
     {
         $o = $this->__offset(34);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /**
-     * @return double
-     */
-    public function getEND_POINT2_LON()
+    /// Second endpoint beam identifier
+    public function getID_BEAM2()
     {
         $o = $this->__offset(36);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /**
-     * @return double
-     */
-    public function getDATA_RATE1_TO2()
+    /// Second endpoint name
+    public function getEND_POINT2_NAME()
     {
         $o = $this->__offset(38);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Second endpoint latitude (degrees)
     /**
      * @return double
      */
-    public function getDATA_RATE2_TO1()
+    public function getEND_POINT2_LAT()
     {
         $o = $this->__offset(40);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    public function getLINK_STATE()
+    /// Second endpoint longitude (degrees)
+    /**
+     * @return double
+     */
+    public function getEND_POINT2_LON()
     {
         $o = $this->__offset(42);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    public function getSYS_CAP()
+    /// Data rate from endpoint 1 to 2 (Mbps)
+    /**
+     * @return double
+     */
+    public function getDATA_RATE1_TO2()
     {
         $o = $this->__offset(44);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    public function getOPS_CAP()
+    /// Data rate from endpoint 2 to 1 (Mbps)
+    /**
+     * @return double
+     */
+    public function getDATA_RATE2_TO1()
     {
         $o = $this->__offset(46);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// System capability status
+    public function getSYS_CAP()
+    {
+        $o = $this->__offset(48);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /**
-     * @return int
-     */
-    public function getSAT_NO1()
-    {
-        $o = $this->__offset(48);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSAT_NO2()
+    /// Operational capability status
+    public function getOPS_CAP()
     {
         $o = $this->__offset(50);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /**
@@ -222,18 +252,21 @@ class LKS extends Table
      * @param FlatBufferBuilder $builder
      * @return LKS
      */
-    public static function createLKS(FlatBufferBuilder $builder, $ID, $ID_ON_ORBIT1, $ID_ON_ORBIT2, $LINK_START_TIME, $LINK_STOP_TIME, $CONSTELLATION, $LINK_NAME, $LINK_TYPE, $BAND, $ID_BEAM1, $END_POINT1_NAME, $END_POINT1_LAT, $END_POINT1_LON, $ID_BEAM2, $END_POINT2_NAME, $END_POINT2_LAT, $END_POINT2_LON, $DATA_RATE1_TO2, $DATA_RATE2_TO1, $LINK_STATE, $SYS_CAP, $OPS_CAP, $SAT_NO1, $SAT_NO2)
+    public static function createLKS(FlatBufferBuilder $builder, $ID, $ID_ON_ORBIT1, $SAT_NO1, $ID_ON_ORBIT2, $SAT_NO2, $CONSTELLATION, $LINK_NAME, $LINK_TYPE, $LINK_STATE, $BAND, $LINK_START_TIME, $LINK_STOP_TIME, $ID_BEAM1, $END_POINT1_NAME, $END_POINT1_LAT, $END_POINT1_LON, $ID_BEAM2, $END_POINT2_NAME, $END_POINT2_LAT, $END_POINT2_LON, $DATA_RATE1_TO2, $DATA_RATE2_TO1, $SYS_CAP, $OPS_CAP)
     {
         $builder->startObject(24);
         self::addID($builder, $ID);
         self::addID_ON_ORBIT1($builder, $ID_ON_ORBIT1);
+        self::addSAT_NO1($builder, $SAT_NO1);
         self::addID_ON_ORBIT2($builder, $ID_ON_ORBIT2);
-        self::addLINK_START_TIME($builder, $LINK_START_TIME);
-        self::addLINK_STOP_TIME($builder, $LINK_STOP_TIME);
+        self::addSAT_NO2($builder, $SAT_NO2);
         self::addCONSTELLATION($builder, $CONSTELLATION);
         self::addLINK_NAME($builder, $LINK_NAME);
         self::addLINK_TYPE($builder, $LINK_TYPE);
+        self::addLINK_STATE($builder, $LINK_STATE);
         self::addBAND($builder, $BAND);
+        self::addLINK_START_TIME($builder, $LINK_START_TIME);
+        self::addLINK_STOP_TIME($builder, $LINK_STOP_TIME);
         self::addID_BEAM1($builder, $ID_BEAM1);
         self::addEND_POINT1_NAME($builder, $END_POINT1_NAME);
         self::addEND_POINT1_LAT($builder, $END_POINT1_LAT);
@@ -244,11 +277,8 @@ class LKS extends Table
         self::addEND_POINT2_LON($builder, $END_POINT2_LON);
         self::addDATA_RATE1_TO2($builder, $DATA_RATE1_TO2);
         self::addDATA_RATE2_TO1($builder, $DATA_RATE2_TO1);
-        self::addLINK_STATE($builder, $LINK_STATE);
         self::addSYS_CAP($builder, $SYS_CAP);
         self::addOPS_CAP($builder, $OPS_CAP);
-        self::addSAT_NO1($builder, $SAT_NO1);
-        self::addSAT_NO2($builder, $SAT_NO2);
         $o = $builder->endObject();
         return $o;
     }
@@ -275,32 +305,32 @@ class LKS extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addSAT_NO1(FlatBufferBuilder $builder, $SAT_NO1)
+    {
+        $builder->addUintX(2, $SAT_NO1, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param StringOffset
      * @return void
      */
     public static function addID_ON_ORBIT2(FlatBufferBuilder $builder, $ID_ON_ORBIT2)
     {
-        $builder->addOffsetX(2, $ID_ON_ORBIT2, 0);
+        $builder->addOffsetX(3, $ID_ON_ORBIT2, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param uint
      * @return void
      */
-    public static function addLINK_START_TIME(FlatBufferBuilder $builder, $LINK_START_TIME)
+    public static function addSAT_NO2(FlatBufferBuilder $builder, $SAT_NO2)
     {
-        $builder->addOffsetX(3, $LINK_START_TIME, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addLINK_STOP_TIME(FlatBufferBuilder $builder, $LINK_STOP_TIME)
-    {
-        $builder->addOffsetX(4, $LINK_STOP_TIME, 0);
+        $builder->addUintX(4, $SAT_NO2, 0);
     }
 
     /**
@@ -325,12 +355,22 @@ class LKS extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addLINK_TYPE(FlatBufferBuilder $builder, $LINK_TYPE)
     {
-        $builder->addOffsetX(7, $LINK_TYPE, 0);
+        $builder->addSbyteX(7, $LINK_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addLINK_STATE(FlatBufferBuilder $builder, $LINK_STATE)
+    {
+        $builder->addSbyteX(8, $LINK_STATE, 0);
     }
 
     /**
@@ -340,7 +380,27 @@ class LKS extends Table
      */
     public static function addBAND(FlatBufferBuilder $builder, $BAND)
     {
-        $builder->addOffsetX(8, $BAND, 0);
+        $builder->addOffsetX(9, $BAND, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addLINK_START_TIME(FlatBufferBuilder $builder, $LINK_START_TIME)
+    {
+        $builder->addOffsetX(10, $LINK_START_TIME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addLINK_STOP_TIME(FlatBufferBuilder $builder, $LINK_STOP_TIME)
+    {
+        $builder->addOffsetX(11, $LINK_STOP_TIME, 0);
     }
 
     /**
@@ -350,7 +410,7 @@ class LKS extends Table
      */
     public static function addID_BEAM1(FlatBufferBuilder $builder, $ID_BEAM1)
     {
-        $builder->addOffsetX(9, $ID_BEAM1, 0);
+        $builder->addOffsetX(12, $ID_BEAM1, 0);
     }
 
     /**
@@ -360,7 +420,7 @@ class LKS extends Table
      */
     public static function addEND_POINT1_NAME(FlatBufferBuilder $builder, $END_POINT1_NAME)
     {
-        $builder->addOffsetX(10, $END_POINT1_NAME, 0);
+        $builder->addOffsetX(13, $END_POINT1_NAME, 0);
     }
 
     /**
@@ -370,7 +430,7 @@ class LKS extends Table
      */
     public static function addEND_POINT1_LAT(FlatBufferBuilder $builder, $END_POINT1_LAT)
     {
-        $builder->addDoubleX(11, $END_POINT1_LAT, 0.0);
+        $builder->addDoubleX(14, $END_POINT1_LAT, 0.0);
     }
 
     /**
@@ -380,7 +440,7 @@ class LKS extends Table
      */
     public static function addEND_POINT1_LON(FlatBufferBuilder $builder, $END_POINT1_LON)
     {
-        $builder->addDoubleX(12, $END_POINT1_LON, 0.0);
+        $builder->addDoubleX(15, $END_POINT1_LON, 0.0);
     }
 
     /**
@@ -390,7 +450,7 @@ class LKS extends Table
      */
     public static function addID_BEAM2(FlatBufferBuilder $builder, $ID_BEAM2)
     {
-        $builder->addOffsetX(13, $ID_BEAM2, 0);
+        $builder->addOffsetX(16, $ID_BEAM2, 0);
     }
 
     /**
@@ -400,7 +460,7 @@ class LKS extends Table
      */
     public static function addEND_POINT2_NAME(FlatBufferBuilder $builder, $END_POINT2_NAME)
     {
-        $builder->addOffsetX(14, $END_POINT2_NAME, 0);
+        $builder->addOffsetX(17, $END_POINT2_NAME, 0);
     }
 
     /**
@@ -410,7 +470,7 @@ class LKS extends Table
      */
     public static function addEND_POINT2_LAT(FlatBufferBuilder $builder, $END_POINT2_LAT)
     {
-        $builder->addDoubleX(15, $END_POINT2_LAT, 0.0);
+        $builder->addDoubleX(18, $END_POINT2_LAT, 0.0);
     }
 
     /**
@@ -420,7 +480,7 @@ class LKS extends Table
      */
     public static function addEND_POINT2_LON(FlatBufferBuilder $builder, $END_POINT2_LON)
     {
-        $builder->addDoubleX(16, $END_POINT2_LON, 0.0);
+        $builder->addDoubleX(19, $END_POINT2_LON, 0.0);
     }
 
     /**
@@ -430,7 +490,7 @@ class LKS extends Table
      */
     public static function addDATA_RATE1_TO2(FlatBufferBuilder $builder, $DATA_RATE1_TO2)
     {
-        $builder->addDoubleX(17, $DATA_RATE1_TO2, 0.0);
+        $builder->addDoubleX(20, $DATA_RATE1_TO2, 0.0);
     }
 
     /**
@@ -440,17 +500,7 @@ class LKS extends Table
      */
     public static function addDATA_RATE2_TO1(FlatBufferBuilder $builder, $DATA_RATE2_TO1)
     {
-        $builder->addDoubleX(18, $DATA_RATE2_TO1, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addLINK_STATE(FlatBufferBuilder $builder, $LINK_STATE)
-    {
-        $builder->addOffsetX(19, $LINK_STATE, 0);
+        $builder->addDoubleX(21, $DATA_RATE2_TO1, 0.0);
     }
 
     /**
@@ -460,7 +510,7 @@ class LKS extends Table
      */
     public static function addSYS_CAP(FlatBufferBuilder $builder, $SYS_CAP)
     {
-        $builder->addOffsetX(20, $SYS_CAP, 0);
+        $builder->addOffsetX(22, $SYS_CAP, 0);
     }
 
     /**
@@ -470,27 +520,7 @@ class LKS extends Table
      */
     public static function addOPS_CAP(FlatBufferBuilder $builder, $OPS_CAP)
     {
-        $builder->addOffsetX(21, $OPS_CAP, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int
-     * @return void
-     */
-    public static function addSAT_NO1(FlatBufferBuilder $builder, $SAT_NO1)
-    {
-        $builder->addIntX(22, $SAT_NO1, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int
-     * @return void
-     */
-    public static function addSAT_NO2(FlatBufferBuilder $builder, $SAT_NO2)
-    {
-        $builder->addIntX(23, $SAT_NO2, 0);
+        $builder->addOffsetX(23, $OPS_CAP, 0);
     }
 
     /**

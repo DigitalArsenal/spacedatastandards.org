@@ -1,13 +1,105 @@
-// Hash: cae70d4e3cd9b57de80181ae0d7eaae3fcc30d9db79cb9e2ec1b66cb78351c28
-// Version: 0.0.2
+// Hash: 85c6ef32dcbb24a44c10592a5608843b193949629c38d22554bf65d18b991085
+// Version: 0.0.3
 // -----------------------------------END_HEADER
+enum gnssConstellation : byte {
+  GPS,
+  GLONASS,
+  GALILEO,
+  BEIDOU,
+  QZSS,
+  IRNSS,
+  SBAS,
+  MIXED
+}
+
+enum gnssObsType : byte {
+  PSEUDORANGE,
+  CARRIER_PHASE,
+  DOPPLER,
+  SNR,
+  RAW_IF
+}
+
+/// GNSS Observation Data Point
+table gnssObsData {
+  /// Signal type code (e.g., L1C, L2P, L5Q, E1B)
+  SIGNAL:string;
+  /// Observation type
+  OBS_TYPE:gnssObsType;
+  /// Observation value (units depend on type: m, cycles, Hz, dB-Hz)
+  VALUE:double;
+  /// Loss of lock indicator
+  LLI:uint8;
+  /// Signal strength indicator (1-9)
+  SSI:uint8;
+}
+
+/// GNSS Satellite Observation
+table gnssSatObs {
+  /// GNSS satellite identifier (e.g., G01, R24, E05, C03)
+  GNSS_SAT_ID:string;
+  /// Constellation
+  CONSTELLATION:gnssConstellation;
+  /// Elevation angle in degrees
+  ELEVATION:double;
+  /// Azimuth angle in degrees
+  AZIMUTH:double;
+  /// Tracking status (0=not tracked, 1=tracking, 2=locked)
+  TRACKING_STATUS:int;
+  /// AGC state
+  AGC_STATE:int;
+  /// Observations for this satellite
+  OBSERVATIONS:[gnssObsData];
+}
+
 /// GNSS Observation
 table GNO {
-  GNSS_SAT_ID:string;
-  TRACKING_STATUS:int;
-  AGC_STATE:int;
+  /// Unique identifier
+  ID:string;
+  /// Receiver identifier
+  RECEIVER_ID:string;
+  /// Receiver type/model
+  RECEIVER_TYPE:string;
+  /// Antenna identifier
+  ANTENNA_ID:string;
+  /// Antenna type/model
+  ANTENNA_TYPE:string;
+  /// Receiver firmware version
+  FIRMWARE_VERSION:string;
+  /// Observation epoch (ISO 8601)
+  EPOCH:string;
+  /// Receiver clock offset in seconds
+  CLOCK_OFFSET:double;
+  /// Receiver clock drift in seconds/second
+  CLOCK_DRIFT:double;
+  /// Receiver geodetic latitude in degrees
+  LATITUDE:double;
+  /// Receiver geodetic longitude in degrees
+  LONGITUDE:double;
+  /// Receiver altitude in meters above WGS-84
+  ALTITUDE:double;
+  /// Approximate position X in meters (ECEF)
+  APPROX_X:double;
+  /// Approximate position Y in meters (ECEF)
+  APPROX_Y:double;
+  /// Approximate position Z in meters (ECEF)
+  APPROX_Z:double;
+  /// Observation interval in seconds
+  INTERVAL:double;
+  /// Number of satellites observed
+  NUM_SATS:uint;
+  /// PDOP
+  PDOP:double;
+  /// HDOP
+  HDOP:double;
+  /// VDOP
+  VDOP:double;
+  /// Satellite observations
+  SAT_OBS:[gnssSatObs];
+  /// Observation code set identifiers
   OBS_CODE_SET:[string];
-  OB:[string];
+  /// Additional notes
+  NOTES:string;
 }
 
 root_type GNO;

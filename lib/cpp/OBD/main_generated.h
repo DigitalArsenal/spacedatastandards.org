@@ -13,169 +13,395 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
               FLATBUFFERS_VERSION_REVISION == 25,
              "Non-compatible flatbuffers version included");
 
+struct odSensorContribution;
+struct odSensorContributionBuilder;
+
 struct OBD;
 struct OBDBuilder;
+
+enum odMethod : int8_t {
+  odMethod_BATCH_LEAST_SQUARES = 0,
+  odMethod_SEQUENTIAL_LEAST_SQUARES = 1,
+  odMethod_EXTENDED_KALMAN = 2,
+  odMethod_UNSCENTED_KALMAN = 3,
+  odMethod_SPECIAL_PERTURBATIONS = 4,
+  odMethod_GENERAL_PERTURBATIONS = 5,
+  odMethod_DIFFERENTIAL_CORRECTION = 6,
+  odMethod_UNKNOWN = 7,
+  odMethod_MIN = odMethod_BATCH_LEAST_SQUARES,
+  odMethod_MAX = odMethod_UNKNOWN
+};
+
+inline const odMethod (&EnumValuesodMethod())[8] {
+  static const odMethod values[] = {
+    odMethod_BATCH_LEAST_SQUARES,
+    odMethod_SEQUENTIAL_LEAST_SQUARES,
+    odMethod_EXTENDED_KALMAN,
+    odMethod_UNSCENTED_KALMAN,
+    odMethod_SPECIAL_PERTURBATIONS,
+    odMethod_GENERAL_PERTURBATIONS,
+    odMethod_DIFFERENTIAL_CORRECTION,
+    odMethod_UNKNOWN
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesodMethod() {
+  static const char * const names[9] = {
+    "BATCH_LEAST_SQUARES",
+    "SEQUENTIAL_LEAST_SQUARES",
+    "EXTENDED_KALMAN",
+    "UNSCENTED_KALMAN",
+    "SPECIAL_PERTURBATIONS",
+    "GENERAL_PERTURBATIONS",
+    "DIFFERENTIAL_CORRECTION",
+    "UNKNOWN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameodMethod(odMethod e) {
+  if (::flatbuffers::IsOutRange(e, odMethod_BATCH_LEAST_SQUARES, odMethod_UNKNOWN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesodMethod()[index];
+}
+
+/// Sensor contribution to an orbit determination solution
+struct odSensorContribution FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef odSensorContributionBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_SENSOR_ID = 4,
+    VT_ORIG_SENSOR_ID = 6,
+    VT_NUM_ACCEPTED = 8,
+    VT_NUM_REJECTED = 10,
+    VT_WRMS = 12,
+    VT_OB_TYPES = 14
+  };
+  /// Sensor identifier
+  const ::flatbuffers::String *SENSOR_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SENSOR_ID);
+  }
+  /// Original sensor identifier
+  const ::flatbuffers::String *ORIG_SENSOR_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ORIG_SENSOR_ID);
+  }
+  /// Number of accepted observations from this sensor
+  uint32_t NUM_ACCEPTED() const {
+    return GetField<uint32_t>(VT_NUM_ACCEPTED, 0);
+  }
+  /// Number of rejected observations from this sensor
+  uint32_t NUM_REJECTED() const {
+    return GetField<uint32_t>(VT_NUM_REJECTED, 0);
+  }
+  /// Weighted RMS for this sensor's observations
+  double WRMS() const {
+    return GetField<double>(VT_WRMS, 0.0);
+  }
+  /// Observation types from this sensor
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *OB_TYPES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_OB_TYPES);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_SENSOR_ID) &&
+           verifier.VerifyString(SENSOR_ID()) &&
+           VerifyOffset(verifier, VT_ORIG_SENSOR_ID) &&
+           verifier.VerifyString(ORIG_SENSOR_ID()) &&
+           VerifyField<uint32_t>(verifier, VT_NUM_ACCEPTED, 4) &&
+           VerifyField<uint32_t>(verifier, VT_NUM_REJECTED, 4) &&
+           VerifyField<double>(verifier, VT_WRMS, 8) &&
+           VerifyOffset(verifier, VT_OB_TYPES) &&
+           verifier.VerifyVector(OB_TYPES()) &&
+           verifier.VerifyVectorOfStrings(OB_TYPES()) &&
+           verifier.EndTable();
+  }
+};
+
+struct odSensorContributionBuilder {
+  typedef odSensorContribution Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_SENSOR_ID(::flatbuffers::Offset<::flatbuffers::String> SENSOR_ID) {
+    fbb_.AddOffset(odSensorContribution::VT_SENSOR_ID, SENSOR_ID);
+  }
+  void add_ORIG_SENSOR_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID) {
+    fbb_.AddOffset(odSensorContribution::VT_ORIG_SENSOR_ID, ORIG_SENSOR_ID);
+  }
+  void add_NUM_ACCEPTED(uint32_t NUM_ACCEPTED) {
+    fbb_.AddElement<uint32_t>(odSensorContribution::VT_NUM_ACCEPTED, NUM_ACCEPTED, 0);
+  }
+  void add_NUM_REJECTED(uint32_t NUM_REJECTED) {
+    fbb_.AddElement<uint32_t>(odSensorContribution::VT_NUM_REJECTED, NUM_REJECTED, 0);
+  }
+  void add_WRMS(double WRMS) {
+    fbb_.AddElement<double>(odSensorContribution::VT_WRMS, WRMS, 0.0);
+  }
+  void add_OB_TYPES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> OB_TYPES) {
+    fbb_.AddOffset(odSensorContribution::VT_OB_TYPES, OB_TYPES);
+  }
+  explicit odSensorContributionBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<odSensorContribution> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<odSensorContribution>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<odSensorContribution> CreateodSensorContribution(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> SENSOR_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID = 0,
+    uint32_t NUM_ACCEPTED = 0,
+    uint32_t NUM_REJECTED = 0,
+    double WRMS = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> OB_TYPES = 0) {
+  odSensorContributionBuilder builder_(_fbb);
+  builder_.add_WRMS(WRMS);
+  builder_.add_OB_TYPES(OB_TYPES);
+  builder_.add_NUM_REJECTED(NUM_REJECTED);
+  builder_.add_NUM_ACCEPTED(NUM_ACCEPTED);
+  builder_.add_ORIG_SENSOR_ID(ORIG_SENSOR_ID);
+  builder_.add_SENSOR_ID(SENSOR_ID);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<odSensorContribution> CreateodSensorContributionDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *SENSOR_ID = nullptr,
+    const char *ORIG_SENSOR_ID = nullptr,
+    uint32_t NUM_ACCEPTED = 0,
+    uint32_t NUM_REJECTED = 0,
+    double WRMS = 0.0,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *OB_TYPES = nullptr) {
+  auto SENSOR_ID__ = SENSOR_ID ? _fbb.CreateString(SENSOR_ID) : 0;
+  auto ORIG_SENSOR_ID__ = ORIG_SENSOR_ID ? _fbb.CreateString(ORIG_SENSOR_ID) : 0;
+  auto OB_TYPES__ = OB_TYPES ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*OB_TYPES) : 0;
+  return CreateodSensorContribution(
+      _fbb,
+      SENSOR_ID__,
+      ORIG_SENSOR_ID__,
+      NUM_ACCEPTED,
+      NUM_REJECTED,
+      WRMS,
+      OB_TYPES__);
+}
 
 /// Orbit Determination Results
 struct OBD FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef OBDBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
-    VT_START_TIME = 6,
-    VT_END_TIME = 8,
-    VT_ORIG_OBJECT_ID = 10,
-    VT_SAT_NO = 12,
-    VT_APRIORI_ID_ELSET = 14,
-    VT_APRIORI_ELSET = 16,
-    VT_APRIORI_ID_STATE_VECTOR = 18,
-    VT_APRIORI_STATE_VECTOR = 20,
-    VT_INITIAL_OD = 22,
-    VT_LAST_OB_START = 24,
-    VT_LAST_OB_END = 26,
-    VT_TIME_SPAN = 28,
-    VT_EFFECTIVE_FROM = 30,
-    VT_EFFECTIVE_UNTIL = 32,
-    VT_WRMS = 34,
-    VT_PREVIOUS_WRMS = 36,
-    VT_FIRST_PASS_WRMS = 38,
-    VT_BEST_PASS_WRMS = 40,
-    VT_ERROR_GROWTH_RATE = 42,
-    VT_EDR = 44,
-    VT_METHOD = 46,
-    VT_METHOD_SOURCE = 48,
-    VT_FIT_SPAN = 50,
-    VT_BALLISTIC_COEFF_EST = 52,
-    VT_BALLISTIC_COEFF_MODEL = 54,
-    VT_AGOM_EST = 56,
-    VT_AGOM_MODEL = 58,
-    VT_RMS_CONVERGENCE_CRITERIA = 60,
-    VT_NUM_ITERATIONS = 62,
-    VT_ACCEPTED_OB_TYPS = 64,
-    VT_ACCEPTED_OB_IDS = 66,
-    VT_REJECTED_OB_TYPS = 68,
-    VT_REJECTED_OB_IDS = 70,
-    VT_SENSOR_IDS = 72,
-    VT_ON_ORBIT = 74
+    VT_SAT_NO = 6,
+    VT_ORIG_OBJECT_ID = 8,
+    VT_ON_ORBIT = 10,
+    VT_START_TIME = 12,
+    VT_END_TIME = 14,
+    VT_METHOD = 16,
+    VT_METHOD_SOURCE = 18,
+    VT_INITIAL_OD = 20,
+    VT_APRIORI_ID_ELSET = 22,
+    VT_APRIORI_ELSET = 24,
+    VT_APRIORI_ID_STATE_VECTOR = 26,
+    VT_APRIORI_STATE_VECTOR = 28,
+    VT_LAST_OB_START = 30,
+    VT_LAST_OB_END = 32,
+    VT_TIME_SPAN = 34,
+    VT_FIT_SPAN = 36,
+    VT_EFFECTIVE_FROM = 38,
+    VT_EFFECTIVE_UNTIL = 40,
+    VT_WRMS = 42,
+    VT_PREVIOUS_WRMS = 44,
+    VT_FIRST_PASS_WRMS = 46,
+    VT_BEST_PASS_WRMS = 48,
+    VT_ERROR_GROWTH_RATE = 50,
+    VT_EDR = 52,
+    VT_BALLISTIC_COEFF_EST = 54,
+    VT_BALLISTIC_COEFF_MODEL = 56,
+    VT_AGOM_EST = 58,
+    VT_AGOM_MODEL = 60,
+    VT_RMS_CONVERGENCE_CRITERIA = 62,
+    VT_NUM_ITERATIONS = 64,
+    VT_NUM_ACCEPTED_OBS = 66,
+    VT_NUM_REJECTED_OBS = 68,
+    VT_SENSORS = 70,
+    VT_ACCEPTED_OB_TYPS = 72,
+    VT_ACCEPTED_OB_IDS = 74,
+    VT_REJECTED_OB_TYPS = 76,
+    VT_REJECTED_OB_IDS = 78
   };
+  /// Unique identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
-  const ::flatbuffers::String *START_TIME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_START_TIME);
+  /// Satellite catalog number
+  uint32_t SAT_NO() const {
+    return GetField<uint32_t>(VT_SAT_NO, 0);
   }
-  const ::flatbuffers::String *END_TIME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_END_TIME);
-  }
+  /// International designator
   const ::flatbuffers::String *ORIG_OBJECT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIG_OBJECT_ID);
   }
-  int32_t SAT_NO() const {
-    return GetField<int32_t>(VT_SAT_NO, 0);
+  /// On-orbit reference
+  const ::flatbuffers::String *ON_ORBIT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ON_ORBIT);
   }
-  const ::flatbuffers::String *APRIORI_ID_ELSET() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_APRIORI_ID_ELSET);
+  /// OD fit start time (ISO 8601)
+  const ::flatbuffers::String *START_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_START_TIME);
   }
-  const ::flatbuffers::String *APRIORI_ELSET() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_APRIORI_ELSET);
+  /// OD fit end time (ISO 8601)
+  const ::flatbuffers::String *END_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_END_TIME);
   }
-  const ::flatbuffers::String *APRIORI_ID_STATE_VECTOR() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_APRIORI_ID_STATE_VECTOR);
+  /// OD method used
+  odMethod METHOD() const {
+    return static_cast<odMethod>(GetField<int8_t>(VT_METHOD, 0));
   }
-  const ::flatbuffers::String *APRIORI_STATE_VECTOR() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_APRIORI_STATE_VECTOR);
-  }
-  bool INITIAL_OD() const {
-    return GetField<uint8_t>(VT_INITIAL_OD, 0) != 0;
-  }
-  const ::flatbuffers::String *LAST_OB_START() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_LAST_OB_START);
-  }
-  const ::flatbuffers::String *LAST_OB_END() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_LAST_OB_END);
-  }
-  double TIME_SPAN() const {
-    return GetField<double>(VT_TIME_SPAN, 0.0);
-  }
-  const ::flatbuffers::String *EFFECTIVE_FROM() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_EFFECTIVE_FROM);
-  }
-  const ::flatbuffers::String *EFFECTIVE_UNTIL() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_EFFECTIVE_UNTIL);
-  }
-  double WRMS() const {
-    return GetField<double>(VT_WRMS, 0.0);
-  }
-  double PREVIOUS_WRMS() const {
-    return GetField<double>(VT_PREVIOUS_WRMS, 0.0);
-  }
-  double FIRST_PASS_WRMS() const {
-    return GetField<double>(VT_FIRST_PASS_WRMS, 0.0);
-  }
-  double BEST_PASS_WRMS() const {
-    return GetField<double>(VT_BEST_PASS_WRMS, 0.0);
-  }
-  double ERROR_GROWTH_RATE() const {
-    return GetField<double>(VT_ERROR_GROWTH_RATE, 0.0);
-  }
-  double EDR() const {
-    return GetField<double>(VT_EDR, 0.0);
-  }
-  const ::flatbuffers::String *METHOD() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_METHOD);
-  }
+  /// Method source or software
   const ::flatbuffers::String *METHOD_SOURCE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_METHOD_SOURCE);
   }
+  /// True if this is an initial orbit determination
+  bool INITIAL_OD() const {
+    return GetField<uint8_t>(VT_INITIAL_OD, 0) != 0;
+  }
+  /// A priori element set identifier
+  const ::flatbuffers::String *APRIORI_ID_ELSET() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_APRIORI_ID_ELSET);
+  }
+  /// A priori element set data reference
+  const ::flatbuffers::String *APRIORI_ELSET() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_APRIORI_ELSET);
+  }
+  /// A priori state vector identifier
+  const ::flatbuffers::String *APRIORI_ID_STATE_VECTOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_APRIORI_ID_STATE_VECTOR);
+  }
+  /// A priori state vector data reference
+  const ::flatbuffers::String *APRIORI_STATE_VECTOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_APRIORI_STATE_VECTOR);
+  }
+  /// Start of last observation arc (ISO 8601)
+  const ::flatbuffers::String *LAST_OB_START() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LAST_OB_START);
+  }
+  /// End of last observation arc (ISO 8601)
+  const ::flatbuffers::String *LAST_OB_END() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LAST_OB_END);
+  }
+  /// Observation time span (days)
+  double TIME_SPAN() const {
+    return GetField<double>(VT_TIME_SPAN, 0.0);
+  }
+  /// Fit span in days
   double FIT_SPAN() const {
     return GetField<double>(VT_FIT_SPAN, 0.0);
   }
+  /// Solution effective from (ISO 8601)
+  const ::flatbuffers::String *EFFECTIVE_FROM() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EFFECTIVE_FROM);
+  }
+  /// Solution effective until (ISO 8601)
+  const ::flatbuffers::String *EFFECTIVE_UNTIL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EFFECTIVE_UNTIL);
+  }
+  /// Weighted RMS of residuals
+  double WRMS() const {
+    return GetField<double>(VT_WRMS, 0.0);
+  }
+  /// Previous solution WRMS
+  double PREVIOUS_WRMS() const {
+    return GetField<double>(VT_PREVIOUS_WRMS, 0.0);
+  }
+  /// First pass WRMS
+  double FIRST_PASS_WRMS() const {
+    return GetField<double>(VT_FIRST_PASS_WRMS, 0.0);
+  }
+  /// Best pass WRMS
+  double BEST_PASS_WRMS() const {
+    return GetField<double>(VT_BEST_PASS_WRMS, 0.0);
+  }
+  /// Error growth rate (km/day)
+  double ERROR_GROWTH_RATE() const {
+    return GetField<double>(VT_ERROR_GROWTH_RATE, 0.0);
+  }
+  /// Energy dissipation rate
+  double EDR() const {
+    return GetField<double>(VT_EDR, 0.0);
+  }
+  /// True if ballistic coefficient was estimated
   bool BALLISTIC_COEFF_EST() const {
     return GetField<uint8_t>(VT_BALLISTIC_COEFF_EST, 0) != 0;
   }
+  /// Ballistic coefficient model
   const ::flatbuffers::String *BALLISTIC_COEFF_MODEL() const {
     return GetPointer<const ::flatbuffers::String *>(VT_BALLISTIC_COEFF_MODEL);
   }
+  /// True if area-to-mass ratio was estimated
   bool AGOM_EST() const {
     return GetField<uint8_t>(VT_AGOM_EST, 0) != 0;
   }
+  /// Area-to-mass ratio model
   const ::flatbuffers::String *AGOM_MODEL() const {
     return GetPointer<const ::flatbuffers::String *>(VT_AGOM_MODEL);
   }
+  /// RMS convergence criteria
   double RMS_CONVERGENCE_CRITERIA() const {
     return GetField<double>(VT_RMS_CONVERGENCE_CRITERIA, 0.0);
   }
-  int32_t NUM_ITERATIONS() const {
-    return GetField<int32_t>(VT_NUM_ITERATIONS, 0);
+  /// Number of iterations to converge
+  uint16_t NUM_ITERATIONS() const {
+    return GetField<uint16_t>(VT_NUM_ITERATIONS, 0);
   }
+  /// Total accepted observations
+  uint32_t NUM_ACCEPTED_OBS() const {
+    return GetField<uint32_t>(VT_NUM_ACCEPTED_OBS, 0);
+  }
+  /// Total rejected observations
+  uint32_t NUM_REJECTED_OBS() const {
+    return GetField<uint32_t>(VT_NUM_REJECTED_OBS, 0);
+  }
+  /// Sensor contributions to this solution
+  const ::flatbuffers::Vector<::flatbuffers::Offset<odSensorContribution>> *SENSORS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<odSensorContribution>> *>(VT_SENSORS);
+  }
+  /// Accepted observation types
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *ACCEPTED_OB_TYPS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_ACCEPTED_OB_TYPS);
   }
+  /// Accepted observation identifiers
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *ACCEPTED_OB_IDS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_ACCEPTED_OB_IDS);
   }
+  /// Rejected observation types
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *REJECTED_OB_TYPS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_REJECTED_OB_TYPS);
   }
+  /// Rejected observation identifiers
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *REJECTED_OB_IDS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_REJECTED_OB_IDS);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SENSOR_IDS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SENSOR_IDS);
-  }
-  const ::flatbuffers::String *ON_ORBIT() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ON_ORBIT);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
            verifier.VerifyString(ID()) &&
+           VerifyField<uint32_t>(verifier, VT_SAT_NO, 4) &&
+           VerifyOffset(verifier, VT_ORIG_OBJECT_ID) &&
+           verifier.VerifyString(ORIG_OBJECT_ID()) &&
+           VerifyOffset(verifier, VT_ON_ORBIT) &&
+           verifier.VerifyString(ON_ORBIT()) &&
            VerifyOffset(verifier, VT_START_TIME) &&
            verifier.VerifyString(START_TIME()) &&
            VerifyOffset(verifier, VT_END_TIME) &&
            verifier.VerifyString(END_TIME()) &&
-           VerifyOffset(verifier, VT_ORIG_OBJECT_ID) &&
-           verifier.VerifyString(ORIG_OBJECT_ID()) &&
-           VerifyField<int32_t>(verifier, VT_SAT_NO, 4) &&
+           VerifyField<int8_t>(verifier, VT_METHOD, 1) &&
+           VerifyOffset(verifier, VT_METHOD_SOURCE) &&
+           verifier.VerifyString(METHOD_SOURCE()) &&
+           VerifyField<uint8_t>(verifier, VT_INITIAL_OD, 1) &&
            VerifyOffset(verifier, VT_APRIORI_ID_ELSET) &&
            verifier.VerifyString(APRIORI_ID_ELSET()) &&
            VerifyOffset(verifier, VT_APRIORI_ELSET) &&
@@ -184,12 +410,12 @@ struct OBD FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(APRIORI_ID_STATE_VECTOR()) &&
            VerifyOffset(verifier, VT_APRIORI_STATE_VECTOR) &&
            verifier.VerifyString(APRIORI_STATE_VECTOR()) &&
-           VerifyField<uint8_t>(verifier, VT_INITIAL_OD, 1) &&
            VerifyOffset(verifier, VT_LAST_OB_START) &&
            verifier.VerifyString(LAST_OB_START()) &&
            VerifyOffset(verifier, VT_LAST_OB_END) &&
            verifier.VerifyString(LAST_OB_END()) &&
            VerifyField<double>(verifier, VT_TIME_SPAN, 8) &&
+           VerifyField<double>(verifier, VT_FIT_SPAN, 8) &&
            VerifyOffset(verifier, VT_EFFECTIVE_FROM) &&
            verifier.VerifyString(EFFECTIVE_FROM()) &&
            VerifyOffset(verifier, VT_EFFECTIVE_UNTIL) &&
@@ -200,11 +426,6 @@ struct OBD FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_BEST_PASS_WRMS, 8) &&
            VerifyField<double>(verifier, VT_ERROR_GROWTH_RATE, 8) &&
            VerifyField<double>(verifier, VT_EDR, 8) &&
-           VerifyOffset(verifier, VT_METHOD) &&
-           verifier.VerifyString(METHOD()) &&
-           VerifyOffset(verifier, VT_METHOD_SOURCE) &&
-           verifier.VerifyString(METHOD_SOURCE()) &&
-           VerifyField<double>(verifier, VT_FIT_SPAN, 8) &&
            VerifyField<uint8_t>(verifier, VT_BALLISTIC_COEFF_EST, 1) &&
            VerifyOffset(verifier, VT_BALLISTIC_COEFF_MODEL) &&
            verifier.VerifyString(BALLISTIC_COEFF_MODEL()) &&
@@ -212,7 +433,12 @@ struct OBD FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_AGOM_MODEL) &&
            verifier.VerifyString(AGOM_MODEL()) &&
            VerifyField<double>(verifier, VT_RMS_CONVERGENCE_CRITERIA, 8) &&
-           VerifyField<int32_t>(verifier, VT_NUM_ITERATIONS, 4) &&
+           VerifyField<uint16_t>(verifier, VT_NUM_ITERATIONS, 2) &&
+           VerifyField<uint32_t>(verifier, VT_NUM_ACCEPTED_OBS, 4) &&
+           VerifyField<uint32_t>(verifier, VT_NUM_REJECTED_OBS, 4) &&
+           VerifyOffset(verifier, VT_SENSORS) &&
+           verifier.VerifyVector(SENSORS()) &&
+           verifier.VerifyVectorOfTables(SENSORS()) &&
            VerifyOffset(verifier, VT_ACCEPTED_OB_TYPS) &&
            verifier.VerifyVector(ACCEPTED_OB_TYPS()) &&
            verifier.VerifyVectorOfStrings(ACCEPTED_OB_TYPS()) &&
@@ -225,11 +451,6 @@ struct OBD FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_REJECTED_OB_IDS) &&
            verifier.VerifyVector(REJECTED_OB_IDS()) &&
            verifier.VerifyVectorOfStrings(REJECTED_OB_IDS()) &&
-           VerifyOffset(verifier, VT_SENSOR_IDS) &&
-           verifier.VerifyVector(SENSOR_IDS()) &&
-           verifier.VerifyVectorOfStrings(SENSOR_IDS()) &&
-           VerifyOffset(verifier, VT_ON_ORBIT) &&
-           verifier.VerifyString(ON_ORBIT()) &&
            verifier.EndTable();
   }
 };
@@ -241,17 +462,29 @@ struct OBDBuilder {
   void add_ID(::flatbuffers::Offset<::flatbuffers::String> ID) {
     fbb_.AddOffset(OBD::VT_ID, ID);
   }
+  void add_SAT_NO(uint32_t SAT_NO) {
+    fbb_.AddElement<uint32_t>(OBD::VT_SAT_NO, SAT_NO, 0);
+  }
+  void add_ORIG_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID) {
+    fbb_.AddOffset(OBD::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
+  }
+  void add_ON_ORBIT(::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT) {
+    fbb_.AddOffset(OBD::VT_ON_ORBIT, ON_ORBIT);
+  }
   void add_START_TIME(::flatbuffers::Offset<::flatbuffers::String> START_TIME) {
     fbb_.AddOffset(OBD::VT_START_TIME, START_TIME);
   }
   void add_END_TIME(::flatbuffers::Offset<::flatbuffers::String> END_TIME) {
     fbb_.AddOffset(OBD::VT_END_TIME, END_TIME);
   }
-  void add_ORIG_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID) {
-    fbb_.AddOffset(OBD::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
+  void add_METHOD(odMethod METHOD) {
+    fbb_.AddElement<int8_t>(OBD::VT_METHOD, static_cast<int8_t>(METHOD), 0);
   }
-  void add_SAT_NO(int32_t SAT_NO) {
-    fbb_.AddElement<int32_t>(OBD::VT_SAT_NO, SAT_NO, 0);
+  void add_METHOD_SOURCE(::flatbuffers::Offset<::flatbuffers::String> METHOD_SOURCE) {
+    fbb_.AddOffset(OBD::VT_METHOD_SOURCE, METHOD_SOURCE);
+  }
+  void add_INITIAL_OD(bool INITIAL_OD) {
+    fbb_.AddElement<uint8_t>(OBD::VT_INITIAL_OD, static_cast<uint8_t>(INITIAL_OD), 0);
   }
   void add_APRIORI_ID_ELSET(::flatbuffers::Offset<::flatbuffers::String> APRIORI_ID_ELSET) {
     fbb_.AddOffset(OBD::VT_APRIORI_ID_ELSET, APRIORI_ID_ELSET);
@@ -265,9 +498,6 @@ struct OBDBuilder {
   void add_APRIORI_STATE_VECTOR(::flatbuffers::Offset<::flatbuffers::String> APRIORI_STATE_VECTOR) {
     fbb_.AddOffset(OBD::VT_APRIORI_STATE_VECTOR, APRIORI_STATE_VECTOR);
   }
-  void add_INITIAL_OD(bool INITIAL_OD) {
-    fbb_.AddElement<uint8_t>(OBD::VT_INITIAL_OD, static_cast<uint8_t>(INITIAL_OD), 0);
-  }
   void add_LAST_OB_START(::flatbuffers::Offset<::flatbuffers::String> LAST_OB_START) {
     fbb_.AddOffset(OBD::VT_LAST_OB_START, LAST_OB_START);
   }
@@ -276,6 +506,9 @@ struct OBDBuilder {
   }
   void add_TIME_SPAN(double TIME_SPAN) {
     fbb_.AddElement<double>(OBD::VT_TIME_SPAN, TIME_SPAN, 0.0);
+  }
+  void add_FIT_SPAN(double FIT_SPAN) {
+    fbb_.AddElement<double>(OBD::VT_FIT_SPAN, FIT_SPAN, 0.0);
   }
   void add_EFFECTIVE_FROM(::flatbuffers::Offset<::flatbuffers::String> EFFECTIVE_FROM) {
     fbb_.AddOffset(OBD::VT_EFFECTIVE_FROM, EFFECTIVE_FROM);
@@ -301,15 +534,6 @@ struct OBDBuilder {
   void add_EDR(double EDR) {
     fbb_.AddElement<double>(OBD::VT_EDR, EDR, 0.0);
   }
-  void add_METHOD(::flatbuffers::Offset<::flatbuffers::String> METHOD) {
-    fbb_.AddOffset(OBD::VT_METHOD, METHOD);
-  }
-  void add_METHOD_SOURCE(::flatbuffers::Offset<::flatbuffers::String> METHOD_SOURCE) {
-    fbb_.AddOffset(OBD::VT_METHOD_SOURCE, METHOD_SOURCE);
-  }
-  void add_FIT_SPAN(double FIT_SPAN) {
-    fbb_.AddElement<double>(OBD::VT_FIT_SPAN, FIT_SPAN, 0.0);
-  }
   void add_BALLISTIC_COEFF_EST(bool BALLISTIC_COEFF_EST) {
     fbb_.AddElement<uint8_t>(OBD::VT_BALLISTIC_COEFF_EST, static_cast<uint8_t>(BALLISTIC_COEFF_EST), 0);
   }
@@ -325,8 +549,17 @@ struct OBDBuilder {
   void add_RMS_CONVERGENCE_CRITERIA(double RMS_CONVERGENCE_CRITERIA) {
     fbb_.AddElement<double>(OBD::VT_RMS_CONVERGENCE_CRITERIA, RMS_CONVERGENCE_CRITERIA, 0.0);
   }
-  void add_NUM_ITERATIONS(int32_t NUM_ITERATIONS) {
-    fbb_.AddElement<int32_t>(OBD::VT_NUM_ITERATIONS, NUM_ITERATIONS, 0);
+  void add_NUM_ITERATIONS(uint16_t NUM_ITERATIONS) {
+    fbb_.AddElement<uint16_t>(OBD::VT_NUM_ITERATIONS, NUM_ITERATIONS, 0);
+  }
+  void add_NUM_ACCEPTED_OBS(uint32_t NUM_ACCEPTED_OBS) {
+    fbb_.AddElement<uint32_t>(OBD::VT_NUM_ACCEPTED_OBS, NUM_ACCEPTED_OBS, 0);
+  }
+  void add_NUM_REJECTED_OBS(uint32_t NUM_REJECTED_OBS) {
+    fbb_.AddElement<uint32_t>(OBD::VT_NUM_REJECTED_OBS, NUM_REJECTED_OBS, 0);
+  }
+  void add_SENSORS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<odSensorContribution>>> SENSORS) {
+    fbb_.AddOffset(OBD::VT_SENSORS, SENSORS);
   }
   void add_ACCEPTED_OB_TYPS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ACCEPTED_OB_TYPS) {
     fbb_.AddOffset(OBD::VT_ACCEPTED_OB_TYPS, ACCEPTED_OB_TYPS);
@@ -339,12 +572,6 @@ struct OBDBuilder {
   }
   void add_REJECTED_OB_IDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> REJECTED_OB_IDS) {
     fbb_.AddOffset(OBD::VT_REJECTED_OB_IDS, REJECTED_OB_IDS);
-  }
-  void add_SENSOR_IDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SENSOR_IDS) {
-    fbb_.AddOffset(OBD::VT_SENSOR_IDS, SENSOR_IDS);
-  }
-  void add_ON_ORBIT(::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT) {
-    fbb_.AddOffset(OBD::VT_ON_ORBIT, ON_ORBIT);
   }
   explicit OBDBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -360,18 +587,22 @@ struct OBDBuilder {
 inline ::flatbuffers::Offset<OBD> CreateOBD(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
+    uint32_t SAT_NO = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> START_TIME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> END_TIME = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID = 0,
-    int32_t SAT_NO = 0,
+    odMethod METHOD = odMethod_BATCH_LEAST_SQUARES,
+    ::flatbuffers::Offset<::flatbuffers::String> METHOD_SOURCE = 0,
+    bool INITIAL_OD = false,
     ::flatbuffers::Offset<::flatbuffers::String> APRIORI_ID_ELSET = 0,
     ::flatbuffers::Offset<::flatbuffers::String> APRIORI_ELSET = 0,
     ::flatbuffers::Offset<::flatbuffers::String> APRIORI_ID_STATE_VECTOR = 0,
     ::flatbuffers::Offset<::flatbuffers::String> APRIORI_STATE_VECTOR = 0,
-    bool INITIAL_OD = false,
     ::flatbuffers::Offset<::flatbuffers::String> LAST_OB_START = 0,
     ::flatbuffers::Offset<::flatbuffers::String> LAST_OB_END = 0,
     double TIME_SPAN = 0.0,
+    double FIT_SPAN = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> EFFECTIVE_FROM = 0,
     ::flatbuffers::Offset<::flatbuffers::String> EFFECTIVE_UNTIL = 0,
     double WRMS = 0.0,
@@ -380,42 +611,38 @@ inline ::flatbuffers::Offset<OBD> CreateOBD(
     double BEST_PASS_WRMS = 0.0,
     double ERROR_GROWTH_RATE = 0.0,
     double EDR = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::String> METHOD = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> METHOD_SOURCE = 0,
-    double FIT_SPAN = 0.0,
     bool BALLISTIC_COEFF_EST = false,
     ::flatbuffers::Offset<::flatbuffers::String> BALLISTIC_COEFF_MODEL = 0,
     bool AGOM_EST = false,
     ::flatbuffers::Offset<::flatbuffers::String> AGOM_MODEL = 0,
     double RMS_CONVERGENCE_CRITERIA = 0.0,
-    int32_t NUM_ITERATIONS = 0,
+    uint16_t NUM_ITERATIONS = 0,
+    uint32_t NUM_ACCEPTED_OBS = 0,
+    uint32_t NUM_REJECTED_OBS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<odSensorContribution>>> SENSORS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ACCEPTED_OB_TYPS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ACCEPTED_OB_IDS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> REJECTED_OB_TYPS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> REJECTED_OB_IDS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SENSOR_IDS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> REJECTED_OB_IDS = 0) {
   OBDBuilder builder_(_fbb);
   builder_.add_RMS_CONVERGENCE_CRITERIA(RMS_CONVERGENCE_CRITERIA);
-  builder_.add_FIT_SPAN(FIT_SPAN);
   builder_.add_EDR(EDR);
   builder_.add_ERROR_GROWTH_RATE(ERROR_GROWTH_RATE);
   builder_.add_BEST_PASS_WRMS(BEST_PASS_WRMS);
   builder_.add_FIRST_PASS_WRMS(FIRST_PASS_WRMS);
   builder_.add_PREVIOUS_WRMS(PREVIOUS_WRMS);
   builder_.add_WRMS(WRMS);
+  builder_.add_FIT_SPAN(FIT_SPAN);
   builder_.add_TIME_SPAN(TIME_SPAN);
-  builder_.add_ON_ORBIT(ON_ORBIT);
-  builder_.add_SENSOR_IDS(SENSOR_IDS);
   builder_.add_REJECTED_OB_IDS(REJECTED_OB_IDS);
   builder_.add_REJECTED_OB_TYPS(REJECTED_OB_TYPS);
   builder_.add_ACCEPTED_OB_IDS(ACCEPTED_OB_IDS);
   builder_.add_ACCEPTED_OB_TYPS(ACCEPTED_OB_TYPS);
-  builder_.add_NUM_ITERATIONS(NUM_ITERATIONS);
+  builder_.add_SENSORS(SENSORS);
+  builder_.add_NUM_REJECTED_OBS(NUM_REJECTED_OBS);
+  builder_.add_NUM_ACCEPTED_OBS(NUM_ACCEPTED_OBS);
   builder_.add_AGOM_MODEL(AGOM_MODEL);
   builder_.add_BALLISTIC_COEFF_MODEL(BALLISTIC_COEFF_MODEL);
-  builder_.add_METHOD_SOURCE(METHOD_SOURCE);
-  builder_.add_METHOD(METHOD);
   builder_.add_EFFECTIVE_UNTIL(EFFECTIVE_UNTIL);
   builder_.add_EFFECTIVE_FROM(EFFECTIVE_FROM);
   builder_.add_LAST_OB_END(LAST_OB_END);
@@ -424,32 +651,40 @@ inline ::flatbuffers::Offset<OBD> CreateOBD(
   builder_.add_APRIORI_ID_STATE_VECTOR(APRIORI_ID_STATE_VECTOR);
   builder_.add_APRIORI_ELSET(APRIORI_ELSET);
   builder_.add_APRIORI_ID_ELSET(APRIORI_ID_ELSET);
-  builder_.add_SAT_NO(SAT_NO);
-  builder_.add_ORIG_OBJECT_ID(ORIG_OBJECT_ID);
+  builder_.add_METHOD_SOURCE(METHOD_SOURCE);
   builder_.add_END_TIME(END_TIME);
   builder_.add_START_TIME(START_TIME);
+  builder_.add_ON_ORBIT(ON_ORBIT);
+  builder_.add_ORIG_OBJECT_ID(ORIG_OBJECT_ID);
+  builder_.add_SAT_NO(SAT_NO);
   builder_.add_ID(ID);
+  builder_.add_NUM_ITERATIONS(NUM_ITERATIONS);
   builder_.add_AGOM_EST(AGOM_EST);
   builder_.add_BALLISTIC_COEFF_EST(BALLISTIC_COEFF_EST);
   builder_.add_INITIAL_OD(INITIAL_OD);
+  builder_.add_METHOD(METHOD);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<OBD> CreateOBDDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *ID = nullptr,
+    uint32_t SAT_NO = 0,
+    const char *ORIG_OBJECT_ID = nullptr,
+    const char *ON_ORBIT = nullptr,
     const char *START_TIME = nullptr,
     const char *END_TIME = nullptr,
-    const char *ORIG_OBJECT_ID = nullptr,
-    int32_t SAT_NO = 0,
+    odMethod METHOD = odMethod_BATCH_LEAST_SQUARES,
+    const char *METHOD_SOURCE = nullptr,
+    bool INITIAL_OD = false,
     const char *APRIORI_ID_ELSET = nullptr,
     const char *APRIORI_ELSET = nullptr,
     const char *APRIORI_ID_STATE_VECTOR = nullptr,
     const char *APRIORI_STATE_VECTOR = nullptr,
-    bool INITIAL_OD = false,
     const char *LAST_OB_START = nullptr,
     const char *LAST_OB_END = nullptr,
     double TIME_SPAN = 0.0,
+    double FIT_SPAN = 0.0,
     const char *EFFECTIVE_FROM = nullptr,
     const char *EFFECTIVE_UNTIL = nullptr,
     double WRMS = 0.0,
@@ -458,25 +693,25 @@ inline ::flatbuffers::Offset<OBD> CreateOBDDirect(
     double BEST_PASS_WRMS = 0.0,
     double ERROR_GROWTH_RATE = 0.0,
     double EDR = 0.0,
-    const char *METHOD = nullptr,
-    const char *METHOD_SOURCE = nullptr,
-    double FIT_SPAN = 0.0,
     bool BALLISTIC_COEFF_EST = false,
     const char *BALLISTIC_COEFF_MODEL = nullptr,
     bool AGOM_EST = false,
     const char *AGOM_MODEL = nullptr,
     double RMS_CONVERGENCE_CRITERIA = 0.0,
-    int32_t NUM_ITERATIONS = 0,
+    uint16_t NUM_ITERATIONS = 0,
+    uint32_t NUM_ACCEPTED_OBS = 0,
+    uint32_t NUM_REJECTED_OBS = 0,
+    const std::vector<::flatbuffers::Offset<odSensorContribution>> *SENSORS = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *ACCEPTED_OB_TYPS = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *ACCEPTED_OB_IDS = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *REJECTED_OB_TYPS = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *REJECTED_OB_IDS = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *SENSOR_IDS = nullptr,
-    const char *ON_ORBIT = nullptr) {
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *REJECTED_OB_IDS = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
+  auto ORIG_OBJECT_ID__ = ORIG_OBJECT_ID ? _fbb.CreateString(ORIG_OBJECT_ID) : 0;
+  auto ON_ORBIT__ = ON_ORBIT ? _fbb.CreateString(ON_ORBIT) : 0;
   auto START_TIME__ = START_TIME ? _fbb.CreateString(START_TIME) : 0;
   auto END_TIME__ = END_TIME ? _fbb.CreateString(END_TIME) : 0;
-  auto ORIG_OBJECT_ID__ = ORIG_OBJECT_ID ? _fbb.CreateString(ORIG_OBJECT_ID) : 0;
+  auto METHOD_SOURCE__ = METHOD_SOURCE ? _fbb.CreateString(METHOD_SOURCE) : 0;
   auto APRIORI_ID_ELSET__ = APRIORI_ID_ELSET ? _fbb.CreateString(APRIORI_ID_ELSET) : 0;
   auto APRIORI_ELSET__ = APRIORI_ELSET ? _fbb.CreateString(APRIORI_ELSET) : 0;
   auto APRIORI_ID_STATE_VECTOR__ = APRIORI_ID_STATE_VECTOR ? _fbb.CreateString(APRIORI_ID_STATE_VECTOR) : 0;
@@ -485,31 +720,32 @@ inline ::flatbuffers::Offset<OBD> CreateOBDDirect(
   auto LAST_OB_END__ = LAST_OB_END ? _fbb.CreateString(LAST_OB_END) : 0;
   auto EFFECTIVE_FROM__ = EFFECTIVE_FROM ? _fbb.CreateString(EFFECTIVE_FROM) : 0;
   auto EFFECTIVE_UNTIL__ = EFFECTIVE_UNTIL ? _fbb.CreateString(EFFECTIVE_UNTIL) : 0;
-  auto METHOD__ = METHOD ? _fbb.CreateString(METHOD) : 0;
-  auto METHOD_SOURCE__ = METHOD_SOURCE ? _fbb.CreateString(METHOD_SOURCE) : 0;
   auto BALLISTIC_COEFF_MODEL__ = BALLISTIC_COEFF_MODEL ? _fbb.CreateString(BALLISTIC_COEFF_MODEL) : 0;
   auto AGOM_MODEL__ = AGOM_MODEL ? _fbb.CreateString(AGOM_MODEL) : 0;
+  auto SENSORS__ = SENSORS ? _fbb.CreateVector<::flatbuffers::Offset<odSensorContribution>>(*SENSORS) : 0;
   auto ACCEPTED_OB_TYPS__ = ACCEPTED_OB_TYPS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*ACCEPTED_OB_TYPS) : 0;
   auto ACCEPTED_OB_IDS__ = ACCEPTED_OB_IDS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*ACCEPTED_OB_IDS) : 0;
   auto REJECTED_OB_TYPS__ = REJECTED_OB_TYPS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*REJECTED_OB_TYPS) : 0;
   auto REJECTED_OB_IDS__ = REJECTED_OB_IDS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*REJECTED_OB_IDS) : 0;
-  auto SENSOR_IDS__ = SENSOR_IDS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SENSOR_IDS) : 0;
-  auto ON_ORBIT__ = ON_ORBIT ? _fbb.CreateString(ON_ORBIT) : 0;
   return CreateOBD(
       _fbb,
       ID__,
+      SAT_NO,
+      ORIG_OBJECT_ID__,
+      ON_ORBIT__,
       START_TIME__,
       END_TIME__,
-      ORIG_OBJECT_ID__,
-      SAT_NO,
+      METHOD,
+      METHOD_SOURCE__,
+      INITIAL_OD,
       APRIORI_ID_ELSET__,
       APRIORI_ELSET__,
       APRIORI_ID_STATE_VECTOR__,
       APRIORI_STATE_VECTOR__,
-      INITIAL_OD,
       LAST_OB_START__,
       LAST_OB_END__,
       TIME_SPAN,
+      FIT_SPAN,
       EFFECTIVE_FROM__,
       EFFECTIVE_UNTIL__,
       WRMS,
@@ -518,21 +754,19 @@ inline ::flatbuffers::Offset<OBD> CreateOBDDirect(
       BEST_PASS_WRMS,
       ERROR_GROWTH_RATE,
       EDR,
-      METHOD__,
-      METHOD_SOURCE__,
-      FIT_SPAN,
       BALLISTIC_COEFF_EST,
       BALLISTIC_COEFF_MODEL__,
       AGOM_EST,
       AGOM_MODEL__,
       RMS_CONVERGENCE_CRITERIA,
       NUM_ITERATIONS,
+      NUM_ACCEPTED_OBS,
+      NUM_REJECTED_OBS,
+      SENSORS__,
       ACCEPTED_OB_TYPS__,
       ACCEPTED_OB_IDS__,
       REJECTED_OB_TYPS__,
-      REJECTED_OB_IDS__,
-      SENSOR_IDS__,
-      ON_ORBIT__);
+      REJECTED_OB_IDS__);
 }
 
 inline const OBD *GetOBD(const void *buf) {

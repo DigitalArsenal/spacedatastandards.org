@@ -16,6 +16,48 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct SKI;
 struct SKIBuilder;
 
+enum imageType : int8_t {
+  imageType_VISIBLE = 0,
+  imageType_INFRARED = 1,
+  imageType_MULTISPECTRAL = 2,
+  imageType_HYPERSPECTRAL = 3,
+  imageType_UV = 4,
+  imageType_BROADBAND = 5,
+  imageType_MIN = imageType_VISIBLE,
+  imageType_MAX = imageType_BROADBAND
+};
+
+inline const imageType (&EnumValuesimageType())[6] {
+  static const imageType values[] = {
+    imageType_VISIBLE,
+    imageType_INFRARED,
+    imageType_MULTISPECTRAL,
+    imageType_HYPERSPECTRAL,
+    imageType_UV,
+    imageType_BROADBAND
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesimageType() {
+  static const char * const names[7] = {
+    "VISIBLE",
+    "INFRARED",
+    "MULTISPECTRAL",
+    "HYPERSPECTRAL",
+    "UV",
+    "BROADBAND",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameimageType(imageType e) {
+  if (::flatbuffers::IsOutRange(e, imageType_VISIBLE, imageType_BROADBAND)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesimageType()[index];
+}
+
 /// Sky Imagery
 struct SKI FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef SKIBuilder Builder;
@@ -23,8 +65,8 @@ struct SKI FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ID = 4,
     VT_ON_ORBIT = 6,
     VT_ORIG_OBJECT_ID = 8,
-    VT_ID_SENSOR = 10,
-    VT_SAT_NO = 12,
+    VT_SAT_NO = 10,
+    VT_ID_SENSOR = 12,
     VT_ORIG_SENSOR_ID = 14,
     VT_SENLAT = 16,
     VT_SENLON = 18,
@@ -62,126 +104,167 @@ struct SKI FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_DESCRIPTION = 82,
     VT_EO_OBSERVATIONS = 84
   };
+  /// Unique identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
+  /// On-orbit reference
   const ::flatbuffers::String *ON_ORBIT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ON_ORBIT);
   }
+  /// International designator
   const ::flatbuffers::String *ORIG_OBJECT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIG_OBJECT_ID);
   }
+  /// Satellite catalog number
+  uint32_t SAT_NO() const {
+    return GetField<uint32_t>(VT_SAT_NO, 0);
+  }
+  /// Sensor identifier
   const ::flatbuffers::String *ID_SENSOR() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID_SENSOR);
   }
-  int32_t SAT_NO() const {
-    return GetField<int32_t>(VT_SAT_NO, 0);
-  }
+  /// Original sensor identifier
   const ::flatbuffers::String *ORIG_SENSOR_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIG_SENSOR_ID);
   }
+  /// Sensor geodetic latitude (degrees)
   double SENLAT() const {
     return GetField<double>(VT_SENLAT, 0.0);
   }
+  /// Sensor geodetic longitude (degrees)
   double SENLON() const {
     return GetField<double>(VT_SENLON, 0.0);
   }
+  /// Sensor altitude (km)
   double SENALT() const {
     return GetField<double>(VT_SENALT, 0.0);
   }
+  /// Sensor ECEF X position (km)
   double SENX() const {
     return GetField<double>(VT_SENX, 0.0);
   }
+  /// Sensor ECEF Y position (km)
   double SENY() const {
     return GetField<double>(VT_SENY, 0.0);
   }
+  /// Sensor ECEF Z position (km)
   double SENZ() const {
     return GetField<double>(VT_SENZ, 0.0);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SEN_QUAT() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SEN_QUAT);
+  /// Sensor quaternion (scalar-last: q1, q2, q3, q0)
+  const ::flatbuffers::Vector<double> *SEN_QUAT() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_SEN_QUAT);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SEN_QUAT_DOT() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SEN_QUAT_DOT);
+  /// Sensor quaternion rate
+  const ::flatbuffers::Vector<double> *SEN_QUAT_DOT() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_SEN_QUAT_DOT);
   }
-  const ::flatbuffers::String *IMAGE_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_IMAGE_TYPE);
+  /// Image type
+  imageType IMAGE_TYPE() const {
+    return static_cast<imageType>(GetField<int8_t>(VT_IMAGE_TYPE, 0));
   }
+  /// Exposure start time (ISO 8601)
   const ::flatbuffers::String *EXP_START_TIME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_EXP_START_TIME);
   }
+  /// Exposure end time (ISO 8601)
   const ::flatbuffers::String *EXP_END_TIME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_EXP_END_TIME);
   }
+  /// Image source information
   const ::flatbuffers::String *IMAGE_SOURCE_INFO() const {
     return GetPointer<const ::flatbuffers::String *>(VT_IMAGE_SOURCE_INFO);
   }
+  /// Top-left corner start azimuth (degrees)
   double TOP_LEFT_START_AZ() const {
     return GetField<double>(VT_TOP_LEFT_START_AZ, 0.0);
   }
+  /// Top-left corner start elevation (degrees)
   double TOP_LEFT_START_EL() const {
     return GetField<double>(VT_TOP_LEFT_START_EL, 0.0);
   }
+  /// Top-left corner stop azimuth (degrees)
   double TOP_LEFT_STOP_AZ() const {
     return GetField<double>(VT_TOP_LEFT_STOP_AZ, 0.0);
   }
+  /// Top-left corner stop elevation (degrees)
   double TOP_LEFT_STOP_EL() const {
     return GetField<double>(VT_TOP_LEFT_STOP_EL, 0.0);
   }
+  /// Image set identifier
   const ::flatbuffers::String *IMAGE_SET_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_IMAGE_SET_ID);
   }
-  int32_t IMAGE_SET_LENGTH() const {
-    return GetField<int32_t>(VT_IMAGE_SET_LENGTH, 0);
+  /// Number of images in set
+  uint16_t IMAGE_SET_LENGTH() const {
+    return GetField<uint16_t>(VT_IMAGE_SET_LENGTH, 0);
   }
-  int32_t SEQUENCE_ID() const {
-    return GetField<int32_t>(VT_SEQUENCE_ID, 0);
+  /// Sequence number within set
+  uint16_t SEQUENCE_ID() const {
+    return GetField<uint16_t>(VT_SEQUENCE_ID, 0);
   }
+  /// Frame field-of-view width (degrees)
   double FRAME_FOVWIDTH() const {
     return GetField<double>(VT_FRAME_FOVWIDTH, 0.0);
   }
+  /// Frame field-of-view height (degrees)
   double FRAME_FOVHEIGHT() const {
     return GetField<double>(VT_FRAME_FOVHEIGHT, 0.0);
   }
+  /// Pixel field-of-view width (arcseconds)
   double PIXEL_FOVWIDTH() const {
     return GetField<double>(VT_PIXEL_FOVWIDTH, 0.0);
   }
+  /// Pixel field-of-view height (arcseconds)
   double PIXEL_FOVHEIGHT() const {
     return GetField<double>(VT_PIXEL_FOVHEIGHT, 0.0);
   }
-  int32_t FRAME_WIDTH_PIXELS() const {
-    return GetField<int32_t>(VT_FRAME_WIDTH_PIXELS, 0);
+  /// Frame width (pixels)
+  uint16_t FRAME_WIDTH_PIXELS() const {
+    return GetField<uint16_t>(VT_FRAME_WIDTH_PIXELS, 0);
   }
-  int32_t FRAME_HEIGHT_PIXELS() const {
-    return GetField<int32_t>(VT_FRAME_HEIGHT_PIXELS, 0);
+  /// Frame height (pixels)
+  uint16_t FRAME_HEIGHT_PIXELS() const {
+    return GetField<uint16_t>(VT_FRAME_HEIGHT_PIXELS, 0);
   }
-  int32_t PIXEL_BIT_DEPTH() const {
-    return GetField<int32_t>(VT_PIXEL_BIT_DEPTH, 0);
+  /// Pixel bit depth
+  uint8_t PIXEL_BIT_DEPTH() const {
+    return GetField<uint8_t>(VT_PIXEL_BIT_DEPTH, 0);
   }
+  /// Annotation key reference
   const ::flatbuffers::String *ANNOTATION_KEY() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ANNOTATION_KEY);
   }
+  /// Calibration key reference
   const ::flatbuffers::String *CALIBRATION_KEY() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CALIBRATION_KEY);
   }
+  /// Image filename
   const ::flatbuffers::String *FILENAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_FILENAME);
   }
+  /// File size (bytes)
   int64_t FILESIZE() const {
     return GetField<int64_t>(VT_FILESIZE, 0);
   }
+  /// File checksum value
   const ::flatbuffers::String *CHECKSUM_VALUE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CHECKSUM_VALUE);
   }
+  /// Transaction identifier
   const ::flatbuffers::String *TRANSACTION_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TRANSACTION_ID);
   }
+  /// Associated tags
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_TAGS);
   }
+  /// Description
   const ::flatbuffers::String *DESCRIPTION() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
   }
+  /// Associated EO observation references
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *EO_OBSERVATIONS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_EO_OBSERVATIONS);
   }
@@ -193,9 +276,9 @@ struct SKI FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(ON_ORBIT()) &&
            VerifyOffset(verifier, VT_ORIG_OBJECT_ID) &&
            verifier.VerifyString(ORIG_OBJECT_ID()) &&
+           VerifyField<uint32_t>(verifier, VT_SAT_NO, 4) &&
            VerifyOffset(verifier, VT_ID_SENSOR) &&
            verifier.VerifyString(ID_SENSOR()) &&
-           VerifyField<int32_t>(verifier, VT_SAT_NO, 4) &&
            VerifyOffset(verifier, VT_ORIG_SENSOR_ID) &&
            verifier.VerifyString(ORIG_SENSOR_ID()) &&
            VerifyField<double>(verifier, VT_SENLAT, 8) &&
@@ -206,12 +289,9 @@ struct SKI FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_SENZ, 8) &&
            VerifyOffset(verifier, VT_SEN_QUAT) &&
            verifier.VerifyVector(SEN_QUAT()) &&
-           verifier.VerifyVectorOfStrings(SEN_QUAT()) &&
            VerifyOffset(verifier, VT_SEN_QUAT_DOT) &&
            verifier.VerifyVector(SEN_QUAT_DOT()) &&
-           verifier.VerifyVectorOfStrings(SEN_QUAT_DOT()) &&
-           VerifyOffset(verifier, VT_IMAGE_TYPE) &&
-           verifier.VerifyString(IMAGE_TYPE()) &&
+           VerifyField<int8_t>(verifier, VT_IMAGE_TYPE, 1) &&
            VerifyOffset(verifier, VT_EXP_START_TIME) &&
            verifier.VerifyString(EXP_START_TIME()) &&
            VerifyOffset(verifier, VT_EXP_END_TIME) &&
@@ -224,15 +304,15 @@ struct SKI FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_TOP_LEFT_STOP_EL, 8) &&
            VerifyOffset(verifier, VT_IMAGE_SET_ID) &&
            verifier.VerifyString(IMAGE_SET_ID()) &&
-           VerifyField<int32_t>(verifier, VT_IMAGE_SET_LENGTH, 4) &&
-           VerifyField<int32_t>(verifier, VT_SEQUENCE_ID, 4) &&
+           VerifyField<uint16_t>(verifier, VT_IMAGE_SET_LENGTH, 2) &&
+           VerifyField<uint16_t>(verifier, VT_SEQUENCE_ID, 2) &&
            VerifyField<double>(verifier, VT_FRAME_FOVWIDTH, 8) &&
            VerifyField<double>(verifier, VT_FRAME_FOVHEIGHT, 8) &&
            VerifyField<double>(verifier, VT_PIXEL_FOVWIDTH, 8) &&
            VerifyField<double>(verifier, VT_PIXEL_FOVHEIGHT, 8) &&
-           VerifyField<int32_t>(verifier, VT_FRAME_WIDTH_PIXELS, 4) &&
-           VerifyField<int32_t>(verifier, VT_FRAME_HEIGHT_PIXELS, 4) &&
-           VerifyField<int32_t>(verifier, VT_PIXEL_BIT_DEPTH, 4) &&
+           VerifyField<uint16_t>(verifier, VT_FRAME_WIDTH_PIXELS, 2) &&
+           VerifyField<uint16_t>(verifier, VT_FRAME_HEIGHT_PIXELS, 2) &&
+           VerifyField<uint8_t>(verifier, VT_PIXEL_BIT_DEPTH, 1) &&
            VerifyOffset(verifier, VT_ANNOTATION_KEY) &&
            verifier.VerifyString(ANNOTATION_KEY()) &&
            VerifyOffset(verifier, VT_CALIBRATION_KEY) &&
@@ -269,11 +349,11 @@ struct SKIBuilder {
   void add_ORIG_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID) {
     fbb_.AddOffset(SKI::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
   }
+  void add_SAT_NO(uint32_t SAT_NO) {
+    fbb_.AddElement<uint32_t>(SKI::VT_SAT_NO, SAT_NO, 0);
+  }
   void add_ID_SENSOR(::flatbuffers::Offset<::flatbuffers::String> ID_SENSOR) {
     fbb_.AddOffset(SKI::VT_ID_SENSOR, ID_SENSOR);
-  }
-  void add_SAT_NO(int32_t SAT_NO) {
-    fbb_.AddElement<int32_t>(SKI::VT_SAT_NO, SAT_NO, 0);
   }
   void add_ORIG_SENSOR_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID) {
     fbb_.AddOffset(SKI::VT_ORIG_SENSOR_ID, ORIG_SENSOR_ID);
@@ -296,14 +376,14 @@ struct SKIBuilder {
   void add_SENZ(double SENZ) {
     fbb_.AddElement<double>(SKI::VT_SENZ, SENZ, 0.0);
   }
-  void add_SEN_QUAT(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SEN_QUAT) {
+  void add_SEN_QUAT(::flatbuffers::Offset<::flatbuffers::Vector<double>> SEN_QUAT) {
     fbb_.AddOffset(SKI::VT_SEN_QUAT, SEN_QUAT);
   }
-  void add_SEN_QUAT_DOT(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SEN_QUAT_DOT) {
+  void add_SEN_QUAT_DOT(::flatbuffers::Offset<::flatbuffers::Vector<double>> SEN_QUAT_DOT) {
     fbb_.AddOffset(SKI::VT_SEN_QUAT_DOT, SEN_QUAT_DOT);
   }
-  void add_IMAGE_TYPE(::flatbuffers::Offset<::flatbuffers::String> IMAGE_TYPE) {
-    fbb_.AddOffset(SKI::VT_IMAGE_TYPE, IMAGE_TYPE);
+  void add_IMAGE_TYPE(imageType IMAGE_TYPE) {
+    fbb_.AddElement<int8_t>(SKI::VT_IMAGE_TYPE, static_cast<int8_t>(IMAGE_TYPE), 0);
   }
   void add_EXP_START_TIME(::flatbuffers::Offset<::flatbuffers::String> EXP_START_TIME) {
     fbb_.AddOffset(SKI::VT_EXP_START_TIME, EXP_START_TIME);
@@ -329,11 +409,11 @@ struct SKIBuilder {
   void add_IMAGE_SET_ID(::flatbuffers::Offset<::flatbuffers::String> IMAGE_SET_ID) {
     fbb_.AddOffset(SKI::VT_IMAGE_SET_ID, IMAGE_SET_ID);
   }
-  void add_IMAGE_SET_LENGTH(int32_t IMAGE_SET_LENGTH) {
-    fbb_.AddElement<int32_t>(SKI::VT_IMAGE_SET_LENGTH, IMAGE_SET_LENGTH, 0);
+  void add_IMAGE_SET_LENGTH(uint16_t IMAGE_SET_LENGTH) {
+    fbb_.AddElement<uint16_t>(SKI::VT_IMAGE_SET_LENGTH, IMAGE_SET_LENGTH, 0);
   }
-  void add_SEQUENCE_ID(int32_t SEQUENCE_ID) {
-    fbb_.AddElement<int32_t>(SKI::VT_SEQUENCE_ID, SEQUENCE_ID, 0);
+  void add_SEQUENCE_ID(uint16_t SEQUENCE_ID) {
+    fbb_.AddElement<uint16_t>(SKI::VT_SEQUENCE_ID, SEQUENCE_ID, 0);
   }
   void add_FRAME_FOVWIDTH(double FRAME_FOVWIDTH) {
     fbb_.AddElement<double>(SKI::VT_FRAME_FOVWIDTH, FRAME_FOVWIDTH, 0.0);
@@ -347,14 +427,14 @@ struct SKIBuilder {
   void add_PIXEL_FOVHEIGHT(double PIXEL_FOVHEIGHT) {
     fbb_.AddElement<double>(SKI::VT_PIXEL_FOVHEIGHT, PIXEL_FOVHEIGHT, 0.0);
   }
-  void add_FRAME_WIDTH_PIXELS(int32_t FRAME_WIDTH_PIXELS) {
-    fbb_.AddElement<int32_t>(SKI::VT_FRAME_WIDTH_PIXELS, FRAME_WIDTH_PIXELS, 0);
+  void add_FRAME_WIDTH_PIXELS(uint16_t FRAME_WIDTH_PIXELS) {
+    fbb_.AddElement<uint16_t>(SKI::VT_FRAME_WIDTH_PIXELS, FRAME_WIDTH_PIXELS, 0);
   }
-  void add_FRAME_HEIGHT_PIXELS(int32_t FRAME_HEIGHT_PIXELS) {
-    fbb_.AddElement<int32_t>(SKI::VT_FRAME_HEIGHT_PIXELS, FRAME_HEIGHT_PIXELS, 0);
+  void add_FRAME_HEIGHT_PIXELS(uint16_t FRAME_HEIGHT_PIXELS) {
+    fbb_.AddElement<uint16_t>(SKI::VT_FRAME_HEIGHT_PIXELS, FRAME_HEIGHT_PIXELS, 0);
   }
-  void add_PIXEL_BIT_DEPTH(int32_t PIXEL_BIT_DEPTH) {
-    fbb_.AddElement<int32_t>(SKI::VT_PIXEL_BIT_DEPTH, PIXEL_BIT_DEPTH, 0);
+  void add_PIXEL_BIT_DEPTH(uint8_t PIXEL_BIT_DEPTH) {
+    fbb_.AddElement<uint8_t>(SKI::VT_PIXEL_BIT_DEPTH, PIXEL_BIT_DEPTH, 0);
   }
   void add_ANNOTATION_KEY(::flatbuffers::Offset<::flatbuffers::String> ANNOTATION_KEY) {
     fbb_.AddOffset(SKI::VT_ANNOTATION_KEY, ANNOTATION_KEY);
@@ -399,8 +479,8 @@ inline ::flatbuffers::Offset<SKI> CreateSKI(
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID = 0,
+    uint32_t SAT_NO = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ID_SENSOR = 0,
-    int32_t SAT_NO = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID = 0,
     double SENLAT = 0.0,
     double SENLON = 0.0,
@@ -408,9 +488,9 @@ inline ::flatbuffers::Offset<SKI> CreateSKI(
     double SENX = 0.0,
     double SENY = 0.0,
     double SENZ = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SEN_QUAT = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SEN_QUAT_DOT = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> IMAGE_TYPE = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> SEN_QUAT = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> SEN_QUAT_DOT = 0,
+    imageType IMAGE_TYPE = imageType_VISIBLE,
     ::flatbuffers::Offset<::flatbuffers::String> EXP_START_TIME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> EXP_END_TIME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> IMAGE_SOURCE_INFO = 0,
@@ -419,15 +499,15 @@ inline ::flatbuffers::Offset<SKI> CreateSKI(
     double TOP_LEFT_STOP_AZ = 0.0,
     double TOP_LEFT_STOP_EL = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> IMAGE_SET_ID = 0,
-    int32_t IMAGE_SET_LENGTH = 0,
-    int32_t SEQUENCE_ID = 0,
+    uint16_t IMAGE_SET_LENGTH = 0,
+    uint16_t SEQUENCE_ID = 0,
     double FRAME_FOVWIDTH = 0.0,
     double FRAME_FOVHEIGHT = 0.0,
     double PIXEL_FOVWIDTH = 0.0,
     double PIXEL_FOVHEIGHT = 0.0,
-    int32_t FRAME_WIDTH_PIXELS = 0,
-    int32_t FRAME_HEIGHT_PIXELS = 0,
-    int32_t PIXEL_BIT_DEPTH = 0,
+    uint16_t FRAME_WIDTH_PIXELS = 0,
+    uint16_t FRAME_HEIGHT_PIXELS = 0,
+    uint8_t PIXEL_BIT_DEPTH = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ANNOTATION_KEY = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CALIBRATION_KEY = 0,
     ::flatbuffers::Offset<::flatbuffers::String> FILENAME = 0,
@@ -461,24 +541,24 @@ inline ::flatbuffers::Offset<SKI> CreateSKI(
   builder_.add_FILENAME(FILENAME);
   builder_.add_CALIBRATION_KEY(CALIBRATION_KEY);
   builder_.add_ANNOTATION_KEY(ANNOTATION_KEY);
-  builder_.add_PIXEL_BIT_DEPTH(PIXEL_BIT_DEPTH);
-  builder_.add_FRAME_HEIGHT_PIXELS(FRAME_HEIGHT_PIXELS);
-  builder_.add_FRAME_WIDTH_PIXELS(FRAME_WIDTH_PIXELS);
-  builder_.add_SEQUENCE_ID(SEQUENCE_ID);
-  builder_.add_IMAGE_SET_LENGTH(IMAGE_SET_LENGTH);
   builder_.add_IMAGE_SET_ID(IMAGE_SET_ID);
   builder_.add_IMAGE_SOURCE_INFO(IMAGE_SOURCE_INFO);
   builder_.add_EXP_END_TIME(EXP_END_TIME);
   builder_.add_EXP_START_TIME(EXP_START_TIME);
-  builder_.add_IMAGE_TYPE(IMAGE_TYPE);
   builder_.add_SEN_QUAT_DOT(SEN_QUAT_DOT);
   builder_.add_SEN_QUAT(SEN_QUAT);
   builder_.add_ORIG_SENSOR_ID(ORIG_SENSOR_ID);
-  builder_.add_SAT_NO(SAT_NO);
   builder_.add_ID_SENSOR(ID_SENSOR);
+  builder_.add_SAT_NO(SAT_NO);
   builder_.add_ORIG_OBJECT_ID(ORIG_OBJECT_ID);
   builder_.add_ON_ORBIT(ON_ORBIT);
   builder_.add_ID(ID);
+  builder_.add_FRAME_HEIGHT_PIXELS(FRAME_HEIGHT_PIXELS);
+  builder_.add_FRAME_WIDTH_PIXELS(FRAME_WIDTH_PIXELS);
+  builder_.add_SEQUENCE_ID(SEQUENCE_ID);
+  builder_.add_IMAGE_SET_LENGTH(IMAGE_SET_LENGTH);
+  builder_.add_PIXEL_BIT_DEPTH(PIXEL_BIT_DEPTH);
+  builder_.add_IMAGE_TYPE(IMAGE_TYPE);
   return builder_.Finish();
 }
 
@@ -487,8 +567,8 @@ inline ::flatbuffers::Offset<SKI> CreateSKIDirect(
     const char *ID = nullptr,
     const char *ON_ORBIT = nullptr,
     const char *ORIG_OBJECT_ID = nullptr,
+    uint32_t SAT_NO = 0,
     const char *ID_SENSOR = nullptr,
-    int32_t SAT_NO = 0,
     const char *ORIG_SENSOR_ID = nullptr,
     double SENLAT = 0.0,
     double SENLON = 0.0,
@@ -496,9 +576,9 @@ inline ::flatbuffers::Offset<SKI> CreateSKIDirect(
     double SENX = 0.0,
     double SENY = 0.0,
     double SENZ = 0.0,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *SEN_QUAT = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *SEN_QUAT_DOT = nullptr,
-    const char *IMAGE_TYPE = nullptr,
+    const std::vector<double> *SEN_QUAT = nullptr,
+    const std::vector<double> *SEN_QUAT_DOT = nullptr,
+    imageType IMAGE_TYPE = imageType_VISIBLE,
     const char *EXP_START_TIME = nullptr,
     const char *EXP_END_TIME = nullptr,
     const char *IMAGE_SOURCE_INFO = nullptr,
@@ -507,15 +587,15 @@ inline ::flatbuffers::Offset<SKI> CreateSKIDirect(
     double TOP_LEFT_STOP_AZ = 0.0,
     double TOP_LEFT_STOP_EL = 0.0,
     const char *IMAGE_SET_ID = nullptr,
-    int32_t IMAGE_SET_LENGTH = 0,
-    int32_t SEQUENCE_ID = 0,
+    uint16_t IMAGE_SET_LENGTH = 0,
+    uint16_t SEQUENCE_ID = 0,
     double FRAME_FOVWIDTH = 0.0,
     double FRAME_FOVHEIGHT = 0.0,
     double PIXEL_FOVWIDTH = 0.0,
     double PIXEL_FOVHEIGHT = 0.0,
-    int32_t FRAME_WIDTH_PIXELS = 0,
-    int32_t FRAME_HEIGHT_PIXELS = 0,
-    int32_t PIXEL_BIT_DEPTH = 0,
+    uint16_t FRAME_WIDTH_PIXELS = 0,
+    uint16_t FRAME_HEIGHT_PIXELS = 0,
+    uint8_t PIXEL_BIT_DEPTH = 0,
     const char *ANNOTATION_KEY = nullptr,
     const char *CALIBRATION_KEY = nullptr,
     const char *FILENAME = nullptr,
@@ -530,9 +610,8 @@ inline ::flatbuffers::Offset<SKI> CreateSKIDirect(
   auto ORIG_OBJECT_ID__ = ORIG_OBJECT_ID ? _fbb.CreateString(ORIG_OBJECT_ID) : 0;
   auto ID_SENSOR__ = ID_SENSOR ? _fbb.CreateString(ID_SENSOR) : 0;
   auto ORIG_SENSOR_ID__ = ORIG_SENSOR_ID ? _fbb.CreateString(ORIG_SENSOR_ID) : 0;
-  auto SEN_QUAT__ = SEN_QUAT ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SEN_QUAT) : 0;
-  auto SEN_QUAT_DOT__ = SEN_QUAT_DOT ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SEN_QUAT_DOT) : 0;
-  auto IMAGE_TYPE__ = IMAGE_TYPE ? _fbb.CreateString(IMAGE_TYPE) : 0;
+  auto SEN_QUAT__ = SEN_QUAT ? _fbb.CreateVector<double>(*SEN_QUAT) : 0;
+  auto SEN_QUAT_DOT__ = SEN_QUAT_DOT ? _fbb.CreateVector<double>(*SEN_QUAT_DOT) : 0;
   auto EXP_START_TIME__ = EXP_START_TIME ? _fbb.CreateString(EXP_START_TIME) : 0;
   auto EXP_END_TIME__ = EXP_END_TIME ? _fbb.CreateString(EXP_END_TIME) : 0;
   auto IMAGE_SOURCE_INFO__ = IMAGE_SOURCE_INFO ? _fbb.CreateString(IMAGE_SOURCE_INFO) : 0;
@@ -550,8 +629,8 @@ inline ::flatbuffers::Offset<SKI> CreateSKIDirect(
       ID__,
       ON_ORBIT__,
       ORIG_OBJECT_ID__,
-      ID_SENSOR__,
       SAT_NO,
+      ID_SENSOR__,
       ORIG_SENSOR_ID__,
       SENLAT,
       SENLON,
@@ -561,7 +640,7 @@ inline ::flatbuffers::Offset<SKI> CreateSKIDirect(
       SENZ,
       SEN_QUAT__,
       SEN_QUAT_DOT__,
-      IMAGE_TYPE__,
+      IMAGE_TYPE,
       EXP_START_TIME__,
       EXP_END_TIME__,
       IMAGE_SOURCE_INFO__,

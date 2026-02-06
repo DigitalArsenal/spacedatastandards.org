@@ -16,6 +16,123 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct SOI;
 struct SOIBuilder;
 
+enum soiCollectionMode : int8_t {
+  soiCollectionMode_SIDEREAL = 0,
+  soiCollectionMode_RATE_TRACK = 1,
+  soiCollectionMode_STARE = 2,
+  soiCollectionMode_SEARCH = 3,
+  soiCollectionMode_SURVEY = 4,
+  soiCollectionMode_TASKED = 5,
+  soiCollectionMode_MIN = soiCollectionMode_SIDEREAL,
+  soiCollectionMode_MAX = soiCollectionMode_TASKED
+};
+
+inline const soiCollectionMode (&EnumValuessoiCollectionMode())[6] {
+  static const soiCollectionMode values[] = {
+    soiCollectionMode_SIDEREAL,
+    soiCollectionMode_RATE_TRACK,
+    soiCollectionMode_STARE,
+    soiCollectionMode_SEARCH,
+    soiCollectionMode_SURVEY,
+    soiCollectionMode_TASKED
+  };
+  return values;
+}
+
+inline const char * const *EnumNamessoiCollectionMode() {
+  static const char * const names[7] = {
+    "SIDEREAL",
+    "RATE_TRACK",
+    "STARE",
+    "SEARCH",
+    "SURVEY",
+    "TASKED",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamesoiCollectionMode(soiCollectionMode e) {
+  if (::flatbuffers::IsOutRange(e, soiCollectionMode_SIDEREAL, soiCollectionMode_TASKED)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamessoiCollectionMode()[index];
+}
+
+enum soiObsType : int8_t {
+  soiObsType_OPTICAL = 0,
+  soiObsType_RADAR = 1,
+  soiObsType_COMBINED = 2,
+  soiObsType_MIN = soiObsType_OPTICAL,
+  soiObsType_MAX = soiObsType_COMBINED
+};
+
+inline const soiObsType (&EnumValuessoiObsType())[3] {
+  static const soiObsType values[] = {
+    soiObsType_OPTICAL,
+    soiObsType_RADAR,
+    soiObsType_COMBINED
+  };
+  return values;
+}
+
+inline const char * const *EnumNamessoiObsType() {
+  static const char * const names[4] = {
+    "OPTICAL",
+    "RADAR",
+    "COMBINED",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamesoiObsType(soiObsType e) {
+  if (::flatbuffers::IsOutRange(e, soiObsType_OPTICAL, soiObsType_COMBINED)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamessoiObsType()[index];
+}
+
+enum soiCalibrationType : int8_t {
+  soiCalibrationType_PHOTOMETRIC = 0,
+  soiCalibrationType_ASTROMETRIC = 1,
+  soiCalibrationType_RADIOMETRIC = 2,
+  soiCalibrationType_POLARIMETRIC = 3,
+  soiCalibrationType_TEMPORAL = 4,
+  soiCalibrationType_NONE = 5,
+  soiCalibrationType_MIN = soiCalibrationType_PHOTOMETRIC,
+  soiCalibrationType_MAX = soiCalibrationType_NONE
+};
+
+inline const soiCalibrationType (&EnumValuessoiCalibrationType())[6] {
+  static const soiCalibrationType values[] = {
+    soiCalibrationType_PHOTOMETRIC,
+    soiCalibrationType_ASTROMETRIC,
+    soiCalibrationType_RADIOMETRIC,
+    soiCalibrationType_POLARIMETRIC,
+    soiCalibrationType_TEMPORAL,
+    soiCalibrationType_NONE
+  };
+  return values;
+}
+
+inline const char * const *EnumNamessoiCalibrationType() {
+  static const char * const names[7] = {
+    "PHOTOMETRIC",
+    "ASTROMETRIC",
+    "RADIOMETRIC",
+    "POLARIMETRIC",
+    "TEMPORAL",
+    "NONE",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamesoiCalibrationType(soiCalibrationType e) {
+  if (::flatbuffers::IsOutRange(e, soiCalibrationType_PHOTOMETRIC, soiCalibrationType_NONE)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamessoiCalibrationType()[index];
+}
+
 /// Space Object Identification Observation Set
 struct SOI FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef SOIBuilder Builder;
@@ -27,47 +144,47 @@ struct SOI FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_SENSOR_AS_ID = 12,
     VT_SAT_NO = 14,
     VT_ORIG_OBJECT_ID = 16,
-    VT_SENLAT = 18,
-    VT_SENLON = 20,
-    VT_SENALT = 22,
-    VT_SENX = 24,
-    VT_SENY = 26,
-    VT_SENZ = 28,
-    VT_SENVELX = 30,
-    VT_SENVELY = 32,
-    VT_SENVELZ = 34,
-    VT_START_TIME = 36,
-    VT_END_TIME = 38,
-    VT_NUM_OBS = 40,
-    VT_TYPE = 42,
-    VT_POLAR_ANGLE_START = 44,
-    VT_POLAR_ANGLE_END = 46,
-    VT_REFERENCE_FRAME = 48,
-    VT_SEN_REFERENCE_FRAME = 50,
-    VT_LOS_DECLINATION_START = 52,
-    VT_LOS_DECLINATION_END = 54,
-    VT_POINTING_ANGLE_AZ_START = 56,
-    VT_POINTING_ANGLE_AZ_END = 58,
-    VT_POINTING_ANGLE_EL_START = 60,
-    VT_POINTING_ANGLE_EL_END = 62,
-    VT_PIXEL_ARRAY_WIDTH = 64,
-    VT_PIXEL_ARRAY_HEIGHT = 66,
-    VT_NUM_SPECTRAL_FILTERS = 68,
-    VT_SPECTRAL_FILTERS = 70,
-    VT_COLLECTION_MODE = 72,
-    VT_GAIN = 74,
-    VT_BINNING_HORIZ = 76,
-    VT_BINNING_VERT = 78,
-    VT_SOLAR_MAG = 80,
-    VT_PIXEL_MIN = 82,
-    VT_PIXEL_MAX = 84,
-    VT_SOFTWARE_VERSION = 86,
-    VT_SATELLITE_NAME = 88,
-    VT_STAR_CAT_NAME = 90,
-    VT_CORR_QUALITY = 92,
-    VT_UCT = 94,
-    VT_VALID_CALIBRATIONS = 96,
-    VT_CALIBRATION_TYPE = 98,
+    VT_SATELLITE_NAME = 18,
+    VT_UCT = 20,
+    VT_SENLAT = 22,
+    VT_SENLON = 24,
+    VT_SENALT = 26,
+    VT_SENX = 28,
+    VT_SENY = 30,
+    VT_SENZ = 32,
+    VT_SENVELX = 34,
+    VT_SENVELY = 36,
+    VT_SENVELZ = 38,
+    VT_SEN_REFERENCE_FRAME = 40,
+    VT_OBS_TYPE = 42,
+    VT_COLLECTION_MODE = 44,
+    VT_START_TIME = 46,
+    VT_END_TIME = 48,
+    VT_NUM_OBS = 50,
+    VT_REFERENCE_FRAME = 52,
+    VT_POLAR_ANGLE_START = 54,
+    VT_POLAR_ANGLE_END = 56,
+    VT_LOS_DECLINATION_START = 58,
+    VT_LOS_DECLINATION_END = 60,
+    VT_POINTING_ANGLE_AZ_START = 62,
+    VT_POINTING_ANGLE_AZ_END = 64,
+    VT_POINTING_ANGLE_EL_START = 66,
+    VT_POINTING_ANGLE_EL_END = 68,
+    VT_PIXEL_ARRAY_WIDTH = 70,
+    VT_PIXEL_ARRAY_HEIGHT = 72,
+    VT_NUM_SPECTRAL_FILTERS = 74,
+    VT_SPECTRAL_FILTERS = 76,
+    VT_GAIN = 78,
+    VT_BINNING_HORIZ = 80,
+    VT_BINNING_VERT = 82,
+    VT_SOLAR_MAG = 84,
+    VT_PIXEL_MIN = 86,
+    VT_PIXEL_MAX = 88,
+    VT_SOFTWARE_VERSION = 90,
+    VT_STAR_CAT_NAME = 92,
+    VT_CORR_QUALITY = 94,
+    VT_CALIBRATION_TYPE = 96,
+    VT_VALID_CALIBRATIONS = 98,
     VT_PERCENT_SAT_THRESHOLD = 100,
     VT_CHANGE_DETECTED = 102,
     VT_PERIODICITY_CHANGE_DETECTED = 104,
@@ -84,192 +201,255 @@ struct SOI FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_OPTICAL_SOIOBSERVATION_LIST = 126,
     VT_RADAR_SOIOBSERVATION_LIST = 128
   };
+  /// Unique identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
+  /// Message creation date (ISO 8601)
   const ::flatbuffers::String *MSG_CREATE_DATE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_MSG_CREATE_DATE);
   }
+  /// Sensor identifier
   const ::flatbuffers::String *ID_SENSOR() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID_SENSOR);
   }
+  /// Original sensor identifier
   const ::flatbuffers::String *ORIG_SENSOR_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIG_SENSOR_ID);
   }
+  /// Sensor observation set identifier
   const ::flatbuffers::String *SENSOR_AS_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SENSOR_AS_ID);
   }
-  int32_t SAT_NO() const {
-    return GetField<int32_t>(VT_SAT_NO, 0);
+  /// Satellite catalog number
+  uint32_t SAT_NO() const {
+    return GetField<uint32_t>(VT_SAT_NO, 0);
   }
+  /// International designator
   const ::flatbuffers::String *ORIG_OBJECT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIG_OBJECT_ID);
   }
-  double SENLAT() const {
-    return GetField<double>(VT_SENLAT, 0.0);
-  }
-  double SENLON() const {
-    return GetField<double>(VT_SENLON, 0.0);
-  }
-  double SENALT() const {
-    return GetField<double>(VT_SENALT, 0.0);
-  }
-  double SENX() const {
-    return GetField<double>(VT_SENX, 0.0);
-  }
-  double SENY() const {
-    return GetField<double>(VT_SENY, 0.0);
-  }
-  double SENZ() const {
-    return GetField<double>(VT_SENZ, 0.0);
-  }
-  double SENVELX() const {
-    return GetField<double>(VT_SENVELX, 0.0);
-  }
-  double SENVELY() const {
-    return GetField<double>(VT_SENVELY, 0.0);
-  }
-  double SENVELZ() const {
-    return GetField<double>(VT_SENVELZ, 0.0);
-  }
-  const ::flatbuffers::String *START_TIME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_START_TIME);
-  }
-  const ::flatbuffers::String *END_TIME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_END_TIME);
-  }
-  int32_t NUM_OBS() const {
-    return GetField<int32_t>(VT_NUM_OBS, 0);
-  }
-  const ::flatbuffers::String *TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TYPE);
-  }
-  double POLAR_ANGLE_START() const {
-    return GetField<double>(VT_POLAR_ANGLE_START, 0.0);
-  }
-  double POLAR_ANGLE_END() const {
-    return GetField<double>(VT_POLAR_ANGLE_END, 0.0);
-  }
-  const ::flatbuffers::String *REFERENCE_FRAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_REFERENCE_FRAME);
-  }
-  const ::flatbuffers::String *SEN_REFERENCE_FRAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SEN_REFERENCE_FRAME);
-  }
-  double LOS_DECLINATION_START() const {
-    return GetField<double>(VT_LOS_DECLINATION_START, 0.0);
-  }
-  double LOS_DECLINATION_END() const {
-    return GetField<double>(VT_LOS_DECLINATION_END, 0.0);
-  }
-  double POINTING_ANGLE_AZ_START() const {
-    return GetField<double>(VT_POINTING_ANGLE_AZ_START, 0.0);
-  }
-  double POINTING_ANGLE_AZ_END() const {
-    return GetField<double>(VT_POINTING_ANGLE_AZ_END, 0.0);
-  }
-  double POINTING_ANGLE_EL_START() const {
-    return GetField<double>(VT_POINTING_ANGLE_EL_START, 0.0);
-  }
-  double POINTING_ANGLE_EL_END() const {
-    return GetField<double>(VT_POINTING_ANGLE_EL_END, 0.0);
-  }
-  int32_t PIXEL_ARRAY_WIDTH() const {
-    return GetField<int32_t>(VT_PIXEL_ARRAY_WIDTH, 0);
-  }
-  int32_t PIXEL_ARRAY_HEIGHT() const {
-    return GetField<int32_t>(VT_PIXEL_ARRAY_HEIGHT, 0);
-  }
-  int32_t NUM_SPECTRAL_FILTERS() const {
-    return GetField<int32_t>(VT_NUM_SPECTRAL_FILTERS, 0);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SPECTRAL_FILTERS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SPECTRAL_FILTERS);
-  }
-  const ::flatbuffers::String *COLLECTION_MODE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_COLLECTION_MODE);
-  }
-  double GAIN() const {
-    return GetField<double>(VT_GAIN, 0.0);
-  }
-  int32_t BINNING_HORIZ() const {
-    return GetField<int32_t>(VT_BINNING_HORIZ, 0);
-  }
-  int32_t BINNING_VERT() const {
-    return GetField<int32_t>(VT_BINNING_VERT, 0);
-  }
-  double SOLAR_MAG() const {
-    return GetField<double>(VT_SOLAR_MAG, 0.0);
-  }
-  int32_t PIXEL_MIN() const {
-    return GetField<int32_t>(VT_PIXEL_MIN, 0);
-  }
-  int32_t PIXEL_MAX() const {
-    return GetField<int32_t>(VT_PIXEL_MAX, 0);
-  }
-  const ::flatbuffers::String *SOFTWARE_VERSION() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SOFTWARE_VERSION);
-  }
+  /// Satellite common name
   const ::flatbuffers::String *SATELLITE_NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SATELLITE_NAME);
   }
-  const ::flatbuffers::String *STAR_CAT_NAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_STAR_CAT_NAME);
-  }
-  double CORR_QUALITY() const {
-    return GetField<double>(VT_CORR_QUALITY, 0.0);
-  }
+  /// True if uncorrelated target
   bool UCT() const {
     return GetField<uint8_t>(VT_UCT, 0) != 0;
   }
+  /// Sensor geodetic latitude (degrees)
+  double SENLAT() const {
+    return GetField<double>(VT_SENLAT, 0.0);
+  }
+  /// Sensor geodetic longitude (degrees)
+  double SENLON() const {
+    return GetField<double>(VT_SENLON, 0.0);
+  }
+  /// Sensor altitude (km)
+  double SENALT() const {
+    return GetField<double>(VT_SENALT, 0.0);
+  }
+  /// Sensor ECEF X position (km)
+  double SENX() const {
+    return GetField<double>(VT_SENX, 0.0);
+  }
+  /// Sensor ECEF Y position (km)
+  double SENY() const {
+    return GetField<double>(VT_SENY, 0.0);
+  }
+  /// Sensor ECEF Z position (km)
+  double SENZ() const {
+    return GetField<double>(VT_SENZ, 0.0);
+  }
+  /// Sensor ECEF X velocity (km/s)
+  double SENVELX() const {
+    return GetField<double>(VT_SENVELX, 0.0);
+  }
+  /// Sensor ECEF Y velocity (km/s)
+  double SENVELY() const {
+    return GetField<double>(VT_SENVELY, 0.0);
+  }
+  /// Sensor ECEF Z velocity (km/s)
+  double SENVELZ() const {
+    return GetField<double>(VT_SENVELZ, 0.0);
+  }
+  /// Sensor reference frame
+  const ::flatbuffers::String *SEN_REFERENCE_FRAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SEN_REFERENCE_FRAME);
+  }
+  /// Observation type
+  soiObsType OBS_TYPE() const {
+    return static_cast<soiObsType>(GetField<int8_t>(VT_OBS_TYPE, 0));
+  }
+  /// Collection mode
+  soiCollectionMode COLLECTION_MODE() const {
+    return static_cast<soiCollectionMode>(GetField<int8_t>(VT_COLLECTION_MODE, 0));
+  }
+  /// Observation start time (ISO 8601)
+  const ::flatbuffers::String *START_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_START_TIME);
+  }
+  /// Observation end time (ISO 8601)
+  const ::flatbuffers::String *END_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_END_TIME);
+  }
+  /// Number of observations in set
+  uint32_t NUM_OBS() const {
+    return GetField<uint32_t>(VT_NUM_OBS, 0);
+  }
+  /// Observation reference frame
+  const ::flatbuffers::String *REFERENCE_FRAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REFERENCE_FRAME);
+  }
+  /// Polar angle at start (degrees)
+  double POLAR_ANGLE_START() const {
+    return GetField<double>(VT_POLAR_ANGLE_START, 0.0);
+  }
+  /// Polar angle at end (degrees)
+  double POLAR_ANGLE_END() const {
+    return GetField<double>(VT_POLAR_ANGLE_END, 0.0);
+  }
+  /// Line-of-sight declination at start (degrees)
+  double LOS_DECLINATION_START() const {
+    return GetField<double>(VT_LOS_DECLINATION_START, 0.0);
+  }
+  /// Line-of-sight declination at end (degrees)
+  double LOS_DECLINATION_END() const {
+    return GetField<double>(VT_LOS_DECLINATION_END, 0.0);
+  }
+  /// Pointing azimuth at start (degrees)
+  double POINTING_ANGLE_AZ_START() const {
+    return GetField<double>(VT_POINTING_ANGLE_AZ_START, 0.0);
+  }
+  /// Pointing azimuth at end (degrees)
+  double POINTING_ANGLE_AZ_END() const {
+    return GetField<double>(VT_POINTING_ANGLE_AZ_END, 0.0);
+  }
+  /// Pointing elevation at start (degrees)
+  double POINTING_ANGLE_EL_START() const {
+    return GetField<double>(VT_POINTING_ANGLE_EL_START, 0.0);
+  }
+  /// Pointing elevation at end (degrees)
+  double POINTING_ANGLE_EL_END() const {
+    return GetField<double>(VT_POINTING_ANGLE_EL_END, 0.0);
+  }
+  /// Focal plane array width (pixels)
+  uint16_t PIXEL_ARRAY_WIDTH() const {
+    return GetField<uint16_t>(VT_PIXEL_ARRAY_WIDTH, 0);
+  }
+  /// Focal plane array height (pixels)
+  uint16_t PIXEL_ARRAY_HEIGHT() const {
+    return GetField<uint16_t>(VT_PIXEL_ARRAY_HEIGHT, 0);
+  }
+  /// Number of spectral filters used
+  uint8_t NUM_SPECTRAL_FILTERS() const {
+    return GetField<uint8_t>(VT_NUM_SPECTRAL_FILTERS, 0);
+  }
+  /// Spectral filter identifiers
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SPECTRAL_FILTERS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SPECTRAL_FILTERS);
+  }
+  /// Detector gain setting
+  double GAIN() const {
+    return GetField<double>(VT_GAIN, 0.0);
+  }
+  /// Horizontal binning factor
+  uint8_t BINNING_HORIZ() const {
+    return GetField<uint8_t>(VT_BINNING_HORIZ, 0);
+  }
+  /// Vertical binning factor
+  uint8_t BINNING_VERT() const {
+    return GetField<uint8_t>(VT_BINNING_VERT, 0);
+  }
+  /// Solar visual magnitude
+  double SOLAR_MAG() const {
+    return GetField<double>(VT_SOLAR_MAG, 0.0);
+  }
+  /// Minimum pixel value in observation
+  int32_t PIXEL_MIN() const {
+    return GetField<int32_t>(VT_PIXEL_MIN, 0);
+  }
+  /// Maximum pixel value in observation
+  int32_t PIXEL_MAX() const {
+    return GetField<int32_t>(VT_PIXEL_MAX, 0);
+  }
+  /// Processing software version
+  const ::flatbuffers::String *SOFTWARE_VERSION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SOFTWARE_VERSION);
+  }
+  /// Star catalog used for calibration
+  const ::flatbuffers::String *STAR_CAT_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_STAR_CAT_NAME);
+  }
+  /// Correlation quality score
+  double CORR_QUALITY() const {
+    return GetField<double>(VT_CORR_QUALITY, 0.0);
+  }
+  /// Calibration type
+  soiCalibrationType CALIBRATION_TYPE() const {
+    return static_cast<soiCalibrationType>(GetField<int8_t>(VT_CALIBRATION_TYPE, 0));
+  }
+  /// Valid calibration identifiers
   const ::flatbuffers::String *VALID_CALIBRATIONS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_VALID_CALIBRATIONS);
   }
-  const ::flatbuffers::String *CALIBRATION_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_CALIBRATION_TYPE);
-  }
+  /// Percent saturation threshold
   double PERCENT_SAT_THRESHOLD() const {
     return GetField<double>(VT_PERCENT_SAT_THRESHOLD, 0.0);
   }
+  /// True if change detected from baseline
   bool CHANGE_DETECTED() const {
     return GetField<uint8_t>(VT_CHANGE_DETECTED, 0) != 0;
   }
+  /// True if periodicity change detected
   bool PERIODICITY_CHANGE_DETECTED() const {
     return GetField<uint8_t>(VT_PERIODICITY_CHANGE_DETECTED, 0) != 0;
   }
+  /// True if brightness variance change detected
   bool BRIGHTNESS_VARIANCE_CHANGE_DETECTED() const {
     return GetField<uint8_t>(VT_BRIGHTNESS_VARIANCE_CHANGE_DETECTED, 0) != 0;
   }
+  /// True if solar phase angle brightness change detected
   bool SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED() const {
     return GetField<uint8_t>(VT_SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED, 0) != 0;
   }
+  /// Change confidence assessment
   const ::flatbuffers::String *CHANGE_CONF() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CHANGE_CONF);
   }
+  /// Collection density confidence
   const ::flatbuffers::String *COLLECTION_DENSITY_CONF() const {
     return GetPointer<const ::flatbuffers::String *>(VT_COLLECTION_DENSITY_CONF);
   }
+  /// Periodicity sampling confidence
   const ::flatbuffers::String *PERIODICITY_SAMPLING_CONF() const {
     return GetPointer<const ::flatbuffers::String *>(VT_PERIODICITY_SAMPLING_CONF);
   }
+  /// Periodicity detection confidence
   const ::flatbuffers::String *PERIODICITY_DETECTION_CONF() const {
     return GetPointer<const ::flatbuffers::String *>(VT_PERIODICITY_DETECTION_CONF);
   }
+  /// Collection identifier
   const ::flatbuffers::String *COLLECTION_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_COLLECTION_ID);
   }
+  /// Calibration record references
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *CALIBRATIONS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_CALIBRATIONS);
   }
+  /// Associated tags
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_TAGS);
   }
+  /// Transaction identifier
   const ::flatbuffers::String *TRANSACTION_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TRANSACTION_ID);
   }
+  /// Optical SOI observation references
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *OPTICAL_SOIOBSERVATION_LIST() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_OPTICAL_SOIOBSERVATION_LIST);
   }
+  /// Radar SOI observation references
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *RADAR_SOIOBSERVATION_LIST() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_RADAR_SOIOBSERVATION_LIST);
   }
@@ -285,9 +465,12 @@ struct SOI FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(ORIG_SENSOR_ID()) &&
            VerifyOffset(verifier, VT_SENSOR_AS_ID) &&
            verifier.VerifyString(SENSOR_AS_ID()) &&
-           VerifyField<int32_t>(verifier, VT_SAT_NO, 4) &&
+           VerifyField<uint32_t>(verifier, VT_SAT_NO, 4) &&
            VerifyOffset(verifier, VT_ORIG_OBJECT_ID) &&
            verifier.VerifyString(ORIG_OBJECT_ID()) &&
+           VerifyOffset(verifier, VT_SATELLITE_NAME) &&
+           verifier.VerifyString(SATELLITE_NAME()) &&
+           VerifyField<uint8_t>(verifier, VT_UCT, 1) &&
            VerifyField<double>(verifier, VT_SENLAT, 8) &&
            VerifyField<double>(verifier, VT_SENLON, 8) &&
            VerifyField<double>(verifier, VT_SENALT, 8) &&
@@ -297,51 +480,45 @@ struct SOI FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_SENVELX, 8) &&
            VerifyField<double>(verifier, VT_SENVELY, 8) &&
            VerifyField<double>(verifier, VT_SENVELZ, 8) &&
+           VerifyOffset(verifier, VT_SEN_REFERENCE_FRAME) &&
+           verifier.VerifyString(SEN_REFERENCE_FRAME()) &&
+           VerifyField<int8_t>(verifier, VT_OBS_TYPE, 1) &&
+           VerifyField<int8_t>(verifier, VT_COLLECTION_MODE, 1) &&
            VerifyOffset(verifier, VT_START_TIME) &&
            verifier.VerifyString(START_TIME()) &&
            VerifyOffset(verifier, VT_END_TIME) &&
            verifier.VerifyString(END_TIME()) &&
-           VerifyField<int32_t>(verifier, VT_NUM_OBS, 4) &&
-           VerifyOffset(verifier, VT_TYPE) &&
-           verifier.VerifyString(TYPE()) &&
-           VerifyField<double>(verifier, VT_POLAR_ANGLE_START, 8) &&
-           VerifyField<double>(verifier, VT_POLAR_ANGLE_END, 8) &&
+           VerifyField<uint32_t>(verifier, VT_NUM_OBS, 4) &&
            VerifyOffset(verifier, VT_REFERENCE_FRAME) &&
            verifier.VerifyString(REFERENCE_FRAME()) &&
-           VerifyOffset(verifier, VT_SEN_REFERENCE_FRAME) &&
-           verifier.VerifyString(SEN_REFERENCE_FRAME()) &&
+           VerifyField<double>(verifier, VT_POLAR_ANGLE_START, 8) &&
+           VerifyField<double>(verifier, VT_POLAR_ANGLE_END, 8) &&
            VerifyField<double>(verifier, VT_LOS_DECLINATION_START, 8) &&
            VerifyField<double>(verifier, VT_LOS_DECLINATION_END, 8) &&
            VerifyField<double>(verifier, VT_POINTING_ANGLE_AZ_START, 8) &&
            VerifyField<double>(verifier, VT_POINTING_ANGLE_AZ_END, 8) &&
            VerifyField<double>(verifier, VT_POINTING_ANGLE_EL_START, 8) &&
            VerifyField<double>(verifier, VT_POINTING_ANGLE_EL_END, 8) &&
-           VerifyField<int32_t>(verifier, VT_PIXEL_ARRAY_WIDTH, 4) &&
-           VerifyField<int32_t>(verifier, VT_PIXEL_ARRAY_HEIGHT, 4) &&
-           VerifyField<int32_t>(verifier, VT_NUM_SPECTRAL_FILTERS, 4) &&
+           VerifyField<uint16_t>(verifier, VT_PIXEL_ARRAY_WIDTH, 2) &&
+           VerifyField<uint16_t>(verifier, VT_PIXEL_ARRAY_HEIGHT, 2) &&
+           VerifyField<uint8_t>(verifier, VT_NUM_SPECTRAL_FILTERS, 1) &&
            VerifyOffset(verifier, VT_SPECTRAL_FILTERS) &&
            verifier.VerifyVector(SPECTRAL_FILTERS()) &&
            verifier.VerifyVectorOfStrings(SPECTRAL_FILTERS()) &&
-           VerifyOffset(verifier, VT_COLLECTION_MODE) &&
-           verifier.VerifyString(COLLECTION_MODE()) &&
            VerifyField<double>(verifier, VT_GAIN, 8) &&
-           VerifyField<int32_t>(verifier, VT_BINNING_HORIZ, 4) &&
-           VerifyField<int32_t>(verifier, VT_BINNING_VERT, 4) &&
+           VerifyField<uint8_t>(verifier, VT_BINNING_HORIZ, 1) &&
+           VerifyField<uint8_t>(verifier, VT_BINNING_VERT, 1) &&
            VerifyField<double>(verifier, VT_SOLAR_MAG, 8) &&
            VerifyField<int32_t>(verifier, VT_PIXEL_MIN, 4) &&
            VerifyField<int32_t>(verifier, VT_PIXEL_MAX, 4) &&
            VerifyOffset(verifier, VT_SOFTWARE_VERSION) &&
            verifier.VerifyString(SOFTWARE_VERSION()) &&
-           VerifyOffset(verifier, VT_SATELLITE_NAME) &&
-           verifier.VerifyString(SATELLITE_NAME()) &&
            VerifyOffset(verifier, VT_STAR_CAT_NAME) &&
            verifier.VerifyString(STAR_CAT_NAME()) &&
            VerifyField<double>(verifier, VT_CORR_QUALITY, 8) &&
-           VerifyField<uint8_t>(verifier, VT_UCT, 1) &&
+           VerifyField<int8_t>(verifier, VT_CALIBRATION_TYPE, 1) &&
            VerifyOffset(verifier, VT_VALID_CALIBRATIONS) &&
            verifier.VerifyString(VALID_CALIBRATIONS()) &&
-           VerifyOffset(verifier, VT_CALIBRATION_TYPE) &&
-           verifier.VerifyString(CALIBRATION_TYPE()) &&
            VerifyField<double>(verifier, VT_PERCENT_SAT_THRESHOLD, 8) &&
            VerifyField<uint8_t>(verifier, VT_CHANGE_DETECTED, 1) &&
            VerifyField<uint8_t>(verifier, VT_PERIODICITY_CHANGE_DETECTED, 1) &&
@@ -394,11 +571,17 @@ struct SOIBuilder {
   void add_SENSOR_AS_ID(::flatbuffers::Offset<::flatbuffers::String> SENSOR_AS_ID) {
     fbb_.AddOffset(SOI::VT_SENSOR_AS_ID, SENSOR_AS_ID);
   }
-  void add_SAT_NO(int32_t SAT_NO) {
-    fbb_.AddElement<int32_t>(SOI::VT_SAT_NO, SAT_NO, 0);
+  void add_SAT_NO(uint32_t SAT_NO) {
+    fbb_.AddElement<uint32_t>(SOI::VT_SAT_NO, SAT_NO, 0);
   }
   void add_ORIG_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID) {
     fbb_.AddOffset(SOI::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
+  }
+  void add_SATELLITE_NAME(::flatbuffers::Offset<::flatbuffers::String> SATELLITE_NAME) {
+    fbb_.AddOffset(SOI::VT_SATELLITE_NAME, SATELLITE_NAME);
+  }
+  void add_UCT(bool UCT) {
+    fbb_.AddElement<uint8_t>(SOI::VT_UCT, static_cast<uint8_t>(UCT), 0);
   }
   void add_SENLAT(double SENLAT) {
     fbb_.AddElement<double>(SOI::VT_SENLAT, SENLAT, 0.0);
@@ -427,29 +610,32 @@ struct SOIBuilder {
   void add_SENVELZ(double SENVELZ) {
     fbb_.AddElement<double>(SOI::VT_SENVELZ, SENVELZ, 0.0);
   }
+  void add_SEN_REFERENCE_FRAME(::flatbuffers::Offset<::flatbuffers::String> SEN_REFERENCE_FRAME) {
+    fbb_.AddOffset(SOI::VT_SEN_REFERENCE_FRAME, SEN_REFERENCE_FRAME);
+  }
+  void add_OBS_TYPE(soiObsType OBS_TYPE) {
+    fbb_.AddElement<int8_t>(SOI::VT_OBS_TYPE, static_cast<int8_t>(OBS_TYPE), 0);
+  }
+  void add_COLLECTION_MODE(soiCollectionMode COLLECTION_MODE) {
+    fbb_.AddElement<int8_t>(SOI::VT_COLLECTION_MODE, static_cast<int8_t>(COLLECTION_MODE), 0);
+  }
   void add_START_TIME(::flatbuffers::Offset<::flatbuffers::String> START_TIME) {
     fbb_.AddOffset(SOI::VT_START_TIME, START_TIME);
   }
   void add_END_TIME(::flatbuffers::Offset<::flatbuffers::String> END_TIME) {
     fbb_.AddOffset(SOI::VT_END_TIME, END_TIME);
   }
-  void add_NUM_OBS(int32_t NUM_OBS) {
-    fbb_.AddElement<int32_t>(SOI::VT_NUM_OBS, NUM_OBS, 0);
+  void add_NUM_OBS(uint32_t NUM_OBS) {
+    fbb_.AddElement<uint32_t>(SOI::VT_NUM_OBS, NUM_OBS, 0);
   }
-  void add_TYPE(::flatbuffers::Offset<::flatbuffers::String> TYPE) {
-    fbb_.AddOffset(SOI::VT_TYPE, TYPE);
+  void add_REFERENCE_FRAME(::flatbuffers::Offset<::flatbuffers::String> REFERENCE_FRAME) {
+    fbb_.AddOffset(SOI::VT_REFERENCE_FRAME, REFERENCE_FRAME);
   }
   void add_POLAR_ANGLE_START(double POLAR_ANGLE_START) {
     fbb_.AddElement<double>(SOI::VT_POLAR_ANGLE_START, POLAR_ANGLE_START, 0.0);
   }
   void add_POLAR_ANGLE_END(double POLAR_ANGLE_END) {
     fbb_.AddElement<double>(SOI::VT_POLAR_ANGLE_END, POLAR_ANGLE_END, 0.0);
-  }
-  void add_REFERENCE_FRAME(::flatbuffers::Offset<::flatbuffers::String> REFERENCE_FRAME) {
-    fbb_.AddOffset(SOI::VT_REFERENCE_FRAME, REFERENCE_FRAME);
-  }
-  void add_SEN_REFERENCE_FRAME(::flatbuffers::Offset<::flatbuffers::String> SEN_REFERENCE_FRAME) {
-    fbb_.AddOffset(SOI::VT_SEN_REFERENCE_FRAME, SEN_REFERENCE_FRAME);
   }
   void add_LOS_DECLINATION_START(double LOS_DECLINATION_START) {
     fbb_.AddElement<double>(SOI::VT_LOS_DECLINATION_START, LOS_DECLINATION_START, 0.0);
@@ -469,29 +655,26 @@ struct SOIBuilder {
   void add_POINTING_ANGLE_EL_END(double POINTING_ANGLE_EL_END) {
     fbb_.AddElement<double>(SOI::VT_POINTING_ANGLE_EL_END, POINTING_ANGLE_EL_END, 0.0);
   }
-  void add_PIXEL_ARRAY_WIDTH(int32_t PIXEL_ARRAY_WIDTH) {
-    fbb_.AddElement<int32_t>(SOI::VT_PIXEL_ARRAY_WIDTH, PIXEL_ARRAY_WIDTH, 0);
+  void add_PIXEL_ARRAY_WIDTH(uint16_t PIXEL_ARRAY_WIDTH) {
+    fbb_.AddElement<uint16_t>(SOI::VT_PIXEL_ARRAY_WIDTH, PIXEL_ARRAY_WIDTH, 0);
   }
-  void add_PIXEL_ARRAY_HEIGHT(int32_t PIXEL_ARRAY_HEIGHT) {
-    fbb_.AddElement<int32_t>(SOI::VT_PIXEL_ARRAY_HEIGHT, PIXEL_ARRAY_HEIGHT, 0);
+  void add_PIXEL_ARRAY_HEIGHT(uint16_t PIXEL_ARRAY_HEIGHT) {
+    fbb_.AddElement<uint16_t>(SOI::VT_PIXEL_ARRAY_HEIGHT, PIXEL_ARRAY_HEIGHT, 0);
   }
-  void add_NUM_SPECTRAL_FILTERS(int32_t NUM_SPECTRAL_FILTERS) {
-    fbb_.AddElement<int32_t>(SOI::VT_NUM_SPECTRAL_FILTERS, NUM_SPECTRAL_FILTERS, 0);
+  void add_NUM_SPECTRAL_FILTERS(uint8_t NUM_SPECTRAL_FILTERS) {
+    fbb_.AddElement<uint8_t>(SOI::VT_NUM_SPECTRAL_FILTERS, NUM_SPECTRAL_FILTERS, 0);
   }
   void add_SPECTRAL_FILTERS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SPECTRAL_FILTERS) {
     fbb_.AddOffset(SOI::VT_SPECTRAL_FILTERS, SPECTRAL_FILTERS);
   }
-  void add_COLLECTION_MODE(::flatbuffers::Offset<::flatbuffers::String> COLLECTION_MODE) {
-    fbb_.AddOffset(SOI::VT_COLLECTION_MODE, COLLECTION_MODE);
-  }
   void add_GAIN(double GAIN) {
     fbb_.AddElement<double>(SOI::VT_GAIN, GAIN, 0.0);
   }
-  void add_BINNING_HORIZ(int32_t BINNING_HORIZ) {
-    fbb_.AddElement<int32_t>(SOI::VT_BINNING_HORIZ, BINNING_HORIZ, 0);
+  void add_BINNING_HORIZ(uint8_t BINNING_HORIZ) {
+    fbb_.AddElement<uint8_t>(SOI::VT_BINNING_HORIZ, BINNING_HORIZ, 0);
   }
-  void add_BINNING_VERT(int32_t BINNING_VERT) {
-    fbb_.AddElement<int32_t>(SOI::VT_BINNING_VERT, BINNING_VERT, 0);
+  void add_BINNING_VERT(uint8_t BINNING_VERT) {
+    fbb_.AddElement<uint8_t>(SOI::VT_BINNING_VERT, BINNING_VERT, 0);
   }
   void add_SOLAR_MAG(double SOLAR_MAG) {
     fbb_.AddElement<double>(SOI::VT_SOLAR_MAG, SOLAR_MAG, 0.0);
@@ -505,23 +688,17 @@ struct SOIBuilder {
   void add_SOFTWARE_VERSION(::flatbuffers::Offset<::flatbuffers::String> SOFTWARE_VERSION) {
     fbb_.AddOffset(SOI::VT_SOFTWARE_VERSION, SOFTWARE_VERSION);
   }
-  void add_SATELLITE_NAME(::flatbuffers::Offset<::flatbuffers::String> SATELLITE_NAME) {
-    fbb_.AddOffset(SOI::VT_SATELLITE_NAME, SATELLITE_NAME);
-  }
   void add_STAR_CAT_NAME(::flatbuffers::Offset<::flatbuffers::String> STAR_CAT_NAME) {
     fbb_.AddOffset(SOI::VT_STAR_CAT_NAME, STAR_CAT_NAME);
   }
   void add_CORR_QUALITY(double CORR_QUALITY) {
     fbb_.AddElement<double>(SOI::VT_CORR_QUALITY, CORR_QUALITY, 0.0);
   }
-  void add_UCT(bool UCT) {
-    fbb_.AddElement<uint8_t>(SOI::VT_UCT, static_cast<uint8_t>(UCT), 0);
+  void add_CALIBRATION_TYPE(soiCalibrationType CALIBRATION_TYPE) {
+    fbb_.AddElement<int8_t>(SOI::VT_CALIBRATION_TYPE, static_cast<int8_t>(CALIBRATION_TYPE), 0);
   }
   void add_VALID_CALIBRATIONS(::flatbuffers::Offset<::flatbuffers::String> VALID_CALIBRATIONS) {
     fbb_.AddOffset(SOI::VT_VALID_CALIBRATIONS, VALID_CALIBRATIONS);
-  }
-  void add_CALIBRATION_TYPE(::flatbuffers::Offset<::flatbuffers::String> CALIBRATION_TYPE) {
-    fbb_.AddOffset(SOI::VT_CALIBRATION_TYPE, CALIBRATION_TYPE);
   }
   void add_PERCENT_SAT_THRESHOLD(double PERCENT_SAT_THRESHOLD) {
     fbb_.AddElement<double>(SOI::VT_PERCENT_SAT_THRESHOLD, PERCENT_SAT_THRESHOLD, 0.0);
@@ -586,8 +763,10 @@ inline ::flatbuffers::Offset<SOI> CreateSOI(
     ::flatbuffers::Offset<::flatbuffers::String> ID_SENSOR = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SENSOR_AS_ID = 0,
-    int32_t SAT_NO = 0,
+    uint32_t SAT_NO = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SATELLITE_NAME = 0,
+    bool UCT = false,
     double SENLAT = 0.0,
     double SENLON = 0.0,
     double SENALT = 0.0,
@@ -597,38 +776,36 @@ inline ::flatbuffers::Offset<SOI> CreateSOI(
     double SENVELX = 0.0,
     double SENVELY = 0.0,
     double SENVELZ = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> SEN_REFERENCE_FRAME = 0,
+    soiObsType OBS_TYPE = soiObsType_OPTICAL,
+    soiCollectionMode COLLECTION_MODE = soiCollectionMode_SIDEREAL,
     ::flatbuffers::Offset<::flatbuffers::String> START_TIME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> END_TIME = 0,
-    int32_t NUM_OBS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TYPE = 0,
+    uint32_t NUM_OBS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REFERENCE_FRAME = 0,
     double POLAR_ANGLE_START = 0.0,
     double POLAR_ANGLE_END = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::String> REFERENCE_FRAME = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SEN_REFERENCE_FRAME = 0,
     double LOS_DECLINATION_START = 0.0,
     double LOS_DECLINATION_END = 0.0,
     double POINTING_ANGLE_AZ_START = 0.0,
     double POINTING_ANGLE_AZ_END = 0.0,
     double POINTING_ANGLE_EL_START = 0.0,
     double POINTING_ANGLE_EL_END = 0.0,
-    int32_t PIXEL_ARRAY_WIDTH = 0,
-    int32_t PIXEL_ARRAY_HEIGHT = 0,
-    int32_t NUM_SPECTRAL_FILTERS = 0,
+    uint16_t PIXEL_ARRAY_WIDTH = 0,
+    uint16_t PIXEL_ARRAY_HEIGHT = 0,
+    uint8_t NUM_SPECTRAL_FILTERS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SPECTRAL_FILTERS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> COLLECTION_MODE = 0,
     double GAIN = 0.0,
-    int32_t BINNING_HORIZ = 0,
-    int32_t BINNING_VERT = 0,
+    uint8_t BINNING_HORIZ = 0,
+    uint8_t BINNING_VERT = 0,
     double SOLAR_MAG = 0.0,
     int32_t PIXEL_MIN = 0,
     int32_t PIXEL_MAX = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SOFTWARE_VERSION = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SATELLITE_NAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> STAR_CAT_NAME = 0,
     double CORR_QUALITY = 0.0,
-    bool UCT = false,
+    soiCalibrationType CALIBRATION_TYPE = soiCalibrationType_PHOTOMETRIC,
     ::flatbuffers::Offset<::flatbuffers::String> VALID_CALIBRATIONS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> CALIBRATION_TYPE = 0,
     double PERCENT_SAT_THRESHOLD = 0.0,
     bool CHANGE_DETECTED = false,
     bool PERIODICITY_CHANGE_DETECTED = false,
@@ -676,26 +853,18 @@ inline ::flatbuffers::Offset<SOI> CreateSOI(
   builder_.add_PERIODICITY_SAMPLING_CONF(PERIODICITY_SAMPLING_CONF);
   builder_.add_COLLECTION_DENSITY_CONF(COLLECTION_DENSITY_CONF);
   builder_.add_CHANGE_CONF(CHANGE_CONF);
-  builder_.add_CALIBRATION_TYPE(CALIBRATION_TYPE);
   builder_.add_VALID_CALIBRATIONS(VALID_CALIBRATIONS);
   builder_.add_STAR_CAT_NAME(STAR_CAT_NAME);
-  builder_.add_SATELLITE_NAME(SATELLITE_NAME);
   builder_.add_SOFTWARE_VERSION(SOFTWARE_VERSION);
   builder_.add_PIXEL_MAX(PIXEL_MAX);
   builder_.add_PIXEL_MIN(PIXEL_MIN);
-  builder_.add_BINNING_VERT(BINNING_VERT);
-  builder_.add_BINNING_HORIZ(BINNING_HORIZ);
-  builder_.add_COLLECTION_MODE(COLLECTION_MODE);
   builder_.add_SPECTRAL_FILTERS(SPECTRAL_FILTERS);
-  builder_.add_NUM_SPECTRAL_FILTERS(NUM_SPECTRAL_FILTERS);
-  builder_.add_PIXEL_ARRAY_HEIGHT(PIXEL_ARRAY_HEIGHT);
-  builder_.add_PIXEL_ARRAY_WIDTH(PIXEL_ARRAY_WIDTH);
-  builder_.add_SEN_REFERENCE_FRAME(SEN_REFERENCE_FRAME);
   builder_.add_REFERENCE_FRAME(REFERENCE_FRAME);
-  builder_.add_TYPE(TYPE);
   builder_.add_NUM_OBS(NUM_OBS);
   builder_.add_END_TIME(END_TIME);
   builder_.add_START_TIME(START_TIME);
+  builder_.add_SEN_REFERENCE_FRAME(SEN_REFERENCE_FRAME);
+  builder_.add_SATELLITE_NAME(SATELLITE_NAME);
   builder_.add_ORIG_OBJECT_ID(ORIG_OBJECT_ID);
   builder_.add_SAT_NO(SAT_NO);
   builder_.add_SENSOR_AS_ID(SENSOR_AS_ID);
@@ -703,10 +872,18 @@ inline ::flatbuffers::Offset<SOI> CreateSOI(
   builder_.add_ID_SENSOR(ID_SENSOR);
   builder_.add_MSG_CREATE_DATE(MSG_CREATE_DATE);
   builder_.add_ID(ID);
+  builder_.add_PIXEL_ARRAY_HEIGHT(PIXEL_ARRAY_HEIGHT);
+  builder_.add_PIXEL_ARRAY_WIDTH(PIXEL_ARRAY_WIDTH);
   builder_.add_SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED(SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED);
   builder_.add_BRIGHTNESS_VARIANCE_CHANGE_DETECTED(BRIGHTNESS_VARIANCE_CHANGE_DETECTED);
   builder_.add_PERIODICITY_CHANGE_DETECTED(PERIODICITY_CHANGE_DETECTED);
   builder_.add_CHANGE_DETECTED(CHANGE_DETECTED);
+  builder_.add_CALIBRATION_TYPE(CALIBRATION_TYPE);
+  builder_.add_BINNING_VERT(BINNING_VERT);
+  builder_.add_BINNING_HORIZ(BINNING_HORIZ);
+  builder_.add_NUM_SPECTRAL_FILTERS(NUM_SPECTRAL_FILTERS);
+  builder_.add_COLLECTION_MODE(COLLECTION_MODE);
+  builder_.add_OBS_TYPE(OBS_TYPE);
   builder_.add_UCT(UCT);
   return builder_.Finish();
 }
@@ -718,8 +895,10 @@ inline ::flatbuffers::Offset<SOI> CreateSOIDirect(
     const char *ID_SENSOR = nullptr,
     const char *ORIG_SENSOR_ID = nullptr,
     const char *SENSOR_AS_ID = nullptr,
-    int32_t SAT_NO = 0,
+    uint32_t SAT_NO = 0,
     const char *ORIG_OBJECT_ID = nullptr,
+    const char *SATELLITE_NAME = nullptr,
+    bool UCT = false,
     double SENLAT = 0.0,
     double SENLON = 0.0,
     double SENALT = 0.0,
@@ -729,38 +908,36 @@ inline ::flatbuffers::Offset<SOI> CreateSOIDirect(
     double SENVELX = 0.0,
     double SENVELY = 0.0,
     double SENVELZ = 0.0,
+    const char *SEN_REFERENCE_FRAME = nullptr,
+    soiObsType OBS_TYPE = soiObsType_OPTICAL,
+    soiCollectionMode COLLECTION_MODE = soiCollectionMode_SIDEREAL,
     const char *START_TIME = nullptr,
     const char *END_TIME = nullptr,
-    int32_t NUM_OBS = 0,
-    const char *TYPE = nullptr,
+    uint32_t NUM_OBS = 0,
+    const char *REFERENCE_FRAME = nullptr,
     double POLAR_ANGLE_START = 0.0,
     double POLAR_ANGLE_END = 0.0,
-    const char *REFERENCE_FRAME = nullptr,
-    const char *SEN_REFERENCE_FRAME = nullptr,
     double LOS_DECLINATION_START = 0.0,
     double LOS_DECLINATION_END = 0.0,
     double POINTING_ANGLE_AZ_START = 0.0,
     double POINTING_ANGLE_AZ_END = 0.0,
     double POINTING_ANGLE_EL_START = 0.0,
     double POINTING_ANGLE_EL_END = 0.0,
-    int32_t PIXEL_ARRAY_WIDTH = 0,
-    int32_t PIXEL_ARRAY_HEIGHT = 0,
-    int32_t NUM_SPECTRAL_FILTERS = 0,
+    uint16_t PIXEL_ARRAY_WIDTH = 0,
+    uint16_t PIXEL_ARRAY_HEIGHT = 0,
+    uint8_t NUM_SPECTRAL_FILTERS = 0,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *SPECTRAL_FILTERS = nullptr,
-    const char *COLLECTION_MODE = nullptr,
     double GAIN = 0.0,
-    int32_t BINNING_HORIZ = 0,
-    int32_t BINNING_VERT = 0,
+    uint8_t BINNING_HORIZ = 0,
+    uint8_t BINNING_VERT = 0,
     double SOLAR_MAG = 0.0,
     int32_t PIXEL_MIN = 0,
     int32_t PIXEL_MAX = 0,
     const char *SOFTWARE_VERSION = nullptr,
-    const char *SATELLITE_NAME = nullptr,
     const char *STAR_CAT_NAME = nullptr,
     double CORR_QUALITY = 0.0,
-    bool UCT = false,
+    soiCalibrationType CALIBRATION_TYPE = soiCalibrationType_PHOTOMETRIC,
     const char *VALID_CALIBRATIONS = nullptr,
-    const char *CALIBRATION_TYPE = nullptr,
     double PERCENT_SAT_THRESHOLD = 0.0,
     bool CHANGE_DETECTED = false,
     bool PERIODICITY_CHANGE_DETECTED = false,
@@ -782,18 +959,15 @@ inline ::flatbuffers::Offset<SOI> CreateSOIDirect(
   auto ORIG_SENSOR_ID__ = ORIG_SENSOR_ID ? _fbb.CreateString(ORIG_SENSOR_ID) : 0;
   auto SENSOR_AS_ID__ = SENSOR_AS_ID ? _fbb.CreateString(SENSOR_AS_ID) : 0;
   auto ORIG_OBJECT_ID__ = ORIG_OBJECT_ID ? _fbb.CreateString(ORIG_OBJECT_ID) : 0;
+  auto SATELLITE_NAME__ = SATELLITE_NAME ? _fbb.CreateString(SATELLITE_NAME) : 0;
+  auto SEN_REFERENCE_FRAME__ = SEN_REFERENCE_FRAME ? _fbb.CreateString(SEN_REFERENCE_FRAME) : 0;
   auto START_TIME__ = START_TIME ? _fbb.CreateString(START_TIME) : 0;
   auto END_TIME__ = END_TIME ? _fbb.CreateString(END_TIME) : 0;
-  auto TYPE__ = TYPE ? _fbb.CreateString(TYPE) : 0;
   auto REFERENCE_FRAME__ = REFERENCE_FRAME ? _fbb.CreateString(REFERENCE_FRAME) : 0;
-  auto SEN_REFERENCE_FRAME__ = SEN_REFERENCE_FRAME ? _fbb.CreateString(SEN_REFERENCE_FRAME) : 0;
   auto SPECTRAL_FILTERS__ = SPECTRAL_FILTERS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SPECTRAL_FILTERS) : 0;
-  auto COLLECTION_MODE__ = COLLECTION_MODE ? _fbb.CreateString(COLLECTION_MODE) : 0;
   auto SOFTWARE_VERSION__ = SOFTWARE_VERSION ? _fbb.CreateString(SOFTWARE_VERSION) : 0;
-  auto SATELLITE_NAME__ = SATELLITE_NAME ? _fbb.CreateString(SATELLITE_NAME) : 0;
   auto STAR_CAT_NAME__ = STAR_CAT_NAME ? _fbb.CreateString(STAR_CAT_NAME) : 0;
   auto VALID_CALIBRATIONS__ = VALID_CALIBRATIONS ? _fbb.CreateString(VALID_CALIBRATIONS) : 0;
-  auto CALIBRATION_TYPE__ = CALIBRATION_TYPE ? _fbb.CreateString(CALIBRATION_TYPE) : 0;
   auto CHANGE_CONF__ = CHANGE_CONF ? _fbb.CreateString(CHANGE_CONF) : 0;
   auto COLLECTION_DENSITY_CONF__ = COLLECTION_DENSITY_CONF ? _fbb.CreateString(COLLECTION_DENSITY_CONF) : 0;
   auto PERIODICITY_SAMPLING_CONF__ = PERIODICITY_SAMPLING_CONF ? _fbb.CreateString(PERIODICITY_SAMPLING_CONF) : 0;
@@ -813,6 +987,8 @@ inline ::flatbuffers::Offset<SOI> CreateSOIDirect(
       SENSOR_AS_ID__,
       SAT_NO,
       ORIG_OBJECT_ID__,
+      SATELLITE_NAME__,
+      UCT,
       SENLAT,
       SENLON,
       SENALT,
@@ -822,14 +998,15 @@ inline ::flatbuffers::Offset<SOI> CreateSOIDirect(
       SENVELX,
       SENVELY,
       SENVELZ,
+      SEN_REFERENCE_FRAME__,
+      OBS_TYPE,
+      COLLECTION_MODE,
       START_TIME__,
       END_TIME__,
       NUM_OBS,
-      TYPE__,
+      REFERENCE_FRAME__,
       POLAR_ANGLE_START,
       POLAR_ANGLE_END,
-      REFERENCE_FRAME__,
-      SEN_REFERENCE_FRAME__,
       LOS_DECLINATION_START,
       LOS_DECLINATION_END,
       POINTING_ANGLE_AZ_START,
@@ -840,7 +1017,6 @@ inline ::flatbuffers::Offset<SOI> CreateSOIDirect(
       PIXEL_ARRAY_HEIGHT,
       NUM_SPECTRAL_FILTERS,
       SPECTRAL_FILTERS__,
-      COLLECTION_MODE__,
       GAIN,
       BINNING_HORIZ,
       BINNING_VERT,
@@ -848,12 +1024,10 @@ inline ::flatbuffers::Offset<SOI> CreateSOIDirect(
       PIXEL_MIN,
       PIXEL_MAX,
       SOFTWARE_VERSION__,
-      SATELLITE_NAME__,
       STAR_CAT_NAME__,
       CORR_QUALITY,
-      UCT,
+      CALIBRATION_TYPE,
       VALID_CALIBRATIONS__,
-      CALIBRATION_TYPE__,
       PERCENT_SAT_THRESHOLD,
       CHANGE_DETECTED,
       PERIODICITY_CHANGE_DETECTED,

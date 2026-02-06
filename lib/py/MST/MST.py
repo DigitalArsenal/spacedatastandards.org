@@ -29,6 +29,7 @@ class MST(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Unique identifier
     # MST
     def ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +37,7 @@ class MST(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Message type code
     # MST
     def MSG_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -43,6 +45,7 @@ class MST(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Message sub-type
     # MST
     def MSG_SUB_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -50,6 +53,7 @@ class MST(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Message creation date (ISO 8601)
     # MST
     def MSG_CREATE_DATE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
@@ -57,13 +61,15 @@ class MST(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Track environment
     # MST
     def ENVIRONMENT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
+    # Object type classification
     # MST
     def OBJ_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
@@ -71,13 +77,15 @@ class MST(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Object type confidence (0-100)
     # MST
     def OBJ_TYPE_CONF(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
+    # Object platform type
     # MST
     def OBJ_PLAT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
@@ -85,6 +93,7 @@ class MST(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Object identity assessment
     # MST
     def OBJ_IDENT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
@@ -92,6 +101,7 @@ class MST(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Space amplification data
     # MST
     def SPACE_AMP(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
@@ -99,188 +109,215 @@ class MST(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Space amplification confidence (0-100)
     # MST
-    def OBJ_ACT(self):
+    def SPACE_AMP_CONF(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
 
+    # Object activity
     # MST
-    def SPACE_SPEC_TYPE(self):
+    def OBJ_ACT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Space specific type
     # MST
-    def ACFT_SUB_TYPE(self):
+    def SPACE_SPEC_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Aircraft sub-type (if applicable)
     # MST
-    def NAME(self):
+    def ACFT_SUB_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Object name
     # MST
-    def CALL_SIGN(self):
+    def NAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Call sign
     # MST
-    def LOST_TRK_IND(self):
+    def CALL_SIGN(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
-        if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
-
-    # MST
-    def TRACK_ID(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # True if track is lost
     # MST
-    def PARENT_TRACK_ID(self):
+    def LOST_TRK_IND(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Track identifier
+    # MST
+    def TRACK_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Parent track identifier
     # MST
-    def MUID_SRC_TRK(self):
+    def PARENT_TRACK_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Multi-unit identifier (source track)
     # MST
-    def MUID_SRC(self):
+    def MUID_SRC_TRK(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Multi-unit identifier (source)
     # MST
-    def ALERT(self):
+    def MUID_SRC(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Alert classification
     # MST
-    def MSL_STATUS(self):
+    def ALERT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Missile engagement status
     # MST
-    def TS(self):
+    def MSL_STATUS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
+    # Track timestamp (ISO 8601)
     # MST
-    def AOU_RPT_TYPE(self):
+    def TS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # AOU report type
     # MST
-    def CONTAINMENT(self):
+    def AOU_RPT_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
+    # Containment probability (0-1)
     # MST
-    def TRK_CONF(self):
+    def CONTAINMENT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Track confidence (0-1)
     # MST
-    def TRK_QUAL(self):
+    def TRK_CONF(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
-    # MST
-    def ANG_ELEV(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Track quality (0-15)
     # MST
-    def SEN_MODE(self):
+    def TRK_QUAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Elevation angle (degrees)
+    # MST
+    def ANG_ELEV(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
 
+    # Sensor mode
     # MST
-    def INFO_SOURCE(self):
+    def SEN_MODE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Information source
+    # MST
+    def INFO_SOURCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # True if object is in boost phase
     # MST
     def BOOSTING(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # Polar singularity latitude (degrees)
     # MST
     def POLAR_SING_LOC_LAT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # MST
-    def POLAR_SING_LOC_LON(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Polar singularity longitude (degrees)
     # MST
-    def EMG_IND(self):
+    def POLAR_SING_LOC_LON(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
         if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
 
+    # True if emergency indicator set
     # MST
-    def DROP_PT_IND(self):
+    def EMG_IND(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # True if drop point indicator set
     # MST
-    def SPACE_AMP_CONF(self):
+    def DROP_PT_IND(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
 
+    # Launch time (ISO 8601)
     # MST
     def LAUNCH_TIME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
@@ -288,6 +325,7 @@ class MST(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Launch latitude (degrees)
     # MST
     def LAUNCH_LAT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
@@ -295,6 +333,7 @@ class MST(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Launch longitude (degrees)
     # MST
     def LAUNCH_LON(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
@@ -302,6 +341,7 @@ class MST(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Azimuth correction (degrees)
     # MST
     def AZ_CORR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
@@ -309,6 +349,7 @@ class MST(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Burnout altitude (km)
     # MST
     def BURNOUT_ALT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
@@ -316,13 +357,15 @@ class MST(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Launch AOU type
     # MST
     def LAUNCH_AOU_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
+    # Predicted impact time (ISO 8601)
     # MST
     def IMPACT_TIME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
@@ -330,6 +373,7 @@ class MST(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Predicted impact latitude (degrees)
     # MST
     def IMPACT_LAT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
@@ -337,6 +381,7 @@ class MST(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Predicted impact longitude (degrees)
     # MST
     def IMPACT_LON(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
@@ -344,14 +389,15 @@ class MST(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Impact AOU type
     # MST
     def IMPACT_AOU_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
-    # Start time for vector data (ISO 8601 UTC format).
+    # Start time for vector data (ISO 8601)
     # MST
     def VECTOR_START_TIME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
@@ -359,7 +405,7 @@ class MST(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Time interval between vector points in seconds.
+    # Time interval between vector points (seconds)
     # MST
     def VECTOR_STEP_SIZE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
@@ -367,7 +413,7 @@ class MST(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).
+    # Number of components per vector (default 6: X, Y, Z, VX, VY, VZ)
     # MST
     def VECTOR_COMPONENTS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
@@ -403,7 +449,7 @@ class MST(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
         return o == 0
 
-    # AOU report data as flat array (layout depends on AOU_RPT_TYPE).
+    # AOU report data as flat array
     # MST
     def AOU_RPT(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
@@ -431,7 +477,7 @@ class MST(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
         return o == 0
 
-    # Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).
+    # Launch AOU data as flat array
     # MST
     def LAUNCH_AOU(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
@@ -459,7 +505,7 @@ class MST(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
         return o == 0
 
-    # Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).
+    # Impact AOU data as flat array
     # MST
     def IMPACT_AOU(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
@@ -518,7 +564,7 @@ def AddMSG_CREATE_DATE(builder, MSG_CREATE_DATE):
     MSTAddMSG_CREATE_DATE(builder, MSG_CREATE_DATE)
 
 def MSTAddENVIRONMENT(builder, ENVIRONMENT):
-    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ENVIRONMENT), 0)
+    builder.PrependInt8Slot(4, ENVIRONMENT, 0)
 
 def AddENVIRONMENT(builder, ENVIRONMENT):
     MSTAddENVIRONMENT(builder, ENVIRONMENT)
@@ -530,7 +576,7 @@ def AddOBJ_TYPE(builder, OBJ_TYPE):
     MSTAddOBJ_TYPE(builder, OBJ_TYPE)
 
 def MSTAddOBJ_TYPE_CONF(builder, OBJ_TYPE_CONF):
-    builder.PrependInt32Slot(6, OBJ_TYPE_CONF, 0)
+    builder.PrependUint8Slot(6, OBJ_TYPE_CONF, 0)
 
 def AddOBJ_TYPE_CONF(builder, OBJ_TYPE_CONF):
     MSTAddOBJ_TYPE_CONF(builder, OBJ_TYPE_CONF)
@@ -553,161 +599,161 @@ def MSTAddSPACE_AMP(builder, SPACE_AMP):
 def AddSPACE_AMP(builder, SPACE_AMP):
     MSTAddSPACE_AMP(builder, SPACE_AMP)
 
+def MSTAddSPACE_AMP_CONF(builder, SPACE_AMP_CONF):
+    builder.PrependUint8Slot(10, SPACE_AMP_CONF, 0)
+
+def AddSPACE_AMP_CONF(builder, SPACE_AMP_CONF):
+    MSTAddSPACE_AMP_CONF(builder, SPACE_AMP_CONF)
+
 def MSTAddOBJ_ACT(builder, OBJ_ACT):
-    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(OBJ_ACT), 0)
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(OBJ_ACT), 0)
 
 def AddOBJ_ACT(builder, OBJ_ACT):
     MSTAddOBJ_ACT(builder, OBJ_ACT)
 
 def MSTAddSPACE_SPEC_TYPE(builder, SPACE_SPEC_TYPE):
-    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(SPACE_SPEC_TYPE), 0)
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(SPACE_SPEC_TYPE), 0)
 
 def AddSPACE_SPEC_TYPE(builder, SPACE_SPEC_TYPE):
     MSTAddSPACE_SPEC_TYPE(builder, SPACE_SPEC_TYPE)
 
 def MSTAddACFT_SUB_TYPE(builder, ACFT_SUB_TYPE):
-    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(ACFT_SUB_TYPE), 0)
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(ACFT_SUB_TYPE), 0)
 
 def AddACFT_SUB_TYPE(builder, ACFT_SUB_TYPE):
     MSTAddACFT_SUB_TYPE(builder, ACFT_SUB_TYPE)
 
 def MSTAddNAME(builder, NAME):
-    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
 
 def AddNAME(builder, NAME):
     MSTAddNAME(builder, NAME)
 
 def MSTAddCALL_SIGN(builder, CALL_SIGN):
-    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(CALL_SIGN), 0)
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(CALL_SIGN), 0)
 
 def AddCALL_SIGN(builder, CALL_SIGN):
     MSTAddCALL_SIGN(builder, CALL_SIGN)
 
 def MSTAddLOST_TRK_IND(builder, LOST_TRK_IND):
-    builder.PrependBoolSlot(15, LOST_TRK_IND, 0)
+    builder.PrependBoolSlot(16, LOST_TRK_IND, 0)
 
 def AddLOST_TRK_IND(builder, LOST_TRK_IND):
     MSTAddLOST_TRK_IND(builder, LOST_TRK_IND)
 
 def MSTAddTRACK_ID(builder, TRACK_ID):
-    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(TRACK_ID), 0)
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(TRACK_ID), 0)
 
 def AddTRACK_ID(builder, TRACK_ID):
     MSTAddTRACK_ID(builder, TRACK_ID)
 
 def MSTAddPARENT_TRACK_ID(builder, PARENT_TRACK_ID):
-    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(PARENT_TRACK_ID), 0)
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(PARENT_TRACK_ID), 0)
 
 def AddPARENT_TRACK_ID(builder, PARENT_TRACK_ID):
     MSTAddPARENT_TRACK_ID(builder, PARENT_TRACK_ID)
 
 def MSTAddMUID_SRC_TRK(builder, MUID_SRC_TRK):
-    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(MUID_SRC_TRK), 0)
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(MUID_SRC_TRK), 0)
 
 def AddMUID_SRC_TRK(builder, MUID_SRC_TRK):
     MSTAddMUID_SRC_TRK(builder, MUID_SRC_TRK)
 
 def MSTAddMUID_SRC(builder, MUID_SRC):
-    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(MUID_SRC), 0)
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(MUID_SRC), 0)
 
 def AddMUID_SRC(builder, MUID_SRC):
     MSTAddMUID_SRC(builder, MUID_SRC)
 
 def MSTAddALERT(builder, ALERT):
-    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(ALERT), 0)
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(ALERT), 0)
 
 def AddALERT(builder, ALERT):
     MSTAddALERT(builder, ALERT)
 
 def MSTAddMSL_STATUS(builder, MSL_STATUS):
-    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(MSL_STATUS), 0)
+    builder.PrependInt8Slot(22, MSL_STATUS, 0)
 
 def AddMSL_STATUS(builder, MSL_STATUS):
     MSTAddMSL_STATUS(builder, MSL_STATUS)
 
 def MSTAddTS(builder, TS):
-    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(TS), 0)
+    builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(TS), 0)
 
 def AddTS(builder, TS):
     MSTAddTS(builder, TS)
 
 def MSTAddAOU_RPT_TYPE(builder, AOU_RPT_TYPE):
-    builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(AOU_RPT_TYPE), 0)
+    builder.PrependInt8Slot(24, AOU_RPT_TYPE, 0)
 
 def AddAOU_RPT_TYPE(builder, AOU_RPT_TYPE):
     MSTAddAOU_RPT_TYPE(builder, AOU_RPT_TYPE)
 
 def MSTAddCONTAINMENT(builder, CONTAINMENT):
-    builder.PrependFloat64Slot(24, CONTAINMENT, 0.0)
+    builder.PrependFloat64Slot(25, CONTAINMENT, 0.0)
 
 def AddCONTAINMENT(builder, CONTAINMENT):
     MSTAddCONTAINMENT(builder, CONTAINMENT)
 
 def MSTAddTRK_CONF(builder, TRK_CONF):
-    builder.PrependFloat64Slot(25, TRK_CONF, 0.0)
+    builder.PrependFloat64Slot(26, TRK_CONF, 0.0)
 
 def AddTRK_CONF(builder, TRK_CONF):
     MSTAddTRK_CONF(builder, TRK_CONF)
 
 def MSTAddTRK_QUAL(builder, TRK_QUAL):
-    builder.PrependInt32Slot(26, TRK_QUAL, 0)
+    builder.PrependUint8Slot(27, TRK_QUAL, 0)
 
 def AddTRK_QUAL(builder, TRK_QUAL):
     MSTAddTRK_QUAL(builder, TRK_QUAL)
 
 def MSTAddANG_ELEV(builder, ANG_ELEV):
-    builder.PrependFloat64Slot(27, ANG_ELEV, 0.0)
+    builder.PrependFloat64Slot(28, ANG_ELEV, 0.0)
 
 def AddANG_ELEV(builder, ANG_ELEV):
     MSTAddANG_ELEV(builder, ANG_ELEV)
 
 def MSTAddSEN_MODE(builder, SEN_MODE):
-    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(SEN_MODE), 0)
+    builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(SEN_MODE), 0)
 
 def AddSEN_MODE(builder, SEN_MODE):
     MSTAddSEN_MODE(builder, SEN_MODE)
 
 def MSTAddINFO_SOURCE(builder, INFO_SOURCE):
-    builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(INFO_SOURCE), 0)
+    builder.PrependUOffsetTRelativeSlot(30, flatbuffers.number_types.UOffsetTFlags.py_type(INFO_SOURCE), 0)
 
 def AddINFO_SOURCE(builder, INFO_SOURCE):
     MSTAddINFO_SOURCE(builder, INFO_SOURCE)
 
 def MSTAddBOOSTING(builder, BOOSTING):
-    builder.PrependBoolSlot(30, BOOSTING, 0)
+    builder.PrependBoolSlot(31, BOOSTING, 0)
 
 def AddBOOSTING(builder, BOOSTING):
     MSTAddBOOSTING(builder, BOOSTING)
 
 def MSTAddPOLAR_SING_LOC_LAT(builder, POLAR_SING_LOC_LAT):
-    builder.PrependFloat64Slot(31, POLAR_SING_LOC_LAT, 0.0)
+    builder.PrependFloat64Slot(32, POLAR_SING_LOC_LAT, 0.0)
 
 def AddPOLAR_SING_LOC_LAT(builder, POLAR_SING_LOC_LAT):
     MSTAddPOLAR_SING_LOC_LAT(builder, POLAR_SING_LOC_LAT)
 
 def MSTAddPOLAR_SING_LOC_LON(builder, POLAR_SING_LOC_LON):
-    builder.PrependFloat64Slot(32, POLAR_SING_LOC_LON, 0.0)
+    builder.PrependFloat64Slot(33, POLAR_SING_LOC_LON, 0.0)
 
 def AddPOLAR_SING_LOC_LON(builder, POLAR_SING_LOC_LON):
     MSTAddPOLAR_SING_LOC_LON(builder, POLAR_SING_LOC_LON)
 
 def MSTAddEMG_IND(builder, EMG_IND):
-    builder.PrependBoolSlot(33, EMG_IND, 0)
+    builder.PrependBoolSlot(34, EMG_IND, 0)
 
 def AddEMG_IND(builder, EMG_IND):
     MSTAddEMG_IND(builder, EMG_IND)
 
 def MSTAddDROP_PT_IND(builder, DROP_PT_IND):
-    builder.PrependBoolSlot(34, DROP_PT_IND, 0)
+    builder.PrependBoolSlot(35, DROP_PT_IND, 0)
 
 def AddDROP_PT_IND(builder, DROP_PT_IND):
     MSTAddDROP_PT_IND(builder, DROP_PT_IND)
-
-def MSTAddSPACE_AMP_CONF(builder, SPACE_AMP_CONF):
-    builder.PrependInt32Slot(35, SPACE_AMP_CONF, 0)
-
-def AddSPACE_AMP_CONF(builder, SPACE_AMP_CONF):
-    MSTAddSPACE_AMP_CONF(builder, SPACE_AMP_CONF)
 
 def MSTAddLAUNCH_TIME(builder, LAUNCH_TIME):
     builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(LAUNCH_TIME), 0)
@@ -740,7 +786,7 @@ def AddBURNOUT_ALT(builder, BURNOUT_ALT):
     MSTAddBURNOUT_ALT(builder, BURNOUT_ALT)
 
 def MSTAddLAUNCH_AOU_TYPE(builder, LAUNCH_AOU_TYPE):
-    builder.PrependUOffsetTRelativeSlot(41, flatbuffers.number_types.UOffsetTFlags.py_type(LAUNCH_AOU_TYPE), 0)
+    builder.PrependInt8Slot(41, LAUNCH_AOU_TYPE, 0)
 
 def AddLAUNCH_AOU_TYPE(builder, LAUNCH_AOU_TYPE):
     MSTAddLAUNCH_AOU_TYPE(builder, LAUNCH_AOU_TYPE)
@@ -764,7 +810,7 @@ def AddIMPACT_LON(builder, IMPACT_LON):
     MSTAddIMPACT_LON(builder, IMPACT_LON)
 
 def MSTAddIMPACT_AOU_TYPE(builder, IMPACT_AOU_TYPE):
-    builder.PrependUOffsetTRelativeSlot(45, flatbuffers.number_types.UOffsetTFlags.py_type(IMPACT_AOU_TYPE), 0)
+    builder.PrependInt8Slot(45, IMPACT_AOU_TYPE, 0)
 
 def AddIMPACT_AOU_TYPE(builder, IMPACT_AOU_TYPE):
     MSTAddIMPACT_AOU_TYPE(builder, IMPACT_AOU_TYPE)
@@ -854,12 +900,13 @@ class MSTT(object):
         self.MSG_TYPE = None  # type: str
         self.MSG_SUB_TYPE = None  # type: str
         self.MSG_CREATE_DATE = None  # type: str
-        self.ENVIRONMENT = None  # type: str
+        self.ENVIRONMENT = 0  # type: int
         self.OBJ_TYPE = None  # type: str
         self.OBJ_TYPE_CONF = 0  # type: int
         self.OBJ_PLAT = None  # type: str
         self.OBJ_IDENT = None  # type: str
         self.SPACE_AMP = None  # type: str
+        self.SPACE_AMP_CONF = 0  # type: int
         self.OBJ_ACT = None  # type: str
         self.SPACE_SPEC_TYPE = None  # type: str
         self.ACFT_SUB_TYPE = None  # type: str
@@ -871,9 +918,9 @@ class MSTT(object):
         self.MUID_SRC_TRK = None  # type: str
         self.MUID_SRC = None  # type: str
         self.ALERT = None  # type: str
-        self.MSL_STATUS = None  # type: str
+        self.MSL_STATUS = 0  # type: int
         self.TS = None  # type: str
-        self.AOU_RPT_TYPE = None  # type: str
+        self.AOU_RPT_TYPE = 0  # type: int
         self.CONTAINMENT = 0.0  # type: float
         self.TRK_CONF = 0.0  # type: float
         self.TRK_QUAL = 0  # type: int
@@ -885,17 +932,16 @@ class MSTT(object):
         self.POLAR_SING_LOC_LON = 0.0  # type: float
         self.EMG_IND = False  # type: bool
         self.DROP_PT_IND = False  # type: bool
-        self.SPACE_AMP_CONF = 0  # type: int
         self.LAUNCH_TIME = None  # type: str
         self.LAUNCH_LAT = 0.0  # type: float
         self.LAUNCH_LON = 0.0  # type: float
         self.AZ_CORR = 0.0  # type: float
         self.BURNOUT_ALT = 0.0  # type: float
-        self.LAUNCH_AOU_TYPE = None  # type: str
+        self.LAUNCH_AOU_TYPE = 0  # type: int
         self.IMPACT_TIME = None  # type: str
         self.IMPACT_LAT = 0.0  # type: float
         self.IMPACT_LON = 0.0  # type: float
-        self.IMPACT_AOU_TYPE = None  # type: str
+        self.IMPACT_AOU_TYPE = 0  # type: int
         self.VECTOR_START_TIME = None  # type: str
         self.VECTOR_STEP_SIZE = 0.0  # type: float
         self.VECTOR_COMPONENTS = 6  # type: int
@@ -935,6 +981,7 @@ class MSTT(object):
         self.OBJ_PLAT = MST.OBJ_PLAT()
         self.OBJ_IDENT = MST.OBJ_IDENT()
         self.SPACE_AMP = MST.SPACE_AMP()
+        self.SPACE_AMP_CONF = MST.SPACE_AMP_CONF()
         self.OBJ_ACT = MST.OBJ_ACT()
         self.SPACE_SPEC_TYPE = MST.SPACE_SPEC_TYPE()
         self.ACFT_SUB_TYPE = MST.ACFT_SUB_TYPE()
@@ -960,7 +1007,6 @@ class MSTT(object):
         self.POLAR_SING_LOC_LON = MST.POLAR_SING_LOC_LON()
         self.EMG_IND = MST.EMG_IND()
         self.DROP_PT_IND = MST.DROP_PT_IND()
-        self.SPACE_AMP_CONF = MST.SPACE_AMP_CONF()
         self.LAUNCH_TIME = MST.LAUNCH_TIME()
         self.LAUNCH_LAT = MST.LAUNCH_LAT()
         self.LAUNCH_LON = MST.LAUNCH_LON()
@@ -1013,8 +1059,6 @@ class MSTT(object):
             MSG_SUB_TYPE = builder.CreateString(self.MSG_SUB_TYPE)
         if self.MSG_CREATE_DATE is not None:
             MSG_CREATE_DATE = builder.CreateString(self.MSG_CREATE_DATE)
-        if self.ENVIRONMENT is not None:
-            ENVIRONMENT = builder.CreateString(self.ENVIRONMENT)
         if self.OBJ_TYPE is not None:
             OBJ_TYPE = builder.CreateString(self.OBJ_TYPE)
         if self.OBJ_PLAT is not None:
@@ -1043,24 +1087,16 @@ class MSTT(object):
             MUID_SRC = builder.CreateString(self.MUID_SRC)
         if self.ALERT is not None:
             ALERT = builder.CreateString(self.ALERT)
-        if self.MSL_STATUS is not None:
-            MSL_STATUS = builder.CreateString(self.MSL_STATUS)
         if self.TS is not None:
             TS = builder.CreateString(self.TS)
-        if self.AOU_RPT_TYPE is not None:
-            AOU_RPT_TYPE = builder.CreateString(self.AOU_RPT_TYPE)
         if self.SEN_MODE is not None:
             SEN_MODE = builder.CreateString(self.SEN_MODE)
         if self.INFO_SOURCE is not None:
             INFO_SOURCE = builder.CreateString(self.INFO_SOURCE)
         if self.LAUNCH_TIME is not None:
             LAUNCH_TIME = builder.CreateString(self.LAUNCH_TIME)
-        if self.LAUNCH_AOU_TYPE is not None:
-            LAUNCH_AOU_TYPE = builder.CreateString(self.LAUNCH_AOU_TYPE)
         if self.IMPACT_TIME is not None:
             IMPACT_TIME = builder.CreateString(self.IMPACT_TIME)
-        if self.IMPACT_AOU_TYPE is not None:
-            IMPACT_AOU_TYPE = builder.CreateString(self.IMPACT_AOU_TYPE)
         if self.VECTOR_START_TIME is not None:
             VECTOR_START_TIME = builder.CreateString(self.VECTOR_START_TIME)
         if self.VECTORS is not None:
@@ -1104,8 +1140,7 @@ class MSTT(object):
             MSTAddMSG_SUB_TYPE(builder, MSG_SUB_TYPE)
         if self.MSG_CREATE_DATE is not None:
             MSTAddMSG_CREATE_DATE(builder, MSG_CREATE_DATE)
-        if self.ENVIRONMENT is not None:
-            MSTAddENVIRONMENT(builder, ENVIRONMENT)
+        MSTAddENVIRONMENT(builder, self.ENVIRONMENT)
         if self.OBJ_TYPE is not None:
             MSTAddOBJ_TYPE(builder, OBJ_TYPE)
         MSTAddOBJ_TYPE_CONF(builder, self.OBJ_TYPE_CONF)
@@ -1115,6 +1150,7 @@ class MSTT(object):
             MSTAddOBJ_IDENT(builder, OBJ_IDENT)
         if self.SPACE_AMP is not None:
             MSTAddSPACE_AMP(builder, SPACE_AMP)
+        MSTAddSPACE_AMP_CONF(builder, self.SPACE_AMP_CONF)
         if self.OBJ_ACT is not None:
             MSTAddOBJ_ACT(builder, OBJ_ACT)
         if self.SPACE_SPEC_TYPE is not None:
@@ -1136,12 +1172,10 @@ class MSTT(object):
             MSTAddMUID_SRC(builder, MUID_SRC)
         if self.ALERT is not None:
             MSTAddALERT(builder, ALERT)
-        if self.MSL_STATUS is not None:
-            MSTAddMSL_STATUS(builder, MSL_STATUS)
+        MSTAddMSL_STATUS(builder, self.MSL_STATUS)
         if self.TS is not None:
             MSTAddTS(builder, TS)
-        if self.AOU_RPT_TYPE is not None:
-            MSTAddAOU_RPT_TYPE(builder, AOU_RPT_TYPE)
+        MSTAddAOU_RPT_TYPE(builder, self.AOU_RPT_TYPE)
         MSTAddCONTAINMENT(builder, self.CONTAINMENT)
         MSTAddTRK_CONF(builder, self.TRK_CONF)
         MSTAddTRK_QUAL(builder, self.TRK_QUAL)
@@ -1155,21 +1189,18 @@ class MSTT(object):
         MSTAddPOLAR_SING_LOC_LON(builder, self.POLAR_SING_LOC_LON)
         MSTAddEMG_IND(builder, self.EMG_IND)
         MSTAddDROP_PT_IND(builder, self.DROP_PT_IND)
-        MSTAddSPACE_AMP_CONF(builder, self.SPACE_AMP_CONF)
         if self.LAUNCH_TIME is not None:
             MSTAddLAUNCH_TIME(builder, LAUNCH_TIME)
         MSTAddLAUNCH_LAT(builder, self.LAUNCH_LAT)
         MSTAddLAUNCH_LON(builder, self.LAUNCH_LON)
         MSTAddAZ_CORR(builder, self.AZ_CORR)
         MSTAddBURNOUT_ALT(builder, self.BURNOUT_ALT)
-        if self.LAUNCH_AOU_TYPE is not None:
-            MSTAddLAUNCH_AOU_TYPE(builder, LAUNCH_AOU_TYPE)
+        MSTAddLAUNCH_AOU_TYPE(builder, self.LAUNCH_AOU_TYPE)
         if self.IMPACT_TIME is not None:
             MSTAddIMPACT_TIME(builder, IMPACT_TIME)
         MSTAddIMPACT_LAT(builder, self.IMPACT_LAT)
         MSTAddIMPACT_LON(builder, self.IMPACT_LON)
-        if self.IMPACT_AOU_TYPE is not None:
-            MSTAddIMPACT_AOU_TYPE(builder, IMPACT_AOU_TYPE)
+        MSTAddIMPACT_AOU_TYPE(builder, self.IMPACT_AOU_TYPE)
         if self.VECTOR_START_TIME is not None:
             MSTAddVECTOR_START_TIME(builder, VECTOR_START_TIME)
         MSTAddVECTOR_STEP_SIZE(builder, self.VECTOR_STEP_SIZE)

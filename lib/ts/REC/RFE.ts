@@ -4,6 +4,8 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { emitterType } from './emitterType.js';
+import { rfEmitterDetail, rfEmitterDetailT } from './rfEmitterDetail.js';
 
 
 /**
@@ -31,6 +33,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$RFE');
 }
 
+/**
+ * Unique emitter identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,6 +43,9 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Reference to parent entity
+ */
 ID_ENTITY():string|null
 ID_ENTITY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID_ENTITY(optionalEncoding?:any):string|Uint8Array|null {
@@ -45,6 +53,9 @@ ID_ENTITY(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Emitter name or designation
+ */
 NAME():string|null
 NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 NAME(optionalEncoding?:any):string|Uint8Array|null {
@@ -52,13 +63,17 @@ NAME(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-TYPE():string|null
-TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-TYPE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Emitter type
+ */
+TYPE():emitterType {
   const offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : emitterType.RADAR;
 }
 
+/**
+ * Parent entity designator
+ */
 ENTITY():string|null
 ENTITY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ENTITY(optionalEncoding?:any):string|Uint8Array|null {
@@ -66,20 +81,149 @@ ENTITY(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-RF_EMITTER_DETAILS(index: number):string
-RF_EMITTER_DETAILS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-RF_EMITTER_DETAILS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * ELNOT (Electronic Notation)
+ */
+ELNOT():string|null
+ELNOT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ELNOT(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * NATO reporting name
+ */
+NATO_NAME():string|null
+NATO_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+NATO_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Platform type (e.g., SHIP, AIRCRAFT, GROUND, SATELLITE)
+ */
+PLATFORM_TYPE():string|null
+PLATFORM_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PLATFORM_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Country of origin
+ */
+COUNTRY():string|null
+COUNTRY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+COUNTRY(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Primary function description
+ */
+FUNCTION():string|null
+FUNCTION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+FUNCTION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Operating band (e.g., HF, VHF, UHF, L, S, C, X, Ku, Ka)
+ */
+BAND():string|null
+BAND(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+BAND(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Minimum operating frequency in MHz
+ */
+FREQ_MIN():number {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Maximum operating frequency in MHz
+ */
+FREQ_MAX():number {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Peak power in kW
+ */
+PEAK_POWER():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Average power in kW
+ */
+AVG_POWER():number {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Antenna gain in dBi
+ */
+ANTENNA_GAIN():number {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Number of operating modes
+ */
+NUM_MODES():number {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Emitter operating mode details
+ */
+RF_EMITTER_DETAILS(index: number, obj?:rfEmitterDetail):rfEmitterDetail|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? (obj || new rfEmitterDetail()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 rfEmitterDetailsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
+  const offset = this.bb!.__offset(this.bb_pos, 38);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Threat level assessment
+ */
+THREAT_LEVEL():string|null
+THREAT_LEVEL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+THREAT_LEVEL(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Additional notes
+ */
+NOTES():string|null
+NOTES(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+NOTES(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startRFE(builder:flatbuffers.Builder) {
-  builder.startObject(6);
+  builder.startObject(20);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -94,16 +238,64 @@ static addName(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset) {
   builder.addFieldOffset(2, NAMEOffset, 0);
 }
 
-static addType(builder:flatbuffers.Builder, TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, TYPEOffset, 0);
+static addType(builder:flatbuffers.Builder, TYPE:emitterType) {
+  builder.addFieldInt8(3, TYPE, emitterType.RADAR);
 }
 
 static addEntity(builder:flatbuffers.Builder, ENTITYOffset:flatbuffers.Offset) {
   builder.addFieldOffset(4, ENTITYOffset, 0);
 }
 
+static addElnot(builder:flatbuffers.Builder, ELNOTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, ELNOTOffset, 0);
+}
+
+static addNatoName(builder:flatbuffers.Builder, NATO_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, NATO_NAMEOffset, 0);
+}
+
+static addPlatformType(builder:flatbuffers.Builder, PLATFORM_TYPEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, PLATFORM_TYPEOffset, 0);
+}
+
+static addCountry(builder:flatbuffers.Builder, COUNTRYOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(8, COUNTRYOffset, 0);
+}
+
+static addFunction(builder:flatbuffers.Builder, FUNCTIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, FUNCTIONOffset, 0);
+}
+
+static addBand(builder:flatbuffers.Builder, BANDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(10, BANDOffset, 0);
+}
+
+static addFreqMin(builder:flatbuffers.Builder, FREQ_MIN:number) {
+  builder.addFieldFloat64(11, FREQ_MIN, 0.0);
+}
+
+static addFreqMax(builder:flatbuffers.Builder, FREQ_MAX:number) {
+  builder.addFieldFloat64(12, FREQ_MAX, 0.0);
+}
+
+static addPeakPower(builder:flatbuffers.Builder, PEAK_POWER:number) {
+  builder.addFieldFloat64(13, PEAK_POWER, 0.0);
+}
+
+static addAvgPower(builder:flatbuffers.Builder, AVG_POWER:number) {
+  builder.addFieldFloat64(14, AVG_POWER, 0.0);
+}
+
+static addAntennaGain(builder:flatbuffers.Builder, ANTENNA_GAIN:number) {
+  builder.addFieldFloat64(15, ANTENNA_GAIN, 0.0);
+}
+
+static addNumModes(builder:flatbuffers.Builder, NUM_MODES:number) {
+  builder.addFieldInt32(16, NUM_MODES, 0);
+}
+
 static addRfEmitterDetails(builder:flatbuffers.Builder, RF_EMITTER_DETAILSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, RF_EMITTER_DETAILSOffset, 0);
+  builder.addFieldOffset(17, RF_EMITTER_DETAILSOffset, 0);
 }
 
 static createRfEmitterDetailsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -116,6 +308,14 @@ static createRfEmitterDetailsVector(builder:flatbuffers.Builder, data:flatbuffer
 
 static startRfEmitterDetailsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
+}
+
+static addThreatLevel(builder:flatbuffers.Builder, THREAT_LEVELOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(18, THREAT_LEVELOffset, 0);
+}
+
+static addNotes(builder:flatbuffers.Builder, NOTESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(19, NOTESOffset, 0);
 }
 
 static endRFE(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -131,14 +331,28 @@ static finishSizePrefixedRFEBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$RFE', true);
 }
 
-static createRFE(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ID_ENTITYOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, TYPEOffset:flatbuffers.Offset, ENTITYOffset:flatbuffers.Offset, RF_EMITTER_DETAILSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createRFE(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ID_ENTITYOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, TYPE:emitterType, ENTITYOffset:flatbuffers.Offset, ELNOTOffset:flatbuffers.Offset, NATO_NAMEOffset:flatbuffers.Offset, PLATFORM_TYPEOffset:flatbuffers.Offset, COUNTRYOffset:flatbuffers.Offset, FUNCTIONOffset:flatbuffers.Offset, BANDOffset:flatbuffers.Offset, FREQ_MIN:number, FREQ_MAX:number, PEAK_POWER:number, AVG_POWER:number, ANTENNA_GAIN:number, NUM_MODES:number, RF_EMITTER_DETAILSOffset:flatbuffers.Offset, THREAT_LEVELOffset:flatbuffers.Offset, NOTESOffset:flatbuffers.Offset):flatbuffers.Offset {
   RFE.startRFE(builder);
   RFE.addId(builder, IDOffset);
   RFE.addIdEntity(builder, ID_ENTITYOffset);
   RFE.addName(builder, NAMEOffset);
-  RFE.addType(builder, TYPEOffset);
+  RFE.addType(builder, TYPE);
   RFE.addEntity(builder, ENTITYOffset);
+  RFE.addElnot(builder, ELNOTOffset);
+  RFE.addNatoName(builder, NATO_NAMEOffset);
+  RFE.addPlatformType(builder, PLATFORM_TYPEOffset);
+  RFE.addCountry(builder, COUNTRYOffset);
+  RFE.addFunction(builder, FUNCTIONOffset);
+  RFE.addBand(builder, BANDOffset);
+  RFE.addFreqMin(builder, FREQ_MIN);
+  RFE.addFreqMax(builder, FREQ_MAX);
+  RFE.addPeakPower(builder, PEAK_POWER);
+  RFE.addAvgPower(builder, AVG_POWER);
+  RFE.addAntennaGain(builder, ANTENNA_GAIN);
+  RFE.addNumModes(builder, NUM_MODES);
   RFE.addRfEmitterDetails(builder, RF_EMITTER_DETAILSOffset);
+  RFE.addThreatLevel(builder, THREAT_LEVELOffset);
+  RFE.addNotes(builder, NOTESOffset);
   return RFE.endRFE(builder);
 }
 
@@ -149,7 +363,21 @@ unpack(): RFET {
     this.NAME(),
     this.TYPE(),
     this.ENTITY(),
-    this.bb!.createScalarList<string>(this.RF_EMITTER_DETAILS.bind(this), this.rfEmitterDetailsLength())
+    this.ELNOT(),
+    this.NATO_NAME(),
+    this.PLATFORM_TYPE(),
+    this.COUNTRY(),
+    this.FUNCTION(),
+    this.BAND(),
+    this.FREQ_MIN(),
+    this.FREQ_MAX(),
+    this.PEAK_POWER(),
+    this.AVG_POWER(),
+    this.ANTENNA_GAIN(),
+    this.NUM_MODES(),
+    this.bb!.createObjList<rfEmitterDetail, rfEmitterDetailT>(this.RF_EMITTER_DETAILS.bind(this), this.rfEmitterDetailsLength()),
+    this.THREAT_LEVEL(),
+    this.NOTES()
   );
 }
 
@@ -160,7 +388,21 @@ unpackTo(_o: RFET): void {
   _o.NAME = this.NAME();
   _o.TYPE = this.TYPE();
   _o.ENTITY = this.ENTITY();
-  _o.RF_EMITTER_DETAILS = this.bb!.createScalarList<string>(this.RF_EMITTER_DETAILS.bind(this), this.rfEmitterDetailsLength());
+  _o.ELNOT = this.ELNOT();
+  _o.NATO_NAME = this.NATO_NAME();
+  _o.PLATFORM_TYPE = this.PLATFORM_TYPE();
+  _o.COUNTRY = this.COUNTRY();
+  _o.FUNCTION = this.FUNCTION();
+  _o.BAND = this.BAND();
+  _o.FREQ_MIN = this.FREQ_MIN();
+  _o.FREQ_MAX = this.FREQ_MAX();
+  _o.PEAK_POWER = this.PEAK_POWER();
+  _o.AVG_POWER = this.AVG_POWER();
+  _o.ANTENNA_GAIN = this.ANTENNA_GAIN();
+  _o.NUM_MODES = this.NUM_MODES();
+  _o.RF_EMITTER_DETAILS = this.bb!.createObjList<rfEmitterDetail, rfEmitterDetailT>(this.RF_EMITTER_DETAILS.bind(this), this.rfEmitterDetailsLength());
+  _o.THREAT_LEVEL = this.THREAT_LEVEL();
+  _o.NOTES = this.NOTES();
 }
 }
 
@@ -169,9 +411,23 @@ constructor(
   public ID: string|Uint8Array|null = null,
   public ID_ENTITY: string|Uint8Array|null = null,
   public NAME: string|Uint8Array|null = null,
-  public TYPE: string|Uint8Array|null = null,
+  public TYPE: emitterType = emitterType.RADAR,
   public ENTITY: string|Uint8Array|null = null,
-  public RF_EMITTER_DETAILS: (string)[] = []
+  public ELNOT: string|Uint8Array|null = null,
+  public NATO_NAME: string|Uint8Array|null = null,
+  public PLATFORM_TYPE: string|Uint8Array|null = null,
+  public COUNTRY: string|Uint8Array|null = null,
+  public FUNCTION: string|Uint8Array|null = null,
+  public BAND: string|Uint8Array|null = null,
+  public FREQ_MIN: number = 0.0,
+  public FREQ_MAX: number = 0.0,
+  public PEAK_POWER: number = 0.0,
+  public AVG_POWER: number = 0.0,
+  public ANTENNA_GAIN: number = 0.0,
+  public NUM_MODES: number = 0,
+  public RF_EMITTER_DETAILS: (rfEmitterDetailT)[] = [],
+  public THREAT_LEVEL: string|Uint8Array|null = null,
+  public NOTES: string|Uint8Array|null = null
 ){}
 
 
@@ -179,17 +435,38 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ID = (this.ID !== null ? builder.createString(this.ID!) : 0);
   const ID_ENTITY = (this.ID_ENTITY !== null ? builder.createString(this.ID_ENTITY!) : 0);
   const NAME = (this.NAME !== null ? builder.createString(this.NAME!) : 0);
-  const TYPE = (this.TYPE !== null ? builder.createString(this.TYPE!) : 0);
   const ENTITY = (this.ENTITY !== null ? builder.createString(this.ENTITY!) : 0);
+  const ELNOT = (this.ELNOT !== null ? builder.createString(this.ELNOT!) : 0);
+  const NATO_NAME = (this.NATO_NAME !== null ? builder.createString(this.NATO_NAME!) : 0);
+  const PLATFORM_TYPE = (this.PLATFORM_TYPE !== null ? builder.createString(this.PLATFORM_TYPE!) : 0);
+  const COUNTRY = (this.COUNTRY !== null ? builder.createString(this.COUNTRY!) : 0);
+  const FUNCTION = (this.FUNCTION !== null ? builder.createString(this.FUNCTION!) : 0);
+  const BAND = (this.BAND !== null ? builder.createString(this.BAND!) : 0);
   const RF_EMITTER_DETAILS = RFE.createRfEmitterDetailsVector(builder, builder.createObjectOffsetList(this.RF_EMITTER_DETAILS));
+  const THREAT_LEVEL = (this.THREAT_LEVEL !== null ? builder.createString(this.THREAT_LEVEL!) : 0);
+  const NOTES = (this.NOTES !== null ? builder.createString(this.NOTES!) : 0);
 
   return RFE.createRFE(builder,
     ID,
     ID_ENTITY,
     NAME,
-    TYPE,
+    this.TYPE,
     ENTITY,
-    RF_EMITTER_DETAILS
+    ELNOT,
+    NATO_NAME,
+    PLATFORM_TYPE,
+    COUNTRY,
+    FUNCTION,
+    BAND,
+    this.FREQ_MIN,
+    this.FREQ_MAX,
+    this.PEAK_POWER,
+    this.AVG_POWER,
+    this.ANTENNA_GAIN,
+    this.NUM_MODES,
+    RF_EMITTER_DETAILS,
+    THREAT_LEVEL,
+    NOTES
   );
 }
 }

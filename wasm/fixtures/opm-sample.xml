@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opm xmlns="urn:ccsds:recommendation:navigation:schema:ndmxml"
+     id="CCSDS_OPM_VERS" version="2.0">
+  <header>
+    <CREATION_DATE>2007-065T16:00:00</CREATION_DATE>
+    <ORIGINATOR>NASA/JPL</ORIGINATOR>
+  </header>
+  <body>
+    <segment>
+      <metadata>
+        <OBJECT_NAME>GOES 9</OBJECT_NAME>
+        <OBJECT_ID>1995-025A</OBJECT_ID>
+        <CENTER_NAME>EARTH</CENTER_NAME>
+        <REF_FRAME>EME2000</REF_FRAME>
+        <TIME_SYSTEM>UTC</TIME_SYSTEM>
+      </metadata>
+      <data>
+        <stateVector>
+          <EPOCH>1998-12-18T14:28:15.1172</EPOCH>
+          <X units="km">6503.514000</X>
+          <Y units="km">1239.647000</Y>
+          <Z units="km">-717.490000</Z>
+          <X_DOT units="km/s">-0.873160</X_DOT>
+          <Y_DOT units="km/s">8.740420</Y_DOT>
+          <Z_DOT units="km/s">-4.191076</Z_DOT>
+        </stateVector>
+        <keplerianElements>
+          <SEMI_MAJOR_AXIS units="km">6730.963</SEMI_MAJOR_AXIS>
+          <ECCENTRICITY>0.0012221</ECCENTRICITY>
+          <INCLINATION units="deg">28.4700</INCLINATION>
+          <RA_OF_ASC_NODE units="deg">140.4720</RA_OF_ASC_NODE>
+          <ARG_OF_PERICENTER units="deg">197.5290</ARG_OF_PERICENTER>
+          <TRUE_ANOMALY units="deg">253.4710</TRUE_ANOMALY>
+          <GM units="km**3/s**2">398600.4418</GM>
+        </keplerianElements>
+        <spacecraftParameters>
+          <MASS units="kg">1913.000</MASS>
+          <SOLAR_RAD_AREA units="m**2">10.000</SOLAR_RAD_AREA>
+          <SOLAR_RAD_COEFF>1.300</SOLAR_RAD_COEFF>
+          <DRAG_AREA units="m**2">10.000</DRAG_AREA>
+          <DRAG_COEFF>2.200</DRAG_COEFF>
+        </spacecraftParameters>
+      </data>
+    </segment>
+  </body>
+</opm>

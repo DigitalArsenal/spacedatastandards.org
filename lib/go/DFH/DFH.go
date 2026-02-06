@@ -54,6 +54,7 @@ func (rcv *DFH) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Unique identifier
 func (rcv *DFH) ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -62,37 +63,237 @@ func (rcv *DFH) ID() []byte {
 	return nil
 }
 
-func (rcv *DFH) EFFECTIVE_UNTIL() []byte {
+/// Unique identifier
+/// Satellite number
+func (rcv *DFH) SAT_NO() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Satellite number
+func (rcv *DFH) MutateSAT_NO(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(6, n)
+}
+
+/// Object designator
+func (rcv *DFH) OBJECT_DESIGNATOR() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
 }
 
+/// Object designator
+/// Object common name
+func (rcv *DFH) OBJECT_NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Object common name
+/// History start time (ISO 8601)
+func (rcv *DFH) START_TIME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// History start time (ISO 8601)
+/// History end time (ISO 8601)
+func (rcv *DFH) END_TIME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// History end time (ISO 8601)
+/// Current effective until date (ISO 8601)
+func (rcv *DFH) EFFECTIVE_UNTIL() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Current effective until date (ISO 8601)
+/// Current drift rate in degrees/day
 func (rcv *DFH) DRIFT_RATE() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
 	return 0.0
 }
 
+/// Current drift rate in degrees/day
 func (rcv *DFH) MutateDRIFT_RATE(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(8, n)
+	return rcv._tab.MutateFloat64Slot(18, n)
 }
 
+/// Current mean longitude in degrees East
+func (rcv *DFH) MEAN_LONGITUDE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Current mean longitude in degrees East
+func (rcv *DFH) MutateMEAN_LONGITUDE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+/// Longitude slot center in degrees East (if station-keeping)
+func (rcv *DFH) SLOT_CENTER() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Longitude slot center in degrees East (if station-keeping)
+func (rcv *DFH) MutateSLOT_CENTER(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+/// Longitude slot half-width in degrees
+func (rcv *DFH) SLOT_HALF_WIDTH() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Longitude slot half-width in degrees
+func (rcv *DFH) MutateSLOT_HALF_WIDTH(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+/// Whether object is actively station-keeping
+func (rcv *DFH) STATION_KEEPING() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+/// Whether object is actively station-keeping
+func (rcv *DFH) MutateSTATION_KEEPING(n bool) bool {
+	return rcv._tab.MutateBoolSlot(26, n)
+}
+
+/// Historical drift records
+func (rcv *DFH) RECORDS(obj *driftRecord, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *DFH) RECORDSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Historical drift records
+/// Number of records in history
+func (rcv *DFH) NUM_RECORDS() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Number of records in history
+func (rcv *DFH) MutateNUM_RECORDS(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(30, n)
+}
+
+/// Additional notes
+func (rcv *DFH) NOTES() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Additional notes
 func DFHStart(builder *flatbuffers.Builder) {
-	builder.StartObject(3)
+	builder.StartObject(15)
 }
 func DFHAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
+func DFHAddSAT_NO(builder *flatbuffers.Builder, SAT_NO uint32) {
+	builder.PrependUint32Slot(1, SAT_NO, 0)
+}
+func DFHAddOBJECT_DESIGNATOR(builder *flatbuffers.Builder, OBJECT_DESIGNATOR flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(OBJECT_DESIGNATOR), 0)
+}
+func DFHAddOBJECT_NAME(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(OBJECT_NAME), 0)
+}
+func DFHAddSTART_TIME(builder *flatbuffers.Builder, START_TIME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(START_TIME), 0)
+}
+func DFHAddEND_TIME(builder *flatbuffers.Builder, END_TIME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(END_TIME), 0)
+}
 func DFHAddEFFECTIVE_UNTIL(builder *flatbuffers.Builder, EFFECTIVE_UNTIL flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(EFFECTIVE_UNTIL), 0)
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(EFFECTIVE_UNTIL), 0)
 }
 func DFHAddDRIFT_RATE(builder *flatbuffers.Builder, DRIFT_RATE float64) {
-	builder.PrependFloat64Slot(2, DRIFT_RATE, 0.0)
+	builder.PrependFloat64Slot(7, DRIFT_RATE, 0.0)
+}
+func DFHAddMEAN_LONGITUDE(builder *flatbuffers.Builder, MEAN_LONGITUDE float64) {
+	builder.PrependFloat64Slot(8, MEAN_LONGITUDE, 0.0)
+}
+func DFHAddSLOT_CENTER(builder *flatbuffers.Builder, SLOT_CENTER float64) {
+	builder.PrependFloat64Slot(9, SLOT_CENTER, 0.0)
+}
+func DFHAddSLOT_HALF_WIDTH(builder *flatbuffers.Builder, SLOT_HALF_WIDTH float64) {
+	builder.PrependFloat64Slot(10, SLOT_HALF_WIDTH, 0.0)
+}
+func DFHAddSTATION_KEEPING(builder *flatbuffers.Builder, STATION_KEEPING bool) {
+	builder.PrependBoolSlot(11, STATION_KEEPING, false)
+}
+func DFHAddRECORDS(builder *flatbuffers.Builder, RECORDS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(RECORDS), 0)
+}
+func DFHStartRECORDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func DFHAddNUM_RECORDS(builder *flatbuffers.Builder, NUM_RECORDS uint32) {
+	builder.PrependUint32Slot(13, NUM_RECORDS, 0)
+}
+func DFHAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(NOTES), 0)
 }
 func DFHEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

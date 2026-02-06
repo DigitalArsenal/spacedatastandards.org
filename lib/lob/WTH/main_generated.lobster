@@ -5,94 +5,126 @@ class WTH
 
 /// Weather Data
 class WTH : flatbuffers.handle
+    /// Unique identifier
     def ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
+    /// Sensor identifier
     def ID_SENSOR() -> string:
         return flatbuffers.field_string(buf_, pos_, 6)
+    /// Original sensor identifier
     def ORIG_SENSOR_ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 8)
+    /// Observation time (ISO 8601)
     def OB_TIME() -> string:
         return flatbuffers.field_string(buf_, pos_, 10)
-    def SIG_PWRS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 12) + i * 4)
-    def SIG_PWRS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 12)
-    def NOISE_LVLS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 14) + i * 4)
-    def NOISE_LVLS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 14)
-    def SPEC_WIDTHS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 16) + i * 4)
-    def SPEC_WIDTHS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 16)
-    def FIRST_GUESS_AVGS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 18) + i * 4)
-    def FIRST_GUESS_AVGS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 18)
-    def QC_VALUE() -> int:
-        return flatbuffers.field_int32(buf_, pos_, 20, 0)
+    /// File creation time (ISO 8601)
     def FILE_CREATION() -> string:
-        return flatbuffers.field_string(buf_, pos_, 22)
+        return flatbuffers.field_string(buf_, pos_, 12)
+    /// Quality control value
+    def QC_VALUE() -> int:
+        return flatbuffers.field_uint8(buf_, pos_, 14, 0)
+    /// Terminal altitude (km)
     def TERM_ALT() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
+    /// Average transmit power (dBm)
     def AVG_TX_PWR() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
+    /// Average reflected power (dBm)
     def AVG_REF_PWR() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 28, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
+    /// Sector number
     def SECTOR_NUM() -> int:
-        return flatbuffers.field_int32(buf_, pos_, 30, 0)
+        return flatbuffers.field_uint16(buf_, pos_, 22, 0)
+    /// Number of data elements
     def NUM_ELEMENTS() -> int:
-        return flatbuffers.field_int32(buf_, pos_, 32, 0)
-    def TD_AVG_SAMPLE_NUMS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 34) + i * 4)
-    def TD_AVG_SAMPLE_NUMS_length() -> int:
-        return flatbuffers.field_vector_len(buf_, pos_, 34)
+        return flatbuffers.field_uint16(buf_, pos_, 24, 0)
+    /// Checksum
     def CHECKSUM() -> int:
-        return flatbuffers.field_int32(buf_, pos_, 36, 0)
-    def CO_INTEGS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 38) + i * 4)
+        return flatbuffers.field_uint32(buf_, pos_, 26, 0)
+    /// Signal power values (dBm)
+    def SIG_PWRS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 28) + i * 8)
+    def SIG_PWRS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 28)
+    /// Noise level values (dBm)
+    def NOISE_LVLS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 30) + i * 8)
+    def NOISE_LVLS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 30)
+    /// Spectral width values (m/s)
+    def SPEC_WIDTHS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 32) + i * 8)
+    def SPEC_WIDTHS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 32)
+    /// First guess average values
+    def FIRST_GUESS_AVGS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 34) + i * 8)
+    def FIRST_GUESS_AVGS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 34)
+    /// Time domain average sample numbers
+    def TD_AVG_SAMPLE_NUMS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 36) + i * 8)
+    def TD_AVG_SAMPLE_NUMS_length() -> int:
+        return flatbuffers.field_vector_len(buf_, pos_, 36)
+    /// Co-integration values
+    def CO_INTEGS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 38) + i * 8)
     def CO_INTEGS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 38)
-    def SPEC_AVGS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 40) + i * 4)
+    /// Spectral average values
+    def SPEC_AVGS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 40) + i * 8)
     def SPEC_AVGS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 40)
-    def INTERPULSE_PERIODS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 42) + i * 4)
+    /// Interpulse periods (microseconds)
+    def INTERPULSE_PERIODS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 42) + i * 8)
     def INTERPULSE_PERIODS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 42)
-    def DOPP_VELS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 44) + i * 4)
+    /// Doppler velocities (m/s)
+    def DOPP_VELS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 44) + i * 8)
     def DOPP_VELS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 44)
-    def CONS_RECS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 46) + i * 4)
+    /// Consecutive records count
+    def CONS_RECS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 46) + i * 8)
     def CONS_RECS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 46)
-    def SNRS(i:int) -> string:
-        return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 48) + i * 4)
+    /// Signal-to-noise ratios (dB)
+    def SNRS(i:int) -> float:
+        return read_float64_le(buf_, buf_.flatbuffers.field_vector(pos_, 48) + i * 8)
     def SNRS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 48)
+    /// Signal strength (dBm)
     def SIG_STRENGTH() -> float:
         return flatbuffers.field_float64(buf_, pos_, 50, 0.0)
+    /// Error ellipse semi-major axis (km)
     def SEMI_MAJOR_AXIS() -> float:
         return flatbuffers.field_float64(buf_, pos_, 52, 0.0)
+    /// Error ellipse semi-minor axis (km)
     def SEMI_MINOR_AXIS() -> float:
         return flatbuffers.field_float64(buf_, pos_, 54, 0.0)
+    /// Error ellipse orientation angle (degrees)
     def ANGLE_ORIENTATION() -> float:
         return flatbuffers.field_float64(buf_, pos_, 56, 0.0)
+    /// Lightning event number
     def LIGHT_EVENT_NUM() -> int:
-        return flatbuffers.field_int32(buf_, pos_, 58, 0)
+        return flatbuffers.field_uint32(buf_, pos_, 58, 0)
+    /// Lightning detection sensor identifiers
     def LIGHT_DET_SENSORS(i:int) -> string:
         return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 60) + i * 4)
     def LIGHT_DET_SENSORS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 60)
+    /// Position confidence (0-1)
     def POS_CONFIDENCE() -> float:
         return flatbuffers.field_float64(buf_, pos_, 62, 0.0)
+    /// Source types
     def SRC_TYPS(i:int) -> string:
         return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 64) + i * 4)
     def SRC_TYPS_length() -> int:
         return flatbuffers.field_vector_len(buf_, pos_, 64)
+    /// Source identifiers
     def SRC_IDS(i:int) -> string:
         return flatbuffers.string(buf_, buf_.flatbuffers.field_vector(pos_, 66) + i * 4)
     def SRC_IDS_length() -> int:
@@ -117,44 +149,44 @@ struct WTHBuilder:
     def add_OB_TIME(OB_TIME:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(3, OB_TIME)
         return this
-    def add_SIG_PWRS(SIG_PWRS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(4, SIG_PWRS)
-        return this
-    def add_NOISE_LVLS(NOISE_LVLS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(5, NOISE_LVLS)
-        return this
-    def add_SPEC_WIDTHS(SPEC_WIDTHS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(6, SPEC_WIDTHS)
-        return this
-    def add_FIRST_GUESS_AVGS(FIRST_GUESS_AVGS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(7, FIRST_GUESS_AVGS)
+    def add_FILE_CREATION(FILE_CREATION:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(4, FILE_CREATION)
         return this
     def add_QC_VALUE(QC_VALUE:int):
-        b_.PrependInt32Slot(8, QC_VALUE, 0)
-        return this
-    def add_FILE_CREATION(FILE_CREATION:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(9, FILE_CREATION)
+        b_.PrependUint8Slot(5, QC_VALUE, 0)
         return this
     def add_TERM_ALT(TERM_ALT:float):
-        b_.PrependFloat64Slot(10, TERM_ALT, 0.0)
+        b_.PrependFloat64Slot(6, TERM_ALT, 0.0)
         return this
     def add_AVG_TX_PWR(AVG_TX_PWR:float):
-        b_.PrependFloat64Slot(11, AVG_TX_PWR, 0.0)
+        b_.PrependFloat64Slot(7, AVG_TX_PWR, 0.0)
         return this
     def add_AVG_REF_PWR(AVG_REF_PWR:float):
-        b_.PrependFloat64Slot(12, AVG_REF_PWR, 0.0)
+        b_.PrependFloat64Slot(8, AVG_REF_PWR, 0.0)
         return this
     def add_SECTOR_NUM(SECTOR_NUM:int):
-        b_.PrependInt32Slot(13, SECTOR_NUM, 0)
+        b_.PrependUint16Slot(9, SECTOR_NUM, 0)
         return this
     def add_NUM_ELEMENTS(NUM_ELEMENTS:int):
-        b_.PrependInt32Slot(14, NUM_ELEMENTS, 0)
-        return this
-    def add_TD_AVG_SAMPLE_NUMS(TD_AVG_SAMPLE_NUMS:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(15, TD_AVG_SAMPLE_NUMS)
+        b_.PrependUint16Slot(10, NUM_ELEMENTS, 0)
         return this
     def add_CHECKSUM(CHECKSUM:int):
-        b_.PrependInt32Slot(16, CHECKSUM, 0)
+        b_.PrependUint32Slot(11, CHECKSUM, 0)
+        return this
+    def add_SIG_PWRS(SIG_PWRS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(12, SIG_PWRS)
+        return this
+    def add_NOISE_LVLS(NOISE_LVLS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(13, NOISE_LVLS)
+        return this
+    def add_SPEC_WIDTHS(SPEC_WIDTHS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(14, SPEC_WIDTHS)
+        return this
+    def add_FIRST_GUESS_AVGS(FIRST_GUESS_AVGS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(15, FIRST_GUESS_AVGS)
+        return this
+    def add_TD_AVG_SAMPLE_NUMS(TD_AVG_SAMPLE_NUMS:flatbuffers.offset):
+        b_.PrependUOffsetTRelativeSlot(16, TD_AVG_SAMPLE_NUMS)
         return this
     def add_CO_INTEGS(CO_INTEGS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(17, CO_INTEGS)
@@ -187,7 +219,7 @@ struct WTHBuilder:
         b_.PrependFloat64Slot(26, ANGLE_ORIENTATION, 0.0)
         return this
     def add_LIGHT_EVENT_NUM(LIGHT_EVENT_NUM:int):
-        b_.PrependInt32Slot(27, LIGHT_EVENT_NUM, 0)
+        b_.PrependUint32Slot(27, LIGHT_EVENT_NUM, 0)
         return this
     def add_LIGHT_DET_SENSORS(LIGHT_DET_SENSORS:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(28, LIGHT_DET_SENSORS)
@@ -205,80 +237,80 @@ struct WTHBuilder:
         return b_.EndObject()
 
 def WTHStartSIG_PWRSVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def WTHCreateSIG_PWRSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    b_.StartVector(8, n_, 8)
+def WTHCreateSIG_PWRSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
 def WTHStartNOISE_LVLSVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def WTHCreateNOISE_LVLSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    b_.StartVector(8, n_, 8)
+def WTHCreateNOISE_LVLSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
 def WTHStartSPEC_WIDTHSVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def WTHCreateSPEC_WIDTHSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    b_.StartVector(8, n_, 8)
+def WTHCreateSPEC_WIDTHSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
 def WTHStartFIRST_GUESS_AVGSVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def WTHCreateFIRST_GUESS_AVGSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    b_.StartVector(8, n_, 8)
+def WTHCreateFIRST_GUESS_AVGSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
 def WTHStartTD_AVG_SAMPLE_NUMSVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def WTHCreateTD_AVG_SAMPLE_NUMSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    b_.StartVector(8, n_, 8)
+def WTHCreateTD_AVG_SAMPLE_NUMSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
 def WTHStartCO_INTEGSVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def WTHCreateCO_INTEGSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    b_.StartVector(8, n_, 8)
+def WTHCreateCO_INTEGSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
 def WTHStartSPEC_AVGSVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def WTHCreateSPEC_AVGSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    b_.StartVector(8, n_, 8)
+def WTHCreateSPEC_AVGSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
 def WTHStartINTERPULSE_PERIODSVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def WTHCreateINTERPULSE_PERIODSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    b_.StartVector(8, n_, 8)
+def WTHCreateINTERPULSE_PERIODSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
 def WTHStartDOPP_VELSVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def WTHCreateDOPP_VELSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    b_.StartVector(8, n_, 8)
+def WTHCreateDOPP_VELSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
 def WTHStartCONS_RECSVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def WTHCreateCONS_RECSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    b_.StartVector(8, n_, 8)
+def WTHCreateCONS_RECSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
 def WTHStartSNRSVector(b_:flatbuffers.builder, n_:int):
-    b_.StartVector(4, n_, 4)
-def WTHCreateSNRSVector(b_:flatbuffers.builder, v_:[flatbuffers.offset]):
-    b_.StartVector(4, v_.length, 4)
-    reverse(v_) e_: b_.PrependUOffsetTRelative(e_)
+    b_.StartVector(8, n_, 8)
+def WTHCreateSNRSVector(b_:flatbuffers.builder, v_:[float]):
+    b_.StartVector(8, v_.length, 8)
+    reverse(v_) e_: b_.PrependFloat64(e_)
     return b_.EndVector(v_.length)
 
 def WTHStartLIGHT_DET_SENSORSVector(b_:flatbuffers.builder, n_:int):

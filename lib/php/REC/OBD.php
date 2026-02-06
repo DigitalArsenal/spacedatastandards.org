@@ -41,235 +41,316 @@ class OBD extends Table
         return $this;
     }
 
+    /// Unique identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getSTART_TIME()
+    /// Satellite catalog number
+    /**
+     * @return uint
+     */
+    public function getSAT_NO()
     {
         $o = $this->__offset(6);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
-    public function getEND_TIME()
+    /// International designator
+    public function getORIG_OBJECT_ID()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getORIG_OBJECT_ID()
+    /// On-orbit reference
+    public function getON_ORBIT()
     {
         $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /**
-     * @return int
-     */
-    public function getSAT_NO()
+    /// OD fit start time (ISO 8601)
+    public function getSTART_TIME()
     {
         $o = $this->__offset(12);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getAPRIORI_ID_ELSET()
+    /// OD fit end time (ISO 8601)
+    public function getEND_TIME()
     {
         $o = $this->__offset(14);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getAPRIORI_ELSET()
+    /// OD method used
+    /**
+     * @return sbyte
+     */
+    public function getMETHOD()
     {
         $o = $this->__offset(16);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \odMethod::BATCH_LEAST_SQUARES;
     }
 
-    public function getAPRIORI_ID_STATE_VECTOR()
+    /// Method source or software
+    public function getMETHOD_SOURCE()
     {
         $o = $this->__offset(18);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getAPRIORI_STATE_VECTOR()
-    {
-        $o = $this->__offset(20);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
+    /// True if this is an initial orbit determination
     /**
      * @return bool
      */
     public function getINITIAL_OD()
     {
-        $o = $this->__offset(22);
+        $o = $this->__offset(20);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
-    public function getLAST_OB_START()
+    /// A priori element set identifier
+    public function getAPRIORI_ID_ELSET()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// A priori element set data reference
+    public function getAPRIORI_ELSET()
     {
         $o = $this->__offset(24);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getLAST_OB_END()
+    /// A priori state vector identifier
+    public function getAPRIORI_ID_STATE_VECTOR()
     {
         $o = $this->__offset(26);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /**
-     * @return double
-     */
-    public function getTIME_SPAN()
+    /// A priori state vector data reference
+    public function getAPRIORI_STATE_VECTOR()
     {
         $o = $this->__offset(28);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getEFFECTIVE_FROM()
+    /// Start of last observation arc (ISO 8601)
+    public function getLAST_OB_START()
     {
         $o = $this->__offset(30);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getEFFECTIVE_UNTIL()
+    /// End of last observation arc (ISO 8601)
+    public function getLAST_OB_END()
     {
         $o = $this->__offset(32);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Observation time span (days)
     /**
      * @return double
      */
-    public function getWRMS()
+    public function getTIME_SPAN()
     {
         $o = $this->__offset(34);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /**
-     * @return double
-     */
-    public function getPREVIOUS_WRMS()
-    {
-        $o = $this->__offset(36);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getFIRST_PASS_WRMS()
-    {
-        $o = $this->__offset(38);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getBEST_PASS_WRMS()
-    {
-        $o = $this->__offset(40);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getERROR_GROWTH_RATE()
-    {
-        $o = $this->__offset(42);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getEDR()
-    {
-        $o = $this->__offset(44);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    public function getMETHOD()
-    {
-        $o = $this->__offset(46);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getMETHOD_SOURCE()
-    {
-        $o = $this->__offset(48);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
+    /// Fit span in days
     /**
      * @return double
      */
     public function getFIT_SPAN()
     {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Solution effective from (ISO 8601)
+    public function getEFFECTIVE_FROM()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Solution effective until (ISO 8601)
+    public function getEFFECTIVE_UNTIL()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Weighted RMS of residuals
+    /**
+     * @return double
+     */
+    public function getWRMS()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Previous solution WRMS
+    /**
+     * @return double
+     */
+    public function getPREVIOUS_WRMS()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// First pass WRMS
+    /**
+     * @return double
+     */
+    public function getFIRST_PASS_WRMS()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Best pass WRMS
+    /**
+     * @return double
+     */
+    public function getBEST_PASS_WRMS()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Error growth rate (km/day)
+    /**
+     * @return double
+     */
+    public function getERROR_GROWTH_RATE()
+    {
         $o = $this->__offset(50);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Energy dissipation rate
+    /**
+     * @return double
+     */
+    public function getEDR()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// True if ballistic coefficient was estimated
     /**
      * @return bool
      */
     public function getBALLISTIC_COEFF_EST()
     {
-        $o = $this->__offset(52);
+        $o = $this->__offset(54);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Ballistic coefficient model
     public function getBALLISTIC_COEFF_MODEL()
     {
-        $o = $this->__offset(54);
+        $o = $this->__offset(56);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// True if area-to-mass ratio was estimated
     /**
      * @return bool
      */
     public function getAGOM_EST()
     {
-        $o = $this->__offset(56);
+        $o = $this->__offset(58);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Area-to-mass ratio model
     public function getAGOM_MODEL()
     {
-        $o = $this->__offset(58);
+        $o = $this->__offset(60);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// RMS convergence criteria
     /**
      * @return double
      */
     public function getRMS_CONVERGENCE_CRITERIA()
     {
-        $o = $this->__offset(60);
+        $o = $this->__offset(62);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Number of iterations to converge
+    /**
+     * @return ushort
+     */
+    public function getNUM_ITERATIONS()
+    {
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
+    }
+
+    /// Total accepted observations
+    /**
+     * @return uint
+     */
+    public function getNUM_ACCEPTED_OBS()
+    {
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Total rejected observations
+    /**
+     * @return uint
+     */
+    public function getNUM_REJECTED_OBS()
+    {
+        $o = $this->__offset(68);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Sensor contributions to this solution
+    /**
+     * @returnVectorOffset
+     */
+    public function getSENSORS($j)
+    {
+        $o = $this->__offset(70);
+        $obj = new OdSensorContribution();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
 
     /**
      * @return int
      */
-    public function getNUM_ITERATIONS()
+    public function getSENSORSLength()
     {
-        $o = $this->__offset(62);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        $o = $this->__offset(70);
+        return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Accepted observation types
     /**
      * @param int offset
      * @return string
      */
     public function getACCEPTED_OB_TYPS($j)
     {
-        $o = $this->__offset(64);
+        $o = $this->__offset(72);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -278,17 +359,18 @@ class OBD extends Table
      */
     public function getACCEPTED_OB_TYPSLength()
     {
-        $o = $this->__offset(64);
+        $o = $this->__offset(72);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Accepted observation identifiers
     /**
      * @param int offset
      * @return string
      */
     public function getACCEPTED_OB_IDS($j)
     {
-        $o = $this->__offset(66);
+        $o = $this->__offset(74);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -297,17 +379,18 @@ class OBD extends Table
      */
     public function getACCEPTED_OB_IDSLength()
     {
-        $o = $this->__offset(66);
+        $o = $this->__offset(74);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Rejected observation types
     /**
      * @param int offset
      * @return string
      */
     public function getREJECTED_OB_TYPS($j)
     {
-        $o = $this->__offset(68);
+        $o = $this->__offset(76);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -316,17 +399,18 @@ class OBD extends Table
      */
     public function getREJECTED_OB_TYPSLength()
     {
-        $o = $this->__offset(68);
+        $o = $this->__offset(76);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Rejected observation identifiers
     /**
      * @param int offset
      * @return string
      */
     public function getREJECTED_OB_IDS($j)
     {
-        $o = $this->__offset(70);
+        $o = $this->__offset(78);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -335,33 +419,8 @@ class OBD extends Table
      */
     public function getREJECTED_OB_IDSLength()
     {
-        $o = $this->__offset(70);
+        $o = $this->__offset(78);
         return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
-    /**
-     * @param int offset
-     * @return string
-     */
-    public function getSENSOR_IDS($j)
-    {
-        $o = $this->__offset(72);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSENSOR_IDSLength()
-    {
-        $o = $this->__offset(72);
-        return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
-    public function getON_ORBIT()
-    {
-        $o = $this->__offset(74);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /**
@@ -370,29 +429,33 @@ class OBD extends Table
      */
     public static function startOBD(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(36);
+        $builder->StartObject(38);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return OBD
      */
-    public static function createOBD(FlatBufferBuilder $builder, $ID, $START_TIME, $END_TIME, $ORIG_OBJECT_ID, $SAT_NO, $APRIORI_ID_ELSET, $APRIORI_ELSET, $APRIORI_ID_STATE_VECTOR, $APRIORI_STATE_VECTOR, $INITIAL_OD, $LAST_OB_START, $LAST_OB_END, $TIME_SPAN, $EFFECTIVE_FROM, $EFFECTIVE_UNTIL, $WRMS, $PREVIOUS_WRMS, $FIRST_PASS_WRMS, $BEST_PASS_WRMS, $ERROR_GROWTH_RATE, $EDR, $METHOD, $METHOD_SOURCE, $FIT_SPAN, $BALLISTIC_COEFF_EST, $BALLISTIC_COEFF_MODEL, $AGOM_EST, $AGOM_MODEL, $RMS_CONVERGENCE_CRITERIA, $NUM_ITERATIONS, $ACCEPTED_OB_TYPS, $ACCEPTED_OB_IDS, $REJECTED_OB_TYPS, $REJECTED_OB_IDS, $SENSOR_IDS, $ON_ORBIT)
+    public static function createOBD(FlatBufferBuilder $builder, $ID, $SAT_NO, $ORIG_OBJECT_ID, $ON_ORBIT, $START_TIME, $END_TIME, $METHOD, $METHOD_SOURCE, $INITIAL_OD, $APRIORI_ID_ELSET, $APRIORI_ELSET, $APRIORI_ID_STATE_VECTOR, $APRIORI_STATE_VECTOR, $LAST_OB_START, $LAST_OB_END, $TIME_SPAN, $FIT_SPAN, $EFFECTIVE_FROM, $EFFECTIVE_UNTIL, $WRMS, $PREVIOUS_WRMS, $FIRST_PASS_WRMS, $BEST_PASS_WRMS, $ERROR_GROWTH_RATE, $EDR, $BALLISTIC_COEFF_EST, $BALLISTIC_COEFF_MODEL, $AGOM_EST, $AGOM_MODEL, $RMS_CONVERGENCE_CRITERIA, $NUM_ITERATIONS, $NUM_ACCEPTED_OBS, $NUM_REJECTED_OBS, $SENSORS, $ACCEPTED_OB_TYPS, $ACCEPTED_OB_IDS, $REJECTED_OB_TYPS, $REJECTED_OB_IDS)
     {
-        $builder->startObject(36);
+        $builder->startObject(38);
         self::addID($builder, $ID);
+        self::addSAT_NO($builder, $SAT_NO);
+        self::addORIG_OBJECT_ID($builder, $ORIG_OBJECT_ID);
+        self::addON_ORBIT($builder, $ON_ORBIT);
         self::addSTART_TIME($builder, $START_TIME);
         self::addEND_TIME($builder, $END_TIME);
-        self::addORIG_OBJECT_ID($builder, $ORIG_OBJECT_ID);
-        self::addSAT_NO($builder, $SAT_NO);
+        self::addMETHOD($builder, $METHOD);
+        self::addMETHOD_SOURCE($builder, $METHOD_SOURCE);
+        self::addINITIAL_OD($builder, $INITIAL_OD);
         self::addAPRIORI_ID_ELSET($builder, $APRIORI_ID_ELSET);
         self::addAPRIORI_ELSET($builder, $APRIORI_ELSET);
         self::addAPRIORI_ID_STATE_VECTOR($builder, $APRIORI_ID_STATE_VECTOR);
         self::addAPRIORI_STATE_VECTOR($builder, $APRIORI_STATE_VECTOR);
-        self::addINITIAL_OD($builder, $INITIAL_OD);
         self::addLAST_OB_START($builder, $LAST_OB_START);
         self::addLAST_OB_END($builder, $LAST_OB_END);
         self::addTIME_SPAN($builder, $TIME_SPAN);
+        self::addFIT_SPAN($builder, $FIT_SPAN);
         self::addEFFECTIVE_FROM($builder, $EFFECTIVE_FROM);
         self::addEFFECTIVE_UNTIL($builder, $EFFECTIVE_UNTIL);
         self::addWRMS($builder, $WRMS);
@@ -401,21 +464,19 @@ class OBD extends Table
         self::addBEST_PASS_WRMS($builder, $BEST_PASS_WRMS);
         self::addERROR_GROWTH_RATE($builder, $ERROR_GROWTH_RATE);
         self::addEDR($builder, $EDR);
-        self::addMETHOD($builder, $METHOD);
-        self::addMETHOD_SOURCE($builder, $METHOD_SOURCE);
-        self::addFIT_SPAN($builder, $FIT_SPAN);
         self::addBALLISTIC_COEFF_EST($builder, $BALLISTIC_COEFF_EST);
         self::addBALLISTIC_COEFF_MODEL($builder, $BALLISTIC_COEFF_MODEL);
         self::addAGOM_EST($builder, $AGOM_EST);
         self::addAGOM_MODEL($builder, $AGOM_MODEL);
         self::addRMS_CONVERGENCE_CRITERIA($builder, $RMS_CONVERGENCE_CRITERIA);
         self::addNUM_ITERATIONS($builder, $NUM_ITERATIONS);
+        self::addNUM_ACCEPTED_OBS($builder, $NUM_ACCEPTED_OBS);
+        self::addNUM_REJECTED_OBS($builder, $NUM_REJECTED_OBS);
+        self::addSENSORS($builder, $SENSORS);
         self::addACCEPTED_OB_TYPS($builder, $ACCEPTED_OB_TYPS);
         self::addACCEPTED_OB_IDS($builder, $ACCEPTED_OB_IDS);
         self::addREJECTED_OB_TYPS($builder, $REJECTED_OB_TYPS);
         self::addREJECTED_OB_IDS($builder, $REJECTED_OB_IDS);
-        self::addSENSOR_IDS($builder, $SENSOR_IDS);
-        self::addON_ORBIT($builder, $ON_ORBIT);
         $o = $builder->endObject();
         return $o;
     }
@@ -432,22 +493,12 @@ class OBD extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param uint
      * @return void
      */
-    public static function addSTART_TIME(FlatBufferBuilder $builder, $START_TIME)
+    public static function addSAT_NO(FlatBufferBuilder $builder, $SAT_NO)
     {
-        $builder->addOffsetX(1, $START_TIME, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addEND_TIME(FlatBufferBuilder $builder, $END_TIME)
-    {
-        $builder->addOffsetX(2, $END_TIME, 0);
+        $builder->addUintX(1, $SAT_NO, 0);
     }
 
     /**
@@ -457,17 +508,7 @@ class OBD extends Table
      */
     public static function addORIG_OBJECT_ID(FlatBufferBuilder $builder, $ORIG_OBJECT_ID)
     {
-        $builder->addOffsetX(3, $ORIG_OBJECT_ID, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int
-     * @return void
-     */
-    public static function addSAT_NO(FlatBufferBuilder $builder, $SAT_NO)
-    {
-        $builder->addIntX(4, $SAT_NO, 0);
+        $builder->addOffsetX(2, $ORIG_OBJECT_ID, 0);
     }
 
     /**
@@ -475,9 +516,9 @@ class OBD extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addAPRIORI_ID_ELSET(FlatBufferBuilder $builder, $APRIORI_ID_ELSET)
+    public static function addON_ORBIT(FlatBufferBuilder $builder, $ON_ORBIT)
     {
-        $builder->addOffsetX(5, $APRIORI_ID_ELSET, 0);
+        $builder->addOffsetX(3, $ON_ORBIT, 0);
     }
 
     /**
@@ -485,9 +526,9 @@ class OBD extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addAPRIORI_ELSET(FlatBufferBuilder $builder, $APRIORI_ELSET)
+    public static function addSTART_TIME(FlatBufferBuilder $builder, $START_TIME)
     {
-        $builder->addOffsetX(6, $APRIORI_ELSET, 0);
+        $builder->addOffsetX(4, $START_TIME, 0);
     }
 
     /**
@@ -495,149 +536,19 @@ class OBD extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addAPRIORI_ID_STATE_VECTOR(FlatBufferBuilder $builder, $APRIORI_ID_STATE_VECTOR)
+    public static function addEND_TIME(FlatBufferBuilder $builder, $END_TIME)
     {
-        $builder->addOffsetX(7, $APRIORI_ID_STATE_VECTOR, 0);
+        $builder->addOffsetX(5, $END_TIME, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addAPRIORI_STATE_VECTOR(FlatBufferBuilder $builder, $APRIORI_STATE_VECTOR)
-    {
-        $builder->addOffsetX(8, $APRIORI_STATE_VECTOR, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param bool
-     * @return void
-     */
-    public static function addINITIAL_OD(FlatBufferBuilder $builder, $INITIAL_OD)
-    {
-        $builder->addBoolX(9, $INITIAL_OD, false);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addLAST_OB_START(FlatBufferBuilder $builder, $LAST_OB_START)
-    {
-        $builder->addOffsetX(10, $LAST_OB_START, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addLAST_OB_END(FlatBufferBuilder $builder, $LAST_OB_END)
-    {
-        $builder->addOffsetX(11, $LAST_OB_END, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addTIME_SPAN(FlatBufferBuilder $builder, $TIME_SPAN)
-    {
-        $builder->addDoubleX(12, $TIME_SPAN, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addEFFECTIVE_FROM(FlatBufferBuilder $builder, $EFFECTIVE_FROM)
-    {
-        $builder->addOffsetX(13, $EFFECTIVE_FROM, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addEFFECTIVE_UNTIL(FlatBufferBuilder $builder, $EFFECTIVE_UNTIL)
-    {
-        $builder->addOffsetX(14, $EFFECTIVE_UNTIL, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addWRMS(FlatBufferBuilder $builder, $WRMS)
-    {
-        $builder->addDoubleX(15, $WRMS, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPREVIOUS_WRMS(FlatBufferBuilder $builder, $PREVIOUS_WRMS)
-    {
-        $builder->addDoubleX(16, $PREVIOUS_WRMS, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addFIRST_PASS_WRMS(FlatBufferBuilder $builder, $FIRST_PASS_WRMS)
-    {
-        $builder->addDoubleX(17, $FIRST_PASS_WRMS, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addBEST_PASS_WRMS(FlatBufferBuilder $builder, $BEST_PASS_WRMS)
-    {
-        $builder->addDoubleX(18, $BEST_PASS_WRMS, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addERROR_GROWTH_RATE(FlatBufferBuilder $builder, $ERROR_GROWTH_RATE)
-    {
-        $builder->addDoubleX(19, $ERROR_GROWTH_RATE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addEDR(FlatBufferBuilder $builder, $EDR)
-    {
-        $builder->addDoubleX(20, $EDR, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addMETHOD(FlatBufferBuilder $builder, $METHOD)
     {
-        $builder->addOffsetX(21, $METHOD, 0);
+        $builder->addSbyteX(6, $METHOD, 0);
     }
 
     /**
@@ -647,7 +558,87 @@ class OBD extends Table
      */
     public static function addMETHOD_SOURCE(FlatBufferBuilder $builder, $METHOD_SOURCE)
     {
-        $builder->addOffsetX(22, $METHOD_SOURCE, 0);
+        $builder->addOffsetX(7, $METHOD_SOURCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addINITIAL_OD(FlatBufferBuilder $builder, $INITIAL_OD)
+    {
+        $builder->addBoolX(8, $INITIAL_OD, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addAPRIORI_ID_ELSET(FlatBufferBuilder $builder, $APRIORI_ID_ELSET)
+    {
+        $builder->addOffsetX(9, $APRIORI_ID_ELSET, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addAPRIORI_ELSET(FlatBufferBuilder $builder, $APRIORI_ELSET)
+    {
+        $builder->addOffsetX(10, $APRIORI_ELSET, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addAPRIORI_ID_STATE_VECTOR(FlatBufferBuilder $builder, $APRIORI_ID_STATE_VECTOR)
+    {
+        $builder->addOffsetX(11, $APRIORI_ID_STATE_VECTOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addAPRIORI_STATE_VECTOR(FlatBufferBuilder $builder, $APRIORI_STATE_VECTOR)
+    {
+        $builder->addOffsetX(12, $APRIORI_STATE_VECTOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addLAST_OB_START(FlatBufferBuilder $builder, $LAST_OB_START)
+    {
+        $builder->addOffsetX(13, $LAST_OB_START, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addLAST_OB_END(FlatBufferBuilder $builder, $LAST_OB_END)
+    {
+        $builder->addOffsetX(14, $LAST_OB_END, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTIME_SPAN(FlatBufferBuilder $builder, $TIME_SPAN)
+    {
+        $builder->addDoubleX(15, $TIME_SPAN, 0.0);
     }
 
     /**
@@ -657,7 +648,87 @@ class OBD extends Table
      */
     public static function addFIT_SPAN(FlatBufferBuilder $builder, $FIT_SPAN)
     {
-        $builder->addDoubleX(23, $FIT_SPAN, 0.0);
+        $builder->addDoubleX(16, $FIT_SPAN, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEFFECTIVE_FROM(FlatBufferBuilder $builder, $EFFECTIVE_FROM)
+    {
+        $builder->addOffsetX(17, $EFFECTIVE_FROM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEFFECTIVE_UNTIL(FlatBufferBuilder $builder, $EFFECTIVE_UNTIL)
+    {
+        $builder->addOffsetX(18, $EFFECTIVE_UNTIL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addWRMS(FlatBufferBuilder $builder, $WRMS)
+    {
+        $builder->addDoubleX(19, $WRMS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPREVIOUS_WRMS(FlatBufferBuilder $builder, $PREVIOUS_WRMS)
+    {
+        $builder->addDoubleX(20, $PREVIOUS_WRMS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addFIRST_PASS_WRMS(FlatBufferBuilder $builder, $FIRST_PASS_WRMS)
+    {
+        $builder->addDoubleX(21, $FIRST_PASS_WRMS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addBEST_PASS_WRMS(FlatBufferBuilder $builder, $BEST_PASS_WRMS)
+    {
+        $builder->addDoubleX(22, $BEST_PASS_WRMS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addERROR_GROWTH_RATE(FlatBufferBuilder $builder, $ERROR_GROWTH_RATE)
+    {
+        $builder->addDoubleX(23, $ERROR_GROWTH_RATE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addEDR(FlatBufferBuilder $builder, $EDR)
+    {
+        $builder->addDoubleX(24, $EDR, 0.0);
     }
 
     /**
@@ -667,7 +738,7 @@ class OBD extends Table
      */
     public static function addBALLISTIC_COEFF_EST(FlatBufferBuilder $builder, $BALLISTIC_COEFF_EST)
     {
-        $builder->addBoolX(24, $BALLISTIC_COEFF_EST, false);
+        $builder->addBoolX(25, $BALLISTIC_COEFF_EST, false);
     }
 
     /**
@@ -677,7 +748,7 @@ class OBD extends Table
      */
     public static function addBALLISTIC_COEFF_MODEL(FlatBufferBuilder $builder, $BALLISTIC_COEFF_MODEL)
     {
-        $builder->addOffsetX(25, $BALLISTIC_COEFF_MODEL, 0);
+        $builder->addOffsetX(26, $BALLISTIC_COEFF_MODEL, 0);
     }
 
     /**
@@ -687,7 +758,7 @@ class OBD extends Table
      */
     public static function addAGOM_EST(FlatBufferBuilder $builder, $AGOM_EST)
     {
-        $builder->addBoolX(26, $AGOM_EST, false);
+        $builder->addBoolX(27, $AGOM_EST, false);
     }
 
     /**
@@ -697,7 +768,7 @@ class OBD extends Table
      */
     public static function addAGOM_MODEL(FlatBufferBuilder $builder, $AGOM_MODEL)
     {
-        $builder->addOffsetX(27, $AGOM_MODEL, 0);
+        $builder->addOffsetX(28, $AGOM_MODEL, 0);
     }
 
     /**
@@ -707,17 +778,71 @@ class OBD extends Table
      */
     public static function addRMS_CONVERGENCE_CRITERIA(FlatBufferBuilder $builder, $RMS_CONVERGENCE_CRITERIA)
     {
-        $builder->addDoubleX(28, $RMS_CONVERGENCE_CRITERIA, 0.0);
+        $builder->addDoubleX(29, $RMS_CONVERGENCE_CRITERIA, 0.0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param ushort
      * @return void
      */
     public static function addNUM_ITERATIONS(FlatBufferBuilder $builder, $NUM_ITERATIONS)
     {
-        $builder->addIntX(29, $NUM_ITERATIONS, 0);
+        $builder->addUshortX(30, $NUM_ITERATIONS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addNUM_ACCEPTED_OBS(FlatBufferBuilder $builder, $NUM_ACCEPTED_OBS)
+    {
+        $builder->addUintX(31, $NUM_ACCEPTED_OBS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addNUM_REJECTED_OBS(FlatBufferBuilder $builder, $NUM_REJECTED_OBS)
+    {
+        $builder->addUintX(32, $NUM_REJECTED_OBS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSENSORS(FlatBufferBuilder $builder, $SENSORS)
+    {
+        $builder->addOffsetX(33, $SENSORS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSENSORSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSENSORSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**
@@ -727,7 +852,7 @@ class OBD extends Table
      */
     public static function addACCEPTED_OB_TYPS(FlatBufferBuilder $builder, $ACCEPTED_OB_TYPS)
     {
-        $builder->addOffsetX(30, $ACCEPTED_OB_TYPS, 0);
+        $builder->addOffsetX(34, $ACCEPTED_OB_TYPS, 0);
     }
 
     /**
@@ -761,7 +886,7 @@ class OBD extends Table
      */
     public static function addACCEPTED_OB_IDS(FlatBufferBuilder $builder, $ACCEPTED_OB_IDS)
     {
-        $builder->addOffsetX(31, $ACCEPTED_OB_IDS, 0);
+        $builder->addOffsetX(35, $ACCEPTED_OB_IDS, 0);
     }
 
     /**
@@ -795,7 +920,7 @@ class OBD extends Table
      */
     public static function addREJECTED_OB_TYPS(FlatBufferBuilder $builder, $REJECTED_OB_TYPS)
     {
-        $builder->addOffsetX(32, $REJECTED_OB_TYPS, 0);
+        $builder->addOffsetX(36, $REJECTED_OB_TYPS, 0);
     }
 
     /**
@@ -829,7 +954,7 @@ class OBD extends Table
      */
     public static function addREJECTED_OB_IDS(FlatBufferBuilder $builder, $REJECTED_OB_IDS)
     {
-        $builder->addOffsetX(33, $REJECTED_OB_IDS, 0);
+        $builder->addOffsetX(37, $REJECTED_OB_IDS, 0);
     }
 
     /**
@@ -854,50 +979,6 @@ class OBD extends Table
     public static function startREJECTED_OB_IDSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param VectorOffset
-     * @return void
-     */
-    public static function addSENSOR_IDS(FlatBufferBuilder $builder, $SENSOR_IDS)
-    {
-        $builder->addOffsetX(34, $SENSOR_IDS, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param array offset array
-     * @return int vector offset
-     */
-    public static function createSENSOR_IDSVector(FlatBufferBuilder $builder, array $data)
-    {
-        $builder->startVector(4, count($data), 4);
-        for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
-        }
-        return $builder->endVector();
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int $numElems
-     * @return void
-     */
-    public static function startSENSOR_IDSVector(FlatBufferBuilder $builder, $numElems)
-    {
-        $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addON_ORBIT(FlatBufferBuilder $builder, $ON_ORBIT)
-    {
-        $builder->addOffsetX(35, $ON_ORBIT, 0);
     }
 
     /**

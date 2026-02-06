@@ -3,3 +3,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export { SEO, SEOT } from './SEO.js';
+export { seoDataType } from './seoDataType.js';
+export { seoObservatoryType } from './seoObservatoryType.js';
+export { seoParticleType } from './seoParticleType.js';

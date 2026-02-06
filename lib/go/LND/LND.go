@@ -54,6 +54,7 @@ func (rcv *LND) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Unique identifier
 func (rcv *LND) ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -62,7 +63,9 @@ func (rcv *LND) ID() []byte {
 	return nil
 }
 
-func (rcv *LND) LAUNCH_TIME() []byte {
+/// Unique identifier
+/// Detection event identifier
+func (rcv *LND) EVENT_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -70,39 +73,43 @@ func (rcv *LND) LAUNCH_TIME() []byte {
 	return nil
 }
 
-func (rcv *LND) MESSAGE_TYPE() []byte {
+/// Detection event identifier
+/// Detection type
+func (rcv *LND) DETECTION_TYPE() launchDetectionType {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
+	if o != 0 {
+		return launchDetectionType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// Detection type
+func (rcv *LND) MutateDETECTION_TYPE(n launchDetectionType) bool {
+	return rcv._tab.MutateInt8Slot(8, int8(n))
+}
+
+/// Detection message type code
+func (rcv *LND) MESSAGE_TYPE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
 }
 
-func (rcv *LND) LAUNCH_LATITUDE() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *LND) MutateLAUNCH_LATITUDE(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(10, n)
-}
-
-func (rcv *LND) LAUNCH_LONGITUDE() float64 {
+/// Detection message type code
+/// Time of launch detection (ISO 8601)
+func (rcv *LND) LAUNCH_TIME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
-	return 0.0
+	return nil
 }
 
-func (rcv *LND) MutateLAUNCH_LONGITUDE(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(12, n)
-}
-
-func (rcv *LND) LAUNCH_AZIMUTH() float64 {
+/// Time of launch detection (ISO 8601)
+/// Launch site latitude (degrees)
+func (rcv *LND) LAUNCH_LATITUDE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -110,11 +117,13 @@ func (rcv *LND) LAUNCH_AZIMUTH() float64 {
 	return 0.0
 }
 
-func (rcv *LND) MutateLAUNCH_AZIMUTH(n float64) bool {
+/// Launch site latitude (degrees)
+func (rcv *LND) MutateLAUNCH_LATITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
 }
 
-func (rcv *LND) RAAN() float64 {
+/// Launch site longitude (degrees)
+func (rcv *LND) LAUNCH_LONGITUDE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -122,11 +131,13 @@ func (rcv *LND) RAAN() float64 {
 	return 0.0
 }
 
-func (rcv *LND) MutateRAAN(n float64) bool {
+/// Launch site longitude (degrees)
+func (rcv *LND) MutateLAUNCH_LONGITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
 }
 
-func (rcv *LND) INCLINATION() float64 {
+/// Launch azimuth (degrees from north)
+func (rcv *LND) LAUNCH_AZIMUTH() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -134,19 +145,27 @@ func (rcv *LND) INCLINATION() float64 {
 	return 0.0
 }
 
-func (rcv *LND) MutateINCLINATION(n float64) bool {
+/// Launch azimuth (degrees from north)
+func (rcv *LND) MutateLAUNCH_AZIMUTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
 }
 
-func (rcv *LND) OBSERVATION_TIME() []byte {
+/// Estimated RAAN (degrees)
+func (rcv *LND) RAAN() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
-	return nil
+	return 0.0
 }
 
-func (rcv *LND) OBSERVATION_LATITUDE() float64 {
+/// Estimated RAAN (degrees)
+func (rcv *LND) MutateRAAN(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+/// Estimated inclination (degrees)
+func (rcv *LND) INCLINATION() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -154,23 +173,23 @@ func (rcv *LND) OBSERVATION_LATITUDE() float64 {
 	return 0.0
 }
 
-func (rcv *LND) MutateOBSERVATION_LATITUDE(n float64) bool {
+/// Estimated inclination (degrees)
+func (rcv *LND) MutateINCLINATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
 }
 
-func (rcv *LND) OBSERVATION_LONGITUDE() float64 {
+/// Time of trajectory observation (ISO 8601)
+func (rcv *LND) OBSERVATION_TIME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
-	return 0.0
+	return nil
 }
 
-func (rcv *LND) MutateOBSERVATION_LONGITUDE(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(24, n)
-}
-
-func (rcv *LND) OBSERVATION_ALTITUDE() float64 {
+/// Time of trajectory observation (ISO 8601)
+/// Observation point latitude (degrees)
+func (rcv *LND) OBSERVATION_LATITUDE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -178,64 +197,138 @@ func (rcv *LND) OBSERVATION_ALTITUDE() float64 {
 	return 0.0
 }
 
-func (rcv *LND) MutateOBSERVATION_ALTITUDE(n float64) bool {
+/// Observation point latitude (degrees)
+func (rcv *LND) MutateOBSERVATION_LATITUDE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
 }
 
-func (rcv *LND) STEREO_FLAG() bool {
+/// Observation point longitude (degrees)
+func (rcv *LND) OBSERVATION_LONGITUDE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
-		return rcv._tab.GetBool(o + rcv._tab.Pos)
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
-	return false
+	return 0.0
 }
 
-func (rcv *LND) MutateSTEREO_FLAG(n bool) bool {
-	return rcv._tab.MutateBoolSlot(28, n)
+/// Observation point longitude (degrees)
+func (rcv *LND) MutateOBSERVATION_LONGITUDE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(28, n)
 }
 
-func (rcv *LND) HIGH_ZENITH_AZIMUTH() bool {
+/// Observation point altitude (km)
+func (rcv *LND) OBSERVATION_ALTITUDE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Observation point altitude (km)
+func (rcv *LND) MutateOBSERVATION_ALTITUDE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+/// True if stereo observation (multiple sensors)
+func (rcv *LND) STEREO_FLAG() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
 	}
 	return false
 }
 
-func (rcv *LND) MutateHIGH_ZENITH_AZIMUTH(n bool) bool {
-	return rcv._tab.MutateBoolSlot(30, n)
+/// True if stereo observation (multiple sensors)
+func (rcv *LND) MutateSTEREO_FLAG(n bool) bool {
+	return rcv._tab.MutateBoolSlot(32, n)
 }
 
-func (rcv *LND) SEQUENCE_NUMBER() int32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+/// True if high zenith angle observation
+func (rcv *LND) HIGH_ZENITH_AZIMUTH() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+/// True if high zenith angle observation
+func (rcv *LND) MutateHIGH_ZENITH_AZIMUTH(n bool) bool {
+	return rcv._tab.MutateBoolSlot(34, n)
+}
+
+/// Sequence number in detection chain
+func (rcv *LND) SEQUENCE_NUMBER() uint16 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *LND) MutateSEQUENCE_NUMBER(n int32) bool {
-	return rcv._tab.MutateInt32Slot(32, n)
+/// Sequence number in detection chain
+func (rcv *LND) MutateSEQUENCE_NUMBER(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(36, n)
 }
 
-func (rcv *LND) EVENT_ID() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-func (rcv *LND) DESCRIPTOR() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-func (rcv *LND) TAGS(j int) []byte {
+/// Launch site identifier
+func (rcv *LND) LAUNCH_SITE_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Launch site identifier
+/// Launch vehicle type (if identified)
+func (rcv *LND) LAUNCH_VEHICLE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Launch vehicle type (if identified)
+/// Estimated trajectory type
+func (rcv *LND) TRAJECTORY_TYPE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Estimated trajectory type
+/// Detection confidence (0-1)
+func (rcv *LND) CONFIDENCE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Detection confidence (0-1)
+func (rcv *LND) MutateCONFIDENCE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+/// Event descriptor
+func (rcv *LND) DESCRIPTOR() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Event descriptor
+/// Associated tags
+func (rcv *LND) TAGS(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -244,69 +337,85 @@ func (rcv *LND) TAGS(j int) []byte {
 }
 
 func (rcv *LND) TAGSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
+/// Associated tags
 func LNDStart(builder *flatbuffers.Builder) {
-	builder.StartObject(18)
+	builder.StartObject(23)
 }
 func LNDAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
-func LNDAddLAUNCH_TIME(builder *flatbuffers.Builder, LAUNCH_TIME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(LAUNCH_TIME), 0)
+func LNDAddEVENT_ID(builder *flatbuffers.Builder, EVENT_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(EVENT_ID), 0)
+}
+func LNDAddDETECTION_TYPE(builder *flatbuffers.Builder, DETECTION_TYPE launchDetectionType) {
+	builder.PrependInt8Slot(2, int8(DETECTION_TYPE), 0)
 }
 func LNDAddMESSAGE_TYPE(builder *flatbuffers.Builder, MESSAGE_TYPE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(MESSAGE_TYPE), 0)
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(MESSAGE_TYPE), 0)
+}
+func LNDAddLAUNCH_TIME(builder *flatbuffers.Builder, LAUNCH_TIME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(LAUNCH_TIME), 0)
 }
 func LNDAddLAUNCH_LATITUDE(builder *flatbuffers.Builder, LAUNCH_LATITUDE float64) {
-	builder.PrependFloat64Slot(3, LAUNCH_LATITUDE, 0.0)
+	builder.PrependFloat64Slot(5, LAUNCH_LATITUDE, 0.0)
 }
 func LNDAddLAUNCH_LONGITUDE(builder *flatbuffers.Builder, LAUNCH_LONGITUDE float64) {
-	builder.PrependFloat64Slot(4, LAUNCH_LONGITUDE, 0.0)
+	builder.PrependFloat64Slot(6, LAUNCH_LONGITUDE, 0.0)
 }
 func LNDAddLAUNCH_AZIMUTH(builder *flatbuffers.Builder, LAUNCH_AZIMUTH float64) {
-	builder.PrependFloat64Slot(5, LAUNCH_AZIMUTH, 0.0)
+	builder.PrependFloat64Slot(7, LAUNCH_AZIMUTH, 0.0)
 }
 func LNDAddRAAN(builder *flatbuffers.Builder, RAAN float64) {
-	builder.PrependFloat64Slot(6, RAAN, 0.0)
+	builder.PrependFloat64Slot(8, RAAN, 0.0)
 }
 func LNDAddINCLINATION(builder *flatbuffers.Builder, INCLINATION float64) {
-	builder.PrependFloat64Slot(7, INCLINATION, 0.0)
+	builder.PrependFloat64Slot(9, INCLINATION, 0.0)
 }
 func LNDAddOBSERVATION_TIME(builder *flatbuffers.Builder, OBSERVATION_TIME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(OBSERVATION_TIME), 0)
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(OBSERVATION_TIME), 0)
 }
 func LNDAddOBSERVATION_LATITUDE(builder *flatbuffers.Builder, OBSERVATION_LATITUDE float64) {
-	builder.PrependFloat64Slot(9, OBSERVATION_LATITUDE, 0.0)
+	builder.PrependFloat64Slot(11, OBSERVATION_LATITUDE, 0.0)
 }
 func LNDAddOBSERVATION_LONGITUDE(builder *flatbuffers.Builder, OBSERVATION_LONGITUDE float64) {
-	builder.PrependFloat64Slot(10, OBSERVATION_LONGITUDE, 0.0)
+	builder.PrependFloat64Slot(12, OBSERVATION_LONGITUDE, 0.0)
 }
 func LNDAddOBSERVATION_ALTITUDE(builder *flatbuffers.Builder, OBSERVATION_ALTITUDE float64) {
-	builder.PrependFloat64Slot(11, OBSERVATION_ALTITUDE, 0.0)
+	builder.PrependFloat64Slot(13, OBSERVATION_ALTITUDE, 0.0)
 }
 func LNDAddSTEREO_FLAG(builder *flatbuffers.Builder, STEREO_FLAG bool) {
-	builder.PrependBoolSlot(12, STEREO_FLAG, false)
+	builder.PrependBoolSlot(14, STEREO_FLAG, false)
 }
 func LNDAddHIGH_ZENITH_AZIMUTH(builder *flatbuffers.Builder, HIGH_ZENITH_AZIMUTH bool) {
-	builder.PrependBoolSlot(13, HIGH_ZENITH_AZIMUTH, false)
+	builder.PrependBoolSlot(15, HIGH_ZENITH_AZIMUTH, false)
 }
-func LNDAddSEQUENCE_NUMBER(builder *flatbuffers.Builder, SEQUENCE_NUMBER int32) {
-	builder.PrependInt32Slot(14, SEQUENCE_NUMBER, 0)
+func LNDAddSEQUENCE_NUMBER(builder *flatbuffers.Builder, SEQUENCE_NUMBER uint16) {
+	builder.PrependUint16Slot(16, SEQUENCE_NUMBER, 0)
 }
-func LNDAddEVENT_ID(builder *flatbuffers.Builder, EVENT_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(EVENT_ID), 0)
+func LNDAddLAUNCH_SITE_ID(builder *flatbuffers.Builder, LAUNCH_SITE_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(LAUNCH_SITE_ID), 0)
+}
+func LNDAddLAUNCH_VEHICLE(builder *flatbuffers.Builder, LAUNCH_VEHICLE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(LAUNCH_VEHICLE), 0)
+}
+func LNDAddTRAJECTORY_TYPE(builder *flatbuffers.Builder, TRAJECTORY_TYPE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(TRAJECTORY_TYPE), 0)
+}
+func LNDAddCONFIDENCE(builder *flatbuffers.Builder, CONFIDENCE float64) {
+	builder.PrependFloat64Slot(20, CONFIDENCE, 0.0)
 }
 func LNDAddDESCRIPTOR(builder *flatbuffers.Builder, DESCRIPTOR flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(DESCRIPTOR), 0)
+	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(DESCRIPTOR), 0)
 }
 func LNDAddTAGS(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(TAGS), 0)
+	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(TAGS), 0)
 }
 func LNDStartTAGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)

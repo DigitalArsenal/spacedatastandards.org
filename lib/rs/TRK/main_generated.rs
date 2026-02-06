@@ -9,6 +9,208 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_TRACK_STATUS: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_TRACK_STATUS: i8 = 5;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_TRACK_STATUS: [trackStatus; 6] = [
+  trackStatus::ACTIVE,
+  trackStatus::DROPPED,
+  trackStatus::TENTATIVE,
+  trackStatus::CONFIRMED,
+  trackStatus::COASTED,
+  trackStatus::DEAD,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct trackStatus(pub i8);
+#[allow(non_upper_case_globals)]
+impl trackStatus {
+  pub const ACTIVE: Self = Self(0);
+  pub const DROPPED: Self = Self(1);
+  pub const TENTATIVE: Self = Self(2);
+  pub const CONFIRMED: Self = Self(3);
+  pub const COASTED: Self = Self(4);
+  pub const DEAD: Self = Self(5);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 5;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::ACTIVE,
+    Self::DROPPED,
+    Self::TENTATIVE,
+    Self::CONFIRMED,
+    Self::COASTED,
+    Self::DEAD,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::ACTIVE => Some("ACTIVE"),
+      Self::DROPPED => Some("DROPPED"),
+      Self::TENTATIVE => Some("TENTATIVE"),
+      Self::CONFIRMED => Some("CONFIRMED"),
+      Self::COASTED => Some("COASTED"),
+      Self::DEAD => Some("DEAD"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for trackStatus {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for trackStatus {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for trackStatus {
+    type Output = trackStatus;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for trackStatus {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for trackStatus {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for trackStatus {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_TRACK_ENVIRONMENT: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_TRACK_ENVIRONMENT: i8 = 5;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_TRACK_ENVIRONMENT: [trackEnvironment; 6] = [
+  trackEnvironment::SPACE,
+  trackEnvironment::AIR,
+  trackEnvironment::SURFACE,
+  trackEnvironment::SUBSURFACE,
+  trackEnvironment::LAND,
+  trackEnvironment::UNKNOWN,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct trackEnvironment(pub i8);
+#[allow(non_upper_case_globals)]
+impl trackEnvironment {
+  pub const SPACE: Self = Self(0);
+  pub const AIR: Self = Self(1);
+  pub const SURFACE: Self = Self(2);
+  pub const SUBSURFACE: Self = Self(3);
+  pub const LAND: Self = Self(4);
+  pub const UNKNOWN: Self = Self(5);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 5;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::SPACE,
+    Self::AIR,
+    Self::SURFACE,
+    Self::SUBSURFACE,
+    Self::LAND,
+    Self::UNKNOWN,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::SPACE => Some("SPACE"),
+      Self::AIR => Some("AIR"),
+      Self::SURFACE => Some("SURFACE"),
+      Self::SUBSURFACE => Some("SUBSURFACE"),
+      Self::LAND => Some("LAND"),
+      Self::UNKNOWN => Some("UNKNOWN"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for trackEnvironment {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for trackEnvironment {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for trackEnvironment {
+    type Output = trackEnvironment;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for trackEnvironment {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for trackEnvironment {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for trackEnvironment {}
 pub enum TRKOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -32,7 +234,7 @@ impl<'a> TRK<'a> {
   pub const VT_MSN_ID: flatbuffers::VOffsetT = 10;
   pub const VT_ASSET_NAT: flatbuffers::VOffsetT = 12;
   pub const VT_ASSET: flatbuffers::VOffsetT = 14;
-  pub const VT_SEN: flatbuffers::VOffsetT = 16;
+  pub const VT_SENSOR_ID: flatbuffers::VOffsetT = 16;
   pub const VT_SEN_QUAL: flatbuffers::VOffsetT = 18;
   pub const VT_TRK_ID: flatbuffers::VOffsetT = 20;
   pub const VT_TRK_NUM: flatbuffers::VOffsetT = 22;
@@ -115,24 +317,13 @@ impl<'a> TRK<'a> {
     if let Some(x) = args.ECEF_POS { builder.add_ECEF_POS(x); }
     if let Some(x) = args.TRACK_START_TIME { builder.add_TRACK_START_TIME(x); }
     if let Some(x) = args.TAGS { builder.add_TAGS(x); }
-    builder.add_M3AV(args.M3AV);
-    builder.add_M3A(args.M3A);
-    builder.add_M2V(args.M2V);
-    builder.add_M2(args.M2);
-    builder.add_M1V(args.M1V);
-    builder.add_M1(args.M1);
-    builder.add_STRENGTH(args.STRENGTH);
     if let Some(x) = args.J_SERIES { builder.add_J_SERIES(x); }
     if let Some(x) = args.CALL_SIGN { builder.add_CALL_SIGN(x); }
     if let Some(x) = args.SRC_IDS { builder.add_SRC_IDS(x); }
     if let Some(x) = args.SRC_TYPS { builder.add_SRC_TYPS(x); }
-    if let Some(x) = args.ENVIRONMENT { builder.add_ENVIRONMENT(x); }
     if let Some(x) = args.IDENT_AMP { builder.add_IDENT_AMP(x); }
-    builder.add_IDENT_REL(args.IDENT_REL);
-    builder.add_IDENT_CRED(args.IDENT_CRED);
     if let Some(x) = args.OBJ_IDENT { builder.add_OBJ_IDENT(x); }
     if let Some(x) = args.TRK_PT_TYPE { builder.add_TRK_PT_TYPE(x); }
-    builder.add_TRK_QUAL(args.TRK_QUAL);
     if let Some(x) = args.TS { builder.add_TS(x); }
     if let Some(x) = args.TRK_ITM_ID { builder.add_TRK_ITM_ID(x); }
     if let Some(x) = args.MOD_TYPE { builder.add_MOD_TYPE(x); }
@@ -142,19 +333,30 @@ impl<'a> TRK<'a> {
     if let Some(x) = args.OBJ_TYPE { builder.add_OBJ_TYPE(x); }
     if let Some(x) = args.OBJ_ID { builder.add_OBJ_ID(x); }
     if let Some(x) = args.OBJ_NAT { builder.add_OBJ_NAT(x); }
-    if let Some(x) = args.TRK_STAT { builder.add_TRK_STAT(x); }
     if let Some(x) = args.TRK_NUM { builder.add_TRK_NUM(x); }
     if let Some(x) = args.TRK_ID { builder.add_TRK_ID(x); }
     if let Some(x) = args.SEN_QUAL { builder.add_SEN_QUAL(x); }
-    if let Some(x) = args.SEN { builder.add_SEN(x); }
+    if let Some(x) = args.SENSOR_ID { builder.add_SENSOR_ID(x); }
     if let Some(x) = args.ASSET { builder.add_ASSET(x); }
     if let Some(x) = args.ASSET_NAT { builder.add_ASSET_NAT(x); }
     if let Some(x) = args.MSN_ID { builder.add_MSN_ID(x); }
     if let Some(x) = args.MSG_TS { builder.add_MSG_TS(x); }
     if let Some(x) = args.CNTCT { builder.add_CNTCT(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_M3A(args.M3A);
+    builder.add_M2(args.M2);
+    builder.add_M1(args.M1);
+    builder.add_STRENGTH(args.STRENGTH);
     builder.add_TRACK_COMPONENTS(args.TRACK_COMPONENTS);
+    builder.add_M3AV(args.M3AV);
+    builder.add_M2V(args.M2V);
+    builder.add_M1V(args.M1V);
     builder.add_MULTI_SOURCE(args.MULTI_SOURCE);
+    builder.add_ENVIRONMENT(args.ENVIRONMENT);
+    builder.add_IDENT_REL(args.IDENT_REL);
+    builder.add_IDENT_CRED(args.IDENT_CRED);
+    builder.add_TRK_QUAL(args.TRK_QUAL);
+    builder.add_TRK_STAT(args.TRK_STAT);
     builder.finish()
   }
 
@@ -177,7 +379,7 @@ impl<'a> TRK<'a> {
     let ASSET = self.ASSET().map(|x| {
       x.to_string()
     });
-    let SEN = self.SEN().map(|x| {
+    let SENSOR_ID = self.SENSOR_ID().map(|x| {
       x.to_string()
     });
     let SEN_QUAL = self.SEN_QUAL().map(|x| {
@@ -189,9 +391,7 @@ impl<'a> TRK<'a> {
     let TRK_NUM = self.TRK_NUM().map(|x| {
       x.to_string()
     });
-    let TRK_STAT = self.TRK_STAT().map(|x| {
-      x.to_string()
-    });
+    let TRK_STAT = self.TRK_STAT();
     let OBJ_NAT = self.OBJ_NAT().map(|x| {
       x.to_string()
     });
@@ -231,9 +431,7 @@ impl<'a> TRK<'a> {
     let IDENT_AMP = self.IDENT_AMP().map(|x| {
       x.to_string()
     });
-    let ENVIRONMENT = self.ENVIRONMENT().map(|x| {
-      x.to_string()
-    });
+    let ENVIRONMENT = self.ENVIRONMENT();
     let ENVIRONMENT_CONF = self.ENVIRONMENT_CONF();
     let TRK_CONF = self.TRK_CONF();
     let LAT = self.LAT();
@@ -301,7 +499,7 @@ impl<'a> TRK<'a> {
       MSN_ID,
       ASSET_NAT,
       ASSET,
-      SEN,
+      SENSOR_ID,
       SEN_QUAL,
       TRK_ID,
       TRK_NUM,
@@ -357,6 +555,7 @@ impl<'a> TRK<'a> {
     }
   }
 
+  /// Unique identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -364,6 +563,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_ID, None)}
   }
+  /// Contact reference
   #[inline]
   pub fn CNTCT(&self) -> Option<&'a str> {
     // Safety:
@@ -371,6 +571,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_CNTCT, None)}
   }
+  /// Message timestamp (ISO 8601)
   #[inline]
   pub fn MSG_TS(&self) -> Option<&'a str> {
     // Safety:
@@ -378,6 +579,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_MSG_TS, None)}
   }
+  /// Mission identifier
   #[inline]
   pub fn MSN_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -385,6 +587,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_MSN_ID, None)}
   }
+  /// Asset nationality
   #[inline]
   pub fn ASSET_NAT(&self) -> Option<&'a str> {
     // Safety:
@@ -392,6 +595,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_ASSET_NAT, None)}
   }
+  /// Asset identifier
   #[inline]
   pub fn ASSET(&self) -> Option<&'a str> {
     // Safety:
@@ -399,13 +603,15 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_ASSET, None)}
   }
+  /// Sensor identifier
   #[inline]
-  pub fn SEN(&self) -> Option<&'a str> {
+  pub fn SENSOR_ID(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_SEN, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_SENSOR_ID, None)}
   }
+  /// Sensor quality assessment
   #[inline]
   pub fn SEN_QUAL(&self) -> Option<&'a str> {
     // Safety:
@@ -413,6 +619,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_SEN_QUAL, None)}
   }
+  /// Track identifier
   #[inline]
   pub fn TRK_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -420,6 +627,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_TRK_ID, None)}
   }
+  /// Track number
   #[inline]
   pub fn TRK_NUM(&self) -> Option<&'a str> {
     // Safety:
@@ -427,13 +635,15 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_TRK_NUM, None)}
   }
+  /// Track status
   #[inline]
-  pub fn TRK_STAT(&self) -> Option<&'a str> {
+  pub fn TRK_STAT(&self) -> trackStatus {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_TRK_STAT, None)}
+    unsafe { self._tab.get::<trackStatus>(TRK::VT_TRK_STAT, Some(trackStatus::ACTIVE)).unwrap()}
   }
+  /// Object nationality
   #[inline]
   pub fn OBJ_NAT(&self) -> Option<&'a str> {
     // Safety:
@@ -441,6 +651,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_OBJ_NAT, None)}
   }
+  /// Object identifier
   #[inline]
   pub fn OBJ_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -448,6 +659,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_OBJ_ID, None)}
   }
+  /// Object type classification
   #[inline]
   pub fn OBJ_TYPE(&self) -> Option<&'a str> {
     // Safety:
@@ -455,6 +667,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_OBJ_TYPE, None)}
   }
+  /// Object specific type
   #[inline]
   pub fn OBJ_SPEC(&self) -> Option<&'a str> {
     // Safety:
@@ -462,6 +675,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_OBJ_SPEC, None)}
   }
+  /// Object platform type
   #[inline]
   pub fn OBJ_PLAT(&self) -> Option<&'a str> {
     // Safety:
@@ -469,6 +683,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_OBJ_PLAT, None)}
   }
+  /// Object activity
   #[inline]
   pub fn OBJ_ACT(&self) -> Option<&'a str> {
     // Safety:
@@ -476,6 +691,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_OBJ_ACT, None)}
   }
+  /// Mode type
   #[inline]
   pub fn MOD_TYPE(&self) -> Option<&'a str> {
     // Safety:
@@ -483,6 +699,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_MOD_TYPE, None)}
   }
+  /// Track item identifier
   #[inline]
   pub fn TRK_ITM_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -490,6 +707,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_TRK_ITM_ID, None)}
   }
+  /// Track point timestamp (ISO 8601)
   #[inline]
   pub fn TS(&self) -> Option<&'a str> {
     // Safety:
@@ -497,13 +715,15 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_TS, None)}
   }
+  /// Track quality (0-15)
   #[inline]
-  pub fn TRK_QUAL(&self) -> i32 {
+  pub fn TRK_QUAL(&self) -> u8 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(TRK::VT_TRK_QUAL, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u8>(TRK::VT_TRK_QUAL, Some(0)).unwrap()}
   }
+  /// Track point type
   #[inline]
   pub fn TRK_PT_TYPE(&self) -> Option<&'a str> {
     // Safety:
@@ -511,6 +731,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_TRK_PT_TYPE, None)}
   }
+  /// Object identity assessment
   #[inline]
   pub fn OBJ_IDENT(&self) -> Option<&'a str> {
     // Safety:
@@ -518,20 +739,23 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_OBJ_IDENT, None)}
   }
+  /// Identity credibility (1-6)
   #[inline]
-  pub fn IDENT_CRED(&self) -> i32 {
+  pub fn IDENT_CRED(&self) -> u8 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(TRK::VT_IDENT_CRED, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u8>(TRK::VT_IDENT_CRED, Some(0)).unwrap()}
   }
+  /// Identity reliability (A-F)
   #[inline]
-  pub fn IDENT_REL(&self) -> i32 {
+  pub fn IDENT_REL(&self) -> u8 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(TRK::VT_IDENT_REL, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u8>(TRK::VT_IDENT_REL, Some(0)).unwrap()}
   }
+  /// Identity amplification
   #[inline]
   pub fn IDENT_AMP(&self) -> Option<&'a str> {
     // Safety:
@@ -539,13 +763,15 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_IDENT_AMP, None)}
   }
+  /// Track environment
   #[inline]
-  pub fn ENVIRONMENT(&self) -> Option<&'a str> {
+  pub fn ENVIRONMENT(&self) -> trackEnvironment {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_ENVIRONMENT, None)}
+    unsafe { self._tab.get::<trackEnvironment>(TRK::VT_ENVIRONMENT, Some(trackEnvironment::SPACE)).unwrap()}
   }
+  /// Environment confidence (0-1)
   #[inline]
   pub fn ENVIRONMENT_CONF(&self) -> f64 {
     // Safety:
@@ -553,6 +779,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(TRK::VT_ENVIRONMENT_CONF, Some(0.0)).unwrap()}
   }
+  /// Track confidence (0-1)
   #[inline]
   pub fn TRK_CONF(&self) -> f64 {
     // Safety:
@@ -560,6 +787,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(TRK::VT_TRK_CONF, Some(0.0)).unwrap()}
   }
+  /// Latitude (degrees)
   #[inline]
   pub fn LAT(&self) -> f64 {
     // Safety:
@@ -567,6 +795,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(TRK::VT_LAT, Some(0.0)).unwrap()}
   }
+  /// Longitude (degrees)
   #[inline]
   pub fn LON(&self) -> f64 {
     // Safety:
@@ -574,6 +803,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(TRK::VT_LON, Some(0.0)).unwrap()}
   }
+  /// Altitude (km)
   #[inline]
   pub fn ALT(&self) -> f64 {
     // Safety:
@@ -581,6 +811,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(TRK::VT_ALT, Some(0.0)).unwrap()}
   }
+  /// Speed (km/s)
   #[inline]
   pub fn SPD(&self) -> f64 {
     // Safety:
@@ -588,6 +819,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(TRK::VT_SPD, Some(0.0)).unwrap()}
   }
+  /// Heading (degrees from north)
   #[inline]
   pub fn HDNG(&self) -> f64 {
     // Safety:
@@ -595,6 +827,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(TRK::VT_HDNG, Some(0.0)).unwrap()}
   }
+  /// Course (degrees from north)
   #[inline]
   pub fn COURSE(&self) -> f64 {
     // Safety:
@@ -602,6 +835,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(TRK::VT_COURSE, Some(0.0)).unwrap()}
   }
+  /// Source types
   #[inline]
   pub fn SRC_TYPS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -609,6 +843,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(TRK::VT_SRC_TYPS, None)}
   }
+  /// Source identifiers
   #[inline]
   pub fn SRC_IDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -616,6 +851,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(TRK::VT_SRC_IDS, None)}
   }
+  /// Call sign
   #[inline]
   pub fn CALL_SIGN(&self) -> Option<&'a str> {
     // Safety:
@@ -623,6 +859,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_CALL_SIGN, None)}
   }
+  /// True if fused from multiple sources
   #[inline]
   pub fn MULTI_SOURCE(&self) -> bool {
     // Safety:
@@ -630,6 +867,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(TRK::VT_MULTI_SOURCE, Some(false)).unwrap()}
   }
+  /// J-series message type
   #[inline]
   pub fn J_SERIES(&self) -> Option<&'a str> {
     // Safety:
@@ -637,55 +875,63 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_J_SERIES, None)}
   }
+  /// Force strength indicator
   #[inline]
-  pub fn STRENGTH(&self) -> i32 {
+  pub fn STRENGTH(&self) -> u16 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(TRK::VT_STRENGTH, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u16>(TRK::VT_STRENGTH, Some(0)).unwrap()}
   }
+  /// Mode 1 code
   #[inline]
-  pub fn M1(&self) -> i32 {
+  pub fn M1(&self) -> u16 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(TRK::VT_M1, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u16>(TRK::VT_M1, Some(0)).unwrap()}
   }
+  /// Mode 1 validity
   #[inline]
-  pub fn M1V(&self) -> i32 {
+  pub fn M1V(&self) -> u8 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(TRK::VT_M1V, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u8>(TRK::VT_M1V, Some(0)).unwrap()}
   }
+  /// Mode 2 code
   #[inline]
-  pub fn M2(&self) -> i32 {
+  pub fn M2(&self) -> u16 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(TRK::VT_M2, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u16>(TRK::VT_M2, Some(0)).unwrap()}
   }
+  /// Mode 2 validity
   #[inline]
-  pub fn M2V(&self) -> i32 {
+  pub fn M2V(&self) -> u8 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(TRK::VT_M2V, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u8>(TRK::VT_M2V, Some(0)).unwrap()}
   }
+  /// Mode 3A code
   #[inline]
-  pub fn M3A(&self) -> i32 {
+  pub fn M3A(&self) -> u16 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(TRK::VT_M3A, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u16>(TRK::VT_M3A, Some(0)).unwrap()}
   }
+  /// Mode 3A validity
   #[inline]
-  pub fn M3AV(&self) -> i32 {
+  pub fn M3AV(&self) -> u8 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(TRK::VT_M3AV, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u8>(TRK::VT_M3AV, Some(0)).unwrap()}
   }
+  /// Associated tags
   #[inline]
   pub fn TAGS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -693,7 +939,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(TRK::VT_TAGS, None)}
   }
-  /// Start time for track data (ISO 8601 UTC format).
+  /// Start time for track data (ISO 8601)
   #[inline]
   pub fn TRACK_START_TIME(&self) -> Option<&'a str> {
     // Safety:
@@ -701,7 +947,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(TRK::VT_TRACK_START_TIME, None)}
   }
-  /// Time interval between track points in seconds.
+  /// Time interval between track points (seconds)
   #[inline]
   pub fn TRACK_STEP_SIZE(&self) -> f64 {
     // Safety:
@@ -709,7 +955,7 @@ impl<'a> TRK<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(TRK::VT_TRACK_STEP_SIZE, Some(0.0)).unwrap()}
   }
-  /// Number of components per point (default 3 for X, Y, Z).
+  /// Number of components per point (default 3 for X, Y, Z)
   #[inline]
   pub fn TRACK_COMPONENTS(&self) -> u8 {
     // Safety:
@@ -796,11 +1042,11 @@ impl flatbuffers::Verifiable for TRK<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MSN_ID", Self::VT_MSN_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ASSET_NAT", Self::VT_ASSET_NAT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ASSET", Self::VT_ASSET, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SEN", Self::VT_SEN, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SENSOR_ID", Self::VT_SENSOR_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SEN_QUAL", Self::VT_SEN_QUAL, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRK_ID", Self::VT_TRK_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRK_NUM", Self::VT_TRK_NUM, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRK_STAT", Self::VT_TRK_STAT, false)?
+     .visit_field::<trackStatus>("TRK_STAT", Self::VT_TRK_STAT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJ_NAT", Self::VT_OBJ_NAT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJ_ID", Self::VT_OBJ_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJ_TYPE", Self::VT_OBJ_TYPE, false)?
@@ -810,13 +1056,13 @@ impl flatbuffers::Verifiable for TRK<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MOD_TYPE", Self::VT_MOD_TYPE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRK_ITM_ID", Self::VT_TRK_ITM_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TS", Self::VT_TS, false)?
-     .visit_field::<i32>("TRK_QUAL", Self::VT_TRK_QUAL, false)?
+     .visit_field::<u8>("TRK_QUAL", Self::VT_TRK_QUAL, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRK_PT_TYPE", Self::VT_TRK_PT_TYPE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJ_IDENT", Self::VT_OBJ_IDENT, false)?
-     .visit_field::<i32>("IDENT_CRED", Self::VT_IDENT_CRED, false)?
-     .visit_field::<i32>("IDENT_REL", Self::VT_IDENT_REL, false)?
+     .visit_field::<u8>("IDENT_CRED", Self::VT_IDENT_CRED, false)?
+     .visit_field::<u8>("IDENT_REL", Self::VT_IDENT_REL, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("IDENT_AMP", Self::VT_IDENT_AMP, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ENVIRONMENT", Self::VT_ENVIRONMENT, false)?
+     .visit_field::<trackEnvironment>("ENVIRONMENT", Self::VT_ENVIRONMENT, false)?
      .visit_field::<f64>("ENVIRONMENT_CONF", Self::VT_ENVIRONMENT_CONF, false)?
      .visit_field::<f64>("TRK_CONF", Self::VT_TRK_CONF, false)?
      .visit_field::<f64>("LAT", Self::VT_LAT, false)?
@@ -830,13 +1076,13 @@ impl flatbuffers::Verifiable for TRK<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CALL_SIGN", Self::VT_CALL_SIGN, false)?
      .visit_field::<bool>("MULTI_SOURCE", Self::VT_MULTI_SOURCE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("J_SERIES", Self::VT_J_SERIES, false)?
-     .visit_field::<i32>("STRENGTH", Self::VT_STRENGTH, false)?
-     .visit_field::<i32>("M1", Self::VT_M1, false)?
-     .visit_field::<i32>("M1V", Self::VT_M1V, false)?
-     .visit_field::<i32>("M2", Self::VT_M2, false)?
-     .visit_field::<i32>("M2V", Self::VT_M2V, false)?
-     .visit_field::<i32>("M3A", Self::VT_M3A, false)?
-     .visit_field::<i32>("M3AV", Self::VT_M3AV, false)?
+     .visit_field::<u16>("STRENGTH", Self::VT_STRENGTH, false)?
+     .visit_field::<u16>("M1", Self::VT_M1, false)?
+     .visit_field::<u8>("M1V", Self::VT_M1V, false)?
+     .visit_field::<u16>("M2", Self::VT_M2, false)?
+     .visit_field::<u8>("M2V", Self::VT_M2V, false)?
+     .visit_field::<u16>("M3A", Self::VT_M3A, false)?
+     .visit_field::<u8>("M3AV", Self::VT_M3AV, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("TAGS", Self::VT_TAGS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRACK_START_TIME", Self::VT_TRACK_START_TIME, false)?
      .visit_field::<f64>("TRACK_STEP_SIZE", Self::VT_TRACK_STEP_SIZE, false)?
@@ -860,11 +1106,11 @@ pub struct TRKArgs<'a> {
     pub MSN_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ASSET_NAT: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ASSET: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SEN: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SENSOR_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub SEN_QUAL: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TRK_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TRK_NUM: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub TRK_STAT: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub TRK_STAT: trackStatus,
     pub OBJ_NAT: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OBJ_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OBJ_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -874,13 +1120,13 @@ pub struct TRKArgs<'a> {
     pub MOD_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TRK_ITM_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TS: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub TRK_QUAL: i32,
+    pub TRK_QUAL: u8,
     pub TRK_PT_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OBJ_IDENT: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub IDENT_CRED: i32,
-    pub IDENT_REL: i32,
+    pub IDENT_CRED: u8,
+    pub IDENT_REL: u8,
     pub IDENT_AMP: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ENVIRONMENT: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ENVIRONMENT: trackEnvironment,
     pub ENVIRONMENT_CONF: f64,
     pub TRK_CONF: f64,
     pub LAT: f64,
@@ -894,13 +1140,13 @@ pub struct TRKArgs<'a> {
     pub CALL_SIGN: Option<flatbuffers::WIPOffset<&'a str>>,
     pub MULTI_SOURCE: bool,
     pub J_SERIES: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub STRENGTH: i32,
-    pub M1: i32,
-    pub M1V: i32,
-    pub M2: i32,
-    pub M2V: i32,
-    pub M3A: i32,
-    pub M3AV: i32,
+    pub STRENGTH: u16,
+    pub M1: u16,
+    pub M1V: u8,
+    pub M2: u16,
+    pub M2V: u8,
+    pub M3A: u16,
+    pub M3AV: u8,
     pub TAGS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub TRACK_START_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TRACK_STEP_SIZE: f64,
@@ -924,11 +1170,11 @@ impl<'a> Default for TRKArgs<'a> {
       MSN_ID: None,
       ASSET_NAT: None,
       ASSET: None,
-      SEN: None,
+      SENSOR_ID: None,
       SEN_QUAL: None,
       TRK_ID: None,
       TRK_NUM: None,
-      TRK_STAT: None,
+      TRK_STAT: trackStatus::ACTIVE,
       OBJ_NAT: None,
       OBJ_ID: None,
       OBJ_TYPE: None,
@@ -944,7 +1190,7 @@ impl<'a> Default for TRKArgs<'a> {
       IDENT_CRED: 0,
       IDENT_REL: 0,
       IDENT_AMP: None,
-      ENVIRONMENT: None,
+      ENVIRONMENT: trackEnvironment::SPACE,
       ENVIRONMENT_CONF: 0.0,
       TRK_CONF: 0.0,
       LAT: 0.0,
@@ -1011,8 +1257,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> TRKBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_ASSET, ASSET);
   }
   #[inline]
-  pub fn add_SEN(&mut self, SEN: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_SEN, SEN);
+  pub fn add_SENSOR_ID(&mut self, SENSOR_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_SENSOR_ID, SENSOR_ID);
   }
   #[inline]
   pub fn add_SEN_QUAL(&mut self, SEN_QUAL: flatbuffers::WIPOffset<&'b  str>) {
@@ -1027,8 +1273,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> TRKBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_TRK_NUM, TRK_NUM);
   }
   #[inline]
-  pub fn add_TRK_STAT(&mut self, TRK_STAT: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_TRK_STAT, TRK_STAT);
+  pub fn add_TRK_STAT(&mut self, TRK_STAT: trackStatus) {
+    self.fbb_.push_slot::<trackStatus>(TRK::VT_TRK_STAT, TRK_STAT, trackStatus::ACTIVE);
   }
   #[inline]
   pub fn add_OBJ_NAT(&mut self, OBJ_NAT: flatbuffers::WIPOffset<&'b  str>) {
@@ -1067,8 +1313,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> TRKBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_TS, TS);
   }
   #[inline]
-  pub fn add_TRK_QUAL(&mut self, TRK_QUAL: i32) {
-    self.fbb_.push_slot::<i32>(TRK::VT_TRK_QUAL, TRK_QUAL, 0);
+  pub fn add_TRK_QUAL(&mut self, TRK_QUAL: u8) {
+    self.fbb_.push_slot::<u8>(TRK::VT_TRK_QUAL, TRK_QUAL, 0);
   }
   #[inline]
   pub fn add_TRK_PT_TYPE(&mut self, TRK_PT_TYPE: flatbuffers::WIPOffset<&'b  str>) {
@@ -1079,20 +1325,20 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> TRKBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_OBJ_IDENT, OBJ_IDENT);
   }
   #[inline]
-  pub fn add_IDENT_CRED(&mut self, IDENT_CRED: i32) {
-    self.fbb_.push_slot::<i32>(TRK::VT_IDENT_CRED, IDENT_CRED, 0);
+  pub fn add_IDENT_CRED(&mut self, IDENT_CRED: u8) {
+    self.fbb_.push_slot::<u8>(TRK::VT_IDENT_CRED, IDENT_CRED, 0);
   }
   #[inline]
-  pub fn add_IDENT_REL(&mut self, IDENT_REL: i32) {
-    self.fbb_.push_slot::<i32>(TRK::VT_IDENT_REL, IDENT_REL, 0);
+  pub fn add_IDENT_REL(&mut self, IDENT_REL: u8) {
+    self.fbb_.push_slot::<u8>(TRK::VT_IDENT_REL, IDENT_REL, 0);
   }
   #[inline]
   pub fn add_IDENT_AMP(&mut self, IDENT_AMP: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_IDENT_AMP, IDENT_AMP);
   }
   #[inline]
-  pub fn add_ENVIRONMENT(&mut self, ENVIRONMENT: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_ENVIRONMENT, ENVIRONMENT);
+  pub fn add_ENVIRONMENT(&mut self, ENVIRONMENT: trackEnvironment) {
+    self.fbb_.push_slot::<trackEnvironment>(TRK::VT_ENVIRONMENT, ENVIRONMENT, trackEnvironment::SPACE);
   }
   #[inline]
   pub fn add_ENVIRONMENT_CONF(&mut self, ENVIRONMENT_CONF: f64) {
@@ -1147,32 +1393,32 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> TRKBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(TRK::VT_J_SERIES, J_SERIES);
   }
   #[inline]
-  pub fn add_STRENGTH(&mut self, STRENGTH: i32) {
-    self.fbb_.push_slot::<i32>(TRK::VT_STRENGTH, STRENGTH, 0);
+  pub fn add_STRENGTH(&mut self, STRENGTH: u16) {
+    self.fbb_.push_slot::<u16>(TRK::VT_STRENGTH, STRENGTH, 0);
   }
   #[inline]
-  pub fn add_M1(&mut self, M1: i32) {
-    self.fbb_.push_slot::<i32>(TRK::VT_M1, M1, 0);
+  pub fn add_M1(&mut self, M1: u16) {
+    self.fbb_.push_slot::<u16>(TRK::VT_M1, M1, 0);
   }
   #[inline]
-  pub fn add_M1V(&mut self, M1V: i32) {
-    self.fbb_.push_slot::<i32>(TRK::VT_M1V, M1V, 0);
+  pub fn add_M1V(&mut self, M1V: u8) {
+    self.fbb_.push_slot::<u8>(TRK::VT_M1V, M1V, 0);
   }
   #[inline]
-  pub fn add_M2(&mut self, M2: i32) {
-    self.fbb_.push_slot::<i32>(TRK::VT_M2, M2, 0);
+  pub fn add_M2(&mut self, M2: u16) {
+    self.fbb_.push_slot::<u16>(TRK::VT_M2, M2, 0);
   }
   #[inline]
-  pub fn add_M2V(&mut self, M2V: i32) {
-    self.fbb_.push_slot::<i32>(TRK::VT_M2V, M2V, 0);
+  pub fn add_M2V(&mut self, M2V: u8) {
+    self.fbb_.push_slot::<u8>(TRK::VT_M2V, M2V, 0);
   }
   #[inline]
-  pub fn add_M3A(&mut self, M3A: i32) {
-    self.fbb_.push_slot::<i32>(TRK::VT_M3A, M3A, 0);
+  pub fn add_M3A(&mut self, M3A: u16) {
+    self.fbb_.push_slot::<u16>(TRK::VT_M3A, M3A, 0);
   }
   #[inline]
-  pub fn add_M3AV(&mut self, M3AV: i32) {
-    self.fbb_.push_slot::<i32>(TRK::VT_M3AV, M3AV, 0);
+  pub fn add_M3AV(&mut self, M3AV: u8) {
+    self.fbb_.push_slot::<u8>(TRK::VT_M3AV, M3AV, 0);
   }
   #[inline]
   pub fn add_TAGS(&mut self, TAGS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
@@ -1246,7 +1492,7 @@ impl core::fmt::Debug for TRK<'_> {
       ds.field("MSN_ID", &self.MSN_ID());
       ds.field("ASSET_NAT", &self.ASSET_NAT());
       ds.field("ASSET", &self.ASSET());
-      ds.field("SEN", &self.SEN());
+      ds.field("SENSOR_ID", &self.SENSOR_ID());
       ds.field("SEN_QUAL", &self.SEN_QUAL());
       ds.field("TRK_ID", &self.TRK_ID());
       ds.field("TRK_NUM", &self.TRK_NUM());
@@ -1311,11 +1557,11 @@ pub struct TRKT {
   pub MSN_ID: Option<String>,
   pub ASSET_NAT: Option<String>,
   pub ASSET: Option<String>,
-  pub SEN: Option<String>,
+  pub SENSOR_ID: Option<String>,
   pub SEN_QUAL: Option<String>,
   pub TRK_ID: Option<String>,
   pub TRK_NUM: Option<String>,
-  pub TRK_STAT: Option<String>,
+  pub TRK_STAT: trackStatus,
   pub OBJ_NAT: Option<String>,
   pub OBJ_ID: Option<String>,
   pub OBJ_TYPE: Option<String>,
@@ -1325,13 +1571,13 @@ pub struct TRKT {
   pub MOD_TYPE: Option<String>,
   pub TRK_ITM_ID: Option<String>,
   pub TS: Option<String>,
-  pub TRK_QUAL: i32,
+  pub TRK_QUAL: u8,
   pub TRK_PT_TYPE: Option<String>,
   pub OBJ_IDENT: Option<String>,
-  pub IDENT_CRED: i32,
-  pub IDENT_REL: i32,
+  pub IDENT_CRED: u8,
+  pub IDENT_REL: u8,
   pub IDENT_AMP: Option<String>,
-  pub ENVIRONMENT: Option<String>,
+  pub ENVIRONMENT: trackEnvironment,
   pub ENVIRONMENT_CONF: f64,
   pub TRK_CONF: f64,
   pub LAT: f64,
@@ -1345,13 +1591,13 @@ pub struct TRKT {
   pub CALL_SIGN: Option<String>,
   pub MULTI_SOURCE: bool,
   pub J_SERIES: Option<String>,
-  pub STRENGTH: i32,
-  pub M1: i32,
-  pub M1V: i32,
-  pub M2: i32,
-  pub M2V: i32,
-  pub M3A: i32,
-  pub M3AV: i32,
+  pub STRENGTH: u16,
+  pub M1: u16,
+  pub M1V: u8,
+  pub M2: u16,
+  pub M2V: u8,
+  pub M3A: u16,
+  pub M3AV: u8,
   pub TAGS: Option<Vec<String>>,
   pub TRACK_START_TIME: Option<String>,
   pub TRACK_STEP_SIZE: f64,
@@ -1374,11 +1620,11 @@ impl Default for TRKT {
       MSN_ID: None,
       ASSET_NAT: None,
       ASSET: None,
-      SEN: None,
+      SENSOR_ID: None,
       SEN_QUAL: None,
       TRK_ID: None,
       TRK_NUM: None,
-      TRK_STAT: None,
+      TRK_STAT: trackStatus::ACTIVE,
       OBJ_NAT: None,
       OBJ_ID: None,
       OBJ_TYPE: None,
@@ -1394,7 +1640,7 @@ impl Default for TRKT {
       IDENT_CRED: 0,
       IDENT_REL: 0,
       IDENT_AMP: None,
-      ENVIRONMENT: None,
+      ENVIRONMENT: trackEnvironment::SPACE,
       ENVIRONMENT_CONF: 0.0,
       TRK_CONF: 0.0,
       LAT: 0.0,
@@ -1453,7 +1699,7 @@ impl TRKT {
     let ASSET = self.ASSET.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let SEN = self.SEN.as_ref().map(|x|{
+    let SENSOR_ID = self.SENSOR_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let SEN_QUAL = self.SEN_QUAL.as_ref().map(|x|{
@@ -1465,9 +1711,7 @@ impl TRKT {
     let TRK_NUM = self.TRK_NUM.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let TRK_STAT = self.TRK_STAT.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+    let TRK_STAT = self.TRK_STAT;
     let OBJ_NAT = self.OBJ_NAT.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -1507,9 +1751,7 @@ impl TRKT {
     let IDENT_AMP = self.IDENT_AMP.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let ENVIRONMENT = self.ENVIRONMENT.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+    let ENVIRONMENT = self.ENVIRONMENT;
     let ENVIRONMENT_CONF = self.ENVIRONMENT_CONF;
     let TRK_CONF = self.TRK_CONF;
     let LAT = self.LAT;
@@ -1577,7 +1819,7 @@ impl TRKT {
       MSN_ID,
       ASSET_NAT,
       ASSET,
-      SEN,
+      SENSOR_ID,
       SEN_QUAL,
       TRK_ID,
       TRK_NUM,

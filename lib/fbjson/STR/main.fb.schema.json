@@ -7,168 +7,207 @@
       "properties": {
         "ID": {
           "type": "string",
+          "description": "Unique internal identifier",
           "x-flatbuffer-type": "string"
         },
         "CS_ID": {
           "type": "integer",
           "minimum": -9223372036854775808,
           "maximum": 9223372036854775807,
+          "description": "CelesTrak Star catalog identifier",
           "x-flatbuffer-type": "long"
         },
         "GNC_CAT_ID": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "GNC star catalog identifier",
+          "x-flatbuffer-type": "uint32"
         },
         "GAIADR3_CAT_ID": {
           "type": "integer",
           "minimum": -9223372036854775808,
           "maximum": 9223372036854775807,
+          "description": "Gaia DR3 source identifier",
           "x-flatbuffer-type": "long"
         },
         "HIP_CAT_ID": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Hipparcos catalog identifier",
+          "x-flatbuffer-type": "uint32"
         },
         "CAT_VERSION": {
           "type": "string",
+          "description": "Catalog version string",
           "x-flatbuffer-type": "string"
-        },
-        "RA": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "RA_UNC": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "DEC": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "DEC_UNC": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "POS_UNC_FLAG": {
-          "type": "boolean",
-          "x-flatbuffer-type": "bool"
-        },
-        "PARALLAX": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "PARALLAX_UNC": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "PMRA": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "PMRA_UNC": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "PMDEC": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "PMDEC_UNC": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "PM_UNC_FLAG": {
-          "type": "boolean",
-          "x-flatbuffer-type": "bool"
         },
         "ASTROMETRY_ORIGIN": {
           "type": "string",
+          "description": "Astrometry source description",
           "x-flatbuffer-type": "string"
         },
         "STAR_EPOCH": {
           "type": "number",
+          "description": "Epoch of stellar position (Julian years)",
           "x-flatbuffer-type": "double"
+        },
+        "RA": {
+          "type": "number",
+          "description": "Right ascension (degrees, ICRS)",
+          "x-flatbuffer-type": "double"
+        },
+        "RA_UNC": {
+          "type": "number",
+          "description": "Right ascension uncertainty (arcseconds)",
+          "x-flatbuffer-type": "double"
+        },
+        "DEC": {
+          "type": "number",
+          "description": "Declination (degrees, ICRS)",
+          "x-flatbuffer-type": "double"
+        },
+        "DEC_UNC": {
+          "type": "number",
+          "description": "Declination uncertainty (arcseconds)",
+          "x-flatbuffer-type": "double"
+        },
+        "POS_UNC_FLAG": {
+          "type": "boolean",
+          "description": "True if position uncertainty is flagged",
+          "x-flatbuffer-type": "bool"
+        },
+        "PARALLAX": {
+          "type": "number",
+          "description": "Parallax (milliarcseconds)",
+          "x-flatbuffer-type": "double"
+        },
+        "PARALLAX_UNC": {
+          "type": "number",
+          "description": "Parallax uncertainty (milliarcseconds)",
+          "x-flatbuffer-type": "double"
+        },
+        "PMRA": {
+          "type": "number",
+          "description": "Proper motion in RA (milliarcseconds/year)",
+          "x-flatbuffer-type": "double"
+        },
+        "PMRA_UNC": {
+          "type": "number",
+          "description": "Proper motion in RA uncertainty (milliarcseconds/year)",
+          "x-flatbuffer-type": "double"
+        },
+        "PMDEC": {
+          "type": "number",
+          "description": "Proper motion in DEC (milliarcseconds/year)",
+          "x-flatbuffer-type": "double"
+        },
+        "PMDEC_UNC": {
+          "type": "number",
+          "description": "Proper motion in DEC uncertainty (milliarcseconds/year)",
+          "x-flatbuffer-type": "double"
+        },
+        "PM_UNC_FLAG": {
+          "type": "boolean",
+          "description": "True if proper motion uncertainty is flagged",
+          "x-flatbuffer-type": "bool"
         },
         "GMAG": {
           "type": "number",
+          "description": "Gaia G-band magnitude",
           "x-flatbuffer-type": "double"
         },
         "GMAG_UNC": {
           "type": "number",
+          "description": "Gaia G-band magnitude uncertainty",
           "x-flatbuffer-type": "double"
         },
         "BPMAG": {
           "type": "number",
+          "description": "Gaia BP-band magnitude (blue photometer)",
           "x-flatbuffer-type": "double"
         },
         "BPMAG_UNC": {
           "type": "number",
+          "description": "Gaia BP-band magnitude uncertainty",
           "x-flatbuffer-type": "double"
         },
         "RPMAG": {
           "type": "number",
+          "description": "Gaia RP-band magnitude (red photometer)",
           "x-flatbuffer-type": "double"
         },
         "RPMAG_UNC": {
           "type": "number",
+          "description": "Gaia RP-band magnitude uncertainty",
           "x-flatbuffer-type": "double"
         },
         "JMAG": {
           "type": "number",
+          "description": "2MASS J-band magnitude (1.25 um)",
           "x-flatbuffer-type": "double"
         },
         "JMAG_UNC": {
           "type": "number",
+          "description": "J-band magnitude uncertainty",
           "x-flatbuffer-type": "double"
         },
         "KMAG": {
           "type": "number",
+          "description": "2MASS K-band magnitude (2.17 um)",
           "x-flatbuffer-type": "double"
         },
         "KMAG_UNC": {
           "type": "number",
+          "description": "K-band magnitude uncertainty",
           "x-flatbuffer-type": "double"
         },
         "HMAG": {
           "type": "number",
+          "description": "2MASS H-band magnitude (1.65 um)",
           "x-flatbuffer-type": "double"
         },
         "HMAG_UNC": {
           "type": "number",
+          "description": "H-band magnitude uncertainty",
           "x-flatbuffer-type": "double"
         },
         "VAR_FLAG": {
           "type": "boolean",
+          "description": "True if star is variable",
           "x-flatbuffer-type": "bool"
         },
         "MULT_FLAG": {
           "type": "boolean",
+          "description": "True if star is in a multiple system",
           "x-flatbuffer-type": "bool"
         },
         "NEIGHBOR_ID": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Nearest neighbor catalog identifier",
+          "x-flatbuffer-type": "uint32"
         },
         "NEIGHBOR_FLAG": {
           "type": "boolean",
+          "description": "True if nearest neighbor is within confusion radius",
           "x-flatbuffer-type": "bool"
         },
         "NEIGHBOR_DISTANCE": {
           "type": "number",
+          "description": "Distance to nearest neighbor (arcseconds)",
           "x-flatbuffer-type": "double"
         },
         "SHIFT_FLAG": {
           "type": "boolean",
+          "description": "True if position shift detected between catalogs",
           "x-flatbuffer-type": "bool"
         },
         "SHIFT": {
           "type": "number",
+          "description": "Position shift magnitude (arcseconds)",
           "x-flatbuffer-type": "double"
         }
       },

@@ -9,6 +9,204 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_OOI_STATUS: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_OOI_STATUS: i8 = 5;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_OOI_STATUS: [ooiStatus; 6] = [
+  ooiStatus::ACTIVE,
+  ooiStatus::PENDING,
+  ooiStatus::CLOSED,
+  ooiStatus::MONITORING,
+  ooiStatus::URGENT,
+  ooiStatus::ARCHIVED,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct ooiStatus(pub i8);
+#[allow(non_upper_case_globals)]
+impl ooiStatus {
+  pub const ACTIVE: Self = Self(0);
+  pub const PENDING: Self = Self(1);
+  pub const CLOSED: Self = Self(2);
+  pub const MONITORING: Self = Self(3);
+  pub const URGENT: Self = Self(4);
+  pub const ARCHIVED: Self = Self(5);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 5;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::ACTIVE,
+    Self::PENDING,
+    Self::CLOSED,
+    Self::MONITORING,
+    Self::URGENT,
+    Self::ARCHIVED,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::ACTIVE => Some("ACTIVE"),
+      Self::PENDING => Some("PENDING"),
+      Self::CLOSED => Some("CLOSED"),
+      Self::MONITORING => Some("MONITORING"),
+      Self::URGENT => Some("URGENT"),
+      Self::ARCHIVED => Some("ARCHIVED"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for ooiStatus {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for ooiStatus {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for ooiStatus {
+    type Output = ooiStatus;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for ooiStatus {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for ooiStatus {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for ooiStatus {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_OOI_PRIORITY: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_OOI_PRIORITY: i8 = 4;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_OOI_PRIORITY: [ooiPriority; 5] = [
+  ooiPriority::CRITICAL,
+  ooiPriority::HIGH,
+  ooiPriority::MEDIUM,
+  ooiPriority::LOW,
+  ooiPriority::ROUTINE,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct ooiPriority(pub i8);
+#[allow(non_upper_case_globals)]
+impl ooiPriority {
+  pub const CRITICAL: Self = Self(0);
+  pub const HIGH: Self = Self(1);
+  pub const MEDIUM: Self = Self(2);
+  pub const LOW: Self = Self(3);
+  pub const ROUTINE: Self = Self(4);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 4;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::CRITICAL,
+    Self::HIGH,
+    Self::MEDIUM,
+    Self::LOW,
+    Self::ROUTINE,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::CRITICAL => Some("CRITICAL"),
+      Self::HIGH => Some("HIGH"),
+      Self::MEDIUM => Some("MEDIUM"),
+      Self::LOW => Some("LOW"),
+      Self::ROUTINE => Some("ROUTINE"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for ooiPriority {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for ooiPriority {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for ooiPriority {
+    type Output = ooiPriority;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for ooiPriority {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for ooiPriority {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for ooiPriority {}
 pub enum OOIOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -29,40 +227,40 @@ impl<'a> OOI<'a> {
   pub const VT_ID: flatbuffers::VOffsetT = 4;
   pub const VT_SAT_NO: flatbuffers::VOffsetT = 6;
   pub const VT_NAME: flatbuffers::VOffsetT = 8;
-  pub const VT_SENSOR_TASKING_START_TIME: flatbuffers::VOffsetT = 10;
-  pub const VT_SENSOR_TASKING_STOP_TIME: flatbuffers::VOffsetT = 12;
-  pub const VT_PRIORITY: flatbuffers::VOffsetT = 14;
-  pub const VT_STATUS: flatbuffers::VOffsetT = 16;
-  pub const VT_STATUS_DATE: flatbuffers::VOffsetT = 18;
-  pub const VT_DESCRIPTION: flatbuffers::VOffsetT = 20;
-  pub const VT_LAST_OB_TIME: flatbuffers::VOffsetT = 22;
-  pub const VT_MISSED_OB_TIME: flatbuffers::VOffsetT = 24;
-  pub const VT_DELTA_VS: flatbuffers::VOffsetT = 26;
-  pub const VT_DELTA_TS: flatbuffers::VOffsetT = 28;
-  pub const VT_SV_EPOCH: flatbuffers::VOffsetT = 30;
-  pub const VT_X: flatbuffers::VOffsetT = 32;
-  pub const VT_Y: flatbuffers::VOffsetT = 34;
-  pub const VT_Z: flatbuffers::VOffsetT = 36;
-  pub const VT_XVEL: flatbuffers::VOffsetT = 38;
-  pub const VT_YVEL: flatbuffers::VOffsetT = 40;
-  pub const VT_ZVEL: flatbuffers::VOffsetT = 42;
-  pub const VT_ELSET_EPOCH: flatbuffers::VOffsetT = 44;
-  pub const VT_MEAN_MOTION: flatbuffers::VOffsetT = 46;
-  pub const VT_ECCENTRICITY: flatbuffers::VOffsetT = 48;
-  pub const VT_INCLINATION: flatbuffers::VOffsetT = 50;
-  pub const VT_RAAN: flatbuffers::VOffsetT = 52;
-  pub const VT_ARG_OF_PERIGEE: flatbuffers::VOffsetT = 54;
-  pub const VT_MEAN_ANOMALY: flatbuffers::VOffsetT = 56;
-  pub const VT_REV_NO: flatbuffers::VOffsetT = 58;
-  pub const VT_B_STAR: flatbuffers::VOffsetT = 60;
-  pub const VT_MEAN_MOTION_DOT: flatbuffers::VOffsetT = 62;
-  pub const VT_MEAN_MOTION_DDOT: flatbuffers::VOffsetT = 64;
-  pub const VT_SEMI_MAJOR_AXIS: flatbuffers::VOffsetT = 66;
-  pub const VT_PERIOD: flatbuffers::VOffsetT = 68;
-  pub const VT_APOGEE: flatbuffers::VOffsetT = 70;
-  pub const VT_PERIGEE: flatbuffers::VOffsetT = 72;
-  pub const VT_AFFECTED_OBJECTS: flatbuffers::VOffsetT = 74;
-  pub const VT_ON_ORBIT: flatbuffers::VOffsetT = 76;
+  pub const VT_ON_ORBIT: flatbuffers::VOffsetT = 10;
+  pub const VT_STATUS: flatbuffers::VOffsetT = 12;
+  pub const VT_STATUS_DATE: flatbuffers::VOffsetT = 14;
+  pub const VT_PRIORITY: flatbuffers::VOffsetT = 16;
+  pub const VT_DESCRIPTION: flatbuffers::VOffsetT = 18;
+  pub const VT_SENSOR_TASKING_START_TIME: flatbuffers::VOffsetT = 20;
+  pub const VT_SENSOR_TASKING_STOP_TIME: flatbuffers::VOffsetT = 22;
+  pub const VT_LAST_OB_TIME: flatbuffers::VOffsetT = 24;
+  pub const VT_MISSED_OB_TIME: flatbuffers::VOffsetT = 26;
+  pub const VT_SV_EPOCH: flatbuffers::VOffsetT = 28;
+  pub const VT_X: flatbuffers::VOffsetT = 30;
+  pub const VT_Y: flatbuffers::VOffsetT = 32;
+  pub const VT_Z: flatbuffers::VOffsetT = 34;
+  pub const VT_XVEL: flatbuffers::VOffsetT = 36;
+  pub const VT_YVEL: flatbuffers::VOffsetT = 38;
+  pub const VT_ZVEL: flatbuffers::VOffsetT = 40;
+  pub const VT_ELSET_EPOCH: flatbuffers::VOffsetT = 42;
+  pub const VT_MEAN_MOTION: flatbuffers::VOffsetT = 44;
+  pub const VT_ECCENTRICITY: flatbuffers::VOffsetT = 46;
+  pub const VT_INCLINATION: flatbuffers::VOffsetT = 48;
+  pub const VT_RAAN: flatbuffers::VOffsetT = 50;
+  pub const VT_ARG_OF_PERIGEE: flatbuffers::VOffsetT = 52;
+  pub const VT_MEAN_ANOMALY: flatbuffers::VOffsetT = 54;
+  pub const VT_REV_NO: flatbuffers::VOffsetT = 56;
+  pub const VT_B_STAR: flatbuffers::VOffsetT = 58;
+  pub const VT_MEAN_MOTION_DOT: flatbuffers::VOffsetT = 60;
+  pub const VT_MEAN_MOTION_DDOT: flatbuffers::VOffsetT = 62;
+  pub const VT_SEMI_MAJOR_AXIS: flatbuffers::VOffsetT = 64;
+  pub const VT_PERIOD: flatbuffers::VOffsetT = 66;
+  pub const VT_APOGEE: flatbuffers::VOffsetT = 68;
+  pub const VT_PERIGEE: flatbuffers::VOffsetT = 70;
+  pub const VT_DELTA_VS: flatbuffers::VOffsetT = 72;
+  pub const VT_DELTA_TS: flatbuffers::VOffsetT = 74;
+  pub const VT_AFFECTED_OBJECTS: flatbuffers::VOffsetT = 76;
   pub const VT_MANIFOLDS: flatbuffers::VOffsetT = 78;
 
   #[inline]
@@ -95,24 +293,24 @@ impl<'a> OOI<'a> {
     builder.add_Y(args.Y);
     builder.add_X(args.X);
     if let Some(x) = args.MANIFOLDS { builder.add_MANIFOLDS(x); }
-    if let Some(x) = args.ON_ORBIT { builder.add_ON_ORBIT(x); }
     if let Some(x) = args.AFFECTED_OBJECTS { builder.add_AFFECTED_OBJECTS(x); }
+    if let Some(x) = args.DELTA_TS { builder.add_DELTA_TS(x); }
+    if let Some(x) = args.DELTA_VS { builder.add_DELTA_VS(x); }
     builder.add_REV_NO(args.REV_NO);
     if let Some(x) = args.ELSET_EPOCH { builder.add_ELSET_EPOCH(x); }
     if let Some(x) = args.SV_EPOCH { builder.add_SV_EPOCH(x); }
-    if let Some(x) = args.DELTA_TS { builder.add_DELTA_TS(x); }
-    if let Some(x) = args.DELTA_VS { builder.add_DELTA_VS(x); }
     if let Some(x) = args.MISSED_OB_TIME { builder.add_MISSED_OB_TIME(x); }
     if let Some(x) = args.LAST_OB_TIME { builder.add_LAST_OB_TIME(x); }
-    if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
-    if let Some(x) = args.STATUS_DATE { builder.add_STATUS_DATE(x); }
-    if let Some(x) = args.STATUS { builder.add_STATUS(x); }
-    builder.add_PRIORITY(args.PRIORITY);
     if let Some(x) = args.SENSOR_TASKING_STOP_TIME { builder.add_SENSOR_TASKING_STOP_TIME(x); }
     if let Some(x) = args.SENSOR_TASKING_START_TIME { builder.add_SENSOR_TASKING_START_TIME(x); }
+    if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
+    if let Some(x) = args.STATUS_DATE { builder.add_STATUS_DATE(x); }
+    if let Some(x) = args.ON_ORBIT { builder.add_ON_ORBIT(x); }
     if let Some(x) = args.NAME { builder.add_NAME(x); }
     builder.add_SAT_NO(args.SAT_NO);
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_PRIORITY(args.PRIORITY);
+    builder.add_STATUS(args.STATUS);
     builder.finish()
   }
 
@@ -124,20 +322,21 @@ impl<'a> OOI<'a> {
     let NAME = self.NAME().map(|x| {
       x.to_string()
     });
+    let ON_ORBIT = self.ON_ORBIT().map(|x| {
+      x.to_string()
+    });
+    let STATUS = self.STATUS();
+    let STATUS_DATE = self.STATUS_DATE().map(|x| {
+      x.to_string()
+    });
+    let PRIORITY = self.PRIORITY();
+    let DESCRIPTION = self.DESCRIPTION().map(|x| {
+      x.to_string()
+    });
     let SENSOR_TASKING_START_TIME = self.SENSOR_TASKING_START_TIME().map(|x| {
       x.to_string()
     });
     let SENSOR_TASKING_STOP_TIME = self.SENSOR_TASKING_STOP_TIME().map(|x| {
-      x.to_string()
-    });
-    let PRIORITY = self.PRIORITY();
-    let STATUS = self.STATUS().map(|x| {
-      x.to_string()
-    });
-    let STATUS_DATE = self.STATUS_DATE().map(|x| {
-      x.to_string()
-    });
-    let DESCRIPTION = self.DESCRIPTION().map(|x| {
       x.to_string()
     });
     let LAST_OB_TIME = self.LAST_OB_TIME().map(|x| {
@@ -145,12 +344,6 @@ impl<'a> OOI<'a> {
     });
     let MISSED_OB_TIME = self.MISSED_OB_TIME().map(|x| {
       x.to_string()
-    });
-    let DELTA_VS = self.DELTA_VS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
-    let DELTA_TS = self.DELTA_TS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
     });
     let SV_EPOCH = self.SV_EPOCH().map(|x| {
       x.to_string()
@@ -178,11 +371,14 @@ impl<'a> OOI<'a> {
     let PERIOD = self.PERIOD();
     let APOGEE = self.APOGEE();
     let PERIGEE = self.PERIGEE();
+    let DELTA_VS = self.DELTA_VS().map(|x| {
+      x.into_iter().collect()
+    });
+    let DELTA_TS = self.DELTA_TS().map(|x| {
+      x.into_iter().collect()
+    });
     let AFFECTED_OBJECTS = self.AFFECTED_OBJECTS().map(|x| {
       x.iter().map(|s| s.to_string()).collect()
-    });
-    let ON_ORBIT = self.ON_ORBIT().map(|x| {
-      x.to_string()
     });
     let MANIFOLDS = self.MANIFOLDS().map(|x| {
       x.iter().map(|s| s.to_string()).collect()
@@ -191,16 +387,15 @@ impl<'a> OOI<'a> {
       ID,
       SAT_NO,
       NAME,
-      SENSOR_TASKING_START_TIME,
-      SENSOR_TASKING_STOP_TIME,
-      PRIORITY,
+      ON_ORBIT,
       STATUS,
       STATUS_DATE,
+      PRIORITY,
       DESCRIPTION,
+      SENSOR_TASKING_START_TIME,
+      SENSOR_TASKING_STOP_TIME,
       LAST_OB_TIME,
       MISSED_OB_TIME,
-      DELTA_VS,
-      DELTA_TS,
       SV_EPOCH,
       X,
       Y,
@@ -223,12 +418,14 @@ impl<'a> OOI<'a> {
       PERIOD,
       APOGEE,
       PERIGEE,
+      DELTA_VS,
+      DELTA_TS,
       AFFECTED_OBJECTS,
-      ON_ORBIT,
       MANIFOLDS,
     }
   }
 
+  /// Unique identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -236,13 +433,15 @@ impl<'a> OOI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOI::VT_ID, None)}
   }
+  /// Satellite catalog number
   #[inline]
-  pub fn SAT_NO(&self) -> i32 {
+  pub fn SAT_NO(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(OOI::VT_SAT_NO, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u32>(OOI::VT_SAT_NO, Some(0)).unwrap()}
   }
+  /// Object name or designator
   #[inline]
   pub fn NAME(&self) -> Option<&'a str> {
     // Safety:
@@ -250,237 +449,7 @@ impl<'a> OOI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOI::VT_NAME, None)}
   }
-  #[inline]
-  pub fn SENSOR_TASKING_START_TIME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOI::VT_SENSOR_TASKING_START_TIME, None)}
-  }
-  #[inline]
-  pub fn SENSOR_TASKING_STOP_TIME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOI::VT_SENSOR_TASKING_STOP_TIME, None)}
-  }
-  #[inline]
-  pub fn PRIORITY(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(OOI::VT_PRIORITY, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn STATUS(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOI::VT_STATUS, None)}
-  }
-  #[inline]
-  pub fn STATUS_DATE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOI::VT_STATUS_DATE, None)}
-  }
-  #[inline]
-  pub fn DESCRIPTION(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOI::VT_DESCRIPTION, None)}
-  }
-  #[inline]
-  pub fn LAST_OB_TIME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOI::VT_LAST_OB_TIME, None)}
-  }
-  #[inline]
-  pub fn MISSED_OB_TIME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOI::VT_MISSED_OB_TIME, None)}
-  }
-  #[inline]
-  pub fn DELTA_VS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(OOI::VT_DELTA_VS, None)}
-  }
-  #[inline]
-  pub fn DELTA_TS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(OOI::VT_DELTA_TS, None)}
-  }
-  #[inline]
-  pub fn SV_EPOCH(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOI::VT_SV_EPOCH, None)}
-  }
-  #[inline]
-  pub fn X(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OOI::VT_X, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn Y(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OOI::VT_Y, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn Z(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OOI::VT_Z, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn XVEL(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OOI::VT_XVEL, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn YVEL(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OOI::VT_YVEL, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn ZVEL(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OOI::VT_ZVEL, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn ELSET_EPOCH(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOI::VT_ELSET_EPOCH, None)}
-  }
-  #[inline]
-  pub fn MEAN_MOTION(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OOI::VT_MEAN_MOTION, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn ECCENTRICITY(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OOI::VT_ECCENTRICITY, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn INCLINATION(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OOI::VT_INCLINATION, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn RAAN(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OOI::VT_RAAN, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn ARG_OF_PERIGEE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OOI::VT_ARG_OF_PERIGEE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn MEAN_ANOMALY(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OOI::VT_MEAN_ANOMALY, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn REV_NO(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(OOI::VT_REV_NO, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn B_STAR(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OOI::VT_B_STAR, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn MEAN_MOTION_DOT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OOI::VT_MEAN_MOTION_DOT, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn MEAN_MOTION_DDOT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OOI::VT_MEAN_MOTION_DDOT, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SEMI_MAJOR_AXIS(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OOI::VT_SEMI_MAJOR_AXIS, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PERIOD(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OOI::VT_PERIOD, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn APOGEE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OOI::VT_APOGEE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PERIGEE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OOI::VT_PERIGEE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn AFFECTED_OBJECTS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(OOI::VT_AFFECTED_OBJECTS, None)}
-  }
+  /// On-orbit reference
   #[inline]
   pub fn ON_ORBIT(&self) -> Option<&'a str> {
     // Safety:
@@ -488,6 +457,271 @@ impl<'a> OOI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOI::VT_ON_ORBIT, None)}
   }
+  /// Tasking status
+  #[inline]
+  pub fn STATUS(&self) -> ooiStatus {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<ooiStatus>(OOI::VT_STATUS, Some(ooiStatus::ACTIVE)).unwrap()}
+  }
+  /// Status update date (ISO 8601)
+  #[inline]
+  pub fn STATUS_DATE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOI::VT_STATUS_DATE, None)}
+  }
+  /// Collection priority
+  #[inline]
+  pub fn PRIORITY(&self) -> ooiPriority {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<ooiPriority>(OOI::VT_PRIORITY, Some(ooiPriority::CRITICAL)).unwrap()}
+  }
+  /// Description of why object is of interest
+  #[inline]
+  pub fn DESCRIPTION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOI::VT_DESCRIPTION, None)}
+  }
+  /// Sensor tasking start time (ISO 8601)
+  #[inline]
+  pub fn SENSOR_TASKING_START_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOI::VT_SENSOR_TASKING_START_TIME, None)}
+  }
+  /// Sensor tasking stop time (ISO 8601)
+  #[inline]
+  pub fn SENSOR_TASKING_STOP_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOI::VT_SENSOR_TASKING_STOP_TIME, None)}
+  }
+  /// Last observation time (ISO 8601)
+  #[inline]
+  pub fn LAST_OB_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOI::VT_LAST_OB_TIME, None)}
+  }
+  /// Last missed observation time (ISO 8601)
+  #[inline]
+  pub fn MISSED_OB_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOI::VT_MISSED_OB_TIME, None)}
+  }
+  /// State vector epoch (ISO 8601)
+  #[inline]
+  pub fn SV_EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOI::VT_SV_EPOCH, None)}
+  }
+  /// Position X (km, TEME)
+  #[inline]
+  pub fn X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OOI::VT_X, Some(0.0)).unwrap()}
+  }
+  /// Position Y (km, TEME)
+  #[inline]
+  pub fn Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OOI::VT_Y, Some(0.0)).unwrap()}
+  }
+  /// Position Z (km, TEME)
+  #[inline]
+  pub fn Z(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OOI::VT_Z, Some(0.0)).unwrap()}
+  }
+  /// Velocity X (km/s, TEME)
+  #[inline]
+  pub fn XVEL(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OOI::VT_XVEL, Some(0.0)).unwrap()}
+  }
+  /// Velocity Y (km/s, TEME)
+  #[inline]
+  pub fn YVEL(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OOI::VT_YVEL, Some(0.0)).unwrap()}
+  }
+  /// Velocity Z (km/s, TEME)
+  #[inline]
+  pub fn ZVEL(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OOI::VT_ZVEL, Some(0.0)).unwrap()}
+  }
+  /// Element set epoch (ISO 8601)
+  #[inline]
+  pub fn ELSET_EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOI::VT_ELSET_EPOCH, None)}
+  }
+  /// Mean motion (rev/day)
+  #[inline]
+  pub fn MEAN_MOTION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OOI::VT_MEAN_MOTION, Some(0.0)).unwrap()}
+  }
+  /// Eccentricity
+  #[inline]
+  pub fn ECCENTRICITY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OOI::VT_ECCENTRICITY, Some(0.0)).unwrap()}
+  }
+  /// Inclination (degrees)
+  #[inline]
+  pub fn INCLINATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OOI::VT_INCLINATION, Some(0.0)).unwrap()}
+  }
+  /// Right ascension of ascending node (degrees)
+  #[inline]
+  pub fn RAAN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OOI::VT_RAAN, Some(0.0)).unwrap()}
+  }
+  /// Argument of perigee (degrees)
+  #[inline]
+  pub fn ARG_OF_PERIGEE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OOI::VT_ARG_OF_PERIGEE, Some(0.0)).unwrap()}
+  }
+  /// Mean anomaly (degrees)
+  #[inline]
+  pub fn MEAN_ANOMALY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OOI::VT_MEAN_ANOMALY, Some(0.0)).unwrap()}
+  }
+  /// Revolution number at epoch
+  #[inline]
+  pub fn REV_NO(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(OOI::VT_REV_NO, Some(0)).unwrap()}
+  }
+  /// BSTAR drag term (1/Earth radii)
+  #[inline]
+  pub fn B_STAR(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OOI::VT_B_STAR, Some(0.0)).unwrap()}
+  }
+  /// Mean motion first derivative (rev/day^2)
+  #[inline]
+  pub fn MEAN_MOTION_DOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OOI::VT_MEAN_MOTION_DOT, Some(0.0)).unwrap()}
+  }
+  /// Mean motion second derivative (rev/day^3)
+  #[inline]
+  pub fn MEAN_MOTION_DDOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OOI::VT_MEAN_MOTION_DDOT, Some(0.0)).unwrap()}
+  }
+  /// Semi-major axis (km)
+  #[inline]
+  pub fn SEMI_MAJOR_AXIS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OOI::VT_SEMI_MAJOR_AXIS, Some(0.0)).unwrap()}
+  }
+  /// Orbital period (minutes)
+  #[inline]
+  pub fn PERIOD(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OOI::VT_PERIOD, Some(0.0)).unwrap()}
+  }
+  /// Apogee altitude (km)
+  #[inline]
+  pub fn APOGEE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OOI::VT_APOGEE, Some(0.0)).unwrap()}
+  }
+  /// Perigee altitude (km)
+  #[inline]
+  pub fn PERIGEE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OOI::VT_PERIGEE, Some(0.0)).unwrap()}
+  }
+  /// Delta-V estimates for maneuver hypotheses (m/s)
+  #[inline]
+  pub fn DELTA_VS(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(OOI::VT_DELTA_VS, None)}
+  }
+  /// Delta-T estimates for maneuver timing (seconds)
+  #[inline]
+  pub fn DELTA_TS(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(OOI::VT_DELTA_TS, None)}
+  }
+  /// Other affected satellite catalog numbers
+  #[inline]
+  pub fn AFFECTED_OBJECTS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(OOI::VT_AFFECTED_OBJECTS, None)}
+  }
+  /// Associated orbit manifold identifiers
   #[inline]
   pub fn MANIFOLDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -505,18 +739,17 @@ impl flatbuffers::Verifiable for OOI<'_> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
-     .visit_field::<i32>("SAT_NO", Self::VT_SAT_NO, false)?
+     .visit_field::<u32>("SAT_NO", Self::VT_SAT_NO, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ON_ORBIT", Self::VT_ON_ORBIT, false)?
+     .visit_field::<ooiStatus>("STATUS", Self::VT_STATUS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("STATUS_DATE", Self::VT_STATUS_DATE, false)?
+     .visit_field::<ooiPriority>("PRIORITY", Self::VT_PRIORITY, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SENSOR_TASKING_START_TIME", Self::VT_SENSOR_TASKING_START_TIME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SENSOR_TASKING_STOP_TIME", Self::VT_SENSOR_TASKING_STOP_TIME, false)?
-     .visit_field::<i32>("PRIORITY", Self::VT_PRIORITY, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("STATUS", Self::VT_STATUS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("STATUS_DATE", Self::VT_STATUS_DATE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LAST_OB_TIME", Self::VT_LAST_OB_TIME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MISSED_OB_TIME", Self::VT_MISSED_OB_TIME, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("DELTA_VS", Self::VT_DELTA_VS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("DELTA_TS", Self::VT_DELTA_TS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SV_EPOCH", Self::VT_SV_EPOCH, false)?
      .visit_field::<f64>("X", Self::VT_X, false)?
      .visit_field::<f64>("Y", Self::VT_Y, false)?
@@ -531,7 +764,7 @@ impl flatbuffers::Verifiable for OOI<'_> {
      .visit_field::<f64>("RAAN", Self::VT_RAAN, false)?
      .visit_field::<f64>("ARG_OF_PERIGEE", Self::VT_ARG_OF_PERIGEE, false)?
      .visit_field::<f64>("MEAN_ANOMALY", Self::VT_MEAN_ANOMALY, false)?
-     .visit_field::<i32>("REV_NO", Self::VT_REV_NO, false)?
+     .visit_field::<u32>("REV_NO", Self::VT_REV_NO, false)?
      .visit_field::<f64>("B_STAR", Self::VT_B_STAR, false)?
      .visit_field::<f64>("MEAN_MOTION_DOT", Self::VT_MEAN_MOTION_DOT, false)?
      .visit_field::<f64>("MEAN_MOTION_DDOT", Self::VT_MEAN_MOTION_DDOT, false)?
@@ -539,8 +772,9 @@ impl flatbuffers::Verifiable for OOI<'_> {
      .visit_field::<f64>("PERIOD", Self::VT_PERIOD, false)?
      .visit_field::<f64>("APOGEE", Self::VT_APOGEE, false)?
      .visit_field::<f64>("PERIGEE", Self::VT_PERIGEE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("DELTA_VS", Self::VT_DELTA_VS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("DELTA_TS", Self::VT_DELTA_TS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("AFFECTED_OBJECTS", Self::VT_AFFECTED_OBJECTS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ON_ORBIT", Self::VT_ON_ORBIT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("MANIFOLDS", Self::VT_MANIFOLDS, false)?
      .finish();
     Ok(())
@@ -548,18 +782,17 @@ impl flatbuffers::Verifiable for OOI<'_> {
 }
 pub struct OOIArgs<'a> {
     pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SAT_NO: i32,
+    pub SAT_NO: u32,
     pub NAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ON_ORBIT: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub STATUS: ooiStatus,
+    pub STATUS_DATE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub PRIORITY: ooiPriority,
+    pub DESCRIPTION: Option<flatbuffers::WIPOffset<&'a str>>,
     pub SENSOR_TASKING_START_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub SENSOR_TASKING_STOP_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub PRIORITY: i32,
-    pub STATUS: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub STATUS_DATE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub DESCRIPTION: Option<flatbuffers::WIPOffset<&'a str>>,
     pub LAST_OB_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub MISSED_OB_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub DELTA_VS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub DELTA_TS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub SV_EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
     pub X: f64,
     pub Y: f64,
@@ -574,7 +807,7 @@ pub struct OOIArgs<'a> {
     pub RAAN: f64,
     pub ARG_OF_PERIGEE: f64,
     pub MEAN_ANOMALY: f64,
-    pub REV_NO: i32,
+    pub REV_NO: u32,
     pub B_STAR: f64,
     pub MEAN_MOTION_DOT: f64,
     pub MEAN_MOTION_DDOT: f64,
@@ -582,8 +815,9 @@ pub struct OOIArgs<'a> {
     pub PERIOD: f64,
     pub APOGEE: f64,
     pub PERIGEE: f64,
+    pub DELTA_VS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub DELTA_TS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
     pub AFFECTED_OBJECTS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub ON_ORBIT: Option<flatbuffers::WIPOffset<&'a str>>,
     pub MANIFOLDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
 }
 impl<'a> Default for OOIArgs<'a> {
@@ -593,16 +827,15 @@ impl<'a> Default for OOIArgs<'a> {
       ID: None,
       SAT_NO: 0,
       NAME: None,
+      ON_ORBIT: None,
+      STATUS: ooiStatus::ACTIVE,
+      STATUS_DATE: None,
+      PRIORITY: ooiPriority::CRITICAL,
+      DESCRIPTION: None,
       SENSOR_TASKING_START_TIME: None,
       SENSOR_TASKING_STOP_TIME: None,
-      PRIORITY: 0,
-      STATUS: None,
-      STATUS_DATE: None,
-      DESCRIPTION: None,
       LAST_OB_TIME: None,
       MISSED_OB_TIME: None,
-      DELTA_VS: None,
-      DELTA_TS: None,
       SV_EPOCH: None,
       X: 0.0,
       Y: 0.0,
@@ -625,8 +858,9 @@ impl<'a> Default for OOIArgs<'a> {
       PERIOD: 0.0,
       APOGEE: 0.0,
       PERIGEE: 0.0,
+      DELTA_VS: None,
+      DELTA_TS: None,
       AFFECTED_OBJECTS: None,
-      ON_ORBIT: None,
       MANIFOLDS: None,
     }
   }
@@ -642,12 +876,32 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OOIBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOI::VT_ID, ID);
   }
   #[inline]
-  pub fn add_SAT_NO(&mut self, SAT_NO: i32) {
-    self.fbb_.push_slot::<i32>(OOI::VT_SAT_NO, SAT_NO, 0);
+  pub fn add_SAT_NO(&mut self, SAT_NO: u32) {
+    self.fbb_.push_slot::<u32>(OOI::VT_SAT_NO, SAT_NO, 0);
   }
   #[inline]
   pub fn add_NAME(&mut self, NAME: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOI::VT_NAME, NAME);
+  }
+  #[inline]
+  pub fn add_ON_ORBIT(&mut self, ON_ORBIT: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOI::VT_ON_ORBIT, ON_ORBIT);
+  }
+  #[inline]
+  pub fn add_STATUS(&mut self, STATUS: ooiStatus) {
+    self.fbb_.push_slot::<ooiStatus>(OOI::VT_STATUS, STATUS, ooiStatus::ACTIVE);
+  }
+  #[inline]
+  pub fn add_STATUS_DATE(&mut self, STATUS_DATE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOI::VT_STATUS_DATE, STATUS_DATE);
+  }
+  #[inline]
+  pub fn add_PRIORITY(&mut self, PRIORITY: ooiPriority) {
+    self.fbb_.push_slot::<ooiPriority>(OOI::VT_PRIORITY, PRIORITY, ooiPriority::CRITICAL);
+  }
+  #[inline]
+  pub fn add_DESCRIPTION(&mut self, DESCRIPTION: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOI::VT_DESCRIPTION, DESCRIPTION);
   }
   #[inline]
   pub fn add_SENSOR_TASKING_START_TIME(&mut self, SENSOR_TASKING_START_TIME: flatbuffers::WIPOffset<&'b  str>) {
@@ -658,36 +912,12 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OOIBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOI::VT_SENSOR_TASKING_STOP_TIME, SENSOR_TASKING_STOP_TIME);
   }
   #[inline]
-  pub fn add_PRIORITY(&mut self, PRIORITY: i32) {
-    self.fbb_.push_slot::<i32>(OOI::VT_PRIORITY, PRIORITY, 0);
-  }
-  #[inline]
-  pub fn add_STATUS(&mut self, STATUS: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOI::VT_STATUS, STATUS);
-  }
-  #[inline]
-  pub fn add_STATUS_DATE(&mut self, STATUS_DATE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOI::VT_STATUS_DATE, STATUS_DATE);
-  }
-  #[inline]
-  pub fn add_DESCRIPTION(&mut self, DESCRIPTION: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOI::VT_DESCRIPTION, DESCRIPTION);
-  }
-  #[inline]
   pub fn add_LAST_OB_TIME(&mut self, LAST_OB_TIME: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOI::VT_LAST_OB_TIME, LAST_OB_TIME);
   }
   #[inline]
   pub fn add_MISSED_OB_TIME(&mut self, MISSED_OB_TIME: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOI::VT_MISSED_OB_TIME, MISSED_OB_TIME);
-  }
-  #[inline]
-  pub fn add_DELTA_VS(&mut self, DELTA_VS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOI::VT_DELTA_VS, DELTA_VS);
-  }
-  #[inline]
-  pub fn add_DELTA_TS(&mut self, DELTA_TS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOI::VT_DELTA_TS, DELTA_TS);
   }
   #[inline]
   pub fn add_SV_EPOCH(&mut self, SV_EPOCH: flatbuffers::WIPOffset<&'b  str>) {
@@ -746,8 +976,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OOIBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(OOI::VT_MEAN_ANOMALY, MEAN_ANOMALY, 0.0);
   }
   #[inline]
-  pub fn add_REV_NO(&mut self, REV_NO: i32) {
-    self.fbb_.push_slot::<i32>(OOI::VT_REV_NO, REV_NO, 0);
+  pub fn add_REV_NO(&mut self, REV_NO: u32) {
+    self.fbb_.push_slot::<u32>(OOI::VT_REV_NO, REV_NO, 0);
   }
   #[inline]
   pub fn add_B_STAR(&mut self, B_STAR: f64) {
@@ -778,12 +1008,16 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OOIBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(OOI::VT_PERIGEE, PERIGEE, 0.0);
   }
   #[inline]
-  pub fn add_AFFECTED_OBJECTS(&mut self, AFFECTED_OBJECTS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOI::VT_AFFECTED_OBJECTS, AFFECTED_OBJECTS);
+  pub fn add_DELTA_VS(&mut self, DELTA_VS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOI::VT_DELTA_VS, DELTA_VS);
   }
   #[inline]
-  pub fn add_ON_ORBIT(&mut self, ON_ORBIT: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOI::VT_ON_ORBIT, ON_ORBIT);
+  pub fn add_DELTA_TS(&mut self, DELTA_TS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOI::VT_DELTA_TS, DELTA_TS);
+  }
+  #[inline]
+  pub fn add_AFFECTED_OBJECTS(&mut self, AFFECTED_OBJECTS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOI::VT_AFFECTED_OBJECTS, AFFECTED_OBJECTS);
   }
   #[inline]
   pub fn add_MANIFOLDS(&mut self, MANIFOLDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
@@ -810,16 +1044,15 @@ impl core::fmt::Debug for OOI<'_> {
       ds.field("ID", &self.ID());
       ds.field("SAT_NO", &self.SAT_NO());
       ds.field("NAME", &self.NAME());
-      ds.field("SENSOR_TASKING_START_TIME", &self.SENSOR_TASKING_START_TIME());
-      ds.field("SENSOR_TASKING_STOP_TIME", &self.SENSOR_TASKING_STOP_TIME());
-      ds.field("PRIORITY", &self.PRIORITY());
+      ds.field("ON_ORBIT", &self.ON_ORBIT());
       ds.field("STATUS", &self.STATUS());
       ds.field("STATUS_DATE", &self.STATUS_DATE());
+      ds.field("PRIORITY", &self.PRIORITY());
       ds.field("DESCRIPTION", &self.DESCRIPTION());
+      ds.field("SENSOR_TASKING_START_TIME", &self.SENSOR_TASKING_START_TIME());
+      ds.field("SENSOR_TASKING_STOP_TIME", &self.SENSOR_TASKING_STOP_TIME());
       ds.field("LAST_OB_TIME", &self.LAST_OB_TIME());
       ds.field("MISSED_OB_TIME", &self.MISSED_OB_TIME());
-      ds.field("DELTA_VS", &self.DELTA_VS());
-      ds.field("DELTA_TS", &self.DELTA_TS());
       ds.field("SV_EPOCH", &self.SV_EPOCH());
       ds.field("X", &self.X());
       ds.field("Y", &self.Y());
@@ -842,8 +1075,9 @@ impl core::fmt::Debug for OOI<'_> {
       ds.field("PERIOD", &self.PERIOD());
       ds.field("APOGEE", &self.APOGEE());
       ds.field("PERIGEE", &self.PERIGEE());
+      ds.field("DELTA_VS", &self.DELTA_VS());
+      ds.field("DELTA_TS", &self.DELTA_TS());
       ds.field("AFFECTED_OBJECTS", &self.AFFECTED_OBJECTS());
-      ds.field("ON_ORBIT", &self.ON_ORBIT());
       ds.field("MANIFOLDS", &self.MANIFOLDS());
       ds.finish()
   }
@@ -852,18 +1086,17 @@ impl core::fmt::Debug for OOI<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct OOIT {
   pub ID: Option<String>,
-  pub SAT_NO: i32,
+  pub SAT_NO: u32,
   pub NAME: Option<String>,
+  pub ON_ORBIT: Option<String>,
+  pub STATUS: ooiStatus,
+  pub STATUS_DATE: Option<String>,
+  pub PRIORITY: ooiPriority,
+  pub DESCRIPTION: Option<String>,
   pub SENSOR_TASKING_START_TIME: Option<String>,
   pub SENSOR_TASKING_STOP_TIME: Option<String>,
-  pub PRIORITY: i32,
-  pub STATUS: Option<String>,
-  pub STATUS_DATE: Option<String>,
-  pub DESCRIPTION: Option<String>,
   pub LAST_OB_TIME: Option<String>,
   pub MISSED_OB_TIME: Option<String>,
-  pub DELTA_VS: Option<Vec<String>>,
-  pub DELTA_TS: Option<Vec<String>>,
   pub SV_EPOCH: Option<String>,
   pub X: f64,
   pub Y: f64,
@@ -878,7 +1111,7 @@ pub struct OOIT {
   pub RAAN: f64,
   pub ARG_OF_PERIGEE: f64,
   pub MEAN_ANOMALY: f64,
-  pub REV_NO: i32,
+  pub REV_NO: u32,
   pub B_STAR: f64,
   pub MEAN_MOTION_DOT: f64,
   pub MEAN_MOTION_DDOT: f64,
@@ -886,8 +1119,9 @@ pub struct OOIT {
   pub PERIOD: f64,
   pub APOGEE: f64,
   pub PERIGEE: f64,
+  pub DELTA_VS: Option<Vec<f64>>,
+  pub DELTA_TS: Option<Vec<f64>>,
   pub AFFECTED_OBJECTS: Option<Vec<String>>,
-  pub ON_ORBIT: Option<String>,
   pub MANIFOLDS: Option<Vec<String>>,
 }
 impl Default for OOIT {
@@ -896,16 +1130,15 @@ impl Default for OOIT {
       ID: None,
       SAT_NO: 0,
       NAME: None,
+      ON_ORBIT: None,
+      STATUS: ooiStatus::ACTIVE,
+      STATUS_DATE: None,
+      PRIORITY: ooiPriority::CRITICAL,
+      DESCRIPTION: None,
       SENSOR_TASKING_START_TIME: None,
       SENSOR_TASKING_STOP_TIME: None,
-      PRIORITY: 0,
-      STATUS: None,
-      STATUS_DATE: None,
-      DESCRIPTION: None,
       LAST_OB_TIME: None,
       MISSED_OB_TIME: None,
-      DELTA_VS: None,
-      DELTA_TS: None,
       SV_EPOCH: None,
       X: 0.0,
       Y: 0.0,
@@ -928,8 +1161,9 @@ impl Default for OOIT {
       PERIOD: 0.0,
       APOGEE: 0.0,
       PERIGEE: 0.0,
+      DELTA_VS: None,
+      DELTA_TS: None,
       AFFECTED_OBJECTS: None,
-      ON_ORBIT: None,
       MANIFOLDS: None,
     }
   }
@@ -946,20 +1180,21 @@ impl OOIT {
     let NAME = self.NAME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let ON_ORBIT = self.ON_ORBIT.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let STATUS = self.STATUS;
+    let STATUS_DATE = self.STATUS_DATE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PRIORITY = self.PRIORITY;
+    let DESCRIPTION = self.DESCRIPTION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     let SENSOR_TASKING_START_TIME = self.SENSOR_TASKING_START_TIME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let SENSOR_TASKING_STOP_TIME = self.SENSOR_TASKING_STOP_TIME.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let PRIORITY = self.PRIORITY;
-    let STATUS = self.STATUS.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let STATUS_DATE = self.STATUS_DATE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let DESCRIPTION = self.DESCRIPTION.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let LAST_OB_TIME = self.LAST_OB_TIME.as_ref().map(|x|{
@@ -967,12 +1202,6 @@ impl OOIT {
     });
     let MISSED_OB_TIME = self.MISSED_OB_TIME.as_ref().map(|x|{
       _fbb.create_string(x)
-    });
-    let DELTA_VS = self.DELTA_VS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    let DELTA_TS = self.DELTA_TS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
     let SV_EPOCH = self.SV_EPOCH.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -1000,11 +1229,14 @@ impl OOIT {
     let PERIOD = self.PERIOD;
     let APOGEE = self.APOGEE;
     let PERIGEE = self.PERIGEE;
+    let DELTA_VS = self.DELTA_VS.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let DELTA_TS = self.DELTA_TS.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
     let AFFECTED_OBJECTS = self.AFFECTED_OBJECTS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    let ON_ORBIT = self.ON_ORBIT.as_ref().map(|x|{
-      _fbb.create_string(x)
     });
     let MANIFOLDS = self.MANIFOLDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
@@ -1013,16 +1245,15 @@ impl OOIT {
       ID,
       SAT_NO,
       NAME,
-      SENSOR_TASKING_START_TIME,
-      SENSOR_TASKING_STOP_TIME,
-      PRIORITY,
+      ON_ORBIT,
       STATUS,
       STATUS_DATE,
+      PRIORITY,
       DESCRIPTION,
+      SENSOR_TASKING_START_TIME,
+      SENSOR_TASKING_STOP_TIME,
       LAST_OB_TIME,
       MISSED_OB_TIME,
-      DELTA_VS,
-      DELTA_TS,
       SV_EPOCH,
       X,
       Y,
@@ -1045,8 +1276,9 @@ impl OOIT {
       PERIOD,
       APOGEE,
       PERIGEE,
+      DELTA_VS,
+      DELTA_TS,
       AFFECTED_OBJECTS,
-      ON_ORBIT,
       MANIFOLDS,
     })
   }

@@ -1,282 +1,300 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "maneuverStatus" : {
+      "type" : "string",
+      "enum": ["DETECTED", "CONFIRMED", "PREDICTED", "PLANNED", "EXECUTED", "CANCELLED", "UNKNOWN"]
+    },
+    "maneuverCharacterization" : {
+      "type" : "string",
+      "enum": ["IN_PLANE", "OUT_OF_PLANE", "COMBINED", "STATION_KEEPING", "ORBIT_RAISING", "ORBIT_LOWERING", "PHASING", "DEORBIT", "COLLISION_AVOIDANCE", "UNKNOWN"]
+    },
+    "mnvOrbitalState" : {
+      "type" : "object",
+      "description" : "Pre/post-maneuver orbital state",
+      "properties" : {
+        "ID_ELSET" : {
+                "type" : "string",
+                "description" : "Element set identifier"
+              },
+        "ELSET" : {
+                "type" : "string",
+                "description" : "Element set data reference"
+              },
+        "ID_STATE_VECTOR" : {
+                "type" : "string",
+                "description" : "State vector identifier"
+              },
+        "STATE_VECTOR" : {
+                "type" : "string",
+                "description" : "State vector data reference"
+              },
+        "POS_X" : {
+                "type" : "number",
+                "description" : "Position X (km)"
+              },
+        "POS_Y" : {
+                "type" : "number",
+                "description" : "Position Y (km)"
+              },
+        "POS_Z" : {
+                "type" : "number",
+                "description" : "Position Z (km)"
+              },
+        "VEL_X" : {
+                "type" : "number",
+                "description" : "Velocity X (km/s)"
+              },
+        "VEL_Y" : {
+                "type" : "number",
+                "description" : "Velocity Y (km/s)"
+              },
+        "VEL_Z" : {
+                "type" : "number",
+                "description" : "Velocity Z (km/s)"
+              },
+        "RADIATION_PRESS_COEFF" : {
+                "type" : "number",
+                "description" : "Radiation pressure coefficient (Cr)"
+              },
+        "BALLISTIC_COEFF" : {
+                "type" : "number",
+                "description" : "Ballistic coefficient (m^2/kg)"
+              },
+        "APOGEE" : {
+                "type" : "number",
+                "description" : "Apogee altitude (km)"
+              },
+        "PERIGEE" : {
+                "type" : "number",
+                "description" : "Perigee altitude (km)"
+              },
+        "INCLINATION" : {
+                "type" : "number",
+                "description" : "Inclination (degrees)"
+              },
+        "ECCENTRICITY" : {
+                "type" : "number",
+                "description" : "Eccentricity"
+              },
+        "PERIOD" : {
+                "type" : "number",
+                "description" : "Orbital period (minutes)"
+              },
+        "RAAN" : {
+                "type" : "number",
+                "description" : "Right ascension of ascending node (degrees)"
+              },
+        "SMA" : {
+                "type" : "number",
+                "description" : "Semi-major axis (km)"
+              },
+        "GEO_LONGITUDE" : {
+                "type" : "number",
+                "description" : "GEO longitude (degrees east)"
+              },
+        "DRIFT_RATE" : {
+                "type" : "number",
+                "description" : "Longitude drift rate (degrees/day)"
+              },
+        "SIGMA_U" : {
+                "type" : "number",
+                "description" : "Position uncertainty U (km, 1-sigma)"
+              },
+        "SIGMA_V" : {
+                "type" : "number",
+                "description" : "Position uncertainty V (km, 1-sigma)"
+              },
+        "SIGMA_W" : {
+                "type" : "number",
+                "description" : "Position uncertainty W (km, 1-sigma)"
+              }
+      },
+      "additionalProperties" : false
+    },
     "MNV" : {
       "type" : "object",
       "description" : "Spacecraft Maneuver",
       "properties" : {
         "ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique identifier"
               },
         "SAT_NO" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "REPORT_TIME" : {
-                "type" : "string"
-              },
-        "EVENT_START_TIME" : {
-                "type" : "string"
-              },
-        "EVENT_END_TIME" : {
-                "type" : "string"
-              },
-        "TOTAL_BURN_TIME" : {
-                "type" : "number"
-              },
-        "OD_FIT_END_TIME" : {
-                "type" : "string"
-              },
-        "ID_SENSOR" : {
-                "type" : "string"
-              },
-        "UCT" : {
-                "type" : "boolean"
-              },
-        "MANEUVER_UNC" : {
-                "type" : "number"
-              },
-        "CHARACTERIZATION" : {
-                "type" : "string"
-              },
-        "CHARACTERIZATION_UNC" : {
-                "type" : "number"
-              },
-        "EVENT_ID" : {
-                "type" : "string"
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Satellite catalog number"
               },
         "ORIG_OBJECT_ID" : {
-                "type" : "string"
-              },
-        "ORIG_SENSOR_ID" : {
-                "type" : "string"
-              },
-        "STATUS" : {
-                "type" : "string"
-              },
-        "DELTA_POS" : {
-                "type" : "number"
-              },
-        "DELTA_POS_U" : {
-                "type" : "number"
-              },
-        "DELTA_POS_V" : {
-                "type" : "number"
-              },
-        "DELTA_POS_W" : {
-                "type" : "number"
-              },
-        "DELTA_VEL" : {
-                "type" : "number"
-              },
-        "DELTA_VEL_U" : {
-                "type" : "number"
-              },
-        "DELTA_VEL_V" : {
-                "type" : "number"
-              },
-        "DELTA_VEL_W" : {
-                "type" : "number"
-              },
-        "DELTA_MASS" : {
-                "type" : "number"
-              },
-        "PRE_EVENT_ID_ELSET" : {
-                "type" : "string"
-              },
-        "PRE_EVENT_ELSET" : {
-                "type" : "string"
-              },
-        "PRE_EVENT_ID_STATE_VECTOR" : {
-                "type" : "string"
-              },
-        "PRE_EVENT_STATE_VECTOR" : {
-                "type" : "string"
-              },
-        "PRE_POS_X" : {
-                "type" : "number"
-              },
-        "PRE_POS_Y" : {
-                "type" : "number"
-              },
-        "PRE_POS_Z" : {
-                "type" : "number"
-              },
-        "PRE_VEL_X" : {
-                "type" : "number"
-              },
-        "PRE_VEL_Y" : {
-                "type" : "number"
-              },
-        "PRE_VEL_Z" : {
-                "type" : "number"
-              },
-        "PRE_RADIATION_PRESS_COEFF" : {
-                "type" : "number"
-              },
-        "PRE_BALLISTIC_COEFF" : {
-                "type" : "number"
-              },
-        "PRE_APOGEE" : {
-                "type" : "number"
-              },
-        "PRE_PERIGEE" : {
-                "type" : "number"
-              },
-        "PRE_INCLINATION" : {
-                "type" : "number"
-              },
-        "PRE_ECCENTRICITY" : {
-                "type" : "number"
-              },
-        "PRE_PERIOD" : {
-                "type" : "number"
-              },
-        "PRE_RAAN" : {
-                "type" : "number"
-              },
-        "PRE_SMA" : {
-                "type" : "number"
-              },
-        "PRE_GEO_LONGITUDE" : {
-                "type" : "number"
-              },
-        "PRE_DRIFT_RATE" : {
-                "type" : "number"
-              },
-        "PRE_SIGMA_U" : {
-                "type" : "number"
-              },
-        "PRE_SIGMA_V" : {
-                "type" : "number"
-              },
-        "PRE_SIGMA_W" : {
-                "type" : "number"
-              },
-        "POST_EVENT_ID_ELSET" : {
-                "type" : "string"
-              },
-        "POST_EVENT_ELSET" : {
-                "type" : "string"
-              },
-        "POST_EVENT_ID_STATE_VECTOR" : {
-                "type" : "string"
-              },
-        "POST_EVENT_STATE_VECTOR" : {
-                "type" : "string"
-              },
-        "POST_POS_X" : {
-                "type" : "number"
-              },
-        "POST_POS_Y" : {
-                "type" : "number"
-              },
-        "POST_POS_Z" : {
-                "type" : "number"
-              },
-        "POST_VEL_X" : {
-                "type" : "number"
-              },
-        "POST_VEL_Y" : {
-                "type" : "number"
-              },
-        "POST_VEL_Z" : {
-                "type" : "number"
-              },
-        "POST_RADIATION_PRESS_COEFF" : {
-                "type" : "number"
-              },
-        "POST_BALLISTIC_COEFF" : {
-                "type" : "number"
-              },
-        "POST_APOGEE" : {
-                "type" : "number"
-              },
-        "POST_PERIGEE" : {
-                "type" : "number"
-              },
-        "POST_INCLINATION" : {
-                "type" : "number"
-              },
-        "POST_ECCENTRICITY" : {
-                "type" : "number"
-              },
-        "POST_PERIOD" : {
-                "type" : "number"
-              },
-        "POST_RAAN" : {
-                "type" : "number"
-              },
-        "POST_SMA" : {
-                "type" : "number"
-              },
-        "POST_GEO_LONGITUDE" : {
-                "type" : "number"
-              },
-        "POST_DRIFT_RATE" : {
-                "type" : "number"
-              },
-        "POST_SIGMA_U" : {
-                "type" : "number"
-              },
-        "POST_SIGMA_V" : {
-                "type" : "number"
-              },
-        "POST_SIGMA_W" : {
-                "type" : "number"
-              },
-        "COV" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
-        "POST_MASS" : {
-                "type" : "number"
-              },
-        "POST_AREA" : {
-                "type" : "number"
-              },
-        "NUM_OBS" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "DESCRIPTION" : {
-                "type" : "string"
-              },
-        "DESCRIPTOR" : {
-                "type" : "string"
-              },
-        "STATE_MODEL" : {
-                "type" : "string"
-              },
-        "STATE_MODEL_VERSION" : {
-                "type" : "number"
-              },
-        "NUM_ACCEL_POINTS" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "MNVR_ACCEL_TIMES" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
-        "MNVR_ACCELS" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
-        "MNVR_ACCEL_UNCS" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
-        "TAGS" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
-        "ALGORITHM" : {
-                "type" : "string"
-              },
-        "SOURCED_DATA" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
-        "SOURCED_DATA_TYPES" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "International designator"
               },
         "ON_ORBIT" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "On-orbit reference"
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/maneuverStatus",
+                "description" : "Maneuver status"
+              },
+        "CHARACTERIZATION" : {
+                "$ref" : "#/definitions/maneuverCharacterization",
+                "description" : "Maneuver characterization"
+              },
+        "CHARACTERIZATION_UNC" : {
+                "type" : "number",
+                "description" : "Characterization uncertainty (0-1)"
+              },
+        "REPORT_TIME" : {
+                "type" : "string",
+                "description" : "Detection report time (ISO 8601)"
+              },
+        "EVENT_START_TIME" : {
+                "type" : "string",
+                "description" : "Maneuver start time (ISO 8601)"
+              },
+        "EVENT_END_TIME" : {
+                "type" : "string",
+                "description" : "Maneuver end time (ISO 8601)"
+              },
+        "TOTAL_BURN_TIME" : {
+                "type" : "number",
+                "description" : "Total burn time (seconds)"
+              },
+        "OD_FIT_END_TIME" : {
+                "type" : "string",
+                "description" : "OD fit end time (ISO 8601)"
+              },
+        "ID_SENSOR" : {
+                "type" : "string",
+                "description" : "Detecting sensor identifier"
+              },
+        "ORIG_SENSOR_ID" : {
+                "type" : "string",
+                "description" : "Original sensor identifier"
+              },
+        "EVENT_ID" : {
+                "type" : "string",
+                "description" : "Maneuver event identifier"
+              },
+        "UCT" : {
+                "type" : "boolean",
+                "description" : "True if object is uncorrelated"
+              },
+        "MANEUVER_UNC" : {
+                "type" : "number",
+                "description" : "Maneuver detection uncertainty (km)"
+              },
+        "DELTA_VEL" : {
+                "type" : "number",
+                "description" : "Total delta-V magnitude (km/s)"
+              },
+        "DELTA_VEL_U" : {
+                "type" : "number",
+                "description" : "Delta-V along-track/U component (km/s)"
+              },
+        "DELTA_VEL_V" : {
+                "type" : "number",
+                "description" : "Delta-V cross-track/V component (km/s)"
+              },
+        "DELTA_VEL_W" : {
+                "type" : "number",
+                "description" : "Delta-V radial/W component (km/s)"
+              },
+        "DELTA_POS" : {
+                "type" : "number",
+                "description" : "Total delta position (km)"
+              },
+        "DELTA_POS_U" : {
+                "type" : "number",
+                "description" : "Delta position U component (km)"
+              },
+        "DELTA_POS_V" : {
+                "type" : "number",
+                "description" : "Delta position V component (km)"
+              },
+        "DELTA_POS_W" : {
+                "type" : "number",
+                "description" : "Delta position W component (km)"
+              },
+        "DELTA_MASS" : {
+                "type" : "number",
+                "description" : "Propellant mass consumed (kg)"
+              },
+        "PRE_EVENT" : {
+                "$ref" : "#/definitions/mnvOrbitalState",
+                "description" : "Pre-maneuver orbital state"
+              },
+        "POST_EVENT" : {
+                "$ref" : "#/definitions/mnvOrbitalState",
+                "description" : "Post-maneuver orbital state"
+              },
+        "POST_MASS" : {
+                "type" : "number",
+                "description" : "Post-maneuver mass (kg)"
+              },
+        "POST_AREA" : {
+                "type" : "number",
+                "description" : "Post-maneuver cross-sectional area (m^2)"
+              },
+        "COV" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "6x6 covariance matrix (upper triangle, row-major)"
+              },
+        "NUM_OBS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of observations used"
+              },
+        "STATE_MODEL" : {
+                "type" : "string",
+                "description" : "State model used"
+              },
+        "STATE_MODEL_VERSION" : {
+                "type" : "number",
+                "description" : "State model version"
+              },
+        "NUM_ACCEL_POINTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Number of acceleration profile points"
+              },
+        "MNVR_ACCEL_TIMES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Acceleration profile times (ISO 8601)"
+              },
+        "MNVR_ACCELS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Acceleration values (km/s^2, 3 components per point)"
+              },
+        "MNVR_ACCEL_UNCS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Acceleration uncertainties (km/s^2)"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Description"
+              },
+        "DESCRIPTOR" : {
+                "type" : "string",
+                "description" : "Event descriptor"
+              },
+        "ALGORITHM" : {
+                "type" : "string",
+                "description" : "Algorithm used for detection"
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Associated tags"
+              },
+        "SOURCED_DATA" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Sourced data references"
+              },
+        "SOURCED_DATA_TYPES" : {
+                "type" : "string",
+                "description" : "Sourced data types"
               },
         "TRANSACTION_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Transaction identifier"
               }
       },
       "additionalProperties" : false

@@ -5,6 +5,110 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class TrackStatus {
+  final int value;
+  const TrackStatus._(this.value);
+
+  factory TrackStatus.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum TrackStatus');
+    }
+    return result;
+  }
+
+  static TrackStatus? _createOrNull(int? value) => 
+      value == null ? null : TrackStatus.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 5;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const TrackStatus ACTIVE = TrackStatus._(0);
+  static const TrackStatus DROPPED = TrackStatus._(1);
+  static const TrackStatus TENTATIVE = TrackStatus._(2);
+  static const TrackStatus CONFIRMED = TrackStatus._(3);
+  static const TrackStatus COASTED = TrackStatus._(4);
+  static const TrackStatus DEAD = TrackStatus._(5);
+  static const Map<int, TrackStatus> values = {
+    0: ACTIVE,
+    1: DROPPED,
+    2: TENTATIVE,
+    3: CONFIRMED,
+    4: COASTED,
+    5: DEAD};
+
+  static const fb.Reader<TrackStatus> reader = _TrackStatusReader();
+
+  @override
+  String toString() {
+    return 'TrackStatus{value: $value}';
+  }
+}
+
+class _TrackStatusReader extends fb.Reader<TrackStatus> {
+  const _TrackStatusReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  TrackStatus read(fb.BufferContext bc, int offset) =>
+      TrackStatus.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class TrackEnvironment {
+  final int value;
+  const TrackEnvironment._(this.value);
+
+  factory TrackEnvironment.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum TrackEnvironment');
+    }
+    return result;
+  }
+
+  static TrackEnvironment? _createOrNull(int? value) => 
+      value == null ? null : TrackEnvironment.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 5;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const TrackEnvironment SPACE = TrackEnvironment._(0);
+  static const TrackEnvironment AIR = TrackEnvironment._(1);
+  static const TrackEnvironment SURFACE = TrackEnvironment._(2);
+  static const TrackEnvironment SUBSURFACE = TrackEnvironment._(3);
+  static const TrackEnvironment LAND = TrackEnvironment._(4);
+  static const TrackEnvironment UNKNOWN = TrackEnvironment._(5);
+  static const Map<int, TrackEnvironment> values = {
+    0: SPACE,
+    1: AIR,
+    2: SURFACE,
+    3: SUBSURFACE,
+    4: LAND,
+    5: UNKNOWN};
+
+  static const fb.Reader<TrackEnvironment> reader = _TrackEnvironmentReader();
+
+  @override
+  String toString() {
+    return 'TrackEnvironment{value: $value}';
+  }
+}
+
+class _TrackEnvironmentReader extends fb.Reader<TrackEnvironment> {
+  const _TrackEnvironmentReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  TrackEnvironment read(fb.BufferContext bc, int offset) =>
+      TrackEnvironment.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 ///  Track
 class TRK {
   TRK._(this._bc, this._bcOffset);
@@ -18,59 +122,107 @@ class TRK {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Contact reference
   String? get CNTCT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Message timestamp (ISO 8601)
   String? get MSG_TS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Mission identifier
   String? get MSN_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Asset nationality
   String? get ASSET_NAT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Asset identifier
   String? get ASSET => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get SEN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Sensor identifier
+  String? get SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Sensor quality assessment
   String? get SEN_QUAL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Track identifier
   String? get TRK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  ///  Track number
   String? get TRK_NUM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  String? get TRK_STAT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Track status
+  TrackStatus get TRK_STAT => TrackStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 24, 0));
+  ///  Object nationality
   String? get OBJ_NAT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Object identifier
   String? get OBJ_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Object type classification
   String? get OBJ_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  ///  Object specific type
   String? get OBJ_SPEC => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  ///  Object platform type
   String? get OBJ_PLAT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  ///  Object activity
   String? get OBJ_ACT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  ///  Mode type
   String? get MOD_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  ///  Track item identifier
   String? get TRK_ITM_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+  ///  Track point timestamp (ISO 8601)
   String? get TS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
-  int get TRK_QUAL => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 44, 0);
+  ///  Track quality (0-15)
+  int get TRK_QUAL => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 44, 0);
+  ///  Track point type
   String? get TRK_PT_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
+  ///  Object identity assessment
   String? get OBJ_IDENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
-  int get IDENT_CRED => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 50, 0);
-  int get IDENT_REL => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 52, 0);
+  ///  Identity credibility (1-6)
+  int get IDENT_CRED => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 50, 0);
+  ///  Identity reliability (A-F)
+  int get IDENT_REL => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 52, 0);
+  ///  Identity amplification
   String? get IDENT_AMP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 54);
-  String? get ENVIRONMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 56);
+  ///  Track environment
+  TrackEnvironment get ENVIRONMENT => TrackEnvironment.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 56, 0));
+  ///  Environment confidence (0-1)
   double get ENVIRONMENT_CONF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
+  ///  Track confidence (0-1)
   double get TRK_CONF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 60, 0.0);
+  ///  Latitude (degrees)
   double get LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
+  ///  Longitude (degrees)
   double get LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
+  ///  Altitude (km)
   double get ALT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, 0.0);
+  ///  Speed (km/s)
   double get SPD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, 0.0);
+  ///  Heading (degrees from north)
   double get HDNG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 70, 0.0);
+  ///  Course (degrees from north)
   double get COURSE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 72, 0.0);
+  ///  Source types
   List<String>? get SRC_TYPS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 74);
+  ///  Source identifiers
   List<String>? get SRC_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 76);
+  ///  Call sign
   String? get CALL_SIGN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 78);
+  ///  True if fused from multiple sources
   bool get MULTI_SOURCE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 80, false);
+  ///  J-series message type
   String? get J_SERIES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 82);
-  int get STRENGTH => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 84, 0);
-  int get M1 => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 86, 0);
-  int get M1V => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 88, 0);
-  int get M2 => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 90, 0);
-  int get M2V => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 92, 0);
-  int get M3A => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 94, 0);
-  int get M3AV => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 96, 0);
+  ///  Force strength indicator
+  int get STRENGTH => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 84, 0);
+  ///  Mode 1 code
+  int get M1 => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 86, 0);
+  ///  Mode 1 validity
+  int get M1V => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 88, 0);
+  ///  Mode 2 code
+  int get M2 => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 90, 0);
+  ///  Mode 2 validity
+  int get M2V => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 92, 0);
+  ///  Mode 3A code
+  int get M3A => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 94, 0);
+  ///  Mode 3A validity
+  int get M3AV => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 96, 0);
+  ///  Associated tags
   List<String>? get TAGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 98);
-  ///  Start time for track data (ISO 8601 UTC format).
+  ///  Start time for track data (ISO 8601)
   String? get TRACK_START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 100);
-  ///  Time interval between track points in seconds.
+  ///  Time interval between track points (seconds)
   double get TRACK_STEP_SIZE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 102, 0.0);
-  ///  Number of components per point (default 3 for X, Y, Z).
+  ///  Number of components per point (default 3 for X, Y, Z)
   int get TRACK_COMPONENTS => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 104, 3);
   ///  ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]
   List<double>? get ECEF_POS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 106);
@@ -91,7 +243,7 @@ class TRK {
 
   @override
   String toString() {
-    return 'TRK{ID: ${ID}, CNTCT: ${CNTCT}, MSG_TS: ${MSG_TS}, MSN_ID: ${MSN_ID}, ASSET_NAT: ${ASSET_NAT}, ASSET: ${ASSET}, SEN: ${SEN}, SEN_QUAL: ${SEN_QUAL}, TRK_ID: ${TRK_ID}, TRK_NUM: ${TRK_NUM}, TRK_STAT: ${TRK_STAT}, OBJ_NAT: ${OBJ_NAT}, OBJ_ID: ${OBJ_ID}, OBJ_TYPE: ${OBJ_TYPE}, OBJ_SPEC: ${OBJ_SPEC}, OBJ_PLAT: ${OBJ_PLAT}, OBJ_ACT: ${OBJ_ACT}, MOD_TYPE: ${MOD_TYPE}, TRK_ITM_ID: ${TRK_ITM_ID}, TS: ${TS}, TRK_QUAL: ${TRK_QUAL}, TRK_PT_TYPE: ${TRK_PT_TYPE}, OBJ_IDENT: ${OBJ_IDENT}, IDENT_CRED: ${IDENT_CRED}, IDENT_REL: ${IDENT_REL}, IDENT_AMP: ${IDENT_AMP}, ENVIRONMENT: ${ENVIRONMENT}, ENVIRONMENT_CONF: ${ENVIRONMENT_CONF}, TRK_CONF: ${TRK_CONF}, LAT: ${LAT}, LON: ${LON}, ALT: ${ALT}, SPD: ${SPD}, HDNG: ${HDNG}, COURSE: ${COURSE}, SRC_TYPS: ${SRC_TYPS}, SRC_IDS: ${SRC_IDS}, CALL_SIGN: ${CALL_SIGN}, MULTI_SOURCE: ${MULTI_SOURCE}, J_SERIES: ${J_SERIES}, STRENGTH: ${STRENGTH}, M1: ${M1}, M1V: ${M1V}, M2: ${M2}, M2V: ${M2V}, M3A: ${M3A}, M3AV: ${M3AV}, TAGS: ${TAGS}, TRACK_START_TIME: ${TRACK_START_TIME}, TRACK_STEP_SIZE: ${TRACK_STEP_SIZE}, TRACK_COMPONENTS: ${TRACK_COMPONENTS}, ECEF_POS: ${ECEF_POS}, ECEF_VEL: ${ECEF_VEL}, ECEF_ACC: ${ECEF_ACC}, LC_POS: ${LC_POS}, LC_VEL: ${LC_VEL}, LC_ACC: ${LC_ACC}, COV: ${COV}, ERR_ELLP: ${ERR_ELLP}}';
+    return 'TRK{ID: ${ID}, CNTCT: ${CNTCT}, MSG_TS: ${MSG_TS}, MSN_ID: ${MSN_ID}, ASSET_NAT: ${ASSET_NAT}, ASSET: ${ASSET}, SENSOR_ID: ${SENSOR_ID}, SEN_QUAL: ${SEN_QUAL}, TRK_ID: ${TRK_ID}, TRK_NUM: ${TRK_NUM}, TRK_STAT: ${TRK_STAT}, OBJ_NAT: ${OBJ_NAT}, OBJ_ID: ${OBJ_ID}, OBJ_TYPE: ${OBJ_TYPE}, OBJ_SPEC: ${OBJ_SPEC}, OBJ_PLAT: ${OBJ_PLAT}, OBJ_ACT: ${OBJ_ACT}, MOD_TYPE: ${MOD_TYPE}, TRK_ITM_ID: ${TRK_ITM_ID}, TS: ${TS}, TRK_QUAL: ${TRK_QUAL}, TRK_PT_TYPE: ${TRK_PT_TYPE}, OBJ_IDENT: ${OBJ_IDENT}, IDENT_CRED: ${IDENT_CRED}, IDENT_REL: ${IDENT_REL}, IDENT_AMP: ${IDENT_AMP}, ENVIRONMENT: ${ENVIRONMENT}, ENVIRONMENT_CONF: ${ENVIRONMENT_CONF}, TRK_CONF: ${TRK_CONF}, LAT: ${LAT}, LON: ${LON}, ALT: ${ALT}, SPD: ${SPD}, HDNG: ${HDNG}, COURSE: ${COURSE}, SRC_TYPS: ${SRC_TYPS}, SRC_IDS: ${SRC_IDS}, CALL_SIGN: ${CALL_SIGN}, MULTI_SOURCE: ${MULTI_SOURCE}, J_SERIES: ${J_SERIES}, STRENGTH: ${STRENGTH}, M1: ${M1}, M1V: ${M1V}, M2: ${M2}, M2V: ${M2V}, M3A: ${M3A}, M3AV: ${M3AV}, TAGS: ${TAGS}, TRACK_START_TIME: ${TRACK_START_TIME}, TRACK_STEP_SIZE: ${TRACK_STEP_SIZE}, TRACK_COMPONENTS: ${TRACK_COMPONENTS}, ECEF_POS: ${ECEF_POS}, ECEF_VEL: ${ECEF_VEL}, ECEF_ACC: ${ECEF_ACC}, LC_POS: ${LC_POS}, LC_VEL: ${LC_VEL}, LC_ACC: ${LC_ACC}, COV: ${COV}, ERR_ELLP: ${ERR_ELLP}}';
   }
 }
 
@@ -136,7 +288,7 @@ class TRKBuilder {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addSenOffset(int? offset) {
+  int addSensorIdOffset(int? offset) {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
@@ -152,8 +304,8 @@ class TRKBuilder {
     fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
-  int addTrkStatOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
+  int addTrkStat(TrackStatus? TRK_STAT) {
+    fbBuilder.addInt8(10, TRK_STAT?.value);
     return fbBuilder.offset;
   }
   int addObjNatOffset(int? offset) {
@@ -193,7 +345,7 @@ class TRKBuilder {
     return fbBuilder.offset;
   }
   int addTrkQual(int? TRK_QUAL) {
-    fbBuilder.addInt32(20, TRK_QUAL);
+    fbBuilder.addUint8(20, TRK_QUAL);
     return fbBuilder.offset;
   }
   int addTrkPtTypeOffset(int? offset) {
@@ -205,19 +357,19 @@ class TRKBuilder {
     return fbBuilder.offset;
   }
   int addIdentCred(int? IDENT_CRED) {
-    fbBuilder.addInt32(23, IDENT_CRED);
+    fbBuilder.addUint8(23, IDENT_CRED);
     return fbBuilder.offset;
   }
   int addIdentRel(int? IDENT_REL) {
-    fbBuilder.addInt32(24, IDENT_REL);
+    fbBuilder.addUint8(24, IDENT_REL);
     return fbBuilder.offset;
   }
   int addIdentAmpOffset(int? offset) {
     fbBuilder.addOffset(25, offset);
     return fbBuilder.offset;
   }
-  int addEnvironmentOffset(int? offset) {
-    fbBuilder.addOffset(26, offset);
+  int addEnvironment(TrackEnvironment? ENVIRONMENT) {
+    fbBuilder.addInt8(26, ENVIRONMENT?.value);
     return fbBuilder.offset;
   }
   int addEnvironmentConf(double? ENVIRONMENT_CONF) {
@@ -273,31 +425,31 @@ class TRKBuilder {
     return fbBuilder.offset;
   }
   int addStrength(int? STRENGTH) {
-    fbBuilder.addInt32(40, STRENGTH);
+    fbBuilder.addUint16(40, STRENGTH);
     return fbBuilder.offset;
   }
   int addM1(int? M1) {
-    fbBuilder.addInt32(41, M1);
+    fbBuilder.addUint16(41, M1);
     return fbBuilder.offset;
   }
   int addM1V(int? M1V) {
-    fbBuilder.addInt32(42, M1V);
+    fbBuilder.addUint8(42, M1V);
     return fbBuilder.offset;
   }
   int addM2(int? M2) {
-    fbBuilder.addInt32(43, M2);
+    fbBuilder.addUint16(43, M2);
     return fbBuilder.offset;
   }
   int addM2V(int? M2V) {
-    fbBuilder.addInt32(44, M2V);
+    fbBuilder.addUint8(44, M2V);
     return fbBuilder.offset;
   }
   int addM3A(int? M3A) {
-    fbBuilder.addInt32(45, M3A);
+    fbBuilder.addUint16(45, M3A);
     return fbBuilder.offset;
   }
   int addM3Av(int? M3AV) {
-    fbBuilder.addInt32(46, M3AV);
+    fbBuilder.addUint8(46, M3AV);
     return fbBuilder.offset;
   }
   int addTagsOffset(int? offset) {
@@ -361,11 +513,11 @@ class TRKObjectBuilder extends fb.ObjectBuilder {
   final String? _MSN_ID;
   final String? _ASSET_NAT;
   final String? _ASSET;
-  final String? _SEN;
+  final String? _SENSOR_ID;
   final String? _SEN_QUAL;
   final String? _TRK_ID;
   final String? _TRK_NUM;
-  final String? _TRK_STAT;
+  final TrackStatus? _TRK_STAT;
   final String? _OBJ_NAT;
   final String? _OBJ_ID;
   final String? _OBJ_TYPE;
@@ -381,7 +533,7 @@ class TRKObjectBuilder extends fb.ObjectBuilder {
   final int? _IDENT_CRED;
   final int? _IDENT_REL;
   final String? _IDENT_AMP;
-  final String? _ENVIRONMENT;
+  final TrackEnvironment? _ENVIRONMENT;
   final double? _ENVIRONMENT_CONF;
   final double? _TRK_CONF;
   final double? _LAT;
@@ -422,11 +574,11 @@ class TRKObjectBuilder extends fb.ObjectBuilder {
     String? MSN_ID,
     String? ASSET_NAT,
     String? ASSET,
-    String? SEN,
+    String? SENSOR_ID,
     String? SEN_QUAL,
     String? TRK_ID,
     String? TRK_NUM,
-    String? TRK_STAT,
+    TrackStatus? TRK_STAT,
     String? OBJ_NAT,
     String? OBJ_ID,
     String? OBJ_TYPE,
@@ -442,7 +594,7 @@ class TRKObjectBuilder extends fb.ObjectBuilder {
     int? IDENT_CRED,
     int? IDENT_REL,
     String? IDENT_AMP,
-    String? ENVIRONMENT,
+    TrackEnvironment? ENVIRONMENT,
     double? ENVIRONMENT_CONF,
     double? TRK_CONF,
     double? LAT,
@@ -482,7 +634,7 @@ class TRKObjectBuilder extends fb.ObjectBuilder {
         _MSN_ID = MSN_ID,
         _ASSET_NAT = ASSET_NAT,
         _ASSET = ASSET,
-        _SEN = SEN,
+        _SENSOR_ID = SENSOR_ID,
         _SEN_QUAL = SEN_QUAL,
         _TRK_ID = TRK_ID,
         _TRK_NUM = TRK_NUM,
@@ -551,16 +703,14 @@ class TRKObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ASSET_NAT!);
     final int? ASSETOffset = _ASSET == null ? null
         : fbBuilder.writeString(_ASSET!);
-    final int? SENOffset = _SEN == null ? null
-        : fbBuilder.writeString(_SEN!);
+    final int? SENSOR_IDOffset = _SENSOR_ID == null ? null
+        : fbBuilder.writeString(_SENSOR_ID!);
     final int? SEN_QUALOffset = _SEN_QUAL == null ? null
         : fbBuilder.writeString(_SEN_QUAL!);
     final int? TRK_IDOffset = _TRK_ID == null ? null
         : fbBuilder.writeString(_TRK_ID!);
     final int? TRK_NUMOffset = _TRK_NUM == null ? null
         : fbBuilder.writeString(_TRK_NUM!);
-    final int? TRK_STATOffset = _TRK_STAT == null ? null
-        : fbBuilder.writeString(_TRK_STAT!);
     final int? OBJ_NATOffset = _OBJ_NAT == null ? null
         : fbBuilder.writeString(_OBJ_NAT!);
     final int? OBJ_IDOffset = _OBJ_ID == null ? null
@@ -585,8 +735,6 @@ class TRKObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_OBJ_IDENT!);
     final int? IDENT_AMPOffset = _IDENT_AMP == null ? null
         : fbBuilder.writeString(_IDENT_AMP!);
-    final int? ENVIRONMENTOffset = _ENVIRONMENT == null ? null
-        : fbBuilder.writeString(_ENVIRONMENT!);
     final int? SRC_TYPSOffset = _SRC_TYPS == null ? null
         : fbBuilder.writeList(_SRC_TYPS!.map(fbBuilder.writeString).toList());
     final int? SRC_IDSOffset = _SRC_IDS == null ? null
@@ -622,11 +770,11 @@ class TRKObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(3, MSN_IDOffset);
     fbBuilder.addOffset(4, ASSET_NATOffset);
     fbBuilder.addOffset(5, ASSETOffset);
-    fbBuilder.addOffset(6, SENOffset);
+    fbBuilder.addOffset(6, SENSOR_IDOffset);
     fbBuilder.addOffset(7, SEN_QUALOffset);
     fbBuilder.addOffset(8, TRK_IDOffset);
     fbBuilder.addOffset(9, TRK_NUMOffset);
-    fbBuilder.addOffset(10, TRK_STATOffset);
+    fbBuilder.addInt8(10, _TRK_STAT?.value);
     fbBuilder.addOffset(11, OBJ_NATOffset);
     fbBuilder.addOffset(12, OBJ_IDOffset);
     fbBuilder.addOffset(13, OBJ_TYPEOffset);
@@ -636,13 +784,13 @@ class TRKObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(17, MOD_TYPEOffset);
     fbBuilder.addOffset(18, TRK_ITM_IDOffset);
     fbBuilder.addOffset(19, TSOffset);
-    fbBuilder.addInt32(20, _TRK_QUAL);
+    fbBuilder.addUint8(20, _TRK_QUAL);
     fbBuilder.addOffset(21, TRK_PT_TYPEOffset);
     fbBuilder.addOffset(22, OBJ_IDENTOffset);
-    fbBuilder.addInt32(23, _IDENT_CRED);
-    fbBuilder.addInt32(24, _IDENT_REL);
+    fbBuilder.addUint8(23, _IDENT_CRED);
+    fbBuilder.addUint8(24, _IDENT_REL);
     fbBuilder.addOffset(25, IDENT_AMPOffset);
-    fbBuilder.addOffset(26, ENVIRONMENTOffset);
+    fbBuilder.addInt8(26, _ENVIRONMENT?.value);
     fbBuilder.addFloat64(27, _ENVIRONMENT_CONF);
     fbBuilder.addFloat64(28, _TRK_CONF);
     fbBuilder.addFloat64(29, _LAT);
@@ -656,13 +804,13 @@ class TRKObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(37, CALL_SIGNOffset);
     fbBuilder.addBool(38, _MULTI_SOURCE);
     fbBuilder.addOffset(39, J_SERIESOffset);
-    fbBuilder.addInt32(40, _STRENGTH);
-    fbBuilder.addInt32(41, _M1);
-    fbBuilder.addInt32(42, _M1V);
-    fbBuilder.addInt32(43, _M2);
-    fbBuilder.addInt32(44, _M2V);
-    fbBuilder.addInt32(45, _M3A);
-    fbBuilder.addInt32(46, _M3AV);
+    fbBuilder.addUint16(40, _STRENGTH);
+    fbBuilder.addUint16(41, _M1);
+    fbBuilder.addUint8(42, _M1V);
+    fbBuilder.addUint16(43, _M2);
+    fbBuilder.addUint8(44, _M2V);
+    fbBuilder.addUint16(45, _M3A);
+    fbBuilder.addUint8(46, _M3AV);
     fbBuilder.addOffset(47, TAGSOffset);
     fbBuilder.addOffset(48, TRACK_START_TIMEOffset);
     fbBuilder.addFloat64(49, _TRACK_STEP_SIZE);

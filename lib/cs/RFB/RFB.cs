@@ -6,7 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// RF Band
+/// RF Band Specification
 public struct RFB : IFlatbufferObject
 {
   private Table __p;
@@ -19,6 +19,7 @@ public struct RFB : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public RFB __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Unique identifier
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,6 +27,7 @@ public struct RFB : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
+  /// Parent entity identifier
   public string ID_ENTITY { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetID_ENTITYBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -33,6 +35,7 @@ public struct RFB : IFlatbufferObject
   public ArraySegment<byte>? GetID_ENTITYBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetID_ENTITYArray() { return __p.__vector_as_array<byte>(6); }
+  /// Band name or designation
   public string NAME { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetNAMEBytes() { return __p.__vector_as_span<byte>(8, 1); }
@@ -40,13 +43,9 @@ public struct RFB : IFlatbufferObject
   public ArraySegment<byte>? GetNAMEBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetNAMEArray() { return __p.__vector_as_array<byte>(8); }
-  public string BAND { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetBANDBytes() { return __p.__vector_as_span<byte>(10, 1); }
-#else
-  public ArraySegment<byte>? GetBANDBytes() { return __p.__vector_as_arraysegment(10); }
-#endif
-  public byte[] GetBANDArray() { return __p.__vector_as_array<byte>(10); }
+  /// RF band designation
+  public rfBandDesignation BAND { get { int o = __p.__offset(10); return o != 0 ? (rfBandDesignation)__p.bb.GetSbyte(o + __p.bb_pos) : rfBandDesignation.UHF; } }
+  /// Operating mode
   public string MODE { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetMODEBytes() { return __p.__vector_as_span<byte>(12, 1); }
@@ -54,6 +53,7 @@ public struct RFB : IFlatbufferObject
   public ArraySegment<byte>? GetMODEBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
   public byte[] GetMODEArray() { return __p.__vector_as_array<byte>(12); }
+  /// Band purpose (e.g., TT&C, PAYLOAD, BEACON)
   public string PURPOSE { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetPURPOSEBytes() { return __p.__vector_as_span<byte>(14, 1); }
@@ -61,57 +61,61 @@ public struct RFB : IFlatbufferObject
   public ArraySegment<byte>? GetPURPOSEBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
   public byte[] GetPURPOSEArray() { return __p.__vector_as_array<byte>(14); }
+  /// Minimum frequency (MHz)
   public double FREQ_MIN { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Maximum frequency (MHz)
   public double FREQ_MAX { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Center frequency (MHz)
   public double CENTER_FREQ { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double PEAK_GAIN { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double EDGE_GAIN { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double BANDWIDTH { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Bandwidth (MHz)
+  public double BANDWIDTH { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Peak antenna gain (dBi)
+  public double PEAK_GAIN { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Edge-of-coverage gain (dBi)
+  public double EDGE_GAIN { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Antenna beamwidth (degrees)
   public double BEAMWIDTH { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string POLARIZATION { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetPOLARIZATIONBytes() { return __p.__vector_as_span<byte>(30, 1); }
-#else
-  public ArraySegment<byte>? GetPOLARIZATIONBytes() { return __p.__vector_as_arraysegment(30); }
-#endif
-  public byte[] GetPOLARIZATIONArray() { return __p.__vector_as_array<byte>(30); }
+  /// Polarization
+  public rfPolarization POLARIZATION { get { int o = __p.__offset(30); return o != 0 ? (rfPolarization)__p.bb.GetSbyte(o + __p.bb_pos) : rfPolarization.LHCP; } }
+  /// Effective radiated power (dBW)
   public double ERP { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Effective isotropic radiated power (dBW)
   public double EIRP { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<RFB> CreateRFB(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
       StringOffset ID_ENTITYOffset = default(StringOffset),
       StringOffset NAMEOffset = default(StringOffset),
-      StringOffset BANDOffset = default(StringOffset),
+      rfBandDesignation BAND = rfBandDesignation.UHF,
       StringOffset MODEOffset = default(StringOffset),
       StringOffset PURPOSEOffset = default(StringOffset),
       double FREQ_MIN = 0.0,
       double FREQ_MAX = 0.0,
       double CENTER_FREQ = 0.0,
+      double BANDWIDTH = 0.0,
       double PEAK_GAIN = 0.0,
       double EDGE_GAIN = 0.0,
-      double BANDWIDTH = 0.0,
       double BEAMWIDTH = 0.0,
-      StringOffset POLARIZATIONOffset = default(StringOffset),
+      rfPolarization POLARIZATION = rfPolarization.LHCP,
       double ERP = 0.0,
       double EIRP = 0.0) {
     builder.StartTable(16);
     RFB.AddEIRP(builder, EIRP);
     RFB.AddERP(builder, ERP);
     RFB.AddBEAMWIDTH(builder, BEAMWIDTH);
-    RFB.AddBANDWIDTH(builder, BANDWIDTH);
     RFB.AddEDGE_GAIN(builder, EDGE_GAIN);
     RFB.AddPEAK_GAIN(builder, PEAK_GAIN);
+    RFB.AddBANDWIDTH(builder, BANDWIDTH);
     RFB.AddCENTER_FREQ(builder, CENTER_FREQ);
     RFB.AddFREQ_MAX(builder, FREQ_MAX);
     RFB.AddFREQ_MIN(builder, FREQ_MIN);
-    RFB.AddPOLARIZATION(builder, POLARIZATIONOffset);
     RFB.AddPURPOSE(builder, PURPOSEOffset);
     RFB.AddMODE(builder, MODEOffset);
-    RFB.AddBAND(builder, BANDOffset);
     RFB.AddNAME(builder, NAMEOffset);
     RFB.AddID_ENTITY(builder, ID_ENTITYOffset);
     RFB.AddID(builder, IDOffset);
+    RFB.AddPOLARIZATION(builder, POLARIZATION);
+    RFB.AddBAND(builder, BAND);
     return RFB.EndRFB(builder);
   }
 
@@ -119,17 +123,17 @@ public struct RFB : IFlatbufferObject
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddID_ENTITY(FlatBufferBuilder builder, StringOffset ID_ENTITYOffset) { builder.AddOffset(1, ID_ENTITYOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(2, NAMEOffset.Value, 0); }
-  public static void AddBAND(FlatBufferBuilder builder, StringOffset BANDOffset) { builder.AddOffset(3, BANDOffset.Value, 0); }
+  public static void AddBAND(FlatBufferBuilder builder, rfBandDesignation BAND) { builder.AddSbyte(3, (sbyte)BAND, 0); }
   public static void AddMODE(FlatBufferBuilder builder, StringOffset MODEOffset) { builder.AddOffset(4, MODEOffset.Value, 0); }
   public static void AddPURPOSE(FlatBufferBuilder builder, StringOffset PURPOSEOffset) { builder.AddOffset(5, PURPOSEOffset.Value, 0); }
   public static void AddFREQ_MIN(FlatBufferBuilder builder, double FREQ_MIN) { builder.AddDouble(6, FREQ_MIN, 0.0); }
   public static void AddFREQ_MAX(FlatBufferBuilder builder, double FREQ_MAX) { builder.AddDouble(7, FREQ_MAX, 0.0); }
   public static void AddCENTER_FREQ(FlatBufferBuilder builder, double CENTER_FREQ) { builder.AddDouble(8, CENTER_FREQ, 0.0); }
-  public static void AddPEAK_GAIN(FlatBufferBuilder builder, double PEAK_GAIN) { builder.AddDouble(9, PEAK_GAIN, 0.0); }
-  public static void AddEDGE_GAIN(FlatBufferBuilder builder, double EDGE_GAIN) { builder.AddDouble(10, EDGE_GAIN, 0.0); }
-  public static void AddBANDWIDTH(FlatBufferBuilder builder, double BANDWIDTH) { builder.AddDouble(11, BANDWIDTH, 0.0); }
+  public static void AddBANDWIDTH(FlatBufferBuilder builder, double BANDWIDTH) { builder.AddDouble(9, BANDWIDTH, 0.0); }
+  public static void AddPEAK_GAIN(FlatBufferBuilder builder, double PEAK_GAIN) { builder.AddDouble(10, PEAK_GAIN, 0.0); }
+  public static void AddEDGE_GAIN(FlatBufferBuilder builder, double EDGE_GAIN) { builder.AddDouble(11, EDGE_GAIN, 0.0); }
   public static void AddBEAMWIDTH(FlatBufferBuilder builder, double BEAMWIDTH) { builder.AddDouble(12, BEAMWIDTH, 0.0); }
-  public static void AddPOLARIZATION(FlatBufferBuilder builder, StringOffset POLARIZATIONOffset) { builder.AddOffset(13, POLARIZATIONOffset.Value, 0); }
+  public static void AddPOLARIZATION(FlatBufferBuilder builder, rfPolarization POLARIZATION) { builder.AddSbyte(13, (sbyte)POLARIZATION, 0); }
   public static void AddERP(FlatBufferBuilder builder, double ERP) { builder.AddDouble(14, ERP, 0.0); }
   public static void AddEIRP(FlatBufferBuilder builder, double EIRP) { builder.AddDouble(15, EIRP, 0.0); }
   public static Offset<RFB> EndRFB(FlatBufferBuilder builder) {
@@ -153,9 +157,9 @@ public struct RFB : IFlatbufferObject
     _o.FREQ_MIN = this.FREQ_MIN;
     _o.FREQ_MAX = this.FREQ_MAX;
     _o.CENTER_FREQ = this.CENTER_FREQ;
+    _o.BANDWIDTH = this.BANDWIDTH;
     _o.PEAK_GAIN = this.PEAK_GAIN;
     _o.EDGE_GAIN = this.EDGE_GAIN;
-    _o.BANDWIDTH = this.BANDWIDTH;
     _o.BEAMWIDTH = this.BEAMWIDTH;
     _o.POLARIZATION = this.POLARIZATION;
     _o.ERP = this.ERP;
@@ -166,26 +170,24 @@ public struct RFB : IFlatbufferObject
     var _ID = _o.ID == null ? default(StringOffset) : builder.CreateString(_o.ID);
     var _ID_ENTITY = _o.ID_ENTITY == null ? default(StringOffset) : builder.CreateString(_o.ID_ENTITY);
     var _NAME = _o.NAME == null ? default(StringOffset) : builder.CreateString(_o.NAME);
-    var _BAND = _o.BAND == null ? default(StringOffset) : builder.CreateString(_o.BAND);
     var _MODE = _o.MODE == null ? default(StringOffset) : builder.CreateString(_o.MODE);
     var _PURPOSE = _o.PURPOSE == null ? default(StringOffset) : builder.CreateString(_o.PURPOSE);
-    var _POLARIZATION = _o.POLARIZATION == null ? default(StringOffset) : builder.CreateString(_o.POLARIZATION);
     return CreateRFB(
       builder,
       _ID,
       _ID_ENTITY,
       _NAME,
-      _BAND,
+      _o.BAND,
       _MODE,
       _PURPOSE,
       _o.FREQ_MIN,
       _o.FREQ_MAX,
       _o.CENTER_FREQ,
+      _o.BANDWIDTH,
       _o.PEAK_GAIN,
       _o.EDGE_GAIN,
-      _o.BANDWIDTH,
       _o.BEAMWIDTH,
-      _POLARIZATION,
+      _o.POLARIZATION,
       _o.ERP,
       _o.EIRP);
   }
@@ -196,17 +198,17 @@ public class RFBT
   public string ID { get; set; }
   public string ID_ENTITY { get; set; }
   public string NAME { get; set; }
-  public string BAND { get; set; }
+  public rfBandDesignation BAND { get; set; }
   public string MODE { get; set; }
   public string PURPOSE { get; set; }
   public double FREQ_MIN { get; set; }
   public double FREQ_MAX { get; set; }
   public double CENTER_FREQ { get; set; }
+  public double BANDWIDTH { get; set; }
   public double PEAK_GAIN { get; set; }
   public double EDGE_GAIN { get; set; }
-  public double BANDWIDTH { get; set; }
   public double BEAMWIDTH { get; set; }
-  public string POLARIZATION { get; set; }
+  public rfPolarization POLARIZATION { get; set; }
   public double ERP { get; set; }
   public double EIRP { get; set; }
 
@@ -214,17 +216,17 @@ public class RFBT
     this.ID = null;
     this.ID_ENTITY = null;
     this.NAME = null;
-    this.BAND = null;
+    this.BAND = rfBandDesignation.UHF;
     this.MODE = null;
     this.PURPOSE = null;
     this.FREQ_MIN = 0.0;
     this.FREQ_MAX = 0.0;
     this.CENTER_FREQ = 0.0;
+    this.BANDWIDTH = 0.0;
     this.PEAK_GAIN = 0.0;
     this.EDGE_GAIN = 0.0;
-    this.BANDWIDTH = 0.0;
     this.BEAMWIDTH = 0.0;
-    this.POLARIZATION = null;
+    this.POLARIZATION = rfPolarization.LHCP;
     this.ERP = 0.0;
     this.EIRP = 0.0;
   }
@@ -247,17 +249,17 @@ static public class RFBVerify
       && verifier.VerifyString(tablePos, 4 /*ID*/, false)
       && verifier.VerifyString(tablePos, 6 /*ID_ENTITY*/, false)
       && verifier.VerifyString(tablePos, 8 /*NAME*/, false)
-      && verifier.VerifyString(tablePos, 10 /*BAND*/, false)
+      && verifier.VerifyField(tablePos, 10 /*BAND*/, 1 /*rfBandDesignation*/, 1, false)
       && verifier.VerifyString(tablePos, 12 /*MODE*/, false)
       && verifier.VerifyString(tablePos, 14 /*PURPOSE*/, false)
       && verifier.VerifyField(tablePos, 16 /*FREQ_MIN*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 18 /*FREQ_MAX*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 20 /*CENTER_FREQ*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 22 /*PEAK_GAIN*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 24 /*EDGE_GAIN*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 26 /*BANDWIDTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 22 /*BANDWIDTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 24 /*PEAK_GAIN*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 26 /*EDGE_GAIN*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 28 /*BEAMWIDTH*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 30 /*POLARIZATION*/, false)
+      && verifier.VerifyField(tablePos, 30 /*POLARIZATION*/, 1 /*rfPolarization*/, 1, false)
       && verifier.VerifyField(tablePos, 32 /*ERP*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 34 /*EIRP*/, 8 /*double*/, 8, false)
       && verifier.VerifyTableEnd(tablePos);

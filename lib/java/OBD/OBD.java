@@ -29,106 +29,225 @@ public final class OBD extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public OBD __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
-  public String START_TIME() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer START_TIMEAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
-  public ByteBuffer START_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
-  public String END_TIME() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer END_TIMEAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
-  public ByteBuffer END_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
-  public String ORIG_OBJECT_ID() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ORIG_OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
-  public ByteBuffer ORIG_OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
-  public int SAT_NO() { int o = __offset(12); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public String APRIORI_ID_ELSET() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer APRIORI_ID_ELSETAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
-  public ByteBuffer APRIORI_ID_ELSETInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
-  public String APRIORI_ELSET() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer APRIORI_ELSETAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
-  public ByteBuffer APRIORI_ELSETInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
-  public String APRIORI_ID_STATE_VECTOR() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer APRIORI_ID_STATE_VECTORAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
-  public ByteBuffer APRIORI_ID_STATE_VECTORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
-  public String APRIORI_STATE_VECTOR() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer APRIORI_STATE_VECTORAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
-  public ByteBuffer APRIORI_STATE_VECTORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
-  public boolean INITIAL_OD() { int o = __offset(22); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public String LAST_OB_START() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer LAST_OB_STARTAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
-  public ByteBuffer LAST_OB_STARTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
-  public String LAST_OB_END() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer LAST_OB_ENDAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
-  public ByteBuffer LAST_OB_ENDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
-  public double TIME_SPAN() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String EFFECTIVE_FROM() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer EFFECTIVE_FROMAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
-  public ByteBuffer EFFECTIVE_FROMInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
-  public String EFFECTIVE_UNTIL() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer EFFECTIVE_UNTILAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
-  public ByteBuffer EFFECTIVE_UNTILInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
-  public double WRMS() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double PREVIOUS_WRMS() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double FIRST_PASS_WRMS() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double BEST_PASS_WRMS() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double ERROR_GROWTH_RATE() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double EDR() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String METHOD() { int o = __offset(46); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer METHODAsByteBuffer() { return __vector_as_bytebuffer(46, 1); }
-  public ByteBuffer METHODInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 46, 1); }
-  public String METHOD_SOURCE() { int o = __offset(48); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer METHOD_SOURCEAsByteBuffer() { return __vector_as_bytebuffer(48, 1); }
-  public ByteBuffer METHOD_SOURCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 48, 1); }
-  public double FIT_SPAN() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public boolean BALLISTIC_COEFF_EST() { int o = __offset(52); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public String BALLISTIC_COEFF_MODEL() { int o = __offset(54); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer BALLISTIC_COEFF_MODELAsByteBuffer() { return __vector_as_bytebuffer(54, 1); }
-  public ByteBuffer BALLISTIC_COEFF_MODELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 54, 1); }
-  public boolean AGOM_EST() { int o = __offset(56); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public String AGOM_MODEL() { int o = __offset(58); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer AGOM_MODELAsByteBuffer() { return __vector_as_bytebuffer(58, 1); }
-  public ByteBuffer AGOM_MODELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 58, 1); }
-  public double RMS_CONVERGENCE_CRITERIA() { int o = __offset(60); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public int NUM_ITERATIONS() { int o = __offset(62); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public String ACCEPTED_OB_TYPS(int j) { int o = __offset(64); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int ACCEPTED_OB_TYPSLength() { int o = __offset(64); return o != 0 ? __vector_len(o) : 0; }
+  /**
+   * Satellite catalog number
+   */
+  public long SAT_NO() { int o = __offset(6); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * International designator
+   */
+  public String ORIG_OBJECT_ID() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ORIG_OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
+  public ByteBuffer ORIG_OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * On-orbit reference
+   */
+  public String ON_ORBIT() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ON_ORBITAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer ON_ORBITInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * OD fit start time (ISO 8601)
+   */
+  public String START_TIME() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer START_TIMEAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer START_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * OD fit end time (ISO 8601)
+   */
+  public String END_TIME() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer END_TIMEAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer END_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * OD method used
+   */
+  public byte METHOD() { int o = __offset(16); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Method source or software
+   */
+  public String METHOD_SOURCE() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer METHOD_SOURCEAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
+  public ByteBuffer METHOD_SOURCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
+  /**
+   * True if this is an initial orbit determination
+   */
+  public boolean INITIAL_OD() { int o = __offset(20); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * A priori element set identifier
+   */
+  public String APRIORI_ID_ELSET() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer APRIORI_ID_ELSETAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
+  public ByteBuffer APRIORI_ID_ELSETInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
+  /**
+   * A priori element set data reference
+   */
+  public String APRIORI_ELSET() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer APRIORI_ELSETAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
+  public ByteBuffer APRIORI_ELSETInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
+  /**
+   * A priori state vector identifier
+   */
+  public String APRIORI_ID_STATE_VECTOR() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer APRIORI_ID_STATE_VECTORAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
+  public ByteBuffer APRIORI_ID_STATE_VECTORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
+  /**
+   * A priori state vector data reference
+   */
+  public String APRIORI_STATE_VECTOR() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer APRIORI_STATE_VECTORAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
+  public ByteBuffer APRIORI_STATE_VECTORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
+  /**
+   * Start of last observation arc (ISO 8601)
+   */
+  public String LAST_OB_START() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LAST_OB_STARTAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
+  public ByteBuffer LAST_OB_STARTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
+  /**
+   * End of last observation arc (ISO 8601)
+   */
+  public String LAST_OB_END() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LAST_OB_ENDAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
+  public ByteBuffer LAST_OB_ENDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
+  /**
+   * Observation time span (days)
+   */
+  public double TIME_SPAN() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Fit span in days
+   */
+  public double FIT_SPAN() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Solution effective from (ISO 8601)
+   */
+  public String EFFECTIVE_FROM() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EFFECTIVE_FROMAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
+  public ByteBuffer EFFECTIVE_FROMInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
+  /**
+   * Solution effective until (ISO 8601)
+   */
+  public String EFFECTIVE_UNTIL() { int o = __offset(40); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EFFECTIVE_UNTILAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
+  public ByteBuffer EFFECTIVE_UNTILInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
+  /**
+   * Weighted RMS of residuals
+   */
+  public double WRMS() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Previous solution WRMS
+   */
+  public double PREVIOUS_WRMS() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * First pass WRMS
+   */
+  public double FIRST_PASS_WRMS() { int o = __offset(46); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Best pass WRMS
+   */
+  public double BEST_PASS_WRMS() { int o = __offset(48); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Error growth rate (km/day)
+   */
+  public double ERROR_GROWTH_RATE() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Energy dissipation rate
+   */
+  public double EDR() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * True if ballistic coefficient was estimated
+   */
+  public boolean BALLISTIC_COEFF_EST() { int o = __offset(54); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Ballistic coefficient model
+   */
+  public String BALLISTIC_COEFF_MODEL() { int o = __offset(56); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer BALLISTIC_COEFF_MODELAsByteBuffer() { return __vector_as_bytebuffer(56, 1); }
+  public ByteBuffer BALLISTIC_COEFF_MODELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 56, 1); }
+  /**
+   * True if area-to-mass ratio was estimated
+   */
+  public boolean AGOM_EST() { int o = __offset(58); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Area-to-mass ratio model
+   */
+  public String AGOM_MODEL() { int o = __offset(60); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer AGOM_MODELAsByteBuffer() { return __vector_as_bytebuffer(60, 1); }
+  public ByteBuffer AGOM_MODELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 60, 1); }
+  /**
+   * RMS convergence criteria
+   */
+  public double RMS_CONVERGENCE_CRITERIA() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Number of iterations to converge
+   */
+  public int NUM_ITERATIONS() { int o = __offset(64); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * Total accepted observations
+   */
+  public long NUM_ACCEPTED_OBS() { int o = __offset(66); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Total rejected observations
+   */
+  public long NUM_REJECTED_OBS() { int o = __offset(68); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Sensor contributions to this solution
+   */
+  public odSensorContribution SENSORS(int j) { return SENSORS(new odSensorContribution(), j); }
+  public odSensorContribution SENSORS(odSensorContribution obj, int j) { int o = __offset(70); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int SENSORSLength() { int o = __offset(70); return o != 0 ? __vector_len(o) : 0; }
+  public odSensorContribution.Vector sensorsVector() { return sensorsVector(new odSensorContribution.Vector()); }
+  public odSensorContribution.Vector sensorsVector(odSensorContribution.Vector obj) { int o = __offset(70); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Accepted observation types
+   */
+  public String ACCEPTED_OB_TYPS(int j) { int o = __offset(72); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int ACCEPTED_OB_TYPSLength() { int o = __offset(72); return o != 0 ? __vector_len(o) : 0; }
   public StringVector acceptedObTypsVector() { return acceptedObTypsVector(new StringVector()); }
-  public StringVector acceptedObTypsVector(StringVector obj) { int o = __offset(64); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String ACCEPTED_OB_IDS(int j) { int o = __offset(66); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int ACCEPTED_OB_IDSLength() { int o = __offset(66); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector acceptedObTypsVector(StringVector obj) { int o = __offset(72); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Accepted observation identifiers
+   */
+  public String ACCEPTED_OB_IDS(int j) { int o = __offset(74); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int ACCEPTED_OB_IDSLength() { int o = __offset(74); return o != 0 ? __vector_len(o) : 0; }
   public StringVector acceptedObIdsVector() { return acceptedObIdsVector(new StringVector()); }
-  public StringVector acceptedObIdsVector(StringVector obj) { int o = __offset(66); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String REJECTED_OB_TYPS(int j) { int o = __offset(68); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int REJECTED_OB_TYPSLength() { int o = __offset(68); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector acceptedObIdsVector(StringVector obj) { int o = __offset(74); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Rejected observation types
+   */
+  public String REJECTED_OB_TYPS(int j) { int o = __offset(76); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int REJECTED_OB_TYPSLength() { int o = __offset(76); return o != 0 ? __vector_len(o) : 0; }
   public StringVector rejectedObTypsVector() { return rejectedObTypsVector(new StringVector()); }
-  public StringVector rejectedObTypsVector(StringVector obj) { int o = __offset(68); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String REJECTED_OB_IDS(int j) { int o = __offset(70); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int REJECTED_OB_IDSLength() { int o = __offset(70); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector rejectedObTypsVector(StringVector obj) { int o = __offset(76); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Rejected observation identifiers
+   */
+  public String REJECTED_OB_IDS(int j) { int o = __offset(78); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int REJECTED_OB_IDSLength() { int o = __offset(78); return o != 0 ? __vector_len(o) : 0; }
   public StringVector rejectedObIdsVector() { return rejectedObIdsVector(new StringVector()); }
-  public StringVector rejectedObIdsVector(StringVector obj) { int o = __offset(70); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String SENSOR_IDS(int j) { int o = __offset(72); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int SENSOR_IDSLength() { int o = __offset(72); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector sensorIdsVector() { return sensorIdsVector(new StringVector()); }
-  public StringVector sensorIdsVector(StringVector obj) { int o = __offset(72); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String ON_ORBIT() { int o = __offset(74); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ON_ORBITAsByteBuffer() { return __vector_as_bytebuffer(74, 1); }
-  public ByteBuffer ON_ORBITInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 74, 1); }
+  public StringVector rejectedObIdsVector(StringVector obj) { int o = __offset(78); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createOBD(FlatBufferBuilder builder,
       int IDOffset,
+      long SAT_NO,
+      int ORIG_OBJECT_IDOffset,
+      int ON_ORBITOffset,
       int START_TIMEOffset,
       int END_TIMEOffset,
-      int ORIG_OBJECT_IDOffset,
-      int SAT_NO,
+      byte METHOD,
+      int METHOD_SOURCEOffset,
+      boolean INITIAL_OD,
       int APRIORI_ID_ELSETOffset,
       int APRIORI_ELSETOffset,
       int APRIORI_ID_STATE_VECTOROffset,
       int APRIORI_STATE_VECTOROffset,
-      boolean INITIAL_OD,
       int LAST_OB_STARTOffset,
       int LAST_OB_ENDOffset,
       double TIME_SPAN,
+      double FIT_SPAN,
       int EFFECTIVE_FROMOffset,
       int EFFECTIVE_UNTILOffset,
       double WRMS,
@@ -137,42 +256,38 @@ public final class OBD extends Table {
       double BEST_PASS_WRMS,
       double ERROR_GROWTH_RATE,
       double EDR,
-      int METHODOffset,
-      int METHOD_SOURCEOffset,
-      double FIT_SPAN,
       boolean BALLISTIC_COEFF_EST,
       int BALLISTIC_COEFF_MODELOffset,
       boolean AGOM_EST,
       int AGOM_MODELOffset,
       double RMS_CONVERGENCE_CRITERIA,
       int NUM_ITERATIONS,
+      long NUM_ACCEPTED_OBS,
+      long NUM_REJECTED_OBS,
+      int SENSORSOffset,
       int ACCEPTED_OB_TYPSOffset,
       int ACCEPTED_OB_IDSOffset,
       int REJECTED_OB_TYPSOffset,
-      int REJECTED_OB_IDSOffset,
-      int SENSOR_IDSOffset,
-      int ON_ORBITOffset) {
-    builder.startTable(36);
+      int REJECTED_OB_IDSOffset) {
+    builder.startTable(38);
     OBD.addRmsConvergenceCriteria(builder, RMS_CONVERGENCE_CRITERIA);
-    OBD.addFitSpan(builder, FIT_SPAN);
     OBD.addEdr(builder, EDR);
     OBD.addErrorGrowthRate(builder, ERROR_GROWTH_RATE);
     OBD.addBestPassWrms(builder, BEST_PASS_WRMS);
     OBD.addFirstPassWrms(builder, FIRST_PASS_WRMS);
     OBD.addPreviousWrms(builder, PREVIOUS_WRMS);
     OBD.addWrms(builder, WRMS);
+    OBD.addFitSpan(builder, FIT_SPAN);
     OBD.addTimeSpan(builder, TIME_SPAN);
-    OBD.addOnOrbit(builder, ON_ORBITOffset);
-    OBD.addSensorIds(builder, SENSOR_IDSOffset);
     OBD.addRejectedObIds(builder, REJECTED_OB_IDSOffset);
     OBD.addRejectedObTyps(builder, REJECTED_OB_TYPSOffset);
     OBD.addAcceptedObIds(builder, ACCEPTED_OB_IDSOffset);
     OBD.addAcceptedObTyps(builder, ACCEPTED_OB_TYPSOffset);
-    OBD.addNumIterations(builder, NUM_ITERATIONS);
+    OBD.addSensors(builder, SENSORSOffset);
+    OBD.addNumRejectedObs(builder, NUM_REJECTED_OBS);
+    OBD.addNumAcceptedObs(builder, NUM_ACCEPTED_OBS);
     OBD.addAgomModel(builder, AGOM_MODELOffset);
     OBD.addBallisticCoeffModel(builder, BALLISTIC_COEFF_MODELOffset);
-    OBD.addMethodSource(builder, METHOD_SOURCEOffset);
-    OBD.addMethod(builder, METHODOffset);
     OBD.addEffectiveUntil(builder, EFFECTIVE_UNTILOffset);
     OBD.addEffectiveFrom(builder, EFFECTIVE_FROMOffset);
     OBD.addLastObEnd(builder, LAST_OB_ENDOffset);
@@ -181,64 +296,70 @@ public final class OBD extends Table {
     OBD.addAprioriIdStateVector(builder, APRIORI_ID_STATE_VECTOROffset);
     OBD.addAprioriElset(builder, APRIORI_ELSETOffset);
     OBD.addAprioriIdElset(builder, APRIORI_ID_ELSETOffset);
-    OBD.addSatNo(builder, SAT_NO);
-    OBD.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
+    OBD.addMethodSource(builder, METHOD_SOURCEOffset);
     OBD.addEndTime(builder, END_TIMEOffset);
     OBD.addStartTime(builder, START_TIMEOffset);
+    OBD.addOnOrbit(builder, ON_ORBITOffset);
+    OBD.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
+    OBD.addSatNo(builder, SAT_NO);
     OBD.addId(builder, IDOffset);
+    OBD.addNumIterations(builder, NUM_ITERATIONS);
     OBD.addAgomEst(builder, AGOM_EST);
     OBD.addBallisticCoeffEst(builder, BALLISTIC_COEFF_EST);
     OBD.addInitialOd(builder, INITIAL_OD);
+    OBD.addMethod(builder, METHOD);
     return OBD.endOBD(builder);
   }
 
-  public static void startOBD(FlatBufferBuilder builder) { builder.startTable(36); }
+  public static void startOBD(FlatBufferBuilder builder) { builder.startTable(38); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
-  public static void addStartTime(FlatBufferBuilder builder, int START_TIMEOffset) { builder.addOffset(1, START_TIMEOffset, 0); }
-  public static void addEndTime(FlatBufferBuilder builder, int END_TIMEOffset) { builder.addOffset(2, END_TIMEOffset, 0); }
-  public static void addOrigObjectId(FlatBufferBuilder builder, int ORIG_OBJECT_IDOffset) { builder.addOffset(3, ORIG_OBJECT_IDOffset, 0); }
-  public static void addSatNo(FlatBufferBuilder builder, int SAT_NO) { builder.addInt(4, SAT_NO, 0); }
-  public static void addAprioriIdElset(FlatBufferBuilder builder, int APRIORI_ID_ELSETOffset) { builder.addOffset(5, APRIORI_ID_ELSETOffset, 0); }
-  public static void addAprioriElset(FlatBufferBuilder builder, int APRIORI_ELSETOffset) { builder.addOffset(6, APRIORI_ELSETOffset, 0); }
-  public static void addAprioriIdStateVector(FlatBufferBuilder builder, int APRIORI_ID_STATE_VECTOROffset) { builder.addOffset(7, APRIORI_ID_STATE_VECTOROffset, 0); }
-  public static void addAprioriStateVector(FlatBufferBuilder builder, int APRIORI_STATE_VECTOROffset) { builder.addOffset(8, APRIORI_STATE_VECTOROffset, 0); }
-  public static void addInitialOd(FlatBufferBuilder builder, boolean INITIAL_OD) { builder.addBoolean(9, INITIAL_OD, false); }
-  public static void addLastObStart(FlatBufferBuilder builder, int LAST_OB_STARTOffset) { builder.addOffset(10, LAST_OB_STARTOffset, 0); }
-  public static void addLastObEnd(FlatBufferBuilder builder, int LAST_OB_ENDOffset) { builder.addOffset(11, LAST_OB_ENDOffset, 0); }
-  public static void addTimeSpan(FlatBufferBuilder builder, double TIME_SPAN) { builder.addDouble(12, TIME_SPAN, 0.0); }
-  public static void addEffectiveFrom(FlatBufferBuilder builder, int EFFECTIVE_FROMOffset) { builder.addOffset(13, EFFECTIVE_FROMOffset, 0); }
-  public static void addEffectiveUntil(FlatBufferBuilder builder, int EFFECTIVE_UNTILOffset) { builder.addOffset(14, EFFECTIVE_UNTILOffset, 0); }
-  public static void addWrms(FlatBufferBuilder builder, double WRMS) { builder.addDouble(15, WRMS, 0.0); }
-  public static void addPreviousWrms(FlatBufferBuilder builder, double PREVIOUS_WRMS) { builder.addDouble(16, PREVIOUS_WRMS, 0.0); }
-  public static void addFirstPassWrms(FlatBufferBuilder builder, double FIRST_PASS_WRMS) { builder.addDouble(17, FIRST_PASS_WRMS, 0.0); }
-  public static void addBestPassWrms(FlatBufferBuilder builder, double BEST_PASS_WRMS) { builder.addDouble(18, BEST_PASS_WRMS, 0.0); }
-  public static void addErrorGrowthRate(FlatBufferBuilder builder, double ERROR_GROWTH_RATE) { builder.addDouble(19, ERROR_GROWTH_RATE, 0.0); }
-  public static void addEdr(FlatBufferBuilder builder, double EDR) { builder.addDouble(20, EDR, 0.0); }
-  public static void addMethod(FlatBufferBuilder builder, int METHODOffset) { builder.addOffset(21, METHODOffset, 0); }
-  public static void addMethodSource(FlatBufferBuilder builder, int METHOD_SOURCEOffset) { builder.addOffset(22, METHOD_SOURCEOffset, 0); }
-  public static void addFitSpan(FlatBufferBuilder builder, double FIT_SPAN) { builder.addDouble(23, FIT_SPAN, 0.0); }
-  public static void addBallisticCoeffEst(FlatBufferBuilder builder, boolean BALLISTIC_COEFF_EST) { builder.addBoolean(24, BALLISTIC_COEFF_EST, false); }
-  public static void addBallisticCoeffModel(FlatBufferBuilder builder, int BALLISTIC_COEFF_MODELOffset) { builder.addOffset(25, BALLISTIC_COEFF_MODELOffset, 0); }
-  public static void addAgomEst(FlatBufferBuilder builder, boolean AGOM_EST) { builder.addBoolean(26, AGOM_EST, false); }
-  public static void addAgomModel(FlatBufferBuilder builder, int AGOM_MODELOffset) { builder.addOffset(27, AGOM_MODELOffset, 0); }
-  public static void addRmsConvergenceCriteria(FlatBufferBuilder builder, double RMS_CONVERGENCE_CRITERIA) { builder.addDouble(28, RMS_CONVERGENCE_CRITERIA, 0.0); }
-  public static void addNumIterations(FlatBufferBuilder builder, int NUM_ITERATIONS) { builder.addInt(29, NUM_ITERATIONS, 0); }
-  public static void addAcceptedObTyps(FlatBufferBuilder builder, int ACCEPTED_OB_TYPSOffset) { builder.addOffset(30, ACCEPTED_OB_TYPSOffset, 0); }
+  public static void addSatNo(FlatBufferBuilder builder, long SAT_NO) { builder.addInt(1, (int) SAT_NO, (int) 0L); }
+  public static void addOrigObjectId(FlatBufferBuilder builder, int ORIG_OBJECT_IDOffset) { builder.addOffset(2, ORIG_OBJECT_IDOffset, 0); }
+  public static void addOnOrbit(FlatBufferBuilder builder, int ON_ORBITOffset) { builder.addOffset(3, ON_ORBITOffset, 0); }
+  public static void addStartTime(FlatBufferBuilder builder, int START_TIMEOffset) { builder.addOffset(4, START_TIMEOffset, 0); }
+  public static void addEndTime(FlatBufferBuilder builder, int END_TIMEOffset) { builder.addOffset(5, END_TIMEOffset, 0); }
+  public static void addMethod(FlatBufferBuilder builder, byte METHOD) { builder.addByte(6, METHOD, 0); }
+  public static void addMethodSource(FlatBufferBuilder builder, int METHOD_SOURCEOffset) { builder.addOffset(7, METHOD_SOURCEOffset, 0); }
+  public static void addInitialOd(FlatBufferBuilder builder, boolean INITIAL_OD) { builder.addBoolean(8, INITIAL_OD, false); }
+  public static void addAprioriIdElset(FlatBufferBuilder builder, int APRIORI_ID_ELSETOffset) { builder.addOffset(9, APRIORI_ID_ELSETOffset, 0); }
+  public static void addAprioriElset(FlatBufferBuilder builder, int APRIORI_ELSETOffset) { builder.addOffset(10, APRIORI_ELSETOffset, 0); }
+  public static void addAprioriIdStateVector(FlatBufferBuilder builder, int APRIORI_ID_STATE_VECTOROffset) { builder.addOffset(11, APRIORI_ID_STATE_VECTOROffset, 0); }
+  public static void addAprioriStateVector(FlatBufferBuilder builder, int APRIORI_STATE_VECTOROffset) { builder.addOffset(12, APRIORI_STATE_VECTOROffset, 0); }
+  public static void addLastObStart(FlatBufferBuilder builder, int LAST_OB_STARTOffset) { builder.addOffset(13, LAST_OB_STARTOffset, 0); }
+  public static void addLastObEnd(FlatBufferBuilder builder, int LAST_OB_ENDOffset) { builder.addOffset(14, LAST_OB_ENDOffset, 0); }
+  public static void addTimeSpan(FlatBufferBuilder builder, double TIME_SPAN) { builder.addDouble(15, TIME_SPAN, 0.0); }
+  public static void addFitSpan(FlatBufferBuilder builder, double FIT_SPAN) { builder.addDouble(16, FIT_SPAN, 0.0); }
+  public static void addEffectiveFrom(FlatBufferBuilder builder, int EFFECTIVE_FROMOffset) { builder.addOffset(17, EFFECTIVE_FROMOffset, 0); }
+  public static void addEffectiveUntil(FlatBufferBuilder builder, int EFFECTIVE_UNTILOffset) { builder.addOffset(18, EFFECTIVE_UNTILOffset, 0); }
+  public static void addWrms(FlatBufferBuilder builder, double WRMS) { builder.addDouble(19, WRMS, 0.0); }
+  public static void addPreviousWrms(FlatBufferBuilder builder, double PREVIOUS_WRMS) { builder.addDouble(20, PREVIOUS_WRMS, 0.0); }
+  public static void addFirstPassWrms(FlatBufferBuilder builder, double FIRST_PASS_WRMS) { builder.addDouble(21, FIRST_PASS_WRMS, 0.0); }
+  public static void addBestPassWrms(FlatBufferBuilder builder, double BEST_PASS_WRMS) { builder.addDouble(22, BEST_PASS_WRMS, 0.0); }
+  public static void addErrorGrowthRate(FlatBufferBuilder builder, double ERROR_GROWTH_RATE) { builder.addDouble(23, ERROR_GROWTH_RATE, 0.0); }
+  public static void addEdr(FlatBufferBuilder builder, double EDR) { builder.addDouble(24, EDR, 0.0); }
+  public static void addBallisticCoeffEst(FlatBufferBuilder builder, boolean BALLISTIC_COEFF_EST) { builder.addBoolean(25, BALLISTIC_COEFF_EST, false); }
+  public static void addBallisticCoeffModel(FlatBufferBuilder builder, int BALLISTIC_COEFF_MODELOffset) { builder.addOffset(26, BALLISTIC_COEFF_MODELOffset, 0); }
+  public static void addAgomEst(FlatBufferBuilder builder, boolean AGOM_EST) { builder.addBoolean(27, AGOM_EST, false); }
+  public static void addAgomModel(FlatBufferBuilder builder, int AGOM_MODELOffset) { builder.addOffset(28, AGOM_MODELOffset, 0); }
+  public static void addRmsConvergenceCriteria(FlatBufferBuilder builder, double RMS_CONVERGENCE_CRITERIA) { builder.addDouble(29, RMS_CONVERGENCE_CRITERIA, 0.0); }
+  public static void addNumIterations(FlatBufferBuilder builder, int NUM_ITERATIONS) { builder.addShort(30, (short) NUM_ITERATIONS, (short) 0); }
+  public static void addNumAcceptedObs(FlatBufferBuilder builder, long NUM_ACCEPTED_OBS) { builder.addInt(31, (int) NUM_ACCEPTED_OBS, (int) 0L); }
+  public static void addNumRejectedObs(FlatBufferBuilder builder, long NUM_REJECTED_OBS) { builder.addInt(32, (int) NUM_REJECTED_OBS, (int) 0L); }
+  public static void addSensors(FlatBufferBuilder builder, int SENSORSOffset) { builder.addOffset(33, SENSORSOffset, 0); }
+  public static int createSensorsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startSensorsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addAcceptedObTyps(FlatBufferBuilder builder, int ACCEPTED_OB_TYPSOffset) { builder.addOffset(34, ACCEPTED_OB_TYPSOffset, 0); }
   public static int createAcceptedObTypsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startAcceptedObTypsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addAcceptedObIds(FlatBufferBuilder builder, int ACCEPTED_OB_IDSOffset) { builder.addOffset(31, ACCEPTED_OB_IDSOffset, 0); }
+  public static void addAcceptedObIds(FlatBufferBuilder builder, int ACCEPTED_OB_IDSOffset) { builder.addOffset(35, ACCEPTED_OB_IDSOffset, 0); }
   public static int createAcceptedObIdsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startAcceptedObIdsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addRejectedObTyps(FlatBufferBuilder builder, int REJECTED_OB_TYPSOffset) { builder.addOffset(32, REJECTED_OB_TYPSOffset, 0); }
+  public static void addRejectedObTyps(FlatBufferBuilder builder, int REJECTED_OB_TYPSOffset) { builder.addOffset(36, REJECTED_OB_TYPSOffset, 0); }
   public static int createRejectedObTypsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startRejectedObTypsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addRejectedObIds(FlatBufferBuilder builder, int REJECTED_OB_IDSOffset) { builder.addOffset(33, REJECTED_OB_IDSOffset, 0); }
+  public static void addRejectedObIds(FlatBufferBuilder builder, int REJECTED_OB_IDSOffset) { builder.addOffset(37, REJECTED_OB_IDSOffset, 0); }
   public static int createRejectedObIdsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startRejectedObIdsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addSensorIds(FlatBufferBuilder builder, int SENSOR_IDSOffset) { builder.addOffset(34, SENSOR_IDSOffset, 0); }
-  public static int createSensorIdsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startSensorIdsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addOnOrbit(FlatBufferBuilder builder, int ON_ORBITOffset) { builder.addOffset(35, ON_ORBITOffset, 0); }
   public static int endOBD(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

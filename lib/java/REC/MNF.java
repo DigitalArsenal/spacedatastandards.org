@@ -29,37 +29,173 @@ public final class MNF extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public MNF __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique manifold identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
-  public String STATUS() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer STATUSAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
-  public ByteBuffer STATUSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
-  public double WEIGHT() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double DELTA_V() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double DELTA_T() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Parent object satellite number
+   */
+  public long SAT_NO() { int o = __offset(6); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Object designator
+   */
+  public String OBJECT_DESIGNATOR() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OBJECT_DESIGNATORAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
+  public ByteBuffer OBJECT_DESIGNATORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * Manifold status
+   */
+  public byte STATUS() { int o = __offset(10); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Event epoch that spawned the manifold (ISO 8601)
+   */
+  public String EVENT_EPOCH() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EVENT_EPOCHAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer EVENT_EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * Source of detection (sensor ID or method)
+   */
+  public String SOURCE() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SOURCEAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer SOURCEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * Reference frame
+   */
+  public String REF_FRAME() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer REF_FRAMEAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
+  public ByteBuffer REF_FRAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  /**
+   * Original pre-event semi-major axis in km
+   */
+  public double ORIG_SEMI_MAJOR_AXIS() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Original pre-event eccentricity
+   */
+  public double ORIG_ECCENTRICITY() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Original pre-event inclination in degrees
+   */
+  public double ORIG_INCLINATION() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Minimum delta-V sampled in m/s
+   */
+  public double DELTA_V_MIN() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Maximum delta-V sampled in m/s
+   */
+  public double DELTA_V_MAX() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Delta-V step size in m/s
+   */
+  public double DELTA_V_STEP() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Minimum delta-T sampled in seconds
+   */
+  public double DELTA_T_MIN() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Maximum delta-T sampled in seconds
+   */
+  public double DELTA_T_MAX() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Delta-T step size in seconds
+   */
+  public double DELTA_T_STEP() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Total number of manifold elements
+   */
+  public long NUM_ELEMENTS() { int o = __offset(36); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Theoretical element sets
+   */
+  public manifoldElset ELEMENTS(int j) { return ELEMENTS(new manifoldElset(), j); }
+  public manifoldElset ELEMENTS(manifoldElset obj, int j) { int o = __offset(38); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int ELEMENTSLength() { int o = __offset(38); return o != 0 ? __vector_len(o) : 0; }
+  public manifoldElset.Vector elementsVector() { return elementsVector(new manifoldElset.Vector()); }
+  public manifoldElset.Vector elementsVector(manifoldElset.Vector obj) { int o = __offset(38); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Correlated catalog object ID (if matched)
+   */
+  public String CORRELATED_ID() { int o = __offset(40); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CORRELATED_IDAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
+  public ByteBuffer CORRELATED_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
+  /**
+   * Additional notes
+   */
+  public String NOTES() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer NOTESAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
+  public ByteBuffer NOTESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
 
   public static int createMNF(FlatBufferBuilder builder,
       int IDOffset,
-      int STATUSOffset,
-      double WEIGHT,
-      double DELTA_V,
-      double DELTA_T) {
-    builder.startTable(5);
-    MNF.addDeltaT(builder, DELTA_T);
-    MNF.addDeltaV(builder, DELTA_V);
-    MNF.addWeight(builder, WEIGHT);
-    MNF.addStatus(builder, STATUSOffset);
+      long SAT_NO,
+      int OBJECT_DESIGNATOROffset,
+      byte STATUS,
+      int EVENT_EPOCHOffset,
+      int SOURCEOffset,
+      int REF_FRAMEOffset,
+      double ORIG_SEMI_MAJOR_AXIS,
+      double ORIG_ECCENTRICITY,
+      double ORIG_INCLINATION,
+      double DELTA_V_MIN,
+      double DELTA_V_MAX,
+      double DELTA_V_STEP,
+      double DELTA_T_MIN,
+      double DELTA_T_MAX,
+      double DELTA_T_STEP,
+      long NUM_ELEMENTS,
+      int ELEMENTSOffset,
+      int CORRELATED_IDOffset,
+      int NOTESOffset) {
+    builder.startTable(20);
+    MNF.addDeltaTStep(builder, DELTA_T_STEP);
+    MNF.addDeltaTMax(builder, DELTA_T_MAX);
+    MNF.addDeltaTMin(builder, DELTA_T_MIN);
+    MNF.addDeltaVStep(builder, DELTA_V_STEP);
+    MNF.addDeltaVMax(builder, DELTA_V_MAX);
+    MNF.addDeltaVMin(builder, DELTA_V_MIN);
+    MNF.addOrigInclination(builder, ORIG_INCLINATION);
+    MNF.addOrigEccentricity(builder, ORIG_ECCENTRICITY);
+    MNF.addOrigSemiMajorAxis(builder, ORIG_SEMI_MAJOR_AXIS);
+    MNF.addNotes(builder, NOTESOffset);
+    MNF.addCorrelatedId(builder, CORRELATED_IDOffset);
+    MNF.addElements(builder, ELEMENTSOffset);
+    MNF.addNumElements(builder, NUM_ELEMENTS);
+    MNF.addRefFrame(builder, REF_FRAMEOffset);
+    MNF.addSource(builder, SOURCEOffset);
+    MNF.addEventEpoch(builder, EVENT_EPOCHOffset);
+    MNF.addObjectDesignator(builder, OBJECT_DESIGNATOROffset);
+    MNF.addSatNo(builder, SAT_NO);
     MNF.addId(builder, IDOffset);
+    MNF.addStatus(builder, STATUS);
     return MNF.endMNF(builder);
   }
 
-  public static void startMNF(FlatBufferBuilder builder) { builder.startTable(5); }
+  public static void startMNF(FlatBufferBuilder builder) { builder.startTable(20); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
-  public static void addStatus(FlatBufferBuilder builder, int STATUSOffset) { builder.addOffset(1, STATUSOffset, 0); }
-  public static void addWeight(FlatBufferBuilder builder, double WEIGHT) { builder.addDouble(2, WEIGHT, 0.0); }
-  public static void addDeltaV(FlatBufferBuilder builder, double DELTA_V) { builder.addDouble(3, DELTA_V, 0.0); }
-  public static void addDeltaT(FlatBufferBuilder builder, double DELTA_T) { builder.addDouble(4, DELTA_T, 0.0); }
+  public static void addSatNo(FlatBufferBuilder builder, long SAT_NO) { builder.addInt(1, (int) SAT_NO, (int) 0L); }
+  public static void addObjectDesignator(FlatBufferBuilder builder, int OBJECT_DESIGNATOROffset) { builder.addOffset(2, OBJECT_DESIGNATOROffset, 0); }
+  public static void addStatus(FlatBufferBuilder builder, byte STATUS) { builder.addByte(3, STATUS, 0); }
+  public static void addEventEpoch(FlatBufferBuilder builder, int EVENT_EPOCHOffset) { builder.addOffset(4, EVENT_EPOCHOffset, 0); }
+  public static void addSource(FlatBufferBuilder builder, int SOURCEOffset) { builder.addOffset(5, SOURCEOffset, 0); }
+  public static void addRefFrame(FlatBufferBuilder builder, int REF_FRAMEOffset) { builder.addOffset(6, REF_FRAMEOffset, 0); }
+  public static void addOrigSemiMajorAxis(FlatBufferBuilder builder, double ORIG_SEMI_MAJOR_AXIS) { builder.addDouble(7, ORIG_SEMI_MAJOR_AXIS, 0.0); }
+  public static void addOrigEccentricity(FlatBufferBuilder builder, double ORIG_ECCENTRICITY) { builder.addDouble(8, ORIG_ECCENTRICITY, 0.0); }
+  public static void addOrigInclination(FlatBufferBuilder builder, double ORIG_INCLINATION) { builder.addDouble(9, ORIG_INCLINATION, 0.0); }
+  public static void addDeltaVMin(FlatBufferBuilder builder, double DELTA_V_MIN) { builder.addDouble(10, DELTA_V_MIN, 0.0); }
+  public static void addDeltaVMax(FlatBufferBuilder builder, double DELTA_V_MAX) { builder.addDouble(11, DELTA_V_MAX, 0.0); }
+  public static void addDeltaVStep(FlatBufferBuilder builder, double DELTA_V_STEP) { builder.addDouble(12, DELTA_V_STEP, 0.0); }
+  public static void addDeltaTMin(FlatBufferBuilder builder, double DELTA_T_MIN) { builder.addDouble(13, DELTA_T_MIN, 0.0); }
+  public static void addDeltaTMax(FlatBufferBuilder builder, double DELTA_T_MAX) { builder.addDouble(14, DELTA_T_MAX, 0.0); }
+  public static void addDeltaTStep(FlatBufferBuilder builder, double DELTA_T_STEP) { builder.addDouble(15, DELTA_T_STEP, 0.0); }
+  public static void addNumElements(FlatBufferBuilder builder, long NUM_ELEMENTS) { builder.addInt(16, (int) NUM_ELEMENTS, (int) 0L); }
+  public static void addElements(FlatBufferBuilder builder, int ELEMENTSOffset) { builder.addOffset(17, ELEMENTSOffset, 0); }
+  public static int createElementsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startElementsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addCorrelatedId(FlatBufferBuilder builder, int CORRELATED_IDOffset) { builder.addOffset(18, CORRELATED_IDOffset, 0); }
+  public static void addNotes(FlatBufferBuilder builder, int NOTESOffset) { builder.addOffset(19, NOTESOffset, 0); }
   public static int endMNF(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

@@ -29,102 +29,259 @@ public final class RDO extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public RDO __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * Observation time (ISO 8601)
+   */
   public String OB_TIME() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer OB_TIMEAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer OB_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  /**
+   * Sensor identifier
+   */
   public String ID_SENSOR() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ID_SENSORAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer ID_SENSORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
-  public int SAT_NO() { int o = __offset(10); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public String TASK_ID() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer TASK_IDAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
-  public ByteBuffer TASK_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
-  public String TRANSACTION_ID() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer TRANSACTION_IDAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
-  public ByteBuffer TRANSACTION_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
-  public String TRACK_ID() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer TRACK_IDAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
-  public ByteBuffer TRACK_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
-  public String OB_POSITION() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer OB_POSITIONAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
-  public ByteBuffer OB_POSITIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
-  public String ORIG_OBJECT_ID() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ORIG_OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
-  public ByteBuffer ORIG_OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
-  public String ORIG_SENSOR_ID() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ORIG_SENSOR_IDAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
-  public ByteBuffer ORIG_SENSOR_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
-  public boolean UCT() { int o = __offset(24); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public double AZIMUTH() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double AZIMUTH_UNC() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double AZIMUTH_BIAS() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double AZIMUTH_RATE() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double ELEVATION() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double ELEVATION_UNC() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double ELEVATION_BIAS() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double ELEVATION_RATE() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double RANGE() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double RANGE_ACCEL() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double RANGE_ACCEL_UNC() { int o = __offset(46); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double RANGE_UNC() { int o = __offset(48); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double RANGE_BIAS() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double RANGE_RATE() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double RANGE_RATE_UNC() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double DOPPLER() { int o = __offset(56); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double DOPPLER_UNC() { int o = __offset(58); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double RA() { int o = __offset(60); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double DECLINATION() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double X() { int o = __offset(64); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double Y() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double Z() { int o = __offset(68); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double XVEL() { int o = __offset(70); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double YVEL() { int o = __offset(72); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double ZVEL() { int o = __offset(74); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double SENX() { int o = __offset(76); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double SENY() { int o = __offset(78); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double SENZ() { int o = __offset(80); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double RCS() { int o = __offset(82); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double RCS_UNC() { int o = __offset(84); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double ORTHOGONAL_RCS() { int o = __offset(86); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double ORTHOGONAL_RCS_UNC() { int o = __offset(88); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double SNR() { int o = __offset(90); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double BEAM() { int o = __offset(92); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double TIMING_BIAS() { int o = __offset(94); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String RAW_FILE_URI() { int o = __offset(96); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer RAW_FILE_URIAsByteBuffer() { return __vector_as_bytebuffer(96, 1); }
-  public ByteBuffer RAW_FILE_URIInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 96, 1); }
-  public String TAGS(int j) { int o = __offset(98); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int TAGSLength() { int o = __offset(98); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector tagsVector() { return tagsVector(new StringVector()); }
-  public StringVector tagsVector(StringVector obj) { int o = __offset(98); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String ON_ORBIT() { int o = __offset(100); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ON_ORBITAsByteBuffer() { return __vector_as_bytebuffer(100, 1); }
-  public ByteBuffer ON_ORBITInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 100, 1); }
-  public String SEN_REFERENCE_FRAME() { int o = __offset(102); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SEN_REFERENCE_FRAMEAsByteBuffer() { return __vector_as_bytebuffer(102, 1); }
-  public ByteBuffer SEN_REFERENCE_FRAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 102, 1); }
+  /**
+   * Original sensor identifier
+   */
+  public String ORIG_SENSOR_ID() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ORIG_SENSOR_IDAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer ORIG_SENSOR_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * Satellite catalog number
+   */
+  public long SAT_NO() { int o = __offset(12); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * International designator
+   */
+  public String ORIG_OBJECT_ID() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ORIG_OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer ORIG_OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * On-orbit reference
+   */
+  public String ON_ORBIT() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ON_ORBITAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
+  public ByteBuffer ON_ORBITInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  /**
+   * True if uncorrelated target
+   */
+  public boolean UCT() { int o = __offset(18); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Observation type
+   */
+  public byte OBS_TYPE() { int o = __offset(20); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Task identifier
+   */
+  public String TASK_ID() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TASK_IDAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
+  public ByteBuffer TASK_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
+  /**
+   * Transaction identifier
+   */
+  public String TRANSACTION_ID() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TRANSACTION_IDAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
+  public ByteBuffer TRANSACTION_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
+  /**
+   * Track identifier
+   */
+  public String TRACK_ID() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TRACK_IDAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
+  public ByteBuffer TRACK_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
+  /**
+   * Observation position identifier
+   */
+  public String OB_POSITION() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OB_POSITIONAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
+  public ByteBuffer OB_POSITIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
+  /**
+   * Sensor reference frame
+   */
+  public String SEN_REFERENCE_FRAME() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SEN_REFERENCE_FRAMEAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
+  public ByteBuffer SEN_REFERENCE_FRAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
+  /**
+   * Azimuth angle (degrees)
+   */
+  public double AZIMUTH() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Azimuth uncertainty (degrees, 1-sigma)
+   */
+  public double AZIMUTH_UNC() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Azimuth bias (degrees)
+   */
+  public double AZIMUTH_BIAS() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Azimuth rate (degrees/s)
+   */
+  public double AZIMUTH_RATE() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Elevation angle (degrees)
+   */
+  public double ELEVATION() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Elevation uncertainty (degrees, 1-sigma)
+   */
+  public double ELEVATION_UNC() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Elevation bias (degrees)
+   */
+  public double ELEVATION_BIAS() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Elevation rate (degrees/s)
+   */
+  public double ELEVATION_RATE() { int o = __offset(46); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Slant range (km)
+   */
+  public double RANGE() { int o = __offset(48); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Range uncertainty (km, 1-sigma)
+   */
+  public double RANGE_UNC() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Range bias (km)
+   */
+  public double RANGE_BIAS() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Range rate (km/s)
+   */
+  public double RANGE_RATE() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Range rate uncertainty (km/s, 1-sigma)
+   */
+  public double RANGE_RATE_UNC() { int o = __offset(56); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Range acceleration (km/s^2)
+   */
+  public double RANGE_ACCEL() { int o = __offset(58); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Range acceleration uncertainty (km/s^2, 1-sigma)
+   */
+  public double RANGE_ACCEL_UNC() { int o = __offset(60); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Doppler shift (Hz)
+   */
+  public double DOPPLER() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Doppler uncertainty (Hz, 1-sigma)
+   */
+  public double DOPPLER_UNC() { int o = __offset(64); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Right ascension (degrees)
+   */
+  public double RA() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Declination (degrees)
+   */
+  public double DECLINATION() { int o = __offset(68); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Target position X (km, ECI)
+   */
+  public double X() { int o = __offset(70); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Target position Y (km, ECI)
+   */
+  public double Y() { int o = __offset(72); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Target position Z (km, ECI)
+   */
+  public double Z() { int o = __offset(74); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Target velocity X (km/s, ECI)
+   */
+  public double XVEL() { int o = __offset(76); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Target velocity Y (km/s, ECI)
+   */
+  public double YVEL() { int o = __offset(78); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Target velocity Z (km/s, ECI)
+   */
+  public double ZVEL() { int o = __offset(80); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sensor position X (km, ECEF)
+   */
+  public double SENX() { int o = __offset(82); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sensor position Y (km, ECEF)
+   */
+  public double SENY() { int o = __offset(84); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sensor position Z (km, ECEF)
+   */
+  public double SENZ() { int o = __offset(86); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Radar cross-section (dBsm)
+   */
+  public double RCS() { int o = __offset(88); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * RCS uncertainty (dBsm, 1-sigma)
+   */
+  public double RCS_UNC() { int o = __offset(90); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Orthogonal polarization RCS (dBsm)
+   */
+  public double ORTHOGONAL_RCS() { int o = __offset(92); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Orthogonal RCS uncertainty (dBsm, 1-sigma)
+   */
+  public double ORTHOGONAL_RCS_UNC() { int o = __offset(94); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Signal-to-noise ratio (dB)
+   */
+  public double SNR() { int o = __offset(96); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Beam identifier
+   */
+  public double BEAM() { int o = __offset(98); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Timing bias (seconds)
+   */
+  public double TIMING_BIAS() { int o = __offset(100); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Reference to raw data file
+   */
+  public String RAW_FILE_URI() { int o = __offset(102); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer RAW_FILE_URIAsByteBuffer() { return __vector_as_bytebuffer(102, 1); }
+  public ByteBuffer RAW_FILE_URIInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 102, 1); }
+  /**
+   * Event descriptor
+   */
   public String DESCRIPTOR() { int o = __offset(104); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer DESCRIPTORAsByteBuffer() { return __vector_as_bytebuffer(104, 1); }
   public ByteBuffer DESCRIPTORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 104, 1); }
-  public String TYPE() { int o = __offset(106); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer TYPEAsByteBuffer() { return __vector_as_bytebuffer(106, 1); }
-  public ByteBuffer TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 106, 1); }
+  /**
+   * Associated tags
+   */
+  public String TAGS(int j) { int o = __offset(106); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int TAGSLength() { int o = __offset(106); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector tagsVector() { return tagsVector(new StringVector()); }
+  public StringVector tagsVector(StringVector obj) { int o = __offset(106); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createRDO(FlatBufferBuilder builder,
       int IDOffset,
       int OB_TIMEOffset,
       int ID_SENSOROffset,
-      int SAT_NO,
+      int ORIG_SENSOR_IDOffset,
+      long SAT_NO,
+      int ORIG_OBJECT_IDOffset,
+      int ON_ORBITOffset,
+      boolean UCT,
+      byte OBS_TYPE,
       int TASK_IDOffset,
       int TRANSACTION_IDOffset,
       int TRACK_IDOffset,
       int OB_POSITIONOffset,
-      int ORIG_OBJECT_IDOffset,
-      int ORIG_SENSOR_IDOffset,
-      boolean UCT,
+      int SEN_REFERENCE_FRAMEOffset,
       double AZIMUTH,
       double AZIMUTH_UNC,
       double AZIMUTH_BIAS,
@@ -134,12 +291,12 @@ public final class RDO extends Table {
       double ELEVATION_BIAS,
       double ELEVATION_RATE,
       double RANGE,
-      double RANGE_ACCEL,
-      double RANGE_ACCEL_UNC,
       double RANGE_UNC,
       double RANGE_BIAS,
       double RANGE_RATE,
       double RANGE_RATE_UNC,
+      double RANGE_ACCEL,
+      double RANGE_ACCEL_UNC,
       double DOPPLER,
       double DOPPLER_UNC,
       double RA,
@@ -161,11 +318,8 @@ public final class RDO extends Table {
       double BEAM,
       double TIMING_BIAS,
       int RAW_FILE_URIOffset,
-      int TAGSOffset,
-      int ON_ORBITOffset,
-      int SEN_REFERENCE_FRAMEOffset,
       int DESCRIPTOROffset,
-      int TYPEOffset) {
+      int TAGSOffset) {
     builder.startTable(52);
     RDO.addTimingBias(builder, TIMING_BIAS);
     RDO.addBeam(builder, BEAM);
@@ -187,12 +341,12 @@ public final class RDO extends Table {
     RDO.addRa(builder, RA);
     RDO.addDopplerUnc(builder, DOPPLER_UNC);
     RDO.addDoppler(builder, DOPPLER);
+    RDO.addRangeAccelUnc(builder, RANGE_ACCEL_UNC);
+    RDO.addRangeAccel(builder, RANGE_ACCEL);
     RDO.addRangeRateUnc(builder, RANGE_RATE_UNC);
     RDO.addRangeRate(builder, RANGE_RATE);
     RDO.addRangeBias(builder, RANGE_BIAS);
     RDO.addRangeUnc(builder, RANGE_UNC);
-    RDO.addRangeAccelUnc(builder, RANGE_ACCEL_UNC);
-    RDO.addRangeAccel(builder, RANGE_ACCEL);
     RDO.addRange(builder, RANGE);
     RDO.addElevationRate(builder, ELEVATION_RATE);
     RDO.addElevationBias(builder, ELEVATION_BIAS);
@@ -202,22 +356,22 @@ public final class RDO extends Table {
     RDO.addAzimuthBias(builder, AZIMUTH_BIAS);
     RDO.addAzimuthUnc(builder, AZIMUTH_UNC);
     RDO.addAzimuth(builder, AZIMUTH);
-    RDO.addType(builder, TYPEOffset);
-    RDO.addDescriptor(builder, DESCRIPTOROffset);
-    RDO.addSenReferenceFrame(builder, SEN_REFERENCE_FRAMEOffset);
-    RDO.addOnOrbit(builder, ON_ORBITOffset);
     RDO.addTags(builder, TAGSOffset);
+    RDO.addDescriptor(builder, DESCRIPTOROffset);
     RDO.addRawFileUri(builder, RAW_FILE_URIOffset);
-    RDO.addOrigSensorId(builder, ORIG_SENSOR_IDOffset);
-    RDO.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
+    RDO.addSenReferenceFrame(builder, SEN_REFERENCE_FRAMEOffset);
     RDO.addObPosition(builder, OB_POSITIONOffset);
     RDO.addTrackId(builder, TRACK_IDOffset);
     RDO.addTransactionId(builder, TRANSACTION_IDOffset);
     RDO.addTaskId(builder, TASK_IDOffset);
+    RDO.addOnOrbit(builder, ON_ORBITOffset);
+    RDO.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
     RDO.addSatNo(builder, SAT_NO);
+    RDO.addOrigSensorId(builder, ORIG_SENSOR_IDOffset);
     RDO.addIdSensor(builder, ID_SENSOROffset);
     RDO.addObTime(builder, OB_TIMEOffset);
     RDO.addId(builder, IDOffset);
+    RDO.addObsType(builder, OBS_TYPE);
     RDO.addUct(builder, UCT);
     return RDO.endRDO(builder);
   }
@@ -226,57 +380,57 @@ public final class RDO extends Table {
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addObTime(FlatBufferBuilder builder, int OB_TIMEOffset) { builder.addOffset(1, OB_TIMEOffset, 0); }
   public static void addIdSensor(FlatBufferBuilder builder, int ID_SENSOROffset) { builder.addOffset(2, ID_SENSOROffset, 0); }
-  public static void addSatNo(FlatBufferBuilder builder, int SAT_NO) { builder.addInt(3, SAT_NO, 0); }
-  public static void addTaskId(FlatBufferBuilder builder, int TASK_IDOffset) { builder.addOffset(4, TASK_IDOffset, 0); }
-  public static void addTransactionId(FlatBufferBuilder builder, int TRANSACTION_IDOffset) { builder.addOffset(5, TRANSACTION_IDOffset, 0); }
-  public static void addTrackId(FlatBufferBuilder builder, int TRACK_IDOffset) { builder.addOffset(6, TRACK_IDOffset, 0); }
-  public static void addObPosition(FlatBufferBuilder builder, int OB_POSITIONOffset) { builder.addOffset(7, OB_POSITIONOffset, 0); }
-  public static void addOrigObjectId(FlatBufferBuilder builder, int ORIG_OBJECT_IDOffset) { builder.addOffset(8, ORIG_OBJECT_IDOffset, 0); }
-  public static void addOrigSensorId(FlatBufferBuilder builder, int ORIG_SENSOR_IDOffset) { builder.addOffset(9, ORIG_SENSOR_IDOffset, 0); }
-  public static void addUct(FlatBufferBuilder builder, boolean UCT) { builder.addBoolean(10, UCT, false); }
-  public static void addAzimuth(FlatBufferBuilder builder, double AZIMUTH) { builder.addDouble(11, AZIMUTH, 0.0); }
-  public static void addAzimuthUnc(FlatBufferBuilder builder, double AZIMUTH_UNC) { builder.addDouble(12, AZIMUTH_UNC, 0.0); }
-  public static void addAzimuthBias(FlatBufferBuilder builder, double AZIMUTH_BIAS) { builder.addDouble(13, AZIMUTH_BIAS, 0.0); }
-  public static void addAzimuthRate(FlatBufferBuilder builder, double AZIMUTH_RATE) { builder.addDouble(14, AZIMUTH_RATE, 0.0); }
-  public static void addElevation(FlatBufferBuilder builder, double ELEVATION) { builder.addDouble(15, ELEVATION, 0.0); }
-  public static void addElevationUnc(FlatBufferBuilder builder, double ELEVATION_UNC) { builder.addDouble(16, ELEVATION_UNC, 0.0); }
-  public static void addElevationBias(FlatBufferBuilder builder, double ELEVATION_BIAS) { builder.addDouble(17, ELEVATION_BIAS, 0.0); }
-  public static void addElevationRate(FlatBufferBuilder builder, double ELEVATION_RATE) { builder.addDouble(18, ELEVATION_RATE, 0.0); }
-  public static void addRange(FlatBufferBuilder builder, double RANGE) { builder.addDouble(19, RANGE, 0.0); }
-  public static void addRangeAccel(FlatBufferBuilder builder, double RANGE_ACCEL) { builder.addDouble(20, RANGE_ACCEL, 0.0); }
-  public static void addRangeAccelUnc(FlatBufferBuilder builder, double RANGE_ACCEL_UNC) { builder.addDouble(21, RANGE_ACCEL_UNC, 0.0); }
-  public static void addRangeUnc(FlatBufferBuilder builder, double RANGE_UNC) { builder.addDouble(22, RANGE_UNC, 0.0); }
-  public static void addRangeBias(FlatBufferBuilder builder, double RANGE_BIAS) { builder.addDouble(23, RANGE_BIAS, 0.0); }
-  public static void addRangeRate(FlatBufferBuilder builder, double RANGE_RATE) { builder.addDouble(24, RANGE_RATE, 0.0); }
-  public static void addRangeRateUnc(FlatBufferBuilder builder, double RANGE_RATE_UNC) { builder.addDouble(25, RANGE_RATE_UNC, 0.0); }
-  public static void addDoppler(FlatBufferBuilder builder, double DOPPLER) { builder.addDouble(26, DOPPLER, 0.0); }
-  public static void addDopplerUnc(FlatBufferBuilder builder, double DOPPLER_UNC) { builder.addDouble(27, DOPPLER_UNC, 0.0); }
-  public static void addRa(FlatBufferBuilder builder, double RA) { builder.addDouble(28, RA, 0.0); }
-  public static void addDeclination(FlatBufferBuilder builder, double DECLINATION) { builder.addDouble(29, DECLINATION, 0.0); }
-  public static void addX(FlatBufferBuilder builder, double X) { builder.addDouble(30, X, 0.0); }
-  public static void addY(FlatBufferBuilder builder, double Y) { builder.addDouble(31, Y, 0.0); }
-  public static void addZ(FlatBufferBuilder builder, double Z) { builder.addDouble(32, Z, 0.0); }
-  public static void addXvel(FlatBufferBuilder builder, double XVEL) { builder.addDouble(33, XVEL, 0.0); }
-  public static void addYvel(FlatBufferBuilder builder, double YVEL) { builder.addDouble(34, YVEL, 0.0); }
-  public static void addZvel(FlatBufferBuilder builder, double ZVEL) { builder.addDouble(35, ZVEL, 0.0); }
-  public static void addSenx(FlatBufferBuilder builder, double SENX) { builder.addDouble(36, SENX, 0.0); }
-  public static void addSeny(FlatBufferBuilder builder, double SENY) { builder.addDouble(37, SENY, 0.0); }
-  public static void addSenz(FlatBufferBuilder builder, double SENZ) { builder.addDouble(38, SENZ, 0.0); }
-  public static void addRcs(FlatBufferBuilder builder, double RCS) { builder.addDouble(39, RCS, 0.0); }
-  public static void addRcsUnc(FlatBufferBuilder builder, double RCS_UNC) { builder.addDouble(40, RCS_UNC, 0.0); }
-  public static void addOrthogonalRcs(FlatBufferBuilder builder, double ORTHOGONAL_RCS) { builder.addDouble(41, ORTHOGONAL_RCS, 0.0); }
-  public static void addOrthogonalRcsUnc(FlatBufferBuilder builder, double ORTHOGONAL_RCS_UNC) { builder.addDouble(42, ORTHOGONAL_RCS_UNC, 0.0); }
-  public static void addSnr(FlatBufferBuilder builder, double SNR) { builder.addDouble(43, SNR, 0.0); }
-  public static void addBeam(FlatBufferBuilder builder, double BEAM) { builder.addDouble(44, BEAM, 0.0); }
-  public static void addTimingBias(FlatBufferBuilder builder, double TIMING_BIAS) { builder.addDouble(45, TIMING_BIAS, 0.0); }
-  public static void addRawFileUri(FlatBufferBuilder builder, int RAW_FILE_URIOffset) { builder.addOffset(46, RAW_FILE_URIOffset, 0); }
-  public static void addTags(FlatBufferBuilder builder, int TAGSOffset) { builder.addOffset(47, TAGSOffset, 0); }
+  public static void addOrigSensorId(FlatBufferBuilder builder, int ORIG_SENSOR_IDOffset) { builder.addOffset(3, ORIG_SENSOR_IDOffset, 0); }
+  public static void addSatNo(FlatBufferBuilder builder, long SAT_NO) { builder.addInt(4, (int) SAT_NO, (int) 0L); }
+  public static void addOrigObjectId(FlatBufferBuilder builder, int ORIG_OBJECT_IDOffset) { builder.addOffset(5, ORIG_OBJECT_IDOffset, 0); }
+  public static void addOnOrbit(FlatBufferBuilder builder, int ON_ORBITOffset) { builder.addOffset(6, ON_ORBITOffset, 0); }
+  public static void addUct(FlatBufferBuilder builder, boolean UCT) { builder.addBoolean(7, UCT, false); }
+  public static void addObsType(FlatBufferBuilder builder, byte OBS_TYPE) { builder.addByte(8, OBS_TYPE, 0); }
+  public static void addTaskId(FlatBufferBuilder builder, int TASK_IDOffset) { builder.addOffset(9, TASK_IDOffset, 0); }
+  public static void addTransactionId(FlatBufferBuilder builder, int TRANSACTION_IDOffset) { builder.addOffset(10, TRANSACTION_IDOffset, 0); }
+  public static void addTrackId(FlatBufferBuilder builder, int TRACK_IDOffset) { builder.addOffset(11, TRACK_IDOffset, 0); }
+  public static void addObPosition(FlatBufferBuilder builder, int OB_POSITIONOffset) { builder.addOffset(12, OB_POSITIONOffset, 0); }
+  public static void addSenReferenceFrame(FlatBufferBuilder builder, int SEN_REFERENCE_FRAMEOffset) { builder.addOffset(13, SEN_REFERENCE_FRAMEOffset, 0); }
+  public static void addAzimuth(FlatBufferBuilder builder, double AZIMUTH) { builder.addDouble(14, AZIMUTH, 0.0); }
+  public static void addAzimuthUnc(FlatBufferBuilder builder, double AZIMUTH_UNC) { builder.addDouble(15, AZIMUTH_UNC, 0.0); }
+  public static void addAzimuthBias(FlatBufferBuilder builder, double AZIMUTH_BIAS) { builder.addDouble(16, AZIMUTH_BIAS, 0.0); }
+  public static void addAzimuthRate(FlatBufferBuilder builder, double AZIMUTH_RATE) { builder.addDouble(17, AZIMUTH_RATE, 0.0); }
+  public static void addElevation(FlatBufferBuilder builder, double ELEVATION) { builder.addDouble(18, ELEVATION, 0.0); }
+  public static void addElevationUnc(FlatBufferBuilder builder, double ELEVATION_UNC) { builder.addDouble(19, ELEVATION_UNC, 0.0); }
+  public static void addElevationBias(FlatBufferBuilder builder, double ELEVATION_BIAS) { builder.addDouble(20, ELEVATION_BIAS, 0.0); }
+  public static void addElevationRate(FlatBufferBuilder builder, double ELEVATION_RATE) { builder.addDouble(21, ELEVATION_RATE, 0.0); }
+  public static void addRange(FlatBufferBuilder builder, double RANGE) { builder.addDouble(22, RANGE, 0.0); }
+  public static void addRangeUnc(FlatBufferBuilder builder, double RANGE_UNC) { builder.addDouble(23, RANGE_UNC, 0.0); }
+  public static void addRangeBias(FlatBufferBuilder builder, double RANGE_BIAS) { builder.addDouble(24, RANGE_BIAS, 0.0); }
+  public static void addRangeRate(FlatBufferBuilder builder, double RANGE_RATE) { builder.addDouble(25, RANGE_RATE, 0.0); }
+  public static void addRangeRateUnc(FlatBufferBuilder builder, double RANGE_RATE_UNC) { builder.addDouble(26, RANGE_RATE_UNC, 0.0); }
+  public static void addRangeAccel(FlatBufferBuilder builder, double RANGE_ACCEL) { builder.addDouble(27, RANGE_ACCEL, 0.0); }
+  public static void addRangeAccelUnc(FlatBufferBuilder builder, double RANGE_ACCEL_UNC) { builder.addDouble(28, RANGE_ACCEL_UNC, 0.0); }
+  public static void addDoppler(FlatBufferBuilder builder, double DOPPLER) { builder.addDouble(29, DOPPLER, 0.0); }
+  public static void addDopplerUnc(FlatBufferBuilder builder, double DOPPLER_UNC) { builder.addDouble(30, DOPPLER_UNC, 0.0); }
+  public static void addRa(FlatBufferBuilder builder, double RA) { builder.addDouble(31, RA, 0.0); }
+  public static void addDeclination(FlatBufferBuilder builder, double DECLINATION) { builder.addDouble(32, DECLINATION, 0.0); }
+  public static void addX(FlatBufferBuilder builder, double X) { builder.addDouble(33, X, 0.0); }
+  public static void addY(FlatBufferBuilder builder, double Y) { builder.addDouble(34, Y, 0.0); }
+  public static void addZ(FlatBufferBuilder builder, double Z) { builder.addDouble(35, Z, 0.0); }
+  public static void addXvel(FlatBufferBuilder builder, double XVEL) { builder.addDouble(36, XVEL, 0.0); }
+  public static void addYvel(FlatBufferBuilder builder, double YVEL) { builder.addDouble(37, YVEL, 0.0); }
+  public static void addZvel(FlatBufferBuilder builder, double ZVEL) { builder.addDouble(38, ZVEL, 0.0); }
+  public static void addSenx(FlatBufferBuilder builder, double SENX) { builder.addDouble(39, SENX, 0.0); }
+  public static void addSeny(FlatBufferBuilder builder, double SENY) { builder.addDouble(40, SENY, 0.0); }
+  public static void addSenz(FlatBufferBuilder builder, double SENZ) { builder.addDouble(41, SENZ, 0.0); }
+  public static void addRcs(FlatBufferBuilder builder, double RCS) { builder.addDouble(42, RCS, 0.0); }
+  public static void addRcsUnc(FlatBufferBuilder builder, double RCS_UNC) { builder.addDouble(43, RCS_UNC, 0.0); }
+  public static void addOrthogonalRcs(FlatBufferBuilder builder, double ORTHOGONAL_RCS) { builder.addDouble(44, ORTHOGONAL_RCS, 0.0); }
+  public static void addOrthogonalRcsUnc(FlatBufferBuilder builder, double ORTHOGONAL_RCS_UNC) { builder.addDouble(45, ORTHOGONAL_RCS_UNC, 0.0); }
+  public static void addSnr(FlatBufferBuilder builder, double SNR) { builder.addDouble(46, SNR, 0.0); }
+  public static void addBeam(FlatBufferBuilder builder, double BEAM) { builder.addDouble(47, BEAM, 0.0); }
+  public static void addTimingBias(FlatBufferBuilder builder, double TIMING_BIAS) { builder.addDouble(48, TIMING_BIAS, 0.0); }
+  public static void addRawFileUri(FlatBufferBuilder builder, int RAW_FILE_URIOffset) { builder.addOffset(49, RAW_FILE_URIOffset, 0); }
+  public static void addDescriptor(FlatBufferBuilder builder, int DESCRIPTOROffset) { builder.addOffset(50, DESCRIPTOROffset, 0); }
+  public static void addTags(FlatBufferBuilder builder, int TAGSOffset) { builder.addOffset(51, TAGSOffset, 0); }
   public static int createTagsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startTagsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addOnOrbit(FlatBufferBuilder builder, int ON_ORBITOffset) { builder.addOffset(48, ON_ORBITOffset, 0); }
-  public static void addSenReferenceFrame(FlatBufferBuilder builder, int SEN_REFERENCE_FRAMEOffset) { builder.addOffset(49, SEN_REFERENCE_FRAMEOffset, 0); }
-  public static void addDescriptor(FlatBufferBuilder builder, int DESCRIPTOROffset) { builder.addOffset(50, DESCRIPTOROffset, 0); }
-  public static void addType(FlatBufferBuilder builder, int TYPEOffset) { builder.addOffset(51, TYPEOffset, 0); }
   public static int endRDO(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

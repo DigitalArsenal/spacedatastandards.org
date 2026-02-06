@@ -1,87 +1,142 @@
-// Hash: 152f6e237a93b3d9b168a88b98883505ddd7a7ccebfc3533e52512230b95e163
-// Version: 2.0.1
+// Hash: fdfd34c0dd0b48c4eff5778644d78889cab9c7a637f8eb724db118c48b19aa26
+// Version: 2.0.2
 // -----------------------------------END_HEADER
+enum trackStatus : byte {
+  ACTIVE,
+  DROPPED,
+  TENTATIVE,
+  CONFIRMED,
+  COASTED,
+  DEAD
+}
+
+enum trackEnvironment : byte {
+  SPACE,
+  AIR,
+  SURFACE,
+  SUBSURFACE,
+  LAND,
+  UNKNOWN
+}
+
 /// Track
 table TRK {
+  /// Unique identifier
   ID:string;
+  /// Contact reference
   CNTCT:string;
+  /// Message timestamp (ISO 8601)
   MSG_TS:string;
+  /// Mission identifier
   MSN_ID:string;
+  /// Asset nationality
   ASSET_NAT:string;
+  /// Asset identifier
   ASSET:string;
-  SEN:string;
+  /// Sensor identifier
+  SENSOR_ID:string;
+  /// Sensor quality assessment
   SEN_QUAL:string;
+  /// Track identifier
   TRK_ID:string;
+  /// Track number
   TRK_NUM:string;
-  TRK_STAT:string;
+  /// Track status
+  TRK_STAT:trackStatus;
+  /// Object nationality
   OBJ_NAT:string;
+  /// Object identifier
   OBJ_ID:string;
+  /// Object type classification
   OBJ_TYPE:string;
+  /// Object specific type
   OBJ_SPEC:string;
+  /// Object platform type
   OBJ_PLAT:string;
+  /// Object activity
   OBJ_ACT:string;
+  /// Mode type
   MOD_TYPE:string;
+  /// Track item identifier
   TRK_ITM_ID:string;
+  /// Track point timestamp (ISO 8601)
   TS:string;
-  TRK_QUAL:int;
+  /// Track quality (0-15)
+  TRK_QUAL:uint8;
+  /// Track point type
   TRK_PT_TYPE:string;
+  /// Object identity assessment
   OBJ_IDENT:string;
-  IDENT_CRED:int;
-  IDENT_REL:int;
+  /// Identity credibility (1-6)
+  IDENT_CRED:uint8;
+  /// Identity reliability (A-F)
+  IDENT_REL:uint8;
+  /// Identity amplification
   IDENT_AMP:string;
-  ENVIRONMENT:string;
+  /// Track environment
+  ENVIRONMENT:trackEnvironment;
+  /// Environment confidence (0-1)
   ENVIRONMENT_CONF:double;
+  /// Track confidence (0-1)
   TRK_CONF:double;
+  /// Latitude (degrees)
   LAT:double;
+  /// Longitude (degrees)
   LON:double;
+  /// Altitude (km)
   ALT:double;
+  /// Speed (km/s)
   SPD:double;
+  /// Heading (degrees from north)
   HDNG:double;
+  /// Course (degrees from north)
   COURSE:double;
+  /// Source types
   SRC_TYPS:[string];
+  /// Source identifiers
   SRC_IDS:[string];
+  /// Call sign
   CALL_SIGN:string;
+  /// True if fused from multiple sources
   MULTI_SOURCE:bool;
+  /// J-series message type
   J_SERIES:string;
-  STRENGTH:int;
-  M1:int;
-  M1V:int;
-  M2:int;
-  M2V:int;
-  M3A:int;
-  M3AV:int;
+  /// Force strength indicator
+  STRENGTH:uint16;
+  /// Mode 1 code
+  M1:uint16;
+  /// Mode 1 validity
+  M1V:uint8;
+  /// Mode 2 code
+  M2:uint16;
+  /// Mode 2 validity
+  M2V:uint8;
+  /// Mode 3A code
+  M3A:uint16;
+  /// Mode 3A validity
+  M3AV:uint8;
+  /// Associated tags
   TAGS:[string];
-
-  /// Start time for track data (ISO 8601 UTC format).
+  /// Start time for track data (ISO 8601)
   TRACK_START_TIME:string;
-
-  /// Time interval between track points in seconds.
+  /// Time interval between track points (seconds)
   TRACK_STEP_SIZE:double;
-
-  /// Number of components per point (default 3 for X, Y, Z).
+  /// Number of components per point (default 3 for X, Y, Z)
   TRACK_COMPONENTS:uint8 = 3;
-
   /// ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]
   ECEF_POS:[double];
-
   /// ECEF velocity as flat array [VX0, VY0, VZ0, VX1, VY1, VZ1, ...]
   ECEF_VEL:[double];
-
   /// ECEF acceleration as flat array [AX0, AY0, AZ0, AX1, AY1, AZ1, ...]
   ECEF_ACC:[double];
-
   /// Local coordinate position as flat array
   LC_POS:[double];
-
   /// Local coordinate velocity as flat array
   LC_VEL:[double];
-
   /// Local coordinate acceleration as flat array
   LC_ACC:[double];
-
   /// Covariance data (21 elements per point for 6x6 lower triangular)
   COV:[double];
-
   /// Error ellipse data (6 elements per point)
   ERR_ELLP:[double];
 }

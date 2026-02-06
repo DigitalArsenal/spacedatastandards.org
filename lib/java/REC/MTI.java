@@ -29,59 +29,106 @@ public final class MTI extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public MTI __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
-  public String P3() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer P3AsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
-  public ByteBuffer P3InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
-  public String P6() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer P6AsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
-  public ByteBuffer P6InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
-  public String P7() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer P7AsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
-  public ByteBuffer P7InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
-  public String P8() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer P8AsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
-  public ByteBuffer P8InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
-  public int P9() { int o = __offset(14); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public int P10() { int o = __offset(16); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public String MISSIONS(int j) { int o = __offset(18); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int MISSIONSLength() { int o = __offset(18); return o != 0 ? __vector_len(o) : 0; }
+  /**
+   * MTI standard (e.g., STANAG 4607)
+   */
+  public byte STANDARD() { int o = __offset(6); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Platform type (P3 field)
+   */
+  public String P3() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer P3AsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
+  public ByteBuffer P3InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * Platform activity (P6 field)
+   */
+  public String P6() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer P6AsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer P6InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * Sensor type (P7 field)
+   */
+  public String P7() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer P7AsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer P7InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * Sensor model (P8 field)
+   */
+  public String P8() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer P8AsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer P8InByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * Reference time code (P9)
+   */
+  public long P9() { int o = __offset(16); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Security classification (P10)
+   */
+  public int P10() { int o = __offset(18); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * Mission segment identifiers
+   */
+  public String MISSIONS(int j) { int o = __offset(20); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int MISSIONSLength() { int o = __offset(20); return o != 0 ? __vector_len(o) : 0; }
   public StringVector missionsVector() { return missionsVector(new StringVector()); }
-  public StringVector missionsVector(StringVector obj) { int o = __offset(18); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String DWELLS(int j) { int o = __offset(20); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int DWELLSLength() { int o = __offset(20); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector missionsVector(StringVector obj) { int o = __offset(20); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Dwell segment data references
+   */
+  public String DWELLS(int j) { int o = __offset(22); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int DWELLSLength() { int o = __offset(22); return o != 0 ? __vector_len(o) : 0; }
   public StringVector dwellsVector() { return dwellsVector(new StringVector()); }
-  public StringVector dwellsVector(StringVector obj) { int o = __offset(20); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String HRRS(int j) { int o = __offset(22); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int HRRSLength() { int o = __offset(22); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector dwellsVector(StringVector obj) { int o = __offset(22); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * High range resolution profile references
+   */
+  public String HRRS(int j) { int o = __offset(24); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int HRRSLength() { int o = __offset(24); return o != 0 ? __vector_len(o) : 0; }
   public StringVector hrrsVector() { return hrrsVector(new StringVector()); }
-  public StringVector hrrsVector(StringVector obj) { int o = __offset(22); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String JOB_DEFS(int j) { int o = __offset(24); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int JOB_DEFSLength() { int o = __offset(24); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector hrrsVector(StringVector obj) { int o = __offset(24); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Job definition references
+   */
+  public String JOB_DEFS(int j) { int o = __offset(26); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int JOB_DEFSLength() { int o = __offset(26); return o != 0 ? __vector_len(o) : 0; }
   public StringVector jobDefsVector() { return jobDefsVector(new StringVector()); }
-  public StringVector jobDefsVector(StringVector obj) { int o = __offset(24); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String FREE_TEXTS(int j) { int o = __offset(26); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int FREE_TEXTSLength() { int o = __offset(26); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector jobDefsVector(StringVector obj) { int o = __offset(26); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Free text entries
+   */
+  public String FREE_TEXTS(int j) { int o = __offset(28); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int FREE_TEXTSLength() { int o = __offset(28); return o != 0 ? __vector_len(o) : 0; }
   public StringVector freeTextsVector() { return freeTextsVector(new StringVector()); }
-  public StringVector freeTextsVector(StringVector obj) { int o = __offset(26); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String PLATFORM_LOCS(int j) { int o = __offset(28); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int PLATFORM_LOCSLength() { int o = __offset(28); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector freeTextsVector(StringVector obj) { int o = __offset(28); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Platform location data references
+   */
+  public String PLATFORM_LOCS(int j) { int o = __offset(30); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int PLATFORM_LOCSLength() { int o = __offset(30); return o != 0 ? __vector_len(o) : 0; }
   public StringVector platformLocsVector() { return platformLocsVector(new StringVector()); }
-  public StringVector platformLocsVector(StringVector obj) { int o = __offset(28); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String JOB_REQUESTS(int j) { int o = __offset(30); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int JOB_REQUESTSLength() { int o = __offset(30); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector platformLocsVector(StringVector obj) { int o = __offset(30); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Job request references
+   */
+  public String JOB_REQUESTS(int j) { int o = __offset(32); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int JOB_REQUESTSLength() { int o = __offset(32); return o != 0 ? __vector_len(o) : 0; }
   public StringVector jobRequestsVector() { return jobRequestsVector(new StringVector()); }
-  public StringVector jobRequestsVector(StringVector obj) { int o = __offset(30); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  public StringVector jobRequestsVector(StringVector obj) { int o = __offset(32); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
 
   public static int createMTI(FlatBufferBuilder builder,
       int IDOffset,
+      byte STANDARD,
       int P3Offset,
       int P6Offset,
       int P7Offset,
       int P8Offset,
-      int P9,
+      long P9,
       int P10,
       int MISSIONSOffset,
       int DWELLSOffset,
@@ -90,7 +137,7 @@ public final class MTI extends Table {
       int FREE_TEXTSOffset,
       int PLATFORM_LOCSOffset,
       int JOB_REQUESTSOffset) {
-    builder.startTable(14);
+    builder.startTable(15);
     MTI.addJobRequests(builder, JOB_REQUESTSOffset);
     MTI.addPlatformLocs(builder, PLATFORM_LOCSOffset);
     MTI.addFreeTexts(builder, FREE_TEXTSOffset);
@@ -98,43 +145,45 @@ public final class MTI extends Table {
     MTI.addHrrs(builder, HRRSOffset);
     MTI.addDwells(builder, DWELLSOffset);
     MTI.addMissions(builder, MISSIONSOffset);
-    MTI.addP10(builder, P10);
     MTI.addP9(builder, P9);
     MTI.addP8(builder, P8Offset);
     MTI.addP7(builder, P7Offset);
     MTI.addP6(builder, P6Offset);
     MTI.addP3(builder, P3Offset);
     MTI.addId(builder, IDOffset);
+    MTI.addP10(builder, P10);
+    MTI.addStandard(builder, STANDARD);
     return MTI.endMTI(builder);
   }
 
-  public static void startMTI(FlatBufferBuilder builder) { builder.startTable(14); }
+  public static void startMTI(FlatBufferBuilder builder) { builder.startTable(15); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
-  public static void addP3(FlatBufferBuilder builder, int P3Offset) { builder.addOffset(1, P3Offset, 0); }
-  public static void addP6(FlatBufferBuilder builder, int P6Offset) { builder.addOffset(2, P6Offset, 0); }
-  public static void addP7(FlatBufferBuilder builder, int P7Offset) { builder.addOffset(3, P7Offset, 0); }
-  public static void addP8(FlatBufferBuilder builder, int P8Offset) { builder.addOffset(4, P8Offset, 0); }
-  public static void addP9(FlatBufferBuilder builder, int P9) { builder.addInt(5, P9, 0); }
-  public static void addP10(FlatBufferBuilder builder, int P10) { builder.addInt(6, P10, 0); }
-  public static void addMissions(FlatBufferBuilder builder, int MISSIONSOffset) { builder.addOffset(7, MISSIONSOffset, 0); }
+  public static void addStandard(FlatBufferBuilder builder, byte STANDARD) { builder.addByte(1, STANDARD, 0); }
+  public static void addP3(FlatBufferBuilder builder, int P3Offset) { builder.addOffset(2, P3Offset, 0); }
+  public static void addP6(FlatBufferBuilder builder, int P6Offset) { builder.addOffset(3, P6Offset, 0); }
+  public static void addP7(FlatBufferBuilder builder, int P7Offset) { builder.addOffset(4, P7Offset, 0); }
+  public static void addP8(FlatBufferBuilder builder, int P8Offset) { builder.addOffset(5, P8Offset, 0); }
+  public static void addP9(FlatBufferBuilder builder, long P9) { builder.addInt(6, (int) P9, (int) 0L); }
+  public static void addP10(FlatBufferBuilder builder, int P10) { builder.addShort(7, (short) P10, (short) 0); }
+  public static void addMissions(FlatBufferBuilder builder, int MISSIONSOffset) { builder.addOffset(8, MISSIONSOffset, 0); }
   public static int createMissionsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startMissionsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addDwells(FlatBufferBuilder builder, int DWELLSOffset) { builder.addOffset(8, DWELLSOffset, 0); }
+  public static void addDwells(FlatBufferBuilder builder, int DWELLSOffset) { builder.addOffset(9, DWELLSOffset, 0); }
   public static int createDwellsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startDwellsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addHrrs(FlatBufferBuilder builder, int HRRSOffset) { builder.addOffset(9, HRRSOffset, 0); }
+  public static void addHrrs(FlatBufferBuilder builder, int HRRSOffset) { builder.addOffset(10, HRRSOffset, 0); }
   public static int createHrrsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startHrrsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addJobDefs(FlatBufferBuilder builder, int JOB_DEFSOffset) { builder.addOffset(10, JOB_DEFSOffset, 0); }
+  public static void addJobDefs(FlatBufferBuilder builder, int JOB_DEFSOffset) { builder.addOffset(11, JOB_DEFSOffset, 0); }
   public static int createJobDefsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startJobDefsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addFreeTexts(FlatBufferBuilder builder, int FREE_TEXTSOffset) { builder.addOffset(11, FREE_TEXTSOffset, 0); }
+  public static void addFreeTexts(FlatBufferBuilder builder, int FREE_TEXTSOffset) { builder.addOffset(12, FREE_TEXTSOffset, 0); }
   public static int createFreeTextsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startFreeTextsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addPlatformLocs(FlatBufferBuilder builder, int PLATFORM_LOCSOffset) { builder.addOffset(12, PLATFORM_LOCSOffset, 0); }
+  public static void addPlatformLocs(FlatBufferBuilder builder, int PLATFORM_LOCSOffset) { builder.addOffset(13, PLATFORM_LOCSOffset, 0); }
   public static int createPlatformLocsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startPlatformLocsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addJobRequests(FlatBufferBuilder builder, int JOB_REQUESTSOffset) { builder.addOffset(13, JOB_REQUESTSOffset, 0); }
+  public static void addJobRequests(FlatBufferBuilder builder, int JOB_REQUESTSOffset) { builder.addOffset(14, JOB_REQUESTSOffset, 0); }
   public static int createJobRequestsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startJobRequestsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
   public static int endMTI(FlatBufferBuilder builder) {

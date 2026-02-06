@@ -16,150 +16,227 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct DOA;
 struct DOABuilder;
 
-/// Difference of Arrival
+enum doaCollectionMode : int8_t {
+  doaCollectionMode_TDOA = 0,
+  doaCollectionMode_FDOA = 1,
+  doaCollectionMode_TDOA_FDOA = 2,
+  doaCollectionMode_AOA = 3,
+  doaCollectionMode_COMBINED = 4,
+  doaCollectionMode_UNKNOWN = 5,
+  doaCollectionMode_MIN = doaCollectionMode_TDOA,
+  doaCollectionMode_MAX = doaCollectionMode_UNKNOWN
+};
+
+inline const doaCollectionMode (&EnumValuesdoaCollectionMode())[6] {
+  static const doaCollectionMode values[] = {
+    doaCollectionMode_TDOA,
+    doaCollectionMode_FDOA,
+    doaCollectionMode_TDOA_FDOA,
+    doaCollectionMode_AOA,
+    doaCollectionMode_COMBINED,
+    doaCollectionMode_UNKNOWN
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesdoaCollectionMode() {
+  static const char * const names[7] = {
+    "TDOA",
+    "FDOA",
+    "TDOA_FDOA",
+    "AOA",
+    "COMBINED",
+    "UNKNOWN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamedoaCollectionMode(doaCollectionMode e) {
+  if (::flatbuffers::IsOutRange(e, doaCollectionMode_TDOA, doaCollectionMode_UNKNOWN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesdoaCollectionMode()[index];
+}
+
+/// Difference of Arrival Geolocation
 struct DOA FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef DOABuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
     VT_OB_TIME = 6,
-    VT_ID_SENSOR1 = 8,
-    VT_ID_SENSOR2 = 10,
-    VT_SAT_NO = 12,
-    VT_TASK_ID = 14,
-    VT_ORIG_OBJECT_ID = 16,
-    VT_ORIG_SENSOR_ID1 = 18,
-    VT_ORIG_SENSOR_ID2 = 20,
-    VT_UCT = 22,
-    VT_SENSOR1_DELAY = 24,
-    VT_SENSOR2_DELAY = 26,
-    VT_SENLAT = 28,
-    VT_SENLON = 30,
-    VT_SENALT = 32,
-    VT_SEN2LAT = 34,
-    VT_SEN2LON = 36,
-    VT_SEN2ALT = 38,
-    VT_FREQUENCY = 40,
-    VT_BANDWIDTH = 42,
-    VT_DELTA_RANGE = 44,
-    VT_DELTA_RANGE_UNC = 46,
-    VT_DELTA_RANGE_RATE = 48,
-    VT_DELTA_RANGE_RATE_UNC = 50,
-    VT_SNR = 52,
-    VT_TDOA = 54,
-    VT_TDOA_UNC = 56,
-    VT_FDOA = 58,
-    VT_FDOA_UNC = 60,
-    VT_COLLECTION_MODE = 62,
-    VT_RAW_FILE_URI = 64,
-    VT_TAGS = 66,
-    VT_ON_ORBIT = 68,
+    VT_SAT_NO = 8,
+    VT_ORIG_OBJECT_ID = 10,
+    VT_ON_ORBIT = 12,
+    VT_UCT = 14,
+    VT_TASK_ID = 16,
+    VT_TRANSACTION_ID = 18,
+    VT_COLLECTION_MODE = 20,
+    VT_ID_SENSOR1 = 22,
+    VT_ORIG_SENSOR_ID1 = 24,
+    VT_SENLAT = 26,
+    VT_SENLON = 28,
+    VT_SENALT = 30,
+    VT_SENSOR1_DELAY = 32,
+    VT_ID_SENSOR2 = 34,
+    VT_ORIG_SENSOR_ID2 = 36,
+    VT_SEN2LAT = 38,
+    VT_SEN2LON = 40,
+    VT_SEN2ALT = 42,
+    VT_SENSOR2_DELAY = 44,
+    VT_FREQUENCY = 46,
+    VT_BANDWIDTH = 48,
+    VT_SNR = 50,
+    VT_DELTA_RANGE = 52,
+    VT_DELTA_RANGE_UNC = 54,
+    VT_DELTA_RANGE_RATE = 56,
+    VT_DELTA_RANGE_RATE_UNC = 58,
+    VT_TDOA = 60,
+    VT_TDOA_UNC = 62,
+    VT_FDOA = 64,
+    VT_FDOA_UNC = 66,
+    VT_RAW_FILE_URI = 68,
     VT_DESCRIPTOR = 70,
-    VT_TRANSACTION_ID = 72
+    VT_TAGS = 72
   };
+  /// Unique identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
+  /// Observation time (ISO 8601)
   const ::flatbuffers::String *OB_TIME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OB_TIME);
   }
-  const ::flatbuffers::String *ID_SENSOR1() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ID_SENSOR1);
+  /// Satellite catalog number
+  uint32_t SAT_NO() const {
+    return GetField<uint32_t>(VT_SAT_NO, 0);
   }
-  const ::flatbuffers::String *ID_SENSOR2() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ID_SENSOR2);
-  }
-  int32_t SAT_NO() const {
-    return GetField<int32_t>(VT_SAT_NO, 0);
-  }
-  const ::flatbuffers::String *TASK_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TASK_ID);
-  }
+  /// International designator
   const ::flatbuffers::String *ORIG_OBJECT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIG_OBJECT_ID);
   }
-  const ::flatbuffers::String *ORIG_SENSOR_ID1() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ORIG_SENSOR_ID1);
-  }
-  const ::flatbuffers::String *ORIG_SENSOR_ID2() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ORIG_SENSOR_ID2);
-  }
-  bool UCT() const {
-    return GetField<uint8_t>(VT_UCT, 0) != 0;
-  }
-  double SENSOR1_DELAY() const {
-    return GetField<double>(VT_SENSOR1_DELAY, 0.0);
-  }
-  double SENSOR2_DELAY() const {
-    return GetField<double>(VT_SENSOR2_DELAY, 0.0);
-  }
-  double SENLAT() const {
-    return GetField<double>(VT_SENLAT, 0.0);
-  }
-  double SENLON() const {
-    return GetField<double>(VT_SENLON, 0.0);
-  }
-  double SENALT() const {
-    return GetField<double>(VT_SENALT, 0.0);
-  }
-  double SEN2LAT() const {
-    return GetField<double>(VT_SEN2LAT, 0.0);
-  }
-  double SEN2LON() const {
-    return GetField<double>(VT_SEN2LON, 0.0);
-  }
-  double SEN2ALT() const {
-    return GetField<double>(VT_SEN2ALT, 0.0);
-  }
-  double FREQUENCY() const {
-    return GetField<double>(VT_FREQUENCY, 0.0);
-  }
-  double BANDWIDTH() const {
-    return GetField<double>(VT_BANDWIDTH, 0.0);
-  }
-  double DELTA_RANGE() const {
-    return GetField<double>(VT_DELTA_RANGE, 0.0);
-  }
-  double DELTA_RANGE_UNC() const {
-    return GetField<double>(VT_DELTA_RANGE_UNC, 0.0);
-  }
-  double DELTA_RANGE_RATE() const {
-    return GetField<double>(VT_DELTA_RANGE_RATE, 0.0);
-  }
-  double DELTA_RANGE_RATE_UNC() const {
-    return GetField<double>(VT_DELTA_RANGE_RATE_UNC, 0.0);
-  }
-  double SNR() const {
-    return GetField<double>(VT_SNR, 0.0);
-  }
-  double TDOA() const {
-    return GetField<double>(VT_TDOA, 0.0);
-  }
-  double TDOA_UNC() const {
-    return GetField<double>(VT_TDOA_UNC, 0.0);
-  }
-  double FDOA() const {
-    return GetField<double>(VT_FDOA, 0.0);
-  }
-  double FDOA_UNC() const {
-    return GetField<double>(VT_FDOA_UNC, 0.0);
-  }
-  const ::flatbuffers::String *COLLECTION_MODE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_COLLECTION_MODE);
-  }
-  const ::flatbuffers::String *RAW_FILE_URI() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_RAW_FILE_URI);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_TAGS);
-  }
+  /// On-orbit reference
   const ::flatbuffers::String *ON_ORBIT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ON_ORBIT);
   }
+  /// True if uncorrelated target
+  bool UCT() const {
+    return GetField<uint8_t>(VT_UCT, 0) != 0;
+  }
+  /// Task identifier
+  const ::flatbuffers::String *TASK_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TASK_ID);
+  }
+  /// Transaction identifier
+  const ::flatbuffers::String *TRANSACTION_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TRANSACTION_ID);
+  }
+  /// Collection mode
+  doaCollectionMode COLLECTION_MODE() const {
+    return static_cast<doaCollectionMode>(GetField<int8_t>(VT_COLLECTION_MODE, 0));
+  }
+  /// Sensor 1 identifier
+  const ::flatbuffers::String *ID_SENSOR1() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ID_SENSOR1);
+  }
+  /// Sensor 1 original identifier
+  const ::flatbuffers::String *ORIG_SENSOR_ID1() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ORIG_SENSOR_ID1);
+  }
+  /// Sensor 1 latitude (degrees)
+  double SENLAT() const {
+    return GetField<double>(VT_SENLAT, 0.0);
+  }
+  /// Sensor 1 longitude (degrees)
+  double SENLON() const {
+    return GetField<double>(VT_SENLON, 0.0);
+  }
+  /// Sensor 1 altitude (km)
+  double SENALT() const {
+    return GetField<double>(VT_SENALT, 0.0);
+  }
+  /// Sensor 1 processing delay (seconds)
+  double SENSOR1_DELAY() const {
+    return GetField<double>(VT_SENSOR1_DELAY, 0.0);
+  }
+  /// Sensor 2 identifier
+  const ::flatbuffers::String *ID_SENSOR2() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ID_SENSOR2);
+  }
+  /// Sensor 2 original identifier
+  const ::flatbuffers::String *ORIG_SENSOR_ID2() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ORIG_SENSOR_ID2);
+  }
+  /// Sensor 2 latitude (degrees)
+  double SEN2LAT() const {
+    return GetField<double>(VT_SEN2LAT, 0.0);
+  }
+  /// Sensor 2 longitude (degrees)
+  double SEN2LON() const {
+    return GetField<double>(VT_SEN2LON, 0.0);
+  }
+  /// Sensor 2 altitude (km)
+  double SEN2ALT() const {
+    return GetField<double>(VT_SEN2ALT, 0.0);
+  }
+  /// Sensor 2 processing delay (seconds)
+  double SENSOR2_DELAY() const {
+    return GetField<double>(VT_SENSOR2_DELAY, 0.0);
+  }
+  /// Measured frequency (MHz)
+  double FREQUENCY() const {
+    return GetField<double>(VT_FREQUENCY, 0.0);
+  }
+  /// Measurement bandwidth (MHz)
+  double BANDWIDTH() const {
+    return GetField<double>(VT_BANDWIDTH, 0.0);
+  }
+  /// Signal-to-noise ratio (dB)
+  double SNR() const {
+    return GetField<double>(VT_SNR, 0.0);
+  }
+  /// Differential range (km)
+  double DELTA_RANGE() const {
+    return GetField<double>(VT_DELTA_RANGE, 0.0);
+  }
+  /// Differential range uncertainty (km, 1-sigma)
+  double DELTA_RANGE_UNC() const {
+    return GetField<double>(VT_DELTA_RANGE_UNC, 0.0);
+  }
+  /// Differential range rate (km/s)
+  double DELTA_RANGE_RATE() const {
+    return GetField<double>(VT_DELTA_RANGE_RATE, 0.0);
+  }
+  /// Differential range rate uncertainty (km/s, 1-sigma)
+  double DELTA_RANGE_RATE_UNC() const {
+    return GetField<double>(VT_DELTA_RANGE_RATE_UNC, 0.0);
+  }
+  /// Time difference of arrival (seconds)
+  double TDOA() const {
+    return GetField<double>(VT_TDOA, 0.0);
+  }
+  /// TDOA uncertainty (seconds, 1-sigma)
+  double TDOA_UNC() const {
+    return GetField<double>(VT_TDOA_UNC, 0.0);
+  }
+  /// Frequency difference of arrival (Hz)
+  double FDOA() const {
+    return GetField<double>(VT_FDOA, 0.0);
+  }
+  /// FDOA uncertainty (Hz, 1-sigma)
+  double FDOA_UNC() const {
+    return GetField<double>(VT_FDOA_UNC, 0.0);
+  }
+  /// Reference to raw data file
+  const ::flatbuffers::String *RAW_FILE_URI() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_RAW_FILE_URI);
+  }
+  /// Event descriptor
   const ::flatbuffers::String *DESCRIPTOR() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTOR);
   }
-  const ::flatbuffers::String *TRANSACTION_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TRANSACTION_ID);
+  /// Associated tags
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_TAGS);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -167,52 +244,51 @@ struct DOA FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(ID()) &&
            VerifyOffset(verifier, VT_OB_TIME) &&
            verifier.VerifyString(OB_TIME()) &&
-           VerifyOffset(verifier, VT_ID_SENSOR1) &&
-           verifier.VerifyString(ID_SENSOR1()) &&
-           VerifyOffset(verifier, VT_ID_SENSOR2) &&
-           verifier.VerifyString(ID_SENSOR2()) &&
-           VerifyField<int32_t>(verifier, VT_SAT_NO, 4) &&
-           VerifyOffset(verifier, VT_TASK_ID) &&
-           verifier.VerifyString(TASK_ID()) &&
+           VerifyField<uint32_t>(verifier, VT_SAT_NO, 4) &&
            VerifyOffset(verifier, VT_ORIG_OBJECT_ID) &&
            verifier.VerifyString(ORIG_OBJECT_ID()) &&
+           VerifyOffset(verifier, VT_ON_ORBIT) &&
+           verifier.VerifyString(ON_ORBIT()) &&
+           VerifyField<uint8_t>(verifier, VT_UCT, 1) &&
+           VerifyOffset(verifier, VT_TASK_ID) &&
+           verifier.VerifyString(TASK_ID()) &&
+           VerifyOffset(verifier, VT_TRANSACTION_ID) &&
+           verifier.VerifyString(TRANSACTION_ID()) &&
+           VerifyField<int8_t>(verifier, VT_COLLECTION_MODE, 1) &&
+           VerifyOffset(verifier, VT_ID_SENSOR1) &&
+           verifier.VerifyString(ID_SENSOR1()) &&
            VerifyOffset(verifier, VT_ORIG_SENSOR_ID1) &&
            verifier.VerifyString(ORIG_SENSOR_ID1()) &&
-           VerifyOffset(verifier, VT_ORIG_SENSOR_ID2) &&
-           verifier.VerifyString(ORIG_SENSOR_ID2()) &&
-           VerifyField<uint8_t>(verifier, VT_UCT, 1) &&
-           VerifyField<double>(verifier, VT_SENSOR1_DELAY, 8) &&
-           VerifyField<double>(verifier, VT_SENSOR2_DELAY, 8) &&
            VerifyField<double>(verifier, VT_SENLAT, 8) &&
            VerifyField<double>(verifier, VT_SENLON, 8) &&
            VerifyField<double>(verifier, VT_SENALT, 8) &&
+           VerifyField<double>(verifier, VT_SENSOR1_DELAY, 8) &&
+           VerifyOffset(verifier, VT_ID_SENSOR2) &&
+           verifier.VerifyString(ID_SENSOR2()) &&
+           VerifyOffset(verifier, VT_ORIG_SENSOR_ID2) &&
+           verifier.VerifyString(ORIG_SENSOR_ID2()) &&
            VerifyField<double>(verifier, VT_SEN2LAT, 8) &&
            VerifyField<double>(verifier, VT_SEN2LON, 8) &&
            VerifyField<double>(verifier, VT_SEN2ALT, 8) &&
+           VerifyField<double>(verifier, VT_SENSOR2_DELAY, 8) &&
            VerifyField<double>(verifier, VT_FREQUENCY, 8) &&
            VerifyField<double>(verifier, VT_BANDWIDTH, 8) &&
+           VerifyField<double>(verifier, VT_SNR, 8) &&
            VerifyField<double>(verifier, VT_DELTA_RANGE, 8) &&
            VerifyField<double>(verifier, VT_DELTA_RANGE_UNC, 8) &&
            VerifyField<double>(verifier, VT_DELTA_RANGE_RATE, 8) &&
            VerifyField<double>(verifier, VT_DELTA_RANGE_RATE_UNC, 8) &&
-           VerifyField<double>(verifier, VT_SNR, 8) &&
            VerifyField<double>(verifier, VT_TDOA, 8) &&
            VerifyField<double>(verifier, VT_TDOA_UNC, 8) &&
            VerifyField<double>(verifier, VT_FDOA, 8) &&
            VerifyField<double>(verifier, VT_FDOA_UNC, 8) &&
-           VerifyOffset(verifier, VT_COLLECTION_MODE) &&
-           verifier.VerifyString(COLLECTION_MODE()) &&
            VerifyOffset(verifier, VT_RAW_FILE_URI) &&
            verifier.VerifyString(RAW_FILE_URI()) &&
+           VerifyOffset(verifier, VT_DESCRIPTOR) &&
+           verifier.VerifyString(DESCRIPTOR()) &&
            VerifyOffset(verifier, VT_TAGS) &&
            verifier.VerifyVector(TAGS()) &&
            verifier.VerifyVectorOfStrings(TAGS()) &&
-           VerifyOffset(verifier, VT_ON_ORBIT) &&
-           verifier.VerifyString(ON_ORBIT()) &&
-           VerifyOffset(verifier, VT_DESCRIPTOR) &&
-           verifier.VerifyString(DESCRIPTOR()) &&
-           VerifyOffset(verifier, VT_TRANSACTION_ID) &&
-           verifier.VerifyString(TRANSACTION_ID()) &&
            verifier.EndTable();
   }
 };
@@ -227,35 +303,32 @@ struct DOABuilder {
   void add_OB_TIME(::flatbuffers::Offset<::flatbuffers::String> OB_TIME) {
     fbb_.AddOffset(DOA::VT_OB_TIME, OB_TIME);
   }
-  void add_ID_SENSOR1(::flatbuffers::Offset<::flatbuffers::String> ID_SENSOR1) {
-    fbb_.AddOffset(DOA::VT_ID_SENSOR1, ID_SENSOR1);
-  }
-  void add_ID_SENSOR2(::flatbuffers::Offset<::flatbuffers::String> ID_SENSOR2) {
-    fbb_.AddOffset(DOA::VT_ID_SENSOR2, ID_SENSOR2);
-  }
-  void add_SAT_NO(int32_t SAT_NO) {
-    fbb_.AddElement<int32_t>(DOA::VT_SAT_NO, SAT_NO, 0);
-  }
-  void add_TASK_ID(::flatbuffers::Offset<::flatbuffers::String> TASK_ID) {
-    fbb_.AddOffset(DOA::VT_TASK_ID, TASK_ID);
+  void add_SAT_NO(uint32_t SAT_NO) {
+    fbb_.AddElement<uint32_t>(DOA::VT_SAT_NO, SAT_NO, 0);
   }
   void add_ORIG_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID) {
     fbb_.AddOffset(DOA::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
   }
-  void add_ORIG_SENSOR_ID1(::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID1) {
-    fbb_.AddOffset(DOA::VT_ORIG_SENSOR_ID1, ORIG_SENSOR_ID1);
-  }
-  void add_ORIG_SENSOR_ID2(::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID2) {
-    fbb_.AddOffset(DOA::VT_ORIG_SENSOR_ID2, ORIG_SENSOR_ID2);
+  void add_ON_ORBIT(::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT) {
+    fbb_.AddOffset(DOA::VT_ON_ORBIT, ON_ORBIT);
   }
   void add_UCT(bool UCT) {
     fbb_.AddElement<uint8_t>(DOA::VT_UCT, static_cast<uint8_t>(UCT), 0);
   }
-  void add_SENSOR1_DELAY(double SENSOR1_DELAY) {
-    fbb_.AddElement<double>(DOA::VT_SENSOR1_DELAY, SENSOR1_DELAY, 0.0);
+  void add_TASK_ID(::flatbuffers::Offset<::flatbuffers::String> TASK_ID) {
+    fbb_.AddOffset(DOA::VT_TASK_ID, TASK_ID);
   }
-  void add_SENSOR2_DELAY(double SENSOR2_DELAY) {
-    fbb_.AddElement<double>(DOA::VT_SENSOR2_DELAY, SENSOR2_DELAY, 0.0);
+  void add_TRANSACTION_ID(::flatbuffers::Offset<::flatbuffers::String> TRANSACTION_ID) {
+    fbb_.AddOffset(DOA::VT_TRANSACTION_ID, TRANSACTION_ID);
+  }
+  void add_COLLECTION_MODE(doaCollectionMode COLLECTION_MODE) {
+    fbb_.AddElement<int8_t>(DOA::VT_COLLECTION_MODE, static_cast<int8_t>(COLLECTION_MODE), 0);
+  }
+  void add_ID_SENSOR1(::flatbuffers::Offset<::flatbuffers::String> ID_SENSOR1) {
+    fbb_.AddOffset(DOA::VT_ID_SENSOR1, ID_SENSOR1);
+  }
+  void add_ORIG_SENSOR_ID1(::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID1) {
+    fbb_.AddOffset(DOA::VT_ORIG_SENSOR_ID1, ORIG_SENSOR_ID1);
   }
   void add_SENLAT(double SENLAT) {
     fbb_.AddElement<double>(DOA::VT_SENLAT, SENLAT, 0.0);
@@ -266,6 +339,15 @@ struct DOABuilder {
   void add_SENALT(double SENALT) {
     fbb_.AddElement<double>(DOA::VT_SENALT, SENALT, 0.0);
   }
+  void add_SENSOR1_DELAY(double SENSOR1_DELAY) {
+    fbb_.AddElement<double>(DOA::VT_SENSOR1_DELAY, SENSOR1_DELAY, 0.0);
+  }
+  void add_ID_SENSOR2(::flatbuffers::Offset<::flatbuffers::String> ID_SENSOR2) {
+    fbb_.AddOffset(DOA::VT_ID_SENSOR2, ID_SENSOR2);
+  }
+  void add_ORIG_SENSOR_ID2(::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID2) {
+    fbb_.AddOffset(DOA::VT_ORIG_SENSOR_ID2, ORIG_SENSOR_ID2);
+  }
   void add_SEN2LAT(double SEN2LAT) {
     fbb_.AddElement<double>(DOA::VT_SEN2LAT, SEN2LAT, 0.0);
   }
@@ -275,11 +357,17 @@ struct DOABuilder {
   void add_SEN2ALT(double SEN2ALT) {
     fbb_.AddElement<double>(DOA::VT_SEN2ALT, SEN2ALT, 0.0);
   }
+  void add_SENSOR2_DELAY(double SENSOR2_DELAY) {
+    fbb_.AddElement<double>(DOA::VT_SENSOR2_DELAY, SENSOR2_DELAY, 0.0);
+  }
   void add_FREQUENCY(double FREQUENCY) {
     fbb_.AddElement<double>(DOA::VT_FREQUENCY, FREQUENCY, 0.0);
   }
   void add_BANDWIDTH(double BANDWIDTH) {
     fbb_.AddElement<double>(DOA::VT_BANDWIDTH, BANDWIDTH, 0.0);
+  }
+  void add_SNR(double SNR) {
+    fbb_.AddElement<double>(DOA::VT_SNR, SNR, 0.0);
   }
   void add_DELTA_RANGE(double DELTA_RANGE) {
     fbb_.AddElement<double>(DOA::VT_DELTA_RANGE, DELTA_RANGE, 0.0);
@@ -293,9 +381,6 @@ struct DOABuilder {
   void add_DELTA_RANGE_RATE_UNC(double DELTA_RANGE_RATE_UNC) {
     fbb_.AddElement<double>(DOA::VT_DELTA_RANGE_RATE_UNC, DELTA_RANGE_RATE_UNC, 0.0);
   }
-  void add_SNR(double SNR) {
-    fbb_.AddElement<double>(DOA::VT_SNR, SNR, 0.0);
-  }
   void add_TDOA(double TDOA) {
     fbb_.AddElement<double>(DOA::VT_TDOA, TDOA, 0.0);
   }
@@ -308,23 +393,14 @@ struct DOABuilder {
   void add_FDOA_UNC(double FDOA_UNC) {
     fbb_.AddElement<double>(DOA::VT_FDOA_UNC, FDOA_UNC, 0.0);
   }
-  void add_COLLECTION_MODE(::flatbuffers::Offset<::flatbuffers::String> COLLECTION_MODE) {
-    fbb_.AddOffset(DOA::VT_COLLECTION_MODE, COLLECTION_MODE);
-  }
   void add_RAW_FILE_URI(::flatbuffers::Offset<::flatbuffers::String> RAW_FILE_URI) {
     fbb_.AddOffset(DOA::VT_RAW_FILE_URI, RAW_FILE_URI);
-  }
-  void add_TAGS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS) {
-    fbb_.AddOffset(DOA::VT_TAGS, TAGS);
-  }
-  void add_ON_ORBIT(::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT) {
-    fbb_.AddOffset(DOA::VT_ON_ORBIT, ON_ORBIT);
   }
   void add_DESCRIPTOR(::flatbuffers::Offset<::flatbuffers::String> DESCRIPTOR) {
     fbb_.AddOffset(DOA::VT_DESCRIPTOR, DESCRIPTOR);
   }
-  void add_TRANSACTION_ID(::flatbuffers::Offset<::flatbuffers::String> TRANSACTION_ID) {
-    fbb_.AddOffset(DOA::VT_TRANSACTION_ID, TRANSACTION_ID);
+  void add_TAGS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS) {
+    fbb_.AddOffset(DOA::VT_TAGS, TAGS);
   }
   explicit DOABuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -341,74 +417,74 @@ inline ::flatbuffers::Offset<DOA> CreateDOA(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OB_TIME = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ID_SENSOR1 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ID_SENSOR2 = 0,
-    int32_t SAT_NO = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TASK_ID = 0,
+    uint32_t SAT_NO = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID1 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID2 = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT = 0,
     bool UCT = false,
-    double SENSOR1_DELAY = 0.0,
-    double SENSOR2_DELAY = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> TASK_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> TRANSACTION_ID = 0,
+    doaCollectionMode COLLECTION_MODE = doaCollectionMode_TDOA,
+    ::flatbuffers::Offset<::flatbuffers::String> ID_SENSOR1 = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID1 = 0,
     double SENLAT = 0.0,
     double SENLON = 0.0,
     double SENALT = 0.0,
+    double SENSOR1_DELAY = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> ID_SENSOR2 = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID2 = 0,
     double SEN2LAT = 0.0,
     double SEN2LON = 0.0,
     double SEN2ALT = 0.0,
+    double SENSOR2_DELAY = 0.0,
     double FREQUENCY = 0.0,
     double BANDWIDTH = 0.0,
+    double SNR = 0.0,
     double DELTA_RANGE = 0.0,
     double DELTA_RANGE_UNC = 0.0,
     double DELTA_RANGE_RATE = 0.0,
     double DELTA_RANGE_RATE_UNC = 0.0,
-    double SNR = 0.0,
     double TDOA = 0.0,
     double TDOA_UNC = 0.0,
     double FDOA = 0.0,
     double FDOA_UNC = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::String> COLLECTION_MODE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> RAW_FILE_URI = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTOR = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TRANSACTION_ID = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS = 0) {
   DOABuilder builder_(_fbb);
   builder_.add_FDOA_UNC(FDOA_UNC);
   builder_.add_FDOA(FDOA);
   builder_.add_TDOA_UNC(TDOA_UNC);
   builder_.add_TDOA(TDOA);
-  builder_.add_SNR(SNR);
   builder_.add_DELTA_RANGE_RATE_UNC(DELTA_RANGE_RATE_UNC);
   builder_.add_DELTA_RANGE_RATE(DELTA_RANGE_RATE);
   builder_.add_DELTA_RANGE_UNC(DELTA_RANGE_UNC);
   builder_.add_DELTA_RANGE(DELTA_RANGE);
+  builder_.add_SNR(SNR);
   builder_.add_BANDWIDTH(BANDWIDTH);
   builder_.add_FREQUENCY(FREQUENCY);
+  builder_.add_SENSOR2_DELAY(SENSOR2_DELAY);
   builder_.add_SEN2ALT(SEN2ALT);
   builder_.add_SEN2LON(SEN2LON);
   builder_.add_SEN2LAT(SEN2LAT);
+  builder_.add_SENSOR1_DELAY(SENSOR1_DELAY);
   builder_.add_SENALT(SENALT);
   builder_.add_SENLON(SENLON);
   builder_.add_SENLAT(SENLAT);
-  builder_.add_SENSOR2_DELAY(SENSOR2_DELAY);
-  builder_.add_SENSOR1_DELAY(SENSOR1_DELAY);
-  builder_.add_TRANSACTION_ID(TRANSACTION_ID);
-  builder_.add_DESCRIPTOR(DESCRIPTOR);
-  builder_.add_ON_ORBIT(ON_ORBIT);
   builder_.add_TAGS(TAGS);
+  builder_.add_DESCRIPTOR(DESCRIPTOR);
   builder_.add_RAW_FILE_URI(RAW_FILE_URI);
-  builder_.add_COLLECTION_MODE(COLLECTION_MODE);
   builder_.add_ORIG_SENSOR_ID2(ORIG_SENSOR_ID2);
-  builder_.add_ORIG_SENSOR_ID1(ORIG_SENSOR_ID1);
-  builder_.add_ORIG_OBJECT_ID(ORIG_OBJECT_ID);
-  builder_.add_TASK_ID(TASK_ID);
-  builder_.add_SAT_NO(SAT_NO);
   builder_.add_ID_SENSOR2(ID_SENSOR2);
+  builder_.add_ORIG_SENSOR_ID1(ORIG_SENSOR_ID1);
   builder_.add_ID_SENSOR1(ID_SENSOR1);
+  builder_.add_TRANSACTION_ID(TRANSACTION_ID);
+  builder_.add_TASK_ID(TASK_ID);
+  builder_.add_ON_ORBIT(ON_ORBIT);
+  builder_.add_ORIG_OBJECT_ID(ORIG_OBJECT_ID);
+  builder_.add_SAT_NO(SAT_NO);
   builder_.add_OB_TIME(OB_TIME);
   builder_.add_ID(ID);
+  builder_.add_COLLECTION_MODE(COLLECTION_MODE);
   builder_.add_UCT(UCT);
   return builder_.Finish();
 }
@@ -417,90 +493,89 @@ inline ::flatbuffers::Offset<DOA> CreateDOADirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *ID = nullptr,
     const char *OB_TIME = nullptr,
-    const char *ID_SENSOR1 = nullptr,
-    const char *ID_SENSOR2 = nullptr,
-    int32_t SAT_NO = 0,
-    const char *TASK_ID = nullptr,
+    uint32_t SAT_NO = 0,
     const char *ORIG_OBJECT_ID = nullptr,
-    const char *ORIG_SENSOR_ID1 = nullptr,
-    const char *ORIG_SENSOR_ID2 = nullptr,
+    const char *ON_ORBIT = nullptr,
     bool UCT = false,
-    double SENSOR1_DELAY = 0.0,
-    double SENSOR2_DELAY = 0.0,
+    const char *TASK_ID = nullptr,
+    const char *TRANSACTION_ID = nullptr,
+    doaCollectionMode COLLECTION_MODE = doaCollectionMode_TDOA,
+    const char *ID_SENSOR1 = nullptr,
+    const char *ORIG_SENSOR_ID1 = nullptr,
     double SENLAT = 0.0,
     double SENLON = 0.0,
     double SENALT = 0.0,
+    double SENSOR1_DELAY = 0.0,
+    const char *ID_SENSOR2 = nullptr,
+    const char *ORIG_SENSOR_ID2 = nullptr,
     double SEN2LAT = 0.0,
     double SEN2LON = 0.0,
     double SEN2ALT = 0.0,
+    double SENSOR2_DELAY = 0.0,
     double FREQUENCY = 0.0,
     double BANDWIDTH = 0.0,
+    double SNR = 0.0,
     double DELTA_RANGE = 0.0,
     double DELTA_RANGE_UNC = 0.0,
     double DELTA_RANGE_RATE = 0.0,
     double DELTA_RANGE_RATE_UNC = 0.0,
-    double SNR = 0.0,
     double TDOA = 0.0,
     double TDOA_UNC = 0.0,
     double FDOA = 0.0,
     double FDOA_UNC = 0.0,
-    const char *COLLECTION_MODE = nullptr,
     const char *RAW_FILE_URI = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS = nullptr,
-    const char *ON_ORBIT = nullptr,
     const char *DESCRIPTOR = nullptr,
-    const char *TRANSACTION_ID = nullptr) {
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto OB_TIME__ = OB_TIME ? _fbb.CreateString(OB_TIME) : 0;
-  auto ID_SENSOR1__ = ID_SENSOR1 ? _fbb.CreateString(ID_SENSOR1) : 0;
-  auto ID_SENSOR2__ = ID_SENSOR2 ? _fbb.CreateString(ID_SENSOR2) : 0;
-  auto TASK_ID__ = TASK_ID ? _fbb.CreateString(TASK_ID) : 0;
   auto ORIG_OBJECT_ID__ = ORIG_OBJECT_ID ? _fbb.CreateString(ORIG_OBJECT_ID) : 0;
-  auto ORIG_SENSOR_ID1__ = ORIG_SENSOR_ID1 ? _fbb.CreateString(ORIG_SENSOR_ID1) : 0;
-  auto ORIG_SENSOR_ID2__ = ORIG_SENSOR_ID2 ? _fbb.CreateString(ORIG_SENSOR_ID2) : 0;
-  auto COLLECTION_MODE__ = COLLECTION_MODE ? _fbb.CreateString(COLLECTION_MODE) : 0;
-  auto RAW_FILE_URI__ = RAW_FILE_URI ? _fbb.CreateString(RAW_FILE_URI) : 0;
-  auto TAGS__ = TAGS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*TAGS) : 0;
   auto ON_ORBIT__ = ON_ORBIT ? _fbb.CreateString(ON_ORBIT) : 0;
-  auto DESCRIPTOR__ = DESCRIPTOR ? _fbb.CreateString(DESCRIPTOR) : 0;
+  auto TASK_ID__ = TASK_ID ? _fbb.CreateString(TASK_ID) : 0;
   auto TRANSACTION_ID__ = TRANSACTION_ID ? _fbb.CreateString(TRANSACTION_ID) : 0;
+  auto ID_SENSOR1__ = ID_SENSOR1 ? _fbb.CreateString(ID_SENSOR1) : 0;
+  auto ORIG_SENSOR_ID1__ = ORIG_SENSOR_ID1 ? _fbb.CreateString(ORIG_SENSOR_ID1) : 0;
+  auto ID_SENSOR2__ = ID_SENSOR2 ? _fbb.CreateString(ID_SENSOR2) : 0;
+  auto ORIG_SENSOR_ID2__ = ORIG_SENSOR_ID2 ? _fbb.CreateString(ORIG_SENSOR_ID2) : 0;
+  auto RAW_FILE_URI__ = RAW_FILE_URI ? _fbb.CreateString(RAW_FILE_URI) : 0;
+  auto DESCRIPTOR__ = DESCRIPTOR ? _fbb.CreateString(DESCRIPTOR) : 0;
+  auto TAGS__ = TAGS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*TAGS) : 0;
   return CreateDOA(
       _fbb,
       ID__,
       OB_TIME__,
-      ID_SENSOR1__,
-      ID_SENSOR2__,
       SAT_NO,
-      TASK_ID__,
       ORIG_OBJECT_ID__,
-      ORIG_SENSOR_ID1__,
-      ORIG_SENSOR_ID2__,
+      ON_ORBIT__,
       UCT,
-      SENSOR1_DELAY,
-      SENSOR2_DELAY,
+      TASK_ID__,
+      TRANSACTION_ID__,
+      COLLECTION_MODE,
+      ID_SENSOR1__,
+      ORIG_SENSOR_ID1__,
       SENLAT,
       SENLON,
       SENALT,
+      SENSOR1_DELAY,
+      ID_SENSOR2__,
+      ORIG_SENSOR_ID2__,
       SEN2LAT,
       SEN2LON,
       SEN2ALT,
+      SENSOR2_DELAY,
       FREQUENCY,
       BANDWIDTH,
+      SNR,
       DELTA_RANGE,
       DELTA_RANGE_UNC,
       DELTA_RANGE_RATE,
       DELTA_RANGE_RATE_UNC,
-      SNR,
       TDOA,
       TDOA_UNC,
       FDOA,
       FDOA_UNC,
-      COLLECTION_MODE__,
       RAW_FILE_URI__,
-      TAGS__,
-      ON_ORBIT__,
       DESCRIPTOR__,
-      TRANSACTION_ID__);
+      TAGS__);
 }
 
 inline const DOA *GetDOA(const void *buf) {

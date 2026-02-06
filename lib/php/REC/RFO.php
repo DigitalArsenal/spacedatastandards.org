@@ -41,514 +41,684 @@ class RFO extends Table
         return $this;
     }
 
+    /// Unique identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Observation time (ISO 8601)
     public function getOB_TIME()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Sensor identifier
     public function getID_SENSOR()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getTYPE()
+    /// Original sensor identifier
+    public function getORIG_SENSOR_ID()
     {
         $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Observation type
     /**
-     * @return int
+     * @return sbyte
+     */
+    public function getOBS_TYPE()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \rfObsType::EMISSION;
+    }
+
+    /// Satellite catalog number
+    /**
+     * @return uint
      */
     public function getSAT_NO()
     {
-        $o = $this->__offset(12);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
-    }
-
-    public function getTASK_ID()
-    {
         $o = $this->__offset(14);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
-    public function getTRANSACTION_ID()
+    /// International designator
+    public function getORIG_OBJECT_ID()
     {
         $o = $this->__offset(16);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getTRACK_ID()
+    /// On-orbit reference
+    public function getON_ORBIT()
     {
         $o = $this->__offset(18);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getORIG_OBJECT_ID()
-    {
-        $o = $this->__offset(20);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getORIG_SENSOR_ID()
-    {
-        $o = $this->__offset(22);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
+    /// True if uncorrelated target
     /**
      * @return bool
      */
     public function getUCT()
     {
-        $o = $this->__offset(24);
+        $o = $this->__offset(20);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
-    public function getTRANSPONDER()
+    /// Task identifier
+    public function getTASK_ID()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Transaction identifier
+    public function getTRANSACTION_ID()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Track identifier
+    public function getTRACK_ID()
     {
         $o = $this->__offset(26);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Transponder identifier
+    public function getTRANSPONDER()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Detection status
+    /**
+     * @return sbyte
+     */
+    public function getDETECTION_STATUS()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \rfDetectionStatus::DETECTED;
+    }
+
+    /// Azimuth angle (degrees)
     /**
      * @return double
      */
     public function getAZIMUTH()
     {
-        $o = $this->__offset(28);
+        $o = $this->__offset(32);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Azimuth uncertainty (degrees, 1-sigma)
     /**
      * @return double
      */
     public function getAZIMUTH_UNC()
     {
-        $o = $this->__offset(30);
+        $o = $this->__offset(34);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Azimuth rate (degrees/s)
     /**
      * @return double
      */
     public function getAZIMUTH_RATE()
     {
-        $o = $this->__offset(32);
+        $o = $this->__offset(36);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Elevation angle (degrees)
     /**
      * @return double
      */
     public function getELEVATION()
     {
-        $o = $this->__offset(34);
+        $o = $this->__offset(38);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Elevation uncertainty (degrees, 1-sigma)
     /**
      * @return double
      */
     public function getELEVATION_UNC()
     {
-        $o = $this->__offset(36);
+        $o = $this->__offset(40);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Elevation rate (degrees/s)
     /**
      * @return double
      */
     public function getELEVATION_RATE()
     {
-        $o = $this->__offset(38);
+        $o = $this->__offset(42);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Slant range (km)
     /**
      * @return double
      */
     public function getRANGE()
     {
-        $o = $this->__offset(40);
+        $o = $this->__offset(44);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Range uncertainty (km, 1-sigma)
     /**
      * @return double
      */
     public function getRANGE_UNC()
     {
-        $o = $this->__offset(42);
+        $o = $this->__offset(46);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Range rate (km/s)
     /**
      * @return double
      */
     public function getRANGE_RATE()
     {
-        $o = $this->__offset(44);
+        $o = $this->__offset(48);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Range rate uncertainty (km/s, 1-sigma)
     /**
      * @return double
      */
     public function getRANGE_RATE_UNC()
     {
-        $o = $this->__offset(46);
+        $o = $this->__offset(50);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Track range (km)
     /**
      * @return double
      */
     public function getTRACK_RANGE()
     {
-        $o = $this->__offset(48);
+        $o = $this->__offset(52);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor latitude (degrees)
     /**
      * @return double
      */
     public function getSENLAT()
     {
-        $o = $this->__offset(50);
+        $o = $this->__offset(54);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor longitude (degrees)
     /**
      * @return double
      */
     public function getSENLON()
     {
-        $o = $this->__offset(52);
+        $o = $this->__offset(56);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor altitude (km)
     /**
      * @return double
      */
     public function getSENALT()
     {
-        $o = $this->__offset(54);
+        $o = $this->__offset(58);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// ELNOT (Electronic Intelligence Notation)
     public function getELNOT()
     {
-        $o = $this->__offset(56);
+        $o = $this->__offset(60);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Antenna name
+    public function getANTENNA_NAME()
+    {
+        $o = $this->__offset(62);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Collection mode
+    public function getCOLLECTION_MODE()
+    {
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Measured center frequency (MHz)
     /**
      * @return double
      */
     public function getFREQUENCY()
     {
-        $o = $this->__offset(58);
+        $o = $this->__offset(66);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Nominal center frequency (MHz)
     /**
      * @return double
      */
     public function getNOMINAL_FREQUENCY()
     {
-        $o = $this->__offset(60);
+        $o = $this->__offset(68);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Start frequency of emission (MHz)
     /**
      * @return double
      */
     public function getSTART_FREQUENCY()
     {
-        $o = $this->__offset(62);
+        $o = $this->__offset(70);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// End frequency of emission (MHz)
     /**
      * @return double
      */
     public function getEND_FREQUENCY()
     {
-        $o = $this->__offset(64);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getRELATIVE_CARRIER_POWER()
-    {
-        $o = $this->__offset(66);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getSPECTRUM_ANALYZER_POWER()
-    {
-        $o = $this->__offset(68);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getRELATIVE_NOISE_FLOOR()
-    {
-        $o = $this->__offset(70);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getREFERENCE_LEVEL()
-    {
         $o = $this->__offset(72);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /**
-     * @return double
-     */
-    public function getPGRI()
-    {
-        $o = $this->__offset(74);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getCONFIDENCE()
-    {
-        $o = $this->__offset(76);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getINCOMING()
-    {
-        $o = $this->__offset(78);
-        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSWITCH_POINT()
-    {
-        $o = $this->__offset(80);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getBAUD_RATE()
-    {
-        $o = $this->__offset(82);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getSNR()
-    {
-        $o = $this->__offset(84);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getNOMINAL_SNR()
-    {
-        $o = $this->__offset(86);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPOLARITY()
-    {
-        $o = $this->__offset(88);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    public function getPOLARITY_TYPE()
-    {
-        $o = $this->__offset(90);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /**
-     * @return int
-     */
-    public function getCHANNEL()
-    {
-        $o = $this->__offset(92);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPOWER_OVER_NOISE()
-    {
-        $o = $this->__offset(94);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getNOMINAL_POWER_OVER_NOISE()
-    {
-        $o = $this->__offset(96);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getBANDWIDTH()
-    {
-        $o = $this->__offset(98);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getNOMINAL_BANDWIDTH()
-    {
-        $o = $this->__offset(100);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getRESOLUTION_BANDWIDTH()
-    {
-        $o = $this->__offset(102);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getVIDEO_BANDWIDTH()
-    {
-        $o = $this->__offset(104);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getEIRP()
-    {
-        $o = $this->__offset(106);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getNOMINAL_EIRP()
-    {
-        $o = $this->__offset(108);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getMIN_PSD()
-    {
-        $o = $this->__offset(110);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getMAX_PSD()
-    {
-        $o = $this->__offset(112);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
+    /// Frequency shift from nominal (MHz)
     /**
      * @return double
      */
     public function getFREQUENCY_SHIFT()
     {
-        $o = $this->__offset(114);
+        $o = $this->__offset(74);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Measured bandwidth (MHz)
+    /**
+     * @return double
+     */
+    public function getBANDWIDTH()
+    {
+        $o = $this->__offset(76);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Nominal bandwidth (MHz)
+    /**
+     * @return double
+     */
+    public function getNOMINAL_BANDWIDTH()
+    {
+        $o = $this->__offset(78);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Resolution bandwidth (MHz)
+    /**
+     * @return double
+     */
+    public function getRESOLUTION_BANDWIDTH()
+    {
+        $o = $this->__offset(80);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Video bandwidth (MHz)
+    /**
+     * @return double
+     */
+    public function getVIDEO_BANDWIDTH()
+    {
+        $o = $this->__offset(82);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Relative carrier power (dBm)
+    /**
+     * @return double
+     */
+    public function getRELATIVE_CARRIER_POWER()
+    {
+        $o = $this->__offset(84);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Spectrum analyzer power (dBm)
+    /**
+     * @return double
+     */
+    public function getSPECTRUM_ANALYZER_POWER()
+    {
+        $o = $this->__offset(86);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Relative noise floor (dBm)
+    /**
+     * @return double
+     */
+    public function getRELATIVE_NOISE_FLOOR()
+    {
+        $o = $this->__offset(88);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Reference level (dBm)
+    /**
+     * @return double
+     */
+    public function getREFERENCE_LEVEL()
+    {
+        $o = $this->__offset(90);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Noise power density (dBm/Hz)
+    /**
+     * @return double
+     */
+    public function getNOISE_PWR_DENSITY()
+    {
+        $o = $this->__offset(92);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// PGRI (Pulse Group Repetition Interval, microseconds)
+    /**
+     * @return double
+     */
+    public function getPGRI()
+    {
+        $o = $this->__offset(94);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Effective isotropic radiated power (dBW)
+    /**
+     * @return double
+     */
+    public function getEIRP()
+    {
+        $o = $this->__offset(96);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Nominal EIRP (dBW)
+    /**
+     * @return double
+     */
+    public function getNOMINAL_EIRP()
+    {
+        $o = $this->__offset(98);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Minimum power spectral density (dBm/Hz)
+    /**
+     * @return double
+     */
+    public function getMIN_PSD()
+    {
+        $o = $this->__offset(100);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Maximum power spectral density (dBm/Hz)
+    /**
+     * @return double
+     */
+    public function getMAX_PSD()
+    {
+        $o = $this->__offset(102);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Signal-to-noise ratio (dB)
+    /**
+     * @return double
+     */
+    public function getSNR()
+    {
+        $o = $this->__offset(104);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Nominal SNR (dB)
+    /**
+     * @return double
+     */
+    public function getNOMINAL_SNR()
+    {
+        $o = $this->__offset(106);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Power over noise (dB)
+    /**
+     * @return double
+     */
+    public function getPOWER_OVER_NOISE()
+    {
+        $o = $this->__offset(108);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Nominal power over noise (dB)
+    /**
+     * @return double
+     */
+    public function getNOMINAL_POWER_OVER_NOISE()
+    {
+        $o = $this->__offset(110);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Polarity angle (degrees)
+    /**
+     * @return double
+     */
+    public function getPOLARITY()
+    {
+        $o = $this->__offset(112);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Polarization type (e.g., LHCP, RHCP, LINEAR)
+    public function getPOLARITY_TYPE()
+    {
+        $o = $this->__offset(114);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Channel number
+    /**
+     * @return ushort
+     */
+    public function getCHANNEL()
+    {
+        $o = $this->__offset(116);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
+    }
+
+    /// Baud rate (symbols/s)
+    /**
+     * @return double
+     */
+    public function getBAUD_RATE()
+    {
+        $o = $this->__offset(118);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Symbol-to-noise ratio (dB)
+    /**
+     * @return double
+     */
+    public function getSYMBOL_TO_NOISE_RATIO()
+    {
+        $o = $this->__offset(120);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Bit error rate
+    /**
+     * @return double
+     */
+    public function getBIT_ERROR_RATE()
+    {
+        $o = $this->__offset(122);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// True if peak measurement
     /**
      * @return bool
      */
     public function getPEAK()
     {
-        $o = $this->__offset(116);
+        $o = $this->__offset(124);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
-    public function getANTENNA_NAME()
+    /// True if incoming signal
+    /**
+     * @return bool
+     */
+    public function getINCOMING()
     {
-        $o = $this->__offset(118);
+        $o = $this->__offset(126);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Switch point number
+    /**
+     * @return ushort
+     */
+    public function getSWITCH_POINT()
+    {
+        $o = $this->__offset(128);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
+    }
+
+    /// Confidence score (0-1)
+    /**
+     * @return double
+     */
+    public function getCONFIDENCE()
+    {
+        $o = $this->__offset(130);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Carrier standard (e.g., DVB-S, DVB-S2)
+    public function getCARRIER_STANDARD()
+    {
+        $o = $this->__offset(132);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getDETECTION_STATUS()
+    /// Modulation type
+    public function getMODULATION()
     {
-        $o = $this->__offset(120);
+        $o = $this->__offset(134);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getCOLLECTION_MODE()
+    /// Inner FEC coding rate denominator
+    /**
+     * @return byte
+     */
+    public function getINNER_CODING_RATE()
     {
-        $o = $this->__offset(122);
+        $o = $this->__offset(136);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
+    }
+
+    /// Outer FEC coding rate denominator
+    /**
+     * @return byte
+     */
+    public function getOUTER_CODING_RATE()
+    {
+        $o = $this->__offset(138);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
+    }
+
+    /// Transmit filter type
+    public function getTRANSMIT_FILTER_TYPE()
+    {
+        $o = $this->__offset(140);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Transmit filter roll-off factor
+    /**
+     * @return double
+     */
+    public function getTRANSMIT_FILTER_ROLL_OFF()
+    {
+        $o = $this->__offset(142);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Reference to raw data file
     public function getRAW_FILE_URI()
     {
-        $o = $this->__offset(124);
+        $o = $this->__offset(144);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Event descriptor
+    public function getDESCRIPTOR()
+    {
+        $o = $this->__offset(146);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Reference URL
+    public function getURL()
+    {
+        $o = $this->__offset(148);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Associated tags
     /**
      * @param int offset
      * @return string
      */
     public function getTAGS($j)
     {
-        $o = $this->__offset(126);
+        $o = $this->__offset(150);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -557,98 +727,8 @@ class RFO extends Table
      */
     public function getTAGSLength()
     {
-        $o = $this->__offset(126);
-        return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getNOISE_PWR_DENSITY()
-    {
-        $o = $this->__offset(128);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    public function getCARRIER_STANDARD()
-    {
-        $o = $this->__offset(130);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getMODULATION()
-    {
-        $o = $this->__offset(132);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /**
-     * @return int
-     */
-    public function getINNER_CODING_RATE()
-    {
-        $o = $this->__offset(134);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getOUTER_CODING_RATE()
-    {
-        $o = $this->__offset(136);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
-    }
-
-    public function getTRANSMIT_FILTER_TYPE()
-    {
-        $o = $this->__offset(138);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /**
-     * @return double
-     */
-    public function getTRANSMIT_FILTER_ROLL_OFF()
-    {
-        $o = $this->__offset(140);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getSYMBOL_TO_NOISE_RATIO()
-    {
-        $o = $this->__offset(142);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getBIT_ERROR_RATE()
-    {
-        $o = $this->__offset(144);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    public function getON_ORBIT()
-    {
-        $o = $this->__offset(146);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getDESCRIPTOR()
-    {
-        $o = $this->__offset(148);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getURL()
-    {
         $o = $this->__offset(150);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
     /**
@@ -664,21 +744,23 @@ class RFO extends Table
      * @param FlatBufferBuilder $builder
      * @return RFO
      */
-    public static function createRFO(FlatBufferBuilder $builder, $ID, $OB_TIME, $ID_SENSOR, $TYPE, $SAT_NO, $TASK_ID, $TRANSACTION_ID, $TRACK_ID, $ORIG_OBJECT_ID, $ORIG_SENSOR_ID, $UCT, $TRANSPONDER, $AZIMUTH, $AZIMUTH_UNC, $AZIMUTH_RATE, $ELEVATION, $ELEVATION_UNC, $ELEVATION_RATE, $RANGE, $RANGE_UNC, $RANGE_RATE, $RANGE_RATE_UNC, $TRACK_RANGE, $SENLAT, $SENLON, $SENALT, $ELNOT, $FREQUENCY, $NOMINAL_FREQUENCY, $START_FREQUENCY, $END_FREQUENCY, $RELATIVE_CARRIER_POWER, $SPECTRUM_ANALYZER_POWER, $RELATIVE_NOISE_FLOOR, $REFERENCE_LEVEL, $PGRI, $CONFIDENCE, $INCOMING, $SWITCH_POINT, $BAUD_RATE, $SNR, $NOMINAL_SNR, $POLARITY, $POLARITY_TYPE, $CHANNEL, $POWER_OVER_NOISE, $NOMINAL_POWER_OVER_NOISE, $BANDWIDTH, $NOMINAL_BANDWIDTH, $RESOLUTION_BANDWIDTH, $VIDEO_BANDWIDTH, $EIRP, $NOMINAL_EIRP, $MIN_PSD, $MAX_PSD, $FREQUENCY_SHIFT, $PEAK, $ANTENNA_NAME, $DETECTION_STATUS, $COLLECTION_MODE, $RAW_FILE_URI, $TAGS, $NOISE_PWR_DENSITY, $CARRIER_STANDARD, $MODULATION, $INNER_CODING_RATE, $OUTER_CODING_RATE, $TRANSMIT_FILTER_TYPE, $TRANSMIT_FILTER_ROLL_OFF, $SYMBOL_TO_NOISE_RATIO, $BIT_ERROR_RATE, $ON_ORBIT, $DESCRIPTOR, $URL)
+    public static function createRFO(FlatBufferBuilder $builder, $ID, $OB_TIME, $ID_SENSOR, $ORIG_SENSOR_ID, $OBS_TYPE, $SAT_NO, $ORIG_OBJECT_ID, $ON_ORBIT, $UCT, $TASK_ID, $TRANSACTION_ID, $TRACK_ID, $TRANSPONDER, $DETECTION_STATUS, $AZIMUTH, $AZIMUTH_UNC, $AZIMUTH_RATE, $ELEVATION, $ELEVATION_UNC, $ELEVATION_RATE, $RANGE, $RANGE_UNC, $RANGE_RATE, $RANGE_RATE_UNC, $TRACK_RANGE, $SENLAT, $SENLON, $SENALT, $ELNOT, $ANTENNA_NAME, $COLLECTION_MODE, $FREQUENCY, $NOMINAL_FREQUENCY, $START_FREQUENCY, $END_FREQUENCY, $FREQUENCY_SHIFT, $BANDWIDTH, $NOMINAL_BANDWIDTH, $RESOLUTION_BANDWIDTH, $VIDEO_BANDWIDTH, $RELATIVE_CARRIER_POWER, $SPECTRUM_ANALYZER_POWER, $RELATIVE_NOISE_FLOOR, $REFERENCE_LEVEL, $NOISE_PWR_DENSITY, $PGRI, $EIRP, $NOMINAL_EIRP, $MIN_PSD, $MAX_PSD, $SNR, $NOMINAL_SNR, $POWER_OVER_NOISE, $NOMINAL_POWER_OVER_NOISE, $POLARITY, $POLARITY_TYPE, $CHANNEL, $BAUD_RATE, $SYMBOL_TO_NOISE_RATIO, $BIT_ERROR_RATE, $PEAK, $INCOMING, $SWITCH_POINT, $CONFIDENCE, $CARRIER_STANDARD, $MODULATION, $INNER_CODING_RATE, $OUTER_CODING_RATE, $TRANSMIT_FILTER_TYPE, $TRANSMIT_FILTER_ROLL_OFF, $RAW_FILE_URI, $DESCRIPTOR, $URL, $TAGS)
     {
         $builder->startObject(74);
         self::addID($builder, $ID);
         self::addOB_TIME($builder, $OB_TIME);
         self::addID_SENSOR($builder, $ID_SENSOR);
-        self::addTYPE($builder, $TYPE);
+        self::addORIG_SENSOR_ID($builder, $ORIG_SENSOR_ID);
+        self::addOBS_TYPE($builder, $OBS_TYPE);
         self::addSAT_NO($builder, $SAT_NO);
+        self::addORIG_OBJECT_ID($builder, $ORIG_OBJECT_ID);
+        self::addON_ORBIT($builder, $ON_ORBIT);
+        self::addUCT($builder, $UCT);
         self::addTASK_ID($builder, $TASK_ID);
         self::addTRANSACTION_ID($builder, $TRANSACTION_ID);
         self::addTRACK_ID($builder, $TRACK_ID);
-        self::addORIG_OBJECT_ID($builder, $ORIG_OBJECT_ID);
-        self::addORIG_SENSOR_ID($builder, $ORIG_SENSOR_ID);
-        self::addUCT($builder, $UCT);
         self::addTRANSPONDER($builder, $TRANSPONDER);
+        self::addDETECTION_STATUS($builder, $DETECTION_STATUS);
         self::addAZIMUTH($builder, $AZIMUTH);
         self::addAZIMUTH_UNC($builder, $AZIMUTH_UNC);
         self::addAZIMUTH_RATE($builder, $AZIMUTH_RATE);
@@ -694,53 +776,51 @@ class RFO extends Table
         self::addSENLON($builder, $SENLON);
         self::addSENALT($builder, $SENALT);
         self::addELNOT($builder, $ELNOT);
+        self::addANTENNA_NAME($builder, $ANTENNA_NAME);
+        self::addCOLLECTION_MODE($builder, $COLLECTION_MODE);
         self::addFREQUENCY($builder, $FREQUENCY);
         self::addNOMINAL_FREQUENCY($builder, $NOMINAL_FREQUENCY);
         self::addSTART_FREQUENCY($builder, $START_FREQUENCY);
         self::addEND_FREQUENCY($builder, $END_FREQUENCY);
-        self::addRELATIVE_CARRIER_POWER($builder, $RELATIVE_CARRIER_POWER);
-        self::addSPECTRUM_ANALYZER_POWER($builder, $SPECTRUM_ANALYZER_POWER);
-        self::addRELATIVE_NOISE_FLOOR($builder, $RELATIVE_NOISE_FLOOR);
-        self::addREFERENCE_LEVEL($builder, $REFERENCE_LEVEL);
-        self::addPGRI($builder, $PGRI);
-        self::addCONFIDENCE($builder, $CONFIDENCE);
-        self::addINCOMING($builder, $INCOMING);
-        self::addSWITCH_POINT($builder, $SWITCH_POINT);
-        self::addBAUD_RATE($builder, $BAUD_RATE);
-        self::addSNR($builder, $SNR);
-        self::addNOMINAL_SNR($builder, $NOMINAL_SNR);
-        self::addPOLARITY($builder, $POLARITY);
-        self::addPOLARITY_TYPE($builder, $POLARITY_TYPE);
-        self::addCHANNEL($builder, $CHANNEL);
-        self::addPOWER_OVER_NOISE($builder, $POWER_OVER_NOISE);
-        self::addNOMINAL_POWER_OVER_NOISE($builder, $NOMINAL_POWER_OVER_NOISE);
+        self::addFREQUENCY_SHIFT($builder, $FREQUENCY_SHIFT);
         self::addBANDWIDTH($builder, $BANDWIDTH);
         self::addNOMINAL_BANDWIDTH($builder, $NOMINAL_BANDWIDTH);
         self::addRESOLUTION_BANDWIDTH($builder, $RESOLUTION_BANDWIDTH);
         self::addVIDEO_BANDWIDTH($builder, $VIDEO_BANDWIDTH);
+        self::addRELATIVE_CARRIER_POWER($builder, $RELATIVE_CARRIER_POWER);
+        self::addSPECTRUM_ANALYZER_POWER($builder, $SPECTRUM_ANALYZER_POWER);
+        self::addRELATIVE_NOISE_FLOOR($builder, $RELATIVE_NOISE_FLOOR);
+        self::addREFERENCE_LEVEL($builder, $REFERENCE_LEVEL);
+        self::addNOISE_PWR_DENSITY($builder, $NOISE_PWR_DENSITY);
+        self::addPGRI($builder, $PGRI);
         self::addEIRP($builder, $EIRP);
         self::addNOMINAL_EIRP($builder, $NOMINAL_EIRP);
         self::addMIN_PSD($builder, $MIN_PSD);
         self::addMAX_PSD($builder, $MAX_PSD);
-        self::addFREQUENCY_SHIFT($builder, $FREQUENCY_SHIFT);
+        self::addSNR($builder, $SNR);
+        self::addNOMINAL_SNR($builder, $NOMINAL_SNR);
+        self::addPOWER_OVER_NOISE($builder, $POWER_OVER_NOISE);
+        self::addNOMINAL_POWER_OVER_NOISE($builder, $NOMINAL_POWER_OVER_NOISE);
+        self::addPOLARITY($builder, $POLARITY);
+        self::addPOLARITY_TYPE($builder, $POLARITY_TYPE);
+        self::addCHANNEL($builder, $CHANNEL);
+        self::addBAUD_RATE($builder, $BAUD_RATE);
+        self::addSYMBOL_TO_NOISE_RATIO($builder, $SYMBOL_TO_NOISE_RATIO);
+        self::addBIT_ERROR_RATE($builder, $BIT_ERROR_RATE);
         self::addPEAK($builder, $PEAK);
-        self::addANTENNA_NAME($builder, $ANTENNA_NAME);
-        self::addDETECTION_STATUS($builder, $DETECTION_STATUS);
-        self::addCOLLECTION_MODE($builder, $COLLECTION_MODE);
-        self::addRAW_FILE_URI($builder, $RAW_FILE_URI);
-        self::addTAGS($builder, $TAGS);
-        self::addNOISE_PWR_DENSITY($builder, $NOISE_PWR_DENSITY);
+        self::addINCOMING($builder, $INCOMING);
+        self::addSWITCH_POINT($builder, $SWITCH_POINT);
+        self::addCONFIDENCE($builder, $CONFIDENCE);
         self::addCARRIER_STANDARD($builder, $CARRIER_STANDARD);
         self::addMODULATION($builder, $MODULATION);
         self::addINNER_CODING_RATE($builder, $INNER_CODING_RATE);
         self::addOUTER_CODING_RATE($builder, $OUTER_CODING_RATE);
         self::addTRANSMIT_FILTER_TYPE($builder, $TRANSMIT_FILTER_TYPE);
         self::addTRANSMIT_FILTER_ROLL_OFF($builder, $TRANSMIT_FILTER_ROLL_OFF);
-        self::addSYMBOL_TO_NOISE_RATIO($builder, $SYMBOL_TO_NOISE_RATIO);
-        self::addBIT_ERROR_RATE($builder, $BIT_ERROR_RATE);
-        self::addON_ORBIT($builder, $ON_ORBIT);
+        self::addRAW_FILE_URI($builder, $RAW_FILE_URI);
         self::addDESCRIPTOR($builder, $DESCRIPTOR);
         self::addURL($builder, $URL);
+        self::addTAGS($builder, $TAGS);
         $o = $builder->endObject();
         return $o;
     }
@@ -780,49 +860,29 @@ class RFO extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addTYPE(FlatBufferBuilder $builder, $TYPE)
+    public static function addORIG_SENSOR_ID(FlatBufferBuilder $builder, $ORIG_SENSOR_ID)
     {
-        $builder->addOffsetX(3, $TYPE, 0);
+        $builder->addOffsetX(3, $ORIG_SENSOR_ID, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param sbyte
+     * @return void
+     */
+    public static function addOBS_TYPE(FlatBufferBuilder $builder, $OBS_TYPE)
+    {
+        $builder->addSbyteX(4, $OBS_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
      * @return void
      */
     public static function addSAT_NO(FlatBufferBuilder $builder, $SAT_NO)
     {
-        $builder->addIntX(4, $SAT_NO, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addTASK_ID(FlatBufferBuilder $builder, $TASK_ID)
-    {
-        $builder->addOffsetX(5, $TASK_ID, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addTRANSACTION_ID(FlatBufferBuilder $builder, $TRANSACTION_ID)
-    {
-        $builder->addOffsetX(6, $TRANSACTION_ID, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addTRACK_ID(FlatBufferBuilder $builder, $TRACK_ID)
-    {
-        $builder->addOffsetX(7, $TRACK_ID, 0);
+        $builder->addUintX(5, $SAT_NO, 0);
     }
 
     /**
@@ -832,7 +892,7 @@ class RFO extends Table
      */
     public static function addORIG_OBJECT_ID(FlatBufferBuilder $builder, $ORIG_OBJECT_ID)
     {
-        $builder->addOffsetX(8, $ORIG_OBJECT_ID, 0);
+        $builder->addOffsetX(6, $ORIG_OBJECT_ID, 0);
     }
 
     /**
@@ -840,9 +900,9 @@ class RFO extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addORIG_SENSOR_ID(FlatBufferBuilder $builder, $ORIG_SENSOR_ID)
+    public static function addON_ORBIT(FlatBufferBuilder $builder, $ON_ORBIT)
     {
-        $builder->addOffsetX(9, $ORIG_SENSOR_ID, 0);
+        $builder->addOffsetX(7, $ON_ORBIT, 0);
     }
 
     /**
@@ -852,7 +912,37 @@ class RFO extends Table
      */
     public static function addUCT(FlatBufferBuilder $builder, $UCT)
     {
-        $builder->addBoolX(10, $UCT, false);
+        $builder->addBoolX(8, $UCT, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addTASK_ID(FlatBufferBuilder $builder, $TASK_ID)
+    {
+        $builder->addOffsetX(9, $TASK_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addTRANSACTION_ID(FlatBufferBuilder $builder, $TRANSACTION_ID)
+    {
+        $builder->addOffsetX(10, $TRANSACTION_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addTRACK_ID(FlatBufferBuilder $builder, $TRACK_ID)
+    {
+        $builder->addOffsetX(11, $TRACK_ID, 0);
     }
 
     /**
@@ -862,7 +952,17 @@ class RFO extends Table
      */
     public static function addTRANSPONDER(FlatBufferBuilder $builder, $TRANSPONDER)
     {
-        $builder->addOffsetX(11, $TRANSPONDER, 0);
+        $builder->addOffsetX(12, $TRANSPONDER, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addDETECTION_STATUS(FlatBufferBuilder $builder, $DETECTION_STATUS)
+    {
+        $builder->addSbyteX(13, $DETECTION_STATUS, 0);
     }
 
     /**
@@ -872,7 +972,7 @@ class RFO extends Table
      */
     public static function addAZIMUTH(FlatBufferBuilder $builder, $AZIMUTH)
     {
-        $builder->addDoubleX(12, $AZIMUTH, 0.0);
+        $builder->addDoubleX(14, $AZIMUTH, 0.0);
     }
 
     /**
@@ -882,7 +982,7 @@ class RFO extends Table
      */
     public static function addAZIMUTH_UNC(FlatBufferBuilder $builder, $AZIMUTH_UNC)
     {
-        $builder->addDoubleX(13, $AZIMUTH_UNC, 0.0);
+        $builder->addDoubleX(15, $AZIMUTH_UNC, 0.0);
     }
 
     /**
@@ -892,7 +992,7 @@ class RFO extends Table
      */
     public static function addAZIMUTH_RATE(FlatBufferBuilder $builder, $AZIMUTH_RATE)
     {
-        $builder->addDoubleX(14, $AZIMUTH_RATE, 0.0);
+        $builder->addDoubleX(16, $AZIMUTH_RATE, 0.0);
     }
 
     /**
@@ -902,7 +1002,7 @@ class RFO extends Table
      */
     public static function addELEVATION(FlatBufferBuilder $builder, $ELEVATION)
     {
-        $builder->addDoubleX(15, $ELEVATION, 0.0);
+        $builder->addDoubleX(17, $ELEVATION, 0.0);
     }
 
     /**
@@ -912,7 +1012,7 @@ class RFO extends Table
      */
     public static function addELEVATION_UNC(FlatBufferBuilder $builder, $ELEVATION_UNC)
     {
-        $builder->addDoubleX(16, $ELEVATION_UNC, 0.0);
+        $builder->addDoubleX(18, $ELEVATION_UNC, 0.0);
     }
 
     /**
@@ -922,7 +1022,7 @@ class RFO extends Table
      */
     public static function addELEVATION_RATE(FlatBufferBuilder $builder, $ELEVATION_RATE)
     {
-        $builder->addDoubleX(17, $ELEVATION_RATE, 0.0);
+        $builder->addDoubleX(19, $ELEVATION_RATE, 0.0);
     }
 
     /**
@@ -932,7 +1032,7 @@ class RFO extends Table
      */
     public static function addRANGE(FlatBufferBuilder $builder, $RANGE)
     {
-        $builder->addDoubleX(18, $RANGE, 0.0);
+        $builder->addDoubleX(20, $RANGE, 0.0);
     }
 
     /**
@@ -942,7 +1042,7 @@ class RFO extends Table
      */
     public static function addRANGE_UNC(FlatBufferBuilder $builder, $RANGE_UNC)
     {
-        $builder->addDoubleX(19, $RANGE_UNC, 0.0);
+        $builder->addDoubleX(21, $RANGE_UNC, 0.0);
     }
 
     /**
@@ -952,7 +1052,7 @@ class RFO extends Table
      */
     public static function addRANGE_RATE(FlatBufferBuilder $builder, $RANGE_RATE)
     {
-        $builder->addDoubleX(20, $RANGE_RATE, 0.0);
+        $builder->addDoubleX(22, $RANGE_RATE, 0.0);
     }
 
     /**
@@ -962,7 +1062,7 @@ class RFO extends Table
      */
     public static function addRANGE_RATE_UNC(FlatBufferBuilder $builder, $RANGE_RATE_UNC)
     {
-        $builder->addDoubleX(21, $RANGE_RATE_UNC, 0.0);
+        $builder->addDoubleX(23, $RANGE_RATE_UNC, 0.0);
     }
 
     /**
@@ -972,7 +1072,7 @@ class RFO extends Table
      */
     public static function addTRACK_RANGE(FlatBufferBuilder $builder, $TRACK_RANGE)
     {
-        $builder->addDoubleX(22, $TRACK_RANGE, 0.0);
+        $builder->addDoubleX(24, $TRACK_RANGE, 0.0);
     }
 
     /**
@@ -982,7 +1082,7 @@ class RFO extends Table
      */
     public static function addSENLAT(FlatBufferBuilder $builder, $SENLAT)
     {
-        $builder->addDoubleX(23, $SENLAT, 0.0);
+        $builder->addDoubleX(25, $SENLAT, 0.0);
     }
 
     /**
@@ -992,7 +1092,7 @@ class RFO extends Table
      */
     public static function addSENLON(FlatBufferBuilder $builder, $SENLON)
     {
-        $builder->addDoubleX(24, $SENLON, 0.0);
+        $builder->addDoubleX(26, $SENLON, 0.0);
     }
 
     /**
@@ -1002,7 +1102,7 @@ class RFO extends Table
      */
     public static function addSENALT(FlatBufferBuilder $builder, $SENALT)
     {
-        $builder->addDoubleX(25, $SENALT, 0.0);
+        $builder->addDoubleX(27, $SENALT, 0.0);
     }
 
     /**
@@ -1012,307 +1112,7 @@ class RFO extends Table
      */
     public static function addELNOT(FlatBufferBuilder $builder, $ELNOT)
     {
-        $builder->addOffsetX(26, $ELNOT, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addFREQUENCY(FlatBufferBuilder $builder, $FREQUENCY)
-    {
-        $builder->addDoubleX(27, $FREQUENCY, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addNOMINAL_FREQUENCY(FlatBufferBuilder $builder, $NOMINAL_FREQUENCY)
-    {
-        $builder->addDoubleX(28, $NOMINAL_FREQUENCY, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addSTART_FREQUENCY(FlatBufferBuilder $builder, $START_FREQUENCY)
-    {
-        $builder->addDoubleX(29, $START_FREQUENCY, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addEND_FREQUENCY(FlatBufferBuilder $builder, $END_FREQUENCY)
-    {
-        $builder->addDoubleX(30, $END_FREQUENCY, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addRELATIVE_CARRIER_POWER(FlatBufferBuilder $builder, $RELATIVE_CARRIER_POWER)
-    {
-        $builder->addDoubleX(31, $RELATIVE_CARRIER_POWER, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addSPECTRUM_ANALYZER_POWER(FlatBufferBuilder $builder, $SPECTRUM_ANALYZER_POWER)
-    {
-        $builder->addDoubleX(32, $SPECTRUM_ANALYZER_POWER, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addRELATIVE_NOISE_FLOOR(FlatBufferBuilder $builder, $RELATIVE_NOISE_FLOOR)
-    {
-        $builder->addDoubleX(33, $RELATIVE_NOISE_FLOOR, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addREFERENCE_LEVEL(FlatBufferBuilder $builder, $REFERENCE_LEVEL)
-    {
-        $builder->addDoubleX(34, $REFERENCE_LEVEL, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPGRI(FlatBufferBuilder $builder, $PGRI)
-    {
-        $builder->addDoubleX(35, $PGRI, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addCONFIDENCE(FlatBufferBuilder $builder, $CONFIDENCE)
-    {
-        $builder->addDoubleX(36, $CONFIDENCE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param bool
-     * @return void
-     */
-    public static function addINCOMING(FlatBufferBuilder $builder, $INCOMING)
-    {
-        $builder->addBoolX(37, $INCOMING, false);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int
-     * @return void
-     */
-    public static function addSWITCH_POINT(FlatBufferBuilder $builder, $SWITCH_POINT)
-    {
-        $builder->addIntX(38, $SWITCH_POINT, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addBAUD_RATE(FlatBufferBuilder $builder, $BAUD_RATE)
-    {
-        $builder->addDoubleX(39, $BAUD_RATE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addSNR(FlatBufferBuilder $builder, $SNR)
-    {
-        $builder->addDoubleX(40, $SNR, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addNOMINAL_SNR(FlatBufferBuilder $builder, $NOMINAL_SNR)
-    {
-        $builder->addDoubleX(41, $NOMINAL_SNR, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPOLARITY(FlatBufferBuilder $builder, $POLARITY)
-    {
-        $builder->addDoubleX(42, $POLARITY, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addPOLARITY_TYPE(FlatBufferBuilder $builder, $POLARITY_TYPE)
-    {
-        $builder->addOffsetX(43, $POLARITY_TYPE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int
-     * @return void
-     */
-    public static function addCHANNEL(FlatBufferBuilder $builder, $CHANNEL)
-    {
-        $builder->addIntX(44, $CHANNEL, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPOWER_OVER_NOISE(FlatBufferBuilder $builder, $POWER_OVER_NOISE)
-    {
-        $builder->addDoubleX(45, $POWER_OVER_NOISE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addNOMINAL_POWER_OVER_NOISE(FlatBufferBuilder $builder, $NOMINAL_POWER_OVER_NOISE)
-    {
-        $builder->addDoubleX(46, $NOMINAL_POWER_OVER_NOISE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addBANDWIDTH(FlatBufferBuilder $builder, $BANDWIDTH)
-    {
-        $builder->addDoubleX(47, $BANDWIDTH, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addNOMINAL_BANDWIDTH(FlatBufferBuilder $builder, $NOMINAL_BANDWIDTH)
-    {
-        $builder->addDoubleX(48, $NOMINAL_BANDWIDTH, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addRESOLUTION_BANDWIDTH(FlatBufferBuilder $builder, $RESOLUTION_BANDWIDTH)
-    {
-        $builder->addDoubleX(49, $RESOLUTION_BANDWIDTH, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addVIDEO_BANDWIDTH(FlatBufferBuilder $builder, $VIDEO_BANDWIDTH)
-    {
-        $builder->addDoubleX(50, $VIDEO_BANDWIDTH, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addEIRP(FlatBufferBuilder $builder, $EIRP)
-    {
-        $builder->addDoubleX(51, $EIRP, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addNOMINAL_EIRP(FlatBufferBuilder $builder, $NOMINAL_EIRP)
-    {
-        $builder->addDoubleX(52, $NOMINAL_EIRP, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addMIN_PSD(FlatBufferBuilder $builder, $MIN_PSD)
-    {
-        $builder->addDoubleX(53, $MIN_PSD, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addMAX_PSD(FlatBufferBuilder $builder, $MAX_PSD)
-    {
-        $builder->addDoubleX(54, $MAX_PSD, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addFREQUENCY_SHIFT(FlatBufferBuilder $builder, $FREQUENCY_SHIFT)
-    {
-        $builder->addDoubleX(55, $FREQUENCY_SHIFT, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param bool
-     * @return void
-     */
-    public static function addPEAK(FlatBufferBuilder $builder, $PEAK)
-    {
-        $builder->addBoolX(56, $PEAK, false);
+        $builder->addOffsetX(28, $ELNOT, 0);
     }
 
     /**
@@ -1322,17 +1122,7 @@ class RFO extends Table
      */
     public static function addANTENNA_NAME(FlatBufferBuilder $builder, $ANTENNA_NAME)
     {
-        $builder->addOffsetX(57, $ANTENNA_NAME, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addDETECTION_STATUS(FlatBufferBuilder $builder, $DETECTION_STATUS)
-    {
-        $builder->addOffsetX(58, $DETECTION_STATUS, 0);
+        $builder->addOffsetX(29, $ANTENNA_NAME, 0);
     }
 
     /**
@@ -1342,7 +1132,397 @@ class RFO extends Table
      */
     public static function addCOLLECTION_MODE(FlatBufferBuilder $builder, $COLLECTION_MODE)
     {
-        $builder->addOffsetX(59, $COLLECTION_MODE, 0);
+        $builder->addOffsetX(30, $COLLECTION_MODE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addFREQUENCY(FlatBufferBuilder $builder, $FREQUENCY)
+    {
+        $builder->addDoubleX(31, $FREQUENCY, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addNOMINAL_FREQUENCY(FlatBufferBuilder $builder, $NOMINAL_FREQUENCY)
+    {
+        $builder->addDoubleX(32, $NOMINAL_FREQUENCY, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addSTART_FREQUENCY(FlatBufferBuilder $builder, $START_FREQUENCY)
+    {
+        $builder->addDoubleX(33, $START_FREQUENCY, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addEND_FREQUENCY(FlatBufferBuilder $builder, $END_FREQUENCY)
+    {
+        $builder->addDoubleX(34, $END_FREQUENCY, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addFREQUENCY_SHIFT(FlatBufferBuilder $builder, $FREQUENCY_SHIFT)
+    {
+        $builder->addDoubleX(35, $FREQUENCY_SHIFT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addBANDWIDTH(FlatBufferBuilder $builder, $BANDWIDTH)
+    {
+        $builder->addDoubleX(36, $BANDWIDTH, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addNOMINAL_BANDWIDTH(FlatBufferBuilder $builder, $NOMINAL_BANDWIDTH)
+    {
+        $builder->addDoubleX(37, $NOMINAL_BANDWIDTH, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addRESOLUTION_BANDWIDTH(FlatBufferBuilder $builder, $RESOLUTION_BANDWIDTH)
+    {
+        $builder->addDoubleX(38, $RESOLUTION_BANDWIDTH, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addVIDEO_BANDWIDTH(FlatBufferBuilder $builder, $VIDEO_BANDWIDTH)
+    {
+        $builder->addDoubleX(39, $VIDEO_BANDWIDTH, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addRELATIVE_CARRIER_POWER(FlatBufferBuilder $builder, $RELATIVE_CARRIER_POWER)
+    {
+        $builder->addDoubleX(40, $RELATIVE_CARRIER_POWER, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addSPECTRUM_ANALYZER_POWER(FlatBufferBuilder $builder, $SPECTRUM_ANALYZER_POWER)
+    {
+        $builder->addDoubleX(41, $SPECTRUM_ANALYZER_POWER, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addRELATIVE_NOISE_FLOOR(FlatBufferBuilder $builder, $RELATIVE_NOISE_FLOOR)
+    {
+        $builder->addDoubleX(42, $RELATIVE_NOISE_FLOOR, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addREFERENCE_LEVEL(FlatBufferBuilder $builder, $REFERENCE_LEVEL)
+    {
+        $builder->addDoubleX(43, $REFERENCE_LEVEL, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addNOISE_PWR_DENSITY(FlatBufferBuilder $builder, $NOISE_PWR_DENSITY)
+    {
+        $builder->addDoubleX(44, $NOISE_PWR_DENSITY, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPGRI(FlatBufferBuilder $builder, $PGRI)
+    {
+        $builder->addDoubleX(45, $PGRI, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addEIRP(FlatBufferBuilder $builder, $EIRP)
+    {
+        $builder->addDoubleX(46, $EIRP, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addNOMINAL_EIRP(FlatBufferBuilder $builder, $NOMINAL_EIRP)
+    {
+        $builder->addDoubleX(47, $NOMINAL_EIRP, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addMIN_PSD(FlatBufferBuilder $builder, $MIN_PSD)
+    {
+        $builder->addDoubleX(48, $MIN_PSD, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addMAX_PSD(FlatBufferBuilder $builder, $MAX_PSD)
+    {
+        $builder->addDoubleX(49, $MAX_PSD, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addSNR(FlatBufferBuilder $builder, $SNR)
+    {
+        $builder->addDoubleX(50, $SNR, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addNOMINAL_SNR(FlatBufferBuilder $builder, $NOMINAL_SNR)
+    {
+        $builder->addDoubleX(51, $NOMINAL_SNR, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPOWER_OVER_NOISE(FlatBufferBuilder $builder, $POWER_OVER_NOISE)
+    {
+        $builder->addDoubleX(52, $POWER_OVER_NOISE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addNOMINAL_POWER_OVER_NOISE(FlatBufferBuilder $builder, $NOMINAL_POWER_OVER_NOISE)
+    {
+        $builder->addDoubleX(53, $NOMINAL_POWER_OVER_NOISE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPOLARITY(FlatBufferBuilder $builder, $POLARITY)
+    {
+        $builder->addDoubleX(54, $POLARITY, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPOLARITY_TYPE(FlatBufferBuilder $builder, $POLARITY_TYPE)
+    {
+        $builder->addOffsetX(55, $POLARITY_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ushort
+     * @return void
+     */
+    public static function addCHANNEL(FlatBufferBuilder $builder, $CHANNEL)
+    {
+        $builder->addUshortX(56, $CHANNEL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addBAUD_RATE(FlatBufferBuilder $builder, $BAUD_RATE)
+    {
+        $builder->addDoubleX(57, $BAUD_RATE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addSYMBOL_TO_NOISE_RATIO(FlatBufferBuilder $builder, $SYMBOL_TO_NOISE_RATIO)
+    {
+        $builder->addDoubleX(58, $SYMBOL_TO_NOISE_RATIO, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addBIT_ERROR_RATE(FlatBufferBuilder $builder, $BIT_ERROR_RATE)
+    {
+        $builder->addDoubleX(59, $BIT_ERROR_RATE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addPEAK(FlatBufferBuilder $builder, $PEAK)
+    {
+        $builder->addBoolX(60, $PEAK, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addINCOMING(FlatBufferBuilder $builder, $INCOMING)
+    {
+        $builder->addBoolX(61, $INCOMING, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ushort
+     * @return void
+     */
+    public static function addSWITCH_POINT(FlatBufferBuilder $builder, $SWITCH_POINT)
+    {
+        $builder->addUshortX(62, $SWITCH_POINT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCONFIDENCE(FlatBufferBuilder $builder, $CONFIDENCE)
+    {
+        $builder->addDoubleX(63, $CONFIDENCE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCARRIER_STANDARD(FlatBufferBuilder $builder, $CARRIER_STANDARD)
+    {
+        $builder->addOffsetX(64, $CARRIER_STANDARD, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addMODULATION(FlatBufferBuilder $builder, $MODULATION)
+    {
+        $builder->addOffsetX(65, $MODULATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addINNER_CODING_RATE(FlatBufferBuilder $builder, $INNER_CODING_RATE)
+    {
+        $builder->addByteX(66, $INNER_CODING_RATE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addOUTER_CODING_RATE(FlatBufferBuilder $builder, $OUTER_CODING_RATE)
+    {
+        $builder->addByteX(67, $OUTER_CODING_RATE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addTRANSMIT_FILTER_TYPE(FlatBufferBuilder $builder, $TRANSMIT_FILTER_TYPE)
+    {
+        $builder->addOffsetX(68, $TRANSMIT_FILTER_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTRANSMIT_FILTER_ROLL_OFF(FlatBufferBuilder $builder, $TRANSMIT_FILTER_ROLL_OFF)
+    {
+        $builder->addDoubleX(69, $TRANSMIT_FILTER_ROLL_OFF, 0.0);
     }
 
     /**
@@ -1352,7 +1532,27 @@ class RFO extends Table
      */
     public static function addRAW_FILE_URI(FlatBufferBuilder $builder, $RAW_FILE_URI)
     {
-        $builder->addOffsetX(60, $RAW_FILE_URI, 0);
+        $builder->addOffsetX(70, $RAW_FILE_URI, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDESCRIPTOR(FlatBufferBuilder $builder, $DESCRIPTOR)
+    {
+        $builder->addOffsetX(71, $DESCRIPTOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addURL(FlatBufferBuilder $builder, $URL)
+    {
+        $builder->addOffsetX(72, $URL, 0);
     }
 
     /**
@@ -1362,7 +1562,7 @@ class RFO extends Table
      */
     public static function addTAGS(FlatBufferBuilder $builder, $TAGS)
     {
-        $builder->addOffsetX(61, $TAGS, 0);
+        $builder->addOffsetX(73, $TAGS, 0);
     }
 
     /**
@@ -1387,126 +1587,6 @@ class RFO extends Table
     public static function startTAGSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addNOISE_PWR_DENSITY(FlatBufferBuilder $builder, $NOISE_PWR_DENSITY)
-    {
-        $builder->addDoubleX(62, $NOISE_PWR_DENSITY, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addCARRIER_STANDARD(FlatBufferBuilder $builder, $CARRIER_STANDARD)
-    {
-        $builder->addOffsetX(63, $CARRIER_STANDARD, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addMODULATION(FlatBufferBuilder $builder, $MODULATION)
-    {
-        $builder->addOffsetX(64, $MODULATION, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int
-     * @return void
-     */
-    public static function addINNER_CODING_RATE(FlatBufferBuilder $builder, $INNER_CODING_RATE)
-    {
-        $builder->addIntX(65, $INNER_CODING_RATE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int
-     * @return void
-     */
-    public static function addOUTER_CODING_RATE(FlatBufferBuilder $builder, $OUTER_CODING_RATE)
-    {
-        $builder->addIntX(66, $OUTER_CODING_RATE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addTRANSMIT_FILTER_TYPE(FlatBufferBuilder $builder, $TRANSMIT_FILTER_TYPE)
-    {
-        $builder->addOffsetX(67, $TRANSMIT_FILTER_TYPE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addTRANSMIT_FILTER_ROLL_OFF(FlatBufferBuilder $builder, $TRANSMIT_FILTER_ROLL_OFF)
-    {
-        $builder->addDoubleX(68, $TRANSMIT_FILTER_ROLL_OFF, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addSYMBOL_TO_NOISE_RATIO(FlatBufferBuilder $builder, $SYMBOL_TO_NOISE_RATIO)
-    {
-        $builder->addDoubleX(69, $SYMBOL_TO_NOISE_RATIO, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addBIT_ERROR_RATE(FlatBufferBuilder $builder, $BIT_ERROR_RATE)
-    {
-        $builder->addDoubleX(70, $BIT_ERROR_RATE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addON_ORBIT(FlatBufferBuilder $builder, $ON_ORBIT)
-    {
-        $builder->addOffsetX(71, $ON_ORBIT, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addDESCRIPTOR(FlatBufferBuilder $builder, $DESCRIPTOR)
-    {
-        $builder->addOffsetX(72, $DESCRIPTOR, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addURL(FlatBufferBuilder $builder, $URL)
-    {
-        $builder->addOffsetX(73, $URL, 0);
     }
 
     /**

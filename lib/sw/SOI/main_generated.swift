@@ -4,6 +4,51 @@
 
 import FlatBuffers
 
+public enum soiCollectionMode: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case sidereal = 0
+  case rateTrack = 1
+  case stare = 2
+  case search = 3
+  case survey = 4
+  case tasked = 5
+
+  public static var max: soiCollectionMode { return .tasked }
+  public static var min: soiCollectionMode { return .sidereal }
+}
+
+
+public enum soiObsType: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case optical = 0
+  case radar = 1
+  case combined = 2
+
+  public static var max: soiObsType { return .combined }
+  public static var min: soiObsType { return .optical }
+}
+
+
+public enum soiCalibrationType: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case photometric = 0
+  case astrometric = 1
+  case radiometric = 2
+  case polarimetric = 3
+  case temporal = 4
+  case none_ = 5
+
+  public static var max: soiCalibrationType { return .none_ }
+  public static var min: soiCalibrationType { return .photometric }
+}
+
+
 ///  Space Object Identification Observation Set
 public struct SOI: FlatBufferObject, Verifiable {
 
@@ -24,47 +69,47 @@ public struct SOI: FlatBufferObject, Verifiable {
     case SENSOR_AS_ID = 12
     case SAT_NO = 14
     case ORIG_OBJECT_ID = 16
-    case SENLAT = 18
-    case SENLON = 20
-    case SENALT = 22
-    case SENX = 24
-    case SENY = 26
-    case SENZ = 28
-    case SENVELX = 30
-    case SENVELY = 32
-    case SENVELZ = 34
-    case START_TIME = 36
-    case END_TIME = 38
-    case NUM_OBS = 40
-    case TYPE = 42
-    case POLAR_ANGLE_START = 44
-    case POLAR_ANGLE_END = 46
-    case REFERENCE_FRAME = 48
-    case SEN_REFERENCE_FRAME = 50
-    case LOS_DECLINATION_START = 52
-    case LOS_DECLINATION_END = 54
-    case POINTING_ANGLE_AZ_START = 56
-    case POINTING_ANGLE_AZ_END = 58
-    case POINTING_ANGLE_EL_START = 60
-    case POINTING_ANGLE_EL_END = 62
-    case PIXEL_ARRAY_WIDTH = 64
-    case PIXEL_ARRAY_HEIGHT = 66
-    case NUM_SPECTRAL_FILTERS = 68
-    case SPECTRAL_FILTERS = 70
-    case COLLECTION_MODE = 72
-    case GAIN = 74
-    case BINNING_HORIZ = 76
-    case BINNING_VERT = 78
-    case SOLAR_MAG = 80
-    case PIXEL_MIN = 82
-    case PIXEL_MAX = 84
-    case SOFTWARE_VERSION = 86
-    case SATELLITE_NAME = 88
-    case STAR_CAT_NAME = 90
-    case CORR_QUALITY = 92
-    case UCT = 94
-    case VALID_CALIBRATIONS = 96
-    case CALIBRATION_TYPE = 98
+    case SATELLITE_NAME = 18
+    case UCT = 20
+    case SENLAT = 22
+    case SENLON = 24
+    case SENALT = 26
+    case SENX = 28
+    case SENY = 30
+    case SENZ = 32
+    case SENVELX = 34
+    case SENVELY = 36
+    case SENVELZ = 38
+    case SEN_REFERENCE_FRAME = 40
+    case OBS_TYPE = 42
+    case COLLECTION_MODE = 44
+    case START_TIME = 46
+    case END_TIME = 48
+    case NUM_OBS = 50
+    case REFERENCE_FRAME = 52
+    case POLAR_ANGLE_START = 54
+    case POLAR_ANGLE_END = 56
+    case LOS_DECLINATION_START = 58
+    case LOS_DECLINATION_END = 60
+    case POINTING_ANGLE_AZ_START = 62
+    case POINTING_ANGLE_AZ_END = 64
+    case POINTING_ANGLE_EL_START = 66
+    case POINTING_ANGLE_EL_END = 68
+    case PIXEL_ARRAY_WIDTH = 70
+    case PIXEL_ARRAY_HEIGHT = 72
+    case NUM_SPECTRAL_FILTERS = 74
+    case SPECTRAL_FILTERS = 76
+    case GAIN = 78
+    case BINNING_HORIZ = 80
+    case BINNING_VERT = 82
+    case SOLAR_MAG = 84
+    case PIXEL_MIN = 86
+    case PIXEL_MAX = 88
+    case SOFTWARE_VERSION = 90
+    case STAR_CAT_NAME = 92
+    case CORR_QUALITY = 94
+    case CALIBRATION_TYPE = 96
+    case VALID_CALIBRATIONS = 98
     case PERCENT_SAT_THRESHOLD = 100
     case CHANGE_DETECTED = 102
     case PERIODICITY_CHANGE_DETECTED = 104
@@ -84,99 +129,159 @@ public struct SOI: FlatBufferObject, Verifiable {
     var p: VOffset { self.rawValue }
   }
 
+  ///  Unique identifier
   public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  ///  Message creation date (ISO 8601)
   public var MSG_CREATE_DATE: String? { let o = _accessor.offset(VTOFFSET.MSG_CREATE_DATE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var MSG_CREATE_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MSG_CREATE_DATE.v) }
+  ///  Sensor identifier
   public var ID_SENSOR: String? { let o = _accessor.offset(VTOFFSET.ID_SENSOR.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ID_SENSORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_SENSOR.v) }
+  ///  Original sensor identifier
   public var ORIG_SENSOR_ID: String? { let o = _accessor.offset(VTOFFSET.ORIG_SENSOR_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ORIG_SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_SENSOR_ID.v) }
+  ///  Sensor observation set identifier
   public var SENSOR_AS_ID: String? { let o = _accessor.offset(VTOFFSET.SENSOR_AS_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SENSOR_AS_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SENSOR_AS_ID.v) }
-  public var SAT_NO: Int32 { let o = _accessor.offset(VTOFFSET.SAT_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Satellite catalog number
+  public var SAT_NO: UInt32 { let o = _accessor.offset(VTOFFSET.SAT_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  International designator
   public var ORIG_OBJECT_ID: String? { let o = _accessor.offset(VTOFFSET.ORIG_OBJECT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ORIG_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_OBJECT_ID.v) }
+  ///  Satellite common name
+  public var SATELLITE_NAME: String? { let o = _accessor.offset(VTOFFSET.SATELLITE_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SATELLITE_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SATELLITE_NAME.v) }
+  ///  True if uncorrelated target
+  public var UCT: Bool { let o = _accessor.offset(VTOFFSET.UCT.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Sensor geodetic latitude (degrees)
   public var SENLAT: Double { let o = _accessor.offset(VTOFFSET.SENLAT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Sensor geodetic longitude (degrees)
   public var SENLON: Double { let o = _accessor.offset(VTOFFSET.SENLON.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Sensor altitude (km)
   public var SENALT: Double { let o = _accessor.offset(VTOFFSET.SENALT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Sensor ECEF X position (km)
   public var SENX: Double { let o = _accessor.offset(VTOFFSET.SENX.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Sensor ECEF Y position (km)
   public var SENY: Double { let o = _accessor.offset(VTOFFSET.SENY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Sensor ECEF Z position (km)
   public var SENZ: Double { let o = _accessor.offset(VTOFFSET.SENZ.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Sensor ECEF X velocity (km/s)
   public var SENVELX: Double { let o = _accessor.offset(VTOFFSET.SENVELX.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Sensor ECEF Y velocity (km/s)
   public var SENVELY: Double { let o = _accessor.offset(VTOFFSET.SENVELY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Sensor ECEF Z velocity (km/s)
   public var SENVELZ: Double { let o = _accessor.offset(VTOFFSET.SENVELZ.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var START_TIME: String? { let o = _accessor.offset(VTOFFSET.START_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.START_TIME.v) }
-  public var END_TIME: String? { let o = _accessor.offset(VTOFFSET.END_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var END_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.END_TIME.v) }
-  public var NUM_OBS: Int32 { let o = _accessor.offset(VTOFFSET.NUM_OBS.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var TYPE: String? { let o = _accessor.offset(VTOFFSET.TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TYPE.v) }
-  public var POLAR_ANGLE_START: Double { let o = _accessor.offset(VTOFFSET.POLAR_ANGLE_START.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var POLAR_ANGLE_END: Double { let o = _accessor.offset(VTOFFSET.POLAR_ANGLE_END.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var REFERENCE_FRAME: String? { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var REFERENCE_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REFERENCE_FRAME.v) }
+  ///  Sensor reference frame
   public var SEN_REFERENCE_FRAME: String? { let o = _accessor.offset(VTOFFSET.SEN_REFERENCE_FRAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SEN_REFERENCE_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SEN_REFERENCE_FRAME.v) }
+  ///  Observation type
+  public var OBS_TYPE: soiObsType { let o = _accessor.offset(VTOFFSET.OBS_TYPE.v); return o == 0 ? .optical : soiObsType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .optical }
+  ///  Collection mode
+  public var COLLECTION_MODE: soiCollectionMode { let o = _accessor.offset(VTOFFSET.COLLECTION_MODE.v); return o == 0 ? .sidereal : soiCollectionMode(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .sidereal }
+  ///  Observation start time (ISO 8601)
+  public var START_TIME: String? { let o = _accessor.offset(VTOFFSET.START_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.START_TIME.v) }
+  ///  Observation end time (ISO 8601)
+  public var END_TIME: String? { let o = _accessor.offset(VTOFFSET.END_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var END_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.END_TIME.v) }
+  ///  Number of observations in set
+  public var NUM_OBS: UInt32 { let o = _accessor.offset(VTOFFSET.NUM_OBS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Observation reference frame
+  public var REFERENCE_FRAME: String? { let o = _accessor.offset(VTOFFSET.REFERENCE_FRAME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REFERENCE_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REFERENCE_FRAME.v) }
+  ///  Polar angle at start (degrees)
+  public var POLAR_ANGLE_START: Double { let o = _accessor.offset(VTOFFSET.POLAR_ANGLE_START.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Polar angle at end (degrees)
+  public var POLAR_ANGLE_END: Double { let o = _accessor.offset(VTOFFSET.POLAR_ANGLE_END.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Line-of-sight declination at start (degrees)
   public var LOS_DECLINATION_START: Double { let o = _accessor.offset(VTOFFSET.LOS_DECLINATION_START.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Line-of-sight declination at end (degrees)
   public var LOS_DECLINATION_END: Double { let o = _accessor.offset(VTOFFSET.LOS_DECLINATION_END.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Pointing azimuth at start (degrees)
   public var POINTING_ANGLE_AZ_START: Double { let o = _accessor.offset(VTOFFSET.POINTING_ANGLE_AZ_START.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Pointing azimuth at end (degrees)
   public var POINTING_ANGLE_AZ_END: Double { let o = _accessor.offset(VTOFFSET.POINTING_ANGLE_AZ_END.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Pointing elevation at start (degrees)
   public var POINTING_ANGLE_EL_START: Double { let o = _accessor.offset(VTOFFSET.POINTING_ANGLE_EL_START.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Pointing elevation at end (degrees)
   public var POINTING_ANGLE_EL_END: Double { let o = _accessor.offset(VTOFFSET.POINTING_ANGLE_EL_END.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var PIXEL_ARRAY_WIDTH: Int32 { let o = _accessor.offset(VTOFFSET.PIXEL_ARRAY_WIDTH.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var PIXEL_ARRAY_HEIGHT: Int32 { let o = _accessor.offset(VTOFFSET.PIXEL_ARRAY_HEIGHT.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var NUM_SPECTRAL_FILTERS: Int32 { let o = _accessor.offset(VTOFFSET.NUM_SPECTRAL_FILTERS.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Focal plane array width (pixels)
+  public var PIXEL_ARRAY_WIDTH: UInt16 { let o = _accessor.offset(VTOFFSET.PIXEL_ARRAY_WIDTH.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Focal plane array height (pixels)
+  public var PIXEL_ARRAY_HEIGHT: UInt16 { let o = _accessor.offset(VTOFFSET.PIXEL_ARRAY_HEIGHT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Number of spectral filters used
+  public var NUM_SPECTRAL_FILTERS: UInt8 { let o = _accessor.offset(VTOFFSET.NUM_SPECTRAL_FILTERS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Spectral filter identifiers
   public var hasSpectralFilters: Bool { let o = _accessor.offset(VTOFFSET.SPECTRAL_FILTERS.v); return o == 0 ? false : true }
   public var SPECTRAL_FILTERSCount: Int32 { let o = _accessor.offset(VTOFFSET.SPECTRAL_FILTERS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func SPECTRAL_FILTERS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.SPECTRAL_FILTERS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public var COLLECTION_MODE: String? { let o = _accessor.offset(VTOFFSET.COLLECTION_MODE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var COLLECTION_MODESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COLLECTION_MODE.v) }
+  ///  Detector gain setting
   public var GAIN: Double { let o = _accessor.offset(VTOFFSET.GAIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var BINNING_HORIZ: Int32 { let o = _accessor.offset(VTOFFSET.BINNING_HORIZ.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var BINNING_VERT: Int32 { let o = _accessor.offset(VTOFFSET.BINNING_VERT.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Horizontal binning factor
+  public var BINNING_HORIZ: UInt8 { let o = _accessor.offset(VTOFFSET.BINNING_HORIZ.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Vertical binning factor
+  public var BINNING_VERT: UInt8 { let o = _accessor.offset(VTOFFSET.BINNING_VERT.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Solar visual magnitude
   public var SOLAR_MAG: Double { let o = _accessor.offset(VTOFFSET.SOLAR_MAG.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Minimum pixel value in observation
   public var PIXEL_MIN: Int32 { let o = _accessor.offset(VTOFFSET.PIXEL_MIN.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Maximum pixel value in observation
   public var PIXEL_MAX: Int32 { let o = _accessor.offset(VTOFFSET.PIXEL_MAX.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Processing software version
   public var SOFTWARE_VERSION: String? { let o = _accessor.offset(VTOFFSET.SOFTWARE_VERSION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SOFTWARE_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SOFTWARE_VERSION.v) }
-  public var SATELLITE_NAME: String? { let o = _accessor.offset(VTOFFSET.SATELLITE_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var SATELLITE_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SATELLITE_NAME.v) }
+  ///  Star catalog used for calibration
   public var STAR_CAT_NAME: String? { let o = _accessor.offset(VTOFFSET.STAR_CAT_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var STAR_CAT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STAR_CAT_NAME.v) }
+  ///  Correlation quality score
   public var CORR_QUALITY: Double { let o = _accessor.offset(VTOFFSET.CORR_QUALITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var UCT: Bool { let o = _accessor.offset(VTOFFSET.UCT.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Calibration type
+  public var CALIBRATION_TYPE: soiCalibrationType { let o = _accessor.offset(VTOFFSET.CALIBRATION_TYPE.v); return o == 0 ? .photometric : soiCalibrationType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .photometric }
+  ///  Valid calibration identifiers
   public var VALID_CALIBRATIONS: String? { let o = _accessor.offset(VTOFFSET.VALID_CALIBRATIONS.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var VALID_CALIBRATIONSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.VALID_CALIBRATIONS.v) }
-  public var CALIBRATION_TYPE: String? { let o = _accessor.offset(VTOFFSET.CALIBRATION_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var CALIBRATION_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CALIBRATION_TYPE.v) }
+  ///  Percent saturation threshold
   public var PERCENT_SAT_THRESHOLD: Double { let o = _accessor.offset(VTOFFSET.PERCENT_SAT_THRESHOLD.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True if change detected from baseline
   public var CHANGE_DETECTED: Bool { let o = _accessor.offset(VTOFFSET.CHANGE_DETECTED.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  True if periodicity change detected
   public var PERIODICITY_CHANGE_DETECTED: Bool { let o = _accessor.offset(VTOFFSET.PERIODICITY_CHANGE_DETECTED.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  True if brightness variance change detected
   public var BRIGHTNESS_VARIANCE_CHANGE_DETECTED: Bool { let o = _accessor.offset(VTOFFSET.BRIGHTNESS_VARIANCE_CHANGE_DETECTED.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  True if solar phase angle brightness change detected
   public var SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED: Bool { let o = _accessor.offset(VTOFFSET.SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Change confidence assessment
   public var CHANGE_CONF: String? { let o = _accessor.offset(VTOFFSET.CHANGE_CONF.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CHANGE_CONFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CHANGE_CONF.v) }
+  ///  Collection density confidence
   public var COLLECTION_DENSITY_CONF: String? { let o = _accessor.offset(VTOFFSET.COLLECTION_DENSITY_CONF.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var COLLECTION_DENSITY_CONFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COLLECTION_DENSITY_CONF.v) }
+  ///  Periodicity sampling confidence
   public var PERIODICITY_SAMPLING_CONF: String? { let o = _accessor.offset(VTOFFSET.PERIODICITY_SAMPLING_CONF.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var PERIODICITY_SAMPLING_CONFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PERIODICITY_SAMPLING_CONF.v) }
+  ///  Periodicity detection confidence
   public var PERIODICITY_DETECTION_CONF: String? { let o = _accessor.offset(VTOFFSET.PERIODICITY_DETECTION_CONF.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var PERIODICITY_DETECTION_CONFSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PERIODICITY_DETECTION_CONF.v) }
+  ///  Collection identifier
   public var COLLECTION_ID: String? { let o = _accessor.offset(VTOFFSET.COLLECTION_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var COLLECTION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COLLECTION_ID.v) }
+  ///  Calibration record references
   public var hasCalibrations: Bool { let o = _accessor.offset(VTOFFSET.CALIBRATIONS.v); return o == 0 ? false : true }
   public var CALIBRATIONSCount: Int32 { let o = _accessor.offset(VTOFFSET.CALIBRATIONS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func CALIBRATIONS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.CALIBRATIONS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  ///  Associated tags
   public var hasTags: Bool { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? false : true }
   public var TAGSCount: Int32 { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func TAGS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  ///  Transaction identifier
   public var TRANSACTION_ID: String? { let o = _accessor.offset(VTOFFSET.TRANSACTION_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var TRANSACTION_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRANSACTION_ID.v) }
+  ///  Optical SOI observation references
   public var hasOpticalSoiobservationList: Bool { let o = _accessor.offset(VTOFFSET.OPTICAL_SOIOBSERVATION_LIST.v); return o == 0 ? false : true }
   public var OPTICAL_SOIOBSERVATION_LISTCount: Int32 { let o = _accessor.offset(VTOFFSET.OPTICAL_SOIOBSERVATION_LIST.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func OPTICAL_SOIOBSERVATION_LIST(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.OPTICAL_SOIOBSERVATION_LIST.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  ///  Radar SOI observation references
   public var hasRadarSoiobservationList: Bool { let o = _accessor.offset(VTOFFSET.RADAR_SOIOBSERVATION_LIST.v); return o == 0 ? false : true }
   public var RADAR_SOIOBSERVATION_LISTCount: Int32 { let o = _accessor.offset(VTOFFSET.RADAR_SOIOBSERVATION_LIST.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func RADAR_SOIOBSERVATION_LIST(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.RADAR_SOIOBSERVATION_LIST.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
@@ -186,8 +291,11 @@ public struct SOI: FlatBufferObject, Verifiable {
   public static func add(ID_SENSOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_SENSOR, at: VTOFFSET.ID_SENSOR.p) }
   public static func add(ORIG_SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_SENSOR_ID, at: VTOFFSET.ORIG_SENSOR_ID.p) }
   public static func add(SENSOR_AS_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SENSOR_AS_ID, at: VTOFFSET.SENSOR_AS_ID.p) }
-  public static func add(SAT_NO: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }
+  public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }
   public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VTOFFSET.ORIG_OBJECT_ID.p) }
+  public static func add(SATELLITE_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SATELLITE_NAME, at: VTOFFSET.SATELLITE_NAME.p) }
+  public static func add(UCT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UCT, def: false,
+   at: VTOFFSET.UCT.p) }
   public static func add(SENLAT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENLAT, def: 0.0, at: VTOFFSET.SENLAT.p) }
   public static func add(SENLON: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENLON, def: 0.0, at: VTOFFSET.SENLON.p) }
   public static func add(SENALT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENALT, def: 0.0, at: VTOFFSET.SENALT.p) }
@@ -197,39 +305,36 @@ public struct SOI: FlatBufferObject, Verifiable {
   public static func add(SENVELX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENVELX, def: 0.0, at: VTOFFSET.SENVELX.p) }
   public static func add(SENVELY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENVELY, def: 0.0, at: VTOFFSET.SENVELY.p) }
   public static func add(SENVELZ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SENVELZ, def: 0.0, at: VTOFFSET.SENVELZ.p) }
+  public static func add(SEN_REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEN_REFERENCE_FRAME, at: VTOFFSET.SEN_REFERENCE_FRAME.p) }
+  public static func add(OBS_TYPE: soiObsType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBS_TYPE.rawValue, def: 0, at: VTOFFSET.OBS_TYPE.p) }
+  public static func add(COLLECTION_MODE: soiCollectionMode, _ fbb: inout FlatBufferBuilder) { fbb.add(element: COLLECTION_MODE.rawValue, def: 0, at: VTOFFSET.COLLECTION_MODE.p) }
   public static func add(START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_TIME, at: VTOFFSET.START_TIME.p) }
   public static func add(END_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: END_TIME, at: VTOFFSET.END_TIME.p) }
-  public static func add(NUM_OBS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_OBS, def: 0, at: VTOFFSET.NUM_OBS.p) }
-  public static func add(TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE, at: VTOFFSET.TYPE.p) }
+  public static func add(NUM_OBS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_OBS, def: 0, at: VTOFFSET.NUM_OBS.p) }
+  public static func add(REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_FRAME, at: VTOFFSET.REFERENCE_FRAME.p) }
   public static func add(POLAR_ANGLE_START: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLAR_ANGLE_START, def: 0.0, at: VTOFFSET.POLAR_ANGLE_START.p) }
   public static func add(POLAR_ANGLE_END: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLAR_ANGLE_END, def: 0.0, at: VTOFFSET.POLAR_ANGLE_END.p) }
-  public static func add(REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REFERENCE_FRAME, at: VTOFFSET.REFERENCE_FRAME.p) }
-  public static func add(SEN_REFERENCE_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEN_REFERENCE_FRAME, at: VTOFFSET.SEN_REFERENCE_FRAME.p) }
   public static func add(LOS_DECLINATION_START: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOS_DECLINATION_START, def: 0.0, at: VTOFFSET.LOS_DECLINATION_START.p) }
   public static func add(LOS_DECLINATION_END: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LOS_DECLINATION_END, def: 0.0, at: VTOFFSET.LOS_DECLINATION_END.p) }
   public static func add(POINTING_ANGLE_AZ_START: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POINTING_ANGLE_AZ_START, def: 0.0, at: VTOFFSET.POINTING_ANGLE_AZ_START.p) }
   public static func add(POINTING_ANGLE_AZ_END: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POINTING_ANGLE_AZ_END, def: 0.0, at: VTOFFSET.POINTING_ANGLE_AZ_END.p) }
   public static func add(POINTING_ANGLE_EL_START: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POINTING_ANGLE_EL_START, def: 0.0, at: VTOFFSET.POINTING_ANGLE_EL_START.p) }
   public static func add(POINTING_ANGLE_EL_END: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POINTING_ANGLE_EL_END, def: 0.0, at: VTOFFSET.POINTING_ANGLE_EL_END.p) }
-  public static func add(PIXEL_ARRAY_WIDTH: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PIXEL_ARRAY_WIDTH, def: 0, at: VTOFFSET.PIXEL_ARRAY_WIDTH.p) }
-  public static func add(PIXEL_ARRAY_HEIGHT: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PIXEL_ARRAY_HEIGHT, def: 0, at: VTOFFSET.PIXEL_ARRAY_HEIGHT.p) }
-  public static func add(NUM_SPECTRAL_FILTERS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_SPECTRAL_FILTERS, def: 0, at: VTOFFSET.NUM_SPECTRAL_FILTERS.p) }
+  public static func add(PIXEL_ARRAY_WIDTH: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PIXEL_ARRAY_WIDTH, def: 0, at: VTOFFSET.PIXEL_ARRAY_WIDTH.p) }
+  public static func add(PIXEL_ARRAY_HEIGHT: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PIXEL_ARRAY_HEIGHT, def: 0, at: VTOFFSET.PIXEL_ARRAY_HEIGHT.p) }
+  public static func add(NUM_SPECTRAL_FILTERS: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_SPECTRAL_FILTERS, def: 0, at: VTOFFSET.NUM_SPECTRAL_FILTERS.p) }
   public static func addVectorOf(SPECTRAL_FILTERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPECTRAL_FILTERS, at: VTOFFSET.SPECTRAL_FILTERS.p) }
-  public static func add(COLLECTION_MODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COLLECTION_MODE, at: VTOFFSET.COLLECTION_MODE.p) }
   public static func add(GAIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GAIN, def: 0.0, at: VTOFFSET.GAIN.p) }
-  public static func add(BINNING_HORIZ: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BINNING_HORIZ, def: 0, at: VTOFFSET.BINNING_HORIZ.p) }
-  public static func add(BINNING_VERT: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BINNING_VERT, def: 0, at: VTOFFSET.BINNING_VERT.p) }
+  public static func add(BINNING_HORIZ: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BINNING_HORIZ, def: 0, at: VTOFFSET.BINNING_HORIZ.p) }
+  public static func add(BINNING_VERT: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BINNING_VERT, def: 0, at: VTOFFSET.BINNING_VERT.p) }
   public static func add(SOLAR_MAG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLAR_MAG, def: 0.0, at: VTOFFSET.SOLAR_MAG.p) }
   public static func add(PIXEL_MIN: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PIXEL_MIN, def: 0, at: VTOFFSET.PIXEL_MIN.p) }
   public static func add(PIXEL_MAX: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PIXEL_MAX, def: 0, at: VTOFFSET.PIXEL_MAX.p) }
   public static func add(SOFTWARE_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOFTWARE_VERSION, at: VTOFFSET.SOFTWARE_VERSION.p) }
-  public static func add(SATELLITE_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SATELLITE_NAME, at: VTOFFSET.SATELLITE_NAME.p) }
   public static func add(STAR_CAT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STAR_CAT_NAME, at: VTOFFSET.STAR_CAT_NAME.p) }
   public static func add(CORR_QUALITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CORR_QUALITY, def: 0.0, at: VTOFFSET.CORR_QUALITY.p) }
-  public static func add(UCT: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UCT, def: false,
-   at: VTOFFSET.UCT.p) }
+  public static func add(CALIBRATION_TYPE: soiCalibrationType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CALIBRATION_TYPE.rawValue, def: 0, at: VTOFFSET.CALIBRATION_TYPE.p) }
   public static func add(VALID_CALIBRATIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALID_CALIBRATIONS, at: VTOFFSET.VALID_CALIBRATIONS.p) }
-  public static func add(CALIBRATION_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CALIBRATION_TYPE, at: VTOFFSET.CALIBRATION_TYPE.p) }
   public static func add(PERCENT_SAT_THRESHOLD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERCENT_SAT_THRESHOLD, def: 0.0, at: VTOFFSET.PERCENT_SAT_THRESHOLD.p) }
   public static func add(CHANGE_DETECTED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CHANGE_DETECTED, def: false,
    at: VTOFFSET.CHANGE_DETECTED.p) }
@@ -257,8 +362,10 @@ public struct SOI: FlatBufferObject, Verifiable {
     ID_SENSOROffset ID_SENSOR: Offset = Offset(),
     ORIG_SENSOR_IDOffset ORIG_SENSOR_ID: Offset = Offset(),
     SENSOR_AS_IDOffset SENSOR_AS_ID: Offset = Offset(),
-    SAT_NO: Int32 = 0,
+    SAT_NO: UInt32 = 0,
     ORIG_OBJECT_IDOffset ORIG_OBJECT_ID: Offset = Offset(),
+    SATELLITE_NAMEOffset SATELLITE_NAME: Offset = Offset(),
+    UCT: Bool = false,
     SENLAT: Double = 0.0,
     SENLON: Double = 0.0,
     SENALT: Double = 0.0,
@@ -268,38 +375,36 @@ public struct SOI: FlatBufferObject, Verifiable {
     SENVELX: Double = 0.0,
     SENVELY: Double = 0.0,
     SENVELZ: Double = 0.0,
+    SEN_REFERENCE_FRAMEOffset SEN_REFERENCE_FRAME: Offset = Offset(),
+    OBS_TYPE: soiObsType = .optical,
+    COLLECTION_MODE: soiCollectionMode = .sidereal,
     START_TIMEOffset START_TIME: Offset = Offset(),
     END_TIMEOffset END_TIME: Offset = Offset(),
-    NUM_OBS: Int32 = 0,
-    TYPEOffset TYPE: Offset = Offset(),
+    NUM_OBS: UInt32 = 0,
+    REFERENCE_FRAMEOffset REFERENCE_FRAME: Offset = Offset(),
     POLAR_ANGLE_START: Double = 0.0,
     POLAR_ANGLE_END: Double = 0.0,
-    REFERENCE_FRAMEOffset REFERENCE_FRAME: Offset = Offset(),
-    SEN_REFERENCE_FRAMEOffset SEN_REFERENCE_FRAME: Offset = Offset(),
     LOS_DECLINATION_START: Double = 0.0,
     LOS_DECLINATION_END: Double = 0.0,
     POINTING_ANGLE_AZ_START: Double = 0.0,
     POINTING_ANGLE_AZ_END: Double = 0.0,
     POINTING_ANGLE_EL_START: Double = 0.0,
     POINTING_ANGLE_EL_END: Double = 0.0,
-    PIXEL_ARRAY_WIDTH: Int32 = 0,
-    PIXEL_ARRAY_HEIGHT: Int32 = 0,
-    NUM_SPECTRAL_FILTERS: Int32 = 0,
+    PIXEL_ARRAY_WIDTH: UInt16 = 0,
+    PIXEL_ARRAY_HEIGHT: UInt16 = 0,
+    NUM_SPECTRAL_FILTERS: UInt8 = 0,
     SPECTRAL_FILTERSVectorOffset SPECTRAL_FILTERS: Offset = Offset(),
-    COLLECTION_MODEOffset COLLECTION_MODE: Offset = Offset(),
     GAIN: Double = 0.0,
-    BINNING_HORIZ: Int32 = 0,
-    BINNING_VERT: Int32 = 0,
+    BINNING_HORIZ: UInt8 = 0,
+    BINNING_VERT: UInt8 = 0,
     SOLAR_MAG: Double = 0.0,
     PIXEL_MIN: Int32 = 0,
     PIXEL_MAX: Int32 = 0,
     SOFTWARE_VERSIONOffset SOFTWARE_VERSION: Offset = Offset(),
-    SATELLITE_NAMEOffset SATELLITE_NAME: Offset = Offset(),
     STAR_CAT_NAMEOffset STAR_CAT_NAME: Offset = Offset(),
     CORR_QUALITY: Double = 0.0,
-    UCT: Bool = false,
+    CALIBRATION_TYPE: soiCalibrationType = .photometric,
     VALID_CALIBRATIONSOffset VALID_CALIBRATIONS: Offset = Offset(),
-    CALIBRATION_TYPEOffset CALIBRATION_TYPE: Offset = Offset(),
     PERCENT_SAT_THRESHOLD: Double = 0.0,
     CHANGE_DETECTED: Bool = false,
     PERIODICITY_CHANGE_DETECTED: Bool = false,
@@ -324,6 +429,8 @@ public struct SOI: FlatBufferObject, Verifiable {
     SOI.add(SENSOR_AS_ID: SENSOR_AS_ID, &fbb)
     SOI.add(SAT_NO: SAT_NO, &fbb)
     SOI.add(ORIG_OBJECT_ID: ORIG_OBJECT_ID, &fbb)
+    SOI.add(SATELLITE_NAME: SATELLITE_NAME, &fbb)
+    SOI.add(UCT: UCT, &fbb)
     SOI.add(SENLAT: SENLAT, &fbb)
     SOI.add(SENLON: SENLON, &fbb)
     SOI.add(SENALT: SENALT, &fbb)
@@ -333,14 +440,15 @@ public struct SOI: FlatBufferObject, Verifiable {
     SOI.add(SENVELX: SENVELX, &fbb)
     SOI.add(SENVELY: SENVELY, &fbb)
     SOI.add(SENVELZ: SENVELZ, &fbb)
+    SOI.add(SEN_REFERENCE_FRAME: SEN_REFERENCE_FRAME, &fbb)
+    SOI.add(OBS_TYPE: OBS_TYPE, &fbb)
+    SOI.add(COLLECTION_MODE: COLLECTION_MODE, &fbb)
     SOI.add(START_TIME: START_TIME, &fbb)
     SOI.add(END_TIME: END_TIME, &fbb)
     SOI.add(NUM_OBS: NUM_OBS, &fbb)
-    SOI.add(TYPE: TYPE, &fbb)
+    SOI.add(REFERENCE_FRAME: REFERENCE_FRAME, &fbb)
     SOI.add(POLAR_ANGLE_START: POLAR_ANGLE_START, &fbb)
     SOI.add(POLAR_ANGLE_END: POLAR_ANGLE_END, &fbb)
-    SOI.add(REFERENCE_FRAME: REFERENCE_FRAME, &fbb)
-    SOI.add(SEN_REFERENCE_FRAME: SEN_REFERENCE_FRAME, &fbb)
     SOI.add(LOS_DECLINATION_START: LOS_DECLINATION_START, &fbb)
     SOI.add(LOS_DECLINATION_END: LOS_DECLINATION_END, &fbb)
     SOI.add(POINTING_ANGLE_AZ_START: POINTING_ANGLE_AZ_START, &fbb)
@@ -351,7 +459,6 @@ public struct SOI: FlatBufferObject, Verifiable {
     SOI.add(PIXEL_ARRAY_HEIGHT: PIXEL_ARRAY_HEIGHT, &fbb)
     SOI.add(NUM_SPECTRAL_FILTERS: NUM_SPECTRAL_FILTERS, &fbb)
     SOI.addVectorOf(SPECTRAL_FILTERS: SPECTRAL_FILTERS, &fbb)
-    SOI.add(COLLECTION_MODE: COLLECTION_MODE, &fbb)
     SOI.add(GAIN: GAIN, &fbb)
     SOI.add(BINNING_HORIZ: BINNING_HORIZ, &fbb)
     SOI.add(BINNING_VERT: BINNING_VERT, &fbb)
@@ -359,12 +466,10 @@ public struct SOI: FlatBufferObject, Verifiable {
     SOI.add(PIXEL_MIN: PIXEL_MIN, &fbb)
     SOI.add(PIXEL_MAX: PIXEL_MAX, &fbb)
     SOI.add(SOFTWARE_VERSION: SOFTWARE_VERSION, &fbb)
-    SOI.add(SATELLITE_NAME: SATELLITE_NAME, &fbb)
     SOI.add(STAR_CAT_NAME: STAR_CAT_NAME, &fbb)
     SOI.add(CORR_QUALITY: CORR_QUALITY, &fbb)
-    SOI.add(UCT: UCT, &fbb)
-    SOI.add(VALID_CALIBRATIONS: VALID_CALIBRATIONS, &fbb)
     SOI.add(CALIBRATION_TYPE: CALIBRATION_TYPE, &fbb)
+    SOI.add(VALID_CALIBRATIONS: VALID_CALIBRATIONS, &fbb)
     SOI.add(PERCENT_SAT_THRESHOLD: PERCENT_SAT_THRESHOLD, &fbb)
     SOI.add(CHANGE_DETECTED: CHANGE_DETECTED, &fbb)
     SOI.add(PERIODICITY_CHANGE_DETECTED: PERIODICITY_CHANGE_DETECTED, &fbb)
@@ -390,8 +495,10 @@ public struct SOI: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.ID_SENSOR.p, fieldName: "ID_SENSOR", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ORIG_SENSOR_ID.p, fieldName: "ORIG_SENSOR_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.SENSOR_AS_ID.p, fieldName: "SENSOR_AS_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SAT_NO.p, fieldName: "SAT_NO", required: false, type: Int32.self)
+    try _v.visit(field: VTOFFSET.SAT_NO.p, fieldName: "SAT_NO", required: false, type: UInt32.self)
     try _v.visit(field: VTOFFSET.ORIG_OBJECT_ID.p, fieldName: "ORIG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.SATELLITE_NAME.p, fieldName: "SATELLITE_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.UCT.p, fieldName: "UCT", required: false, type: Bool.self)
     try _v.visit(field: VTOFFSET.SENLAT.p, fieldName: "SENLAT", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.SENLON.p, fieldName: "SENLON", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.SENALT.p, fieldName: "SENALT", required: false, type: Double.self)
@@ -401,38 +508,36 @@ public struct SOI: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.SENVELX.p, fieldName: "SENVELX", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.SENVELY.p, fieldName: "SENVELY", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.SENVELZ.p, fieldName: "SENVELZ", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.SEN_REFERENCE_FRAME.p, fieldName: "SEN_REFERENCE_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.OBS_TYPE.p, fieldName: "OBS_TYPE", required: false, type: soiObsType.self)
+    try _v.visit(field: VTOFFSET.COLLECTION_MODE.p, fieldName: "COLLECTION_MODE", required: false, type: soiCollectionMode.self)
     try _v.visit(field: VTOFFSET.START_TIME.p, fieldName: "START_TIME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.END_TIME.p, fieldName: "END_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.NUM_OBS.p, fieldName: "NUM_OBS", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.TYPE.p, fieldName: "TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.NUM_OBS.p, fieldName: "NUM_OBS", required: false, type: UInt32.self)
+    try _v.visit(field: VTOFFSET.REFERENCE_FRAME.p, fieldName: "REFERENCE_FRAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.POLAR_ANGLE_START.p, fieldName: "POLAR_ANGLE_START", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.POLAR_ANGLE_END.p, fieldName: "POLAR_ANGLE_END", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.REFERENCE_FRAME.p, fieldName: "REFERENCE_FRAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SEN_REFERENCE_FRAME.p, fieldName: "SEN_REFERENCE_FRAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.LOS_DECLINATION_START.p, fieldName: "LOS_DECLINATION_START", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.LOS_DECLINATION_END.p, fieldName: "LOS_DECLINATION_END", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.POINTING_ANGLE_AZ_START.p, fieldName: "POINTING_ANGLE_AZ_START", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.POINTING_ANGLE_AZ_END.p, fieldName: "POINTING_ANGLE_AZ_END", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.POINTING_ANGLE_EL_START.p, fieldName: "POINTING_ANGLE_EL_START", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.POINTING_ANGLE_EL_END.p, fieldName: "POINTING_ANGLE_EL_END", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.PIXEL_ARRAY_WIDTH.p, fieldName: "PIXEL_ARRAY_WIDTH", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.PIXEL_ARRAY_HEIGHT.p, fieldName: "PIXEL_ARRAY_HEIGHT", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.NUM_SPECTRAL_FILTERS.p, fieldName: "NUM_SPECTRAL_FILTERS", required: false, type: Int32.self)
+    try _v.visit(field: VTOFFSET.PIXEL_ARRAY_WIDTH.p, fieldName: "PIXEL_ARRAY_WIDTH", required: false, type: UInt16.self)
+    try _v.visit(field: VTOFFSET.PIXEL_ARRAY_HEIGHT.p, fieldName: "PIXEL_ARRAY_HEIGHT", required: false, type: UInt16.self)
+    try _v.visit(field: VTOFFSET.NUM_SPECTRAL_FILTERS.p, fieldName: "NUM_SPECTRAL_FILTERS", required: false, type: UInt8.self)
     try _v.visit(field: VTOFFSET.SPECTRAL_FILTERS.p, fieldName: "SPECTRAL_FILTERS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.COLLECTION_MODE.p, fieldName: "COLLECTION_MODE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.GAIN.p, fieldName: "GAIN", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.BINNING_HORIZ.p, fieldName: "BINNING_HORIZ", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.BINNING_VERT.p, fieldName: "BINNING_VERT", required: false, type: Int32.self)
+    try _v.visit(field: VTOFFSET.BINNING_HORIZ.p, fieldName: "BINNING_HORIZ", required: false, type: UInt8.self)
+    try _v.visit(field: VTOFFSET.BINNING_VERT.p, fieldName: "BINNING_VERT", required: false, type: UInt8.self)
     try _v.visit(field: VTOFFSET.SOLAR_MAG.p, fieldName: "SOLAR_MAG", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.PIXEL_MIN.p, fieldName: "PIXEL_MIN", required: false, type: Int32.self)
     try _v.visit(field: VTOFFSET.PIXEL_MAX.p, fieldName: "PIXEL_MAX", required: false, type: Int32.self)
     try _v.visit(field: VTOFFSET.SOFTWARE_VERSION.p, fieldName: "SOFTWARE_VERSION", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SATELLITE_NAME.p, fieldName: "SATELLITE_NAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.STAR_CAT_NAME.p, fieldName: "STAR_CAT_NAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.CORR_QUALITY.p, fieldName: "CORR_QUALITY", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.UCT.p, fieldName: "UCT", required: false, type: Bool.self)
+    try _v.visit(field: VTOFFSET.CALIBRATION_TYPE.p, fieldName: "CALIBRATION_TYPE", required: false, type: soiCalibrationType.self)
     try _v.visit(field: VTOFFSET.VALID_CALIBRATIONS.p, fieldName: "VALID_CALIBRATIONS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.CALIBRATION_TYPE.p, fieldName: "CALIBRATION_TYPE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.PERCENT_SAT_THRESHOLD.p, fieldName: "PERCENT_SAT_THRESHOLD", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.CHANGE_DETECTED.p, fieldName: "CHANGE_DETECTED", required: false, type: Bool.self)
     try _v.visit(field: VTOFFSET.PERIODICITY_CHANGE_DETECTED.p, fieldName: "PERIODICITY_CHANGE_DETECTED", required: false, type: Bool.self)

@@ -3,3 +3,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export { MNV, MNVT } from './MNV.js';
+export { maneuverCharacterization } from './maneuverCharacterization.js';
+export { maneuverStatus } from './maneuverStatus.js';
+export { mnvOrbitalState, mnvOrbitalStateT } from './mnvOrbitalState.js';

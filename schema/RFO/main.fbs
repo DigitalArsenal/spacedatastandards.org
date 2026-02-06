@@ -1,82 +1,173 @@
-// Hash: 02ff946057229b8aa83265b3e65e4cbba0a3edcdef5b9d90a0e0ab03cd5b34b4
-// Version: 0.0.2
+// Hash: 029209669f16529948240356cd105ecb5f9d7f193319aef72c626bc3e33db254
+// Version: 0.0.3
 // -----------------------------------END_HEADER
+enum rfObsType : byte {
+  EMISSION,
+  TRANSPONDER,
+  INTERFERENCE,
+  BEACON,
+  TELEMETRY,
+  UNKNOWN
+}
+
+enum rfDetectionStatus : byte {
+  DETECTED,
+  CONFIRMED,
+  TENTATIVE,
+  LOST,
+  INTERFERENCE_ONLY
+}
+
 /// RF Observation
 table RFO {
+  /// Unique identifier
   ID:string;
+  /// Observation time (ISO 8601)
   OB_TIME:string;
+  /// Sensor identifier
   ID_SENSOR:string;
-  TYPE:string;
-  SAT_NO:int;
-  TASK_ID:string;
-  TRANSACTION_ID:string;
-  TRACK_ID:string;
-  ORIG_OBJECT_ID:string;
+  /// Original sensor identifier
   ORIG_SENSOR_ID:string;
-  UCT:bool;
-  TRANSPONDER:string;
-  AZIMUTH:double;
-  AZIMUTH_UNC:double;
-  AZIMUTH_RATE:double;
-  ELEVATION:double;
-  ELEVATION_UNC:double;
-  ELEVATION_RATE:double;
-  RANGE:double;
-  RANGE_UNC:double;
-  RANGE_RATE:double;
-  RANGE_RATE_UNC:double;
-  TRACK_RANGE:double;
-  SENLAT:double;
-  SENLON:double;
-  SENALT:double;
-  ELNOT:string;
-  FREQUENCY:double;
-  NOMINAL_FREQUENCY:double;
-  START_FREQUENCY:double;
-  END_FREQUENCY:double;
-  RELATIVE_CARRIER_POWER:double;
-  SPECTRUM_ANALYZER_POWER:double;
-  RELATIVE_NOISE_FLOOR:double;
-  REFERENCE_LEVEL:double;
-  PGRI:double;
-  CONFIDENCE:double;
-  INCOMING:bool;
-  SWITCH_POINT:int;
-  BAUD_RATE:double;
-  SNR:double;
-  NOMINAL_SNR:double;
-  POLARITY:double;
-  POLARITY_TYPE:string;
-  CHANNEL:int;
-  POWER_OVER_NOISE:double;
-  NOMINAL_POWER_OVER_NOISE:double;
-  BANDWIDTH:double;
-  NOMINAL_BANDWIDTH:double;
-  RESOLUTION_BANDWIDTH:double;
-  VIDEO_BANDWIDTH:double;
-  EIRP:double;
-  NOMINAL_EIRP:double;
-  MIN_PSD:double;
-  MAX_PSD:double;
-  FREQUENCY_SHIFT:double;
-  PEAK:bool;
-  ANTENNA_NAME:string;
-  DETECTION_STATUS:string;
-  COLLECTION_MODE:string;
-  RAW_FILE_URI:string;
-  TAGS:[string];
-  NOISE_PWR_DENSITY:double;
-  CARRIER_STANDARD:string;
-  MODULATION:string;
-  INNER_CODING_RATE:int;
-  OUTER_CODING_RATE:int;
-  TRANSMIT_FILTER_TYPE:string;
-  TRANSMIT_FILTER_ROLL_OFF:double;
-  SYMBOL_TO_NOISE_RATIO:double;
-  BIT_ERROR_RATE:double;
+  /// Observation type
+  OBS_TYPE:rfObsType;
+  /// Satellite catalog number
+  SAT_NO:uint32;
+  /// International designator
+  ORIG_OBJECT_ID:string;
+  /// On-orbit reference
   ON_ORBIT:string;
+  /// True if uncorrelated target
+  UCT:bool;
+  /// Task identifier
+  TASK_ID:string;
+  /// Transaction identifier
+  TRANSACTION_ID:string;
+  /// Track identifier
+  TRACK_ID:string;
+  /// Transponder identifier
+  TRANSPONDER:string;
+  /// Detection status
+  DETECTION_STATUS:rfDetectionStatus;
+  /// Azimuth angle (degrees)
+  AZIMUTH:double;
+  /// Azimuth uncertainty (degrees, 1-sigma)
+  AZIMUTH_UNC:double;
+  /// Azimuth rate (degrees/s)
+  AZIMUTH_RATE:double;
+  /// Elevation angle (degrees)
+  ELEVATION:double;
+  /// Elevation uncertainty (degrees, 1-sigma)
+  ELEVATION_UNC:double;
+  /// Elevation rate (degrees/s)
+  ELEVATION_RATE:double;
+  /// Slant range (km)
+  RANGE:double;
+  /// Range uncertainty (km, 1-sigma)
+  RANGE_UNC:double;
+  /// Range rate (km/s)
+  RANGE_RATE:double;
+  /// Range rate uncertainty (km/s, 1-sigma)
+  RANGE_RATE_UNC:double;
+  /// Track range (km)
+  TRACK_RANGE:double;
+  /// Sensor latitude (degrees)
+  SENLAT:double;
+  /// Sensor longitude (degrees)
+  SENLON:double;
+  /// Sensor altitude (km)
+  SENALT:double;
+  /// ELNOT (Electronic Intelligence Notation)
+  ELNOT:string;
+  /// Antenna name
+  ANTENNA_NAME:string;
+  /// Collection mode
+  COLLECTION_MODE:string;
+  /// Measured center frequency (MHz)
+  FREQUENCY:double;
+  /// Nominal center frequency (MHz)
+  NOMINAL_FREQUENCY:double;
+  /// Start frequency of emission (MHz)
+  START_FREQUENCY:double;
+  /// End frequency of emission (MHz)
+  END_FREQUENCY:double;
+  /// Frequency shift from nominal (MHz)
+  FREQUENCY_SHIFT:double;
+  /// Measured bandwidth (MHz)
+  BANDWIDTH:double;
+  /// Nominal bandwidth (MHz)
+  NOMINAL_BANDWIDTH:double;
+  /// Resolution bandwidth (MHz)
+  RESOLUTION_BANDWIDTH:double;
+  /// Video bandwidth (MHz)
+  VIDEO_BANDWIDTH:double;
+  /// Relative carrier power (dBm)
+  RELATIVE_CARRIER_POWER:double;
+  /// Spectrum analyzer power (dBm)
+  SPECTRUM_ANALYZER_POWER:double;
+  /// Relative noise floor (dBm)
+  RELATIVE_NOISE_FLOOR:double;
+  /// Reference level (dBm)
+  REFERENCE_LEVEL:double;
+  /// Noise power density (dBm/Hz)
+  NOISE_PWR_DENSITY:double;
+  /// PGRI (Pulse Group Repetition Interval, microseconds)
+  PGRI:double;
+  /// Effective isotropic radiated power (dBW)
+  EIRP:double;
+  /// Nominal EIRP (dBW)
+  NOMINAL_EIRP:double;
+  /// Minimum power spectral density (dBm/Hz)
+  MIN_PSD:double;
+  /// Maximum power spectral density (dBm/Hz)
+  MAX_PSD:double;
+  /// Signal-to-noise ratio (dB)
+  SNR:double;
+  /// Nominal SNR (dB)
+  NOMINAL_SNR:double;
+  /// Power over noise (dB)
+  POWER_OVER_NOISE:double;
+  /// Nominal power over noise (dB)
+  NOMINAL_POWER_OVER_NOISE:double;
+  /// Polarity angle (degrees)
+  POLARITY:double;
+  /// Polarization type (e.g., LHCP, RHCP, LINEAR)
+  POLARITY_TYPE:string;
+  /// Channel number
+  CHANNEL:uint16;
+  /// Baud rate (symbols/s)
+  BAUD_RATE:double;
+  /// Symbol-to-noise ratio (dB)
+  SYMBOL_TO_NOISE_RATIO:double;
+  /// Bit error rate
+  BIT_ERROR_RATE:double;
+  /// True if peak measurement
+  PEAK:bool;
+  /// True if incoming signal
+  INCOMING:bool;
+  /// Switch point number
+  SWITCH_POINT:uint16;
+  /// Confidence score (0-1)
+  CONFIDENCE:double;
+  /// Carrier standard (e.g., DVB-S, DVB-S2)
+  CARRIER_STANDARD:string;
+  /// Modulation type
+  MODULATION:string;
+  /// Inner FEC coding rate denominator
+  INNER_CODING_RATE:uint8;
+  /// Outer FEC coding rate denominator
+  OUTER_CODING_RATE:uint8;
+  /// Transmit filter type
+  TRANSMIT_FILTER_TYPE:string;
+  /// Transmit filter roll-off factor
+  TRANSMIT_FILTER_ROLL_OFF:double;
+  /// Reference to raw data file
+  RAW_FILE_URI:string;
+  /// Event descriptor
   DESCRIPTOR:string;
+  /// Reference URL
   URL:string;
+  /// Associated tags
+  TAGS:[string];
 }
 
 root_type RFO;

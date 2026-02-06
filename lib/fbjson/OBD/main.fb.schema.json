@@ -1,139 +1,309 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "odMethod": {
+      "type": "string",
+      "enum": [
+        "BATCH_LEAST_SQUARES",
+        "SEQUENTIAL_LEAST_SQUARES",
+        "EXTENDED_KALMAN",
+        "UNSCENTED_KALMAN",
+        "SPECIAL_PERTURBATIONS",
+        "GENERAL_PERTURBATIONS",
+        "DIFFERENTIAL_CORRECTION",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "BATCH_LEAST_SQUARES": {
+          "value": 0
+        },
+        "SEQUENTIAL_LEAST_SQUARES": {
+          "value": 1
+        },
+        "EXTENDED_KALMAN": {
+          "value": 2
+        },
+        "UNSCENTED_KALMAN": {
+          "value": 3
+        },
+        "SPECIAL_PERTURBATIONS": {
+          "value": 4
+        },
+        "GENERAL_PERTURBATIONS": {
+          "value": 5
+        },
+        "DIFFERENTIAL_CORRECTION": {
+          "value": 6
+        },
+        "UNKNOWN": {
+          "value": 7
+        }
+      }
+    },
+    "odSensorContribution": {
+      "type": "object",
+      "description": "Sensor contribution to an orbit determination solution",
+      "properties": {
+        "SENSOR_ID": {
+          "type": "string",
+          "description": "Sensor identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIG_SENSOR_ID": {
+          "type": "string",
+          "description": "Original sensor identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "NUM_ACCEPTED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of accepted observations from this sensor",
+          "x-flatbuffer-type": "uint32"
+        },
+        "NUM_REJECTED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of rejected observations from this sensor",
+          "x-flatbuffer-type": "uint32"
+        },
+        "WRMS": {
+          "type": "number",
+          "description": "Weighted RMS for this sensor's observations",
+          "x-flatbuffer-type": "double"
+        },
+        "OB_TYPES": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Observation types from this sensor",
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    },
     "OBD": {
       "type": "object",
       "description": "Orbit Determination Results",
       "properties": {
         "ID": {
           "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "START_TIME": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "END_TIME": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "ORIG_OBJECT_ID": {
-          "type": "string",
+          "description": "Unique identifier",
           "x-flatbuffer-type": "string"
         },
         "SAT_NO": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Satellite catalog number",
+          "x-flatbuffer-type": "uint32"
         },
-        "APRIORI_ID_ELSET": {
+        "ORIG_OBJECT_ID": {
           "type": "string",
+          "description": "International designator",
           "x-flatbuffer-type": "string"
         },
-        "APRIORI_ELSET": {
+        "ON_ORBIT": {
           "type": "string",
+          "description": "On-orbit reference",
           "x-flatbuffer-type": "string"
         },
-        "APRIORI_ID_STATE_VECTOR": {
+        "START_TIME": {
           "type": "string",
+          "description": "OD fit start time (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
-        "APRIORI_STATE_VECTOR": {
+        "END_TIME": {
           "type": "string",
+          "description": "OD fit end time (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "METHOD": {
+          "$ref": "#/definitions/odMethod",
+          "description": "OD method used",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "BATCH_LEAST_SQUARES": {
+              "value": 0
+            },
+            "SEQUENTIAL_LEAST_SQUARES": {
+              "value": 1
+            },
+            "EXTENDED_KALMAN": {
+              "value": 2
+            },
+            "UNSCENTED_KALMAN": {
+              "value": 3
+            },
+            "SPECIAL_PERTURBATIONS": {
+              "value": 4
+            },
+            "GENERAL_PERTURBATIONS": {
+              "value": 5
+            },
+            "DIFFERENTIAL_CORRECTION": {
+              "value": 6
+            },
+            "UNKNOWN": {
+              "value": 7
+            }
+          }
+        },
+        "METHOD_SOURCE": {
+          "type": "string",
+          "description": "Method source or software",
           "x-flatbuffer-type": "string"
         },
         "INITIAL_OD": {
           "type": "boolean",
+          "description": "True if this is an initial orbit determination",
           "x-flatbuffer-type": "bool"
+        },
+        "APRIORI_ID_ELSET": {
+          "type": "string",
+          "description": "A priori element set identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "APRIORI_ELSET": {
+          "type": "string",
+          "description": "A priori element set data reference",
+          "x-flatbuffer-type": "string"
+        },
+        "APRIORI_ID_STATE_VECTOR": {
+          "type": "string",
+          "description": "A priori state vector identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "APRIORI_STATE_VECTOR": {
+          "type": "string",
+          "description": "A priori state vector data reference",
+          "x-flatbuffer-type": "string"
         },
         "LAST_OB_START": {
           "type": "string",
+          "description": "Start of last observation arc (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "LAST_OB_END": {
           "type": "string",
+          "description": "End of last observation arc (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "TIME_SPAN": {
           "type": "number",
+          "description": "Observation time span (days)",
+          "x-flatbuffer-type": "double"
+        },
+        "FIT_SPAN": {
+          "type": "number",
+          "description": "Fit span in days",
           "x-flatbuffer-type": "double"
         },
         "EFFECTIVE_FROM": {
           "type": "string",
+          "description": "Solution effective from (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "EFFECTIVE_UNTIL": {
           "type": "string",
+          "description": "Solution effective until (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "WRMS": {
           "type": "number",
+          "description": "Weighted RMS of residuals",
           "x-flatbuffer-type": "double"
         },
         "PREVIOUS_WRMS": {
           "type": "number",
+          "description": "Previous solution WRMS",
           "x-flatbuffer-type": "double"
         },
         "FIRST_PASS_WRMS": {
           "type": "number",
+          "description": "First pass WRMS",
           "x-flatbuffer-type": "double"
         },
         "BEST_PASS_WRMS": {
           "type": "number",
+          "description": "Best pass WRMS",
           "x-flatbuffer-type": "double"
         },
         "ERROR_GROWTH_RATE": {
           "type": "number",
+          "description": "Error growth rate (km/day)",
           "x-flatbuffer-type": "double"
         },
         "EDR": {
           "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "METHOD": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "METHOD_SOURCE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "FIT_SPAN": {
-          "type": "number",
+          "description": "Energy dissipation rate",
           "x-flatbuffer-type": "double"
         },
         "BALLISTIC_COEFF_EST": {
           "type": "boolean",
+          "description": "True if ballistic coefficient was estimated",
           "x-flatbuffer-type": "bool"
         },
         "BALLISTIC_COEFF_MODEL": {
           "type": "string",
+          "description": "Ballistic coefficient model",
           "x-flatbuffer-type": "string"
         },
         "AGOM_EST": {
           "type": "boolean",
+          "description": "True if area-to-mass ratio was estimated",
           "x-flatbuffer-type": "bool"
         },
         "AGOM_MODEL": {
           "type": "string",
+          "description": "Area-to-mass ratio model",
           "x-flatbuffer-type": "string"
         },
         "RMS_CONVERGENCE_CRITERIA": {
           "type": "number",
+          "description": "RMS convergence criteria",
           "x-flatbuffer-type": "double"
         },
         "NUM_ITERATIONS": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Number of iterations to converge",
+          "x-flatbuffer-type": "uint16"
+        },
+        "NUM_ACCEPTED_OBS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Total accepted observations",
+          "x-flatbuffer-type": "uint32"
+        },
+        "NUM_REJECTED_OBS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Total rejected observations",
+          "x-flatbuffer-type": "uint32"
+        },
+        "SENSORS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/odSensorContribution"
+          },
+          "description": "Sensor contributions to this solution",
+          "x-flatbuffer-type": "[odSensorContribution]"
         },
         "ACCEPTED_OB_TYPS": {
           "type": "array",
           "items": {
             "type": "string"
           },
+          "description": "Accepted observation types",
           "x-flatbuffer-type": "[string]"
         },
         "ACCEPTED_OB_IDS": {
@@ -141,6 +311,7 @@
           "items": {
             "type": "string"
           },
+          "description": "Accepted observation identifiers",
           "x-flatbuffer-type": "[string]"
         },
         "REJECTED_OB_TYPS": {
@@ -148,6 +319,7 @@
           "items": {
             "type": "string"
           },
+          "description": "Rejected observation types",
           "x-flatbuffer-type": "[string]"
         },
         "REJECTED_OB_IDS": {
@@ -155,18 +327,8 @@
           "items": {
             "type": "string"
           },
+          "description": "Rejected observation identifiers",
           "x-flatbuffer-type": "[string]"
-        },
-        "SENSOR_IDS": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
-        },
-        "ON_ORBIT": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

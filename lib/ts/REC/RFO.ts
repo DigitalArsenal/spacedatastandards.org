@@ -4,6 +4,8 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { rfDetectionStatus } from './rfDetectionStatus.js';
+import { rfObsType } from './rfObsType.js';
 
 
 /**
@@ -31,6 +33,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$RFO');
 }
 
+/**
+ * Unique identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,6 +43,9 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Observation time (ISO 8601)
+ */
 OB_TIME():string|null
 OB_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 OB_TIME(optionalEncoding?:any):string|Uint8Array|null {
@@ -45,6 +53,9 @@ OB_TIME(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Sensor identifier
+ */
 ID_SENSOR():string|null
 ID_SENSOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID_SENSOR(optionalEncoding?:any):string|Uint8Array|null {
@@ -52,404 +63,613 @@ ID_SENSOR(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-TYPE():string|null
-TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-TYPE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Original sensor identifier
+ */
+ORIG_SENSOR_ID():string|null
+ORIG_SENSOR_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ORIG_SENSOR_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-SAT_NO():number {
+/**
+ * Observation type
+ */
+OBS_TYPE():rfObsType {
   const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : rfObsType.EMISSION;
 }
 
-TASK_ID():string|null
-TASK_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-TASK_ID(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Satellite catalog number
+ */
+SAT_NO():number {
   const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
-TRANSACTION_ID():string|null
-TRANSACTION_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-TRANSACTION_ID(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * International designator
+ */
+ORIG_OBJECT_ID():string|null
+ORIG_OBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ORIG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-TRACK_ID():string|null
-TRACK_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-TRACK_ID(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * On-orbit reference
+ */
+ON_ORBIT():string|null
+ON_ORBIT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ON_ORBIT(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-ORIG_OBJECT_ID():string|null
-ORIG_OBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ORIG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * True if uncorrelated target
+ */
+UCT():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 20);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
-ORIG_SENSOR_ID():string|null
-ORIG_SENSOR_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ORIG_SENSOR_ID(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Task identifier
+ */
+TASK_ID():string|null
+TASK_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TASK_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-UCT():boolean {
+/**
+ * Transaction identifier
+ */
+TRANSACTION_ID():string|null
+TRANSACTION_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TRANSACTION_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 24);
-  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-TRANSPONDER():string|null
-TRANSPONDER(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-TRANSPONDER(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Track identifier
+ */
+TRACK_ID():string|null
+TRACK_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TRACK_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-AZIMUTH():number {
+/**
+ * Transponder identifier
+ */
+TRANSPONDER():string|null
+TRANSPONDER(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TRANSPONDER(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 28);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-AZIMUTH_UNC():number {
+/**
+ * Detection status
+ */
+DETECTION_STATUS():rfDetectionStatus {
   const offset = this.bb!.__offset(this.bb_pos, 30);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : rfDetectionStatus.DETECTED;
 }
 
-AZIMUTH_RATE():number {
+/**
+ * Azimuth angle (degrees)
+ */
+AZIMUTH():number {
   const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-ELEVATION():number {
+/**
+ * Azimuth uncertainty (degrees, 1-sigma)
+ */
+AZIMUTH_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 34);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-ELEVATION_UNC():number {
+/**
+ * Azimuth rate (degrees/s)
+ */
+AZIMUTH_RATE():number {
   const offset = this.bb!.__offset(this.bb_pos, 36);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-ELEVATION_RATE():number {
+/**
+ * Elevation angle (degrees)
+ */
+ELEVATION():number {
   const offset = this.bb!.__offset(this.bb_pos, 38);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-RANGE():number {
+/**
+ * Elevation uncertainty (degrees, 1-sigma)
+ */
+ELEVATION_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 40);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-RANGE_UNC():number {
+/**
+ * Elevation rate (degrees/s)
+ */
+ELEVATION_RATE():number {
   const offset = this.bb!.__offset(this.bb_pos, 42);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-RANGE_RATE():number {
+/**
+ * Slant range (km)
+ */
+RANGE():number {
   const offset = this.bb!.__offset(this.bb_pos, 44);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-RANGE_RATE_UNC():number {
+/**
+ * Range uncertainty (km, 1-sigma)
+ */
+RANGE_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 46);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-TRACK_RANGE():number {
+/**
+ * Range rate (km/s)
+ */
+RANGE_RATE():number {
   const offset = this.bb!.__offset(this.bb_pos, 48);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SENLAT():number {
+/**
+ * Range rate uncertainty (km/s, 1-sigma)
+ */
+RANGE_RATE_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 50);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SENLON():number {
+/**
+ * Track range (km)
+ */
+TRACK_RANGE():number {
   const offset = this.bb!.__offset(this.bb_pos, 52);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SENALT():number {
+/**
+ * Sensor latitude (degrees)
+ */
+SENLAT():number {
   const offset = this.bb!.__offset(this.bb_pos, 54);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-ELNOT():string|null
-ELNOT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ELNOT(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Sensor longitude (degrees)
+ */
+SENLON():number {
   const offset = this.bb!.__offset(this.bb_pos, 56);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-FREQUENCY():number {
+/**
+ * Sensor altitude (km)
+ */
+SENALT():number {
   const offset = this.bb!.__offset(this.bb_pos, 58);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-NOMINAL_FREQUENCY():number {
+/**
+ * ELNOT (Electronic Intelligence Notation)
+ */
+ELNOT():string|null
+ELNOT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ELNOT(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 60);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-START_FREQUENCY():number {
+/**
+ * Antenna name
+ */
+ANTENNA_NAME():string|null
+ANTENNA_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ANTENNA_NAME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 62);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-END_FREQUENCY():number {
+/**
+ * Collection mode
+ */
+COLLECTION_MODE():string|null
+COLLECTION_MODE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+COLLECTION_MODE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 64);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-RELATIVE_CARRIER_POWER():number {
+/**
+ * Measured center frequency (MHz)
+ */
+FREQUENCY():number {
   const offset = this.bb!.__offset(this.bb_pos, 66);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SPECTRUM_ANALYZER_POWER():number {
+/**
+ * Nominal center frequency (MHz)
+ */
+NOMINAL_FREQUENCY():number {
   const offset = this.bb!.__offset(this.bb_pos, 68);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-RELATIVE_NOISE_FLOOR():number {
+/**
+ * Start frequency of emission (MHz)
+ */
+START_FREQUENCY():number {
   const offset = this.bb!.__offset(this.bb_pos, 70);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-REFERENCE_LEVEL():number {
+/**
+ * End frequency of emission (MHz)
+ */
+END_FREQUENCY():number {
   const offset = this.bb!.__offset(this.bb_pos, 72);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-PGRI():number {
+/**
+ * Frequency shift from nominal (MHz)
+ */
+FREQUENCY_SHIFT():number {
   const offset = this.bb!.__offset(this.bb_pos, 74);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-CONFIDENCE():number {
+/**
+ * Measured bandwidth (MHz)
+ */
+BANDWIDTH():number {
   const offset = this.bb!.__offset(this.bb_pos, 76);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-INCOMING():boolean {
+/**
+ * Nominal bandwidth (MHz)
+ */
+NOMINAL_BANDWIDTH():number {
   const offset = this.bb!.__offset(this.bb_pos, 78);
-  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SWITCH_POINT():number {
+/**
+ * Resolution bandwidth (MHz)
+ */
+RESOLUTION_BANDWIDTH():number {
   const offset = this.bb!.__offset(this.bb_pos, 80);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-BAUD_RATE():number {
+/**
+ * Video bandwidth (MHz)
+ */
+VIDEO_BANDWIDTH():number {
   const offset = this.bb!.__offset(this.bb_pos, 82);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SNR():number {
+/**
+ * Relative carrier power (dBm)
+ */
+RELATIVE_CARRIER_POWER():number {
   const offset = this.bb!.__offset(this.bb_pos, 84);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-NOMINAL_SNR():number {
+/**
+ * Spectrum analyzer power (dBm)
+ */
+SPECTRUM_ANALYZER_POWER():number {
   const offset = this.bb!.__offset(this.bb_pos, 86);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-POLARITY():number {
+/**
+ * Relative noise floor (dBm)
+ */
+RELATIVE_NOISE_FLOOR():number {
   const offset = this.bb!.__offset(this.bb_pos, 88);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-POLARITY_TYPE():string|null
-POLARITY_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-POLARITY_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Reference level (dBm)
+ */
+REFERENCE_LEVEL():number {
   const offset = this.bb!.__offset(this.bb_pos, 90);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-CHANNEL():number {
+/**
+ * Noise power density (dBm/Hz)
+ */
+NOISE_PWR_DENSITY():number {
   const offset = this.bb!.__offset(this.bb_pos, 92);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-POWER_OVER_NOISE():number {
+/**
+ * PGRI (Pulse Group Repetition Interval, microseconds)
+ */
+PGRI():number {
   const offset = this.bb!.__offset(this.bb_pos, 94);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-NOMINAL_POWER_OVER_NOISE():number {
+/**
+ * Effective isotropic radiated power (dBW)
+ */
+EIRP():number {
   const offset = this.bb!.__offset(this.bb_pos, 96);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-BANDWIDTH():number {
+/**
+ * Nominal EIRP (dBW)
+ */
+NOMINAL_EIRP():number {
   const offset = this.bb!.__offset(this.bb_pos, 98);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-NOMINAL_BANDWIDTH():number {
+/**
+ * Minimum power spectral density (dBm/Hz)
+ */
+MIN_PSD():number {
   const offset = this.bb!.__offset(this.bb_pos, 100);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-RESOLUTION_BANDWIDTH():number {
+/**
+ * Maximum power spectral density (dBm/Hz)
+ */
+MAX_PSD():number {
   const offset = this.bb!.__offset(this.bb_pos, 102);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-VIDEO_BANDWIDTH():number {
+/**
+ * Signal-to-noise ratio (dB)
+ */
+SNR():number {
   const offset = this.bb!.__offset(this.bb_pos, 104);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-EIRP():number {
+/**
+ * Nominal SNR (dB)
+ */
+NOMINAL_SNR():number {
   const offset = this.bb!.__offset(this.bb_pos, 106);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-NOMINAL_EIRP():number {
+/**
+ * Power over noise (dB)
+ */
+POWER_OVER_NOISE():number {
   const offset = this.bb!.__offset(this.bb_pos, 108);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-MIN_PSD():number {
+/**
+ * Nominal power over noise (dB)
+ */
+NOMINAL_POWER_OVER_NOISE():number {
   const offset = this.bb!.__offset(this.bb_pos, 110);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-MAX_PSD():number {
+/**
+ * Polarity angle (degrees)
+ */
+POLARITY():number {
   const offset = this.bb!.__offset(this.bb_pos, 112);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-FREQUENCY_SHIFT():number {
+/**
+ * Polarization type (e.g., LHCP, RHCP, LINEAR)
+ */
+POLARITY_TYPE():string|null
+POLARITY_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+POLARITY_TYPE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 114);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Channel number
+ */
+CHANNEL():number {
+  const offset = this.bb!.__offset(this.bb_pos, 116);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Baud rate (symbols/s)
+ */
+BAUD_RATE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 118);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Symbol-to-noise ratio (dB)
+ */
+SYMBOL_TO_NOISE_RATIO():number {
+  const offset = this.bb!.__offset(this.bb_pos, 120);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Bit error rate
+ */
+BIT_ERROR_RATE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 122);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * True if peak measurement
+ */
 PEAK():boolean {
-  const offset = this.bb!.__offset(this.bb_pos, 116);
+  const offset = this.bb!.__offset(this.bb_pos, 124);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
-ANTENNA_NAME():string|null
-ANTENNA_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ANTENNA_NAME(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 118);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-DETECTION_STATUS():string|null
-DETECTION_STATUS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-DETECTION_STATUS(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 120);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-COLLECTION_MODE():string|null
-COLLECTION_MODE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-COLLECTION_MODE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 122);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-RAW_FILE_URI():string|null
-RAW_FILE_URI(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-RAW_FILE_URI(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 124);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-TAGS(index: number):string
-TAGS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-TAGS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * True if incoming signal
+ */
+INCOMING():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 126);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
-tagsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 126);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-NOISE_PWR_DENSITY():number {
+/**
+ * Switch point number
+ */
+SWITCH_POINT():number {
   const offset = this.bb!.__offset(this.bb_pos, 128);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Confidence score (0-1)
+ */
+CONFIDENCE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 130);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Carrier standard (e.g., DVB-S, DVB-S2)
+ */
 CARRIER_STANDARD():string|null
 CARRIER_STANDARD(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 CARRIER_STANDARD(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 130);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-MODULATION():string|null
-MODULATION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-MODULATION(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 132);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-INNER_CODING_RATE():number {
+/**
+ * Modulation type
+ */
+MODULATION():string|null
+MODULATION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MODULATION(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 134);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
-}
-
-OUTER_CODING_RATE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 136);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
-}
-
-TRANSMIT_FILTER_TYPE():string|null
-TRANSMIT_FILTER_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-TRANSMIT_FILTER_TYPE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 138);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-TRANSMIT_FILTER_ROLL_OFF():number {
-  const offset = this.bb!.__offset(this.bb_pos, 140);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+/**
+ * Inner FEC coding rate denominator
+ */
+INNER_CODING_RATE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 136);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
 }
 
-SYMBOL_TO_NOISE_RATIO():number {
+/**
+ * Outer FEC coding rate denominator
+ */
+OUTER_CODING_RATE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 138);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Transmit filter type
+ */
+TRANSMIT_FILTER_TYPE():string|null
+TRANSMIT_FILTER_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TRANSMIT_FILTER_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 140);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Transmit filter roll-off factor
+ */
+TRANSMIT_FILTER_ROLL_OFF():number {
   const offset = this.bb!.__offset(this.bb_pos, 142);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-BIT_ERROR_RATE():number {
+/**
+ * Reference to raw data file
+ */
+RAW_FILE_URI():string|null
+RAW_FILE_URI(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+RAW_FILE_URI(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 144);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-ON_ORBIT():string|null
-ON_ORBIT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ON_ORBIT(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Event descriptor
+ */
+DESCRIPTOR():string|null
+DESCRIPTOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DESCRIPTOR(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 146);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-DESCRIPTOR():string|null
-DESCRIPTOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-DESCRIPTOR(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Reference URL
+ */
+URL():string|null
+URL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+URL(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 148);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-URL():string|null
-URL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-URL(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Associated tags
+ */
+TAGS(index: number):string
+TAGS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+TAGS(index: number,optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 150);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+tagsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 150);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 static startRFO(builder:flatbuffers.Builder) {
@@ -468,240 +688,288 @@ static addIdSensor(builder:flatbuffers.Builder, ID_SENSOROffset:flatbuffers.Offs
   builder.addFieldOffset(2, ID_SENSOROffset, 0);
 }
 
-static addType(builder:flatbuffers.Builder, TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, TYPEOffset, 0);
+static addOrigSensorId(builder:flatbuffers.Builder, ORIG_SENSOR_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(3, ORIG_SENSOR_IDOffset, 0);
+}
+
+static addObsType(builder:flatbuffers.Builder, OBS_TYPE:rfObsType) {
+  builder.addFieldInt8(4, OBS_TYPE, rfObsType.EMISSION);
 }
 
 static addSatNo(builder:flatbuffers.Builder, SAT_NO:number) {
-  builder.addFieldInt32(4, SAT_NO, 0);
-}
-
-static addTaskId(builder:flatbuffers.Builder, TASK_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, TASK_IDOffset, 0);
-}
-
-static addTransactionId(builder:flatbuffers.Builder, TRANSACTION_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(6, TRANSACTION_IDOffset, 0);
-}
-
-static addTrackId(builder:flatbuffers.Builder, TRACK_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(7, TRACK_IDOffset, 0);
+  builder.addFieldInt32(5, SAT_NO, 0);
 }
 
 static addOrigObjectId(builder:flatbuffers.Builder, ORIG_OBJECT_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(8, ORIG_OBJECT_IDOffset, 0);
+  builder.addFieldOffset(6, ORIG_OBJECT_IDOffset, 0);
 }
 
-static addOrigSensorId(builder:flatbuffers.Builder, ORIG_SENSOR_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(9, ORIG_SENSOR_IDOffset, 0);
+static addOnOrbit(builder:flatbuffers.Builder, ON_ORBITOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, ON_ORBITOffset, 0);
 }
 
 static addUct(builder:flatbuffers.Builder, UCT:boolean) {
-  builder.addFieldInt8(10, +UCT, +false);
+  builder.addFieldInt8(8, +UCT, +false);
+}
+
+static addTaskId(builder:flatbuffers.Builder, TASK_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, TASK_IDOffset, 0);
+}
+
+static addTransactionId(builder:flatbuffers.Builder, TRANSACTION_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(10, TRANSACTION_IDOffset, 0);
+}
+
+static addTrackId(builder:flatbuffers.Builder, TRACK_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, TRACK_IDOffset, 0);
 }
 
 static addTransponder(builder:flatbuffers.Builder, TRANSPONDEROffset:flatbuffers.Offset) {
-  builder.addFieldOffset(11, TRANSPONDEROffset, 0);
+  builder.addFieldOffset(12, TRANSPONDEROffset, 0);
+}
+
+static addDetectionStatus(builder:flatbuffers.Builder, DETECTION_STATUS:rfDetectionStatus) {
+  builder.addFieldInt8(13, DETECTION_STATUS, rfDetectionStatus.DETECTED);
 }
 
 static addAzimuth(builder:flatbuffers.Builder, AZIMUTH:number) {
-  builder.addFieldFloat64(12, AZIMUTH, 0.0);
+  builder.addFieldFloat64(14, AZIMUTH, 0.0);
 }
 
 static addAzimuthUnc(builder:flatbuffers.Builder, AZIMUTH_UNC:number) {
-  builder.addFieldFloat64(13, AZIMUTH_UNC, 0.0);
+  builder.addFieldFloat64(15, AZIMUTH_UNC, 0.0);
 }
 
 static addAzimuthRate(builder:flatbuffers.Builder, AZIMUTH_RATE:number) {
-  builder.addFieldFloat64(14, AZIMUTH_RATE, 0.0);
+  builder.addFieldFloat64(16, AZIMUTH_RATE, 0.0);
 }
 
 static addElevation(builder:flatbuffers.Builder, ELEVATION:number) {
-  builder.addFieldFloat64(15, ELEVATION, 0.0);
+  builder.addFieldFloat64(17, ELEVATION, 0.0);
 }
 
 static addElevationUnc(builder:flatbuffers.Builder, ELEVATION_UNC:number) {
-  builder.addFieldFloat64(16, ELEVATION_UNC, 0.0);
+  builder.addFieldFloat64(18, ELEVATION_UNC, 0.0);
 }
 
 static addElevationRate(builder:flatbuffers.Builder, ELEVATION_RATE:number) {
-  builder.addFieldFloat64(17, ELEVATION_RATE, 0.0);
+  builder.addFieldFloat64(19, ELEVATION_RATE, 0.0);
 }
 
 static addRange(builder:flatbuffers.Builder, RANGE:number) {
-  builder.addFieldFloat64(18, RANGE, 0.0);
+  builder.addFieldFloat64(20, RANGE, 0.0);
 }
 
 static addRangeUnc(builder:flatbuffers.Builder, RANGE_UNC:number) {
-  builder.addFieldFloat64(19, RANGE_UNC, 0.0);
+  builder.addFieldFloat64(21, RANGE_UNC, 0.0);
 }
 
 static addRangeRate(builder:flatbuffers.Builder, RANGE_RATE:number) {
-  builder.addFieldFloat64(20, RANGE_RATE, 0.0);
+  builder.addFieldFloat64(22, RANGE_RATE, 0.0);
 }
 
 static addRangeRateUnc(builder:flatbuffers.Builder, RANGE_RATE_UNC:number) {
-  builder.addFieldFloat64(21, RANGE_RATE_UNC, 0.0);
+  builder.addFieldFloat64(23, RANGE_RATE_UNC, 0.0);
 }
 
 static addTrackRange(builder:flatbuffers.Builder, TRACK_RANGE:number) {
-  builder.addFieldFloat64(22, TRACK_RANGE, 0.0);
+  builder.addFieldFloat64(24, TRACK_RANGE, 0.0);
 }
 
 static addSenlat(builder:flatbuffers.Builder, SENLAT:number) {
-  builder.addFieldFloat64(23, SENLAT, 0.0);
+  builder.addFieldFloat64(25, SENLAT, 0.0);
 }
 
 static addSenlon(builder:flatbuffers.Builder, SENLON:number) {
-  builder.addFieldFloat64(24, SENLON, 0.0);
+  builder.addFieldFloat64(26, SENLON, 0.0);
 }
 
 static addSenalt(builder:flatbuffers.Builder, SENALT:number) {
-  builder.addFieldFloat64(25, SENALT, 0.0);
+  builder.addFieldFloat64(27, SENALT, 0.0);
 }
 
 static addElnot(builder:flatbuffers.Builder, ELNOTOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(26, ELNOTOffset, 0);
-}
-
-static addFrequency(builder:flatbuffers.Builder, FREQUENCY:number) {
-  builder.addFieldFloat64(27, FREQUENCY, 0.0);
-}
-
-static addNominalFrequency(builder:flatbuffers.Builder, NOMINAL_FREQUENCY:number) {
-  builder.addFieldFloat64(28, NOMINAL_FREQUENCY, 0.0);
-}
-
-static addStartFrequency(builder:flatbuffers.Builder, START_FREQUENCY:number) {
-  builder.addFieldFloat64(29, START_FREQUENCY, 0.0);
-}
-
-static addEndFrequency(builder:flatbuffers.Builder, END_FREQUENCY:number) {
-  builder.addFieldFloat64(30, END_FREQUENCY, 0.0);
-}
-
-static addRelativeCarrierPower(builder:flatbuffers.Builder, RELATIVE_CARRIER_POWER:number) {
-  builder.addFieldFloat64(31, RELATIVE_CARRIER_POWER, 0.0);
-}
-
-static addSpectrumAnalyzerPower(builder:flatbuffers.Builder, SPECTRUM_ANALYZER_POWER:number) {
-  builder.addFieldFloat64(32, SPECTRUM_ANALYZER_POWER, 0.0);
-}
-
-static addRelativeNoiseFloor(builder:flatbuffers.Builder, RELATIVE_NOISE_FLOOR:number) {
-  builder.addFieldFloat64(33, RELATIVE_NOISE_FLOOR, 0.0);
-}
-
-static addReferenceLevel(builder:flatbuffers.Builder, REFERENCE_LEVEL:number) {
-  builder.addFieldFloat64(34, REFERENCE_LEVEL, 0.0);
-}
-
-static addPgri(builder:flatbuffers.Builder, PGRI:number) {
-  builder.addFieldFloat64(35, PGRI, 0.0);
-}
-
-static addConfidence(builder:flatbuffers.Builder, CONFIDENCE:number) {
-  builder.addFieldFloat64(36, CONFIDENCE, 0.0);
-}
-
-static addIncoming(builder:flatbuffers.Builder, INCOMING:boolean) {
-  builder.addFieldInt8(37, +INCOMING, +false);
-}
-
-static addSwitchPoint(builder:flatbuffers.Builder, SWITCH_POINT:number) {
-  builder.addFieldInt32(38, SWITCH_POINT, 0);
-}
-
-static addBaudRate(builder:flatbuffers.Builder, BAUD_RATE:number) {
-  builder.addFieldFloat64(39, BAUD_RATE, 0.0);
-}
-
-static addSnr(builder:flatbuffers.Builder, SNR:number) {
-  builder.addFieldFloat64(40, SNR, 0.0);
-}
-
-static addNominalSnr(builder:flatbuffers.Builder, NOMINAL_SNR:number) {
-  builder.addFieldFloat64(41, NOMINAL_SNR, 0.0);
-}
-
-static addPolarity(builder:flatbuffers.Builder, POLARITY:number) {
-  builder.addFieldFloat64(42, POLARITY, 0.0);
-}
-
-static addPolarityType(builder:flatbuffers.Builder, POLARITY_TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(43, POLARITY_TYPEOffset, 0);
-}
-
-static addChannel(builder:flatbuffers.Builder, CHANNEL:number) {
-  builder.addFieldInt32(44, CHANNEL, 0);
-}
-
-static addPowerOverNoise(builder:flatbuffers.Builder, POWER_OVER_NOISE:number) {
-  builder.addFieldFloat64(45, POWER_OVER_NOISE, 0.0);
-}
-
-static addNominalPowerOverNoise(builder:flatbuffers.Builder, NOMINAL_POWER_OVER_NOISE:number) {
-  builder.addFieldFloat64(46, NOMINAL_POWER_OVER_NOISE, 0.0);
-}
-
-static addBandwidth(builder:flatbuffers.Builder, BANDWIDTH:number) {
-  builder.addFieldFloat64(47, BANDWIDTH, 0.0);
-}
-
-static addNominalBandwidth(builder:flatbuffers.Builder, NOMINAL_BANDWIDTH:number) {
-  builder.addFieldFloat64(48, NOMINAL_BANDWIDTH, 0.0);
-}
-
-static addResolutionBandwidth(builder:flatbuffers.Builder, RESOLUTION_BANDWIDTH:number) {
-  builder.addFieldFloat64(49, RESOLUTION_BANDWIDTH, 0.0);
-}
-
-static addVideoBandwidth(builder:flatbuffers.Builder, VIDEO_BANDWIDTH:number) {
-  builder.addFieldFloat64(50, VIDEO_BANDWIDTH, 0.0);
-}
-
-static addEirp(builder:flatbuffers.Builder, EIRP:number) {
-  builder.addFieldFloat64(51, EIRP, 0.0);
-}
-
-static addNominalEirp(builder:flatbuffers.Builder, NOMINAL_EIRP:number) {
-  builder.addFieldFloat64(52, NOMINAL_EIRP, 0.0);
-}
-
-static addMinPsd(builder:flatbuffers.Builder, MIN_PSD:number) {
-  builder.addFieldFloat64(53, MIN_PSD, 0.0);
-}
-
-static addMaxPsd(builder:flatbuffers.Builder, MAX_PSD:number) {
-  builder.addFieldFloat64(54, MAX_PSD, 0.0);
-}
-
-static addFrequencyShift(builder:flatbuffers.Builder, FREQUENCY_SHIFT:number) {
-  builder.addFieldFloat64(55, FREQUENCY_SHIFT, 0.0);
-}
-
-static addPeak(builder:flatbuffers.Builder, PEAK:boolean) {
-  builder.addFieldInt8(56, +PEAK, +false);
+  builder.addFieldOffset(28, ELNOTOffset, 0);
 }
 
 static addAntennaName(builder:flatbuffers.Builder, ANTENNA_NAMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(57, ANTENNA_NAMEOffset, 0);
-}
-
-static addDetectionStatus(builder:flatbuffers.Builder, DETECTION_STATUSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(58, DETECTION_STATUSOffset, 0);
+  builder.addFieldOffset(29, ANTENNA_NAMEOffset, 0);
 }
 
 static addCollectionMode(builder:flatbuffers.Builder, COLLECTION_MODEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(59, COLLECTION_MODEOffset, 0);
+  builder.addFieldOffset(30, COLLECTION_MODEOffset, 0);
+}
+
+static addFrequency(builder:flatbuffers.Builder, FREQUENCY:number) {
+  builder.addFieldFloat64(31, FREQUENCY, 0.0);
+}
+
+static addNominalFrequency(builder:flatbuffers.Builder, NOMINAL_FREQUENCY:number) {
+  builder.addFieldFloat64(32, NOMINAL_FREQUENCY, 0.0);
+}
+
+static addStartFrequency(builder:flatbuffers.Builder, START_FREQUENCY:number) {
+  builder.addFieldFloat64(33, START_FREQUENCY, 0.0);
+}
+
+static addEndFrequency(builder:flatbuffers.Builder, END_FREQUENCY:number) {
+  builder.addFieldFloat64(34, END_FREQUENCY, 0.0);
+}
+
+static addFrequencyShift(builder:flatbuffers.Builder, FREQUENCY_SHIFT:number) {
+  builder.addFieldFloat64(35, FREQUENCY_SHIFT, 0.0);
+}
+
+static addBandwidth(builder:flatbuffers.Builder, BANDWIDTH:number) {
+  builder.addFieldFloat64(36, BANDWIDTH, 0.0);
+}
+
+static addNominalBandwidth(builder:flatbuffers.Builder, NOMINAL_BANDWIDTH:number) {
+  builder.addFieldFloat64(37, NOMINAL_BANDWIDTH, 0.0);
+}
+
+static addResolutionBandwidth(builder:flatbuffers.Builder, RESOLUTION_BANDWIDTH:number) {
+  builder.addFieldFloat64(38, RESOLUTION_BANDWIDTH, 0.0);
+}
+
+static addVideoBandwidth(builder:flatbuffers.Builder, VIDEO_BANDWIDTH:number) {
+  builder.addFieldFloat64(39, VIDEO_BANDWIDTH, 0.0);
+}
+
+static addRelativeCarrierPower(builder:flatbuffers.Builder, RELATIVE_CARRIER_POWER:number) {
+  builder.addFieldFloat64(40, RELATIVE_CARRIER_POWER, 0.0);
+}
+
+static addSpectrumAnalyzerPower(builder:flatbuffers.Builder, SPECTRUM_ANALYZER_POWER:number) {
+  builder.addFieldFloat64(41, SPECTRUM_ANALYZER_POWER, 0.0);
+}
+
+static addRelativeNoiseFloor(builder:flatbuffers.Builder, RELATIVE_NOISE_FLOOR:number) {
+  builder.addFieldFloat64(42, RELATIVE_NOISE_FLOOR, 0.0);
+}
+
+static addReferenceLevel(builder:flatbuffers.Builder, REFERENCE_LEVEL:number) {
+  builder.addFieldFloat64(43, REFERENCE_LEVEL, 0.0);
+}
+
+static addNoisePwrDensity(builder:flatbuffers.Builder, NOISE_PWR_DENSITY:number) {
+  builder.addFieldFloat64(44, NOISE_PWR_DENSITY, 0.0);
+}
+
+static addPgri(builder:flatbuffers.Builder, PGRI:number) {
+  builder.addFieldFloat64(45, PGRI, 0.0);
+}
+
+static addEirp(builder:flatbuffers.Builder, EIRP:number) {
+  builder.addFieldFloat64(46, EIRP, 0.0);
+}
+
+static addNominalEirp(builder:flatbuffers.Builder, NOMINAL_EIRP:number) {
+  builder.addFieldFloat64(47, NOMINAL_EIRP, 0.0);
+}
+
+static addMinPsd(builder:flatbuffers.Builder, MIN_PSD:number) {
+  builder.addFieldFloat64(48, MIN_PSD, 0.0);
+}
+
+static addMaxPsd(builder:flatbuffers.Builder, MAX_PSD:number) {
+  builder.addFieldFloat64(49, MAX_PSD, 0.0);
+}
+
+static addSnr(builder:flatbuffers.Builder, SNR:number) {
+  builder.addFieldFloat64(50, SNR, 0.0);
+}
+
+static addNominalSnr(builder:flatbuffers.Builder, NOMINAL_SNR:number) {
+  builder.addFieldFloat64(51, NOMINAL_SNR, 0.0);
+}
+
+static addPowerOverNoise(builder:flatbuffers.Builder, POWER_OVER_NOISE:number) {
+  builder.addFieldFloat64(52, POWER_OVER_NOISE, 0.0);
+}
+
+static addNominalPowerOverNoise(builder:flatbuffers.Builder, NOMINAL_POWER_OVER_NOISE:number) {
+  builder.addFieldFloat64(53, NOMINAL_POWER_OVER_NOISE, 0.0);
+}
+
+static addPolarity(builder:flatbuffers.Builder, POLARITY:number) {
+  builder.addFieldFloat64(54, POLARITY, 0.0);
+}
+
+static addPolarityType(builder:flatbuffers.Builder, POLARITY_TYPEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(55, POLARITY_TYPEOffset, 0);
+}
+
+static addChannel(builder:flatbuffers.Builder, CHANNEL:number) {
+  builder.addFieldInt16(56, CHANNEL, 0);
+}
+
+static addBaudRate(builder:flatbuffers.Builder, BAUD_RATE:number) {
+  builder.addFieldFloat64(57, BAUD_RATE, 0.0);
+}
+
+static addSymbolToNoiseRatio(builder:flatbuffers.Builder, SYMBOL_TO_NOISE_RATIO:number) {
+  builder.addFieldFloat64(58, SYMBOL_TO_NOISE_RATIO, 0.0);
+}
+
+static addBitErrorRate(builder:flatbuffers.Builder, BIT_ERROR_RATE:number) {
+  builder.addFieldFloat64(59, BIT_ERROR_RATE, 0.0);
+}
+
+static addPeak(builder:flatbuffers.Builder, PEAK:boolean) {
+  builder.addFieldInt8(60, +PEAK, +false);
+}
+
+static addIncoming(builder:flatbuffers.Builder, INCOMING:boolean) {
+  builder.addFieldInt8(61, +INCOMING, +false);
+}
+
+static addSwitchPoint(builder:flatbuffers.Builder, SWITCH_POINT:number) {
+  builder.addFieldInt16(62, SWITCH_POINT, 0);
+}
+
+static addConfidence(builder:flatbuffers.Builder, CONFIDENCE:number) {
+  builder.addFieldFloat64(63, CONFIDENCE, 0.0);
+}
+
+static addCarrierStandard(builder:flatbuffers.Builder, CARRIER_STANDARDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(64, CARRIER_STANDARDOffset, 0);
+}
+
+static addModulation(builder:flatbuffers.Builder, MODULATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(65, MODULATIONOffset, 0);
+}
+
+static addInnerCodingRate(builder:flatbuffers.Builder, INNER_CODING_RATE:number) {
+  builder.addFieldInt8(66, INNER_CODING_RATE, 0);
+}
+
+static addOuterCodingRate(builder:flatbuffers.Builder, OUTER_CODING_RATE:number) {
+  builder.addFieldInt8(67, OUTER_CODING_RATE, 0);
+}
+
+static addTransmitFilterType(builder:flatbuffers.Builder, TRANSMIT_FILTER_TYPEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(68, TRANSMIT_FILTER_TYPEOffset, 0);
+}
+
+static addTransmitFilterRollOff(builder:flatbuffers.Builder, TRANSMIT_FILTER_ROLL_OFF:number) {
+  builder.addFieldFloat64(69, TRANSMIT_FILTER_ROLL_OFF, 0.0);
 }
 
 static addRawFileUri(builder:flatbuffers.Builder, RAW_FILE_URIOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(60, RAW_FILE_URIOffset, 0);
+  builder.addFieldOffset(70, RAW_FILE_URIOffset, 0);
+}
+
+static addDescriptor(builder:flatbuffers.Builder, DESCRIPTOROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(71, DESCRIPTOROffset, 0);
+}
+
+static addUrl(builder:flatbuffers.Builder, URLOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(72, URLOffset, 0);
 }
 
 static addTags(builder:flatbuffers.Builder, TAGSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(61, TAGSOffset, 0);
+  builder.addFieldOffset(73, TAGSOffset, 0);
 }
 
 static createTagsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -714,54 +982,6 @@ static createTagsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):
 
 static startTagsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
-}
-
-static addNoisePwrDensity(builder:flatbuffers.Builder, NOISE_PWR_DENSITY:number) {
-  builder.addFieldFloat64(62, NOISE_PWR_DENSITY, 0.0);
-}
-
-static addCarrierStandard(builder:flatbuffers.Builder, CARRIER_STANDARDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(63, CARRIER_STANDARDOffset, 0);
-}
-
-static addModulation(builder:flatbuffers.Builder, MODULATIONOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(64, MODULATIONOffset, 0);
-}
-
-static addInnerCodingRate(builder:flatbuffers.Builder, INNER_CODING_RATE:number) {
-  builder.addFieldInt32(65, INNER_CODING_RATE, 0);
-}
-
-static addOuterCodingRate(builder:flatbuffers.Builder, OUTER_CODING_RATE:number) {
-  builder.addFieldInt32(66, OUTER_CODING_RATE, 0);
-}
-
-static addTransmitFilterType(builder:flatbuffers.Builder, TRANSMIT_FILTER_TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(67, TRANSMIT_FILTER_TYPEOffset, 0);
-}
-
-static addTransmitFilterRollOff(builder:flatbuffers.Builder, TRANSMIT_FILTER_ROLL_OFF:number) {
-  builder.addFieldFloat64(68, TRANSMIT_FILTER_ROLL_OFF, 0.0);
-}
-
-static addSymbolToNoiseRatio(builder:flatbuffers.Builder, SYMBOL_TO_NOISE_RATIO:number) {
-  builder.addFieldFloat64(69, SYMBOL_TO_NOISE_RATIO, 0.0);
-}
-
-static addBitErrorRate(builder:flatbuffers.Builder, BIT_ERROR_RATE:number) {
-  builder.addFieldFloat64(70, BIT_ERROR_RATE, 0.0);
-}
-
-static addOnOrbit(builder:flatbuffers.Builder, ON_ORBITOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(71, ON_ORBITOffset, 0);
-}
-
-static addDescriptor(builder:flatbuffers.Builder, DESCRIPTOROffset:flatbuffers.Offset) {
-  builder.addFieldOffset(72, DESCRIPTOROffset, 0);
-}
-
-static addUrl(builder:flatbuffers.Builder, URLOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(73, URLOffset, 0);
 }
 
 static endRFO(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -777,20 +997,22 @@ static finishSizePrefixedRFOBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$RFO', true);
 }
 
-static createRFO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, OB_TIMEOffset:flatbuffers.Offset, ID_SENSOROffset:flatbuffers.Offset, TYPEOffset:flatbuffers.Offset, SAT_NO:number, TASK_IDOffset:flatbuffers.Offset, TRANSACTION_IDOffset:flatbuffers.Offset, TRACK_IDOffset:flatbuffers.Offset, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, UCT:boolean, TRANSPONDEROffset:flatbuffers.Offset, AZIMUTH:number, AZIMUTH_UNC:number, AZIMUTH_RATE:number, ELEVATION:number, ELEVATION_UNC:number, ELEVATION_RATE:number, RANGE:number, RANGE_UNC:number, RANGE_RATE:number, RANGE_RATE_UNC:number, TRACK_RANGE:number, SENLAT:number, SENLON:number, SENALT:number, ELNOTOffset:flatbuffers.Offset, FREQUENCY:number, NOMINAL_FREQUENCY:number, START_FREQUENCY:number, END_FREQUENCY:number, RELATIVE_CARRIER_POWER:number, SPECTRUM_ANALYZER_POWER:number, RELATIVE_NOISE_FLOOR:number, REFERENCE_LEVEL:number, PGRI:number, CONFIDENCE:number, INCOMING:boolean, SWITCH_POINT:number, BAUD_RATE:number, SNR:number, NOMINAL_SNR:number, POLARITY:number, POLARITY_TYPEOffset:flatbuffers.Offset, CHANNEL:number, POWER_OVER_NOISE:number, NOMINAL_POWER_OVER_NOISE:number, BANDWIDTH:number, NOMINAL_BANDWIDTH:number, RESOLUTION_BANDWIDTH:number, VIDEO_BANDWIDTH:number, EIRP:number, NOMINAL_EIRP:number, MIN_PSD:number, MAX_PSD:number, FREQUENCY_SHIFT:number, PEAK:boolean, ANTENNA_NAMEOffset:flatbuffers.Offset, DETECTION_STATUSOffset:flatbuffers.Offset, COLLECTION_MODEOffset:flatbuffers.Offset, RAW_FILE_URIOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, NOISE_PWR_DENSITY:number, CARRIER_STANDARDOffset:flatbuffers.Offset, MODULATIONOffset:flatbuffers.Offset, INNER_CODING_RATE:number, OUTER_CODING_RATE:number, TRANSMIT_FILTER_TYPEOffset:flatbuffers.Offset, TRANSMIT_FILTER_ROLL_OFF:number, SYMBOL_TO_NOISE_RATIO:number, BIT_ERROR_RATE:number, ON_ORBITOffset:flatbuffers.Offset, DESCRIPTOROffset:flatbuffers.Offset, URLOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createRFO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, OB_TIMEOffset:flatbuffers.Offset, ID_SENSOROffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, OBS_TYPE:rfObsType, SAT_NO:number, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset, UCT:boolean, TASK_IDOffset:flatbuffers.Offset, TRANSACTION_IDOffset:flatbuffers.Offset, TRACK_IDOffset:flatbuffers.Offset, TRANSPONDEROffset:flatbuffers.Offset, DETECTION_STATUS:rfDetectionStatus, AZIMUTH:number, AZIMUTH_UNC:number, AZIMUTH_RATE:number, ELEVATION:number, ELEVATION_UNC:number, ELEVATION_RATE:number, RANGE:number, RANGE_UNC:number, RANGE_RATE:number, RANGE_RATE_UNC:number, TRACK_RANGE:number, SENLAT:number, SENLON:number, SENALT:number, ELNOTOffset:flatbuffers.Offset, ANTENNA_NAMEOffset:flatbuffers.Offset, COLLECTION_MODEOffset:flatbuffers.Offset, FREQUENCY:number, NOMINAL_FREQUENCY:number, START_FREQUENCY:number, END_FREQUENCY:number, FREQUENCY_SHIFT:number, BANDWIDTH:number, NOMINAL_BANDWIDTH:number, RESOLUTION_BANDWIDTH:number, VIDEO_BANDWIDTH:number, RELATIVE_CARRIER_POWER:number, SPECTRUM_ANALYZER_POWER:number, RELATIVE_NOISE_FLOOR:number, REFERENCE_LEVEL:number, NOISE_PWR_DENSITY:number, PGRI:number, EIRP:number, NOMINAL_EIRP:number, MIN_PSD:number, MAX_PSD:number, SNR:number, NOMINAL_SNR:number, POWER_OVER_NOISE:number, NOMINAL_POWER_OVER_NOISE:number, POLARITY:number, POLARITY_TYPEOffset:flatbuffers.Offset, CHANNEL:number, BAUD_RATE:number, SYMBOL_TO_NOISE_RATIO:number, BIT_ERROR_RATE:number, PEAK:boolean, INCOMING:boolean, SWITCH_POINT:number, CONFIDENCE:number, CARRIER_STANDARDOffset:flatbuffers.Offset, MODULATIONOffset:flatbuffers.Offset, INNER_CODING_RATE:number, OUTER_CODING_RATE:number, TRANSMIT_FILTER_TYPEOffset:flatbuffers.Offset, TRANSMIT_FILTER_ROLL_OFF:number, RAW_FILE_URIOffset:flatbuffers.Offset, DESCRIPTOROffset:flatbuffers.Offset, URLOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset):flatbuffers.Offset {
   RFO.startRFO(builder);
   RFO.addId(builder, IDOffset);
   RFO.addObTime(builder, OB_TIMEOffset);
   RFO.addIdSensor(builder, ID_SENSOROffset);
-  RFO.addType(builder, TYPEOffset);
+  RFO.addOrigSensorId(builder, ORIG_SENSOR_IDOffset);
+  RFO.addObsType(builder, OBS_TYPE);
   RFO.addSatNo(builder, SAT_NO);
+  RFO.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
+  RFO.addOnOrbit(builder, ON_ORBITOffset);
+  RFO.addUct(builder, UCT);
   RFO.addTaskId(builder, TASK_IDOffset);
   RFO.addTransactionId(builder, TRANSACTION_IDOffset);
   RFO.addTrackId(builder, TRACK_IDOffset);
-  RFO.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
-  RFO.addOrigSensorId(builder, ORIG_SENSOR_IDOffset);
-  RFO.addUct(builder, UCT);
   RFO.addTransponder(builder, TRANSPONDEROffset);
+  RFO.addDetectionStatus(builder, DETECTION_STATUS);
   RFO.addAzimuth(builder, AZIMUTH);
   RFO.addAzimuthUnc(builder, AZIMUTH_UNC);
   RFO.addAzimuthRate(builder, AZIMUTH_RATE);
@@ -806,53 +1028,51 @@ static createRFO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, OB_TI
   RFO.addSenlon(builder, SENLON);
   RFO.addSenalt(builder, SENALT);
   RFO.addElnot(builder, ELNOTOffset);
+  RFO.addAntennaName(builder, ANTENNA_NAMEOffset);
+  RFO.addCollectionMode(builder, COLLECTION_MODEOffset);
   RFO.addFrequency(builder, FREQUENCY);
   RFO.addNominalFrequency(builder, NOMINAL_FREQUENCY);
   RFO.addStartFrequency(builder, START_FREQUENCY);
   RFO.addEndFrequency(builder, END_FREQUENCY);
-  RFO.addRelativeCarrierPower(builder, RELATIVE_CARRIER_POWER);
-  RFO.addSpectrumAnalyzerPower(builder, SPECTRUM_ANALYZER_POWER);
-  RFO.addRelativeNoiseFloor(builder, RELATIVE_NOISE_FLOOR);
-  RFO.addReferenceLevel(builder, REFERENCE_LEVEL);
-  RFO.addPgri(builder, PGRI);
-  RFO.addConfidence(builder, CONFIDENCE);
-  RFO.addIncoming(builder, INCOMING);
-  RFO.addSwitchPoint(builder, SWITCH_POINT);
-  RFO.addBaudRate(builder, BAUD_RATE);
-  RFO.addSnr(builder, SNR);
-  RFO.addNominalSnr(builder, NOMINAL_SNR);
-  RFO.addPolarity(builder, POLARITY);
-  RFO.addPolarityType(builder, POLARITY_TYPEOffset);
-  RFO.addChannel(builder, CHANNEL);
-  RFO.addPowerOverNoise(builder, POWER_OVER_NOISE);
-  RFO.addNominalPowerOverNoise(builder, NOMINAL_POWER_OVER_NOISE);
+  RFO.addFrequencyShift(builder, FREQUENCY_SHIFT);
   RFO.addBandwidth(builder, BANDWIDTH);
   RFO.addNominalBandwidth(builder, NOMINAL_BANDWIDTH);
   RFO.addResolutionBandwidth(builder, RESOLUTION_BANDWIDTH);
   RFO.addVideoBandwidth(builder, VIDEO_BANDWIDTH);
+  RFO.addRelativeCarrierPower(builder, RELATIVE_CARRIER_POWER);
+  RFO.addSpectrumAnalyzerPower(builder, SPECTRUM_ANALYZER_POWER);
+  RFO.addRelativeNoiseFloor(builder, RELATIVE_NOISE_FLOOR);
+  RFO.addReferenceLevel(builder, REFERENCE_LEVEL);
+  RFO.addNoisePwrDensity(builder, NOISE_PWR_DENSITY);
+  RFO.addPgri(builder, PGRI);
   RFO.addEirp(builder, EIRP);
   RFO.addNominalEirp(builder, NOMINAL_EIRP);
   RFO.addMinPsd(builder, MIN_PSD);
   RFO.addMaxPsd(builder, MAX_PSD);
-  RFO.addFrequencyShift(builder, FREQUENCY_SHIFT);
+  RFO.addSnr(builder, SNR);
+  RFO.addNominalSnr(builder, NOMINAL_SNR);
+  RFO.addPowerOverNoise(builder, POWER_OVER_NOISE);
+  RFO.addNominalPowerOverNoise(builder, NOMINAL_POWER_OVER_NOISE);
+  RFO.addPolarity(builder, POLARITY);
+  RFO.addPolarityType(builder, POLARITY_TYPEOffset);
+  RFO.addChannel(builder, CHANNEL);
+  RFO.addBaudRate(builder, BAUD_RATE);
+  RFO.addSymbolToNoiseRatio(builder, SYMBOL_TO_NOISE_RATIO);
+  RFO.addBitErrorRate(builder, BIT_ERROR_RATE);
   RFO.addPeak(builder, PEAK);
-  RFO.addAntennaName(builder, ANTENNA_NAMEOffset);
-  RFO.addDetectionStatus(builder, DETECTION_STATUSOffset);
-  RFO.addCollectionMode(builder, COLLECTION_MODEOffset);
-  RFO.addRawFileUri(builder, RAW_FILE_URIOffset);
-  RFO.addTags(builder, TAGSOffset);
-  RFO.addNoisePwrDensity(builder, NOISE_PWR_DENSITY);
+  RFO.addIncoming(builder, INCOMING);
+  RFO.addSwitchPoint(builder, SWITCH_POINT);
+  RFO.addConfidence(builder, CONFIDENCE);
   RFO.addCarrierStandard(builder, CARRIER_STANDARDOffset);
   RFO.addModulation(builder, MODULATIONOffset);
   RFO.addInnerCodingRate(builder, INNER_CODING_RATE);
   RFO.addOuterCodingRate(builder, OUTER_CODING_RATE);
   RFO.addTransmitFilterType(builder, TRANSMIT_FILTER_TYPEOffset);
   RFO.addTransmitFilterRollOff(builder, TRANSMIT_FILTER_ROLL_OFF);
-  RFO.addSymbolToNoiseRatio(builder, SYMBOL_TO_NOISE_RATIO);
-  RFO.addBitErrorRate(builder, BIT_ERROR_RATE);
-  RFO.addOnOrbit(builder, ON_ORBITOffset);
+  RFO.addRawFileUri(builder, RAW_FILE_URIOffset);
   RFO.addDescriptor(builder, DESCRIPTOROffset);
   RFO.addUrl(builder, URLOffset);
+  RFO.addTags(builder, TAGSOffset);
   return RFO.endRFO(builder);
 }
 
@@ -861,15 +1081,17 @@ unpack(): RFOT {
     this.ID(),
     this.OB_TIME(),
     this.ID_SENSOR(),
-    this.TYPE(),
+    this.ORIG_SENSOR_ID(),
+    this.OBS_TYPE(),
     this.SAT_NO(),
+    this.ORIG_OBJECT_ID(),
+    this.ON_ORBIT(),
+    this.UCT(),
     this.TASK_ID(),
     this.TRANSACTION_ID(),
     this.TRACK_ID(),
-    this.ORIG_OBJECT_ID(),
-    this.ORIG_SENSOR_ID(),
-    this.UCT(),
     this.TRANSPONDER(),
+    this.DETECTION_STATUS(),
     this.AZIMUTH(),
     this.AZIMUTH_UNC(),
     this.AZIMUTH_RATE(),
@@ -885,53 +1107,51 @@ unpack(): RFOT {
     this.SENLON(),
     this.SENALT(),
     this.ELNOT(),
+    this.ANTENNA_NAME(),
+    this.COLLECTION_MODE(),
     this.FREQUENCY(),
     this.NOMINAL_FREQUENCY(),
     this.START_FREQUENCY(),
     this.END_FREQUENCY(),
-    this.RELATIVE_CARRIER_POWER(),
-    this.SPECTRUM_ANALYZER_POWER(),
-    this.RELATIVE_NOISE_FLOOR(),
-    this.REFERENCE_LEVEL(),
-    this.PGRI(),
-    this.CONFIDENCE(),
-    this.INCOMING(),
-    this.SWITCH_POINT(),
-    this.BAUD_RATE(),
-    this.SNR(),
-    this.NOMINAL_SNR(),
-    this.POLARITY(),
-    this.POLARITY_TYPE(),
-    this.CHANNEL(),
-    this.POWER_OVER_NOISE(),
-    this.NOMINAL_POWER_OVER_NOISE(),
+    this.FREQUENCY_SHIFT(),
     this.BANDWIDTH(),
     this.NOMINAL_BANDWIDTH(),
     this.RESOLUTION_BANDWIDTH(),
     this.VIDEO_BANDWIDTH(),
+    this.RELATIVE_CARRIER_POWER(),
+    this.SPECTRUM_ANALYZER_POWER(),
+    this.RELATIVE_NOISE_FLOOR(),
+    this.REFERENCE_LEVEL(),
+    this.NOISE_PWR_DENSITY(),
+    this.PGRI(),
     this.EIRP(),
     this.NOMINAL_EIRP(),
     this.MIN_PSD(),
     this.MAX_PSD(),
-    this.FREQUENCY_SHIFT(),
+    this.SNR(),
+    this.NOMINAL_SNR(),
+    this.POWER_OVER_NOISE(),
+    this.NOMINAL_POWER_OVER_NOISE(),
+    this.POLARITY(),
+    this.POLARITY_TYPE(),
+    this.CHANNEL(),
+    this.BAUD_RATE(),
+    this.SYMBOL_TO_NOISE_RATIO(),
+    this.BIT_ERROR_RATE(),
     this.PEAK(),
-    this.ANTENNA_NAME(),
-    this.DETECTION_STATUS(),
-    this.COLLECTION_MODE(),
-    this.RAW_FILE_URI(),
-    this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength()),
-    this.NOISE_PWR_DENSITY(),
+    this.INCOMING(),
+    this.SWITCH_POINT(),
+    this.CONFIDENCE(),
     this.CARRIER_STANDARD(),
     this.MODULATION(),
     this.INNER_CODING_RATE(),
     this.OUTER_CODING_RATE(),
     this.TRANSMIT_FILTER_TYPE(),
     this.TRANSMIT_FILTER_ROLL_OFF(),
-    this.SYMBOL_TO_NOISE_RATIO(),
-    this.BIT_ERROR_RATE(),
-    this.ON_ORBIT(),
+    this.RAW_FILE_URI(),
     this.DESCRIPTOR(),
-    this.URL()
+    this.URL(),
+    this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength())
   );
 }
 
@@ -940,15 +1160,17 @@ unpackTo(_o: RFOT): void {
   _o.ID = this.ID();
   _o.OB_TIME = this.OB_TIME();
   _o.ID_SENSOR = this.ID_SENSOR();
-  _o.TYPE = this.TYPE();
+  _o.ORIG_SENSOR_ID = this.ORIG_SENSOR_ID();
+  _o.OBS_TYPE = this.OBS_TYPE();
   _o.SAT_NO = this.SAT_NO();
+  _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID();
+  _o.ON_ORBIT = this.ON_ORBIT();
+  _o.UCT = this.UCT();
   _o.TASK_ID = this.TASK_ID();
   _o.TRANSACTION_ID = this.TRANSACTION_ID();
   _o.TRACK_ID = this.TRACK_ID();
-  _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID();
-  _o.ORIG_SENSOR_ID = this.ORIG_SENSOR_ID();
-  _o.UCT = this.UCT();
   _o.TRANSPONDER = this.TRANSPONDER();
+  _o.DETECTION_STATUS = this.DETECTION_STATUS();
   _o.AZIMUTH = this.AZIMUTH();
   _o.AZIMUTH_UNC = this.AZIMUTH_UNC();
   _o.AZIMUTH_RATE = this.AZIMUTH_RATE();
@@ -964,53 +1186,51 @@ unpackTo(_o: RFOT): void {
   _o.SENLON = this.SENLON();
   _o.SENALT = this.SENALT();
   _o.ELNOT = this.ELNOT();
+  _o.ANTENNA_NAME = this.ANTENNA_NAME();
+  _o.COLLECTION_MODE = this.COLLECTION_MODE();
   _o.FREQUENCY = this.FREQUENCY();
   _o.NOMINAL_FREQUENCY = this.NOMINAL_FREQUENCY();
   _o.START_FREQUENCY = this.START_FREQUENCY();
   _o.END_FREQUENCY = this.END_FREQUENCY();
-  _o.RELATIVE_CARRIER_POWER = this.RELATIVE_CARRIER_POWER();
-  _o.SPECTRUM_ANALYZER_POWER = this.SPECTRUM_ANALYZER_POWER();
-  _o.RELATIVE_NOISE_FLOOR = this.RELATIVE_NOISE_FLOOR();
-  _o.REFERENCE_LEVEL = this.REFERENCE_LEVEL();
-  _o.PGRI = this.PGRI();
-  _o.CONFIDENCE = this.CONFIDENCE();
-  _o.INCOMING = this.INCOMING();
-  _o.SWITCH_POINT = this.SWITCH_POINT();
-  _o.BAUD_RATE = this.BAUD_RATE();
-  _o.SNR = this.SNR();
-  _o.NOMINAL_SNR = this.NOMINAL_SNR();
-  _o.POLARITY = this.POLARITY();
-  _o.POLARITY_TYPE = this.POLARITY_TYPE();
-  _o.CHANNEL = this.CHANNEL();
-  _o.POWER_OVER_NOISE = this.POWER_OVER_NOISE();
-  _o.NOMINAL_POWER_OVER_NOISE = this.NOMINAL_POWER_OVER_NOISE();
+  _o.FREQUENCY_SHIFT = this.FREQUENCY_SHIFT();
   _o.BANDWIDTH = this.BANDWIDTH();
   _o.NOMINAL_BANDWIDTH = this.NOMINAL_BANDWIDTH();
   _o.RESOLUTION_BANDWIDTH = this.RESOLUTION_BANDWIDTH();
   _o.VIDEO_BANDWIDTH = this.VIDEO_BANDWIDTH();
+  _o.RELATIVE_CARRIER_POWER = this.RELATIVE_CARRIER_POWER();
+  _o.SPECTRUM_ANALYZER_POWER = this.SPECTRUM_ANALYZER_POWER();
+  _o.RELATIVE_NOISE_FLOOR = this.RELATIVE_NOISE_FLOOR();
+  _o.REFERENCE_LEVEL = this.REFERENCE_LEVEL();
+  _o.NOISE_PWR_DENSITY = this.NOISE_PWR_DENSITY();
+  _o.PGRI = this.PGRI();
   _o.EIRP = this.EIRP();
   _o.NOMINAL_EIRP = this.NOMINAL_EIRP();
   _o.MIN_PSD = this.MIN_PSD();
   _o.MAX_PSD = this.MAX_PSD();
-  _o.FREQUENCY_SHIFT = this.FREQUENCY_SHIFT();
+  _o.SNR = this.SNR();
+  _o.NOMINAL_SNR = this.NOMINAL_SNR();
+  _o.POWER_OVER_NOISE = this.POWER_OVER_NOISE();
+  _o.NOMINAL_POWER_OVER_NOISE = this.NOMINAL_POWER_OVER_NOISE();
+  _o.POLARITY = this.POLARITY();
+  _o.POLARITY_TYPE = this.POLARITY_TYPE();
+  _o.CHANNEL = this.CHANNEL();
+  _o.BAUD_RATE = this.BAUD_RATE();
+  _o.SYMBOL_TO_NOISE_RATIO = this.SYMBOL_TO_NOISE_RATIO();
+  _o.BIT_ERROR_RATE = this.BIT_ERROR_RATE();
   _o.PEAK = this.PEAK();
-  _o.ANTENNA_NAME = this.ANTENNA_NAME();
-  _o.DETECTION_STATUS = this.DETECTION_STATUS();
-  _o.COLLECTION_MODE = this.COLLECTION_MODE();
-  _o.RAW_FILE_URI = this.RAW_FILE_URI();
-  _o.TAGS = this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength());
-  _o.NOISE_PWR_DENSITY = this.NOISE_PWR_DENSITY();
+  _o.INCOMING = this.INCOMING();
+  _o.SWITCH_POINT = this.SWITCH_POINT();
+  _o.CONFIDENCE = this.CONFIDENCE();
   _o.CARRIER_STANDARD = this.CARRIER_STANDARD();
   _o.MODULATION = this.MODULATION();
   _o.INNER_CODING_RATE = this.INNER_CODING_RATE();
   _o.OUTER_CODING_RATE = this.OUTER_CODING_RATE();
   _o.TRANSMIT_FILTER_TYPE = this.TRANSMIT_FILTER_TYPE();
   _o.TRANSMIT_FILTER_ROLL_OFF = this.TRANSMIT_FILTER_ROLL_OFF();
-  _o.SYMBOL_TO_NOISE_RATIO = this.SYMBOL_TO_NOISE_RATIO();
-  _o.BIT_ERROR_RATE = this.BIT_ERROR_RATE();
-  _o.ON_ORBIT = this.ON_ORBIT();
+  _o.RAW_FILE_URI = this.RAW_FILE_URI();
   _o.DESCRIPTOR = this.DESCRIPTOR();
   _o.URL = this.URL();
+  _o.TAGS = this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength());
 }
 }
 
@@ -1019,15 +1239,17 @@ constructor(
   public ID: string|Uint8Array|null = null,
   public OB_TIME: string|Uint8Array|null = null,
   public ID_SENSOR: string|Uint8Array|null = null,
-  public TYPE: string|Uint8Array|null = null,
+  public ORIG_SENSOR_ID: string|Uint8Array|null = null,
+  public OBS_TYPE: rfObsType = rfObsType.EMISSION,
   public SAT_NO: number = 0,
+  public ORIG_OBJECT_ID: string|Uint8Array|null = null,
+  public ON_ORBIT: string|Uint8Array|null = null,
+  public UCT: boolean = false,
   public TASK_ID: string|Uint8Array|null = null,
   public TRANSACTION_ID: string|Uint8Array|null = null,
   public TRACK_ID: string|Uint8Array|null = null,
-  public ORIG_OBJECT_ID: string|Uint8Array|null = null,
-  public ORIG_SENSOR_ID: string|Uint8Array|null = null,
-  public UCT: boolean = false,
   public TRANSPONDER: string|Uint8Array|null = null,
+  public DETECTION_STATUS: rfDetectionStatus = rfDetectionStatus.DETECTED,
   public AZIMUTH: number = 0.0,
   public AZIMUTH_UNC: number = 0.0,
   public AZIMUTH_RATE: number = 0.0,
@@ -1043,53 +1265,51 @@ constructor(
   public SENLON: number = 0.0,
   public SENALT: number = 0.0,
   public ELNOT: string|Uint8Array|null = null,
+  public ANTENNA_NAME: string|Uint8Array|null = null,
+  public COLLECTION_MODE: string|Uint8Array|null = null,
   public FREQUENCY: number = 0.0,
   public NOMINAL_FREQUENCY: number = 0.0,
   public START_FREQUENCY: number = 0.0,
   public END_FREQUENCY: number = 0.0,
-  public RELATIVE_CARRIER_POWER: number = 0.0,
-  public SPECTRUM_ANALYZER_POWER: number = 0.0,
-  public RELATIVE_NOISE_FLOOR: number = 0.0,
-  public REFERENCE_LEVEL: number = 0.0,
-  public PGRI: number = 0.0,
-  public CONFIDENCE: number = 0.0,
-  public INCOMING: boolean = false,
-  public SWITCH_POINT: number = 0,
-  public BAUD_RATE: number = 0.0,
-  public SNR: number = 0.0,
-  public NOMINAL_SNR: number = 0.0,
-  public POLARITY: number = 0.0,
-  public POLARITY_TYPE: string|Uint8Array|null = null,
-  public CHANNEL: number = 0,
-  public POWER_OVER_NOISE: number = 0.0,
-  public NOMINAL_POWER_OVER_NOISE: number = 0.0,
+  public FREQUENCY_SHIFT: number = 0.0,
   public BANDWIDTH: number = 0.0,
   public NOMINAL_BANDWIDTH: number = 0.0,
   public RESOLUTION_BANDWIDTH: number = 0.0,
   public VIDEO_BANDWIDTH: number = 0.0,
+  public RELATIVE_CARRIER_POWER: number = 0.0,
+  public SPECTRUM_ANALYZER_POWER: number = 0.0,
+  public RELATIVE_NOISE_FLOOR: number = 0.0,
+  public REFERENCE_LEVEL: number = 0.0,
+  public NOISE_PWR_DENSITY: number = 0.0,
+  public PGRI: number = 0.0,
   public EIRP: number = 0.0,
   public NOMINAL_EIRP: number = 0.0,
   public MIN_PSD: number = 0.0,
   public MAX_PSD: number = 0.0,
-  public FREQUENCY_SHIFT: number = 0.0,
+  public SNR: number = 0.0,
+  public NOMINAL_SNR: number = 0.0,
+  public POWER_OVER_NOISE: number = 0.0,
+  public NOMINAL_POWER_OVER_NOISE: number = 0.0,
+  public POLARITY: number = 0.0,
+  public POLARITY_TYPE: string|Uint8Array|null = null,
+  public CHANNEL: number = 0,
+  public BAUD_RATE: number = 0.0,
+  public SYMBOL_TO_NOISE_RATIO: number = 0.0,
+  public BIT_ERROR_RATE: number = 0.0,
   public PEAK: boolean = false,
-  public ANTENNA_NAME: string|Uint8Array|null = null,
-  public DETECTION_STATUS: string|Uint8Array|null = null,
-  public COLLECTION_MODE: string|Uint8Array|null = null,
-  public RAW_FILE_URI: string|Uint8Array|null = null,
-  public TAGS: (string)[] = [],
-  public NOISE_PWR_DENSITY: number = 0.0,
+  public INCOMING: boolean = false,
+  public SWITCH_POINT: number = 0,
+  public CONFIDENCE: number = 0.0,
   public CARRIER_STANDARD: string|Uint8Array|null = null,
   public MODULATION: string|Uint8Array|null = null,
   public INNER_CODING_RATE: number = 0,
   public OUTER_CODING_RATE: number = 0,
   public TRANSMIT_FILTER_TYPE: string|Uint8Array|null = null,
   public TRANSMIT_FILTER_ROLL_OFF: number = 0.0,
-  public SYMBOL_TO_NOISE_RATIO: number = 0.0,
-  public BIT_ERROR_RATE: number = 0.0,
-  public ON_ORBIT: string|Uint8Array|null = null,
+  public RAW_FILE_URI: string|Uint8Array|null = null,
   public DESCRIPTOR: string|Uint8Array|null = null,
-  public URL: string|Uint8Array|null = null
+  public URL: string|Uint8Array|null = null,
+  public TAGS: (string)[] = []
 ){}
 
 
@@ -1097,40 +1317,40 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ID = (this.ID !== null ? builder.createString(this.ID!) : 0);
   const OB_TIME = (this.OB_TIME !== null ? builder.createString(this.OB_TIME!) : 0);
   const ID_SENSOR = (this.ID_SENSOR !== null ? builder.createString(this.ID_SENSOR!) : 0);
-  const TYPE = (this.TYPE !== null ? builder.createString(this.TYPE!) : 0);
+  const ORIG_SENSOR_ID = (this.ORIG_SENSOR_ID !== null ? builder.createString(this.ORIG_SENSOR_ID!) : 0);
+  const ORIG_OBJECT_ID = (this.ORIG_OBJECT_ID !== null ? builder.createString(this.ORIG_OBJECT_ID!) : 0);
+  const ON_ORBIT = (this.ON_ORBIT !== null ? builder.createString(this.ON_ORBIT!) : 0);
   const TASK_ID = (this.TASK_ID !== null ? builder.createString(this.TASK_ID!) : 0);
   const TRANSACTION_ID = (this.TRANSACTION_ID !== null ? builder.createString(this.TRANSACTION_ID!) : 0);
   const TRACK_ID = (this.TRACK_ID !== null ? builder.createString(this.TRACK_ID!) : 0);
-  const ORIG_OBJECT_ID = (this.ORIG_OBJECT_ID !== null ? builder.createString(this.ORIG_OBJECT_ID!) : 0);
-  const ORIG_SENSOR_ID = (this.ORIG_SENSOR_ID !== null ? builder.createString(this.ORIG_SENSOR_ID!) : 0);
   const TRANSPONDER = (this.TRANSPONDER !== null ? builder.createString(this.TRANSPONDER!) : 0);
   const ELNOT = (this.ELNOT !== null ? builder.createString(this.ELNOT!) : 0);
-  const POLARITY_TYPE = (this.POLARITY_TYPE !== null ? builder.createString(this.POLARITY_TYPE!) : 0);
   const ANTENNA_NAME = (this.ANTENNA_NAME !== null ? builder.createString(this.ANTENNA_NAME!) : 0);
-  const DETECTION_STATUS = (this.DETECTION_STATUS !== null ? builder.createString(this.DETECTION_STATUS!) : 0);
   const COLLECTION_MODE = (this.COLLECTION_MODE !== null ? builder.createString(this.COLLECTION_MODE!) : 0);
-  const RAW_FILE_URI = (this.RAW_FILE_URI !== null ? builder.createString(this.RAW_FILE_URI!) : 0);
-  const TAGS = RFO.createTagsVector(builder, builder.createObjectOffsetList(this.TAGS));
+  const POLARITY_TYPE = (this.POLARITY_TYPE !== null ? builder.createString(this.POLARITY_TYPE!) : 0);
   const CARRIER_STANDARD = (this.CARRIER_STANDARD !== null ? builder.createString(this.CARRIER_STANDARD!) : 0);
   const MODULATION = (this.MODULATION !== null ? builder.createString(this.MODULATION!) : 0);
   const TRANSMIT_FILTER_TYPE = (this.TRANSMIT_FILTER_TYPE !== null ? builder.createString(this.TRANSMIT_FILTER_TYPE!) : 0);
-  const ON_ORBIT = (this.ON_ORBIT !== null ? builder.createString(this.ON_ORBIT!) : 0);
+  const RAW_FILE_URI = (this.RAW_FILE_URI !== null ? builder.createString(this.RAW_FILE_URI!) : 0);
   const DESCRIPTOR = (this.DESCRIPTOR !== null ? builder.createString(this.DESCRIPTOR!) : 0);
   const URL = (this.URL !== null ? builder.createString(this.URL!) : 0);
+  const TAGS = RFO.createTagsVector(builder, builder.createObjectOffsetList(this.TAGS));
 
   return RFO.createRFO(builder,
     ID,
     OB_TIME,
     ID_SENSOR,
-    TYPE,
+    ORIG_SENSOR_ID,
+    this.OBS_TYPE,
     this.SAT_NO,
+    ORIG_OBJECT_ID,
+    ON_ORBIT,
+    this.UCT,
     TASK_ID,
     TRANSACTION_ID,
     TRACK_ID,
-    ORIG_OBJECT_ID,
-    ORIG_SENSOR_ID,
-    this.UCT,
     TRANSPONDER,
+    this.DETECTION_STATUS,
     this.AZIMUTH,
     this.AZIMUTH_UNC,
     this.AZIMUTH_RATE,
@@ -1146,53 +1366,51 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.SENLON,
     this.SENALT,
     ELNOT,
+    ANTENNA_NAME,
+    COLLECTION_MODE,
     this.FREQUENCY,
     this.NOMINAL_FREQUENCY,
     this.START_FREQUENCY,
     this.END_FREQUENCY,
-    this.RELATIVE_CARRIER_POWER,
-    this.SPECTRUM_ANALYZER_POWER,
-    this.RELATIVE_NOISE_FLOOR,
-    this.REFERENCE_LEVEL,
-    this.PGRI,
-    this.CONFIDENCE,
-    this.INCOMING,
-    this.SWITCH_POINT,
-    this.BAUD_RATE,
-    this.SNR,
-    this.NOMINAL_SNR,
-    this.POLARITY,
-    POLARITY_TYPE,
-    this.CHANNEL,
-    this.POWER_OVER_NOISE,
-    this.NOMINAL_POWER_OVER_NOISE,
+    this.FREQUENCY_SHIFT,
     this.BANDWIDTH,
     this.NOMINAL_BANDWIDTH,
     this.RESOLUTION_BANDWIDTH,
     this.VIDEO_BANDWIDTH,
+    this.RELATIVE_CARRIER_POWER,
+    this.SPECTRUM_ANALYZER_POWER,
+    this.RELATIVE_NOISE_FLOOR,
+    this.REFERENCE_LEVEL,
+    this.NOISE_PWR_DENSITY,
+    this.PGRI,
     this.EIRP,
     this.NOMINAL_EIRP,
     this.MIN_PSD,
     this.MAX_PSD,
-    this.FREQUENCY_SHIFT,
+    this.SNR,
+    this.NOMINAL_SNR,
+    this.POWER_OVER_NOISE,
+    this.NOMINAL_POWER_OVER_NOISE,
+    this.POLARITY,
+    POLARITY_TYPE,
+    this.CHANNEL,
+    this.BAUD_RATE,
+    this.SYMBOL_TO_NOISE_RATIO,
+    this.BIT_ERROR_RATE,
     this.PEAK,
-    ANTENNA_NAME,
-    DETECTION_STATUS,
-    COLLECTION_MODE,
-    RAW_FILE_URI,
-    TAGS,
-    this.NOISE_PWR_DENSITY,
+    this.INCOMING,
+    this.SWITCH_POINT,
+    this.CONFIDENCE,
     CARRIER_STANDARD,
     MODULATION,
     this.INNER_CODING_RATE,
     this.OUTER_CODING_RATE,
     TRANSMIT_FILTER_TYPE,
     this.TRANSMIT_FILTER_ROLL_OFF,
-    this.SYMBOL_TO_NOISE_RATIO,
-    this.BIT_ERROR_RATE,
-    ON_ORBIT,
+    RAW_FILE_URI,
     DESCRIPTOR,
-    URL
+    URL,
+    TAGS
   );
 }
 }

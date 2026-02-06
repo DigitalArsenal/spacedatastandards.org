@@ -16,196 +16,321 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct OOE;
 struct OOEBuilder;
 
+enum eventCategory : int8_t {
+  eventCategory_ANOMALY = 0,
+  eventCategory_FAILURE = 1,
+  eventCategory_RETIREMENT = 2,
+  eventCategory_DEORBIT = 3,
+  eventCategory_BREAKUP = 4,
+  eventCategory_COLLISION = 5,
+  eventCategory_STATUS_CHANGE = 6,
+  eventCategory_REPOSITIONING = 7,
+  eventCategory_UNKNOWN = 8,
+  eventCategory_MIN = eventCategory_ANOMALY,
+  eventCategory_MAX = eventCategory_UNKNOWN
+};
+
+inline const eventCategory (&EnumValueseventCategory())[9] {
+  static const eventCategory values[] = {
+    eventCategory_ANOMALY,
+    eventCategory_FAILURE,
+    eventCategory_RETIREMENT,
+    eventCategory_DEORBIT,
+    eventCategory_BREAKUP,
+    eventCategory_COLLISION,
+    eventCategory_STATUS_CHANGE,
+    eventCategory_REPOSITIONING,
+    eventCategory_UNKNOWN
+  };
+  return values;
+}
+
+inline const char * const *EnumNameseventCategory() {
+  static const char * const names[10] = {
+    "ANOMALY",
+    "FAILURE",
+    "RETIREMENT",
+    "DEORBIT",
+    "BREAKUP",
+    "COLLISION",
+    "STATUS_CHANGE",
+    "REPOSITIONING",
+    "UNKNOWN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameeventCategory(eventCategory e) {
+  if (::flatbuffers::IsOutRange(e, eventCategory_ANOMALY, eventCategory_UNKNOWN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNameseventCategory()[index];
+}
+
+enum eventResult : int8_t {
+  eventResult_TOTAL_LOSS = 0,
+  eventResult_PARTIAL_LOSS = 1,
+  eventResult_DEGRADED = 2,
+  eventResult_RECOVERED = 3,
+  eventResult_NOMINAL = 4,
+  eventResult_PENDING = 5,
+  eventResult_MIN = eventResult_TOTAL_LOSS,
+  eventResult_MAX = eventResult_PENDING
+};
+
+inline const eventResult (&EnumValueseventResult())[6] {
+  static const eventResult values[] = {
+    eventResult_TOTAL_LOSS,
+    eventResult_PARTIAL_LOSS,
+    eventResult_DEGRADED,
+    eventResult_RECOVERED,
+    eventResult_NOMINAL,
+    eventResult_PENDING
+  };
+  return values;
+}
+
+inline const char * const *EnumNameseventResult() {
+  static const char * const names[7] = {
+    "TOTAL_LOSS",
+    "PARTIAL_LOSS",
+    "DEGRADED",
+    "RECOVERED",
+    "NOMINAL",
+    "PENDING",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameeventResult(eventResult e) {
+  if (::flatbuffers::IsOutRange(e, eventResult_TOTAL_LOSS, eventResult_PENDING)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNameseventResult()[index];
+}
+
 /// On-Orbit Event
 struct OOE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef OOEBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
-    VT_DERIVED_FROM = 6,
-    VT_DECLASSIFICATION_DATE = 8,
-    VT_DECLASSIFICATION_STRING = 10,
-    VT_SAT_NO = 12,
-    VT_ORIG_OBJECT_ID = 14,
+    VT_SAT_NO = 6,
+    VT_ORIG_OBJECT_ID = 8,
+    VT_DERIVED_FROM = 10,
+    VT_DECLASSIFICATION_DATE = 12,
+    VT_DECLASSIFICATION_STRING = 14,
     VT_EVENT_TIME = 16,
     VT_EVENT_TIME_NOTES = 18,
-    VT_OPERATOR_ORG_ID = 20,
-    VT_OWNER_ORG_ID = 22,
-    VT_LESSEE_ORG_ID = 24,
-    VT_OPERATED_ON_BEHALF_OF_ORG_ID = 26,
-    VT_GEO_POSITION = 28,
-    VT_PLANE_SLOT = 30,
-    VT_PLANE_NUMBER = 32,
-    VT_POSITION_STATUS = 34,
-    VT_UNTIL_TIME = 36,
-    VT_OFFICIAL_LOSS_DATE = 38,
-    VT_NET_AMOUNT = 40,
-    VT_UNDERLYING_CAUSE = 42,
-    VT_CAPABILITY_LOSS = 44,
-    VT_CAPACITY_LOSS = 46,
-    VT_INSURANCE_LOSS = 48,
-    VT_THIRD_PARTY_INSURANCE_LOSS = 50,
-    VT_INJURED = 52,
-    VT_KILLED = 54,
-    VT_LIFE_LOST = 56,
-    VT_AGE_AT_EVENT = 58,
-    VT_ACHIEVED_FLIGHT_PHASE = 60,
-    VT_OCCURRENCE_FLIGHT_PHASE = 62,
-    VT_STAGE_AT_FAULT = 64,
-    VT_EQUIPMENT_AT_FAULT = 66,
-    VT_EQUIPMENT_TYPE_AT_FAULT = 68,
-    VT_EQUIPMENT_PART_AT_FAULT = 70,
-    VT_CONSEQUENTIAL_EQUIPMENT_FAILURE = 72,
-    VT_INCLINED = 74,
-    VT_DESCRIPTION = 76,
-    VT_REMARKS = 78,
-    VT_INSURANCE_LOSS_NOTES = 80,
-    VT_CAPABILITY_LOSS_NOTES = 82,
-    VT_INSURANCE_CARRIED_NOTES = 84,
-    VT_EQUIPMENT_CAUSING_LOSS_NOTES = 86,
-    VT_EVENT_TYPE = 88,
-    VT_EVENT_RESULT = 90,
-    VT_OBJECT_STATUS = 92,
-    VT_SATELLITE_POSITION = 94,
-    VT_ON_ORBIT = 96
+    VT_CATEGORY = 20,
+    VT_RESULT = 22,
+    VT_EVENT_TYPE = 24,
+    VT_OPERATOR_ORG_ID = 26,
+    VT_OWNER_ORG_ID = 28,
+    VT_LESSEE_ORG_ID = 30,
+    VT_OPERATED_ON_BEHALF_OF_ORG_ID = 32,
+    VT_GEO_POSITION = 34,
+    VT_PLANE_SLOT = 36,
+    VT_PLANE_NUMBER = 38,
+    VT_POSITION_STATUS = 40,
+    VT_UNTIL_TIME = 42,
+    VT_OFFICIAL_LOSS_DATE = 44,
+    VT_NET_AMOUNT = 46,
+    VT_UNDERLYING_CAUSE = 48,
+    VT_CAPABILITY_LOSS = 50,
+    VT_CAPACITY_LOSS = 52,
+    VT_INSURANCE_LOSS = 54,
+    VT_THIRD_PARTY_INSURANCE_LOSS = 56,
+    VT_INJURED = 58,
+    VT_KILLED = 60,
+    VT_AGE_AT_EVENT = 62,
+    VT_LIFE_LOST = 64,
+    VT_ACHIEVED_FLIGHT_PHASE = 66,
+    VT_OCCURRENCE_FLIGHT_PHASE = 68,
+    VT_STAGE_AT_FAULT = 70,
+    VT_EQUIPMENT_AT_FAULT = 72,
+    VT_EQUIPMENT_TYPE_AT_FAULT = 74,
+    VT_EQUIPMENT_PART_AT_FAULT = 76,
+    VT_CONSEQUENTIAL_EQUIPMENT_FAILURE = 78,
+    VT_INCLINED = 80,
+    VT_DESCRIPTION = 82,
+    VT_REMARKS = 84,
+    VT_OBJECT_STATUS = 86,
+    VT_SATELLITE_POSITION = 88,
+    VT_ON_ORBIT = 90
   };
+  /// Unique identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
-  const ::flatbuffers::String *DERIVED_FROM() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_DERIVED_FROM);
+  /// Satellite catalog number
+  uint32_t SAT_NO() const {
+    return GetField<uint32_t>(VT_SAT_NO, 0);
   }
-  const ::flatbuffers::String *DECLASSIFICATION_DATE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_DECLASSIFICATION_DATE);
-  }
-  const ::flatbuffers::String *DECLASSIFICATION_STRING() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_DECLASSIFICATION_STRING);
-  }
-  int32_t SAT_NO() const {
-    return GetField<int32_t>(VT_SAT_NO, 0);
-  }
+  /// International designator
   const ::flatbuffers::String *ORIG_OBJECT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIG_OBJECT_ID);
   }
+  /// Source record this was derived from
+  const ::flatbuffers::String *DERIVED_FROM() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DERIVED_FROM);
+  }
+  /// Classification date (ISO 8601)
+  const ::flatbuffers::String *DECLASSIFICATION_DATE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DECLASSIFICATION_DATE);
+  }
+  /// Classification marking
+  const ::flatbuffers::String *DECLASSIFICATION_STRING() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DECLASSIFICATION_STRING);
+  }
+  /// Event time (ISO 8601)
   const ::flatbuffers::String *EVENT_TIME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_EVENT_TIME);
   }
+  /// Notes on event time accuracy
   const ::flatbuffers::String *EVENT_TIME_NOTES() const {
     return GetPointer<const ::flatbuffers::String *>(VT_EVENT_TIME_NOTES);
   }
-  const ::flatbuffers::String *OPERATOR_ORG_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OPERATOR_ORG_ID);
+  /// Event category
+  eventCategory CATEGORY() const {
+    return static_cast<eventCategory>(GetField<int8_t>(VT_CATEGORY, 0));
   }
-  const ::flatbuffers::String *OWNER_ORG_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OWNER_ORG_ID);
+  /// Event result/outcome
+  eventResult RESULT() const {
+    return static_cast<eventResult>(GetField<int8_t>(VT_RESULT, 0));
   }
-  const ::flatbuffers::String *LESSEE_ORG_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_LESSEE_ORG_ID);
-  }
-  const ::flatbuffers::String *OPERATED_ON_BEHALF_OF_ORG_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OPERATED_ON_BEHALF_OF_ORG_ID);
-  }
-  double GEO_POSITION() const {
-    return GetField<double>(VT_GEO_POSITION, 0.0);
-  }
-  const ::flatbuffers::String *PLANE_SLOT() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_PLANE_SLOT);
-  }
-  const ::flatbuffers::String *PLANE_NUMBER() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_PLANE_NUMBER);
-  }
-  const ::flatbuffers::String *POSITION_STATUS() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_POSITION_STATUS);
-  }
-  const ::flatbuffers::String *UNTIL_TIME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_UNTIL_TIME);
-  }
-  const ::flatbuffers::String *OFFICIAL_LOSS_DATE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OFFICIAL_LOSS_DATE);
-  }
-  double NET_AMOUNT() const {
-    return GetField<double>(VT_NET_AMOUNT, 0.0);
-  }
-  const ::flatbuffers::String *UNDERLYING_CAUSE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_UNDERLYING_CAUSE);
-  }
-  double CAPABILITY_LOSS() const {
-    return GetField<double>(VT_CAPABILITY_LOSS, 0.0);
-  }
-  double CAPACITY_LOSS() const {
-    return GetField<double>(VT_CAPACITY_LOSS, 0.0);
-  }
-  double INSURANCE_LOSS() const {
-    return GetField<double>(VT_INSURANCE_LOSS, 0.0);
-  }
-  double THIRD_PARTY_INSURANCE_LOSS() const {
-    return GetField<double>(VT_THIRD_PARTY_INSURANCE_LOSS, 0.0);
-  }
-  int32_t INJURED() const {
-    return GetField<int32_t>(VT_INJURED, 0);
-  }
-  int32_t KILLED() const {
-    return GetField<int32_t>(VT_KILLED, 0);
-  }
-  double LIFE_LOST() const {
-    return GetField<double>(VT_LIFE_LOST, 0.0);
-  }
-  double AGE_AT_EVENT() const {
-    return GetField<double>(VT_AGE_AT_EVENT, 0.0);
-  }
-  const ::flatbuffers::String *ACHIEVED_FLIGHT_PHASE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ACHIEVED_FLIGHT_PHASE);
-  }
-  const ::flatbuffers::String *OCCURRENCE_FLIGHT_PHASE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OCCURRENCE_FLIGHT_PHASE);
-  }
-  const ::flatbuffers::String *STAGE_AT_FAULT() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_STAGE_AT_FAULT);
-  }
-  const ::flatbuffers::String *EQUIPMENT_AT_FAULT() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_EQUIPMENT_AT_FAULT);
-  }
-  const ::flatbuffers::String *EQUIPMENT_TYPE_AT_FAULT() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_EQUIPMENT_TYPE_AT_FAULT);
-  }
-  const ::flatbuffers::String *EQUIPMENT_PART_AT_FAULT() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_EQUIPMENT_PART_AT_FAULT);
-  }
-  const ::flatbuffers::String *CONSEQUENTIAL_EQUIPMENT_FAILURE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_CONSEQUENTIAL_EQUIPMENT_FAILURE);
-  }
-  bool INCLINED() const {
-    return GetField<uint8_t>(VT_INCLINED, 0) != 0;
-  }
-  const ::flatbuffers::String *DESCRIPTION() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
-  }
-  const ::flatbuffers::String *REMARKS() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_REMARKS);
-  }
-  const ::flatbuffers::String *INSURANCE_LOSS_NOTES() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_INSURANCE_LOSS_NOTES);
-  }
-  const ::flatbuffers::String *CAPABILITY_LOSS_NOTES() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_CAPABILITY_LOSS_NOTES);
-  }
-  const ::flatbuffers::String *INSURANCE_CARRIED_NOTES() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_INSURANCE_CARRIED_NOTES);
-  }
-  const ::flatbuffers::String *EQUIPMENT_CAUSING_LOSS_NOTES() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_EQUIPMENT_CAUSING_LOSS_NOTES);
-  }
+  /// Event type detail
   const ::flatbuffers::String *EVENT_TYPE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_EVENT_TYPE);
   }
-  const ::flatbuffers::String *EVENT_RESULT() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_EVENT_RESULT);
+  /// Operator organization identifier
+  const ::flatbuffers::String *OPERATOR_ORG_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OPERATOR_ORG_ID);
   }
+  /// Owner organization identifier
+  const ::flatbuffers::String *OWNER_ORG_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OWNER_ORG_ID);
+  }
+  /// Lessee organization identifier
+  const ::flatbuffers::String *LESSEE_ORG_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LESSEE_ORG_ID);
+  }
+  /// Operated on behalf of organization
+  const ::flatbuffers::String *OPERATED_ON_BEHALF_OF_ORG_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OPERATED_ON_BEHALF_OF_ORG_ID);
+  }
+  /// GEO longitude at event time (degrees east)
+  double GEO_POSITION() const {
+    return GetField<double>(VT_GEO_POSITION, 0.0);
+  }
+  /// Orbital plane slot
+  const ::flatbuffers::String *PLANE_SLOT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PLANE_SLOT);
+  }
+  /// Orbital plane number
+  const ::flatbuffers::String *PLANE_NUMBER() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PLANE_NUMBER);
+  }
+  /// Position status at event time
+  const ::flatbuffers::String *POSITION_STATUS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_POSITION_STATUS);
+  }
+  /// Time until expected recovery (ISO 8601)
+  const ::flatbuffers::String *UNTIL_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_UNTIL_TIME);
+  }
+  /// Official loss date (ISO 8601)
+  const ::flatbuffers::String *OFFICIAL_LOSS_DATE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OFFICIAL_LOSS_DATE);
+  }
+  /// Financial loss amount (USD)
+  double NET_AMOUNT() const {
+    return GetField<double>(VT_NET_AMOUNT, 0.0);
+  }
+  /// Root cause description
+  const ::flatbuffers::String *UNDERLYING_CAUSE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_UNDERLYING_CAUSE);
+  }
+  /// Capability loss fraction (0-1)
+  double CAPABILITY_LOSS() const {
+    return GetField<double>(VT_CAPABILITY_LOSS, 0.0);
+  }
+  /// Capacity loss fraction (0-1)
+  double CAPACITY_LOSS() const {
+    return GetField<double>(VT_CAPACITY_LOSS, 0.0);
+  }
+  /// Insurance loss amount (USD)
+  double INSURANCE_LOSS() const {
+    return GetField<double>(VT_INSURANCE_LOSS, 0.0);
+  }
+  /// Third-party insurance loss (USD)
+  double THIRD_PARTY_INSURANCE_LOSS() const {
+    return GetField<double>(VT_THIRD_PARTY_INSURANCE_LOSS, 0.0);
+  }
+  /// Number of personnel injured
+  uint16_t INJURED() const {
+    return GetField<uint16_t>(VT_INJURED, 0);
+  }
+  /// Number of fatalities
+  uint16_t KILLED() const {
+    return GetField<uint16_t>(VT_KILLED, 0);
+  }
+  /// Spacecraft age at event (years)
+  double AGE_AT_EVENT() const {
+    return GetField<double>(VT_AGE_AT_EVENT, 0.0);
+  }
+  /// Design life remaining at event (years)
+  double LIFE_LOST() const {
+    return GetField<double>(VT_LIFE_LOST, 0.0);
+  }
+  /// Flight phase achieved
+  const ::flatbuffers::String *ACHIEVED_FLIGHT_PHASE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ACHIEVED_FLIGHT_PHASE);
+  }
+  /// Flight phase at occurrence
+  const ::flatbuffers::String *OCCURRENCE_FLIGHT_PHASE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OCCURRENCE_FLIGHT_PHASE);
+  }
+  /// Stage at fault
+  const ::flatbuffers::String *STAGE_AT_FAULT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_STAGE_AT_FAULT);
+  }
+  /// Equipment at fault
+  const ::flatbuffers::String *EQUIPMENT_AT_FAULT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EQUIPMENT_AT_FAULT);
+  }
+  /// Equipment type at fault
+  const ::flatbuffers::String *EQUIPMENT_TYPE_AT_FAULT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EQUIPMENT_TYPE_AT_FAULT);
+  }
+  /// Equipment part at fault
+  const ::flatbuffers::String *EQUIPMENT_PART_AT_FAULT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EQUIPMENT_PART_AT_FAULT);
+  }
+  /// Consequential equipment failure
+  const ::flatbuffers::String *CONSEQUENTIAL_EQUIPMENT_FAILURE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CONSEQUENTIAL_EQUIPMENT_FAILURE);
+  }
+  /// True if orbit is inclined
+  bool INCLINED() const {
+    return GetField<uint8_t>(VT_INCLINED, 0) != 0;
+  }
+  /// Event description
+  const ::flatbuffers::String *DESCRIPTION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
+  }
+  /// Additional remarks
+  const ::flatbuffers::String *REMARKS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REMARKS);
+  }
+  /// Object status after event
   const ::flatbuffers::String *OBJECT_STATUS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_STATUS);
   }
+  /// Satellite position after event
   const ::flatbuffers::String *SATELLITE_POSITION() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SATELLITE_POSITION);
   }
+  /// On-orbit reference
   const ::flatbuffers::String *ON_ORBIT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ON_ORBIT);
   }
@@ -213,19 +338,23 @@ struct OOE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
            verifier.VerifyString(ID()) &&
+           VerifyField<uint32_t>(verifier, VT_SAT_NO, 4) &&
+           VerifyOffset(verifier, VT_ORIG_OBJECT_ID) &&
+           verifier.VerifyString(ORIG_OBJECT_ID()) &&
            VerifyOffset(verifier, VT_DERIVED_FROM) &&
            verifier.VerifyString(DERIVED_FROM()) &&
            VerifyOffset(verifier, VT_DECLASSIFICATION_DATE) &&
            verifier.VerifyString(DECLASSIFICATION_DATE()) &&
            VerifyOffset(verifier, VT_DECLASSIFICATION_STRING) &&
            verifier.VerifyString(DECLASSIFICATION_STRING()) &&
-           VerifyField<int32_t>(verifier, VT_SAT_NO, 4) &&
-           VerifyOffset(verifier, VT_ORIG_OBJECT_ID) &&
-           verifier.VerifyString(ORIG_OBJECT_ID()) &&
            VerifyOffset(verifier, VT_EVENT_TIME) &&
            verifier.VerifyString(EVENT_TIME()) &&
            VerifyOffset(verifier, VT_EVENT_TIME_NOTES) &&
            verifier.VerifyString(EVENT_TIME_NOTES()) &&
+           VerifyField<int8_t>(verifier, VT_CATEGORY, 1) &&
+           VerifyField<int8_t>(verifier, VT_RESULT, 1) &&
+           VerifyOffset(verifier, VT_EVENT_TYPE) &&
+           verifier.VerifyString(EVENT_TYPE()) &&
            VerifyOffset(verifier, VT_OPERATOR_ORG_ID) &&
            verifier.VerifyString(OPERATOR_ORG_ID()) &&
            VerifyOffset(verifier, VT_OWNER_ORG_ID) &&
@@ -252,10 +381,10 @@ struct OOE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_CAPACITY_LOSS, 8) &&
            VerifyField<double>(verifier, VT_INSURANCE_LOSS, 8) &&
            VerifyField<double>(verifier, VT_THIRD_PARTY_INSURANCE_LOSS, 8) &&
-           VerifyField<int32_t>(verifier, VT_INJURED, 4) &&
-           VerifyField<int32_t>(verifier, VT_KILLED, 4) &&
-           VerifyField<double>(verifier, VT_LIFE_LOST, 8) &&
+           VerifyField<uint16_t>(verifier, VT_INJURED, 2) &&
+           VerifyField<uint16_t>(verifier, VT_KILLED, 2) &&
            VerifyField<double>(verifier, VT_AGE_AT_EVENT, 8) &&
+           VerifyField<double>(verifier, VT_LIFE_LOST, 8) &&
            VerifyOffset(verifier, VT_ACHIEVED_FLIGHT_PHASE) &&
            verifier.VerifyString(ACHIEVED_FLIGHT_PHASE()) &&
            VerifyOffset(verifier, VT_OCCURRENCE_FLIGHT_PHASE) &&
@@ -275,18 +404,6 @@ struct OOE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(DESCRIPTION()) &&
            VerifyOffset(verifier, VT_REMARKS) &&
            verifier.VerifyString(REMARKS()) &&
-           VerifyOffset(verifier, VT_INSURANCE_LOSS_NOTES) &&
-           verifier.VerifyString(INSURANCE_LOSS_NOTES()) &&
-           VerifyOffset(verifier, VT_CAPABILITY_LOSS_NOTES) &&
-           verifier.VerifyString(CAPABILITY_LOSS_NOTES()) &&
-           VerifyOffset(verifier, VT_INSURANCE_CARRIED_NOTES) &&
-           verifier.VerifyString(INSURANCE_CARRIED_NOTES()) &&
-           VerifyOffset(verifier, VT_EQUIPMENT_CAUSING_LOSS_NOTES) &&
-           verifier.VerifyString(EQUIPMENT_CAUSING_LOSS_NOTES()) &&
-           VerifyOffset(verifier, VT_EVENT_TYPE) &&
-           verifier.VerifyString(EVENT_TYPE()) &&
-           VerifyOffset(verifier, VT_EVENT_RESULT) &&
-           verifier.VerifyString(EVENT_RESULT()) &&
            VerifyOffset(verifier, VT_OBJECT_STATUS) &&
            verifier.VerifyString(OBJECT_STATUS()) &&
            VerifyOffset(verifier, VT_SATELLITE_POSITION) &&
@@ -304,6 +421,12 @@ struct OOEBuilder {
   void add_ID(::flatbuffers::Offset<::flatbuffers::String> ID) {
     fbb_.AddOffset(OOE::VT_ID, ID);
   }
+  void add_SAT_NO(uint32_t SAT_NO) {
+    fbb_.AddElement<uint32_t>(OOE::VT_SAT_NO, SAT_NO, 0);
+  }
+  void add_ORIG_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID) {
+    fbb_.AddOffset(OOE::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
+  }
   void add_DERIVED_FROM(::flatbuffers::Offset<::flatbuffers::String> DERIVED_FROM) {
     fbb_.AddOffset(OOE::VT_DERIVED_FROM, DERIVED_FROM);
   }
@@ -313,17 +436,20 @@ struct OOEBuilder {
   void add_DECLASSIFICATION_STRING(::flatbuffers::Offset<::flatbuffers::String> DECLASSIFICATION_STRING) {
     fbb_.AddOffset(OOE::VT_DECLASSIFICATION_STRING, DECLASSIFICATION_STRING);
   }
-  void add_SAT_NO(int32_t SAT_NO) {
-    fbb_.AddElement<int32_t>(OOE::VT_SAT_NO, SAT_NO, 0);
-  }
-  void add_ORIG_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID) {
-    fbb_.AddOffset(OOE::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
-  }
   void add_EVENT_TIME(::flatbuffers::Offset<::flatbuffers::String> EVENT_TIME) {
     fbb_.AddOffset(OOE::VT_EVENT_TIME, EVENT_TIME);
   }
   void add_EVENT_TIME_NOTES(::flatbuffers::Offset<::flatbuffers::String> EVENT_TIME_NOTES) {
     fbb_.AddOffset(OOE::VT_EVENT_TIME_NOTES, EVENT_TIME_NOTES);
+  }
+  void add_CATEGORY(eventCategory CATEGORY) {
+    fbb_.AddElement<int8_t>(OOE::VT_CATEGORY, static_cast<int8_t>(CATEGORY), 0);
+  }
+  void add_RESULT(eventResult RESULT) {
+    fbb_.AddElement<int8_t>(OOE::VT_RESULT, static_cast<int8_t>(RESULT), 0);
+  }
+  void add_EVENT_TYPE(::flatbuffers::Offset<::flatbuffers::String> EVENT_TYPE) {
+    fbb_.AddOffset(OOE::VT_EVENT_TYPE, EVENT_TYPE);
   }
   void add_OPERATOR_ORG_ID(::flatbuffers::Offset<::flatbuffers::String> OPERATOR_ORG_ID) {
     fbb_.AddOffset(OOE::VT_OPERATOR_ORG_ID, OPERATOR_ORG_ID);
@@ -373,17 +499,17 @@ struct OOEBuilder {
   void add_THIRD_PARTY_INSURANCE_LOSS(double THIRD_PARTY_INSURANCE_LOSS) {
     fbb_.AddElement<double>(OOE::VT_THIRD_PARTY_INSURANCE_LOSS, THIRD_PARTY_INSURANCE_LOSS, 0.0);
   }
-  void add_INJURED(int32_t INJURED) {
-    fbb_.AddElement<int32_t>(OOE::VT_INJURED, INJURED, 0);
+  void add_INJURED(uint16_t INJURED) {
+    fbb_.AddElement<uint16_t>(OOE::VT_INJURED, INJURED, 0);
   }
-  void add_KILLED(int32_t KILLED) {
-    fbb_.AddElement<int32_t>(OOE::VT_KILLED, KILLED, 0);
-  }
-  void add_LIFE_LOST(double LIFE_LOST) {
-    fbb_.AddElement<double>(OOE::VT_LIFE_LOST, LIFE_LOST, 0.0);
+  void add_KILLED(uint16_t KILLED) {
+    fbb_.AddElement<uint16_t>(OOE::VT_KILLED, KILLED, 0);
   }
   void add_AGE_AT_EVENT(double AGE_AT_EVENT) {
     fbb_.AddElement<double>(OOE::VT_AGE_AT_EVENT, AGE_AT_EVENT, 0.0);
+  }
+  void add_LIFE_LOST(double LIFE_LOST) {
+    fbb_.AddElement<double>(OOE::VT_LIFE_LOST, LIFE_LOST, 0.0);
   }
   void add_ACHIEVED_FLIGHT_PHASE(::flatbuffers::Offset<::flatbuffers::String> ACHIEVED_FLIGHT_PHASE) {
     fbb_.AddOffset(OOE::VT_ACHIEVED_FLIGHT_PHASE, ACHIEVED_FLIGHT_PHASE);
@@ -415,24 +541,6 @@ struct OOEBuilder {
   void add_REMARKS(::flatbuffers::Offset<::flatbuffers::String> REMARKS) {
     fbb_.AddOffset(OOE::VT_REMARKS, REMARKS);
   }
-  void add_INSURANCE_LOSS_NOTES(::flatbuffers::Offset<::flatbuffers::String> INSURANCE_LOSS_NOTES) {
-    fbb_.AddOffset(OOE::VT_INSURANCE_LOSS_NOTES, INSURANCE_LOSS_NOTES);
-  }
-  void add_CAPABILITY_LOSS_NOTES(::flatbuffers::Offset<::flatbuffers::String> CAPABILITY_LOSS_NOTES) {
-    fbb_.AddOffset(OOE::VT_CAPABILITY_LOSS_NOTES, CAPABILITY_LOSS_NOTES);
-  }
-  void add_INSURANCE_CARRIED_NOTES(::flatbuffers::Offset<::flatbuffers::String> INSURANCE_CARRIED_NOTES) {
-    fbb_.AddOffset(OOE::VT_INSURANCE_CARRIED_NOTES, INSURANCE_CARRIED_NOTES);
-  }
-  void add_EQUIPMENT_CAUSING_LOSS_NOTES(::flatbuffers::Offset<::flatbuffers::String> EQUIPMENT_CAUSING_LOSS_NOTES) {
-    fbb_.AddOffset(OOE::VT_EQUIPMENT_CAUSING_LOSS_NOTES, EQUIPMENT_CAUSING_LOSS_NOTES);
-  }
-  void add_EVENT_TYPE(::flatbuffers::Offset<::flatbuffers::String> EVENT_TYPE) {
-    fbb_.AddOffset(OOE::VT_EVENT_TYPE, EVENT_TYPE);
-  }
-  void add_EVENT_RESULT(::flatbuffers::Offset<::flatbuffers::String> EVENT_RESULT) {
-    fbb_.AddOffset(OOE::VT_EVENT_RESULT, EVENT_RESULT);
-  }
   void add_OBJECT_STATUS(::flatbuffers::Offset<::flatbuffers::String> OBJECT_STATUS) {
     fbb_.AddOffset(OOE::VT_OBJECT_STATUS, OBJECT_STATUS);
   }
@@ -456,13 +564,16 @@ struct OOEBuilder {
 inline ::flatbuffers::Offset<OOE> CreateOOE(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
+    uint32_t SAT_NO = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> DERIVED_FROM = 0,
     ::flatbuffers::Offset<::flatbuffers::String> DECLASSIFICATION_DATE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> DECLASSIFICATION_STRING = 0,
-    int32_t SAT_NO = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> EVENT_TIME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> EVENT_TIME_NOTES = 0,
+    eventCategory CATEGORY = eventCategory_ANOMALY,
+    eventResult RESULT = eventResult_TOTAL_LOSS,
+    ::flatbuffers::Offset<::flatbuffers::String> EVENT_TYPE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OPERATOR_ORG_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OWNER_ORG_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> LESSEE_ORG_ID = 0,
@@ -479,10 +590,10 @@ inline ::flatbuffers::Offset<OOE> CreateOOE(
     double CAPACITY_LOSS = 0.0,
     double INSURANCE_LOSS = 0.0,
     double THIRD_PARTY_INSURANCE_LOSS = 0.0,
-    int32_t INJURED = 0,
-    int32_t KILLED = 0,
-    double LIFE_LOST = 0.0,
+    uint16_t INJURED = 0,
+    uint16_t KILLED = 0,
     double AGE_AT_EVENT = 0.0,
+    double LIFE_LOST = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> ACHIEVED_FLIGHT_PHASE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OCCURRENCE_FLIGHT_PHASE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> STAGE_AT_FAULT = 0,
@@ -493,18 +604,12 @@ inline ::flatbuffers::Offset<OOE> CreateOOE(
     bool INCLINED = false,
     ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0,
     ::flatbuffers::Offset<::flatbuffers::String> REMARKS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> INSURANCE_LOSS_NOTES = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> CAPABILITY_LOSS_NOTES = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> INSURANCE_CARRIED_NOTES = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> EQUIPMENT_CAUSING_LOSS_NOTES = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> EVENT_TYPE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> EVENT_RESULT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OBJECT_STATUS = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SATELLITE_POSITION = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT = 0) {
   OOEBuilder builder_(_fbb);
-  builder_.add_AGE_AT_EVENT(AGE_AT_EVENT);
   builder_.add_LIFE_LOST(LIFE_LOST);
+  builder_.add_AGE_AT_EVENT(AGE_AT_EVENT);
   builder_.add_THIRD_PARTY_INSURANCE_LOSS(THIRD_PARTY_INSURANCE_LOSS);
   builder_.add_INSURANCE_LOSS(INSURANCE_LOSS);
   builder_.add_CAPACITY_LOSS(CAPACITY_LOSS);
@@ -514,12 +619,6 @@ inline ::flatbuffers::Offset<OOE> CreateOOE(
   builder_.add_ON_ORBIT(ON_ORBIT);
   builder_.add_SATELLITE_POSITION(SATELLITE_POSITION);
   builder_.add_OBJECT_STATUS(OBJECT_STATUS);
-  builder_.add_EVENT_RESULT(EVENT_RESULT);
-  builder_.add_EVENT_TYPE(EVENT_TYPE);
-  builder_.add_EQUIPMENT_CAUSING_LOSS_NOTES(EQUIPMENT_CAUSING_LOSS_NOTES);
-  builder_.add_INSURANCE_CARRIED_NOTES(INSURANCE_CARRIED_NOTES);
-  builder_.add_CAPABILITY_LOSS_NOTES(CAPABILITY_LOSS_NOTES);
-  builder_.add_INSURANCE_LOSS_NOTES(INSURANCE_LOSS_NOTES);
   builder_.add_REMARKS(REMARKS);
   builder_.add_DESCRIPTION(DESCRIPTION);
   builder_.add_CONSEQUENTIAL_EQUIPMENT_FAILURE(CONSEQUENTIAL_EQUIPMENT_FAILURE);
@@ -529,8 +628,6 @@ inline ::flatbuffers::Offset<OOE> CreateOOE(
   builder_.add_STAGE_AT_FAULT(STAGE_AT_FAULT);
   builder_.add_OCCURRENCE_FLIGHT_PHASE(OCCURRENCE_FLIGHT_PHASE);
   builder_.add_ACHIEVED_FLIGHT_PHASE(ACHIEVED_FLIGHT_PHASE);
-  builder_.add_KILLED(KILLED);
-  builder_.add_INJURED(INJURED);
   builder_.add_UNDERLYING_CAUSE(UNDERLYING_CAUSE);
   builder_.add_OFFICIAL_LOSS_DATE(OFFICIAL_LOSS_DATE);
   builder_.add_UNTIL_TIME(UNTIL_TIME);
@@ -541,28 +638,36 @@ inline ::flatbuffers::Offset<OOE> CreateOOE(
   builder_.add_LESSEE_ORG_ID(LESSEE_ORG_ID);
   builder_.add_OWNER_ORG_ID(OWNER_ORG_ID);
   builder_.add_OPERATOR_ORG_ID(OPERATOR_ORG_ID);
+  builder_.add_EVENT_TYPE(EVENT_TYPE);
   builder_.add_EVENT_TIME_NOTES(EVENT_TIME_NOTES);
   builder_.add_EVENT_TIME(EVENT_TIME);
-  builder_.add_ORIG_OBJECT_ID(ORIG_OBJECT_ID);
-  builder_.add_SAT_NO(SAT_NO);
   builder_.add_DECLASSIFICATION_STRING(DECLASSIFICATION_STRING);
   builder_.add_DECLASSIFICATION_DATE(DECLASSIFICATION_DATE);
   builder_.add_DERIVED_FROM(DERIVED_FROM);
+  builder_.add_ORIG_OBJECT_ID(ORIG_OBJECT_ID);
+  builder_.add_SAT_NO(SAT_NO);
   builder_.add_ID(ID);
+  builder_.add_KILLED(KILLED);
+  builder_.add_INJURED(INJURED);
   builder_.add_INCLINED(INCLINED);
+  builder_.add_RESULT(RESULT);
+  builder_.add_CATEGORY(CATEGORY);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<OOE> CreateOOEDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *ID = nullptr,
+    uint32_t SAT_NO = 0,
+    const char *ORIG_OBJECT_ID = nullptr,
     const char *DERIVED_FROM = nullptr,
     const char *DECLASSIFICATION_DATE = nullptr,
     const char *DECLASSIFICATION_STRING = nullptr,
-    int32_t SAT_NO = 0,
-    const char *ORIG_OBJECT_ID = nullptr,
     const char *EVENT_TIME = nullptr,
     const char *EVENT_TIME_NOTES = nullptr,
+    eventCategory CATEGORY = eventCategory_ANOMALY,
+    eventResult RESULT = eventResult_TOTAL_LOSS,
+    const char *EVENT_TYPE = nullptr,
     const char *OPERATOR_ORG_ID = nullptr,
     const char *OWNER_ORG_ID = nullptr,
     const char *LESSEE_ORG_ID = nullptr,
@@ -579,10 +684,10 @@ inline ::flatbuffers::Offset<OOE> CreateOOEDirect(
     double CAPACITY_LOSS = 0.0,
     double INSURANCE_LOSS = 0.0,
     double THIRD_PARTY_INSURANCE_LOSS = 0.0,
-    int32_t INJURED = 0,
-    int32_t KILLED = 0,
-    double LIFE_LOST = 0.0,
+    uint16_t INJURED = 0,
+    uint16_t KILLED = 0,
     double AGE_AT_EVENT = 0.0,
+    double LIFE_LOST = 0.0,
     const char *ACHIEVED_FLIGHT_PHASE = nullptr,
     const char *OCCURRENCE_FLIGHT_PHASE = nullptr,
     const char *STAGE_AT_FAULT = nullptr,
@@ -593,22 +698,17 @@ inline ::flatbuffers::Offset<OOE> CreateOOEDirect(
     bool INCLINED = false,
     const char *DESCRIPTION = nullptr,
     const char *REMARKS = nullptr,
-    const char *INSURANCE_LOSS_NOTES = nullptr,
-    const char *CAPABILITY_LOSS_NOTES = nullptr,
-    const char *INSURANCE_CARRIED_NOTES = nullptr,
-    const char *EQUIPMENT_CAUSING_LOSS_NOTES = nullptr,
-    const char *EVENT_TYPE = nullptr,
-    const char *EVENT_RESULT = nullptr,
     const char *OBJECT_STATUS = nullptr,
     const char *SATELLITE_POSITION = nullptr,
     const char *ON_ORBIT = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
+  auto ORIG_OBJECT_ID__ = ORIG_OBJECT_ID ? _fbb.CreateString(ORIG_OBJECT_ID) : 0;
   auto DERIVED_FROM__ = DERIVED_FROM ? _fbb.CreateString(DERIVED_FROM) : 0;
   auto DECLASSIFICATION_DATE__ = DECLASSIFICATION_DATE ? _fbb.CreateString(DECLASSIFICATION_DATE) : 0;
   auto DECLASSIFICATION_STRING__ = DECLASSIFICATION_STRING ? _fbb.CreateString(DECLASSIFICATION_STRING) : 0;
-  auto ORIG_OBJECT_ID__ = ORIG_OBJECT_ID ? _fbb.CreateString(ORIG_OBJECT_ID) : 0;
   auto EVENT_TIME__ = EVENT_TIME ? _fbb.CreateString(EVENT_TIME) : 0;
   auto EVENT_TIME_NOTES__ = EVENT_TIME_NOTES ? _fbb.CreateString(EVENT_TIME_NOTES) : 0;
+  auto EVENT_TYPE__ = EVENT_TYPE ? _fbb.CreateString(EVENT_TYPE) : 0;
   auto OPERATOR_ORG_ID__ = OPERATOR_ORG_ID ? _fbb.CreateString(OPERATOR_ORG_ID) : 0;
   auto OWNER_ORG_ID__ = OWNER_ORG_ID ? _fbb.CreateString(OWNER_ORG_ID) : 0;
   auto LESSEE_ORG_ID__ = LESSEE_ORG_ID ? _fbb.CreateString(LESSEE_ORG_ID) : 0;
@@ -628,25 +728,22 @@ inline ::flatbuffers::Offset<OOE> CreateOOEDirect(
   auto CONSEQUENTIAL_EQUIPMENT_FAILURE__ = CONSEQUENTIAL_EQUIPMENT_FAILURE ? _fbb.CreateString(CONSEQUENTIAL_EQUIPMENT_FAILURE) : 0;
   auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
   auto REMARKS__ = REMARKS ? _fbb.CreateString(REMARKS) : 0;
-  auto INSURANCE_LOSS_NOTES__ = INSURANCE_LOSS_NOTES ? _fbb.CreateString(INSURANCE_LOSS_NOTES) : 0;
-  auto CAPABILITY_LOSS_NOTES__ = CAPABILITY_LOSS_NOTES ? _fbb.CreateString(CAPABILITY_LOSS_NOTES) : 0;
-  auto INSURANCE_CARRIED_NOTES__ = INSURANCE_CARRIED_NOTES ? _fbb.CreateString(INSURANCE_CARRIED_NOTES) : 0;
-  auto EQUIPMENT_CAUSING_LOSS_NOTES__ = EQUIPMENT_CAUSING_LOSS_NOTES ? _fbb.CreateString(EQUIPMENT_CAUSING_LOSS_NOTES) : 0;
-  auto EVENT_TYPE__ = EVENT_TYPE ? _fbb.CreateString(EVENT_TYPE) : 0;
-  auto EVENT_RESULT__ = EVENT_RESULT ? _fbb.CreateString(EVENT_RESULT) : 0;
   auto OBJECT_STATUS__ = OBJECT_STATUS ? _fbb.CreateString(OBJECT_STATUS) : 0;
   auto SATELLITE_POSITION__ = SATELLITE_POSITION ? _fbb.CreateString(SATELLITE_POSITION) : 0;
   auto ON_ORBIT__ = ON_ORBIT ? _fbb.CreateString(ON_ORBIT) : 0;
   return CreateOOE(
       _fbb,
       ID__,
+      SAT_NO,
+      ORIG_OBJECT_ID__,
       DERIVED_FROM__,
       DECLASSIFICATION_DATE__,
       DECLASSIFICATION_STRING__,
-      SAT_NO,
-      ORIG_OBJECT_ID__,
       EVENT_TIME__,
       EVENT_TIME_NOTES__,
+      CATEGORY,
+      RESULT,
+      EVENT_TYPE__,
       OPERATOR_ORG_ID__,
       OWNER_ORG_ID__,
       LESSEE_ORG_ID__,
@@ -665,8 +762,8 @@ inline ::flatbuffers::Offset<OOE> CreateOOEDirect(
       THIRD_PARTY_INSURANCE_LOSS,
       INJURED,
       KILLED,
-      LIFE_LOST,
       AGE_AT_EVENT,
+      LIFE_LOST,
       ACHIEVED_FLIGHT_PHASE__,
       OCCURRENCE_FLIGHT_PHASE__,
       STAGE_AT_FAULT__,
@@ -677,12 +774,6 @@ inline ::flatbuffers::Offset<OOE> CreateOOEDirect(
       INCLINED,
       DESCRIPTION__,
       REMARKS__,
-      INSURANCE_LOSS_NOTES__,
-      CAPABILITY_LOSS_NOTES__,
-      INSURANCE_CARRIED_NOTES__,
-      EQUIPMENT_CAUSING_LOSS_NOTES__,
-      EVENT_TYPE__,
-      EVENT_RESULT__,
       OBJECT_STATUS__,
       SATELLITE_POSITION__,
       ON_ORBIT__);

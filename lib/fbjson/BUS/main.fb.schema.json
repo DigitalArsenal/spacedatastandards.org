@@ -1,0 +1,273 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "busSize": {
+      "type": "string",
+      "enum": [
+        "FEMTO",
+        "PICO",
+        "NANO",
+        "MICRO",
+        "MINI",
+        "SMALL",
+        "MEDIUM",
+        "LARGE",
+        "HEAVY"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "FEMTO": {
+          "value": 0
+        },
+        "PICO": {
+          "value": 1
+        },
+        "NANO": {
+          "value": 2
+        },
+        "MICRO": {
+          "value": 3
+        },
+        "MINI": {
+          "value": 4
+        },
+        "SMALL": {
+          "value": 5
+        },
+        "MEDIUM": {
+          "value": 6
+        },
+        "LARGE": {
+          "value": 7
+        },
+        "HEAVY": {
+          "value": 8
+        }
+      }
+    },
+    "stabilizationType": {
+      "type": "string",
+      "enum": [
+        "THREE_AXIS",
+        "SPIN",
+        "GRAVITY_GRADIENT",
+        "MAGNETIC",
+        "DUAL_SPIN",
+        "NONE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "THREE_AXIS": {
+          "value": 0
+        },
+        "SPIN": {
+          "value": 1
+        },
+        "GRAVITY_GRADIENT": {
+          "value": 2
+        },
+        "MAGNETIC": {
+          "value": 3
+        },
+        "DUAL_SPIN": {
+          "value": 4
+        },
+        "NONE": {
+          "value": 5
+        }
+      }
+    },
+    "BUS": {
+      "type": "object",
+      "description": "Satellite Bus Specification",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Unique identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Bus name or model",
+          "x-flatbuffer-type": "string"
+        },
+        "MANUFACTURER": {
+          "type": "string",
+          "description": "Manufacturer",
+          "x-flatbuffer-type": "string"
+        },
+        "SIZE": {
+          "$ref": "#/definitions/busSize",
+          "description": "Bus size category",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "FEMTO": {
+              "value": 0
+            },
+            "PICO": {
+              "value": 1
+            },
+            "NANO": {
+              "value": 2
+            },
+            "MICRO": {
+              "value": 3
+            },
+            "MINI": {
+              "value": 4
+            },
+            "SMALL": {
+              "value": 5
+            },
+            "MEDIUM": {
+              "value": 6
+            },
+            "LARGE": {
+              "value": 7
+            },
+            "HEAVY": {
+              "value": 8
+            }
+          }
+        },
+        "DRY_MASS": {
+          "type": "number",
+          "description": "Dry mass in kg",
+          "x-flatbuffer-type": "double"
+        },
+        "WET_MASS": {
+          "type": "number",
+          "description": "Maximum wet mass (with propellant) in kg",
+          "x-flatbuffer-type": "double"
+        },
+        "PAYLOAD_MASS": {
+          "type": "number",
+          "description": "Maximum payload mass in kg",
+          "x-flatbuffer-type": "double"
+        },
+        "DIM_X": {
+          "type": "number",
+          "description": "Bus dimensions X in meters",
+          "x-flatbuffer-type": "double"
+        },
+        "DIM_Y": {
+          "type": "number",
+          "description": "Bus dimensions Y in meters",
+          "x-flatbuffer-type": "double"
+        },
+        "DIM_Z": {
+          "type": "number",
+          "description": "Bus dimensions Z in meters",
+          "x-flatbuffer-type": "double"
+        },
+        "STOWED_X": {
+          "type": "number",
+          "description": "Stowed dimensions X in meters",
+          "x-flatbuffer-type": "double"
+        },
+        "STOWED_Y": {
+          "type": "number",
+          "description": "Stowed dimensions Y in meters",
+          "x-flatbuffer-type": "double"
+        },
+        "STOWED_Z": {
+          "type": "number",
+          "description": "Stowed dimensions Z in meters",
+          "x-flatbuffer-type": "double"
+        },
+        "POWER_GENERATION": {
+          "type": "number",
+          "description": "Total power generation in Watts",
+          "x-flatbuffer-type": "double"
+        },
+        "PAYLOAD_POWER": {
+          "type": "number",
+          "description": "Available payload power in Watts",
+          "x-flatbuffer-type": "double"
+        },
+        "BATTERY_CAPACITY": {
+          "type": "number",
+          "description": "Battery capacity in Watt-hours",
+          "x-flatbuffer-type": "double"
+        },
+        "STABILIZATION": {
+          "$ref": "#/definitions/stabilizationType",
+          "description": "Stabilization method",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "THREE_AXIS": {
+              "value": 0
+            },
+            "SPIN": {
+              "value": 1
+            },
+            "GRAVITY_GRADIENT": {
+              "value": 2
+            },
+            "MAGNETIC": {
+              "value": 3
+            },
+            "DUAL_SPIN": {
+              "value": 4
+            },
+            "NONE": {
+              "value": 5
+            }
+          }
+        },
+        "POINTING_ACCURACY": {
+          "type": "number",
+          "description": "Pointing accuracy in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "POINTING_KNOWLEDGE": {
+          "type": "number",
+          "description": "Pointing knowledge in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "DESIGN_LIFE": {
+          "type": "number",
+          "description": "Design life in years",
+          "x-flatbuffer-type": "double"
+        },
+        "DATA_STORAGE": {
+          "type": "number",
+          "description": "Data storage capacity in Gbits",
+          "x-flatbuffer-type": "double"
+        },
+        "DOWNLINK_RATE": {
+          "type": "number",
+          "description": "Downlink data rate in Mbps",
+          "x-flatbuffer-type": "double"
+        },
+        "PAYLOAD_SLOTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of payload slots/interfaces",
+          "x-flatbuffer-type": "uint"
+        },
+        "HERITAGE_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Heritage missions count",
+          "x-flatbuffer-type": "uint"
+        },
+        "NOTES": {
+          "type": "string",
+          "description": "Additional notes",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/BUS",
+  "x-flatbuffer-root-type": "BUS",
+  "x-flatbuffer-file-identifier": "$BUS"
+}

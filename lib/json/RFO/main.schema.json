@@ -1,231 +1,313 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "rfObsType" : {
+      "type" : "string",
+      "enum": ["EMISSION", "TRANSPONDER", "INTERFERENCE", "BEACON", "TELEMETRY", "UNKNOWN"]
+    },
+    "rfDetectionStatus" : {
+      "type" : "string",
+      "enum": ["DETECTED", "CONFIRMED", "TENTATIVE", "LOST", "INTERFERENCE_ONLY"]
+    },
     "RFO" : {
       "type" : "object",
       "description" : "RF Observation",
       "properties" : {
         "ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique identifier"
               },
         "OB_TIME" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Observation time (ISO 8601)"
               },
         "ID_SENSOR" : {
-                "type" : "string"
-              },
-        "TYPE" : {
-                "type" : "string"
-              },
-        "SAT_NO" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "TASK_ID" : {
-                "type" : "string"
-              },
-        "TRANSACTION_ID" : {
-                "type" : "string"
-              },
-        "TRACK_ID" : {
-                "type" : "string"
-              },
-        "ORIG_OBJECT_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Sensor identifier"
               },
         "ORIG_SENSOR_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Original sensor identifier"
               },
-        "UCT" : {
-                "type" : "boolean"
+        "OBS_TYPE" : {
+                "$ref" : "#/definitions/rfObsType",
+                "description" : "Observation type"
               },
-        "TRANSPONDER" : {
-                "type" : "string"
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Satellite catalog number"
               },
-        "AZIMUTH" : {
-                "type" : "number"
-              },
-        "AZIMUTH_UNC" : {
-                "type" : "number"
-              },
-        "AZIMUTH_RATE" : {
-                "type" : "number"
-              },
-        "ELEVATION" : {
-                "type" : "number"
-              },
-        "ELEVATION_UNC" : {
-                "type" : "number"
-              },
-        "ELEVATION_RATE" : {
-                "type" : "number"
-              },
-        "RANGE" : {
-                "type" : "number"
-              },
-        "RANGE_UNC" : {
-                "type" : "number"
-              },
-        "RANGE_RATE" : {
-                "type" : "number"
-              },
-        "RANGE_RATE_UNC" : {
-                "type" : "number"
-              },
-        "TRACK_RANGE" : {
-                "type" : "number"
-              },
-        "SENLAT" : {
-                "type" : "number"
-              },
-        "SENLON" : {
-                "type" : "number"
-              },
-        "SENALT" : {
-                "type" : "number"
-              },
-        "ELNOT" : {
-                "type" : "string"
-              },
-        "FREQUENCY" : {
-                "type" : "number"
-              },
-        "NOMINAL_FREQUENCY" : {
-                "type" : "number"
-              },
-        "START_FREQUENCY" : {
-                "type" : "number"
-              },
-        "END_FREQUENCY" : {
-                "type" : "number"
-              },
-        "RELATIVE_CARRIER_POWER" : {
-                "type" : "number"
-              },
-        "SPECTRUM_ANALYZER_POWER" : {
-                "type" : "number"
-              },
-        "RELATIVE_NOISE_FLOOR" : {
-                "type" : "number"
-              },
-        "REFERENCE_LEVEL" : {
-                "type" : "number"
-              },
-        "PGRI" : {
-                "type" : "number"
-              },
-        "CONFIDENCE" : {
-                "type" : "number"
-              },
-        "INCOMING" : {
-                "type" : "boolean"
-              },
-        "SWITCH_POINT" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "BAUD_RATE" : {
-                "type" : "number"
-              },
-        "SNR" : {
-                "type" : "number"
-              },
-        "NOMINAL_SNR" : {
-                "type" : "number"
-              },
-        "POLARITY" : {
-                "type" : "number"
-              },
-        "POLARITY_TYPE" : {
-                "type" : "string"
-              },
-        "CHANNEL" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "POWER_OVER_NOISE" : {
-                "type" : "number"
-              },
-        "NOMINAL_POWER_OVER_NOISE" : {
-                "type" : "number"
-              },
-        "BANDWIDTH" : {
-                "type" : "number"
-              },
-        "NOMINAL_BANDWIDTH" : {
-                "type" : "number"
-              },
-        "RESOLUTION_BANDWIDTH" : {
-                "type" : "number"
-              },
-        "VIDEO_BANDWIDTH" : {
-                "type" : "number"
-              },
-        "EIRP" : {
-                "type" : "number"
-              },
-        "NOMINAL_EIRP" : {
-                "type" : "number"
-              },
-        "MIN_PSD" : {
-                "type" : "number"
-              },
-        "MAX_PSD" : {
-                "type" : "number"
-              },
-        "FREQUENCY_SHIFT" : {
-                "type" : "number"
-              },
-        "PEAK" : {
-                "type" : "boolean"
-              },
-        "ANTENNA_NAME" : {
-                "type" : "string"
-              },
-        "DETECTION_STATUS" : {
-                "type" : "string"
-              },
-        "COLLECTION_MODE" : {
-                "type" : "string"
-              },
-        "RAW_FILE_URI" : {
-                "type" : "string"
-              },
-        "TAGS" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
-        "NOISE_PWR_DENSITY" : {
-                "type" : "number"
-              },
-        "CARRIER_STANDARD" : {
-                "type" : "string"
-              },
-        "MODULATION" : {
-                "type" : "string"
-              },
-        "INNER_CODING_RATE" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "OUTER_CODING_RATE" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "TRANSMIT_FILTER_TYPE" : {
-                "type" : "string"
-              },
-        "TRANSMIT_FILTER_ROLL_OFF" : {
-                "type" : "number"
-              },
-        "SYMBOL_TO_NOISE_RATIO" : {
-                "type" : "number"
-              },
-        "BIT_ERROR_RATE" : {
-                "type" : "number"
+        "ORIG_OBJECT_ID" : {
+                "type" : "string",
+                "description" : "International designator"
               },
         "ON_ORBIT" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "On-orbit reference"
+              },
+        "UCT" : {
+                "type" : "boolean",
+                "description" : "True if uncorrelated target"
+              },
+        "TASK_ID" : {
+                "type" : "string",
+                "description" : "Task identifier"
+              },
+        "TRANSACTION_ID" : {
+                "type" : "string",
+                "description" : "Transaction identifier"
+              },
+        "TRACK_ID" : {
+                "type" : "string",
+                "description" : "Track identifier"
+              },
+        "TRANSPONDER" : {
+                "type" : "string",
+                "description" : "Transponder identifier"
+              },
+        "DETECTION_STATUS" : {
+                "$ref" : "#/definitions/rfDetectionStatus",
+                "description" : "Detection status"
+              },
+        "AZIMUTH" : {
+                "type" : "number",
+                "description" : "Azimuth angle (degrees)"
+              },
+        "AZIMUTH_UNC" : {
+                "type" : "number",
+                "description" : "Azimuth uncertainty (degrees, 1-sigma)"
+              },
+        "AZIMUTH_RATE" : {
+                "type" : "number",
+                "description" : "Azimuth rate (degrees/s)"
+              },
+        "ELEVATION" : {
+                "type" : "number",
+                "description" : "Elevation angle (degrees)"
+              },
+        "ELEVATION_UNC" : {
+                "type" : "number",
+                "description" : "Elevation uncertainty (degrees, 1-sigma)"
+              },
+        "ELEVATION_RATE" : {
+                "type" : "number",
+                "description" : "Elevation rate (degrees/s)"
+              },
+        "RANGE" : {
+                "type" : "number",
+                "description" : "Slant range (km)"
+              },
+        "RANGE_UNC" : {
+                "type" : "number",
+                "description" : "Range uncertainty (km, 1-sigma)"
+              },
+        "RANGE_RATE" : {
+                "type" : "number",
+                "description" : "Range rate (km/s)"
+              },
+        "RANGE_RATE_UNC" : {
+                "type" : "number",
+                "description" : "Range rate uncertainty (km/s, 1-sigma)"
+              },
+        "TRACK_RANGE" : {
+                "type" : "number",
+                "description" : "Track range (km)"
+              },
+        "SENLAT" : {
+                "type" : "number",
+                "description" : "Sensor latitude (degrees)"
+              },
+        "SENLON" : {
+                "type" : "number",
+                "description" : "Sensor longitude (degrees)"
+              },
+        "SENALT" : {
+                "type" : "number",
+                "description" : "Sensor altitude (km)"
+              },
+        "ELNOT" : {
+                "type" : "string",
+                "description" : "ELNOT (Electronic Intelligence Notation)"
+              },
+        "ANTENNA_NAME" : {
+                "type" : "string",
+                "description" : "Antenna name"
+              },
+        "COLLECTION_MODE" : {
+                "type" : "string",
+                "description" : "Collection mode"
+              },
+        "FREQUENCY" : {
+                "type" : "number",
+                "description" : "Measured center frequency (MHz)"
+              },
+        "NOMINAL_FREQUENCY" : {
+                "type" : "number",
+                "description" : "Nominal center frequency (MHz)"
+              },
+        "START_FREQUENCY" : {
+                "type" : "number",
+                "description" : "Start frequency of emission (MHz)"
+              },
+        "END_FREQUENCY" : {
+                "type" : "number",
+                "description" : "End frequency of emission (MHz)"
+              },
+        "FREQUENCY_SHIFT" : {
+                "type" : "number",
+                "description" : "Frequency shift from nominal (MHz)"
+              },
+        "BANDWIDTH" : {
+                "type" : "number",
+                "description" : "Measured bandwidth (MHz)"
+              },
+        "NOMINAL_BANDWIDTH" : {
+                "type" : "number",
+                "description" : "Nominal bandwidth (MHz)"
+              },
+        "RESOLUTION_BANDWIDTH" : {
+                "type" : "number",
+                "description" : "Resolution bandwidth (MHz)"
+              },
+        "VIDEO_BANDWIDTH" : {
+                "type" : "number",
+                "description" : "Video bandwidth (MHz)"
+              },
+        "RELATIVE_CARRIER_POWER" : {
+                "type" : "number",
+                "description" : "Relative carrier power (dBm)"
+              },
+        "SPECTRUM_ANALYZER_POWER" : {
+                "type" : "number",
+                "description" : "Spectrum analyzer power (dBm)"
+              },
+        "RELATIVE_NOISE_FLOOR" : {
+                "type" : "number",
+                "description" : "Relative noise floor (dBm)"
+              },
+        "REFERENCE_LEVEL" : {
+                "type" : "number",
+                "description" : "Reference level (dBm)"
+              },
+        "NOISE_PWR_DENSITY" : {
+                "type" : "number",
+                "description" : "Noise power density (dBm/Hz)"
+              },
+        "PGRI" : {
+                "type" : "number",
+                "description" : "PGRI (Pulse Group Repetition Interval, microseconds)"
+              },
+        "EIRP" : {
+                "type" : "number",
+                "description" : "Effective isotropic radiated power (dBW)"
+              },
+        "NOMINAL_EIRP" : {
+                "type" : "number",
+                "description" : "Nominal EIRP (dBW)"
+              },
+        "MIN_PSD" : {
+                "type" : "number",
+                "description" : "Minimum power spectral density (dBm/Hz)"
+              },
+        "MAX_PSD" : {
+                "type" : "number",
+                "description" : "Maximum power spectral density (dBm/Hz)"
+              },
+        "SNR" : {
+                "type" : "number",
+                "description" : "Signal-to-noise ratio (dB)"
+              },
+        "NOMINAL_SNR" : {
+                "type" : "number",
+                "description" : "Nominal SNR (dB)"
+              },
+        "POWER_OVER_NOISE" : {
+                "type" : "number",
+                "description" : "Power over noise (dB)"
+              },
+        "NOMINAL_POWER_OVER_NOISE" : {
+                "type" : "number",
+                "description" : "Nominal power over noise (dB)"
+              },
+        "POLARITY" : {
+                "type" : "number",
+                "description" : "Polarity angle (degrees)"
+              },
+        "POLARITY_TYPE" : {
+                "type" : "string",
+                "description" : "Polarization type (e.g., LHCP, RHCP, LINEAR)"
+              },
+        "CHANNEL" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Channel number"
+              },
+        "BAUD_RATE" : {
+                "type" : "number",
+                "description" : "Baud rate (symbols/s)"
+              },
+        "SYMBOL_TO_NOISE_RATIO" : {
+                "type" : "number",
+                "description" : "Symbol-to-noise ratio (dB)"
+              },
+        "BIT_ERROR_RATE" : {
+                "type" : "number",
+                "description" : "Bit error rate"
+              },
+        "PEAK" : {
+                "type" : "boolean",
+                "description" : "True if peak measurement"
+              },
+        "INCOMING" : {
+                "type" : "boolean",
+                "description" : "True if incoming signal"
+              },
+        "SWITCH_POINT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Switch point number"
+              },
+        "CONFIDENCE" : {
+                "type" : "number",
+                "description" : "Confidence score (0-1)"
+              },
+        "CARRIER_STANDARD" : {
+                "type" : "string",
+                "description" : "Carrier standard (e.g., DVB-S, DVB-S2)"
+              },
+        "MODULATION" : {
+                "type" : "string",
+                "description" : "Modulation type"
+              },
+        "INNER_CODING_RATE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Inner FEC coding rate denominator"
+              },
+        "OUTER_CODING_RATE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Outer FEC coding rate denominator"
+              },
+        "TRANSMIT_FILTER_TYPE" : {
+                "type" : "string",
+                "description" : "Transmit filter type"
+              },
+        "TRANSMIT_FILTER_ROLL_OFF" : {
+                "type" : "number",
+                "description" : "Transmit filter roll-off factor"
+              },
+        "RAW_FILE_URI" : {
+                "type" : "string",
+                "description" : "Reference to raw data file"
               },
         "DESCRIPTOR" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Event descriptor"
               },
         "URL" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Reference URL"
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Associated tags"
               }
       },
       "additionalProperties" : false

@@ -5,6 +5,58 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class LaunchDetectionType {
+  final int value;
+  const LaunchDetectionType._(this.value);
+
+  factory LaunchDetectionType.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum LaunchDetectionType');
+    }
+    return result;
+  }
+
+  static LaunchDetectionType? _createOrNull(int? value) => 
+      value == null ? null : LaunchDetectionType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 5;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const LaunchDetectionType IR_DETECT = LaunchDetectionType._(0);
+  static const LaunchDetectionType RADAR_DETECT = LaunchDetectionType._(1);
+  static const LaunchDetectionType OPTICAL_DETECT = LaunchDetectionType._(2);
+  static const LaunchDetectionType ELINT_DETECT = LaunchDetectionType._(3);
+  static const LaunchDetectionType COMBINED = LaunchDetectionType._(4);
+  static const LaunchDetectionType UNKNOWN = LaunchDetectionType._(5);
+  static const Map<int, LaunchDetectionType> values = {
+    0: IR_DETECT,
+    1: RADAR_DETECT,
+    2: OPTICAL_DETECT,
+    3: ELINT_DETECT,
+    4: COMBINED,
+    5: UNKNOWN};
+
+  static const fb.Reader<LaunchDetectionType> reader = _LaunchDetectionTypeReader();
+
+  @override
+  String toString() {
+    return 'LaunchDetectionType{value: $value}';
+  }
+}
+
+class _LaunchDetectionTypeReader extends fb.Reader<LaunchDetectionType> {
+  const _LaunchDetectionTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  LaunchDetectionType read(fb.BufferContext bc, int offset) =>
+      LaunchDetectionType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 ///  Launch Detection
 class LND {
   LND._(this._bc, this._bcOffset);
@@ -18,28 +70,56 @@ class LND {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get LAUNCH_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get MESSAGE_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  double get LAUNCH_LATITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  double get LAUNCH_LONGITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
-  double get LAUNCH_AZIMUTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  double get RAAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
-  double get INCLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
-  String? get OBSERVATION_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  double get OBSERVATION_LATITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
-  double get OBSERVATION_LONGITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
-  double get OBSERVATION_ALTITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
-  bool get STEREO_FLAG => const fb.BoolReader().vTableGet(_bc, _bcOffset, 28, false);
-  bool get HIGH_ZENITH_AZIMUTH => const fb.BoolReader().vTableGet(_bc, _bcOffset, 30, false);
-  int get SEQUENCE_NUMBER => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 32, 0);
-  String? get EVENT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
-  String? get DESCRIPTOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
-  List<String>? get TAGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 38);
+  ///  Detection event identifier
+  String? get EVENT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Detection type
+  LaunchDetectionType get DETECTION_TYPE => LaunchDetectionType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 8, 0));
+  ///  Detection message type code
+  String? get MESSAGE_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Time of launch detection (ISO 8601)
+  String? get LAUNCH_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Launch site latitude (degrees)
+  double get LAUNCH_LATITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  ///  Launch site longitude (degrees)
+  double get LAUNCH_LONGITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Launch azimuth (degrees from north)
+  double get LAUNCH_AZIMUTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  ///  Estimated RAAN (degrees)
+  double get RAAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  Estimated inclination (degrees)
+  double get INCLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Time of trajectory observation (ISO 8601)
+  String? get OBSERVATION_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Observation point latitude (degrees)
+  double get OBSERVATION_LATITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  ///  Observation point longitude (degrees)
+  double get OBSERVATION_LONGITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  ///  Observation point altitude (km)
+  double get OBSERVATION_ALTITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  ///  True if stereo observation (multiple sensors)
+  bool get STEREO_FLAG => const fb.BoolReader().vTableGet(_bc, _bcOffset, 32, false);
+  ///  True if high zenith angle observation
+  bool get HIGH_ZENITH_AZIMUTH => const fb.BoolReader().vTableGet(_bc, _bcOffset, 34, false);
+  ///  Sequence number in detection chain
+  int get SEQUENCE_NUMBER => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 36, 0);
+  ///  Launch site identifier
+  String? get LAUNCH_SITE_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  ///  Launch vehicle type (if identified)
+  String? get LAUNCH_VEHICLE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+  ///  Estimated trajectory type
+  String? get TRAJECTORY_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
+  ///  Detection confidence (0-1)
+  double get CONFIDENCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  ///  Event descriptor
+  String? get DESCRIPTOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
+  ///  Associated tags
+  List<String>? get TAGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 48);
 
   @override
   String toString() {
-    return 'LND{ID: ${ID}, LAUNCH_TIME: ${LAUNCH_TIME}, MESSAGE_TYPE: ${MESSAGE_TYPE}, LAUNCH_LATITUDE: ${LAUNCH_LATITUDE}, LAUNCH_LONGITUDE: ${LAUNCH_LONGITUDE}, LAUNCH_AZIMUTH: ${LAUNCH_AZIMUTH}, RAAN: ${RAAN}, INCLINATION: ${INCLINATION}, OBSERVATION_TIME: ${OBSERVATION_TIME}, OBSERVATION_LATITUDE: ${OBSERVATION_LATITUDE}, OBSERVATION_LONGITUDE: ${OBSERVATION_LONGITUDE}, OBSERVATION_ALTITUDE: ${OBSERVATION_ALTITUDE}, STEREO_FLAG: ${STEREO_FLAG}, HIGH_ZENITH_AZIMUTH: ${HIGH_ZENITH_AZIMUTH}, SEQUENCE_NUMBER: ${SEQUENCE_NUMBER}, EVENT_ID: ${EVENT_ID}, DESCRIPTOR: ${DESCRIPTOR}, TAGS: ${TAGS}}';
+    return 'LND{ID: ${ID}, EVENT_ID: ${EVENT_ID}, DETECTION_TYPE: ${DETECTION_TYPE}, MESSAGE_TYPE: ${MESSAGE_TYPE}, LAUNCH_TIME: ${LAUNCH_TIME}, LAUNCH_LATITUDE: ${LAUNCH_LATITUDE}, LAUNCH_LONGITUDE: ${LAUNCH_LONGITUDE}, LAUNCH_AZIMUTH: ${LAUNCH_AZIMUTH}, RAAN: ${RAAN}, INCLINATION: ${INCLINATION}, OBSERVATION_TIME: ${OBSERVATION_TIME}, OBSERVATION_LATITUDE: ${OBSERVATION_LATITUDE}, OBSERVATION_LONGITUDE: ${OBSERVATION_LONGITUDE}, OBSERVATION_ALTITUDE: ${OBSERVATION_ALTITUDE}, STEREO_FLAG: ${STEREO_FLAG}, HIGH_ZENITH_AZIMUTH: ${HIGH_ZENITH_AZIMUTH}, SEQUENCE_NUMBER: ${SEQUENCE_NUMBER}, LAUNCH_SITE_ID: ${LAUNCH_SITE_ID}, LAUNCH_VEHICLE: ${LAUNCH_VEHICLE}, TRAJECTORY_TYPE: ${TRAJECTORY_TYPE}, CONFIDENCE: ${CONFIDENCE}, DESCRIPTOR: ${DESCRIPTOR}, TAGS: ${TAGS}}';
   }
 }
 
@@ -57,79 +137,99 @@ class LNDBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(18);
+    fbBuilder.startTable(23);
   }
 
   int addIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addLaunchTimeOffset(int? offset) {
+  int addEventIdOffset(int? offset) {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
+  int addDetectionType(LaunchDetectionType? DETECTION_TYPE) {
+    fbBuilder.addInt8(2, DETECTION_TYPE?.value);
+    return fbBuilder.offset;
+  }
   int addMessageTypeOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addLaunchTimeOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
   int addLaunchLatitude(double? LAUNCH_LATITUDE) {
-    fbBuilder.addFloat64(3, LAUNCH_LATITUDE);
+    fbBuilder.addFloat64(5, LAUNCH_LATITUDE);
     return fbBuilder.offset;
   }
   int addLaunchLongitude(double? LAUNCH_LONGITUDE) {
-    fbBuilder.addFloat64(4, LAUNCH_LONGITUDE);
+    fbBuilder.addFloat64(6, LAUNCH_LONGITUDE);
     return fbBuilder.offset;
   }
   int addLaunchAzimuth(double? LAUNCH_AZIMUTH) {
-    fbBuilder.addFloat64(5, LAUNCH_AZIMUTH);
+    fbBuilder.addFloat64(7, LAUNCH_AZIMUTH);
     return fbBuilder.offset;
   }
   int addRaan(double? RAAN) {
-    fbBuilder.addFloat64(6, RAAN);
+    fbBuilder.addFloat64(8, RAAN);
     return fbBuilder.offset;
   }
   int addInclination(double? INCLINATION) {
-    fbBuilder.addFloat64(7, INCLINATION);
+    fbBuilder.addFloat64(9, INCLINATION);
     return fbBuilder.offset;
   }
   int addObservationTimeOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
+    fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
   int addObservationLatitude(double? OBSERVATION_LATITUDE) {
-    fbBuilder.addFloat64(9, OBSERVATION_LATITUDE);
+    fbBuilder.addFloat64(11, OBSERVATION_LATITUDE);
     return fbBuilder.offset;
   }
   int addObservationLongitude(double? OBSERVATION_LONGITUDE) {
-    fbBuilder.addFloat64(10, OBSERVATION_LONGITUDE);
+    fbBuilder.addFloat64(12, OBSERVATION_LONGITUDE);
     return fbBuilder.offset;
   }
   int addObservationAltitude(double? OBSERVATION_ALTITUDE) {
-    fbBuilder.addFloat64(11, OBSERVATION_ALTITUDE);
+    fbBuilder.addFloat64(13, OBSERVATION_ALTITUDE);
     return fbBuilder.offset;
   }
   int addStereoFlag(bool? STEREO_FLAG) {
-    fbBuilder.addBool(12, STEREO_FLAG);
+    fbBuilder.addBool(14, STEREO_FLAG);
     return fbBuilder.offset;
   }
   int addHighZenithAzimuth(bool? HIGH_ZENITH_AZIMUTH) {
-    fbBuilder.addBool(13, HIGH_ZENITH_AZIMUTH);
+    fbBuilder.addBool(15, HIGH_ZENITH_AZIMUTH);
     return fbBuilder.offset;
   }
   int addSequenceNumber(int? SEQUENCE_NUMBER) {
-    fbBuilder.addInt32(14, SEQUENCE_NUMBER);
+    fbBuilder.addUint16(16, SEQUENCE_NUMBER);
     return fbBuilder.offset;
   }
-  int addEventIdOffset(int? offset) {
-    fbBuilder.addOffset(15, offset);
+  int addLaunchSiteIdOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addLaunchVehicleOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addTrajectoryTypeOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addConfidence(double? CONFIDENCE) {
+    fbBuilder.addFloat64(20, CONFIDENCE);
     return fbBuilder.offset;
   }
   int addDescriptorOffset(int? offset) {
-    fbBuilder.addOffset(16, offset);
+    fbBuilder.addOffset(21, offset);
     return fbBuilder.offset;
   }
   int addTagsOffset(int? offset) {
-    fbBuilder.addOffset(17, offset);
+    fbBuilder.addOffset(22, offset);
     return fbBuilder.offset;
   }
 
@@ -140,8 +240,10 @@ class LNDBuilder {
 
 class LNDObjectBuilder extends fb.ObjectBuilder {
   final String? _ID;
-  final String? _LAUNCH_TIME;
+  final String? _EVENT_ID;
+  final LaunchDetectionType? _DETECTION_TYPE;
   final String? _MESSAGE_TYPE;
+  final String? _LAUNCH_TIME;
   final double? _LAUNCH_LATITUDE;
   final double? _LAUNCH_LONGITUDE;
   final double? _LAUNCH_AZIMUTH;
@@ -154,14 +256,19 @@ class LNDObjectBuilder extends fb.ObjectBuilder {
   final bool? _STEREO_FLAG;
   final bool? _HIGH_ZENITH_AZIMUTH;
   final int? _SEQUENCE_NUMBER;
-  final String? _EVENT_ID;
+  final String? _LAUNCH_SITE_ID;
+  final String? _LAUNCH_VEHICLE;
+  final String? _TRAJECTORY_TYPE;
+  final double? _CONFIDENCE;
   final String? _DESCRIPTOR;
   final List<String>? _TAGS;
 
   LNDObjectBuilder({
     String? ID,
-    String? LAUNCH_TIME,
+    String? EVENT_ID,
+    LaunchDetectionType? DETECTION_TYPE,
     String? MESSAGE_TYPE,
+    String? LAUNCH_TIME,
     double? LAUNCH_LATITUDE,
     double? LAUNCH_LONGITUDE,
     double? LAUNCH_AZIMUTH,
@@ -174,13 +281,18 @@ class LNDObjectBuilder extends fb.ObjectBuilder {
     bool? STEREO_FLAG,
     bool? HIGH_ZENITH_AZIMUTH,
     int? SEQUENCE_NUMBER,
-    String? EVENT_ID,
+    String? LAUNCH_SITE_ID,
+    String? LAUNCH_VEHICLE,
+    String? TRAJECTORY_TYPE,
+    double? CONFIDENCE,
     String? DESCRIPTOR,
     List<String>? TAGS,
   })
       : _ID = ID,
-        _LAUNCH_TIME = LAUNCH_TIME,
+        _EVENT_ID = EVENT_ID,
+        _DETECTION_TYPE = DETECTION_TYPE,
         _MESSAGE_TYPE = MESSAGE_TYPE,
+        _LAUNCH_TIME = LAUNCH_TIME,
         _LAUNCH_LATITUDE = LAUNCH_LATITUDE,
         _LAUNCH_LONGITUDE = LAUNCH_LONGITUDE,
         _LAUNCH_AZIMUTH = LAUNCH_AZIMUTH,
@@ -193,7 +305,10 @@ class LNDObjectBuilder extends fb.ObjectBuilder {
         _STEREO_FLAG = STEREO_FLAG,
         _HIGH_ZENITH_AZIMUTH = HIGH_ZENITH_AZIMUTH,
         _SEQUENCE_NUMBER = SEQUENCE_NUMBER,
-        _EVENT_ID = EVENT_ID,
+        _LAUNCH_SITE_ID = LAUNCH_SITE_ID,
+        _LAUNCH_VEHICLE = LAUNCH_VEHICLE,
+        _TRAJECTORY_TYPE = TRAJECTORY_TYPE,
+        _CONFIDENCE = CONFIDENCE,
         _DESCRIPTOR = DESCRIPTOR,
         _TAGS = TAGS;
 
@@ -202,37 +317,48 @@ class LNDObjectBuilder extends fb.ObjectBuilder {
   int finish(fb.Builder fbBuilder) {
     final int? IDOffset = _ID == null ? null
         : fbBuilder.writeString(_ID!);
-    final int? LAUNCH_TIMEOffset = _LAUNCH_TIME == null ? null
-        : fbBuilder.writeString(_LAUNCH_TIME!);
-    final int? MESSAGE_TYPEOffset = _MESSAGE_TYPE == null ? null
-        : fbBuilder.writeString(_MESSAGE_TYPE!);
-    final int? OBSERVATION_TIMEOffset = _OBSERVATION_TIME == null ? null
-        : fbBuilder.writeString(_OBSERVATION_TIME!);
     final int? EVENT_IDOffset = _EVENT_ID == null ? null
         : fbBuilder.writeString(_EVENT_ID!);
+    final int? MESSAGE_TYPEOffset = _MESSAGE_TYPE == null ? null
+        : fbBuilder.writeString(_MESSAGE_TYPE!);
+    final int? LAUNCH_TIMEOffset = _LAUNCH_TIME == null ? null
+        : fbBuilder.writeString(_LAUNCH_TIME!);
+    final int? OBSERVATION_TIMEOffset = _OBSERVATION_TIME == null ? null
+        : fbBuilder.writeString(_OBSERVATION_TIME!);
+    final int? LAUNCH_SITE_IDOffset = _LAUNCH_SITE_ID == null ? null
+        : fbBuilder.writeString(_LAUNCH_SITE_ID!);
+    final int? LAUNCH_VEHICLEOffset = _LAUNCH_VEHICLE == null ? null
+        : fbBuilder.writeString(_LAUNCH_VEHICLE!);
+    final int? TRAJECTORY_TYPEOffset = _TRAJECTORY_TYPE == null ? null
+        : fbBuilder.writeString(_TRAJECTORY_TYPE!);
     final int? DESCRIPTOROffset = _DESCRIPTOR == null ? null
         : fbBuilder.writeString(_DESCRIPTOR!);
     final int? TAGSOffset = _TAGS == null ? null
         : fbBuilder.writeList(_TAGS!.map(fbBuilder.writeString).toList());
-    fbBuilder.startTable(18);
+    fbBuilder.startTable(23);
     fbBuilder.addOffset(0, IDOffset);
-    fbBuilder.addOffset(1, LAUNCH_TIMEOffset);
-    fbBuilder.addOffset(2, MESSAGE_TYPEOffset);
-    fbBuilder.addFloat64(3, _LAUNCH_LATITUDE);
-    fbBuilder.addFloat64(4, _LAUNCH_LONGITUDE);
-    fbBuilder.addFloat64(5, _LAUNCH_AZIMUTH);
-    fbBuilder.addFloat64(6, _RAAN);
-    fbBuilder.addFloat64(7, _INCLINATION);
-    fbBuilder.addOffset(8, OBSERVATION_TIMEOffset);
-    fbBuilder.addFloat64(9, _OBSERVATION_LATITUDE);
-    fbBuilder.addFloat64(10, _OBSERVATION_LONGITUDE);
-    fbBuilder.addFloat64(11, _OBSERVATION_ALTITUDE);
-    fbBuilder.addBool(12, _STEREO_FLAG);
-    fbBuilder.addBool(13, _HIGH_ZENITH_AZIMUTH);
-    fbBuilder.addInt32(14, _SEQUENCE_NUMBER);
-    fbBuilder.addOffset(15, EVENT_IDOffset);
-    fbBuilder.addOffset(16, DESCRIPTOROffset);
-    fbBuilder.addOffset(17, TAGSOffset);
+    fbBuilder.addOffset(1, EVENT_IDOffset);
+    fbBuilder.addInt8(2, _DETECTION_TYPE?.value);
+    fbBuilder.addOffset(3, MESSAGE_TYPEOffset);
+    fbBuilder.addOffset(4, LAUNCH_TIMEOffset);
+    fbBuilder.addFloat64(5, _LAUNCH_LATITUDE);
+    fbBuilder.addFloat64(6, _LAUNCH_LONGITUDE);
+    fbBuilder.addFloat64(7, _LAUNCH_AZIMUTH);
+    fbBuilder.addFloat64(8, _RAAN);
+    fbBuilder.addFloat64(9, _INCLINATION);
+    fbBuilder.addOffset(10, OBSERVATION_TIMEOffset);
+    fbBuilder.addFloat64(11, _OBSERVATION_LATITUDE);
+    fbBuilder.addFloat64(12, _OBSERVATION_LONGITUDE);
+    fbBuilder.addFloat64(13, _OBSERVATION_ALTITUDE);
+    fbBuilder.addBool(14, _STEREO_FLAG);
+    fbBuilder.addBool(15, _HIGH_ZENITH_AZIMUTH);
+    fbBuilder.addUint16(16, _SEQUENCE_NUMBER);
+    fbBuilder.addOffset(17, LAUNCH_SITE_IDOffset);
+    fbBuilder.addOffset(18, LAUNCH_VEHICLEOffset);
+    fbBuilder.addOffset(19, TRAJECTORY_TYPEOffset);
+    fbBuilder.addFloat64(20, _CONFIDENCE);
+    fbBuilder.addOffset(21, DESCRIPTOROffset);
+    fbBuilder.addOffset(22, TAGSOffset);
     return fbBuilder.endTable();
   }
 

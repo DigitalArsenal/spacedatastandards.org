@@ -1,84 +1,141 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "attMotionType" : {
+      "type" : "string",
+      "enum": ["STABILIZED", "SPINNING", "TUMBLING", "PRECESSING", "UNKNOWN"]
+    },
+    "attRepresentation" : {
+      "type" : "string",
+      "enum": ["QUATERNION", "EULER", "SPIN", "DIRECTION_COSINE"]
+    },
     "ATD" : {
       "type" : "object",
       "description" : "Attitude Data Point",
       "properties" : {
         "ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique identifier"
               },
         "AS_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Attitude set identifier (groups time-series points)"
               },
         "SAT_NO" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Satellite catalog number"
               },
         "ORIG_OBJECT_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "International designator"
               },
-        "TS" : {
-                "type" : "string"
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Observation epoch (ISO 8601)"
+              },
+        "REPRESENTATION" : {
+                "$ref" : "#/definitions/attRepresentation",
+                "description" : "Attitude representation used"
               },
         "MOTION_TYPE" : {
-                "type" : "string"
-              },
-        "Q1" : {
-                "type" : "number"
-              },
-        "Q2" : {
-                "type" : "number"
-              },
-        "Q3" : {
-                "type" : "number"
+                "$ref" : "#/definitions/attMotionType",
+                "description" : "Motion characterization"
               },
         "QC" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Quaternion scalar component (q0 or qc)"
               },
-        "Q1_DOT" : {
-                "type" : "number"
+        "Q1" : {
+                "type" : "number",
+                "description" : "Quaternion vector component 1"
               },
-        "Q2_DOT" : {
-                "type" : "number"
+        "Q2" : {
+                "type" : "number",
+                "description" : "Quaternion vector component 2"
               },
-        "Q3_DOT" : {
-                "type" : "number"
+        "Q3" : {
+                "type" : "number",
+                "description" : "Quaternion vector component 3"
               },
         "QC_DOT" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Quaternion scalar rate (rad/s)"
+              },
+        "Q1_DOT" : {
+                "type" : "number",
+                "description" : "Quaternion vector rate 1 (rad/s)"
+              },
+        "Q2_DOT" : {
+                "type" : "number",
+                "description" : "Quaternion vector rate 2 (rad/s)"
+              },
+        "Q3_DOT" : {
+                "type" : "number",
+                "description" : "Quaternion vector rate 3 (rad/s)"
               },
         "X_ANGLE" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "number",
+                "description" : "Euler angle X (degrees)"
               },
         "Y_ANGLE" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "number",
+                "description" : "Euler angle Y (degrees)"
               },
         "Z_ANGLE" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "number",
+                "description" : "Euler angle Z (degrees)"
               },
         "X_RATE" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "number",
+                "description" : "Angular rate about X (deg/s)"
               },
         "Y_RATE" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "number",
+                "description" : "Angular rate about Y (deg/s)"
               },
         "Z_RATE" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "number",
+                "description" : "Angular rate about Z (deg/s)"
               },
         "RA" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Right ascension of spin axis (degrees)"
               },
         "DECLINATION" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Declination of spin axis (degrees)"
               },
         "CONING_ANGLE" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Coning half-angle (degrees)"
               },
         "PREC_PERIOD" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Precession period (seconds)"
               },
         "SPIN_PERIOD" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Spin period (seconds)"
+              },
+        "ATTITUDE_UNC" : {
+                "type" : "number",
+                "description" : "Attitude uncertainty (degrees, 1-sigma)"
+              },
+        "RATE_UNC" : {
+                "type" : "number",
+                "description" : "Rate uncertainty (deg/s, 1-sigma)"
+              },
+        "QUALITY" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Data quality (0-9, 9=best)"
+              },
+        "REF_FRAME" : {
+                "type" : "string",
+                "description" : "Reference frame for attitude"
+              },
+        "SENSOR_ID" : {
+                "type" : "string",
+                "description" : "Sensor identifier providing the observation"
               }
       },
       "additionalProperties" : false

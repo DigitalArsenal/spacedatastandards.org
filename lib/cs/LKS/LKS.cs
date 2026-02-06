@@ -19,6 +19,7 @@ public struct LKS : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public LKS __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Unique identifier
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,6 +27,7 @@ public struct LKS : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
+  /// First endpoint on-orbit identifier
   public string ID_ON_ORBIT1 { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetID_ON_ORBIT1Bytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -33,27 +35,19 @@ public struct LKS : IFlatbufferObject
   public ArraySegment<byte>? GetID_ON_ORBIT1Bytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetID_ON_ORBIT1Array() { return __p.__vector_as_array<byte>(6); }
-  public string ID_ON_ORBIT2 { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// First endpoint satellite catalog number
+  public uint SAT_NO1 { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Second endpoint on-orbit identifier
+  public string ID_ON_ORBIT2 { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetID_ON_ORBIT2Bytes() { return __p.__vector_as_span<byte>(8, 1); }
+  public Span<byte> GetID_ON_ORBIT2Bytes() { return __p.__vector_as_span<byte>(10, 1); }
 #else
-  public ArraySegment<byte>? GetID_ON_ORBIT2Bytes() { return __p.__vector_as_arraysegment(8); }
+  public ArraySegment<byte>? GetID_ON_ORBIT2Bytes() { return __p.__vector_as_arraysegment(10); }
 #endif
-  public byte[] GetID_ON_ORBIT2Array() { return __p.__vector_as_array<byte>(8); }
-  public string LINK_START_TIME { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetLINK_START_TIMEBytes() { return __p.__vector_as_span<byte>(10, 1); }
-#else
-  public ArraySegment<byte>? GetLINK_START_TIMEBytes() { return __p.__vector_as_arraysegment(10); }
-#endif
-  public byte[] GetLINK_START_TIMEArray() { return __p.__vector_as_array<byte>(10); }
-  public string LINK_STOP_TIME { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetLINK_STOP_TIMEBytes() { return __p.__vector_as_span<byte>(12, 1); }
-#else
-  public ArraySegment<byte>? GetLINK_STOP_TIMEBytes() { return __p.__vector_as_arraysegment(12); }
-#endif
-  public byte[] GetLINK_STOP_TIMEArray() { return __p.__vector_as_array<byte>(12); }
+  public byte[] GetID_ON_ORBIT2Array() { return __p.__vector_as_array<byte>(10); }
+  /// Second endpoint satellite catalog number
+  public uint SAT_NO2 { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Constellation name
   public string CONSTELLATION { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCONSTELLATIONBytes() { return __p.__vector_as_span<byte>(14, 1); }
@@ -61,6 +55,7 @@ public struct LKS : IFlatbufferObject
   public ArraySegment<byte>? GetCONSTELLATIONBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
   public byte[] GetCONSTELLATIONArray() { return __p.__vector_as_array<byte>(14); }
+  /// Link name or identifier
   public string LINK_NAME { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetLINK_NAMEBytes() { return __p.__vector_as_span<byte>(16, 1); }
@@ -68,88 +63,108 @@ public struct LKS : IFlatbufferObject
   public ArraySegment<byte>? GetLINK_NAMEBytes() { return __p.__vector_as_arraysegment(16); }
 #endif
   public byte[] GetLINK_NAMEArray() { return __p.__vector_as_array<byte>(16); }
-  public string LINK_TYPE { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Link type
+  public linkType LINK_TYPE { get { int o = __p.__offset(18); return o != 0 ? (linkType)__p.bb.GetSbyte(o + __p.bb_pos) : linkType.UPLINK; } }
+  /// Link state
+  public linkState LINK_STATE { get { int o = __p.__offset(20); return o != 0 ? (linkState)__p.bb.GetSbyte(o + __p.bb_pos) : linkState.ESTABLISHED; } }
+  /// RF band
+  public string BAND { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetLINK_TYPEBytes() { return __p.__vector_as_span<byte>(18, 1); }
+  public Span<byte> GetBANDBytes() { return __p.__vector_as_span<byte>(22, 1); }
 #else
-  public ArraySegment<byte>? GetLINK_TYPEBytes() { return __p.__vector_as_arraysegment(18); }
+  public ArraySegment<byte>? GetBANDBytes() { return __p.__vector_as_arraysegment(22); }
 #endif
-  public byte[] GetLINK_TYPEArray() { return __p.__vector_as_array<byte>(18); }
-  public string BAND { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetBANDArray() { return __p.__vector_as_array<byte>(22); }
+  /// Link start time (ISO 8601)
+  public string LINK_START_TIME { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetBANDBytes() { return __p.__vector_as_span<byte>(20, 1); }
+  public Span<byte> GetLINK_START_TIMEBytes() { return __p.__vector_as_span<byte>(24, 1); }
 #else
-  public ArraySegment<byte>? GetBANDBytes() { return __p.__vector_as_arraysegment(20); }
+  public ArraySegment<byte>? GetLINK_START_TIMEBytes() { return __p.__vector_as_arraysegment(24); }
 #endif
-  public byte[] GetBANDArray() { return __p.__vector_as_array<byte>(20); }
-  public string ID_BEAM1 { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetLINK_START_TIMEArray() { return __p.__vector_as_array<byte>(24); }
+  /// Link stop time (ISO 8601)
+  public string LINK_STOP_TIME { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetID_BEAM1Bytes() { return __p.__vector_as_span<byte>(22, 1); }
+  public Span<byte> GetLINK_STOP_TIMEBytes() { return __p.__vector_as_span<byte>(26, 1); }
 #else
-  public ArraySegment<byte>? GetID_BEAM1Bytes() { return __p.__vector_as_arraysegment(22); }
+  public ArraySegment<byte>? GetLINK_STOP_TIMEBytes() { return __p.__vector_as_arraysegment(26); }
 #endif
-  public byte[] GetID_BEAM1Array() { return __p.__vector_as_array<byte>(22); }
-  public string END_POINT1_NAME { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetLINK_STOP_TIMEArray() { return __p.__vector_as_array<byte>(26); }
+  /// First endpoint beam identifier
+  public string ID_BEAM1 { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetEND_POINT1_NAMEBytes() { return __p.__vector_as_span<byte>(24, 1); }
+  public Span<byte> GetID_BEAM1Bytes() { return __p.__vector_as_span<byte>(28, 1); }
 #else
-  public ArraySegment<byte>? GetEND_POINT1_NAMEBytes() { return __p.__vector_as_arraysegment(24); }
+  public ArraySegment<byte>? GetID_BEAM1Bytes() { return __p.__vector_as_arraysegment(28); }
 #endif
-  public byte[] GetEND_POINT1_NAMEArray() { return __p.__vector_as_array<byte>(24); }
-  public double END_POINT1_LAT { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double END_POINT1_LON { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string ID_BEAM2 { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetID_BEAM1Array() { return __p.__vector_as_array<byte>(28); }
+  /// First endpoint name
+  public string END_POINT1_NAME { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetID_BEAM2Bytes() { return __p.__vector_as_span<byte>(30, 1); }
+  public Span<byte> GetEND_POINT1_NAMEBytes() { return __p.__vector_as_span<byte>(30, 1); }
 #else
-  public ArraySegment<byte>? GetID_BEAM2Bytes() { return __p.__vector_as_arraysegment(30); }
+  public ArraySegment<byte>? GetEND_POINT1_NAMEBytes() { return __p.__vector_as_arraysegment(30); }
 #endif
-  public byte[] GetID_BEAM2Array() { return __p.__vector_as_array<byte>(30); }
-  public string END_POINT2_NAME { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetEND_POINT1_NAMEArray() { return __p.__vector_as_array<byte>(30); }
+  /// First endpoint latitude (degrees)
+  public double END_POINT1_LAT { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// First endpoint longitude (degrees)
+  public double END_POINT1_LON { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Second endpoint beam identifier
+  public string ID_BEAM2 { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetEND_POINT2_NAMEBytes() { return __p.__vector_as_span<byte>(32, 1); }
+  public Span<byte> GetID_BEAM2Bytes() { return __p.__vector_as_span<byte>(36, 1); }
 #else
-  public ArraySegment<byte>? GetEND_POINT2_NAMEBytes() { return __p.__vector_as_arraysegment(32); }
+  public ArraySegment<byte>? GetID_BEAM2Bytes() { return __p.__vector_as_arraysegment(36); }
 #endif
-  public byte[] GetEND_POINT2_NAMEArray() { return __p.__vector_as_array<byte>(32); }
-  public double END_POINT2_LAT { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double END_POINT2_LON { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double DATA_RATE1_TO2 { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double DATA_RATE2_TO1 { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string LINK_STATE { get { int o = __p.__offset(42); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetID_BEAM2Array() { return __p.__vector_as_array<byte>(36); }
+  /// Second endpoint name
+  public string END_POINT2_NAME { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetLINK_STATEBytes() { return __p.__vector_as_span<byte>(42, 1); }
+  public Span<byte> GetEND_POINT2_NAMEBytes() { return __p.__vector_as_span<byte>(38, 1); }
 #else
-  public ArraySegment<byte>? GetLINK_STATEBytes() { return __p.__vector_as_arraysegment(42); }
+  public ArraySegment<byte>? GetEND_POINT2_NAMEBytes() { return __p.__vector_as_arraysegment(38); }
 #endif
-  public byte[] GetLINK_STATEArray() { return __p.__vector_as_array<byte>(42); }
-  public string SYS_CAP { get { int o = __p.__offset(44); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetEND_POINT2_NAMEArray() { return __p.__vector_as_array<byte>(38); }
+  /// Second endpoint latitude (degrees)
+  public double END_POINT2_LAT { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Second endpoint longitude (degrees)
+  public double END_POINT2_LON { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Data rate from endpoint 1 to 2 (Mbps)
+  public double DATA_RATE1_TO2 { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Data rate from endpoint 2 to 1 (Mbps)
+  public double DATA_RATE2_TO1 { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// System capability status
+  public string SYS_CAP { get { int o = __p.__offset(48); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSYS_CAPBytes() { return __p.__vector_as_span<byte>(44, 1); }
+  public Span<byte> GetSYS_CAPBytes() { return __p.__vector_as_span<byte>(48, 1); }
 #else
-  public ArraySegment<byte>? GetSYS_CAPBytes() { return __p.__vector_as_arraysegment(44); }
+  public ArraySegment<byte>? GetSYS_CAPBytes() { return __p.__vector_as_arraysegment(48); }
 #endif
-  public byte[] GetSYS_CAPArray() { return __p.__vector_as_array<byte>(44); }
-  public string OPS_CAP { get { int o = __p.__offset(46); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetSYS_CAPArray() { return __p.__vector_as_array<byte>(48); }
+  /// Operational capability status
+  public string OPS_CAP { get { int o = __p.__offset(50); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetOPS_CAPBytes() { return __p.__vector_as_span<byte>(46, 1); }
+  public Span<byte> GetOPS_CAPBytes() { return __p.__vector_as_span<byte>(50, 1); }
 #else
-  public ArraySegment<byte>? GetOPS_CAPBytes() { return __p.__vector_as_arraysegment(46); }
+  public ArraySegment<byte>? GetOPS_CAPBytes() { return __p.__vector_as_arraysegment(50); }
 #endif
-  public byte[] GetOPS_CAPArray() { return __p.__vector_as_array<byte>(46); }
-  public int SAT_NO1 { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int SAT_NO2 { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public byte[] GetOPS_CAPArray() { return __p.__vector_as_array<byte>(50); }
 
   public static Offset<LKS> CreateLKS(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
       StringOffset ID_ON_ORBIT1Offset = default(StringOffset),
+      uint SAT_NO1 = 0,
       StringOffset ID_ON_ORBIT2Offset = default(StringOffset),
-      StringOffset LINK_START_TIMEOffset = default(StringOffset),
-      StringOffset LINK_STOP_TIMEOffset = default(StringOffset),
+      uint SAT_NO2 = 0,
       StringOffset CONSTELLATIONOffset = default(StringOffset),
       StringOffset LINK_NAMEOffset = default(StringOffset),
-      StringOffset LINK_TYPEOffset = default(StringOffset),
+      linkType LINK_TYPE = linkType.UPLINK,
+      linkState LINK_STATE = linkState.ESTABLISHED,
       StringOffset BANDOffset = default(StringOffset),
+      StringOffset LINK_START_TIMEOffset = default(StringOffset),
+      StringOffset LINK_STOP_TIMEOffset = default(StringOffset),
       StringOffset ID_BEAM1Offset = default(StringOffset),
       StringOffset END_POINT1_NAMEOffset = default(StringOffset),
       double END_POINT1_LAT = 0.0,
@@ -160,11 +175,8 @@ public struct LKS : IFlatbufferObject
       double END_POINT2_LON = 0.0,
       double DATA_RATE1_TO2 = 0.0,
       double DATA_RATE2_TO1 = 0.0,
-      StringOffset LINK_STATEOffset = default(StringOffset),
       StringOffset SYS_CAPOffset = default(StringOffset),
-      StringOffset OPS_CAPOffset = default(StringOffset),
-      int SAT_NO1 = 0,
-      int SAT_NO2 = 0) {
+      StringOffset OPS_CAPOffset = default(StringOffset)) {
     builder.StartTable(24);
     LKS.AddDATA_RATE2_TO1(builder, DATA_RATE2_TO1);
     LKS.AddDATA_RATE1_TO2(builder, DATA_RATE1_TO2);
@@ -172,52 +184,52 @@ public struct LKS : IFlatbufferObject
     LKS.AddEND_POINT2_LAT(builder, END_POINT2_LAT);
     LKS.AddEND_POINT1_LON(builder, END_POINT1_LON);
     LKS.AddEND_POINT1_LAT(builder, END_POINT1_LAT);
-    LKS.AddSAT_NO2(builder, SAT_NO2);
-    LKS.AddSAT_NO1(builder, SAT_NO1);
     LKS.AddOPS_CAP(builder, OPS_CAPOffset);
     LKS.AddSYS_CAP(builder, SYS_CAPOffset);
-    LKS.AddLINK_STATE(builder, LINK_STATEOffset);
     LKS.AddEND_POINT2_NAME(builder, END_POINT2_NAMEOffset);
     LKS.AddID_BEAM2(builder, ID_BEAM2Offset);
     LKS.AddEND_POINT1_NAME(builder, END_POINT1_NAMEOffset);
     LKS.AddID_BEAM1(builder, ID_BEAM1Offset);
-    LKS.AddBAND(builder, BANDOffset);
-    LKS.AddLINK_TYPE(builder, LINK_TYPEOffset);
-    LKS.AddLINK_NAME(builder, LINK_NAMEOffset);
-    LKS.AddCONSTELLATION(builder, CONSTELLATIONOffset);
     LKS.AddLINK_STOP_TIME(builder, LINK_STOP_TIMEOffset);
     LKS.AddLINK_START_TIME(builder, LINK_START_TIMEOffset);
+    LKS.AddBAND(builder, BANDOffset);
+    LKS.AddLINK_NAME(builder, LINK_NAMEOffset);
+    LKS.AddCONSTELLATION(builder, CONSTELLATIONOffset);
+    LKS.AddSAT_NO2(builder, SAT_NO2);
     LKS.AddID_ON_ORBIT2(builder, ID_ON_ORBIT2Offset);
+    LKS.AddSAT_NO1(builder, SAT_NO1);
     LKS.AddID_ON_ORBIT1(builder, ID_ON_ORBIT1Offset);
     LKS.AddID(builder, IDOffset);
+    LKS.AddLINK_STATE(builder, LINK_STATE);
+    LKS.AddLINK_TYPE(builder, LINK_TYPE);
     return LKS.EndLKS(builder);
   }
 
   public static void StartLKS(FlatBufferBuilder builder) { builder.StartTable(24); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddID_ON_ORBIT1(FlatBufferBuilder builder, StringOffset ID_ON_ORBIT1Offset) { builder.AddOffset(1, ID_ON_ORBIT1Offset.Value, 0); }
-  public static void AddID_ON_ORBIT2(FlatBufferBuilder builder, StringOffset ID_ON_ORBIT2Offset) { builder.AddOffset(2, ID_ON_ORBIT2Offset.Value, 0); }
-  public static void AddLINK_START_TIME(FlatBufferBuilder builder, StringOffset LINK_START_TIMEOffset) { builder.AddOffset(3, LINK_START_TIMEOffset.Value, 0); }
-  public static void AddLINK_STOP_TIME(FlatBufferBuilder builder, StringOffset LINK_STOP_TIMEOffset) { builder.AddOffset(4, LINK_STOP_TIMEOffset.Value, 0); }
+  public static void AddSAT_NO1(FlatBufferBuilder builder, uint SAT_NO1) { builder.AddUint(2, SAT_NO1, 0); }
+  public static void AddID_ON_ORBIT2(FlatBufferBuilder builder, StringOffset ID_ON_ORBIT2Offset) { builder.AddOffset(3, ID_ON_ORBIT2Offset.Value, 0); }
+  public static void AddSAT_NO2(FlatBufferBuilder builder, uint SAT_NO2) { builder.AddUint(4, SAT_NO2, 0); }
   public static void AddCONSTELLATION(FlatBufferBuilder builder, StringOffset CONSTELLATIONOffset) { builder.AddOffset(5, CONSTELLATIONOffset.Value, 0); }
   public static void AddLINK_NAME(FlatBufferBuilder builder, StringOffset LINK_NAMEOffset) { builder.AddOffset(6, LINK_NAMEOffset.Value, 0); }
-  public static void AddLINK_TYPE(FlatBufferBuilder builder, StringOffset LINK_TYPEOffset) { builder.AddOffset(7, LINK_TYPEOffset.Value, 0); }
-  public static void AddBAND(FlatBufferBuilder builder, StringOffset BANDOffset) { builder.AddOffset(8, BANDOffset.Value, 0); }
-  public static void AddID_BEAM1(FlatBufferBuilder builder, StringOffset ID_BEAM1Offset) { builder.AddOffset(9, ID_BEAM1Offset.Value, 0); }
-  public static void AddEND_POINT1_NAME(FlatBufferBuilder builder, StringOffset END_POINT1_NAMEOffset) { builder.AddOffset(10, END_POINT1_NAMEOffset.Value, 0); }
-  public static void AddEND_POINT1_LAT(FlatBufferBuilder builder, double END_POINT1_LAT) { builder.AddDouble(11, END_POINT1_LAT, 0.0); }
-  public static void AddEND_POINT1_LON(FlatBufferBuilder builder, double END_POINT1_LON) { builder.AddDouble(12, END_POINT1_LON, 0.0); }
-  public static void AddID_BEAM2(FlatBufferBuilder builder, StringOffset ID_BEAM2Offset) { builder.AddOffset(13, ID_BEAM2Offset.Value, 0); }
-  public static void AddEND_POINT2_NAME(FlatBufferBuilder builder, StringOffset END_POINT2_NAMEOffset) { builder.AddOffset(14, END_POINT2_NAMEOffset.Value, 0); }
-  public static void AddEND_POINT2_LAT(FlatBufferBuilder builder, double END_POINT2_LAT) { builder.AddDouble(15, END_POINT2_LAT, 0.0); }
-  public static void AddEND_POINT2_LON(FlatBufferBuilder builder, double END_POINT2_LON) { builder.AddDouble(16, END_POINT2_LON, 0.0); }
-  public static void AddDATA_RATE1_TO2(FlatBufferBuilder builder, double DATA_RATE1_TO2) { builder.AddDouble(17, DATA_RATE1_TO2, 0.0); }
-  public static void AddDATA_RATE2_TO1(FlatBufferBuilder builder, double DATA_RATE2_TO1) { builder.AddDouble(18, DATA_RATE2_TO1, 0.0); }
-  public static void AddLINK_STATE(FlatBufferBuilder builder, StringOffset LINK_STATEOffset) { builder.AddOffset(19, LINK_STATEOffset.Value, 0); }
-  public static void AddSYS_CAP(FlatBufferBuilder builder, StringOffset SYS_CAPOffset) { builder.AddOffset(20, SYS_CAPOffset.Value, 0); }
-  public static void AddOPS_CAP(FlatBufferBuilder builder, StringOffset OPS_CAPOffset) { builder.AddOffset(21, OPS_CAPOffset.Value, 0); }
-  public static void AddSAT_NO1(FlatBufferBuilder builder, int SAT_NO1) { builder.AddInt(22, SAT_NO1, 0); }
-  public static void AddSAT_NO2(FlatBufferBuilder builder, int SAT_NO2) { builder.AddInt(23, SAT_NO2, 0); }
+  public static void AddLINK_TYPE(FlatBufferBuilder builder, linkType LINK_TYPE) { builder.AddSbyte(7, (sbyte)LINK_TYPE, 0); }
+  public static void AddLINK_STATE(FlatBufferBuilder builder, linkState LINK_STATE) { builder.AddSbyte(8, (sbyte)LINK_STATE, 0); }
+  public static void AddBAND(FlatBufferBuilder builder, StringOffset BANDOffset) { builder.AddOffset(9, BANDOffset.Value, 0); }
+  public static void AddLINK_START_TIME(FlatBufferBuilder builder, StringOffset LINK_START_TIMEOffset) { builder.AddOffset(10, LINK_START_TIMEOffset.Value, 0); }
+  public static void AddLINK_STOP_TIME(FlatBufferBuilder builder, StringOffset LINK_STOP_TIMEOffset) { builder.AddOffset(11, LINK_STOP_TIMEOffset.Value, 0); }
+  public static void AddID_BEAM1(FlatBufferBuilder builder, StringOffset ID_BEAM1Offset) { builder.AddOffset(12, ID_BEAM1Offset.Value, 0); }
+  public static void AddEND_POINT1_NAME(FlatBufferBuilder builder, StringOffset END_POINT1_NAMEOffset) { builder.AddOffset(13, END_POINT1_NAMEOffset.Value, 0); }
+  public static void AddEND_POINT1_LAT(FlatBufferBuilder builder, double END_POINT1_LAT) { builder.AddDouble(14, END_POINT1_LAT, 0.0); }
+  public static void AddEND_POINT1_LON(FlatBufferBuilder builder, double END_POINT1_LON) { builder.AddDouble(15, END_POINT1_LON, 0.0); }
+  public static void AddID_BEAM2(FlatBufferBuilder builder, StringOffset ID_BEAM2Offset) { builder.AddOffset(16, ID_BEAM2Offset.Value, 0); }
+  public static void AddEND_POINT2_NAME(FlatBufferBuilder builder, StringOffset END_POINT2_NAMEOffset) { builder.AddOffset(17, END_POINT2_NAMEOffset.Value, 0); }
+  public static void AddEND_POINT2_LAT(FlatBufferBuilder builder, double END_POINT2_LAT) { builder.AddDouble(18, END_POINT2_LAT, 0.0); }
+  public static void AddEND_POINT2_LON(FlatBufferBuilder builder, double END_POINT2_LON) { builder.AddDouble(19, END_POINT2_LON, 0.0); }
+  public static void AddDATA_RATE1_TO2(FlatBufferBuilder builder, double DATA_RATE1_TO2) { builder.AddDouble(20, DATA_RATE1_TO2, 0.0); }
+  public static void AddDATA_RATE2_TO1(FlatBufferBuilder builder, double DATA_RATE2_TO1) { builder.AddDouble(21, DATA_RATE2_TO1, 0.0); }
+  public static void AddSYS_CAP(FlatBufferBuilder builder, StringOffset SYS_CAPOffset) { builder.AddOffset(22, SYS_CAPOffset.Value, 0); }
+  public static void AddOPS_CAP(FlatBufferBuilder builder, StringOffset OPS_CAPOffset) { builder.AddOffset(23, OPS_CAPOffset.Value, 0); }
   public static Offset<LKS> EndLKS(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<LKS>(o);
@@ -232,13 +244,16 @@ public struct LKS : IFlatbufferObject
   public void UnPackTo(LKST _o) {
     _o.ID = this.ID;
     _o.ID_ON_ORBIT1 = this.ID_ON_ORBIT1;
+    _o.SAT_NO1 = this.SAT_NO1;
     _o.ID_ON_ORBIT2 = this.ID_ON_ORBIT2;
-    _o.LINK_START_TIME = this.LINK_START_TIME;
-    _o.LINK_STOP_TIME = this.LINK_STOP_TIME;
+    _o.SAT_NO2 = this.SAT_NO2;
     _o.CONSTELLATION = this.CONSTELLATION;
     _o.LINK_NAME = this.LINK_NAME;
     _o.LINK_TYPE = this.LINK_TYPE;
+    _o.LINK_STATE = this.LINK_STATE;
     _o.BAND = this.BAND;
+    _o.LINK_START_TIME = this.LINK_START_TIME;
+    _o.LINK_STOP_TIME = this.LINK_STOP_TIME;
     _o.ID_BEAM1 = this.ID_BEAM1;
     _o.END_POINT1_NAME = this.END_POINT1_NAME;
     _o.END_POINT1_LAT = this.END_POINT1_LAT;
@@ -249,41 +264,39 @@ public struct LKS : IFlatbufferObject
     _o.END_POINT2_LON = this.END_POINT2_LON;
     _o.DATA_RATE1_TO2 = this.DATA_RATE1_TO2;
     _o.DATA_RATE2_TO1 = this.DATA_RATE2_TO1;
-    _o.LINK_STATE = this.LINK_STATE;
     _o.SYS_CAP = this.SYS_CAP;
     _o.OPS_CAP = this.OPS_CAP;
-    _o.SAT_NO1 = this.SAT_NO1;
-    _o.SAT_NO2 = this.SAT_NO2;
   }
   public static Offset<LKS> Pack(FlatBufferBuilder builder, LKST _o) {
     if (_o == null) return default(Offset<LKS>);
     var _ID = _o.ID == null ? default(StringOffset) : builder.CreateString(_o.ID);
     var _ID_ON_ORBIT1 = _o.ID_ON_ORBIT1 == null ? default(StringOffset) : builder.CreateString(_o.ID_ON_ORBIT1);
     var _ID_ON_ORBIT2 = _o.ID_ON_ORBIT2 == null ? default(StringOffset) : builder.CreateString(_o.ID_ON_ORBIT2);
-    var _LINK_START_TIME = _o.LINK_START_TIME == null ? default(StringOffset) : builder.CreateString(_o.LINK_START_TIME);
-    var _LINK_STOP_TIME = _o.LINK_STOP_TIME == null ? default(StringOffset) : builder.CreateString(_o.LINK_STOP_TIME);
     var _CONSTELLATION = _o.CONSTELLATION == null ? default(StringOffset) : builder.CreateString(_o.CONSTELLATION);
     var _LINK_NAME = _o.LINK_NAME == null ? default(StringOffset) : builder.CreateString(_o.LINK_NAME);
-    var _LINK_TYPE = _o.LINK_TYPE == null ? default(StringOffset) : builder.CreateString(_o.LINK_TYPE);
     var _BAND = _o.BAND == null ? default(StringOffset) : builder.CreateString(_o.BAND);
+    var _LINK_START_TIME = _o.LINK_START_TIME == null ? default(StringOffset) : builder.CreateString(_o.LINK_START_TIME);
+    var _LINK_STOP_TIME = _o.LINK_STOP_TIME == null ? default(StringOffset) : builder.CreateString(_o.LINK_STOP_TIME);
     var _ID_BEAM1 = _o.ID_BEAM1 == null ? default(StringOffset) : builder.CreateString(_o.ID_BEAM1);
     var _END_POINT1_NAME = _o.END_POINT1_NAME == null ? default(StringOffset) : builder.CreateString(_o.END_POINT1_NAME);
     var _ID_BEAM2 = _o.ID_BEAM2 == null ? default(StringOffset) : builder.CreateString(_o.ID_BEAM2);
     var _END_POINT2_NAME = _o.END_POINT2_NAME == null ? default(StringOffset) : builder.CreateString(_o.END_POINT2_NAME);
-    var _LINK_STATE = _o.LINK_STATE == null ? default(StringOffset) : builder.CreateString(_o.LINK_STATE);
     var _SYS_CAP = _o.SYS_CAP == null ? default(StringOffset) : builder.CreateString(_o.SYS_CAP);
     var _OPS_CAP = _o.OPS_CAP == null ? default(StringOffset) : builder.CreateString(_o.OPS_CAP);
     return CreateLKS(
       builder,
       _ID,
       _ID_ON_ORBIT1,
+      _o.SAT_NO1,
       _ID_ON_ORBIT2,
-      _LINK_START_TIME,
-      _LINK_STOP_TIME,
+      _o.SAT_NO2,
       _CONSTELLATION,
       _LINK_NAME,
-      _LINK_TYPE,
+      _o.LINK_TYPE,
+      _o.LINK_STATE,
       _BAND,
+      _LINK_START_TIME,
+      _LINK_STOP_TIME,
       _ID_BEAM1,
       _END_POINT1_NAME,
       _o.END_POINT1_LAT,
@@ -294,11 +307,8 @@ public struct LKS : IFlatbufferObject
       _o.END_POINT2_LON,
       _o.DATA_RATE1_TO2,
       _o.DATA_RATE2_TO1,
-      _LINK_STATE,
       _SYS_CAP,
-      _OPS_CAP,
-      _o.SAT_NO1,
-      _o.SAT_NO2);
+      _OPS_CAP);
   }
 }
 
@@ -306,13 +316,16 @@ public class LKST
 {
   public string ID { get; set; }
   public string ID_ON_ORBIT1 { get; set; }
+  public uint SAT_NO1 { get; set; }
   public string ID_ON_ORBIT2 { get; set; }
-  public string LINK_START_TIME { get; set; }
-  public string LINK_STOP_TIME { get; set; }
+  public uint SAT_NO2 { get; set; }
   public string CONSTELLATION { get; set; }
   public string LINK_NAME { get; set; }
-  public string LINK_TYPE { get; set; }
+  public linkType LINK_TYPE { get; set; }
+  public linkState LINK_STATE { get; set; }
   public string BAND { get; set; }
+  public string LINK_START_TIME { get; set; }
+  public string LINK_STOP_TIME { get; set; }
   public string ID_BEAM1 { get; set; }
   public string END_POINT1_NAME { get; set; }
   public double END_POINT1_LAT { get; set; }
@@ -323,22 +336,22 @@ public class LKST
   public double END_POINT2_LON { get; set; }
   public double DATA_RATE1_TO2 { get; set; }
   public double DATA_RATE2_TO1 { get; set; }
-  public string LINK_STATE { get; set; }
   public string SYS_CAP { get; set; }
   public string OPS_CAP { get; set; }
-  public int SAT_NO1 { get; set; }
-  public int SAT_NO2 { get; set; }
 
   public LKST() {
     this.ID = null;
     this.ID_ON_ORBIT1 = null;
+    this.SAT_NO1 = 0;
     this.ID_ON_ORBIT2 = null;
-    this.LINK_START_TIME = null;
-    this.LINK_STOP_TIME = null;
+    this.SAT_NO2 = 0;
     this.CONSTELLATION = null;
     this.LINK_NAME = null;
-    this.LINK_TYPE = null;
+    this.LINK_TYPE = linkType.UPLINK;
+    this.LINK_STATE = linkState.ESTABLISHED;
     this.BAND = null;
+    this.LINK_START_TIME = null;
+    this.LINK_STOP_TIME = null;
     this.ID_BEAM1 = null;
     this.END_POINT1_NAME = null;
     this.END_POINT1_LAT = 0.0;
@@ -349,11 +362,8 @@ public class LKST
     this.END_POINT2_LON = 0.0;
     this.DATA_RATE1_TO2 = 0.0;
     this.DATA_RATE2_TO1 = 0.0;
-    this.LINK_STATE = null;
     this.SYS_CAP = null;
     this.OPS_CAP = null;
-    this.SAT_NO1 = 0;
-    this.SAT_NO2 = 0;
   }
   public static LKST DeserializeFromBinary(byte[] fbBuffer) {
     return LKS.GetRootAsLKS(new ByteBuffer(fbBuffer)).UnPack();
@@ -373,28 +383,28 @@ static public class LKSVerify
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*ID*/, false)
       && verifier.VerifyString(tablePos, 6 /*ID_ON_ORBIT1*/, false)
-      && verifier.VerifyString(tablePos, 8 /*ID_ON_ORBIT2*/, false)
-      && verifier.VerifyString(tablePos, 10 /*LINK_START_TIME*/, false)
-      && verifier.VerifyString(tablePos, 12 /*LINK_STOP_TIME*/, false)
+      && verifier.VerifyField(tablePos, 8 /*SAT_NO1*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 10 /*ID_ON_ORBIT2*/, false)
+      && verifier.VerifyField(tablePos, 12 /*SAT_NO2*/, 4 /*uint*/, 4, false)
       && verifier.VerifyString(tablePos, 14 /*CONSTELLATION*/, false)
       && verifier.VerifyString(tablePos, 16 /*LINK_NAME*/, false)
-      && verifier.VerifyString(tablePos, 18 /*LINK_TYPE*/, false)
-      && verifier.VerifyString(tablePos, 20 /*BAND*/, false)
-      && verifier.VerifyString(tablePos, 22 /*ID_BEAM1*/, false)
-      && verifier.VerifyString(tablePos, 24 /*END_POINT1_NAME*/, false)
-      && verifier.VerifyField(tablePos, 26 /*END_POINT1_LAT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 28 /*END_POINT1_LON*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 30 /*ID_BEAM2*/, false)
-      && verifier.VerifyString(tablePos, 32 /*END_POINT2_NAME*/, false)
-      && verifier.VerifyField(tablePos, 34 /*END_POINT2_LAT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 36 /*END_POINT2_LON*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 38 /*DATA_RATE1_TO2*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 40 /*DATA_RATE2_TO1*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 42 /*LINK_STATE*/, false)
-      && verifier.VerifyString(tablePos, 44 /*SYS_CAP*/, false)
-      && verifier.VerifyString(tablePos, 46 /*OPS_CAP*/, false)
-      && verifier.VerifyField(tablePos, 48 /*SAT_NO1*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 50 /*SAT_NO2*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 18 /*LINK_TYPE*/, 1 /*linkType*/, 1, false)
+      && verifier.VerifyField(tablePos, 20 /*LINK_STATE*/, 1 /*linkState*/, 1, false)
+      && verifier.VerifyString(tablePos, 22 /*BAND*/, false)
+      && verifier.VerifyString(tablePos, 24 /*LINK_START_TIME*/, false)
+      && verifier.VerifyString(tablePos, 26 /*LINK_STOP_TIME*/, false)
+      && verifier.VerifyString(tablePos, 28 /*ID_BEAM1*/, false)
+      && verifier.VerifyString(tablePos, 30 /*END_POINT1_NAME*/, false)
+      && verifier.VerifyField(tablePos, 32 /*END_POINT1_LAT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 34 /*END_POINT1_LON*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 36 /*ID_BEAM2*/, false)
+      && verifier.VerifyString(tablePos, 38 /*END_POINT2_NAME*/, false)
+      && verifier.VerifyField(tablePos, 40 /*END_POINT2_LAT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 42 /*END_POINT2_LON*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 44 /*DATA_RATE1_TO2*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 46 /*DATA_RATE2_TO1*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 48 /*SYS_CAP*/, false)
+      && verifier.VerifyString(tablePos, 50 /*OPS_CAP*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

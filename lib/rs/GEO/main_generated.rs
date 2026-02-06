@@ -9,6 +9,289 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_GEO_STATION_KEEPING: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_GEO_STATION_KEEPING: i8 = 5;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_GEO_STATION_KEEPING: [geoStationKeeping; 6] = [
+  geoStationKeeping::ACTIVE,
+  geoStationKeeping::DRIFTING,
+  geoStationKeeping::INCLINED,
+  geoStationKeeping::GRAVEYARD,
+  geoStationKeeping::REPOSITIONING,
+  geoStationKeeping::UNKNOWN,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct geoStationKeeping(pub i8);
+#[allow(non_upper_case_globals)]
+impl geoStationKeeping {
+  pub const ACTIVE: Self = Self(0);
+  pub const DRIFTING: Self = Self(1);
+  pub const INCLINED: Self = Self(2);
+  pub const GRAVEYARD: Self = Self(3);
+  pub const REPOSITIONING: Self = Self(4);
+  pub const UNKNOWN: Self = Self(5);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 5;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::ACTIVE,
+    Self::DRIFTING,
+    Self::INCLINED,
+    Self::GRAVEYARD,
+    Self::REPOSITIONING,
+    Self::UNKNOWN,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::ACTIVE => Some("ACTIVE"),
+      Self::DRIFTING => Some("DRIFTING"),
+      Self::INCLINED => Some("INCLINED"),
+      Self::GRAVEYARD => Some("GRAVEYARD"),
+      Self::REPOSITIONING => Some("REPOSITIONING"),
+      Self::UNKNOWN => Some("UNKNOWN"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for geoStationKeeping {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for geoStationKeeping {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for geoStationKeeping {
+    type Output = geoStationKeeping;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for geoStationKeeping {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for geoStationKeeping {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for geoStationKeeping {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_GEO_CONFIDENCE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_GEO_CONFIDENCE: i8 = 3;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_GEO_CONFIDENCE: [geoConfidence; 4] = [
+  geoConfidence::HIGH,
+  geoConfidence::MEDIUM,
+  geoConfidence::LOW,
+  geoConfidence::TENTATIVE,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct geoConfidence(pub i8);
+#[allow(non_upper_case_globals)]
+impl geoConfidence {
+  pub const HIGH: Self = Self(0);
+  pub const MEDIUM: Self = Self(1);
+  pub const LOW: Self = Self(2);
+  pub const TENTATIVE: Self = Self(3);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 3;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::HIGH,
+    Self::MEDIUM,
+    Self::LOW,
+    Self::TENTATIVE,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::HIGH => Some("HIGH"),
+      Self::MEDIUM => Some("MEDIUM"),
+      Self::LOW => Some("LOW"),
+      Self::TENTATIVE => Some("TENTATIVE"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for geoConfidence {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for geoConfidence {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for geoConfidence {
+    type Output = geoConfidence;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for geoConfidence {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for geoConfidence {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for geoConfidence {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_TROUGH_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_TROUGH_TYPE: i8 = 2;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_TROUGH_TYPE: [troughType; 3] = [
+  troughType::EAST,
+  troughType::WEST,
+  troughType::NEITHER,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct troughType(pub i8);
+#[allow(non_upper_case_globals)]
+impl troughType {
+  pub const EAST: Self = Self(0);
+  pub const WEST: Self = Self(1);
+  pub const NEITHER: Self = Self(2);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 2;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::EAST,
+    Self::WEST,
+    Self::NEITHER,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::EAST => Some("EAST"),
+      Self::WEST => Some("WEST"),
+      Self::NEITHER => Some("NEITHER"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for troughType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for troughType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for troughType {
+    type Output = troughType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for troughType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for troughType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for troughType {}
 pub enum GEOOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -28,21 +311,25 @@ impl<'a> flatbuffers::Follow<'a> for GEO<'a> {
 impl<'a> GEO<'a> {
   pub const VT_ID: flatbuffers::VOffsetT = 4;
   pub const VT_ORIG_OBJECT_ID: flatbuffers::VOffsetT = 6;
-  pub const VT_SS: flatbuffers::VOffsetT = 8;
-  pub const VT_SC: flatbuffers::VOffsetT = 10;
-  pub const VT_RELATIVE_ENERGY: flatbuffers::VOffsetT = 12;
-  pub const VT_LONGITUDE_RATE: flatbuffers::VOffsetT = 14;
-  pub const VT_LONGITUDE_MIN: flatbuffers::VOffsetT = 16;
-  pub const VT_LONGITUDE_MAX: flatbuffers::VOffsetT = 18;
-  pub const VT_CONFIDENCE_LEVEL: flatbuffers::VOffsetT = 20;
-  pub const VT_PLANE_CHANGE_STATUS: flatbuffers::VOffsetT = 22;
-  pub const VT_TROUGH_TYPE: flatbuffers::VOffsetT = 24;
-  pub const VT_LOST_FLAG: flatbuffers::VOffsetT = 26;
-  pub const VT_SEMI_ANNUAL_CORR_FLAG: flatbuffers::VOffsetT = 28;
-  pub const VT_OBJECT_STATUS: flatbuffers::VOffsetT = 30;
-  pub const VT_RAW_FILE_URI: flatbuffers::VOffsetT = 32;
-  pub const VT_ON_ORBIT: flatbuffers::VOffsetT = 34;
-  pub const VT_SAT_NO: flatbuffers::VOffsetT = 36;
+  pub const VT_SAT_NO: flatbuffers::VOffsetT = 8;
+  pub const VT_ON_ORBIT: flatbuffers::VOffsetT = 10;
+  pub const VT_STATION_KEEPING: flatbuffers::VOffsetT = 12;
+  pub const VT_SS: flatbuffers::VOffsetT = 14;
+  pub const VT_SC: flatbuffers::VOffsetT = 16;
+  pub const VT_RELATIVE_ENERGY: flatbuffers::VOffsetT = 18;
+  pub const VT_LONGITUDE_RATE: flatbuffers::VOffsetT = 20;
+  pub const VT_LONGITUDE_MIN: flatbuffers::VOffsetT = 22;
+  pub const VT_LONGITUDE_MAX: flatbuffers::VOffsetT = 24;
+  pub const VT_CONFIDENCE: flatbuffers::VOffsetT = 26;
+  pub const VT_TROUGH: flatbuffers::VOffsetT = 28;
+  pub const VT_PLANE_CHANGE_STATUS: flatbuffers::VOffsetT = 30;
+  pub const VT_LOST_FLAG: flatbuffers::VOffsetT = 32;
+  pub const VT_SEMI_ANNUAL_CORR_FLAG: flatbuffers::VOffsetT = 34;
+  pub const VT_OBJECT_STATUS: flatbuffers::VOffsetT = 36;
+  pub const VT_INCLINATION: flatbuffers::VOffsetT = 38;
+  pub const VT_ECCENTRICITY: flatbuffers::VOffsetT = 40;
+  pub const VT_EPOCH: flatbuffers::VOffsetT = 42;
+  pub const VT_RAW_FILE_URI: flatbuffers::VOffsetT = 44;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -54,23 +341,27 @@ impl<'a> GEO<'a> {
     args: &'args GEOArgs<'args>
   ) -> flatbuffers::WIPOffset<GEO<'bldr>> {
     let mut builder = GEOBuilder::new(_fbb);
+    builder.add_ECCENTRICITY(args.ECCENTRICITY);
+    builder.add_INCLINATION(args.INCLINATION);
     builder.add_LONGITUDE_MAX(args.LONGITUDE_MAX);
     builder.add_LONGITUDE_MIN(args.LONGITUDE_MIN);
     builder.add_LONGITUDE_RATE(args.LONGITUDE_RATE);
     builder.add_RELATIVE_ENERGY(args.RELATIVE_ENERGY);
     builder.add_SC(args.SC);
     builder.add_SS(args.SS);
-    builder.add_SAT_NO(args.SAT_NO);
-    if let Some(x) = args.ON_ORBIT { builder.add_ON_ORBIT(x); }
     if let Some(x) = args.RAW_FILE_URI { builder.add_RAW_FILE_URI(x); }
+    if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
     if let Some(x) = args.OBJECT_STATUS { builder.add_OBJECT_STATUS(x); }
-    if let Some(x) = args.TROUGH_TYPE { builder.add_TROUGH_TYPE(x); }
     if let Some(x) = args.PLANE_CHANGE_STATUS { builder.add_PLANE_CHANGE_STATUS(x); }
-    if let Some(x) = args.CONFIDENCE_LEVEL { builder.add_CONFIDENCE_LEVEL(x); }
+    if let Some(x) = args.ON_ORBIT { builder.add_ON_ORBIT(x); }
+    builder.add_SAT_NO(args.SAT_NO);
     if let Some(x) = args.ORIG_OBJECT_ID { builder.add_ORIG_OBJECT_ID(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
     builder.add_SEMI_ANNUAL_CORR_FLAG(args.SEMI_ANNUAL_CORR_FLAG);
     builder.add_LOST_FLAG(args.LOST_FLAG);
+    builder.add_TROUGH(args.TROUGH);
+    builder.add_CONFIDENCE(args.CONFIDENCE);
+    builder.add_STATION_KEEPING(args.STATION_KEEPING);
     builder.finish()
   }
 
@@ -81,19 +372,20 @@ impl<'a> GEO<'a> {
     let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID().map(|x| {
       x.to_string()
     });
+    let SAT_NO = self.SAT_NO();
+    let ON_ORBIT = self.ON_ORBIT().map(|x| {
+      x.to_string()
+    });
+    let STATION_KEEPING = self.STATION_KEEPING();
     let SS = self.SS();
     let SC = self.SC();
     let RELATIVE_ENERGY = self.RELATIVE_ENERGY();
     let LONGITUDE_RATE = self.LONGITUDE_RATE();
     let LONGITUDE_MIN = self.LONGITUDE_MIN();
     let LONGITUDE_MAX = self.LONGITUDE_MAX();
-    let CONFIDENCE_LEVEL = self.CONFIDENCE_LEVEL().map(|x| {
-      x.to_string()
-    });
+    let CONFIDENCE = self.CONFIDENCE();
+    let TROUGH = self.TROUGH();
     let PLANE_CHANGE_STATUS = self.PLANE_CHANGE_STATUS().map(|x| {
-      x.to_string()
-    });
-    let TROUGH_TYPE = self.TROUGH_TYPE().map(|x| {
       x.to_string()
     });
     let LOST_FLAG = self.LOST_FLAG();
@@ -101,34 +393,40 @@ impl<'a> GEO<'a> {
     let OBJECT_STATUS = self.OBJECT_STATUS().map(|x| {
       x.to_string()
     });
+    let INCLINATION = self.INCLINATION();
+    let ECCENTRICITY = self.ECCENTRICITY();
+    let EPOCH = self.EPOCH().map(|x| {
+      x.to_string()
+    });
     let RAW_FILE_URI = self.RAW_FILE_URI().map(|x| {
       x.to_string()
     });
-    let ON_ORBIT = self.ON_ORBIT().map(|x| {
-      x.to_string()
-    });
-    let SAT_NO = self.SAT_NO();
     GEOT {
       ID,
       ORIG_OBJECT_ID,
+      SAT_NO,
+      ON_ORBIT,
+      STATION_KEEPING,
       SS,
       SC,
       RELATIVE_ENERGY,
       LONGITUDE_RATE,
       LONGITUDE_MIN,
       LONGITUDE_MAX,
-      CONFIDENCE_LEVEL,
+      CONFIDENCE,
+      TROUGH,
       PLANE_CHANGE_STATUS,
-      TROUGH_TYPE,
       LOST_FLAG,
       SEMI_ANNUAL_CORR_FLAG,
       OBJECT_STATUS,
+      INCLINATION,
+      ECCENTRICITY,
+      EPOCH,
       RAW_FILE_URI,
-      ON_ORBIT,
-      SAT_NO,
     }
   }
 
+  /// Unique identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -136,6 +434,7 @@ impl<'a> GEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GEO::VT_ID, None)}
   }
+  /// International designator
   #[inline]
   pub fn ORIG_OBJECT_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -143,97 +442,15 @@ impl<'a> GEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GEO::VT_ORIG_OBJECT_ID, None)}
   }
+  /// Satellite catalog number
   #[inline]
-  pub fn SS(&self) -> f64 {
+  pub fn SAT_NO(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(GEO::VT_SS, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<u32>(GEO::VT_SAT_NO, Some(0)).unwrap()}
   }
-  #[inline]
-  pub fn SC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(GEO::VT_SC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn RELATIVE_ENERGY(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(GEO::VT_RELATIVE_ENERGY, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn LONGITUDE_RATE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(GEO::VT_LONGITUDE_RATE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn LONGITUDE_MIN(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(GEO::VT_LONGITUDE_MIN, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn LONGITUDE_MAX(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(GEO::VT_LONGITUDE_MAX, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn CONFIDENCE_LEVEL(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GEO::VT_CONFIDENCE_LEVEL, None)}
-  }
-  #[inline]
-  pub fn PLANE_CHANGE_STATUS(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GEO::VT_PLANE_CHANGE_STATUS, None)}
-  }
-  #[inline]
-  pub fn TROUGH_TYPE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GEO::VT_TROUGH_TYPE, None)}
-  }
-  #[inline]
-  pub fn LOST_FLAG(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(GEO::VT_LOST_FLAG, Some(false)).unwrap()}
-  }
-  #[inline]
-  pub fn SEMI_ANNUAL_CORR_FLAG(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(GEO::VT_SEMI_ANNUAL_CORR_FLAG, Some(false)).unwrap()}
-  }
-  #[inline]
-  pub fn OBJECT_STATUS(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GEO::VT_OBJECT_STATUS, None)}
-  }
-  #[inline]
-  pub fn RAW_FILE_URI(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GEO::VT_RAW_FILE_URI, None)}
-  }
+  /// On-orbit reference identifier
   #[inline]
   pub fn ON_ORBIT(&self) -> Option<&'a str> {
     // Safety:
@@ -241,12 +458,141 @@ impl<'a> GEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GEO::VT_ON_ORBIT, None)}
   }
+  /// Station-keeping status
   #[inline]
-  pub fn SAT_NO(&self) -> i32 {
+  pub fn STATION_KEEPING(&self) -> geoStationKeeping {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(GEO::VT_SAT_NO, Some(0)).unwrap()}
+    unsafe { self._tab.get::<geoStationKeeping>(GEO::VT_STATION_KEEPING, Some(geoStationKeeping::ACTIVE)).unwrap()}
+  }
+  /// Subsatellite point longitude (degrees east)
+  #[inline]
+  pub fn SS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GEO::VT_SS, Some(0.0)).unwrap()}
+  }
+  /// Longitude of ascending node (degrees)
+  #[inline]
+  pub fn SC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GEO::VT_SC, Some(0.0)).unwrap()}
+  }
+  /// Relative energy (km^2/s^2)
+  #[inline]
+  pub fn RELATIVE_ENERGY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GEO::VT_RELATIVE_ENERGY, Some(0.0)).unwrap()}
+  }
+  /// Longitude drift rate (degrees/day)
+  #[inline]
+  pub fn LONGITUDE_RATE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GEO::VT_LONGITUDE_RATE, Some(0.0)).unwrap()}
+  }
+  /// Western longitude boundary of slot (degrees east)
+  #[inline]
+  pub fn LONGITUDE_MIN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GEO::VT_LONGITUDE_MIN, Some(0.0)).unwrap()}
+  }
+  /// Eastern longitude boundary of slot (degrees east)
+  #[inline]
+  pub fn LONGITUDE_MAX(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GEO::VT_LONGITUDE_MAX, Some(0.0)).unwrap()}
+  }
+  /// Assessment confidence level
+  #[inline]
+  pub fn CONFIDENCE(&self) -> geoConfidence {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<geoConfidence>(GEO::VT_CONFIDENCE, Some(geoConfidence::HIGH)).unwrap()}
+  }
+  /// Trough type (east/west gravitational well)
+  #[inline]
+  pub fn TROUGH(&self) -> troughType {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<troughType>(GEO::VT_TROUGH, Some(troughType::EAST)).unwrap()}
+  }
+  /// Plane change status description
+  #[inline]
+  pub fn PLANE_CHANGE_STATUS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GEO::VT_PLANE_CHANGE_STATUS, None)}
+  }
+  /// True if object is lost/not tracked
+  #[inline]
+  pub fn LOST_FLAG(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(GEO::VT_LOST_FLAG, Some(false)).unwrap()}
+  }
+  /// True if semi-annual correction applied
+  #[inline]
+  pub fn SEMI_ANNUAL_CORR_FLAG(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(GEO::VT_SEMI_ANNUAL_CORR_FLAG, Some(false)).unwrap()}
+  }
+  /// Current operational status
+  #[inline]
+  pub fn OBJECT_STATUS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GEO::VT_OBJECT_STATUS, None)}
+  }
+  /// Inclination (degrees)
+  #[inline]
+  pub fn INCLINATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GEO::VT_INCLINATION, Some(0.0)).unwrap()}
+  }
+  /// Eccentricity
+  #[inline]
+  pub fn ECCENTRICITY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GEO::VT_ECCENTRICITY, Some(0.0)).unwrap()}
+  }
+  /// Epoch of status (ISO 8601)
+  #[inline]
+  pub fn EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GEO::VT_EPOCH, None)}
+  }
+  /// Reference to raw data file
+  #[inline]
+  pub fn RAW_FILE_URI(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GEO::VT_RAW_FILE_URI, None)}
   }
 }
 
@@ -259,21 +605,25 @@ impl flatbuffers::Verifiable for GEO<'_> {
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_OBJECT_ID", Self::VT_ORIG_OBJECT_ID, false)?
+     .visit_field::<u32>("SAT_NO", Self::VT_SAT_NO, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ON_ORBIT", Self::VT_ON_ORBIT, false)?
+     .visit_field::<geoStationKeeping>("STATION_KEEPING", Self::VT_STATION_KEEPING, false)?
      .visit_field::<f64>("SS", Self::VT_SS, false)?
      .visit_field::<f64>("SC", Self::VT_SC, false)?
      .visit_field::<f64>("RELATIVE_ENERGY", Self::VT_RELATIVE_ENERGY, false)?
      .visit_field::<f64>("LONGITUDE_RATE", Self::VT_LONGITUDE_RATE, false)?
      .visit_field::<f64>("LONGITUDE_MIN", Self::VT_LONGITUDE_MIN, false)?
      .visit_field::<f64>("LONGITUDE_MAX", Self::VT_LONGITUDE_MAX, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CONFIDENCE_LEVEL", Self::VT_CONFIDENCE_LEVEL, false)?
+     .visit_field::<geoConfidence>("CONFIDENCE", Self::VT_CONFIDENCE, false)?
+     .visit_field::<troughType>("TROUGH", Self::VT_TROUGH, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("PLANE_CHANGE_STATUS", Self::VT_PLANE_CHANGE_STATUS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TROUGH_TYPE", Self::VT_TROUGH_TYPE, false)?
      .visit_field::<bool>("LOST_FLAG", Self::VT_LOST_FLAG, false)?
      .visit_field::<bool>("SEMI_ANNUAL_CORR_FLAG", Self::VT_SEMI_ANNUAL_CORR_FLAG, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJECT_STATUS", Self::VT_OBJECT_STATUS, false)?
+     .visit_field::<f64>("INCLINATION", Self::VT_INCLINATION, false)?
+     .visit_field::<f64>("ECCENTRICITY", Self::VT_ECCENTRICITY, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("RAW_FILE_URI", Self::VT_RAW_FILE_URI, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ON_ORBIT", Self::VT_ON_ORBIT, false)?
-     .visit_field::<i32>("SAT_NO", Self::VT_SAT_NO, false)?
      .finish();
     Ok(())
   }
@@ -281,21 +631,25 @@ impl flatbuffers::Verifiable for GEO<'_> {
 pub struct GEOArgs<'a> {
     pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ORIG_OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SAT_NO: u32,
+    pub ON_ORBIT: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub STATION_KEEPING: geoStationKeeping,
     pub SS: f64,
     pub SC: f64,
     pub RELATIVE_ENERGY: f64,
     pub LONGITUDE_RATE: f64,
     pub LONGITUDE_MIN: f64,
     pub LONGITUDE_MAX: f64,
-    pub CONFIDENCE_LEVEL: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub CONFIDENCE: geoConfidence,
+    pub TROUGH: troughType,
     pub PLANE_CHANGE_STATUS: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub TROUGH_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub LOST_FLAG: bool,
     pub SEMI_ANNUAL_CORR_FLAG: bool,
     pub OBJECT_STATUS: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub INCLINATION: f64,
+    pub ECCENTRICITY: f64,
+    pub EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
     pub RAW_FILE_URI: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ON_ORBIT: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SAT_NO: i32,
 }
 impl<'a> Default for GEOArgs<'a> {
   #[inline]
@@ -303,21 +657,25 @@ impl<'a> Default for GEOArgs<'a> {
     GEOArgs {
       ID: None,
       ORIG_OBJECT_ID: None,
+      SAT_NO: 0,
+      ON_ORBIT: None,
+      STATION_KEEPING: geoStationKeeping::ACTIVE,
       SS: 0.0,
       SC: 0.0,
       RELATIVE_ENERGY: 0.0,
       LONGITUDE_RATE: 0.0,
       LONGITUDE_MIN: 0.0,
       LONGITUDE_MAX: 0.0,
-      CONFIDENCE_LEVEL: None,
+      CONFIDENCE: geoConfidence::HIGH,
+      TROUGH: troughType::EAST,
       PLANE_CHANGE_STATUS: None,
-      TROUGH_TYPE: None,
       LOST_FLAG: false,
       SEMI_ANNUAL_CORR_FLAG: false,
       OBJECT_STATUS: None,
+      INCLINATION: 0.0,
+      ECCENTRICITY: 0.0,
+      EPOCH: None,
       RAW_FILE_URI: None,
-      ON_ORBIT: None,
-      SAT_NO: 0,
     }
   }
 }
@@ -334,6 +692,18 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> GEOBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_ORIG_OBJECT_ID(&mut self, ORIG_OBJECT_ID: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GEO::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
+  }
+  #[inline]
+  pub fn add_SAT_NO(&mut self, SAT_NO: u32) {
+    self.fbb_.push_slot::<u32>(GEO::VT_SAT_NO, SAT_NO, 0);
+  }
+  #[inline]
+  pub fn add_ON_ORBIT(&mut self, ON_ORBIT: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GEO::VT_ON_ORBIT, ON_ORBIT);
+  }
+  #[inline]
+  pub fn add_STATION_KEEPING(&mut self, STATION_KEEPING: geoStationKeeping) {
+    self.fbb_.push_slot::<geoStationKeeping>(GEO::VT_STATION_KEEPING, STATION_KEEPING, geoStationKeeping::ACTIVE);
   }
   #[inline]
   pub fn add_SS(&mut self, SS: f64) {
@@ -360,16 +730,16 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> GEOBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(GEO::VT_LONGITUDE_MAX, LONGITUDE_MAX, 0.0);
   }
   #[inline]
-  pub fn add_CONFIDENCE_LEVEL(&mut self, CONFIDENCE_LEVEL: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GEO::VT_CONFIDENCE_LEVEL, CONFIDENCE_LEVEL);
+  pub fn add_CONFIDENCE(&mut self, CONFIDENCE: geoConfidence) {
+    self.fbb_.push_slot::<geoConfidence>(GEO::VT_CONFIDENCE, CONFIDENCE, geoConfidence::HIGH);
+  }
+  #[inline]
+  pub fn add_TROUGH(&mut self, TROUGH: troughType) {
+    self.fbb_.push_slot::<troughType>(GEO::VT_TROUGH, TROUGH, troughType::EAST);
   }
   #[inline]
   pub fn add_PLANE_CHANGE_STATUS(&mut self, PLANE_CHANGE_STATUS: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GEO::VT_PLANE_CHANGE_STATUS, PLANE_CHANGE_STATUS);
-  }
-  #[inline]
-  pub fn add_TROUGH_TYPE(&mut self, TROUGH_TYPE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GEO::VT_TROUGH_TYPE, TROUGH_TYPE);
   }
   #[inline]
   pub fn add_LOST_FLAG(&mut self, LOST_FLAG: bool) {
@@ -384,16 +754,20 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> GEOBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GEO::VT_OBJECT_STATUS, OBJECT_STATUS);
   }
   #[inline]
+  pub fn add_INCLINATION(&mut self, INCLINATION: f64) {
+    self.fbb_.push_slot::<f64>(GEO::VT_INCLINATION, INCLINATION, 0.0);
+  }
+  #[inline]
+  pub fn add_ECCENTRICITY(&mut self, ECCENTRICITY: f64) {
+    self.fbb_.push_slot::<f64>(GEO::VT_ECCENTRICITY, ECCENTRICITY, 0.0);
+  }
+  #[inline]
+  pub fn add_EPOCH(&mut self, EPOCH: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GEO::VT_EPOCH, EPOCH);
+  }
+  #[inline]
   pub fn add_RAW_FILE_URI(&mut self, RAW_FILE_URI: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GEO::VT_RAW_FILE_URI, RAW_FILE_URI);
-  }
-  #[inline]
-  pub fn add_ON_ORBIT(&mut self, ON_ORBIT: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GEO::VT_ON_ORBIT, ON_ORBIT);
-  }
-  #[inline]
-  pub fn add_SAT_NO(&mut self, SAT_NO: i32) {
-    self.fbb_.push_slot::<i32>(GEO::VT_SAT_NO, SAT_NO, 0);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> GEOBuilder<'a, 'b, A> {
@@ -415,21 +789,25 @@ impl core::fmt::Debug for GEO<'_> {
     let mut ds = f.debug_struct("GEO");
       ds.field("ID", &self.ID());
       ds.field("ORIG_OBJECT_ID", &self.ORIG_OBJECT_ID());
+      ds.field("SAT_NO", &self.SAT_NO());
+      ds.field("ON_ORBIT", &self.ON_ORBIT());
+      ds.field("STATION_KEEPING", &self.STATION_KEEPING());
       ds.field("SS", &self.SS());
       ds.field("SC", &self.SC());
       ds.field("RELATIVE_ENERGY", &self.RELATIVE_ENERGY());
       ds.field("LONGITUDE_RATE", &self.LONGITUDE_RATE());
       ds.field("LONGITUDE_MIN", &self.LONGITUDE_MIN());
       ds.field("LONGITUDE_MAX", &self.LONGITUDE_MAX());
-      ds.field("CONFIDENCE_LEVEL", &self.CONFIDENCE_LEVEL());
+      ds.field("CONFIDENCE", &self.CONFIDENCE());
+      ds.field("TROUGH", &self.TROUGH());
       ds.field("PLANE_CHANGE_STATUS", &self.PLANE_CHANGE_STATUS());
-      ds.field("TROUGH_TYPE", &self.TROUGH_TYPE());
       ds.field("LOST_FLAG", &self.LOST_FLAG());
       ds.field("SEMI_ANNUAL_CORR_FLAG", &self.SEMI_ANNUAL_CORR_FLAG());
       ds.field("OBJECT_STATUS", &self.OBJECT_STATUS());
+      ds.field("INCLINATION", &self.INCLINATION());
+      ds.field("ECCENTRICITY", &self.ECCENTRICITY());
+      ds.field("EPOCH", &self.EPOCH());
       ds.field("RAW_FILE_URI", &self.RAW_FILE_URI());
-      ds.field("ON_ORBIT", &self.ON_ORBIT());
-      ds.field("SAT_NO", &self.SAT_NO());
       ds.finish()
   }
 }
@@ -438,42 +816,50 @@ impl core::fmt::Debug for GEO<'_> {
 pub struct GEOT {
   pub ID: Option<String>,
   pub ORIG_OBJECT_ID: Option<String>,
+  pub SAT_NO: u32,
+  pub ON_ORBIT: Option<String>,
+  pub STATION_KEEPING: geoStationKeeping,
   pub SS: f64,
   pub SC: f64,
   pub RELATIVE_ENERGY: f64,
   pub LONGITUDE_RATE: f64,
   pub LONGITUDE_MIN: f64,
   pub LONGITUDE_MAX: f64,
-  pub CONFIDENCE_LEVEL: Option<String>,
+  pub CONFIDENCE: geoConfidence,
+  pub TROUGH: troughType,
   pub PLANE_CHANGE_STATUS: Option<String>,
-  pub TROUGH_TYPE: Option<String>,
   pub LOST_FLAG: bool,
   pub SEMI_ANNUAL_CORR_FLAG: bool,
   pub OBJECT_STATUS: Option<String>,
+  pub INCLINATION: f64,
+  pub ECCENTRICITY: f64,
+  pub EPOCH: Option<String>,
   pub RAW_FILE_URI: Option<String>,
-  pub ON_ORBIT: Option<String>,
-  pub SAT_NO: i32,
 }
 impl Default for GEOT {
   fn default() -> Self {
     Self {
       ID: None,
       ORIG_OBJECT_ID: None,
+      SAT_NO: 0,
+      ON_ORBIT: None,
+      STATION_KEEPING: geoStationKeeping::ACTIVE,
       SS: 0.0,
       SC: 0.0,
       RELATIVE_ENERGY: 0.0,
       LONGITUDE_RATE: 0.0,
       LONGITUDE_MIN: 0.0,
       LONGITUDE_MAX: 0.0,
-      CONFIDENCE_LEVEL: None,
+      CONFIDENCE: geoConfidence::HIGH,
+      TROUGH: troughType::EAST,
       PLANE_CHANGE_STATUS: None,
-      TROUGH_TYPE: None,
       LOST_FLAG: false,
       SEMI_ANNUAL_CORR_FLAG: false,
       OBJECT_STATUS: None,
+      INCLINATION: 0.0,
+      ECCENTRICITY: 0.0,
+      EPOCH: None,
       RAW_FILE_URI: None,
-      ON_ORBIT: None,
-      SAT_NO: 0,
     }
   }
 }
@@ -488,19 +874,20 @@ impl GEOT {
     let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let SAT_NO = self.SAT_NO;
+    let ON_ORBIT = self.ON_ORBIT.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let STATION_KEEPING = self.STATION_KEEPING;
     let SS = self.SS;
     let SC = self.SC;
     let RELATIVE_ENERGY = self.RELATIVE_ENERGY;
     let LONGITUDE_RATE = self.LONGITUDE_RATE;
     let LONGITUDE_MIN = self.LONGITUDE_MIN;
     let LONGITUDE_MAX = self.LONGITUDE_MAX;
-    let CONFIDENCE_LEVEL = self.CONFIDENCE_LEVEL.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+    let CONFIDENCE = self.CONFIDENCE;
+    let TROUGH = self.TROUGH;
     let PLANE_CHANGE_STATUS = self.PLANE_CHANGE_STATUS.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let TROUGH_TYPE = self.TROUGH_TYPE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let LOST_FLAG = self.LOST_FLAG;
@@ -508,31 +895,36 @@ impl GEOT {
     let OBJECT_STATUS = self.OBJECT_STATUS.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let INCLINATION = self.INCLINATION;
+    let ECCENTRICITY = self.ECCENTRICITY;
+    let EPOCH = self.EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     let RAW_FILE_URI = self.RAW_FILE_URI.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let ON_ORBIT = self.ON_ORBIT.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let SAT_NO = self.SAT_NO;
     GEO::create(_fbb, &GEOArgs{
       ID,
       ORIG_OBJECT_ID,
+      SAT_NO,
+      ON_ORBIT,
+      STATION_KEEPING,
       SS,
       SC,
       RELATIVE_ENERGY,
       LONGITUDE_RATE,
       LONGITUDE_MIN,
       LONGITUDE_MAX,
-      CONFIDENCE_LEVEL,
+      CONFIDENCE,
+      TROUGH,
       PLANE_CHANGE_STATUS,
-      TROUGH_TYPE,
       LOST_FLAG,
       SEMI_ANNUAL_CORR_FLAG,
       OBJECT_STATUS,
+      INCLINATION,
+      ECCENTRICITY,
+      EPOCH,
       RAW_FILE_URI,
-      ON_ORBIT,
-      SAT_NO,
     })
   }
 }

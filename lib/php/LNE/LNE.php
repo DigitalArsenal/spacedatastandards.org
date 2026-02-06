@@ -41,85 +41,167 @@ class LNE extends Table
         return $this;
     }
 
+    /// Unique identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getORIG_OBJECT_ID()
+    /// Satellite catalog number of launched object
+    /**
+     * @return uint
+     */
+    public function getSAT_NO()
     {
         $o = $this->__offset(6);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
-    public function getDERIVED_FROM()
+    /// International designator (YYYY-NNNP)
+    public function getORIG_OBJECT_ID()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getDECLASSIFICATION_DATE()
+    /// Source record this event was derived from
+    public function getDERIVED_FROM()
     {
         $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getDECLASSIFICATION_STRING()
+    /// Classification date (ISO 8601)
+    public function getDECLASSIFICATION_DATE()
     {
         $o = $this->__offset(12);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getMSG_CREATE_DATE()
+    /// Classification marking
+    public function getDECLASSIFICATION_STRING()
     {
         $o = $this->__offset(14);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getLAUNCH_FAILURE_CODE()
+    /// Message creation time (ISO 8601)
+    public function getMSG_CREATE_DATE()
     {
         $o = $this->__offset(16);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Launch date and time (ISO 8601)
     public function getLAUNCH_DATE()
     {
         $o = $this->__offset(18);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getBE_NUMBER()
+    /// Launch outcome
+    /**
+     * @return sbyte
+     */
+    public function getOUTCOME()
     {
         $o = $this->__offset(20);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \launchOutcome::SUCCESS;
     }
 
-    public function getO_SUFFIX()
+    /// Launch failure code (if applicable)
+    public function getLAUNCH_FAILURE_CODE()
     {
         $o = $this->__offset(22);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getLAUNCH_FACILITY_NAME()
+    /// Basic encyclopedia number
+    public function getBE_NUMBER()
     {
         $o = $this->__offset(24);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getON_ORBIT()
+    /// Object suffix identifier
+    public function getO_SUFFIX()
     {
         $o = $this->__offset(26);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /**
-     * @return int
-     */
-    public function getSAT_NO()
+    /// Launch facility name
+    public function getLAUNCH_FACILITY_NAME()
     {
         $o = $this->__offset(28);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Launch facility code
+    public function getLAUNCH_FACILITY_CODE()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Launch vehicle type
+    public function getLAUNCH_VEHICLE()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Launch vehicle configuration
+    public function getLAUNCH_VEHICLE_CONFIG()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Target orbit type (LEO, MEO, GEO, HEO, SSO, etc.)
+    public function getTARGET_ORBIT()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Number of objects placed on orbit
+    /**
+     * @return ushort
+     */
+    public function getOBJECTS_ON_ORBIT()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
+    }
+
+    /// On-orbit reference identifier
+    public function getON_ORBIT()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Launch country or operator
+    public function getLAUNCH_COUNTRY()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Mission name or payload description
+    public function getMISSION_NAME()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Additional remarks
+    public function getREMARKS()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /**
@@ -128,29 +210,38 @@ class LNE extends Table
      */
     public static function startLNE(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(13);
+        $builder->StartObject(22);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return LNE
      */
-    public static function createLNE(FlatBufferBuilder $builder, $ID, $ORIG_OBJECT_ID, $DERIVED_FROM, $DECLASSIFICATION_DATE, $DECLASSIFICATION_STRING, $MSG_CREATE_DATE, $LAUNCH_FAILURE_CODE, $LAUNCH_DATE, $BE_NUMBER, $O_SUFFIX, $LAUNCH_FACILITY_NAME, $ON_ORBIT, $SAT_NO)
+    public static function createLNE(FlatBufferBuilder $builder, $ID, $SAT_NO, $ORIG_OBJECT_ID, $DERIVED_FROM, $DECLASSIFICATION_DATE, $DECLASSIFICATION_STRING, $MSG_CREATE_DATE, $LAUNCH_DATE, $OUTCOME, $LAUNCH_FAILURE_CODE, $BE_NUMBER, $O_SUFFIX, $LAUNCH_FACILITY_NAME, $LAUNCH_FACILITY_CODE, $LAUNCH_VEHICLE, $LAUNCH_VEHICLE_CONFIG, $TARGET_ORBIT, $OBJECTS_ON_ORBIT, $ON_ORBIT, $LAUNCH_COUNTRY, $MISSION_NAME, $REMARKS)
     {
-        $builder->startObject(13);
+        $builder->startObject(22);
         self::addID($builder, $ID);
+        self::addSAT_NO($builder, $SAT_NO);
         self::addORIG_OBJECT_ID($builder, $ORIG_OBJECT_ID);
         self::addDERIVED_FROM($builder, $DERIVED_FROM);
         self::addDECLASSIFICATION_DATE($builder, $DECLASSIFICATION_DATE);
         self::addDECLASSIFICATION_STRING($builder, $DECLASSIFICATION_STRING);
         self::addMSG_CREATE_DATE($builder, $MSG_CREATE_DATE);
-        self::addLAUNCH_FAILURE_CODE($builder, $LAUNCH_FAILURE_CODE);
         self::addLAUNCH_DATE($builder, $LAUNCH_DATE);
+        self::addOUTCOME($builder, $OUTCOME);
+        self::addLAUNCH_FAILURE_CODE($builder, $LAUNCH_FAILURE_CODE);
         self::addBE_NUMBER($builder, $BE_NUMBER);
         self::addO_SUFFIX($builder, $O_SUFFIX);
         self::addLAUNCH_FACILITY_NAME($builder, $LAUNCH_FACILITY_NAME);
+        self::addLAUNCH_FACILITY_CODE($builder, $LAUNCH_FACILITY_CODE);
+        self::addLAUNCH_VEHICLE($builder, $LAUNCH_VEHICLE);
+        self::addLAUNCH_VEHICLE_CONFIG($builder, $LAUNCH_VEHICLE_CONFIG);
+        self::addTARGET_ORBIT($builder, $TARGET_ORBIT);
+        self::addOBJECTS_ON_ORBIT($builder, $OBJECTS_ON_ORBIT);
         self::addON_ORBIT($builder, $ON_ORBIT);
-        self::addSAT_NO($builder, $SAT_NO);
+        self::addLAUNCH_COUNTRY($builder, $LAUNCH_COUNTRY);
+        self::addMISSION_NAME($builder, $MISSION_NAME);
+        self::addREMARKS($builder, $REMARKS);
         $o = $builder->endObject();
         return $o;
     }
@@ -167,12 +258,22 @@ class LNE extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addSAT_NO(FlatBufferBuilder $builder, $SAT_NO)
+    {
+        $builder->addUintX(1, $SAT_NO, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param StringOffset
      * @return void
      */
     public static function addORIG_OBJECT_ID(FlatBufferBuilder $builder, $ORIG_OBJECT_ID)
     {
-        $builder->addOffsetX(1, $ORIG_OBJECT_ID, 0);
+        $builder->addOffsetX(2, $ORIG_OBJECT_ID, 0);
     }
 
     /**
@@ -182,7 +283,7 @@ class LNE extends Table
      */
     public static function addDERIVED_FROM(FlatBufferBuilder $builder, $DERIVED_FROM)
     {
-        $builder->addOffsetX(2, $DERIVED_FROM, 0);
+        $builder->addOffsetX(3, $DERIVED_FROM, 0);
     }
 
     /**
@@ -192,7 +293,7 @@ class LNE extends Table
      */
     public static function addDECLASSIFICATION_DATE(FlatBufferBuilder $builder, $DECLASSIFICATION_DATE)
     {
-        $builder->addOffsetX(3, $DECLASSIFICATION_DATE, 0);
+        $builder->addOffsetX(4, $DECLASSIFICATION_DATE, 0);
     }
 
     /**
@@ -202,7 +303,7 @@ class LNE extends Table
      */
     public static function addDECLASSIFICATION_STRING(FlatBufferBuilder $builder, $DECLASSIFICATION_STRING)
     {
-        $builder->addOffsetX(4, $DECLASSIFICATION_STRING, 0);
+        $builder->addOffsetX(5, $DECLASSIFICATION_STRING, 0);
     }
 
     /**
@@ -212,17 +313,7 @@ class LNE extends Table
      */
     public static function addMSG_CREATE_DATE(FlatBufferBuilder $builder, $MSG_CREATE_DATE)
     {
-        $builder->addOffsetX(5, $MSG_CREATE_DATE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addLAUNCH_FAILURE_CODE(FlatBufferBuilder $builder, $LAUNCH_FAILURE_CODE)
-    {
-        $builder->addOffsetX(6, $LAUNCH_FAILURE_CODE, 0);
+        $builder->addOffsetX(6, $MSG_CREATE_DATE, 0);
     }
 
     /**
@@ -237,12 +328,32 @@ class LNE extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addOUTCOME(FlatBufferBuilder $builder, $OUTCOME)
+    {
+        $builder->addSbyteX(8, $OUTCOME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addLAUNCH_FAILURE_CODE(FlatBufferBuilder $builder, $LAUNCH_FAILURE_CODE)
+    {
+        $builder->addOffsetX(9, $LAUNCH_FAILURE_CODE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param StringOffset
      * @return void
      */
     public static function addBE_NUMBER(FlatBufferBuilder $builder, $BE_NUMBER)
     {
-        $builder->addOffsetX(8, $BE_NUMBER, 0);
+        $builder->addOffsetX(10, $BE_NUMBER, 0);
     }
 
     /**
@@ -252,7 +363,7 @@ class LNE extends Table
      */
     public static function addO_SUFFIX(FlatBufferBuilder $builder, $O_SUFFIX)
     {
-        $builder->addOffsetX(9, $O_SUFFIX, 0);
+        $builder->addOffsetX(11, $O_SUFFIX, 0);
     }
 
     /**
@@ -262,7 +373,57 @@ class LNE extends Table
      */
     public static function addLAUNCH_FACILITY_NAME(FlatBufferBuilder $builder, $LAUNCH_FACILITY_NAME)
     {
-        $builder->addOffsetX(10, $LAUNCH_FACILITY_NAME, 0);
+        $builder->addOffsetX(12, $LAUNCH_FACILITY_NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addLAUNCH_FACILITY_CODE(FlatBufferBuilder $builder, $LAUNCH_FACILITY_CODE)
+    {
+        $builder->addOffsetX(13, $LAUNCH_FACILITY_CODE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addLAUNCH_VEHICLE(FlatBufferBuilder $builder, $LAUNCH_VEHICLE)
+    {
+        $builder->addOffsetX(14, $LAUNCH_VEHICLE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addLAUNCH_VEHICLE_CONFIG(FlatBufferBuilder $builder, $LAUNCH_VEHICLE_CONFIG)
+    {
+        $builder->addOffsetX(15, $LAUNCH_VEHICLE_CONFIG, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addTARGET_ORBIT(FlatBufferBuilder $builder, $TARGET_ORBIT)
+    {
+        $builder->addOffsetX(16, $TARGET_ORBIT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ushort
+     * @return void
+     */
+    public static function addOBJECTS_ON_ORBIT(FlatBufferBuilder $builder, $OBJECTS_ON_ORBIT)
+    {
+        $builder->addUshortX(17, $OBJECTS_ON_ORBIT, 0);
     }
 
     /**
@@ -272,17 +433,37 @@ class LNE extends Table
      */
     public static function addON_ORBIT(FlatBufferBuilder $builder, $ON_ORBIT)
     {
-        $builder->addOffsetX(11, $ON_ORBIT, 0);
+        $builder->addOffsetX(18, $ON_ORBIT, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param StringOffset
      * @return void
      */
-    public static function addSAT_NO(FlatBufferBuilder $builder, $SAT_NO)
+    public static function addLAUNCH_COUNTRY(FlatBufferBuilder $builder, $LAUNCH_COUNTRY)
     {
-        $builder->addIntX(12, $SAT_NO, 0);
+        $builder->addOffsetX(19, $LAUNCH_COUNTRY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addMISSION_NAME(FlatBufferBuilder $builder, $MISSION_NAME)
+    {
+        $builder->addOffsetX(20, $MISSION_NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addREMARKS(FlatBufferBuilder $builder, $REMARKS)
+    {
+        $builder->addOffsetX(21, $REMARKS, 0);
     }
 
     /**

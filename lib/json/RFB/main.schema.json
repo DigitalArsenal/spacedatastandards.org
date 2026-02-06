@@ -1,57 +1,81 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "rfBandDesignation" : {
+      "type" : "string",
+      "enum": ["UHF", "L", "S", "C", "X", "KU", "K", "KA", "V", "W", "Q", "EHF", "OTHER"]
+    },
+    "rfPolarization" : {
+      "type" : "string",
+      "enum": ["LHCP", "RHCP", "LINEAR_H", "LINEAR_V", "DUAL", "CROSS", "UNKNOWN"]
+    },
     "RFB" : {
       "type" : "object",
-      "description" : "RF Band",
+      "description" : "RF Band Specification",
       "properties" : {
         "ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique identifier"
               },
         "ID_ENTITY" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Parent entity identifier"
               },
         "NAME" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Band name or designation"
               },
         "BAND" : {
-                "type" : "string"
+                "$ref" : "#/definitions/rfBandDesignation",
+                "description" : "RF band designation"
               },
         "MODE" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Operating mode"
               },
         "PURPOSE" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Band purpose (e.g., TT&C, PAYLOAD, BEACON)"
               },
         "FREQ_MIN" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Minimum frequency (MHz)"
               },
         "FREQ_MAX" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Maximum frequency (MHz)"
               },
         "CENTER_FREQ" : {
-                "type" : "number"
-              },
-        "PEAK_GAIN" : {
-                "type" : "number"
-              },
-        "EDGE_GAIN" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Center frequency (MHz)"
               },
         "BANDWIDTH" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Bandwidth (MHz)"
+              },
+        "PEAK_GAIN" : {
+                "type" : "number",
+                "description" : "Peak antenna gain (dBi)"
+              },
+        "EDGE_GAIN" : {
+                "type" : "number",
+                "description" : "Edge-of-coverage gain (dBi)"
               },
         "BEAMWIDTH" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Antenna beamwidth (degrees)"
               },
         "POLARIZATION" : {
-                "type" : "string"
+                "$ref" : "#/definitions/rfPolarization",
+                "description" : "Polarization"
               },
         "ERP" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Effective radiated power (dBW)"
               },
         "EIRP" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Effective isotropic radiated power (dBW)"
               }
       },
       "additionalProperties" : false

@@ -54,6 +54,7 @@ func (rcv *TRK) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Unique identifier
 func (rcv *TRK) ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -62,6 +63,8 @@ func (rcv *TRK) ID() []byte {
 	return nil
 }
 
+/// Unique identifier
+/// Contact reference
 func (rcv *TRK) CNTCT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -70,6 +73,8 @@ func (rcv *TRK) CNTCT() []byte {
 	return nil
 }
 
+/// Contact reference
+/// Message timestamp (ISO 8601)
 func (rcv *TRK) MSG_TS() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -78,6 +83,8 @@ func (rcv *TRK) MSG_TS() []byte {
 	return nil
 }
 
+/// Message timestamp (ISO 8601)
+/// Mission identifier
 func (rcv *TRK) MSN_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -86,6 +93,8 @@ func (rcv *TRK) MSN_ID() []byte {
 	return nil
 }
 
+/// Mission identifier
+/// Asset nationality
 func (rcv *TRK) ASSET_NAT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -94,6 +103,8 @@ func (rcv *TRK) ASSET_NAT() []byte {
 	return nil
 }
 
+/// Asset nationality
+/// Asset identifier
 func (rcv *TRK) ASSET() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -102,7 +113,9 @@ func (rcv *TRK) ASSET() []byte {
 	return nil
 }
 
-func (rcv *TRK) SEN() []byte {
+/// Asset identifier
+/// Sensor identifier
+func (rcv *TRK) SENSOR_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -110,6 +123,8 @@ func (rcv *TRK) SEN() []byte {
 	return nil
 }
 
+/// Sensor identifier
+/// Sensor quality assessment
 func (rcv *TRK) SEN_QUAL() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -118,6 +133,8 @@ func (rcv *TRK) SEN_QUAL() []byte {
 	return nil
 }
 
+/// Sensor quality assessment
+/// Track identifier
 func (rcv *TRK) TRK_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
@@ -126,6 +143,8 @@ func (rcv *TRK) TRK_ID() []byte {
 	return nil
 }
 
+/// Track identifier
+/// Track number
 func (rcv *TRK) TRK_NUM() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
@@ -134,14 +153,22 @@ func (rcv *TRK) TRK_NUM() []byte {
 	return nil
 }
 
-func (rcv *TRK) TRK_STAT() []byte {
+/// Track number
+/// Track status
+func (rcv *TRK) TRK_STAT() trackStatus {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return trackStatus(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
-	return nil
+	return 0
 }
 
+/// Track status
+func (rcv *TRK) MutateTRK_STAT(n trackStatus) bool {
+	return rcv._tab.MutateInt8Slot(24, int8(n))
+}
+
+/// Object nationality
 func (rcv *TRK) OBJ_NAT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
@@ -150,6 +177,8 @@ func (rcv *TRK) OBJ_NAT() []byte {
 	return nil
 }
 
+/// Object nationality
+/// Object identifier
 func (rcv *TRK) OBJ_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
@@ -158,6 +187,8 @@ func (rcv *TRK) OBJ_ID() []byte {
 	return nil
 }
 
+/// Object identifier
+/// Object type classification
 func (rcv *TRK) OBJ_TYPE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
@@ -166,6 +197,8 @@ func (rcv *TRK) OBJ_TYPE() []byte {
 	return nil
 }
 
+/// Object type classification
+/// Object specific type
 func (rcv *TRK) OBJ_SPEC() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
@@ -174,6 +207,8 @@ func (rcv *TRK) OBJ_SPEC() []byte {
 	return nil
 }
 
+/// Object specific type
+/// Object platform type
 func (rcv *TRK) OBJ_PLAT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
@@ -182,6 +217,8 @@ func (rcv *TRK) OBJ_PLAT() []byte {
 	return nil
 }
 
+/// Object platform type
+/// Object activity
 func (rcv *TRK) OBJ_ACT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
@@ -190,6 +227,8 @@ func (rcv *TRK) OBJ_ACT() []byte {
 	return nil
 }
 
+/// Object activity
+/// Mode type
 func (rcv *TRK) MOD_TYPE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
@@ -198,6 +237,8 @@ func (rcv *TRK) MOD_TYPE() []byte {
 	return nil
 }
 
+/// Mode type
+/// Track item identifier
 func (rcv *TRK) TRK_ITM_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
@@ -206,6 +247,8 @@ func (rcv *TRK) TRK_ITM_ID() []byte {
 	return nil
 }
 
+/// Track item identifier
+/// Track point timestamp (ISO 8601)
 func (rcv *TRK) TS() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
 	if o != 0 {
@@ -214,18 +257,22 @@ func (rcv *TRK) TS() []byte {
 	return nil
 }
 
-func (rcv *TRK) TRK_QUAL() int32 {
+/// Track point timestamp (ISO 8601)
+/// Track quality (0-15)
+func (rcv *TRK) TRK_QUAL() byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *TRK) MutateTRK_QUAL(n int32) bool {
-	return rcv._tab.MutateInt32Slot(44, n)
+/// Track quality (0-15)
+func (rcv *TRK) MutateTRK_QUAL(n byte) bool {
+	return rcv._tab.MutateByteSlot(44, n)
 }
 
+/// Track point type
 func (rcv *TRK) TRK_PT_TYPE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
 	if o != 0 {
@@ -234,6 +281,8 @@ func (rcv *TRK) TRK_PT_TYPE() []byte {
 	return nil
 }
 
+/// Track point type
+/// Object identity assessment
 func (rcv *TRK) OBJ_IDENT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
@@ -242,30 +291,36 @@ func (rcv *TRK) OBJ_IDENT() []byte {
 	return nil
 }
 
-func (rcv *TRK) IDENT_CRED() int32 {
+/// Object identity assessment
+/// Identity credibility (1-6)
+func (rcv *TRK) IDENT_CRED() byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *TRK) MutateIDENT_CRED(n int32) bool {
-	return rcv._tab.MutateInt32Slot(50, n)
+/// Identity credibility (1-6)
+func (rcv *TRK) MutateIDENT_CRED(n byte) bool {
+	return rcv._tab.MutateByteSlot(50, n)
 }
 
-func (rcv *TRK) IDENT_REL() int32 {
+/// Identity reliability (A-F)
+func (rcv *TRK) IDENT_REL() byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *TRK) MutateIDENT_REL(n int32) bool {
-	return rcv._tab.MutateInt32Slot(52, n)
+/// Identity reliability (A-F)
+func (rcv *TRK) MutateIDENT_REL(n byte) bool {
+	return rcv._tab.MutateByteSlot(52, n)
 }
 
+/// Identity amplification
 func (rcv *TRK) IDENT_AMP() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
 	if o != 0 {
@@ -274,14 +329,22 @@ func (rcv *TRK) IDENT_AMP() []byte {
 	return nil
 }
 
-func (rcv *TRK) ENVIRONMENT() []byte {
+/// Identity amplification
+/// Track environment
+func (rcv *TRK) ENVIRONMENT() trackEnvironment {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return trackEnvironment(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
-	return nil
+	return 0
 }
 
+/// Track environment
+func (rcv *TRK) MutateENVIRONMENT(n trackEnvironment) bool {
+	return rcv._tab.MutateInt8Slot(56, int8(n))
+}
+
+/// Environment confidence (0-1)
 func (rcv *TRK) ENVIRONMENT_CONF() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
 	if o != 0 {
@@ -290,10 +353,12 @@ func (rcv *TRK) ENVIRONMENT_CONF() float64 {
 	return 0.0
 }
 
+/// Environment confidence (0-1)
 func (rcv *TRK) MutateENVIRONMENT_CONF(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(58, n)
 }
 
+/// Track confidence (0-1)
 func (rcv *TRK) TRK_CONF() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
 	if o != 0 {
@@ -302,10 +367,12 @@ func (rcv *TRK) TRK_CONF() float64 {
 	return 0.0
 }
 
+/// Track confidence (0-1)
 func (rcv *TRK) MutateTRK_CONF(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(60, n)
 }
 
+/// Latitude (degrees)
 func (rcv *TRK) LAT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
 	if o != 0 {
@@ -314,10 +381,12 @@ func (rcv *TRK) LAT() float64 {
 	return 0.0
 }
 
+/// Latitude (degrees)
 func (rcv *TRK) MutateLAT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(62, n)
 }
 
+/// Longitude (degrees)
 func (rcv *TRK) LON() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
 	if o != 0 {
@@ -326,10 +395,12 @@ func (rcv *TRK) LON() float64 {
 	return 0.0
 }
 
+/// Longitude (degrees)
 func (rcv *TRK) MutateLON(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(64, n)
 }
 
+/// Altitude (km)
 func (rcv *TRK) ALT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
 	if o != 0 {
@@ -338,10 +409,12 @@ func (rcv *TRK) ALT() float64 {
 	return 0.0
 }
 
+/// Altitude (km)
 func (rcv *TRK) MutateALT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(66, n)
 }
 
+/// Speed (km/s)
 func (rcv *TRK) SPD() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
 	if o != 0 {
@@ -350,10 +423,12 @@ func (rcv *TRK) SPD() float64 {
 	return 0.0
 }
 
+/// Speed (km/s)
 func (rcv *TRK) MutateSPD(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(68, n)
 }
 
+/// Heading (degrees from north)
 func (rcv *TRK) HDNG() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
 	if o != 0 {
@@ -362,10 +437,12 @@ func (rcv *TRK) HDNG() float64 {
 	return 0.0
 }
 
+/// Heading (degrees from north)
 func (rcv *TRK) MutateHDNG(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(70, n)
 }
 
+/// Course (degrees from north)
 func (rcv *TRK) COURSE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
 	if o != 0 {
@@ -374,10 +451,12 @@ func (rcv *TRK) COURSE() float64 {
 	return 0.0
 }
 
+/// Course (degrees from north)
 func (rcv *TRK) MutateCOURSE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(72, n)
 }
 
+/// Source types
 func (rcv *TRK) SRC_TYPS(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
 	if o != 0 {
@@ -395,6 +474,8 @@ func (rcv *TRK) SRC_TYPSLength() int {
 	return 0
 }
 
+/// Source types
+/// Source identifiers
 func (rcv *TRK) SRC_IDS(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
 	if o != 0 {
@@ -412,6 +493,8 @@ func (rcv *TRK) SRC_IDSLength() int {
 	return 0
 }
 
+/// Source identifiers
+/// Call sign
 func (rcv *TRK) CALL_SIGN() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
 	if o != 0 {
@@ -420,6 +503,8 @@ func (rcv *TRK) CALL_SIGN() []byte {
 	return nil
 }
 
+/// Call sign
+/// True if fused from multiple sources
 func (rcv *TRK) MULTI_SOURCE() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
 	if o != 0 {
@@ -428,10 +513,12 @@ func (rcv *TRK) MULTI_SOURCE() bool {
 	return false
 }
 
+/// True if fused from multiple sources
 func (rcv *TRK) MutateMULTI_SOURCE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(80, n)
 }
 
+/// J-series message type
 func (rcv *TRK) J_SERIES() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
 	if o != 0 {
@@ -440,90 +527,106 @@ func (rcv *TRK) J_SERIES() []byte {
 	return nil
 }
 
-func (rcv *TRK) STRENGTH() int32 {
+/// J-series message type
+/// Force strength indicator
+func (rcv *TRK) STRENGTH() uint16 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *TRK) MutateSTRENGTH(n int32) bool {
-	return rcv._tab.MutateInt32Slot(84, n)
+/// Force strength indicator
+func (rcv *TRK) MutateSTRENGTH(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(84, n)
 }
 
-func (rcv *TRK) M1() int32 {
+/// Mode 1 code
+func (rcv *TRK) M1() uint16 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *TRK) MutateM1(n int32) bool {
-	return rcv._tab.MutateInt32Slot(86, n)
+/// Mode 1 code
+func (rcv *TRK) MutateM1(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(86, n)
 }
 
-func (rcv *TRK) M1V() int32 {
+/// Mode 1 validity
+func (rcv *TRK) M1V() byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *TRK) MutateM1V(n int32) bool {
-	return rcv._tab.MutateInt32Slot(88, n)
+/// Mode 1 validity
+func (rcv *TRK) MutateM1V(n byte) bool {
+	return rcv._tab.MutateByteSlot(88, n)
 }
 
-func (rcv *TRK) M2() int32 {
+/// Mode 2 code
+func (rcv *TRK) M2() uint16 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *TRK) MutateM2(n int32) bool {
-	return rcv._tab.MutateInt32Slot(90, n)
+/// Mode 2 code
+func (rcv *TRK) MutateM2(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(90, n)
 }
 
-func (rcv *TRK) M2V() int32 {
+/// Mode 2 validity
+func (rcv *TRK) M2V() byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *TRK) MutateM2V(n int32) bool {
-	return rcv._tab.MutateInt32Slot(92, n)
+/// Mode 2 validity
+func (rcv *TRK) MutateM2V(n byte) bool {
+	return rcv._tab.MutateByteSlot(92, n)
 }
 
-func (rcv *TRK) M3A() int32 {
+/// Mode 3A code
+func (rcv *TRK) M3A() uint16 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *TRK) MutateM3A(n int32) bool {
-	return rcv._tab.MutateInt32Slot(94, n)
+/// Mode 3A code
+func (rcv *TRK) MutateM3A(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(94, n)
 }
 
-func (rcv *TRK) M3AV() int32 {
+/// Mode 3A validity
+func (rcv *TRK) M3AV() byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *TRK) MutateM3AV(n int32) bool {
-	return rcv._tab.MutateInt32Slot(96, n)
+/// Mode 3A validity
+func (rcv *TRK) MutateM3AV(n byte) bool {
+	return rcv._tab.MutateByteSlot(96, n)
 }
 
+/// Associated tags
 func (rcv *TRK) TAGS(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
 	if o != 0 {
@@ -541,7 +644,8 @@ func (rcv *TRK) TAGSLength() int {
 	return 0
 }
 
-/// Start time for track data (ISO 8601 UTC format).
+/// Associated tags
+/// Start time for track data (ISO 8601)
 func (rcv *TRK) TRACK_START_TIME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
 	if o != 0 {
@@ -550,8 +654,8 @@ func (rcv *TRK) TRACK_START_TIME() []byte {
 	return nil
 }
 
-/// Start time for track data (ISO 8601 UTC format).
-/// Time interval between track points in seconds.
+/// Start time for track data (ISO 8601)
+/// Time interval between track points (seconds)
 func (rcv *TRK) TRACK_STEP_SIZE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
 	if o != 0 {
@@ -560,12 +664,12 @@ func (rcv *TRK) TRACK_STEP_SIZE() float64 {
 	return 0.0
 }
 
-/// Time interval between track points in seconds.
+/// Time interval between track points (seconds)
 func (rcv *TRK) MutateTRACK_STEP_SIZE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(102, n)
 }
 
-/// Number of components per point (default 3 for X, Y, Z).
+/// Number of components per point (default 3 for X, Y, Z)
 func (rcv *TRK) TRACK_COMPONENTS() byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
 	if o != 0 {
@@ -574,7 +678,7 @@ func (rcv *TRK) TRACK_COMPONENTS() byte {
 	return 3
 }
 
-/// Number of components per point (default 3 for X, Y, Z).
+/// Number of components per point (default 3 for X, Y, Z)
 func (rcv *TRK) MutateTRACK_COMPONENTS(n byte) bool {
 	return rcv._tab.MutateByteSlot(104, n)
 }
@@ -824,8 +928,8 @@ func TRKAddASSET_NAT(builder *flatbuffers.Builder, ASSET_NAT flatbuffers.UOffset
 func TRKAddASSET(builder *flatbuffers.Builder, ASSET flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(ASSET), 0)
 }
-func TRKAddSEN(builder *flatbuffers.Builder, SEN flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(SEN), 0)
+func TRKAddSENSOR_ID(builder *flatbuffers.Builder, SENSOR_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(SENSOR_ID), 0)
 }
 func TRKAddSEN_QUAL(builder *flatbuffers.Builder, SEN_QUAL flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(SEN_QUAL), 0)
@@ -836,8 +940,8 @@ func TRKAddTRK_ID(builder *flatbuffers.Builder, TRK_ID flatbuffers.UOffsetT) {
 func TRKAddTRK_NUM(builder *flatbuffers.Builder, TRK_NUM flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(TRK_NUM), 0)
 }
-func TRKAddTRK_STAT(builder *flatbuffers.Builder, TRK_STAT flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(TRK_STAT), 0)
+func TRKAddTRK_STAT(builder *flatbuffers.Builder, TRK_STAT trackStatus) {
+	builder.PrependInt8Slot(10, int8(TRK_STAT), 0)
 }
 func TRKAddOBJ_NAT(builder *flatbuffers.Builder, OBJ_NAT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(OBJ_NAT), 0)
@@ -866,8 +970,8 @@ func TRKAddTRK_ITM_ID(builder *flatbuffers.Builder, TRK_ITM_ID flatbuffers.UOffs
 func TRKAddTS(builder *flatbuffers.Builder, TS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(TS), 0)
 }
-func TRKAddTRK_QUAL(builder *flatbuffers.Builder, TRK_QUAL int32) {
-	builder.PrependInt32Slot(20, TRK_QUAL, 0)
+func TRKAddTRK_QUAL(builder *flatbuffers.Builder, TRK_QUAL byte) {
+	builder.PrependByteSlot(20, TRK_QUAL, 0)
 }
 func TRKAddTRK_PT_TYPE(builder *flatbuffers.Builder, TRK_PT_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(TRK_PT_TYPE), 0)
@@ -875,17 +979,17 @@ func TRKAddTRK_PT_TYPE(builder *flatbuffers.Builder, TRK_PT_TYPE flatbuffers.UOf
 func TRKAddOBJ_IDENT(builder *flatbuffers.Builder, OBJ_IDENT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(OBJ_IDENT), 0)
 }
-func TRKAddIDENT_CRED(builder *flatbuffers.Builder, IDENT_CRED int32) {
-	builder.PrependInt32Slot(23, IDENT_CRED, 0)
+func TRKAddIDENT_CRED(builder *flatbuffers.Builder, IDENT_CRED byte) {
+	builder.PrependByteSlot(23, IDENT_CRED, 0)
 }
-func TRKAddIDENT_REL(builder *flatbuffers.Builder, IDENT_REL int32) {
-	builder.PrependInt32Slot(24, IDENT_REL, 0)
+func TRKAddIDENT_REL(builder *flatbuffers.Builder, IDENT_REL byte) {
+	builder.PrependByteSlot(24, IDENT_REL, 0)
 }
 func TRKAddIDENT_AMP(builder *flatbuffers.Builder, IDENT_AMP flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(25, flatbuffers.UOffsetT(IDENT_AMP), 0)
 }
-func TRKAddENVIRONMENT(builder *flatbuffers.Builder, ENVIRONMENT flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(ENVIRONMENT), 0)
+func TRKAddENVIRONMENT(builder *flatbuffers.Builder, ENVIRONMENT trackEnvironment) {
+	builder.PrependInt8Slot(26, int8(ENVIRONMENT), 0)
 }
 func TRKAddENVIRONMENT_CONF(builder *flatbuffers.Builder, ENVIRONMENT_CONF float64) {
 	builder.PrependFloat64Slot(27, ENVIRONMENT_CONF, 0.0)
@@ -932,26 +1036,26 @@ func TRKAddMULTI_SOURCE(builder *flatbuffers.Builder, MULTI_SOURCE bool) {
 func TRKAddJ_SERIES(builder *flatbuffers.Builder, J_SERIES flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(39, flatbuffers.UOffsetT(J_SERIES), 0)
 }
-func TRKAddSTRENGTH(builder *flatbuffers.Builder, STRENGTH int32) {
-	builder.PrependInt32Slot(40, STRENGTH, 0)
+func TRKAddSTRENGTH(builder *flatbuffers.Builder, STRENGTH uint16) {
+	builder.PrependUint16Slot(40, STRENGTH, 0)
 }
-func TRKAddM1(builder *flatbuffers.Builder, M1 int32) {
-	builder.PrependInt32Slot(41, M1, 0)
+func TRKAddM1(builder *flatbuffers.Builder, M1 uint16) {
+	builder.PrependUint16Slot(41, M1, 0)
 }
-func TRKAddM1V(builder *flatbuffers.Builder, M1V int32) {
-	builder.PrependInt32Slot(42, M1V, 0)
+func TRKAddM1V(builder *flatbuffers.Builder, M1V byte) {
+	builder.PrependByteSlot(42, M1V, 0)
 }
-func TRKAddM2(builder *flatbuffers.Builder, M2 int32) {
-	builder.PrependInt32Slot(43, M2, 0)
+func TRKAddM2(builder *flatbuffers.Builder, M2 uint16) {
+	builder.PrependUint16Slot(43, M2, 0)
 }
-func TRKAddM2V(builder *flatbuffers.Builder, M2V int32) {
-	builder.PrependInt32Slot(44, M2V, 0)
+func TRKAddM2V(builder *flatbuffers.Builder, M2V byte) {
+	builder.PrependByteSlot(44, M2V, 0)
 }
-func TRKAddM3A(builder *flatbuffers.Builder, M3A int32) {
-	builder.PrependInt32Slot(45, M3A, 0)
+func TRKAddM3A(builder *flatbuffers.Builder, M3A uint16) {
+	builder.PrependUint16Slot(45, M3A, 0)
 }
-func TRKAddM3AV(builder *flatbuffers.Builder, M3AV int32) {
-	builder.PrependInt32Slot(46, M3AV, 0)
+func TRKAddM3AV(builder *flatbuffers.Builder, M3AV byte) {
+	builder.PrependByteSlot(46, M3AV, 0)
 }
 func TRKAddTAGS(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(47, flatbuffers.UOffsetT(TAGS), 0)

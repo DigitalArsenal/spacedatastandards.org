@@ -41,103 +41,145 @@ class GDI extends Table
         return $this;
     }
 
+    /// Unique identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Sensor identifier
     public function getID_SENSOR()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getIMAGE_TIME()
+    /// Original sensor identifier
+    public function getORIG_SENSOR_ID()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getFILENAME()
+    /// Image capture time (ISO 8601)
+    public function getIMAGE_TIME()
     {
         $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getREGION()
+    /// Image filename
+    public function getFILENAME()
     {
         $o = $this->__offset(12);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getREGION_TEXT()
+    /// Image format
+    /**
+     * @return sbyte
+     */
+    public function getFORMAT()
     {
         $o = $this->__offset(14);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \imageFormat::FITS;
     }
 
-    public function getREGION_GEO_JSON()
+    /// File size (bytes)
+    /**
+     * @return long
+     */
+    public function getFILESIZE()
     {
         $o = $this->__offset(16);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getLong($o + $this->bb_pos) : 0;
     }
 
-    public function getREGION_TYPE()
+    /// File checksum value
+    public function getCHECKSUM_VALUE()
     {
         $o = $this->__offset(18);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /**
-     * @return int
-     */
-    public function getREGION_NDIMS()
+    /// Region GeoJSON boundary
+    public function getREGION_GEO_JSON()
     {
         $o = $this->__offset(20);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /**
-     * @return int
-     */
-    public function getREGION_SRID()
+    /// Region text description
+    public function getREGION_TEXT()
     {
         $o = $this->__offset(22);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getORIG_SENSOR_ID()
+    /// Region name
+    public function getREGION()
     {
         $o = $this->__offset(24);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getSUBJECT_ID()
+    /// Region type
+    public function getREGION_TYPE()
     {
         $o = $this->__offset(26);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getNAME()
+    /// Region geometry dimensions
+    /**
+     * @return byte
+     */
+    public function getREGION_NDIMS()
     {
         $o = $this->__offset(28);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
     }
 
-    public function getTRANSACTION_ID()
+    /// Region spatial reference ID
+    /**
+     * @return ushort
+     */
+    public function getREGION_SRID()
     {
         $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
+    }
+
+    /// Subject object identifier
+    public function getSUBJECT_ID()
+    {
+        $o = $this->__offset(32);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Image name or title
+    public function getNAME()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Transaction identifier
+    public function getTRANSACTION_ID()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Associated tags
     /**
      * @param int offset
      * @return string
      */
     public function getTAGS($j)
     {
-        $o = $this->__offset(32);
+        $o = $this->__offset(38);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -146,17 +188,18 @@ class GDI extends Table
      */
     public function getTAGSLength()
     {
-        $o = $this->__offset(32);
+        $o = $this->__offset(38);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Keywords for search/classification
     /**
      * @param int offset
      * @return string
      */
     public function getKEYWORDS($j)
     {
-        $o = $this->__offset(34);
+        $o = $this->__offset(40);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -165,32 +208,12 @@ class GDI extends Table
      */
     public function getKEYWORDSLength()
     {
-        $o = $this->__offset(34);
+        $o = $this->__offset(40);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Notes
     public function getNOTES()
-    {
-        $o = $this->__offset(36);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getFORMAT()
-    {
-        $o = $this->__offset(38);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /**
-     * @return long
-     */
-    public function getFILESIZE()
-    {
-        $o = $this->__offset(40);
-        return $o != 0 ? $this->bb->getLong($o + $this->bb_pos) : 0;
-    }
-
-    public function getCHECKSUM_VALUE()
     {
         $o = $this->__offset(42);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
@@ -209,29 +232,29 @@ class GDI extends Table
      * @param FlatBufferBuilder $builder
      * @return GDI
      */
-    public static function createGDI(FlatBufferBuilder $builder, $ID, $ID_SENSOR, $IMAGE_TIME, $FILENAME, $REGION, $REGION_TEXT, $REGION_GEO_JSON, $REGION_TYPE, $REGION_NDIMS, $REGION_SRID, $ORIG_SENSOR_ID, $SUBJECT_ID, $NAME, $TRANSACTION_ID, $TAGS, $KEYWORDS, $NOTES, $FORMAT, $FILESIZE, $CHECKSUM_VALUE)
+    public static function createGDI(FlatBufferBuilder $builder, $ID, $ID_SENSOR, $ORIG_SENSOR_ID, $IMAGE_TIME, $FILENAME, $FORMAT, $FILESIZE, $CHECKSUM_VALUE, $REGION_GEO_JSON, $REGION_TEXT, $REGION, $REGION_TYPE, $REGION_NDIMS, $REGION_SRID, $SUBJECT_ID, $NAME, $TRANSACTION_ID, $TAGS, $KEYWORDS, $NOTES)
     {
         $builder->startObject(20);
         self::addID($builder, $ID);
         self::addID_SENSOR($builder, $ID_SENSOR);
+        self::addORIG_SENSOR_ID($builder, $ORIG_SENSOR_ID);
         self::addIMAGE_TIME($builder, $IMAGE_TIME);
         self::addFILENAME($builder, $FILENAME);
-        self::addREGION($builder, $REGION);
-        self::addREGION_TEXT($builder, $REGION_TEXT);
+        self::addFORMAT($builder, $FORMAT);
+        self::addFILESIZE($builder, $FILESIZE);
+        self::addCHECKSUM_VALUE($builder, $CHECKSUM_VALUE);
         self::addREGION_GEO_JSON($builder, $REGION_GEO_JSON);
+        self::addREGION_TEXT($builder, $REGION_TEXT);
+        self::addREGION($builder, $REGION);
         self::addREGION_TYPE($builder, $REGION_TYPE);
         self::addREGION_NDIMS($builder, $REGION_NDIMS);
         self::addREGION_SRID($builder, $REGION_SRID);
-        self::addORIG_SENSOR_ID($builder, $ORIG_SENSOR_ID);
         self::addSUBJECT_ID($builder, $SUBJECT_ID);
         self::addNAME($builder, $NAME);
         self::addTRANSACTION_ID($builder, $TRANSACTION_ID);
         self::addTAGS($builder, $TAGS);
         self::addKEYWORDS($builder, $KEYWORDS);
         self::addNOTES($builder, $NOTES);
-        self::addFORMAT($builder, $FORMAT);
-        self::addFILESIZE($builder, $FILESIZE);
-        self::addCHECKSUM_VALUE($builder, $CHECKSUM_VALUE);
         $o = $builder->endObject();
         return $o;
     }
@@ -261,9 +284,19 @@ class GDI extends Table
      * @param StringOffset
      * @return void
      */
+    public static function addORIG_SENSOR_ID(FlatBufferBuilder $builder, $ORIG_SENSOR_ID)
+    {
+        $builder->addOffsetX(2, $ORIG_SENSOR_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
     public static function addIMAGE_TIME(FlatBufferBuilder $builder, $IMAGE_TIME)
     {
-        $builder->addOffsetX(2, $IMAGE_TIME, 0);
+        $builder->addOffsetX(3, $IMAGE_TIME, 0);
     }
 
     /**
@@ -273,7 +306,27 @@ class GDI extends Table
      */
     public static function addFILENAME(FlatBufferBuilder $builder, $FILENAME)
     {
-        $builder->addOffsetX(3, $FILENAME, 0);
+        $builder->addOffsetX(4, $FILENAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addFORMAT(FlatBufferBuilder $builder, $FORMAT)
+    {
+        $builder->addSbyteX(5, $FORMAT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param long
+     * @return void
+     */
+    public static function addFILESIZE(FlatBufferBuilder $builder, $FILESIZE)
+    {
+        $builder->addLongX(6, $FILESIZE, 0);
     }
 
     /**
@@ -281,19 +334,9 @@ class GDI extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addREGION(FlatBufferBuilder $builder, $REGION)
+    public static function addCHECKSUM_VALUE(FlatBufferBuilder $builder, $CHECKSUM_VALUE)
     {
-        $builder->addOffsetX(4, $REGION, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addREGION_TEXT(FlatBufferBuilder $builder, $REGION_TEXT)
-    {
-        $builder->addOffsetX(5, $REGION_TEXT, 0);
+        $builder->addOffsetX(7, $CHECKSUM_VALUE, 0);
     }
 
     /**
@@ -303,7 +346,27 @@ class GDI extends Table
      */
     public static function addREGION_GEO_JSON(FlatBufferBuilder $builder, $REGION_GEO_JSON)
     {
-        $builder->addOffsetX(6, $REGION_GEO_JSON, 0);
+        $builder->addOffsetX(8, $REGION_GEO_JSON, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addREGION_TEXT(FlatBufferBuilder $builder, $REGION_TEXT)
+    {
+        $builder->addOffsetX(9, $REGION_TEXT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addREGION(FlatBufferBuilder $builder, $REGION)
+    {
+        $builder->addOffsetX(10, $REGION, 0);
     }
 
     /**
@@ -313,37 +376,27 @@ class GDI extends Table
      */
     public static function addREGION_TYPE(FlatBufferBuilder $builder, $REGION_TYPE)
     {
-        $builder->addOffsetX(7, $REGION_TYPE, 0);
+        $builder->addOffsetX(11, $REGION_TYPE, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param byte
      * @return void
      */
     public static function addREGION_NDIMS(FlatBufferBuilder $builder, $REGION_NDIMS)
     {
-        $builder->addIntX(8, $REGION_NDIMS, 0);
+        $builder->addByteX(12, $REGION_NDIMS, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param ushort
      * @return void
      */
     public static function addREGION_SRID(FlatBufferBuilder $builder, $REGION_SRID)
     {
-        $builder->addIntX(9, $REGION_SRID, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addORIG_SENSOR_ID(FlatBufferBuilder $builder, $ORIG_SENSOR_ID)
-    {
-        $builder->addOffsetX(10, $ORIG_SENSOR_ID, 0);
+        $builder->addUshortX(13, $REGION_SRID, 0);
     }
 
     /**
@@ -353,7 +406,7 @@ class GDI extends Table
      */
     public static function addSUBJECT_ID(FlatBufferBuilder $builder, $SUBJECT_ID)
     {
-        $builder->addOffsetX(11, $SUBJECT_ID, 0);
+        $builder->addOffsetX(14, $SUBJECT_ID, 0);
     }
 
     /**
@@ -363,7 +416,7 @@ class GDI extends Table
      */
     public static function addNAME(FlatBufferBuilder $builder, $NAME)
     {
-        $builder->addOffsetX(12, $NAME, 0);
+        $builder->addOffsetX(15, $NAME, 0);
     }
 
     /**
@@ -373,7 +426,7 @@ class GDI extends Table
      */
     public static function addTRANSACTION_ID(FlatBufferBuilder $builder, $TRANSACTION_ID)
     {
-        $builder->addOffsetX(13, $TRANSACTION_ID, 0);
+        $builder->addOffsetX(16, $TRANSACTION_ID, 0);
     }
 
     /**
@@ -383,7 +436,7 @@ class GDI extends Table
      */
     public static function addTAGS(FlatBufferBuilder $builder, $TAGS)
     {
-        $builder->addOffsetX(14, $TAGS, 0);
+        $builder->addOffsetX(17, $TAGS, 0);
     }
 
     /**
@@ -417,7 +470,7 @@ class GDI extends Table
      */
     public static function addKEYWORDS(FlatBufferBuilder $builder, $KEYWORDS)
     {
-        $builder->addOffsetX(15, $KEYWORDS, 0);
+        $builder->addOffsetX(18, $KEYWORDS, 0);
     }
 
     /**
@@ -451,37 +504,7 @@ class GDI extends Table
      */
     public static function addNOTES(FlatBufferBuilder $builder, $NOTES)
     {
-        $builder->addOffsetX(16, $NOTES, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addFORMAT(FlatBufferBuilder $builder, $FORMAT)
-    {
-        $builder->addOffsetX(17, $FORMAT, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param long
-     * @return void
-     */
-    public static function addFILESIZE(FlatBufferBuilder $builder, $FILESIZE)
-    {
-        $builder->addLongX(18, $FILESIZE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addCHECKSUM_VALUE(FlatBufferBuilder $builder, $CHECKSUM_VALUE)
-    {
-        $builder->addOffsetX(19, $CHECKSUM_VALUE, 0);
+        $builder->addOffsetX(19, $NOTES, 0);
     }
 
     /**

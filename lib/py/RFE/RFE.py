@@ -29,6 +29,7 @@ class RFE(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Unique emitter identifier
     # RFE
     def ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +37,7 @@ class RFE(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Reference to parent entity
     # RFE
     def ID_ENTITY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -43,6 +45,7 @@ class RFE(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Emitter name or designation
     # RFE
     def NAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -50,13 +53,15 @@ class RFE(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Emitter type
     # RFE
     def TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
+    # Parent entity designator
     # RFE
     def ENTITY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -64,28 +69,146 @@ class RFE(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # ELNOT (Electronic Notation)
     # RFE
-    def RF_EMITTER_DETAILS(self, j):
+    def ELNOT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
-            a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # NATO reporting name
+    # RFE
+    def NATO_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Platform type (e.g., SHIP, AIRCRAFT, GROUND, SATELLITE)
+    # RFE
+    def PLATFORM_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Country of origin
+    # RFE
+    def COUNTRY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Primary function description
+    # RFE
+    def FUNCTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Operating band (e.g., HF, VHF, UHF, L, S, C, X, Ku, Ka)
+    # RFE
+    def BAND(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Minimum operating frequency in MHz
+    # RFE
+    def FREQ_MIN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Maximum operating frequency in MHz
+    # RFE
+    def FREQ_MAX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Peak power in kW
+    # RFE
+    def PEAK_POWER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Average power in kW
+    # RFE
+    def AVG_POWER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Antenna gain in dBi
+    # RFE
+    def ANTENNA_GAIN(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Number of operating modes
+    # RFE
+    def NUM_MODES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Emitter operating mode details
+    # RFE
+    def RF_EMITTER_DETAILS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from rfEmitterDetail import rfEmitterDetail
+            obj = rfEmitterDetail()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
 
     # RFE
     def RF_EMITTER_DETAILSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # RFE
     def RF_EMITTER_DETAILSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         return o == 0
 
+    # Threat level assessment
+    # RFE
+    def THREAT_LEVEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Additional notes
+    # RFE
+    def NOTES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def RFEStart(builder):
-    builder.StartObject(6)
+    builder.StartObject(20)
 
 def Start(builder):
     RFEStart(builder)
@@ -109,7 +232,7 @@ def AddNAME(builder, NAME):
     RFEAddNAME(builder, NAME)
 
 def RFEAddTYPE(builder, TYPE):
-    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(TYPE), 0)
+    builder.PrependInt8Slot(3, TYPE, 0)
 
 def AddTYPE(builder, TYPE):
     RFEAddTYPE(builder, TYPE)
@@ -120,8 +243,80 @@ def RFEAddENTITY(builder, ENTITY):
 def AddENTITY(builder, ENTITY):
     RFEAddENTITY(builder, ENTITY)
 
+def RFEAddELNOT(builder, ELNOT):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(ELNOT), 0)
+
+def AddELNOT(builder, ELNOT):
+    RFEAddELNOT(builder, ELNOT)
+
+def RFEAddNATO_NAME(builder, NATO_NAME):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(NATO_NAME), 0)
+
+def AddNATO_NAME(builder, NATO_NAME):
+    RFEAddNATO_NAME(builder, NATO_NAME)
+
+def RFEAddPLATFORM_TYPE(builder, PLATFORM_TYPE):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(PLATFORM_TYPE), 0)
+
+def AddPLATFORM_TYPE(builder, PLATFORM_TYPE):
+    RFEAddPLATFORM_TYPE(builder, PLATFORM_TYPE)
+
+def RFEAddCOUNTRY(builder, COUNTRY):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(COUNTRY), 0)
+
+def AddCOUNTRY(builder, COUNTRY):
+    RFEAddCOUNTRY(builder, COUNTRY)
+
+def RFEAddFUNCTION(builder, FUNCTION):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(FUNCTION), 0)
+
+def AddFUNCTION(builder, FUNCTION):
+    RFEAddFUNCTION(builder, FUNCTION)
+
+def RFEAddBAND(builder, BAND):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(BAND), 0)
+
+def AddBAND(builder, BAND):
+    RFEAddBAND(builder, BAND)
+
+def RFEAddFREQ_MIN(builder, FREQ_MIN):
+    builder.PrependFloat64Slot(11, FREQ_MIN, 0.0)
+
+def AddFREQ_MIN(builder, FREQ_MIN):
+    RFEAddFREQ_MIN(builder, FREQ_MIN)
+
+def RFEAddFREQ_MAX(builder, FREQ_MAX):
+    builder.PrependFloat64Slot(12, FREQ_MAX, 0.0)
+
+def AddFREQ_MAX(builder, FREQ_MAX):
+    RFEAddFREQ_MAX(builder, FREQ_MAX)
+
+def RFEAddPEAK_POWER(builder, PEAK_POWER):
+    builder.PrependFloat64Slot(13, PEAK_POWER, 0.0)
+
+def AddPEAK_POWER(builder, PEAK_POWER):
+    RFEAddPEAK_POWER(builder, PEAK_POWER)
+
+def RFEAddAVG_POWER(builder, AVG_POWER):
+    builder.PrependFloat64Slot(14, AVG_POWER, 0.0)
+
+def AddAVG_POWER(builder, AVG_POWER):
+    RFEAddAVG_POWER(builder, AVG_POWER)
+
+def RFEAddANTENNA_GAIN(builder, ANTENNA_GAIN):
+    builder.PrependFloat64Slot(15, ANTENNA_GAIN, 0.0)
+
+def AddANTENNA_GAIN(builder, ANTENNA_GAIN):
+    RFEAddANTENNA_GAIN(builder, ANTENNA_GAIN)
+
+def RFEAddNUM_MODES(builder, NUM_MODES):
+    builder.PrependUint32Slot(16, NUM_MODES, 0)
+
+def AddNUM_MODES(builder, NUM_MODES):
+    RFEAddNUM_MODES(builder, NUM_MODES)
+
 def RFEAddRF_EMITTER_DETAILS(builder, RF_EMITTER_DETAILS):
-    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(RF_EMITTER_DETAILS), 0)
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(RF_EMITTER_DETAILS), 0)
 
 def AddRF_EMITTER_DETAILS(builder, RF_EMITTER_DETAILS):
     RFEAddRF_EMITTER_DETAILS(builder, RF_EMITTER_DETAILS)
@@ -132,12 +327,25 @@ def RFEStartRF_EMITTER_DETAILSVector(builder, numElems):
 def StartRF_EMITTER_DETAILSVector(builder, numElems):
     return RFEStartRF_EMITTER_DETAILSVector(builder, numElems)
 
+def RFEAddTHREAT_LEVEL(builder, THREAT_LEVEL):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(THREAT_LEVEL), 0)
+
+def AddTHREAT_LEVEL(builder, THREAT_LEVEL):
+    RFEAddTHREAT_LEVEL(builder, THREAT_LEVEL)
+
+def RFEAddNOTES(builder, NOTES):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(NOTES), 0)
+
+def AddNOTES(builder, NOTES):
+    RFEAddNOTES(builder, NOTES)
+
 def RFEEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return RFEEnd(builder)
 
+import rfEmitterDetail
 try:
     from typing import List
 except:
@@ -150,9 +358,23 @@ class RFET(object):
         self.ID = None  # type: str
         self.ID_ENTITY = None  # type: str
         self.NAME = None  # type: str
-        self.TYPE = None  # type: str
+        self.TYPE = 0  # type: int
         self.ENTITY = None  # type: str
-        self.RF_EMITTER_DETAILS = None  # type: List[str]
+        self.ELNOT = None  # type: str
+        self.NATO_NAME = None  # type: str
+        self.PLATFORM_TYPE = None  # type: str
+        self.COUNTRY = None  # type: str
+        self.FUNCTION = None  # type: str
+        self.BAND = None  # type: str
+        self.FREQ_MIN = 0.0  # type: float
+        self.FREQ_MAX = 0.0  # type: float
+        self.PEAK_POWER = 0.0  # type: float
+        self.AVG_POWER = 0.0  # type: float
+        self.ANTENNA_GAIN = 0.0  # type: float
+        self.NUM_MODES = 0  # type: int
+        self.RF_EMITTER_DETAILS = None  # type: List[rfEmitterDetail.rfEmitterDetailT]
+        self.THREAT_LEVEL = None  # type: str
+        self.NOTES = None  # type: str
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -180,10 +402,28 @@ class RFET(object):
         self.NAME = RFE.NAME()
         self.TYPE = RFE.TYPE()
         self.ENTITY = RFE.ENTITY()
+        self.ELNOT = RFE.ELNOT()
+        self.NATO_NAME = RFE.NATO_NAME()
+        self.PLATFORM_TYPE = RFE.PLATFORM_TYPE()
+        self.COUNTRY = RFE.COUNTRY()
+        self.FUNCTION = RFE.FUNCTION()
+        self.BAND = RFE.BAND()
+        self.FREQ_MIN = RFE.FREQ_MIN()
+        self.FREQ_MAX = RFE.FREQ_MAX()
+        self.PEAK_POWER = RFE.PEAK_POWER()
+        self.AVG_POWER = RFE.AVG_POWER()
+        self.ANTENNA_GAIN = RFE.ANTENNA_GAIN()
+        self.NUM_MODES = RFE.NUM_MODES()
         if not RFE.RF_EMITTER_DETAILSIsNone():
             self.RF_EMITTER_DETAILS = []
             for i in range(RFE.RF_EMITTER_DETAILSLength()):
-                self.RF_EMITTER_DETAILS.append(RFE.RF_EMITTER_DETAILS(i))
+                if RFE.RF_EMITTER_DETAILS(i) is None:
+                    self.RF_EMITTER_DETAILS.append(None)
+                else:
+                    rfEmitterDetail_ = rfEmitterDetail.rfEmitterDetailT.InitFromObj(RFE.RF_EMITTER_DETAILS(i))
+                    self.RF_EMITTER_DETAILS.append(rfEmitterDetail_)
+        self.THREAT_LEVEL = RFE.THREAT_LEVEL()
+        self.NOTES = RFE.NOTES()
 
     # RFET
     def Pack(self, builder):
@@ -193,18 +433,32 @@ class RFET(object):
             ID_ENTITY = builder.CreateString(self.ID_ENTITY)
         if self.NAME is not None:
             NAME = builder.CreateString(self.NAME)
-        if self.TYPE is not None:
-            TYPE = builder.CreateString(self.TYPE)
         if self.ENTITY is not None:
             ENTITY = builder.CreateString(self.ENTITY)
+        if self.ELNOT is not None:
+            ELNOT = builder.CreateString(self.ELNOT)
+        if self.NATO_NAME is not None:
+            NATO_NAME = builder.CreateString(self.NATO_NAME)
+        if self.PLATFORM_TYPE is not None:
+            PLATFORM_TYPE = builder.CreateString(self.PLATFORM_TYPE)
+        if self.COUNTRY is not None:
+            COUNTRY = builder.CreateString(self.COUNTRY)
+        if self.FUNCTION is not None:
+            FUNCTION = builder.CreateString(self.FUNCTION)
+        if self.BAND is not None:
+            BAND = builder.CreateString(self.BAND)
         if self.RF_EMITTER_DETAILS is not None:
             RF_EMITTER_DETAILSlist = []
             for i in range(len(self.RF_EMITTER_DETAILS)):
-                RF_EMITTER_DETAILSlist.append(builder.CreateString(self.RF_EMITTER_DETAILS[i]))
+                RF_EMITTER_DETAILSlist.append(self.RF_EMITTER_DETAILS[i].Pack(builder))
             RFEStartRF_EMITTER_DETAILSVector(builder, len(self.RF_EMITTER_DETAILS))
             for i in reversed(range(len(self.RF_EMITTER_DETAILS))):
                 builder.PrependUOffsetTRelative(RF_EMITTER_DETAILSlist[i])
             RF_EMITTER_DETAILS = builder.EndVector()
+        if self.THREAT_LEVEL is not None:
+            THREAT_LEVEL = builder.CreateString(self.THREAT_LEVEL)
+        if self.NOTES is not None:
+            NOTES = builder.CreateString(self.NOTES)
         RFEStart(builder)
         if self.ID is not None:
             RFEAddID(builder, ID)
@@ -212,11 +466,32 @@ class RFET(object):
             RFEAddID_ENTITY(builder, ID_ENTITY)
         if self.NAME is not None:
             RFEAddNAME(builder, NAME)
-        if self.TYPE is not None:
-            RFEAddTYPE(builder, TYPE)
+        RFEAddTYPE(builder, self.TYPE)
         if self.ENTITY is not None:
             RFEAddENTITY(builder, ENTITY)
+        if self.ELNOT is not None:
+            RFEAddELNOT(builder, ELNOT)
+        if self.NATO_NAME is not None:
+            RFEAddNATO_NAME(builder, NATO_NAME)
+        if self.PLATFORM_TYPE is not None:
+            RFEAddPLATFORM_TYPE(builder, PLATFORM_TYPE)
+        if self.COUNTRY is not None:
+            RFEAddCOUNTRY(builder, COUNTRY)
+        if self.FUNCTION is not None:
+            RFEAddFUNCTION(builder, FUNCTION)
+        if self.BAND is not None:
+            RFEAddBAND(builder, BAND)
+        RFEAddFREQ_MIN(builder, self.FREQ_MIN)
+        RFEAddFREQ_MAX(builder, self.FREQ_MAX)
+        RFEAddPEAK_POWER(builder, self.PEAK_POWER)
+        RFEAddAVG_POWER(builder, self.AVG_POWER)
+        RFEAddANTENNA_GAIN(builder, self.ANTENNA_GAIN)
+        RFEAddNUM_MODES(builder, self.NUM_MODES)
         if self.RF_EMITTER_DETAILS is not None:
             RFEAddRF_EMITTER_DETAILS(builder, RF_EMITTER_DETAILS)
+        if self.THREAT_LEVEL is not None:
+            RFEAddTHREAT_LEVEL(builder, THREAT_LEVEL)
+        if self.NOTES is not None:
+            RFEAddNOTES(builder, NOTES)
         RFE = RFEEnd(builder)
         return RFE

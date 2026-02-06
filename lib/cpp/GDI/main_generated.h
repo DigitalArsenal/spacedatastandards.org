@@ -16,90 +16,158 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct GDI;
 struct GDIBuilder;
 
+enum imageFormat : int8_t {
+  imageFormat_FITS = 0,
+  imageFormat_JPEG = 1,
+  imageFormat_PNG = 2,
+  imageFormat_TIFF = 3,
+  imageFormat_RAW = 4,
+  imageFormat_NITF = 5,
+  imageFormat_GEOTIFF = 6,
+  imageFormat_OTHER = 7,
+  imageFormat_MIN = imageFormat_FITS,
+  imageFormat_MAX = imageFormat_OTHER
+};
+
+inline const imageFormat (&EnumValuesimageFormat())[8] {
+  static const imageFormat values[] = {
+    imageFormat_FITS,
+    imageFormat_JPEG,
+    imageFormat_PNG,
+    imageFormat_TIFF,
+    imageFormat_RAW,
+    imageFormat_NITF,
+    imageFormat_GEOTIFF,
+    imageFormat_OTHER
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesimageFormat() {
+  static const char * const names[9] = {
+    "FITS",
+    "JPEG",
+    "PNG",
+    "TIFF",
+    "RAW",
+    "NITF",
+    "GEOTIFF",
+    "OTHER",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameimageFormat(imageFormat e) {
+  if (::flatbuffers::IsOutRange(e, imageFormat_FITS, imageFormat_OTHER)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesimageFormat()[index];
+}
+
 /// Ground Imagery
 struct GDI FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef GDIBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
     VT_ID_SENSOR = 6,
-    VT_IMAGE_TIME = 8,
-    VT_FILENAME = 10,
-    VT_REGION = 12,
-    VT_REGION_TEXT = 14,
-    VT_REGION_GEO_JSON = 16,
-    VT_REGION_TYPE = 18,
-    VT_REGION_NDIMS = 20,
-    VT_REGION_SRID = 22,
-    VT_ORIG_SENSOR_ID = 24,
-    VT_SUBJECT_ID = 26,
-    VT_NAME = 28,
-    VT_TRANSACTION_ID = 30,
-    VT_TAGS = 32,
-    VT_KEYWORDS = 34,
-    VT_NOTES = 36,
-    VT_FORMAT = 38,
-    VT_FILESIZE = 40,
-    VT_CHECKSUM_VALUE = 42
+    VT_ORIG_SENSOR_ID = 8,
+    VT_IMAGE_TIME = 10,
+    VT_FILENAME = 12,
+    VT_FORMAT = 14,
+    VT_FILESIZE = 16,
+    VT_CHECKSUM_VALUE = 18,
+    VT_REGION_GEO_JSON = 20,
+    VT_REGION_TEXT = 22,
+    VT_REGION = 24,
+    VT_REGION_TYPE = 26,
+    VT_REGION_NDIMS = 28,
+    VT_REGION_SRID = 30,
+    VT_SUBJECT_ID = 32,
+    VT_NAME = 34,
+    VT_TRANSACTION_ID = 36,
+    VT_TAGS = 38,
+    VT_KEYWORDS = 40,
+    VT_NOTES = 42
   };
+  /// Unique identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
+  /// Sensor identifier
   const ::flatbuffers::String *ID_SENSOR() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID_SENSOR);
   }
-  const ::flatbuffers::String *IMAGE_TIME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_IMAGE_TIME);
-  }
-  const ::flatbuffers::String *FILENAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_FILENAME);
-  }
-  const ::flatbuffers::String *REGION() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_REGION);
-  }
-  const ::flatbuffers::String *REGION_TEXT() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_REGION_TEXT);
-  }
-  const ::flatbuffers::String *REGION_GEO_JSON() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_REGION_GEO_JSON);
-  }
-  const ::flatbuffers::String *REGION_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_REGION_TYPE);
-  }
-  int32_t REGION_NDIMS() const {
-    return GetField<int32_t>(VT_REGION_NDIMS, 0);
-  }
-  int32_t REGION_SRID() const {
-    return GetField<int32_t>(VT_REGION_SRID, 0);
-  }
+  /// Original sensor identifier
   const ::flatbuffers::String *ORIG_SENSOR_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIG_SENSOR_ID);
   }
-  const ::flatbuffers::String *SUBJECT_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SUBJECT_ID);
+  /// Image capture time (ISO 8601)
+  const ::flatbuffers::String *IMAGE_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_IMAGE_TIME);
   }
-  const ::flatbuffers::String *NAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  /// Image filename
+  const ::flatbuffers::String *FILENAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_FILENAME);
   }
-  const ::flatbuffers::String *TRANSACTION_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TRANSACTION_ID);
+  /// Image format
+  imageFormat FORMAT() const {
+    return static_cast<imageFormat>(GetField<int8_t>(VT_FORMAT, 0));
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_TAGS);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *KEYWORDS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_KEYWORDS);
-  }
-  const ::flatbuffers::String *NOTES() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_NOTES);
-  }
-  const ::flatbuffers::String *FORMAT() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_FORMAT);
-  }
+  /// File size (bytes)
   int64_t FILESIZE() const {
     return GetField<int64_t>(VT_FILESIZE, 0);
   }
+  /// File checksum value
   const ::flatbuffers::String *CHECKSUM_VALUE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CHECKSUM_VALUE);
+  }
+  /// Region GeoJSON boundary
+  const ::flatbuffers::String *REGION_GEO_JSON() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REGION_GEO_JSON);
+  }
+  /// Region text description
+  const ::flatbuffers::String *REGION_TEXT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REGION_TEXT);
+  }
+  /// Region name
+  const ::flatbuffers::String *REGION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REGION);
+  }
+  /// Region type
+  const ::flatbuffers::String *REGION_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REGION_TYPE);
+  }
+  /// Region geometry dimensions
+  uint8_t REGION_NDIMS() const {
+    return GetField<uint8_t>(VT_REGION_NDIMS, 0);
+  }
+  /// Region spatial reference ID
+  uint16_t REGION_SRID() const {
+    return GetField<uint16_t>(VT_REGION_SRID, 0);
+  }
+  /// Subject object identifier
+  const ::flatbuffers::String *SUBJECT_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SUBJECT_ID);
+  }
+  /// Image name or title
+  const ::flatbuffers::String *NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  /// Transaction identifier
+  const ::flatbuffers::String *TRANSACTION_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TRANSACTION_ID);
+  }
+  /// Associated tags
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_TAGS);
+  }
+  /// Keywords for search/classification
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *KEYWORDS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_KEYWORDS);
+  }
+  /// Notes
+  const ::flatbuffers::String *NOTES() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NOTES);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -107,22 +175,26 @@ struct GDI FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(ID()) &&
            VerifyOffset(verifier, VT_ID_SENSOR) &&
            verifier.VerifyString(ID_SENSOR()) &&
+           VerifyOffset(verifier, VT_ORIG_SENSOR_ID) &&
+           verifier.VerifyString(ORIG_SENSOR_ID()) &&
            VerifyOffset(verifier, VT_IMAGE_TIME) &&
            verifier.VerifyString(IMAGE_TIME()) &&
            VerifyOffset(verifier, VT_FILENAME) &&
            verifier.VerifyString(FILENAME()) &&
-           VerifyOffset(verifier, VT_REGION) &&
-           verifier.VerifyString(REGION()) &&
-           VerifyOffset(verifier, VT_REGION_TEXT) &&
-           verifier.VerifyString(REGION_TEXT()) &&
+           VerifyField<int8_t>(verifier, VT_FORMAT, 1) &&
+           VerifyField<int64_t>(verifier, VT_FILESIZE, 8) &&
+           VerifyOffset(verifier, VT_CHECKSUM_VALUE) &&
+           verifier.VerifyString(CHECKSUM_VALUE()) &&
            VerifyOffset(verifier, VT_REGION_GEO_JSON) &&
            verifier.VerifyString(REGION_GEO_JSON()) &&
+           VerifyOffset(verifier, VT_REGION_TEXT) &&
+           verifier.VerifyString(REGION_TEXT()) &&
+           VerifyOffset(verifier, VT_REGION) &&
+           verifier.VerifyString(REGION()) &&
            VerifyOffset(verifier, VT_REGION_TYPE) &&
            verifier.VerifyString(REGION_TYPE()) &&
-           VerifyField<int32_t>(verifier, VT_REGION_NDIMS, 4) &&
-           VerifyField<int32_t>(verifier, VT_REGION_SRID, 4) &&
-           VerifyOffset(verifier, VT_ORIG_SENSOR_ID) &&
-           verifier.VerifyString(ORIG_SENSOR_ID()) &&
+           VerifyField<uint8_t>(verifier, VT_REGION_NDIMS, 1) &&
+           VerifyField<uint16_t>(verifier, VT_REGION_SRID, 2) &&
            VerifyOffset(verifier, VT_SUBJECT_ID) &&
            verifier.VerifyString(SUBJECT_ID()) &&
            VerifyOffset(verifier, VT_NAME) &&
@@ -137,11 +209,6 @@ struct GDI FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyVectorOfStrings(KEYWORDS()) &&
            VerifyOffset(verifier, VT_NOTES) &&
            verifier.VerifyString(NOTES()) &&
-           VerifyOffset(verifier, VT_FORMAT) &&
-           verifier.VerifyString(FORMAT()) &&
-           VerifyField<int64_t>(verifier, VT_FILESIZE, 8) &&
-           VerifyOffset(verifier, VT_CHECKSUM_VALUE) &&
-           verifier.VerifyString(CHECKSUM_VALUE()) &&
            verifier.EndTable();
   }
 };
@@ -156,32 +223,41 @@ struct GDIBuilder {
   void add_ID_SENSOR(::flatbuffers::Offset<::flatbuffers::String> ID_SENSOR) {
     fbb_.AddOffset(GDI::VT_ID_SENSOR, ID_SENSOR);
   }
+  void add_ORIG_SENSOR_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID) {
+    fbb_.AddOffset(GDI::VT_ORIG_SENSOR_ID, ORIG_SENSOR_ID);
+  }
   void add_IMAGE_TIME(::flatbuffers::Offset<::flatbuffers::String> IMAGE_TIME) {
     fbb_.AddOffset(GDI::VT_IMAGE_TIME, IMAGE_TIME);
   }
   void add_FILENAME(::flatbuffers::Offset<::flatbuffers::String> FILENAME) {
     fbb_.AddOffset(GDI::VT_FILENAME, FILENAME);
   }
-  void add_REGION(::flatbuffers::Offset<::flatbuffers::String> REGION) {
-    fbb_.AddOffset(GDI::VT_REGION, REGION);
+  void add_FORMAT(imageFormat FORMAT) {
+    fbb_.AddElement<int8_t>(GDI::VT_FORMAT, static_cast<int8_t>(FORMAT), 0);
   }
-  void add_REGION_TEXT(::flatbuffers::Offset<::flatbuffers::String> REGION_TEXT) {
-    fbb_.AddOffset(GDI::VT_REGION_TEXT, REGION_TEXT);
+  void add_FILESIZE(int64_t FILESIZE) {
+    fbb_.AddElement<int64_t>(GDI::VT_FILESIZE, FILESIZE, 0);
+  }
+  void add_CHECKSUM_VALUE(::flatbuffers::Offset<::flatbuffers::String> CHECKSUM_VALUE) {
+    fbb_.AddOffset(GDI::VT_CHECKSUM_VALUE, CHECKSUM_VALUE);
   }
   void add_REGION_GEO_JSON(::flatbuffers::Offset<::flatbuffers::String> REGION_GEO_JSON) {
     fbb_.AddOffset(GDI::VT_REGION_GEO_JSON, REGION_GEO_JSON);
   }
+  void add_REGION_TEXT(::flatbuffers::Offset<::flatbuffers::String> REGION_TEXT) {
+    fbb_.AddOffset(GDI::VT_REGION_TEXT, REGION_TEXT);
+  }
+  void add_REGION(::flatbuffers::Offset<::flatbuffers::String> REGION) {
+    fbb_.AddOffset(GDI::VT_REGION, REGION);
+  }
   void add_REGION_TYPE(::flatbuffers::Offset<::flatbuffers::String> REGION_TYPE) {
     fbb_.AddOffset(GDI::VT_REGION_TYPE, REGION_TYPE);
   }
-  void add_REGION_NDIMS(int32_t REGION_NDIMS) {
-    fbb_.AddElement<int32_t>(GDI::VT_REGION_NDIMS, REGION_NDIMS, 0);
+  void add_REGION_NDIMS(uint8_t REGION_NDIMS) {
+    fbb_.AddElement<uint8_t>(GDI::VT_REGION_NDIMS, REGION_NDIMS, 0);
   }
-  void add_REGION_SRID(int32_t REGION_SRID) {
-    fbb_.AddElement<int32_t>(GDI::VT_REGION_SRID, REGION_SRID, 0);
-  }
-  void add_ORIG_SENSOR_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID) {
-    fbb_.AddOffset(GDI::VT_ORIG_SENSOR_ID, ORIG_SENSOR_ID);
+  void add_REGION_SRID(uint16_t REGION_SRID) {
+    fbb_.AddElement<uint16_t>(GDI::VT_REGION_SRID, REGION_SRID, 0);
   }
   void add_SUBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> SUBJECT_ID) {
     fbb_.AddOffset(GDI::VT_SUBJECT_ID, SUBJECT_ID);
@@ -201,15 +277,6 @@ struct GDIBuilder {
   void add_NOTES(::flatbuffers::Offset<::flatbuffers::String> NOTES) {
     fbb_.AddOffset(GDI::VT_NOTES, NOTES);
   }
-  void add_FORMAT(::flatbuffers::Offset<::flatbuffers::String> FORMAT) {
-    fbb_.AddOffset(GDI::VT_FORMAT, FORMAT);
-  }
-  void add_FILESIZE(int64_t FILESIZE) {
-    fbb_.AddElement<int64_t>(GDI::VT_FILESIZE, FILESIZE, 0);
-  }
-  void add_CHECKSUM_VALUE(::flatbuffers::Offset<::flatbuffers::String> CHECKSUM_VALUE) {
-    fbb_.AddOffset(GDI::VT_CHECKSUM_VALUE, CHECKSUM_VALUE);
-  }
   explicit GDIBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -225,45 +292,45 @@ inline ::flatbuffers::Offset<GDI> CreateGDI(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ID_SENSOR = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> IMAGE_TIME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> FILENAME = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> REGION = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> REGION_TEXT = 0,
+    imageFormat FORMAT = imageFormat_FITS,
+    int64_t FILESIZE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> CHECKSUM_VALUE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> REGION_GEO_JSON = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REGION_TEXT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REGION = 0,
     ::flatbuffers::Offset<::flatbuffers::String> REGION_TYPE = 0,
-    int32_t REGION_NDIMS = 0,
-    int32_t REGION_SRID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID = 0,
+    uint8_t REGION_NDIMS = 0,
+    uint16_t REGION_SRID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SUBJECT_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TRANSACTION_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> KEYWORDS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> NOTES = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> FORMAT = 0,
-    int64_t FILESIZE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> CHECKSUM_VALUE = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> NOTES = 0) {
   GDIBuilder builder_(_fbb);
   builder_.add_FILESIZE(FILESIZE);
-  builder_.add_CHECKSUM_VALUE(CHECKSUM_VALUE);
-  builder_.add_FORMAT(FORMAT);
   builder_.add_NOTES(NOTES);
   builder_.add_KEYWORDS(KEYWORDS);
   builder_.add_TAGS(TAGS);
   builder_.add_TRANSACTION_ID(TRANSACTION_ID);
   builder_.add_NAME(NAME);
   builder_.add_SUBJECT_ID(SUBJECT_ID);
-  builder_.add_ORIG_SENSOR_ID(ORIG_SENSOR_ID);
-  builder_.add_REGION_SRID(REGION_SRID);
-  builder_.add_REGION_NDIMS(REGION_NDIMS);
   builder_.add_REGION_TYPE(REGION_TYPE);
-  builder_.add_REGION_GEO_JSON(REGION_GEO_JSON);
-  builder_.add_REGION_TEXT(REGION_TEXT);
   builder_.add_REGION(REGION);
+  builder_.add_REGION_TEXT(REGION_TEXT);
+  builder_.add_REGION_GEO_JSON(REGION_GEO_JSON);
+  builder_.add_CHECKSUM_VALUE(CHECKSUM_VALUE);
   builder_.add_FILENAME(FILENAME);
   builder_.add_IMAGE_TIME(IMAGE_TIME);
+  builder_.add_ORIG_SENSOR_ID(ORIG_SENSOR_ID);
   builder_.add_ID_SENSOR(ID_SENSOR);
   builder_.add_ID(ID);
+  builder_.add_REGION_SRID(REGION_SRID);
+  builder_.add_REGION_NDIMS(REGION_NDIMS);
+  builder_.add_FORMAT(FORMAT);
   return builder_.Finish();
 }
 
@@ -271,63 +338,62 @@ inline ::flatbuffers::Offset<GDI> CreateGDIDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *ID = nullptr,
     const char *ID_SENSOR = nullptr,
+    const char *ORIG_SENSOR_ID = nullptr,
     const char *IMAGE_TIME = nullptr,
     const char *FILENAME = nullptr,
-    const char *REGION = nullptr,
-    const char *REGION_TEXT = nullptr,
+    imageFormat FORMAT = imageFormat_FITS,
+    int64_t FILESIZE = 0,
+    const char *CHECKSUM_VALUE = nullptr,
     const char *REGION_GEO_JSON = nullptr,
+    const char *REGION_TEXT = nullptr,
+    const char *REGION = nullptr,
     const char *REGION_TYPE = nullptr,
-    int32_t REGION_NDIMS = 0,
-    int32_t REGION_SRID = 0,
-    const char *ORIG_SENSOR_ID = nullptr,
+    uint8_t REGION_NDIMS = 0,
+    uint16_t REGION_SRID = 0,
     const char *SUBJECT_ID = nullptr,
     const char *NAME = nullptr,
     const char *TRANSACTION_ID = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *KEYWORDS = nullptr,
-    const char *NOTES = nullptr,
-    const char *FORMAT = nullptr,
-    int64_t FILESIZE = 0,
-    const char *CHECKSUM_VALUE = nullptr) {
+    const char *NOTES = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto ID_SENSOR__ = ID_SENSOR ? _fbb.CreateString(ID_SENSOR) : 0;
+  auto ORIG_SENSOR_ID__ = ORIG_SENSOR_ID ? _fbb.CreateString(ORIG_SENSOR_ID) : 0;
   auto IMAGE_TIME__ = IMAGE_TIME ? _fbb.CreateString(IMAGE_TIME) : 0;
   auto FILENAME__ = FILENAME ? _fbb.CreateString(FILENAME) : 0;
-  auto REGION__ = REGION ? _fbb.CreateString(REGION) : 0;
-  auto REGION_TEXT__ = REGION_TEXT ? _fbb.CreateString(REGION_TEXT) : 0;
+  auto CHECKSUM_VALUE__ = CHECKSUM_VALUE ? _fbb.CreateString(CHECKSUM_VALUE) : 0;
   auto REGION_GEO_JSON__ = REGION_GEO_JSON ? _fbb.CreateString(REGION_GEO_JSON) : 0;
+  auto REGION_TEXT__ = REGION_TEXT ? _fbb.CreateString(REGION_TEXT) : 0;
+  auto REGION__ = REGION ? _fbb.CreateString(REGION) : 0;
   auto REGION_TYPE__ = REGION_TYPE ? _fbb.CreateString(REGION_TYPE) : 0;
-  auto ORIG_SENSOR_ID__ = ORIG_SENSOR_ID ? _fbb.CreateString(ORIG_SENSOR_ID) : 0;
   auto SUBJECT_ID__ = SUBJECT_ID ? _fbb.CreateString(SUBJECT_ID) : 0;
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   auto TRANSACTION_ID__ = TRANSACTION_ID ? _fbb.CreateString(TRANSACTION_ID) : 0;
   auto TAGS__ = TAGS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*TAGS) : 0;
   auto KEYWORDS__ = KEYWORDS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*KEYWORDS) : 0;
   auto NOTES__ = NOTES ? _fbb.CreateString(NOTES) : 0;
-  auto FORMAT__ = FORMAT ? _fbb.CreateString(FORMAT) : 0;
-  auto CHECKSUM_VALUE__ = CHECKSUM_VALUE ? _fbb.CreateString(CHECKSUM_VALUE) : 0;
   return CreateGDI(
       _fbb,
       ID__,
       ID_SENSOR__,
+      ORIG_SENSOR_ID__,
       IMAGE_TIME__,
       FILENAME__,
-      REGION__,
-      REGION_TEXT__,
+      FORMAT,
+      FILESIZE,
+      CHECKSUM_VALUE__,
       REGION_GEO_JSON__,
+      REGION_TEXT__,
+      REGION__,
       REGION_TYPE__,
       REGION_NDIMS,
       REGION_SRID,
-      ORIG_SENSOR_ID__,
       SUBJECT_ID__,
       NAME__,
       TRANSACTION_ID__,
       TAGS__,
       KEYWORDS__,
-      NOTES__,
-      FORMAT__,
-      FILESIZE,
-      CHECKSUM_VALUE__);
+      NOTES__);
 }
 
 inline const GDI *GetGDI(const void *buf) {

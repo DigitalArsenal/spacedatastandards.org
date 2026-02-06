@@ -5,6 +5,104 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class AttMotionType {
+  final int value;
+  const AttMotionType._(this.value);
+
+  factory AttMotionType.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum AttMotionType');
+    }
+    return result;
+  }
+
+  static AttMotionType? _createOrNull(int? value) => 
+      value == null ? null : AttMotionType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const AttMotionType STABILIZED = AttMotionType._(0);
+  static const AttMotionType SPINNING = AttMotionType._(1);
+  static const AttMotionType TUMBLING = AttMotionType._(2);
+  static const AttMotionType PRECESSING = AttMotionType._(3);
+  static const AttMotionType UNKNOWN = AttMotionType._(4);
+  static const Map<int, AttMotionType> values = {
+    0: STABILIZED,
+    1: SPINNING,
+    2: TUMBLING,
+    3: PRECESSING,
+    4: UNKNOWN};
+
+  static const fb.Reader<AttMotionType> reader = _AttMotionTypeReader();
+
+  @override
+  String toString() {
+    return 'AttMotionType{value: $value}';
+  }
+}
+
+class _AttMotionTypeReader extends fb.Reader<AttMotionType> {
+  const _AttMotionTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  AttMotionType read(fb.BufferContext bc, int offset) =>
+      AttMotionType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class AttRepresentation {
+  final int value;
+  const AttRepresentation._(this.value);
+
+  factory AttRepresentation.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum AttRepresentation');
+    }
+    return result;
+  }
+
+  static AttRepresentation? _createOrNull(int? value) => 
+      value == null ? null : AttRepresentation.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const AttRepresentation QUATERNION = AttRepresentation._(0);
+  static const AttRepresentation EULER = AttRepresentation._(1);
+  static const AttRepresentation SPIN = AttRepresentation._(2);
+  static const AttRepresentation DIRECTION_COSINE = AttRepresentation._(3);
+  static const Map<int, AttRepresentation> values = {
+    0: QUATERNION,
+    1: EULER,
+    2: SPIN,
+    3: DIRECTION_COSINE};
+
+  static const fb.Reader<AttRepresentation> reader = _AttRepresentationReader();
+
+  @override
+  String toString() {
+    return 'AttRepresentation{value: $value}';
+  }
+}
+
+class _AttRepresentationReader extends fb.Reader<AttRepresentation> {
+  const _AttRepresentationReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  AttRepresentation read(fb.BufferContext bc, int offset) =>
+      AttRepresentation.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 ///  Attitude Data Point
 class ATD {
   ATD._(this._bc, this._bcOffset);
@@ -18,35 +116,72 @@ class ATD {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Attitude set identifier (groups time-series points)
   String? get AS_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  int get SAT_NO => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  ///  Satellite catalog number
+  int get SAT_NO => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  ///  International designator
   String? get ORIG_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get TS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get MOTION_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  double get Q1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
-  double get Q2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
-  double get Q3 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
-  double get QC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
-  double get Q1_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
-  double get Q2_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
-  double get Q3_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
-  double get QC_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
-  List<String>? get X_ANGLE => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 32);
-  List<String>? get Y_ANGLE => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 34);
-  List<String>? get Z_ANGLE => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 36);
-  List<String>? get X_RATE => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 38);
-  List<String>? get Y_RATE => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 40);
-  List<String>? get Z_RATE => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 42);
-  double get RA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
-  double get DECLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
-  double get CONING_ANGLE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
-  double get PREC_PERIOD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
-  double get SPIN_PERIOD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
+  ///  Observation epoch (ISO 8601)
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Attitude representation used
+  AttRepresentation get REPRESENTATION => AttRepresentation.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
+  ///  Motion characterization
+  AttMotionType get MOTION_TYPE => AttMotionType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 16, 0));
+  ///  Quaternion scalar component (q0 or qc)
+  double get QC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  ///  Quaternion vector component 1
+  double get Q1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  Quaternion vector component 2
+  double get Q2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Quaternion vector component 3
+  double get Q3 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  ///  Quaternion scalar rate (rad/s)
+  double get QC_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  ///  Quaternion vector rate 1 (rad/s)
+  double get Q1_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  ///  Quaternion vector rate 2 (rad/s)
+  double get Q2_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  ///  Quaternion vector rate 3 (rad/s)
+  double get Q3_DOT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  ///  Euler angle X (degrees)
+  double get X_ANGLE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  ///  Euler angle Y (degrees)
+  double get Y_ANGLE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  ///  Euler angle Z (degrees)
+  double get Z_ANGLE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  ///  Angular rate about X (deg/s)
+  double get X_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  ///  Angular rate about Y (deg/s)
+  double get Y_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  ///  Angular rate about Z (deg/s)
+  double get Z_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  ///  Right ascension of spin axis (degrees)
+  double get RA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
+  ///  Declination of spin axis (degrees)
+  double get DECLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
+  ///  Coning half-angle (degrees)
+  double get CONING_ANGLE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
+  ///  Precession period (seconds)
+  double get PREC_PERIOD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
+  ///  Spin period (seconds)
+  double get SPIN_PERIOD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
+  ///  Attitude uncertainty (degrees, 1-sigma)
+  double get ATTITUDE_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, 0.0);
+  ///  Rate uncertainty (deg/s, 1-sigma)
+  double get RATE_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
+  ///  Data quality (0-9, 9=best)
+  int get QUALITY => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 60, 0);
+  ///  Reference frame for attitude
+  String? get REF_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 62);
+  ///  Sensor identifier providing the observation
+  String? get SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 64);
 
   @override
   String toString() {
-    return 'ATD{ID: ${ID}, AS_ID: ${AS_ID}, SAT_NO: ${SAT_NO}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, TS: ${TS}, MOTION_TYPE: ${MOTION_TYPE}, Q1: ${Q1}, Q2: ${Q2}, Q3: ${Q3}, QC: ${QC}, Q1_DOT: ${Q1_DOT}, Q2_DOT: ${Q2_DOT}, Q3_DOT: ${Q3_DOT}, QC_DOT: ${QC_DOT}, X_ANGLE: ${X_ANGLE}, Y_ANGLE: ${Y_ANGLE}, Z_ANGLE: ${Z_ANGLE}, X_RATE: ${X_RATE}, Y_RATE: ${Y_RATE}, Z_RATE: ${Z_RATE}, RA: ${RA}, DECLINATION: ${DECLINATION}, CONING_ANGLE: ${CONING_ANGLE}, PREC_PERIOD: ${PREC_PERIOD}, SPIN_PERIOD: ${SPIN_PERIOD}}';
+    return 'ATD{ID: ${ID}, AS_ID: ${AS_ID}, SAT_NO: ${SAT_NO}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, EPOCH: ${EPOCH}, REPRESENTATION: ${REPRESENTATION}, MOTION_TYPE: ${MOTION_TYPE}, QC: ${QC}, Q1: ${Q1}, Q2: ${Q2}, Q3: ${Q3}, QC_DOT: ${QC_DOT}, Q1_DOT: ${Q1_DOT}, Q2_DOT: ${Q2_DOT}, Q3_DOT: ${Q3_DOT}, X_ANGLE: ${X_ANGLE}, Y_ANGLE: ${Y_ANGLE}, Z_ANGLE: ${Z_ANGLE}, X_RATE: ${X_RATE}, Y_RATE: ${Y_RATE}, Z_RATE: ${Z_RATE}, RA: ${RA}, DECLINATION: ${DECLINATION}, CONING_ANGLE: ${CONING_ANGLE}, PREC_PERIOD: ${PREC_PERIOD}, SPIN_PERIOD: ${SPIN_PERIOD}, ATTITUDE_UNC: ${ATTITUDE_UNC}, RATE_UNC: ${RATE_UNC}, QUALITY: ${QUALITY}, REF_FRAME: ${REF_FRAME}, SENSOR_ID: ${SENSOR_ID}}';
   }
 }
 
@@ -64,7 +199,7 @@ class ATDBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(25);
+    fbBuilder.startTable(31);
   }
 
   int addIdOffset(int? offset) {
@@ -76,95 +211,119 @@ class ATDBuilder {
     return fbBuilder.offset;
   }
   int addSatNo(int? SAT_NO) {
-    fbBuilder.addInt32(2, SAT_NO);
+    fbBuilder.addUint32(2, SAT_NO);
     return fbBuilder.offset;
   }
   int addOrigObjectIdOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addTsOffset(int? offset) {
+  int addEpochOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addMotionTypeOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
+  int addRepresentation(AttRepresentation? REPRESENTATION) {
+    fbBuilder.addInt8(5, REPRESENTATION?.value);
     return fbBuilder.offset;
   }
-  int addQ1(double? Q1) {
-    fbBuilder.addFloat64(6, Q1);
-    return fbBuilder.offset;
-  }
-  int addQ2(double? Q2) {
-    fbBuilder.addFloat64(7, Q2);
-    return fbBuilder.offset;
-  }
-  int addQ3(double? Q3) {
-    fbBuilder.addFloat64(8, Q3);
+  int addMotionType(AttMotionType? MOTION_TYPE) {
+    fbBuilder.addInt8(6, MOTION_TYPE?.value);
     return fbBuilder.offset;
   }
   int addQc(double? QC) {
-    fbBuilder.addFloat64(9, QC);
+    fbBuilder.addFloat64(7, QC);
     return fbBuilder.offset;
   }
-  int addQ1Dot(double? Q1_DOT) {
-    fbBuilder.addFloat64(10, Q1_DOT);
+  int addQ1(double? Q1) {
+    fbBuilder.addFloat64(8, Q1);
     return fbBuilder.offset;
   }
-  int addQ2Dot(double? Q2_DOT) {
-    fbBuilder.addFloat64(11, Q2_DOT);
+  int addQ2(double? Q2) {
+    fbBuilder.addFloat64(9, Q2);
     return fbBuilder.offset;
   }
-  int addQ3Dot(double? Q3_DOT) {
-    fbBuilder.addFloat64(12, Q3_DOT);
+  int addQ3(double? Q3) {
+    fbBuilder.addFloat64(10, Q3);
     return fbBuilder.offset;
   }
   int addQcDot(double? QC_DOT) {
-    fbBuilder.addFloat64(13, QC_DOT);
+    fbBuilder.addFloat64(11, QC_DOT);
     return fbBuilder.offset;
   }
-  int addXAngleOffset(int? offset) {
-    fbBuilder.addOffset(14, offset);
+  int addQ1Dot(double? Q1_DOT) {
+    fbBuilder.addFloat64(12, Q1_DOT);
     return fbBuilder.offset;
   }
-  int addYAngleOffset(int? offset) {
-    fbBuilder.addOffset(15, offset);
+  int addQ2Dot(double? Q2_DOT) {
+    fbBuilder.addFloat64(13, Q2_DOT);
     return fbBuilder.offset;
   }
-  int addZAngleOffset(int? offset) {
-    fbBuilder.addOffset(16, offset);
+  int addQ3Dot(double? Q3_DOT) {
+    fbBuilder.addFloat64(14, Q3_DOT);
     return fbBuilder.offset;
   }
-  int addXRateOffset(int? offset) {
-    fbBuilder.addOffset(17, offset);
+  int addXAngle(double? X_ANGLE) {
+    fbBuilder.addFloat64(15, X_ANGLE);
     return fbBuilder.offset;
   }
-  int addYRateOffset(int? offset) {
-    fbBuilder.addOffset(18, offset);
+  int addYAngle(double? Y_ANGLE) {
+    fbBuilder.addFloat64(16, Y_ANGLE);
     return fbBuilder.offset;
   }
-  int addZRateOffset(int? offset) {
-    fbBuilder.addOffset(19, offset);
+  int addZAngle(double? Z_ANGLE) {
+    fbBuilder.addFloat64(17, Z_ANGLE);
+    return fbBuilder.offset;
+  }
+  int addXRate(double? X_RATE) {
+    fbBuilder.addFloat64(18, X_RATE);
+    return fbBuilder.offset;
+  }
+  int addYRate(double? Y_RATE) {
+    fbBuilder.addFloat64(19, Y_RATE);
+    return fbBuilder.offset;
+  }
+  int addZRate(double? Z_RATE) {
+    fbBuilder.addFloat64(20, Z_RATE);
     return fbBuilder.offset;
   }
   int addRa(double? RA) {
-    fbBuilder.addFloat64(20, RA);
+    fbBuilder.addFloat64(21, RA);
     return fbBuilder.offset;
   }
   int addDeclination(double? DECLINATION) {
-    fbBuilder.addFloat64(21, DECLINATION);
+    fbBuilder.addFloat64(22, DECLINATION);
     return fbBuilder.offset;
   }
   int addConingAngle(double? CONING_ANGLE) {
-    fbBuilder.addFloat64(22, CONING_ANGLE);
+    fbBuilder.addFloat64(23, CONING_ANGLE);
     return fbBuilder.offset;
   }
   int addPrecPeriod(double? PREC_PERIOD) {
-    fbBuilder.addFloat64(23, PREC_PERIOD);
+    fbBuilder.addFloat64(24, PREC_PERIOD);
     return fbBuilder.offset;
   }
   int addSpinPeriod(double? SPIN_PERIOD) {
-    fbBuilder.addFloat64(24, SPIN_PERIOD);
+    fbBuilder.addFloat64(25, SPIN_PERIOD);
+    return fbBuilder.offset;
+  }
+  int addAttitudeUnc(double? ATTITUDE_UNC) {
+    fbBuilder.addFloat64(26, ATTITUDE_UNC);
+    return fbBuilder.offset;
+  }
+  int addRateUnc(double? RATE_UNC) {
+    fbBuilder.addFloat64(27, RATE_UNC);
+    return fbBuilder.offset;
+  }
+  int addQuality(int? QUALITY) {
+    fbBuilder.addUint8(28, QUALITY);
+    return fbBuilder.offset;
+  }
+  int addRefFrameOffset(int? offset) {
+    fbBuilder.addOffset(29, offset);
+    return fbBuilder.offset;
+  }
+  int addSensorIdOffset(int? offset) {
+    fbBuilder.addOffset(30, offset);
     return fbBuilder.offset;
   }
 
@@ -178,69 +337,82 @@ class ATDObjectBuilder extends fb.ObjectBuilder {
   final String? _AS_ID;
   final int? _SAT_NO;
   final String? _ORIG_OBJECT_ID;
-  final String? _TS;
-  final String? _MOTION_TYPE;
+  final String? _EPOCH;
+  final AttRepresentation? _REPRESENTATION;
+  final AttMotionType? _MOTION_TYPE;
+  final double? _QC;
   final double? _Q1;
   final double? _Q2;
   final double? _Q3;
-  final double? _QC;
+  final double? _QC_DOT;
   final double? _Q1_DOT;
   final double? _Q2_DOT;
   final double? _Q3_DOT;
-  final double? _QC_DOT;
-  final List<String>? _X_ANGLE;
-  final List<String>? _Y_ANGLE;
-  final List<String>? _Z_ANGLE;
-  final List<String>? _X_RATE;
-  final List<String>? _Y_RATE;
-  final List<String>? _Z_RATE;
+  final double? _X_ANGLE;
+  final double? _Y_ANGLE;
+  final double? _Z_ANGLE;
+  final double? _X_RATE;
+  final double? _Y_RATE;
+  final double? _Z_RATE;
   final double? _RA;
   final double? _DECLINATION;
   final double? _CONING_ANGLE;
   final double? _PREC_PERIOD;
   final double? _SPIN_PERIOD;
+  final double? _ATTITUDE_UNC;
+  final double? _RATE_UNC;
+  final int? _QUALITY;
+  final String? _REF_FRAME;
+  final String? _SENSOR_ID;
 
   ATDObjectBuilder({
     String? ID,
     String? AS_ID,
     int? SAT_NO,
     String? ORIG_OBJECT_ID,
-    String? TS,
-    String? MOTION_TYPE,
+    String? EPOCH,
+    AttRepresentation? REPRESENTATION,
+    AttMotionType? MOTION_TYPE,
+    double? QC,
     double? Q1,
     double? Q2,
     double? Q3,
-    double? QC,
+    double? QC_DOT,
     double? Q1_DOT,
     double? Q2_DOT,
     double? Q3_DOT,
-    double? QC_DOT,
-    List<String>? X_ANGLE,
-    List<String>? Y_ANGLE,
-    List<String>? Z_ANGLE,
-    List<String>? X_RATE,
-    List<String>? Y_RATE,
-    List<String>? Z_RATE,
+    double? X_ANGLE,
+    double? Y_ANGLE,
+    double? Z_ANGLE,
+    double? X_RATE,
+    double? Y_RATE,
+    double? Z_RATE,
     double? RA,
     double? DECLINATION,
     double? CONING_ANGLE,
     double? PREC_PERIOD,
     double? SPIN_PERIOD,
+    double? ATTITUDE_UNC,
+    double? RATE_UNC,
+    int? QUALITY,
+    String? REF_FRAME,
+    String? SENSOR_ID,
   })
       : _ID = ID,
         _AS_ID = AS_ID,
         _SAT_NO = SAT_NO,
         _ORIG_OBJECT_ID = ORIG_OBJECT_ID,
-        _TS = TS,
+        _EPOCH = EPOCH,
+        _REPRESENTATION = REPRESENTATION,
         _MOTION_TYPE = MOTION_TYPE,
+        _QC = QC,
         _Q1 = Q1,
         _Q2 = Q2,
         _Q3 = Q3,
-        _QC = QC,
+        _QC_DOT = QC_DOT,
         _Q1_DOT = Q1_DOT,
         _Q2_DOT = Q2_DOT,
         _Q3_DOT = Q3_DOT,
-        _QC_DOT = QC_DOT,
         _X_ANGLE = X_ANGLE,
         _Y_ANGLE = Y_ANGLE,
         _Z_ANGLE = Z_ANGLE,
@@ -251,7 +423,12 @@ class ATDObjectBuilder extends fb.ObjectBuilder {
         _DECLINATION = DECLINATION,
         _CONING_ANGLE = CONING_ANGLE,
         _PREC_PERIOD = PREC_PERIOD,
-        _SPIN_PERIOD = SPIN_PERIOD;
+        _SPIN_PERIOD = SPIN_PERIOD,
+        _ATTITUDE_UNC = ATTITUDE_UNC,
+        _RATE_UNC = RATE_UNC,
+        _QUALITY = QUALITY,
+        _REF_FRAME = REF_FRAME,
+        _SENSOR_ID = SENSOR_ID;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -262,48 +439,44 @@ class ATDObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_AS_ID!);
     final int? ORIG_OBJECT_IDOffset = _ORIG_OBJECT_ID == null ? null
         : fbBuilder.writeString(_ORIG_OBJECT_ID!);
-    final int? TSOffset = _TS == null ? null
-        : fbBuilder.writeString(_TS!);
-    final int? MOTION_TYPEOffset = _MOTION_TYPE == null ? null
-        : fbBuilder.writeString(_MOTION_TYPE!);
-    final int? X_ANGLEOffset = _X_ANGLE == null ? null
-        : fbBuilder.writeList(_X_ANGLE!.map(fbBuilder.writeString).toList());
-    final int? Y_ANGLEOffset = _Y_ANGLE == null ? null
-        : fbBuilder.writeList(_Y_ANGLE!.map(fbBuilder.writeString).toList());
-    final int? Z_ANGLEOffset = _Z_ANGLE == null ? null
-        : fbBuilder.writeList(_Z_ANGLE!.map(fbBuilder.writeString).toList());
-    final int? X_RATEOffset = _X_RATE == null ? null
-        : fbBuilder.writeList(_X_RATE!.map(fbBuilder.writeString).toList());
-    final int? Y_RATEOffset = _Y_RATE == null ? null
-        : fbBuilder.writeList(_Y_RATE!.map(fbBuilder.writeString).toList());
-    final int? Z_RATEOffset = _Z_RATE == null ? null
-        : fbBuilder.writeList(_Z_RATE!.map(fbBuilder.writeString).toList());
-    fbBuilder.startTable(25);
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    final int? REF_FRAMEOffset = _REF_FRAME == null ? null
+        : fbBuilder.writeString(_REF_FRAME!);
+    final int? SENSOR_IDOffset = _SENSOR_ID == null ? null
+        : fbBuilder.writeString(_SENSOR_ID!);
+    fbBuilder.startTable(31);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, AS_IDOffset);
-    fbBuilder.addInt32(2, _SAT_NO);
+    fbBuilder.addUint32(2, _SAT_NO);
     fbBuilder.addOffset(3, ORIG_OBJECT_IDOffset);
-    fbBuilder.addOffset(4, TSOffset);
-    fbBuilder.addOffset(5, MOTION_TYPEOffset);
-    fbBuilder.addFloat64(6, _Q1);
-    fbBuilder.addFloat64(7, _Q2);
-    fbBuilder.addFloat64(8, _Q3);
-    fbBuilder.addFloat64(9, _QC);
-    fbBuilder.addFloat64(10, _Q1_DOT);
-    fbBuilder.addFloat64(11, _Q2_DOT);
-    fbBuilder.addFloat64(12, _Q3_DOT);
-    fbBuilder.addFloat64(13, _QC_DOT);
-    fbBuilder.addOffset(14, X_ANGLEOffset);
-    fbBuilder.addOffset(15, Y_ANGLEOffset);
-    fbBuilder.addOffset(16, Z_ANGLEOffset);
-    fbBuilder.addOffset(17, X_RATEOffset);
-    fbBuilder.addOffset(18, Y_RATEOffset);
-    fbBuilder.addOffset(19, Z_RATEOffset);
-    fbBuilder.addFloat64(20, _RA);
-    fbBuilder.addFloat64(21, _DECLINATION);
-    fbBuilder.addFloat64(22, _CONING_ANGLE);
-    fbBuilder.addFloat64(23, _PREC_PERIOD);
-    fbBuilder.addFloat64(24, _SPIN_PERIOD);
+    fbBuilder.addOffset(4, EPOCHOffset);
+    fbBuilder.addInt8(5, _REPRESENTATION?.value);
+    fbBuilder.addInt8(6, _MOTION_TYPE?.value);
+    fbBuilder.addFloat64(7, _QC);
+    fbBuilder.addFloat64(8, _Q1);
+    fbBuilder.addFloat64(9, _Q2);
+    fbBuilder.addFloat64(10, _Q3);
+    fbBuilder.addFloat64(11, _QC_DOT);
+    fbBuilder.addFloat64(12, _Q1_DOT);
+    fbBuilder.addFloat64(13, _Q2_DOT);
+    fbBuilder.addFloat64(14, _Q3_DOT);
+    fbBuilder.addFloat64(15, _X_ANGLE);
+    fbBuilder.addFloat64(16, _Y_ANGLE);
+    fbBuilder.addFloat64(17, _Z_ANGLE);
+    fbBuilder.addFloat64(18, _X_RATE);
+    fbBuilder.addFloat64(19, _Y_RATE);
+    fbBuilder.addFloat64(20, _Z_RATE);
+    fbBuilder.addFloat64(21, _RA);
+    fbBuilder.addFloat64(22, _DECLINATION);
+    fbBuilder.addFloat64(23, _CONING_ANGLE);
+    fbBuilder.addFloat64(24, _PREC_PERIOD);
+    fbBuilder.addFloat64(25, _SPIN_PERIOD);
+    fbBuilder.addFloat64(26, _ATTITUDE_UNC);
+    fbBuilder.addFloat64(27, _RATE_UNC);
+    fbBuilder.addUint8(28, _QUALITY);
+    fbBuilder.addOffset(29, REF_FRAMEOffset);
+    fbBuilder.addOffset(30, SENSOR_IDOffset);
     return fbBuilder.endTable();
   }
 

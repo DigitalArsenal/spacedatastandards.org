@@ -6,121 +6,160 @@
       "description" : "Star Catalog Entry",
       "properties" : {
         "ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique internal identifier"
               },
         "CS_ID" : {
-                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "CelesTrak Star catalog identifier"
               },
         "GNC_CAT_ID" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "GNC star catalog identifier"
               },
         "GAIADR3_CAT_ID" : {
-                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "Gaia DR3 source identifier"
               },
         "HIP_CAT_ID" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Hipparcos catalog identifier"
               },
         "CAT_VERSION" : {
-                "type" : "string"
-              },
-        "RA" : {
-                "type" : "number"
-              },
-        "RA_UNC" : {
-                "type" : "number"
-              },
-        "DEC" : {
-                "type" : "number"
-              },
-        "DEC_UNC" : {
-                "type" : "number"
-              },
-        "POS_UNC_FLAG" : {
-                "type" : "boolean"
-              },
-        "PARALLAX" : {
-                "type" : "number"
-              },
-        "PARALLAX_UNC" : {
-                "type" : "number"
-              },
-        "PMRA" : {
-                "type" : "number"
-              },
-        "PMRA_UNC" : {
-                "type" : "number"
-              },
-        "PMDEC" : {
-                "type" : "number"
-              },
-        "PMDEC_UNC" : {
-                "type" : "number"
-              },
-        "PM_UNC_FLAG" : {
-                "type" : "boolean"
+                "type" : "string",
+                "description" : "Catalog version string"
               },
         "ASTROMETRY_ORIGIN" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Astrometry source description"
               },
         "STAR_EPOCH" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Epoch of stellar position (Julian years)"
+              },
+        "RA" : {
+                "type" : "number",
+                "description" : "Right ascension (degrees, ICRS)"
+              },
+        "RA_UNC" : {
+                "type" : "number",
+                "description" : "Right ascension uncertainty (arcseconds)"
+              },
+        "DEC" : {
+                "type" : "number",
+                "description" : "Declination (degrees, ICRS)"
+              },
+        "DEC_UNC" : {
+                "type" : "number",
+                "description" : "Declination uncertainty (arcseconds)"
+              },
+        "POS_UNC_FLAG" : {
+                "type" : "boolean",
+                "description" : "True if position uncertainty is flagged"
+              },
+        "PARALLAX" : {
+                "type" : "number",
+                "description" : "Parallax (milliarcseconds)"
+              },
+        "PARALLAX_UNC" : {
+                "type" : "number",
+                "description" : "Parallax uncertainty (milliarcseconds)"
+              },
+        "PMRA" : {
+                "type" : "number",
+                "description" : "Proper motion in RA (milliarcseconds/year)"
+              },
+        "PMRA_UNC" : {
+                "type" : "number",
+                "description" : "Proper motion in RA uncertainty (milliarcseconds/year)"
+              },
+        "PMDEC" : {
+                "type" : "number",
+                "description" : "Proper motion in DEC (milliarcseconds/year)"
+              },
+        "PMDEC_UNC" : {
+                "type" : "number",
+                "description" : "Proper motion in DEC uncertainty (milliarcseconds/year)"
+              },
+        "PM_UNC_FLAG" : {
+                "type" : "boolean",
+                "description" : "True if proper motion uncertainty is flagged"
               },
         "GMAG" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Gaia G-band magnitude"
               },
         "GMAG_UNC" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Gaia G-band magnitude uncertainty"
               },
         "BPMAG" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Gaia BP-band magnitude (blue photometer)"
               },
         "BPMAG_UNC" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Gaia BP-band magnitude uncertainty"
               },
         "RPMAG" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Gaia RP-band magnitude (red photometer)"
               },
         "RPMAG_UNC" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Gaia RP-band magnitude uncertainty"
               },
         "JMAG" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "2MASS J-band magnitude (1.25 um)"
               },
         "JMAG_UNC" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "J-band magnitude uncertainty"
               },
         "KMAG" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "2MASS K-band magnitude (2.17 um)"
               },
         "KMAG_UNC" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "K-band magnitude uncertainty"
               },
         "HMAG" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "2MASS H-band magnitude (1.65 um)"
               },
         "HMAG_UNC" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "H-band magnitude uncertainty"
               },
         "VAR_FLAG" : {
-                "type" : "boolean"
+                "type" : "boolean",
+                "description" : "True if star is variable"
               },
         "MULT_FLAG" : {
-                "type" : "boolean"
+                "type" : "boolean",
+                "description" : "True if star is in a multiple system"
               },
         "NEIGHBOR_ID" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Nearest neighbor catalog identifier"
               },
         "NEIGHBOR_FLAG" : {
-                "type" : "boolean"
+                "type" : "boolean",
+                "description" : "True if nearest neighbor is within confusion radius"
               },
         "NEIGHBOR_DISTANCE" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Distance to nearest neighbor (arcseconds)"
               },
         "SHIFT_FLAG" : {
-                "type" : "boolean"
+                "type" : "boolean",
+                "description" : "True if position shift detected between catalogs"
               },
         "SHIFT" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Position shift magnitude (arcseconds)"
               }
       },
       "additionalProperties" : false

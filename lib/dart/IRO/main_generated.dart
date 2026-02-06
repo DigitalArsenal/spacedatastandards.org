@@ -5,6 +5,106 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class IrBand {
+  final int value;
+  const IrBand._(this.value);
+
+  factory IrBand.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum IrBand');
+    }
+    return result;
+  }
+
+  static IrBand? _createOrNull(int? value) => 
+      value == null ? null : IrBand.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const IrBand SWIR = IrBand._(0);
+  static const IrBand MWIR = IrBand._(1);
+  static const IrBand LWIR = IrBand._(2);
+  static const IrBand VLWIR = IrBand._(3);
+  static const IrBand BROADBAND = IrBand._(4);
+  static const Map<int, IrBand> values = {
+    0: SWIR,
+    1: MWIR,
+    2: LWIR,
+    3: VLWIR,
+    4: BROADBAND};
+
+  static const fb.Reader<IrBand> reader = _IrBandReader();
+
+  @override
+  String toString() {
+    return 'IrBand{value: $value}';
+  }
+}
+
+class _IrBandReader extends fb.Reader<IrBand> {
+  const _IrBandReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  IrBand read(fb.BufferContext bc, int offset) =>
+      IrBand.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class IrDetectionType {
+  final int value;
+  const IrDetectionType._(this.value);
+
+  factory IrDetectionType.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum IrDetectionType');
+    }
+    return result;
+  }
+
+  static IrDetectionType? _createOrNull(int? value) => 
+      value == null ? null : IrDetectionType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const IrDetectionType POINT_SOURCE = IrDetectionType._(0);
+  static const IrDetectionType RESOLVED = IrDetectionType._(1);
+  static const IrDetectionType STREAK = IrDetectionType._(2);
+  static const IrDetectionType UNRESOLVED = IrDetectionType._(3);
+  static const IrDetectionType EXTENDED = IrDetectionType._(4);
+  static const Map<int, IrDetectionType> values = {
+    0: POINT_SOURCE,
+    1: RESOLVED,
+    2: STREAK,
+    3: UNRESOLVED,
+    4: EXTENDED};
+
+  static const fb.Reader<IrDetectionType> reader = _IrDetectionTypeReader();
+
+  @override
+  String toString() {
+    return 'IrDetectionType{value: $value}';
+  }
+}
+
+class _IrDetectionTypeReader extends fb.Reader<IrDetectionType> {
+  const _IrDetectionTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  IrDetectionType read(fb.BufferContext bc, int offset) =>
+      IrDetectionType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 ///  Infrared Observation
 class IRO {
   IRO._(this._bc, this._bcOffset);
@@ -18,15 +118,70 @@ class IRO {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Reference to source entity
   String? get ID_ENTITY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Sensor or observation name
   String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Description of observation
   String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Source entity designator
   String? get ENTITY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Observation epoch (ISO 8601)
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Sensor identifier
+  String? get SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Target satellite number (if identified)
+  int get SAT_NO => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 18, 0);
+  ///  Target object designator
+  String? get OBJECT_DESIGNATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  ///  IR spectral band
+  IrBand get BAND => IrBand.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 22, 0));
+  ///  Detection type
+  IrDetectionType get DETECTION_TYPE => IrDetectionType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 24, 0));
+  ///  Right ascension in degrees
+  double get RA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  ///  Declination in degrees
+  double get DEC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  ///  Right ascension uncertainty in arcseconds
+  double get RA_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  ///  Declination uncertainty in arcseconds
+  double get DEC_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  ///  Azimuth angle in degrees
+  double get AZIMUTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  ///  Elevation angle in degrees
+  double get ELEVATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  ///  Range in km (if available)
+  double get RANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  ///  Irradiance in W/m^2
+  double get IRRADIANCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  ///  Irradiance uncertainty in W/m^2
+  double get IRRADIANCE_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  ///  Apparent IR magnitude
+  double get IR_MAG => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  ///  Magnitude uncertainty
+  double get MAG_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
+  ///  Effective temperature in Kelvin
+  double get TEMPERATURE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
+  ///  Integration time in seconds
+  double get INTEGRATION_TIME => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
+  ///  Background irradiance in W/m^2/sr
+  double get BACKGROUND => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
+  ///  Signal-to-noise ratio
+  double get SNR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
+  ///  Spectral data wavelengths in micrometers
+  List<double>? get WAVELENGTHS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 56);
+  ///  Spectral data values in W/m^2/um
+  List<double>? get SPECTRAL_VALUES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 58);
+  ///  Data quality indicator (0-9, 9=best)
+  int get QUALITY => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 60, 0);
+  ///  Additional notes
+  String? get NOTES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 62);
 
   @override
   String toString() {
-    return 'IRO{ID: ${ID}, ID_ENTITY: ${ID_ENTITY}, NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, ENTITY: ${ENTITY}}';
+    return 'IRO{ID: ${ID}, ID_ENTITY: ${ID_ENTITY}, NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, ENTITY: ${ENTITY}, EPOCH: ${EPOCH}, SENSOR_ID: ${SENSOR_ID}, SAT_NO: ${SAT_NO}, OBJECT_DESIGNATOR: ${OBJECT_DESIGNATOR}, BAND: ${BAND}, DETECTION_TYPE: ${DETECTION_TYPE}, RA: ${RA}, DEC: ${DEC}, RA_UNC: ${RA_UNC}, DEC_UNC: ${DEC_UNC}, AZIMUTH: ${AZIMUTH}, ELEVATION: ${ELEVATION}, RANGE: ${RANGE}, IRRADIANCE: ${IRRADIANCE}, IRRADIANCE_UNC: ${IRRADIANCE_UNC}, IR_MAG: ${IR_MAG}, MAG_UNC: ${MAG_UNC}, TEMPERATURE: ${TEMPERATURE}, INTEGRATION_TIME: ${INTEGRATION_TIME}, BACKGROUND: ${BACKGROUND}, SNR: ${SNR}, WAVELENGTHS: ${WAVELENGTHS}, SPECTRAL_VALUES: ${SPECTRAL_VALUES}, QUALITY: ${QUALITY}, NOTES: ${NOTES}}';
   }
 }
 
@@ -44,7 +199,7 @@ class IROBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(5);
+    fbBuilder.startTable(30);
   }
 
   int addIdOffset(int? offset) {
@@ -67,6 +222,106 @@ class IROBuilder {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addSensorIdOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addSatNo(int? SAT_NO) {
+    fbBuilder.addUint32(7, SAT_NO);
+    return fbBuilder.offset;
+  }
+  int addObjectDesignatorOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addBand(IrBand? BAND) {
+    fbBuilder.addInt8(9, BAND?.value);
+    return fbBuilder.offset;
+  }
+  int addDetectionType(IrDetectionType? DETECTION_TYPE) {
+    fbBuilder.addInt8(10, DETECTION_TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addRa(double? RA) {
+    fbBuilder.addFloat64(11, RA);
+    return fbBuilder.offset;
+  }
+  int addDec(double? DEC) {
+    fbBuilder.addFloat64(12, DEC);
+    return fbBuilder.offset;
+  }
+  int addRaUnc(double? RA_UNC) {
+    fbBuilder.addFloat64(13, RA_UNC);
+    return fbBuilder.offset;
+  }
+  int addDecUnc(double? DEC_UNC) {
+    fbBuilder.addFloat64(14, DEC_UNC);
+    return fbBuilder.offset;
+  }
+  int addAzimuth(double? AZIMUTH) {
+    fbBuilder.addFloat64(15, AZIMUTH);
+    return fbBuilder.offset;
+  }
+  int addElevation(double? ELEVATION) {
+    fbBuilder.addFloat64(16, ELEVATION);
+    return fbBuilder.offset;
+  }
+  int addRange(double? RANGE) {
+    fbBuilder.addFloat64(17, RANGE);
+    return fbBuilder.offset;
+  }
+  int addIrradiance(double? IRRADIANCE) {
+    fbBuilder.addFloat64(18, IRRADIANCE);
+    return fbBuilder.offset;
+  }
+  int addIrradianceUnc(double? IRRADIANCE_UNC) {
+    fbBuilder.addFloat64(19, IRRADIANCE_UNC);
+    return fbBuilder.offset;
+  }
+  int addIrMag(double? IR_MAG) {
+    fbBuilder.addFloat64(20, IR_MAG);
+    return fbBuilder.offset;
+  }
+  int addMagUnc(double? MAG_UNC) {
+    fbBuilder.addFloat64(21, MAG_UNC);
+    return fbBuilder.offset;
+  }
+  int addTemperature(double? TEMPERATURE) {
+    fbBuilder.addFloat64(22, TEMPERATURE);
+    return fbBuilder.offset;
+  }
+  int addIntegrationTime(double? INTEGRATION_TIME) {
+    fbBuilder.addFloat64(23, INTEGRATION_TIME);
+    return fbBuilder.offset;
+  }
+  int addBackground(double? BACKGROUND) {
+    fbBuilder.addFloat64(24, BACKGROUND);
+    return fbBuilder.offset;
+  }
+  int addSnr(double? SNR) {
+    fbBuilder.addFloat64(25, SNR);
+    return fbBuilder.offset;
+  }
+  int addWavelengthsOffset(int? offset) {
+    fbBuilder.addOffset(26, offset);
+    return fbBuilder.offset;
+  }
+  int addSpectralValuesOffset(int? offset) {
+    fbBuilder.addOffset(27, offset);
+    return fbBuilder.offset;
+  }
+  int addQuality(int? QUALITY) {
+    fbBuilder.addUint8(28, QUALITY);
+    return fbBuilder.offset;
+  }
+  int addNotesOffset(int? offset) {
+    fbBuilder.addOffset(29, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -79,6 +334,31 @@ class IROObjectBuilder extends fb.ObjectBuilder {
   final String? _NAME;
   final String? _DESCRIPTION;
   final String? _ENTITY;
+  final String? _EPOCH;
+  final String? _SENSOR_ID;
+  final int? _SAT_NO;
+  final String? _OBJECT_DESIGNATOR;
+  final IrBand? _BAND;
+  final IrDetectionType? _DETECTION_TYPE;
+  final double? _RA;
+  final double? _DEC;
+  final double? _RA_UNC;
+  final double? _DEC_UNC;
+  final double? _AZIMUTH;
+  final double? _ELEVATION;
+  final double? _RANGE;
+  final double? _IRRADIANCE;
+  final double? _IRRADIANCE_UNC;
+  final double? _IR_MAG;
+  final double? _MAG_UNC;
+  final double? _TEMPERATURE;
+  final double? _INTEGRATION_TIME;
+  final double? _BACKGROUND;
+  final double? _SNR;
+  final List<double>? _WAVELENGTHS;
+  final List<double>? _SPECTRAL_VALUES;
+  final int? _QUALITY;
+  final String? _NOTES;
 
   IROObjectBuilder({
     String? ID,
@@ -86,12 +366,62 @@ class IROObjectBuilder extends fb.ObjectBuilder {
     String? NAME,
     String? DESCRIPTION,
     String? ENTITY,
+    String? EPOCH,
+    String? SENSOR_ID,
+    int? SAT_NO,
+    String? OBJECT_DESIGNATOR,
+    IrBand? BAND,
+    IrDetectionType? DETECTION_TYPE,
+    double? RA,
+    double? DEC,
+    double? RA_UNC,
+    double? DEC_UNC,
+    double? AZIMUTH,
+    double? ELEVATION,
+    double? RANGE,
+    double? IRRADIANCE,
+    double? IRRADIANCE_UNC,
+    double? IR_MAG,
+    double? MAG_UNC,
+    double? TEMPERATURE,
+    double? INTEGRATION_TIME,
+    double? BACKGROUND,
+    double? SNR,
+    List<double>? WAVELENGTHS,
+    List<double>? SPECTRAL_VALUES,
+    int? QUALITY,
+    String? NOTES,
   })
       : _ID = ID,
         _ID_ENTITY = ID_ENTITY,
         _NAME = NAME,
         _DESCRIPTION = DESCRIPTION,
-        _ENTITY = ENTITY;
+        _ENTITY = ENTITY,
+        _EPOCH = EPOCH,
+        _SENSOR_ID = SENSOR_ID,
+        _SAT_NO = SAT_NO,
+        _OBJECT_DESIGNATOR = OBJECT_DESIGNATOR,
+        _BAND = BAND,
+        _DETECTION_TYPE = DETECTION_TYPE,
+        _RA = RA,
+        _DEC = DEC,
+        _RA_UNC = RA_UNC,
+        _DEC_UNC = DEC_UNC,
+        _AZIMUTH = AZIMUTH,
+        _ELEVATION = ELEVATION,
+        _RANGE = RANGE,
+        _IRRADIANCE = IRRADIANCE,
+        _IRRADIANCE_UNC = IRRADIANCE_UNC,
+        _IR_MAG = IR_MAG,
+        _MAG_UNC = MAG_UNC,
+        _TEMPERATURE = TEMPERATURE,
+        _INTEGRATION_TIME = INTEGRATION_TIME,
+        _BACKGROUND = BACKGROUND,
+        _SNR = SNR,
+        _WAVELENGTHS = WAVELENGTHS,
+        _SPECTRAL_VALUES = SPECTRAL_VALUES,
+        _QUALITY = QUALITY,
+        _NOTES = NOTES;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -106,12 +436,49 @@ class IROObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_DESCRIPTION!);
     final int? ENTITYOffset = _ENTITY == null ? null
         : fbBuilder.writeString(_ENTITY!);
-    fbBuilder.startTable(5);
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    final int? SENSOR_IDOffset = _SENSOR_ID == null ? null
+        : fbBuilder.writeString(_SENSOR_ID!);
+    final int? OBJECT_DESIGNATOROffset = _OBJECT_DESIGNATOR == null ? null
+        : fbBuilder.writeString(_OBJECT_DESIGNATOR!);
+    final int? WAVELENGTHSOffset = _WAVELENGTHS == null ? null
+        : fbBuilder.writeListFloat64(_WAVELENGTHS!);
+    final int? SPECTRAL_VALUESOffset = _SPECTRAL_VALUES == null ? null
+        : fbBuilder.writeListFloat64(_SPECTRAL_VALUES!);
+    final int? NOTESOffset = _NOTES == null ? null
+        : fbBuilder.writeString(_NOTES!);
+    fbBuilder.startTable(30);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, ID_ENTITYOffset);
     fbBuilder.addOffset(2, NAMEOffset);
     fbBuilder.addOffset(3, DESCRIPTIONOffset);
     fbBuilder.addOffset(4, ENTITYOffset);
+    fbBuilder.addOffset(5, EPOCHOffset);
+    fbBuilder.addOffset(6, SENSOR_IDOffset);
+    fbBuilder.addUint32(7, _SAT_NO);
+    fbBuilder.addOffset(8, OBJECT_DESIGNATOROffset);
+    fbBuilder.addInt8(9, _BAND?.value);
+    fbBuilder.addInt8(10, _DETECTION_TYPE?.value);
+    fbBuilder.addFloat64(11, _RA);
+    fbBuilder.addFloat64(12, _DEC);
+    fbBuilder.addFloat64(13, _RA_UNC);
+    fbBuilder.addFloat64(14, _DEC_UNC);
+    fbBuilder.addFloat64(15, _AZIMUTH);
+    fbBuilder.addFloat64(16, _ELEVATION);
+    fbBuilder.addFloat64(17, _RANGE);
+    fbBuilder.addFloat64(18, _IRRADIANCE);
+    fbBuilder.addFloat64(19, _IRRADIANCE_UNC);
+    fbBuilder.addFloat64(20, _IR_MAG);
+    fbBuilder.addFloat64(21, _MAG_UNC);
+    fbBuilder.addFloat64(22, _TEMPERATURE);
+    fbBuilder.addFloat64(23, _INTEGRATION_TIME);
+    fbBuilder.addFloat64(24, _BACKGROUND);
+    fbBuilder.addFloat64(25, _SNR);
+    fbBuilder.addOffset(26, WAVELENGTHSOffset);
+    fbBuilder.addOffset(27, SPECTRAL_VALUESOffset);
+    fbBuilder.addUint8(28, _QUALITY);
+    fbBuilder.addOffset(29, NOTESOffset);
     return fbBuilder.endTable();
   }
 

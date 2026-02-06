@@ -1,198 +1,319 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "radarObsType": {
+      "type": "string",
+      "enum": [
+        "DETECTION",
+        "TRACK",
+        "METRIC",
+        "SIGNATURE",
+        "SEARCH_FENCE",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "DETECTION": {
+          "value": 0
+        },
+        "TRACK": {
+          "value": 1
+        },
+        "METRIC": {
+          "value": 2
+        },
+        "SIGNATURE": {
+          "value": 3
+        },
+        "SEARCH_FENCE": {
+          "value": 4
+        },
+        "UNKNOWN": {
+          "value": 5
+        }
+      }
+    },
     "RDO": {
       "type": "object",
       "description": "Radar Observation",
       "properties": {
         "ID": {
           "type": "string",
+          "description": "Unique identifier",
           "x-flatbuffer-type": "string"
         },
         "OB_TIME": {
           "type": "string",
+          "description": "Observation time (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "ID_SENSOR": {
           "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "SAT_NO": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
-        },
-        "TASK_ID": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "TRANSACTION_ID": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "TRACK_ID": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "OB_POSITION": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "ORIG_OBJECT_ID": {
-          "type": "string",
+          "description": "Sensor identifier",
           "x-flatbuffer-type": "string"
         },
         "ORIG_SENSOR_ID": {
           "type": "string",
+          "description": "Original sensor identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "SAT_NO": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Satellite catalog number",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ORIG_OBJECT_ID": {
+          "type": "string",
+          "description": "International designator",
+          "x-flatbuffer-type": "string"
+        },
+        "ON_ORBIT": {
+          "type": "string",
+          "description": "On-orbit reference",
           "x-flatbuffer-type": "string"
         },
         "UCT": {
           "type": "boolean",
+          "description": "True if uncorrelated target",
           "x-flatbuffer-type": "bool"
+        },
+        "OBS_TYPE": {
+          "$ref": "#/definitions/radarObsType",
+          "description": "Observation type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "DETECTION": {
+              "value": 0
+            },
+            "TRACK": {
+              "value": 1
+            },
+            "METRIC": {
+              "value": 2
+            },
+            "SIGNATURE": {
+              "value": 3
+            },
+            "SEARCH_FENCE": {
+              "value": 4
+            },
+            "UNKNOWN": {
+              "value": 5
+            }
+          }
+        },
+        "TASK_ID": {
+          "type": "string",
+          "description": "Task identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "TRANSACTION_ID": {
+          "type": "string",
+          "description": "Transaction identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "TRACK_ID": {
+          "type": "string",
+          "description": "Track identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "OB_POSITION": {
+          "type": "string",
+          "description": "Observation position identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "SEN_REFERENCE_FRAME": {
+          "type": "string",
+          "description": "Sensor reference frame",
+          "x-flatbuffer-type": "string"
         },
         "AZIMUTH": {
           "type": "number",
+          "description": "Azimuth angle (degrees)",
           "x-flatbuffer-type": "double"
         },
         "AZIMUTH_UNC": {
           "type": "number",
+          "description": "Azimuth uncertainty (degrees, 1-sigma)",
           "x-flatbuffer-type": "double"
         },
         "AZIMUTH_BIAS": {
           "type": "number",
+          "description": "Azimuth bias (degrees)",
           "x-flatbuffer-type": "double"
         },
         "AZIMUTH_RATE": {
           "type": "number",
+          "description": "Azimuth rate (degrees/s)",
           "x-flatbuffer-type": "double"
         },
         "ELEVATION": {
           "type": "number",
+          "description": "Elevation angle (degrees)",
           "x-flatbuffer-type": "double"
         },
         "ELEVATION_UNC": {
           "type": "number",
+          "description": "Elevation uncertainty (degrees, 1-sigma)",
           "x-flatbuffer-type": "double"
         },
         "ELEVATION_BIAS": {
           "type": "number",
+          "description": "Elevation bias (degrees)",
           "x-flatbuffer-type": "double"
         },
         "ELEVATION_RATE": {
           "type": "number",
+          "description": "Elevation rate (degrees/s)",
           "x-flatbuffer-type": "double"
         },
         "RANGE": {
           "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "RANGE_ACCEL": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "RANGE_ACCEL_UNC": {
-          "type": "number",
+          "description": "Slant range (km)",
           "x-flatbuffer-type": "double"
         },
         "RANGE_UNC": {
           "type": "number",
+          "description": "Range uncertainty (km, 1-sigma)",
           "x-flatbuffer-type": "double"
         },
         "RANGE_BIAS": {
           "type": "number",
+          "description": "Range bias (km)",
           "x-flatbuffer-type": "double"
         },
         "RANGE_RATE": {
           "type": "number",
+          "description": "Range rate (km/s)",
           "x-flatbuffer-type": "double"
         },
         "RANGE_RATE_UNC": {
           "type": "number",
+          "description": "Range rate uncertainty (km/s, 1-sigma)",
+          "x-flatbuffer-type": "double"
+        },
+        "RANGE_ACCEL": {
+          "type": "number",
+          "description": "Range acceleration (km/s^2)",
+          "x-flatbuffer-type": "double"
+        },
+        "RANGE_ACCEL_UNC": {
+          "type": "number",
+          "description": "Range acceleration uncertainty (km/s^2, 1-sigma)",
           "x-flatbuffer-type": "double"
         },
         "DOPPLER": {
           "type": "number",
+          "description": "Doppler shift (Hz)",
           "x-flatbuffer-type": "double"
         },
         "DOPPLER_UNC": {
           "type": "number",
+          "description": "Doppler uncertainty (Hz, 1-sigma)",
           "x-flatbuffer-type": "double"
         },
         "RA": {
           "type": "number",
+          "description": "Right ascension (degrees)",
           "x-flatbuffer-type": "double"
         },
         "DECLINATION": {
           "type": "number",
+          "description": "Declination (degrees)",
           "x-flatbuffer-type": "double"
         },
         "X": {
           "type": "number",
+          "description": "Target position X (km, ECI)",
           "x-flatbuffer-type": "double"
         },
         "Y": {
           "type": "number",
+          "description": "Target position Y (km, ECI)",
           "x-flatbuffer-type": "double"
         },
         "Z": {
           "type": "number",
+          "description": "Target position Z (km, ECI)",
           "x-flatbuffer-type": "double"
         },
         "XVEL": {
           "type": "number",
+          "description": "Target velocity X (km/s, ECI)",
           "x-flatbuffer-type": "double"
         },
         "YVEL": {
           "type": "number",
+          "description": "Target velocity Y (km/s, ECI)",
           "x-flatbuffer-type": "double"
         },
         "ZVEL": {
           "type": "number",
+          "description": "Target velocity Z (km/s, ECI)",
           "x-flatbuffer-type": "double"
         },
         "SENX": {
           "type": "number",
+          "description": "Sensor position X (km, ECEF)",
           "x-flatbuffer-type": "double"
         },
         "SENY": {
           "type": "number",
+          "description": "Sensor position Y (km, ECEF)",
           "x-flatbuffer-type": "double"
         },
         "SENZ": {
           "type": "number",
+          "description": "Sensor position Z (km, ECEF)",
           "x-flatbuffer-type": "double"
         },
         "RCS": {
           "type": "number",
+          "description": "Radar cross-section (dBsm)",
           "x-flatbuffer-type": "double"
         },
         "RCS_UNC": {
           "type": "number",
+          "description": "RCS uncertainty (dBsm, 1-sigma)",
           "x-flatbuffer-type": "double"
         },
         "ORTHOGONAL_RCS": {
           "type": "number",
+          "description": "Orthogonal polarization RCS (dBsm)",
           "x-flatbuffer-type": "double"
         },
         "ORTHOGONAL_RCS_UNC": {
           "type": "number",
+          "description": "Orthogonal RCS uncertainty (dBsm, 1-sigma)",
           "x-flatbuffer-type": "double"
         },
         "SNR": {
           "type": "number",
+          "description": "Signal-to-noise ratio (dB)",
           "x-flatbuffer-type": "double"
         },
         "BEAM": {
           "type": "number",
+          "description": "Beam identifier",
           "x-flatbuffer-type": "double"
         },
         "TIMING_BIAS": {
           "type": "number",
+          "description": "Timing bias (seconds)",
           "x-flatbuffer-type": "double"
         },
         "RAW_FILE_URI": {
           "type": "string",
+          "description": "Reference to raw data file",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTOR": {
+          "type": "string",
+          "description": "Event descriptor",
           "x-flatbuffer-type": "string"
         },
         "TAGS": {
@@ -200,23 +321,8 @@
           "items": {
             "type": "string"
           },
+          "description": "Associated tags",
           "x-flatbuffer-type": "[string]"
-        },
-        "ON_ORBIT": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "SEN_REFERENCE_FRAME": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "DESCRIPTOR": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "TYPE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

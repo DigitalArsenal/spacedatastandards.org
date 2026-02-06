@@ -16,6 +16,90 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct TRK;
 struct TRKBuilder;
 
+enum trackStatus : int8_t {
+  trackStatus_ACTIVE = 0,
+  trackStatus_DROPPED = 1,
+  trackStatus_TENTATIVE = 2,
+  trackStatus_CONFIRMED = 3,
+  trackStatus_COASTED = 4,
+  trackStatus_DEAD = 5,
+  trackStatus_MIN = trackStatus_ACTIVE,
+  trackStatus_MAX = trackStatus_DEAD
+};
+
+inline const trackStatus (&EnumValuestrackStatus())[6] {
+  static const trackStatus values[] = {
+    trackStatus_ACTIVE,
+    trackStatus_DROPPED,
+    trackStatus_TENTATIVE,
+    trackStatus_CONFIRMED,
+    trackStatus_COASTED,
+    trackStatus_DEAD
+  };
+  return values;
+}
+
+inline const char * const *EnumNamestrackStatus() {
+  static const char * const names[7] = {
+    "ACTIVE",
+    "DROPPED",
+    "TENTATIVE",
+    "CONFIRMED",
+    "COASTED",
+    "DEAD",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNametrackStatus(trackStatus e) {
+  if (::flatbuffers::IsOutRange(e, trackStatus_ACTIVE, trackStatus_DEAD)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamestrackStatus()[index];
+}
+
+enum trackEnvironment : int8_t {
+  trackEnvironment_SPACE = 0,
+  trackEnvironment_AIR = 1,
+  trackEnvironment_SURFACE = 2,
+  trackEnvironment_SUBSURFACE = 3,
+  trackEnvironment_LAND = 4,
+  trackEnvironment_UNKNOWN = 5,
+  trackEnvironment_MIN = trackEnvironment_SPACE,
+  trackEnvironment_MAX = trackEnvironment_UNKNOWN
+};
+
+inline const trackEnvironment (&EnumValuestrackEnvironment())[6] {
+  static const trackEnvironment values[] = {
+    trackEnvironment_SPACE,
+    trackEnvironment_AIR,
+    trackEnvironment_SURFACE,
+    trackEnvironment_SUBSURFACE,
+    trackEnvironment_LAND,
+    trackEnvironment_UNKNOWN
+  };
+  return values;
+}
+
+inline const char * const *EnumNamestrackEnvironment() {
+  static const char * const names[7] = {
+    "SPACE",
+    "AIR",
+    "SURFACE",
+    "SUBSURFACE",
+    "LAND",
+    "UNKNOWN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNametrackEnvironment(trackEnvironment e) {
+  if (::flatbuffers::IsOutRange(e, trackEnvironment_SPACE, trackEnvironment_UNKNOWN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamestrackEnvironment()[index];
+}
+
 /// Track
 struct TRK FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef TRKBuilder Builder;
@@ -26,7 +110,7 @@ struct TRK FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_MSN_ID = 10,
     VT_ASSET_NAT = 12,
     VT_ASSET = 14,
-    VT_SEN = 16,
+    VT_SENSOR_ID = 16,
     VT_SEN_QUAL = 18,
     VT_TRK_ID = 20,
     VT_TRK_NUM = 22,
@@ -80,159 +164,207 @@ struct TRK FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_COV = 118,
     VT_ERR_ELLP = 120
   };
+  /// Unique identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
+  /// Contact reference
   const ::flatbuffers::String *CNTCT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CNTCT);
   }
+  /// Message timestamp (ISO 8601)
   const ::flatbuffers::String *MSG_TS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_MSG_TS);
   }
+  /// Mission identifier
   const ::flatbuffers::String *MSN_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_MSN_ID);
   }
+  /// Asset nationality
   const ::flatbuffers::String *ASSET_NAT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ASSET_NAT);
   }
+  /// Asset identifier
   const ::flatbuffers::String *ASSET() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ASSET);
   }
-  const ::flatbuffers::String *SEN() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SEN);
+  /// Sensor identifier
+  const ::flatbuffers::String *SENSOR_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SENSOR_ID);
   }
+  /// Sensor quality assessment
   const ::flatbuffers::String *SEN_QUAL() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SEN_QUAL);
   }
+  /// Track identifier
   const ::flatbuffers::String *TRK_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TRK_ID);
   }
+  /// Track number
   const ::flatbuffers::String *TRK_NUM() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TRK_NUM);
   }
-  const ::flatbuffers::String *TRK_STAT() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TRK_STAT);
+  /// Track status
+  trackStatus TRK_STAT() const {
+    return static_cast<trackStatus>(GetField<int8_t>(VT_TRK_STAT, 0));
   }
+  /// Object nationality
   const ::flatbuffers::String *OBJ_NAT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBJ_NAT);
   }
+  /// Object identifier
   const ::flatbuffers::String *OBJ_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBJ_ID);
   }
+  /// Object type classification
   const ::flatbuffers::String *OBJ_TYPE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBJ_TYPE);
   }
+  /// Object specific type
   const ::flatbuffers::String *OBJ_SPEC() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBJ_SPEC);
   }
+  /// Object platform type
   const ::flatbuffers::String *OBJ_PLAT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBJ_PLAT);
   }
+  /// Object activity
   const ::flatbuffers::String *OBJ_ACT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBJ_ACT);
   }
+  /// Mode type
   const ::flatbuffers::String *MOD_TYPE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_MOD_TYPE);
   }
+  /// Track item identifier
   const ::flatbuffers::String *TRK_ITM_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TRK_ITM_ID);
   }
+  /// Track point timestamp (ISO 8601)
   const ::flatbuffers::String *TS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TS);
   }
-  int32_t TRK_QUAL() const {
-    return GetField<int32_t>(VT_TRK_QUAL, 0);
+  /// Track quality (0-15)
+  uint8_t TRK_QUAL() const {
+    return GetField<uint8_t>(VT_TRK_QUAL, 0);
   }
+  /// Track point type
   const ::flatbuffers::String *TRK_PT_TYPE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TRK_PT_TYPE);
   }
+  /// Object identity assessment
   const ::flatbuffers::String *OBJ_IDENT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBJ_IDENT);
   }
-  int32_t IDENT_CRED() const {
-    return GetField<int32_t>(VT_IDENT_CRED, 0);
+  /// Identity credibility (1-6)
+  uint8_t IDENT_CRED() const {
+    return GetField<uint8_t>(VT_IDENT_CRED, 0);
   }
-  int32_t IDENT_REL() const {
-    return GetField<int32_t>(VT_IDENT_REL, 0);
+  /// Identity reliability (A-F)
+  uint8_t IDENT_REL() const {
+    return GetField<uint8_t>(VT_IDENT_REL, 0);
   }
+  /// Identity amplification
   const ::flatbuffers::String *IDENT_AMP() const {
     return GetPointer<const ::flatbuffers::String *>(VT_IDENT_AMP);
   }
-  const ::flatbuffers::String *ENVIRONMENT() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ENVIRONMENT);
+  /// Track environment
+  trackEnvironment ENVIRONMENT() const {
+    return static_cast<trackEnvironment>(GetField<int8_t>(VT_ENVIRONMENT, 0));
   }
+  /// Environment confidence (0-1)
   double ENVIRONMENT_CONF() const {
     return GetField<double>(VT_ENVIRONMENT_CONF, 0.0);
   }
+  /// Track confidence (0-1)
   double TRK_CONF() const {
     return GetField<double>(VT_TRK_CONF, 0.0);
   }
+  /// Latitude (degrees)
   double LAT() const {
     return GetField<double>(VT_LAT, 0.0);
   }
+  /// Longitude (degrees)
   double LON() const {
     return GetField<double>(VT_LON, 0.0);
   }
+  /// Altitude (km)
   double ALT() const {
     return GetField<double>(VT_ALT, 0.0);
   }
+  /// Speed (km/s)
   double SPD() const {
     return GetField<double>(VT_SPD, 0.0);
   }
+  /// Heading (degrees from north)
   double HDNG() const {
     return GetField<double>(VT_HDNG, 0.0);
   }
+  /// Course (degrees from north)
   double COURSE() const {
     return GetField<double>(VT_COURSE, 0.0);
   }
+  /// Source types
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SRC_TYPS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SRC_TYPS);
   }
+  /// Source identifiers
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SRC_IDS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SRC_IDS);
   }
+  /// Call sign
   const ::flatbuffers::String *CALL_SIGN() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CALL_SIGN);
   }
+  /// True if fused from multiple sources
   bool MULTI_SOURCE() const {
     return GetField<uint8_t>(VT_MULTI_SOURCE, 0) != 0;
   }
+  /// J-series message type
   const ::flatbuffers::String *J_SERIES() const {
     return GetPointer<const ::flatbuffers::String *>(VT_J_SERIES);
   }
-  int32_t STRENGTH() const {
-    return GetField<int32_t>(VT_STRENGTH, 0);
+  /// Force strength indicator
+  uint16_t STRENGTH() const {
+    return GetField<uint16_t>(VT_STRENGTH, 0);
   }
-  int32_t M1() const {
-    return GetField<int32_t>(VT_M1, 0);
+  /// Mode 1 code
+  uint16_t M1() const {
+    return GetField<uint16_t>(VT_M1, 0);
   }
-  int32_t M1V() const {
-    return GetField<int32_t>(VT_M1V, 0);
+  /// Mode 1 validity
+  uint8_t M1V() const {
+    return GetField<uint8_t>(VT_M1V, 0);
   }
-  int32_t M2() const {
-    return GetField<int32_t>(VT_M2, 0);
+  /// Mode 2 code
+  uint16_t M2() const {
+    return GetField<uint16_t>(VT_M2, 0);
   }
-  int32_t M2V() const {
-    return GetField<int32_t>(VT_M2V, 0);
+  /// Mode 2 validity
+  uint8_t M2V() const {
+    return GetField<uint8_t>(VT_M2V, 0);
   }
-  int32_t M3A() const {
-    return GetField<int32_t>(VT_M3A, 0);
+  /// Mode 3A code
+  uint16_t M3A() const {
+    return GetField<uint16_t>(VT_M3A, 0);
   }
-  int32_t M3AV() const {
-    return GetField<int32_t>(VT_M3AV, 0);
+  /// Mode 3A validity
+  uint8_t M3AV() const {
+    return GetField<uint8_t>(VT_M3AV, 0);
   }
+  /// Associated tags
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_TAGS);
   }
-  /// Start time for track data (ISO 8601 UTC format).
+  /// Start time for track data (ISO 8601)
   const ::flatbuffers::String *TRACK_START_TIME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TRACK_START_TIME);
   }
-  /// Time interval between track points in seconds.
+  /// Time interval between track points (seconds)
   double TRACK_STEP_SIZE() const {
     return GetField<double>(VT_TRACK_STEP_SIZE, 0.0);
   }
-  /// Number of components per point (default 3 for X, Y, Z).
+  /// Number of components per point (default 3 for X, Y, Z)
   uint8_t TRACK_COMPONENTS() const {
     return GetField<uint8_t>(VT_TRACK_COMPONENTS, 3);
   }
@@ -282,16 +414,15 @@ struct TRK FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(ASSET_NAT()) &&
            VerifyOffset(verifier, VT_ASSET) &&
            verifier.VerifyString(ASSET()) &&
-           VerifyOffset(verifier, VT_SEN) &&
-           verifier.VerifyString(SEN()) &&
+           VerifyOffset(verifier, VT_SENSOR_ID) &&
+           verifier.VerifyString(SENSOR_ID()) &&
            VerifyOffset(verifier, VT_SEN_QUAL) &&
            verifier.VerifyString(SEN_QUAL()) &&
            VerifyOffset(verifier, VT_TRK_ID) &&
            verifier.VerifyString(TRK_ID()) &&
            VerifyOffset(verifier, VT_TRK_NUM) &&
            verifier.VerifyString(TRK_NUM()) &&
-           VerifyOffset(verifier, VT_TRK_STAT) &&
-           verifier.VerifyString(TRK_STAT()) &&
+           VerifyField<int8_t>(verifier, VT_TRK_STAT, 1) &&
            VerifyOffset(verifier, VT_OBJ_NAT) &&
            verifier.VerifyString(OBJ_NAT()) &&
            VerifyOffset(verifier, VT_OBJ_ID) &&
@@ -310,17 +441,16 @@ struct TRK FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(TRK_ITM_ID()) &&
            VerifyOffset(verifier, VT_TS) &&
            verifier.VerifyString(TS()) &&
-           VerifyField<int32_t>(verifier, VT_TRK_QUAL, 4) &&
+           VerifyField<uint8_t>(verifier, VT_TRK_QUAL, 1) &&
            VerifyOffset(verifier, VT_TRK_PT_TYPE) &&
            verifier.VerifyString(TRK_PT_TYPE()) &&
            VerifyOffset(verifier, VT_OBJ_IDENT) &&
            verifier.VerifyString(OBJ_IDENT()) &&
-           VerifyField<int32_t>(verifier, VT_IDENT_CRED, 4) &&
-           VerifyField<int32_t>(verifier, VT_IDENT_REL, 4) &&
+           VerifyField<uint8_t>(verifier, VT_IDENT_CRED, 1) &&
+           VerifyField<uint8_t>(verifier, VT_IDENT_REL, 1) &&
            VerifyOffset(verifier, VT_IDENT_AMP) &&
            verifier.VerifyString(IDENT_AMP()) &&
-           VerifyOffset(verifier, VT_ENVIRONMENT) &&
-           verifier.VerifyString(ENVIRONMENT()) &&
+           VerifyField<int8_t>(verifier, VT_ENVIRONMENT, 1) &&
            VerifyField<double>(verifier, VT_ENVIRONMENT_CONF, 8) &&
            VerifyField<double>(verifier, VT_TRK_CONF, 8) &&
            VerifyField<double>(verifier, VT_LAT, 8) &&
@@ -340,13 +470,13 @@ struct TRK FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<uint8_t>(verifier, VT_MULTI_SOURCE, 1) &&
            VerifyOffset(verifier, VT_J_SERIES) &&
            verifier.VerifyString(J_SERIES()) &&
-           VerifyField<int32_t>(verifier, VT_STRENGTH, 4) &&
-           VerifyField<int32_t>(verifier, VT_M1, 4) &&
-           VerifyField<int32_t>(verifier, VT_M1V, 4) &&
-           VerifyField<int32_t>(verifier, VT_M2, 4) &&
-           VerifyField<int32_t>(verifier, VT_M2V, 4) &&
-           VerifyField<int32_t>(verifier, VT_M3A, 4) &&
-           VerifyField<int32_t>(verifier, VT_M3AV, 4) &&
+           VerifyField<uint16_t>(verifier, VT_STRENGTH, 2) &&
+           VerifyField<uint16_t>(verifier, VT_M1, 2) &&
+           VerifyField<uint8_t>(verifier, VT_M1V, 1) &&
+           VerifyField<uint16_t>(verifier, VT_M2, 2) &&
+           VerifyField<uint8_t>(verifier, VT_M2V, 1) &&
+           VerifyField<uint16_t>(verifier, VT_M3A, 2) &&
+           VerifyField<uint8_t>(verifier, VT_M3AV, 1) &&
            VerifyOffset(verifier, VT_TAGS) &&
            verifier.VerifyVector(TAGS()) &&
            verifier.VerifyVectorOfStrings(TAGS()) &&
@@ -396,8 +526,8 @@ struct TRKBuilder {
   void add_ASSET(::flatbuffers::Offset<::flatbuffers::String> ASSET) {
     fbb_.AddOffset(TRK::VT_ASSET, ASSET);
   }
-  void add_SEN(::flatbuffers::Offset<::flatbuffers::String> SEN) {
-    fbb_.AddOffset(TRK::VT_SEN, SEN);
+  void add_SENSOR_ID(::flatbuffers::Offset<::flatbuffers::String> SENSOR_ID) {
+    fbb_.AddOffset(TRK::VT_SENSOR_ID, SENSOR_ID);
   }
   void add_SEN_QUAL(::flatbuffers::Offset<::flatbuffers::String> SEN_QUAL) {
     fbb_.AddOffset(TRK::VT_SEN_QUAL, SEN_QUAL);
@@ -408,8 +538,8 @@ struct TRKBuilder {
   void add_TRK_NUM(::flatbuffers::Offset<::flatbuffers::String> TRK_NUM) {
     fbb_.AddOffset(TRK::VT_TRK_NUM, TRK_NUM);
   }
-  void add_TRK_STAT(::flatbuffers::Offset<::flatbuffers::String> TRK_STAT) {
-    fbb_.AddOffset(TRK::VT_TRK_STAT, TRK_STAT);
+  void add_TRK_STAT(trackStatus TRK_STAT) {
+    fbb_.AddElement<int8_t>(TRK::VT_TRK_STAT, static_cast<int8_t>(TRK_STAT), 0);
   }
   void add_OBJ_NAT(::flatbuffers::Offset<::flatbuffers::String> OBJ_NAT) {
     fbb_.AddOffset(TRK::VT_OBJ_NAT, OBJ_NAT);
@@ -438,8 +568,8 @@ struct TRKBuilder {
   void add_TS(::flatbuffers::Offset<::flatbuffers::String> TS) {
     fbb_.AddOffset(TRK::VT_TS, TS);
   }
-  void add_TRK_QUAL(int32_t TRK_QUAL) {
-    fbb_.AddElement<int32_t>(TRK::VT_TRK_QUAL, TRK_QUAL, 0);
+  void add_TRK_QUAL(uint8_t TRK_QUAL) {
+    fbb_.AddElement<uint8_t>(TRK::VT_TRK_QUAL, TRK_QUAL, 0);
   }
   void add_TRK_PT_TYPE(::flatbuffers::Offset<::flatbuffers::String> TRK_PT_TYPE) {
     fbb_.AddOffset(TRK::VT_TRK_PT_TYPE, TRK_PT_TYPE);
@@ -447,17 +577,17 @@ struct TRKBuilder {
   void add_OBJ_IDENT(::flatbuffers::Offset<::flatbuffers::String> OBJ_IDENT) {
     fbb_.AddOffset(TRK::VT_OBJ_IDENT, OBJ_IDENT);
   }
-  void add_IDENT_CRED(int32_t IDENT_CRED) {
-    fbb_.AddElement<int32_t>(TRK::VT_IDENT_CRED, IDENT_CRED, 0);
+  void add_IDENT_CRED(uint8_t IDENT_CRED) {
+    fbb_.AddElement<uint8_t>(TRK::VT_IDENT_CRED, IDENT_CRED, 0);
   }
-  void add_IDENT_REL(int32_t IDENT_REL) {
-    fbb_.AddElement<int32_t>(TRK::VT_IDENT_REL, IDENT_REL, 0);
+  void add_IDENT_REL(uint8_t IDENT_REL) {
+    fbb_.AddElement<uint8_t>(TRK::VT_IDENT_REL, IDENT_REL, 0);
   }
   void add_IDENT_AMP(::flatbuffers::Offset<::flatbuffers::String> IDENT_AMP) {
     fbb_.AddOffset(TRK::VT_IDENT_AMP, IDENT_AMP);
   }
-  void add_ENVIRONMENT(::flatbuffers::Offset<::flatbuffers::String> ENVIRONMENT) {
-    fbb_.AddOffset(TRK::VT_ENVIRONMENT, ENVIRONMENT);
+  void add_ENVIRONMENT(trackEnvironment ENVIRONMENT) {
+    fbb_.AddElement<int8_t>(TRK::VT_ENVIRONMENT, static_cast<int8_t>(ENVIRONMENT), 0);
   }
   void add_ENVIRONMENT_CONF(double ENVIRONMENT_CONF) {
     fbb_.AddElement<double>(TRK::VT_ENVIRONMENT_CONF, ENVIRONMENT_CONF, 0.0);
@@ -498,26 +628,26 @@ struct TRKBuilder {
   void add_J_SERIES(::flatbuffers::Offset<::flatbuffers::String> J_SERIES) {
     fbb_.AddOffset(TRK::VT_J_SERIES, J_SERIES);
   }
-  void add_STRENGTH(int32_t STRENGTH) {
-    fbb_.AddElement<int32_t>(TRK::VT_STRENGTH, STRENGTH, 0);
+  void add_STRENGTH(uint16_t STRENGTH) {
+    fbb_.AddElement<uint16_t>(TRK::VT_STRENGTH, STRENGTH, 0);
   }
-  void add_M1(int32_t M1) {
-    fbb_.AddElement<int32_t>(TRK::VT_M1, M1, 0);
+  void add_M1(uint16_t M1) {
+    fbb_.AddElement<uint16_t>(TRK::VT_M1, M1, 0);
   }
-  void add_M1V(int32_t M1V) {
-    fbb_.AddElement<int32_t>(TRK::VT_M1V, M1V, 0);
+  void add_M1V(uint8_t M1V) {
+    fbb_.AddElement<uint8_t>(TRK::VT_M1V, M1V, 0);
   }
-  void add_M2(int32_t M2) {
-    fbb_.AddElement<int32_t>(TRK::VT_M2, M2, 0);
+  void add_M2(uint16_t M2) {
+    fbb_.AddElement<uint16_t>(TRK::VT_M2, M2, 0);
   }
-  void add_M2V(int32_t M2V) {
-    fbb_.AddElement<int32_t>(TRK::VT_M2V, M2V, 0);
+  void add_M2V(uint8_t M2V) {
+    fbb_.AddElement<uint8_t>(TRK::VT_M2V, M2V, 0);
   }
-  void add_M3A(int32_t M3A) {
-    fbb_.AddElement<int32_t>(TRK::VT_M3A, M3A, 0);
+  void add_M3A(uint16_t M3A) {
+    fbb_.AddElement<uint16_t>(TRK::VT_M3A, M3A, 0);
   }
-  void add_M3AV(int32_t M3AV) {
-    fbb_.AddElement<int32_t>(TRK::VT_M3AV, M3AV, 0);
+  void add_M3AV(uint8_t M3AV) {
+    fbb_.AddElement<uint8_t>(TRK::VT_M3AV, M3AV, 0);
   }
   void add_TAGS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS) {
     fbb_.AddOffset(TRK::VT_TAGS, TAGS);
@@ -574,11 +704,11 @@ inline ::flatbuffers::Offset<TRK> CreateTRK(
     ::flatbuffers::Offset<::flatbuffers::String> MSN_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ASSET_NAT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ASSET = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SEN = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SENSOR_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SEN_QUAL = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TRK_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TRK_NUM = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TRK_STAT = 0,
+    trackStatus TRK_STAT = trackStatus_ACTIVE,
     ::flatbuffers::Offset<::flatbuffers::String> OBJ_NAT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OBJ_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OBJ_TYPE = 0,
@@ -588,13 +718,13 @@ inline ::flatbuffers::Offset<TRK> CreateTRK(
     ::flatbuffers::Offset<::flatbuffers::String> MOD_TYPE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TRK_ITM_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TS = 0,
-    int32_t TRK_QUAL = 0,
+    uint8_t TRK_QUAL = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TRK_PT_TYPE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OBJ_IDENT = 0,
-    int32_t IDENT_CRED = 0,
-    int32_t IDENT_REL = 0,
+    uint8_t IDENT_CRED = 0,
+    uint8_t IDENT_REL = 0,
     ::flatbuffers::Offset<::flatbuffers::String> IDENT_AMP = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ENVIRONMENT = 0,
+    trackEnvironment ENVIRONMENT = trackEnvironment_SPACE,
     double ENVIRONMENT_CONF = 0.0,
     double TRK_CONF = 0.0,
     double LAT = 0.0,
@@ -608,13 +738,13 @@ inline ::flatbuffers::Offset<TRK> CreateTRK(
     ::flatbuffers::Offset<::flatbuffers::String> CALL_SIGN = 0,
     bool MULTI_SOURCE = false,
     ::flatbuffers::Offset<::flatbuffers::String> J_SERIES = 0,
-    int32_t STRENGTH = 0,
-    int32_t M1 = 0,
-    int32_t M1V = 0,
-    int32_t M2 = 0,
-    int32_t M2V = 0,
-    int32_t M3A = 0,
-    int32_t M3AV = 0,
+    uint16_t STRENGTH = 0,
+    uint16_t M1 = 0,
+    uint8_t M1V = 0,
+    uint16_t M2 = 0,
+    uint8_t M2V = 0,
+    uint16_t M3A = 0,
+    uint8_t M3AV = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TRACK_START_TIME = 0,
     double TRACK_STEP_SIZE = 0.0,
@@ -647,24 +777,13 @@ inline ::flatbuffers::Offset<TRK> CreateTRK(
   builder_.add_ECEF_POS(ECEF_POS);
   builder_.add_TRACK_START_TIME(TRACK_START_TIME);
   builder_.add_TAGS(TAGS);
-  builder_.add_M3AV(M3AV);
-  builder_.add_M3A(M3A);
-  builder_.add_M2V(M2V);
-  builder_.add_M2(M2);
-  builder_.add_M1V(M1V);
-  builder_.add_M1(M1);
-  builder_.add_STRENGTH(STRENGTH);
   builder_.add_J_SERIES(J_SERIES);
   builder_.add_CALL_SIGN(CALL_SIGN);
   builder_.add_SRC_IDS(SRC_IDS);
   builder_.add_SRC_TYPS(SRC_TYPS);
-  builder_.add_ENVIRONMENT(ENVIRONMENT);
   builder_.add_IDENT_AMP(IDENT_AMP);
-  builder_.add_IDENT_REL(IDENT_REL);
-  builder_.add_IDENT_CRED(IDENT_CRED);
   builder_.add_OBJ_IDENT(OBJ_IDENT);
   builder_.add_TRK_PT_TYPE(TRK_PT_TYPE);
-  builder_.add_TRK_QUAL(TRK_QUAL);
   builder_.add_TS(TS);
   builder_.add_TRK_ITM_ID(TRK_ITM_ID);
   builder_.add_MOD_TYPE(MOD_TYPE);
@@ -674,19 +793,30 @@ inline ::flatbuffers::Offset<TRK> CreateTRK(
   builder_.add_OBJ_TYPE(OBJ_TYPE);
   builder_.add_OBJ_ID(OBJ_ID);
   builder_.add_OBJ_NAT(OBJ_NAT);
-  builder_.add_TRK_STAT(TRK_STAT);
   builder_.add_TRK_NUM(TRK_NUM);
   builder_.add_TRK_ID(TRK_ID);
   builder_.add_SEN_QUAL(SEN_QUAL);
-  builder_.add_SEN(SEN);
+  builder_.add_SENSOR_ID(SENSOR_ID);
   builder_.add_ASSET(ASSET);
   builder_.add_ASSET_NAT(ASSET_NAT);
   builder_.add_MSN_ID(MSN_ID);
   builder_.add_MSG_TS(MSG_TS);
   builder_.add_CNTCT(CNTCT);
   builder_.add_ID(ID);
+  builder_.add_M3A(M3A);
+  builder_.add_M2(M2);
+  builder_.add_M1(M1);
+  builder_.add_STRENGTH(STRENGTH);
   builder_.add_TRACK_COMPONENTS(TRACK_COMPONENTS);
+  builder_.add_M3AV(M3AV);
+  builder_.add_M2V(M2V);
+  builder_.add_M1V(M1V);
   builder_.add_MULTI_SOURCE(MULTI_SOURCE);
+  builder_.add_ENVIRONMENT(ENVIRONMENT);
+  builder_.add_IDENT_REL(IDENT_REL);
+  builder_.add_IDENT_CRED(IDENT_CRED);
+  builder_.add_TRK_QUAL(TRK_QUAL);
+  builder_.add_TRK_STAT(TRK_STAT);
   return builder_.Finish();
 }
 
@@ -698,11 +828,11 @@ inline ::flatbuffers::Offset<TRK> CreateTRKDirect(
     const char *MSN_ID = nullptr,
     const char *ASSET_NAT = nullptr,
     const char *ASSET = nullptr,
-    const char *SEN = nullptr,
+    const char *SENSOR_ID = nullptr,
     const char *SEN_QUAL = nullptr,
     const char *TRK_ID = nullptr,
     const char *TRK_NUM = nullptr,
-    const char *TRK_STAT = nullptr,
+    trackStatus TRK_STAT = trackStatus_ACTIVE,
     const char *OBJ_NAT = nullptr,
     const char *OBJ_ID = nullptr,
     const char *OBJ_TYPE = nullptr,
@@ -712,13 +842,13 @@ inline ::flatbuffers::Offset<TRK> CreateTRKDirect(
     const char *MOD_TYPE = nullptr,
     const char *TRK_ITM_ID = nullptr,
     const char *TS = nullptr,
-    int32_t TRK_QUAL = 0,
+    uint8_t TRK_QUAL = 0,
     const char *TRK_PT_TYPE = nullptr,
     const char *OBJ_IDENT = nullptr,
-    int32_t IDENT_CRED = 0,
-    int32_t IDENT_REL = 0,
+    uint8_t IDENT_CRED = 0,
+    uint8_t IDENT_REL = 0,
     const char *IDENT_AMP = nullptr,
-    const char *ENVIRONMENT = nullptr,
+    trackEnvironment ENVIRONMENT = trackEnvironment_SPACE,
     double ENVIRONMENT_CONF = 0.0,
     double TRK_CONF = 0.0,
     double LAT = 0.0,
@@ -732,13 +862,13 @@ inline ::flatbuffers::Offset<TRK> CreateTRKDirect(
     const char *CALL_SIGN = nullptr,
     bool MULTI_SOURCE = false,
     const char *J_SERIES = nullptr,
-    int32_t STRENGTH = 0,
-    int32_t M1 = 0,
-    int32_t M1V = 0,
-    int32_t M2 = 0,
-    int32_t M2V = 0,
-    int32_t M3A = 0,
-    int32_t M3AV = 0,
+    uint16_t STRENGTH = 0,
+    uint16_t M1 = 0,
+    uint8_t M1V = 0,
+    uint16_t M2 = 0,
+    uint8_t M2V = 0,
+    uint16_t M3A = 0,
+    uint8_t M3AV = 0,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS = nullptr,
     const char *TRACK_START_TIME = nullptr,
     double TRACK_STEP_SIZE = 0.0,
@@ -757,11 +887,10 @@ inline ::flatbuffers::Offset<TRK> CreateTRKDirect(
   auto MSN_ID__ = MSN_ID ? _fbb.CreateString(MSN_ID) : 0;
   auto ASSET_NAT__ = ASSET_NAT ? _fbb.CreateString(ASSET_NAT) : 0;
   auto ASSET__ = ASSET ? _fbb.CreateString(ASSET) : 0;
-  auto SEN__ = SEN ? _fbb.CreateString(SEN) : 0;
+  auto SENSOR_ID__ = SENSOR_ID ? _fbb.CreateString(SENSOR_ID) : 0;
   auto SEN_QUAL__ = SEN_QUAL ? _fbb.CreateString(SEN_QUAL) : 0;
   auto TRK_ID__ = TRK_ID ? _fbb.CreateString(TRK_ID) : 0;
   auto TRK_NUM__ = TRK_NUM ? _fbb.CreateString(TRK_NUM) : 0;
-  auto TRK_STAT__ = TRK_STAT ? _fbb.CreateString(TRK_STAT) : 0;
   auto OBJ_NAT__ = OBJ_NAT ? _fbb.CreateString(OBJ_NAT) : 0;
   auto OBJ_ID__ = OBJ_ID ? _fbb.CreateString(OBJ_ID) : 0;
   auto OBJ_TYPE__ = OBJ_TYPE ? _fbb.CreateString(OBJ_TYPE) : 0;
@@ -774,7 +903,6 @@ inline ::flatbuffers::Offset<TRK> CreateTRKDirect(
   auto TRK_PT_TYPE__ = TRK_PT_TYPE ? _fbb.CreateString(TRK_PT_TYPE) : 0;
   auto OBJ_IDENT__ = OBJ_IDENT ? _fbb.CreateString(OBJ_IDENT) : 0;
   auto IDENT_AMP__ = IDENT_AMP ? _fbb.CreateString(IDENT_AMP) : 0;
-  auto ENVIRONMENT__ = ENVIRONMENT ? _fbb.CreateString(ENVIRONMENT) : 0;
   auto SRC_TYPS__ = SRC_TYPS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SRC_TYPS) : 0;
   auto SRC_IDS__ = SRC_IDS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SRC_IDS) : 0;
   auto CALL_SIGN__ = CALL_SIGN ? _fbb.CreateString(CALL_SIGN) : 0;
@@ -797,11 +925,11 @@ inline ::flatbuffers::Offset<TRK> CreateTRKDirect(
       MSN_ID__,
       ASSET_NAT__,
       ASSET__,
-      SEN__,
+      SENSOR_ID__,
       SEN_QUAL__,
       TRK_ID__,
       TRK_NUM__,
-      TRK_STAT__,
+      TRK_STAT,
       OBJ_NAT__,
       OBJ_ID__,
       OBJ_TYPE__,
@@ -817,7 +945,7 @@ inline ::flatbuffers::Offset<TRK> CreateTRKDirect(
       IDENT_CRED,
       IDENT_REL,
       IDENT_AMP__,
-      ENVIRONMENT__,
+      ENVIRONMENT,
       ENVIRONMENT_CONF,
       TRK_CONF,
       LAT,

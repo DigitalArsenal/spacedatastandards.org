@@ -1,69 +1,147 @@
-// Hash: e86ecf4ac051f9fa266c644f3d8ef9216679a329e1879161baffc4c18019ad3f
-// Version: 0.0.2
+// Hash: d06a27a10397b9a7ebf1e7eb1911523c0df018edeec4edd673cf5f662ef4fc16
+// Version: 0.0.3
 // -----------------------------------END_HEADER
+enum sarMode : byte {
+  STRIPMAP,
+  SPOTLIGHT,
+  SCANSAR,
+  TOPSAR,
+  ISAR,
+  GMTI,
+  MARITIME,
+  UNKNOWN
+}
+
+enum sarPolarization : byte {
+  HH,
+  VV,
+  HV,
+  VH,
+  DUAL_HH_VV,
+  DUAL_HH_HV,
+  DUAL_VV_VH,
+  QUAD,
+  COMPACT
+}
+
 /// SAR Observation
 table SAR {
+  /// Unique identifier
   ID:string;
-  SAT_NO:int;
+  /// Satellite catalog number (of SAR platform)
+  SAT_NO:uint32;
+  /// International designator
   ORIG_OBJECT_ID:string;
-  ID_SENSOR:string;
-  ORIG_SENSOR_ID:string;
-  EXTERNAL_ID:string;
-  COLLECTION_ID:string;
-  DETECTION_ID:string;
-  COLLECTION_START:string;
-  COLLECTION_END:string;
-  CENTER_TIME:string;
-  DETECTION_START:string;
-  DETECTION_END:string;
-  DWELL_TIME:double;
-  ORBIT_STATE:string;
-  SAR_MODE:string;
-  OPERATING_BAND:string;
-  OPERATING_FREQ:double;
-  SNR:double;
-  TX_POLARIZATION:string;
-  RX_POLARIZATION:string;
-  GRAZE_ANGLE:double;
-  INCIDENCE_ANGLE:double;
-  SQUINT_ANGLE:double;
-  PULSE_BANDWIDTH:double;
-  PULSE_DURATION:double;
-  CONTINUOUS_SPOT_ANGLE:double;
-  SLANT_RANGE:double;
-  NEAR_RANGE:double;
-  FAR_RANGE:double;
-  SWATH_LENGTH:double;
-  AREA:string;
-  ATEXT:string;
-  AGJSON:string;
-  ATYPE:string;
-  ANDIMS:int;
-  ASRID:int;
-  SPACING_RANGE:double;
-  SPACING_AZIMUTH:double;
-  LOOKS_AZIMUTH:int;
-  LOOKS_RANGE:int;
-  RESOLUTION_RANGE:double;
-  RESOLUTION_AZIMUTH:double;
-  OB_DIRECTION:string;
-  COORD_SYS:string;
-  TARGETPOSX:double;
-  TARGETPOSY:double;
-  TARGETPOSZ:double;
-  SENALT:double;
-  SENVELX:double;
-  SENVELY:double;
-  SENVELZ:double;
-  SENLAT_START:double;
-  SENLON_START:double;
-  SENLAT_END:double;
-  SENLON_END:double;
-  TRANSACTION_ID:string;
-  TAGS:[string];
-  SRC_TYPS:[string];
-  SRC_IDS:[string];
+  /// On-orbit reference
   ON_ORBIT:string;
+  /// Sensor identifier
+  ID_SENSOR:string;
+  /// Original sensor identifier
+  ORIG_SENSOR_ID:string;
+  /// External reference identifier
+  EXTERNAL_ID:string;
+  /// Collection identifier
+  COLLECTION_ID:string;
+  /// Detection identifier
+  DETECTION_ID:string;
+  /// Collection start time (ISO 8601)
+  COLLECTION_START:string;
+  /// Collection end time (ISO 8601)
+  COLLECTION_END:string;
+  /// Center time of observation (ISO 8601)
+  CENTER_TIME:string;
+  /// Detection start time (ISO 8601)
+  DETECTION_START:string;
+  /// Detection end time (ISO 8601)
+  DETECTION_END:string;
+  /// Integration/dwell time (seconds)
+  DWELL_TIME:double;
+  /// Orbit state description
+  ORBIT_STATE:string;
+  /// SAR imaging mode
+  SAR_MODE:sarMode;
+  /// Operating RF band (e.g., X, C, L, S, P)
+  OPERATING_BAND:string;
+  /// Operating frequency (GHz)
+  OPERATING_FREQ:double;
+  /// Signal-to-noise ratio (dB)
+  SNR:double;
+  /// Transmit polarization
+  TX_POLARIZATION:sarPolarization;
+  /// Receive polarization
+  RX_POLARIZATION:sarPolarization;
+  /// Grazing angle (degrees)
+  GRAZE_ANGLE:double;
+  /// Incidence angle (degrees)
+  INCIDENCE_ANGLE:double;
+  /// Squint angle (degrees)
+  SQUINT_ANGLE:double;
+  /// Pulse bandwidth (MHz)
+  PULSE_BANDWIDTH:double;
+  /// Pulse duration (microseconds)
+  PULSE_DURATION:double;
+  /// Continuous spot angle (degrees)
+  CONTINUOUS_SPOT_ANGLE:double;
+  /// Slant range to target (km)
+  SLANT_RANGE:double;
+  /// Near range (km)
+  NEAR_RANGE:double;
+  /// Far range (km)
+  FAR_RANGE:double;
+  /// Swath length (km)
+  SWATH_LENGTH:double;
+  /// Image area GeoJSON
+  AGJSON:string;
+  /// Image area text description
+  ATEXT:string;
+  /// Area type
+  ATYPE:string;
+  /// Coordinate system
+  COORD_SYS:string;
+  /// Range pixel spacing (meters)
+  SPACING_RANGE:double;
+  /// Azimuth pixel spacing (meters)
+  SPACING_AZIMUTH:double;
+  /// Number of azimuth looks
+  LOOKS_AZIMUTH:uint8;
+  /// Number of range looks
+  LOOKS_RANGE:uint8;
+  /// Range resolution (meters)
+  RESOLUTION_RANGE:double;
+  /// Azimuth resolution (meters)
+  RESOLUTION_AZIMUTH:double;
+  /// Observation direction (ASCENDING/DESCENDING)
+  OB_DIRECTION:string;
+  /// Target position X (km)
+  TARGETPOSX:double;
+  /// Target position Y (km)
+  TARGETPOSY:double;
+  /// Target position Z (km)
+  TARGETPOSZ:double;
+  /// Sensor altitude (km)
+  SENALT:double;
+  /// Sensor velocity X (km/s)
+  SENVELX:double;
+  /// Sensor velocity Y (km/s)
+  SENVELY:double;
+  /// Sensor velocity Z (km/s)
+  SENVELZ:double;
+  /// Sensor latitude at start (degrees)
+  SENLAT_START:double;
+  /// Sensor longitude at start (degrees)
+  SENLON_START:double;
+  /// Sensor latitude at end (degrees)
+  SENLAT_END:double;
+  /// Sensor longitude at end (degrees)
+  SENLON_END:double;
+  /// Transaction identifier
+  TRANSACTION_ID:string;
+  /// Associated tags
+  TAGS:[string];
+  /// Source types
+  SRC_TYPS:[string];
+  /// Source identifiers
+  SRC_IDS:[string];
 }
 
 root_type SAR;

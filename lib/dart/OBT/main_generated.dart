@@ -5,6 +5,104 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class OrbitObjectType {
+  final int value;
+  const OrbitObjectType._(this.value);
+
+  factory OrbitObjectType.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum OrbitObjectType');
+    }
+    return result;
+  }
+
+  static OrbitObjectType? _createOrNull(int? value) => 
+      value == null ? null : OrbitObjectType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const OrbitObjectType PAYLOAD = OrbitObjectType._(0);
+  static const OrbitObjectType ROCKET_BODY = OrbitObjectType._(1);
+  static const OrbitObjectType DEBRIS = OrbitObjectType._(2);
+  static const OrbitObjectType TBA = OrbitObjectType._(3);
+  static const OrbitObjectType UNKNOWN = OrbitObjectType._(4);
+  static const Map<int, OrbitObjectType> values = {
+    0: PAYLOAD,
+    1: ROCKET_BODY,
+    2: DEBRIS,
+    3: TBA,
+    4: UNKNOWN};
+
+  static const fb.Reader<OrbitObjectType> reader = _OrbitObjectTypeReader();
+
+  @override
+  String toString() {
+    return 'OrbitObjectType{value: $value}';
+  }
+}
+
+class _OrbitObjectTypeReader extends fb.Reader<OrbitObjectType> {
+  const _OrbitObjectTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  OrbitObjectType read(fb.BufferContext bc, int offset) =>
+      OrbitObjectType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class AouType {
+  final int value;
+  const AouType._(this.value);
+
+  factory AouType.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum AouType');
+    }
+    return result;
+  }
+
+  static AouType? _createOrNull(int? value) => 
+      value == null ? null : AouType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const AouType CIRCULAR = AouType._(0);
+  static const AouType ELLIPTICAL = AouType._(1);
+  static const AouType RECTANGULAR = AouType._(2);
+  static const AouType NONE = AouType._(3);
+  static const Map<int, AouType> values = {
+    0: CIRCULAR,
+    1: ELLIPTICAL,
+    2: RECTANGULAR,
+    3: NONE};
+
+  static const fb.Reader<AouType> reader = _AouTypeReader();
+
+  @override
+  String toString() {
+    return 'AouType{value: $value}';
+  }
+}
+
+class _AouTypeReader extends fb.Reader<AouType> {
+  const _AouTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  AouType read(fb.BufferContext bc, int offset) =>
+      AouType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 ///  Orbit Track
 class OBT {
   OBT._(this._bc, this._bcOffset);
@@ -18,47 +116,84 @@ class OBT {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  int get SAT_NO => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  String? get ON_ORBIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get ORIG_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Satellite catalog number
+  int get SAT_NO => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  ///  International designator
+  String? get ORIG_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  On-orbit reference
+  String? get ON_ORBIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Track point timestamp (ISO 8601)
   String? get TS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Latitude (degrees)
   double get LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  ///  Longitude (degrees)
   double get LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Altitude (km)
   double get ALT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
-  double get RDF_RF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
-  String? get CALL_SIGN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  String? get RPT_NUM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
-  String? get OBJ_IDENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
-  String? get IDENT_AMP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
-  String? get SAT_STATUS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
-  String? get OBJECT_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
-  String? get COUNTRY_CODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
-  double get DECAY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
-  String? get CHARLIE_LINE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
-  String? get AOU_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
-  List<String>? get AOU_DATA => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 42);
-  double get SPD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
-  double get ANG_ELEV => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
-  double get CNTNMNT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
-  String? get XREF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 50);
-  String? get CH_XREF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 52);
-  String? get AMPLIFICATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 54);
-  String? get IFF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 56);
-  bool get REINFORCED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 58, false);
-  bool get REDUCED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 60, false);
-  bool get HQ => const fb.BoolReader().vTableGet(_bc, _bcOffset, 62, false);
-  bool get DUMMY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 64, false);
-  bool get TASK_FORCE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 66, false);
-  bool get FEINT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 68, false);
-  bool get INSTALLATION => const fb.BoolReader().vTableGet(_bc, _bcOffset, 70, false);
-  String? get VEH_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 72);
-  String? get TRK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 74);
+  ///  Speed (km/s)
+  double get SPD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  Elevation angle from observer (degrees)
+  double get ANG_ELEV => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Radar data fusion RF value
+  double get RDF_RF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  ///  Call sign
+  String? get CALL_SIGN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Report number
+  String? get RPT_NUM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Track identifier
+  String? get TRK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  ///  Object identity assessment
+  String? get OBJ_IDENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  ///  Identity amplification
+  String? get IDENT_AMP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  ///  Satellite operational status
+  String? get SAT_STATUS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  ///  Object type
+  OrbitObjectType get OBJ_TYPE => OrbitObjectType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 38, 0));
+  ///  Country code (ISO 3166)
+  String? get COUNTRY_CODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+  ///  Orbit decay rate (km/day)
+  double get DECAY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  ///  Charlie line data (amplification text)
+  String? get CHARLIE_LINE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
+  ///  Area of uncertainty type
+  AouType get AOU_TYPE => AouType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 46, 0));
+  ///  Area of uncertainty data
+  List<double>? get AOU_DATA => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 48);
+  ///  Containment probability (0-1)
+  double get CNTNMNT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
+  ///  Cross-reference identifier
+  String? get XREF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 52);
+  ///  Charlie cross-reference
+  String? get CH_XREF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 54);
+  ///  Additional amplification text
+  String? get AMPLIFICATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 56);
+  ///  IFF mode/code
+  String? get IFF => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 58);
+  ///  Vehicle type
+  String? get VEH_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 60);
+  ///  True if reinforced unit
+  bool get REINFORCED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 62, false);
+  ///  True if reduced unit
+  bool get REDUCED => const fb.BoolReader().vTableGet(_bc, _bcOffset, 64, false);
+  ///  True if headquarters element
+  bool get HQ => const fb.BoolReader().vTableGet(_bc, _bcOffset, 66, false);
+  ///  True if dummy/exercise track
+  bool get DUMMY => const fb.BoolReader().vTableGet(_bc, _bcOffset, 68, false);
+  ///  True if task force
+  bool get TASK_FORCE => const fb.BoolReader().vTableGet(_bc, _bcOffset, 70, false);
+  ///  True if feint
+  bool get FEINT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 72, false);
+  ///  True if installation (not mobile)
+  bool get INSTALLATION => const fb.BoolReader().vTableGet(_bc, _bcOffset, 74, false);
+  ///  Contributing track sensors
   List<String>? get TRACK_SENSORS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 76);
 
   @override
   String toString() {
-    return 'OBT{ID: ${ID}, SAT_NO: ${SAT_NO}, ON_ORBIT: ${ON_ORBIT}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, TS: ${TS}, LAT: ${LAT}, LON: ${LON}, ALT: ${ALT}, RDF_RF: ${RDF_RF}, CALL_SIGN: ${CALL_SIGN}, RPT_NUM: ${RPT_NUM}, OBJ_IDENT: ${OBJ_IDENT}, IDENT_AMP: ${IDENT_AMP}, SAT_STATUS: ${SAT_STATUS}, OBJECT_TYPE: ${OBJECT_TYPE}, COUNTRY_CODE: ${COUNTRY_CODE}, DECAY: ${DECAY}, CHARLIE_LINE: ${CHARLIE_LINE}, AOU_TYPE: ${AOU_TYPE}, AOU_DATA: ${AOU_DATA}, SPD: ${SPD}, ANG_ELEV: ${ANG_ELEV}, CNTNMNT: ${CNTNMNT}, XREF: ${XREF}, CH_XREF: ${CH_XREF}, AMPLIFICATION: ${AMPLIFICATION}, IFF: ${IFF}, REINFORCED: ${REINFORCED}, REDUCED: ${REDUCED}, HQ: ${HQ}, DUMMY: ${DUMMY}, TASK_FORCE: ${TASK_FORCE}, FEINT: ${FEINT}, INSTALLATION: ${INSTALLATION}, VEH_TYPE: ${VEH_TYPE}, TRK_ID: ${TRK_ID}, TRACK_SENSORS: ${TRACK_SENSORS}}';
+    return 'OBT{ID: ${ID}, SAT_NO: ${SAT_NO}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, ON_ORBIT: ${ON_ORBIT}, TS: ${TS}, LAT: ${LAT}, LON: ${LON}, ALT: ${ALT}, SPD: ${SPD}, ANG_ELEV: ${ANG_ELEV}, RDF_RF: ${RDF_RF}, CALL_SIGN: ${CALL_SIGN}, RPT_NUM: ${RPT_NUM}, TRK_ID: ${TRK_ID}, OBJ_IDENT: ${OBJ_IDENT}, IDENT_AMP: ${IDENT_AMP}, SAT_STATUS: ${SAT_STATUS}, OBJ_TYPE: ${OBJ_TYPE}, COUNTRY_CODE: ${COUNTRY_CODE}, DECAY: ${DECAY}, CHARLIE_LINE: ${CHARLIE_LINE}, AOU_TYPE: ${AOU_TYPE}, AOU_DATA: ${AOU_DATA}, CNTNMNT: ${CNTNMNT}, XREF: ${XREF}, CH_XREF: ${CH_XREF}, AMPLIFICATION: ${AMPLIFICATION}, IFF: ${IFF}, VEH_TYPE: ${VEH_TYPE}, REINFORCED: ${REINFORCED}, REDUCED: ${REDUCED}, HQ: ${HQ}, DUMMY: ${DUMMY}, TASK_FORCE: ${TASK_FORCE}, FEINT: ${FEINT}, INSTALLATION: ${INSTALLATION}, TRACK_SENSORS: ${TRACK_SENSORS}}';
   }
 }
 
@@ -84,14 +219,14 @@ class OBTBuilder {
     return fbBuilder.offset;
   }
   int addSatNo(int? SAT_NO) {
-    fbBuilder.addInt32(1, SAT_NO);
-    return fbBuilder.offset;
-  }
-  int addOnOrbitOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
+    fbBuilder.addUint32(1, SAT_NO);
     return fbBuilder.offset;
   }
   int addOrigObjectIdOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addOnOrbitOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
@@ -111,116 +246,116 @@ class OBTBuilder {
     fbBuilder.addFloat64(7, ALT);
     return fbBuilder.offset;
   }
-  int addRdfRf(double? RDF_RF) {
-    fbBuilder.addFloat64(8, RDF_RF);
-    return fbBuilder.offset;
-  }
-  int addCallSignOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
-    return fbBuilder.offset;
-  }
-  int addRptNumOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
-    return fbBuilder.offset;
-  }
-  int addObjIdentOffset(int? offset) {
-    fbBuilder.addOffset(11, offset);
-    return fbBuilder.offset;
-  }
-  int addIdentAmpOffset(int? offset) {
-    fbBuilder.addOffset(12, offset);
-    return fbBuilder.offset;
-  }
-  int addSatStatusOffset(int? offset) {
-    fbBuilder.addOffset(13, offset);
-    return fbBuilder.offset;
-  }
-  int addObjectTypeOffset(int? offset) {
-    fbBuilder.addOffset(14, offset);
-    return fbBuilder.offset;
-  }
-  int addCountryCodeOffset(int? offset) {
-    fbBuilder.addOffset(15, offset);
-    return fbBuilder.offset;
-  }
-  int addDecay(double? DECAY) {
-    fbBuilder.addFloat64(16, DECAY);
-    return fbBuilder.offset;
-  }
-  int addCharlieLineOffset(int? offset) {
-    fbBuilder.addOffset(17, offset);
-    return fbBuilder.offset;
-  }
-  int addAouTypeOffset(int? offset) {
-    fbBuilder.addOffset(18, offset);
-    return fbBuilder.offset;
-  }
-  int addAouDataOffset(int? offset) {
-    fbBuilder.addOffset(19, offset);
-    return fbBuilder.offset;
-  }
   int addSpd(double? SPD) {
-    fbBuilder.addFloat64(20, SPD);
+    fbBuilder.addFloat64(8, SPD);
     return fbBuilder.offset;
   }
   int addAngElev(double? ANG_ELEV) {
-    fbBuilder.addFloat64(21, ANG_ELEV);
+    fbBuilder.addFloat64(9, ANG_ELEV);
     return fbBuilder.offset;
   }
-  int addCntnmnt(double? CNTNMNT) {
-    fbBuilder.addFloat64(22, CNTNMNT);
+  int addRdfRf(double? RDF_RF) {
+    fbBuilder.addFloat64(10, RDF_RF);
     return fbBuilder.offset;
   }
-  int addXrefOffset(int? offset) {
-    fbBuilder.addOffset(23, offset);
+  int addCallSignOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
-  int addChXrefOffset(int? offset) {
-    fbBuilder.addOffset(24, offset);
-    return fbBuilder.offset;
-  }
-  int addAmplificationOffset(int? offset) {
-    fbBuilder.addOffset(25, offset);
-    return fbBuilder.offset;
-  }
-  int addIffOffset(int? offset) {
-    fbBuilder.addOffset(26, offset);
-    return fbBuilder.offset;
-  }
-  int addReinforced(bool? REINFORCED) {
-    fbBuilder.addBool(27, REINFORCED);
-    return fbBuilder.offset;
-  }
-  int addReduced(bool? REDUCED) {
-    fbBuilder.addBool(28, REDUCED);
-    return fbBuilder.offset;
-  }
-  int addHq(bool? HQ) {
-    fbBuilder.addBool(29, HQ);
-    return fbBuilder.offset;
-  }
-  int addDummy(bool? DUMMY) {
-    fbBuilder.addBool(30, DUMMY);
-    return fbBuilder.offset;
-  }
-  int addTaskForce(bool? TASK_FORCE) {
-    fbBuilder.addBool(31, TASK_FORCE);
-    return fbBuilder.offset;
-  }
-  int addFeint(bool? FEINT) {
-    fbBuilder.addBool(32, FEINT);
-    return fbBuilder.offset;
-  }
-  int addInstallation(bool? INSTALLATION) {
-    fbBuilder.addBool(33, INSTALLATION);
-    return fbBuilder.offset;
-  }
-  int addVehTypeOffset(int? offset) {
-    fbBuilder.addOffset(34, offset);
+  int addRptNumOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
   int addTrkIdOffset(int? offset) {
-    fbBuilder.addOffset(35, offset);
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addObjIdentOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addIdentAmpOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addSatStatusOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addObjType(OrbitObjectType? OBJ_TYPE) {
+    fbBuilder.addInt8(17, OBJ_TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addCountryCodeOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addDecay(double? DECAY) {
+    fbBuilder.addFloat64(19, DECAY);
+    return fbBuilder.offset;
+  }
+  int addCharlieLineOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addAouType(AouType? AOU_TYPE) {
+    fbBuilder.addInt8(21, AOU_TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addAouDataOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
+    return fbBuilder.offset;
+  }
+  int addCntnmnt(double? CNTNMNT) {
+    fbBuilder.addFloat64(23, CNTNMNT);
+    return fbBuilder.offset;
+  }
+  int addXrefOffset(int? offset) {
+    fbBuilder.addOffset(24, offset);
+    return fbBuilder.offset;
+  }
+  int addChXrefOffset(int? offset) {
+    fbBuilder.addOffset(25, offset);
+    return fbBuilder.offset;
+  }
+  int addAmplificationOffset(int? offset) {
+    fbBuilder.addOffset(26, offset);
+    return fbBuilder.offset;
+  }
+  int addIffOffset(int? offset) {
+    fbBuilder.addOffset(27, offset);
+    return fbBuilder.offset;
+  }
+  int addVehTypeOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
+  int addReinforced(bool? REINFORCED) {
+    fbBuilder.addBool(29, REINFORCED);
+    return fbBuilder.offset;
+  }
+  int addReduced(bool? REDUCED) {
+    fbBuilder.addBool(30, REDUCED);
+    return fbBuilder.offset;
+  }
+  int addHq(bool? HQ) {
+    fbBuilder.addBool(31, HQ);
+    return fbBuilder.offset;
+  }
+  int addDummy(bool? DUMMY) {
+    fbBuilder.addBool(32, DUMMY);
+    return fbBuilder.offset;
+  }
+  int addTaskForce(bool? TASK_FORCE) {
+    fbBuilder.addBool(33, TASK_FORCE);
+    return fbBuilder.offset;
+  }
+  int addFeint(bool? FEINT) {
+    fbBuilder.addBool(34, FEINT);
+    return fbBuilder.offset;
+  }
+  int addInstallation(bool? INSTALLATION) {
+    fbBuilder.addBool(35, INSTALLATION);
     return fbBuilder.offset;
   }
   int addTrackSensorsOffset(int? offset) {
@@ -236,31 +371,33 @@ class OBTBuilder {
 class OBTObjectBuilder extends fb.ObjectBuilder {
   final String? _ID;
   final int? _SAT_NO;
-  final String? _ON_ORBIT;
   final String? _ORIG_OBJECT_ID;
+  final String? _ON_ORBIT;
   final String? _TS;
   final double? _LAT;
   final double? _LON;
   final double? _ALT;
+  final double? _SPD;
+  final double? _ANG_ELEV;
   final double? _RDF_RF;
   final String? _CALL_SIGN;
   final String? _RPT_NUM;
+  final String? _TRK_ID;
   final String? _OBJ_IDENT;
   final String? _IDENT_AMP;
   final String? _SAT_STATUS;
-  final String? _OBJECT_TYPE;
+  final OrbitObjectType? _OBJ_TYPE;
   final String? _COUNTRY_CODE;
   final double? _DECAY;
   final String? _CHARLIE_LINE;
-  final String? _AOU_TYPE;
-  final List<String>? _AOU_DATA;
-  final double? _SPD;
-  final double? _ANG_ELEV;
+  final AouType? _AOU_TYPE;
+  final List<double>? _AOU_DATA;
   final double? _CNTNMNT;
   final String? _XREF;
   final String? _CH_XREF;
   final String? _AMPLIFICATION;
   final String? _IFF;
+  final String? _VEH_TYPE;
   final bool? _REINFORCED;
   final bool? _REDUCED;
   final bool? _HQ;
@@ -268,38 +405,38 @@ class OBTObjectBuilder extends fb.ObjectBuilder {
   final bool? _TASK_FORCE;
   final bool? _FEINT;
   final bool? _INSTALLATION;
-  final String? _VEH_TYPE;
-  final String? _TRK_ID;
   final List<String>? _TRACK_SENSORS;
 
   OBTObjectBuilder({
     String? ID,
     int? SAT_NO,
-    String? ON_ORBIT,
     String? ORIG_OBJECT_ID,
+    String? ON_ORBIT,
     String? TS,
     double? LAT,
     double? LON,
     double? ALT,
+    double? SPD,
+    double? ANG_ELEV,
     double? RDF_RF,
     String? CALL_SIGN,
     String? RPT_NUM,
+    String? TRK_ID,
     String? OBJ_IDENT,
     String? IDENT_AMP,
     String? SAT_STATUS,
-    String? OBJECT_TYPE,
+    OrbitObjectType? OBJ_TYPE,
     String? COUNTRY_CODE,
     double? DECAY,
     String? CHARLIE_LINE,
-    String? AOU_TYPE,
-    List<String>? AOU_DATA,
-    double? SPD,
-    double? ANG_ELEV,
+    AouType? AOU_TYPE,
+    List<double>? AOU_DATA,
     double? CNTNMNT,
     String? XREF,
     String? CH_XREF,
     String? AMPLIFICATION,
     String? IFF,
+    String? VEH_TYPE,
     bool? REINFORCED,
     bool? REDUCED,
     bool? HQ,
@@ -307,37 +444,37 @@ class OBTObjectBuilder extends fb.ObjectBuilder {
     bool? TASK_FORCE,
     bool? FEINT,
     bool? INSTALLATION,
-    String? VEH_TYPE,
-    String? TRK_ID,
     List<String>? TRACK_SENSORS,
   })
       : _ID = ID,
         _SAT_NO = SAT_NO,
-        _ON_ORBIT = ON_ORBIT,
         _ORIG_OBJECT_ID = ORIG_OBJECT_ID,
+        _ON_ORBIT = ON_ORBIT,
         _TS = TS,
         _LAT = LAT,
         _LON = LON,
         _ALT = ALT,
+        _SPD = SPD,
+        _ANG_ELEV = ANG_ELEV,
         _RDF_RF = RDF_RF,
         _CALL_SIGN = CALL_SIGN,
         _RPT_NUM = RPT_NUM,
+        _TRK_ID = TRK_ID,
         _OBJ_IDENT = OBJ_IDENT,
         _IDENT_AMP = IDENT_AMP,
         _SAT_STATUS = SAT_STATUS,
-        _OBJECT_TYPE = OBJECT_TYPE,
+        _OBJ_TYPE = OBJ_TYPE,
         _COUNTRY_CODE = COUNTRY_CODE,
         _DECAY = DECAY,
         _CHARLIE_LINE = CHARLIE_LINE,
         _AOU_TYPE = AOU_TYPE,
         _AOU_DATA = AOU_DATA,
-        _SPD = SPD,
-        _ANG_ELEV = ANG_ELEV,
         _CNTNMNT = CNTNMNT,
         _XREF = XREF,
         _CH_XREF = CH_XREF,
         _AMPLIFICATION = AMPLIFICATION,
         _IFF = IFF,
+        _VEH_TYPE = VEH_TYPE,
         _REINFORCED = REINFORCED,
         _REDUCED = REDUCED,
         _HQ = HQ,
@@ -345,8 +482,6 @@ class OBTObjectBuilder extends fb.ObjectBuilder {
         _TASK_FORCE = TASK_FORCE,
         _FEINT = FEINT,
         _INSTALLATION = INSTALLATION,
-        _VEH_TYPE = VEH_TYPE,
-        _TRK_ID = TRK_ID,
         _TRACK_SENSORS = TRACK_SENSORS;
 
   /// Finish building, and store into the [fbBuilder].
@@ -354,32 +489,30 @@ class OBTObjectBuilder extends fb.ObjectBuilder {
   int finish(fb.Builder fbBuilder) {
     final int? IDOffset = _ID == null ? null
         : fbBuilder.writeString(_ID!);
-    final int? ON_ORBITOffset = _ON_ORBIT == null ? null
-        : fbBuilder.writeString(_ON_ORBIT!);
     final int? ORIG_OBJECT_IDOffset = _ORIG_OBJECT_ID == null ? null
         : fbBuilder.writeString(_ORIG_OBJECT_ID!);
+    final int? ON_ORBITOffset = _ON_ORBIT == null ? null
+        : fbBuilder.writeString(_ON_ORBIT!);
     final int? TSOffset = _TS == null ? null
         : fbBuilder.writeString(_TS!);
     final int? CALL_SIGNOffset = _CALL_SIGN == null ? null
         : fbBuilder.writeString(_CALL_SIGN!);
     final int? RPT_NUMOffset = _RPT_NUM == null ? null
         : fbBuilder.writeString(_RPT_NUM!);
+    final int? TRK_IDOffset = _TRK_ID == null ? null
+        : fbBuilder.writeString(_TRK_ID!);
     final int? OBJ_IDENTOffset = _OBJ_IDENT == null ? null
         : fbBuilder.writeString(_OBJ_IDENT!);
     final int? IDENT_AMPOffset = _IDENT_AMP == null ? null
         : fbBuilder.writeString(_IDENT_AMP!);
     final int? SAT_STATUSOffset = _SAT_STATUS == null ? null
         : fbBuilder.writeString(_SAT_STATUS!);
-    final int? OBJECT_TYPEOffset = _OBJECT_TYPE == null ? null
-        : fbBuilder.writeString(_OBJECT_TYPE!);
     final int? COUNTRY_CODEOffset = _COUNTRY_CODE == null ? null
         : fbBuilder.writeString(_COUNTRY_CODE!);
     final int? CHARLIE_LINEOffset = _CHARLIE_LINE == null ? null
         : fbBuilder.writeString(_CHARLIE_LINE!);
-    final int? AOU_TYPEOffset = _AOU_TYPE == null ? null
-        : fbBuilder.writeString(_AOU_TYPE!);
     final int? AOU_DATAOffset = _AOU_DATA == null ? null
-        : fbBuilder.writeList(_AOU_DATA!.map(fbBuilder.writeString).toList());
+        : fbBuilder.writeListFloat64(_AOU_DATA!);
     final int? XREFOffset = _XREF == null ? null
         : fbBuilder.writeString(_XREF!);
     final int? CH_XREFOffset = _CH_XREF == null ? null
@@ -390,47 +523,45 @@ class OBTObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_IFF!);
     final int? VEH_TYPEOffset = _VEH_TYPE == null ? null
         : fbBuilder.writeString(_VEH_TYPE!);
-    final int? TRK_IDOffset = _TRK_ID == null ? null
-        : fbBuilder.writeString(_TRK_ID!);
     final int? TRACK_SENSORSOffset = _TRACK_SENSORS == null ? null
         : fbBuilder.writeList(_TRACK_SENSORS!.map(fbBuilder.writeString).toList());
     fbBuilder.startTable(37);
     fbBuilder.addOffset(0, IDOffset);
-    fbBuilder.addInt32(1, _SAT_NO);
-    fbBuilder.addOffset(2, ON_ORBITOffset);
-    fbBuilder.addOffset(3, ORIG_OBJECT_IDOffset);
+    fbBuilder.addUint32(1, _SAT_NO);
+    fbBuilder.addOffset(2, ORIG_OBJECT_IDOffset);
+    fbBuilder.addOffset(3, ON_ORBITOffset);
     fbBuilder.addOffset(4, TSOffset);
     fbBuilder.addFloat64(5, _LAT);
     fbBuilder.addFloat64(6, _LON);
     fbBuilder.addFloat64(7, _ALT);
-    fbBuilder.addFloat64(8, _RDF_RF);
-    fbBuilder.addOffset(9, CALL_SIGNOffset);
-    fbBuilder.addOffset(10, RPT_NUMOffset);
-    fbBuilder.addOffset(11, OBJ_IDENTOffset);
-    fbBuilder.addOffset(12, IDENT_AMPOffset);
-    fbBuilder.addOffset(13, SAT_STATUSOffset);
-    fbBuilder.addOffset(14, OBJECT_TYPEOffset);
-    fbBuilder.addOffset(15, COUNTRY_CODEOffset);
-    fbBuilder.addFloat64(16, _DECAY);
-    fbBuilder.addOffset(17, CHARLIE_LINEOffset);
-    fbBuilder.addOffset(18, AOU_TYPEOffset);
-    fbBuilder.addOffset(19, AOU_DATAOffset);
-    fbBuilder.addFloat64(20, _SPD);
-    fbBuilder.addFloat64(21, _ANG_ELEV);
-    fbBuilder.addFloat64(22, _CNTNMNT);
-    fbBuilder.addOffset(23, XREFOffset);
-    fbBuilder.addOffset(24, CH_XREFOffset);
-    fbBuilder.addOffset(25, AMPLIFICATIONOffset);
-    fbBuilder.addOffset(26, IFFOffset);
-    fbBuilder.addBool(27, _REINFORCED);
-    fbBuilder.addBool(28, _REDUCED);
-    fbBuilder.addBool(29, _HQ);
-    fbBuilder.addBool(30, _DUMMY);
-    fbBuilder.addBool(31, _TASK_FORCE);
-    fbBuilder.addBool(32, _FEINT);
-    fbBuilder.addBool(33, _INSTALLATION);
-    fbBuilder.addOffset(34, VEH_TYPEOffset);
-    fbBuilder.addOffset(35, TRK_IDOffset);
+    fbBuilder.addFloat64(8, _SPD);
+    fbBuilder.addFloat64(9, _ANG_ELEV);
+    fbBuilder.addFloat64(10, _RDF_RF);
+    fbBuilder.addOffset(11, CALL_SIGNOffset);
+    fbBuilder.addOffset(12, RPT_NUMOffset);
+    fbBuilder.addOffset(13, TRK_IDOffset);
+    fbBuilder.addOffset(14, OBJ_IDENTOffset);
+    fbBuilder.addOffset(15, IDENT_AMPOffset);
+    fbBuilder.addOffset(16, SAT_STATUSOffset);
+    fbBuilder.addInt8(17, _OBJ_TYPE?.value);
+    fbBuilder.addOffset(18, COUNTRY_CODEOffset);
+    fbBuilder.addFloat64(19, _DECAY);
+    fbBuilder.addOffset(20, CHARLIE_LINEOffset);
+    fbBuilder.addInt8(21, _AOU_TYPE?.value);
+    fbBuilder.addOffset(22, AOU_DATAOffset);
+    fbBuilder.addFloat64(23, _CNTNMNT);
+    fbBuilder.addOffset(24, XREFOffset);
+    fbBuilder.addOffset(25, CH_XREFOffset);
+    fbBuilder.addOffset(26, AMPLIFICATIONOffset);
+    fbBuilder.addOffset(27, IFFOffset);
+    fbBuilder.addOffset(28, VEH_TYPEOffset);
+    fbBuilder.addBool(29, _REINFORCED);
+    fbBuilder.addBool(30, _REDUCED);
+    fbBuilder.addBool(31, _HQ);
+    fbBuilder.addBool(32, _DUMMY);
+    fbBuilder.addBool(33, _TASK_FORCE);
+    fbBuilder.addBool(34, _FEINT);
+    fbBuilder.addBool(35, _INSTALLATION);
     fbBuilder.addOffset(36, TRACK_SENSORSOffset);
     return fbBuilder.endTable();
   }

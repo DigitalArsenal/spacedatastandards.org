@@ -3,3 +3,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export { RFB, RFBT } from './RFB.js';
+export { rfBandDesignation } from './rfBandDesignation.js';
+export { rfPolarization } from './rfPolarization.js';

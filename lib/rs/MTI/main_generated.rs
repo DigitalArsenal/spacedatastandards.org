@@ -9,6 +9,99 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_MTI_STANDARD: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_MTI_STANDARD: i8 = 3;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_MTI_STANDARD: [mtiStandard; 4] = [
+  mtiStandard::STANAG_4607,
+  mtiStandard::STANAG_4545,
+  mtiStandard::CUSTOM,
+  mtiStandard::UNKNOWN,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct mtiStandard(pub i8);
+#[allow(non_upper_case_globals)]
+impl mtiStandard {
+  pub const STANAG_4607: Self = Self(0);
+  pub const STANAG_4545: Self = Self(1);
+  pub const CUSTOM: Self = Self(2);
+  pub const UNKNOWN: Self = Self(3);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 3;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::STANAG_4607,
+    Self::STANAG_4545,
+    Self::CUSTOM,
+    Self::UNKNOWN,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::STANAG_4607 => Some("STANAG_4607"),
+      Self::STANAG_4545 => Some("STANAG_4545"),
+      Self::CUSTOM => Some("CUSTOM"),
+      Self::UNKNOWN => Some("UNKNOWN"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for mtiStandard {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for mtiStandard {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for mtiStandard {
+    type Output = mtiStandard;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for mtiStandard {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for mtiStandard {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for mtiStandard {}
 pub enum MTIOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -27,19 +120,20 @@ impl<'a> flatbuffers::Follow<'a> for MTI<'a> {
 
 impl<'a> MTI<'a> {
   pub const VT_ID: flatbuffers::VOffsetT = 4;
-  pub const VT_P3: flatbuffers::VOffsetT = 6;
-  pub const VT_P6: flatbuffers::VOffsetT = 8;
-  pub const VT_P7: flatbuffers::VOffsetT = 10;
-  pub const VT_P8: flatbuffers::VOffsetT = 12;
-  pub const VT_P9: flatbuffers::VOffsetT = 14;
-  pub const VT_P10: flatbuffers::VOffsetT = 16;
-  pub const VT_MISSIONS: flatbuffers::VOffsetT = 18;
-  pub const VT_DWELLS: flatbuffers::VOffsetT = 20;
-  pub const VT_HRRS: flatbuffers::VOffsetT = 22;
-  pub const VT_JOB_DEFS: flatbuffers::VOffsetT = 24;
-  pub const VT_FREE_TEXTS: flatbuffers::VOffsetT = 26;
-  pub const VT_PLATFORM_LOCS: flatbuffers::VOffsetT = 28;
-  pub const VT_JOB_REQUESTS: flatbuffers::VOffsetT = 30;
+  pub const VT_STANDARD: flatbuffers::VOffsetT = 6;
+  pub const VT_P3: flatbuffers::VOffsetT = 8;
+  pub const VT_P6: flatbuffers::VOffsetT = 10;
+  pub const VT_P7: flatbuffers::VOffsetT = 12;
+  pub const VT_P8: flatbuffers::VOffsetT = 14;
+  pub const VT_P9: flatbuffers::VOffsetT = 16;
+  pub const VT_P10: flatbuffers::VOffsetT = 18;
+  pub const VT_MISSIONS: flatbuffers::VOffsetT = 20;
+  pub const VT_DWELLS: flatbuffers::VOffsetT = 22;
+  pub const VT_HRRS: flatbuffers::VOffsetT = 24;
+  pub const VT_JOB_DEFS: flatbuffers::VOffsetT = 26;
+  pub const VT_FREE_TEXTS: flatbuffers::VOffsetT = 28;
+  pub const VT_PLATFORM_LOCS: flatbuffers::VOffsetT = 30;
+  pub const VT_JOB_REQUESTS: flatbuffers::VOffsetT = 32;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -58,13 +152,14 @@ impl<'a> MTI<'a> {
     if let Some(x) = args.HRRS { builder.add_HRRS(x); }
     if let Some(x) = args.DWELLS { builder.add_DWELLS(x); }
     if let Some(x) = args.MISSIONS { builder.add_MISSIONS(x); }
-    builder.add_P10(args.P10);
     builder.add_P9(args.P9);
     if let Some(x) = args.P8 { builder.add_P8(x); }
     if let Some(x) = args.P7 { builder.add_P7(x); }
     if let Some(x) = args.P6 { builder.add_P6(x); }
     if let Some(x) = args.P3 { builder.add_P3(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_P10(args.P10);
+    builder.add_STANDARD(args.STANDARD);
     builder.finish()
   }
 
@@ -72,6 +167,7 @@ impl<'a> MTI<'a> {
     let ID = self.ID().map(|x| {
       x.to_string()
     });
+    let STANDARD = self.STANDARD();
     let P3 = self.P3().map(|x| {
       x.to_string()
     });
@@ -109,6 +205,7 @@ impl<'a> MTI<'a> {
     });
     MTIT {
       ID,
+      STANDARD,
       P3,
       P6,
       P7,
@@ -125,6 +222,7 @@ impl<'a> MTI<'a> {
     }
   }
 
+  /// Unique identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -132,6 +230,15 @@ impl<'a> MTI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MTI::VT_ID, None)}
   }
+  /// MTI standard (e.g., STANAG 4607)
+  #[inline]
+  pub fn STANDARD(&self) -> mtiStandard {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<mtiStandard>(MTI::VT_STANDARD, Some(mtiStandard::STANAG_4607)).unwrap()}
+  }
+  /// Platform type (P3 field)
   #[inline]
   pub fn P3(&self) -> Option<&'a str> {
     // Safety:
@@ -139,6 +246,7 @@ impl<'a> MTI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MTI::VT_P3, None)}
   }
+  /// Platform activity (P6 field)
   #[inline]
   pub fn P6(&self) -> Option<&'a str> {
     // Safety:
@@ -146,6 +254,7 @@ impl<'a> MTI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MTI::VT_P6, None)}
   }
+  /// Sensor type (P7 field)
   #[inline]
   pub fn P7(&self) -> Option<&'a str> {
     // Safety:
@@ -153,6 +262,7 @@ impl<'a> MTI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MTI::VT_P7, None)}
   }
+  /// Sensor model (P8 field)
   #[inline]
   pub fn P8(&self) -> Option<&'a str> {
     // Safety:
@@ -160,20 +270,23 @@ impl<'a> MTI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MTI::VT_P8, None)}
   }
+  /// Reference time code (P9)
   #[inline]
-  pub fn P9(&self) -> i32 {
+  pub fn P9(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(MTI::VT_P9, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u32>(MTI::VT_P9, Some(0)).unwrap()}
   }
+  /// Security classification (P10)
   #[inline]
-  pub fn P10(&self) -> i32 {
+  pub fn P10(&self) -> u16 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(MTI::VT_P10, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u16>(MTI::VT_P10, Some(0)).unwrap()}
   }
+  /// Mission segment identifiers
   #[inline]
   pub fn MISSIONS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -181,6 +294,7 @@ impl<'a> MTI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(MTI::VT_MISSIONS, None)}
   }
+  /// Dwell segment data references
   #[inline]
   pub fn DWELLS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -188,6 +302,7 @@ impl<'a> MTI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(MTI::VT_DWELLS, None)}
   }
+  /// High range resolution profile references
   #[inline]
   pub fn HRRS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -195,6 +310,7 @@ impl<'a> MTI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(MTI::VT_HRRS, None)}
   }
+  /// Job definition references
   #[inline]
   pub fn JOB_DEFS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -202,6 +318,7 @@ impl<'a> MTI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(MTI::VT_JOB_DEFS, None)}
   }
+  /// Free text entries
   #[inline]
   pub fn FREE_TEXTS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -209,6 +326,7 @@ impl<'a> MTI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(MTI::VT_FREE_TEXTS, None)}
   }
+  /// Platform location data references
   #[inline]
   pub fn PLATFORM_LOCS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -216,6 +334,7 @@ impl<'a> MTI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(MTI::VT_PLATFORM_LOCS, None)}
   }
+  /// Job request references
   #[inline]
   pub fn JOB_REQUESTS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -233,12 +352,13 @@ impl flatbuffers::Verifiable for MTI<'_> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
+     .visit_field::<mtiStandard>("STANDARD", Self::VT_STANDARD, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("P3", Self::VT_P3, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("P6", Self::VT_P6, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("P7", Self::VT_P7, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("P8", Self::VT_P8, false)?
-     .visit_field::<i32>("P9", Self::VT_P9, false)?
-     .visit_field::<i32>("P10", Self::VT_P10, false)?
+     .visit_field::<u32>("P9", Self::VT_P9, false)?
+     .visit_field::<u16>("P10", Self::VT_P10, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("MISSIONS", Self::VT_MISSIONS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("DWELLS", Self::VT_DWELLS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("HRRS", Self::VT_HRRS, false)?
@@ -252,12 +372,13 @@ impl flatbuffers::Verifiable for MTI<'_> {
 }
 pub struct MTIArgs<'a> {
     pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub STANDARD: mtiStandard,
     pub P3: Option<flatbuffers::WIPOffset<&'a str>>,
     pub P6: Option<flatbuffers::WIPOffset<&'a str>>,
     pub P7: Option<flatbuffers::WIPOffset<&'a str>>,
     pub P8: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub P9: i32,
-    pub P10: i32,
+    pub P9: u32,
+    pub P10: u16,
     pub MISSIONS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub DWELLS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub HRRS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
@@ -271,6 +392,7 @@ impl<'a> Default for MTIArgs<'a> {
   fn default() -> Self {
     MTIArgs {
       ID: None,
+      STANDARD: mtiStandard::STANAG_4607,
       P3: None,
       P6: None,
       P7: None,
@@ -298,6 +420,10 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> MTIBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MTI::VT_ID, ID);
   }
   #[inline]
+  pub fn add_STANDARD(&mut self, STANDARD: mtiStandard) {
+    self.fbb_.push_slot::<mtiStandard>(MTI::VT_STANDARD, STANDARD, mtiStandard::STANAG_4607);
+  }
+  #[inline]
   pub fn add_P3(&mut self, P3: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MTI::VT_P3, P3);
   }
@@ -314,12 +440,12 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> MTIBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MTI::VT_P8, P8);
   }
   #[inline]
-  pub fn add_P9(&mut self, P9: i32) {
-    self.fbb_.push_slot::<i32>(MTI::VT_P9, P9, 0);
+  pub fn add_P9(&mut self, P9: u32) {
+    self.fbb_.push_slot::<u32>(MTI::VT_P9, P9, 0);
   }
   #[inline]
-  pub fn add_P10(&mut self, P10: i32) {
-    self.fbb_.push_slot::<i32>(MTI::VT_P10, P10, 0);
+  pub fn add_P10(&mut self, P10: u16) {
+    self.fbb_.push_slot::<u16>(MTI::VT_P10, P10, 0);
   }
   #[inline]
   pub fn add_MISSIONS(&mut self, MISSIONS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
@@ -368,6 +494,7 @@ impl core::fmt::Debug for MTI<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
     let mut ds = f.debug_struct("MTI");
       ds.field("ID", &self.ID());
+      ds.field("STANDARD", &self.STANDARD());
       ds.field("P3", &self.P3());
       ds.field("P6", &self.P6());
       ds.field("P7", &self.P7());
@@ -388,12 +515,13 @@ impl core::fmt::Debug for MTI<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct MTIT {
   pub ID: Option<String>,
+  pub STANDARD: mtiStandard,
   pub P3: Option<String>,
   pub P6: Option<String>,
   pub P7: Option<String>,
   pub P8: Option<String>,
-  pub P9: i32,
-  pub P10: i32,
+  pub P9: u32,
+  pub P10: u16,
   pub MISSIONS: Option<Vec<String>>,
   pub DWELLS: Option<Vec<String>>,
   pub HRRS: Option<Vec<String>>,
@@ -406,6 +534,7 @@ impl Default for MTIT {
   fn default() -> Self {
     Self {
       ID: None,
+      STANDARD: mtiStandard::STANAG_4607,
       P3: None,
       P6: None,
       P7: None,
@@ -430,6 +559,7 @@ impl MTIT {
     let ID = self.ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let STANDARD = self.STANDARD;
     let P3 = self.P3.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -467,6 +597,7 @@ impl MTIT {
     });
     MTI::create(_fbb, &MTIArgs{
       ID,
+      STANDARD,
       P3,
       P6,
       P7,

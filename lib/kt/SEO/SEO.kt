@@ -29,6 +29,9 @@ class SEO : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Unique identifier
+     */
     val ID : String?
         get() {
             val o = __offset(4)
@@ -40,6 +43,9 @@ class SEO : Table() {
         }
     val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    /**
+     * Message type code
+     */
     val MSG_TYPE : String?
         get() {
             val o = __offset(6)
@@ -51,6 +57,9 @@ class SEO : Table() {
         }
     val MSG_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
     fun MSG_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    /**
+     * Generating system
+     */
     val GEN_SYSTEM : String?
         get() {
             val o = __offset(8)
@@ -62,6 +71,9 @@ class SEO : Table() {
         }
     val GEN_SYSTEMAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
     fun GEN_SYSTEMInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    /**
+     * External reference identifier
+     */
     val EXTERNAL_ID : String?
         get() {
             val o = __offset(10)
@@ -73,17 +85,17 @@ class SEO : Table() {
         }
     val EXTERNAL_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
     fun EXTERNAL_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    val DATA_TYPE : String?
+    /**
+     * Type of environmental data
+     */
+    val DATA_TYPE : Byte
         get() {
             val o = __offset(12)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val DATA_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun DATA_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * Generation time (ISO 8601)
+     */
     val GEN_TIME : String?
         get() {
             val o = __offset(14)
@@ -95,21 +107,33 @@ class SEO : Table() {
         }
     val GEN_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
     fun GEN_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    /**
+     * True if this is a forecast
+     */
     val FORECAST : Boolean
         get() {
             val o = __offset(16)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * True if derived from other measurements
+     */
     val DERIVED : Boolean
         get() {
             val o = __offset(18)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val SAT_NO : Int
+    /**
+     * Satellite catalog number (if space-based)
+     */
+    val SAT_NO : UInt
         get() {
             val o = __offset(20)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
+    /**
+     * International designator
+     */
     val ORIG_OBJECT_ID : String?
         get() {
             val o = __offset(22)
@@ -121,6 +145,9 @@ class SEO : Table() {
         }
     val ORIG_OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
     fun ORIG_OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    /**
+     * Sensor identifier
+     */
     val ID_SENSOR : String?
         get() {
             val o = __offset(24)
@@ -132,6 +159,9 @@ class SEO : Table() {
         }
     val ID_SENSORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
     fun ID_SENSORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    /**
+     * Original sensor identifier
+     */
     val ORIG_SENSOR_ID : String?
         get() {
             val o = __offset(26)
@@ -143,17 +173,17 @@ class SEO : Table() {
         }
     val ORIG_SENSOR_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
     fun ORIG_SENSOR_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
-    val OBSERVATORY_TYPE : String?
+    /**
+     * Observatory type
+     */
+    val OBSERVATORY_TYPE : Byte
         get() {
             val o = __offset(28)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val OBSERVATORY_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun OBSERVATORY_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    /**
+     * Observatory name
+     */
     val OBSERVATORY_NAME : String?
         get() {
             val o = __offset(30)
@@ -165,6 +195,9 @@ class SEO : Table() {
         }
     val OBSERVATORY_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
     fun OBSERVATORY_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    /**
+     * Observatory notes
+     */
     val OBSERVATORY_NOTES : String?
         get() {
             val o = __offset(32)
@@ -176,6 +209,9 @@ class SEO : Table() {
         }
     val OBSERVATORY_NOTESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
     fun OBSERVATORY_NOTESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
+    /**
+     * Instrument type description
+     */
     val INSTRUMENT_TYPE : String?
         get() {
             val o = __offset(34)
@@ -187,21 +223,33 @@ class SEO : Table() {
         }
     val INSTRUMENT_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
     fun INSTRUMENT_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    /**
+     * Observatory latitude (degrees)
+     */
     val LAT : Double
         get() {
             val o = __offset(36)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Observatory longitude (degrees)
+     */
     val LON : Double
         get() {
             val o = __offset(38)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Observatory altitude (km)
+     */
     val ALT : Double
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Sensor reference frame
+     */
     val SEN_REFERENCE_FRAME : String?
         get() {
             val o = __offset(42)
@@ -213,30 +261,43 @@ class SEO : Table() {
         }
     val SEN_REFERENCE_FRAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(42, 1)
     fun SEN_REFERENCE_FRAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 42, 1)
-    fun SEN_POS(j: Int) : String? {
+    /**
+     * Sensor position (km, 3 components)
+     */
+    fun SEN_POS(j: Int) : Double {
         val o = __offset(44)
         return if (o != 0) {
-            __string(__vector(o) + j * 4)
+            bb.getDouble(__vector(o) + j * 8)
         } else {
-            null
+            0.0
         }
     }
     val SEN_POSLength : Int
         get() {
             val o = __offset(44); return if (o != 0) __vector_len(o) else 0
         }
-    fun SEN_VEL(j: Int) : String? {
+    val SEN_POSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(44, 8)
+    fun SEN_POSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 44, 8)
+    /**
+     * Sensor velocity (km/s, 3 components)
+     */
+    fun SEN_VEL(j: Int) : Double {
         val o = __offset(46)
         return if (o != 0) {
-            __string(__vector(o) + j * 4)
+            bb.getDouble(__vector(o) + j * 8)
         } else {
-            null
+            0.0
         }
     }
     val SEN_VELLength : Int
         get() {
             val o = __offset(46); return if (o != 0) __vector_len(o) else 0
         }
+    val SEN_VELAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(46, 8)
+    fun SEN_VELInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 46, 8)
+    /**
+     * Measurement type description
+     */
     val MEAS_TYPE : String?
         get() {
             val o = __offset(48)
@@ -248,18 +309,18 @@ class SEO : Table() {
         }
     val MEAS_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(48, 1)
     fun MEAS_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 48, 1)
-    val SEN_ENERGY_LEVEL : String?
+    /**
+     * Particle type measured
+     */
+    val PARTICLE_TYPE : Byte
         get() {
             val o = __offset(50)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val SEN_ENERGY_LEVELAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(50, 1)
-    fun SEN_ENERGY_LEVELInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 50, 1)
-    val OB_SET_ID : String?
+    /**
+     * Energy level or range (keV or MeV)
+     */
+    val SEN_ENERGY_LEVEL : String?
         get() {
             val o = __offset(52)
             return if (o != 0) {
@@ -268,9 +329,12 @@ class SEO : Table() {
                 null
             }
         }
-    val OB_SET_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(52, 1)
-    fun OB_SET_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 52, 1)
-    val PARTICLE_TYPE : String?
+    val SEN_ENERGY_LEVELAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(52, 1)
+    fun SEN_ENERGY_LEVELInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 52, 1)
+    /**
+     * Observation set identifier
+     */
+    val OB_SET_ID : String?
         get() {
             val o = __offset(54)
             return if (o != 0) {
@@ -279,8 +343,11 @@ class SEO : Table() {
                 null
             }
         }
-    val PARTICLE_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(54, 1)
-    fun PARTICLE_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 54, 1)
+    val OB_SET_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(54, 1)
+    fun OB_SET_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 54, 1)
+    /**
+     * Observation time (ISO 8601)
+     */
     val OB_TIME : String?
         get() {
             val o = __offset(56)
@@ -292,30 +359,44 @@ class SEO : Table() {
         }
     val OB_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(56, 1)
     fun OB_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 56, 1)
-    fun SEO_LIST(j: Int) : String? {
+    /**
+     * Measurement values
+     */
+    fun VALUES(j: Int) : Double {
         val o = __offset(58)
         return if (o != 0) {
-            __string(__vector(o) + j * 4)
+            bb.getDouble(__vector(o) + j * 8)
         } else {
-            null
+            0.0
         }
     }
-    val SEO_LISTLength : Int
+    val VALUESLength : Int
         get() {
             val o = __offset(58); return if (o != 0) __vector_len(o) else 0
         }
-    val QUALITY : String?
-        get() {
-            val o = __offset(60)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+    val VALUESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(58, 8)
+    fun VALUESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 58, 8)
+    /**
+     * Measurement uncertainties
+     */
+    fun UNCERTAINTIES(j: Int) : Double {
+        val o = __offset(60)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
         }
-    val QUALITYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(60, 1)
-    fun QUALITYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 60, 1)
-    val DESCRIPTION : String?
+    }
+    val UNCERTAINTIESLength : Int
+        get() {
+            val o = __offset(60); return if (o != 0) __vector_len(o) else 0
+        }
+    val UNCERTAINTIESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(60, 8)
+    fun UNCERTAINTIESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 60, 8)
+    /**
+     * Units for measurement values
+     */
+    val UNITS : String?
         get() {
             val o = __offset(62)
             return if (o != 0) {
@@ -324,9 +405,12 @@ class SEO : Table() {
                 null
             }
         }
-    val DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(62, 1)
-    fun DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 62, 1)
-    val DESCRIPTOR : String?
+    val UNITSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(62, 1)
+    fun UNITSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 62, 1)
+    /**
+     * Data quality indicator
+     */
+    val QUALITY : String?
         get() {
             val o = __offset(64)
             return if (o != 0) {
@@ -335,10 +419,41 @@ class SEO : Table() {
                 null
             }
         }
-    val DESCRIPTORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(64, 1)
-    fun DESCRIPTORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 64, 1)
+    val QUALITYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(64, 1)
+    fun QUALITYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 64, 1)
+    /**
+     * Description
+     */
+    val DESCRIPTION : String?
+        get() {
+            val o = __offset(66)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(66, 1)
+    fun DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 66, 1)
+    /**
+     * Event descriptor
+     */
+    val DESCRIPTOR : String?
+        get() {
+            val o = __offset(68)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val DESCRIPTORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(68, 1)
+    fun DESCRIPTORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 68, 1)
+    /**
+     * Source types
+     */
     fun SRC_TYPS(j: Int) : String? {
-        val o = __offset(66)
+        val o = __offset(70)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -347,10 +462,13 @@ class SEO : Table() {
     }
     val SRC_TYPSLength : Int
         get() {
-            val o = __offset(66); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(70); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Source identifiers
+     */
     fun SRC_IDS(j: Int) : String? {
-        val o = __offset(68)
+        val o = __offset(72)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -359,7 +477,7 @@ class SEO : Table() {
     }
     val SRC_IDSLength : Int
         get() {
-            val o = __offset(68); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(72); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
@@ -369,8 +487,8 @@ class SEO : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SEOBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SEO")
-        fun createSEO(builder: FlatBufferBuilder, IDOffset: Int, MSG_TYPEOffset: Int, GEN_SYSTEMOffset: Int, EXTERNAL_IDOffset: Int, DATA_TYPEOffset: Int, GEN_TIMEOffset: Int, FORECAST: Boolean, DERIVED: Boolean, SAT_NO: Int, ORIG_OBJECT_IDOffset: Int, ID_SENSOROffset: Int, ORIG_SENSOR_IDOffset: Int, OBSERVATORY_TYPEOffset: Int, OBSERVATORY_NAMEOffset: Int, OBSERVATORY_NOTESOffset: Int, INSTRUMENT_TYPEOffset: Int, LAT: Double, LON: Double, ALT: Double, SEN_REFERENCE_FRAMEOffset: Int, SEN_POSOffset: Int, SEN_VELOffset: Int, MEAS_TYPEOffset: Int, SEN_ENERGY_LEVELOffset: Int, OB_SET_IDOffset: Int, PARTICLE_TYPEOffset: Int, OB_TIMEOffset: Int, SEO_LISTOffset: Int, QUALITYOffset: Int, DESCRIPTIONOffset: Int, DESCRIPTOROffset: Int, SRC_TYPSOffset: Int, SRC_IDSOffset: Int) : Int {
-            builder.startTable(33)
+        fun createSEO(builder: FlatBufferBuilder, IDOffset: Int, MSG_TYPEOffset: Int, GEN_SYSTEMOffset: Int, EXTERNAL_IDOffset: Int, DATA_TYPE: Byte, GEN_TIMEOffset: Int, FORECAST: Boolean, DERIVED: Boolean, SAT_NO: UInt, ORIG_OBJECT_IDOffset: Int, ID_SENSOROffset: Int, ORIG_SENSOR_IDOffset: Int, OBSERVATORY_TYPE: Byte, OBSERVATORY_NAMEOffset: Int, OBSERVATORY_NOTESOffset: Int, INSTRUMENT_TYPEOffset: Int, LAT: Double, LON: Double, ALT: Double, SEN_REFERENCE_FRAMEOffset: Int, SEN_POSOffset: Int, SEN_VELOffset: Int, MEAS_TYPEOffset: Int, PARTICLE_TYPE: Byte, SEN_ENERGY_LEVELOffset: Int, OB_SET_IDOffset: Int, OB_TIMEOffset: Int, VALUESOffset: Int, UNCERTAINTIESOffset: Int, UNITSOffset: Int, QUALITYOffset: Int, DESCRIPTIONOffset: Int, DESCRIPTOROffset: Int, SRC_TYPSOffset: Int, SRC_IDSOffset: Int) : Int {
+            builder.startTable(35)
             addALT(builder, ALT)
             addLON(builder, LON)
             addLAT(builder, LAT)
@@ -379,9 +497,10 @@ class SEO : Table() {
             addDESCRIPTOR(builder, DESCRIPTOROffset)
             addDESCRIPTION(builder, DESCRIPTIONOffset)
             addQUALITY(builder, QUALITYOffset)
-            addSEO_LIST(builder, SEO_LISTOffset)
+            addUNITS(builder, UNITSOffset)
+            addUNCERTAINTIES(builder, UNCERTAINTIESOffset)
+            addVALUES(builder, VALUESOffset)
             addOB_TIME(builder, OB_TIMEOffset)
-            addPARTICLE_TYPE(builder, PARTICLE_TYPEOffset)
             addOB_SET_ID(builder, OB_SET_IDOffset)
             addSEN_ENERGY_LEVEL(builder, SEN_ENERGY_LEVELOffset)
             addMEAS_TYPE(builder, MEAS_TYPEOffset)
@@ -391,35 +510,36 @@ class SEO : Table() {
             addINSTRUMENT_TYPE(builder, INSTRUMENT_TYPEOffset)
             addOBSERVATORY_NOTES(builder, OBSERVATORY_NOTESOffset)
             addOBSERVATORY_NAME(builder, OBSERVATORY_NAMEOffset)
-            addOBSERVATORY_TYPE(builder, OBSERVATORY_TYPEOffset)
             addORIG_SENSOR_ID(builder, ORIG_SENSOR_IDOffset)
             addID_SENSOR(builder, ID_SENSOROffset)
             addORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset)
             addSAT_NO(builder, SAT_NO)
             addGEN_TIME(builder, GEN_TIMEOffset)
-            addDATA_TYPE(builder, DATA_TYPEOffset)
             addEXTERNAL_ID(builder, EXTERNAL_IDOffset)
             addGEN_SYSTEM(builder, GEN_SYSTEMOffset)
             addMSG_TYPE(builder, MSG_TYPEOffset)
             addID(builder, IDOffset)
+            addPARTICLE_TYPE(builder, PARTICLE_TYPE)
+            addOBSERVATORY_TYPE(builder, OBSERVATORY_TYPE)
             addDERIVED(builder, DERIVED)
             addFORECAST(builder, FORECAST)
+            addDATA_TYPE(builder, DATA_TYPE)
             return endSEO(builder)
         }
-        fun startSEO(builder: FlatBufferBuilder) = builder.startTable(33)
+        fun startSEO(builder: FlatBufferBuilder) = builder.startTable(35)
         fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
         fun addMSG_TYPE(builder: FlatBufferBuilder, MSG_TYPE: Int) = builder.addOffset(1, MSG_TYPE, 0)
         fun addGEN_SYSTEM(builder: FlatBufferBuilder, GEN_SYSTEM: Int) = builder.addOffset(2, GEN_SYSTEM, 0)
         fun addEXTERNAL_ID(builder: FlatBufferBuilder, EXTERNAL_ID: Int) = builder.addOffset(3, EXTERNAL_ID, 0)
-        fun addDATA_TYPE(builder: FlatBufferBuilder, DATA_TYPE: Int) = builder.addOffset(4, DATA_TYPE, 0)
+        fun addDATA_TYPE(builder: FlatBufferBuilder, DATA_TYPE: Byte) = builder.addByte(4, DATA_TYPE, 0)
         fun addGEN_TIME(builder: FlatBufferBuilder, GEN_TIME: Int) = builder.addOffset(5, GEN_TIME, 0)
         fun addFORECAST(builder: FlatBufferBuilder, FORECAST: Boolean) = builder.addBoolean(6, FORECAST, false)
         fun addDERIVED(builder: FlatBufferBuilder, DERIVED: Boolean) = builder.addBoolean(7, DERIVED, false)
-        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: Int) = builder.addInt(8, SAT_NO, 0)
+        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: UInt) = builder.addInt(8, SAT_NO.toInt(), 0)
         fun addORIG_OBJECT_ID(builder: FlatBufferBuilder, ORIG_OBJECT_ID: Int) = builder.addOffset(9, ORIG_OBJECT_ID, 0)
         fun addID_SENSOR(builder: FlatBufferBuilder, ID_SENSOR: Int) = builder.addOffset(10, ID_SENSOR, 0)
         fun addORIG_SENSOR_ID(builder: FlatBufferBuilder, ORIG_SENSOR_ID: Int) = builder.addOffset(11, ORIG_SENSOR_ID, 0)
-        fun addOBSERVATORY_TYPE(builder: FlatBufferBuilder, OBSERVATORY_TYPE: Int) = builder.addOffset(12, OBSERVATORY_TYPE, 0)
+        fun addOBSERVATORY_TYPE(builder: FlatBufferBuilder, OBSERVATORY_TYPE: Byte) = builder.addByte(12, OBSERVATORY_TYPE, 0)
         fun addOBSERVATORY_NAME(builder: FlatBufferBuilder, OBSERVATORY_NAME: Int) = builder.addOffset(13, OBSERVATORY_NAME, 0)
         fun addOBSERVATORY_NOTES(builder: FlatBufferBuilder, OBSERVATORY_NOTES: Int) = builder.addOffset(14, OBSERVATORY_NOTES, 0)
         fun addINSTRUMENT_TYPE(builder: FlatBufferBuilder, INSTRUMENT_TYPE: Int) = builder.addOffset(15, INSTRUMENT_TYPE, 0)
@@ -428,41 +548,51 @@ class SEO : Table() {
         fun addALT(builder: FlatBufferBuilder, ALT: Double) = builder.addDouble(18, ALT, 0.0)
         fun addSEN_REFERENCE_FRAME(builder: FlatBufferBuilder, SEN_REFERENCE_FRAME: Int) = builder.addOffset(19, SEN_REFERENCE_FRAME, 0)
         fun addSEN_POS(builder: FlatBufferBuilder, SEN_POS: Int) = builder.addOffset(20, SEN_POS, 0)
-        fun createSenPosVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
+        fun createSenPosVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
+                builder.addDouble(data[i])
             }
             return builder.endVector()
         }
-        fun startSenPosVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun startSenPosVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
         fun addSEN_VEL(builder: FlatBufferBuilder, SEN_VEL: Int) = builder.addOffset(21, SEN_VEL, 0)
-        fun createSenVelVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
+        fun createSenVelVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
+                builder.addDouble(data[i])
             }
             return builder.endVector()
         }
-        fun startSenVelVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun startSenVelVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
         fun addMEAS_TYPE(builder: FlatBufferBuilder, MEAS_TYPE: Int) = builder.addOffset(22, MEAS_TYPE, 0)
-        fun addSEN_ENERGY_LEVEL(builder: FlatBufferBuilder, SEN_ENERGY_LEVEL: Int) = builder.addOffset(23, SEN_ENERGY_LEVEL, 0)
-        fun addOB_SET_ID(builder: FlatBufferBuilder, OB_SET_ID: Int) = builder.addOffset(24, OB_SET_ID, 0)
-        fun addPARTICLE_TYPE(builder: FlatBufferBuilder, PARTICLE_TYPE: Int) = builder.addOffset(25, PARTICLE_TYPE, 0)
+        fun addPARTICLE_TYPE(builder: FlatBufferBuilder, PARTICLE_TYPE: Byte) = builder.addByte(23, PARTICLE_TYPE, 0)
+        fun addSEN_ENERGY_LEVEL(builder: FlatBufferBuilder, SEN_ENERGY_LEVEL: Int) = builder.addOffset(24, SEN_ENERGY_LEVEL, 0)
+        fun addOB_SET_ID(builder: FlatBufferBuilder, OB_SET_ID: Int) = builder.addOffset(25, OB_SET_ID, 0)
         fun addOB_TIME(builder: FlatBufferBuilder, OB_TIME: Int) = builder.addOffset(26, OB_TIME, 0)
-        fun addSEO_LIST(builder: FlatBufferBuilder, SEO_LIST: Int) = builder.addOffset(27, SEO_LIST, 0)
-        fun createSeoListVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
+        fun addVALUES(builder: FlatBufferBuilder, VALUES: Int) = builder.addOffset(27, VALUES, 0)
+        fun createValuesVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
+                builder.addDouble(data[i])
             }
             return builder.endVector()
         }
-        fun startSeoListVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addQUALITY(builder: FlatBufferBuilder, QUALITY: Int) = builder.addOffset(28, QUALITY, 0)
-        fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(29, DESCRIPTION, 0)
-        fun addDESCRIPTOR(builder: FlatBufferBuilder, DESCRIPTOR: Int) = builder.addOffset(30, DESCRIPTOR, 0)
-        fun addSRC_TYPS(builder: FlatBufferBuilder, SRC_TYPS: Int) = builder.addOffset(31, SRC_TYPS, 0)
+        fun startValuesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addUNCERTAINTIES(builder: FlatBufferBuilder, UNCERTAINTIES: Int) = builder.addOffset(28, UNCERTAINTIES, 0)
+        fun createUncertaintiesVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startUncertaintiesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addUNITS(builder: FlatBufferBuilder, UNITS: Int) = builder.addOffset(29, UNITS, 0)
+        fun addQUALITY(builder: FlatBufferBuilder, QUALITY: Int) = builder.addOffset(30, QUALITY, 0)
+        fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(31, DESCRIPTION, 0)
+        fun addDESCRIPTOR(builder: FlatBufferBuilder, DESCRIPTOR: Int) = builder.addOffset(32, DESCRIPTOR, 0)
+        fun addSRC_TYPS(builder: FlatBufferBuilder, SRC_TYPS: Int) = builder.addOffset(33, SRC_TYPS, 0)
         fun createSrcTypsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -471,7 +601,7 @@ class SEO : Table() {
             return builder.endVector()
         }
         fun startSrcTypsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSRC_IDS(builder: FlatBufferBuilder, SRC_IDS: Int) = builder.addOffset(32, SRC_IDS, 0)
+        fun addSRC_IDS(builder: FlatBufferBuilder, SRC_IDS: Int) = builder.addOffset(34, SRC_IDS, 0)
         fun createSrcIdsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

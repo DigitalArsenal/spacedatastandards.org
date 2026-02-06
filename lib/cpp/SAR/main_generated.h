@@ -16,6 +16,105 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct SAR;
 struct SARBuilder;
 
+enum sarMode : int8_t {
+  sarMode_STRIPMAP = 0,
+  sarMode_SPOTLIGHT = 1,
+  sarMode_SCANSAR = 2,
+  sarMode_TOPSAR = 3,
+  sarMode_ISAR = 4,
+  sarMode_GMTI = 5,
+  sarMode_MARITIME = 6,
+  sarMode_UNKNOWN = 7,
+  sarMode_MIN = sarMode_STRIPMAP,
+  sarMode_MAX = sarMode_UNKNOWN
+};
+
+inline const sarMode (&EnumValuessarMode())[8] {
+  static const sarMode values[] = {
+    sarMode_STRIPMAP,
+    sarMode_SPOTLIGHT,
+    sarMode_SCANSAR,
+    sarMode_TOPSAR,
+    sarMode_ISAR,
+    sarMode_GMTI,
+    sarMode_MARITIME,
+    sarMode_UNKNOWN
+  };
+  return values;
+}
+
+inline const char * const *EnumNamessarMode() {
+  static const char * const names[9] = {
+    "STRIPMAP",
+    "SPOTLIGHT",
+    "SCANSAR",
+    "TOPSAR",
+    "ISAR",
+    "GMTI",
+    "MARITIME",
+    "UNKNOWN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamesarMode(sarMode e) {
+  if (::flatbuffers::IsOutRange(e, sarMode_STRIPMAP, sarMode_UNKNOWN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamessarMode()[index];
+}
+
+enum sarPolarization : int8_t {
+  sarPolarization_HH = 0,
+  sarPolarization_VV = 1,
+  sarPolarization_HV = 2,
+  sarPolarization_VH = 3,
+  sarPolarization_DUAL_HH_VV = 4,
+  sarPolarization_DUAL_HH_HV = 5,
+  sarPolarization_DUAL_VV_VH = 6,
+  sarPolarization_QUAD = 7,
+  sarPolarization_COMPACT = 8,
+  sarPolarization_MIN = sarPolarization_HH,
+  sarPolarization_MAX = sarPolarization_COMPACT
+};
+
+inline const sarPolarization (&EnumValuessarPolarization())[9] {
+  static const sarPolarization values[] = {
+    sarPolarization_HH,
+    sarPolarization_VV,
+    sarPolarization_HV,
+    sarPolarization_VH,
+    sarPolarization_DUAL_HH_VV,
+    sarPolarization_DUAL_HH_HV,
+    sarPolarization_DUAL_VV_VH,
+    sarPolarization_QUAD,
+    sarPolarization_COMPACT
+  };
+  return values;
+}
+
+inline const char * const *EnumNamessarPolarization() {
+  static const char * const names[10] = {
+    "HH",
+    "VV",
+    "HV",
+    "VH",
+    "DUAL_HH_VV",
+    "DUAL_HH_HV",
+    "DUAL_VV_VH",
+    "QUAD",
+    "COMPACT",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamesarPolarization(sarPolarization e) {
+  if (::flatbuffers::IsOutRange(e, sarPolarization_HH, sarPolarization_COMPACT)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamessarPolarization()[index];
+}
+
 /// SAR Observation
 struct SAR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef SARBuilder Builder;
@@ -23,255 +122,303 @@ struct SAR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ID = 4,
     VT_SAT_NO = 6,
     VT_ORIG_OBJECT_ID = 8,
-    VT_ID_SENSOR = 10,
-    VT_ORIG_SENSOR_ID = 12,
-    VT_EXTERNAL_ID = 14,
-    VT_COLLECTION_ID = 16,
-    VT_DETECTION_ID = 18,
-    VT_COLLECTION_START = 20,
-    VT_COLLECTION_END = 22,
-    VT_CENTER_TIME = 24,
-    VT_DETECTION_START = 26,
-    VT_DETECTION_END = 28,
-    VT_DWELL_TIME = 30,
-    VT_ORBIT_STATE = 32,
-    VT_SAR_MODE = 34,
-    VT_OPERATING_BAND = 36,
-    VT_OPERATING_FREQ = 38,
-    VT_SNR = 40,
-    VT_TX_POLARIZATION = 42,
-    VT_RX_POLARIZATION = 44,
-    VT_GRAZE_ANGLE = 46,
-    VT_INCIDENCE_ANGLE = 48,
-    VT_SQUINT_ANGLE = 50,
-    VT_PULSE_BANDWIDTH = 52,
-    VT_PULSE_DURATION = 54,
-    VT_CONTINUOUS_SPOT_ANGLE = 56,
-    VT_SLANT_RANGE = 58,
-    VT_NEAR_RANGE = 60,
-    VT_FAR_RANGE = 62,
-    VT_SWATH_LENGTH = 64,
-    VT_AREA = 66,
-    VT_ATEXT = 68,
-    VT_AGJSON = 70,
+    VT_ON_ORBIT = 10,
+    VT_ID_SENSOR = 12,
+    VT_ORIG_SENSOR_ID = 14,
+    VT_EXTERNAL_ID = 16,
+    VT_COLLECTION_ID = 18,
+    VT_DETECTION_ID = 20,
+    VT_COLLECTION_START = 22,
+    VT_COLLECTION_END = 24,
+    VT_CENTER_TIME = 26,
+    VT_DETECTION_START = 28,
+    VT_DETECTION_END = 30,
+    VT_DWELL_TIME = 32,
+    VT_ORBIT_STATE = 34,
+    VT_SAR_MODE = 36,
+    VT_OPERATING_BAND = 38,
+    VT_OPERATING_FREQ = 40,
+    VT_SNR = 42,
+    VT_TX_POLARIZATION = 44,
+    VT_RX_POLARIZATION = 46,
+    VT_GRAZE_ANGLE = 48,
+    VT_INCIDENCE_ANGLE = 50,
+    VT_SQUINT_ANGLE = 52,
+    VT_PULSE_BANDWIDTH = 54,
+    VT_PULSE_DURATION = 56,
+    VT_CONTINUOUS_SPOT_ANGLE = 58,
+    VT_SLANT_RANGE = 60,
+    VT_NEAR_RANGE = 62,
+    VT_FAR_RANGE = 64,
+    VT_SWATH_LENGTH = 66,
+    VT_AGJSON = 68,
+    VT_ATEXT = 70,
     VT_ATYPE = 72,
-    VT_ANDIMS = 74,
-    VT_ASRID = 76,
-    VT_SPACING_RANGE = 78,
-    VT_SPACING_AZIMUTH = 80,
-    VT_LOOKS_AZIMUTH = 82,
-    VT_LOOKS_RANGE = 84,
-    VT_RESOLUTION_RANGE = 86,
-    VT_RESOLUTION_AZIMUTH = 88,
-    VT_OB_DIRECTION = 90,
-    VT_COORD_SYS = 92,
-    VT_TARGETPOSX = 94,
-    VT_TARGETPOSY = 96,
-    VT_TARGETPOSZ = 98,
-    VT_SENALT = 100,
-    VT_SENVELX = 102,
-    VT_SENVELY = 104,
-    VT_SENVELZ = 106,
-    VT_SENLAT_START = 108,
-    VT_SENLON_START = 110,
-    VT_SENLAT_END = 112,
-    VT_SENLON_END = 114,
-    VT_TRANSACTION_ID = 116,
-    VT_TAGS = 118,
-    VT_SRC_TYPS = 120,
-    VT_SRC_IDS = 122,
-    VT_ON_ORBIT = 124
+    VT_COORD_SYS = 74,
+    VT_SPACING_RANGE = 76,
+    VT_SPACING_AZIMUTH = 78,
+    VT_LOOKS_AZIMUTH = 80,
+    VT_LOOKS_RANGE = 82,
+    VT_RESOLUTION_RANGE = 84,
+    VT_RESOLUTION_AZIMUTH = 86,
+    VT_OB_DIRECTION = 88,
+    VT_TARGETPOSX = 90,
+    VT_TARGETPOSY = 92,
+    VT_TARGETPOSZ = 94,
+    VT_SENALT = 96,
+    VT_SENVELX = 98,
+    VT_SENVELY = 100,
+    VT_SENVELZ = 102,
+    VT_SENLAT_START = 104,
+    VT_SENLON_START = 106,
+    VT_SENLAT_END = 108,
+    VT_SENLON_END = 110,
+    VT_TRANSACTION_ID = 112,
+    VT_TAGS = 114,
+    VT_SRC_TYPS = 116,
+    VT_SRC_IDS = 118
   };
+  /// Unique identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
-  int32_t SAT_NO() const {
-    return GetField<int32_t>(VT_SAT_NO, 0);
+  /// Satellite catalog number (of SAR platform)
+  uint32_t SAT_NO() const {
+    return GetField<uint32_t>(VT_SAT_NO, 0);
   }
+  /// International designator
   const ::flatbuffers::String *ORIG_OBJECT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIG_OBJECT_ID);
   }
+  /// On-orbit reference
+  const ::flatbuffers::String *ON_ORBIT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ON_ORBIT);
+  }
+  /// Sensor identifier
   const ::flatbuffers::String *ID_SENSOR() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID_SENSOR);
   }
+  /// Original sensor identifier
   const ::flatbuffers::String *ORIG_SENSOR_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIG_SENSOR_ID);
   }
+  /// External reference identifier
   const ::flatbuffers::String *EXTERNAL_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_EXTERNAL_ID);
   }
+  /// Collection identifier
   const ::flatbuffers::String *COLLECTION_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_COLLECTION_ID);
   }
+  /// Detection identifier
   const ::flatbuffers::String *DETECTION_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DETECTION_ID);
   }
+  /// Collection start time (ISO 8601)
   const ::flatbuffers::String *COLLECTION_START() const {
     return GetPointer<const ::flatbuffers::String *>(VT_COLLECTION_START);
   }
+  /// Collection end time (ISO 8601)
   const ::flatbuffers::String *COLLECTION_END() const {
     return GetPointer<const ::flatbuffers::String *>(VT_COLLECTION_END);
   }
+  /// Center time of observation (ISO 8601)
   const ::flatbuffers::String *CENTER_TIME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CENTER_TIME);
   }
+  /// Detection start time (ISO 8601)
   const ::flatbuffers::String *DETECTION_START() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DETECTION_START);
   }
+  /// Detection end time (ISO 8601)
   const ::flatbuffers::String *DETECTION_END() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DETECTION_END);
   }
+  /// Integration/dwell time (seconds)
   double DWELL_TIME() const {
     return GetField<double>(VT_DWELL_TIME, 0.0);
   }
+  /// Orbit state description
   const ::flatbuffers::String *ORBIT_STATE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORBIT_STATE);
   }
-  const ::flatbuffers::String *SAR_MODE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SAR_MODE);
+  /// SAR imaging mode
+  sarMode SAR_MODE() const {
+    return static_cast<sarMode>(GetField<int8_t>(VT_SAR_MODE, 0));
   }
+  /// Operating RF band (e.g., X, C, L, S, P)
   const ::flatbuffers::String *OPERATING_BAND() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OPERATING_BAND);
   }
+  /// Operating frequency (GHz)
   double OPERATING_FREQ() const {
     return GetField<double>(VT_OPERATING_FREQ, 0.0);
   }
+  /// Signal-to-noise ratio (dB)
   double SNR() const {
     return GetField<double>(VT_SNR, 0.0);
   }
-  const ::flatbuffers::String *TX_POLARIZATION() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TX_POLARIZATION);
+  /// Transmit polarization
+  sarPolarization TX_POLARIZATION() const {
+    return static_cast<sarPolarization>(GetField<int8_t>(VT_TX_POLARIZATION, 0));
   }
-  const ::flatbuffers::String *RX_POLARIZATION() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_RX_POLARIZATION);
+  /// Receive polarization
+  sarPolarization RX_POLARIZATION() const {
+    return static_cast<sarPolarization>(GetField<int8_t>(VT_RX_POLARIZATION, 0));
   }
+  /// Grazing angle (degrees)
   double GRAZE_ANGLE() const {
     return GetField<double>(VT_GRAZE_ANGLE, 0.0);
   }
+  /// Incidence angle (degrees)
   double INCIDENCE_ANGLE() const {
     return GetField<double>(VT_INCIDENCE_ANGLE, 0.0);
   }
+  /// Squint angle (degrees)
   double SQUINT_ANGLE() const {
     return GetField<double>(VT_SQUINT_ANGLE, 0.0);
   }
+  /// Pulse bandwidth (MHz)
   double PULSE_BANDWIDTH() const {
     return GetField<double>(VT_PULSE_BANDWIDTH, 0.0);
   }
+  /// Pulse duration (microseconds)
   double PULSE_DURATION() const {
     return GetField<double>(VT_PULSE_DURATION, 0.0);
   }
+  /// Continuous spot angle (degrees)
   double CONTINUOUS_SPOT_ANGLE() const {
     return GetField<double>(VT_CONTINUOUS_SPOT_ANGLE, 0.0);
   }
+  /// Slant range to target (km)
   double SLANT_RANGE() const {
     return GetField<double>(VT_SLANT_RANGE, 0.0);
   }
+  /// Near range (km)
   double NEAR_RANGE() const {
     return GetField<double>(VT_NEAR_RANGE, 0.0);
   }
+  /// Far range (km)
   double FAR_RANGE() const {
     return GetField<double>(VT_FAR_RANGE, 0.0);
   }
+  /// Swath length (km)
   double SWATH_LENGTH() const {
     return GetField<double>(VT_SWATH_LENGTH, 0.0);
   }
-  const ::flatbuffers::String *AREA() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_AREA);
-  }
-  const ::flatbuffers::String *ATEXT() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ATEXT);
-  }
+  /// Image area GeoJSON
   const ::flatbuffers::String *AGJSON() const {
     return GetPointer<const ::flatbuffers::String *>(VT_AGJSON);
   }
+  /// Image area text description
+  const ::flatbuffers::String *ATEXT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ATEXT);
+  }
+  /// Area type
   const ::flatbuffers::String *ATYPE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ATYPE);
   }
-  int32_t ANDIMS() const {
-    return GetField<int32_t>(VT_ANDIMS, 0);
-  }
-  int32_t ASRID() const {
-    return GetField<int32_t>(VT_ASRID, 0);
-  }
-  double SPACING_RANGE() const {
-    return GetField<double>(VT_SPACING_RANGE, 0.0);
-  }
-  double SPACING_AZIMUTH() const {
-    return GetField<double>(VT_SPACING_AZIMUTH, 0.0);
-  }
-  int32_t LOOKS_AZIMUTH() const {
-    return GetField<int32_t>(VT_LOOKS_AZIMUTH, 0);
-  }
-  int32_t LOOKS_RANGE() const {
-    return GetField<int32_t>(VT_LOOKS_RANGE, 0);
-  }
-  double RESOLUTION_RANGE() const {
-    return GetField<double>(VT_RESOLUTION_RANGE, 0.0);
-  }
-  double RESOLUTION_AZIMUTH() const {
-    return GetField<double>(VT_RESOLUTION_AZIMUTH, 0.0);
-  }
-  const ::flatbuffers::String *OB_DIRECTION() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OB_DIRECTION);
-  }
+  /// Coordinate system
   const ::flatbuffers::String *COORD_SYS() const {
     return GetPointer<const ::flatbuffers::String *>(VT_COORD_SYS);
   }
+  /// Range pixel spacing (meters)
+  double SPACING_RANGE() const {
+    return GetField<double>(VT_SPACING_RANGE, 0.0);
+  }
+  /// Azimuth pixel spacing (meters)
+  double SPACING_AZIMUTH() const {
+    return GetField<double>(VT_SPACING_AZIMUTH, 0.0);
+  }
+  /// Number of azimuth looks
+  uint8_t LOOKS_AZIMUTH() const {
+    return GetField<uint8_t>(VT_LOOKS_AZIMUTH, 0);
+  }
+  /// Number of range looks
+  uint8_t LOOKS_RANGE() const {
+    return GetField<uint8_t>(VT_LOOKS_RANGE, 0);
+  }
+  /// Range resolution (meters)
+  double RESOLUTION_RANGE() const {
+    return GetField<double>(VT_RESOLUTION_RANGE, 0.0);
+  }
+  /// Azimuth resolution (meters)
+  double RESOLUTION_AZIMUTH() const {
+    return GetField<double>(VT_RESOLUTION_AZIMUTH, 0.0);
+  }
+  /// Observation direction (ASCENDING/DESCENDING)
+  const ::flatbuffers::String *OB_DIRECTION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OB_DIRECTION);
+  }
+  /// Target position X (km)
   double TARGETPOSX() const {
     return GetField<double>(VT_TARGETPOSX, 0.0);
   }
+  /// Target position Y (km)
   double TARGETPOSY() const {
     return GetField<double>(VT_TARGETPOSY, 0.0);
   }
+  /// Target position Z (km)
   double TARGETPOSZ() const {
     return GetField<double>(VT_TARGETPOSZ, 0.0);
   }
+  /// Sensor altitude (km)
   double SENALT() const {
     return GetField<double>(VT_SENALT, 0.0);
   }
+  /// Sensor velocity X (km/s)
   double SENVELX() const {
     return GetField<double>(VT_SENVELX, 0.0);
   }
+  /// Sensor velocity Y (km/s)
   double SENVELY() const {
     return GetField<double>(VT_SENVELY, 0.0);
   }
+  /// Sensor velocity Z (km/s)
   double SENVELZ() const {
     return GetField<double>(VT_SENVELZ, 0.0);
   }
+  /// Sensor latitude at start (degrees)
   double SENLAT_START() const {
     return GetField<double>(VT_SENLAT_START, 0.0);
   }
+  /// Sensor longitude at start (degrees)
   double SENLON_START() const {
     return GetField<double>(VT_SENLON_START, 0.0);
   }
+  /// Sensor latitude at end (degrees)
   double SENLAT_END() const {
     return GetField<double>(VT_SENLAT_END, 0.0);
   }
+  /// Sensor longitude at end (degrees)
   double SENLON_END() const {
     return GetField<double>(VT_SENLON_END, 0.0);
   }
+  /// Transaction identifier
   const ::flatbuffers::String *TRANSACTION_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TRANSACTION_ID);
   }
+  /// Associated tags
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_TAGS);
   }
+  /// Source types
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SRC_TYPS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SRC_TYPS);
   }
+  /// Source identifiers
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SRC_IDS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SRC_IDS);
-  }
-  const ::flatbuffers::String *ON_ORBIT() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ON_ORBIT);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
            verifier.VerifyString(ID()) &&
-           VerifyField<int32_t>(verifier, VT_SAT_NO, 4) &&
+           VerifyField<uint32_t>(verifier, VT_SAT_NO, 4) &&
            VerifyOffset(verifier, VT_ORIG_OBJECT_ID) &&
            verifier.VerifyString(ORIG_OBJECT_ID()) &&
+           VerifyOffset(verifier, VT_ON_ORBIT) &&
+           verifier.VerifyString(ON_ORBIT()) &&
            VerifyOffset(verifier, VT_ID_SENSOR) &&
            verifier.VerifyString(ID_SENSOR()) &&
            VerifyOffset(verifier, VT_ORIG_SENSOR_ID) &&
@@ -295,16 +442,13 @@ struct SAR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_DWELL_TIME, 8) &&
            VerifyOffset(verifier, VT_ORBIT_STATE) &&
            verifier.VerifyString(ORBIT_STATE()) &&
-           VerifyOffset(verifier, VT_SAR_MODE) &&
-           verifier.VerifyString(SAR_MODE()) &&
+           VerifyField<int8_t>(verifier, VT_SAR_MODE, 1) &&
            VerifyOffset(verifier, VT_OPERATING_BAND) &&
            verifier.VerifyString(OPERATING_BAND()) &&
            VerifyField<double>(verifier, VT_OPERATING_FREQ, 8) &&
            VerifyField<double>(verifier, VT_SNR, 8) &&
-           VerifyOffset(verifier, VT_TX_POLARIZATION) &&
-           verifier.VerifyString(TX_POLARIZATION()) &&
-           VerifyOffset(verifier, VT_RX_POLARIZATION) &&
-           verifier.VerifyString(RX_POLARIZATION()) &&
+           VerifyField<int8_t>(verifier, VT_TX_POLARIZATION, 1) &&
+           VerifyField<int8_t>(verifier, VT_RX_POLARIZATION, 1) &&
            VerifyField<double>(verifier, VT_GRAZE_ANGLE, 8) &&
            VerifyField<double>(verifier, VT_INCIDENCE_ANGLE, 8) &&
            VerifyField<double>(verifier, VT_SQUINT_ANGLE, 8) &&
@@ -315,26 +459,22 @@ struct SAR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_NEAR_RANGE, 8) &&
            VerifyField<double>(verifier, VT_FAR_RANGE, 8) &&
            VerifyField<double>(verifier, VT_SWATH_LENGTH, 8) &&
-           VerifyOffset(verifier, VT_AREA) &&
-           verifier.VerifyString(AREA()) &&
-           VerifyOffset(verifier, VT_ATEXT) &&
-           verifier.VerifyString(ATEXT()) &&
            VerifyOffset(verifier, VT_AGJSON) &&
            verifier.VerifyString(AGJSON()) &&
+           VerifyOffset(verifier, VT_ATEXT) &&
+           verifier.VerifyString(ATEXT()) &&
            VerifyOffset(verifier, VT_ATYPE) &&
            verifier.VerifyString(ATYPE()) &&
-           VerifyField<int32_t>(verifier, VT_ANDIMS, 4) &&
-           VerifyField<int32_t>(verifier, VT_ASRID, 4) &&
+           VerifyOffset(verifier, VT_COORD_SYS) &&
+           verifier.VerifyString(COORD_SYS()) &&
            VerifyField<double>(verifier, VT_SPACING_RANGE, 8) &&
            VerifyField<double>(verifier, VT_SPACING_AZIMUTH, 8) &&
-           VerifyField<int32_t>(verifier, VT_LOOKS_AZIMUTH, 4) &&
-           VerifyField<int32_t>(verifier, VT_LOOKS_RANGE, 4) &&
+           VerifyField<uint8_t>(verifier, VT_LOOKS_AZIMUTH, 1) &&
+           VerifyField<uint8_t>(verifier, VT_LOOKS_RANGE, 1) &&
            VerifyField<double>(verifier, VT_RESOLUTION_RANGE, 8) &&
            VerifyField<double>(verifier, VT_RESOLUTION_AZIMUTH, 8) &&
            VerifyOffset(verifier, VT_OB_DIRECTION) &&
            verifier.VerifyString(OB_DIRECTION()) &&
-           VerifyOffset(verifier, VT_COORD_SYS) &&
-           verifier.VerifyString(COORD_SYS()) &&
            VerifyField<double>(verifier, VT_TARGETPOSX, 8) &&
            VerifyField<double>(verifier, VT_TARGETPOSY, 8) &&
            VerifyField<double>(verifier, VT_TARGETPOSZ, 8) &&
@@ -357,8 +497,6 @@ struct SAR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_SRC_IDS) &&
            verifier.VerifyVector(SRC_IDS()) &&
            verifier.VerifyVectorOfStrings(SRC_IDS()) &&
-           VerifyOffset(verifier, VT_ON_ORBIT) &&
-           verifier.VerifyString(ON_ORBIT()) &&
            verifier.EndTable();
   }
 };
@@ -370,11 +508,14 @@ struct SARBuilder {
   void add_ID(::flatbuffers::Offset<::flatbuffers::String> ID) {
     fbb_.AddOffset(SAR::VT_ID, ID);
   }
-  void add_SAT_NO(int32_t SAT_NO) {
-    fbb_.AddElement<int32_t>(SAR::VT_SAT_NO, SAT_NO, 0);
+  void add_SAT_NO(uint32_t SAT_NO) {
+    fbb_.AddElement<uint32_t>(SAR::VT_SAT_NO, SAT_NO, 0);
   }
   void add_ORIG_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID) {
     fbb_.AddOffset(SAR::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
+  }
+  void add_ON_ORBIT(::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT) {
+    fbb_.AddOffset(SAR::VT_ON_ORBIT, ON_ORBIT);
   }
   void add_ID_SENSOR(::flatbuffers::Offset<::flatbuffers::String> ID_SENSOR) {
     fbb_.AddOffset(SAR::VT_ID_SENSOR, ID_SENSOR);
@@ -412,8 +553,8 @@ struct SARBuilder {
   void add_ORBIT_STATE(::flatbuffers::Offset<::flatbuffers::String> ORBIT_STATE) {
     fbb_.AddOffset(SAR::VT_ORBIT_STATE, ORBIT_STATE);
   }
-  void add_SAR_MODE(::flatbuffers::Offset<::flatbuffers::String> SAR_MODE) {
-    fbb_.AddOffset(SAR::VT_SAR_MODE, SAR_MODE);
+  void add_SAR_MODE(sarMode SAR_MODE) {
+    fbb_.AddElement<int8_t>(SAR::VT_SAR_MODE, static_cast<int8_t>(SAR_MODE), 0);
   }
   void add_OPERATING_BAND(::flatbuffers::Offset<::flatbuffers::String> OPERATING_BAND) {
     fbb_.AddOffset(SAR::VT_OPERATING_BAND, OPERATING_BAND);
@@ -424,11 +565,11 @@ struct SARBuilder {
   void add_SNR(double SNR) {
     fbb_.AddElement<double>(SAR::VT_SNR, SNR, 0.0);
   }
-  void add_TX_POLARIZATION(::flatbuffers::Offset<::flatbuffers::String> TX_POLARIZATION) {
-    fbb_.AddOffset(SAR::VT_TX_POLARIZATION, TX_POLARIZATION);
+  void add_TX_POLARIZATION(sarPolarization TX_POLARIZATION) {
+    fbb_.AddElement<int8_t>(SAR::VT_TX_POLARIZATION, static_cast<int8_t>(TX_POLARIZATION), 0);
   }
-  void add_RX_POLARIZATION(::flatbuffers::Offset<::flatbuffers::String> RX_POLARIZATION) {
-    fbb_.AddOffset(SAR::VT_RX_POLARIZATION, RX_POLARIZATION);
+  void add_RX_POLARIZATION(sarPolarization RX_POLARIZATION) {
+    fbb_.AddElement<int8_t>(SAR::VT_RX_POLARIZATION, static_cast<int8_t>(RX_POLARIZATION), 0);
   }
   void add_GRAZE_ANGLE(double GRAZE_ANGLE) {
     fbb_.AddElement<double>(SAR::VT_GRAZE_ANGLE, GRAZE_ANGLE, 0.0);
@@ -460,23 +601,17 @@ struct SARBuilder {
   void add_SWATH_LENGTH(double SWATH_LENGTH) {
     fbb_.AddElement<double>(SAR::VT_SWATH_LENGTH, SWATH_LENGTH, 0.0);
   }
-  void add_AREA(::flatbuffers::Offset<::flatbuffers::String> AREA) {
-    fbb_.AddOffset(SAR::VT_AREA, AREA);
+  void add_AGJSON(::flatbuffers::Offset<::flatbuffers::String> AGJSON) {
+    fbb_.AddOffset(SAR::VT_AGJSON, AGJSON);
   }
   void add_ATEXT(::flatbuffers::Offset<::flatbuffers::String> ATEXT) {
     fbb_.AddOffset(SAR::VT_ATEXT, ATEXT);
   }
-  void add_AGJSON(::flatbuffers::Offset<::flatbuffers::String> AGJSON) {
-    fbb_.AddOffset(SAR::VT_AGJSON, AGJSON);
-  }
   void add_ATYPE(::flatbuffers::Offset<::flatbuffers::String> ATYPE) {
     fbb_.AddOffset(SAR::VT_ATYPE, ATYPE);
   }
-  void add_ANDIMS(int32_t ANDIMS) {
-    fbb_.AddElement<int32_t>(SAR::VT_ANDIMS, ANDIMS, 0);
-  }
-  void add_ASRID(int32_t ASRID) {
-    fbb_.AddElement<int32_t>(SAR::VT_ASRID, ASRID, 0);
+  void add_COORD_SYS(::flatbuffers::Offset<::flatbuffers::String> COORD_SYS) {
+    fbb_.AddOffset(SAR::VT_COORD_SYS, COORD_SYS);
   }
   void add_SPACING_RANGE(double SPACING_RANGE) {
     fbb_.AddElement<double>(SAR::VT_SPACING_RANGE, SPACING_RANGE, 0.0);
@@ -484,11 +619,11 @@ struct SARBuilder {
   void add_SPACING_AZIMUTH(double SPACING_AZIMUTH) {
     fbb_.AddElement<double>(SAR::VT_SPACING_AZIMUTH, SPACING_AZIMUTH, 0.0);
   }
-  void add_LOOKS_AZIMUTH(int32_t LOOKS_AZIMUTH) {
-    fbb_.AddElement<int32_t>(SAR::VT_LOOKS_AZIMUTH, LOOKS_AZIMUTH, 0);
+  void add_LOOKS_AZIMUTH(uint8_t LOOKS_AZIMUTH) {
+    fbb_.AddElement<uint8_t>(SAR::VT_LOOKS_AZIMUTH, LOOKS_AZIMUTH, 0);
   }
-  void add_LOOKS_RANGE(int32_t LOOKS_RANGE) {
-    fbb_.AddElement<int32_t>(SAR::VT_LOOKS_RANGE, LOOKS_RANGE, 0);
+  void add_LOOKS_RANGE(uint8_t LOOKS_RANGE) {
+    fbb_.AddElement<uint8_t>(SAR::VT_LOOKS_RANGE, LOOKS_RANGE, 0);
   }
   void add_RESOLUTION_RANGE(double RESOLUTION_RANGE) {
     fbb_.AddElement<double>(SAR::VT_RESOLUTION_RANGE, RESOLUTION_RANGE, 0.0);
@@ -498,9 +633,6 @@ struct SARBuilder {
   }
   void add_OB_DIRECTION(::flatbuffers::Offset<::flatbuffers::String> OB_DIRECTION) {
     fbb_.AddOffset(SAR::VT_OB_DIRECTION, OB_DIRECTION);
-  }
-  void add_COORD_SYS(::flatbuffers::Offset<::flatbuffers::String> COORD_SYS) {
-    fbb_.AddOffset(SAR::VT_COORD_SYS, COORD_SYS);
   }
   void add_TARGETPOSX(double TARGETPOSX) {
     fbb_.AddElement<double>(SAR::VT_TARGETPOSX, TARGETPOSX, 0.0);
@@ -547,9 +679,6 @@ struct SARBuilder {
   void add_SRC_IDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SRC_IDS) {
     fbb_.AddOffset(SAR::VT_SRC_IDS, SRC_IDS);
   }
-  void add_ON_ORBIT(::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT) {
-    fbb_.AddOffset(SAR::VT_ON_ORBIT, ON_ORBIT);
-  }
   explicit SARBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -564,8 +693,9 @@ struct SARBuilder {
 inline ::flatbuffers::Offset<SAR> CreateSAR(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
-    int32_t SAT_NO = 0,
+    uint32_t SAT_NO = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ID_SENSOR = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> EXTERNAL_ID = 0,
@@ -578,12 +708,12 @@ inline ::flatbuffers::Offset<SAR> CreateSAR(
     ::flatbuffers::Offset<::flatbuffers::String> DETECTION_END = 0,
     double DWELL_TIME = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> ORBIT_STATE = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SAR_MODE = 0,
+    sarMode SAR_MODE = sarMode_STRIPMAP,
     ::flatbuffers::Offset<::flatbuffers::String> OPERATING_BAND = 0,
     double OPERATING_FREQ = 0.0,
     double SNR = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::String> TX_POLARIZATION = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> RX_POLARIZATION = 0,
+    sarPolarization TX_POLARIZATION = sarPolarization_HH,
+    sarPolarization RX_POLARIZATION = sarPolarization_HH,
     double GRAZE_ANGLE = 0.0,
     double INCIDENCE_ANGLE = 0.0,
     double SQUINT_ANGLE = 0.0,
@@ -594,20 +724,17 @@ inline ::flatbuffers::Offset<SAR> CreateSAR(
     double NEAR_RANGE = 0.0,
     double FAR_RANGE = 0.0,
     double SWATH_LENGTH = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::String> AREA = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ATEXT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> AGJSON = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ATEXT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ATYPE = 0,
-    int32_t ANDIMS = 0,
-    int32_t ASRID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> COORD_SYS = 0,
     double SPACING_RANGE = 0.0,
     double SPACING_AZIMUTH = 0.0,
-    int32_t LOOKS_AZIMUTH = 0,
-    int32_t LOOKS_RANGE = 0,
+    uint8_t LOOKS_AZIMUTH = 0,
+    uint8_t LOOKS_RANGE = 0,
     double RESOLUTION_RANGE = 0.0,
     double RESOLUTION_AZIMUTH = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> OB_DIRECTION = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> COORD_SYS = 0,
     double TARGETPOSX = 0.0,
     double TARGETPOSY = 0.0,
     double TARGETPOSZ = 0.0,
@@ -622,8 +749,7 @@ inline ::flatbuffers::Offset<SAR> CreateSAR(
     ::flatbuffers::Offset<::flatbuffers::String> TRANSACTION_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SRC_TYPS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SRC_IDS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SRC_IDS = 0) {
   SARBuilder builder_(_fbb);
   builder_.add_SENLON_END(SENLON_END);
   builder_.add_SENLAT_END(SENLAT_END);
@@ -653,25 +779,16 @@ inline ::flatbuffers::Offset<SAR> CreateSAR(
   builder_.add_SNR(SNR);
   builder_.add_OPERATING_FREQ(OPERATING_FREQ);
   builder_.add_DWELL_TIME(DWELL_TIME);
-  builder_.add_ON_ORBIT(ON_ORBIT);
   builder_.add_SRC_IDS(SRC_IDS);
   builder_.add_SRC_TYPS(SRC_TYPS);
   builder_.add_TAGS(TAGS);
   builder_.add_TRANSACTION_ID(TRANSACTION_ID);
-  builder_.add_COORD_SYS(COORD_SYS);
   builder_.add_OB_DIRECTION(OB_DIRECTION);
-  builder_.add_LOOKS_RANGE(LOOKS_RANGE);
-  builder_.add_LOOKS_AZIMUTH(LOOKS_AZIMUTH);
-  builder_.add_ASRID(ASRID);
-  builder_.add_ANDIMS(ANDIMS);
+  builder_.add_COORD_SYS(COORD_SYS);
   builder_.add_ATYPE(ATYPE);
-  builder_.add_AGJSON(AGJSON);
   builder_.add_ATEXT(ATEXT);
-  builder_.add_AREA(AREA);
-  builder_.add_RX_POLARIZATION(RX_POLARIZATION);
-  builder_.add_TX_POLARIZATION(TX_POLARIZATION);
+  builder_.add_AGJSON(AGJSON);
   builder_.add_OPERATING_BAND(OPERATING_BAND);
-  builder_.add_SAR_MODE(SAR_MODE);
   builder_.add_ORBIT_STATE(ORBIT_STATE);
   builder_.add_DETECTION_END(DETECTION_END);
   builder_.add_DETECTION_START(DETECTION_START);
@@ -683,17 +800,24 @@ inline ::flatbuffers::Offset<SAR> CreateSAR(
   builder_.add_EXTERNAL_ID(EXTERNAL_ID);
   builder_.add_ORIG_SENSOR_ID(ORIG_SENSOR_ID);
   builder_.add_ID_SENSOR(ID_SENSOR);
+  builder_.add_ON_ORBIT(ON_ORBIT);
   builder_.add_ORIG_OBJECT_ID(ORIG_OBJECT_ID);
   builder_.add_SAT_NO(SAT_NO);
   builder_.add_ID(ID);
+  builder_.add_LOOKS_RANGE(LOOKS_RANGE);
+  builder_.add_LOOKS_AZIMUTH(LOOKS_AZIMUTH);
+  builder_.add_RX_POLARIZATION(RX_POLARIZATION);
+  builder_.add_TX_POLARIZATION(TX_POLARIZATION);
+  builder_.add_SAR_MODE(SAR_MODE);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<SAR> CreateSARDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *ID = nullptr,
-    int32_t SAT_NO = 0,
+    uint32_t SAT_NO = 0,
     const char *ORIG_OBJECT_ID = nullptr,
+    const char *ON_ORBIT = nullptr,
     const char *ID_SENSOR = nullptr,
     const char *ORIG_SENSOR_ID = nullptr,
     const char *EXTERNAL_ID = nullptr,
@@ -706,12 +830,12 @@ inline ::flatbuffers::Offset<SAR> CreateSARDirect(
     const char *DETECTION_END = nullptr,
     double DWELL_TIME = 0.0,
     const char *ORBIT_STATE = nullptr,
-    const char *SAR_MODE = nullptr,
+    sarMode SAR_MODE = sarMode_STRIPMAP,
     const char *OPERATING_BAND = nullptr,
     double OPERATING_FREQ = 0.0,
     double SNR = 0.0,
-    const char *TX_POLARIZATION = nullptr,
-    const char *RX_POLARIZATION = nullptr,
+    sarPolarization TX_POLARIZATION = sarPolarization_HH,
+    sarPolarization RX_POLARIZATION = sarPolarization_HH,
     double GRAZE_ANGLE = 0.0,
     double INCIDENCE_ANGLE = 0.0,
     double SQUINT_ANGLE = 0.0,
@@ -722,20 +846,17 @@ inline ::flatbuffers::Offset<SAR> CreateSARDirect(
     double NEAR_RANGE = 0.0,
     double FAR_RANGE = 0.0,
     double SWATH_LENGTH = 0.0,
-    const char *AREA = nullptr,
-    const char *ATEXT = nullptr,
     const char *AGJSON = nullptr,
+    const char *ATEXT = nullptr,
     const char *ATYPE = nullptr,
-    int32_t ANDIMS = 0,
-    int32_t ASRID = 0,
+    const char *COORD_SYS = nullptr,
     double SPACING_RANGE = 0.0,
     double SPACING_AZIMUTH = 0.0,
-    int32_t LOOKS_AZIMUTH = 0,
-    int32_t LOOKS_RANGE = 0,
+    uint8_t LOOKS_AZIMUTH = 0,
+    uint8_t LOOKS_RANGE = 0,
     double RESOLUTION_RANGE = 0.0,
     double RESOLUTION_AZIMUTH = 0.0,
     const char *OB_DIRECTION = nullptr,
-    const char *COORD_SYS = nullptr,
     double TARGETPOSX = 0.0,
     double TARGETPOSY = 0.0,
     double TARGETPOSZ = 0.0,
@@ -750,10 +871,10 @@ inline ::flatbuffers::Offset<SAR> CreateSARDirect(
     const char *TRANSACTION_ID = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *SRC_TYPS = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *SRC_IDS = nullptr,
-    const char *ON_ORBIT = nullptr) {
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *SRC_IDS = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto ORIG_OBJECT_ID__ = ORIG_OBJECT_ID ? _fbb.CreateString(ORIG_OBJECT_ID) : 0;
+  auto ON_ORBIT__ = ON_ORBIT ? _fbb.CreateString(ON_ORBIT) : 0;
   auto ID_SENSOR__ = ID_SENSOR ? _fbb.CreateString(ID_SENSOR) : 0;
   auto ORIG_SENSOR_ID__ = ORIG_SENSOR_ID ? _fbb.CreateString(ORIG_SENSOR_ID) : 0;
   auto EXTERNAL_ID__ = EXTERNAL_ID ? _fbb.CreateString(EXTERNAL_ID) : 0;
@@ -765,26 +886,22 @@ inline ::flatbuffers::Offset<SAR> CreateSARDirect(
   auto DETECTION_START__ = DETECTION_START ? _fbb.CreateString(DETECTION_START) : 0;
   auto DETECTION_END__ = DETECTION_END ? _fbb.CreateString(DETECTION_END) : 0;
   auto ORBIT_STATE__ = ORBIT_STATE ? _fbb.CreateString(ORBIT_STATE) : 0;
-  auto SAR_MODE__ = SAR_MODE ? _fbb.CreateString(SAR_MODE) : 0;
   auto OPERATING_BAND__ = OPERATING_BAND ? _fbb.CreateString(OPERATING_BAND) : 0;
-  auto TX_POLARIZATION__ = TX_POLARIZATION ? _fbb.CreateString(TX_POLARIZATION) : 0;
-  auto RX_POLARIZATION__ = RX_POLARIZATION ? _fbb.CreateString(RX_POLARIZATION) : 0;
-  auto AREA__ = AREA ? _fbb.CreateString(AREA) : 0;
-  auto ATEXT__ = ATEXT ? _fbb.CreateString(ATEXT) : 0;
   auto AGJSON__ = AGJSON ? _fbb.CreateString(AGJSON) : 0;
+  auto ATEXT__ = ATEXT ? _fbb.CreateString(ATEXT) : 0;
   auto ATYPE__ = ATYPE ? _fbb.CreateString(ATYPE) : 0;
-  auto OB_DIRECTION__ = OB_DIRECTION ? _fbb.CreateString(OB_DIRECTION) : 0;
   auto COORD_SYS__ = COORD_SYS ? _fbb.CreateString(COORD_SYS) : 0;
+  auto OB_DIRECTION__ = OB_DIRECTION ? _fbb.CreateString(OB_DIRECTION) : 0;
   auto TRANSACTION_ID__ = TRANSACTION_ID ? _fbb.CreateString(TRANSACTION_ID) : 0;
   auto TAGS__ = TAGS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*TAGS) : 0;
   auto SRC_TYPS__ = SRC_TYPS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SRC_TYPS) : 0;
   auto SRC_IDS__ = SRC_IDS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SRC_IDS) : 0;
-  auto ON_ORBIT__ = ON_ORBIT ? _fbb.CreateString(ON_ORBIT) : 0;
   return CreateSAR(
       _fbb,
       ID__,
       SAT_NO,
       ORIG_OBJECT_ID__,
+      ON_ORBIT__,
       ID_SENSOR__,
       ORIG_SENSOR_ID__,
       EXTERNAL_ID__,
@@ -797,12 +914,12 @@ inline ::flatbuffers::Offset<SAR> CreateSARDirect(
       DETECTION_END__,
       DWELL_TIME,
       ORBIT_STATE__,
-      SAR_MODE__,
+      SAR_MODE,
       OPERATING_BAND__,
       OPERATING_FREQ,
       SNR,
-      TX_POLARIZATION__,
-      RX_POLARIZATION__,
+      TX_POLARIZATION,
+      RX_POLARIZATION,
       GRAZE_ANGLE,
       INCIDENCE_ANGLE,
       SQUINT_ANGLE,
@@ -813,12 +930,10 @@ inline ::flatbuffers::Offset<SAR> CreateSARDirect(
       NEAR_RANGE,
       FAR_RANGE,
       SWATH_LENGTH,
-      AREA__,
-      ATEXT__,
       AGJSON__,
+      ATEXT__,
       ATYPE__,
-      ANDIMS,
-      ASRID,
+      COORD_SYS__,
       SPACING_RANGE,
       SPACING_AZIMUTH,
       LOOKS_AZIMUTH,
@@ -826,7 +941,6 @@ inline ::flatbuffers::Offset<SAR> CreateSARDirect(
       RESOLUTION_RANGE,
       RESOLUTION_AZIMUTH,
       OB_DIRECTION__,
-      COORD_SYS__,
       TARGETPOSX,
       TARGETPOSY,
       TARGETPOSZ,
@@ -841,8 +955,7 @@ inline ::flatbuffers::Offset<SAR> CreateSARDirect(
       TRANSACTION_ID__,
       TAGS__,
       SRC_TYPS__,
-      SRC_IDS__,
-      ON_ORBIT__);
+      SRC_IDS__);
 }
 
 inline const SAR *GetSAR(const void *buf) {

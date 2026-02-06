@@ -29,40 +29,148 @@ public final class BEM extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public BEM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique beam identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * Beam name or designation
+   */
   public String BEAM_NAME() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer BEAM_NAMEAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer BEAM_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
-  public String NOTES() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer NOTESAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
-  public ByteBuffer NOTESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
-  public String BEAM_CONTOURS(int j) { int o = __offset(10); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int BEAM_CONTOURSLength() { int o = __offset(10); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector beamContoursVector() { return beamContoursVector(new StringVector()); }
-  public StringVector beamContoursVector(StringVector obj) { int o = __offset(10); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Reference to parent entity (satellite/transponder)
+   */
+  public String ID_ENTITY() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ID_ENTITYAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
+  public ByteBuffer ID_ENTITYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * Reference to parent antenna
+   */
+  public String ID_ANTENNA() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ID_ANTENNAAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer ID_ANTENNAInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * Beam type
+   */
+  public byte TYPE() { int o = __offset(12); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Beam polarization
+   */
+  public byte POLARIZATION() { int o = __offset(14); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Peak gain in dBi
+   */
+  public double PEAK_GAIN() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Edge-of-coverage gain in dBi
+   */
+  public double EOC_GAIN() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Beam center latitude in degrees
+   */
+  public double CENTER_LATITUDE() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Beam center longitude in degrees
+   */
+  public double CENTER_LONGITUDE() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Beamwidth (3dB) in degrees
+   */
+  public double BEAMWIDTH() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Operating frequency in MHz
+   */
+  public double FREQUENCY() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * EIRP at beam center in dBW
+   */
+  public double EIRP() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * G/T at beam center in dB/K
+   */
+  public double G_OVER_T() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Beam footprint area in km^2
+   */
+  public double FOOTPRINT_AREA() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Beam contour definitions
+   */
+  public beamContour BEAM_CONTOURS(int j) { return BEAM_CONTOURS(new beamContour(), j); }
+  public beamContour BEAM_CONTOURS(beamContour obj, int j) { int o = __offset(34); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int BEAM_CONTOURSLength() { int o = __offset(34); return o != 0 ? __vector_len(o) : 0; }
+  public beamContour.Vector beamContoursVector() { return beamContoursVector(new beamContour.Vector()); }
+  public beamContour.Vector beamContoursVector(beamContour.Vector obj) { int o = __offset(34); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Additional notes
+   */
+  public String NOTES() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer NOTESAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
+  public ByteBuffer NOTESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
 
   public static int createBEM(FlatBufferBuilder builder,
       int IDOffset,
       int BEAM_NAMEOffset,
-      int NOTESOffset,
-      int BEAM_CONTOURSOffset) {
-    builder.startTable(4);
-    BEM.addBeamContours(builder, BEAM_CONTOURSOffset);
+      int ID_ENTITYOffset,
+      int ID_ANTENNAOffset,
+      byte TYPE,
+      byte POLARIZATION,
+      double PEAK_GAIN,
+      double EOC_GAIN,
+      double CENTER_LATITUDE,
+      double CENTER_LONGITUDE,
+      double BEAMWIDTH,
+      double FREQUENCY,
+      double EIRP,
+      double G_OVER_T,
+      double FOOTPRINT_AREA,
+      int BEAM_CONTOURSOffset,
+      int NOTESOffset) {
+    builder.startTable(17);
+    BEM.addFootprintArea(builder, FOOTPRINT_AREA);
+    BEM.addGOverT(builder, G_OVER_T);
+    BEM.addEirp(builder, EIRP);
+    BEM.addFrequency(builder, FREQUENCY);
+    BEM.addBeamwidth(builder, BEAMWIDTH);
+    BEM.addCenterLongitude(builder, CENTER_LONGITUDE);
+    BEM.addCenterLatitude(builder, CENTER_LATITUDE);
+    BEM.addEocGain(builder, EOC_GAIN);
+    BEM.addPeakGain(builder, PEAK_GAIN);
     BEM.addNotes(builder, NOTESOffset);
+    BEM.addBeamContours(builder, BEAM_CONTOURSOffset);
+    BEM.addIdAntenna(builder, ID_ANTENNAOffset);
+    BEM.addIdEntity(builder, ID_ENTITYOffset);
     BEM.addBeamName(builder, BEAM_NAMEOffset);
     BEM.addId(builder, IDOffset);
+    BEM.addPolarization(builder, POLARIZATION);
+    BEM.addType(builder, TYPE);
     return BEM.endBEM(builder);
   }
 
-  public static void startBEM(FlatBufferBuilder builder) { builder.startTable(4); }
+  public static void startBEM(FlatBufferBuilder builder) { builder.startTable(17); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addBeamName(FlatBufferBuilder builder, int BEAM_NAMEOffset) { builder.addOffset(1, BEAM_NAMEOffset, 0); }
-  public static void addNotes(FlatBufferBuilder builder, int NOTESOffset) { builder.addOffset(2, NOTESOffset, 0); }
-  public static void addBeamContours(FlatBufferBuilder builder, int BEAM_CONTOURSOffset) { builder.addOffset(3, BEAM_CONTOURSOffset, 0); }
+  public static void addIdEntity(FlatBufferBuilder builder, int ID_ENTITYOffset) { builder.addOffset(2, ID_ENTITYOffset, 0); }
+  public static void addIdAntenna(FlatBufferBuilder builder, int ID_ANTENNAOffset) { builder.addOffset(3, ID_ANTENNAOffset, 0); }
+  public static void addType(FlatBufferBuilder builder, byte TYPE) { builder.addByte(4, TYPE, 0); }
+  public static void addPolarization(FlatBufferBuilder builder, byte POLARIZATION) { builder.addByte(5, POLARIZATION, 0); }
+  public static void addPeakGain(FlatBufferBuilder builder, double PEAK_GAIN) { builder.addDouble(6, PEAK_GAIN, 0.0); }
+  public static void addEocGain(FlatBufferBuilder builder, double EOC_GAIN) { builder.addDouble(7, EOC_GAIN, 0.0); }
+  public static void addCenterLatitude(FlatBufferBuilder builder, double CENTER_LATITUDE) { builder.addDouble(8, CENTER_LATITUDE, 0.0); }
+  public static void addCenterLongitude(FlatBufferBuilder builder, double CENTER_LONGITUDE) { builder.addDouble(9, CENTER_LONGITUDE, 0.0); }
+  public static void addBeamwidth(FlatBufferBuilder builder, double BEAMWIDTH) { builder.addDouble(10, BEAMWIDTH, 0.0); }
+  public static void addFrequency(FlatBufferBuilder builder, double FREQUENCY) { builder.addDouble(11, FREQUENCY, 0.0); }
+  public static void addEirp(FlatBufferBuilder builder, double EIRP) { builder.addDouble(12, EIRP, 0.0); }
+  public static void addGOverT(FlatBufferBuilder builder, double G_OVER_T) { builder.addDouble(13, G_OVER_T, 0.0); }
+  public static void addFootprintArea(FlatBufferBuilder builder, double FOOTPRINT_AREA) { builder.addDouble(14, FOOTPRINT_AREA, 0.0); }
+  public static void addBeamContours(FlatBufferBuilder builder, int BEAM_CONTOURSOffset) { builder.addOffset(15, BEAM_CONTOURSOffset, 0); }
   public static int createBeamContoursVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startBeamContoursVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addNotes(FlatBufferBuilder builder, int NOTESOffset) { builder.addOffset(16, NOTESOffset, 0); }
   public static int endBEM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

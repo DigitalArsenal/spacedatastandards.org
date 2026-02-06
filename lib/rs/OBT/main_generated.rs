@@ -9,6 +9,196 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_ORBIT_OBJECT_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_ORBIT_OBJECT_TYPE: i8 = 4;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_ORBIT_OBJECT_TYPE: [orbitObjectType; 5] = [
+  orbitObjectType::PAYLOAD,
+  orbitObjectType::ROCKET_BODY,
+  orbitObjectType::DEBRIS,
+  orbitObjectType::TBA,
+  orbitObjectType::UNKNOWN,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct orbitObjectType(pub i8);
+#[allow(non_upper_case_globals)]
+impl orbitObjectType {
+  pub const PAYLOAD: Self = Self(0);
+  pub const ROCKET_BODY: Self = Self(1);
+  pub const DEBRIS: Self = Self(2);
+  pub const TBA: Self = Self(3);
+  pub const UNKNOWN: Self = Self(4);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 4;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::PAYLOAD,
+    Self::ROCKET_BODY,
+    Self::DEBRIS,
+    Self::TBA,
+    Self::UNKNOWN,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::PAYLOAD => Some("PAYLOAD"),
+      Self::ROCKET_BODY => Some("ROCKET_BODY"),
+      Self::DEBRIS => Some("DEBRIS"),
+      Self::TBA => Some("TBA"),
+      Self::UNKNOWN => Some("UNKNOWN"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for orbitObjectType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for orbitObjectType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for orbitObjectType {
+    type Output = orbitObjectType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for orbitObjectType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for orbitObjectType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for orbitObjectType {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_AOU_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_AOU_TYPE: i8 = 3;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_AOU_TYPE: [aouType; 4] = [
+  aouType::CIRCULAR,
+  aouType::ELLIPTICAL,
+  aouType::RECTANGULAR,
+  aouType::NONE,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct aouType(pub i8);
+#[allow(non_upper_case_globals)]
+impl aouType {
+  pub const CIRCULAR: Self = Self(0);
+  pub const ELLIPTICAL: Self = Self(1);
+  pub const RECTANGULAR: Self = Self(2);
+  pub const NONE: Self = Self(3);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 3;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::CIRCULAR,
+    Self::ELLIPTICAL,
+    Self::RECTANGULAR,
+    Self::NONE,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::CIRCULAR => Some("CIRCULAR"),
+      Self::ELLIPTICAL => Some("ELLIPTICAL"),
+      Self::RECTANGULAR => Some("RECTANGULAR"),
+      Self::NONE => Some("NONE"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for aouType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for aouType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for aouType {
+    type Output = aouType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for aouType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for aouType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for aouType {}
 pub enum OBTOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -28,40 +218,40 @@ impl<'a> flatbuffers::Follow<'a> for OBT<'a> {
 impl<'a> OBT<'a> {
   pub const VT_ID: flatbuffers::VOffsetT = 4;
   pub const VT_SAT_NO: flatbuffers::VOffsetT = 6;
-  pub const VT_ON_ORBIT: flatbuffers::VOffsetT = 8;
-  pub const VT_ORIG_OBJECT_ID: flatbuffers::VOffsetT = 10;
+  pub const VT_ORIG_OBJECT_ID: flatbuffers::VOffsetT = 8;
+  pub const VT_ON_ORBIT: flatbuffers::VOffsetT = 10;
   pub const VT_TS: flatbuffers::VOffsetT = 12;
   pub const VT_LAT: flatbuffers::VOffsetT = 14;
   pub const VT_LON: flatbuffers::VOffsetT = 16;
   pub const VT_ALT: flatbuffers::VOffsetT = 18;
-  pub const VT_RDF_RF: flatbuffers::VOffsetT = 20;
-  pub const VT_CALL_SIGN: flatbuffers::VOffsetT = 22;
-  pub const VT_RPT_NUM: flatbuffers::VOffsetT = 24;
-  pub const VT_OBJ_IDENT: flatbuffers::VOffsetT = 26;
-  pub const VT_IDENT_AMP: flatbuffers::VOffsetT = 28;
-  pub const VT_SAT_STATUS: flatbuffers::VOffsetT = 30;
-  pub const VT_OBJECT_TYPE: flatbuffers::VOffsetT = 32;
-  pub const VT_COUNTRY_CODE: flatbuffers::VOffsetT = 34;
-  pub const VT_DECAY: flatbuffers::VOffsetT = 36;
-  pub const VT_CHARLIE_LINE: flatbuffers::VOffsetT = 38;
-  pub const VT_AOU_TYPE: flatbuffers::VOffsetT = 40;
-  pub const VT_AOU_DATA: flatbuffers::VOffsetT = 42;
-  pub const VT_SPD: flatbuffers::VOffsetT = 44;
-  pub const VT_ANG_ELEV: flatbuffers::VOffsetT = 46;
-  pub const VT_CNTNMNT: flatbuffers::VOffsetT = 48;
-  pub const VT_XREF: flatbuffers::VOffsetT = 50;
-  pub const VT_CH_XREF: flatbuffers::VOffsetT = 52;
-  pub const VT_AMPLIFICATION: flatbuffers::VOffsetT = 54;
-  pub const VT_IFF: flatbuffers::VOffsetT = 56;
-  pub const VT_REINFORCED: flatbuffers::VOffsetT = 58;
-  pub const VT_REDUCED: flatbuffers::VOffsetT = 60;
-  pub const VT_HQ: flatbuffers::VOffsetT = 62;
-  pub const VT_DUMMY: flatbuffers::VOffsetT = 64;
-  pub const VT_TASK_FORCE: flatbuffers::VOffsetT = 66;
-  pub const VT_FEINT: flatbuffers::VOffsetT = 68;
-  pub const VT_INSTALLATION: flatbuffers::VOffsetT = 70;
-  pub const VT_VEH_TYPE: flatbuffers::VOffsetT = 72;
-  pub const VT_TRK_ID: flatbuffers::VOffsetT = 74;
+  pub const VT_SPD: flatbuffers::VOffsetT = 20;
+  pub const VT_ANG_ELEV: flatbuffers::VOffsetT = 22;
+  pub const VT_RDF_RF: flatbuffers::VOffsetT = 24;
+  pub const VT_CALL_SIGN: flatbuffers::VOffsetT = 26;
+  pub const VT_RPT_NUM: flatbuffers::VOffsetT = 28;
+  pub const VT_TRK_ID: flatbuffers::VOffsetT = 30;
+  pub const VT_OBJ_IDENT: flatbuffers::VOffsetT = 32;
+  pub const VT_IDENT_AMP: flatbuffers::VOffsetT = 34;
+  pub const VT_SAT_STATUS: flatbuffers::VOffsetT = 36;
+  pub const VT_OBJ_TYPE: flatbuffers::VOffsetT = 38;
+  pub const VT_COUNTRY_CODE: flatbuffers::VOffsetT = 40;
+  pub const VT_DECAY: flatbuffers::VOffsetT = 42;
+  pub const VT_CHARLIE_LINE: flatbuffers::VOffsetT = 44;
+  pub const VT_AOU_TYPE: flatbuffers::VOffsetT = 46;
+  pub const VT_AOU_DATA: flatbuffers::VOffsetT = 48;
+  pub const VT_CNTNMNT: flatbuffers::VOffsetT = 50;
+  pub const VT_XREF: flatbuffers::VOffsetT = 52;
+  pub const VT_CH_XREF: flatbuffers::VOffsetT = 54;
+  pub const VT_AMPLIFICATION: flatbuffers::VOffsetT = 56;
+  pub const VT_IFF: flatbuffers::VOffsetT = 58;
+  pub const VT_VEH_TYPE: flatbuffers::VOffsetT = 60;
+  pub const VT_REINFORCED: flatbuffers::VOffsetT = 62;
+  pub const VT_REDUCED: flatbuffers::VOffsetT = 64;
+  pub const VT_HQ: flatbuffers::VOffsetT = 66;
+  pub const VT_DUMMY: flatbuffers::VOffsetT = 68;
+  pub const VT_TASK_FORCE: flatbuffers::VOffsetT = 70;
+  pub const VT_FEINT: flatbuffers::VOffsetT = 72;
+  pub const VT_INSTALLATION: flatbuffers::VOffsetT = 74;
   pub const VT_TRACK_SENSORS: flatbuffers::VOffsetT = 76;
 
   #[inline]
@@ -75,33 +265,31 @@ impl<'a> OBT<'a> {
   ) -> flatbuffers::WIPOffset<OBT<'bldr>> {
     let mut builder = OBTBuilder::new(_fbb);
     builder.add_CNTNMNT(args.CNTNMNT);
-    builder.add_ANG_ELEV(args.ANG_ELEV);
-    builder.add_SPD(args.SPD);
     builder.add_DECAY(args.DECAY);
     builder.add_RDF_RF(args.RDF_RF);
+    builder.add_ANG_ELEV(args.ANG_ELEV);
+    builder.add_SPD(args.SPD);
     builder.add_ALT(args.ALT);
     builder.add_LON(args.LON);
     builder.add_LAT(args.LAT);
     if let Some(x) = args.TRACK_SENSORS { builder.add_TRACK_SENSORS(x); }
-    if let Some(x) = args.TRK_ID { builder.add_TRK_ID(x); }
     if let Some(x) = args.VEH_TYPE { builder.add_VEH_TYPE(x); }
     if let Some(x) = args.IFF { builder.add_IFF(x); }
     if let Some(x) = args.AMPLIFICATION { builder.add_AMPLIFICATION(x); }
     if let Some(x) = args.CH_XREF { builder.add_CH_XREF(x); }
     if let Some(x) = args.XREF { builder.add_XREF(x); }
     if let Some(x) = args.AOU_DATA { builder.add_AOU_DATA(x); }
-    if let Some(x) = args.AOU_TYPE { builder.add_AOU_TYPE(x); }
     if let Some(x) = args.CHARLIE_LINE { builder.add_CHARLIE_LINE(x); }
     if let Some(x) = args.COUNTRY_CODE { builder.add_COUNTRY_CODE(x); }
-    if let Some(x) = args.OBJECT_TYPE { builder.add_OBJECT_TYPE(x); }
     if let Some(x) = args.SAT_STATUS { builder.add_SAT_STATUS(x); }
     if let Some(x) = args.IDENT_AMP { builder.add_IDENT_AMP(x); }
     if let Some(x) = args.OBJ_IDENT { builder.add_OBJ_IDENT(x); }
+    if let Some(x) = args.TRK_ID { builder.add_TRK_ID(x); }
     if let Some(x) = args.RPT_NUM { builder.add_RPT_NUM(x); }
     if let Some(x) = args.CALL_SIGN { builder.add_CALL_SIGN(x); }
     if let Some(x) = args.TS { builder.add_TS(x); }
-    if let Some(x) = args.ORIG_OBJECT_ID { builder.add_ORIG_OBJECT_ID(x); }
     if let Some(x) = args.ON_ORBIT { builder.add_ON_ORBIT(x); }
+    if let Some(x) = args.ORIG_OBJECT_ID { builder.add_ORIG_OBJECT_ID(x); }
     builder.add_SAT_NO(args.SAT_NO);
     if let Some(x) = args.ID { builder.add_ID(x); }
     builder.add_INSTALLATION(args.INSTALLATION);
@@ -111,6 +299,8 @@ impl<'a> OBT<'a> {
     builder.add_HQ(args.HQ);
     builder.add_REDUCED(args.REDUCED);
     builder.add_REINFORCED(args.REINFORCED);
+    builder.add_AOU_TYPE(args.AOU_TYPE);
+    builder.add_OBJ_TYPE(args.OBJ_TYPE);
     builder.finish()
   }
 
@@ -119,10 +309,10 @@ impl<'a> OBT<'a> {
       x.to_string()
     });
     let SAT_NO = self.SAT_NO();
-    let ON_ORBIT = self.ON_ORBIT().map(|x| {
+    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID().map(|x| {
       x.to_string()
     });
-    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID().map(|x| {
+    let ON_ORBIT = self.ON_ORBIT().map(|x| {
       x.to_string()
     });
     let TS = self.TS().map(|x| {
@@ -131,11 +321,16 @@ impl<'a> OBT<'a> {
     let LAT = self.LAT();
     let LON = self.LON();
     let ALT = self.ALT();
+    let SPD = self.SPD();
+    let ANG_ELEV = self.ANG_ELEV();
     let RDF_RF = self.RDF_RF();
     let CALL_SIGN = self.CALL_SIGN().map(|x| {
       x.to_string()
     });
     let RPT_NUM = self.RPT_NUM().map(|x| {
+      x.to_string()
+    });
+    let TRK_ID = self.TRK_ID().map(|x| {
       x.to_string()
     });
     let OBJ_IDENT = self.OBJ_IDENT().map(|x| {
@@ -147,9 +342,7 @@ impl<'a> OBT<'a> {
     let SAT_STATUS = self.SAT_STATUS().map(|x| {
       x.to_string()
     });
-    let OBJECT_TYPE = self.OBJECT_TYPE().map(|x| {
-      x.to_string()
-    });
+    let OBJ_TYPE = self.OBJ_TYPE();
     let COUNTRY_CODE = self.COUNTRY_CODE().map(|x| {
       x.to_string()
     });
@@ -157,14 +350,10 @@ impl<'a> OBT<'a> {
     let CHARLIE_LINE = self.CHARLIE_LINE().map(|x| {
       x.to_string()
     });
-    let AOU_TYPE = self.AOU_TYPE().map(|x| {
-      x.to_string()
-    });
+    let AOU_TYPE = self.AOU_TYPE();
     let AOU_DATA = self.AOU_DATA().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
+      x.into_iter().collect()
     });
-    let SPD = self.SPD();
-    let ANG_ELEV = self.ANG_ELEV();
     let CNTNMNT = self.CNTNMNT();
     let XREF = self.XREF().map(|x| {
       x.to_string()
@@ -178,6 +367,9 @@ impl<'a> OBT<'a> {
     let IFF = self.IFF().map(|x| {
       x.to_string()
     });
+    let VEH_TYPE = self.VEH_TYPE().map(|x| {
+      x.to_string()
+    });
     let REINFORCED = self.REINFORCED();
     let REDUCED = self.REDUCED();
     let HQ = self.HQ();
@@ -185,43 +377,39 @@ impl<'a> OBT<'a> {
     let TASK_FORCE = self.TASK_FORCE();
     let FEINT = self.FEINT();
     let INSTALLATION = self.INSTALLATION();
-    let VEH_TYPE = self.VEH_TYPE().map(|x| {
-      x.to_string()
-    });
-    let TRK_ID = self.TRK_ID().map(|x| {
-      x.to_string()
-    });
     let TRACK_SENSORS = self.TRACK_SENSORS().map(|x| {
       x.iter().map(|s| s.to_string()).collect()
     });
     OBTT {
       ID,
       SAT_NO,
-      ON_ORBIT,
       ORIG_OBJECT_ID,
+      ON_ORBIT,
       TS,
       LAT,
       LON,
       ALT,
+      SPD,
+      ANG_ELEV,
       RDF_RF,
       CALL_SIGN,
       RPT_NUM,
+      TRK_ID,
       OBJ_IDENT,
       IDENT_AMP,
       SAT_STATUS,
-      OBJECT_TYPE,
+      OBJ_TYPE,
       COUNTRY_CODE,
       DECAY,
       CHARLIE_LINE,
       AOU_TYPE,
       AOU_DATA,
-      SPD,
-      ANG_ELEV,
       CNTNMNT,
       XREF,
       CH_XREF,
       AMPLIFICATION,
       IFF,
+      VEH_TYPE,
       REINFORCED,
       REDUCED,
       HQ,
@@ -229,12 +417,11 @@ impl<'a> OBT<'a> {
       TASK_FORCE,
       FEINT,
       INSTALLATION,
-      VEH_TYPE,
-      TRK_ID,
       TRACK_SENSORS,
     }
   }
 
+  /// Unique identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -242,20 +429,15 @@ impl<'a> OBT<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_ID, None)}
   }
+  /// Satellite catalog number
   #[inline]
-  pub fn SAT_NO(&self) -> i32 {
+  pub fn SAT_NO(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(OBT::VT_SAT_NO, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u32>(OBT::VT_SAT_NO, Some(0)).unwrap()}
   }
-  #[inline]
-  pub fn ON_ORBIT(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_ON_ORBIT, None)}
-  }
+  /// International designator
   #[inline]
   pub fn ORIG_OBJECT_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -263,6 +445,15 @@ impl<'a> OBT<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_ORIG_OBJECT_ID, None)}
   }
+  /// On-orbit reference
+  #[inline]
+  pub fn ON_ORBIT(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_ON_ORBIT, None)}
+  }
+  /// Track point timestamp (ISO 8601)
   #[inline]
   pub fn TS(&self) -> Option<&'a str> {
     // Safety:
@@ -270,6 +461,7 @@ impl<'a> OBT<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_TS, None)}
   }
+  /// Latitude (degrees)
   #[inline]
   pub fn LAT(&self) -> f64 {
     // Safety:
@@ -277,6 +469,7 @@ impl<'a> OBT<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OBT::VT_LAT, Some(0.0)).unwrap()}
   }
+  /// Longitude (degrees)
   #[inline]
   pub fn LON(&self) -> f64 {
     // Safety:
@@ -284,6 +477,7 @@ impl<'a> OBT<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OBT::VT_LON, Some(0.0)).unwrap()}
   }
+  /// Altitude (km)
   #[inline]
   pub fn ALT(&self) -> f64 {
     // Safety:
@@ -291,90 +485,7 @@ impl<'a> OBT<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OBT::VT_ALT, Some(0.0)).unwrap()}
   }
-  #[inline]
-  pub fn RDF_RF(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OBT::VT_RDF_RF, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn CALL_SIGN(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_CALL_SIGN, None)}
-  }
-  #[inline]
-  pub fn RPT_NUM(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_RPT_NUM, None)}
-  }
-  #[inline]
-  pub fn OBJ_IDENT(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_OBJ_IDENT, None)}
-  }
-  #[inline]
-  pub fn IDENT_AMP(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_IDENT_AMP, None)}
-  }
-  #[inline]
-  pub fn SAT_STATUS(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_SAT_STATUS, None)}
-  }
-  #[inline]
-  pub fn OBJECT_TYPE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_OBJECT_TYPE, None)}
-  }
-  #[inline]
-  pub fn COUNTRY_CODE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_COUNTRY_CODE, None)}
-  }
-  #[inline]
-  pub fn DECAY(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OBT::VT_DECAY, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn CHARLIE_LINE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_CHARLIE_LINE, None)}
-  }
-  #[inline]
-  pub fn AOU_TYPE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_AOU_TYPE, None)}
-  }
-  #[inline]
-  pub fn AOU_DATA(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(OBT::VT_AOU_DATA, None)}
-  }
+  /// Speed (km/s)
   #[inline]
   pub fn SPD(&self) -> f64 {
     // Safety:
@@ -382,6 +493,7 @@ impl<'a> OBT<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OBT::VT_SPD, Some(0.0)).unwrap()}
   }
+  /// Elevation angle from observer (degrees)
   #[inline]
   pub fn ANG_ELEV(&self) -> f64 {
     // Safety:
@@ -389,97 +501,31 @@ impl<'a> OBT<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OBT::VT_ANG_ELEV, Some(0.0)).unwrap()}
   }
+  /// Radar data fusion RF value
   #[inline]
-  pub fn CNTNMNT(&self) -> f64 {
+  pub fn RDF_RF(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OBT::VT_CNTNMNT, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<f64>(OBT::VT_RDF_RF, Some(0.0)).unwrap()}
   }
+  /// Call sign
   #[inline]
-  pub fn XREF(&self) -> Option<&'a str> {
+  pub fn CALL_SIGN(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_XREF, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_CALL_SIGN, None)}
   }
+  /// Report number
   #[inline]
-  pub fn CH_XREF(&self) -> Option<&'a str> {
+  pub fn RPT_NUM(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_CH_XREF, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_RPT_NUM, None)}
   }
-  #[inline]
-  pub fn AMPLIFICATION(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_AMPLIFICATION, None)}
-  }
-  #[inline]
-  pub fn IFF(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_IFF, None)}
-  }
-  #[inline]
-  pub fn REINFORCED(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(OBT::VT_REINFORCED, Some(false)).unwrap()}
-  }
-  #[inline]
-  pub fn REDUCED(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(OBT::VT_REDUCED, Some(false)).unwrap()}
-  }
-  #[inline]
-  pub fn HQ(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(OBT::VT_HQ, Some(false)).unwrap()}
-  }
-  #[inline]
-  pub fn DUMMY(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(OBT::VT_DUMMY, Some(false)).unwrap()}
-  }
-  #[inline]
-  pub fn TASK_FORCE(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(OBT::VT_TASK_FORCE, Some(false)).unwrap()}
-  }
-  #[inline]
-  pub fn FEINT(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(OBT::VT_FEINT, Some(false)).unwrap()}
-  }
-  #[inline]
-  pub fn INSTALLATION(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(OBT::VT_INSTALLATION, Some(false)).unwrap()}
-  }
-  #[inline]
-  pub fn VEH_TYPE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_VEH_TYPE, None)}
-  }
+  /// Track identifier
   #[inline]
   pub fn TRK_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -487,6 +533,183 @@ impl<'a> OBT<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_TRK_ID, None)}
   }
+  /// Object identity assessment
+  #[inline]
+  pub fn OBJ_IDENT(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_OBJ_IDENT, None)}
+  }
+  /// Identity amplification
+  #[inline]
+  pub fn IDENT_AMP(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_IDENT_AMP, None)}
+  }
+  /// Satellite operational status
+  #[inline]
+  pub fn SAT_STATUS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_SAT_STATUS, None)}
+  }
+  /// Object type
+  #[inline]
+  pub fn OBJ_TYPE(&self) -> orbitObjectType {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<orbitObjectType>(OBT::VT_OBJ_TYPE, Some(orbitObjectType::PAYLOAD)).unwrap()}
+  }
+  /// Country code (ISO 3166)
+  #[inline]
+  pub fn COUNTRY_CODE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_COUNTRY_CODE, None)}
+  }
+  /// Orbit decay rate (km/day)
+  #[inline]
+  pub fn DECAY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OBT::VT_DECAY, Some(0.0)).unwrap()}
+  }
+  /// Charlie line data (amplification text)
+  #[inline]
+  pub fn CHARLIE_LINE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_CHARLIE_LINE, None)}
+  }
+  /// Area of uncertainty type
+  #[inline]
+  pub fn AOU_TYPE(&self) -> aouType {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<aouType>(OBT::VT_AOU_TYPE, Some(aouType::CIRCULAR)).unwrap()}
+  }
+  /// Area of uncertainty data
+  #[inline]
+  pub fn AOU_DATA(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(OBT::VT_AOU_DATA, None)}
+  }
+  /// Containment probability (0-1)
+  #[inline]
+  pub fn CNTNMNT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OBT::VT_CNTNMNT, Some(0.0)).unwrap()}
+  }
+  /// Cross-reference identifier
+  #[inline]
+  pub fn XREF(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_XREF, None)}
+  }
+  /// Charlie cross-reference
+  #[inline]
+  pub fn CH_XREF(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_CH_XREF, None)}
+  }
+  /// Additional amplification text
+  #[inline]
+  pub fn AMPLIFICATION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_AMPLIFICATION, None)}
+  }
+  /// IFF mode/code
+  #[inline]
+  pub fn IFF(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_IFF, None)}
+  }
+  /// Vehicle type
+  #[inline]
+  pub fn VEH_TYPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBT::VT_VEH_TYPE, None)}
+  }
+  /// True if reinforced unit
+  #[inline]
+  pub fn REINFORCED(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(OBT::VT_REINFORCED, Some(false)).unwrap()}
+  }
+  /// True if reduced unit
+  #[inline]
+  pub fn REDUCED(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(OBT::VT_REDUCED, Some(false)).unwrap()}
+  }
+  /// True if headquarters element
+  #[inline]
+  pub fn HQ(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(OBT::VT_HQ, Some(false)).unwrap()}
+  }
+  /// True if dummy/exercise track
+  #[inline]
+  pub fn DUMMY(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(OBT::VT_DUMMY, Some(false)).unwrap()}
+  }
+  /// True if task force
+  #[inline]
+  pub fn TASK_FORCE(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(OBT::VT_TASK_FORCE, Some(false)).unwrap()}
+  }
+  /// True if feint
+  #[inline]
+  pub fn FEINT(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(OBT::VT_FEINT, Some(false)).unwrap()}
+  }
+  /// True if installation (not mobile)
+  #[inline]
+  pub fn INSTALLATION(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(OBT::VT_INSTALLATION, Some(false)).unwrap()}
+  }
+  /// Contributing track sensors
   #[inline]
   pub fn TRACK_SENSORS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -504,32 +727,34 @@ impl flatbuffers::Verifiable for OBT<'_> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
-     .visit_field::<i32>("SAT_NO", Self::VT_SAT_NO, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ON_ORBIT", Self::VT_ON_ORBIT, false)?
+     .visit_field::<u32>("SAT_NO", Self::VT_SAT_NO, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_OBJECT_ID", Self::VT_ORIG_OBJECT_ID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ON_ORBIT", Self::VT_ON_ORBIT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TS", Self::VT_TS, false)?
      .visit_field::<f64>("LAT", Self::VT_LAT, false)?
      .visit_field::<f64>("LON", Self::VT_LON, false)?
      .visit_field::<f64>("ALT", Self::VT_ALT, false)?
+     .visit_field::<f64>("SPD", Self::VT_SPD, false)?
+     .visit_field::<f64>("ANG_ELEV", Self::VT_ANG_ELEV, false)?
      .visit_field::<f64>("RDF_RF", Self::VT_RDF_RF, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CALL_SIGN", Self::VT_CALL_SIGN, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("RPT_NUM", Self::VT_RPT_NUM, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRK_ID", Self::VT_TRK_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJ_IDENT", Self::VT_OBJ_IDENT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("IDENT_AMP", Self::VT_IDENT_AMP, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SAT_STATUS", Self::VT_SAT_STATUS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJECT_TYPE", Self::VT_OBJECT_TYPE, false)?
+     .visit_field::<orbitObjectType>("OBJ_TYPE", Self::VT_OBJ_TYPE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COUNTRY_CODE", Self::VT_COUNTRY_CODE, false)?
      .visit_field::<f64>("DECAY", Self::VT_DECAY, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CHARLIE_LINE", Self::VT_CHARLIE_LINE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("AOU_TYPE", Self::VT_AOU_TYPE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("AOU_DATA", Self::VT_AOU_DATA, false)?
-     .visit_field::<f64>("SPD", Self::VT_SPD, false)?
-     .visit_field::<f64>("ANG_ELEV", Self::VT_ANG_ELEV, false)?
+     .visit_field::<aouType>("AOU_TYPE", Self::VT_AOU_TYPE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("AOU_DATA", Self::VT_AOU_DATA, false)?
      .visit_field::<f64>("CNTNMNT", Self::VT_CNTNMNT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("XREF", Self::VT_XREF, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CH_XREF", Self::VT_CH_XREF, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("AMPLIFICATION", Self::VT_AMPLIFICATION, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("IFF", Self::VT_IFF, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("VEH_TYPE", Self::VT_VEH_TYPE, false)?
      .visit_field::<bool>("REINFORCED", Self::VT_REINFORCED, false)?
      .visit_field::<bool>("REDUCED", Self::VT_REDUCED, false)?
      .visit_field::<bool>("HQ", Self::VT_HQ, false)?
@@ -537,8 +762,6 @@ impl flatbuffers::Verifiable for OBT<'_> {
      .visit_field::<bool>("TASK_FORCE", Self::VT_TASK_FORCE, false)?
      .visit_field::<bool>("FEINT", Self::VT_FEINT, false)?
      .visit_field::<bool>("INSTALLATION", Self::VT_INSTALLATION, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("VEH_TYPE", Self::VT_VEH_TYPE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRK_ID", Self::VT_TRK_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("TRACK_SENSORS", Self::VT_TRACK_SENSORS, false)?
      .finish();
     Ok(())
@@ -546,32 +769,34 @@ impl flatbuffers::Verifiable for OBT<'_> {
 }
 pub struct OBTArgs<'a> {
     pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SAT_NO: i32,
-    pub ON_ORBIT: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SAT_NO: u32,
     pub ORIG_OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ON_ORBIT: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TS: Option<flatbuffers::WIPOffset<&'a str>>,
     pub LAT: f64,
     pub LON: f64,
     pub ALT: f64,
+    pub SPD: f64,
+    pub ANG_ELEV: f64,
     pub RDF_RF: f64,
     pub CALL_SIGN: Option<flatbuffers::WIPOffset<&'a str>>,
     pub RPT_NUM: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub TRK_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OBJ_IDENT: Option<flatbuffers::WIPOffset<&'a str>>,
     pub IDENT_AMP: Option<flatbuffers::WIPOffset<&'a str>>,
     pub SAT_STATUS: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub OBJECT_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub OBJ_TYPE: orbitObjectType,
     pub COUNTRY_CODE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub DECAY: f64,
     pub CHARLIE_LINE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub AOU_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub AOU_DATA: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub SPD: f64,
-    pub ANG_ELEV: f64,
+    pub AOU_TYPE: aouType,
+    pub AOU_DATA: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
     pub CNTNMNT: f64,
     pub XREF: Option<flatbuffers::WIPOffset<&'a str>>,
     pub CH_XREF: Option<flatbuffers::WIPOffset<&'a str>>,
     pub AMPLIFICATION: Option<flatbuffers::WIPOffset<&'a str>>,
     pub IFF: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub VEH_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub REINFORCED: bool,
     pub REDUCED: bool,
     pub HQ: bool,
@@ -579,8 +804,6 @@ pub struct OBTArgs<'a> {
     pub TASK_FORCE: bool,
     pub FEINT: bool,
     pub INSTALLATION: bool,
-    pub VEH_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub TRK_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TRACK_SENSORS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
 }
 impl<'a> Default for OBTArgs<'a> {
@@ -589,31 +812,33 @@ impl<'a> Default for OBTArgs<'a> {
     OBTArgs {
       ID: None,
       SAT_NO: 0,
-      ON_ORBIT: None,
       ORIG_OBJECT_ID: None,
+      ON_ORBIT: None,
       TS: None,
       LAT: 0.0,
       LON: 0.0,
       ALT: 0.0,
+      SPD: 0.0,
+      ANG_ELEV: 0.0,
       RDF_RF: 0.0,
       CALL_SIGN: None,
       RPT_NUM: None,
+      TRK_ID: None,
       OBJ_IDENT: None,
       IDENT_AMP: None,
       SAT_STATUS: None,
-      OBJECT_TYPE: None,
+      OBJ_TYPE: orbitObjectType::PAYLOAD,
       COUNTRY_CODE: None,
       DECAY: 0.0,
       CHARLIE_LINE: None,
-      AOU_TYPE: None,
+      AOU_TYPE: aouType::CIRCULAR,
       AOU_DATA: None,
-      SPD: 0.0,
-      ANG_ELEV: 0.0,
       CNTNMNT: 0.0,
       XREF: None,
       CH_XREF: None,
       AMPLIFICATION: None,
       IFF: None,
+      VEH_TYPE: None,
       REINFORCED: false,
       REDUCED: false,
       HQ: false,
@@ -621,8 +846,6 @@ impl<'a> Default for OBTArgs<'a> {
       TASK_FORCE: false,
       FEINT: false,
       INSTALLATION: false,
-      VEH_TYPE: None,
-      TRK_ID: None,
       TRACK_SENSORS: None,
     }
   }
@@ -638,16 +861,16 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OBTBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBT::VT_ID, ID);
   }
   #[inline]
-  pub fn add_SAT_NO(&mut self, SAT_NO: i32) {
-    self.fbb_.push_slot::<i32>(OBT::VT_SAT_NO, SAT_NO, 0);
-  }
-  #[inline]
-  pub fn add_ON_ORBIT(&mut self, ON_ORBIT: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBT::VT_ON_ORBIT, ON_ORBIT);
+  pub fn add_SAT_NO(&mut self, SAT_NO: u32) {
+    self.fbb_.push_slot::<u32>(OBT::VT_SAT_NO, SAT_NO, 0);
   }
   #[inline]
   pub fn add_ORIG_OBJECT_ID(&mut self, ORIG_OBJECT_ID: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBT::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
+  }
+  #[inline]
+  pub fn add_ON_ORBIT(&mut self, ON_ORBIT: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBT::VT_ON_ORBIT, ON_ORBIT);
   }
   #[inline]
   pub fn add_TS(&mut self, TS: flatbuffers::WIPOffset<&'b  str>) {
@@ -666,6 +889,14 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OBTBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(OBT::VT_ALT, ALT, 0.0);
   }
   #[inline]
+  pub fn add_SPD(&mut self, SPD: f64) {
+    self.fbb_.push_slot::<f64>(OBT::VT_SPD, SPD, 0.0);
+  }
+  #[inline]
+  pub fn add_ANG_ELEV(&mut self, ANG_ELEV: f64) {
+    self.fbb_.push_slot::<f64>(OBT::VT_ANG_ELEV, ANG_ELEV, 0.0);
+  }
+  #[inline]
   pub fn add_RDF_RF(&mut self, RDF_RF: f64) {
     self.fbb_.push_slot::<f64>(OBT::VT_RDF_RF, RDF_RF, 0.0);
   }
@@ -676,6 +907,10 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OBTBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RPT_NUM(&mut self, RPT_NUM: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBT::VT_RPT_NUM, RPT_NUM);
+  }
+  #[inline]
+  pub fn add_TRK_ID(&mut self, TRK_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBT::VT_TRK_ID, TRK_ID);
   }
   #[inline]
   pub fn add_OBJ_IDENT(&mut self, OBJ_IDENT: flatbuffers::WIPOffset<&'b  str>) {
@@ -690,8 +925,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OBTBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBT::VT_SAT_STATUS, SAT_STATUS);
   }
   #[inline]
-  pub fn add_OBJECT_TYPE(&mut self, OBJECT_TYPE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBT::VT_OBJECT_TYPE, OBJECT_TYPE);
+  pub fn add_OBJ_TYPE(&mut self, OBJ_TYPE: orbitObjectType) {
+    self.fbb_.push_slot::<orbitObjectType>(OBT::VT_OBJ_TYPE, OBJ_TYPE, orbitObjectType::PAYLOAD);
   }
   #[inline]
   pub fn add_COUNTRY_CODE(&mut self, COUNTRY_CODE: flatbuffers::WIPOffset<&'b  str>) {
@@ -706,20 +941,12 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OBTBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBT::VT_CHARLIE_LINE, CHARLIE_LINE);
   }
   #[inline]
-  pub fn add_AOU_TYPE(&mut self, AOU_TYPE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBT::VT_AOU_TYPE, AOU_TYPE);
+  pub fn add_AOU_TYPE(&mut self, AOU_TYPE: aouType) {
+    self.fbb_.push_slot::<aouType>(OBT::VT_AOU_TYPE, AOU_TYPE, aouType::CIRCULAR);
   }
   #[inline]
-  pub fn add_AOU_DATA(&mut self, AOU_DATA: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+  pub fn add_AOU_DATA(&mut self, AOU_DATA: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBT::VT_AOU_DATA, AOU_DATA);
-  }
-  #[inline]
-  pub fn add_SPD(&mut self, SPD: f64) {
-    self.fbb_.push_slot::<f64>(OBT::VT_SPD, SPD, 0.0);
-  }
-  #[inline]
-  pub fn add_ANG_ELEV(&mut self, ANG_ELEV: f64) {
-    self.fbb_.push_slot::<f64>(OBT::VT_ANG_ELEV, ANG_ELEV, 0.0);
   }
   #[inline]
   pub fn add_CNTNMNT(&mut self, CNTNMNT: f64) {
@@ -740,6 +967,10 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OBTBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_IFF(&mut self, IFF: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBT::VT_IFF, IFF);
+  }
+  #[inline]
+  pub fn add_VEH_TYPE(&mut self, VEH_TYPE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBT::VT_VEH_TYPE, VEH_TYPE);
   }
   #[inline]
   pub fn add_REINFORCED(&mut self, REINFORCED: bool) {
@@ -770,14 +1001,6 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OBTBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<bool>(OBT::VT_INSTALLATION, INSTALLATION, false);
   }
   #[inline]
-  pub fn add_VEH_TYPE(&mut self, VEH_TYPE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBT::VT_VEH_TYPE, VEH_TYPE);
-  }
-  #[inline]
-  pub fn add_TRK_ID(&mut self, TRK_ID: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBT::VT_TRK_ID, TRK_ID);
-  }
-  #[inline]
   pub fn add_TRACK_SENSORS(&mut self, TRACK_SENSORS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBT::VT_TRACK_SENSORS, TRACK_SENSORS);
   }
@@ -801,31 +1024,33 @@ impl core::fmt::Debug for OBT<'_> {
     let mut ds = f.debug_struct("OBT");
       ds.field("ID", &self.ID());
       ds.field("SAT_NO", &self.SAT_NO());
-      ds.field("ON_ORBIT", &self.ON_ORBIT());
       ds.field("ORIG_OBJECT_ID", &self.ORIG_OBJECT_ID());
+      ds.field("ON_ORBIT", &self.ON_ORBIT());
       ds.field("TS", &self.TS());
       ds.field("LAT", &self.LAT());
       ds.field("LON", &self.LON());
       ds.field("ALT", &self.ALT());
+      ds.field("SPD", &self.SPD());
+      ds.field("ANG_ELEV", &self.ANG_ELEV());
       ds.field("RDF_RF", &self.RDF_RF());
       ds.field("CALL_SIGN", &self.CALL_SIGN());
       ds.field("RPT_NUM", &self.RPT_NUM());
+      ds.field("TRK_ID", &self.TRK_ID());
       ds.field("OBJ_IDENT", &self.OBJ_IDENT());
       ds.field("IDENT_AMP", &self.IDENT_AMP());
       ds.field("SAT_STATUS", &self.SAT_STATUS());
-      ds.field("OBJECT_TYPE", &self.OBJECT_TYPE());
+      ds.field("OBJ_TYPE", &self.OBJ_TYPE());
       ds.field("COUNTRY_CODE", &self.COUNTRY_CODE());
       ds.field("DECAY", &self.DECAY());
       ds.field("CHARLIE_LINE", &self.CHARLIE_LINE());
       ds.field("AOU_TYPE", &self.AOU_TYPE());
       ds.field("AOU_DATA", &self.AOU_DATA());
-      ds.field("SPD", &self.SPD());
-      ds.field("ANG_ELEV", &self.ANG_ELEV());
       ds.field("CNTNMNT", &self.CNTNMNT());
       ds.field("XREF", &self.XREF());
       ds.field("CH_XREF", &self.CH_XREF());
       ds.field("AMPLIFICATION", &self.AMPLIFICATION());
       ds.field("IFF", &self.IFF());
+      ds.field("VEH_TYPE", &self.VEH_TYPE());
       ds.field("REINFORCED", &self.REINFORCED());
       ds.field("REDUCED", &self.REDUCED());
       ds.field("HQ", &self.HQ());
@@ -833,8 +1058,6 @@ impl core::fmt::Debug for OBT<'_> {
       ds.field("TASK_FORCE", &self.TASK_FORCE());
       ds.field("FEINT", &self.FEINT());
       ds.field("INSTALLATION", &self.INSTALLATION());
-      ds.field("VEH_TYPE", &self.VEH_TYPE());
-      ds.field("TRK_ID", &self.TRK_ID());
       ds.field("TRACK_SENSORS", &self.TRACK_SENSORS());
       ds.finish()
   }
@@ -843,32 +1066,34 @@ impl core::fmt::Debug for OBT<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct OBTT {
   pub ID: Option<String>,
-  pub SAT_NO: i32,
-  pub ON_ORBIT: Option<String>,
+  pub SAT_NO: u32,
   pub ORIG_OBJECT_ID: Option<String>,
+  pub ON_ORBIT: Option<String>,
   pub TS: Option<String>,
   pub LAT: f64,
   pub LON: f64,
   pub ALT: f64,
+  pub SPD: f64,
+  pub ANG_ELEV: f64,
   pub RDF_RF: f64,
   pub CALL_SIGN: Option<String>,
   pub RPT_NUM: Option<String>,
+  pub TRK_ID: Option<String>,
   pub OBJ_IDENT: Option<String>,
   pub IDENT_AMP: Option<String>,
   pub SAT_STATUS: Option<String>,
-  pub OBJECT_TYPE: Option<String>,
+  pub OBJ_TYPE: orbitObjectType,
   pub COUNTRY_CODE: Option<String>,
   pub DECAY: f64,
   pub CHARLIE_LINE: Option<String>,
-  pub AOU_TYPE: Option<String>,
-  pub AOU_DATA: Option<Vec<String>>,
-  pub SPD: f64,
-  pub ANG_ELEV: f64,
+  pub AOU_TYPE: aouType,
+  pub AOU_DATA: Option<Vec<f64>>,
   pub CNTNMNT: f64,
   pub XREF: Option<String>,
   pub CH_XREF: Option<String>,
   pub AMPLIFICATION: Option<String>,
   pub IFF: Option<String>,
+  pub VEH_TYPE: Option<String>,
   pub REINFORCED: bool,
   pub REDUCED: bool,
   pub HQ: bool,
@@ -876,8 +1101,6 @@ pub struct OBTT {
   pub TASK_FORCE: bool,
   pub FEINT: bool,
   pub INSTALLATION: bool,
-  pub VEH_TYPE: Option<String>,
-  pub TRK_ID: Option<String>,
   pub TRACK_SENSORS: Option<Vec<String>>,
 }
 impl Default for OBTT {
@@ -885,31 +1108,33 @@ impl Default for OBTT {
     Self {
       ID: None,
       SAT_NO: 0,
-      ON_ORBIT: None,
       ORIG_OBJECT_ID: None,
+      ON_ORBIT: None,
       TS: None,
       LAT: 0.0,
       LON: 0.0,
       ALT: 0.0,
+      SPD: 0.0,
+      ANG_ELEV: 0.0,
       RDF_RF: 0.0,
       CALL_SIGN: None,
       RPT_NUM: None,
+      TRK_ID: None,
       OBJ_IDENT: None,
       IDENT_AMP: None,
       SAT_STATUS: None,
-      OBJECT_TYPE: None,
+      OBJ_TYPE: orbitObjectType::PAYLOAD,
       COUNTRY_CODE: None,
       DECAY: 0.0,
       CHARLIE_LINE: None,
-      AOU_TYPE: None,
+      AOU_TYPE: aouType::CIRCULAR,
       AOU_DATA: None,
-      SPD: 0.0,
-      ANG_ELEV: 0.0,
       CNTNMNT: 0.0,
       XREF: None,
       CH_XREF: None,
       AMPLIFICATION: None,
       IFF: None,
+      VEH_TYPE: None,
       REINFORCED: false,
       REDUCED: false,
       HQ: false,
@@ -917,8 +1142,6 @@ impl Default for OBTT {
       TASK_FORCE: false,
       FEINT: false,
       INSTALLATION: false,
-      VEH_TYPE: None,
-      TRK_ID: None,
       TRACK_SENSORS: None,
     }
   }
@@ -932,10 +1155,10 @@ impl OBTT {
       _fbb.create_string(x)
     });
     let SAT_NO = self.SAT_NO;
-    let ON_ORBIT = self.ON_ORBIT.as_ref().map(|x|{
+    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID.as_ref().map(|x|{
+    let ON_ORBIT = self.ON_ORBIT.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let TS = self.TS.as_ref().map(|x|{
@@ -944,11 +1167,16 @@ impl OBTT {
     let LAT = self.LAT;
     let LON = self.LON;
     let ALT = self.ALT;
+    let SPD = self.SPD;
+    let ANG_ELEV = self.ANG_ELEV;
     let RDF_RF = self.RDF_RF;
     let CALL_SIGN = self.CALL_SIGN.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let RPT_NUM = self.RPT_NUM.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let TRK_ID = self.TRK_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let OBJ_IDENT = self.OBJ_IDENT.as_ref().map(|x|{
@@ -960,9 +1188,7 @@ impl OBTT {
     let SAT_STATUS = self.SAT_STATUS.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let OBJECT_TYPE = self.OBJECT_TYPE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+    let OBJ_TYPE = self.OBJ_TYPE;
     let COUNTRY_CODE = self.COUNTRY_CODE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -970,14 +1196,10 @@ impl OBTT {
     let CHARLIE_LINE = self.CHARLIE_LINE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let AOU_TYPE = self.AOU_TYPE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+    let AOU_TYPE = self.AOU_TYPE;
     let AOU_DATA = self.AOU_DATA.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+      _fbb.create_vector(x)
     });
-    let SPD = self.SPD;
-    let ANG_ELEV = self.ANG_ELEV;
     let CNTNMNT = self.CNTNMNT;
     let XREF = self.XREF.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -991,6 +1213,9 @@ impl OBTT {
     let IFF = self.IFF.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let VEH_TYPE = self.VEH_TYPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     let REINFORCED = self.REINFORCED;
     let REDUCED = self.REDUCED;
     let HQ = self.HQ;
@@ -998,43 +1223,39 @@ impl OBTT {
     let TASK_FORCE = self.TASK_FORCE;
     let FEINT = self.FEINT;
     let INSTALLATION = self.INSTALLATION;
-    let VEH_TYPE = self.VEH_TYPE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let TRK_ID = self.TRK_ID.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
     let TRACK_SENSORS = self.TRACK_SENSORS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
     OBT::create(_fbb, &OBTArgs{
       ID,
       SAT_NO,
-      ON_ORBIT,
       ORIG_OBJECT_ID,
+      ON_ORBIT,
       TS,
       LAT,
       LON,
       ALT,
+      SPD,
+      ANG_ELEV,
       RDF_RF,
       CALL_SIGN,
       RPT_NUM,
+      TRK_ID,
       OBJ_IDENT,
       IDENT_AMP,
       SAT_STATUS,
-      OBJECT_TYPE,
+      OBJ_TYPE,
       COUNTRY_CODE,
       DECAY,
       CHARLIE_LINE,
       AOU_TYPE,
       AOU_DATA,
-      SPD,
-      ANG_ELEV,
       CNTNMNT,
       XREF,
       CH_XREF,
       AMPLIFICATION,
       IFF,
+      VEH_TYPE,
       REINFORCED,
       REDUCED,
       HQ,
@@ -1042,8 +1263,6 @@ impl OBTT {
       TASK_FORCE,
       FEINT,
       INSTALLATION,
-      VEH_TYPE,
-      TRK_ID,
       TRACK_SENSORS,
     })
   }

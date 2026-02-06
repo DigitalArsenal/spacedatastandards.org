@@ -5,6 +5,281 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class ManifoldStatus {
+  final int value;
+  const ManifoldStatus._(this.value);
+
+  factory ManifoldStatus.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum ManifoldStatus');
+    }
+    return result;
+  }
+
+  static ManifoldStatus? _createOrNull(int? value) => 
+      value == null ? null : ManifoldStatus.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const ManifoldStatus CANDIDATE = ManifoldStatus._(0);
+  static const ManifoldStatus CONFIRMED = ManifoldStatus._(1);
+  static const ManifoldStatus REJECTED = ManifoldStatus._(2);
+  static const ManifoldStatus CORRELATED = ManifoldStatus._(3);
+  static const ManifoldStatus EXPIRED = ManifoldStatus._(4);
+  static const Map<int, ManifoldStatus> values = {
+    0: CANDIDATE,
+    1: CONFIRMED,
+    2: REJECTED,
+    3: CORRELATED,
+    4: EXPIRED};
+
+  static const fb.Reader<ManifoldStatus> reader = _ManifoldStatusReader();
+
+  @override
+  String toString() {
+    return 'ManifoldStatus{value: $value}';
+  }
+}
+
+class _ManifoldStatusReader extends fb.Reader<ManifoldStatus> {
+  const _ManifoldStatusReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  ManifoldStatus read(fb.BufferContext bc, int offset) =>
+      ManifoldStatus.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Manifold Element Set
+class ManifoldElset {
+  ManifoldElset._(this._bc, this._bcOffset);
+  factory ManifoldElset(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<ManifoldElset> reader = _ManifoldElsetReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Epoch of element set (ISO 8601)
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Semi-major axis in km
+  double get SEMI_MAJOR_AXIS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Eccentricity
+  double get ECCENTRICITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Inclination in degrees
+  double get INCLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  Right ascension of ascending node in degrees
+  double get RA_OF_ASC_NODE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  Argument of pericenter in degrees
+  double get ARG_OF_PERICENTER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  ///  Mean anomaly in degrees
+  double get MEAN_ANOMALY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Applied delta-V in m/s
+  double get DELTA_V => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  ///  Applied delta-T in seconds
+  double get DELTA_T => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  Delta-V direction X (unit vector)
+  double get DV_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Delta-V direction Y (unit vector)
+  double get DV_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  ///  Delta-V direction Z (unit vector)
+  double get DV_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  ///  Probability weight (0.0-1.0)
+  double get WEIGHT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  ///  Apogee altitude in km
+  double get APOGEE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  ///  Perigee altitude in km
+  double get PERIGEE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  ///  Period in minutes
+  double get PERIOD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+
+  @override
+  String toString() {
+    return 'ManifoldElset{EPOCH: ${EPOCH}, SEMI_MAJOR_AXIS: ${SEMI_MAJOR_AXIS}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}, RA_OF_ASC_NODE: ${RA_OF_ASC_NODE}, ARG_OF_PERICENTER: ${ARG_OF_PERICENTER}, MEAN_ANOMALY: ${MEAN_ANOMALY}, DELTA_V: ${DELTA_V}, DELTA_T: ${DELTA_T}, DV_X: ${DV_X}, DV_Y: ${DV_Y}, DV_Z: ${DV_Z}, WEIGHT: ${WEIGHT}, APOGEE: ${APOGEE}, PERIGEE: ${PERIGEE}, PERIOD: ${PERIOD}}';
+  }
+}
+
+class _ManifoldElsetReader extends fb.TableReader<ManifoldElset> {
+  const _ManifoldElsetReader();
+
+  @override
+  ManifoldElset createObject(fb.BufferContext bc, int offset) => 
+    ManifoldElset._(bc, offset);
+}
+
+class ManifoldElsetBuilder {
+  ManifoldElsetBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(16);
+  }
+
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addSemiMajorAxis(double? SEMI_MAJOR_AXIS) {
+    fbBuilder.addFloat64(1, SEMI_MAJOR_AXIS);
+    return fbBuilder.offset;
+  }
+  int addEccentricity(double? ECCENTRICITY) {
+    fbBuilder.addFloat64(2, ECCENTRICITY);
+    return fbBuilder.offset;
+  }
+  int addInclination(double? INCLINATION) {
+    fbBuilder.addFloat64(3, INCLINATION);
+    return fbBuilder.offset;
+  }
+  int addRaOfAscNode(double? RA_OF_ASC_NODE) {
+    fbBuilder.addFloat64(4, RA_OF_ASC_NODE);
+    return fbBuilder.offset;
+  }
+  int addArgOfPericenter(double? ARG_OF_PERICENTER) {
+    fbBuilder.addFloat64(5, ARG_OF_PERICENTER);
+    return fbBuilder.offset;
+  }
+  int addMeanAnomaly(double? MEAN_ANOMALY) {
+    fbBuilder.addFloat64(6, MEAN_ANOMALY);
+    return fbBuilder.offset;
+  }
+  int addDeltaV(double? DELTA_V) {
+    fbBuilder.addFloat64(7, DELTA_V);
+    return fbBuilder.offset;
+  }
+  int addDeltaT(double? DELTA_T) {
+    fbBuilder.addFloat64(8, DELTA_T);
+    return fbBuilder.offset;
+  }
+  int addDvX(double? DV_X) {
+    fbBuilder.addFloat64(9, DV_X);
+    return fbBuilder.offset;
+  }
+  int addDvY(double? DV_Y) {
+    fbBuilder.addFloat64(10, DV_Y);
+    return fbBuilder.offset;
+  }
+  int addDvZ(double? DV_Z) {
+    fbBuilder.addFloat64(11, DV_Z);
+    return fbBuilder.offset;
+  }
+  int addWeight(double? WEIGHT) {
+    fbBuilder.addFloat64(12, WEIGHT);
+    return fbBuilder.offset;
+  }
+  int addApogee(double? APOGEE) {
+    fbBuilder.addFloat64(13, APOGEE);
+    return fbBuilder.offset;
+  }
+  int addPerigee(double? PERIGEE) {
+    fbBuilder.addFloat64(14, PERIGEE);
+    return fbBuilder.offset;
+  }
+  int addPeriod(double? PERIOD) {
+    fbBuilder.addFloat64(15, PERIOD);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class ManifoldElsetObjectBuilder extends fb.ObjectBuilder {
+  final String? _EPOCH;
+  final double? _SEMI_MAJOR_AXIS;
+  final double? _ECCENTRICITY;
+  final double? _INCLINATION;
+  final double? _RA_OF_ASC_NODE;
+  final double? _ARG_OF_PERICENTER;
+  final double? _MEAN_ANOMALY;
+  final double? _DELTA_V;
+  final double? _DELTA_T;
+  final double? _DV_X;
+  final double? _DV_Y;
+  final double? _DV_Z;
+  final double? _WEIGHT;
+  final double? _APOGEE;
+  final double? _PERIGEE;
+  final double? _PERIOD;
+
+  ManifoldElsetObjectBuilder({
+    String? EPOCH,
+    double? SEMI_MAJOR_AXIS,
+    double? ECCENTRICITY,
+    double? INCLINATION,
+    double? RA_OF_ASC_NODE,
+    double? ARG_OF_PERICENTER,
+    double? MEAN_ANOMALY,
+    double? DELTA_V,
+    double? DELTA_T,
+    double? DV_X,
+    double? DV_Y,
+    double? DV_Z,
+    double? WEIGHT,
+    double? APOGEE,
+    double? PERIGEE,
+    double? PERIOD,
+  })
+      : _EPOCH = EPOCH,
+        _SEMI_MAJOR_AXIS = SEMI_MAJOR_AXIS,
+        _ECCENTRICITY = ECCENTRICITY,
+        _INCLINATION = INCLINATION,
+        _RA_OF_ASC_NODE = RA_OF_ASC_NODE,
+        _ARG_OF_PERICENTER = ARG_OF_PERICENTER,
+        _MEAN_ANOMALY = MEAN_ANOMALY,
+        _DELTA_V = DELTA_V,
+        _DELTA_T = DELTA_T,
+        _DV_X = DV_X,
+        _DV_Y = DV_Y,
+        _DV_Z = DV_Z,
+        _WEIGHT = WEIGHT,
+        _APOGEE = APOGEE,
+        _PERIGEE = PERIGEE,
+        _PERIOD = PERIOD;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    fbBuilder.startTable(16);
+    fbBuilder.addOffset(0, EPOCHOffset);
+    fbBuilder.addFloat64(1, _SEMI_MAJOR_AXIS);
+    fbBuilder.addFloat64(2, _ECCENTRICITY);
+    fbBuilder.addFloat64(3, _INCLINATION);
+    fbBuilder.addFloat64(4, _RA_OF_ASC_NODE);
+    fbBuilder.addFloat64(5, _ARG_OF_PERICENTER);
+    fbBuilder.addFloat64(6, _MEAN_ANOMALY);
+    fbBuilder.addFloat64(7, _DELTA_V);
+    fbBuilder.addFloat64(8, _DELTA_T);
+    fbBuilder.addFloat64(9, _DV_X);
+    fbBuilder.addFloat64(10, _DV_Y);
+    fbBuilder.addFloat64(11, _DV_Z);
+    fbBuilder.addFloat64(12, _WEIGHT);
+    fbBuilder.addFloat64(13, _APOGEE);
+    fbBuilder.addFloat64(14, _PERIGEE);
+    fbBuilder.addFloat64(15, _PERIOD);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Orbit Manifold
 class MNF {
   MNF._(this._bc, this._bcOffset);
@@ -18,15 +293,50 @@ class MNF {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique manifold identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get STATUS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  double get WEIGHT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  double get DELTA_V => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  double get DELTA_T => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  Parent object satellite number
+  int get SAT_NO => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  ///  Object designator
+  String? get OBJECT_DESIGNATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Manifold status
+  ManifoldStatus get STATUS => ManifoldStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  ///  Event epoch that spawned the manifold (ISO 8601)
+  String? get EVENT_EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Source of detection (sensor ID or method)
+  String? get SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Reference frame
+  String? get REF_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Original pre-event semi-major axis in km
+  double get ORIG_SEMI_MAJOR_AXIS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  ///  Original pre-event eccentricity
+  double get ORIG_ECCENTRICITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  Original pre-event inclination in degrees
+  double get ORIG_INCLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Minimum delta-V sampled in m/s
+  double get DELTA_V_MIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  ///  Maximum delta-V sampled in m/s
+  double get DELTA_V_MAX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  ///  Delta-V step size in m/s
+  double get DELTA_V_STEP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  ///  Minimum delta-T sampled in seconds
+  double get DELTA_T_MIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  ///  Maximum delta-T sampled in seconds
+  double get DELTA_T_MAX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  ///  Delta-T step size in seconds
+  double get DELTA_T_STEP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  ///  Total number of manifold elements
+  int get NUM_ELEMENTS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 36, 0);
+  ///  Theoretical element sets
+  List<ManifoldElset>? get ELEMENTS => const fb.ListReader<ManifoldElset>(ManifoldElset.reader).vTableGetNullable(_bc, _bcOffset, 38);
+  ///  Correlated catalog object ID (if matched)
+  String? get CORRELATED_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+  ///  Additional notes
+  String? get NOTES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
 
   @override
   String toString() {
-    return 'MNF{ID: ${ID}, STATUS: ${STATUS}, WEIGHT: ${WEIGHT}, DELTA_V: ${DELTA_V}, DELTA_T: ${DELTA_T}}';
+    return 'MNF{ID: ${ID}, SAT_NO: ${SAT_NO}, OBJECT_DESIGNATOR: ${OBJECT_DESIGNATOR}, STATUS: ${STATUS}, EVENT_EPOCH: ${EVENT_EPOCH}, SOURCE: ${SOURCE}, REF_FRAME: ${REF_FRAME}, ORIG_SEMI_MAJOR_AXIS: ${ORIG_SEMI_MAJOR_AXIS}, ORIG_ECCENTRICITY: ${ORIG_ECCENTRICITY}, ORIG_INCLINATION: ${ORIG_INCLINATION}, DELTA_V_MIN: ${DELTA_V_MIN}, DELTA_V_MAX: ${DELTA_V_MAX}, DELTA_V_STEP: ${DELTA_V_STEP}, DELTA_T_MIN: ${DELTA_T_MIN}, DELTA_T_MAX: ${DELTA_T_MAX}, DELTA_T_STEP: ${DELTA_T_STEP}, NUM_ELEMENTS: ${NUM_ELEMENTS}, ELEMENTS: ${ELEMENTS}, CORRELATED_ID: ${CORRELATED_ID}, NOTES: ${NOTES}}';
   }
 }
 
@@ -44,27 +354,87 @@ class MNFBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(5);
+    fbBuilder.startTable(20);
   }
 
   int addIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addStatusOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
+  int addSatNo(int? SAT_NO) {
+    fbBuilder.addUint32(1, SAT_NO);
     return fbBuilder.offset;
   }
-  int addWeight(double? WEIGHT) {
-    fbBuilder.addFloat64(2, WEIGHT);
+  int addObjectDesignatorOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addDeltaV(double? DELTA_V) {
-    fbBuilder.addFloat64(3, DELTA_V);
+  int addStatus(ManifoldStatus? STATUS) {
+    fbBuilder.addInt8(3, STATUS?.value);
     return fbBuilder.offset;
   }
-  int addDeltaT(double? DELTA_T) {
-    fbBuilder.addFloat64(4, DELTA_T);
+  int addEventEpochOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addSourceOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addRefFrameOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addOrigSemiMajorAxis(double? ORIG_SEMI_MAJOR_AXIS) {
+    fbBuilder.addFloat64(7, ORIG_SEMI_MAJOR_AXIS);
+    return fbBuilder.offset;
+  }
+  int addOrigEccentricity(double? ORIG_ECCENTRICITY) {
+    fbBuilder.addFloat64(8, ORIG_ECCENTRICITY);
+    return fbBuilder.offset;
+  }
+  int addOrigInclination(double? ORIG_INCLINATION) {
+    fbBuilder.addFloat64(9, ORIG_INCLINATION);
+    return fbBuilder.offset;
+  }
+  int addDeltaVMin(double? DELTA_V_MIN) {
+    fbBuilder.addFloat64(10, DELTA_V_MIN);
+    return fbBuilder.offset;
+  }
+  int addDeltaVMax(double? DELTA_V_MAX) {
+    fbBuilder.addFloat64(11, DELTA_V_MAX);
+    return fbBuilder.offset;
+  }
+  int addDeltaVStep(double? DELTA_V_STEP) {
+    fbBuilder.addFloat64(12, DELTA_V_STEP);
+    return fbBuilder.offset;
+  }
+  int addDeltaTMin(double? DELTA_T_MIN) {
+    fbBuilder.addFloat64(13, DELTA_T_MIN);
+    return fbBuilder.offset;
+  }
+  int addDeltaTMax(double? DELTA_T_MAX) {
+    fbBuilder.addFloat64(14, DELTA_T_MAX);
+    return fbBuilder.offset;
+  }
+  int addDeltaTStep(double? DELTA_T_STEP) {
+    fbBuilder.addFloat64(15, DELTA_T_STEP);
+    return fbBuilder.offset;
+  }
+  int addNumElements(int? NUM_ELEMENTS) {
+    fbBuilder.addUint32(16, NUM_ELEMENTS);
+    return fbBuilder.offset;
+  }
+  int addElementsOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addCorrelatedIdOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addNotesOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
     return fbBuilder.offset;
   }
 
@@ -75,37 +445,109 @@ class MNFBuilder {
 
 class MNFObjectBuilder extends fb.ObjectBuilder {
   final String? _ID;
-  final String? _STATUS;
-  final double? _WEIGHT;
-  final double? _DELTA_V;
-  final double? _DELTA_T;
+  final int? _SAT_NO;
+  final String? _OBJECT_DESIGNATOR;
+  final ManifoldStatus? _STATUS;
+  final String? _EVENT_EPOCH;
+  final String? _SOURCE;
+  final String? _REF_FRAME;
+  final double? _ORIG_SEMI_MAJOR_AXIS;
+  final double? _ORIG_ECCENTRICITY;
+  final double? _ORIG_INCLINATION;
+  final double? _DELTA_V_MIN;
+  final double? _DELTA_V_MAX;
+  final double? _DELTA_V_STEP;
+  final double? _DELTA_T_MIN;
+  final double? _DELTA_T_MAX;
+  final double? _DELTA_T_STEP;
+  final int? _NUM_ELEMENTS;
+  final List<ManifoldElsetObjectBuilder>? _ELEMENTS;
+  final String? _CORRELATED_ID;
+  final String? _NOTES;
 
   MNFObjectBuilder({
     String? ID,
-    String? STATUS,
-    double? WEIGHT,
-    double? DELTA_V,
-    double? DELTA_T,
+    int? SAT_NO,
+    String? OBJECT_DESIGNATOR,
+    ManifoldStatus? STATUS,
+    String? EVENT_EPOCH,
+    String? SOURCE,
+    String? REF_FRAME,
+    double? ORIG_SEMI_MAJOR_AXIS,
+    double? ORIG_ECCENTRICITY,
+    double? ORIG_INCLINATION,
+    double? DELTA_V_MIN,
+    double? DELTA_V_MAX,
+    double? DELTA_V_STEP,
+    double? DELTA_T_MIN,
+    double? DELTA_T_MAX,
+    double? DELTA_T_STEP,
+    int? NUM_ELEMENTS,
+    List<ManifoldElsetObjectBuilder>? ELEMENTS,
+    String? CORRELATED_ID,
+    String? NOTES,
   })
       : _ID = ID,
+        _SAT_NO = SAT_NO,
+        _OBJECT_DESIGNATOR = OBJECT_DESIGNATOR,
         _STATUS = STATUS,
-        _WEIGHT = WEIGHT,
-        _DELTA_V = DELTA_V,
-        _DELTA_T = DELTA_T;
+        _EVENT_EPOCH = EVENT_EPOCH,
+        _SOURCE = SOURCE,
+        _REF_FRAME = REF_FRAME,
+        _ORIG_SEMI_MAJOR_AXIS = ORIG_SEMI_MAJOR_AXIS,
+        _ORIG_ECCENTRICITY = ORIG_ECCENTRICITY,
+        _ORIG_INCLINATION = ORIG_INCLINATION,
+        _DELTA_V_MIN = DELTA_V_MIN,
+        _DELTA_V_MAX = DELTA_V_MAX,
+        _DELTA_V_STEP = DELTA_V_STEP,
+        _DELTA_T_MIN = DELTA_T_MIN,
+        _DELTA_T_MAX = DELTA_T_MAX,
+        _DELTA_T_STEP = DELTA_T_STEP,
+        _NUM_ELEMENTS = NUM_ELEMENTS,
+        _ELEMENTS = ELEMENTS,
+        _CORRELATED_ID = CORRELATED_ID,
+        _NOTES = NOTES;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? IDOffset = _ID == null ? null
         : fbBuilder.writeString(_ID!);
-    final int? STATUSOffset = _STATUS == null ? null
-        : fbBuilder.writeString(_STATUS!);
-    fbBuilder.startTable(5);
+    final int? OBJECT_DESIGNATOROffset = _OBJECT_DESIGNATOR == null ? null
+        : fbBuilder.writeString(_OBJECT_DESIGNATOR!);
+    final int? EVENT_EPOCHOffset = _EVENT_EPOCH == null ? null
+        : fbBuilder.writeString(_EVENT_EPOCH!);
+    final int? SOURCEOffset = _SOURCE == null ? null
+        : fbBuilder.writeString(_SOURCE!);
+    final int? REF_FRAMEOffset = _REF_FRAME == null ? null
+        : fbBuilder.writeString(_REF_FRAME!);
+    final int? ELEMENTSOffset = _ELEMENTS == null ? null
+        : fbBuilder.writeList(_ELEMENTS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? CORRELATED_IDOffset = _CORRELATED_ID == null ? null
+        : fbBuilder.writeString(_CORRELATED_ID!);
+    final int? NOTESOffset = _NOTES == null ? null
+        : fbBuilder.writeString(_NOTES!);
+    fbBuilder.startTable(20);
     fbBuilder.addOffset(0, IDOffset);
-    fbBuilder.addOffset(1, STATUSOffset);
-    fbBuilder.addFloat64(2, _WEIGHT);
-    fbBuilder.addFloat64(3, _DELTA_V);
-    fbBuilder.addFloat64(4, _DELTA_T);
+    fbBuilder.addUint32(1, _SAT_NO);
+    fbBuilder.addOffset(2, OBJECT_DESIGNATOROffset);
+    fbBuilder.addInt8(3, _STATUS?.value);
+    fbBuilder.addOffset(4, EVENT_EPOCHOffset);
+    fbBuilder.addOffset(5, SOURCEOffset);
+    fbBuilder.addOffset(6, REF_FRAMEOffset);
+    fbBuilder.addFloat64(7, _ORIG_SEMI_MAJOR_AXIS);
+    fbBuilder.addFloat64(8, _ORIG_ECCENTRICITY);
+    fbBuilder.addFloat64(9, _ORIG_INCLINATION);
+    fbBuilder.addFloat64(10, _DELTA_V_MIN);
+    fbBuilder.addFloat64(11, _DELTA_V_MAX);
+    fbBuilder.addFloat64(12, _DELTA_V_STEP);
+    fbBuilder.addFloat64(13, _DELTA_T_MIN);
+    fbBuilder.addFloat64(14, _DELTA_T_MAX);
+    fbBuilder.addFloat64(15, _DELTA_T_STEP);
+    fbBuilder.addUint32(16, _NUM_ELEMENTS);
+    fbBuilder.addOffset(17, ELEMENTSOffset);
+    fbBuilder.addOffset(18, CORRELATED_IDOffset);
+    fbBuilder.addOffset(19, NOTESOffset);
     return fbBuilder.endTable();
   }
 

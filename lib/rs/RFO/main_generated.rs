@@ -9,6 +9,204 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_RF_OBS_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_RF_OBS_TYPE: i8 = 5;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_RF_OBS_TYPE: [rfObsType; 6] = [
+  rfObsType::EMISSION,
+  rfObsType::TRANSPONDER,
+  rfObsType::INTERFERENCE,
+  rfObsType::BEACON,
+  rfObsType::TELEMETRY,
+  rfObsType::UNKNOWN,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct rfObsType(pub i8);
+#[allow(non_upper_case_globals)]
+impl rfObsType {
+  pub const EMISSION: Self = Self(0);
+  pub const TRANSPONDER: Self = Self(1);
+  pub const INTERFERENCE: Self = Self(2);
+  pub const BEACON: Self = Self(3);
+  pub const TELEMETRY: Self = Self(4);
+  pub const UNKNOWN: Self = Self(5);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 5;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::EMISSION,
+    Self::TRANSPONDER,
+    Self::INTERFERENCE,
+    Self::BEACON,
+    Self::TELEMETRY,
+    Self::UNKNOWN,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::EMISSION => Some("EMISSION"),
+      Self::TRANSPONDER => Some("TRANSPONDER"),
+      Self::INTERFERENCE => Some("INTERFERENCE"),
+      Self::BEACON => Some("BEACON"),
+      Self::TELEMETRY => Some("TELEMETRY"),
+      Self::UNKNOWN => Some("UNKNOWN"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for rfObsType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for rfObsType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for rfObsType {
+    type Output = rfObsType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for rfObsType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for rfObsType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for rfObsType {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_RF_DETECTION_STATUS: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_RF_DETECTION_STATUS: i8 = 4;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_RF_DETECTION_STATUS: [rfDetectionStatus; 5] = [
+  rfDetectionStatus::DETECTED,
+  rfDetectionStatus::CONFIRMED,
+  rfDetectionStatus::TENTATIVE,
+  rfDetectionStatus::LOST,
+  rfDetectionStatus::INTERFERENCE_ONLY,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct rfDetectionStatus(pub i8);
+#[allow(non_upper_case_globals)]
+impl rfDetectionStatus {
+  pub const DETECTED: Self = Self(0);
+  pub const CONFIRMED: Self = Self(1);
+  pub const TENTATIVE: Self = Self(2);
+  pub const LOST: Self = Self(3);
+  pub const INTERFERENCE_ONLY: Self = Self(4);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 4;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::DETECTED,
+    Self::CONFIRMED,
+    Self::TENTATIVE,
+    Self::LOST,
+    Self::INTERFERENCE_ONLY,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::DETECTED => Some("DETECTED"),
+      Self::CONFIRMED => Some("CONFIRMED"),
+      Self::TENTATIVE => Some("TENTATIVE"),
+      Self::LOST => Some("LOST"),
+      Self::INTERFERENCE_ONLY => Some("INTERFERENCE_ONLY"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for rfDetectionStatus {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for rfDetectionStatus {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for rfDetectionStatus {
+    type Output = rfDetectionStatus;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for rfDetectionStatus {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for rfDetectionStatus {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for rfDetectionStatus {}
 pub enum RFOOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -29,77 +227,77 @@ impl<'a> RFO<'a> {
   pub const VT_ID: flatbuffers::VOffsetT = 4;
   pub const VT_OB_TIME: flatbuffers::VOffsetT = 6;
   pub const VT_ID_SENSOR: flatbuffers::VOffsetT = 8;
-  pub const VT_TYPE: flatbuffers::VOffsetT = 10;
-  pub const VT_SAT_NO: flatbuffers::VOffsetT = 12;
-  pub const VT_TASK_ID: flatbuffers::VOffsetT = 14;
-  pub const VT_TRANSACTION_ID: flatbuffers::VOffsetT = 16;
-  pub const VT_TRACK_ID: flatbuffers::VOffsetT = 18;
-  pub const VT_ORIG_OBJECT_ID: flatbuffers::VOffsetT = 20;
-  pub const VT_ORIG_SENSOR_ID: flatbuffers::VOffsetT = 22;
-  pub const VT_UCT: flatbuffers::VOffsetT = 24;
-  pub const VT_TRANSPONDER: flatbuffers::VOffsetT = 26;
-  pub const VT_AZIMUTH: flatbuffers::VOffsetT = 28;
-  pub const VT_AZIMUTH_UNC: flatbuffers::VOffsetT = 30;
-  pub const VT_AZIMUTH_RATE: flatbuffers::VOffsetT = 32;
-  pub const VT_ELEVATION: flatbuffers::VOffsetT = 34;
-  pub const VT_ELEVATION_UNC: flatbuffers::VOffsetT = 36;
-  pub const VT_ELEVATION_RATE: flatbuffers::VOffsetT = 38;
-  pub const VT_RANGE: flatbuffers::VOffsetT = 40;
-  pub const VT_RANGE_UNC: flatbuffers::VOffsetT = 42;
-  pub const VT_RANGE_RATE: flatbuffers::VOffsetT = 44;
-  pub const VT_RANGE_RATE_UNC: flatbuffers::VOffsetT = 46;
-  pub const VT_TRACK_RANGE: flatbuffers::VOffsetT = 48;
-  pub const VT_SENLAT: flatbuffers::VOffsetT = 50;
-  pub const VT_SENLON: flatbuffers::VOffsetT = 52;
-  pub const VT_SENALT: flatbuffers::VOffsetT = 54;
-  pub const VT_ELNOT: flatbuffers::VOffsetT = 56;
-  pub const VT_FREQUENCY: flatbuffers::VOffsetT = 58;
-  pub const VT_NOMINAL_FREQUENCY: flatbuffers::VOffsetT = 60;
-  pub const VT_START_FREQUENCY: flatbuffers::VOffsetT = 62;
-  pub const VT_END_FREQUENCY: flatbuffers::VOffsetT = 64;
-  pub const VT_RELATIVE_CARRIER_POWER: flatbuffers::VOffsetT = 66;
-  pub const VT_SPECTRUM_ANALYZER_POWER: flatbuffers::VOffsetT = 68;
-  pub const VT_RELATIVE_NOISE_FLOOR: flatbuffers::VOffsetT = 70;
-  pub const VT_REFERENCE_LEVEL: flatbuffers::VOffsetT = 72;
-  pub const VT_PGRI: flatbuffers::VOffsetT = 74;
-  pub const VT_CONFIDENCE: flatbuffers::VOffsetT = 76;
-  pub const VT_INCOMING: flatbuffers::VOffsetT = 78;
-  pub const VT_SWITCH_POINT: flatbuffers::VOffsetT = 80;
-  pub const VT_BAUD_RATE: flatbuffers::VOffsetT = 82;
-  pub const VT_SNR: flatbuffers::VOffsetT = 84;
-  pub const VT_NOMINAL_SNR: flatbuffers::VOffsetT = 86;
-  pub const VT_POLARITY: flatbuffers::VOffsetT = 88;
-  pub const VT_POLARITY_TYPE: flatbuffers::VOffsetT = 90;
-  pub const VT_CHANNEL: flatbuffers::VOffsetT = 92;
-  pub const VT_POWER_OVER_NOISE: flatbuffers::VOffsetT = 94;
-  pub const VT_NOMINAL_POWER_OVER_NOISE: flatbuffers::VOffsetT = 96;
-  pub const VT_BANDWIDTH: flatbuffers::VOffsetT = 98;
-  pub const VT_NOMINAL_BANDWIDTH: flatbuffers::VOffsetT = 100;
-  pub const VT_RESOLUTION_BANDWIDTH: flatbuffers::VOffsetT = 102;
-  pub const VT_VIDEO_BANDWIDTH: flatbuffers::VOffsetT = 104;
-  pub const VT_EIRP: flatbuffers::VOffsetT = 106;
-  pub const VT_NOMINAL_EIRP: flatbuffers::VOffsetT = 108;
-  pub const VT_MIN_PSD: flatbuffers::VOffsetT = 110;
-  pub const VT_MAX_PSD: flatbuffers::VOffsetT = 112;
-  pub const VT_FREQUENCY_SHIFT: flatbuffers::VOffsetT = 114;
-  pub const VT_PEAK: flatbuffers::VOffsetT = 116;
-  pub const VT_ANTENNA_NAME: flatbuffers::VOffsetT = 118;
-  pub const VT_DETECTION_STATUS: flatbuffers::VOffsetT = 120;
-  pub const VT_COLLECTION_MODE: flatbuffers::VOffsetT = 122;
-  pub const VT_RAW_FILE_URI: flatbuffers::VOffsetT = 124;
-  pub const VT_TAGS: flatbuffers::VOffsetT = 126;
-  pub const VT_NOISE_PWR_DENSITY: flatbuffers::VOffsetT = 128;
-  pub const VT_CARRIER_STANDARD: flatbuffers::VOffsetT = 130;
-  pub const VT_MODULATION: flatbuffers::VOffsetT = 132;
-  pub const VT_INNER_CODING_RATE: flatbuffers::VOffsetT = 134;
-  pub const VT_OUTER_CODING_RATE: flatbuffers::VOffsetT = 136;
-  pub const VT_TRANSMIT_FILTER_TYPE: flatbuffers::VOffsetT = 138;
-  pub const VT_TRANSMIT_FILTER_ROLL_OFF: flatbuffers::VOffsetT = 140;
-  pub const VT_SYMBOL_TO_NOISE_RATIO: flatbuffers::VOffsetT = 142;
-  pub const VT_BIT_ERROR_RATE: flatbuffers::VOffsetT = 144;
-  pub const VT_ON_ORBIT: flatbuffers::VOffsetT = 146;
-  pub const VT_DESCRIPTOR: flatbuffers::VOffsetT = 148;
-  pub const VT_URL: flatbuffers::VOffsetT = 150;
+  pub const VT_ORIG_SENSOR_ID: flatbuffers::VOffsetT = 10;
+  pub const VT_OBS_TYPE: flatbuffers::VOffsetT = 12;
+  pub const VT_SAT_NO: flatbuffers::VOffsetT = 14;
+  pub const VT_ORIG_OBJECT_ID: flatbuffers::VOffsetT = 16;
+  pub const VT_ON_ORBIT: flatbuffers::VOffsetT = 18;
+  pub const VT_UCT: flatbuffers::VOffsetT = 20;
+  pub const VT_TASK_ID: flatbuffers::VOffsetT = 22;
+  pub const VT_TRANSACTION_ID: flatbuffers::VOffsetT = 24;
+  pub const VT_TRACK_ID: flatbuffers::VOffsetT = 26;
+  pub const VT_TRANSPONDER: flatbuffers::VOffsetT = 28;
+  pub const VT_DETECTION_STATUS: flatbuffers::VOffsetT = 30;
+  pub const VT_AZIMUTH: flatbuffers::VOffsetT = 32;
+  pub const VT_AZIMUTH_UNC: flatbuffers::VOffsetT = 34;
+  pub const VT_AZIMUTH_RATE: flatbuffers::VOffsetT = 36;
+  pub const VT_ELEVATION: flatbuffers::VOffsetT = 38;
+  pub const VT_ELEVATION_UNC: flatbuffers::VOffsetT = 40;
+  pub const VT_ELEVATION_RATE: flatbuffers::VOffsetT = 42;
+  pub const VT_RANGE: flatbuffers::VOffsetT = 44;
+  pub const VT_RANGE_UNC: flatbuffers::VOffsetT = 46;
+  pub const VT_RANGE_RATE: flatbuffers::VOffsetT = 48;
+  pub const VT_RANGE_RATE_UNC: flatbuffers::VOffsetT = 50;
+  pub const VT_TRACK_RANGE: flatbuffers::VOffsetT = 52;
+  pub const VT_SENLAT: flatbuffers::VOffsetT = 54;
+  pub const VT_SENLON: flatbuffers::VOffsetT = 56;
+  pub const VT_SENALT: flatbuffers::VOffsetT = 58;
+  pub const VT_ELNOT: flatbuffers::VOffsetT = 60;
+  pub const VT_ANTENNA_NAME: flatbuffers::VOffsetT = 62;
+  pub const VT_COLLECTION_MODE: flatbuffers::VOffsetT = 64;
+  pub const VT_FREQUENCY: flatbuffers::VOffsetT = 66;
+  pub const VT_NOMINAL_FREQUENCY: flatbuffers::VOffsetT = 68;
+  pub const VT_START_FREQUENCY: flatbuffers::VOffsetT = 70;
+  pub const VT_END_FREQUENCY: flatbuffers::VOffsetT = 72;
+  pub const VT_FREQUENCY_SHIFT: flatbuffers::VOffsetT = 74;
+  pub const VT_BANDWIDTH: flatbuffers::VOffsetT = 76;
+  pub const VT_NOMINAL_BANDWIDTH: flatbuffers::VOffsetT = 78;
+  pub const VT_RESOLUTION_BANDWIDTH: flatbuffers::VOffsetT = 80;
+  pub const VT_VIDEO_BANDWIDTH: flatbuffers::VOffsetT = 82;
+  pub const VT_RELATIVE_CARRIER_POWER: flatbuffers::VOffsetT = 84;
+  pub const VT_SPECTRUM_ANALYZER_POWER: flatbuffers::VOffsetT = 86;
+  pub const VT_RELATIVE_NOISE_FLOOR: flatbuffers::VOffsetT = 88;
+  pub const VT_REFERENCE_LEVEL: flatbuffers::VOffsetT = 90;
+  pub const VT_NOISE_PWR_DENSITY: flatbuffers::VOffsetT = 92;
+  pub const VT_PGRI: flatbuffers::VOffsetT = 94;
+  pub const VT_EIRP: flatbuffers::VOffsetT = 96;
+  pub const VT_NOMINAL_EIRP: flatbuffers::VOffsetT = 98;
+  pub const VT_MIN_PSD: flatbuffers::VOffsetT = 100;
+  pub const VT_MAX_PSD: flatbuffers::VOffsetT = 102;
+  pub const VT_SNR: flatbuffers::VOffsetT = 104;
+  pub const VT_NOMINAL_SNR: flatbuffers::VOffsetT = 106;
+  pub const VT_POWER_OVER_NOISE: flatbuffers::VOffsetT = 108;
+  pub const VT_NOMINAL_POWER_OVER_NOISE: flatbuffers::VOffsetT = 110;
+  pub const VT_POLARITY: flatbuffers::VOffsetT = 112;
+  pub const VT_POLARITY_TYPE: flatbuffers::VOffsetT = 114;
+  pub const VT_CHANNEL: flatbuffers::VOffsetT = 116;
+  pub const VT_BAUD_RATE: flatbuffers::VOffsetT = 118;
+  pub const VT_SYMBOL_TO_NOISE_RATIO: flatbuffers::VOffsetT = 120;
+  pub const VT_BIT_ERROR_RATE: flatbuffers::VOffsetT = 122;
+  pub const VT_PEAK: flatbuffers::VOffsetT = 124;
+  pub const VT_INCOMING: flatbuffers::VOffsetT = 126;
+  pub const VT_SWITCH_POINT: flatbuffers::VOffsetT = 128;
+  pub const VT_CONFIDENCE: flatbuffers::VOffsetT = 130;
+  pub const VT_CARRIER_STANDARD: flatbuffers::VOffsetT = 132;
+  pub const VT_MODULATION: flatbuffers::VOffsetT = 134;
+  pub const VT_INNER_CODING_RATE: flatbuffers::VOffsetT = 136;
+  pub const VT_OUTER_CODING_RATE: flatbuffers::VOffsetT = 138;
+  pub const VT_TRANSMIT_FILTER_TYPE: flatbuffers::VOffsetT = 140;
+  pub const VT_TRANSMIT_FILTER_ROLL_OFF: flatbuffers::VOffsetT = 142;
+  pub const VT_RAW_FILE_URI: flatbuffers::VOffsetT = 144;
+  pub const VT_DESCRIPTOR: flatbuffers::VOffsetT = 146;
+  pub const VT_URL: flatbuffers::VOffsetT = 148;
+  pub const VT_TAGS: flatbuffers::VOffsetT = 150;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -111,31 +309,31 @@ impl<'a> RFO<'a> {
     args: &'args RFOArgs<'args>
   ) -> flatbuffers::WIPOffset<RFO<'bldr>> {
     let mut builder = RFOBuilder::new(_fbb);
+    builder.add_TRANSMIT_FILTER_ROLL_OFF(args.TRANSMIT_FILTER_ROLL_OFF);
+    builder.add_CONFIDENCE(args.CONFIDENCE);
     builder.add_BIT_ERROR_RATE(args.BIT_ERROR_RATE);
     builder.add_SYMBOL_TO_NOISE_RATIO(args.SYMBOL_TO_NOISE_RATIO);
-    builder.add_TRANSMIT_FILTER_ROLL_OFF(args.TRANSMIT_FILTER_ROLL_OFF);
-    builder.add_NOISE_PWR_DENSITY(args.NOISE_PWR_DENSITY);
-    builder.add_FREQUENCY_SHIFT(args.FREQUENCY_SHIFT);
+    builder.add_BAUD_RATE(args.BAUD_RATE);
+    builder.add_POLARITY(args.POLARITY);
+    builder.add_NOMINAL_POWER_OVER_NOISE(args.NOMINAL_POWER_OVER_NOISE);
+    builder.add_POWER_OVER_NOISE(args.POWER_OVER_NOISE);
+    builder.add_NOMINAL_SNR(args.NOMINAL_SNR);
+    builder.add_SNR(args.SNR);
     builder.add_MAX_PSD(args.MAX_PSD);
     builder.add_MIN_PSD(args.MIN_PSD);
     builder.add_NOMINAL_EIRP(args.NOMINAL_EIRP);
     builder.add_EIRP(args.EIRP);
-    builder.add_VIDEO_BANDWIDTH(args.VIDEO_BANDWIDTH);
-    builder.add_RESOLUTION_BANDWIDTH(args.RESOLUTION_BANDWIDTH);
-    builder.add_NOMINAL_BANDWIDTH(args.NOMINAL_BANDWIDTH);
-    builder.add_BANDWIDTH(args.BANDWIDTH);
-    builder.add_NOMINAL_POWER_OVER_NOISE(args.NOMINAL_POWER_OVER_NOISE);
-    builder.add_POWER_OVER_NOISE(args.POWER_OVER_NOISE);
-    builder.add_POLARITY(args.POLARITY);
-    builder.add_NOMINAL_SNR(args.NOMINAL_SNR);
-    builder.add_SNR(args.SNR);
-    builder.add_BAUD_RATE(args.BAUD_RATE);
-    builder.add_CONFIDENCE(args.CONFIDENCE);
     builder.add_PGRI(args.PGRI);
+    builder.add_NOISE_PWR_DENSITY(args.NOISE_PWR_DENSITY);
     builder.add_REFERENCE_LEVEL(args.REFERENCE_LEVEL);
     builder.add_RELATIVE_NOISE_FLOOR(args.RELATIVE_NOISE_FLOOR);
     builder.add_SPECTRUM_ANALYZER_POWER(args.SPECTRUM_ANALYZER_POWER);
     builder.add_RELATIVE_CARRIER_POWER(args.RELATIVE_CARRIER_POWER);
+    builder.add_VIDEO_BANDWIDTH(args.VIDEO_BANDWIDTH);
+    builder.add_RESOLUTION_BANDWIDTH(args.RESOLUTION_BANDWIDTH);
+    builder.add_NOMINAL_BANDWIDTH(args.NOMINAL_BANDWIDTH);
+    builder.add_BANDWIDTH(args.BANDWIDTH);
+    builder.add_FREQUENCY_SHIFT(args.FREQUENCY_SHIFT);
     builder.add_END_FREQUENCY(args.END_FREQUENCY);
     builder.add_START_FREQUENCY(args.START_FREQUENCY);
     builder.add_NOMINAL_FREQUENCY(args.NOMINAL_FREQUENCY);
@@ -154,37 +352,37 @@ impl<'a> RFO<'a> {
     builder.add_AZIMUTH_RATE(args.AZIMUTH_RATE);
     builder.add_AZIMUTH_UNC(args.AZIMUTH_UNC);
     builder.add_AZIMUTH(args.AZIMUTH);
+    if let Some(x) = args.TAGS { builder.add_TAGS(x); }
     if let Some(x) = args.URL { builder.add_URL(x); }
     if let Some(x) = args.DESCRIPTOR { builder.add_DESCRIPTOR(x); }
-    if let Some(x) = args.ON_ORBIT { builder.add_ON_ORBIT(x); }
+    if let Some(x) = args.RAW_FILE_URI { builder.add_RAW_FILE_URI(x); }
     if let Some(x) = args.TRANSMIT_FILTER_TYPE { builder.add_TRANSMIT_FILTER_TYPE(x); }
-    builder.add_OUTER_CODING_RATE(args.OUTER_CODING_RATE);
-    builder.add_INNER_CODING_RATE(args.INNER_CODING_RATE);
     if let Some(x) = args.MODULATION { builder.add_MODULATION(x); }
     if let Some(x) = args.CARRIER_STANDARD { builder.add_CARRIER_STANDARD(x); }
-    if let Some(x) = args.TAGS { builder.add_TAGS(x); }
-    if let Some(x) = args.RAW_FILE_URI { builder.add_RAW_FILE_URI(x); }
-    if let Some(x) = args.COLLECTION_MODE { builder.add_COLLECTION_MODE(x); }
-    if let Some(x) = args.DETECTION_STATUS { builder.add_DETECTION_STATUS(x); }
-    if let Some(x) = args.ANTENNA_NAME { builder.add_ANTENNA_NAME(x); }
-    builder.add_CHANNEL(args.CHANNEL);
     if let Some(x) = args.POLARITY_TYPE { builder.add_POLARITY_TYPE(x); }
-    builder.add_SWITCH_POINT(args.SWITCH_POINT);
+    if let Some(x) = args.COLLECTION_MODE { builder.add_COLLECTION_MODE(x); }
+    if let Some(x) = args.ANTENNA_NAME { builder.add_ANTENNA_NAME(x); }
     if let Some(x) = args.ELNOT { builder.add_ELNOT(x); }
     if let Some(x) = args.TRANSPONDER { builder.add_TRANSPONDER(x); }
-    if let Some(x) = args.ORIG_SENSOR_ID { builder.add_ORIG_SENSOR_ID(x); }
-    if let Some(x) = args.ORIG_OBJECT_ID { builder.add_ORIG_OBJECT_ID(x); }
     if let Some(x) = args.TRACK_ID { builder.add_TRACK_ID(x); }
     if let Some(x) = args.TRANSACTION_ID { builder.add_TRANSACTION_ID(x); }
     if let Some(x) = args.TASK_ID { builder.add_TASK_ID(x); }
+    if let Some(x) = args.ON_ORBIT { builder.add_ON_ORBIT(x); }
+    if let Some(x) = args.ORIG_OBJECT_ID { builder.add_ORIG_OBJECT_ID(x); }
     builder.add_SAT_NO(args.SAT_NO);
-    if let Some(x) = args.TYPE { builder.add_TYPE(x); }
+    if let Some(x) = args.ORIG_SENSOR_ID { builder.add_ORIG_SENSOR_ID(x); }
     if let Some(x) = args.ID_SENSOR { builder.add_ID_SENSOR(x); }
     if let Some(x) = args.OB_TIME { builder.add_OB_TIME(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
-    builder.add_PEAK(args.PEAK);
+    builder.add_SWITCH_POINT(args.SWITCH_POINT);
+    builder.add_CHANNEL(args.CHANNEL);
+    builder.add_OUTER_CODING_RATE(args.OUTER_CODING_RATE);
+    builder.add_INNER_CODING_RATE(args.INNER_CODING_RATE);
     builder.add_INCOMING(args.INCOMING);
+    builder.add_PEAK(args.PEAK);
+    builder.add_DETECTION_STATUS(args.DETECTION_STATUS);
     builder.add_UCT(args.UCT);
+    builder.add_OBS_TYPE(args.OBS_TYPE);
     builder.finish()
   }
 
@@ -198,10 +396,18 @@ impl<'a> RFO<'a> {
     let ID_SENSOR = self.ID_SENSOR().map(|x| {
       x.to_string()
     });
-    let TYPE = self.TYPE().map(|x| {
+    let ORIG_SENSOR_ID = self.ORIG_SENSOR_ID().map(|x| {
       x.to_string()
     });
+    let OBS_TYPE = self.OBS_TYPE();
     let SAT_NO = self.SAT_NO();
+    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID().map(|x| {
+      x.to_string()
+    });
+    let ON_ORBIT = self.ON_ORBIT().map(|x| {
+      x.to_string()
+    });
+    let UCT = self.UCT();
     let TASK_ID = self.TASK_ID().map(|x| {
       x.to_string()
     });
@@ -211,16 +417,10 @@ impl<'a> RFO<'a> {
     let TRACK_ID = self.TRACK_ID().map(|x| {
       x.to_string()
     });
-    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID().map(|x| {
-      x.to_string()
-    });
-    let ORIG_SENSOR_ID = self.ORIG_SENSOR_ID().map(|x| {
-      x.to_string()
-    });
-    let UCT = self.UCT();
     let TRANSPONDER = self.TRANSPONDER().map(|x| {
       x.to_string()
     });
+    let DETECTION_STATUS = self.DETECTION_STATUS();
     let AZIMUTH = self.AZIMUTH();
     let AZIMUTH_UNC = self.AZIMUTH_UNC();
     let AZIMUTH_RATE = self.AZIMUTH_RATE();
@@ -238,54 +438,47 @@ impl<'a> RFO<'a> {
     let ELNOT = self.ELNOT().map(|x| {
       x.to_string()
     });
-    let FREQUENCY = self.FREQUENCY();
-    let NOMINAL_FREQUENCY = self.NOMINAL_FREQUENCY();
-    let START_FREQUENCY = self.START_FREQUENCY();
-    let END_FREQUENCY = self.END_FREQUENCY();
-    let RELATIVE_CARRIER_POWER = self.RELATIVE_CARRIER_POWER();
-    let SPECTRUM_ANALYZER_POWER = self.SPECTRUM_ANALYZER_POWER();
-    let RELATIVE_NOISE_FLOOR = self.RELATIVE_NOISE_FLOOR();
-    let REFERENCE_LEVEL = self.REFERENCE_LEVEL();
-    let PGRI = self.PGRI();
-    let CONFIDENCE = self.CONFIDENCE();
-    let INCOMING = self.INCOMING();
-    let SWITCH_POINT = self.SWITCH_POINT();
-    let BAUD_RATE = self.BAUD_RATE();
-    let SNR = self.SNR();
-    let NOMINAL_SNR = self.NOMINAL_SNR();
-    let POLARITY = self.POLARITY();
-    let POLARITY_TYPE = self.POLARITY_TYPE().map(|x| {
-      x.to_string()
-    });
-    let CHANNEL = self.CHANNEL();
-    let POWER_OVER_NOISE = self.POWER_OVER_NOISE();
-    let NOMINAL_POWER_OVER_NOISE = self.NOMINAL_POWER_OVER_NOISE();
-    let BANDWIDTH = self.BANDWIDTH();
-    let NOMINAL_BANDWIDTH = self.NOMINAL_BANDWIDTH();
-    let RESOLUTION_BANDWIDTH = self.RESOLUTION_BANDWIDTH();
-    let VIDEO_BANDWIDTH = self.VIDEO_BANDWIDTH();
-    let EIRP = self.EIRP();
-    let NOMINAL_EIRP = self.NOMINAL_EIRP();
-    let MIN_PSD = self.MIN_PSD();
-    let MAX_PSD = self.MAX_PSD();
-    let FREQUENCY_SHIFT = self.FREQUENCY_SHIFT();
-    let PEAK = self.PEAK();
     let ANTENNA_NAME = self.ANTENNA_NAME().map(|x| {
-      x.to_string()
-    });
-    let DETECTION_STATUS = self.DETECTION_STATUS().map(|x| {
       x.to_string()
     });
     let COLLECTION_MODE = self.COLLECTION_MODE().map(|x| {
       x.to_string()
     });
-    let RAW_FILE_URI = self.RAW_FILE_URI().map(|x| {
+    let FREQUENCY = self.FREQUENCY();
+    let NOMINAL_FREQUENCY = self.NOMINAL_FREQUENCY();
+    let START_FREQUENCY = self.START_FREQUENCY();
+    let END_FREQUENCY = self.END_FREQUENCY();
+    let FREQUENCY_SHIFT = self.FREQUENCY_SHIFT();
+    let BANDWIDTH = self.BANDWIDTH();
+    let NOMINAL_BANDWIDTH = self.NOMINAL_BANDWIDTH();
+    let RESOLUTION_BANDWIDTH = self.RESOLUTION_BANDWIDTH();
+    let VIDEO_BANDWIDTH = self.VIDEO_BANDWIDTH();
+    let RELATIVE_CARRIER_POWER = self.RELATIVE_CARRIER_POWER();
+    let SPECTRUM_ANALYZER_POWER = self.SPECTRUM_ANALYZER_POWER();
+    let RELATIVE_NOISE_FLOOR = self.RELATIVE_NOISE_FLOOR();
+    let REFERENCE_LEVEL = self.REFERENCE_LEVEL();
+    let NOISE_PWR_DENSITY = self.NOISE_PWR_DENSITY();
+    let PGRI = self.PGRI();
+    let EIRP = self.EIRP();
+    let NOMINAL_EIRP = self.NOMINAL_EIRP();
+    let MIN_PSD = self.MIN_PSD();
+    let MAX_PSD = self.MAX_PSD();
+    let SNR = self.SNR();
+    let NOMINAL_SNR = self.NOMINAL_SNR();
+    let POWER_OVER_NOISE = self.POWER_OVER_NOISE();
+    let NOMINAL_POWER_OVER_NOISE = self.NOMINAL_POWER_OVER_NOISE();
+    let POLARITY = self.POLARITY();
+    let POLARITY_TYPE = self.POLARITY_TYPE().map(|x| {
       x.to_string()
     });
-    let TAGS = self.TAGS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
-    let NOISE_PWR_DENSITY = self.NOISE_PWR_DENSITY();
+    let CHANNEL = self.CHANNEL();
+    let BAUD_RATE = self.BAUD_RATE();
+    let SYMBOL_TO_NOISE_RATIO = self.SYMBOL_TO_NOISE_RATIO();
+    let BIT_ERROR_RATE = self.BIT_ERROR_RATE();
+    let PEAK = self.PEAK();
+    let INCOMING = self.INCOMING();
+    let SWITCH_POINT = self.SWITCH_POINT();
+    let CONFIDENCE = self.CONFIDENCE();
     let CARRIER_STANDARD = self.CARRIER_STANDARD().map(|x| {
       x.to_string()
     });
@@ -298,9 +491,7 @@ impl<'a> RFO<'a> {
       x.to_string()
     });
     let TRANSMIT_FILTER_ROLL_OFF = self.TRANSMIT_FILTER_ROLL_OFF();
-    let SYMBOL_TO_NOISE_RATIO = self.SYMBOL_TO_NOISE_RATIO();
-    let BIT_ERROR_RATE = self.BIT_ERROR_RATE();
-    let ON_ORBIT = self.ON_ORBIT().map(|x| {
+    let RAW_FILE_URI = self.RAW_FILE_URI().map(|x| {
       x.to_string()
     });
     let DESCRIPTOR = self.DESCRIPTOR().map(|x| {
@@ -309,19 +500,24 @@ impl<'a> RFO<'a> {
     let URL = self.URL().map(|x| {
       x.to_string()
     });
+    let TAGS = self.TAGS().map(|x| {
+      x.iter().map(|s| s.to_string()).collect()
+    });
     RFOT {
       ID,
       OB_TIME,
       ID_SENSOR,
-      TYPE,
+      ORIG_SENSOR_ID,
+      OBS_TYPE,
       SAT_NO,
+      ORIG_OBJECT_ID,
+      ON_ORBIT,
+      UCT,
       TASK_ID,
       TRANSACTION_ID,
       TRACK_ID,
-      ORIG_OBJECT_ID,
-      ORIG_SENSOR_ID,
-      UCT,
       TRANSPONDER,
+      DETECTION_STATUS,
       AZIMUTH,
       AZIMUTH_UNC,
       AZIMUTH_RATE,
@@ -337,56 +533,55 @@ impl<'a> RFO<'a> {
       SENLON,
       SENALT,
       ELNOT,
+      ANTENNA_NAME,
+      COLLECTION_MODE,
       FREQUENCY,
       NOMINAL_FREQUENCY,
       START_FREQUENCY,
       END_FREQUENCY,
-      RELATIVE_CARRIER_POWER,
-      SPECTRUM_ANALYZER_POWER,
-      RELATIVE_NOISE_FLOOR,
-      REFERENCE_LEVEL,
-      PGRI,
-      CONFIDENCE,
-      INCOMING,
-      SWITCH_POINT,
-      BAUD_RATE,
-      SNR,
-      NOMINAL_SNR,
-      POLARITY,
-      POLARITY_TYPE,
-      CHANNEL,
-      POWER_OVER_NOISE,
-      NOMINAL_POWER_OVER_NOISE,
+      FREQUENCY_SHIFT,
       BANDWIDTH,
       NOMINAL_BANDWIDTH,
       RESOLUTION_BANDWIDTH,
       VIDEO_BANDWIDTH,
+      RELATIVE_CARRIER_POWER,
+      SPECTRUM_ANALYZER_POWER,
+      RELATIVE_NOISE_FLOOR,
+      REFERENCE_LEVEL,
+      NOISE_PWR_DENSITY,
+      PGRI,
       EIRP,
       NOMINAL_EIRP,
       MIN_PSD,
       MAX_PSD,
-      FREQUENCY_SHIFT,
+      SNR,
+      NOMINAL_SNR,
+      POWER_OVER_NOISE,
+      NOMINAL_POWER_OVER_NOISE,
+      POLARITY,
+      POLARITY_TYPE,
+      CHANNEL,
+      BAUD_RATE,
+      SYMBOL_TO_NOISE_RATIO,
+      BIT_ERROR_RATE,
       PEAK,
-      ANTENNA_NAME,
-      DETECTION_STATUS,
-      COLLECTION_MODE,
-      RAW_FILE_URI,
-      TAGS,
-      NOISE_PWR_DENSITY,
+      INCOMING,
+      SWITCH_POINT,
+      CONFIDENCE,
       CARRIER_STANDARD,
       MODULATION,
       INNER_CODING_RATE,
       OUTER_CODING_RATE,
       TRANSMIT_FILTER_TYPE,
       TRANSMIT_FILTER_ROLL_OFF,
-      SYMBOL_TO_NOISE_RATIO,
-      BIT_ERROR_RATE,
-      ON_ORBIT,
+      RAW_FILE_URI,
       DESCRIPTOR,
       URL,
+      TAGS,
     }
   }
 
+  /// Unique identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -394,6 +589,7 @@ impl<'a> RFO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_ID, None)}
   }
+  /// Observation time (ISO 8601)
   #[inline]
   pub fn OB_TIME(&self) -> Option<&'a str> {
     // Safety:
@@ -401,6 +597,7 @@ impl<'a> RFO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_OB_TIME, None)}
   }
+  /// Sensor identifier
   #[inline]
   pub fn ID_SENSOR(&self) -> Option<&'a str> {
     // Safety:
@@ -408,48 +605,7 @@ impl<'a> RFO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_ID_SENSOR, None)}
   }
-  #[inline]
-  pub fn TYPE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_TYPE, None)}
-  }
-  #[inline]
-  pub fn SAT_NO(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(RFO::VT_SAT_NO, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn TASK_ID(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_TASK_ID, None)}
-  }
-  #[inline]
-  pub fn TRANSACTION_ID(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_TRANSACTION_ID, None)}
-  }
-  #[inline]
-  pub fn TRACK_ID(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_TRACK_ID, None)}
-  }
-  #[inline]
-  pub fn ORIG_OBJECT_ID(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_ORIG_OBJECT_ID, None)}
-  }
+  /// Original sensor identifier
   #[inline]
   pub fn ORIG_SENSOR_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -457,433 +613,31 @@ impl<'a> RFO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_ORIG_SENSOR_ID, None)}
   }
+  /// Observation type
   #[inline]
-  pub fn UCT(&self) -> bool {
+  pub fn OBS_TYPE(&self) -> rfObsType {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(RFO::VT_UCT, Some(false)).unwrap()}
+    unsafe { self._tab.get::<rfObsType>(RFO::VT_OBS_TYPE, Some(rfObsType::EMISSION)).unwrap()}
   }
+  /// Satellite catalog number
   #[inline]
-  pub fn TRANSPONDER(&self) -> Option<&'a str> {
+  pub fn SAT_NO(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_TRANSPONDER, None)}
+    unsafe { self._tab.get::<u32>(RFO::VT_SAT_NO, Some(0)).unwrap()}
   }
+  /// International designator
   #[inline]
-  pub fn AZIMUTH(&self) -> f64 {
+  pub fn ORIG_OBJECT_ID(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_AZIMUTH, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_ORIG_OBJECT_ID, None)}
   }
-  #[inline]
-  pub fn AZIMUTH_UNC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_AZIMUTH_UNC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn AZIMUTH_RATE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_AZIMUTH_RATE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn ELEVATION(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_ELEVATION, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn ELEVATION_UNC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_ELEVATION_UNC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn ELEVATION_RATE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_ELEVATION_RATE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn RANGE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_RANGE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn RANGE_UNC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_RANGE_UNC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn RANGE_RATE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_RANGE_RATE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn RANGE_RATE_UNC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_RANGE_RATE_UNC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn TRACK_RANGE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_TRACK_RANGE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SENLAT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_SENLAT, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SENLON(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_SENLON, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SENALT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_SENALT, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn ELNOT(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_ELNOT, None)}
-  }
-  #[inline]
-  pub fn FREQUENCY(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_FREQUENCY, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn NOMINAL_FREQUENCY(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_NOMINAL_FREQUENCY, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn START_FREQUENCY(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_START_FREQUENCY, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn END_FREQUENCY(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_END_FREQUENCY, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn RELATIVE_CARRIER_POWER(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_RELATIVE_CARRIER_POWER, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SPECTRUM_ANALYZER_POWER(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_SPECTRUM_ANALYZER_POWER, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn RELATIVE_NOISE_FLOOR(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_RELATIVE_NOISE_FLOOR, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn REFERENCE_LEVEL(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_REFERENCE_LEVEL, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PGRI(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_PGRI, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn CONFIDENCE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_CONFIDENCE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn INCOMING(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(RFO::VT_INCOMING, Some(false)).unwrap()}
-  }
-  #[inline]
-  pub fn SWITCH_POINT(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(RFO::VT_SWITCH_POINT, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn BAUD_RATE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_BAUD_RATE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SNR(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_SNR, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn NOMINAL_SNR(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_NOMINAL_SNR, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POLARITY(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_POLARITY, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POLARITY_TYPE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_POLARITY_TYPE, None)}
-  }
-  #[inline]
-  pub fn CHANNEL(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(RFO::VT_CHANNEL, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn POWER_OVER_NOISE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_POWER_OVER_NOISE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn NOMINAL_POWER_OVER_NOISE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_NOMINAL_POWER_OVER_NOISE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn BANDWIDTH(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_BANDWIDTH, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn NOMINAL_BANDWIDTH(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_NOMINAL_BANDWIDTH, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn RESOLUTION_BANDWIDTH(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_RESOLUTION_BANDWIDTH, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn VIDEO_BANDWIDTH(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_VIDEO_BANDWIDTH, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn EIRP(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_EIRP, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn NOMINAL_EIRP(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_NOMINAL_EIRP, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn MIN_PSD(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_MIN_PSD, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn MAX_PSD(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_MAX_PSD, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn FREQUENCY_SHIFT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_FREQUENCY_SHIFT, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PEAK(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(RFO::VT_PEAK, Some(false)).unwrap()}
-  }
-  #[inline]
-  pub fn ANTENNA_NAME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_ANTENNA_NAME, None)}
-  }
-  #[inline]
-  pub fn DETECTION_STATUS(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_DETECTION_STATUS, None)}
-  }
-  #[inline]
-  pub fn COLLECTION_MODE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_COLLECTION_MODE, None)}
-  }
-  #[inline]
-  pub fn RAW_FILE_URI(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_RAW_FILE_URI, None)}
-  }
-  #[inline]
-  pub fn TAGS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(RFO::VT_TAGS, None)}
-  }
-  #[inline]
-  pub fn NOISE_PWR_DENSITY(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_NOISE_PWR_DENSITY, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn CARRIER_STANDARD(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_CARRIER_STANDARD, None)}
-  }
-  #[inline]
-  pub fn MODULATION(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_MODULATION, None)}
-  }
-  #[inline]
-  pub fn INNER_CODING_RATE(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(RFO::VT_INNER_CODING_RATE, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn OUTER_CODING_RATE(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(RFO::VT_OUTER_CODING_RATE, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn TRANSMIT_FILTER_TYPE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_TRANSMIT_FILTER_TYPE, None)}
-  }
-  #[inline]
-  pub fn TRANSMIT_FILTER_ROLL_OFF(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_TRANSMIT_FILTER_ROLL_OFF, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SYMBOL_TO_NOISE_RATIO(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_SYMBOL_TO_NOISE_RATIO, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn BIT_ERROR_RATE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFO::VT_BIT_ERROR_RATE, Some(0.0)).unwrap()}
-  }
+  /// On-orbit reference
   #[inline]
   pub fn ON_ORBIT(&self) -> Option<&'a str> {
     // Safety:
@@ -891,6 +645,511 @@ impl<'a> RFO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_ON_ORBIT, None)}
   }
+  /// True if uncorrelated target
+  #[inline]
+  pub fn UCT(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(RFO::VT_UCT, Some(false)).unwrap()}
+  }
+  /// Task identifier
+  #[inline]
+  pub fn TASK_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_TASK_ID, None)}
+  }
+  /// Transaction identifier
+  #[inline]
+  pub fn TRANSACTION_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_TRANSACTION_ID, None)}
+  }
+  /// Track identifier
+  #[inline]
+  pub fn TRACK_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_TRACK_ID, None)}
+  }
+  /// Transponder identifier
+  #[inline]
+  pub fn TRANSPONDER(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_TRANSPONDER, None)}
+  }
+  /// Detection status
+  #[inline]
+  pub fn DETECTION_STATUS(&self) -> rfDetectionStatus {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<rfDetectionStatus>(RFO::VT_DETECTION_STATUS, Some(rfDetectionStatus::DETECTED)).unwrap()}
+  }
+  /// Azimuth angle (degrees)
+  #[inline]
+  pub fn AZIMUTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_AZIMUTH, Some(0.0)).unwrap()}
+  }
+  /// Azimuth uncertainty (degrees, 1-sigma)
+  #[inline]
+  pub fn AZIMUTH_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_AZIMUTH_UNC, Some(0.0)).unwrap()}
+  }
+  /// Azimuth rate (degrees/s)
+  #[inline]
+  pub fn AZIMUTH_RATE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_AZIMUTH_RATE, Some(0.0)).unwrap()}
+  }
+  /// Elevation angle (degrees)
+  #[inline]
+  pub fn ELEVATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_ELEVATION, Some(0.0)).unwrap()}
+  }
+  /// Elevation uncertainty (degrees, 1-sigma)
+  #[inline]
+  pub fn ELEVATION_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_ELEVATION_UNC, Some(0.0)).unwrap()}
+  }
+  /// Elevation rate (degrees/s)
+  #[inline]
+  pub fn ELEVATION_RATE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_ELEVATION_RATE, Some(0.0)).unwrap()}
+  }
+  /// Slant range (km)
+  #[inline]
+  pub fn RANGE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_RANGE, Some(0.0)).unwrap()}
+  }
+  /// Range uncertainty (km, 1-sigma)
+  #[inline]
+  pub fn RANGE_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_RANGE_UNC, Some(0.0)).unwrap()}
+  }
+  /// Range rate (km/s)
+  #[inline]
+  pub fn RANGE_RATE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_RANGE_RATE, Some(0.0)).unwrap()}
+  }
+  /// Range rate uncertainty (km/s, 1-sigma)
+  #[inline]
+  pub fn RANGE_RATE_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_RANGE_RATE_UNC, Some(0.0)).unwrap()}
+  }
+  /// Track range (km)
+  #[inline]
+  pub fn TRACK_RANGE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_TRACK_RANGE, Some(0.0)).unwrap()}
+  }
+  /// Sensor latitude (degrees)
+  #[inline]
+  pub fn SENLAT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_SENLAT, Some(0.0)).unwrap()}
+  }
+  /// Sensor longitude (degrees)
+  #[inline]
+  pub fn SENLON(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_SENLON, Some(0.0)).unwrap()}
+  }
+  /// Sensor altitude (km)
+  #[inline]
+  pub fn SENALT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_SENALT, Some(0.0)).unwrap()}
+  }
+  /// ELNOT (Electronic Intelligence Notation)
+  #[inline]
+  pub fn ELNOT(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_ELNOT, None)}
+  }
+  /// Antenna name
+  #[inline]
+  pub fn ANTENNA_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_ANTENNA_NAME, None)}
+  }
+  /// Collection mode
+  #[inline]
+  pub fn COLLECTION_MODE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_COLLECTION_MODE, None)}
+  }
+  /// Measured center frequency (MHz)
+  #[inline]
+  pub fn FREQUENCY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_FREQUENCY, Some(0.0)).unwrap()}
+  }
+  /// Nominal center frequency (MHz)
+  #[inline]
+  pub fn NOMINAL_FREQUENCY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_NOMINAL_FREQUENCY, Some(0.0)).unwrap()}
+  }
+  /// Start frequency of emission (MHz)
+  #[inline]
+  pub fn START_FREQUENCY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_START_FREQUENCY, Some(0.0)).unwrap()}
+  }
+  /// End frequency of emission (MHz)
+  #[inline]
+  pub fn END_FREQUENCY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_END_FREQUENCY, Some(0.0)).unwrap()}
+  }
+  /// Frequency shift from nominal (MHz)
+  #[inline]
+  pub fn FREQUENCY_SHIFT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_FREQUENCY_SHIFT, Some(0.0)).unwrap()}
+  }
+  /// Measured bandwidth (MHz)
+  #[inline]
+  pub fn BANDWIDTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_BANDWIDTH, Some(0.0)).unwrap()}
+  }
+  /// Nominal bandwidth (MHz)
+  #[inline]
+  pub fn NOMINAL_BANDWIDTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_NOMINAL_BANDWIDTH, Some(0.0)).unwrap()}
+  }
+  /// Resolution bandwidth (MHz)
+  #[inline]
+  pub fn RESOLUTION_BANDWIDTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_RESOLUTION_BANDWIDTH, Some(0.0)).unwrap()}
+  }
+  /// Video bandwidth (MHz)
+  #[inline]
+  pub fn VIDEO_BANDWIDTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_VIDEO_BANDWIDTH, Some(0.0)).unwrap()}
+  }
+  /// Relative carrier power (dBm)
+  #[inline]
+  pub fn RELATIVE_CARRIER_POWER(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_RELATIVE_CARRIER_POWER, Some(0.0)).unwrap()}
+  }
+  /// Spectrum analyzer power (dBm)
+  #[inline]
+  pub fn SPECTRUM_ANALYZER_POWER(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_SPECTRUM_ANALYZER_POWER, Some(0.0)).unwrap()}
+  }
+  /// Relative noise floor (dBm)
+  #[inline]
+  pub fn RELATIVE_NOISE_FLOOR(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_RELATIVE_NOISE_FLOOR, Some(0.0)).unwrap()}
+  }
+  /// Reference level (dBm)
+  #[inline]
+  pub fn REFERENCE_LEVEL(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_REFERENCE_LEVEL, Some(0.0)).unwrap()}
+  }
+  /// Noise power density (dBm/Hz)
+  #[inline]
+  pub fn NOISE_PWR_DENSITY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_NOISE_PWR_DENSITY, Some(0.0)).unwrap()}
+  }
+  /// PGRI (Pulse Group Repetition Interval, microseconds)
+  #[inline]
+  pub fn PGRI(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_PGRI, Some(0.0)).unwrap()}
+  }
+  /// Effective isotropic radiated power (dBW)
+  #[inline]
+  pub fn EIRP(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_EIRP, Some(0.0)).unwrap()}
+  }
+  /// Nominal EIRP (dBW)
+  #[inline]
+  pub fn NOMINAL_EIRP(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_NOMINAL_EIRP, Some(0.0)).unwrap()}
+  }
+  /// Minimum power spectral density (dBm/Hz)
+  #[inline]
+  pub fn MIN_PSD(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_MIN_PSD, Some(0.0)).unwrap()}
+  }
+  /// Maximum power spectral density (dBm/Hz)
+  #[inline]
+  pub fn MAX_PSD(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_MAX_PSD, Some(0.0)).unwrap()}
+  }
+  /// Signal-to-noise ratio (dB)
+  #[inline]
+  pub fn SNR(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_SNR, Some(0.0)).unwrap()}
+  }
+  /// Nominal SNR (dB)
+  #[inline]
+  pub fn NOMINAL_SNR(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_NOMINAL_SNR, Some(0.0)).unwrap()}
+  }
+  /// Power over noise (dB)
+  #[inline]
+  pub fn POWER_OVER_NOISE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_POWER_OVER_NOISE, Some(0.0)).unwrap()}
+  }
+  /// Nominal power over noise (dB)
+  #[inline]
+  pub fn NOMINAL_POWER_OVER_NOISE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_NOMINAL_POWER_OVER_NOISE, Some(0.0)).unwrap()}
+  }
+  /// Polarity angle (degrees)
+  #[inline]
+  pub fn POLARITY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_POLARITY, Some(0.0)).unwrap()}
+  }
+  /// Polarization type (e.g., LHCP, RHCP, LINEAR)
+  #[inline]
+  pub fn POLARITY_TYPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_POLARITY_TYPE, None)}
+  }
+  /// Channel number
+  #[inline]
+  pub fn CHANNEL(&self) -> u16 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u16>(RFO::VT_CHANNEL, Some(0)).unwrap()}
+  }
+  /// Baud rate (symbols/s)
+  #[inline]
+  pub fn BAUD_RATE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_BAUD_RATE, Some(0.0)).unwrap()}
+  }
+  /// Symbol-to-noise ratio (dB)
+  #[inline]
+  pub fn SYMBOL_TO_NOISE_RATIO(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_SYMBOL_TO_NOISE_RATIO, Some(0.0)).unwrap()}
+  }
+  /// Bit error rate
+  #[inline]
+  pub fn BIT_ERROR_RATE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_BIT_ERROR_RATE, Some(0.0)).unwrap()}
+  }
+  /// True if peak measurement
+  #[inline]
+  pub fn PEAK(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(RFO::VT_PEAK, Some(false)).unwrap()}
+  }
+  /// True if incoming signal
+  #[inline]
+  pub fn INCOMING(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(RFO::VT_INCOMING, Some(false)).unwrap()}
+  }
+  /// Switch point number
+  #[inline]
+  pub fn SWITCH_POINT(&self) -> u16 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u16>(RFO::VT_SWITCH_POINT, Some(0)).unwrap()}
+  }
+  /// Confidence score (0-1)
+  #[inline]
+  pub fn CONFIDENCE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_CONFIDENCE, Some(0.0)).unwrap()}
+  }
+  /// Carrier standard (e.g., DVB-S, DVB-S2)
+  #[inline]
+  pub fn CARRIER_STANDARD(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_CARRIER_STANDARD, None)}
+  }
+  /// Modulation type
+  #[inline]
+  pub fn MODULATION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_MODULATION, None)}
+  }
+  /// Inner FEC coding rate denominator
+  #[inline]
+  pub fn INNER_CODING_RATE(&self) -> u8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u8>(RFO::VT_INNER_CODING_RATE, Some(0)).unwrap()}
+  }
+  /// Outer FEC coding rate denominator
+  #[inline]
+  pub fn OUTER_CODING_RATE(&self) -> u8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u8>(RFO::VT_OUTER_CODING_RATE, Some(0)).unwrap()}
+  }
+  /// Transmit filter type
+  #[inline]
+  pub fn TRANSMIT_FILTER_TYPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_TRANSMIT_FILTER_TYPE, None)}
+  }
+  /// Transmit filter roll-off factor
+  #[inline]
+  pub fn TRANSMIT_FILTER_ROLL_OFF(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFO::VT_TRANSMIT_FILTER_ROLL_OFF, Some(0.0)).unwrap()}
+  }
+  /// Reference to raw data file
+  #[inline]
+  pub fn RAW_FILE_URI(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_RAW_FILE_URI, None)}
+  }
+  /// Event descriptor
   #[inline]
   pub fn DESCRIPTOR(&self) -> Option<&'a str> {
     // Safety:
@@ -898,12 +1157,21 @@ impl<'a> RFO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_DESCRIPTOR, None)}
   }
+  /// Reference URL
   #[inline]
   pub fn URL(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFO::VT_URL, None)}
+  }
+  /// Associated tags
+  #[inline]
+  pub fn TAGS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(RFO::VT_TAGS, None)}
   }
 }
 
@@ -917,15 +1185,17 @@ impl flatbuffers::Verifiable for RFO<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OB_TIME", Self::VT_OB_TIME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID_SENSOR", Self::VT_ID_SENSOR, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TYPE", Self::VT_TYPE, false)?
-     .visit_field::<i32>("SAT_NO", Self::VT_SAT_NO, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_SENSOR_ID", Self::VT_ORIG_SENSOR_ID, false)?
+     .visit_field::<rfObsType>("OBS_TYPE", Self::VT_OBS_TYPE, false)?
+     .visit_field::<u32>("SAT_NO", Self::VT_SAT_NO, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_OBJECT_ID", Self::VT_ORIG_OBJECT_ID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ON_ORBIT", Self::VT_ON_ORBIT, false)?
+     .visit_field::<bool>("UCT", Self::VT_UCT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TASK_ID", Self::VT_TASK_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRANSACTION_ID", Self::VT_TRANSACTION_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRACK_ID", Self::VT_TRACK_ID, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_OBJECT_ID", Self::VT_ORIG_OBJECT_ID, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_SENSOR_ID", Self::VT_ORIG_SENSOR_ID, false)?
-     .visit_field::<bool>("UCT", Self::VT_UCT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRANSPONDER", Self::VT_TRANSPONDER, false)?
+     .visit_field::<rfDetectionStatus>("DETECTION_STATUS", Self::VT_DETECTION_STATUS, false)?
      .visit_field::<f64>("AZIMUTH", Self::VT_AZIMUTH, false)?
      .visit_field::<f64>("AZIMUTH_UNC", Self::VT_AZIMUTH_UNC, false)?
      .visit_field::<f64>("AZIMUTH_RATE", Self::VT_AZIMUTH_RATE, false)?
@@ -941,53 +1211,51 @@ impl flatbuffers::Verifiable for RFO<'_> {
      .visit_field::<f64>("SENLON", Self::VT_SENLON, false)?
      .visit_field::<f64>("SENALT", Self::VT_SENALT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ELNOT", Self::VT_ELNOT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ANTENNA_NAME", Self::VT_ANTENNA_NAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COLLECTION_MODE", Self::VT_COLLECTION_MODE, false)?
      .visit_field::<f64>("FREQUENCY", Self::VT_FREQUENCY, false)?
      .visit_field::<f64>("NOMINAL_FREQUENCY", Self::VT_NOMINAL_FREQUENCY, false)?
      .visit_field::<f64>("START_FREQUENCY", Self::VT_START_FREQUENCY, false)?
      .visit_field::<f64>("END_FREQUENCY", Self::VT_END_FREQUENCY, false)?
-     .visit_field::<f64>("RELATIVE_CARRIER_POWER", Self::VT_RELATIVE_CARRIER_POWER, false)?
-     .visit_field::<f64>("SPECTRUM_ANALYZER_POWER", Self::VT_SPECTRUM_ANALYZER_POWER, false)?
-     .visit_field::<f64>("RELATIVE_NOISE_FLOOR", Self::VT_RELATIVE_NOISE_FLOOR, false)?
-     .visit_field::<f64>("REFERENCE_LEVEL", Self::VT_REFERENCE_LEVEL, false)?
-     .visit_field::<f64>("PGRI", Self::VT_PGRI, false)?
-     .visit_field::<f64>("CONFIDENCE", Self::VT_CONFIDENCE, false)?
-     .visit_field::<bool>("INCOMING", Self::VT_INCOMING, false)?
-     .visit_field::<i32>("SWITCH_POINT", Self::VT_SWITCH_POINT, false)?
-     .visit_field::<f64>("BAUD_RATE", Self::VT_BAUD_RATE, false)?
-     .visit_field::<f64>("SNR", Self::VT_SNR, false)?
-     .visit_field::<f64>("NOMINAL_SNR", Self::VT_NOMINAL_SNR, false)?
-     .visit_field::<f64>("POLARITY", Self::VT_POLARITY, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("POLARITY_TYPE", Self::VT_POLARITY_TYPE, false)?
-     .visit_field::<i32>("CHANNEL", Self::VT_CHANNEL, false)?
-     .visit_field::<f64>("POWER_OVER_NOISE", Self::VT_POWER_OVER_NOISE, false)?
-     .visit_field::<f64>("NOMINAL_POWER_OVER_NOISE", Self::VT_NOMINAL_POWER_OVER_NOISE, false)?
+     .visit_field::<f64>("FREQUENCY_SHIFT", Self::VT_FREQUENCY_SHIFT, false)?
      .visit_field::<f64>("BANDWIDTH", Self::VT_BANDWIDTH, false)?
      .visit_field::<f64>("NOMINAL_BANDWIDTH", Self::VT_NOMINAL_BANDWIDTH, false)?
      .visit_field::<f64>("RESOLUTION_BANDWIDTH", Self::VT_RESOLUTION_BANDWIDTH, false)?
      .visit_field::<f64>("VIDEO_BANDWIDTH", Self::VT_VIDEO_BANDWIDTH, false)?
+     .visit_field::<f64>("RELATIVE_CARRIER_POWER", Self::VT_RELATIVE_CARRIER_POWER, false)?
+     .visit_field::<f64>("SPECTRUM_ANALYZER_POWER", Self::VT_SPECTRUM_ANALYZER_POWER, false)?
+     .visit_field::<f64>("RELATIVE_NOISE_FLOOR", Self::VT_RELATIVE_NOISE_FLOOR, false)?
+     .visit_field::<f64>("REFERENCE_LEVEL", Self::VT_REFERENCE_LEVEL, false)?
+     .visit_field::<f64>("NOISE_PWR_DENSITY", Self::VT_NOISE_PWR_DENSITY, false)?
+     .visit_field::<f64>("PGRI", Self::VT_PGRI, false)?
      .visit_field::<f64>("EIRP", Self::VT_EIRP, false)?
      .visit_field::<f64>("NOMINAL_EIRP", Self::VT_NOMINAL_EIRP, false)?
      .visit_field::<f64>("MIN_PSD", Self::VT_MIN_PSD, false)?
      .visit_field::<f64>("MAX_PSD", Self::VT_MAX_PSD, false)?
-     .visit_field::<f64>("FREQUENCY_SHIFT", Self::VT_FREQUENCY_SHIFT, false)?
-     .visit_field::<bool>("PEAK", Self::VT_PEAK, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ANTENNA_NAME", Self::VT_ANTENNA_NAME, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DETECTION_STATUS", Self::VT_DETECTION_STATUS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COLLECTION_MODE", Self::VT_COLLECTION_MODE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("RAW_FILE_URI", Self::VT_RAW_FILE_URI, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("TAGS", Self::VT_TAGS, false)?
-     .visit_field::<f64>("NOISE_PWR_DENSITY", Self::VT_NOISE_PWR_DENSITY, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CARRIER_STANDARD", Self::VT_CARRIER_STANDARD, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MODULATION", Self::VT_MODULATION, false)?
-     .visit_field::<i32>("INNER_CODING_RATE", Self::VT_INNER_CODING_RATE, false)?
-     .visit_field::<i32>("OUTER_CODING_RATE", Self::VT_OUTER_CODING_RATE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRANSMIT_FILTER_TYPE", Self::VT_TRANSMIT_FILTER_TYPE, false)?
-     .visit_field::<f64>("TRANSMIT_FILTER_ROLL_OFF", Self::VT_TRANSMIT_FILTER_ROLL_OFF, false)?
+     .visit_field::<f64>("SNR", Self::VT_SNR, false)?
+     .visit_field::<f64>("NOMINAL_SNR", Self::VT_NOMINAL_SNR, false)?
+     .visit_field::<f64>("POWER_OVER_NOISE", Self::VT_POWER_OVER_NOISE, false)?
+     .visit_field::<f64>("NOMINAL_POWER_OVER_NOISE", Self::VT_NOMINAL_POWER_OVER_NOISE, false)?
+     .visit_field::<f64>("POLARITY", Self::VT_POLARITY, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("POLARITY_TYPE", Self::VT_POLARITY_TYPE, false)?
+     .visit_field::<u16>("CHANNEL", Self::VT_CHANNEL, false)?
+     .visit_field::<f64>("BAUD_RATE", Self::VT_BAUD_RATE, false)?
      .visit_field::<f64>("SYMBOL_TO_NOISE_RATIO", Self::VT_SYMBOL_TO_NOISE_RATIO, false)?
      .visit_field::<f64>("BIT_ERROR_RATE", Self::VT_BIT_ERROR_RATE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ON_ORBIT", Self::VT_ON_ORBIT, false)?
+     .visit_field::<bool>("PEAK", Self::VT_PEAK, false)?
+     .visit_field::<bool>("INCOMING", Self::VT_INCOMING, false)?
+     .visit_field::<u16>("SWITCH_POINT", Self::VT_SWITCH_POINT, false)?
+     .visit_field::<f64>("CONFIDENCE", Self::VT_CONFIDENCE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CARRIER_STANDARD", Self::VT_CARRIER_STANDARD, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MODULATION", Self::VT_MODULATION, false)?
+     .visit_field::<u8>("INNER_CODING_RATE", Self::VT_INNER_CODING_RATE, false)?
+     .visit_field::<u8>("OUTER_CODING_RATE", Self::VT_OUTER_CODING_RATE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRANSMIT_FILTER_TYPE", Self::VT_TRANSMIT_FILTER_TYPE, false)?
+     .visit_field::<f64>("TRANSMIT_FILTER_ROLL_OFF", Self::VT_TRANSMIT_FILTER_ROLL_OFF, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("RAW_FILE_URI", Self::VT_RAW_FILE_URI, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DESCRIPTOR", Self::VT_DESCRIPTOR, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("URL", Self::VT_URL, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("TAGS", Self::VT_TAGS, false)?
      .finish();
     Ok(())
   }
@@ -996,15 +1264,17 @@ pub struct RFOArgs<'a> {
     pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OB_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ID_SENSOR: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SAT_NO: i32,
+    pub ORIG_SENSOR_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub OBS_TYPE: rfObsType,
+    pub SAT_NO: u32,
+    pub ORIG_OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ON_ORBIT: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub UCT: bool,
     pub TASK_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TRANSACTION_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TRACK_ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ORIG_OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ORIG_SENSOR_ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub UCT: bool,
     pub TRANSPONDER: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub DETECTION_STATUS: rfDetectionStatus,
     pub AZIMUTH: f64,
     pub AZIMUTH_UNC: f64,
     pub AZIMUTH_RATE: f64,
@@ -1020,53 +1290,51 @@ pub struct RFOArgs<'a> {
     pub SENLON: f64,
     pub SENALT: f64,
     pub ELNOT: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ANTENNA_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub COLLECTION_MODE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub FREQUENCY: f64,
     pub NOMINAL_FREQUENCY: f64,
     pub START_FREQUENCY: f64,
     pub END_FREQUENCY: f64,
-    pub RELATIVE_CARRIER_POWER: f64,
-    pub SPECTRUM_ANALYZER_POWER: f64,
-    pub RELATIVE_NOISE_FLOOR: f64,
-    pub REFERENCE_LEVEL: f64,
-    pub PGRI: f64,
-    pub CONFIDENCE: f64,
-    pub INCOMING: bool,
-    pub SWITCH_POINT: i32,
-    pub BAUD_RATE: f64,
-    pub SNR: f64,
-    pub NOMINAL_SNR: f64,
-    pub POLARITY: f64,
-    pub POLARITY_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub CHANNEL: i32,
-    pub POWER_OVER_NOISE: f64,
-    pub NOMINAL_POWER_OVER_NOISE: f64,
+    pub FREQUENCY_SHIFT: f64,
     pub BANDWIDTH: f64,
     pub NOMINAL_BANDWIDTH: f64,
     pub RESOLUTION_BANDWIDTH: f64,
     pub VIDEO_BANDWIDTH: f64,
+    pub RELATIVE_CARRIER_POWER: f64,
+    pub SPECTRUM_ANALYZER_POWER: f64,
+    pub RELATIVE_NOISE_FLOOR: f64,
+    pub REFERENCE_LEVEL: f64,
+    pub NOISE_PWR_DENSITY: f64,
+    pub PGRI: f64,
     pub EIRP: f64,
     pub NOMINAL_EIRP: f64,
     pub MIN_PSD: f64,
     pub MAX_PSD: f64,
-    pub FREQUENCY_SHIFT: f64,
-    pub PEAK: bool,
-    pub ANTENNA_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub DETECTION_STATUS: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub COLLECTION_MODE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub RAW_FILE_URI: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub TAGS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub NOISE_PWR_DENSITY: f64,
-    pub CARRIER_STANDARD: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub MODULATION: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub INNER_CODING_RATE: i32,
-    pub OUTER_CODING_RATE: i32,
-    pub TRANSMIT_FILTER_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub TRANSMIT_FILTER_ROLL_OFF: f64,
+    pub SNR: f64,
+    pub NOMINAL_SNR: f64,
+    pub POWER_OVER_NOISE: f64,
+    pub NOMINAL_POWER_OVER_NOISE: f64,
+    pub POLARITY: f64,
+    pub POLARITY_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub CHANNEL: u16,
+    pub BAUD_RATE: f64,
     pub SYMBOL_TO_NOISE_RATIO: f64,
     pub BIT_ERROR_RATE: f64,
-    pub ON_ORBIT: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub PEAK: bool,
+    pub INCOMING: bool,
+    pub SWITCH_POINT: u16,
+    pub CONFIDENCE: f64,
+    pub CARRIER_STANDARD: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub MODULATION: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub INNER_CODING_RATE: u8,
+    pub OUTER_CODING_RATE: u8,
+    pub TRANSMIT_FILTER_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub TRANSMIT_FILTER_ROLL_OFF: f64,
+    pub RAW_FILE_URI: Option<flatbuffers::WIPOffset<&'a str>>,
     pub DESCRIPTOR: Option<flatbuffers::WIPOffset<&'a str>>,
     pub URL: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub TAGS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
 }
 impl<'a> Default for RFOArgs<'a> {
   #[inline]
@@ -1075,15 +1343,17 @@ impl<'a> Default for RFOArgs<'a> {
       ID: None,
       OB_TIME: None,
       ID_SENSOR: None,
-      TYPE: None,
+      ORIG_SENSOR_ID: None,
+      OBS_TYPE: rfObsType::EMISSION,
       SAT_NO: 0,
+      ORIG_OBJECT_ID: None,
+      ON_ORBIT: None,
+      UCT: false,
       TASK_ID: None,
       TRANSACTION_ID: None,
       TRACK_ID: None,
-      ORIG_OBJECT_ID: None,
-      ORIG_SENSOR_ID: None,
-      UCT: false,
       TRANSPONDER: None,
+      DETECTION_STATUS: rfDetectionStatus::DETECTED,
       AZIMUTH: 0.0,
       AZIMUTH_UNC: 0.0,
       AZIMUTH_RATE: 0.0,
@@ -1099,53 +1369,51 @@ impl<'a> Default for RFOArgs<'a> {
       SENLON: 0.0,
       SENALT: 0.0,
       ELNOT: None,
+      ANTENNA_NAME: None,
+      COLLECTION_MODE: None,
       FREQUENCY: 0.0,
       NOMINAL_FREQUENCY: 0.0,
       START_FREQUENCY: 0.0,
       END_FREQUENCY: 0.0,
-      RELATIVE_CARRIER_POWER: 0.0,
-      SPECTRUM_ANALYZER_POWER: 0.0,
-      RELATIVE_NOISE_FLOOR: 0.0,
-      REFERENCE_LEVEL: 0.0,
-      PGRI: 0.0,
-      CONFIDENCE: 0.0,
-      INCOMING: false,
-      SWITCH_POINT: 0,
-      BAUD_RATE: 0.0,
-      SNR: 0.0,
-      NOMINAL_SNR: 0.0,
-      POLARITY: 0.0,
-      POLARITY_TYPE: None,
-      CHANNEL: 0,
-      POWER_OVER_NOISE: 0.0,
-      NOMINAL_POWER_OVER_NOISE: 0.0,
+      FREQUENCY_SHIFT: 0.0,
       BANDWIDTH: 0.0,
       NOMINAL_BANDWIDTH: 0.0,
       RESOLUTION_BANDWIDTH: 0.0,
       VIDEO_BANDWIDTH: 0.0,
+      RELATIVE_CARRIER_POWER: 0.0,
+      SPECTRUM_ANALYZER_POWER: 0.0,
+      RELATIVE_NOISE_FLOOR: 0.0,
+      REFERENCE_LEVEL: 0.0,
+      NOISE_PWR_DENSITY: 0.0,
+      PGRI: 0.0,
       EIRP: 0.0,
       NOMINAL_EIRP: 0.0,
       MIN_PSD: 0.0,
       MAX_PSD: 0.0,
-      FREQUENCY_SHIFT: 0.0,
+      SNR: 0.0,
+      NOMINAL_SNR: 0.0,
+      POWER_OVER_NOISE: 0.0,
+      NOMINAL_POWER_OVER_NOISE: 0.0,
+      POLARITY: 0.0,
+      POLARITY_TYPE: None,
+      CHANNEL: 0,
+      BAUD_RATE: 0.0,
+      SYMBOL_TO_NOISE_RATIO: 0.0,
+      BIT_ERROR_RATE: 0.0,
       PEAK: false,
-      ANTENNA_NAME: None,
-      DETECTION_STATUS: None,
-      COLLECTION_MODE: None,
-      RAW_FILE_URI: None,
-      TAGS: None,
-      NOISE_PWR_DENSITY: 0.0,
+      INCOMING: false,
+      SWITCH_POINT: 0,
+      CONFIDENCE: 0.0,
       CARRIER_STANDARD: None,
       MODULATION: None,
       INNER_CODING_RATE: 0,
       OUTER_CODING_RATE: 0,
       TRANSMIT_FILTER_TYPE: None,
       TRANSMIT_FILTER_ROLL_OFF: 0.0,
-      SYMBOL_TO_NOISE_RATIO: 0.0,
-      BIT_ERROR_RATE: 0.0,
-      ON_ORBIT: None,
+      RAW_FILE_URI: None,
       DESCRIPTOR: None,
       URL: None,
+      TAGS: None,
     }
   }
 }
@@ -1168,12 +1436,28 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RFOBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_ID_SENSOR, ID_SENSOR);
   }
   #[inline]
-  pub fn add_TYPE(&mut self, TYPE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_TYPE, TYPE);
+  pub fn add_ORIG_SENSOR_ID(&mut self, ORIG_SENSOR_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_ORIG_SENSOR_ID, ORIG_SENSOR_ID);
   }
   #[inline]
-  pub fn add_SAT_NO(&mut self, SAT_NO: i32) {
-    self.fbb_.push_slot::<i32>(RFO::VT_SAT_NO, SAT_NO, 0);
+  pub fn add_OBS_TYPE(&mut self, OBS_TYPE: rfObsType) {
+    self.fbb_.push_slot::<rfObsType>(RFO::VT_OBS_TYPE, OBS_TYPE, rfObsType::EMISSION);
+  }
+  #[inline]
+  pub fn add_SAT_NO(&mut self, SAT_NO: u32) {
+    self.fbb_.push_slot::<u32>(RFO::VT_SAT_NO, SAT_NO, 0);
+  }
+  #[inline]
+  pub fn add_ORIG_OBJECT_ID(&mut self, ORIG_OBJECT_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
+  }
+  #[inline]
+  pub fn add_ON_ORBIT(&mut self, ON_ORBIT: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_ON_ORBIT, ON_ORBIT);
+  }
+  #[inline]
+  pub fn add_UCT(&mut self, UCT: bool) {
+    self.fbb_.push_slot::<bool>(RFO::VT_UCT, UCT, false);
   }
   #[inline]
   pub fn add_TASK_ID(&mut self, TASK_ID: flatbuffers::WIPOffset<&'b  str>) {
@@ -1188,20 +1472,12 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RFOBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_TRACK_ID, TRACK_ID);
   }
   #[inline]
-  pub fn add_ORIG_OBJECT_ID(&mut self, ORIG_OBJECT_ID: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
-  }
-  #[inline]
-  pub fn add_ORIG_SENSOR_ID(&mut self, ORIG_SENSOR_ID: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_ORIG_SENSOR_ID, ORIG_SENSOR_ID);
-  }
-  #[inline]
-  pub fn add_UCT(&mut self, UCT: bool) {
-    self.fbb_.push_slot::<bool>(RFO::VT_UCT, UCT, false);
-  }
-  #[inline]
   pub fn add_TRANSPONDER(&mut self, TRANSPONDER: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_TRANSPONDER, TRANSPONDER);
+  }
+  #[inline]
+  pub fn add_DETECTION_STATUS(&mut self, DETECTION_STATUS: rfDetectionStatus) {
+    self.fbb_.push_slot::<rfDetectionStatus>(RFO::VT_DETECTION_STATUS, DETECTION_STATUS, rfDetectionStatus::DETECTED);
   }
   #[inline]
   pub fn add_AZIMUTH(&mut self, AZIMUTH: f64) {
@@ -1264,6 +1540,14 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RFOBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_ELNOT, ELNOT);
   }
   #[inline]
+  pub fn add_ANTENNA_NAME(&mut self, ANTENNA_NAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_ANTENNA_NAME, ANTENNA_NAME);
+  }
+  #[inline]
+  pub fn add_COLLECTION_MODE(&mut self, COLLECTION_MODE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_COLLECTION_MODE, COLLECTION_MODE);
+  }
+  #[inline]
   pub fn add_FREQUENCY(&mut self, FREQUENCY: f64) {
     self.fbb_.push_slot::<f64>(RFO::VT_FREQUENCY, FREQUENCY, 0.0);
   }
@@ -1280,68 +1564,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RFOBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(RFO::VT_END_FREQUENCY, END_FREQUENCY, 0.0);
   }
   #[inline]
-  pub fn add_RELATIVE_CARRIER_POWER(&mut self, RELATIVE_CARRIER_POWER: f64) {
-    self.fbb_.push_slot::<f64>(RFO::VT_RELATIVE_CARRIER_POWER, RELATIVE_CARRIER_POWER, 0.0);
-  }
-  #[inline]
-  pub fn add_SPECTRUM_ANALYZER_POWER(&mut self, SPECTRUM_ANALYZER_POWER: f64) {
-    self.fbb_.push_slot::<f64>(RFO::VT_SPECTRUM_ANALYZER_POWER, SPECTRUM_ANALYZER_POWER, 0.0);
-  }
-  #[inline]
-  pub fn add_RELATIVE_NOISE_FLOOR(&mut self, RELATIVE_NOISE_FLOOR: f64) {
-    self.fbb_.push_slot::<f64>(RFO::VT_RELATIVE_NOISE_FLOOR, RELATIVE_NOISE_FLOOR, 0.0);
-  }
-  #[inline]
-  pub fn add_REFERENCE_LEVEL(&mut self, REFERENCE_LEVEL: f64) {
-    self.fbb_.push_slot::<f64>(RFO::VT_REFERENCE_LEVEL, REFERENCE_LEVEL, 0.0);
-  }
-  #[inline]
-  pub fn add_PGRI(&mut self, PGRI: f64) {
-    self.fbb_.push_slot::<f64>(RFO::VT_PGRI, PGRI, 0.0);
-  }
-  #[inline]
-  pub fn add_CONFIDENCE(&mut self, CONFIDENCE: f64) {
-    self.fbb_.push_slot::<f64>(RFO::VT_CONFIDENCE, CONFIDENCE, 0.0);
-  }
-  #[inline]
-  pub fn add_INCOMING(&mut self, INCOMING: bool) {
-    self.fbb_.push_slot::<bool>(RFO::VT_INCOMING, INCOMING, false);
-  }
-  #[inline]
-  pub fn add_SWITCH_POINT(&mut self, SWITCH_POINT: i32) {
-    self.fbb_.push_slot::<i32>(RFO::VT_SWITCH_POINT, SWITCH_POINT, 0);
-  }
-  #[inline]
-  pub fn add_BAUD_RATE(&mut self, BAUD_RATE: f64) {
-    self.fbb_.push_slot::<f64>(RFO::VT_BAUD_RATE, BAUD_RATE, 0.0);
-  }
-  #[inline]
-  pub fn add_SNR(&mut self, SNR: f64) {
-    self.fbb_.push_slot::<f64>(RFO::VT_SNR, SNR, 0.0);
-  }
-  #[inline]
-  pub fn add_NOMINAL_SNR(&mut self, NOMINAL_SNR: f64) {
-    self.fbb_.push_slot::<f64>(RFO::VT_NOMINAL_SNR, NOMINAL_SNR, 0.0);
-  }
-  #[inline]
-  pub fn add_POLARITY(&mut self, POLARITY: f64) {
-    self.fbb_.push_slot::<f64>(RFO::VT_POLARITY, POLARITY, 0.0);
-  }
-  #[inline]
-  pub fn add_POLARITY_TYPE(&mut self, POLARITY_TYPE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_POLARITY_TYPE, POLARITY_TYPE);
-  }
-  #[inline]
-  pub fn add_CHANNEL(&mut self, CHANNEL: i32) {
-    self.fbb_.push_slot::<i32>(RFO::VT_CHANNEL, CHANNEL, 0);
-  }
-  #[inline]
-  pub fn add_POWER_OVER_NOISE(&mut self, POWER_OVER_NOISE: f64) {
-    self.fbb_.push_slot::<f64>(RFO::VT_POWER_OVER_NOISE, POWER_OVER_NOISE, 0.0);
-  }
-  #[inline]
-  pub fn add_NOMINAL_POWER_OVER_NOISE(&mut self, NOMINAL_POWER_OVER_NOISE: f64) {
-    self.fbb_.push_slot::<f64>(RFO::VT_NOMINAL_POWER_OVER_NOISE, NOMINAL_POWER_OVER_NOISE, 0.0);
+  pub fn add_FREQUENCY_SHIFT(&mut self, FREQUENCY_SHIFT: f64) {
+    self.fbb_.push_slot::<f64>(RFO::VT_FREQUENCY_SHIFT, FREQUENCY_SHIFT, 0.0);
   }
   #[inline]
   pub fn add_BANDWIDTH(&mut self, BANDWIDTH: f64) {
@@ -1360,6 +1584,30 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RFOBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(RFO::VT_VIDEO_BANDWIDTH, VIDEO_BANDWIDTH, 0.0);
   }
   #[inline]
+  pub fn add_RELATIVE_CARRIER_POWER(&mut self, RELATIVE_CARRIER_POWER: f64) {
+    self.fbb_.push_slot::<f64>(RFO::VT_RELATIVE_CARRIER_POWER, RELATIVE_CARRIER_POWER, 0.0);
+  }
+  #[inline]
+  pub fn add_SPECTRUM_ANALYZER_POWER(&mut self, SPECTRUM_ANALYZER_POWER: f64) {
+    self.fbb_.push_slot::<f64>(RFO::VT_SPECTRUM_ANALYZER_POWER, SPECTRUM_ANALYZER_POWER, 0.0);
+  }
+  #[inline]
+  pub fn add_RELATIVE_NOISE_FLOOR(&mut self, RELATIVE_NOISE_FLOOR: f64) {
+    self.fbb_.push_slot::<f64>(RFO::VT_RELATIVE_NOISE_FLOOR, RELATIVE_NOISE_FLOOR, 0.0);
+  }
+  #[inline]
+  pub fn add_REFERENCE_LEVEL(&mut self, REFERENCE_LEVEL: f64) {
+    self.fbb_.push_slot::<f64>(RFO::VT_REFERENCE_LEVEL, REFERENCE_LEVEL, 0.0);
+  }
+  #[inline]
+  pub fn add_NOISE_PWR_DENSITY(&mut self, NOISE_PWR_DENSITY: f64) {
+    self.fbb_.push_slot::<f64>(RFO::VT_NOISE_PWR_DENSITY, NOISE_PWR_DENSITY, 0.0);
+  }
+  #[inline]
+  pub fn add_PGRI(&mut self, PGRI: f64) {
+    self.fbb_.push_slot::<f64>(RFO::VT_PGRI, PGRI, 0.0);
+  }
+  #[inline]
   pub fn add_EIRP(&mut self, EIRP: f64) {
     self.fbb_.push_slot::<f64>(RFO::VT_EIRP, EIRP, 0.0);
   }
@@ -1376,60 +1624,36 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RFOBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(RFO::VT_MAX_PSD, MAX_PSD, 0.0);
   }
   #[inline]
-  pub fn add_FREQUENCY_SHIFT(&mut self, FREQUENCY_SHIFT: f64) {
-    self.fbb_.push_slot::<f64>(RFO::VT_FREQUENCY_SHIFT, FREQUENCY_SHIFT, 0.0);
+  pub fn add_SNR(&mut self, SNR: f64) {
+    self.fbb_.push_slot::<f64>(RFO::VT_SNR, SNR, 0.0);
   }
   #[inline]
-  pub fn add_PEAK(&mut self, PEAK: bool) {
-    self.fbb_.push_slot::<bool>(RFO::VT_PEAK, PEAK, false);
+  pub fn add_NOMINAL_SNR(&mut self, NOMINAL_SNR: f64) {
+    self.fbb_.push_slot::<f64>(RFO::VT_NOMINAL_SNR, NOMINAL_SNR, 0.0);
   }
   #[inline]
-  pub fn add_ANTENNA_NAME(&mut self, ANTENNA_NAME: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_ANTENNA_NAME, ANTENNA_NAME);
+  pub fn add_POWER_OVER_NOISE(&mut self, POWER_OVER_NOISE: f64) {
+    self.fbb_.push_slot::<f64>(RFO::VT_POWER_OVER_NOISE, POWER_OVER_NOISE, 0.0);
   }
   #[inline]
-  pub fn add_DETECTION_STATUS(&mut self, DETECTION_STATUS: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_DETECTION_STATUS, DETECTION_STATUS);
+  pub fn add_NOMINAL_POWER_OVER_NOISE(&mut self, NOMINAL_POWER_OVER_NOISE: f64) {
+    self.fbb_.push_slot::<f64>(RFO::VT_NOMINAL_POWER_OVER_NOISE, NOMINAL_POWER_OVER_NOISE, 0.0);
   }
   #[inline]
-  pub fn add_COLLECTION_MODE(&mut self, COLLECTION_MODE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_COLLECTION_MODE, COLLECTION_MODE);
+  pub fn add_POLARITY(&mut self, POLARITY: f64) {
+    self.fbb_.push_slot::<f64>(RFO::VT_POLARITY, POLARITY, 0.0);
   }
   #[inline]
-  pub fn add_RAW_FILE_URI(&mut self, RAW_FILE_URI: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_RAW_FILE_URI, RAW_FILE_URI);
+  pub fn add_POLARITY_TYPE(&mut self, POLARITY_TYPE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_POLARITY_TYPE, POLARITY_TYPE);
   }
   #[inline]
-  pub fn add_TAGS(&mut self, TAGS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_TAGS, TAGS);
+  pub fn add_CHANNEL(&mut self, CHANNEL: u16) {
+    self.fbb_.push_slot::<u16>(RFO::VT_CHANNEL, CHANNEL, 0);
   }
   #[inline]
-  pub fn add_NOISE_PWR_DENSITY(&mut self, NOISE_PWR_DENSITY: f64) {
-    self.fbb_.push_slot::<f64>(RFO::VT_NOISE_PWR_DENSITY, NOISE_PWR_DENSITY, 0.0);
-  }
-  #[inline]
-  pub fn add_CARRIER_STANDARD(&mut self, CARRIER_STANDARD: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_CARRIER_STANDARD, CARRIER_STANDARD);
-  }
-  #[inline]
-  pub fn add_MODULATION(&mut self, MODULATION: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_MODULATION, MODULATION);
-  }
-  #[inline]
-  pub fn add_INNER_CODING_RATE(&mut self, INNER_CODING_RATE: i32) {
-    self.fbb_.push_slot::<i32>(RFO::VT_INNER_CODING_RATE, INNER_CODING_RATE, 0);
-  }
-  #[inline]
-  pub fn add_OUTER_CODING_RATE(&mut self, OUTER_CODING_RATE: i32) {
-    self.fbb_.push_slot::<i32>(RFO::VT_OUTER_CODING_RATE, OUTER_CODING_RATE, 0);
-  }
-  #[inline]
-  pub fn add_TRANSMIT_FILTER_TYPE(&mut self, TRANSMIT_FILTER_TYPE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_TRANSMIT_FILTER_TYPE, TRANSMIT_FILTER_TYPE);
-  }
-  #[inline]
-  pub fn add_TRANSMIT_FILTER_ROLL_OFF(&mut self, TRANSMIT_FILTER_ROLL_OFF: f64) {
-    self.fbb_.push_slot::<f64>(RFO::VT_TRANSMIT_FILTER_ROLL_OFF, TRANSMIT_FILTER_ROLL_OFF, 0.0);
+  pub fn add_BAUD_RATE(&mut self, BAUD_RATE: f64) {
+    self.fbb_.push_slot::<f64>(RFO::VT_BAUD_RATE, BAUD_RATE, 0.0);
   }
   #[inline]
   pub fn add_SYMBOL_TO_NOISE_RATIO(&mut self, SYMBOL_TO_NOISE_RATIO: f64) {
@@ -1440,8 +1664,48 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RFOBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(RFO::VT_BIT_ERROR_RATE, BIT_ERROR_RATE, 0.0);
   }
   #[inline]
-  pub fn add_ON_ORBIT(&mut self, ON_ORBIT: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_ON_ORBIT, ON_ORBIT);
+  pub fn add_PEAK(&mut self, PEAK: bool) {
+    self.fbb_.push_slot::<bool>(RFO::VT_PEAK, PEAK, false);
+  }
+  #[inline]
+  pub fn add_INCOMING(&mut self, INCOMING: bool) {
+    self.fbb_.push_slot::<bool>(RFO::VT_INCOMING, INCOMING, false);
+  }
+  #[inline]
+  pub fn add_SWITCH_POINT(&mut self, SWITCH_POINT: u16) {
+    self.fbb_.push_slot::<u16>(RFO::VT_SWITCH_POINT, SWITCH_POINT, 0);
+  }
+  #[inline]
+  pub fn add_CONFIDENCE(&mut self, CONFIDENCE: f64) {
+    self.fbb_.push_slot::<f64>(RFO::VT_CONFIDENCE, CONFIDENCE, 0.0);
+  }
+  #[inline]
+  pub fn add_CARRIER_STANDARD(&mut self, CARRIER_STANDARD: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_CARRIER_STANDARD, CARRIER_STANDARD);
+  }
+  #[inline]
+  pub fn add_MODULATION(&mut self, MODULATION: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_MODULATION, MODULATION);
+  }
+  #[inline]
+  pub fn add_INNER_CODING_RATE(&mut self, INNER_CODING_RATE: u8) {
+    self.fbb_.push_slot::<u8>(RFO::VT_INNER_CODING_RATE, INNER_CODING_RATE, 0);
+  }
+  #[inline]
+  pub fn add_OUTER_CODING_RATE(&mut self, OUTER_CODING_RATE: u8) {
+    self.fbb_.push_slot::<u8>(RFO::VT_OUTER_CODING_RATE, OUTER_CODING_RATE, 0);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_FILTER_TYPE(&mut self, TRANSMIT_FILTER_TYPE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_TRANSMIT_FILTER_TYPE, TRANSMIT_FILTER_TYPE);
+  }
+  #[inline]
+  pub fn add_TRANSMIT_FILTER_ROLL_OFF(&mut self, TRANSMIT_FILTER_ROLL_OFF: f64) {
+    self.fbb_.push_slot::<f64>(RFO::VT_TRANSMIT_FILTER_ROLL_OFF, TRANSMIT_FILTER_ROLL_OFF, 0.0);
+  }
+  #[inline]
+  pub fn add_RAW_FILE_URI(&mut self, RAW_FILE_URI: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_RAW_FILE_URI, RAW_FILE_URI);
   }
   #[inline]
   pub fn add_DESCRIPTOR(&mut self, DESCRIPTOR: flatbuffers::WIPOffset<&'b  str>) {
@@ -1450,6 +1714,10 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RFOBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_URL(&mut self, URL: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_URL, URL);
+  }
+  #[inline]
+  pub fn add_TAGS(&mut self, TAGS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFO::VT_TAGS, TAGS);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> RFOBuilder<'a, 'b, A> {
@@ -1472,15 +1740,17 @@ impl core::fmt::Debug for RFO<'_> {
       ds.field("ID", &self.ID());
       ds.field("OB_TIME", &self.OB_TIME());
       ds.field("ID_SENSOR", &self.ID_SENSOR());
-      ds.field("TYPE", &self.TYPE());
+      ds.field("ORIG_SENSOR_ID", &self.ORIG_SENSOR_ID());
+      ds.field("OBS_TYPE", &self.OBS_TYPE());
       ds.field("SAT_NO", &self.SAT_NO());
+      ds.field("ORIG_OBJECT_ID", &self.ORIG_OBJECT_ID());
+      ds.field("ON_ORBIT", &self.ON_ORBIT());
+      ds.field("UCT", &self.UCT());
       ds.field("TASK_ID", &self.TASK_ID());
       ds.field("TRANSACTION_ID", &self.TRANSACTION_ID());
       ds.field("TRACK_ID", &self.TRACK_ID());
-      ds.field("ORIG_OBJECT_ID", &self.ORIG_OBJECT_ID());
-      ds.field("ORIG_SENSOR_ID", &self.ORIG_SENSOR_ID());
-      ds.field("UCT", &self.UCT());
       ds.field("TRANSPONDER", &self.TRANSPONDER());
+      ds.field("DETECTION_STATUS", &self.DETECTION_STATUS());
       ds.field("AZIMUTH", &self.AZIMUTH());
       ds.field("AZIMUTH_UNC", &self.AZIMUTH_UNC());
       ds.field("AZIMUTH_RATE", &self.AZIMUTH_RATE());
@@ -1496,53 +1766,51 @@ impl core::fmt::Debug for RFO<'_> {
       ds.field("SENLON", &self.SENLON());
       ds.field("SENALT", &self.SENALT());
       ds.field("ELNOT", &self.ELNOT());
+      ds.field("ANTENNA_NAME", &self.ANTENNA_NAME());
+      ds.field("COLLECTION_MODE", &self.COLLECTION_MODE());
       ds.field("FREQUENCY", &self.FREQUENCY());
       ds.field("NOMINAL_FREQUENCY", &self.NOMINAL_FREQUENCY());
       ds.field("START_FREQUENCY", &self.START_FREQUENCY());
       ds.field("END_FREQUENCY", &self.END_FREQUENCY());
-      ds.field("RELATIVE_CARRIER_POWER", &self.RELATIVE_CARRIER_POWER());
-      ds.field("SPECTRUM_ANALYZER_POWER", &self.SPECTRUM_ANALYZER_POWER());
-      ds.field("RELATIVE_NOISE_FLOOR", &self.RELATIVE_NOISE_FLOOR());
-      ds.field("REFERENCE_LEVEL", &self.REFERENCE_LEVEL());
-      ds.field("PGRI", &self.PGRI());
-      ds.field("CONFIDENCE", &self.CONFIDENCE());
-      ds.field("INCOMING", &self.INCOMING());
-      ds.field("SWITCH_POINT", &self.SWITCH_POINT());
-      ds.field("BAUD_RATE", &self.BAUD_RATE());
-      ds.field("SNR", &self.SNR());
-      ds.field("NOMINAL_SNR", &self.NOMINAL_SNR());
-      ds.field("POLARITY", &self.POLARITY());
-      ds.field("POLARITY_TYPE", &self.POLARITY_TYPE());
-      ds.field("CHANNEL", &self.CHANNEL());
-      ds.field("POWER_OVER_NOISE", &self.POWER_OVER_NOISE());
-      ds.field("NOMINAL_POWER_OVER_NOISE", &self.NOMINAL_POWER_OVER_NOISE());
+      ds.field("FREQUENCY_SHIFT", &self.FREQUENCY_SHIFT());
       ds.field("BANDWIDTH", &self.BANDWIDTH());
       ds.field("NOMINAL_BANDWIDTH", &self.NOMINAL_BANDWIDTH());
       ds.field("RESOLUTION_BANDWIDTH", &self.RESOLUTION_BANDWIDTH());
       ds.field("VIDEO_BANDWIDTH", &self.VIDEO_BANDWIDTH());
+      ds.field("RELATIVE_CARRIER_POWER", &self.RELATIVE_CARRIER_POWER());
+      ds.field("SPECTRUM_ANALYZER_POWER", &self.SPECTRUM_ANALYZER_POWER());
+      ds.field("RELATIVE_NOISE_FLOOR", &self.RELATIVE_NOISE_FLOOR());
+      ds.field("REFERENCE_LEVEL", &self.REFERENCE_LEVEL());
+      ds.field("NOISE_PWR_DENSITY", &self.NOISE_PWR_DENSITY());
+      ds.field("PGRI", &self.PGRI());
       ds.field("EIRP", &self.EIRP());
       ds.field("NOMINAL_EIRP", &self.NOMINAL_EIRP());
       ds.field("MIN_PSD", &self.MIN_PSD());
       ds.field("MAX_PSD", &self.MAX_PSD());
-      ds.field("FREQUENCY_SHIFT", &self.FREQUENCY_SHIFT());
+      ds.field("SNR", &self.SNR());
+      ds.field("NOMINAL_SNR", &self.NOMINAL_SNR());
+      ds.field("POWER_OVER_NOISE", &self.POWER_OVER_NOISE());
+      ds.field("NOMINAL_POWER_OVER_NOISE", &self.NOMINAL_POWER_OVER_NOISE());
+      ds.field("POLARITY", &self.POLARITY());
+      ds.field("POLARITY_TYPE", &self.POLARITY_TYPE());
+      ds.field("CHANNEL", &self.CHANNEL());
+      ds.field("BAUD_RATE", &self.BAUD_RATE());
+      ds.field("SYMBOL_TO_NOISE_RATIO", &self.SYMBOL_TO_NOISE_RATIO());
+      ds.field("BIT_ERROR_RATE", &self.BIT_ERROR_RATE());
       ds.field("PEAK", &self.PEAK());
-      ds.field("ANTENNA_NAME", &self.ANTENNA_NAME());
-      ds.field("DETECTION_STATUS", &self.DETECTION_STATUS());
-      ds.field("COLLECTION_MODE", &self.COLLECTION_MODE());
-      ds.field("RAW_FILE_URI", &self.RAW_FILE_URI());
-      ds.field("TAGS", &self.TAGS());
-      ds.field("NOISE_PWR_DENSITY", &self.NOISE_PWR_DENSITY());
+      ds.field("INCOMING", &self.INCOMING());
+      ds.field("SWITCH_POINT", &self.SWITCH_POINT());
+      ds.field("CONFIDENCE", &self.CONFIDENCE());
       ds.field("CARRIER_STANDARD", &self.CARRIER_STANDARD());
       ds.field("MODULATION", &self.MODULATION());
       ds.field("INNER_CODING_RATE", &self.INNER_CODING_RATE());
       ds.field("OUTER_CODING_RATE", &self.OUTER_CODING_RATE());
       ds.field("TRANSMIT_FILTER_TYPE", &self.TRANSMIT_FILTER_TYPE());
       ds.field("TRANSMIT_FILTER_ROLL_OFF", &self.TRANSMIT_FILTER_ROLL_OFF());
-      ds.field("SYMBOL_TO_NOISE_RATIO", &self.SYMBOL_TO_NOISE_RATIO());
-      ds.field("BIT_ERROR_RATE", &self.BIT_ERROR_RATE());
-      ds.field("ON_ORBIT", &self.ON_ORBIT());
+      ds.field("RAW_FILE_URI", &self.RAW_FILE_URI());
       ds.field("DESCRIPTOR", &self.DESCRIPTOR());
       ds.field("URL", &self.URL());
+      ds.field("TAGS", &self.TAGS());
       ds.finish()
   }
 }
@@ -1552,15 +1820,17 @@ pub struct RFOT {
   pub ID: Option<String>,
   pub OB_TIME: Option<String>,
   pub ID_SENSOR: Option<String>,
-  pub TYPE: Option<String>,
-  pub SAT_NO: i32,
+  pub ORIG_SENSOR_ID: Option<String>,
+  pub OBS_TYPE: rfObsType,
+  pub SAT_NO: u32,
+  pub ORIG_OBJECT_ID: Option<String>,
+  pub ON_ORBIT: Option<String>,
+  pub UCT: bool,
   pub TASK_ID: Option<String>,
   pub TRANSACTION_ID: Option<String>,
   pub TRACK_ID: Option<String>,
-  pub ORIG_OBJECT_ID: Option<String>,
-  pub ORIG_SENSOR_ID: Option<String>,
-  pub UCT: bool,
   pub TRANSPONDER: Option<String>,
+  pub DETECTION_STATUS: rfDetectionStatus,
   pub AZIMUTH: f64,
   pub AZIMUTH_UNC: f64,
   pub AZIMUTH_RATE: f64,
@@ -1576,53 +1846,51 @@ pub struct RFOT {
   pub SENLON: f64,
   pub SENALT: f64,
   pub ELNOT: Option<String>,
+  pub ANTENNA_NAME: Option<String>,
+  pub COLLECTION_MODE: Option<String>,
   pub FREQUENCY: f64,
   pub NOMINAL_FREQUENCY: f64,
   pub START_FREQUENCY: f64,
   pub END_FREQUENCY: f64,
-  pub RELATIVE_CARRIER_POWER: f64,
-  pub SPECTRUM_ANALYZER_POWER: f64,
-  pub RELATIVE_NOISE_FLOOR: f64,
-  pub REFERENCE_LEVEL: f64,
-  pub PGRI: f64,
-  pub CONFIDENCE: f64,
-  pub INCOMING: bool,
-  pub SWITCH_POINT: i32,
-  pub BAUD_RATE: f64,
-  pub SNR: f64,
-  pub NOMINAL_SNR: f64,
-  pub POLARITY: f64,
-  pub POLARITY_TYPE: Option<String>,
-  pub CHANNEL: i32,
-  pub POWER_OVER_NOISE: f64,
-  pub NOMINAL_POWER_OVER_NOISE: f64,
+  pub FREQUENCY_SHIFT: f64,
   pub BANDWIDTH: f64,
   pub NOMINAL_BANDWIDTH: f64,
   pub RESOLUTION_BANDWIDTH: f64,
   pub VIDEO_BANDWIDTH: f64,
+  pub RELATIVE_CARRIER_POWER: f64,
+  pub SPECTRUM_ANALYZER_POWER: f64,
+  pub RELATIVE_NOISE_FLOOR: f64,
+  pub REFERENCE_LEVEL: f64,
+  pub NOISE_PWR_DENSITY: f64,
+  pub PGRI: f64,
   pub EIRP: f64,
   pub NOMINAL_EIRP: f64,
   pub MIN_PSD: f64,
   pub MAX_PSD: f64,
-  pub FREQUENCY_SHIFT: f64,
-  pub PEAK: bool,
-  pub ANTENNA_NAME: Option<String>,
-  pub DETECTION_STATUS: Option<String>,
-  pub COLLECTION_MODE: Option<String>,
-  pub RAW_FILE_URI: Option<String>,
-  pub TAGS: Option<Vec<String>>,
-  pub NOISE_PWR_DENSITY: f64,
-  pub CARRIER_STANDARD: Option<String>,
-  pub MODULATION: Option<String>,
-  pub INNER_CODING_RATE: i32,
-  pub OUTER_CODING_RATE: i32,
-  pub TRANSMIT_FILTER_TYPE: Option<String>,
-  pub TRANSMIT_FILTER_ROLL_OFF: f64,
+  pub SNR: f64,
+  pub NOMINAL_SNR: f64,
+  pub POWER_OVER_NOISE: f64,
+  pub NOMINAL_POWER_OVER_NOISE: f64,
+  pub POLARITY: f64,
+  pub POLARITY_TYPE: Option<String>,
+  pub CHANNEL: u16,
+  pub BAUD_RATE: f64,
   pub SYMBOL_TO_NOISE_RATIO: f64,
   pub BIT_ERROR_RATE: f64,
-  pub ON_ORBIT: Option<String>,
+  pub PEAK: bool,
+  pub INCOMING: bool,
+  pub SWITCH_POINT: u16,
+  pub CONFIDENCE: f64,
+  pub CARRIER_STANDARD: Option<String>,
+  pub MODULATION: Option<String>,
+  pub INNER_CODING_RATE: u8,
+  pub OUTER_CODING_RATE: u8,
+  pub TRANSMIT_FILTER_TYPE: Option<String>,
+  pub TRANSMIT_FILTER_ROLL_OFF: f64,
+  pub RAW_FILE_URI: Option<String>,
   pub DESCRIPTOR: Option<String>,
   pub URL: Option<String>,
+  pub TAGS: Option<Vec<String>>,
 }
 impl Default for RFOT {
   fn default() -> Self {
@@ -1630,15 +1898,17 @@ impl Default for RFOT {
       ID: None,
       OB_TIME: None,
       ID_SENSOR: None,
-      TYPE: None,
+      ORIG_SENSOR_ID: None,
+      OBS_TYPE: rfObsType::EMISSION,
       SAT_NO: 0,
+      ORIG_OBJECT_ID: None,
+      ON_ORBIT: None,
+      UCT: false,
       TASK_ID: None,
       TRANSACTION_ID: None,
       TRACK_ID: None,
-      ORIG_OBJECT_ID: None,
-      ORIG_SENSOR_ID: None,
-      UCT: false,
       TRANSPONDER: None,
+      DETECTION_STATUS: rfDetectionStatus::DETECTED,
       AZIMUTH: 0.0,
       AZIMUTH_UNC: 0.0,
       AZIMUTH_RATE: 0.0,
@@ -1654,53 +1924,51 @@ impl Default for RFOT {
       SENLON: 0.0,
       SENALT: 0.0,
       ELNOT: None,
+      ANTENNA_NAME: None,
+      COLLECTION_MODE: None,
       FREQUENCY: 0.0,
       NOMINAL_FREQUENCY: 0.0,
       START_FREQUENCY: 0.0,
       END_FREQUENCY: 0.0,
-      RELATIVE_CARRIER_POWER: 0.0,
-      SPECTRUM_ANALYZER_POWER: 0.0,
-      RELATIVE_NOISE_FLOOR: 0.0,
-      REFERENCE_LEVEL: 0.0,
-      PGRI: 0.0,
-      CONFIDENCE: 0.0,
-      INCOMING: false,
-      SWITCH_POINT: 0,
-      BAUD_RATE: 0.0,
-      SNR: 0.0,
-      NOMINAL_SNR: 0.0,
-      POLARITY: 0.0,
-      POLARITY_TYPE: None,
-      CHANNEL: 0,
-      POWER_OVER_NOISE: 0.0,
-      NOMINAL_POWER_OVER_NOISE: 0.0,
+      FREQUENCY_SHIFT: 0.0,
       BANDWIDTH: 0.0,
       NOMINAL_BANDWIDTH: 0.0,
       RESOLUTION_BANDWIDTH: 0.0,
       VIDEO_BANDWIDTH: 0.0,
+      RELATIVE_CARRIER_POWER: 0.0,
+      SPECTRUM_ANALYZER_POWER: 0.0,
+      RELATIVE_NOISE_FLOOR: 0.0,
+      REFERENCE_LEVEL: 0.0,
+      NOISE_PWR_DENSITY: 0.0,
+      PGRI: 0.0,
       EIRP: 0.0,
       NOMINAL_EIRP: 0.0,
       MIN_PSD: 0.0,
       MAX_PSD: 0.0,
-      FREQUENCY_SHIFT: 0.0,
+      SNR: 0.0,
+      NOMINAL_SNR: 0.0,
+      POWER_OVER_NOISE: 0.0,
+      NOMINAL_POWER_OVER_NOISE: 0.0,
+      POLARITY: 0.0,
+      POLARITY_TYPE: None,
+      CHANNEL: 0,
+      BAUD_RATE: 0.0,
+      SYMBOL_TO_NOISE_RATIO: 0.0,
+      BIT_ERROR_RATE: 0.0,
       PEAK: false,
-      ANTENNA_NAME: None,
-      DETECTION_STATUS: None,
-      COLLECTION_MODE: None,
-      RAW_FILE_URI: None,
-      TAGS: None,
-      NOISE_PWR_DENSITY: 0.0,
+      INCOMING: false,
+      SWITCH_POINT: 0,
+      CONFIDENCE: 0.0,
       CARRIER_STANDARD: None,
       MODULATION: None,
       INNER_CODING_RATE: 0,
       OUTER_CODING_RATE: 0,
       TRANSMIT_FILTER_TYPE: None,
       TRANSMIT_FILTER_ROLL_OFF: 0.0,
-      SYMBOL_TO_NOISE_RATIO: 0.0,
-      BIT_ERROR_RATE: 0.0,
-      ON_ORBIT: None,
+      RAW_FILE_URI: None,
       DESCRIPTOR: None,
       URL: None,
+      TAGS: None,
     }
   }
 }
@@ -1718,10 +1986,18 @@ impl RFOT {
     let ID_SENSOR = self.ID_SENSOR.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let TYPE = self.TYPE.as_ref().map(|x|{
+    let ORIG_SENSOR_ID = self.ORIG_SENSOR_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let OBS_TYPE = self.OBS_TYPE;
     let SAT_NO = self.SAT_NO;
+    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ON_ORBIT = self.ON_ORBIT.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let UCT = self.UCT;
     let TASK_ID = self.TASK_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -1731,16 +2007,10 @@ impl RFOT {
     let TRACK_ID = self.TRACK_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let ORIG_SENSOR_ID = self.ORIG_SENSOR_ID.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let UCT = self.UCT;
     let TRANSPONDER = self.TRANSPONDER.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let DETECTION_STATUS = self.DETECTION_STATUS;
     let AZIMUTH = self.AZIMUTH;
     let AZIMUTH_UNC = self.AZIMUTH_UNC;
     let AZIMUTH_RATE = self.AZIMUTH_RATE;
@@ -1758,54 +2028,47 @@ impl RFOT {
     let ELNOT = self.ELNOT.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let FREQUENCY = self.FREQUENCY;
-    let NOMINAL_FREQUENCY = self.NOMINAL_FREQUENCY;
-    let START_FREQUENCY = self.START_FREQUENCY;
-    let END_FREQUENCY = self.END_FREQUENCY;
-    let RELATIVE_CARRIER_POWER = self.RELATIVE_CARRIER_POWER;
-    let SPECTRUM_ANALYZER_POWER = self.SPECTRUM_ANALYZER_POWER;
-    let RELATIVE_NOISE_FLOOR = self.RELATIVE_NOISE_FLOOR;
-    let REFERENCE_LEVEL = self.REFERENCE_LEVEL;
-    let PGRI = self.PGRI;
-    let CONFIDENCE = self.CONFIDENCE;
-    let INCOMING = self.INCOMING;
-    let SWITCH_POINT = self.SWITCH_POINT;
-    let BAUD_RATE = self.BAUD_RATE;
-    let SNR = self.SNR;
-    let NOMINAL_SNR = self.NOMINAL_SNR;
-    let POLARITY = self.POLARITY;
-    let POLARITY_TYPE = self.POLARITY_TYPE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let CHANNEL = self.CHANNEL;
-    let POWER_OVER_NOISE = self.POWER_OVER_NOISE;
-    let NOMINAL_POWER_OVER_NOISE = self.NOMINAL_POWER_OVER_NOISE;
-    let BANDWIDTH = self.BANDWIDTH;
-    let NOMINAL_BANDWIDTH = self.NOMINAL_BANDWIDTH;
-    let RESOLUTION_BANDWIDTH = self.RESOLUTION_BANDWIDTH;
-    let VIDEO_BANDWIDTH = self.VIDEO_BANDWIDTH;
-    let EIRP = self.EIRP;
-    let NOMINAL_EIRP = self.NOMINAL_EIRP;
-    let MIN_PSD = self.MIN_PSD;
-    let MAX_PSD = self.MAX_PSD;
-    let FREQUENCY_SHIFT = self.FREQUENCY_SHIFT;
-    let PEAK = self.PEAK;
     let ANTENNA_NAME = self.ANTENNA_NAME.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let DETECTION_STATUS = self.DETECTION_STATUS.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let COLLECTION_MODE = self.COLLECTION_MODE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let RAW_FILE_URI = self.RAW_FILE_URI.as_ref().map(|x|{
+    let FREQUENCY = self.FREQUENCY;
+    let NOMINAL_FREQUENCY = self.NOMINAL_FREQUENCY;
+    let START_FREQUENCY = self.START_FREQUENCY;
+    let END_FREQUENCY = self.END_FREQUENCY;
+    let FREQUENCY_SHIFT = self.FREQUENCY_SHIFT;
+    let BANDWIDTH = self.BANDWIDTH;
+    let NOMINAL_BANDWIDTH = self.NOMINAL_BANDWIDTH;
+    let RESOLUTION_BANDWIDTH = self.RESOLUTION_BANDWIDTH;
+    let VIDEO_BANDWIDTH = self.VIDEO_BANDWIDTH;
+    let RELATIVE_CARRIER_POWER = self.RELATIVE_CARRIER_POWER;
+    let SPECTRUM_ANALYZER_POWER = self.SPECTRUM_ANALYZER_POWER;
+    let RELATIVE_NOISE_FLOOR = self.RELATIVE_NOISE_FLOOR;
+    let REFERENCE_LEVEL = self.REFERENCE_LEVEL;
+    let NOISE_PWR_DENSITY = self.NOISE_PWR_DENSITY;
+    let PGRI = self.PGRI;
+    let EIRP = self.EIRP;
+    let NOMINAL_EIRP = self.NOMINAL_EIRP;
+    let MIN_PSD = self.MIN_PSD;
+    let MAX_PSD = self.MAX_PSD;
+    let SNR = self.SNR;
+    let NOMINAL_SNR = self.NOMINAL_SNR;
+    let POWER_OVER_NOISE = self.POWER_OVER_NOISE;
+    let NOMINAL_POWER_OVER_NOISE = self.NOMINAL_POWER_OVER_NOISE;
+    let POLARITY = self.POLARITY;
+    let POLARITY_TYPE = self.POLARITY_TYPE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let TAGS = self.TAGS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    let NOISE_PWR_DENSITY = self.NOISE_PWR_DENSITY;
+    let CHANNEL = self.CHANNEL;
+    let BAUD_RATE = self.BAUD_RATE;
+    let SYMBOL_TO_NOISE_RATIO = self.SYMBOL_TO_NOISE_RATIO;
+    let BIT_ERROR_RATE = self.BIT_ERROR_RATE;
+    let PEAK = self.PEAK;
+    let INCOMING = self.INCOMING;
+    let SWITCH_POINT = self.SWITCH_POINT;
+    let CONFIDENCE = self.CONFIDENCE;
     let CARRIER_STANDARD = self.CARRIER_STANDARD.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -1818,9 +2081,7 @@ impl RFOT {
       _fbb.create_string(x)
     });
     let TRANSMIT_FILTER_ROLL_OFF = self.TRANSMIT_FILTER_ROLL_OFF;
-    let SYMBOL_TO_NOISE_RATIO = self.SYMBOL_TO_NOISE_RATIO;
-    let BIT_ERROR_RATE = self.BIT_ERROR_RATE;
-    let ON_ORBIT = self.ON_ORBIT.as_ref().map(|x|{
+    let RAW_FILE_URI = self.RAW_FILE_URI.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let DESCRIPTOR = self.DESCRIPTOR.as_ref().map(|x|{
@@ -1829,19 +2090,24 @@ impl RFOT {
     let URL = self.URL.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let TAGS = self.TAGS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
     RFO::create(_fbb, &RFOArgs{
       ID,
       OB_TIME,
       ID_SENSOR,
-      TYPE,
+      ORIG_SENSOR_ID,
+      OBS_TYPE,
       SAT_NO,
+      ORIG_OBJECT_ID,
+      ON_ORBIT,
+      UCT,
       TASK_ID,
       TRANSACTION_ID,
       TRACK_ID,
-      ORIG_OBJECT_ID,
-      ORIG_SENSOR_ID,
-      UCT,
       TRANSPONDER,
+      DETECTION_STATUS,
       AZIMUTH,
       AZIMUTH_UNC,
       AZIMUTH_RATE,
@@ -1857,53 +2123,51 @@ impl RFOT {
       SENLON,
       SENALT,
       ELNOT,
+      ANTENNA_NAME,
+      COLLECTION_MODE,
       FREQUENCY,
       NOMINAL_FREQUENCY,
       START_FREQUENCY,
       END_FREQUENCY,
-      RELATIVE_CARRIER_POWER,
-      SPECTRUM_ANALYZER_POWER,
-      RELATIVE_NOISE_FLOOR,
-      REFERENCE_LEVEL,
-      PGRI,
-      CONFIDENCE,
-      INCOMING,
-      SWITCH_POINT,
-      BAUD_RATE,
-      SNR,
-      NOMINAL_SNR,
-      POLARITY,
-      POLARITY_TYPE,
-      CHANNEL,
-      POWER_OVER_NOISE,
-      NOMINAL_POWER_OVER_NOISE,
+      FREQUENCY_SHIFT,
       BANDWIDTH,
       NOMINAL_BANDWIDTH,
       RESOLUTION_BANDWIDTH,
       VIDEO_BANDWIDTH,
+      RELATIVE_CARRIER_POWER,
+      SPECTRUM_ANALYZER_POWER,
+      RELATIVE_NOISE_FLOOR,
+      REFERENCE_LEVEL,
+      NOISE_PWR_DENSITY,
+      PGRI,
       EIRP,
       NOMINAL_EIRP,
       MIN_PSD,
       MAX_PSD,
-      FREQUENCY_SHIFT,
+      SNR,
+      NOMINAL_SNR,
+      POWER_OVER_NOISE,
+      NOMINAL_POWER_OVER_NOISE,
+      POLARITY,
+      POLARITY_TYPE,
+      CHANNEL,
+      BAUD_RATE,
+      SYMBOL_TO_NOISE_RATIO,
+      BIT_ERROR_RATE,
       PEAK,
-      ANTENNA_NAME,
-      DETECTION_STATUS,
-      COLLECTION_MODE,
-      RAW_FILE_URI,
-      TAGS,
-      NOISE_PWR_DENSITY,
+      INCOMING,
+      SWITCH_POINT,
+      CONFIDENCE,
       CARRIER_STANDARD,
       MODULATION,
       INNER_CODING_RATE,
       OUTER_CODING_RATE,
       TRANSMIT_FILTER_TYPE,
       TRANSMIT_FILTER_ROLL_OFF,
-      SYMBOL_TO_NOISE_RATIO,
-      BIT_ERROR_RATE,
-      ON_ORBIT,
+      RAW_FILE_URI,
       DESCRIPTOR,
       URL,
+      TAGS,
     })
   }
 }

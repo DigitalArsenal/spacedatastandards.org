@@ -29,59 +29,178 @@ public final class STR extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public STR __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique internal identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * CelesTrak Star catalog identifier
+   */
   public long CS_ID() { int o = __offset(6); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
-  public int GNC_CAT_ID() { int o = __offset(8); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * GNC star catalog identifier
+   */
+  public long GNC_CAT_ID() { int o = __offset(8); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Gaia DR3 source identifier
+   */
   public long GAIADR3_CAT_ID() { int o = __offset(10); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
-  public int HIP_CAT_ID() { int o = __offset(12); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Hipparcos catalog identifier
+   */
+  public long HIP_CAT_ID() { int o = __offset(12); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Catalog version string
+   */
   public String CAT_VERSION() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CAT_VERSIONAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
   public ByteBuffer CAT_VERSIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
-  public double RA() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double RA_UNC() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double DEC() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double DEC_UNC() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public boolean POS_UNC_FLAG() { int o = __offset(24); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public double PARALLAX() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double PARALLAX_UNC() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double PMRA() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double PMRA_UNC() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double PMDEC() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double PMDEC_UNC() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public boolean PM_UNC_FLAG() { int o = __offset(38); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public String ASTROMETRY_ORIGIN() { int o = __offset(40); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ASTROMETRY_ORIGINAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
-  public ByteBuffer ASTROMETRY_ORIGINInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
-  public double STAR_EPOCH() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Astrometry source description
+   */
+  public String ASTROMETRY_ORIGIN() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ASTROMETRY_ORIGINAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
+  public ByteBuffer ASTROMETRY_ORIGINInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  /**
+   * Epoch of stellar position (Julian years)
+   */
+  public double STAR_EPOCH() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Right ascension (degrees, ICRS)
+   */
+  public double RA() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Right ascension uncertainty (arcseconds)
+   */
+  public double RA_UNC() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Declination (degrees, ICRS)
+   */
+  public double DEC() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Declination uncertainty (arcseconds)
+   */
+  public double DEC_UNC() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * True if position uncertainty is flagged
+   */
+  public boolean POS_UNC_FLAG() { int o = __offset(28); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Parallax (milliarcseconds)
+   */
+  public double PARALLAX() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Parallax uncertainty (milliarcseconds)
+   */
+  public double PARALLAX_UNC() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Proper motion in RA (milliarcseconds/year)
+   */
+  public double PMRA() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Proper motion in RA uncertainty (milliarcseconds/year)
+   */
+  public double PMRA_UNC() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Proper motion in DEC (milliarcseconds/year)
+   */
+  public double PMDEC() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Proper motion in DEC uncertainty (milliarcseconds/year)
+   */
+  public double PMDEC_UNC() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * True if proper motion uncertainty is flagged
+   */
+  public boolean PM_UNC_FLAG() { int o = __offset(42); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Gaia G-band magnitude
+   */
   public double GMAG() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Gaia G-band magnitude uncertainty
+   */
   public double GMAG_UNC() { int o = __offset(46); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Gaia BP-band magnitude (blue photometer)
+   */
   public double BPMAG() { int o = __offset(48); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Gaia BP-band magnitude uncertainty
+   */
   public double BPMAG_UNC() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Gaia RP-band magnitude (red photometer)
+   */
   public double RPMAG() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Gaia RP-band magnitude uncertainty
+   */
   public double RPMAG_UNC() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * 2MASS J-band magnitude (1.25 um)
+   */
   public double JMAG() { int o = __offset(56); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * J-band magnitude uncertainty
+   */
   public double JMAG_UNC() { int o = __offset(58); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * 2MASS K-band magnitude (2.17 um)
+   */
   public double KMAG() { int o = __offset(60); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * K-band magnitude uncertainty
+   */
   public double KMAG_UNC() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * 2MASS H-band magnitude (1.65 um)
+   */
   public double HMAG() { int o = __offset(64); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * H-band magnitude uncertainty
+   */
   public double HMAG_UNC() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * True if star is variable
+   */
   public boolean VAR_FLAG() { int o = __offset(68); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * True if star is in a multiple system
+   */
   public boolean MULT_FLAG() { int o = __offset(70); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public int NEIGHBOR_ID() { int o = __offset(72); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Nearest neighbor catalog identifier
+   */
+  public long NEIGHBOR_ID() { int o = __offset(72); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * True if nearest neighbor is within confusion radius
+   */
   public boolean NEIGHBOR_FLAG() { int o = __offset(74); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Distance to nearest neighbor (arcseconds)
+   */
   public double NEIGHBOR_DISTANCE() { int o = __offset(76); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * True if position shift detected between catalogs
+   */
   public boolean SHIFT_FLAG() { int o = __offset(78); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Position shift magnitude (arcseconds)
+   */
   public double SHIFT() { int o = __offset(80); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createSTR(FlatBufferBuilder builder,
       int IDOffset,
       long CS_ID,
-      int GNC_CAT_ID,
+      long GNC_CAT_ID,
       long GAIADR3_CAT_ID,
-      int HIP_CAT_ID,
+      long HIP_CAT_ID,
       int CAT_VERSIONOffset,
+      int ASTROMETRY_ORIGINOffset,
+      double STAR_EPOCH,
       double RA,
       double RA_UNC,
       double DEC,
@@ -94,8 +213,6 @@ public final class STR extends Table {
       double PMDEC,
       double PMDEC_UNC,
       boolean PM_UNC_FLAG,
-      int ASTROMETRY_ORIGINOffset,
-      double STAR_EPOCH,
       double GMAG,
       double GMAG_UNC,
       double BPMAG,
@@ -110,7 +227,7 @@ public final class STR extends Table {
       double HMAG_UNC,
       boolean VAR_FLAG,
       boolean MULT_FLAG,
-      int NEIGHBOR_ID,
+      long NEIGHBOR_ID,
       boolean NEIGHBOR_FLAG,
       double NEIGHBOR_DISTANCE,
       boolean SHIFT_FLAG,
@@ -130,7 +247,6 @@ public final class STR extends Table {
     STR.addBpmag(builder, BPMAG);
     STR.addGmagUnc(builder, GMAG_UNC);
     STR.addGmag(builder, GMAG);
-    STR.addStarEpoch(builder, STAR_EPOCH);
     STR.addPmdecUnc(builder, PMDEC_UNC);
     STR.addPmdec(builder, PMDEC);
     STR.addPmraUnc(builder, PMRA_UNC);
@@ -141,6 +257,7 @@ public final class STR extends Table {
     STR.addDec(builder, DEC);
     STR.addRaUnc(builder, RA_UNC);
     STR.addRa(builder, RA);
+    STR.addStarEpoch(builder, STAR_EPOCH);
     STR.addGaiadr3CatId(builder, GAIADR3_CAT_ID);
     STR.addCsId(builder, CS_ID);
     STR.addNeighborId(builder, NEIGHBOR_ID);
@@ -161,24 +278,24 @@ public final class STR extends Table {
   public static void startSTR(FlatBufferBuilder builder) { builder.startTable(39); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addCsId(FlatBufferBuilder builder, long CS_ID) { builder.addLong(1, CS_ID, 0L); }
-  public static void addGncCatId(FlatBufferBuilder builder, int GNC_CAT_ID) { builder.addInt(2, GNC_CAT_ID, 0); }
+  public static void addGncCatId(FlatBufferBuilder builder, long GNC_CAT_ID) { builder.addInt(2, (int) GNC_CAT_ID, (int) 0L); }
   public static void addGaiadr3CatId(FlatBufferBuilder builder, long GAIADR3_CAT_ID) { builder.addLong(3, GAIADR3_CAT_ID, 0L); }
-  public static void addHipCatId(FlatBufferBuilder builder, int HIP_CAT_ID) { builder.addInt(4, HIP_CAT_ID, 0); }
+  public static void addHipCatId(FlatBufferBuilder builder, long HIP_CAT_ID) { builder.addInt(4, (int) HIP_CAT_ID, (int) 0L); }
   public static void addCatVersion(FlatBufferBuilder builder, int CAT_VERSIONOffset) { builder.addOffset(5, CAT_VERSIONOffset, 0); }
-  public static void addRa(FlatBufferBuilder builder, double RA) { builder.addDouble(6, RA, 0.0); }
-  public static void addRaUnc(FlatBufferBuilder builder, double RA_UNC) { builder.addDouble(7, RA_UNC, 0.0); }
-  public static void addDec(FlatBufferBuilder builder, double DEC) { builder.addDouble(8, DEC, 0.0); }
-  public static void addDecUnc(FlatBufferBuilder builder, double DEC_UNC) { builder.addDouble(9, DEC_UNC, 0.0); }
-  public static void addPosUncFlag(FlatBufferBuilder builder, boolean POS_UNC_FLAG) { builder.addBoolean(10, POS_UNC_FLAG, false); }
-  public static void addParallax(FlatBufferBuilder builder, double PARALLAX) { builder.addDouble(11, PARALLAX, 0.0); }
-  public static void addParallaxUnc(FlatBufferBuilder builder, double PARALLAX_UNC) { builder.addDouble(12, PARALLAX_UNC, 0.0); }
-  public static void addPmra(FlatBufferBuilder builder, double PMRA) { builder.addDouble(13, PMRA, 0.0); }
-  public static void addPmraUnc(FlatBufferBuilder builder, double PMRA_UNC) { builder.addDouble(14, PMRA_UNC, 0.0); }
-  public static void addPmdec(FlatBufferBuilder builder, double PMDEC) { builder.addDouble(15, PMDEC, 0.0); }
-  public static void addPmdecUnc(FlatBufferBuilder builder, double PMDEC_UNC) { builder.addDouble(16, PMDEC_UNC, 0.0); }
-  public static void addPmUncFlag(FlatBufferBuilder builder, boolean PM_UNC_FLAG) { builder.addBoolean(17, PM_UNC_FLAG, false); }
-  public static void addAstrometryOrigin(FlatBufferBuilder builder, int ASTROMETRY_ORIGINOffset) { builder.addOffset(18, ASTROMETRY_ORIGINOffset, 0); }
-  public static void addStarEpoch(FlatBufferBuilder builder, double STAR_EPOCH) { builder.addDouble(19, STAR_EPOCH, 0.0); }
+  public static void addAstrometryOrigin(FlatBufferBuilder builder, int ASTROMETRY_ORIGINOffset) { builder.addOffset(6, ASTROMETRY_ORIGINOffset, 0); }
+  public static void addStarEpoch(FlatBufferBuilder builder, double STAR_EPOCH) { builder.addDouble(7, STAR_EPOCH, 0.0); }
+  public static void addRa(FlatBufferBuilder builder, double RA) { builder.addDouble(8, RA, 0.0); }
+  public static void addRaUnc(FlatBufferBuilder builder, double RA_UNC) { builder.addDouble(9, RA_UNC, 0.0); }
+  public static void addDec(FlatBufferBuilder builder, double DEC) { builder.addDouble(10, DEC, 0.0); }
+  public static void addDecUnc(FlatBufferBuilder builder, double DEC_UNC) { builder.addDouble(11, DEC_UNC, 0.0); }
+  public static void addPosUncFlag(FlatBufferBuilder builder, boolean POS_UNC_FLAG) { builder.addBoolean(12, POS_UNC_FLAG, false); }
+  public static void addParallax(FlatBufferBuilder builder, double PARALLAX) { builder.addDouble(13, PARALLAX, 0.0); }
+  public static void addParallaxUnc(FlatBufferBuilder builder, double PARALLAX_UNC) { builder.addDouble(14, PARALLAX_UNC, 0.0); }
+  public static void addPmra(FlatBufferBuilder builder, double PMRA) { builder.addDouble(15, PMRA, 0.0); }
+  public static void addPmraUnc(FlatBufferBuilder builder, double PMRA_UNC) { builder.addDouble(16, PMRA_UNC, 0.0); }
+  public static void addPmdec(FlatBufferBuilder builder, double PMDEC) { builder.addDouble(17, PMDEC, 0.0); }
+  public static void addPmdecUnc(FlatBufferBuilder builder, double PMDEC_UNC) { builder.addDouble(18, PMDEC_UNC, 0.0); }
+  public static void addPmUncFlag(FlatBufferBuilder builder, boolean PM_UNC_FLAG) { builder.addBoolean(19, PM_UNC_FLAG, false); }
   public static void addGmag(FlatBufferBuilder builder, double GMAG) { builder.addDouble(20, GMAG, 0.0); }
   public static void addGmagUnc(FlatBufferBuilder builder, double GMAG_UNC) { builder.addDouble(21, GMAG_UNC, 0.0); }
   public static void addBpmag(FlatBufferBuilder builder, double BPMAG) { builder.addDouble(22, BPMAG, 0.0); }
@@ -193,7 +310,7 @@ public final class STR extends Table {
   public static void addHmagUnc(FlatBufferBuilder builder, double HMAG_UNC) { builder.addDouble(31, HMAG_UNC, 0.0); }
   public static void addVarFlag(FlatBufferBuilder builder, boolean VAR_FLAG) { builder.addBoolean(32, VAR_FLAG, false); }
   public static void addMultFlag(FlatBufferBuilder builder, boolean MULT_FLAG) { builder.addBoolean(33, MULT_FLAG, false); }
-  public static void addNeighborId(FlatBufferBuilder builder, int NEIGHBOR_ID) { builder.addInt(34, NEIGHBOR_ID, 0); }
+  public static void addNeighborId(FlatBufferBuilder builder, long NEIGHBOR_ID) { builder.addInt(34, (int) NEIGHBOR_ID, (int) 0L); }
   public static void addNeighborFlag(FlatBufferBuilder builder, boolean NEIGHBOR_FLAG) { builder.addBoolean(35, NEIGHBOR_FLAG, false); }
   public static void addNeighborDistance(FlatBufferBuilder builder, double NEIGHBOR_DISTANCE) { builder.addDouble(36, NEIGHBOR_DISTANCE, 0.0); }
   public static void addShiftFlag(FlatBufferBuilder builder, boolean SHIFT_FLAG) { builder.addBoolean(37, SHIFT_FLAG, false); }

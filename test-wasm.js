@@ -49,7 +49,7 @@ async function main() {
       await resolve(name);
 
       const schemaInput = { entry: `/schemas/${name}/main.fbs`, files };
-      const result = await flatc.generateCode(schemaInput, "typescript", { genObjectApi: true });
+      const result = await flatc.generateCode(schemaInput, "ts", { genObjectApi: true });
 
       if (Object.keys(result).length > 0) {
         passed++;

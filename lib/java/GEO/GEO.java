@@ -29,97 +29,174 @@ public final class GEO extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public GEO __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * International designator
+   */
   public String ORIG_OBJECT_ID() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ORIG_OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer ORIG_OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
-  public double SS() { int o = __offset(8); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double SC() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double RELATIVE_ENERGY() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double LONGITUDE_RATE() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double LONGITUDE_MIN() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double LONGITUDE_MAX() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String CONFIDENCE_LEVEL() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer CONFIDENCE_LEVELAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
-  public ByteBuffer CONFIDENCE_LEVELInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
-  public String PLANE_CHANGE_STATUS() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer PLANE_CHANGE_STATUSAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
-  public ByteBuffer PLANE_CHANGE_STATUSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
-  public String TROUGH_TYPE() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer TROUGH_TYPEAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
-  public ByteBuffer TROUGH_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
-  public boolean LOST_FLAG() { int o = __offset(26); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public boolean SEMI_ANNUAL_CORR_FLAG() { int o = __offset(28); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public String OBJECT_STATUS() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer OBJECT_STATUSAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
-  public ByteBuffer OBJECT_STATUSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
-  public String RAW_FILE_URI() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer RAW_FILE_URIAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
-  public ByteBuffer RAW_FILE_URIInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
-  public String ON_ORBIT() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ON_ORBITAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
-  public ByteBuffer ON_ORBITInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
-  public int SAT_NO() { int o = __offset(36); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Satellite catalog number
+   */
+  public long SAT_NO() { int o = __offset(8); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * On-orbit reference identifier
+   */
+  public String ON_ORBIT() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ON_ORBITAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer ON_ORBITInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * Station-keeping status
+   */
+  public byte STATION_KEEPING() { int o = __offset(12); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Subsatellite point longitude (degrees east)
+   */
+  public double SS() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Longitude of ascending node (degrees)
+   */
+  public double SC() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Relative energy (km^2/s^2)
+   */
+  public double RELATIVE_ENERGY() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Longitude drift rate (degrees/day)
+   */
+  public double LONGITUDE_RATE() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Western longitude boundary of slot (degrees east)
+   */
+  public double LONGITUDE_MIN() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Eastern longitude boundary of slot (degrees east)
+   */
+  public double LONGITUDE_MAX() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Assessment confidence level
+   */
+  public byte CONFIDENCE() { int o = __offset(26); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Trough type (east/west gravitational well)
+   */
+  public byte TROUGH() { int o = __offset(28); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Plane change status description
+   */
+  public String PLANE_CHANGE_STATUS() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PLANE_CHANGE_STATUSAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
+  public ByteBuffer PLANE_CHANGE_STATUSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
+  /**
+   * True if object is lost/not tracked
+   */
+  public boolean LOST_FLAG() { int o = __offset(32); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * True if semi-annual correction applied
+   */
+  public boolean SEMI_ANNUAL_CORR_FLAG() { int o = __offset(34); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Current operational status
+   */
+  public String OBJECT_STATUS() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OBJECT_STATUSAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
+  public ByteBuffer OBJECT_STATUSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
+  /**
+   * Inclination (degrees)
+   */
+  public double INCLINATION() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Eccentricity
+   */
+  public double ECCENTRICITY() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Epoch of status (ISO 8601)
+   */
+  public String EPOCH() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EPOCHAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
+  public ByteBuffer EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
+  /**
+   * Reference to raw data file
+   */
+  public String RAW_FILE_URI() { int o = __offset(44); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer RAW_FILE_URIAsByteBuffer() { return __vector_as_bytebuffer(44, 1); }
+  public ByteBuffer RAW_FILE_URIInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 44, 1); }
 
   public static int createGEO(FlatBufferBuilder builder,
       int IDOffset,
       int ORIG_OBJECT_IDOffset,
+      long SAT_NO,
+      int ON_ORBITOffset,
+      byte STATION_KEEPING,
       double SS,
       double SC,
       double RELATIVE_ENERGY,
       double LONGITUDE_RATE,
       double LONGITUDE_MIN,
       double LONGITUDE_MAX,
-      int CONFIDENCE_LEVELOffset,
+      byte CONFIDENCE,
+      byte TROUGH,
       int PLANE_CHANGE_STATUSOffset,
-      int TROUGH_TYPEOffset,
       boolean LOST_FLAG,
       boolean SEMI_ANNUAL_CORR_FLAG,
       int OBJECT_STATUSOffset,
-      int RAW_FILE_URIOffset,
-      int ON_ORBITOffset,
-      int SAT_NO) {
-    builder.startTable(17);
+      double INCLINATION,
+      double ECCENTRICITY,
+      int EPOCHOffset,
+      int RAW_FILE_URIOffset) {
+    builder.startTable(21);
+    GEO.addEccentricity(builder, ECCENTRICITY);
+    GEO.addInclination(builder, INCLINATION);
     GEO.addLongitudeMax(builder, LONGITUDE_MAX);
     GEO.addLongitudeMin(builder, LONGITUDE_MIN);
     GEO.addLongitudeRate(builder, LONGITUDE_RATE);
     GEO.addRelativeEnergy(builder, RELATIVE_ENERGY);
     GEO.addSc(builder, SC);
     GEO.addSs(builder, SS);
-    GEO.addSatNo(builder, SAT_NO);
-    GEO.addOnOrbit(builder, ON_ORBITOffset);
     GEO.addRawFileUri(builder, RAW_FILE_URIOffset);
+    GEO.addEpoch(builder, EPOCHOffset);
     GEO.addObjectStatus(builder, OBJECT_STATUSOffset);
-    GEO.addTroughType(builder, TROUGH_TYPEOffset);
     GEO.addPlaneChangeStatus(builder, PLANE_CHANGE_STATUSOffset);
-    GEO.addConfidenceLevel(builder, CONFIDENCE_LEVELOffset);
+    GEO.addOnOrbit(builder, ON_ORBITOffset);
+    GEO.addSatNo(builder, SAT_NO);
     GEO.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
     GEO.addId(builder, IDOffset);
     GEO.addSemiAnnualCorrFlag(builder, SEMI_ANNUAL_CORR_FLAG);
     GEO.addLostFlag(builder, LOST_FLAG);
+    GEO.addTrough(builder, TROUGH);
+    GEO.addConfidence(builder, CONFIDENCE);
+    GEO.addStationKeeping(builder, STATION_KEEPING);
     return GEO.endGEO(builder);
   }
 
-  public static void startGEO(FlatBufferBuilder builder) { builder.startTable(17); }
+  public static void startGEO(FlatBufferBuilder builder) { builder.startTable(21); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addOrigObjectId(FlatBufferBuilder builder, int ORIG_OBJECT_IDOffset) { builder.addOffset(1, ORIG_OBJECT_IDOffset, 0); }
-  public static void addSs(FlatBufferBuilder builder, double SS) { builder.addDouble(2, SS, 0.0); }
-  public static void addSc(FlatBufferBuilder builder, double SC) { builder.addDouble(3, SC, 0.0); }
-  public static void addRelativeEnergy(FlatBufferBuilder builder, double RELATIVE_ENERGY) { builder.addDouble(4, RELATIVE_ENERGY, 0.0); }
-  public static void addLongitudeRate(FlatBufferBuilder builder, double LONGITUDE_RATE) { builder.addDouble(5, LONGITUDE_RATE, 0.0); }
-  public static void addLongitudeMin(FlatBufferBuilder builder, double LONGITUDE_MIN) { builder.addDouble(6, LONGITUDE_MIN, 0.0); }
-  public static void addLongitudeMax(FlatBufferBuilder builder, double LONGITUDE_MAX) { builder.addDouble(7, LONGITUDE_MAX, 0.0); }
-  public static void addConfidenceLevel(FlatBufferBuilder builder, int CONFIDENCE_LEVELOffset) { builder.addOffset(8, CONFIDENCE_LEVELOffset, 0); }
-  public static void addPlaneChangeStatus(FlatBufferBuilder builder, int PLANE_CHANGE_STATUSOffset) { builder.addOffset(9, PLANE_CHANGE_STATUSOffset, 0); }
-  public static void addTroughType(FlatBufferBuilder builder, int TROUGH_TYPEOffset) { builder.addOffset(10, TROUGH_TYPEOffset, 0); }
-  public static void addLostFlag(FlatBufferBuilder builder, boolean LOST_FLAG) { builder.addBoolean(11, LOST_FLAG, false); }
-  public static void addSemiAnnualCorrFlag(FlatBufferBuilder builder, boolean SEMI_ANNUAL_CORR_FLAG) { builder.addBoolean(12, SEMI_ANNUAL_CORR_FLAG, false); }
-  public static void addObjectStatus(FlatBufferBuilder builder, int OBJECT_STATUSOffset) { builder.addOffset(13, OBJECT_STATUSOffset, 0); }
-  public static void addRawFileUri(FlatBufferBuilder builder, int RAW_FILE_URIOffset) { builder.addOffset(14, RAW_FILE_URIOffset, 0); }
-  public static void addOnOrbit(FlatBufferBuilder builder, int ON_ORBITOffset) { builder.addOffset(15, ON_ORBITOffset, 0); }
-  public static void addSatNo(FlatBufferBuilder builder, int SAT_NO) { builder.addInt(16, SAT_NO, 0); }
+  public static void addSatNo(FlatBufferBuilder builder, long SAT_NO) { builder.addInt(2, (int) SAT_NO, (int) 0L); }
+  public static void addOnOrbit(FlatBufferBuilder builder, int ON_ORBITOffset) { builder.addOffset(3, ON_ORBITOffset, 0); }
+  public static void addStationKeeping(FlatBufferBuilder builder, byte STATION_KEEPING) { builder.addByte(4, STATION_KEEPING, 0); }
+  public static void addSs(FlatBufferBuilder builder, double SS) { builder.addDouble(5, SS, 0.0); }
+  public static void addSc(FlatBufferBuilder builder, double SC) { builder.addDouble(6, SC, 0.0); }
+  public static void addRelativeEnergy(FlatBufferBuilder builder, double RELATIVE_ENERGY) { builder.addDouble(7, RELATIVE_ENERGY, 0.0); }
+  public static void addLongitudeRate(FlatBufferBuilder builder, double LONGITUDE_RATE) { builder.addDouble(8, LONGITUDE_RATE, 0.0); }
+  public static void addLongitudeMin(FlatBufferBuilder builder, double LONGITUDE_MIN) { builder.addDouble(9, LONGITUDE_MIN, 0.0); }
+  public static void addLongitudeMax(FlatBufferBuilder builder, double LONGITUDE_MAX) { builder.addDouble(10, LONGITUDE_MAX, 0.0); }
+  public static void addConfidence(FlatBufferBuilder builder, byte CONFIDENCE) { builder.addByte(11, CONFIDENCE, 0); }
+  public static void addTrough(FlatBufferBuilder builder, byte TROUGH) { builder.addByte(12, TROUGH, 0); }
+  public static void addPlaneChangeStatus(FlatBufferBuilder builder, int PLANE_CHANGE_STATUSOffset) { builder.addOffset(13, PLANE_CHANGE_STATUSOffset, 0); }
+  public static void addLostFlag(FlatBufferBuilder builder, boolean LOST_FLAG) { builder.addBoolean(14, LOST_FLAG, false); }
+  public static void addSemiAnnualCorrFlag(FlatBufferBuilder builder, boolean SEMI_ANNUAL_CORR_FLAG) { builder.addBoolean(15, SEMI_ANNUAL_CORR_FLAG, false); }
+  public static void addObjectStatus(FlatBufferBuilder builder, int OBJECT_STATUSOffset) { builder.addOffset(16, OBJECT_STATUSOffset, 0); }
+  public static void addInclination(FlatBufferBuilder builder, double INCLINATION) { builder.addDouble(17, INCLINATION, 0.0); }
+  public static void addEccentricity(FlatBufferBuilder builder, double ECCENTRICITY) { builder.addDouble(18, ECCENTRICITY, 0.0); }
+  public static void addEpoch(FlatBufferBuilder builder, int EPOCHOffset) { builder.addOffset(19, EPOCHOffset, 0); }
+  public static void addRawFileUri(FlatBufferBuilder builder, int RAW_FILE_URIOffset) { builder.addOffset(20, RAW_FILE_URIOffset, 0); }
   public static int endGEO(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

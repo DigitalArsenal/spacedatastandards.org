@@ -4,6 +4,20 @@
 
 import FlatBuffers
 
+public enum mtiStandard: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case stanag4607 = 0
+  case stanag4545 = 1
+  case custom = 2
+  case unknown = 3
+
+  public static var max: mtiStandard { return .unknown }
+  public static var min: mtiStandard { return .stanag4607 }
+}
+
+
 ///  Moving Target Indicator
 public struct MTI: FlatBufferObject, Verifiable {
 
@@ -18,64 +32,82 @@ public struct MTI: FlatBufferObject, Verifiable {
 
   private enum VTOFFSET: VOffset {
     case ID = 4
-    case P3 = 6
-    case P6 = 8
-    case P7 = 10
-    case P8 = 12
-    case P9 = 14
-    case P10 = 16
-    case MISSIONS = 18
-    case DWELLS = 20
-    case HRRS = 22
-    case JOB_DEFS = 24
-    case FREE_TEXTS = 26
-    case PLATFORM_LOCS = 28
-    case JOB_REQUESTS = 30
+    case STANDARD = 6
+    case P3 = 8
+    case P6 = 10
+    case P7 = 12
+    case P8 = 14
+    case P9 = 16
+    case P10 = 18
+    case MISSIONS = 20
+    case DWELLS = 22
+    case HRRS = 24
+    case JOB_DEFS = 26
+    case FREE_TEXTS = 28
+    case PLATFORM_LOCS = 30
+    case JOB_REQUESTS = 32
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
+  ///  Unique identifier
   public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  ///  MTI standard (e.g., STANAG 4607)
+  public var STANDARD: mtiStandard { let o = _accessor.offset(VTOFFSET.STANDARD.v); return o == 0 ? .stanag4607 : mtiStandard(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .stanag4607 }
+  ///  Platform type (P3 field)
   public var P3: String? { let o = _accessor.offset(VTOFFSET.P3.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var P3SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.P3.v) }
+  ///  Platform activity (P6 field)
   public var P6: String? { let o = _accessor.offset(VTOFFSET.P6.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var P6SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.P6.v) }
+  ///  Sensor type (P7 field)
   public var P7: String? { let o = _accessor.offset(VTOFFSET.P7.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var P7SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.P7.v) }
+  ///  Sensor model (P8 field)
   public var P8: String? { let o = _accessor.offset(VTOFFSET.P8.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var P8SegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.P8.v) }
-  public var P9: Int32 { let o = _accessor.offset(VTOFFSET.P9.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var P10: Int32 { let o = _accessor.offset(VTOFFSET.P10.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Reference time code (P9)
+  public var P9: UInt32 { let o = _accessor.offset(VTOFFSET.P9.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Security classification (P10)
+  public var P10: UInt16 { let o = _accessor.offset(VTOFFSET.P10.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Mission segment identifiers
   public var hasMissions: Bool { let o = _accessor.offset(VTOFFSET.MISSIONS.v); return o == 0 ? false : true }
   public var MISSIONSCount: Int32 { let o = _accessor.offset(VTOFFSET.MISSIONS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func MISSIONS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.MISSIONS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  ///  Dwell segment data references
   public var hasDwells: Bool { let o = _accessor.offset(VTOFFSET.DWELLS.v); return o == 0 ? false : true }
   public var DWELLSCount: Int32 { let o = _accessor.offset(VTOFFSET.DWELLS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func DWELLS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.DWELLS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  ///  High range resolution profile references
   public var hasHrrs: Bool { let o = _accessor.offset(VTOFFSET.HRRS.v); return o == 0 ? false : true }
   public var HRRSCount: Int32 { let o = _accessor.offset(VTOFFSET.HRRS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func HRRS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.HRRS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  ///  Job definition references
   public var hasJobDefs: Bool { let o = _accessor.offset(VTOFFSET.JOB_DEFS.v); return o == 0 ? false : true }
   public var JOB_DEFSCount: Int32 { let o = _accessor.offset(VTOFFSET.JOB_DEFS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func JOB_DEFS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.JOB_DEFS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  ///  Free text entries
   public var hasFreeTexts: Bool { let o = _accessor.offset(VTOFFSET.FREE_TEXTS.v); return o == 0 ? false : true }
   public var FREE_TEXTSCount: Int32 { let o = _accessor.offset(VTOFFSET.FREE_TEXTS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func FREE_TEXTS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.FREE_TEXTS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  ///  Platform location data references
   public var hasPlatformLocs: Bool { let o = _accessor.offset(VTOFFSET.PLATFORM_LOCS.v); return o == 0 ? false : true }
   public var PLATFORM_LOCSCount: Int32 { let o = _accessor.offset(VTOFFSET.PLATFORM_LOCS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func PLATFORM_LOCS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.PLATFORM_LOCS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  ///  Job request references
   public var hasJobRequests: Bool { let o = _accessor.offset(VTOFFSET.JOB_REQUESTS.v); return o == 0 ? false : true }
   public var JOB_REQUESTSCount: Int32 { let o = _accessor.offset(VTOFFSET.JOB_REQUESTS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func JOB_REQUESTS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.JOB_REQUESTS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public static func startMTI(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
+  public static func startMTI(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
+  public static func add(STANDARD: mtiStandard, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STANDARD.rawValue, def: 0, at: VTOFFSET.STANDARD.p) }
   public static func add(P3: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: P3, at: VTOFFSET.P3.p) }
   public static func add(P6: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: P6, at: VTOFFSET.P6.p) }
   public static func add(P7: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: P7, at: VTOFFSET.P7.p) }
   public static func add(P8: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: P8, at: VTOFFSET.P8.p) }
-  public static func add(P9: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: P9, def: 0, at: VTOFFSET.P9.p) }
-  public static func add(P10: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: P10, def: 0, at: VTOFFSET.P10.p) }
+  public static func add(P9: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: P9, def: 0, at: VTOFFSET.P9.p) }
+  public static func add(P10: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: P10, def: 0, at: VTOFFSET.P10.p) }
   public static func addVectorOf(MISSIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MISSIONS, at: VTOFFSET.MISSIONS.p) }
   public static func addVectorOf(DWELLS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DWELLS, at: VTOFFSET.DWELLS.p) }
   public static func addVectorOf(HRRS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: HRRS, at: VTOFFSET.HRRS.p) }
@@ -87,12 +119,13 @@ public struct MTI: FlatBufferObject, Verifiable {
   public static func createMTI(
     _ fbb: inout FlatBufferBuilder,
     IDOffset ID: Offset = Offset(),
+    STANDARD: mtiStandard = .stanag4607,
     P3Offset P3: Offset = Offset(),
     P6Offset P6: Offset = Offset(),
     P7Offset P7: Offset = Offset(),
     P8Offset P8: Offset = Offset(),
-    P9: Int32 = 0,
-    P10: Int32 = 0,
+    P9: UInt32 = 0,
+    P10: UInt16 = 0,
     MISSIONSVectorOffset MISSIONS: Offset = Offset(),
     DWELLSVectorOffset DWELLS: Offset = Offset(),
     HRRSVectorOffset HRRS: Offset = Offset(),
@@ -103,6 +136,7 @@ public struct MTI: FlatBufferObject, Verifiable {
   ) -> Offset {
     let __start = MTI.startMTI(&fbb)
     MTI.add(ID: ID, &fbb)
+    MTI.add(STANDARD: STANDARD, &fbb)
     MTI.add(P3: P3, &fbb)
     MTI.add(P6: P6, &fbb)
     MTI.add(P7: P7, &fbb)
@@ -122,12 +156,13 @@ public struct MTI: FlatBufferObject, Verifiable {
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.STANDARD.p, fieldName: "STANDARD", required: false, type: mtiStandard.self)
     try _v.visit(field: VTOFFSET.P3.p, fieldName: "P3", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.P6.p, fieldName: "P6", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.P7.p, fieldName: "P7", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.P8.p, fieldName: "P8", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.P9.p, fieldName: "P9", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.P10.p, fieldName: "P10", required: false, type: Int32.self)
+    try _v.visit(field: VTOFFSET.P9.p, fieldName: "P9", required: false, type: UInt32.self)
+    try _v.visit(field: VTOFFSET.P10.p, fieldName: "P10", required: false, type: UInt16.self)
     try _v.visit(field: VTOFFSET.MISSIONS.p, fieldName: "MISSIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VTOFFSET.DWELLS.p, fieldName: "DWELLS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VTOFFSET.HRRS.p, fieldName: "HRRS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)

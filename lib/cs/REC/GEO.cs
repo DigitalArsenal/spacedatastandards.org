@@ -19,6 +19,7 @@ public struct GEO : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public GEO __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Unique identifier
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,6 +27,7 @@ public struct GEO : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
+  /// International designator
   public string ORIG_OBJECT_ID { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetORIG_OBJECT_IDBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -33,115 +35,144 @@ public struct GEO : IFlatbufferObject
   public ArraySegment<byte>? GetORIG_OBJECT_IDBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetORIG_OBJECT_IDArray() { return __p.__vector_as_array<byte>(6); }
-  public double SS { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SC { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double RELATIVE_ENERGY { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double LONGITUDE_RATE { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double LONGITUDE_MIN { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double LONGITUDE_MAX { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string CONFIDENCE_LEVEL { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Satellite catalog number
+  public uint SAT_NO { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// On-orbit reference identifier
+  public string ON_ORBIT { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetCONFIDENCE_LEVELBytes() { return __p.__vector_as_span<byte>(20, 1); }
+  public Span<byte> GetON_ORBITBytes() { return __p.__vector_as_span<byte>(10, 1); }
 #else
-  public ArraySegment<byte>? GetCONFIDENCE_LEVELBytes() { return __p.__vector_as_arraysegment(20); }
+  public ArraySegment<byte>? GetON_ORBITBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
-  public byte[] GetCONFIDENCE_LEVELArray() { return __p.__vector_as_array<byte>(20); }
-  public string PLANE_CHANGE_STATUS { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetON_ORBITArray() { return __p.__vector_as_array<byte>(10); }
+  /// Station-keeping status
+  public geoStationKeeping STATION_KEEPING { get { int o = __p.__offset(12); return o != 0 ? (geoStationKeeping)__p.bb.GetSbyte(o + __p.bb_pos) : geoStationKeeping.ACTIVE; } }
+  /// Subsatellite point longitude (degrees east)
+  public double SS { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Longitude of ascending node (degrees)
+  public double SC { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Relative energy (km^2/s^2)
+  public double RELATIVE_ENERGY { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Longitude drift rate (degrees/day)
+  public double LONGITUDE_RATE { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Western longitude boundary of slot (degrees east)
+  public double LONGITUDE_MIN { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Eastern longitude boundary of slot (degrees east)
+  public double LONGITUDE_MAX { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Assessment confidence level
+  public geoConfidence CONFIDENCE { get { int o = __p.__offset(26); return o != 0 ? (geoConfidence)__p.bb.GetSbyte(o + __p.bb_pos) : geoConfidence.HIGH; } }
+  /// Trough type (east/west gravitational well)
+  public troughType TROUGH { get { int o = __p.__offset(28); return o != 0 ? (troughType)__p.bb.GetSbyte(o + __p.bb_pos) : troughType.EAST; } }
+  /// Plane change status description
+  public string PLANE_CHANGE_STATUS { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetPLANE_CHANGE_STATUSBytes() { return __p.__vector_as_span<byte>(22, 1); }
+  public Span<byte> GetPLANE_CHANGE_STATUSBytes() { return __p.__vector_as_span<byte>(30, 1); }
 #else
-  public ArraySegment<byte>? GetPLANE_CHANGE_STATUSBytes() { return __p.__vector_as_arraysegment(22); }
+  public ArraySegment<byte>? GetPLANE_CHANGE_STATUSBytes() { return __p.__vector_as_arraysegment(30); }
 #endif
-  public byte[] GetPLANE_CHANGE_STATUSArray() { return __p.__vector_as_array<byte>(22); }
-  public string TROUGH_TYPE { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetPLANE_CHANGE_STATUSArray() { return __p.__vector_as_array<byte>(30); }
+  /// True if object is lost/not tracked
+  public bool LOST_FLAG { get { int o = __p.__offset(32); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// True if semi-annual correction applied
+  public bool SEMI_ANNUAL_CORR_FLAG { get { int o = __p.__offset(34); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Current operational status
+  public string OBJECT_STATUS { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTROUGH_TYPEBytes() { return __p.__vector_as_span<byte>(24, 1); }
+  public Span<byte> GetOBJECT_STATUSBytes() { return __p.__vector_as_span<byte>(36, 1); }
 #else
-  public ArraySegment<byte>? GetTROUGH_TYPEBytes() { return __p.__vector_as_arraysegment(24); }
+  public ArraySegment<byte>? GetOBJECT_STATUSBytes() { return __p.__vector_as_arraysegment(36); }
 #endif
-  public byte[] GetTROUGH_TYPEArray() { return __p.__vector_as_array<byte>(24); }
-  public bool LOST_FLAG { get { int o = __p.__offset(26); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  public bool SEMI_ANNUAL_CORR_FLAG { get { int o = __p.__offset(28); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  public string OBJECT_STATUS { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetOBJECT_STATUSArray() { return __p.__vector_as_array<byte>(36); }
+  /// Inclination (degrees)
+  public double INCLINATION { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Eccentricity
+  public double ECCENTRICITY { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Epoch of status (ISO 8601)
+  public string EPOCH { get { int o = __p.__offset(42); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetOBJECT_STATUSBytes() { return __p.__vector_as_span<byte>(30, 1); }
+  public Span<byte> GetEPOCHBytes() { return __p.__vector_as_span<byte>(42, 1); }
 #else
-  public ArraySegment<byte>? GetOBJECT_STATUSBytes() { return __p.__vector_as_arraysegment(30); }
+  public ArraySegment<byte>? GetEPOCHBytes() { return __p.__vector_as_arraysegment(42); }
 #endif
-  public byte[] GetOBJECT_STATUSArray() { return __p.__vector_as_array<byte>(30); }
-  public string RAW_FILE_URI { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetEPOCHArray() { return __p.__vector_as_array<byte>(42); }
+  /// Reference to raw data file
+  public string RAW_FILE_URI { get { int o = __p.__offset(44); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetRAW_FILE_URIBytes() { return __p.__vector_as_span<byte>(32, 1); }
+  public Span<byte> GetRAW_FILE_URIBytes() { return __p.__vector_as_span<byte>(44, 1); }
 #else
-  public ArraySegment<byte>? GetRAW_FILE_URIBytes() { return __p.__vector_as_arraysegment(32); }
+  public ArraySegment<byte>? GetRAW_FILE_URIBytes() { return __p.__vector_as_arraysegment(44); }
 #endif
-  public byte[] GetRAW_FILE_URIArray() { return __p.__vector_as_array<byte>(32); }
-  public string ON_ORBIT { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetON_ORBITBytes() { return __p.__vector_as_span<byte>(34, 1); }
-#else
-  public ArraySegment<byte>? GetON_ORBITBytes() { return __p.__vector_as_arraysegment(34); }
-#endif
-  public byte[] GetON_ORBITArray() { return __p.__vector_as_array<byte>(34); }
-  public int SAT_NO { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public byte[] GetRAW_FILE_URIArray() { return __p.__vector_as_array<byte>(44); }
 
   public static Offset<GEO> CreateGEO(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
       StringOffset ORIG_OBJECT_IDOffset = default(StringOffset),
+      uint SAT_NO = 0,
+      StringOffset ON_ORBITOffset = default(StringOffset),
+      geoStationKeeping STATION_KEEPING = geoStationKeeping.ACTIVE,
       double SS = 0.0,
       double SC = 0.0,
       double RELATIVE_ENERGY = 0.0,
       double LONGITUDE_RATE = 0.0,
       double LONGITUDE_MIN = 0.0,
       double LONGITUDE_MAX = 0.0,
-      StringOffset CONFIDENCE_LEVELOffset = default(StringOffset),
+      geoConfidence CONFIDENCE = geoConfidence.HIGH,
+      troughType TROUGH = troughType.EAST,
       StringOffset PLANE_CHANGE_STATUSOffset = default(StringOffset),
-      StringOffset TROUGH_TYPEOffset = default(StringOffset),
       bool LOST_FLAG = false,
       bool SEMI_ANNUAL_CORR_FLAG = false,
       StringOffset OBJECT_STATUSOffset = default(StringOffset),
-      StringOffset RAW_FILE_URIOffset = default(StringOffset),
-      StringOffset ON_ORBITOffset = default(StringOffset),
-      int SAT_NO = 0) {
-    builder.StartTable(17);
+      double INCLINATION = 0.0,
+      double ECCENTRICITY = 0.0,
+      StringOffset EPOCHOffset = default(StringOffset),
+      StringOffset RAW_FILE_URIOffset = default(StringOffset)) {
+    builder.StartTable(21);
+    GEO.AddECCENTRICITY(builder, ECCENTRICITY);
+    GEO.AddINCLINATION(builder, INCLINATION);
     GEO.AddLONGITUDE_MAX(builder, LONGITUDE_MAX);
     GEO.AddLONGITUDE_MIN(builder, LONGITUDE_MIN);
     GEO.AddLONGITUDE_RATE(builder, LONGITUDE_RATE);
     GEO.AddRELATIVE_ENERGY(builder, RELATIVE_ENERGY);
     GEO.AddSC(builder, SC);
     GEO.AddSS(builder, SS);
-    GEO.AddSAT_NO(builder, SAT_NO);
-    GEO.AddON_ORBIT(builder, ON_ORBITOffset);
     GEO.AddRAW_FILE_URI(builder, RAW_FILE_URIOffset);
+    GEO.AddEPOCH(builder, EPOCHOffset);
     GEO.AddOBJECT_STATUS(builder, OBJECT_STATUSOffset);
-    GEO.AddTROUGH_TYPE(builder, TROUGH_TYPEOffset);
     GEO.AddPLANE_CHANGE_STATUS(builder, PLANE_CHANGE_STATUSOffset);
-    GEO.AddCONFIDENCE_LEVEL(builder, CONFIDENCE_LEVELOffset);
+    GEO.AddON_ORBIT(builder, ON_ORBITOffset);
+    GEO.AddSAT_NO(builder, SAT_NO);
     GEO.AddORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset);
     GEO.AddID(builder, IDOffset);
     GEO.AddSEMI_ANNUAL_CORR_FLAG(builder, SEMI_ANNUAL_CORR_FLAG);
     GEO.AddLOST_FLAG(builder, LOST_FLAG);
+    GEO.AddTROUGH(builder, TROUGH);
+    GEO.AddCONFIDENCE(builder, CONFIDENCE);
+    GEO.AddSTATION_KEEPING(builder, STATION_KEEPING);
     return GEO.EndGEO(builder);
   }
 
-  public static void StartGEO(FlatBufferBuilder builder) { builder.StartTable(17); }
+  public static void StartGEO(FlatBufferBuilder builder) { builder.StartTable(21); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddORIG_OBJECT_ID(FlatBufferBuilder builder, StringOffset ORIG_OBJECT_IDOffset) { builder.AddOffset(1, ORIG_OBJECT_IDOffset.Value, 0); }
-  public static void AddSS(FlatBufferBuilder builder, double SS) { builder.AddDouble(2, SS, 0.0); }
-  public static void AddSC(FlatBufferBuilder builder, double SC) { builder.AddDouble(3, SC, 0.0); }
-  public static void AddRELATIVE_ENERGY(FlatBufferBuilder builder, double RELATIVE_ENERGY) { builder.AddDouble(4, RELATIVE_ENERGY, 0.0); }
-  public static void AddLONGITUDE_RATE(FlatBufferBuilder builder, double LONGITUDE_RATE) { builder.AddDouble(5, LONGITUDE_RATE, 0.0); }
-  public static void AddLONGITUDE_MIN(FlatBufferBuilder builder, double LONGITUDE_MIN) { builder.AddDouble(6, LONGITUDE_MIN, 0.0); }
-  public static void AddLONGITUDE_MAX(FlatBufferBuilder builder, double LONGITUDE_MAX) { builder.AddDouble(7, LONGITUDE_MAX, 0.0); }
-  public static void AddCONFIDENCE_LEVEL(FlatBufferBuilder builder, StringOffset CONFIDENCE_LEVELOffset) { builder.AddOffset(8, CONFIDENCE_LEVELOffset.Value, 0); }
-  public static void AddPLANE_CHANGE_STATUS(FlatBufferBuilder builder, StringOffset PLANE_CHANGE_STATUSOffset) { builder.AddOffset(9, PLANE_CHANGE_STATUSOffset.Value, 0); }
-  public static void AddTROUGH_TYPE(FlatBufferBuilder builder, StringOffset TROUGH_TYPEOffset) { builder.AddOffset(10, TROUGH_TYPEOffset.Value, 0); }
-  public static void AddLOST_FLAG(FlatBufferBuilder builder, bool LOST_FLAG) { builder.AddBool(11, LOST_FLAG, false); }
-  public static void AddSEMI_ANNUAL_CORR_FLAG(FlatBufferBuilder builder, bool SEMI_ANNUAL_CORR_FLAG) { builder.AddBool(12, SEMI_ANNUAL_CORR_FLAG, false); }
-  public static void AddOBJECT_STATUS(FlatBufferBuilder builder, StringOffset OBJECT_STATUSOffset) { builder.AddOffset(13, OBJECT_STATUSOffset.Value, 0); }
-  public static void AddRAW_FILE_URI(FlatBufferBuilder builder, StringOffset RAW_FILE_URIOffset) { builder.AddOffset(14, RAW_FILE_URIOffset.Value, 0); }
-  public static void AddON_ORBIT(FlatBufferBuilder builder, StringOffset ON_ORBITOffset) { builder.AddOffset(15, ON_ORBITOffset.Value, 0); }
-  public static void AddSAT_NO(FlatBufferBuilder builder, int SAT_NO) { builder.AddInt(16, SAT_NO, 0); }
+  public static void AddSAT_NO(FlatBufferBuilder builder, uint SAT_NO) { builder.AddUint(2, SAT_NO, 0); }
+  public static void AddON_ORBIT(FlatBufferBuilder builder, StringOffset ON_ORBITOffset) { builder.AddOffset(3, ON_ORBITOffset.Value, 0); }
+  public static void AddSTATION_KEEPING(FlatBufferBuilder builder, geoStationKeeping STATION_KEEPING) { builder.AddSbyte(4, (sbyte)STATION_KEEPING, 0); }
+  public static void AddSS(FlatBufferBuilder builder, double SS) { builder.AddDouble(5, SS, 0.0); }
+  public static void AddSC(FlatBufferBuilder builder, double SC) { builder.AddDouble(6, SC, 0.0); }
+  public static void AddRELATIVE_ENERGY(FlatBufferBuilder builder, double RELATIVE_ENERGY) { builder.AddDouble(7, RELATIVE_ENERGY, 0.0); }
+  public static void AddLONGITUDE_RATE(FlatBufferBuilder builder, double LONGITUDE_RATE) { builder.AddDouble(8, LONGITUDE_RATE, 0.0); }
+  public static void AddLONGITUDE_MIN(FlatBufferBuilder builder, double LONGITUDE_MIN) { builder.AddDouble(9, LONGITUDE_MIN, 0.0); }
+  public static void AddLONGITUDE_MAX(FlatBufferBuilder builder, double LONGITUDE_MAX) { builder.AddDouble(10, LONGITUDE_MAX, 0.0); }
+  public static void AddCONFIDENCE(FlatBufferBuilder builder, geoConfidence CONFIDENCE) { builder.AddSbyte(11, (sbyte)CONFIDENCE, 0); }
+  public static void AddTROUGH(FlatBufferBuilder builder, troughType TROUGH) { builder.AddSbyte(12, (sbyte)TROUGH, 0); }
+  public static void AddPLANE_CHANGE_STATUS(FlatBufferBuilder builder, StringOffset PLANE_CHANGE_STATUSOffset) { builder.AddOffset(13, PLANE_CHANGE_STATUSOffset.Value, 0); }
+  public static void AddLOST_FLAG(FlatBufferBuilder builder, bool LOST_FLAG) { builder.AddBool(14, LOST_FLAG, false); }
+  public static void AddSEMI_ANNUAL_CORR_FLAG(FlatBufferBuilder builder, bool SEMI_ANNUAL_CORR_FLAG) { builder.AddBool(15, SEMI_ANNUAL_CORR_FLAG, false); }
+  public static void AddOBJECT_STATUS(FlatBufferBuilder builder, StringOffset OBJECT_STATUSOffset) { builder.AddOffset(16, OBJECT_STATUSOffset.Value, 0); }
+  public static void AddINCLINATION(FlatBufferBuilder builder, double INCLINATION) { builder.AddDouble(17, INCLINATION, 0.0); }
+  public static void AddECCENTRICITY(FlatBufferBuilder builder, double ECCENTRICITY) { builder.AddDouble(18, ECCENTRICITY, 0.0); }
+  public static void AddEPOCH(FlatBufferBuilder builder, StringOffset EPOCHOffset) { builder.AddOffset(19, EPOCHOffset.Value, 0); }
+  public static void AddRAW_FILE_URI(FlatBufferBuilder builder, StringOffset RAW_FILE_URIOffset) { builder.AddOffset(20, RAW_FILE_URIOffset.Value, 0); }
   public static Offset<GEO> EndGEO(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<GEO>(o);
@@ -156,51 +187,58 @@ public struct GEO : IFlatbufferObject
   public void UnPackTo(GEOT _o) {
     _o.ID = this.ID;
     _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID;
+    _o.SAT_NO = this.SAT_NO;
+    _o.ON_ORBIT = this.ON_ORBIT;
+    _o.STATION_KEEPING = this.STATION_KEEPING;
     _o.SS = this.SS;
     _o.SC = this.SC;
     _o.RELATIVE_ENERGY = this.RELATIVE_ENERGY;
     _o.LONGITUDE_RATE = this.LONGITUDE_RATE;
     _o.LONGITUDE_MIN = this.LONGITUDE_MIN;
     _o.LONGITUDE_MAX = this.LONGITUDE_MAX;
-    _o.CONFIDENCE_LEVEL = this.CONFIDENCE_LEVEL;
+    _o.CONFIDENCE = this.CONFIDENCE;
+    _o.TROUGH = this.TROUGH;
     _o.PLANE_CHANGE_STATUS = this.PLANE_CHANGE_STATUS;
-    _o.TROUGH_TYPE = this.TROUGH_TYPE;
     _o.LOST_FLAG = this.LOST_FLAG;
     _o.SEMI_ANNUAL_CORR_FLAG = this.SEMI_ANNUAL_CORR_FLAG;
     _o.OBJECT_STATUS = this.OBJECT_STATUS;
+    _o.INCLINATION = this.INCLINATION;
+    _o.ECCENTRICITY = this.ECCENTRICITY;
+    _o.EPOCH = this.EPOCH;
     _o.RAW_FILE_URI = this.RAW_FILE_URI;
-    _o.ON_ORBIT = this.ON_ORBIT;
-    _o.SAT_NO = this.SAT_NO;
   }
   public static Offset<GEO> Pack(FlatBufferBuilder builder, GEOT _o) {
     if (_o == null) return default(Offset<GEO>);
     var _ID = _o.ID == null ? default(StringOffset) : builder.CreateString(_o.ID);
     var _ORIG_OBJECT_ID = _o.ORIG_OBJECT_ID == null ? default(StringOffset) : builder.CreateString(_o.ORIG_OBJECT_ID);
-    var _CONFIDENCE_LEVEL = _o.CONFIDENCE_LEVEL == null ? default(StringOffset) : builder.CreateString(_o.CONFIDENCE_LEVEL);
-    var _PLANE_CHANGE_STATUS = _o.PLANE_CHANGE_STATUS == null ? default(StringOffset) : builder.CreateString(_o.PLANE_CHANGE_STATUS);
-    var _TROUGH_TYPE = _o.TROUGH_TYPE == null ? default(StringOffset) : builder.CreateString(_o.TROUGH_TYPE);
-    var _OBJECT_STATUS = _o.OBJECT_STATUS == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_STATUS);
-    var _RAW_FILE_URI = _o.RAW_FILE_URI == null ? default(StringOffset) : builder.CreateString(_o.RAW_FILE_URI);
     var _ON_ORBIT = _o.ON_ORBIT == null ? default(StringOffset) : builder.CreateString(_o.ON_ORBIT);
+    var _PLANE_CHANGE_STATUS = _o.PLANE_CHANGE_STATUS == null ? default(StringOffset) : builder.CreateString(_o.PLANE_CHANGE_STATUS);
+    var _OBJECT_STATUS = _o.OBJECT_STATUS == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_STATUS);
+    var _EPOCH = _o.EPOCH == null ? default(StringOffset) : builder.CreateString(_o.EPOCH);
+    var _RAW_FILE_URI = _o.RAW_FILE_URI == null ? default(StringOffset) : builder.CreateString(_o.RAW_FILE_URI);
     return CreateGEO(
       builder,
       _ID,
       _ORIG_OBJECT_ID,
+      _o.SAT_NO,
+      _ON_ORBIT,
+      _o.STATION_KEEPING,
       _o.SS,
       _o.SC,
       _o.RELATIVE_ENERGY,
       _o.LONGITUDE_RATE,
       _o.LONGITUDE_MIN,
       _o.LONGITUDE_MAX,
-      _CONFIDENCE_LEVEL,
+      _o.CONFIDENCE,
+      _o.TROUGH,
       _PLANE_CHANGE_STATUS,
-      _TROUGH_TYPE,
       _o.LOST_FLAG,
       _o.SEMI_ANNUAL_CORR_FLAG,
       _OBJECT_STATUS,
-      _RAW_FILE_URI,
-      _ON_ORBIT,
-      _o.SAT_NO);
+      _o.INCLINATION,
+      _o.ECCENTRICITY,
+      _EPOCH,
+      _RAW_FILE_URI);
   }
 }
 
@@ -208,40 +246,48 @@ public class GEOT
 {
   public string ID { get; set; }
   public string ORIG_OBJECT_ID { get; set; }
+  public uint SAT_NO { get; set; }
+  public string ON_ORBIT { get; set; }
+  public geoStationKeeping STATION_KEEPING { get; set; }
   public double SS { get; set; }
   public double SC { get; set; }
   public double RELATIVE_ENERGY { get; set; }
   public double LONGITUDE_RATE { get; set; }
   public double LONGITUDE_MIN { get; set; }
   public double LONGITUDE_MAX { get; set; }
-  public string CONFIDENCE_LEVEL { get; set; }
+  public geoConfidence CONFIDENCE { get; set; }
+  public troughType TROUGH { get; set; }
   public string PLANE_CHANGE_STATUS { get; set; }
-  public string TROUGH_TYPE { get; set; }
   public bool LOST_FLAG { get; set; }
   public bool SEMI_ANNUAL_CORR_FLAG { get; set; }
   public string OBJECT_STATUS { get; set; }
+  public double INCLINATION { get; set; }
+  public double ECCENTRICITY { get; set; }
+  public string EPOCH { get; set; }
   public string RAW_FILE_URI { get; set; }
-  public string ON_ORBIT { get; set; }
-  public int SAT_NO { get; set; }
 
   public GEOT() {
     this.ID = null;
     this.ORIG_OBJECT_ID = null;
+    this.SAT_NO = 0;
+    this.ON_ORBIT = null;
+    this.STATION_KEEPING = geoStationKeeping.ACTIVE;
     this.SS = 0.0;
     this.SC = 0.0;
     this.RELATIVE_ENERGY = 0.0;
     this.LONGITUDE_RATE = 0.0;
     this.LONGITUDE_MIN = 0.0;
     this.LONGITUDE_MAX = 0.0;
-    this.CONFIDENCE_LEVEL = null;
+    this.CONFIDENCE = geoConfidence.HIGH;
+    this.TROUGH = troughType.EAST;
     this.PLANE_CHANGE_STATUS = null;
-    this.TROUGH_TYPE = null;
     this.LOST_FLAG = false;
     this.SEMI_ANNUAL_CORR_FLAG = false;
     this.OBJECT_STATUS = null;
+    this.INCLINATION = 0.0;
+    this.ECCENTRICITY = 0.0;
+    this.EPOCH = null;
     this.RAW_FILE_URI = null;
-    this.ON_ORBIT = null;
-    this.SAT_NO = 0;
   }
   public static GEOT DeserializeFromBinary(byte[] fbBuffer) {
     return GEO.GetRootAsGEO(new ByteBuffer(fbBuffer)).UnPack();
@@ -261,21 +307,25 @@ static public class GEOVerify
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*ID*/, false)
       && verifier.VerifyString(tablePos, 6 /*ORIG_OBJECT_ID*/, false)
-      && verifier.VerifyField(tablePos, 8 /*SS*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 10 /*SC*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 12 /*RELATIVE_ENERGY*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 14 /*LONGITUDE_RATE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 16 /*LONGITUDE_MIN*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 18 /*LONGITUDE_MAX*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 20 /*CONFIDENCE_LEVEL*/, false)
-      && verifier.VerifyString(tablePos, 22 /*PLANE_CHANGE_STATUS*/, false)
-      && verifier.VerifyString(tablePos, 24 /*TROUGH_TYPE*/, false)
-      && verifier.VerifyField(tablePos, 26 /*LOST_FLAG*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyField(tablePos, 28 /*SEMI_ANNUAL_CORR_FLAG*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyString(tablePos, 30 /*OBJECT_STATUS*/, false)
-      && verifier.VerifyString(tablePos, 32 /*RAW_FILE_URI*/, false)
-      && verifier.VerifyString(tablePos, 34 /*ON_ORBIT*/, false)
-      && verifier.VerifyField(tablePos, 36 /*SAT_NO*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 8 /*SAT_NO*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 10 /*ON_ORBIT*/, false)
+      && verifier.VerifyField(tablePos, 12 /*STATION_KEEPING*/, 1 /*geoStationKeeping*/, 1, false)
+      && verifier.VerifyField(tablePos, 14 /*SS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 16 /*SC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 18 /*RELATIVE_ENERGY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 20 /*LONGITUDE_RATE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 22 /*LONGITUDE_MIN*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 24 /*LONGITUDE_MAX*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 26 /*CONFIDENCE*/, 1 /*geoConfidence*/, 1, false)
+      && verifier.VerifyField(tablePos, 28 /*TROUGH*/, 1 /*troughType*/, 1, false)
+      && verifier.VerifyString(tablePos, 30 /*PLANE_CHANGE_STATUS*/, false)
+      && verifier.VerifyField(tablePos, 32 /*LOST_FLAG*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 34 /*SEMI_ANNUAL_CORR_FLAG*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyString(tablePos, 36 /*OBJECT_STATUS*/, false)
+      && verifier.VerifyField(tablePos, 38 /*INCLINATION*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 40 /*ECCENTRICITY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 42 /*EPOCH*/, false)
+      && verifier.VerifyString(tablePos, 44 /*RAW_FILE_URI*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

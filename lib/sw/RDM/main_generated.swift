@@ -4,6 +4,276 @@
 
 import FlatBuffers
 
+public enum reentryDisposition: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case controlled = 0
+  case uncontrolled = 1
+  case semiControlled = 2
+
+  public static var max: reentryDisposition { return .semiControlled }
+  public static var min: reentryDisposition { return .controlled }
+}
+
+
+public enum reentryReason: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case naturalDecay = 0
+  case commandedDeorbit = 1
+  case propulsionFailure = 2
+  case collision = 3
+  case fragmentation = 4
+  case unknown = 5
+
+  public static var max: reentryReason { return .unknown }
+  public static var min: reentryReason { return .naturalDecay }
+}
+
+
+///  Reentry State Vector
+public struct reentryStateVector: FlatBufferObject, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$RDM" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: reentryStateVector.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private enum VTOFFSET: VOffset {
+    case EPOCH = 4
+    case REF_FRAME = 6
+    case X = 8
+    case Y = 10
+    case Z = 12
+    case X_DOT = 14
+    case Y_DOT = 16
+    case Z_DOT = 18
+    var v: Int32 { Int32(self.rawValue) }
+    var p: VOffset { self.rawValue }
+  }
+
+  ///  Epoch (ISO 8601)
+  public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
+  ///  Reference frame
+  public var REF_FRAME: String? { let o = _accessor.offset(VTOFFSET.REF_FRAME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REF_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REF_FRAME.v) }
+  ///  Position X in km
+  public var X: Double { let o = _accessor.offset(VTOFFSET.X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Position Y in km
+  public var Y: Double { let o = _accessor.offset(VTOFFSET.Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Position Z in km
+  public var Z: Double { let o = _accessor.offset(VTOFFSET.Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Velocity X in km/s
+  public var X_DOT: Double { let o = _accessor.offset(VTOFFSET.X_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Velocity Y in km/s
+  public var Y_DOT: Double { let o = _accessor.offset(VTOFFSET.Y_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Velocity Z in km/s
+  public var Z_DOT: Double { let o = _accessor.offset(VTOFFSET.Z_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startreentryStateVector(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VTOFFSET.EPOCH.p) }
+  public static func add(REF_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME, at: VTOFFSET.REF_FRAME.p) }
+  public static func add(X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X, def: 0.0, at: VTOFFSET.X.p) }
+  public static func add(Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y, def: 0.0, at: VTOFFSET.Y.p) }
+  public static func add(Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z, def: 0.0, at: VTOFFSET.Z.p) }
+  public static func add(X_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_DOT, def: 0.0, at: VTOFFSET.X_DOT.p) }
+  public static func add(Y_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_DOT, def: 0.0, at: VTOFFSET.Y_DOT.p) }
+  public static func add(Z_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z_DOT, def: 0.0, at: VTOFFSET.Z_DOT.p) }
+  public static func endreentryStateVector(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createreentryStateVector(
+    _ fbb: inout FlatBufferBuilder,
+    EPOCHOffset EPOCH: Offset = Offset(),
+    REF_FRAMEOffset REF_FRAME: Offset = Offset(),
+    X: Double = 0.0,
+    Y: Double = 0.0,
+    Z: Double = 0.0,
+    X_DOT: Double = 0.0,
+    Y_DOT: Double = 0.0,
+    Z_DOT: Double = 0.0
+  ) -> Offset {
+    let __start = reentryStateVector.startreentryStateVector(&fbb)
+    reentryStateVector.add(EPOCH: EPOCH, &fbb)
+    reentryStateVector.add(REF_FRAME: REF_FRAME, &fbb)
+    reentryStateVector.add(X: X, &fbb)
+    reentryStateVector.add(Y: Y, &fbb)
+    reentryStateVector.add(Z: Z, &fbb)
+    reentryStateVector.add(X_DOT: X_DOT, &fbb)
+    reentryStateVector.add(Y_DOT: Y_DOT, &fbb)
+    reentryStateVector.add(Z_DOT: Z_DOT, &fbb)
+    return reentryStateVector.endreentryStateVector(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VTOFFSET.EPOCH.p, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.REF_FRAME.p, fieldName: "REF_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.X.p, fieldName: "X", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.Y.p, fieldName: "Y", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.Z.p, fieldName: "Z", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.X_DOT.p, fieldName: "X_DOT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.Y_DOT.p, fieldName: "Y_DOT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.Z_DOT.p, fieldName: "Z_DOT", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Reentry Ground Impact Prediction
+public struct reentryImpact: FlatBufferObject, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$RDM" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: reentryImpact.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private enum VTOFFSET: VOffset {
+    case IMPACT_EPOCH = 4
+    case EPOCH_UNCERTAINTY = 6
+    case LATITUDE = 8
+    case LONGITUDE = 10
+    case ALONG_TRACK_UNC = 12
+    case CROSS_TRACK_UNC = 14
+    case IMPACT_PROBABILITY = 16
+    var v: Int32 { Int32(self.rawValue) }
+    var p: VOffset { self.rawValue }
+  }
+
+  ///  Predicted impact epoch (ISO 8601)
+  public var IMPACT_EPOCH: String? { let o = _accessor.offset(VTOFFSET.IMPACT_EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var IMPACT_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.IMPACT_EPOCH.v) }
+  ///  Epoch uncertainty window in seconds
+  public var EPOCH_UNCERTAINTY: Double { let o = _accessor.offset(VTOFFSET.EPOCH_UNCERTAINTY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Impact latitude in degrees
+  public var LATITUDE: Double { let o = _accessor.offset(VTOFFSET.LATITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Impact longitude in degrees
+  public var LONGITUDE: Double { let o = _accessor.offset(VTOFFSET.LONGITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Along-track uncertainty in km
+  public var ALONG_TRACK_UNC: Double { let o = _accessor.offset(VTOFFSET.ALONG_TRACK_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Cross-track uncertainty in km
+  public var CROSS_TRACK_UNC: Double { let o = _accessor.offset(VTOFFSET.CROSS_TRACK_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Impact probability (0.0-1.0)
+  public var IMPACT_PROBABILITY: Double { let o = _accessor.offset(VTOFFSET.IMPACT_PROBABILITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startreentryImpact(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 7) }
+  public static func add(IMPACT_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMPACT_EPOCH, at: VTOFFSET.IMPACT_EPOCH.p) }
+  public static func add(EPOCH_UNCERTAINTY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EPOCH_UNCERTAINTY, def: 0.0, at: VTOFFSET.EPOCH_UNCERTAINTY.p) }
+  public static func add(LATITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE, def: 0.0, at: VTOFFSET.LATITUDE.p) }
+  public static func add(LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE, def: 0.0, at: VTOFFSET.LONGITUDE.p) }
+  public static func add(ALONG_TRACK_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ALONG_TRACK_UNC, def: 0.0, at: VTOFFSET.ALONG_TRACK_UNC.p) }
+  public static func add(CROSS_TRACK_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CROSS_TRACK_UNC, def: 0.0, at: VTOFFSET.CROSS_TRACK_UNC.p) }
+  public static func add(IMPACT_PROBABILITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IMPACT_PROBABILITY, def: 0.0, at: VTOFFSET.IMPACT_PROBABILITY.p) }
+  public static func endreentryImpact(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createreentryImpact(
+    _ fbb: inout FlatBufferBuilder,
+    IMPACT_EPOCHOffset IMPACT_EPOCH: Offset = Offset(),
+    EPOCH_UNCERTAINTY: Double = 0.0,
+    LATITUDE: Double = 0.0,
+    LONGITUDE: Double = 0.0,
+    ALONG_TRACK_UNC: Double = 0.0,
+    CROSS_TRACK_UNC: Double = 0.0,
+    IMPACT_PROBABILITY: Double = 0.0
+  ) -> Offset {
+    let __start = reentryImpact.startreentryImpact(&fbb)
+    reentryImpact.add(IMPACT_EPOCH: IMPACT_EPOCH, &fbb)
+    reentryImpact.add(EPOCH_UNCERTAINTY: EPOCH_UNCERTAINTY, &fbb)
+    reentryImpact.add(LATITUDE: LATITUDE, &fbb)
+    reentryImpact.add(LONGITUDE: LONGITUDE, &fbb)
+    reentryImpact.add(ALONG_TRACK_UNC: ALONG_TRACK_UNC, &fbb)
+    reentryImpact.add(CROSS_TRACK_UNC: CROSS_TRACK_UNC, &fbb)
+    reentryImpact.add(IMPACT_PROBABILITY: IMPACT_PROBABILITY, &fbb)
+    return reentryImpact.endreentryImpact(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VTOFFSET.IMPACT_EPOCH.p, fieldName: "IMPACT_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.EPOCH_UNCERTAINTY.p, fieldName: "EPOCH_UNCERTAINTY", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.LATITUDE.p, fieldName: "LATITUDE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.LONGITUDE.p, fieldName: "LONGITUDE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.ALONG_TRACK_UNC.p, fieldName: "ALONG_TRACK_UNC", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.CROSS_TRACK_UNC.p, fieldName: "CROSS_TRACK_UNC", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.IMPACT_PROBABILITY.p, fieldName: "IMPACT_PROBABILITY", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Surviving Debris Prediction
+public struct survivingDebris: FlatBufferObject, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$RDM" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: survivingDebris.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private enum VTOFFSET: VOffset {
+    case FRAGMENT_ID = 4
+    case MATERIAL = 6
+    case MASS = 8
+    case CASUALTY_AREA = 10
+    case SURVIVAL_PROBABILITY = 12
+    var v: Int32 { Int32(self.rawValue) }
+    var p: VOffset { self.rawValue }
+  }
+
+  ///  Fragment identifier
+  public var FRAGMENT_ID: String? { let o = _accessor.offset(VTOFFSET.FRAGMENT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var FRAGMENT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.FRAGMENT_ID.v) }
+  ///  Material type
+  public var MATERIAL: String? { let o = _accessor.offset(VTOFFSET.MATERIAL.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MATERIALSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MATERIAL.v) }
+  ///  Fragment mass in kg
+  public var MASS: Double { let o = _accessor.offset(VTOFFSET.MASS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Casualty area in m^2
+  public var CASUALTY_AREA: Double { let o = _accessor.offset(VTOFFSET.CASUALTY_AREA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Survival probability (0.0-1.0)
+  public var SURVIVAL_PROBABILITY: Double { let o = _accessor.offset(VTOFFSET.SURVIVAL_PROBABILITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startsurvivingDebris(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  public static func add(FRAGMENT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: FRAGMENT_ID, at: VTOFFSET.FRAGMENT_ID.p) }
+  public static func add(MATERIAL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MATERIAL, at: VTOFFSET.MATERIAL.p) }
+  public static func add(MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MASS, def: 0.0, at: VTOFFSET.MASS.p) }
+  public static func add(CASUALTY_AREA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CASUALTY_AREA, def: 0.0, at: VTOFFSET.CASUALTY_AREA.p) }
+  public static func add(SURVIVAL_PROBABILITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SURVIVAL_PROBABILITY, def: 0.0, at: VTOFFSET.SURVIVAL_PROBABILITY.p) }
+  public static func endsurvivingDebris(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createsurvivingDebris(
+    _ fbb: inout FlatBufferBuilder,
+    FRAGMENT_IDOffset FRAGMENT_ID: Offset = Offset(),
+    MATERIALOffset MATERIAL: Offset = Offset(),
+    MASS: Double = 0.0,
+    CASUALTY_AREA: Double = 0.0,
+    SURVIVAL_PROBABILITY: Double = 0.0
+  ) -> Offset {
+    let __start = survivingDebris.startsurvivingDebris(&fbb)
+    survivingDebris.add(FRAGMENT_ID: FRAGMENT_ID, &fbb)
+    survivingDebris.add(MATERIAL: MATERIAL, &fbb)
+    survivingDebris.add(MASS: MASS, &fbb)
+    survivingDebris.add(CASUALTY_AREA: CASUALTY_AREA, &fbb)
+    survivingDebris.add(SURVIVAL_PROBABILITY: SURVIVAL_PROBABILITY, &fbb)
+    return survivingDebris.endsurvivingDebris(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VTOFFSET.FRAGMENT_ID.p, fieldName: "FRAGMENT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.MATERIAL.p, fieldName: "MATERIAL", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.MASS.p, fieldName: "MASS", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.CASUALTY_AREA.p, fieldName: "CASUALTY_AREA", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.SURVIVAL_PROBABILITY.p, fieldName: "SURVIVAL_PROBABILITY", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
 ///  Reentry Data Message
 public struct RDM: FlatBufferObject, Verifiable {
 
@@ -22,36 +292,128 @@ public struct RDM: FlatBufferObject, Verifiable {
     case ORIGINATOR = 8
     case OBJECT_NAME = 10
     case OBJECT_ID = 12
-    case REENTRY_EPOCH = 14
-    case REENTRY_LATITUDE = 16
-    case REENTRY_LONGITUDE = 18
+    case NORAD_CAT_ID = 14
+    case OBJECT_TYPE = 16
+    case DISPOSITION = 18
+    case REASON = 20
+    case REENTRY_EPOCH = 22
+    case REENTRY_EPOCH_UNC = 24
+    case REENTRY_LATITUDE = 26
+    case REENTRY_LONGITUDE = 28
+    case REENTRY_ALTITUDE = 30
+    case TIME_SYSTEM = 32
+    case PREV_PREDICTION_EPOCH = 34
+    case BALLISTIC_COEFF = 36
+    case MASS = 38
+    case SOLAR_RAD_AREA = 40
+    case DRAG_AREA = 42
+    case INITIAL_STATE = 44
+    case IMPACT_PREDICTIONS = 46
+    case SURVIVING_DEBRIS = 48
+    case CASUALTY_EXPECTATION = 50
+    case NUM_FRAGMENTS = 52
+    case SURVIVING_MASS = 54
+    case COMMENT = 56
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
+  ///  CCSDS RDM version
   public var CCSDS_RDM_VERS: String? { let o = _accessor.offset(VTOFFSET.CCSDS_RDM_VERS.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CCSDS_RDM_VERSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CCSDS_RDM_VERS.v) }
+  ///  Message creation date (ISO 8601)
   public var CREATION_DATE: String? { let o = _accessor.offset(VTOFFSET.CREATION_DATE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CREATION_DATESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CREATION_DATE.v) }
+  ///  Creating organization
   public var ORIGINATOR: String? { let o = _accessor.offset(VTOFFSET.ORIGINATOR.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ORIGINATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIGINATOR.v) }
+  ///  Object name
   public var OBJECT_NAME: String? { let o = _accessor.offset(VTOFFSET.OBJECT_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OBJECT_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJECT_NAME.v) }
+  ///  International designator
   public var OBJECT_ID: String? { let o = _accessor.offset(VTOFFSET.OBJECT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJECT_ID.v) }
+  ///  NORAD catalog number
+  public var NORAD_CAT_ID: UInt32 { let o = _accessor.offset(VTOFFSET.NORAD_CAT_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Object type (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN)
+  public var OBJECT_TYPE: String? { let o = _accessor.offset(VTOFFSET.OBJECT_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJECT_TYPE.v) }
+  ///  Reentry disposition
+  public var DISPOSITION: reentryDisposition { let o = _accessor.offset(VTOFFSET.DISPOSITION.v); return o == 0 ? .controlled : reentryDisposition(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .controlled }
+  ///  Reentry reason
+  public var REASON: reentryReason { let o = _accessor.offset(VTOFFSET.REASON.v); return o == 0 ? .naturalDecay : reentryReason(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .naturalDecay }
+  ///  Predicted reentry epoch (ISO 8601)
   public var REENTRY_EPOCH: String? { let o = _accessor.offset(VTOFFSET.REENTRY_EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var REENTRY_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REENTRY_EPOCH.v) }
+  ///  Reentry epoch uncertainty window in hours
+  public var REENTRY_EPOCH_UNC: Double { let o = _accessor.offset(VTOFFSET.REENTRY_EPOCH_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Reentry latitude in degrees
   public var REENTRY_LATITUDE: Double { let o = _accessor.offset(VTOFFSET.REENTRY_LATITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Reentry longitude in degrees
   public var REENTRY_LONGITUDE: Double { let o = _accessor.offset(VTOFFSET.REENTRY_LONGITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startRDM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 8) }
+  ///  Reentry altitude in km
+  public var REENTRY_ALTITUDE: Double { let o = _accessor.offset(VTOFFSET.REENTRY_ALTITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Time system
+  public var TIME_SYSTEM: String? { let o = _accessor.offset(VTOFFSET.TIME_SYSTEM.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TIME_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TIME_SYSTEM.v) }
+  ///  Previous predicted reentry epoch for comparison (ISO 8601)
+  public var PREV_PREDICTION_EPOCH: String? { let o = _accessor.offset(VTOFFSET.PREV_PREDICTION_EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var PREV_PREDICTION_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PREV_PREDICTION_EPOCH.v) }
+  ///  Ballistic coefficient in kg/m^2
+  public var BALLISTIC_COEFF: Double { let o = _accessor.offset(VTOFFSET.BALLISTIC_COEFF.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Object mass in kg
+  public var MASS: Double { let o = _accessor.offset(VTOFFSET.MASS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Solar radiation pressure area in m^2
+  public var SOLAR_RAD_AREA: Double { let o = _accessor.offset(VTOFFSET.SOLAR_RAD_AREA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Drag area in m^2
+  public var DRAG_AREA: Double { let o = _accessor.offset(VTOFFSET.DRAG_AREA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Initial state vector
+  public var INITIAL_STATE: reentryStateVector? { let o = _accessor.offset(VTOFFSET.INITIAL_STATE.v); return o == 0 ? nil : reentryStateVector(_accessor.bb, o: _accessor.indirect(o + _accessor.postion)) }
+  ///  Ground impact predictions
+  public var hasImpactPredictions: Bool { let o = _accessor.offset(VTOFFSET.IMPACT_PREDICTIONS.v); return o == 0 ? false : true }
+  public var IMPACT_PREDICTIONSCount: Int32 { let o = _accessor.offset(VTOFFSET.IMPACT_PREDICTIONS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func IMPACT_PREDICTIONS(at index: Int32) -> reentryImpact? { let o = _accessor.offset(VTOFFSET.IMPACT_PREDICTIONS.v); return o == 0 ? nil : reentryImpact(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  ///  Predicted surviving debris
+  public var hasSurvivingDebris: Bool { let o = _accessor.offset(VTOFFSET.SURVIVING_DEBRIS.v); return o == 0 ? false : true }
+  public var SURVIVING_DEBRISCount: Int32 { let o = _accessor.offset(VTOFFSET.SURVIVING_DEBRIS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func SURVIVING_DEBRIS(at index: Int32) -> survivingDebris? { let o = _accessor.offset(VTOFFSET.SURVIVING_DEBRIS.v); return o == 0 ? nil : survivingDebris(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  ///  Casualty expectation
+  public var CASUALTY_EXPECTATION: Double { let o = _accessor.offset(VTOFFSET.CASUALTY_EXPECTATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Number of breakup fragments predicted
+  public var NUM_FRAGMENTS: UInt32 { let o = _accessor.offset(VTOFFSET.NUM_FRAGMENTS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Total surviving mass in kg
+  public var SURVIVING_MASS: Double { let o = _accessor.offset(VTOFFSET.SURVIVING_MASS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Additional comments
+  public var COMMENT: String? { let o = _accessor.offset(VTOFFSET.COMMENT.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COMMENTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COMMENT.v) }
+  public static func startRDM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 27) }
   public static func add(CCSDS_RDM_VERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CCSDS_RDM_VERS, at: VTOFFSET.CCSDS_RDM_VERS.p) }
   public static func add(CREATION_DATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CREATION_DATE, at: VTOFFSET.CREATION_DATE.p) }
   public static func add(ORIGINATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIGINATOR, at: VTOFFSET.ORIGINATOR.p) }
   public static func add(OBJECT_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_NAME, at: VTOFFSET.OBJECT_NAME.p) }
   public static func add(OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_ID, at: VTOFFSET.OBJECT_ID.p) }
+  public static func add(NORAD_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NORAD_CAT_ID, def: 0, at: VTOFFSET.NORAD_CAT_ID.p) }
+  public static func add(OBJECT_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_TYPE, at: VTOFFSET.OBJECT_TYPE.p) }
+  public static func add(DISPOSITION: reentryDisposition, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DISPOSITION.rawValue, def: 0, at: VTOFFSET.DISPOSITION.p) }
+  public static func add(REASON: reentryReason, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REASON.rawValue, def: 0, at: VTOFFSET.REASON.p) }
   public static func add(REENTRY_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REENTRY_EPOCH, at: VTOFFSET.REENTRY_EPOCH.p) }
+  public static func add(REENTRY_EPOCH_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REENTRY_EPOCH_UNC, def: 0.0, at: VTOFFSET.REENTRY_EPOCH_UNC.p) }
   public static func add(REENTRY_LATITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REENTRY_LATITUDE, def: 0.0, at: VTOFFSET.REENTRY_LATITUDE.p) }
   public static func add(REENTRY_LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REENTRY_LONGITUDE, def: 0.0, at: VTOFFSET.REENTRY_LONGITUDE.p) }
+  public static func add(REENTRY_ALTITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REENTRY_ALTITUDE, def: 0.0, at: VTOFFSET.REENTRY_ALTITUDE.p) }
+  public static func add(TIME_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TIME_SYSTEM, at: VTOFFSET.TIME_SYSTEM.p) }
+  public static func add(PREV_PREDICTION_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PREV_PREDICTION_EPOCH, at: VTOFFSET.PREV_PREDICTION_EPOCH.p) }
+  public static func add(BALLISTIC_COEFF: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BALLISTIC_COEFF, def: 0.0, at: VTOFFSET.BALLISTIC_COEFF.p) }
+  public static func add(MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MASS, def: 0.0, at: VTOFFSET.MASS.p) }
+  public static func add(SOLAR_RAD_AREA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SOLAR_RAD_AREA, def: 0.0, at: VTOFFSET.SOLAR_RAD_AREA.p) }
+  public static func add(DRAG_AREA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DRAG_AREA, def: 0.0, at: VTOFFSET.DRAG_AREA.p) }
+  public static func add(INITIAL_STATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INITIAL_STATE, at: VTOFFSET.INITIAL_STATE.p) }
+  public static func addVectorOf(IMPACT_PREDICTIONS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: IMPACT_PREDICTIONS, at: VTOFFSET.IMPACT_PREDICTIONS.p) }
+  public static func addVectorOf(SURVIVING_DEBRIS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SURVIVING_DEBRIS, at: VTOFFSET.SURVIVING_DEBRIS.p) }
+  public static func add(CASUALTY_EXPECTATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CASUALTY_EXPECTATION, def: 0.0, at: VTOFFSET.CASUALTY_EXPECTATION.p) }
+  public static func add(NUM_FRAGMENTS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_FRAGMENTS, def: 0, at: VTOFFSET.NUM_FRAGMENTS.p) }
+  public static func add(SURVIVING_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SURVIVING_MASS, def: 0.0, at: VTOFFSET.SURVIVING_MASS.p) }
+  public static func add(COMMENT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COMMENT, at: VTOFFSET.COMMENT.p) }
   public static func endRDM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createRDM(
     _ fbb: inout FlatBufferBuilder,
@@ -60,9 +422,28 @@ public struct RDM: FlatBufferObject, Verifiable {
     ORIGINATOROffset ORIGINATOR: Offset = Offset(),
     OBJECT_NAMEOffset OBJECT_NAME: Offset = Offset(),
     OBJECT_IDOffset OBJECT_ID: Offset = Offset(),
+    NORAD_CAT_ID: UInt32 = 0,
+    OBJECT_TYPEOffset OBJECT_TYPE: Offset = Offset(),
+    DISPOSITION: reentryDisposition = .controlled,
+    REASON: reentryReason = .naturalDecay,
     REENTRY_EPOCHOffset REENTRY_EPOCH: Offset = Offset(),
+    REENTRY_EPOCH_UNC: Double = 0.0,
     REENTRY_LATITUDE: Double = 0.0,
-    REENTRY_LONGITUDE: Double = 0.0
+    REENTRY_LONGITUDE: Double = 0.0,
+    REENTRY_ALTITUDE: Double = 0.0,
+    TIME_SYSTEMOffset TIME_SYSTEM: Offset = Offset(),
+    PREV_PREDICTION_EPOCHOffset PREV_PREDICTION_EPOCH: Offset = Offset(),
+    BALLISTIC_COEFF: Double = 0.0,
+    MASS: Double = 0.0,
+    SOLAR_RAD_AREA: Double = 0.0,
+    DRAG_AREA: Double = 0.0,
+    INITIAL_STATEOffset INITIAL_STATE: Offset = Offset(),
+    IMPACT_PREDICTIONSVectorOffset IMPACT_PREDICTIONS: Offset = Offset(),
+    SURVIVING_DEBRISVectorOffset SURVIVING_DEBRIS: Offset = Offset(),
+    CASUALTY_EXPECTATION: Double = 0.0,
+    NUM_FRAGMENTS: UInt32 = 0,
+    SURVIVING_MASS: Double = 0.0,
+    COMMENTOffset COMMENT: Offset = Offset()
   ) -> Offset {
     let __start = RDM.startRDM(&fbb)
     RDM.add(CCSDS_RDM_VERS: CCSDS_RDM_VERS, &fbb)
@@ -70,9 +451,28 @@ public struct RDM: FlatBufferObject, Verifiable {
     RDM.add(ORIGINATOR: ORIGINATOR, &fbb)
     RDM.add(OBJECT_NAME: OBJECT_NAME, &fbb)
     RDM.add(OBJECT_ID: OBJECT_ID, &fbb)
+    RDM.add(NORAD_CAT_ID: NORAD_CAT_ID, &fbb)
+    RDM.add(OBJECT_TYPE: OBJECT_TYPE, &fbb)
+    RDM.add(DISPOSITION: DISPOSITION, &fbb)
+    RDM.add(REASON: REASON, &fbb)
     RDM.add(REENTRY_EPOCH: REENTRY_EPOCH, &fbb)
+    RDM.add(REENTRY_EPOCH_UNC: REENTRY_EPOCH_UNC, &fbb)
     RDM.add(REENTRY_LATITUDE: REENTRY_LATITUDE, &fbb)
     RDM.add(REENTRY_LONGITUDE: REENTRY_LONGITUDE, &fbb)
+    RDM.add(REENTRY_ALTITUDE: REENTRY_ALTITUDE, &fbb)
+    RDM.add(TIME_SYSTEM: TIME_SYSTEM, &fbb)
+    RDM.add(PREV_PREDICTION_EPOCH: PREV_PREDICTION_EPOCH, &fbb)
+    RDM.add(BALLISTIC_COEFF: BALLISTIC_COEFF, &fbb)
+    RDM.add(MASS: MASS, &fbb)
+    RDM.add(SOLAR_RAD_AREA: SOLAR_RAD_AREA, &fbb)
+    RDM.add(DRAG_AREA: DRAG_AREA, &fbb)
+    RDM.add(INITIAL_STATE: INITIAL_STATE, &fbb)
+    RDM.addVectorOf(IMPACT_PREDICTIONS: IMPACT_PREDICTIONS, &fbb)
+    RDM.addVectorOf(SURVIVING_DEBRIS: SURVIVING_DEBRIS, &fbb)
+    RDM.add(CASUALTY_EXPECTATION: CASUALTY_EXPECTATION, &fbb)
+    RDM.add(NUM_FRAGMENTS: NUM_FRAGMENTS, &fbb)
+    RDM.add(SURVIVING_MASS: SURVIVING_MASS, &fbb)
+    RDM.add(COMMENT: COMMENT, &fbb)
     return RDM.endRDM(&fbb, start: __start)
   }
 
@@ -83,9 +483,28 @@ public struct RDM: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.ORIGINATOR.p, fieldName: "ORIGINATOR", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.OBJECT_NAME.p, fieldName: "OBJECT_NAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.OBJECT_ID.p, fieldName: "OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.NORAD_CAT_ID.p, fieldName: "NORAD_CAT_ID", required: false, type: UInt32.self)
+    try _v.visit(field: VTOFFSET.OBJECT_TYPE.p, fieldName: "OBJECT_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.DISPOSITION.p, fieldName: "DISPOSITION", required: false, type: reentryDisposition.self)
+    try _v.visit(field: VTOFFSET.REASON.p, fieldName: "REASON", required: false, type: reentryReason.self)
     try _v.visit(field: VTOFFSET.REENTRY_EPOCH.p, fieldName: "REENTRY_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.REENTRY_EPOCH_UNC.p, fieldName: "REENTRY_EPOCH_UNC", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.REENTRY_LATITUDE.p, fieldName: "REENTRY_LATITUDE", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.REENTRY_LONGITUDE.p, fieldName: "REENTRY_LONGITUDE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.REENTRY_ALTITUDE.p, fieldName: "REENTRY_ALTITUDE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.TIME_SYSTEM.p, fieldName: "TIME_SYSTEM", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.PREV_PREDICTION_EPOCH.p, fieldName: "PREV_PREDICTION_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.BALLISTIC_COEFF.p, fieldName: "BALLISTIC_COEFF", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.MASS.p, fieldName: "MASS", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.SOLAR_RAD_AREA.p, fieldName: "SOLAR_RAD_AREA", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.DRAG_AREA.p, fieldName: "DRAG_AREA", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.INITIAL_STATE.p, fieldName: "INITIAL_STATE", required: false, type: ForwardOffset<reentryStateVector>.self)
+    try _v.visit(field: VTOFFSET.IMPACT_PREDICTIONS.p, fieldName: "IMPACT_PREDICTIONS", required: false, type: ForwardOffset<Vector<ForwardOffset<reentryImpact>, reentryImpact>>.self)
+    try _v.visit(field: VTOFFSET.SURVIVING_DEBRIS.p, fieldName: "SURVIVING_DEBRIS", required: false, type: ForwardOffset<Vector<ForwardOffset<survivingDebris>, survivingDebris>>.self)
+    try _v.visit(field: VTOFFSET.CASUALTY_EXPECTATION.p, fieldName: "CASUALTY_EXPECTATION", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.NUM_FRAGMENTS.p, fieldName: "NUM_FRAGMENTS", required: false, type: UInt32.self)
+    try _v.visit(field: VTOFFSET.SURVIVING_MASS.p, fieldName: "SURVIVING_MASS", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.COMMENT.p, fieldName: "COMMENT", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

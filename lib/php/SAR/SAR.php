@@ -41,454 +41,501 @@ class SAR extends Table
         return $this;
     }
 
+    /// Unique identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Satellite catalog number (of SAR platform)
     /**
-     * @return int
+     * @return uint
      */
     public function getSAT_NO()
     {
         $o = $this->__offset(6);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
+    /// International designator
     public function getORIG_OBJECT_ID()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getID_SENSOR()
+    /// On-orbit reference
+    public function getON_ORBIT()
     {
         $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getORIG_SENSOR_ID()
+    /// Sensor identifier
+    public function getID_SENSOR()
     {
         $o = $this->__offset(12);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getEXTERNAL_ID()
+    /// Original sensor identifier
+    public function getORIG_SENSOR_ID()
     {
         $o = $this->__offset(14);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getCOLLECTION_ID()
+    /// External reference identifier
+    public function getEXTERNAL_ID()
     {
         $o = $this->__offset(16);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getDETECTION_ID()
+    /// Collection identifier
+    public function getCOLLECTION_ID()
     {
         $o = $this->__offset(18);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getCOLLECTION_START()
+    /// Detection identifier
+    public function getDETECTION_ID()
     {
         $o = $this->__offset(20);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getCOLLECTION_END()
+    /// Collection start time (ISO 8601)
+    public function getCOLLECTION_START()
     {
         $o = $this->__offset(22);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getCENTER_TIME()
+    /// Collection end time (ISO 8601)
+    public function getCOLLECTION_END()
     {
         $o = $this->__offset(24);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getDETECTION_START()
+    /// Center time of observation (ISO 8601)
+    public function getCENTER_TIME()
     {
         $o = $this->__offset(26);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getDETECTION_END()
+    /// Detection start time (ISO 8601)
+    public function getDETECTION_START()
     {
         $o = $this->__offset(28);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Detection end time (ISO 8601)
+    public function getDETECTION_END()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Integration/dwell time (seconds)
     /**
      * @return double
      */
     public function getDWELL_TIME()
     {
-        $o = $this->__offset(30);
+        $o = $this->__offset(32);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Orbit state description
     public function getORBIT_STATE()
-    {
-        $o = $this->__offset(32);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getSAR_MODE()
     {
         $o = $this->__offset(34);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getOPERATING_BAND()
+    /// SAR imaging mode
+    /**
+     * @return sbyte
+     */
+    public function getSAR_MODE()
     {
         $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \sarMode::STRIPMAP;
+    }
+
+    /// Operating RF band (e.g., X, C, L, S, P)
+    public function getOPERATING_BAND()
+    {
+        $o = $this->__offset(38);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Operating frequency (GHz)
     /**
      * @return double
      */
     public function getOPERATING_FREQ()
     {
-        $o = $this->__offset(38);
+        $o = $this->__offset(40);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Signal-to-noise ratio (dB)
     /**
      * @return double
      */
     public function getSNR()
     {
-        $o = $this->__offset(40);
+        $o = $this->__offset(42);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Transmit polarization
+    /**
+     * @return sbyte
+     */
     public function getTX_POLARIZATION()
     {
-        $o = $this->__offset(42);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \sarPolarization::HH;
     }
 
+    /// Receive polarization
+    /**
+     * @return sbyte
+     */
     public function getRX_POLARIZATION()
     {
-        $o = $this->__offset(44);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \sarPolarization::HH;
     }
 
+    /// Grazing angle (degrees)
     /**
      * @return double
      */
     public function getGRAZE_ANGLE()
     {
-        $o = $this->__offset(46);
+        $o = $this->__offset(48);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Incidence angle (degrees)
     /**
      * @return double
      */
     public function getINCIDENCE_ANGLE()
     {
-        $o = $this->__offset(48);
+        $o = $this->__offset(50);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Squint angle (degrees)
     /**
      * @return double
      */
     public function getSQUINT_ANGLE()
     {
-        $o = $this->__offset(50);
+        $o = $this->__offset(52);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Pulse bandwidth (MHz)
     /**
      * @return double
      */
     public function getPULSE_BANDWIDTH()
     {
-        $o = $this->__offset(52);
+        $o = $this->__offset(54);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Pulse duration (microseconds)
     /**
      * @return double
      */
     public function getPULSE_DURATION()
     {
-        $o = $this->__offset(54);
+        $o = $this->__offset(56);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Continuous spot angle (degrees)
     /**
      * @return double
      */
     public function getCONTINUOUS_SPOT_ANGLE()
     {
-        $o = $this->__offset(56);
+        $o = $this->__offset(58);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Slant range to target (km)
     /**
      * @return double
      */
     public function getSLANT_RANGE()
     {
-        $o = $this->__offset(58);
+        $o = $this->__offset(60);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Near range (km)
     /**
      * @return double
      */
     public function getNEAR_RANGE()
     {
-        $o = $this->__offset(60);
+        $o = $this->__offset(62);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Far range (km)
     /**
      * @return double
      */
     public function getFAR_RANGE()
     {
-        $o = $this->__offset(62);
+        $o = $this->__offset(64);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Swath length (km)
     /**
      * @return double
      */
     public function getSWATH_LENGTH()
     {
-        $o = $this->__offset(64);
+        $o = $this->__offset(66);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    public function getAREA()
-    {
-        $o = $this->__offset(66);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getATEXT()
+    /// Image area GeoJSON
+    public function getAGJSON()
     {
         $o = $this->__offset(68);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getAGJSON()
+    /// Image area text description
+    public function getATEXT()
     {
         $o = $this->__offset(70);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Area type
     public function getATYPE()
     {
         $o = $this->__offset(72);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /**
-     * @return int
-     */
-    public function getANDIMS()
+    /// Coordinate system
+    public function getCOORD_SYS()
     {
         $o = $this->__offset(74);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /**
-     * @return int
-     */
-    public function getASRID()
-    {
-        $o = $this->__offset(76);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
-    }
-
+    /// Range pixel spacing (meters)
     /**
      * @return double
      */
     public function getSPACING_RANGE()
     {
-        $o = $this->__offset(78);
+        $o = $this->__offset(76);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Azimuth pixel spacing (meters)
     /**
      * @return double
      */
     public function getSPACING_AZIMUTH()
     {
-        $o = $this->__offset(80);
+        $o = $this->__offset(78);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Number of azimuth looks
     /**
-     * @return int
+     * @return byte
      */
     public function getLOOKS_AZIMUTH()
     {
-        $o = $this->__offset(82);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        $o = $this->__offset(80);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
     }
 
+    /// Number of range looks
     /**
-     * @return int
+     * @return byte
      */
     public function getLOOKS_RANGE()
     {
-        $o = $this->__offset(84);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        $o = $this->__offset(82);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
     }
 
+    /// Range resolution (meters)
     /**
      * @return double
      */
     public function getRESOLUTION_RANGE()
     {
-        $o = $this->__offset(86);
+        $o = $this->__offset(84);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Azimuth resolution (meters)
     /**
      * @return double
      */
     public function getRESOLUTION_AZIMUTH()
     {
-        $o = $this->__offset(88);
+        $o = $this->__offset(86);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Observation direction (ASCENDING/DESCENDING)
     public function getOB_DIRECTION()
     {
-        $o = $this->__offset(90);
+        $o = $this->__offset(88);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getCOORD_SYS()
-    {
-        $o = $this->__offset(92);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
+    /// Target position X (km)
     /**
      * @return double
      */
     public function getTARGETPOSX()
     {
-        $o = $this->__offset(94);
+        $o = $this->__offset(90);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Target position Y (km)
     /**
      * @return double
      */
     public function getTARGETPOSY()
     {
-        $o = $this->__offset(96);
+        $o = $this->__offset(92);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Target position Z (km)
     /**
      * @return double
      */
     public function getTARGETPOSZ()
     {
-        $o = $this->__offset(98);
+        $o = $this->__offset(94);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor altitude (km)
     /**
      * @return double
      */
     public function getSENALT()
     {
-        $o = $this->__offset(100);
+        $o = $this->__offset(96);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor velocity X (km/s)
     /**
      * @return double
      */
     public function getSENVELX()
     {
-        $o = $this->__offset(102);
+        $o = $this->__offset(98);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor velocity Y (km/s)
     /**
      * @return double
      */
     public function getSENVELY()
     {
-        $o = $this->__offset(104);
+        $o = $this->__offset(100);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor velocity Z (km/s)
     /**
      * @return double
      */
     public function getSENVELZ()
     {
-        $o = $this->__offset(106);
+        $o = $this->__offset(102);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor latitude at start (degrees)
     /**
      * @return double
      */
     public function getSENLAT_START()
     {
-        $o = $this->__offset(108);
+        $o = $this->__offset(104);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor longitude at start (degrees)
     /**
      * @return double
      */
     public function getSENLON_START()
     {
-        $o = $this->__offset(110);
+        $o = $this->__offset(106);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor latitude at end (degrees)
     /**
      * @return double
      */
     public function getSENLAT_END()
     {
-        $o = $this->__offset(112);
+        $o = $this->__offset(108);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor longitude at end (degrees)
     /**
      * @return double
      */
     public function getSENLON_END()
     {
-        $o = $this->__offset(114);
+        $o = $this->__offset(110);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Transaction identifier
     public function getTRANSACTION_ID()
     {
-        $o = $this->__offset(116);
+        $o = $this->__offset(112);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Associated tags
     /**
      * @param int offset
      * @return string
      */
     public function getTAGS($j)
     {
-        $o = $this->__offset(118);
+        $o = $this->__offset(114);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -497,17 +544,18 @@ class SAR extends Table
      */
     public function getTAGSLength()
     {
-        $o = $this->__offset(118);
+        $o = $this->__offset(114);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Source types
     /**
      * @param int offset
      * @return string
      */
     public function getSRC_TYPS($j)
     {
-        $o = $this->__offset(120);
+        $o = $this->__offset(116);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -516,17 +564,18 @@ class SAR extends Table
      */
     public function getSRC_TYPSLength()
     {
-        $o = $this->__offset(120);
+        $o = $this->__offset(116);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Source identifiers
     /**
      * @param int offset
      * @return string
      */
     public function getSRC_IDS($j)
     {
-        $o = $this->__offset(122);
+        $o = $this->__offset(118);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -535,14 +584,8 @@ class SAR extends Table
      */
     public function getSRC_IDSLength()
     {
-        $o = $this->__offset(122);
+        $o = $this->__offset(118);
         return $o != 0 ? $this->__vector_len($o) : 0;
-    }
-
-    public function getON_ORBIT()
-    {
-        $o = $this->__offset(124);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /**
@@ -551,19 +594,20 @@ class SAR extends Table
      */
     public static function startSAR(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(61);
+        $builder->StartObject(58);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SAR
      */
-    public static function createSAR(FlatBufferBuilder $builder, $ID, $SAT_NO, $ORIG_OBJECT_ID, $ID_SENSOR, $ORIG_SENSOR_ID, $EXTERNAL_ID, $COLLECTION_ID, $DETECTION_ID, $COLLECTION_START, $COLLECTION_END, $CENTER_TIME, $DETECTION_START, $DETECTION_END, $DWELL_TIME, $ORBIT_STATE, $SAR_MODE, $OPERATING_BAND, $OPERATING_FREQ, $SNR, $TX_POLARIZATION, $RX_POLARIZATION, $GRAZE_ANGLE, $INCIDENCE_ANGLE, $SQUINT_ANGLE, $PULSE_BANDWIDTH, $PULSE_DURATION, $CONTINUOUS_SPOT_ANGLE, $SLANT_RANGE, $NEAR_RANGE, $FAR_RANGE, $SWATH_LENGTH, $AREA, $ATEXT, $AGJSON, $ATYPE, $ANDIMS, $ASRID, $SPACING_RANGE, $SPACING_AZIMUTH, $LOOKS_AZIMUTH, $LOOKS_RANGE, $RESOLUTION_RANGE, $RESOLUTION_AZIMUTH, $OB_DIRECTION, $COORD_SYS, $TARGETPOSX, $TARGETPOSY, $TARGETPOSZ, $SENALT, $SENVELX, $SENVELY, $SENVELZ, $SENLAT_START, $SENLON_START, $SENLAT_END, $SENLON_END, $TRANSACTION_ID, $TAGS, $SRC_TYPS, $SRC_IDS, $ON_ORBIT)
+    public static function createSAR(FlatBufferBuilder $builder, $ID, $SAT_NO, $ORIG_OBJECT_ID, $ON_ORBIT, $ID_SENSOR, $ORIG_SENSOR_ID, $EXTERNAL_ID, $COLLECTION_ID, $DETECTION_ID, $COLLECTION_START, $COLLECTION_END, $CENTER_TIME, $DETECTION_START, $DETECTION_END, $DWELL_TIME, $ORBIT_STATE, $SAR_MODE, $OPERATING_BAND, $OPERATING_FREQ, $SNR, $TX_POLARIZATION, $RX_POLARIZATION, $GRAZE_ANGLE, $INCIDENCE_ANGLE, $SQUINT_ANGLE, $PULSE_BANDWIDTH, $PULSE_DURATION, $CONTINUOUS_SPOT_ANGLE, $SLANT_RANGE, $NEAR_RANGE, $FAR_RANGE, $SWATH_LENGTH, $AGJSON, $ATEXT, $ATYPE, $COORD_SYS, $SPACING_RANGE, $SPACING_AZIMUTH, $LOOKS_AZIMUTH, $LOOKS_RANGE, $RESOLUTION_RANGE, $RESOLUTION_AZIMUTH, $OB_DIRECTION, $TARGETPOSX, $TARGETPOSY, $TARGETPOSZ, $SENALT, $SENVELX, $SENVELY, $SENVELZ, $SENLAT_START, $SENLON_START, $SENLAT_END, $SENLON_END, $TRANSACTION_ID, $TAGS, $SRC_TYPS, $SRC_IDS)
     {
-        $builder->startObject(61);
+        $builder->startObject(58);
         self::addID($builder, $ID);
         self::addSAT_NO($builder, $SAT_NO);
         self::addORIG_OBJECT_ID($builder, $ORIG_OBJECT_ID);
+        self::addON_ORBIT($builder, $ON_ORBIT);
         self::addID_SENSOR($builder, $ID_SENSOR);
         self::addORIG_SENSOR_ID($builder, $ORIG_SENSOR_ID);
         self::addEXTERNAL_ID($builder, $EXTERNAL_ID);
@@ -592,12 +636,10 @@ class SAR extends Table
         self::addNEAR_RANGE($builder, $NEAR_RANGE);
         self::addFAR_RANGE($builder, $FAR_RANGE);
         self::addSWATH_LENGTH($builder, $SWATH_LENGTH);
-        self::addAREA($builder, $AREA);
-        self::addATEXT($builder, $ATEXT);
         self::addAGJSON($builder, $AGJSON);
+        self::addATEXT($builder, $ATEXT);
         self::addATYPE($builder, $ATYPE);
-        self::addANDIMS($builder, $ANDIMS);
-        self::addASRID($builder, $ASRID);
+        self::addCOORD_SYS($builder, $COORD_SYS);
         self::addSPACING_RANGE($builder, $SPACING_RANGE);
         self::addSPACING_AZIMUTH($builder, $SPACING_AZIMUTH);
         self::addLOOKS_AZIMUTH($builder, $LOOKS_AZIMUTH);
@@ -605,7 +647,6 @@ class SAR extends Table
         self::addRESOLUTION_RANGE($builder, $RESOLUTION_RANGE);
         self::addRESOLUTION_AZIMUTH($builder, $RESOLUTION_AZIMUTH);
         self::addOB_DIRECTION($builder, $OB_DIRECTION);
-        self::addCOORD_SYS($builder, $COORD_SYS);
         self::addTARGETPOSX($builder, $TARGETPOSX);
         self::addTARGETPOSY($builder, $TARGETPOSY);
         self::addTARGETPOSZ($builder, $TARGETPOSZ);
@@ -621,7 +662,6 @@ class SAR extends Table
         self::addTAGS($builder, $TAGS);
         self::addSRC_TYPS($builder, $SRC_TYPS);
         self::addSRC_IDS($builder, $SRC_IDS);
-        self::addON_ORBIT($builder, $ON_ORBIT);
         $o = $builder->endObject();
         return $o;
     }
@@ -638,12 +678,12 @@ class SAR extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param uint
      * @return void
      */
     public static function addSAT_NO(FlatBufferBuilder $builder, $SAT_NO)
     {
-        $builder->addIntX(1, $SAT_NO, 0);
+        $builder->addUintX(1, $SAT_NO, 0);
     }
 
     /**
@@ -661,9 +701,19 @@ class SAR extends Table
      * @param StringOffset
      * @return void
      */
+    public static function addON_ORBIT(FlatBufferBuilder $builder, $ON_ORBIT)
+    {
+        $builder->addOffsetX(3, $ON_ORBIT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
     public static function addID_SENSOR(FlatBufferBuilder $builder, $ID_SENSOR)
     {
-        $builder->addOffsetX(3, $ID_SENSOR, 0);
+        $builder->addOffsetX(4, $ID_SENSOR, 0);
     }
 
     /**
@@ -673,7 +723,7 @@ class SAR extends Table
      */
     public static function addORIG_SENSOR_ID(FlatBufferBuilder $builder, $ORIG_SENSOR_ID)
     {
-        $builder->addOffsetX(4, $ORIG_SENSOR_ID, 0);
+        $builder->addOffsetX(5, $ORIG_SENSOR_ID, 0);
     }
 
     /**
@@ -683,7 +733,7 @@ class SAR extends Table
      */
     public static function addEXTERNAL_ID(FlatBufferBuilder $builder, $EXTERNAL_ID)
     {
-        $builder->addOffsetX(5, $EXTERNAL_ID, 0);
+        $builder->addOffsetX(6, $EXTERNAL_ID, 0);
     }
 
     /**
@@ -693,7 +743,7 @@ class SAR extends Table
      */
     public static function addCOLLECTION_ID(FlatBufferBuilder $builder, $COLLECTION_ID)
     {
-        $builder->addOffsetX(6, $COLLECTION_ID, 0);
+        $builder->addOffsetX(7, $COLLECTION_ID, 0);
     }
 
     /**
@@ -703,7 +753,7 @@ class SAR extends Table
      */
     public static function addDETECTION_ID(FlatBufferBuilder $builder, $DETECTION_ID)
     {
-        $builder->addOffsetX(7, $DETECTION_ID, 0);
+        $builder->addOffsetX(8, $DETECTION_ID, 0);
     }
 
     /**
@@ -713,7 +763,7 @@ class SAR extends Table
      */
     public static function addCOLLECTION_START(FlatBufferBuilder $builder, $COLLECTION_START)
     {
-        $builder->addOffsetX(8, $COLLECTION_START, 0);
+        $builder->addOffsetX(9, $COLLECTION_START, 0);
     }
 
     /**
@@ -723,7 +773,7 @@ class SAR extends Table
      */
     public static function addCOLLECTION_END(FlatBufferBuilder $builder, $COLLECTION_END)
     {
-        $builder->addOffsetX(9, $COLLECTION_END, 0);
+        $builder->addOffsetX(10, $COLLECTION_END, 0);
     }
 
     /**
@@ -733,7 +783,7 @@ class SAR extends Table
      */
     public static function addCENTER_TIME(FlatBufferBuilder $builder, $CENTER_TIME)
     {
-        $builder->addOffsetX(10, $CENTER_TIME, 0);
+        $builder->addOffsetX(11, $CENTER_TIME, 0);
     }
 
     /**
@@ -743,7 +793,7 @@ class SAR extends Table
      */
     public static function addDETECTION_START(FlatBufferBuilder $builder, $DETECTION_START)
     {
-        $builder->addOffsetX(11, $DETECTION_START, 0);
+        $builder->addOffsetX(12, $DETECTION_START, 0);
     }
 
     /**
@@ -753,7 +803,7 @@ class SAR extends Table
      */
     public static function addDETECTION_END(FlatBufferBuilder $builder, $DETECTION_END)
     {
-        $builder->addOffsetX(12, $DETECTION_END, 0);
+        $builder->addOffsetX(13, $DETECTION_END, 0);
     }
 
     /**
@@ -763,7 +813,7 @@ class SAR extends Table
      */
     public static function addDWELL_TIME(FlatBufferBuilder $builder, $DWELL_TIME)
     {
-        $builder->addDoubleX(13, $DWELL_TIME, 0.0);
+        $builder->addDoubleX(14, $DWELL_TIME, 0.0);
     }
 
     /**
@@ -773,17 +823,17 @@ class SAR extends Table
      */
     public static function addORBIT_STATE(FlatBufferBuilder $builder, $ORBIT_STATE)
     {
-        $builder->addOffsetX(14, $ORBIT_STATE, 0);
+        $builder->addOffsetX(15, $ORBIT_STATE, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addSAR_MODE(FlatBufferBuilder $builder, $SAR_MODE)
     {
-        $builder->addOffsetX(15, $SAR_MODE, 0);
+        $builder->addSbyteX(16, $SAR_MODE, 0);
     }
 
     /**
@@ -793,7 +843,7 @@ class SAR extends Table
      */
     public static function addOPERATING_BAND(FlatBufferBuilder $builder, $OPERATING_BAND)
     {
-        $builder->addOffsetX(16, $OPERATING_BAND, 0);
+        $builder->addOffsetX(17, $OPERATING_BAND, 0);
     }
 
     /**
@@ -803,7 +853,7 @@ class SAR extends Table
      */
     public static function addOPERATING_FREQ(FlatBufferBuilder $builder, $OPERATING_FREQ)
     {
-        $builder->addDoubleX(17, $OPERATING_FREQ, 0.0);
+        $builder->addDoubleX(18, $OPERATING_FREQ, 0.0);
     }
 
     /**
@@ -813,27 +863,27 @@ class SAR extends Table
      */
     public static function addSNR(FlatBufferBuilder $builder, $SNR)
     {
-        $builder->addDoubleX(18, $SNR, 0.0);
+        $builder->addDoubleX(19, $SNR, 0.0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addTX_POLARIZATION(FlatBufferBuilder $builder, $TX_POLARIZATION)
     {
-        $builder->addOffsetX(19, $TX_POLARIZATION, 0);
+        $builder->addSbyteX(20, $TX_POLARIZATION, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addRX_POLARIZATION(FlatBufferBuilder $builder, $RX_POLARIZATION)
     {
-        $builder->addOffsetX(20, $RX_POLARIZATION, 0);
+        $builder->addSbyteX(21, $RX_POLARIZATION, 0);
     }
 
     /**
@@ -843,7 +893,7 @@ class SAR extends Table
      */
     public static function addGRAZE_ANGLE(FlatBufferBuilder $builder, $GRAZE_ANGLE)
     {
-        $builder->addDoubleX(21, $GRAZE_ANGLE, 0.0);
+        $builder->addDoubleX(22, $GRAZE_ANGLE, 0.0);
     }
 
     /**
@@ -853,7 +903,7 @@ class SAR extends Table
      */
     public static function addINCIDENCE_ANGLE(FlatBufferBuilder $builder, $INCIDENCE_ANGLE)
     {
-        $builder->addDoubleX(22, $INCIDENCE_ANGLE, 0.0);
+        $builder->addDoubleX(23, $INCIDENCE_ANGLE, 0.0);
     }
 
     /**
@@ -863,7 +913,7 @@ class SAR extends Table
      */
     public static function addSQUINT_ANGLE(FlatBufferBuilder $builder, $SQUINT_ANGLE)
     {
-        $builder->addDoubleX(23, $SQUINT_ANGLE, 0.0);
+        $builder->addDoubleX(24, $SQUINT_ANGLE, 0.0);
     }
 
     /**
@@ -873,7 +923,7 @@ class SAR extends Table
      */
     public static function addPULSE_BANDWIDTH(FlatBufferBuilder $builder, $PULSE_BANDWIDTH)
     {
-        $builder->addDoubleX(24, $PULSE_BANDWIDTH, 0.0);
+        $builder->addDoubleX(25, $PULSE_BANDWIDTH, 0.0);
     }
 
     /**
@@ -883,7 +933,7 @@ class SAR extends Table
      */
     public static function addPULSE_DURATION(FlatBufferBuilder $builder, $PULSE_DURATION)
     {
-        $builder->addDoubleX(25, $PULSE_DURATION, 0.0);
+        $builder->addDoubleX(26, $PULSE_DURATION, 0.0);
     }
 
     /**
@@ -893,7 +943,7 @@ class SAR extends Table
      */
     public static function addCONTINUOUS_SPOT_ANGLE(FlatBufferBuilder $builder, $CONTINUOUS_SPOT_ANGLE)
     {
-        $builder->addDoubleX(26, $CONTINUOUS_SPOT_ANGLE, 0.0);
+        $builder->addDoubleX(27, $CONTINUOUS_SPOT_ANGLE, 0.0);
     }
 
     /**
@@ -903,7 +953,7 @@ class SAR extends Table
      */
     public static function addSLANT_RANGE(FlatBufferBuilder $builder, $SLANT_RANGE)
     {
-        $builder->addDoubleX(27, $SLANT_RANGE, 0.0);
+        $builder->addDoubleX(28, $SLANT_RANGE, 0.0);
     }
 
     /**
@@ -913,7 +963,7 @@ class SAR extends Table
      */
     public static function addNEAR_RANGE(FlatBufferBuilder $builder, $NEAR_RANGE)
     {
-        $builder->addDoubleX(28, $NEAR_RANGE, 0.0);
+        $builder->addDoubleX(29, $NEAR_RANGE, 0.0);
     }
 
     /**
@@ -923,7 +973,7 @@ class SAR extends Table
      */
     public static function addFAR_RANGE(FlatBufferBuilder $builder, $FAR_RANGE)
     {
-        $builder->addDoubleX(29, $FAR_RANGE, 0.0);
+        $builder->addDoubleX(30, $FAR_RANGE, 0.0);
     }
 
     /**
@@ -933,27 +983,7 @@ class SAR extends Table
      */
     public static function addSWATH_LENGTH(FlatBufferBuilder $builder, $SWATH_LENGTH)
     {
-        $builder->addDoubleX(30, $SWATH_LENGTH, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addAREA(FlatBufferBuilder $builder, $AREA)
-    {
-        $builder->addOffsetX(31, $AREA, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addATEXT(FlatBufferBuilder $builder, $ATEXT)
-    {
-        $builder->addOffsetX(32, $ATEXT, 0);
+        $builder->addDoubleX(31, $SWATH_LENGTH, 0.0);
     }
 
     /**
@@ -963,7 +993,17 @@ class SAR extends Table
      */
     public static function addAGJSON(FlatBufferBuilder $builder, $AGJSON)
     {
-        $builder->addOffsetX(33, $AGJSON, 0);
+        $builder->addOffsetX(32, $AGJSON, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addATEXT(FlatBufferBuilder $builder, $ATEXT)
+    {
+        $builder->addOffsetX(33, $ATEXT, 0);
     }
 
     /**
@@ -978,22 +1018,12 @@ class SAR extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param StringOffset
      * @return void
      */
-    public static function addANDIMS(FlatBufferBuilder $builder, $ANDIMS)
+    public static function addCOORD_SYS(FlatBufferBuilder $builder, $COORD_SYS)
     {
-        $builder->addIntX(35, $ANDIMS, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int
-     * @return void
-     */
-    public static function addASRID(FlatBufferBuilder $builder, $ASRID)
-    {
-        $builder->addIntX(36, $ASRID, 0);
+        $builder->addOffsetX(35, $COORD_SYS, 0);
     }
 
     /**
@@ -1003,7 +1033,7 @@ class SAR extends Table
      */
     public static function addSPACING_RANGE(FlatBufferBuilder $builder, $SPACING_RANGE)
     {
-        $builder->addDoubleX(37, $SPACING_RANGE, 0.0);
+        $builder->addDoubleX(36, $SPACING_RANGE, 0.0);
     }
 
     /**
@@ -1013,27 +1043,27 @@ class SAR extends Table
      */
     public static function addSPACING_AZIMUTH(FlatBufferBuilder $builder, $SPACING_AZIMUTH)
     {
-        $builder->addDoubleX(38, $SPACING_AZIMUTH, 0.0);
+        $builder->addDoubleX(37, $SPACING_AZIMUTH, 0.0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param byte
      * @return void
      */
     public static function addLOOKS_AZIMUTH(FlatBufferBuilder $builder, $LOOKS_AZIMUTH)
     {
-        $builder->addIntX(39, $LOOKS_AZIMUTH, 0);
+        $builder->addByteX(38, $LOOKS_AZIMUTH, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param byte
      * @return void
      */
     public static function addLOOKS_RANGE(FlatBufferBuilder $builder, $LOOKS_RANGE)
     {
-        $builder->addIntX(40, $LOOKS_RANGE, 0);
+        $builder->addByteX(39, $LOOKS_RANGE, 0);
     }
 
     /**
@@ -1043,7 +1073,7 @@ class SAR extends Table
      */
     public static function addRESOLUTION_RANGE(FlatBufferBuilder $builder, $RESOLUTION_RANGE)
     {
-        $builder->addDoubleX(41, $RESOLUTION_RANGE, 0.0);
+        $builder->addDoubleX(40, $RESOLUTION_RANGE, 0.0);
     }
 
     /**
@@ -1053,7 +1083,7 @@ class SAR extends Table
      */
     public static function addRESOLUTION_AZIMUTH(FlatBufferBuilder $builder, $RESOLUTION_AZIMUTH)
     {
-        $builder->addDoubleX(42, $RESOLUTION_AZIMUTH, 0.0);
+        $builder->addDoubleX(41, $RESOLUTION_AZIMUTH, 0.0);
     }
 
     /**
@@ -1063,17 +1093,7 @@ class SAR extends Table
      */
     public static function addOB_DIRECTION(FlatBufferBuilder $builder, $OB_DIRECTION)
     {
-        $builder->addOffsetX(43, $OB_DIRECTION, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addCOORD_SYS(FlatBufferBuilder $builder, $COORD_SYS)
-    {
-        $builder->addOffsetX(44, $COORD_SYS, 0);
+        $builder->addOffsetX(42, $OB_DIRECTION, 0);
     }
 
     /**
@@ -1083,7 +1103,7 @@ class SAR extends Table
      */
     public static function addTARGETPOSX(FlatBufferBuilder $builder, $TARGETPOSX)
     {
-        $builder->addDoubleX(45, $TARGETPOSX, 0.0);
+        $builder->addDoubleX(43, $TARGETPOSX, 0.0);
     }
 
     /**
@@ -1093,7 +1113,7 @@ class SAR extends Table
      */
     public static function addTARGETPOSY(FlatBufferBuilder $builder, $TARGETPOSY)
     {
-        $builder->addDoubleX(46, $TARGETPOSY, 0.0);
+        $builder->addDoubleX(44, $TARGETPOSY, 0.0);
     }
 
     /**
@@ -1103,7 +1123,7 @@ class SAR extends Table
      */
     public static function addTARGETPOSZ(FlatBufferBuilder $builder, $TARGETPOSZ)
     {
-        $builder->addDoubleX(47, $TARGETPOSZ, 0.0);
+        $builder->addDoubleX(45, $TARGETPOSZ, 0.0);
     }
 
     /**
@@ -1113,7 +1133,7 @@ class SAR extends Table
      */
     public static function addSENALT(FlatBufferBuilder $builder, $SENALT)
     {
-        $builder->addDoubleX(48, $SENALT, 0.0);
+        $builder->addDoubleX(46, $SENALT, 0.0);
     }
 
     /**
@@ -1123,7 +1143,7 @@ class SAR extends Table
      */
     public static function addSENVELX(FlatBufferBuilder $builder, $SENVELX)
     {
-        $builder->addDoubleX(49, $SENVELX, 0.0);
+        $builder->addDoubleX(47, $SENVELX, 0.0);
     }
 
     /**
@@ -1133,7 +1153,7 @@ class SAR extends Table
      */
     public static function addSENVELY(FlatBufferBuilder $builder, $SENVELY)
     {
-        $builder->addDoubleX(50, $SENVELY, 0.0);
+        $builder->addDoubleX(48, $SENVELY, 0.0);
     }
 
     /**
@@ -1143,7 +1163,7 @@ class SAR extends Table
      */
     public static function addSENVELZ(FlatBufferBuilder $builder, $SENVELZ)
     {
-        $builder->addDoubleX(51, $SENVELZ, 0.0);
+        $builder->addDoubleX(49, $SENVELZ, 0.0);
     }
 
     /**
@@ -1153,7 +1173,7 @@ class SAR extends Table
      */
     public static function addSENLAT_START(FlatBufferBuilder $builder, $SENLAT_START)
     {
-        $builder->addDoubleX(52, $SENLAT_START, 0.0);
+        $builder->addDoubleX(50, $SENLAT_START, 0.0);
     }
 
     /**
@@ -1163,7 +1183,7 @@ class SAR extends Table
      */
     public static function addSENLON_START(FlatBufferBuilder $builder, $SENLON_START)
     {
-        $builder->addDoubleX(53, $SENLON_START, 0.0);
+        $builder->addDoubleX(51, $SENLON_START, 0.0);
     }
 
     /**
@@ -1173,7 +1193,7 @@ class SAR extends Table
      */
     public static function addSENLAT_END(FlatBufferBuilder $builder, $SENLAT_END)
     {
-        $builder->addDoubleX(54, $SENLAT_END, 0.0);
+        $builder->addDoubleX(52, $SENLAT_END, 0.0);
     }
 
     /**
@@ -1183,7 +1203,7 @@ class SAR extends Table
      */
     public static function addSENLON_END(FlatBufferBuilder $builder, $SENLON_END)
     {
-        $builder->addDoubleX(55, $SENLON_END, 0.0);
+        $builder->addDoubleX(53, $SENLON_END, 0.0);
     }
 
     /**
@@ -1193,7 +1213,7 @@ class SAR extends Table
      */
     public static function addTRANSACTION_ID(FlatBufferBuilder $builder, $TRANSACTION_ID)
     {
-        $builder->addOffsetX(56, $TRANSACTION_ID, 0);
+        $builder->addOffsetX(54, $TRANSACTION_ID, 0);
     }
 
     /**
@@ -1203,7 +1223,7 @@ class SAR extends Table
      */
     public static function addTAGS(FlatBufferBuilder $builder, $TAGS)
     {
-        $builder->addOffsetX(57, $TAGS, 0);
+        $builder->addOffsetX(55, $TAGS, 0);
     }
 
     /**
@@ -1237,7 +1257,7 @@ class SAR extends Table
      */
     public static function addSRC_TYPS(FlatBufferBuilder $builder, $SRC_TYPS)
     {
-        $builder->addOffsetX(58, $SRC_TYPS, 0);
+        $builder->addOffsetX(56, $SRC_TYPS, 0);
     }
 
     /**
@@ -1271,7 +1291,7 @@ class SAR extends Table
      */
     public static function addSRC_IDS(FlatBufferBuilder $builder, $SRC_IDS)
     {
-        $builder->addOffsetX(59, $SRC_IDS, 0);
+        $builder->addOffsetX(57, $SRC_IDS, 0);
     }
 
     /**
@@ -1296,16 +1316,6 @@ class SAR extends Table
     public static function startSRC_IDSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addON_ORBIT(FlatBufferBuilder $builder, $ON_ORBIT)
-    {
-        $builder->addOffsetX(60, $ON_ORBIT, 0);
     }
 
     /**

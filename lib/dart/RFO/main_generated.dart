@@ -5,6 +5,108 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class RfObsType {
+  final int value;
+  const RfObsType._(this.value);
+
+  factory RfObsType.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum RfObsType');
+    }
+    return result;
+  }
+
+  static RfObsType? _createOrNull(int? value) => 
+      value == null ? null : RfObsType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 5;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const RfObsType EMISSION = RfObsType._(0);
+  static const RfObsType TRANSPONDER = RfObsType._(1);
+  static const RfObsType INTERFERENCE = RfObsType._(2);
+  static const RfObsType BEACON = RfObsType._(3);
+  static const RfObsType TELEMETRY = RfObsType._(4);
+  static const RfObsType UNKNOWN = RfObsType._(5);
+  static const Map<int, RfObsType> values = {
+    0: EMISSION,
+    1: TRANSPONDER,
+    2: INTERFERENCE,
+    3: BEACON,
+    4: TELEMETRY,
+    5: UNKNOWN};
+
+  static const fb.Reader<RfObsType> reader = _RfObsTypeReader();
+
+  @override
+  String toString() {
+    return 'RfObsType{value: $value}';
+  }
+}
+
+class _RfObsTypeReader extends fb.Reader<RfObsType> {
+  const _RfObsTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  RfObsType read(fb.BufferContext bc, int offset) =>
+      RfObsType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class RfDetectionStatus {
+  final int value;
+  const RfDetectionStatus._(this.value);
+
+  factory RfDetectionStatus.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum RfDetectionStatus');
+    }
+    return result;
+  }
+
+  static RfDetectionStatus? _createOrNull(int? value) => 
+      value == null ? null : RfDetectionStatus.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const RfDetectionStatus DETECTED = RfDetectionStatus._(0);
+  static const RfDetectionStatus CONFIRMED = RfDetectionStatus._(1);
+  static const RfDetectionStatus TENTATIVE = RfDetectionStatus._(2);
+  static const RfDetectionStatus LOST = RfDetectionStatus._(3);
+  static const RfDetectionStatus INTERFERENCE_ONLY = RfDetectionStatus._(4);
+  static const Map<int, RfDetectionStatus> values = {
+    0: DETECTED,
+    1: CONFIRMED,
+    2: TENTATIVE,
+    3: LOST,
+    4: INTERFERENCE_ONLY};
+
+  static const fb.Reader<RfDetectionStatus> reader = _RfDetectionStatusReader();
+
+  @override
+  String toString() {
+    return 'RfDetectionStatus{value: $value}';
+  }
+}
+
+class _RfDetectionStatusReader extends fb.Reader<RfDetectionStatus> {
+  const _RfDetectionStatusReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  RfDetectionStatus read(fb.BufferContext bc, int offset) =>
+      RfDetectionStatus.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 ///  RF Observation
 class RFO {
   RFO._(this._bc, this._bcOffset);
@@ -18,84 +120,158 @@ class RFO {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Observation time (ISO 8601)
   String? get OB_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Sensor identifier
   String? get ID_SENSOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  int get SAT_NO => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 12, 0);
-  String? get TASK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get TRANSACTION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  String? get TRACK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  String? get ORIG_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  String? get ORIG_SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  bool get UCT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
-  String? get TRANSPONDER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
-  double get AZIMUTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
-  double get AZIMUTH_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
-  double get AZIMUTH_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
-  double get ELEVATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
-  double get ELEVATION_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
-  double get ELEVATION_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
-  double get RANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
-  double get RANGE_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
-  double get RANGE_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
-  double get RANGE_RATE_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
-  double get TRACK_RANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
-  double get SENLAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
-  double get SENLON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
-  double get SENALT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
-  String? get ELNOT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 56);
-  double get FREQUENCY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
-  double get NOMINAL_FREQUENCY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 60, 0.0);
-  double get START_FREQUENCY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
-  double get END_FREQUENCY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
-  double get RELATIVE_CARRIER_POWER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, 0.0);
-  double get SPECTRUM_ANALYZER_POWER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, 0.0);
-  double get RELATIVE_NOISE_FLOOR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 70, 0.0);
-  double get REFERENCE_LEVEL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 72, 0.0);
-  double get PGRI => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 74, 0.0);
-  double get CONFIDENCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 76, 0.0);
-  bool get INCOMING => const fb.BoolReader().vTableGet(_bc, _bcOffset, 78, false);
-  int get SWITCH_POINT => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 80, 0);
-  double get BAUD_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 82, 0.0);
-  double get SNR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 84, 0.0);
-  double get NOMINAL_SNR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 86, 0.0);
-  double get POLARITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 88, 0.0);
-  String? get POLARITY_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 90);
-  int get CHANNEL => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 92, 0);
-  double get POWER_OVER_NOISE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 94, 0.0);
-  double get NOMINAL_POWER_OVER_NOISE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 96, 0.0);
-  double get BANDWIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 98, 0.0);
-  double get NOMINAL_BANDWIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 100, 0.0);
-  double get RESOLUTION_BANDWIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 102, 0.0);
-  double get VIDEO_BANDWIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 104, 0.0);
-  double get EIRP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 106, 0.0);
-  double get NOMINAL_EIRP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 108, 0.0);
-  double get MIN_PSD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 110, 0.0);
-  double get MAX_PSD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 112, 0.0);
-  double get FREQUENCY_SHIFT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 114, 0.0);
-  bool get PEAK => const fb.BoolReader().vTableGet(_bc, _bcOffset, 116, false);
-  String? get ANTENNA_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 118);
-  String? get DETECTION_STATUS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 120);
-  String? get COLLECTION_MODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 122);
-  String? get RAW_FILE_URI => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 124);
-  List<String>? get TAGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 126);
-  double get NOISE_PWR_DENSITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 128, 0.0);
-  String? get CARRIER_STANDARD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 130);
-  String? get MODULATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 132);
-  int get INNER_CODING_RATE => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 134, 0);
-  int get OUTER_CODING_RATE => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 136, 0);
-  String? get TRANSMIT_FILTER_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 138);
-  double get TRANSMIT_FILTER_ROLL_OFF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 140, 0.0);
-  double get SYMBOL_TO_NOISE_RATIO => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 142, 0.0);
-  double get BIT_ERROR_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 144, 0.0);
-  String? get ON_ORBIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 146);
-  String? get DESCRIPTOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 148);
-  String? get URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 150);
+  ///  Original sensor identifier
+  String? get ORIG_SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Observation type
+  RfObsType get OBS_TYPE => RfObsType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  ///  Satellite catalog number
+  int get SAT_NO => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  ///  International designator
+  String? get ORIG_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  On-orbit reference
+  String? get ON_ORBIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ///  True if uncorrelated target
+  bool get UCT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
+  ///  Task identifier
+  String? get TASK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Transaction identifier
+  String? get TRANSACTION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Track identifier
+  String? get TRACK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Transponder identifier
+  String? get TRANSPONDER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Detection status
+  RfDetectionStatus get DETECTION_STATUS => RfDetectionStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 30, 0));
+  ///  Azimuth angle (degrees)
+  double get AZIMUTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  ///  Azimuth uncertainty (degrees, 1-sigma)
+  double get AZIMUTH_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  ///  Azimuth rate (degrees/s)
+  double get AZIMUTH_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  ///  Elevation angle (degrees)
+  double get ELEVATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  ///  Elevation uncertainty (degrees, 1-sigma)
+  double get ELEVATION_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  ///  Elevation rate (degrees/s)
+  double get ELEVATION_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  ///  Slant range (km)
+  double get RANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  ///  Range uncertainty (km, 1-sigma)
+  double get RANGE_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
+  ///  Range rate (km/s)
+  double get RANGE_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
+  ///  Range rate uncertainty (km/s, 1-sigma)
+  double get RANGE_RATE_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
+  ///  Track range (km)
+  double get TRACK_RANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
+  ///  Sensor latitude (degrees)
+  double get SENLAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
+  ///  Sensor longitude (degrees)
+  double get SENLON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, 0.0);
+  ///  Sensor altitude (km)
+  double get SENALT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
+  ///  ELNOT (Electronic Intelligence Notation)
+  String? get ELNOT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 60);
+  ///  Antenna name
+  String? get ANTENNA_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 62);
+  ///  Collection mode
+  String? get COLLECTION_MODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 64);
+  ///  Measured center frequency (MHz)
+  double get FREQUENCY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, 0.0);
+  ///  Nominal center frequency (MHz)
+  double get NOMINAL_FREQUENCY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, 0.0);
+  ///  Start frequency of emission (MHz)
+  double get START_FREQUENCY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 70, 0.0);
+  ///  End frequency of emission (MHz)
+  double get END_FREQUENCY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 72, 0.0);
+  ///  Frequency shift from nominal (MHz)
+  double get FREQUENCY_SHIFT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 74, 0.0);
+  ///  Measured bandwidth (MHz)
+  double get BANDWIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 76, 0.0);
+  ///  Nominal bandwidth (MHz)
+  double get NOMINAL_BANDWIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 78, 0.0);
+  ///  Resolution bandwidth (MHz)
+  double get RESOLUTION_BANDWIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 80, 0.0);
+  ///  Video bandwidth (MHz)
+  double get VIDEO_BANDWIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 82, 0.0);
+  ///  Relative carrier power (dBm)
+  double get RELATIVE_CARRIER_POWER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 84, 0.0);
+  ///  Spectrum analyzer power (dBm)
+  double get SPECTRUM_ANALYZER_POWER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 86, 0.0);
+  ///  Relative noise floor (dBm)
+  double get RELATIVE_NOISE_FLOOR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 88, 0.0);
+  ///  Reference level (dBm)
+  double get REFERENCE_LEVEL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 90, 0.0);
+  ///  Noise power density (dBm/Hz)
+  double get NOISE_PWR_DENSITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 92, 0.0);
+  ///  PGRI (Pulse Group Repetition Interval, microseconds)
+  double get PGRI => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 94, 0.0);
+  ///  Effective isotropic radiated power (dBW)
+  double get EIRP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 96, 0.0);
+  ///  Nominal EIRP (dBW)
+  double get NOMINAL_EIRP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 98, 0.0);
+  ///  Minimum power spectral density (dBm/Hz)
+  double get MIN_PSD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 100, 0.0);
+  ///  Maximum power spectral density (dBm/Hz)
+  double get MAX_PSD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 102, 0.0);
+  ///  Signal-to-noise ratio (dB)
+  double get SNR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 104, 0.0);
+  ///  Nominal SNR (dB)
+  double get NOMINAL_SNR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 106, 0.0);
+  ///  Power over noise (dB)
+  double get POWER_OVER_NOISE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 108, 0.0);
+  ///  Nominal power over noise (dB)
+  double get NOMINAL_POWER_OVER_NOISE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 110, 0.0);
+  ///  Polarity angle (degrees)
+  double get POLARITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 112, 0.0);
+  ///  Polarization type (e.g., LHCP, RHCP, LINEAR)
+  String? get POLARITY_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 114);
+  ///  Channel number
+  int get CHANNEL => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 116, 0);
+  ///  Baud rate (symbols/s)
+  double get BAUD_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 118, 0.0);
+  ///  Symbol-to-noise ratio (dB)
+  double get SYMBOL_TO_NOISE_RATIO => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 120, 0.0);
+  ///  Bit error rate
+  double get BIT_ERROR_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 122, 0.0);
+  ///  True if peak measurement
+  bool get PEAK => const fb.BoolReader().vTableGet(_bc, _bcOffset, 124, false);
+  ///  True if incoming signal
+  bool get INCOMING => const fb.BoolReader().vTableGet(_bc, _bcOffset, 126, false);
+  ///  Switch point number
+  int get SWITCH_POINT => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 128, 0);
+  ///  Confidence score (0-1)
+  double get CONFIDENCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 130, 0.0);
+  ///  Carrier standard (e.g., DVB-S, DVB-S2)
+  String? get CARRIER_STANDARD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 132);
+  ///  Modulation type
+  String? get MODULATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 134);
+  ///  Inner FEC coding rate denominator
+  int get INNER_CODING_RATE => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 136, 0);
+  ///  Outer FEC coding rate denominator
+  int get OUTER_CODING_RATE => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 138, 0);
+  ///  Transmit filter type
+  String? get TRANSMIT_FILTER_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 140);
+  ///  Transmit filter roll-off factor
+  double get TRANSMIT_FILTER_ROLL_OFF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 142, 0.0);
+  ///  Reference to raw data file
+  String? get RAW_FILE_URI => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 144);
+  ///  Event descriptor
+  String? get DESCRIPTOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 146);
+  ///  Reference URL
+  String? get URL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 148);
+  ///  Associated tags
+  List<String>? get TAGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 150);
 
   @override
   String toString() {
-    return 'RFO{ID: ${ID}, OB_TIME: ${OB_TIME}, ID_SENSOR: ${ID_SENSOR}, TYPE: ${TYPE}, SAT_NO: ${SAT_NO}, TASK_ID: ${TASK_ID}, TRANSACTION_ID: ${TRANSACTION_ID}, TRACK_ID: ${TRACK_ID}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, ORIG_SENSOR_ID: ${ORIG_SENSOR_ID}, UCT: ${UCT}, TRANSPONDER: ${TRANSPONDER}, AZIMUTH: ${AZIMUTH}, AZIMUTH_UNC: ${AZIMUTH_UNC}, AZIMUTH_RATE: ${AZIMUTH_RATE}, ELEVATION: ${ELEVATION}, ELEVATION_UNC: ${ELEVATION_UNC}, ELEVATION_RATE: ${ELEVATION_RATE}, RANGE: ${RANGE}, RANGE_UNC: ${RANGE_UNC}, RANGE_RATE: ${RANGE_RATE}, RANGE_RATE_UNC: ${RANGE_RATE_UNC}, TRACK_RANGE: ${TRACK_RANGE}, SENLAT: ${SENLAT}, SENLON: ${SENLON}, SENALT: ${SENALT}, ELNOT: ${ELNOT}, FREQUENCY: ${FREQUENCY}, NOMINAL_FREQUENCY: ${NOMINAL_FREQUENCY}, START_FREQUENCY: ${START_FREQUENCY}, END_FREQUENCY: ${END_FREQUENCY}, RELATIVE_CARRIER_POWER: ${RELATIVE_CARRIER_POWER}, SPECTRUM_ANALYZER_POWER: ${SPECTRUM_ANALYZER_POWER}, RELATIVE_NOISE_FLOOR: ${RELATIVE_NOISE_FLOOR}, REFERENCE_LEVEL: ${REFERENCE_LEVEL}, PGRI: ${PGRI}, CONFIDENCE: ${CONFIDENCE}, INCOMING: ${INCOMING}, SWITCH_POINT: ${SWITCH_POINT}, BAUD_RATE: ${BAUD_RATE}, SNR: ${SNR}, NOMINAL_SNR: ${NOMINAL_SNR}, POLARITY: ${POLARITY}, POLARITY_TYPE: ${POLARITY_TYPE}, CHANNEL: ${CHANNEL}, POWER_OVER_NOISE: ${POWER_OVER_NOISE}, NOMINAL_POWER_OVER_NOISE: ${NOMINAL_POWER_OVER_NOISE}, BANDWIDTH: ${BANDWIDTH}, NOMINAL_BANDWIDTH: ${NOMINAL_BANDWIDTH}, RESOLUTION_BANDWIDTH: ${RESOLUTION_BANDWIDTH}, VIDEO_BANDWIDTH: ${VIDEO_BANDWIDTH}, EIRP: ${EIRP}, NOMINAL_EIRP: ${NOMINAL_EIRP}, MIN_PSD: ${MIN_PSD}, MAX_PSD: ${MAX_PSD}, FREQUENCY_SHIFT: ${FREQUENCY_SHIFT}, PEAK: ${PEAK}, ANTENNA_NAME: ${ANTENNA_NAME}, DETECTION_STATUS: ${DETECTION_STATUS}, COLLECTION_MODE: ${COLLECTION_MODE}, RAW_FILE_URI: ${RAW_FILE_URI}, TAGS: ${TAGS}, NOISE_PWR_DENSITY: ${NOISE_PWR_DENSITY}, CARRIER_STANDARD: ${CARRIER_STANDARD}, MODULATION: ${MODULATION}, INNER_CODING_RATE: ${INNER_CODING_RATE}, OUTER_CODING_RATE: ${OUTER_CODING_RATE}, TRANSMIT_FILTER_TYPE: ${TRANSMIT_FILTER_TYPE}, TRANSMIT_FILTER_ROLL_OFF: ${TRANSMIT_FILTER_ROLL_OFF}, SYMBOL_TO_NOISE_RATIO: ${SYMBOL_TO_NOISE_RATIO}, BIT_ERROR_RATE: ${BIT_ERROR_RATE}, ON_ORBIT: ${ON_ORBIT}, DESCRIPTOR: ${DESCRIPTOR}, URL: ${URL}}';
+    return 'RFO{ID: ${ID}, OB_TIME: ${OB_TIME}, ID_SENSOR: ${ID_SENSOR}, ORIG_SENSOR_ID: ${ORIG_SENSOR_ID}, OBS_TYPE: ${OBS_TYPE}, SAT_NO: ${SAT_NO}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, ON_ORBIT: ${ON_ORBIT}, UCT: ${UCT}, TASK_ID: ${TASK_ID}, TRANSACTION_ID: ${TRANSACTION_ID}, TRACK_ID: ${TRACK_ID}, TRANSPONDER: ${TRANSPONDER}, DETECTION_STATUS: ${DETECTION_STATUS}, AZIMUTH: ${AZIMUTH}, AZIMUTH_UNC: ${AZIMUTH_UNC}, AZIMUTH_RATE: ${AZIMUTH_RATE}, ELEVATION: ${ELEVATION}, ELEVATION_UNC: ${ELEVATION_UNC}, ELEVATION_RATE: ${ELEVATION_RATE}, RANGE: ${RANGE}, RANGE_UNC: ${RANGE_UNC}, RANGE_RATE: ${RANGE_RATE}, RANGE_RATE_UNC: ${RANGE_RATE_UNC}, TRACK_RANGE: ${TRACK_RANGE}, SENLAT: ${SENLAT}, SENLON: ${SENLON}, SENALT: ${SENALT}, ELNOT: ${ELNOT}, ANTENNA_NAME: ${ANTENNA_NAME}, COLLECTION_MODE: ${COLLECTION_MODE}, FREQUENCY: ${FREQUENCY}, NOMINAL_FREQUENCY: ${NOMINAL_FREQUENCY}, START_FREQUENCY: ${START_FREQUENCY}, END_FREQUENCY: ${END_FREQUENCY}, FREQUENCY_SHIFT: ${FREQUENCY_SHIFT}, BANDWIDTH: ${BANDWIDTH}, NOMINAL_BANDWIDTH: ${NOMINAL_BANDWIDTH}, RESOLUTION_BANDWIDTH: ${RESOLUTION_BANDWIDTH}, VIDEO_BANDWIDTH: ${VIDEO_BANDWIDTH}, RELATIVE_CARRIER_POWER: ${RELATIVE_CARRIER_POWER}, SPECTRUM_ANALYZER_POWER: ${SPECTRUM_ANALYZER_POWER}, RELATIVE_NOISE_FLOOR: ${RELATIVE_NOISE_FLOOR}, REFERENCE_LEVEL: ${REFERENCE_LEVEL}, NOISE_PWR_DENSITY: ${NOISE_PWR_DENSITY}, PGRI: ${PGRI}, EIRP: ${EIRP}, NOMINAL_EIRP: ${NOMINAL_EIRP}, MIN_PSD: ${MIN_PSD}, MAX_PSD: ${MAX_PSD}, SNR: ${SNR}, NOMINAL_SNR: ${NOMINAL_SNR}, POWER_OVER_NOISE: ${POWER_OVER_NOISE}, NOMINAL_POWER_OVER_NOISE: ${NOMINAL_POWER_OVER_NOISE}, POLARITY: ${POLARITY}, POLARITY_TYPE: ${POLARITY_TYPE}, CHANNEL: ${CHANNEL}, BAUD_RATE: ${BAUD_RATE}, SYMBOL_TO_NOISE_RATIO: ${SYMBOL_TO_NOISE_RATIO}, BIT_ERROR_RATE: ${BIT_ERROR_RATE}, PEAK: ${PEAK}, INCOMING: ${INCOMING}, SWITCH_POINT: ${SWITCH_POINT}, CONFIDENCE: ${CONFIDENCE}, CARRIER_STANDARD: ${CARRIER_STANDARD}, MODULATION: ${MODULATION}, INNER_CODING_RATE: ${INNER_CODING_RATE}, OUTER_CODING_RATE: ${OUTER_CODING_RATE}, TRANSMIT_FILTER_TYPE: ${TRANSMIT_FILTER_TYPE}, TRANSMIT_FILTER_ROLL_OFF: ${TRANSMIT_FILTER_ROLL_OFF}, RAW_FILE_URI: ${RAW_FILE_URI}, DESCRIPTOR: ${DESCRIPTOR}, URL: ${URL}, TAGS: ${TAGS}}';
   }
 }
 
@@ -128,287 +304,287 @@ class RFOBuilder {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addTypeOffset(int? offset) {
+  int addOrigSensorIdOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
+  int addObsType(RfObsType? OBS_TYPE) {
+    fbBuilder.addInt8(4, OBS_TYPE?.value);
+    return fbBuilder.offset;
+  }
   int addSatNo(int? SAT_NO) {
-    fbBuilder.addInt32(4, SAT_NO);
-    return fbBuilder.offset;
-  }
-  int addTaskIdOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addTransactionIdOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addTrackIdOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
+    fbBuilder.addUint32(5, SAT_NO);
     return fbBuilder.offset;
   }
   int addOrigObjectIdOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-  int addOrigSensorIdOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
-    return fbBuilder.offset;
-  }
-  int addUct(bool? UCT) {
-    fbBuilder.addBool(10, UCT);
-    return fbBuilder.offset;
-  }
-  int addTransponderOffset(int? offset) {
-    fbBuilder.addOffset(11, offset);
-    return fbBuilder.offset;
-  }
-  int addAzimuth(double? AZIMUTH) {
-    fbBuilder.addFloat64(12, AZIMUTH);
-    return fbBuilder.offset;
-  }
-  int addAzimuthUnc(double? AZIMUTH_UNC) {
-    fbBuilder.addFloat64(13, AZIMUTH_UNC);
-    return fbBuilder.offset;
-  }
-  int addAzimuthRate(double? AZIMUTH_RATE) {
-    fbBuilder.addFloat64(14, AZIMUTH_RATE);
-    return fbBuilder.offset;
-  }
-  int addElevation(double? ELEVATION) {
-    fbBuilder.addFloat64(15, ELEVATION);
-    return fbBuilder.offset;
-  }
-  int addElevationUnc(double? ELEVATION_UNC) {
-    fbBuilder.addFloat64(16, ELEVATION_UNC);
-    return fbBuilder.offset;
-  }
-  int addElevationRate(double? ELEVATION_RATE) {
-    fbBuilder.addFloat64(17, ELEVATION_RATE);
-    return fbBuilder.offset;
-  }
-  int addRange(double? RANGE) {
-    fbBuilder.addFloat64(18, RANGE);
-    return fbBuilder.offset;
-  }
-  int addRangeUnc(double? RANGE_UNC) {
-    fbBuilder.addFloat64(19, RANGE_UNC);
-    return fbBuilder.offset;
-  }
-  int addRangeRate(double? RANGE_RATE) {
-    fbBuilder.addFloat64(20, RANGE_RATE);
-    return fbBuilder.offset;
-  }
-  int addRangeRateUnc(double? RANGE_RATE_UNC) {
-    fbBuilder.addFloat64(21, RANGE_RATE_UNC);
-    return fbBuilder.offset;
-  }
-  int addTrackRange(double? TRACK_RANGE) {
-    fbBuilder.addFloat64(22, TRACK_RANGE);
-    return fbBuilder.offset;
-  }
-  int addSenlat(double? SENLAT) {
-    fbBuilder.addFloat64(23, SENLAT);
-    return fbBuilder.offset;
-  }
-  int addSenlon(double? SENLON) {
-    fbBuilder.addFloat64(24, SENLON);
-    return fbBuilder.offset;
-  }
-  int addSenalt(double? SENALT) {
-    fbBuilder.addFloat64(25, SENALT);
-    return fbBuilder.offset;
-  }
-  int addElnotOffset(int? offset) {
-    fbBuilder.addOffset(26, offset);
-    return fbBuilder.offset;
-  }
-  int addFrequency(double? FREQUENCY) {
-    fbBuilder.addFloat64(27, FREQUENCY);
-    return fbBuilder.offset;
-  }
-  int addNominalFrequency(double? NOMINAL_FREQUENCY) {
-    fbBuilder.addFloat64(28, NOMINAL_FREQUENCY);
-    return fbBuilder.offset;
-  }
-  int addStartFrequency(double? START_FREQUENCY) {
-    fbBuilder.addFloat64(29, START_FREQUENCY);
-    return fbBuilder.offset;
-  }
-  int addEndFrequency(double? END_FREQUENCY) {
-    fbBuilder.addFloat64(30, END_FREQUENCY);
-    return fbBuilder.offset;
-  }
-  int addRelativeCarrierPower(double? RELATIVE_CARRIER_POWER) {
-    fbBuilder.addFloat64(31, RELATIVE_CARRIER_POWER);
-    return fbBuilder.offset;
-  }
-  int addSpectrumAnalyzerPower(double? SPECTRUM_ANALYZER_POWER) {
-    fbBuilder.addFloat64(32, SPECTRUM_ANALYZER_POWER);
-    return fbBuilder.offset;
-  }
-  int addRelativeNoiseFloor(double? RELATIVE_NOISE_FLOOR) {
-    fbBuilder.addFloat64(33, RELATIVE_NOISE_FLOOR);
-    return fbBuilder.offset;
-  }
-  int addReferenceLevel(double? REFERENCE_LEVEL) {
-    fbBuilder.addFloat64(34, REFERENCE_LEVEL);
-    return fbBuilder.offset;
-  }
-  int addPgri(double? PGRI) {
-    fbBuilder.addFloat64(35, PGRI);
-    return fbBuilder.offset;
-  }
-  int addConfidence(double? CONFIDENCE) {
-    fbBuilder.addFloat64(36, CONFIDENCE);
-    return fbBuilder.offset;
-  }
-  int addIncoming(bool? INCOMING) {
-    fbBuilder.addBool(37, INCOMING);
-    return fbBuilder.offset;
-  }
-  int addSwitchPoint(int? SWITCH_POINT) {
-    fbBuilder.addInt32(38, SWITCH_POINT);
-    return fbBuilder.offset;
-  }
-  int addBaudRate(double? BAUD_RATE) {
-    fbBuilder.addFloat64(39, BAUD_RATE);
-    return fbBuilder.offset;
-  }
-  int addSnr(double? SNR) {
-    fbBuilder.addFloat64(40, SNR);
-    return fbBuilder.offset;
-  }
-  int addNominalSnr(double? NOMINAL_SNR) {
-    fbBuilder.addFloat64(41, NOMINAL_SNR);
-    return fbBuilder.offset;
-  }
-  int addPolarity(double? POLARITY) {
-    fbBuilder.addFloat64(42, POLARITY);
-    return fbBuilder.offset;
-  }
-  int addPolarityTypeOffset(int? offset) {
-    fbBuilder.addOffset(43, offset);
-    return fbBuilder.offset;
-  }
-  int addChannel(int? CHANNEL) {
-    fbBuilder.addInt32(44, CHANNEL);
-    return fbBuilder.offset;
-  }
-  int addPowerOverNoise(double? POWER_OVER_NOISE) {
-    fbBuilder.addFloat64(45, POWER_OVER_NOISE);
-    return fbBuilder.offset;
-  }
-  int addNominalPowerOverNoise(double? NOMINAL_POWER_OVER_NOISE) {
-    fbBuilder.addFloat64(46, NOMINAL_POWER_OVER_NOISE);
-    return fbBuilder.offset;
-  }
-  int addBandwidth(double? BANDWIDTH) {
-    fbBuilder.addFloat64(47, BANDWIDTH);
-    return fbBuilder.offset;
-  }
-  int addNominalBandwidth(double? NOMINAL_BANDWIDTH) {
-    fbBuilder.addFloat64(48, NOMINAL_BANDWIDTH);
-    return fbBuilder.offset;
-  }
-  int addResolutionBandwidth(double? RESOLUTION_BANDWIDTH) {
-    fbBuilder.addFloat64(49, RESOLUTION_BANDWIDTH);
-    return fbBuilder.offset;
-  }
-  int addVideoBandwidth(double? VIDEO_BANDWIDTH) {
-    fbBuilder.addFloat64(50, VIDEO_BANDWIDTH);
-    return fbBuilder.offset;
-  }
-  int addEirp(double? EIRP) {
-    fbBuilder.addFloat64(51, EIRP);
-    return fbBuilder.offset;
-  }
-  int addNominalEirp(double? NOMINAL_EIRP) {
-    fbBuilder.addFloat64(52, NOMINAL_EIRP);
-    return fbBuilder.offset;
-  }
-  int addMinPsd(double? MIN_PSD) {
-    fbBuilder.addFloat64(53, MIN_PSD);
-    return fbBuilder.offset;
-  }
-  int addMaxPsd(double? MAX_PSD) {
-    fbBuilder.addFloat64(54, MAX_PSD);
-    return fbBuilder.offset;
-  }
-  int addFrequencyShift(double? FREQUENCY_SHIFT) {
-    fbBuilder.addFloat64(55, FREQUENCY_SHIFT);
-    return fbBuilder.offset;
-  }
-  int addPeak(bool? PEAK) {
-    fbBuilder.addBool(56, PEAK);
-    return fbBuilder.offset;
-  }
-  int addAntennaNameOffset(int? offset) {
-    fbBuilder.addOffset(57, offset);
-    return fbBuilder.offset;
-  }
-  int addDetectionStatusOffset(int? offset) {
-    fbBuilder.addOffset(58, offset);
-    return fbBuilder.offset;
-  }
-  int addCollectionModeOffset(int? offset) {
-    fbBuilder.addOffset(59, offset);
-    return fbBuilder.offset;
-  }
-  int addRawFileUriOffset(int? offset) {
-    fbBuilder.addOffset(60, offset);
-    return fbBuilder.offset;
-  }
-  int addTagsOffset(int? offset) {
-    fbBuilder.addOffset(61, offset);
-    return fbBuilder.offset;
-  }
-  int addNoisePwrDensity(double? NOISE_PWR_DENSITY) {
-    fbBuilder.addFloat64(62, NOISE_PWR_DENSITY);
-    return fbBuilder.offset;
-  }
-  int addCarrierStandardOffset(int? offset) {
-    fbBuilder.addOffset(63, offset);
-    return fbBuilder.offset;
-  }
-  int addModulationOffset(int? offset) {
-    fbBuilder.addOffset(64, offset);
-    return fbBuilder.offset;
-  }
-  int addInnerCodingRate(int? INNER_CODING_RATE) {
-    fbBuilder.addInt32(65, INNER_CODING_RATE);
-    return fbBuilder.offset;
-  }
-  int addOuterCodingRate(int? OUTER_CODING_RATE) {
-    fbBuilder.addInt32(66, OUTER_CODING_RATE);
-    return fbBuilder.offset;
-  }
-  int addTransmitFilterTypeOffset(int? offset) {
-    fbBuilder.addOffset(67, offset);
-    return fbBuilder.offset;
-  }
-  int addTransmitFilterRollOff(double? TRANSMIT_FILTER_ROLL_OFF) {
-    fbBuilder.addFloat64(68, TRANSMIT_FILTER_ROLL_OFF);
-    return fbBuilder.offset;
-  }
-  int addSymbolToNoiseRatio(double? SYMBOL_TO_NOISE_RATIO) {
-    fbBuilder.addFloat64(69, SYMBOL_TO_NOISE_RATIO);
-    return fbBuilder.offset;
-  }
-  int addBitErrorRate(double? BIT_ERROR_RATE) {
-    fbBuilder.addFloat64(70, BIT_ERROR_RATE);
+    fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
   int addOnOrbitOffset(int? offset) {
-    fbBuilder.addOffset(71, offset);
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addUct(bool? UCT) {
+    fbBuilder.addBool(8, UCT);
+    return fbBuilder.offset;
+  }
+  int addTaskIdOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addTransactionIdOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addTrackIdOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addTransponderOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addDetectionStatus(RfDetectionStatus? DETECTION_STATUS) {
+    fbBuilder.addInt8(13, DETECTION_STATUS?.value);
+    return fbBuilder.offset;
+  }
+  int addAzimuth(double? AZIMUTH) {
+    fbBuilder.addFloat64(14, AZIMUTH);
+    return fbBuilder.offset;
+  }
+  int addAzimuthUnc(double? AZIMUTH_UNC) {
+    fbBuilder.addFloat64(15, AZIMUTH_UNC);
+    return fbBuilder.offset;
+  }
+  int addAzimuthRate(double? AZIMUTH_RATE) {
+    fbBuilder.addFloat64(16, AZIMUTH_RATE);
+    return fbBuilder.offset;
+  }
+  int addElevation(double? ELEVATION) {
+    fbBuilder.addFloat64(17, ELEVATION);
+    return fbBuilder.offset;
+  }
+  int addElevationUnc(double? ELEVATION_UNC) {
+    fbBuilder.addFloat64(18, ELEVATION_UNC);
+    return fbBuilder.offset;
+  }
+  int addElevationRate(double? ELEVATION_RATE) {
+    fbBuilder.addFloat64(19, ELEVATION_RATE);
+    return fbBuilder.offset;
+  }
+  int addRange(double? RANGE) {
+    fbBuilder.addFloat64(20, RANGE);
+    return fbBuilder.offset;
+  }
+  int addRangeUnc(double? RANGE_UNC) {
+    fbBuilder.addFloat64(21, RANGE_UNC);
+    return fbBuilder.offset;
+  }
+  int addRangeRate(double? RANGE_RATE) {
+    fbBuilder.addFloat64(22, RANGE_RATE);
+    return fbBuilder.offset;
+  }
+  int addRangeRateUnc(double? RANGE_RATE_UNC) {
+    fbBuilder.addFloat64(23, RANGE_RATE_UNC);
+    return fbBuilder.offset;
+  }
+  int addTrackRange(double? TRACK_RANGE) {
+    fbBuilder.addFloat64(24, TRACK_RANGE);
+    return fbBuilder.offset;
+  }
+  int addSenlat(double? SENLAT) {
+    fbBuilder.addFloat64(25, SENLAT);
+    return fbBuilder.offset;
+  }
+  int addSenlon(double? SENLON) {
+    fbBuilder.addFloat64(26, SENLON);
+    return fbBuilder.offset;
+  }
+  int addSenalt(double? SENALT) {
+    fbBuilder.addFloat64(27, SENALT);
+    return fbBuilder.offset;
+  }
+  int addElnotOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
+  int addAntennaNameOffset(int? offset) {
+    fbBuilder.addOffset(29, offset);
+    return fbBuilder.offset;
+  }
+  int addCollectionModeOffset(int? offset) {
+    fbBuilder.addOffset(30, offset);
+    return fbBuilder.offset;
+  }
+  int addFrequency(double? FREQUENCY) {
+    fbBuilder.addFloat64(31, FREQUENCY);
+    return fbBuilder.offset;
+  }
+  int addNominalFrequency(double? NOMINAL_FREQUENCY) {
+    fbBuilder.addFloat64(32, NOMINAL_FREQUENCY);
+    return fbBuilder.offset;
+  }
+  int addStartFrequency(double? START_FREQUENCY) {
+    fbBuilder.addFloat64(33, START_FREQUENCY);
+    return fbBuilder.offset;
+  }
+  int addEndFrequency(double? END_FREQUENCY) {
+    fbBuilder.addFloat64(34, END_FREQUENCY);
+    return fbBuilder.offset;
+  }
+  int addFrequencyShift(double? FREQUENCY_SHIFT) {
+    fbBuilder.addFloat64(35, FREQUENCY_SHIFT);
+    return fbBuilder.offset;
+  }
+  int addBandwidth(double? BANDWIDTH) {
+    fbBuilder.addFloat64(36, BANDWIDTH);
+    return fbBuilder.offset;
+  }
+  int addNominalBandwidth(double? NOMINAL_BANDWIDTH) {
+    fbBuilder.addFloat64(37, NOMINAL_BANDWIDTH);
+    return fbBuilder.offset;
+  }
+  int addResolutionBandwidth(double? RESOLUTION_BANDWIDTH) {
+    fbBuilder.addFloat64(38, RESOLUTION_BANDWIDTH);
+    return fbBuilder.offset;
+  }
+  int addVideoBandwidth(double? VIDEO_BANDWIDTH) {
+    fbBuilder.addFloat64(39, VIDEO_BANDWIDTH);
+    return fbBuilder.offset;
+  }
+  int addRelativeCarrierPower(double? RELATIVE_CARRIER_POWER) {
+    fbBuilder.addFloat64(40, RELATIVE_CARRIER_POWER);
+    return fbBuilder.offset;
+  }
+  int addSpectrumAnalyzerPower(double? SPECTRUM_ANALYZER_POWER) {
+    fbBuilder.addFloat64(41, SPECTRUM_ANALYZER_POWER);
+    return fbBuilder.offset;
+  }
+  int addRelativeNoiseFloor(double? RELATIVE_NOISE_FLOOR) {
+    fbBuilder.addFloat64(42, RELATIVE_NOISE_FLOOR);
+    return fbBuilder.offset;
+  }
+  int addReferenceLevel(double? REFERENCE_LEVEL) {
+    fbBuilder.addFloat64(43, REFERENCE_LEVEL);
+    return fbBuilder.offset;
+  }
+  int addNoisePwrDensity(double? NOISE_PWR_DENSITY) {
+    fbBuilder.addFloat64(44, NOISE_PWR_DENSITY);
+    return fbBuilder.offset;
+  }
+  int addPgri(double? PGRI) {
+    fbBuilder.addFloat64(45, PGRI);
+    return fbBuilder.offset;
+  }
+  int addEirp(double? EIRP) {
+    fbBuilder.addFloat64(46, EIRP);
+    return fbBuilder.offset;
+  }
+  int addNominalEirp(double? NOMINAL_EIRP) {
+    fbBuilder.addFloat64(47, NOMINAL_EIRP);
+    return fbBuilder.offset;
+  }
+  int addMinPsd(double? MIN_PSD) {
+    fbBuilder.addFloat64(48, MIN_PSD);
+    return fbBuilder.offset;
+  }
+  int addMaxPsd(double? MAX_PSD) {
+    fbBuilder.addFloat64(49, MAX_PSD);
+    return fbBuilder.offset;
+  }
+  int addSnr(double? SNR) {
+    fbBuilder.addFloat64(50, SNR);
+    return fbBuilder.offset;
+  }
+  int addNominalSnr(double? NOMINAL_SNR) {
+    fbBuilder.addFloat64(51, NOMINAL_SNR);
+    return fbBuilder.offset;
+  }
+  int addPowerOverNoise(double? POWER_OVER_NOISE) {
+    fbBuilder.addFloat64(52, POWER_OVER_NOISE);
+    return fbBuilder.offset;
+  }
+  int addNominalPowerOverNoise(double? NOMINAL_POWER_OVER_NOISE) {
+    fbBuilder.addFloat64(53, NOMINAL_POWER_OVER_NOISE);
+    return fbBuilder.offset;
+  }
+  int addPolarity(double? POLARITY) {
+    fbBuilder.addFloat64(54, POLARITY);
+    return fbBuilder.offset;
+  }
+  int addPolarityTypeOffset(int? offset) {
+    fbBuilder.addOffset(55, offset);
+    return fbBuilder.offset;
+  }
+  int addChannel(int? CHANNEL) {
+    fbBuilder.addUint16(56, CHANNEL);
+    return fbBuilder.offset;
+  }
+  int addBaudRate(double? BAUD_RATE) {
+    fbBuilder.addFloat64(57, BAUD_RATE);
+    return fbBuilder.offset;
+  }
+  int addSymbolToNoiseRatio(double? SYMBOL_TO_NOISE_RATIO) {
+    fbBuilder.addFloat64(58, SYMBOL_TO_NOISE_RATIO);
+    return fbBuilder.offset;
+  }
+  int addBitErrorRate(double? BIT_ERROR_RATE) {
+    fbBuilder.addFloat64(59, BIT_ERROR_RATE);
+    return fbBuilder.offset;
+  }
+  int addPeak(bool? PEAK) {
+    fbBuilder.addBool(60, PEAK);
+    return fbBuilder.offset;
+  }
+  int addIncoming(bool? INCOMING) {
+    fbBuilder.addBool(61, INCOMING);
+    return fbBuilder.offset;
+  }
+  int addSwitchPoint(int? SWITCH_POINT) {
+    fbBuilder.addUint16(62, SWITCH_POINT);
+    return fbBuilder.offset;
+  }
+  int addConfidence(double? CONFIDENCE) {
+    fbBuilder.addFloat64(63, CONFIDENCE);
+    return fbBuilder.offset;
+  }
+  int addCarrierStandardOffset(int? offset) {
+    fbBuilder.addOffset(64, offset);
+    return fbBuilder.offset;
+  }
+  int addModulationOffset(int? offset) {
+    fbBuilder.addOffset(65, offset);
+    return fbBuilder.offset;
+  }
+  int addInnerCodingRate(int? INNER_CODING_RATE) {
+    fbBuilder.addUint8(66, INNER_CODING_RATE);
+    return fbBuilder.offset;
+  }
+  int addOuterCodingRate(int? OUTER_CODING_RATE) {
+    fbBuilder.addUint8(67, OUTER_CODING_RATE);
+    return fbBuilder.offset;
+  }
+  int addTransmitFilterTypeOffset(int? offset) {
+    fbBuilder.addOffset(68, offset);
+    return fbBuilder.offset;
+  }
+  int addTransmitFilterRollOff(double? TRANSMIT_FILTER_ROLL_OFF) {
+    fbBuilder.addFloat64(69, TRANSMIT_FILTER_ROLL_OFF);
+    return fbBuilder.offset;
+  }
+  int addRawFileUriOffset(int? offset) {
+    fbBuilder.addOffset(70, offset);
     return fbBuilder.offset;
   }
   int addDescriptorOffset(int? offset) {
-    fbBuilder.addOffset(72, offset);
+    fbBuilder.addOffset(71, offset);
     return fbBuilder.offset;
   }
   int addUrlOffset(int? offset) {
+    fbBuilder.addOffset(72, offset);
+    return fbBuilder.offset;
+  }
+  int addTagsOffset(int? offset) {
     fbBuilder.addOffset(73, offset);
     return fbBuilder.offset;
   }
@@ -422,15 +598,17 @@ class RFOObjectBuilder extends fb.ObjectBuilder {
   final String? _ID;
   final String? _OB_TIME;
   final String? _ID_SENSOR;
-  final String? _TYPE;
+  final String? _ORIG_SENSOR_ID;
+  final RfObsType? _OBS_TYPE;
   final int? _SAT_NO;
+  final String? _ORIG_OBJECT_ID;
+  final String? _ON_ORBIT;
+  final bool? _UCT;
   final String? _TASK_ID;
   final String? _TRANSACTION_ID;
   final String? _TRACK_ID;
-  final String? _ORIG_OBJECT_ID;
-  final String? _ORIG_SENSOR_ID;
-  final bool? _UCT;
   final String? _TRANSPONDER;
+  final RfDetectionStatus? _DETECTION_STATUS;
   final double? _AZIMUTH;
   final double? _AZIMUTH_UNC;
   final double? _AZIMUTH_RATE;
@@ -446,67 +624,67 @@ class RFOObjectBuilder extends fb.ObjectBuilder {
   final double? _SENLON;
   final double? _SENALT;
   final String? _ELNOT;
+  final String? _ANTENNA_NAME;
+  final String? _COLLECTION_MODE;
   final double? _FREQUENCY;
   final double? _NOMINAL_FREQUENCY;
   final double? _START_FREQUENCY;
   final double? _END_FREQUENCY;
-  final double? _RELATIVE_CARRIER_POWER;
-  final double? _SPECTRUM_ANALYZER_POWER;
-  final double? _RELATIVE_NOISE_FLOOR;
-  final double? _REFERENCE_LEVEL;
-  final double? _PGRI;
-  final double? _CONFIDENCE;
-  final bool? _INCOMING;
-  final int? _SWITCH_POINT;
-  final double? _BAUD_RATE;
-  final double? _SNR;
-  final double? _NOMINAL_SNR;
-  final double? _POLARITY;
-  final String? _POLARITY_TYPE;
-  final int? _CHANNEL;
-  final double? _POWER_OVER_NOISE;
-  final double? _NOMINAL_POWER_OVER_NOISE;
+  final double? _FREQUENCY_SHIFT;
   final double? _BANDWIDTH;
   final double? _NOMINAL_BANDWIDTH;
   final double? _RESOLUTION_BANDWIDTH;
   final double? _VIDEO_BANDWIDTH;
+  final double? _RELATIVE_CARRIER_POWER;
+  final double? _SPECTRUM_ANALYZER_POWER;
+  final double? _RELATIVE_NOISE_FLOOR;
+  final double? _REFERENCE_LEVEL;
+  final double? _NOISE_PWR_DENSITY;
+  final double? _PGRI;
   final double? _EIRP;
   final double? _NOMINAL_EIRP;
   final double? _MIN_PSD;
   final double? _MAX_PSD;
-  final double? _FREQUENCY_SHIFT;
+  final double? _SNR;
+  final double? _NOMINAL_SNR;
+  final double? _POWER_OVER_NOISE;
+  final double? _NOMINAL_POWER_OVER_NOISE;
+  final double? _POLARITY;
+  final String? _POLARITY_TYPE;
+  final int? _CHANNEL;
+  final double? _BAUD_RATE;
+  final double? _SYMBOL_TO_NOISE_RATIO;
+  final double? _BIT_ERROR_RATE;
   final bool? _PEAK;
-  final String? _ANTENNA_NAME;
-  final String? _DETECTION_STATUS;
-  final String? _COLLECTION_MODE;
-  final String? _RAW_FILE_URI;
-  final List<String>? _TAGS;
-  final double? _NOISE_PWR_DENSITY;
+  final bool? _INCOMING;
+  final int? _SWITCH_POINT;
+  final double? _CONFIDENCE;
   final String? _CARRIER_STANDARD;
   final String? _MODULATION;
   final int? _INNER_CODING_RATE;
   final int? _OUTER_CODING_RATE;
   final String? _TRANSMIT_FILTER_TYPE;
   final double? _TRANSMIT_FILTER_ROLL_OFF;
-  final double? _SYMBOL_TO_NOISE_RATIO;
-  final double? _BIT_ERROR_RATE;
-  final String? _ON_ORBIT;
+  final String? _RAW_FILE_URI;
   final String? _DESCRIPTOR;
   final String? _URL;
+  final List<String>? _TAGS;
 
   RFOObjectBuilder({
     String? ID,
     String? OB_TIME,
     String? ID_SENSOR,
-    String? TYPE,
+    String? ORIG_SENSOR_ID,
+    RfObsType? OBS_TYPE,
     int? SAT_NO,
+    String? ORIG_OBJECT_ID,
+    String? ON_ORBIT,
+    bool? UCT,
     String? TASK_ID,
     String? TRANSACTION_ID,
     String? TRACK_ID,
-    String? ORIG_OBJECT_ID,
-    String? ORIG_SENSOR_ID,
-    bool? UCT,
     String? TRANSPONDER,
+    RfDetectionStatus? DETECTION_STATUS,
     double? AZIMUTH,
     double? AZIMUTH_UNC,
     double? AZIMUTH_RATE,
@@ -522,66 +700,66 @@ class RFOObjectBuilder extends fb.ObjectBuilder {
     double? SENLON,
     double? SENALT,
     String? ELNOT,
+    String? ANTENNA_NAME,
+    String? COLLECTION_MODE,
     double? FREQUENCY,
     double? NOMINAL_FREQUENCY,
     double? START_FREQUENCY,
     double? END_FREQUENCY,
-    double? RELATIVE_CARRIER_POWER,
-    double? SPECTRUM_ANALYZER_POWER,
-    double? RELATIVE_NOISE_FLOOR,
-    double? REFERENCE_LEVEL,
-    double? PGRI,
-    double? CONFIDENCE,
-    bool? INCOMING,
-    int? SWITCH_POINT,
-    double? BAUD_RATE,
-    double? SNR,
-    double? NOMINAL_SNR,
-    double? POLARITY,
-    String? POLARITY_TYPE,
-    int? CHANNEL,
-    double? POWER_OVER_NOISE,
-    double? NOMINAL_POWER_OVER_NOISE,
+    double? FREQUENCY_SHIFT,
     double? BANDWIDTH,
     double? NOMINAL_BANDWIDTH,
     double? RESOLUTION_BANDWIDTH,
     double? VIDEO_BANDWIDTH,
+    double? RELATIVE_CARRIER_POWER,
+    double? SPECTRUM_ANALYZER_POWER,
+    double? RELATIVE_NOISE_FLOOR,
+    double? REFERENCE_LEVEL,
+    double? NOISE_PWR_DENSITY,
+    double? PGRI,
     double? EIRP,
     double? NOMINAL_EIRP,
     double? MIN_PSD,
     double? MAX_PSD,
-    double? FREQUENCY_SHIFT,
+    double? SNR,
+    double? NOMINAL_SNR,
+    double? POWER_OVER_NOISE,
+    double? NOMINAL_POWER_OVER_NOISE,
+    double? POLARITY,
+    String? POLARITY_TYPE,
+    int? CHANNEL,
+    double? BAUD_RATE,
+    double? SYMBOL_TO_NOISE_RATIO,
+    double? BIT_ERROR_RATE,
     bool? PEAK,
-    String? ANTENNA_NAME,
-    String? DETECTION_STATUS,
-    String? COLLECTION_MODE,
-    String? RAW_FILE_URI,
-    List<String>? TAGS,
-    double? NOISE_PWR_DENSITY,
+    bool? INCOMING,
+    int? SWITCH_POINT,
+    double? CONFIDENCE,
     String? CARRIER_STANDARD,
     String? MODULATION,
     int? INNER_CODING_RATE,
     int? OUTER_CODING_RATE,
     String? TRANSMIT_FILTER_TYPE,
     double? TRANSMIT_FILTER_ROLL_OFF,
-    double? SYMBOL_TO_NOISE_RATIO,
-    double? BIT_ERROR_RATE,
-    String? ON_ORBIT,
+    String? RAW_FILE_URI,
     String? DESCRIPTOR,
     String? URL,
+    List<String>? TAGS,
   })
       : _ID = ID,
         _OB_TIME = OB_TIME,
         _ID_SENSOR = ID_SENSOR,
-        _TYPE = TYPE,
+        _ORIG_SENSOR_ID = ORIG_SENSOR_ID,
+        _OBS_TYPE = OBS_TYPE,
         _SAT_NO = SAT_NO,
+        _ORIG_OBJECT_ID = ORIG_OBJECT_ID,
+        _ON_ORBIT = ON_ORBIT,
+        _UCT = UCT,
         _TASK_ID = TASK_ID,
         _TRANSACTION_ID = TRANSACTION_ID,
         _TRACK_ID = TRACK_ID,
-        _ORIG_OBJECT_ID = ORIG_OBJECT_ID,
-        _ORIG_SENSOR_ID = ORIG_SENSOR_ID,
-        _UCT = UCT,
         _TRANSPONDER = TRANSPONDER,
+        _DETECTION_STATUS = DETECTION_STATUS,
         _AZIMUTH = AZIMUTH,
         _AZIMUTH_UNC = AZIMUTH_UNC,
         _AZIMUTH_RATE = AZIMUTH_RATE,
@@ -597,53 +775,51 @@ class RFOObjectBuilder extends fb.ObjectBuilder {
         _SENLON = SENLON,
         _SENALT = SENALT,
         _ELNOT = ELNOT,
+        _ANTENNA_NAME = ANTENNA_NAME,
+        _COLLECTION_MODE = COLLECTION_MODE,
         _FREQUENCY = FREQUENCY,
         _NOMINAL_FREQUENCY = NOMINAL_FREQUENCY,
         _START_FREQUENCY = START_FREQUENCY,
         _END_FREQUENCY = END_FREQUENCY,
-        _RELATIVE_CARRIER_POWER = RELATIVE_CARRIER_POWER,
-        _SPECTRUM_ANALYZER_POWER = SPECTRUM_ANALYZER_POWER,
-        _RELATIVE_NOISE_FLOOR = RELATIVE_NOISE_FLOOR,
-        _REFERENCE_LEVEL = REFERENCE_LEVEL,
-        _PGRI = PGRI,
-        _CONFIDENCE = CONFIDENCE,
-        _INCOMING = INCOMING,
-        _SWITCH_POINT = SWITCH_POINT,
-        _BAUD_RATE = BAUD_RATE,
-        _SNR = SNR,
-        _NOMINAL_SNR = NOMINAL_SNR,
-        _POLARITY = POLARITY,
-        _POLARITY_TYPE = POLARITY_TYPE,
-        _CHANNEL = CHANNEL,
-        _POWER_OVER_NOISE = POWER_OVER_NOISE,
-        _NOMINAL_POWER_OVER_NOISE = NOMINAL_POWER_OVER_NOISE,
+        _FREQUENCY_SHIFT = FREQUENCY_SHIFT,
         _BANDWIDTH = BANDWIDTH,
         _NOMINAL_BANDWIDTH = NOMINAL_BANDWIDTH,
         _RESOLUTION_BANDWIDTH = RESOLUTION_BANDWIDTH,
         _VIDEO_BANDWIDTH = VIDEO_BANDWIDTH,
+        _RELATIVE_CARRIER_POWER = RELATIVE_CARRIER_POWER,
+        _SPECTRUM_ANALYZER_POWER = SPECTRUM_ANALYZER_POWER,
+        _RELATIVE_NOISE_FLOOR = RELATIVE_NOISE_FLOOR,
+        _REFERENCE_LEVEL = REFERENCE_LEVEL,
+        _NOISE_PWR_DENSITY = NOISE_PWR_DENSITY,
+        _PGRI = PGRI,
         _EIRP = EIRP,
         _NOMINAL_EIRP = NOMINAL_EIRP,
         _MIN_PSD = MIN_PSD,
         _MAX_PSD = MAX_PSD,
-        _FREQUENCY_SHIFT = FREQUENCY_SHIFT,
+        _SNR = SNR,
+        _NOMINAL_SNR = NOMINAL_SNR,
+        _POWER_OVER_NOISE = POWER_OVER_NOISE,
+        _NOMINAL_POWER_OVER_NOISE = NOMINAL_POWER_OVER_NOISE,
+        _POLARITY = POLARITY,
+        _POLARITY_TYPE = POLARITY_TYPE,
+        _CHANNEL = CHANNEL,
+        _BAUD_RATE = BAUD_RATE,
+        _SYMBOL_TO_NOISE_RATIO = SYMBOL_TO_NOISE_RATIO,
+        _BIT_ERROR_RATE = BIT_ERROR_RATE,
         _PEAK = PEAK,
-        _ANTENNA_NAME = ANTENNA_NAME,
-        _DETECTION_STATUS = DETECTION_STATUS,
-        _COLLECTION_MODE = COLLECTION_MODE,
-        _RAW_FILE_URI = RAW_FILE_URI,
-        _TAGS = TAGS,
-        _NOISE_PWR_DENSITY = NOISE_PWR_DENSITY,
+        _INCOMING = INCOMING,
+        _SWITCH_POINT = SWITCH_POINT,
+        _CONFIDENCE = CONFIDENCE,
         _CARRIER_STANDARD = CARRIER_STANDARD,
         _MODULATION = MODULATION,
         _INNER_CODING_RATE = INNER_CODING_RATE,
         _OUTER_CODING_RATE = OUTER_CODING_RATE,
         _TRANSMIT_FILTER_TYPE = TRANSMIT_FILTER_TYPE,
         _TRANSMIT_FILTER_ROLL_OFF = TRANSMIT_FILTER_ROLL_OFF,
-        _SYMBOL_TO_NOISE_RATIO = SYMBOL_TO_NOISE_RATIO,
-        _BIT_ERROR_RATE = BIT_ERROR_RATE,
-        _ON_ORBIT = ON_ORBIT,
+        _RAW_FILE_URI = RAW_FILE_URI,
         _DESCRIPTOR = DESCRIPTOR,
-        _URL = URL;
+        _URL = URL,
+        _TAGS = TAGS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -654,121 +830,117 @@ class RFOObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_OB_TIME!);
     final int? ID_SENSOROffset = _ID_SENSOR == null ? null
         : fbBuilder.writeString(_ID_SENSOR!);
-    final int? TYPEOffset = _TYPE == null ? null
-        : fbBuilder.writeString(_TYPE!);
+    final int? ORIG_SENSOR_IDOffset = _ORIG_SENSOR_ID == null ? null
+        : fbBuilder.writeString(_ORIG_SENSOR_ID!);
+    final int? ORIG_OBJECT_IDOffset = _ORIG_OBJECT_ID == null ? null
+        : fbBuilder.writeString(_ORIG_OBJECT_ID!);
+    final int? ON_ORBITOffset = _ON_ORBIT == null ? null
+        : fbBuilder.writeString(_ON_ORBIT!);
     final int? TASK_IDOffset = _TASK_ID == null ? null
         : fbBuilder.writeString(_TASK_ID!);
     final int? TRANSACTION_IDOffset = _TRANSACTION_ID == null ? null
         : fbBuilder.writeString(_TRANSACTION_ID!);
     final int? TRACK_IDOffset = _TRACK_ID == null ? null
         : fbBuilder.writeString(_TRACK_ID!);
-    final int? ORIG_OBJECT_IDOffset = _ORIG_OBJECT_ID == null ? null
-        : fbBuilder.writeString(_ORIG_OBJECT_ID!);
-    final int? ORIG_SENSOR_IDOffset = _ORIG_SENSOR_ID == null ? null
-        : fbBuilder.writeString(_ORIG_SENSOR_ID!);
     final int? TRANSPONDEROffset = _TRANSPONDER == null ? null
         : fbBuilder.writeString(_TRANSPONDER!);
     final int? ELNOTOffset = _ELNOT == null ? null
         : fbBuilder.writeString(_ELNOT!);
-    final int? POLARITY_TYPEOffset = _POLARITY_TYPE == null ? null
-        : fbBuilder.writeString(_POLARITY_TYPE!);
     final int? ANTENNA_NAMEOffset = _ANTENNA_NAME == null ? null
         : fbBuilder.writeString(_ANTENNA_NAME!);
-    final int? DETECTION_STATUSOffset = _DETECTION_STATUS == null ? null
-        : fbBuilder.writeString(_DETECTION_STATUS!);
     final int? COLLECTION_MODEOffset = _COLLECTION_MODE == null ? null
         : fbBuilder.writeString(_COLLECTION_MODE!);
-    final int? RAW_FILE_URIOffset = _RAW_FILE_URI == null ? null
-        : fbBuilder.writeString(_RAW_FILE_URI!);
-    final int? TAGSOffset = _TAGS == null ? null
-        : fbBuilder.writeList(_TAGS!.map(fbBuilder.writeString).toList());
+    final int? POLARITY_TYPEOffset = _POLARITY_TYPE == null ? null
+        : fbBuilder.writeString(_POLARITY_TYPE!);
     final int? CARRIER_STANDARDOffset = _CARRIER_STANDARD == null ? null
         : fbBuilder.writeString(_CARRIER_STANDARD!);
     final int? MODULATIONOffset = _MODULATION == null ? null
         : fbBuilder.writeString(_MODULATION!);
     final int? TRANSMIT_FILTER_TYPEOffset = _TRANSMIT_FILTER_TYPE == null ? null
         : fbBuilder.writeString(_TRANSMIT_FILTER_TYPE!);
-    final int? ON_ORBITOffset = _ON_ORBIT == null ? null
-        : fbBuilder.writeString(_ON_ORBIT!);
+    final int? RAW_FILE_URIOffset = _RAW_FILE_URI == null ? null
+        : fbBuilder.writeString(_RAW_FILE_URI!);
     final int? DESCRIPTOROffset = _DESCRIPTOR == null ? null
         : fbBuilder.writeString(_DESCRIPTOR!);
     final int? URLOffset = _URL == null ? null
         : fbBuilder.writeString(_URL!);
+    final int? TAGSOffset = _TAGS == null ? null
+        : fbBuilder.writeList(_TAGS!.map(fbBuilder.writeString).toList());
     fbBuilder.startTable(74);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, OB_TIMEOffset);
     fbBuilder.addOffset(2, ID_SENSOROffset);
-    fbBuilder.addOffset(3, TYPEOffset);
-    fbBuilder.addInt32(4, _SAT_NO);
-    fbBuilder.addOffset(5, TASK_IDOffset);
-    fbBuilder.addOffset(6, TRANSACTION_IDOffset);
-    fbBuilder.addOffset(7, TRACK_IDOffset);
-    fbBuilder.addOffset(8, ORIG_OBJECT_IDOffset);
-    fbBuilder.addOffset(9, ORIG_SENSOR_IDOffset);
-    fbBuilder.addBool(10, _UCT);
-    fbBuilder.addOffset(11, TRANSPONDEROffset);
-    fbBuilder.addFloat64(12, _AZIMUTH);
-    fbBuilder.addFloat64(13, _AZIMUTH_UNC);
-    fbBuilder.addFloat64(14, _AZIMUTH_RATE);
-    fbBuilder.addFloat64(15, _ELEVATION);
-    fbBuilder.addFloat64(16, _ELEVATION_UNC);
-    fbBuilder.addFloat64(17, _ELEVATION_RATE);
-    fbBuilder.addFloat64(18, _RANGE);
-    fbBuilder.addFloat64(19, _RANGE_UNC);
-    fbBuilder.addFloat64(20, _RANGE_RATE);
-    fbBuilder.addFloat64(21, _RANGE_RATE_UNC);
-    fbBuilder.addFloat64(22, _TRACK_RANGE);
-    fbBuilder.addFloat64(23, _SENLAT);
-    fbBuilder.addFloat64(24, _SENLON);
-    fbBuilder.addFloat64(25, _SENALT);
-    fbBuilder.addOffset(26, ELNOTOffset);
-    fbBuilder.addFloat64(27, _FREQUENCY);
-    fbBuilder.addFloat64(28, _NOMINAL_FREQUENCY);
-    fbBuilder.addFloat64(29, _START_FREQUENCY);
-    fbBuilder.addFloat64(30, _END_FREQUENCY);
-    fbBuilder.addFloat64(31, _RELATIVE_CARRIER_POWER);
-    fbBuilder.addFloat64(32, _SPECTRUM_ANALYZER_POWER);
-    fbBuilder.addFloat64(33, _RELATIVE_NOISE_FLOOR);
-    fbBuilder.addFloat64(34, _REFERENCE_LEVEL);
-    fbBuilder.addFloat64(35, _PGRI);
-    fbBuilder.addFloat64(36, _CONFIDENCE);
-    fbBuilder.addBool(37, _INCOMING);
-    fbBuilder.addInt32(38, _SWITCH_POINT);
-    fbBuilder.addFloat64(39, _BAUD_RATE);
-    fbBuilder.addFloat64(40, _SNR);
-    fbBuilder.addFloat64(41, _NOMINAL_SNR);
-    fbBuilder.addFloat64(42, _POLARITY);
-    fbBuilder.addOffset(43, POLARITY_TYPEOffset);
-    fbBuilder.addInt32(44, _CHANNEL);
-    fbBuilder.addFloat64(45, _POWER_OVER_NOISE);
-    fbBuilder.addFloat64(46, _NOMINAL_POWER_OVER_NOISE);
-    fbBuilder.addFloat64(47, _BANDWIDTH);
-    fbBuilder.addFloat64(48, _NOMINAL_BANDWIDTH);
-    fbBuilder.addFloat64(49, _RESOLUTION_BANDWIDTH);
-    fbBuilder.addFloat64(50, _VIDEO_BANDWIDTH);
-    fbBuilder.addFloat64(51, _EIRP);
-    fbBuilder.addFloat64(52, _NOMINAL_EIRP);
-    fbBuilder.addFloat64(53, _MIN_PSD);
-    fbBuilder.addFloat64(54, _MAX_PSD);
-    fbBuilder.addFloat64(55, _FREQUENCY_SHIFT);
-    fbBuilder.addBool(56, _PEAK);
-    fbBuilder.addOffset(57, ANTENNA_NAMEOffset);
-    fbBuilder.addOffset(58, DETECTION_STATUSOffset);
-    fbBuilder.addOffset(59, COLLECTION_MODEOffset);
-    fbBuilder.addOffset(60, RAW_FILE_URIOffset);
-    fbBuilder.addOffset(61, TAGSOffset);
-    fbBuilder.addFloat64(62, _NOISE_PWR_DENSITY);
-    fbBuilder.addOffset(63, CARRIER_STANDARDOffset);
-    fbBuilder.addOffset(64, MODULATIONOffset);
-    fbBuilder.addInt32(65, _INNER_CODING_RATE);
-    fbBuilder.addInt32(66, _OUTER_CODING_RATE);
-    fbBuilder.addOffset(67, TRANSMIT_FILTER_TYPEOffset);
-    fbBuilder.addFloat64(68, _TRANSMIT_FILTER_ROLL_OFF);
-    fbBuilder.addFloat64(69, _SYMBOL_TO_NOISE_RATIO);
-    fbBuilder.addFloat64(70, _BIT_ERROR_RATE);
-    fbBuilder.addOffset(71, ON_ORBITOffset);
-    fbBuilder.addOffset(72, DESCRIPTOROffset);
-    fbBuilder.addOffset(73, URLOffset);
+    fbBuilder.addOffset(3, ORIG_SENSOR_IDOffset);
+    fbBuilder.addInt8(4, _OBS_TYPE?.value);
+    fbBuilder.addUint32(5, _SAT_NO);
+    fbBuilder.addOffset(6, ORIG_OBJECT_IDOffset);
+    fbBuilder.addOffset(7, ON_ORBITOffset);
+    fbBuilder.addBool(8, _UCT);
+    fbBuilder.addOffset(9, TASK_IDOffset);
+    fbBuilder.addOffset(10, TRANSACTION_IDOffset);
+    fbBuilder.addOffset(11, TRACK_IDOffset);
+    fbBuilder.addOffset(12, TRANSPONDEROffset);
+    fbBuilder.addInt8(13, _DETECTION_STATUS?.value);
+    fbBuilder.addFloat64(14, _AZIMUTH);
+    fbBuilder.addFloat64(15, _AZIMUTH_UNC);
+    fbBuilder.addFloat64(16, _AZIMUTH_RATE);
+    fbBuilder.addFloat64(17, _ELEVATION);
+    fbBuilder.addFloat64(18, _ELEVATION_UNC);
+    fbBuilder.addFloat64(19, _ELEVATION_RATE);
+    fbBuilder.addFloat64(20, _RANGE);
+    fbBuilder.addFloat64(21, _RANGE_UNC);
+    fbBuilder.addFloat64(22, _RANGE_RATE);
+    fbBuilder.addFloat64(23, _RANGE_RATE_UNC);
+    fbBuilder.addFloat64(24, _TRACK_RANGE);
+    fbBuilder.addFloat64(25, _SENLAT);
+    fbBuilder.addFloat64(26, _SENLON);
+    fbBuilder.addFloat64(27, _SENALT);
+    fbBuilder.addOffset(28, ELNOTOffset);
+    fbBuilder.addOffset(29, ANTENNA_NAMEOffset);
+    fbBuilder.addOffset(30, COLLECTION_MODEOffset);
+    fbBuilder.addFloat64(31, _FREQUENCY);
+    fbBuilder.addFloat64(32, _NOMINAL_FREQUENCY);
+    fbBuilder.addFloat64(33, _START_FREQUENCY);
+    fbBuilder.addFloat64(34, _END_FREQUENCY);
+    fbBuilder.addFloat64(35, _FREQUENCY_SHIFT);
+    fbBuilder.addFloat64(36, _BANDWIDTH);
+    fbBuilder.addFloat64(37, _NOMINAL_BANDWIDTH);
+    fbBuilder.addFloat64(38, _RESOLUTION_BANDWIDTH);
+    fbBuilder.addFloat64(39, _VIDEO_BANDWIDTH);
+    fbBuilder.addFloat64(40, _RELATIVE_CARRIER_POWER);
+    fbBuilder.addFloat64(41, _SPECTRUM_ANALYZER_POWER);
+    fbBuilder.addFloat64(42, _RELATIVE_NOISE_FLOOR);
+    fbBuilder.addFloat64(43, _REFERENCE_LEVEL);
+    fbBuilder.addFloat64(44, _NOISE_PWR_DENSITY);
+    fbBuilder.addFloat64(45, _PGRI);
+    fbBuilder.addFloat64(46, _EIRP);
+    fbBuilder.addFloat64(47, _NOMINAL_EIRP);
+    fbBuilder.addFloat64(48, _MIN_PSD);
+    fbBuilder.addFloat64(49, _MAX_PSD);
+    fbBuilder.addFloat64(50, _SNR);
+    fbBuilder.addFloat64(51, _NOMINAL_SNR);
+    fbBuilder.addFloat64(52, _POWER_OVER_NOISE);
+    fbBuilder.addFloat64(53, _NOMINAL_POWER_OVER_NOISE);
+    fbBuilder.addFloat64(54, _POLARITY);
+    fbBuilder.addOffset(55, POLARITY_TYPEOffset);
+    fbBuilder.addUint16(56, _CHANNEL);
+    fbBuilder.addFloat64(57, _BAUD_RATE);
+    fbBuilder.addFloat64(58, _SYMBOL_TO_NOISE_RATIO);
+    fbBuilder.addFloat64(59, _BIT_ERROR_RATE);
+    fbBuilder.addBool(60, _PEAK);
+    fbBuilder.addBool(61, _INCOMING);
+    fbBuilder.addUint16(62, _SWITCH_POINT);
+    fbBuilder.addFloat64(63, _CONFIDENCE);
+    fbBuilder.addOffset(64, CARRIER_STANDARDOffset);
+    fbBuilder.addOffset(65, MODULATIONOffset);
+    fbBuilder.addUint8(66, _INNER_CODING_RATE);
+    fbBuilder.addUint8(67, _OUTER_CODING_RATE);
+    fbBuilder.addOffset(68, TRANSMIT_FILTER_TYPEOffset);
+    fbBuilder.addFloat64(69, _TRANSMIT_FILTER_ROLL_OFF);
+    fbBuilder.addOffset(70, RAW_FILE_URIOffset);
+    fbBuilder.addOffset(71, DESCRIPTOROffset);
+    fbBuilder.addOffset(72, URLOffset);
+    fbBuilder.addOffset(73, TAGSOffset);
     return fbBuilder.endTable();
   }
 

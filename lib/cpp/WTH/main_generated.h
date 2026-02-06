@@ -24,19 +24,19 @@ struct WTH FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ID_SENSOR = 6,
     VT_ORIG_SENSOR_ID = 8,
     VT_OB_TIME = 10,
-    VT_SIG_PWRS = 12,
-    VT_NOISE_LVLS = 14,
-    VT_SPEC_WIDTHS = 16,
-    VT_FIRST_GUESS_AVGS = 18,
-    VT_QC_VALUE = 20,
-    VT_FILE_CREATION = 22,
-    VT_TERM_ALT = 24,
-    VT_AVG_TX_PWR = 26,
-    VT_AVG_REF_PWR = 28,
-    VT_SECTOR_NUM = 30,
-    VT_NUM_ELEMENTS = 32,
-    VT_TD_AVG_SAMPLE_NUMS = 34,
-    VT_CHECKSUM = 36,
+    VT_FILE_CREATION = 12,
+    VT_QC_VALUE = 14,
+    VT_TERM_ALT = 16,
+    VT_AVG_TX_PWR = 18,
+    VT_AVG_REF_PWR = 20,
+    VT_SECTOR_NUM = 22,
+    VT_NUM_ELEMENTS = 24,
+    VT_CHECKSUM = 26,
+    VT_SIG_PWRS = 28,
+    VT_NOISE_LVLS = 30,
+    VT_SPEC_WIDTHS = 32,
+    VT_FIRST_GUESS_AVGS = 34,
+    VT_TD_AVG_SAMPLE_NUMS = 36,
     VT_CO_INTEGS = 38,
     VT_SPEC_AVGS = 40,
     VT_INTERPULSE_PERIODS = 42,
@@ -53,99 +53,131 @@ struct WTH FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_SRC_TYPS = 64,
     VT_SRC_IDS = 66
   };
+  /// Unique identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
+  /// Sensor identifier
   const ::flatbuffers::String *ID_SENSOR() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID_SENSOR);
   }
+  /// Original sensor identifier
   const ::flatbuffers::String *ORIG_SENSOR_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIG_SENSOR_ID);
   }
+  /// Observation time (ISO 8601)
   const ::flatbuffers::String *OB_TIME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OB_TIME);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SIG_PWRS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SIG_PWRS);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *NOISE_LVLS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_NOISE_LVLS);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SPEC_WIDTHS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SPEC_WIDTHS);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *FIRST_GUESS_AVGS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_FIRST_GUESS_AVGS);
-  }
-  int32_t QC_VALUE() const {
-    return GetField<int32_t>(VT_QC_VALUE, 0);
-  }
+  /// File creation time (ISO 8601)
   const ::flatbuffers::String *FILE_CREATION() const {
     return GetPointer<const ::flatbuffers::String *>(VT_FILE_CREATION);
   }
+  /// Quality control value
+  uint8_t QC_VALUE() const {
+    return GetField<uint8_t>(VT_QC_VALUE, 0);
+  }
+  /// Terminal altitude (km)
   double TERM_ALT() const {
     return GetField<double>(VT_TERM_ALT, 0.0);
   }
+  /// Average transmit power (dBm)
   double AVG_TX_PWR() const {
     return GetField<double>(VT_AVG_TX_PWR, 0.0);
   }
+  /// Average reflected power (dBm)
   double AVG_REF_PWR() const {
     return GetField<double>(VT_AVG_REF_PWR, 0.0);
   }
-  int32_t SECTOR_NUM() const {
-    return GetField<int32_t>(VT_SECTOR_NUM, 0);
+  /// Sector number
+  uint16_t SECTOR_NUM() const {
+    return GetField<uint16_t>(VT_SECTOR_NUM, 0);
   }
-  int32_t NUM_ELEMENTS() const {
-    return GetField<int32_t>(VT_NUM_ELEMENTS, 0);
+  /// Number of data elements
+  uint16_t NUM_ELEMENTS() const {
+    return GetField<uint16_t>(VT_NUM_ELEMENTS, 0);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *TD_AVG_SAMPLE_NUMS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_TD_AVG_SAMPLE_NUMS);
+  /// Checksum
+  uint32_t CHECKSUM() const {
+    return GetField<uint32_t>(VT_CHECKSUM, 0);
   }
-  int32_t CHECKSUM() const {
-    return GetField<int32_t>(VT_CHECKSUM, 0);
+  /// Signal power values (dBm)
+  const ::flatbuffers::Vector<double> *SIG_PWRS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_SIG_PWRS);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *CO_INTEGS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_CO_INTEGS);
+  /// Noise level values (dBm)
+  const ::flatbuffers::Vector<double> *NOISE_LVLS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_NOISE_LVLS);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SPEC_AVGS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SPEC_AVGS);
+  /// Spectral width values (m/s)
+  const ::flatbuffers::Vector<double> *SPEC_WIDTHS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_SPEC_WIDTHS);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *INTERPULSE_PERIODS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_INTERPULSE_PERIODS);
+  /// First guess average values
+  const ::flatbuffers::Vector<double> *FIRST_GUESS_AVGS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_FIRST_GUESS_AVGS);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *DOPP_VELS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_DOPP_VELS);
+  /// Time domain average sample numbers
+  const ::flatbuffers::Vector<double> *TD_AVG_SAMPLE_NUMS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_TD_AVG_SAMPLE_NUMS);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *CONS_RECS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_CONS_RECS);
+  /// Co-integration values
+  const ::flatbuffers::Vector<double> *CO_INTEGS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_CO_INTEGS);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SNRS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SNRS);
+  /// Spectral average values
+  const ::flatbuffers::Vector<double> *SPEC_AVGS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_SPEC_AVGS);
   }
+  /// Interpulse periods (microseconds)
+  const ::flatbuffers::Vector<double> *INTERPULSE_PERIODS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_INTERPULSE_PERIODS);
+  }
+  /// Doppler velocities (m/s)
+  const ::flatbuffers::Vector<double> *DOPP_VELS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_DOPP_VELS);
+  }
+  /// Consecutive records count
+  const ::flatbuffers::Vector<double> *CONS_RECS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_CONS_RECS);
+  }
+  /// Signal-to-noise ratios (dB)
+  const ::flatbuffers::Vector<double> *SNRS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_SNRS);
+  }
+  /// Signal strength (dBm)
   double SIG_STRENGTH() const {
     return GetField<double>(VT_SIG_STRENGTH, 0.0);
   }
+  /// Error ellipse semi-major axis (km)
   double SEMI_MAJOR_AXIS() const {
     return GetField<double>(VT_SEMI_MAJOR_AXIS, 0.0);
   }
+  /// Error ellipse semi-minor axis (km)
   double SEMI_MINOR_AXIS() const {
     return GetField<double>(VT_SEMI_MINOR_AXIS, 0.0);
   }
+  /// Error ellipse orientation angle (degrees)
   double ANGLE_ORIENTATION() const {
     return GetField<double>(VT_ANGLE_ORIENTATION, 0.0);
   }
-  int32_t LIGHT_EVENT_NUM() const {
-    return GetField<int32_t>(VT_LIGHT_EVENT_NUM, 0);
+  /// Lightning event number
+  uint32_t LIGHT_EVENT_NUM() const {
+    return GetField<uint32_t>(VT_LIGHT_EVENT_NUM, 0);
   }
+  /// Lightning detection sensor identifiers
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *LIGHT_DET_SENSORS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_LIGHT_DET_SENSORS);
   }
+  /// Position confidence (0-1)
   double POS_CONFIDENCE() const {
     return GetField<double>(VT_POS_CONFIDENCE, 0.0);
   }
+  /// Source types
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SRC_TYPS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SRC_TYPS);
   }
+  /// Source identifiers
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SRC_IDS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SRC_IDS);
   }
@@ -159,53 +191,42 @@ struct WTH FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(ORIG_SENSOR_ID()) &&
            VerifyOffset(verifier, VT_OB_TIME) &&
            verifier.VerifyString(OB_TIME()) &&
-           VerifyOffset(verifier, VT_SIG_PWRS) &&
-           verifier.VerifyVector(SIG_PWRS()) &&
-           verifier.VerifyVectorOfStrings(SIG_PWRS()) &&
-           VerifyOffset(verifier, VT_NOISE_LVLS) &&
-           verifier.VerifyVector(NOISE_LVLS()) &&
-           verifier.VerifyVectorOfStrings(NOISE_LVLS()) &&
-           VerifyOffset(verifier, VT_SPEC_WIDTHS) &&
-           verifier.VerifyVector(SPEC_WIDTHS()) &&
-           verifier.VerifyVectorOfStrings(SPEC_WIDTHS()) &&
-           VerifyOffset(verifier, VT_FIRST_GUESS_AVGS) &&
-           verifier.VerifyVector(FIRST_GUESS_AVGS()) &&
-           verifier.VerifyVectorOfStrings(FIRST_GUESS_AVGS()) &&
-           VerifyField<int32_t>(verifier, VT_QC_VALUE, 4) &&
            VerifyOffset(verifier, VT_FILE_CREATION) &&
            verifier.VerifyString(FILE_CREATION()) &&
+           VerifyField<uint8_t>(verifier, VT_QC_VALUE, 1) &&
            VerifyField<double>(verifier, VT_TERM_ALT, 8) &&
            VerifyField<double>(verifier, VT_AVG_TX_PWR, 8) &&
            VerifyField<double>(verifier, VT_AVG_REF_PWR, 8) &&
-           VerifyField<int32_t>(verifier, VT_SECTOR_NUM, 4) &&
-           VerifyField<int32_t>(verifier, VT_NUM_ELEMENTS, 4) &&
+           VerifyField<uint16_t>(verifier, VT_SECTOR_NUM, 2) &&
+           VerifyField<uint16_t>(verifier, VT_NUM_ELEMENTS, 2) &&
+           VerifyField<uint32_t>(verifier, VT_CHECKSUM, 4) &&
+           VerifyOffset(verifier, VT_SIG_PWRS) &&
+           verifier.VerifyVector(SIG_PWRS()) &&
+           VerifyOffset(verifier, VT_NOISE_LVLS) &&
+           verifier.VerifyVector(NOISE_LVLS()) &&
+           VerifyOffset(verifier, VT_SPEC_WIDTHS) &&
+           verifier.VerifyVector(SPEC_WIDTHS()) &&
+           VerifyOffset(verifier, VT_FIRST_GUESS_AVGS) &&
+           verifier.VerifyVector(FIRST_GUESS_AVGS()) &&
            VerifyOffset(verifier, VT_TD_AVG_SAMPLE_NUMS) &&
            verifier.VerifyVector(TD_AVG_SAMPLE_NUMS()) &&
-           verifier.VerifyVectorOfStrings(TD_AVG_SAMPLE_NUMS()) &&
-           VerifyField<int32_t>(verifier, VT_CHECKSUM, 4) &&
            VerifyOffset(verifier, VT_CO_INTEGS) &&
            verifier.VerifyVector(CO_INTEGS()) &&
-           verifier.VerifyVectorOfStrings(CO_INTEGS()) &&
            VerifyOffset(verifier, VT_SPEC_AVGS) &&
            verifier.VerifyVector(SPEC_AVGS()) &&
-           verifier.VerifyVectorOfStrings(SPEC_AVGS()) &&
            VerifyOffset(verifier, VT_INTERPULSE_PERIODS) &&
            verifier.VerifyVector(INTERPULSE_PERIODS()) &&
-           verifier.VerifyVectorOfStrings(INTERPULSE_PERIODS()) &&
            VerifyOffset(verifier, VT_DOPP_VELS) &&
            verifier.VerifyVector(DOPP_VELS()) &&
-           verifier.VerifyVectorOfStrings(DOPP_VELS()) &&
            VerifyOffset(verifier, VT_CONS_RECS) &&
            verifier.VerifyVector(CONS_RECS()) &&
-           verifier.VerifyVectorOfStrings(CONS_RECS()) &&
            VerifyOffset(verifier, VT_SNRS) &&
            verifier.VerifyVector(SNRS()) &&
-           verifier.VerifyVectorOfStrings(SNRS()) &&
            VerifyField<double>(verifier, VT_SIG_STRENGTH, 8) &&
            VerifyField<double>(verifier, VT_SEMI_MAJOR_AXIS, 8) &&
            VerifyField<double>(verifier, VT_SEMI_MINOR_AXIS, 8) &&
            VerifyField<double>(verifier, VT_ANGLE_ORIENTATION, 8) &&
-           VerifyField<int32_t>(verifier, VT_LIGHT_EVENT_NUM, 4) &&
+           VerifyField<uint32_t>(verifier, VT_LIGHT_EVENT_NUM, 4) &&
            VerifyOffset(verifier, VT_LIGHT_DET_SENSORS) &&
            verifier.VerifyVector(LIGHT_DET_SENSORS()) &&
            verifier.VerifyVectorOfStrings(LIGHT_DET_SENSORS()) &&
@@ -236,23 +257,11 @@ struct WTHBuilder {
   void add_OB_TIME(::flatbuffers::Offset<::flatbuffers::String> OB_TIME) {
     fbb_.AddOffset(WTH::VT_OB_TIME, OB_TIME);
   }
-  void add_SIG_PWRS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SIG_PWRS) {
-    fbb_.AddOffset(WTH::VT_SIG_PWRS, SIG_PWRS);
-  }
-  void add_NOISE_LVLS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> NOISE_LVLS) {
-    fbb_.AddOffset(WTH::VT_NOISE_LVLS, NOISE_LVLS);
-  }
-  void add_SPEC_WIDTHS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SPEC_WIDTHS) {
-    fbb_.AddOffset(WTH::VT_SPEC_WIDTHS, SPEC_WIDTHS);
-  }
-  void add_FIRST_GUESS_AVGS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> FIRST_GUESS_AVGS) {
-    fbb_.AddOffset(WTH::VT_FIRST_GUESS_AVGS, FIRST_GUESS_AVGS);
-  }
-  void add_QC_VALUE(int32_t QC_VALUE) {
-    fbb_.AddElement<int32_t>(WTH::VT_QC_VALUE, QC_VALUE, 0);
-  }
   void add_FILE_CREATION(::flatbuffers::Offset<::flatbuffers::String> FILE_CREATION) {
     fbb_.AddOffset(WTH::VT_FILE_CREATION, FILE_CREATION);
+  }
+  void add_QC_VALUE(uint8_t QC_VALUE) {
+    fbb_.AddElement<uint8_t>(WTH::VT_QC_VALUE, QC_VALUE, 0);
   }
   void add_TERM_ALT(double TERM_ALT) {
     fbb_.AddElement<double>(WTH::VT_TERM_ALT, TERM_ALT, 0.0);
@@ -263,34 +272,46 @@ struct WTHBuilder {
   void add_AVG_REF_PWR(double AVG_REF_PWR) {
     fbb_.AddElement<double>(WTH::VT_AVG_REF_PWR, AVG_REF_PWR, 0.0);
   }
-  void add_SECTOR_NUM(int32_t SECTOR_NUM) {
-    fbb_.AddElement<int32_t>(WTH::VT_SECTOR_NUM, SECTOR_NUM, 0);
+  void add_SECTOR_NUM(uint16_t SECTOR_NUM) {
+    fbb_.AddElement<uint16_t>(WTH::VT_SECTOR_NUM, SECTOR_NUM, 0);
   }
-  void add_NUM_ELEMENTS(int32_t NUM_ELEMENTS) {
-    fbb_.AddElement<int32_t>(WTH::VT_NUM_ELEMENTS, NUM_ELEMENTS, 0);
+  void add_NUM_ELEMENTS(uint16_t NUM_ELEMENTS) {
+    fbb_.AddElement<uint16_t>(WTH::VT_NUM_ELEMENTS, NUM_ELEMENTS, 0);
   }
-  void add_TD_AVG_SAMPLE_NUMS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TD_AVG_SAMPLE_NUMS) {
+  void add_CHECKSUM(uint32_t CHECKSUM) {
+    fbb_.AddElement<uint32_t>(WTH::VT_CHECKSUM, CHECKSUM, 0);
+  }
+  void add_SIG_PWRS(::flatbuffers::Offset<::flatbuffers::Vector<double>> SIG_PWRS) {
+    fbb_.AddOffset(WTH::VT_SIG_PWRS, SIG_PWRS);
+  }
+  void add_NOISE_LVLS(::flatbuffers::Offset<::flatbuffers::Vector<double>> NOISE_LVLS) {
+    fbb_.AddOffset(WTH::VT_NOISE_LVLS, NOISE_LVLS);
+  }
+  void add_SPEC_WIDTHS(::flatbuffers::Offset<::flatbuffers::Vector<double>> SPEC_WIDTHS) {
+    fbb_.AddOffset(WTH::VT_SPEC_WIDTHS, SPEC_WIDTHS);
+  }
+  void add_FIRST_GUESS_AVGS(::flatbuffers::Offset<::flatbuffers::Vector<double>> FIRST_GUESS_AVGS) {
+    fbb_.AddOffset(WTH::VT_FIRST_GUESS_AVGS, FIRST_GUESS_AVGS);
+  }
+  void add_TD_AVG_SAMPLE_NUMS(::flatbuffers::Offset<::flatbuffers::Vector<double>> TD_AVG_SAMPLE_NUMS) {
     fbb_.AddOffset(WTH::VT_TD_AVG_SAMPLE_NUMS, TD_AVG_SAMPLE_NUMS);
   }
-  void add_CHECKSUM(int32_t CHECKSUM) {
-    fbb_.AddElement<int32_t>(WTH::VT_CHECKSUM, CHECKSUM, 0);
-  }
-  void add_CO_INTEGS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> CO_INTEGS) {
+  void add_CO_INTEGS(::flatbuffers::Offset<::flatbuffers::Vector<double>> CO_INTEGS) {
     fbb_.AddOffset(WTH::VT_CO_INTEGS, CO_INTEGS);
   }
-  void add_SPEC_AVGS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SPEC_AVGS) {
+  void add_SPEC_AVGS(::flatbuffers::Offset<::flatbuffers::Vector<double>> SPEC_AVGS) {
     fbb_.AddOffset(WTH::VT_SPEC_AVGS, SPEC_AVGS);
   }
-  void add_INTERPULSE_PERIODS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> INTERPULSE_PERIODS) {
+  void add_INTERPULSE_PERIODS(::flatbuffers::Offset<::flatbuffers::Vector<double>> INTERPULSE_PERIODS) {
     fbb_.AddOffset(WTH::VT_INTERPULSE_PERIODS, INTERPULSE_PERIODS);
   }
-  void add_DOPP_VELS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> DOPP_VELS) {
+  void add_DOPP_VELS(::flatbuffers::Offset<::flatbuffers::Vector<double>> DOPP_VELS) {
     fbb_.AddOffset(WTH::VT_DOPP_VELS, DOPP_VELS);
   }
-  void add_CONS_RECS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> CONS_RECS) {
+  void add_CONS_RECS(::flatbuffers::Offset<::flatbuffers::Vector<double>> CONS_RECS) {
     fbb_.AddOffset(WTH::VT_CONS_RECS, CONS_RECS);
   }
-  void add_SNRS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SNRS) {
+  void add_SNRS(::flatbuffers::Offset<::flatbuffers::Vector<double>> SNRS) {
     fbb_.AddOffset(WTH::VT_SNRS, SNRS);
   }
   void add_SIG_STRENGTH(double SIG_STRENGTH) {
@@ -305,8 +326,8 @@ struct WTHBuilder {
   void add_ANGLE_ORIENTATION(double ANGLE_ORIENTATION) {
     fbb_.AddElement<double>(WTH::VT_ANGLE_ORIENTATION, ANGLE_ORIENTATION, 0.0);
   }
-  void add_LIGHT_EVENT_NUM(int32_t LIGHT_EVENT_NUM) {
-    fbb_.AddElement<int32_t>(WTH::VT_LIGHT_EVENT_NUM, LIGHT_EVENT_NUM, 0);
+  void add_LIGHT_EVENT_NUM(uint32_t LIGHT_EVENT_NUM) {
+    fbb_.AddElement<uint32_t>(WTH::VT_LIGHT_EVENT_NUM, LIGHT_EVENT_NUM, 0);
   }
   void add_LIGHT_DET_SENSORS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> LIGHT_DET_SENSORS) {
     fbb_.AddOffset(WTH::VT_LIGHT_DET_SENSORS, LIGHT_DET_SENSORS);
@@ -337,30 +358,30 @@ inline ::flatbuffers::Offset<WTH> CreateWTH(
     ::flatbuffers::Offset<::flatbuffers::String> ID_SENSOR = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OB_TIME = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SIG_PWRS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> NOISE_LVLS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SPEC_WIDTHS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> FIRST_GUESS_AVGS = 0,
-    int32_t QC_VALUE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> FILE_CREATION = 0,
+    uint8_t QC_VALUE = 0,
     double TERM_ALT = 0.0,
     double AVG_TX_PWR = 0.0,
     double AVG_REF_PWR = 0.0,
-    int32_t SECTOR_NUM = 0,
-    int32_t NUM_ELEMENTS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TD_AVG_SAMPLE_NUMS = 0,
-    int32_t CHECKSUM = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> CO_INTEGS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SPEC_AVGS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> INTERPULSE_PERIODS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> DOPP_VELS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> CONS_RECS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SNRS = 0,
+    uint16_t SECTOR_NUM = 0,
+    uint16_t NUM_ELEMENTS = 0,
+    uint32_t CHECKSUM = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> SIG_PWRS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> NOISE_LVLS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> SPEC_WIDTHS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> FIRST_GUESS_AVGS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> TD_AVG_SAMPLE_NUMS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> CO_INTEGS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> SPEC_AVGS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> INTERPULSE_PERIODS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> DOPP_VELS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> CONS_RECS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> SNRS = 0,
     double SIG_STRENGTH = 0.0,
     double SEMI_MAJOR_AXIS = 0.0,
     double SEMI_MINOR_AXIS = 0.0,
     double ANGLE_ORIENTATION = 0.0,
-    int32_t LIGHT_EVENT_NUM = 0,
+    uint32_t LIGHT_EVENT_NUM = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> LIGHT_DET_SENSORS = 0,
     double POS_CONFIDENCE = 0.0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SRC_TYPS = 0,
@@ -384,20 +405,20 @@ inline ::flatbuffers::Offset<WTH> CreateWTH(
   builder_.add_INTERPULSE_PERIODS(INTERPULSE_PERIODS);
   builder_.add_SPEC_AVGS(SPEC_AVGS);
   builder_.add_CO_INTEGS(CO_INTEGS);
-  builder_.add_CHECKSUM(CHECKSUM);
   builder_.add_TD_AVG_SAMPLE_NUMS(TD_AVG_SAMPLE_NUMS);
-  builder_.add_NUM_ELEMENTS(NUM_ELEMENTS);
-  builder_.add_SECTOR_NUM(SECTOR_NUM);
-  builder_.add_FILE_CREATION(FILE_CREATION);
-  builder_.add_QC_VALUE(QC_VALUE);
   builder_.add_FIRST_GUESS_AVGS(FIRST_GUESS_AVGS);
   builder_.add_SPEC_WIDTHS(SPEC_WIDTHS);
   builder_.add_NOISE_LVLS(NOISE_LVLS);
   builder_.add_SIG_PWRS(SIG_PWRS);
+  builder_.add_CHECKSUM(CHECKSUM);
+  builder_.add_FILE_CREATION(FILE_CREATION);
   builder_.add_OB_TIME(OB_TIME);
   builder_.add_ORIG_SENSOR_ID(ORIG_SENSOR_ID);
   builder_.add_ID_SENSOR(ID_SENSOR);
   builder_.add_ID(ID);
+  builder_.add_NUM_ELEMENTS(NUM_ELEMENTS);
+  builder_.add_SECTOR_NUM(SECTOR_NUM);
+  builder_.add_QC_VALUE(QC_VALUE);
   return builder_.Finish();
 }
 
@@ -407,30 +428,30 @@ inline ::flatbuffers::Offset<WTH> CreateWTHDirect(
     const char *ID_SENSOR = nullptr,
     const char *ORIG_SENSOR_ID = nullptr,
     const char *OB_TIME = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *SIG_PWRS = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *NOISE_LVLS = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *SPEC_WIDTHS = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *FIRST_GUESS_AVGS = nullptr,
-    int32_t QC_VALUE = 0,
     const char *FILE_CREATION = nullptr,
+    uint8_t QC_VALUE = 0,
     double TERM_ALT = 0.0,
     double AVG_TX_PWR = 0.0,
     double AVG_REF_PWR = 0.0,
-    int32_t SECTOR_NUM = 0,
-    int32_t NUM_ELEMENTS = 0,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *TD_AVG_SAMPLE_NUMS = nullptr,
-    int32_t CHECKSUM = 0,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *CO_INTEGS = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *SPEC_AVGS = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *INTERPULSE_PERIODS = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *DOPP_VELS = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *CONS_RECS = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *SNRS = nullptr,
+    uint16_t SECTOR_NUM = 0,
+    uint16_t NUM_ELEMENTS = 0,
+    uint32_t CHECKSUM = 0,
+    const std::vector<double> *SIG_PWRS = nullptr,
+    const std::vector<double> *NOISE_LVLS = nullptr,
+    const std::vector<double> *SPEC_WIDTHS = nullptr,
+    const std::vector<double> *FIRST_GUESS_AVGS = nullptr,
+    const std::vector<double> *TD_AVG_SAMPLE_NUMS = nullptr,
+    const std::vector<double> *CO_INTEGS = nullptr,
+    const std::vector<double> *SPEC_AVGS = nullptr,
+    const std::vector<double> *INTERPULSE_PERIODS = nullptr,
+    const std::vector<double> *DOPP_VELS = nullptr,
+    const std::vector<double> *CONS_RECS = nullptr,
+    const std::vector<double> *SNRS = nullptr,
     double SIG_STRENGTH = 0.0,
     double SEMI_MAJOR_AXIS = 0.0,
     double SEMI_MINOR_AXIS = 0.0,
     double ANGLE_ORIENTATION = 0.0,
-    int32_t LIGHT_EVENT_NUM = 0,
+    uint32_t LIGHT_EVENT_NUM = 0,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *LIGHT_DET_SENSORS = nullptr,
     double POS_CONFIDENCE = 0.0,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *SRC_TYPS = nullptr,
@@ -439,18 +460,18 @@ inline ::flatbuffers::Offset<WTH> CreateWTHDirect(
   auto ID_SENSOR__ = ID_SENSOR ? _fbb.CreateString(ID_SENSOR) : 0;
   auto ORIG_SENSOR_ID__ = ORIG_SENSOR_ID ? _fbb.CreateString(ORIG_SENSOR_ID) : 0;
   auto OB_TIME__ = OB_TIME ? _fbb.CreateString(OB_TIME) : 0;
-  auto SIG_PWRS__ = SIG_PWRS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SIG_PWRS) : 0;
-  auto NOISE_LVLS__ = NOISE_LVLS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*NOISE_LVLS) : 0;
-  auto SPEC_WIDTHS__ = SPEC_WIDTHS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SPEC_WIDTHS) : 0;
-  auto FIRST_GUESS_AVGS__ = FIRST_GUESS_AVGS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*FIRST_GUESS_AVGS) : 0;
   auto FILE_CREATION__ = FILE_CREATION ? _fbb.CreateString(FILE_CREATION) : 0;
-  auto TD_AVG_SAMPLE_NUMS__ = TD_AVG_SAMPLE_NUMS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*TD_AVG_SAMPLE_NUMS) : 0;
-  auto CO_INTEGS__ = CO_INTEGS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*CO_INTEGS) : 0;
-  auto SPEC_AVGS__ = SPEC_AVGS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SPEC_AVGS) : 0;
-  auto INTERPULSE_PERIODS__ = INTERPULSE_PERIODS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*INTERPULSE_PERIODS) : 0;
-  auto DOPP_VELS__ = DOPP_VELS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*DOPP_VELS) : 0;
-  auto CONS_RECS__ = CONS_RECS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*CONS_RECS) : 0;
-  auto SNRS__ = SNRS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SNRS) : 0;
+  auto SIG_PWRS__ = SIG_PWRS ? _fbb.CreateVector<double>(*SIG_PWRS) : 0;
+  auto NOISE_LVLS__ = NOISE_LVLS ? _fbb.CreateVector<double>(*NOISE_LVLS) : 0;
+  auto SPEC_WIDTHS__ = SPEC_WIDTHS ? _fbb.CreateVector<double>(*SPEC_WIDTHS) : 0;
+  auto FIRST_GUESS_AVGS__ = FIRST_GUESS_AVGS ? _fbb.CreateVector<double>(*FIRST_GUESS_AVGS) : 0;
+  auto TD_AVG_SAMPLE_NUMS__ = TD_AVG_SAMPLE_NUMS ? _fbb.CreateVector<double>(*TD_AVG_SAMPLE_NUMS) : 0;
+  auto CO_INTEGS__ = CO_INTEGS ? _fbb.CreateVector<double>(*CO_INTEGS) : 0;
+  auto SPEC_AVGS__ = SPEC_AVGS ? _fbb.CreateVector<double>(*SPEC_AVGS) : 0;
+  auto INTERPULSE_PERIODS__ = INTERPULSE_PERIODS ? _fbb.CreateVector<double>(*INTERPULSE_PERIODS) : 0;
+  auto DOPP_VELS__ = DOPP_VELS ? _fbb.CreateVector<double>(*DOPP_VELS) : 0;
+  auto CONS_RECS__ = CONS_RECS ? _fbb.CreateVector<double>(*CONS_RECS) : 0;
+  auto SNRS__ = SNRS ? _fbb.CreateVector<double>(*SNRS) : 0;
   auto LIGHT_DET_SENSORS__ = LIGHT_DET_SENSORS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*LIGHT_DET_SENSORS) : 0;
   auto SRC_TYPS__ = SRC_TYPS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SRC_TYPS) : 0;
   auto SRC_IDS__ = SRC_IDS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SRC_IDS) : 0;
@@ -460,19 +481,19 @@ inline ::flatbuffers::Offset<WTH> CreateWTHDirect(
       ID_SENSOR__,
       ORIG_SENSOR_ID__,
       OB_TIME__,
-      SIG_PWRS__,
-      NOISE_LVLS__,
-      SPEC_WIDTHS__,
-      FIRST_GUESS_AVGS__,
-      QC_VALUE,
       FILE_CREATION__,
+      QC_VALUE,
       TERM_ALT,
       AVG_TX_PWR,
       AVG_REF_PWR,
       SECTOR_NUM,
       NUM_ELEMENTS,
-      TD_AVG_SAMPLE_NUMS__,
       CHECKSUM,
+      SIG_PWRS__,
+      NOISE_LVLS__,
+      SPEC_WIDTHS__,
+      FIRST_GUESS_AVGS__,
+      TD_AVG_SAMPLE_NUMS__,
       CO_INTEGS__,
       SPEC_AVGS__,
       INTERPULSE_PERIODS__,

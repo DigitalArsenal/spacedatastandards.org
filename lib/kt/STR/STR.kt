@@ -29,6 +29,9 @@ class STR : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Unique internal identifier
+     */
     val ID : String?
         get() {
             val o = __offset(4)
@@ -40,26 +43,41 @@ class STR : Table() {
         }
     val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    /**
+     * CelesTrak Star catalog identifier
+     */
     val CS_ID : Long
         get() {
             val o = __offset(6)
             return if(o != 0) bb.getLong(o + bb_pos) else 0L
         }
-    val GNC_CAT_ID : Int
+    /**
+     * GNC star catalog identifier
+     */
+    val GNC_CAT_ID : UInt
         get() {
             val o = __offset(8)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
+    /**
+     * Gaia DR3 source identifier
+     */
     val GAIADR3_CAT_ID : Long
         get() {
             val o = __offset(10)
             return if(o != 0) bb.getLong(o + bb_pos) else 0L
         }
-    val HIP_CAT_ID : Int
+    /**
+     * Hipparcos catalog identifier
+     */
+    val HIP_CAT_ID : UInt
         get() {
             val o = __offset(12)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
+    /**
+     * Catalog version string
+     */
     val CAT_VERSION : String?
         get() {
             val o = __offset(14)
@@ -71,172 +89,271 @@ class STR : Table() {
         }
     val CAT_VERSIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
     fun CAT_VERSIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
-    val RA : Double
-        get() {
-            val o = __offset(16)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val RA_UNC : Double
-        get() {
-            val o = __offset(18)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val DEC : Double
-        get() {
-            val o = __offset(20)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val DEC_UNC : Double
-        get() {
-            val o = __offset(22)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val POS_UNC_FLAG : Boolean
-        get() {
-            val o = __offset(24)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
-        }
-    val PARALLAX : Double
-        get() {
-            val o = __offset(26)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val PARALLAX_UNC : Double
-        get() {
-            val o = __offset(28)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val PMRA : Double
-        get() {
-            val o = __offset(30)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val PMRA_UNC : Double
-        get() {
-            val o = __offset(32)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val PMDEC : Double
-        get() {
-            val o = __offset(34)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val PMDEC_UNC : Double
-        get() {
-            val o = __offset(36)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val PM_UNC_FLAG : Boolean
-        get() {
-            val o = __offset(38)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
-        }
+    /**
+     * Astrometry source description
+     */
     val ASTROMETRY_ORIGIN : String?
         get() {
-            val o = __offset(40)
+            val o = __offset(16)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val ASTROMETRY_ORIGINAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(40, 1)
-    fun ASTROMETRY_ORIGINInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 40, 1)
+    val ASTROMETRY_ORIGINAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
+    fun ASTROMETRY_ORIGINInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    /**
+     * Epoch of stellar position (Julian years)
+     */
     val STAR_EPOCH : Double
         get() {
-            val o = __offset(42)
+            val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Right ascension (degrees, ICRS)
+     */
+    val RA : Double
+        get() {
+            val o = __offset(20)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Right ascension uncertainty (arcseconds)
+     */
+    val RA_UNC : Double
+        get() {
+            val o = __offset(22)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Declination (degrees, ICRS)
+     */
+    val DEC : Double
+        get() {
+            val o = __offset(24)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Declination uncertainty (arcseconds)
+     */
+    val DEC_UNC : Double
+        get() {
+            val o = __offset(26)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * True if position uncertainty is flagged
+     */
+    val POS_UNC_FLAG : Boolean
+        get() {
+            val o = __offset(28)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Parallax (milliarcseconds)
+     */
+    val PARALLAX : Double
+        get() {
+            val o = __offset(30)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Parallax uncertainty (milliarcseconds)
+     */
+    val PARALLAX_UNC : Double
+        get() {
+            val o = __offset(32)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Proper motion in RA (milliarcseconds/year)
+     */
+    val PMRA : Double
+        get() {
+            val o = __offset(34)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Proper motion in RA uncertainty (milliarcseconds/year)
+     */
+    val PMRA_UNC : Double
+        get() {
+            val o = __offset(36)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Proper motion in DEC (milliarcseconds/year)
+     */
+    val PMDEC : Double
+        get() {
+            val o = __offset(38)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Proper motion in DEC uncertainty (milliarcseconds/year)
+     */
+    val PMDEC_UNC : Double
+        get() {
+            val o = __offset(40)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * True if proper motion uncertainty is flagged
+     */
+    val PM_UNC_FLAG : Boolean
+        get() {
+            val o = __offset(42)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Gaia G-band magnitude
+     */
     val GMAG : Double
         get() {
             val o = __offset(44)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Gaia G-band magnitude uncertainty
+     */
     val GMAG_UNC : Double
         get() {
             val o = __offset(46)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Gaia BP-band magnitude (blue photometer)
+     */
     val BPMAG : Double
         get() {
             val o = __offset(48)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Gaia BP-band magnitude uncertainty
+     */
     val BPMAG_UNC : Double
         get() {
             val o = __offset(50)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Gaia RP-band magnitude (red photometer)
+     */
     val RPMAG : Double
         get() {
             val o = __offset(52)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Gaia RP-band magnitude uncertainty
+     */
     val RPMAG_UNC : Double
         get() {
             val o = __offset(54)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * 2MASS J-band magnitude (1.25 um)
+     */
     val JMAG : Double
         get() {
             val o = __offset(56)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * J-band magnitude uncertainty
+     */
     val JMAG_UNC : Double
         get() {
             val o = __offset(58)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * 2MASS K-band magnitude (2.17 um)
+     */
     val KMAG : Double
         get() {
             val o = __offset(60)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * K-band magnitude uncertainty
+     */
     val KMAG_UNC : Double
         get() {
             val o = __offset(62)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * 2MASS H-band magnitude (1.65 um)
+     */
     val HMAG : Double
         get() {
             val o = __offset(64)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * H-band magnitude uncertainty
+     */
     val HMAG_UNC : Double
         get() {
             val o = __offset(66)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * True if star is variable
+     */
     val VAR_FLAG : Boolean
         get() {
             val o = __offset(68)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * True if star is in a multiple system
+     */
     val MULT_FLAG : Boolean
         get() {
             val o = __offset(70)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val NEIGHBOR_ID : Int
+    /**
+     * Nearest neighbor catalog identifier
+     */
+    val NEIGHBOR_ID : UInt
         get() {
             val o = __offset(72)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
+    /**
+     * True if nearest neighbor is within confusion radius
+     */
     val NEIGHBOR_FLAG : Boolean
         get() {
             val o = __offset(74)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * Distance to nearest neighbor (arcseconds)
+     */
     val NEIGHBOR_DISTANCE : Double
         get() {
             val o = __offset(76)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * True if position shift detected between catalogs
+     */
     val SHIFT_FLAG : Boolean
         get() {
             val o = __offset(78)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * Position shift magnitude (arcseconds)
+     */
     val SHIFT : Double
         get() {
             val o = __offset(80)
@@ -250,7 +367,7 @@ class STR : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun STRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$STR")
-        fun createSTR(builder: FlatBufferBuilder, IDOffset: Int, CS_ID: Long, GNC_CAT_ID: Int, GAIADR3_CAT_ID: Long, HIP_CAT_ID: Int, CAT_VERSIONOffset: Int, RA: Double, RA_UNC: Double, DEC: Double, DEC_UNC: Double, POS_UNC_FLAG: Boolean, PARALLAX: Double, PARALLAX_UNC: Double, PMRA: Double, PMRA_UNC: Double, PMDEC: Double, PMDEC_UNC: Double, PM_UNC_FLAG: Boolean, ASTROMETRY_ORIGINOffset: Int, STAR_EPOCH: Double, GMAG: Double, GMAG_UNC: Double, BPMAG: Double, BPMAG_UNC: Double, RPMAG: Double, RPMAG_UNC: Double, JMAG: Double, JMAG_UNC: Double, KMAG: Double, KMAG_UNC: Double, HMAG: Double, HMAG_UNC: Double, VAR_FLAG: Boolean, MULT_FLAG: Boolean, NEIGHBOR_ID: Int, NEIGHBOR_FLAG: Boolean, NEIGHBOR_DISTANCE: Double, SHIFT_FLAG: Boolean, SHIFT: Double) : Int {
+        fun createSTR(builder: FlatBufferBuilder, IDOffset: Int, CS_ID: Long, GNC_CAT_ID: UInt, GAIADR3_CAT_ID: Long, HIP_CAT_ID: UInt, CAT_VERSIONOffset: Int, ASTROMETRY_ORIGINOffset: Int, STAR_EPOCH: Double, RA: Double, RA_UNC: Double, DEC: Double, DEC_UNC: Double, POS_UNC_FLAG: Boolean, PARALLAX: Double, PARALLAX_UNC: Double, PMRA: Double, PMRA_UNC: Double, PMDEC: Double, PMDEC_UNC: Double, PM_UNC_FLAG: Boolean, GMAG: Double, GMAG_UNC: Double, BPMAG: Double, BPMAG_UNC: Double, RPMAG: Double, RPMAG_UNC: Double, JMAG: Double, JMAG_UNC: Double, KMAG: Double, KMAG_UNC: Double, HMAG: Double, HMAG_UNC: Double, VAR_FLAG: Boolean, MULT_FLAG: Boolean, NEIGHBOR_ID: UInt, NEIGHBOR_FLAG: Boolean, NEIGHBOR_DISTANCE: Double, SHIFT_FLAG: Boolean, SHIFT: Double) : Int {
             builder.startTable(39)
             addSHIFT(builder, SHIFT)
             addNEIGHBOR_DISTANCE(builder, NEIGHBOR_DISTANCE)
@@ -266,7 +383,6 @@ class STR : Table() {
             addBPMAG(builder, BPMAG)
             addGMAG_UNC(builder, GMAG_UNC)
             addGMAG(builder, GMAG)
-            addSTAR_EPOCH(builder, STAR_EPOCH)
             addPMDEC_UNC(builder, PMDEC_UNC)
             addPMDEC(builder, PMDEC)
             addPMRA_UNC(builder, PMRA_UNC)
@@ -277,6 +393,7 @@ class STR : Table() {
             addDEC(builder, DEC)
             addRA_UNC(builder, RA_UNC)
             addRA(builder, RA)
+            addSTAR_EPOCH(builder, STAR_EPOCH)
             addGAIADR3_CAT_ID(builder, GAIADR3_CAT_ID)
             addCS_ID(builder, CS_ID)
             addNEIGHBOR_ID(builder, NEIGHBOR_ID)
@@ -296,24 +413,24 @@ class STR : Table() {
         fun startSTR(builder: FlatBufferBuilder) = builder.startTable(39)
         fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
         fun addCS_ID(builder: FlatBufferBuilder, CS_ID: Long) = builder.addLong(1, CS_ID, 0L)
-        fun addGNC_CAT_ID(builder: FlatBufferBuilder, GNC_CAT_ID: Int) = builder.addInt(2, GNC_CAT_ID, 0)
+        fun addGNC_CAT_ID(builder: FlatBufferBuilder, GNC_CAT_ID: UInt) = builder.addInt(2, GNC_CAT_ID.toInt(), 0)
         fun addGAIADR3_CAT_ID(builder: FlatBufferBuilder, GAIADR3_CAT_ID: Long) = builder.addLong(3, GAIADR3_CAT_ID, 0L)
-        fun addHIP_CAT_ID(builder: FlatBufferBuilder, HIP_CAT_ID: Int) = builder.addInt(4, HIP_CAT_ID, 0)
+        fun addHIP_CAT_ID(builder: FlatBufferBuilder, HIP_CAT_ID: UInt) = builder.addInt(4, HIP_CAT_ID.toInt(), 0)
         fun addCAT_VERSION(builder: FlatBufferBuilder, CAT_VERSION: Int) = builder.addOffset(5, CAT_VERSION, 0)
-        fun addRA(builder: FlatBufferBuilder, RA: Double) = builder.addDouble(6, RA, 0.0)
-        fun addRA_UNC(builder: FlatBufferBuilder, RA_UNC: Double) = builder.addDouble(7, RA_UNC, 0.0)
-        fun addDEC(builder: FlatBufferBuilder, DEC: Double) = builder.addDouble(8, DEC, 0.0)
-        fun addDEC_UNC(builder: FlatBufferBuilder, DEC_UNC: Double) = builder.addDouble(9, DEC_UNC, 0.0)
-        fun addPOS_UNC_FLAG(builder: FlatBufferBuilder, POS_UNC_FLAG: Boolean) = builder.addBoolean(10, POS_UNC_FLAG, false)
-        fun addPARALLAX(builder: FlatBufferBuilder, PARALLAX: Double) = builder.addDouble(11, PARALLAX, 0.0)
-        fun addPARALLAX_UNC(builder: FlatBufferBuilder, PARALLAX_UNC: Double) = builder.addDouble(12, PARALLAX_UNC, 0.0)
-        fun addPMRA(builder: FlatBufferBuilder, PMRA: Double) = builder.addDouble(13, PMRA, 0.0)
-        fun addPMRA_UNC(builder: FlatBufferBuilder, PMRA_UNC: Double) = builder.addDouble(14, PMRA_UNC, 0.0)
-        fun addPMDEC(builder: FlatBufferBuilder, PMDEC: Double) = builder.addDouble(15, PMDEC, 0.0)
-        fun addPMDEC_UNC(builder: FlatBufferBuilder, PMDEC_UNC: Double) = builder.addDouble(16, PMDEC_UNC, 0.0)
-        fun addPM_UNC_FLAG(builder: FlatBufferBuilder, PM_UNC_FLAG: Boolean) = builder.addBoolean(17, PM_UNC_FLAG, false)
-        fun addASTROMETRY_ORIGIN(builder: FlatBufferBuilder, ASTROMETRY_ORIGIN: Int) = builder.addOffset(18, ASTROMETRY_ORIGIN, 0)
-        fun addSTAR_EPOCH(builder: FlatBufferBuilder, STAR_EPOCH: Double) = builder.addDouble(19, STAR_EPOCH, 0.0)
+        fun addASTROMETRY_ORIGIN(builder: FlatBufferBuilder, ASTROMETRY_ORIGIN: Int) = builder.addOffset(6, ASTROMETRY_ORIGIN, 0)
+        fun addSTAR_EPOCH(builder: FlatBufferBuilder, STAR_EPOCH: Double) = builder.addDouble(7, STAR_EPOCH, 0.0)
+        fun addRA(builder: FlatBufferBuilder, RA: Double) = builder.addDouble(8, RA, 0.0)
+        fun addRA_UNC(builder: FlatBufferBuilder, RA_UNC: Double) = builder.addDouble(9, RA_UNC, 0.0)
+        fun addDEC(builder: FlatBufferBuilder, DEC: Double) = builder.addDouble(10, DEC, 0.0)
+        fun addDEC_UNC(builder: FlatBufferBuilder, DEC_UNC: Double) = builder.addDouble(11, DEC_UNC, 0.0)
+        fun addPOS_UNC_FLAG(builder: FlatBufferBuilder, POS_UNC_FLAG: Boolean) = builder.addBoolean(12, POS_UNC_FLAG, false)
+        fun addPARALLAX(builder: FlatBufferBuilder, PARALLAX: Double) = builder.addDouble(13, PARALLAX, 0.0)
+        fun addPARALLAX_UNC(builder: FlatBufferBuilder, PARALLAX_UNC: Double) = builder.addDouble(14, PARALLAX_UNC, 0.0)
+        fun addPMRA(builder: FlatBufferBuilder, PMRA: Double) = builder.addDouble(15, PMRA, 0.0)
+        fun addPMRA_UNC(builder: FlatBufferBuilder, PMRA_UNC: Double) = builder.addDouble(16, PMRA_UNC, 0.0)
+        fun addPMDEC(builder: FlatBufferBuilder, PMDEC: Double) = builder.addDouble(17, PMDEC, 0.0)
+        fun addPMDEC_UNC(builder: FlatBufferBuilder, PMDEC_UNC: Double) = builder.addDouble(18, PMDEC_UNC, 0.0)
+        fun addPM_UNC_FLAG(builder: FlatBufferBuilder, PM_UNC_FLAG: Boolean) = builder.addBoolean(19, PM_UNC_FLAG, false)
         fun addGMAG(builder: FlatBufferBuilder, GMAG: Double) = builder.addDouble(20, GMAG, 0.0)
         fun addGMAG_UNC(builder: FlatBufferBuilder, GMAG_UNC: Double) = builder.addDouble(21, GMAG_UNC, 0.0)
         fun addBPMAG(builder: FlatBufferBuilder, BPMAG: Double) = builder.addDouble(22, BPMAG, 0.0)
@@ -328,7 +445,7 @@ class STR : Table() {
         fun addHMAG_UNC(builder: FlatBufferBuilder, HMAG_UNC: Double) = builder.addDouble(31, HMAG_UNC, 0.0)
         fun addVAR_FLAG(builder: FlatBufferBuilder, VAR_FLAG: Boolean) = builder.addBoolean(32, VAR_FLAG, false)
         fun addMULT_FLAG(builder: FlatBufferBuilder, MULT_FLAG: Boolean) = builder.addBoolean(33, MULT_FLAG, false)
-        fun addNEIGHBOR_ID(builder: FlatBufferBuilder, NEIGHBOR_ID: Int) = builder.addInt(34, NEIGHBOR_ID, 0)
+        fun addNEIGHBOR_ID(builder: FlatBufferBuilder, NEIGHBOR_ID: UInt) = builder.addInt(34, NEIGHBOR_ID.toInt(), 0)
         fun addNEIGHBOR_FLAG(builder: FlatBufferBuilder, NEIGHBOR_FLAG: Boolean) = builder.addBoolean(35, NEIGHBOR_FLAG, false)
         fun addNEIGHBOR_DISTANCE(builder: FlatBufferBuilder, NEIGHBOR_DISTANCE: Double) = builder.addDouble(36, NEIGHBOR_DISTANCE, 0.0)
         fun addSHIFT_FLAG(builder: FlatBufferBuilder, SHIFT_FLAG: Boolean) = builder.addBoolean(37, SHIFT_FLAG, false)

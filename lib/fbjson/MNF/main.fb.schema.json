@@ -1,29 +1,250 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "manifoldStatus": {
+      "type": "string",
+      "enum": [
+        "CANDIDATE",
+        "CONFIRMED",
+        "REJECTED",
+        "CORRELATED",
+        "EXPIRED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "CANDIDATE": {
+          "value": 0
+        },
+        "CONFIRMED": {
+          "value": 1
+        },
+        "REJECTED": {
+          "value": 2
+        },
+        "CORRELATED": {
+          "value": 3
+        },
+        "EXPIRED": {
+          "value": 4
+        }
+      }
+    },
+    "manifoldElset": {
+      "type": "object",
+      "description": "Manifold Element Set",
+      "properties": {
+        "EPOCH": {
+          "type": "string",
+          "description": "Epoch of element set (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "SEMI_MAJOR_AXIS": {
+          "type": "number",
+          "description": "Semi-major axis in km",
+          "x-flatbuffer-type": "double"
+        },
+        "ECCENTRICITY": {
+          "type": "number",
+          "description": "Eccentricity",
+          "x-flatbuffer-type": "double"
+        },
+        "INCLINATION": {
+          "type": "number",
+          "description": "Inclination in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "RA_OF_ASC_NODE": {
+          "type": "number",
+          "description": "Right ascension of ascending node in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "ARG_OF_PERICENTER": {
+          "type": "number",
+          "description": "Argument of pericenter in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "MEAN_ANOMALY": {
+          "type": "number",
+          "description": "Mean anomaly in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_V": {
+          "type": "number",
+          "description": "Applied delta-V in m/s",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_T": {
+          "type": "number",
+          "description": "Applied delta-T in seconds",
+          "x-flatbuffer-type": "double"
+        },
+        "DV_X": {
+          "type": "number",
+          "description": "Delta-V direction X (unit vector)",
+          "x-flatbuffer-type": "double"
+        },
+        "DV_Y": {
+          "type": "number",
+          "description": "Delta-V direction Y (unit vector)",
+          "x-flatbuffer-type": "double"
+        },
+        "DV_Z": {
+          "type": "number",
+          "description": "Delta-V direction Z (unit vector)",
+          "x-flatbuffer-type": "double"
+        },
+        "WEIGHT": {
+          "type": "number",
+          "description": "Probability weight (0.0-1.0)",
+          "x-flatbuffer-type": "double"
+        },
+        "APOGEE": {
+          "type": "number",
+          "description": "Apogee altitude in km",
+          "x-flatbuffer-type": "double"
+        },
+        "PERIGEE": {
+          "type": "number",
+          "description": "Perigee altitude in km",
+          "x-flatbuffer-type": "double"
+        },
+        "PERIOD": {
+          "type": "number",
+          "description": "Period in minutes",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
     "MNF": {
       "type": "object",
       "description": "Orbit Manifold",
       "properties": {
         "ID": {
           "type": "string",
+          "description": "Unique manifold identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "SAT_NO": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Parent object satellite number",
+          "x-flatbuffer-type": "uint32"
+        },
+        "OBJECT_DESIGNATOR": {
+          "type": "string",
+          "description": "Object designator",
           "x-flatbuffer-type": "string"
         },
         "STATUS": {
+          "$ref": "#/definitions/manifoldStatus",
+          "description": "Manifold status",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "CANDIDATE": {
+              "value": 0
+            },
+            "CONFIRMED": {
+              "value": 1
+            },
+            "REJECTED": {
+              "value": 2
+            },
+            "CORRELATED": {
+              "value": 3
+            },
+            "EXPIRED": {
+              "value": 4
+            }
+          }
+        },
+        "EVENT_EPOCH": {
           "type": "string",
+          "description": "Event epoch that spawned the manifold (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
-        "WEIGHT": {
+        "SOURCE": {
+          "type": "string",
+          "description": "Source of detection (sensor ID or method)",
+          "x-flatbuffer-type": "string"
+        },
+        "REF_FRAME": {
+          "type": "string",
+          "description": "Reference frame",
+          "x-flatbuffer-type": "string"
+        },
+        "ORIG_SEMI_MAJOR_AXIS": {
           "type": "number",
+          "description": "Original pre-event semi-major axis in km",
           "x-flatbuffer-type": "double"
         },
-        "DELTA_V": {
+        "ORIG_ECCENTRICITY": {
           "type": "number",
+          "description": "Original pre-event eccentricity",
           "x-flatbuffer-type": "double"
         },
-        "DELTA_T": {
+        "ORIG_INCLINATION": {
           "type": "number",
+          "description": "Original pre-event inclination in degrees",
           "x-flatbuffer-type": "double"
+        },
+        "DELTA_V_MIN": {
+          "type": "number",
+          "description": "Minimum delta-V sampled in m/s",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_V_MAX": {
+          "type": "number",
+          "description": "Maximum delta-V sampled in m/s",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_V_STEP": {
+          "type": "number",
+          "description": "Delta-V step size in m/s",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_T_MIN": {
+          "type": "number",
+          "description": "Minimum delta-T sampled in seconds",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_T_MAX": {
+          "type": "number",
+          "description": "Maximum delta-T sampled in seconds",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_T_STEP": {
+          "type": "number",
+          "description": "Delta-T step size in seconds",
+          "x-flatbuffer-type": "double"
+        },
+        "NUM_ELEMENTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Total number of manifold elements",
+          "x-flatbuffer-type": "uint"
+        },
+        "ELEMENTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/manifoldElset"
+          },
+          "description": "Theoretical element sets",
+          "x-flatbuffer-type": "[manifoldElset]"
+        },
+        "CORRELATED_ID": {
+          "type": "string",
+          "description": "Correlated catalog object ID (if matched)",
+          "x-flatbuffer-type": "string"
+        },
+        "NOTES": {
+          "type": "string",
+          "description": "Additional notes",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

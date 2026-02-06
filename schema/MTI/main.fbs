@@ -1,21 +1,44 @@
-// Hash: 870d20ead9f9e3189572c4087e7de2298712e98479a56d014c54a8319ae11358
-// Version: 0.0.2
+// Hash: 2480e63df7103d6b5f2fcaab94d2d4293e802973967e08dafcf8dfe909456f01
+// Version: 0.0.3
 // -----------------------------------END_HEADER
+enum mtiStandard : byte {
+  STANAG_4607,
+  STANAG_4545,
+  CUSTOM,
+  UNKNOWN
+}
+
 /// Moving Target Indicator
 table MTI {
+  /// Unique identifier
   ID:string;
+  /// MTI standard (e.g., STANAG 4607)
+  STANDARD:mtiStandard;
+  /// Platform type (P3 field)
   P3:string;
+  /// Platform activity (P6 field)
   P6:string;
+  /// Sensor type (P7 field)
   P7:string;
+  /// Sensor model (P8 field)
   P8:string;
-  P9:int;
-  P10:int;
+  /// Reference time code (P9)
+  P9:uint32;
+  /// Security classification (P10)
+  P10:uint16;
+  /// Mission segment identifiers
   MISSIONS:[string];
+  /// Dwell segment data references
   DWELLS:[string];
+  /// High range resolution profile references
   HRRS:[string];
+  /// Job definition references
   JOB_DEFS:[string];
+  /// Free text entries
   FREE_TEXTS:[string];
+  /// Platform location data references
   PLATFORM_LOCS:[string];
+  /// Job request references
   JOB_REQUESTS:[string];
 }
 

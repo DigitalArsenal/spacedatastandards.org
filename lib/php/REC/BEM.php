@@ -41,32 +41,153 @@ class BEM extends Table
         return $this;
     }
 
+    /// Unique beam identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Beam name or designation
     public function getBEAM_NAME()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getNOTES()
+    /// Reference to parent entity (satellite/transponder)
+    public function getID_ENTITY()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Reference to parent antenna
+    public function getID_ANTENNA()
+    {
+        $o = $this->__offset(10);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Beam type
     /**
-     * @param int offset
-     * @return string
+     * @return sbyte
+     */
+    public function getTYPE()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \beamType::SPOT;
+    }
+
+    /// Beam polarization
+    /**
+     * @return sbyte
+     */
+    public function getPOLARIZATION()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \beamPolarization::RHCP;
+    }
+
+    /// Peak gain in dBi
+    /**
+     * @return double
+     */
+    public function getPEAK_GAIN()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Edge-of-coverage gain in dBi
+    /**
+     * @return double
+     */
+    public function getEOC_GAIN()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Beam center latitude in degrees
+    /**
+     * @return double
+     */
+    public function getCENTER_LATITUDE()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Beam center longitude in degrees
+    /**
+     * @return double
+     */
+    public function getCENTER_LONGITUDE()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Beamwidth (3dB) in degrees
+    /**
+     * @return double
+     */
+    public function getBEAMWIDTH()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Operating frequency in MHz
+    /**
+     * @return double
+     */
+    public function getFREQUENCY()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// EIRP at beam center in dBW
+    /**
+     * @return double
+     */
+    public function getEIRP()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// G/T at beam center in dB/K
+    /**
+     * @return double
+     */
+    public function getG_OVER_T()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Beam footprint area in km^2
+    /**
+     * @return double
+     */
+    public function getFOOTPRINT_AREA()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Beam contour definitions
+    /**
+     * @returnVectorOffset
      */
     public function getBEAM_CONTOURS($j)
     {
-        $o = $this->__offset(10);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        $o = $this->__offset(34);
+        $obj = new BeamContour();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
 
     /**
@@ -74,8 +195,15 @@ class BEM extends Table
      */
     public function getBEAM_CONTOURSLength()
     {
-        $o = $this->__offset(10);
+        $o = $this->__offset(34);
         return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Additional notes
+    public function getNOTES()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /**
@@ -84,20 +212,33 @@ class BEM extends Table
      */
     public static function startBEM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(4);
+        $builder->StartObject(17);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return BEM
      */
-    public static function createBEM(FlatBufferBuilder $builder, $ID, $BEAM_NAME, $NOTES, $BEAM_CONTOURS)
+    public static function createBEM(FlatBufferBuilder $builder, $ID, $BEAM_NAME, $ID_ENTITY, $ID_ANTENNA, $TYPE, $POLARIZATION, $PEAK_GAIN, $EOC_GAIN, $CENTER_LATITUDE, $CENTER_LONGITUDE, $BEAMWIDTH, $FREQUENCY, $EIRP, $G_OVER_T, $FOOTPRINT_AREA, $BEAM_CONTOURS, $NOTES)
     {
-        $builder->startObject(4);
+        $builder->startObject(17);
         self::addID($builder, $ID);
         self::addBEAM_NAME($builder, $BEAM_NAME);
-        self::addNOTES($builder, $NOTES);
+        self::addID_ENTITY($builder, $ID_ENTITY);
+        self::addID_ANTENNA($builder, $ID_ANTENNA);
+        self::addTYPE($builder, $TYPE);
+        self::addPOLARIZATION($builder, $POLARIZATION);
+        self::addPEAK_GAIN($builder, $PEAK_GAIN);
+        self::addEOC_GAIN($builder, $EOC_GAIN);
+        self::addCENTER_LATITUDE($builder, $CENTER_LATITUDE);
+        self::addCENTER_LONGITUDE($builder, $CENTER_LONGITUDE);
+        self::addBEAMWIDTH($builder, $BEAMWIDTH);
+        self::addFREQUENCY($builder, $FREQUENCY);
+        self::addEIRP($builder, $EIRP);
+        self::addG_OVER_T($builder, $G_OVER_T);
+        self::addFOOTPRINT_AREA($builder, $FOOTPRINT_AREA);
         self::addBEAM_CONTOURS($builder, $BEAM_CONTOURS);
+        self::addNOTES($builder, $NOTES);
         $o = $builder->endObject();
         return $o;
     }
@@ -127,9 +268,129 @@ class BEM extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addNOTES(FlatBufferBuilder $builder, $NOTES)
+    public static function addID_ENTITY(FlatBufferBuilder $builder, $ID_ENTITY)
     {
-        $builder->addOffsetX(2, $NOTES, 0);
+        $builder->addOffsetX(2, $ID_ENTITY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addID_ANTENNA(FlatBufferBuilder $builder, $ID_ANTENNA)
+    {
+        $builder->addOffsetX(3, $ID_ANTENNA, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addTYPE(FlatBufferBuilder $builder, $TYPE)
+    {
+        $builder->addSbyteX(4, $TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addPOLARIZATION(FlatBufferBuilder $builder, $POLARIZATION)
+    {
+        $builder->addSbyteX(5, $POLARIZATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPEAK_GAIN(FlatBufferBuilder $builder, $PEAK_GAIN)
+    {
+        $builder->addDoubleX(6, $PEAK_GAIN, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addEOC_GAIN(FlatBufferBuilder $builder, $EOC_GAIN)
+    {
+        $builder->addDoubleX(7, $EOC_GAIN, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCENTER_LATITUDE(FlatBufferBuilder $builder, $CENTER_LATITUDE)
+    {
+        $builder->addDoubleX(8, $CENTER_LATITUDE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCENTER_LONGITUDE(FlatBufferBuilder $builder, $CENTER_LONGITUDE)
+    {
+        $builder->addDoubleX(9, $CENTER_LONGITUDE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addBEAMWIDTH(FlatBufferBuilder $builder, $BEAMWIDTH)
+    {
+        $builder->addDoubleX(10, $BEAMWIDTH, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addFREQUENCY(FlatBufferBuilder $builder, $FREQUENCY)
+    {
+        $builder->addDoubleX(11, $FREQUENCY, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addEIRP(FlatBufferBuilder $builder, $EIRP)
+    {
+        $builder->addDoubleX(12, $EIRP, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addG_OVER_T(FlatBufferBuilder $builder, $G_OVER_T)
+    {
+        $builder->addDoubleX(13, $G_OVER_T, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addFOOTPRINT_AREA(FlatBufferBuilder $builder, $FOOTPRINT_AREA)
+    {
+        $builder->addDoubleX(14, $FOOTPRINT_AREA, 0.0);
     }
 
     /**
@@ -139,7 +400,7 @@ class BEM extends Table
      */
     public static function addBEAM_CONTOURS(FlatBufferBuilder $builder, $BEAM_CONTOURS)
     {
-        $builder->addOffsetX(3, $BEAM_CONTOURS, 0);
+        $builder->addOffsetX(15, $BEAM_CONTOURS, 0);
     }
 
     /**
@@ -164,6 +425,16 @@ class BEM extends Table
     public static function startBEAM_CONTOURSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addNOTES(FlatBufferBuilder $builder, $NOTES)
+    {
+        $builder->addOffsetX(16, $NOTES, 0);
     }
 
     /**

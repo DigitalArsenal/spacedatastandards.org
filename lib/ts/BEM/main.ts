@@ -3,3 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export { BEM, BEMT } from './BEM.js';
+export { beamContour, beamContourT } from './beamContour.js';
+export { beamContourPoint, beamContourPointT } from './beamContourPoint.js';
+export { beamPolarization } from './beamPolarization.js';
+export { beamType } from './beamType.js';

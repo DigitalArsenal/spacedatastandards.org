@@ -1,129 +1,255 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "attMotionType": {
+      "type": "string",
+      "enum": [
+        "STABILIZED",
+        "SPINNING",
+        "TUMBLING",
+        "PRECESSING",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "STABILIZED": {
+          "value": 0
+        },
+        "SPINNING": {
+          "value": 1
+        },
+        "TUMBLING": {
+          "value": 2
+        },
+        "PRECESSING": {
+          "value": 3
+        },
+        "UNKNOWN": {
+          "value": 4
+        }
+      }
+    },
+    "attRepresentation": {
+      "type": "string",
+      "enum": [
+        "QUATERNION",
+        "EULER",
+        "SPIN",
+        "DIRECTION_COSINE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "QUATERNION": {
+          "value": 0
+        },
+        "EULER": {
+          "value": 1
+        },
+        "SPIN": {
+          "value": 2
+        },
+        "DIRECTION_COSINE": {
+          "value": 3
+        }
+      }
+    },
     "ATD": {
       "type": "object",
       "description": "Attitude Data Point",
       "properties": {
         "ID": {
           "type": "string",
+          "description": "Unique identifier",
           "x-flatbuffer-type": "string"
         },
         "AS_ID": {
           "type": "string",
+          "description": "Attitude set identifier (groups time-series points)",
           "x-flatbuffer-type": "string"
         },
         "SAT_NO": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Satellite catalog number",
+          "x-flatbuffer-type": "uint32"
         },
         "ORIG_OBJECT_ID": {
           "type": "string",
+          "description": "International designator",
           "x-flatbuffer-type": "string"
         },
-        "TS": {
+        "EPOCH": {
           "type": "string",
+          "description": "Observation epoch (ISO 8601)",
           "x-flatbuffer-type": "string"
+        },
+        "REPRESENTATION": {
+          "$ref": "#/definitions/attRepresentation",
+          "description": "Attitude representation used",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "QUATERNION": {
+              "value": 0
+            },
+            "EULER": {
+              "value": 1
+            },
+            "SPIN": {
+              "value": 2
+            },
+            "DIRECTION_COSINE": {
+              "value": 3
+            }
+          }
         },
         "MOTION_TYPE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
+          "$ref": "#/definitions/attMotionType",
+          "description": "Motion characterization",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "STABILIZED": {
+              "value": 0
+            },
+            "SPINNING": {
+              "value": 1
+            },
+            "TUMBLING": {
+              "value": 2
+            },
+            "PRECESSING": {
+              "value": 3
+            },
+            "UNKNOWN": {
+              "value": 4
+            }
+          }
+        },
+        "QC": {
+          "type": "number",
+          "description": "Quaternion scalar component (q0 or qc)",
+          "x-flatbuffer-type": "double"
         },
         "Q1": {
           "type": "number",
+          "description": "Quaternion vector component 1",
           "x-flatbuffer-type": "double"
         },
         "Q2": {
           "type": "number",
+          "description": "Quaternion vector component 2",
           "x-flatbuffer-type": "double"
         },
         "Q3": {
           "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "QC": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "Q1_DOT": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "Q2_DOT": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "Q3_DOT": {
-          "type": "number",
+          "description": "Quaternion vector component 3",
           "x-flatbuffer-type": "double"
         },
         "QC_DOT": {
           "type": "number",
+          "description": "Quaternion scalar rate (rad/s)",
+          "x-flatbuffer-type": "double"
+        },
+        "Q1_DOT": {
+          "type": "number",
+          "description": "Quaternion vector rate 1 (rad/s)",
+          "x-flatbuffer-type": "double"
+        },
+        "Q2_DOT": {
+          "type": "number",
+          "description": "Quaternion vector rate 2 (rad/s)",
+          "x-flatbuffer-type": "double"
+        },
+        "Q3_DOT": {
+          "type": "number",
+          "description": "Quaternion vector rate 3 (rad/s)",
           "x-flatbuffer-type": "double"
         },
         "X_ANGLE": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
+          "type": "number",
+          "description": "Euler angle X (degrees)",
+          "x-flatbuffer-type": "double"
         },
         "Y_ANGLE": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
+          "type": "number",
+          "description": "Euler angle Y (degrees)",
+          "x-flatbuffer-type": "double"
         },
         "Z_ANGLE": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
+          "type": "number",
+          "description": "Euler angle Z (degrees)",
+          "x-flatbuffer-type": "double"
         },
         "X_RATE": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
+          "type": "number",
+          "description": "Angular rate about X (deg/s)",
+          "x-flatbuffer-type": "double"
         },
         "Y_RATE": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
+          "type": "number",
+          "description": "Angular rate about Y (deg/s)",
+          "x-flatbuffer-type": "double"
         },
         "Z_RATE": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
+          "type": "number",
+          "description": "Angular rate about Z (deg/s)",
+          "x-flatbuffer-type": "double"
         },
         "RA": {
           "type": "number",
+          "description": "Right ascension of spin axis (degrees)",
           "x-flatbuffer-type": "double"
         },
         "DECLINATION": {
           "type": "number",
+          "description": "Declination of spin axis (degrees)",
           "x-flatbuffer-type": "double"
         },
         "CONING_ANGLE": {
           "type": "number",
+          "description": "Coning half-angle (degrees)",
           "x-flatbuffer-type": "double"
         },
         "PREC_PERIOD": {
           "type": "number",
+          "description": "Precession period (seconds)",
           "x-flatbuffer-type": "double"
         },
         "SPIN_PERIOD": {
           "type": "number",
+          "description": "Spin period (seconds)",
           "x-flatbuffer-type": "double"
+        },
+        "ATTITUDE_UNC": {
+          "type": "number",
+          "description": "Attitude uncertainty (degrees, 1-sigma)",
+          "x-flatbuffer-type": "double"
+        },
+        "RATE_UNC": {
+          "type": "number",
+          "description": "Rate uncertainty (deg/s, 1-sigma)",
+          "x-flatbuffer-type": "double"
+        },
+        "QUALITY": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Data quality (0-9, 9=best)",
+          "x-flatbuffer-type": "uint8"
+        },
+        "REF_FRAME": {
+          "type": "string",
+          "description": "Reference frame for attitude",
+          "x-flatbuffer-type": "string"
+        },
+        "SENSOR_ID": {
+          "type": "string",
+          "description": "Sensor identifier providing the observation",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

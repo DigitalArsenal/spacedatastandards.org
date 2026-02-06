@@ -29,6 +29,9 @@ class MNV : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Unique identifier
+     */
     val ID : String?
         get() {
             val o = __offset(4)
@@ -40,12 +43,18 @@ class MNV : Table() {
         }
     val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val SAT_NO : Int
+    /**
+     * Satellite catalog number
+     */
+    val SAT_NO : UInt
         get() {
             val o = __offset(6)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
-    val REPORT_TIME : String?
+    /**
+     * International designator
+     */
+    val ORIG_OBJECT_ID : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -54,9 +63,12 @@ class MNV : Table() {
                 null
             }
         }
-    val REPORT_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun REPORT_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val EVENT_START_TIME : String?
+    val ORIG_OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
+    fun ORIG_OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    /**
+     * On-orbit reference
+     */
+    val ON_ORBIT : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -65,36 +77,36 @@ class MNV : Table() {
                 null
             }
         }
-    val EVENT_START_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun EVENT_START_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    val EVENT_END_TIME : String?
+    val ON_ORBITAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
+    fun ON_ORBITInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    /**
+     * Maneuver status
+     */
+    val STATUS : Byte
         get() {
             val o = __offset(12)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val EVENT_END_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun EVENT_END_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
-    val TOTAL_BURN_TIME : Double
+    /**
+     * Maneuver characterization
+     */
+    val CHARACTERIZATION : Byte
         get() {
             val o = __offset(14)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val OD_FIT_END_TIME : String?
+    /**
+     * Characterization uncertainty (0-1)
+     */
+    val CHARACTERIZATION_UNC : Double
         get() {
             val o = __offset(16)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val OD_FIT_END_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun OD_FIT_END_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
-    val ID_SENSOR : String?
+    /**
+     * Detection report time (ISO 8601)
+     */
+    val REPORT_TIME : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -103,35 +115,62 @@ class MNV : Table() {
                 null
             }
         }
-    val ID_SENSORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun ID_SENSORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
-    val UCT : Boolean
+    val REPORT_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
+    fun REPORT_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    /**
+     * Maneuver start time (ISO 8601)
+     */
+    val EVENT_START_TIME : String?
         get() {
             val o = __offset(20)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
-        }
-    val MANEUVER_UNC : Double
-        get() {
-            val o = __offset(22)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val CHARACTERIZATION : String?
-        get() {
-            val o = __offset(24)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val CHARACTERIZATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun CHARACTERIZATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
-    val CHARACTERIZATION_UNC : Double
+    val EVENT_START_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
+    fun EVENT_START_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    /**
+     * Maneuver end time (ISO 8601)
+     */
+    val EVENT_END_TIME : String?
         get() {
-            val o = __offset(26)
+            val o = __offset(22)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val EVENT_END_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
+    fun EVENT_END_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    /**
+     * Total burn time (seconds)
+     */
+    val TOTAL_BURN_TIME : Double
+        get() {
+            val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val EVENT_ID : String?
+    /**
+     * OD fit end time (ISO 8601)
+     */
+    val OD_FIT_END_TIME : String?
+        get() {
+            val o = __offset(26)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val OD_FIT_END_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
+    fun OD_FIT_END_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    /**
+     * Detecting sensor identifier
+     */
+    val ID_SENSOR : String?
         get() {
             val o = __offset(28)
             return if (o != 0) {
@@ -140,9 +179,12 @@ class MNV : Table() {
                 null
             }
         }
-    val EVENT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun EVENT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
-    val ORIG_OBJECT_ID : String?
+    val ID_SENSORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
+    fun ID_SENSORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    /**
+     * Original sensor identifier
+     */
+    val ORIG_SENSOR_ID : String?
         get() {
             val o = __offset(30)
             return if (o != 0) {
@@ -151,9 +193,12 @@ class MNV : Table() {
                 null
             }
         }
-    val ORIG_OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
-    fun ORIG_OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
-    val ORIG_SENSOR_ID : String?
+    val ORIG_SENSOR_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
+    fun ORIG_SENSOR_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    /**
+     * Maneuver event identifier
+     */
+    val EVENT_ID : String?
         get() {
             val o = __offset(32)
             return if (o != 0) {
@@ -162,424 +207,196 @@ class MNV : Table() {
                 null
             }
         }
-    val ORIG_SENSOR_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
-    fun ORIG_SENSOR_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
-    val STATUS : String?
+    val EVENT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
+    fun EVENT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
+    /**
+     * True if object is uncorrelated
+     */
+    val UCT : Boolean
         get() {
             val o = __offset(34)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val STATUSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun STATUSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
-    val DELTA_POS : Double
+    /**
+     * Maneuver detection uncertainty (km)
+     */
+    val MANEUVER_UNC : Double
         get() {
             val o = __offset(36)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val DELTA_POS_U : Double
+    /**
+     * Total delta-V magnitude (km/s)
+     */
+    val DELTA_VEL : Double
         get() {
             val o = __offset(38)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val DELTA_POS_V : Double
+    /**
+     * Delta-V along-track/U component (km/s)
+     */
+    val DELTA_VEL_U : Double
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val DELTA_POS_W : Double
+    /**
+     * Delta-V cross-track/V component (km/s)
+     */
+    val DELTA_VEL_V : Double
         get() {
             val o = __offset(42)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val DELTA_VEL : Double
+    /**
+     * Delta-V radial/W component (km/s)
+     */
+    val DELTA_VEL_W : Double
         get() {
             val o = __offset(44)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val DELTA_VEL_U : Double
+    /**
+     * Total delta position (km)
+     */
+    val DELTA_POS : Double
         get() {
             val o = __offset(46)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val DELTA_VEL_V : Double
+    /**
+     * Delta position U component (km)
+     */
+    val DELTA_POS_U : Double
         get() {
             val o = __offset(48)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val DELTA_VEL_W : Double
+    /**
+     * Delta position V component (km)
+     */
+    val DELTA_POS_V : Double
         get() {
             val o = __offset(50)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val DELTA_MASS : Double
+    /**
+     * Delta position W component (km)
+     */
+    val DELTA_POS_W : Double
         get() {
             val o = __offset(52)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val PRE_EVENT_ID_ELSET : String?
+    /**
+     * Propellant mass consumed (kg)
+     */
+    val DELTA_MASS : Double
         get() {
             val o = __offset(54)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val PRE_EVENT_ID_ELSETAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(54, 1)
-    fun PRE_EVENT_ID_ELSETInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 54, 1)
-    val PRE_EVENT_ELSET : String?
-        get() {
-            val o = __offset(56)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val PRE_EVENT_ELSETAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(56, 1)
-    fun PRE_EVENT_ELSETInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 56, 1)
-    val PRE_EVENT_ID_STATE_VECTOR : String?
-        get() {
-            val o = __offset(58)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val PRE_EVENT_ID_STATE_VECTORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(58, 1)
-    fun PRE_EVENT_ID_STATE_VECTORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 58, 1)
-    val PRE_EVENT_STATE_VECTOR : String?
-        get() {
-            val o = __offset(60)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val PRE_EVENT_STATE_VECTORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(60, 1)
-    fun PRE_EVENT_STATE_VECTORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 60, 1)
-    val PRE_POS_X : Double
-        get() {
-            val o = __offset(62)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val PRE_POS_Y : Double
-        get() {
-            val o = __offset(64)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val PRE_POS_Z : Double
-        get() {
-            val o = __offset(66)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val PRE_VEL_X : Double
-        get() {
-            val o = __offset(68)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val PRE_VEL_Y : Double
-        get() {
-            val o = __offset(70)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val PRE_VEL_Z : Double
-        get() {
-            val o = __offset(72)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val PRE_RADIATION_PRESS_COEFF : Double
-        get() {
-            val o = __offset(74)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val PRE_BALLISTIC_COEFF : Double
-        get() {
-            val o = __offset(76)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val PRE_APOGEE : Double
-        get() {
-            val o = __offset(78)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val PRE_PERIGEE : Double
-        get() {
-            val o = __offset(80)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val PRE_INCLINATION : Double
-        get() {
-            val o = __offset(82)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val PRE_ECCENTRICITY : Double
-        get() {
-            val o = __offset(84)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val PRE_PERIOD : Double
-        get() {
-            val o = __offset(86)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val PRE_RAAN : Double
-        get() {
-            val o = __offset(88)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val PRE_SMA : Double
-        get() {
-            val o = __offset(90)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val PRE_GEO_LONGITUDE : Double
-        get() {
-            val o = __offset(92)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val PRE_DRIFT_RATE : Double
-        get() {
-            val o = __offset(94)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val PRE_SIGMA_U : Double
-        get() {
-            val o = __offset(96)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val PRE_SIGMA_V : Double
-        get() {
-            val o = __offset(98)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val PRE_SIGMA_W : Double
-        get() {
-            val o = __offset(100)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val POST_EVENT_ID_ELSET : String?
-        get() {
-            val o = __offset(102)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val POST_EVENT_ID_ELSETAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(102, 1)
-    fun POST_EVENT_ID_ELSETInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 102, 1)
-    val POST_EVENT_ELSET : String?
-        get() {
-            val o = __offset(104)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val POST_EVENT_ELSETAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(104, 1)
-    fun POST_EVENT_ELSETInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 104, 1)
-    val POST_EVENT_ID_STATE_VECTOR : String?
-        get() {
-            val o = __offset(106)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val POST_EVENT_ID_STATE_VECTORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(106, 1)
-    fun POST_EVENT_ID_STATE_VECTORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 106, 1)
-    val POST_EVENT_STATE_VECTOR : String?
-        get() {
-            val o = __offset(108)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val POST_EVENT_STATE_VECTORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(108, 1)
-    fun POST_EVENT_STATE_VECTORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 108, 1)
-    val POST_POS_X : Double
-        get() {
-            val o = __offset(110)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val POST_POS_Y : Double
-        get() {
-            val o = __offset(112)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val POST_POS_Z : Double
-        get() {
-            val o = __offset(114)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val POST_VEL_X : Double
-        get() {
-            val o = __offset(116)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val POST_VEL_Y : Double
-        get() {
-            val o = __offset(118)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val POST_VEL_Z : Double
-        get() {
-            val o = __offset(120)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val POST_RADIATION_PRESS_COEFF : Double
-        get() {
-            val o = __offset(122)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val POST_BALLISTIC_COEFF : Double
-        get() {
-            val o = __offset(124)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val POST_APOGEE : Double
-        get() {
-            val o = __offset(126)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val POST_PERIGEE : Double
-        get() {
-            val o = __offset(128)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val POST_INCLINATION : Double
-        get() {
-            val o = __offset(130)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val POST_ECCENTRICITY : Double
-        get() {
-            val o = __offset(132)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val POST_PERIOD : Double
-        get() {
-            val o = __offset(134)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val POST_RAAN : Double
-        get() {
-            val o = __offset(136)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val POST_SMA : Double
-        get() {
-            val o = __offset(138)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val POST_GEO_LONGITUDE : Double
-        get() {
-            val o = __offset(140)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val POST_DRIFT_RATE : Double
-        get() {
-            val o = __offset(142)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val POST_SIGMA_U : Double
-        get() {
-            val o = __offset(144)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val POST_SIGMA_V : Double
-        get() {
-            val o = __offset(146)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val POST_SIGMA_W : Double
-        get() {
-            val o = __offset(148)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    fun COV(j: Int) : String? {
-        val o = __offset(150)
+    /**
+     * Pre-maneuver orbital state
+     */
+    val PRE_EVENT : mnvOrbitalState? get() = PRE_EVENT(mnvOrbitalState())
+    fun PRE_EVENT(obj: mnvOrbitalState) : mnvOrbitalState? {
+        val o = __offset(56)
         return if (o != 0) {
-            __string(__vector(o) + j * 4)
+            obj.__assign(__indirect(o + bb_pos), bb)
         } else {
             null
         }
     }
-    val COVLength : Int
-        get() {
-            val o = __offset(150); return if (o != 0) __vector_len(o) else 0
+    /**
+     * Post-maneuver orbital state
+     */
+    val POST_EVENT : mnvOrbitalState? get() = POST_EVENT(mnvOrbitalState())
+    fun POST_EVENT(obj: mnvOrbitalState) : mnvOrbitalState? {
+        val o = __offset(58)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
         }
+    }
+    /**
+     * Post-maneuver mass (kg)
+     */
     val POST_MASS : Double
         get() {
-            val o = __offset(152)
+            val o = __offset(60)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Post-maneuver cross-sectional area (m^2)
+     */
     val POST_AREA : Double
         get() {
-            val o = __offset(154)
+            val o = __offset(62)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val NUM_OBS : Int
-        get() {
-            val o = __offset(156)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+    /**
+     * 6x6 covariance matrix (upper triangle, row-major)
+     */
+    fun COV(j: Int) : Double {
+        val o = __offset(64)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
         }
-    val DESCRIPTION : String?
+    }
+    val COVLength : Int
         get() {
-            val o = __offset(158)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            val o = __offset(64); return if (o != 0) __vector_len(o) else 0
         }
-    val DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(158, 1)
-    fun DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 158, 1)
-    val DESCRIPTOR : String?
+    val COVAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(64, 8)
+    fun COVInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 64, 8)
+    /**
+     * Number of observations used
+     */
+    val NUM_OBS : UInt
         get() {
-            val o = __offset(160)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            val o = __offset(66)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
-    val DESCRIPTORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(160, 1)
-    fun DESCRIPTORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 160, 1)
+    /**
+     * State model used
+     */
     val STATE_MODEL : String?
         get() {
-            val o = __offset(162)
+            val o = __offset(68)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val STATE_MODELAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(162, 1)
-    fun STATE_MODELInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 162, 1)
+    val STATE_MODELAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(68, 1)
+    fun STATE_MODELInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 68, 1)
+    /**
+     * State model version
+     */
     val STATE_MODEL_VERSION : Double
         get() {
-            val o = __offset(164)
+            val o = __offset(70)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val NUM_ACCEL_POINTS : Int
+    /**
+     * Number of acceleration profile points
+     */
+    val NUM_ACCEL_POINTS : UShort
         get() {
-            val o = __offset(166)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            val o = __offset(72)
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
+    /**
+     * Acceleration profile times (ISO 8601)
+     */
     fun MNVR_ACCEL_TIMES(j: Int) : String? {
-        val o = __offset(168)
+        val o = __offset(74)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -588,34 +405,89 @@ class MNV : Table() {
     }
     val MNVR_ACCEL_TIMESLength : Int
         get() {
-            val o = __offset(168); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(74); return if (o != 0) __vector_len(o) else 0
         }
-    fun MNVR_ACCELS(j: Int) : String? {
-        val o = __offset(170)
+    /**
+     * Acceleration values (km/s^2, 3 components per point)
+     */
+    fun MNVR_ACCELS(j: Int) : Double {
+        val o = __offset(76)
         return if (o != 0) {
-            __string(__vector(o) + j * 4)
+            bb.getDouble(__vector(o) + j * 8)
         } else {
-            null
+            0.0
         }
     }
     val MNVR_ACCELSLength : Int
         get() {
-            val o = __offset(170); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(76); return if (o != 0) __vector_len(o) else 0
         }
-    fun MNVR_ACCEL_UNCS(j: Int) : String? {
-        val o = __offset(172)
+    val MNVR_ACCELSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(76, 8)
+    fun MNVR_ACCELSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 76, 8)
+    /**
+     * Acceleration uncertainties (km/s^2)
+     */
+    fun MNVR_ACCEL_UNCS(j: Int) : Double {
+        val o = __offset(78)
         return if (o != 0) {
-            __string(__vector(o) + j * 4)
+            bb.getDouble(__vector(o) + j * 8)
         } else {
-            null
+            0.0
         }
     }
     val MNVR_ACCEL_UNCSLength : Int
         get() {
-            val o = __offset(172); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(78); return if (o != 0) __vector_len(o) else 0
         }
+    val MNVR_ACCEL_UNCSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(78, 8)
+    fun MNVR_ACCEL_UNCSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 78, 8)
+    /**
+     * Description
+     */
+    val DESCRIPTION : String?
+        get() {
+            val o = __offset(80)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(80, 1)
+    fun DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 80, 1)
+    /**
+     * Event descriptor
+     */
+    val DESCRIPTOR : String?
+        get() {
+            val o = __offset(82)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val DESCRIPTORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(82, 1)
+    fun DESCRIPTORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 82, 1)
+    /**
+     * Algorithm used for detection
+     */
+    val ALGORITHM : String?
+        get() {
+            val o = __offset(84)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val ALGORITHMAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(84, 1)
+    fun ALGORITHMInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 84, 1)
+    /**
+     * Associated tags
+     */
     fun TAGS(j: Int) : String? {
-        val o = __offset(174)
+        val o = __offset(86)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -624,21 +496,13 @@ class MNV : Table() {
     }
     val TAGSLength : Int
         get() {
-            val o = __offset(174); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(86); return if (o != 0) __vector_len(o) else 0
         }
-    val ALGORITHM : String?
-        get() {
-            val o = __offset(176)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val ALGORITHMAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(176, 1)
-    fun ALGORITHMInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 176, 1)
+    /**
+     * Sourced data references
+     */
     fun SOURCED_DATA(j: Int) : String? {
-        val o = __offset(178)
+        val o = __offset(88)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -647,41 +511,36 @@ class MNV : Table() {
     }
     val SOURCED_DATALength : Int
         get() {
-            val o = __offset(178); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(88); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Sourced data types
+     */
     val SOURCED_DATA_TYPES : String?
         get() {
-            val o = __offset(180)
+            val o = __offset(90)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val SOURCED_DATA_TYPESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(180, 1)
-    fun SOURCED_DATA_TYPESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 180, 1)
-    val ON_ORBIT : String?
-        get() {
-            val o = __offset(182)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val ON_ORBITAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(182, 1)
-    fun ON_ORBITInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 182, 1)
+    val SOURCED_DATA_TYPESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(90, 1)
+    fun SOURCED_DATA_TYPESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 90, 1)
+    /**
+     * Transaction identifier
+     */
     val TRANSACTION_ID : String?
         get() {
-            val o = __offset(184)
+            val o = __offset(92)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val TRANSACTION_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(184, 1)
-    fun TRANSACTION_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 184, 1)
+    val TRANSACTION_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(92, 1)
+    fun TRANSACTION_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 92, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsMNV(_bb: ByteBuffer): MNV = getRootAsMNV(_bb, MNV())
@@ -690,193 +549,100 @@ class MNV : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun MNVBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$MNV")
-        fun createMNV(builder: FlatBufferBuilder, IDOffset: Int, SAT_NO: Int, REPORT_TIMEOffset: Int, EVENT_START_TIMEOffset: Int, EVENT_END_TIMEOffset: Int, TOTAL_BURN_TIME: Double, OD_FIT_END_TIMEOffset: Int, ID_SENSOROffset: Int, UCT: Boolean, MANEUVER_UNC: Double, CHARACTERIZATIONOffset: Int, CHARACTERIZATION_UNC: Double, EVENT_IDOffset: Int, ORIG_OBJECT_IDOffset: Int, ORIG_SENSOR_IDOffset: Int, STATUSOffset: Int, DELTA_POS: Double, DELTA_POS_U: Double, DELTA_POS_V: Double, DELTA_POS_W: Double, DELTA_VEL: Double, DELTA_VEL_U: Double, DELTA_VEL_V: Double, DELTA_VEL_W: Double, DELTA_MASS: Double, PRE_EVENT_ID_ELSETOffset: Int, PRE_EVENT_ELSETOffset: Int, PRE_EVENT_ID_STATE_VECTOROffset: Int, PRE_EVENT_STATE_VECTOROffset: Int, PRE_POS_X: Double, PRE_POS_Y: Double, PRE_POS_Z: Double, PRE_VEL_X: Double, PRE_VEL_Y: Double, PRE_VEL_Z: Double, PRE_RADIATION_PRESS_COEFF: Double, PRE_BALLISTIC_COEFF: Double, PRE_APOGEE: Double, PRE_PERIGEE: Double, PRE_INCLINATION: Double, PRE_ECCENTRICITY: Double, PRE_PERIOD: Double, PRE_RAAN: Double, PRE_SMA: Double, PRE_GEO_LONGITUDE: Double, PRE_DRIFT_RATE: Double, PRE_SIGMA_U: Double, PRE_SIGMA_V: Double, PRE_SIGMA_W: Double, POST_EVENT_ID_ELSETOffset: Int, POST_EVENT_ELSETOffset: Int, POST_EVENT_ID_STATE_VECTOROffset: Int, POST_EVENT_STATE_VECTOROffset: Int, POST_POS_X: Double, POST_POS_Y: Double, POST_POS_Z: Double, POST_VEL_X: Double, POST_VEL_Y: Double, POST_VEL_Z: Double, POST_RADIATION_PRESS_COEFF: Double, POST_BALLISTIC_COEFF: Double, POST_APOGEE: Double, POST_PERIGEE: Double, POST_INCLINATION: Double, POST_ECCENTRICITY: Double, POST_PERIOD: Double, POST_RAAN: Double, POST_SMA: Double, POST_GEO_LONGITUDE: Double, POST_DRIFT_RATE: Double, POST_SIGMA_U: Double, POST_SIGMA_V: Double, POST_SIGMA_W: Double, COVOffset: Int, POST_MASS: Double, POST_AREA: Double, NUM_OBS: Int, DESCRIPTIONOffset: Int, DESCRIPTOROffset: Int, STATE_MODELOffset: Int, STATE_MODEL_VERSION: Double, NUM_ACCEL_POINTS: Int, MNVR_ACCEL_TIMESOffset: Int, MNVR_ACCELSOffset: Int, MNVR_ACCEL_UNCSOffset: Int, TAGSOffset: Int, ALGORITHMOffset: Int, SOURCED_DATAOffset: Int, SOURCED_DATA_TYPESOffset: Int, ON_ORBITOffset: Int, TRANSACTION_IDOffset: Int) : Int {
-            builder.startTable(91)
+        fun createMNV(builder: FlatBufferBuilder, IDOffset: Int, SAT_NO: UInt, ORIG_OBJECT_IDOffset: Int, ON_ORBITOffset: Int, STATUS: Byte, CHARACTERIZATION: Byte, CHARACTERIZATION_UNC: Double, REPORT_TIMEOffset: Int, EVENT_START_TIMEOffset: Int, EVENT_END_TIMEOffset: Int, TOTAL_BURN_TIME: Double, OD_FIT_END_TIMEOffset: Int, ID_SENSOROffset: Int, ORIG_SENSOR_IDOffset: Int, EVENT_IDOffset: Int, UCT: Boolean, MANEUVER_UNC: Double, DELTA_VEL: Double, DELTA_VEL_U: Double, DELTA_VEL_V: Double, DELTA_VEL_W: Double, DELTA_POS: Double, DELTA_POS_U: Double, DELTA_POS_V: Double, DELTA_POS_W: Double, DELTA_MASS: Double, PRE_EVENTOffset: Int, POST_EVENTOffset: Int, POST_MASS: Double, POST_AREA: Double, COVOffset: Int, NUM_OBS: UInt, STATE_MODELOffset: Int, STATE_MODEL_VERSION: Double, NUM_ACCEL_POINTS: UShort, MNVR_ACCEL_TIMESOffset: Int, MNVR_ACCELSOffset: Int, MNVR_ACCEL_UNCSOffset: Int, DESCRIPTIONOffset: Int, DESCRIPTOROffset: Int, ALGORITHMOffset: Int, TAGSOffset: Int, SOURCED_DATAOffset: Int, SOURCED_DATA_TYPESOffset: Int, TRANSACTION_IDOffset: Int) : Int {
+            builder.startTable(45)
             addSTATE_MODEL_VERSION(builder, STATE_MODEL_VERSION)
             addPOST_AREA(builder, POST_AREA)
             addPOST_MASS(builder, POST_MASS)
-            addPOST_SIGMA_W(builder, POST_SIGMA_W)
-            addPOST_SIGMA_V(builder, POST_SIGMA_V)
-            addPOST_SIGMA_U(builder, POST_SIGMA_U)
-            addPOST_DRIFT_RATE(builder, POST_DRIFT_RATE)
-            addPOST_GEO_LONGITUDE(builder, POST_GEO_LONGITUDE)
-            addPOST_SMA(builder, POST_SMA)
-            addPOST_RAAN(builder, POST_RAAN)
-            addPOST_PERIOD(builder, POST_PERIOD)
-            addPOST_ECCENTRICITY(builder, POST_ECCENTRICITY)
-            addPOST_INCLINATION(builder, POST_INCLINATION)
-            addPOST_PERIGEE(builder, POST_PERIGEE)
-            addPOST_APOGEE(builder, POST_APOGEE)
-            addPOST_BALLISTIC_COEFF(builder, POST_BALLISTIC_COEFF)
-            addPOST_RADIATION_PRESS_COEFF(builder, POST_RADIATION_PRESS_COEFF)
-            addPOST_VEL_Z(builder, POST_VEL_Z)
-            addPOST_VEL_Y(builder, POST_VEL_Y)
-            addPOST_VEL_X(builder, POST_VEL_X)
-            addPOST_POS_Z(builder, POST_POS_Z)
-            addPOST_POS_Y(builder, POST_POS_Y)
-            addPOST_POS_X(builder, POST_POS_X)
-            addPRE_SIGMA_W(builder, PRE_SIGMA_W)
-            addPRE_SIGMA_V(builder, PRE_SIGMA_V)
-            addPRE_SIGMA_U(builder, PRE_SIGMA_U)
-            addPRE_DRIFT_RATE(builder, PRE_DRIFT_RATE)
-            addPRE_GEO_LONGITUDE(builder, PRE_GEO_LONGITUDE)
-            addPRE_SMA(builder, PRE_SMA)
-            addPRE_RAAN(builder, PRE_RAAN)
-            addPRE_PERIOD(builder, PRE_PERIOD)
-            addPRE_ECCENTRICITY(builder, PRE_ECCENTRICITY)
-            addPRE_INCLINATION(builder, PRE_INCLINATION)
-            addPRE_PERIGEE(builder, PRE_PERIGEE)
-            addPRE_APOGEE(builder, PRE_APOGEE)
-            addPRE_BALLISTIC_COEFF(builder, PRE_BALLISTIC_COEFF)
-            addPRE_RADIATION_PRESS_COEFF(builder, PRE_RADIATION_PRESS_COEFF)
-            addPRE_VEL_Z(builder, PRE_VEL_Z)
-            addPRE_VEL_Y(builder, PRE_VEL_Y)
-            addPRE_VEL_X(builder, PRE_VEL_X)
-            addPRE_POS_Z(builder, PRE_POS_Z)
-            addPRE_POS_Y(builder, PRE_POS_Y)
-            addPRE_POS_X(builder, PRE_POS_X)
             addDELTA_MASS(builder, DELTA_MASS)
-            addDELTA_VEL_W(builder, DELTA_VEL_W)
-            addDELTA_VEL_V(builder, DELTA_VEL_V)
-            addDELTA_VEL_U(builder, DELTA_VEL_U)
-            addDELTA_VEL(builder, DELTA_VEL)
             addDELTA_POS_W(builder, DELTA_POS_W)
             addDELTA_POS_V(builder, DELTA_POS_V)
             addDELTA_POS_U(builder, DELTA_POS_U)
             addDELTA_POS(builder, DELTA_POS)
-            addCHARACTERIZATION_UNC(builder, CHARACTERIZATION_UNC)
+            addDELTA_VEL_W(builder, DELTA_VEL_W)
+            addDELTA_VEL_V(builder, DELTA_VEL_V)
+            addDELTA_VEL_U(builder, DELTA_VEL_U)
+            addDELTA_VEL(builder, DELTA_VEL)
             addMANEUVER_UNC(builder, MANEUVER_UNC)
             addTOTAL_BURN_TIME(builder, TOTAL_BURN_TIME)
+            addCHARACTERIZATION_UNC(builder, CHARACTERIZATION_UNC)
             addTRANSACTION_ID(builder, TRANSACTION_IDOffset)
-            addON_ORBIT(builder, ON_ORBITOffset)
             addSOURCED_DATA_TYPES(builder, SOURCED_DATA_TYPESOffset)
             addSOURCED_DATA(builder, SOURCED_DATAOffset)
-            addALGORITHM(builder, ALGORITHMOffset)
             addTAGS(builder, TAGSOffset)
+            addALGORITHM(builder, ALGORITHMOffset)
+            addDESCRIPTOR(builder, DESCRIPTOROffset)
+            addDESCRIPTION(builder, DESCRIPTIONOffset)
             addMNVR_ACCEL_UNCS(builder, MNVR_ACCEL_UNCSOffset)
             addMNVR_ACCELS(builder, MNVR_ACCELSOffset)
             addMNVR_ACCEL_TIMES(builder, MNVR_ACCEL_TIMESOffset)
-            addNUM_ACCEL_POINTS(builder, NUM_ACCEL_POINTS)
             addSTATE_MODEL(builder, STATE_MODELOffset)
-            addDESCRIPTOR(builder, DESCRIPTOROffset)
-            addDESCRIPTION(builder, DESCRIPTIONOffset)
             addNUM_OBS(builder, NUM_OBS)
             addCOV(builder, COVOffset)
-            addPOST_EVENT_STATE_VECTOR(builder, POST_EVENT_STATE_VECTOROffset)
-            addPOST_EVENT_ID_STATE_VECTOR(builder, POST_EVENT_ID_STATE_VECTOROffset)
-            addPOST_EVENT_ELSET(builder, POST_EVENT_ELSETOffset)
-            addPOST_EVENT_ID_ELSET(builder, POST_EVENT_ID_ELSETOffset)
-            addPRE_EVENT_STATE_VECTOR(builder, PRE_EVENT_STATE_VECTOROffset)
-            addPRE_EVENT_ID_STATE_VECTOR(builder, PRE_EVENT_ID_STATE_VECTOROffset)
-            addPRE_EVENT_ELSET(builder, PRE_EVENT_ELSETOffset)
-            addPRE_EVENT_ID_ELSET(builder, PRE_EVENT_ID_ELSETOffset)
-            addSTATUS(builder, STATUSOffset)
-            addORIG_SENSOR_ID(builder, ORIG_SENSOR_IDOffset)
-            addORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset)
+            addPOST_EVENT(builder, POST_EVENTOffset)
+            addPRE_EVENT(builder, PRE_EVENTOffset)
             addEVENT_ID(builder, EVENT_IDOffset)
-            addCHARACTERIZATION(builder, CHARACTERIZATIONOffset)
+            addORIG_SENSOR_ID(builder, ORIG_SENSOR_IDOffset)
             addID_SENSOR(builder, ID_SENSOROffset)
             addOD_FIT_END_TIME(builder, OD_FIT_END_TIMEOffset)
             addEVENT_END_TIME(builder, EVENT_END_TIMEOffset)
             addEVENT_START_TIME(builder, EVENT_START_TIMEOffset)
             addREPORT_TIME(builder, REPORT_TIMEOffset)
+            addON_ORBIT(builder, ON_ORBITOffset)
+            addORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset)
             addSAT_NO(builder, SAT_NO)
             addID(builder, IDOffset)
+            addNUM_ACCEL_POINTS(builder, NUM_ACCEL_POINTS)
             addUCT(builder, UCT)
+            addCHARACTERIZATION(builder, CHARACTERIZATION)
+            addSTATUS(builder, STATUS)
             return endMNV(builder)
         }
-        fun startMNV(builder: FlatBufferBuilder) = builder.startTable(91)
+        fun startMNV(builder: FlatBufferBuilder) = builder.startTable(45)
         fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: Int) = builder.addInt(1, SAT_NO, 0)
-        fun addREPORT_TIME(builder: FlatBufferBuilder, REPORT_TIME: Int) = builder.addOffset(2, REPORT_TIME, 0)
-        fun addEVENT_START_TIME(builder: FlatBufferBuilder, EVENT_START_TIME: Int) = builder.addOffset(3, EVENT_START_TIME, 0)
-        fun addEVENT_END_TIME(builder: FlatBufferBuilder, EVENT_END_TIME: Int) = builder.addOffset(4, EVENT_END_TIME, 0)
-        fun addTOTAL_BURN_TIME(builder: FlatBufferBuilder, TOTAL_BURN_TIME: Double) = builder.addDouble(5, TOTAL_BURN_TIME, 0.0)
-        fun addOD_FIT_END_TIME(builder: FlatBufferBuilder, OD_FIT_END_TIME: Int) = builder.addOffset(6, OD_FIT_END_TIME, 0)
-        fun addID_SENSOR(builder: FlatBufferBuilder, ID_SENSOR: Int) = builder.addOffset(7, ID_SENSOR, 0)
-        fun addUCT(builder: FlatBufferBuilder, UCT: Boolean) = builder.addBoolean(8, UCT, false)
-        fun addMANEUVER_UNC(builder: FlatBufferBuilder, MANEUVER_UNC: Double) = builder.addDouble(9, MANEUVER_UNC, 0.0)
-        fun addCHARACTERIZATION(builder: FlatBufferBuilder, CHARACTERIZATION: Int) = builder.addOffset(10, CHARACTERIZATION, 0)
-        fun addCHARACTERIZATION_UNC(builder: FlatBufferBuilder, CHARACTERIZATION_UNC: Double) = builder.addDouble(11, CHARACTERIZATION_UNC, 0.0)
-        fun addEVENT_ID(builder: FlatBufferBuilder, EVENT_ID: Int) = builder.addOffset(12, EVENT_ID, 0)
-        fun addORIG_OBJECT_ID(builder: FlatBufferBuilder, ORIG_OBJECT_ID: Int) = builder.addOffset(13, ORIG_OBJECT_ID, 0)
-        fun addORIG_SENSOR_ID(builder: FlatBufferBuilder, ORIG_SENSOR_ID: Int) = builder.addOffset(14, ORIG_SENSOR_ID, 0)
-        fun addSTATUS(builder: FlatBufferBuilder, STATUS: Int) = builder.addOffset(15, STATUS, 0)
-        fun addDELTA_POS(builder: FlatBufferBuilder, DELTA_POS: Double) = builder.addDouble(16, DELTA_POS, 0.0)
-        fun addDELTA_POS_U(builder: FlatBufferBuilder, DELTA_POS_U: Double) = builder.addDouble(17, DELTA_POS_U, 0.0)
-        fun addDELTA_POS_V(builder: FlatBufferBuilder, DELTA_POS_V: Double) = builder.addDouble(18, DELTA_POS_V, 0.0)
-        fun addDELTA_POS_W(builder: FlatBufferBuilder, DELTA_POS_W: Double) = builder.addDouble(19, DELTA_POS_W, 0.0)
-        fun addDELTA_VEL(builder: FlatBufferBuilder, DELTA_VEL: Double) = builder.addDouble(20, DELTA_VEL, 0.0)
-        fun addDELTA_VEL_U(builder: FlatBufferBuilder, DELTA_VEL_U: Double) = builder.addDouble(21, DELTA_VEL_U, 0.0)
-        fun addDELTA_VEL_V(builder: FlatBufferBuilder, DELTA_VEL_V: Double) = builder.addDouble(22, DELTA_VEL_V, 0.0)
-        fun addDELTA_VEL_W(builder: FlatBufferBuilder, DELTA_VEL_W: Double) = builder.addDouble(23, DELTA_VEL_W, 0.0)
-        fun addDELTA_MASS(builder: FlatBufferBuilder, DELTA_MASS: Double) = builder.addDouble(24, DELTA_MASS, 0.0)
-        fun addPRE_EVENT_ID_ELSET(builder: FlatBufferBuilder, PRE_EVENT_ID_ELSET: Int) = builder.addOffset(25, PRE_EVENT_ID_ELSET, 0)
-        fun addPRE_EVENT_ELSET(builder: FlatBufferBuilder, PRE_EVENT_ELSET: Int) = builder.addOffset(26, PRE_EVENT_ELSET, 0)
-        fun addPRE_EVENT_ID_STATE_VECTOR(builder: FlatBufferBuilder, PRE_EVENT_ID_STATE_VECTOR: Int) = builder.addOffset(27, PRE_EVENT_ID_STATE_VECTOR, 0)
-        fun addPRE_EVENT_STATE_VECTOR(builder: FlatBufferBuilder, PRE_EVENT_STATE_VECTOR: Int) = builder.addOffset(28, PRE_EVENT_STATE_VECTOR, 0)
-        fun addPRE_POS_X(builder: FlatBufferBuilder, PRE_POS_X: Double) = builder.addDouble(29, PRE_POS_X, 0.0)
-        fun addPRE_POS_Y(builder: FlatBufferBuilder, PRE_POS_Y: Double) = builder.addDouble(30, PRE_POS_Y, 0.0)
-        fun addPRE_POS_Z(builder: FlatBufferBuilder, PRE_POS_Z: Double) = builder.addDouble(31, PRE_POS_Z, 0.0)
-        fun addPRE_VEL_X(builder: FlatBufferBuilder, PRE_VEL_X: Double) = builder.addDouble(32, PRE_VEL_X, 0.0)
-        fun addPRE_VEL_Y(builder: FlatBufferBuilder, PRE_VEL_Y: Double) = builder.addDouble(33, PRE_VEL_Y, 0.0)
-        fun addPRE_VEL_Z(builder: FlatBufferBuilder, PRE_VEL_Z: Double) = builder.addDouble(34, PRE_VEL_Z, 0.0)
-        fun addPRE_RADIATION_PRESS_COEFF(builder: FlatBufferBuilder, PRE_RADIATION_PRESS_COEFF: Double) = builder.addDouble(35, PRE_RADIATION_PRESS_COEFF, 0.0)
-        fun addPRE_BALLISTIC_COEFF(builder: FlatBufferBuilder, PRE_BALLISTIC_COEFF: Double) = builder.addDouble(36, PRE_BALLISTIC_COEFF, 0.0)
-        fun addPRE_APOGEE(builder: FlatBufferBuilder, PRE_APOGEE: Double) = builder.addDouble(37, PRE_APOGEE, 0.0)
-        fun addPRE_PERIGEE(builder: FlatBufferBuilder, PRE_PERIGEE: Double) = builder.addDouble(38, PRE_PERIGEE, 0.0)
-        fun addPRE_INCLINATION(builder: FlatBufferBuilder, PRE_INCLINATION: Double) = builder.addDouble(39, PRE_INCLINATION, 0.0)
-        fun addPRE_ECCENTRICITY(builder: FlatBufferBuilder, PRE_ECCENTRICITY: Double) = builder.addDouble(40, PRE_ECCENTRICITY, 0.0)
-        fun addPRE_PERIOD(builder: FlatBufferBuilder, PRE_PERIOD: Double) = builder.addDouble(41, PRE_PERIOD, 0.0)
-        fun addPRE_RAAN(builder: FlatBufferBuilder, PRE_RAAN: Double) = builder.addDouble(42, PRE_RAAN, 0.0)
-        fun addPRE_SMA(builder: FlatBufferBuilder, PRE_SMA: Double) = builder.addDouble(43, PRE_SMA, 0.0)
-        fun addPRE_GEO_LONGITUDE(builder: FlatBufferBuilder, PRE_GEO_LONGITUDE: Double) = builder.addDouble(44, PRE_GEO_LONGITUDE, 0.0)
-        fun addPRE_DRIFT_RATE(builder: FlatBufferBuilder, PRE_DRIFT_RATE: Double) = builder.addDouble(45, PRE_DRIFT_RATE, 0.0)
-        fun addPRE_SIGMA_U(builder: FlatBufferBuilder, PRE_SIGMA_U: Double) = builder.addDouble(46, PRE_SIGMA_U, 0.0)
-        fun addPRE_SIGMA_V(builder: FlatBufferBuilder, PRE_SIGMA_V: Double) = builder.addDouble(47, PRE_SIGMA_V, 0.0)
-        fun addPRE_SIGMA_W(builder: FlatBufferBuilder, PRE_SIGMA_W: Double) = builder.addDouble(48, PRE_SIGMA_W, 0.0)
-        fun addPOST_EVENT_ID_ELSET(builder: FlatBufferBuilder, POST_EVENT_ID_ELSET: Int) = builder.addOffset(49, POST_EVENT_ID_ELSET, 0)
-        fun addPOST_EVENT_ELSET(builder: FlatBufferBuilder, POST_EVENT_ELSET: Int) = builder.addOffset(50, POST_EVENT_ELSET, 0)
-        fun addPOST_EVENT_ID_STATE_VECTOR(builder: FlatBufferBuilder, POST_EVENT_ID_STATE_VECTOR: Int) = builder.addOffset(51, POST_EVENT_ID_STATE_VECTOR, 0)
-        fun addPOST_EVENT_STATE_VECTOR(builder: FlatBufferBuilder, POST_EVENT_STATE_VECTOR: Int) = builder.addOffset(52, POST_EVENT_STATE_VECTOR, 0)
-        fun addPOST_POS_X(builder: FlatBufferBuilder, POST_POS_X: Double) = builder.addDouble(53, POST_POS_X, 0.0)
-        fun addPOST_POS_Y(builder: FlatBufferBuilder, POST_POS_Y: Double) = builder.addDouble(54, POST_POS_Y, 0.0)
-        fun addPOST_POS_Z(builder: FlatBufferBuilder, POST_POS_Z: Double) = builder.addDouble(55, POST_POS_Z, 0.0)
-        fun addPOST_VEL_X(builder: FlatBufferBuilder, POST_VEL_X: Double) = builder.addDouble(56, POST_VEL_X, 0.0)
-        fun addPOST_VEL_Y(builder: FlatBufferBuilder, POST_VEL_Y: Double) = builder.addDouble(57, POST_VEL_Y, 0.0)
-        fun addPOST_VEL_Z(builder: FlatBufferBuilder, POST_VEL_Z: Double) = builder.addDouble(58, POST_VEL_Z, 0.0)
-        fun addPOST_RADIATION_PRESS_COEFF(builder: FlatBufferBuilder, POST_RADIATION_PRESS_COEFF: Double) = builder.addDouble(59, POST_RADIATION_PRESS_COEFF, 0.0)
-        fun addPOST_BALLISTIC_COEFF(builder: FlatBufferBuilder, POST_BALLISTIC_COEFF: Double) = builder.addDouble(60, POST_BALLISTIC_COEFF, 0.0)
-        fun addPOST_APOGEE(builder: FlatBufferBuilder, POST_APOGEE: Double) = builder.addDouble(61, POST_APOGEE, 0.0)
-        fun addPOST_PERIGEE(builder: FlatBufferBuilder, POST_PERIGEE: Double) = builder.addDouble(62, POST_PERIGEE, 0.0)
-        fun addPOST_INCLINATION(builder: FlatBufferBuilder, POST_INCLINATION: Double) = builder.addDouble(63, POST_INCLINATION, 0.0)
-        fun addPOST_ECCENTRICITY(builder: FlatBufferBuilder, POST_ECCENTRICITY: Double) = builder.addDouble(64, POST_ECCENTRICITY, 0.0)
-        fun addPOST_PERIOD(builder: FlatBufferBuilder, POST_PERIOD: Double) = builder.addDouble(65, POST_PERIOD, 0.0)
-        fun addPOST_RAAN(builder: FlatBufferBuilder, POST_RAAN: Double) = builder.addDouble(66, POST_RAAN, 0.0)
-        fun addPOST_SMA(builder: FlatBufferBuilder, POST_SMA: Double) = builder.addDouble(67, POST_SMA, 0.0)
-        fun addPOST_GEO_LONGITUDE(builder: FlatBufferBuilder, POST_GEO_LONGITUDE: Double) = builder.addDouble(68, POST_GEO_LONGITUDE, 0.0)
-        fun addPOST_DRIFT_RATE(builder: FlatBufferBuilder, POST_DRIFT_RATE: Double) = builder.addDouble(69, POST_DRIFT_RATE, 0.0)
-        fun addPOST_SIGMA_U(builder: FlatBufferBuilder, POST_SIGMA_U: Double) = builder.addDouble(70, POST_SIGMA_U, 0.0)
-        fun addPOST_SIGMA_V(builder: FlatBufferBuilder, POST_SIGMA_V: Double) = builder.addDouble(71, POST_SIGMA_V, 0.0)
-        fun addPOST_SIGMA_W(builder: FlatBufferBuilder, POST_SIGMA_W: Double) = builder.addDouble(72, POST_SIGMA_W, 0.0)
-        fun addCOV(builder: FlatBufferBuilder, COV: Int) = builder.addOffset(73, COV, 0)
-        fun createCovVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
+        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: UInt) = builder.addInt(1, SAT_NO.toInt(), 0)
+        fun addORIG_OBJECT_ID(builder: FlatBufferBuilder, ORIG_OBJECT_ID: Int) = builder.addOffset(2, ORIG_OBJECT_ID, 0)
+        fun addON_ORBIT(builder: FlatBufferBuilder, ON_ORBIT: Int) = builder.addOffset(3, ON_ORBIT, 0)
+        fun addSTATUS(builder: FlatBufferBuilder, STATUS: Byte) = builder.addByte(4, STATUS, 0)
+        fun addCHARACTERIZATION(builder: FlatBufferBuilder, CHARACTERIZATION: Byte) = builder.addByte(5, CHARACTERIZATION, 0)
+        fun addCHARACTERIZATION_UNC(builder: FlatBufferBuilder, CHARACTERIZATION_UNC: Double) = builder.addDouble(6, CHARACTERIZATION_UNC, 0.0)
+        fun addREPORT_TIME(builder: FlatBufferBuilder, REPORT_TIME: Int) = builder.addOffset(7, REPORT_TIME, 0)
+        fun addEVENT_START_TIME(builder: FlatBufferBuilder, EVENT_START_TIME: Int) = builder.addOffset(8, EVENT_START_TIME, 0)
+        fun addEVENT_END_TIME(builder: FlatBufferBuilder, EVENT_END_TIME: Int) = builder.addOffset(9, EVENT_END_TIME, 0)
+        fun addTOTAL_BURN_TIME(builder: FlatBufferBuilder, TOTAL_BURN_TIME: Double) = builder.addDouble(10, TOTAL_BURN_TIME, 0.0)
+        fun addOD_FIT_END_TIME(builder: FlatBufferBuilder, OD_FIT_END_TIME: Int) = builder.addOffset(11, OD_FIT_END_TIME, 0)
+        fun addID_SENSOR(builder: FlatBufferBuilder, ID_SENSOR: Int) = builder.addOffset(12, ID_SENSOR, 0)
+        fun addORIG_SENSOR_ID(builder: FlatBufferBuilder, ORIG_SENSOR_ID: Int) = builder.addOffset(13, ORIG_SENSOR_ID, 0)
+        fun addEVENT_ID(builder: FlatBufferBuilder, EVENT_ID: Int) = builder.addOffset(14, EVENT_ID, 0)
+        fun addUCT(builder: FlatBufferBuilder, UCT: Boolean) = builder.addBoolean(15, UCT, false)
+        fun addMANEUVER_UNC(builder: FlatBufferBuilder, MANEUVER_UNC: Double) = builder.addDouble(16, MANEUVER_UNC, 0.0)
+        fun addDELTA_VEL(builder: FlatBufferBuilder, DELTA_VEL: Double) = builder.addDouble(17, DELTA_VEL, 0.0)
+        fun addDELTA_VEL_U(builder: FlatBufferBuilder, DELTA_VEL_U: Double) = builder.addDouble(18, DELTA_VEL_U, 0.0)
+        fun addDELTA_VEL_V(builder: FlatBufferBuilder, DELTA_VEL_V: Double) = builder.addDouble(19, DELTA_VEL_V, 0.0)
+        fun addDELTA_VEL_W(builder: FlatBufferBuilder, DELTA_VEL_W: Double) = builder.addDouble(20, DELTA_VEL_W, 0.0)
+        fun addDELTA_POS(builder: FlatBufferBuilder, DELTA_POS: Double) = builder.addDouble(21, DELTA_POS, 0.0)
+        fun addDELTA_POS_U(builder: FlatBufferBuilder, DELTA_POS_U: Double) = builder.addDouble(22, DELTA_POS_U, 0.0)
+        fun addDELTA_POS_V(builder: FlatBufferBuilder, DELTA_POS_V: Double) = builder.addDouble(23, DELTA_POS_V, 0.0)
+        fun addDELTA_POS_W(builder: FlatBufferBuilder, DELTA_POS_W: Double) = builder.addDouble(24, DELTA_POS_W, 0.0)
+        fun addDELTA_MASS(builder: FlatBufferBuilder, DELTA_MASS: Double) = builder.addDouble(25, DELTA_MASS, 0.0)
+        fun addPRE_EVENT(builder: FlatBufferBuilder, PRE_EVENT: Int) = builder.addOffset(26, PRE_EVENT, 0)
+        fun addPOST_EVENT(builder: FlatBufferBuilder, POST_EVENT: Int) = builder.addOffset(27, POST_EVENT, 0)
+        fun addPOST_MASS(builder: FlatBufferBuilder, POST_MASS: Double) = builder.addDouble(28, POST_MASS, 0.0)
+        fun addPOST_AREA(builder: FlatBufferBuilder, POST_AREA: Double) = builder.addDouble(29, POST_AREA, 0.0)
+        fun addCOV(builder: FlatBufferBuilder, COV: Int) = builder.addOffset(30, COV, 0)
+        fun createCovVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
+                builder.addDouble(data[i])
             }
             return builder.endVector()
         }
-        fun startCovVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addPOST_MASS(builder: FlatBufferBuilder, POST_MASS: Double) = builder.addDouble(74, POST_MASS, 0.0)
-        fun addPOST_AREA(builder: FlatBufferBuilder, POST_AREA: Double) = builder.addDouble(75, POST_AREA, 0.0)
-        fun addNUM_OBS(builder: FlatBufferBuilder, NUM_OBS: Int) = builder.addInt(76, NUM_OBS, 0)
-        fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(77, DESCRIPTION, 0)
-        fun addDESCRIPTOR(builder: FlatBufferBuilder, DESCRIPTOR: Int) = builder.addOffset(78, DESCRIPTOR, 0)
-        fun addSTATE_MODEL(builder: FlatBufferBuilder, STATE_MODEL: Int) = builder.addOffset(79, STATE_MODEL, 0)
-        fun addSTATE_MODEL_VERSION(builder: FlatBufferBuilder, STATE_MODEL_VERSION: Double) = builder.addDouble(80, STATE_MODEL_VERSION, 0.0)
-        fun addNUM_ACCEL_POINTS(builder: FlatBufferBuilder, NUM_ACCEL_POINTS: Int) = builder.addInt(81, NUM_ACCEL_POINTS, 0)
-        fun addMNVR_ACCEL_TIMES(builder: FlatBufferBuilder, MNVR_ACCEL_TIMES: Int) = builder.addOffset(82, MNVR_ACCEL_TIMES, 0)
+        fun startCovVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addNUM_OBS(builder: FlatBufferBuilder, NUM_OBS: UInt) = builder.addInt(31, NUM_OBS.toInt(), 0)
+        fun addSTATE_MODEL(builder: FlatBufferBuilder, STATE_MODEL: Int) = builder.addOffset(32, STATE_MODEL, 0)
+        fun addSTATE_MODEL_VERSION(builder: FlatBufferBuilder, STATE_MODEL_VERSION: Double) = builder.addDouble(33, STATE_MODEL_VERSION, 0.0)
+        fun addNUM_ACCEL_POINTS(builder: FlatBufferBuilder, NUM_ACCEL_POINTS: UShort) = builder.addShort(34, NUM_ACCEL_POINTS.toShort(), 0)
+        fun addMNVR_ACCEL_TIMES(builder: FlatBufferBuilder, MNVR_ACCEL_TIMES: Int) = builder.addOffset(35, MNVR_ACCEL_TIMES, 0)
         fun createMnvrAccelTimesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -885,25 +651,28 @@ class MNV : Table() {
             return builder.endVector()
         }
         fun startMnvrAccelTimesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addMNVR_ACCELS(builder: FlatBufferBuilder, MNVR_ACCELS: Int) = builder.addOffset(83, MNVR_ACCELS, 0)
-        fun createMnvrAccelsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
+        fun addMNVR_ACCELS(builder: FlatBufferBuilder, MNVR_ACCELS: Int) = builder.addOffset(36, MNVR_ACCELS, 0)
+        fun createMnvrAccelsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
+                builder.addDouble(data[i])
             }
             return builder.endVector()
         }
-        fun startMnvrAccelsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addMNVR_ACCEL_UNCS(builder: FlatBufferBuilder, MNVR_ACCEL_UNCS: Int) = builder.addOffset(84, MNVR_ACCEL_UNCS, 0)
-        fun createMnvrAccelUncsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
+        fun startMnvrAccelsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addMNVR_ACCEL_UNCS(builder: FlatBufferBuilder, MNVR_ACCEL_UNCS: Int) = builder.addOffset(37, MNVR_ACCEL_UNCS, 0)
+        fun createMnvrAccelUncsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
+                builder.addDouble(data[i])
             }
             return builder.endVector()
         }
-        fun startMnvrAccelUncsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addTAGS(builder: FlatBufferBuilder, TAGS: Int) = builder.addOffset(85, TAGS, 0)
+        fun startMnvrAccelUncsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(38, DESCRIPTION, 0)
+        fun addDESCRIPTOR(builder: FlatBufferBuilder, DESCRIPTOR: Int) = builder.addOffset(39, DESCRIPTOR, 0)
+        fun addALGORITHM(builder: FlatBufferBuilder, ALGORITHM: Int) = builder.addOffset(40, ALGORITHM, 0)
+        fun addTAGS(builder: FlatBufferBuilder, TAGS: Int) = builder.addOffset(41, TAGS, 0)
         fun createTagsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -912,8 +681,7 @@ class MNV : Table() {
             return builder.endVector()
         }
         fun startTagsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addALGORITHM(builder: FlatBufferBuilder, ALGORITHM: Int) = builder.addOffset(86, ALGORITHM, 0)
-        fun addSOURCED_DATA(builder: FlatBufferBuilder, SOURCED_DATA: Int) = builder.addOffset(87, SOURCED_DATA, 0)
+        fun addSOURCED_DATA(builder: FlatBufferBuilder, SOURCED_DATA: Int) = builder.addOffset(42, SOURCED_DATA, 0)
         fun createSourcedDataVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -922,9 +690,8 @@ class MNV : Table() {
             return builder.endVector()
         }
         fun startSourcedDataVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSOURCED_DATA_TYPES(builder: FlatBufferBuilder, SOURCED_DATA_TYPES: Int) = builder.addOffset(88, SOURCED_DATA_TYPES, 0)
-        fun addON_ORBIT(builder: FlatBufferBuilder, ON_ORBIT: Int) = builder.addOffset(89, ON_ORBIT, 0)
-        fun addTRANSACTION_ID(builder: FlatBufferBuilder, TRANSACTION_ID: Int) = builder.addOffset(90, TRANSACTION_ID, 0)
+        fun addSOURCED_DATA_TYPES(builder: FlatBufferBuilder, SOURCED_DATA_TYPES: Int) = builder.addOffset(43, SOURCED_DATA_TYPES, 0)
+        fun addTRANSACTION_ID(builder: FlatBufferBuilder, TRANSACTION_ID: Int) = builder.addOffset(44, TRANSACTION_ID, 0)
         fun endMNV(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

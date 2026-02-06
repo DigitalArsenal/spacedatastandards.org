@@ -16,6 +16,48 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct RDO;
 struct RDOBuilder;
 
+enum radarObsType : int8_t {
+  radarObsType_DETECTION = 0,
+  radarObsType_TRACK = 1,
+  radarObsType_METRIC = 2,
+  radarObsType_SIGNATURE = 3,
+  radarObsType_SEARCH_FENCE = 4,
+  radarObsType_UNKNOWN = 5,
+  radarObsType_MIN = radarObsType_DETECTION,
+  radarObsType_MAX = radarObsType_UNKNOWN
+};
+
+inline const radarObsType (&EnumValuesradarObsType())[6] {
+  static const radarObsType values[] = {
+    radarObsType_DETECTION,
+    radarObsType_TRACK,
+    radarObsType_METRIC,
+    radarObsType_SIGNATURE,
+    radarObsType_SEARCH_FENCE,
+    radarObsType_UNKNOWN
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesradarObsType() {
+  static const char * const names[7] = {
+    "DETECTION",
+    "TRACK",
+    "METRIC",
+    "SIGNATURE",
+    "SEARCH_FENCE",
+    "UNKNOWN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameradarObsType(radarObsType e) {
+  if (::flatbuffers::IsOutRange(e, radarObsType_DETECTION, radarObsType_UNKNOWN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesradarObsType()[index];
+}
+
 /// Radar Observation
 struct RDO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef RDOBuilder Builder;
@@ -23,211 +65,263 @@ struct RDO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ID = 4,
     VT_OB_TIME = 6,
     VT_ID_SENSOR = 8,
-    VT_SAT_NO = 10,
-    VT_TASK_ID = 12,
-    VT_TRANSACTION_ID = 14,
-    VT_TRACK_ID = 16,
-    VT_OB_POSITION = 18,
-    VT_ORIG_OBJECT_ID = 20,
-    VT_ORIG_SENSOR_ID = 22,
-    VT_UCT = 24,
-    VT_AZIMUTH = 26,
-    VT_AZIMUTH_UNC = 28,
-    VT_AZIMUTH_BIAS = 30,
-    VT_AZIMUTH_RATE = 32,
-    VT_ELEVATION = 34,
-    VT_ELEVATION_UNC = 36,
-    VT_ELEVATION_BIAS = 38,
-    VT_ELEVATION_RATE = 40,
-    VT_RANGE = 42,
-    VT_RANGE_ACCEL = 44,
-    VT_RANGE_ACCEL_UNC = 46,
-    VT_RANGE_UNC = 48,
-    VT_RANGE_BIAS = 50,
-    VT_RANGE_RATE = 52,
-    VT_RANGE_RATE_UNC = 54,
-    VT_DOPPLER = 56,
-    VT_DOPPLER_UNC = 58,
-    VT_RA = 60,
-    VT_DECLINATION = 62,
-    VT_X = 64,
-    VT_Y = 66,
-    VT_Z = 68,
-    VT_XVEL = 70,
-    VT_YVEL = 72,
-    VT_ZVEL = 74,
-    VT_SENX = 76,
-    VT_SENY = 78,
-    VT_SENZ = 80,
-    VT_RCS = 82,
-    VT_RCS_UNC = 84,
-    VT_ORTHOGONAL_RCS = 86,
-    VT_ORTHOGONAL_RCS_UNC = 88,
-    VT_SNR = 90,
-    VT_BEAM = 92,
-    VT_TIMING_BIAS = 94,
-    VT_RAW_FILE_URI = 96,
-    VT_TAGS = 98,
-    VT_ON_ORBIT = 100,
-    VT_SEN_REFERENCE_FRAME = 102,
+    VT_ORIG_SENSOR_ID = 10,
+    VT_SAT_NO = 12,
+    VT_ORIG_OBJECT_ID = 14,
+    VT_ON_ORBIT = 16,
+    VT_UCT = 18,
+    VT_OBS_TYPE = 20,
+    VT_TASK_ID = 22,
+    VT_TRANSACTION_ID = 24,
+    VT_TRACK_ID = 26,
+    VT_OB_POSITION = 28,
+    VT_SEN_REFERENCE_FRAME = 30,
+    VT_AZIMUTH = 32,
+    VT_AZIMUTH_UNC = 34,
+    VT_AZIMUTH_BIAS = 36,
+    VT_AZIMUTH_RATE = 38,
+    VT_ELEVATION = 40,
+    VT_ELEVATION_UNC = 42,
+    VT_ELEVATION_BIAS = 44,
+    VT_ELEVATION_RATE = 46,
+    VT_RANGE = 48,
+    VT_RANGE_UNC = 50,
+    VT_RANGE_BIAS = 52,
+    VT_RANGE_RATE = 54,
+    VT_RANGE_RATE_UNC = 56,
+    VT_RANGE_ACCEL = 58,
+    VT_RANGE_ACCEL_UNC = 60,
+    VT_DOPPLER = 62,
+    VT_DOPPLER_UNC = 64,
+    VT_RA = 66,
+    VT_DECLINATION = 68,
+    VT_X = 70,
+    VT_Y = 72,
+    VT_Z = 74,
+    VT_XVEL = 76,
+    VT_YVEL = 78,
+    VT_ZVEL = 80,
+    VT_SENX = 82,
+    VT_SENY = 84,
+    VT_SENZ = 86,
+    VT_RCS = 88,
+    VT_RCS_UNC = 90,
+    VT_ORTHOGONAL_RCS = 92,
+    VT_ORTHOGONAL_RCS_UNC = 94,
+    VT_SNR = 96,
+    VT_BEAM = 98,
+    VT_TIMING_BIAS = 100,
+    VT_RAW_FILE_URI = 102,
     VT_DESCRIPTOR = 104,
-    VT_TYPE = 106
+    VT_TAGS = 106
   };
+  /// Unique identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
+  /// Observation time (ISO 8601)
   const ::flatbuffers::String *OB_TIME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OB_TIME);
   }
+  /// Sensor identifier
   const ::flatbuffers::String *ID_SENSOR() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID_SENSOR);
   }
-  int32_t SAT_NO() const {
-    return GetField<int32_t>(VT_SAT_NO, 0);
-  }
-  const ::flatbuffers::String *TASK_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TASK_ID);
-  }
-  const ::flatbuffers::String *TRANSACTION_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TRANSACTION_ID);
-  }
-  const ::flatbuffers::String *TRACK_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TRACK_ID);
-  }
-  const ::flatbuffers::String *OB_POSITION() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OB_POSITION);
-  }
-  const ::flatbuffers::String *ORIG_OBJECT_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ORIG_OBJECT_ID);
-  }
+  /// Original sensor identifier
   const ::flatbuffers::String *ORIG_SENSOR_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIG_SENSOR_ID);
   }
-  bool UCT() const {
-    return GetField<uint8_t>(VT_UCT, 0) != 0;
+  /// Satellite catalog number
+  uint32_t SAT_NO() const {
+    return GetField<uint32_t>(VT_SAT_NO, 0);
   }
-  double AZIMUTH() const {
-    return GetField<double>(VT_AZIMUTH, 0.0);
+  /// International designator
+  const ::flatbuffers::String *ORIG_OBJECT_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ORIG_OBJECT_ID);
   }
-  double AZIMUTH_UNC() const {
-    return GetField<double>(VT_AZIMUTH_UNC, 0.0);
-  }
-  double AZIMUTH_BIAS() const {
-    return GetField<double>(VT_AZIMUTH_BIAS, 0.0);
-  }
-  double AZIMUTH_RATE() const {
-    return GetField<double>(VT_AZIMUTH_RATE, 0.0);
-  }
-  double ELEVATION() const {
-    return GetField<double>(VT_ELEVATION, 0.0);
-  }
-  double ELEVATION_UNC() const {
-    return GetField<double>(VT_ELEVATION_UNC, 0.0);
-  }
-  double ELEVATION_BIAS() const {
-    return GetField<double>(VT_ELEVATION_BIAS, 0.0);
-  }
-  double ELEVATION_RATE() const {
-    return GetField<double>(VT_ELEVATION_RATE, 0.0);
-  }
-  double RANGE() const {
-    return GetField<double>(VT_RANGE, 0.0);
-  }
-  double RANGE_ACCEL() const {
-    return GetField<double>(VT_RANGE_ACCEL, 0.0);
-  }
-  double RANGE_ACCEL_UNC() const {
-    return GetField<double>(VT_RANGE_ACCEL_UNC, 0.0);
-  }
-  double RANGE_UNC() const {
-    return GetField<double>(VT_RANGE_UNC, 0.0);
-  }
-  double RANGE_BIAS() const {
-    return GetField<double>(VT_RANGE_BIAS, 0.0);
-  }
-  double RANGE_RATE() const {
-    return GetField<double>(VT_RANGE_RATE, 0.0);
-  }
-  double RANGE_RATE_UNC() const {
-    return GetField<double>(VT_RANGE_RATE_UNC, 0.0);
-  }
-  double DOPPLER() const {
-    return GetField<double>(VT_DOPPLER, 0.0);
-  }
-  double DOPPLER_UNC() const {
-    return GetField<double>(VT_DOPPLER_UNC, 0.0);
-  }
-  double RA() const {
-    return GetField<double>(VT_RA, 0.0);
-  }
-  double DECLINATION() const {
-    return GetField<double>(VT_DECLINATION, 0.0);
-  }
-  double X() const {
-    return GetField<double>(VT_X, 0.0);
-  }
-  double Y() const {
-    return GetField<double>(VT_Y, 0.0);
-  }
-  double Z() const {
-    return GetField<double>(VT_Z, 0.0);
-  }
-  double XVEL() const {
-    return GetField<double>(VT_XVEL, 0.0);
-  }
-  double YVEL() const {
-    return GetField<double>(VT_YVEL, 0.0);
-  }
-  double ZVEL() const {
-    return GetField<double>(VT_ZVEL, 0.0);
-  }
-  double SENX() const {
-    return GetField<double>(VT_SENX, 0.0);
-  }
-  double SENY() const {
-    return GetField<double>(VT_SENY, 0.0);
-  }
-  double SENZ() const {
-    return GetField<double>(VT_SENZ, 0.0);
-  }
-  double RCS() const {
-    return GetField<double>(VT_RCS, 0.0);
-  }
-  double RCS_UNC() const {
-    return GetField<double>(VT_RCS_UNC, 0.0);
-  }
-  double ORTHOGONAL_RCS() const {
-    return GetField<double>(VT_ORTHOGONAL_RCS, 0.0);
-  }
-  double ORTHOGONAL_RCS_UNC() const {
-    return GetField<double>(VT_ORTHOGONAL_RCS_UNC, 0.0);
-  }
-  double SNR() const {
-    return GetField<double>(VT_SNR, 0.0);
-  }
-  double BEAM() const {
-    return GetField<double>(VT_BEAM, 0.0);
-  }
-  double TIMING_BIAS() const {
-    return GetField<double>(VT_TIMING_BIAS, 0.0);
-  }
-  const ::flatbuffers::String *RAW_FILE_URI() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_RAW_FILE_URI);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_TAGS);
-  }
+  /// On-orbit reference
   const ::flatbuffers::String *ON_ORBIT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ON_ORBIT);
   }
+  /// True if uncorrelated target
+  bool UCT() const {
+    return GetField<uint8_t>(VT_UCT, 0) != 0;
+  }
+  /// Observation type
+  radarObsType OBS_TYPE() const {
+    return static_cast<radarObsType>(GetField<int8_t>(VT_OBS_TYPE, 0));
+  }
+  /// Task identifier
+  const ::flatbuffers::String *TASK_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TASK_ID);
+  }
+  /// Transaction identifier
+  const ::flatbuffers::String *TRANSACTION_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TRANSACTION_ID);
+  }
+  /// Track identifier
+  const ::flatbuffers::String *TRACK_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TRACK_ID);
+  }
+  /// Observation position identifier
+  const ::flatbuffers::String *OB_POSITION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OB_POSITION);
+  }
+  /// Sensor reference frame
   const ::flatbuffers::String *SEN_REFERENCE_FRAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SEN_REFERENCE_FRAME);
   }
+  /// Azimuth angle (degrees)
+  double AZIMUTH() const {
+    return GetField<double>(VT_AZIMUTH, 0.0);
+  }
+  /// Azimuth uncertainty (degrees, 1-sigma)
+  double AZIMUTH_UNC() const {
+    return GetField<double>(VT_AZIMUTH_UNC, 0.0);
+  }
+  /// Azimuth bias (degrees)
+  double AZIMUTH_BIAS() const {
+    return GetField<double>(VT_AZIMUTH_BIAS, 0.0);
+  }
+  /// Azimuth rate (degrees/s)
+  double AZIMUTH_RATE() const {
+    return GetField<double>(VT_AZIMUTH_RATE, 0.0);
+  }
+  /// Elevation angle (degrees)
+  double ELEVATION() const {
+    return GetField<double>(VT_ELEVATION, 0.0);
+  }
+  /// Elevation uncertainty (degrees, 1-sigma)
+  double ELEVATION_UNC() const {
+    return GetField<double>(VT_ELEVATION_UNC, 0.0);
+  }
+  /// Elevation bias (degrees)
+  double ELEVATION_BIAS() const {
+    return GetField<double>(VT_ELEVATION_BIAS, 0.0);
+  }
+  /// Elevation rate (degrees/s)
+  double ELEVATION_RATE() const {
+    return GetField<double>(VT_ELEVATION_RATE, 0.0);
+  }
+  /// Slant range (km)
+  double RANGE() const {
+    return GetField<double>(VT_RANGE, 0.0);
+  }
+  /// Range uncertainty (km, 1-sigma)
+  double RANGE_UNC() const {
+    return GetField<double>(VT_RANGE_UNC, 0.0);
+  }
+  /// Range bias (km)
+  double RANGE_BIAS() const {
+    return GetField<double>(VT_RANGE_BIAS, 0.0);
+  }
+  /// Range rate (km/s)
+  double RANGE_RATE() const {
+    return GetField<double>(VT_RANGE_RATE, 0.0);
+  }
+  /// Range rate uncertainty (km/s, 1-sigma)
+  double RANGE_RATE_UNC() const {
+    return GetField<double>(VT_RANGE_RATE_UNC, 0.0);
+  }
+  /// Range acceleration (km/s^2)
+  double RANGE_ACCEL() const {
+    return GetField<double>(VT_RANGE_ACCEL, 0.0);
+  }
+  /// Range acceleration uncertainty (km/s^2, 1-sigma)
+  double RANGE_ACCEL_UNC() const {
+    return GetField<double>(VT_RANGE_ACCEL_UNC, 0.0);
+  }
+  /// Doppler shift (Hz)
+  double DOPPLER() const {
+    return GetField<double>(VT_DOPPLER, 0.0);
+  }
+  /// Doppler uncertainty (Hz, 1-sigma)
+  double DOPPLER_UNC() const {
+    return GetField<double>(VT_DOPPLER_UNC, 0.0);
+  }
+  /// Right ascension (degrees)
+  double RA() const {
+    return GetField<double>(VT_RA, 0.0);
+  }
+  /// Declination (degrees)
+  double DECLINATION() const {
+    return GetField<double>(VT_DECLINATION, 0.0);
+  }
+  /// Target position X (km, ECI)
+  double X() const {
+    return GetField<double>(VT_X, 0.0);
+  }
+  /// Target position Y (km, ECI)
+  double Y() const {
+    return GetField<double>(VT_Y, 0.0);
+  }
+  /// Target position Z (km, ECI)
+  double Z() const {
+    return GetField<double>(VT_Z, 0.0);
+  }
+  /// Target velocity X (km/s, ECI)
+  double XVEL() const {
+    return GetField<double>(VT_XVEL, 0.0);
+  }
+  /// Target velocity Y (km/s, ECI)
+  double YVEL() const {
+    return GetField<double>(VT_YVEL, 0.0);
+  }
+  /// Target velocity Z (km/s, ECI)
+  double ZVEL() const {
+    return GetField<double>(VT_ZVEL, 0.0);
+  }
+  /// Sensor position X (km, ECEF)
+  double SENX() const {
+    return GetField<double>(VT_SENX, 0.0);
+  }
+  /// Sensor position Y (km, ECEF)
+  double SENY() const {
+    return GetField<double>(VT_SENY, 0.0);
+  }
+  /// Sensor position Z (km, ECEF)
+  double SENZ() const {
+    return GetField<double>(VT_SENZ, 0.0);
+  }
+  /// Radar cross-section (dBsm)
+  double RCS() const {
+    return GetField<double>(VT_RCS, 0.0);
+  }
+  /// RCS uncertainty (dBsm, 1-sigma)
+  double RCS_UNC() const {
+    return GetField<double>(VT_RCS_UNC, 0.0);
+  }
+  /// Orthogonal polarization RCS (dBsm)
+  double ORTHOGONAL_RCS() const {
+    return GetField<double>(VT_ORTHOGONAL_RCS, 0.0);
+  }
+  /// Orthogonal RCS uncertainty (dBsm, 1-sigma)
+  double ORTHOGONAL_RCS_UNC() const {
+    return GetField<double>(VT_ORTHOGONAL_RCS_UNC, 0.0);
+  }
+  /// Signal-to-noise ratio (dB)
+  double SNR() const {
+    return GetField<double>(VT_SNR, 0.0);
+  }
+  /// Beam identifier
+  double BEAM() const {
+    return GetField<double>(VT_BEAM, 0.0);
+  }
+  /// Timing bias (seconds)
+  double TIMING_BIAS() const {
+    return GetField<double>(VT_TIMING_BIAS, 0.0);
+  }
+  /// Reference to raw data file
+  const ::flatbuffers::String *RAW_FILE_URI() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_RAW_FILE_URI);
+  }
+  /// Event descriptor
   const ::flatbuffers::String *DESCRIPTOR() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTOR);
   }
-  const ::flatbuffers::String *TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TYPE);
+  /// Associated tags
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_TAGS);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -237,7 +331,15 @@ struct RDO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(OB_TIME()) &&
            VerifyOffset(verifier, VT_ID_SENSOR) &&
            verifier.VerifyString(ID_SENSOR()) &&
-           VerifyField<int32_t>(verifier, VT_SAT_NO, 4) &&
+           VerifyOffset(verifier, VT_ORIG_SENSOR_ID) &&
+           verifier.VerifyString(ORIG_SENSOR_ID()) &&
+           VerifyField<uint32_t>(verifier, VT_SAT_NO, 4) &&
+           VerifyOffset(verifier, VT_ORIG_OBJECT_ID) &&
+           verifier.VerifyString(ORIG_OBJECT_ID()) &&
+           VerifyOffset(verifier, VT_ON_ORBIT) &&
+           verifier.VerifyString(ON_ORBIT()) &&
+           VerifyField<uint8_t>(verifier, VT_UCT, 1) &&
+           VerifyField<int8_t>(verifier, VT_OBS_TYPE, 1) &&
            VerifyOffset(verifier, VT_TASK_ID) &&
            verifier.VerifyString(TASK_ID()) &&
            VerifyOffset(verifier, VT_TRANSACTION_ID) &&
@@ -246,11 +348,8 @@ struct RDO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(TRACK_ID()) &&
            VerifyOffset(verifier, VT_OB_POSITION) &&
            verifier.VerifyString(OB_POSITION()) &&
-           VerifyOffset(verifier, VT_ORIG_OBJECT_ID) &&
-           verifier.VerifyString(ORIG_OBJECT_ID()) &&
-           VerifyOffset(verifier, VT_ORIG_SENSOR_ID) &&
-           verifier.VerifyString(ORIG_SENSOR_ID()) &&
-           VerifyField<uint8_t>(verifier, VT_UCT, 1) &&
+           VerifyOffset(verifier, VT_SEN_REFERENCE_FRAME) &&
+           verifier.VerifyString(SEN_REFERENCE_FRAME()) &&
            VerifyField<double>(verifier, VT_AZIMUTH, 8) &&
            VerifyField<double>(verifier, VT_AZIMUTH_UNC, 8) &&
            VerifyField<double>(verifier, VT_AZIMUTH_BIAS, 8) &&
@@ -260,12 +359,12 @@ struct RDO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_ELEVATION_BIAS, 8) &&
            VerifyField<double>(verifier, VT_ELEVATION_RATE, 8) &&
            VerifyField<double>(verifier, VT_RANGE, 8) &&
-           VerifyField<double>(verifier, VT_RANGE_ACCEL, 8) &&
-           VerifyField<double>(verifier, VT_RANGE_ACCEL_UNC, 8) &&
            VerifyField<double>(verifier, VT_RANGE_UNC, 8) &&
            VerifyField<double>(verifier, VT_RANGE_BIAS, 8) &&
            VerifyField<double>(verifier, VT_RANGE_RATE, 8) &&
            VerifyField<double>(verifier, VT_RANGE_RATE_UNC, 8) &&
+           VerifyField<double>(verifier, VT_RANGE_ACCEL, 8) &&
+           VerifyField<double>(verifier, VT_RANGE_ACCEL_UNC, 8) &&
            VerifyField<double>(verifier, VT_DOPPLER, 8) &&
            VerifyField<double>(verifier, VT_DOPPLER_UNC, 8) &&
            VerifyField<double>(verifier, VT_RA, 8) &&
@@ -288,17 +387,11 @@ struct RDO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_TIMING_BIAS, 8) &&
            VerifyOffset(verifier, VT_RAW_FILE_URI) &&
            verifier.VerifyString(RAW_FILE_URI()) &&
+           VerifyOffset(verifier, VT_DESCRIPTOR) &&
+           verifier.VerifyString(DESCRIPTOR()) &&
            VerifyOffset(verifier, VT_TAGS) &&
            verifier.VerifyVector(TAGS()) &&
            verifier.VerifyVectorOfStrings(TAGS()) &&
-           VerifyOffset(verifier, VT_ON_ORBIT) &&
-           verifier.VerifyString(ON_ORBIT()) &&
-           VerifyOffset(verifier, VT_SEN_REFERENCE_FRAME) &&
-           verifier.VerifyString(SEN_REFERENCE_FRAME()) &&
-           VerifyOffset(verifier, VT_DESCRIPTOR) &&
-           verifier.VerifyString(DESCRIPTOR()) &&
-           VerifyOffset(verifier, VT_TYPE) &&
-           verifier.VerifyString(TYPE()) &&
            verifier.EndTable();
   }
 };
@@ -316,8 +409,23 @@ struct RDOBuilder {
   void add_ID_SENSOR(::flatbuffers::Offset<::flatbuffers::String> ID_SENSOR) {
     fbb_.AddOffset(RDO::VT_ID_SENSOR, ID_SENSOR);
   }
-  void add_SAT_NO(int32_t SAT_NO) {
-    fbb_.AddElement<int32_t>(RDO::VT_SAT_NO, SAT_NO, 0);
+  void add_ORIG_SENSOR_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID) {
+    fbb_.AddOffset(RDO::VT_ORIG_SENSOR_ID, ORIG_SENSOR_ID);
+  }
+  void add_SAT_NO(uint32_t SAT_NO) {
+    fbb_.AddElement<uint32_t>(RDO::VT_SAT_NO, SAT_NO, 0);
+  }
+  void add_ORIG_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID) {
+    fbb_.AddOffset(RDO::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
+  }
+  void add_ON_ORBIT(::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT) {
+    fbb_.AddOffset(RDO::VT_ON_ORBIT, ON_ORBIT);
+  }
+  void add_UCT(bool UCT) {
+    fbb_.AddElement<uint8_t>(RDO::VT_UCT, static_cast<uint8_t>(UCT), 0);
+  }
+  void add_OBS_TYPE(radarObsType OBS_TYPE) {
+    fbb_.AddElement<int8_t>(RDO::VT_OBS_TYPE, static_cast<int8_t>(OBS_TYPE), 0);
   }
   void add_TASK_ID(::flatbuffers::Offset<::flatbuffers::String> TASK_ID) {
     fbb_.AddOffset(RDO::VT_TASK_ID, TASK_ID);
@@ -331,14 +439,8 @@ struct RDOBuilder {
   void add_OB_POSITION(::flatbuffers::Offset<::flatbuffers::String> OB_POSITION) {
     fbb_.AddOffset(RDO::VT_OB_POSITION, OB_POSITION);
   }
-  void add_ORIG_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID) {
-    fbb_.AddOffset(RDO::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
-  }
-  void add_ORIG_SENSOR_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID) {
-    fbb_.AddOffset(RDO::VT_ORIG_SENSOR_ID, ORIG_SENSOR_ID);
-  }
-  void add_UCT(bool UCT) {
-    fbb_.AddElement<uint8_t>(RDO::VT_UCT, static_cast<uint8_t>(UCT), 0);
+  void add_SEN_REFERENCE_FRAME(::flatbuffers::Offset<::flatbuffers::String> SEN_REFERENCE_FRAME) {
+    fbb_.AddOffset(RDO::VT_SEN_REFERENCE_FRAME, SEN_REFERENCE_FRAME);
   }
   void add_AZIMUTH(double AZIMUTH) {
     fbb_.AddElement<double>(RDO::VT_AZIMUTH, AZIMUTH, 0.0);
@@ -367,12 +469,6 @@ struct RDOBuilder {
   void add_RANGE(double RANGE) {
     fbb_.AddElement<double>(RDO::VT_RANGE, RANGE, 0.0);
   }
-  void add_RANGE_ACCEL(double RANGE_ACCEL) {
-    fbb_.AddElement<double>(RDO::VT_RANGE_ACCEL, RANGE_ACCEL, 0.0);
-  }
-  void add_RANGE_ACCEL_UNC(double RANGE_ACCEL_UNC) {
-    fbb_.AddElement<double>(RDO::VT_RANGE_ACCEL_UNC, RANGE_ACCEL_UNC, 0.0);
-  }
   void add_RANGE_UNC(double RANGE_UNC) {
     fbb_.AddElement<double>(RDO::VT_RANGE_UNC, RANGE_UNC, 0.0);
   }
@@ -384,6 +480,12 @@ struct RDOBuilder {
   }
   void add_RANGE_RATE_UNC(double RANGE_RATE_UNC) {
     fbb_.AddElement<double>(RDO::VT_RANGE_RATE_UNC, RANGE_RATE_UNC, 0.0);
+  }
+  void add_RANGE_ACCEL(double RANGE_ACCEL) {
+    fbb_.AddElement<double>(RDO::VT_RANGE_ACCEL, RANGE_ACCEL, 0.0);
+  }
+  void add_RANGE_ACCEL_UNC(double RANGE_ACCEL_UNC) {
+    fbb_.AddElement<double>(RDO::VT_RANGE_ACCEL_UNC, RANGE_ACCEL_UNC, 0.0);
   }
   void add_DOPPLER(double DOPPLER) {
     fbb_.AddElement<double>(RDO::VT_DOPPLER, DOPPLER, 0.0);
@@ -448,20 +550,11 @@ struct RDOBuilder {
   void add_RAW_FILE_URI(::flatbuffers::Offset<::flatbuffers::String> RAW_FILE_URI) {
     fbb_.AddOffset(RDO::VT_RAW_FILE_URI, RAW_FILE_URI);
   }
-  void add_TAGS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS) {
-    fbb_.AddOffset(RDO::VT_TAGS, TAGS);
-  }
-  void add_ON_ORBIT(::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT) {
-    fbb_.AddOffset(RDO::VT_ON_ORBIT, ON_ORBIT);
-  }
-  void add_SEN_REFERENCE_FRAME(::flatbuffers::Offset<::flatbuffers::String> SEN_REFERENCE_FRAME) {
-    fbb_.AddOffset(RDO::VT_SEN_REFERENCE_FRAME, SEN_REFERENCE_FRAME);
-  }
   void add_DESCRIPTOR(::flatbuffers::Offset<::flatbuffers::String> DESCRIPTOR) {
     fbb_.AddOffset(RDO::VT_DESCRIPTOR, DESCRIPTOR);
   }
-  void add_TYPE(::flatbuffers::Offset<::flatbuffers::String> TYPE) {
-    fbb_.AddOffset(RDO::VT_TYPE, TYPE);
+  void add_TAGS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS) {
+    fbb_.AddOffset(RDO::VT_TAGS, TAGS);
   }
   explicit RDOBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -479,14 +572,17 @@ inline ::flatbuffers::Offset<RDO> CreateRDO(
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OB_TIME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ID_SENSOR = 0,
-    int32_t SAT_NO = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID = 0,
+    uint32_t SAT_NO = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT = 0,
+    bool UCT = false,
+    radarObsType OBS_TYPE = radarObsType_DETECTION,
     ::flatbuffers::Offset<::flatbuffers::String> TASK_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TRANSACTION_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TRACK_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OB_POSITION = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID = 0,
-    bool UCT = false,
+    ::flatbuffers::Offset<::flatbuffers::String> SEN_REFERENCE_FRAME = 0,
     double AZIMUTH = 0.0,
     double AZIMUTH_UNC = 0.0,
     double AZIMUTH_BIAS = 0.0,
@@ -496,12 +592,12 @@ inline ::flatbuffers::Offset<RDO> CreateRDO(
     double ELEVATION_BIAS = 0.0,
     double ELEVATION_RATE = 0.0,
     double RANGE = 0.0,
-    double RANGE_ACCEL = 0.0,
-    double RANGE_ACCEL_UNC = 0.0,
     double RANGE_UNC = 0.0,
     double RANGE_BIAS = 0.0,
     double RANGE_RATE = 0.0,
     double RANGE_RATE_UNC = 0.0,
+    double RANGE_ACCEL = 0.0,
+    double RANGE_ACCEL_UNC = 0.0,
     double DOPPLER = 0.0,
     double DOPPLER_UNC = 0.0,
     double RA = 0.0,
@@ -523,11 +619,8 @@ inline ::flatbuffers::Offset<RDO> CreateRDO(
     double BEAM = 0.0,
     double TIMING_BIAS = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> RAW_FILE_URI = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> SEN_REFERENCE_FRAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTOR = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TYPE = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS = 0) {
   RDOBuilder builder_(_fbb);
   builder_.add_TIMING_BIAS(TIMING_BIAS);
   builder_.add_BEAM(BEAM);
@@ -549,12 +642,12 @@ inline ::flatbuffers::Offset<RDO> CreateRDO(
   builder_.add_RA(RA);
   builder_.add_DOPPLER_UNC(DOPPLER_UNC);
   builder_.add_DOPPLER(DOPPLER);
+  builder_.add_RANGE_ACCEL_UNC(RANGE_ACCEL_UNC);
+  builder_.add_RANGE_ACCEL(RANGE_ACCEL);
   builder_.add_RANGE_RATE_UNC(RANGE_RATE_UNC);
   builder_.add_RANGE_RATE(RANGE_RATE);
   builder_.add_RANGE_BIAS(RANGE_BIAS);
   builder_.add_RANGE_UNC(RANGE_UNC);
-  builder_.add_RANGE_ACCEL_UNC(RANGE_ACCEL_UNC);
-  builder_.add_RANGE_ACCEL(RANGE_ACCEL);
   builder_.add_RANGE(RANGE);
   builder_.add_ELEVATION_RATE(ELEVATION_RATE);
   builder_.add_ELEVATION_BIAS(ELEVATION_BIAS);
@@ -564,22 +657,22 @@ inline ::flatbuffers::Offset<RDO> CreateRDO(
   builder_.add_AZIMUTH_BIAS(AZIMUTH_BIAS);
   builder_.add_AZIMUTH_UNC(AZIMUTH_UNC);
   builder_.add_AZIMUTH(AZIMUTH);
-  builder_.add_TYPE(TYPE);
-  builder_.add_DESCRIPTOR(DESCRIPTOR);
-  builder_.add_SEN_REFERENCE_FRAME(SEN_REFERENCE_FRAME);
-  builder_.add_ON_ORBIT(ON_ORBIT);
   builder_.add_TAGS(TAGS);
+  builder_.add_DESCRIPTOR(DESCRIPTOR);
   builder_.add_RAW_FILE_URI(RAW_FILE_URI);
-  builder_.add_ORIG_SENSOR_ID(ORIG_SENSOR_ID);
-  builder_.add_ORIG_OBJECT_ID(ORIG_OBJECT_ID);
+  builder_.add_SEN_REFERENCE_FRAME(SEN_REFERENCE_FRAME);
   builder_.add_OB_POSITION(OB_POSITION);
   builder_.add_TRACK_ID(TRACK_ID);
   builder_.add_TRANSACTION_ID(TRANSACTION_ID);
   builder_.add_TASK_ID(TASK_ID);
+  builder_.add_ON_ORBIT(ON_ORBIT);
+  builder_.add_ORIG_OBJECT_ID(ORIG_OBJECT_ID);
   builder_.add_SAT_NO(SAT_NO);
+  builder_.add_ORIG_SENSOR_ID(ORIG_SENSOR_ID);
   builder_.add_ID_SENSOR(ID_SENSOR);
   builder_.add_OB_TIME(OB_TIME);
   builder_.add_ID(ID);
+  builder_.add_OBS_TYPE(OBS_TYPE);
   builder_.add_UCT(UCT);
   return builder_.Finish();
 }
@@ -589,14 +682,17 @@ inline ::flatbuffers::Offset<RDO> CreateRDODirect(
     const char *ID = nullptr,
     const char *OB_TIME = nullptr,
     const char *ID_SENSOR = nullptr,
-    int32_t SAT_NO = 0,
+    const char *ORIG_SENSOR_ID = nullptr,
+    uint32_t SAT_NO = 0,
+    const char *ORIG_OBJECT_ID = nullptr,
+    const char *ON_ORBIT = nullptr,
+    bool UCT = false,
+    radarObsType OBS_TYPE = radarObsType_DETECTION,
     const char *TASK_ID = nullptr,
     const char *TRANSACTION_ID = nullptr,
     const char *TRACK_ID = nullptr,
     const char *OB_POSITION = nullptr,
-    const char *ORIG_OBJECT_ID = nullptr,
-    const char *ORIG_SENSOR_ID = nullptr,
-    bool UCT = false,
+    const char *SEN_REFERENCE_FRAME = nullptr,
     double AZIMUTH = 0.0,
     double AZIMUTH_UNC = 0.0,
     double AZIMUTH_BIAS = 0.0,
@@ -606,12 +702,12 @@ inline ::flatbuffers::Offset<RDO> CreateRDODirect(
     double ELEVATION_BIAS = 0.0,
     double ELEVATION_RATE = 0.0,
     double RANGE = 0.0,
-    double RANGE_ACCEL = 0.0,
-    double RANGE_ACCEL_UNC = 0.0,
     double RANGE_UNC = 0.0,
     double RANGE_BIAS = 0.0,
     double RANGE_RATE = 0.0,
     double RANGE_RATE_UNC = 0.0,
+    double RANGE_ACCEL = 0.0,
+    double RANGE_ACCEL_UNC = 0.0,
     double DOPPLER = 0.0,
     double DOPPLER_UNC = 0.0,
     double RA = 0.0,
@@ -633,39 +729,38 @@ inline ::flatbuffers::Offset<RDO> CreateRDODirect(
     double BEAM = 0.0,
     double TIMING_BIAS = 0.0,
     const char *RAW_FILE_URI = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS = nullptr,
-    const char *ON_ORBIT = nullptr,
-    const char *SEN_REFERENCE_FRAME = nullptr,
     const char *DESCRIPTOR = nullptr,
-    const char *TYPE = nullptr) {
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto OB_TIME__ = OB_TIME ? _fbb.CreateString(OB_TIME) : 0;
   auto ID_SENSOR__ = ID_SENSOR ? _fbb.CreateString(ID_SENSOR) : 0;
+  auto ORIG_SENSOR_ID__ = ORIG_SENSOR_ID ? _fbb.CreateString(ORIG_SENSOR_ID) : 0;
+  auto ORIG_OBJECT_ID__ = ORIG_OBJECT_ID ? _fbb.CreateString(ORIG_OBJECT_ID) : 0;
+  auto ON_ORBIT__ = ON_ORBIT ? _fbb.CreateString(ON_ORBIT) : 0;
   auto TASK_ID__ = TASK_ID ? _fbb.CreateString(TASK_ID) : 0;
   auto TRANSACTION_ID__ = TRANSACTION_ID ? _fbb.CreateString(TRANSACTION_ID) : 0;
   auto TRACK_ID__ = TRACK_ID ? _fbb.CreateString(TRACK_ID) : 0;
   auto OB_POSITION__ = OB_POSITION ? _fbb.CreateString(OB_POSITION) : 0;
-  auto ORIG_OBJECT_ID__ = ORIG_OBJECT_ID ? _fbb.CreateString(ORIG_OBJECT_ID) : 0;
-  auto ORIG_SENSOR_ID__ = ORIG_SENSOR_ID ? _fbb.CreateString(ORIG_SENSOR_ID) : 0;
-  auto RAW_FILE_URI__ = RAW_FILE_URI ? _fbb.CreateString(RAW_FILE_URI) : 0;
-  auto TAGS__ = TAGS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*TAGS) : 0;
-  auto ON_ORBIT__ = ON_ORBIT ? _fbb.CreateString(ON_ORBIT) : 0;
   auto SEN_REFERENCE_FRAME__ = SEN_REFERENCE_FRAME ? _fbb.CreateString(SEN_REFERENCE_FRAME) : 0;
+  auto RAW_FILE_URI__ = RAW_FILE_URI ? _fbb.CreateString(RAW_FILE_URI) : 0;
   auto DESCRIPTOR__ = DESCRIPTOR ? _fbb.CreateString(DESCRIPTOR) : 0;
-  auto TYPE__ = TYPE ? _fbb.CreateString(TYPE) : 0;
+  auto TAGS__ = TAGS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*TAGS) : 0;
   return CreateRDO(
       _fbb,
       ID__,
       OB_TIME__,
       ID_SENSOR__,
+      ORIG_SENSOR_ID__,
       SAT_NO,
+      ORIG_OBJECT_ID__,
+      ON_ORBIT__,
+      UCT,
+      OBS_TYPE,
       TASK_ID__,
       TRANSACTION_ID__,
       TRACK_ID__,
       OB_POSITION__,
-      ORIG_OBJECT_ID__,
-      ORIG_SENSOR_ID__,
-      UCT,
+      SEN_REFERENCE_FRAME__,
       AZIMUTH,
       AZIMUTH_UNC,
       AZIMUTH_BIAS,
@@ -675,12 +770,12 @@ inline ::flatbuffers::Offset<RDO> CreateRDODirect(
       ELEVATION_BIAS,
       ELEVATION_RATE,
       RANGE,
-      RANGE_ACCEL,
-      RANGE_ACCEL_UNC,
       RANGE_UNC,
       RANGE_BIAS,
       RANGE_RATE,
       RANGE_RATE_UNC,
+      RANGE_ACCEL,
+      RANGE_ACCEL_UNC,
       DOPPLER,
       DOPPLER_UNC,
       RA,
@@ -702,11 +797,8 @@ inline ::flatbuffers::Offset<RDO> CreateRDODirect(
       BEAM,
       TIMING_BIAS,
       RAW_FILE_URI__,
-      TAGS__,
-      ON_ORBIT__,
-      SEN_REFERENCE_FRAME__,
       DESCRIPTOR__,
-      TYPE__);
+      TAGS__);
 }
 
 inline const RDO *GetRDO(const void *buf) {

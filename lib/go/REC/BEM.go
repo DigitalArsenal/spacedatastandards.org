@@ -54,6 +54,7 @@ func (rcv *BEM) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Unique beam identifier
 func (rcv *BEM) ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -62,6 +63,8 @@ func (rcv *BEM) ID() []byte {
 	return nil
 }
 
+/// Unique beam identifier
+/// Beam name or designation
 func (rcv *BEM) BEAM_NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -70,7 +73,9 @@ func (rcv *BEM) BEAM_NAME() []byte {
 	return nil
 }
 
-func (rcv *BEM) NOTES() []byte {
+/// Beam name or designation
+/// Reference to parent entity (satellite/transponder)
+func (rcv *BEM) ID_ENTITY() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -78,25 +83,205 @@ func (rcv *BEM) NOTES() []byte {
 	return nil
 }
 
-func (rcv *BEM) BEAM_CONTOURS(j int) []byte {
+/// Reference to parent entity (satellite/transponder)
+/// Reference to parent antenna
+func (rcv *BEM) ID_ANTENNA() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
 }
 
+/// Reference to parent antenna
+/// Beam type
+func (rcv *BEM) TYPE() beamType {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
+	if o != 0 {
+		return beamType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// Beam type
+func (rcv *BEM) MutateTYPE(n beamType) bool {
+	return rcv._tab.MutateInt8Slot(12, int8(n))
+}
+
+/// Beam polarization
+func (rcv *BEM) POLARIZATION() beamPolarization {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return beamPolarization(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// Beam polarization
+func (rcv *BEM) MutatePOLARIZATION(n beamPolarization) bool {
+	return rcv._tab.MutateInt8Slot(14, int8(n))
+}
+
+/// Peak gain in dBi
+func (rcv *BEM) PEAK_GAIN() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Peak gain in dBi
+func (rcv *BEM) MutatePEAK_GAIN(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+/// Edge-of-coverage gain in dBi
+func (rcv *BEM) EOC_GAIN() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Edge-of-coverage gain in dBi
+func (rcv *BEM) MutateEOC_GAIN(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+/// Beam center latitude in degrees
+func (rcv *BEM) CENTER_LATITUDE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Beam center latitude in degrees
+func (rcv *BEM) MutateCENTER_LATITUDE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(20, n)
+}
+
+/// Beam center longitude in degrees
+func (rcv *BEM) CENTER_LONGITUDE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Beam center longitude in degrees
+func (rcv *BEM) MutateCENTER_LONGITUDE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+/// Beamwidth (3dB) in degrees
+func (rcv *BEM) BEAMWIDTH() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Beamwidth (3dB) in degrees
+func (rcv *BEM) MutateBEAMWIDTH(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+/// Operating frequency in MHz
+func (rcv *BEM) FREQUENCY() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Operating frequency in MHz
+func (rcv *BEM) MutateFREQUENCY(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+/// EIRP at beam center in dBW
+func (rcv *BEM) EIRP() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// EIRP at beam center in dBW
+func (rcv *BEM) MutateEIRP(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+/// G/T at beam center in dB/K
+func (rcv *BEM) G_OVER_T() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// G/T at beam center in dB/K
+func (rcv *BEM) MutateG_OVER_T(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+/// Beam footprint area in km^2
+func (rcv *BEM) FOOTPRINT_AREA() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Beam footprint area in km^2
+func (rcv *BEM) MutateFOOTPRINT_AREA(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+/// Beam contour definitions
+func (rcv *BEM) BEAM_CONTOURS(obj *beamContour, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
 func (rcv *BEM) BEAM_CONTOURSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
+/// Beam contour definitions
+/// Additional notes
+func (rcv *BEM) NOTES() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Additional notes
 func BEMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(4)
+	builder.StartObject(17)
 }
 func BEMAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
@@ -104,14 +289,53 @@ func BEMAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 func BEMAddBEAM_NAME(builder *flatbuffers.Builder, BEAM_NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(BEAM_NAME), 0)
 }
-func BEMAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(NOTES), 0)
+func BEMAddID_ENTITY(builder *flatbuffers.Builder, ID_ENTITY flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ID_ENTITY), 0)
+}
+func BEMAddID_ANTENNA(builder *flatbuffers.Builder, ID_ANTENNA flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ID_ANTENNA), 0)
+}
+func BEMAddTYPE(builder *flatbuffers.Builder, TYPE beamType) {
+	builder.PrependInt8Slot(4, int8(TYPE), 0)
+}
+func BEMAddPOLARIZATION(builder *flatbuffers.Builder, POLARIZATION beamPolarization) {
+	builder.PrependInt8Slot(5, int8(POLARIZATION), 0)
+}
+func BEMAddPEAK_GAIN(builder *flatbuffers.Builder, PEAK_GAIN float64) {
+	builder.PrependFloat64Slot(6, PEAK_GAIN, 0.0)
+}
+func BEMAddEOC_GAIN(builder *flatbuffers.Builder, EOC_GAIN float64) {
+	builder.PrependFloat64Slot(7, EOC_GAIN, 0.0)
+}
+func BEMAddCENTER_LATITUDE(builder *flatbuffers.Builder, CENTER_LATITUDE float64) {
+	builder.PrependFloat64Slot(8, CENTER_LATITUDE, 0.0)
+}
+func BEMAddCENTER_LONGITUDE(builder *flatbuffers.Builder, CENTER_LONGITUDE float64) {
+	builder.PrependFloat64Slot(9, CENTER_LONGITUDE, 0.0)
+}
+func BEMAddBEAMWIDTH(builder *flatbuffers.Builder, BEAMWIDTH float64) {
+	builder.PrependFloat64Slot(10, BEAMWIDTH, 0.0)
+}
+func BEMAddFREQUENCY(builder *flatbuffers.Builder, FREQUENCY float64) {
+	builder.PrependFloat64Slot(11, FREQUENCY, 0.0)
+}
+func BEMAddEIRP(builder *flatbuffers.Builder, EIRP float64) {
+	builder.PrependFloat64Slot(12, EIRP, 0.0)
+}
+func BEMAddG_OVER_T(builder *flatbuffers.Builder, G_OVER_T float64) {
+	builder.PrependFloat64Slot(13, G_OVER_T, 0.0)
+}
+func BEMAddFOOTPRINT_AREA(builder *flatbuffers.Builder, FOOTPRINT_AREA float64) {
+	builder.PrependFloat64Slot(14, FOOTPRINT_AREA, 0.0)
 }
 func BEMAddBEAM_CONTOURS(builder *flatbuffers.Builder, BEAM_CONTOURS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(BEAM_CONTOURS), 0)
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(BEAM_CONTOURS), 0)
 }
 func BEMStartBEAM_CONTOURSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func BEMAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(NOTES), 0)
 }
 func BEMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

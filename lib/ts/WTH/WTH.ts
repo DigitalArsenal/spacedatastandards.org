@@ -31,6 +31,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$WTH');
 }
 
+/**
+ * Unique identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,6 +41,9 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Sensor identifier
+ */
 ID_SENSOR():string|null
 ID_SENSOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID_SENSOR(optionalEncoding?:any):string|Uint8Array|null {
@@ -45,6 +51,9 @@ ID_SENSOR(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Original sensor identifier
+ */
 ORIG_SENSOR_ID():string|null
 ORIG_SENSOR_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ORIG_SENSOR_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -52,6 +61,9 @@ ORIG_SENSOR_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Observation time (ISO 8601)
+ */
 OB_TIME():string|null
 OB_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 OB_TIME(optionalEncoding?:any):string|Uint8Array|null {
@@ -59,113 +71,168 @@ OB_TIME(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-SIG_PWRS(index: number):string
-SIG_PWRS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-SIG_PWRS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
-}
-
-sigPwrsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-NOISE_LVLS(index: number):string
-NOISE_LVLS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-NOISE_LVLS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
-}
-
-noiseLvlsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-SPEC_WIDTHS(index: number):string
-SPEC_WIDTHS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-SPEC_WIDTHS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
-}
-
-specWidthsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 16);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-FIRST_GUESS_AVGS(index: number):string
-FIRST_GUESS_AVGS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-FIRST_GUESS_AVGS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
-}
-
-firstGuessAvgsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 18);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-QC_VALUE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
-}
-
+/**
+ * File creation time (ISO 8601)
+ */
 FILE_CREATION():string|null
 FILE_CREATION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 FILE_CREATION(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
+  const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Quality control value
+ */
+QC_VALUE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Terminal altitude (km)
+ */
 TERM_ALT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
+  const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Average transmit power (dBm)
+ */
 AVG_TX_PWR():number {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Average reflected power (dBm)
+ */
 AVG_REF_PWR():number {
-  const offset = this.bb!.__offset(this.bb_pos, 28);
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Sector number
+ */
 SECTOR_NUM():number {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Number of data elements
+ */
 NUM_ELEMENTS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Checksum
+ */
+CHECKSUM():number {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Signal power values (dBm)
+ */
+SIG_PWRS(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+sigPwrsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+sigPwrsArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Noise level values (dBm)
+ */
+NOISE_LVLS(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+noiseLvlsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+noiseLvlsArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Spectral width values (m/s)
+ */
+SPEC_WIDTHS(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 32);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
 }
 
-TD_AVG_SAMPLE_NUMS(index: number):string
-TD_AVG_SAMPLE_NUMS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-TD_AVG_SAMPLE_NUMS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+specWidthsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+specWidthsArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * First guess average values
+ */
+FIRST_GUESS_AVGS(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 34);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
 }
 
-tdAvgSampleNumsLength():number {
+firstGuessAvgsLength():number {
   const offset = this.bb!.__offset(this.bb_pos, 34);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-CHECKSUM():number {
-  const offset = this.bb!.__offset(this.bb_pos, 36);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+firstGuessAvgsArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
-CO_INTEGS(index: number):string
-CO_INTEGS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-CO_INTEGS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Time domain average sample numbers
+ */
+TD_AVG_SAMPLE_NUMS(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+tdAvgSampleNumsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+tdAvgSampleNumsArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Co-integration values
+ */
+CO_INTEGS(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 38);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
 }
 
 coIntegsLength():number {
@@ -173,11 +240,17 @@ coIntegsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-SPEC_AVGS(index: number):string
-SPEC_AVGS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-SPEC_AVGS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+coIntegsArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Spectral average values
+ */
+SPEC_AVGS(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 40);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
 }
 
 specAvgsLength():number {
@@ -185,11 +258,17 @@ specAvgsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-INTERPULSE_PERIODS(index: number):string
-INTERPULSE_PERIODS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-INTERPULSE_PERIODS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+specAvgsArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Interpulse periods (microseconds)
+ */
+INTERPULSE_PERIODS(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 42);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
 }
 
 interpulsePeriodsLength():number {
@@ -197,11 +276,17 @@ interpulsePeriodsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-DOPP_VELS(index: number):string
-DOPP_VELS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-DOPP_VELS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+interpulsePeriodsArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Doppler velocities (m/s)
+ */
+DOPP_VELS(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 44);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
 }
 
 doppVelsLength():number {
@@ -209,11 +294,17 @@ doppVelsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-CONS_RECS(index: number):string
-CONS_RECS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-CONS_RECS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+doppVelsArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Consecutive records count
+ */
+CONS_RECS(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 46);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
 }
 
 consRecsLength():number {
@@ -221,11 +312,17 @@ consRecsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-SNRS(index: number):string
-SNRS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-SNRS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+consRecsArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Signal-to-noise ratios (dB)
+ */
+SNRS(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 48);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
 }
 
 snrsLength():number {
@@ -233,31 +330,54 @@ snrsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+snrsArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Signal strength (dBm)
+ */
 SIG_STRENGTH():number {
   const offset = this.bb!.__offset(this.bb_pos, 50);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Error ellipse semi-major axis (km)
+ */
 SEMI_MAJOR_AXIS():number {
   const offset = this.bb!.__offset(this.bb_pos, 52);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Error ellipse semi-minor axis (km)
+ */
 SEMI_MINOR_AXIS():number {
   const offset = this.bb!.__offset(this.bb_pos, 54);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Error ellipse orientation angle (degrees)
+ */
 ANGLE_ORIENTATION():number {
   const offset = this.bb!.__offset(this.bb_pos, 56);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Lightning event number
+ */
 LIGHT_EVENT_NUM():number {
   const offset = this.bb!.__offset(this.bb_pos, 58);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Lightning detection sensor identifiers
+ */
 LIGHT_DET_SENSORS(index: number):string
 LIGHT_DET_SENSORS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 LIGHT_DET_SENSORS(index: number,optionalEncoding?:any):string|Uint8Array|null {
@@ -270,11 +390,17 @@ lightDetSensorsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Position confidence (0-1)
+ */
 POS_CONFIDENCE():number {
   const offset = this.bb!.__offset(this.bb_pos, 62);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Source types
+ */
 SRC_TYPS(index: number):string
 SRC_TYPS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 SRC_TYPS(index: number,optionalEncoding?:any):string|Uint8Array|null {
@@ -287,6 +413,9 @@ srcTypsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Source identifiers
+ */
 SRC_IDS(index: number):string
 SRC_IDS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 SRC_IDS(index: number,optionalEncoding?:any):string|Uint8Array|null {
@@ -319,212 +448,267 @@ static addObTime(builder:flatbuffers.Builder, OB_TIMEOffset:flatbuffers.Offset) 
   builder.addFieldOffset(3, OB_TIMEOffset, 0);
 }
 
-static addSigPwrs(builder:flatbuffers.Builder, SIG_PWRSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(4, SIG_PWRSOffset, 0);
+static addFileCreation(builder:flatbuffers.Builder, FILE_CREATIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(4, FILE_CREATIONOffset, 0);
 }
 
-static createSigPwrsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static addQcValue(builder:flatbuffers.Builder, QC_VALUE:number) {
+  builder.addFieldInt8(5, QC_VALUE, 0);
+}
+
+static addTermAlt(builder:flatbuffers.Builder, TERM_ALT:number) {
+  builder.addFieldFloat64(6, TERM_ALT, 0.0);
+}
+
+static addAvgTxPwr(builder:flatbuffers.Builder, AVG_TX_PWR:number) {
+  builder.addFieldFloat64(7, AVG_TX_PWR, 0.0);
+}
+
+static addAvgRefPwr(builder:flatbuffers.Builder, AVG_REF_PWR:number) {
+  builder.addFieldFloat64(8, AVG_REF_PWR, 0.0);
+}
+
+static addSectorNum(builder:flatbuffers.Builder, SECTOR_NUM:number) {
+  builder.addFieldInt16(9, SECTOR_NUM, 0);
+}
+
+static addNumElements(builder:flatbuffers.Builder, NUM_ELEMENTS:number) {
+  builder.addFieldInt16(10, NUM_ELEMENTS, 0);
+}
+
+static addChecksum(builder:flatbuffers.Builder, CHECKSUM:number) {
+  builder.addFieldInt32(11, CHECKSUM, 0);
+}
+
+static addSigPwrs(builder:flatbuffers.Builder, SIG_PWRSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(12, SIG_PWRSOffset, 0);
+}
+
+static createSigPwrsVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createSigPwrsVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createSigPwrsVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
 static startSigPwrsVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+  builder.startVector(8, numElems, 8);
 }
 
 static addNoiseLvls(builder:flatbuffers.Builder, NOISE_LVLSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, NOISE_LVLSOffset, 0);
+  builder.addFieldOffset(13, NOISE_LVLSOffset, 0);
 }
 
-static createNoiseLvlsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static createNoiseLvlsVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createNoiseLvlsVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createNoiseLvlsVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
 static startNoiseLvlsVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+  builder.startVector(8, numElems, 8);
 }
 
 static addSpecWidths(builder:flatbuffers.Builder, SPEC_WIDTHSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(6, SPEC_WIDTHSOffset, 0);
+  builder.addFieldOffset(14, SPEC_WIDTHSOffset, 0);
 }
 
-static createSpecWidthsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static createSpecWidthsVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createSpecWidthsVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createSpecWidthsVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
 static startSpecWidthsVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+  builder.startVector(8, numElems, 8);
 }
 
 static addFirstGuessAvgs(builder:flatbuffers.Builder, FIRST_GUESS_AVGSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(7, FIRST_GUESS_AVGSOffset, 0);
+  builder.addFieldOffset(15, FIRST_GUESS_AVGSOffset, 0);
 }
 
-static createFirstGuessAvgsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static createFirstGuessAvgsVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createFirstGuessAvgsVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createFirstGuessAvgsVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
 static startFirstGuessAvgsVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
-static addQcValue(builder:flatbuffers.Builder, QC_VALUE:number) {
-  builder.addFieldInt32(8, QC_VALUE, 0);
-}
-
-static addFileCreation(builder:flatbuffers.Builder, FILE_CREATIONOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(9, FILE_CREATIONOffset, 0);
-}
-
-static addTermAlt(builder:flatbuffers.Builder, TERM_ALT:number) {
-  builder.addFieldFloat64(10, TERM_ALT, 0.0);
-}
-
-static addAvgTxPwr(builder:flatbuffers.Builder, AVG_TX_PWR:number) {
-  builder.addFieldFloat64(11, AVG_TX_PWR, 0.0);
-}
-
-static addAvgRefPwr(builder:flatbuffers.Builder, AVG_REF_PWR:number) {
-  builder.addFieldFloat64(12, AVG_REF_PWR, 0.0);
-}
-
-static addSectorNum(builder:flatbuffers.Builder, SECTOR_NUM:number) {
-  builder.addFieldInt32(13, SECTOR_NUM, 0);
-}
-
-static addNumElements(builder:flatbuffers.Builder, NUM_ELEMENTS:number) {
-  builder.addFieldInt32(14, NUM_ELEMENTS, 0);
+  builder.startVector(8, numElems, 8);
 }
 
 static addTdAvgSampleNums(builder:flatbuffers.Builder, TD_AVG_SAMPLE_NUMSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(15, TD_AVG_SAMPLE_NUMSOffset, 0);
+  builder.addFieldOffset(16, TD_AVG_SAMPLE_NUMSOffset, 0);
 }
 
-static createTdAvgSampleNumsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static createTdAvgSampleNumsVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createTdAvgSampleNumsVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createTdAvgSampleNumsVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
 static startTdAvgSampleNumsVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
-static addChecksum(builder:flatbuffers.Builder, CHECKSUM:number) {
-  builder.addFieldInt32(16, CHECKSUM, 0);
+  builder.startVector(8, numElems, 8);
 }
 
 static addCoIntegs(builder:flatbuffers.Builder, CO_INTEGSOffset:flatbuffers.Offset) {
   builder.addFieldOffset(17, CO_INTEGSOffset, 0);
 }
 
-static createCoIntegsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static createCoIntegsVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createCoIntegsVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createCoIntegsVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
 static startCoIntegsVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+  builder.startVector(8, numElems, 8);
 }
 
 static addSpecAvgs(builder:flatbuffers.Builder, SPEC_AVGSOffset:flatbuffers.Offset) {
   builder.addFieldOffset(18, SPEC_AVGSOffset, 0);
 }
 
-static createSpecAvgsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static createSpecAvgsVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createSpecAvgsVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createSpecAvgsVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
 static startSpecAvgsVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+  builder.startVector(8, numElems, 8);
 }
 
 static addInterpulsePeriods(builder:flatbuffers.Builder, INTERPULSE_PERIODSOffset:flatbuffers.Offset) {
   builder.addFieldOffset(19, INTERPULSE_PERIODSOffset, 0);
 }
 
-static createInterpulsePeriodsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static createInterpulsePeriodsVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createInterpulsePeriodsVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createInterpulsePeriodsVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
 static startInterpulsePeriodsVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+  builder.startVector(8, numElems, 8);
 }
 
 static addDoppVels(builder:flatbuffers.Builder, DOPP_VELSOffset:flatbuffers.Offset) {
   builder.addFieldOffset(20, DOPP_VELSOffset, 0);
 }
 
-static createDoppVelsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static createDoppVelsVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createDoppVelsVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createDoppVelsVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
 static startDoppVelsVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+  builder.startVector(8, numElems, 8);
 }
 
 static addConsRecs(builder:flatbuffers.Builder, CONS_RECSOffset:flatbuffers.Offset) {
   builder.addFieldOffset(21, CONS_RECSOffset, 0);
 }
 
-static createConsRecsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static createConsRecsVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createConsRecsVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createConsRecsVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
 static startConsRecsVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+  builder.startVector(8, numElems, 8);
 }
 
 static addSnrs(builder:flatbuffers.Builder, SNRSOffset:flatbuffers.Offset) {
   builder.addFieldOffset(22, SNRSOffset, 0);
 }
 
-static createSnrsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static createSnrsVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createSnrsVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createSnrsVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
 static startSnrsVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+  builder.startVector(8, numElems, 8);
 }
 
 static addSigStrength(builder:flatbuffers.Builder, SIG_STRENGTH:number) {
@@ -612,25 +796,25 @@ static finishSizePrefixedWTHBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$WTH', true);
 }
 
-static createWTH(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ID_SENSOROffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, OB_TIMEOffset:flatbuffers.Offset, SIG_PWRSOffset:flatbuffers.Offset, NOISE_LVLSOffset:flatbuffers.Offset, SPEC_WIDTHSOffset:flatbuffers.Offset, FIRST_GUESS_AVGSOffset:flatbuffers.Offset, QC_VALUE:number, FILE_CREATIONOffset:flatbuffers.Offset, TERM_ALT:number, AVG_TX_PWR:number, AVG_REF_PWR:number, SECTOR_NUM:number, NUM_ELEMENTS:number, TD_AVG_SAMPLE_NUMSOffset:flatbuffers.Offset, CHECKSUM:number, CO_INTEGSOffset:flatbuffers.Offset, SPEC_AVGSOffset:flatbuffers.Offset, INTERPULSE_PERIODSOffset:flatbuffers.Offset, DOPP_VELSOffset:flatbuffers.Offset, CONS_RECSOffset:flatbuffers.Offset, SNRSOffset:flatbuffers.Offset, SIG_STRENGTH:number, SEMI_MAJOR_AXIS:number, SEMI_MINOR_AXIS:number, ANGLE_ORIENTATION:number, LIGHT_EVENT_NUM:number, LIGHT_DET_SENSORSOffset:flatbuffers.Offset, POS_CONFIDENCE:number, SRC_TYPSOffset:flatbuffers.Offset, SRC_IDSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createWTH(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ID_SENSOROffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, OB_TIMEOffset:flatbuffers.Offset, FILE_CREATIONOffset:flatbuffers.Offset, QC_VALUE:number, TERM_ALT:number, AVG_TX_PWR:number, AVG_REF_PWR:number, SECTOR_NUM:number, NUM_ELEMENTS:number, CHECKSUM:number, SIG_PWRSOffset:flatbuffers.Offset, NOISE_LVLSOffset:flatbuffers.Offset, SPEC_WIDTHSOffset:flatbuffers.Offset, FIRST_GUESS_AVGSOffset:flatbuffers.Offset, TD_AVG_SAMPLE_NUMSOffset:flatbuffers.Offset, CO_INTEGSOffset:flatbuffers.Offset, SPEC_AVGSOffset:flatbuffers.Offset, INTERPULSE_PERIODSOffset:flatbuffers.Offset, DOPP_VELSOffset:flatbuffers.Offset, CONS_RECSOffset:flatbuffers.Offset, SNRSOffset:flatbuffers.Offset, SIG_STRENGTH:number, SEMI_MAJOR_AXIS:number, SEMI_MINOR_AXIS:number, ANGLE_ORIENTATION:number, LIGHT_EVENT_NUM:number, LIGHT_DET_SENSORSOffset:flatbuffers.Offset, POS_CONFIDENCE:number, SRC_TYPSOffset:flatbuffers.Offset, SRC_IDSOffset:flatbuffers.Offset):flatbuffers.Offset {
   WTH.startWTH(builder);
   WTH.addId(builder, IDOffset);
   WTH.addIdSensor(builder, ID_SENSOROffset);
   WTH.addOrigSensorId(builder, ORIG_SENSOR_IDOffset);
   WTH.addObTime(builder, OB_TIMEOffset);
-  WTH.addSigPwrs(builder, SIG_PWRSOffset);
-  WTH.addNoiseLvls(builder, NOISE_LVLSOffset);
-  WTH.addSpecWidths(builder, SPEC_WIDTHSOffset);
-  WTH.addFirstGuessAvgs(builder, FIRST_GUESS_AVGSOffset);
-  WTH.addQcValue(builder, QC_VALUE);
   WTH.addFileCreation(builder, FILE_CREATIONOffset);
+  WTH.addQcValue(builder, QC_VALUE);
   WTH.addTermAlt(builder, TERM_ALT);
   WTH.addAvgTxPwr(builder, AVG_TX_PWR);
   WTH.addAvgRefPwr(builder, AVG_REF_PWR);
   WTH.addSectorNum(builder, SECTOR_NUM);
   WTH.addNumElements(builder, NUM_ELEMENTS);
-  WTH.addTdAvgSampleNums(builder, TD_AVG_SAMPLE_NUMSOffset);
   WTH.addChecksum(builder, CHECKSUM);
+  WTH.addSigPwrs(builder, SIG_PWRSOffset);
+  WTH.addNoiseLvls(builder, NOISE_LVLSOffset);
+  WTH.addSpecWidths(builder, SPEC_WIDTHSOffset);
+  WTH.addFirstGuessAvgs(builder, FIRST_GUESS_AVGSOffset);
+  WTH.addTdAvgSampleNums(builder, TD_AVG_SAMPLE_NUMSOffset);
   WTH.addCoIntegs(builder, CO_INTEGSOffset);
   WTH.addSpecAvgs(builder, SPEC_AVGSOffset);
   WTH.addInterpulsePeriods(builder, INTERPULSE_PERIODSOffset);
@@ -655,25 +839,25 @@ unpack(): WTHT {
     this.ID_SENSOR(),
     this.ORIG_SENSOR_ID(),
     this.OB_TIME(),
-    this.bb!.createScalarList<string>(this.SIG_PWRS.bind(this), this.sigPwrsLength()),
-    this.bb!.createScalarList<string>(this.NOISE_LVLS.bind(this), this.noiseLvlsLength()),
-    this.bb!.createScalarList<string>(this.SPEC_WIDTHS.bind(this), this.specWidthsLength()),
-    this.bb!.createScalarList<string>(this.FIRST_GUESS_AVGS.bind(this), this.firstGuessAvgsLength()),
-    this.QC_VALUE(),
     this.FILE_CREATION(),
+    this.QC_VALUE(),
     this.TERM_ALT(),
     this.AVG_TX_PWR(),
     this.AVG_REF_PWR(),
     this.SECTOR_NUM(),
     this.NUM_ELEMENTS(),
-    this.bb!.createScalarList<string>(this.TD_AVG_SAMPLE_NUMS.bind(this), this.tdAvgSampleNumsLength()),
     this.CHECKSUM(),
-    this.bb!.createScalarList<string>(this.CO_INTEGS.bind(this), this.coIntegsLength()),
-    this.bb!.createScalarList<string>(this.SPEC_AVGS.bind(this), this.specAvgsLength()),
-    this.bb!.createScalarList<string>(this.INTERPULSE_PERIODS.bind(this), this.interpulsePeriodsLength()),
-    this.bb!.createScalarList<string>(this.DOPP_VELS.bind(this), this.doppVelsLength()),
-    this.bb!.createScalarList<string>(this.CONS_RECS.bind(this), this.consRecsLength()),
-    this.bb!.createScalarList<string>(this.SNRS.bind(this), this.snrsLength()),
+    this.bb!.createScalarList<number>(this.SIG_PWRS.bind(this), this.sigPwrsLength()),
+    this.bb!.createScalarList<number>(this.NOISE_LVLS.bind(this), this.noiseLvlsLength()),
+    this.bb!.createScalarList<number>(this.SPEC_WIDTHS.bind(this), this.specWidthsLength()),
+    this.bb!.createScalarList<number>(this.FIRST_GUESS_AVGS.bind(this), this.firstGuessAvgsLength()),
+    this.bb!.createScalarList<number>(this.TD_AVG_SAMPLE_NUMS.bind(this), this.tdAvgSampleNumsLength()),
+    this.bb!.createScalarList<number>(this.CO_INTEGS.bind(this), this.coIntegsLength()),
+    this.bb!.createScalarList<number>(this.SPEC_AVGS.bind(this), this.specAvgsLength()),
+    this.bb!.createScalarList<number>(this.INTERPULSE_PERIODS.bind(this), this.interpulsePeriodsLength()),
+    this.bb!.createScalarList<number>(this.DOPP_VELS.bind(this), this.doppVelsLength()),
+    this.bb!.createScalarList<number>(this.CONS_RECS.bind(this), this.consRecsLength()),
+    this.bb!.createScalarList<number>(this.SNRS.bind(this), this.snrsLength()),
     this.SIG_STRENGTH(),
     this.SEMI_MAJOR_AXIS(),
     this.SEMI_MINOR_AXIS(),
@@ -692,25 +876,25 @@ unpackTo(_o: WTHT): void {
   _o.ID_SENSOR = this.ID_SENSOR();
   _o.ORIG_SENSOR_ID = this.ORIG_SENSOR_ID();
   _o.OB_TIME = this.OB_TIME();
-  _o.SIG_PWRS = this.bb!.createScalarList<string>(this.SIG_PWRS.bind(this), this.sigPwrsLength());
-  _o.NOISE_LVLS = this.bb!.createScalarList<string>(this.NOISE_LVLS.bind(this), this.noiseLvlsLength());
-  _o.SPEC_WIDTHS = this.bb!.createScalarList<string>(this.SPEC_WIDTHS.bind(this), this.specWidthsLength());
-  _o.FIRST_GUESS_AVGS = this.bb!.createScalarList<string>(this.FIRST_GUESS_AVGS.bind(this), this.firstGuessAvgsLength());
-  _o.QC_VALUE = this.QC_VALUE();
   _o.FILE_CREATION = this.FILE_CREATION();
+  _o.QC_VALUE = this.QC_VALUE();
   _o.TERM_ALT = this.TERM_ALT();
   _o.AVG_TX_PWR = this.AVG_TX_PWR();
   _o.AVG_REF_PWR = this.AVG_REF_PWR();
   _o.SECTOR_NUM = this.SECTOR_NUM();
   _o.NUM_ELEMENTS = this.NUM_ELEMENTS();
-  _o.TD_AVG_SAMPLE_NUMS = this.bb!.createScalarList<string>(this.TD_AVG_SAMPLE_NUMS.bind(this), this.tdAvgSampleNumsLength());
   _o.CHECKSUM = this.CHECKSUM();
-  _o.CO_INTEGS = this.bb!.createScalarList<string>(this.CO_INTEGS.bind(this), this.coIntegsLength());
-  _o.SPEC_AVGS = this.bb!.createScalarList<string>(this.SPEC_AVGS.bind(this), this.specAvgsLength());
-  _o.INTERPULSE_PERIODS = this.bb!.createScalarList<string>(this.INTERPULSE_PERIODS.bind(this), this.interpulsePeriodsLength());
-  _o.DOPP_VELS = this.bb!.createScalarList<string>(this.DOPP_VELS.bind(this), this.doppVelsLength());
-  _o.CONS_RECS = this.bb!.createScalarList<string>(this.CONS_RECS.bind(this), this.consRecsLength());
-  _o.SNRS = this.bb!.createScalarList<string>(this.SNRS.bind(this), this.snrsLength());
+  _o.SIG_PWRS = this.bb!.createScalarList<number>(this.SIG_PWRS.bind(this), this.sigPwrsLength());
+  _o.NOISE_LVLS = this.bb!.createScalarList<number>(this.NOISE_LVLS.bind(this), this.noiseLvlsLength());
+  _o.SPEC_WIDTHS = this.bb!.createScalarList<number>(this.SPEC_WIDTHS.bind(this), this.specWidthsLength());
+  _o.FIRST_GUESS_AVGS = this.bb!.createScalarList<number>(this.FIRST_GUESS_AVGS.bind(this), this.firstGuessAvgsLength());
+  _o.TD_AVG_SAMPLE_NUMS = this.bb!.createScalarList<number>(this.TD_AVG_SAMPLE_NUMS.bind(this), this.tdAvgSampleNumsLength());
+  _o.CO_INTEGS = this.bb!.createScalarList<number>(this.CO_INTEGS.bind(this), this.coIntegsLength());
+  _o.SPEC_AVGS = this.bb!.createScalarList<number>(this.SPEC_AVGS.bind(this), this.specAvgsLength());
+  _o.INTERPULSE_PERIODS = this.bb!.createScalarList<number>(this.INTERPULSE_PERIODS.bind(this), this.interpulsePeriodsLength());
+  _o.DOPP_VELS = this.bb!.createScalarList<number>(this.DOPP_VELS.bind(this), this.doppVelsLength());
+  _o.CONS_RECS = this.bb!.createScalarList<number>(this.CONS_RECS.bind(this), this.consRecsLength());
+  _o.SNRS = this.bb!.createScalarList<number>(this.SNRS.bind(this), this.snrsLength());
   _o.SIG_STRENGTH = this.SIG_STRENGTH();
   _o.SEMI_MAJOR_AXIS = this.SEMI_MAJOR_AXIS();
   _o.SEMI_MINOR_AXIS = this.SEMI_MINOR_AXIS();
@@ -729,25 +913,25 @@ constructor(
   public ID_SENSOR: string|Uint8Array|null = null,
   public ORIG_SENSOR_ID: string|Uint8Array|null = null,
   public OB_TIME: string|Uint8Array|null = null,
-  public SIG_PWRS: (string)[] = [],
-  public NOISE_LVLS: (string)[] = [],
-  public SPEC_WIDTHS: (string)[] = [],
-  public FIRST_GUESS_AVGS: (string)[] = [],
-  public QC_VALUE: number = 0,
   public FILE_CREATION: string|Uint8Array|null = null,
+  public QC_VALUE: number = 0,
   public TERM_ALT: number = 0.0,
   public AVG_TX_PWR: number = 0.0,
   public AVG_REF_PWR: number = 0.0,
   public SECTOR_NUM: number = 0,
   public NUM_ELEMENTS: number = 0,
-  public TD_AVG_SAMPLE_NUMS: (string)[] = [],
   public CHECKSUM: number = 0,
-  public CO_INTEGS: (string)[] = [],
-  public SPEC_AVGS: (string)[] = [],
-  public INTERPULSE_PERIODS: (string)[] = [],
-  public DOPP_VELS: (string)[] = [],
-  public CONS_RECS: (string)[] = [],
-  public SNRS: (string)[] = [],
+  public SIG_PWRS: (number)[] = [],
+  public NOISE_LVLS: (number)[] = [],
+  public SPEC_WIDTHS: (number)[] = [],
+  public FIRST_GUESS_AVGS: (number)[] = [],
+  public TD_AVG_SAMPLE_NUMS: (number)[] = [],
+  public CO_INTEGS: (number)[] = [],
+  public SPEC_AVGS: (number)[] = [],
+  public INTERPULSE_PERIODS: (number)[] = [],
+  public DOPP_VELS: (number)[] = [],
+  public CONS_RECS: (number)[] = [],
+  public SNRS: (number)[] = [],
   public SIG_STRENGTH: number = 0.0,
   public SEMI_MAJOR_AXIS: number = 0.0,
   public SEMI_MINOR_AXIS: number = 0.0,
@@ -765,18 +949,18 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ID_SENSOR = (this.ID_SENSOR !== null ? builder.createString(this.ID_SENSOR!) : 0);
   const ORIG_SENSOR_ID = (this.ORIG_SENSOR_ID !== null ? builder.createString(this.ORIG_SENSOR_ID!) : 0);
   const OB_TIME = (this.OB_TIME !== null ? builder.createString(this.OB_TIME!) : 0);
-  const SIG_PWRS = WTH.createSigPwrsVector(builder, builder.createObjectOffsetList(this.SIG_PWRS));
-  const NOISE_LVLS = WTH.createNoiseLvlsVector(builder, builder.createObjectOffsetList(this.NOISE_LVLS));
-  const SPEC_WIDTHS = WTH.createSpecWidthsVector(builder, builder.createObjectOffsetList(this.SPEC_WIDTHS));
-  const FIRST_GUESS_AVGS = WTH.createFirstGuessAvgsVector(builder, builder.createObjectOffsetList(this.FIRST_GUESS_AVGS));
   const FILE_CREATION = (this.FILE_CREATION !== null ? builder.createString(this.FILE_CREATION!) : 0);
-  const TD_AVG_SAMPLE_NUMS = WTH.createTdAvgSampleNumsVector(builder, builder.createObjectOffsetList(this.TD_AVG_SAMPLE_NUMS));
-  const CO_INTEGS = WTH.createCoIntegsVector(builder, builder.createObjectOffsetList(this.CO_INTEGS));
-  const SPEC_AVGS = WTH.createSpecAvgsVector(builder, builder.createObjectOffsetList(this.SPEC_AVGS));
-  const INTERPULSE_PERIODS = WTH.createInterpulsePeriodsVector(builder, builder.createObjectOffsetList(this.INTERPULSE_PERIODS));
-  const DOPP_VELS = WTH.createDoppVelsVector(builder, builder.createObjectOffsetList(this.DOPP_VELS));
-  const CONS_RECS = WTH.createConsRecsVector(builder, builder.createObjectOffsetList(this.CONS_RECS));
-  const SNRS = WTH.createSnrsVector(builder, builder.createObjectOffsetList(this.SNRS));
+  const SIG_PWRS = WTH.createSigPwrsVector(builder, this.SIG_PWRS);
+  const NOISE_LVLS = WTH.createNoiseLvlsVector(builder, this.NOISE_LVLS);
+  const SPEC_WIDTHS = WTH.createSpecWidthsVector(builder, this.SPEC_WIDTHS);
+  const FIRST_GUESS_AVGS = WTH.createFirstGuessAvgsVector(builder, this.FIRST_GUESS_AVGS);
+  const TD_AVG_SAMPLE_NUMS = WTH.createTdAvgSampleNumsVector(builder, this.TD_AVG_SAMPLE_NUMS);
+  const CO_INTEGS = WTH.createCoIntegsVector(builder, this.CO_INTEGS);
+  const SPEC_AVGS = WTH.createSpecAvgsVector(builder, this.SPEC_AVGS);
+  const INTERPULSE_PERIODS = WTH.createInterpulsePeriodsVector(builder, this.INTERPULSE_PERIODS);
+  const DOPP_VELS = WTH.createDoppVelsVector(builder, this.DOPP_VELS);
+  const CONS_RECS = WTH.createConsRecsVector(builder, this.CONS_RECS);
+  const SNRS = WTH.createSnrsVector(builder, this.SNRS);
   const LIGHT_DET_SENSORS = WTH.createLightDetSensorsVector(builder, builder.createObjectOffsetList(this.LIGHT_DET_SENSORS));
   const SRC_TYPS = WTH.createSrcTypsVector(builder, builder.createObjectOffsetList(this.SRC_TYPS));
   const SRC_IDS = WTH.createSrcIdsVector(builder, builder.createObjectOffsetList(this.SRC_IDS));
@@ -786,19 +970,19 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     ID_SENSOR,
     ORIG_SENSOR_ID,
     OB_TIME,
-    SIG_PWRS,
-    NOISE_LVLS,
-    SPEC_WIDTHS,
-    FIRST_GUESS_AVGS,
-    this.QC_VALUE,
     FILE_CREATION,
+    this.QC_VALUE,
     this.TERM_ALT,
     this.AVG_TX_PWR,
     this.AVG_REF_PWR,
     this.SECTOR_NUM,
     this.NUM_ELEMENTS,
-    TD_AVG_SAMPLE_NUMS,
     this.CHECKSUM,
+    SIG_PWRS,
+    NOISE_LVLS,
+    SPEC_WIDTHS,
+    FIRST_GUESS_AVGS,
+    TD_AVG_SAMPLE_NUMS,
     CO_INTEGS,
     SPEC_AVGS,
     INTERPULSE_PERIODS,

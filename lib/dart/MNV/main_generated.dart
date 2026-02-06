@@ -5,6 +5,431 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class ManeuverStatus {
+  final int value;
+  const ManeuverStatus._(this.value);
+
+  factory ManeuverStatus.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum ManeuverStatus');
+    }
+    return result;
+  }
+
+  static ManeuverStatus? _createOrNull(int? value) => 
+      value == null ? null : ManeuverStatus.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 6;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const ManeuverStatus DETECTED = ManeuverStatus._(0);
+  static const ManeuverStatus CONFIRMED = ManeuverStatus._(1);
+  static const ManeuverStatus PREDICTED = ManeuverStatus._(2);
+  static const ManeuverStatus PLANNED = ManeuverStatus._(3);
+  static const ManeuverStatus EXECUTED = ManeuverStatus._(4);
+  static const ManeuverStatus CANCELLED = ManeuverStatus._(5);
+  static const ManeuverStatus UNKNOWN = ManeuverStatus._(6);
+  static const Map<int, ManeuverStatus> values = {
+    0: DETECTED,
+    1: CONFIRMED,
+    2: PREDICTED,
+    3: PLANNED,
+    4: EXECUTED,
+    5: CANCELLED,
+    6: UNKNOWN};
+
+  static const fb.Reader<ManeuverStatus> reader = _ManeuverStatusReader();
+
+  @override
+  String toString() {
+    return 'ManeuverStatus{value: $value}';
+  }
+}
+
+class _ManeuverStatusReader extends fb.Reader<ManeuverStatus> {
+  const _ManeuverStatusReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  ManeuverStatus read(fb.BufferContext bc, int offset) =>
+      ManeuverStatus.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class ManeuverCharacterization {
+  final int value;
+  const ManeuverCharacterization._(this.value);
+
+  factory ManeuverCharacterization.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum ManeuverCharacterization');
+    }
+    return result;
+  }
+
+  static ManeuverCharacterization? _createOrNull(int? value) => 
+      value == null ? null : ManeuverCharacterization.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 9;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const ManeuverCharacterization IN_PLANE = ManeuverCharacterization._(0);
+  static const ManeuverCharacterization OUT_OF_PLANE = ManeuverCharacterization._(1);
+  static const ManeuverCharacterization COMBINED = ManeuverCharacterization._(2);
+  static const ManeuverCharacterization STATION_KEEPING = ManeuverCharacterization._(3);
+  static const ManeuverCharacterization ORBIT_RAISING = ManeuverCharacterization._(4);
+  static const ManeuverCharacterization ORBIT_LOWERING = ManeuverCharacterization._(5);
+  static const ManeuverCharacterization PHASING = ManeuverCharacterization._(6);
+  static const ManeuverCharacterization DEORBIT = ManeuverCharacterization._(7);
+  static const ManeuverCharacterization COLLISION_AVOIDANCE = ManeuverCharacterization._(8);
+  static const ManeuverCharacterization UNKNOWN = ManeuverCharacterization._(9);
+  static const Map<int, ManeuverCharacterization> values = {
+    0: IN_PLANE,
+    1: OUT_OF_PLANE,
+    2: COMBINED,
+    3: STATION_KEEPING,
+    4: ORBIT_RAISING,
+    5: ORBIT_LOWERING,
+    6: PHASING,
+    7: DEORBIT,
+    8: COLLISION_AVOIDANCE,
+    9: UNKNOWN};
+
+  static const fb.Reader<ManeuverCharacterization> reader = _ManeuverCharacterizationReader();
+
+  @override
+  String toString() {
+    return 'ManeuverCharacterization{value: $value}';
+  }
+}
+
+class _ManeuverCharacterizationReader extends fb.Reader<ManeuverCharacterization> {
+  const _ManeuverCharacterizationReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  ManeuverCharacterization read(fb.BufferContext bc, int offset) =>
+      ManeuverCharacterization.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Pre/post-maneuver orbital state
+class MnvOrbitalState {
+  MnvOrbitalState._(this._bc, this._bcOffset);
+  factory MnvOrbitalState(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<MnvOrbitalState> reader = _MnvOrbitalStateReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Element set identifier
+  String? get ID_ELSET => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Element set data reference
+  String? get ELSET => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  State vector identifier
+  String? get ID_STATE_VECTOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  State vector data reference
+  String? get STATE_VECTOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Position X (km)
+  double get POS_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  Position Y (km)
+  double get POS_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  ///  Position Z (km)
+  double get POS_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Velocity X (km/s)
+  double get VEL_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  ///  Velocity Y (km/s)
+  double get VEL_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  Velocity Z (km/s)
+  double get VEL_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Radiation pressure coefficient (Cr)
+  double get RADIATION_PRESS_COEFF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  ///  Ballistic coefficient (m^2/kg)
+  double get BALLISTIC_COEFF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  ///  Apogee altitude (km)
+  double get APOGEE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  ///  Perigee altitude (km)
+  double get PERIGEE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  ///  Inclination (degrees)
+  double get INCLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  ///  Eccentricity
+  double get ECCENTRICITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  ///  Orbital period (minutes)
+  double get PERIOD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  ///  Right ascension of ascending node (degrees)
+  double get RAAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  ///  Semi-major axis (km)
+  double get SMA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  ///  GEO longitude (degrees east)
+  double get GEO_LONGITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  ///  Longitude drift rate (degrees/day)
+  double get DRIFT_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  ///  Position uncertainty U (km, 1-sigma)
+  double get SIGMA_U => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
+  ///  Position uncertainty V (km, 1-sigma)
+  double get SIGMA_V => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
+  ///  Position uncertainty W (km, 1-sigma)
+  double get SIGMA_W => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
+
+  @override
+  String toString() {
+    return 'MnvOrbitalState{ID_ELSET: ${ID_ELSET}, ELSET: ${ELSET}, ID_STATE_VECTOR: ${ID_STATE_VECTOR}, STATE_VECTOR: ${STATE_VECTOR}, POS_X: ${POS_X}, POS_Y: ${POS_Y}, POS_Z: ${POS_Z}, VEL_X: ${VEL_X}, VEL_Y: ${VEL_Y}, VEL_Z: ${VEL_Z}, RADIATION_PRESS_COEFF: ${RADIATION_PRESS_COEFF}, BALLISTIC_COEFF: ${BALLISTIC_COEFF}, APOGEE: ${APOGEE}, PERIGEE: ${PERIGEE}, INCLINATION: ${INCLINATION}, ECCENTRICITY: ${ECCENTRICITY}, PERIOD: ${PERIOD}, RAAN: ${RAAN}, SMA: ${SMA}, GEO_LONGITUDE: ${GEO_LONGITUDE}, DRIFT_RATE: ${DRIFT_RATE}, SIGMA_U: ${SIGMA_U}, SIGMA_V: ${SIGMA_V}, SIGMA_W: ${SIGMA_W}}';
+  }
+}
+
+class _MnvOrbitalStateReader extends fb.TableReader<MnvOrbitalState> {
+  const _MnvOrbitalStateReader();
+
+  @override
+  MnvOrbitalState createObject(fb.BufferContext bc, int offset) => 
+    MnvOrbitalState._(bc, offset);
+}
+
+class MnvOrbitalStateBuilder {
+  MnvOrbitalStateBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(24);
+  }
+
+  int addIdElsetOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addElsetOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addIdStateVectorOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addStateVectorOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addPosX(double? POS_X) {
+    fbBuilder.addFloat64(4, POS_X);
+    return fbBuilder.offset;
+  }
+  int addPosY(double? POS_Y) {
+    fbBuilder.addFloat64(5, POS_Y);
+    return fbBuilder.offset;
+  }
+  int addPosZ(double? POS_Z) {
+    fbBuilder.addFloat64(6, POS_Z);
+    return fbBuilder.offset;
+  }
+  int addVelX(double? VEL_X) {
+    fbBuilder.addFloat64(7, VEL_X);
+    return fbBuilder.offset;
+  }
+  int addVelY(double? VEL_Y) {
+    fbBuilder.addFloat64(8, VEL_Y);
+    return fbBuilder.offset;
+  }
+  int addVelZ(double? VEL_Z) {
+    fbBuilder.addFloat64(9, VEL_Z);
+    return fbBuilder.offset;
+  }
+  int addRadiationPressCoeff(double? RADIATION_PRESS_COEFF) {
+    fbBuilder.addFloat64(10, RADIATION_PRESS_COEFF);
+    return fbBuilder.offset;
+  }
+  int addBallisticCoeff(double? BALLISTIC_COEFF) {
+    fbBuilder.addFloat64(11, BALLISTIC_COEFF);
+    return fbBuilder.offset;
+  }
+  int addApogee(double? APOGEE) {
+    fbBuilder.addFloat64(12, APOGEE);
+    return fbBuilder.offset;
+  }
+  int addPerigee(double? PERIGEE) {
+    fbBuilder.addFloat64(13, PERIGEE);
+    return fbBuilder.offset;
+  }
+  int addInclination(double? INCLINATION) {
+    fbBuilder.addFloat64(14, INCLINATION);
+    return fbBuilder.offset;
+  }
+  int addEccentricity(double? ECCENTRICITY) {
+    fbBuilder.addFloat64(15, ECCENTRICITY);
+    return fbBuilder.offset;
+  }
+  int addPeriod(double? PERIOD) {
+    fbBuilder.addFloat64(16, PERIOD);
+    return fbBuilder.offset;
+  }
+  int addRaan(double? RAAN) {
+    fbBuilder.addFloat64(17, RAAN);
+    return fbBuilder.offset;
+  }
+  int addSma(double? SMA) {
+    fbBuilder.addFloat64(18, SMA);
+    return fbBuilder.offset;
+  }
+  int addGeoLongitude(double? GEO_LONGITUDE) {
+    fbBuilder.addFloat64(19, GEO_LONGITUDE);
+    return fbBuilder.offset;
+  }
+  int addDriftRate(double? DRIFT_RATE) {
+    fbBuilder.addFloat64(20, DRIFT_RATE);
+    return fbBuilder.offset;
+  }
+  int addSigmaU(double? SIGMA_U) {
+    fbBuilder.addFloat64(21, SIGMA_U);
+    return fbBuilder.offset;
+  }
+  int addSigmaV(double? SIGMA_V) {
+    fbBuilder.addFloat64(22, SIGMA_V);
+    return fbBuilder.offset;
+  }
+  int addSigmaW(double? SIGMA_W) {
+    fbBuilder.addFloat64(23, SIGMA_W);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class MnvOrbitalStateObjectBuilder extends fb.ObjectBuilder {
+  final String? _ID_ELSET;
+  final String? _ELSET;
+  final String? _ID_STATE_VECTOR;
+  final String? _STATE_VECTOR;
+  final double? _POS_X;
+  final double? _POS_Y;
+  final double? _POS_Z;
+  final double? _VEL_X;
+  final double? _VEL_Y;
+  final double? _VEL_Z;
+  final double? _RADIATION_PRESS_COEFF;
+  final double? _BALLISTIC_COEFF;
+  final double? _APOGEE;
+  final double? _PERIGEE;
+  final double? _INCLINATION;
+  final double? _ECCENTRICITY;
+  final double? _PERIOD;
+  final double? _RAAN;
+  final double? _SMA;
+  final double? _GEO_LONGITUDE;
+  final double? _DRIFT_RATE;
+  final double? _SIGMA_U;
+  final double? _SIGMA_V;
+  final double? _SIGMA_W;
+
+  MnvOrbitalStateObjectBuilder({
+    String? ID_ELSET,
+    String? ELSET,
+    String? ID_STATE_VECTOR,
+    String? STATE_VECTOR,
+    double? POS_X,
+    double? POS_Y,
+    double? POS_Z,
+    double? VEL_X,
+    double? VEL_Y,
+    double? VEL_Z,
+    double? RADIATION_PRESS_COEFF,
+    double? BALLISTIC_COEFF,
+    double? APOGEE,
+    double? PERIGEE,
+    double? INCLINATION,
+    double? ECCENTRICITY,
+    double? PERIOD,
+    double? RAAN,
+    double? SMA,
+    double? GEO_LONGITUDE,
+    double? DRIFT_RATE,
+    double? SIGMA_U,
+    double? SIGMA_V,
+    double? SIGMA_W,
+  })
+      : _ID_ELSET = ID_ELSET,
+        _ELSET = ELSET,
+        _ID_STATE_VECTOR = ID_STATE_VECTOR,
+        _STATE_VECTOR = STATE_VECTOR,
+        _POS_X = POS_X,
+        _POS_Y = POS_Y,
+        _POS_Z = POS_Z,
+        _VEL_X = VEL_X,
+        _VEL_Y = VEL_Y,
+        _VEL_Z = VEL_Z,
+        _RADIATION_PRESS_COEFF = RADIATION_PRESS_COEFF,
+        _BALLISTIC_COEFF = BALLISTIC_COEFF,
+        _APOGEE = APOGEE,
+        _PERIGEE = PERIGEE,
+        _INCLINATION = INCLINATION,
+        _ECCENTRICITY = ECCENTRICITY,
+        _PERIOD = PERIOD,
+        _RAAN = RAAN,
+        _SMA = SMA,
+        _GEO_LONGITUDE = GEO_LONGITUDE,
+        _DRIFT_RATE = DRIFT_RATE,
+        _SIGMA_U = SIGMA_U,
+        _SIGMA_V = SIGMA_V,
+        _SIGMA_W = SIGMA_W;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? ID_ELSETOffset = _ID_ELSET == null ? null
+        : fbBuilder.writeString(_ID_ELSET!);
+    final int? ELSETOffset = _ELSET == null ? null
+        : fbBuilder.writeString(_ELSET!);
+    final int? ID_STATE_VECTOROffset = _ID_STATE_VECTOR == null ? null
+        : fbBuilder.writeString(_ID_STATE_VECTOR!);
+    final int? STATE_VECTOROffset = _STATE_VECTOR == null ? null
+        : fbBuilder.writeString(_STATE_VECTOR!);
+    fbBuilder.startTable(24);
+    fbBuilder.addOffset(0, ID_ELSETOffset);
+    fbBuilder.addOffset(1, ELSETOffset);
+    fbBuilder.addOffset(2, ID_STATE_VECTOROffset);
+    fbBuilder.addOffset(3, STATE_VECTOROffset);
+    fbBuilder.addFloat64(4, _POS_X);
+    fbBuilder.addFloat64(5, _POS_Y);
+    fbBuilder.addFloat64(6, _POS_Z);
+    fbBuilder.addFloat64(7, _VEL_X);
+    fbBuilder.addFloat64(8, _VEL_Y);
+    fbBuilder.addFloat64(9, _VEL_Z);
+    fbBuilder.addFloat64(10, _RADIATION_PRESS_COEFF);
+    fbBuilder.addFloat64(11, _BALLISTIC_COEFF);
+    fbBuilder.addFloat64(12, _APOGEE);
+    fbBuilder.addFloat64(13, _PERIGEE);
+    fbBuilder.addFloat64(14, _INCLINATION);
+    fbBuilder.addFloat64(15, _ECCENTRICITY);
+    fbBuilder.addFloat64(16, _PERIOD);
+    fbBuilder.addFloat64(17, _RAAN);
+    fbBuilder.addFloat64(18, _SMA);
+    fbBuilder.addFloat64(19, _GEO_LONGITUDE);
+    fbBuilder.addFloat64(20, _DRIFT_RATE);
+    fbBuilder.addFloat64(21, _SIGMA_U);
+    fbBuilder.addFloat64(22, _SIGMA_V);
+    fbBuilder.addFloat64(23, _SIGMA_W);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Spacecraft Maneuver
 class MNV {
   MNV._(this._bc, this._bcOffset);
@@ -18,101 +443,100 @@ class MNV {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  int get SAT_NO => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  String? get REPORT_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get EVENT_START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get EVENT_END_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  double get TOTAL_BURN_TIME => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  String? get OD_FIT_END_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  String? get ID_SENSOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  bool get UCT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
-  double get MANEUVER_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
-  String? get CHARACTERIZATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
-  double get CHARACTERIZATION_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
-  String? get EVENT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
-  String? get ORIG_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
-  String? get ORIG_SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
-  String? get STATUS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
-  double get DELTA_POS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
-  double get DELTA_POS_U => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
-  double get DELTA_POS_V => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
-  double get DELTA_POS_W => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
-  double get DELTA_VEL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
-  double get DELTA_VEL_U => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
-  double get DELTA_VEL_V => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
-  double get DELTA_VEL_W => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
-  double get DELTA_MASS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
-  String? get PRE_EVENT_ID_ELSET => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 54);
-  String? get PRE_EVENT_ELSET => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 56);
-  String? get PRE_EVENT_ID_STATE_VECTOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 58);
-  String? get PRE_EVENT_STATE_VECTOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 60);
-  double get PRE_POS_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
-  double get PRE_POS_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
-  double get PRE_POS_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, 0.0);
-  double get PRE_VEL_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, 0.0);
-  double get PRE_VEL_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 70, 0.0);
-  double get PRE_VEL_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 72, 0.0);
-  double get PRE_RADIATION_PRESS_COEFF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 74, 0.0);
-  double get PRE_BALLISTIC_COEFF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 76, 0.0);
-  double get PRE_APOGEE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 78, 0.0);
-  double get PRE_PERIGEE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 80, 0.0);
-  double get PRE_INCLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 82, 0.0);
-  double get PRE_ECCENTRICITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 84, 0.0);
-  double get PRE_PERIOD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 86, 0.0);
-  double get PRE_RAAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 88, 0.0);
-  double get PRE_SMA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 90, 0.0);
-  double get PRE_GEO_LONGITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 92, 0.0);
-  double get PRE_DRIFT_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 94, 0.0);
-  double get PRE_SIGMA_U => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 96, 0.0);
-  double get PRE_SIGMA_V => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 98, 0.0);
-  double get PRE_SIGMA_W => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 100, 0.0);
-  String? get POST_EVENT_ID_ELSET => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 102);
-  String? get POST_EVENT_ELSET => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 104);
-  String? get POST_EVENT_ID_STATE_VECTOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 106);
-  String? get POST_EVENT_STATE_VECTOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 108);
-  double get POST_POS_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 110, 0.0);
-  double get POST_POS_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 112, 0.0);
-  double get POST_POS_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 114, 0.0);
-  double get POST_VEL_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 116, 0.0);
-  double get POST_VEL_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 118, 0.0);
-  double get POST_VEL_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 120, 0.0);
-  double get POST_RADIATION_PRESS_COEFF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 122, 0.0);
-  double get POST_BALLISTIC_COEFF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 124, 0.0);
-  double get POST_APOGEE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 126, 0.0);
-  double get POST_PERIGEE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 128, 0.0);
-  double get POST_INCLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 130, 0.0);
-  double get POST_ECCENTRICITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 132, 0.0);
-  double get POST_PERIOD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 134, 0.0);
-  double get POST_RAAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 136, 0.0);
-  double get POST_SMA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 138, 0.0);
-  double get POST_GEO_LONGITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 140, 0.0);
-  double get POST_DRIFT_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 142, 0.0);
-  double get POST_SIGMA_U => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 144, 0.0);
-  double get POST_SIGMA_V => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 146, 0.0);
-  double get POST_SIGMA_W => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 148, 0.0);
-  List<String>? get COV => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 150);
-  double get POST_MASS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 152, 0.0);
-  double get POST_AREA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 154, 0.0);
-  int get NUM_OBS => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 156, 0);
-  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 158);
-  String? get DESCRIPTOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 160);
-  String? get STATE_MODEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 162);
-  double get STATE_MODEL_VERSION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 164, 0.0);
-  int get NUM_ACCEL_POINTS => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 166, 0);
-  List<String>? get MNVR_ACCEL_TIMES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 168);
-  List<String>? get MNVR_ACCELS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 170);
-  List<String>? get MNVR_ACCEL_UNCS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 172);
-  List<String>? get TAGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 174);
-  String? get ALGORITHM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 176);
-  List<String>? get SOURCED_DATA => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 178);
-  String? get SOURCED_DATA_TYPES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 180);
-  String? get ON_ORBIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 182);
-  String? get TRANSACTION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 184);
+  ///  Satellite catalog number
+  int get SAT_NO => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  ///  International designator
+  String? get ORIG_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  On-orbit reference
+  String? get ON_ORBIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Maneuver status
+  ManeuverStatus get STATUS => ManeuverStatus.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  ///  Maneuver characterization
+  ManeuverCharacterization get CHARACTERIZATION => ManeuverCharacterization.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
+  ///  Characterization uncertainty (0-1)
+  double get CHARACTERIZATION_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Detection report time (ISO 8601)
+  String? get REPORT_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Maneuver start time (ISO 8601)
+  String? get EVENT_START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  ///  Maneuver end time (ISO 8601)
+  String? get EVENT_END_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Total burn time (seconds)
+  double get TOTAL_BURN_TIME => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  ///  OD fit end time (ISO 8601)
+  String? get OD_FIT_END_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Detecting sensor identifier
+  String? get ID_SENSOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Original sensor identifier
+  String? get ORIG_SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  ///  Maneuver event identifier
+  String? get EVENT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  ///  True if object is uncorrelated
+  bool get UCT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 34, false);
+  ///  Maneuver detection uncertainty (km)
+  double get MANEUVER_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  ///  Total delta-V magnitude (km/s)
+  double get DELTA_VEL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  ///  Delta-V along-track/U component (km/s)
+  double get DELTA_VEL_U => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  ///  Delta-V cross-track/V component (km/s)
+  double get DELTA_VEL_V => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  ///  Delta-V radial/W component (km/s)
+  double get DELTA_VEL_W => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  ///  Total delta position (km)
+  double get DELTA_POS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
+  ///  Delta position U component (km)
+  double get DELTA_POS_U => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
+  ///  Delta position V component (km)
+  double get DELTA_POS_V => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
+  ///  Delta position W component (km)
+  double get DELTA_POS_W => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
+  ///  Propellant mass consumed (kg)
+  double get DELTA_MASS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
+  ///  Pre-maneuver orbital state
+  MnvOrbitalState? get PRE_EVENT => MnvOrbitalState.reader.vTableGetNullable(_bc, _bcOffset, 56);
+  ///  Post-maneuver orbital state
+  MnvOrbitalState? get POST_EVENT => MnvOrbitalState.reader.vTableGetNullable(_bc, _bcOffset, 58);
+  ///  Post-maneuver mass (kg)
+  double get POST_MASS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 60, 0.0);
+  ///  Post-maneuver cross-sectional area (m^2)
+  double get POST_AREA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
+  ///  6x6 covariance matrix (upper triangle, row-major)
+  List<double>? get COV => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 64);
+  ///  Number of observations used
+  int get NUM_OBS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 66, 0);
+  ///  State model used
+  String? get STATE_MODEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 68);
+  ///  State model version
+  double get STATE_MODEL_VERSION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 70, 0.0);
+  ///  Number of acceleration profile points
+  int get NUM_ACCEL_POINTS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 72, 0);
+  ///  Acceleration profile times (ISO 8601)
+  List<String>? get MNVR_ACCEL_TIMES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 74);
+  ///  Acceleration values (km/s^2, 3 components per point)
+  List<double>? get MNVR_ACCELS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 76);
+  ///  Acceleration uncertainties (km/s^2)
+  List<double>? get MNVR_ACCEL_UNCS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 78);
+  ///  Description
+  String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 80);
+  ///  Event descriptor
+  String? get DESCRIPTOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 82);
+  ///  Algorithm used for detection
+  String? get ALGORITHM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 84);
+  ///  Associated tags
+  List<String>? get TAGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 86);
+  ///  Sourced data references
+  List<String>? get SOURCED_DATA => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 88);
+  ///  Sourced data types
+  String? get SOURCED_DATA_TYPES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 90);
+  ///  Transaction identifier
+  String? get TRANSACTION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 92);
 
   @override
   String toString() {
-    return 'MNV{ID: ${ID}, SAT_NO: ${SAT_NO}, REPORT_TIME: ${REPORT_TIME}, EVENT_START_TIME: ${EVENT_START_TIME}, EVENT_END_TIME: ${EVENT_END_TIME}, TOTAL_BURN_TIME: ${TOTAL_BURN_TIME}, OD_FIT_END_TIME: ${OD_FIT_END_TIME}, ID_SENSOR: ${ID_SENSOR}, UCT: ${UCT}, MANEUVER_UNC: ${MANEUVER_UNC}, CHARACTERIZATION: ${CHARACTERIZATION}, CHARACTERIZATION_UNC: ${CHARACTERIZATION_UNC}, EVENT_ID: ${EVENT_ID}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, ORIG_SENSOR_ID: ${ORIG_SENSOR_ID}, STATUS: ${STATUS}, DELTA_POS: ${DELTA_POS}, DELTA_POS_U: ${DELTA_POS_U}, DELTA_POS_V: ${DELTA_POS_V}, DELTA_POS_W: ${DELTA_POS_W}, DELTA_VEL: ${DELTA_VEL}, DELTA_VEL_U: ${DELTA_VEL_U}, DELTA_VEL_V: ${DELTA_VEL_V}, DELTA_VEL_W: ${DELTA_VEL_W}, DELTA_MASS: ${DELTA_MASS}, PRE_EVENT_ID_ELSET: ${PRE_EVENT_ID_ELSET}, PRE_EVENT_ELSET: ${PRE_EVENT_ELSET}, PRE_EVENT_ID_STATE_VECTOR: ${PRE_EVENT_ID_STATE_VECTOR}, PRE_EVENT_STATE_VECTOR: ${PRE_EVENT_STATE_VECTOR}, PRE_POS_X: ${PRE_POS_X}, PRE_POS_Y: ${PRE_POS_Y}, PRE_POS_Z: ${PRE_POS_Z}, PRE_VEL_X: ${PRE_VEL_X}, PRE_VEL_Y: ${PRE_VEL_Y}, PRE_VEL_Z: ${PRE_VEL_Z}, PRE_RADIATION_PRESS_COEFF: ${PRE_RADIATION_PRESS_COEFF}, PRE_BALLISTIC_COEFF: ${PRE_BALLISTIC_COEFF}, PRE_APOGEE: ${PRE_APOGEE}, PRE_PERIGEE: ${PRE_PERIGEE}, PRE_INCLINATION: ${PRE_INCLINATION}, PRE_ECCENTRICITY: ${PRE_ECCENTRICITY}, PRE_PERIOD: ${PRE_PERIOD}, PRE_RAAN: ${PRE_RAAN}, PRE_SMA: ${PRE_SMA}, PRE_GEO_LONGITUDE: ${PRE_GEO_LONGITUDE}, PRE_DRIFT_RATE: ${PRE_DRIFT_RATE}, PRE_SIGMA_U: ${PRE_SIGMA_U}, PRE_SIGMA_V: ${PRE_SIGMA_V}, PRE_SIGMA_W: ${PRE_SIGMA_W}, POST_EVENT_ID_ELSET: ${POST_EVENT_ID_ELSET}, POST_EVENT_ELSET: ${POST_EVENT_ELSET}, POST_EVENT_ID_STATE_VECTOR: ${POST_EVENT_ID_STATE_VECTOR}, POST_EVENT_STATE_VECTOR: ${POST_EVENT_STATE_VECTOR}, POST_POS_X: ${POST_POS_X}, POST_POS_Y: ${POST_POS_Y}, POST_POS_Z: ${POST_POS_Z}, POST_VEL_X: ${POST_VEL_X}, POST_VEL_Y: ${POST_VEL_Y}, POST_VEL_Z: ${POST_VEL_Z}, POST_RADIATION_PRESS_COEFF: ${POST_RADIATION_PRESS_COEFF}, POST_BALLISTIC_COEFF: ${POST_BALLISTIC_COEFF}, POST_APOGEE: ${POST_APOGEE}, POST_PERIGEE: ${POST_PERIGEE}, POST_INCLINATION: ${POST_INCLINATION}, POST_ECCENTRICITY: ${POST_ECCENTRICITY}, POST_PERIOD: ${POST_PERIOD}, POST_RAAN: ${POST_RAAN}, POST_SMA: ${POST_SMA}, POST_GEO_LONGITUDE: ${POST_GEO_LONGITUDE}, POST_DRIFT_RATE: ${POST_DRIFT_RATE}, POST_SIGMA_U: ${POST_SIGMA_U}, POST_SIGMA_V: ${POST_SIGMA_V}, POST_SIGMA_W: ${POST_SIGMA_W}, COV: ${COV}, POST_MASS: ${POST_MASS}, POST_AREA: ${POST_AREA}, NUM_OBS: ${NUM_OBS}, DESCRIPTION: ${DESCRIPTION}, DESCRIPTOR: ${DESCRIPTOR}, STATE_MODEL: ${STATE_MODEL}, STATE_MODEL_VERSION: ${STATE_MODEL_VERSION}, NUM_ACCEL_POINTS: ${NUM_ACCEL_POINTS}, MNVR_ACCEL_TIMES: ${MNVR_ACCEL_TIMES}, MNVR_ACCELS: ${MNVR_ACCELS}, MNVR_ACCEL_UNCS: ${MNVR_ACCEL_UNCS}, TAGS: ${TAGS}, ALGORITHM: ${ALGORITHM}, SOURCED_DATA: ${SOURCED_DATA}, SOURCED_DATA_TYPES: ${SOURCED_DATA_TYPES}, ON_ORBIT: ${ON_ORBIT}, TRANSACTION_ID: ${TRANSACTION_ID}}';
+    return 'MNV{ID: ${ID}, SAT_NO: ${SAT_NO}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, ON_ORBIT: ${ON_ORBIT}, STATUS: ${STATUS}, CHARACTERIZATION: ${CHARACTERIZATION}, CHARACTERIZATION_UNC: ${CHARACTERIZATION_UNC}, REPORT_TIME: ${REPORT_TIME}, EVENT_START_TIME: ${EVENT_START_TIME}, EVENT_END_TIME: ${EVENT_END_TIME}, TOTAL_BURN_TIME: ${TOTAL_BURN_TIME}, OD_FIT_END_TIME: ${OD_FIT_END_TIME}, ID_SENSOR: ${ID_SENSOR}, ORIG_SENSOR_ID: ${ORIG_SENSOR_ID}, EVENT_ID: ${EVENT_ID}, UCT: ${UCT}, MANEUVER_UNC: ${MANEUVER_UNC}, DELTA_VEL: ${DELTA_VEL}, DELTA_VEL_U: ${DELTA_VEL_U}, DELTA_VEL_V: ${DELTA_VEL_V}, DELTA_VEL_W: ${DELTA_VEL_W}, DELTA_POS: ${DELTA_POS}, DELTA_POS_U: ${DELTA_POS_U}, DELTA_POS_V: ${DELTA_POS_V}, DELTA_POS_W: ${DELTA_POS_W}, DELTA_MASS: ${DELTA_MASS}, PRE_EVENT: ${PRE_EVENT}, POST_EVENT: ${POST_EVENT}, POST_MASS: ${POST_MASS}, POST_AREA: ${POST_AREA}, COV: ${COV}, NUM_OBS: ${NUM_OBS}, STATE_MODEL: ${STATE_MODEL}, STATE_MODEL_VERSION: ${STATE_MODEL_VERSION}, NUM_ACCEL_POINTS: ${NUM_ACCEL_POINTS}, MNVR_ACCEL_TIMES: ${MNVR_ACCEL_TIMES}, MNVR_ACCELS: ${MNVR_ACCELS}, MNVR_ACCEL_UNCS: ${MNVR_ACCEL_UNCS}, DESCRIPTION: ${DESCRIPTION}, DESCRIPTOR: ${DESCRIPTOR}, ALGORITHM: ${ALGORITHM}, TAGS: ${TAGS}, SOURCED_DATA: ${SOURCED_DATA}, SOURCED_DATA_TYPES: ${SOURCED_DATA_TYPES}, TRANSACTION_ID: ${TRANSACTION_ID}}';
   }
 }
 
@@ -130,7 +554,7 @@ class MNVBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(91);
+    fbBuilder.startTable(45);
   }
 
   int addIdOffset(int? offset) {
@@ -138,363 +562,179 @@ class MNVBuilder {
     return fbBuilder.offset;
   }
   int addSatNo(int? SAT_NO) {
-    fbBuilder.addInt32(1, SAT_NO);
-    return fbBuilder.offset;
-  }
-  int addReportTimeOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addEventStartTimeOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addEventEndTimeOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addTotalBurnTime(double? TOTAL_BURN_TIME) {
-    fbBuilder.addFloat64(5, TOTAL_BURN_TIME);
-    return fbBuilder.offset;
-  }
-  int addOdFitEndTimeOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addIdSensorOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addUct(bool? UCT) {
-    fbBuilder.addBool(8, UCT);
-    return fbBuilder.offset;
-  }
-  int addManeuverUnc(double? MANEUVER_UNC) {
-    fbBuilder.addFloat64(9, MANEUVER_UNC);
-    return fbBuilder.offset;
-  }
-  int addCharacterizationOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
-    return fbBuilder.offset;
-  }
-  int addCharacterizationUnc(double? CHARACTERIZATION_UNC) {
-    fbBuilder.addFloat64(11, CHARACTERIZATION_UNC);
-    return fbBuilder.offset;
-  }
-  int addEventIdOffset(int? offset) {
-    fbBuilder.addOffset(12, offset);
+    fbBuilder.addUint32(1, SAT_NO);
     return fbBuilder.offset;
   }
   int addOrigObjectIdOffset(int? offset) {
-    fbBuilder.addOffset(13, offset);
-    return fbBuilder.offset;
-  }
-  int addOrigSensorIdOffset(int? offset) {
-    fbBuilder.addOffset(14, offset);
-    return fbBuilder.offset;
-  }
-  int addStatusOffset(int? offset) {
-    fbBuilder.addOffset(15, offset);
-    return fbBuilder.offset;
-  }
-  int addDeltaPos(double? DELTA_POS) {
-    fbBuilder.addFloat64(16, DELTA_POS);
-    return fbBuilder.offset;
-  }
-  int addDeltaPosU(double? DELTA_POS_U) {
-    fbBuilder.addFloat64(17, DELTA_POS_U);
-    return fbBuilder.offset;
-  }
-  int addDeltaPosV(double? DELTA_POS_V) {
-    fbBuilder.addFloat64(18, DELTA_POS_V);
-    return fbBuilder.offset;
-  }
-  int addDeltaPosW(double? DELTA_POS_W) {
-    fbBuilder.addFloat64(19, DELTA_POS_W);
-    return fbBuilder.offset;
-  }
-  int addDeltaVel(double? DELTA_VEL) {
-    fbBuilder.addFloat64(20, DELTA_VEL);
-    return fbBuilder.offset;
-  }
-  int addDeltaVelU(double? DELTA_VEL_U) {
-    fbBuilder.addFloat64(21, DELTA_VEL_U);
-    return fbBuilder.offset;
-  }
-  int addDeltaVelV(double? DELTA_VEL_V) {
-    fbBuilder.addFloat64(22, DELTA_VEL_V);
-    return fbBuilder.offset;
-  }
-  int addDeltaVelW(double? DELTA_VEL_W) {
-    fbBuilder.addFloat64(23, DELTA_VEL_W);
-    return fbBuilder.offset;
-  }
-  int addDeltaMass(double? DELTA_MASS) {
-    fbBuilder.addFloat64(24, DELTA_MASS);
-    return fbBuilder.offset;
-  }
-  int addPreEventIdElsetOffset(int? offset) {
-    fbBuilder.addOffset(25, offset);
-    return fbBuilder.offset;
-  }
-  int addPreEventElsetOffset(int? offset) {
-    fbBuilder.addOffset(26, offset);
-    return fbBuilder.offset;
-  }
-  int addPreEventIdStateVectorOffset(int? offset) {
-    fbBuilder.addOffset(27, offset);
-    return fbBuilder.offset;
-  }
-  int addPreEventStateVectorOffset(int? offset) {
-    fbBuilder.addOffset(28, offset);
-    return fbBuilder.offset;
-  }
-  int addPrePosX(double? PRE_POS_X) {
-    fbBuilder.addFloat64(29, PRE_POS_X);
-    return fbBuilder.offset;
-  }
-  int addPrePosY(double? PRE_POS_Y) {
-    fbBuilder.addFloat64(30, PRE_POS_Y);
-    return fbBuilder.offset;
-  }
-  int addPrePosZ(double? PRE_POS_Z) {
-    fbBuilder.addFloat64(31, PRE_POS_Z);
-    return fbBuilder.offset;
-  }
-  int addPreVelX(double? PRE_VEL_X) {
-    fbBuilder.addFloat64(32, PRE_VEL_X);
-    return fbBuilder.offset;
-  }
-  int addPreVelY(double? PRE_VEL_Y) {
-    fbBuilder.addFloat64(33, PRE_VEL_Y);
-    return fbBuilder.offset;
-  }
-  int addPreVelZ(double? PRE_VEL_Z) {
-    fbBuilder.addFloat64(34, PRE_VEL_Z);
-    return fbBuilder.offset;
-  }
-  int addPreRadiationPressCoeff(double? PRE_RADIATION_PRESS_COEFF) {
-    fbBuilder.addFloat64(35, PRE_RADIATION_PRESS_COEFF);
-    return fbBuilder.offset;
-  }
-  int addPreBallisticCoeff(double? PRE_BALLISTIC_COEFF) {
-    fbBuilder.addFloat64(36, PRE_BALLISTIC_COEFF);
-    return fbBuilder.offset;
-  }
-  int addPreApogee(double? PRE_APOGEE) {
-    fbBuilder.addFloat64(37, PRE_APOGEE);
-    return fbBuilder.offset;
-  }
-  int addPrePerigee(double? PRE_PERIGEE) {
-    fbBuilder.addFloat64(38, PRE_PERIGEE);
-    return fbBuilder.offset;
-  }
-  int addPreInclination(double? PRE_INCLINATION) {
-    fbBuilder.addFloat64(39, PRE_INCLINATION);
-    return fbBuilder.offset;
-  }
-  int addPreEccentricity(double? PRE_ECCENTRICITY) {
-    fbBuilder.addFloat64(40, PRE_ECCENTRICITY);
-    return fbBuilder.offset;
-  }
-  int addPrePeriod(double? PRE_PERIOD) {
-    fbBuilder.addFloat64(41, PRE_PERIOD);
-    return fbBuilder.offset;
-  }
-  int addPreRaan(double? PRE_RAAN) {
-    fbBuilder.addFloat64(42, PRE_RAAN);
-    return fbBuilder.offset;
-  }
-  int addPreSma(double? PRE_SMA) {
-    fbBuilder.addFloat64(43, PRE_SMA);
-    return fbBuilder.offset;
-  }
-  int addPreGeoLongitude(double? PRE_GEO_LONGITUDE) {
-    fbBuilder.addFloat64(44, PRE_GEO_LONGITUDE);
-    return fbBuilder.offset;
-  }
-  int addPreDriftRate(double? PRE_DRIFT_RATE) {
-    fbBuilder.addFloat64(45, PRE_DRIFT_RATE);
-    return fbBuilder.offset;
-  }
-  int addPreSigmaU(double? PRE_SIGMA_U) {
-    fbBuilder.addFloat64(46, PRE_SIGMA_U);
-    return fbBuilder.offset;
-  }
-  int addPreSigmaV(double? PRE_SIGMA_V) {
-    fbBuilder.addFloat64(47, PRE_SIGMA_V);
-    return fbBuilder.offset;
-  }
-  int addPreSigmaW(double? PRE_SIGMA_W) {
-    fbBuilder.addFloat64(48, PRE_SIGMA_W);
-    return fbBuilder.offset;
-  }
-  int addPostEventIdElsetOffset(int? offset) {
-    fbBuilder.addOffset(49, offset);
-    return fbBuilder.offset;
-  }
-  int addPostEventElsetOffset(int? offset) {
-    fbBuilder.addOffset(50, offset);
-    return fbBuilder.offset;
-  }
-  int addPostEventIdStateVectorOffset(int? offset) {
-    fbBuilder.addOffset(51, offset);
-    return fbBuilder.offset;
-  }
-  int addPostEventStateVectorOffset(int? offset) {
-    fbBuilder.addOffset(52, offset);
-    return fbBuilder.offset;
-  }
-  int addPostPosX(double? POST_POS_X) {
-    fbBuilder.addFloat64(53, POST_POS_X);
-    return fbBuilder.offset;
-  }
-  int addPostPosY(double? POST_POS_Y) {
-    fbBuilder.addFloat64(54, POST_POS_Y);
-    return fbBuilder.offset;
-  }
-  int addPostPosZ(double? POST_POS_Z) {
-    fbBuilder.addFloat64(55, POST_POS_Z);
-    return fbBuilder.offset;
-  }
-  int addPostVelX(double? POST_VEL_X) {
-    fbBuilder.addFloat64(56, POST_VEL_X);
-    return fbBuilder.offset;
-  }
-  int addPostVelY(double? POST_VEL_Y) {
-    fbBuilder.addFloat64(57, POST_VEL_Y);
-    return fbBuilder.offset;
-  }
-  int addPostVelZ(double? POST_VEL_Z) {
-    fbBuilder.addFloat64(58, POST_VEL_Z);
-    return fbBuilder.offset;
-  }
-  int addPostRadiationPressCoeff(double? POST_RADIATION_PRESS_COEFF) {
-    fbBuilder.addFloat64(59, POST_RADIATION_PRESS_COEFF);
-    return fbBuilder.offset;
-  }
-  int addPostBallisticCoeff(double? POST_BALLISTIC_COEFF) {
-    fbBuilder.addFloat64(60, POST_BALLISTIC_COEFF);
-    return fbBuilder.offset;
-  }
-  int addPostApogee(double? POST_APOGEE) {
-    fbBuilder.addFloat64(61, POST_APOGEE);
-    return fbBuilder.offset;
-  }
-  int addPostPerigee(double? POST_PERIGEE) {
-    fbBuilder.addFloat64(62, POST_PERIGEE);
-    return fbBuilder.offset;
-  }
-  int addPostInclination(double? POST_INCLINATION) {
-    fbBuilder.addFloat64(63, POST_INCLINATION);
-    return fbBuilder.offset;
-  }
-  int addPostEccentricity(double? POST_ECCENTRICITY) {
-    fbBuilder.addFloat64(64, POST_ECCENTRICITY);
-    return fbBuilder.offset;
-  }
-  int addPostPeriod(double? POST_PERIOD) {
-    fbBuilder.addFloat64(65, POST_PERIOD);
-    return fbBuilder.offset;
-  }
-  int addPostRaan(double? POST_RAAN) {
-    fbBuilder.addFloat64(66, POST_RAAN);
-    return fbBuilder.offset;
-  }
-  int addPostSma(double? POST_SMA) {
-    fbBuilder.addFloat64(67, POST_SMA);
-    return fbBuilder.offset;
-  }
-  int addPostGeoLongitude(double? POST_GEO_LONGITUDE) {
-    fbBuilder.addFloat64(68, POST_GEO_LONGITUDE);
-    return fbBuilder.offset;
-  }
-  int addPostDriftRate(double? POST_DRIFT_RATE) {
-    fbBuilder.addFloat64(69, POST_DRIFT_RATE);
-    return fbBuilder.offset;
-  }
-  int addPostSigmaU(double? POST_SIGMA_U) {
-    fbBuilder.addFloat64(70, POST_SIGMA_U);
-    return fbBuilder.offset;
-  }
-  int addPostSigmaV(double? POST_SIGMA_V) {
-    fbBuilder.addFloat64(71, POST_SIGMA_V);
-    return fbBuilder.offset;
-  }
-  int addPostSigmaW(double? POST_SIGMA_W) {
-    fbBuilder.addFloat64(72, POST_SIGMA_W);
-    return fbBuilder.offset;
-  }
-  int addCovOffset(int? offset) {
-    fbBuilder.addOffset(73, offset);
-    return fbBuilder.offset;
-  }
-  int addPostMass(double? POST_MASS) {
-    fbBuilder.addFloat64(74, POST_MASS);
-    return fbBuilder.offset;
-  }
-  int addPostArea(double? POST_AREA) {
-    fbBuilder.addFloat64(75, POST_AREA);
-    return fbBuilder.offset;
-  }
-  int addNumObs(int? NUM_OBS) {
-    fbBuilder.addInt32(76, NUM_OBS);
-    return fbBuilder.offset;
-  }
-  int addDescriptionOffset(int? offset) {
-    fbBuilder.addOffset(77, offset);
-    return fbBuilder.offset;
-  }
-  int addDescriptorOffset(int? offset) {
-    fbBuilder.addOffset(78, offset);
-    return fbBuilder.offset;
-  }
-  int addStateModelOffset(int? offset) {
-    fbBuilder.addOffset(79, offset);
-    return fbBuilder.offset;
-  }
-  int addStateModelVersion(double? STATE_MODEL_VERSION) {
-    fbBuilder.addFloat64(80, STATE_MODEL_VERSION);
-    return fbBuilder.offset;
-  }
-  int addNumAccelPoints(int? NUM_ACCEL_POINTS) {
-    fbBuilder.addInt32(81, NUM_ACCEL_POINTS);
-    return fbBuilder.offset;
-  }
-  int addMnvrAccelTimesOffset(int? offset) {
-    fbBuilder.addOffset(82, offset);
-    return fbBuilder.offset;
-  }
-  int addMnvrAccelsOffset(int? offset) {
-    fbBuilder.addOffset(83, offset);
-    return fbBuilder.offset;
-  }
-  int addMnvrAccelUncsOffset(int? offset) {
-    fbBuilder.addOffset(84, offset);
-    return fbBuilder.offset;
-  }
-  int addTagsOffset(int? offset) {
-    fbBuilder.addOffset(85, offset);
-    return fbBuilder.offset;
-  }
-  int addAlgorithmOffset(int? offset) {
-    fbBuilder.addOffset(86, offset);
-    return fbBuilder.offset;
-  }
-  int addSourcedDataOffset(int? offset) {
-    fbBuilder.addOffset(87, offset);
-    return fbBuilder.offset;
-  }
-  int addSourcedDataTypesOffset(int? offset) {
-    fbBuilder.addOffset(88, offset);
+    fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
   int addOnOrbitOffset(int? offset) {
-    fbBuilder.addOffset(89, offset);
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addStatus(ManeuverStatus? STATUS) {
+    fbBuilder.addInt8(4, STATUS?.value);
+    return fbBuilder.offset;
+  }
+  int addCharacterization(ManeuverCharacterization? CHARACTERIZATION) {
+    fbBuilder.addInt8(5, CHARACTERIZATION?.value);
+    return fbBuilder.offset;
+  }
+  int addCharacterizationUnc(double? CHARACTERIZATION_UNC) {
+    fbBuilder.addFloat64(6, CHARACTERIZATION_UNC);
+    return fbBuilder.offset;
+  }
+  int addReportTimeOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addEventStartTimeOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addEventEndTimeOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addTotalBurnTime(double? TOTAL_BURN_TIME) {
+    fbBuilder.addFloat64(10, TOTAL_BURN_TIME);
+    return fbBuilder.offset;
+  }
+  int addOdFitEndTimeOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addIdSensorOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addOrigSensorIdOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addEventIdOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addUct(bool? UCT) {
+    fbBuilder.addBool(15, UCT);
+    return fbBuilder.offset;
+  }
+  int addManeuverUnc(double? MANEUVER_UNC) {
+    fbBuilder.addFloat64(16, MANEUVER_UNC);
+    return fbBuilder.offset;
+  }
+  int addDeltaVel(double? DELTA_VEL) {
+    fbBuilder.addFloat64(17, DELTA_VEL);
+    return fbBuilder.offset;
+  }
+  int addDeltaVelU(double? DELTA_VEL_U) {
+    fbBuilder.addFloat64(18, DELTA_VEL_U);
+    return fbBuilder.offset;
+  }
+  int addDeltaVelV(double? DELTA_VEL_V) {
+    fbBuilder.addFloat64(19, DELTA_VEL_V);
+    return fbBuilder.offset;
+  }
+  int addDeltaVelW(double? DELTA_VEL_W) {
+    fbBuilder.addFloat64(20, DELTA_VEL_W);
+    return fbBuilder.offset;
+  }
+  int addDeltaPos(double? DELTA_POS) {
+    fbBuilder.addFloat64(21, DELTA_POS);
+    return fbBuilder.offset;
+  }
+  int addDeltaPosU(double? DELTA_POS_U) {
+    fbBuilder.addFloat64(22, DELTA_POS_U);
+    return fbBuilder.offset;
+  }
+  int addDeltaPosV(double? DELTA_POS_V) {
+    fbBuilder.addFloat64(23, DELTA_POS_V);
+    return fbBuilder.offset;
+  }
+  int addDeltaPosW(double? DELTA_POS_W) {
+    fbBuilder.addFloat64(24, DELTA_POS_W);
+    return fbBuilder.offset;
+  }
+  int addDeltaMass(double? DELTA_MASS) {
+    fbBuilder.addFloat64(25, DELTA_MASS);
+    return fbBuilder.offset;
+  }
+  int addPreEventOffset(int? offset) {
+    fbBuilder.addOffset(26, offset);
+    return fbBuilder.offset;
+  }
+  int addPostEventOffset(int? offset) {
+    fbBuilder.addOffset(27, offset);
+    return fbBuilder.offset;
+  }
+  int addPostMass(double? POST_MASS) {
+    fbBuilder.addFloat64(28, POST_MASS);
+    return fbBuilder.offset;
+  }
+  int addPostArea(double? POST_AREA) {
+    fbBuilder.addFloat64(29, POST_AREA);
+    return fbBuilder.offset;
+  }
+  int addCovOffset(int? offset) {
+    fbBuilder.addOffset(30, offset);
+    return fbBuilder.offset;
+  }
+  int addNumObs(int? NUM_OBS) {
+    fbBuilder.addUint32(31, NUM_OBS);
+    return fbBuilder.offset;
+  }
+  int addStateModelOffset(int? offset) {
+    fbBuilder.addOffset(32, offset);
+    return fbBuilder.offset;
+  }
+  int addStateModelVersion(double? STATE_MODEL_VERSION) {
+    fbBuilder.addFloat64(33, STATE_MODEL_VERSION);
+    return fbBuilder.offset;
+  }
+  int addNumAccelPoints(int? NUM_ACCEL_POINTS) {
+    fbBuilder.addUint16(34, NUM_ACCEL_POINTS);
+    return fbBuilder.offset;
+  }
+  int addMnvrAccelTimesOffset(int? offset) {
+    fbBuilder.addOffset(35, offset);
+    return fbBuilder.offset;
+  }
+  int addMnvrAccelsOffset(int? offset) {
+    fbBuilder.addOffset(36, offset);
+    return fbBuilder.offset;
+  }
+  int addMnvrAccelUncsOffset(int? offset) {
+    fbBuilder.addOffset(37, offset);
+    return fbBuilder.offset;
+  }
+  int addDescriptionOffset(int? offset) {
+    fbBuilder.addOffset(38, offset);
+    return fbBuilder.offset;
+  }
+  int addDescriptorOffset(int? offset) {
+    fbBuilder.addOffset(39, offset);
+    return fbBuilder.offset;
+  }
+  int addAlgorithmOffset(int? offset) {
+    fbBuilder.addOffset(40, offset);
+    return fbBuilder.offset;
+  }
+  int addTagsOffset(int? offset) {
+    fbBuilder.addOffset(41, offset);
+    return fbBuilder.offset;
+  }
+  int addSourcedDataOffset(int? offset) {
+    fbBuilder.addOffset(42, offset);
+    return fbBuilder.offset;
+  }
+  int addSourcedDataTypesOffset(int? offset) {
+    fbBuilder.addOffset(43, offset);
     return fbBuilder.offset;
   }
   int addTransactionIdOffset(int? offset) {
-    fbBuilder.addOffset(90, offset);
+    fbBuilder.addOffset(44, offset);
     return fbBuilder.offset;
   }
 
@@ -506,279 +746,141 @@ class MNVBuilder {
 class MNVObjectBuilder extends fb.ObjectBuilder {
   final String? _ID;
   final int? _SAT_NO;
+  final String? _ORIG_OBJECT_ID;
+  final String? _ON_ORBIT;
+  final ManeuverStatus? _STATUS;
+  final ManeuverCharacterization? _CHARACTERIZATION;
+  final double? _CHARACTERIZATION_UNC;
   final String? _REPORT_TIME;
   final String? _EVENT_START_TIME;
   final String? _EVENT_END_TIME;
   final double? _TOTAL_BURN_TIME;
   final String? _OD_FIT_END_TIME;
   final String? _ID_SENSOR;
+  final String? _ORIG_SENSOR_ID;
+  final String? _EVENT_ID;
   final bool? _UCT;
   final double? _MANEUVER_UNC;
-  final String? _CHARACTERIZATION;
-  final double? _CHARACTERIZATION_UNC;
-  final String? _EVENT_ID;
-  final String? _ORIG_OBJECT_ID;
-  final String? _ORIG_SENSOR_ID;
-  final String? _STATUS;
-  final double? _DELTA_POS;
-  final double? _DELTA_POS_U;
-  final double? _DELTA_POS_V;
-  final double? _DELTA_POS_W;
   final double? _DELTA_VEL;
   final double? _DELTA_VEL_U;
   final double? _DELTA_VEL_V;
   final double? _DELTA_VEL_W;
+  final double? _DELTA_POS;
+  final double? _DELTA_POS_U;
+  final double? _DELTA_POS_V;
+  final double? _DELTA_POS_W;
   final double? _DELTA_MASS;
-  final String? _PRE_EVENT_ID_ELSET;
-  final String? _PRE_EVENT_ELSET;
-  final String? _PRE_EVENT_ID_STATE_VECTOR;
-  final String? _PRE_EVENT_STATE_VECTOR;
-  final double? _PRE_POS_X;
-  final double? _PRE_POS_Y;
-  final double? _PRE_POS_Z;
-  final double? _PRE_VEL_X;
-  final double? _PRE_VEL_Y;
-  final double? _PRE_VEL_Z;
-  final double? _PRE_RADIATION_PRESS_COEFF;
-  final double? _PRE_BALLISTIC_COEFF;
-  final double? _PRE_APOGEE;
-  final double? _PRE_PERIGEE;
-  final double? _PRE_INCLINATION;
-  final double? _PRE_ECCENTRICITY;
-  final double? _PRE_PERIOD;
-  final double? _PRE_RAAN;
-  final double? _PRE_SMA;
-  final double? _PRE_GEO_LONGITUDE;
-  final double? _PRE_DRIFT_RATE;
-  final double? _PRE_SIGMA_U;
-  final double? _PRE_SIGMA_V;
-  final double? _PRE_SIGMA_W;
-  final String? _POST_EVENT_ID_ELSET;
-  final String? _POST_EVENT_ELSET;
-  final String? _POST_EVENT_ID_STATE_VECTOR;
-  final String? _POST_EVENT_STATE_VECTOR;
-  final double? _POST_POS_X;
-  final double? _POST_POS_Y;
-  final double? _POST_POS_Z;
-  final double? _POST_VEL_X;
-  final double? _POST_VEL_Y;
-  final double? _POST_VEL_Z;
-  final double? _POST_RADIATION_PRESS_COEFF;
-  final double? _POST_BALLISTIC_COEFF;
-  final double? _POST_APOGEE;
-  final double? _POST_PERIGEE;
-  final double? _POST_INCLINATION;
-  final double? _POST_ECCENTRICITY;
-  final double? _POST_PERIOD;
-  final double? _POST_RAAN;
-  final double? _POST_SMA;
-  final double? _POST_GEO_LONGITUDE;
-  final double? _POST_DRIFT_RATE;
-  final double? _POST_SIGMA_U;
-  final double? _POST_SIGMA_V;
-  final double? _POST_SIGMA_W;
-  final List<String>? _COV;
+  final MnvOrbitalStateObjectBuilder? _PRE_EVENT;
+  final MnvOrbitalStateObjectBuilder? _POST_EVENT;
   final double? _POST_MASS;
   final double? _POST_AREA;
+  final List<double>? _COV;
   final int? _NUM_OBS;
-  final String? _DESCRIPTION;
-  final String? _DESCRIPTOR;
   final String? _STATE_MODEL;
   final double? _STATE_MODEL_VERSION;
   final int? _NUM_ACCEL_POINTS;
   final List<String>? _MNVR_ACCEL_TIMES;
-  final List<String>? _MNVR_ACCELS;
-  final List<String>? _MNVR_ACCEL_UNCS;
-  final List<String>? _TAGS;
+  final List<double>? _MNVR_ACCELS;
+  final List<double>? _MNVR_ACCEL_UNCS;
+  final String? _DESCRIPTION;
+  final String? _DESCRIPTOR;
   final String? _ALGORITHM;
+  final List<String>? _TAGS;
   final List<String>? _SOURCED_DATA;
   final String? _SOURCED_DATA_TYPES;
-  final String? _ON_ORBIT;
   final String? _TRANSACTION_ID;
 
   MNVObjectBuilder({
     String? ID,
     int? SAT_NO,
+    String? ORIG_OBJECT_ID,
+    String? ON_ORBIT,
+    ManeuverStatus? STATUS,
+    ManeuverCharacterization? CHARACTERIZATION,
+    double? CHARACTERIZATION_UNC,
     String? REPORT_TIME,
     String? EVENT_START_TIME,
     String? EVENT_END_TIME,
     double? TOTAL_BURN_TIME,
     String? OD_FIT_END_TIME,
     String? ID_SENSOR,
+    String? ORIG_SENSOR_ID,
+    String? EVENT_ID,
     bool? UCT,
     double? MANEUVER_UNC,
-    String? CHARACTERIZATION,
-    double? CHARACTERIZATION_UNC,
-    String? EVENT_ID,
-    String? ORIG_OBJECT_ID,
-    String? ORIG_SENSOR_ID,
-    String? STATUS,
-    double? DELTA_POS,
-    double? DELTA_POS_U,
-    double? DELTA_POS_V,
-    double? DELTA_POS_W,
     double? DELTA_VEL,
     double? DELTA_VEL_U,
     double? DELTA_VEL_V,
     double? DELTA_VEL_W,
+    double? DELTA_POS,
+    double? DELTA_POS_U,
+    double? DELTA_POS_V,
+    double? DELTA_POS_W,
     double? DELTA_MASS,
-    String? PRE_EVENT_ID_ELSET,
-    String? PRE_EVENT_ELSET,
-    String? PRE_EVENT_ID_STATE_VECTOR,
-    String? PRE_EVENT_STATE_VECTOR,
-    double? PRE_POS_X,
-    double? PRE_POS_Y,
-    double? PRE_POS_Z,
-    double? PRE_VEL_X,
-    double? PRE_VEL_Y,
-    double? PRE_VEL_Z,
-    double? PRE_RADIATION_PRESS_COEFF,
-    double? PRE_BALLISTIC_COEFF,
-    double? PRE_APOGEE,
-    double? PRE_PERIGEE,
-    double? PRE_INCLINATION,
-    double? PRE_ECCENTRICITY,
-    double? PRE_PERIOD,
-    double? PRE_RAAN,
-    double? PRE_SMA,
-    double? PRE_GEO_LONGITUDE,
-    double? PRE_DRIFT_RATE,
-    double? PRE_SIGMA_U,
-    double? PRE_SIGMA_V,
-    double? PRE_SIGMA_W,
-    String? POST_EVENT_ID_ELSET,
-    String? POST_EVENT_ELSET,
-    String? POST_EVENT_ID_STATE_VECTOR,
-    String? POST_EVENT_STATE_VECTOR,
-    double? POST_POS_X,
-    double? POST_POS_Y,
-    double? POST_POS_Z,
-    double? POST_VEL_X,
-    double? POST_VEL_Y,
-    double? POST_VEL_Z,
-    double? POST_RADIATION_PRESS_COEFF,
-    double? POST_BALLISTIC_COEFF,
-    double? POST_APOGEE,
-    double? POST_PERIGEE,
-    double? POST_INCLINATION,
-    double? POST_ECCENTRICITY,
-    double? POST_PERIOD,
-    double? POST_RAAN,
-    double? POST_SMA,
-    double? POST_GEO_LONGITUDE,
-    double? POST_DRIFT_RATE,
-    double? POST_SIGMA_U,
-    double? POST_SIGMA_V,
-    double? POST_SIGMA_W,
-    List<String>? COV,
+    MnvOrbitalStateObjectBuilder? PRE_EVENT,
+    MnvOrbitalStateObjectBuilder? POST_EVENT,
     double? POST_MASS,
     double? POST_AREA,
+    List<double>? COV,
     int? NUM_OBS,
-    String? DESCRIPTION,
-    String? DESCRIPTOR,
     String? STATE_MODEL,
     double? STATE_MODEL_VERSION,
     int? NUM_ACCEL_POINTS,
     List<String>? MNVR_ACCEL_TIMES,
-    List<String>? MNVR_ACCELS,
-    List<String>? MNVR_ACCEL_UNCS,
-    List<String>? TAGS,
+    List<double>? MNVR_ACCELS,
+    List<double>? MNVR_ACCEL_UNCS,
+    String? DESCRIPTION,
+    String? DESCRIPTOR,
     String? ALGORITHM,
+    List<String>? TAGS,
     List<String>? SOURCED_DATA,
     String? SOURCED_DATA_TYPES,
-    String? ON_ORBIT,
     String? TRANSACTION_ID,
   })
       : _ID = ID,
         _SAT_NO = SAT_NO,
+        _ORIG_OBJECT_ID = ORIG_OBJECT_ID,
+        _ON_ORBIT = ON_ORBIT,
+        _STATUS = STATUS,
+        _CHARACTERIZATION = CHARACTERIZATION,
+        _CHARACTERIZATION_UNC = CHARACTERIZATION_UNC,
         _REPORT_TIME = REPORT_TIME,
         _EVENT_START_TIME = EVENT_START_TIME,
         _EVENT_END_TIME = EVENT_END_TIME,
         _TOTAL_BURN_TIME = TOTAL_BURN_TIME,
         _OD_FIT_END_TIME = OD_FIT_END_TIME,
         _ID_SENSOR = ID_SENSOR,
+        _ORIG_SENSOR_ID = ORIG_SENSOR_ID,
+        _EVENT_ID = EVENT_ID,
         _UCT = UCT,
         _MANEUVER_UNC = MANEUVER_UNC,
-        _CHARACTERIZATION = CHARACTERIZATION,
-        _CHARACTERIZATION_UNC = CHARACTERIZATION_UNC,
-        _EVENT_ID = EVENT_ID,
-        _ORIG_OBJECT_ID = ORIG_OBJECT_ID,
-        _ORIG_SENSOR_ID = ORIG_SENSOR_ID,
-        _STATUS = STATUS,
-        _DELTA_POS = DELTA_POS,
-        _DELTA_POS_U = DELTA_POS_U,
-        _DELTA_POS_V = DELTA_POS_V,
-        _DELTA_POS_W = DELTA_POS_W,
         _DELTA_VEL = DELTA_VEL,
         _DELTA_VEL_U = DELTA_VEL_U,
         _DELTA_VEL_V = DELTA_VEL_V,
         _DELTA_VEL_W = DELTA_VEL_W,
+        _DELTA_POS = DELTA_POS,
+        _DELTA_POS_U = DELTA_POS_U,
+        _DELTA_POS_V = DELTA_POS_V,
+        _DELTA_POS_W = DELTA_POS_W,
         _DELTA_MASS = DELTA_MASS,
-        _PRE_EVENT_ID_ELSET = PRE_EVENT_ID_ELSET,
-        _PRE_EVENT_ELSET = PRE_EVENT_ELSET,
-        _PRE_EVENT_ID_STATE_VECTOR = PRE_EVENT_ID_STATE_VECTOR,
-        _PRE_EVENT_STATE_VECTOR = PRE_EVENT_STATE_VECTOR,
-        _PRE_POS_X = PRE_POS_X,
-        _PRE_POS_Y = PRE_POS_Y,
-        _PRE_POS_Z = PRE_POS_Z,
-        _PRE_VEL_X = PRE_VEL_X,
-        _PRE_VEL_Y = PRE_VEL_Y,
-        _PRE_VEL_Z = PRE_VEL_Z,
-        _PRE_RADIATION_PRESS_COEFF = PRE_RADIATION_PRESS_COEFF,
-        _PRE_BALLISTIC_COEFF = PRE_BALLISTIC_COEFF,
-        _PRE_APOGEE = PRE_APOGEE,
-        _PRE_PERIGEE = PRE_PERIGEE,
-        _PRE_INCLINATION = PRE_INCLINATION,
-        _PRE_ECCENTRICITY = PRE_ECCENTRICITY,
-        _PRE_PERIOD = PRE_PERIOD,
-        _PRE_RAAN = PRE_RAAN,
-        _PRE_SMA = PRE_SMA,
-        _PRE_GEO_LONGITUDE = PRE_GEO_LONGITUDE,
-        _PRE_DRIFT_RATE = PRE_DRIFT_RATE,
-        _PRE_SIGMA_U = PRE_SIGMA_U,
-        _PRE_SIGMA_V = PRE_SIGMA_V,
-        _PRE_SIGMA_W = PRE_SIGMA_W,
-        _POST_EVENT_ID_ELSET = POST_EVENT_ID_ELSET,
-        _POST_EVENT_ELSET = POST_EVENT_ELSET,
-        _POST_EVENT_ID_STATE_VECTOR = POST_EVENT_ID_STATE_VECTOR,
-        _POST_EVENT_STATE_VECTOR = POST_EVENT_STATE_VECTOR,
-        _POST_POS_X = POST_POS_X,
-        _POST_POS_Y = POST_POS_Y,
-        _POST_POS_Z = POST_POS_Z,
-        _POST_VEL_X = POST_VEL_X,
-        _POST_VEL_Y = POST_VEL_Y,
-        _POST_VEL_Z = POST_VEL_Z,
-        _POST_RADIATION_PRESS_COEFF = POST_RADIATION_PRESS_COEFF,
-        _POST_BALLISTIC_COEFF = POST_BALLISTIC_COEFF,
-        _POST_APOGEE = POST_APOGEE,
-        _POST_PERIGEE = POST_PERIGEE,
-        _POST_INCLINATION = POST_INCLINATION,
-        _POST_ECCENTRICITY = POST_ECCENTRICITY,
-        _POST_PERIOD = POST_PERIOD,
-        _POST_RAAN = POST_RAAN,
-        _POST_SMA = POST_SMA,
-        _POST_GEO_LONGITUDE = POST_GEO_LONGITUDE,
-        _POST_DRIFT_RATE = POST_DRIFT_RATE,
-        _POST_SIGMA_U = POST_SIGMA_U,
-        _POST_SIGMA_V = POST_SIGMA_V,
-        _POST_SIGMA_W = POST_SIGMA_W,
-        _COV = COV,
+        _PRE_EVENT = PRE_EVENT,
+        _POST_EVENT = POST_EVENT,
         _POST_MASS = POST_MASS,
         _POST_AREA = POST_AREA,
+        _COV = COV,
         _NUM_OBS = NUM_OBS,
-        _DESCRIPTION = DESCRIPTION,
-        _DESCRIPTOR = DESCRIPTOR,
         _STATE_MODEL = STATE_MODEL,
         _STATE_MODEL_VERSION = STATE_MODEL_VERSION,
         _NUM_ACCEL_POINTS = NUM_ACCEL_POINTS,
         _MNVR_ACCEL_TIMES = MNVR_ACCEL_TIMES,
         _MNVR_ACCELS = MNVR_ACCELS,
         _MNVR_ACCEL_UNCS = MNVR_ACCEL_UNCS,
-        _TAGS = TAGS,
+        _DESCRIPTION = DESCRIPTION,
+        _DESCRIPTOR = DESCRIPTOR,
         _ALGORITHM = ALGORITHM,
+        _TAGS = TAGS,
         _SOURCED_DATA = SOURCED_DATA,
         _SOURCED_DATA_TYPES = SOURCED_DATA_TYPES,
-        _ON_ORBIT = ON_ORBIT,
         _TRANSACTION_ID = TRANSACTION_ID;
 
   /// Finish building, and store into the [fbBuilder].
@@ -786,6 +888,10 @@ class MNVObjectBuilder extends fb.ObjectBuilder {
   int finish(fb.Builder fbBuilder) {
     final int? IDOffset = _ID == null ? null
         : fbBuilder.writeString(_ID!);
+    final int? ORIG_OBJECT_IDOffset = _ORIG_OBJECT_ID == null ? null
+        : fbBuilder.writeString(_ORIG_OBJECT_ID!);
+    final int? ON_ORBITOffset = _ON_ORBIT == null ? null
+        : fbBuilder.writeString(_ON_ORBIT!);
     final int? REPORT_TIMEOffset = _REPORT_TIME == null ? null
         : fbBuilder.writeString(_REPORT_TIME!);
     final int? EVENT_START_TIMEOffset = _EVENT_START_TIME == null ? null
@@ -796,150 +902,82 @@ class MNVObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_OD_FIT_END_TIME!);
     final int? ID_SENSOROffset = _ID_SENSOR == null ? null
         : fbBuilder.writeString(_ID_SENSOR!);
-    final int? CHARACTERIZATIONOffset = _CHARACTERIZATION == null ? null
-        : fbBuilder.writeString(_CHARACTERIZATION!);
-    final int? EVENT_IDOffset = _EVENT_ID == null ? null
-        : fbBuilder.writeString(_EVENT_ID!);
-    final int? ORIG_OBJECT_IDOffset = _ORIG_OBJECT_ID == null ? null
-        : fbBuilder.writeString(_ORIG_OBJECT_ID!);
     final int? ORIG_SENSOR_IDOffset = _ORIG_SENSOR_ID == null ? null
         : fbBuilder.writeString(_ORIG_SENSOR_ID!);
-    final int? STATUSOffset = _STATUS == null ? null
-        : fbBuilder.writeString(_STATUS!);
-    final int? PRE_EVENT_ID_ELSETOffset = _PRE_EVENT_ID_ELSET == null ? null
-        : fbBuilder.writeString(_PRE_EVENT_ID_ELSET!);
-    final int? PRE_EVENT_ELSETOffset = _PRE_EVENT_ELSET == null ? null
-        : fbBuilder.writeString(_PRE_EVENT_ELSET!);
-    final int? PRE_EVENT_ID_STATE_VECTOROffset = _PRE_EVENT_ID_STATE_VECTOR == null ? null
-        : fbBuilder.writeString(_PRE_EVENT_ID_STATE_VECTOR!);
-    final int? PRE_EVENT_STATE_VECTOROffset = _PRE_EVENT_STATE_VECTOR == null ? null
-        : fbBuilder.writeString(_PRE_EVENT_STATE_VECTOR!);
-    final int? POST_EVENT_ID_ELSETOffset = _POST_EVENT_ID_ELSET == null ? null
-        : fbBuilder.writeString(_POST_EVENT_ID_ELSET!);
-    final int? POST_EVENT_ELSETOffset = _POST_EVENT_ELSET == null ? null
-        : fbBuilder.writeString(_POST_EVENT_ELSET!);
-    final int? POST_EVENT_ID_STATE_VECTOROffset = _POST_EVENT_ID_STATE_VECTOR == null ? null
-        : fbBuilder.writeString(_POST_EVENT_ID_STATE_VECTOR!);
-    final int? POST_EVENT_STATE_VECTOROffset = _POST_EVENT_STATE_VECTOR == null ? null
-        : fbBuilder.writeString(_POST_EVENT_STATE_VECTOR!);
+    final int? EVENT_IDOffset = _EVENT_ID == null ? null
+        : fbBuilder.writeString(_EVENT_ID!);
+    final int? PRE_EVENTOffset = _PRE_EVENT?.getOrCreateOffset(fbBuilder);
+    final int? POST_EVENTOffset = _POST_EVENT?.getOrCreateOffset(fbBuilder);
     final int? COVOffset = _COV == null ? null
-        : fbBuilder.writeList(_COV!.map(fbBuilder.writeString).toList());
-    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
-        : fbBuilder.writeString(_DESCRIPTION!);
-    final int? DESCRIPTOROffset = _DESCRIPTOR == null ? null
-        : fbBuilder.writeString(_DESCRIPTOR!);
+        : fbBuilder.writeListFloat64(_COV!);
     final int? STATE_MODELOffset = _STATE_MODEL == null ? null
         : fbBuilder.writeString(_STATE_MODEL!);
     final int? MNVR_ACCEL_TIMESOffset = _MNVR_ACCEL_TIMES == null ? null
         : fbBuilder.writeList(_MNVR_ACCEL_TIMES!.map(fbBuilder.writeString).toList());
     final int? MNVR_ACCELSOffset = _MNVR_ACCELS == null ? null
-        : fbBuilder.writeList(_MNVR_ACCELS!.map(fbBuilder.writeString).toList());
+        : fbBuilder.writeListFloat64(_MNVR_ACCELS!);
     final int? MNVR_ACCEL_UNCSOffset = _MNVR_ACCEL_UNCS == null ? null
-        : fbBuilder.writeList(_MNVR_ACCEL_UNCS!.map(fbBuilder.writeString).toList());
-    final int? TAGSOffset = _TAGS == null ? null
-        : fbBuilder.writeList(_TAGS!.map(fbBuilder.writeString).toList());
+        : fbBuilder.writeListFloat64(_MNVR_ACCEL_UNCS!);
+    final int? DESCRIPTIONOffset = _DESCRIPTION == null ? null
+        : fbBuilder.writeString(_DESCRIPTION!);
+    final int? DESCRIPTOROffset = _DESCRIPTOR == null ? null
+        : fbBuilder.writeString(_DESCRIPTOR!);
     final int? ALGORITHMOffset = _ALGORITHM == null ? null
         : fbBuilder.writeString(_ALGORITHM!);
+    final int? TAGSOffset = _TAGS == null ? null
+        : fbBuilder.writeList(_TAGS!.map(fbBuilder.writeString).toList());
     final int? SOURCED_DATAOffset = _SOURCED_DATA == null ? null
         : fbBuilder.writeList(_SOURCED_DATA!.map(fbBuilder.writeString).toList());
     final int? SOURCED_DATA_TYPESOffset = _SOURCED_DATA_TYPES == null ? null
         : fbBuilder.writeString(_SOURCED_DATA_TYPES!);
-    final int? ON_ORBITOffset = _ON_ORBIT == null ? null
-        : fbBuilder.writeString(_ON_ORBIT!);
     final int? TRANSACTION_IDOffset = _TRANSACTION_ID == null ? null
         : fbBuilder.writeString(_TRANSACTION_ID!);
-    fbBuilder.startTable(91);
+    fbBuilder.startTable(45);
     fbBuilder.addOffset(0, IDOffset);
-    fbBuilder.addInt32(1, _SAT_NO);
-    fbBuilder.addOffset(2, REPORT_TIMEOffset);
-    fbBuilder.addOffset(3, EVENT_START_TIMEOffset);
-    fbBuilder.addOffset(4, EVENT_END_TIMEOffset);
-    fbBuilder.addFloat64(5, _TOTAL_BURN_TIME);
-    fbBuilder.addOffset(6, OD_FIT_END_TIMEOffset);
-    fbBuilder.addOffset(7, ID_SENSOROffset);
-    fbBuilder.addBool(8, _UCT);
-    fbBuilder.addFloat64(9, _MANEUVER_UNC);
-    fbBuilder.addOffset(10, CHARACTERIZATIONOffset);
-    fbBuilder.addFloat64(11, _CHARACTERIZATION_UNC);
-    fbBuilder.addOffset(12, EVENT_IDOffset);
-    fbBuilder.addOffset(13, ORIG_OBJECT_IDOffset);
-    fbBuilder.addOffset(14, ORIG_SENSOR_IDOffset);
-    fbBuilder.addOffset(15, STATUSOffset);
-    fbBuilder.addFloat64(16, _DELTA_POS);
-    fbBuilder.addFloat64(17, _DELTA_POS_U);
-    fbBuilder.addFloat64(18, _DELTA_POS_V);
-    fbBuilder.addFloat64(19, _DELTA_POS_W);
-    fbBuilder.addFloat64(20, _DELTA_VEL);
-    fbBuilder.addFloat64(21, _DELTA_VEL_U);
-    fbBuilder.addFloat64(22, _DELTA_VEL_V);
-    fbBuilder.addFloat64(23, _DELTA_VEL_W);
-    fbBuilder.addFloat64(24, _DELTA_MASS);
-    fbBuilder.addOffset(25, PRE_EVENT_ID_ELSETOffset);
-    fbBuilder.addOffset(26, PRE_EVENT_ELSETOffset);
-    fbBuilder.addOffset(27, PRE_EVENT_ID_STATE_VECTOROffset);
-    fbBuilder.addOffset(28, PRE_EVENT_STATE_VECTOROffset);
-    fbBuilder.addFloat64(29, _PRE_POS_X);
-    fbBuilder.addFloat64(30, _PRE_POS_Y);
-    fbBuilder.addFloat64(31, _PRE_POS_Z);
-    fbBuilder.addFloat64(32, _PRE_VEL_X);
-    fbBuilder.addFloat64(33, _PRE_VEL_Y);
-    fbBuilder.addFloat64(34, _PRE_VEL_Z);
-    fbBuilder.addFloat64(35, _PRE_RADIATION_PRESS_COEFF);
-    fbBuilder.addFloat64(36, _PRE_BALLISTIC_COEFF);
-    fbBuilder.addFloat64(37, _PRE_APOGEE);
-    fbBuilder.addFloat64(38, _PRE_PERIGEE);
-    fbBuilder.addFloat64(39, _PRE_INCLINATION);
-    fbBuilder.addFloat64(40, _PRE_ECCENTRICITY);
-    fbBuilder.addFloat64(41, _PRE_PERIOD);
-    fbBuilder.addFloat64(42, _PRE_RAAN);
-    fbBuilder.addFloat64(43, _PRE_SMA);
-    fbBuilder.addFloat64(44, _PRE_GEO_LONGITUDE);
-    fbBuilder.addFloat64(45, _PRE_DRIFT_RATE);
-    fbBuilder.addFloat64(46, _PRE_SIGMA_U);
-    fbBuilder.addFloat64(47, _PRE_SIGMA_V);
-    fbBuilder.addFloat64(48, _PRE_SIGMA_W);
-    fbBuilder.addOffset(49, POST_EVENT_ID_ELSETOffset);
-    fbBuilder.addOffset(50, POST_EVENT_ELSETOffset);
-    fbBuilder.addOffset(51, POST_EVENT_ID_STATE_VECTOROffset);
-    fbBuilder.addOffset(52, POST_EVENT_STATE_VECTOROffset);
-    fbBuilder.addFloat64(53, _POST_POS_X);
-    fbBuilder.addFloat64(54, _POST_POS_Y);
-    fbBuilder.addFloat64(55, _POST_POS_Z);
-    fbBuilder.addFloat64(56, _POST_VEL_X);
-    fbBuilder.addFloat64(57, _POST_VEL_Y);
-    fbBuilder.addFloat64(58, _POST_VEL_Z);
-    fbBuilder.addFloat64(59, _POST_RADIATION_PRESS_COEFF);
-    fbBuilder.addFloat64(60, _POST_BALLISTIC_COEFF);
-    fbBuilder.addFloat64(61, _POST_APOGEE);
-    fbBuilder.addFloat64(62, _POST_PERIGEE);
-    fbBuilder.addFloat64(63, _POST_INCLINATION);
-    fbBuilder.addFloat64(64, _POST_ECCENTRICITY);
-    fbBuilder.addFloat64(65, _POST_PERIOD);
-    fbBuilder.addFloat64(66, _POST_RAAN);
-    fbBuilder.addFloat64(67, _POST_SMA);
-    fbBuilder.addFloat64(68, _POST_GEO_LONGITUDE);
-    fbBuilder.addFloat64(69, _POST_DRIFT_RATE);
-    fbBuilder.addFloat64(70, _POST_SIGMA_U);
-    fbBuilder.addFloat64(71, _POST_SIGMA_V);
-    fbBuilder.addFloat64(72, _POST_SIGMA_W);
-    fbBuilder.addOffset(73, COVOffset);
-    fbBuilder.addFloat64(74, _POST_MASS);
-    fbBuilder.addFloat64(75, _POST_AREA);
-    fbBuilder.addInt32(76, _NUM_OBS);
-    fbBuilder.addOffset(77, DESCRIPTIONOffset);
-    fbBuilder.addOffset(78, DESCRIPTOROffset);
-    fbBuilder.addOffset(79, STATE_MODELOffset);
-    fbBuilder.addFloat64(80, _STATE_MODEL_VERSION);
-    fbBuilder.addInt32(81, _NUM_ACCEL_POINTS);
-    fbBuilder.addOffset(82, MNVR_ACCEL_TIMESOffset);
-    fbBuilder.addOffset(83, MNVR_ACCELSOffset);
-    fbBuilder.addOffset(84, MNVR_ACCEL_UNCSOffset);
-    fbBuilder.addOffset(85, TAGSOffset);
-    fbBuilder.addOffset(86, ALGORITHMOffset);
-    fbBuilder.addOffset(87, SOURCED_DATAOffset);
-    fbBuilder.addOffset(88, SOURCED_DATA_TYPESOffset);
-    fbBuilder.addOffset(89, ON_ORBITOffset);
-    fbBuilder.addOffset(90, TRANSACTION_IDOffset);
+    fbBuilder.addUint32(1, _SAT_NO);
+    fbBuilder.addOffset(2, ORIG_OBJECT_IDOffset);
+    fbBuilder.addOffset(3, ON_ORBITOffset);
+    fbBuilder.addInt8(4, _STATUS?.value);
+    fbBuilder.addInt8(5, _CHARACTERIZATION?.value);
+    fbBuilder.addFloat64(6, _CHARACTERIZATION_UNC);
+    fbBuilder.addOffset(7, REPORT_TIMEOffset);
+    fbBuilder.addOffset(8, EVENT_START_TIMEOffset);
+    fbBuilder.addOffset(9, EVENT_END_TIMEOffset);
+    fbBuilder.addFloat64(10, _TOTAL_BURN_TIME);
+    fbBuilder.addOffset(11, OD_FIT_END_TIMEOffset);
+    fbBuilder.addOffset(12, ID_SENSOROffset);
+    fbBuilder.addOffset(13, ORIG_SENSOR_IDOffset);
+    fbBuilder.addOffset(14, EVENT_IDOffset);
+    fbBuilder.addBool(15, _UCT);
+    fbBuilder.addFloat64(16, _MANEUVER_UNC);
+    fbBuilder.addFloat64(17, _DELTA_VEL);
+    fbBuilder.addFloat64(18, _DELTA_VEL_U);
+    fbBuilder.addFloat64(19, _DELTA_VEL_V);
+    fbBuilder.addFloat64(20, _DELTA_VEL_W);
+    fbBuilder.addFloat64(21, _DELTA_POS);
+    fbBuilder.addFloat64(22, _DELTA_POS_U);
+    fbBuilder.addFloat64(23, _DELTA_POS_V);
+    fbBuilder.addFloat64(24, _DELTA_POS_W);
+    fbBuilder.addFloat64(25, _DELTA_MASS);
+    fbBuilder.addOffset(26, PRE_EVENTOffset);
+    fbBuilder.addOffset(27, POST_EVENTOffset);
+    fbBuilder.addFloat64(28, _POST_MASS);
+    fbBuilder.addFloat64(29, _POST_AREA);
+    fbBuilder.addOffset(30, COVOffset);
+    fbBuilder.addUint32(31, _NUM_OBS);
+    fbBuilder.addOffset(32, STATE_MODELOffset);
+    fbBuilder.addFloat64(33, _STATE_MODEL_VERSION);
+    fbBuilder.addUint16(34, _NUM_ACCEL_POINTS);
+    fbBuilder.addOffset(35, MNVR_ACCEL_TIMESOffset);
+    fbBuilder.addOffset(36, MNVR_ACCELSOffset);
+    fbBuilder.addOffset(37, MNVR_ACCEL_UNCSOffset);
+    fbBuilder.addOffset(38, DESCRIPTIONOffset);
+    fbBuilder.addOffset(39, DESCRIPTOROffset);
+    fbBuilder.addOffset(40, ALGORITHMOffset);
+    fbBuilder.addOffset(41, TAGSOffset);
+    fbBuilder.addOffset(42, SOURCED_DATAOffset);
+    fbBuilder.addOffset(43, SOURCED_DATA_TYPESOffset);
+    fbBuilder.addOffset(44, TRANSACTION_IDOffset);
     return fbBuilder.endTable();
   }
 

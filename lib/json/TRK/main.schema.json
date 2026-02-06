@@ -1,165 +1,221 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "trackStatus" : {
+      "type" : "string",
+      "enum": ["ACTIVE", "DROPPED", "TENTATIVE", "CONFIRMED", "COASTED", "DEAD"]
+    },
+    "trackEnvironment" : {
+      "type" : "string",
+      "enum": ["SPACE", "AIR", "SURFACE", "SUBSURFACE", "LAND", "UNKNOWN"]
+    },
     "TRK" : {
       "type" : "object",
       "description" : "Track",
       "properties" : {
         "ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique identifier"
               },
         "CNTCT" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Contact reference"
               },
         "MSG_TS" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Message timestamp (ISO 8601)"
               },
         "MSN_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Mission identifier"
               },
         "ASSET_NAT" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Asset nationality"
               },
         "ASSET" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Asset identifier"
               },
-        "SEN" : {
-                "type" : "string"
+        "SENSOR_ID" : {
+                "type" : "string",
+                "description" : "Sensor identifier"
               },
         "SEN_QUAL" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Sensor quality assessment"
               },
         "TRK_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Track identifier"
               },
         "TRK_NUM" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Track number"
               },
         "TRK_STAT" : {
-                "type" : "string"
+                "$ref" : "#/definitions/trackStatus",
+                "description" : "Track status"
               },
         "OBJ_NAT" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Object nationality"
               },
         "OBJ_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Object identifier"
               },
         "OBJ_TYPE" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Object type classification"
               },
         "OBJ_SPEC" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Object specific type"
               },
         "OBJ_PLAT" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Object platform type"
               },
         "OBJ_ACT" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Object activity"
               },
         "MOD_TYPE" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Mode type"
               },
         "TRK_ITM_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Track item identifier"
               },
         "TS" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Track point timestamp (ISO 8601)"
               },
         "TRK_QUAL" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Track quality (0-15)"
               },
         "TRK_PT_TYPE" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Track point type"
               },
         "OBJ_IDENT" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Object identity assessment"
               },
         "IDENT_CRED" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Identity credibility (1-6)"
               },
         "IDENT_REL" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Identity reliability (A-F)"
               },
         "IDENT_AMP" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Identity amplification"
               },
         "ENVIRONMENT" : {
-                "type" : "string"
+                "$ref" : "#/definitions/trackEnvironment",
+                "description" : "Track environment"
               },
         "ENVIRONMENT_CONF" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Environment confidence (0-1)"
               },
         "TRK_CONF" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Track confidence (0-1)"
               },
         "LAT" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Latitude (degrees)"
               },
         "LON" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Longitude (degrees)"
               },
         "ALT" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Altitude (km)"
               },
         "SPD" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Speed (km/s)"
               },
         "HDNG" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Heading (degrees from north)"
               },
         "COURSE" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Course (degrees from north)"
               },
         "SRC_TYPS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Source types"
               },
         "SRC_IDS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Source identifiers"
               },
         "CALL_SIGN" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Call sign"
               },
         "MULTI_SOURCE" : {
-                "type" : "boolean"
+                "type" : "boolean",
+                "description" : "True if fused from multiple sources"
               },
         "J_SERIES" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "J-series message type"
               },
         "STRENGTH" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Force strength indicator"
               },
         "M1" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Mode 1 code"
               },
         "M1V" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Mode 1 validity"
               },
         "M2" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Mode 2 code"
               },
         "M2V" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Mode 2 validity"
               },
         "M3A" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Mode 3A code"
               },
         "M3AV" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Mode 3A validity"
               },
         "TAGS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Associated tags"
               },
         "TRACK_START_TIME" : {
                 "type" : "string",
-                "description" : "Start time for track data (ISO 8601 UTC format)."
+                "description" : "Start time for track data (ISO 8601)"
               },
         "TRACK_STEP_SIZE" : {
                 "type" : "number",
-                "description" : "Time interval between track points in seconds."
+                "description" : "Time interval between track points (seconds)"
               },
         "TRACK_COMPONENTS" : {
                 "type" : "integer", "minimum" : 0, "maximum" :255,
-                "description" : "Number of components per point (default 3 for X, Y, Z)."
+                "description" : "Number of components per point (default 3 for X, Y, Z)"
               },
         "ECEF_POS" : {
                 "type" : "array", "items" : {"type" : "number"},

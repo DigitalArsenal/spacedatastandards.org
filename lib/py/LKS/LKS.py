@@ -29,6 +29,7 @@ class LKS(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Unique identifier
     # LKS
     def ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +37,7 @@ class LKS(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # First endpoint on-orbit identifier
     # LKS
     def ID_ON_ORBIT1(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -43,27 +45,31 @@ class LKS(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # First endpoint satellite catalog number
     # LKS
-    def ID_ON_ORBIT2(self):
+    def SAT_NO1(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
 
+    # Second endpoint on-orbit identifier
     # LKS
-    def LINK_START_TIME(self):
+    def ID_ON_ORBIT2(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Second endpoint satellite catalog number
     # LKS
-    def LINK_STOP_TIME(self):
+    def SAT_NO2(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
 
+    # Constellation name
     # LKS
     def CONSTELLATION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
@@ -71,6 +77,7 @@ class LKS(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Link name or identifier
     # LKS
     def LINK_NAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
@@ -78,124 +85,141 @@ class LKS(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Link type
     # LKS
     def LINK_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
+    # Link state
     # LKS
-    def BAND(self):
+    def LINK_STATE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
+    # RF band
     # LKS
-    def ID_BEAM1(self):
+    def BAND(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Link start time (ISO 8601)
     # LKS
-    def END_POINT1_NAME(self):
+    def LINK_START_TIME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Link stop time (ISO 8601)
     # LKS
-    def END_POINT1_LAT(self):
+    def LINK_STOP_TIME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
+    # First endpoint beam identifier
     # LKS
-    def END_POINT1_LON(self):
+    def ID_BEAM1(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
+    # First endpoint name
     # LKS
-    def ID_BEAM2(self):
+    def END_POINT1_NAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # First endpoint latitude (degrees)
     # LKS
-    def END_POINT2_NAME(self):
+    def END_POINT1_LAT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
 
+    # First endpoint longitude (degrees)
     # LKS
-    def END_POINT2_LAT(self):
+    def END_POINT1_LON(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Second endpoint beam identifier
     # LKS
-    def END_POINT2_LON(self):
+    def ID_BEAM2(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
+    # Second endpoint name
     # LKS
-    def DATA_RATE1_TO2(self):
+    def END_POINT2_NAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
+    # Second endpoint latitude (degrees)
     # LKS
-    def DATA_RATE2_TO1(self):
+    def END_POINT2_LAT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Second endpoint longitude (degrees)
     # LKS
-    def LINK_STATE(self):
+    def END_POINT2_LON(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
 
+    # Data rate from endpoint 1 to 2 (Mbps)
     # LKS
-    def SYS_CAP(self):
+    def DATA_RATE1_TO2(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
 
+    # Data rate from endpoint 2 to 1 (Mbps)
     # LKS
-    def OPS_CAP(self):
+    def DATA_RATE2_TO1(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # System capability status
+    # LKS
+    def SYS_CAP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Operational capability status
     # LKS
-    def SAT_NO1(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
-    # LKS
-    def SAT_NO2(self):
+    def OPS_CAP(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
 def LKSStart(builder):
     builder.StartObject(24)
@@ -215,23 +239,23 @@ def LKSAddID_ON_ORBIT1(builder, ID_ON_ORBIT1):
 def AddID_ON_ORBIT1(builder, ID_ON_ORBIT1):
     LKSAddID_ON_ORBIT1(builder, ID_ON_ORBIT1)
 
+def LKSAddSAT_NO1(builder, SAT_NO1):
+    builder.PrependUint32Slot(2, SAT_NO1, 0)
+
+def AddSAT_NO1(builder, SAT_NO1):
+    LKSAddSAT_NO1(builder, SAT_NO1)
+
 def LKSAddID_ON_ORBIT2(builder, ID_ON_ORBIT2):
-    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ID_ON_ORBIT2), 0)
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ID_ON_ORBIT2), 0)
 
 def AddID_ON_ORBIT2(builder, ID_ON_ORBIT2):
     LKSAddID_ON_ORBIT2(builder, ID_ON_ORBIT2)
 
-def LKSAddLINK_START_TIME(builder, LINK_START_TIME):
-    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(LINK_START_TIME), 0)
+def LKSAddSAT_NO2(builder, SAT_NO2):
+    builder.PrependUint32Slot(4, SAT_NO2, 0)
 
-def AddLINK_START_TIME(builder, LINK_START_TIME):
-    LKSAddLINK_START_TIME(builder, LINK_START_TIME)
-
-def LKSAddLINK_STOP_TIME(builder, LINK_STOP_TIME):
-    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(LINK_STOP_TIME), 0)
-
-def AddLINK_STOP_TIME(builder, LINK_STOP_TIME):
-    LKSAddLINK_STOP_TIME(builder, LINK_STOP_TIME)
+def AddSAT_NO2(builder, SAT_NO2):
+    LKSAddSAT_NO2(builder, SAT_NO2)
 
 def LKSAddCONSTELLATION(builder, CONSTELLATION):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(CONSTELLATION), 0)
@@ -246,106 +270,106 @@ def AddLINK_NAME(builder, LINK_NAME):
     LKSAddLINK_NAME(builder, LINK_NAME)
 
 def LKSAddLINK_TYPE(builder, LINK_TYPE):
-    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(LINK_TYPE), 0)
+    builder.PrependInt8Slot(7, LINK_TYPE, 0)
 
 def AddLINK_TYPE(builder, LINK_TYPE):
     LKSAddLINK_TYPE(builder, LINK_TYPE)
 
+def LKSAddLINK_STATE(builder, LINK_STATE):
+    builder.PrependInt8Slot(8, LINK_STATE, 0)
+
+def AddLINK_STATE(builder, LINK_STATE):
+    LKSAddLINK_STATE(builder, LINK_STATE)
+
 def LKSAddBAND(builder, BAND):
-    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(BAND), 0)
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(BAND), 0)
 
 def AddBAND(builder, BAND):
     LKSAddBAND(builder, BAND)
 
+def LKSAddLINK_START_TIME(builder, LINK_START_TIME):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(LINK_START_TIME), 0)
+
+def AddLINK_START_TIME(builder, LINK_START_TIME):
+    LKSAddLINK_START_TIME(builder, LINK_START_TIME)
+
+def LKSAddLINK_STOP_TIME(builder, LINK_STOP_TIME):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(LINK_STOP_TIME), 0)
+
+def AddLINK_STOP_TIME(builder, LINK_STOP_TIME):
+    LKSAddLINK_STOP_TIME(builder, LINK_STOP_TIME)
+
 def LKSAddID_BEAM1(builder, ID_BEAM1):
-    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ID_BEAM1), 0)
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(ID_BEAM1), 0)
 
 def AddID_BEAM1(builder, ID_BEAM1):
     LKSAddID_BEAM1(builder, ID_BEAM1)
 
 def LKSAddEND_POINT1_NAME(builder, END_POINT1_NAME):
-    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(END_POINT1_NAME), 0)
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(END_POINT1_NAME), 0)
 
 def AddEND_POINT1_NAME(builder, END_POINT1_NAME):
     LKSAddEND_POINT1_NAME(builder, END_POINT1_NAME)
 
 def LKSAddEND_POINT1_LAT(builder, END_POINT1_LAT):
-    builder.PrependFloat64Slot(11, END_POINT1_LAT, 0.0)
+    builder.PrependFloat64Slot(14, END_POINT1_LAT, 0.0)
 
 def AddEND_POINT1_LAT(builder, END_POINT1_LAT):
     LKSAddEND_POINT1_LAT(builder, END_POINT1_LAT)
 
 def LKSAddEND_POINT1_LON(builder, END_POINT1_LON):
-    builder.PrependFloat64Slot(12, END_POINT1_LON, 0.0)
+    builder.PrependFloat64Slot(15, END_POINT1_LON, 0.0)
 
 def AddEND_POINT1_LON(builder, END_POINT1_LON):
     LKSAddEND_POINT1_LON(builder, END_POINT1_LON)
 
 def LKSAddID_BEAM2(builder, ID_BEAM2):
-    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(ID_BEAM2), 0)
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(ID_BEAM2), 0)
 
 def AddID_BEAM2(builder, ID_BEAM2):
     LKSAddID_BEAM2(builder, ID_BEAM2)
 
 def LKSAddEND_POINT2_NAME(builder, END_POINT2_NAME):
-    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(END_POINT2_NAME), 0)
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(END_POINT2_NAME), 0)
 
 def AddEND_POINT2_NAME(builder, END_POINT2_NAME):
     LKSAddEND_POINT2_NAME(builder, END_POINT2_NAME)
 
 def LKSAddEND_POINT2_LAT(builder, END_POINT2_LAT):
-    builder.PrependFloat64Slot(15, END_POINT2_LAT, 0.0)
+    builder.PrependFloat64Slot(18, END_POINT2_LAT, 0.0)
 
 def AddEND_POINT2_LAT(builder, END_POINT2_LAT):
     LKSAddEND_POINT2_LAT(builder, END_POINT2_LAT)
 
 def LKSAddEND_POINT2_LON(builder, END_POINT2_LON):
-    builder.PrependFloat64Slot(16, END_POINT2_LON, 0.0)
+    builder.PrependFloat64Slot(19, END_POINT2_LON, 0.0)
 
 def AddEND_POINT2_LON(builder, END_POINT2_LON):
     LKSAddEND_POINT2_LON(builder, END_POINT2_LON)
 
 def LKSAddDATA_RATE1_TO2(builder, DATA_RATE1_TO2):
-    builder.PrependFloat64Slot(17, DATA_RATE1_TO2, 0.0)
+    builder.PrependFloat64Slot(20, DATA_RATE1_TO2, 0.0)
 
 def AddDATA_RATE1_TO2(builder, DATA_RATE1_TO2):
     LKSAddDATA_RATE1_TO2(builder, DATA_RATE1_TO2)
 
 def LKSAddDATA_RATE2_TO1(builder, DATA_RATE2_TO1):
-    builder.PrependFloat64Slot(18, DATA_RATE2_TO1, 0.0)
+    builder.PrependFloat64Slot(21, DATA_RATE2_TO1, 0.0)
 
 def AddDATA_RATE2_TO1(builder, DATA_RATE2_TO1):
     LKSAddDATA_RATE2_TO1(builder, DATA_RATE2_TO1)
 
-def LKSAddLINK_STATE(builder, LINK_STATE):
-    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(LINK_STATE), 0)
-
-def AddLINK_STATE(builder, LINK_STATE):
-    LKSAddLINK_STATE(builder, LINK_STATE)
-
 def LKSAddSYS_CAP(builder, SYS_CAP):
-    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(SYS_CAP), 0)
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(SYS_CAP), 0)
 
 def AddSYS_CAP(builder, SYS_CAP):
     LKSAddSYS_CAP(builder, SYS_CAP)
 
 def LKSAddOPS_CAP(builder, OPS_CAP):
-    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(OPS_CAP), 0)
+    builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(OPS_CAP), 0)
 
 def AddOPS_CAP(builder, OPS_CAP):
     LKSAddOPS_CAP(builder, OPS_CAP)
-
-def LKSAddSAT_NO1(builder, SAT_NO1):
-    builder.PrependInt32Slot(22, SAT_NO1, 0)
-
-def AddSAT_NO1(builder, SAT_NO1):
-    LKSAddSAT_NO1(builder, SAT_NO1)
-
-def LKSAddSAT_NO2(builder, SAT_NO2):
-    builder.PrependInt32Slot(23, SAT_NO2, 0)
-
-def AddSAT_NO2(builder, SAT_NO2):
-    LKSAddSAT_NO2(builder, SAT_NO2)
 
 def LKSEnd(builder):
     return builder.EndObject()
@@ -360,13 +384,16 @@ class LKST(object):
     def __init__(self):
         self.ID = None  # type: str
         self.ID_ON_ORBIT1 = None  # type: str
+        self.SAT_NO1 = 0  # type: int
         self.ID_ON_ORBIT2 = None  # type: str
-        self.LINK_START_TIME = None  # type: str
-        self.LINK_STOP_TIME = None  # type: str
+        self.SAT_NO2 = 0  # type: int
         self.CONSTELLATION = None  # type: str
         self.LINK_NAME = None  # type: str
-        self.LINK_TYPE = None  # type: str
+        self.LINK_TYPE = 0  # type: int
+        self.LINK_STATE = 0  # type: int
         self.BAND = None  # type: str
+        self.LINK_START_TIME = None  # type: str
+        self.LINK_STOP_TIME = None  # type: str
         self.ID_BEAM1 = None  # type: str
         self.END_POINT1_NAME = None  # type: str
         self.END_POINT1_LAT = 0.0  # type: float
@@ -377,11 +404,8 @@ class LKST(object):
         self.END_POINT2_LON = 0.0  # type: float
         self.DATA_RATE1_TO2 = 0.0  # type: float
         self.DATA_RATE2_TO1 = 0.0  # type: float
-        self.LINK_STATE = None  # type: str
         self.SYS_CAP = None  # type: str
         self.OPS_CAP = None  # type: str
-        self.SAT_NO1 = 0  # type: int
-        self.SAT_NO2 = 0  # type: int
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -406,13 +430,16 @@ class LKST(object):
             return
         self.ID = LKS.ID()
         self.ID_ON_ORBIT1 = LKS.ID_ON_ORBIT1()
+        self.SAT_NO1 = LKS.SAT_NO1()
         self.ID_ON_ORBIT2 = LKS.ID_ON_ORBIT2()
-        self.LINK_START_TIME = LKS.LINK_START_TIME()
-        self.LINK_STOP_TIME = LKS.LINK_STOP_TIME()
+        self.SAT_NO2 = LKS.SAT_NO2()
         self.CONSTELLATION = LKS.CONSTELLATION()
         self.LINK_NAME = LKS.LINK_NAME()
         self.LINK_TYPE = LKS.LINK_TYPE()
+        self.LINK_STATE = LKS.LINK_STATE()
         self.BAND = LKS.BAND()
+        self.LINK_START_TIME = LKS.LINK_START_TIME()
+        self.LINK_STOP_TIME = LKS.LINK_STOP_TIME()
         self.ID_BEAM1 = LKS.ID_BEAM1()
         self.END_POINT1_NAME = LKS.END_POINT1_NAME()
         self.END_POINT1_LAT = LKS.END_POINT1_LAT()
@@ -423,11 +450,8 @@ class LKST(object):
         self.END_POINT2_LON = LKS.END_POINT2_LON()
         self.DATA_RATE1_TO2 = LKS.DATA_RATE1_TO2()
         self.DATA_RATE2_TO1 = LKS.DATA_RATE2_TO1()
-        self.LINK_STATE = LKS.LINK_STATE()
         self.SYS_CAP = LKS.SYS_CAP()
         self.OPS_CAP = LKS.OPS_CAP()
-        self.SAT_NO1 = LKS.SAT_NO1()
-        self.SAT_NO2 = LKS.SAT_NO2()
 
     # LKST
     def Pack(self, builder):
@@ -437,18 +461,16 @@ class LKST(object):
             ID_ON_ORBIT1 = builder.CreateString(self.ID_ON_ORBIT1)
         if self.ID_ON_ORBIT2 is not None:
             ID_ON_ORBIT2 = builder.CreateString(self.ID_ON_ORBIT2)
-        if self.LINK_START_TIME is not None:
-            LINK_START_TIME = builder.CreateString(self.LINK_START_TIME)
-        if self.LINK_STOP_TIME is not None:
-            LINK_STOP_TIME = builder.CreateString(self.LINK_STOP_TIME)
         if self.CONSTELLATION is not None:
             CONSTELLATION = builder.CreateString(self.CONSTELLATION)
         if self.LINK_NAME is not None:
             LINK_NAME = builder.CreateString(self.LINK_NAME)
-        if self.LINK_TYPE is not None:
-            LINK_TYPE = builder.CreateString(self.LINK_TYPE)
         if self.BAND is not None:
             BAND = builder.CreateString(self.BAND)
+        if self.LINK_START_TIME is not None:
+            LINK_START_TIME = builder.CreateString(self.LINK_START_TIME)
+        if self.LINK_STOP_TIME is not None:
+            LINK_STOP_TIME = builder.CreateString(self.LINK_STOP_TIME)
         if self.ID_BEAM1 is not None:
             ID_BEAM1 = builder.CreateString(self.ID_BEAM1)
         if self.END_POINT1_NAME is not None:
@@ -457,8 +479,6 @@ class LKST(object):
             ID_BEAM2 = builder.CreateString(self.ID_BEAM2)
         if self.END_POINT2_NAME is not None:
             END_POINT2_NAME = builder.CreateString(self.END_POINT2_NAME)
-        if self.LINK_STATE is not None:
-            LINK_STATE = builder.CreateString(self.LINK_STATE)
         if self.SYS_CAP is not None:
             SYS_CAP = builder.CreateString(self.SYS_CAP)
         if self.OPS_CAP is not None:
@@ -468,20 +488,22 @@ class LKST(object):
             LKSAddID(builder, ID)
         if self.ID_ON_ORBIT1 is not None:
             LKSAddID_ON_ORBIT1(builder, ID_ON_ORBIT1)
+        LKSAddSAT_NO1(builder, self.SAT_NO1)
         if self.ID_ON_ORBIT2 is not None:
             LKSAddID_ON_ORBIT2(builder, ID_ON_ORBIT2)
-        if self.LINK_START_TIME is not None:
-            LKSAddLINK_START_TIME(builder, LINK_START_TIME)
-        if self.LINK_STOP_TIME is not None:
-            LKSAddLINK_STOP_TIME(builder, LINK_STOP_TIME)
+        LKSAddSAT_NO2(builder, self.SAT_NO2)
         if self.CONSTELLATION is not None:
             LKSAddCONSTELLATION(builder, CONSTELLATION)
         if self.LINK_NAME is not None:
             LKSAddLINK_NAME(builder, LINK_NAME)
-        if self.LINK_TYPE is not None:
-            LKSAddLINK_TYPE(builder, LINK_TYPE)
+        LKSAddLINK_TYPE(builder, self.LINK_TYPE)
+        LKSAddLINK_STATE(builder, self.LINK_STATE)
         if self.BAND is not None:
             LKSAddBAND(builder, BAND)
+        if self.LINK_START_TIME is not None:
+            LKSAddLINK_START_TIME(builder, LINK_START_TIME)
+        if self.LINK_STOP_TIME is not None:
+            LKSAddLINK_STOP_TIME(builder, LINK_STOP_TIME)
         if self.ID_BEAM1 is not None:
             LKSAddID_BEAM1(builder, ID_BEAM1)
         if self.END_POINT1_NAME is not None:
@@ -496,13 +518,9 @@ class LKST(object):
         LKSAddEND_POINT2_LON(builder, self.END_POINT2_LON)
         LKSAddDATA_RATE1_TO2(builder, self.DATA_RATE1_TO2)
         LKSAddDATA_RATE2_TO1(builder, self.DATA_RATE2_TO1)
-        if self.LINK_STATE is not None:
-            LKSAddLINK_STATE(builder, LINK_STATE)
         if self.SYS_CAP is not None:
             LKSAddSYS_CAP(builder, SYS_CAP)
         if self.OPS_CAP is not None:
             LKSAddOPS_CAP(builder, OPS_CAP)
-        LKSAddSAT_NO1(builder, self.SAT_NO1)
-        LKSAddSAT_NO2(builder, self.SAT_NO2)
         LKS = LKSEnd(builder)
         return LKS

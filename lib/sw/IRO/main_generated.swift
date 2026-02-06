@@ -4,6 +4,36 @@
 
 import FlatBuffers
 
+public enum irBand: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case swir = 0
+  case mwir = 1
+  case lwir = 2
+  case vlwir = 3
+  case broadband = 4
+
+  public static var max: irBand { return .broadband }
+  public static var min: irBand { return .swir }
+}
+
+
+public enum irDetectionType: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case pointSource = 0
+  case resolved = 1
+  case streak = 2
+  case unresolved = 3
+  case extended = 4
+
+  public static var max: irDetectionType { return .extended }
+  public static var min: irDetectionType { return .pointSource }
+}
+
+
 ///  Infrared Observation
 public struct IRO: FlatBufferObject, Verifiable {
 
@@ -22,26 +52,141 @@ public struct IRO: FlatBufferObject, Verifiable {
     case NAME = 8
     case DESCRIPTION = 10
     case ENTITY = 12
+    case EPOCH = 14
+    case SENSOR_ID = 16
+    case SAT_NO = 18
+    case OBJECT_DESIGNATOR = 20
+    case BAND = 22
+    case DETECTION_TYPE = 24
+    case RA = 26
+    case DEC = 28
+    case RA_UNC = 30
+    case DEC_UNC = 32
+    case AZIMUTH = 34
+    case ELEVATION = 36
+    case RANGE = 38
+    case IRRADIANCE = 40
+    case IRRADIANCE_UNC = 42
+    case IR_MAG = 44
+    case MAG_UNC = 46
+    case TEMPERATURE = 48
+    case INTEGRATION_TIME = 50
+    case BACKGROUND = 52
+    case SNR = 54
+    case WAVELENGTHS = 56
+    case SPECTRAL_VALUES = 58
+    case QUALITY = 60
+    case NOTES = 62
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
+  ///  Unique identifier
   public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  ///  Reference to source entity
   public var ID_ENTITY: String? { let o = _accessor.offset(VTOFFSET.ID_ENTITY.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ID_ENTITYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_ENTITY.v) }
+  ///  Sensor or observation name
   public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  ///  Description of observation
   public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
+  ///  Source entity designator
   public var ENTITY: String? { let o = _accessor.offset(VTOFFSET.ENTITY.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ENTITYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ENTITY.v) }
-  public static func startIRO(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  ///  Observation epoch (ISO 8601)
+  public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
+  ///  Sensor identifier
+  public var SENSOR_ID: String? { let o = _accessor.offset(VTOFFSET.SENSOR_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SENSOR_ID.v) }
+  ///  Target satellite number (if identified)
+  public var SAT_NO: UInt32 { let o = _accessor.offset(VTOFFSET.SAT_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Target object designator
+  public var OBJECT_DESIGNATOR: String? { let o = _accessor.offset(VTOFFSET.OBJECT_DESIGNATOR.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_DESIGNATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJECT_DESIGNATOR.v) }
+  ///  IR spectral band
+  public var BAND: irBand { let o = _accessor.offset(VTOFFSET.BAND.v); return o == 0 ? .swir : irBand(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .swir }
+  ///  Detection type
+  public var DETECTION_TYPE: irDetectionType { let o = _accessor.offset(VTOFFSET.DETECTION_TYPE.v); return o == 0 ? .pointSource : irDetectionType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .pointSource }
+  ///  Right ascension in degrees
+  public var RA: Double { let o = _accessor.offset(VTOFFSET.RA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Declination in degrees
+  public var DEC: Double { let o = _accessor.offset(VTOFFSET.DEC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Right ascension uncertainty in arcseconds
+  public var RA_UNC: Double { let o = _accessor.offset(VTOFFSET.RA_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Declination uncertainty in arcseconds
+  public var DEC_UNC: Double { let o = _accessor.offset(VTOFFSET.DEC_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Azimuth angle in degrees
+  public var AZIMUTH: Double { let o = _accessor.offset(VTOFFSET.AZIMUTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Elevation angle in degrees
+  public var ELEVATION: Double { let o = _accessor.offset(VTOFFSET.ELEVATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Range in km (if available)
+  public var RANGE: Double { let o = _accessor.offset(VTOFFSET.RANGE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Irradiance in W/m^2
+  public var IRRADIANCE: Double { let o = _accessor.offset(VTOFFSET.IRRADIANCE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Irradiance uncertainty in W/m^2
+  public var IRRADIANCE_UNC: Double { let o = _accessor.offset(VTOFFSET.IRRADIANCE_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Apparent IR magnitude
+  public var IR_MAG: Double { let o = _accessor.offset(VTOFFSET.IR_MAG.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Magnitude uncertainty
+  public var MAG_UNC: Double { let o = _accessor.offset(VTOFFSET.MAG_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Effective temperature in Kelvin
+  public var TEMPERATURE: Double { let o = _accessor.offset(VTOFFSET.TEMPERATURE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Integration time in seconds
+  public var INTEGRATION_TIME: Double { let o = _accessor.offset(VTOFFSET.INTEGRATION_TIME.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Background irradiance in W/m^2/sr
+  public var BACKGROUND: Double { let o = _accessor.offset(VTOFFSET.BACKGROUND.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Signal-to-noise ratio
+  public var SNR: Double { let o = _accessor.offset(VTOFFSET.SNR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Spectral data wavelengths in micrometers
+  public var hasWavelengths: Bool { let o = _accessor.offset(VTOFFSET.WAVELENGTHS.v); return o == 0 ? false : true }
+  public var WAVELENGTHSCount: Int32 { let o = _accessor.offset(VTOFFSET.WAVELENGTHS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func WAVELENGTHS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.WAVELENGTHS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
+  public var WAVELENGTHS: [Double] { return _accessor.getVector(at: VTOFFSET.WAVELENGTHS.v) ?? [] }
+  ///  Spectral data values in W/m^2/um
+  public var hasSpectralValues: Bool { let o = _accessor.offset(VTOFFSET.SPECTRAL_VALUES.v); return o == 0 ? false : true }
+  public var SPECTRAL_VALUESCount: Int32 { let o = _accessor.offset(VTOFFSET.SPECTRAL_VALUES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func SPECTRAL_VALUES(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.SPECTRAL_VALUES.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
+  public var SPECTRAL_VALUES: [Double] { return _accessor.getVector(at: VTOFFSET.SPECTRAL_VALUES.v) ?? [] }
+  ///  Data quality indicator (0-9, 9=best)
+  public var QUALITY: UInt8 { let o = _accessor.offset(VTOFFSET.QUALITY.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Additional notes
+  public var NOTES: String? { let o = _accessor.offset(VTOFFSET.NOTES.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NOTES.v) }
+  public static func startIRO(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 30) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(ID_ENTITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_ENTITY, at: VTOFFSET.ID_ENTITY.p) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
   public static func add(ENTITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTITY, at: VTOFFSET.ENTITY.p) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VTOFFSET.EPOCH.p) }
+  public static func add(SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SENSOR_ID, at: VTOFFSET.SENSOR_ID.p) }
+  public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }
+  public static func add(OBJECT_DESIGNATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_DESIGNATOR, at: VTOFFSET.OBJECT_DESIGNATOR.p) }
+  public static func add(BAND: irBand, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BAND.rawValue, def: 0, at: VTOFFSET.BAND.p) }
+  public static func add(DETECTION_TYPE: irDetectionType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DETECTION_TYPE.rawValue, def: 0, at: VTOFFSET.DETECTION_TYPE.p) }
+  public static func add(RA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RA, def: 0.0, at: VTOFFSET.RA.p) }
+  public static func add(DEC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEC, def: 0.0, at: VTOFFSET.DEC.p) }
+  public static func add(RA_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RA_UNC, def: 0.0, at: VTOFFSET.RA_UNC.p) }
+  public static func add(DEC_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEC_UNC, def: 0.0, at: VTOFFSET.DEC_UNC.p) }
+  public static func add(AZIMUTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: AZIMUTH, def: 0.0, at: VTOFFSET.AZIMUTH.p) }
+  public static func add(ELEVATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ELEVATION, def: 0.0, at: VTOFFSET.ELEVATION.p) }
+  public static func add(RANGE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RANGE, def: 0.0, at: VTOFFSET.RANGE.p) }
+  public static func add(IRRADIANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IRRADIANCE, def: 0.0, at: VTOFFSET.IRRADIANCE.p) }
+  public static func add(IRRADIANCE_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IRRADIANCE_UNC, def: 0.0, at: VTOFFSET.IRRADIANCE_UNC.p) }
+  public static func add(IR_MAG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: IR_MAG, def: 0.0, at: VTOFFSET.IR_MAG.p) }
+  public static func add(MAG_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MAG_UNC, def: 0.0, at: VTOFFSET.MAG_UNC.p) }
+  public static func add(TEMPERATURE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TEMPERATURE, def: 0.0, at: VTOFFSET.TEMPERATURE.p) }
+  public static func add(INTEGRATION_TIME: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INTEGRATION_TIME, def: 0.0, at: VTOFFSET.INTEGRATION_TIME.p) }
+  public static func add(BACKGROUND: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BACKGROUND, def: 0.0, at: VTOFFSET.BACKGROUND.p) }
+  public static func add(SNR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SNR, def: 0.0, at: VTOFFSET.SNR.p) }
+  public static func addVectorOf(WAVELENGTHS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: WAVELENGTHS, at: VTOFFSET.WAVELENGTHS.p) }
+  public static func addVectorOf(SPECTRAL_VALUES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SPECTRAL_VALUES, at: VTOFFSET.SPECTRAL_VALUES.p) }
+  public static func add(QUALITY: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QUALITY, def: 0, at: VTOFFSET.QUALITY.p) }
+  public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VTOFFSET.NOTES.p) }
   public static func endIRO(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createIRO(
     _ fbb: inout FlatBufferBuilder,
@@ -49,7 +194,32 @@ public struct IRO: FlatBufferObject, Verifiable {
     ID_ENTITYOffset ID_ENTITY: Offset = Offset(),
     NAMEOffset NAME: Offset = Offset(),
     DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
-    ENTITYOffset ENTITY: Offset = Offset()
+    ENTITYOffset ENTITY: Offset = Offset(),
+    EPOCHOffset EPOCH: Offset = Offset(),
+    SENSOR_IDOffset SENSOR_ID: Offset = Offset(),
+    SAT_NO: UInt32 = 0,
+    OBJECT_DESIGNATOROffset OBJECT_DESIGNATOR: Offset = Offset(),
+    BAND: irBand = .swir,
+    DETECTION_TYPE: irDetectionType = .pointSource,
+    RA: Double = 0.0,
+    DEC: Double = 0.0,
+    RA_UNC: Double = 0.0,
+    DEC_UNC: Double = 0.0,
+    AZIMUTH: Double = 0.0,
+    ELEVATION: Double = 0.0,
+    RANGE: Double = 0.0,
+    IRRADIANCE: Double = 0.0,
+    IRRADIANCE_UNC: Double = 0.0,
+    IR_MAG: Double = 0.0,
+    MAG_UNC: Double = 0.0,
+    TEMPERATURE: Double = 0.0,
+    INTEGRATION_TIME: Double = 0.0,
+    BACKGROUND: Double = 0.0,
+    SNR: Double = 0.0,
+    WAVELENGTHSVectorOffset WAVELENGTHS: Offset = Offset(),
+    SPECTRAL_VALUESVectorOffset SPECTRAL_VALUES: Offset = Offset(),
+    QUALITY: UInt8 = 0,
+    NOTESOffset NOTES: Offset = Offset()
   ) -> Offset {
     let __start = IRO.startIRO(&fbb)
     IRO.add(ID: ID, &fbb)
@@ -57,6 +227,31 @@ public struct IRO: FlatBufferObject, Verifiable {
     IRO.add(NAME: NAME, &fbb)
     IRO.add(DESCRIPTION: DESCRIPTION, &fbb)
     IRO.add(ENTITY: ENTITY, &fbb)
+    IRO.add(EPOCH: EPOCH, &fbb)
+    IRO.add(SENSOR_ID: SENSOR_ID, &fbb)
+    IRO.add(SAT_NO: SAT_NO, &fbb)
+    IRO.add(OBJECT_DESIGNATOR: OBJECT_DESIGNATOR, &fbb)
+    IRO.add(BAND: BAND, &fbb)
+    IRO.add(DETECTION_TYPE: DETECTION_TYPE, &fbb)
+    IRO.add(RA: RA, &fbb)
+    IRO.add(DEC: DEC, &fbb)
+    IRO.add(RA_UNC: RA_UNC, &fbb)
+    IRO.add(DEC_UNC: DEC_UNC, &fbb)
+    IRO.add(AZIMUTH: AZIMUTH, &fbb)
+    IRO.add(ELEVATION: ELEVATION, &fbb)
+    IRO.add(RANGE: RANGE, &fbb)
+    IRO.add(IRRADIANCE: IRRADIANCE, &fbb)
+    IRO.add(IRRADIANCE_UNC: IRRADIANCE_UNC, &fbb)
+    IRO.add(IR_MAG: IR_MAG, &fbb)
+    IRO.add(MAG_UNC: MAG_UNC, &fbb)
+    IRO.add(TEMPERATURE: TEMPERATURE, &fbb)
+    IRO.add(INTEGRATION_TIME: INTEGRATION_TIME, &fbb)
+    IRO.add(BACKGROUND: BACKGROUND, &fbb)
+    IRO.add(SNR: SNR, &fbb)
+    IRO.addVectorOf(WAVELENGTHS: WAVELENGTHS, &fbb)
+    IRO.addVectorOf(SPECTRAL_VALUES: SPECTRAL_VALUES, &fbb)
+    IRO.add(QUALITY: QUALITY, &fbb)
+    IRO.add(NOTES: NOTES, &fbb)
     return IRO.endIRO(&fbb, start: __start)
   }
 
@@ -67,6 +262,31 @@ public struct IRO: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.DESCRIPTION.p, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ENTITY.p, fieldName: "ENTITY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.EPOCH.p, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.SENSOR_ID.p, fieldName: "SENSOR_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.SAT_NO.p, fieldName: "SAT_NO", required: false, type: UInt32.self)
+    try _v.visit(field: VTOFFSET.OBJECT_DESIGNATOR.p, fieldName: "OBJECT_DESIGNATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.BAND.p, fieldName: "BAND", required: false, type: irBand.self)
+    try _v.visit(field: VTOFFSET.DETECTION_TYPE.p, fieldName: "DETECTION_TYPE", required: false, type: irDetectionType.self)
+    try _v.visit(field: VTOFFSET.RA.p, fieldName: "RA", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.DEC.p, fieldName: "DEC", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.RA_UNC.p, fieldName: "RA_UNC", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.DEC_UNC.p, fieldName: "DEC_UNC", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.AZIMUTH.p, fieldName: "AZIMUTH", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.ELEVATION.p, fieldName: "ELEVATION", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.RANGE.p, fieldName: "RANGE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.IRRADIANCE.p, fieldName: "IRRADIANCE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.IRRADIANCE_UNC.p, fieldName: "IRRADIANCE_UNC", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.IR_MAG.p, fieldName: "IR_MAG", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.MAG_UNC.p, fieldName: "MAG_UNC", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.TEMPERATURE.p, fieldName: "TEMPERATURE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.INTEGRATION_TIME.p, fieldName: "INTEGRATION_TIME", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.BACKGROUND.p, fieldName: "BACKGROUND", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.SNR.p, fieldName: "SNR", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.WAVELENGTHS.p, fieldName: "WAVELENGTHS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.SPECTRAL_VALUES.p, fieldName: "SPECTRAL_VALUES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.QUALITY.p, fieldName: "QUALITY", required: false, type: UInt8.self)
+    try _v.visit(field: VTOFFSET.NOTES.p, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

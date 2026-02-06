@@ -13,46 +13,498 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
               FLATBUFFERS_VERSION_REVISION == 25,
              "Non-compatible flatbuffers version included");
 
+struct gnssObsData;
+struct gnssObsDataBuilder;
+
+struct gnssSatObs;
+struct gnssSatObsBuilder;
+
 struct GNO;
 struct GNOBuilder;
 
-/// GNSS Observation
-struct GNO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
-  typedef GNOBuilder Builder;
+enum gnssConstellation : int8_t {
+  gnssConstellation_GPS = 0,
+  gnssConstellation_GLONASS = 1,
+  gnssConstellation_GALILEO = 2,
+  gnssConstellation_BEIDOU = 3,
+  gnssConstellation_QZSS = 4,
+  gnssConstellation_IRNSS = 5,
+  gnssConstellation_SBAS = 6,
+  gnssConstellation_MIXED = 7,
+  gnssConstellation_MIN = gnssConstellation_GPS,
+  gnssConstellation_MAX = gnssConstellation_MIXED
+};
+
+inline const gnssConstellation (&EnumValuesgnssConstellation())[8] {
+  static const gnssConstellation values[] = {
+    gnssConstellation_GPS,
+    gnssConstellation_GLONASS,
+    gnssConstellation_GALILEO,
+    gnssConstellation_BEIDOU,
+    gnssConstellation_QZSS,
+    gnssConstellation_IRNSS,
+    gnssConstellation_SBAS,
+    gnssConstellation_MIXED
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesgnssConstellation() {
+  static const char * const names[9] = {
+    "GPS",
+    "GLONASS",
+    "GALILEO",
+    "BEIDOU",
+    "QZSS",
+    "IRNSS",
+    "SBAS",
+    "MIXED",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamegnssConstellation(gnssConstellation e) {
+  if (::flatbuffers::IsOutRange(e, gnssConstellation_GPS, gnssConstellation_MIXED)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesgnssConstellation()[index];
+}
+
+enum gnssObsType : int8_t {
+  gnssObsType_PSEUDORANGE = 0,
+  gnssObsType_CARRIER_PHASE = 1,
+  gnssObsType_DOPPLER = 2,
+  gnssObsType_SNR = 3,
+  gnssObsType_RAW_IF = 4,
+  gnssObsType_MIN = gnssObsType_PSEUDORANGE,
+  gnssObsType_MAX = gnssObsType_RAW_IF
+};
+
+inline const gnssObsType (&EnumValuesgnssObsType())[5] {
+  static const gnssObsType values[] = {
+    gnssObsType_PSEUDORANGE,
+    gnssObsType_CARRIER_PHASE,
+    gnssObsType_DOPPLER,
+    gnssObsType_SNR,
+    gnssObsType_RAW_IF
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesgnssObsType() {
+  static const char * const names[6] = {
+    "PSEUDORANGE",
+    "CARRIER_PHASE",
+    "DOPPLER",
+    "SNR",
+    "RAW_IF",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamegnssObsType(gnssObsType e) {
+  if (::flatbuffers::IsOutRange(e, gnssObsType_PSEUDORANGE, gnssObsType_RAW_IF)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesgnssObsType()[index];
+}
+
+/// GNSS Observation Data Point
+struct gnssObsData FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef gnssObsDataBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_SIGNAL = 4,
+    VT_OBS_TYPE = 6,
+    VT_VALUE = 8,
+    VT_LLI = 10,
+    VT_SSI = 12
+  };
+  /// Signal type code (e.g., L1C, L2P, L5Q, E1B)
+  const ::flatbuffers::String *SIGNAL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SIGNAL);
+  }
+  /// Observation type
+  gnssObsType OBS_TYPE() const {
+    return static_cast<gnssObsType>(GetField<int8_t>(VT_OBS_TYPE, 0));
+  }
+  /// Observation value (units depend on type: m, cycles, Hz, dB-Hz)
+  double VALUE() const {
+    return GetField<double>(VT_VALUE, 0.0);
+  }
+  /// Loss of lock indicator
+  uint8_t LLI() const {
+    return GetField<uint8_t>(VT_LLI, 0);
+  }
+  /// Signal strength indicator (1-9)
+  uint8_t SSI() const {
+    return GetField<uint8_t>(VT_SSI, 0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_SIGNAL) &&
+           verifier.VerifyString(SIGNAL()) &&
+           VerifyField<int8_t>(verifier, VT_OBS_TYPE, 1) &&
+           VerifyField<double>(verifier, VT_VALUE, 8) &&
+           VerifyField<uint8_t>(verifier, VT_LLI, 1) &&
+           VerifyField<uint8_t>(verifier, VT_SSI, 1) &&
+           verifier.EndTable();
+  }
+};
+
+struct gnssObsDataBuilder {
+  typedef gnssObsData Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_SIGNAL(::flatbuffers::Offset<::flatbuffers::String> SIGNAL) {
+    fbb_.AddOffset(gnssObsData::VT_SIGNAL, SIGNAL);
+  }
+  void add_OBS_TYPE(gnssObsType OBS_TYPE) {
+    fbb_.AddElement<int8_t>(gnssObsData::VT_OBS_TYPE, static_cast<int8_t>(OBS_TYPE), 0);
+  }
+  void add_VALUE(double VALUE) {
+    fbb_.AddElement<double>(gnssObsData::VT_VALUE, VALUE, 0.0);
+  }
+  void add_LLI(uint8_t LLI) {
+    fbb_.AddElement<uint8_t>(gnssObsData::VT_LLI, LLI, 0);
+  }
+  void add_SSI(uint8_t SSI) {
+    fbb_.AddElement<uint8_t>(gnssObsData::VT_SSI, SSI, 0);
+  }
+  explicit gnssObsDataBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<gnssObsData> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<gnssObsData>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<gnssObsData> CreategnssObsData(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> SIGNAL = 0,
+    gnssObsType OBS_TYPE = gnssObsType_PSEUDORANGE,
+    double VALUE = 0.0,
+    uint8_t LLI = 0,
+    uint8_t SSI = 0) {
+  gnssObsDataBuilder builder_(_fbb);
+  builder_.add_VALUE(VALUE);
+  builder_.add_SIGNAL(SIGNAL);
+  builder_.add_SSI(SSI);
+  builder_.add_LLI(LLI);
+  builder_.add_OBS_TYPE(OBS_TYPE);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<gnssObsData> CreategnssObsDataDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *SIGNAL = nullptr,
+    gnssObsType OBS_TYPE = gnssObsType_PSEUDORANGE,
+    double VALUE = 0.0,
+    uint8_t LLI = 0,
+    uint8_t SSI = 0) {
+  auto SIGNAL__ = SIGNAL ? _fbb.CreateString(SIGNAL) : 0;
+  return CreategnssObsData(
+      _fbb,
+      SIGNAL__,
+      OBS_TYPE,
+      VALUE,
+      LLI,
+      SSI);
+}
+
+/// GNSS Satellite Observation
+struct gnssSatObs FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef gnssSatObsBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_GNSS_SAT_ID = 4,
-    VT_TRACKING_STATUS = 6,
-    VT_AGC_STATE = 8,
-    VT_OBS_CODE_SET = 10,
-    VT_OB = 12
+    VT_CONSTELLATION = 6,
+    VT_ELEVATION = 8,
+    VT_AZIMUTH = 10,
+    VT_TRACKING_STATUS = 12,
+    VT_AGC_STATE = 14,
+    VT_OBSERVATIONS = 16
   };
+  /// GNSS satellite identifier (e.g., G01, R24, E05, C03)
   const ::flatbuffers::String *GNSS_SAT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_GNSS_SAT_ID);
   }
+  /// Constellation
+  gnssConstellation CONSTELLATION() const {
+    return static_cast<gnssConstellation>(GetField<int8_t>(VT_CONSTELLATION, 0));
+  }
+  /// Elevation angle in degrees
+  double ELEVATION() const {
+    return GetField<double>(VT_ELEVATION, 0.0);
+  }
+  /// Azimuth angle in degrees
+  double AZIMUTH() const {
+    return GetField<double>(VT_AZIMUTH, 0.0);
+  }
+  /// Tracking status (0=not tracked, 1=tracking, 2=locked)
   int32_t TRACKING_STATUS() const {
     return GetField<int32_t>(VT_TRACKING_STATUS, 0);
   }
+  /// AGC state
   int32_t AGC_STATE() const {
     return GetField<int32_t>(VT_AGC_STATE, 0);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *OBS_CODE_SET() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_OBS_CODE_SET);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *OB() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_OB);
+  /// Observations for this satellite
+  const ::flatbuffers::Vector<::flatbuffers::Offset<gnssObsData>> *OBSERVATIONS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<gnssObsData>> *>(VT_OBSERVATIONS);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_GNSS_SAT_ID) &&
            verifier.VerifyString(GNSS_SAT_ID()) &&
+           VerifyField<int8_t>(verifier, VT_CONSTELLATION, 1) &&
+           VerifyField<double>(verifier, VT_ELEVATION, 8) &&
+           VerifyField<double>(verifier, VT_AZIMUTH, 8) &&
            VerifyField<int32_t>(verifier, VT_TRACKING_STATUS, 4) &&
            VerifyField<int32_t>(verifier, VT_AGC_STATE, 4) &&
+           VerifyOffset(verifier, VT_OBSERVATIONS) &&
+           verifier.VerifyVector(OBSERVATIONS()) &&
+           verifier.VerifyVectorOfTables(OBSERVATIONS()) &&
+           verifier.EndTable();
+  }
+};
+
+struct gnssSatObsBuilder {
+  typedef gnssSatObs Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_GNSS_SAT_ID(::flatbuffers::Offset<::flatbuffers::String> GNSS_SAT_ID) {
+    fbb_.AddOffset(gnssSatObs::VT_GNSS_SAT_ID, GNSS_SAT_ID);
+  }
+  void add_CONSTELLATION(gnssConstellation CONSTELLATION) {
+    fbb_.AddElement<int8_t>(gnssSatObs::VT_CONSTELLATION, static_cast<int8_t>(CONSTELLATION), 0);
+  }
+  void add_ELEVATION(double ELEVATION) {
+    fbb_.AddElement<double>(gnssSatObs::VT_ELEVATION, ELEVATION, 0.0);
+  }
+  void add_AZIMUTH(double AZIMUTH) {
+    fbb_.AddElement<double>(gnssSatObs::VT_AZIMUTH, AZIMUTH, 0.0);
+  }
+  void add_TRACKING_STATUS(int32_t TRACKING_STATUS) {
+    fbb_.AddElement<int32_t>(gnssSatObs::VT_TRACKING_STATUS, TRACKING_STATUS, 0);
+  }
+  void add_AGC_STATE(int32_t AGC_STATE) {
+    fbb_.AddElement<int32_t>(gnssSatObs::VT_AGC_STATE, AGC_STATE, 0);
+  }
+  void add_OBSERVATIONS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<gnssObsData>>> OBSERVATIONS) {
+    fbb_.AddOffset(gnssSatObs::VT_OBSERVATIONS, OBSERVATIONS);
+  }
+  explicit gnssSatObsBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<gnssSatObs> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<gnssSatObs>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<gnssSatObs> CreategnssSatObs(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> GNSS_SAT_ID = 0,
+    gnssConstellation CONSTELLATION = gnssConstellation_GPS,
+    double ELEVATION = 0.0,
+    double AZIMUTH = 0.0,
+    int32_t TRACKING_STATUS = 0,
+    int32_t AGC_STATE = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<gnssObsData>>> OBSERVATIONS = 0) {
+  gnssSatObsBuilder builder_(_fbb);
+  builder_.add_AZIMUTH(AZIMUTH);
+  builder_.add_ELEVATION(ELEVATION);
+  builder_.add_OBSERVATIONS(OBSERVATIONS);
+  builder_.add_AGC_STATE(AGC_STATE);
+  builder_.add_TRACKING_STATUS(TRACKING_STATUS);
+  builder_.add_GNSS_SAT_ID(GNSS_SAT_ID);
+  builder_.add_CONSTELLATION(CONSTELLATION);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<gnssSatObs> CreategnssSatObsDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *GNSS_SAT_ID = nullptr,
+    gnssConstellation CONSTELLATION = gnssConstellation_GPS,
+    double ELEVATION = 0.0,
+    double AZIMUTH = 0.0,
+    int32_t TRACKING_STATUS = 0,
+    int32_t AGC_STATE = 0,
+    const std::vector<::flatbuffers::Offset<gnssObsData>> *OBSERVATIONS = nullptr) {
+  auto GNSS_SAT_ID__ = GNSS_SAT_ID ? _fbb.CreateString(GNSS_SAT_ID) : 0;
+  auto OBSERVATIONS__ = OBSERVATIONS ? _fbb.CreateVector<::flatbuffers::Offset<gnssObsData>>(*OBSERVATIONS) : 0;
+  return CreategnssSatObs(
+      _fbb,
+      GNSS_SAT_ID__,
+      CONSTELLATION,
+      ELEVATION,
+      AZIMUTH,
+      TRACKING_STATUS,
+      AGC_STATE,
+      OBSERVATIONS__);
+}
+
+/// GNSS Observation
+struct GNO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef GNOBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_ID = 4,
+    VT_RECEIVER_ID = 6,
+    VT_RECEIVER_TYPE = 8,
+    VT_ANTENNA_ID = 10,
+    VT_ANTENNA_TYPE = 12,
+    VT_FIRMWARE_VERSION = 14,
+    VT_EPOCH = 16,
+    VT_CLOCK_OFFSET = 18,
+    VT_CLOCK_DRIFT = 20,
+    VT_LATITUDE = 22,
+    VT_LONGITUDE = 24,
+    VT_ALTITUDE = 26,
+    VT_APPROX_X = 28,
+    VT_APPROX_Y = 30,
+    VT_APPROX_Z = 32,
+    VT_INTERVAL = 34,
+    VT_NUM_SATS = 36,
+    VT_PDOP = 38,
+    VT_HDOP = 40,
+    VT_VDOP = 42,
+    VT_SAT_OBS = 44,
+    VT_OBS_CODE_SET = 46,
+    VT_NOTES = 48
+  };
+  /// Unique identifier
+  const ::flatbuffers::String *ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ID);
+  }
+  /// Receiver identifier
+  const ::flatbuffers::String *RECEIVER_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_RECEIVER_ID);
+  }
+  /// Receiver type/model
+  const ::flatbuffers::String *RECEIVER_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_RECEIVER_TYPE);
+  }
+  /// Antenna identifier
+  const ::flatbuffers::String *ANTENNA_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ANTENNA_ID);
+  }
+  /// Antenna type/model
+  const ::flatbuffers::String *ANTENNA_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ANTENNA_TYPE);
+  }
+  /// Receiver firmware version
+  const ::flatbuffers::String *FIRMWARE_VERSION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_FIRMWARE_VERSION);
+  }
+  /// Observation epoch (ISO 8601)
+  const ::flatbuffers::String *EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
+  }
+  /// Receiver clock offset in seconds
+  double CLOCK_OFFSET() const {
+    return GetField<double>(VT_CLOCK_OFFSET, 0.0);
+  }
+  /// Receiver clock drift in seconds/second
+  double CLOCK_DRIFT() const {
+    return GetField<double>(VT_CLOCK_DRIFT, 0.0);
+  }
+  /// Receiver geodetic latitude in degrees
+  double LATITUDE() const {
+    return GetField<double>(VT_LATITUDE, 0.0);
+  }
+  /// Receiver geodetic longitude in degrees
+  double LONGITUDE() const {
+    return GetField<double>(VT_LONGITUDE, 0.0);
+  }
+  /// Receiver altitude in meters above WGS-84
+  double ALTITUDE() const {
+    return GetField<double>(VT_ALTITUDE, 0.0);
+  }
+  /// Approximate position X in meters (ECEF)
+  double APPROX_X() const {
+    return GetField<double>(VT_APPROX_X, 0.0);
+  }
+  /// Approximate position Y in meters (ECEF)
+  double APPROX_Y() const {
+    return GetField<double>(VT_APPROX_Y, 0.0);
+  }
+  /// Approximate position Z in meters (ECEF)
+  double APPROX_Z() const {
+    return GetField<double>(VT_APPROX_Z, 0.0);
+  }
+  /// Observation interval in seconds
+  double INTERVAL() const {
+    return GetField<double>(VT_INTERVAL, 0.0);
+  }
+  /// Number of satellites observed
+  uint32_t NUM_SATS() const {
+    return GetField<uint32_t>(VT_NUM_SATS, 0);
+  }
+  /// PDOP
+  double PDOP() const {
+    return GetField<double>(VT_PDOP, 0.0);
+  }
+  /// HDOP
+  double HDOP() const {
+    return GetField<double>(VT_HDOP, 0.0);
+  }
+  /// VDOP
+  double VDOP() const {
+    return GetField<double>(VT_VDOP, 0.0);
+  }
+  /// Satellite observations
+  const ::flatbuffers::Vector<::flatbuffers::Offset<gnssSatObs>> *SAT_OBS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<gnssSatObs>> *>(VT_SAT_OBS);
+  }
+  /// Observation code set identifiers
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *OBS_CODE_SET() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_OBS_CODE_SET);
+  }
+  /// Additional notes
+  const ::flatbuffers::String *NOTES() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NOTES);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_ID) &&
+           verifier.VerifyString(ID()) &&
+           VerifyOffset(verifier, VT_RECEIVER_ID) &&
+           verifier.VerifyString(RECEIVER_ID()) &&
+           VerifyOffset(verifier, VT_RECEIVER_TYPE) &&
+           verifier.VerifyString(RECEIVER_TYPE()) &&
+           VerifyOffset(verifier, VT_ANTENNA_ID) &&
+           verifier.VerifyString(ANTENNA_ID()) &&
+           VerifyOffset(verifier, VT_ANTENNA_TYPE) &&
+           verifier.VerifyString(ANTENNA_TYPE()) &&
+           VerifyOffset(verifier, VT_FIRMWARE_VERSION) &&
+           verifier.VerifyString(FIRMWARE_VERSION()) &&
+           VerifyOffset(verifier, VT_EPOCH) &&
+           verifier.VerifyString(EPOCH()) &&
+           VerifyField<double>(verifier, VT_CLOCK_OFFSET, 8) &&
+           VerifyField<double>(verifier, VT_CLOCK_DRIFT, 8) &&
+           VerifyField<double>(verifier, VT_LATITUDE, 8) &&
+           VerifyField<double>(verifier, VT_LONGITUDE, 8) &&
+           VerifyField<double>(verifier, VT_ALTITUDE, 8) &&
+           VerifyField<double>(verifier, VT_APPROX_X, 8) &&
+           VerifyField<double>(verifier, VT_APPROX_Y, 8) &&
+           VerifyField<double>(verifier, VT_APPROX_Z, 8) &&
+           VerifyField<double>(verifier, VT_INTERVAL, 8) &&
+           VerifyField<uint32_t>(verifier, VT_NUM_SATS, 4) &&
+           VerifyField<double>(verifier, VT_PDOP, 8) &&
+           VerifyField<double>(verifier, VT_HDOP, 8) &&
+           VerifyField<double>(verifier, VT_VDOP, 8) &&
+           VerifyOffset(verifier, VT_SAT_OBS) &&
+           verifier.VerifyVector(SAT_OBS()) &&
+           verifier.VerifyVectorOfTables(SAT_OBS()) &&
            VerifyOffset(verifier, VT_OBS_CODE_SET) &&
            verifier.VerifyVector(OBS_CODE_SET()) &&
            verifier.VerifyVectorOfStrings(OBS_CODE_SET()) &&
-           VerifyOffset(verifier, VT_OB) &&
-           verifier.VerifyVector(OB()) &&
-           verifier.VerifyVectorOfStrings(OB()) &&
+           VerifyOffset(verifier, VT_NOTES) &&
+           verifier.VerifyString(NOTES()) &&
            verifier.EndTable();
   }
 };
@@ -61,20 +513,74 @@ struct GNOBuilder {
   typedef GNO Table;
   ::flatbuffers::FlatBufferBuilder &fbb_;
   ::flatbuffers::uoffset_t start_;
-  void add_GNSS_SAT_ID(::flatbuffers::Offset<::flatbuffers::String> GNSS_SAT_ID) {
-    fbb_.AddOffset(GNO::VT_GNSS_SAT_ID, GNSS_SAT_ID);
+  void add_ID(::flatbuffers::Offset<::flatbuffers::String> ID) {
+    fbb_.AddOffset(GNO::VT_ID, ID);
   }
-  void add_TRACKING_STATUS(int32_t TRACKING_STATUS) {
-    fbb_.AddElement<int32_t>(GNO::VT_TRACKING_STATUS, TRACKING_STATUS, 0);
+  void add_RECEIVER_ID(::flatbuffers::Offset<::flatbuffers::String> RECEIVER_ID) {
+    fbb_.AddOffset(GNO::VT_RECEIVER_ID, RECEIVER_ID);
   }
-  void add_AGC_STATE(int32_t AGC_STATE) {
-    fbb_.AddElement<int32_t>(GNO::VT_AGC_STATE, AGC_STATE, 0);
+  void add_RECEIVER_TYPE(::flatbuffers::Offset<::flatbuffers::String> RECEIVER_TYPE) {
+    fbb_.AddOffset(GNO::VT_RECEIVER_TYPE, RECEIVER_TYPE);
+  }
+  void add_ANTENNA_ID(::flatbuffers::Offset<::flatbuffers::String> ANTENNA_ID) {
+    fbb_.AddOffset(GNO::VT_ANTENNA_ID, ANTENNA_ID);
+  }
+  void add_ANTENNA_TYPE(::flatbuffers::Offset<::flatbuffers::String> ANTENNA_TYPE) {
+    fbb_.AddOffset(GNO::VT_ANTENNA_TYPE, ANTENNA_TYPE);
+  }
+  void add_FIRMWARE_VERSION(::flatbuffers::Offset<::flatbuffers::String> FIRMWARE_VERSION) {
+    fbb_.AddOffset(GNO::VT_FIRMWARE_VERSION, FIRMWARE_VERSION);
+  }
+  void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
+    fbb_.AddOffset(GNO::VT_EPOCH, EPOCH);
+  }
+  void add_CLOCK_OFFSET(double CLOCK_OFFSET) {
+    fbb_.AddElement<double>(GNO::VT_CLOCK_OFFSET, CLOCK_OFFSET, 0.0);
+  }
+  void add_CLOCK_DRIFT(double CLOCK_DRIFT) {
+    fbb_.AddElement<double>(GNO::VT_CLOCK_DRIFT, CLOCK_DRIFT, 0.0);
+  }
+  void add_LATITUDE(double LATITUDE) {
+    fbb_.AddElement<double>(GNO::VT_LATITUDE, LATITUDE, 0.0);
+  }
+  void add_LONGITUDE(double LONGITUDE) {
+    fbb_.AddElement<double>(GNO::VT_LONGITUDE, LONGITUDE, 0.0);
+  }
+  void add_ALTITUDE(double ALTITUDE) {
+    fbb_.AddElement<double>(GNO::VT_ALTITUDE, ALTITUDE, 0.0);
+  }
+  void add_APPROX_X(double APPROX_X) {
+    fbb_.AddElement<double>(GNO::VT_APPROX_X, APPROX_X, 0.0);
+  }
+  void add_APPROX_Y(double APPROX_Y) {
+    fbb_.AddElement<double>(GNO::VT_APPROX_Y, APPROX_Y, 0.0);
+  }
+  void add_APPROX_Z(double APPROX_Z) {
+    fbb_.AddElement<double>(GNO::VT_APPROX_Z, APPROX_Z, 0.0);
+  }
+  void add_INTERVAL(double INTERVAL) {
+    fbb_.AddElement<double>(GNO::VT_INTERVAL, INTERVAL, 0.0);
+  }
+  void add_NUM_SATS(uint32_t NUM_SATS) {
+    fbb_.AddElement<uint32_t>(GNO::VT_NUM_SATS, NUM_SATS, 0);
+  }
+  void add_PDOP(double PDOP) {
+    fbb_.AddElement<double>(GNO::VT_PDOP, PDOP, 0.0);
+  }
+  void add_HDOP(double HDOP) {
+    fbb_.AddElement<double>(GNO::VT_HDOP, HDOP, 0.0);
+  }
+  void add_VDOP(double VDOP) {
+    fbb_.AddElement<double>(GNO::VT_VDOP, VDOP, 0.0);
+  }
+  void add_SAT_OBS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<gnssSatObs>>> SAT_OBS) {
+    fbb_.AddOffset(GNO::VT_SAT_OBS, SAT_OBS);
   }
   void add_OBS_CODE_SET(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> OBS_CODE_SET) {
     fbb_.AddOffset(GNO::VT_OBS_CODE_SET, OBS_CODE_SET);
   }
-  void add_OB(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> OB) {
-    fbb_.AddOffset(GNO::VT_OB, OB);
+  void add_NOTES(::flatbuffers::Offset<::flatbuffers::String> NOTES) {
+    fbb_.AddOffset(GNO::VT_NOTES, NOTES);
   }
   explicit GNOBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -89,37 +595,116 @@ struct GNOBuilder {
 
 inline ::flatbuffers::Offset<GNO> CreateGNO(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    ::flatbuffers::Offset<::flatbuffers::String> GNSS_SAT_ID = 0,
-    int32_t TRACKING_STATUS = 0,
-    int32_t AGC_STATE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> RECEIVER_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> RECEIVER_TYPE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ANTENNA_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ANTENNA_TYPE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> FIRMWARE_VERSION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
+    double CLOCK_OFFSET = 0.0,
+    double CLOCK_DRIFT = 0.0,
+    double LATITUDE = 0.0,
+    double LONGITUDE = 0.0,
+    double ALTITUDE = 0.0,
+    double APPROX_X = 0.0,
+    double APPROX_Y = 0.0,
+    double APPROX_Z = 0.0,
+    double INTERVAL = 0.0,
+    uint32_t NUM_SATS = 0,
+    double PDOP = 0.0,
+    double HDOP = 0.0,
+    double VDOP = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<gnssSatObs>>> SAT_OBS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> OBS_CODE_SET = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> OB = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> NOTES = 0) {
   GNOBuilder builder_(_fbb);
-  builder_.add_OB(OB);
+  builder_.add_VDOP(VDOP);
+  builder_.add_HDOP(HDOP);
+  builder_.add_PDOP(PDOP);
+  builder_.add_INTERVAL(INTERVAL);
+  builder_.add_APPROX_Z(APPROX_Z);
+  builder_.add_APPROX_Y(APPROX_Y);
+  builder_.add_APPROX_X(APPROX_X);
+  builder_.add_ALTITUDE(ALTITUDE);
+  builder_.add_LONGITUDE(LONGITUDE);
+  builder_.add_LATITUDE(LATITUDE);
+  builder_.add_CLOCK_DRIFT(CLOCK_DRIFT);
+  builder_.add_CLOCK_OFFSET(CLOCK_OFFSET);
+  builder_.add_NOTES(NOTES);
   builder_.add_OBS_CODE_SET(OBS_CODE_SET);
-  builder_.add_AGC_STATE(AGC_STATE);
-  builder_.add_TRACKING_STATUS(TRACKING_STATUS);
-  builder_.add_GNSS_SAT_ID(GNSS_SAT_ID);
+  builder_.add_SAT_OBS(SAT_OBS);
+  builder_.add_NUM_SATS(NUM_SATS);
+  builder_.add_EPOCH(EPOCH);
+  builder_.add_FIRMWARE_VERSION(FIRMWARE_VERSION);
+  builder_.add_ANTENNA_TYPE(ANTENNA_TYPE);
+  builder_.add_ANTENNA_ID(ANTENNA_ID);
+  builder_.add_RECEIVER_TYPE(RECEIVER_TYPE);
+  builder_.add_RECEIVER_ID(RECEIVER_ID);
+  builder_.add_ID(ID);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<GNO> CreateGNODirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
-    const char *GNSS_SAT_ID = nullptr,
-    int32_t TRACKING_STATUS = 0,
-    int32_t AGC_STATE = 0,
+    const char *ID = nullptr,
+    const char *RECEIVER_ID = nullptr,
+    const char *RECEIVER_TYPE = nullptr,
+    const char *ANTENNA_ID = nullptr,
+    const char *ANTENNA_TYPE = nullptr,
+    const char *FIRMWARE_VERSION = nullptr,
+    const char *EPOCH = nullptr,
+    double CLOCK_OFFSET = 0.0,
+    double CLOCK_DRIFT = 0.0,
+    double LATITUDE = 0.0,
+    double LONGITUDE = 0.0,
+    double ALTITUDE = 0.0,
+    double APPROX_X = 0.0,
+    double APPROX_Y = 0.0,
+    double APPROX_Z = 0.0,
+    double INTERVAL = 0.0,
+    uint32_t NUM_SATS = 0,
+    double PDOP = 0.0,
+    double HDOP = 0.0,
+    double VDOP = 0.0,
+    const std::vector<::flatbuffers::Offset<gnssSatObs>> *SAT_OBS = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *OBS_CODE_SET = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *OB = nullptr) {
-  auto GNSS_SAT_ID__ = GNSS_SAT_ID ? _fbb.CreateString(GNSS_SAT_ID) : 0;
+    const char *NOTES = nullptr) {
+  auto ID__ = ID ? _fbb.CreateString(ID) : 0;
+  auto RECEIVER_ID__ = RECEIVER_ID ? _fbb.CreateString(RECEIVER_ID) : 0;
+  auto RECEIVER_TYPE__ = RECEIVER_TYPE ? _fbb.CreateString(RECEIVER_TYPE) : 0;
+  auto ANTENNA_ID__ = ANTENNA_ID ? _fbb.CreateString(ANTENNA_ID) : 0;
+  auto ANTENNA_TYPE__ = ANTENNA_TYPE ? _fbb.CreateString(ANTENNA_TYPE) : 0;
+  auto FIRMWARE_VERSION__ = FIRMWARE_VERSION ? _fbb.CreateString(FIRMWARE_VERSION) : 0;
+  auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
+  auto SAT_OBS__ = SAT_OBS ? _fbb.CreateVector<::flatbuffers::Offset<gnssSatObs>>(*SAT_OBS) : 0;
   auto OBS_CODE_SET__ = OBS_CODE_SET ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*OBS_CODE_SET) : 0;
-  auto OB__ = OB ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*OB) : 0;
+  auto NOTES__ = NOTES ? _fbb.CreateString(NOTES) : 0;
   return CreateGNO(
       _fbb,
-      GNSS_SAT_ID__,
-      TRACKING_STATUS,
-      AGC_STATE,
+      ID__,
+      RECEIVER_ID__,
+      RECEIVER_TYPE__,
+      ANTENNA_ID__,
+      ANTENNA_TYPE__,
+      FIRMWARE_VERSION__,
+      EPOCH__,
+      CLOCK_OFFSET,
+      CLOCK_DRIFT,
+      LATITUDE,
+      LONGITUDE,
+      ALTITUDE,
+      APPROX_X,
+      APPROX_Y,
+      APPROX_Z,
+      INTERVAL,
+      NUM_SATS,
+      PDOP,
+      HDOP,
+      VDOP,
+      SAT_OBS__,
       OBS_CODE_SET__,
-      OB__);
+      NOTES__);
 }
 
 inline const GNO *GetGNO(const void *buf) {

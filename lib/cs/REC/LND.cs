@@ -19,6 +19,7 @@ public struct LND : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public LND __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Unique identifier
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,59 +27,106 @@ public struct LND : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
-  public string LAUNCH_TIME { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Detection event identifier
+  public string EVENT_ID { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetLAUNCH_TIMEBytes() { return __p.__vector_as_span<byte>(6, 1); }
+  public Span<byte> GetEVENT_IDBytes() { return __p.__vector_as_span<byte>(6, 1); }
 #else
-  public ArraySegment<byte>? GetLAUNCH_TIMEBytes() { return __p.__vector_as_arraysegment(6); }
+  public ArraySegment<byte>? GetEVENT_IDBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
-  public byte[] GetLAUNCH_TIMEArray() { return __p.__vector_as_array<byte>(6); }
-  public string MESSAGE_TYPE { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetEVENT_IDArray() { return __p.__vector_as_array<byte>(6); }
+  /// Detection type
+  public launchDetectionType DETECTION_TYPE { get { int o = __p.__offset(8); return o != 0 ? (launchDetectionType)__p.bb.GetSbyte(o + __p.bb_pos) : launchDetectionType.IR_DETECT; } }
+  /// Detection message type code
+  public string MESSAGE_TYPE { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetMESSAGE_TYPEBytes() { return __p.__vector_as_span<byte>(8, 1); }
+  public Span<byte> GetMESSAGE_TYPEBytes() { return __p.__vector_as_span<byte>(10, 1); }
 #else
-  public ArraySegment<byte>? GetMESSAGE_TYPEBytes() { return __p.__vector_as_arraysegment(8); }
+  public ArraySegment<byte>? GetMESSAGE_TYPEBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
-  public byte[] GetMESSAGE_TYPEArray() { return __p.__vector_as_array<byte>(8); }
-  public double LAUNCH_LATITUDE { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double LAUNCH_LONGITUDE { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double LAUNCH_AZIMUTH { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double RAAN { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double INCLINATION { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string OBSERVATION_TIME { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetMESSAGE_TYPEArray() { return __p.__vector_as_array<byte>(10); }
+  /// Time of launch detection (ISO 8601)
+  public string LAUNCH_TIME { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetOBSERVATION_TIMEBytes() { return __p.__vector_as_span<byte>(20, 1); }
+  public Span<byte> GetLAUNCH_TIMEBytes() { return __p.__vector_as_span<byte>(12, 1); }
 #else
-  public ArraySegment<byte>? GetOBSERVATION_TIMEBytes() { return __p.__vector_as_arraysegment(20); }
+  public ArraySegment<byte>? GetLAUNCH_TIMEBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
-  public byte[] GetOBSERVATION_TIMEArray() { return __p.__vector_as_array<byte>(20); }
-  public double OBSERVATION_LATITUDE { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double OBSERVATION_LONGITUDE { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double OBSERVATION_ALTITUDE { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public bool STEREO_FLAG { get { int o = __p.__offset(28); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  public bool HIGH_ZENITH_AZIMUTH { get { int o = __p.__offset(30); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  public int SEQUENCE_NUMBER { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public string EVENT_ID { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetLAUNCH_TIMEArray() { return __p.__vector_as_array<byte>(12); }
+  /// Launch site latitude (degrees)
+  public double LAUNCH_LATITUDE { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Launch site longitude (degrees)
+  public double LAUNCH_LONGITUDE { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Launch azimuth (degrees from north)
+  public double LAUNCH_AZIMUTH { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Estimated RAAN (degrees)
+  public double RAAN { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Estimated inclination (degrees)
+  public double INCLINATION { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Time of trajectory observation (ISO 8601)
+  public string OBSERVATION_TIME { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetEVENT_IDBytes() { return __p.__vector_as_span<byte>(34, 1); }
+  public Span<byte> GetOBSERVATION_TIMEBytes() { return __p.__vector_as_span<byte>(24, 1); }
 #else
-  public ArraySegment<byte>? GetEVENT_IDBytes() { return __p.__vector_as_arraysegment(34); }
+  public ArraySegment<byte>? GetOBSERVATION_TIMEBytes() { return __p.__vector_as_arraysegment(24); }
 #endif
-  public byte[] GetEVENT_IDArray() { return __p.__vector_as_array<byte>(34); }
-  public string DESCRIPTOR { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetOBSERVATION_TIMEArray() { return __p.__vector_as_array<byte>(24); }
+  /// Observation point latitude (degrees)
+  public double OBSERVATION_LATITUDE { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Observation point longitude (degrees)
+  public double OBSERVATION_LONGITUDE { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Observation point altitude (km)
+  public double OBSERVATION_ALTITUDE { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// True if stereo observation (multiple sensors)
+  public bool STEREO_FLAG { get { int o = __p.__offset(32); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// True if high zenith angle observation
+  public bool HIGH_ZENITH_AZIMUTH { get { int o = __p.__offset(34); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Sequence number in detection chain
+  public ushort SEQUENCE_NUMBER { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  /// Launch site identifier
+  public string LAUNCH_SITE_ID { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDESCRIPTORBytes() { return __p.__vector_as_span<byte>(36, 1); }
+  public Span<byte> GetLAUNCH_SITE_IDBytes() { return __p.__vector_as_span<byte>(38, 1); }
 #else
-  public ArraySegment<byte>? GetDESCRIPTORBytes() { return __p.__vector_as_arraysegment(36); }
+  public ArraySegment<byte>? GetLAUNCH_SITE_IDBytes() { return __p.__vector_as_arraysegment(38); }
 #endif
-  public byte[] GetDESCRIPTORArray() { return __p.__vector_as_array<byte>(36); }
-  public string TAGS(int j) { int o = __p.__offset(38); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int TAGSLength { get { int o = __p.__offset(38); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public byte[] GetLAUNCH_SITE_IDArray() { return __p.__vector_as_array<byte>(38); }
+  /// Launch vehicle type (if identified)
+  public string LAUNCH_VEHICLE { get { int o = __p.__offset(40); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetLAUNCH_VEHICLEBytes() { return __p.__vector_as_span<byte>(40, 1); }
+#else
+  public ArraySegment<byte>? GetLAUNCH_VEHICLEBytes() { return __p.__vector_as_arraysegment(40); }
+#endif
+  public byte[] GetLAUNCH_VEHICLEArray() { return __p.__vector_as_array<byte>(40); }
+  /// Estimated trajectory type
+  public string TRAJECTORY_TYPE { get { int o = __p.__offset(42); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetTRAJECTORY_TYPEBytes() { return __p.__vector_as_span<byte>(42, 1); }
+#else
+  public ArraySegment<byte>? GetTRAJECTORY_TYPEBytes() { return __p.__vector_as_arraysegment(42); }
+#endif
+  public byte[] GetTRAJECTORY_TYPEArray() { return __p.__vector_as_array<byte>(42); }
+  /// Detection confidence (0-1)
+  public double CONFIDENCE { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Event descriptor
+  public string DESCRIPTOR { get { int o = __p.__offset(46); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetDESCRIPTORBytes() { return __p.__vector_as_span<byte>(46, 1); }
+#else
+  public ArraySegment<byte>? GetDESCRIPTORBytes() { return __p.__vector_as_arraysegment(46); }
+#endif
+  public byte[] GetDESCRIPTORArray() { return __p.__vector_as_array<byte>(46); }
+  /// Associated tags
+  public string TAGS(int j) { int o = __p.__offset(48); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int TAGSLength { get { int o = __p.__offset(48); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<LND> CreateLND(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
-      StringOffset LAUNCH_TIMEOffset = default(StringOffset),
+      StringOffset EVENT_IDOffset = default(StringOffset),
+      launchDetectionType DETECTION_TYPE = launchDetectionType.IR_DETECT,
       StringOffset MESSAGE_TYPEOffset = default(StringOffset),
+      StringOffset LAUNCH_TIMEOffset = default(StringOffset),
       double LAUNCH_LATITUDE = 0.0,
       double LAUNCH_LONGITUDE = 0.0,
       double LAUNCH_AZIMUTH = 0.0,
@@ -90,11 +138,15 @@ public struct LND : IFlatbufferObject
       double OBSERVATION_ALTITUDE = 0.0,
       bool STEREO_FLAG = false,
       bool HIGH_ZENITH_AZIMUTH = false,
-      int SEQUENCE_NUMBER = 0,
-      StringOffset EVENT_IDOffset = default(StringOffset),
+      ushort SEQUENCE_NUMBER = 0,
+      StringOffset LAUNCH_SITE_IDOffset = default(StringOffset),
+      StringOffset LAUNCH_VEHICLEOffset = default(StringOffset),
+      StringOffset TRAJECTORY_TYPEOffset = default(StringOffset),
+      double CONFIDENCE = 0.0,
       StringOffset DESCRIPTOROffset = default(StringOffset),
       VectorOffset TAGSOffset = default(VectorOffset)) {
-    builder.StartTable(18);
+    builder.StartTable(23);
+    LND.AddCONFIDENCE(builder, CONFIDENCE);
     LND.AddOBSERVATION_ALTITUDE(builder, OBSERVATION_ALTITUDE);
     LND.AddOBSERVATION_LONGITUDE(builder, OBSERVATION_LONGITUDE);
     LND.AddOBSERVATION_LATITUDE(builder, OBSERVATION_LATITUDE);
@@ -105,36 +157,45 @@ public struct LND : IFlatbufferObject
     LND.AddLAUNCH_LATITUDE(builder, LAUNCH_LATITUDE);
     LND.AddTAGS(builder, TAGSOffset);
     LND.AddDESCRIPTOR(builder, DESCRIPTOROffset);
-    LND.AddEVENT_ID(builder, EVENT_IDOffset);
-    LND.AddSEQUENCE_NUMBER(builder, SEQUENCE_NUMBER);
+    LND.AddTRAJECTORY_TYPE(builder, TRAJECTORY_TYPEOffset);
+    LND.AddLAUNCH_VEHICLE(builder, LAUNCH_VEHICLEOffset);
+    LND.AddLAUNCH_SITE_ID(builder, LAUNCH_SITE_IDOffset);
     LND.AddOBSERVATION_TIME(builder, OBSERVATION_TIMEOffset);
-    LND.AddMESSAGE_TYPE(builder, MESSAGE_TYPEOffset);
     LND.AddLAUNCH_TIME(builder, LAUNCH_TIMEOffset);
+    LND.AddMESSAGE_TYPE(builder, MESSAGE_TYPEOffset);
+    LND.AddEVENT_ID(builder, EVENT_IDOffset);
     LND.AddID(builder, IDOffset);
+    LND.AddSEQUENCE_NUMBER(builder, SEQUENCE_NUMBER);
     LND.AddHIGH_ZENITH_AZIMUTH(builder, HIGH_ZENITH_AZIMUTH);
     LND.AddSTEREO_FLAG(builder, STEREO_FLAG);
+    LND.AddDETECTION_TYPE(builder, DETECTION_TYPE);
     return LND.EndLND(builder);
   }
 
-  public static void StartLND(FlatBufferBuilder builder) { builder.StartTable(18); }
+  public static void StartLND(FlatBufferBuilder builder) { builder.StartTable(23); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
-  public static void AddLAUNCH_TIME(FlatBufferBuilder builder, StringOffset LAUNCH_TIMEOffset) { builder.AddOffset(1, LAUNCH_TIMEOffset.Value, 0); }
-  public static void AddMESSAGE_TYPE(FlatBufferBuilder builder, StringOffset MESSAGE_TYPEOffset) { builder.AddOffset(2, MESSAGE_TYPEOffset.Value, 0); }
-  public static void AddLAUNCH_LATITUDE(FlatBufferBuilder builder, double LAUNCH_LATITUDE) { builder.AddDouble(3, LAUNCH_LATITUDE, 0.0); }
-  public static void AddLAUNCH_LONGITUDE(FlatBufferBuilder builder, double LAUNCH_LONGITUDE) { builder.AddDouble(4, LAUNCH_LONGITUDE, 0.0); }
-  public static void AddLAUNCH_AZIMUTH(FlatBufferBuilder builder, double LAUNCH_AZIMUTH) { builder.AddDouble(5, LAUNCH_AZIMUTH, 0.0); }
-  public static void AddRAAN(FlatBufferBuilder builder, double RAAN) { builder.AddDouble(6, RAAN, 0.0); }
-  public static void AddINCLINATION(FlatBufferBuilder builder, double INCLINATION) { builder.AddDouble(7, INCLINATION, 0.0); }
-  public static void AddOBSERVATION_TIME(FlatBufferBuilder builder, StringOffset OBSERVATION_TIMEOffset) { builder.AddOffset(8, OBSERVATION_TIMEOffset.Value, 0); }
-  public static void AddOBSERVATION_LATITUDE(FlatBufferBuilder builder, double OBSERVATION_LATITUDE) { builder.AddDouble(9, OBSERVATION_LATITUDE, 0.0); }
-  public static void AddOBSERVATION_LONGITUDE(FlatBufferBuilder builder, double OBSERVATION_LONGITUDE) { builder.AddDouble(10, OBSERVATION_LONGITUDE, 0.0); }
-  public static void AddOBSERVATION_ALTITUDE(FlatBufferBuilder builder, double OBSERVATION_ALTITUDE) { builder.AddDouble(11, OBSERVATION_ALTITUDE, 0.0); }
-  public static void AddSTEREO_FLAG(FlatBufferBuilder builder, bool STEREO_FLAG) { builder.AddBool(12, STEREO_FLAG, false); }
-  public static void AddHIGH_ZENITH_AZIMUTH(FlatBufferBuilder builder, bool HIGH_ZENITH_AZIMUTH) { builder.AddBool(13, HIGH_ZENITH_AZIMUTH, false); }
-  public static void AddSEQUENCE_NUMBER(FlatBufferBuilder builder, int SEQUENCE_NUMBER) { builder.AddInt(14, SEQUENCE_NUMBER, 0); }
-  public static void AddEVENT_ID(FlatBufferBuilder builder, StringOffset EVENT_IDOffset) { builder.AddOffset(15, EVENT_IDOffset.Value, 0); }
-  public static void AddDESCRIPTOR(FlatBufferBuilder builder, StringOffset DESCRIPTOROffset) { builder.AddOffset(16, DESCRIPTOROffset.Value, 0); }
-  public static void AddTAGS(FlatBufferBuilder builder, VectorOffset TAGSOffset) { builder.AddOffset(17, TAGSOffset.Value, 0); }
+  public static void AddEVENT_ID(FlatBufferBuilder builder, StringOffset EVENT_IDOffset) { builder.AddOffset(1, EVENT_IDOffset.Value, 0); }
+  public static void AddDETECTION_TYPE(FlatBufferBuilder builder, launchDetectionType DETECTION_TYPE) { builder.AddSbyte(2, (sbyte)DETECTION_TYPE, 0); }
+  public static void AddMESSAGE_TYPE(FlatBufferBuilder builder, StringOffset MESSAGE_TYPEOffset) { builder.AddOffset(3, MESSAGE_TYPEOffset.Value, 0); }
+  public static void AddLAUNCH_TIME(FlatBufferBuilder builder, StringOffset LAUNCH_TIMEOffset) { builder.AddOffset(4, LAUNCH_TIMEOffset.Value, 0); }
+  public static void AddLAUNCH_LATITUDE(FlatBufferBuilder builder, double LAUNCH_LATITUDE) { builder.AddDouble(5, LAUNCH_LATITUDE, 0.0); }
+  public static void AddLAUNCH_LONGITUDE(FlatBufferBuilder builder, double LAUNCH_LONGITUDE) { builder.AddDouble(6, LAUNCH_LONGITUDE, 0.0); }
+  public static void AddLAUNCH_AZIMUTH(FlatBufferBuilder builder, double LAUNCH_AZIMUTH) { builder.AddDouble(7, LAUNCH_AZIMUTH, 0.0); }
+  public static void AddRAAN(FlatBufferBuilder builder, double RAAN) { builder.AddDouble(8, RAAN, 0.0); }
+  public static void AddINCLINATION(FlatBufferBuilder builder, double INCLINATION) { builder.AddDouble(9, INCLINATION, 0.0); }
+  public static void AddOBSERVATION_TIME(FlatBufferBuilder builder, StringOffset OBSERVATION_TIMEOffset) { builder.AddOffset(10, OBSERVATION_TIMEOffset.Value, 0); }
+  public static void AddOBSERVATION_LATITUDE(FlatBufferBuilder builder, double OBSERVATION_LATITUDE) { builder.AddDouble(11, OBSERVATION_LATITUDE, 0.0); }
+  public static void AddOBSERVATION_LONGITUDE(FlatBufferBuilder builder, double OBSERVATION_LONGITUDE) { builder.AddDouble(12, OBSERVATION_LONGITUDE, 0.0); }
+  public static void AddOBSERVATION_ALTITUDE(FlatBufferBuilder builder, double OBSERVATION_ALTITUDE) { builder.AddDouble(13, OBSERVATION_ALTITUDE, 0.0); }
+  public static void AddSTEREO_FLAG(FlatBufferBuilder builder, bool STEREO_FLAG) { builder.AddBool(14, STEREO_FLAG, false); }
+  public static void AddHIGH_ZENITH_AZIMUTH(FlatBufferBuilder builder, bool HIGH_ZENITH_AZIMUTH) { builder.AddBool(15, HIGH_ZENITH_AZIMUTH, false); }
+  public static void AddSEQUENCE_NUMBER(FlatBufferBuilder builder, ushort SEQUENCE_NUMBER) { builder.AddUshort(16, SEQUENCE_NUMBER, 0); }
+  public static void AddLAUNCH_SITE_ID(FlatBufferBuilder builder, StringOffset LAUNCH_SITE_IDOffset) { builder.AddOffset(17, LAUNCH_SITE_IDOffset.Value, 0); }
+  public static void AddLAUNCH_VEHICLE(FlatBufferBuilder builder, StringOffset LAUNCH_VEHICLEOffset) { builder.AddOffset(18, LAUNCH_VEHICLEOffset.Value, 0); }
+  public static void AddTRAJECTORY_TYPE(FlatBufferBuilder builder, StringOffset TRAJECTORY_TYPEOffset) { builder.AddOffset(19, TRAJECTORY_TYPEOffset.Value, 0); }
+  public static void AddCONFIDENCE(FlatBufferBuilder builder, double CONFIDENCE) { builder.AddDouble(20, CONFIDENCE, 0.0); }
+  public static void AddDESCRIPTOR(FlatBufferBuilder builder, StringOffset DESCRIPTOROffset) { builder.AddOffset(21, DESCRIPTOROffset.Value, 0); }
+  public static void AddTAGS(FlatBufferBuilder builder, VectorOffset TAGSOffset) { builder.AddOffset(22, TAGSOffset.Value, 0); }
   public static VectorOffset CreateTAGSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
@@ -153,8 +214,10 @@ public struct LND : IFlatbufferObject
   }
   public void UnPackTo(LNDT _o) {
     _o.ID = this.ID;
-    _o.LAUNCH_TIME = this.LAUNCH_TIME;
+    _o.EVENT_ID = this.EVENT_ID;
+    _o.DETECTION_TYPE = this.DETECTION_TYPE;
     _o.MESSAGE_TYPE = this.MESSAGE_TYPE;
+    _o.LAUNCH_TIME = this.LAUNCH_TIME;
     _o.LAUNCH_LATITUDE = this.LAUNCH_LATITUDE;
     _o.LAUNCH_LONGITUDE = this.LAUNCH_LONGITUDE;
     _o.LAUNCH_AZIMUTH = this.LAUNCH_AZIMUTH;
@@ -167,7 +230,10 @@ public struct LND : IFlatbufferObject
     _o.STEREO_FLAG = this.STEREO_FLAG;
     _o.HIGH_ZENITH_AZIMUTH = this.HIGH_ZENITH_AZIMUTH;
     _o.SEQUENCE_NUMBER = this.SEQUENCE_NUMBER;
-    _o.EVENT_ID = this.EVENT_ID;
+    _o.LAUNCH_SITE_ID = this.LAUNCH_SITE_ID;
+    _o.LAUNCH_VEHICLE = this.LAUNCH_VEHICLE;
+    _o.TRAJECTORY_TYPE = this.TRAJECTORY_TYPE;
+    _o.CONFIDENCE = this.CONFIDENCE;
     _o.DESCRIPTOR = this.DESCRIPTOR;
     _o.TAGS = new List<string>();
     for (var _j = 0; _j < this.TAGSLength; ++_j) {_o.TAGS.Add(this.TAGS(_j));}
@@ -175,10 +241,13 @@ public struct LND : IFlatbufferObject
   public static Offset<LND> Pack(FlatBufferBuilder builder, LNDT _o) {
     if (_o == null) return default(Offset<LND>);
     var _ID = _o.ID == null ? default(StringOffset) : builder.CreateString(_o.ID);
-    var _LAUNCH_TIME = _o.LAUNCH_TIME == null ? default(StringOffset) : builder.CreateString(_o.LAUNCH_TIME);
-    var _MESSAGE_TYPE = _o.MESSAGE_TYPE == null ? default(StringOffset) : builder.CreateString(_o.MESSAGE_TYPE);
-    var _OBSERVATION_TIME = _o.OBSERVATION_TIME == null ? default(StringOffset) : builder.CreateString(_o.OBSERVATION_TIME);
     var _EVENT_ID = _o.EVENT_ID == null ? default(StringOffset) : builder.CreateString(_o.EVENT_ID);
+    var _MESSAGE_TYPE = _o.MESSAGE_TYPE == null ? default(StringOffset) : builder.CreateString(_o.MESSAGE_TYPE);
+    var _LAUNCH_TIME = _o.LAUNCH_TIME == null ? default(StringOffset) : builder.CreateString(_o.LAUNCH_TIME);
+    var _OBSERVATION_TIME = _o.OBSERVATION_TIME == null ? default(StringOffset) : builder.CreateString(_o.OBSERVATION_TIME);
+    var _LAUNCH_SITE_ID = _o.LAUNCH_SITE_ID == null ? default(StringOffset) : builder.CreateString(_o.LAUNCH_SITE_ID);
+    var _LAUNCH_VEHICLE = _o.LAUNCH_VEHICLE == null ? default(StringOffset) : builder.CreateString(_o.LAUNCH_VEHICLE);
+    var _TRAJECTORY_TYPE = _o.TRAJECTORY_TYPE == null ? default(StringOffset) : builder.CreateString(_o.TRAJECTORY_TYPE);
     var _DESCRIPTOR = _o.DESCRIPTOR == null ? default(StringOffset) : builder.CreateString(_o.DESCRIPTOR);
     var _TAGS = default(VectorOffset);
     if (_o.TAGS != null) {
@@ -189,8 +258,10 @@ public struct LND : IFlatbufferObject
     return CreateLND(
       builder,
       _ID,
-      _LAUNCH_TIME,
+      _EVENT_ID,
+      _o.DETECTION_TYPE,
       _MESSAGE_TYPE,
+      _LAUNCH_TIME,
       _o.LAUNCH_LATITUDE,
       _o.LAUNCH_LONGITUDE,
       _o.LAUNCH_AZIMUTH,
@@ -203,7 +274,10 @@ public struct LND : IFlatbufferObject
       _o.STEREO_FLAG,
       _o.HIGH_ZENITH_AZIMUTH,
       _o.SEQUENCE_NUMBER,
-      _EVENT_ID,
+      _LAUNCH_SITE_ID,
+      _LAUNCH_VEHICLE,
+      _TRAJECTORY_TYPE,
+      _o.CONFIDENCE,
       _DESCRIPTOR,
       _TAGS);
   }
@@ -212,8 +286,10 @@ public struct LND : IFlatbufferObject
 public class LNDT
 {
   public string ID { get; set; }
-  public string LAUNCH_TIME { get; set; }
+  public string EVENT_ID { get; set; }
+  public launchDetectionType DETECTION_TYPE { get; set; }
   public string MESSAGE_TYPE { get; set; }
+  public string LAUNCH_TIME { get; set; }
   public double LAUNCH_LATITUDE { get; set; }
   public double LAUNCH_LONGITUDE { get; set; }
   public double LAUNCH_AZIMUTH { get; set; }
@@ -225,15 +301,20 @@ public class LNDT
   public double OBSERVATION_ALTITUDE { get; set; }
   public bool STEREO_FLAG { get; set; }
   public bool HIGH_ZENITH_AZIMUTH { get; set; }
-  public int SEQUENCE_NUMBER { get; set; }
-  public string EVENT_ID { get; set; }
+  public ushort SEQUENCE_NUMBER { get; set; }
+  public string LAUNCH_SITE_ID { get; set; }
+  public string LAUNCH_VEHICLE { get; set; }
+  public string TRAJECTORY_TYPE { get; set; }
+  public double CONFIDENCE { get; set; }
   public string DESCRIPTOR { get; set; }
   public List<string> TAGS { get; set; }
 
   public LNDT() {
     this.ID = null;
-    this.LAUNCH_TIME = null;
+    this.EVENT_ID = null;
+    this.DETECTION_TYPE = launchDetectionType.IR_DETECT;
     this.MESSAGE_TYPE = null;
+    this.LAUNCH_TIME = null;
     this.LAUNCH_LATITUDE = 0.0;
     this.LAUNCH_LONGITUDE = 0.0;
     this.LAUNCH_AZIMUTH = 0.0;
@@ -246,7 +327,10 @@ public class LNDT
     this.STEREO_FLAG = false;
     this.HIGH_ZENITH_AZIMUTH = false;
     this.SEQUENCE_NUMBER = 0;
-    this.EVENT_ID = null;
+    this.LAUNCH_SITE_ID = null;
+    this.LAUNCH_VEHICLE = null;
+    this.TRAJECTORY_TYPE = null;
+    this.CONFIDENCE = 0.0;
     this.DESCRIPTOR = null;
     this.TAGS = null;
   }
@@ -267,23 +351,28 @@ static public class LNDVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*ID*/, false)
-      && verifier.VerifyString(tablePos, 6 /*LAUNCH_TIME*/, false)
-      && verifier.VerifyString(tablePos, 8 /*MESSAGE_TYPE*/, false)
-      && verifier.VerifyField(tablePos, 10 /*LAUNCH_LATITUDE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 12 /*LAUNCH_LONGITUDE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 14 /*LAUNCH_AZIMUTH*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 16 /*RAAN*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 18 /*INCLINATION*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 20 /*OBSERVATION_TIME*/, false)
-      && verifier.VerifyField(tablePos, 22 /*OBSERVATION_LATITUDE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 24 /*OBSERVATION_LONGITUDE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 26 /*OBSERVATION_ALTITUDE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 28 /*STEREO_FLAG*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyField(tablePos, 30 /*HIGH_ZENITH_AZIMUTH*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyField(tablePos, 32 /*SEQUENCE_NUMBER*/, 4 /*int*/, 4, false)
-      && verifier.VerifyString(tablePos, 34 /*EVENT_ID*/, false)
-      && verifier.VerifyString(tablePos, 36 /*DESCRIPTOR*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 38 /*TAGS*/, false)
+      && verifier.VerifyString(tablePos, 6 /*EVENT_ID*/, false)
+      && verifier.VerifyField(tablePos, 8 /*DETECTION_TYPE*/, 1 /*launchDetectionType*/, 1, false)
+      && verifier.VerifyString(tablePos, 10 /*MESSAGE_TYPE*/, false)
+      && verifier.VerifyString(tablePos, 12 /*LAUNCH_TIME*/, false)
+      && verifier.VerifyField(tablePos, 14 /*LAUNCH_LATITUDE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 16 /*LAUNCH_LONGITUDE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 18 /*LAUNCH_AZIMUTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 20 /*RAAN*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 22 /*INCLINATION*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 24 /*OBSERVATION_TIME*/, false)
+      && verifier.VerifyField(tablePos, 26 /*OBSERVATION_LATITUDE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 28 /*OBSERVATION_LONGITUDE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 30 /*OBSERVATION_ALTITUDE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 32 /*STEREO_FLAG*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 34 /*HIGH_ZENITH_AZIMUTH*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 36 /*SEQUENCE_NUMBER*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyString(tablePos, 38 /*LAUNCH_SITE_ID*/, false)
+      && verifier.VerifyString(tablePos, 40 /*LAUNCH_VEHICLE*/, false)
+      && verifier.VerifyString(tablePos, 42 /*TRAJECTORY_TYPE*/, false)
+      && verifier.VerifyField(tablePos, 44 /*CONFIDENCE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 46 /*DESCRIPTOR*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 48 /*TAGS*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -5,82 +5,121 @@ class STR
 
 /// Star Catalog Entry
 class STR : flatbuffers.handle
+    /// Unique internal identifier
     def ID() -> string:
         return flatbuffers.field_string(buf_, pos_, 4)
+    /// CelesTrak Star catalog identifier
     def CS_ID() -> int:
         return flatbuffers.field_int64(buf_, pos_, 6, 0)
+    /// GNC star catalog identifier
     def GNC_CAT_ID() -> int:
-        return flatbuffers.field_int32(buf_, pos_, 8, 0)
+        return flatbuffers.field_uint32(buf_, pos_, 8, 0)
+    /// Gaia DR3 source identifier
     def GAIADR3_CAT_ID() -> int:
         return flatbuffers.field_int64(buf_, pos_, 10, 0)
+    /// Hipparcos catalog identifier
     def HIP_CAT_ID() -> int:
-        return flatbuffers.field_int32(buf_, pos_, 12, 0)
+        return flatbuffers.field_uint32(buf_, pos_, 12, 0)
+    /// Catalog version string
     def CAT_VERSION() -> string:
         return flatbuffers.field_string(buf_, pos_, 14)
-    def RA() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 16, 0.0)
-    def RA_UNC() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
-    def DEC() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
-    def DEC_UNC() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
-    def POS_UNC_FLAG() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 24, 0))
-    def PARALLAX() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
-    def PARALLAX_UNC() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 28, 0.0)
-    def PMRA() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 30, 0.0)
-    def PMRA_UNC() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 32, 0.0)
-    def PMDEC() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 34, 0.0)
-    def PMDEC_UNC() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 36, 0.0)
-    def PM_UNC_FLAG() -> bool:
-        return bool(flatbuffers.field_int8(buf_, pos_, 38, 0))
+    /// Astrometry source description
     def ASTROMETRY_ORIGIN() -> string:
-        return flatbuffers.field_string(buf_, pos_, 40)
+        return flatbuffers.field_string(buf_, pos_, 16)
+    /// Epoch of stellar position (Julian years)
     def STAR_EPOCH() -> float:
-        return flatbuffers.field_float64(buf_, pos_, 42, 0.0)
+        return flatbuffers.field_float64(buf_, pos_, 18, 0.0)
+    /// Right ascension (degrees, ICRS)
+    def RA() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 20, 0.0)
+    /// Right ascension uncertainty (arcseconds)
+    def RA_UNC() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 22, 0.0)
+    /// Declination (degrees, ICRS)
+    def DEC() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 24, 0.0)
+    /// Declination uncertainty (arcseconds)
+    def DEC_UNC() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 26, 0.0)
+    /// True if position uncertainty is flagged
+    def POS_UNC_FLAG() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 28, 0))
+    /// Parallax (milliarcseconds)
+    def PARALLAX() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 30, 0.0)
+    /// Parallax uncertainty (milliarcseconds)
+    def PARALLAX_UNC() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 32, 0.0)
+    /// Proper motion in RA (milliarcseconds/year)
+    def PMRA() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 34, 0.0)
+    /// Proper motion in RA uncertainty (milliarcseconds/year)
+    def PMRA_UNC() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 36, 0.0)
+    /// Proper motion in DEC (milliarcseconds/year)
+    def PMDEC() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 38, 0.0)
+    /// Proper motion in DEC uncertainty (milliarcseconds/year)
+    def PMDEC_UNC() -> float:
+        return flatbuffers.field_float64(buf_, pos_, 40, 0.0)
+    /// True if proper motion uncertainty is flagged
+    def PM_UNC_FLAG() -> bool:
+        return bool(flatbuffers.field_int8(buf_, pos_, 42, 0))
+    /// Gaia G-band magnitude
     def GMAG() -> float:
         return flatbuffers.field_float64(buf_, pos_, 44, 0.0)
+    /// Gaia G-band magnitude uncertainty
     def GMAG_UNC() -> float:
         return flatbuffers.field_float64(buf_, pos_, 46, 0.0)
+    /// Gaia BP-band magnitude (blue photometer)
     def BPMAG() -> float:
         return flatbuffers.field_float64(buf_, pos_, 48, 0.0)
+    /// Gaia BP-band magnitude uncertainty
     def BPMAG_UNC() -> float:
         return flatbuffers.field_float64(buf_, pos_, 50, 0.0)
+    /// Gaia RP-band magnitude (red photometer)
     def RPMAG() -> float:
         return flatbuffers.field_float64(buf_, pos_, 52, 0.0)
+    /// Gaia RP-band magnitude uncertainty
     def RPMAG_UNC() -> float:
         return flatbuffers.field_float64(buf_, pos_, 54, 0.0)
+    /// 2MASS J-band magnitude (1.25 um)
     def JMAG() -> float:
         return flatbuffers.field_float64(buf_, pos_, 56, 0.0)
+    /// J-band magnitude uncertainty
     def JMAG_UNC() -> float:
         return flatbuffers.field_float64(buf_, pos_, 58, 0.0)
+    /// 2MASS K-band magnitude (2.17 um)
     def KMAG() -> float:
         return flatbuffers.field_float64(buf_, pos_, 60, 0.0)
+    /// K-band magnitude uncertainty
     def KMAG_UNC() -> float:
         return flatbuffers.field_float64(buf_, pos_, 62, 0.0)
+    /// 2MASS H-band magnitude (1.65 um)
     def HMAG() -> float:
         return flatbuffers.field_float64(buf_, pos_, 64, 0.0)
+    /// H-band magnitude uncertainty
     def HMAG_UNC() -> float:
         return flatbuffers.field_float64(buf_, pos_, 66, 0.0)
+    /// True if star is variable
     def VAR_FLAG() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 68, 0))
+    /// True if star is in a multiple system
     def MULT_FLAG() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 70, 0))
+    /// Nearest neighbor catalog identifier
     def NEIGHBOR_ID() -> int:
-        return flatbuffers.field_int32(buf_, pos_, 72, 0)
+        return flatbuffers.field_uint32(buf_, pos_, 72, 0)
+    /// True if nearest neighbor is within confusion radius
     def NEIGHBOR_FLAG() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 74, 0))
+    /// Distance to nearest neighbor (arcseconds)
     def NEIGHBOR_DISTANCE() -> float:
         return flatbuffers.field_float64(buf_, pos_, 76, 0.0)
+    /// True if position shift detected between catalogs
     def SHIFT_FLAG() -> bool:
         return bool(flatbuffers.field_int8(buf_, pos_, 78, 0))
+    /// Position shift magnitude (arcseconds)
     def SHIFT() -> float:
         return flatbuffers.field_float64(buf_, pos_, 80, 0.0)
 
@@ -98,58 +137,58 @@ struct STRBuilder:
         b_.PrependInt64Slot(1, CS_ID, 0)
         return this
     def add_GNC_CAT_ID(GNC_CAT_ID:int):
-        b_.PrependInt32Slot(2, GNC_CAT_ID, 0)
+        b_.PrependUint32Slot(2, GNC_CAT_ID, 0)
         return this
     def add_GAIADR3_CAT_ID(GAIADR3_CAT_ID:int):
         b_.PrependInt64Slot(3, GAIADR3_CAT_ID, 0)
         return this
     def add_HIP_CAT_ID(HIP_CAT_ID:int):
-        b_.PrependInt32Slot(4, HIP_CAT_ID, 0)
+        b_.PrependUint32Slot(4, HIP_CAT_ID, 0)
         return this
     def add_CAT_VERSION(CAT_VERSION:flatbuffers.offset):
         b_.PrependUOffsetTRelativeSlot(5, CAT_VERSION)
         return this
-    def add_RA(RA:float):
-        b_.PrependFloat64Slot(6, RA, 0.0)
-        return this
-    def add_RA_UNC(RA_UNC:float):
-        b_.PrependFloat64Slot(7, RA_UNC, 0.0)
-        return this
-    def add_DEC(DEC:float):
-        b_.PrependFloat64Slot(8, DEC, 0.0)
-        return this
-    def add_DEC_UNC(DEC_UNC:float):
-        b_.PrependFloat64Slot(9, DEC_UNC, 0.0)
-        return this
-    def add_POS_UNC_FLAG(POS_UNC_FLAG:bool):
-        b_.PrependBoolSlot(10, POS_UNC_FLAG, 0)
-        return this
-    def add_PARALLAX(PARALLAX:float):
-        b_.PrependFloat64Slot(11, PARALLAX, 0.0)
-        return this
-    def add_PARALLAX_UNC(PARALLAX_UNC:float):
-        b_.PrependFloat64Slot(12, PARALLAX_UNC, 0.0)
-        return this
-    def add_PMRA(PMRA:float):
-        b_.PrependFloat64Slot(13, PMRA, 0.0)
-        return this
-    def add_PMRA_UNC(PMRA_UNC:float):
-        b_.PrependFloat64Slot(14, PMRA_UNC, 0.0)
-        return this
-    def add_PMDEC(PMDEC:float):
-        b_.PrependFloat64Slot(15, PMDEC, 0.0)
-        return this
-    def add_PMDEC_UNC(PMDEC_UNC:float):
-        b_.PrependFloat64Slot(16, PMDEC_UNC, 0.0)
-        return this
-    def add_PM_UNC_FLAG(PM_UNC_FLAG:bool):
-        b_.PrependBoolSlot(17, PM_UNC_FLAG, 0)
-        return this
     def add_ASTROMETRY_ORIGIN(ASTROMETRY_ORIGIN:flatbuffers.offset):
-        b_.PrependUOffsetTRelativeSlot(18, ASTROMETRY_ORIGIN)
+        b_.PrependUOffsetTRelativeSlot(6, ASTROMETRY_ORIGIN)
         return this
     def add_STAR_EPOCH(STAR_EPOCH:float):
-        b_.PrependFloat64Slot(19, STAR_EPOCH, 0.0)
+        b_.PrependFloat64Slot(7, STAR_EPOCH, 0.0)
+        return this
+    def add_RA(RA:float):
+        b_.PrependFloat64Slot(8, RA, 0.0)
+        return this
+    def add_RA_UNC(RA_UNC:float):
+        b_.PrependFloat64Slot(9, RA_UNC, 0.0)
+        return this
+    def add_DEC(DEC:float):
+        b_.PrependFloat64Slot(10, DEC, 0.0)
+        return this
+    def add_DEC_UNC(DEC_UNC:float):
+        b_.PrependFloat64Slot(11, DEC_UNC, 0.0)
+        return this
+    def add_POS_UNC_FLAG(POS_UNC_FLAG:bool):
+        b_.PrependBoolSlot(12, POS_UNC_FLAG, 0)
+        return this
+    def add_PARALLAX(PARALLAX:float):
+        b_.PrependFloat64Slot(13, PARALLAX, 0.0)
+        return this
+    def add_PARALLAX_UNC(PARALLAX_UNC:float):
+        b_.PrependFloat64Slot(14, PARALLAX_UNC, 0.0)
+        return this
+    def add_PMRA(PMRA:float):
+        b_.PrependFloat64Slot(15, PMRA, 0.0)
+        return this
+    def add_PMRA_UNC(PMRA_UNC:float):
+        b_.PrependFloat64Slot(16, PMRA_UNC, 0.0)
+        return this
+    def add_PMDEC(PMDEC:float):
+        b_.PrependFloat64Slot(17, PMDEC, 0.0)
+        return this
+    def add_PMDEC_UNC(PMDEC_UNC:float):
+        b_.PrependFloat64Slot(18, PMDEC_UNC, 0.0)
+        return this
+    def add_PM_UNC_FLAG(PM_UNC_FLAG:bool):
+        b_.PrependBoolSlot(19, PM_UNC_FLAG, 0)
         return this
     def add_GMAG(GMAG:float):
         b_.PrependFloat64Slot(20, GMAG, 0.0)
@@ -194,7 +233,7 @@ struct STRBuilder:
         b_.PrependBoolSlot(33, MULT_FLAG, 0)
         return this
     def add_NEIGHBOR_ID(NEIGHBOR_ID:int):
-        b_.PrependInt32Slot(34, NEIGHBOR_ID, 0)
+        b_.PrependUint32Slot(34, NEIGHBOR_ID, 0)
         return this
     def add_NEIGHBOR_FLAG(NEIGHBOR_FLAG:bool):
         b_.PrependBoolSlot(35, NEIGHBOR_FLAG, 0)

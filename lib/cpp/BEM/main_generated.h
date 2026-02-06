@@ -13,8 +13,248 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
               FLATBUFFERS_VERSION_REVISION == 25,
              "Non-compatible flatbuffers version included");
 
+struct beamContourPoint;
+struct beamContourPointBuilder;
+
+struct beamContour;
+struct beamContourBuilder;
+
 struct BEM;
 struct BEMBuilder;
+
+enum beamType : int8_t {
+  beamType_SPOT = 0,
+  beamType_REGIONAL = 1,
+  beamType_GLOBAL = 2,
+  beamType_SHAPED = 3,
+  beamType_STEERABLE = 4,
+  beamType_HOPPING = 5,
+  beamType_MIN = beamType_SPOT,
+  beamType_MAX = beamType_HOPPING
+};
+
+inline const beamType (&EnumValuesbeamType())[6] {
+  static const beamType values[] = {
+    beamType_SPOT,
+    beamType_REGIONAL,
+    beamType_GLOBAL,
+    beamType_SHAPED,
+    beamType_STEERABLE,
+    beamType_HOPPING
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesbeamType() {
+  static const char * const names[7] = {
+    "SPOT",
+    "REGIONAL",
+    "GLOBAL",
+    "SHAPED",
+    "STEERABLE",
+    "HOPPING",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamebeamType(beamType e) {
+  if (::flatbuffers::IsOutRange(e, beamType_SPOT, beamType_HOPPING)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesbeamType()[index];
+}
+
+enum beamPolarization : int8_t {
+  beamPolarization_RHCP = 0,
+  beamPolarization_LHCP = 1,
+  beamPolarization_LINEAR_H = 2,
+  beamPolarization_LINEAR_V = 3,
+  beamPolarization_DUAL_CIRCULAR = 4,
+  beamPolarization_DUAL_LINEAR = 5,
+  beamPolarization_CROSS_POL = 6,
+  beamPolarization_MIN = beamPolarization_RHCP,
+  beamPolarization_MAX = beamPolarization_CROSS_POL
+};
+
+inline const beamPolarization (&EnumValuesbeamPolarization())[7] {
+  static const beamPolarization values[] = {
+    beamPolarization_RHCP,
+    beamPolarization_LHCP,
+    beamPolarization_LINEAR_H,
+    beamPolarization_LINEAR_V,
+    beamPolarization_DUAL_CIRCULAR,
+    beamPolarization_DUAL_LINEAR,
+    beamPolarization_CROSS_POL
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesbeamPolarization() {
+  static const char * const names[8] = {
+    "RHCP",
+    "LHCP",
+    "LINEAR_H",
+    "LINEAR_V",
+    "DUAL_CIRCULAR",
+    "DUAL_LINEAR",
+    "CROSS_POL",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamebeamPolarization(beamPolarization e) {
+  if (::flatbuffers::IsOutRange(e, beamPolarization_RHCP, beamPolarization_CROSS_POL)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesbeamPolarization()[index];
+}
+
+/// Beam Contour Point (gain pattern boundary)
+struct beamContourPoint FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef beamContourPointBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_LATITUDE = 4,
+    VT_LONGITUDE = 6,
+    VT_GAIN = 8
+  };
+  /// Latitude in degrees
+  double LATITUDE() const {
+    return GetField<double>(VT_LATITUDE, 0.0);
+  }
+  /// Longitude in degrees
+  double LONGITUDE() const {
+    return GetField<double>(VT_LONGITUDE, 0.0);
+  }
+  /// Gain level in dBi at this contour
+  double GAIN() const {
+    return GetField<double>(VT_GAIN, 0.0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyField<double>(verifier, VT_LATITUDE, 8) &&
+           VerifyField<double>(verifier, VT_LONGITUDE, 8) &&
+           VerifyField<double>(verifier, VT_GAIN, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct beamContourPointBuilder {
+  typedef beamContourPoint Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_LATITUDE(double LATITUDE) {
+    fbb_.AddElement<double>(beamContourPoint::VT_LATITUDE, LATITUDE, 0.0);
+  }
+  void add_LONGITUDE(double LONGITUDE) {
+    fbb_.AddElement<double>(beamContourPoint::VT_LONGITUDE, LONGITUDE, 0.0);
+  }
+  void add_GAIN(double GAIN) {
+    fbb_.AddElement<double>(beamContourPoint::VT_GAIN, GAIN, 0.0);
+  }
+  explicit beamContourPointBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<beamContourPoint> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<beamContourPoint>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<beamContourPoint> CreatebeamContourPoint(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    double LATITUDE = 0.0,
+    double LONGITUDE = 0.0,
+    double GAIN = 0.0) {
+  beamContourPointBuilder builder_(_fbb);
+  builder_.add_GAIN(GAIN);
+  builder_.add_LONGITUDE(LONGITUDE);
+  builder_.add_LATITUDE(LATITUDE);
+  return builder_.Finish();
+}
+
+/// Beam Contour (iso-gain boundary)
+struct beamContour FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef beamContourBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_CONTOUR_ID = 4,
+    VT_GAIN_LEVEL = 6,
+    VT_POINTS = 8
+  };
+  /// Contour level identifier
+  const ::flatbuffers::String *CONTOUR_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CONTOUR_ID);
+  }
+  /// Gain level in dBi
+  double GAIN_LEVEL() const {
+    return GetField<double>(VT_GAIN_LEVEL, 0.0);
+  }
+  /// Contour boundary points
+  const ::flatbuffers::Vector<::flatbuffers::Offset<beamContourPoint>> *POINTS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<beamContourPoint>> *>(VT_POINTS);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_CONTOUR_ID) &&
+           verifier.VerifyString(CONTOUR_ID()) &&
+           VerifyField<double>(verifier, VT_GAIN_LEVEL, 8) &&
+           VerifyOffset(verifier, VT_POINTS) &&
+           verifier.VerifyVector(POINTS()) &&
+           verifier.VerifyVectorOfTables(POINTS()) &&
+           verifier.EndTable();
+  }
+};
+
+struct beamContourBuilder {
+  typedef beamContour Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_CONTOUR_ID(::flatbuffers::Offset<::flatbuffers::String> CONTOUR_ID) {
+    fbb_.AddOffset(beamContour::VT_CONTOUR_ID, CONTOUR_ID);
+  }
+  void add_GAIN_LEVEL(double GAIN_LEVEL) {
+    fbb_.AddElement<double>(beamContour::VT_GAIN_LEVEL, GAIN_LEVEL, 0.0);
+  }
+  void add_POINTS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<beamContourPoint>>> POINTS) {
+    fbb_.AddOffset(beamContour::VT_POINTS, POINTS);
+  }
+  explicit beamContourBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<beamContour> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<beamContour>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<beamContour> CreatebeamContour(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> CONTOUR_ID = 0,
+    double GAIN_LEVEL = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<beamContourPoint>>> POINTS = 0) {
+  beamContourBuilder builder_(_fbb);
+  builder_.add_GAIN_LEVEL(GAIN_LEVEL);
+  builder_.add_POINTS(POINTS);
+  builder_.add_CONTOUR_ID(CONTOUR_ID);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<beamContour> CreatebeamContourDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *CONTOUR_ID = nullptr,
+    double GAIN_LEVEL = 0.0,
+    const std::vector<::flatbuffers::Offset<beamContourPoint>> *POINTS = nullptr) {
+  auto CONTOUR_ID__ = CONTOUR_ID ? _fbb.CreateString(CONTOUR_ID) : 0;
+  auto POINTS__ = POINTS ? _fbb.CreateVector<::flatbuffers::Offset<beamContourPoint>>(*POINTS) : 0;
+  return CreatebeamContour(
+      _fbb,
+      CONTOUR_ID__,
+      GAIN_LEVEL,
+      POINTS__);
+}
 
 /// Antenna Beam
 struct BEM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
@@ -22,20 +262,89 @@ struct BEM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
     VT_BEAM_NAME = 6,
-    VT_NOTES = 8,
-    VT_BEAM_CONTOURS = 10
+    VT_ID_ENTITY = 8,
+    VT_ID_ANTENNA = 10,
+    VT_TYPE = 12,
+    VT_POLARIZATION = 14,
+    VT_PEAK_GAIN = 16,
+    VT_EOC_GAIN = 18,
+    VT_CENTER_LATITUDE = 20,
+    VT_CENTER_LONGITUDE = 22,
+    VT_BEAMWIDTH = 24,
+    VT_FREQUENCY = 26,
+    VT_EIRP = 28,
+    VT_G_OVER_T = 30,
+    VT_FOOTPRINT_AREA = 32,
+    VT_BEAM_CONTOURS = 34,
+    VT_NOTES = 36
   };
+  /// Unique beam identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
+  /// Beam name or designation
   const ::flatbuffers::String *BEAM_NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_BEAM_NAME);
   }
+  /// Reference to parent entity (satellite/transponder)
+  const ::flatbuffers::String *ID_ENTITY() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ID_ENTITY);
+  }
+  /// Reference to parent antenna
+  const ::flatbuffers::String *ID_ANTENNA() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ID_ANTENNA);
+  }
+  /// Beam type
+  beamType TYPE() const {
+    return static_cast<beamType>(GetField<int8_t>(VT_TYPE, 0));
+  }
+  /// Beam polarization
+  beamPolarization POLARIZATION() const {
+    return static_cast<beamPolarization>(GetField<int8_t>(VT_POLARIZATION, 0));
+  }
+  /// Peak gain in dBi
+  double PEAK_GAIN() const {
+    return GetField<double>(VT_PEAK_GAIN, 0.0);
+  }
+  /// Edge-of-coverage gain in dBi
+  double EOC_GAIN() const {
+    return GetField<double>(VT_EOC_GAIN, 0.0);
+  }
+  /// Beam center latitude in degrees
+  double CENTER_LATITUDE() const {
+    return GetField<double>(VT_CENTER_LATITUDE, 0.0);
+  }
+  /// Beam center longitude in degrees
+  double CENTER_LONGITUDE() const {
+    return GetField<double>(VT_CENTER_LONGITUDE, 0.0);
+  }
+  /// Beamwidth (3dB) in degrees
+  double BEAMWIDTH() const {
+    return GetField<double>(VT_BEAMWIDTH, 0.0);
+  }
+  /// Operating frequency in MHz
+  double FREQUENCY() const {
+    return GetField<double>(VT_FREQUENCY, 0.0);
+  }
+  /// EIRP at beam center in dBW
+  double EIRP() const {
+    return GetField<double>(VT_EIRP, 0.0);
+  }
+  /// G/T at beam center in dB/K
+  double G_OVER_T() const {
+    return GetField<double>(VT_G_OVER_T, 0.0);
+  }
+  /// Beam footprint area in km^2
+  double FOOTPRINT_AREA() const {
+    return GetField<double>(VT_FOOTPRINT_AREA, 0.0);
+  }
+  /// Beam contour definitions
+  const ::flatbuffers::Vector<::flatbuffers::Offset<beamContour>> *BEAM_CONTOURS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<beamContour>> *>(VT_BEAM_CONTOURS);
+  }
+  /// Additional notes
   const ::flatbuffers::String *NOTES() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NOTES);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *BEAM_CONTOURS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_BEAM_CONTOURS);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -43,11 +352,26 @@ struct BEM FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(ID()) &&
            VerifyOffset(verifier, VT_BEAM_NAME) &&
            verifier.VerifyString(BEAM_NAME()) &&
-           VerifyOffset(verifier, VT_NOTES) &&
-           verifier.VerifyString(NOTES()) &&
+           VerifyOffset(verifier, VT_ID_ENTITY) &&
+           verifier.VerifyString(ID_ENTITY()) &&
+           VerifyOffset(verifier, VT_ID_ANTENNA) &&
+           verifier.VerifyString(ID_ANTENNA()) &&
+           VerifyField<int8_t>(verifier, VT_TYPE, 1) &&
+           VerifyField<int8_t>(verifier, VT_POLARIZATION, 1) &&
+           VerifyField<double>(verifier, VT_PEAK_GAIN, 8) &&
+           VerifyField<double>(verifier, VT_EOC_GAIN, 8) &&
+           VerifyField<double>(verifier, VT_CENTER_LATITUDE, 8) &&
+           VerifyField<double>(verifier, VT_CENTER_LONGITUDE, 8) &&
+           VerifyField<double>(verifier, VT_BEAMWIDTH, 8) &&
+           VerifyField<double>(verifier, VT_FREQUENCY, 8) &&
+           VerifyField<double>(verifier, VT_EIRP, 8) &&
+           VerifyField<double>(verifier, VT_G_OVER_T, 8) &&
+           VerifyField<double>(verifier, VT_FOOTPRINT_AREA, 8) &&
            VerifyOffset(verifier, VT_BEAM_CONTOURS) &&
            verifier.VerifyVector(BEAM_CONTOURS()) &&
-           verifier.VerifyVectorOfStrings(BEAM_CONTOURS()) &&
+           verifier.VerifyVectorOfTables(BEAM_CONTOURS()) &&
+           VerifyOffset(verifier, VT_NOTES) &&
+           verifier.VerifyString(NOTES()) &&
            verifier.EndTable();
   }
 };
@@ -62,11 +386,50 @@ struct BEMBuilder {
   void add_BEAM_NAME(::flatbuffers::Offset<::flatbuffers::String> BEAM_NAME) {
     fbb_.AddOffset(BEM::VT_BEAM_NAME, BEAM_NAME);
   }
+  void add_ID_ENTITY(::flatbuffers::Offset<::flatbuffers::String> ID_ENTITY) {
+    fbb_.AddOffset(BEM::VT_ID_ENTITY, ID_ENTITY);
+  }
+  void add_ID_ANTENNA(::flatbuffers::Offset<::flatbuffers::String> ID_ANTENNA) {
+    fbb_.AddOffset(BEM::VT_ID_ANTENNA, ID_ANTENNA);
+  }
+  void add_TYPE(beamType TYPE) {
+    fbb_.AddElement<int8_t>(BEM::VT_TYPE, static_cast<int8_t>(TYPE), 0);
+  }
+  void add_POLARIZATION(beamPolarization POLARIZATION) {
+    fbb_.AddElement<int8_t>(BEM::VT_POLARIZATION, static_cast<int8_t>(POLARIZATION), 0);
+  }
+  void add_PEAK_GAIN(double PEAK_GAIN) {
+    fbb_.AddElement<double>(BEM::VT_PEAK_GAIN, PEAK_GAIN, 0.0);
+  }
+  void add_EOC_GAIN(double EOC_GAIN) {
+    fbb_.AddElement<double>(BEM::VT_EOC_GAIN, EOC_GAIN, 0.0);
+  }
+  void add_CENTER_LATITUDE(double CENTER_LATITUDE) {
+    fbb_.AddElement<double>(BEM::VT_CENTER_LATITUDE, CENTER_LATITUDE, 0.0);
+  }
+  void add_CENTER_LONGITUDE(double CENTER_LONGITUDE) {
+    fbb_.AddElement<double>(BEM::VT_CENTER_LONGITUDE, CENTER_LONGITUDE, 0.0);
+  }
+  void add_BEAMWIDTH(double BEAMWIDTH) {
+    fbb_.AddElement<double>(BEM::VT_BEAMWIDTH, BEAMWIDTH, 0.0);
+  }
+  void add_FREQUENCY(double FREQUENCY) {
+    fbb_.AddElement<double>(BEM::VT_FREQUENCY, FREQUENCY, 0.0);
+  }
+  void add_EIRP(double EIRP) {
+    fbb_.AddElement<double>(BEM::VT_EIRP, EIRP, 0.0);
+  }
+  void add_G_OVER_T(double G_OVER_T) {
+    fbb_.AddElement<double>(BEM::VT_G_OVER_T, G_OVER_T, 0.0);
+  }
+  void add_FOOTPRINT_AREA(double FOOTPRINT_AREA) {
+    fbb_.AddElement<double>(BEM::VT_FOOTPRINT_AREA, FOOTPRINT_AREA, 0.0);
+  }
+  void add_BEAM_CONTOURS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<beamContour>>> BEAM_CONTOURS) {
+    fbb_.AddOffset(BEM::VT_BEAM_CONTOURS, BEAM_CONTOURS);
+  }
   void add_NOTES(::flatbuffers::Offset<::flatbuffers::String> NOTES) {
     fbb_.AddOffset(BEM::VT_NOTES, NOTES);
-  }
-  void add_BEAM_CONTOURS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> BEAM_CONTOURS) {
-    fbb_.AddOffset(BEM::VT_BEAM_CONTOURS, BEAM_CONTOURS);
   }
   explicit BEMBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -83,13 +446,39 @@ inline ::flatbuffers::Offset<BEM> CreateBEM(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> BEAM_NAME = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> NOTES = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> BEAM_CONTOURS = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> ID_ENTITY = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ID_ANTENNA = 0,
+    beamType TYPE = beamType_SPOT,
+    beamPolarization POLARIZATION = beamPolarization_RHCP,
+    double PEAK_GAIN = 0.0,
+    double EOC_GAIN = 0.0,
+    double CENTER_LATITUDE = 0.0,
+    double CENTER_LONGITUDE = 0.0,
+    double BEAMWIDTH = 0.0,
+    double FREQUENCY = 0.0,
+    double EIRP = 0.0,
+    double G_OVER_T = 0.0,
+    double FOOTPRINT_AREA = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<beamContour>>> BEAM_CONTOURS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> NOTES = 0) {
   BEMBuilder builder_(_fbb);
-  builder_.add_BEAM_CONTOURS(BEAM_CONTOURS);
+  builder_.add_FOOTPRINT_AREA(FOOTPRINT_AREA);
+  builder_.add_G_OVER_T(G_OVER_T);
+  builder_.add_EIRP(EIRP);
+  builder_.add_FREQUENCY(FREQUENCY);
+  builder_.add_BEAMWIDTH(BEAMWIDTH);
+  builder_.add_CENTER_LONGITUDE(CENTER_LONGITUDE);
+  builder_.add_CENTER_LATITUDE(CENTER_LATITUDE);
+  builder_.add_EOC_GAIN(EOC_GAIN);
+  builder_.add_PEAK_GAIN(PEAK_GAIN);
   builder_.add_NOTES(NOTES);
+  builder_.add_BEAM_CONTOURS(BEAM_CONTOURS);
+  builder_.add_ID_ANTENNA(ID_ANTENNA);
+  builder_.add_ID_ENTITY(ID_ENTITY);
   builder_.add_BEAM_NAME(BEAM_NAME);
   builder_.add_ID(ID);
+  builder_.add_POLARIZATION(POLARIZATION);
+  builder_.add_TYPE(TYPE);
   return builder_.Finish();
 }
 
@@ -97,18 +486,46 @@ inline ::flatbuffers::Offset<BEM> CreateBEMDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *ID = nullptr,
     const char *BEAM_NAME = nullptr,
-    const char *NOTES = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *BEAM_CONTOURS = nullptr) {
+    const char *ID_ENTITY = nullptr,
+    const char *ID_ANTENNA = nullptr,
+    beamType TYPE = beamType_SPOT,
+    beamPolarization POLARIZATION = beamPolarization_RHCP,
+    double PEAK_GAIN = 0.0,
+    double EOC_GAIN = 0.0,
+    double CENTER_LATITUDE = 0.0,
+    double CENTER_LONGITUDE = 0.0,
+    double BEAMWIDTH = 0.0,
+    double FREQUENCY = 0.0,
+    double EIRP = 0.0,
+    double G_OVER_T = 0.0,
+    double FOOTPRINT_AREA = 0.0,
+    const std::vector<::flatbuffers::Offset<beamContour>> *BEAM_CONTOURS = nullptr,
+    const char *NOTES = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto BEAM_NAME__ = BEAM_NAME ? _fbb.CreateString(BEAM_NAME) : 0;
+  auto ID_ENTITY__ = ID_ENTITY ? _fbb.CreateString(ID_ENTITY) : 0;
+  auto ID_ANTENNA__ = ID_ANTENNA ? _fbb.CreateString(ID_ANTENNA) : 0;
+  auto BEAM_CONTOURS__ = BEAM_CONTOURS ? _fbb.CreateVector<::flatbuffers::Offset<beamContour>>(*BEAM_CONTOURS) : 0;
   auto NOTES__ = NOTES ? _fbb.CreateString(NOTES) : 0;
-  auto BEAM_CONTOURS__ = BEAM_CONTOURS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*BEAM_CONTOURS) : 0;
   return CreateBEM(
       _fbb,
       ID__,
       BEAM_NAME__,
-      NOTES__,
-      BEAM_CONTOURS__);
+      ID_ENTITY__,
+      ID_ANTENNA__,
+      TYPE,
+      POLARIZATION,
+      PEAK_GAIN,
+      EOC_GAIN,
+      CENTER_LATITUDE,
+      CENTER_LONGITUDE,
+      BEAMWIDTH,
+      FREQUENCY,
+      EIRP,
+      G_OVER_T,
+      FOOTPRINT_AREA,
+      BEAM_CONTOURS__,
+      NOTES__);
 }
 
 inline const BEM *GetBEM(const void *buf) {

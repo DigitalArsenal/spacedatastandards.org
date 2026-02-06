@@ -1,258 +1,484 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "rfObsType": {
+      "type": "string",
+      "enum": [
+        "EMISSION",
+        "TRANSPONDER",
+        "INTERFERENCE",
+        "BEACON",
+        "TELEMETRY",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "EMISSION": {
+          "value": 0
+        },
+        "TRANSPONDER": {
+          "value": 1
+        },
+        "INTERFERENCE": {
+          "value": 2
+        },
+        "BEACON": {
+          "value": 3
+        },
+        "TELEMETRY": {
+          "value": 4
+        },
+        "UNKNOWN": {
+          "value": 5
+        }
+      }
+    },
+    "rfDetectionStatus": {
+      "type": "string",
+      "enum": [
+        "DETECTED",
+        "CONFIRMED",
+        "TENTATIVE",
+        "LOST",
+        "INTERFERENCE_ONLY"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "DETECTED": {
+          "value": 0
+        },
+        "CONFIRMED": {
+          "value": 1
+        },
+        "TENTATIVE": {
+          "value": 2
+        },
+        "LOST": {
+          "value": 3
+        },
+        "INTERFERENCE_ONLY": {
+          "value": 4
+        }
+      }
+    },
     "RFO": {
       "type": "object",
       "description": "RF Observation",
       "properties": {
         "ID": {
           "type": "string",
+          "description": "Unique identifier",
           "x-flatbuffer-type": "string"
         },
         "OB_TIME": {
           "type": "string",
+          "description": "Observation time (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "ID_SENSOR": {
           "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "TYPE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "SAT_NO": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
-        },
-        "TASK_ID": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "TRANSACTION_ID": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "TRACK_ID": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "ORIG_OBJECT_ID": {
-          "type": "string",
+          "description": "Sensor identifier",
           "x-flatbuffer-type": "string"
         },
         "ORIG_SENSOR_ID": {
           "type": "string",
+          "description": "Original sensor identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "OBS_TYPE": {
+          "$ref": "#/definitions/rfObsType",
+          "description": "Observation type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "EMISSION": {
+              "value": 0
+            },
+            "TRANSPONDER": {
+              "value": 1
+            },
+            "INTERFERENCE": {
+              "value": 2
+            },
+            "BEACON": {
+              "value": 3
+            },
+            "TELEMETRY": {
+              "value": 4
+            },
+            "UNKNOWN": {
+              "value": 5
+            }
+          }
+        },
+        "SAT_NO": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Satellite catalog number",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ORIG_OBJECT_ID": {
+          "type": "string",
+          "description": "International designator",
+          "x-flatbuffer-type": "string"
+        },
+        "ON_ORBIT": {
+          "type": "string",
+          "description": "On-orbit reference",
           "x-flatbuffer-type": "string"
         },
         "UCT": {
           "type": "boolean",
+          "description": "True if uncorrelated target",
           "x-flatbuffer-type": "bool"
+        },
+        "TASK_ID": {
+          "type": "string",
+          "description": "Task identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "TRANSACTION_ID": {
+          "type": "string",
+          "description": "Transaction identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "TRACK_ID": {
+          "type": "string",
+          "description": "Track identifier",
+          "x-flatbuffer-type": "string"
         },
         "TRANSPONDER": {
           "type": "string",
+          "description": "Transponder identifier",
           "x-flatbuffer-type": "string"
+        },
+        "DETECTION_STATUS": {
+          "$ref": "#/definitions/rfDetectionStatus",
+          "description": "Detection status",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "DETECTED": {
+              "value": 0
+            },
+            "CONFIRMED": {
+              "value": 1
+            },
+            "TENTATIVE": {
+              "value": 2
+            },
+            "LOST": {
+              "value": 3
+            },
+            "INTERFERENCE_ONLY": {
+              "value": 4
+            }
+          }
         },
         "AZIMUTH": {
           "type": "number",
+          "description": "Azimuth angle (degrees)",
           "x-flatbuffer-type": "double"
         },
         "AZIMUTH_UNC": {
           "type": "number",
+          "description": "Azimuth uncertainty (degrees, 1-sigma)",
           "x-flatbuffer-type": "double"
         },
         "AZIMUTH_RATE": {
           "type": "number",
+          "description": "Azimuth rate (degrees/s)",
           "x-flatbuffer-type": "double"
         },
         "ELEVATION": {
           "type": "number",
+          "description": "Elevation angle (degrees)",
           "x-flatbuffer-type": "double"
         },
         "ELEVATION_UNC": {
           "type": "number",
+          "description": "Elevation uncertainty (degrees, 1-sigma)",
           "x-flatbuffer-type": "double"
         },
         "ELEVATION_RATE": {
           "type": "number",
+          "description": "Elevation rate (degrees/s)",
           "x-flatbuffer-type": "double"
         },
         "RANGE": {
           "type": "number",
+          "description": "Slant range (km)",
           "x-flatbuffer-type": "double"
         },
         "RANGE_UNC": {
           "type": "number",
+          "description": "Range uncertainty (km, 1-sigma)",
           "x-flatbuffer-type": "double"
         },
         "RANGE_RATE": {
           "type": "number",
+          "description": "Range rate (km/s)",
           "x-flatbuffer-type": "double"
         },
         "RANGE_RATE_UNC": {
           "type": "number",
+          "description": "Range rate uncertainty (km/s, 1-sigma)",
           "x-flatbuffer-type": "double"
         },
         "TRACK_RANGE": {
           "type": "number",
+          "description": "Track range (km)",
           "x-flatbuffer-type": "double"
         },
         "SENLAT": {
           "type": "number",
+          "description": "Sensor latitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "SENLON": {
           "type": "number",
+          "description": "Sensor longitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "SENALT": {
           "type": "number",
+          "description": "Sensor altitude (km)",
           "x-flatbuffer-type": "double"
         },
         "ELNOT": {
           "type": "string",
+          "description": "ELNOT (Electronic Intelligence Notation)",
           "x-flatbuffer-type": "string"
-        },
-        "FREQUENCY": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "NOMINAL_FREQUENCY": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "START_FREQUENCY": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "END_FREQUENCY": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "RELATIVE_CARRIER_POWER": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "SPECTRUM_ANALYZER_POWER": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "RELATIVE_NOISE_FLOOR": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "REFERENCE_LEVEL": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "PGRI": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "CONFIDENCE": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "INCOMING": {
-          "type": "boolean",
-          "x-flatbuffer-type": "bool"
-        },
-        "SWITCH_POINT": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
-        },
-        "BAUD_RATE": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "SNR": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "NOMINAL_SNR": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "POLARITY": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "POLARITY_TYPE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "CHANNEL": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
-        },
-        "POWER_OVER_NOISE": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "NOMINAL_POWER_OVER_NOISE": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "BANDWIDTH": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "NOMINAL_BANDWIDTH": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "RESOLUTION_BANDWIDTH": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "VIDEO_BANDWIDTH": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "EIRP": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "NOMINAL_EIRP": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "MIN_PSD": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "MAX_PSD": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "FREQUENCY_SHIFT": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "PEAK": {
-          "type": "boolean",
-          "x-flatbuffer-type": "bool"
         },
         "ANTENNA_NAME": {
           "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "DETECTION_STATUS": {
-          "type": "string",
+          "description": "Antenna name",
           "x-flatbuffer-type": "string"
         },
         "COLLECTION_MODE": {
           "type": "string",
+          "description": "Collection mode",
           "x-flatbuffer-type": "string"
+        },
+        "FREQUENCY": {
+          "type": "number",
+          "description": "Measured center frequency (MHz)",
+          "x-flatbuffer-type": "double"
+        },
+        "NOMINAL_FREQUENCY": {
+          "type": "number",
+          "description": "Nominal center frequency (MHz)",
+          "x-flatbuffer-type": "double"
+        },
+        "START_FREQUENCY": {
+          "type": "number",
+          "description": "Start frequency of emission (MHz)",
+          "x-flatbuffer-type": "double"
+        },
+        "END_FREQUENCY": {
+          "type": "number",
+          "description": "End frequency of emission (MHz)",
+          "x-flatbuffer-type": "double"
+        },
+        "FREQUENCY_SHIFT": {
+          "type": "number",
+          "description": "Frequency shift from nominal (MHz)",
+          "x-flatbuffer-type": "double"
+        },
+        "BANDWIDTH": {
+          "type": "number",
+          "description": "Measured bandwidth (MHz)",
+          "x-flatbuffer-type": "double"
+        },
+        "NOMINAL_BANDWIDTH": {
+          "type": "number",
+          "description": "Nominal bandwidth (MHz)",
+          "x-flatbuffer-type": "double"
+        },
+        "RESOLUTION_BANDWIDTH": {
+          "type": "number",
+          "description": "Resolution bandwidth (MHz)",
+          "x-flatbuffer-type": "double"
+        },
+        "VIDEO_BANDWIDTH": {
+          "type": "number",
+          "description": "Video bandwidth (MHz)",
+          "x-flatbuffer-type": "double"
+        },
+        "RELATIVE_CARRIER_POWER": {
+          "type": "number",
+          "description": "Relative carrier power (dBm)",
+          "x-flatbuffer-type": "double"
+        },
+        "SPECTRUM_ANALYZER_POWER": {
+          "type": "number",
+          "description": "Spectrum analyzer power (dBm)",
+          "x-flatbuffer-type": "double"
+        },
+        "RELATIVE_NOISE_FLOOR": {
+          "type": "number",
+          "description": "Relative noise floor (dBm)",
+          "x-flatbuffer-type": "double"
+        },
+        "REFERENCE_LEVEL": {
+          "type": "number",
+          "description": "Reference level (dBm)",
+          "x-flatbuffer-type": "double"
+        },
+        "NOISE_PWR_DENSITY": {
+          "type": "number",
+          "description": "Noise power density (dBm/Hz)",
+          "x-flatbuffer-type": "double"
+        },
+        "PGRI": {
+          "type": "number",
+          "description": "PGRI (Pulse Group Repetition Interval, microseconds)",
+          "x-flatbuffer-type": "double"
+        },
+        "EIRP": {
+          "type": "number",
+          "description": "Effective isotropic radiated power (dBW)",
+          "x-flatbuffer-type": "double"
+        },
+        "NOMINAL_EIRP": {
+          "type": "number",
+          "description": "Nominal EIRP (dBW)",
+          "x-flatbuffer-type": "double"
+        },
+        "MIN_PSD": {
+          "type": "number",
+          "description": "Minimum power spectral density (dBm/Hz)",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_PSD": {
+          "type": "number",
+          "description": "Maximum power spectral density (dBm/Hz)",
+          "x-flatbuffer-type": "double"
+        },
+        "SNR": {
+          "type": "number",
+          "description": "Signal-to-noise ratio (dB)",
+          "x-flatbuffer-type": "double"
+        },
+        "NOMINAL_SNR": {
+          "type": "number",
+          "description": "Nominal SNR (dB)",
+          "x-flatbuffer-type": "double"
+        },
+        "POWER_OVER_NOISE": {
+          "type": "number",
+          "description": "Power over noise (dB)",
+          "x-flatbuffer-type": "double"
+        },
+        "NOMINAL_POWER_OVER_NOISE": {
+          "type": "number",
+          "description": "Nominal power over noise (dB)",
+          "x-flatbuffer-type": "double"
+        },
+        "POLARITY": {
+          "type": "number",
+          "description": "Polarity angle (degrees)",
+          "x-flatbuffer-type": "double"
+        },
+        "POLARITY_TYPE": {
+          "type": "string",
+          "description": "Polarization type (e.g., LHCP, RHCP, LINEAR)",
+          "x-flatbuffer-type": "string"
+        },
+        "CHANNEL": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Channel number",
+          "x-flatbuffer-type": "uint16"
+        },
+        "BAUD_RATE": {
+          "type": "number",
+          "description": "Baud rate (symbols/s)",
+          "x-flatbuffer-type": "double"
+        },
+        "SYMBOL_TO_NOISE_RATIO": {
+          "type": "number",
+          "description": "Symbol-to-noise ratio (dB)",
+          "x-flatbuffer-type": "double"
+        },
+        "BIT_ERROR_RATE": {
+          "type": "number",
+          "description": "Bit error rate",
+          "x-flatbuffer-type": "double"
+        },
+        "PEAK": {
+          "type": "boolean",
+          "description": "True if peak measurement",
+          "x-flatbuffer-type": "bool"
+        },
+        "INCOMING": {
+          "type": "boolean",
+          "description": "True if incoming signal",
+          "x-flatbuffer-type": "bool"
+        },
+        "SWITCH_POINT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Switch point number",
+          "x-flatbuffer-type": "uint16"
+        },
+        "CONFIDENCE": {
+          "type": "number",
+          "description": "Confidence score (0-1)",
+          "x-flatbuffer-type": "double"
+        },
+        "CARRIER_STANDARD": {
+          "type": "string",
+          "description": "Carrier standard (e.g., DVB-S, DVB-S2)",
+          "x-flatbuffer-type": "string"
+        },
+        "MODULATION": {
+          "type": "string",
+          "description": "Modulation type",
+          "x-flatbuffer-type": "string"
+        },
+        "INNER_CODING_RATE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Inner FEC coding rate denominator",
+          "x-flatbuffer-type": "uint8"
+        },
+        "OUTER_CODING_RATE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Outer FEC coding rate denominator",
+          "x-flatbuffer-type": "uint8"
+        },
+        "TRANSMIT_FILTER_TYPE": {
+          "type": "string",
+          "description": "Transmit filter type",
+          "x-flatbuffer-type": "string"
+        },
+        "TRANSMIT_FILTER_ROLL_OFF": {
+          "type": "number",
+          "description": "Transmit filter roll-off factor",
+          "x-flatbuffer-type": "double"
         },
         "RAW_FILE_URI": {
           "type": "string",
+          "description": "Reference to raw data file",
+          "x-flatbuffer-type": "string"
+        },
+        "DESCRIPTOR": {
+          "type": "string",
+          "description": "Event descriptor",
+          "x-flatbuffer-type": "string"
+        },
+        "URL": {
+          "type": "string",
+          "description": "Reference URL",
           "x-flatbuffer-type": "string"
         },
         "TAGS": {
@@ -260,59 +486,8 @@
           "items": {
             "type": "string"
           },
+          "description": "Associated tags",
           "x-flatbuffer-type": "[string]"
-        },
-        "NOISE_PWR_DENSITY": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "CARRIER_STANDARD": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "MODULATION": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "INNER_CODING_RATE": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
-        },
-        "OUTER_CODING_RATE": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
-        },
-        "TRANSMIT_FILTER_TYPE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "TRANSMIT_FILTER_ROLL_OFF": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "SYMBOL_TO_NOISE_RATIO": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "BIT_ERROR_RATE": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "ON_ORBIT": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "DESCRIPTOR": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "URL": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

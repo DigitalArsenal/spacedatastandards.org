@@ -1,192 +1,249 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "sarMode" : {
+      "type" : "string",
+      "enum": ["STRIPMAP", "SPOTLIGHT", "SCANSAR", "TOPSAR", "ISAR", "GMTI", "MARITIME", "UNKNOWN"]
+    },
+    "sarPolarization" : {
+      "type" : "string",
+      "enum": ["HH", "VV", "HV", "VH", "DUAL_HH_VV", "DUAL_HH_HV", "DUAL_VV_VH", "QUAD", "COMPACT"]
+    },
     "SAR" : {
       "type" : "object",
       "description" : "SAR Observation",
       "properties" : {
         "ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique identifier"
               },
         "SAT_NO" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Satellite catalog number (of SAR platform)"
               },
         "ORIG_OBJECT_ID" : {
-                "type" : "string"
-              },
-        "ID_SENSOR" : {
-                "type" : "string"
-              },
-        "ORIG_SENSOR_ID" : {
-                "type" : "string"
-              },
-        "EXTERNAL_ID" : {
-                "type" : "string"
-              },
-        "COLLECTION_ID" : {
-                "type" : "string"
-              },
-        "DETECTION_ID" : {
-                "type" : "string"
-              },
-        "COLLECTION_START" : {
-                "type" : "string"
-              },
-        "COLLECTION_END" : {
-                "type" : "string"
-              },
-        "CENTER_TIME" : {
-                "type" : "string"
-              },
-        "DETECTION_START" : {
-                "type" : "string"
-              },
-        "DETECTION_END" : {
-                "type" : "string"
-              },
-        "DWELL_TIME" : {
-                "type" : "number"
-              },
-        "ORBIT_STATE" : {
-                "type" : "string"
-              },
-        "SAR_MODE" : {
-                "type" : "string"
-              },
-        "OPERATING_BAND" : {
-                "type" : "string"
-              },
-        "OPERATING_FREQ" : {
-                "type" : "number"
-              },
-        "SNR" : {
-                "type" : "number"
-              },
-        "TX_POLARIZATION" : {
-                "type" : "string"
-              },
-        "RX_POLARIZATION" : {
-                "type" : "string"
-              },
-        "GRAZE_ANGLE" : {
-                "type" : "number"
-              },
-        "INCIDENCE_ANGLE" : {
-                "type" : "number"
-              },
-        "SQUINT_ANGLE" : {
-                "type" : "number"
-              },
-        "PULSE_BANDWIDTH" : {
-                "type" : "number"
-              },
-        "PULSE_DURATION" : {
-                "type" : "number"
-              },
-        "CONTINUOUS_SPOT_ANGLE" : {
-                "type" : "number"
-              },
-        "SLANT_RANGE" : {
-                "type" : "number"
-              },
-        "NEAR_RANGE" : {
-                "type" : "number"
-              },
-        "FAR_RANGE" : {
-                "type" : "number"
-              },
-        "SWATH_LENGTH" : {
-                "type" : "number"
-              },
-        "AREA" : {
-                "type" : "string"
-              },
-        "ATEXT" : {
-                "type" : "string"
-              },
-        "AGJSON" : {
-                "type" : "string"
-              },
-        "ATYPE" : {
-                "type" : "string"
-              },
-        "ANDIMS" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "ASRID" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "SPACING_RANGE" : {
-                "type" : "number"
-              },
-        "SPACING_AZIMUTH" : {
-                "type" : "number"
-              },
-        "LOOKS_AZIMUTH" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "LOOKS_RANGE" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "RESOLUTION_RANGE" : {
-                "type" : "number"
-              },
-        "RESOLUTION_AZIMUTH" : {
-                "type" : "number"
-              },
-        "OB_DIRECTION" : {
-                "type" : "string"
-              },
-        "COORD_SYS" : {
-                "type" : "string"
-              },
-        "TARGETPOSX" : {
-                "type" : "number"
-              },
-        "TARGETPOSY" : {
-                "type" : "number"
-              },
-        "TARGETPOSZ" : {
-                "type" : "number"
-              },
-        "SENALT" : {
-                "type" : "number"
-              },
-        "SENVELX" : {
-                "type" : "number"
-              },
-        "SENVELY" : {
-                "type" : "number"
-              },
-        "SENVELZ" : {
-                "type" : "number"
-              },
-        "SENLAT_START" : {
-                "type" : "number"
-              },
-        "SENLON_START" : {
-                "type" : "number"
-              },
-        "SENLAT_END" : {
-                "type" : "number"
-              },
-        "SENLON_END" : {
-                "type" : "number"
-              },
-        "TRANSACTION_ID" : {
-                "type" : "string"
-              },
-        "TAGS" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
-        "SRC_TYPS" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
-        "SRC_IDS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "string",
+                "description" : "International designator"
               },
         "ON_ORBIT" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "On-orbit reference"
+              },
+        "ID_SENSOR" : {
+                "type" : "string",
+                "description" : "Sensor identifier"
+              },
+        "ORIG_SENSOR_ID" : {
+                "type" : "string",
+                "description" : "Original sensor identifier"
+              },
+        "EXTERNAL_ID" : {
+                "type" : "string",
+                "description" : "External reference identifier"
+              },
+        "COLLECTION_ID" : {
+                "type" : "string",
+                "description" : "Collection identifier"
+              },
+        "DETECTION_ID" : {
+                "type" : "string",
+                "description" : "Detection identifier"
+              },
+        "COLLECTION_START" : {
+                "type" : "string",
+                "description" : "Collection start time (ISO 8601)"
+              },
+        "COLLECTION_END" : {
+                "type" : "string",
+                "description" : "Collection end time (ISO 8601)"
+              },
+        "CENTER_TIME" : {
+                "type" : "string",
+                "description" : "Center time of observation (ISO 8601)"
+              },
+        "DETECTION_START" : {
+                "type" : "string",
+                "description" : "Detection start time (ISO 8601)"
+              },
+        "DETECTION_END" : {
+                "type" : "string",
+                "description" : "Detection end time (ISO 8601)"
+              },
+        "DWELL_TIME" : {
+                "type" : "number",
+                "description" : "Integration/dwell time (seconds)"
+              },
+        "ORBIT_STATE" : {
+                "type" : "string",
+                "description" : "Orbit state description"
+              },
+        "SAR_MODE" : {
+                "$ref" : "#/definitions/sarMode",
+                "description" : "SAR imaging mode"
+              },
+        "OPERATING_BAND" : {
+                "type" : "string",
+                "description" : "Operating RF band (e.g., X, C, L, S, P)"
+              },
+        "OPERATING_FREQ" : {
+                "type" : "number",
+                "description" : "Operating frequency (GHz)"
+              },
+        "SNR" : {
+                "type" : "number",
+                "description" : "Signal-to-noise ratio (dB)"
+              },
+        "TX_POLARIZATION" : {
+                "$ref" : "#/definitions/sarPolarization",
+                "description" : "Transmit polarization"
+              },
+        "RX_POLARIZATION" : {
+                "$ref" : "#/definitions/sarPolarization",
+                "description" : "Receive polarization"
+              },
+        "GRAZE_ANGLE" : {
+                "type" : "number",
+                "description" : "Grazing angle (degrees)"
+              },
+        "INCIDENCE_ANGLE" : {
+                "type" : "number",
+                "description" : "Incidence angle (degrees)"
+              },
+        "SQUINT_ANGLE" : {
+                "type" : "number",
+                "description" : "Squint angle (degrees)"
+              },
+        "PULSE_BANDWIDTH" : {
+                "type" : "number",
+                "description" : "Pulse bandwidth (MHz)"
+              },
+        "PULSE_DURATION" : {
+                "type" : "number",
+                "description" : "Pulse duration (microseconds)"
+              },
+        "CONTINUOUS_SPOT_ANGLE" : {
+                "type" : "number",
+                "description" : "Continuous spot angle (degrees)"
+              },
+        "SLANT_RANGE" : {
+                "type" : "number",
+                "description" : "Slant range to target (km)"
+              },
+        "NEAR_RANGE" : {
+                "type" : "number",
+                "description" : "Near range (km)"
+              },
+        "FAR_RANGE" : {
+                "type" : "number",
+                "description" : "Far range (km)"
+              },
+        "SWATH_LENGTH" : {
+                "type" : "number",
+                "description" : "Swath length (km)"
+              },
+        "AGJSON" : {
+                "type" : "string",
+                "description" : "Image area GeoJSON"
+              },
+        "ATEXT" : {
+                "type" : "string",
+                "description" : "Image area text description"
+              },
+        "ATYPE" : {
+                "type" : "string",
+                "description" : "Area type"
+              },
+        "COORD_SYS" : {
+                "type" : "string",
+                "description" : "Coordinate system"
+              },
+        "SPACING_RANGE" : {
+                "type" : "number",
+                "description" : "Range pixel spacing (meters)"
+              },
+        "SPACING_AZIMUTH" : {
+                "type" : "number",
+                "description" : "Azimuth pixel spacing (meters)"
+              },
+        "LOOKS_AZIMUTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Number of azimuth looks"
+              },
+        "LOOKS_RANGE" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Number of range looks"
+              },
+        "RESOLUTION_RANGE" : {
+                "type" : "number",
+                "description" : "Range resolution (meters)"
+              },
+        "RESOLUTION_AZIMUTH" : {
+                "type" : "number",
+                "description" : "Azimuth resolution (meters)"
+              },
+        "OB_DIRECTION" : {
+                "type" : "string",
+                "description" : "Observation direction (ASCENDING/DESCENDING)"
+              },
+        "TARGETPOSX" : {
+                "type" : "number",
+                "description" : "Target position X (km)"
+              },
+        "TARGETPOSY" : {
+                "type" : "number",
+                "description" : "Target position Y (km)"
+              },
+        "TARGETPOSZ" : {
+                "type" : "number",
+                "description" : "Target position Z (km)"
+              },
+        "SENALT" : {
+                "type" : "number",
+                "description" : "Sensor altitude (km)"
+              },
+        "SENVELX" : {
+                "type" : "number",
+                "description" : "Sensor velocity X (km/s)"
+              },
+        "SENVELY" : {
+                "type" : "number",
+                "description" : "Sensor velocity Y (km/s)"
+              },
+        "SENVELZ" : {
+                "type" : "number",
+                "description" : "Sensor velocity Z (km/s)"
+              },
+        "SENLAT_START" : {
+                "type" : "number",
+                "description" : "Sensor latitude at start (degrees)"
+              },
+        "SENLON_START" : {
+                "type" : "number",
+                "description" : "Sensor longitude at start (degrees)"
+              },
+        "SENLAT_END" : {
+                "type" : "number",
+                "description" : "Sensor latitude at end (degrees)"
+              },
+        "SENLON_END" : {
+                "type" : "number",
+                "description" : "Sensor longitude at end (degrees)"
+              },
+        "TRANSACTION_ID" : {
+                "type" : "string",
+                "description" : "Transaction identifier"
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Associated tags"
+              },
+        "SRC_TYPS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Source types"
+              },
+        "SRC_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Source identifiers"
               }
       },
       "additionalProperties" : false

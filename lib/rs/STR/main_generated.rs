@@ -32,20 +32,20 @@ impl<'a> STR<'a> {
   pub const VT_GAIADR3_CAT_ID: flatbuffers::VOffsetT = 10;
   pub const VT_HIP_CAT_ID: flatbuffers::VOffsetT = 12;
   pub const VT_CAT_VERSION: flatbuffers::VOffsetT = 14;
-  pub const VT_RA: flatbuffers::VOffsetT = 16;
-  pub const VT_RA_UNC: flatbuffers::VOffsetT = 18;
-  pub const VT_DEC: flatbuffers::VOffsetT = 20;
-  pub const VT_DEC_UNC: flatbuffers::VOffsetT = 22;
-  pub const VT_POS_UNC_FLAG: flatbuffers::VOffsetT = 24;
-  pub const VT_PARALLAX: flatbuffers::VOffsetT = 26;
-  pub const VT_PARALLAX_UNC: flatbuffers::VOffsetT = 28;
-  pub const VT_PMRA: flatbuffers::VOffsetT = 30;
-  pub const VT_PMRA_UNC: flatbuffers::VOffsetT = 32;
-  pub const VT_PMDEC: flatbuffers::VOffsetT = 34;
-  pub const VT_PMDEC_UNC: flatbuffers::VOffsetT = 36;
-  pub const VT_PM_UNC_FLAG: flatbuffers::VOffsetT = 38;
-  pub const VT_ASTROMETRY_ORIGIN: flatbuffers::VOffsetT = 40;
-  pub const VT_STAR_EPOCH: flatbuffers::VOffsetT = 42;
+  pub const VT_ASTROMETRY_ORIGIN: flatbuffers::VOffsetT = 16;
+  pub const VT_STAR_EPOCH: flatbuffers::VOffsetT = 18;
+  pub const VT_RA: flatbuffers::VOffsetT = 20;
+  pub const VT_RA_UNC: flatbuffers::VOffsetT = 22;
+  pub const VT_DEC: flatbuffers::VOffsetT = 24;
+  pub const VT_DEC_UNC: flatbuffers::VOffsetT = 26;
+  pub const VT_POS_UNC_FLAG: flatbuffers::VOffsetT = 28;
+  pub const VT_PARALLAX: flatbuffers::VOffsetT = 30;
+  pub const VT_PARALLAX_UNC: flatbuffers::VOffsetT = 32;
+  pub const VT_PMRA: flatbuffers::VOffsetT = 34;
+  pub const VT_PMRA_UNC: flatbuffers::VOffsetT = 36;
+  pub const VT_PMDEC: flatbuffers::VOffsetT = 38;
+  pub const VT_PMDEC_UNC: flatbuffers::VOffsetT = 40;
+  pub const VT_PM_UNC_FLAG: flatbuffers::VOffsetT = 42;
   pub const VT_GMAG: flatbuffers::VOffsetT = 44;
   pub const VT_GMAG_UNC: flatbuffers::VOffsetT = 46;
   pub const VT_BPMAG: flatbuffers::VOffsetT = 48;
@@ -90,7 +90,6 @@ impl<'a> STR<'a> {
     builder.add_BPMAG(args.BPMAG);
     builder.add_GMAG_UNC(args.GMAG_UNC);
     builder.add_GMAG(args.GMAG);
-    builder.add_STAR_EPOCH(args.STAR_EPOCH);
     builder.add_PMDEC_UNC(args.PMDEC_UNC);
     builder.add_PMDEC(args.PMDEC);
     builder.add_PMRA_UNC(args.PMRA_UNC);
@@ -101,6 +100,7 @@ impl<'a> STR<'a> {
     builder.add_DEC(args.DEC);
     builder.add_RA_UNC(args.RA_UNC);
     builder.add_RA(args.RA);
+    builder.add_STAR_EPOCH(args.STAR_EPOCH);
     builder.add_GAIADR3_CAT_ID(args.GAIADR3_CAT_ID);
     builder.add_CS_ID(args.CS_ID);
     builder.add_NEIGHBOR_ID(args.NEIGHBOR_ID);
@@ -129,6 +129,10 @@ impl<'a> STR<'a> {
     let CAT_VERSION = self.CAT_VERSION().map(|x| {
       x.to_string()
     });
+    let ASTROMETRY_ORIGIN = self.ASTROMETRY_ORIGIN().map(|x| {
+      x.to_string()
+    });
+    let STAR_EPOCH = self.STAR_EPOCH();
     let RA = self.RA();
     let RA_UNC = self.RA_UNC();
     let DEC = self.DEC();
@@ -141,10 +145,6 @@ impl<'a> STR<'a> {
     let PMDEC = self.PMDEC();
     let PMDEC_UNC = self.PMDEC_UNC();
     let PM_UNC_FLAG = self.PM_UNC_FLAG();
-    let ASTROMETRY_ORIGIN = self.ASTROMETRY_ORIGIN().map(|x| {
-      x.to_string()
-    });
-    let STAR_EPOCH = self.STAR_EPOCH();
     let GMAG = self.GMAG();
     let GMAG_UNC = self.GMAG_UNC();
     let BPMAG = self.BPMAG();
@@ -171,6 +171,8 @@ impl<'a> STR<'a> {
       GAIADR3_CAT_ID,
       HIP_CAT_ID,
       CAT_VERSION,
+      ASTROMETRY_ORIGIN,
+      STAR_EPOCH,
       RA,
       RA_UNC,
       DEC,
@@ -183,8 +185,6 @@ impl<'a> STR<'a> {
       PMDEC,
       PMDEC_UNC,
       PM_UNC_FLAG,
-      ASTROMETRY_ORIGIN,
-      STAR_EPOCH,
       GMAG,
       GMAG_UNC,
       BPMAG,
@@ -207,6 +207,7 @@ impl<'a> STR<'a> {
     }
   }
 
+  /// Unique internal identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -214,6 +215,7 @@ impl<'a> STR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(STR::VT_ID, None)}
   }
+  /// CelesTrak Star catalog identifier
   #[inline]
   pub fn CS_ID(&self) -> i64 {
     // Safety:
@@ -221,13 +223,15 @@ impl<'a> STR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<i64>(STR::VT_CS_ID, Some(0)).unwrap()}
   }
+  /// GNC star catalog identifier
   #[inline]
-  pub fn GNC_CAT_ID(&self) -> i32 {
+  pub fn GNC_CAT_ID(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(STR::VT_GNC_CAT_ID, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u32>(STR::VT_GNC_CAT_ID, Some(0)).unwrap()}
   }
+  /// Gaia DR3 source identifier
   #[inline]
   pub fn GAIADR3_CAT_ID(&self) -> i64 {
     // Safety:
@@ -235,13 +239,15 @@ impl<'a> STR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<i64>(STR::VT_GAIADR3_CAT_ID, Some(0)).unwrap()}
   }
+  /// Hipparcos catalog identifier
   #[inline]
-  pub fn HIP_CAT_ID(&self) -> i32 {
+  pub fn HIP_CAT_ID(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(STR::VT_HIP_CAT_ID, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u32>(STR::VT_HIP_CAT_ID, Some(0)).unwrap()}
   }
+  /// Catalog version string
   #[inline]
   pub fn CAT_VERSION(&self) -> Option<&'a str> {
     // Safety:
@@ -249,90 +255,7 @@ impl<'a> STR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(STR::VT_CAT_VERSION, None)}
   }
-  #[inline]
-  pub fn RA(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(STR::VT_RA, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn RA_UNC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(STR::VT_RA_UNC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn DEC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(STR::VT_DEC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn DEC_UNC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(STR::VT_DEC_UNC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POS_UNC_FLAG(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(STR::VT_POS_UNC_FLAG, Some(false)).unwrap()}
-  }
-  #[inline]
-  pub fn PARALLAX(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(STR::VT_PARALLAX, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PARALLAX_UNC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(STR::VT_PARALLAX_UNC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PMRA(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(STR::VT_PMRA, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PMRA_UNC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(STR::VT_PMRA_UNC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PMDEC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(STR::VT_PMDEC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PMDEC_UNC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(STR::VT_PMDEC_UNC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PM_UNC_FLAG(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(STR::VT_PM_UNC_FLAG, Some(false)).unwrap()}
-  }
+  /// Astrometry source description
   #[inline]
   pub fn ASTROMETRY_ORIGIN(&self) -> Option<&'a str> {
     // Safety:
@@ -340,6 +263,7 @@ impl<'a> STR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(STR::VT_ASTROMETRY_ORIGIN, None)}
   }
+  /// Epoch of stellar position (Julian years)
   #[inline]
   pub fn STAR_EPOCH(&self) -> f64 {
     // Safety:
@@ -347,6 +271,103 @@ impl<'a> STR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(STR::VT_STAR_EPOCH, Some(0.0)).unwrap()}
   }
+  /// Right ascension (degrees, ICRS)
+  #[inline]
+  pub fn RA(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(STR::VT_RA, Some(0.0)).unwrap()}
+  }
+  /// Right ascension uncertainty (arcseconds)
+  #[inline]
+  pub fn RA_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(STR::VT_RA_UNC, Some(0.0)).unwrap()}
+  }
+  /// Declination (degrees, ICRS)
+  #[inline]
+  pub fn DEC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(STR::VT_DEC, Some(0.0)).unwrap()}
+  }
+  /// Declination uncertainty (arcseconds)
+  #[inline]
+  pub fn DEC_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(STR::VT_DEC_UNC, Some(0.0)).unwrap()}
+  }
+  /// True if position uncertainty is flagged
+  #[inline]
+  pub fn POS_UNC_FLAG(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(STR::VT_POS_UNC_FLAG, Some(false)).unwrap()}
+  }
+  /// Parallax (milliarcseconds)
+  #[inline]
+  pub fn PARALLAX(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(STR::VT_PARALLAX, Some(0.0)).unwrap()}
+  }
+  /// Parallax uncertainty (milliarcseconds)
+  #[inline]
+  pub fn PARALLAX_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(STR::VT_PARALLAX_UNC, Some(0.0)).unwrap()}
+  }
+  /// Proper motion in RA (milliarcseconds/year)
+  #[inline]
+  pub fn PMRA(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(STR::VT_PMRA, Some(0.0)).unwrap()}
+  }
+  /// Proper motion in RA uncertainty (milliarcseconds/year)
+  #[inline]
+  pub fn PMRA_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(STR::VT_PMRA_UNC, Some(0.0)).unwrap()}
+  }
+  /// Proper motion in DEC (milliarcseconds/year)
+  #[inline]
+  pub fn PMDEC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(STR::VT_PMDEC, Some(0.0)).unwrap()}
+  }
+  /// Proper motion in DEC uncertainty (milliarcseconds/year)
+  #[inline]
+  pub fn PMDEC_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(STR::VT_PMDEC_UNC, Some(0.0)).unwrap()}
+  }
+  /// True if proper motion uncertainty is flagged
+  #[inline]
+  pub fn PM_UNC_FLAG(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(STR::VT_PM_UNC_FLAG, Some(false)).unwrap()}
+  }
+  /// Gaia G-band magnitude
   #[inline]
   pub fn GMAG(&self) -> f64 {
     // Safety:
@@ -354,6 +375,7 @@ impl<'a> STR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(STR::VT_GMAG, Some(0.0)).unwrap()}
   }
+  /// Gaia G-band magnitude uncertainty
   #[inline]
   pub fn GMAG_UNC(&self) -> f64 {
     // Safety:
@@ -361,6 +383,7 @@ impl<'a> STR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(STR::VT_GMAG_UNC, Some(0.0)).unwrap()}
   }
+  /// Gaia BP-band magnitude (blue photometer)
   #[inline]
   pub fn BPMAG(&self) -> f64 {
     // Safety:
@@ -368,6 +391,7 @@ impl<'a> STR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(STR::VT_BPMAG, Some(0.0)).unwrap()}
   }
+  /// Gaia BP-band magnitude uncertainty
   #[inline]
   pub fn BPMAG_UNC(&self) -> f64 {
     // Safety:
@@ -375,6 +399,7 @@ impl<'a> STR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(STR::VT_BPMAG_UNC, Some(0.0)).unwrap()}
   }
+  /// Gaia RP-band magnitude (red photometer)
   #[inline]
   pub fn RPMAG(&self) -> f64 {
     // Safety:
@@ -382,6 +407,7 @@ impl<'a> STR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(STR::VT_RPMAG, Some(0.0)).unwrap()}
   }
+  /// Gaia RP-band magnitude uncertainty
   #[inline]
   pub fn RPMAG_UNC(&self) -> f64 {
     // Safety:
@@ -389,6 +415,7 @@ impl<'a> STR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(STR::VT_RPMAG_UNC, Some(0.0)).unwrap()}
   }
+  /// 2MASS J-band magnitude (1.25 um)
   #[inline]
   pub fn JMAG(&self) -> f64 {
     // Safety:
@@ -396,6 +423,7 @@ impl<'a> STR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(STR::VT_JMAG, Some(0.0)).unwrap()}
   }
+  /// J-band magnitude uncertainty
   #[inline]
   pub fn JMAG_UNC(&self) -> f64 {
     // Safety:
@@ -403,6 +431,7 @@ impl<'a> STR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(STR::VT_JMAG_UNC, Some(0.0)).unwrap()}
   }
+  /// 2MASS K-band magnitude (2.17 um)
   #[inline]
   pub fn KMAG(&self) -> f64 {
     // Safety:
@@ -410,6 +439,7 @@ impl<'a> STR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(STR::VT_KMAG, Some(0.0)).unwrap()}
   }
+  /// K-band magnitude uncertainty
   #[inline]
   pub fn KMAG_UNC(&self) -> f64 {
     // Safety:
@@ -417,6 +447,7 @@ impl<'a> STR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(STR::VT_KMAG_UNC, Some(0.0)).unwrap()}
   }
+  /// 2MASS H-band magnitude (1.65 um)
   #[inline]
   pub fn HMAG(&self) -> f64 {
     // Safety:
@@ -424,6 +455,7 @@ impl<'a> STR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(STR::VT_HMAG, Some(0.0)).unwrap()}
   }
+  /// H-band magnitude uncertainty
   #[inline]
   pub fn HMAG_UNC(&self) -> f64 {
     // Safety:
@@ -431,6 +463,7 @@ impl<'a> STR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(STR::VT_HMAG_UNC, Some(0.0)).unwrap()}
   }
+  /// True if star is variable
   #[inline]
   pub fn VAR_FLAG(&self) -> bool {
     // Safety:
@@ -438,6 +471,7 @@ impl<'a> STR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(STR::VT_VAR_FLAG, Some(false)).unwrap()}
   }
+  /// True if star is in a multiple system
   #[inline]
   pub fn MULT_FLAG(&self) -> bool {
     // Safety:
@@ -445,13 +479,15 @@ impl<'a> STR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(STR::VT_MULT_FLAG, Some(false)).unwrap()}
   }
+  /// Nearest neighbor catalog identifier
   #[inline]
-  pub fn NEIGHBOR_ID(&self) -> i32 {
+  pub fn NEIGHBOR_ID(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(STR::VT_NEIGHBOR_ID, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u32>(STR::VT_NEIGHBOR_ID, Some(0)).unwrap()}
   }
+  /// True if nearest neighbor is within confusion radius
   #[inline]
   pub fn NEIGHBOR_FLAG(&self) -> bool {
     // Safety:
@@ -459,6 +495,7 @@ impl<'a> STR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(STR::VT_NEIGHBOR_FLAG, Some(false)).unwrap()}
   }
+  /// Distance to nearest neighbor (arcseconds)
   #[inline]
   pub fn NEIGHBOR_DISTANCE(&self) -> f64 {
     // Safety:
@@ -466,6 +503,7 @@ impl<'a> STR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(STR::VT_NEIGHBOR_DISTANCE, Some(0.0)).unwrap()}
   }
+  /// True if position shift detected between catalogs
   #[inline]
   pub fn SHIFT_FLAG(&self) -> bool {
     // Safety:
@@ -473,6 +511,7 @@ impl<'a> STR<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(STR::VT_SHIFT_FLAG, Some(false)).unwrap()}
   }
+  /// Position shift magnitude (arcseconds)
   #[inline]
   pub fn SHIFT(&self) -> f64 {
     // Safety:
@@ -491,10 +530,12 @@ impl flatbuffers::Verifiable for STR<'_> {
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
      .visit_field::<i64>("CS_ID", Self::VT_CS_ID, false)?
-     .visit_field::<i32>("GNC_CAT_ID", Self::VT_GNC_CAT_ID, false)?
+     .visit_field::<u32>("GNC_CAT_ID", Self::VT_GNC_CAT_ID, false)?
      .visit_field::<i64>("GAIADR3_CAT_ID", Self::VT_GAIADR3_CAT_ID, false)?
-     .visit_field::<i32>("HIP_CAT_ID", Self::VT_HIP_CAT_ID, false)?
+     .visit_field::<u32>("HIP_CAT_ID", Self::VT_HIP_CAT_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CAT_VERSION", Self::VT_CAT_VERSION, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ASTROMETRY_ORIGIN", Self::VT_ASTROMETRY_ORIGIN, false)?
+     .visit_field::<f64>("STAR_EPOCH", Self::VT_STAR_EPOCH, false)?
      .visit_field::<f64>("RA", Self::VT_RA, false)?
      .visit_field::<f64>("RA_UNC", Self::VT_RA_UNC, false)?
      .visit_field::<f64>("DEC", Self::VT_DEC, false)?
@@ -507,8 +548,6 @@ impl flatbuffers::Verifiable for STR<'_> {
      .visit_field::<f64>("PMDEC", Self::VT_PMDEC, false)?
      .visit_field::<f64>("PMDEC_UNC", Self::VT_PMDEC_UNC, false)?
      .visit_field::<bool>("PM_UNC_FLAG", Self::VT_PM_UNC_FLAG, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ASTROMETRY_ORIGIN", Self::VT_ASTROMETRY_ORIGIN, false)?
-     .visit_field::<f64>("STAR_EPOCH", Self::VT_STAR_EPOCH, false)?
      .visit_field::<f64>("GMAG", Self::VT_GMAG, false)?
      .visit_field::<f64>("GMAG_UNC", Self::VT_GMAG_UNC, false)?
      .visit_field::<f64>("BPMAG", Self::VT_BPMAG, false)?
@@ -523,7 +562,7 @@ impl flatbuffers::Verifiable for STR<'_> {
      .visit_field::<f64>("HMAG_UNC", Self::VT_HMAG_UNC, false)?
      .visit_field::<bool>("VAR_FLAG", Self::VT_VAR_FLAG, false)?
      .visit_field::<bool>("MULT_FLAG", Self::VT_MULT_FLAG, false)?
-     .visit_field::<i32>("NEIGHBOR_ID", Self::VT_NEIGHBOR_ID, false)?
+     .visit_field::<u32>("NEIGHBOR_ID", Self::VT_NEIGHBOR_ID, false)?
      .visit_field::<bool>("NEIGHBOR_FLAG", Self::VT_NEIGHBOR_FLAG, false)?
      .visit_field::<f64>("NEIGHBOR_DISTANCE", Self::VT_NEIGHBOR_DISTANCE, false)?
      .visit_field::<bool>("SHIFT_FLAG", Self::VT_SHIFT_FLAG, false)?
@@ -535,10 +574,12 @@ impl flatbuffers::Verifiable for STR<'_> {
 pub struct STRArgs<'a> {
     pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub CS_ID: i64,
-    pub GNC_CAT_ID: i32,
+    pub GNC_CAT_ID: u32,
     pub GAIADR3_CAT_ID: i64,
-    pub HIP_CAT_ID: i32,
+    pub HIP_CAT_ID: u32,
     pub CAT_VERSION: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ASTROMETRY_ORIGIN: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub STAR_EPOCH: f64,
     pub RA: f64,
     pub RA_UNC: f64,
     pub DEC: f64,
@@ -551,8 +592,6 @@ pub struct STRArgs<'a> {
     pub PMDEC: f64,
     pub PMDEC_UNC: f64,
     pub PM_UNC_FLAG: bool,
-    pub ASTROMETRY_ORIGIN: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub STAR_EPOCH: f64,
     pub GMAG: f64,
     pub GMAG_UNC: f64,
     pub BPMAG: f64,
@@ -567,7 +606,7 @@ pub struct STRArgs<'a> {
     pub HMAG_UNC: f64,
     pub VAR_FLAG: bool,
     pub MULT_FLAG: bool,
-    pub NEIGHBOR_ID: i32,
+    pub NEIGHBOR_ID: u32,
     pub NEIGHBOR_FLAG: bool,
     pub NEIGHBOR_DISTANCE: f64,
     pub SHIFT_FLAG: bool,
@@ -583,6 +622,8 @@ impl<'a> Default for STRArgs<'a> {
       GAIADR3_CAT_ID: 0,
       HIP_CAT_ID: 0,
       CAT_VERSION: None,
+      ASTROMETRY_ORIGIN: None,
+      STAR_EPOCH: 0.0,
       RA: 0.0,
       RA_UNC: 0.0,
       DEC: 0.0,
@@ -595,8 +636,6 @@ impl<'a> Default for STRArgs<'a> {
       PMDEC: 0.0,
       PMDEC_UNC: 0.0,
       PM_UNC_FLAG: false,
-      ASTROMETRY_ORIGIN: None,
-      STAR_EPOCH: 0.0,
       GMAG: 0.0,
       GMAG_UNC: 0.0,
       BPMAG: 0.0,
@@ -634,20 +673,28 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> STRBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<i64>(STR::VT_CS_ID, CS_ID, 0);
   }
   #[inline]
-  pub fn add_GNC_CAT_ID(&mut self, GNC_CAT_ID: i32) {
-    self.fbb_.push_slot::<i32>(STR::VT_GNC_CAT_ID, GNC_CAT_ID, 0);
+  pub fn add_GNC_CAT_ID(&mut self, GNC_CAT_ID: u32) {
+    self.fbb_.push_slot::<u32>(STR::VT_GNC_CAT_ID, GNC_CAT_ID, 0);
   }
   #[inline]
   pub fn add_GAIADR3_CAT_ID(&mut self, GAIADR3_CAT_ID: i64) {
     self.fbb_.push_slot::<i64>(STR::VT_GAIADR3_CAT_ID, GAIADR3_CAT_ID, 0);
   }
   #[inline]
-  pub fn add_HIP_CAT_ID(&mut self, HIP_CAT_ID: i32) {
-    self.fbb_.push_slot::<i32>(STR::VT_HIP_CAT_ID, HIP_CAT_ID, 0);
+  pub fn add_HIP_CAT_ID(&mut self, HIP_CAT_ID: u32) {
+    self.fbb_.push_slot::<u32>(STR::VT_HIP_CAT_ID, HIP_CAT_ID, 0);
   }
   #[inline]
   pub fn add_CAT_VERSION(&mut self, CAT_VERSION: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(STR::VT_CAT_VERSION, CAT_VERSION);
+  }
+  #[inline]
+  pub fn add_ASTROMETRY_ORIGIN(&mut self, ASTROMETRY_ORIGIN: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(STR::VT_ASTROMETRY_ORIGIN, ASTROMETRY_ORIGIN);
+  }
+  #[inline]
+  pub fn add_STAR_EPOCH(&mut self, STAR_EPOCH: f64) {
+    self.fbb_.push_slot::<f64>(STR::VT_STAR_EPOCH, STAR_EPOCH, 0.0);
   }
   #[inline]
   pub fn add_RA(&mut self, RA: f64) {
@@ -696,14 +743,6 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> STRBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_PM_UNC_FLAG(&mut self, PM_UNC_FLAG: bool) {
     self.fbb_.push_slot::<bool>(STR::VT_PM_UNC_FLAG, PM_UNC_FLAG, false);
-  }
-  #[inline]
-  pub fn add_ASTROMETRY_ORIGIN(&mut self, ASTROMETRY_ORIGIN: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(STR::VT_ASTROMETRY_ORIGIN, ASTROMETRY_ORIGIN);
-  }
-  #[inline]
-  pub fn add_STAR_EPOCH(&mut self, STAR_EPOCH: f64) {
-    self.fbb_.push_slot::<f64>(STR::VT_STAR_EPOCH, STAR_EPOCH, 0.0);
   }
   #[inline]
   pub fn add_GMAG(&mut self, GMAG: f64) {
@@ -762,8 +801,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> STRBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<bool>(STR::VT_MULT_FLAG, MULT_FLAG, false);
   }
   #[inline]
-  pub fn add_NEIGHBOR_ID(&mut self, NEIGHBOR_ID: i32) {
-    self.fbb_.push_slot::<i32>(STR::VT_NEIGHBOR_ID, NEIGHBOR_ID, 0);
+  pub fn add_NEIGHBOR_ID(&mut self, NEIGHBOR_ID: u32) {
+    self.fbb_.push_slot::<u32>(STR::VT_NEIGHBOR_ID, NEIGHBOR_ID, 0);
   }
   #[inline]
   pub fn add_NEIGHBOR_FLAG(&mut self, NEIGHBOR_FLAG: bool) {
@@ -805,6 +844,8 @@ impl core::fmt::Debug for STR<'_> {
       ds.field("GAIADR3_CAT_ID", &self.GAIADR3_CAT_ID());
       ds.field("HIP_CAT_ID", &self.HIP_CAT_ID());
       ds.field("CAT_VERSION", &self.CAT_VERSION());
+      ds.field("ASTROMETRY_ORIGIN", &self.ASTROMETRY_ORIGIN());
+      ds.field("STAR_EPOCH", &self.STAR_EPOCH());
       ds.field("RA", &self.RA());
       ds.field("RA_UNC", &self.RA_UNC());
       ds.field("DEC", &self.DEC());
@@ -817,8 +858,6 @@ impl core::fmt::Debug for STR<'_> {
       ds.field("PMDEC", &self.PMDEC());
       ds.field("PMDEC_UNC", &self.PMDEC_UNC());
       ds.field("PM_UNC_FLAG", &self.PM_UNC_FLAG());
-      ds.field("ASTROMETRY_ORIGIN", &self.ASTROMETRY_ORIGIN());
-      ds.field("STAR_EPOCH", &self.STAR_EPOCH());
       ds.field("GMAG", &self.GMAG());
       ds.field("GMAG_UNC", &self.GMAG_UNC());
       ds.field("BPMAG", &self.BPMAG());
@@ -846,10 +885,12 @@ impl core::fmt::Debug for STR<'_> {
 pub struct STRT {
   pub ID: Option<String>,
   pub CS_ID: i64,
-  pub GNC_CAT_ID: i32,
+  pub GNC_CAT_ID: u32,
   pub GAIADR3_CAT_ID: i64,
-  pub HIP_CAT_ID: i32,
+  pub HIP_CAT_ID: u32,
   pub CAT_VERSION: Option<String>,
+  pub ASTROMETRY_ORIGIN: Option<String>,
+  pub STAR_EPOCH: f64,
   pub RA: f64,
   pub RA_UNC: f64,
   pub DEC: f64,
@@ -862,8 +903,6 @@ pub struct STRT {
   pub PMDEC: f64,
   pub PMDEC_UNC: f64,
   pub PM_UNC_FLAG: bool,
-  pub ASTROMETRY_ORIGIN: Option<String>,
-  pub STAR_EPOCH: f64,
   pub GMAG: f64,
   pub GMAG_UNC: f64,
   pub BPMAG: f64,
@@ -878,7 +917,7 @@ pub struct STRT {
   pub HMAG_UNC: f64,
   pub VAR_FLAG: bool,
   pub MULT_FLAG: bool,
-  pub NEIGHBOR_ID: i32,
+  pub NEIGHBOR_ID: u32,
   pub NEIGHBOR_FLAG: bool,
   pub NEIGHBOR_DISTANCE: f64,
   pub SHIFT_FLAG: bool,
@@ -893,6 +932,8 @@ impl Default for STRT {
       GAIADR3_CAT_ID: 0,
       HIP_CAT_ID: 0,
       CAT_VERSION: None,
+      ASTROMETRY_ORIGIN: None,
+      STAR_EPOCH: 0.0,
       RA: 0.0,
       RA_UNC: 0.0,
       DEC: 0.0,
@@ -905,8 +946,6 @@ impl Default for STRT {
       PMDEC: 0.0,
       PMDEC_UNC: 0.0,
       PM_UNC_FLAG: false,
-      ASTROMETRY_ORIGIN: None,
-      STAR_EPOCH: 0.0,
       GMAG: 0.0,
       GMAG_UNC: 0.0,
       BPMAG: 0.0,
@@ -944,6 +983,10 @@ impl STRT {
     let CAT_VERSION = self.CAT_VERSION.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let ASTROMETRY_ORIGIN = self.ASTROMETRY_ORIGIN.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let STAR_EPOCH = self.STAR_EPOCH;
     let RA = self.RA;
     let RA_UNC = self.RA_UNC;
     let DEC = self.DEC;
@@ -956,10 +999,6 @@ impl STRT {
     let PMDEC = self.PMDEC;
     let PMDEC_UNC = self.PMDEC_UNC;
     let PM_UNC_FLAG = self.PM_UNC_FLAG;
-    let ASTROMETRY_ORIGIN = self.ASTROMETRY_ORIGIN.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let STAR_EPOCH = self.STAR_EPOCH;
     let GMAG = self.GMAG;
     let GMAG_UNC = self.GMAG_UNC;
     let BPMAG = self.BPMAG;
@@ -986,6 +1025,8 @@ impl STRT {
       GAIADR3_CAT_ID,
       HIP_CAT_ID,
       CAT_VERSION,
+      ASTROMETRY_ORIGIN,
+      STAR_EPOCH,
       RA,
       RA_UNC,
       DEC,
@@ -998,8 +1039,6 @@ impl STRT {
       PMDEC,
       PMDEC_UNC,
       PM_UNC_FLAG,
-      ASTROMETRY_ORIGIN,
-      STAR_EPOCH,
       GMAG,
       GMAG_UNC,
       BPMAG,

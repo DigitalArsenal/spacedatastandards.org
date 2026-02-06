@@ -1,178 +1,315 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "ooiStatus": {
+      "type": "string",
+      "enum": [
+        "ACTIVE",
+        "PENDING",
+        "CLOSED",
+        "MONITORING",
+        "URGENT",
+        "ARCHIVED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ACTIVE": {
+          "value": 0
+        },
+        "PENDING": {
+          "value": 1
+        },
+        "CLOSED": {
+          "value": 2
+        },
+        "MONITORING": {
+          "value": 3
+        },
+        "URGENT": {
+          "value": 4
+        },
+        "ARCHIVED": {
+          "value": 5
+        }
+      }
+    },
+    "ooiPriority": {
+      "type": "string",
+      "enum": [
+        "CRITICAL",
+        "HIGH",
+        "MEDIUM",
+        "LOW",
+        "ROUTINE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "CRITICAL": {
+          "value": 0
+        },
+        "HIGH": {
+          "value": 1
+        },
+        "MEDIUM": {
+          "value": 2
+        },
+        "LOW": {
+          "value": 3
+        },
+        "ROUTINE": {
+          "value": 4
+        }
+      }
+    },
     "OOI": {
       "type": "object",
       "description": "Object of Interest",
       "properties": {
         "ID": {
           "type": "string",
+          "description": "Unique identifier",
           "x-flatbuffer-type": "string"
         },
         "SAT_NO": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Satellite catalog number",
+          "x-flatbuffer-type": "uint32"
         },
         "NAME": {
           "type": "string",
+          "description": "Object name or designator",
+          "x-flatbuffer-type": "string"
+        },
+        "ON_ORBIT": {
+          "type": "string",
+          "description": "On-orbit reference",
+          "x-flatbuffer-type": "string"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/ooiStatus",
+          "description": "Tasking status",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ACTIVE": {
+              "value": 0
+            },
+            "PENDING": {
+              "value": 1
+            },
+            "CLOSED": {
+              "value": 2
+            },
+            "MONITORING": {
+              "value": 3
+            },
+            "URGENT": {
+              "value": 4
+            },
+            "ARCHIVED": {
+              "value": 5
+            }
+          }
+        },
+        "STATUS_DATE": {
+          "type": "string",
+          "description": "Status update date (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "PRIORITY": {
+          "$ref": "#/definitions/ooiPriority",
+          "description": "Collection priority",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "CRITICAL": {
+              "value": 0
+            },
+            "HIGH": {
+              "value": 1
+            },
+            "MEDIUM": {
+              "value": 2
+            },
+            "LOW": {
+              "value": 3
+            },
+            "ROUTINE": {
+              "value": 4
+            }
+          }
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Description of why object is of interest",
           "x-flatbuffer-type": "string"
         },
         "SENSOR_TASKING_START_TIME": {
           "type": "string",
+          "description": "Sensor tasking start time (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "SENSOR_TASKING_STOP_TIME": {
           "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "PRIORITY": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
-        },
-        "STATUS": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "STATUS_DATE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "DESCRIPTION": {
-          "type": "string",
+          "description": "Sensor tasking stop time (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "LAST_OB_TIME": {
           "type": "string",
+          "description": "Last observation time (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "MISSED_OB_TIME": {
           "type": "string",
+          "description": "Last missed observation time (ISO 8601)",
           "x-flatbuffer-type": "string"
-        },
-        "DELTA_VS": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
-        },
-        "DELTA_TS": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
         },
         "SV_EPOCH": {
           "type": "string",
+          "description": "State vector epoch (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "X": {
           "type": "number",
+          "description": "Position X (km, TEME)",
           "x-flatbuffer-type": "double"
         },
         "Y": {
           "type": "number",
+          "description": "Position Y (km, TEME)",
           "x-flatbuffer-type": "double"
         },
         "Z": {
           "type": "number",
+          "description": "Position Z (km, TEME)",
           "x-flatbuffer-type": "double"
         },
         "XVEL": {
           "type": "number",
+          "description": "Velocity X (km/s, TEME)",
           "x-flatbuffer-type": "double"
         },
         "YVEL": {
           "type": "number",
+          "description": "Velocity Y (km/s, TEME)",
           "x-flatbuffer-type": "double"
         },
         "ZVEL": {
           "type": "number",
+          "description": "Velocity Z (km/s, TEME)",
           "x-flatbuffer-type": "double"
         },
         "ELSET_EPOCH": {
           "type": "string",
+          "description": "Element set epoch (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "MEAN_MOTION": {
           "type": "number",
+          "description": "Mean motion (rev/day)",
           "x-flatbuffer-type": "double"
         },
         "ECCENTRICITY": {
           "type": "number",
+          "description": "Eccentricity",
           "x-flatbuffer-type": "double"
         },
         "INCLINATION": {
           "type": "number",
+          "description": "Inclination (degrees)",
           "x-flatbuffer-type": "double"
         },
         "RAAN": {
           "type": "number",
+          "description": "Right ascension of ascending node (degrees)",
           "x-flatbuffer-type": "double"
         },
         "ARG_OF_PERIGEE": {
           "type": "number",
+          "description": "Argument of perigee (degrees)",
           "x-flatbuffer-type": "double"
         },
         "MEAN_ANOMALY": {
           "type": "number",
+          "description": "Mean anomaly (degrees)",
           "x-flatbuffer-type": "double"
         },
         "REV_NO": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Revolution number at epoch",
+          "x-flatbuffer-type": "uint32"
         },
         "B_STAR": {
           "type": "number",
+          "description": "BSTAR drag term (1/Earth radii)",
           "x-flatbuffer-type": "double"
         },
         "MEAN_MOTION_DOT": {
           "type": "number",
+          "description": "Mean motion first derivative (rev/day^2)",
           "x-flatbuffer-type": "double"
         },
         "MEAN_MOTION_DDOT": {
           "type": "number",
+          "description": "Mean motion second derivative (rev/day^3)",
           "x-flatbuffer-type": "double"
         },
         "SEMI_MAJOR_AXIS": {
           "type": "number",
+          "description": "Semi-major axis (km)",
           "x-flatbuffer-type": "double"
         },
         "PERIOD": {
           "type": "number",
+          "description": "Orbital period (minutes)",
           "x-flatbuffer-type": "double"
         },
         "APOGEE": {
           "type": "number",
+          "description": "Apogee altitude (km)",
           "x-flatbuffer-type": "double"
         },
         "PERIGEE": {
           "type": "number",
+          "description": "Perigee altitude (km)",
           "x-flatbuffer-type": "double"
+        },
+        "DELTA_VS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Delta-V estimates for maneuver hypotheses (m/s)",
+          "x-flatbuffer-type": "[double]"
+        },
+        "DELTA_TS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Delta-T estimates for maneuver timing (seconds)",
+          "x-flatbuffer-type": "[double]"
         },
         "AFFECTED_OBJECTS": {
           "type": "array",
           "items": {
             "type": "string"
           },
+          "description": "Other affected satellite catalog numbers",
           "x-flatbuffer-type": "[string]"
-        },
-        "ON_ORBIT": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
         },
         "MANIFOLDS": {
           "type": "array",
           "items": {
             "type": "string"
           },
+          "description": "Associated orbit manifold identifiers",
           "x-flatbuffer-type": "[string]"
         }
       },

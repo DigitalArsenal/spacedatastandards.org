@@ -29,6 +29,7 @@ class SEO(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Unique identifier
     # SEO
     def ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +37,7 @@ class SEO(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Message type code
     # SEO
     def MSG_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -43,6 +45,7 @@ class SEO(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Generating system
     # SEO
     def GEN_SYSTEM(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -50,6 +53,7 @@ class SEO(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # External reference identifier
     # SEO
     def EXTERNAL_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
@@ -57,13 +61,15 @@ class SEO(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Type of environmental data
     # SEO
     def DATA_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
+    # Generation time (ISO 8601)
     # SEO
     def GEN_TIME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
@@ -71,6 +77,7 @@ class SEO(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # True if this is a forecast
     # SEO
     def FORECAST(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
@@ -78,6 +85,7 @@ class SEO(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # True if derived from other measurements
     # SEO
     def DERIVED(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
@@ -85,13 +93,15 @@ class SEO(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # Satellite catalog number (if space-based)
     # SEO
     def SAT_NO(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
+    # International designator
     # SEO
     def ORIG_OBJECT_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
@@ -99,6 +109,7 @@ class SEO(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Sensor identifier
     # SEO
     def ID_SENSOR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
@@ -106,6 +117,7 @@ class SEO(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Original sensor identifier
     # SEO
     def ORIG_SENSOR_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
@@ -113,13 +125,15 @@ class SEO(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Observatory type
     # SEO
     def OBSERVATORY_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
+    # Observatory name
     # SEO
     def OBSERVATORY_NAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
@@ -127,6 +141,7 @@ class SEO(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Observatory notes
     # SEO
     def OBSERVATORY_NOTES(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
@@ -134,6 +149,7 @@ class SEO(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Instrument type description
     # SEO
     def INSTRUMENT_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
@@ -141,6 +157,7 @@ class SEO(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Observatory latitude (degrees)
     # SEO
     def LAT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
@@ -148,6 +165,7 @@ class SEO(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Observatory longitude (degrees)
     # SEO
     def LON(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
@@ -155,6 +173,7 @@ class SEO(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Observatory altitude (km)
     # SEO
     def ALT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
@@ -162,6 +181,7 @@ class SEO(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor reference frame
     # SEO
     def SEN_REFERENCE_FRAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
@@ -169,13 +189,21 @@ class SEO(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Sensor position (km, 3 components)
     # SEO
     def SEN_POS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
         if o != 0:
             a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # SEO
+    def SEN_POSAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
 
     # SEO
     def SEN_POSLength(self):
@@ -189,13 +217,21 @@ class SEO(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
         return o == 0
 
+    # Sensor velocity (km/s, 3 components)
     # SEO
     def SEN_VEL(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # SEO
+    def SEN_VELAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
 
     # SEO
     def SEN_VELLength(self):
@@ -209,6 +245,7 @@ class SEO(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         return o == 0
 
+    # Measurement type description
     # SEO
     def MEAS_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
@@ -216,27 +253,31 @@ class SEO(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Particle type measured
     # SEO
-    def SEN_ENERGY_LEVEL(self):
+    def PARTICLE_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
+    # Energy level or range (keV or MeV)
     # SEO
-    def OB_SET_ID(self):
+    def SEN_ENERGY_LEVEL(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Observation set identifier
     # SEO
-    def PARTICLE_TYPE(self):
+    def OB_SET_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Observation time (ISO 8601)
     # SEO
     def OB_TIME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
@@ -244,50 +285,98 @@ class SEO(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Measurement values
     # SEO
-    def SEO_LIST(self, j):
+    def VALUES(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         if o != 0:
             a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
 
     # SEO
-    def SEO_LISTLength(self):
+    def VALUESAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # SEO
+    def VALUESLength(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # SEO
-    def SEO_LISTIsNone(self):
+    def VALUESIsNone(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         return o == 0
 
+    # Measurement uncertainties
     # SEO
-    def QUALITY(self):
+    def UNCERTAINTIES(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            a = self._tab.Vector(o)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
 
     # SEO
-    def DESCRIPTION(self):
+    def UNCERTAINTIESAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
+
+    # SEO
+    def UNCERTAINTIESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # SEO
+    def UNCERTAINTIESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        return o == 0
+
+    # Units for measurement values
+    # SEO
+    def UNITS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Data quality indicator
     # SEO
-    def DESCRIPTOR(self):
+    def QUALITY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Description
+    # SEO
+    def DESCRIPTION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Event descriptor
+    # SEO
+    def DESCRIPTOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Source types
     # SEO
     def SRC_TYPS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -295,19 +384,20 @@ class SEO(object):
 
     # SEO
     def SRC_TYPSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # SEO
     def SRC_TYPSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
         return o == 0
 
+    # Source identifiers
     # SEO
     def SRC_IDS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -315,18 +405,18 @@ class SEO(object):
 
     # SEO
     def SRC_IDSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # SEO
     def SRC_IDSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
         return o == 0
 
 def SEOStart(builder):
-    builder.StartObject(33)
+    builder.StartObject(35)
 
 def Start(builder):
     SEOStart(builder)
@@ -356,7 +446,7 @@ def AddEXTERNAL_ID(builder, EXTERNAL_ID):
     SEOAddEXTERNAL_ID(builder, EXTERNAL_ID)
 
 def SEOAddDATA_TYPE(builder, DATA_TYPE):
-    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(DATA_TYPE), 0)
+    builder.PrependInt8Slot(4, DATA_TYPE, 0)
 
 def AddDATA_TYPE(builder, DATA_TYPE):
     SEOAddDATA_TYPE(builder, DATA_TYPE)
@@ -380,7 +470,7 @@ def AddDERIVED(builder, DERIVED):
     SEOAddDERIVED(builder, DERIVED)
 
 def SEOAddSAT_NO(builder, SAT_NO):
-    builder.PrependInt32Slot(8, SAT_NO, 0)
+    builder.PrependUint32Slot(8, SAT_NO, 0)
 
 def AddSAT_NO(builder, SAT_NO):
     SEOAddSAT_NO(builder, SAT_NO)
@@ -404,7 +494,7 @@ def AddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID):
     SEOAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
 
 def SEOAddOBSERVATORY_TYPE(builder, OBSERVATORY_TYPE):
-    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(OBSERVATORY_TYPE), 0)
+    builder.PrependInt8Slot(12, OBSERVATORY_TYPE, 0)
 
 def AddOBSERVATORY_TYPE(builder, OBSERVATORY_TYPE):
     SEOAddOBSERVATORY_TYPE(builder, OBSERVATORY_TYPE)
@@ -458,7 +548,7 @@ def AddSEN_POS(builder, SEN_POS):
     SEOAddSEN_POS(builder, SEN_POS)
 
 def SEOStartSEN_POSVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
+    return builder.StartVector(8, numElems, 8)
 
 def StartSEN_POSVector(builder, numElems):
     return SEOStartSEN_POSVector(builder, numElems)
@@ -470,7 +560,7 @@ def AddSEN_VEL(builder, SEN_VEL):
     SEOAddSEN_VEL(builder, SEN_VEL)
 
 def SEOStartSEN_VELVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
+    return builder.StartVector(8, numElems, 8)
 
 def StartSEN_VELVector(builder, numElems):
     return SEOStartSEN_VELVector(builder, numElems)
@@ -481,23 +571,23 @@ def SEOAddMEAS_TYPE(builder, MEAS_TYPE):
 def AddMEAS_TYPE(builder, MEAS_TYPE):
     SEOAddMEAS_TYPE(builder, MEAS_TYPE)
 
+def SEOAddPARTICLE_TYPE(builder, PARTICLE_TYPE):
+    builder.PrependInt8Slot(23, PARTICLE_TYPE, 0)
+
+def AddPARTICLE_TYPE(builder, PARTICLE_TYPE):
+    SEOAddPARTICLE_TYPE(builder, PARTICLE_TYPE)
+
 def SEOAddSEN_ENERGY_LEVEL(builder, SEN_ENERGY_LEVEL):
-    builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(SEN_ENERGY_LEVEL), 0)
+    builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(SEN_ENERGY_LEVEL), 0)
 
 def AddSEN_ENERGY_LEVEL(builder, SEN_ENERGY_LEVEL):
     SEOAddSEN_ENERGY_LEVEL(builder, SEN_ENERGY_LEVEL)
 
 def SEOAddOB_SET_ID(builder, OB_SET_ID):
-    builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(OB_SET_ID), 0)
+    builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(OB_SET_ID), 0)
 
 def AddOB_SET_ID(builder, OB_SET_ID):
     SEOAddOB_SET_ID(builder, OB_SET_ID)
-
-def SEOAddPARTICLE_TYPE(builder, PARTICLE_TYPE):
-    builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(PARTICLE_TYPE), 0)
-
-def AddPARTICLE_TYPE(builder, PARTICLE_TYPE):
-    SEOAddPARTICLE_TYPE(builder, PARTICLE_TYPE)
 
 def SEOAddOB_TIME(builder, OB_TIME):
     builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(OB_TIME), 0)
@@ -505,38 +595,56 @@ def SEOAddOB_TIME(builder, OB_TIME):
 def AddOB_TIME(builder, OB_TIME):
     SEOAddOB_TIME(builder, OB_TIME)
 
-def SEOAddSEO_LIST(builder, SEO_LIST):
-    builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(SEO_LIST), 0)
+def SEOAddVALUES(builder, VALUES):
+    builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(VALUES), 0)
 
-def AddSEO_LIST(builder, SEO_LIST):
-    SEOAddSEO_LIST(builder, SEO_LIST)
+def AddVALUES(builder, VALUES):
+    SEOAddVALUES(builder, VALUES)
 
-def SEOStartSEO_LISTVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
+def SEOStartVALUESVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
 
-def StartSEO_LISTVector(builder, numElems):
-    return SEOStartSEO_LISTVector(builder, numElems)
+def StartVALUESVector(builder, numElems):
+    return SEOStartVALUESVector(builder, numElems)
+
+def SEOAddUNCERTAINTIES(builder, UNCERTAINTIES):
+    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(UNCERTAINTIES), 0)
+
+def AddUNCERTAINTIES(builder, UNCERTAINTIES):
+    SEOAddUNCERTAINTIES(builder, UNCERTAINTIES)
+
+def SEOStartUNCERTAINTIESVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartUNCERTAINTIESVector(builder, numElems):
+    return SEOStartUNCERTAINTIESVector(builder, numElems)
+
+def SEOAddUNITS(builder, UNITS):
+    builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(UNITS), 0)
+
+def AddUNITS(builder, UNITS):
+    SEOAddUNITS(builder, UNITS)
 
 def SEOAddQUALITY(builder, QUALITY):
-    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(QUALITY), 0)
+    builder.PrependUOffsetTRelativeSlot(30, flatbuffers.number_types.UOffsetTFlags.py_type(QUALITY), 0)
 
 def AddQUALITY(builder, QUALITY):
     SEOAddQUALITY(builder, QUALITY)
 
 def SEOAddDESCRIPTION(builder, DESCRIPTION):
-    builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION), 0)
+    builder.PrependUOffsetTRelativeSlot(31, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTION), 0)
 
 def AddDESCRIPTION(builder, DESCRIPTION):
     SEOAddDESCRIPTION(builder, DESCRIPTION)
 
 def SEOAddDESCRIPTOR(builder, DESCRIPTOR):
-    builder.PrependUOffsetTRelativeSlot(30, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTOR), 0)
+    builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTOR), 0)
 
 def AddDESCRIPTOR(builder, DESCRIPTOR):
     SEOAddDESCRIPTOR(builder, DESCRIPTOR)
 
 def SEOAddSRC_TYPS(builder, SRC_TYPS):
-    builder.PrependUOffsetTRelativeSlot(31, flatbuffers.number_types.UOffsetTFlags.py_type(SRC_TYPS), 0)
+    builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(SRC_TYPS), 0)
 
 def AddSRC_TYPS(builder, SRC_TYPS):
     SEOAddSRC_TYPS(builder, SRC_TYPS)
@@ -548,7 +656,7 @@ def StartSRC_TYPSVector(builder, numElems):
     return SEOStartSRC_TYPSVector(builder, numElems)
 
 def SEOAddSRC_IDS(builder, SRC_IDS):
-    builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(SRC_IDS), 0)
+    builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(SRC_IDS), 0)
 
 def AddSRC_IDS(builder, SRC_IDS):
     SEOAddSRC_IDS(builder, SRC_IDS)
@@ -578,7 +686,7 @@ class SEOT(object):
         self.MSG_TYPE = None  # type: str
         self.GEN_SYSTEM = None  # type: str
         self.EXTERNAL_ID = None  # type: str
-        self.DATA_TYPE = None  # type: str
+        self.DATA_TYPE = 0  # type: int
         self.GEN_TIME = None  # type: str
         self.FORECAST = False  # type: bool
         self.DERIVED = False  # type: bool
@@ -586,7 +694,7 @@ class SEOT(object):
         self.ORIG_OBJECT_ID = None  # type: str
         self.ID_SENSOR = None  # type: str
         self.ORIG_SENSOR_ID = None  # type: str
-        self.OBSERVATORY_TYPE = None  # type: str
+        self.OBSERVATORY_TYPE = 0  # type: int
         self.OBSERVATORY_NAME = None  # type: str
         self.OBSERVATORY_NOTES = None  # type: str
         self.INSTRUMENT_TYPE = None  # type: str
@@ -594,14 +702,16 @@ class SEOT(object):
         self.LON = 0.0  # type: float
         self.ALT = 0.0  # type: float
         self.SEN_REFERENCE_FRAME = None  # type: str
-        self.SEN_POS = None  # type: List[str]
-        self.SEN_VEL = None  # type: List[str]
+        self.SEN_POS = None  # type: List[float]
+        self.SEN_VEL = None  # type: List[float]
         self.MEAS_TYPE = None  # type: str
+        self.PARTICLE_TYPE = 0  # type: int
         self.SEN_ENERGY_LEVEL = None  # type: str
         self.OB_SET_ID = None  # type: str
-        self.PARTICLE_TYPE = None  # type: str
         self.OB_TIME = None  # type: str
-        self.SEO_LIST = None  # type: List[str]
+        self.VALUES = None  # type: List[float]
+        self.UNCERTAINTIES = None  # type: List[float]
+        self.UNITS = None  # type: str
         self.QUALITY = None  # type: str
         self.DESCRIPTION = None  # type: str
         self.DESCRIPTOR = None  # type: str
@@ -650,22 +760,39 @@ class SEOT(object):
         self.ALT = SEO.ALT()
         self.SEN_REFERENCE_FRAME = SEO.SEN_REFERENCE_FRAME()
         if not SEO.SEN_POSIsNone():
-            self.SEN_POS = []
-            for i in range(SEO.SEN_POSLength()):
-                self.SEN_POS.append(SEO.SEN_POS(i))
+            if np is None:
+                self.SEN_POS = []
+                for i in range(SEO.SEN_POSLength()):
+                    self.SEN_POS.append(SEO.SEN_POS(i))
+            else:
+                self.SEN_POS = SEO.SEN_POSAsNumpy()
         if not SEO.SEN_VELIsNone():
-            self.SEN_VEL = []
-            for i in range(SEO.SEN_VELLength()):
-                self.SEN_VEL.append(SEO.SEN_VEL(i))
+            if np is None:
+                self.SEN_VEL = []
+                for i in range(SEO.SEN_VELLength()):
+                    self.SEN_VEL.append(SEO.SEN_VEL(i))
+            else:
+                self.SEN_VEL = SEO.SEN_VELAsNumpy()
         self.MEAS_TYPE = SEO.MEAS_TYPE()
+        self.PARTICLE_TYPE = SEO.PARTICLE_TYPE()
         self.SEN_ENERGY_LEVEL = SEO.SEN_ENERGY_LEVEL()
         self.OB_SET_ID = SEO.OB_SET_ID()
-        self.PARTICLE_TYPE = SEO.PARTICLE_TYPE()
         self.OB_TIME = SEO.OB_TIME()
-        if not SEO.SEO_LISTIsNone():
-            self.SEO_LIST = []
-            for i in range(SEO.SEO_LISTLength()):
-                self.SEO_LIST.append(SEO.SEO_LIST(i))
+        if not SEO.VALUESIsNone():
+            if np is None:
+                self.VALUES = []
+                for i in range(SEO.VALUESLength()):
+                    self.VALUES.append(SEO.VALUES(i))
+            else:
+                self.VALUES = SEO.VALUESAsNumpy()
+        if not SEO.UNCERTAINTIESIsNone():
+            if np is None:
+                self.UNCERTAINTIES = []
+                for i in range(SEO.UNCERTAINTIESLength()):
+                    self.UNCERTAINTIES.append(SEO.UNCERTAINTIES(i))
+            else:
+                self.UNCERTAINTIES = SEO.UNCERTAINTIESAsNumpy()
+        self.UNITS = SEO.UNITS()
         self.QUALITY = SEO.QUALITY()
         self.DESCRIPTION = SEO.DESCRIPTION()
         self.DESCRIPTOR = SEO.DESCRIPTOR()
@@ -688,8 +815,6 @@ class SEOT(object):
             GEN_SYSTEM = builder.CreateString(self.GEN_SYSTEM)
         if self.EXTERNAL_ID is not None:
             EXTERNAL_ID = builder.CreateString(self.EXTERNAL_ID)
-        if self.DATA_TYPE is not None:
-            DATA_TYPE = builder.CreateString(self.DATA_TYPE)
         if self.GEN_TIME is not None:
             GEN_TIME = builder.CreateString(self.GEN_TIME)
         if self.ORIG_OBJECT_ID is not None:
@@ -698,8 +823,6 @@ class SEOT(object):
             ID_SENSOR = builder.CreateString(self.ID_SENSOR)
         if self.ORIG_SENSOR_ID is not None:
             ORIG_SENSOR_ID = builder.CreateString(self.ORIG_SENSOR_ID)
-        if self.OBSERVATORY_TYPE is not None:
-            OBSERVATORY_TYPE = builder.CreateString(self.OBSERVATORY_TYPE)
         if self.OBSERVATORY_NAME is not None:
             OBSERVATORY_NAME = builder.CreateString(self.OBSERVATORY_NAME)
         if self.OBSERVATORY_NOTES is not None:
@@ -709,39 +832,47 @@ class SEOT(object):
         if self.SEN_REFERENCE_FRAME is not None:
             SEN_REFERENCE_FRAME = builder.CreateString(self.SEN_REFERENCE_FRAME)
         if self.SEN_POS is not None:
-            SEN_POSlist = []
-            for i in range(len(self.SEN_POS)):
-                SEN_POSlist.append(builder.CreateString(self.SEN_POS[i]))
-            SEOStartSEN_POSVector(builder, len(self.SEN_POS))
-            for i in reversed(range(len(self.SEN_POS))):
-                builder.PrependUOffsetTRelative(SEN_POSlist[i])
-            SEN_POS = builder.EndVector()
+            if np is not None and type(self.SEN_POS) is np.ndarray:
+                SEN_POS = builder.CreateNumpyVector(self.SEN_POS)
+            else:
+                SEOStartSEN_POSVector(builder, len(self.SEN_POS))
+                for i in reversed(range(len(self.SEN_POS))):
+                    builder.PrependFloat64(self.SEN_POS[i])
+                SEN_POS = builder.EndVector()
         if self.SEN_VEL is not None:
-            SEN_VELlist = []
-            for i in range(len(self.SEN_VEL)):
-                SEN_VELlist.append(builder.CreateString(self.SEN_VEL[i]))
-            SEOStartSEN_VELVector(builder, len(self.SEN_VEL))
-            for i in reversed(range(len(self.SEN_VEL))):
-                builder.PrependUOffsetTRelative(SEN_VELlist[i])
-            SEN_VEL = builder.EndVector()
+            if np is not None and type(self.SEN_VEL) is np.ndarray:
+                SEN_VEL = builder.CreateNumpyVector(self.SEN_VEL)
+            else:
+                SEOStartSEN_VELVector(builder, len(self.SEN_VEL))
+                for i in reversed(range(len(self.SEN_VEL))):
+                    builder.PrependFloat64(self.SEN_VEL[i])
+                SEN_VEL = builder.EndVector()
         if self.MEAS_TYPE is not None:
             MEAS_TYPE = builder.CreateString(self.MEAS_TYPE)
         if self.SEN_ENERGY_LEVEL is not None:
             SEN_ENERGY_LEVEL = builder.CreateString(self.SEN_ENERGY_LEVEL)
         if self.OB_SET_ID is not None:
             OB_SET_ID = builder.CreateString(self.OB_SET_ID)
-        if self.PARTICLE_TYPE is not None:
-            PARTICLE_TYPE = builder.CreateString(self.PARTICLE_TYPE)
         if self.OB_TIME is not None:
             OB_TIME = builder.CreateString(self.OB_TIME)
-        if self.SEO_LIST is not None:
-            SEO_LISTlist = []
-            for i in range(len(self.SEO_LIST)):
-                SEO_LISTlist.append(builder.CreateString(self.SEO_LIST[i]))
-            SEOStartSEO_LISTVector(builder, len(self.SEO_LIST))
-            for i in reversed(range(len(self.SEO_LIST))):
-                builder.PrependUOffsetTRelative(SEO_LISTlist[i])
-            SEO_LIST = builder.EndVector()
+        if self.VALUES is not None:
+            if np is not None and type(self.VALUES) is np.ndarray:
+                VALUES = builder.CreateNumpyVector(self.VALUES)
+            else:
+                SEOStartVALUESVector(builder, len(self.VALUES))
+                for i in reversed(range(len(self.VALUES))):
+                    builder.PrependFloat64(self.VALUES[i])
+                VALUES = builder.EndVector()
+        if self.UNCERTAINTIES is not None:
+            if np is not None and type(self.UNCERTAINTIES) is np.ndarray:
+                UNCERTAINTIES = builder.CreateNumpyVector(self.UNCERTAINTIES)
+            else:
+                SEOStartUNCERTAINTIESVector(builder, len(self.UNCERTAINTIES))
+                for i in reversed(range(len(self.UNCERTAINTIES))):
+                    builder.PrependFloat64(self.UNCERTAINTIES[i])
+                UNCERTAINTIES = builder.EndVector()
+        if self.UNITS is not None:
+            UNITS = builder.CreateString(self.UNITS)
         if self.QUALITY is not None:
             QUALITY = builder.CreateString(self.QUALITY)
         if self.DESCRIPTION is not None:
@@ -773,8 +904,7 @@ class SEOT(object):
             SEOAddGEN_SYSTEM(builder, GEN_SYSTEM)
         if self.EXTERNAL_ID is not None:
             SEOAddEXTERNAL_ID(builder, EXTERNAL_ID)
-        if self.DATA_TYPE is not None:
-            SEOAddDATA_TYPE(builder, DATA_TYPE)
+        SEOAddDATA_TYPE(builder, self.DATA_TYPE)
         if self.GEN_TIME is not None:
             SEOAddGEN_TIME(builder, GEN_TIME)
         SEOAddFORECAST(builder, self.FORECAST)
@@ -786,8 +916,7 @@ class SEOT(object):
             SEOAddID_SENSOR(builder, ID_SENSOR)
         if self.ORIG_SENSOR_ID is not None:
             SEOAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
-        if self.OBSERVATORY_TYPE is not None:
-            SEOAddOBSERVATORY_TYPE(builder, OBSERVATORY_TYPE)
+        SEOAddOBSERVATORY_TYPE(builder, self.OBSERVATORY_TYPE)
         if self.OBSERVATORY_NAME is not None:
             SEOAddOBSERVATORY_NAME(builder, OBSERVATORY_NAME)
         if self.OBSERVATORY_NOTES is not None:
@@ -805,16 +934,19 @@ class SEOT(object):
             SEOAddSEN_VEL(builder, SEN_VEL)
         if self.MEAS_TYPE is not None:
             SEOAddMEAS_TYPE(builder, MEAS_TYPE)
+        SEOAddPARTICLE_TYPE(builder, self.PARTICLE_TYPE)
         if self.SEN_ENERGY_LEVEL is not None:
             SEOAddSEN_ENERGY_LEVEL(builder, SEN_ENERGY_LEVEL)
         if self.OB_SET_ID is not None:
             SEOAddOB_SET_ID(builder, OB_SET_ID)
-        if self.PARTICLE_TYPE is not None:
-            SEOAddPARTICLE_TYPE(builder, PARTICLE_TYPE)
         if self.OB_TIME is not None:
             SEOAddOB_TIME(builder, OB_TIME)
-        if self.SEO_LIST is not None:
-            SEOAddSEO_LIST(builder, SEO_LIST)
+        if self.VALUES is not None:
+            SEOAddVALUES(builder, VALUES)
+        if self.UNCERTAINTIES is not None:
+            SEOAddUNCERTAINTIES(builder, UNCERTAINTIES)
+        if self.UNITS is not None:
+            SEOAddUNITS(builder, UNITS)
         if self.QUALITY is not None:
             SEOAddQUALITY(builder, QUALITY)
         if self.DESCRIPTION is not None:

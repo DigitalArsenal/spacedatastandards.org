@@ -29,6 +29,7 @@ class LND(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Unique identifier
     # LND
     def ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,121 +37,178 @@ class LND(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Detection event identifier
     # LND
-    def LAUNCH_TIME(self):
+    def EVENT_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Detection type
+    # LND
+    def DETECTION_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Detection message type code
     # LND
     def MESSAGE_TYPE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Time of launch detection (ISO 8601)
     # LND
-    def LAUNCH_LATITUDE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # LND
-    def LAUNCH_LONGITUDE(self):
+    def LAUNCH_TIME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
+    # Launch site latitude (degrees)
     # LND
-    def LAUNCH_AZIMUTH(self):
+    def LAUNCH_LATITUDE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Launch site longitude (degrees)
     # LND
-    def RAAN(self):
+    def LAUNCH_LONGITUDE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Launch azimuth (degrees from north)
     # LND
-    def INCLINATION(self):
+    def LAUNCH_AZIMUTH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Estimated RAAN (degrees)
     # LND
-    def OBSERVATION_TIME(self):
+    def RAAN(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
 
+    # Estimated inclination (degrees)
     # LND
-    def OBSERVATION_LATITUDE(self):
+    def INCLINATION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Time of trajectory observation (ISO 8601)
     # LND
-    def OBSERVATION_LONGITUDE(self):
+    def OBSERVATION_TIME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
+    # Observation point latitude (degrees)
     # LND
-    def OBSERVATION_ALTITUDE(self):
+    def OBSERVATION_LATITUDE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Observation point longitude (degrees)
     # LND
-    def STEREO_FLAG(self):
+    def OBSERVATION_LONGITUDE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
 
+    # Observation point altitude (km)
     # LND
-    def HIGH_ZENITH_AZIMUTH(self):
+    def OBSERVATION_ALTITUDE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # True if stereo observation (multiple sensors)
+    # LND
+    def STEREO_FLAG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # True if high zenith angle observation
     # LND
-    def SEQUENCE_NUMBER(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
-    # LND
-    def EVENT_ID(self):
+    def HIGH_ZENITH_AZIMUTH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
 
+    # Sequence number in detection chain
     # LND
-    def DESCRIPTOR(self):
+    def SEQUENCE_NUMBER(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Launch site identifier
+    # LND
+    def LAUNCH_SITE_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Launch vehicle type (if identified)
+    # LND
+    def LAUNCH_VEHICLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Estimated trajectory type
+    # LND
+    def TRAJECTORY_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Detection confidence (0-1)
+    # LND
+    def CONFIDENCE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Event descriptor
+    # LND
+    def DESCRIPTOR(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Associated tags
     # LND
     def TAGS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -158,18 +216,18 @@ class LND(object):
 
     # LND
     def TAGSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # LND
     def TAGSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         return o == 0
 
 def LNDStart(builder):
-    builder.StartObject(18)
+    builder.StartObject(23)
 
 def Start(builder):
     LNDStart(builder)
@@ -180,104 +238,134 @@ def LNDAddID(builder, ID):
 def AddID(builder, ID):
     LNDAddID(builder, ID)
 
-def LNDAddLAUNCH_TIME(builder, LAUNCH_TIME):
-    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(LAUNCH_TIME), 0)
+def LNDAddEVENT_ID(builder, EVENT_ID):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(EVENT_ID), 0)
 
-def AddLAUNCH_TIME(builder, LAUNCH_TIME):
-    LNDAddLAUNCH_TIME(builder, LAUNCH_TIME)
+def AddEVENT_ID(builder, EVENT_ID):
+    LNDAddEVENT_ID(builder, EVENT_ID)
+
+def LNDAddDETECTION_TYPE(builder, DETECTION_TYPE):
+    builder.PrependInt8Slot(2, DETECTION_TYPE, 0)
+
+def AddDETECTION_TYPE(builder, DETECTION_TYPE):
+    LNDAddDETECTION_TYPE(builder, DETECTION_TYPE)
 
 def LNDAddMESSAGE_TYPE(builder, MESSAGE_TYPE):
-    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(MESSAGE_TYPE), 0)
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(MESSAGE_TYPE), 0)
 
 def AddMESSAGE_TYPE(builder, MESSAGE_TYPE):
     LNDAddMESSAGE_TYPE(builder, MESSAGE_TYPE)
 
+def LNDAddLAUNCH_TIME(builder, LAUNCH_TIME):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(LAUNCH_TIME), 0)
+
+def AddLAUNCH_TIME(builder, LAUNCH_TIME):
+    LNDAddLAUNCH_TIME(builder, LAUNCH_TIME)
+
 def LNDAddLAUNCH_LATITUDE(builder, LAUNCH_LATITUDE):
-    builder.PrependFloat64Slot(3, LAUNCH_LATITUDE, 0.0)
+    builder.PrependFloat64Slot(5, LAUNCH_LATITUDE, 0.0)
 
 def AddLAUNCH_LATITUDE(builder, LAUNCH_LATITUDE):
     LNDAddLAUNCH_LATITUDE(builder, LAUNCH_LATITUDE)
 
 def LNDAddLAUNCH_LONGITUDE(builder, LAUNCH_LONGITUDE):
-    builder.PrependFloat64Slot(4, LAUNCH_LONGITUDE, 0.0)
+    builder.PrependFloat64Slot(6, LAUNCH_LONGITUDE, 0.0)
 
 def AddLAUNCH_LONGITUDE(builder, LAUNCH_LONGITUDE):
     LNDAddLAUNCH_LONGITUDE(builder, LAUNCH_LONGITUDE)
 
 def LNDAddLAUNCH_AZIMUTH(builder, LAUNCH_AZIMUTH):
-    builder.PrependFloat64Slot(5, LAUNCH_AZIMUTH, 0.0)
+    builder.PrependFloat64Slot(7, LAUNCH_AZIMUTH, 0.0)
 
 def AddLAUNCH_AZIMUTH(builder, LAUNCH_AZIMUTH):
     LNDAddLAUNCH_AZIMUTH(builder, LAUNCH_AZIMUTH)
 
 def LNDAddRAAN(builder, RAAN):
-    builder.PrependFloat64Slot(6, RAAN, 0.0)
+    builder.PrependFloat64Slot(8, RAAN, 0.0)
 
 def AddRAAN(builder, RAAN):
     LNDAddRAAN(builder, RAAN)
 
 def LNDAddINCLINATION(builder, INCLINATION):
-    builder.PrependFloat64Slot(7, INCLINATION, 0.0)
+    builder.PrependFloat64Slot(9, INCLINATION, 0.0)
 
 def AddINCLINATION(builder, INCLINATION):
     LNDAddINCLINATION(builder, INCLINATION)
 
 def LNDAddOBSERVATION_TIME(builder, OBSERVATION_TIME):
-    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(OBSERVATION_TIME), 0)
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(OBSERVATION_TIME), 0)
 
 def AddOBSERVATION_TIME(builder, OBSERVATION_TIME):
     LNDAddOBSERVATION_TIME(builder, OBSERVATION_TIME)
 
 def LNDAddOBSERVATION_LATITUDE(builder, OBSERVATION_LATITUDE):
-    builder.PrependFloat64Slot(9, OBSERVATION_LATITUDE, 0.0)
+    builder.PrependFloat64Slot(11, OBSERVATION_LATITUDE, 0.0)
 
 def AddOBSERVATION_LATITUDE(builder, OBSERVATION_LATITUDE):
     LNDAddOBSERVATION_LATITUDE(builder, OBSERVATION_LATITUDE)
 
 def LNDAddOBSERVATION_LONGITUDE(builder, OBSERVATION_LONGITUDE):
-    builder.PrependFloat64Slot(10, OBSERVATION_LONGITUDE, 0.0)
+    builder.PrependFloat64Slot(12, OBSERVATION_LONGITUDE, 0.0)
 
 def AddOBSERVATION_LONGITUDE(builder, OBSERVATION_LONGITUDE):
     LNDAddOBSERVATION_LONGITUDE(builder, OBSERVATION_LONGITUDE)
 
 def LNDAddOBSERVATION_ALTITUDE(builder, OBSERVATION_ALTITUDE):
-    builder.PrependFloat64Slot(11, OBSERVATION_ALTITUDE, 0.0)
+    builder.PrependFloat64Slot(13, OBSERVATION_ALTITUDE, 0.0)
 
 def AddOBSERVATION_ALTITUDE(builder, OBSERVATION_ALTITUDE):
     LNDAddOBSERVATION_ALTITUDE(builder, OBSERVATION_ALTITUDE)
 
 def LNDAddSTEREO_FLAG(builder, STEREO_FLAG):
-    builder.PrependBoolSlot(12, STEREO_FLAG, 0)
+    builder.PrependBoolSlot(14, STEREO_FLAG, 0)
 
 def AddSTEREO_FLAG(builder, STEREO_FLAG):
     LNDAddSTEREO_FLAG(builder, STEREO_FLAG)
 
 def LNDAddHIGH_ZENITH_AZIMUTH(builder, HIGH_ZENITH_AZIMUTH):
-    builder.PrependBoolSlot(13, HIGH_ZENITH_AZIMUTH, 0)
+    builder.PrependBoolSlot(15, HIGH_ZENITH_AZIMUTH, 0)
 
 def AddHIGH_ZENITH_AZIMUTH(builder, HIGH_ZENITH_AZIMUTH):
     LNDAddHIGH_ZENITH_AZIMUTH(builder, HIGH_ZENITH_AZIMUTH)
 
 def LNDAddSEQUENCE_NUMBER(builder, SEQUENCE_NUMBER):
-    builder.PrependInt32Slot(14, SEQUENCE_NUMBER, 0)
+    builder.PrependUint16Slot(16, SEQUENCE_NUMBER, 0)
 
 def AddSEQUENCE_NUMBER(builder, SEQUENCE_NUMBER):
     LNDAddSEQUENCE_NUMBER(builder, SEQUENCE_NUMBER)
 
-def LNDAddEVENT_ID(builder, EVENT_ID):
-    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(EVENT_ID), 0)
+def LNDAddLAUNCH_SITE_ID(builder, LAUNCH_SITE_ID):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(LAUNCH_SITE_ID), 0)
 
-def AddEVENT_ID(builder, EVENT_ID):
-    LNDAddEVENT_ID(builder, EVENT_ID)
+def AddLAUNCH_SITE_ID(builder, LAUNCH_SITE_ID):
+    LNDAddLAUNCH_SITE_ID(builder, LAUNCH_SITE_ID)
+
+def LNDAddLAUNCH_VEHICLE(builder, LAUNCH_VEHICLE):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(LAUNCH_VEHICLE), 0)
+
+def AddLAUNCH_VEHICLE(builder, LAUNCH_VEHICLE):
+    LNDAddLAUNCH_VEHICLE(builder, LAUNCH_VEHICLE)
+
+def LNDAddTRAJECTORY_TYPE(builder, TRAJECTORY_TYPE):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(TRAJECTORY_TYPE), 0)
+
+def AddTRAJECTORY_TYPE(builder, TRAJECTORY_TYPE):
+    LNDAddTRAJECTORY_TYPE(builder, TRAJECTORY_TYPE)
+
+def LNDAddCONFIDENCE(builder, CONFIDENCE):
+    builder.PrependFloat64Slot(20, CONFIDENCE, 0.0)
+
+def AddCONFIDENCE(builder, CONFIDENCE):
+    LNDAddCONFIDENCE(builder, CONFIDENCE)
 
 def LNDAddDESCRIPTOR(builder, DESCRIPTOR):
-    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTOR), 0)
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTOR), 0)
 
 def AddDESCRIPTOR(builder, DESCRIPTOR):
     LNDAddDESCRIPTOR(builder, DESCRIPTOR)
 
 def LNDAddTAGS(builder, TAGS):
-    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(TAGS), 0)
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(TAGS), 0)
 
 def AddTAGS(builder, TAGS):
     LNDAddTAGS(builder, TAGS)
@@ -304,8 +392,10 @@ class LNDT(object):
     # LNDT
     def __init__(self):
         self.ID = None  # type: str
-        self.LAUNCH_TIME = None  # type: str
+        self.EVENT_ID = None  # type: str
+        self.DETECTION_TYPE = 0  # type: int
         self.MESSAGE_TYPE = None  # type: str
+        self.LAUNCH_TIME = None  # type: str
         self.LAUNCH_LATITUDE = 0.0  # type: float
         self.LAUNCH_LONGITUDE = 0.0  # type: float
         self.LAUNCH_AZIMUTH = 0.0  # type: float
@@ -318,7 +408,10 @@ class LNDT(object):
         self.STEREO_FLAG = False  # type: bool
         self.HIGH_ZENITH_AZIMUTH = False  # type: bool
         self.SEQUENCE_NUMBER = 0  # type: int
-        self.EVENT_ID = None  # type: str
+        self.LAUNCH_SITE_ID = None  # type: str
+        self.LAUNCH_VEHICLE = None  # type: str
+        self.TRAJECTORY_TYPE = None  # type: str
+        self.CONFIDENCE = 0.0  # type: float
         self.DESCRIPTOR = None  # type: str
         self.TAGS = None  # type: List[str]
 
@@ -344,8 +437,10 @@ class LNDT(object):
         if LND is None:
             return
         self.ID = LND.ID()
-        self.LAUNCH_TIME = LND.LAUNCH_TIME()
+        self.EVENT_ID = LND.EVENT_ID()
+        self.DETECTION_TYPE = LND.DETECTION_TYPE()
         self.MESSAGE_TYPE = LND.MESSAGE_TYPE()
+        self.LAUNCH_TIME = LND.LAUNCH_TIME()
         self.LAUNCH_LATITUDE = LND.LAUNCH_LATITUDE()
         self.LAUNCH_LONGITUDE = LND.LAUNCH_LONGITUDE()
         self.LAUNCH_AZIMUTH = LND.LAUNCH_AZIMUTH()
@@ -358,7 +453,10 @@ class LNDT(object):
         self.STEREO_FLAG = LND.STEREO_FLAG()
         self.HIGH_ZENITH_AZIMUTH = LND.HIGH_ZENITH_AZIMUTH()
         self.SEQUENCE_NUMBER = LND.SEQUENCE_NUMBER()
-        self.EVENT_ID = LND.EVENT_ID()
+        self.LAUNCH_SITE_ID = LND.LAUNCH_SITE_ID()
+        self.LAUNCH_VEHICLE = LND.LAUNCH_VEHICLE()
+        self.TRAJECTORY_TYPE = LND.TRAJECTORY_TYPE()
+        self.CONFIDENCE = LND.CONFIDENCE()
         self.DESCRIPTOR = LND.DESCRIPTOR()
         if not LND.TAGSIsNone():
             self.TAGS = []
@@ -369,14 +467,20 @@ class LNDT(object):
     def Pack(self, builder):
         if self.ID is not None:
             ID = builder.CreateString(self.ID)
-        if self.LAUNCH_TIME is not None:
-            LAUNCH_TIME = builder.CreateString(self.LAUNCH_TIME)
-        if self.MESSAGE_TYPE is not None:
-            MESSAGE_TYPE = builder.CreateString(self.MESSAGE_TYPE)
-        if self.OBSERVATION_TIME is not None:
-            OBSERVATION_TIME = builder.CreateString(self.OBSERVATION_TIME)
         if self.EVENT_ID is not None:
             EVENT_ID = builder.CreateString(self.EVENT_ID)
+        if self.MESSAGE_TYPE is not None:
+            MESSAGE_TYPE = builder.CreateString(self.MESSAGE_TYPE)
+        if self.LAUNCH_TIME is not None:
+            LAUNCH_TIME = builder.CreateString(self.LAUNCH_TIME)
+        if self.OBSERVATION_TIME is not None:
+            OBSERVATION_TIME = builder.CreateString(self.OBSERVATION_TIME)
+        if self.LAUNCH_SITE_ID is not None:
+            LAUNCH_SITE_ID = builder.CreateString(self.LAUNCH_SITE_ID)
+        if self.LAUNCH_VEHICLE is not None:
+            LAUNCH_VEHICLE = builder.CreateString(self.LAUNCH_VEHICLE)
+        if self.TRAJECTORY_TYPE is not None:
+            TRAJECTORY_TYPE = builder.CreateString(self.TRAJECTORY_TYPE)
         if self.DESCRIPTOR is not None:
             DESCRIPTOR = builder.CreateString(self.DESCRIPTOR)
         if self.TAGS is not None:
@@ -390,10 +494,13 @@ class LNDT(object):
         LNDStart(builder)
         if self.ID is not None:
             LNDAddID(builder, ID)
-        if self.LAUNCH_TIME is not None:
-            LNDAddLAUNCH_TIME(builder, LAUNCH_TIME)
+        if self.EVENT_ID is not None:
+            LNDAddEVENT_ID(builder, EVENT_ID)
+        LNDAddDETECTION_TYPE(builder, self.DETECTION_TYPE)
         if self.MESSAGE_TYPE is not None:
             LNDAddMESSAGE_TYPE(builder, MESSAGE_TYPE)
+        if self.LAUNCH_TIME is not None:
+            LNDAddLAUNCH_TIME(builder, LAUNCH_TIME)
         LNDAddLAUNCH_LATITUDE(builder, self.LAUNCH_LATITUDE)
         LNDAddLAUNCH_LONGITUDE(builder, self.LAUNCH_LONGITUDE)
         LNDAddLAUNCH_AZIMUTH(builder, self.LAUNCH_AZIMUTH)
@@ -407,8 +514,13 @@ class LNDT(object):
         LNDAddSTEREO_FLAG(builder, self.STEREO_FLAG)
         LNDAddHIGH_ZENITH_AZIMUTH(builder, self.HIGH_ZENITH_AZIMUTH)
         LNDAddSEQUENCE_NUMBER(builder, self.SEQUENCE_NUMBER)
-        if self.EVENT_ID is not None:
-            LNDAddEVENT_ID(builder, EVENT_ID)
+        if self.LAUNCH_SITE_ID is not None:
+            LNDAddLAUNCH_SITE_ID(builder, LAUNCH_SITE_ID)
+        if self.LAUNCH_VEHICLE is not None:
+            LNDAddLAUNCH_VEHICLE(builder, LAUNCH_VEHICLE)
+        if self.TRAJECTORY_TYPE is not None:
+            LNDAddTRAJECTORY_TYPE(builder, TRAJECTORY_TYPE)
+        LNDAddCONFIDENCE(builder, self.CONFIDENCE)
         if self.DESCRIPTOR is not None:
             LNDAddDESCRIPTOR(builder, DESCRIPTOR)
         if self.TAGS is not None:

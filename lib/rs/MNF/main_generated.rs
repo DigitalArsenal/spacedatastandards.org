@@ -9,6 +9,595 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_MANIFOLD_STATUS: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_MANIFOLD_STATUS: i8 = 4;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_MANIFOLD_STATUS: [manifoldStatus; 5] = [
+  manifoldStatus::CANDIDATE,
+  manifoldStatus::CONFIRMED,
+  manifoldStatus::REJECTED,
+  manifoldStatus::CORRELATED,
+  manifoldStatus::EXPIRED,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct manifoldStatus(pub i8);
+#[allow(non_upper_case_globals)]
+impl manifoldStatus {
+  pub const CANDIDATE: Self = Self(0);
+  pub const CONFIRMED: Self = Self(1);
+  pub const REJECTED: Self = Self(2);
+  pub const CORRELATED: Self = Self(3);
+  pub const EXPIRED: Self = Self(4);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 4;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::CANDIDATE,
+    Self::CONFIRMED,
+    Self::REJECTED,
+    Self::CORRELATED,
+    Self::EXPIRED,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::CANDIDATE => Some("CANDIDATE"),
+      Self::CONFIRMED => Some("CONFIRMED"),
+      Self::REJECTED => Some("REJECTED"),
+      Self::CORRELATED => Some("CORRELATED"),
+      Self::EXPIRED => Some("EXPIRED"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for manifoldStatus {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for manifoldStatus {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for manifoldStatus {
+    type Output = manifoldStatus;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for manifoldStatus {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for manifoldStatus {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for manifoldStatus {}
+pub enum manifoldElsetOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Manifold Element Set
+pub struct manifoldElset<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for manifoldElset<'a> {
+  type Inner = manifoldElset<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> manifoldElset<'a> {
+  pub const VT_EPOCH: flatbuffers::VOffsetT = 4;
+  pub const VT_SEMI_MAJOR_AXIS: flatbuffers::VOffsetT = 6;
+  pub const VT_ECCENTRICITY: flatbuffers::VOffsetT = 8;
+  pub const VT_INCLINATION: flatbuffers::VOffsetT = 10;
+  pub const VT_RA_OF_ASC_NODE: flatbuffers::VOffsetT = 12;
+  pub const VT_ARG_OF_PERICENTER: flatbuffers::VOffsetT = 14;
+  pub const VT_MEAN_ANOMALY: flatbuffers::VOffsetT = 16;
+  pub const VT_DELTA_V: flatbuffers::VOffsetT = 18;
+  pub const VT_DELTA_T: flatbuffers::VOffsetT = 20;
+  pub const VT_DV_X: flatbuffers::VOffsetT = 22;
+  pub const VT_DV_Y: flatbuffers::VOffsetT = 24;
+  pub const VT_DV_Z: flatbuffers::VOffsetT = 26;
+  pub const VT_WEIGHT: flatbuffers::VOffsetT = 28;
+  pub const VT_APOGEE: flatbuffers::VOffsetT = 30;
+  pub const VT_PERIGEE: flatbuffers::VOffsetT = 32;
+  pub const VT_PERIOD: flatbuffers::VOffsetT = 34;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    manifoldElset { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args manifoldElsetArgs<'args>
+  ) -> flatbuffers::WIPOffset<manifoldElset<'bldr>> {
+    let mut builder = manifoldElsetBuilder::new(_fbb);
+    builder.add_PERIOD(args.PERIOD);
+    builder.add_PERIGEE(args.PERIGEE);
+    builder.add_APOGEE(args.APOGEE);
+    builder.add_WEIGHT(args.WEIGHT);
+    builder.add_DV_Z(args.DV_Z);
+    builder.add_DV_Y(args.DV_Y);
+    builder.add_DV_X(args.DV_X);
+    builder.add_DELTA_T(args.DELTA_T);
+    builder.add_DELTA_V(args.DELTA_V);
+    builder.add_MEAN_ANOMALY(args.MEAN_ANOMALY);
+    builder.add_ARG_OF_PERICENTER(args.ARG_OF_PERICENTER);
+    builder.add_RA_OF_ASC_NODE(args.RA_OF_ASC_NODE);
+    builder.add_INCLINATION(args.INCLINATION);
+    builder.add_ECCENTRICITY(args.ECCENTRICITY);
+    builder.add_SEMI_MAJOR_AXIS(args.SEMI_MAJOR_AXIS);
+    if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> manifoldElsetT {
+    let EPOCH = self.EPOCH().map(|x| {
+      x.to_string()
+    });
+    let SEMI_MAJOR_AXIS = self.SEMI_MAJOR_AXIS();
+    let ECCENTRICITY = self.ECCENTRICITY();
+    let INCLINATION = self.INCLINATION();
+    let RA_OF_ASC_NODE = self.RA_OF_ASC_NODE();
+    let ARG_OF_PERICENTER = self.ARG_OF_PERICENTER();
+    let MEAN_ANOMALY = self.MEAN_ANOMALY();
+    let DELTA_V = self.DELTA_V();
+    let DELTA_T = self.DELTA_T();
+    let DV_X = self.DV_X();
+    let DV_Y = self.DV_Y();
+    let DV_Z = self.DV_Z();
+    let WEIGHT = self.WEIGHT();
+    let APOGEE = self.APOGEE();
+    let PERIGEE = self.PERIGEE();
+    let PERIOD = self.PERIOD();
+    manifoldElsetT {
+      EPOCH,
+      SEMI_MAJOR_AXIS,
+      ECCENTRICITY,
+      INCLINATION,
+      RA_OF_ASC_NODE,
+      ARG_OF_PERICENTER,
+      MEAN_ANOMALY,
+      DELTA_V,
+      DELTA_T,
+      DV_X,
+      DV_Y,
+      DV_Z,
+      WEIGHT,
+      APOGEE,
+      PERIGEE,
+      PERIOD,
+    }
+  }
+
+  /// Epoch of element set (ISO 8601)
+  #[inline]
+  pub fn EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(manifoldElset::VT_EPOCH, None)}
+  }
+  /// Semi-major axis in km
+  #[inline]
+  pub fn SEMI_MAJOR_AXIS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(manifoldElset::VT_SEMI_MAJOR_AXIS, Some(0.0)).unwrap()}
+  }
+  /// Eccentricity
+  #[inline]
+  pub fn ECCENTRICITY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(manifoldElset::VT_ECCENTRICITY, Some(0.0)).unwrap()}
+  }
+  /// Inclination in degrees
+  #[inline]
+  pub fn INCLINATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(manifoldElset::VT_INCLINATION, Some(0.0)).unwrap()}
+  }
+  /// Right ascension of ascending node in degrees
+  #[inline]
+  pub fn RA_OF_ASC_NODE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(manifoldElset::VT_RA_OF_ASC_NODE, Some(0.0)).unwrap()}
+  }
+  /// Argument of pericenter in degrees
+  #[inline]
+  pub fn ARG_OF_PERICENTER(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(manifoldElset::VT_ARG_OF_PERICENTER, Some(0.0)).unwrap()}
+  }
+  /// Mean anomaly in degrees
+  #[inline]
+  pub fn MEAN_ANOMALY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(manifoldElset::VT_MEAN_ANOMALY, Some(0.0)).unwrap()}
+  }
+  /// Applied delta-V in m/s
+  #[inline]
+  pub fn DELTA_V(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(manifoldElset::VT_DELTA_V, Some(0.0)).unwrap()}
+  }
+  /// Applied delta-T in seconds
+  #[inline]
+  pub fn DELTA_T(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(manifoldElset::VT_DELTA_T, Some(0.0)).unwrap()}
+  }
+  /// Delta-V direction X (unit vector)
+  #[inline]
+  pub fn DV_X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(manifoldElset::VT_DV_X, Some(0.0)).unwrap()}
+  }
+  /// Delta-V direction Y (unit vector)
+  #[inline]
+  pub fn DV_Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(manifoldElset::VT_DV_Y, Some(0.0)).unwrap()}
+  }
+  /// Delta-V direction Z (unit vector)
+  #[inline]
+  pub fn DV_Z(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(manifoldElset::VT_DV_Z, Some(0.0)).unwrap()}
+  }
+  /// Probability weight (0.0-1.0)
+  #[inline]
+  pub fn WEIGHT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(manifoldElset::VT_WEIGHT, Some(0.0)).unwrap()}
+  }
+  /// Apogee altitude in km
+  #[inline]
+  pub fn APOGEE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(manifoldElset::VT_APOGEE, Some(0.0)).unwrap()}
+  }
+  /// Perigee altitude in km
+  #[inline]
+  pub fn PERIGEE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(manifoldElset::VT_PERIGEE, Some(0.0)).unwrap()}
+  }
+  /// Period in minutes
+  #[inline]
+  pub fn PERIOD(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(manifoldElset::VT_PERIOD, Some(0.0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for manifoldElset<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
+     .visit_field::<f64>("SEMI_MAJOR_AXIS", Self::VT_SEMI_MAJOR_AXIS, false)?
+     .visit_field::<f64>("ECCENTRICITY", Self::VT_ECCENTRICITY, false)?
+     .visit_field::<f64>("INCLINATION", Self::VT_INCLINATION, false)?
+     .visit_field::<f64>("RA_OF_ASC_NODE", Self::VT_RA_OF_ASC_NODE, false)?
+     .visit_field::<f64>("ARG_OF_PERICENTER", Self::VT_ARG_OF_PERICENTER, false)?
+     .visit_field::<f64>("MEAN_ANOMALY", Self::VT_MEAN_ANOMALY, false)?
+     .visit_field::<f64>("DELTA_V", Self::VT_DELTA_V, false)?
+     .visit_field::<f64>("DELTA_T", Self::VT_DELTA_T, false)?
+     .visit_field::<f64>("DV_X", Self::VT_DV_X, false)?
+     .visit_field::<f64>("DV_Y", Self::VT_DV_Y, false)?
+     .visit_field::<f64>("DV_Z", Self::VT_DV_Z, false)?
+     .visit_field::<f64>("WEIGHT", Self::VT_WEIGHT, false)?
+     .visit_field::<f64>("APOGEE", Self::VT_APOGEE, false)?
+     .visit_field::<f64>("PERIGEE", Self::VT_PERIGEE, false)?
+     .visit_field::<f64>("PERIOD", Self::VT_PERIOD, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct manifoldElsetArgs<'a> {
+    pub EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SEMI_MAJOR_AXIS: f64,
+    pub ECCENTRICITY: f64,
+    pub INCLINATION: f64,
+    pub RA_OF_ASC_NODE: f64,
+    pub ARG_OF_PERICENTER: f64,
+    pub MEAN_ANOMALY: f64,
+    pub DELTA_V: f64,
+    pub DELTA_T: f64,
+    pub DV_X: f64,
+    pub DV_Y: f64,
+    pub DV_Z: f64,
+    pub WEIGHT: f64,
+    pub APOGEE: f64,
+    pub PERIGEE: f64,
+    pub PERIOD: f64,
+}
+impl<'a> Default for manifoldElsetArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    manifoldElsetArgs {
+      EPOCH: None,
+      SEMI_MAJOR_AXIS: 0.0,
+      ECCENTRICITY: 0.0,
+      INCLINATION: 0.0,
+      RA_OF_ASC_NODE: 0.0,
+      ARG_OF_PERICENTER: 0.0,
+      MEAN_ANOMALY: 0.0,
+      DELTA_V: 0.0,
+      DELTA_T: 0.0,
+      DV_X: 0.0,
+      DV_Y: 0.0,
+      DV_Z: 0.0,
+      WEIGHT: 0.0,
+      APOGEE: 0.0,
+      PERIGEE: 0.0,
+      PERIOD: 0.0,
+    }
+  }
+}
+
+pub struct manifoldElsetBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> manifoldElsetBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_EPOCH(&mut self, EPOCH: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(manifoldElset::VT_EPOCH, EPOCH);
+  }
+  #[inline]
+  pub fn add_SEMI_MAJOR_AXIS(&mut self, SEMI_MAJOR_AXIS: f64) {
+    self.fbb_.push_slot::<f64>(manifoldElset::VT_SEMI_MAJOR_AXIS, SEMI_MAJOR_AXIS, 0.0);
+  }
+  #[inline]
+  pub fn add_ECCENTRICITY(&mut self, ECCENTRICITY: f64) {
+    self.fbb_.push_slot::<f64>(manifoldElset::VT_ECCENTRICITY, ECCENTRICITY, 0.0);
+  }
+  #[inline]
+  pub fn add_INCLINATION(&mut self, INCLINATION: f64) {
+    self.fbb_.push_slot::<f64>(manifoldElset::VT_INCLINATION, INCLINATION, 0.0);
+  }
+  #[inline]
+  pub fn add_RA_OF_ASC_NODE(&mut self, RA_OF_ASC_NODE: f64) {
+    self.fbb_.push_slot::<f64>(manifoldElset::VT_RA_OF_ASC_NODE, RA_OF_ASC_NODE, 0.0);
+  }
+  #[inline]
+  pub fn add_ARG_OF_PERICENTER(&mut self, ARG_OF_PERICENTER: f64) {
+    self.fbb_.push_slot::<f64>(manifoldElset::VT_ARG_OF_PERICENTER, ARG_OF_PERICENTER, 0.0);
+  }
+  #[inline]
+  pub fn add_MEAN_ANOMALY(&mut self, MEAN_ANOMALY: f64) {
+    self.fbb_.push_slot::<f64>(manifoldElset::VT_MEAN_ANOMALY, MEAN_ANOMALY, 0.0);
+  }
+  #[inline]
+  pub fn add_DELTA_V(&mut self, DELTA_V: f64) {
+    self.fbb_.push_slot::<f64>(manifoldElset::VT_DELTA_V, DELTA_V, 0.0);
+  }
+  #[inline]
+  pub fn add_DELTA_T(&mut self, DELTA_T: f64) {
+    self.fbb_.push_slot::<f64>(manifoldElset::VT_DELTA_T, DELTA_T, 0.0);
+  }
+  #[inline]
+  pub fn add_DV_X(&mut self, DV_X: f64) {
+    self.fbb_.push_slot::<f64>(manifoldElset::VT_DV_X, DV_X, 0.0);
+  }
+  #[inline]
+  pub fn add_DV_Y(&mut self, DV_Y: f64) {
+    self.fbb_.push_slot::<f64>(manifoldElset::VT_DV_Y, DV_Y, 0.0);
+  }
+  #[inline]
+  pub fn add_DV_Z(&mut self, DV_Z: f64) {
+    self.fbb_.push_slot::<f64>(manifoldElset::VT_DV_Z, DV_Z, 0.0);
+  }
+  #[inline]
+  pub fn add_WEIGHT(&mut self, WEIGHT: f64) {
+    self.fbb_.push_slot::<f64>(manifoldElset::VT_WEIGHT, WEIGHT, 0.0);
+  }
+  #[inline]
+  pub fn add_APOGEE(&mut self, APOGEE: f64) {
+    self.fbb_.push_slot::<f64>(manifoldElset::VT_APOGEE, APOGEE, 0.0);
+  }
+  #[inline]
+  pub fn add_PERIGEE(&mut self, PERIGEE: f64) {
+    self.fbb_.push_slot::<f64>(manifoldElset::VT_PERIGEE, PERIGEE, 0.0);
+  }
+  #[inline]
+  pub fn add_PERIOD(&mut self, PERIOD: f64) {
+    self.fbb_.push_slot::<f64>(manifoldElset::VT_PERIOD, PERIOD, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> manifoldElsetBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    manifoldElsetBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<manifoldElset<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for manifoldElset<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("manifoldElset");
+      ds.field("EPOCH", &self.EPOCH());
+      ds.field("SEMI_MAJOR_AXIS", &self.SEMI_MAJOR_AXIS());
+      ds.field("ECCENTRICITY", &self.ECCENTRICITY());
+      ds.field("INCLINATION", &self.INCLINATION());
+      ds.field("RA_OF_ASC_NODE", &self.RA_OF_ASC_NODE());
+      ds.field("ARG_OF_PERICENTER", &self.ARG_OF_PERICENTER());
+      ds.field("MEAN_ANOMALY", &self.MEAN_ANOMALY());
+      ds.field("DELTA_V", &self.DELTA_V());
+      ds.field("DELTA_T", &self.DELTA_T());
+      ds.field("DV_X", &self.DV_X());
+      ds.field("DV_Y", &self.DV_Y());
+      ds.field("DV_Z", &self.DV_Z());
+      ds.field("WEIGHT", &self.WEIGHT());
+      ds.field("APOGEE", &self.APOGEE());
+      ds.field("PERIGEE", &self.PERIGEE());
+      ds.field("PERIOD", &self.PERIOD());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct manifoldElsetT {
+  pub EPOCH: Option<String>,
+  pub SEMI_MAJOR_AXIS: f64,
+  pub ECCENTRICITY: f64,
+  pub INCLINATION: f64,
+  pub RA_OF_ASC_NODE: f64,
+  pub ARG_OF_PERICENTER: f64,
+  pub MEAN_ANOMALY: f64,
+  pub DELTA_V: f64,
+  pub DELTA_T: f64,
+  pub DV_X: f64,
+  pub DV_Y: f64,
+  pub DV_Z: f64,
+  pub WEIGHT: f64,
+  pub APOGEE: f64,
+  pub PERIGEE: f64,
+  pub PERIOD: f64,
+}
+impl Default for manifoldElsetT {
+  fn default() -> Self {
+    Self {
+      EPOCH: None,
+      SEMI_MAJOR_AXIS: 0.0,
+      ECCENTRICITY: 0.0,
+      INCLINATION: 0.0,
+      RA_OF_ASC_NODE: 0.0,
+      ARG_OF_PERICENTER: 0.0,
+      MEAN_ANOMALY: 0.0,
+      DELTA_V: 0.0,
+      DELTA_T: 0.0,
+      DV_X: 0.0,
+      DV_Y: 0.0,
+      DV_Z: 0.0,
+      WEIGHT: 0.0,
+      APOGEE: 0.0,
+      PERIGEE: 0.0,
+      PERIOD: 0.0,
+    }
+  }
+}
+impl manifoldElsetT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<manifoldElset<'b>> {
+    let EPOCH = self.EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SEMI_MAJOR_AXIS = self.SEMI_MAJOR_AXIS;
+    let ECCENTRICITY = self.ECCENTRICITY;
+    let INCLINATION = self.INCLINATION;
+    let RA_OF_ASC_NODE = self.RA_OF_ASC_NODE;
+    let ARG_OF_PERICENTER = self.ARG_OF_PERICENTER;
+    let MEAN_ANOMALY = self.MEAN_ANOMALY;
+    let DELTA_V = self.DELTA_V;
+    let DELTA_T = self.DELTA_T;
+    let DV_X = self.DV_X;
+    let DV_Y = self.DV_Y;
+    let DV_Z = self.DV_Z;
+    let WEIGHT = self.WEIGHT;
+    let APOGEE = self.APOGEE;
+    let PERIGEE = self.PERIGEE;
+    let PERIOD = self.PERIOD;
+    manifoldElset::create(_fbb, &manifoldElsetArgs{
+      EPOCH,
+      SEMI_MAJOR_AXIS,
+      ECCENTRICITY,
+      INCLINATION,
+      RA_OF_ASC_NODE,
+      ARG_OF_PERICENTER,
+      MEAN_ANOMALY,
+      DELTA_V,
+      DELTA_T,
+      DV_X,
+      DV_Y,
+      DV_Z,
+      WEIGHT,
+      APOGEE,
+      PERIGEE,
+      PERIOD,
+    })
+  }
+}
 pub enum MNFOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -27,10 +616,25 @@ impl<'a> flatbuffers::Follow<'a> for MNF<'a> {
 
 impl<'a> MNF<'a> {
   pub const VT_ID: flatbuffers::VOffsetT = 4;
-  pub const VT_STATUS: flatbuffers::VOffsetT = 6;
-  pub const VT_WEIGHT: flatbuffers::VOffsetT = 8;
-  pub const VT_DELTA_V: flatbuffers::VOffsetT = 10;
-  pub const VT_DELTA_T: flatbuffers::VOffsetT = 12;
+  pub const VT_SAT_NO: flatbuffers::VOffsetT = 6;
+  pub const VT_OBJECT_DESIGNATOR: flatbuffers::VOffsetT = 8;
+  pub const VT_STATUS: flatbuffers::VOffsetT = 10;
+  pub const VT_EVENT_EPOCH: flatbuffers::VOffsetT = 12;
+  pub const VT_SOURCE: flatbuffers::VOffsetT = 14;
+  pub const VT_REF_FRAME: flatbuffers::VOffsetT = 16;
+  pub const VT_ORIG_SEMI_MAJOR_AXIS: flatbuffers::VOffsetT = 18;
+  pub const VT_ORIG_ECCENTRICITY: flatbuffers::VOffsetT = 20;
+  pub const VT_ORIG_INCLINATION: flatbuffers::VOffsetT = 22;
+  pub const VT_DELTA_V_MIN: flatbuffers::VOffsetT = 24;
+  pub const VT_DELTA_V_MAX: flatbuffers::VOffsetT = 26;
+  pub const VT_DELTA_V_STEP: flatbuffers::VOffsetT = 28;
+  pub const VT_DELTA_T_MIN: flatbuffers::VOffsetT = 30;
+  pub const VT_DELTA_T_MAX: flatbuffers::VOffsetT = 32;
+  pub const VT_DELTA_T_STEP: flatbuffers::VOffsetT = 34;
+  pub const VT_NUM_ELEMENTS: flatbuffers::VOffsetT = 36;
+  pub const VT_ELEMENTS: flatbuffers::VOffsetT = 38;
+  pub const VT_CORRELATED_ID: flatbuffers::VOffsetT = 40;
+  pub const VT_NOTES: flatbuffers::VOffsetT = 42;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -42,11 +646,26 @@ impl<'a> MNF<'a> {
     args: &'args MNFArgs<'args>
   ) -> flatbuffers::WIPOffset<MNF<'bldr>> {
     let mut builder = MNFBuilder::new(_fbb);
-    builder.add_DELTA_T(args.DELTA_T);
-    builder.add_DELTA_V(args.DELTA_V);
-    builder.add_WEIGHT(args.WEIGHT);
-    if let Some(x) = args.STATUS { builder.add_STATUS(x); }
+    builder.add_DELTA_T_STEP(args.DELTA_T_STEP);
+    builder.add_DELTA_T_MAX(args.DELTA_T_MAX);
+    builder.add_DELTA_T_MIN(args.DELTA_T_MIN);
+    builder.add_DELTA_V_STEP(args.DELTA_V_STEP);
+    builder.add_DELTA_V_MAX(args.DELTA_V_MAX);
+    builder.add_DELTA_V_MIN(args.DELTA_V_MIN);
+    builder.add_ORIG_INCLINATION(args.ORIG_INCLINATION);
+    builder.add_ORIG_ECCENTRICITY(args.ORIG_ECCENTRICITY);
+    builder.add_ORIG_SEMI_MAJOR_AXIS(args.ORIG_SEMI_MAJOR_AXIS);
+    if let Some(x) = args.NOTES { builder.add_NOTES(x); }
+    if let Some(x) = args.CORRELATED_ID { builder.add_CORRELATED_ID(x); }
+    if let Some(x) = args.ELEMENTS { builder.add_ELEMENTS(x); }
+    builder.add_NUM_ELEMENTS(args.NUM_ELEMENTS);
+    if let Some(x) = args.REF_FRAME { builder.add_REF_FRAME(x); }
+    if let Some(x) = args.SOURCE { builder.add_SOURCE(x); }
+    if let Some(x) = args.EVENT_EPOCH { builder.add_EVENT_EPOCH(x); }
+    if let Some(x) = args.OBJECT_DESIGNATOR { builder.add_OBJECT_DESIGNATOR(x); }
+    builder.add_SAT_NO(args.SAT_NO);
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_STATUS(args.STATUS);
     builder.finish()
   }
 
@@ -54,21 +673,64 @@ impl<'a> MNF<'a> {
     let ID = self.ID().map(|x| {
       x.to_string()
     });
-    let STATUS = self.STATUS().map(|x| {
+    let SAT_NO = self.SAT_NO();
+    let OBJECT_DESIGNATOR = self.OBJECT_DESIGNATOR().map(|x| {
       x.to_string()
     });
-    let WEIGHT = self.WEIGHT();
-    let DELTA_V = self.DELTA_V();
-    let DELTA_T = self.DELTA_T();
+    let STATUS = self.STATUS();
+    let EVENT_EPOCH = self.EVENT_EPOCH().map(|x| {
+      x.to_string()
+    });
+    let SOURCE = self.SOURCE().map(|x| {
+      x.to_string()
+    });
+    let REF_FRAME = self.REF_FRAME().map(|x| {
+      x.to_string()
+    });
+    let ORIG_SEMI_MAJOR_AXIS = self.ORIG_SEMI_MAJOR_AXIS();
+    let ORIG_ECCENTRICITY = self.ORIG_ECCENTRICITY();
+    let ORIG_INCLINATION = self.ORIG_INCLINATION();
+    let DELTA_V_MIN = self.DELTA_V_MIN();
+    let DELTA_V_MAX = self.DELTA_V_MAX();
+    let DELTA_V_STEP = self.DELTA_V_STEP();
+    let DELTA_T_MIN = self.DELTA_T_MIN();
+    let DELTA_T_MAX = self.DELTA_T_MAX();
+    let DELTA_T_STEP = self.DELTA_T_STEP();
+    let NUM_ELEMENTS = self.NUM_ELEMENTS();
+    let ELEMENTS = self.ELEMENTS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let CORRELATED_ID = self.CORRELATED_ID().map(|x| {
+      x.to_string()
+    });
+    let NOTES = self.NOTES().map(|x| {
+      x.to_string()
+    });
     MNFT {
       ID,
+      SAT_NO,
+      OBJECT_DESIGNATOR,
       STATUS,
-      WEIGHT,
-      DELTA_V,
-      DELTA_T,
+      EVENT_EPOCH,
+      SOURCE,
+      REF_FRAME,
+      ORIG_SEMI_MAJOR_AXIS,
+      ORIG_ECCENTRICITY,
+      ORIG_INCLINATION,
+      DELTA_V_MIN,
+      DELTA_V_MAX,
+      DELTA_V_STEP,
+      DELTA_T_MIN,
+      DELTA_T_MAX,
+      DELTA_T_STEP,
+      NUM_ELEMENTS,
+      ELEMENTS,
+      CORRELATED_ID,
+      NOTES,
     }
   }
 
+  /// Unique manifold identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -76,33 +738,157 @@ impl<'a> MNF<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNF::VT_ID, None)}
   }
+  /// Parent object satellite number
   #[inline]
-  pub fn STATUS(&self) -> Option<&'a str> {
+  pub fn SAT_NO(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNF::VT_STATUS, None)}
+    unsafe { self._tab.get::<u32>(MNF::VT_SAT_NO, Some(0)).unwrap()}
   }
+  /// Object designator
   #[inline]
-  pub fn WEIGHT(&self) -> f64 {
+  pub fn OBJECT_DESIGNATOR(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNF::VT_WEIGHT, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNF::VT_OBJECT_DESIGNATOR, None)}
   }
+  /// Manifold status
   #[inline]
-  pub fn DELTA_V(&self) -> f64 {
+  pub fn STATUS(&self) -> manifoldStatus {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNF::VT_DELTA_V, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<manifoldStatus>(MNF::VT_STATUS, Some(manifoldStatus::CANDIDATE)).unwrap()}
   }
+  /// Event epoch that spawned the manifold (ISO 8601)
   #[inline]
-  pub fn DELTA_T(&self) -> f64 {
+  pub fn EVENT_EPOCH(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNF::VT_DELTA_T, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNF::VT_EVENT_EPOCH, None)}
+  }
+  /// Source of detection (sensor ID or method)
+  #[inline]
+  pub fn SOURCE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNF::VT_SOURCE, None)}
+  }
+  /// Reference frame
+  #[inline]
+  pub fn REF_FRAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNF::VT_REF_FRAME, None)}
+  }
+  /// Original pre-event semi-major axis in km
+  #[inline]
+  pub fn ORIG_SEMI_MAJOR_AXIS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MNF::VT_ORIG_SEMI_MAJOR_AXIS, Some(0.0)).unwrap()}
+  }
+  /// Original pre-event eccentricity
+  #[inline]
+  pub fn ORIG_ECCENTRICITY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MNF::VT_ORIG_ECCENTRICITY, Some(0.0)).unwrap()}
+  }
+  /// Original pre-event inclination in degrees
+  #[inline]
+  pub fn ORIG_INCLINATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MNF::VT_ORIG_INCLINATION, Some(0.0)).unwrap()}
+  }
+  /// Minimum delta-V sampled in m/s
+  #[inline]
+  pub fn DELTA_V_MIN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MNF::VT_DELTA_V_MIN, Some(0.0)).unwrap()}
+  }
+  /// Maximum delta-V sampled in m/s
+  #[inline]
+  pub fn DELTA_V_MAX(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MNF::VT_DELTA_V_MAX, Some(0.0)).unwrap()}
+  }
+  /// Delta-V step size in m/s
+  #[inline]
+  pub fn DELTA_V_STEP(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MNF::VT_DELTA_V_STEP, Some(0.0)).unwrap()}
+  }
+  /// Minimum delta-T sampled in seconds
+  #[inline]
+  pub fn DELTA_T_MIN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MNF::VT_DELTA_T_MIN, Some(0.0)).unwrap()}
+  }
+  /// Maximum delta-T sampled in seconds
+  #[inline]
+  pub fn DELTA_T_MAX(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MNF::VT_DELTA_T_MAX, Some(0.0)).unwrap()}
+  }
+  /// Delta-T step size in seconds
+  #[inline]
+  pub fn DELTA_T_STEP(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MNF::VT_DELTA_T_STEP, Some(0.0)).unwrap()}
+  }
+  /// Total number of manifold elements
+  #[inline]
+  pub fn NUM_ELEMENTS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(MNF::VT_NUM_ELEMENTS, Some(0)).unwrap()}
+  }
+  /// Theoretical element sets
+  #[inline]
+  pub fn ELEMENTS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<manifoldElset<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<manifoldElset>>>>(MNF::VT_ELEMENTS, None)}
+  }
+  /// Correlated catalog object ID (if matched)
+  #[inline]
+  pub fn CORRELATED_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNF::VT_CORRELATED_ID, None)}
+  }
+  /// Additional notes
+  #[inline]
+  pub fn NOTES(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNF::VT_NOTES, None)}
   }
 }
 
@@ -114,30 +900,75 @@ impl flatbuffers::Verifiable for MNF<'_> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("STATUS", Self::VT_STATUS, false)?
-     .visit_field::<f64>("WEIGHT", Self::VT_WEIGHT, false)?
-     .visit_field::<f64>("DELTA_V", Self::VT_DELTA_V, false)?
-     .visit_field::<f64>("DELTA_T", Self::VT_DELTA_T, false)?
+     .visit_field::<u32>("SAT_NO", Self::VT_SAT_NO, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJECT_DESIGNATOR", Self::VT_OBJECT_DESIGNATOR, false)?
+     .visit_field::<manifoldStatus>("STATUS", Self::VT_STATUS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EVENT_EPOCH", Self::VT_EVENT_EPOCH, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SOURCE", Self::VT_SOURCE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REF_FRAME", Self::VT_REF_FRAME, false)?
+     .visit_field::<f64>("ORIG_SEMI_MAJOR_AXIS", Self::VT_ORIG_SEMI_MAJOR_AXIS, false)?
+     .visit_field::<f64>("ORIG_ECCENTRICITY", Self::VT_ORIG_ECCENTRICITY, false)?
+     .visit_field::<f64>("ORIG_INCLINATION", Self::VT_ORIG_INCLINATION, false)?
+     .visit_field::<f64>("DELTA_V_MIN", Self::VT_DELTA_V_MIN, false)?
+     .visit_field::<f64>("DELTA_V_MAX", Self::VT_DELTA_V_MAX, false)?
+     .visit_field::<f64>("DELTA_V_STEP", Self::VT_DELTA_V_STEP, false)?
+     .visit_field::<f64>("DELTA_T_MIN", Self::VT_DELTA_T_MIN, false)?
+     .visit_field::<f64>("DELTA_T_MAX", Self::VT_DELTA_T_MAX, false)?
+     .visit_field::<f64>("DELTA_T_STEP", Self::VT_DELTA_T_STEP, false)?
+     .visit_field::<u32>("NUM_ELEMENTS", Self::VT_NUM_ELEMENTS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<manifoldElset>>>>("ELEMENTS", Self::VT_ELEMENTS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CORRELATED_ID", Self::VT_CORRELATED_ID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NOTES", Self::VT_NOTES, false)?
      .finish();
     Ok(())
   }
 }
 pub struct MNFArgs<'a> {
     pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub STATUS: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub WEIGHT: f64,
-    pub DELTA_V: f64,
-    pub DELTA_T: f64,
+    pub SAT_NO: u32,
+    pub OBJECT_DESIGNATOR: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub STATUS: manifoldStatus,
+    pub EVENT_EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SOURCE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub REF_FRAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ORIG_SEMI_MAJOR_AXIS: f64,
+    pub ORIG_ECCENTRICITY: f64,
+    pub ORIG_INCLINATION: f64,
+    pub DELTA_V_MIN: f64,
+    pub DELTA_V_MAX: f64,
+    pub DELTA_V_STEP: f64,
+    pub DELTA_T_MIN: f64,
+    pub DELTA_T_MAX: f64,
+    pub DELTA_T_STEP: f64,
+    pub NUM_ELEMENTS: u32,
+    pub ELEMENTS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<manifoldElset<'a>>>>>,
+    pub CORRELATED_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub NOTES: Option<flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for MNFArgs<'a> {
   #[inline]
   fn default() -> Self {
     MNFArgs {
       ID: None,
-      STATUS: None,
-      WEIGHT: 0.0,
-      DELTA_V: 0.0,
-      DELTA_T: 0.0,
+      SAT_NO: 0,
+      OBJECT_DESIGNATOR: None,
+      STATUS: manifoldStatus::CANDIDATE,
+      EVENT_EPOCH: None,
+      SOURCE: None,
+      REF_FRAME: None,
+      ORIG_SEMI_MAJOR_AXIS: 0.0,
+      ORIG_ECCENTRICITY: 0.0,
+      ORIG_INCLINATION: 0.0,
+      DELTA_V_MIN: 0.0,
+      DELTA_V_MAX: 0.0,
+      DELTA_V_STEP: 0.0,
+      DELTA_T_MIN: 0.0,
+      DELTA_T_MAX: 0.0,
+      DELTA_T_STEP: 0.0,
+      NUM_ELEMENTS: 0,
+      ELEMENTS: None,
+      CORRELATED_ID: None,
+      NOTES: None,
     }
   }
 }
@@ -152,20 +983,80 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> MNFBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNF::VT_ID, ID);
   }
   #[inline]
-  pub fn add_STATUS(&mut self, STATUS: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNF::VT_STATUS, STATUS);
+  pub fn add_SAT_NO(&mut self, SAT_NO: u32) {
+    self.fbb_.push_slot::<u32>(MNF::VT_SAT_NO, SAT_NO, 0);
   }
   #[inline]
-  pub fn add_WEIGHT(&mut self, WEIGHT: f64) {
-    self.fbb_.push_slot::<f64>(MNF::VT_WEIGHT, WEIGHT, 0.0);
+  pub fn add_OBJECT_DESIGNATOR(&mut self, OBJECT_DESIGNATOR: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNF::VT_OBJECT_DESIGNATOR, OBJECT_DESIGNATOR);
   }
   #[inline]
-  pub fn add_DELTA_V(&mut self, DELTA_V: f64) {
-    self.fbb_.push_slot::<f64>(MNF::VT_DELTA_V, DELTA_V, 0.0);
+  pub fn add_STATUS(&mut self, STATUS: manifoldStatus) {
+    self.fbb_.push_slot::<manifoldStatus>(MNF::VT_STATUS, STATUS, manifoldStatus::CANDIDATE);
   }
   #[inline]
-  pub fn add_DELTA_T(&mut self, DELTA_T: f64) {
-    self.fbb_.push_slot::<f64>(MNF::VT_DELTA_T, DELTA_T, 0.0);
+  pub fn add_EVENT_EPOCH(&mut self, EVENT_EPOCH: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNF::VT_EVENT_EPOCH, EVENT_EPOCH);
+  }
+  #[inline]
+  pub fn add_SOURCE(&mut self, SOURCE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNF::VT_SOURCE, SOURCE);
+  }
+  #[inline]
+  pub fn add_REF_FRAME(&mut self, REF_FRAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNF::VT_REF_FRAME, REF_FRAME);
+  }
+  #[inline]
+  pub fn add_ORIG_SEMI_MAJOR_AXIS(&mut self, ORIG_SEMI_MAJOR_AXIS: f64) {
+    self.fbb_.push_slot::<f64>(MNF::VT_ORIG_SEMI_MAJOR_AXIS, ORIG_SEMI_MAJOR_AXIS, 0.0);
+  }
+  #[inline]
+  pub fn add_ORIG_ECCENTRICITY(&mut self, ORIG_ECCENTRICITY: f64) {
+    self.fbb_.push_slot::<f64>(MNF::VT_ORIG_ECCENTRICITY, ORIG_ECCENTRICITY, 0.0);
+  }
+  #[inline]
+  pub fn add_ORIG_INCLINATION(&mut self, ORIG_INCLINATION: f64) {
+    self.fbb_.push_slot::<f64>(MNF::VT_ORIG_INCLINATION, ORIG_INCLINATION, 0.0);
+  }
+  #[inline]
+  pub fn add_DELTA_V_MIN(&mut self, DELTA_V_MIN: f64) {
+    self.fbb_.push_slot::<f64>(MNF::VT_DELTA_V_MIN, DELTA_V_MIN, 0.0);
+  }
+  #[inline]
+  pub fn add_DELTA_V_MAX(&mut self, DELTA_V_MAX: f64) {
+    self.fbb_.push_slot::<f64>(MNF::VT_DELTA_V_MAX, DELTA_V_MAX, 0.0);
+  }
+  #[inline]
+  pub fn add_DELTA_V_STEP(&mut self, DELTA_V_STEP: f64) {
+    self.fbb_.push_slot::<f64>(MNF::VT_DELTA_V_STEP, DELTA_V_STEP, 0.0);
+  }
+  #[inline]
+  pub fn add_DELTA_T_MIN(&mut self, DELTA_T_MIN: f64) {
+    self.fbb_.push_slot::<f64>(MNF::VT_DELTA_T_MIN, DELTA_T_MIN, 0.0);
+  }
+  #[inline]
+  pub fn add_DELTA_T_MAX(&mut self, DELTA_T_MAX: f64) {
+    self.fbb_.push_slot::<f64>(MNF::VT_DELTA_T_MAX, DELTA_T_MAX, 0.0);
+  }
+  #[inline]
+  pub fn add_DELTA_T_STEP(&mut self, DELTA_T_STEP: f64) {
+    self.fbb_.push_slot::<f64>(MNF::VT_DELTA_T_STEP, DELTA_T_STEP, 0.0);
+  }
+  #[inline]
+  pub fn add_NUM_ELEMENTS(&mut self, NUM_ELEMENTS: u32) {
+    self.fbb_.push_slot::<u32>(MNF::VT_NUM_ELEMENTS, NUM_ELEMENTS, 0);
+  }
+  #[inline]
+  pub fn add_ELEMENTS(&mut self, ELEMENTS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<manifoldElset<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNF::VT_ELEMENTS, ELEMENTS);
+  }
+  #[inline]
+  pub fn add_CORRELATED_ID(&mut self, CORRELATED_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNF::VT_CORRELATED_ID, CORRELATED_ID);
+  }
+  #[inline]
+  pub fn add_NOTES(&mut self, NOTES: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNF::VT_NOTES, NOTES);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> MNFBuilder<'a, 'b, A> {
@@ -186,10 +1077,25 @@ impl core::fmt::Debug for MNF<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
     let mut ds = f.debug_struct("MNF");
       ds.field("ID", &self.ID());
+      ds.field("SAT_NO", &self.SAT_NO());
+      ds.field("OBJECT_DESIGNATOR", &self.OBJECT_DESIGNATOR());
       ds.field("STATUS", &self.STATUS());
-      ds.field("WEIGHT", &self.WEIGHT());
-      ds.field("DELTA_V", &self.DELTA_V());
-      ds.field("DELTA_T", &self.DELTA_T());
+      ds.field("EVENT_EPOCH", &self.EVENT_EPOCH());
+      ds.field("SOURCE", &self.SOURCE());
+      ds.field("REF_FRAME", &self.REF_FRAME());
+      ds.field("ORIG_SEMI_MAJOR_AXIS", &self.ORIG_SEMI_MAJOR_AXIS());
+      ds.field("ORIG_ECCENTRICITY", &self.ORIG_ECCENTRICITY());
+      ds.field("ORIG_INCLINATION", &self.ORIG_INCLINATION());
+      ds.field("DELTA_V_MIN", &self.DELTA_V_MIN());
+      ds.field("DELTA_V_MAX", &self.DELTA_V_MAX());
+      ds.field("DELTA_V_STEP", &self.DELTA_V_STEP());
+      ds.field("DELTA_T_MIN", &self.DELTA_T_MIN());
+      ds.field("DELTA_T_MAX", &self.DELTA_T_MAX());
+      ds.field("DELTA_T_STEP", &self.DELTA_T_STEP());
+      ds.field("NUM_ELEMENTS", &self.NUM_ELEMENTS());
+      ds.field("ELEMENTS", &self.ELEMENTS());
+      ds.field("CORRELATED_ID", &self.CORRELATED_ID());
+      ds.field("NOTES", &self.NOTES());
       ds.finish()
   }
 }
@@ -197,19 +1103,49 @@ impl core::fmt::Debug for MNF<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct MNFT {
   pub ID: Option<String>,
-  pub STATUS: Option<String>,
-  pub WEIGHT: f64,
-  pub DELTA_V: f64,
-  pub DELTA_T: f64,
+  pub SAT_NO: u32,
+  pub OBJECT_DESIGNATOR: Option<String>,
+  pub STATUS: manifoldStatus,
+  pub EVENT_EPOCH: Option<String>,
+  pub SOURCE: Option<String>,
+  pub REF_FRAME: Option<String>,
+  pub ORIG_SEMI_MAJOR_AXIS: f64,
+  pub ORIG_ECCENTRICITY: f64,
+  pub ORIG_INCLINATION: f64,
+  pub DELTA_V_MIN: f64,
+  pub DELTA_V_MAX: f64,
+  pub DELTA_V_STEP: f64,
+  pub DELTA_T_MIN: f64,
+  pub DELTA_T_MAX: f64,
+  pub DELTA_T_STEP: f64,
+  pub NUM_ELEMENTS: u32,
+  pub ELEMENTS: Option<Vec<manifoldElsetT>>,
+  pub CORRELATED_ID: Option<String>,
+  pub NOTES: Option<String>,
 }
 impl Default for MNFT {
   fn default() -> Self {
     Self {
       ID: None,
-      STATUS: None,
-      WEIGHT: 0.0,
-      DELTA_V: 0.0,
-      DELTA_T: 0.0,
+      SAT_NO: 0,
+      OBJECT_DESIGNATOR: None,
+      STATUS: manifoldStatus::CANDIDATE,
+      EVENT_EPOCH: None,
+      SOURCE: None,
+      REF_FRAME: None,
+      ORIG_SEMI_MAJOR_AXIS: 0.0,
+      ORIG_ECCENTRICITY: 0.0,
+      ORIG_INCLINATION: 0.0,
+      DELTA_V_MIN: 0.0,
+      DELTA_V_MAX: 0.0,
+      DELTA_V_STEP: 0.0,
+      DELTA_T_MIN: 0.0,
+      DELTA_T_MAX: 0.0,
+      DELTA_T_STEP: 0.0,
+      NUM_ELEMENTS: 0,
+      ELEMENTS: None,
+      CORRELATED_ID: None,
+      NOTES: None,
     }
   }
 }
@@ -221,18 +1157,60 @@ impl MNFT {
     let ID = self.ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let STATUS = self.STATUS.as_ref().map(|x|{
+    let SAT_NO = self.SAT_NO;
+    let OBJECT_DESIGNATOR = self.OBJECT_DESIGNATOR.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let WEIGHT = self.WEIGHT;
-    let DELTA_V = self.DELTA_V;
-    let DELTA_T = self.DELTA_T;
+    let STATUS = self.STATUS;
+    let EVENT_EPOCH = self.EVENT_EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SOURCE = self.SOURCE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let REF_FRAME = self.REF_FRAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ORIG_SEMI_MAJOR_AXIS = self.ORIG_SEMI_MAJOR_AXIS;
+    let ORIG_ECCENTRICITY = self.ORIG_ECCENTRICITY;
+    let ORIG_INCLINATION = self.ORIG_INCLINATION;
+    let DELTA_V_MIN = self.DELTA_V_MIN;
+    let DELTA_V_MAX = self.DELTA_V_MAX;
+    let DELTA_V_STEP = self.DELTA_V_STEP;
+    let DELTA_T_MIN = self.DELTA_T_MIN;
+    let DELTA_T_MAX = self.DELTA_T_MAX;
+    let DELTA_T_STEP = self.DELTA_T_STEP;
+    let NUM_ELEMENTS = self.NUM_ELEMENTS;
+    let ELEMENTS = self.ELEMENTS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let CORRELATED_ID = self.CORRELATED_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let NOTES = self.NOTES.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     MNF::create(_fbb, &MNFArgs{
       ID,
+      SAT_NO,
+      OBJECT_DESIGNATOR,
       STATUS,
-      WEIGHT,
-      DELTA_V,
-      DELTA_T,
+      EVENT_EPOCH,
+      SOURCE,
+      REF_FRAME,
+      ORIG_SEMI_MAJOR_AXIS,
+      ORIG_ECCENTRICITY,
+      ORIG_INCLINATION,
+      DELTA_V_MIN,
+      DELTA_V_MAX,
+      DELTA_V_STEP,
+      DELTA_T_MIN,
+      DELTA_T_MAX,
+      DELTA_T_STEP,
+      NUM_ELEMENTS,
+      ELEMENTS,
+      CORRELATED_ID,
+      NOTES,
     })
   }
 }

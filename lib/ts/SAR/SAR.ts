@@ -4,6 +4,8 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { sarMode } from './sarMode.js';
+import { sarPolarization } from './sarPolarization.js';
 
 
 /**
@@ -31,6 +33,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$SAR');
 }
 
+/**
+ * Unique identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,11 +43,17 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Satellite catalog number (of SAR platform)
+ */
 SAT_NO():number {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
+/**
+ * International designator
+ */
 ORIG_OBJECT_ID():string|null
 ORIG_OBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ORIG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -50,197 +61,287 @@ ORIG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-ID_SENSOR():string|null
-ID_SENSOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ID_SENSOR(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * On-orbit reference
+ */
+ON_ORBIT():string|null
+ON_ORBIT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ON_ORBIT(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-ORIG_SENSOR_ID():string|null
-ORIG_SENSOR_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ORIG_SENSOR_ID(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Sensor identifier
+ */
+ID_SENSOR():string|null
+ID_SENSOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ID_SENSOR(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-EXTERNAL_ID():string|null
-EXTERNAL_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-EXTERNAL_ID(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Original sensor identifier
+ */
+ORIG_SENSOR_ID():string|null
+ORIG_SENSOR_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ORIG_SENSOR_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-COLLECTION_ID():string|null
-COLLECTION_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-COLLECTION_ID(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * External reference identifier
+ */
+EXTERNAL_ID():string|null
+EXTERNAL_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EXTERNAL_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-DETECTION_ID():string|null
-DETECTION_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-DETECTION_ID(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Collection identifier
+ */
+COLLECTION_ID():string|null
+COLLECTION_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+COLLECTION_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-COLLECTION_START():string|null
-COLLECTION_START(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-COLLECTION_START(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Detection identifier
+ */
+DETECTION_ID():string|null
+DETECTION_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DETECTION_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-COLLECTION_END():string|null
-COLLECTION_END(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-COLLECTION_END(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Collection start time (ISO 8601)
+ */
+COLLECTION_START():string|null
+COLLECTION_START(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+COLLECTION_START(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-CENTER_TIME():string|null
-CENTER_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-CENTER_TIME(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Collection end time (ISO 8601)
+ */
+COLLECTION_END():string|null
+COLLECTION_END(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+COLLECTION_END(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-DETECTION_START():string|null
-DETECTION_START(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-DETECTION_START(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Center time of observation (ISO 8601)
+ */
+CENTER_TIME():string|null
+CENTER_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CENTER_TIME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-DETECTION_END():string|null
-DETECTION_END(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-DETECTION_END(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Detection start time (ISO 8601)
+ */
+DETECTION_START():string|null
+DETECTION_START(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DETECTION_START(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-DWELL_TIME():number {
+/**
+ * Detection end time (ISO 8601)
+ */
+DETECTION_END():string|null
+DETECTION_END(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DETECTION_END(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 30);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-ORBIT_STATE():string|null
-ORBIT_STATE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ORBIT_STATE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-SAR_MODE():string|null
-SAR_MODE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-SAR_MODE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Integration/dwell time (seconds)
+ */
+DWELL_TIME():number {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Orbit state description
+ */
+ORBIT_STATE():string|null
+ORBIT_STATE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ORBIT_STATE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 34);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * SAR imaging mode
+ */
+SAR_MODE():sarMode {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : sarMode.STRIPMAP;
+}
+
+/**
+ * Operating RF band (e.g., X, C, L, S, P)
+ */
 OPERATING_BAND():string|null
 OPERATING_BAND(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 OPERATING_BAND(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 36);
+  const offset = this.bb!.__offset(this.bb_pos, 38);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Operating frequency (GHz)
+ */
 OPERATING_FREQ():number {
-  const offset = this.bb!.__offset(this.bb_pos, 38);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-SNR():number {
   const offset = this.bb!.__offset(this.bb_pos, 40);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-TX_POLARIZATION():string|null
-TX_POLARIZATION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-TX_POLARIZATION(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Signal-to-noise ratio (dB)
+ */
+SNR():number {
   const offset = this.bb!.__offset(this.bb_pos, 42);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-RX_POLARIZATION():string|null
-RX_POLARIZATION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-RX_POLARIZATION(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 44);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-GRAZE_ANGLE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 46);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-INCIDENCE_ANGLE():number {
+/**
+ * Transmit polarization
+ */
+TX_POLARIZATION():sarPolarization {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : sarPolarization.HH;
+}
+
+/**
+ * Receive polarization
+ */
+RX_POLARIZATION():sarPolarization {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : sarPolarization.HH;
+}
+
+/**
+ * Grazing angle (degrees)
+ */
+GRAZE_ANGLE():number {
   const offset = this.bb!.__offset(this.bb_pos, 48);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SQUINT_ANGLE():number {
+/**
+ * Incidence angle (degrees)
+ */
+INCIDENCE_ANGLE():number {
   const offset = this.bb!.__offset(this.bb_pos, 50);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-PULSE_BANDWIDTH():number {
+/**
+ * Squint angle (degrees)
+ */
+SQUINT_ANGLE():number {
   const offset = this.bb!.__offset(this.bb_pos, 52);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-PULSE_DURATION():number {
+/**
+ * Pulse bandwidth (MHz)
+ */
+PULSE_BANDWIDTH():number {
   const offset = this.bb!.__offset(this.bb_pos, 54);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-CONTINUOUS_SPOT_ANGLE():number {
+/**
+ * Pulse duration (microseconds)
+ */
+PULSE_DURATION():number {
   const offset = this.bb!.__offset(this.bb_pos, 56);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SLANT_RANGE():number {
+/**
+ * Continuous spot angle (degrees)
+ */
+CONTINUOUS_SPOT_ANGLE():number {
   const offset = this.bb!.__offset(this.bb_pos, 58);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-NEAR_RANGE():number {
+/**
+ * Slant range to target (km)
+ */
+SLANT_RANGE():number {
   const offset = this.bb!.__offset(this.bb_pos, 60);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-FAR_RANGE():number {
+/**
+ * Near range (km)
+ */
+NEAR_RANGE():number {
   const offset = this.bb!.__offset(this.bb_pos, 62);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SWATH_LENGTH():number {
+/**
+ * Far range (km)
+ */
+FAR_RANGE():number {
   const offset = this.bb!.__offset(this.bb_pos, 64);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-AREA():string|null
-AREA(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-AREA(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Swath length (km)
+ */
+SWATH_LENGTH():number {
   const offset = this.bb!.__offset(this.bb_pos, 66);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-ATEXT():string|null
-ATEXT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ATEXT(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Image area GeoJSON
+ */
+AGJSON():string|null
+AGJSON(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+AGJSON(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 68);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-AGJSON():string|null
-AGJSON(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-AGJSON(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Image area text description
+ */
+ATEXT():string|null
+ATEXT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ATEXT(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 70);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Area type
+ */
 ATYPE():string|null
 ATYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ATYPE(optionalEncoding?:any):string|Uint8Array|null {
@@ -248,167 +349,219 @@ ATYPE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-ANDIMS():number {
+/**
+ * Coordinate system
+ */
+COORD_SYS():string|null
+COORD_SYS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+COORD_SYS(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 74);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-ASRID():number {
-  const offset = this.bb!.__offset(this.bb_pos, 76);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
-}
-
+/**
+ * Range pixel spacing (meters)
+ */
 SPACING_RANGE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 76);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Azimuth pixel spacing (meters)
+ */
+SPACING_AZIMUTH():number {
   const offset = this.bb!.__offset(this.bb_pos, 78);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SPACING_AZIMUTH():number {
+/**
+ * Number of azimuth looks
+ */
+LOOKS_AZIMUTH():number {
   const offset = this.bb!.__offset(this.bb_pos, 80);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Number of range looks
+ */
+LOOKS_RANGE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 82);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Range resolution (meters)
+ */
+RESOLUTION_RANGE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 84);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-LOOKS_AZIMUTH():number {
-  const offset = this.bb!.__offset(this.bb_pos, 82);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
-}
-
-LOOKS_RANGE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 84);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
-}
-
-RESOLUTION_RANGE():number {
+/**
+ * Azimuth resolution (meters)
+ */
+RESOLUTION_AZIMUTH():number {
   const offset = this.bb!.__offset(this.bb_pos, 86);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-RESOLUTION_AZIMUTH():number {
-  const offset = this.bb!.__offset(this.bb_pos, 88);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
+/**
+ * Observation direction (ASCENDING/DESCENDING)
+ */
 OB_DIRECTION():string|null
 OB_DIRECTION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 OB_DIRECTION(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 90);
+  const offset = this.bb!.__offset(this.bb_pos, 88);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-COORD_SYS():string|null
-COORD_SYS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-COORD_SYS(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 92);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
+/**
+ * Target position X (km)
+ */
 TARGETPOSX():number {
+  const offset = this.bb!.__offset(this.bb_pos, 90);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Target position Y (km)
+ */
+TARGETPOSY():number {
+  const offset = this.bb!.__offset(this.bb_pos, 92);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Target position Z (km)
+ */
+TARGETPOSZ():number {
   const offset = this.bb!.__offset(this.bb_pos, 94);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-TARGETPOSY():number {
+/**
+ * Sensor altitude (km)
+ */
+SENALT():number {
   const offset = this.bb!.__offset(this.bb_pos, 96);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-TARGETPOSZ():number {
+/**
+ * Sensor velocity X (km/s)
+ */
+SENVELX():number {
   const offset = this.bb!.__offset(this.bb_pos, 98);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SENALT():number {
+/**
+ * Sensor velocity Y (km/s)
+ */
+SENVELY():number {
   const offset = this.bb!.__offset(this.bb_pos, 100);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SENVELX():number {
+/**
+ * Sensor velocity Z (km/s)
+ */
+SENVELZ():number {
   const offset = this.bb!.__offset(this.bb_pos, 102);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SENVELY():number {
+/**
+ * Sensor latitude at start (degrees)
+ */
+SENLAT_START():number {
   const offset = this.bb!.__offset(this.bb_pos, 104);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SENVELZ():number {
+/**
+ * Sensor longitude at start (degrees)
+ */
+SENLON_START():number {
   const offset = this.bb!.__offset(this.bb_pos, 106);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SENLAT_START():number {
+/**
+ * Sensor latitude at end (degrees)
+ */
+SENLAT_END():number {
   const offset = this.bb!.__offset(this.bb_pos, 108);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SENLON_START():number {
+/**
+ * Sensor longitude at end (degrees)
+ */
+SENLON_END():number {
   const offset = this.bb!.__offset(this.bb_pos, 110);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SENLAT_END():number {
-  const offset = this.bb!.__offset(this.bb_pos, 112);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-SENLON_END():number {
-  const offset = this.bb!.__offset(this.bb_pos, 114);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
+/**
+ * Transaction identifier
+ */
 TRANSACTION_ID():string|null
 TRANSACTION_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 TRANSACTION_ID(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 116);
+  const offset = this.bb!.__offset(this.bb_pos, 112);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Associated tags
+ */
 TAGS(index: number):string
 TAGS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 TAGS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 118);
+  const offset = this.bb!.__offset(this.bb_pos, 114);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 tagsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 118);
+  const offset = this.bb!.__offset(this.bb_pos, 114);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Source types
+ */
 SRC_TYPS(index: number):string
 SRC_TYPS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 SRC_TYPS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 120);
+  const offset = this.bb!.__offset(this.bb_pos, 116);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 srcTypsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 120);
+  const offset = this.bb!.__offset(this.bb_pos, 116);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Source identifiers
+ */
 SRC_IDS(index: number):string
 SRC_IDS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 SRC_IDS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 122);
+  const offset = this.bb!.__offset(this.bb_pos, 118);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 srcIdsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 122);
+  const offset = this.bb!.__offset(this.bb_pos, 118);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-ON_ORBIT():string|null
-ON_ORBIT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ON_ORBIT(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 124);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
 static startSAR(builder:flatbuffers.Builder) {
-  builder.startObject(61);
+  builder.startObject(58);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -423,224 +576,216 @@ static addOrigObjectId(builder:flatbuffers.Builder, ORIG_OBJECT_IDOffset:flatbuf
   builder.addFieldOffset(2, ORIG_OBJECT_IDOffset, 0);
 }
 
+static addOnOrbit(builder:flatbuffers.Builder, ON_ORBITOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(3, ON_ORBITOffset, 0);
+}
+
 static addIdSensor(builder:flatbuffers.Builder, ID_SENSOROffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, ID_SENSOROffset, 0);
+  builder.addFieldOffset(4, ID_SENSOROffset, 0);
 }
 
 static addOrigSensorId(builder:flatbuffers.Builder, ORIG_SENSOR_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(4, ORIG_SENSOR_IDOffset, 0);
+  builder.addFieldOffset(5, ORIG_SENSOR_IDOffset, 0);
 }
 
 static addExternalId(builder:flatbuffers.Builder, EXTERNAL_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, EXTERNAL_IDOffset, 0);
+  builder.addFieldOffset(6, EXTERNAL_IDOffset, 0);
 }
 
 static addCollectionId(builder:flatbuffers.Builder, COLLECTION_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(6, COLLECTION_IDOffset, 0);
+  builder.addFieldOffset(7, COLLECTION_IDOffset, 0);
 }
 
 static addDetectionId(builder:flatbuffers.Builder, DETECTION_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(7, DETECTION_IDOffset, 0);
+  builder.addFieldOffset(8, DETECTION_IDOffset, 0);
 }
 
 static addCollectionStart(builder:flatbuffers.Builder, COLLECTION_STARTOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(8, COLLECTION_STARTOffset, 0);
+  builder.addFieldOffset(9, COLLECTION_STARTOffset, 0);
 }
 
 static addCollectionEnd(builder:flatbuffers.Builder, COLLECTION_ENDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(9, COLLECTION_ENDOffset, 0);
+  builder.addFieldOffset(10, COLLECTION_ENDOffset, 0);
 }
 
 static addCenterTime(builder:flatbuffers.Builder, CENTER_TIMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(10, CENTER_TIMEOffset, 0);
+  builder.addFieldOffset(11, CENTER_TIMEOffset, 0);
 }
 
 static addDetectionStart(builder:flatbuffers.Builder, DETECTION_STARTOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(11, DETECTION_STARTOffset, 0);
+  builder.addFieldOffset(12, DETECTION_STARTOffset, 0);
 }
 
 static addDetectionEnd(builder:flatbuffers.Builder, DETECTION_ENDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(12, DETECTION_ENDOffset, 0);
+  builder.addFieldOffset(13, DETECTION_ENDOffset, 0);
 }
 
 static addDwellTime(builder:flatbuffers.Builder, DWELL_TIME:number) {
-  builder.addFieldFloat64(13, DWELL_TIME, 0.0);
+  builder.addFieldFloat64(14, DWELL_TIME, 0.0);
 }
 
 static addOrbitState(builder:flatbuffers.Builder, ORBIT_STATEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(14, ORBIT_STATEOffset, 0);
+  builder.addFieldOffset(15, ORBIT_STATEOffset, 0);
 }
 
-static addSarMode(builder:flatbuffers.Builder, SAR_MODEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(15, SAR_MODEOffset, 0);
+static addSarMode(builder:flatbuffers.Builder, SAR_MODE:sarMode) {
+  builder.addFieldInt8(16, SAR_MODE, sarMode.STRIPMAP);
 }
 
 static addOperatingBand(builder:flatbuffers.Builder, OPERATING_BANDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(16, OPERATING_BANDOffset, 0);
+  builder.addFieldOffset(17, OPERATING_BANDOffset, 0);
 }
 
 static addOperatingFreq(builder:flatbuffers.Builder, OPERATING_FREQ:number) {
-  builder.addFieldFloat64(17, OPERATING_FREQ, 0.0);
+  builder.addFieldFloat64(18, OPERATING_FREQ, 0.0);
 }
 
 static addSnr(builder:flatbuffers.Builder, SNR:number) {
-  builder.addFieldFloat64(18, SNR, 0.0);
+  builder.addFieldFloat64(19, SNR, 0.0);
 }
 
-static addTxPolarization(builder:flatbuffers.Builder, TX_POLARIZATIONOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(19, TX_POLARIZATIONOffset, 0);
+static addTxPolarization(builder:flatbuffers.Builder, TX_POLARIZATION:sarPolarization) {
+  builder.addFieldInt8(20, TX_POLARIZATION, sarPolarization.HH);
 }
 
-static addRxPolarization(builder:flatbuffers.Builder, RX_POLARIZATIONOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(20, RX_POLARIZATIONOffset, 0);
+static addRxPolarization(builder:flatbuffers.Builder, RX_POLARIZATION:sarPolarization) {
+  builder.addFieldInt8(21, RX_POLARIZATION, sarPolarization.HH);
 }
 
 static addGrazeAngle(builder:flatbuffers.Builder, GRAZE_ANGLE:number) {
-  builder.addFieldFloat64(21, GRAZE_ANGLE, 0.0);
+  builder.addFieldFloat64(22, GRAZE_ANGLE, 0.0);
 }
 
 static addIncidenceAngle(builder:flatbuffers.Builder, INCIDENCE_ANGLE:number) {
-  builder.addFieldFloat64(22, INCIDENCE_ANGLE, 0.0);
+  builder.addFieldFloat64(23, INCIDENCE_ANGLE, 0.0);
 }
 
 static addSquintAngle(builder:flatbuffers.Builder, SQUINT_ANGLE:number) {
-  builder.addFieldFloat64(23, SQUINT_ANGLE, 0.0);
+  builder.addFieldFloat64(24, SQUINT_ANGLE, 0.0);
 }
 
 static addPulseBandwidth(builder:flatbuffers.Builder, PULSE_BANDWIDTH:number) {
-  builder.addFieldFloat64(24, PULSE_BANDWIDTH, 0.0);
+  builder.addFieldFloat64(25, PULSE_BANDWIDTH, 0.0);
 }
 
 static addPulseDuration(builder:flatbuffers.Builder, PULSE_DURATION:number) {
-  builder.addFieldFloat64(25, PULSE_DURATION, 0.0);
+  builder.addFieldFloat64(26, PULSE_DURATION, 0.0);
 }
 
 static addContinuousSpotAngle(builder:flatbuffers.Builder, CONTINUOUS_SPOT_ANGLE:number) {
-  builder.addFieldFloat64(26, CONTINUOUS_SPOT_ANGLE, 0.0);
+  builder.addFieldFloat64(27, CONTINUOUS_SPOT_ANGLE, 0.0);
 }
 
 static addSlantRange(builder:flatbuffers.Builder, SLANT_RANGE:number) {
-  builder.addFieldFloat64(27, SLANT_RANGE, 0.0);
+  builder.addFieldFloat64(28, SLANT_RANGE, 0.0);
 }
 
 static addNearRange(builder:flatbuffers.Builder, NEAR_RANGE:number) {
-  builder.addFieldFloat64(28, NEAR_RANGE, 0.0);
+  builder.addFieldFloat64(29, NEAR_RANGE, 0.0);
 }
 
 static addFarRange(builder:flatbuffers.Builder, FAR_RANGE:number) {
-  builder.addFieldFloat64(29, FAR_RANGE, 0.0);
+  builder.addFieldFloat64(30, FAR_RANGE, 0.0);
 }
 
 static addSwathLength(builder:flatbuffers.Builder, SWATH_LENGTH:number) {
-  builder.addFieldFloat64(30, SWATH_LENGTH, 0.0);
-}
-
-static addArea(builder:flatbuffers.Builder, AREAOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(31, AREAOffset, 0);
-}
-
-static addAtext(builder:flatbuffers.Builder, ATEXTOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(32, ATEXTOffset, 0);
+  builder.addFieldFloat64(31, SWATH_LENGTH, 0.0);
 }
 
 static addAgjson(builder:flatbuffers.Builder, AGJSONOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(33, AGJSONOffset, 0);
+  builder.addFieldOffset(32, AGJSONOffset, 0);
+}
+
+static addAtext(builder:flatbuffers.Builder, ATEXTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(33, ATEXTOffset, 0);
 }
 
 static addAtype(builder:flatbuffers.Builder, ATYPEOffset:flatbuffers.Offset) {
   builder.addFieldOffset(34, ATYPEOffset, 0);
 }
 
-static addAndims(builder:flatbuffers.Builder, ANDIMS:number) {
-  builder.addFieldInt32(35, ANDIMS, 0);
-}
-
-static addAsrid(builder:flatbuffers.Builder, ASRID:number) {
-  builder.addFieldInt32(36, ASRID, 0);
+static addCoordSys(builder:flatbuffers.Builder, COORD_SYSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(35, COORD_SYSOffset, 0);
 }
 
 static addSpacingRange(builder:flatbuffers.Builder, SPACING_RANGE:number) {
-  builder.addFieldFloat64(37, SPACING_RANGE, 0.0);
+  builder.addFieldFloat64(36, SPACING_RANGE, 0.0);
 }
 
 static addSpacingAzimuth(builder:flatbuffers.Builder, SPACING_AZIMUTH:number) {
-  builder.addFieldFloat64(38, SPACING_AZIMUTH, 0.0);
+  builder.addFieldFloat64(37, SPACING_AZIMUTH, 0.0);
 }
 
 static addLooksAzimuth(builder:flatbuffers.Builder, LOOKS_AZIMUTH:number) {
-  builder.addFieldInt32(39, LOOKS_AZIMUTH, 0);
+  builder.addFieldInt8(38, LOOKS_AZIMUTH, 0);
 }
 
 static addLooksRange(builder:flatbuffers.Builder, LOOKS_RANGE:number) {
-  builder.addFieldInt32(40, LOOKS_RANGE, 0);
+  builder.addFieldInt8(39, LOOKS_RANGE, 0);
 }
 
 static addResolutionRange(builder:flatbuffers.Builder, RESOLUTION_RANGE:number) {
-  builder.addFieldFloat64(41, RESOLUTION_RANGE, 0.0);
+  builder.addFieldFloat64(40, RESOLUTION_RANGE, 0.0);
 }
 
 static addResolutionAzimuth(builder:flatbuffers.Builder, RESOLUTION_AZIMUTH:number) {
-  builder.addFieldFloat64(42, RESOLUTION_AZIMUTH, 0.0);
+  builder.addFieldFloat64(41, RESOLUTION_AZIMUTH, 0.0);
 }
 
 static addObDirection(builder:flatbuffers.Builder, OB_DIRECTIONOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(43, OB_DIRECTIONOffset, 0);
-}
-
-static addCoordSys(builder:flatbuffers.Builder, COORD_SYSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(44, COORD_SYSOffset, 0);
+  builder.addFieldOffset(42, OB_DIRECTIONOffset, 0);
 }
 
 static addTargetposx(builder:flatbuffers.Builder, TARGETPOSX:number) {
-  builder.addFieldFloat64(45, TARGETPOSX, 0.0);
+  builder.addFieldFloat64(43, TARGETPOSX, 0.0);
 }
 
 static addTargetposy(builder:flatbuffers.Builder, TARGETPOSY:number) {
-  builder.addFieldFloat64(46, TARGETPOSY, 0.0);
+  builder.addFieldFloat64(44, TARGETPOSY, 0.0);
 }
 
 static addTargetposz(builder:flatbuffers.Builder, TARGETPOSZ:number) {
-  builder.addFieldFloat64(47, TARGETPOSZ, 0.0);
+  builder.addFieldFloat64(45, TARGETPOSZ, 0.0);
 }
 
 static addSenalt(builder:flatbuffers.Builder, SENALT:number) {
-  builder.addFieldFloat64(48, SENALT, 0.0);
+  builder.addFieldFloat64(46, SENALT, 0.0);
 }
 
 static addSenvelx(builder:flatbuffers.Builder, SENVELX:number) {
-  builder.addFieldFloat64(49, SENVELX, 0.0);
+  builder.addFieldFloat64(47, SENVELX, 0.0);
 }
 
 static addSenvely(builder:flatbuffers.Builder, SENVELY:number) {
-  builder.addFieldFloat64(50, SENVELY, 0.0);
+  builder.addFieldFloat64(48, SENVELY, 0.0);
 }
 
 static addSenvelz(builder:flatbuffers.Builder, SENVELZ:number) {
-  builder.addFieldFloat64(51, SENVELZ, 0.0);
+  builder.addFieldFloat64(49, SENVELZ, 0.0);
 }
 
 static addSenlatStart(builder:flatbuffers.Builder, SENLAT_START:number) {
-  builder.addFieldFloat64(52, SENLAT_START, 0.0);
+  builder.addFieldFloat64(50, SENLAT_START, 0.0);
 }
 
 static addSenlonStart(builder:flatbuffers.Builder, SENLON_START:number) {
-  builder.addFieldFloat64(53, SENLON_START, 0.0);
+  builder.addFieldFloat64(51, SENLON_START, 0.0);
 }
 
 static addSenlatEnd(builder:flatbuffers.Builder, SENLAT_END:number) {
-  builder.addFieldFloat64(54, SENLAT_END, 0.0);
+  builder.addFieldFloat64(52, SENLAT_END, 0.0);
 }
 
 static addSenlonEnd(builder:flatbuffers.Builder, SENLON_END:number) {
-  builder.addFieldFloat64(55, SENLON_END, 0.0);
+  builder.addFieldFloat64(53, SENLON_END, 0.0);
 }
 
 static addTransactionId(builder:flatbuffers.Builder, TRANSACTION_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(56, TRANSACTION_IDOffset, 0);
+  builder.addFieldOffset(54, TRANSACTION_IDOffset, 0);
 }
 
 static addTags(builder:flatbuffers.Builder, TAGSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(57, TAGSOffset, 0);
+  builder.addFieldOffset(55, TAGSOffset, 0);
 }
 
 static createTagsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -656,7 +801,7 @@ static startTagsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addSrcTyps(builder:flatbuffers.Builder, SRC_TYPSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(58, SRC_TYPSOffset, 0);
+  builder.addFieldOffset(56, SRC_TYPSOffset, 0);
 }
 
 static createSrcTypsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -672,7 +817,7 @@ static startSrcTypsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addSrcIds(builder:flatbuffers.Builder, SRC_IDSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(59, SRC_IDSOffset, 0);
+  builder.addFieldOffset(57, SRC_IDSOffset, 0);
 }
 
 static createSrcIdsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -685,10 +830,6 @@ static createSrcIdsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]
 
 static startSrcIdsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
-}
-
-static addOnOrbit(builder:flatbuffers.Builder, ON_ORBITOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(60, ON_ORBITOffset, 0);
 }
 
 static endSAR(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -704,11 +845,12 @@ static finishSizePrefixedSARBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$SAR', true);
 }
 
-static createSAR(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, SAT_NO:number, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ID_SENSOROffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, EXTERNAL_IDOffset:flatbuffers.Offset, COLLECTION_IDOffset:flatbuffers.Offset, DETECTION_IDOffset:flatbuffers.Offset, COLLECTION_STARTOffset:flatbuffers.Offset, COLLECTION_ENDOffset:flatbuffers.Offset, CENTER_TIMEOffset:flatbuffers.Offset, DETECTION_STARTOffset:flatbuffers.Offset, DETECTION_ENDOffset:flatbuffers.Offset, DWELL_TIME:number, ORBIT_STATEOffset:flatbuffers.Offset, SAR_MODEOffset:flatbuffers.Offset, OPERATING_BANDOffset:flatbuffers.Offset, OPERATING_FREQ:number, SNR:number, TX_POLARIZATIONOffset:flatbuffers.Offset, RX_POLARIZATIONOffset:flatbuffers.Offset, GRAZE_ANGLE:number, INCIDENCE_ANGLE:number, SQUINT_ANGLE:number, PULSE_BANDWIDTH:number, PULSE_DURATION:number, CONTINUOUS_SPOT_ANGLE:number, SLANT_RANGE:number, NEAR_RANGE:number, FAR_RANGE:number, SWATH_LENGTH:number, AREAOffset:flatbuffers.Offset, ATEXTOffset:flatbuffers.Offset, AGJSONOffset:flatbuffers.Offset, ATYPEOffset:flatbuffers.Offset, ANDIMS:number, ASRID:number, SPACING_RANGE:number, SPACING_AZIMUTH:number, LOOKS_AZIMUTH:number, LOOKS_RANGE:number, RESOLUTION_RANGE:number, RESOLUTION_AZIMUTH:number, OB_DIRECTIONOffset:flatbuffers.Offset, COORD_SYSOffset:flatbuffers.Offset, TARGETPOSX:number, TARGETPOSY:number, TARGETPOSZ:number, SENALT:number, SENVELX:number, SENVELY:number, SENVELZ:number, SENLAT_START:number, SENLON_START:number, SENLAT_END:number, SENLON_END:number, TRANSACTION_IDOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, SRC_TYPSOffset:flatbuffers.Offset, SRC_IDSOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createSAR(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, SAT_NO:number, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset, ID_SENSOROffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, EXTERNAL_IDOffset:flatbuffers.Offset, COLLECTION_IDOffset:flatbuffers.Offset, DETECTION_IDOffset:flatbuffers.Offset, COLLECTION_STARTOffset:flatbuffers.Offset, COLLECTION_ENDOffset:flatbuffers.Offset, CENTER_TIMEOffset:flatbuffers.Offset, DETECTION_STARTOffset:flatbuffers.Offset, DETECTION_ENDOffset:flatbuffers.Offset, DWELL_TIME:number, ORBIT_STATEOffset:flatbuffers.Offset, SAR_MODE:sarMode, OPERATING_BANDOffset:flatbuffers.Offset, OPERATING_FREQ:number, SNR:number, TX_POLARIZATION:sarPolarization, RX_POLARIZATION:sarPolarization, GRAZE_ANGLE:number, INCIDENCE_ANGLE:number, SQUINT_ANGLE:number, PULSE_BANDWIDTH:number, PULSE_DURATION:number, CONTINUOUS_SPOT_ANGLE:number, SLANT_RANGE:number, NEAR_RANGE:number, FAR_RANGE:number, SWATH_LENGTH:number, AGJSONOffset:flatbuffers.Offset, ATEXTOffset:flatbuffers.Offset, ATYPEOffset:flatbuffers.Offset, COORD_SYSOffset:flatbuffers.Offset, SPACING_RANGE:number, SPACING_AZIMUTH:number, LOOKS_AZIMUTH:number, LOOKS_RANGE:number, RESOLUTION_RANGE:number, RESOLUTION_AZIMUTH:number, OB_DIRECTIONOffset:flatbuffers.Offset, TARGETPOSX:number, TARGETPOSY:number, TARGETPOSZ:number, SENALT:number, SENVELX:number, SENVELY:number, SENVELZ:number, SENLAT_START:number, SENLON_START:number, SENLAT_END:number, SENLON_END:number, TRANSACTION_IDOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, SRC_TYPSOffset:flatbuffers.Offset, SRC_IDSOffset:flatbuffers.Offset):flatbuffers.Offset {
   SAR.startSAR(builder);
   SAR.addId(builder, IDOffset);
   SAR.addSatNo(builder, SAT_NO);
   SAR.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
+  SAR.addOnOrbit(builder, ON_ORBITOffset);
   SAR.addIdSensor(builder, ID_SENSOROffset);
   SAR.addOrigSensorId(builder, ORIG_SENSOR_IDOffset);
   SAR.addExternalId(builder, EXTERNAL_IDOffset);
@@ -721,12 +863,12 @@ static createSAR(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, SAT_N
   SAR.addDetectionEnd(builder, DETECTION_ENDOffset);
   SAR.addDwellTime(builder, DWELL_TIME);
   SAR.addOrbitState(builder, ORBIT_STATEOffset);
-  SAR.addSarMode(builder, SAR_MODEOffset);
+  SAR.addSarMode(builder, SAR_MODE);
   SAR.addOperatingBand(builder, OPERATING_BANDOffset);
   SAR.addOperatingFreq(builder, OPERATING_FREQ);
   SAR.addSnr(builder, SNR);
-  SAR.addTxPolarization(builder, TX_POLARIZATIONOffset);
-  SAR.addRxPolarization(builder, RX_POLARIZATIONOffset);
+  SAR.addTxPolarization(builder, TX_POLARIZATION);
+  SAR.addRxPolarization(builder, RX_POLARIZATION);
   SAR.addGrazeAngle(builder, GRAZE_ANGLE);
   SAR.addIncidenceAngle(builder, INCIDENCE_ANGLE);
   SAR.addSquintAngle(builder, SQUINT_ANGLE);
@@ -737,12 +879,10 @@ static createSAR(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, SAT_N
   SAR.addNearRange(builder, NEAR_RANGE);
   SAR.addFarRange(builder, FAR_RANGE);
   SAR.addSwathLength(builder, SWATH_LENGTH);
-  SAR.addArea(builder, AREAOffset);
-  SAR.addAtext(builder, ATEXTOffset);
   SAR.addAgjson(builder, AGJSONOffset);
+  SAR.addAtext(builder, ATEXTOffset);
   SAR.addAtype(builder, ATYPEOffset);
-  SAR.addAndims(builder, ANDIMS);
-  SAR.addAsrid(builder, ASRID);
+  SAR.addCoordSys(builder, COORD_SYSOffset);
   SAR.addSpacingRange(builder, SPACING_RANGE);
   SAR.addSpacingAzimuth(builder, SPACING_AZIMUTH);
   SAR.addLooksAzimuth(builder, LOOKS_AZIMUTH);
@@ -750,7 +890,6 @@ static createSAR(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, SAT_N
   SAR.addResolutionRange(builder, RESOLUTION_RANGE);
   SAR.addResolutionAzimuth(builder, RESOLUTION_AZIMUTH);
   SAR.addObDirection(builder, OB_DIRECTIONOffset);
-  SAR.addCoordSys(builder, COORD_SYSOffset);
   SAR.addTargetposx(builder, TARGETPOSX);
   SAR.addTargetposy(builder, TARGETPOSY);
   SAR.addTargetposz(builder, TARGETPOSZ);
@@ -766,7 +905,6 @@ static createSAR(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, SAT_N
   SAR.addTags(builder, TAGSOffset);
   SAR.addSrcTyps(builder, SRC_TYPSOffset);
   SAR.addSrcIds(builder, SRC_IDSOffset);
-  SAR.addOnOrbit(builder, ON_ORBITOffset);
   return SAR.endSAR(builder);
 }
 
@@ -775,6 +913,7 @@ unpack(): SART {
     this.ID(),
     this.SAT_NO(),
     this.ORIG_OBJECT_ID(),
+    this.ON_ORBIT(),
     this.ID_SENSOR(),
     this.ORIG_SENSOR_ID(),
     this.EXTERNAL_ID(),
@@ -803,12 +942,10 @@ unpack(): SART {
     this.NEAR_RANGE(),
     this.FAR_RANGE(),
     this.SWATH_LENGTH(),
-    this.AREA(),
-    this.ATEXT(),
     this.AGJSON(),
+    this.ATEXT(),
     this.ATYPE(),
-    this.ANDIMS(),
-    this.ASRID(),
+    this.COORD_SYS(),
     this.SPACING_RANGE(),
     this.SPACING_AZIMUTH(),
     this.LOOKS_AZIMUTH(),
@@ -816,7 +953,6 @@ unpack(): SART {
     this.RESOLUTION_RANGE(),
     this.RESOLUTION_AZIMUTH(),
     this.OB_DIRECTION(),
-    this.COORD_SYS(),
     this.TARGETPOSX(),
     this.TARGETPOSY(),
     this.TARGETPOSZ(),
@@ -831,8 +967,7 @@ unpack(): SART {
     this.TRANSACTION_ID(),
     this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength()),
     this.bb!.createScalarList<string>(this.SRC_TYPS.bind(this), this.srcTypsLength()),
-    this.bb!.createScalarList<string>(this.SRC_IDS.bind(this), this.srcIdsLength()),
-    this.ON_ORBIT()
+    this.bb!.createScalarList<string>(this.SRC_IDS.bind(this), this.srcIdsLength())
   );
 }
 
@@ -841,6 +976,7 @@ unpackTo(_o: SART): void {
   _o.ID = this.ID();
   _o.SAT_NO = this.SAT_NO();
   _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID();
+  _o.ON_ORBIT = this.ON_ORBIT();
   _o.ID_SENSOR = this.ID_SENSOR();
   _o.ORIG_SENSOR_ID = this.ORIG_SENSOR_ID();
   _o.EXTERNAL_ID = this.EXTERNAL_ID();
@@ -869,12 +1005,10 @@ unpackTo(_o: SART): void {
   _o.NEAR_RANGE = this.NEAR_RANGE();
   _o.FAR_RANGE = this.FAR_RANGE();
   _o.SWATH_LENGTH = this.SWATH_LENGTH();
-  _o.AREA = this.AREA();
-  _o.ATEXT = this.ATEXT();
   _o.AGJSON = this.AGJSON();
+  _o.ATEXT = this.ATEXT();
   _o.ATYPE = this.ATYPE();
-  _o.ANDIMS = this.ANDIMS();
-  _o.ASRID = this.ASRID();
+  _o.COORD_SYS = this.COORD_SYS();
   _o.SPACING_RANGE = this.SPACING_RANGE();
   _o.SPACING_AZIMUTH = this.SPACING_AZIMUTH();
   _o.LOOKS_AZIMUTH = this.LOOKS_AZIMUTH();
@@ -882,7 +1016,6 @@ unpackTo(_o: SART): void {
   _o.RESOLUTION_RANGE = this.RESOLUTION_RANGE();
   _o.RESOLUTION_AZIMUTH = this.RESOLUTION_AZIMUTH();
   _o.OB_DIRECTION = this.OB_DIRECTION();
-  _o.COORD_SYS = this.COORD_SYS();
   _o.TARGETPOSX = this.TARGETPOSX();
   _o.TARGETPOSY = this.TARGETPOSY();
   _o.TARGETPOSZ = this.TARGETPOSZ();
@@ -898,7 +1031,6 @@ unpackTo(_o: SART): void {
   _o.TAGS = this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength());
   _o.SRC_TYPS = this.bb!.createScalarList<string>(this.SRC_TYPS.bind(this), this.srcTypsLength());
   _o.SRC_IDS = this.bb!.createScalarList<string>(this.SRC_IDS.bind(this), this.srcIdsLength());
-  _o.ON_ORBIT = this.ON_ORBIT();
 }
 }
 
@@ -907,6 +1039,7 @@ constructor(
   public ID: string|Uint8Array|null = null,
   public SAT_NO: number = 0,
   public ORIG_OBJECT_ID: string|Uint8Array|null = null,
+  public ON_ORBIT: string|Uint8Array|null = null,
   public ID_SENSOR: string|Uint8Array|null = null,
   public ORIG_SENSOR_ID: string|Uint8Array|null = null,
   public EXTERNAL_ID: string|Uint8Array|null = null,
@@ -919,12 +1052,12 @@ constructor(
   public DETECTION_END: string|Uint8Array|null = null,
   public DWELL_TIME: number = 0.0,
   public ORBIT_STATE: string|Uint8Array|null = null,
-  public SAR_MODE: string|Uint8Array|null = null,
+  public SAR_MODE: sarMode = sarMode.STRIPMAP,
   public OPERATING_BAND: string|Uint8Array|null = null,
   public OPERATING_FREQ: number = 0.0,
   public SNR: number = 0.0,
-  public TX_POLARIZATION: string|Uint8Array|null = null,
-  public RX_POLARIZATION: string|Uint8Array|null = null,
+  public TX_POLARIZATION: sarPolarization = sarPolarization.HH,
+  public RX_POLARIZATION: sarPolarization = sarPolarization.HH,
   public GRAZE_ANGLE: number = 0.0,
   public INCIDENCE_ANGLE: number = 0.0,
   public SQUINT_ANGLE: number = 0.0,
@@ -935,12 +1068,10 @@ constructor(
   public NEAR_RANGE: number = 0.0,
   public FAR_RANGE: number = 0.0,
   public SWATH_LENGTH: number = 0.0,
-  public AREA: string|Uint8Array|null = null,
-  public ATEXT: string|Uint8Array|null = null,
   public AGJSON: string|Uint8Array|null = null,
+  public ATEXT: string|Uint8Array|null = null,
   public ATYPE: string|Uint8Array|null = null,
-  public ANDIMS: number = 0,
-  public ASRID: number = 0,
+  public COORD_SYS: string|Uint8Array|null = null,
   public SPACING_RANGE: number = 0.0,
   public SPACING_AZIMUTH: number = 0.0,
   public LOOKS_AZIMUTH: number = 0,
@@ -948,7 +1079,6 @@ constructor(
   public RESOLUTION_RANGE: number = 0.0,
   public RESOLUTION_AZIMUTH: number = 0.0,
   public OB_DIRECTION: string|Uint8Array|null = null,
-  public COORD_SYS: string|Uint8Array|null = null,
   public TARGETPOSX: number = 0.0,
   public TARGETPOSY: number = 0.0,
   public TARGETPOSZ: number = 0.0,
@@ -963,14 +1093,14 @@ constructor(
   public TRANSACTION_ID: string|Uint8Array|null = null,
   public TAGS: (string)[] = [],
   public SRC_TYPS: (string)[] = [],
-  public SRC_IDS: (string)[] = [],
-  public ON_ORBIT: string|Uint8Array|null = null
+  public SRC_IDS: (string)[] = []
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ID = (this.ID !== null ? builder.createString(this.ID!) : 0);
   const ORIG_OBJECT_ID = (this.ORIG_OBJECT_ID !== null ? builder.createString(this.ORIG_OBJECT_ID!) : 0);
+  const ON_ORBIT = (this.ON_ORBIT !== null ? builder.createString(this.ON_ORBIT!) : 0);
   const ID_SENSOR = (this.ID_SENSOR !== null ? builder.createString(this.ID_SENSOR!) : 0);
   const ORIG_SENSOR_ID = (this.ORIG_SENSOR_ID !== null ? builder.createString(this.ORIG_SENSOR_ID!) : 0);
   const EXTERNAL_ID = (this.EXTERNAL_ID !== null ? builder.createString(this.EXTERNAL_ID!) : 0);
@@ -982,26 +1112,22 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const DETECTION_START = (this.DETECTION_START !== null ? builder.createString(this.DETECTION_START!) : 0);
   const DETECTION_END = (this.DETECTION_END !== null ? builder.createString(this.DETECTION_END!) : 0);
   const ORBIT_STATE = (this.ORBIT_STATE !== null ? builder.createString(this.ORBIT_STATE!) : 0);
-  const SAR_MODE = (this.SAR_MODE !== null ? builder.createString(this.SAR_MODE!) : 0);
   const OPERATING_BAND = (this.OPERATING_BAND !== null ? builder.createString(this.OPERATING_BAND!) : 0);
-  const TX_POLARIZATION = (this.TX_POLARIZATION !== null ? builder.createString(this.TX_POLARIZATION!) : 0);
-  const RX_POLARIZATION = (this.RX_POLARIZATION !== null ? builder.createString(this.RX_POLARIZATION!) : 0);
-  const AREA = (this.AREA !== null ? builder.createString(this.AREA!) : 0);
-  const ATEXT = (this.ATEXT !== null ? builder.createString(this.ATEXT!) : 0);
   const AGJSON = (this.AGJSON !== null ? builder.createString(this.AGJSON!) : 0);
+  const ATEXT = (this.ATEXT !== null ? builder.createString(this.ATEXT!) : 0);
   const ATYPE = (this.ATYPE !== null ? builder.createString(this.ATYPE!) : 0);
-  const OB_DIRECTION = (this.OB_DIRECTION !== null ? builder.createString(this.OB_DIRECTION!) : 0);
   const COORD_SYS = (this.COORD_SYS !== null ? builder.createString(this.COORD_SYS!) : 0);
+  const OB_DIRECTION = (this.OB_DIRECTION !== null ? builder.createString(this.OB_DIRECTION!) : 0);
   const TRANSACTION_ID = (this.TRANSACTION_ID !== null ? builder.createString(this.TRANSACTION_ID!) : 0);
   const TAGS = SAR.createTagsVector(builder, builder.createObjectOffsetList(this.TAGS));
   const SRC_TYPS = SAR.createSrcTypsVector(builder, builder.createObjectOffsetList(this.SRC_TYPS));
   const SRC_IDS = SAR.createSrcIdsVector(builder, builder.createObjectOffsetList(this.SRC_IDS));
-  const ON_ORBIT = (this.ON_ORBIT !== null ? builder.createString(this.ON_ORBIT!) : 0);
 
   return SAR.createSAR(builder,
     ID,
     this.SAT_NO,
     ORIG_OBJECT_ID,
+    ON_ORBIT,
     ID_SENSOR,
     ORIG_SENSOR_ID,
     EXTERNAL_ID,
@@ -1014,12 +1140,12 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     DETECTION_END,
     this.DWELL_TIME,
     ORBIT_STATE,
-    SAR_MODE,
+    this.SAR_MODE,
     OPERATING_BAND,
     this.OPERATING_FREQ,
     this.SNR,
-    TX_POLARIZATION,
-    RX_POLARIZATION,
+    this.TX_POLARIZATION,
+    this.RX_POLARIZATION,
     this.GRAZE_ANGLE,
     this.INCIDENCE_ANGLE,
     this.SQUINT_ANGLE,
@@ -1030,12 +1156,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.NEAR_RANGE,
     this.FAR_RANGE,
     this.SWATH_LENGTH,
-    AREA,
-    ATEXT,
     AGJSON,
+    ATEXT,
     ATYPE,
-    this.ANDIMS,
-    this.ASRID,
+    COORD_SYS,
     this.SPACING_RANGE,
     this.SPACING_AZIMUTH,
     this.LOOKS_AZIMUTH,
@@ -1043,7 +1167,6 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.RESOLUTION_RANGE,
     this.RESOLUTION_AZIMUTH,
     OB_DIRECTION,
-    COORD_SYS,
     this.TARGETPOSX,
     this.TARGETPOSY,
     this.TARGETPOSZ,
@@ -1058,8 +1181,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     TRANSACTION_ID,
     TAGS,
     SRC_TYPS,
-    SRC_IDS,
-    ON_ORBIT
+    SRC_IDS
   );
 }
 }

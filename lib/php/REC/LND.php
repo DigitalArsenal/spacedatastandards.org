@@ -41,148 +41,207 @@ class LND extends Table
         return $this;
     }
 
+    /// Unique identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getLAUNCH_TIME()
+    /// Detection event identifier
+    public function getEVENT_ID()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getMESSAGE_TYPE()
+    /// Detection type
+    /**
+     * @return sbyte
+     */
+    public function getDETECTION_TYPE()
     {
         $o = $this->__offset(8);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \launchDetectionType::IR_DETECT;
+    }
+
+    /// Detection message type code
+    public function getMESSAGE_TYPE()
+    {
+        $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Time of launch detection (ISO 8601)
+    public function getLAUNCH_TIME()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Launch site latitude (degrees)
     /**
      * @return double
      */
     public function getLAUNCH_LATITUDE()
     {
-        $o = $this->__offset(10);
+        $o = $this->__offset(14);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Launch site longitude (degrees)
     /**
      * @return double
      */
     public function getLAUNCH_LONGITUDE()
     {
-        $o = $this->__offset(12);
+        $o = $this->__offset(16);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Launch azimuth (degrees from north)
     /**
      * @return double
      */
     public function getLAUNCH_AZIMUTH()
     {
-        $o = $this->__offset(14);
+        $o = $this->__offset(18);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Estimated RAAN (degrees)
     /**
      * @return double
      */
     public function getRAAN()
     {
-        $o = $this->__offset(16);
+        $o = $this->__offset(20);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Estimated inclination (degrees)
     /**
      * @return double
      */
     public function getINCLINATION()
     {
-        $o = $this->__offset(18);
+        $o = $this->__offset(22);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Time of trajectory observation (ISO 8601)
     public function getOBSERVATION_TIME()
     {
-        $o = $this->__offset(20);
+        $o = $this->__offset(24);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Observation point latitude (degrees)
     /**
      * @return double
      */
     public function getOBSERVATION_LATITUDE()
     {
-        $o = $this->__offset(22);
+        $o = $this->__offset(26);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Observation point longitude (degrees)
     /**
      * @return double
      */
     public function getOBSERVATION_LONGITUDE()
     {
-        $o = $this->__offset(24);
+        $o = $this->__offset(28);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Observation point altitude (km)
     /**
      * @return double
      */
     public function getOBSERVATION_ALTITUDE()
     {
-        $o = $this->__offset(26);
+        $o = $this->__offset(30);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// True if stereo observation (multiple sensors)
     /**
      * @return bool
      */
     public function getSTEREO_FLAG()
     {
-        $o = $this->__offset(28);
+        $o = $this->__offset(32);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// True if high zenith angle observation
     /**
      * @return bool
      */
     public function getHIGH_ZENITH_AZIMUTH()
     {
-        $o = $this->__offset(30);
+        $o = $this->__offset(34);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Sequence number in detection chain
     /**
-     * @return int
+     * @return ushort
      */
     public function getSEQUENCE_NUMBER()
     {
-        $o = $this->__offset(32);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
     }
 
-    public function getEVENT_ID()
+    /// Launch site identifier
+    public function getLAUNCH_SITE_ID()
     {
-        $o = $this->__offset(34);
+        $o = $this->__offset(38);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Launch vehicle type (if identified)
+    public function getLAUNCH_VEHICLE()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Estimated trajectory type
+    public function getTRAJECTORY_TYPE()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Detection confidence (0-1)
+    /**
+     * @return double
+     */
+    public function getCONFIDENCE()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Event descriptor
     public function getDESCRIPTOR()
     {
-        $o = $this->__offset(36);
+        $o = $this->__offset(46);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Associated tags
     /**
      * @param int offset
      * @return string
      */
     public function getTAGS($j)
     {
-        $o = $this->__offset(38);
+        $o = $this->__offset(48);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -191,7 +250,7 @@ class LND extends Table
      */
     public function getTAGSLength()
     {
-        $o = $this->__offset(38);
+        $o = $this->__offset(48);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -201,19 +260,21 @@ class LND extends Table
      */
     public static function startLND(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(18);
+        $builder->StartObject(23);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return LND
      */
-    public static function createLND(FlatBufferBuilder $builder, $ID, $LAUNCH_TIME, $MESSAGE_TYPE, $LAUNCH_LATITUDE, $LAUNCH_LONGITUDE, $LAUNCH_AZIMUTH, $RAAN, $INCLINATION, $OBSERVATION_TIME, $OBSERVATION_LATITUDE, $OBSERVATION_LONGITUDE, $OBSERVATION_ALTITUDE, $STEREO_FLAG, $HIGH_ZENITH_AZIMUTH, $SEQUENCE_NUMBER, $EVENT_ID, $DESCRIPTOR, $TAGS)
+    public static function createLND(FlatBufferBuilder $builder, $ID, $EVENT_ID, $DETECTION_TYPE, $MESSAGE_TYPE, $LAUNCH_TIME, $LAUNCH_LATITUDE, $LAUNCH_LONGITUDE, $LAUNCH_AZIMUTH, $RAAN, $INCLINATION, $OBSERVATION_TIME, $OBSERVATION_LATITUDE, $OBSERVATION_LONGITUDE, $OBSERVATION_ALTITUDE, $STEREO_FLAG, $HIGH_ZENITH_AZIMUTH, $SEQUENCE_NUMBER, $LAUNCH_SITE_ID, $LAUNCH_VEHICLE, $TRAJECTORY_TYPE, $CONFIDENCE, $DESCRIPTOR, $TAGS)
     {
-        $builder->startObject(18);
+        $builder->startObject(23);
         self::addID($builder, $ID);
-        self::addLAUNCH_TIME($builder, $LAUNCH_TIME);
+        self::addEVENT_ID($builder, $EVENT_ID);
+        self::addDETECTION_TYPE($builder, $DETECTION_TYPE);
         self::addMESSAGE_TYPE($builder, $MESSAGE_TYPE);
+        self::addLAUNCH_TIME($builder, $LAUNCH_TIME);
         self::addLAUNCH_LATITUDE($builder, $LAUNCH_LATITUDE);
         self::addLAUNCH_LONGITUDE($builder, $LAUNCH_LONGITUDE);
         self::addLAUNCH_AZIMUTH($builder, $LAUNCH_AZIMUTH);
@@ -226,7 +287,10 @@ class LND extends Table
         self::addSTEREO_FLAG($builder, $STEREO_FLAG);
         self::addHIGH_ZENITH_AZIMUTH($builder, $HIGH_ZENITH_AZIMUTH);
         self::addSEQUENCE_NUMBER($builder, $SEQUENCE_NUMBER);
-        self::addEVENT_ID($builder, $EVENT_ID);
+        self::addLAUNCH_SITE_ID($builder, $LAUNCH_SITE_ID);
+        self::addLAUNCH_VEHICLE($builder, $LAUNCH_VEHICLE);
+        self::addTRAJECTORY_TYPE($builder, $TRAJECTORY_TYPE);
+        self::addCONFIDENCE($builder, $CONFIDENCE);
         self::addDESCRIPTOR($builder, $DESCRIPTOR);
         self::addTAGS($builder, $TAGS);
         $o = $builder->endObject();
@@ -248,9 +312,19 @@ class LND extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addLAUNCH_TIME(FlatBufferBuilder $builder, $LAUNCH_TIME)
+    public static function addEVENT_ID(FlatBufferBuilder $builder, $EVENT_ID)
     {
-        $builder->addOffsetX(1, $LAUNCH_TIME, 0);
+        $builder->addOffsetX(1, $EVENT_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addDETECTION_TYPE(FlatBufferBuilder $builder, $DETECTION_TYPE)
+    {
+        $builder->addSbyteX(2, $DETECTION_TYPE, 0);
     }
 
     /**
@@ -260,7 +334,17 @@ class LND extends Table
      */
     public static function addMESSAGE_TYPE(FlatBufferBuilder $builder, $MESSAGE_TYPE)
     {
-        $builder->addOffsetX(2, $MESSAGE_TYPE, 0);
+        $builder->addOffsetX(3, $MESSAGE_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addLAUNCH_TIME(FlatBufferBuilder $builder, $LAUNCH_TIME)
+    {
+        $builder->addOffsetX(4, $LAUNCH_TIME, 0);
     }
 
     /**
@@ -270,7 +354,7 @@ class LND extends Table
      */
     public static function addLAUNCH_LATITUDE(FlatBufferBuilder $builder, $LAUNCH_LATITUDE)
     {
-        $builder->addDoubleX(3, $LAUNCH_LATITUDE, 0.0);
+        $builder->addDoubleX(5, $LAUNCH_LATITUDE, 0.0);
     }
 
     /**
@@ -280,7 +364,7 @@ class LND extends Table
      */
     public static function addLAUNCH_LONGITUDE(FlatBufferBuilder $builder, $LAUNCH_LONGITUDE)
     {
-        $builder->addDoubleX(4, $LAUNCH_LONGITUDE, 0.0);
+        $builder->addDoubleX(6, $LAUNCH_LONGITUDE, 0.0);
     }
 
     /**
@@ -290,7 +374,7 @@ class LND extends Table
      */
     public static function addLAUNCH_AZIMUTH(FlatBufferBuilder $builder, $LAUNCH_AZIMUTH)
     {
-        $builder->addDoubleX(5, $LAUNCH_AZIMUTH, 0.0);
+        $builder->addDoubleX(7, $LAUNCH_AZIMUTH, 0.0);
     }
 
     /**
@@ -300,7 +384,7 @@ class LND extends Table
      */
     public static function addRAAN(FlatBufferBuilder $builder, $RAAN)
     {
-        $builder->addDoubleX(6, $RAAN, 0.0);
+        $builder->addDoubleX(8, $RAAN, 0.0);
     }
 
     /**
@@ -310,7 +394,7 @@ class LND extends Table
      */
     public static function addINCLINATION(FlatBufferBuilder $builder, $INCLINATION)
     {
-        $builder->addDoubleX(7, $INCLINATION, 0.0);
+        $builder->addDoubleX(9, $INCLINATION, 0.0);
     }
 
     /**
@@ -320,7 +404,7 @@ class LND extends Table
      */
     public static function addOBSERVATION_TIME(FlatBufferBuilder $builder, $OBSERVATION_TIME)
     {
-        $builder->addOffsetX(8, $OBSERVATION_TIME, 0);
+        $builder->addOffsetX(10, $OBSERVATION_TIME, 0);
     }
 
     /**
@@ -330,7 +414,7 @@ class LND extends Table
      */
     public static function addOBSERVATION_LATITUDE(FlatBufferBuilder $builder, $OBSERVATION_LATITUDE)
     {
-        $builder->addDoubleX(9, $OBSERVATION_LATITUDE, 0.0);
+        $builder->addDoubleX(11, $OBSERVATION_LATITUDE, 0.0);
     }
 
     /**
@@ -340,7 +424,7 @@ class LND extends Table
      */
     public static function addOBSERVATION_LONGITUDE(FlatBufferBuilder $builder, $OBSERVATION_LONGITUDE)
     {
-        $builder->addDoubleX(10, $OBSERVATION_LONGITUDE, 0.0);
+        $builder->addDoubleX(12, $OBSERVATION_LONGITUDE, 0.0);
     }
 
     /**
@@ -350,7 +434,7 @@ class LND extends Table
      */
     public static function addOBSERVATION_ALTITUDE(FlatBufferBuilder $builder, $OBSERVATION_ALTITUDE)
     {
-        $builder->addDoubleX(11, $OBSERVATION_ALTITUDE, 0.0);
+        $builder->addDoubleX(13, $OBSERVATION_ALTITUDE, 0.0);
     }
 
     /**
@@ -360,7 +444,7 @@ class LND extends Table
      */
     public static function addSTEREO_FLAG(FlatBufferBuilder $builder, $STEREO_FLAG)
     {
-        $builder->addBoolX(12, $STEREO_FLAG, false);
+        $builder->addBoolX(14, $STEREO_FLAG, false);
     }
 
     /**
@@ -370,17 +454,17 @@ class LND extends Table
      */
     public static function addHIGH_ZENITH_AZIMUTH(FlatBufferBuilder $builder, $HIGH_ZENITH_AZIMUTH)
     {
-        $builder->addBoolX(13, $HIGH_ZENITH_AZIMUTH, false);
+        $builder->addBoolX(15, $HIGH_ZENITH_AZIMUTH, false);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param ushort
      * @return void
      */
     public static function addSEQUENCE_NUMBER(FlatBufferBuilder $builder, $SEQUENCE_NUMBER)
     {
-        $builder->addIntX(14, $SEQUENCE_NUMBER, 0);
+        $builder->addUshortX(16, $SEQUENCE_NUMBER, 0);
     }
 
     /**
@@ -388,9 +472,39 @@ class LND extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addEVENT_ID(FlatBufferBuilder $builder, $EVENT_ID)
+    public static function addLAUNCH_SITE_ID(FlatBufferBuilder $builder, $LAUNCH_SITE_ID)
     {
-        $builder->addOffsetX(15, $EVENT_ID, 0);
+        $builder->addOffsetX(17, $LAUNCH_SITE_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addLAUNCH_VEHICLE(FlatBufferBuilder $builder, $LAUNCH_VEHICLE)
+    {
+        $builder->addOffsetX(18, $LAUNCH_VEHICLE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addTRAJECTORY_TYPE(FlatBufferBuilder $builder, $TRAJECTORY_TYPE)
+    {
+        $builder->addOffsetX(19, $TRAJECTORY_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCONFIDENCE(FlatBufferBuilder $builder, $CONFIDENCE)
+    {
+        $builder->addDoubleX(20, $CONFIDENCE, 0.0);
     }
 
     /**
@@ -400,7 +514,7 @@ class LND extends Table
      */
     public static function addDESCRIPTOR(FlatBufferBuilder $builder, $DESCRIPTOR)
     {
-        $builder->addOffsetX(16, $DESCRIPTOR, 0);
+        $builder->addOffsetX(21, $DESCRIPTOR, 0);
     }
 
     /**
@@ -410,7 +524,7 @@ class LND extends Table
      */
     public static function addTAGS(FlatBufferBuilder $builder, $TAGS)
     {
-        $builder->addOffsetX(17, $TAGS, 0);
+        $builder->addOffsetX(22, $TAGS, 0);
     }
 
     /**

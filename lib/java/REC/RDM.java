@@ -29,26 +29,143 @@ public final class RDM extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public RDM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * CCSDS RDM version
+   */
   public String CCSDS_RDM_VERS() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CCSDS_RDM_VERSAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer CCSDS_RDM_VERSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * Message creation date (ISO 8601)
+   */
   public String CREATION_DATE() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CREATION_DATEAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer CREATION_DATEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  /**
+   * Creating organization
+   */
   public String ORIGINATOR() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ORIGINATORAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer ORIGINATORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * Object name
+   */
   public String OBJECT_NAME() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer OBJECT_NAMEAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
   public ByteBuffer OBJECT_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * International designator
+   */
   public String OBJECT_ID() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
   public ByteBuffer OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
-  public String REENTRY_EPOCH() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer REENTRY_EPOCHAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
-  public ByteBuffer REENTRY_EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
-  public double REENTRY_LATITUDE() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double REENTRY_LONGITUDE() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * NORAD catalog number
+   */
+  public long NORAD_CAT_ID() { int o = __offset(14); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Object type (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN)
+   */
+  public String OBJECT_TYPE() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OBJECT_TYPEAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
+  public ByteBuffer OBJECT_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  /**
+   * Reentry disposition
+   */
+  public byte DISPOSITION() { int o = __offset(18); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Reentry reason
+   */
+  public byte REASON() { int o = __offset(20); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Predicted reentry epoch (ISO 8601)
+   */
+  public String REENTRY_EPOCH() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer REENTRY_EPOCHAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
+  public ByteBuffer REENTRY_EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
+  /**
+   * Reentry epoch uncertainty window in hours
+   */
+  public double REENTRY_EPOCH_UNC() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Reentry latitude in degrees
+   */
+  public double REENTRY_LATITUDE() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Reentry longitude in degrees
+   */
+  public double REENTRY_LONGITUDE() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Reentry altitude in km
+   */
+  public double REENTRY_ALTITUDE() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Time system
+   */
+  public String TIME_SYSTEM() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TIME_SYSTEMAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
+  public ByteBuffer TIME_SYSTEMInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
+  /**
+   * Previous predicted reentry epoch for comparison (ISO 8601)
+   */
+  public String PREV_PREDICTION_EPOCH() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer PREV_PREDICTION_EPOCHAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
+  public ByteBuffer PREV_PREDICTION_EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  /**
+   * Ballistic coefficient in kg/m^2
+   */
+  public double BALLISTIC_COEFF() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Object mass in kg
+   */
+  public double MASS() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Solar radiation pressure area in m^2
+   */
+  public double SOLAR_RAD_AREA() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Drag area in m^2
+   */
+  public double DRAG_AREA() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Initial state vector
+   */
+  public reentryStateVector INITIAL_STATE() { return INITIAL_STATE(new reentryStateVector()); }
+  public reentryStateVector INITIAL_STATE(reentryStateVector obj) { int o = __offset(44); return o != 0 ? obj.__assign(__indirect(o + bb_pos), bb) : null; }
+  /**
+   * Ground impact predictions
+   */
+  public reentryImpact IMPACT_PREDICTIONS(int j) { return IMPACT_PREDICTIONS(new reentryImpact(), j); }
+  public reentryImpact IMPACT_PREDICTIONS(reentryImpact obj, int j) { int o = __offset(46); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int IMPACT_PREDICTIONSLength() { int o = __offset(46); return o != 0 ? __vector_len(o) : 0; }
+  public reentryImpact.Vector impactPredictionsVector() { return impactPredictionsVector(new reentryImpact.Vector()); }
+  public reentryImpact.Vector impactPredictionsVector(reentryImpact.Vector obj) { int o = __offset(46); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Predicted surviving debris
+   */
+  public survivingDebris SURVIVING_DEBRIS(int j) { return SURVIVING_DEBRIS(new survivingDebris(), j); }
+  public survivingDebris SURVIVING_DEBRIS(survivingDebris obj, int j) { int o = __offset(48); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int SURVIVING_DEBRISLength() { int o = __offset(48); return o != 0 ? __vector_len(o) : 0; }
+  public survivingDebris.Vector survivingDebrisVector() { return survivingDebrisVector(new survivingDebris.Vector()); }
+  public survivingDebris.Vector survivingDebrisVector(survivingDebris.Vector obj) { int o = __offset(48); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Casualty expectation
+   */
+  public double CASUALTY_EXPECTATION() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Number of breakup fragments predicted
+   */
+  public long NUM_FRAGMENTS() { int o = __offset(52); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Total surviving mass in kg
+   */
+  public double SURVIVING_MASS() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Additional comments
+   */
+  public String COMMENT() { int o = __offset(56); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer COMMENTAsByteBuffer() { return __vector_as_bytebuffer(56, 1); }
+  public ByteBuffer COMMENTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 56, 1); }
 
   public static int createRDM(FlatBufferBuilder builder,
       int CCSDS_RDM_VERSOffset,
@@ -56,30 +173,91 @@ public final class RDM extends Table {
       int ORIGINATOROffset,
       int OBJECT_NAMEOffset,
       int OBJECT_IDOffset,
+      long NORAD_CAT_ID,
+      int OBJECT_TYPEOffset,
+      byte DISPOSITION,
+      byte REASON,
       int REENTRY_EPOCHOffset,
+      double REENTRY_EPOCH_UNC,
       double REENTRY_LATITUDE,
-      double REENTRY_LONGITUDE) {
-    builder.startTable(8);
+      double REENTRY_LONGITUDE,
+      double REENTRY_ALTITUDE,
+      int TIME_SYSTEMOffset,
+      int PREV_PREDICTION_EPOCHOffset,
+      double BALLISTIC_COEFF,
+      double MASS,
+      double SOLAR_RAD_AREA,
+      double DRAG_AREA,
+      int INITIAL_STATEOffset,
+      int IMPACT_PREDICTIONSOffset,
+      int SURVIVING_DEBRISOffset,
+      double CASUALTY_EXPECTATION,
+      long NUM_FRAGMENTS,
+      double SURVIVING_MASS,
+      int COMMENTOffset) {
+    builder.startTable(27);
+    RDM.addSurvivingMass(builder, SURVIVING_MASS);
+    RDM.addCasualtyExpectation(builder, CASUALTY_EXPECTATION);
+    RDM.addDragArea(builder, DRAG_AREA);
+    RDM.addSolarRadArea(builder, SOLAR_RAD_AREA);
+    RDM.addMass(builder, MASS);
+    RDM.addBallisticCoeff(builder, BALLISTIC_COEFF);
+    RDM.addReentryAltitude(builder, REENTRY_ALTITUDE);
     RDM.addReentryLongitude(builder, REENTRY_LONGITUDE);
     RDM.addReentryLatitude(builder, REENTRY_LATITUDE);
+    RDM.addReentryEpochUnc(builder, REENTRY_EPOCH_UNC);
+    RDM.addComment(builder, COMMENTOffset);
+    RDM.addNumFragments(builder, NUM_FRAGMENTS);
+    RDM.addSurvivingDebris(builder, SURVIVING_DEBRISOffset);
+    RDM.addImpactPredictions(builder, IMPACT_PREDICTIONSOffset);
+    RDM.addInitialState(builder, INITIAL_STATEOffset);
+    RDM.addPrevPredictionEpoch(builder, PREV_PREDICTION_EPOCHOffset);
+    RDM.addTimeSystem(builder, TIME_SYSTEMOffset);
     RDM.addReentryEpoch(builder, REENTRY_EPOCHOffset);
+    RDM.addObjectType(builder, OBJECT_TYPEOffset);
+    RDM.addNoradCatId(builder, NORAD_CAT_ID);
     RDM.addObjectId(builder, OBJECT_IDOffset);
     RDM.addObjectName(builder, OBJECT_NAMEOffset);
     RDM.addOriginator(builder, ORIGINATOROffset);
     RDM.addCreationDate(builder, CREATION_DATEOffset);
     RDM.addCcsdsRdmVers(builder, CCSDS_RDM_VERSOffset);
+    RDM.addReason(builder, REASON);
+    RDM.addDisposition(builder, DISPOSITION);
     return RDM.endRDM(builder);
   }
 
-  public static void startRDM(FlatBufferBuilder builder) { builder.startTable(8); }
+  public static void startRDM(FlatBufferBuilder builder) { builder.startTable(27); }
   public static void addCcsdsRdmVers(FlatBufferBuilder builder, int CCSDS_RDM_VERSOffset) { builder.addOffset(0, CCSDS_RDM_VERSOffset, 0); }
   public static void addCreationDate(FlatBufferBuilder builder, int CREATION_DATEOffset) { builder.addOffset(1, CREATION_DATEOffset, 0); }
   public static void addOriginator(FlatBufferBuilder builder, int ORIGINATOROffset) { builder.addOffset(2, ORIGINATOROffset, 0); }
   public static void addObjectName(FlatBufferBuilder builder, int OBJECT_NAMEOffset) { builder.addOffset(3, OBJECT_NAMEOffset, 0); }
   public static void addObjectId(FlatBufferBuilder builder, int OBJECT_IDOffset) { builder.addOffset(4, OBJECT_IDOffset, 0); }
-  public static void addReentryEpoch(FlatBufferBuilder builder, int REENTRY_EPOCHOffset) { builder.addOffset(5, REENTRY_EPOCHOffset, 0); }
-  public static void addReentryLatitude(FlatBufferBuilder builder, double REENTRY_LATITUDE) { builder.addDouble(6, REENTRY_LATITUDE, 0.0); }
-  public static void addReentryLongitude(FlatBufferBuilder builder, double REENTRY_LONGITUDE) { builder.addDouble(7, REENTRY_LONGITUDE, 0.0); }
+  public static void addNoradCatId(FlatBufferBuilder builder, long NORAD_CAT_ID) { builder.addInt(5, (int) NORAD_CAT_ID, (int) 0L); }
+  public static void addObjectType(FlatBufferBuilder builder, int OBJECT_TYPEOffset) { builder.addOffset(6, OBJECT_TYPEOffset, 0); }
+  public static void addDisposition(FlatBufferBuilder builder, byte DISPOSITION) { builder.addByte(7, DISPOSITION, 0); }
+  public static void addReason(FlatBufferBuilder builder, byte REASON) { builder.addByte(8, REASON, 0); }
+  public static void addReentryEpoch(FlatBufferBuilder builder, int REENTRY_EPOCHOffset) { builder.addOffset(9, REENTRY_EPOCHOffset, 0); }
+  public static void addReentryEpochUnc(FlatBufferBuilder builder, double REENTRY_EPOCH_UNC) { builder.addDouble(10, REENTRY_EPOCH_UNC, 0.0); }
+  public static void addReentryLatitude(FlatBufferBuilder builder, double REENTRY_LATITUDE) { builder.addDouble(11, REENTRY_LATITUDE, 0.0); }
+  public static void addReentryLongitude(FlatBufferBuilder builder, double REENTRY_LONGITUDE) { builder.addDouble(12, REENTRY_LONGITUDE, 0.0); }
+  public static void addReentryAltitude(FlatBufferBuilder builder, double REENTRY_ALTITUDE) { builder.addDouble(13, REENTRY_ALTITUDE, 0.0); }
+  public static void addTimeSystem(FlatBufferBuilder builder, int TIME_SYSTEMOffset) { builder.addOffset(14, TIME_SYSTEMOffset, 0); }
+  public static void addPrevPredictionEpoch(FlatBufferBuilder builder, int PREV_PREDICTION_EPOCHOffset) { builder.addOffset(15, PREV_PREDICTION_EPOCHOffset, 0); }
+  public static void addBallisticCoeff(FlatBufferBuilder builder, double BALLISTIC_COEFF) { builder.addDouble(16, BALLISTIC_COEFF, 0.0); }
+  public static void addMass(FlatBufferBuilder builder, double MASS) { builder.addDouble(17, MASS, 0.0); }
+  public static void addSolarRadArea(FlatBufferBuilder builder, double SOLAR_RAD_AREA) { builder.addDouble(18, SOLAR_RAD_AREA, 0.0); }
+  public static void addDragArea(FlatBufferBuilder builder, double DRAG_AREA) { builder.addDouble(19, DRAG_AREA, 0.0); }
+  public static void addInitialState(FlatBufferBuilder builder, int INITIAL_STATEOffset) { builder.addOffset(20, INITIAL_STATEOffset, 0); }
+  public static void addImpactPredictions(FlatBufferBuilder builder, int IMPACT_PREDICTIONSOffset) { builder.addOffset(21, IMPACT_PREDICTIONSOffset, 0); }
+  public static int createImpactPredictionsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startImpactPredictionsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addSurvivingDebris(FlatBufferBuilder builder, int SURVIVING_DEBRISOffset) { builder.addOffset(22, SURVIVING_DEBRISOffset, 0); }
+  public static int createSurvivingDebrisVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
+  public static void startSurvivingDebrisVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addCasualtyExpectation(FlatBufferBuilder builder, double CASUALTY_EXPECTATION) { builder.addDouble(23, CASUALTY_EXPECTATION, 0.0); }
+  public static void addNumFragments(FlatBufferBuilder builder, long NUM_FRAGMENTS) { builder.addInt(24, (int) NUM_FRAGMENTS, (int) 0L); }
+  public static void addSurvivingMass(FlatBufferBuilder builder, double SURVIVING_MASS) { builder.addDouble(25, SURVIVING_MASS, 0.0); }
+  public static void addComment(FlatBufferBuilder builder, int COMMENTOffset) { builder.addOffset(26, COMMENTOffset, 0); }
   public static int endRDM(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

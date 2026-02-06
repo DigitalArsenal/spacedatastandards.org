@@ -13,33 +13,236 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
               FLATBUFFERS_VERSION_REVISION == 25,
              "Non-compatible flatbuffers version included");
 
+struct driftRecord;
+struct driftRecordBuilder;
+
 struct DFH;
 struct DFHBuilder;
+
+/// GEO Drift History Record
+struct driftRecord FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef driftRecordBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_EPOCH = 4,
+    VT_DRIFT_RATE = 6,
+    VT_MEAN_LONGITUDE = 8,
+    VT_LONGITUDE_AMPLITUDE = 10,
+    VT_ECCENTRICITY = 12,
+    VT_INCLINATION = 14
+  };
+  /// Epoch of drift measurement (ISO 8601)
+  const ::flatbuffers::String *EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
+  }
+  /// Longitude drift rate in degrees/day
+  double DRIFT_RATE() const {
+    return GetField<double>(VT_DRIFT_RATE, 0.0);
+  }
+  /// Mean longitude in degrees East
+  double MEAN_LONGITUDE() const {
+    return GetField<double>(VT_MEAN_LONGITUDE, 0.0);
+  }
+  /// Longitude oscillation amplitude in degrees
+  double LONGITUDE_AMPLITUDE() const {
+    return GetField<double>(VT_LONGITUDE_AMPLITUDE, 0.0);
+  }
+  /// Eccentricity
+  double ECCENTRICITY() const {
+    return GetField<double>(VT_ECCENTRICITY, 0.0);
+  }
+  /// Inclination in degrees
+  double INCLINATION() const {
+    return GetField<double>(VT_INCLINATION, 0.0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_EPOCH) &&
+           verifier.VerifyString(EPOCH()) &&
+           VerifyField<double>(verifier, VT_DRIFT_RATE, 8) &&
+           VerifyField<double>(verifier, VT_MEAN_LONGITUDE, 8) &&
+           VerifyField<double>(verifier, VT_LONGITUDE_AMPLITUDE, 8) &&
+           VerifyField<double>(verifier, VT_ECCENTRICITY, 8) &&
+           VerifyField<double>(verifier, VT_INCLINATION, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct driftRecordBuilder {
+  typedef driftRecord Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
+    fbb_.AddOffset(driftRecord::VT_EPOCH, EPOCH);
+  }
+  void add_DRIFT_RATE(double DRIFT_RATE) {
+    fbb_.AddElement<double>(driftRecord::VT_DRIFT_RATE, DRIFT_RATE, 0.0);
+  }
+  void add_MEAN_LONGITUDE(double MEAN_LONGITUDE) {
+    fbb_.AddElement<double>(driftRecord::VT_MEAN_LONGITUDE, MEAN_LONGITUDE, 0.0);
+  }
+  void add_LONGITUDE_AMPLITUDE(double LONGITUDE_AMPLITUDE) {
+    fbb_.AddElement<double>(driftRecord::VT_LONGITUDE_AMPLITUDE, LONGITUDE_AMPLITUDE, 0.0);
+  }
+  void add_ECCENTRICITY(double ECCENTRICITY) {
+    fbb_.AddElement<double>(driftRecord::VT_ECCENTRICITY, ECCENTRICITY, 0.0);
+  }
+  void add_INCLINATION(double INCLINATION) {
+    fbb_.AddElement<double>(driftRecord::VT_INCLINATION, INCLINATION, 0.0);
+  }
+  explicit driftRecordBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<driftRecord> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<driftRecord>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<driftRecord> CreatedriftRecord(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
+    double DRIFT_RATE = 0.0,
+    double MEAN_LONGITUDE = 0.0,
+    double LONGITUDE_AMPLITUDE = 0.0,
+    double ECCENTRICITY = 0.0,
+    double INCLINATION = 0.0) {
+  driftRecordBuilder builder_(_fbb);
+  builder_.add_INCLINATION(INCLINATION);
+  builder_.add_ECCENTRICITY(ECCENTRICITY);
+  builder_.add_LONGITUDE_AMPLITUDE(LONGITUDE_AMPLITUDE);
+  builder_.add_MEAN_LONGITUDE(MEAN_LONGITUDE);
+  builder_.add_DRIFT_RATE(DRIFT_RATE);
+  builder_.add_EPOCH(EPOCH);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<driftRecord> CreatedriftRecordDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *EPOCH = nullptr,
+    double DRIFT_RATE = 0.0,
+    double MEAN_LONGITUDE = 0.0,
+    double LONGITUDE_AMPLITUDE = 0.0,
+    double ECCENTRICITY = 0.0,
+    double INCLINATION = 0.0) {
+  auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
+  return CreatedriftRecord(
+      _fbb,
+      EPOCH__,
+      DRIFT_RATE,
+      MEAN_LONGITUDE,
+      LONGITUDE_AMPLITUDE,
+      ECCENTRICITY,
+      INCLINATION);
+}
 
 /// GEO Drift History
 struct DFH FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef DFHBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
-    VT_EFFECTIVE_UNTIL = 6,
-    VT_DRIFT_RATE = 8
+    VT_SAT_NO = 6,
+    VT_OBJECT_DESIGNATOR = 8,
+    VT_OBJECT_NAME = 10,
+    VT_START_TIME = 12,
+    VT_END_TIME = 14,
+    VT_EFFECTIVE_UNTIL = 16,
+    VT_DRIFT_RATE = 18,
+    VT_MEAN_LONGITUDE = 20,
+    VT_SLOT_CENTER = 22,
+    VT_SLOT_HALF_WIDTH = 24,
+    VT_STATION_KEEPING = 26,
+    VT_RECORDS = 28,
+    VT_NUM_RECORDS = 30,
+    VT_NOTES = 32
   };
+  /// Unique identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
+  /// Satellite number
+  uint32_t SAT_NO() const {
+    return GetField<uint32_t>(VT_SAT_NO, 0);
+  }
+  /// Object designator
+  const ::flatbuffers::String *OBJECT_DESIGNATOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_DESIGNATOR);
+  }
+  /// Object common name
+  const ::flatbuffers::String *OBJECT_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_NAME);
+  }
+  /// History start time (ISO 8601)
+  const ::flatbuffers::String *START_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_START_TIME);
+  }
+  /// History end time (ISO 8601)
+  const ::flatbuffers::String *END_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_END_TIME);
+  }
+  /// Current effective until date (ISO 8601)
   const ::flatbuffers::String *EFFECTIVE_UNTIL() const {
     return GetPointer<const ::flatbuffers::String *>(VT_EFFECTIVE_UNTIL);
   }
+  /// Current drift rate in degrees/day
   double DRIFT_RATE() const {
     return GetField<double>(VT_DRIFT_RATE, 0.0);
+  }
+  /// Current mean longitude in degrees East
+  double MEAN_LONGITUDE() const {
+    return GetField<double>(VT_MEAN_LONGITUDE, 0.0);
+  }
+  /// Longitude slot center in degrees East (if station-keeping)
+  double SLOT_CENTER() const {
+    return GetField<double>(VT_SLOT_CENTER, 0.0);
+  }
+  /// Longitude slot half-width in degrees
+  double SLOT_HALF_WIDTH() const {
+    return GetField<double>(VT_SLOT_HALF_WIDTH, 0.0);
+  }
+  /// Whether object is actively station-keeping
+  bool STATION_KEEPING() const {
+    return GetField<uint8_t>(VT_STATION_KEEPING, 0) != 0;
+  }
+  /// Historical drift records
+  const ::flatbuffers::Vector<::flatbuffers::Offset<driftRecord>> *RECORDS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<driftRecord>> *>(VT_RECORDS);
+  }
+  /// Number of records in history
+  uint32_t NUM_RECORDS() const {
+    return GetField<uint32_t>(VT_NUM_RECORDS, 0);
+  }
+  /// Additional notes
+  const ::flatbuffers::String *NOTES() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NOTES);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
            verifier.VerifyString(ID()) &&
+           VerifyField<uint32_t>(verifier, VT_SAT_NO, 4) &&
+           VerifyOffset(verifier, VT_OBJECT_DESIGNATOR) &&
+           verifier.VerifyString(OBJECT_DESIGNATOR()) &&
+           VerifyOffset(verifier, VT_OBJECT_NAME) &&
+           verifier.VerifyString(OBJECT_NAME()) &&
+           VerifyOffset(verifier, VT_START_TIME) &&
+           verifier.VerifyString(START_TIME()) &&
+           VerifyOffset(verifier, VT_END_TIME) &&
+           verifier.VerifyString(END_TIME()) &&
            VerifyOffset(verifier, VT_EFFECTIVE_UNTIL) &&
            verifier.VerifyString(EFFECTIVE_UNTIL()) &&
            VerifyField<double>(verifier, VT_DRIFT_RATE, 8) &&
+           VerifyField<double>(verifier, VT_MEAN_LONGITUDE, 8) &&
+           VerifyField<double>(verifier, VT_SLOT_CENTER, 8) &&
+           VerifyField<double>(verifier, VT_SLOT_HALF_WIDTH, 8) &&
+           VerifyField<uint8_t>(verifier, VT_STATION_KEEPING, 1) &&
+           VerifyOffset(verifier, VT_RECORDS) &&
+           verifier.VerifyVector(RECORDS()) &&
+           verifier.VerifyVectorOfTables(RECORDS()) &&
+           VerifyField<uint32_t>(verifier, VT_NUM_RECORDS, 4) &&
+           VerifyOffset(verifier, VT_NOTES) &&
+           verifier.VerifyString(NOTES()) &&
            verifier.EndTable();
   }
 };
@@ -51,11 +254,47 @@ struct DFHBuilder {
   void add_ID(::flatbuffers::Offset<::flatbuffers::String> ID) {
     fbb_.AddOffset(DFH::VT_ID, ID);
   }
+  void add_SAT_NO(uint32_t SAT_NO) {
+    fbb_.AddElement<uint32_t>(DFH::VT_SAT_NO, SAT_NO, 0);
+  }
+  void add_OBJECT_DESIGNATOR(::flatbuffers::Offset<::flatbuffers::String> OBJECT_DESIGNATOR) {
+    fbb_.AddOffset(DFH::VT_OBJECT_DESIGNATOR, OBJECT_DESIGNATOR);
+  }
+  void add_OBJECT_NAME(::flatbuffers::Offset<::flatbuffers::String> OBJECT_NAME) {
+    fbb_.AddOffset(DFH::VT_OBJECT_NAME, OBJECT_NAME);
+  }
+  void add_START_TIME(::flatbuffers::Offset<::flatbuffers::String> START_TIME) {
+    fbb_.AddOffset(DFH::VT_START_TIME, START_TIME);
+  }
+  void add_END_TIME(::flatbuffers::Offset<::flatbuffers::String> END_TIME) {
+    fbb_.AddOffset(DFH::VT_END_TIME, END_TIME);
+  }
   void add_EFFECTIVE_UNTIL(::flatbuffers::Offset<::flatbuffers::String> EFFECTIVE_UNTIL) {
     fbb_.AddOffset(DFH::VT_EFFECTIVE_UNTIL, EFFECTIVE_UNTIL);
   }
   void add_DRIFT_RATE(double DRIFT_RATE) {
     fbb_.AddElement<double>(DFH::VT_DRIFT_RATE, DRIFT_RATE, 0.0);
+  }
+  void add_MEAN_LONGITUDE(double MEAN_LONGITUDE) {
+    fbb_.AddElement<double>(DFH::VT_MEAN_LONGITUDE, MEAN_LONGITUDE, 0.0);
+  }
+  void add_SLOT_CENTER(double SLOT_CENTER) {
+    fbb_.AddElement<double>(DFH::VT_SLOT_CENTER, SLOT_CENTER, 0.0);
+  }
+  void add_SLOT_HALF_WIDTH(double SLOT_HALF_WIDTH) {
+    fbb_.AddElement<double>(DFH::VT_SLOT_HALF_WIDTH, SLOT_HALF_WIDTH, 0.0);
+  }
+  void add_STATION_KEEPING(bool STATION_KEEPING) {
+    fbb_.AddElement<uint8_t>(DFH::VT_STATION_KEEPING, static_cast<uint8_t>(STATION_KEEPING), 0);
+  }
+  void add_RECORDS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<driftRecord>>> RECORDS) {
+    fbb_.AddOffset(DFH::VT_RECORDS, RECORDS);
+  }
+  void add_NUM_RECORDS(uint32_t NUM_RECORDS) {
+    fbb_.AddElement<uint32_t>(DFH::VT_NUM_RECORDS, NUM_RECORDS, 0);
+  }
+  void add_NOTES(::flatbuffers::Offset<::flatbuffers::String> NOTES) {
+    fbb_.AddOffset(DFH::VT_NOTES, NOTES);
   }
   explicit DFHBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -71,27 +310,81 @@ struct DFHBuilder {
 inline ::flatbuffers::Offset<DFH> CreateDFH(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
+    uint32_t SAT_NO = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_DESIGNATOR = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> START_TIME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> END_TIME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> EFFECTIVE_UNTIL = 0,
-    double DRIFT_RATE = 0.0) {
+    double DRIFT_RATE = 0.0,
+    double MEAN_LONGITUDE = 0.0,
+    double SLOT_CENTER = 0.0,
+    double SLOT_HALF_WIDTH = 0.0,
+    bool STATION_KEEPING = false,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<driftRecord>>> RECORDS = 0,
+    uint32_t NUM_RECORDS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> NOTES = 0) {
   DFHBuilder builder_(_fbb);
+  builder_.add_SLOT_HALF_WIDTH(SLOT_HALF_WIDTH);
+  builder_.add_SLOT_CENTER(SLOT_CENTER);
+  builder_.add_MEAN_LONGITUDE(MEAN_LONGITUDE);
   builder_.add_DRIFT_RATE(DRIFT_RATE);
+  builder_.add_NOTES(NOTES);
+  builder_.add_NUM_RECORDS(NUM_RECORDS);
+  builder_.add_RECORDS(RECORDS);
   builder_.add_EFFECTIVE_UNTIL(EFFECTIVE_UNTIL);
+  builder_.add_END_TIME(END_TIME);
+  builder_.add_START_TIME(START_TIME);
+  builder_.add_OBJECT_NAME(OBJECT_NAME);
+  builder_.add_OBJECT_DESIGNATOR(OBJECT_DESIGNATOR);
+  builder_.add_SAT_NO(SAT_NO);
   builder_.add_ID(ID);
+  builder_.add_STATION_KEEPING(STATION_KEEPING);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<DFH> CreateDFHDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *ID = nullptr,
+    uint32_t SAT_NO = 0,
+    const char *OBJECT_DESIGNATOR = nullptr,
+    const char *OBJECT_NAME = nullptr,
+    const char *START_TIME = nullptr,
+    const char *END_TIME = nullptr,
     const char *EFFECTIVE_UNTIL = nullptr,
-    double DRIFT_RATE = 0.0) {
+    double DRIFT_RATE = 0.0,
+    double MEAN_LONGITUDE = 0.0,
+    double SLOT_CENTER = 0.0,
+    double SLOT_HALF_WIDTH = 0.0,
+    bool STATION_KEEPING = false,
+    const std::vector<::flatbuffers::Offset<driftRecord>> *RECORDS = nullptr,
+    uint32_t NUM_RECORDS = 0,
+    const char *NOTES = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
+  auto OBJECT_DESIGNATOR__ = OBJECT_DESIGNATOR ? _fbb.CreateString(OBJECT_DESIGNATOR) : 0;
+  auto OBJECT_NAME__ = OBJECT_NAME ? _fbb.CreateString(OBJECT_NAME) : 0;
+  auto START_TIME__ = START_TIME ? _fbb.CreateString(START_TIME) : 0;
+  auto END_TIME__ = END_TIME ? _fbb.CreateString(END_TIME) : 0;
   auto EFFECTIVE_UNTIL__ = EFFECTIVE_UNTIL ? _fbb.CreateString(EFFECTIVE_UNTIL) : 0;
+  auto RECORDS__ = RECORDS ? _fbb.CreateVector<::flatbuffers::Offset<driftRecord>>(*RECORDS) : 0;
+  auto NOTES__ = NOTES ? _fbb.CreateString(NOTES) : 0;
   return CreateDFH(
       _fbb,
       ID__,
+      SAT_NO,
+      OBJECT_DESIGNATOR__,
+      OBJECT_NAME__,
+      START_TIME__,
+      END_TIME__,
       EFFECTIVE_UNTIL__,
-      DRIFT_RATE);
+      DRIFT_RATE,
+      MEAN_LONGITUDE,
+      SLOT_CENTER,
+      SLOT_HALF_WIDTH,
+      STATION_KEEPING,
+      RECORDS__,
+      NUM_RECORDS,
+      NOTES__);
 }
 
 inline const DFH *GetDFH(const void *buf) {

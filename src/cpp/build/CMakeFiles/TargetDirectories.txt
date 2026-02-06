@@ -1,0 +1,3 @@
+/Users/tj/software/spacedatastandards.org/src/cpp/build/CMakeFiles/sds_parsers.dir
+/Users/tj/software/spacedatastandards.org/src/cpp/build/CMakeFiles/edit_cache.dir
+/Users/tj/software/spacedatastandards.org/src/cpp/build/CMakeFiles/rebuild_cache.dir

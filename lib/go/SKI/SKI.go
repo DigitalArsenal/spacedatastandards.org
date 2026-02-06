@@ -54,6 +54,7 @@ func (rcv *SKI) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Unique identifier
 func (rcv *SKI) ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -62,6 +63,8 @@ func (rcv *SKI) ID() []byte {
 	return nil
 }
 
+/// Unique identifier
+/// On-orbit reference
 func (rcv *SKI) ON_ORBIT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -70,6 +73,8 @@ func (rcv *SKI) ON_ORBIT() []byte {
 	return nil
 }
 
+/// On-orbit reference
+/// International designator
 func (rcv *SKI) ORIG_OBJECT_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -78,26 +83,32 @@ func (rcv *SKI) ORIG_OBJECT_ID() []byte {
 	return nil
 }
 
-func (rcv *SKI) ID_SENSOR() []byte {
+/// International designator
+/// Satellite catalog number
+func (rcv *SKI) SAT_NO() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Satellite catalog number
+func (rcv *SKI) MutateSAT_NO(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(10, n)
+}
+
+/// Sensor identifier
+func (rcv *SKI) ID_SENSOR() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
 }
 
-func (rcv *SKI) SAT_NO() int32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
-	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-func (rcv *SKI) MutateSAT_NO(n int32) bool {
-	return rcv._tab.MutateInt32Slot(12, n)
-}
-
+/// Sensor identifier
+/// Original sensor identifier
 func (rcv *SKI) ORIG_SENSOR_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -106,6 +117,8 @@ func (rcv *SKI) ORIG_SENSOR_ID() []byte {
 	return nil
 }
 
+/// Original sensor identifier
+/// Sensor geodetic latitude (degrees)
 func (rcv *SKI) SENLAT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -114,10 +127,12 @@ func (rcv *SKI) SENLAT() float64 {
 	return 0.0
 }
 
+/// Sensor geodetic latitude (degrees)
 func (rcv *SKI) MutateSENLAT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
 }
 
+/// Sensor geodetic longitude (degrees)
 func (rcv *SKI) SENLON() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -126,10 +141,12 @@ func (rcv *SKI) SENLON() float64 {
 	return 0.0
 }
 
+/// Sensor geodetic longitude (degrees)
 func (rcv *SKI) MutateSENLON(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
 }
 
+/// Sensor altitude (km)
 func (rcv *SKI) SENALT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
@@ -138,10 +155,12 @@ func (rcv *SKI) SENALT() float64 {
 	return 0.0
 }
 
+/// Sensor altitude (km)
 func (rcv *SKI) MutateSENALT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
 }
 
+/// Sensor ECEF X position (km)
 func (rcv *SKI) SENX() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
@@ -150,10 +169,12 @@ func (rcv *SKI) SENX() float64 {
 	return 0.0
 }
 
+/// Sensor ECEF X position (km)
 func (rcv *SKI) MutateSENX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
 }
 
+/// Sensor ECEF Y position (km)
 func (rcv *SKI) SENY() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
@@ -162,10 +183,12 @@ func (rcv *SKI) SENY() float64 {
 	return 0.0
 }
 
+/// Sensor ECEF Y position (km)
 func (rcv *SKI) MutateSENY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
 }
 
+/// Sensor ECEF Z position (km)
 func (rcv *SKI) SENZ() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
@@ -174,17 +197,19 @@ func (rcv *SKI) SENZ() float64 {
 	return 0.0
 }
 
+/// Sensor ECEF Z position (km)
 func (rcv *SKI) MutateSENZ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
 }
 
-func (rcv *SKI) SEN_QUAT(j int) []byte {
+/// Sensor quaternion (scalar-last: q1, q2, q3, q0)
+func (rcv *SKI) SEN_QUAT(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
 	}
-	return nil
+	return 0
 }
 
 func (rcv *SKI) SEN_QUATLength() int {
@@ -195,13 +220,24 @@ func (rcv *SKI) SEN_QUATLength() int {
 	return 0
 }
 
-func (rcv *SKI) SEN_QUAT_DOT(j int) []byte {
+/// Sensor quaternion (scalar-last: q1, q2, q3, q0)
+func (rcv *SKI) MutateSEN_QUAT(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// Sensor quaternion rate
+func (rcv *SKI) SEN_QUAT_DOT(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
 	}
-	return nil
+	return 0
 }
 
 func (rcv *SKI) SEN_QUAT_DOTLength() int {
@@ -212,14 +248,31 @@ func (rcv *SKI) SEN_QUAT_DOTLength() int {
 	return 0
 }
 
-func (rcv *SKI) IMAGE_TYPE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+/// Sensor quaternion rate
+func (rcv *SKI) MutateSEN_QUAT_DOT(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
 	}
-	return nil
+	return false
 }
 
+/// Image type
+func (rcv *SKI) IMAGE_TYPE() imageType {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return imageType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// Image type
+func (rcv *SKI) MutateIMAGE_TYPE(n imageType) bool {
+	return rcv._tab.MutateInt8Slot(32, int8(n))
+}
+
+/// Exposure start time (ISO 8601)
 func (rcv *SKI) EXP_START_TIME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
@@ -228,6 +281,8 @@ func (rcv *SKI) EXP_START_TIME() []byte {
 	return nil
 }
 
+/// Exposure start time (ISO 8601)
+/// Exposure end time (ISO 8601)
 func (rcv *SKI) EXP_END_TIME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
@@ -236,6 +291,8 @@ func (rcv *SKI) EXP_END_TIME() []byte {
 	return nil
 }
 
+/// Exposure end time (ISO 8601)
+/// Image source information
 func (rcv *SKI) IMAGE_SOURCE_INFO() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
@@ -244,6 +301,8 @@ func (rcv *SKI) IMAGE_SOURCE_INFO() []byte {
 	return nil
 }
 
+/// Image source information
+/// Top-left corner start azimuth (degrees)
 func (rcv *SKI) TOP_LEFT_START_AZ() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
@@ -252,10 +311,12 @@ func (rcv *SKI) TOP_LEFT_START_AZ() float64 {
 	return 0.0
 }
 
+/// Top-left corner start azimuth (degrees)
 func (rcv *SKI) MutateTOP_LEFT_START_AZ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
 }
 
+/// Top-left corner start elevation (degrees)
 func (rcv *SKI) TOP_LEFT_START_EL() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
 	if o != 0 {
@@ -264,10 +325,12 @@ func (rcv *SKI) TOP_LEFT_START_EL() float64 {
 	return 0.0
 }
 
+/// Top-left corner start elevation (degrees)
 func (rcv *SKI) MutateTOP_LEFT_START_EL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
 }
 
+/// Top-left corner stop azimuth (degrees)
 func (rcv *SKI) TOP_LEFT_STOP_AZ() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
 	if o != 0 {
@@ -276,10 +339,12 @@ func (rcv *SKI) TOP_LEFT_STOP_AZ() float64 {
 	return 0.0
 }
 
+/// Top-left corner stop azimuth (degrees)
 func (rcv *SKI) MutateTOP_LEFT_STOP_AZ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
 }
 
+/// Top-left corner stop elevation (degrees)
 func (rcv *SKI) TOP_LEFT_STOP_EL() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
 	if o != 0 {
@@ -288,10 +353,12 @@ func (rcv *SKI) TOP_LEFT_STOP_EL() float64 {
 	return 0.0
 }
 
+/// Top-left corner stop elevation (degrees)
 func (rcv *SKI) MutateTOP_LEFT_STOP_EL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
 }
 
+/// Image set identifier
 func (rcv *SKI) IMAGE_SET_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
@@ -300,30 +367,36 @@ func (rcv *SKI) IMAGE_SET_ID() []byte {
 	return nil
 }
 
-func (rcv *SKI) IMAGE_SET_LENGTH() int32 {
+/// Image set identifier
+/// Number of images in set
+func (rcv *SKI) IMAGE_SET_LENGTH() uint16 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *SKI) MutateIMAGE_SET_LENGTH(n int32) bool {
-	return rcv._tab.MutateInt32Slot(50, n)
+/// Number of images in set
+func (rcv *SKI) MutateIMAGE_SET_LENGTH(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(50, n)
 }
 
-func (rcv *SKI) SEQUENCE_ID() int32 {
+/// Sequence number within set
+func (rcv *SKI) SEQUENCE_ID() uint16 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *SKI) MutateSEQUENCE_ID(n int32) bool {
-	return rcv._tab.MutateInt32Slot(52, n)
+/// Sequence number within set
+func (rcv *SKI) MutateSEQUENCE_ID(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(52, n)
 }
 
+/// Frame field-of-view width (degrees)
 func (rcv *SKI) FRAME_FOVWIDTH() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
 	if o != 0 {
@@ -332,10 +405,12 @@ func (rcv *SKI) FRAME_FOVWIDTH() float64 {
 	return 0.0
 }
 
+/// Frame field-of-view width (degrees)
 func (rcv *SKI) MutateFRAME_FOVWIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(54, n)
 }
 
+/// Frame field-of-view height (degrees)
 func (rcv *SKI) FRAME_FOVHEIGHT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
 	if o != 0 {
@@ -344,10 +419,12 @@ func (rcv *SKI) FRAME_FOVHEIGHT() float64 {
 	return 0.0
 }
 
+/// Frame field-of-view height (degrees)
 func (rcv *SKI) MutateFRAME_FOVHEIGHT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(56, n)
 }
 
+/// Pixel field-of-view width (arcseconds)
 func (rcv *SKI) PIXEL_FOVWIDTH() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
 	if o != 0 {
@@ -356,10 +433,12 @@ func (rcv *SKI) PIXEL_FOVWIDTH() float64 {
 	return 0.0
 }
 
+/// Pixel field-of-view width (arcseconds)
 func (rcv *SKI) MutatePIXEL_FOVWIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(58, n)
 }
 
+/// Pixel field-of-view height (arcseconds)
 func (rcv *SKI) PIXEL_FOVHEIGHT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
 	if o != 0 {
@@ -368,46 +447,54 @@ func (rcv *SKI) PIXEL_FOVHEIGHT() float64 {
 	return 0.0
 }
 
+/// Pixel field-of-view height (arcseconds)
 func (rcv *SKI) MutatePIXEL_FOVHEIGHT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(60, n)
 }
 
-func (rcv *SKI) FRAME_WIDTH_PIXELS() int32 {
+/// Frame width (pixels)
+func (rcv *SKI) FRAME_WIDTH_PIXELS() uint16 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *SKI) MutateFRAME_WIDTH_PIXELS(n int32) bool {
-	return rcv._tab.MutateInt32Slot(62, n)
+/// Frame width (pixels)
+func (rcv *SKI) MutateFRAME_WIDTH_PIXELS(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(62, n)
 }
 
-func (rcv *SKI) FRAME_HEIGHT_PIXELS() int32 {
+/// Frame height (pixels)
+func (rcv *SKI) FRAME_HEIGHT_PIXELS() uint16 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *SKI) MutateFRAME_HEIGHT_PIXELS(n int32) bool {
-	return rcv._tab.MutateInt32Slot(64, n)
+/// Frame height (pixels)
+func (rcv *SKI) MutateFRAME_HEIGHT_PIXELS(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(64, n)
 }
 
-func (rcv *SKI) PIXEL_BIT_DEPTH() int32 {
+/// Pixel bit depth
+func (rcv *SKI) PIXEL_BIT_DEPTH() byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *SKI) MutatePIXEL_BIT_DEPTH(n int32) bool {
-	return rcv._tab.MutateInt32Slot(66, n)
+/// Pixel bit depth
+func (rcv *SKI) MutatePIXEL_BIT_DEPTH(n byte) bool {
+	return rcv._tab.MutateByteSlot(66, n)
 }
 
+/// Annotation key reference
 func (rcv *SKI) ANNOTATION_KEY() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
 	if o != 0 {
@@ -416,6 +503,8 @@ func (rcv *SKI) ANNOTATION_KEY() []byte {
 	return nil
 }
 
+/// Annotation key reference
+/// Calibration key reference
 func (rcv *SKI) CALIBRATION_KEY() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
 	if o != 0 {
@@ -424,6 +513,8 @@ func (rcv *SKI) CALIBRATION_KEY() []byte {
 	return nil
 }
 
+/// Calibration key reference
+/// Image filename
 func (rcv *SKI) FILENAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
 	if o != 0 {
@@ -432,6 +523,8 @@ func (rcv *SKI) FILENAME() []byte {
 	return nil
 }
 
+/// Image filename
+/// File size (bytes)
 func (rcv *SKI) FILESIZE() int64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
 	if o != 0 {
@@ -440,10 +533,12 @@ func (rcv *SKI) FILESIZE() int64 {
 	return 0
 }
 
+/// File size (bytes)
 func (rcv *SKI) MutateFILESIZE(n int64) bool {
 	return rcv._tab.MutateInt64Slot(74, n)
 }
 
+/// File checksum value
 func (rcv *SKI) CHECKSUM_VALUE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
 	if o != 0 {
@@ -452,6 +547,8 @@ func (rcv *SKI) CHECKSUM_VALUE() []byte {
 	return nil
 }
 
+/// File checksum value
+/// Transaction identifier
 func (rcv *SKI) TRANSACTION_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
 	if o != 0 {
@@ -460,6 +557,8 @@ func (rcv *SKI) TRANSACTION_ID() []byte {
 	return nil
 }
 
+/// Transaction identifier
+/// Associated tags
 func (rcv *SKI) TAGS(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
 	if o != 0 {
@@ -477,6 +576,8 @@ func (rcv *SKI) TAGSLength() int {
 	return 0
 }
 
+/// Associated tags
+/// Description
 func (rcv *SKI) DESCRIPTION() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
 	if o != 0 {
@@ -485,6 +586,8 @@ func (rcv *SKI) DESCRIPTION() []byte {
 	return nil
 }
 
+/// Description
+/// Associated EO observation references
 func (rcv *SKI) EO_OBSERVATIONS(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
 	if o != 0 {
@@ -502,6 +605,7 @@ func (rcv *SKI) EO_OBSERVATIONSLength() int {
 	return 0
 }
 
+/// Associated EO observation references
 func SKIStart(builder *flatbuffers.Builder) {
 	builder.StartObject(41)
 }
@@ -514,11 +618,11 @@ func SKIAddON_ORBIT(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT)
 func SKIAddORIG_OBJECT_ID(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ORIG_OBJECT_ID), 0)
 }
-func SKIAddID_SENSOR(builder *flatbuffers.Builder, ID_SENSOR flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ID_SENSOR), 0)
+func SKIAddSAT_NO(builder *flatbuffers.Builder, SAT_NO uint32) {
+	builder.PrependUint32Slot(3, SAT_NO, 0)
 }
-func SKIAddSAT_NO(builder *flatbuffers.Builder, SAT_NO int32) {
-	builder.PrependInt32Slot(4, SAT_NO, 0)
+func SKIAddID_SENSOR(builder *flatbuffers.Builder, ID_SENSOR flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ID_SENSOR), 0)
 }
 func SKIAddORIG_SENSOR_ID(builder *flatbuffers.Builder, ORIG_SENSOR_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(ORIG_SENSOR_ID), 0)
@@ -545,16 +649,16 @@ func SKIAddSEN_QUAT(builder *flatbuffers.Builder, SEN_QUAT flatbuffers.UOffsetT)
 	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(SEN_QUAT), 0)
 }
 func SKIStartSEN_QUATVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
+	return builder.StartVector(8, numElems, 8)
 }
 func SKIAddSEN_QUAT_DOT(builder *flatbuffers.Builder, SEN_QUAT_DOT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(SEN_QUAT_DOT), 0)
 }
 func SKIStartSEN_QUAT_DOTVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
+	return builder.StartVector(8, numElems, 8)
 }
-func SKIAddIMAGE_TYPE(builder *flatbuffers.Builder, IMAGE_TYPE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(IMAGE_TYPE), 0)
+func SKIAddIMAGE_TYPE(builder *flatbuffers.Builder, IMAGE_TYPE imageType) {
+	builder.PrependInt8Slot(14, int8(IMAGE_TYPE), 0)
 }
 func SKIAddEXP_START_TIME(builder *flatbuffers.Builder, EXP_START_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(EXP_START_TIME), 0)
@@ -580,11 +684,11 @@ func SKIAddTOP_LEFT_STOP_EL(builder *flatbuffers.Builder, TOP_LEFT_STOP_EL float
 func SKIAddIMAGE_SET_ID(builder *flatbuffers.Builder, IMAGE_SET_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(IMAGE_SET_ID), 0)
 }
-func SKIAddIMAGE_SET_LENGTH(builder *flatbuffers.Builder, IMAGE_SET_LENGTH int32) {
-	builder.PrependInt32Slot(23, IMAGE_SET_LENGTH, 0)
+func SKIAddIMAGE_SET_LENGTH(builder *flatbuffers.Builder, IMAGE_SET_LENGTH uint16) {
+	builder.PrependUint16Slot(23, IMAGE_SET_LENGTH, 0)
 }
-func SKIAddSEQUENCE_ID(builder *flatbuffers.Builder, SEQUENCE_ID int32) {
-	builder.PrependInt32Slot(24, SEQUENCE_ID, 0)
+func SKIAddSEQUENCE_ID(builder *flatbuffers.Builder, SEQUENCE_ID uint16) {
+	builder.PrependUint16Slot(24, SEQUENCE_ID, 0)
 }
 func SKIAddFRAME_FOVWIDTH(builder *flatbuffers.Builder, FRAME_FOVWIDTH float64) {
 	builder.PrependFloat64Slot(25, FRAME_FOVWIDTH, 0.0)
@@ -598,14 +702,14 @@ func SKIAddPIXEL_FOVWIDTH(builder *flatbuffers.Builder, PIXEL_FOVWIDTH float64) 
 func SKIAddPIXEL_FOVHEIGHT(builder *flatbuffers.Builder, PIXEL_FOVHEIGHT float64) {
 	builder.PrependFloat64Slot(28, PIXEL_FOVHEIGHT, 0.0)
 }
-func SKIAddFRAME_WIDTH_PIXELS(builder *flatbuffers.Builder, FRAME_WIDTH_PIXELS int32) {
-	builder.PrependInt32Slot(29, FRAME_WIDTH_PIXELS, 0)
+func SKIAddFRAME_WIDTH_PIXELS(builder *flatbuffers.Builder, FRAME_WIDTH_PIXELS uint16) {
+	builder.PrependUint16Slot(29, FRAME_WIDTH_PIXELS, 0)
 }
-func SKIAddFRAME_HEIGHT_PIXELS(builder *flatbuffers.Builder, FRAME_HEIGHT_PIXELS int32) {
-	builder.PrependInt32Slot(30, FRAME_HEIGHT_PIXELS, 0)
+func SKIAddFRAME_HEIGHT_PIXELS(builder *flatbuffers.Builder, FRAME_HEIGHT_PIXELS uint16) {
+	builder.PrependUint16Slot(30, FRAME_HEIGHT_PIXELS, 0)
 }
-func SKIAddPIXEL_BIT_DEPTH(builder *flatbuffers.Builder, PIXEL_BIT_DEPTH int32) {
-	builder.PrependInt32Slot(31, PIXEL_BIT_DEPTH, 0)
+func SKIAddPIXEL_BIT_DEPTH(builder *flatbuffers.Builder, PIXEL_BIT_DEPTH byte) {
+	builder.PrependByteSlot(31, PIXEL_BIT_DEPTH, 0)
 }
 func SKIAddANNOTATION_KEY(builder *flatbuffers.Builder, ANNOTATION_KEY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(32, flatbuffers.UOffsetT(ANNOTATION_KEY), 0)

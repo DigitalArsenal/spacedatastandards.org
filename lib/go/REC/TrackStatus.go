@@ -4,35 +4,38 @@ package REC
 
 import "strconv"
 
-type TrackStatus int8
+type trackStatus int8
 
 const (
-	TrackStatusTENTATIVE TrackStatus = 0
-	TrackStatusCONFIRMED TrackStatus = 1
-	TrackStatusCOASTING  TrackStatus = 2
-	TrackStatusLOST      TrackStatus = 3
-	TrackStatusDELETED   TrackStatus = 4
+	trackStatusACTIVE    trackStatus = 0
+	trackStatusDROPPED   trackStatus = 1
+	trackStatusTENTATIVE trackStatus = 2
+	trackStatusCONFIRMED trackStatus = 3
+	trackStatusCOASTED   trackStatus = 4
+	trackStatusDEAD      trackStatus = 5
 )
 
-var EnumNamesTrackStatus = map[TrackStatus]string{
-	TrackStatusTENTATIVE: "TENTATIVE",
-	TrackStatusCONFIRMED: "CONFIRMED",
-	TrackStatusCOASTING:  "COASTING",
-	TrackStatusLOST:      "LOST",
-	TrackStatusDELETED:   "DELETED",
+var EnumNamestrackStatus = map[trackStatus]string{
+	trackStatusACTIVE:    "ACTIVE",
+	trackStatusDROPPED:   "DROPPED",
+	trackStatusTENTATIVE: "TENTATIVE",
+	trackStatusCONFIRMED: "CONFIRMED",
+	trackStatusCOASTED:   "COASTED",
+	trackStatusDEAD:      "DEAD",
 }
 
-var EnumValuesTrackStatus = map[string]TrackStatus{
-	"TENTATIVE": TrackStatusTENTATIVE,
-	"CONFIRMED": TrackStatusCONFIRMED,
-	"COASTING":  TrackStatusCOASTING,
-	"LOST":      TrackStatusLOST,
-	"DELETED":   TrackStatusDELETED,
+var EnumValuestrackStatus = map[string]trackStatus{
+	"ACTIVE":    trackStatusACTIVE,
+	"DROPPED":   trackStatusDROPPED,
+	"TENTATIVE": trackStatusTENTATIVE,
+	"CONFIRMED": trackStatusCONFIRMED,
+	"COASTED":   trackStatusCOASTED,
+	"DEAD":      trackStatusDEAD,
 }
 
-func (v TrackStatus) String() string {
-	if s, ok := EnumNamesTrackStatus[v]; ok {
+func (v trackStatus) String() string {
+	if s, ok := EnumNamestrackStatus[v]; ok {
 		return s
 	}
-	return "TrackStatus(" + strconv.FormatInt(int64(v), 10) + ")"
+	return "trackStatus(" + strconv.FormatInt(int64(v), 10) + ")"
 }

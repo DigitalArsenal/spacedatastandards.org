@@ -3,3 +3,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export { MST, MSTT } from './MST.js';
+export { aouReportType } from './aouReportType.js';
+export { missileEnvironment } from './missileEnvironment.js';
+export { missileStatus } from './missileStatus.js';

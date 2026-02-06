@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xtce:SpaceSystem name="TestSatellite"
+  xmlns:xtce="http://www.omg.org/spec/XTCE/20180204"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.omg.org/spec/XTCE/20180204 https://www.omg.org/spec/XTCE/20180204/SpaceSystem.xsd">
+
+  <xtce:Header validationStatus="Working" classification="NotClassified" version="1.2" date="2024-01-15">
+    <xtce:AuthorSet>
+      <xtce:Author>SDS Test Suite</xtce:Author>
+    </xtce:AuthorSet>
+    <xtce:NoteSet>
+      <xtce:Note>Test XTCE 1.2 document for SDS WASM parser validation. Exercises major features of the standard including parameter types, containers, commands, algorithms, and alarms.</xtce:Note>
+    </xtce:NoteSet>
+  </xtce:Header>
+
+  <xtce:TelemetryMetaData>
+
+    <!-- ================================================================== -->
+    <!-- Parameter Type Definitions                                          -->
+    <!-- ================================================================== -->
+    <xtce:ParameterTypeSet>
+
+      <!-- Unsigned 3-bit integer for CCSDS version field -->
+      <xtce:IntegerParameterType name="uint3_type" signed="false">
+        <xtce:UnitSet/>
+        <xtce:IntegerDataEncoding sizeInBits="3" encoding="unsigned"/>
+      </xtce:IntegerParameterType>
+
+      <!-- Unsigned 1-bit integer for CCSDS type field -->
+      <xtce:IntegerParameterType name="uint1_type" signed="false">
+        <xtce:UnitSet/>
+        <xtce:IntegerDataEncoding sizeInBits="1" encoding="unsigned"/>
+      </xtce:IntegerParameterType>
+
+      <!-- Unsigned 11-bit integer for CCSDS APID -->
+      <xtce:IntegerParameterType name="uint11_type" signed="false">
+        <xtce:UnitSet/>
+        <xtce:IntegerDataEncoding sizeInBits="11" encoding="unsigned"/>
+      </xtce:IntegerParameterType>
+
+      <!-- Unsigned 16-bit integer with unit (raw counts) -->
+      <xtce:IntegerParameterType name="uint16_type" signed="false">
+        <xtce:UnitSet>
+          <xtce:Unit>counts</xtce:Unit>
+        </xtce:UnitSet>
+        <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned"/>
+      </xtce:IntegerParameterType>
+
+      <!-- Unsigned 16-bit battery voltage with polynomial calibration and alarms -->
+      <xtce:IntegerParameterType name="battery_voltage_type" signed="false">
+        <xtce:UnitSet>
+          <xtce:Unit>V</xtce:Unit>
+        </xtce:UnitSet>
+        <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned">
+          <xtce:DefaultCalibrator>
+            <xtce:PolynomialCalibrator>
+              <xtce:Term exponent="0" coefficient="0"/>
+              <xtce:Term exponent="1" coefficient="0.001"/>
+            </xtce:PolynomialCalibrator>
+          </xtce:DefaultCalibrator>
+        </xtce:IntegerDataEncoding>
+        <xtce:DefaultAlarm minViolations="3">
+          <xtce:StaticAlarmRanges>
+            <xtce:WarningRange minExclusive="12.0" maxExclusive="14.5"/>
+            <xtce:CriticalRange minExclusive="11.0" maxExclusive="15.5"/>
+          </xtce:StaticAlarmRanges>
+        </xtce:DefaultAlarm>
+      </xtce:IntegerParameterType>
+
+      <!-- 32-bit float temperature with alarms -->
+      <xtce:FloatParameterType name="temp_type" sizeInBits="32">
+        <xtce:UnitSet>
+          <xtce:Unit>degC</xtce:Unit>
+        </xtce:UnitSet>
+        <xtce:FloatDataEncoding sizeInBits="32"/>
+        <xtce:DefaultAlarm minViolations="3">
+          <xtce:StaticAlarmRanges>
+            <xtce:WarningRange minInclusive="-20" maxInclusive="60"/>
+            <xtce:CriticalRange minInclusive="-40" maxInclusive="80"/>
+          </xtce:StaticAlarmRanges>
+        </xtce:DefaultAlarm>
+      </xtce:FloatParameterType>
+
+      <!-- Enumerated satellite mode -->
+      <xtce:EnumeratedParameterType name="mode_type">
+        <xtce:UnitSet/>
+        <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+        <xtce:EnumerationList>
+          <xtce:Enumeration label="OFF" value="0"/>
+          <xtce:Enumeration label="STANDBY" value="1"/>
+          <xtce:Enumeration label="NOMINAL" value="2"/>
+          <xtce:Enumeration label="SAFE" value="3"/>
+          <xtce:Enumeration label="EMERGENCY" value="4"/>
+        </xtce:EnumerationList>
+      </xtce:EnumeratedParameterType>
+
+      <!-- Boolean on/off flag -->
+      <xtce:BooleanParameterType name="flag_type" zeroStringValue="OFF" oneStringValue="ON">
+        <xtce:UnitSet/>
+        <xtce:IntegerDataEncoding sizeInBits="1" encoding="unsigned"/>
+      </xtce:BooleanParameterType>
+
+      <!-- Variable-length string -->
+      <xtce:StringParameterType name="name_type">
+        <xtce:UnitSet/>
+        <xtce:StringDataEncoding encoding="UTF-8">
+          <xtce:SizeInBits>
+            <xtce:Fixed>
+              <xtce:FixedValue>256</xtce:FixedValue>
+            </xtce:Fixed>
+          </xtce:SizeInBits>
+        </xtce:StringDataEncoding>
+      </xtce:StringParameterType>
+
+      <!-- Binary opaque data -->
+      <xtce:BinaryParameterType name="binary_blob_type">
+        <xtce:UnitSet/>
+        <xtce:BinaryDataEncoding>
+          <xtce:SizeInBits>
+            <xtce:FixedValue>128</xtce:FixedValue>
+          </xtce:SizeInBits>
+        </xtce:BinaryDataEncoding>
+      </xtce:BinaryParameterType>
+
+      <!-- Absolute time (UNIX epoch) -->
+      <xtce:AbsoluteTimeParameterType name="unix_time_type" shortDescription="UNIX epoch seconds">
+        <xtce:Encoding>
+          <xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned"/>
+        </xtce:Encoding>
+        <xtce:ReferenceTime>
+          <xtce:Epoch>UNIX</xtce:Epoch>
+        </xtce:ReferenceTime>
+      </xtce:AbsoluteTimeParameterType>
+
+      <!-- 32-bit float for derived/computed values -->
+      <xtce:FloatParameterType name="voltage_eng_type" sizeInBits="32">
+        <xtce:UnitSet>
+          <xtce:Unit>V</xtce:Unit>
+        </xtce:UnitSet>
+        <xtce:FloatDataEncoding sizeInBits="32"/>
+      </xtce:FloatParameterType>
+
+    </xtce:ParameterTypeSet>
+
+    <!-- ================================================================== -->
+    <!-- Parameter Definitions                                               -->
+    <!-- ================================================================== -->
+    <xtce:ParameterSet>
+
+      <!-- CCSDS Primary Header Fields -->
+      <xtce:Parameter name="CCSDS_VERSION" parameterTypeRef="uint3_type"
+        shortDescription="CCSDS packet version number">
+        <xtce:ParameterProperties dataSource="telemetered" readOnly="true"/>
+      </xtce:Parameter>
+      <xtce:Parameter name="CCSDS_TYPE" parameterTypeRef="uint1_type"
+        shortDescription="CCSDS packet type (0=TM, 1=TC)">
+        <xtce:ParameterProperties dataSource="telemetered" readOnly="true"/>
+      </xtce:Parameter>
+      <xtce:Parameter name="CCSDS_APID" parameterTypeRef="uint11_type"
+        shortDescription="Application Process Identifier">
+        <xtce:ParameterProperties dataSource="telemetered" readOnly="true"/>
+      </xtce:Parameter>
+
+      <!-- Housekeeping Parameters -->
+      <xtce:Parameter name="BATTERY_VOLTAGE" parameterTypeRef="battery_voltage_type"
+        shortDescription="Main bus battery voltage">
+        <xtce:ParameterProperties dataSource="telemetered" readOnly="true"/>
+      </xtce:Parameter>
+      <xtce:Parameter name="SOLAR_PANEL_TEMP" parameterTypeRef="temp_type"
+        shortDescription="Solar panel temperature sensor">
+        <xtce:ParameterProperties dataSource="telemetered" readOnly="true"/>
+      </xtce:Parameter>
+      <xtce:Parameter name="OBC_TEMP" parameterTypeRef="temp_type"
+        shortDescription="On-board computer temperature">
+        <xtce:ParameterProperties dataSource="telemetered" readOnly="true"/>
+      </xtce:Parameter>
+      <xtce:Parameter name="OBC_MODE" parameterTypeRef="mode_type"
+        shortDescription="On-board computer operating mode">
+        <xtce:ParameterProperties dataSource="telemetered" readOnly="true"/>
+      </xtce:Parameter>
+      <xtce:Parameter name="HEATER_STATUS" parameterTypeRef="flag_type"
+        shortDescription="Survival heater on/off">
+        <xtce:ParameterProperties dataSource="telemetered" readOnly="true"/>
+      </xtce:Parameter>
+      <xtce:Parameter name="DEPLOY_FLAG" parameterTypeRef="flag_type"
+        shortDescription="Solar array deployment flag">
+        <xtce:ParameterProperties dataSource="telemetered" readOnly="true"/>
+      </xtce:Parameter>
+      <xtce:Parameter name="MISSION_NAME" parameterTypeRef="name_type"
+        shortDescription="Mission name constant">
+        <xtce:ParameterProperties dataSource="constant" readOnly="true"/>
+      </xtce:Parameter>
+      <xtce:Parameter name="MEMORY_DUMP" parameterTypeRef="binary_blob_type"
+        shortDescription="Raw memory dump segment">
+        <xtce:ParameterProperties dataSource="telemetered" readOnly="true"/>
+      </xtce:Parameter>
+      <xtce:Parameter name="ONBOARD_TIME" parameterTypeRef="unix_time_type"
+        shortDescription="Spacecraft onboard clock">
+        <xtce:ParameterProperties dataSource="telemetered" readOnly="true"/>
+      </xtce:Parameter>
+
+      <!-- Derived parameter (algorithm output) -->
+      <xtce:Parameter name="BATTERY_VOLTAGE_ENG" parameterTypeRef="voltage_eng_type"
+        shortDescription="Calibrated battery voltage">
+        <xtce:ParameterProperties dataSource="derived" readOnly="true"/>
+      </xtce:Parameter>
+
+    </xtce:ParameterSet>
+
+    <!-- ================================================================== -->
+    <!-- Sequence Containers (Packet Definitions)                            -->
+    <!-- ================================================================== -->
+    <xtce:ContainerSet>
+
+      <!-- Abstract CCSDS primary header container -->
+      <xtce:SequenceContainer name="CCSDSPacket" abstract="true"
+        shortDescription="CCSDS Space Packet primary header">
+        <xtce:EntryList>
+          <xtce:ParameterRefEntry parameterRef="CCSDS_VERSION"/>
+          <xtce:ParameterRefEntry parameterRef="CCSDS_TYPE"/>
+          <xtce:ParameterRefEntry parameterRef="CCSDS_APID"/>
+        </xtce:EntryList>
+      </xtce:SequenceContainer>
+
+      <!-- Abstract TM packet (type=0) -->
+      <xtce:SequenceContainer name="CCSDSTelemetryPacket" abstract="true"
+        shortDescription="CCSDS telemetry packet base">
+        <xtce:EntryList/>
+        <xtce:BaseContainer containerRef="CCSDSPacket">
+          <xtce:RestrictionCriteria>
+            <xtce:Comparison parameterRef="CCSDS_TYPE" value="0"/>
+          </xtce:RestrictionCriteria>
+        </xtce:BaseContainer>
+      </xtce:SequenceContainer>
+
+      <!-- Housekeeping telemetry packet (APID=1) -->
+      <xtce:SequenceContainer name="HousekeepingPacket"
+        shortDescription="Periodic housekeeping telemetry">
+        <xtce:EntryList>
+          <xtce:ParameterRefEntry parameterRef="ONBOARD_TIME"/>
+          <xtce:ParameterRefEntry parameterRef="BATTERY_VOLTAGE"/>
+          <xtce:ParameterRefEntry parameterRef="SOLAR_PANEL_TEMP"/>
+          <xtce:ParameterRefEntry parameterRef="OBC_TEMP"/>
+          <xtce:ParameterRefEntry parameterRef="OBC_MODE"/>
+          <xtce:ParameterRefEntry parameterRef="HEATER_STATUS"/>
+          <xtce:ParameterRefEntry parameterRef="DEPLOY_FLAG"/>
+        </xtce:EntryList>
+        <xtce:BaseContainer containerRef="CCSDSTelemetryPacket">
+          <xtce:RestrictionCriteria>
+            <xtce:Comparison parameterRef="CCSDS_APID" value="1"/>
+          </xtce:RestrictionCriteria>
+        </xtce:BaseContainer>
+      </xtce:SequenceContainer>
+
+      <!-- Memory dump packet (APID=10) -->
+      <xtce:SequenceContainer name="MemoryDumpPacket"
+        shortDescription="On-demand memory dump">
+        <xtce:EntryList>
+          <xtce:ParameterRefEntry parameterRef="ONBOARD_TIME"/>
+          <xtce:ParameterRefEntry parameterRef="MEMORY_DUMP"/>
+        </xtce:EntryList>
+        <xtce:BaseContainer containerRef="CCSDSTelemetryPacket">
+          <xtce:RestrictionCriteria>
+            <xtce:Comparison parameterRef="CCSDS_APID" value="10"/>
+          </xtce:RestrictionCriteria>
+        </xtce:BaseContainer>
+      </xtce:SequenceContainer>
+
+    </xtce:ContainerSet>
+
+    <!-- ================================================================== -->
+    <!-- Algorithms                                                          -->
+    <!-- ================================================================== -->
+    <xtce:AlgorithmSet>
+
+      <xtce:MathAlgorithm name="VoltageConversion"
+        shortDescription="Convert raw battery ADC counts to engineering volts">
+        <xtce:MathOperation outputParameterRef="BATTERY_VOLTAGE_ENG">
+          <xtce:ParameterInstanceRefOperand parameterRef="BATTERY_VOLTAGE"/>
+          <xtce:ValueOperand>0.001</xtce:ValueOperand>
+          <xtce:Operator>*</xtce:Operator>
+          <xtce:ValueOperand>3.3</xtce:ValueOperand>
+          <xtce:Operator>*</xtce:Operator>
+          <xtce:TriggerSet>
+            <xtce:OnParameterUpdateTrigger parameterRef="BATTERY_VOLTAGE"/>
+          </xtce:TriggerSet>
+        </xtce:MathOperation>
+      </xtce:MathAlgorithm>
+
+    </xtce:AlgorithmSet>
+
+  </xtce:TelemetryMetaData>
+
+  <!-- ==================================================================== -->
+  <!-- Command Metadata                                                      -->
+  <!-- ==================================================================== -->
+  <xtce:CommandMetaData>
+
+    <xtce:ArgumentTypeSet>
+      <xtce:IntegerArgumentType name="uint8_arg_type" signed="false">
+        <xtce:UnitSet/>
+        <xtce:IntegerDataEncoding sizeInBits="8" encoding="unsigned"/>
+      </xtce:IntegerArgumentType>
+      <xtce:IntegerArgumentType name="uint16_arg_type" signed="false">
+        <xtce:UnitSet/>
+        <xtce:IntegerDataEncoding sizeInBits="16" encoding="unsigned"/>
+      </xtce:IntegerArgumentType>
+    </xtce:ArgumentTypeSet>
+
+    <xtce:MetaCommandSet>
+
+      <!-- Set satellite operating mode -->
+      <xtce:MetaCommand name="SetMode"
+        shortDescription="Command the OBC to change operating mode">
+        <xtce:ArgumentList>
+          <xtce:Argument name="newMode" argumentTypeRef="uint8_arg_type"/>
+        </xtce:ArgumentList>
+        <xtce:CommandContainer name="SetModeContainer">
+          <xtce:EntryList>
+            <xtce:FixedValueEntry binaryValue="01" sizeInBits="8"
+              name="CommandID"/>
+            <xtce:ArgumentRefEntry argumentRef="newMode"/>
+          </xtce:EntryList>
+        </xtce:CommandContainer>
+        <xtce:VerifierSet>
+          <xtce:CompleteVerifier>
+            <xtce:Comparison parameterRef="OBC_MODE" value="2"/>
+            <xtce:CheckWindow timeToStartChecking="PT0S"
+              timeToStopChecking="PT5S"/>
+          </xtce:CompleteVerifier>
+        </xtce:VerifierSet>
+      </xtce:MetaCommand>
+
+      <!-- Request memory dump -->
+      <xtce:MetaCommand name="RequestMemoryDump"
+        shortDescription="Request a segment of onboard memory">
+        <xtce:ArgumentList>
+          <xtce:Argument name="startAddress" argumentTypeRef="uint16_arg_type"/>
+          <xtce:Argument name="length" argumentTypeRef="uint16_arg_type"/>
+        </xtce:ArgumentList>
+        <xtce:CommandContainer name="RequestMemoryDumpContainer">
+          <xtce:EntryList>
+            <xtce:FixedValueEntry binaryValue="02" sizeInBits="8"
+              name="CommandID"/>
+            <xtce:ArgumentRefEntry argumentRef="startAddress"/>
+            <xtce:ArgumentRefEntry argumentRef="length"/>
+          </xtce:EntryList>
+        </xtce:CommandContainer>
+      </xtce:MetaCommand>
+
+    </xtce:MetaCommandSet>
+
+  </xtce:CommandMetaData>
+
+  <!-- ==================================================================== -->
+  <!-- Nested SpaceSystem: Payload Subsystem                                 -->
+  <!-- ==================================================================== -->
+  <xtce:SpaceSystem name="Payload">
+
+    <xtce:TelemetryMetaData>
+
+      <xtce:ParameterTypeSet>
+        <xtce:FloatParameterType name="science_float64_type" sizeInBits="64">
+          <xtce:UnitSet>
+            <xtce:Unit>W/m^2</xtce:Unit>
+          </xtce:UnitSet>
+          <xtce:FloatDataEncoding sizeInBits="64"/>
+        </xtce:FloatParameterType>
+        <xtce:IntegerParameterType name="science_uint32_type" signed="false">
+          <xtce:UnitSet>
+            <xtce:Unit>counts</xtce:Unit>
+          </xtce:UnitSet>
+          <xtce:IntegerDataEncoding sizeInBits="32" encoding="unsigned"/>
+        </xtce:IntegerParameterType>
+      </xtce:ParameterTypeSet>
+
+      <xtce:ParameterSet>
+        <xtce:Parameter name="IRRADIANCE" parameterTypeRef="science_float64_type"
+          shortDescription="Solar irradiance measurement">
+          <xtce:ParameterProperties dataSource="telemetered" readOnly="true"/>
+        </xtce:Parameter>
+        <xtce:Parameter name="PHOTON_COUNT" parameterTypeRef="science_uint32_type"
+          shortDescription="Photon detector event counter">
+          <xtce:ParameterProperties dataSource="telemetered" readOnly="true"/>
+        </xtce:Parameter>
+      </xtce:ParameterSet>
+
+      <xtce:ContainerSet>
+        <xtce:SequenceContainer name="SciencePacket"
+          shortDescription="Payload science data packet">
+          <xtce:EntryList>
+            <xtce:ParameterRefEntry parameterRef="IRRADIANCE"/>
+            <xtce:ParameterRefEntry parameterRef="PHOTON_COUNT"/>
+          </xtce:EntryList>
+          <xtce:BaseContainer containerRef="/TestSatellite/CCSDSTelemetryPacket">
+            <xtce:RestrictionCriteria>
+              <xtce:Comparison parameterRef="/TestSatellite/CCSDS_APID" value="20"/>
+            </xtce:RestrictionCriteria>
+          </xtce:BaseContainer>
+        </xtce:SequenceContainer>
+      </xtce:ContainerSet>
+
+    </xtce:TelemetryMetaData>
+
+  </xtce:SpaceSystem>
+
+</xtce:SpaceSystem>

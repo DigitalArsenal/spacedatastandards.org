@@ -19,6 +19,7 @@ public struct LNE : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public LNE __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Unique identifier
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,48 +27,49 @@ public struct LNE : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
-  public string ORIG_OBJECT_ID { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Satellite catalog number of launched object
+  public uint SAT_NO { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// International designator (YYYY-NNNP)
+  public string ORIG_OBJECT_ID { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetORIG_OBJECT_IDBytes() { return __p.__vector_as_span<byte>(6, 1); }
+  public Span<byte> GetORIG_OBJECT_IDBytes() { return __p.__vector_as_span<byte>(8, 1); }
 #else
-  public ArraySegment<byte>? GetORIG_OBJECT_IDBytes() { return __p.__vector_as_arraysegment(6); }
+  public ArraySegment<byte>? GetORIG_OBJECT_IDBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
-  public byte[] GetORIG_OBJECT_IDArray() { return __p.__vector_as_array<byte>(6); }
-  public string DERIVED_FROM { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetORIG_OBJECT_IDArray() { return __p.__vector_as_array<byte>(8); }
+  /// Source record this event was derived from
+  public string DERIVED_FROM { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDERIVED_FROMBytes() { return __p.__vector_as_span<byte>(8, 1); }
+  public Span<byte> GetDERIVED_FROMBytes() { return __p.__vector_as_span<byte>(10, 1); }
 #else
-  public ArraySegment<byte>? GetDERIVED_FROMBytes() { return __p.__vector_as_arraysegment(8); }
+  public ArraySegment<byte>? GetDERIVED_FROMBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
-  public byte[] GetDERIVED_FROMArray() { return __p.__vector_as_array<byte>(8); }
-  public string DECLASSIFICATION_DATE { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetDERIVED_FROMArray() { return __p.__vector_as_array<byte>(10); }
+  /// Classification date (ISO 8601)
+  public string DECLASSIFICATION_DATE { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDECLASSIFICATION_DATEBytes() { return __p.__vector_as_span<byte>(10, 1); }
+  public Span<byte> GetDECLASSIFICATION_DATEBytes() { return __p.__vector_as_span<byte>(12, 1); }
 #else
-  public ArraySegment<byte>? GetDECLASSIFICATION_DATEBytes() { return __p.__vector_as_arraysegment(10); }
+  public ArraySegment<byte>? GetDECLASSIFICATION_DATEBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
-  public byte[] GetDECLASSIFICATION_DATEArray() { return __p.__vector_as_array<byte>(10); }
-  public string DECLASSIFICATION_STRING { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetDECLASSIFICATION_DATEArray() { return __p.__vector_as_array<byte>(12); }
+  /// Classification marking
+  public string DECLASSIFICATION_STRING { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDECLASSIFICATION_STRINGBytes() { return __p.__vector_as_span<byte>(12, 1); }
+  public Span<byte> GetDECLASSIFICATION_STRINGBytes() { return __p.__vector_as_span<byte>(14, 1); }
 #else
-  public ArraySegment<byte>? GetDECLASSIFICATION_STRINGBytes() { return __p.__vector_as_arraysegment(12); }
+  public ArraySegment<byte>? GetDECLASSIFICATION_STRINGBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
-  public byte[] GetDECLASSIFICATION_STRINGArray() { return __p.__vector_as_array<byte>(12); }
-  public string MSG_CREATE_DATE { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetDECLASSIFICATION_STRINGArray() { return __p.__vector_as_array<byte>(14); }
+  /// Message creation time (ISO 8601)
+  public string MSG_CREATE_DATE { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetMSG_CREATE_DATEBytes() { return __p.__vector_as_span<byte>(14, 1); }
+  public Span<byte> GetMSG_CREATE_DATEBytes() { return __p.__vector_as_span<byte>(16, 1); }
 #else
-  public ArraySegment<byte>? GetMSG_CREATE_DATEBytes() { return __p.__vector_as_arraysegment(14); }
+  public ArraySegment<byte>? GetMSG_CREATE_DATEBytes() { return __p.__vector_as_arraysegment(16); }
 #endif
-  public byte[] GetMSG_CREATE_DATEArray() { return __p.__vector_as_array<byte>(14); }
-  public string LAUNCH_FAILURE_CODE { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetLAUNCH_FAILURE_CODEBytes() { return __p.__vector_as_span<byte>(16, 1); }
-#else
-  public ArraySegment<byte>? GetLAUNCH_FAILURE_CODEBytes() { return __p.__vector_as_arraysegment(16); }
-#endif
-  public byte[] GetLAUNCH_FAILURE_CODEArray() { return __p.__vector_as_array<byte>(16); }
+  public byte[] GetMSG_CREATE_DATEArray() { return __p.__vector_as_array<byte>(16); }
+  /// Launch date and time (ISO 8601)
   public string LAUNCH_DATE { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetLAUNCH_DATEBytes() { return __p.__vector_as_span<byte>(18, 1); }
@@ -75,81 +77,179 @@ public struct LNE : IFlatbufferObject
   public ArraySegment<byte>? GetLAUNCH_DATEBytes() { return __p.__vector_as_arraysegment(18); }
 #endif
   public byte[] GetLAUNCH_DATEArray() { return __p.__vector_as_array<byte>(18); }
-  public string BE_NUMBER { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Launch outcome
+  public launchOutcome OUTCOME { get { int o = __p.__offset(20); return o != 0 ? (launchOutcome)__p.bb.GetSbyte(o + __p.bb_pos) : launchOutcome.SUCCESS; } }
+  /// Launch failure code (if applicable)
+  public string LAUNCH_FAILURE_CODE { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetBE_NUMBERBytes() { return __p.__vector_as_span<byte>(20, 1); }
+  public Span<byte> GetLAUNCH_FAILURE_CODEBytes() { return __p.__vector_as_span<byte>(22, 1); }
 #else
-  public ArraySegment<byte>? GetBE_NUMBERBytes() { return __p.__vector_as_arraysegment(20); }
+  public ArraySegment<byte>? GetLAUNCH_FAILURE_CODEBytes() { return __p.__vector_as_arraysegment(22); }
 #endif
-  public byte[] GetBE_NUMBERArray() { return __p.__vector_as_array<byte>(20); }
-  public string O_SUFFIX { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetLAUNCH_FAILURE_CODEArray() { return __p.__vector_as_array<byte>(22); }
+  /// Basic encyclopedia number
+  public string BE_NUMBER { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetO_SUFFIXBytes() { return __p.__vector_as_span<byte>(22, 1); }
+  public Span<byte> GetBE_NUMBERBytes() { return __p.__vector_as_span<byte>(24, 1); }
 #else
-  public ArraySegment<byte>? GetO_SUFFIXBytes() { return __p.__vector_as_arraysegment(22); }
+  public ArraySegment<byte>? GetBE_NUMBERBytes() { return __p.__vector_as_arraysegment(24); }
 #endif
-  public byte[] GetO_SUFFIXArray() { return __p.__vector_as_array<byte>(22); }
-  public string LAUNCH_FACILITY_NAME { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetBE_NUMBERArray() { return __p.__vector_as_array<byte>(24); }
+  /// Object suffix identifier
+  public string O_SUFFIX { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetLAUNCH_FACILITY_NAMEBytes() { return __p.__vector_as_span<byte>(24, 1); }
+  public Span<byte> GetO_SUFFIXBytes() { return __p.__vector_as_span<byte>(26, 1); }
 #else
-  public ArraySegment<byte>? GetLAUNCH_FACILITY_NAMEBytes() { return __p.__vector_as_arraysegment(24); }
+  public ArraySegment<byte>? GetO_SUFFIXBytes() { return __p.__vector_as_arraysegment(26); }
 #endif
-  public byte[] GetLAUNCH_FACILITY_NAMEArray() { return __p.__vector_as_array<byte>(24); }
-  public string ON_ORBIT { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetO_SUFFIXArray() { return __p.__vector_as_array<byte>(26); }
+  /// Launch facility name
+  public string LAUNCH_FACILITY_NAME { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetON_ORBITBytes() { return __p.__vector_as_span<byte>(26, 1); }
+  public Span<byte> GetLAUNCH_FACILITY_NAMEBytes() { return __p.__vector_as_span<byte>(28, 1); }
 #else
-  public ArraySegment<byte>? GetON_ORBITBytes() { return __p.__vector_as_arraysegment(26); }
+  public ArraySegment<byte>? GetLAUNCH_FACILITY_NAMEBytes() { return __p.__vector_as_arraysegment(28); }
 #endif
-  public byte[] GetON_ORBITArray() { return __p.__vector_as_array<byte>(26); }
-  public int SAT_NO { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public byte[] GetLAUNCH_FACILITY_NAMEArray() { return __p.__vector_as_array<byte>(28); }
+  /// Launch facility code
+  public string LAUNCH_FACILITY_CODE { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetLAUNCH_FACILITY_CODEBytes() { return __p.__vector_as_span<byte>(30, 1); }
+#else
+  public ArraySegment<byte>? GetLAUNCH_FACILITY_CODEBytes() { return __p.__vector_as_arraysegment(30); }
+#endif
+  public byte[] GetLAUNCH_FACILITY_CODEArray() { return __p.__vector_as_array<byte>(30); }
+  /// Launch vehicle type
+  public string LAUNCH_VEHICLE { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetLAUNCH_VEHICLEBytes() { return __p.__vector_as_span<byte>(32, 1); }
+#else
+  public ArraySegment<byte>? GetLAUNCH_VEHICLEBytes() { return __p.__vector_as_arraysegment(32); }
+#endif
+  public byte[] GetLAUNCH_VEHICLEArray() { return __p.__vector_as_array<byte>(32); }
+  /// Launch vehicle configuration
+  public string LAUNCH_VEHICLE_CONFIG { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetLAUNCH_VEHICLE_CONFIGBytes() { return __p.__vector_as_span<byte>(34, 1); }
+#else
+  public ArraySegment<byte>? GetLAUNCH_VEHICLE_CONFIGBytes() { return __p.__vector_as_arraysegment(34); }
+#endif
+  public byte[] GetLAUNCH_VEHICLE_CONFIGArray() { return __p.__vector_as_array<byte>(34); }
+  /// Target orbit type (LEO, MEO, GEO, HEO, SSO, etc.)
+  public string TARGET_ORBIT { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetTARGET_ORBITBytes() { return __p.__vector_as_span<byte>(36, 1); }
+#else
+  public ArraySegment<byte>? GetTARGET_ORBITBytes() { return __p.__vector_as_arraysegment(36); }
+#endif
+  public byte[] GetTARGET_ORBITArray() { return __p.__vector_as_array<byte>(36); }
+  /// Number of objects placed on orbit
+  public ushort OBJECTS_ON_ORBIT { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  /// On-orbit reference identifier
+  public string ON_ORBIT { get { int o = __p.__offset(40); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetON_ORBITBytes() { return __p.__vector_as_span<byte>(40, 1); }
+#else
+  public ArraySegment<byte>? GetON_ORBITBytes() { return __p.__vector_as_arraysegment(40); }
+#endif
+  public byte[] GetON_ORBITArray() { return __p.__vector_as_array<byte>(40); }
+  /// Launch country or operator
+  public string LAUNCH_COUNTRY { get { int o = __p.__offset(42); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetLAUNCH_COUNTRYBytes() { return __p.__vector_as_span<byte>(42, 1); }
+#else
+  public ArraySegment<byte>? GetLAUNCH_COUNTRYBytes() { return __p.__vector_as_arraysegment(42); }
+#endif
+  public byte[] GetLAUNCH_COUNTRYArray() { return __p.__vector_as_array<byte>(42); }
+  /// Mission name or payload description
+  public string MISSION_NAME { get { int o = __p.__offset(44); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetMISSION_NAMEBytes() { return __p.__vector_as_span<byte>(44, 1); }
+#else
+  public ArraySegment<byte>? GetMISSION_NAMEBytes() { return __p.__vector_as_arraysegment(44); }
+#endif
+  public byte[] GetMISSION_NAMEArray() { return __p.__vector_as_array<byte>(44); }
+  /// Additional remarks
+  public string REMARKS { get { int o = __p.__offset(46); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetREMARKSBytes() { return __p.__vector_as_span<byte>(46, 1); }
+#else
+  public ArraySegment<byte>? GetREMARKSBytes() { return __p.__vector_as_arraysegment(46); }
+#endif
+  public byte[] GetREMARKSArray() { return __p.__vector_as_array<byte>(46); }
 
   public static Offset<LNE> CreateLNE(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
+      uint SAT_NO = 0,
       StringOffset ORIG_OBJECT_IDOffset = default(StringOffset),
       StringOffset DERIVED_FROMOffset = default(StringOffset),
       StringOffset DECLASSIFICATION_DATEOffset = default(StringOffset),
       StringOffset DECLASSIFICATION_STRINGOffset = default(StringOffset),
       StringOffset MSG_CREATE_DATEOffset = default(StringOffset),
-      StringOffset LAUNCH_FAILURE_CODEOffset = default(StringOffset),
       StringOffset LAUNCH_DATEOffset = default(StringOffset),
+      launchOutcome OUTCOME = launchOutcome.SUCCESS,
+      StringOffset LAUNCH_FAILURE_CODEOffset = default(StringOffset),
       StringOffset BE_NUMBEROffset = default(StringOffset),
       StringOffset O_SUFFIXOffset = default(StringOffset),
       StringOffset LAUNCH_FACILITY_NAMEOffset = default(StringOffset),
+      StringOffset LAUNCH_FACILITY_CODEOffset = default(StringOffset),
+      StringOffset LAUNCH_VEHICLEOffset = default(StringOffset),
+      StringOffset LAUNCH_VEHICLE_CONFIGOffset = default(StringOffset),
+      StringOffset TARGET_ORBITOffset = default(StringOffset),
+      ushort OBJECTS_ON_ORBIT = 0,
       StringOffset ON_ORBITOffset = default(StringOffset),
-      int SAT_NO = 0) {
-    builder.StartTable(13);
-    LNE.AddSAT_NO(builder, SAT_NO);
+      StringOffset LAUNCH_COUNTRYOffset = default(StringOffset),
+      StringOffset MISSION_NAMEOffset = default(StringOffset),
+      StringOffset REMARKSOffset = default(StringOffset)) {
+    builder.StartTable(22);
+    LNE.AddREMARKS(builder, REMARKSOffset);
+    LNE.AddMISSION_NAME(builder, MISSION_NAMEOffset);
+    LNE.AddLAUNCH_COUNTRY(builder, LAUNCH_COUNTRYOffset);
     LNE.AddON_ORBIT(builder, ON_ORBITOffset);
+    LNE.AddTARGET_ORBIT(builder, TARGET_ORBITOffset);
+    LNE.AddLAUNCH_VEHICLE_CONFIG(builder, LAUNCH_VEHICLE_CONFIGOffset);
+    LNE.AddLAUNCH_VEHICLE(builder, LAUNCH_VEHICLEOffset);
+    LNE.AddLAUNCH_FACILITY_CODE(builder, LAUNCH_FACILITY_CODEOffset);
     LNE.AddLAUNCH_FACILITY_NAME(builder, LAUNCH_FACILITY_NAMEOffset);
     LNE.AddO_SUFFIX(builder, O_SUFFIXOffset);
     LNE.AddBE_NUMBER(builder, BE_NUMBEROffset);
-    LNE.AddLAUNCH_DATE(builder, LAUNCH_DATEOffset);
     LNE.AddLAUNCH_FAILURE_CODE(builder, LAUNCH_FAILURE_CODEOffset);
+    LNE.AddLAUNCH_DATE(builder, LAUNCH_DATEOffset);
     LNE.AddMSG_CREATE_DATE(builder, MSG_CREATE_DATEOffset);
     LNE.AddDECLASSIFICATION_STRING(builder, DECLASSIFICATION_STRINGOffset);
     LNE.AddDECLASSIFICATION_DATE(builder, DECLASSIFICATION_DATEOffset);
     LNE.AddDERIVED_FROM(builder, DERIVED_FROMOffset);
     LNE.AddORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset);
+    LNE.AddSAT_NO(builder, SAT_NO);
     LNE.AddID(builder, IDOffset);
+    LNE.AddOBJECTS_ON_ORBIT(builder, OBJECTS_ON_ORBIT);
+    LNE.AddOUTCOME(builder, OUTCOME);
     return LNE.EndLNE(builder);
   }
 
-  public static void StartLNE(FlatBufferBuilder builder) { builder.StartTable(13); }
+  public static void StartLNE(FlatBufferBuilder builder) { builder.StartTable(22); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
-  public static void AddORIG_OBJECT_ID(FlatBufferBuilder builder, StringOffset ORIG_OBJECT_IDOffset) { builder.AddOffset(1, ORIG_OBJECT_IDOffset.Value, 0); }
-  public static void AddDERIVED_FROM(FlatBufferBuilder builder, StringOffset DERIVED_FROMOffset) { builder.AddOffset(2, DERIVED_FROMOffset.Value, 0); }
-  public static void AddDECLASSIFICATION_DATE(FlatBufferBuilder builder, StringOffset DECLASSIFICATION_DATEOffset) { builder.AddOffset(3, DECLASSIFICATION_DATEOffset.Value, 0); }
-  public static void AddDECLASSIFICATION_STRING(FlatBufferBuilder builder, StringOffset DECLASSIFICATION_STRINGOffset) { builder.AddOffset(4, DECLASSIFICATION_STRINGOffset.Value, 0); }
-  public static void AddMSG_CREATE_DATE(FlatBufferBuilder builder, StringOffset MSG_CREATE_DATEOffset) { builder.AddOffset(5, MSG_CREATE_DATEOffset.Value, 0); }
-  public static void AddLAUNCH_FAILURE_CODE(FlatBufferBuilder builder, StringOffset LAUNCH_FAILURE_CODEOffset) { builder.AddOffset(6, LAUNCH_FAILURE_CODEOffset.Value, 0); }
+  public static void AddSAT_NO(FlatBufferBuilder builder, uint SAT_NO) { builder.AddUint(1, SAT_NO, 0); }
+  public static void AddORIG_OBJECT_ID(FlatBufferBuilder builder, StringOffset ORIG_OBJECT_IDOffset) { builder.AddOffset(2, ORIG_OBJECT_IDOffset.Value, 0); }
+  public static void AddDERIVED_FROM(FlatBufferBuilder builder, StringOffset DERIVED_FROMOffset) { builder.AddOffset(3, DERIVED_FROMOffset.Value, 0); }
+  public static void AddDECLASSIFICATION_DATE(FlatBufferBuilder builder, StringOffset DECLASSIFICATION_DATEOffset) { builder.AddOffset(4, DECLASSIFICATION_DATEOffset.Value, 0); }
+  public static void AddDECLASSIFICATION_STRING(FlatBufferBuilder builder, StringOffset DECLASSIFICATION_STRINGOffset) { builder.AddOffset(5, DECLASSIFICATION_STRINGOffset.Value, 0); }
+  public static void AddMSG_CREATE_DATE(FlatBufferBuilder builder, StringOffset MSG_CREATE_DATEOffset) { builder.AddOffset(6, MSG_CREATE_DATEOffset.Value, 0); }
   public static void AddLAUNCH_DATE(FlatBufferBuilder builder, StringOffset LAUNCH_DATEOffset) { builder.AddOffset(7, LAUNCH_DATEOffset.Value, 0); }
-  public static void AddBE_NUMBER(FlatBufferBuilder builder, StringOffset BE_NUMBEROffset) { builder.AddOffset(8, BE_NUMBEROffset.Value, 0); }
-  public static void AddO_SUFFIX(FlatBufferBuilder builder, StringOffset O_SUFFIXOffset) { builder.AddOffset(9, O_SUFFIXOffset.Value, 0); }
-  public static void AddLAUNCH_FACILITY_NAME(FlatBufferBuilder builder, StringOffset LAUNCH_FACILITY_NAMEOffset) { builder.AddOffset(10, LAUNCH_FACILITY_NAMEOffset.Value, 0); }
-  public static void AddON_ORBIT(FlatBufferBuilder builder, StringOffset ON_ORBITOffset) { builder.AddOffset(11, ON_ORBITOffset.Value, 0); }
-  public static void AddSAT_NO(FlatBufferBuilder builder, int SAT_NO) { builder.AddInt(12, SAT_NO, 0); }
+  public static void AddOUTCOME(FlatBufferBuilder builder, launchOutcome OUTCOME) { builder.AddSbyte(8, (sbyte)OUTCOME, 0); }
+  public static void AddLAUNCH_FAILURE_CODE(FlatBufferBuilder builder, StringOffset LAUNCH_FAILURE_CODEOffset) { builder.AddOffset(9, LAUNCH_FAILURE_CODEOffset.Value, 0); }
+  public static void AddBE_NUMBER(FlatBufferBuilder builder, StringOffset BE_NUMBEROffset) { builder.AddOffset(10, BE_NUMBEROffset.Value, 0); }
+  public static void AddO_SUFFIX(FlatBufferBuilder builder, StringOffset O_SUFFIXOffset) { builder.AddOffset(11, O_SUFFIXOffset.Value, 0); }
+  public static void AddLAUNCH_FACILITY_NAME(FlatBufferBuilder builder, StringOffset LAUNCH_FACILITY_NAMEOffset) { builder.AddOffset(12, LAUNCH_FACILITY_NAMEOffset.Value, 0); }
+  public static void AddLAUNCH_FACILITY_CODE(FlatBufferBuilder builder, StringOffset LAUNCH_FACILITY_CODEOffset) { builder.AddOffset(13, LAUNCH_FACILITY_CODEOffset.Value, 0); }
+  public static void AddLAUNCH_VEHICLE(FlatBufferBuilder builder, StringOffset LAUNCH_VEHICLEOffset) { builder.AddOffset(14, LAUNCH_VEHICLEOffset.Value, 0); }
+  public static void AddLAUNCH_VEHICLE_CONFIG(FlatBufferBuilder builder, StringOffset LAUNCH_VEHICLE_CONFIGOffset) { builder.AddOffset(15, LAUNCH_VEHICLE_CONFIGOffset.Value, 0); }
+  public static void AddTARGET_ORBIT(FlatBufferBuilder builder, StringOffset TARGET_ORBITOffset) { builder.AddOffset(16, TARGET_ORBITOffset.Value, 0); }
+  public static void AddOBJECTS_ON_ORBIT(FlatBufferBuilder builder, ushort OBJECTS_ON_ORBIT) { builder.AddUshort(17, OBJECTS_ON_ORBIT, 0); }
+  public static void AddON_ORBIT(FlatBufferBuilder builder, StringOffset ON_ORBITOffset) { builder.AddOffset(18, ON_ORBITOffset.Value, 0); }
+  public static void AddLAUNCH_COUNTRY(FlatBufferBuilder builder, StringOffset LAUNCH_COUNTRYOffset) { builder.AddOffset(19, LAUNCH_COUNTRYOffset.Value, 0); }
+  public static void AddMISSION_NAME(FlatBufferBuilder builder, StringOffset MISSION_NAMEOffset) { builder.AddOffset(20, MISSION_NAMEOffset.Value, 0); }
+  public static void AddREMARKS(FlatBufferBuilder builder, StringOffset REMARKSOffset) { builder.AddOffset(21, REMARKSOffset.Value, 0); }
   public static Offset<LNE> EndLNE(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<LNE>(o);
@@ -163,18 +263,27 @@ public struct LNE : IFlatbufferObject
   }
   public void UnPackTo(LNET _o) {
     _o.ID = this.ID;
+    _o.SAT_NO = this.SAT_NO;
     _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID;
     _o.DERIVED_FROM = this.DERIVED_FROM;
     _o.DECLASSIFICATION_DATE = this.DECLASSIFICATION_DATE;
     _o.DECLASSIFICATION_STRING = this.DECLASSIFICATION_STRING;
     _o.MSG_CREATE_DATE = this.MSG_CREATE_DATE;
-    _o.LAUNCH_FAILURE_CODE = this.LAUNCH_FAILURE_CODE;
     _o.LAUNCH_DATE = this.LAUNCH_DATE;
+    _o.OUTCOME = this.OUTCOME;
+    _o.LAUNCH_FAILURE_CODE = this.LAUNCH_FAILURE_CODE;
     _o.BE_NUMBER = this.BE_NUMBER;
     _o.O_SUFFIX = this.O_SUFFIX;
     _o.LAUNCH_FACILITY_NAME = this.LAUNCH_FACILITY_NAME;
+    _o.LAUNCH_FACILITY_CODE = this.LAUNCH_FACILITY_CODE;
+    _o.LAUNCH_VEHICLE = this.LAUNCH_VEHICLE;
+    _o.LAUNCH_VEHICLE_CONFIG = this.LAUNCH_VEHICLE_CONFIG;
+    _o.TARGET_ORBIT = this.TARGET_ORBIT;
+    _o.OBJECTS_ON_ORBIT = this.OBJECTS_ON_ORBIT;
     _o.ON_ORBIT = this.ON_ORBIT;
-    _o.SAT_NO = this.SAT_NO;
+    _o.LAUNCH_COUNTRY = this.LAUNCH_COUNTRY;
+    _o.MISSION_NAME = this.MISSION_NAME;
+    _o.REMARKS = this.REMARKS;
   }
   public static Offset<LNE> Pack(FlatBufferBuilder builder, LNET _o) {
     if (_o == null) return default(Offset<LNE>);
@@ -184,60 +293,94 @@ public struct LNE : IFlatbufferObject
     var _DECLASSIFICATION_DATE = _o.DECLASSIFICATION_DATE == null ? default(StringOffset) : builder.CreateString(_o.DECLASSIFICATION_DATE);
     var _DECLASSIFICATION_STRING = _o.DECLASSIFICATION_STRING == null ? default(StringOffset) : builder.CreateString(_o.DECLASSIFICATION_STRING);
     var _MSG_CREATE_DATE = _o.MSG_CREATE_DATE == null ? default(StringOffset) : builder.CreateString(_o.MSG_CREATE_DATE);
-    var _LAUNCH_FAILURE_CODE = _o.LAUNCH_FAILURE_CODE == null ? default(StringOffset) : builder.CreateString(_o.LAUNCH_FAILURE_CODE);
     var _LAUNCH_DATE = _o.LAUNCH_DATE == null ? default(StringOffset) : builder.CreateString(_o.LAUNCH_DATE);
+    var _LAUNCH_FAILURE_CODE = _o.LAUNCH_FAILURE_CODE == null ? default(StringOffset) : builder.CreateString(_o.LAUNCH_FAILURE_CODE);
     var _BE_NUMBER = _o.BE_NUMBER == null ? default(StringOffset) : builder.CreateString(_o.BE_NUMBER);
     var _O_SUFFIX = _o.O_SUFFIX == null ? default(StringOffset) : builder.CreateString(_o.O_SUFFIX);
     var _LAUNCH_FACILITY_NAME = _o.LAUNCH_FACILITY_NAME == null ? default(StringOffset) : builder.CreateString(_o.LAUNCH_FACILITY_NAME);
+    var _LAUNCH_FACILITY_CODE = _o.LAUNCH_FACILITY_CODE == null ? default(StringOffset) : builder.CreateString(_o.LAUNCH_FACILITY_CODE);
+    var _LAUNCH_VEHICLE = _o.LAUNCH_VEHICLE == null ? default(StringOffset) : builder.CreateString(_o.LAUNCH_VEHICLE);
+    var _LAUNCH_VEHICLE_CONFIG = _o.LAUNCH_VEHICLE_CONFIG == null ? default(StringOffset) : builder.CreateString(_o.LAUNCH_VEHICLE_CONFIG);
+    var _TARGET_ORBIT = _o.TARGET_ORBIT == null ? default(StringOffset) : builder.CreateString(_o.TARGET_ORBIT);
     var _ON_ORBIT = _o.ON_ORBIT == null ? default(StringOffset) : builder.CreateString(_o.ON_ORBIT);
+    var _LAUNCH_COUNTRY = _o.LAUNCH_COUNTRY == null ? default(StringOffset) : builder.CreateString(_o.LAUNCH_COUNTRY);
+    var _MISSION_NAME = _o.MISSION_NAME == null ? default(StringOffset) : builder.CreateString(_o.MISSION_NAME);
+    var _REMARKS = _o.REMARKS == null ? default(StringOffset) : builder.CreateString(_o.REMARKS);
     return CreateLNE(
       builder,
       _ID,
+      _o.SAT_NO,
       _ORIG_OBJECT_ID,
       _DERIVED_FROM,
       _DECLASSIFICATION_DATE,
       _DECLASSIFICATION_STRING,
       _MSG_CREATE_DATE,
-      _LAUNCH_FAILURE_CODE,
       _LAUNCH_DATE,
+      _o.OUTCOME,
+      _LAUNCH_FAILURE_CODE,
       _BE_NUMBER,
       _O_SUFFIX,
       _LAUNCH_FACILITY_NAME,
+      _LAUNCH_FACILITY_CODE,
+      _LAUNCH_VEHICLE,
+      _LAUNCH_VEHICLE_CONFIG,
+      _TARGET_ORBIT,
+      _o.OBJECTS_ON_ORBIT,
       _ON_ORBIT,
-      _o.SAT_NO);
+      _LAUNCH_COUNTRY,
+      _MISSION_NAME,
+      _REMARKS);
   }
 }
 
 public class LNET
 {
   public string ID { get; set; }
+  public uint SAT_NO { get; set; }
   public string ORIG_OBJECT_ID { get; set; }
   public string DERIVED_FROM { get; set; }
   public string DECLASSIFICATION_DATE { get; set; }
   public string DECLASSIFICATION_STRING { get; set; }
   public string MSG_CREATE_DATE { get; set; }
-  public string LAUNCH_FAILURE_CODE { get; set; }
   public string LAUNCH_DATE { get; set; }
+  public launchOutcome OUTCOME { get; set; }
+  public string LAUNCH_FAILURE_CODE { get; set; }
   public string BE_NUMBER { get; set; }
   public string O_SUFFIX { get; set; }
   public string LAUNCH_FACILITY_NAME { get; set; }
+  public string LAUNCH_FACILITY_CODE { get; set; }
+  public string LAUNCH_VEHICLE { get; set; }
+  public string LAUNCH_VEHICLE_CONFIG { get; set; }
+  public string TARGET_ORBIT { get; set; }
+  public ushort OBJECTS_ON_ORBIT { get; set; }
   public string ON_ORBIT { get; set; }
-  public int SAT_NO { get; set; }
+  public string LAUNCH_COUNTRY { get; set; }
+  public string MISSION_NAME { get; set; }
+  public string REMARKS { get; set; }
 
   public LNET() {
     this.ID = null;
+    this.SAT_NO = 0;
     this.ORIG_OBJECT_ID = null;
     this.DERIVED_FROM = null;
     this.DECLASSIFICATION_DATE = null;
     this.DECLASSIFICATION_STRING = null;
     this.MSG_CREATE_DATE = null;
-    this.LAUNCH_FAILURE_CODE = null;
     this.LAUNCH_DATE = null;
+    this.OUTCOME = launchOutcome.SUCCESS;
+    this.LAUNCH_FAILURE_CODE = null;
     this.BE_NUMBER = null;
     this.O_SUFFIX = null;
     this.LAUNCH_FACILITY_NAME = null;
+    this.LAUNCH_FACILITY_CODE = null;
+    this.LAUNCH_VEHICLE = null;
+    this.LAUNCH_VEHICLE_CONFIG = null;
+    this.TARGET_ORBIT = null;
+    this.OBJECTS_ON_ORBIT = 0;
     this.ON_ORBIT = null;
-    this.SAT_NO = 0;
+    this.LAUNCH_COUNTRY = null;
+    this.MISSION_NAME = null;
+    this.REMARKS = null;
   }
   public static LNET DeserializeFromBinary(byte[] fbBuffer) {
     return LNE.GetRootAsLNE(new ByteBuffer(fbBuffer)).UnPack();
@@ -256,18 +399,27 @@ static public class LNEVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*ID*/, false)
-      && verifier.VerifyString(tablePos, 6 /*ORIG_OBJECT_ID*/, false)
-      && verifier.VerifyString(tablePos, 8 /*DERIVED_FROM*/, false)
-      && verifier.VerifyString(tablePos, 10 /*DECLASSIFICATION_DATE*/, false)
-      && verifier.VerifyString(tablePos, 12 /*DECLASSIFICATION_STRING*/, false)
-      && verifier.VerifyString(tablePos, 14 /*MSG_CREATE_DATE*/, false)
-      && verifier.VerifyString(tablePos, 16 /*LAUNCH_FAILURE_CODE*/, false)
+      && verifier.VerifyField(tablePos, 6 /*SAT_NO*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 8 /*ORIG_OBJECT_ID*/, false)
+      && verifier.VerifyString(tablePos, 10 /*DERIVED_FROM*/, false)
+      && verifier.VerifyString(tablePos, 12 /*DECLASSIFICATION_DATE*/, false)
+      && verifier.VerifyString(tablePos, 14 /*DECLASSIFICATION_STRING*/, false)
+      && verifier.VerifyString(tablePos, 16 /*MSG_CREATE_DATE*/, false)
       && verifier.VerifyString(tablePos, 18 /*LAUNCH_DATE*/, false)
-      && verifier.VerifyString(tablePos, 20 /*BE_NUMBER*/, false)
-      && verifier.VerifyString(tablePos, 22 /*O_SUFFIX*/, false)
-      && verifier.VerifyString(tablePos, 24 /*LAUNCH_FACILITY_NAME*/, false)
-      && verifier.VerifyString(tablePos, 26 /*ON_ORBIT*/, false)
-      && verifier.VerifyField(tablePos, 28 /*SAT_NO*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 20 /*OUTCOME*/, 1 /*launchOutcome*/, 1, false)
+      && verifier.VerifyString(tablePos, 22 /*LAUNCH_FAILURE_CODE*/, false)
+      && verifier.VerifyString(tablePos, 24 /*BE_NUMBER*/, false)
+      && verifier.VerifyString(tablePos, 26 /*O_SUFFIX*/, false)
+      && verifier.VerifyString(tablePos, 28 /*LAUNCH_FACILITY_NAME*/, false)
+      && verifier.VerifyString(tablePos, 30 /*LAUNCH_FACILITY_CODE*/, false)
+      && verifier.VerifyString(tablePos, 32 /*LAUNCH_VEHICLE*/, false)
+      && verifier.VerifyString(tablePos, 34 /*LAUNCH_VEHICLE_CONFIG*/, false)
+      && verifier.VerifyString(tablePos, 36 /*TARGET_ORBIT*/, false)
+      && verifier.VerifyField(tablePos, 38 /*OBJECTS_ON_ORBIT*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyString(tablePos, 40 /*ON_ORBIT*/, false)
+      && verifier.VerifyString(tablePos, 42 /*LAUNCH_COUNTRY*/, false)
+      && verifier.VerifyString(tablePos, 44 /*MISSION_NAME*/, false)
+      && verifier.VerifyString(tablePos, 46 /*REMARKS*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

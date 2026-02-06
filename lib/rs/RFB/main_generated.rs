@@ -9,10 +9,244 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_RF_BAND_DESIGNATION: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_RF_BAND_DESIGNATION: i8 = 12;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_RF_BAND_DESIGNATION: [rfBandDesignation; 13] = [
+  rfBandDesignation::UHF,
+  rfBandDesignation::L,
+  rfBandDesignation::S,
+  rfBandDesignation::C,
+  rfBandDesignation::X,
+  rfBandDesignation::KU,
+  rfBandDesignation::K,
+  rfBandDesignation::KA,
+  rfBandDesignation::V,
+  rfBandDesignation::W,
+  rfBandDesignation::Q,
+  rfBandDesignation::EHF,
+  rfBandDesignation::OTHER,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct rfBandDesignation(pub i8);
+#[allow(non_upper_case_globals)]
+impl rfBandDesignation {
+  pub const UHF: Self = Self(0);
+  pub const L: Self = Self(1);
+  pub const S: Self = Self(2);
+  pub const C: Self = Self(3);
+  pub const X: Self = Self(4);
+  pub const KU: Self = Self(5);
+  pub const K: Self = Self(6);
+  pub const KA: Self = Self(7);
+  pub const V: Self = Self(8);
+  pub const W: Self = Self(9);
+  pub const Q: Self = Self(10);
+  pub const EHF: Self = Self(11);
+  pub const OTHER: Self = Self(12);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 12;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::UHF,
+    Self::L,
+    Self::S,
+    Self::C,
+    Self::X,
+    Self::KU,
+    Self::K,
+    Self::KA,
+    Self::V,
+    Self::W,
+    Self::Q,
+    Self::EHF,
+    Self::OTHER,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::UHF => Some("UHF"),
+      Self::L => Some("L"),
+      Self::S => Some("S"),
+      Self::C => Some("C"),
+      Self::X => Some("X"),
+      Self::KU => Some("KU"),
+      Self::K => Some("K"),
+      Self::KA => Some("KA"),
+      Self::V => Some("V"),
+      Self::W => Some("W"),
+      Self::Q => Some("Q"),
+      Self::EHF => Some("EHF"),
+      Self::OTHER => Some("OTHER"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for rfBandDesignation {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for rfBandDesignation {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for rfBandDesignation {
+    type Output = rfBandDesignation;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for rfBandDesignation {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for rfBandDesignation {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for rfBandDesignation {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_RF_POLARIZATION: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_RF_POLARIZATION: i8 = 6;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_RF_POLARIZATION: [rfPolarization; 7] = [
+  rfPolarization::LHCP,
+  rfPolarization::RHCP,
+  rfPolarization::LINEAR_H,
+  rfPolarization::LINEAR_V,
+  rfPolarization::DUAL,
+  rfPolarization::CROSS,
+  rfPolarization::UNKNOWN,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct rfPolarization(pub i8);
+#[allow(non_upper_case_globals)]
+impl rfPolarization {
+  pub const LHCP: Self = Self(0);
+  pub const RHCP: Self = Self(1);
+  pub const LINEAR_H: Self = Self(2);
+  pub const LINEAR_V: Self = Self(3);
+  pub const DUAL: Self = Self(4);
+  pub const CROSS: Self = Self(5);
+  pub const UNKNOWN: Self = Self(6);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 6;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::LHCP,
+    Self::RHCP,
+    Self::LINEAR_H,
+    Self::LINEAR_V,
+    Self::DUAL,
+    Self::CROSS,
+    Self::UNKNOWN,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::LHCP => Some("LHCP"),
+      Self::RHCP => Some("RHCP"),
+      Self::LINEAR_H => Some("LINEAR_H"),
+      Self::LINEAR_V => Some("LINEAR_V"),
+      Self::DUAL => Some("DUAL"),
+      Self::CROSS => Some("CROSS"),
+      Self::UNKNOWN => Some("UNKNOWN"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for rfPolarization {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for rfPolarization {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for rfPolarization {
+    type Output = rfPolarization;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for rfPolarization {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for rfPolarization {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for rfPolarization {}
 pub enum RFBOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
-/// RF Band
+/// RF Band Specification
 pub struct RFB<'a> {
   pub _tab: flatbuffers::Table<'a>,
 }
@@ -35,9 +269,9 @@ impl<'a> RFB<'a> {
   pub const VT_FREQ_MIN: flatbuffers::VOffsetT = 16;
   pub const VT_FREQ_MAX: flatbuffers::VOffsetT = 18;
   pub const VT_CENTER_FREQ: flatbuffers::VOffsetT = 20;
-  pub const VT_PEAK_GAIN: flatbuffers::VOffsetT = 22;
-  pub const VT_EDGE_GAIN: flatbuffers::VOffsetT = 24;
-  pub const VT_BANDWIDTH: flatbuffers::VOffsetT = 26;
+  pub const VT_BANDWIDTH: flatbuffers::VOffsetT = 22;
+  pub const VT_PEAK_GAIN: flatbuffers::VOffsetT = 24;
+  pub const VT_EDGE_GAIN: flatbuffers::VOffsetT = 26;
   pub const VT_BEAMWIDTH: flatbuffers::VOffsetT = 28;
   pub const VT_POLARIZATION: flatbuffers::VOffsetT = 30;
   pub const VT_ERP: flatbuffers::VOffsetT = 32;
@@ -56,19 +290,19 @@ impl<'a> RFB<'a> {
     builder.add_EIRP(args.EIRP);
     builder.add_ERP(args.ERP);
     builder.add_BEAMWIDTH(args.BEAMWIDTH);
-    builder.add_BANDWIDTH(args.BANDWIDTH);
     builder.add_EDGE_GAIN(args.EDGE_GAIN);
     builder.add_PEAK_GAIN(args.PEAK_GAIN);
+    builder.add_BANDWIDTH(args.BANDWIDTH);
     builder.add_CENTER_FREQ(args.CENTER_FREQ);
     builder.add_FREQ_MAX(args.FREQ_MAX);
     builder.add_FREQ_MIN(args.FREQ_MIN);
-    if let Some(x) = args.POLARIZATION { builder.add_POLARIZATION(x); }
     if let Some(x) = args.PURPOSE { builder.add_PURPOSE(x); }
     if let Some(x) = args.MODE { builder.add_MODE(x); }
-    if let Some(x) = args.BAND { builder.add_BAND(x); }
     if let Some(x) = args.NAME { builder.add_NAME(x); }
     if let Some(x) = args.ID_ENTITY { builder.add_ID_ENTITY(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_POLARIZATION(args.POLARIZATION);
+    builder.add_BAND(args.BAND);
     builder.finish()
   }
 
@@ -82,9 +316,7 @@ impl<'a> RFB<'a> {
     let NAME = self.NAME().map(|x| {
       x.to_string()
     });
-    let BAND = self.BAND().map(|x| {
-      x.to_string()
-    });
+    let BAND = self.BAND();
     let MODE = self.MODE().map(|x| {
       x.to_string()
     });
@@ -94,13 +326,11 @@ impl<'a> RFB<'a> {
     let FREQ_MIN = self.FREQ_MIN();
     let FREQ_MAX = self.FREQ_MAX();
     let CENTER_FREQ = self.CENTER_FREQ();
+    let BANDWIDTH = self.BANDWIDTH();
     let PEAK_GAIN = self.PEAK_GAIN();
     let EDGE_GAIN = self.EDGE_GAIN();
-    let BANDWIDTH = self.BANDWIDTH();
     let BEAMWIDTH = self.BEAMWIDTH();
-    let POLARIZATION = self.POLARIZATION().map(|x| {
-      x.to_string()
-    });
+    let POLARIZATION = self.POLARIZATION();
     let ERP = self.ERP();
     let EIRP = self.EIRP();
     RFBT {
@@ -113,9 +343,9 @@ impl<'a> RFB<'a> {
       FREQ_MIN,
       FREQ_MAX,
       CENTER_FREQ,
+      BANDWIDTH,
       PEAK_GAIN,
       EDGE_GAIN,
-      BANDWIDTH,
       BEAMWIDTH,
       POLARIZATION,
       ERP,
@@ -123,6 +353,7 @@ impl<'a> RFB<'a> {
     }
   }
 
+  /// Unique identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -130,6 +361,7 @@ impl<'a> RFB<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFB::VT_ID, None)}
   }
+  /// Parent entity identifier
   #[inline]
   pub fn ID_ENTITY(&self) -> Option<&'a str> {
     // Safety:
@@ -137,6 +369,7 @@ impl<'a> RFB<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFB::VT_ID_ENTITY, None)}
   }
+  /// Band name or designation
   #[inline]
   pub fn NAME(&self) -> Option<&'a str> {
     // Safety:
@@ -144,13 +377,15 @@ impl<'a> RFB<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFB::VT_NAME, None)}
   }
+  /// RF band designation
   #[inline]
-  pub fn BAND(&self) -> Option<&'a str> {
+  pub fn BAND(&self) -> rfBandDesignation {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFB::VT_BAND, None)}
+    unsafe { self._tab.get::<rfBandDesignation>(RFB::VT_BAND, Some(rfBandDesignation::UHF)).unwrap()}
   }
+  /// Operating mode
   #[inline]
   pub fn MODE(&self) -> Option<&'a str> {
     // Safety:
@@ -158,6 +393,7 @@ impl<'a> RFB<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFB::VT_MODE, None)}
   }
+  /// Band purpose (e.g., TT&C, PAYLOAD, BEACON)
   #[inline]
   pub fn PURPOSE(&self) -> Option<&'a str> {
     // Safety:
@@ -165,6 +401,7 @@ impl<'a> RFB<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFB::VT_PURPOSE, None)}
   }
+  /// Minimum frequency (MHz)
   #[inline]
   pub fn FREQ_MIN(&self) -> f64 {
     // Safety:
@@ -172,6 +409,7 @@ impl<'a> RFB<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(RFB::VT_FREQ_MIN, Some(0.0)).unwrap()}
   }
+  /// Maximum frequency (MHz)
   #[inline]
   pub fn FREQ_MAX(&self) -> f64 {
     // Safety:
@@ -179,6 +417,7 @@ impl<'a> RFB<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(RFB::VT_FREQ_MAX, Some(0.0)).unwrap()}
   }
+  /// Center frequency (MHz)
   #[inline]
   pub fn CENTER_FREQ(&self) -> f64 {
     // Safety:
@@ -186,20 +425,7 @@ impl<'a> RFB<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(RFB::VT_CENTER_FREQ, Some(0.0)).unwrap()}
   }
-  #[inline]
-  pub fn PEAK_GAIN(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFB::VT_PEAK_GAIN, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn EDGE_GAIN(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RFB::VT_EDGE_GAIN, Some(0.0)).unwrap()}
-  }
+  /// Bandwidth (MHz)
   #[inline]
   pub fn BANDWIDTH(&self) -> f64 {
     // Safety:
@@ -207,6 +433,23 @@ impl<'a> RFB<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(RFB::VT_BANDWIDTH, Some(0.0)).unwrap()}
   }
+  /// Peak antenna gain (dBi)
+  #[inline]
+  pub fn PEAK_GAIN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFB::VT_PEAK_GAIN, Some(0.0)).unwrap()}
+  }
+  /// Edge-of-coverage gain (dBi)
+  #[inline]
+  pub fn EDGE_GAIN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFB::VT_EDGE_GAIN, Some(0.0)).unwrap()}
+  }
+  /// Antenna beamwidth (degrees)
   #[inline]
   pub fn BEAMWIDTH(&self) -> f64 {
     // Safety:
@@ -214,13 +457,15 @@ impl<'a> RFB<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(RFB::VT_BEAMWIDTH, Some(0.0)).unwrap()}
   }
+  /// Polarization
   #[inline]
-  pub fn POLARIZATION(&self) -> Option<&'a str> {
+  pub fn POLARIZATION(&self) -> rfPolarization {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFB::VT_POLARIZATION, None)}
+    unsafe { self._tab.get::<rfPolarization>(RFB::VT_POLARIZATION, Some(rfPolarization::LHCP)).unwrap()}
   }
+  /// Effective radiated power (dBW)
   #[inline]
   pub fn ERP(&self) -> f64 {
     // Safety:
@@ -228,6 +473,7 @@ impl<'a> RFB<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(RFB::VT_ERP, Some(0.0)).unwrap()}
   }
+  /// Effective isotropic radiated power (dBW)
   #[inline]
   pub fn EIRP(&self) -> f64 {
     // Safety:
@@ -247,17 +493,17 @@ impl flatbuffers::Verifiable for RFB<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID_ENTITY", Self::VT_ID_ENTITY, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("BAND", Self::VT_BAND, false)?
+     .visit_field::<rfBandDesignation>("BAND", Self::VT_BAND, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MODE", Self::VT_MODE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("PURPOSE", Self::VT_PURPOSE, false)?
      .visit_field::<f64>("FREQ_MIN", Self::VT_FREQ_MIN, false)?
      .visit_field::<f64>("FREQ_MAX", Self::VT_FREQ_MAX, false)?
      .visit_field::<f64>("CENTER_FREQ", Self::VT_CENTER_FREQ, false)?
+     .visit_field::<f64>("BANDWIDTH", Self::VT_BANDWIDTH, false)?
      .visit_field::<f64>("PEAK_GAIN", Self::VT_PEAK_GAIN, false)?
      .visit_field::<f64>("EDGE_GAIN", Self::VT_EDGE_GAIN, false)?
-     .visit_field::<f64>("BANDWIDTH", Self::VT_BANDWIDTH, false)?
      .visit_field::<f64>("BEAMWIDTH", Self::VT_BEAMWIDTH, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("POLARIZATION", Self::VT_POLARIZATION, false)?
+     .visit_field::<rfPolarization>("POLARIZATION", Self::VT_POLARIZATION, false)?
      .visit_field::<f64>("ERP", Self::VT_ERP, false)?
      .visit_field::<f64>("EIRP", Self::VT_EIRP, false)?
      .finish();
@@ -268,17 +514,17 @@ pub struct RFBArgs<'a> {
     pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ID_ENTITY: Option<flatbuffers::WIPOffset<&'a str>>,
     pub NAME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub BAND: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub BAND: rfBandDesignation,
     pub MODE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub PURPOSE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub FREQ_MIN: f64,
     pub FREQ_MAX: f64,
     pub CENTER_FREQ: f64,
+    pub BANDWIDTH: f64,
     pub PEAK_GAIN: f64,
     pub EDGE_GAIN: f64,
-    pub BANDWIDTH: f64,
     pub BEAMWIDTH: f64,
-    pub POLARIZATION: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub POLARIZATION: rfPolarization,
     pub ERP: f64,
     pub EIRP: f64,
 }
@@ -289,17 +535,17 @@ impl<'a> Default for RFBArgs<'a> {
       ID: None,
       ID_ENTITY: None,
       NAME: None,
-      BAND: None,
+      BAND: rfBandDesignation::UHF,
       MODE: None,
       PURPOSE: None,
       FREQ_MIN: 0.0,
       FREQ_MAX: 0.0,
       CENTER_FREQ: 0.0,
+      BANDWIDTH: 0.0,
       PEAK_GAIN: 0.0,
       EDGE_GAIN: 0.0,
-      BANDWIDTH: 0.0,
       BEAMWIDTH: 0.0,
-      POLARIZATION: None,
+      POLARIZATION: rfPolarization::LHCP,
       ERP: 0.0,
       EIRP: 0.0,
     }
@@ -324,8 +570,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RFBBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFB::VT_NAME, NAME);
   }
   #[inline]
-  pub fn add_BAND(&mut self, BAND: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFB::VT_BAND, BAND);
+  pub fn add_BAND(&mut self, BAND: rfBandDesignation) {
+    self.fbb_.push_slot::<rfBandDesignation>(RFB::VT_BAND, BAND, rfBandDesignation::UHF);
   }
   #[inline]
   pub fn add_MODE(&mut self, MODE: flatbuffers::WIPOffset<&'b  str>) {
@@ -348,6 +594,10 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RFBBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(RFB::VT_CENTER_FREQ, CENTER_FREQ, 0.0);
   }
   #[inline]
+  pub fn add_BANDWIDTH(&mut self, BANDWIDTH: f64) {
+    self.fbb_.push_slot::<f64>(RFB::VT_BANDWIDTH, BANDWIDTH, 0.0);
+  }
+  #[inline]
   pub fn add_PEAK_GAIN(&mut self, PEAK_GAIN: f64) {
     self.fbb_.push_slot::<f64>(RFB::VT_PEAK_GAIN, PEAK_GAIN, 0.0);
   }
@@ -356,16 +606,12 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RFBBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(RFB::VT_EDGE_GAIN, EDGE_GAIN, 0.0);
   }
   #[inline]
-  pub fn add_BANDWIDTH(&mut self, BANDWIDTH: f64) {
-    self.fbb_.push_slot::<f64>(RFB::VT_BANDWIDTH, BANDWIDTH, 0.0);
-  }
-  #[inline]
   pub fn add_BEAMWIDTH(&mut self, BEAMWIDTH: f64) {
     self.fbb_.push_slot::<f64>(RFB::VT_BEAMWIDTH, BEAMWIDTH, 0.0);
   }
   #[inline]
-  pub fn add_POLARIZATION(&mut self, POLARIZATION: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFB::VT_POLARIZATION, POLARIZATION);
+  pub fn add_POLARIZATION(&mut self, POLARIZATION: rfPolarization) {
+    self.fbb_.push_slot::<rfPolarization>(RFB::VT_POLARIZATION, POLARIZATION, rfPolarization::LHCP);
   }
   #[inline]
   pub fn add_ERP(&mut self, ERP: f64) {
@@ -402,9 +648,9 @@ impl core::fmt::Debug for RFB<'_> {
       ds.field("FREQ_MIN", &self.FREQ_MIN());
       ds.field("FREQ_MAX", &self.FREQ_MAX());
       ds.field("CENTER_FREQ", &self.CENTER_FREQ());
+      ds.field("BANDWIDTH", &self.BANDWIDTH());
       ds.field("PEAK_GAIN", &self.PEAK_GAIN());
       ds.field("EDGE_GAIN", &self.EDGE_GAIN());
-      ds.field("BANDWIDTH", &self.BANDWIDTH());
       ds.field("BEAMWIDTH", &self.BEAMWIDTH());
       ds.field("POLARIZATION", &self.POLARIZATION());
       ds.field("ERP", &self.ERP());
@@ -418,17 +664,17 @@ pub struct RFBT {
   pub ID: Option<String>,
   pub ID_ENTITY: Option<String>,
   pub NAME: Option<String>,
-  pub BAND: Option<String>,
+  pub BAND: rfBandDesignation,
   pub MODE: Option<String>,
   pub PURPOSE: Option<String>,
   pub FREQ_MIN: f64,
   pub FREQ_MAX: f64,
   pub CENTER_FREQ: f64,
+  pub BANDWIDTH: f64,
   pub PEAK_GAIN: f64,
   pub EDGE_GAIN: f64,
-  pub BANDWIDTH: f64,
   pub BEAMWIDTH: f64,
-  pub POLARIZATION: Option<String>,
+  pub POLARIZATION: rfPolarization,
   pub ERP: f64,
   pub EIRP: f64,
 }
@@ -438,17 +684,17 @@ impl Default for RFBT {
       ID: None,
       ID_ENTITY: None,
       NAME: None,
-      BAND: None,
+      BAND: rfBandDesignation::UHF,
       MODE: None,
       PURPOSE: None,
       FREQ_MIN: 0.0,
       FREQ_MAX: 0.0,
       CENTER_FREQ: 0.0,
+      BANDWIDTH: 0.0,
       PEAK_GAIN: 0.0,
       EDGE_GAIN: 0.0,
-      BANDWIDTH: 0.0,
       BEAMWIDTH: 0.0,
-      POLARIZATION: None,
+      POLARIZATION: rfPolarization::LHCP,
       ERP: 0.0,
       EIRP: 0.0,
     }
@@ -468,9 +714,7 @@ impl RFBT {
     let NAME = self.NAME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let BAND = self.BAND.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+    let BAND = self.BAND;
     let MODE = self.MODE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -480,13 +724,11 @@ impl RFBT {
     let FREQ_MIN = self.FREQ_MIN;
     let FREQ_MAX = self.FREQ_MAX;
     let CENTER_FREQ = self.CENTER_FREQ;
+    let BANDWIDTH = self.BANDWIDTH;
     let PEAK_GAIN = self.PEAK_GAIN;
     let EDGE_GAIN = self.EDGE_GAIN;
-    let BANDWIDTH = self.BANDWIDTH;
     let BEAMWIDTH = self.BEAMWIDTH;
-    let POLARIZATION = self.POLARIZATION.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+    let POLARIZATION = self.POLARIZATION;
     let ERP = self.ERP;
     let EIRP = self.EIRP;
     RFB::create(_fbb, &RFBArgs{
@@ -499,9 +741,9 @@ impl RFBT {
       FREQ_MIN,
       FREQ_MAX,
       CENTER_FREQ,
+      BANDWIDTH,
       PEAK_GAIN,
       EDGE_GAIN,
-      BANDWIDTH,
       BEAMWIDTH,
       POLARIZATION,
       ERP,

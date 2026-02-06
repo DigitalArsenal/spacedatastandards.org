@@ -54,6 +54,7 @@ func (rcv *RDM) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// CCSDS RDM version
 func (rcv *RDM) CCSDS_RDM_VERS() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -62,6 +63,8 @@ func (rcv *RDM) CCSDS_RDM_VERS() []byte {
 	return nil
 }
 
+/// CCSDS RDM version
+/// Message creation date (ISO 8601)
 func (rcv *RDM) CREATION_DATE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -70,6 +73,8 @@ func (rcv *RDM) CREATION_DATE() []byte {
 	return nil
 }
 
+/// Message creation date (ISO 8601)
+/// Creating organization
 func (rcv *RDM) ORIGINATOR() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -78,6 +83,8 @@ func (rcv *RDM) ORIGINATOR() []byte {
 	return nil
 }
 
+/// Creating organization
+/// Object name
 func (rcv *RDM) OBJECT_NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -86,6 +93,8 @@ func (rcv *RDM) OBJECT_NAME() []byte {
 	return nil
 }
 
+/// Object name
+/// International designator
 func (rcv *RDM) OBJECT_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -94,40 +103,314 @@ func (rcv *RDM) OBJECT_ID() []byte {
 	return nil
 }
 
-func (rcv *RDM) REENTRY_EPOCH() []byte {
+/// International designator
+/// NORAD catalog number
+func (rcv *RDM) NORAD_CAT_ID() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// NORAD catalog number
+func (rcv *RDM) MutateNORAD_CAT_ID(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(14, n)
+}
+
+/// Object type (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN)
+func (rcv *RDM) OBJECT_TYPE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
 }
 
-func (rcv *RDM) REENTRY_LATITUDE() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *RDM) MutateREENTRY_LATITUDE(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(16, n)
-}
-
-func (rcv *RDM) REENTRY_LONGITUDE() float64 {
+/// Object type (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN)
+/// Reentry disposition
+func (rcv *RDM) DISPOSITION() reentryDisposition {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
+		return reentryDisposition(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// Reentry disposition
+func (rcv *RDM) MutateDISPOSITION(n reentryDisposition) bool {
+	return rcv._tab.MutateInt8Slot(18, int8(n))
+}
+
+/// Reentry reason
+func (rcv *RDM) REASON() reentryReason {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return reentryReason(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// Reentry reason
+func (rcv *RDM) MutateREASON(n reentryReason) bool {
+	return rcv._tab.MutateInt8Slot(20, int8(n))
+}
+
+/// Predicted reentry epoch (ISO 8601)
+func (rcv *RDM) REENTRY_EPOCH() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Predicted reentry epoch (ISO 8601)
+/// Reentry epoch uncertainty window in hours
+func (rcv *RDM) REENTRY_EPOCH_UNC() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
 	return 0.0
 }
 
-func (rcv *RDM) MutateREENTRY_LONGITUDE(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(18, n)
+/// Reentry epoch uncertainty window in hours
+func (rcv *RDM) MutateREENTRY_EPOCH_UNC(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(24, n)
 }
 
+/// Reentry latitude in degrees
+func (rcv *RDM) REENTRY_LATITUDE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Reentry latitude in degrees
+func (rcv *RDM) MutateREENTRY_LATITUDE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+/// Reentry longitude in degrees
+func (rcv *RDM) REENTRY_LONGITUDE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Reentry longitude in degrees
+func (rcv *RDM) MutateREENTRY_LONGITUDE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+/// Reentry altitude in km
+func (rcv *RDM) REENTRY_ALTITUDE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Reentry altitude in km
+func (rcv *RDM) MutateREENTRY_ALTITUDE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+/// Time system
+func (rcv *RDM) TIME_SYSTEM() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Time system
+/// Previous predicted reentry epoch for comparison (ISO 8601)
+func (rcv *RDM) PREV_PREDICTION_EPOCH() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Previous predicted reentry epoch for comparison (ISO 8601)
+/// Ballistic coefficient in kg/m^2
+func (rcv *RDM) BALLISTIC_COEFF() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Ballistic coefficient in kg/m^2
+func (rcv *RDM) MutateBALLISTIC_COEFF(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+/// Object mass in kg
+func (rcv *RDM) MASS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Object mass in kg
+func (rcv *RDM) MutateMASS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(38, n)
+}
+
+/// Solar radiation pressure area in m^2
+func (rcv *RDM) SOLAR_RAD_AREA() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Solar radiation pressure area in m^2
+func (rcv *RDM) MutateSOLAR_RAD_AREA(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(40, n)
+}
+
+/// Drag area in m^2
+func (rcv *RDM) DRAG_AREA() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Drag area in m^2
+func (rcv *RDM) MutateDRAG_AREA(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(42, n)
+}
+
+/// Initial state vector
+func (rcv *RDM) INITIAL_STATE(obj *reentryStateVector) *reentryStateVector {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		x := rcv._tab.Indirect(o + rcv._tab.Pos)
+		if obj == nil {
+			obj = new(reentryStateVector)
+		}
+		obj.Init(rcv._tab.Bytes, x)
+		return obj
+	}
+	return nil
+}
+
+/// Initial state vector
+/// Ground impact predictions
+func (rcv *RDM) IMPACT_PREDICTIONS(obj *reentryImpact, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *RDM) IMPACT_PREDICTIONSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Ground impact predictions
+/// Predicted surviving debris
+func (rcv *RDM) SURVIVING_DEBRIS(obj *survivingDebris, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
+func (rcv *RDM) SURVIVING_DEBRISLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Predicted surviving debris
+/// Casualty expectation
+func (rcv *RDM) CASUALTY_EXPECTATION() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Casualty expectation
+func (rcv *RDM) MutateCASUALTY_EXPECTATION(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(50, n)
+}
+
+/// Number of breakup fragments predicted
+func (rcv *RDM) NUM_FRAGMENTS() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Number of breakup fragments predicted
+func (rcv *RDM) MutateNUM_FRAGMENTS(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(52, n)
+}
+
+/// Total surviving mass in kg
+func (rcv *RDM) SURVIVING_MASS() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Total surviving mass in kg
+func (rcv *RDM) MutateSURVIVING_MASS(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(54, n)
+}
+
+/// Additional comments
+func (rcv *RDM) COMMENT() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Additional comments
 func RDMStart(builder *flatbuffers.Builder) {
-	builder.StartObject(8)
+	builder.StartObject(27)
 }
 func RDMAddCCSDS_RDM_VERS(builder *flatbuffers.Builder, CCSDS_RDM_VERS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(CCSDS_RDM_VERS), 0)
@@ -144,14 +427,77 @@ func RDMAddOBJECT_NAME(builder *flatbuffers.Builder, OBJECT_NAME flatbuffers.UOf
 func RDMAddOBJECT_ID(builder *flatbuffers.Builder, OBJECT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(OBJECT_ID), 0)
 }
+func RDMAddNORAD_CAT_ID(builder *flatbuffers.Builder, NORAD_CAT_ID uint32) {
+	builder.PrependUint32Slot(5, NORAD_CAT_ID, 0)
+}
+func RDMAddOBJECT_TYPE(builder *flatbuffers.Builder, OBJECT_TYPE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(OBJECT_TYPE), 0)
+}
+func RDMAddDISPOSITION(builder *flatbuffers.Builder, DISPOSITION reentryDisposition) {
+	builder.PrependInt8Slot(7, int8(DISPOSITION), 0)
+}
+func RDMAddREASON(builder *flatbuffers.Builder, REASON reentryReason) {
+	builder.PrependInt8Slot(8, int8(REASON), 0)
+}
 func RDMAddREENTRY_EPOCH(builder *flatbuffers.Builder, REENTRY_EPOCH flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(REENTRY_EPOCH), 0)
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(REENTRY_EPOCH), 0)
+}
+func RDMAddREENTRY_EPOCH_UNC(builder *flatbuffers.Builder, REENTRY_EPOCH_UNC float64) {
+	builder.PrependFloat64Slot(10, REENTRY_EPOCH_UNC, 0.0)
 }
 func RDMAddREENTRY_LATITUDE(builder *flatbuffers.Builder, REENTRY_LATITUDE float64) {
-	builder.PrependFloat64Slot(6, REENTRY_LATITUDE, 0.0)
+	builder.PrependFloat64Slot(11, REENTRY_LATITUDE, 0.0)
 }
 func RDMAddREENTRY_LONGITUDE(builder *flatbuffers.Builder, REENTRY_LONGITUDE float64) {
-	builder.PrependFloat64Slot(7, REENTRY_LONGITUDE, 0.0)
+	builder.PrependFloat64Slot(12, REENTRY_LONGITUDE, 0.0)
+}
+func RDMAddREENTRY_ALTITUDE(builder *flatbuffers.Builder, REENTRY_ALTITUDE float64) {
+	builder.PrependFloat64Slot(13, REENTRY_ALTITUDE, 0.0)
+}
+func RDMAddTIME_SYSTEM(builder *flatbuffers.Builder, TIME_SYSTEM flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(TIME_SYSTEM), 0)
+}
+func RDMAddPREV_PREDICTION_EPOCH(builder *flatbuffers.Builder, PREV_PREDICTION_EPOCH flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(PREV_PREDICTION_EPOCH), 0)
+}
+func RDMAddBALLISTIC_COEFF(builder *flatbuffers.Builder, BALLISTIC_COEFF float64) {
+	builder.PrependFloat64Slot(16, BALLISTIC_COEFF, 0.0)
+}
+func RDMAddMASS(builder *flatbuffers.Builder, MASS float64) {
+	builder.PrependFloat64Slot(17, MASS, 0.0)
+}
+func RDMAddSOLAR_RAD_AREA(builder *flatbuffers.Builder, SOLAR_RAD_AREA float64) {
+	builder.PrependFloat64Slot(18, SOLAR_RAD_AREA, 0.0)
+}
+func RDMAddDRAG_AREA(builder *flatbuffers.Builder, DRAG_AREA float64) {
+	builder.PrependFloat64Slot(19, DRAG_AREA, 0.0)
+}
+func RDMAddINITIAL_STATE(builder *flatbuffers.Builder, INITIAL_STATE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(INITIAL_STATE), 0)
+}
+func RDMAddIMPACT_PREDICTIONS(builder *flatbuffers.Builder, IMPACT_PREDICTIONS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(IMPACT_PREDICTIONS), 0)
+}
+func RDMStartIMPACT_PREDICTIONSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func RDMAddSURVIVING_DEBRIS(builder *flatbuffers.Builder, SURVIVING_DEBRIS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(SURVIVING_DEBRIS), 0)
+}
+func RDMStartSURVIVING_DEBRISVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
+}
+func RDMAddCASUALTY_EXPECTATION(builder *flatbuffers.Builder, CASUALTY_EXPECTATION float64) {
+	builder.PrependFloat64Slot(23, CASUALTY_EXPECTATION, 0.0)
+}
+func RDMAddNUM_FRAGMENTS(builder *flatbuffers.Builder, NUM_FRAGMENTS uint32) {
+	builder.PrependUint32Slot(24, NUM_FRAGMENTS, 0)
+}
+func RDMAddSURVIVING_MASS(builder *flatbuffers.Builder, SURVIVING_MASS float64) {
+	builder.PrependFloat64Slot(25, SURVIVING_MASS, 0.0)
+}
+func RDMAddCOMMENT(builder *flatbuffers.Builder, COMMENT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(COMMENT), 0)
 }
 func RDMEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

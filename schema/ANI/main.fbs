@@ -1,0 +1,63 @@
+// Hash: e0ae7c395f6b67a212633662ae3ef3bbe084a72e23e888a2a680bb7fc3b53b6c
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum analyticType : byte {
+  SPECTRAL,
+  PHOTOMETRIC,
+  ASTROMETRIC,
+  RADIOMETRIC,
+  SIGNATURE,
+  FEATURE_EXTRACTION,
+  CHANGE_DETECTION,
+  CLASSIFICATION,
+  FUSION
+}
+
+/// Analytic Imagery Product
+table ANI {
+  /// Unique identifier
+  ID:string;
+  /// Reference to source imagery (e.g., SKI, GDI, EOO)
+  SOURCE_ID:string;
+  /// Source imagery type
+  SOURCE_TYPE:string;
+  /// Analytic product type
+  ANALYTIC_TYPE:analyticType;
+  /// Processing algorithm or pipeline name
+  ALGORITHM:string;
+  /// Algorithm version
+  ALGORITHM_VERSION:string;
+  /// Processing epoch (ISO 8601)
+  PROCESSING_TIME:string;
+  /// Original observation epoch (ISO 8601)
+  OBS_TIME:string;
+  /// Target satellite number (if applicable)
+  SAT_NO:uint32;
+  /// Target object designator
+  OBJECT_DESIGNATOR:string;
+  /// Center right ascension in degrees
+  RA:double;
+  /// Center declination in degrees
+  DEC:double;
+  /// Field of view in degrees
+  FOV:double;
+  /// Visual magnitude estimate
+  VISUAL_MAG:double;
+  /// Magnitude uncertainty
+  MAG_UNCERTAINTY:double;
+  /// Detected object count
+  OBJECT_COUNT:uint;
+  /// Classification labels
+  LABELS:[string];
+  /// Classification confidence scores (0.0-1.0)
+  CONFIDENCE:[double];
+  /// Feature vector or extracted parameters
+  FEATURES:[double];
+  /// Quality score (0.0-1.0)
+  QUALITY:double;
+  /// Additional notes
+  NOTES:string;
+}
+
+root_type ANI;
+file_identifier "$ANI";

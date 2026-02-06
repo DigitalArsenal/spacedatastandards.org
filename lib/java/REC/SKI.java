@@ -29,87 +29,212 @@ public final class SKI extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public SKI __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * On-orbit reference
+   */
   public String ON_ORBIT() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ON_ORBITAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer ON_ORBITInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  /**
+   * International designator
+   */
   public String ORIG_OBJECT_ID() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ORIG_OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer ORIG_OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
-  public String ID_SENSOR() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ID_SENSORAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
-  public ByteBuffer ID_SENSORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
-  public int SAT_NO() { int o = __offset(12); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Satellite catalog number
+   */
+  public long SAT_NO() { int o = __offset(10); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Sensor identifier
+   */
+  public String ID_SENSOR() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ID_SENSORAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer ID_SENSORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * Original sensor identifier
+   */
   public String ORIG_SENSOR_ID() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ORIG_SENSOR_IDAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
   public ByteBuffer ORIG_SENSOR_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * Sensor geodetic latitude (degrees)
+   */
   public double SENLAT() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sensor geodetic longitude (degrees)
+   */
   public double SENLON() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sensor altitude (km)
+   */
   public double SENALT() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sensor ECEF X position (km)
+   */
   public double SENX() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sensor ECEF Y position (km)
+   */
   public double SENY() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sensor ECEF Z position (km)
+   */
   public double SENZ() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String SEN_QUAT(int j) { int o = __offset(28); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  /**
+   * Sensor quaternion (scalar-last: q1, q2, q3, q0)
+   */
+  public double SEN_QUAT(int j) { int o = __offset(28); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
   public int SEN_QUATLength() { int o = __offset(28); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector senQuatVector() { return senQuatVector(new StringVector()); }
-  public StringVector senQuatVector(StringVector obj) { int o = __offset(28); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String SEN_QUAT_DOT(int j) { int o = __offset(30); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public DoubleVector senQuatVector() { return senQuatVector(new DoubleVector()); }
+  public DoubleVector senQuatVector(DoubleVector obj) { int o = __offset(28); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer SEN_QUATAsByteBuffer() { return __vector_as_bytebuffer(28, 8); }
+  public ByteBuffer SEN_QUATInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 8); }
+  /**
+   * Sensor quaternion rate
+   */
+  public double SEN_QUAT_DOT(int j) { int o = __offset(30); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
   public int SEN_QUAT_DOTLength() { int o = __offset(30); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector senQuatDotVector() { return senQuatDotVector(new StringVector()); }
-  public StringVector senQuatDotVector(StringVector obj) { int o = __offset(30); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String IMAGE_TYPE() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer IMAGE_TYPEAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
-  public ByteBuffer IMAGE_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
+  public DoubleVector senQuatDotVector() { return senQuatDotVector(new DoubleVector()); }
+  public DoubleVector senQuatDotVector(DoubleVector obj) { int o = __offset(30); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer SEN_QUAT_DOTAsByteBuffer() { return __vector_as_bytebuffer(30, 8); }
+  public ByteBuffer SEN_QUAT_DOTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 8); }
+  /**
+   * Image type
+   */
+  public byte IMAGE_TYPE() { int o = __offset(32); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Exposure start time (ISO 8601)
+   */
   public String EXP_START_TIME() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer EXP_START_TIMEAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
   public ByteBuffer EXP_START_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  /**
+   * Exposure end time (ISO 8601)
+   */
   public String EXP_END_TIME() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer EXP_END_TIMEAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
   public ByteBuffer EXP_END_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
+  /**
+   * Image source information
+   */
   public String IMAGE_SOURCE_INFO() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IMAGE_SOURCE_INFOAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
   public ByteBuffer IMAGE_SOURCE_INFOInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
+  /**
+   * Top-left corner start azimuth (degrees)
+   */
   public double TOP_LEFT_START_AZ() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Top-left corner start elevation (degrees)
+   */
   public double TOP_LEFT_START_EL() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Top-left corner stop azimuth (degrees)
+   */
   public double TOP_LEFT_STOP_AZ() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Top-left corner stop elevation (degrees)
+   */
   public double TOP_LEFT_STOP_EL() { int o = __offset(46); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Image set identifier
+   */
   public String IMAGE_SET_ID() { int o = __offset(48); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IMAGE_SET_IDAsByteBuffer() { return __vector_as_bytebuffer(48, 1); }
   public ByteBuffer IMAGE_SET_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 48, 1); }
-  public int IMAGE_SET_LENGTH() { int o = __offset(50); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public int SEQUENCE_ID() { int o = __offset(52); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Number of images in set
+   */
+  public int IMAGE_SET_LENGTH() { int o = __offset(50); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * Sequence number within set
+   */
+  public int SEQUENCE_ID() { int o = __offset(52); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * Frame field-of-view width (degrees)
+   */
   public double FRAME_FOVWIDTH() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Frame field-of-view height (degrees)
+   */
   public double FRAME_FOVHEIGHT() { int o = __offset(56); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Pixel field-of-view width (arcseconds)
+   */
   public double PIXEL_FOVWIDTH() { int o = __offset(58); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Pixel field-of-view height (arcseconds)
+   */
   public double PIXEL_FOVHEIGHT() { int o = __offset(60); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public int FRAME_WIDTH_PIXELS() { int o = __offset(62); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public int FRAME_HEIGHT_PIXELS() { int o = __offset(64); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public int PIXEL_BIT_DEPTH() { int o = __offset(66); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Frame width (pixels)
+   */
+  public int FRAME_WIDTH_PIXELS() { int o = __offset(62); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * Frame height (pixels)
+   */
+  public int FRAME_HEIGHT_PIXELS() { int o = __offset(64); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * Pixel bit depth
+   */
+  public int PIXEL_BIT_DEPTH() { int o = __offset(66); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Annotation key reference
+   */
   public String ANNOTATION_KEY() { int o = __offset(68); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ANNOTATION_KEYAsByteBuffer() { return __vector_as_bytebuffer(68, 1); }
   public ByteBuffer ANNOTATION_KEYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 68, 1); }
+  /**
+   * Calibration key reference
+   */
   public String CALIBRATION_KEY() { int o = __offset(70); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CALIBRATION_KEYAsByteBuffer() { return __vector_as_bytebuffer(70, 1); }
   public ByteBuffer CALIBRATION_KEYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 70, 1); }
+  /**
+   * Image filename
+   */
   public String FILENAME() { int o = __offset(72); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer FILENAMEAsByteBuffer() { return __vector_as_bytebuffer(72, 1); }
   public ByteBuffer FILENAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 72, 1); }
+  /**
+   * File size (bytes)
+   */
   public long FILESIZE() { int o = __offset(74); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * File checksum value
+   */
   public String CHECKSUM_VALUE() { int o = __offset(76); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CHECKSUM_VALUEAsByteBuffer() { return __vector_as_bytebuffer(76, 1); }
   public ByteBuffer CHECKSUM_VALUEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 76, 1); }
+  /**
+   * Transaction identifier
+   */
   public String TRANSACTION_ID() { int o = __offset(78); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer TRANSACTION_IDAsByteBuffer() { return __vector_as_bytebuffer(78, 1); }
   public ByteBuffer TRANSACTION_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 78, 1); }
+  /**
+   * Associated tags
+   */
   public String TAGS(int j) { int o = __offset(80); return o != 0 ? __string(__vector(o) + j * 4) : null; }
   public int TAGSLength() { int o = __offset(80); return o != 0 ? __vector_len(o) : 0; }
   public StringVector tagsVector() { return tagsVector(new StringVector()); }
   public StringVector tagsVector(StringVector obj) { int o = __offset(80); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Description
+   */
   public String DESCRIPTION() { int o = __offset(82); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer DESCRIPTIONAsByteBuffer() { return __vector_as_bytebuffer(82, 1); }
   public ByteBuffer DESCRIPTIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 82, 1); }
+  /**
+   * Associated EO observation references
+   */
   public String EO_OBSERVATIONS(int j) { int o = __offset(84); return o != 0 ? __string(__vector(o) + j * 4) : null; }
   public int EO_OBSERVATIONSLength() { int o = __offset(84); return o != 0 ? __vector_len(o) : 0; }
   public StringVector eoObservationsVector() { return eoObservationsVector(new StringVector()); }
@@ -119,8 +244,8 @@ public final class SKI extends Table {
       int IDOffset,
       int ON_ORBITOffset,
       int ORIG_OBJECT_IDOffset,
+      long SAT_NO,
       int ID_SENSOROffset,
-      int SAT_NO,
       int ORIG_SENSOR_IDOffset,
       double SENLAT,
       double SENLON,
@@ -130,7 +255,7 @@ public final class SKI extends Table {
       double SENZ,
       int SEN_QUATOffset,
       int SEN_QUAT_DOTOffset,
-      int IMAGE_TYPEOffset,
+      byte IMAGE_TYPE,
       int EXP_START_TIMEOffset,
       int EXP_END_TIMEOffset,
       int IMAGE_SOURCE_INFOOffset,
@@ -181,24 +306,24 @@ public final class SKI extends Table {
     SKI.addFilename(builder, FILENAMEOffset);
     SKI.addCalibrationKey(builder, CALIBRATION_KEYOffset);
     SKI.addAnnotationKey(builder, ANNOTATION_KEYOffset);
-    SKI.addPixelBitDepth(builder, PIXEL_BIT_DEPTH);
-    SKI.addFrameHeightPixels(builder, FRAME_HEIGHT_PIXELS);
-    SKI.addFrameWidthPixels(builder, FRAME_WIDTH_PIXELS);
-    SKI.addSequenceId(builder, SEQUENCE_ID);
-    SKI.addImageSetLength(builder, IMAGE_SET_LENGTH);
     SKI.addImageSetId(builder, IMAGE_SET_IDOffset);
     SKI.addImageSourceInfo(builder, IMAGE_SOURCE_INFOOffset);
     SKI.addExpEndTime(builder, EXP_END_TIMEOffset);
     SKI.addExpStartTime(builder, EXP_START_TIMEOffset);
-    SKI.addImageType(builder, IMAGE_TYPEOffset);
     SKI.addSenQuatDot(builder, SEN_QUAT_DOTOffset);
     SKI.addSenQuat(builder, SEN_QUATOffset);
     SKI.addOrigSensorId(builder, ORIG_SENSOR_IDOffset);
-    SKI.addSatNo(builder, SAT_NO);
     SKI.addIdSensor(builder, ID_SENSOROffset);
+    SKI.addSatNo(builder, SAT_NO);
     SKI.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
     SKI.addOnOrbit(builder, ON_ORBITOffset);
     SKI.addId(builder, IDOffset);
+    SKI.addFrameHeightPixels(builder, FRAME_HEIGHT_PIXELS);
+    SKI.addFrameWidthPixels(builder, FRAME_WIDTH_PIXELS);
+    SKI.addSequenceId(builder, SEQUENCE_ID);
+    SKI.addImageSetLength(builder, IMAGE_SET_LENGTH);
+    SKI.addPixelBitDepth(builder, PIXEL_BIT_DEPTH);
+    SKI.addImageType(builder, IMAGE_TYPE);
     return SKI.endSKI(builder);
   }
 
@@ -206,8 +331,8 @@ public final class SKI extends Table {
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addOnOrbit(FlatBufferBuilder builder, int ON_ORBITOffset) { builder.addOffset(1, ON_ORBITOffset, 0); }
   public static void addOrigObjectId(FlatBufferBuilder builder, int ORIG_OBJECT_IDOffset) { builder.addOffset(2, ORIG_OBJECT_IDOffset, 0); }
-  public static void addIdSensor(FlatBufferBuilder builder, int ID_SENSOROffset) { builder.addOffset(3, ID_SENSOROffset, 0); }
-  public static void addSatNo(FlatBufferBuilder builder, int SAT_NO) { builder.addInt(4, SAT_NO, 0); }
+  public static void addSatNo(FlatBufferBuilder builder, long SAT_NO) { builder.addInt(3, (int) SAT_NO, (int) 0L); }
+  public static void addIdSensor(FlatBufferBuilder builder, int ID_SENSOROffset) { builder.addOffset(4, ID_SENSOROffset, 0); }
   public static void addOrigSensorId(FlatBufferBuilder builder, int ORIG_SENSOR_IDOffset) { builder.addOffset(5, ORIG_SENSOR_IDOffset, 0); }
   public static void addSenlat(FlatBufferBuilder builder, double SENLAT) { builder.addDouble(6, SENLAT, 0.0); }
   public static void addSenlon(FlatBufferBuilder builder, double SENLON) { builder.addDouble(7, SENLON, 0.0); }
@@ -216,12 +341,12 @@ public final class SKI extends Table {
   public static void addSeny(FlatBufferBuilder builder, double SENY) { builder.addDouble(10, SENY, 0.0); }
   public static void addSenz(FlatBufferBuilder builder, double SENZ) { builder.addDouble(11, SENZ, 0.0); }
   public static void addSenQuat(FlatBufferBuilder builder, int SEN_QUATOffset) { builder.addOffset(12, SEN_QUATOffset, 0); }
-  public static int createSenQuatVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startSenQuatVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static int createSenQuatVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startSenQuatVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
   public static void addSenQuatDot(FlatBufferBuilder builder, int SEN_QUAT_DOTOffset) { builder.addOffset(13, SEN_QUAT_DOTOffset, 0); }
-  public static int createSenQuatDotVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startSenQuatDotVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addImageType(FlatBufferBuilder builder, int IMAGE_TYPEOffset) { builder.addOffset(14, IMAGE_TYPEOffset, 0); }
+  public static int createSenQuatDotVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startSenQuatDotVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addImageType(FlatBufferBuilder builder, byte IMAGE_TYPE) { builder.addByte(14, IMAGE_TYPE, 0); }
   public static void addExpStartTime(FlatBufferBuilder builder, int EXP_START_TIMEOffset) { builder.addOffset(15, EXP_START_TIMEOffset, 0); }
   public static void addExpEndTime(FlatBufferBuilder builder, int EXP_END_TIMEOffset) { builder.addOffset(16, EXP_END_TIMEOffset, 0); }
   public static void addImageSourceInfo(FlatBufferBuilder builder, int IMAGE_SOURCE_INFOOffset) { builder.addOffset(17, IMAGE_SOURCE_INFOOffset, 0); }
@@ -230,15 +355,15 @@ public final class SKI extends Table {
   public static void addTopLeftStopAz(FlatBufferBuilder builder, double TOP_LEFT_STOP_AZ) { builder.addDouble(20, TOP_LEFT_STOP_AZ, 0.0); }
   public static void addTopLeftStopEl(FlatBufferBuilder builder, double TOP_LEFT_STOP_EL) { builder.addDouble(21, TOP_LEFT_STOP_EL, 0.0); }
   public static void addImageSetId(FlatBufferBuilder builder, int IMAGE_SET_IDOffset) { builder.addOffset(22, IMAGE_SET_IDOffset, 0); }
-  public static void addImageSetLength(FlatBufferBuilder builder, int IMAGE_SET_LENGTH) { builder.addInt(23, IMAGE_SET_LENGTH, 0); }
-  public static void addSequenceId(FlatBufferBuilder builder, int SEQUENCE_ID) { builder.addInt(24, SEQUENCE_ID, 0); }
+  public static void addImageSetLength(FlatBufferBuilder builder, int IMAGE_SET_LENGTH) { builder.addShort(23, (short) IMAGE_SET_LENGTH, (short) 0); }
+  public static void addSequenceId(FlatBufferBuilder builder, int SEQUENCE_ID) { builder.addShort(24, (short) SEQUENCE_ID, (short) 0); }
   public static void addFrameFovwidth(FlatBufferBuilder builder, double FRAME_FOVWIDTH) { builder.addDouble(25, FRAME_FOVWIDTH, 0.0); }
   public static void addFrameFovheight(FlatBufferBuilder builder, double FRAME_FOVHEIGHT) { builder.addDouble(26, FRAME_FOVHEIGHT, 0.0); }
   public static void addPixelFovwidth(FlatBufferBuilder builder, double PIXEL_FOVWIDTH) { builder.addDouble(27, PIXEL_FOVWIDTH, 0.0); }
   public static void addPixelFovheight(FlatBufferBuilder builder, double PIXEL_FOVHEIGHT) { builder.addDouble(28, PIXEL_FOVHEIGHT, 0.0); }
-  public static void addFrameWidthPixels(FlatBufferBuilder builder, int FRAME_WIDTH_PIXELS) { builder.addInt(29, FRAME_WIDTH_PIXELS, 0); }
-  public static void addFrameHeightPixels(FlatBufferBuilder builder, int FRAME_HEIGHT_PIXELS) { builder.addInt(30, FRAME_HEIGHT_PIXELS, 0); }
-  public static void addPixelBitDepth(FlatBufferBuilder builder, int PIXEL_BIT_DEPTH) { builder.addInt(31, PIXEL_BIT_DEPTH, 0); }
+  public static void addFrameWidthPixels(FlatBufferBuilder builder, int FRAME_WIDTH_PIXELS) { builder.addShort(29, (short) FRAME_WIDTH_PIXELS, (short) 0); }
+  public static void addFrameHeightPixels(FlatBufferBuilder builder, int FRAME_HEIGHT_PIXELS) { builder.addShort(30, (short) FRAME_HEIGHT_PIXELS, (short) 0); }
+  public static void addPixelBitDepth(FlatBufferBuilder builder, int PIXEL_BIT_DEPTH) { builder.addByte(31, (byte) PIXEL_BIT_DEPTH, (byte) 0); }
   public static void addAnnotationKey(FlatBufferBuilder builder, int ANNOTATION_KEYOffset) { builder.addOffset(32, ANNOTATION_KEYOffset, 0); }
   public static void addCalibrationKey(FlatBufferBuilder builder, int CALIBRATION_KEYOffset) { builder.addOffset(33, CALIBRATION_KEYOffset, 0); }
   public static void addFilename(FlatBufferBuilder builder, int FILENAMEOffset) { builder.addOffset(34, FILENAMEOffset, 0); }

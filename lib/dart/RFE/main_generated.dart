@@ -5,6 +5,349 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class EmitterType {
+  final int value;
+  const EmitterType._(this.value);
+
+  factory EmitterType.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum EmitterType');
+    }
+    return result;
+  }
+
+  static EmitterType? _createOrNull(int? value) => 
+      value == null ? null : EmitterType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 9;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const EmitterType RADAR = EmitterType._(0);
+  static const EmitterType COMMUNICATIONS = EmitterType._(1);
+  static const EmitterType NAVIGATION = EmitterType._(2);
+  static const EmitterType JAMMER = EmitterType._(3);
+  static const EmitterType BEACON = EmitterType._(4);
+  static const EmitterType TRANSPONDER = EmitterType._(5);
+  static const EmitterType DATA_LINK = EmitterType._(6);
+  static const EmitterType TELEMETRY = EmitterType._(7);
+  static const EmitterType EW = EmitterType._(8);
+  static const EmitterType UNKNOWN = EmitterType._(9);
+  static const Map<int, EmitterType> values = {
+    0: RADAR,
+    1: COMMUNICATIONS,
+    2: NAVIGATION,
+    3: JAMMER,
+    4: BEACON,
+    5: TRANSPONDER,
+    6: DATA_LINK,
+    7: TELEMETRY,
+    8: EW,
+    9: UNKNOWN};
+
+  static const fb.Reader<EmitterType> reader = _EmitterTypeReader();
+
+  @override
+  String toString() {
+    return 'EmitterType{value: $value}';
+  }
+}
+
+class _EmitterTypeReader extends fb.Reader<EmitterType> {
+  const _EmitterTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  EmitterType read(fb.BufferContext bc, int offset) =>
+      EmitterType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class SignalModulation {
+  final int value;
+  const SignalModulation._(this.value);
+
+  factory SignalModulation.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum SignalModulation');
+    }
+    return result;
+  }
+
+  static SignalModulation? _createOrNull(int? value) => 
+      value == null ? null : SignalModulation.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 12;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const SignalModulation CW = SignalModulation._(0);
+  static const SignalModulation PULSE = SignalModulation._(1);
+  static const SignalModulation FMCW = SignalModulation._(2);
+  static const SignalModulation CHIRP = SignalModulation._(3);
+  static const SignalModulation BPSK = SignalModulation._(4);
+  static const SignalModulation QPSK = SignalModulation._(5);
+  static const SignalModulation FSK = SignalModulation._(6);
+  static const SignalModulation AM = SignalModulation._(7);
+  static const SignalModulation FM = SignalModulation._(8);
+  static const SignalModulation SPREAD_SPECTRUM = SignalModulation._(9);
+  static const SignalModulation PHASED_ARRAY = SignalModulation._(10);
+  static const SignalModulation AGILE = SignalModulation._(11);
+  static const SignalModulation UNKNOWN = SignalModulation._(12);
+  static const Map<int, SignalModulation> values = {
+    0: CW,
+    1: PULSE,
+    2: FMCW,
+    3: CHIRP,
+    4: BPSK,
+    5: QPSK,
+    6: FSK,
+    7: AM,
+    8: FM,
+    9: SPREAD_SPECTRUM,
+    10: PHASED_ARRAY,
+    11: AGILE,
+    12: UNKNOWN};
+
+  static const fb.Reader<SignalModulation> reader = _SignalModulationReader();
+
+  @override
+  String toString() {
+    return 'SignalModulation{value: $value}';
+  }
+}
+
+class _SignalModulationReader extends fb.Reader<SignalModulation> {
+  const _SignalModulationReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  SignalModulation read(fb.BufferContext bc, int offset) =>
+      SignalModulation.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  RF Emitter Detail Record
+class RfEmitterDetail {
+  RfEmitterDetail._(this._bc, this._bcOffset);
+  factory RfEmitterDetail(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<RfEmitterDetail> reader = _RfEmitterDetailReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Mode name or identifier
+  String? get MODE_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Center frequency in MHz
+  double get FREQUENCY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Frequency minimum in MHz
+  double get FREQ_MIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Frequency maximum in MHz
+  double get FREQ_MAX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  Pulse repetition interval in microseconds
+  double get PRI => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  PRI minimum in microseconds
+  double get PRI_MIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  ///  PRI maximum in microseconds
+  double get PRI_MAX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Pulse width in microseconds
+  double get PULSE_WIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  ///  Pulse width minimum in microseconds
+  double get PW_MIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  Pulse width maximum in microseconds
+  double get PW_MAX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Scan period in seconds
+  double get SCAN_PERIOD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  ///  Effective radiated power in dBW
+  double get ERP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  ///  Signal modulation
+  SignalModulation get MODULATION => SignalModulation.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 28, 0));
+  ///  Antenna pattern type
+  String? get ANTENNA_PATTERN => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  ///  3dB beamwidth in degrees
+  double get BEAMWIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+
+  @override
+  String toString() {
+    return 'RfEmitterDetail{MODE_NAME: ${MODE_NAME}, FREQUENCY: ${FREQUENCY}, FREQ_MIN: ${FREQ_MIN}, FREQ_MAX: ${FREQ_MAX}, PRI: ${PRI}, PRI_MIN: ${PRI_MIN}, PRI_MAX: ${PRI_MAX}, PULSE_WIDTH: ${PULSE_WIDTH}, PW_MIN: ${PW_MIN}, PW_MAX: ${PW_MAX}, SCAN_PERIOD: ${SCAN_PERIOD}, ERP: ${ERP}, MODULATION: ${MODULATION}, ANTENNA_PATTERN: ${ANTENNA_PATTERN}, BEAMWIDTH: ${BEAMWIDTH}}';
+  }
+}
+
+class _RfEmitterDetailReader extends fb.TableReader<RfEmitterDetail> {
+  const _RfEmitterDetailReader();
+
+  @override
+  RfEmitterDetail createObject(fb.BufferContext bc, int offset) => 
+    RfEmitterDetail._(bc, offset);
+}
+
+class RfEmitterDetailBuilder {
+  RfEmitterDetailBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(15);
+  }
+
+  int addModeNameOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addFrequency(double? FREQUENCY) {
+    fbBuilder.addFloat64(1, FREQUENCY);
+    return fbBuilder.offset;
+  }
+  int addFreqMin(double? FREQ_MIN) {
+    fbBuilder.addFloat64(2, FREQ_MIN);
+    return fbBuilder.offset;
+  }
+  int addFreqMax(double? FREQ_MAX) {
+    fbBuilder.addFloat64(3, FREQ_MAX);
+    return fbBuilder.offset;
+  }
+  int addPri(double? PRI) {
+    fbBuilder.addFloat64(4, PRI);
+    return fbBuilder.offset;
+  }
+  int addPriMin(double? PRI_MIN) {
+    fbBuilder.addFloat64(5, PRI_MIN);
+    return fbBuilder.offset;
+  }
+  int addPriMax(double? PRI_MAX) {
+    fbBuilder.addFloat64(6, PRI_MAX);
+    return fbBuilder.offset;
+  }
+  int addPulseWidth(double? PULSE_WIDTH) {
+    fbBuilder.addFloat64(7, PULSE_WIDTH);
+    return fbBuilder.offset;
+  }
+  int addPwMin(double? PW_MIN) {
+    fbBuilder.addFloat64(8, PW_MIN);
+    return fbBuilder.offset;
+  }
+  int addPwMax(double? PW_MAX) {
+    fbBuilder.addFloat64(9, PW_MAX);
+    return fbBuilder.offset;
+  }
+  int addScanPeriod(double? SCAN_PERIOD) {
+    fbBuilder.addFloat64(10, SCAN_PERIOD);
+    return fbBuilder.offset;
+  }
+  int addErp(double? ERP) {
+    fbBuilder.addFloat64(11, ERP);
+    return fbBuilder.offset;
+  }
+  int addModulation(SignalModulation? MODULATION) {
+    fbBuilder.addInt8(12, MODULATION?.value);
+    return fbBuilder.offset;
+  }
+  int addAntennaPatternOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addBeamwidth(double? BEAMWIDTH) {
+    fbBuilder.addFloat64(14, BEAMWIDTH);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class RfEmitterDetailObjectBuilder extends fb.ObjectBuilder {
+  final String? _MODE_NAME;
+  final double? _FREQUENCY;
+  final double? _FREQ_MIN;
+  final double? _FREQ_MAX;
+  final double? _PRI;
+  final double? _PRI_MIN;
+  final double? _PRI_MAX;
+  final double? _PULSE_WIDTH;
+  final double? _PW_MIN;
+  final double? _PW_MAX;
+  final double? _SCAN_PERIOD;
+  final double? _ERP;
+  final SignalModulation? _MODULATION;
+  final String? _ANTENNA_PATTERN;
+  final double? _BEAMWIDTH;
+
+  RfEmitterDetailObjectBuilder({
+    String? MODE_NAME,
+    double? FREQUENCY,
+    double? FREQ_MIN,
+    double? FREQ_MAX,
+    double? PRI,
+    double? PRI_MIN,
+    double? PRI_MAX,
+    double? PULSE_WIDTH,
+    double? PW_MIN,
+    double? PW_MAX,
+    double? SCAN_PERIOD,
+    double? ERP,
+    SignalModulation? MODULATION,
+    String? ANTENNA_PATTERN,
+    double? BEAMWIDTH,
+  })
+      : _MODE_NAME = MODE_NAME,
+        _FREQUENCY = FREQUENCY,
+        _FREQ_MIN = FREQ_MIN,
+        _FREQ_MAX = FREQ_MAX,
+        _PRI = PRI,
+        _PRI_MIN = PRI_MIN,
+        _PRI_MAX = PRI_MAX,
+        _PULSE_WIDTH = PULSE_WIDTH,
+        _PW_MIN = PW_MIN,
+        _PW_MAX = PW_MAX,
+        _SCAN_PERIOD = SCAN_PERIOD,
+        _ERP = ERP,
+        _MODULATION = MODULATION,
+        _ANTENNA_PATTERN = ANTENNA_PATTERN,
+        _BEAMWIDTH = BEAMWIDTH;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? MODE_NAMEOffset = _MODE_NAME == null ? null
+        : fbBuilder.writeString(_MODE_NAME!);
+    final int? ANTENNA_PATTERNOffset = _ANTENNA_PATTERN == null ? null
+        : fbBuilder.writeString(_ANTENNA_PATTERN!);
+    fbBuilder.startTable(15);
+    fbBuilder.addOffset(0, MODE_NAMEOffset);
+    fbBuilder.addFloat64(1, _FREQUENCY);
+    fbBuilder.addFloat64(2, _FREQ_MIN);
+    fbBuilder.addFloat64(3, _FREQ_MAX);
+    fbBuilder.addFloat64(4, _PRI);
+    fbBuilder.addFloat64(5, _PRI_MIN);
+    fbBuilder.addFloat64(6, _PRI_MAX);
+    fbBuilder.addFloat64(7, _PULSE_WIDTH);
+    fbBuilder.addFloat64(8, _PW_MIN);
+    fbBuilder.addFloat64(9, _PW_MAX);
+    fbBuilder.addFloat64(10, _SCAN_PERIOD);
+    fbBuilder.addFloat64(11, _ERP);
+    fbBuilder.addInt8(12, _MODULATION?.value);
+    fbBuilder.addOffset(13, ANTENNA_PATTERNOffset);
+    fbBuilder.addFloat64(14, _BEAMWIDTH);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  RF Emitter
 class RFE {
   RFE._(this._bc, this._bcOffset);
@@ -18,16 +361,50 @@ class RFE {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique emitter identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Reference to parent entity
   String? get ID_ENTITY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Emitter name or designation
   String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Emitter type
+  EmitterType get TYPE => EmitterType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 10, 0));
+  ///  Parent entity designator
   String? get ENTITY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  List<String>? get RF_EMITTER_DETAILS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 14);
+  ///  ELNOT (Electronic Notation)
+  String? get ELNOT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  NATO reporting name
+  String? get NATO_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Platform type (e.g., SHIP, AIRCRAFT, GROUND, SATELLITE)
+  String? get PLATFORM_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Country of origin
+  String? get COUNTRY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  ///  Primary function description
+  String? get FUNCTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Operating band (e.g., HF, VHF, UHF, L, S, C, X, Ku, Ka)
+  String? get BAND => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Minimum operating frequency in MHz
+  double get FREQ_MIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  ///  Maximum operating frequency in MHz
+  double get FREQ_MAX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  ///  Peak power in kW
+  double get PEAK_POWER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  ///  Average power in kW
+  double get AVG_POWER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  ///  Antenna gain in dBi
+  double get ANTENNA_GAIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  ///  Number of operating modes
+  int get NUM_MODES => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 36, 0);
+  ///  Emitter operating mode details
+  List<RfEmitterDetail>? get RF_EMITTER_DETAILS => const fb.ListReader<RfEmitterDetail>(RfEmitterDetail.reader).vTableGetNullable(_bc, _bcOffset, 38);
+  ///  Threat level assessment
+  String? get THREAT_LEVEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+  ///  Additional notes
+  String? get NOTES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
 
   @override
   String toString() {
-    return 'RFE{ID: ${ID}, ID_ENTITY: ${ID_ENTITY}, NAME: ${NAME}, TYPE: ${TYPE}, ENTITY: ${ENTITY}, RF_EMITTER_DETAILS: ${RF_EMITTER_DETAILS}}';
+    return 'RFE{ID: ${ID}, ID_ENTITY: ${ID_ENTITY}, NAME: ${NAME}, TYPE: ${TYPE}, ENTITY: ${ENTITY}, ELNOT: ${ELNOT}, NATO_NAME: ${NATO_NAME}, PLATFORM_TYPE: ${PLATFORM_TYPE}, COUNTRY: ${COUNTRY}, FUNCTION: ${FUNCTION}, BAND: ${BAND}, FREQ_MIN: ${FREQ_MIN}, FREQ_MAX: ${FREQ_MAX}, PEAK_POWER: ${PEAK_POWER}, AVG_POWER: ${AVG_POWER}, ANTENNA_GAIN: ${ANTENNA_GAIN}, NUM_MODES: ${NUM_MODES}, RF_EMITTER_DETAILS: ${RF_EMITTER_DETAILS}, THREAT_LEVEL: ${THREAT_LEVEL}, NOTES: ${NOTES}}';
   }
 }
 
@@ -45,7 +422,7 @@ class RFEBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(6);
+    fbBuilder.startTable(20);
   }
 
   int addIdOffset(int? offset) {
@@ -60,16 +437,72 @@ class RFEBuilder {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addTypeOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
+  int addType(EmitterType? TYPE) {
+    fbBuilder.addInt8(3, TYPE?.value);
     return fbBuilder.offset;
   }
   int addEntityOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addRfEmitterDetailsOffset(int? offset) {
+  int addElnotOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addNatoNameOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addPlatformTypeOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addCountryOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addFunctionOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addBandOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addFreqMin(double? FREQ_MIN) {
+    fbBuilder.addFloat64(11, FREQ_MIN);
+    return fbBuilder.offset;
+  }
+  int addFreqMax(double? FREQ_MAX) {
+    fbBuilder.addFloat64(12, FREQ_MAX);
+    return fbBuilder.offset;
+  }
+  int addPeakPower(double? PEAK_POWER) {
+    fbBuilder.addFloat64(13, PEAK_POWER);
+    return fbBuilder.offset;
+  }
+  int addAvgPower(double? AVG_POWER) {
+    fbBuilder.addFloat64(14, AVG_POWER);
+    return fbBuilder.offset;
+  }
+  int addAntennaGain(double? ANTENNA_GAIN) {
+    fbBuilder.addFloat64(15, ANTENNA_GAIN);
+    return fbBuilder.offset;
+  }
+  int addNumModes(int? NUM_MODES) {
+    fbBuilder.addUint32(16, NUM_MODES);
+    return fbBuilder.offset;
+  }
+  int addRfEmitterDetailsOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addThreatLevelOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addNotesOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
     return fbBuilder.offset;
   }
 
@@ -82,24 +515,66 @@ class RFEObjectBuilder extends fb.ObjectBuilder {
   final String? _ID;
   final String? _ID_ENTITY;
   final String? _NAME;
-  final String? _TYPE;
+  final EmitterType? _TYPE;
   final String? _ENTITY;
-  final List<String>? _RF_EMITTER_DETAILS;
+  final String? _ELNOT;
+  final String? _NATO_NAME;
+  final String? _PLATFORM_TYPE;
+  final String? _COUNTRY;
+  final String? _FUNCTION;
+  final String? _BAND;
+  final double? _FREQ_MIN;
+  final double? _FREQ_MAX;
+  final double? _PEAK_POWER;
+  final double? _AVG_POWER;
+  final double? _ANTENNA_GAIN;
+  final int? _NUM_MODES;
+  final List<RfEmitterDetailObjectBuilder>? _RF_EMITTER_DETAILS;
+  final String? _THREAT_LEVEL;
+  final String? _NOTES;
 
   RFEObjectBuilder({
     String? ID,
     String? ID_ENTITY,
     String? NAME,
-    String? TYPE,
+    EmitterType? TYPE,
     String? ENTITY,
-    List<String>? RF_EMITTER_DETAILS,
+    String? ELNOT,
+    String? NATO_NAME,
+    String? PLATFORM_TYPE,
+    String? COUNTRY,
+    String? FUNCTION,
+    String? BAND,
+    double? FREQ_MIN,
+    double? FREQ_MAX,
+    double? PEAK_POWER,
+    double? AVG_POWER,
+    double? ANTENNA_GAIN,
+    int? NUM_MODES,
+    List<RfEmitterDetailObjectBuilder>? RF_EMITTER_DETAILS,
+    String? THREAT_LEVEL,
+    String? NOTES,
   })
       : _ID = ID,
         _ID_ENTITY = ID_ENTITY,
         _NAME = NAME,
         _TYPE = TYPE,
         _ENTITY = ENTITY,
-        _RF_EMITTER_DETAILS = RF_EMITTER_DETAILS;
+        _ELNOT = ELNOT,
+        _NATO_NAME = NATO_NAME,
+        _PLATFORM_TYPE = PLATFORM_TYPE,
+        _COUNTRY = COUNTRY,
+        _FUNCTION = FUNCTION,
+        _BAND = BAND,
+        _FREQ_MIN = FREQ_MIN,
+        _FREQ_MAX = FREQ_MAX,
+        _PEAK_POWER = PEAK_POWER,
+        _AVG_POWER = AVG_POWER,
+        _ANTENNA_GAIN = ANTENNA_GAIN,
+        _NUM_MODES = NUM_MODES,
+        _RF_EMITTER_DETAILS = RF_EMITTER_DETAILS,
+        _THREAT_LEVEL = THREAT_LEVEL,
+        _NOTES = NOTES;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -110,19 +585,47 @@ class RFEObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ID_ENTITY!);
     final int? NAMEOffset = _NAME == null ? null
         : fbBuilder.writeString(_NAME!);
-    final int? TYPEOffset = _TYPE == null ? null
-        : fbBuilder.writeString(_TYPE!);
     final int? ENTITYOffset = _ENTITY == null ? null
         : fbBuilder.writeString(_ENTITY!);
+    final int? ELNOTOffset = _ELNOT == null ? null
+        : fbBuilder.writeString(_ELNOT!);
+    final int? NATO_NAMEOffset = _NATO_NAME == null ? null
+        : fbBuilder.writeString(_NATO_NAME!);
+    final int? PLATFORM_TYPEOffset = _PLATFORM_TYPE == null ? null
+        : fbBuilder.writeString(_PLATFORM_TYPE!);
+    final int? COUNTRYOffset = _COUNTRY == null ? null
+        : fbBuilder.writeString(_COUNTRY!);
+    final int? FUNCTIONOffset = _FUNCTION == null ? null
+        : fbBuilder.writeString(_FUNCTION!);
+    final int? BANDOffset = _BAND == null ? null
+        : fbBuilder.writeString(_BAND!);
     final int? RF_EMITTER_DETAILSOffset = _RF_EMITTER_DETAILS == null ? null
-        : fbBuilder.writeList(_RF_EMITTER_DETAILS!.map(fbBuilder.writeString).toList());
-    fbBuilder.startTable(6);
+        : fbBuilder.writeList(_RF_EMITTER_DETAILS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? THREAT_LEVELOffset = _THREAT_LEVEL == null ? null
+        : fbBuilder.writeString(_THREAT_LEVEL!);
+    final int? NOTESOffset = _NOTES == null ? null
+        : fbBuilder.writeString(_NOTES!);
+    fbBuilder.startTable(20);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, ID_ENTITYOffset);
     fbBuilder.addOffset(2, NAMEOffset);
-    fbBuilder.addOffset(3, TYPEOffset);
+    fbBuilder.addInt8(3, _TYPE?.value);
     fbBuilder.addOffset(4, ENTITYOffset);
-    fbBuilder.addOffset(5, RF_EMITTER_DETAILSOffset);
+    fbBuilder.addOffset(5, ELNOTOffset);
+    fbBuilder.addOffset(6, NATO_NAMEOffset);
+    fbBuilder.addOffset(7, PLATFORM_TYPEOffset);
+    fbBuilder.addOffset(8, COUNTRYOffset);
+    fbBuilder.addOffset(9, FUNCTIONOffset);
+    fbBuilder.addOffset(10, BANDOffset);
+    fbBuilder.addFloat64(11, _FREQ_MIN);
+    fbBuilder.addFloat64(12, _FREQ_MAX);
+    fbBuilder.addFloat64(13, _PEAK_POWER);
+    fbBuilder.addFloat64(14, _AVG_POWER);
+    fbBuilder.addFloat64(15, _ANTENNA_GAIN);
+    fbBuilder.addUint32(16, _NUM_MODES);
+    fbBuilder.addOffset(17, RF_EMITTER_DETAILSOffset);
+    fbBuilder.addOffset(18, THREAT_LEVELOffset);
+    fbBuilder.addOffset(19, NOTESOffset);
     return fbBuilder.endTable();
   }
 

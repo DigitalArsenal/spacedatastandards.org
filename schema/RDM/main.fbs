@@ -1,16 +1,129 @@
-// Hash: 1c0e8f9267b920d11478fe2cf3a02aed3659c4ad65ca1dba250982489ee08edd
-// Version: 0.0.2
+// Hash: 9a425c8ea5da3d0c597c7ef01b8d7f05d6f7fc64c9feaf67b29d42c97487404e
+// Version: 0.0.3
 // -----------------------------------END_HEADER
+enum reentryDisposition : byte {
+  CONTROLLED,
+  UNCONTROLLED,
+  SEMI_CONTROLLED
+}
+
+enum reentryReason : byte {
+  NATURAL_DECAY,
+  COMMANDED_DEORBIT,
+  PROPULSION_FAILURE,
+  COLLISION,
+  FRAGMENTATION,
+  UNKNOWN
+}
+
+/// Reentry State Vector
+table reentryStateVector {
+  /// Epoch (ISO 8601)
+  EPOCH:string;
+  /// Reference frame
+  REF_FRAME:string;
+  /// Position X in km
+  X:double;
+  /// Position Y in km
+  Y:double;
+  /// Position Z in km
+  Z:double;
+  /// Velocity X in km/s
+  X_DOT:double;
+  /// Velocity Y in km/s
+  Y_DOT:double;
+  /// Velocity Z in km/s
+  Z_DOT:double;
+}
+
+/// Reentry Ground Impact Prediction
+table reentryImpact {
+  /// Predicted impact epoch (ISO 8601)
+  IMPACT_EPOCH:string;
+  /// Epoch uncertainty window in seconds
+  EPOCH_UNCERTAINTY:double;
+  /// Impact latitude in degrees
+  LATITUDE:double;
+  /// Impact longitude in degrees
+  LONGITUDE:double;
+  /// Along-track uncertainty in km
+  ALONG_TRACK_UNC:double;
+  /// Cross-track uncertainty in km
+  CROSS_TRACK_UNC:double;
+  /// Impact probability (0.0-1.0)
+  IMPACT_PROBABILITY:double;
+}
+
+/// Surviving Debris Prediction
+table survivingDebris {
+  /// Fragment identifier
+  FRAGMENT_ID:string;
+  /// Material type
+  MATERIAL:string;
+  /// Fragment mass in kg
+  MASS:double;
+  /// Casualty area in m^2
+  CASUALTY_AREA:double;
+  /// Survival probability (0.0-1.0)
+  SURVIVAL_PROBABILITY:double;
+}
+
 /// Reentry Data Message
 table RDM {
+  /// CCSDS RDM version
   CCSDS_RDM_VERS:string;
+  /// Message creation date (ISO 8601)
   CREATION_DATE:string;
+  /// Creating organization
   ORIGINATOR:string;
+  /// Object name
   OBJECT_NAME:string;
+  /// International designator
   OBJECT_ID:string;
+  /// NORAD catalog number
+  NORAD_CAT_ID:uint32;
+  /// Object type (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN)
+  OBJECT_TYPE:string;
+  /// Reentry disposition
+  DISPOSITION:reentryDisposition;
+  /// Reentry reason
+  REASON:reentryReason;
+  /// Predicted reentry epoch (ISO 8601)
   REENTRY_EPOCH:string;
+  /// Reentry epoch uncertainty window in hours
+  REENTRY_EPOCH_UNC:double;
+  /// Reentry latitude in degrees
   REENTRY_LATITUDE:double;
+  /// Reentry longitude in degrees
   REENTRY_LONGITUDE:double;
+  /// Reentry altitude in km
+  REENTRY_ALTITUDE:double;
+  /// Time system
+  TIME_SYSTEM:string;
+  /// Previous predicted reentry epoch for comparison (ISO 8601)
+  PREV_PREDICTION_EPOCH:string;
+  /// Ballistic coefficient in kg/m^2
+  BALLISTIC_COEFF:double;
+  /// Object mass in kg
+  MASS:double;
+  /// Solar radiation pressure area in m^2
+  SOLAR_RAD_AREA:double;
+  /// Drag area in m^2
+  DRAG_AREA:double;
+  /// Initial state vector
+  INITIAL_STATE:reentryStateVector;
+  /// Ground impact predictions
+  IMPACT_PREDICTIONS:[reentryImpact];
+  /// Predicted surviving debris
+  SURVIVING_DEBRIS:[survivingDebris];
+  /// Casualty expectation
+  CASUALTY_EXPECTATION:double;
+  /// Number of breakup fragments predicted
+  NUM_FRAGMENTS:uint;
+  /// Total surviving mass in kg
+  SURVIVING_MASS:double;
+  /// Additional comments
+  COMMENT:string;
 }
 
 root_type RDM;

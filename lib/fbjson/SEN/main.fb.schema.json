@@ -1,0 +1,352 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "sensorStatus": {
+      "type": "string",
+      "enum": [
+        "OPERATIONAL",
+        "DEGRADED",
+        "MAINTENANCE",
+        "OFFLINE",
+        "CALIBRATING",
+        "TESTING",
+        "DECOMMISSIONED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "OPERATIONAL": {
+          "value": 0
+        },
+        "DEGRADED": {
+          "value": 1
+        },
+        "MAINTENANCE": {
+          "value": 2
+        },
+        "OFFLINE": {
+          "value": 3
+        },
+        "CALIBRATING": {
+          "value": 4
+        },
+        "TESTING": {
+          "value": 5
+        },
+        "DECOMMISSIONED": {
+          "value": 6
+        }
+      }
+    },
+    "maintenanceType": {
+      "type": "string",
+      "enum": [
+        "SCHEDULED",
+        "UNSCHEDULED",
+        "CORRECTIVE",
+        "PREVENTIVE",
+        "CALIBRATION",
+        "UPGRADE",
+        "INSPECTION"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "SCHEDULED": {
+          "value": 0
+        },
+        "UNSCHEDULED": {
+          "value": 1
+        },
+        "CORRECTIVE": {
+          "value": 2
+        },
+        "PREVENTIVE": {
+          "value": 3
+        },
+        "CALIBRATION": {
+          "value": 4
+        },
+        "UPGRADE": {
+          "value": 5
+        },
+        "INSPECTION": {
+          "value": 6
+        }
+      }
+    },
+    "sensorMaintenanceEvent": {
+      "type": "object",
+      "description": "Sensor Maintenance Event",
+      "properties": {
+        "START_TIME": {
+          "type": "string",
+          "description": "Maintenance start time (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "END_TIME": {
+          "type": "string",
+          "description": "Maintenance end time (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "TYPE": {
+          "$ref": "#/definitions/maintenanceType",
+          "description": "Type of maintenance",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "SCHEDULED": {
+              "value": 0
+            },
+            "UNSCHEDULED": {
+              "value": 1
+            },
+            "CORRECTIVE": {
+              "value": 2
+            },
+            "PREVENTIVE": {
+              "value": 3
+            },
+            "CALIBRATION": {
+              "value": 4
+            },
+            "UPGRADE": {
+              "value": 5
+            },
+            "INSPECTION": {
+              "value": 6
+            }
+          }
+        },
+        "DESCRIPTION": {
+          "type": "string",
+          "description": "Description of maintenance performed",
+          "x-flatbuffer-type": "string"
+        },
+        "COMPONENTS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Components affected",
+          "x-flatbuffer-type": "[string]"
+        }
+      },
+      "additionalProperties": false
+    },
+    "sensorPlan": {
+      "type": "object",
+      "description": "Sensor Tasking Plan",
+      "properties": {
+        "START_TIME": {
+          "type": "string",
+          "description": "Plan start time (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "END_TIME": {
+          "type": "string",
+          "description": "Plan end time (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "TARGET_ID": {
+          "type": "string",
+          "description": "Target satellite number or designator",
+          "x-flatbuffer-type": "string"
+        },
+        "PRIORITY": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Priority level (1=highest)",
+          "x-flatbuffer-type": "uint8"
+        },
+        "MODE": {
+          "type": "string",
+          "description": "Requested observation mode",
+          "x-flatbuffer-type": "string"
+        },
+        "MIN_ELEVATION": {
+          "type": "number",
+          "description": "Minimum elevation in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_RANGE": {
+          "type": "number",
+          "description": "Maximum range in km",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "sensorStats": {
+      "type": "object",
+      "description": "Sensor Operational Statistics",
+      "properties": {
+        "PERIOD_START": {
+          "type": "string",
+          "description": "Statistics period start (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "PERIOD_END": {
+          "type": "string",
+          "description": "Statistics period end (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "OBS_ATTEMPTED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Total observation attempts",
+          "x-flatbuffer-type": "uint"
+        },
+        "OBS_SUCCESSFUL": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Successful observations",
+          "x-flatbuffer-type": "uint"
+        },
+        "OBS_FAILED": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Failed observations",
+          "x-flatbuffer-type": "uint"
+        },
+        "UPTIME": {
+          "type": "number",
+          "description": "Uptime fraction (0.0-1.0)",
+          "x-flatbuffer-type": "double"
+        },
+        "AVG_ACCURACY": {
+          "type": "number",
+          "description": "Average tracking accuracy in arcseconds",
+          "x-flatbuffer-type": "double"
+        },
+        "DETECTIONS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Detected objects count",
+          "x-flatbuffer-type": "uint"
+        },
+        "UCT_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Uncorrelated tracks count",
+          "x-flatbuffer-type": "uint"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SEN": {
+      "type": "object",
+      "description": "Sensor Management",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Unique sensor identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Sensor name",
+          "x-flatbuffer-type": "string"
+        },
+        "TYPE": {
+          "type": "string",
+          "description": "Sensor type",
+          "x-flatbuffer-type": "string"
+        },
+        "STATUS": {
+          "$ref": "#/definitions/sensorStatus",
+          "description": "Current operational status",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OPERATIONAL": {
+              "value": 0
+            },
+            "DEGRADED": {
+              "value": 1
+            },
+            "MAINTENANCE": {
+              "value": 2
+            },
+            "OFFLINE": {
+              "value": 3
+            },
+            "CALIBRATING": {
+              "value": 4
+            },
+            "TESTING": {
+              "value": 5
+            },
+            "DECOMMISSIONED": {
+              "value": 6
+            }
+          }
+        },
+        "SITE_ID": {
+          "type": "string",
+          "description": "Site identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "LATITUDE": {
+          "type": "number",
+          "description": "Geodetic latitude in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE": {
+          "type": "number",
+          "description": "Geodetic longitude in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "ALTITUDE": {
+          "type": "number",
+          "description": "Altitude in meters above WGS-84",
+          "x-flatbuffer-type": "double"
+        },
+        "STATUS_TIME": {
+          "type": "string",
+          "description": "Last status update (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "MAINTENANCE": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/sensorMaintenanceEvent"
+          },
+          "description": "Maintenance history",
+          "x-flatbuffer-type": "[sensorMaintenanceEvent]"
+        },
+        "PLANS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/sensorPlan"
+          },
+          "description": "Observation plans/taskings",
+          "x-flatbuffer-type": "[sensorPlan]"
+        },
+        "STATISTICS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/sensorStats"
+          },
+          "description": "Operational statistics",
+          "x-flatbuffer-type": "[sensorStats]"
+        },
+        "NOTES": {
+          "type": "string",
+          "description": "Additional notes",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/SEN",
+  "x-flatbuffer-root-type": "SEN",
+  "x-flatbuffer-file-identifier": "$SEN"
+}

@@ -29,6 +29,7 @@ class SKI(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Unique identifier
     # SKI
     def ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +37,7 @@ class SKI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # On-orbit reference
     # SKI
     def ON_ORBIT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -43,6 +45,7 @@ class SKI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # International designator
     # SKI
     def ORIG_OBJECT_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -50,20 +53,23 @@ class SKI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Satellite catalog number
+    # SKI
+    def SAT_NO(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Sensor identifier
     # SKI
     def ID_SENSOR(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # SKI
-    def SAT_NO(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
+    # Original sensor identifier
     # SKI
     def ORIG_SENSOR_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
@@ -71,6 +77,7 @@ class SKI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Sensor geodetic latitude (degrees)
     # SKI
     def SENLAT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
@@ -78,6 +85,7 @@ class SKI(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor geodetic longitude (degrees)
     # SKI
     def SENLON(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
@@ -85,6 +93,7 @@ class SKI(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor altitude (km)
     # SKI
     def SENALT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
@@ -92,6 +101,7 @@ class SKI(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor ECEF X position (km)
     # SKI
     def SENX(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
@@ -99,6 +109,7 @@ class SKI(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor ECEF Y position (km)
     # SKI
     def SENY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
@@ -106,6 +117,7 @@ class SKI(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor ECEF Z position (km)
     # SKI
     def SENZ(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
@@ -113,13 +125,21 @@ class SKI(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor quaternion (scalar-last: q1, q2, q3, q0)
     # SKI
     def SEN_QUAT(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # SKI
+    def SEN_QUATAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
 
     # SKI
     def SEN_QUATLength(self):
@@ -133,13 +153,21 @@ class SKI(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         return o == 0
 
+    # Sensor quaternion rate
     # SKI
     def SEN_QUAT_DOT(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # SKI
+    def SEN_QUAT_DOTAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
 
     # SKI
     def SEN_QUAT_DOTLength(self):
@@ -153,13 +181,15 @@ class SKI(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         return o == 0
 
+    # Image type
     # SKI
     def IMAGE_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
+    # Exposure start time (ISO 8601)
     # SKI
     def EXP_START_TIME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
@@ -167,6 +197,7 @@ class SKI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Exposure end time (ISO 8601)
     # SKI
     def EXP_END_TIME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
@@ -174,6 +205,7 @@ class SKI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Image source information
     # SKI
     def IMAGE_SOURCE_INFO(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
@@ -181,6 +213,7 @@ class SKI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Top-left corner start azimuth (degrees)
     # SKI
     def TOP_LEFT_START_AZ(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
@@ -188,6 +221,7 @@ class SKI(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Top-left corner start elevation (degrees)
     # SKI
     def TOP_LEFT_START_EL(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
@@ -195,6 +229,7 @@ class SKI(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Top-left corner stop azimuth (degrees)
     # SKI
     def TOP_LEFT_STOP_AZ(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
@@ -202,6 +237,7 @@ class SKI(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Top-left corner stop elevation (degrees)
     # SKI
     def TOP_LEFT_STOP_EL(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
@@ -209,6 +245,7 @@ class SKI(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Image set identifier
     # SKI
     def IMAGE_SET_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
@@ -216,20 +253,23 @@ class SKI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Number of images in set
     # SKI
     def IMAGE_SET_LENGTH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
         return 0
 
+    # Sequence number within set
     # SKI
     def SEQUENCE_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
         return 0
 
+    # Frame field-of-view width (degrees)
     # SKI
     def FRAME_FOVWIDTH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
@@ -237,6 +277,7 @@ class SKI(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Frame field-of-view height (degrees)
     # SKI
     def FRAME_FOVHEIGHT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
@@ -244,6 +285,7 @@ class SKI(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Pixel field-of-view width (arcseconds)
     # SKI
     def PIXEL_FOVWIDTH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
@@ -251,6 +293,7 @@ class SKI(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Pixel field-of-view height (arcseconds)
     # SKI
     def PIXEL_FOVHEIGHT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
@@ -258,27 +301,31 @@ class SKI(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Frame width (pixels)
     # SKI
     def FRAME_WIDTH_PIXELS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
         return 0
 
+    # Frame height (pixels)
     # SKI
     def FRAME_HEIGHT_PIXELS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
         return 0
 
+    # Pixel bit depth
     # SKI
     def PIXEL_BIT_DEPTH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
+    # Annotation key reference
     # SKI
     def ANNOTATION_KEY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
@@ -286,6 +333,7 @@ class SKI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Calibration key reference
     # SKI
     def CALIBRATION_KEY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
@@ -293,6 +341,7 @@ class SKI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Image filename
     # SKI
     def FILENAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
@@ -300,6 +349,7 @@ class SKI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # File size (bytes)
     # SKI
     def FILESIZE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
@@ -307,6 +357,7 @@ class SKI(object):
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
+    # File checksum value
     # SKI
     def CHECKSUM_VALUE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
@@ -314,6 +365,7 @@ class SKI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Transaction identifier
     # SKI
     def TRANSACTION_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
@@ -321,6 +373,7 @@ class SKI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Associated tags
     # SKI
     def TAGS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
@@ -341,6 +394,7 @@ class SKI(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
         return o == 0
 
+    # Description
     # SKI
     def DESCRIPTION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
@@ -348,6 +402,7 @@ class SKI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Associated EO observation references
     # SKI
     def EO_OBSERVATIONS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
@@ -392,17 +447,17 @@ def SKIAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
 def AddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
     SKIAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
 
-def SKIAddID_SENSOR(builder, ID_SENSOR):
-    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ID_SENSOR), 0)
-
-def AddID_SENSOR(builder, ID_SENSOR):
-    SKIAddID_SENSOR(builder, ID_SENSOR)
-
 def SKIAddSAT_NO(builder, SAT_NO):
-    builder.PrependInt32Slot(4, SAT_NO, 0)
+    builder.PrependUint32Slot(3, SAT_NO, 0)
 
 def AddSAT_NO(builder, SAT_NO):
     SKIAddSAT_NO(builder, SAT_NO)
+
+def SKIAddID_SENSOR(builder, ID_SENSOR):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ID_SENSOR), 0)
+
+def AddID_SENSOR(builder, ID_SENSOR):
+    SKIAddID_SENSOR(builder, ID_SENSOR)
 
 def SKIAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID):
     builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_SENSOR_ID), 0)
@@ -453,7 +508,7 @@ def AddSEN_QUAT(builder, SEN_QUAT):
     SKIAddSEN_QUAT(builder, SEN_QUAT)
 
 def SKIStartSEN_QUATVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
+    return builder.StartVector(8, numElems, 8)
 
 def StartSEN_QUATVector(builder, numElems):
     return SKIStartSEN_QUATVector(builder, numElems)
@@ -465,13 +520,13 @@ def AddSEN_QUAT_DOT(builder, SEN_QUAT_DOT):
     SKIAddSEN_QUAT_DOT(builder, SEN_QUAT_DOT)
 
 def SKIStartSEN_QUAT_DOTVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
+    return builder.StartVector(8, numElems, 8)
 
 def StartSEN_QUAT_DOTVector(builder, numElems):
     return SKIStartSEN_QUAT_DOTVector(builder, numElems)
 
 def SKIAddIMAGE_TYPE(builder, IMAGE_TYPE):
-    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(IMAGE_TYPE), 0)
+    builder.PrependInt8Slot(14, IMAGE_TYPE, 0)
 
 def AddIMAGE_TYPE(builder, IMAGE_TYPE):
     SKIAddIMAGE_TYPE(builder, IMAGE_TYPE)
@@ -525,13 +580,13 @@ def AddIMAGE_SET_ID(builder, IMAGE_SET_ID):
     SKIAddIMAGE_SET_ID(builder, IMAGE_SET_ID)
 
 def SKIAddIMAGE_SET_LENGTH(builder, IMAGE_SET_LENGTH):
-    builder.PrependInt32Slot(23, IMAGE_SET_LENGTH, 0)
+    builder.PrependUint16Slot(23, IMAGE_SET_LENGTH, 0)
 
 def AddIMAGE_SET_LENGTH(builder, IMAGE_SET_LENGTH):
     SKIAddIMAGE_SET_LENGTH(builder, IMAGE_SET_LENGTH)
 
 def SKIAddSEQUENCE_ID(builder, SEQUENCE_ID):
-    builder.PrependInt32Slot(24, SEQUENCE_ID, 0)
+    builder.PrependUint16Slot(24, SEQUENCE_ID, 0)
 
 def AddSEQUENCE_ID(builder, SEQUENCE_ID):
     SKIAddSEQUENCE_ID(builder, SEQUENCE_ID)
@@ -561,19 +616,19 @@ def AddPIXEL_FOVHEIGHT(builder, PIXEL_FOVHEIGHT):
     SKIAddPIXEL_FOVHEIGHT(builder, PIXEL_FOVHEIGHT)
 
 def SKIAddFRAME_WIDTH_PIXELS(builder, FRAME_WIDTH_PIXELS):
-    builder.PrependInt32Slot(29, FRAME_WIDTH_PIXELS, 0)
+    builder.PrependUint16Slot(29, FRAME_WIDTH_PIXELS, 0)
 
 def AddFRAME_WIDTH_PIXELS(builder, FRAME_WIDTH_PIXELS):
     SKIAddFRAME_WIDTH_PIXELS(builder, FRAME_WIDTH_PIXELS)
 
 def SKIAddFRAME_HEIGHT_PIXELS(builder, FRAME_HEIGHT_PIXELS):
-    builder.PrependInt32Slot(30, FRAME_HEIGHT_PIXELS, 0)
+    builder.PrependUint16Slot(30, FRAME_HEIGHT_PIXELS, 0)
 
 def AddFRAME_HEIGHT_PIXELS(builder, FRAME_HEIGHT_PIXELS):
     SKIAddFRAME_HEIGHT_PIXELS(builder, FRAME_HEIGHT_PIXELS)
 
 def SKIAddPIXEL_BIT_DEPTH(builder, PIXEL_BIT_DEPTH):
-    builder.PrependInt32Slot(31, PIXEL_BIT_DEPTH, 0)
+    builder.PrependUint8Slot(31, PIXEL_BIT_DEPTH, 0)
 
 def AddPIXEL_BIT_DEPTH(builder, PIXEL_BIT_DEPTH):
     SKIAddPIXEL_BIT_DEPTH(builder, PIXEL_BIT_DEPTH)
@@ -662,8 +717,8 @@ class SKIT(object):
         self.ID = None  # type: str
         self.ON_ORBIT = None  # type: str
         self.ORIG_OBJECT_ID = None  # type: str
-        self.ID_SENSOR = None  # type: str
         self.SAT_NO = 0  # type: int
+        self.ID_SENSOR = None  # type: str
         self.ORIG_SENSOR_ID = None  # type: str
         self.SENLAT = 0.0  # type: float
         self.SENLON = 0.0  # type: float
@@ -671,9 +726,9 @@ class SKIT(object):
         self.SENX = 0.0  # type: float
         self.SENY = 0.0  # type: float
         self.SENZ = 0.0  # type: float
-        self.SEN_QUAT = None  # type: List[str]
-        self.SEN_QUAT_DOT = None  # type: List[str]
-        self.IMAGE_TYPE = None  # type: str
+        self.SEN_QUAT = None  # type: List[float]
+        self.SEN_QUAT_DOT = None  # type: List[float]
+        self.IMAGE_TYPE = 0  # type: int
         self.EXP_START_TIME = None  # type: str
         self.EXP_END_TIME = None  # type: str
         self.IMAGE_SOURCE_INFO = None  # type: str
@@ -725,8 +780,8 @@ class SKIT(object):
         self.ID = SKI.ID()
         self.ON_ORBIT = SKI.ON_ORBIT()
         self.ORIG_OBJECT_ID = SKI.ORIG_OBJECT_ID()
-        self.ID_SENSOR = SKI.ID_SENSOR()
         self.SAT_NO = SKI.SAT_NO()
+        self.ID_SENSOR = SKI.ID_SENSOR()
         self.ORIG_SENSOR_ID = SKI.ORIG_SENSOR_ID()
         self.SENLAT = SKI.SENLAT()
         self.SENLON = SKI.SENLON()
@@ -735,13 +790,19 @@ class SKIT(object):
         self.SENY = SKI.SENY()
         self.SENZ = SKI.SENZ()
         if not SKI.SEN_QUATIsNone():
-            self.SEN_QUAT = []
-            for i in range(SKI.SEN_QUATLength()):
-                self.SEN_QUAT.append(SKI.SEN_QUAT(i))
+            if np is None:
+                self.SEN_QUAT = []
+                for i in range(SKI.SEN_QUATLength()):
+                    self.SEN_QUAT.append(SKI.SEN_QUAT(i))
+            else:
+                self.SEN_QUAT = SKI.SEN_QUATAsNumpy()
         if not SKI.SEN_QUAT_DOTIsNone():
-            self.SEN_QUAT_DOT = []
-            for i in range(SKI.SEN_QUAT_DOTLength()):
-                self.SEN_QUAT_DOT.append(SKI.SEN_QUAT_DOT(i))
+            if np is None:
+                self.SEN_QUAT_DOT = []
+                for i in range(SKI.SEN_QUAT_DOTLength()):
+                    self.SEN_QUAT_DOT.append(SKI.SEN_QUAT_DOT(i))
+            else:
+                self.SEN_QUAT_DOT = SKI.SEN_QUAT_DOTAsNumpy()
         self.IMAGE_TYPE = SKI.IMAGE_TYPE()
         self.EXP_START_TIME = SKI.EXP_START_TIME()
         self.EXP_END_TIME = SKI.EXP_END_TIME()
@@ -789,23 +850,21 @@ class SKIT(object):
         if self.ORIG_SENSOR_ID is not None:
             ORIG_SENSOR_ID = builder.CreateString(self.ORIG_SENSOR_ID)
         if self.SEN_QUAT is not None:
-            SEN_QUATlist = []
-            for i in range(len(self.SEN_QUAT)):
-                SEN_QUATlist.append(builder.CreateString(self.SEN_QUAT[i]))
-            SKIStartSEN_QUATVector(builder, len(self.SEN_QUAT))
-            for i in reversed(range(len(self.SEN_QUAT))):
-                builder.PrependUOffsetTRelative(SEN_QUATlist[i])
-            SEN_QUAT = builder.EndVector()
+            if np is not None and type(self.SEN_QUAT) is np.ndarray:
+                SEN_QUAT = builder.CreateNumpyVector(self.SEN_QUAT)
+            else:
+                SKIStartSEN_QUATVector(builder, len(self.SEN_QUAT))
+                for i in reversed(range(len(self.SEN_QUAT))):
+                    builder.PrependFloat64(self.SEN_QUAT[i])
+                SEN_QUAT = builder.EndVector()
         if self.SEN_QUAT_DOT is not None:
-            SEN_QUAT_DOTlist = []
-            for i in range(len(self.SEN_QUAT_DOT)):
-                SEN_QUAT_DOTlist.append(builder.CreateString(self.SEN_QUAT_DOT[i]))
-            SKIStartSEN_QUAT_DOTVector(builder, len(self.SEN_QUAT_DOT))
-            for i in reversed(range(len(self.SEN_QUAT_DOT))):
-                builder.PrependUOffsetTRelative(SEN_QUAT_DOTlist[i])
-            SEN_QUAT_DOT = builder.EndVector()
-        if self.IMAGE_TYPE is not None:
-            IMAGE_TYPE = builder.CreateString(self.IMAGE_TYPE)
+            if np is not None and type(self.SEN_QUAT_DOT) is np.ndarray:
+                SEN_QUAT_DOT = builder.CreateNumpyVector(self.SEN_QUAT_DOT)
+            else:
+                SKIStartSEN_QUAT_DOTVector(builder, len(self.SEN_QUAT_DOT))
+                for i in reversed(range(len(self.SEN_QUAT_DOT))):
+                    builder.PrependFloat64(self.SEN_QUAT_DOT[i])
+                SEN_QUAT_DOT = builder.EndVector()
         if self.EXP_START_TIME is not None:
             EXP_START_TIME = builder.CreateString(self.EXP_START_TIME)
         if self.EXP_END_TIME is not None:
@@ -849,9 +908,9 @@ class SKIT(object):
             SKIAddON_ORBIT(builder, ON_ORBIT)
         if self.ORIG_OBJECT_ID is not None:
             SKIAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+        SKIAddSAT_NO(builder, self.SAT_NO)
         if self.ID_SENSOR is not None:
             SKIAddID_SENSOR(builder, ID_SENSOR)
-        SKIAddSAT_NO(builder, self.SAT_NO)
         if self.ORIG_SENSOR_ID is not None:
             SKIAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
         SKIAddSENLAT(builder, self.SENLAT)
@@ -864,8 +923,7 @@ class SKIT(object):
             SKIAddSEN_QUAT(builder, SEN_QUAT)
         if self.SEN_QUAT_DOT is not None:
             SKIAddSEN_QUAT_DOT(builder, SEN_QUAT_DOT)
-        if self.IMAGE_TYPE is not None:
-            SKIAddIMAGE_TYPE(builder, IMAGE_TYPE)
+        SKIAddIMAGE_TYPE(builder, self.IMAGE_TYPE)
         if self.EXP_START_TIME is not None:
             SKIAddEXP_START_TIME(builder, EXP_START_TIME)
         if self.EXP_END_TIME is not None:

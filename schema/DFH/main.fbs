@@ -1,11 +1,54 @@
-// Hash: d881c2bab930e87aff99f452efd36ed672340a7c88a95c2af31c8393604ed399
-// Version: 0.0.2
+// Hash: a6155b3ad1a4ea6cd57d7efcad9a9ea81f39ae9a23e0e712c4f8de03580daf49
+// Version: 0.0.3
 // -----------------------------------END_HEADER
+/// GEO Drift History Record
+table driftRecord {
+  /// Epoch of drift measurement (ISO 8601)
+  EPOCH:string;
+  /// Longitude drift rate in degrees/day
+  DRIFT_RATE:double;
+  /// Mean longitude in degrees East
+  MEAN_LONGITUDE:double;
+  /// Longitude oscillation amplitude in degrees
+  LONGITUDE_AMPLITUDE:double;
+  /// Eccentricity
+  ECCENTRICITY:double;
+  /// Inclination in degrees
+  INCLINATION:double;
+}
+
 /// GEO Drift History
 table DFH {
+  /// Unique identifier
   ID:string;
+  /// Satellite number
+  SAT_NO:uint32;
+  /// Object designator
+  OBJECT_DESIGNATOR:string;
+  /// Object common name
+  OBJECT_NAME:string;
+  /// History start time (ISO 8601)
+  START_TIME:string;
+  /// History end time (ISO 8601)
+  END_TIME:string;
+  /// Current effective until date (ISO 8601)
   EFFECTIVE_UNTIL:string;
+  /// Current drift rate in degrees/day
   DRIFT_RATE:double;
+  /// Current mean longitude in degrees East
+  MEAN_LONGITUDE:double;
+  /// Longitude slot center in degrees East (if station-keeping)
+  SLOT_CENTER:double;
+  /// Longitude slot half-width in degrees
+  SLOT_HALF_WIDTH:double;
+  /// Whether object is actively station-keeping
+  STATION_KEEPING:bool;
+  /// Historical drift records
+  RECORDS:[driftRecord];
+  /// Number of records in history
+  NUM_RECORDS:uint;
+  /// Additional notes
+  NOTES:string;
 }
 
 root_type DFH;

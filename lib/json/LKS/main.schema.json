@@ -1,81 +1,113 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "linkType" : {
+      "type" : "string",
+      "enum": ["UPLINK", "DOWNLINK", "CROSSLINK", "INTER_SATELLITE", "GROUND_TO_GROUND", "RELAY"]
+    },
+    "linkState" : {
+      "type" : "string",
+      "enum": ["ESTABLISHED", "DEGRADED", "INTERRUPTED", "PLANNED", "TERMINATED", "UNKNOWN"]
+    },
     "LKS" : {
       "type" : "object",
       "description" : "Link Status",
       "properties" : {
         "ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique identifier"
               },
         "ID_ON_ORBIT1" : {
-                "type" : "string"
-              },
-        "ID_ON_ORBIT2" : {
-                "type" : "string"
-              },
-        "LINK_START_TIME" : {
-                "type" : "string"
-              },
-        "LINK_STOP_TIME" : {
-                "type" : "string"
-              },
-        "CONSTELLATION" : {
-                "type" : "string"
-              },
-        "LINK_NAME" : {
-                "type" : "string"
-              },
-        "LINK_TYPE" : {
-                "type" : "string"
-              },
-        "BAND" : {
-                "type" : "string"
-              },
-        "ID_BEAM1" : {
-                "type" : "string"
-              },
-        "END_POINT1_NAME" : {
-                "type" : "string"
-              },
-        "END_POINT1_LAT" : {
-                "type" : "number"
-              },
-        "END_POINT1_LON" : {
-                "type" : "number"
-              },
-        "ID_BEAM2" : {
-                "type" : "string"
-              },
-        "END_POINT2_NAME" : {
-                "type" : "string"
-              },
-        "END_POINT2_LAT" : {
-                "type" : "number"
-              },
-        "END_POINT2_LON" : {
-                "type" : "number"
-              },
-        "DATA_RATE1_TO2" : {
-                "type" : "number"
-              },
-        "DATA_RATE2_TO1" : {
-                "type" : "number"
-              },
-        "LINK_STATE" : {
-                "type" : "string"
-              },
-        "SYS_CAP" : {
-                "type" : "string"
-              },
-        "OPS_CAP" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "First endpoint on-orbit identifier"
               },
         "SAT_NO1" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "First endpoint satellite catalog number"
+              },
+        "ID_ON_ORBIT2" : {
+                "type" : "string",
+                "description" : "Second endpoint on-orbit identifier"
               },
         "SAT_NO2" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Second endpoint satellite catalog number"
+              },
+        "CONSTELLATION" : {
+                "type" : "string",
+                "description" : "Constellation name"
+              },
+        "LINK_NAME" : {
+                "type" : "string",
+                "description" : "Link name or identifier"
+              },
+        "LINK_TYPE" : {
+                "$ref" : "#/definitions/linkType",
+                "description" : "Link type"
+              },
+        "LINK_STATE" : {
+                "$ref" : "#/definitions/linkState",
+                "description" : "Link state"
+              },
+        "BAND" : {
+                "type" : "string",
+                "description" : "RF band"
+              },
+        "LINK_START_TIME" : {
+                "type" : "string",
+                "description" : "Link start time (ISO 8601)"
+              },
+        "LINK_STOP_TIME" : {
+                "type" : "string",
+                "description" : "Link stop time (ISO 8601)"
+              },
+        "ID_BEAM1" : {
+                "type" : "string",
+                "description" : "First endpoint beam identifier"
+              },
+        "END_POINT1_NAME" : {
+                "type" : "string",
+                "description" : "First endpoint name"
+              },
+        "END_POINT1_LAT" : {
+                "type" : "number",
+                "description" : "First endpoint latitude (degrees)"
+              },
+        "END_POINT1_LON" : {
+                "type" : "number",
+                "description" : "First endpoint longitude (degrees)"
+              },
+        "ID_BEAM2" : {
+                "type" : "string",
+                "description" : "Second endpoint beam identifier"
+              },
+        "END_POINT2_NAME" : {
+                "type" : "string",
+                "description" : "Second endpoint name"
+              },
+        "END_POINT2_LAT" : {
+                "type" : "number",
+                "description" : "Second endpoint latitude (degrees)"
+              },
+        "END_POINT2_LON" : {
+                "type" : "number",
+                "description" : "Second endpoint longitude (degrees)"
+              },
+        "DATA_RATE1_TO2" : {
+                "type" : "number",
+                "description" : "Data rate from endpoint 1 to 2 (Mbps)"
+              },
+        "DATA_RATE2_TO1" : {
+                "type" : "number",
+                "description" : "Data rate from endpoint 2 to 1 (Mbps)"
+              },
+        "SYS_CAP" : {
+                "type" : "string",
+                "description" : "System capability status"
+              },
+        "OPS_CAP" : {
+                "type" : "string",
+                "description" : "Operational capability status"
               }
       },
       "additionalProperties" : false

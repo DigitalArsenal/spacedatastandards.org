@@ -16,7 +16,115 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct RFB;
 struct RFBBuilder;
 
-/// RF Band
+enum rfBandDesignation : int8_t {
+  rfBandDesignation_UHF = 0,
+  rfBandDesignation_L = 1,
+  rfBandDesignation_S = 2,
+  rfBandDesignation_C = 3,
+  rfBandDesignation_X = 4,
+  rfBandDesignation_KU = 5,
+  rfBandDesignation_K = 6,
+  rfBandDesignation_KA = 7,
+  rfBandDesignation_V = 8,
+  rfBandDesignation_W = 9,
+  rfBandDesignation_Q = 10,
+  rfBandDesignation_EHF = 11,
+  rfBandDesignation_OTHER = 12,
+  rfBandDesignation_MIN = rfBandDesignation_UHF,
+  rfBandDesignation_MAX = rfBandDesignation_OTHER
+};
+
+inline const rfBandDesignation (&EnumValuesrfBandDesignation())[13] {
+  static const rfBandDesignation values[] = {
+    rfBandDesignation_UHF,
+    rfBandDesignation_L,
+    rfBandDesignation_S,
+    rfBandDesignation_C,
+    rfBandDesignation_X,
+    rfBandDesignation_KU,
+    rfBandDesignation_K,
+    rfBandDesignation_KA,
+    rfBandDesignation_V,
+    rfBandDesignation_W,
+    rfBandDesignation_Q,
+    rfBandDesignation_EHF,
+    rfBandDesignation_OTHER
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesrfBandDesignation() {
+  static const char * const names[14] = {
+    "UHF",
+    "L",
+    "S",
+    "C",
+    "X",
+    "KU",
+    "K",
+    "KA",
+    "V",
+    "W",
+    "Q",
+    "EHF",
+    "OTHER",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamerfBandDesignation(rfBandDesignation e) {
+  if (::flatbuffers::IsOutRange(e, rfBandDesignation_UHF, rfBandDesignation_OTHER)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesrfBandDesignation()[index];
+}
+
+enum rfPolarization : int8_t {
+  rfPolarization_LHCP = 0,
+  rfPolarization_RHCP = 1,
+  rfPolarization_LINEAR_H = 2,
+  rfPolarization_LINEAR_V = 3,
+  rfPolarization_DUAL = 4,
+  rfPolarization_CROSS = 5,
+  rfPolarization_UNKNOWN = 6,
+  rfPolarization_MIN = rfPolarization_LHCP,
+  rfPolarization_MAX = rfPolarization_UNKNOWN
+};
+
+inline const rfPolarization (&EnumValuesrfPolarization())[7] {
+  static const rfPolarization values[] = {
+    rfPolarization_LHCP,
+    rfPolarization_RHCP,
+    rfPolarization_LINEAR_H,
+    rfPolarization_LINEAR_V,
+    rfPolarization_DUAL,
+    rfPolarization_CROSS,
+    rfPolarization_UNKNOWN
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesrfPolarization() {
+  static const char * const names[8] = {
+    "LHCP",
+    "RHCP",
+    "LINEAR_H",
+    "LINEAR_V",
+    "DUAL",
+    "CROSS",
+    "UNKNOWN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamerfPolarization(rfPolarization e) {
+  if (::flatbuffers::IsOutRange(e, rfPolarization_LHCP, rfPolarization_UNKNOWN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesrfPolarization()[index];
+}
+
+/// RF Band Specification
 struct RFB FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef RFBBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
@@ -29,59 +137,75 @@ struct RFB FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_FREQ_MIN = 16,
     VT_FREQ_MAX = 18,
     VT_CENTER_FREQ = 20,
-    VT_PEAK_GAIN = 22,
-    VT_EDGE_GAIN = 24,
-    VT_BANDWIDTH = 26,
+    VT_BANDWIDTH = 22,
+    VT_PEAK_GAIN = 24,
+    VT_EDGE_GAIN = 26,
     VT_BEAMWIDTH = 28,
     VT_POLARIZATION = 30,
     VT_ERP = 32,
     VT_EIRP = 34
   };
+  /// Unique identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
+  /// Parent entity identifier
   const ::flatbuffers::String *ID_ENTITY() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID_ENTITY);
   }
+  /// Band name or designation
   const ::flatbuffers::String *NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NAME);
   }
-  const ::flatbuffers::String *BAND() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_BAND);
+  /// RF band designation
+  rfBandDesignation BAND() const {
+    return static_cast<rfBandDesignation>(GetField<int8_t>(VT_BAND, 0));
   }
+  /// Operating mode
   const ::flatbuffers::String *MODE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_MODE);
   }
+  /// Band purpose (e.g., TT&C, PAYLOAD, BEACON)
   const ::flatbuffers::String *PURPOSE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_PURPOSE);
   }
+  /// Minimum frequency (MHz)
   double FREQ_MIN() const {
     return GetField<double>(VT_FREQ_MIN, 0.0);
   }
+  /// Maximum frequency (MHz)
   double FREQ_MAX() const {
     return GetField<double>(VT_FREQ_MAX, 0.0);
   }
+  /// Center frequency (MHz)
   double CENTER_FREQ() const {
     return GetField<double>(VT_CENTER_FREQ, 0.0);
   }
-  double PEAK_GAIN() const {
-    return GetField<double>(VT_PEAK_GAIN, 0.0);
-  }
-  double EDGE_GAIN() const {
-    return GetField<double>(VT_EDGE_GAIN, 0.0);
-  }
+  /// Bandwidth (MHz)
   double BANDWIDTH() const {
     return GetField<double>(VT_BANDWIDTH, 0.0);
   }
+  /// Peak antenna gain (dBi)
+  double PEAK_GAIN() const {
+    return GetField<double>(VT_PEAK_GAIN, 0.0);
+  }
+  /// Edge-of-coverage gain (dBi)
+  double EDGE_GAIN() const {
+    return GetField<double>(VT_EDGE_GAIN, 0.0);
+  }
+  /// Antenna beamwidth (degrees)
   double BEAMWIDTH() const {
     return GetField<double>(VT_BEAMWIDTH, 0.0);
   }
-  const ::flatbuffers::String *POLARIZATION() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_POLARIZATION);
+  /// Polarization
+  rfPolarization POLARIZATION() const {
+    return static_cast<rfPolarization>(GetField<int8_t>(VT_POLARIZATION, 0));
   }
+  /// Effective radiated power (dBW)
   double ERP() const {
     return GetField<double>(VT_ERP, 0.0);
   }
+  /// Effective isotropic radiated power (dBW)
   double EIRP() const {
     return GetField<double>(VT_EIRP, 0.0);
   }
@@ -93,8 +217,7 @@ struct RFB FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(ID_ENTITY()) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
-           VerifyOffset(verifier, VT_BAND) &&
-           verifier.VerifyString(BAND()) &&
+           VerifyField<int8_t>(verifier, VT_BAND, 1) &&
            VerifyOffset(verifier, VT_MODE) &&
            verifier.VerifyString(MODE()) &&
            VerifyOffset(verifier, VT_PURPOSE) &&
@@ -102,12 +225,11 @@ struct RFB FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_FREQ_MIN, 8) &&
            VerifyField<double>(verifier, VT_FREQ_MAX, 8) &&
            VerifyField<double>(verifier, VT_CENTER_FREQ, 8) &&
+           VerifyField<double>(verifier, VT_BANDWIDTH, 8) &&
            VerifyField<double>(verifier, VT_PEAK_GAIN, 8) &&
            VerifyField<double>(verifier, VT_EDGE_GAIN, 8) &&
-           VerifyField<double>(verifier, VT_BANDWIDTH, 8) &&
            VerifyField<double>(verifier, VT_BEAMWIDTH, 8) &&
-           VerifyOffset(verifier, VT_POLARIZATION) &&
-           verifier.VerifyString(POLARIZATION()) &&
+           VerifyField<int8_t>(verifier, VT_POLARIZATION, 1) &&
            VerifyField<double>(verifier, VT_ERP, 8) &&
            VerifyField<double>(verifier, VT_EIRP, 8) &&
            verifier.EndTable();
@@ -127,8 +249,8 @@ struct RFBBuilder {
   void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
     fbb_.AddOffset(RFB::VT_NAME, NAME);
   }
-  void add_BAND(::flatbuffers::Offset<::flatbuffers::String> BAND) {
-    fbb_.AddOffset(RFB::VT_BAND, BAND);
+  void add_BAND(rfBandDesignation BAND) {
+    fbb_.AddElement<int8_t>(RFB::VT_BAND, static_cast<int8_t>(BAND), 0);
   }
   void add_MODE(::flatbuffers::Offset<::flatbuffers::String> MODE) {
     fbb_.AddOffset(RFB::VT_MODE, MODE);
@@ -145,20 +267,20 @@ struct RFBBuilder {
   void add_CENTER_FREQ(double CENTER_FREQ) {
     fbb_.AddElement<double>(RFB::VT_CENTER_FREQ, CENTER_FREQ, 0.0);
   }
+  void add_BANDWIDTH(double BANDWIDTH) {
+    fbb_.AddElement<double>(RFB::VT_BANDWIDTH, BANDWIDTH, 0.0);
+  }
   void add_PEAK_GAIN(double PEAK_GAIN) {
     fbb_.AddElement<double>(RFB::VT_PEAK_GAIN, PEAK_GAIN, 0.0);
   }
   void add_EDGE_GAIN(double EDGE_GAIN) {
     fbb_.AddElement<double>(RFB::VT_EDGE_GAIN, EDGE_GAIN, 0.0);
   }
-  void add_BANDWIDTH(double BANDWIDTH) {
-    fbb_.AddElement<double>(RFB::VT_BANDWIDTH, BANDWIDTH, 0.0);
-  }
   void add_BEAMWIDTH(double BEAMWIDTH) {
     fbb_.AddElement<double>(RFB::VT_BEAMWIDTH, BEAMWIDTH, 0.0);
   }
-  void add_POLARIZATION(::flatbuffers::Offset<::flatbuffers::String> POLARIZATION) {
-    fbb_.AddOffset(RFB::VT_POLARIZATION, POLARIZATION);
+  void add_POLARIZATION(rfPolarization POLARIZATION) {
+    fbb_.AddElement<int8_t>(RFB::VT_POLARIZATION, static_cast<int8_t>(POLARIZATION), 0);
   }
   void add_ERP(double ERP) {
     fbb_.AddElement<double>(RFB::VT_ERP, ERP, 0.0);
@@ -182,36 +304,36 @@ inline ::flatbuffers::Offset<RFB> CreateRFB(
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ID_ENTITY = 0,
     ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> BAND = 0,
+    rfBandDesignation BAND = rfBandDesignation_UHF,
     ::flatbuffers::Offset<::flatbuffers::String> MODE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> PURPOSE = 0,
     double FREQ_MIN = 0.0,
     double FREQ_MAX = 0.0,
     double CENTER_FREQ = 0.0,
+    double BANDWIDTH = 0.0,
     double PEAK_GAIN = 0.0,
     double EDGE_GAIN = 0.0,
-    double BANDWIDTH = 0.0,
     double BEAMWIDTH = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::String> POLARIZATION = 0,
+    rfPolarization POLARIZATION = rfPolarization_LHCP,
     double ERP = 0.0,
     double EIRP = 0.0) {
   RFBBuilder builder_(_fbb);
   builder_.add_EIRP(EIRP);
   builder_.add_ERP(ERP);
   builder_.add_BEAMWIDTH(BEAMWIDTH);
-  builder_.add_BANDWIDTH(BANDWIDTH);
   builder_.add_EDGE_GAIN(EDGE_GAIN);
   builder_.add_PEAK_GAIN(PEAK_GAIN);
+  builder_.add_BANDWIDTH(BANDWIDTH);
   builder_.add_CENTER_FREQ(CENTER_FREQ);
   builder_.add_FREQ_MAX(FREQ_MAX);
   builder_.add_FREQ_MIN(FREQ_MIN);
-  builder_.add_POLARIZATION(POLARIZATION);
   builder_.add_PURPOSE(PURPOSE);
   builder_.add_MODE(MODE);
-  builder_.add_BAND(BAND);
   builder_.add_NAME(NAME);
   builder_.add_ID_ENTITY(ID_ENTITY);
   builder_.add_ID(ID);
+  builder_.add_POLARIZATION(POLARIZATION);
+  builder_.add_BAND(BAND);
   return builder_.Finish();
 }
 
@@ -220,42 +342,40 @@ inline ::flatbuffers::Offset<RFB> CreateRFBDirect(
     const char *ID = nullptr,
     const char *ID_ENTITY = nullptr,
     const char *NAME = nullptr,
-    const char *BAND = nullptr,
+    rfBandDesignation BAND = rfBandDesignation_UHF,
     const char *MODE = nullptr,
     const char *PURPOSE = nullptr,
     double FREQ_MIN = 0.0,
     double FREQ_MAX = 0.0,
     double CENTER_FREQ = 0.0,
+    double BANDWIDTH = 0.0,
     double PEAK_GAIN = 0.0,
     double EDGE_GAIN = 0.0,
-    double BANDWIDTH = 0.0,
     double BEAMWIDTH = 0.0,
-    const char *POLARIZATION = nullptr,
+    rfPolarization POLARIZATION = rfPolarization_LHCP,
     double ERP = 0.0,
     double EIRP = 0.0) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto ID_ENTITY__ = ID_ENTITY ? _fbb.CreateString(ID_ENTITY) : 0;
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
-  auto BAND__ = BAND ? _fbb.CreateString(BAND) : 0;
   auto MODE__ = MODE ? _fbb.CreateString(MODE) : 0;
   auto PURPOSE__ = PURPOSE ? _fbb.CreateString(PURPOSE) : 0;
-  auto POLARIZATION__ = POLARIZATION ? _fbb.CreateString(POLARIZATION) : 0;
   return CreateRFB(
       _fbb,
       ID__,
       ID_ENTITY__,
       NAME__,
-      BAND__,
+      BAND,
       MODE__,
       PURPOSE__,
       FREQ_MIN,
       FREQ_MAX,
       CENTER_FREQ,
+      BANDWIDTH,
       PEAK_GAIN,
       EDGE_GAIN,
-      BANDWIDTH,
       BEAMWIDTH,
-      POLARIZATION__,
+      POLARIZATION,
       ERP,
       EIRP);
 }

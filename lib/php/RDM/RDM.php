@@ -41,58 +41,262 @@ class RDM extends Table
         return $this;
     }
 
+    /// CCSDS RDM version
     public function getCCSDS_RDM_VERS()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Message creation date (ISO 8601)
     public function getCREATION_DATE()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Creating organization
     public function getORIGINATOR()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Object name
     public function getOBJECT_NAME()
     {
         $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// International designator
     public function getOBJECT_ID()
     {
         $o = $this->__offset(12);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getREENTRY_EPOCH()
+    /// NORAD catalog number
+    /**
+     * @return uint
+     */
+    public function getNORAD_CAT_ID()
     {
         $o = $this->__offset(14);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Object type (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN)
+    public function getOBJECT_TYPE()
+    {
+        $o = $this->__offset(16);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Reentry disposition
+    /**
+     * @return sbyte
+     */
+    public function getDISPOSITION()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \reentryDisposition::CONTROLLED;
+    }
+
+    /// Reentry reason
+    /**
+     * @return sbyte
+     */
+    public function getREASON()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \reentryReason::NATURAL_DECAY;
+    }
+
+    /// Predicted reentry epoch (ISO 8601)
+    public function getREENTRY_EPOCH()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Reentry epoch uncertainty window in hours
+    /**
+     * @return double
+     */
+    public function getREENTRY_EPOCH_UNC()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Reentry latitude in degrees
     /**
      * @return double
      */
     public function getREENTRY_LATITUDE()
     {
-        $o = $this->__offset(16);
+        $o = $this->__offset(26);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Reentry longitude in degrees
     /**
      * @return double
      */
     public function getREENTRY_LONGITUDE()
     {
-        $o = $this->__offset(18);
+        $o = $this->__offset(28);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Reentry altitude in km
+    /**
+     * @return double
+     */
+    public function getREENTRY_ALTITUDE()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Time system
+    public function getTIME_SYSTEM()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Previous predicted reentry epoch for comparison (ISO 8601)
+    public function getPREV_PREDICTION_EPOCH()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Ballistic coefficient in kg/m^2
+    /**
+     * @return double
+     */
+    public function getBALLISTIC_COEFF()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Object mass in kg
+    /**
+     * @return double
+     */
+    public function getMASS()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Solar radiation pressure area in m^2
+    /**
+     * @return double
+     */
+    public function getSOLAR_RAD_AREA()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Drag area in m^2
+    /**
+     * @return double
+     */
+    public function getDRAG_AREA()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Initial state vector
+    public function getINITIAL_STATE()
+    {
+        $obj = new ReentryStateVector();
+        $o = $this->__offset(44);
+        return $o != 0 ? $obj->init($this->__indirect($o + $this->bb_pos), $this->bb) : 0;
+    }
+
+    /// Ground impact predictions
+    /**
+     * @returnVectorOffset
+     */
+    public function getIMPACT_PREDICTIONS($j)
+    {
+        $o = $this->__offset(46);
+        $obj = new ReentryImpact();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getIMPACT_PREDICTIONSLength()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Predicted surviving debris
+    /**
+     * @returnVectorOffset
+     */
+    public function getSURVIVING_DEBRIS($j)
+    {
+        $o = $this->__offset(48);
+        $obj = new SurvivingDebris();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSURVIVING_DEBRISLength()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Casualty expectation
+    /**
+     * @return double
+     */
+    public function getCASUALTY_EXPECTATION()
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Number of breakup fragments predicted
+    /**
+     * @return uint
+     */
+    public function getNUM_FRAGMENTS()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Total surviving mass in kg
+    /**
+     * @return double
+     */
+    public function getSURVIVING_MASS()
+    {
+        $o = $this->__offset(54);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Additional comments
+    public function getCOMMENT()
+    {
+        $o = $this->__offset(56);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /**
@@ -101,24 +305,43 @@ class RDM extends Table
      */
     public static function startRDM(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(8);
+        $builder->StartObject(27);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return RDM
      */
-    public static function createRDM(FlatBufferBuilder $builder, $CCSDS_RDM_VERS, $CREATION_DATE, $ORIGINATOR, $OBJECT_NAME, $OBJECT_ID, $REENTRY_EPOCH, $REENTRY_LATITUDE, $REENTRY_LONGITUDE)
+    public static function createRDM(FlatBufferBuilder $builder, $CCSDS_RDM_VERS, $CREATION_DATE, $ORIGINATOR, $OBJECT_NAME, $OBJECT_ID, $NORAD_CAT_ID, $OBJECT_TYPE, $DISPOSITION, $REASON, $REENTRY_EPOCH, $REENTRY_EPOCH_UNC, $REENTRY_LATITUDE, $REENTRY_LONGITUDE, $REENTRY_ALTITUDE, $TIME_SYSTEM, $PREV_PREDICTION_EPOCH, $BALLISTIC_COEFF, $MASS, $SOLAR_RAD_AREA, $DRAG_AREA, $INITIAL_STATE, $IMPACT_PREDICTIONS, $SURVIVING_DEBRIS, $CASUALTY_EXPECTATION, $NUM_FRAGMENTS, $SURVIVING_MASS, $COMMENT)
     {
-        $builder->startObject(8);
+        $builder->startObject(27);
         self::addCCSDS_RDM_VERS($builder, $CCSDS_RDM_VERS);
         self::addCREATION_DATE($builder, $CREATION_DATE);
         self::addORIGINATOR($builder, $ORIGINATOR);
         self::addOBJECT_NAME($builder, $OBJECT_NAME);
         self::addOBJECT_ID($builder, $OBJECT_ID);
+        self::addNORAD_CAT_ID($builder, $NORAD_CAT_ID);
+        self::addOBJECT_TYPE($builder, $OBJECT_TYPE);
+        self::addDISPOSITION($builder, $DISPOSITION);
+        self::addREASON($builder, $REASON);
         self::addREENTRY_EPOCH($builder, $REENTRY_EPOCH);
+        self::addREENTRY_EPOCH_UNC($builder, $REENTRY_EPOCH_UNC);
         self::addREENTRY_LATITUDE($builder, $REENTRY_LATITUDE);
         self::addREENTRY_LONGITUDE($builder, $REENTRY_LONGITUDE);
+        self::addREENTRY_ALTITUDE($builder, $REENTRY_ALTITUDE);
+        self::addTIME_SYSTEM($builder, $TIME_SYSTEM);
+        self::addPREV_PREDICTION_EPOCH($builder, $PREV_PREDICTION_EPOCH);
+        self::addBALLISTIC_COEFF($builder, $BALLISTIC_COEFF);
+        self::addMASS($builder, $MASS);
+        self::addSOLAR_RAD_AREA($builder, $SOLAR_RAD_AREA);
+        self::addDRAG_AREA($builder, $DRAG_AREA);
+        self::addINITIAL_STATE($builder, $INITIAL_STATE);
+        self::addIMPACT_PREDICTIONS($builder, $IMPACT_PREDICTIONS);
+        self::addSURVIVING_DEBRIS($builder, $SURVIVING_DEBRIS);
+        self::addCASUALTY_EXPECTATION($builder, $CASUALTY_EXPECTATION);
+        self::addNUM_FRAGMENTS($builder, $NUM_FRAGMENTS);
+        self::addSURVIVING_MASS($builder, $SURVIVING_MASS);
+        self::addCOMMENT($builder, $COMMENT);
         $o = $builder->endObject();
         return $o;
     }
@@ -175,12 +398,62 @@ class RDM extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addNORAD_CAT_ID(FlatBufferBuilder $builder, $NORAD_CAT_ID)
+    {
+        $builder->addUintX(5, $NORAD_CAT_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addOBJECT_TYPE(FlatBufferBuilder $builder, $OBJECT_TYPE)
+    {
+        $builder->addOffsetX(6, $OBJECT_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addDISPOSITION(FlatBufferBuilder $builder, $DISPOSITION)
+    {
+        $builder->addSbyteX(7, $DISPOSITION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addREASON(FlatBufferBuilder $builder, $REASON)
+    {
+        $builder->addSbyteX(8, $REASON, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param StringOffset
      * @return void
      */
     public static function addREENTRY_EPOCH(FlatBufferBuilder $builder, $REENTRY_EPOCH)
     {
-        $builder->addOffsetX(5, $REENTRY_EPOCH, 0);
+        $builder->addOffsetX(9, $REENTRY_EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addREENTRY_EPOCH_UNC(FlatBufferBuilder $builder, $REENTRY_EPOCH_UNC)
+    {
+        $builder->addDoubleX(10, $REENTRY_EPOCH_UNC, 0.0);
     }
 
     /**
@@ -190,7 +463,7 @@ class RDM extends Table
      */
     public static function addREENTRY_LATITUDE(FlatBufferBuilder $builder, $REENTRY_LATITUDE)
     {
-        $builder->addDoubleX(6, $REENTRY_LATITUDE, 0.0);
+        $builder->addDoubleX(11, $REENTRY_LATITUDE, 0.0);
     }
 
     /**
@@ -200,7 +473,195 @@ class RDM extends Table
      */
     public static function addREENTRY_LONGITUDE(FlatBufferBuilder $builder, $REENTRY_LONGITUDE)
     {
-        $builder->addDoubleX(7, $REENTRY_LONGITUDE, 0.0);
+        $builder->addDoubleX(12, $REENTRY_LONGITUDE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addREENTRY_ALTITUDE(FlatBufferBuilder $builder, $REENTRY_ALTITUDE)
+    {
+        $builder->addDoubleX(13, $REENTRY_ALTITUDE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addTIME_SYSTEM(FlatBufferBuilder $builder, $TIME_SYSTEM)
+    {
+        $builder->addOffsetX(14, $TIME_SYSTEM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPREV_PREDICTION_EPOCH(FlatBufferBuilder $builder, $PREV_PREDICTION_EPOCH)
+    {
+        $builder->addOffsetX(15, $PREV_PREDICTION_EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addBALLISTIC_COEFF(FlatBufferBuilder $builder, $BALLISTIC_COEFF)
+    {
+        $builder->addDoubleX(16, $BALLISTIC_COEFF, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addMASS(FlatBufferBuilder $builder, $MASS)
+    {
+        $builder->addDoubleX(17, $MASS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addSOLAR_RAD_AREA(FlatBufferBuilder $builder, $SOLAR_RAD_AREA)
+    {
+        $builder->addDoubleX(18, $SOLAR_RAD_AREA, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDRAG_AREA(FlatBufferBuilder $builder, $DRAG_AREA)
+    {
+        $builder->addDoubleX(19, $DRAG_AREA, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addINITIAL_STATE(FlatBufferBuilder $builder, $INITIAL_STATE)
+    {
+        $builder->addOffsetX(20, $INITIAL_STATE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addIMPACT_PREDICTIONS(FlatBufferBuilder $builder, $IMPACT_PREDICTIONS)
+    {
+        $builder->addOffsetX(21, $IMPACT_PREDICTIONS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createIMPACT_PREDICTIONSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startIMPACT_PREDICTIONSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSURVIVING_DEBRIS(FlatBufferBuilder $builder, $SURVIVING_DEBRIS)
+    {
+        $builder->addOffsetX(22, $SURVIVING_DEBRIS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSURVIVING_DEBRISVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSURVIVING_DEBRISVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCASUALTY_EXPECTATION(FlatBufferBuilder $builder, $CASUALTY_EXPECTATION)
+    {
+        $builder->addDoubleX(23, $CASUALTY_EXPECTATION, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addNUM_FRAGMENTS(FlatBufferBuilder $builder, $NUM_FRAGMENTS)
+    {
+        $builder->addUintX(24, $NUM_FRAGMENTS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addSURVIVING_MASS(FlatBufferBuilder $builder, $SURVIVING_MASS)
+    {
+        $builder->addDoubleX(25, $SURVIVING_MASS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCOMMENT(FlatBufferBuilder $builder, $COMMENT)
+    {
+        $builder->addOffsetX(26, $COMMENT, 0);
     }
 
     /**

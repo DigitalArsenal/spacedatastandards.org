@@ -1,180 +1,272 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "imageType": {
+      "type": "string",
+      "enum": [
+        "VISIBLE",
+        "INFRARED",
+        "MULTISPECTRAL",
+        "HYPERSPECTRAL",
+        "UV",
+        "BROADBAND"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "VISIBLE": {
+          "value": 0
+        },
+        "INFRARED": {
+          "value": 1
+        },
+        "MULTISPECTRAL": {
+          "value": 2
+        },
+        "HYPERSPECTRAL": {
+          "value": 3
+        },
+        "UV": {
+          "value": 4
+        },
+        "BROADBAND": {
+          "value": 5
+        }
+      }
+    },
     "SKI": {
       "type": "object",
       "description": "Sky Imagery",
       "properties": {
         "ID": {
           "type": "string",
+          "description": "Unique identifier",
           "x-flatbuffer-type": "string"
         },
         "ON_ORBIT": {
           "type": "string",
+          "description": "On-orbit reference",
           "x-flatbuffer-type": "string"
         },
         "ORIG_OBJECT_ID": {
           "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "ID_SENSOR": {
-          "type": "string",
+          "description": "International designator",
           "x-flatbuffer-type": "string"
         },
         "SAT_NO": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Satellite catalog number",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ID_SENSOR": {
+          "type": "string",
+          "description": "Sensor identifier",
+          "x-flatbuffer-type": "string"
         },
         "ORIG_SENSOR_ID": {
           "type": "string",
+          "description": "Original sensor identifier",
           "x-flatbuffer-type": "string"
         },
         "SENLAT": {
           "type": "number",
+          "description": "Sensor geodetic latitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "SENLON": {
           "type": "number",
+          "description": "Sensor geodetic longitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "SENALT": {
           "type": "number",
+          "description": "Sensor altitude (km)",
           "x-flatbuffer-type": "double"
         },
         "SENX": {
           "type": "number",
+          "description": "Sensor ECEF X position (km)",
           "x-flatbuffer-type": "double"
         },
         "SENY": {
           "type": "number",
+          "description": "Sensor ECEF Y position (km)",
           "x-flatbuffer-type": "double"
         },
         "SENZ": {
           "type": "number",
+          "description": "Sensor ECEF Z position (km)",
           "x-flatbuffer-type": "double"
         },
         "SEN_QUAT": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "number"
           },
-          "x-flatbuffer-type": "[string]"
+          "description": "Sensor quaternion (scalar-last: q1, q2, q3, q0)",
+          "x-flatbuffer-type": "[double]"
         },
         "SEN_QUAT_DOT": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "number"
           },
-          "x-flatbuffer-type": "[string]"
+          "description": "Sensor quaternion rate",
+          "x-flatbuffer-type": "[double]"
         },
         "IMAGE_TYPE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
+          "$ref": "#/definitions/imageType",
+          "description": "Image type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "VISIBLE": {
+              "value": 0
+            },
+            "INFRARED": {
+              "value": 1
+            },
+            "MULTISPECTRAL": {
+              "value": 2
+            },
+            "HYPERSPECTRAL": {
+              "value": 3
+            },
+            "UV": {
+              "value": 4
+            },
+            "BROADBAND": {
+              "value": 5
+            }
+          }
         },
         "EXP_START_TIME": {
           "type": "string",
+          "description": "Exposure start time (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "EXP_END_TIME": {
           "type": "string",
+          "description": "Exposure end time (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "IMAGE_SOURCE_INFO": {
           "type": "string",
+          "description": "Image source information",
           "x-flatbuffer-type": "string"
         },
         "TOP_LEFT_START_AZ": {
           "type": "number",
+          "description": "Top-left corner start azimuth (degrees)",
           "x-flatbuffer-type": "double"
         },
         "TOP_LEFT_START_EL": {
           "type": "number",
+          "description": "Top-left corner start elevation (degrees)",
           "x-flatbuffer-type": "double"
         },
         "TOP_LEFT_STOP_AZ": {
           "type": "number",
+          "description": "Top-left corner stop azimuth (degrees)",
           "x-flatbuffer-type": "double"
         },
         "TOP_LEFT_STOP_EL": {
           "type": "number",
+          "description": "Top-left corner stop elevation (degrees)",
           "x-flatbuffer-type": "double"
         },
         "IMAGE_SET_ID": {
           "type": "string",
+          "description": "Image set identifier",
           "x-flatbuffer-type": "string"
         },
         "IMAGE_SET_LENGTH": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Number of images in set",
+          "x-flatbuffer-type": "uint16"
         },
         "SEQUENCE_ID": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Sequence number within set",
+          "x-flatbuffer-type": "uint16"
         },
         "FRAME_FOVWIDTH": {
           "type": "number",
+          "description": "Frame field-of-view width (degrees)",
           "x-flatbuffer-type": "double"
         },
         "FRAME_FOVHEIGHT": {
           "type": "number",
+          "description": "Frame field-of-view height (degrees)",
           "x-flatbuffer-type": "double"
         },
         "PIXEL_FOVWIDTH": {
           "type": "number",
+          "description": "Pixel field-of-view width (arcseconds)",
           "x-flatbuffer-type": "double"
         },
         "PIXEL_FOVHEIGHT": {
           "type": "number",
+          "description": "Pixel field-of-view height (arcseconds)",
           "x-flatbuffer-type": "double"
         },
         "FRAME_WIDTH_PIXELS": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Frame width (pixels)",
+          "x-flatbuffer-type": "uint16"
         },
         "FRAME_HEIGHT_PIXELS": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Frame height (pixels)",
+          "x-flatbuffer-type": "uint16"
         },
         "PIXEL_BIT_DEPTH": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Pixel bit depth",
+          "x-flatbuffer-type": "uint8"
         },
         "ANNOTATION_KEY": {
           "type": "string",
+          "description": "Annotation key reference",
           "x-flatbuffer-type": "string"
         },
         "CALIBRATION_KEY": {
           "type": "string",
+          "description": "Calibration key reference",
           "x-flatbuffer-type": "string"
         },
         "FILENAME": {
           "type": "string",
+          "description": "Image filename",
           "x-flatbuffer-type": "string"
         },
         "FILESIZE": {
           "type": "integer",
           "minimum": -9223372036854775808,
           "maximum": 9223372036854775807,
+          "description": "File size (bytes)",
           "x-flatbuffer-type": "long"
         },
         "CHECKSUM_VALUE": {
           "type": "string",
+          "description": "File checksum value",
           "x-flatbuffer-type": "string"
         },
         "TRANSACTION_ID": {
           "type": "string",
+          "description": "Transaction identifier",
           "x-flatbuffer-type": "string"
         },
         "TAGS": {
@@ -182,10 +274,12 @@
           "items": {
             "type": "string"
           },
+          "description": "Associated tags",
           "x-flatbuffer-type": "[string]"
         },
         "DESCRIPTION": {
           "type": "string",
+          "description": "Description",
           "x-flatbuffer-type": "string"
         },
         "EO_OBSERVATIONS": {
@@ -193,6 +287,7 @@
           "items": {
             "type": "string"
           },
+          "description": "Associated EO observation references",
           "x-flatbuffer-type": "[string]"
         }
       },

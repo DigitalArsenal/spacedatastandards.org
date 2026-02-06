@@ -1,117 +1,196 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "odMethod" : {
+      "type" : "string",
+      "enum": ["BATCH_LEAST_SQUARES", "SEQUENTIAL_LEAST_SQUARES", "EXTENDED_KALMAN", "UNSCENTED_KALMAN", "SPECIAL_PERTURBATIONS", "GENERAL_PERTURBATIONS", "DIFFERENTIAL_CORRECTION", "UNKNOWN"]
+    },
+    "odSensorContribution" : {
+      "type" : "object",
+      "description" : "Sensor contribution to an orbit determination solution",
+      "properties" : {
+        "SENSOR_ID" : {
+                "type" : "string",
+                "description" : "Sensor identifier"
+              },
+        "ORIG_SENSOR_ID" : {
+                "type" : "string",
+                "description" : "Original sensor identifier"
+              },
+        "NUM_ACCEPTED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of accepted observations from this sensor"
+              },
+        "NUM_REJECTED" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of rejected observations from this sensor"
+              },
+        "WRMS" : {
+                "type" : "number",
+                "description" : "Weighted RMS for this sensor's observations"
+              },
+        "OB_TYPES" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Observation types from this sensor"
+              }
+      },
+      "additionalProperties" : false
+    },
     "OBD" : {
       "type" : "object",
       "description" : "Orbit Determination Results",
       "properties" : {
         "ID" : {
-                "type" : "string"
-              },
-        "START_TIME" : {
-                "type" : "string"
-              },
-        "END_TIME" : {
-                "type" : "string"
-              },
-        "ORIG_OBJECT_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique identifier"
               },
         "SAT_NO" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Satellite catalog number"
               },
-        "APRIORI_ID_ELSET" : {
-                "type" : "string"
-              },
-        "APRIORI_ELSET" : {
-                "type" : "string"
-              },
-        "APRIORI_ID_STATE_VECTOR" : {
-                "type" : "string"
-              },
-        "APRIORI_STATE_VECTOR" : {
-                "type" : "string"
-              },
-        "INITIAL_OD" : {
-                "type" : "boolean"
-              },
-        "LAST_OB_START" : {
-                "type" : "string"
-              },
-        "LAST_OB_END" : {
-                "type" : "string"
-              },
-        "TIME_SPAN" : {
-                "type" : "number"
-              },
-        "EFFECTIVE_FROM" : {
-                "type" : "string"
-              },
-        "EFFECTIVE_UNTIL" : {
-                "type" : "string"
-              },
-        "WRMS" : {
-                "type" : "number"
-              },
-        "PREVIOUS_WRMS" : {
-                "type" : "number"
-              },
-        "FIRST_PASS_WRMS" : {
-                "type" : "number"
-              },
-        "BEST_PASS_WRMS" : {
-                "type" : "number"
-              },
-        "ERROR_GROWTH_RATE" : {
-                "type" : "number"
-              },
-        "EDR" : {
-                "type" : "number"
-              },
-        "METHOD" : {
-                "type" : "string"
-              },
-        "METHOD_SOURCE" : {
-                "type" : "string"
-              },
-        "FIT_SPAN" : {
-                "type" : "number"
-              },
-        "BALLISTIC_COEFF_EST" : {
-                "type" : "boolean"
-              },
-        "BALLISTIC_COEFF_MODEL" : {
-                "type" : "string"
-              },
-        "AGOM_EST" : {
-                "type" : "boolean"
-              },
-        "AGOM_MODEL" : {
-                "type" : "string"
-              },
-        "RMS_CONVERGENCE_CRITERIA" : {
-                "type" : "number"
-              },
-        "NUM_ITERATIONS" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "ACCEPTED_OB_TYPS" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
-        "ACCEPTED_OB_IDS" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
-        "REJECTED_OB_TYPS" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
-        "REJECTED_OB_IDS" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
-        "SENSOR_IDS" : {
-                "type" : "array", "items" : {"type" : "string"}
+        "ORIG_OBJECT_ID" : {
+                "type" : "string",
+                "description" : "International designator"
               },
         "ON_ORBIT" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "On-orbit reference"
+              },
+        "START_TIME" : {
+                "type" : "string",
+                "description" : "OD fit start time (ISO 8601)"
+              },
+        "END_TIME" : {
+                "type" : "string",
+                "description" : "OD fit end time (ISO 8601)"
+              },
+        "METHOD" : {
+                "$ref" : "#/definitions/odMethod",
+                "description" : "OD method used"
+              },
+        "METHOD_SOURCE" : {
+                "type" : "string",
+                "description" : "Method source or software"
+              },
+        "INITIAL_OD" : {
+                "type" : "boolean",
+                "description" : "True if this is an initial orbit determination"
+              },
+        "APRIORI_ID_ELSET" : {
+                "type" : "string",
+                "description" : "A priori element set identifier"
+              },
+        "APRIORI_ELSET" : {
+                "type" : "string",
+                "description" : "A priori element set data reference"
+              },
+        "APRIORI_ID_STATE_VECTOR" : {
+                "type" : "string",
+                "description" : "A priori state vector identifier"
+              },
+        "APRIORI_STATE_VECTOR" : {
+                "type" : "string",
+                "description" : "A priori state vector data reference"
+              },
+        "LAST_OB_START" : {
+                "type" : "string",
+                "description" : "Start of last observation arc (ISO 8601)"
+              },
+        "LAST_OB_END" : {
+                "type" : "string",
+                "description" : "End of last observation arc (ISO 8601)"
+              },
+        "TIME_SPAN" : {
+                "type" : "number",
+                "description" : "Observation time span (days)"
+              },
+        "FIT_SPAN" : {
+                "type" : "number",
+                "description" : "Fit span in days"
+              },
+        "EFFECTIVE_FROM" : {
+                "type" : "string",
+                "description" : "Solution effective from (ISO 8601)"
+              },
+        "EFFECTIVE_UNTIL" : {
+                "type" : "string",
+                "description" : "Solution effective until (ISO 8601)"
+              },
+        "WRMS" : {
+                "type" : "number",
+                "description" : "Weighted RMS of residuals"
+              },
+        "PREVIOUS_WRMS" : {
+                "type" : "number",
+                "description" : "Previous solution WRMS"
+              },
+        "FIRST_PASS_WRMS" : {
+                "type" : "number",
+                "description" : "First pass WRMS"
+              },
+        "BEST_PASS_WRMS" : {
+                "type" : "number",
+                "description" : "Best pass WRMS"
+              },
+        "ERROR_GROWTH_RATE" : {
+                "type" : "number",
+                "description" : "Error growth rate (km/day)"
+              },
+        "EDR" : {
+                "type" : "number",
+                "description" : "Energy dissipation rate"
+              },
+        "BALLISTIC_COEFF_EST" : {
+                "type" : "boolean",
+                "description" : "True if ballistic coefficient was estimated"
+              },
+        "BALLISTIC_COEFF_MODEL" : {
+                "type" : "string",
+                "description" : "Ballistic coefficient model"
+              },
+        "AGOM_EST" : {
+                "type" : "boolean",
+                "description" : "True if area-to-mass ratio was estimated"
+              },
+        "AGOM_MODEL" : {
+                "type" : "string",
+                "description" : "Area-to-mass ratio model"
+              },
+        "RMS_CONVERGENCE_CRITERIA" : {
+                "type" : "number",
+                "description" : "RMS convergence criteria"
+              },
+        "NUM_ITERATIONS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Number of iterations to converge"
+              },
+        "NUM_ACCEPTED_OBS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Total accepted observations"
+              },
+        "NUM_REJECTED_OBS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Total rejected observations"
+              },
+        "SENSORS" : {
+                "type" : "array", "items" : {"$ref" : "#/definitions/odSensorContribution"},
+                "description" : "Sensor contributions to this solution"
+              },
+        "ACCEPTED_OB_TYPS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Accepted observation types"
+              },
+        "ACCEPTED_OB_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Accepted observation identifiers"
+              },
+        "REJECTED_OB_TYPS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Rejected observation types"
+              },
+        "REJECTED_OB_IDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Rejected observation identifiers"
               }
       },
       "additionalProperties" : false

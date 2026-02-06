@@ -13,8 +13,365 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
               FLATBUFFERS_VERSION_REVISION == 25,
              "Non-compatible flatbuffers version included");
 
+struct rfEmitterDetail;
+struct rfEmitterDetailBuilder;
+
 struct RFE;
 struct RFEBuilder;
+
+enum emitterType : int8_t {
+  emitterType_RADAR = 0,
+  emitterType_COMMUNICATIONS = 1,
+  emitterType_NAVIGATION = 2,
+  emitterType_JAMMER = 3,
+  emitterType_BEACON = 4,
+  emitterType_TRANSPONDER = 5,
+  emitterType_DATA_LINK = 6,
+  emitterType_TELEMETRY = 7,
+  emitterType_EW = 8,
+  emitterType_UNKNOWN = 9,
+  emitterType_MIN = emitterType_RADAR,
+  emitterType_MAX = emitterType_UNKNOWN
+};
+
+inline const emitterType (&EnumValuesemitterType())[10] {
+  static const emitterType values[] = {
+    emitterType_RADAR,
+    emitterType_COMMUNICATIONS,
+    emitterType_NAVIGATION,
+    emitterType_JAMMER,
+    emitterType_BEACON,
+    emitterType_TRANSPONDER,
+    emitterType_DATA_LINK,
+    emitterType_TELEMETRY,
+    emitterType_EW,
+    emitterType_UNKNOWN
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesemitterType() {
+  static const char * const names[11] = {
+    "RADAR",
+    "COMMUNICATIONS",
+    "NAVIGATION",
+    "JAMMER",
+    "BEACON",
+    "TRANSPONDER",
+    "DATA_LINK",
+    "TELEMETRY",
+    "EW",
+    "UNKNOWN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameemitterType(emitterType e) {
+  if (::flatbuffers::IsOutRange(e, emitterType_RADAR, emitterType_UNKNOWN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesemitterType()[index];
+}
+
+enum signalModulation : int8_t {
+  signalModulation_CW = 0,
+  signalModulation_PULSE = 1,
+  signalModulation_FMCW = 2,
+  signalModulation_CHIRP = 3,
+  signalModulation_BPSK = 4,
+  signalModulation_QPSK = 5,
+  signalModulation_FSK = 6,
+  signalModulation_AM = 7,
+  signalModulation_FM = 8,
+  signalModulation_SPREAD_SPECTRUM = 9,
+  signalModulation_PHASED_ARRAY = 10,
+  signalModulation_AGILE = 11,
+  signalModulation_UNKNOWN = 12,
+  signalModulation_MIN = signalModulation_CW,
+  signalModulation_MAX = signalModulation_UNKNOWN
+};
+
+inline const signalModulation (&EnumValuessignalModulation())[13] {
+  static const signalModulation values[] = {
+    signalModulation_CW,
+    signalModulation_PULSE,
+    signalModulation_FMCW,
+    signalModulation_CHIRP,
+    signalModulation_BPSK,
+    signalModulation_QPSK,
+    signalModulation_FSK,
+    signalModulation_AM,
+    signalModulation_FM,
+    signalModulation_SPREAD_SPECTRUM,
+    signalModulation_PHASED_ARRAY,
+    signalModulation_AGILE,
+    signalModulation_UNKNOWN
+  };
+  return values;
+}
+
+inline const char * const *EnumNamessignalModulation() {
+  static const char * const names[14] = {
+    "CW",
+    "PULSE",
+    "FMCW",
+    "CHIRP",
+    "BPSK",
+    "QPSK",
+    "FSK",
+    "AM",
+    "FM",
+    "SPREAD_SPECTRUM",
+    "PHASED_ARRAY",
+    "AGILE",
+    "UNKNOWN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamesignalModulation(signalModulation e) {
+  if (::flatbuffers::IsOutRange(e, signalModulation_CW, signalModulation_UNKNOWN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamessignalModulation()[index];
+}
+
+/// RF Emitter Detail Record
+struct rfEmitterDetail FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef rfEmitterDetailBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_MODE_NAME = 4,
+    VT_FREQUENCY = 6,
+    VT_FREQ_MIN = 8,
+    VT_FREQ_MAX = 10,
+    VT_PRI = 12,
+    VT_PRI_MIN = 14,
+    VT_PRI_MAX = 16,
+    VT_PULSE_WIDTH = 18,
+    VT_PW_MIN = 20,
+    VT_PW_MAX = 22,
+    VT_SCAN_PERIOD = 24,
+    VT_ERP = 26,
+    VT_MODULATION = 28,
+    VT_ANTENNA_PATTERN = 30,
+    VT_BEAMWIDTH = 32
+  };
+  /// Mode name or identifier
+  const ::flatbuffers::String *MODE_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MODE_NAME);
+  }
+  /// Center frequency in MHz
+  double FREQUENCY() const {
+    return GetField<double>(VT_FREQUENCY, 0.0);
+  }
+  /// Frequency minimum in MHz
+  double FREQ_MIN() const {
+    return GetField<double>(VT_FREQ_MIN, 0.0);
+  }
+  /// Frequency maximum in MHz
+  double FREQ_MAX() const {
+    return GetField<double>(VT_FREQ_MAX, 0.0);
+  }
+  /// Pulse repetition interval in microseconds
+  double PRI() const {
+    return GetField<double>(VT_PRI, 0.0);
+  }
+  /// PRI minimum in microseconds
+  double PRI_MIN() const {
+    return GetField<double>(VT_PRI_MIN, 0.0);
+  }
+  /// PRI maximum in microseconds
+  double PRI_MAX() const {
+    return GetField<double>(VT_PRI_MAX, 0.0);
+  }
+  /// Pulse width in microseconds
+  double PULSE_WIDTH() const {
+    return GetField<double>(VT_PULSE_WIDTH, 0.0);
+  }
+  /// Pulse width minimum in microseconds
+  double PW_MIN() const {
+    return GetField<double>(VT_PW_MIN, 0.0);
+  }
+  /// Pulse width maximum in microseconds
+  double PW_MAX() const {
+    return GetField<double>(VT_PW_MAX, 0.0);
+  }
+  /// Scan period in seconds
+  double SCAN_PERIOD() const {
+    return GetField<double>(VT_SCAN_PERIOD, 0.0);
+  }
+  /// Effective radiated power in dBW
+  double ERP() const {
+    return GetField<double>(VT_ERP, 0.0);
+  }
+  /// Signal modulation
+  signalModulation MODULATION() const {
+    return static_cast<signalModulation>(GetField<int8_t>(VT_MODULATION, 0));
+  }
+  /// Antenna pattern type
+  const ::flatbuffers::String *ANTENNA_PATTERN() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ANTENNA_PATTERN);
+  }
+  /// 3dB beamwidth in degrees
+  double BEAMWIDTH() const {
+    return GetField<double>(VT_BEAMWIDTH, 0.0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_MODE_NAME) &&
+           verifier.VerifyString(MODE_NAME()) &&
+           VerifyField<double>(verifier, VT_FREQUENCY, 8) &&
+           VerifyField<double>(verifier, VT_FREQ_MIN, 8) &&
+           VerifyField<double>(verifier, VT_FREQ_MAX, 8) &&
+           VerifyField<double>(verifier, VT_PRI, 8) &&
+           VerifyField<double>(verifier, VT_PRI_MIN, 8) &&
+           VerifyField<double>(verifier, VT_PRI_MAX, 8) &&
+           VerifyField<double>(verifier, VT_PULSE_WIDTH, 8) &&
+           VerifyField<double>(verifier, VT_PW_MIN, 8) &&
+           VerifyField<double>(verifier, VT_PW_MAX, 8) &&
+           VerifyField<double>(verifier, VT_SCAN_PERIOD, 8) &&
+           VerifyField<double>(verifier, VT_ERP, 8) &&
+           VerifyField<int8_t>(verifier, VT_MODULATION, 1) &&
+           VerifyOffset(verifier, VT_ANTENNA_PATTERN) &&
+           verifier.VerifyString(ANTENNA_PATTERN()) &&
+           VerifyField<double>(verifier, VT_BEAMWIDTH, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct rfEmitterDetailBuilder {
+  typedef rfEmitterDetail Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_MODE_NAME(::flatbuffers::Offset<::flatbuffers::String> MODE_NAME) {
+    fbb_.AddOffset(rfEmitterDetail::VT_MODE_NAME, MODE_NAME);
+  }
+  void add_FREQUENCY(double FREQUENCY) {
+    fbb_.AddElement<double>(rfEmitterDetail::VT_FREQUENCY, FREQUENCY, 0.0);
+  }
+  void add_FREQ_MIN(double FREQ_MIN) {
+    fbb_.AddElement<double>(rfEmitterDetail::VT_FREQ_MIN, FREQ_MIN, 0.0);
+  }
+  void add_FREQ_MAX(double FREQ_MAX) {
+    fbb_.AddElement<double>(rfEmitterDetail::VT_FREQ_MAX, FREQ_MAX, 0.0);
+  }
+  void add_PRI(double PRI) {
+    fbb_.AddElement<double>(rfEmitterDetail::VT_PRI, PRI, 0.0);
+  }
+  void add_PRI_MIN(double PRI_MIN) {
+    fbb_.AddElement<double>(rfEmitterDetail::VT_PRI_MIN, PRI_MIN, 0.0);
+  }
+  void add_PRI_MAX(double PRI_MAX) {
+    fbb_.AddElement<double>(rfEmitterDetail::VT_PRI_MAX, PRI_MAX, 0.0);
+  }
+  void add_PULSE_WIDTH(double PULSE_WIDTH) {
+    fbb_.AddElement<double>(rfEmitterDetail::VT_PULSE_WIDTH, PULSE_WIDTH, 0.0);
+  }
+  void add_PW_MIN(double PW_MIN) {
+    fbb_.AddElement<double>(rfEmitterDetail::VT_PW_MIN, PW_MIN, 0.0);
+  }
+  void add_PW_MAX(double PW_MAX) {
+    fbb_.AddElement<double>(rfEmitterDetail::VT_PW_MAX, PW_MAX, 0.0);
+  }
+  void add_SCAN_PERIOD(double SCAN_PERIOD) {
+    fbb_.AddElement<double>(rfEmitterDetail::VT_SCAN_PERIOD, SCAN_PERIOD, 0.0);
+  }
+  void add_ERP(double ERP) {
+    fbb_.AddElement<double>(rfEmitterDetail::VT_ERP, ERP, 0.0);
+  }
+  void add_MODULATION(signalModulation MODULATION) {
+    fbb_.AddElement<int8_t>(rfEmitterDetail::VT_MODULATION, static_cast<int8_t>(MODULATION), 0);
+  }
+  void add_ANTENNA_PATTERN(::flatbuffers::Offset<::flatbuffers::String> ANTENNA_PATTERN) {
+    fbb_.AddOffset(rfEmitterDetail::VT_ANTENNA_PATTERN, ANTENNA_PATTERN);
+  }
+  void add_BEAMWIDTH(double BEAMWIDTH) {
+    fbb_.AddElement<double>(rfEmitterDetail::VT_BEAMWIDTH, BEAMWIDTH, 0.0);
+  }
+  explicit rfEmitterDetailBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<rfEmitterDetail> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<rfEmitterDetail>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<rfEmitterDetail> CreaterfEmitterDetail(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> MODE_NAME = 0,
+    double FREQUENCY = 0.0,
+    double FREQ_MIN = 0.0,
+    double FREQ_MAX = 0.0,
+    double PRI = 0.0,
+    double PRI_MIN = 0.0,
+    double PRI_MAX = 0.0,
+    double PULSE_WIDTH = 0.0,
+    double PW_MIN = 0.0,
+    double PW_MAX = 0.0,
+    double SCAN_PERIOD = 0.0,
+    double ERP = 0.0,
+    signalModulation MODULATION = signalModulation_CW,
+    ::flatbuffers::Offset<::flatbuffers::String> ANTENNA_PATTERN = 0,
+    double BEAMWIDTH = 0.0) {
+  rfEmitterDetailBuilder builder_(_fbb);
+  builder_.add_BEAMWIDTH(BEAMWIDTH);
+  builder_.add_ERP(ERP);
+  builder_.add_SCAN_PERIOD(SCAN_PERIOD);
+  builder_.add_PW_MAX(PW_MAX);
+  builder_.add_PW_MIN(PW_MIN);
+  builder_.add_PULSE_WIDTH(PULSE_WIDTH);
+  builder_.add_PRI_MAX(PRI_MAX);
+  builder_.add_PRI_MIN(PRI_MIN);
+  builder_.add_PRI(PRI);
+  builder_.add_FREQ_MAX(FREQ_MAX);
+  builder_.add_FREQ_MIN(FREQ_MIN);
+  builder_.add_FREQUENCY(FREQUENCY);
+  builder_.add_ANTENNA_PATTERN(ANTENNA_PATTERN);
+  builder_.add_MODE_NAME(MODE_NAME);
+  builder_.add_MODULATION(MODULATION);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<rfEmitterDetail> CreaterfEmitterDetailDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *MODE_NAME = nullptr,
+    double FREQUENCY = 0.0,
+    double FREQ_MIN = 0.0,
+    double FREQ_MAX = 0.0,
+    double PRI = 0.0,
+    double PRI_MIN = 0.0,
+    double PRI_MAX = 0.0,
+    double PULSE_WIDTH = 0.0,
+    double PW_MIN = 0.0,
+    double PW_MAX = 0.0,
+    double SCAN_PERIOD = 0.0,
+    double ERP = 0.0,
+    signalModulation MODULATION = signalModulation_CW,
+    const char *ANTENNA_PATTERN = nullptr,
+    double BEAMWIDTH = 0.0) {
+  auto MODE_NAME__ = MODE_NAME ? _fbb.CreateString(MODE_NAME) : 0;
+  auto ANTENNA_PATTERN__ = ANTENNA_PATTERN ? _fbb.CreateString(ANTENNA_PATTERN) : 0;
+  return CreaterfEmitterDetail(
+      _fbb,
+      MODE_NAME__,
+      FREQUENCY,
+      FREQ_MIN,
+      FREQ_MAX,
+      PRI,
+      PRI_MIN,
+      PRI_MAX,
+      PULSE_WIDTH,
+      PW_MIN,
+      PW_MAX,
+      SCAN_PERIOD,
+      ERP,
+      MODULATION,
+      ANTENNA_PATTERN__,
+      BEAMWIDTH);
+}
 
 /// RF Emitter
 struct RFE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
@@ -25,25 +382,101 @@ struct RFE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_NAME = 8,
     VT_TYPE = 10,
     VT_ENTITY = 12,
-    VT_RF_EMITTER_DETAILS = 14
+    VT_ELNOT = 14,
+    VT_NATO_NAME = 16,
+    VT_PLATFORM_TYPE = 18,
+    VT_COUNTRY = 20,
+    VT_FUNCTION = 22,
+    VT_BAND = 24,
+    VT_FREQ_MIN = 26,
+    VT_FREQ_MAX = 28,
+    VT_PEAK_POWER = 30,
+    VT_AVG_POWER = 32,
+    VT_ANTENNA_GAIN = 34,
+    VT_NUM_MODES = 36,
+    VT_RF_EMITTER_DETAILS = 38,
+    VT_THREAT_LEVEL = 40,
+    VT_NOTES = 42
   };
+  /// Unique emitter identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
+  /// Reference to parent entity
   const ::flatbuffers::String *ID_ENTITY() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID_ENTITY);
   }
+  /// Emitter name or designation
   const ::flatbuffers::String *NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NAME);
   }
-  const ::flatbuffers::String *TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TYPE);
+  /// Emitter type
+  emitterType TYPE() const {
+    return static_cast<emitterType>(GetField<int8_t>(VT_TYPE, 0));
   }
+  /// Parent entity designator
   const ::flatbuffers::String *ENTITY() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ENTITY);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *RF_EMITTER_DETAILS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_RF_EMITTER_DETAILS);
+  /// ELNOT (Electronic Notation)
+  const ::flatbuffers::String *ELNOT() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ELNOT);
+  }
+  /// NATO reporting name
+  const ::flatbuffers::String *NATO_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NATO_NAME);
+  }
+  /// Platform type (e.g., SHIP, AIRCRAFT, GROUND, SATELLITE)
+  const ::flatbuffers::String *PLATFORM_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_PLATFORM_TYPE);
+  }
+  /// Country of origin
+  const ::flatbuffers::String *COUNTRY() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COUNTRY);
+  }
+  /// Primary function description
+  const ::flatbuffers::String *FUNCTION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_FUNCTION);
+  }
+  /// Operating band (e.g., HF, VHF, UHF, L, S, C, X, Ku, Ka)
+  const ::flatbuffers::String *BAND() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_BAND);
+  }
+  /// Minimum operating frequency in MHz
+  double FREQ_MIN() const {
+    return GetField<double>(VT_FREQ_MIN, 0.0);
+  }
+  /// Maximum operating frequency in MHz
+  double FREQ_MAX() const {
+    return GetField<double>(VT_FREQ_MAX, 0.0);
+  }
+  /// Peak power in kW
+  double PEAK_POWER() const {
+    return GetField<double>(VT_PEAK_POWER, 0.0);
+  }
+  /// Average power in kW
+  double AVG_POWER() const {
+    return GetField<double>(VT_AVG_POWER, 0.0);
+  }
+  /// Antenna gain in dBi
+  double ANTENNA_GAIN() const {
+    return GetField<double>(VT_ANTENNA_GAIN, 0.0);
+  }
+  /// Number of operating modes
+  uint32_t NUM_MODES() const {
+    return GetField<uint32_t>(VT_NUM_MODES, 0);
+  }
+  /// Emitter operating mode details
+  const ::flatbuffers::Vector<::flatbuffers::Offset<rfEmitterDetail>> *RF_EMITTER_DETAILS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<rfEmitterDetail>> *>(VT_RF_EMITTER_DETAILS);
+  }
+  /// Threat level assessment
+  const ::flatbuffers::String *THREAT_LEVEL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_THREAT_LEVEL);
+  }
+  /// Additional notes
+  const ::flatbuffers::String *NOTES() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NOTES);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -53,13 +486,34 @@ struct RFE FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(ID_ENTITY()) &&
            VerifyOffset(verifier, VT_NAME) &&
            verifier.VerifyString(NAME()) &&
-           VerifyOffset(verifier, VT_TYPE) &&
-           verifier.VerifyString(TYPE()) &&
+           VerifyField<int8_t>(verifier, VT_TYPE, 1) &&
            VerifyOffset(verifier, VT_ENTITY) &&
            verifier.VerifyString(ENTITY()) &&
+           VerifyOffset(verifier, VT_ELNOT) &&
+           verifier.VerifyString(ELNOT()) &&
+           VerifyOffset(verifier, VT_NATO_NAME) &&
+           verifier.VerifyString(NATO_NAME()) &&
+           VerifyOffset(verifier, VT_PLATFORM_TYPE) &&
+           verifier.VerifyString(PLATFORM_TYPE()) &&
+           VerifyOffset(verifier, VT_COUNTRY) &&
+           verifier.VerifyString(COUNTRY()) &&
+           VerifyOffset(verifier, VT_FUNCTION) &&
+           verifier.VerifyString(FUNCTION()) &&
+           VerifyOffset(verifier, VT_BAND) &&
+           verifier.VerifyString(BAND()) &&
+           VerifyField<double>(verifier, VT_FREQ_MIN, 8) &&
+           VerifyField<double>(verifier, VT_FREQ_MAX, 8) &&
+           VerifyField<double>(verifier, VT_PEAK_POWER, 8) &&
+           VerifyField<double>(verifier, VT_AVG_POWER, 8) &&
+           VerifyField<double>(verifier, VT_ANTENNA_GAIN, 8) &&
+           VerifyField<uint32_t>(verifier, VT_NUM_MODES, 4) &&
            VerifyOffset(verifier, VT_RF_EMITTER_DETAILS) &&
            verifier.VerifyVector(RF_EMITTER_DETAILS()) &&
-           verifier.VerifyVectorOfStrings(RF_EMITTER_DETAILS()) &&
+           verifier.VerifyVectorOfTables(RF_EMITTER_DETAILS()) &&
+           VerifyOffset(verifier, VT_THREAT_LEVEL) &&
+           verifier.VerifyString(THREAT_LEVEL()) &&
+           VerifyOffset(verifier, VT_NOTES) &&
+           verifier.VerifyString(NOTES()) &&
            verifier.EndTable();
   }
 };
@@ -77,14 +531,56 @@ struct RFEBuilder {
   void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
     fbb_.AddOffset(RFE::VT_NAME, NAME);
   }
-  void add_TYPE(::flatbuffers::Offset<::flatbuffers::String> TYPE) {
-    fbb_.AddOffset(RFE::VT_TYPE, TYPE);
+  void add_TYPE(emitterType TYPE) {
+    fbb_.AddElement<int8_t>(RFE::VT_TYPE, static_cast<int8_t>(TYPE), 0);
   }
   void add_ENTITY(::flatbuffers::Offset<::flatbuffers::String> ENTITY) {
     fbb_.AddOffset(RFE::VT_ENTITY, ENTITY);
   }
-  void add_RF_EMITTER_DETAILS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> RF_EMITTER_DETAILS) {
+  void add_ELNOT(::flatbuffers::Offset<::flatbuffers::String> ELNOT) {
+    fbb_.AddOffset(RFE::VT_ELNOT, ELNOT);
+  }
+  void add_NATO_NAME(::flatbuffers::Offset<::flatbuffers::String> NATO_NAME) {
+    fbb_.AddOffset(RFE::VT_NATO_NAME, NATO_NAME);
+  }
+  void add_PLATFORM_TYPE(::flatbuffers::Offset<::flatbuffers::String> PLATFORM_TYPE) {
+    fbb_.AddOffset(RFE::VT_PLATFORM_TYPE, PLATFORM_TYPE);
+  }
+  void add_COUNTRY(::flatbuffers::Offset<::flatbuffers::String> COUNTRY) {
+    fbb_.AddOffset(RFE::VT_COUNTRY, COUNTRY);
+  }
+  void add_FUNCTION(::flatbuffers::Offset<::flatbuffers::String> FUNCTION) {
+    fbb_.AddOffset(RFE::VT_FUNCTION, FUNCTION);
+  }
+  void add_BAND(::flatbuffers::Offset<::flatbuffers::String> BAND) {
+    fbb_.AddOffset(RFE::VT_BAND, BAND);
+  }
+  void add_FREQ_MIN(double FREQ_MIN) {
+    fbb_.AddElement<double>(RFE::VT_FREQ_MIN, FREQ_MIN, 0.0);
+  }
+  void add_FREQ_MAX(double FREQ_MAX) {
+    fbb_.AddElement<double>(RFE::VT_FREQ_MAX, FREQ_MAX, 0.0);
+  }
+  void add_PEAK_POWER(double PEAK_POWER) {
+    fbb_.AddElement<double>(RFE::VT_PEAK_POWER, PEAK_POWER, 0.0);
+  }
+  void add_AVG_POWER(double AVG_POWER) {
+    fbb_.AddElement<double>(RFE::VT_AVG_POWER, AVG_POWER, 0.0);
+  }
+  void add_ANTENNA_GAIN(double ANTENNA_GAIN) {
+    fbb_.AddElement<double>(RFE::VT_ANTENNA_GAIN, ANTENNA_GAIN, 0.0);
+  }
+  void add_NUM_MODES(uint32_t NUM_MODES) {
+    fbb_.AddElement<uint32_t>(RFE::VT_NUM_MODES, NUM_MODES, 0);
+  }
+  void add_RF_EMITTER_DETAILS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<rfEmitterDetail>>> RF_EMITTER_DETAILS) {
     fbb_.AddOffset(RFE::VT_RF_EMITTER_DETAILS, RF_EMITTER_DETAILS);
+  }
+  void add_THREAT_LEVEL(::flatbuffers::Offset<::flatbuffers::String> THREAT_LEVEL) {
+    fbb_.AddOffset(RFE::VT_THREAT_LEVEL, THREAT_LEVEL);
+  }
+  void add_NOTES(::flatbuffers::Offset<::flatbuffers::String> NOTES) {
+    fbb_.AddOffset(RFE::VT_NOTES, NOTES);
   }
   explicit RFEBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -102,16 +598,44 @@ inline ::flatbuffers::Offset<RFE> CreateRFE(
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ID_ENTITY = 0,
     ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TYPE = 0,
+    emitterType TYPE = emitterType_RADAR,
     ::flatbuffers::Offset<::flatbuffers::String> ENTITY = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> RF_EMITTER_DETAILS = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> ELNOT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> NATO_NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> PLATFORM_TYPE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> COUNTRY = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> FUNCTION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> BAND = 0,
+    double FREQ_MIN = 0.0,
+    double FREQ_MAX = 0.0,
+    double PEAK_POWER = 0.0,
+    double AVG_POWER = 0.0,
+    double ANTENNA_GAIN = 0.0,
+    uint32_t NUM_MODES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<rfEmitterDetail>>> RF_EMITTER_DETAILS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> THREAT_LEVEL = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> NOTES = 0) {
   RFEBuilder builder_(_fbb);
+  builder_.add_ANTENNA_GAIN(ANTENNA_GAIN);
+  builder_.add_AVG_POWER(AVG_POWER);
+  builder_.add_PEAK_POWER(PEAK_POWER);
+  builder_.add_FREQ_MAX(FREQ_MAX);
+  builder_.add_FREQ_MIN(FREQ_MIN);
+  builder_.add_NOTES(NOTES);
+  builder_.add_THREAT_LEVEL(THREAT_LEVEL);
   builder_.add_RF_EMITTER_DETAILS(RF_EMITTER_DETAILS);
+  builder_.add_NUM_MODES(NUM_MODES);
+  builder_.add_BAND(BAND);
+  builder_.add_FUNCTION(FUNCTION);
+  builder_.add_COUNTRY(COUNTRY);
+  builder_.add_PLATFORM_TYPE(PLATFORM_TYPE);
+  builder_.add_NATO_NAME(NATO_NAME);
+  builder_.add_ELNOT(ELNOT);
   builder_.add_ENTITY(ENTITY);
-  builder_.add_TYPE(TYPE);
   builder_.add_NAME(NAME);
   builder_.add_ID_ENTITY(ID_ENTITY);
   builder_.add_ID(ID);
+  builder_.add_TYPE(TYPE);
   return builder_.Finish();
 }
 
@@ -120,23 +644,58 @@ inline ::flatbuffers::Offset<RFE> CreateRFEDirect(
     const char *ID = nullptr,
     const char *ID_ENTITY = nullptr,
     const char *NAME = nullptr,
-    const char *TYPE = nullptr,
+    emitterType TYPE = emitterType_RADAR,
     const char *ENTITY = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *RF_EMITTER_DETAILS = nullptr) {
+    const char *ELNOT = nullptr,
+    const char *NATO_NAME = nullptr,
+    const char *PLATFORM_TYPE = nullptr,
+    const char *COUNTRY = nullptr,
+    const char *FUNCTION = nullptr,
+    const char *BAND = nullptr,
+    double FREQ_MIN = 0.0,
+    double FREQ_MAX = 0.0,
+    double PEAK_POWER = 0.0,
+    double AVG_POWER = 0.0,
+    double ANTENNA_GAIN = 0.0,
+    uint32_t NUM_MODES = 0,
+    const std::vector<::flatbuffers::Offset<rfEmitterDetail>> *RF_EMITTER_DETAILS = nullptr,
+    const char *THREAT_LEVEL = nullptr,
+    const char *NOTES = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto ID_ENTITY__ = ID_ENTITY ? _fbb.CreateString(ID_ENTITY) : 0;
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
-  auto TYPE__ = TYPE ? _fbb.CreateString(TYPE) : 0;
   auto ENTITY__ = ENTITY ? _fbb.CreateString(ENTITY) : 0;
-  auto RF_EMITTER_DETAILS__ = RF_EMITTER_DETAILS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*RF_EMITTER_DETAILS) : 0;
+  auto ELNOT__ = ELNOT ? _fbb.CreateString(ELNOT) : 0;
+  auto NATO_NAME__ = NATO_NAME ? _fbb.CreateString(NATO_NAME) : 0;
+  auto PLATFORM_TYPE__ = PLATFORM_TYPE ? _fbb.CreateString(PLATFORM_TYPE) : 0;
+  auto COUNTRY__ = COUNTRY ? _fbb.CreateString(COUNTRY) : 0;
+  auto FUNCTION__ = FUNCTION ? _fbb.CreateString(FUNCTION) : 0;
+  auto BAND__ = BAND ? _fbb.CreateString(BAND) : 0;
+  auto RF_EMITTER_DETAILS__ = RF_EMITTER_DETAILS ? _fbb.CreateVector<::flatbuffers::Offset<rfEmitterDetail>>(*RF_EMITTER_DETAILS) : 0;
+  auto THREAT_LEVEL__ = THREAT_LEVEL ? _fbb.CreateString(THREAT_LEVEL) : 0;
+  auto NOTES__ = NOTES ? _fbb.CreateString(NOTES) : 0;
   return CreateRFE(
       _fbb,
       ID__,
       ID_ENTITY__,
       NAME__,
-      TYPE__,
+      TYPE,
       ENTITY__,
-      RF_EMITTER_DETAILS__);
+      ELNOT__,
+      NATO_NAME__,
+      PLATFORM_TYPE__,
+      COUNTRY__,
+      FUNCTION__,
+      BAND__,
+      FREQ_MIN,
+      FREQ_MAX,
+      PEAK_POWER,
+      AVG_POWER,
+      ANTENNA_GAIN,
+      NUM_MODES,
+      RF_EMITTER_DETAILS__,
+      THREAT_LEVEL__,
+      NOTES__);
 }
 
 inline const RFE *GetRFE(const void *buf) {

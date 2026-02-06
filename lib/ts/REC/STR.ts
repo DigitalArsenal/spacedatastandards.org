@@ -31,6 +31,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$STR');
 }
 
+/**
+ * Unique internal identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,26 +41,41 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * CelesTrak Star catalog identifier
+ */
 CS_ID():bigint {
   const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? this.bb!.readInt64(this.bb_pos + offset) : BigInt('0');
 }
 
+/**
+ * GNC star catalog identifier
+ */
 GNC_CAT_ID():number {
   const offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Gaia DR3 source identifier
+ */
 GAIADR3_CAT_ID():bigint {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.readInt64(this.bb_pos + offset) : BigInt('0');
 }
 
+/**
+ * Hipparcos catalog identifier
+ */
 HIP_CAT_ID():number {
   const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Catalog version string
+ */
 CAT_VERSION():string|null
 CAT_VERSION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 CAT_VERSION(optionalEncoding?:any):string|Uint8Array|null {
@@ -65,168 +83,267 @@ CAT_VERSION(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-RA():number {
+/**
+ * Astrometry source description
+ */
+ASTROMETRY_ORIGIN():string|null
+ASTROMETRY_ORIGIN(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ASTROMETRY_ORIGIN(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 16);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-RA_UNC():number {
+/**
+ * Epoch of stellar position (Julian years)
+ */
+STAR_EPOCH():number {
   const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-DEC():number {
+/**
+ * Right ascension (degrees, ICRS)
+ */
+RA():number {
   const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-DEC_UNC():number {
+/**
+ * Right ascension uncertainty (arcseconds)
+ */
+RA_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-POS_UNC_FLAG():boolean {
+/**
+ * Declination (degrees, ICRS)
+ */
+DEC():number {
   const offset = this.bb!.__offset(this.bb_pos, 24);
-  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-PARALLAX():number {
+/**
+ * Declination uncertainty (arcseconds)
+ */
+DEC_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-PARALLAX_UNC():number {
+/**
+ * True if position uncertainty is flagged
+ */
+POS_UNC_FLAG():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 28);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
-PMRA():number {
+/**
+ * Parallax (milliarcseconds)
+ */
+PARALLAX():number {
   const offset = this.bb!.__offset(this.bb_pos, 30);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-PMRA_UNC():number {
+/**
+ * Parallax uncertainty (milliarcseconds)
+ */
+PARALLAX_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-PMDEC():number {
+/**
+ * Proper motion in RA (milliarcseconds/year)
+ */
+PMRA():number {
   const offset = this.bb!.__offset(this.bb_pos, 34);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-PMDEC_UNC():number {
+/**
+ * Proper motion in RA uncertainty (milliarcseconds/year)
+ */
+PMRA_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 36);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-PM_UNC_FLAG():boolean {
+/**
+ * Proper motion in DEC (milliarcseconds/year)
+ */
+PMDEC():number {
   const offset = this.bb!.__offset(this.bb_pos, 38);
-  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
-}
-
-ASTROMETRY_ORIGIN():string|null
-ASTROMETRY_ORIGIN(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ASTROMETRY_ORIGIN(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 40);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-STAR_EPOCH():number {
-  const offset = this.bb!.__offset(this.bb_pos, 42);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Proper motion in DEC uncertainty (milliarcseconds/year)
+ */
+PMDEC_UNC():number {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * True if proper motion uncertainty is flagged
+ */
+PM_UNC_FLAG():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Gaia G-band magnitude
+ */
 GMAG():number {
   const offset = this.bb!.__offset(this.bb_pos, 44);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Gaia G-band magnitude uncertainty
+ */
 GMAG_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 46);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Gaia BP-band magnitude (blue photometer)
+ */
 BPMAG():number {
   const offset = this.bb!.__offset(this.bb_pos, 48);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Gaia BP-band magnitude uncertainty
+ */
 BPMAG_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 50);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Gaia RP-band magnitude (red photometer)
+ */
 RPMAG():number {
   const offset = this.bb!.__offset(this.bb_pos, 52);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Gaia RP-band magnitude uncertainty
+ */
 RPMAG_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 54);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * 2MASS J-band magnitude (1.25 um)
+ */
 JMAG():number {
   const offset = this.bb!.__offset(this.bb_pos, 56);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * J-band magnitude uncertainty
+ */
 JMAG_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 58);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * 2MASS K-band magnitude (2.17 um)
+ */
 KMAG():number {
   const offset = this.bb!.__offset(this.bb_pos, 60);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * K-band magnitude uncertainty
+ */
 KMAG_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 62);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * 2MASS H-band magnitude (1.65 um)
+ */
 HMAG():number {
   const offset = this.bb!.__offset(this.bb_pos, 64);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * H-band magnitude uncertainty
+ */
 HMAG_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 66);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * True if star is variable
+ */
 VAR_FLAG():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 68);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * True if star is in a multiple system
+ */
 MULT_FLAG():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 70);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Nearest neighbor catalog identifier
+ */
 NEIGHBOR_ID():number {
   const offset = this.bb!.__offset(this.bb_pos, 72);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
+/**
+ * True if nearest neighbor is within confusion radius
+ */
 NEIGHBOR_FLAG():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 74);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Distance to nearest neighbor (arcseconds)
+ */
 NEIGHBOR_DISTANCE():number {
   const offset = this.bb!.__offset(this.bb_pos, 76);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * True if position shift detected between catalogs
+ */
 SHIFT_FLAG():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 78);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Position shift magnitude (arcseconds)
+ */
 SHIFT():number {
   const offset = this.bb!.__offset(this.bb_pos, 80);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
@@ -260,60 +377,60 @@ static addCatVersion(builder:flatbuffers.Builder, CAT_VERSIONOffset:flatbuffers.
   builder.addFieldOffset(5, CAT_VERSIONOffset, 0);
 }
 
-static addRa(builder:flatbuffers.Builder, RA:number) {
-  builder.addFieldFloat64(6, RA, 0.0);
-}
-
-static addRaUnc(builder:flatbuffers.Builder, RA_UNC:number) {
-  builder.addFieldFloat64(7, RA_UNC, 0.0);
-}
-
-static addDec(builder:flatbuffers.Builder, DEC:number) {
-  builder.addFieldFloat64(8, DEC, 0.0);
-}
-
-static addDecUnc(builder:flatbuffers.Builder, DEC_UNC:number) {
-  builder.addFieldFloat64(9, DEC_UNC, 0.0);
-}
-
-static addPosUncFlag(builder:flatbuffers.Builder, POS_UNC_FLAG:boolean) {
-  builder.addFieldInt8(10, +POS_UNC_FLAG, +false);
-}
-
-static addParallax(builder:flatbuffers.Builder, PARALLAX:number) {
-  builder.addFieldFloat64(11, PARALLAX, 0.0);
-}
-
-static addParallaxUnc(builder:flatbuffers.Builder, PARALLAX_UNC:number) {
-  builder.addFieldFloat64(12, PARALLAX_UNC, 0.0);
-}
-
-static addPmra(builder:flatbuffers.Builder, PMRA:number) {
-  builder.addFieldFloat64(13, PMRA, 0.0);
-}
-
-static addPmraUnc(builder:flatbuffers.Builder, PMRA_UNC:number) {
-  builder.addFieldFloat64(14, PMRA_UNC, 0.0);
-}
-
-static addPmdec(builder:flatbuffers.Builder, PMDEC:number) {
-  builder.addFieldFloat64(15, PMDEC, 0.0);
-}
-
-static addPmdecUnc(builder:flatbuffers.Builder, PMDEC_UNC:number) {
-  builder.addFieldFloat64(16, PMDEC_UNC, 0.0);
-}
-
-static addPmUncFlag(builder:flatbuffers.Builder, PM_UNC_FLAG:boolean) {
-  builder.addFieldInt8(17, +PM_UNC_FLAG, +false);
-}
-
 static addAstrometryOrigin(builder:flatbuffers.Builder, ASTROMETRY_ORIGINOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(18, ASTROMETRY_ORIGINOffset, 0);
+  builder.addFieldOffset(6, ASTROMETRY_ORIGINOffset, 0);
 }
 
 static addStarEpoch(builder:flatbuffers.Builder, STAR_EPOCH:number) {
-  builder.addFieldFloat64(19, STAR_EPOCH, 0.0);
+  builder.addFieldFloat64(7, STAR_EPOCH, 0.0);
+}
+
+static addRa(builder:flatbuffers.Builder, RA:number) {
+  builder.addFieldFloat64(8, RA, 0.0);
+}
+
+static addRaUnc(builder:flatbuffers.Builder, RA_UNC:number) {
+  builder.addFieldFloat64(9, RA_UNC, 0.0);
+}
+
+static addDec(builder:flatbuffers.Builder, DEC:number) {
+  builder.addFieldFloat64(10, DEC, 0.0);
+}
+
+static addDecUnc(builder:flatbuffers.Builder, DEC_UNC:number) {
+  builder.addFieldFloat64(11, DEC_UNC, 0.0);
+}
+
+static addPosUncFlag(builder:flatbuffers.Builder, POS_UNC_FLAG:boolean) {
+  builder.addFieldInt8(12, +POS_UNC_FLAG, +false);
+}
+
+static addParallax(builder:flatbuffers.Builder, PARALLAX:number) {
+  builder.addFieldFloat64(13, PARALLAX, 0.0);
+}
+
+static addParallaxUnc(builder:flatbuffers.Builder, PARALLAX_UNC:number) {
+  builder.addFieldFloat64(14, PARALLAX_UNC, 0.0);
+}
+
+static addPmra(builder:flatbuffers.Builder, PMRA:number) {
+  builder.addFieldFloat64(15, PMRA, 0.0);
+}
+
+static addPmraUnc(builder:flatbuffers.Builder, PMRA_UNC:number) {
+  builder.addFieldFloat64(16, PMRA_UNC, 0.0);
+}
+
+static addPmdec(builder:flatbuffers.Builder, PMDEC:number) {
+  builder.addFieldFloat64(17, PMDEC, 0.0);
+}
+
+static addPmdecUnc(builder:flatbuffers.Builder, PMDEC_UNC:number) {
+  builder.addFieldFloat64(18, PMDEC_UNC, 0.0);
+}
+
+static addPmUncFlag(builder:flatbuffers.Builder, PM_UNC_FLAG:boolean) {
+  builder.addFieldInt8(19, +PM_UNC_FLAG, +false);
 }
 
 static addGmag(builder:flatbuffers.Builder, GMAG:number) {
@@ -405,7 +522,7 @@ static finishSizePrefixedSTRBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$STR', true);
 }
 
-static createSTR(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CS_ID:bigint, GNC_CAT_ID:number, GAIADR3_CAT_ID:bigint, HIP_CAT_ID:number, CAT_VERSIONOffset:flatbuffers.Offset, RA:number, RA_UNC:number, DEC:number, DEC_UNC:number, POS_UNC_FLAG:boolean, PARALLAX:number, PARALLAX_UNC:number, PMRA:number, PMRA_UNC:number, PMDEC:number, PMDEC_UNC:number, PM_UNC_FLAG:boolean, ASTROMETRY_ORIGINOffset:flatbuffers.Offset, STAR_EPOCH:number, GMAG:number, GMAG_UNC:number, BPMAG:number, BPMAG_UNC:number, RPMAG:number, RPMAG_UNC:number, JMAG:number, JMAG_UNC:number, KMAG:number, KMAG_UNC:number, HMAG:number, HMAG_UNC:number, VAR_FLAG:boolean, MULT_FLAG:boolean, NEIGHBOR_ID:number, NEIGHBOR_FLAG:boolean, NEIGHBOR_DISTANCE:number, SHIFT_FLAG:boolean, SHIFT:number):flatbuffers.Offset {
+static createSTR(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CS_ID:bigint, GNC_CAT_ID:number, GAIADR3_CAT_ID:bigint, HIP_CAT_ID:number, CAT_VERSIONOffset:flatbuffers.Offset, ASTROMETRY_ORIGINOffset:flatbuffers.Offset, STAR_EPOCH:number, RA:number, RA_UNC:number, DEC:number, DEC_UNC:number, POS_UNC_FLAG:boolean, PARALLAX:number, PARALLAX_UNC:number, PMRA:number, PMRA_UNC:number, PMDEC:number, PMDEC_UNC:number, PM_UNC_FLAG:boolean, GMAG:number, GMAG_UNC:number, BPMAG:number, BPMAG_UNC:number, RPMAG:number, RPMAG_UNC:number, JMAG:number, JMAG_UNC:number, KMAG:number, KMAG_UNC:number, HMAG:number, HMAG_UNC:number, VAR_FLAG:boolean, MULT_FLAG:boolean, NEIGHBOR_ID:number, NEIGHBOR_FLAG:boolean, NEIGHBOR_DISTANCE:number, SHIFT_FLAG:boolean, SHIFT:number):flatbuffers.Offset {
   STR.startSTR(builder);
   STR.addId(builder, IDOffset);
   STR.addCsId(builder, CS_ID);
@@ -413,6 +530,8 @@ static createSTR(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CS_ID
   STR.addGaiadr3CatId(builder, GAIADR3_CAT_ID);
   STR.addHipCatId(builder, HIP_CAT_ID);
   STR.addCatVersion(builder, CAT_VERSIONOffset);
+  STR.addAstrometryOrigin(builder, ASTROMETRY_ORIGINOffset);
+  STR.addStarEpoch(builder, STAR_EPOCH);
   STR.addRa(builder, RA);
   STR.addRaUnc(builder, RA_UNC);
   STR.addDec(builder, DEC);
@@ -425,8 +544,6 @@ static createSTR(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CS_ID
   STR.addPmdec(builder, PMDEC);
   STR.addPmdecUnc(builder, PMDEC_UNC);
   STR.addPmUncFlag(builder, PM_UNC_FLAG);
-  STR.addAstrometryOrigin(builder, ASTROMETRY_ORIGINOffset);
-  STR.addStarEpoch(builder, STAR_EPOCH);
   STR.addGmag(builder, GMAG);
   STR.addGmagUnc(builder, GMAG_UNC);
   STR.addBpmag(builder, BPMAG);
@@ -457,6 +574,8 @@ unpack(): STRT {
     this.GAIADR3_CAT_ID(),
     this.HIP_CAT_ID(),
     this.CAT_VERSION(),
+    this.ASTROMETRY_ORIGIN(),
+    this.STAR_EPOCH(),
     this.RA(),
     this.RA_UNC(),
     this.DEC(),
@@ -469,8 +588,6 @@ unpack(): STRT {
     this.PMDEC(),
     this.PMDEC_UNC(),
     this.PM_UNC_FLAG(),
-    this.ASTROMETRY_ORIGIN(),
-    this.STAR_EPOCH(),
     this.GMAG(),
     this.GMAG_UNC(),
     this.BPMAG(),
@@ -501,6 +618,8 @@ unpackTo(_o: STRT): void {
   _o.GAIADR3_CAT_ID = this.GAIADR3_CAT_ID();
   _o.HIP_CAT_ID = this.HIP_CAT_ID();
   _o.CAT_VERSION = this.CAT_VERSION();
+  _o.ASTROMETRY_ORIGIN = this.ASTROMETRY_ORIGIN();
+  _o.STAR_EPOCH = this.STAR_EPOCH();
   _o.RA = this.RA();
   _o.RA_UNC = this.RA_UNC();
   _o.DEC = this.DEC();
@@ -513,8 +632,6 @@ unpackTo(_o: STRT): void {
   _o.PMDEC = this.PMDEC();
   _o.PMDEC_UNC = this.PMDEC_UNC();
   _o.PM_UNC_FLAG = this.PM_UNC_FLAG();
-  _o.ASTROMETRY_ORIGIN = this.ASTROMETRY_ORIGIN();
-  _o.STAR_EPOCH = this.STAR_EPOCH();
   _o.GMAG = this.GMAG();
   _o.GMAG_UNC = this.GMAG_UNC();
   _o.BPMAG = this.BPMAG();
@@ -545,6 +662,8 @@ constructor(
   public GAIADR3_CAT_ID: bigint = BigInt('0'),
   public HIP_CAT_ID: number = 0,
   public CAT_VERSION: string|Uint8Array|null = null,
+  public ASTROMETRY_ORIGIN: string|Uint8Array|null = null,
+  public STAR_EPOCH: number = 0.0,
   public RA: number = 0.0,
   public RA_UNC: number = 0.0,
   public DEC: number = 0.0,
@@ -557,8 +676,6 @@ constructor(
   public PMDEC: number = 0.0,
   public PMDEC_UNC: number = 0.0,
   public PM_UNC_FLAG: boolean = false,
-  public ASTROMETRY_ORIGIN: string|Uint8Array|null = null,
-  public STAR_EPOCH: number = 0.0,
   public GMAG: number = 0.0,
   public GMAG_UNC: number = 0.0,
   public BPMAG: number = 0.0,
@@ -593,6 +710,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.GAIADR3_CAT_ID,
     this.HIP_CAT_ID,
     CAT_VERSION,
+    ASTROMETRY_ORIGIN,
+    this.STAR_EPOCH,
     this.RA,
     this.RA_UNC,
     this.DEC,
@@ -605,8 +724,6 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.PMDEC,
     this.PMDEC_UNC,
     this.PM_UNC_FLAG,
-    ASTROMETRY_ORIGIN,
-    this.STAR_EPOCH,
     this.GMAG,
     this.GMAG_UNC,
     this.BPMAG,

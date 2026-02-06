@@ -1,41 +1,362 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "reentryDisposition": {
+      "type": "string",
+      "enum": [
+        "CONTROLLED",
+        "UNCONTROLLED",
+        "SEMI_CONTROLLED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "CONTROLLED": {
+          "value": 0
+        },
+        "UNCONTROLLED": {
+          "value": 1
+        },
+        "SEMI_CONTROLLED": {
+          "value": 2
+        }
+      }
+    },
+    "reentryReason": {
+      "type": "string",
+      "enum": [
+        "NATURAL_DECAY",
+        "COMMANDED_DEORBIT",
+        "PROPULSION_FAILURE",
+        "COLLISION",
+        "FRAGMENTATION",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NATURAL_DECAY": {
+          "value": 0
+        },
+        "COMMANDED_DEORBIT": {
+          "value": 1
+        },
+        "PROPULSION_FAILURE": {
+          "value": 2
+        },
+        "COLLISION": {
+          "value": 3
+        },
+        "FRAGMENTATION": {
+          "value": 4
+        },
+        "UNKNOWN": {
+          "value": 5
+        }
+      }
+    },
+    "reentryStateVector": {
+      "type": "object",
+      "description": "Reentry State Vector",
+      "properties": {
+        "EPOCH": {
+          "type": "string",
+          "description": "Epoch (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "REF_FRAME": {
+          "type": "string",
+          "description": "Reference frame",
+          "x-flatbuffer-type": "string"
+        },
+        "X": {
+          "type": "number",
+          "description": "Position X in km",
+          "x-flatbuffer-type": "double"
+        },
+        "Y": {
+          "type": "number",
+          "description": "Position Y in km",
+          "x-flatbuffer-type": "double"
+        },
+        "Z": {
+          "type": "number",
+          "description": "Position Z in km",
+          "x-flatbuffer-type": "double"
+        },
+        "X_DOT": {
+          "type": "number",
+          "description": "Velocity X in km/s",
+          "x-flatbuffer-type": "double"
+        },
+        "Y_DOT": {
+          "type": "number",
+          "description": "Velocity Y in km/s",
+          "x-flatbuffer-type": "double"
+        },
+        "Z_DOT": {
+          "type": "number",
+          "description": "Velocity Z in km/s",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "reentryImpact": {
+      "type": "object",
+      "description": "Reentry Ground Impact Prediction",
+      "properties": {
+        "IMPACT_EPOCH": {
+          "type": "string",
+          "description": "Predicted impact epoch (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "EPOCH_UNCERTAINTY": {
+          "type": "number",
+          "description": "Epoch uncertainty window in seconds",
+          "x-flatbuffer-type": "double"
+        },
+        "LATITUDE": {
+          "type": "number",
+          "description": "Impact latitude in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE": {
+          "type": "number",
+          "description": "Impact longitude in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "ALONG_TRACK_UNC": {
+          "type": "number",
+          "description": "Along-track uncertainty in km",
+          "x-flatbuffer-type": "double"
+        },
+        "CROSS_TRACK_UNC": {
+          "type": "number",
+          "description": "Cross-track uncertainty in km",
+          "x-flatbuffer-type": "double"
+        },
+        "IMPACT_PROBABILITY": {
+          "type": "number",
+          "description": "Impact probability (0.0-1.0)",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "survivingDebris": {
+      "type": "object",
+      "description": "Surviving Debris Prediction",
+      "properties": {
+        "FRAGMENT_ID": {
+          "type": "string",
+          "description": "Fragment identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "MATERIAL": {
+          "type": "string",
+          "description": "Material type",
+          "x-flatbuffer-type": "string"
+        },
+        "MASS": {
+          "type": "number",
+          "description": "Fragment mass in kg",
+          "x-flatbuffer-type": "double"
+        },
+        "CASUALTY_AREA": {
+          "type": "number",
+          "description": "Casualty area in m^2",
+          "x-flatbuffer-type": "double"
+        },
+        "SURVIVAL_PROBABILITY": {
+          "type": "number",
+          "description": "Survival probability (0.0-1.0)",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
     "RDM": {
       "type": "object",
       "description": "Reentry Data Message",
       "properties": {
         "CCSDS_RDM_VERS": {
           "type": "string",
+          "description": "CCSDS RDM version",
           "x-flatbuffer-type": "string"
         },
         "CREATION_DATE": {
           "type": "string",
+          "description": "Message creation date (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "ORIGINATOR": {
           "type": "string",
+          "description": "Creating organization",
           "x-flatbuffer-type": "string"
         },
         "OBJECT_NAME": {
           "type": "string",
+          "description": "Object name",
           "x-flatbuffer-type": "string"
         },
         "OBJECT_ID": {
           "type": "string",
+          "description": "International designator",
           "x-flatbuffer-type": "string"
+        },
+        "NORAD_CAT_ID": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "NORAD catalog number",
+          "x-flatbuffer-type": "uint32"
+        },
+        "OBJECT_TYPE": {
+          "type": "string",
+          "description": "Object type (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN)",
+          "x-flatbuffer-type": "string"
+        },
+        "DISPOSITION": {
+          "$ref": "#/definitions/reentryDisposition",
+          "description": "Reentry disposition",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "CONTROLLED": {
+              "value": 0
+            },
+            "UNCONTROLLED": {
+              "value": 1
+            },
+            "SEMI_CONTROLLED": {
+              "value": 2
+            }
+          }
+        },
+        "REASON": {
+          "$ref": "#/definitions/reentryReason",
+          "description": "Reentry reason",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NATURAL_DECAY": {
+              "value": 0
+            },
+            "COMMANDED_DEORBIT": {
+              "value": 1
+            },
+            "PROPULSION_FAILURE": {
+              "value": 2
+            },
+            "COLLISION": {
+              "value": 3
+            },
+            "FRAGMENTATION": {
+              "value": 4
+            },
+            "UNKNOWN": {
+              "value": 5
+            }
+          }
         },
         "REENTRY_EPOCH": {
           "type": "string",
+          "description": "Predicted reentry epoch (ISO 8601)",
           "x-flatbuffer-type": "string"
+        },
+        "REENTRY_EPOCH_UNC": {
+          "type": "number",
+          "description": "Reentry epoch uncertainty window in hours",
+          "x-flatbuffer-type": "double"
         },
         "REENTRY_LATITUDE": {
           "type": "number",
+          "description": "Reentry latitude in degrees",
           "x-flatbuffer-type": "double"
         },
         "REENTRY_LONGITUDE": {
           "type": "number",
+          "description": "Reentry longitude in degrees",
           "x-flatbuffer-type": "double"
+        },
+        "REENTRY_ALTITUDE": {
+          "type": "number",
+          "description": "Reentry altitude in km",
+          "x-flatbuffer-type": "double"
+        },
+        "TIME_SYSTEM": {
+          "type": "string",
+          "description": "Time system",
+          "x-flatbuffer-type": "string"
+        },
+        "PREV_PREDICTION_EPOCH": {
+          "type": "string",
+          "description": "Previous predicted reentry epoch for comparison (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "BALLISTIC_COEFF": {
+          "type": "number",
+          "description": "Ballistic coefficient in kg/m^2",
+          "x-flatbuffer-type": "double"
+        },
+        "MASS": {
+          "type": "number",
+          "description": "Object mass in kg",
+          "x-flatbuffer-type": "double"
+        },
+        "SOLAR_RAD_AREA": {
+          "type": "number",
+          "description": "Solar radiation pressure area in m^2",
+          "x-flatbuffer-type": "double"
+        },
+        "DRAG_AREA": {
+          "type": "number",
+          "description": "Drag area in m^2",
+          "x-flatbuffer-type": "double"
+        },
+        "INITIAL_STATE": {
+          "$ref": "#/definitions/reentryStateVector",
+          "description": "Initial state vector",
+          "x-flatbuffer-type": "reentryStateVector"
+        },
+        "IMPACT_PREDICTIONS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/reentryImpact"
+          },
+          "description": "Ground impact predictions",
+          "x-flatbuffer-type": "[reentryImpact]"
+        },
+        "SURVIVING_DEBRIS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/survivingDebris"
+          },
+          "description": "Predicted surviving debris",
+          "x-flatbuffer-type": "[survivingDebris]"
+        },
+        "CASUALTY_EXPECTATION": {
+          "type": "number",
+          "description": "Casualty expectation",
+          "x-flatbuffer-type": "double"
+        },
+        "NUM_FRAGMENTS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of breakup fragments predicted",
+          "x-flatbuffer-type": "uint"
+        },
+        "SURVIVING_MASS": {
+          "type": "number",
+          "description": "Total surviving mass in kg",
+          "x-flatbuffer-type": "double"
+        },
+        "COMMENT": {
+          "type": "string",
+          "description": "Additional comments",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

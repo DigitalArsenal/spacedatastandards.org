@@ -41,43 +41,193 @@ class MNF extends Table
         return $this;
     }
 
+    /// Unique manifold identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getSTATUS()
+    /// Parent object satellite number
+    /**
+     * @return uint
+     */
+    public function getSAT_NO()
     {
         $o = $this->__offset(6);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Object designator
+    public function getOBJECT_DESIGNATOR()
+    {
+        $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Manifold status
     /**
-     * @return double
+     * @return sbyte
      */
-    public function getWEIGHT()
-    {
-        $o = $this->__offset(8);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getDELTA_V()
+    public function getSTATUS()
     {
         $o = $this->__offset(10);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \manifoldStatus::CANDIDATE;
     }
 
+    /// Event epoch that spawned the manifold (ISO 8601)
+    public function getEVENT_EPOCH()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Source of detection (sensor ID or method)
+    public function getSOURCE()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Reference frame
+    public function getREF_FRAME()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Original pre-event semi-major axis in km
     /**
      * @return double
      */
-    public function getDELTA_T()
+    public function getORIG_SEMI_MAJOR_AXIS()
     {
-        $o = $this->__offset(12);
+        $o = $this->__offset(18);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Original pre-event eccentricity
+    /**
+     * @return double
+     */
+    public function getORIG_ECCENTRICITY()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Original pre-event inclination in degrees
+    /**
+     * @return double
+     */
+    public function getORIG_INCLINATION()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Minimum delta-V sampled in m/s
+    /**
+     * @return double
+     */
+    public function getDELTA_V_MIN()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Maximum delta-V sampled in m/s
+    /**
+     * @return double
+     */
+    public function getDELTA_V_MAX()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Delta-V step size in m/s
+    /**
+     * @return double
+     */
+    public function getDELTA_V_STEP()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Minimum delta-T sampled in seconds
+    /**
+     * @return double
+     */
+    public function getDELTA_T_MIN()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Maximum delta-T sampled in seconds
+    /**
+     * @return double
+     */
+    public function getDELTA_T_MAX()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Delta-T step size in seconds
+    /**
+     * @return double
+     */
+    public function getDELTA_T_STEP()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Total number of manifold elements
+    /**
+     * @return uint
+     */
+    public function getNUM_ELEMENTS()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Theoretical element sets
+    /**
+     * @returnVectorOffset
+     */
+    public function getELEMENTS($j)
+    {
+        $o = $this->__offset(38);
+        $obj = new ManifoldElset();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getELEMENTSLength()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Correlated catalog object ID (if matched)
+    public function getCORRELATED_ID()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Additional notes
+    public function getNOTES()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /**
@@ -86,21 +236,36 @@ class MNF extends Table
      */
     public static function startMNF(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(5);
+        $builder->StartObject(20);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return MNF
      */
-    public static function createMNF(FlatBufferBuilder $builder, $ID, $STATUS, $WEIGHT, $DELTA_V, $DELTA_T)
+    public static function createMNF(FlatBufferBuilder $builder, $ID, $SAT_NO, $OBJECT_DESIGNATOR, $STATUS, $EVENT_EPOCH, $SOURCE, $REF_FRAME, $ORIG_SEMI_MAJOR_AXIS, $ORIG_ECCENTRICITY, $ORIG_INCLINATION, $DELTA_V_MIN, $DELTA_V_MAX, $DELTA_V_STEP, $DELTA_T_MIN, $DELTA_T_MAX, $DELTA_T_STEP, $NUM_ELEMENTS, $ELEMENTS, $CORRELATED_ID, $NOTES)
     {
-        $builder->startObject(5);
+        $builder->startObject(20);
         self::addID($builder, $ID);
+        self::addSAT_NO($builder, $SAT_NO);
+        self::addOBJECT_DESIGNATOR($builder, $OBJECT_DESIGNATOR);
         self::addSTATUS($builder, $STATUS);
-        self::addWEIGHT($builder, $WEIGHT);
-        self::addDELTA_V($builder, $DELTA_V);
-        self::addDELTA_T($builder, $DELTA_T);
+        self::addEVENT_EPOCH($builder, $EVENT_EPOCH);
+        self::addSOURCE($builder, $SOURCE);
+        self::addREF_FRAME($builder, $REF_FRAME);
+        self::addORIG_SEMI_MAJOR_AXIS($builder, $ORIG_SEMI_MAJOR_AXIS);
+        self::addORIG_ECCENTRICITY($builder, $ORIG_ECCENTRICITY);
+        self::addORIG_INCLINATION($builder, $ORIG_INCLINATION);
+        self::addDELTA_V_MIN($builder, $DELTA_V_MIN);
+        self::addDELTA_V_MAX($builder, $DELTA_V_MAX);
+        self::addDELTA_V_STEP($builder, $DELTA_V_STEP);
+        self::addDELTA_T_MIN($builder, $DELTA_T_MIN);
+        self::addDELTA_T_MAX($builder, $DELTA_T_MAX);
+        self::addDELTA_T_STEP($builder, $DELTA_T_STEP);
+        self::addNUM_ELEMENTS($builder, $NUM_ELEMENTS);
+        self::addELEMENTS($builder, $ELEMENTS);
+        self::addCORRELATED_ID($builder, $CORRELATED_ID);
+        self::addNOTES($builder, $NOTES);
         $o = $builder->endObject();
         return $o;
     }
@@ -117,12 +282,62 @@ class MNF extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addSAT_NO(FlatBufferBuilder $builder, $SAT_NO)
+    {
+        $builder->addUintX(1, $SAT_NO, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param StringOffset
+     * @return void
+     */
+    public static function addOBJECT_DESIGNATOR(FlatBufferBuilder $builder, $OBJECT_DESIGNATOR)
+    {
+        $builder->addOffsetX(2, $OBJECT_DESIGNATOR, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
      * @return void
      */
     public static function addSTATUS(FlatBufferBuilder $builder, $STATUS)
     {
-        $builder->addOffsetX(1, $STATUS, 0);
+        $builder->addSbyteX(3, $STATUS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEVENT_EPOCH(FlatBufferBuilder $builder, $EVENT_EPOCH)
+    {
+        $builder->addOffsetX(4, $EVENT_EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSOURCE(FlatBufferBuilder $builder, $SOURCE)
+    {
+        $builder->addOffsetX(5, $SOURCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addREF_FRAME(FlatBufferBuilder $builder, $REF_FRAME)
+    {
+        $builder->addOffsetX(6, $REF_FRAME, 0);
     }
 
     /**
@@ -130,9 +345,9 @@ class MNF extends Table
      * @param double
      * @return void
      */
-    public static function addWEIGHT(FlatBufferBuilder $builder, $WEIGHT)
+    public static function addORIG_SEMI_MAJOR_AXIS(FlatBufferBuilder $builder, $ORIG_SEMI_MAJOR_AXIS)
     {
-        $builder->addDoubleX(2, $WEIGHT, 0.0);
+        $builder->addDoubleX(7, $ORIG_SEMI_MAJOR_AXIS, 0.0);
     }
 
     /**
@@ -140,9 +355,9 @@ class MNF extends Table
      * @param double
      * @return void
      */
-    public static function addDELTA_V(FlatBufferBuilder $builder, $DELTA_V)
+    public static function addORIG_ECCENTRICITY(FlatBufferBuilder $builder, $ORIG_ECCENTRICITY)
     {
-        $builder->addDoubleX(3, $DELTA_V, 0.0);
+        $builder->addDoubleX(8, $ORIG_ECCENTRICITY, 0.0);
     }
 
     /**
@@ -150,9 +365,133 @@ class MNF extends Table
      * @param double
      * @return void
      */
-    public static function addDELTA_T(FlatBufferBuilder $builder, $DELTA_T)
+    public static function addORIG_INCLINATION(FlatBufferBuilder $builder, $ORIG_INCLINATION)
     {
-        $builder->addDoubleX(4, $DELTA_T, 0.0);
+        $builder->addDoubleX(9, $ORIG_INCLINATION, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDELTA_V_MIN(FlatBufferBuilder $builder, $DELTA_V_MIN)
+    {
+        $builder->addDoubleX(10, $DELTA_V_MIN, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDELTA_V_MAX(FlatBufferBuilder $builder, $DELTA_V_MAX)
+    {
+        $builder->addDoubleX(11, $DELTA_V_MAX, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDELTA_V_STEP(FlatBufferBuilder $builder, $DELTA_V_STEP)
+    {
+        $builder->addDoubleX(12, $DELTA_V_STEP, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDELTA_T_MIN(FlatBufferBuilder $builder, $DELTA_T_MIN)
+    {
+        $builder->addDoubleX(13, $DELTA_T_MIN, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDELTA_T_MAX(FlatBufferBuilder $builder, $DELTA_T_MAX)
+    {
+        $builder->addDoubleX(14, $DELTA_T_MAX, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDELTA_T_STEP(FlatBufferBuilder $builder, $DELTA_T_STEP)
+    {
+        $builder->addDoubleX(15, $DELTA_T_STEP, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addNUM_ELEMENTS(FlatBufferBuilder $builder, $NUM_ELEMENTS)
+    {
+        $builder->addUintX(16, $NUM_ELEMENTS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addELEMENTS(FlatBufferBuilder $builder, $ELEMENTS)
+    {
+        $builder->addOffsetX(17, $ELEMENTS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createELEMENTSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startELEMENTSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCORRELATED_ID(FlatBufferBuilder $builder, $CORRELATED_ID)
+    {
+        $builder->addOffsetX(18, $CORRELATED_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addNOTES(FlatBufferBuilder $builder, $NOTES)
+    {
+        $builder->addOffsetX(19, $NOTES, 0);
     }
 
     /**

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<omm xmlns="urn:ccsds:recommendation:navigation:schema:ndmxml"
+     id="CCSDS_OMM_VERS" version="2.0">
+  <header>
+    <CREATION_DATE>2007-065T16:00:00</CREATION_DATE>
+    <ORIGINATOR>NORAD</ORIGINATOR>
+  </header>
+  <body>
+    <segment>
+      <metadata>
+        <OBJECT_NAME>ISS (ZARYA)</OBJECT_NAME>
+        <OBJECT_ID>1998-067A</OBJECT_ID>
+        <CENTER_NAME>EARTH</CENTER_NAME>
+        <REF_FRAME>TEME</REF_FRAME>
+        <TIME_SYSTEM>UTC</TIME_SYSTEM>
+        <MEAN_ELEMENT_THEORY>SGP4</MEAN_ELEMENT_THEORY>
+      </metadata>
+      <data>
+        <meanElements>
+          <EPOCH>2007-064T10:34:41.4264</EPOCH>
+          <MEAN_MOTION>15.72125391</MEAN_MOTION>
+          <ECCENTRICITY>.0006703</ECCENTRICITY>
+          <INCLINATION>51.6416</INCLINATION>
+          <RA_OF_ASC_NODE>247.4627</RA_OF_ASC_NODE>
+          <ARG_OF_PERICENTER>130.5360</ARG_OF_PERICENTER>
+          <MEAN_ANOMALY>325.0288</MEAN_ANOMALY>
+          <GM>398600.4418</GM>
+        </meanElements>
+        <tleParameters>
+          <EPHEMERIS_TYPE>0</EPHEMERIS_TYPE>
+          <CLASSIFICATION_TYPE>U</CLASSIFICATION_TYPE>
+          <NORAD_CAT_ID>25544</NORAD_CAT_ID>
+          <ELEMENT_SET_NO>925</ELEMENT_SET_NO>
+          <REV_AT_EPOCH>48170</REV_AT_EPOCH>
+          <BSTAR>.000020128</BSTAR>
+          <MEAN_MOTION_DOT>-.00002182</MEAN_MOTION_DOT>
+          <MEAN_MOTION_DDOT>0</MEAN_MOTION_DDOT>
+        </tleParameters>
+      </data>
+    </segment>
+  </body>
+</omm>

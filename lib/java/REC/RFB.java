@@ -18,7 +18,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * RF Band
+ * RF Band Specification
  */
 @SuppressWarnings("unused")
 public final class RFB extends Table {
@@ -29,71 +29,115 @@ public final class RFB extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public RFB __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * Parent entity identifier
+   */
   public String ID_ENTITY() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ID_ENTITYAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer ID_ENTITYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  /**
+   * Band name or designation
+   */
   public String NAME() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer NAMEAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
-  public String BAND() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer BANDAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
-  public ByteBuffer BANDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * RF band designation
+   */
+  public byte BAND() { int o = __offset(10); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Operating mode
+   */
   public String MODE() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer MODEAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
   public ByteBuffer MODEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * Band purpose (e.g., TT&C, PAYLOAD, BEACON)
+   */
   public String PURPOSE() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer PURPOSEAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
   public ByteBuffer PURPOSEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * Minimum frequency (MHz)
+   */
   public double FREQ_MIN() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Maximum frequency (MHz)
+   */
   public double FREQ_MAX() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Center frequency (MHz)
+   */
   public double CENTER_FREQ() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double PEAK_GAIN() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double EDGE_GAIN() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double BANDWIDTH() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Bandwidth (MHz)
+   */
+  public double BANDWIDTH() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Peak antenna gain (dBi)
+   */
+  public double PEAK_GAIN() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Edge-of-coverage gain (dBi)
+   */
+  public double EDGE_GAIN() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Antenna beamwidth (degrees)
+   */
   public double BEAMWIDTH() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String POLARIZATION() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer POLARIZATIONAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
-  public ByteBuffer POLARIZATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
+  /**
+   * Polarization
+   */
+  public byte POLARIZATION() { int o = __offset(30); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Effective radiated power (dBW)
+   */
   public double ERP() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Effective isotropic radiated power (dBW)
+   */
   public double EIRP() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
 
   public static int createRFB(FlatBufferBuilder builder,
       int IDOffset,
       int ID_ENTITYOffset,
       int NAMEOffset,
-      int BANDOffset,
+      byte BAND,
       int MODEOffset,
       int PURPOSEOffset,
       double FREQ_MIN,
       double FREQ_MAX,
       double CENTER_FREQ,
+      double BANDWIDTH,
       double PEAK_GAIN,
       double EDGE_GAIN,
-      double BANDWIDTH,
       double BEAMWIDTH,
-      int POLARIZATIONOffset,
+      byte POLARIZATION,
       double ERP,
       double EIRP) {
     builder.startTable(16);
     RFB.addEirp(builder, EIRP);
     RFB.addErp(builder, ERP);
     RFB.addBeamwidth(builder, BEAMWIDTH);
-    RFB.addBandwidth(builder, BANDWIDTH);
     RFB.addEdgeGain(builder, EDGE_GAIN);
     RFB.addPeakGain(builder, PEAK_GAIN);
+    RFB.addBandwidth(builder, BANDWIDTH);
     RFB.addCenterFreq(builder, CENTER_FREQ);
     RFB.addFreqMax(builder, FREQ_MAX);
     RFB.addFreqMin(builder, FREQ_MIN);
-    RFB.addPolarization(builder, POLARIZATIONOffset);
     RFB.addPurpose(builder, PURPOSEOffset);
     RFB.addMode(builder, MODEOffset);
-    RFB.addBand(builder, BANDOffset);
     RFB.addName(builder, NAMEOffset);
     RFB.addIdEntity(builder, ID_ENTITYOffset);
     RFB.addId(builder, IDOffset);
+    RFB.addPolarization(builder, POLARIZATION);
+    RFB.addBand(builder, BAND);
     return RFB.endRFB(builder);
   }
 
@@ -101,17 +145,17 @@ public final class RFB extends Table {
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addIdEntity(FlatBufferBuilder builder, int ID_ENTITYOffset) { builder.addOffset(1, ID_ENTITYOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(2, NAMEOffset, 0); }
-  public static void addBand(FlatBufferBuilder builder, int BANDOffset) { builder.addOffset(3, BANDOffset, 0); }
+  public static void addBand(FlatBufferBuilder builder, byte BAND) { builder.addByte(3, BAND, 0); }
   public static void addMode(FlatBufferBuilder builder, int MODEOffset) { builder.addOffset(4, MODEOffset, 0); }
   public static void addPurpose(FlatBufferBuilder builder, int PURPOSEOffset) { builder.addOffset(5, PURPOSEOffset, 0); }
   public static void addFreqMin(FlatBufferBuilder builder, double FREQ_MIN) { builder.addDouble(6, FREQ_MIN, 0.0); }
   public static void addFreqMax(FlatBufferBuilder builder, double FREQ_MAX) { builder.addDouble(7, FREQ_MAX, 0.0); }
   public static void addCenterFreq(FlatBufferBuilder builder, double CENTER_FREQ) { builder.addDouble(8, CENTER_FREQ, 0.0); }
-  public static void addPeakGain(FlatBufferBuilder builder, double PEAK_GAIN) { builder.addDouble(9, PEAK_GAIN, 0.0); }
-  public static void addEdgeGain(FlatBufferBuilder builder, double EDGE_GAIN) { builder.addDouble(10, EDGE_GAIN, 0.0); }
-  public static void addBandwidth(FlatBufferBuilder builder, double BANDWIDTH) { builder.addDouble(11, BANDWIDTH, 0.0); }
+  public static void addBandwidth(FlatBufferBuilder builder, double BANDWIDTH) { builder.addDouble(9, BANDWIDTH, 0.0); }
+  public static void addPeakGain(FlatBufferBuilder builder, double PEAK_GAIN) { builder.addDouble(10, PEAK_GAIN, 0.0); }
+  public static void addEdgeGain(FlatBufferBuilder builder, double EDGE_GAIN) { builder.addDouble(11, EDGE_GAIN, 0.0); }
   public static void addBeamwidth(FlatBufferBuilder builder, double BEAMWIDTH) { builder.addDouble(12, BEAMWIDTH, 0.0); }
-  public static void addPolarization(FlatBufferBuilder builder, int POLARIZATIONOffset) { builder.addOffset(13, POLARIZATIONOffset, 0); }
+  public static void addPolarization(FlatBufferBuilder builder, byte POLARIZATION) { builder.addByte(13, POLARIZATION, 0); }
   public static void addErp(FlatBufferBuilder builder, double ERP) { builder.addDouble(14, ERP, 0.0); }
   public static void addEirp(FlatBufferBuilder builder, double EIRP) { builder.addDouble(15, EIRP, 0.0); }
   public static int endRFB(FlatBufferBuilder builder) {

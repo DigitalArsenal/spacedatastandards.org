@@ -1,32 +1,74 @@
-// Hash: 75c22f66916430c212d016fd5300b64b9cf2f5451c61831120cbb81968a559d2
-// Version: 0.0.2
+// Hash: df3237261fceb13a96bd7984323536437796c3bb5f3665be67d691def21ef818
+// Version: 0.0.3
 // -----------------------------------END_HEADER
+enum linkType : byte {
+  UPLINK,
+  DOWNLINK,
+  CROSSLINK,
+  INTER_SATELLITE,
+  GROUND_TO_GROUND,
+  RELAY
+}
+
+enum linkState : byte {
+  ESTABLISHED,
+  DEGRADED,
+  INTERRUPTED,
+  PLANNED,
+  TERMINATED,
+  UNKNOWN
+}
+
 /// Link Status
 table LKS {
+  /// Unique identifier
   ID:string;
+  /// First endpoint on-orbit identifier
   ID_ON_ORBIT1:string;
+  /// First endpoint satellite catalog number
+  SAT_NO1:uint32;
+  /// Second endpoint on-orbit identifier
   ID_ON_ORBIT2:string;
-  LINK_START_TIME:string;
-  LINK_STOP_TIME:string;
+  /// Second endpoint satellite catalog number
+  SAT_NO2:uint32;
+  /// Constellation name
   CONSTELLATION:string;
+  /// Link name or identifier
   LINK_NAME:string;
-  LINK_TYPE:string;
+  /// Link type
+  LINK_TYPE:linkType;
+  /// Link state
+  LINK_STATE:linkState;
+  /// RF band
   BAND:string;
+  /// Link start time (ISO 8601)
+  LINK_START_TIME:string;
+  /// Link stop time (ISO 8601)
+  LINK_STOP_TIME:string;
+  /// First endpoint beam identifier
   ID_BEAM1:string;
+  /// First endpoint name
   END_POINT1_NAME:string;
+  /// First endpoint latitude (degrees)
   END_POINT1_LAT:double;
+  /// First endpoint longitude (degrees)
   END_POINT1_LON:double;
+  /// Second endpoint beam identifier
   ID_BEAM2:string;
+  /// Second endpoint name
   END_POINT2_NAME:string;
+  /// Second endpoint latitude (degrees)
   END_POINT2_LAT:double;
+  /// Second endpoint longitude (degrees)
   END_POINT2_LON:double;
+  /// Data rate from endpoint 1 to 2 (Mbps)
   DATA_RATE1_TO2:double;
+  /// Data rate from endpoint 2 to 1 (Mbps)
   DATA_RATE2_TO1:double;
-  LINK_STATE:string;
+  /// System capability status
   SYS_CAP:string;
+  /// Operational capability status
   OPS_CAP:string;
-  SAT_NO1:int;
-  SAT_NO2:int;
 }
 
 root_type LKS;

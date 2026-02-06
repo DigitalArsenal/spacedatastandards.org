@@ -29,6 +29,9 @@ class SKI : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Unique identifier
+     */
     val ID : String?
         get() {
             val o = __offset(4)
@@ -40,6 +43,9 @@ class SKI : Table() {
         }
     val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    /**
+     * On-orbit reference
+     */
     val ON_ORBIT : String?
         get() {
             val o = __offset(6)
@@ -51,6 +57,9 @@ class SKI : Table() {
         }
     val ON_ORBITAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
     fun ON_ORBITInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    /**
+     * International designator
+     */
     val ORIG_OBJECT_ID : String?
         get() {
             val o = __offset(8)
@@ -62,22 +71,31 @@ class SKI : Table() {
         }
     val ORIG_OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
     fun ORIG_OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val ID_SENSOR : String?
+    /**
+     * Satellite catalog number
+     */
+    val SAT_NO : UInt
         get() {
             val o = __offset(10)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Sensor identifier
+     */
+    val ID_SENSOR : String?
+        get() {
+            val o = __offset(12)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val ID_SENSORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun ID_SENSORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    val SAT_NO : Int
-        get() {
-            val o = __offset(12)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
-        }
+    val ID_SENSORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
+    fun ID_SENSORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * Original sensor identifier
+     */
     val ORIG_SENSOR_ID : String?
         get() {
             val o = __offset(14)
@@ -89,71 +107,99 @@ class SKI : Table() {
         }
     val ORIG_SENSOR_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
     fun ORIG_SENSOR_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    /**
+     * Sensor geodetic latitude (degrees)
+     */
     val SENLAT : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Sensor geodetic longitude (degrees)
+     */
     val SENLON : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Sensor altitude (km)
+     */
     val SENALT : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Sensor ECEF X position (km)
+     */
     val SENX : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Sensor ECEF Y position (km)
+     */
     val SENY : Double
         get() {
             val o = __offset(24)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Sensor ECEF Z position (km)
+     */
     val SENZ : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    fun SEN_QUAT(j: Int) : String? {
+    /**
+     * Sensor quaternion (scalar-last: q1, q2, q3, q0)
+     */
+    fun SEN_QUAT(j: Int) : Double {
         val o = __offset(28)
         return if (o != 0) {
-            __string(__vector(o) + j * 4)
+            bb.getDouble(__vector(o) + j * 8)
         } else {
-            null
+            0.0
         }
     }
     val SEN_QUATLength : Int
         get() {
             val o = __offset(28); return if (o != 0) __vector_len(o) else 0
         }
-    fun SEN_QUAT_DOT(j: Int) : String? {
+    val SEN_QUATAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 8)
+    fun SEN_QUATInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 8)
+    /**
+     * Sensor quaternion rate
+     */
+    fun SEN_QUAT_DOT(j: Int) : Double {
         val o = __offset(30)
         return if (o != 0) {
-            __string(__vector(o) + j * 4)
+            bb.getDouble(__vector(o) + j * 8)
         } else {
-            null
+            0.0
         }
     }
     val SEN_QUAT_DOTLength : Int
         get() {
             val o = __offset(30); return if (o != 0) __vector_len(o) else 0
         }
-    val IMAGE_TYPE : String?
+    val SEN_QUAT_DOTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 8)
+    fun SEN_QUAT_DOTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 8)
+    /**
+     * Image type
+     */
+    val IMAGE_TYPE : Byte
         get() {
             val o = __offset(32)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val IMAGE_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
-    fun IMAGE_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
+    /**
+     * Exposure start time (ISO 8601)
+     */
     val EXP_START_TIME : String?
         get() {
             val o = __offset(34)
@@ -165,6 +211,9 @@ class SKI : Table() {
         }
     val EXP_START_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
     fun EXP_START_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    /**
+     * Exposure end time (ISO 8601)
+     */
     val EXP_END_TIME : String?
         get() {
             val o = __offset(36)
@@ -176,6 +225,9 @@ class SKI : Table() {
         }
     val EXP_END_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
     fun EXP_END_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
+    /**
+     * Image source information
+     */
     val IMAGE_SOURCE_INFO : String?
         get() {
             val o = __offset(38)
@@ -187,26 +239,41 @@ class SKI : Table() {
         }
     val IMAGE_SOURCE_INFOAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 1)
     fun IMAGE_SOURCE_INFOInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 1)
+    /**
+     * Top-left corner start azimuth (degrees)
+     */
     val TOP_LEFT_START_AZ : Double
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Top-left corner start elevation (degrees)
+     */
     val TOP_LEFT_START_EL : Double
         get() {
             val o = __offset(42)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Top-left corner stop azimuth (degrees)
+     */
     val TOP_LEFT_STOP_AZ : Double
         get() {
             val o = __offset(44)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Top-left corner stop elevation (degrees)
+     */
     val TOP_LEFT_STOP_EL : Double
         get() {
             val o = __offset(46)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Image set identifier
+     */
     val IMAGE_SET_ID : String?
         get() {
             val o = __offset(48)
@@ -218,51 +285,81 @@ class SKI : Table() {
         }
     val IMAGE_SET_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(48, 1)
     fun IMAGE_SET_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 48, 1)
-    val IMAGE_SET_LENGTH : Int
+    /**
+     * Number of images in set
+     */
+    val IMAGE_SET_LENGTH : UShort
         get() {
             val o = __offset(50)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
-    val SEQUENCE_ID : Int
+    /**
+     * Sequence number within set
+     */
+    val SEQUENCE_ID : UShort
         get() {
             val o = __offset(52)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
+    /**
+     * Frame field-of-view width (degrees)
+     */
     val FRAME_FOVWIDTH : Double
         get() {
             val o = __offset(54)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Frame field-of-view height (degrees)
+     */
     val FRAME_FOVHEIGHT : Double
         get() {
             val o = __offset(56)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Pixel field-of-view width (arcseconds)
+     */
     val PIXEL_FOVWIDTH : Double
         get() {
             val o = __offset(58)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Pixel field-of-view height (arcseconds)
+     */
     val PIXEL_FOVHEIGHT : Double
         get() {
             val o = __offset(60)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val FRAME_WIDTH_PIXELS : Int
+    /**
+     * Frame width (pixels)
+     */
+    val FRAME_WIDTH_PIXELS : UShort
         get() {
             val o = __offset(62)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
-    val FRAME_HEIGHT_PIXELS : Int
+    /**
+     * Frame height (pixels)
+     */
+    val FRAME_HEIGHT_PIXELS : UShort
         get() {
             val o = __offset(64)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
-    val PIXEL_BIT_DEPTH : Int
+    /**
+     * Pixel bit depth
+     */
+    val PIXEL_BIT_DEPTH : UByte
         get() {
             val o = __offset(66)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
+    /**
+     * Annotation key reference
+     */
     val ANNOTATION_KEY : String?
         get() {
             val o = __offset(68)
@@ -274,6 +371,9 @@ class SKI : Table() {
         }
     val ANNOTATION_KEYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(68, 1)
     fun ANNOTATION_KEYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 68, 1)
+    /**
+     * Calibration key reference
+     */
     val CALIBRATION_KEY : String?
         get() {
             val o = __offset(70)
@@ -285,6 +385,9 @@ class SKI : Table() {
         }
     val CALIBRATION_KEYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(70, 1)
     fun CALIBRATION_KEYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 70, 1)
+    /**
+     * Image filename
+     */
     val FILENAME : String?
         get() {
             val o = __offset(72)
@@ -296,11 +399,17 @@ class SKI : Table() {
         }
     val FILENAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(72, 1)
     fun FILENAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 72, 1)
+    /**
+     * File size (bytes)
+     */
     val FILESIZE : Long
         get() {
             val o = __offset(74)
             return if(o != 0) bb.getLong(o + bb_pos) else 0L
         }
+    /**
+     * File checksum value
+     */
     val CHECKSUM_VALUE : String?
         get() {
             val o = __offset(76)
@@ -312,6 +421,9 @@ class SKI : Table() {
         }
     val CHECKSUM_VALUEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(76, 1)
     fun CHECKSUM_VALUEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 76, 1)
+    /**
+     * Transaction identifier
+     */
     val TRANSACTION_ID : String?
         get() {
             val o = __offset(78)
@@ -323,6 +435,9 @@ class SKI : Table() {
         }
     val TRANSACTION_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(78, 1)
     fun TRANSACTION_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 78, 1)
+    /**
+     * Associated tags
+     */
     fun TAGS(j: Int) : String? {
         val o = __offset(80)
         return if (o != 0) {
@@ -335,6 +450,9 @@ class SKI : Table() {
         get() {
             val o = __offset(80); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Description
+     */
     val DESCRIPTION : String?
         get() {
             val o = __offset(82)
@@ -346,6 +464,9 @@ class SKI : Table() {
         }
     val DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(82, 1)
     fun DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 82, 1)
+    /**
+     * Associated EO observation references
+     */
     fun EO_OBSERVATIONS(j: Int) : String? {
         val o = __offset(84)
         return if (o != 0) {
@@ -366,7 +487,7 @@ class SKI : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SKIBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SKI")
-        fun createSKI(builder: FlatBufferBuilder, IDOffset: Int, ON_ORBITOffset: Int, ORIG_OBJECT_IDOffset: Int, ID_SENSOROffset: Int, SAT_NO: Int, ORIG_SENSOR_IDOffset: Int, SENLAT: Double, SENLON: Double, SENALT: Double, SENX: Double, SENY: Double, SENZ: Double, SEN_QUATOffset: Int, SEN_QUAT_DOTOffset: Int, IMAGE_TYPEOffset: Int, EXP_START_TIMEOffset: Int, EXP_END_TIMEOffset: Int, IMAGE_SOURCE_INFOOffset: Int, TOP_LEFT_START_AZ: Double, TOP_LEFT_START_EL: Double, TOP_LEFT_STOP_AZ: Double, TOP_LEFT_STOP_EL: Double, IMAGE_SET_IDOffset: Int, IMAGE_SET_LENGTH: Int, SEQUENCE_ID: Int, FRAME_FOVWIDTH: Double, FRAME_FOVHEIGHT: Double, PIXEL_FOVWIDTH: Double, PIXEL_FOVHEIGHT: Double, FRAME_WIDTH_PIXELS: Int, FRAME_HEIGHT_PIXELS: Int, PIXEL_BIT_DEPTH: Int, ANNOTATION_KEYOffset: Int, CALIBRATION_KEYOffset: Int, FILENAMEOffset: Int, FILESIZE: Long, CHECKSUM_VALUEOffset: Int, TRANSACTION_IDOffset: Int, TAGSOffset: Int, DESCRIPTIONOffset: Int, EO_OBSERVATIONSOffset: Int) : Int {
+        fun createSKI(builder: FlatBufferBuilder, IDOffset: Int, ON_ORBITOffset: Int, ORIG_OBJECT_IDOffset: Int, SAT_NO: UInt, ID_SENSOROffset: Int, ORIG_SENSOR_IDOffset: Int, SENLAT: Double, SENLON: Double, SENALT: Double, SENX: Double, SENY: Double, SENZ: Double, SEN_QUATOffset: Int, SEN_QUAT_DOTOffset: Int, IMAGE_TYPE: Byte, EXP_START_TIMEOffset: Int, EXP_END_TIMEOffset: Int, IMAGE_SOURCE_INFOOffset: Int, TOP_LEFT_START_AZ: Double, TOP_LEFT_START_EL: Double, TOP_LEFT_STOP_AZ: Double, TOP_LEFT_STOP_EL: Double, IMAGE_SET_IDOffset: Int, IMAGE_SET_LENGTH: UShort, SEQUENCE_ID: UShort, FRAME_FOVWIDTH: Double, FRAME_FOVHEIGHT: Double, PIXEL_FOVWIDTH: Double, PIXEL_FOVHEIGHT: Double, FRAME_WIDTH_PIXELS: UShort, FRAME_HEIGHT_PIXELS: UShort, PIXEL_BIT_DEPTH: UByte, ANNOTATION_KEYOffset: Int, CALIBRATION_KEYOffset: Int, FILENAMEOffset: Int, FILESIZE: Long, CHECKSUM_VALUEOffset: Int, TRANSACTION_IDOffset: Int, TAGSOffset: Int, DESCRIPTIONOffset: Int, EO_OBSERVATIONSOffset: Int) : Int {
             builder.startTable(41)
             addFILESIZE(builder, FILESIZE)
             addPIXEL_FOVHEIGHT(builder, PIXEL_FOVHEIGHT)
@@ -391,32 +512,32 @@ class SKI : Table() {
             addFILENAME(builder, FILENAMEOffset)
             addCALIBRATION_KEY(builder, CALIBRATION_KEYOffset)
             addANNOTATION_KEY(builder, ANNOTATION_KEYOffset)
-            addPIXEL_BIT_DEPTH(builder, PIXEL_BIT_DEPTH)
-            addFRAME_HEIGHT_PIXELS(builder, FRAME_HEIGHT_PIXELS)
-            addFRAME_WIDTH_PIXELS(builder, FRAME_WIDTH_PIXELS)
-            addSEQUENCE_ID(builder, SEQUENCE_ID)
-            addIMAGE_SET_LENGTH(builder, IMAGE_SET_LENGTH)
             addIMAGE_SET_ID(builder, IMAGE_SET_IDOffset)
             addIMAGE_SOURCE_INFO(builder, IMAGE_SOURCE_INFOOffset)
             addEXP_END_TIME(builder, EXP_END_TIMEOffset)
             addEXP_START_TIME(builder, EXP_START_TIMEOffset)
-            addIMAGE_TYPE(builder, IMAGE_TYPEOffset)
             addSEN_QUAT_DOT(builder, SEN_QUAT_DOTOffset)
             addSEN_QUAT(builder, SEN_QUATOffset)
             addORIG_SENSOR_ID(builder, ORIG_SENSOR_IDOffset)
-            addSAT_NO(builder, SAT_NO)
             addID_SENSOR(builder, ID_SENSOROffset)
+            addSAT_NO(builder, SAT_NO)
             addORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset)
             addON_ORBIT(builder, ON_ORBITOffset)
             addID(builder, IDOffset)
+            addFRAME_HEIGHT_PIXELS(builder, FRAME_HEIGHT_PIXELS)
+            addFRAME_WIDTH_PIXELS(builder, FRAME_WIDTH_PIXELS)
+            addSEQUENCE_ID(builder, SEQUENCE_ID)
+            addIMAGE_SET_LENGTH(builder, IMAGE_SET_LENGTH)
+            addPIXEL_BIT_DEPTH(builder, PIXEL_BIT_DEPTH)
+            addIMAGE_TYPE(builder, IMAGE_TYPE)
             return endSKI(builder)
         }
         fun startSKI(builder: FlatBufferBuilder) = builder.startTable(41)
         fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
         fun addON_ORBIT(builder: FlatBufferBuilder, ON_ORBIT: Int) = builder.addOffset(1, ON_ORBIT, 0)
         fun addORIG_OBJECT_ID(builder: FlatBufferBuilder, ORIG_OBJECT_ID: Int) = builder.addOffset(2, ORIG_OBJECT_ID, 0)
-        fun addID_SENSOR(builder: FlatBufferBuilder, ID_SENSOR: Int) = builder.addOffset(3, ID_SENSOR, 0)
-        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: Int) = builder.addInt(4, SAT_NO, 0)
+        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: UInt) = builder.addInt(3, SAT_NO.toInt(), 0)
+        fun addID_SENSOR(builder: FlatBufferBuilder, ID_SENSOR: Int) = builder.addOffset(4, ID_SENSOR, 0)
         fun addORIG_SENSOR_ID(builder: FlatBufferBuilder, ORIG_SENSOR_ID: Int) = builder.addOffset(5, ORIG_SENSOR_ID, 0)
         fun addSENLAT(builder: FlatBufferBuilder, SENLAT: Double) = builder.addDouble(6, SENLAT, 0.0)
         fun addSENLON(builder: FlatBufferBuilder, SENLON: Double) = builder.addDouble(7, SENLON, 0.0)
@@ -425,24 +546,24 @@ class SKI : Table() {
         fun addSENY(builder: FlatBufferBuilder, SENY: Double) = builder.addDouble(10, SENY, 0.0)
         fun addSENZ(builder: FlatBufferBuilder, SENZ: Double) = builder.addDouble(11, SENZ, 0.0)
         fun addSEN_QUAT(builder: FlatBufferBuilder, SEN_QUAT: Int) = builder.addOffset(12, SEN_QUAT, 0)
-        fun createSenQuatVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
+        fun createSenQuatVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
+                builder.addDouble(data[i])
             }
             return builder.endVector()
         }
-        fun startSenQuatVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun startSenQuatVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
         fun addSEN_QUAT_DOT(builder: FlatBufferBuilder, SEN_QUAT_DOT: Int) = builder.addOffset(13, SEN_QUAT_DOT, 0)
-        fun createSenQuatDotVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
+        fun createSenQuatDotVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
+                builder.addDouble(data[i])
             }
             return builder.endVector()
         }
-        fun startSenQuatDotVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addIMAGE_TYPE(builder: FlatBufferBuilder, IMAGE_TYPE: Int) = builder.addOffset(14, IMAGE_TYPE, 0)
+        fun startSenQuatDotVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addIMAGE_TYPE(builder: FlatBufferBuilder, IMAGE_TYPE: Byte) = builder.addByte(14, IMAGE_TYPE, 0)
         fun addEXP_START_TIME(builder: FlatBufferBuilder, EXP_START_TIME: Int) = builder.addOffset(15, EXP_START_TIME, 0)
         fun addEXP_END_TIME(builder: FlatBufferBuilder, EXP_END_TIME: Int) = builder.addOffset(16, EXP_END_TIME, 0)
         fun addIMAGE_SOURCE_INFO(builder: FlatBufferBuilder, IMAGE_SOURCE_INFO: Int) = builder.addOffset(17, IMAGE_SOURCE_INFO, 0)
@@ -451,15 +572,15 @@ class SKI : Table() {
         fun addTOP_LEFT_STOP_AZ(builder: FlatBufferBuilder, TOP_LEFT_STOP_AZ: Double) = builder.addDouble(20, TOP_LEFT_STOP_AZ, 0.0)
         fun addTOP_LEFT_STOP_EL(builder: FlatBufferBuilder, TOP_LEFT_STOP_EL: Double) = builder.addDouble(21, TOP_LEFT_STOP_EL, 0.0)
         fun addIMAGE_SET_ID(builder: FlatBufferBuilder, IMAGE_SET_ID: Int) = builder.addOffset(22, IMAGE_SET_ID, 0)
-        fun addIMAGE_SET_LENGTH(builder: FlatBufferBuilder, IMAGE_SET_LENGTH: Int) = builder.addInt(23, IMAGE_SET_LENGTH, 0)
-        fun addSEQUENCE_ID(builder: FlatBufferBuilder, SEQUENCE_ID: Int) = builder.addInt(24, SEQUENCE_ID, 0)
+        fun addIMAGE_SET_LENGTH(builder: FlatBufferBuilder, IMAGE_SET_LENGTH: UShort) = builder.addShort(23, IMAGE_SET_LENGTH.toShort(), 0)
+        fun addSEQUENCE_ID(builder: FlatBufferBuilder, SEQUENCE_ID: UShort) = builder.addShort(24, SEQUENCE_ID.toShort(), 0)
         fun addFRAME_FOVWIDTH(builder: FlatBufferBuilder, FRAME_FOVWIDTH: Double) = builder.addDouble(25, FRAME_FOVWIDTH, 0.0)
         fun addFRAME_FOVHEIGHT(builder: FlatBufferBuilder, FRAME_FOVHEIGHT: Double) = builder.addDouble(26, FRAME_FOVHEIGHT, 0.0)
         fun addPIXEL_FOVWIDTH(builder: FlatBufferBuilder, PIXEL_FOVWIDTH: Double) = builder.addDouble(27, PIXEL_FOVWIDTH, 0.0)
         fun addPIXEL_FOVHEIGHT(builder: FlatBufferBuilder, PIXEL_FOVHEIGHT: Double) = builder.addDouble(28, PIXEL_FOVHEIGHT, 0.0)
-        fun addFRAME_WIDTH_PIXELS(builder: FlatBufferBuilder, FRAME_WIDTH_PIXELS: Int) = builder.addInt(29, FRAME_WIDTH_PIXELS, 0)
-        fun addFRAME_HEIGHT_PIXELS(builder: FlatBufferBuilder, FRAME_HEIGHT_PIXELS: Int) = builder.addInt(30, FRAME_HEIGHT_PIXELS, 0)
-        fun addPIXEL_BIT_DEPTH(builder: FlatBufferBuilder, PIXEL_BIT_DEPTH: Int) = builder.addInt(31, PIXEL_BIT_DEPTH, 0)
+        fun addFRAME_WIDTH_PIXELS(builder: FlatBufferBuilder, FRAME_WIDTH_PIXELS: UShort) = builder.addShort(29, FRAME_WIDTH_PIXELS.toShort(), 0)
+        fun addFRAME_HEIGHT_PIXELS(builder: FlatBufferBuilder, FRAME_HEIGHT_PIXELS: UShort) = builder.addShort(30, FRAME_HEIGHT_PIXELS.toShort(), 0)
+        fun addPIXEL_BIT_DEPTH(builder: FlatBufferBuilder, PIXEL_BIT_DEPTH: UByte) = builder.addByte(31, PIXEL_BIT_DEPTH.toByte(), 0)
         fun addANNOTATION_KEY(builder: FlatBufferBuilder, ANNOTATION_KEY: Int) = builder.addOffset(32, ANNOTATION_KEY, 0)
         fun addCALIBRATION_KEY(builder: FlatBufferBuilder, CALIBRATION_KEY: Int) = builder.addOffset(33, CALIBRATION_KEY, 0)
         fun addFILENAME(builder: FlatBufferBuilder, FILENAME: Int) = builder.addOffset(34, FILENAME, 0)

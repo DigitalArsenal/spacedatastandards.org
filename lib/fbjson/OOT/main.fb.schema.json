@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "thrusterType": {
+      "type": "string",
+      "enum": [
+        "CHEMICAL_MONO",
+        "CHEMICAL_BI",
+        "COLD_GAS",
+        "ELECTRIC_HALL",
+        "ELECTRIC_ION",
+        "ELECTRIC_PPT",
+        "ELECTRIC_ARCJET",
+        "ELECTRIC_RESISTOJET",
+        "ELECTRIC_COLLOID",
+        "SOLID",
+        "HYBRID",
+        "NUCLEAR_THERMAL",
+        "SOLAR_THERMAL"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "CHEMICAL_MONO": {
+          "value": 0
+        },
+        "CHEMICAL_BI": {
+          "value": 1
+        },
+        "COLD_GAS": {
+          "value": 2
+        },
+        "ELECTRIC_HALL": {
+          "value": 3
+        },
+        "ELECTRIC_ION": {
+          "value": 4
+        },
+        "ELECTRIC_PPT": {
+          "value": 5
+        },
+        "ELECTRIC_ARCJET": {
+          "value": 6
+        },
+        "ELECTRIC_RESISTOJET": {
+          "value": 7
+        },
+        "ELECTRIC_COLLOID": {
+          "value": 8
+        },
+        "SOLID": {
+          "value": 9
+        },
+        "HYBRID": {
+          "value": 10
+        },
+        "NUCLEAR_THERMAL": {
+          "value": 11
+        },
+        "SOLAR_THERMAL": {
+          "value": 12
+        }
+      }
+    },
+    "OOT": {
+      "type": "object",
+      "description": "On-Orbit Thruster",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Unique identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_ON_ORBIT": {
+          "type": "string",
+          "description": "Reference to parent on-orbit object",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_THRUSTER": {
+          "type": "string",
+          "description": "Reference to thruster specification",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Thruster name or designation",
+          "x-flatbuffer-type": "string"
+        },
+        "TYPE": {
+          "$ref": "#/definitions/thrusterType",
+          "description": "Thruster type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "CHEMICAL_MONO": {
+              "value": 0
+            },
+            "CHEMICAL_BI": {
+              "value": 1
+            },
+            "COLD_GAS": {
+              "value": 2
+            },
+            "ELECTRIC_HALL": {
+              "value": 3
+            },
+            "ELECTRIC_ION": {
+              "value": 4
+            },
+            "ELECTRIC_PPT": {
+              "value": 5
+            },
+            "ELECTRIC_ARCJET": {
+              "value": 6
+            },
+            "ELECTRIC_RESISTOJET": {
+              "value": 7
+            },
+            "ELECTRIC_COLLOID": {
+              "value": 8
+            },
+            "SOLID": {
+              "value": 9
+            },
+            "HYBRID": {
+              "value": 10
+            },
+            "NUCLEAR_THERMAL": {
+              "value": 11
+            },
+            "SOLAR_THERMAL": {
+              "value": 12
+            }
+          }
+        },
+        "QUANTITY": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of thrusters of this type",
+          "x-flatbuffer-type": "uint"
+        },
+        "THRUST": {
+          "type": "number",
+          "description": "Thrust output in Newtons",
+          "x-flatbuffer-type": "double"
+        },
+        "ISP": {
+          "type": "number",
+          "description": "Specific impulse in seconds",
+          "x-flatbuffer-type": "double"
+        },
+        "PROPELLANT": {
+          "type": "string",
+          "description": "Propellant type (e.g., HYDRAZINE, XENON, KRYPTON, MMH_NTO, N2, GN2)",
+          "x-flatbuffer-type": "string"
+        },
+        "PROPELLANT_MASS": {
+          "type": "number",
+          "description": "Total propellant mass in kg",
+          "x-flatbuffer-type": "double"
+        },
+        "PROPELLANT_REMAINING": {
+          "type": "number",
+          "description": "Remaining propellant mass in kg",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_V_TOTAL": {
+          "type": "number",
+          "description": "Total delta-V capability in m/s",
+          "x-flatbuffer-type": "double"
+        },
+        "DELTA_V_REMAINING": {
+          "type": "number",
+          "description": "Remaining delta-V in m/s",
+          "x-flatbuffer-type": "double"
+        },
+        "TOTAL_IMPULSE": {
+          "type": "number",
+          "description": "Total impulse in Newton-seconds",
+          "x-flatbuffer-type": "double"
+        },
+        "MASS": {
+          "type": "number",
+          "description": "Thruster dry mass in kg",
+          "x-flatbuffer-type": "double"
+        },
+        "PURPOSE": {
+          "type": "string",
+          "description": "Purpose (e.g., ORBIT_RAISING, STATION_KEEPING, ATTITUDE_CONTROL, DEORBIT)",
+          "x-flatbuffer-type": "string"
+        },
+        "NOTES": {
+          "type": "string",
+          "description": "Additional notes",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/OOT",
+  "x-flatbuffer-root-type": "OOT",
+  "x-flatbuffer-file-identifier": "$OOT"
+}

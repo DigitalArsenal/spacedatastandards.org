@@ -1,13 +1,166 @@
-// Hash: 151bbcc588f72d915ffe525dcd65a85539a9da2baa4e1982d70848e8ed0f6099
-// Version: 0.0.2
+// Hash: f61049f0e4e2716f4830875da5d91be9d7cd745e116c687dce05288b660ce387
+// Version: 0.0.3
 // -----------------------------------END_HEADER
+enum attitudeStateType : byte {
+  QUATERNION,
+  EULER_ANGLES,
+  SPIN,
+  DIRECTION_COSINE
+}
+
+enum attCovType : byte {
+  ANGLE,
+  ANGLE_GYROBIAS,
+  ANGLE_ANGVEL,
+  QUATERNION_COV
+}
+
+enum maneuverableFlag : byte {
+  YES,
+  NO,
+  UNKNOWN
+}
+
+/// Attitude State Data
+table attitudeState {
+  /// Attitude state type
+  ATT_TYPE:attitudeStateType;
+  /// Reference frame A
+  REF_FRAME_A:string;
+  /// Reference frame B
+  REF_FRAME_B:string;
+  /// Attitude direction (A2B or B2A)
+  ATT_DIR:string;
+  /// Epoch (ISO 8601)
+  EPOCH:string;
+  /// Quaternion scalar component (q0 or qc)
+  Q1:double;
+  /// Quaternion vector component i
+  Q2:double;
+  /// Quaternion vector component j
+  Q3:double;
+  /// Quaternion vector component k
+  QC:double;
+  /// Euler angle X in degrees
+  ANGLE_1:double;
+  /// Euler angle Y in degrees
+  ANGLE_2:double;
+  /// Euler angle Z in degrees
+  ANGLE_3:double;
+  /// Euler rotation sequence (e.g., 321, 313)
+  EULER_ROT_SEQ:string;
+  /// Angular velocity X in deg/s
+  ANGVEL_X:double;
+  /// Angular velocity Y in deg/s
+  ANGVEL_Y:double;
+  /// Angular velocity Z in deg/s
+  ANGVEL_Z:double;
+  /// Spin alpha in degrees
+  SPIN_ALPHA:double;
+  /// Spin delta in degrees
+  SPIN_DELTA:double;
+  /// Spin angle in degrees
+  SPIN_ANGLE:double;
+  /// Spin angle velocity in deg/s
+  SPIN_ANGLE_VEL:double;
+  /// Nutation angle in degrees
+  NUTATION:double;
+  /// Nutation period in seconds
+  NUTATION_PERIOD:double;
+  /// Nutation phase in degrees
+  NUTATION_PHASE:double;
+}
+
+/// Attitude Physical Characteristics
+table attPhysicalProperties {
+  /// Drag coefficient
+  DRAG_COEFF:double;
+  /// Wet mass in kg
+  WET_MASS:double;
+  /// Dry mass in kg
+  DRY_MASS:double;
+  /// Center of pressure reference frame
+  CP_REF_FRAME:string;
+  /// Center of pressure X in m
+  CP_X:double;
+  /// Center of pressure Y in m
+  CP_Y:double;
+  /// Center of pressure Z in m
+  CP_Z:double;
+  /// Inertia reference frame
+  INERTIA_REF_FRAME:string;
+  /// Moment of inertia about X axis in kg*m^2
+  IXX:double;
+  /// Moment of inertia about Y axis in kg*m^2
+  IYY:double;
+  /// Moment of inertia about Z axis in kg*m^2
+  IZZ:double;
+  /// Product of inertia XY in kg*m^2
+  IXY:double;
+  /// Product of inertia XZ in kg*m^2
+  IXZ:double;
+  /// Product of inertia YZ in kg*m^2
+  IYZ:double;
+}
+
+/// Attitude Covariance
+table attCovariance {
+  /// Covariance type
+  COV_TYPE:attCovType;
+  /// Reference frame
+  COV_REF_FRAME:string;
+  /// Epoch (ISO 8601)
+  EPOCH:string;
+  /// Upper-triangular covariance matrix elements (row-major)
+  COV:[double];
+}
+
+/// Attitude Maneuver
+table attManeuver {
+  /// Maneuver epoch start (ISO 8601)
+  MAN_EPOCH_START:string;
+  /// Duration in seconds
+  DURATION:double;
+  /// Reference frame
+  REF_FRAME:string;
+  /// Torque about body X in N*m
+  TOR_1:double;
+  /// Torque about body Y in N*m
+  TOR_2:double;
+  /// Torque about body Z in N*m
+  TOR_3:double;
+}
+
 /// Attitude Comprehensive Message
 table ACM {
+  /// CCSDS ACM version
   CCSDS_ACM_VERS:string;
+  /// Message creation date (ISO 8601)
   CREATION_DATE:string;
+  /// Creating organization
   ORIGINATOR:string;
+  /// Object name
   OBJECT_NAME:string;
+  /// International designator
   OBJECT_ID:string;
+  /// Catalog name
+  CATALOG_NAME:string;
+  /// Epoch of state (ISO 8601)
+  EPOCH:string;
+  /// Time system
+  TIME_SYSTEM:string;
+  /// Attitude states
+  ATT_STATES:[attitudeState];
+  /// Physical properties
+  PHYS_PROPERTIES:attPhysicalProperties;
+  /// Attitude covariance data
+  COV_DATA:[attCovariance];
+  /// Attitude maneuvers
+  MANEUVERS:[attManeuver];
+  /// Maneuverability status
+  MANEUVERABLE:maneuverableFlag;
+  /// Additional comments
+  COMMENT:string;
 }
 
 root_type ACM;

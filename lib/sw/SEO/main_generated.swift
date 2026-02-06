@@ -4,6 +4,58 @@
 
 import FlatBuffers
 
+public enum seoDataType: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case particleCount = 0
+  case magneticField = 1
+  case radiationDose = 2
+  case plasmaDensity = 3
+  case energeticParticle = 4
+  case solarWind = 5
+  case charging = 6
+  case unknown = 7
+
+  public static var max: seoDataType { return .unknown }
+  public static var min: seoDataType { return .particleCount }
+}
+
+
+public enum seoParticleType: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case proton = 0
+  case electron = 1
+  case alpha = 2
+  case heavyIon = 3
+  case neutron = 4
+  case cosmicRay = 5
+  case mixed = 6
+
+  public static var max: seoParticleType { return .mixed }
+  public static var min: seoParticleType { return .proton }
+}
+
+
+public enum seoObservatoryType: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case ground = 0
+  case leo = 1
+  case geo = 2
+  case l1 = 3
+  case l2 = 4
+  case interplanetary = 5
+  case solar = 6
+
+  public static var max: seoObservatoryType { return .solar }
+  public static var min: seoObservatoryType { return .ground }
+}
+
+
 ///  Space Environment Observation
 public struct SEO: FlatBufferObject, Verifiable {
 
@@ -40,101 +92,144 @@ public struct SEO: FlatBufferObject, Verifiable {
     case SEN_POS = 44
     case SEN_VEL = 46
     case MEAS_TYPE = 48
-    case SEN_ENERGY_LEVEL = 50
-    case OB_SET_ID = 52
-    case PARTICLE_TYPE = 54
+    case PARTICLE_TYPE = 50
+    case SEN_ENERGY_LEVEL = 52
+    case OB_SET_ID = 54
     case OB_TIME = 56
-    case SEO_LIST = 58
-    case QUALITY = 60
-    case DESCRIPTION = 62
-    case DESCRIPTOR = 64
-    case SRC_TYPS = 66
-    case SRC_IDS = 68
+    case VALUES = 58
+    case UNCERTAINTIES = 60
+    case UNITS = 62
+    case QUALITY = 64
+    case DESCRIPTION = 66
+    case DESCRIPTOR = 68
+    case SRC_TYPS = 70
+    case SRC_IDS = 72
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
+  ///  Unique identifier
   public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  ///  Message type code
   public var MSG_TYPE: String? { let o = _accessor.offset(VTOFFSET.MSG_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var MSG_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MSG_TYPE.v) }
+  ///  Generating system
   public var GEN_SYSTEM: String? { let o = _accessor.offset(VTOFFSET.GEN_SYSTEM.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var GEN_SYSTEMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.GEN_SYSTEM.v) }
+  ///  External reference identifier
   public var EXTERNAL_ID: String? { let o = _accessor.offset(VTOFFSET.EXTERNAL_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var EXTERNAL_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EXTERNAL_ID.v) }
-  public var DATA_TYPE: String? { let o = _accessor.offset(VTOFFSET.DATA_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var DATA_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DATA_TYPE.v) }
+  ///  Type of environmental data
+  public var DATA_TYPE: seoDataType { let o = _accessor.offset(VTOFFSET.DATA_TYPE.v); return o == 0 ? .particleCount : seoDataType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .particleCount }
+  ///  Generation time (ISO 8601)
   public var GEN_TIME: String? { let o = _accessor.offset(VTOFFSET.GEN_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var GEN_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.GEN_TIME.v) }
+  ///  True if this is a forecast
   public var FORECAST: Bool { let o = _accessor.offset(VTOFFSET.FORECAST.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  True if derived from other measurements
   public var DERIVED: Bool { let o = _accessor.offset(VTOFFSET.DERIVED.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public var SAT_NO: Int32 { let o = _accessor.offset(VTOFFSET.SAT_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Satellite catalog number (if space-based)
+  public var SAT_NO: UInt32 { let o = _accessor.offset(VTOFFSET.SAT_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  International designator
   public var ORIG_OBJECT_ID: String? { let o = _accessor.offset(VTOFFSET.ORIG_OBJECT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ORIG_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_OBJECT_ID.v) }
+  ///  Sensor identifier
   public var ID_SENSOR: String? { let o = _accessor.offset(VTOFFSET.ID_SENSOR.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ID_SENSORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_SENSOR.v) }
+  ///  Original sensor identifier
   public var ORIG_SENSOR_ID: String? { let o = _accessor.offset(VTOFFSET.ORIG_SENSOR_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ORIG_SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_SENSOR_ID.v) }
-  public var OBSERVATORY_TYPE: String? { let o = _accessor.offset(VTOFFSET.OBSERVATORY_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBSERVATORY_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBSERVATORY_TYPE.v) }
+  ///  Observatory type
+  public var OBSERVATORY_TYPE: seoObservatoryType { let o = _accessor.offset(VTOFFSET.OBSERVATORY_TYPE.v); return o == 0 ? .ground : seoObservatoryType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .ground }
+  ///  Observatory name
   public var OBSERVATORY_NAME: String? { let o = _accessor.offset(VTOFFSET.OBSERVATORY_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OBSERVATORY_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBSERVATORY_NAME.v) }
+  ///  Observatory notes
   public var OBSERVATORY_NOTES: String? { let o = _accessor.offset(VTOFFSET.OBSERVATORY_NOTES.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OBSERVATORY_NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBSERVATORY_NOTES.v) }
+  ///  Instrument type description
   public var INSTRUMENT_TYPE: String? { let o = _accessor.offset(VTOFFSET.INSTRUMENT_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var INSTRUMENT_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.INSTRUMENT_TYPE.v) }
+  ///  Observatory latitude (degrees)
   public var LAT: Double { let o = _accessor.offset(VTOFFSET.LAT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Observatory longitude (degrees)
   public var LON: Double { let o = _accessor.offset(VTOFFSET.LON.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Observatory altitude (km)
   public var ALT: Double { let o = _accessor.offset(VTOFFSET.ALT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Sensor reference frame
   public var SEN_REFERENCE_FRAME: String? { let o = _accessor.offset(VTOFFSET.SEN_REFERENCE_FRAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SEN_REFERENCE_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SEN_REFERENCE_FRAME.v) }
+  ///  Sensor position (km, 3 components)
   public var hasSenPos: Bool { let o = _accessor.offset(VTOFFSET.SEN_POS.v); return o == 0 ? false : true }
   public var SEN_POSCount: Int32 { let o = _accessor.offset(VTOFFSET.SEN_POS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SEN_POS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.SEN_POS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public func SEN_POS(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.SEN_POS.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
+  public var SEN_POS: [Double] { return _accessor.getVector(at: VTOFFSET.SEN_POS.v) ?? [] }
+  ///  Sensor velocity (km/s, 3 components)
   public var hasSenVel: Bool { let o = _accessor.offset(VTOFFSET.SEN_VEL.v); return o == 0 ? false : true }
   public var SEN_VELCount: Int32 { let o = _accessor.offset(VTOFFSET.SEN_VEL.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SEN_VEL(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.SEN_VEL.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public func SEN_VEL(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.SEN_VEL.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
+  public var SEN_VEL: [Double] { return _accessor.getVector(at: VTOFFSET.SEN_VEL.v) ?? [] }
+  ///  Measurement type description
   public var MEAS_TYPE: String? { let o = _accessor.offset(VTOFFSET.MEAS_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var MEAS_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MEAS_TYPE.v) }
+  ///  Particle type measured
+  public var PARTICLE_TYPE: seoParticleType { let o = _accessor.offset(VTOFFSET.PARTICLE_TYPE.v); return o == 0 ? .proton : seoParticleType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .proton }
+  ///  Energy level or range (keV or MeV)
   public var SEN_ENERGY_LEVEL: String? { let o = _accessor.offset(VTOFFSET.SEN_ENERGY_LEVEL.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var SEN_ENERGY_LEVELSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SEN_ENERGY_LEVEL.v) }
+  ///  Observation set identifier
   public var OB_SET_ID: String? { let o = _accessor.offset(VTOFFSET.OB_SET_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OB_SET_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OB_SET_ID.v) }
-  public var PARTICLE_TYPE: String? { let o = _accessor.offset(VTOFFSET.PARTICLE_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var PARTICLE_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PARTICLE_TYPE.v) }
+  ///  Observation time (ISO 8601)
   public var OB_TIME: String? { let o = _accessor.offset(VTOFFSET.OB_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var OB_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OB_TIME.v) }
-  public var hasSeoList: Bool { let o = _accessor.offset(VTOFFSET.SEO_LIST.v); return o == 0 ? false : true }
-  public var SEO_LISTCount: Int32 { let o = _accessor.offset(VTOFFSET.SEO_LIST.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SEO_LIST(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.SEO_LIST.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  ///  Measurement values
+  public var hasValues: Bool { let o = _accessor.offset(VTOFFSET.VALUES.v); return o == 0 ? false : true }
+  public var VALUESCount: Int32 { let o = _accessor.offset(VTOFFSET.VALUES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func VALUES(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.VALUES.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
+  public var VALUES: [Double] { return _accessor.getVector(at: VTOFFSET.VALUES.v) ?? [] }
+  ///  Measurement uncertainties
+  public var hasUncertainties: Bool { let o = _accessor.offset(VTOFFSET.UNCERTAINTIES.v); return o == 0 ? false : true }
+  public var UNCERTAINTIESCount: Int32 { let o = _accessor.offset(VTOFFSET.UNCERTAINTIES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func UNCERTAINTIES(at index: Int32) -> Double { let o = _accessor.offset(VTOFFSET.UNCERTAINTIES.v); return o == 0 ? 0 : _accessor.directRead(of: Double.self, offset: _accessor.vector(at: o) + index * 8) }
+  public var UNCERTAINTIES: [Double] { return _accessor.getVector(at: VTOFFSET.UNCERTAINTIES.v) ?? [] }
+  ///  Units for measurement values
+  public var UNITS: String? { let o = _accessor.offset(VTOFFSET.UNITS.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var UNITSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.UNITS.v) }
+  ///  Data quality indicator
   public var QUALITY: String? { let o = _accessor.offset(VTOFFSET.QUALITY.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var QUALITYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.QUALITY.v) }
+  ///  Description
   public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
+  ///  Event descriptor
   public var DESCRIPTOR: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTOR.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var DESCRIPTORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTOR.v) }
+  ///  Source types
   public var hasSrcTyps: Bool { let o = _accessor.offset(VTOFFSET.SRC_TYPS.v); return o == 0 ? false : true }
   public var SRC_TYPSCount: Int32 { let o = _accessor.offset(VTOFFSET.SRC_TYPS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func SRC_TYPS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.SRC_TYPS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  ///  Source identifiers
   public var hasSrcIds: Bool { let o = _accessor.offset(VTOFFSET.SRC_IDS.v); return o == 0 ? false : true }
   public var SRC_IDSCount: Int32 { let o = _accessor.offset(VTOFFSET.SRC_IDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func SRC_IDS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.SRC_IDS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public static func startSEO(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 33) }
+  public static func startSEO(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 35) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(MSG_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MSG_TYPE, at: VTOFFSET.MSG_TYPE.p) }
   public static func add(GEN_SYSTEM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GEN_SYSTEM, at: VTOFFSET.GEN_SYSTEM.p) }
   public static func add(EXTERNAL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EXTERNAL_ID, at: VTOFFSET.EXTERNAL_ID.p) }
-  public static func add(DATA_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DATA_TYPE, at: VTOFFSET.DATA_TYPE.p) }
+  public static func add(DATA_TYPE: seoDataType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_TYPE.rawValue, def: 0, at: VTOFFSET.DATA_TYPE.p) }
   public static func add(GEN_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: GEN_TIME, at: VTOFFSET.GEN_TIME.p) }
   public static func add(FORECAST: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FORECAST, def: false,
    at: VTOFFSET.FORECAST.p) }
   public static func add(DERIVED: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DERIVED, def: false,
    at: VTOFFSET.DERIVED.p) }
-  public static func add(SAT_NO: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }
+  public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }
   public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VTOFFSET.ORIG_OBJECT_ID.p) }
   public static func add(ID_SENSOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_SENSOR, at: VTOFFSET.ID_SENSOR.p) }
   public static func add(ORIG_SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_SENSOR_ID, at: VTOFFSET.ORIG_SENSOR_ID.p) }
-  public static func add(OBSERVATORY_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSERVATORY_TYPE, at: VTOFFSET.OBSERVATORY_TYPE.p) }
+  public static func add(OBSERVATORY_TYPE: seoObservatoryType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: OBSERVATORY_TYPE.rawValue, def: 0, at: VTOFFSET.OBSERVATORY_TYPE.p) }
   public static func add(OBSERVATORY_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSERVATORY_NAME, at: VTOFFSET.OBSERVATORY_NAME.p) }
   public static func add(OBSERVATORY_NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBSERVATORY_NOTES, at: VTOFFSET.OBSERVATORY_NOTES.p) }
   public static func add(INSTRUMENT_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: INSTRUMENT_TYPE, at: VTOFFSET.INSTRUMENT_TYPE.p) }
@@ -145,11 +240,13 @@ public struct SEO: FlatBufferObject, Verifiable {
   public static func addVectorOf(SEN_POS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEN_POS, at: VTOFFSET.SEN_POS.p) }
   public static func addVectorOf(SEN_VEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEN_VEL, at: VTOFFSET.SEN_VEL.p) }
   public static func add(MEAS_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MEAS_TYPE, at: VTOFFSET.MEAS_TYPE.p) }
+  public static func add(PARTICLE_TYPE: seoParticleType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PARTICLE_TYPE.rawValue, def: 0, at: VTOFFSET.PARTICLE_TYPE.p) }
   public static func add(SEN_ENERGY_LEVEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEN_ENERGY_LEVEL, at: VTOFFSET.SEN_ENERGY_LEVEL.p) }
   public static func add(OB_SET_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_SET_ID, at: VTOFFSET.OB_SET_ID.p) }
-  public static func add(PARTICLE_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PARTICLE_TYPE, at: VTOFFSET.PARTICLE_TYPE.p) }
   public static func add(OB_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_TIME, at: VTOFFSET.OB_TIME.p) }
-  public static func addVectorOf(SEO_LIST: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SEO_LIST, at: VTOFFSET.SEO_LIST.p) }
+  public static func addVectorOf(VALUES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: VALUES, at: VTOFFSET.VALUES.p) }
+  public static func addVectorOf(UNCERTAINTIES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNCERTAINTIES, at: VTOFFSET.UNCERTAINTIES.p) }
+  public static func add(UNITS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: UNITS, at: VTOFFSET.UNITS.p) }
   public static func add(QUALITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: QUALITY, at: VTOFFSET.QUALITY.p) }
   public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
   public static func add(DESCRIPTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTOR, at: VTOFFSET.DESCRIPTOR.p) }
@@ -162,15 +259,15 @@ public struct SEO: FlatBufferObject, Verifiable {
     MSG_TYPEOffset MSG_TYPE: Offset = Offset(),
     GEN_SYSTEMOffset GEN_SYSTEM: Offset = Offset(),
     EXTERNAL_IDOffset EXTERNAL_ID: Offset = Offset(),
-    DATA_TYPEOffset DATA_TYPE: Offset = Offset(),
+    DATA_TYPE: seoDataType = .particleCount,
     GEN_TIMEOffset GEN_TIME: Offset = Offset(),
     FORECAST: Bool = false,
     DERIVED: Bool = false,
-    SAT_NO: Int32 = 0,
+    SAT_NO: UInt32 = 0,
     ORIG_OBJECT_IDOffset ORIG_OBJECT_ID: Offset = Offset(),
     ID_SENSOROffset ID_SENSOR: Offset = Offset(),
     ORIG_SENSOR_IDOffset ORIG_SENSOR_ID: Offset = Offset(),
-    OBSERVATORY_TYPEOffset OBSERVATORY_TYPE: Offset = Offset(),
+    OBSERVATORY_TYPE: seoObservatoryType = .ground,
     OBSERVATORY_NAMEOffset OBSERVATORY_NAME: Offset = Offset(),
     OBSERVATORY_NOTESOffset OBSERVATORY_NOTES: Offset = Offset(),
     INSTRUMENT_TYPEOffset INSTRUMENT_TYPE: Offset = Offset(),
@@ -181,11 +278,13 @@ public struct SEO: FlatBufferObject, Verifiable {
     SEN_POSVectorOffset SEN_POS: Offset = Offset(),
     SEN_VELVectorOffset SEN_VEL: Offset = Offset(),
     MEAS_TYPEOffset MEAS_TYPE: Offset = Offset(),
+    PARTICLE_TYPE: seoParticleType = .proton,
     SEN_ENERGY_LEVELOffset SEN_ENERGY_LEVEL: Offset = Offset(),
     OB_SET_IDOffset OB_SET_ID: Offset = Offset(),
-    PARTICLE_TYPEOffset PARTICLE_TYPE: Offset = Offset(),
     OB_TIMEOffset OB_TIME: Offset = Offset(),
-    SEO_LISTVectorOffset SEO_LIST: Offset = Offset(),
+    VALUESVectorOffset VALUES: Offset = Offset(),
+    UNCERTAINTIESVectorOffset UNCERTAINTIES: Offset = Offset(),
+    UNITSOffset UNITS: Offset = Offset(),
     QUALITYOffset QUALITY: Offset = Offset(),
     DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
     DESCRIPTOROffset DESCRIPTOR: Offset = Offset(),
@@ -216,11 +315,13 @@ public struct SEO: FlatBufferObject, Verifiable {
     SEO.addVectorOf(SEN_POS: SEN_POS, &fbb)
     SEO.addVectorOf(SEN_VEL: SEN_VEL, &fbb)
     SEO.add(MEAS_TYPE: MEAS_TYPE, &fbb)
+    SEO.add(PARTICLE_TYPE: PARTICLE_TYPE, &fbb)
     SEO.add(SEN_ENERGY_LEVEL: SEN_ENERGY_LEVEL, &fbb)
     SEO.add(OB_SET_ID: OB_SET_ID, &fbb)
-    SEO.add(PARTICLE_TYPE: PARTICLE_TYPE, &fbb)
     SEO.add(OB_TIME: OB_TIME, &fbb)
-    SEO.addVectorOf(SEO_LIST: SEO_LIST, &fbb)
+    SEO.addVectorOf(VALUES: VALUES, &fbb)
+    SEO.addVectorOf(UNCERTAINTIES: UNCERTAINTIES, &fbb)
+    SEO.add(UNITS: UNITS, &fbb)
     SEO.add(QUALITY: QUALITY, &fbb)
     SEO.add(DESCRIPTION: DESCRIPTION, &fbb)
     SEO.add(DESCRIPTOR: DESCRIPTOR, &fbb)
@@ -235,15 +336,15 @@ public struct SEO: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.MSG_TYPE.p, fieldName: "MSG_TYPE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.GEN_SYSTEM.p, fieldName: "GEN_SYSTEM", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.EXTERNAL_ID.p, fieldName: "EXTERNAL_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.DATA_TYPE.p, fieldName: "DATA_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.DATA_TYPE.p, fieldName: "DATA_TYPE", required: false, type: seoDataType.self)
     try _v.visit(field: VTOFFSET.GEN_TIME.p, fieldName: "GEN_TIME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.FORECAST.p, fieldName: "FORECAST", required: false, type: Bool.self)
     try _v.visit(field: VTOFFSET.DERIVED.p, fieldName: "DERIVED", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.SAT_NO.p, fieldName: "SAT_NO", required: false, type: Int32.self)
+    try _v.visit(field: VTOFFSET.SAT_NO.p, fieldName: "SAT_NO", required: false, type: UInt32.self)
     try _v.visit(field: VTOFFSET.ORIG_OBJECT_ID.p, fieldName: "ORIG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ID_SENSOR.p, fieldName: "ID_SENSOR", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ORIG_SENSOR_ID.p, fieldName: "ORIG_SENSOR_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.OBSERVATORY_TYPE.p, fieldName: "OBSERVATORY_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.OBSERVATORY_TYPE.p, fieldName: "OBSERVATORY_TYPE", required: false, type: seoObservatoryType.self)
     try _v.visit(field: VTOFFSET.OBSERVATORY_NAME.p, fieldName: "OBSERVATORY_NAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.OBSERVATORY_NOTES.p, fieldName: "OBSERVATORY_NOTES", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.INSTRUMENT_TYPE.p, fieldName: "INSTRUMENT_TYPE", required: false, type: ForwardOffset<String>.self)
@@ -251,14 +352,16 @@ public struct SEO: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.LON.p, fieldName: "LON", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.ALT.p, fieldName: "ALT", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.SEN_REFERENCE_FRAME.p, fieldName: "SEN_REFERENCE_FRAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SEN_POS.p, fieldName: "SEN_POS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.SEN_VEL.p, fieldName: "SEN_VEL", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VTOFFSET.SEN_POS.p, fieldName: "SEN_POS", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.SEN_VEL.p, fieldName: "SEN_VEL", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
     try _v.visit(field: VTOFFSET.MEAS_TYPE.p, fieldName: "MEAS_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.PARTICLE_TYPE.p, fieldName: "PARTICLE_TYPE", required: false, type: seoParticleType.self)
     try _v.visit(field: VTOFFSET.SEN_ENERGY_LEVEL.p, fieldName: "SEN_ENERGY_LEVEL", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.OB_SET_ID.p, fieldName: "OB_SET_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.PARTICLE_TYPE.p, fieldName: "PARTICLE_TYPE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.OB_TIME.p, fieldName: "OB_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SEO_LIST.p, fieldName: "SEO_LIST", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VTOFFSET.VALUES.p, fieldName: "VALUES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.UNCERTAINTIES.p, fieldName: "UNCERTAINTIES", required: false, type: ForwardOffset<Vector<Double, Double>>.self)
+    try _v.visit(field: VTOFFSET.UNITS.p, fieldName: "UNITS", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.QUALITY.p, fieldName: "QUALITY", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.DESCRIPTION.p, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.DESCRIPTOR.p, fieldName: "DESCRIPTOR", required: false, type: ForwardOffset<String>.self)

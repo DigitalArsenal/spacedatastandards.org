@@ -3,3 +3,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export { OOE, OOET } from './OOE.js';
+export { eventCategory } from './eventCategory.js';
+export { eventResult } from './eventResult.js';

@@ -5,7 +5,59 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-///  Difference of Arrival
+class DoaCollectionMode {
+  final int value;
+  const DoaCollectionMode._(this.value);
+
+  factory DoaCollectionMode.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum DoaCollectionMode');
+    }
+    return result;
+  }
+
+  static DoaCollectionMode? _createOrNull(int? value) => 
+      value == null ? null : DoaCollectionMode.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 5;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const DoaCollectionMode TDOA = DoaCollectionMode._(0);
+  static const DoaCollectionMode FDOA = DoaCollectionMode._(1);
+  static const DoaCollectionMode TDOA_FDOA = DoaCollectionMode._(2);
+  static const DoaCollectionMode AOA = DoaCollectionMode._(3);
+  static const DoaCollectionMode COMBINED = DoaCollectionMode._(4);
+  static const DoaCollectionMode UNKNOWN = DoaCollectionMode._(5);
+  static const Map<int, DoaCollectionMode> values = {
+    0: TDOA,
+    1: FDOA,
+    2: TDOA_FDOA,
+    3: AOA,
+    4: COMBINED,
+    5: UNKNOWN};
+
+  static const fb.Reader<DoaCollectionMode> reader = _DoaCollectionModeReader();
+
+  @override
+  String toString() {
+    return 'DoaCollectionMode{value: $value}';
+  }
+}
+
+class _DoaCollectionModeReader extends fb.Reader<DoaCollectionMode> {
+  const _DoaCollectionModeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  DoaCollectionMode read(fb.BufferContext bc, int offset) =>
+      DoaCollectionMode.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Difference of Arrival Geolocation
 class DOA {
   DOA._(this._bc, this._bcOffset);
   factory DOA(List<int> bytes) {
@@ -18,45 +70,80 @@ class DOA {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Observation time (ISO 8601)
   String? get OB_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get ID_SENSOR1 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get ID_SENSOR2 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  int get SAT_NO => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 12, 0);
-  String? get TASK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get ORIG_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  String? get ORIG_SENSOR_ID1 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  String? get ORIG_SENSOR_ID2 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  bool get UCT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 22, false);
-  double get SENSOR1_DELAY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
-  double get SENSOR2_DELAY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
-  double get SENLAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
-  double get SENLON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
-  double get SENALT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
-  double get SEN2LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
-  double get SEN2LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
-  double get SEN2ALT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
-  double get FREQUENCY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
-  double get BANDWIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
-  double get DELTA_RANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
-  double get DELTA_RANGE_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
-  double get DELTA_RANGE_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
-  double get DELTA_RANGE_RATE_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
-  double get SNR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
-  double get TDOA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
-  double get TDOA_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, 0.0);
-  double get FDOA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
-  double get FDOA_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 60, 0.0);
-  String? get COLLECTION_MODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 62);
-  String? get RAW_FILE_URI => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 64);
-  List<String>? get TAGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 66);
-  String? get ON_ORBIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 68);
+  ///  Satellite catalog number
+  int get SAT_NO => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  ///  International designator
+  String? get ORIG_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  On-orbit reference
+  String? get ON_ORBIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  True if uncorrelated target
+  bool get UCT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 14, false);
+  ///  Task identifier
+  String? get TASK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Transaction identifier
+  String? get TRANSACTION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Collection mode
+  DoaCollectionMode get COLLECTION_MODE => DoaCollectionMode.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 0));
+  ///  Sensor 1 identifier
+  String? get ID_SENSOR1 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Sensor 1 original identifier
+  String? get ORIG_SENSOR_ID1 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Sensor 1 latitude (degrees)
+  double get SENLAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  ///  Sensor 1 longitude (degrees)
+  double get SENLON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  ///  Sensor 1 altitude (km)
+  double get SENALT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  ///  Sensor 1 processing delay (seconds)
+  double get SENSOR1_DELAY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  ///  Sensor 2 identifier
+  String? get ID_SENSOR2 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  ///  Sensor 2 original identifier
+  String? get ORIG_SENSOR_ID2 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  ///  Sensor 2 latitude (degrees)
+  double get SEN2LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  ///  Sensor 2 longitude (degrees)
+  double get SEN2LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  ///  Sensor 2 altitude (km)
+  double get SEN2ALT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  ///  Sensor 2 processing delay (seconds)
+  double get SENSOR2_DELAY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  ///  Measured frequency (MHz)
+  double get FREQUENCY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
+  ///  Measurement bandwidth (MHz)
+  double get BANDWIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
+  ///  Signal-to-noise ratio (dB)
+  double get SNR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
+  ///  Differential range (km)
+  double get DELTA_RANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
+  ///  Differential range uncertainty (km, 1-sigma)
+  double get DELTA_RANGE_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
+  ///  Differential range rate (km/s)
+  double get DELTA_RANGE_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, 0.0);
+  ///  Differential range rate uncertainty (km/s, 1-sigma)
+  double get DELTA_RANGE_RATE_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
+  ///  Time difference of arrival (seconds)
+  double get TDOA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 60, 0.0);
+  ///  TDOA uncertainty (seconds, 1-sigma)
+  double get TDOA_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
+  ///  Frequency difference of arrival (Hz)
+  double get FDOA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
+  ///  FDOA uncertainty (Hz, 1-sigma)
+  double get FDOA_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, 0.0);
+  ///  Reference to raw data file
+  String? get RAW_FILE_URI => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 68);
+  ///  Event descriptor
   String? get DESCRIPTOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 70);
-  String? get TRANSACTION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 72);
+  ///  Associated tags
+  List<String>? get TAGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 72);
 
   @override
   String toString() {
-    return 'DOA{ID: ${ID}, OB_TIME: ${OB_TIME}, ID_SENSOR1: ${ID_SENSOR1}, ID_SENSOR2: ${ID_SENSOR2}, SAT_NO: ${SAT_NO}, TASK_ID: ${TASK_ID}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, ORIG_SENSOR_ID1: ${ORIG_SENSOR_ID1}, ORIG_SENSOR_ID2: ${ORIG_SENSOR_ID2}, UCT: ${UCT}, SENSOR1_DELAY: ${SENSOR1_DELAY}, SENSOR2_DELAY: ${SENSOR2_DELAY}, SENLAT: ${SENLAT}, SENLON: ${SENLON}, SENALT: ${SENALT}, SEN2LAT: ${SEN2LAT}, SEN2LON: ${SEN2LON}, SEN2ALT: ${SEN2ALT}, FREQUENCY: ${FREQUENCY}, BANDWIDTH: ${BANDWIDTH}, DELTA_RANGE: ${DELTA_RANGE}, DELTA_RANGE_UNC: ${DELTA_RANGE_UNC}, DELTA_RANGE_RATE: ${DELTA_RANGE_RATE}, DELTA_RANGE_RATE_UNC: ${DELTA_RANGE_RATE_UNC}, SNR: ${SNR}, TDOA: ${TDOA}, TDOA_UNC: ${TDOA_UNC}, FDOA: ${FDOA}, FDOA_UNC: ${FDOA_UNC}, COLLECTION_MODE: ${COLLECTION_MODE}, RAW_FILE_URI: ${RAW_FILE_URI}, TAGS: ${TAGS}, ON_ORBIT: ${ON_ORBIT}, DESCRIPTOR: ${DESCRIPTOR}, TRANSACTION_ID: ${TRANSACTION_ID}}';
+    return 'DOA{ID: ${ID}, OB_TIME: ${OB_TIME}, SAT_NO: ${SAT_NO}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, ON_ORBIT: ${ON_ORBIT}, UCT: ${UCT}, TASK_ID: ${TASK_ID}, TRANSACTION_ID: ${TRANSACTION_ID}, COLLECTION_MODE: ${COLLECTION_MODE}, ID_SENSOR1: ${ID_SENSOR1}, ORIG_SENSOR_ID1: ${ORIG_SENSOR_ID1}, SENLAT: ${SENLAT}, SENLON: ${SENLON}, SENALT: ${SENALT}, SENSOR1_DELAY: ${SENSOR1_DELAY}, ID_SENSOR2: ${ID_SENSOR2}, ORIG_SENSOR_ID2: ${ORIG_SENSOR_ID2}, SEN2LAT: ${SEN2LAT}, SEN2LON: ${SEN2LON}, SEN2ALT: ${SEN2ALT}, SENSOR2_DELAY: ${SENSOR2_DELAY}, FREQUENCY: ${FREQUENCY}, BANDWIDTH: ${BANDWIDTH}, SNR: ${SNR}, DELTA_RANGE: ${DELTA_RANGE}, DELTA_RANGE_UNC: ${DELTA_RANGE_UNC}, DELTA_RANGE_RATE: ${DELTA_RANGE_RATE}, DELTA_RANGE_RATE_UNC: ${DELTA_RANGE_RATE_UNC}, TDOA: ${TDOA}, TDOA_UNC: ${TDOA_UNC}, FDOA: ${FDOA}, FDOA_UNC: ${FDOA_UNC}, RAW_FILE_URI: ${RAW_FILE_URI}, DESCRIPTOR: ${DESCRIPTOR}, TAGS: ${TAGS}}';
   }
 }
 
@@ -85,127 +172,127 @@ class DOABuilder {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addIdSensor1Offset(int? offset) {
-    fbBuilder.addOffset(2, offset);
-    return fbBuilder.offset;
-  }
-  int addIdSensor2Offset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
   int addSatNo(int? SAT_NO) {
-    fbBuilder.addInt32(4, SAT_NO);
-    return fbBuilder.offset;
-  }
-  int addTaskIdOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
+    fbBuilder.addUint32(2, SAT_NO);
     return fbBuilder.offset;
   }
   int addOrigObjectIdOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addOrigSensorId1Offset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addOrigSensorId2Offset(int? offset) {
-    fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-  int addUct(bool? UCT) {
-    fbBuilder.addBool(9, UCT);
-    return fbBuilder.offset;
-  }
-  int addSensor1Delay(double? SENSOR1_DELAY) {
-    fbBuilder.addFloat64(10, SENSOR1_DELAY);
-    return fbBuilder.offset;
-  }
-  int addSensor2Delay(double? SENSOR2_DELAY) {
-    fbBuilder.addFloat64(11, SENSOR2_DELAY);
-    return fbBuilder.offset;
-  }
-  int addSenlat(double? SENLAT) {
-    fbBuilder.addFloat64(12, SENLAT);
-    return fbBuilder.offset;
-  }
-  int addSenlon(double? SENLON) {
-    fbBuilder.addFloat64(13, SENLON);
-    return fbBuilder.offset;
-  }
-  int addSenalt(double? SENALT) {
-    fbBuilder.addFloat64(14, SENALT);
-    return fbBuilder.offset;
-  }
-  int addSen2Lat(double? SEN2LAT) {
-    fbBuilder.addFloat64(15, SEN2LAT);
-    return fbBuilder.offset;
-  }
-  int addSen2Lon(double? SEN2LON) {
-    fbBuilder.addFloat64(16, SEN2LON);
-    return fbBuilder.offset;
-  }
-  int addSen2Alt(double? SEN2ALT) {
-    fbBuilder.addFloat64(17, SEN2ALT);
-    return fbBuilder.offset;
-  }
-  int addFrequency(double? FREQUENCY) {
-    fbBuilder.addFloat64(18, FREQUENCY);
-    return fbBuilder.offset;
-  }
-  int addBandwidth(double? BANDWIDTH) {
-    fbBuilder.addFloat64(19, BANDWIDTH);
-    return fbBuilder.offset;
-  }
-  int addDeltaRange(double? DELTA_RANGE) {
-    fbBuilder.addFloat64(20, DELTA_RANGE);
-    return fbBuilder.offset;
-  }
-  int addDeltaRangeUnc(double? DELTA_RANGE_UNC) {
-    fbBuilder.addFloat64(21, DELTA_RANGE_UNC);
-    return fbBuilder.offset;
-  }
-  int addDeltaRangeRate(double? DELTA_RANGE_RATE) {
-    fbBuilder.addFloat64(22, DELTA_RANGE_RATE);
-    return fbBuilder.offset;
-  }
-  int addDeltaRangeRateUnc(double? DELTA_RANGE_RATE_UNC) {
-    fbBuilder.addFloat64(23, DELTA_RANGE_RATE_UNC);
-    return fbBuilder.offset;
-  }
-  int addSnr(double? SNR) {
-    fbBuilder.addFloat64(24, SNR);
-    return fbBuilder.offset;
-  }
-  int addTdoa(double? TDOA) {
-    fbBuilder.addFloat64(25, TDOA);
-    return fbBuilder.offset;
-  }
-  int addTdoaUnc(double? TDOA_UNC) {
-    fbBuilder.addFloat64(26, TDOA_UNC);
-    return fbBuilder.offset;
-  }
-  int addFdoa(double? FDOA) {
-    fbBuilder.addFloat64(27, FDOA);
-    return fbBuilder.offset;
-  }
-  int addFdoaUnc(double? FDOA_UNC) {
-    fbBuilder.addFloat64(28, FDOA_UNC);
-    return fbBuilder.offset;
-  }
-  int addCollectionModeOffset(int? offset) {
-    fbBuilder.addOffset(29, offset);
-    return fbBuilder.offset;
-  }
-  int addRawFileUriOffset(int? offset) {
-    fbBuilder.addOffset(30, offset);
-    return fbBuilder.offset;
-  }
-  int addTagsOffset(int? offset) {
-    fbBuilder.addOffset(31, offset);
+    fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
   int addOnOrbitOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addUct(bool? UCT) {
+    fbBuilder.addBool(5, UCT);
+    return fbBuilder.offset;
+  }
+  int addTaskIdOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addTransactionIdOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addCollectionMode(DoaCollectionMode? COLLECTION_MODE) {
+    fbBuilder.addInt8(8, COLLECTION_MODE?.value);
+    return fbBuilder.offset;
+  }
+  int addIdSensor1Offset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addOrigSensorId1Offset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addSenlat(double? SENLAT) {
+    fbBuilder.addFloat64(11, SENLAT);
+    return fbBuilder.offset;
+  }
+  int addSenlon(double? SENLON) {
+    fbBuilder.addFloat64(12, SENLON);
+    return fbBuilder.offset;
+  }
+  int addSenalt(double? SENALT) {
+    fbBuilder.addFloat64(13, SENALT);
+    return fbBuilder.offset;
+  }
+  int addSensor1Delay(double? SENSOR1_DELAY) {
+    fbBuilder.addFloat64(14, SENSOR1_DELAY);
+    return fbBuilder.offset;
+  }
+  int addIdSensor2Offset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addOrigSensorId2Offset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addSen2Lat(double? SEN2LAT) {
+    fbBuilder.addFloat64(17, SEN2LAT);
+    return fbBuilder.offset;
+  }
+  int addSen2Lon(double? SEN2LON) {
+    fbBuilder.addFloat64(18, SEN2LON);
+    return fbBuilder.offset;
+  }
+  int addSen2Alt(double? SEN2ALT) {
+    fbBuilder.addFloat64(19, SEN2ALT);
+    return fbBuilder.offset;
+  }
+  int addSensor2Delay(double? SENSOR2_DELAY) {
+    fbBuilder.addFloat64(20, SENSOR2_DELAY);
+    return fbBuilder.offset;
+  }
+  int addFrequency(double? FREQUENCY) {
+    fbBuilder.addFloat64(21, FREQUENCY);
+    return fbBuilder.offset;
+  }
+  int addBandwidth(double? BANDWIDTH) {
+    fbBuilder.addFloat64(22, BANDWIDTH);
+    return fbBuilder.offset;
+  }
+  int addSnr(double? SNR) {
+    fbBuilder.addFloat64(23, SNR);
+    return fbBuilder.offset;
+  }
+  int addDeltaRange(double? DELTA_RANGE) {
+    fbBuilder.addFloat64(24, DELTA_RANGE);
+    return fbBuilder.offset;
+  }
+  int addDeltaRangeUnc(double? DELTA_RANGE_UNC) {
+    fbBuilder.addFloat64(25, DELTA_RANGE_UNC);
+    return fbBuilder.offset;
+  }
+  int addDeltaRangeRate(double? DELTA_RANGE_RATE) {
+    fbBuilder.addFloat64(26, DELTA_RANGE_RATE);
+    return fbBuilder.offset;
+  }
+  int addDeltaRangeRateUnc(double? DELTA_RANGE_RATE_UNC) {
+    fbBuilder.addFloat64(27, DELTA_RANGE_RATE_UNC);
+    return fbBuilder.offset;
+  }
+  int addTdoa(double? TDOA) {
+    fbBuilder.addFloat64(28, TDOA);
+    return fbBuilder.offset;
+  }
+  int addTdoaUnc(double? TDOA_UNC) {
+    fbBuilder.addFloat64(29, TDOA_UNC);
+    return fbBuilder.offset;
+  }
+  int addFdoa(double? FDOA) {
+    fbBuilder.addFloat64(30, FDOA);
+    return fbBuilder.offset;
+  }
+  int addFdoaUnc(double? FDOA_UNC) {
+    fbBuilder.addFloat64(31, FDOA_UNC);
+    return fbBuilder.offset;
+  }
+  int addRawFileUriOffset(int? offset) {
     fbBuilder.addOffset(32, offset);
     return fbBuilder.offset;
   }
@@ -213,7 +300,7 @@ class DOABuilder {
     fbBuilder.addOffset(33, offset);
     return fbBuilder.offset;
   }
-  int addTransactionIdOffset(int? offset) {
+  int addTagsOffset(int? offset) {
     fbBuilder.addOffset(34, offset);
     return fbBuilder.offset;
   }
@@ -226,112 +313,112 @@ class DOABuilder {
 class DOAObjectBuilder extends fb.ObjectBuilder {
   final String? _ID;
   final String? _OB_TIME;
-  final String? _ID_SENSOR1;
-  final String? _ID_SENSOR2;
   final int? _SAT_NO;
-  final String? _TASK_ID;
   final String? _ORIG_OBJECT_ID;
-  final String? _ORIG_SENSOR_ID1;
-  final String? _ORIG_SENSOR_ID2;
+  final String? _ON_ORBIT;
   final bool? _UCT;
-  final double? _SENSOR1_DELAY;
-  final double? _SENSOR2_DELAY;
+  final String? _TASK_ID;
+  final String? _TRANSACTION_ID;
+  final DoaCollectionMode? _COLLECTION_MODE;
+  final String? _ID_SENSOR1;
+  final String? _ORIG_SENSOR_ID1;
   final double? _SENLAT;
   final double? _SENLON;
   final double? _SENALT;
+  final double? _SENSOR1_DELAY;
+  final String? _ID_SENSOR2;
+  final String? _ORIG_SENSOR_ID2;
   final double? _SEN2LAT;
   final double? _SEN2LON;
   final double? _SEN2ALT;
+  final double? _SENSOR2_DELAY;
   final double? _FREQUENCY;
   final double? _BANDWIDTH;
+  final double? _SNR;
   final double? _DELTA_RANGE;
   final double? _DELTA_RANGE_UNC;
   final double? _DELTA_RANGE_RATE;
   final double? _DELTA_RANGE_RATE_UNC;
-  final double? _SNR;
   final double? _TDOA;
   final double? _TDOA_UNC;
   final double? _FDOA;
   final double? _FDOA_UNC;
-  final String? _COLLECTION_MODE;
   final String? _RAW_FILE_URI;
-  final List<String>? _TAGS;
-  final String? _ON_ORBIT;
   final String? _DESCRIPTOR;
-  final String? _TRANSACTION_ID;
+  final List<String>? _TAGS;
 
   DOAObjectBuilder({
     String? ID,
     String? OB_TIME,
-    String? ID_SENSOR1,
-    String? ID_SENSOR2,
     int? SAT_NO,
-    String? TASK_ID,
     String? ORIG_OBJECT_ID,
-    String? ORIG_SENSOR_ID1,
-    String? ORIG_SENSOR_ID2,
+    String? ON_ORBIT,
     bool? UCT,
-    double? SENSOR1_DELAY,
-    double? SENSOR2_DELAY,
+    String? TASK_ID,
+    String? TRANSACTION_ID,
+    DoaCollectionMode? COLLECTION_MODE,
+    String? ID_SENSOR1,
+    String? ORIG_SENSOR_ID1,
     double? SENLAT,
     double? SENLON,
     double? SENALT,
+    double? SENSOR1_DELAY,
+    String? ID_SENSOR2,
+    String? ORIG_SENSOR_ID2,
     double? SEN2LAT,
     double? SEN2LON,
     double? SEN2ALT,
+    double? SENSOR2_DELAY,
     double? FREQUENCY,
     double? BANDWIDTH,
+    double? SNR,
     double? DELTA_RANGE,
     double? DELTA_RANGE_UNC,
     double? DELTA_RANGE_RATE,
     double? DELTA_RANGE_RATE_UNC,
-    double? SNR,
     double? TDOA,
     double? TDOA_UNC,
     double? FDOA,
     double? FDOA_UNC,
-    String? COLLECTION_MODE,
     String? RAW_FILE_URI,
-    List<String>? TAGS,
-    String? ON_ORBIT,
     String? DESCRIPTOR,
-    String? TRANSACTION_ID,
+    List<String>? TAGS,
   })
       : _ID = ID,
         _OB_TIME = OB_TIME,
-        _ID_SENSOR1 = ID_SENSOR1,
-        _ID_SENSOR2 = ID_SENSOR2,
         _SAT_NO = SAT_NO,
-        _TASK_ID = TASK_ID,
         _ORIG_OBJECT_ID = ORIG_OBJECT_ID,
-        _ORIG_SENSOR_ID1 = ORIG_SENSOR_ID1,
-        _ORIG_SENSOR_ID2 = ORIG_SENSOR_ID2,
+        _ON_ORBIT = ON_ORBIT,
         _UCT = UCT,
-        _SENSOR1_DELAY = SENSOR1_DELAY,
-        _SENSOR2_DELAY = SENSOR2_DELAY,
+        _TASK_ID = TASK_ID,
+        _TRANSACTION_ID = TRANSACTION_ID,
+        _COLLECTION_MODE = COLLECTION_MODE,
+        _ID_SENSOR1 = ID_SENSOR1,
+        _ORIG_SENSOR_ID1 = ORIG_SENSOR_ID1,
         _SENLAT = SENLAT,
         _SENLON = SENLON,
         _SENALT = SENALT,
+        _SENSOR1_DELAY = SENSOR1_DELAY,
+        _ID_SENSOR2 = ID_SENSOR2,
+        _ORIG_SENSOR_ID2 = ORIG_SENSOR_ID2,
         _SEN2LAT = SEN2LAT,
         _SEN2LON = SEN2LON,
         _SEN2ALT = SEN2ALT,
+        _SENSOR2_DELAY = SENSOR2_DELAY,
         _FREQUENCY = FREQUENCY,
         _BANDWIDTH = BANDWIDTH,
+        _SNR = SNR,
         _DELTA_RANGE = DELTA_RANGE,
         _DELTA_RANGE_UNC = DELTA_RANGE_UNC,
         _DELTA_RANGE_RATE = DELTA_RANGE_RATE,
         _DELTA_RANGE_RATE_UNC = DELTA_RANGE_RATE_UNC,
-        _SNR = SNR,
         _TDOA = TDOA,
         _TDOA_UNC = TDOA_UNC,
         _FDOA = FDOA,
         _FDOA_UNC = FDOA_UNC,
-        _COLLECTION_MODE = COLLECTION_MODE,
         _RAW_FILE_URI = RAW_FILE_URI,
-        _TAGS = TAGS,
-        _ON_ORBIT = ON_ORBIT,
         _DESCRIPTOR = DESCRIPTOR,
-        _TRANSACTION_ID = TRANSACTION_ID;
+        _TAGS = TAGS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -340,66 +427,64 @@ class DOAObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ID!);
     final int? OB_TIMEOffset = _OB_TIME == null ? null
         : fbBuilder.writeString(_OB_TIME!);
-    final int? ID_SENSOR1Offset = _ID_SENSOR1 == null ? null
-        : fbBuilder.writeString(_ID_SENSOR1!);
-    final int? ID_SENSOR2Offset = _ID_SENSOR2 == null ? null
-        : fbBuilder.writeString(_ID_SENSOR2!);
-    final int? TASK_IDOffset = _TASK_ID == null ? null
-        : fbBuilder.writeString(_TASK_ID!);
     final int? ORIG_OBJECT_IDOffset = _ORIG_OBJECT_ID == null ? null
         : fbBuilder.writeString(_ORIG_OBJECT_ID!);
-    final int? ORIG_SENSOR_ID1Offset = _ORIG_SENSOR_ID1 == null ? null
-        : fbBuilder.writeString(_ORIG_SENSOR_ID1!);
-    final int? ORIG_SENSOR_ID2Offset = _ORIG_SENSOR_ID2 == null ? null
-        : fbBuilder.writeString(_ORIG_SENSOR_ID2!);
-    final int? COLLECTION_MODEOffset = _COLLECTION_MODE == null ? null
-        : fbBuilder.writeString(_COLLECTION_MODE!);
-    final int? RAW_FILE_URIOffset = _RAW_FILE_URI == null ? null
-        : fbBuilder.writeString(_RAW_FILE_URI!);
-    final int? TAGSOffset = _TAGS == null ? null
-        : fbBuilder.writeList(_TAGS!.map(fbBuilder.writeString).toList());
     final int? ON_ORBITOffset = _ON_ORBIT == null ? null
         : fbBuilder.writeString(_ON_ORBIT!);
-    final int? DESCRIPTOROffset = _DESCRIPTOR == null ? null
-        : fbBuilder.writeString(_DESCRIPTOR!);
+    final int? TASK_IDOffset = _TASK_ID == null ? null
+        : fbBuilder.writeString(_TASK_ID!);
     final int? TRANSACTION_IDOffset = _TRANSACTION_ID == null ? null
         : fbBuilder.writeString(_TRANSACTION_ID!);
+    final int? ID_SENSOR1Offset = _ID_SENSOR1 == null ? null
+        : fbBuilder.writeString(_ID_SENSOR1!);
+    final int? ORIG_SENSOR_ID1Offset = _ORIG_SENSOR_ID1 == null ? null
+        : fbBuilder.writeString(_ORIG_SENSOR_ID1!);
+    final int? ID_SENSOR2Offset = _ID_SENSOR2 == null ? null
+        : fbBuilder.writeString(_ID_SENSOR2!);
+    final int? ORIG_SENSOR_ID2Offset = _ORIG_SENSOR_ID2 == null ? null
+        : fbBuilder.writeString(_ORIG_SENSOR_ID2!);
+    final int? RAW_FILE_URIOffset = _RAW_FILE_URI == null ? null
+        : fbBuilder.writeString(_RAW_FILE_URI!);
+    final int? DESCRIPTOROffset = _DESCRIPTOR == null ? null
+        : fbBuilder.writeString(_DESCRIPTOR!);
+    final int? TAGSOffset = _TAGS == null ? null
+        : fbBuilder.writeList(_TAGS!.map(fbBuilder.writeString).toList());
     fbBuilder.startTable(35);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, OB_TIMEOffset);
-    fbBuilder.addOffset(2, ID_SENSOR1Offset);
-    fbBuilder.addOffset(3, ID_SENSOR2Offset);
-    fbBuilder.addInt32(4, _SAT_NO);
-    fbBuilder.addOffset(5, TASK_IDOffset);
-    fbBuilder.addOffset(6, ORIG_OBJECT_IDOffset);
-    fbBuilder.addOffset(7, ORIG_SENSOR_ID1Offset);
-    fbBuilder.addOffset(8, ORIG_SENSOR_ID2Offset);
-    fbBuilder.addBool(9, _UCT);
-    fbBuilder.addFloat64(10, _SENSOR1_DELAY);
-    fbBuilder.addFloat64(11, _SENSOR2_DELAY);
-    fbBuilder.addFloat64(12, _SENLAT);
-    fbBuilder.addFloat64(13, _SENLON);
-    fbBuilder.addFloat64(14, _SENALT);
-    fbBuilder.addFloat64(15, _SEN2LAT);
-    fbBuilder.addFloat64(16, _SEN2LON);
-    fbBuilder.addFloat64(17, _SEN2ALT);
-    fbBuilder.addFloat64(18, _FREQUENCY);
-    fbBuilder.addFloat64(19, _BANDWIDTH);
-    fbBuilder.addFloat64(20, _DELTA_RANGE);
-    fbBuilder.addFloat64(21, _DELTA_RANGE_UNC);
-    fbBuilder.addFloat64(22, _DELTA_RANGE_RATE);
-    fbBuilder.addFloat64(23, _DELTA_RANGE_RATE_UNC);
-    fbBuilder.addFloat64(24, _SNR);
-    fbBuilder.addFloat64(25, _TDOA);
-    fbBuilder.addFloat64(26, _TDOA_UNC);
-    fbBuilder.addFloat64(27, _FDOA);
-    fbBuilder.addFloat64(28, _FDOA_UNC);
-    fbBuilder.addOffset(29, COLLECTION_MODEOffset);
-    fbBuilder.addOffset(30, RAW_FILE_URIOffset);
-    fbBuilder.addOffset(31, TAGSOffset);
-    fbBuilder.addOffset(32, ON_ORBITOffset);
+    fbBuilder.addUint32(2, _SAT_NO);
+    fbBuilder.addOffset(3, ORIG_OBJECT_IDOffset);
+    fbBuilder.addOffset(4, ON_ORBITOffset);
+    fbBuilder.addBool(5, _UCT);
+    fbBuilder.addOffset(6, TASK_IDOffset);
+    fbBuilder.addOffset(7, TRANSACTION_IDOffset);
+    fbBuilder.addInt8(8, _COLLECTION_MODE?.value);
+    fbBuilder.addOffset(9, ID_SENSOR1Offset);
+    fbBuilder.addOffset(10, ORIG_SENSOR_ID1Offset);
+    fbBuilder.addFloat64(11, _SENLAT);
+    fbBuilder.addFloat64(12, _SENLON);
+    fbBuilder.addFloat64(13, _SENALT);
+    fbBuilder.addFloat64(14, _SENSOR1_DELAY);
+    fbBuilder.addOffset(15, ID_SENSOR2Offset);
+    fbBuilder.addOffset(16, ORIG_SENSOR_ID2Offset);
+    fbBuilder.addFloat64(17, _SEN2LAT);
+    fbBuilder.addFloat64(18, _SEN2LON);
+    fbBuilder.addFloat64(19, _SEN2ALT);
+    fbBuilder.addFloat64(20, _SENSOR2_DELAY);
+    fbBuilder.addFloat64(21, _FREQUENCY);
+    fbBuilder.addFloat64(22, _BANDWIDTH);
+    fbBuilder.addFloat64(23, _SNR);
+    fbBuilder.addFloat64(24, _DELTA_RANGE);
+    fbBuilder.addFloat64(25, _DELTA_RANGE_UNC);
+    fbBuilder.addFloat64(26, _DELTA_RANGE_RATE);
+    fbBuilder.addFloat64(27, _DELTA_RANGE_RATE_UNC);
+    fbBuilder.addFloat64(28, _TDOA);
+    fbBuilder.addFloat64(29, _TDOA_UNC);
+    fbBuilder.addFloat64(30, _FDOA);
+    fbBuilder.addFloat64(31, _FDOA_UNC);
+    fbBuilder.addOffset(32, RAW_FILE_URIOffset);
     fbBuilder.addOffset(33, DESCRIPTOROffset);
-    fbBuilder.addOffset(34, TRANSACTION_IDOffset);
+    fbBuilder.addOffset(34, TAGSOffset);
     return fbBuilder.endTable();
   }
 

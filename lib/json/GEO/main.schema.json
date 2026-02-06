@@ -1,60 +1,105 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "geoStationKeeping" : {
+      "type" : "string",
+      "enum": ["ACTIVE", "DRIFTING", "INCLINED", "GRAVEYARD", "REPOSITIONING", "UNKNOWN"]
+    },
+    "geoConfidence" : {
+      "type" : "string",
+      "enum": ["HIGH", "MEDIUM", "LOW", "TENTATIVE"]
+    },
+    "troughType" : {
+      "type" : "string",
+      "enum": ["EAST", "WEST", "NEITHER"]
+    },
     "GEO" : {
       "type" : "object",
       "description" : "GEO Spacecraft Status",
       "properties" : {
         "ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique identifier"
               },
         "ORIG_OBJECT_ID" : {
-                "type" : "string"
-              },
-        "SS" : {
-                "type" : "number"
-              },
-        "SC" : {
-                "type" : "number"
-              },
-        "RELATIVE_ENERGY" : {
-                "type" : "number"
-              },
-        "LONGITUDE_RATE" : {
-                "type" : "number"
-              },
-        "LONGITUDE_MIN" : {
-                "type" : "number"
-              },
-        "LONGITUDE_MAX" : {
-                "type" : "number"
-              },
-        "CONFIDENCE_LEVEL" : {
-                "type" : "string"
-              },
-        "PLANE_CHANGE_STATUS" : {
-                "type" : "string"
-              },
-        "TROUGH_TYPE" : {
-                "type" : "string"
-              },
-        "LOST_FLAG" : {
-                "type" : "boolean"
-              },
-        "SEMI_ANNUAL_CORR_FLAG" : {
-                "type" : "boolean"
-              },
-        "OBJECT_STATUS" : {
-                "type" : "string"
-              },
-        "RAW_FILE_URI" : {
-                "type" : "string"
-              },
-        "ON_ORBIT" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "International designator"
               },
         "SAT_NO" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Satellite catalog number"
+              },
+        "ON_ORBIT" : {
+                "type" : "string",
+                "description" : "On-orbit reference identifier"
+              },
+        "STATION_KEEPING" : {
+                "$ref" : "#/definitions/geoStationKeeping",
+                "description" : "Station-keeping status"
+              },
+        "SS" : {
+                "type" : "number",
+                "description" : "Subsatellite point longitude (degrees east)"
+              },
+        "SC" : {
+                "type" : "number",
+                "description" : "Longitude of ascending node (degrees)"
+              },
+        "RELATIVE_ENERGY" : {
+                "type" : "number",
+                "description" : "Relative energy (km^2/s^2)"
+              },
+        "LONGITUDE_RATE" : {
+                "type" : "number",
+                "description" : "Longitude drift rate (degrees/day)"
+              },
+        "LONGITUDE_MIN" : {
+                "type" : "number",
+                "description" : "Western longitude boundary of slot (degrees east)"
+              },
+        "LONGITUDE_MAX" : {
+                "type" : "number",
+                "description" : "Eastern longitude boundary of slot (degrees east)"
+              },
+        "CONFIDENCE" : {
+                "$ref" : "#/definitions/geoConfidence",
+                "description" : "Assessment confidence level"
+              },
+        "TROUGH" : {
+                "$ref" : "#/definitions/troughType",
+                "description" : "Trough type (east/west gravitational well)"
+              },
+        "PLANE_CHANGE_STATUS" : {
+                "type" : "string",
+                "description" : "Plane change status description"
+              },
+        "LOST_FLAG" : {
+                "type" : "boolean",
+                "description" : "True if object is lost/not tracked"
+              },
+        "SEMI_ANNUAL_CORR_FLAG" : {
+                "type" : "boolean",
+                "description" : "True if semi-annual correction applied"
+              },
+        "OBJECT_STATUS" : {
+                "type" : "string",
+                "description" : "Current operational status"
+              },
+        "INCLINATION" : {
+                "type" : "number",
+                "description" : "Inclination (degrees)"
+              },
+        "ECCENTRICITY" : {
+                "type" : "number",
+                "description" : "Eccentricity"
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Epoch of status (ISO 8601)"
+              },
+        "RAW_FILE_URI" : {
+                "type" : "string",
+                "description" : "Reference to raw data file"
               }
       },
       "additionalProperties" : false

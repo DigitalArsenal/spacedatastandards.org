@@ -1,36 +1,415 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "modulationType": {
+      "type": "string",
+      "enum": [
+        "BPSK",
+        "QPSK",
+        "OQPSK",
+        "PSK8",
+        "QAM16",
+        "QAM64",
+        "FSK",
+        "MSK",
+        "GMSK",
+        "AM",
+        "FM",
+        "PM",
+        "SPREAD_SPECTRUM",
+        "DVB_S2",
+        "DVB_S2X"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "BPSK": {
+          "value": 0
+        },
+        "QPSK": {
+          "value": 1
+        },
+        "OQPSK": {
+          "value": 2
+        },
+        "PSK8": {
+          "value": 3
+        },
+        "QAM16": {
+          "value": 4
+        },
+        "QAM64": {
+          "value": 5
+        },
+        "FSK": {
+          "value": 6
+        },
+        "MSK": {
+          "value": 7
+        },
+        "GMSK": {
+          "value": 8
+        },
+        "AM": {
+          "value": 9
+        },
+        "FM": {
+          "value": 10
+        },
+        "PM": {
+          "value": 11
+        },
+        "SPREAD_SPECTRUM": {
+          "value": 12
+        },
+        "DVB_S2": {
+          "value": 13
+        },
+        "DVB_S2X": {
+          "value": 14
+        }
+      }
+    },
+    "encryptionType": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "DES",
+        "TRIPLE_DES",
+        "AES_128",
+        "AES_256",
+        "TYPE_1",
+        "TYPE_2",
+        "CUSTOM"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "NONE": {
+          "value": 0
+        },
+        "DES": {
+          "value": 1
+        },
+        "TRIPLE_DES": {
+          "value": 2
+        },
+        "AES_128": {
+          "value": 3
+        },
+        "AES_256": {
+          "value": 4
+        },
+        "TYPE_1": {
+          "value": 5
+        },
+        "TYPE_2": {
+          "value": 6
+        },
+        "CUSTOM": {
+          "value": 7
+        }
+      }
+    },
+    "commsChannel": {
+      "type": "object",
+      "description": "Transponder Channel",
+      "properties": {
+        "CHANNEL_ID": {
+          "type": "string",
+          "description": "Channel identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Channel name",
+          "x-flatbuffer-type": "string"
+        },
+        "UPLINK_FREQ": {
+          "type": "number",
+          "description": "Uplink frequency in MHz",
+          "x-flatbuffer-type": "double"
+        },
+        "DOWNLINK_FREQ": {
+          "type": "number",
+          "description": "Downlink frequency in MHz",
+          "x-flatbuffer-type": "double"
+        },
+        "BANDWIDTH": {
+          "type": "number",
+          "description": "Channel bandwidth in MHz",
+          "x-flatbuffer-type": "double"
+        },
+        "MODULATION": {
+          "$ref": "#/definitions/modulationType",
+          "description": "Modulation type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "BPSK": {
+              "value": 0
+            },
+            "QPSK": {
+              "value": 1
+            },
+            "OQPSK": {
+              "value": 2
+            },
+            "PSK8": {
+              "value": 3
+            },
+            "QAM16": {
+              "value": 4
+            },
+            "QAM64": {
+              "value": 5
+            },
+            "FSK": {
+              "value": 6
+            },
+            "MSK": {
+              "value": 7
+            },
+            "GMSK": {
+              "value": 8
+            },
+            "AM": {
+              "value": 9
+            },
+            "FM": {
+              "value": 10
+            },
+            "PM": {
+              "value": 11
+            },
+            "SPREAD_SPECTRUM": {
+              "value": 12
+            },
+            "DVB_S2": {
+              "value": 13
+            },
+            "DVB_S2X": {
+              "value": 14
+            }
+          }
+        },
+        "DATA_RATE": {
+          "type": "number",
+          "description": "Data rate in Mbps",
+          "x-flatbuffer-type": "double"
+        },
+        "ENCRYPTION": {
+          "$ref": "#/definitions/encryptionType",
+          "description": "Encryption method",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "NONE": {
+              "value": 0
+            },
+            "DES": {
+              "value": 1
+            },
+            "TRIPLE_DES": {
+              "value": 2
+            },
+            "AES_128": {
+              "value": 3
+            },
+            "AES_256": {
+              "value": 4
+            },
+            "TYPE_1": {
+              "value": 5
+            },
+            "TYPE_2": {
+              "value": 6
+            },
+            "CUSTOM": {
+              "value": 7
+            }
+          }
+        },
+        "FEC_RATE": {
+          "type": "number",
+          "description": "Forward error correction coding rate (e.g., 0.5, 0.75)",
+          "x-flatbuffer-type": "double"
+        },
+        "POWER": {
+          "type": "number",
+          "description": "Channel power in dBW",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "commsTransponder": {
+      "type": "object",
+      "description": "Transponder",
+      "properties": {
+        "TRANSPONDER_ID": {
+          "type": "string",
+          "description": "Transponder identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Transponder name",
+          "x-flatbuffer-type": "string"
+        },
+        "TYPE": {
+          "type": "string",
+          "description": "Transponder type (e.g., BENT_PIPE, REGENERATIVE, OBP)",
+          "x-flatbuffer-type": "string"
+        },
+        "BAND": {
+          "type": "string",
+          "description": "Operating band (e.g., C, Ku, Ka, L, S, X)",
+          "x-flatbuffer-type": "string"
+        },
+        "UPLINK_FREQ_MIN": {
+          "type": "number",
+          "description": "Uplink frequency range minimum in MHz",
+          "x-flatbuffer-type": "double"
+        },
+        "UPLINK_FREQ_MAX": {
+          "type": "number",
+          "description": "Uplink frequency range maximum in MHz",
+          "x-flatbuffer-type": "double"
+        },
+        "DOWNLINK_FREQ_MIN": {
+          "type": "number",
+          "description": "Downlink frequency range minimum in MHz",
+          "x-flatbuffer-type": "double"
+        },
+        "DOWNLINK_FREQ_MAX": {
+          "type": "number",
+          "description": "Downlink frequency range maximum in MHz",
+          "x-flatbuffer-type": "double"
+        },
+        "EIRP": {
+          "type": "number",
+          "description": "Saturated EIRP in dBW",
+          "x-flatbuffer-type": "double"
+        },
+        "G_OVER_T": {
+          "type": "number",
+          "description": "G/T in dB/K",
+          "x-flatbuffer-type": "double"
+        },
+        "BANDWIDTH": {
+          "type": "number",
+          "description": "Total bandwidth in MHz",
+          "x-flatbuffer-type": "double"
+        },
+        "NUM_CHANNELS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of channels",
+          "x-flatbuffer-type": "uint"
+        },
+        "CHANNELS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/commsChannel"
+          },
+          "description": "Channels on this transponder",
+          "x-flatbuffer-type": "[commsChannel]"
+        },
+        "POLARIZATION": {
+          "type": "string",
+          "description": "Polarization (e.g., RHCP, LHCP, LINEAR_H, LINEAR_V)",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
     "CMS": {
       "type": "object",
       "description": "Communications Payload",
       "properties": {
         "ID": {
           "type": "string",
+          "description": "Unique identifier",
           "x-flatbuffer-type": "string"
         },
         "ID_ENTITY": {
           "type": "string",
+          "description": "Reference to parent entity",
           "x-flatbuffer-type": "string"
         },
         "NAME": {
           "type": "string",
+          "description": "Communications payload name",
           "x-flatbuffer-type": "string"
         },
         "DESCRIPTION": {
           "type": "string",
+          "description": "Description",
           "x-flatbuffer-type": "string"
         },
         "ENTITY": {
           "type": "string",
+          "description": "Parent entity designator",
           "x-flatbuffer-type": "string"
+        },
+        "SAT_NO": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Satellite number",
+          "x-flatbuffer-type": "uint32"
+        },
+        "NUM_TRANSPONDERS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of transponders",
+          "x-flatbuffer-type": "uint"
         },
         "TRANSPONDERS": {
           "type": "array",
           "items": {
-            "type": "string"
+            "$ref": "#/definitions/commsTransponder"
           },
-          "x-flatbuffer-type": "[string]"
+          "description": "Transponders",
+          "x-flatbuffer-type": "[commsTransponder]"
+        },
+        "TOTAL_POWER": {
+          "type": "number",
+          "description": "Total payload power in Watts",
+          "x-flatbuffer-type": "double"
+        },
+        "TOTAL_MASS": {
+          "type": "number",
+          "description": "Total payload mass in kg",
+          "x-flatbuffer-type": "double"
+        },
+        "TOTAL_BANDWIDTH": {
+          "type": "number",
+          "description": "Total aggregate bandwidth in MHz",
+          "x-flatbuffer-type": "double"
+        },
+        "MISSION": {
+          "type": "string",
+          "description": "Primary mission (e.g., FIXED_SAT, BROADCAST, MOBILE, RELAY, MILSATCOM)",
+          "x-flatbuffer-type": "string"
+        },
+        "COVERAGE": {
+          "type": "string",
+          "description": "Coverage region description",
+          "x-flatbuffer-type": "string"
+        },
+        "DESIGN_LIFE": {
+          "type": "number",
+          "description": "Design lifetime in years",
+          "x-flatbuffer-type": "double"
+        },
+        "NOTES": {
+          "type": "string",
+          "description": "Additional notes",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

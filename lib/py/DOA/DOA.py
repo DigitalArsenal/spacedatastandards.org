@@ -6,7 +6,7 @@ import flatbuffers
 from flatbuffers.compat import import_numpy
 np = import_numpy()
 
-# Difference of Arrival
+# Difference of Arrival Geolocation
 class DOA(object):
     __slots__ = ['_tab']
 
@@ -29,6 +29,7 @@ class DOA(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Unique identifier
     # DOA
     def ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +37,7 @@ class DOA(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Observation time (ISO 8601)
     # DOA
     def OB_TIME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -43,236 +45,255 @@ class DOA(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Satellite catalog number
     # DOA
-    def ID_SENSOR1(self):
+    def SAT_NO(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
 
+    # International designator
     # DOA
-    def ID_SENSOR2(self):
+    def ORIG_OBJECT_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # On-orbit reference
     # DOA
-    def SAT_NO(self):
+    def ON_ORBIT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
-    # DOA
-    def TASK_ID(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # True if uncorrelated target
     # DOA
-    def ORIG_OBJECT_ID(self):
+    def UCT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Task identifier
+    # DOA
+    def TASK_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Transaction identifier
     # DOA
-    def ORIG_SENSOR_ID1(self):
+    def TRANSACTION_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Collection mode
     # DOA
-    def ORIG_SENSOR_ID2(self):
+    def COLLECTION_MODE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Sensor 1 identifier
+    # DOA
+    def ID_SENSOR1(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Sensor 1 original identifier
     # DOA
-    def UCT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
-        if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
-
-    # DOA
-    def SENSOR1_DELAY(self):
+    def ORIG_SENSOR_ID1(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
+    # Sensor 1 latitude (degrees)
     # DOA
-    def SENSOR2_DELAY(self):
+    def SENLAT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor 1 longitude (degrees)
     # DOA
-    def SENLAT(self):
+    def SENLON(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor 1 altitude (km)
     # DOA
-    def SENLON(self):
+    def SENALT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor 1 processing delay (seconds)
     # DOA
-    def SENALT(self):
+    def SENSOR1_DELAY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor 2 identifier
     # DOA
-    def SEN2LAT(self):
+    def ID_SENSOR2(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
+    # Sensor 2 original identifier
     # DOA
-    def SEN2LON(self):
+    def ORIG_SENSOR_ID2(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
+    # Sensor 2 latitude (degrees)
     # DOA
-    def SEN2ALT(self):
+    def SEN2LAT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor 2 longitude (degrees)
     # DOA
-    def FREQUENCY(self):
+    def SEN2LON(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor 2 altitude (km)
     # DOA
-    def BANDWIDTH(self):
+    def SEN2ALT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor 2 processing delay (seconds)
     # DOA
-    def DELTA_RANGE(self):
+    def SENSOR2_DELAY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Measured frequency (MHz)
     # DOA
-    def DELTA_RANGE_UNC(self):
+    def FREQUENCY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Measurement bandwidth (MHz)
     # DOA
-    def DELTA_RANGE_RATE(self):
+    def BANDWIDTH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Signal-to-noise ratio (dB)
     # DOA
-    def DELTA_RANGE_RATE_UNC(self):
+    def SNR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Differential range (km)
     # DOA
-    def SNR(self):
+    def DELTA_RANGE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Differential range uncertainty (km, 1-sigma)
     # DOA
-    def TDOA(self):
+    def DELTA_RANGE_UNC(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Differential range rate (km/s)
     # DOA
-    def TDOA_UNC(self):
+    def DELTA_RANGE_RATE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Differential range rate uncertainty (km/s, 1-sigma)
     # DOA
-    def FDOA(self):
+    def DELTA_RANGE_RATE_UNC(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Time difference of arrival (seconds)
     # DOA
-    def FDOA_UNC(self):
+    def TDOA(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # TDOA uncertainty (seconds, 1-sigma)
     # DOA
-    def COLLECTION_MODE(self):
+    def TDOA_UNC(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
 
+    # Frequency difference of arrival (Hz)
     # DOA
-    def RAW_FILE_URI(self):
+    def FDOA(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
 
+    # FDOA uncertainty (Hz, 1-sigma)
     # DOA
-    def TAGS(self, j):
+    def FDOA_UNC(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
         if o != 0:
-            a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
 
+    # Reference to raw data file
     # DOA
-    def TAGSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
-
-    # DOA
-    def TAGSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
-        return o == 0
-
-    # DOA
-    def ON_ORBIT(self):
+    def RAW_FILE_URI(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Event descriptor
     # DOA
     def DESCRIPTOR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
@@ -280,12 +301,26 @@ class DOA(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Associated tags
     # DOA
-    def TRANSACTION_ID(self):
+    def TAGS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            a = self._tab.Vector(o)
+            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
+        return ""
+
+    # DOA
+    def TAGSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # DOA
+    def TAGSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
+        return o == 0
 
 def DOAStart(builder):
     builder.StartObject(35)
@@ -305,182 +340,200 @@ def DOAAddOB_TIME(builder, OB_TIME):
 def AddOB_TIME(builder, OB_TIME):
     DOAAddOB_TIME(builder, OB_TIME)
 
-def DOAAddID_SENSOR1(builder, ID_SENSOR1):
-    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ID_SENSOR1), 0)
-
-def AddID_SENSOR1(builder, ID_SENSOR1):
-    DOAAddID_SENSOR1(builder, ID_SENSOR1)
-
-def DOAAddID_SENSOR2(builder, ID_SENSOR2):
-    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ID_SENSOR2), 0)
-
-def AddID_SENSOR2(builder, ID_SENSOR2):
-    DOAAddID_SENSOR2(builder, ID_SENSOR2)
-
 def DOAAddSAT_NO(builder, SAT_NO):
-    builder.PrependInt32Slot(4, SAT_NO, 0)
+    builder.PrependUint32Slot(2, SAT_NO, 0)
 
 def AddSAT_NO(builder, SAT_NO):
     DOAAddSAT_NO(builder, SAT_NO)
 
-def DOAAddTASK_ID(builder, TASK_ID):
-    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(TASK_ID), 0)
-
-def AddTASK_ID(builder, TASK_ID):
-    DOAAddTASK_ID(builder, TASK_ID)
-
 def DOAAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
-    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_OBJECT_ID), 0)
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_OBJECT_ID), 0)
 
 def AddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
     DOAAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
 
-def DOAAddORIG_SENSOR_ID1(builder, ORIG_SENSOR_ID1):
-    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_SENSOR_ID1), 0)
+def DOAAddON_ORBIT(builder, ON_ORBIT):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ON_ORBIT), 0)
 
-def AddORIG_SENSOR_ID1(builder, ORIG_SENSOR_ID1):
-    DOAAddORIG_SENSOR_ID1(builder, ORIG_SENSOR_ID1)
-
-def DOAAddORIG_SENSOR_ID2(builder, ORIG_SENSOR_ID2):
-    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_SENSOR_ID2), 0)
-
-def AddORIG_SENSOR_ID2(builder, ORIG_SENSOR_ID2):
-    DOAAddORIG_SENSOR_ID2(builder, ORIG_SENSOR_ID2)
+def AddON_ORBIT(builder, ON_ORBIT):
+    DOAAddON_ORBIT(builder, ON_ORBIT)
 
 def DOAAddUCT(builder, UCT):
-    builder.PrependBoolSlot(9, UCT, 0)
+    builder.PrependBoolSlot(5, UCT, 0)
 
 def AddUCT(builder, UCT):
     DOAAddUCT(builder, UCT)
 
-def DOAAddSENSOR1_DELAY(builder, SENSOR1_DELAY):
-    builder.PrependFloat64Slot(10, SENSOR1_DELAY, 0.0)
+def DOAAddTASK_ID(builder, TASK_ID):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(TASK_ID), 0)
 
-def AddSENSOR1_DELAY(builder, SENSOR1_DELAY):
-    DOAAddSENSOR1_DELAY(builder, SENSOR1_DELAY)
+def AddTASK_ID(builder, TASK_ID):
+    DOAAddTASK_ID(builder, TASK_ID)
 
-def DOAAddSENSOR2_DELAY(builder, SENSOR2_DELAY):
-    builder.PrependFloat64Slot(11, SENSOR2_DELAY, 0.0)
+def DOAAddTRANSACTION_ID(builder, TRANSACTION_ID):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSACTION_ID), 0)
 
-def AddSENSOR2_DELAY(builder, SENSOR2_DELAY):
-    DOAAddSENSOR2_DELAY(builder, SENSOR2_DELAY)
+def AddTRANSACTION_ID(builder, TRANSACTION_ID):
+    DOAAddTRANSACTION_ID(builder, TRANSACTION_ID)
+
+def DOAAddCOLLECTION_MODE(builder, COLLECTION_MODE):
+    builder.PrependInt8Slot(8, COLLECTION_MODE, 0)
+
+def AddCOLLECTION_MODE(builder, COLLECTION_MODE):
+    DOAAddCOLLECTION_MODE(builder, COLLECTION_MODE)
+
+def DOAAddID_SENSOR1(builder, ID_SENSOR1):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(ID_SENSOR1), 0)
+
+def AddID_SENSOR1(builder, ID_SENSOR1):
+    DOAAddID_SENSOR1(builder, ID_SENSOR1)
+
+def DOAAddORIG_SENSOR_ID1(builder, ORIG_SENSOR_ID1):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_SENSOR_ID1), 0)
+
+def AddORIG_SENSOR_ID1(builder, ORIG_SENSOR_ID1):
+    DOAAddORIG_SENSOR_ID1(builder, ORIG_SENSOR_ID1)
 
 def DOAAddSENLAT(builder, SENLAT):
-    builder.PrependFloat64Slot(12, SENLAT, 0.0)
+    builder.PrependFloat64Slot(11, SENLAT, 0.0)
 
 def AddSENLAT(builder, SENLAT):
     DOAAddSENLAT(builder, SENLAT)
 
 def DOAAddSENLON(builder, SENLON):
-    builder.PrependFloat64Slot(13, SENLON, 0.0)
+    builder.PrependFloat64Slot(12, SENLON, 0.0)
 
 def AddSENLON(builder, SENLON):
     DOAAddSENLON(builder, SENLON)
 
 def DOAAddSENALT(builder, SENALT):
-    builder.PrependFloat64Slot(14, SENALT, 0.0)
+    builder.PrependFloat64Slot(13, SENALT, 0.0)
 
 def AddSENALT(builder, SENALT):
     DOAAddSENALT(builder, SENALT)
 
+def DOAAddSENSOR1_DELAY(builder, SENSOR1_DELAY):
+    builder.PrependFloat64Slot(14, SENSOR1_DELAY, 0.0)
+
+def AddSENSOR1_DELAY(builder, SENSOR1_DELAY):
+    DOAAddSENSOR1_DELAY(builder, SENSOR1_DELAY)
+
+def DOAAddID_SENSOR2(builder, ID_SENSOR2):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(ID_SENSOR2), 0)
+
+def AddID_SENSOR2(builder, ID_SENSOR2):
+    DOAAddID_SENSOR2(builder, ID_SENSOR2)
+
+def DOAAddORIG_SENSOR_ID2(builder, ORIG_SENSOR_ID2):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_SENSOR_ID2), 0)
+
+def AddORIG_SENSOR_ID2(builder, ORIG_SENSOR_ID2):
+    DOAAddORIG_SENSOR_ID2(builder, ORIG_SENSOR_ID2)
+
 def DOAAddSEN2LAT(builder, SEN2LAT):
-    builder.PrependFloat64Slot(15, SEN2LAT, 0.0)
+    builder.PrependFloat64Slot(17, SEN2LAT, 0.0)
 
 def AddSEN2LAT(builder, SEN2LAT):
     DOAAddSEN2LAT(builder, SEN2LAT)
 
 def DOAAddSEN2LON(builder, SEN2LON):
-    builder.PrependFloat64Slot(16, SEN2LON, 0.0)
+    builder.PrependFloat64Slot(18, SEN2LON, 0.0)
 
 def AddSEN2LON(builder, SEN2LON):
     DOAAddSEN2LON(builder, SEN2LON)
 
 def DOAAddSEN2ALT(builder, SEN2ALT):
-    builder.PrependFloat64Slot(17, SEN2ALT, 0.0)
+    builder.PrependFloat64Slot(19, SEN2ALT, 0.0)
 
 def AddSEN2ALT(builder, SEN2ALT):
     DOAAddSEN2ALT(builder, SEN2ALT)
 
+def DOAAddSENSOR2_DELAY(builder, SENSOR2_DELAY):
+    builder.PrependFloat64Slot(20, SENSOR2_DELAY, 0.0)
+
+def AddSENSOR2_DELAY(builder, SENSOR2_DELAY):
+    DOAAddSENSOR2_DELAY(builder, SENSOR2_DELAY)
+
 def DOAAddFREQUENCY(builder, FREQUENCY):
-    builder.PrependFloat64Slot(18, FREQUENCY, 0.0)
+    builder.PrependFloat64Slot(21, FREQUENCY, 0.0)
 
 def AddFREQUENCY(builder, FREQUENCY):
     DOAAddFREQUENCY(builder, FREQUENCY)
 
 def DOAAddBANDWIDTH(builder, BANDWIDTH):
-    builder.PrependFloat64Slot(19, BANDWIDTH, 0.0)
+    builder.PrependFloat64Slot(22, BANDWIDTH, 0.0)
 
 def AddBANDWIDTH(builder, BANDWIDTH):
     DOAAddBANDWIDTH(builder, BANDWIDTH)
 
+def DOAAddSNR(builder, SNR):
+    builder.PrependFloat64Slot(23, SNR, 0.0)
+
+def AddSNR(builder, SNR):
+    DOAAddSNR(builder, SNR)
+
 def DOAAddDELTA_RANGE(builder, DELTA_RANGE):
-    builder.PrependFloat64Slot(20, DELTA_RANGE, 0.0)
+    builder.PrependFloat64Slot(24, DELTA_RANGE, 0.0)
 
 def AddDELTA_RANGE(builder, DELTA_RANGE):
     DOAAddDELTA_RANGE(builder, DELTA_RANGE)
 
 def DOAAddDELTA_RANGE_UNC(builder, DELTA_RANGE_UNC):
-    builder.PrependFloat64Slot(21, DELTA_RANGE_UNC, 0.0)
+    builder.PrependFloat64Slot(25, DELTA_RANGE_UNC, 0.0)
 
 def AddDELTA_RANGE_UNC(builder, DELTA_RANGE_UNC):
     DOAAddDELTA_RANGE_UNC(builder, DELTA_RANGE_UNC)
 
 def DOAAddDELTA_RANGE_RATE(builder, DELTA_RANGE_RATE):
-    builder.PrependFloat64Slot(22, DELTA_RANGE_RATE, 0.0)
+    builder.PrependFloat64Slot(26, DELTA_RANGE_RATE, 0.0)
 
 def AddDELTA_RANGE_RATE(builder, DELTA_RANGE_RATE):
     DOAAddDELTA_RANGE_RATE(builder, DELTA_RANGE_RATE)
 
 def DOAAddDELTA_RANGE_RATE_UNC(builder, DELTA_RANGE_RATE_UNC):
-    builder.PrependFloat64Slot(23, DELTA_RANGE_RATE_UNC, 0.0)
+    builder.PrependFloat64Slot(27, DELTA_RANGE_RATE_UNC, 0.0)
 
 def AddDELTA_RANGE_RATE_UNC(builder, DELTA_RANGE_RATE_UNC):
     DOAAddDELTA_RANGE_RATE_UNC(builder, DELTA_RANGE_RATE_UNC)
 
-def DOAAddSNR(builder, SNR):
-    builder.PrependFloat64Slot(24, SNR, 0.0)
-
-def AddSNR(builder, SNR):
-    DOAAddSNR(builder, SNR)
-
 def DOAAddTDOA(builder, TDOA):
-    builder.PrependFloat64Slot(25, TDOA, 0.0)
+    builder.PrependFloat64Slot(28, TDOA, 0.0)
 
 def AddTDOA(builder, TDOA):
     DOAAddTDOA(builder, TDOA)
 
 def DOAAddTDOA_UNC(builder, TDOA_UNC):
-    builder.PrependFloat64Slot(26, TDOA_UNC, 0.0)
+    builder.PrependFloat64Slot(29, TDOA_UNC, 0.0)
 
 def AddTDOA_UNC(builder, TDOA_UNC):
     DOAAddTDOA_UNC(builder, TDOA_UNC)
 
 def DOAAddFDOA(builder, FDOA):
-    builder.PrependFloat64Slot(27, FDOA, 0.0)
+    builder.PrependFloat64Slot(30, FDOA, 0.0)
 
 def AddFDOA(builder, FDOA):
     DOAAddFDOA(builder, FDOA)
 
 def DOAAddFDOA_UNC(builder, FDOA_UNC):
-    builder.PrependFloat64Slot(28, FDOA_UNC, 0.0)
+    builder.PrependFloat64Slot(31, FDOA_UNC, 0.0)
 
 def AddFDOA_UNC(builder, FDOA_UNC):
     DOAAddFDOA_UNC(builder, FDOA_UNC)
 
-def DOAAddCOLLECTION_MODE(builder, COLLECTION_MODE):
-    builder.PrependUOffsetTRelativeSlot(29, flatbuffers.number_types.UOffsetTFlags.py_type(COLLECTION_MODE), 0)
-
-def AddCOLLECTION_MODE(builder, COLLECTION_MODE):
-    DOAAddCOLLECTION_MODE(builder, COLLECTION_MODE)
-
 def DOAAddRAW_FILE_URI(builder, RAW_FILE_URI):
-    builder.PrependUOffsetTRelativeSlot(30, flatbuffers.number_types.UOffsetTFlags.py_type(RAW_FILE_URI), 0)
+    builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(RAW_FILE_URI), 0)
 
 def AddRAW_FILE_URI(builder, RAW_FILE_URI):
     DOAAddRAW_FILE_URI(builder, RAW_FILE_URI)
 
+def DOAAddDESCRIPTOR(builder, DESCRIPTOR):
+    builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTOR), 0)
+
+def AddDESCRIPTOR(builder, DESCRIPTOR):
+    DOAAddDESCRIPTOR(builder, DESCRIPTOR)
+
 def DOAAddTAGS(builder, TAGS):
-    builder.PrependUOffsetTRelativeSlot(31, flatbuffers.number_types.UOffsetTFlags.py_type(TAGS), 0)
+    builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(TAGS), 0)
 
 def AddTAGS(builder, TAGS):
     DOAAddTAGS(builder, TAGS)
@@ -490,24 +543,6 @@ def DOAStartTAGSVector(builder, numElems):
 
 def StartTAGSVector(builder, numElems):
     return DOAStartTAGSVector(builder, numElems)
-
-def DOAAddON_ORBIT(builder, ON_ORBIT):
-    builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(ON_ORBIT), 0)
-
-def AddON_ORBIT(builder, ON_ORBIT):
-    DOAAddON_ORBIT(builder, ON_ORBIT)
-
-def DOAAddDESCRIPTOR(builder, DESCRIPTOR):
-    builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(DESCRIPTOR), 0)
-
-def AddDESCRIPTOR(builder, DESCRIPTOR):
-    DOAAddDESCRIPTOR(builder, DESCRIPTOR)
-
-def DOAAddTRANSACTION_ID(builder, TRANSACTION_ID):
-    builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSACTION_ID), 0)
-
-def AddTRANSACTION_ID(builder, TRANSACTION_ID):
-    DOAAddTRANSACTION_ID(builder, TRANSACTION_ID)
 
 def DOAEnd(builder):
     return builder.EndObject()
@@ -526,39 +561,39 @@ class DOAT(object):
     def __init__(self):
         self.ID = None  # type: str
         self.OB_TIME = None  # type: str
-        self.ID_SENSOR1 = None  # type: str
-        self.ID_SENSOR2 = None  # type: str
         self.SAT_NO = 0  # type: int
-        self.TASK_ID = None  # type: str
         self.ORIG_OBJECT_ID = None  # type: str
-        self.ORIG_SENSOR_ID1 = None  # type: str
-        self.ORIG_SENSOR_ID2 = None  # type: str
+        self.ON_ORBIT = None  # type: str
         self.UCT = False  # type: bool
-        self.SENSOR1_DELAY = 0.0  # type: float
-        self.SENSOR2_DELAY = 0.0  # type: float
+        self.TASK_ID = None  # type: str
+        self.TRANSACTION_ID = None  # type: str
+        self.COLLECTION_MODE = 0  # type: int
+        self.ID_SENSOR1 = None  # type: str
+        self.ORIG_SENSOR_ID1 = None  # type: str
         self.SENLAT = 0.0  # type: float
         self.SENLON = 0.0  # type: float
         self.SENALT = 0.0  # type: float
+        self.SENSOR1_DELAY = 0.0  # type: float
+        self.ID_SENSOR2 = None  # type: str
+        self.ORIG_SENSOR_ID2 = None  # type: str
         self.SEN2LAT = 0.0  # type: float
         self.SEN2LON = 0.0  # type: float
         self.SEN2ALT = 0.0  # type: float
+        self.SENSOR2_DELAY = 0.0  # type: float
         self.FREQUENCY = 0.0  # type: float
         self.BANDWIDTH = 0.0  # type: float
+        self.SNR = 0.0  # type: float
         self.DELTA_RANGE = 0.0  # type: float
         self.DELTA_RANGE_UNC = 0.0  # type: float
         self.DELTA_RANGE_RATE = 0.0  # type: float
         self.DELTA_RANGE_RATE_UNC = 0.0  # type: float
-        self.SNR = 0.0  # type: float
         self.TDOA = 0.0  # type: float
         self.TDOA_UNC = 0.0  # type: float
         self.FDOA = 0.0  # type: float
         self.FDOA_UNC = 0.0  # type: float
-        self.COLLECTION_MODE = None  # type: str
         self.RAW_FILE_URI = None  # type: str
-        self.TAGS = None  # type: List[str]
-        self.ON_ORBIT = None  # type: str
         self.DESCRIPTOR = None  # type: str
-        self.TRANSACTION_ID = None  # type: str
+        self.TAGS = None  # type: List[str]
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -583,42 +618,42 @@ class DOAT(object):
             return
         self.ID = DOA.ID()
         self.OB_TIME = DOA.OB_TIME()
-        self.ID_SENSOR1 = DOA.ID_SENSOR1()
-        self.ID_SENSOR2 = DOA.ID_SENSOR2()
         self.SAT_NO = DOA.SAT_NO()
-        self.TASK_ID = DOA.TASK_ID()
         self.ORIG_OBJECT_ID = DOA.ORIG_OBJECT_ID()
-        self.ORIG_SENSOR_ID1 = DOA.ORIG_SENSOR_ID1()
-        self.ORIG_SENSOR_ID2 = DOA.ORIG_SENSOR_ID2()
+        self.ON_ORBIT = DOA.ON_ORBIT()
         self.UCT = DOA.UCT()
-        self.SENSOR1_DELAY = DOA.SENSOR1_DELAY()
-        self.SENSOR2_DELAY = DOA.SENSOR2_DELAY()
+        self.TASK_ID = DOA.TASK_ID()
+        self.TRANSACTION_ID = DOA.TRANSACTION_ID()
+        self.COLLECTION_MODE = DOA.COLLECTION_MODE()
+        self.ID_SENSOR1 = DOA.ID_SENSOR1()
+        self.ORIG_SENSOR_ID1 = DOA.ORIG_SENSOR_ID1()
         self.SENLAT = DOA.SENLAT()
         self.SENLON = DOA.SENLON()
         self.SENALT = DOA.SENALT()
+        self.SENSOR1_DELAY = DOA.SENSOR1_DELAY()
+        self.ID_SENSOR2 = DOA.ID_SENSOR2()
+        self.ORIG_SENSOR_ID2 = DOA.ORIG_SENSOR_ID2()
         self.SEN2LAT = DOA.SEN2LAT()
         self.SEN2LON = DOA.SEN2LON()
         self.SEN2ALT = DOA.SEN2ALT()
+        self.SENSOR2_DELAY = DOA.SENSOR2_DELAY()
         self.FREQUENCY = DOA.FREQUENCY()
         self.BANDWIDTH = DOA.BANDWIDTH()
+        self.SNR = DOA.SNR()
         self.DELTA_RANGE = DOA.DELTA_RANGE()
         self.DELTA_RANGE_UNC = DOA.DELTA_RANGE_UNC()
         self.DELTA_RANGE_RATE = DOA.DELTA_RANGE_RATE()
         self.DELTA_RANGE_RATE_UNC = DOA.DELTA_RANGE_RATE_UNC()
-        self.SNR = DOA.SNR()
         self.TDOA = DOA.TDOA()
         self.TDOA_UNC = DOA.TDOA_UNC()
         self.FDOA = DOA.FDOA()
         self.FDOA_UNC = DOA.FDOA_UNC()
-        self.COLLECTION_MODE = DOA.COLLECTION_MODE()
         self.RAW_FILE_URI = DOA.RAW_FILE_URI()
+        self.DESCRIPTOR = DOA.DESCRIPTOR()
         if not DOA.TAGSIsNone():
             self.TAGS = []
             for i in range(DOA.TAGSLength()):
                 self.TAGS.append(DOA.TAGS(i))
-        self.ON_ORBIT = DOA.ON_ORBIT()
-        self.DESCRIPTOR = DOA.DESCRIPTOR()
-        self.TRANSACTION_ID = DOA.TRANSACTION_ID()
 
     # DOAT
     def Pack(self, builder):
@@ -626,22 +661,26 @@ class DOAT(object):
             ID = builder.CreateString(self.ID)
         if self.OB_TIME is not None:
             OB_TIME = builder.CreateString(self.OB_TIME)
-        if self.ID_SENSOR1 is not None:
-            ID_SENSOR1 = builder.CreateString(self.ID_SENSOR1)
-        if self.ID_SENSOR2 is not None:
-            ID_SENSOR2 = builder.CreateString(self.ID_SENSOR2)
-        if self.TASK_ID is not None:
-            TASK_ID = builder.CreateString(self.TASK_ID)
         if self.ORIG_OBJECT_ID is not None:
             ORIG_OBJECT_ID = builder.CreateString(self.ORIG_OBJECT_ID)
+        if self.ON_ORBIT is not None:
+            ON_ORBIT = builder.CreateString(self.ON_ORBIT)
+        if self.TASK_ID is not None:
+            TASK_ID = builder.CreateString(self.TASK_ID)
+        if self.TRANSACTION_ID is not None:
+            TRANSACTION_ID = builder.CreateString(self.TRANSACTION_ID)
+        if self.ID_SENSOR1 is not None:
+            ID_SENSOR1 = builder.CreateString(self.ID_SENSOR1)
         if self.ORIG_SENSOR_ID1 is not None:
             ORIG_SENSOR_ID1 = builder.CreateString(self.ORIG_SENSOR_ID1)
+        if self.ID_SENSOR2 is not None:
+            ID_SENSOR2 = builder.CreateString(self.ID_SENSOR2)
         if self.ORIG_SENSOR_ID2 is not None:
             ORIG_SENSOR_ID2 = builder.CreateString(self.ORIG_SENSOR_ID2)
-        if self.COLLECTION_MODE is not None:
-            COLLECTION_MODE = builder.CreateString(self.COLLECTION_MODE)
         if self.RAW_FILE_URI is not None:
             RAW_FILE_URI = builder.CreateString(self.RAW_FILE_URI)
+        if self.DESCRIPTOR is not None:
+            DESCRIPTOR = builder.CreateString(self.DESCRIPTOR)
         if self.TAGS is not None:
             TAGSlist = []
             for i in range(len(self.TAGS)):
@@ -650,61 +689,54 @@ class DOAT(object):
             for i in reversed(range(len(self.TAGS))):
                 builder.PrependUOffsetTRelative(TAGSlist[i])
             TAGS = builder.EndVector()
-        if self.ON_ORBIT is not None:
-            ON_ORBIT = builder.CreateString(self.ON_ORBIT)
-        if self.DESCRIPTOR is not None:
-            DESCRIPTOR = builder.CreateString(self.DESCRIPTOR)
-        if self.TRANSACTION_ID is not None:
-            TRANSACTION_ID = builder.CreateString(self.TRANSACTION_ID)
         DOAStart(builder)
         if self.ID is not None:
             DOAAddID(builder, ID)
         if self.OB_TIME is not None:
             DOAAddOB_TIME(builder, OB_TIME)
-        if self.ID_SENSOR1 is not None:
-            DOAAddID_SENSOR1(builder, ID_SENSOR1)
-        if self.ID_SENSOR2 is not None:
-            DOAAddID_SENSOR2(builder, ID_SENSOR2)
         DOAAddSAT_NO(builder, self.SAT_NO)
-        if self.TASK_ID is not None:
-            DOAAddTASK_ID(builder, TASK_ID)
         if self.ORIG_OBJECT_ID is not None:
             DOAAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+        if self.ON_ORBIT is not None:
+            DOAAddON_ORBIT(builder, ON_ORBIT)
+        DOAAddUCT(builder, self.UCT)
+        if self.TASK_ID is not None:
+            DOAAddTASK_ID(builder, TASK_ID)
+        if self.TRANSACTION_ID is not None:
+            DOAAddTRANSACTION_ID(builder, TRANSACTION_ID)
+        DOAAddCOLLECTION_MODE(builder, self.COLLECTION_MODE)
+        if self.ID_SENSOR1 is not None:
+            DOAAddID_SENSOR1(builder, ID_SENSOR1)
         if self.ORIG_SENSOR_ID1 is not None:
             DOAAddORIG_SENSOR_ID1(builder, ORIG_SENSOR_ID1)
-        if self.ORIG_SENSOR_ID2 is not None:
-            DOAAddORIG_SENSOR_ID2(builder, ORIG_SENSOR_ID2)
-        DOAAddUCT(builder, self.UCT)
-        DOAAddSENSOR1_DELAY(builder, self.SENSOR1_DELAY)
-        DOAAddSENSOR2_DELAY(builder, self.SENSOR2_DELAY)
         DOAAddSENLAT(builder, self.SENLAT)
         DOAAddSENLON(builder, self.SENLON)
         DOAAddSENALT(builder, self.SENALT)
+        DOAAddSENSOR1_DELAY(builder, self.SENSOR1_DELAY)
+        if self.ID_SENSOR2 is not None:
+            DOAAddID_SENSOR2(builder, ID_SENSOR2)
+        if self.ORIG_SENSOR_ID2 is not None:
+            DOAAddORIG_SENSOR_ID2(builder, ORIG_SENSOR_ID2)
         DOAAddSEN2LAT(builder, self.SEN2LAT)
         DOAAddSEN2LON(builder, self.SEN2LON)
         DOAAddSEN2ALT(builder, self.SEN2ALT)
+        DOAAddSENSOR2_DELAY(builder, self.SENSOR2_DELAY)
         DOAAddFREQUENCY(builder, self.FREQUENCY)
         DOAAddBANDWIDTH(builder, self.BANDWIDTH)
+        DOAAddSNR(builder, self.SNR)
         DOAAddDELTA_RANGE(builder, self.DELTA_RANGE)
         DOAAddDELTA_RANGE_UNC(builder, self.DELTA_RANGE_UNC)
         DOAAddDELTA_RANGE_RATE(builder, self.DELTA_RANGE_RATE)
         DOAAddDELTA_RANGE_RATE_UNC(builder, self.DELTA_RANGE_RATE_UNC)
-        DOAAddSNR(builder, self.SNR)
         DOAAddTDOA(builder, self.TDOA)
         DOAAddTDOA_UNC(builder, self.TDOA_UNC)
         DOAAddFDOA(builder, self.FDOA)
         DOAAddFDOA_UNC(builder, self.FDOA_UNC)
-        if self.COLLECTION_MODE is not None:
-            DOAAddCOLLECTION_MODE(builder, COLLECTION_MODE)
         if self.RAW_FILE_URI is not None:
             DOAAddRAW_FILE_URI(builder, RAW_FILE_URI)
-        if self.TAGS is not None:
-            DOAAddTAGS(builder, TAGS)
-        if self.ON_ORBIT is not None:
-            DOAAddON_ORBIT(builder, ON_ORBIT)
         if self.DESCRIPTOR is not None:
             DOAAddDESCRIPTOR(builder, DESCRIPTOR)
-        if self.TRANSACTION_ID is not None:
-            DOAAddTRANSACTION_ID(builder, TRANSACTION_ID)
+        if self.TAGS is not None:
+            DOAAddTAGS(builder, TAGS)
         DOA = DOAEnd(builder)
         return DOA

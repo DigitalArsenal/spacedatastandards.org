@@ -4,10 +4,12 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { rfBandDesignation } from './rfBandDesignation.js';
+import { rfPolarization } from './rfPolarization.js';
 
 
 /**
- * RF Band
+ * RF Band Specification
  */
 export class RFB implements flatbuffers.IUnpackableObject<RFBT> {
   bb: flatbuffers.ByteBuffer|null = null;
@@ -31,6 +33,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$RFB');
 }
 
+/**
+ * Unique identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,6 +43,9 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Parent entity identifier
+ */
 ID_ENTITY():string|null
 ID_ENTITY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID_ENTITY(optionalEncoding?:any):string|Uint8Array|null {
@@ -45,6 +53,9 @@ ID_ENTITY(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Band name or designation
+ */
 NAME():string|null
 NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 NAME(optionalEncoding?:any):string|Uint8Array|null {
@@ -52,13 +63,17 @@ NAME(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-BAND():string|null
-BAND(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-BAND(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * RF band designation
+ */
+BAND():rfBandDesignation {
   const offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : rfBandDesignation.UHF;
 }
 
+/**
+ * Operating mode
+ */
 MODE():string|null
 MODE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 MODE(optionalEncoding?:any):string|Uint8Array|null {
@@ -66,6 +81,9 @@ MODE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Band purpose (e.g., TT&C, PAYLOAD, BEACON)
+ */
 PURPOSE():string|null
 PURPOSE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 PURPOSE(optionalEncoding?:any):string|Uint8Array|null {
@@ -73,53 +91,81 @@ PURPOSE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Minimum frequency (MHz)
+ */
 FREQ_MIN():number {
   const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Maximum frequency (MHz)
+ */
 FREQ_MAX():number {
   const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Center frequency (MHz)
+ */
 CENTER_FREQ():number {
   const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-PEAK_GAIN():number {
+/**
+ * Bandwidth (MHz)
+ */
+BANDWIDTH():number {
   const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-EDGE_GAIN():number {
+/**
+ * Peak antenna gain (dBi)
+ */
+PEAK_GAIN():number {
   const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-BANDWIDTH():number {
+/**
+ * Edge-of-coverage gain (dBi)
+ */
+EDGE_GAIN():number {
   const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Antenna beamwidth (degrees)
+ */
 BEAMWIDTH():number {
   const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-POLARIZATION():string|null
-POLARIZATION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-POLARIZATION(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Polarization
+ */
+POLARIZATION():rfPolarization {
   const offset = this.bb!.__offset(this.bb_pos, 30);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : rfPolarization.LHCP;
 }
 
+/**
+ * Effective radiated power (dBW)
+ */
 ERP():number {
   const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Effective isotropic radiated power (dBW)
+ */
 EIRP():number {
   const offset = this.bb!.__offset(this.bb_pos, 34);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
@@ -141,8 +187,8 @@ static addName(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset) {
   builder.addFieldOffset(2, NAMEOffset, 0);
 }
 
-static addBand(builder:flatbuffers.Builder, BANDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, BANDOffset, 0);
+static addBand(builder:flatbuffers.Builder, BAND:rfBandDesignation) {
+  builder.addFieldInt8(3, BAND, rfBandDesignation.UHF);
 }
 
 static addMode(builder:flatbuffers.Builder, MODEOffset:flatbuffers.Offset) {
@@ -165,24 +211,24 @@ static addCenterFreq(builder:flatbuffers.Builder, CENTER_FREQ:number) {
   builder.addFieldFloat64(8, CENTER_FREQ, 0.0);
 }
 
+static addBandwidth(builder:flatbuffers.Builder, BANDWIDTH:number) {
+  builder.addFieldFloat64(9, BANDWIDTH, 0.0);
+}
+
 static addPeakGain(builder:flatbuffers.Builder, PEAK_GAIN:number) {
-  builder.addFieldFloat64(9, PEAK_GAIN, 0.0);
+  builder.addFieldFloat64(10, PEAK_GAIN, 0.0);
 }
 
 static addEdgeGain(builder:flatbuffers.Builder, EDGE_GAIN:number) {
-  builder.addFieldFloat64(10, EDGE_GAIN, 0.0);
-}
-
-static addBandwidth(builder:flatbuffers.Builder, BANDWIDTH:number) {
-  builder.addFieldFloat64(11, BANDWIDTH, 0.0);
+  builder.addFieldFloat64(11, EDGE_GAIN, 0.0);
 }
 
 static addBeamwidth(builder:flatbuffers.Builder, BEAMWIDTH:number) {
   builder.addFieldFloat64(12, BEAMWIDTH, 0.0);
 }
 
-static addPolarization(builder:flatbuffers.Builder, POLARIZATIONOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(13, POLARIZATIONOffset, 0);
+static addPolarization(builder:flatbuffers.Builder, POLARIZATION:rfPolarization) {
+  builder.addFieldInt8(13, POLARIZATION, rfPolarization.LHCP);
 }
 
 static addErp(builder:flatbuffers.Builder, ERP:number) {
@@ -206,22 +252,22 @@ static finishSizePrefixedRFBBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$RFB', true);
 }
 
-static createRFB(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ID_ENTITYOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, BANDOffset:flatbuffers.Offset, MODEOffset:flatbuffers.Offset, PURPOSEOffset:flatbuffers.Offset, FREQ_MIN:number, FREQ_MAX:number, CENTER_FREQ:number, PEAK_GAIN:number, EDGE_GAIN:number, BANDWIDTH:number, BEAMWIDTH:number, POLARIZATIONOffset:flatbuffers.Offset, ERP:number, EIRP:number):flatbuffers.Offset {
+static createRFB(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ID_ENTITYOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, BAND:rfBandDesignation, MODEOffset:flatbuffers.Offset, PURPOSEOffset:flatbuffers.Offset, FREQ_MIN:number, FREQ_MAX:number, CENTER_FREQ:number, BANDWIDTH:number, PEAK_GAIN:number, EDGE_GAIN:number, BEAMWIDTH:number, POLARIZATION:rfPolarization, ERP:number, EIRP:number):flatbuffers.Offset {
   RFB.startRFB(builder);
   RFB.addId(builder, IDOffset);
   RFB.addIdEntity(builder, ID_ENTITYOffset);
   RFB.addName(builder, NAMEOffset);
-  RFB.addBand(builder, BANDOffset);
+  RFB.addBand(builder, BAND);
   RFB.addMode(builder, MODEOffset);
   RFB.addPurpose(builder, PURPOSEOffset);
   RFB.addFreqMin(builder, FREQ_MIN);
   RFB.addFreqMax(builder, FREQ_MAX);
   RFB.addCenterFreq(builder, CENTER_FREQ);
+  RFB.addBandwidth(builder, BANDWIDTH);
   RFB.addPeakGain(builder, PEAK_GAIN);
   RFB.addEdgeGain(builder, EDGE_GAIN);
-  RFB.addBandwidth(builder, BANDWIDTH);
   RFB.addBeamwidth(builder, BEAMWIDTH);
-  RFB.addPolarization(builder, POLARIZATIONOffset);
+  RFB.addPolarization(builder, POLARIZATION);
   RFB.addErp(builder, ERP);
   RFB.addEirp(builder, EIRP);
   return RFB.endRFB(builder);
@@ -238,9 +284,9 @@ unpack(): RFBT {
     this.FREQ_MIN(),
     this.FREQ_MAX(),
     this.CENTER_FREQ(),
+    this.BANDWIDTH(),
     this.PEAK_GAIN(),
     this.EDGE_GAIN(),
-    this.BANDWIDTH(),
     this.BEAMWIDTH(),
     this.POLARIZATION(),
     this.ERP(),
@@ -259,9 +305,9 @@ unpackTo(_o: RFBT): void {
   _o.FREQ_MIN = this.FREQ_MIN();
   _o.FREQ_MAX = this.FREQ_MAX();
   _o.CENTER_FREQ = this.CENTER_FREQ();
+  _o.BANDWIDTH = this.BANDWIDTH();
   _o.PEAK_GAIN = this.PEAK_GAIN();
   _o.EDGE_GAIN = this.EDGE_GAIN();
-  _o.BANDWIDTH = this.BANDWIDTH();
   _o.BEAMWIDTH = this.BEAMWIDTH();
   _o.POLARIZATION = this.POLARIZATION();
   _o.ERP = this.ERP();
@@ -274,17 +320,17 @@ constructor(
   public ID: string|Uint8Array|null = null,
   public ID_ENTITY: string|Uint8Array|null = null,
   public NAME: string|Uint8Array|null = null,
-  public BAND: string|Uint8Array|null = null,
+  public BAND: rfBandDesignation = rfBandDesignation.UHF,
   public MODE: string|Uint8Array|null = null,
   public PURPOSE: string|Uint8Array|null = null,
   public FREQ_MIN: number = 0.0,
   public FREQ_MAX: number = 0.0,
   public CENTER_FREQ: number = 0.0,
+  public BANDWIDTH: number = 0.0,
   public PEAK_GAIN: number = 0.0,
   public EDGE_GAIN: number = 0.0,
-  public BANDWIDTH: number = 0.0,
   public BEAMWIDTH: number = 0.0,
-  public POLARIZATION: string|Uint8Array|null = null,
+  public POLARIZATION: rfPolarization = rfPolarization.LHCP,
   public ERP: number = 0.0,
   public EIRP: number = 0.0
 ){}
@@ -294,26 +340,24 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ID = (this.ID !== null ? builder.createString(this.ID!) : 0);
   const ID_ENTITY = (this.ID_ENTITY !== null ? builder.createString(this.ID_ENTITY!) : 0);
   const NAME = (this.NAME !== null ? builder.createString(this.NAME!) : 0);
-  const BAND = (this.BAND !== null ? builder.createString(this.BAND!) : 0);
   const MODE = (this.MODE !== null ? builder.createString(this.MODE!) : 0);
   const PURPOSE = (this.PURPOSE !== null ? builder.createString(this.PURPOSE!) : 0);
-  const POLARIZATION = (this.POLARIZATION !== null ? builder.createString(this.POLARIZATION!) : 0);
 
   return RFB.createRFB(builder,
     ID,
     ID_ENTITY,
     NAME,
-    BAND,
+    this.BAND,
     MODE,
     PURPOSE,
     this.FREQ_MIN,
     this.FREQ_MAX,
     this.CENTER_FREQ,
+    this.BANDWIDTH,
     this.PEAK_GAIN,
     this.EDGE_GAIN,
-    this.BANDWIDTH,
     this.BEAMWIDTH,
-    POLARIZATION,
+    this.POLARIZATION,
     this.ERP,
     this.EIRP
   );

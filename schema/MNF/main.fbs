@@ -1,13 +1,92 @@
-// Hash: 5e3e2cd7d0caed1e43e76d25713c45ab2c40b596d8dffb6261979b2a3c6c88f1
-// Version: 0.0.2
+// Hash: 65ece203b44c7c0a8184d7a896cc314ce9835fae121710415434b8cb222388f0
+// Version: 0.0.3
 // -----------------------------------END_HEADER
+enum manifoldStatus : byte {
+  CANDIDATE,
+  CONFIRMED,
+  REJECTED,
+  CORRELATED,
+  EXPIRED
+}
+
+/// Manifold Element Set
+table manifoldElset {
+  /// Epoch of element set (ISO 8601)
+  EPOCH:string;
+  /// Semi-major axis in km
+  SEMI_MAJOR_AXIS:double;
+  /// Eccentricity
+  ECCENTRICITY:double;
+  /// Inclination in degrees
+  INCLINATION:double;
+  /// Right ascension of ascending node in degrees
+  RA_OF_ASC_NODE:double;
+  /// Argument of pericenter in degrees
+  ARG_OF_PERICENTER:double;
+  /// Mean anomaly in degrees
+  MEAN_ANOMALY:double;
+  /// Applied delta-V in m/s
+  DELTA_V:double;
+  /// Applied delta-T in seconds
+  DELTA_T:double;
+  /// Delta-V direction X (unit vector)
+  DV_X:double;
+  /// Delta-V direction Y (unit vector)
+  DV_Y:double;
+  /// Delta-V direction Z (unit vector)
+  DV_Z:double;
+  /// Probability weight (0.0-1.0)
+  WEIGHT:double;
+  /// Apogee altitude in km
+  APOGEE:double;
+  /// Perigee altitude in km
+  PERIGEE:double;
+  /// Period in minutes
+  PERIOD:double;
+}
+
 /// Orbit Manifold
 table MNF {
+  /// Unique manifold identifier
   ID:string;
-  STATUS:string;
-  WEIGHT:double;
-  DELTA_V:double;
-  DELTA_T:double;
+  /// Parent object satellite number
+  SAT_NO:uint32;
+  /// Object designator
+  OBJECT_DESIGNATOR:string;
+  /// Manifold status
+  STATUS:manifoldStatus;
+  /// Event epoch that spawned the manifold (ISO 8601)
+  EVENT_EPOCH:string;
+  /// Source of detection (sensor ID or method)
+  SOURCE:string;
+  /// Reference frame
+  REF_FRAME:string;
+  /// Original pre-event semi-major axis in km
+  ORIG_SEMI_MAJOR_AXIS:double;
+  /// Original pre-event eccentricity
+  ORIG_ECCENTRICITY:double;
+  /// Original pre-event inclination in degrees
+  ORIG_INCLINATION:double;
+  /// Minimum delta-V sampled in m/s
+  DELTA_V_MIN:double;
+  /// Maximum delta-V sampled in m/s
+  DELTA_V_MAX:double;
+  /// Delta-V step size in m/s
+  DELTA_V_STEP:double;
+  /// Minimum delta-T sampled in seconds
+  DELTA_T_MIN:double;
+  /// Maximum delta-T sampled in seconds
+  DELTA_T_MAX:double;
+  /// Delta-T step size in seconds
+  DELTA_T_STEP:double;
+  /// Total number of manifold elements
+  NUM_ELEMENTS:uint;
+  /// Theoretical element sets
+  ELEMENTS:[manifoldElset];
+  /// Correlated catalog object ID (if matched)
+  CORRELATED_ID:string;
+  /// Additional notes
+  NOTES:string;
 }
 
 root_type MNF;

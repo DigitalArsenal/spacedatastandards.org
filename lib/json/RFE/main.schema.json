@@ -1,27 +1,164 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "emitterType" : {
+      "type" : "string",
+      "enum": ["RADAR", "COMMUNICATIONS", "NAVIGATION", "JAMMER", "BEACON", "TRANSPONDER", "DATA_LINK", "TELEMETRY", "EW", "UNKNOWN"]
+    },
+    "signalModulation" : {
+      "type" : "string",
+      "enum": ["CW", "PULSE", "FMCW", "CHIRP", "BPSK", "QPSK", "FSK", "AM", "FM", "SPREAD_SPECTRUM", "PHASED_ARRAY", "AGILE", "UNKNOWN"]
+    },
+    "rfEmitterDetail" : {
+      "type" : "object",
+      "description" : "RF Emitter Detail Record",
+      "properties" : {
+        "MODE_NAME" : {
+                "type" : "string",
+                "description" : "Mode name or identifier"
+              },
+        "FREQUENCY" : {
+                "type" : "number",
+                "description" : "Center frequency in MHz"
+              },
+        "FREQ_MIN" : {
+                "type" : "number",
+                "description" : "Frequency minimum in MHz"
+              },
+        "FREQ_MAX" : {
+                "type" : "number",
+                "description" : "Frequency maximum in MHz"
+              },
+        "PRI" : {
+                "type" : "number",
+                "description" : "Pulse repetition interval in microseconds"
+              },
+        "PRI_MIN" : {
+                "type" : "number",
+                "description" : "PRI minimum in microseconds"
+              },
+        "PRI_MAX" : {
+                "type" : "number",
+                "description" : "PRI maximum in microseconds"
+              },
+        "PULSE_WIDTH" : {
+                "type" : "number",
+                "description" : "Pulse width in microseconds"
+              },
+        "PW_MIN" : {
+                "type" : "number",
+                "description" : "Pulse width minimum in microseconds"
+              },
+        "PW_MAX" : {
+                "type" : "number",
+                "description" : "Pulse width maximum in microseconds"
+              },
+        "SCAN_PERIOD" : {
+                "type" : "number",
+                "description" : "Scan period in seconds"
+              },
+        "ERP" : {
+                "type" : "number",
+                "description" : "Effective radiated power in dBW"
+              },
+        "MODULATION" : {
+                "$ref" : "#/definitions/signalModulation",
+                "description" : "Signal modulation"
+              },
+        "ANTENNA_PATTERN" : {
+                "type" : "string",
+                "description" : "Antenna pattern type"
+              },
+        "BEAMWIDTH" : {
+                "type" : "number",
+                "description" : "3dB beamwidth in degrees"
+              }
+      },
+      "additionalProperties" : false
+    },
     "RFE" : {
       "type" : "object",
       "description" : "RF Emitter",
       "properties" : {
         "ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique emitter identifier"
               },
         "ID_ENTITY" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Reference to parent entity"
               },
         "NAME" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Emitter name or designation"
               },
         "TYPE" : {
-                "type" : "string"
+                "$ref" : "#/definitions/emitterType",
+                "description" : "Emitter type"
               },
         "ENTITY" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Parent entity designator"
+              },
+        "ELNOT" : {
+                "type" : "string",
+                "description" : "ELNOT (Electronic Notation)"
+              },
+        "NATO_NAME" : {
+                "type" : "string",
+                "description" : "NATO reporting name"
+              },
+        "PLATFORM_TYPE" : {
+                "type" : "string",
+                "description" : "Platform type (e.g., SHIP, AIRCRAFT, GROUND, SATELLITE)"
+              },
+        "COUNTRY" : {
+                "type" : "string",
+                "description" : "Country of origin"
+              },
+        "FUNCTION" : {
+                "type" : "string",
+                "description" : "Primary function description"
+              },
+        "BAND" : {
+                "type" : "string",
+                "description" : "Operating band (e.g., HF, VHF, UHF, L, S, C, X, Ku, Ka)"
+              },
+        "FREQ_MIN" : {
+                "type" : "number",
+                "description" : "Minimum operating frequency in MHz"
+              },
+        "FREQ_MAX" : {
+                "type" : "number",
+                "description" : "Maximum operating frequency in MHz"
+              },
+        "PEAK_POWER" : {
+                "type" : "number",
+                "description" : "Peak power in kW"
+              },
+        "AVG_POWER" : {
+                "type" : "number",
+                "description" : "Average power in kW"
+              },
+        "ANTENNA_GAIN" : {
+                "type" : "number",
+                "description" : "Antenna gain in dBi"
+              },
+        "NUM_MODES" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of operating modes"
               },
         "RF_EMITTER_DETAILS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"$ref" : "#/definitions/rfEmitterDetail"},
+                "description" : "Emitter operating mode details"
+              },
+        "THREAT_LEVEL" : {
+                "type" : "string",
+                "description" : "Threat level assessment"
+              },
+        "NOTES" : {
+                "type" : "string",
+                "description" : "Additional notes"
               }
       },
       "additionalProperties" : false

@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "OOB" : {
+      "type" : "object",
+      "description" : "On-Orbit Battery",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Unique identifier"
+              },
+        "ID_ON_ORBIT" : {
+                "type" : "string",
+                "description" : "Reference to parent on-orbit object"
+              },
+        "ID_BATTERY" : {
+                "type" : "string",
+                "description" : "Reference to battery specification"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Battery name or designation"
+              },
+        "CHEMISTRY" : {
+                "type" : "string",
+                "description" : "Battery chemistry (e.g., LI_ION, NICD, NIMH, LIPO, SILVER_ZINC)"
+              },
+        "QUANTITY" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of batteries of this type"
+              },
+        "VOLTAGE" : {
+                "type" : "number",
+                "description" : "Nominal voltage in Volts"
+              },
+        "CAPACITY_AH" : {
+                "type" : "number",
+                "description" : "Capacity in Amp-hours"
+              },
+        "ENERGY_WH" : {
+                "type" : "number",
+                "description" : "Energy capacity in Watt-hours"
+              },
+        "MAX_DOD" : {
+                "type" : "number",
+                "description" : "Maximum depth of discharge as fraction (0.0-1.0)"
+              },
+        "CYCLE_LIFE" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of charge/discharge cycles rated"
+              },
+        "MASS" : {
+                "type" : "number",
+                "description" : "Battery mass in kg"
+              },
+        "STATE_OF_HEALTH" : {
+                "type" : "number",
+                "description" : "Current state of health as fraction (0.0-1.0)"
+              },
+        "NOTES" : {
+                "type" : "string",
+                "description" : "Additional notes"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/OOB"
+}

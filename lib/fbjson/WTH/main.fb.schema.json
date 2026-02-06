@@ -7,168 +7,198 @@
       "properties": {
         "ID": {
           "type": "string",
+          "description": "Unique identifier",
           "x-flatbuffer-type": "string"
         },
         "ID_SENSOR": {
           "type": "string",
+          "description": "Sensor identifier",
           "x-flatbuffer-type": "string"
         },
         "ORIG_SENSOR_ID": {
           "type": "string",
+          "description": "Original sensor identifier",
           "x-flatbuffer-type": "string"
         },
         "OB_TIME": {
           "type": "string",
+          "description": "Observation time (ISO 8601)",
           "x-flatbuffer-type": "string"
-        },
-        "SIG_PWRS": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
-        },
-        "NOISE_LVLS": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
-        },
-        "SPEC_WIDTHS": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
-        },
-        "FIRST_GUESS_AVGS": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
-        },
-        "QC_VALUE": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
         },
         "FILE_CREATION": {
           "type": "string",
+          "description": "File creation time (ISO 8601)",
           "x-flatbuffer-type": "string"
+        },
+        "QC_VALUE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Quality control value",
+          "x-flatbuffer-type": "uint8"
         },
         "TERM_ALT": {
           "type": "number",
+          "description": "Terminal altitude (km)",
           "x-flatbuffer-type": "double"
         },
         "AVG_TX_PWR": {
           "type": "number",
+          "description": "Average transmit power (dBm)",
           "x-flatbuffer-type": "double"
         },
         "AVG_REF_PWR": {
           "type": "number",
+          "description": "Average reflected power (dBm)",
           "x-flatbuffer-type": "double"
         },
         "SECTOR_NUM": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Sector number",
+          "x-flatbuffer-type": "uint16"
         },
         "NUM_ELEMENTS": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Number of data elements",
+          "x-flatbuffer-type": "uint16"
+        },
+        "CHECKSUM": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Checksum",
+          "x-flatbuffer-type": "uint32"
+        },
+        "SIG_PWRS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Signal power values (dBm)",
+          "x-flatbuffer-type": "[double]"
+        },
+        "NOISE_LVLS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Noise level values (dBm)",
+          "x-flatbuffer-type": "[double]"
+        },
+        "SPEC_WIDTHS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Spectral width values (m/s)",
+          "x-flatbuffer-type": "[double]"
+        },
+        "FIRST_GUESS_AVGS": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "First guess average values",
+          "x-flatbuffer-type": "[double]"
         },
         "TD_AVG_SAMPLE_NUMS": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "number"
           },
-          "x-flatbuffer-type": "[string]"
-        },
-        "CHECKSUM": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "description": "Time domain average sample numbers",
+          "x-flatbuffer-type": "[double]"
         },
         "CO_INTEGS": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "number"
           },
-          "x-flatbuffer-type": "[string]"
+          "description": "Co-integration values",
+          "x-flatbuffer-type": "[double]"
         },
         "SPEC_AVGS": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "number"
           },
-          "x-flatbuffer-type": "[string]"
+          "description": "Spectral average values",
+          "x-flatbuffer-type": "[double]"
         },
         "INTERPULSE_PERIODS": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "number"
           },
-          "x-flatbuffer-type": "[string]"
+          "description": "Interpulse periods (microseconds)",
+          "x-flatbuffer-type": "[double]"
         },
         "DOPP_VELS": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "number"
           },
-          "x-flatbuffer-type": "[string]"
+          "description": "Doppler velocities (m/s)",
+          "x-flatbuffer-type": "[double]"
         },
         "CONS_RECS": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "number"
           },
-          "x-flatbuffer-type": "[string]"
+          "description": "Consecutive records count",
+          "x-flatbuffer-type": "[double]"
         },
         "SNRS": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "number"
           },
-          "x-flatbuffer-type": "[string]"
+          "description": "Signal-to-noise ratios (dB)",
+          "x-flatbuffer-type": "[double]"
         },
         "SIG_STRENGTH": {
           "type": "number",
+          "description": "Signal strength (dBm)",
           "x-flatbuffer-type": "double"
         },
         "SEMI_MAJOR_AXIS": {
           "type": "number",
+          "description": "Error ellipse semi-major axis (km)",
           "x-flatbuffer-type": "double"
         },
         "SEMI_MINOR_AXIS": {
           "type": "number",
+          "description": "Error ellipse semi-minor axis (km)",
           "x-flatbuffer-type": "double"
         },
         "ANGLE_ORIENTATION": {
           "type": "number",
+          "description": "Error ellipse orientation angle (degrees)",
           "x-flatbuffer-type": "double"
         },
         "LIGHT_EVENT_NUM": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Lightning event number",
+          "x-flatbuffer-type": "uint32"
         },
         "LIGHT_DET_SENSORS": {
           "type": "array",
           "items": {
             "type": "string"
           },
+          "description": "Lightning detection sensor identifiers",
           "x-flatbuffer-type": "[string]"
         },
         "POS_CONFIDENCE": {
           "type": "number",
+          "description": "Position confidence (0-1)",
           "x-flatbuffer-type": "double"
         },
         "SRC_TYPS": {
@@ -176,6 +206,7 @@
           "items": {
             "type": "string"
           },
+          "description": "Source types",
           "x-flatbuffer-type": "[string]"
         },
         "SRC_IDS": {
@@ -183,6 +214,7 @@
           "items": {
             "type": "string"
           },
+          "description": "Source identifiers",
           "x-flatbuffer-type": "[string]"
         }
       },

@@ -19,6 +19,7 @@ public struct RFO : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public RFO __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Unique identifier
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,6 +27,7 @@ public struct RFO : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
+  /// Observation time (ISO 8601)
   public string OB_TIME { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetOB_TIMEBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -33,6 +35,7 @@ public struct RFO : IFlatbufferObject
   public ArraySegment<byte>? GetOB_TIMEBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetOB_TIMEArray() { return __p.__vector_as_array<byte>(6); }
+  /// Sensor identifier
   public string ID_SENSOR { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetID_SENSORBytes() { return __p.__vector_as_span<byte>(8, 1); }
@@ -40,206 +43,267 @@ public struct RFO : IFlatbufferObject
   public ArraySegment<byte>? GetID_SENSORBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetID_SENSORArray() { return __p.__vector_as_array<byte>(8); }
-  public string TYPE { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Original sensor identifier
+  public string ORIG_SENSOR_ID { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTYPEBytes() { return __p.__vector_as_span<byte>(10, 1); }
+  public Span<byte> GetORIG_SENSOR_IDBytes() { return __p.__vector_as_span<byte>(10, 1); }
 #else
-  public ArraySegment<byte>? GetTYPEBytes() { return __p.__vector_as_arraysegment(10); }
+  public ArraySegment<byte>? GetORIG_SENSOR_IDBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
-  public byte[] GetTYPEArray() { return __p.__vector_as_array<byte>(10); }
-  public int SAT_NO { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public string TASK_ID { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetORIG_SENSOR_IDArray() { return __p.__vector_as_array<byte>(10); }
+  /// Observation type
+  public rfObsType OBS_TYPE { get { int o = __p.__offset(12); return o != 0 ? (rfObsType)__p.bb.GetSbyte(o + __p.bb_pos) : rfObsType.EMISSION; } }
+  /// Satellite catalog number
+  public uint SAT_NO { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// International designator
+  public string ORIG_OBJECT_ID { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTASK_IDBytes() { return __p.__vector_as_span<byte>(14, 1); }
+  public Span<byte> GetORIG_OBJECT_IDBytes() { return __p.__vector_as_span<byte>(16, 1); }
 #else
-  public ArraySegment<byte>? GetTASK_IDBytes() { return __p.__vector_as_arraysegment(14); }
+  public ArraySegment<byte>? GetORIG_OBJECT_IDBytes() { return __p.__vector_as_arraysegment(16); }
 #endif
-  public byte[] GetTASK_IDArray() { return __p.__vector_as_array<byte>(14); }
-  public string TRANSACTION_ID { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetORIG_OBJECT_IDArray() { return __p.__vector_as_array<byte>(16); }
+  /// On-orbit reference
+  public string ON_ORBIT { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTRANSACTION_IDBytes() { return __p.__vector_as_span<byte>(16, 1); }
+  public Span<byte> GetON_ORBITBytes() { return __p.__vector_as_span<byte>(18, 1); }
 #else
-  public ArraySegment<byte>? GetTRANSACTION_IDBytes() { return __p.__vector_as_arraysegment(16); }
+  public ArraySegment<byte>? GetON_ORBITBytes() { return __p.__vector_as_arraysegment(18); }
 #endif
-  public byte[] GetTRANSACTION_IDArray() { return __p.__vector_as_array<byte>(16); }
-  public string TRACK_ID { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetON_ORBITArray() { return __p.__vector_as_array<byte>(18); }
+  /// True if uncorrelated target
+  public bool UCT { get { int o = __p.__offset(20); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Task identifier
+  public string TASK_ID { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTRACK_IDBytes() { return __p.__vector_as_span<byte>(18, 1); }
+  public Span<byte> GetTASK_IDBytes() { return __p.__vector_as_span<byte>(22, 1); }
 #else
-  public ArraySegment<byte>? GetTRACK_IDBytes() { return __p.__vector_as_arraysegment(18); }
+  public ArraySegment<byte>? GetTASK_IDBytes() { return __p.__vector_as_arraysegment(22); }
 #endif
-  public byte[] GetTRACK_IDArray() { return __p.__vector_as_array<byte>(18); }
-  public string ORIG_OBJECT_ID { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetTASK_IDArray() { return __p.__vector_as_array<byte>(22); }
+  /// Transaction identifier
+  public string TRANSACTION_ID { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetORIG_OBJECT_IDBytes() { return __p.__vector_as_span<byte>(20, 1); }
+  public Span<byte> GetTRANSACTION_IDBytes() { return __p.__vector_as_span<byte>(24, 1); }
 #else
-  public ArraySegment<byte>? GetORIG_OBJECT_IDBytes() { return __p.__vector_as_arraysegment(20); }
+  public ArraySegment<byte>? GetTRANSACTION_IDBytes() { return __p.__vector_as_arraysegment(24); }
 #endif
-  public byte[] GetORIG_OBJECT_IDArray() { return __p.__vector_as_array<byte>(20); }
-  public string ORIG_SENSOR_ID { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetTRANSACTION_IDArray() { return __p.__vector_as_array<byte>(24); }
+  /// Track identifier
+  public string TRACK_ID { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetORIG_SENSOR_IDBytes() { return __p.__vector_as_span<byte>(22, 1); }
+  public Span<byte> GetTRACK_IDBytes() { return __p.__vector_as_span<byte>(26, 1); }
 #else
-  public ArraySegment<byte>? GetORIG_SENSOR_IDBytes() { return __p.__vector_as_arraysegment(22); }
+  public ArraySegment<byte>? GetTRACK_IDBytes() { return __p.__vector_as_arraysegment(26); }
 #endif
-  public byte[] GetORIG_SENSOR_IDArray() { return __p.__vector_as_array<byte>(22); }
-  public bool UCT { get { int o = __p.__offset(24); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  public string TRANSPONDER { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetTRACK_IDArray() { return __p.__vector_as_array<byte>(26); }
+  /// Transponder identifier
+  public string TRANSPONDER { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTRANSPONDERBytes() { return __p.__vector_as_span<byte>(26, 1); }
+  public Span<byte> GetTRANSPONDERBytes() { return __p.__vector_as_span<byte>(28, 1); }
 #else
-  public ArraySegment<byte>? GetTRANSPONDERBytes() { return __p.__vector_as_arraysegment(26); }
+  public ArraySegment<byte>? GetTRANSPONDERBytes() { return __p.__vector_as_arraysegment(28); }
 #endif
-  public byte[] GetTRANSPONDERArray() { return __p.__vector_as_array<byte>(26); }
-  public double AZIMUTH { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double AZIMUTH_UNC { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double AZIMUTH_RATE { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double ELEVATION { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double ELEVATION_UNC { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double ELEVATION_RATE { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double RANGE { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double RANGE_UNC { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double RANGE_RATE { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double RANGE_RATE_UNC { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double TRACK_RANGE { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SENLAT { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SENLON { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SENALT { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string ELNOT { get { int o = __p.__offset(56); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetTRANSPONDERArray() { return __p.__vector_as_array<byte>(28); }
+  /// Detection status
+  public rfDetectionStatus DETECTION_STATUS { get { int o = __p.__offset(30); return o != 0 ? (rfDetectionStatus)__p.bb.GetSbyte(o + __p.bb_pos) : rfDetectionStatus.DETECTED; } }
+  /// Azimuth angle (degrees)
+  public double AZIMUTH { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Azimuth uncertainty (degrees, 1-sigma)
+  public double AZIMUTH_UNC { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Azimuth rate (degrees/s)
+  public double AZIMUTH_RATE { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Elevation angle (degrees)
+  public double ELEVATION { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Elevation uncertainty (degrees, 1-sigma)
+  public double ELEVATION_UNC { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Elevation rate (degrees/s)
+  public double ELEVATION_RATE { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Slant range (km)
+  public double RANGE { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Range uncertainty (km, 1-sigma)
+  public double RANGE_UNC { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Range rate (km/s)
+  public double RANGE_RATE { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Range rate uncertainty (km/s, 1-sigma)
+  public double RANGE_RATE_UNC { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Track range (km)
+  public double TRACK_RANGE { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sensor latitude (degrees)
+  public double SENLAT { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sensor longitude (degrees)
+  public double SENLON { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sensor altitude (km)
+  public double SENALT { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// ELNOT (Electronic Intelligence Notation)
+  public string ELNOT { get { int o = __p.__offset(60); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetELNOTBytes() { return __p.__vector_as_span<byte>(56, 1); }
+  public Span<byte> GetELNOTBytes() { return __p.__vector_as_span<byte>(60, 1); }
 #else
-  public ArraySegment<byte>? GetELNOTBytes() { return __p.__vector_as_arraysegment(56); }
+  public ArraySegment<byte>? GetELNOTBytes() { return __p.__vector_as_arraysegment(60); }
 #endif
-  public byte[] GetELNOTArray() { return __p.__vector_as_array<byte>(56); }
-  public double FREQUENCY { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double NOMINAL_FREQUENCY { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double START_FREQUENCY { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double END_FREQUENCY { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double RELATIVE_CARRIER_POWER { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SPECTRUM_ANALYZER_POWER { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double RELATIVE_NOISE_FLOOR { get { int o = __p.__offset(70); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double REFERENCE_LEVEL { get { int o = __p.__offset(72); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double PGRI { get { int o = __p.__offset(74); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double CONFIDENCE { get { int o = __p.__offset(76); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public bool INCOMING { get { int o = __p.__offset(78); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  public int SWITCH_POINT { get { int o = __p.__offset(80); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public double BAUD_RATE { get { int o = __p.__offset(82); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SNR { get { int o = __p.__offset(84); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double NOMINAL_SNR { get { int o = __p.__offset(86); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double POLARITY { get { int o = __p.__offset(88); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string POLARITY_TYPE { get { int o = __p.__offset(90); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetELNOTArray() { return __p.__vector_as_array<byte>(60); }
+  /// Antenna name
+  public string ANTENNA_NAME { get { int o = __p.__offset(62); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetPOLARITY_TYPEBytes() { return __p.__vector_as_span<byte>(90, 1); }
+  public Span<byte> GetANTENNA_NAMEBytes() { return __p.__vector_as_span<byte>(62, 1); }
 #else
-  public ArraySegment<byte>? GetPOLARITY_TYPEBytes() { return __p.__vector_as_arraysegment(90); }
+  public ArraySegment<byte>? GetANTENNA_NAMEBytes() { return __p.__vector_as_arraysegment(62); }
 #endif
-  public byte[] GetPOLARITY_TYPEArray() { return __p.__vector_as_array<byte>(90); }
-  public int CHANNEL { get { int o = __p.__offset(92); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public double POWER_OVER_NOISE { get { int o = __p.__offset(94); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double NOMINAL_POWER_OVER_NOISE { get { int o = __p.__offset(96); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double BANDWIDTH { get { int o = __p.__offset(98); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double NOMINAL_BANDWIDTH { get { int o = __p.__offset(100); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double RESOLUTION_BANDWIDTH { get { int o = __p.__offset(102); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double VIDEO_BANDWIDTH { get { int o = __p.__offset(104); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double EIRP { get { int o = __p.__offset(106); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double NOMINAL_EIRP { get { int o = __p.__offset(108); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double MIN_PSD { get { int o = __p.__offset(110); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double MAX_PSD { get { int o = __p.__offset(112); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double FREQUENCY_SHIFT { get { int o = __p.__offset(114); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public bool PEAK { get { int o = __p.__offset(116); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  public string ANTENNA_NAME { get { int o = __p.__offset(118); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetANTENNA_NAMEArray() { return __p.__vector_as_array<byte>(62); }
+  /// Collection mode
+  public string COLLECTION_MODE { get { int o = __p.__offset(64); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetANTENNA_NAMEBytes() { return __p.__vector_as_span<byte>(118, 1); }
+  public Span<byte> GetCOLLECTION_MODEBytes() { return __p.__vector_as_span<byte>(64, 1); }
 #else
-  public ArraySegment<byte>? GetANTENNA_NAMEBytes() { return __p.__vector_as_arraysegment(118); }
+  public ArraySegment<byte>? GetCOLLECTION_MODEBytes() { return __p.__vector_as_arraysegment(64); }
 #endif
-  public byte[] GetANTENNA_NAMEArray() { return __p.__vector_as_array<byte>(118); }
-  public string DETECTION_STATUS { get { int o = __p.__offset(120); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetCOLLECTION_MODEArray() { return __p.__vector_as_array<byte>(64); }
+  /// Measured center frequency (MHz)
+  public double FREQUENCY { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Nominal center frequency (MHz)
+  public double NOMINAL_FREQUENCY { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Start frequency of emission (MHz)
+  public double START_FREQUENCY { get { int o = __p.__offset(70); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// End frequency of emission (MHz)
+  public double END_FREQUENCY { get { int o = __p.__offset(72); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Frequency shift from nominal (MHz)
+  public double FREQUENCY_SHIFT { get { int o = __p.__offset(74); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Measured bandwidth (MHz)
+  public double BANDWIDTH { get { int o = __p.__offset(76); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Nominal bandwidth (MHz)
+  public double NOMINAL_BANDWIDTH { get { int o = __p.__offset(78); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Resolution bandwidth (MHz)
+  public double RESOLUTION_BANDWIDTH { get { int o = __p.__offset(80); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Video bandwidth (MHz)
+  public double VIDEO_BANDWIDTH { get { int o = __p.__offset(82); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Relative carrier power (dBm)
+  public double RELATIVE_CARRIER_POWER { get { int o = __p.__offset(84); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Spectrum analyzer power (dBm)
+  public double SPECTRUM_ANALYZER_POWER { get { int o = __p.__offset(86); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Relative noise floor (dBm)
+  public double RELATIVE_NOISE_FLOOR { get { int o = __p.__offset(88); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Reference level (dBm)
+  public double REFERENCE_LEVEL { get { int o = __p.__offset(90); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Noise power density (dBm/Hz)
+  public double NOISE_PWR_DENSITY { get { int o = __p.__offset(92); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// PGRI (Pulse Group Repetition Interval, microseconds)
+  public double PGRI { get { int o = __p.__offset(94); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Effective isotropic radiated power (dBW)
+  public double EIRP { get { int o = __p.__offset(96); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Nominal EIRP (dBW)
+  public double NOMINAL_EIRP { get { int o = __p.__offset(98); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Minimum power spectral density (dBm/Hz)
+  public double MIN_PSD { get { int o = __p.__offset(100); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Maximum power spectral density (dBm/Hz)
+  public double MAX_PSD { get { int o = __p.__offset(102); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Signal-to-noise ratio (dB)
+  public double SNR { get { int o = __p.__offset(104); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Nominal SNR (dB)
+  public double NOMINAL_SNR { get { int o = __p.__offset(106); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Power over noise (dB)
+  public double POWER_OVER_NOISE { get { int o = __p.__offset(108); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Nominal power over noise (dB)
+  public double NOMINAL_POWER_OVER_NOISE { get { int o = __p.__offset(110); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Polarity angle (degrees)
+  public double POLARITY { get { int o = __p.__offset(112); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Polarization type (e.g., LHCP, RHCP, LINEAR)
+  public string POLARITY_TYPE { get { int o = __p.__offset(114); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetDETECTION_STATUSBytes() { return __p.__vector_as_span<byte>(120, 1); }
+  public Span<byte> GetPOLARITY_TYPEBytes() { return __p.__vector_as_span<byte>(114, 1); }
 #else
-  public ArraySegment<byte>? GetDETECTION_STATUSBytes() { return __p.__vector_as_arraysegment(120); }
+  public ArraySegment<byte>? GetPOLARITY_TYPEBytes() { return __p.__vector_as_arraysegment(114); }
 #endif
-  public byte[] GetDETECTION_STATUSArray() { return __p.__vector_as_array<byte>(120); }
-  public string COLLECTION_MODE { get { int o = __p.__offset(122); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetPOLARITY_TYPEArray() { return __p.__vector_as_array<byte>(114); }
+  /// Channel number
+  public ushort CHANNEL { get { int o = __p.__offset(116); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  /// Baud rate (symbols/s)
+  public double BAUD_RATE { get { int o = __p.__offset(118); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Symbol-to-noise ratio (dB)
+  public double SYMBOL_TO_NOISE_RATIO { get { int o = __p.__offset(120); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Bit error rate
+  public double BIT_ERROR_RATE { get { int o = __p.__offset(122); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// True if peak measurement
+  public bool PEAK { get { int o = __p.__offset(124); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// True if incoming signal
+  public bool INCOMING { get { int o = __p.__offset(126); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Switch point number
+  public ushort SWITCH_POINT { get { int o = __p.__offset(128); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  /// Confidence score (0-1)
+  public double CONFIDENCE { get { int o = __p.__offset(130); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Carrier standard (e.g., DVB-S, DVB-S2)
+  public string CARRIER_STANDARD { get { int o = __p.__offset(132); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetCOLLECTION_MODEBytes() { return __p.__vector_as_span<byte>(122, 1); }
+  public Span<byte> GetCARRIER_STANDARDBytes() { return __p.__vector_as_span<byte>(132, 1); }
 #else
-  public ArraySegment<byte>? GetCOLLECTION_MODEBytes() { return __p.__vector_as_arraysegment(122); }
+  public ArraySegment<byte>? GetCARRIER_STANDARDBytes() { return __p.__vector_as_arraysegment(132); }
 #endif
-  public byte[] GetCOLLECTION_MODEArray() { return __p.__vector_as_array<byte>(122); }
-  public string RAW_FILE_URI { get { int o = __p.__offset(124); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetCARRIER_STANDARDArray() { return __p.__vector_as_array<byte>(132); }
+  /// Modulation type
+  public string MODULATION { get { int o = __p.__offset(134); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetRAW_FILE_URIBytes() { return __p.__vector_as_span<byte>(124, 1); }
+  public Span<byte> GetMODULATIONBytes() { return __p.__vector_as_span<byte>(134, 1); }
 #else
-  public ArraySegment<byte>? GetRAW_FILE_URIBytes() { return __p.__vector_as_arraysegment(124); }
+  public ArraySegment<byte>? GetMODULATIONBytes() { return __p.__vector_as_arraysegment(134); }
 #endif
-  public byte[] GetRAW_FILE_URIArray() { return __p.__vector_as_array<byte>(124); }
-  public string TAGS(int j) { int o = __p.__offset(126); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int TAGSLength { get { int o = __p.__offset(126); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public double NOISE_PWR_DENSITY { get { int o = __p.__offset(128); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string CARRIER_STANDARD { get { int o = __p.__offset(130); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetMODULATIONArray() { return __p.__vector_as_array<byte>(134); }
+  /// Inner FEC coding rate denominator
+  public byte INNER_CODING_RATE { get { int o = __p.__offset(136); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  /// Outer FEC coding rate denominator
+  public byte OUTER_CODING_RATE { get { int o = __p.__offset(138); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  /// Transmit filter type
+  public string TRANSMIT_FILTER_TYPE { get { int o = __p.__offset(140); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetCARRIER_STANDARDBytes() { return __p.__vector_as_span<byte>(130, 1); }
+  public Span<byte> GetTRANSMIT_FILTER_TYPEBytes() { return __p.__vector_as_span<byte>(140, 1); }
 #else
-  public ArraySegment<byte>? GetCARRIER_STANDARDBytes() { return __p.__vector_as_arraysegment(130); }
+  public ArraySegment<byte>? GetTRANSMIT_FILTER_TYPEBytes() { return __p.__vector_as_arraysegment(140); }
 #endif
-  public byte[] GetCARRIER_STANDARDArray() { return __p.__vector_as_array<byte>(130); }
-  public string MODULATION { get { int o = __p.__offset(132); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetTRANSMIT_FILTER_TYPEArray() { return __p.__vector_as_array<byte>(140); }
+  /// Transmit filter roll-off factor
+  public double TRANSMIT_FILTER_ROLL_OFF { get { int o = __p.__offset(142); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Reference to raw data file
+  public string RAW_FILE_URI { get { int o = __p.__offset(144); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetMODULATIONBytes() { return __p.__vector_as_span<byte>(132, 1); }
+  public Span<byte> GetRAW_FILE_URIBytes() { return __p.__vector_as_span<byte>(144, 1); }
 #else
-  public ArraySegment<byte>? GetMODULATIONBytes() { return __p.__vector_as_arraysegment(132); }
+  public ArraySegment<byte>? GetRAW_FILE_URIBytes() { return __p.__vector_as_arraysegment(144); }
 #endif
-  public byte[] GetMODULATIONArray() { return __p.__vector_as_array<byte>(132); }
-  public int INNER_CODING_RATE { get { int o = __p.__offset(134); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int OUTER_CODING_RATE { get { int o = __p.__offset(136); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public string TRANSMIT_FILTER_TYPE { get { int o = __p.__offset(138); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetRAW_FILE_URIArray() { return __p.__vector_as_array<byte>(144); }
+  /// Event descriptor
+  public string DESCRIPTOR { get { int o = __p.__offset(146); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTRANSMIT_FILTER_TYPEBytes() { return __p.__vector_as_span<byte>(138, 1); }
+  public Span<byte> GetDESCRIPTORBytes() { return __p.__vector_as_span<byte>(146, 1); }
 #else
-  public ArraySegment<byte>? GetTRANSMIT_FILTER_TYPEBytes() { return __p.__vector_as_arraysegment(138); }
+  public ArraySegment<byte>? GetDESCRIPTORBytes() { return __p.__vector_as_arraysegment(146); }
 #endif
-  public byte[] GetTRANSMIT_FILTER_TYPEArray() { return __p.__vector_as_array<byte>(138); }
-  public double TRANSMIT_FILTER_ROLL_OFF { get { int o = __p.__offset(140); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double SYMBOL_TO_NOISE_RATIO { get { int o = __p.__offset(142); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double BIT_ERROR_RATE { get { int o = __p.__offset(144); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string ON_ORBIT { get { int o = __p.__offset(146); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetDESCRIPTORArray() { return __p.__vector_as_array<byte>(146); }
+  /// Reference URL
+  public string URL { get { int o = __p.__offset(148); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetON_ORBITBytes() { return __p.__vector_as_span<byte>(146, 1); }
+  public Span<byte> GetURLBytes() { return __p.__vector_as_span<byte>(148, 1); }
 #else
-  public ArraySegment<byte>? GetON_ORBITBytes() { return __p.__vector_as_arraysegment(146); }
+  public ArraySegment<byte>? GetURLBytes() { return __p.__vector_as_arraysegment(148); }
 #endif
-  public byte[] GetON_ORBITArray() { return __p.__vector_as_array<byte>(146); }
-  public string DESCRIPTOR { get { int o = __p.__offset(148); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetDESCRIPTORBytes() { return __p.__vector_as_span<byte>(148, 1); }
-#else
-  public ArraySegment<byte>? GetDESCRIPTORBytes() { return __p.__vector_as_arraysegment(148); }
-#endif
-  public byte[] GetDESCRIPTORArray() { return __p.__vector_as_array<byte>(148); }
-  public string URL { get { int o = __p.__offset(150); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetURLBytes() { return __p.__vector_as_span<byte>(150, 1); }
-#else
-  public ArraySegment<byte>? GetURLBytes() { return __p.__vector_as_arraysegment(150); }
-#endif
-  public byte[] GetURLArray() { return __p.__vector_as_array<byte>(150); }
+  public byte[] GetURLArray() { return __p.__vector_as_array<byte>(148); }
+  /// Associated tags
+  public string TAGS(int j) { int o = __p.__offset(150); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int TAGSLength { get { int o = __p.__offset(150); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<RFO> CreateRFO(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
       StringOffset OB_TIMEOffset = default(StringOffset),
       StringOffset ID_SENSOROffset = default(StringOffset),
-      StringOffset TYPEOffset = default(StringOffset),
-      int SAT_NO = 0,
+      StringOffset ORIG_SENSOR_IDOffset = default(StringOffset),
+      rfObsType OBS_TYPE = rfObsType.EMISSION,
+      uint SAT_NO = 0,
+      StringOffset ORIG_OBJECT_IDOffset = default(StringOffset),
+      StringOffset ON_ORBITOffset = default(StringOffset),
+      bool UCT = false,
       StringOffset TASK_IDOffset = default(StringOffset),
       StringOffset TRANSACTION_IDOffset = default(StringOffset),
       StringOffset TRACK_IDOffset = default(StringOffset),
-      StringOffset ORIG_OBJECT_IDOffset = default(StringOffset),
-      StringOffset ORIG_SENSOR_IDOffset = default(StringOffset),
-      bool UCT = false,
       StringOffset TRANSPONDEROffset = default(StringOffset),
+      rfDetectionStatus DETECTION_STATUS = rfDetectionStatus.DETECTED,
       double AZIMUTH = 0.0,
       double AZIMUTH_UNC = 0.0,
       double AZIMUTH_RATE = 0.0,
@@ -255,79 +319,77 @@ public struct RFO : IFlatbufferObject
       double SENLON = 0.0,
       double SENALT = 0.0,
       StringOffset ELNOTOffset = default(StringOffset),
+      StringOffset ANTENNA_NAMEOffset = default(StringOffset),
+      StringOffset COLLECTION_MODEOffset = default(StringOffset),
       double FREQUENCY = 0.0,
       double NOMINAL_FREQUENCY = 0.0,
       double START_FREQUENCY = 0.0,
       double END_FREQUENCY = 0.0,
-      double RELATIVE_CARRIER_POWER = 0.0,
-      double SPECTRUM_ANALYZER_POWER = 0.0,
-      double RELATIVE_NOISE_FLOOR = 0.0,
-      double REFERENCE_LEVEL = 0.0,
-      double PGRI = 0.0,
-      double CONFIDENCE = 0.0,
-      bool INCOMING = false,
-      int SWITCH_POINT = 0,
-      double BAUD_RATE = 0.0,
-      double SNR = 0.0,
-      double NOMINAL_SNR = 0.0,
-      double POLARITY = 0.0,
-      StringOffset POLARITY_TYPEOffset = default(StringOffset),
-      int CHANNEL = 0,
-      double POWER_OVER_NOISE = 0.0,
-      double NOMINAL_POWER_OVER_NOISE = 0.0,
+      double FREQUENCY_SHIFT = 0.0,
       double BANDWIDTH = 0.0,
       double NOMINAL_BANDWIDTH = 0.0,
       double RESOLUTION_BANDWIDTH = 0.0,
       double VIDEO_BANDWIDTH = 0.0,
+      double RELATIVE_CARRIER_POWER = 0.0,
+      double SPECTRUM_ANALYZER_POWER = 0.0,
+      double RELATIVE_NOISE_FLOOR = 0.0,
+      double REFERENCE_LEVEL = 0.0,
+      double NOISE_PWR_DENSITY = 0.0,
+      double PGRI = 0.0,
       double EIRP = 0.0,
       double NOMINAL_EIRP = 0.0,
       double MIN_PSD = 0.0,
       double MAX_PSD = 0.0,
-      double FREQUENCY_SHIFT = 0.0,
-      bool PEAK = false,
-      StringOffset ANTENNA_NAMEOffset = default(StringOffset),
-      StringOffset DETECTION_STATUSOffset = default(StringOffset),
-      StringOffset COLLECTION_MODEOffset = default(StringOffset),
-      StringOffset RAW_FILE_URIOffset = default(StringOffset),
-      VectorOffset TAGSOffset = default(VectorOffset),
-      double NOISE_PWR_DENSITY = 0.0,
-      StringOffset CARRIER_STANDARDOffset = default(StringOffset),
-      StringOffset MODULATIONOffset = default(StringOffset),
-      int INNER_CODING_RATE = 0,
-      int OUTER_CODING_RATE = 0,
-      StringOffset TRANSMIT_FILTER_TYPEOffset = default(StringOffset),
-      double TRANSMIT_FILTER_ROLL_OFF = 0.0,
+      double SNR = 0.0,
+      double NOMINAL_SNR = 0.0,
+      double POWER_OVER_NOISE = 0.0,
+      double NOMINAL_POWER_OVER_NOISE = 0.0,
+      double POLARITY = 0.0,
+      StringOffset POLARITY_TYPEOffset = default(StringOffset),
+      ushort CHANNEL = 0,
+      double BAUD_RATE = 0.0,
       double SYMBOL_TO_NOISE_RATIO = 0.0,
       double BIT_ERROR_RATE = 0.0,
-      StringOffset ON_ORBITOffset = default(StringOffset),
+      bool PEAK = false,
+      bool INCOMING = false,
+      ushort SWITCH_POINT = 0,
+      double CONFIDENCE = 0.0,
+      StringOffset CARRIER_STANDARDOffset = default(StringOffset),
+      StringOffset MODULATIONOffset = default(StringOffset),
+      byte INNER_CODING_RATE = 0,
+      byte OUTER_CODING_RATE = 0,
+      StringOffset TRANSMIT_FILTER_TYPEOffset = default(StringOffset),
+      double TRANSMIT_FILTER_ROLL_OFF = 0.0,
+      StringOffset RAW_FILE_URIOffset = default(StringOffset),
       StringOffset DESCRIPTOROffset = default(StringOffset),
-      StringOffset URLOffset = default(StringOffset)) {
+      StringOffset URLOffset = default(StringOffset),
+      VectorOffset TAGSOffset = default(VectorOffset)) {
     builder.StartTable(74);
+    RFO.AddTRANSMIT_FILTER_ROLL_OFF(builder, TRANSMIT_FILTER_ROLL_OFF);
+    RFO.AddCONFIDENCE(builder, CONFIDENCE);
     RFO.AddBIT_ERROR_RATE(builder, BIT_ERROR_RATE);
     RFO.AddSYMBOL_TO_NOISE_RATIO(builder, SYMBOL_TO_NOISE_RATIO);
-    RFO.AddTRANSMIT_FILTER_ROLL_OFF(builder, TRANSMIT_FILTER_ROLL_OFF);
-    RFO.AddNOISE_PWR_DENSITY(builder, NOISE_PWR_DENSITY);
-    RFO.AddFREQUENCY_SHIFT(builder, FREQUENCY_SHIFT);
+    RFO.AddBAUD_RATE(builder, BAUD_RATE);
+    RFO.AddPOLARITY(builder, POLARITY);
+    RFO.AddNOMINAL_POWER_OVER_NOISE(builder, NOMINAL_POWER_OVER_NOISE);
+    RFO.AddPOWER_OVER_NOISE(builder, POWER_OVER_NOISE);
+    RFO.AddNOMINAL_SNR(builder, NOMINAL_SNR);
+    RFO.AddSNR(builder, SNR);
     RFO.AddMAX_PSD(builder, MAX_PSD);
     RFO.AddMIN_PSD(builder, MIN_PSD);
     RFO.AddNOMINAL_EIRP(builder, NOMINAL_EIRP);
     RFO.AddEIRP(builder, EIRP);
-    RFO.AddVIDEO_BANDWIDTH(builder, VIDEO_BANDWIDTH);
-    RFO.AddRESOLUTION_BANDWIDTH(builder, RESOLUTION_BANDWIDTH);
-    RFO.AddNOMINAL_BANDWIDTH(builder, NOMINAL_BANDWIDTH);
-    RFO.AddBANDWIDTH(builder, BANDWIDTH);
-    RFO.AddNOMINAL_POWER_OVER_NOISE(builder, NOMINAL_POWER_OVER_NOISE);
-    RFO.AddPOWER_OVER_NOISE(builder, POWER_OVER_NOISE);
-    RFO.AddPOLARITY(builder, POLARITY);
-    RFO.AddNOMINAL_SNR(builder, NOMINAL_SNR);
-    RFO.AddSNR(builder, SNR);
-    RFO.AddBAUD_RATE(builder, BAUD_RATE);
-    RFO.AddCONFIDENCE(builder, CONFIDENCE);
     RFO.AddPGRI(builder, PGRI);
+    RFO.AddNOISE_PWR_DENSITY(builder, NOISE_PWR_DENSITY);
     RFO.AddREFERENCE_LEVEL(builder, REFERENCE_LEVEL);
     RFO.AddRELATIVE_NOISE_FLOOR(builder, RELATIVE_NOISE_FLOOR);
     RFO.AddSPECTRUM_ANALYZER_POWER(builder, SPECTRUM_ANALYZER_POWER);
     RFO.AddRELATIVE_CARRIER_POWER(builder, RELATIVE_CARRIER_POWER);
+    RFO.AddVIDEO_BANDWIDTH(builder, VIDEO_BANDWIDTH);
+    RFO.AddRESOLUTION_BANDWIDTH(builder, RESOLUTION_BANDWIDTH);
+    RFO.AddNOMINAL_BANDWIDTH(builder, NOMINAL_BANDWIDTH);
+    RFO.AddBANDWIDTH(builder, BANDWIDTH);
+    RFO.AddFREQUENCY_SHIFT(builder, FREQUENCY_SHIFT);
     RFO.AddEND_FREQUENCY(builder, END_FREQUENCY);
     RFO.AddSTART_FREQUENCY(builder, START_FREQUENCY);
     RFO.AddNOMINAL_FREQUENCY(builder, NOMINAL_FREQUENCY);
@@ -346,37 +408,37 @@ public struct RFO : IFlatbufferObject
     RFO.AddAZIMUTH_RATE(builder, AZIMUTH_RATE);
     RFO.AddAZIMUTH_UNC(builder, AZIMUTH_UNC);
     RFO.AddAZIMUTH(builder, AZIMUTH);
+    RFO.AddTAGS(builder, TAGSOffset);
     RFO.AddURL(builder, URLOffset);
     RFO.AddDESCRIPTOR(builder, DESCRIPTOROffset);
-    RFO.AddON_ORBIT(builder, ON_ORBITOffset);
+    RFO.AddRAW_FILE_URI(builder, RAW_FILE_URIOffset);
     RFO.AddTRANSMIT_FILTER_TYPE(builder, TRANSMIT_FILTER_TYPEOffset);
-    RFO.AddOUTER_CODING_RATE(builder, OUTER_CODING_RATE);
-    RFO.AddINNER_CODING_RATE(builder, INNER_CODING_RATE);
     RFO.AddMODULATION(builder, MODULATIONOffset);
     RFO.AddCARRIER_STANDARD(builder, CARRIER_STANDARDOffset);
-    RFO.AddTAGS(builder, TAGSOffset);
-    RFO.AddRAW_FILE_URI(builder, RAW_FILE_URIOffset);
-    RFO.AddCOLLECTION_MODE(builder, COLLECTION_MODEOffset);
-    RFO.AddDETECTION_STATUS(builder, DETECTION_STATUSOffset);
-    RFO.AddANTENNA_NAME(builder, ANTENNA_NAMEOffset);
-    RFO.AddCHANNEL(builder, CHANNEL);
     RFO.AddPOLARITY_TYPE(builder, POLARITY_TYPEOffset);
-    RFO.AddSWITCH_POINT(builder, SWITCH_POINT);
+    RFO.AddCOLLECTION_MODE(builder, COLLECTION_MODEOffset);
+    RFO.AddANTENNA_NAME(builder, ANTENNA_NAMEOffset);
     RFO.AddELNOT(builder, ELNOTOffset);
     RFO.AddTRANSPONDER(builder, TRANSPONDEROffset);
-    RFO.AddORIG_SENSOR_ID(builder, ORIG_SENSOR_IDOffset);
-    RFO.AddORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset);
     RFO.AddTRACK_ID(builder, TRACK_IDOffset);
     RFO.AddTRANSACTION_ID(builder, TRANSACTION_IDOffset);
     RFO.AddTASK_ID(builder, TASK_IDOffset);
+    RFO.AddON_ORBIT(builder, ON_ORBITOffset);
+    RFO.AddORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset);
     RFO.AddSAT_NO(builder, SAT_NO);
-    RFO.AddTYPE(builder, TYPEOffset);
+    RFO.AddORIG_SENSOR_ID(builder, ORIG_SENSOR_IDOffset);
     RFO.AddID_SENSOR(builder, ID_SENSOROffset);
     RFO.AddOB_TIME(builder, OB_TIMEOffset);
     RFO.AddID(builder, IDOffset);
-    RFO.AddPEAK(builder, PEAK);
+    RFO.AddSWITCH_POINT(builder, SWITCH_POINT);
+    RFO.AddCHANNEL(builder, CHANNEL);
+    RFO.AddOUTER_CODING_RATE(builder, OUTER_CODING_RATE);
+    RFO.AddINNER_CODING_RATE(builder, INNER_CODING_RATE);
     RFO.AddINCOMING(builder, INCOMING);
+    RFO.AddPEAK(builder, PEAK);
+    RFO.AddDETECTION_STATUS(builder, DETECTION_STATUS);
     RFO.AddUCT(builder, UCT);
+    RFO.AddOBS_TYPE(builder, OBS_TYPE);
     return RFO.EndRFO(builder);
   }
 
@@ -384,82 +446,82 @@ public struct RFO : IFlatbufferObject
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddOB_TIME(FlatBufferBuilder builder, StringOffset OB_TIMEOffset) { builder.AddOffset(1, OB_TIMEOffset.Value, 0); }
   public static void AddID_SENSOR(FlatBufferBuilder builder, StringOffset ID_SENSOROffset) { builder.AddOffset(2, ID_SENSOROffset.Value, 0); }
-  public static void AddTYPE(FlatBufferBuilder builder, StringOffset TYPEOffset) { builder.AddOffset(3, TYPEOffset.Value, 0); }
-  public static void AddSAT_NO(FlatBufferBuilder builder, int SAT_NO) { builder.AddInt(4, SAT_NO, 0); }
-  public static void AddTASK_ID(FlatBufferBuilder builder, StringOffset TASK_IDOffset) { builder.AddOffset(5, TASK_IDOffset.Value, 0); }
-  public static void AddTRANSACTION_ID(FlatBufferBuilder builder, StringOffset TRANSACTION_IDOffset) { builder.AddOffset(6, TRANSACTION_IDOffset.Value, 0); }
-  public static void AddTRACK_ID(FlatBufferBuilder builder, StringOffset TRACK_IDOffset) { builder.AddOffset(7, TRACK_IDOffset.Value, 0); }
-  public static void AddORIG_OBJECT_ID(FlatBufferBuilder builder, StringOffset ORIG_OBJECT_IDOffset) { builder.AddOffset(8, ORIG_OBJECT_IDOffset.Value, 0); }
-  public static void AddORIG_SENSOR_ID(FlatBufferBuilder builder, StringOffset ORIG_SENSOR_IDOffset) { builder.AddOffset(9, ORIG_SENSOR_IDOffset.Value, 0); }
-  public static void AddUCT(FlatBufferBuilder builder, bool UCT) { builder.AddBool(10, UCT, false); }
-  public static void AddTRANSPONDER(FlatBufferBuilder builder, StringOffset TRANSPONDEROffset) { builder.AddOffset(11, TRANSPONDEROffset.Value, 0); }
-  public static void AddAZIMUTH(FlatBufferBuilder builder, double AZIMUTH) { builder.AddDouble(12, AZIMUTH, 0.0); }
-  public static void AddAZIMUTH_UNC(FlatBufferBuilder builder, double AZIMUTH_UNC) { builder.AddDouble(13, AZIMUTH_UNC, 0.0); }
-  public static void AddAZIMUTH_RATE(FlatBufferBuilder builder, double AZIMUTH_RATE) { builder.AddDouble(14, AZIMUTH_RATE, 0.0); }
-  public static void AddELEVATION(FlatBufferBuilder builder, double ELEVATION) { builder.AddDouble(15, ELEVATION, 0.0); }
-  public static void AddELEVATION_UNC(FlatBufferBuilder builder, double ELEVATION_UNC) { builder.AddDouble(16, ELEVATION_UNC, 0.0); }
-  public static void AddELEVATION_RATE(FlatBufferBuilder builder, double ELEVATION_RATE) { builder.AddDouble(17, ELEVATION_RATE, 0.0); }
-  public static void AddRANGE(FlatBufferBuilder builder, double RANGE) { builder.AddDouble(18, RANGE, 0.0); }
-  public static void AddRANGE_UNC(FlatBufferBuilder builder, double RANGE_UNC) { builder.AddDouble(19, RANGE_UNC, 0.0); }
-  public static void AddRANGE_RATE(FlatBufferBuilder builder, double RANGE_RATE) { builder.AddDouble(20, RANGE_RATE, 0.0); }
-  public static void AddRANGE_RATE_UNC(FlatBufferBuilder builder, double RANGE_RATE_UNC) { builder.AddDouble(21, RANGE_RATE_UNC, 0.0); }
-  public static void AddTRACK_RANGE(FlatBufferBuilder builder, double TRACK_RANGE) { builder.AddDouble(22, TRACK_RANGE, 0.0); }
-  public static void AddSENLAT(FlatBufferBuilder builder, double SENLAT) { builder.AddDouble(23, SENLAT, 0.0); }
-  public static void AddSENLON(FlatBufferBuilder builder, double SENLON) { builder.AddDouble(24, SENLON, 0.0); }
-  public static void AddSENALT(FlatBufferBuilder builder, double SENALT) { builder.AddDouble(25, SENALT, 0.0); }
-  public static void AddELNOT(FlatBufferBuilder builder, StringOffset ELNOTOffset) { builder.AddOffset(26, ELNOTOffset.Value, 0); }
-  public static void AddFREQUENCY(FlatBufferBuilder builder, double FREQUENCY) { builder.AddDouble(27, FREQUENCY, 0.0); }
-  public static void AddNOMINAL_FREQUENCY(FlatBufferBuilder builder, double NOMINAL_FREQUENCY) { builder.AddDouble(28, NOMINAL_FREQUENCY, 0.0); }
-  public static void AddSTART_FREQUENCY(FlatBufferBuilder builder, double START_FREQUENCY) { builder.AddDouble(29, START_FREQUENCY, 0.0); }
-  public static void AddEND_FREQUENCY(FlatBufferBuilder builder, double END_FREQUENCY) { builder.AddDouble(30, END_FREQUENCY, 0.0); }
-  public static void AddRELATIVE_CARRIER_POWER(FlatBufferBuilder builder, double RELATIVE_CARRIER_POWER) { builder.AddDouble(31, RELATIVE_CARRIER_POWER, 0.0); }
-  public static void AddSPECTRUM_ANALYZER_POWER(FlatBufferBuilder builder, double SPECTRUM_ANALYZER_POWER) { builder.AddDouble(32, SPECTRUM_ANALYZER_POWER, 0.0); }
-  public static void AddRELATIVE_NOISE_FLOOR(FlatBufferBuilder builder, double RELATIVE_NOISE_FLOOR) { builder.AddDouble(33, RELATIVE_NOISE_FLOOR, 0.0); }
-  public static void AddREFERENCE_LEVEL(FlatBufferBuilder builder, double REFERENCE_LEVEL) { builder.AddDouble(34, REFERENCE_LEVEL, 0.0); }
-  public static void AddPGRI(FlatBufferBuilder builder, double PGRI) { builder.AddDouble(35, PGRI, 0.0); }
-  public static void AddCONFIDENCE(FlatBufferBuilder builder, double CONFIDENCE) { builder.AddDouble(36, CONFIDENCE, 0.0); }
-  public static void AddINCOMING(FlatBufferBuilder builder, bool INCOMING) { builder.AddBool(37, INCOMING, false); }
-  public static void AddSWITCH_POINT(FlatBufferBuilder builder, int SWITCH_POINT) { builder.AddInt(38, SWITCH_POINT, 0); }
-  public static void AddBAUD_RATE(FlatBufferBuilder builder, double BAUD_RATE) { builder.AddDouble(39, BAUD_RATE, 0.0); }
-  public static void AddSNR(FlatBufferBuilder builder, double SNR) { builder.AddDouble(40, SNR, 0.0); }
-  public static void AddNOMINAL_SNR(FlatBufferBuilder builder, double NOMINAL_SNR) { builder.AddDouble(41, NOMINAL_SNR, 0.0); }
-  public static void AddPOLARITY(FlatBufferBuilder builder, double POLARITY) { builder.AddDouble(42, POLARITY, 0.0); }
-  public static void AddPOLARITY_TYPE(FlatBufferBuilder builder, StringOffset POLARITY_TYPEOffset) { builder.AddOffset(43, POLARITY_TYPEOffset.Value, 0); }
-  public static void AddCHANNEL(FlatBufferBuilder builder, int CHANNEL) { builder.AddInt(44, CHANNEL, 0); }
-  public static void AddPOWER_OVER_NOISE(FlatBufferBuilder builder, double POWER_OVER_NOISE) { builder.AddDouble(45, POWER_OVER_NOISE, 0.0); }
-  public static void AddNOMINAL_POWER_OVER_NOISE(FlatBufferBuilder builder, double NOMINAL_POWER_OVER_NOISE) { builder.AddDouble(46, NOMINAL_POWER_OVER_NOISE, 0.0); }
-  public static void AddBANDWIDTH(FlatBufferBuilder builder, double BANDWIDTH) { builder.AddDouble(47, BANDWIDTH, 0.0); }
-  public static void AddNOMINAL_BANDWIDTH(FlatBufferBuilder builder, double NOMINAL_BANDWIDTH) { builder.AddDouble(48, NOMINAL_BANDWIDTH, 0.0); }
-  public static void AddRESOLUTION_BANDWIDTH(FlatBufferBuilder builder, double RESOLUTION_BANDWIDTH) { builder.AddDouble(49, RESOLUTION_BANDWIDTH, 0.0); }
-  public static void AddVIDEO_BANDWIDTH(FlatBufferBuilder builder, double VIDEO_BANDWIDTH) { builder.AddDouble(50, VIDEO_BANDWIDTH, 0.0); }
-  public static void AddEIRP(FlatBufferBuilder builder, double EIRP) { builder.AddDouble(51, EIRP, 0.0); }
-  public static void AddNOMINAL_EIRP(FlatBufferBuilder builder, double NOMINAL_EIRP) { builder.AddDouble(52, NOMINAL_EIRP, 0.0); }
-  public static void AddMIN_PSD(FlatBufferBuilder builder, double MIN_PSD) { builder.AddDouble(53, MIN_PSD, 0.0); }
-  public static void AddMAX_PSD(FlatBufferBuilder builder, double MAX_PSD) { builder.AddDouble(54, MAX_PSD, 0.0); }
-  public static void AddFREQUENCY_SHIFT(FlatBufferBuilder builder, double FREQUENCY_SHIFT) { builder.AddDouble(55, FREQUENCY_SHIFT, 0.0); }
-  public static void AddPEAK(FlatBufferBuilder builder, bool PEAK) { builder.AddBool(56, PEAK, false); }
-  public static void AddANTENNA_NAME(FlatBufferBuilder builder, StringOffset ANTENNA_NAMEOffset) { builder.AddOffset(57, ANTENNA_NAMEOffset.Value, 0); }
-  public static void AddDETECTION_STATUS(FlatBufferBuilder builder, StringOffset DETECTION_STATUSOffset) { builder.AddOffset(58, DETECTION_STATUSOffset.Value, 0); }
-  public static void AddCOLLECTION_MODE(FlatBufferBuilder builder, StringOffset COLLECTION_MODEOffset) { builder.AddOffset(59, COLLECTION_MODEOffset.Value, 0); }
-  public static void AddRAW_FILE_URI(FlatBufferBuilder builder, StringOffset RAW_FILE_URIOffset) { builder.AddOffset(60, RAW_FILE_URIOffset.Value, 0); }
-  public static void AddTAGS(FlatBufferBuilder builder, VectorOffset TAGSOffset) { builder.AddOffset(61, TAGSOffset.Value, 0); }
+  public static void AddORIG_SENSOR_ID(FlatBufferBuilder builder, StringOffset ORIG_SENSOR_IDOffset) { builder.AddOffset(3, ORIG_SENSOR_IDOffset.Value, 0); }
+  public static void AddOBS_TYPE(FlatBufferBuilder builder, rfObsType OBS_TYPE) { builder.AddSbyte(4, (sbyte)OBS_TYPE, 0); }
+  public static void AddSAT_NO(FlatBufferBuilder builder, uint SAT_NO) { builder.AddUint(5, SAT_NO, 0); }
+  public static void AddORIG_OBJECT_ID(FlatBufferBuilder builder, StringOffset ORIG_OBJECT_IDOffset) { builder.AddOffset(6, ORIG_OBJECT_IDOffset.Value, 0); }
+  public static void AddON_ORBIT(FlatBufferBuilder builder, StringOffset ON_ORBITOffset) { builder.AddOffset(7, ON_ORBITOffset.Value, 0); }
+  public static void AddUCT(FlatBufferBuilder builder, bool UCT) { builder.AddBool(8, UCT, false); }
+  public static void AddTASK_ID(FlatBufferBuilder builder, StringOffset TASK_IDOffset) { builder.AddOffset(9, TASK_IDOffset.Value, 0); }
+  public static void AddTRANSACTION_ID(FlatBufferBuilder builder, StringOffset TRANSACTION_IDOffset) { builder.AddOffset(10, TRANSACTION_IDOffset.Value, 0); }
+  public static void AddTRACK_ID(FlatBufferBuilder builder, StringOffset TRACK_IDOffset) { builder.AddOffset(11, TRACK_IDOffset.Value, 0); }
+  public static void AddTRANSPONDER(FlatBufferBuilder builder, StringOffset TRANSPONDEROffset) { builder.AddOffset(12, TRANSPONDEROffset.Value, 0); }
+  public static void AddDETECTION_STATUS(FlatBufferBuilder builder, rfDetectionStatus DETECTION_STATUS) { builder.AddSbyte(13, (sbyte)DETECTION_STATUS, 0); }
+  public static void AddAZIMUTH(FlatBufferBuilder builder, double AZIMUTH) { builder.AddDouble(14, AZIMUTH, 0.0); }
+  public static void AddAZIMUTH_UNC(FlatBufferBuilder builder, double AZIMUTH_UNC) { builder.AddDouble(15, AZIMUTH_UNC, 0.0); }
+  public static void AddAZIMUTH_RATE(FlatBufferBuilder builder, double AZIMUTH_RATE) { builder.AddDouble(16, AZIMUTH_RATE, 0.0); }
+  public static void AddELEVATION(FlatBufferBuilder builder, double ELEVATION) { builder.AddDouble(17, ELEVATION, 0.0); }
+  public static void AddELEVATION_UNC(FlatBufferBuilder builder, double ELEVATION_UNC) { builder.AddDouble(18, ELEVATION_UNC, 0.0); }
+  public static void AddELEVATION_RATE(FlatBufferBuilder builder, double ELEVATION_RATE) { builder.AddDouble(19, ELEVATION_RATE, 0.0); }
+  public static void AddRANGE(FlatBufferBuilder builder, double RANGE) { builder.AddDouble(20, RANGE, 0.0); }
+  public static void AddRANGE_UNC(FlatBufferBuilder builder, double RANGE_UNC) { builder.AddDouble(21, RANGE_UNC, 0.0); }
+  public static void AddRANGE_RATE(FlatBufferBuilder builder, double RANGE_RATE) { builder.AddDouble(22, RANGE_RATE, 0.0); }
+  public static void AddRANGE_RATE_UNC(FlatBufferBuilder builder, double RANGE_RATE_UNC) { builder.AddDouble(23, RANGE_RATE_UNC, 0.0); }
+  public static void AddTRACK_RANGE(FlatBufferBuilder builder, double TRACK_RANGE) { builder.AddDouble(24, TRACK_RANGE, 0.0); }
+  public static void AddSENLAT(FlatBufferBuilder builder, double SENLAT) { builder.AddDouble(25, SENLAT, 0.0); }
+  public static void AddSENLON(FlatBufferBuilder builder, double SENLON) { builder.AddDouble(26, SENLON, 0.0); }
+  public static void AddSENALT(FlatBufferBuilder builder, double SENALT) { builder.AddDouble(27, SENALT, 0.0); }
+  public static void AddELNOT(FlatBufferBuilder builder, StringOffset ELNOTOffset) { builder.AddOffset(28, ELNOTOffset.Value, 0); }
+  public static void AddANTENNA_NAME(FlatBufferBuilder builder, StringOffset ANTENNA_NAMEOffset) { builder.AddOffset(29, ANTENNA_NAMEOffset.Value, 0); }
+  public static void AddCOLLECTION_MODE(FlatBufferBuilder builder, StringOffset COLLECTION_MODEOffset) { builder.AddOffset(30, COLLECTION_MODEOffset.Value, 0); }
+  public static void AddFREQUENCY(FlatBufferBuilder builder, double FREQUENCY) { builder.AddDouble(31, FREQUENCY, 0.0); }
+  public static void AddNOMINAL_FREQUENCY(FlatBufferBuilder builder, double NOMINAL_FREQUENCY) { builder.AddDouble(32, NOMINAL_FREQUENCY, 0.0); }
+  public static void AddSTART_FREQUENCY(FlatBufferBuilder builder, double START_FREQUENCY) { builder.AddDouble(33, START_FREQUENCY, 0.0); }
+  public static void AddEND_FREQUENCY(FlatBufferBuilder builder, double END_FREQUENCY) { builder.AddDouble(34, END_FREQUENCY, 0.0); }
+  public static void AddFREQUENCY_SHIFT(FlatBufferBuilder builder, double FREQUENCY_SHIFT) { builder.AddDouble(35, FREQUENCY_SHIFT, 0.0); }
+  public static void AddBANDWIDTH(FlatBufferBuilder builder, double BANDWIDTH) { builder.AddDouble(36, BANDWIDTH, 0.0); }
+  public static void AddNOMINAL_BANDWIDTH(FlatBufferBuilder builder, double NOMINAL_BANDWIDTH) { builder.AddDouble(37, NOMINAL_BANDWIDTH, 0.0); }
+  public static void AddRESOLUTION_BANDWIDTH(FlatBufferBuilder builder, double RESOLUTION_BANDWIDTH) { builder.AddDouble(38, RESOLUTION_BANDWIDTH, 0.0); }
+  public static void AddVIDEO_BANDWIDTH(FlatBufferBuilder builder, double VIDEO_BANDWIDTH) { builder.AddDouble(39, VIDEO_BANDWIDTH, 0.0); }
+  public static void AddRELATIVE_CARRIER_POWER(FlatBufferBuilder builder, double RELATIVE_CARRIER_POWER) { builder.AddDouble(40, RELATIVE_CARRIER_POWER, 0.0); }
+  public static void AddSPECTRUM_ANALYZER_POWER(FlatBufferBuilder builder, double SPECTRUM_ANALYZER_POWER) { builder.AddDouble(41, SPECTRUM_ANALYZER_POWER, 0.0); }
+  public static void AddRELATIVE_NOISE_FLOOR(FlatBufferBuilder builder, double RELATIVE_NOISE_FLOOR) { builder.AddDouble(42, RELATIVE_NOISE_FLOOR, 0.0); }
+  public static void AddREFERENCE_LEVEL(FlatBufferBuilder builder, double REFERENCE_LEVEL) { builder.AddDouble(43, REFERENCE_LEVEL, 0.0); }
+  public static void AddNOISE_PWR_DENSITY(FlatBufferBuilder builder, double NOISE_PWR_DENSITY) { builder.AddDouble(44, NOISE_PWR_DENSITY, 0.0); }
+  public static void AddPGRI(FlatBufferBuilder builder, double PGRI) { builder.AddDouble(45, PGRI, 0.0); }
+  public static void AddEIRP(FlatBufferBuilder builder, double EIRP) { builder.AddDouble(46, EIRP, 0.0); }
+  public static void AddNOMINAL_EIRP(FlatBufferBuilder builder, double NOMINAL_EIRP) { builder.AddDouble(47, NOMINAL_EIRP, 0.0); }
+  public static void AddMIN_PSD(FlatBufferBuilder builder, double MIN_PSD) { builder.AddDouble(48, MIN_PSD, 0.0); }
+  public static void AddMAX_PSD(FlatBufferBuilder builder, double MAX_PSD) { builder.AddDouble(49, MAX_PSD, 0.0); }
+  public static void AddSNR(FlatBufferBuilder builder, double SNR) { builder.AddDouble(50, SNR, 0.0); }
+  public static void AddNOMINAL_SNR(FlatBufferBuilder builder, double NOMINAL_SNR) { builder.AddDouble(51, NOMINAL_SNR, 0.0); }
+  public static void AddPOWER_OVER_NOISE(FlatBufferBuilder builder, double POWER_OVER_NOISE) { builder.AddDouble(52, POWER_OVER_NOISE, 0.0); }
+  public static void AddNOMINAL_POWER_OVER_NOISE(FlatBufferBuilder builder, double NOMINAL_POWER_OVER_NOISE) { builder.AddDouble(53, NOMINAL_POWER_OVER_NOISE, 0.0); }
+  public static void AddPOLARITY(FlatBufferBuilder builder, double POLARITY) { builder.AddDouble(54, POLARITY, 0.0); }
+  public static void AddPOLARITY_TYPE(FlatBufferBuilder builder, StringOffset POLARITY_TYPEOffset) { builder.AddOffset(55, POLARITY_TYPEOffset.Value, 0); }
+  public static void AddCHANNEL(FlatBufferBuilder builder, ushort CHANNEL) { builder.AddUshort(56, CHANNEL, 0); }
+  public static void AddBAUD_RATE(FlatBufferBuilder builder, double BAUD_RATE) { builder.AddDouble(57, BAUD_RATE, 0.0); }
+  public static void AddSYMBOL_TO_NOISE_RATIO(FlatBufferBuilder builder, double SYMBOL_TO_NOISE_RATIO) { builder.AddDouble(58, SYMBOL_TO_NOISE_RATIO, 0.0); }
+  public static void AddBIT_ERROR_RATE(FlatBufferBuilder builder, double BIT_ERROR_RATE) { builder.AddDouble(59, BIT_ERROR_RATE, 0.0); }
+  public static void AddPEAK(FlatBufferBuilder builder, bool PEAK) { builder.AddBool(60, PEAK, false); }
+  public static void AddINCOMING(FlatBufferBuilder builder, bool INCOMING) { builder.AddBool(61, INCOMING, false); }
+  public static void AddSWITCH_POINT(FlatBufferBuilder builder, ushort SWITCH_POINT) { builder.AddUshort(62, SWITCH_POINT, 0); }
+  public static void AddCONFIDENCE(FlatBufferBuilder builder, double CONFIDENCE) { builder.AddDouble(63, CONFIDENCE, 0.0); }
+  public static void AddCARRIER_STANDARD(FlatBufferBuilder builder, StringOffset CARRIER_STANDARDOffset) { builder.AddOffset(64, CARRIER_STANDARDOffset.Value, 0); }
+  public static void AddMODULATION(FlatBufferBuilder builder, StringOffset MODULATIONOffset) { builder.AddOffset(65, MODULATIONOffset.Value, 0); }
+  public static void AddINNER_CODING_RATE(FlatBufferBuilder builder, byte INNER_CODING_RATE) { builder.AddByte(66, INNER_CODING_RATE, 0); }
+  public static void AddOUTER_CODING_RATE(FlatBufferBuilder builder, byte OUTER_CODING_RATE) { builder.AddByte(67, OUTER_CODING_RATE, 0); }
+  public static void AddTRANSMIT_FILTER_TYPE(FlatBufferBuilder builder, StringOffset TRANSMIT_FILTER_TYPEOffset) { builder.AddOffset(68, TRANSMIT_FILTER_TYPEOffset.Value, 0); }
+  public static void AddTRANSMIT_FILTER_ROLL_OFF(FlatBufferBuilder builder, double TRANSMIT_FILTER_ROLL_OFF) { builder.AddDouble(69, TRANSMIT_FILTER_ROLL_OFF, 0.0); }
+  public static void AddRAW_FILE_URI(FlatBufferBuilder builder, StringOffset RAW_FILE_URIOffset) { builder.AddOffset(70, RAW_FILE_URIOffset.Value, 0); }
+  public static void AddDESCRIPTOR(FlatBufferBuilder builder, StringOffset DESCRIPTOROffset) { builder.AddOffset(71, DESCRIPTOROffset.Value, 0); }
+  public static void AddURL(FlatBufferBuilder builder, StringOffset URLOffset) { builder.AddOffset(72, URLOffset.Value, 0); }
+  public static void AddTAGS(FlatBufferBuilder builder, VectorOffset TAGSOffset) { builder.AddOffset(73, TAGSOffset.Value, 0); }
   public static VectorOffset CreateTAGSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartTAGSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddNOISE_PWR_DENSITY(FlatBufferBuilder builder, double NOISE_PWR_DENSITY) { builder.AddDouble(62, NOISE_PWR_DENSITY, 0.0); }
-  public static void AddCARRIER_STANDARD(FlatBufferBuilder builder, StringOffset CARRIER_STANDARDOffset) { builder.AddOffset(63, CARRIER_STANDARDOffset.Value, 0); }
-  public static void AddMODULATION(FlatBufferBuilder builder, StringOffset MODULATIONOffset) { builder.AddOffset(64, MODULATIONOffset.Value, 0); }
-  public static void AddINNER_CODING_RATE(FlatBufferBuilder builder, int INNER_CODING_RATE) { builder.AddInt(65, INNER_CODING_RATE, 0); }
-  public static void AddOUTER_CODING_RATE(FlatBufferBuilder builder, int OUTER_CODING_RATE) { builder.AddInt(66, OUTER_CODING_RATE, 0); }
-  public static void AddTRANSMIT_FILTER_TYPE(FlatBufferBuilder builder, StringOffset TRANSMIT_FILTER_TYPEOffset) { builder.AddOffset(67, TRANSMIT_FILTER_TYPEOffset.Value, 0); }
-  public static void AddTRANSMIT_FILTER_ROLL_OFF(FlatBufferBuilder builder, double TRANSMIT_FILTER_ROLL_OFF) { builder.AddDouble(68, TRANSMIT_FILTER_ROLL_OFF, 0.0); }
-  public static void AddSYMBOL_TO_NOISE_RATIO(FlatBufferBuilder builder, double SYMBOL_TO_NOISE_RATIO) { builder.AddDouble(69, SYMBOL_TO_NOISE_RATIO, 0.0); }
-  public static void AddBIT_ERROR_RATE(FlatBufferBuilder builder, double BIT_ERROR_RATE) { builder.AddDouble(70, BIT_ERROR_RATE, 0.0); }
-  public static void AddON_ORBIT(FlatBufferBuilder builder, StringOffset ON_ORBITOffset) { builder.AddOffset(71, ON_ORBITOffset.Value, 0); }
-  public static void AddDESCRIPTOR(FlatBufferBuilder builder, StringOffset DESCRIPTOROffset) { builder.AddOffset(72, DESCRIPTOROffset.Value, 0); }
-  public static void AddURL(FlatBufferBuilder builder, StringOffset URLOffset) { builder.AddOffset(73, URLOffset.Value, 0); }
   public static Offset<RFO> EndRFO(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<RFO>(o);
@@ -475,15 +537,17 @@ public struct RFO : IFlatbufferObject
     _o.ID = this.ID;
     _o.OB_TIME = this.OB_TIME;
     _o.ID_SENSOR = this.ID_SENSOR;
-    _o.TYPE = this.TYPE;
+    _o.ORIG_SENSOR_ID = this.ORIG_SENSOR_ID;
+    _o.OBS_TYPE = this.OBS_TYPE;
     _o.SAT_NO = this.SAT_NO;
+    _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID;
+    _o.ON_ORBIT = this.ON_ORBIT;
+    _o.UCT = this.UCT;
     _o.TASK_ID = this.TASK_ID;
     _o.TRANSACTION_ID = this.TRANSACTION_ID;
     _o.TRACK_ID = this.TRACK_ID;
-    _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID;
-    _o.ORIG_SENSOR_ID = this.ORIG_SENSOR_ID;
-    _o.UCT = this.UCT;
     _o.TRANSPONDER = this.TRANSPONDER;
+    _o.DETECTION_STATUS = this.DETECTION_STATUS;
     _o.AZIMUTH = this.AZIMUTH;
     _o.AZIMUTH_UNC = this.AZIMUTH_UNC;
     _o.AZIMUTH_RATE = this.AZIMUTH_RATE;
@@ -499,99 +563,97 @@ public struct RFO : IFlatbufferObject
     _o.SENLON = this.SENLON;
     _o.SENALT = this.SENALT;
     _o.ELNOT = this.ELNOT;
+    _o.ANTENNA_NAME = this.ANTENNA_NAME;
+    _o.COLLECTION_MODE = this.COLLECTION_MODE;
     _o.FREQUENCY = this.FREQUENCY;
     _o.NOMINAL_FREQUENCY = this.NOMINAL_FREQUENCY;
     _o.START_FREQUENCY = this.START_FREQUENCY;
     _o.END_FREQUENCY = this.END_FREQUENCY;
-    _o.RELATIVE_CARRIER_POWER = this.RELATIVE_CARRIER_POWER;
-    _o.SPECTRUM_ANALYZER_POWER = this.SPECTRUM_ANALYZER_POWER;
-    _o.RELATIVE_NOISE_FLOOR = this.RELATIVE_NOISE_FLOOR;
-    _o.REFERENCE_LEVEL = this.REFERENCE_LEVEL;
-    _o.PGRI = this.PGRI;
-    _o.CONFIDENCE = this.CONFIDENCE;
-    _o.INCOMING = this.INCOMING;
-    _o.SWITCH_POINT = this.SWITCH_POINT;
-    _o.BAUD_RATE = this.BAUD_RATE;
-    _o.SNR = this.SNR;
-    _o.NOMINAL_SNR = this.NOMINAL_SNR;
-    _o.POLARITY = this.POLARITY;
-    _o.POLARITY_TYPE = this.POLARITY_TYPE;
-    _o.CHANNEL = this.CHANNEL;
-    _o.POWER_OVER_NOISE = this.POWER_OVER_NOISE;
-    _o.NOMINAL_POWER_OVER_NOISE = this.NOMINAL_POWER_OVER_NOISE;
+    _o.FREQUENCY_SHIFT = this.FREQUENCY_SHIFT;
     _o.BANDWIDTH = this.BANDWIDTH;
     _o.NOMINAL_BANDWIDTH = this.NOMINAL_BANDWIDTH;
     _o.RESOLUTION_BANDWIDTH = this.RESOLUTION_BANDWIDTH;
     _o.VIDEO_BANDWIDTH = this.VIDEO_BANDWIDTH;
+    _o.RELATIVE_CARRIER_POWER = this.RELATIVE_CARRIER_POWER;
+    _o.SPECTRUM_ANALYZER_POWER = this.SPECTRUM_ANALYZER_POWER;
+    _o.RELATIVE_NOISE_FLOOR = this.RELATIVE_NOISE_FLOOR;
+    _o.REFERENCE_LEVEL = this.REFERENCE_LEVEL;
+    _o.NOISE_PWR_DENSITY = this.NOISE_PWR_DENSITY;
+    _o.PGRI = this.PGRI;
     _o.EIRP = this.EIRP;
     _o.NOMINAL_EIRP = this.NOMINAL_EIRP;
     _o.MIN_PSD = this.MIN_PSD;
     _o.MAX_PSD = this.MAX_PSD;
-    _o.FREQUENCY_SHIFT = this.FREQUENCY_SHIFT;
+    _o.SNR = this.SNR;
+    _o.NOMINAL_SNR = this.NOMINAL_SNR;
+    _o.POWER_OVER_NOISE = this.POWER_OVER_NOISE;
+    _o.NOMINAL_POWER_OVER_NOISE = this.NOMINAL_POWER_OVER_NOISE;
+    _o.POLARITY = this.POLARITY;
+    _o.POLARITY_TYPE = this.POLARITY_TYPE;
+    _o.CHANNEL = this.CHANNEL;
+    _o.BAUD_RATE = this.BAUD_RATE;
+    _o.SYMBOL_TO_NOISE_RATIO = this.SYMBOL_TO_NOISE_RATIO;
+    _o.BIT_ERROR_RATE = this.BIT_ERROR_RATE;
     _o.PEAK = this.PEAK;
-    _o.ANTENNA_NAME = this.ANTENNA_NAME;
-    _o.DETECTION_STATUS = this.DETECTION_STATUS;
-    _o.COLLECTION_MODE = this.COLLECTION_MODE;
-    _o.RAW_FILE_URI = this.RAW_FILE_URI;
-    _o.TAGS = new List<string>();
-    for (var _j = 0; _j < this.TAGSLength; ++_j) {_o.TAGS.Add(this.TAGS(_j));}
-    _o.NOISE_PWR_DENSITY = this.NOISE_PWR_DENSITY;
+    _o.INCOMING = this.INCOMING;
+    _o.SWITCH_POINT = this.SWITCH_POINT;
+    _o.CONFIDENCE = this.CONFIDENCE;
     _o.CARRIER_STANDARD = this.CARRIER_STANDARD;
     _o.MODULATION = this.MODULATION;
     _o.INNER_CODING_RATE = this.INNER_CODING_RATE;
     _o.OUTER_CODING_RATE = this.OUTER_CODING_RATE;
     _o.TRANSMIT_FILTER_TYPE = this.TRANSMIT_FILTER_TYPE;
     _o.TRANSMIT_FILTER_ROLL_OFF = this.TRANSMIT_FILTER_ROLL_OFF;
-    _o.SYMBOL_TO_NOISE_RATIO = this.SYMBOL_TO_NOISE_RATIO;
-    _o.BIT_ERROR_RATE = this.BIT_ERROR_RATE;
-    _o.ON_ORBIT = this.ON_ORBIT;
+    _o.RAW_FILE_URI = this.RAW_FILE_URI;
     _o.DESCRIPTOR = this.DESCRIPTOR;
     _o.URL = this.URL;
+    _o.TAGS = new List<string>();
+    for (var _j = 0; _j < this.TAGSLength; ++_j) {_o.TAGS.Add(this.TAGS(_j));}
   }
   public static Offset<RFO> Pack(FlatBufferBuilder builder, RFOT _o) {
     if (_o == null) return default(Offset<RFO>);
     var _ID = _o.ID == null ? default(StringOffset) : builder.CreateString(_o.ID);
     var _OB_TIME = _o.OB_TIME == null ? default(StringOffset) : builder.CreateString(_o.OB_TIME);
     var _ID_SENSOR = _o.ID_SENSOR == null ? default(StringOffset) : builder.CreateString(_o.ID_SENSOR);
-    var _TYPE = _o.TYPE == null ? default(StringOffset) : builder.CreateString(_o.TYPE);
+    var _ORIG_SENSOR_ID = _o.ORIG_SENSOR_ID == null ? default(StringOffset) : builder.CreateString(_o.ORIG_SENSOR_ID);
+    var _ORIG_OBJECT_ID = _o.ORIG_OBJECT_ID == null ? default(StringOffset) : builder.CreateString(_o.ORIG_OBJECT_ID);
+    var _ON_ORBIT = _o.ON_ORBIT == null ? default(StringOffset) : builder.CreateString(_o.ON_ORBIT);
     var _TASK_ID = _o.TASK_ID == null ? default(StringOffset) : builder.CreateString(_o.TASK_ID);
     var _TRANSACTION_ID = _o.TRANSACTION_ID == null ? default(StringOffset) : builder.CreateString(_o.TRANSACTION_ID);
     var _TRACK_ID = _o.TRACK_ID == null ? default(StringOffset) : builder.CreateString(_o.TRACK_ID);
-    var _ORIG_OBJECT_ID = _o.ORIG_OBJECT_ID == null ? default(StringOffset) : builder.CreateString(_o.ORIG_OBJECT_ID);
-    var _ORIG_SENSOR_ID = _o.ORIG_SENSOR_ID == null ? default(StringOffset) : builder.CreateString(_o.ORIG_SENSOR_ID);
     var _TRANSPONDER = _o.TRANSPONDER == null ? default(StringOffset) : builder.CreateString(_o.TRANSPONDER);
     var _ELNOT = _o.ELNOT == null ? default(StringOffset) : builder.CreateString(_o.ELNOT);
-    var _POLARITY_TYPE = _o.POLARITY_TYPE == null ? default(StringOffset) : builder.CreateString(_o.POLARITY_TYPE);
     var _ANTENNA_NAME = _o.ANTENNA_NAME == null ? default(StringOffset) : builder.CreateString(_o.ANTENNA_NAME);
-    var _DETECTION_STATUS = _o.DETECTION_STATUS == null ? default(StringOffset) : builder.CreateString(_o.DETECTION_STATUS);
     var _COLLECTION_MODE = _o.COLLECTION_MODE == null ? default(StringOffset) : builder.CreateString(_o.COLLECTION_MODE);
+    var _POLARITY_TYPE = _o.POLARITY_TYPE == null ? default(StringOffset) : builder.CreateString(_o.POLARITY_TYPE);
+    var _CARRIER_STANDARD = _o.CARRIER_STANDARD == null ? default(StringOffset) : builder.CreateString(_o.CARRIER_STANDARD);
+    var _MODULATION = _o.MODULATION == null ? default(StringOffset) : builder.CreateString(_o.MODULATION);
+    var _TRANSMIT_FILTER_TYPE = _o.TRANSMIT_FILTER_TYPE == null ? default(StringOffset) : builder.CreateString(_o.TRANSMIT_FILTER_TYPE);
     var _RAW_FILE_URI = _o.RAW_FILE_URI == null ? default(StringOffset) : builder.CreateString(_o.RAW_FILE_URI);
+    var _DESCRIPTOR = _o.DESCRIPTOR == null ? default(StringOffset) : builder.CreateString(_o.DESCRIPTOR);
+    var _URL = _o.URL == null ? default(StringOffset) : builder.CreateString(_o.URL);
     var _TAGS = default(VectorOffset);
     if (_o.TAGS != null) {
       var __TAGS = new StringOffset[_o.TAGS.Count];
       for (var _j = 0; _j < __TAGS.Length; ++_j) { __TAGS[_j] = builder.CreateString(_o.TAGS[_j]); }
       _TAGS = CreateTAGSVector(builder, __TAGS);
     }
-    var _CARRIER_STANDARD = _o.CARRIER_STANDARD == null ? default(StringOffset) : builder.CreateString(_o.CARRIER_STANDARD);
-    var _MODULATION = _o.MODULATION == null ? default(StringOffset) : builder.CreateString(_o.MODULATION);
-    var _TRANSMIT_FILTER_TYPE = _o.TRANSMIT_FILTER_TYPE == null ? default(StringOffset) : builder.CreateString(_o.TRANSMIT_FILTER_TYPE);
-    var _ON_ORBIT = _o.ON_ORBIT == null ? default(StringOffset) : builder.CreateString(_o.ON_ORBIT);
-    var _DESCRIPTOR = _o.DESCRIPTOR == null ? default(StringOffset) : builder.CreateString(_o.DESCRIPTOR);
-    var _URL = _o.URL == null ? default(StringOffset) : builder.CreateString(_o.URL);
     return CreateRFO(
       builder,
       _ID,
       _OB_TIME,
       _ID_SENSOR,
-      _TYPE,
+      _ORIG_SENSOR_ID,
+      _o.OBS_TYPE,
       _o.SAT_NO,
+      _ORIG_OBJECT_ID,
+      _ON_ORBIT,
+      _o.UCT,
       _TASK_ID,
       _TRANSACTION_ID,
       _TRACK_ID,
-      _ORIG_OBJECT_ID,
-      _ORIG_SENSOR_ID,
-      _o.UCT,
       _TRANSPONDER,
+      _o.DETECTION_STATUS,
       _o.AZIMUTH,
       _o.AZIMUTH_UNC,
       _o.AZIMUTH_RATE,
@@ -607,53 +669,51 @@ public struct RFO : IFlatbufferObject
       _o.SENLON,
       _o.SENALT,
       _ELNOT,
+      _ANTENNA_NAME,
+      _COLLECTION_MODE,
       _o.FREQUENCY,
       _o.NOMINAL_FREQUENCY,
       _o.START_FREQUENCY,
       _o.END_FREQUENCY,
-      _o.RELATIVE_CARRIER_POWER,
-      _o.SPECTRUM_ANALYZER_POWER,
-      _o.RELATIVE_NOISE_FLOOR,
-      _o.REFERENCE_LEVEL,
-      _o.PGRI,
-      _o.CONFIDENCE,
-      _o.INCOMING,
-      _o.SWITCH_POINT,
-      _o.BAUD_RATE,
-      _o.SNR,
-      _o.NOMINAL_SNR,
-      _o.POLARITY,
-      _POLARITY_TYPE,
-      _o.CHANNEL,
-      _o.POWER_OVER_NOISE,
-      _o.NOMINAL_POWER_OVER_NOISE,
+      _o.FREQUENCY_SHIFT,
       _o.BANDWIDTH,
       _o.NOMINAL_BANDWIDTH,
       _o.RESOLUTION_BANDWIDTH,
       _o.VIDEO_BANDWIDTH,
+      _o.RELATIVE_CARRIER_POWER,
+      _o.SPECTRUM_ANALYZER_POWER,
+      _o.RELATIVE_NOISE_FLOOR,
+      _o.REFERENCE_LEVEL,
+      _o.NOISE_PWR_DENSITY,
+      _o.PGRI,
       _o.EIRP,
       _o.NOMINAL_EIRP,
       _o.MIN_PSD,
       _o.MAX_PSD,
-      _o.FREQUENCY_SHIFT,
+      _o.SNR,
+      _o.NOMINAL_SNR,
+      _o.POWER_OVER_NOISE,
+      _o.NOMINAL_POWER_OVER_NOISE,
+      _o.POLARITY,
+      _POLARITY_TYPE,
+      _o.CHANNEL,
+      _o.BAUD_RATE,
+      _o.SYMBOL_TO_NOISE_RATIO,
+      _o.BIT_ERROR_RATE,
       _o.PEAK,
-      _ANTENNA_NAME,
-      _DETECTION_STATUS,
-      _COLLECTION_MODE,
-      _RAW_FILE_URI,
-      _TAGS,
-      _o.NOISE_PWR_DENSITY,
+      _o.INCOMING,
+      _o.SWITCH_POINT,
+      _o.CONFIDENCE,
       _CARRIER_STANDARD,
       _MODULATION,
       _o.INNER_CODING_RATE,
       _o.OUTER_CODING_RATE,
       _TRANSMIT_FILTER_TYPE,
       _o.TRANSMIT_FILTER_ROLL_OFF,
-      _o.SYMBOL_TO_NOISE_RATIO,
-      _o.BIT_ERROR_RATE,
-      _ON_ORBIT,
+      _RAW_FILE_URI,
       _DESCRIPTOR,
-      _URL);
+      _URL,
+      _TAGS);
   }
 }
 
@@ -662,15 +722,17 @@ public class RFOT
   public string ID { get; set; }
   public string OB_TIME { get; set; }
   public string ID_SENSOR { get; set; }
-  public string TYPE { get; set; }
-  public int SAT_NO { get; set; }
+  public string ORIG_SENSOR_ID { get; set; }
+  public rfObsType OBS_TYPE { get; set; }
+  public uint SAT_NO { get; set; }
+  public string ORIG_OBJECT_ID { get; set; }
+  public string ON_ORBIT { get; set; }
+  public bool UCT { get; set; }
   public string TASK_ID { get; set; }
   public string TRANSACTION_ID { get; set; }
   public string TRACK_ID { get; set; }
-  public string ORIG_OBJECT_ID { get; set; }
-  public string ORIG_SENSOR_ID { get; set; }
-  public bool UCT { get; set; }
   public string TRANSPONDER { get; set; }
+  public rfDetectionStatus DETECTION_STATUS { get; set; }
   public double AZIMUTH { get; set; }
   public double AZIMUTH_UNC { get; set; }
   public double AZIMUTH_RATE { get; set; }
@@ -686,67 +748,67 @@ public class RFOT
   public double SENLON { get; set; }
   public double SENALT { get; set; }
   public string ELNOT { get; set; }
+  public string ANTENNA_NAME { get; set; }
+  public string COLLECTION_MODE { get; set; }
   public double FREQUENCY { get; set; }
   public double NOMINAL_FREQUENCY { get; set; }
   public double START_FREQUENCY { get; set; }
   public double END_FREQUENCY { get; set; }
-  public double RELATIVE_CARRIER_POWER { get; set; }
-  public double SPECTRUM_ANALYZER_POWER { get; set; }
-  public double RELATIVE_NOISE_FLOOR { get; set; }
-  public double REFERENCE_LEVEL { get; set; }
-  public double PGRI { get; set; }
-  public double CONFIDENCE { get; set; }
-  public bool INCOMING { get; set; }
-  public int SWITCH_POINT { get; set; }
-  public double BAUD_RATE { get; set; }
-  public double SNR { get; set; }
-  public double NOMINAL_SNR { get; set; }
-  public double POLARITY { get; set; }
-  public string POLARITY_TYPE { get; set; }
-  public int CHANNEL { get; set; }
-  public double POWER_OVER_NOISE { get; set; }
-  public double NOMINAL_POWER_OVER_NOISE { get; set; }
+  public double FREQUENCY_SHIFT { get; set; }
   public double BANDWIDTH { get; set; }
   public double NOMINAL_BANDWIDTH { get; set; }
   public double RESOLUTION_BANDWIDTH { get; set; }
   public double VIDEO_BANDWIDTH { get; set; }
+  public double RELATIVE_CARRIER_POWER { get; set; }
+  public double SPECTRUM_ANALYZER_POWER { get; set; }
+  public double RELATIVE_NOISE_FLOOR { get; set; }
+  public double REFERENCE_LEVEL { get; set; }
+  public double NOISE_PWR_DENSITY { get; set; }
+  public double PGRI { get; set; }
   public double EIRP { get; set; }
   public double NOMINAL_EIRP { get; set; }
   public double MIN_PSD { get; set; }
   public double MAX_PSD { get; set; }
-  public double FREQUENCY_SHIFT { get; set; }
-  public bool PEAK { get; set; }
-  public string ANTENNA_NAME { get; set; }
-  public string DETECTION_STATUS { get; set; }
-  public string COLLECTION_MODE { get; set; }
-  public string RAW_FILE_URI { get; set; }
-  public List<string> TAGS { get; set; }
-  public double NOISE_PWR_DENSITY { get; set; }
-  public string CARRIER_STANDARD { get; set; }
-  public string MODULATION { get; set; }
-  public int INNER_CODING_RATE { get; set; }
-  public int OUTER_CODING_RATE { get; set; }
-  public string TRANSMIT_FILTER_TYPE { get; set; }
-  public double TRANSMIT_FILTER_ROLL_OFF { get; set; }
+  public double SNR { get; set; }
+  public double NOMINAL_SNR { get; set; }
+  public double POWER_OVER_NOISE { get; set; }
+  public double NOMINAL_POWER_OVER_NOISE { get; set; }
+  public double POLARITY { get; set; }
+  public string POLARITY_TYPE { get; set; }
+  public ushort CHANNEL { get; set; }
+  public double BAUD_RATE { get; set; }
   public double SYMBOL_TO_NOISE_RATIO { get; set; }
   public double BIT_ERROR_RATE { get; set; }
-  public string ON_ORBIT { get; set; }
+  public bool PEAK { get; set; }
+  public bool INCOMING { get; set; }
+  public ushort SWITCH_POINT { get; set; }
+  public double CONFIDENCE { get; set; }
+  public string CARRIER_STANDARD { get; set; }
+  public string MODULATION { get; set; }
+  public byte INNER_CODING_RATE { get; set; }
+  public byte OUTER_CODING_RATE { get; set; }
+  public string TRANSMIT_FILTER_TYPE { get; set; }
+  public double TRANSMIT_FILTER_ROLL_OFF { get; set; }
+  public string RAW_FILE_URI { get; set; }
   public string DESCRIPTOR { get; set; }
   public string URL { get; set; }
+  public List<string> TAGS { get; set; }
 
   public RFOT() {
     this.ID = null;
     this.OB_TIME = null;
     this.ID_SENSOR = null;
-    this.TYPE = null;
+    this.ORIG_SENSOR_ID = null;
+    this.OBS_TYPE = rfObsType.EMISSION;
     this.SAT_NO = 0;
+    this.ORIG_OBJECT_ID = null;
+    this.ON_ORBIT = null;
+    this.UCT = false;
     this.TASK_ID = null;
     this.TRANSACTION_ID = null;
     this.TRACK_ID = null;
-    this.ORIG_OBJECT_ID = null;
-    this.ORIG_SENSOR_ID = null;
-    this.UCT = false;
     this.TRANSPONDER = null;
+    this.DETECTION_STATUS = rfDetectionStatus.DETECTED;
     this.AZIMUTH = 0.0;
     this.AZIMUTH_UNC = 0.0;
     this.AZIMUTH_RATE = 0.0;
@@ -762,53 +824,51 @@ public class RFOT
     this.SENLON = 0.0;
     this.SENALT = 0.0;
     this.ELNOT = null;
+    this.ANTENNA_NAME = null;
+    this.COLLECTION_MODE = null;
     this.FREQUENCY = 0.0;
     this.NOMINAL_FREQUENCY = 0.0;
     this.START_FREQUENCY = 0.0;
     this.END_FREQUENCY = 0.0;
-    this.RELATIVE_CARRIER_POWER = 0.0;
-    this.SPECTRUM_ANALYZER_POWER = 0.0;
-    this.RELATIVE_NOISE_FLOOR = 0.0;
-    this.REFERENCE_LEVEL = 0.0;
-    this.PGRI = 0.0;
-    this.CONFIDENCE = 0.0;
-    this.INCOMING = false;
-    this.SWITCH_POINT = 0;
-    this.BAUD_RATE = 0.0;
-    this.SNR = 0.0;
-    this.NOMINAL_SNR = 0.0;
-    this.POLARITY = 0.0;
-    this.POLARITY_TYPE = null;
-    this.CHANNEL = 0;
-    this.POWER_OVER_NOISE = 0.0;
-    this.NOMINAL_POWER_OVER_NOISE = 0.0;
+    this.FREQUENCY_SHIFT = 0.0;
     this.BANDWIDTH = 0.0;
     this.NOMINAL_BANDWIDTH = 0.0;
     this.RESOLUTION_BANDWIDTH = 0.0;
     this.VIDEO_BANDWIDTH = 0.0;
+    this.RELATIVE_CARRIER_POWER = 0.0;
+    this.SPECTRUM_ANALYZER_POWER = 0.0;
+    this.RELATIVE_NOISE_FLOOR = 0.0;
+    this.REFERENCE_LEVEL = 0.0;
+    this.NOISE_PWR_DENSITY = 0.0;
+    this.PGRI = 0.0;
     this.EIRP = 0.0;
     this.NOMINAL_EIRP = 0.0;
     this.MIN_PSD = 0.0;
     this.MAX_PSD = 0.0;
-    this.FREQUENCY_SHIFT = 0.0;
+    this.SNR = 0.0;
+    this.NOMINAL_SNR = 0.0;
+    this.POWER_OVER_NOISE = 0.0;
+    this.NOMINAL_POWER_OVER_NOISE = 0.0;
+    this.POLARITY = 0.0;
+    this.POLARITY_TYPE = null;
+    this.CHANNEL = 0;
+    this.BAUD_RATE = 0.0;
+    this.SYMBOL_TO_NOISE_RATIO = 0.0;
+    this.BIT_ERROR_RATE = 0.0;
     this.PEAK = false;
-    this.ANTENNA_NAME = null;
-    this.DETECTION_STATUS = null;
-    this.COLLECTION_MODE = null;
-    this.RAW_FILE_URI = null;
-    this.TAGS = null;
-    this.NOISE_PWR_DENSITY = 0.0;
+    this.INCOMING = false;
+    this.SWITCH_POINT = 0;
+    this.CONFIDENCE = 0.0;
     this.CARRIER_STANDARD = null;
     this.MODULATION = null;
     this.INNER_CODING_RATE = 0;
     this.OUTER_CODING_RATE = 0;
     this.TRANSMIT_FILTER_TYPE = null;
     this.TRANSMIT_FILTER_ROLL_OFF = 0.0;
-    this.SYMBOL_TO_NOISE_RATIO = 0.0;
-    this.BIT_ERROR_RATE = 0.0;
-    this.ON_ORBIT = null;
+    this.RAW_FILE_URI = null;
     this.DESCRIPTOR = null;
     this.URL = null;
+    this.TAGS = null;
   }
   public static RFOT DeserializeFromBinary(byte[] fbBuffer) {
     return RFO.GetRootAsRFO(new ByteBuffer(fbBuffer)).UnPack();
@@ -829,77 +889,77 @@ static public class RFOVerify
       && verifier.VerifyString(tablePos, 4 /*ID*/, false)
       && verifier.VerifyString(tablePos, 6 /*OB_TIME*/, false)
       && verifier.VerifyString(tablePos, 8 /*ID_SENSOR*/, false)
-      && verifier.VerifyString(tablePos, 10 /*TYPE*/, false)
-      && verifier.VerifyField(tablePos, 12 /*SAT_NO*/, 4 /*int*/, 4, false)
-      && verifier.VerifyString(tablePos, 14 /*TASK_ID*/, false)
-      && verifier.VerifyString(tablePos, 16 /*TRANSACTION_ID*/, false)
-      && verifier.VerifyString(tablePos, 18 /*TRACK_ID*/, false)
-      && verifier.VerifyString(tablePos, 20 /*ORIG_OBJECT_ID*/, false)
-      && verifier.VerifyString(tablePos, 22 /*ORIG_SENSOR_ID*/, false)
-      && verifier.VerifyField(tablePos, 24 /*UCT*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyString(tablePos, 26 /*TRANSPONDER*/, false)
-      && verifier.VerifyField(tablePos, 28 /*AZIMUTH*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 30 /*AZIMUTH_UNC*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 32 /*AZIMUTH_RATE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 34 /*ELEVATION*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 36 /*ELEVATION_UNC*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 38 /*ELEVATION_RATE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 40 /*RANGE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 42 /*RANGE_UNC*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 44 /*RANGE_RATE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 46 /*RANGE_RATE_UNC*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 48 /*TRACK_RANGE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 50 /*SENLAT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 52 /*SENLON*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 54 /*SENALT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 56 /*ELNOT*/, false)
-      && verifier.VerifyField(tablePos, 58 /*FREQUENCY*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 60 /*NOMINAL_FREQUENCY*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 62 /*START_FREQUENCY*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 64 /*END_FREQUENCY*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 66 /*RELATIVE_CARRIER_POWER*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 68 /*SPECTRUM_ANALYZER_POWER*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 70 /*RELATIVE_NOISE_FLOOR*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 72 /*REFERENCE_LEVEL*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 74 /*PGRI*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 76 /*CONFIDENCE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 78 /*INCOMING*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyField(tablePos, 80 /*SWITCH_POINT*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 82 /*BAUD_RATE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 84 /*SNR*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 86 /*NOMINAL_SNR*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 88 /*POLARITY*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 90 /*POLARITY_TYPE*/, false)
-      && verifier.VerifyField(tablePos, 92 /*CHANNEL*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 94 /*POWER_OVER_NOISE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 96 /*NOMINAL_POWER_OVER_NOISE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 98 /*BANDWIDTH*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 100 /*NOMINAL_BANDWIDTH*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 102 /*RESOLUTION_BANDWIDTH*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 104 /*VIDEO_BANDWIDTH*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 106 /*EIRP*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 108 /*NOMINAL_EIRP*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 110 /*MIN_PSD*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 112 /*MAX_PSD*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 114 /*FREQUENCY_SHIFT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 116 /*PEAK*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyString(tablePos, 118 /*ANTENNA_NAME*/, false)
-      && verifier.VerifyString(tablePos, 120 /*DETECTION_STATUS*/, false)
-      && verifier.VerifyString(tablePos, 122 /*COLLECTION_MODE*/, false)
-      && verifier.VerifyString(tablePos, 124 /*RAW_FILE_URI*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 126 /*TAGS*/, false)
-      && verifier.VerifyField(tablePos, 128 /*NOISE_PWR_DENSITY*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 130 /*CARRIER_STANDARD*/, false)
-      && verifier.VerifyString(tablePos, 132 /*MODULATION*/, false)
-      && verifier.VerifyField(tablePos, 134 /*INNER_CODING_RATE*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 136 /*OUTER_CODING_RATE*/, 4 /*int*/, 4, false)
-      && verifier.VerifyString(tablePos, 138 /*TRANSMIT_FILTER_TYPE*/, false)
-      && verifier.VerifyField(tablePos, 140 /*TRANSMIT_FILTER_ROLL_OFF*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 142 /*SYMBOL_TO_NOISE_RATIO*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 144 /*BIT_ERROR_RATE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 146 /*ON_ORBIT*/, false)
-      && verifier.VerifyString(tablePos, 148 /*DESCRIPTOR*/, false)
-      && verifier.VerifyString(tablePos, 150 /*URL*/, false)
+      && verifier.VerifyString(tablePos, 10 /*ORIG_SENSOR_ID*/, false)
+      && verifier.VerifyField(tablePos, 12 /*OBS_TYPE*/, 1 /*rfObsType*/, 1, false)
+      && verifier.VerifyField(tablePos, 14 /*SAT_NO*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 16 /*ORIG_OBJECT_ID*/, false)
+      && verifier.VerifyString(tablePos, 18 /*ON_ORBIT*/, false)
+      && verifier.VerifyField(tablePos, 20 /*UCT*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyString(tablePos, 22 /*TASK_ID*/, false)
+      && verifier.VerifyString(tablePos, 24 /*TRANSACTION_ID*/, false)
+      && verifier.VerifyString(tablePos, 26 /*TRACK_ID*/, false)
+      && verifier.VerifyString(tablePos, 28 /*TRANSPONDER*/, false)
+      && verifier.VerifyField(tablePos, 30 /*DETECTION_STATUS*/, 1 /*rfDetectionStatus*/, 1, false)
+      && verifier.VerifyField(tablePos, 32 /*AZIMUTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 34 /*AZIMUTH_UNC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 36 /*AZIMUTH_RATE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 38 /*ELEVATION*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 40 /*ELEVATION_UNC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 42 /*ELEVATION_RATE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 44 /*RANGE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 46 /*RANGE_UNC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 48 /*RANGE_RATE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 50 /*RANGE_RATE_UNC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 52 /*TRACK_RANGE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 54 /*SENLAT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 56 /*SENLON*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 58 /*SENALT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 60 /*ELNOT*/, false)
+      && verifier.VerifyString(tablePos, 62 /*ANTENNA_NAME*/, false)
+      && verifier.VerifyString(tablePos, 64 /*COLLECTION_MODE*/, false)
+      && verifier.VerifyField(tablePos, 66 /*FREQUENCY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 68 /*NOMINAL_FREQUENCY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 70 /*START_FREQUENCY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 72 /*END_FREQUENCY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 74 /*FREQUENCY_SHIFT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 76 /*BANDWIDTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 78 /*NOMINAL_BANDWIDTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 80 /*RESOLUTION_BANDWIDTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 82 /*VIDEO_BANDWIDTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 84 /*RELATIVE_CARRIER_POWER*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 86 /*SPECTRUM_ANALYZER_POWER*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 88 /*RELATIVE_NOISE_FLOOR*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 90 /*REFERENCE_LEVEL*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 92 /*NOISE_PWR_DENSITY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 94 /*PGRI*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 96 /*EIRP*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 98 /*NOMINAL_EIRP*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 100 /*MIN_PSD*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 102 /*MAX_PSD*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 104 /*SNR*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 106 /*NOMINAL_SNR*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 108 /*POWER_OVER_NOISE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 110 /*NOMINAL_POWER_OVER_NOISE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 112 /*POLARITY*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 114 /*POLARITY_TYPE*/, false)
+      && verifier.VerifyField(tablePos, 116 /*CHANNEL*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyField(tablePos, 118 /*BAUD_RATE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 120 /*SYMBOL_TO_NOISE_RATIO*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 122 /*BIT_ERROR_RATE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 124 /*PEAK*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 126 /*INCOMING*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 128 /*SWITCH_POINT*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyField(tablePos, 130 /*CONFIDENCE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 132 /*CARRIER_STANDARD*/, false)
+      && verifier.VerifyString(tablePos, 134 /*MODULATION*/, false)
+      && verifier.VerifyField(tablePos, 136 /*INNER_CODING_RATE*/, 1 /*byte*/, 1, false)
+      && verifier.VerifyField(tablePos, 138 /*OUTER_CODING_RATE*/, 1 /*byte*/, 1, false)
+      && verifier.VerifyString(tablePos, 140 /*TRANSMIT_FILTER_TYPE*/, false)
+      && verifier.VerifyField(tablePos, 142 /*TRANSMIT_FILTER_ROLL_OFF*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 144 /*RAW_FILE_URI*/, false)
+      && verifier.VerifyString(tablePos, 146 /*DESCRIPTOR*/, false)
+      && verifier.VerifyString(tablePos, 148 /*URL*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 150 /*TAGS*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

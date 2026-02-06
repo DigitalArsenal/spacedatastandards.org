@@ -5,6 +5,110 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class LinkType {
+  final int value;
+  const LinkType._(this.value);
+
+  factory LinkType.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum LinkType');
+    }
+    return result;
+  }
+
+  static LinkType? _createOrNull(int? value) => 
+      value == null ? null : LinkType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 5;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const LinkType UPLINK = LinkType._(0);
+  static const LinkType DOWNLINK = LinkType._(1);
+  static const LinkType CROSSLINK = LinkType._(2);
+  static const LinkType INTER_SATELLITE = LinkType._(3);
+  static const LinkType GROUND_TO_GROUND = LinkType._(4);
+  static const LinkType RELAY = LinkType._(5);
+  static const Map<int, LinkType> values = {
+    0: UPLINK,
+    1: DOWNLINK,
+    2: CROSSLINK,
+    3: INTER_SATELLITE,
+    4: GROUND_TO_GROUND,
+    5: RELAY};
+
+  static const fb.Reader<LinkType> reader = _LinkTypeReader();
+
+  @override
+  String toString() {
+    return 'LinkType{value: $value}';
+  }
+}
+
+class _LinkTypeReader extends fb.Reader<LinkType> {
+  const _LinkTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  LinkType read(fb.BufferContext bc, int offset) =>
+      LinkType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class LinkState {
+  final int value;
+  const LinkState._(this.value);
+
+  factory LinkState.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum LinkState');
+    }
+    return result;
+  }
+
+  static LinkState? _createOrNull(int? value) => 
+      value == null ? null : LinkState.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 5;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const LinkState ESTABLISHED = LinkState._(0);
+  static const LinkState DEGRADED = LinkState._(1);
+  static const LinkState INTERRUPTED = LinkState._(2);
+  static const LinkState PLANNED = LinkState._(3);
+  static const LinkState TERMINATED = LinkState._(4);
+  static const LinkState UNKNOWN = LinkState._(5);
+  static const Map<int, LinkState> values = {
+    0: ESTABLISHED,
+    1: DEGRADED,
+    2: INTERRUPTED,
+    3: PLANNED,
+    4: TERMINATED,
+    5: UNKNOWN};
+
+  static const fb.Reader<LinkState> reader = _LinkStateReader();
+
+  @override
+  String toString() {
+    return 'LinkState{value: $value}';
+  }
+}
+
+class _LinkStateReader extends fb.Reader<LinkState> {
+  const _LinkStateReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  LinkState read(fb.BufferContext bc, int offset) =>
+      LinkState.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 ///  Link Status
 class LKS {
   LKS._(this._bc, this._bcOffset);
@@ -18,34 +122,58 @@ class LKS {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  First endpoint on-orbit identifier
   String? get ID_ON_ORBIT1 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get ID_ON_ORBIT2 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get LINK_START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get LINK_STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  First endpoint satellite catalog number
+  int get SAT_NO1 => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  ///  Second endpoint on-orbit identifier
+  String? get ID_ON_ORBIT2 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Second endpoint satellite catalog number
+  int get SAT_NO2 => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  ///  Constellation name
   String? get CONSTELLATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Link name or identifier
   String? get LINK_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  String? get LINK_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  String? get BAND => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  String? get ID_BEAM1 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  String? get END_POINT1_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
-  double get END_POINT1_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
-  double get END_POINT1_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
-  String? get ID_BEAM2 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
-  String? get END_POINT2_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
-  double get END_POINT2_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
-  double get END_POINT2_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
-  double get DATA_RATE1_TO2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
-  double get DATA_RATE2_TO1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
-  String? get LINK_STATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
-  String? get SYS_CAP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
-  String? get OPS_CAP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
-  int get SAT_NO1 => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 48, 0);
-  int get SAT_NO2 => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 50, 0);
+  ///  Link type
+  LinkType get LINK_TYPE => LinkType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 0));
+  ///  Link state
+  LinkState get LINK_STATE => LinkState.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 0));
+  ///  RF band
+  String? get BAND => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Link start time (ISO 8601)
+  String? get LINK_START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Link stop time (ISO 8601)
+  String? get LINK_STOP_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  ///  First endpoint beam identifier
+  String? get ID_BEAM1 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  ///  First endpoint name
+  String? get END_POINT1_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  ///  First endpoint latitude (degrees)
+  double get END_POINT1_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  ///  First endpoint longitude (degrees)
+  double get END_POINT1_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  ///  Second endpoint beam identifier
+  String? get ID_BEAM2 => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  ///  Second endpoint name
+  String? get END_POINT2_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  ///  Second endpoint latitude (degrees)
+  double get END_POINT2_LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  ///  Second endpoint longitude (degrees)
+  double get END_POINT2_LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  ///  Data rate from endpoint 1 to 2 (Mbps)
+  double get DATA_RATE1_TO2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  ///  Data rate from endpoint 2 to 1 (Mbps)
+  double get DATA_RATE2_TO1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
+  ///  System capability status
+  String? get SYS_CAP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
+  ///  Operational capability status
+  String? get OPS_CAP => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 50);
 
   @override
   String toString() {
-    return 'LKS{ID: ${ID}, ID_ON_ORBIT1: ${ID_ON_ORBIT1}, ID_ON_ORBIT2: ${ID_ON_ORBIT2}, LINK_START_TIME: ${LINK_START_TIME}, LINK_STOP_TIME: ${LINK_STOP_TIME}, CONSTELLATION: ${CONSTELLATION}, LINK_NAME: ${LINK_NAME}, LINK_TYPE: ${LINK_TYPE}, BAND: ${BAND}, ID_BEAM1: ${ID_BEAM1}, END_POINT1_NAME: ${END_POINT1_NAME}, END_POINT1_LAT: ${END_POINT1_LAT}, END_POINT1_LON: ${END_POINT1_LON}, ID_BEAM2: ${ID_BEAM2}, END_POINT2_NAME: ${END_POINT2_NAME}, END_POINT2_LAT: ${END_POINT2_LAT}, END_POINT2_LON: ${END_POINT2_LON}, DATA_RATE1_TO2: ${DATA_RATE1_TO2}, DATA_RATE2_TO1: ${DATA_RATE2_TO1}, LINK_STATE: ${LINK_STATE}, SYS_CAP: ${SYS_CAP}, OPS_CAP: ${OPS_CAP}, SAT_NO1: ${SAT_NO1}, SAT_NO2: ${SAT_NO2}}';
+    return 'LKS{ID: ${ID}, ID_ON_ORBIT1: ${ID_ON_ORBIT1}, SAT_NO1: ${SAT_NO1}, ID_ON_ORBIT2: ${ID_ON_ORBIT2}, SAT_NO2: ${SAT_NO2}, CONSTELLATION: ${CONSTELLATION}, LINK_NAME: ${LINK_NAME}, LINK_TYPE: ${LINK_TYPE}, LINK_STATE: ${LINK_STATE}, BAND: ${BAND}, LINK_START_TIME: ${LINK_START_TIME}, LINK_STOP_TIME: ${LINK_STOP_TIME}, ID_BEAM1: ${ID_BEAM1}, END_POINT1_NAME: ${END_POINT1_NAME}, END_POINT1_LAT: ${END_POINT1_LAT}, END_POINT1_LON: ${END_POINT1_LON}, ID_BEAM2: ${ID_BEAM2}, END_POINT2_NAME: ${END_POINT2_NAME}, END_POINT2_LAT: ${END_POINT2_LAT}, END_POINT2_LON: ${END_POINT2_LON}, DATA_RATE1_TO2: ${DATA_RATE1_TO2}, DATA_RATE2_TO1: ${DATA_RATE2_TO1}, SYS_CAP: ${SYS_CAP}, OPS_CAP: ${OPS_CAP}}';
   }
 }
 
@@ -74,16 +202,16 @@ class LKSBuilder {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addIdOnOrbit2Offset(int? offset) {
-    fbBuilder.addOffset(2, offset);
+  int addSatNo1(int? SAT_NO1) {
+    fbBuilder.addUint32(2, SAT_NO1);
     return fbBuilder.offset;
   }
-  int addLinkStartTimeOffset(int? offset) {
+  int addIdOnOrbit2Offset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addLinkStopTimeOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
+  int addSatNo2(int? SAT_NO2) {
+    fbBuilder.addUint32(4, SAT_NO2);
     return fbBuilder.offset;
   }
   int addConstellationOffset(int? offset) {
@@ -94,72 +222,72 @@ class LKSBuilder {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
-  int addLinkTypeOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
+  int addLinkType(LinkType? LINK_TYPE) {
+    fbBuilder.addInt8(7, LINK_TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addLinkState(LinkState? LINK_STATE) {
+    fbBuilder.addInt8(8, LINK_STATE?.value);
     return fbBuilder.offset;
   }
   int addBandOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-  int addIdBeam1Offset(int? offset) {
     fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
-  int addEndPoint1NameOffset(int? offset) {
+  int addLinkStartTimeOffset(int? offset) {
     fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
-  int addEndPoint1Lat(double? END_POINT1_LAT) {
-    fbBuilder.addFloat64(11, END_POINT1_LAT);
+  int addLinkStopTimeOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
-  int addEndPoint1Lon(double? END_POINT1_LON) {
-    fbBuilder.addFloat64(12, END_POINT1_LON);
+  int addIdBeam1Offset(int? offset) {
+    fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
-  int addIdBeam2Offset(int? offset) {
+  int addEndPoint1NameOffset(int? offset) {
     fbBuilder.addOffset(13, offset);
     return fbBuilder.offset;
   }
+  int addEndPoint1Lat(double? END_POINT1_LAT) {
+    fbBuilder.addFloat64(14, END_POINT1_LAT);
+    return fbBuilder.offset;
+  }
+  int addEndPoint1Lon(double? END_POINT1_LON) {
+    fbBuilder.addFloat64(15, END_POINT1_LON);
+    return fbBuilder.offset;
+  }
+  int addIdBeam2Offset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
   int addEndPoint2NameOffset(int? offset) {
-    fbBuilder.addOffset(14, offset);
+    fbBuilder.addOffset(17, offset);
     return fbBuilder.offset;
   }
   int addEndPoint2Lat(double? END_POINT2_LAT) {
-    fbBuilder.addFloat64(15, END_POINT2_LAT);
+    fbBuilder.addFloat64(18, END_POINT2_LAT);
     return fbBuilder.offset;
   }
   int addEndPoint2Lon(double? END_POINT2_LON) {
-    fbBuilder.addFloat64(16, END_POINT2_LON);
+    fbBuilder.addFloat64(19, END_POINT2_LON);
     return fbBuilder.offset;
   }
   int addDataRate1To2(double? DATA_RATE1_TO2) {
-    fbBuilder.addFloat64(17, DATA_RATE1_TO2);
+    fbBuilder.addFloat64(20, DATA_RATE1_TO2);
     return fbBuilder.offset;
   }
   int addDataRate2To1(double? DATA_RATE2_TO1) {
-    fbBuilder.addFloat64(18, DATA_RATE2_TO1);
-    return fbBuilder.offset;
-  }
-  int addLinkStateOffset(int? offset) {
-    fbBuilder.addOffset(19, offset);
+    fbBuilder.addFloat64(21, DATA_RATE2_TO1);
     return fbBuilder.offset;
   }
   int addSysCapOffset(int? offset) {
-    fbBuilder.addOffset(20, offset);
+    fbBuilder.addOffset(22, offset);
     return fbBuilder.offset;
   }
   int addOpsCapOffset(int? offset) {
-    fbBuilder.addOffset(21, offset);
-    return fbBuilder.offset;
-  }
-  int addSatNo1(int? SAT_NO1) {
-    fbBuilder.addInt32(22, SAT_NO1);
-    return fbBuilder.offset;
-  }
-  int addSatNo2(int? SAT_NO2) {
-    fbBuilder.addInt32(23, SAT_NO2);
+    fbBuilder.addOffset(23, offset);
     return fbBuilder.offset;
   }
 
@@ -171,13 +299,16 @@ class LKSBuilder {
 class LKSObjectBuilder extends fb.ObjectBuilder {
   final String? _ID;
   final String? _ID_ON_ORBIT1;
+  final int? _SAT_NO1;
   final String? _ID_ON_ORBIT2;
-  final String? _LINK_START_TIME;
-  final String? _LINK_STOP_TIME;
+  final int? _SAT_NO2;
   final String? _CONSTELLATION;
   final String? _LINK_NAME;
-  final String? _LINK_TYPE;
+  final LinkType? _LINK_TYPE;
+  final LinkState? _LINK_STATE;
   final String? _BAND;
+  final String? _LINK_START_TIME;
+  final String? _LINK_STOP_TIME;
   final String? _ID_BEAM1;
   final String? _END_POINT1_NAME;
   final double? _END_POINT1_LAT;
@@ -188,22 +319,22 @@ class LKSObjectBuilder extends fb.ObjectBuilder {
   final double? _END_POINT2_LON;
   final double? _DATA_RATE1_TO2;
   final double? _DATA_RATE2_TO1;
-  final String? _LINK_STATE;
   final String? _SYS_CAP;
   final String? _OPS_CAP;
-  final int? _SAT_NO1;
-  final int? _SAT_NO2;
 
   LKSObjectBuilder({
     String? ID,
     String? ID_ON_ORBIT1,
+    int? SAT_NO1,
     String? ID_ON_ORBIT2,
-    String? LINK_START_TIME,
-    String? LINK_STOP_TIME,
+    int? SAT_NO2,
     String? CONSTELLATION,
     String? LINK_NAME,
-    String? LINK_TYPE,
+    LinkType? LINK_TYPE,
+    LinkState? LINK_STATE,
     String? BAND,
+    String? LINK_START_TIME,
+    String? LINK_STOP_TIME,
     String? ID_BEAM1,
     String? END_POINT1_NAME,
     double? END_POINT1_LAT,
@@ -214,21 +345,21 @@ class LKSObjectBuilder extends fb.ObjectBuilder {
     double? END_POINT2_LON,
     double? DATA_RATE1_TO2,
     double? DATA_RATE2_TO1,
-    String? LINK_STATE,
     String? SYS_CAP,
     String? OPS_CAP,
-    int? SAT_NO1,
-    int? SAT_NO2,
   })
       : _ID = ID,
         _ID_ON_ORBIT1 = ID_ON_ORBIT1,
+        _SAT_NO1 = SAT_NO1,
         _ID_ON_ORBIT2 = ID_ON_ORBIT2,
-        _LINK_START_TIME = LINK_START_TIME,
-        _LINK_STOP_TIME = LINK_STOP_TIME,
+        _SAT_NO2 = SAT_NO2,
         _CONSTELLATION = CONSTELLATION,
         _LINK_NAME = LINK_NAME,
         _LINK_TYPE = LINK_TYPE,
+        _LINK_STATE = LINK_STATE,
         _BAND = BAND,
+        _LINK_START_TIME = LINK_START_TIME,
+        _LINK_STOP_TIME = LINK_STOP_TIME,
         _ID_BEAM1 = ID_BEAM1,
         _END_POINT1_NAME = END_POINT1_NAME,
         _END_POINT1_LAT = END_POINT1_LAT,
@@ -239,11 +370,8 @@ class LKSObjectBuilder extends fb.ObjectBuilder {
         _END_POINT2_LON = END_POINT2_LON,
         _DATA_RATE1_TO2 = DATA_RATE1_TO2,
         _DATA_RATE2_TO1 = DATA_RATE2_TO1,
-        _LINK_STATE = LINK_STATE,
         _SYS_CAP = SYS_CAP,
-        _OPS_CAP = OPS_CAP,
-        _SAT_NO1 = SAT_NO1,
-        _SAT_NO2 = SAT_NO2;
+        _OPS_CAP = OPS_CAP;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -254,18 +382,16 @@ class LKSObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ID_ON_ORBIT1!);
     final int? ID_ON_ORBIT2Offset = _ID_ON_ORBIT2 == null ? null
         : fbBuilder.writeString(_ID_ON_ORBIT2!);
-    final int? LINK_START_TIMEOffset = _LINK_START_TIME == null ? null
-        : fbBuilder.writeString(_LINK_START_TIME!);
-    final int? LINK_STOP_TIMEOffset = _LINK_STOP_TIME == null ? null
-        : fbBuilder.writeString(_LINK_STOP_TIME!);
     final int? CONSTELLATIONOffset = _CONSTELLATION == null ? null
         : fbBuilder.writeString(_CONSTELLATION!);
     final int? LINK_NAMEOffset = _LINK_NAME == null ? null
         : fbBuilder.writeString(_LINK_NAME!);
-    final int? LINK_TYPEOffset = _LINK_TYPE == null ? null
-        : fbBuilder.writeString(_LINK_TYPE!);
     final int? BANDOffset = _BAND == null ? null
         : fbBuilder.writeString(_BAND!);
+    final int? LINK_START_TIMEOffset = _LINK_START_TIME == null ? null
+        : fbBuilder.writeString(_LINK_START_TIME!);
+    final int? LINK_STOP_TIMEOffset = _LINK_STOP_TIME == null ? null
+        : fbBuilder.writeString(_LINK_STOP_TIME!);
     final int? ID_BEAM1Offset = _ID_BEAM1 == null ? null
         : fbBuilder.writeString(_ID_BEAM1!);
     final int? END_POINT1_NAMEOffset = _END_POINT1_NAME == null ? null
@@ -274,8 +400,6 @@ class LKSObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ID_BEAM2!);
     final int? END_POINT2_NAMEOffset = _END_POINT2_NAME == null ? null
         : fbBuilder.writeString(_END_POINT2_NAME!);
-    final int? LINK_STATEOffset = _LINK_STATE == null ? null
-        : fbBuilder.writeString(_LINK_STATE!);
     final int? SYS_CAPOffset = _SYS_CAP == null ? null
         : fbBuilder.writeString(_SYS_CAP!);
     final int? OPS_CAPOffset = _OPS_CAP == null ? null
@@ -283,28 +407,28 @@ class LKSObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.startTable(24);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, ID_ON_ORBIT1Offset);
-    fbBuilder.addOffset(2, ID_ON_ORBIT2Offset);
-    fbBuilder.addOffset(3, LINK_START_TIMEOffset);
-    fbBuilder.addOffset(4, LINK_STOP_TIMEOffset);
+    fbBuilder.addUint32(2, _SAT_NO1);
+    fbBuilder.addOffset(3, ID_ON_ORBIT2Offset);
+    fbBuilder.addUint32(4, _SAT_NO2);
     fbBuilder.addOffset(5, CONSTELLATIONOffset);
     fbBuilder.addOffset(6, LINK_NAMEOffset);
-    fbBuilder.addOffset(7, LINK_TYPEOffset);
-    fbBuilder.addOffset(8, BANDOffset);
-    fbBuilder.addOffset(9, ID_BEAM1Offset);
-    fbBuilder.addOffset(10, END_POINT1_NAMEOffset);
-    fbBuilder.addFloat64(11, _END_POINT1_LAT);
-    fbBuilder.addFloat64(12, _END_POINT1_LON);
-    fbBuilder.addOffset(13, ID_BEAM2Offset);
-    fbBuilder.addOffset(14, END_POINT2_NAMEOffset);
-    fbBuilder.addFloat64(15, _END_POINT2_LAT);
-    fbBuilder.addFloat64(16, _END_POINT2_LON);
-    fbBuilder.addFloat64(17, _DATA_RATE1_TO2);
-    fbBuilder.addFloat64(18, _DATA_RATE2_TO1);
-    fbBuilder.addOffset(19, LINK_STATEOffset);
-    fbBuilder.addOffset(20, SYS_CAPOffset);
-    fbBuilder.addOffset(21, OPS_CAPOffset);
-    fbBuilder.addInt32(22, _SAT_NO1);
-    fbBuilder.addInt32(23, _SAT_NO2);
+    fbBuilder.addInt8(7, _LINK_TYPE?.value);
+    fbBuilder.addInt8(8, _LINK_STATE?.value);
+    fbBuilder.addOffset(9, BANDOffset);
+    fbBuilder.addOffset(10, LINK_START_TIMEOffset);
+    fbBuilder.addOffset(11, LINK_STOP_TIMEOffset);
+    fbBuilder.addOffset(12, ID_BEAM1Offset);
+    fbBuilder.addOffset(13, END_POINT1_NAMEOffset);
+    fbBuilder.addFloat64(14, _END_POINT1_LAT);
+    fbBuilder.addFloat64(15, _END_POINT1_LON);
+    fbBuilder.addOffset(16, ID_BEAM2Offset);
+    fbBuilder.addOffset(17, END_POINT2_NAMEOffset);
+    fbBuilder.addFloat64(18, _END_POINT2_LAT);
+    fbBuilder.addFloat64(19, _END_POINT2_LON);
+    fbBuilder.addFloat64(20, _DATA_RATE1_TO2);
+    fbBuilder.addFloat64(21, _DATA_RATE2_TO1);
+    fbBuilder.addOffset(22, SYS_CAPOffset);
+    fbBuilder.addOffset(23, OPS_CAPOffset);
     return fbBuilder.endTable();
   }
 

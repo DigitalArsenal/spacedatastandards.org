@@ -29,6 +29,9 @@ class MST : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Unique identifier
+     */
     val ID : String?
         get() {
             val o = __offset(4)
@@ -40,6 +43,9 @@ class MST : Table() {
         }
     val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    /**
+     * Message type code
+     */
     val MSG_TYPE : String?
         get() {
             val o = __offset(6)
@@ -51,6 +57,9 @@ class MST : Table() {
         }
     val MSG_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
     fun MSG_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    /**
+     * Message sub-type
+     */
     val MSG_SUB_TYPE : String?
         get() {
             val o = __offset(8)
@@ -62,6 +71,9 @@ class MST : Table() {
         }
     val MSG_SUB_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
     fun MSG_SUB_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    /**
+     * Message creation date (ISO 8601)
+     */
     val MSG_CREATE_DATE : String?
         get() {
             val o = __offset(10)
@@ -73,17 +85,17 @@ class MST : Table() {
         }
     val MSG_CREATE_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
     fun MSG_CREATE_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    val ENVIRONMENT : String?
+    /**
+     * Track environment
+     */
+    val ENVIRONMENT : Byte
         get() {
             val o = __offset(12)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val ENVIRONMENTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun ENVIRONMENTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * Object type classification
+     */
     val OBJ_TYPE : String?
         get() {
             val o = __offset(14)
@@ -95,11 +107,17 @@ class MST : Table() {
         }
     val OBJ_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
     fun OBJ_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
-    val OBJ_TYPE_CONF : Int
+    /**
+     * Object type confidence (0-100)
+     */
+    val OBJ_TYPE_CONF : UByte
         get() {
             val o = __offset(16)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
+    /**
+     * Object platform type
+     */
     val OBJ_PLAT : String?
         get() {
             val o = __offset(18)
@@ -111,6 +129,9 @@ class MST : Table() {
         }
     val OBJ_PLATAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
     fun OBJ_PLATInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    /**
+     * Object identity assessment
+     */
     val OBJ_IDENT : String?
         get() {
             val o = __offset(20)
@@ -122,6 +143,9 @@ class MST : Table() {
         }
     val OBJ_IDENTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
     fun OBJ_IDENTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    /**
+     * Space amplification data
+     */
     val SPACE_AMP : String?
         get() {
             val o = __offset(22)
@@ -133,18 +157,18 @@ class MST : Table() {
         }
     val SPACE_AMPAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
     fun SPACE_AMPInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
-    val OBJ_ACT : String?
+    /**
+     * Space amplification confidence (0-100)
+     */
+    val SPACE_AMP_CONF : UByte
         get() {
             val o = __offset(24)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val OBJ_ACTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun OBJ_ACTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
-    val SPACE_SPEC_TYPE : String?
+    /**
+     * Object activity
+     */
+    val OBJ_ACT : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -153,9 +177,12 @@ class MST : Table() {
                 null
             }
         }
-    val SPACE_SPEC_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun SPACE_SPEC_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
-    val ACFT_SUB_TYPE : String?
+    val OBJ_ACTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
+    fun OBJ_ACTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    /**
+     * Space specific type
+     */
+    val SPACE_SPEC_TYPE : String?
         get() {
             val o = __offset(28)
             return if (o != 0) {
@@ -164,9 +191,12 @@ class MST : Table() {
                 null
             }
         }
-    val ACFT_SUB_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun ACFT_SUB_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
-    val NAME : String?
+    val SPACE_SPEC_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
+    fun SPACE_SPEC_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    /**
+     * Aircraft sub-type (if applicable)
+     */
+    val ACFT_SUB_TYPE : String?
         get() {
             val o = __offset(30)
             return if (o != 0) {
@@ -175,9 +205,12 @@ class MST : Table() {
                 null
             }
         }
-    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
-    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
-    val CALL_SIGN : String?
+    val ACFT_SUB_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
+    fun ACFT_SUB_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    /**
+     * Object name
+     */
+    val NAME : String?
         get() {
             val o = __offset(32)
             return if (o != 0) {
@@ -186,25 +219,34 @@ class MST : Table() {
                 null
             }
         }
-    val CALL_SIGNAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
-    fun CALL_SIGNInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
-    val LOST_TRK_IND : Boolean
+    val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
+    fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
+    /**
+     * Call sign
+     */
+    val CALL_SIGN : String?
         get() {
             val o = __offset(34)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
-        }
-    val TRACK_ID : String?
-        get() {
-            val o = __offset(36)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val TRACK_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
-    fun TRACK_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
-    val PARENT_TRACK_ID : String?
+    val CALL_SIGNAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
+    fun CALL_SIGNInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    /**
+     * True if track is lost
+     */
+    val LOST_TRK_IND : Boolean
+        get() {
+            val o = __offset(36)
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+        }
+    /**
+     * Track identifier
+     */
+    val TRACK_ID : String?
         get() {
             val o = __offset(38)
             return if (o != 0) {
@@ -213,9 +255,12 @@ class MST : Table() {
                 null
             }
         }
-    val PARENT_TRACK_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 1)
-    fun PARENT_TRACK_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 1)
-    val MUID_SRC_TRK : String?
+    val TRACK_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 1)
+    fun TRACK_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 1)
+    /**
+     * Parent track identifier
+     */
+    val PARENT_TRACK_ID : String?
         get() {
             val o = __offset(40)
             return if (o != 0) {
@@ -224,9 +269,12 @@ class MST : Table() {
                 null
             }
         }
-    val MUID_SRC_TRKAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(40, 1)
-    fun MUID_SRC_TRKInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 40, 1)
-    val MUID_SRC : String?
+    val PARENT_TRACK_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(40, 1)
+    fun PARENT_TRACK_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 40, 1)
+    /**
+     * Multi-unit identifier (source track)
+     */
+    val MUID_SRC_TRK : String?
         get() {
             val o = __offset(42)
             return if (o != 0) {
@@ -235,9 +283,12 @@ class MST : Table() {
                 null
             }
         }
-    val MUID_SRCAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(42, 1)
-    fun MUID_SRCInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 42, 1)
-    val ALERT : String?
+    val MUID_SRC_TRKAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(42, 1)
+    fun MUID_SRC_TRKInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 42, 1)
+    /**
+     * Multi-unit identifier (source)
+     */
+    val MUID_SRC : String?
         get() {
             val o = __offset(44)
             return if (o != 0) {
@@ -246,9 +297,12 @@ class MST : Table() {
                 null
             }
         }
-    val ALERTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(44, 1)
-    fun ALERTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 44, 1)
-    val MSL_STATUS : String?
+    val MUID_SRCAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(44, 1)
+    fun MUID_SRCInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 44, 1)
+    /**
+     * Alert classification
+     */
+    val ALERT : String?
         get() {
             val o = __offset(46)
             return if (o != 0) {
@@ -257,20 +311,20 @@ class MST : Table() {
                 null
             }
         }
-    val MSL_STATUSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(46, 1)
-    fun MSL_STATUSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 46, 1)
-    val TS : String?
+    val ALERTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(46, 1)
+    fun ALERTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 46, 1)
+    /**
+     * Missile engagement status
+     */
+    val MSL_STATUS : Byte
         get() {
             val o = __offset(48)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val TSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(48, 1)
-    fun TSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 48, 1)
-    val AOU_RPT_TYPE : String?
+    /**
+     * Track timestamp (ISO 8601)
+     */
+    val TS : String?
         get() {
             val o = __offset(50)
             return if (o != 0) {
@@ -279,40 +333,52 @@ class MST : Table() {
                 null
             }
         }
-    val AOU_RPT_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(50, 1)
-    fun AOU_RPT_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 50, 1)
-    val CONTAINMENT : Double
+    val TSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(50, 1)
+    fun TSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 50, 1)
+    /**
+     * AOU report type
+     */
+    val AOU_RPT_TYPE : Byte
         get() {
             val o = __offset(52)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val TRK_CONF : Double
+    /**
+     * Containment probability (0-1)
+     */
+    val CONTAINMENT : Double
         get() {
             val o = __offset(54)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val TRK_QUAL : Int
+    /**
+     * Track confidence (0-1)
+     */
+    val TRK_CONF : Double
         get() {
             val o = __offset(56)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
-        }
-    val ANG_ELEV : Double
-        get() {
-            val o = __offset(58)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SEN_MODE : String?
+    /**
+     * Track quality (0-15)
+     */
+    val TRK_QUAL : UByte
+        get() {
+            val o = __offset(58)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * Elevation angle (degrees)
+     */
+    val ANG_ELEV : Double
         get() {
             val o = __offset(60)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SEN_MODEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(60, 1)
-    fun SEN_MODEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 60, 1)
-    val INFO_SOURCE : String?
+    /**
+     * Sensor mode
+     */
+    val SEN_MODE : String?
         get() {
             val o = __offset(62)
             return if (o != 0) {
@@ -321,38 +387,65 @@ class MST : Table() {
                 null
             }
         }
-    val INFO_SOURCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(62, 1)
-    fun INFO_SOURCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 62, 1)
-    val BOOSTING : Boolean
+    val SEN_MODEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(62, 1)
+    fun SEN_MODEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 62, 1)
+    /**
+     * Information source
+     */
+    val INFO_SOURCE : String?
         get() {
             val o = __offset(64)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
-    val POLAR_SING_LOC_LAT : Double
+    val INFO_SOURCEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(64, 1)
+    fun INFO_SOURCEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 64, 1)
+    /**
+     * True if object is in boost phase
+     */
+    val BOOSTING : Boolean
         get() {
             val o = __offset(66)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val POLAR_SING_LOC_LON : Double
+    /**
+     * Polar singularity latitude (degrees)
+     */
+    val POLAR_SING_LOC_LAT : Double
         get() {
             val o = __offset(68)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val EMG_IND : Boolean
+    /**
+     * Polar singularity longitude (degrees)
+     */
+    val POLAR_SING_LOC_LON : Double
         get() {
             val o = __offset(70)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val DROP_PT_IND : Boolean
+    /**
+     * True if emergency indicator set
+     */
+    val EMG_IND : Boolean
         get() {
             val o = __offset(72)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val SPACE_AMP_CONF : Int
+    /**
+     * True if drop point indicator set
+     */
+    val DROP_PT_IND : Boolean
         get() {
             val o = __offset(74)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * Launch time (ISO 8601)
+     */
     val LAUNCH_TIME : String?
         get() {
             val o = __offset(76)
@@ -364,37 +457,49 @@ class MST : Table() {
         }
     val LAUNCH_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(76, 1)
     fun LAUNCH_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 76, 1)
+    /**
+     * Launch latitude (degrees)
+     */
     val LAUNCH_LAT : Double
         get() {
             val o = __offset(78)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Launch longitude (degrees)
+     */
     val LAUNCH_LON : Double
         get() {
             val o = __offset(80)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Azimuth correction (degrees)
+     */
     val AZ_CORR : Double
         get() {
             val o = __offset(82)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Burnout altitude (km)
+     */
     val BURNOUT_ALT : Double
         get() {
             val o = __offset(84)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val LAUNCH_AOU_TYPE : String?
+    /**
+     * Launch AOU type
+     */
+    val LAUNCH_AOU_TYPE : Byte
         get() {
             val o = __offset(86)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val LAUNCH_AOU_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(86, 1)
-    fun LAUNCH_AOU_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 86, 1)
+    /**
+     * Predicted impact time (ISO 8601)
+     */
     val IMPACT_TIME : String?
         get() {
             val o = __offset(88)
@@ -406,29 +511,32 @@ class MST : Table() {
         }
     val IMPACT_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(88, 1)
     fun IMPACT_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 88, 1)
+    /**
+     * Predicted impact latitude (degrees)
+     */
     val IMPACT_LAT : Double
         get() {
             val o = __offset(90)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Predicted impact longitude (degrees)
+     */
     val IMPACT_LON : Double
         get() {
             val o = __offset(92)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val IMPACT_AOU_TYPE : String?
+    /**
+     * Impact AOU type
+     */
+    val IMPACT_AOU_TYPE : Byte
         get() {
             val o = __offset(94)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val IMPACT_AOU_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(94, 1)
-    fun IMPACT_AOU_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 94, 1)
     /**
-     * Start time for vector data (ISO 8601 UTC format).
+     * Start time for vector data (ISO 8601)
      */
     val VECTOR_START_TIME : String?
         get() {
@@ -442,7 +550,7 @@ class MST : Table() {
     val VECTOR_START_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(96, 1)
     fun VECTOR_START_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 96, 1)
     /**
-     * Time interval between vector points in seconds.
+     * Time interval between vector points (seconds)
      */
     val VECTOR_STEP_SIZE : Double
         get() {
@@ -450,7 +558,7 @@ class MST : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).
+     * Number of components per vector (default 6: X, Y, Z, VX, VY, VZ)
      */
     val VECTOR_COMPONENTS : UByte
         get() {
@@ -475,7 +583,7 @@ class MST : Table() {
     val VECTORSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(102, 8)
     fun VECTORSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 102, 8)
     /**
-     * AOU report data as flat array (layout depends on AOU_RPT_TYPE).
+     * AOU report data as flat array
      */
     fun AOU_RPT(j: Int) : Double {
         val o = __offset(104)
@@ -492,7 +600,7 @@ class MST : Table() {
     val AOU_RPTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(104, 8)
     fun AOU_RPTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 104, 8)
     /**
-     * Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).
+     * Launch AOU data as flat array
      */
     fun LAUNCH_AOU(j: Int) : Double {
         val o = __offset(106)
@@ -509,7 +617,7 @@ class MST : Table() {
     val LAUNCH_AOUAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(106, 8)
     fun LAUNCH_AOUInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 106, 8)
     /**
-     * Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).
+     * Impact AOU data as flat array
      */
     fun IMPACT_AOU(j: Int) : Double {
         val o = __offset(108)
@@ -533,7 +641,7 @@ class MST : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun MSTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$MST")
-        fun createMST(builder: FlatBufferBuilder, IDOffset: Int, MSG_TYPEOffset: Int, MSG_SUB_TYPEOffset: Int, MSG_CREATE_DATEOffset: Int, ENVIRONMENTOffset: Int, OBJ_TYPEOffset: Int, OBJ_TYPE_CONF: Int, OBJ_PLATOffset: Int, OBJ_IDENTOffset: Int, SPACE_AMPOffset: Int, OBJ_ACTOffset: Int, SPACE_SPEC_TYPEOffset: Int, ACFT_SUB_TYPEOffset: Int, NAMEOffset: Int, CALL_SIGNOffset: Int, LOST_TRK_IND: Boolean, TRACK_IDOffset: Int, PARENT_TRACK_IDOffset: Int, MUID_SRC_TRKOffset: Int, MUID_SRCOffset: Int, ALERTOffset: Int, MSL_STATUSOffset: Int, TSOffset: Int, AOU_RPT_TYPEOffset: Int, CONTAINMENT: Double, TRK_CONF: Double, TRK_QUAL: Int, ANG_ELEV: Double, SEN_MODEOffset: Int, INFO_SOURCEOffset: Int, BOOSTING: Boolean, POLAR_SING_LOC_LAT: Double, POLAR_SING_LOC_LON: Double, EMG_IND: Boolean, DROP_PT_IND: Boolean, SPACE_AMP_CONF: Int, LAUNCH_TIMEOffset: Int, LAUNCH_LAT: Double, LAUNCH_LON: Double, AZ_CORR: Double, BURNOUT_ALT: Double, LAUNCH_AOU_TYPEOffset: Int, IMPACT_TIMEOffset: Int, IMPACT_LAT: Double, IMPACT_LON: Double, IMPACT_AOU_TYPEOffset: Int, VECTOR_START_TIMEOffset: Int, VECTOR_STEP_SIZE: Double, VECTOR_COMPONENTS: UByte, VECTORSOffset: Int, AOU_RPTOffset: Int, LAUNCH_AOUOffset: Int, IMPACT_AOUOffset: Int) : Int {
+        fun createMST(builder: FlatBufferBuilder, IDOffset: Int, MSG_TYPEOffset: Int, MSG_SUB_TYPEOffset: Int, MSG_CREATE_DATEOffset: Int, ENVIRONMENT: Byte, OBJ_TYPEOffset: Int, OBJ_TYPE_CONF: UByte, OBJ_PLATOffset: Int, OBJ_IDENTOffset: Int, SPACE_AMPOffset: Int, SPACE_AMP_CONF: UByte, OBJ_ACTOffset: Int, SPACE_SPEC_TYPEOffset: Int, ACFT_SUB_TYPEOffset: Int, NAMEOffset: Int, CALL_SIGNOffset: Int, LOST_TRK_IND: Boolean, TRACK_IDOffset: Int, PARENT_TRACK_IDOffset: Int, MUID_SRC_TRKOffset: Int, MUID_SRCOffset: Int, ALERTOffset: Int, MSL_STATUS: Byte, TSOffset: Int, AOU_RPT_TYPE: Byte, CONTAINMENT: Double, TRK_CONF: Double, TRK_QUAL: UByte, ANG_ELEV: Double, SEN_MODEOffset: Int, INFO_SOURCEOffset: Int, BOOSTING: Boolean, POLAR_SING_LOC_LAT: Double, POLAR_SING_LOC_LON: Double, EMG_IND: Boolean, DROP_PT_IND: Boolean, LAUNCH_TIMEOffset: Int, LAUNCH_LAT: Double, LAUNCH_LON: Double, AZ_CORR: Double, BURNOUT_ALT: Double, LAUNCH_AOU_TYPE: Byte, IMPACT_TIMEOffset: Int, IMPACT_LAT: Double, IMPACT_LON: Double, IMPACT_AOU_TYPE: Byte, VECTOR_START_TIMEOffset: Int, VECTOR_STEP_SIZE: Double, VECTOR_COMPONENTS: UByte, VECTORSOffset: Int, AOU_RPTOffset: Int, LAUNCH_AOUOffset: Int, IMPACT_AOUOffset: Int) : Int {
             builder.startTable(53)
             addVECTOR_STEP_SIZE(builder, VECTOR_STEP_SIZE)
             addIMPACT_LON(builder, IMPACT_LON)
@@ -552,17 +660,11 @@ class MST : Table() {
             addAOU_RPT(builder, AOU_RPTOffset)
             addVECTORS(builder, VECTORSOffset)
             addVECTOR_START_TIME(builder, VECTOR_START_TIMEOffset)
-            addIMPACT_AOU_TYPE(builder, IMPACT_AOU_TYPEOffset)
             addIMPACT_TIME(builder, IMPACT_TIMEOffset)
-            addLAUNCH_AOU_TYPE(builder, LAUNCH_AOU_TYPEOffset)
             addLAUNCH_TIME(builder, LAUNCH_TIMEOffset)
-            addSPACE_AMP_CONF(builder, SPACE_AMP_CONF)
             addINFO_SOURCE(builder, INFO_SOURCEOffset)
             addSEN_MODE(builder, SEN_MODEOffset)
-            addTRK_QUAL(builder, TRK_QUAL)
-            addAOU_RPT_TYPE(builder, AOU_RPT_TYPEOffset)
             addTS(builder, TSOffset)
-            addMSL_STATUS(builder, MSL_STATUSOffset)
             addALERT(builder, ALERTOffset)
             addMUID_SRC(builder, MUID_SRCOffset)
             addMUID_SRC_TRK(builder, MUID_SRC_TRKOffset)
@@ -576,18 +678,24 @@ class MST : Table() {
             addSPACE_AMP(builder, SPACE_AMPOffset)
             addOBJ_IDENT(builder, OBJ_IDENTOffset)
             addOBJ_PLAT(builder, OBJ_PLATOffset)
-            addOBJ_TYPE_CONF(builder, OBJ_TYPE_CONF)
             addOBJ_TYPE(builder, OBJ_TYPEOffset)
-            addENVIRONMENT(builder, ENVIRONMENTOffset)
             addMSG_CREATE_DATE(builder, MSG_CREATE_DATEOffset)
             addMSG_SUB_TYPE(builder, MSG_SUB_TYPEOffset)
             addMSG_TYPE(builder, MSG_TYPEOffset)
             addID(builder, IDOffset)
             addVECTOR_COMPONENTS(builder, VECTOR_COMPONENTS)
+            addIMPACT_AOU_TYPE(builder, IMPACT_AOU_TYPE)
+            addLAUNCH_AOU_TYPE(builder, LAUNCH_AOU_TYPE)
             addDROP_PT_IND(builder, DROP_PT_IND)
             addEMG_IND(builder, EMG_IND)
             addBOOSTING(builder, BOOSTING)
+            addTRK_QUAL(builder, TRK_QUAL)
+            addAOU_RPT_TYPE(builder, AOU_RPT_TYPE)
+            addMSL_STATUS(builder, MSL_STATUS)
             addLOST_TRK_IND(builder, LOST_TRK_IND)
+            addSPACE_AMP_CONF(builder, SPACE_AMP_CONF)
+            addOBJ_TYPE_CONF(builder, OBJ_TYPE_CONF)
+            addENVIRONMENT(builder, ENVIRONMENT)
             return endMST(builder)
         }
         fun startMST(builder: FlatBufferBuilder) = builder.startTable(53)
@@ -595,48 +703,48 @@ class MST : Table() {
         fun addMSG_TYPE(builder: FlatBufferBuilder, MSG_TYPE: Int) = builder.addOffset(1, MSG_TYPE, 0)
         fun addMSG_SUB_TYPE(builder: FlatBufferBuilder, MSG_SUB_TYPE: Int) = builder.addOffset(2, MSG_SUB_TYPE, 0)
         fun addMSG_CREATE_DATE(builder: FlatBufferBuilder, MSG_CREATE_DATE: Int) = builder.addOffset(3, MSG_CREATE_DATE, 0)
-        fun addENVIRONMENT(builder: FlatBufferBuilder, ENVIRONMENT: Int) = builder.addOffset(4, ENVIRONMENT, 0)
+        fun addENVIRONMENT(builder: FlatBufferBuilder, ENVIRONMENT: Byte) = builder.addByte(4, ENVIRONMENT, 0)
         fun addOBJ_TYPE(builder: FlatBufferBuilder, OBJ_TYPE: Int) = builder.addOffset(5, OBJ_TYPE, 0)
-        fun addOBJ_TYPE_CONF(builder: FlatBufferBuilder, OBJ_TYPE_CONF: Int) = builder.addInt(6, OBJ_TYPE_CONF, 0)
+        fun addOBJ_TYPE_CONF(builder: FlatBufferBuilder, OBJ_TYPE_CONF: UByte) = builder.addByte(6, OBJ_TYPE_CONF.toByte(), 0)
         fun addOBJ_PLAT(builder: FlatBufferBuilder, OBJ_PLAT: Int) = builder.addOffset(7, OBJ_PLAT, 0)
         fun addOBJ_IDENT(builder: FlatBufferBuilder, OBJ_IDENT: Int) = builder.addOffset(8, OBJ_IDENT, 0)
         fun addSPACE_AMP(builder: FlatBufferBuilder, SPACE_AMP: Int) = builder.addOffset(9, SPACE_AMP, 0)
-        fun addOBJ_ACT(builder: FlatBufferBuilder, OBJ_ACT: Int) = builder.addOffset(10, OBJ_ACT, 0)
-        fun addSPACE_SPEC_TYPE(builder: FlatBufferBuilder, SPACE_SPEC_TYPE: Int) = builder.addOffset(11, SPACE_SPEC_TYPE, 0)
-        fun addACFT_SUB_TYPE(builder: FlatBufferBuilder, ACFT_SUB_TYPE: Int) = builder.addOffset(12, ACFT_SUB_TYPE, 0)
-        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(13, NAME, 0)
-        fun addCALL_SIGN(builder: FlatBufferBuilder, CALL_SIGN: Int) = builder.addOffset(14, CALL_SIGN, 0)
-        fun addLOST_TRK_IND(builder: FlatBufferBuilder, LOST_TRK_IND: Boolean) = builder.addBoolean(15, LOST_TRK_IND, false)
-        fun addTRACK_ID(builder: FlatBufferBuilder, TRACK_ID: Int) = builder.addOffset(16, TRACK_ID, 0)
-        fun addPARENT_TRACK_ID(builder: FlatBufferBuilder, PARENT_TRACK_ID: Int) = builder.addOffset(17, PARENT_TRACK_ID, 0)
-        fun addMUID_SRC_TRK(builder: FlatBufferBuilder, MUID_SRC_TRK: Int) = builder.addOffset(18, MUID_SRC_TRK, 0)
-        fun addMUID_SRC(builder: FlatBufferBuilder, MUID_SRC: Int) = builder.addOffset(19, MUID_SRC, 0)
-        fun addALERT(builder: FlatBufferBuilder, ALERT: Int) = builder.addOffset(20, ALERT, 0)
-        fun addMSL_STATUS(builder: FlatBufferBuilder, MSL_STATUS: Int) = builder.addOffset(21, MSL_STATUS, 0)
-        fun addTS(builder: FlatBufferBuilder, TS: Int) = builder.addOffset(22, TS, 0)
-        fun addAOU_RPT_TYPE(builder: FlatBufferBuilder, AOU_RPT_TYPE: Int) = builder.addOffset(23, AOU_RPT_TYPE, 0)
-        fun addCONTAINMENT(builder: FlatBufferBuilder, CONTAINMENT: Double) = builder.addDouble(24, CONTAINMENT, 0.0)
-        fun addTRK_CONF(builder: FlatBufferBuilder, TRK_CONF: Double) = builder.addDouble(25, TRK_CONF, 0.0)
-        fun addTRK_QUAL(builder: FlatBufferBuilder, TRK_QUAL: Int) = builder.addInt(26, TRK_QUAL, 0)
-        fun addANG_ELEV(builder: FlatBufferBuilder, ANG_ELEV: Double) = builder.addDouble(27, ANG_ELEV, 0.0)
-        fun addSEN_MODE(builder: FlatBufferBuilder, SEN_MODE: Int) = builder.addOffset(28, SEN_MODE, 0)
-        fun addINFO_SOURCE(builder: FlatBufferBuilder, INFO_SOURCE: Int) = builder.addOffset(29, INFO_SOURCE, 0)
-        fun addBOOSTING(builder: FlatBufferBuilder, BOOSTING: Boolean) = builder.addBoolean(30, BOOSTING, false)
-        fun addPOLAR_SING_LOC_LAT(builder: FlatBufferBuilder, POLAR_SING_LOC_LAT: Double) = builder.addDouble(31, POLAR_SING_LOC_LAT, 0.0)
-        fun addPOLAR_SING_LOC_LON(builder: FlatBufferBuilder, POLAR_SING_LOC_LON: Double) = builder.addDouble(32, POLAR_SING_LOC_LON, 0.0)
-        fun addEMG_IND(builder: FlatBufferBuilder, EMG_IND: Boolean) = builder.addBoolean(33, EMG_IND, false)
-        fun addDROP_PT_IND(builder: FlatBufferBuilder, DROP_PT_IND: Boolean) = builder.addBoolean(34, DROP_PT_IND, false)
-        fun addSPACE_AMP_CONF(builder: FlatBufferBuilder, SPACE_AMP_CONF: Int) = builder.addInt(35, SPACE_AMP_CONF, 0)
+        fun addSPACE_AMP_CONF(builder: FlatBufferBuilder, SPACE_AMP_CONF: UByte) = builder.addByte(10, SPACE_AMP_CONF.toByte(), 0)
+        fun addOBJ_ACT(builder: FlatBufferBuilder, OBJ_ACT: Int) = builder.addOffset(11, OBJ_ACT, 0)
+        fun addSPACE_SPEC_TYPE(builder: FlatBufferBuilder, SPACE_SPEC_TYPE: Int) = builder.addOffset(12, SPACE_SPEC_TYPE, 0)
+        fun addACFT_SUB_TYPE(builder: FlatBufferBuilder, ACFT_SUB_TYPE: Int) = builder.addOffset(13, ACFT_SUB_TYPE, 0)
+        fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(14, NAME, 0)
+        fun addCALL_SIGN(builder: FlatBufferBuilder, CALL_SIGN: Int) = builder.addOffset(15, CALL_SIGN, 0)
+        fun addLOST_TRK_IND(builder: FlatBufferBuilder, LOST_TRK_IND: Boolean) = builder.addBoolean(16, LOST_TRK_IND, false)
+        fun addTRACK_ID(builder: FlatBufferBuilder, TRACK_ID: Int) = builder.addOffset(17, TRACK_ID, 0)
+        fun addPARENT_TRACK_ID(builder: FlatBufferBuilder, PARENT_TRACK_ID: Int) = builder.addOffset(18, PARENT_TRACK_ID, 0)
+        fun addMUID_SRC_TRK(builder: FlatBufferBuilder, MUID_SRC_TRK: Int) = builder.addOffset(19, MUID_SRC_TRK, 0)
+        fun addMUID_SRC(builder: FlatBufferBuilder, MUID_SRC: Int) = builder.addOffset(20, MUID_SRC, 0)
+        fun addALERT(builder: FlatBufferBuilder, ALERT: Int) = builder.addOffset(21, ALERT, 0)
+        fun addMSL_STATUS(builder: FlatBufferBuilder, MSL_STATUS: Byte) = builder.addByte(22, MSL_STATUS, 0)
+        fun addTS(builder: FlatBufferBuilder, TS: Int) = builder.addOffset(23, TS, 0)
+        fun addAOU_RPT_TYPE(builder: FlatBufferBuilder, AOU_RPT_TYPE: Byte) = builder.addByte(24, AOU_RPT_TYPE, 0)
+        fun addCONTAINMENT(builder: FlatBufferBuilder, CONTAINMENT: Double) = builder.addDouble(25, CONTAINMENT, 0.0)
+        fun addTRK_CONF(builder: FlatBufferBuilder, TRK_CONF: Double) = builder.addDouble(26, TRK_CONF, 0.0)
+        fun addTRK_QUAL(builder: FlatBufferBuilder, TRK_QUAL: UByte) = builder.addByte(27, TRK_QUAL.toByte(), 0)
+        fun addANG_ELEV(builder: FlatBufferBuilder, ANG_ELEV: Double) = builder.addDouble(28, ANG_ELEV, 0.0)
+        fun addSEN_MODE(builder: FlatBufferBuilder, SEN_MODE: Int) = builder.addOffset(29, SEN_MODE, 0)
+        fun addINFO_SOURCE(builder: FlatBufferBuilder, INFO_SOURCE: Int) = builder.addOffset(30, INFO_SOURCE, 0)
+        fun addBOOSTING(builder: FlatBufferBuilder, BOOSTING: Boolean) = builder.addBoolean(31, BOOSTING, false)
+        fun addPOLAR_SING_LOC_LAT(builder: FlatBufferBuilder, POLAR_SING_LOC_LAT: Double) = builder.addDouble(32, POLAR_SING_LOC_LAT, 0.0)
+        fun addPOLAR_SING_LOC_LON(builder: FlatBufferBuilder, POLAR_SING_LOC_LON: Double) = builder.addDouble(33, POLAR_SING_LOC_LON, 0.0)
+        fun addEMG_IND(builder: FlatBufferBuilder, EMG_IND: Boolean) = builder.addBoolean(34, EMG_IND, false)
+        fun addDROP_PT_IND(builder: FlatBufferBuilder, DROP_PT_IND: Boolean) = builder.addBoolean(35, DROP_PT_IND, false)
         fun addLAUNCH_TIME(builder: FlatBufferBuilder, LAUNCH_TIME: Int) = builder.addOffset(36, LAUNCH_TIME, 0)
         fun addLAUNCH_LAT(builder: FlatBufferBuilder, LAUNCH_LAT: Double) = builder.addDouble(37, LAUNCH_LAT, 0.0)
         fun addLAUNCH_LON(builder: FlatBufferBuilder, LAUNCH_LON: Double) = builder.addDouble(38, LAUNCH_LON, 0.0)
         fun addAZ_CORR(builder: FlatBufferBuilder, AZ_CORR: Double) = builder.addDouble(39, AZ_CORR, 0.0)
         fun addBURNOUT_ALT(builder: FlatBufferBuilder, BURNOUT_ALT: Double) = builder.addDouble(40, BURNOUT_ALT, 0.0)
-        fun addLAUNCH_AOU_TYPE(builder: FlatBufferBuilder, LAUNCH_AOU_TYPE: Int) = builder.addOffset(41, LAUNCH_AOU_TYPE, 0)
+        fun addLAUNCH_AOU_TYPE(builder: FlatBufferBuilder, LAUNCH_AOU_TYPE: Byte) = builder.addByte(41, LAUNCH_AOU_TYPE, 0)
         fun addIMPACT_TIME(builder: FlatBufferBuilder, IMPACT_TIME: Int) = builder.addOffset(42, IMPACT_TIME, 0)
         fun addIMPACT_LAT(builder: FlatBufferBuilder, IMPACT_LAT: Double) = builder.addDouble(43, IMPACT_LAT, 0.0)
         fun addIMPACT_LON(builder: FlatBufferBuilder, IMPACT_LON: Double) = builder.addDouble(44, IMPACT_LON, 0.0)
-        fun addIMPACT_AOU_TYPE(builder: FlatBufferBuilder, IMPACT_AOU_TYPE: Int) = builder.addOffset(45, IMPACT_AOU_TYPE, 0)
+        fun addIMPACT_AOU_TYPE(builder: FlatBufferBuilder, IMPACT_AOU_TYPE: Byte) = builder.addByte(45, IMPACT_AOU_TYPE, 0)
         fun addVECTOR_START_TIME(builder: FlatBufferBuilder, VECTOR_START_TIME: Int) = builder.addOffset(46, VECTOR_START_TIME, 0)
         fun addVECTOR_STEP_SIZE(builder: FlatBufferBuilder, VECTOR_STEP_SIZE: Double) = builder.addDouble(47, VECTOR_STEP_SIZE, 0.0)
         fun addVECTOR_COMPONENTS(builder: FlatBufferBuilder, VECTOR_COMPONENTS: UByte) = builder.addByte(48, VECTOR_COMPONENTS.toByte(), 6)

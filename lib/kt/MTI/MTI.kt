@@ -29,6 +29,9 @@ class MTI : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Unique identifier
+     */
     val ID : String?
         get() {
             val o = __offset(4)
@@ -40,18 +43,18 @@ class MTI : Table() {
         }
     val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val P3 : String?
+    /**
+     * MTI standard (e.g., STANAG 4607)
+     */
+    val STANDARD : Byte
         get() {
             val o = __offset(6)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val P3AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun P3InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val P6 : String?
+    /**
+     * Platform type (P3 field)
+     */
+    val P3 : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -60,9 +63,12 @@ class MTI : Table() {
                 null
             }
         }
-    val P6AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun P6InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val P7 : String?
+    val P3AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
+    fun P3InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    /**
+     * Platform activity (P6 field)
+     */
+    val P6 : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -71,9 +77,12 @@ class MTI : Table() {
                 null
             }
         }
-    val P7AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun P7InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    val P8 : String?
+    val P6AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
+    fun P6InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    /**
+     * Sensor type (P7 field)
+     */
+    val P7 : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -82,20 +91,43 @@ class MTI : Table() {
                 null
             }
         }
-    val P8AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun P8InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
-    val P9 : Int
+    val P7AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
+    fun P7InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * Sensor model (P8 field)
+     */
+    val P8 : String?
         get() {
             val o = __offset(14)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
-    val P10 : Int
+    val P8AsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
+    fun P8InByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    /**
+     * Reference time code (P9)
+     */
+    val P9 : UInt
         get() {
             val o = __offset(16)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
+    /**
+     * Security classification (P10)
+     */
+    val P10 : UShort
+        get() {
+            val o = __offset(18)
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
+        }
+    /**
+     * Mission segment identifiers
+     */
     fun MISSIONS(j: Int) : String? {
-        val o = __offset(18)
+        val o = __offset(20)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -104,10 +136,13 @@ class MTI : Table() {
     }
     val MISSIONSLength : Int
         get() {
-            val o = __offset(18); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(20); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Dwell segment data references
+     */
     fun DWELLS(j: Int) : String? {
-        val o = __offset(20)
+        val o = __offset(22)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -116,10 +151,13 @@ class MTI : Table() {
     }
     val DWELLSLength : Int
         get() {
-            val o = __offset(20); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(22); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * High range resolution profile references
+     */
     fun HRRS(j: Int) : String? {
-        val o = __offset(22)
+        val o = __offset(24)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -128,10 +166,13 @@ class MTI : Table() {
     }
     val HRRSLength : Int
         get() {
-            val o = __offset(22); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(24); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Job definition references
+     */
     fun JOB_DEFS(j: Int) : String? {
-        val o = __offset(24)
+        val o = __offset(26)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -140,10 +181,13 @@ class MTI : Table() {
     }
     val JOB_DEFSLength : Int
         get() {
-            val o = __offset(24); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(26); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Free text entries
+     */
     fun FREE_TEXTS(j: Int) : String? {
-        val o = __offset(26)
+        val o = __offset(28)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -152,10 +196,13 @@ class MTI : Table() {
     }
     val FREE_TEXTSLength : Int
         get() {
-            val o = __offset(26); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(28); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Platform location data references
+     */
     fun PLATFORM_LOCS(j: Int) : String? {
-        val o = __offset(28)
+        val o = __offset(30)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -164,10 +211,13 @@ class MTI : Table() {
     }
     val PLATFORM_LOCSLength : Int
         get() {
-            val o = __offset(28); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(30); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Job request references
+     */
     fun JOB_REQUESTS(j: Int) : String? {
-        val o = __offset(30)
+        val o = __offset(32)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -176,7 +226,7 @@ class MTI : Table() {
     }
     val JOB_REQUESTSLength : Int
         get() {
-            val o = __offset(30); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(32); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
@@ -186,8 +236,8 @@ class MTI : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun MTIBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$MTI")
-        fun createMTI(builder: FlatBufferBuilder, IDOffset: Int, P3Offset: Int, P6Offset: Int, P7Offset: Int, P8Offset: Int, P9: Int, P10: Int, MISSIONSOffset: Int, DWELLSOffset: Int, HRRSOffset: Int, JOB_DEFSOffset: Int, FREE_TEXTSOffset: Int, PLATFORM_LOCSOffset: Int, JOB_REQUESTSOffset: Int) : Int {
-            builder.startTable(14)
+        fun createMTI(builder: FlatBufferBuilder, IDOffset: Int, STANDARD: Byte, P3Offset: Int, P6Offset: Int, P7Offset: Int, P8Offset: Int, P9: UInt, P10: UShort, MISSIONSOffset: Int, DWELLSOffset: Int, HRRSOffset: Int, JOB_DEFSOffset: Int, FREE_TEXTSOffset: Int, PLATFORM_LOCSOffset: Int, JOB_REQUESTSOffset: Int) : Int {
+            builder.startTable(15)
             addJOB_REQUESTS(builder, JOB_REQUESTSOffset)
             addPLATFORM_LOCS(builder, PLATFORM_LOCSOffset)
             addFREE_TEXTS(builder, FREE_TEXTSOffset)
@@ -195,24 +245,26 @@ class MTI : Table() {
             addHRRS(builder, HRRSOffset)
             addDWELLS(builder, DWELLSOffset)
             addMISSIONS(builder, MISSIONSOffset)
-            addP10(builder, P10)
             addP9(builder, P9)
             addP8(builder, P8Offset)
             addP7(builder, P7Offset)
             addP6(builder, P6Offset)
             addP3(builder, P3Offset)
             addID(builder, IDOffset)
+            addP10(builder, P10)
+            addSTANDARD(builder, STANDARD)
             return endMTI(builder)
         }
-        fun startMTI(builder: FlatBufferBuilder) = builder.startTable(14)
+        fun startMTI(builder: FlatBufferBuilder) = builder.startTable(15)
         fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addP3(builder: FlatBufferBuilder, P3: Int) = builder.addOffset(1, P3, 0)
-        fun addP6(builder: FlatBufferBuilder, P6: Int) = builder.addOffset(2, P6, 0)
-        fun addP7(builder: FlatBufferBuilder, P7: Int) = builder.addOffset(3, P7, 0)
-        fun addP8(builder: FlatBufferBuilder, P8: Int) = builder.addOffset(4, P8, 0)
-        fun addP9(builder: FlatBufferBuilder, P9: Int) = builder.addInt(5, P9, 0)
-        fun addP10(builder: FlatBufferBuilder, P10: Int) = builder.addInt(6, P10, 0)
-        fun addMISSIONS(builder: FlatBufferBuilder, MISSIONS: Int) = builder.addOffset(7, MISSIONS, 0)
+        fun addSTANDARD(builder: FlatBufferBuilder, STANDARD: Byte) = builder.addByte(1, STANDARD, 0)
+        fun addP3(builder: FlatBufferBuilder, P3: Int) = builder.addOffset(2, P3, 0)
+        fun addP6(builder: FlatBufferBuilder, P6: Int) = builder.addOffset(3, P6, 0)
+        fun addP7(builder: FlatBufferBuilder, P7: Int) = builder.addOffset(4, P7, 0)
+        fun addP8(builder: FlatBufferBuilder, P8: Int) = builder.addOffset(5, P8, 0)
+        fun addP9(builder: FlatBufferBuilder, P9: UInt) = builder.addInt(6, P9.toInt(), 0)
+        fun addP10(builder: FlatBufferBuilder, P10: UShort) = builder.addShort(7, P10.toShort(), 0)
+        fun addMISSIONS(builder: FlatBufferBuilder, MISSIONS: Int) = builder.addOffset(8, MISSIONS, 0)
         fun createMissionsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -221,7 +273,7 @@ class MTI : Table() {
             return builder.endVector()
         }
         fun startMissionsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addDWELLS(builder: FlatBufferBuilder, DWELLS: Int) = builder.addOffset(8, DWELLS, 0)
+        fun addDWELLS(builder: FlatBufferBuilder, DWELLS: Int) = builder.addOffset(9, DWELLS, 0)
         fun createDwellsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -230,7 +282,7 @@ class MTI : Table() {
             return builder.endVector()
         }
         fun startDwellsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addHRRS(builder: FlatBufferBuilder, HRRS: Int) = builder.addOffset(9, HRRS, 0)
+        fun addHRRS(builder: FlatBufferBuilder, HRRS: Int) = builder.addOffset(10, HRRS, 0)
         fun createHrrsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -239,7 +291,7 @@ class MTI : Table() {
             return builder.endVector()
         }
         fun startHrrsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addJOB_DEFS(builder: FlatBufferBuilder, JOB_DEFS: Int) = builder.addOffset(10, JOB_DEFS, 0)
+        fun addJOB_DEFS(builder: FlatBufferBuilder, JOB_DEFS: Int) = builder.addOffset(11, JOB_DEFS, 0)
         fun createJobDefsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -248,7 +300,7 @@ class MTI : Table() {
             return builder.endVector()
         }
         fun startJobDefsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addFREE_TEXTS(builder: FlatBufferBuilder, FREE_TEXTS: Int) = builder.addOffset(11, FREE_TEXTS, 0)
+        fun addFREE_TEXTS(builder: FlatBufferBuilder, FREE_TEXTS: Int) = builder.addOffset(12, FREE_TEXTS, 0)
         fun createFreeTextsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -257,7 +309,7 @@ class MTI : Table() {
             return builder.endVector()
         }
         fun startFreeTextsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addPLATFORM_LOCS(builder: FlatBufferBuilder, PLATFORM_LOCS: Int) = builder.addOffset(12, PLATFORM_LOCS, 0)
+        fun addPLATFORM_LOCS(builder: FlatBufferBuilder, PLATFORM_LOCS: Int) = builder.addOffset(13, PLATFORM_LOCS, 0)
         fun createPlatformLocsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -266,7 +318,7 @@ class MTI : Table() {
             return builder.endVector()
         }
         fun startPlatformLocsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addJOB_REQUESTS(builder: FlatBufferBuilder, JOB_REQUESTS: Int) = builder.addOffset(13, JOB_REQUESTS, 0)
+        fun addJOB_REQUESTS(builder: FlatBufferBuilder, JOB_REQUESTS: Int) = builder.addOffset(14, JOB_REQUESTS, 0)
         fun createJobRequestsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

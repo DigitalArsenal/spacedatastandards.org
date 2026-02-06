@@ -4,7 +4,47 @@
 
 import FlatBuffers
 
-///  RF Band
+public enum rfBandDesignation: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case uhf = 0
+  case l = 1
+  case s = 2
+  case c = 3
+  case x = 4
+  case ku = 5
+  case k = 6
+  case ka = 7
+  case v = 8
+  case w = 9
+  case q = 10
+  case ehf = 11
+  case other = 12
+
+  public static var max: rfBandDesignation { return .other }
+  public static var min: rfBandDesignation { return .uhf }
+}
+
+
+public enum rfPolarization: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case lhcp = 0
+  case rhcp = 1
+  case linearH = 2
+  case linearV = 3
+  case dual = 4
+  case cross = 5
+  case unknown = 6
+
+  public static var max: rfPolarization { return .unknown }
+  public static var min: rfPolarization { return .lhcp }
+}
+
+
+///  RF Band Specification
 public struct RFB: FlatBufferObject, Verifiable {
 
   static func validateVersion() { FlatBuffersVersion_24_3_25() }
@@ -26,9 +66,9 @@ public struct RFB: FlatBufferObject, Verifiable {
     case FREQ_MIN = 16
     case FREQ_MAX = 18
     case CENTER_FREQ = 20
-    case PEAK_GAIN = 22
-    case EDGE_GAIN = 24
-    case BANDWIDTH = 26
+    case BANDWIDTH = 22
+    case PEAK_GAIN = 24
+    case EDGE_GAIN = 26
     case BEAMWIDTH = 28
     case POLARIZATION = 30
     case ERP = 32
@@ -37,44 +77,58 @@ public struct RFB: FlatBufferObject, Verifiable {
     var p: VOffset { self.rawValue }
   }
 
+  ///  Unique identifier
   public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  ///  Parent entity identifier
   public var ID_ENTITY: String? { let o = _accessor.offset(VTOFFSET.ID_ENTITY.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ID_ENTITYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_ENTITY.v) }
+  ///  Band name or designation
   public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
-  public var BAND: String? { let o = _accessor.offset(VTOFFSET.BAND.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var BANDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BAND.v) }
+  ///  RF band designation
+  public var BAND: rfBandDesignation { let o = _accessor.offset(VTOFFSET.BAND.v); return o == 0 ? .uhf : rfBandDesignation(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .uhf }
+  ///  Operating mode
   public var MODE: String? { let o = _accessor.offset(VTOFFSET.MODE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var MODESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MODE.v) }
+  ///  Band purpose (e.g., TT&C, PAYLOAD, BEACON)
   public var PURPOSE: String? { let o = _accessor.offset(VTOFFSET.PURPOSE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var PURPOSESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.PURPOSE.v) }
+  ///  Minimum frequency (MHz)
   public var FREQ_MIN: Double { let o = _accessor.offset(VTOFFSET.FREQ_MIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Maximum frequency (MHz)
   public var FREQ_MAX: Double { let o = _accessor.offset(VTOFFSET.FREQ_MAX.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Center frequency (MHz)
   public var CENTER_FREQ: Double { let o = _accessor.offset(VTOFFSET.CENTER_FREQ.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var PEAK_GAIN: Double { let o = _accessor.offset(VTOFFSET.PEAK_GAIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var EDGE_GAIN: Double { let o = _accessor.offset(VTOFFSET.EDGE_GAIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Bandwidth (MHz)
   public var BANDWIDTH: Double { let o = _accessor.offset(VTOFFSET.BANDWIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Peak antenna gain (dBi)
+  public var PEAK_GAIN: Double { let o = _accessor.offset(VTOFFSET.PEAK_GAIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Edge-of-coverage gain (dBi)
+  public var EDGE_GAIN: Double { let o = _accessor.offset(VTOFFSET.EDGE_GAIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Antenna beamwidth (degrees)
   public var BEAMWIDTH: Double { let o = _accessor.offset(VTOFFSET.BEAMWIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var POLARIZATION: String? { let o = _accessor.offset(VTOFFSET.POLARIZATION.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var POLARIZATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.POLARIZATION.v) }
+  ///  Polarization
+  public var POLARIZATION: rfPolarization { let o = _accessor.offset(VTOFFSET.POLARIZATION.v); return o == 0 ? .lhcp : rfPolarization(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .lhcp }
+  ///  Effective radiated power (dBW)
   public var ERP: Double { let o = _accessor.offset(VTOFFSET.ERP.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Effective isotropic radiated power (dBW)
   public var EIRP: Double { let o = _accessor.offset(VTOFFSET.EIRP.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startRFB(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(ID_ENTITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_ENTITY, at: VTOFFSET.ID_ENTITY.p) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
-  public static func add(BAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BAND, at: VTOFFSET.BAND.p) }
+  public static func add(BAND: rfBandDesignation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BAND.rawValue, def: 0, at: VTOFFSET.BAND.p) }
   public static func add(MODE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MODE, at: VTOFFSET.MODE.p) }
   public static func add(PURPOSE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: PURPOSE, at: VTOFFSET.PURPOSE.p) }
   public static func add(FREQ_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQ_MIN, def: 0.0, at: VTOFFSET.FREQ_MIN.p) }
   public static func add(FREQ_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQ_MAX, def: 0.0, at: VTOFFSET.FREQ_MAX.p) }
   public static func add(CENTER_FREQ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CENTER_FREQ, def: 0.0, at: VTOFFSET.CENTER_FREQ.p) }
+  public static func add(BANDWIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BANDWIDTH, def: 0.0, at: VTOFFSET.BANDWIDTH.p) }
   public static func add(PEAK_GAIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PEAK_GAIN, def: 0.0, at: VTOFFSET.PEAK_GAIN.p) }
   public static func add(EDGE_GAIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EDGE_GAIN, def: 0.0, at: VTOFFSET.EDGE_GAIN.p) }
-  public static func add(BANDWIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BANDWIDTH, def: 0.0, at: VTOFFSET.BANDWIDTH.p) }
   public static func add(BEAMWIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BEAMWIDTH, def: 0.0, at: VTOFFSET.BEAMWIDTH.p) }
-  public static func add(POLARIZATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLARIZATION, at: VTOFFSET.POLARIZATION.p) }
+  public static func add(POLARIZATION: rfPolarization, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLARIZATION.rawValue, def: 0, at: VTOFFSET.POLARIZATION.p) }
   public static func add(ERP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ERP, def: 0.0, at: VTOFFSET.ERP.p) }
   public static func add(EIRP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EIRP, def: 0.0, at: VTOFFSET.EIRP.p) }
   public static func endRFB(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
@@ -83,17 +137,17 @@ public struct RFB: FlatBufferObject, Verifiable {
     IDOffset ID: Offset = Offset(),
     ID_ENTITYOffset ID_ENTITY: Offset = Offset(),
     NAMEOffset NAME: Offset = Offset(),
-    BANDOffset BAND: Offset = Offset(),
+    BAND: rfBandDesignation = .uhf,
     MODEOffset MODE: Offset = Offset(),
     PURPOSEOffset PURPOSE: Offset = Offset(),
     FREQ_MIN: Double = 0.0,
     FREQ_MAX: Double = 0.0,
     CENTER_FREQ: Double = 0.0,
+    BANDWIDTH: Double = 0.0,
     PEAK_GAIN: Double = 0.0,
     EDGE_GAIN: Double = 0.0,
-    BANDWIDTH: Double = 0.0,
     BEAMWIDTH: Double = 0.0,
-    POLARIZATIONOffset POLARIZATION: Offset = Offset(),
+    POLARIZATION: rfPolarization = .lhcp,
     ERP: Double = 0.0,
     EIRP: Double = 0.0
   ) -> Offset {
@@ -107,9 +161,9 @@ public struct RFB: FlatBufferObject, Verifiable {
     RFB.add(FREQ_MIN: FREQ_MIN, &fbb)
     RFB.add(FREQ_MAX: FREQ_MAX, &fbb)
     RFB.add(CENTER_FREQ: CENTER_FREQ, &fbb)
+    RFB.add(BANDWIDTH: BANDWIDTH, &fbb)
     RFB.add(PEAK_GAIN: PEAK_GAIN, &fbb)
     RFB.add(EDGE_GAIN: EDGE_GAIN, &fbb)
-    RFB.add(BANDWIDTH: BANDWIDTH, &fbb)
     RFB.add(BEAMWIDTH: BEAMWIDTH, &fbb)
     RFB.add(POLARIZATION: POLARIZATION, &fbb)
     RFB.add(ERP: ERP, &fbb)
@@ -122,17 +176,17 @@ public struct RFB: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ID_ENTITY.p, fieldName: "ID_ENTITY", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.BAND.p, fieldName: "BAND", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.BAND.p, fieldName: "BAND", required: false, type: rfBandDesignation.self)
     try _v.visit(field: VTOFFSET.MODE.p, fieldName: "MODE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.PURPOSE.p, fieldName: "PURPOSE", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.FREQ_MIN.p, fieldName: "FREQ_MIN", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.FREQ_MAX.p, fieldName: "FREQ_MAX", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.CENTER_FREQ.p, fieldName: "CENTER_FREQ", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.BANDWIDTH.p, fieldName: "BANDWIDTH", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.PEAK_GAIN.p, fieldName: "PEAK_GAIN", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.EDGE_GAIN.p, fieldName: "EDGE_GAIN", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.BANDWIDTH.p, fieldName: "BANDWIDTH", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.BEAMWIDTH.p, fieldName: "BEAMWIDTH", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.POLARIZATION.p, fieldName: "POLARIZATION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.POLARIZATION.p, fieldName: "POLARIZATION", required: false, type: rfPolarization.self)
     try _v.visit(field: VTOFFSET.ERP.p, fieldName: "ERP", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.EIRP.p, fieldName: "EIRP", required: false, type: Double.self)
     _v.finish()

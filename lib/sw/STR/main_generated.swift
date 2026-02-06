@@ -23,20 +23,20 @@ public struct STR: FlatBufferObject, Verifiable {
     case GAIADR3_CAT_ID = 10
     case HIP_CAT_ID = 12
     case CAT_VERSION = 14
-    case RA = 16
-    case RA_UNC = 18
-    case DEC = 20
-    case DEC_UNC = 22
-    case POS_UNC_FLAG = 24
-    case PARALLAX = 26
-    case PARALLAX_UNC = 28
-    case PMRA = 30
-    case PMRA_UNC = 32
-    case PMDEC = 34
-    case PMDEC_UNC = 36
-    case PM_UNC_FLAG = 38
-    case ASTROMETRY_ORIGIN = 40
-    case STAR_EPOCH = 42
+    case ASTROMETRY_ORIGIN = 16
+    case STAR_EPOCH = 18
+    case RA = 20
+    case RA_UNC = 22
+    case DEC = 24
+    case DEC_UNC = 26
+    case POS_UNC_FLAG = 28
+    case PARALLAX = 30
+    case PARALLAX_UNC = 32
+    case PMRA = 34
+    case PMRA_UNC = 36
+    case PMDEC = 38
+    case PMDEC_UNC = 40
+    case PM_UNC_FLAG = 42
     case GMAG = 44
     case GMAG_UNC = 46
     case BPMAG = 48
@@ -60,55 +60,96 @@ public struct STR: FlatBufferObject, Verifiable {
     var p: VOffset { self.rawValue }
   }
 
+  ///  Unique internal identifier
   public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  ///  CelesTrak Star catalog identifier
   public var CS_ID: Int64 { let o = _accessor.offset(VTOFFSET.CS_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
-  public var GNC_CAT_ID: Int32 { let o = _accessor.offset(VTOFFSET.GNC_CAT_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  GNC star catalog identifier
+  public var GNC_CAT_ID: UInt32 { let o = _accessor.offset(VTOFFSET.GNC_CAT_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Gaia DR3 source identifier
   public var GAIADR3_CAT_ID: Int64 { let o = _accessor.offset(VTOFFSET.GAIADR3_CAT_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int64.self, at: o) }
-  public var HIP_CAT_ID: Int32 { let o = _accessor.offset(VTOFFSET.HIP_CAT_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Hipparcos catalog identifier
+  public var HIP_CAT_ID: UInt32 { let o = _accessor.offset(VTOFFSET.HIP_CAT_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Catalog version string
   public var CAT_VERSION: String? { let o = _accessor.offset(VTOFFSET.CAT_VERSION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var CAT_VERSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CAT_VERSION.v) }
-  public var RA: Double { let o = _accessor.offset(VTOFFSET.RA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var RA_UNC: Double { let o = _accessor.offset(VTOFFSET.RA_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var DEC: Double { let o = _accessor.offset(VTOFFSET.DEC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var DEC_UNC: Double { let o = _accessor.offset(VTOFFSET.DEC_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var POS_UNC_FLAG: Bool { let o = _accessor.offset(VTOFFSET.POS_UNC_FLAG.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public var PARALLAX: Double { let o = _accessor.offset(VTOFFSET.PARALLAX.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var PARALLAX_UNC: Double { let o = _accessor.offset(VTOFFSET.PARALLAX_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var PMRA: Double { let o = _accessor.offset(VTOFFSET.PMRA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var PMRA_UNC: Double { let o = _accessor.offset(VTOFFSET.PMRA_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var PMDEC: Double { let o = _accessor.offset(VTOFFSET.PMDEC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var PMDEC_UNC: Double { let o = _accessor.offset(VTOFFSET.PMDEC_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var PM_UNC_FLAG: Bool { let o = _accessor.offset(VTOFFSET.PM_UNC_FLAG.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Astrometry source description
   public var ASTROMETRY_ORIGIN: String? { let o = _accessor.offset(VTOFFSET.ASTROMETRY_ORIGIN.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ASTROMETRY_ORIGINSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ASTROMETRY_ORIGIN.v) }
+  ///  Epoch of stellar position (Julian years)
   public var STAR_EPOCH: Double { let o = _accessor.offset(VTOFFSET.STAR_EPOCH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Right ascension (degrees, ICRS)
+  public var RA: Double { let o = _accessor.offset(VTOFFSET.RA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Right ascension uncertainty (arcseconds)
+  public var RA_UNC: Double { let o = _accessor.offset(VTOFFSET.RA_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Declination (degrees, ICRS)
+  public var DEC: Double { let o = _accessor.offset(VTOFFSET.DEC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Declination uncertainty (arcseconds)
+  public var DEC_UNC: Double { let o = _accessor.offset(VTOFFSET.DEC_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True if position uncertainty is flagged
+  public var POS_UNC_FLAG: Bool { let o = _accessor.offset(VTOFFSET.POS_UNC_FLAG.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Parallax (milliarcseconds)
+  public var PARALLAX: Double { let o = _accessor.offset(VTOFFSET.PARALLAX.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Parallax uncertainty (milliarcseconds)
+  public var PARALLAX_UNC: Double { let o = _accessor.offset(VTOFFSET.PARALLAX_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Proper motion in RA (milliarcseconds/year)
+  public var PMRA: Double { let o = _accessor.offset(VTOFFSET.PMRA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Proper motion in RA uncertainty (milliarcseconds/year)
+  public var PMRA_UNC: Double { let o = _accessor.offset(VTOFFSET.PMRA_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Proper motion in DEC (milliarcseconds/year)
+  public var PMDEC: Double { let o = _accessor.offset(VTOFFSET.PMDEC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Proper motion in DEC uncertainty (milliarcseconds/year)
+  public var PMDEC_UNC: Double { let o = _accessor.offset(VTOFFSET.PMDEC_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True if proper motion uncertainty is flagged
+  public var PM_UNC_FLAG: Bool { let o = _accessor.offset(VTOFFSET.PM_UNC_FLAG.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Gaia G-band magnitude
   public var GMAG: Double { let o = _accessor.offset(VTOFFSET.GMAG.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Gaia G-band magnitude uncertainty
   public var GMAG_UNC: Double { let o = _accessor.offset(VTOFFSET.GMAG_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Gaia BP-band magnitude (blue photometer)
   public var BPMAG: Double { let o = _accessor.offset(VTOFFSET.BPMAG.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Gaia BP-band magnitude uncertainty
   public var BPMAG_UNC: Double { let o = _accessor.offset(VTOFFSET.BPMAG_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Gaia RP-band magnitude (red photometer)
   public var RPMAG: Double { let o = _accessor.offset(VTOFFSET.RPMAG.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Gaia RP-band magnitude uncertainty
   public var RPMAG_UNC: Double { let o = _accessor.offset(VTOFFSET.RPMAG_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  2MASS J-band magnitude (1.25 um)
   public var JMAG: Double { let o = _accessor.offset(VTOFFSET.JMAG.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  J-band magnitude uncertainty
   public var JMAG_UNC: Double { let o = _accessor.offset(VTOFFSET.JMAG_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  2MASS K-band magnitude (2.17 um)
   public var KMAG: Double { let o = _accessor.offset(VTOFFSET.KMAG.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  K-band magnitude uncertainty
   public var KMAG_UNC: Double { let o = _accessor.offset(VTOFFSET.KMAG_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  2MASS H-band magnitude (1.65 um)
   public var HMAG: Double { let o = _accessor.offset(VTOFFSET.HMAG.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  H-band magnitude uncertainty
   public var HMAG_UNC: Double { let o = _accessor.offset(VTOFFSET.HMAG_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True if star is variable
   public var VAR_FLAG: Bool { let o = _accessor.offset(VTOFFSET.VAR_FLAG.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  True if star is in a multiple system
   public var MULT_FLAG: Bool { let o = _accessor.offset(VTOFFSET.MULT_FLAG.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public var NEIGHBOR_ID: Int32 { let o = _accessor.offset(VTOFFSET.NEIGHBOR_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Nearest neighbor catalog identifier
+  public var NEIGHBOR_ID: UInt32 { let o = _accessor.offset(VTOFFSET.NEIGHBOR_ID.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  True if nearest neighbor is within confusion radius
   public var NEIGHBOR_FLAG: Bool { let o = _accessor.offset(VTOFFSET.NEIGHBOR_FLAG.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Distance to nearest neighbor (arcseconds)
   public var NEIGHBOR_DISTANCE: Double { let o = _accessor.offset(VTOFFSET.NEIGHBOR_DISTANCE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True if position shift detected between catalogs
   public var SHIFT_FLAG: Bool { let o = _accessor.offset(VTOFFSET.SHIFT_FLAG.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Position shift magnitude (arcseconds)
   public var SHIFT: Double { let o = _accessor.offset(VTOFFSET.SHIFT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
   public static func startSTR(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 39) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(CS_ID: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CS_ID, def: 0, at: VTOFFSET.CS_ID.p) }
-  public static func add(GNC_CAT_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GNC_CAT_ID, def: 0, at: VTOFFSET.GNC_CAT_ID.p) }
+  public static func add(GNC_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GNC_CAT_ID, def: 0, at: VTOFFSET.GNC_CAT_ID.p) }
   public static func add(GAIADR3_CAT_ID: Int64, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GAIADR3_CAT_ID, def: 0, at: VTOFFSET.GAIADR3_CAT_ID.p) }
-  public static func add(HIP_CAT_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HIP_CAT_ID, def: 0, at: VTOFFSET.HIP_CAT_ID.p) }
+  public static func add(HIP_CAT_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HIP_CAT_ID, def: 0, at: VTOFFSET.HIP_CAT_ID.p) }
   public static func add(CAT_VERSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CAT_VERSION, at: VTOFFSET.CAT_VERSION.p) }
+  public static func add(ASTROMETRY_ORIGIN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ASTROMETRY_ORIGIN, at: VTOFFSET.ASTROMETRY_ORIGIN.p) }
+  public static func add(STAR_EPOCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STAR_EPOCH, def: 0.0, at: VTOFFSET.STAR_EPOCH.p) }
   public static func add(RA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RA, def: 0.0, at: VTOFFSET.RA.p) }
   public static func add(RA_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RA_UNC, def: 0.0, at: VTOFFSET.RA_UNC.p) }
   public static func add(DEC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DEC, def: 0.0, at: VTOFFSET.DEC.p) }
@@ -123,8 +164,6 @@ public struct STR: FlatBufferObject, Verifiable {
   public static func add(PMDEC_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PMDEC_UNC, def: 0.0, at: VTOFFSET.PMDEC_UNC.p) }
   public static func add(PM_UNC_FLAG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PM_UNC_FLAG, def: false,
    at: VTOFFSET.PM_UNC_FLAG.p) }
-  public static func add(ASTROMETRY_ORIGIN: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ASTROMETRY_ORIGIN, at: VTOFFSET.ASTROMETRY_ORIGIN.p) }
-  public static func add(STAR_EPOCH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STAR_EPOCH, def: 0.0, at: VTOFFSET.STAR_EPOCH.p) }
   public static func add(GMAG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GMAG, def: 0.0, at: VTOFFSET.GMAG.p) }
   public static func add(GMAG_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GMAG_UNC, def: 0.0, at: VTOFFSET.GMAG_UNC.p) }
   public static func add(BPMAG: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BPMAG, def: 0.0, at: VTOFFSET.BPMAG.p) }
@@ -141,7 +180,7 @@ public struct STR: FlatBufferObject, Verifiable {
    at: VTOFFSET.VAR_FLAG.p) }
   public static func add(MULT_FLAG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MULT_FLAG, def: false,
    at: VTOFFSET.MULT_FLAG.p) }
-  public static func add(NEIGHBOR_ID: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NEIGHBOR_ID, def: 0, at: VTOFFSET.NEIGHBOR_ID.p) }
+  public static func add(NEIGHBOR_ID: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NEIGHBOR_ID, def: 0, at: VTOFFSET.NEIGHBOR_ID.p) }
   public static func add(NEIGHBOR_FLAG: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NEIGHBOR_FLAG, def: false,
    at: VTOFFSET.NEIGHBOR_FLAG.p) }
   public static func add(NEIGHBOR_DISTANCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NEIGHBOR_DISTANCE, def: 0.0, at: VTOFFSET.NEIGHBOR_DISTANCE.p) }
@@ -153,10 +192,12 @@ public struct STR: FlatBufferObject, Verifiable {
     _ fbb: inout FlatBufferBuilder,
     IDOffset ID: Offset = Offset(),
     CS_ID: Int64 = 0,
-    GNC_CAT_ID: Int32 = 0,
+    GNC_CAT_ID: UInt32 = 0,
     GAIADR3_CAT_ID: Int64 = 0,
-    HIP_CAT_ID: Int32 = 0,
+    HIP_CAT_ID: UInt32 = 0,
     CAT_VERSIONOffset CAT_VERSION: Offset = Offset(),
+    ASTROMETRY_ORIGINOffset ASTROMETRY_ORIGIN: Offset = Offset(),
+    STAR_EPOCH: Double = 0.0,
     RA: Double = 0.0,
     RA_UNC: Double = 0.0,
     DEC: Double = 0.0,
@@ -169,8 +210,6 @@ public struct STR: FlatBufferObject, Verifiable {
     PMDEC: Double = 0.0,
     PMDEC_UNC: Double = 0.0,
     PM_UNC_FLAG: Bool = false,
-    ASTROMETRY_ORIGINOffset ASTROMETRY_ORIGIN: Offset = Offset(),
-    STAR_EPOCH: Double = 0.0,
     GMAG: Double = 0.0,
     GMAG_UNC: Double = 0.0,
     BPMAG: Double = 0.0,
@@ -185,7 +224,7 @@ public struct STR: FlatBufferObject, Verifiable {
     HMAG_UNC: Double = 0.0,
     VAR_FLAG: Bool = false,
     MULT_FLAG: Bool = false,
-    NEIGHBOR_ID: Int32 = 0,
+    NEIGHBOR_ID: UInt32 = 0,
     NEIGHBOR_FLAG: Bool = false,
     NEIGHBOR_DISTANCE: Double = 0.0,
     SHIFT_FLAG: Bool = false,
@@ -198,6 +237,8 @@ public struct STR: FlatBufferObject, Verifiable {
     STR.add(GAIADR3_CAT_ID: GAIADR3_CAT_ID, &fbb)
     STR.add(HIP_CAT_ID: HIP_CAT_ID, &fbb)
     STR.add(CAT_VERSION: CAT_VERSION, &fbb)
+    STR.add(ASTROMETRY_ORIGIN: ASTROMETRY_ORIGIN, &fbb)
+    STR.add(STAR_EPOCH: STAR_EPOCH, &fbb)
     STR.add(RA: RA, &fbb)
     STR.add(RA_UNC: RA_UNC, &fbb)
     STR.add(DEC: DEC, &fbb)
@@ -210,8 +251,6 @@ public struct STR: FlatBufferObject, Verifiable {
     STR.add(PMDEC: PMDEC, &fbb)
     STR.add(PMDEC_UNC: PMDEC_UNC, &fbb)
     STR.add(PM_UNC_FLAG: PM_UNC_FLAG, &fbb)
-    STR.add(ASTROMETRY_ORIGIN: ASTROMETRY_ORIGIN, &fbb)
-    STR.add(STAR_EPOCH: STAR_EPOCH, &fbb)
     STR.add(GMAG: GMAG, &fbb)
     STR.add(GMAG_UNC: GMAG_UNC, &fbb)
     STR.add(BPMAG: BPMAG, &fbb)
@@ -238,10 +277,12 @@ public struct STR: FlatBufferObject, Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.CS_ID.p, fieldName: "CS_ID", required: false, type: Int64.self)
-    try _v.visit(field: VTOFFSET.GNC_CAT_ID.p, fieldName: "GNC_CAT_ID", required: false, type: Int32.self)
+    try _v.visit(field: VTOFFSET.GNC_CAT_ID.p, fieldName: "GNC_CAT_ID", required: false, type: UInt32.self)
     try _v.visit(field: VTOFFSET.GAIADR3_CAT_ID.p, fieldName: "GAIADR3_CAT_ID", required: false, type: Int64.self)
-    try _v.visit(field: VTOFFSET.HIP_CAT_ID.p, fieldName: "HIP_CAT_ID", required: false, type: Int32.self)
+    try _v.visit(field: VTOFFSET.HIP_CAT_ID.p, fieldName: "HIP_CAT_ID", required: false, type: UInt32.self)
     try _v.visit(field: VTOFFSET.CAT_VERSION.p, fieldName: "CAT_VERSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.ASTROMETRY_ORIGIN.p, fieldName: "ASTROMETRY_ORIGIN", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.STAR_EPOCH.p, fieldName: "STAR_EPOCH", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.RA.p, fieldName: "RA", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.RA_UNC.p, fieldName: "RA_UNC", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.DEC.p, fieldName: "DEC", required: false, type: Double.self)
@@ -254,8 +295,6 @@ public struct STR: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.PMDEC.p, fieldName: "PMDEC", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.PMDEC_UNC.p, fieldName: "PMDEC_UNC", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.PM_UNC_FLAG.p, fieldName: "PM_UNC_FLAG", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.ASTROMETRY_ORIGIN.p, fieldName: "ASTROMETRY_ORIGIN", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.STAR_EPOCH.p, fieldName: "STAR_EPOCH", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.GMAG.p, fieldName: "GMAG", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.GMAG_UNC.p, fieldName: "GMAG_UNC", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.BPMAG.p, fieldName: "BPMAG", required: false, type: Double.self)
@@ -270,7 +309,7 @@ public struct STR: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.HMAG_UNC.p, fieldName: "HMAG_UNC", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.VAR_FLAG.p, fieldName: "VAR_FLAG", required: false, type: Bool.self)
     try _v.visit(field: VTOFFSET.MULT_FLAG.p, fieldName: "MULT_FLAG", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.NEIGHBOR_ID.p, fieldName: "NEIGHBOR_ID", required: false, type: Int32.self)
+    try _v.visit(field: VTOFFSET.NEIGHBOR_ID.p, fieldName: "NEIGHBOR_ID", required: false, type: UInt32.self)
     try _v.visit(field: VTOFFSET.NEIGHBOR_FLAG.p, fieldName: "NEIGHBOR_FLAG", required: false, type: Bool.self)
     try _v.visit(field: VTOFFSET.NEIGHBOR_DISTANCE.p, fieldName: "NEIGHBOR_DISTANCE", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.SHIFT_FLAG.p, fieldName: "SHIFT_FLAG", required: false, type: Bool.self)

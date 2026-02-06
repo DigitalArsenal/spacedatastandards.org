@@ -1,78 +1,174 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "launchDetectionType": {
+      "type": "string",
+      "enum": [
+        "IR_DETECT",
+        "RADAR_DETECT",
+        "OPTICAL_DETECT",
+        "ELINT_DETECT",
+        "COMBINED",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "IR_DETECT": {
+          "value": 0
+        },
+        "RADAR_DETECT": {
+          "value": 1
+        },
+        "OPTICAL_DETECT": {
+          "value": 2
+        },
+        "ELINT_DETECT": {
+          "value": 3
+        },
+        "COMBINED": {
+          "value": 4
+        },
+        "UNKNOWN": {
+          "value": 5
+        }
+      }
+    },
     "LND": {
       "type": "object",
       "description": "Launch Detection",
       "properties": {
         "ID": {
           "type": "string",
+          "description": "Unique identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "EVENT_ID": {
+          "type": "string",
+          "description": "Detection event identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "DETECTION_TYPE": {
+          "$ref": "#/definitions/launchDetectionType",
+          "description": "Detection type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "IR_DETECT": {
+              "value": 0
+            },
+            "RADAR_DETECT": {
+              "value": 1
+            },
+            "OPTICAL_DETECT": {
+              "value": 2
+            },
+            "ELINT_DETECT": {
+              "value": 3
+            },
+            "COMBINED": {
+              "value": 4
+            },
+            "UNKNOWN": {
+              "value": 5
+            }
+          }
+        },
+        "MESSAGE_TYPE": {
+          "type": "string",
+          "description": "Detection message type code",
           "x-flatbuffer-type": "string"
         },
         "LAUNCH_TIME": {
           "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "MESSAGE_TYPE": {
-          "type": "string",
+          "description": "Time of launch detection (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "LAUNCH_LATITUDE": {
           "type": "number",
+          "description": "Launch site latitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "LAUNCH_LONGITUDE": {
           "type": "number",
+          "description": "Launch site longitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "LAUNCH_AZIMUTH": {
           "type": "number",
+          "description": "Launch azimuth (degrees from north)",
           "x-flatbuffer-type": "double"
         },
         "RAAN": {
           "type": "number",
+          "description": "Estimated RAAN (degrees)",
           "x-flatbuffer-type": "double"
         },
         "INCLINATION": {
           "type": "number",
+          "description": "Estimated inclination (degrees)",
           "x-flatbuffer-type": "double"
         },
         "OBSERVATION_TIME": {
           "type": "string",
+          "description": "Time of trajectory observation (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "OBSERVATION_LATITUDE": {
           "type": "number",
+          "description": "Observation point latitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "OBSERVATION_LONGITUDE": {
           "type": "number",
+          "description": "Observation point longitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "OBSERVATION_ALTITUDE": {
           "type": "number",
+          "description": "Observation point altitude (km)",
           "x-flatbuffer-type": "double"
         },
         "STEREO_FLAG": {
           "type": "boolean",
+          "description": "True if stereo observation (multiple sensors)",
           "x-flatbuffer-type": "bool"
         },
         "HIGH_ZENITH_AZIMUTH": {
           "type": "boolean",
+          "description": "True if high zenith angle observation",
           "x-flatbuffer-type": "bool"
         },
         "SEQUENCE_NUMBER": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Sequence number in detection chain",
+          "x-flatbuffer-type": "uint16"
         },
-        "EVENT_ID": {
+        "LAUNCH_SITE_ID": {
           "type": "string",
+          "description": "Launch site identifier",
           "x-flatbuffer-type": "string"
+        },
+        "LAUNCH_VEHICLE": {
+          "type": "string",
+          "description": "Launch vehicle type (if identified)",
+          "x-flatbuffer-type": "string"
+        },
+        "TRAJECTORY_TYPE": {
+          "type": "string",
+          "description": "Estimated trajectory type",
+          "x-flatbuffer-type": "string"
+        },
+        "CONFIDENCE": {
+          "type": "number",
+          "description": "Detection confidence (0-1)",
+          "x-flatbuffer-type": "double"
         },
         "DESCRIPTOR": {
           "type": "string",
+          "description": "Event descriptor",
           "x-flatbuffer-type": "string"
         },
         "TAGS": {
@@ -80,6 +176,7 @@
           "items": {
             "type": "string"
           },
+          "description": "Associated tags",
           "x-flatbuffer-type": "[string]"
         }
       },

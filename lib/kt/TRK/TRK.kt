@@ -29,6 +29,9 @@ class TRK : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Unique identifier
+     */
     val ID : String?
         get() {
             val o = __offset(4)
@@ -40,6 +43,9 @@ class TRK : Table() {
         }
     val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    /**
+     * Contact reference
+     */
     val CNTCT : String?
         get() {
             val o = __offset(6)
@@ -51,6 +57,9 @@ class TRK : Table() {
         }
     val CNTCTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
     fun CNTCTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    /**
+     * Message timestamp (ISO 8601)
+     */
     val MSG_TS : String?
         get() {
             val o = __offset(8)
@@ -62,6 +71,9 @@ class TRK : Table() {
         }
     val MSG_TSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
     fun MSG_TSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    /**
+     * Mission identifier
+     */
     val MSN_ID : String?
         get() {
             val o = __offset(10)
@@ -73,6 +85,9 @@ class TRK : Table() {
         }
     val MSN_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
     fun MSN_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    /**
+     * Asset nationality
+     */
     val ASSET_NAT : String?
         get() {
             val o = __offset(12)
@@ -84,6 +99,9 @@ class TRK : Table() {
         }
     val ASSET_NATAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
     fun ASSET_NATInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * Asset identifier
+     */
     val ASSET : String?
         get() {
             val o = __offset(14)
@@ -95,7 +113,10 @@ class TRK : Table() {
         }
     val ASSETAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
     fun ASSETInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
-    val SEN : String?
+    /**
+     * Sensor identifier
+     */
+    val SENSOR_ID : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -104,8 +125,11 @@ class TRK : Table() {
                 null
             }
         }
-    val SENAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun SENInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    val SENSOR_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
+    fun SENSOR_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    /**
+     * Sensor quality assessment
+     */
     val SEN_QUAL : String?
         get() {
             val o = __offset(18)
@@ -117,6 +141,9 @@ class TRK : Table() {
         }
     val SEN_QUALAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
     fun SEN_QUALInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    /**
+     * Track identifier
+     */
     val TRK_ID : String?
         get() {
             val o = __offset(20)
@@ -128,6 +155,9 @@ class TRK : Table() {
         }
     val TRK_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
     fun TRK_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    /**
+     * Track number
+     */
     val TRK_NUM : String?
         get() {
             val o = __offset(22)
@@ -139,17 +169,17 @@ class TRK : Table() {
         }
     val TRK_NUMAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
     fun TRK_NUMInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
-    val TRK_STAT : String?
+    /**
+     * Track status
+     */
+    val TRK_STAT : Byte
         get() {
             val o = __offset(24)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val TRK_STATAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun TRK_STATInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    /**
+     * Object nationality
+     */
     val OBJ_NAT : String?
         get() {
             val o = __offset(26)
@@ -161,6 +191,9 @@ class TRK : Table() {
         }
     val OBJ_NATAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
     fun OBJ_NATInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    /**
+     * Object identifier
+     */
     val OBJ_ID : String?
         get() {
             val o = __offset(28)
@@ -172,6 +205,9 @@ class TRK : Table() {
         }
     val OBJ_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
     fun OBJ_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    /**
+     * Object type classification
+     */
     val OBJ_TYPE : String?
         get() {
             val o = __offset(30)
@@ -183,6 +219,9 @@ class TRK : Table() {
         }
     val OBJ_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
     fun OBJ_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    /**
+     * Object specific type
+     */
     val OBJ_SPEC : String?
         get() {
             val o = __offset(32)
@@ -194,6 +233,9 @@ class TRK : Table() {
         }
     val OBJ_SPECAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
     fun OBJ_SPECInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
+    /**
+     * Object platform type
+     */
     val OBJ_PLAT : String?
         get() {
             val o = __offset(34)
@@ -205,6 +247,9 @@ class TRK : Table() {
         }
     val OBJ_PLATAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
     fun OBJ_PLATInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    /**
+     * Object activity
+     */
     val OBJ_ACT : String?
         get() {
             val o = __offset(36)
@@ -216,6 +261,9 @@ class TRK : Table() {
         }
     val OBJ_ACTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
     fun OBJ_ACTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
+    /**
+     * Mode type
+     */
     val MOD_TYPE : String?
         get() {
             val o = __offset(38)
@@ -227,6 +275,9 @@ class TRK : Table() {
         }
     val MOD_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 1)
     fun MOD_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 1)
+    /**
+     * Track item identifier
+     */
     val TRK_ITM_ID : String?
         get() {
             val o = __offset(40)
@@ -238,6 +289,9 @@ class TRK : Table() {
         }
     val TRK_ITM_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(40, 1)
     fun TRK_ITM_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 40, 1)
+    /**
+     * Track point timestamp (ISO 8601)
+     */
     val TS : String?
         get() {
             val o = __offset(42)
@@ -249,11 +303,17 @@ class TRK : Table() {
         }
     val TSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(42, 1)
     fun TSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 42, 1)
-    val TRK_QUAL : Int
+    /**
+     * Track quality (0-15)
+     */
+    val TRK_QUAL : UByte
         get() {
             val o = __offset(44)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
+    /**
+     * Track point type
+     */
     val TRK_PT_TYPE : String?
         get() {
             val o = __offset(46)
@@ -265,6 +325,9 @@ class TRK : Table() {
         }
     val TRK_PT_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(46, 1)
     fun TRK_PT_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 46, 1)
+    /**
+     * Object identity assessment
+     */
     val OBJ_IDENT : String?
         get() {
             val o = __offset(48)
@@ -276,16 +339,25 @@ class TRK : Table() {
         }
     val OBJ_IDENTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(48, 1)
     fun OBJ_IDENTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 48, 1)
-    val IDENT_CRED : Int
+    /**
+     * Identity credibility (1-6)
+     */
+    val IDENT_CRED : UByte
         get() {
             val o = __offset(50)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val IDENT_REL : Int
+    /**
+     * Identity reliability (A-F)
+     */
+    val IDENT_REL : UByte
         get() {
             val o = __offset(52)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
+    /**
+     * Identity amplification
+     */
     val IDENT_AMP : String?
         get() {
             val o = __offset(54)
@@ -297,57 +369,81 @@ class TRK : Table() {
         }
     val IDENT_AMPAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(54, 1)
     fun IDENT_AMPInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 54, 1)
-    val ENVIRONMENT : String?
+    /**
+     * Track environment
+     */
+    val ENVIRONMENT : Byte
         get() {
             val o = __offset(56)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val ENVIRONMENTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(56, 1)
-    fun ENVIRONMENTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 56, 1)
+    /**
+     * Environment confidence (0-1)
+     */
     val ENVIRONMENT_CONF : Double
         get() {
             val o = __offset(58)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Track confidence (0-1)
+     */
     val TRK_CONF : Double
         get() {
             val o = __offset(60)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Latitude (degrees)
+     */
     val LAT : Double
         get() {
             val o = __offset(62)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Longitude (degrees)
+     */
     val LON : Double
         get() {
             val o = __offset(64)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Altitude (km)
+     */
     val ALT : Double
         get() {
             val o = __offset(66)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Speed (km/s)
+     */
     val SPD : Double
         get() {
             val o = __offset(68)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Heading (degrees from north)
+     */
     val HDNG : Double
         get() {
             val o = __offset(70)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Course (degrees from north)
+     */
     val COURSE : Double
         get() {
             val o = __offset(72)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Source types
+     */
     fun SRC_TYPS(j: Int) : String? {
         val o = __offset(74)
         return if (o != 0) {
@@ -360,6 +456,9 @@ class TRK : Table() {
         get() {
             val o = __offset(74); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Source identifiers
+     */
     fun SRC_IDS(j: Int) : String? {
         val o = __offset(76)
         return if (o != 0) {
@@ -372,6 +471,9 @@ class TRK : Table() {
         get() {
             val o = __offset(76); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Call sign
+     */
     val CALL_SIGN : String?
         get() {
             val o = __offset(78)
@@ -383,11 +485,17 @@ class TRK : Table() {
         }
     val CALL_SIGNAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(78, 1)
     fun CALL_SIGNInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 78, 1)
+    /**
+     * True if fused from multiple sources
+     */
     val MULTI_SOURCE : Boolean
         get() {
             val o = __offset(80)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
+    /**
+     * J-series message type
+     */
     val J_SERIES : String?
         get() {
             val o = __offset(82)
@@ -399,41 +507,65 @@ class TRK : Table() {
         }
     val J_SERIESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(82, 1)
     fun J_SERIESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 82, 1)
-    val STRENGTH : Int
+    /**
+     * Force strength indicator
+     */
+    val STRENGTH : UShort
         get() {
             val o = __offset(84)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
-    val M1 : Int
+    /**
+     * Mode 1 code
+     */
+    val M1 : UShort
         get() {
             val o = __offset(86)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
-    val M1V : Int
+    /**
+     * Mode 1 validity
+     */
+    val M1V : UByte
         get() {
             val o = __offset(88)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val M2 : Int
+    /**
+     * Mode 2 code
+     */
+    val M2 : UShort
         get() {
             val o = __offset(90)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
-    val M2V : Int
+    /**
+     * Mode 2 validity
+     */
+    val M2V : UByte
         get() {
             val o = __offset(92)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val M3A : Int
+    /**
+     * Mode 3A code
+     */
+    val M3A : UShort
         get() {
             val o = __offset(94)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
-    val M3AV : Int
+    /**
+     * Mode 3A validity
+     */
+    val M3AV : UByte
         get() {
             val o = __offset(96)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
+    /**
+     * Associated tags
+     */
     fun TAGS(j: Int) : String? {
         val o = __offset(98)
         return if (o != 0) {
@@ -447,7 +579,7 @@ class TRK : Table() {
             val o = __offset(98); return if (o != 0) __vector_len(o) else 0
         }
     /**
-     * Start time for track data (ISO 8601 UTC format).
+     * Start time for track data (ISO 8601)
      */
     val TRACK_START_TIME : String?
         get() {
@@ -461,7 +593,7 @@ class TRK : Table() {
     val TRACK_START_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(100, 1)
     fun TRACK_START_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 100, 1)
     /**
-     * Time interval between track points in seconds.
+     * Time interval between track points (seconds)
      */
     val TRACK_STEP_SIZE : Double
         get() {
@@ -469,7 +601,7 @@ class TRK : Table() {
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
     /**
-     * Number of components per point (default 3 for X, Y, Z).
+     * Number of components per point (default 3 for X, Y, Z)
      */
     val TRACK_COMPONENTS : UByte
         get() {
@@ -620,7 +752,7 @@ class TRK : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun TRKBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$TRK")
-        fun createTRK(builder: FlatBufferBuilder, IDOffset: Int, CNTCTOffset: Int, MSG_TSOffset: Int, MSN_IDOffset: Int, ASSET_NATOffset: Int, ASSETOffset: Int, SENOffset: Int, SEN_QUALOffset: Int, TRK_IDOffset: Int, TRK_NUMOffset: Int, TRK_STATOffset: Int, OBJ_NATOffset: Int, OBJ_IDOffset: Int, OBJ_TYPEOffset: Int, OBJ_SPECOffset: Int, OBJ_PLATOffset: Int, OBJ_ACTOffset: Int, MOD_TYPEOffset: Int, TRK_ITM_IDOffset: Int, TSOffset: Int, TRK_QUAL: Int, TRK_PT_TYPEOffset: Int, OBJ_IDENTOffset: Int, IDENT_CRED: Int, IDENT_REL: Int, IDENT_AMPOffset: Int, ENVIRONMENTOffset: Int, ENVIRONMENT_CONF: Double, TRK_CONF: Double, LAT: Double, LON: Double, ALT: Double, SPD: Double, HDNG: Double, COURSE: Double, SRC_TYPSOffset: Int, SRC_IDSOffset: Int, CALL_SIGNOffset: Int, MULTI_SOURCE: Boolean, J_SERIESOffset: Int, STRENGTH: Int, M1: Int, M1V: Int, M2: Int, M2V: Int, M3A: Int, M3AV: Int, TAGSOffset: Int, TRACK_START_TIMEOffset: Int, TRACK_STEP_SIZE: Double, TRACK_COMPONENTS: UByte, ECEF_POSOffset: Int, ECEF_VELOffset: Int, ECEF_ACCOffset: Int, LC_POSOffset: Int, LC_VELOffset: Int, LC_ACCOffset: Int, COVOffset: Int, ERR_ELLPOffset: Int) : Int {
+        fun createTRK(builder: FlatBufferBuilder, IDOffset: Int, CNTCTOffset: Int, MSG_TSOffset: Int, MSN_IDOffset: Int, ASSET_NATOffset: Int, ASSETOffset: Int, SENSOR_IDOffset: Int, SEN_QUALOffset: Int, TRK_IDOffset: Int, TRK_NUMOffset: Int, TRK_STAT: Byte, OBJ_NATOffset: Int, OBJ_IDOffset: Int, OBJ_TYPEOffset: Int, OBJ_SPECOffset: Int, OBJ_PLATOffset: Int, OBJ_ACTOffset: Int, MOD_TYPEOffset: Int, TRK_ITM_IDOffset: Int, TSOffset: Int, TRK_QUAL: UByte, TRK_PT_TYPEOffset: Int, OBJ_IDENTOffset: Int, IDENT_CRED: UByte, IDENT_REL: UByte, IDENT_AMPOffset: Int, ENVIRONMENT: Byte, ENVIRONMENT_CONF: Double, TRK_CONF: Double, LAT: Double, LON: Double, ALT: Double, SPD: Double, HDNG: Double, COURSE: Double, SRC_TYPSOffset: Int, SRC_IDSOffset: Int, CALL_SIGNOffset: Int, MULTI_SOURCE: Boolean, J_SERIESOffset: Int, STRENGTH: UShort, M1: UShort, M1V: UByte, M2: UShort, M2V: UByte, M3A: UShort, M3AV: UByte, TAGSOffset: Int, TRACK_START_TIMEOffset: Int, TRACK_STEP_SIZE: Double, TRACK_COMPONENTS: UByte, ECEF_POSOffset: Int, ECEF_VELOffset: Int, ECEF_ACCOffset: Int, LC_POSOffset: Int, LC_VELOffset: Int, LC_ACCOffset: Int, COVOffset: Int, ERR_ELLPOffset: Int) : Int {
             builder.startTable(59)
             addTRACK_STEP_SIZE(builder, TRACK_STEP_SIZE)
             addCOURSE(builder, COURSE)
@@ -641,24 +773,13 @@ class TRK : Table() {
             addECEF_POS(builder, ECEF_POSOffset)
             addTRACK_START_TIME(builder, TRACK_START_TIMEOffset)
             addTAGS(builder, TAGSOffset)
-            addM3AV(builder, M3AV)
-            addM3A(builder, M3A)
-            addM2V(builder, M2V)
-            addM2(builder, M2)
-            addM1V(builder, M1V)
-            addM1(builder, M1)
-            addSTRENGTH(builder, STRENGTH)
             addJ_SERIES(builder, J_SERIESOffset)
             addCALL_SIGN(builder, CALL_SIGNOffset)
             addSRC_IDS(builder, SRC_IDSOffset)
             addSRC_TYPS(builder, SRC_TYPSOffset)
-            addENVIRONMENT(builder, ENVIRONMENTOffset)
             addIDENT_AMP(builder, IDENT_AMPOffset)
-            addIDENT_REL(builder, IDENT_REL)
-            addIDENT_CRED(builder, IDENT_CRED)
             addOBJ_IDENT(builder, OBJ_IDENTOffset)
             addTRK_PT_TYPE(builder, TRK_PT_TYPEOffset)
-            addTRK_QUAL(builder, TRK_QUAL)
             addTS(builder, TSOffset)
             addTRK_ITM_ID(builder, TRK_ITM_IDOffset)
             addMOD_TYPE(builder, MOD_TYPEOffset)
@@ -668,19 +789,30 @@ class TRK : Table() {
             addOBJ_TYPE(builder, OBJ_TYPEOffset)
             addOBJ_ID(builder, OBJ_IDOffset)
             addOBJ_NAT(builder, OBJ_NATOffset)
-            addTRK_STAT(builder, TRK_STATOffset)
             addTRK_NUM(builder, TRK_NUMOffset)
             addTRK_ID(builder, TRK_IDOffset)
             addSEN_QUAL(builder, SEN_QUALOffset)
-            addSEN(builder, SENOffset)
+            addSENSOR_ID(builder, SENSOR_IDOffset)
             addASSET(builder, ASSETOffset)
             addASSET_NAT(builder, ASSET_NATOffset)
             addMSN_ID(builder, MSN_IDOffset)
             addMSG_TS(builder, MSG_TSOffset)
             addCNTCT(builder, CNTCTOffset)
             addID(builder, IDOffset)
+            addM3A(builder, M3A)
+            addM2(builder, M2)
+            addM1(builder, M1)
+            addSTRENGTH(builder, STRENGTH)
             addTRACK_COMPONENTS(builder, TRACK_COMPONENTS)
+            addM3AV(builder, M3AV)
+            addM2V(builder, M2V)
+            addM1V(builder, M1V)
             addMULTI_SOURCE(builder, MULTI_SOURCE)
+            addENVIRONMENT(builder, ENVIRONMENT)
+            addIDENT_REL(builder, IDENT_REL)
+            addIDENT_CRED(builder, IDENT_CRED)
+            addTRK_QUAL(builder, TRK_QUAL)
+            addTRK_STAT(builder, TRK_STAT)
             return endTRK(builder)
         }
         fun startTRK(builder: FlatBufferBuilder) = builder.startTable(59)
@@ -690,11 +822,11 @@ class TRK : Table() {
         fun addMSN_ID(builder: FlatBufferBuilder, MSN_ID: Int) = builder.addOffset(3, MSN_ID, 0)
         fun addASSET_NAT(builder: FlatBufferBuilder, ASSET_NAT: Int) = builder.addOffset(4, ASSET_NAT, 0)
         fun addASSET(builder: FlatBufferBuilder, ASSET: Int) = builder.addOffset(5, ASSET, 0)
-        fun addSEN(builder: FlatBufferBuilder, SEN: Int) = builder.addOffset(6, SEN, 0)
+        fun addSENSOR_ID(builder: FlatBufferBuilder, SENSOR_ID: Int) = builder.addOffset(6, SENSOR_ID, 0)
         fun addSEN_QUAL(builder: FlatBufferBuilder, SEN_QUAL: Int) = builder.addOffset(7, SEN_QUAL, 0)
         fun addTRK_ID(builder: FlatBufferBuilder, TRK_ID: Int) = builder.addOffset(8, TRK_ID, 0)
         fun addTRK_NUM(builder: FlatBufferBuilder, TRK_NUM: Int) = builder.addOffset(9, TRK_NUM, 0)
-        fun addTRK_STAT(builder: FlatBufferBuilder, TRK_STAT: Int) = builder.addOffset(10, TRK_STAT, 0)
+        fun addTRK_STAT(builder: FlatBufferBuilder, TRK_STAT: Byte) = builder.addByte(10, TRK_STAT, 0)
         fun addOBJ_NAT(builder: FlatBufferBuilder, OBJ_NAT: Int) = builder.addOffset(11, OBJ_NAT, 0)
         fun addOBJ_ID(builder: FlatBufferBuilder, OBJ_ID: Int) = builder.addOffset(12, OBJ_ID, 0)
         fun addOBJ_TYPE(builder: FlatBufferBuilder, OBJ_TYPE: Int) = builder.addOffset(13, OBJ_TYPE, 0)
@@ -704,13 +836,13 @@ class TRK : Table() {
         fun addMOD_TYPE(builder: FlatBufferBuilder, MOD_TYPE: Int) = builder.addOffset(17, MOD_TYPE, 0)
         fun addTRK_ITM_ID(builder: FlatBufferBuilder, TRK_ITM_ID: Int) = builder.addOffset(18, TRK_ITM_ID, 0)
         fun addTS(builder: FlatBufferBuilder, TS: Int) = builder.addOffset(19, TS, 0)
-        fun addTRK_QUAL(builder: FlatBufferBuilder, TRK_QUAL: Int) = builder.addInt(20, TRK_QUAL, 0)
+        fun addTRK_QUAL(builder: FlatBufferBuilder, TRK_QUAL: UByte) = builder.addByte(20, TRK_QUAL.toByte(), 0)
         fun addTRK_PT_TYPE(builder: FlatBufferBuilder, TRK_PT_TYPE: Int) = builder.addOffset(21, TRK_PT_TYPE, 0)
         fun addOBJ_IDENT(builder: FlatBufferBuilder, OBJ_IDENT: Int) = builder.addOffset(22, OBJ_IDENT, 0)
-        fun addIDENT_CRED(builder: FlatBufferBuilder, IDENT_CRED: Int) = builder.addInt(23, IDENT_CRED, 0)
-        fun addIDENT_REL(builder: FlatBufferBuilder, IDENT_REL: Int) = builder.addInt(24, IDENT_REL, 0)
+        fun addIDENT_CRED(builder: FlatBufferBuilder, IDENT_CRED: UByte) = builder.addByte(23, IDENT_CRED.toByte(), 0)
+        fun addIDENT_REL(builder: FlatBufferBuilder, IDENT_REL: UByte) = builder.addByte(24, IDENT_REL.toByte(), 0)
         fun addIDENT_AMP(builder: FlatBufferBuilder, IDENT_AMP: Int) = builder.addOffset(25, IDENT_AMP, 0)
-        fun addENVIRONMENT(builder: FlatBufferBuilder, ENVIRONMENT: Int) = builder.addOffset(26, ENVIRONMENT, 0)
+        fun addENVIRONMENT(builder: FlatBufferBuilder, ENVIRONMENT: Byte) = builder.addByte(26, ENVIRONMENT, 0)
         fun addENVIRONMENT_CONF(builder: FlatBufferBuilder, ENVIRONMENT_CONF: Double) = builder.addDouble(27, ENVIRONMENT_CONF, 0.0)
         fun addTRK_CONF(builder: FlatBufferBuilder, TRK_CONF: Double) = builder.addDouble(28, TRK_CONF, 0.0)
         fun addLAT(builder: FlatBufferBuilder, LAT: Double) = builder.addDouble(29, LAT, 0.0)
@@ -740,13 +872,13 @@ class TRK : Table() {
         fun addCALL_SIGN(builder: FlatBufferBuilder, CALL_SIGN: Int) = builder.addOffset(37, CALL_SIGN, 0)
         fun addMULTI_SOURCE(builder: FlatBufferBuilder, MULTI_SOURCE: Boolean) = builder.addBoolean(38, MULTI_SOURCE, false)
         fun addJ_SERIES(builder: FlatBufferBuilder, J_SERIES: Int) = builder.addOffset(39, J_SERIES, 0)
-        fun addSTRENGTH(builder: FlatBufferBuilder, STRENGTH: Int) = builder.addInt(40, STRENGTH, 0)
-        fun addM1(builder: FlatBufferBuilder, M1: Int) = builder.addInt(41, M1, 0)
-        fun addM1V(builder: FlatBufferBuilder, M1V: Int) = builder.addInt(42, M1V, 0)
-        fun addM2(builder: FlatBufferBuilder, M2: Int) = builder.addInt(43, M2, 0)
-        fun addM2V(builder: FlatBufferBuilder, M2V: Int) = builder.addInt(44, M2V, 0)
-        fun addM3A(builder: FlatBufferBuilder, M3A: Int) = builder.addInt(45, M3A, 0)
-        fun addM3AV(builder: FlatBufferBuilder, M3AV: Int) = builder.addInt(46, M3AV, 0)
+        fun addSTRENGTH(builder: FlatBufferBuilder, STRENGTH: UShort) = builder.addShort(40, STRENGTH.toShort(), 0)
+        fun addM1(builder: FlatBufferBuilder, M1: UShort) = builder.addShort(41, M1.toShort(), 0)
+        fun addM1V(builder: FlatBufferBuilder, M1V: UByte) = builder.addByte(42, M1V.toByte(), 0)
+        fun addM2(builder: FlatBufferBuilder, M2: UShort) = builder.addShort(43, M2.toShort(), 0)
+        fun addM2V(builder: FlatBufferBuilder, M2V: UByte) = builder.addByte(44, M2V.toByte(), 0)
+        fun addM3A(builder: FlatBufferBuilder, M3A: UShort) = builder.addShort(45, M3A.toShort(), 0)
+        fun addM3AV(builder: FlatBufferBuilder, M3AV: UByte) = builder.addByte(46, M3AV.toByte(), 0)
         fun addTAGS(builder: FlatBufferBuilder, TAGS: Int) = builder.addOffset(47, TAGS, 0)
         fun createTagsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)

@@ -54,6 +54,7 @@ func (rcv *MST) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Unique identifier
 func (rcv *MST) ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -62,6 +63,8 @@ func (rcv *MST) ID() []byte {
 	return nil
 }
 
+/// Unique identifier
+/// Message type code
 func (rcv *MST) MSG_TYPE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -70,6 +73,8 @@ func (rcv *MST) MSG_TYPE() []byte {
 	return nil
 }
 
+/// Message type code
+/// Message sub-type
 func (rcv *MST) MSG_SUB_TYPE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -78,6 +83,8 @@ func (rcv *MST) MSG_SUB_TYPE() []byte {
 	return nil
 }
 
+/// Message sub-type
+/// Message creation date (ISO 8601)
 func (rcv *MST) MSG_CREATE_DATE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
@@ -86,14 +93,22 @@ func (rcv *MST) MSG_CREATE_DATE() []byte {
 	return nil
 }
 
-func (rcv *MST) ENVIRONMENT() []byte {
+/// Message creation date (ISO 8601)
+/// Track environment
+func (rcv *MST) ENVIRONMENT() missileEnvironment {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return missileEnvironment(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
-	return nil
+	return 0
 }
 
+/// Track environment
+func (rcv *MST) MutateENVIRONMENT(n missileEnvironment) bool {
+	return rcv._tab.MutateInt8Slot(12, int8(n))
+}
+
+/// Object type classification
 func (rcv *MST) OBJ_TYPE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -102,18 +117,22 @@ func (rcv *MST) OBJ_TYPE() []byte {
 	return nil
 }
 
-func (rcv *MST) OBJ_TYPE_CONF() int32 {
+/// Object type classification
+/// Object type confidence (0-100)
+func (rcv *MST) OBJ_TYPE_CONF() byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *MST) MutateOBJ_TYPE_CONF(n int32) bool {
-	return rcv._tab.MutateInt32Slot(16, n)
+/// Object type confidence (0-100)
+func (rcv *MST) MutateOBJ_TYPE_CONF(n byte) bool {
+	return rcv._tab.MutateByteSlot(16, n)
 }
 
+/// Object platform type
 func (rcv *MST) OBJ_PLAT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -122,6 +141,8 @@ func (rcv *MST) OBJ_PLAT() []byte {
 	return nil
 }
 
+/// Object platform type
+/// Object identity assessment
 func (rcv *MST) OBJ_IDENT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
@@ -130,6 +151,8 @@ func (rcv *MST) OBJ_IDENT() []byte {
 	return nil
 }
 
+/// Object identity assessment
+/// Space amplification data
 func (rcv *MST) SPACE_AMP() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
@@ -138,15 +161,23 @@ func (rcv *MST) SPACE_AMP() []byte {
 	return nil
 }
 
-func (rcv *MST) OBJ_ACT() []byte {
+/// Space amplification data
+/// Space amplification confidence (0-100)
+func (rcv *MST) SPACE_AMP_CONF() byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
 	}
-	return nil
+	return 0
 }
 
-func (rcv *MST) SPACE_SPEC_TYPE() []byte {
+/// Space amplification confidence (0-100)
+func (rcv *MST) MutateSPACE_AMP_CONF(n byte) bool {
+	return rcv._tab.MutateByteSlot(24, n)
+}
+
+/// Object activity
+func (rcv *MST) OBJ_ACT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -154,7 +185,9 @@ func (rcv *MST) SPACE_SPEC_TYPE() []byte {
 	return nil
 }
 
-func (rcv *MST) ACFT_SUB_TYPE() []byte {
+/// Object activity
+/// Space specific type
+func (rcv *MST) SPACE_SPEC_TYPE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -162,7 +195,9 @@ func (rcv *MST) ACFT_SUB_TYPE() []byte {
 	return nil
 }
 
-func (rcv *MST) NAME() []byte {
+/// Space specific type
+/// Aircraft sub-type (if applicable)
+func (rcv *MST) ACFT_SUB_TYPE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -170,7 +205,9 @@ func (rcv *MST) NAME() []byte {
 	return nil
 }
 
-func (rcv *MST) CALL_SIGN() []byte {
+/// Aircraft sub-type (if applicable)
+/// Object name
+func (rcv *MST) NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -178,27 +215,33 @@ func (rcv *MST) CALL_SIGN() []byte {
 	return nil
 }
 
-func (rcv *MST) LOST_TRK_IND() bool {
+/// Object name
+/// Call sign
+func (rcv *MST) CALL_SIGN() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
-	if o != 0 {
-		return rcv._tab.GetBool(o + rcv._tab.Pos)
-	}
-	return false
-}
-
-func (rcv *MST) MutateLOST_TRK_IND(n bool) bool {
-	return rcv._tab.MutateBoolSlot(34, n)
-}
-
-func (rcv *MST) TRACK_ID() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
 }
 
-func (rcv *MST) PARENT_TRACK_ID() []byte {
+/// Call sign
+/// True if track is lost
+func (rcv *MST) LOST_TRK_IND() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+/// True if track is lost
+func (rcv *MST) MutateLOST_TRK_IND(n bool) bool {
+	return rcv._tab.MutateBoolSlot(36, n)
+}
+
+/// Track identifier
+func (rcv *MST) TRACK_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -206,7 +249,9 @@ func (rcv *MST) PARENT_TRACK_ID() []byte {
 	return nil
 }
 
-func (rcv *MST) MUID_SRC_TRK() []byte {
+/// Track identifier
+/// Parent track identifier
+func (rcv *MST) PARENT_TRACK_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -214,7 +259,9 @@ func (rcv *MST) MUID_SRC_TRK() []byte {
 	return nil
 }
 
-func (rcv *MST) MUID_SRC() []byte {
+/// Parent track identifier
+/// Multi-unit identifier (source track)
+func (rcv *MST) MUID_SRC_TRK() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -222,7 +269,9 @@ func (rcv *MST) MUID_SRC() []byte {
 	return nil
 }
 
-func (rcv *MST) ALERT() []byte {
+/// Multi-unit identifier (source track)
+/// Multi-unit identifier (source)
+func (rcv *MST) MUID_SRC() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -230,7 +279,9 @@ func (rcv *MST) ALERT() []byte {
 	return nil
 }
 
-func (rcv *MST) MSL_STATUS() []byte {
+/// Multi-unit identifier (source)
+/// Alert classification
+func (rcv *MST) ALERT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -238,15 +289,23 @@ func (rcv *MST) MSL_STATUS() []byte {
 	return nil
 }
 
-func (rcv *MST) TS() []byte {
+/// Alert classification
+/// Missile engagement status
+func (rcv *MST) MSL_STATUS() missileStatus {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return missileStatus(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
-	return nil
+	return 0
 }
 
-func (rcv *MST) AOU_RPT_TYPE() []byte {
+/// Missile engagement status
+func (rcv *MST) MutateMSL_STATUS(n missileStatus) bool {
+	return rcv._tab.MutateInt8Slot(48, int8(n))
+}
+
+/// Track timestamp (ISO 8601)
+func (rcv *MST) TS() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -254,19 +313,23 @@ func (rcv *MST) AOU_RPT_TYPE() []byte {
 	return nil
 }
 
-func (rcv *MST) CONTAINMENT() float64 {
+/// Track timestamp (ISO 8601)
+/// AOU report type
+func (rcv *MST) AOU_RPT_TYPE() aouReportType {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		return aouReportType(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
-	return 0.0
+	return 0
 }
 
-func (rcv *MST) MutateCONTAINMENT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(52, n)
+/// AOU report type
+func (rcv *MST) MutateAOU_RPT_TYPE(n aouReportType) bool {
+	return rcv._tab.MutateInt8Slot(52, int8(n))
 }
 
-func (rcv *MST) TRK_CONF() float64 {
+/// Containment probability (0-1)
+func (rcv *MST) CONTAINMENT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -274,43 +337,55 @@ func (rcv *MST) TRK_CONF() float64 {
 	return 0.0
 }
 
-func (rcv *MST) MutateTRK_CONF(n float64) bool {
+/// Containment probability (0-1)
+func (rcv *MST) MutateCONTAINMENT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(54, n)
 }
 
-func (rcv *MST) TRK_QUAL() int32 {
+/// Track confidence (0-1)
+func (rcv *MST) TRK_CONF() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
-	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-func (rcv *MST) MutateTRK_QUAL(n int32) bool {
-	return rcv._tab.MutateInt32Slot(56, n)
-}
-
-func (rcv *MST) ANG_ELEV() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
 	return 0.0
 }
 
-func (rcv *MST) MutateANG_ELEV(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(58, n)
+/// Track confidence (0-1)
+func (rcv *MST) MutateTRK_CONF(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(56, n)
 }
 
-func (rcv *MST) SEN_MODE() []byte {
+/// Track quality (0-15)
+func (rcv *MST) TRK_QUAL() byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
+	if o != 0 {
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Track quality (0-15)
+func (rcv *MST) MutateTRK_QUAL(n byte) bool {
+	return rcv._tab.MutateByteSlot(58, n)
+}
+
+/// Elevation angle (degrees)
+func (rcv *MST) ANG_ELEV() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
-	return nil
+	return 0.0
 }
 
-func (rcv *MST) INFO_SOURCE() []byte {
+/// Elevation angle (degrees)
+func (rcv *MST) MutateANG_ELEV(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(60, n)
+}
+
+/// Sensor mode
+func (rcv *MST) SEN_MODE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -318,31 +393,33 @@ func (rcv *MST) INFO_SOURCE() []byte {
 	return nil
 }
 
-func (rcv *MST) BOOSTING() bool {
+/// Sensor mode
+/// Information source
+func (rcv *MST) INFO_SOURCE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Information source
+/// True if object is in boost phase
+func (rcv *MST) BOOSTING() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
 	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
 	}
 	return false
 }
 
+/// True if object is in boost phase
 func (rcv *MST) MutateBOOSTING(n bool) bool {
-	return rcv._tab.MutateBoolSlot(64, n)
+	return rcv._tab.MutateBoolSlot(66, n)
 }
 
+/// Polar singularity latitude (degrees)
 func (rcv *MST) POLAR_SING_LOC_LAT() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *MST) MutatePOLAR_SING_LOC_LAT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(66, n)
-}
-
-func (rcv *MST) POLAR_SING_LOC_LON() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -350,23 +427,27 @@ func (rcv *MST) POLAR_SING_LOC_LON() float64 {
 	return 0.0
 }
 
-func (rcv *MST) MutatePOLAR_SING_LOC_LON(n float64) bool {
+/// Polar singularity latitude (degrees)
+func (rcv *MST) MutatePOLAR_SING_LOC_LAT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(68, n)
 }
 
-func (rcv *MST) EMG_IND() bool {
+/// Polar singularity longitude (degrees)
+func (rcv *MST) POLAR_SING_LOC_LON() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
 	if o != 0 {
-		return rcv._tab.GetBool(o + rcv._tab.Pos)
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
-	return false
+	return 0.0
 }
 
-func (rcv *MST) MutateEMG_IND(n bool) bool {
-	return rcv._tab.MutateBoolSlot(70, n)
+/// Polar singularity longitude (degrees)
+func (rcv *MST) MutatePOLAR_SING_LOC_LON(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(70, n)
 }
 
-func (rcv *MST) DROP_PT_IND() bool {
+/// True if emergency indicator set
+func (rcv *MST) EMG_IND() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
 	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
@@ -374,22 +455,26 @@ func (rcv *MST) DROP_PT_IND() bool {
 	return false
 }
 
-func (rcv *MST) MutateDROP_PT_IND(n bool) bool {
+/// True if emergency indicator set
+func (rcv *MST) MutateEMG_IND(n bool) bool {
 	return rcv._tab.MutateBoolSlot(72, n)
 }
 
-func (rcv *MST) SPACE_AMP_CONF() int32 {
+/// True if drop point indicator set
+func (rcv *MST) DROP_PT_IND() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
 	}
-	return 0
+	return false
 }
 
-func (rcv *MST) MutateSPACE_AMP_CONF(n int32) bool {
-	return rcv._tab.MutateInt32Slot(74, n)
+/// True if drop point indicator set
+func (rcv *MST) MutateDROP_PT_IND(n bool) bool {
+	return rcv._tab.MutateBoolSlot(74, n)
 }
 
+/// Launch time (ISO 8601)
 func (rcv *MST) LAUNCH_TIME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
 	if o != 0 {
@@ -398,6 +483,8 @@ func (rcv *MST) LAUNCH_TIME() []byte {
 	return nil
 }
 
+/// Launch time (ISO 8601)
+/// Launch latitude (degrees)
 func (rcv *MST) LAUNCH_LAT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
 	if o != 0 {
@@ -406,10 +493,12 @@ func (rcv *MST) LAUNCH_LAT() float64 {
 	return 0.0
 }
 
+/// Launch latitude (degrees)
 func (rcv *MST) MutateLAUNCH_LAT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(78, n)
 }
 
+/// Launch longitude (degrees)
 func (rcv *MST) LAUNCH_LON() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
 	if o != 0 {
@@ -418,10 +507,12 @@ func (rcv *MST) LAUNCH_LON() float64 {
 	return 0.0
 }
 
+/// Launch longitude (degrees)
 func (rcv *MST) MutateLAUNCH_LON(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(80, n)
 }
 
+/// Azimuth correction (degrees)
 func (rcv *MST) AZ_CORR() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
 	if o != 0 {
@@ -430,10 +521,12 @@ func (rcv *MST) AZ_CORR() float64 {
 	return 0.0
 }
 
+/// Azimuth correction (degrees)
 func (rcv *MST) MutateAZ_CORR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(82, n)
 }
 
+/// Burnout altitude (km)
 func (rcv *MST) BURNOUT_ALT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
 	if o != 0 {
@@ -442,18 +535,26 @@ func (rcv *MST) BURNOUT_ALT() float64 {
 	return 0.0
 }
 
+/// Burnout altitude (km)
 func (rcv *MST) MutateBURNOUT_ALT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(84, n)
 }
 
-func (rcv *MST) LAUNCH_AOU_TYPE() []byte {
+/// Launch AOU type
+func (rcv *MST) LAUNCH_AOU_TYPE() aouReportType {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return aouReportType(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
-	return nil
+	return 0
 }
 
+/// Launch AOU type
+func (rcv *MST) MutateLAUNCH_AOU_TYPE(n aouReportType) bool {
+	return rcv._tab.MutateInt8Slot(86, int8(n))
+}
+
+/// Predicted impact time (ISO 8601)
 func (rcv *MST) IMPACT_TIME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
 	if o != 0 {
@@ -462,6 +563,8 @@ func (rcv *MST) IMPACT_TIME() []byte {
 	return nil
 }
 
+/// Predicted impact time (ISO 8601)
+/// Predicted impact latitude (degrees)
 func (rcv *MST) IMPACT_LAT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
 	if o != 0 {
@@ -470,10 +573,12 @@ func (rcv *MST) IMPACT_LAT() float64 {
 	return 0.0
 }
 
+/// Predicted impact latitude (degrees)
 func (rcv *MST) MutateIMPACT_LAT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(90, n)
 }
 
+/// Predicted impact longitude (degrees)
 func (rcv *MST) IMPACT_LON() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
 	if o != 0 {
@@ -482,19 +587,26 @@ func (rcv *MST) IMPACT_LON() float64 {
 	return 0.0
 }
 
+/// Predicted impact longitude (degrees)
 func (rcv *MST) MutateIMPACT_LON(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(92, n)
 }
 
-func (rcv *MST) IMPACT_AOU_TYPE() []byte {
+/// Impact AOU type
+func (rcv *MST) IMPACT_AOU_TYPE() aouReportType {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return aouReportType(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
-	return nil
+	return 0
 }
 
-/// Start time for vector data (ISO 8601 UTC format).
+/// Impact AOU type
+func (rcv *MST) MutateIMPACT_AOU_TYPE(n aouReportType) bool {
+	return rcv._tab.MutateInt8Slot(94, int8(n))
+}
+
+/// Start time for vector data (ISO 8601)
 func (rcv *MST) VECTOR_START_TIME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
 	if o != 0 {
@@ -503,8 +615,8 @@ func (rcv *MST) VECTOR_START_TIME() []byte {
 	return nil
 }
 
-/// Start time for vector data (ISO 8601 UTC format).
-/// Time interval between vector points in seconds.
+/// Start time for vector data (ISO 8601)
+/// Time interval between vector points (seconds)
 func (rcv *MST) VECTOR_STEP_SIZE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
 	if o != 0 {
@@ -513,12 +625,12 @@ func (rcv *MST) VECTOR_STEP_SIZE() float64 {
 	return 0.0
 }
 
-/// Time interval between vector points in seconds.
+/// Time interval between vector points (seconds)
 func (rcv *MST) MutateVECTOR_STEP_SIZE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(98, n)
 }
 
-/// Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).
+/// Number of components per vector (default 6: X, Y, Z, VX, VY, VZ)
 func (rcv *MST) VECTOR_COMPONENTS() byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
 	if o != 0 {
@@ -527,7 +639,7 @@ func (rcv *MST) VECTOR_COMPONENTS() byte {
 	return 6
 }
 
-/// Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).
+/// Number of components per vector (default 6: X, Y, Z, VX, VY, VZ)
 func (rcv *MST) MutateVECTOR_COMPONENTS(n byte) bool {
 	return rcv._tab.MutateByteSlot(100, n)
 }
@@ -560,7 +672,7 @@ func (rcv *MST) MutateVECTORS(j int, n float64) bool {
 	return false
 }
 
-/// AOU report data as flat array (layout depends on AOU_RPT_TYPE).
+/// AOU report data as flat array
 func (rcv *MST) AOU_RPT(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
 	if o != 0 {
@@ -578,7 +690,7 @@ func (rcv *MST) AOU_RPTLength() int {
 	return 0
 }
 
-/// AOU report data as flat array (layout depends on AOU_RPT_TYPE).
+/// AOU report data as flat array
 func (rcv *MST) MutateAOU_RPT(j int, n float64) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
 	if o != 0 {
@@ -588,7 +700,7 @@ func (rcv *MST) MutateAOU_RPT(j int, n float64) bool {
 	return false
 }
 
-/// Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).
+/// Launch AOU data as flat array
 func (rcv *MST) LAUNCH_AOU(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
 	if o != 0 {
@@ -606,7 +718,7 @@ func (rcv *MST) LAUNCH_AOULength() int {
 	return 0
 }
 
-/// Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).
+/// Launch AOU data as flat array
 func (rcv *MST) MutateLAUNCH_AOU(j int, n float64) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
 	if o != 0 {
@@ -616,7 +728,7 @@ func (rcv *MST) MutateLAUNCH_AOU(j int, n float64) bool {
 	return false
 }
 
-/// Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).
+/// Impact AOU data as flat array
 func (rcv *MST) IMPACT_AOU(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
 	if o != 0 {
@@ -634,7 +746,7 @@ func (rcv *MST) IMPACT_AOULength() int {
 	return 0
 }
 
-/// Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).
+/// Impact AOU data as flat array
 func (rcv *MST) MutateIMPACT_AOU(j int, n float64) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
 	if o != 0 {
@@ -659,14 +771,14 @@ func MSTAddMSG_SUB_TYPE(builder *flatbuffers.Builder, MSG_SUB_TYPE flatbuffers.U
 func MSTAddMSG_CREATE_DATE(builder *flatbuffers.Builder, MSG_CREATE_DATE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(MSG_CREATE_DATE), 0)
 }
-func MSTAddENVIRONMENT(builder *flatbuffers.Builder, ENVIRONMENT flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ENVIRONMENT), 0)
+func MSTAddENVIRONMENT(builder *flatbuffers.Builder, ENVIRONMENT missileEnvironment) {
+	builder.PrependInt8Slot(4, int8(ENVIRONMENT), 0)
 }
 func MSTAddOBJ_TYPE(builder *flatbuffers.Builder, OBJ_TYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(OBJ_TYPE), 0)
 }
-func MSTAddOBJ_TYPE_CONF(builder *flatbuffers.Builder, OBJ_TYPE_CONF int32) {
-	builder.PrependInt32Slot(6, OBJ_TYPE_CONF, 0)
+func MSTAddOBJ_TYPE_CONF(builder *flatbuffers.Builder, OBJ_TYPE_CONF byte) {
+	builder.PrependByteSlot(6, OBJ_TYPE_CONF, 0)
 }
 func MSTAddOBJ_PLAT(builder *flatbuffers.Builder, OBJ_PLAT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(OBJ_PLAT), 0)
@@ -677,83 +789,83 @@ func MSTAddOBJ_IDENT(builder *flatbuffers.Builder, OBJ_IDENT flatbuffers.UOffset
 func MSTAddSPACE_AMP(builder *flatbuffers.Builder, SPACE_AMP flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(SPACE_AMP), 0)
 }
+func MSTAddSPACE_AMP_CONF(builder *flatbuffers.Builder, SPACE_AMP_CONF byte) {
+	builder.PrependByteSlot(10, SPACE_AMP_CONF, 0)
+}
 func MSTAddOBJ_ACT(builder *flatbuffers.Builder, OBJ_ACT flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(OBJ_ACT), 0)
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(OBJ_ACT), 0)
 }
 func MSTAddSPACE_SPEC_TYPE(builder *flatbuffers.Builder, SPACE_SPEC_TYPE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(SPACE_SPEC_TYPE), 0)
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(SPACE_SPEC_TYPE), 0)
 }
 func MSTAddACFT_SUB_TYPE(builder *flatbuffers.Builder, ACFT_SUB_TYPE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(ACFT_SUB_TYPE), 0)
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(ACFT_SUB_TYPE), 0)
 }
 func MSTAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(NAME), 0)
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(NAME), 0)
 }
 func MSTAddCALL_SIGN(builder *flatbuffers.Builder, CALL_SIGN flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(CALL_SIGN), 0)
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(CALL_SIGN), 0)
 }
 func MSTAddLOST_TRK_IND(builder *flatbuffers.Builder, LOST_TRK_IND bool) {
-	builder.PrependBoolSlot(15, LOST_TRK_IND, false)
+	builder.PrependBoolSlot(16, LOST_TRK_IND, false)
 }
 func MSTAddTRACK_ID(builder *flatbuffers.Builder, TRACK_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(TRACK_ID), 0)
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(TRACK_ID), 0)
 }
 func MSTAddPARENT_TRACK_ID(builder *flatbuffers.Builder, PARENT_TRACK_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(PARENT_TRACK_ID), 0)
+	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(PARENT_TRACK_ID), 0)
 }
 func MSTAddMUID_SRC_TRK(builder *flatbuffers.Builder, MUID_SRC_TRK flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(MUID_SRC_TRK), 0)
+	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(MUID_SRC_TRK), 0)
 }
 func MSTAddMUID_SRC(builder *flatbuffers.Builder, MUID_SRC flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(MUID_SRC), 0)
+	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(MUID_SRC), 0)
 }
 func MSTAddALERT(builder *flatbuffers.Builder, ALERT flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(ALERT), 0)
+	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(ALERT), 0)
 }
-func MSTAddMSL_STATUS(builder *flatbuffers.Builder, MSL_STATUS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(21, flatbuffers.UOffsetT(MSL_STATUS), 0)
+func MSTAddMSL_STATUS(builder *flatbuffers.Builder, MSL_STATUS missileStatus) {
+	builder.PrependInt8Slot(22, int8(MSL_STATUS), 0)
 }
 func MSTAddTS(builder *flatbuffers.Builder, TS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(TS), 0)
+	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(TS), 0)
 }
-func MSTAddAOU_RPT_TYPE(builder *flatbuffers.Builder, AOU_RPT_TYPE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(AOU_RPT_TYPE), 0)
+func MSTAddAOU_RPT_TYPE(builder *flatbuffers.Builder, AOU_RPT_TYPE aouReportType) {
+	builder.PrependInt8Slot(24, int8(AOU_RPT_TYPE), 0)
 }
 func MSTAddCONTAINMENT(builder *flatbuffers.Builder, CONTAINMENT float64) {
-	builder.PrependFloat64Slot(24, CONTAINMENT, 0.0)
+	builder.PrependFloat64Slot(25, CONTAINMENT, 0.0)
 }
 func MSTAddTRK_CONF(builder *flatbuffers.Builder, TRK_CONF float64) {
-	builder.PrependFloat64Slot(25, TRK_CONF, 0.0)
+	builder.PrependFloat64Slot(26, TRK_CONF, 0.0)
 }
-func MSTAddTRK_QUAL(builder *flatbuffers.Builder, TRK_QUAL int32) {
-	builder.PrependInt32Slot(26, TRK_QUAL, 0)
+func MSTAddTRK_QUAL(builder *flatbuffers.Builder, TRK_QUAL byte) {
+	builder.PrependByteSlot(27, TRK_QUAL, 0)
 }
 func MSTAddANG_ELEV(builder *flatbuffers.Builder, ANG_ELEV float64) {
-	builder.PrependFloat64Slot(27, ANG_ELEV, 0.0)
+	builder.PrependFloat64Slot(28, ANG_ELEV, 0.0)
 }
 func MSTAddSEN_MODE(builder *flatbuffers.Builder, SEN_MODE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(SEN_MODE), 0)
+	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(SEN_MODE), 0)
 }
 func MSTAddINFO_SOURCE(builder *flatbuffers.Builder, INFO_SOURCE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(INFO_SOURCE), 0)
+	builder.PrependUOffsetTSlot(30, flatbuffers.UOffsetT(INFO_SOURCE), 0)
 }
 func MSTAddBOOSTING(builder *flatbuffers.Builder, BOOSTING bool) {
-	builder.PrependBoolSlot(30, BOOSTING, false)
+	builder.PrependBoolSlot(31, BOOSTING, false)
 }
 func MSTAddPOLAR_SING_LOC_LAT(builder *flatbuffers.Builder, POLAR_SING_LOC_LAT float64) {
-	builder.PrependFloat64Slot(31, POLAR_SING_LOC_LAT, 0.0)
+	builder.PrependFloat64Slot(32, POLAR_SING_LOC_LAT, 0.0)
 }
 func MSTAddPOLAR_SING_LOC_LON(builder *flatbuffers.Builder, POLAR_SING_LOC_LON float64) {
-	builder.PrependFloat64Slot(32, POLAR_SING_LOC_LON, 0.0)
+	builder.PrependFloat64Slot(33, POLAR_SING_LOC_LON, 0.0)
 }
 func MSTAddEMG_IND(builder *flatbuffers.Builder, EMG_IND bool) {
-	builder.PrependBoolSlot(33, EMG_IND, false)
+	builder.PrependBoolSlot(34, EMG_IND, false)
 }
 func MSTAddDROP_PT_IND(builder *flatbuffers.Builder, DROP_PT_IND bool) {
-	builder.PrependBoolSlot(34, DROP_PT_IND, false)
-}
-func MSTAddSPACE_AMP_CONF(builder *flatbuffers.Builder, SPACE_AMP_CONF int32) {
-	builder.PrependInt32Slot(35, SPACE_AMP_CONF, 0)
+	builder.PrependBoolSlot(35, DROP_PT_IND, false)
 }
 func MSTAddLAUNCH_TIME(builder *flatbuffers.Builder, LAUNCH_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(36, flatbuffers.UOffsetT(LAUNCH_TIME), 0)
@@ -770,8 +882,8 @@ func MSTAddAZ_CORR(builder *flatbuffers.Builder, AZ_CORR float64) {
 func MSTAddBURNOUT_ALT(builder *flatbuffers.Builder, BURNOUT_ALT float64) {
 	builder.PrependFloat64Slot(40, BURNOUT_ALT, 0.0)
 }
-func MSTAddLAUNCH_AOU_TYPE(builder *flatbuffers.Builder, LAUNCH_AOU_TYPE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(41, flatbuffers.UOffsetT(LAUNCH_AOU_TYPE), 0)
+func MSTAddLAUNCH_AOU_TYPE(builder *flatbuffers.Builder, LAUNCH_AOU_TYPE aouReportType) {
+	builder.PrependInt8Slot(41, int8(LAUNCH_AOU_TYPE), 0)
 }
 func MSTAddIMPACT_TIME(builder *flatbuffers.Builder, IMPACT_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(42, flatbuffers.UOffsetT(IMPACT_TIME), 0)
@@ -782,8 +894,8 @@ func MSTAddIMPACT_LAT(builder *flatbuffers.Builder, IMPACT_LAT float64) {
 func MSTAddIMPACT_LON(builder *flatbuffers.Builder, IMPACT_LON float64) {
 	builder.PrependFloat64Slot(44, IMPACT_LON, 0.0)
 }
-func MSTAddIMPACT_AOU_TYPE(builder *flatbuffers.Builder, IMPACT_AOU_TYPE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(45, flatbuffers.UOffsetT(IMPACT_AOU_TYPE), 0)
+func MSTAddIMPACT_AOU_TYPE(builder *flatbuffers.Builder, IMPACT_AOU_TYPE aouReportType) {
+	builder.PrependInt8Slot(45, int8(IMPACT_AOU_TYPE), 0)
 }
 func MSTAddVECTOR_START_TIME(builder *flatbuffers.Builder, VECTOR_START_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(46, flatbuffers.UOffsetT(VECTOR_START_TIME), 0)

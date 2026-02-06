@@ -4,6 +4,148 @@
 
 import FlatBuffers
 
+public enum beamType: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case spot = 0
+  case regional = 1
+  case global = 2
+  case shaped = 3
+  case steerable = 4
+  case hopping = 5
+
+  public static var max: beamType { return .hopping }
+  public static var min: beamType { return .spot }
+}
+
+
+public enum beamPolarization: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case rhcp = 0
+  case lhcp = 1
+  case linearH = 2
+  case linearV = 3
+  case dualCircular = 4
+  case dualLinear = 5
+  case crossPol = 6
+
+  public static var max: beamPolarization { return .crossPol }
+  public static var min: beamPolarization { return .rhcp }
+}
+
+
+///  Beam Contour Point (gain pattern boundary)
+public struct beamContourPoint: FlatBufferObject, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$BEM" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: beamContourPoint.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private enum VTOFFSET: VOffset {
+    case LATITUDE = 4
+    case LONGITUDE = 6
+    case GAIN = 8
+    var v: Int32 { Int32(self.rawValue) }
+    var p: VOffset { self.rawValue }
+  }
+
+  ///  Latitude in degrees
+  public var LATITUDE: Double { let o = _accessor.offset(VTOFFSET.LATITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Longitude in degrees
+  public var LONGITUDE: Double { let o = _accessor.offset(VTOFFSET.LONGITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Gain level in dBi at this contour
+  public var GAIN: Double { let o = _accessor.offset(VTOFFSET.GAIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startbeamContourPoint(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func add(LATITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LATITUDE, def: 0.0, at: VTOFFSET.LATITUDE.p) }
+  public static func add(LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LONGITUDE, def: 0.0, at: VTOFFSET.LONGITUDE.p) }
+  public static func add(GAIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GAIN, def: 0.0, at: VTOFFSET.GAIN.p) }
+  public static func endbeamContourPoint(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createbeamContourPoint(
+    _ fbb: inout FlatBufferBuilder,
+    LATITUDE: Double = 0.0,
+    LONGITUDE: Double = 0.0,
+    GAIN: Double = 0.0
+  ) -> Offset {
+    let __start = beamContourPoint.startbeamContourPoint(&fbb)
+    beamContourPoint.add(LATITUDE: LATITUDE, &fbb)
+    beamContourPoint.add(LONGITUDE: LONGITUDE, &fbb)
+    beamContourPoint.add(GAIN: GAIN, &fbb)
+    return beamContourPoint.endbeamContourPoint(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VTOFFSET.LATITUDE.p, fieldName: "LATITUDE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.LONGITUDE.p, fieldName: "LONGITUDE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.GAIN.p, fieldName: "GAIN", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Beam Contour (iso-gain boundary)
+public struct beamContour: FlatBufferObject, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$BEM" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: beamContour.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private enum VTOFFSET: VOffset {
+    case CONTOUR_ID = 4
+    case GAIN_LEVEL = 6
+    case POINTS = 8
+    var v: Int32 { Int32(self.rawValue) }
+    var p: VOffset { self.rawValue }
+  }
+
+  ///  Contour level identifier
+  public var CONTOUR_ID: String? { let o = _accessor.offset(VTOFFSET.CONTOUR_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CONTOUR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CONTOUR_ID.v) }
+  ///  Gain level in dBi
+  public var GAIN_LEVEL: Double { let o = _accessor.offset(VTOFFSET.GAIN_LEVEL.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Contour boundary points
+  public var hasPoints: Bool { let o = _accessor.offset(VTOFFSET.POINTS.v); return o == 0 ? false : true }
+  public var POINTSCount: Int32 { let o = _accessor.offset(VTOFFSET.POINTS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func POINTS(at index: Int32) -> beamContourPoint? { let o = _accessor.offset(VTOFFSET.POINTS.v); return o == 0 ? nil : beamContourPoint(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  public static func startbeamContour(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 3) }
+  public static func add(CONTOUR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CONTOUR_ID, at: VTOFFSET.CONTOUR_ID.p) }
+  public static func add(GAIN_LEVEL: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: GAIN_LEVEL, def: 0.0, at: VTOFFSET.GAIN_LEVEL.p) }
+  public static func addVectorOf(POINTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POINTS, at: VTOFFSET.POINTS.p) }
+  public static func endbeamContour(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createbeamContour(
+    _ fbb: inout FlatBufferBuilder,
+    CONTOUR_IDOffset CONTOUR_ID: Offset = Offset(),
+    GAIN_LEVEL: Double = 0.0,
+    POINTSVectorOffset POINTS: Offset = Offset()
+  ) -> Offset {
+    let __start = beamContour.startbeamContour(&fbb)
+    beamContour.add(CONTOUR_ID: CONTOUR_ID, &fbb)
+    beamContour.add(GAIN_LEVEL: GAIN_LEVEL, &fbb)
+    beamContour.addVectorOf(POINTS: POINTS, &fbb)
+    return beamContour.endbeamContour(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VTOFFSET.CONTOUR_ID.p, fieldName: "CONTOUR_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.GAIN_LEVEL.p, fieldName: "GAIN_LEVEL", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.POINTS.p, fieldName: "POINTS", required: false, type: ForwardOffset<Vector<ForwardOffset<beamContourPoint>, beamContourPoint>>.self)
+    _v.finish()
+  }
+}
+
 ///  Antenna Beam
 public struct BEM: FlatBufferObject, Verifiable {
 
@@ -19,39 +161,123 @@ public struct BEM: FlatBufferObject, Verifiable {
   private enum VTOFFSET: VOffset {
     case ID = 4
     case BEAM_NAME = 6
-    case NOTES = 8
-    case BEAM_CONTOURS = 10
+    case ID_ENTITY = 8
+    case ID_ANTENNA = 10
+    case TYPE = 12
+    case POLARIZATION = 14
+    case PEAK_GAIN = 16
+    case EOC_GAIN = 18
+    case CENTER_LATITUDE = 20
+    case CENTER_LONGITUDE = 22
+    case BEAMWIDTH = 24
+    case FREQUENCY = 26
+    case EIRP = 28
+    case G_OVER_T = 30
+    case FOOTPRINT_AREA = 32
+    case BEAM_CONTOURS = 34
+    case NOTES = 36
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
+  ///  Unique beam identifier
   public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  ///  Beam name or designation
   public var BEAM_NAME: String? { let o = _accessor.offset(VTOFFSET.BEAM_NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var BEAM_NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BEAM_NAME.v) }
-  public var NOTES: String? { let o = _accessor.offset(VTOFFSET.NOTES.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NOTES.v) }
+  ///  Reference to parent entity (satellite/transponder)
+  public var ID_ENTITY: String? { let o = _accessor.offset(VTOFFSET.ID_ENTITY.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_ENTITYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_ENTITY.v) }
+  ///  Reference to parent antenna
+  public var ID_ANTENNA: String? { let o = _accessor.offset(VTOFFSET.ID_ANTENNA.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ID_ANTENNASegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_ANTENNA.v) }
+  ///  Beam type
+  public var TYPE: beamType { let o = _accessor.offset(VTOFFSET.TYPE.v); return o == 0 ? .spot : beamType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .spot }
+  ///  Beam polarization
+  public var POLARIZATION: beamPolarization { let o = _accessor.offset(VTOFFSET.POLARIZATION.v); return o == 0 ? .rhcp : beamPolarization(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .rhcp }
+  ///  Peak gain in dBi
+  public var PEAK_GAIN: Double { let o = _accessor.offset(VTOFFSET.PEAK_GAIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Edge-of-coverage gain in dBi
+  public var EOC_GAIN: Double { let o = _accessor.offset(VTOFFSET.EOC_GAIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Beam center latitude in degrees
+  public var CENTER_LATITUDE: Double { let o = _accessor.offset(VTOFFSET.CENTER_LATITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Beam center longitude in degrees
+  public var CENTER_LONGITUDE: Double { let o = _accessor.offset(VTOFFSET.CENTER_LONGITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Beamwidth (3dB) in degrees
+  public var BEAMWIDTH: Double { let o = _accessor.offset(VTOFFSET.BEAMWIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Operating frequency in MHz
+  public var FREQUENCY: Double { let o = _accessor.offset(VTOFFSET.FREQUENCY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  EIRP at beam center in dBW
+  public var EIRP: Double { let o = _accessor.offset(VTOFFSET.EIRP.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  G/T at beam center in dB/K
+  public var G_OVER_T: Double { let o = _accessor.offset(VTOFFSET.G_OVER_T.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Beam footprint area in km^2
+  public var FOOTPRINT_AREA: Double { let o = _accessor.offset(VTOFFSET.FOOTPRINT_AREA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Beam contour definitions
   public var hasBeamContours: Bool { let o = _accessor.offset(VTOFFSET.BEAM_CONTOURS.v); return o == 0 ? false : true }
   public var BEAM_CONTOURSCount: Int32 { let o = _accessor.offset(VTOFFSET.BEAM_CONTOURS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func BEAM_CONTOURS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.BEAM_CONTOURS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public static func startBEM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 4) }
+  public func BEAM_CONTOURS(at index: Int32) -> beamContour? { let o = _accessor.offset(VTOFFSET.BEAM_CONTOURS.v); return o == 0 ? nil : beamContour(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  ///  Additional notes
+  public var NOTES: String? { let o = _accessor.offset(VTOFFSET.NOTES.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NOTES.v) }
+  public static func startBEM(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 17) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(BEAM_NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BEAM_NAME, at: VTOFFSET.BEAM_NAME.p) }
-  public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VTOFFSET.NOTES.p) }
+  public static func add(ID_ENTITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_ENTITY, at: VTOFFSET.ID_ENTITY.p) }
+  public static func add(ID_ANTENNA: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_ANTENNA, at: VTOFFSET.ID_ANTENNA.p) }
+  public static func add(TYPE: beamType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TYPE.rawValue, def: 0, at: VTOFFSET.TYPE.p) }
+  public static func add(POLARIZATION: beamPolarization, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POLARIZATION.rawValue, def: 0, at: VTOFFSET.POLARIZATION.p) }
+  public static func add(PEAK_GAIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PEAK_GAIN, def: 0.0, at: VTOFFSET.PEAK_GAIN.p) }
+  public static func add(EOC_GAIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EOC_GAIN, def: 0.0, at: VTOFFSET.EOC_GAIN.p) }
+  public static func add(CENTER_LATITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CENTER_LATITUDE, def: 0.0, at: VTOFFSET.CENTER_LATITUDE.p) }
+  public static func add(CENTER_LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CENTER_LONGITUDE, def: 0.0, at: VTOFFSET.CENTER_LONGITUDE.p) }
+  public static func add(BEAMWIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BEAMWIDTH, def: 0.0, at: VTOFFSET.BEAMWIDTH.p) }
+  public static func add(FREQUENCY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FREQUENCY, def: 0.0, at: VTOFFSET.FREQUENCY.p) }
+  public static func add(EIRP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EIRP, def: 0.0, at: VTOFFSET.EIRP.p) }
+  public static func add(G_OVER_T: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: G_OVER_T, def: 0.0, at: VTOFFSET.G_OVER_T.p) }
+  public static func add(FOOTPRINT_AREA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FOOTPRINT_AREA, def: 0.0, at: VTOFFSET.FOOTPRINT_AREA.p) }
   public static func addVectorOf(BEAM_CONTOURS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BEAM_CONTOURS, at: VTOFFSET.BEAM_CONTOURS.p) }
+  public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VTOFFSET.NOTES.p) }
   public static func endBEM(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createBEM(
     _ fbb: inout FlatBufferBuilder,
     IDOffset ID: Offset = Offset(),
     BEAM_NAMEOffset BEAM_NAME: Offset = Offset(),
-    NOTESOffset NOTES: Offset = Offset(),
-    BEAM_CONTOURSVectorOffset BEAM_CONTOURS: Offset = Offset()
+    ID_ENTITYOffset ID_ENTITY: Offset = Offset(),
+    ID_ANTENNAOffset ID_ANTENNA: Offset = Offset(),
+    TYPE: beamType = .spot,
+    POLARIZATION: beamPolarization = .rhcp,
+    PEAK_GAIN: Double = 0.0,
+    EOC_GAIN: Double = 0.0,
+    CENTER_LATITUDE: Double = 0.0,
+    CENTER_LONGITUDE: Double = 0.0,
+    BEAMWIDTH: Double = 0.0,
+    FREQUENCY: Double = 0.0,
+    EIRP: Double = 0.0,
+    G_OVER_T: Double = 0.0,
+    FOOTPRINT_AREA: Double = 0.0,
+    BEAM_CONTOURSVectorOffset BEAM_CONTOURS: Offset = Offset(),
+    NOTESOffset NOTES: Offset = Offset()
   ) -> Offset {
     let __start = BEM.startBEM(&fbb)
     BEM.add(ID: ID, &fbb)
     BEM.add(BEAM_NAME: BEAM_NAME, &fbb)
-    BEM.add(NOTES: NOTES, &fbb)
+    BEM.add(ID_ENTITY: ID_ENTITY, &fbb)
+    BEM.add(ID_ANTENNA: ID_ANTENNA, &fbb)
+    BEM.add(TYPE: TYPE, &fbb)
+    BEM.add(POLARIZATION: POLARIZATION, &fbb)
+    BEM.add(PEAK_GAIN: PEAK_GAIN, &fbb)
+    BEM.add(EOC_GAIN: EOC_GAIN, &fbb)
+    BEM.add(CENTER_LATITUDE: CENTER_LATITUDE, &fbb)
+    BEM.add(CENTER_LONGITUDE: CENTER_LONGITUDE, &fbb)
+    BEM.add(BEAMWIDTH: BEAMWIDTH, &fbb)
+    BEM.add(FREQUENCY: FREQUENCY, &fbb)
+    BEM.add(EIRP: EIRP, &fbb)
+    BEM.add(G_OVER_T: G_OVER_T, &fbb)
+    BEM.add(FOOTPRINT_AREA: FOOTPRINT_AREA, &fbb)
     BEM.addVectorOf(BEAM_CONTOURS: BEAM_CONTOURS, &fbb)
+    BEM.add(NOTES: NOTES, &fbb)
     return BEM.endBEM(&fbb, start: __start)
   }
 
@@ -59,8 +285,21 @@ public struct BEM: FlatBufferObject, Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.BEAM_NAME.p, fieldName: "BEAM_NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.ID_ENTITY.p, fieldName: "ID_ENTITY", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.ID_ANTENNA.p, fieldName: "ID_ANTENNA", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.TYPE.p, fieldName: "TYPE", required: false, type: beamType.self)
+    try _v.visit(field: VTOFFSET.POLARIZATION.p, fieldName: "POLARIZATION", required: false, type: beamPolarization.self)
+    try _v.visit(field: VTOFFSET.PEAK_GAIN.p, fieldName: "PEAK_GAIN", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.EOC_GAIN.p, fieldName: "EOC_GAIN", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.CENTER_LATITUDE.p, fieldName: "CENTER_LATITUDE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.CENTER_LONGITUDE.p, fieldName: "CENTER_LONGITUDE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.BEAMWIDTH.p, fieldName: "BEAMWIDTH", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.FREQUENCY.p, fieldName: "FREQUENCY", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.EIRP.p, fieldName: "EIRP", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.G_OVER_T.p, fieldName: "G_OVER_T", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.FOOTPRINT_AREA.p, fieldName: "FOOTPRINT_AREA", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.BEAM_CONTOURS.p, fieldName: "BEAM_CONTOURS", required: false, type: ForwardOffset<Vector<ForwardOffset<beamContour>, beamContour>>.self)
     try _v.visit(field: VTOFFSET.NOTES.p, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.BEAM_CONTOURS.p, fieldName: "BEAM_CONTOURS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     _v.finish()
   }
 }

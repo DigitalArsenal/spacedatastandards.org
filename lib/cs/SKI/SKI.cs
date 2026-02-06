@@ -19,6 +19,7 @@ public struct SKI : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public SKI __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Unique identifier
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,6 +27,7 @@ public struct SKI : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
+  /// On-orbit reference
   public string ON_ORBIT { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetON_ORBITBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -33,6 +35,7 @@ public struct SKI : IFlatbufferObject
   public ArraySegment<byte>? GetON_ORBITBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetON_ORBITArray() { return __p.__vector_as_array<byte>(6); }
+  /// International designator
   public string ORIG_OBJECT_ID { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetORIG_OBJECT_IDBytes() { return __p.__vector_as_span<byte>(8, 1); }
@@ -40,14 +43,17 @@ public struct SKI : IFlatbufferObject
   public ArraySegment<byte>? GetORIG_OBJECT_IDBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetORIG_OBJECT_IDArray() { return __p.__vector_as_array<byte>(8); }
-  public string ID_SENSOR { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Satellite catalog number
+  public uint SAT_NO { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Sensor identifier
+  public string ID_SENSOR { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetID_SENSORBytes() { return __p.__vector_as_span<byte>(10, 1); }
+  public Span<byte> GetID_SENSORBytes() { return __p.__vector_as_span<byte>(12, 1); }
 #else
-  public ArraySegment<byte>? GetID_SENSORBytes() { return __p.__vector_as_arraysegment(10); }
+  public ArraySegment<byte>? GetID_SENSORBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
-  public byte[] GetID_SENSORArray() { return __p.__vector_as_array<byte>(10); }
-  public int SAT_NO { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public byte[] GetID_SENSORArray() { return __p.__vector_as_array<byte>(12); }
+  /// Original sensor identifier
   public string ORIG_SENSOR_ID { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetORIG_SENSOR_IDBytes() { return __p.__vector_as_span<byte>(14, 1); }
@@ -55,23 +61,39 @@ public struct SKI : IFlatbufferObject
   public ArraySegment<byte>? GetORIG_SENSOR_IDBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
   public byte[] GetORIG_SENSOR_IDArray() { return __p.__vector_as_array<byte>(14); }
+  /// Sensor geodetic latitude (degrees)
   public double SENLAT { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sensor geodetic longitude (degrees)
   public double SENLON { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sensor altitude (km)
   public double SENALT { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sensor ECEF X position (km)
   public double SENX { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sensor ECEF Y position (km)
   public double SENY { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sensor ECEF Z position (km)
   public double SENZ { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string SEN_QUAT(int j) { int o = __p.__offset(28); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  /// Sensor quaternion (scalar-last: q1, q2, q3, q0)
+  public double SEN_QUAT(int j) { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
   public int SEN_QUATLength { get { int o = __p.__offset(28); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string SEN_QUAT_DOT(int j) { int o = __p.__offset(30); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int SEN_QUAT_DOTLength { get { int o = __p.__offset(30); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string IMAGE_TYPE { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetIMAGE_TYPEBytes() { return __p.__vector_as_span<byte>(32, 1); }
+  public Span<double> GetSEN_QUATBytes() { return __p.__vector_as_span<double>(28, 8); }
 #else
-  public ArraySegment<byte>? GetIMAGE_TYPEBytes() { return __p.__vector_as_arraysegment(32); }
+  public ArraySegment<byte>? GetSEN_QUATBytes() { return __p.__vector_as_arraysegment(28); }
 #endif
-  public byte[] GetIMAGE_TYPEArray() { return __p.__vector_as_array<byte>(32); }
+  public double[] GetSEN_QUATArray() { return __p.__vector_as_array<double>(28); }
+  /// Sensor quaternion rate
+  public double SEN_QUAT_DOT(int j) { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int SEN_QUAT_DOTLength { get { int o = __p.__offset(30); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetSEN_QUAT_DOTBytes() { return __p.__vector_as_span<double>(30, 8); }
+#else
+  public ArraySegment<byte>? GetSEN_QUAT_DOTBytes() { return __p.__vector_as_arraysegment(30); }
+#endif
+  public double[] GetSEN_QUAT_DOTArray() { return __p.__vector_as_array<double>(30); }
+  /// Image type
+  public imageType IMAGE_TYPE { get { int o = __p.__offset(32); return o != 0 ? (imageType)__p.bb.GetSbyte(o + __p.bb_pos) : imageType.VISIBLE; } }
+  /// Exposure start time (ISO 8601)
   public string EXP_START_TIME { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetEXP_START_TIMEBytes() { return __p.__vector_as_span<byte>(34, 1); }
@@ -79,6 +101,7 @@ public struct SKI : IFlatbufferObject
   public ArraySegment<byte>? GetEXP_START_TIMEBytes() { return __p.__vector_as_arraysegment(34); }
 #endif
   public byte[] GetEXP_START_TIMEArray() { return __p.__vector_as_array<byte>(34); }
+  /// Exposure end time (ISO 8601)
   public string EXP_END_TIME { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetEXP_END_TIMEBytes() { return __p.__vector_as_span<byte>(36, 1); }
@@ -86,6 +109,7 @@ public struct SKI : IFlatbufferObject
   public ArraySegment<byte>? GetEXP_END_TIMEBytes() { return __p.__vector_as_arraysegment(36); }
 #endif
   public byte[] GetEXP_END_TIMEArray() { return __p.__vector_as_array<byte>(36); }
+  /// Image source information
   public string IMAGE_SOURCE_INFO { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIMAGE_SOURCE_INFOBytes() { return __p.__vector_as_span<byte>(38, 1); }
@@ -93,10 +117,15 @@ public struct SKI : IFlatbufferObject
   public ArraySegment<byte>? GetIMAGE_SOURCE_INFOBytes() { return __p.__vector_as_arraysegment(38); }
 #endif
   public byte[] GetIMAGE_SOURCE_INFOArray() { return __p.__vector_as_array<byte>(38); }
+  /// Top-left corner start azimuth (degrees)
   public double TOP_LEFT_START_AZ { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Top-left corner start elevation (degrees)
   public double TOP_LEFT_START_EL { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Top-left corner stop azimuth (degrees)
   public double TOP_LEFT_STOP_AZ { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Top-left corner stop elevation (degrees)
   public double TOP_LEFT_STOP_EL { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Image set identifier
   public string IMAGE_SET_ID { get { int o = __p.__offset(48); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIMAGE_SET_IDBytes() { return __p.__vector_as_span<byte>(48, 1); }
@@ -104,15 +133,25 @@ public struct SKI : IFlatbufferObject
   public ArraySegment<byte>? GetIMAGE_SET_IDBytes() { return __p.__vector_as_arraysegment(48); }
 #endif
   public byte[] GetIMAGE_SET_IDArray() { return __p.__vector_as_array<byte>(48); }
-  public int IMAGE_SET_LENGTH { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int SEQUENCE_ID { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  /// Number of images in set
+  public ushort IMAGE_SET_LENGTH { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  /// Sequence number within set
+  public ushort SEQUENCE_ID { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  /// Frame field-of-view width (degrees)
   public double FRAME_FOVWIDTH { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Frame field-of-view height (degrees)
   public double FRAME_FOVHEIGHT { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Pixel field-of-view width (arcseconds)
   public double PIXEL_FOVWIDTH { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Pixel field-of-view height (arcseconds)
   public double PIXEL_FOVHEIGHT { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public int FRAME_WIDTH_PIXELS { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int FRAME_HEIGHT_PIXELS { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int PIXEL_BIT_DEPTH { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  /// Frame width (pixels)
+  public ushort FRAME_WIDTH_PIXELS { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  /// Frame height (pixels)
+  public ushort FRAME_HEIGHT_PIXELS { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  /// Pixel bit depth
+  public byte PIXEL_BIT_DEPTH { get { int o = __p.__offset(66); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  /// Annotation key reference
   public string ANNOTATION_KEY { get { int o = __p.__offset(68); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetANNOTATION_KEYBytes() { return __p.__vector_as_span<byte>(68, 1); }
@@ -120,6 +159,7 @@ public struct SKI : IFlatbufferObject
   public ArraySegment<byte>? GetANNOTATION_KEYBytes() { return __p.__vector_as_arraysegment(68); }
 #endif
   public byte[] GetANNOTATION_KEYArray() { return __p.__vector_as_array<byte>(68); }
+  /// Calibration key reference
   public string CALIBRATION_KEY { get { int o = __p.__offset(70); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCALIBRATION_KEYBytes() { return __p.__vector_as_span<byte>(70, 1); }
@@ -127,6 +167,7 @@ public struct SKI : IFlatbufferObject
   public ArraySegment<byte>? GetCALIBRATION_KEYBytes() { return __p.__vector_as_arraysegment(70); }
 #endif
   public byte[] GetCALIBRATION_KEYArray() { return __p.__vector_as_array<byte>(70); }
+  /// Image filename
   public string FILENAME { get { int o = __p.__offset(72); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetFILENAMEBytes() { return __p.__vector_as_span<byte>(72, 1); }
@@ -134,7 +175,9 @@ public struct SKI : IFlatbufferObject
   public ArraySegment<byte>? GetFILENAMEBytes() { return __p.__vector_as_arraysegment(72); }
 #endif
   public byte[] GetFILENAMEArray() { return __p.__vector_as_array<byte>(72); }
+  /// File size (bytes)
   public long FILESIZE { get { int o = __p.__offset(74); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
+  /// File checksum value
   public string CHECKSUM_VALUE { get { int o = __p.__offset(76); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCHECKSUM_VALUEBytes() { return __p.__vector_as_span<byte>(76, 1); }
@@ -142,6 +185,7 @@ public struct SKI : IFlatbufferObject
   public ArraySegment<byte>? GetCHECKSUM_VALUEBytes() { return __p.__vector_as_arraysegment(76); }
 #endif
   public byte[] GetCHECKSUM_VALUEArray() { return __p.__vector_as_array<byte>(76); }
+  /// Transaction identifier
   public string TRANSACTION_ID { get { int o = __p.__offset(78); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetTRANSACTION_IDBytes() { return __p.__vector_as_span<byte>(78, 1); }
@@ -149,8 +193,10 @@ public struct SKI : IFlatbufferObject
   public ArraySegment<byte>? GetTRANSACTION_IDBytes() { return __p.__vector_as_arraysegment(78); }
 #endif
   public byte[] GetTRANSACTION_IDArray() { return __p.__vector_as_array<byte>(78); }
+  /// Associated tags
   public string TAGS(int j) { int o = __p.__offset(80); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int TAGSLength { get { int o = __p.__offset(80); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Description
   public string DESCRIPTION { get { int o = __p.__offset(82); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetDESCRIPTIONBytes() { return __p.__vector_as_span<byte>(82, 1); }
@@ -158,6 +204,7 @@ public struct SKI : IFlatbufferObject
   public ArraySegment<byte>? GetDESCRIPTIONBytes() { return __p.__vector_as_arraysegment(82); }
 #endif
   public byte[] GetDESCRIPTIONArray() { return __p.__vector_as_array<byte>(82); }
+  /// Associated EO observation references
   public string EO_OBSERVATIONS(int j) { int o = __p.__offset(84); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int EO_OBSERVATIONSLength { get { int o = __p.__offset(84); return o != 0 ? __p.__vector_len(o) : 0; } }
 
@@ -165,8 +212,8 @@ public struct SKI : IFlatbufferObject
       StringOffset IDOffset = default(StringOffset),
       StringOffset ON_ORBITOffset = default(StringOffset),
       StringOffset ORIG_OBJECT_IDOffset = default(StringOffset),
+      uint SAT_NO = 0,
       StringOffset ID_SENSOROffset = default(StringOffset),
-      int SAT_NO = 0,
       StringOffset ORIG_SENSOR_IDOffset = default(StringOffset),
       double SENLAT = 0.0,
       double SENLON = 0.0,
@@ -176,7 +223,7 @@ public struct SKI : IFlatbufferObject
       double SENZ = 0.0,
       VectorOffset SEN_QUATOffset = default(VectorOffset),
       VectorOffset SEN_QUAT_DOTOffset = default(VectorOffset),
-      StringOffset IMAGE_TYPEOffset = default(StringOffset),
+      imageType IMAGE_TYPE = imageType.VISIBLE,
       StringOffset EXP_START_TIMEOffset = default(StringOffset),
       StringOffset EXP_END_TIMEOffset = default(StringOffset),
       StringOffset IMAGE_SOURCE_INFOOffset = default(StringOffset),
@@ -185,15 +232,15 @@ public struct SKI : IFlatbufferObject
       double TOP_LEFT_STOP_AZ = 0.0,
       double TOP_LEFT_STOP_EL = 0.0,
       StringOffset IMAGE_SET_IDOffset = default(StringOffset),
-      int IMAGE_SET_LENGTH = 0,
-      int SEQUENCE_ID = 0,
+      ushort IMAGE_SET_LENGTH = 0,
+      ushort SEQUENCE_ID = 0,
       double FRAME_FOVWIDTH = 0.0,
       double FRAME_FOVHEIGHT = 0.0,
       double PIXEL_FOVWIDTH = 0.0,
       double PIXEL_FOVHEIGHT = 0.0,
-      int FRAME_WIDTH_PIXELS = 0,
-      int FRAME_HEIGHT_PIXELS = 0,
-      int PIXEL_BIT_DEPTH = 0,
+      ushort FRAME_WIDTH_PIXELS = 0,
+      ushort FRAME_HEIGHT_PIXELS = 0,
+      byte PIXEL_BIT_DEPTH = 0,
       StringOffset ANNOTATION_KEYOffset = default(StringOffset),
       StringOffset CALIBRATION_KEYOffset = default(StringOffset),
       StringOffset FILENAMEOffset = default(StringOffset),
@@ -227,24 +274,24 @@ public struct SKI : IFlatbufferObject
     SKI.AddFILENAME(builder, FILENAMEOffset);
     SKI.AddCALIBRATION_KEY(builder, CALIBRATION_KEYOffset);
     SKI.AddANNOTATION_KEY(builder, ANNOTATION_KEYOffset);
-    SKI.AddPIXEL_BIT_DEPTH(builder, PIXEL_BIT_DEPTH);
-    SKI.AddFRAME_HEIGHT_PIXELS(builder, FRAME_HEIGHT_PIXELS);
-    SKI.AddFRAME_WIDTH_PIXELS(builder, FRAME_WIDTH_PIXELS);
-    SKI.AddSEQUENCE_ID(builder, SEQUENCE_ID);
-    SKI.AddIMAGE_SET_LENGTH(builder, IMAGE_SET_LENGTH);
     SKI.AddIMAGE_SET_ID(builder, IMAGE_SET_IDOffset);
     SKI.AddIMAGE_SOURCE_INFO(builder, IMAGE_SOURCE_INFOOffset);
     SKI.AddEXP_END_TIME(builder, EXP_END_TIMEOffset);
     SKI.AddEXP_START_TIME(builder, EXP_START_TIMEOffset);
-    SKI.AddIMAGE_TYPE(builder, IMAGE_TYPEOffset);
     SKI.AddSEN_QUAT_DOT(builder, SEN_QUAT_DOTOffset);
     SKI.AddSEN_QUAT(builder, SEN_QUATOffset);
     SKI.AddORIG_SENSOR_ID(builder, ORIG_SENSOR_IDOffset);
-    SKI.AddSAT_NO(builder, SAT_NO);
     SKI.AddID_SENSOR(builder, ID_SENSOROffset);
+    SKI.AddSAT_NO(builder, SAT_NO);
     SKI.AddORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset);
     SKI.AddON_ORBIT(builder, ON_ORBITOffset);
     SKI.AddID(builder, IDOffset);
+    SKI.AddFRAME_HEIGHT_PIXELS(builder, FRAME_HEIGHT_PIXELS);
+    SKI.AddFRAME_WIDTH_PIXELS(builder, FRAME_WIDTH_PIXELS);
+    SKI.AddSEQUENCE_ID(builder, SEQUENCE_ID);
+    SKI.AddIMAGE_SET_LENGTH(builder, IMAGE_SET_LENGTH);
+    SKI.AddPIXEL_BIT_DEPTH(builder, PIXEL_BIT_DEPTH);
+    SKI.AddIMAGE_TYPE(builder, IMAGE_TYPE);
     return SKI.EndSKI(builder);
   }
 
@@ -252,8 +299,8 @@ public struct SKI : IFlatbufferObject
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddON_ORBIT(FlatBufferBuilder builder, StringOffset ON_ORBITOffset) { builder.AddOffset(1, ON_ORBITOffset.Value, 0); }
   public static void AddORIG_OBJECT_ID(FlatBufferBuilder builder, StringOffset ORIG_OBJECT_IDOffset) { builder.AddOffset(2, ORIG_OBJECT_IDOffset.Value, 0); }
-  public static void AddID_SENSOR(FlatBufferBuilder builder, StringOffset ID_SENSOROffset) { builder.AddOffset(3, ID_SENSOROffset.Value, 0); }
-  public static void AddSAT_NO(FlatBufferBuilder builder, int SAT_NO) { builder.AddInt(4, SAT_NO, 0); }
+  public static void AddSAT_NO(FlatBufferBuilder builder, uint SAT_NO) { builder.AddUint(3, SAT_NO, 0); }
+  public static void AddID_SENSOR(FlatBufferBuilder builder, StringOffset ID_SENSOROffset) { builder.AddOffset(4, ID_SENSOROffset.Value, 0); }
   public static void AddORIG_SENSOR_ID(FlatBufferBuilder builder, StringOffset ORIG_SENSOR_IDOffset) { builder.AddOffset(5, ORIG_SENSOR_IDOffset.Value, 0); }
   public static void AddSENLAT(FlatBufferBuilder builder, double SENLAT) { builder.AddDouble(6, SENLAT, 0.0); }
   public static void AddSENLON(FlatBufferBuilder builder, double SENLON) { builder.AddDouble(7, SENLON, 0.0); }
@@ -262,18 +309,18 @@ public struct SKI : IFlatbufferObject
   public static void AddSENY(FlatBufferBuilder builder, double SENY) { builder.AddDouble(10, SENY, 0.0); }
   public static void AddSENZ(FlatBufferBuilder builder, double SENZ) { builder.AddDouble(11, SENZ, 0.0); }
   public static void AddSEN_QUAT(FlatBufferBuilder builder, VectorOffset SEN_QUATOffset) { builder.AddOffset(12, SEN_QUATOffset.Value, 0); }
-  public static VectorOffset CreateSEN_QUATVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateSEN_QUATVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateSEN_QUATVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateSEN_QUATVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartSEN_QUATVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static VectorOffset CreateSEN_QUATVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateSEN_QUATVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSEN_QUATVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSEN_QUATVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSEN_QUATVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
   public static void AddSEN_QUAT_DOT(FlatBufferBuilder builder, VectorOffset SEN_QUAT_DOTOffset) { builder.AddOffset(13, SEN_QUAT_DOTOffset.Value, 0); }
-  public static VectorOffset CreateSEN_QUAT_DOTVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateSEN_QUAT_DOTVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateSEN_QUAT_DOTVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateSEN_QUAT_DOTVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartSEN_QUAT_DOTVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddIMAGE_TYPE(FlatBufferBuilder builder, StringOffset IMAGE_TYPEOffset) { builder.AddOffset(14, IMAGE_TYPEOffset.Value, 0); }
+  public static VectorOffset CreateSEN_QUAT_DOTVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateSEN_QUAT_DOTVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSEN_QUAT_DOTVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSEN_QUAT_DOTVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSEN_QUAT_DOTVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddIMAGE_TYPE(FlatBufferBuilder builder, imageType IMAGE_TYPE) { builder.AddSbyte(14, (sbyte)IMAGE_TYPE, 0); }
   public static void AddEXP_START_TIME(FlatBufferBuilder builder, StringOffset EXP_START_TIMEOffset) { builder.AddOffset(15, EXP_START_TIMEOffset.Value, 0); }
   public static void AddEXP_END_TIME(FlatBufferBuilder builder, StringOffset EXP_END_TIMEOffset) { builder.AddOffset(16, EXP_END_TIMEOffset.Value, 0); }
   public static void AddIMAGE_SOURCE_INFO(FlatBufferBuilder builder, StringOffset IMAGE_SOURCE_INFOOffset) { builder.AddOffset(17, IMAGE_SOURCE_INFOOffset.Value, 0); }
@@ -282,15 +329,15 @@ public struct SKI : IFlatbufferObject
   public static void AddTOP_LEFT_STOP_AZ(FlatBufferBuilder builder, double TOP_LEFT_STOP_AZ) { builder.AddDouble(20, TOP_LEFT_STOP_AZ, 0.0); }
   public static void AddTOP_LEFT_STOP_EL(FlatBufferBuilder builder, double TOP_LEFT_STOP_EL) { builder.AddDouble(21, TOP_LEFT_STOP_EL, 0.0); }
   public static void AddIMAGE_SET_ID(FlatBufferBuilder builder, StringOffset IMAGE_SET_IDOffset) { builder.AddOffset(22, IMAGE_SET_IDOffset.Value, 0); }
-  public static void AddIMAGE_SET_LENGTH(FlatBufferBuilder builder, int IMAGE_SET_LENGTH) { builder.AddInt(23, IMAGE_SET_LENGTH, 0); }
-  public static void AddSEQUENCE_ID(FlatBufferBuilder builder, int SEQUENCE_ID) { builder.AddInt(24, SEQUENCE_ID, 0); }
+  public static void AddIMAGE_SET_LENGTH(FlatBufferBuilder builder, ushort IMAGE_SET_LENGTH) { builder.AddUshort(23, IMAGE_SET_LENGTH, 0); }
+  public static void AddSEQUENCE_ID(FlatBufferBuilder builder, ushort SEQUENCE_ID) { builder.AddUshort(24, SEQUENCE_ID, 0); }
   public static void AddFRAME_FOVWIDTH(FlatBufferBuilder builder, double FRAME_FOVWIDTH) { builder.AddDouble(25, FRAME_FOVWIDTH, 0.0); }
   public static void AddFRAME_FOVHEIGHT(FlatBufferBuilder builder, double FRAME_FOVHEIGHT) { builder.AddDouble(26, FRAME_FOVHEIGHT, 0.0); }
   public static void AddPIXEL_FOVWIDTH(FlatBufferBuilder builder, double PIXEL_FOVWIDTH) { builder.AddDouble(27, PIXEL_FOVWIDTH, 0.0); }
   public static void AddPIXEL_FOVHEIGHT(FlatBufferBuilder builder, double PIXEL_FOVHEIGHT) { builder.AddDouble(28, PIXEL_FOVHEIGHT, 0.0); }
-  public static void AddFRAME_WIDTH_PIXELS(FlatBufferBuilder builder, int FRAME_WIDTH_PIXELS) { builder.AddInt(29, FRAME_WIDTH_PIXELS, 0); }
-  public static void AddFRAME_HEIGHT_PIXELS(FlatBufferBuilder builder, int FRAME_HEIGHT_PIXELS) { builder.AddInt(30, FRAME_HEIGHT_PIXELS, 0); }
-  public static void AddPIXEL_BIT_DEPTH(FlatBufferBuilder builder, int PIXEL_BIT_DEPTH) { builder.AddInt(31, PIXEL_BIT_DEPTH, 0); }
+  public static void AddFRAME_WIDTH_PIXELS(FlatBufferBuilder builder, ushort FRAME_WIDTH_PIXELS) { builder.AddUshort(29, FRAME_WIDTH_PIXELS, 0); }
+  public static void AddFRAME_HEIGHT_PIXELS(FlatBufferBuilder builder, ushort FRAME_HEIGHT_PIXELS) { builder.AddUshort(30, FRAME_HEIGHT_PIXELS, 0); }
+  public static void AddPIXEL_BIT_DEPTH(FlatBufferBuilder builder, byte PIXEL_BIT_DEPTH) { builder.AddByte(31, PIXEL_BIT_DEPTH, 0); }
   public static void AddANNOTATION_KEY(FlatBufferBuilder builder, StringOffset ANNOTATION_KEYOffset) { builder.AddOffset(32, ANNOTATION_KEYOffset.Value, 0); }
   public static void AddCALIBRATION_KEY(FlatBufferBuilder builder, StringOffset CALIBRATION_KEYOffset) { builder.AddOffset(33, CALIBRATION_KEYOffset.Value, 0); }
   public static void AddFILENAME(FlatBufferBuilder builder, StringOffset FILENAMEOffset) { builder.AddOffset(34, FILENAMEOffset.Value, 0); }
@@ -325,8 +372,8 @@ public struct SKI : IFlatbufferObject
     _o.ID = this.ID;
     _o.ON_ORBIT = this.ON_ORBIT;
     _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID;
-    _o.ID_SENSOR = this.ID_SENSOR;
     _o.SAT_NO = this.SAT_NO;
+    _o.ID_SENSOR = this.ID_SENSOR;
     _o.ORIG_SENSOR_ID = this.ORIG_SENSOR_ID;
     _o.SENLAT = this.SENLAT;
     _o.SENLON = this.SENLON;
@@ -334,9 +381,9 @@ public struct SKI : IFlatbufferObject
     _o.SENX = this.SENX;
     _o.SENY = this.SENY;
     _o.SENZ = this.SENZ;
-    _o.SEN_QUAT = new List<string>();
+    _o.SEN_QUAT = new List<double>();
     for (var _j = 0; _j < this.SEN_QUATLength; ++_j) {_o.SEN_QUAT.Add(this.SEN_QUAT(_j));}
-    _o.SEN_QUAT_DOT = new List<string>();
+    _o.SEN_QUAT_DOT = new List<double>();
     for (var _j = 0; _j < this.SEN_QUAT_DOTLength; ++_j) {_o.SEN_QUAT_DOT.Add(this.SEN_QUAT_DOT(_j));}
     _o.IMAGE_TYPE = this.IMAGE_TYPE;
     _o.EXP_START_TIME = this.EXP_START_TIME;
@@ -377,17 +424,14 @@ public struct SKI : IFlatbufferObject
     var _ORIG_SENSOR_ID = _o.ORIG_SENSOR_ID == null ? default(StringOffset) : builder.CreateString(_o.ORIG_SENSOR_ID);
     var _SEN_QUAT = default(VectorOffset);
     if (_o.SEN_QUAT != null) {
-      var __SEN_QUAT = new StringOffset[_o.SEN_QUAT.Count];
-      for (var _j = 0; _j < __SEN_QUAT.Length; ++_j) { __SEN_QUAT[_j] = builder.CreateString(_o.SEN_QUAT[_j]); }
+      var __SEN_QUAT = _o.SEN_QUAT.ToArray();
       _SEN_QUAT = CreateSEN_QUATVector(builder, __SEN_QUAT);
     }
     var _SEN_QUAT_DOT = default(VectorOffset);
     if (_o.SEN_QUAT_DOT != null) {
-      var __SEN_QUAT_DOT = new StringOffset[_o.SEN_QUAT_DOT.Count];
-      for (var _j = 0; _j < __SEN_QUAT_DOT.Length; ++_j) { __SEN_QUAT_DOT[_j] = builder.CreateString(_o.SEN_QUAT_DOT[_j]); }
+      var __SEN_QUAT_DOT = _o.SEN_QUAT_DOT.ToArray();
       _SEN_QUAT_DOT = CreateSEN_QUAT_DOTVector(builder, __SEN_QUAT_DOT);
     }
-    var _IMAGE_TYPE = _o.IMAGE_TYPE == null ? default(StringOffset) : builder.CreateString(_o.IMAGE_TYPE);
     var _EXP_START_TIME = _o.EXP_START_TIME == null ? default(StringOffset) : builder.CreateString(_o.EXP_START_TIME);
     var _EXP_END_TIME = _o.EXP_END_TIME == null ? default(StringOffset) : builder.CreateString(_o.EXP_END_TIME);
     var _IMAGE_SOURCE_INFO = _o.IMAGE_SOURCE_INFO == null ? default(StringOffset) : builder.CreateString(_o.IMAGE_SOURCE_INFO);
@@ -415,8 +459,8 @@ public struct SKI : IFlatbufferObject
       _ID,
       _ON_ORBIT,
       _ORIG_OBJECT_ID,
-      _ID_SENSOR,
       _o.SAT_NO,
+      _ID_SENSOR,
       _ORIG_SENSOR_ID,
       _o.SENLAT,
       _o.SENLON,
@@ -426,7 +470,7 @@ public struct SKI : IFlatbufferObject
       _o.SENZ,
       _SEN_QUAT,
       _SEN_QUAT_DOT,
-      _IMAGE_TYPE,
+      _o.IMAGE_TYPE,
       _EXP_START_TIME,
       _EXP_END_TIME,
       _IMAGE_SOURCE_INFO,
@@ -461,8 +505,8 @@ public class SKIT
   public string ID { get; set; }
   public string ON_ORBIT { get; set; }
   public string ORIG_OBJECT_ID { get; set; }
+  public uint SAT_NO { get; set; }
   public string ID_SENSOR { get; set; }
-  public int SAT_NO { get; set; }
   public string ORIG_SENSOR_ID { get; set; }
   public double SENLAT { get; set; }
   public double SENLON { get; set; }
@@ -470,9 +514,9 @@ public class SKIT
   public double SENX { get; set; }
   public double SENY { get; set; }
   public double SENZ { get; set; }
-  public List<string> SEN_QUAT { get; set; }
-  public List<string> SEN_QUAT_DOT { get; set; }
-  public string IMAGE_TYPE { get; set; }
+  public List<double> SEN_QUAT { get; set; }
+  public List<double> SEN_QUAT_DOT { get; set; }
+  public imageType IMAGE_TYPE { get; set; }
   public string EXP_START_TIME { get; set; }
   public string EXP_END_TIME { get; set; }
   public string IMAGE_SOURCE_INFO { get; set; }
@@ -481,15 +525,15 @@ public class SKIT
   public double TOP_LEFT_STOP_AZ { get; set; }
   public double TOP_LEFT_STOP_EL { get; set; }
   public string IMAGE_SET_ID { get; set; }
-  public int IMAGE_SET_LENGTH { get; set; }
-  public int SEQUENCE_ID { get; set; }
+  public ushort IMAGE_SET_LENGTH { get; set; }
+  public ushort SEQUENCE_ID { get; set; }
   public double FRAME_FOVWIDTH { get; set; }
   public double FRAME_FOVHEIGHT { get; set; }
   public double PIXEL_FOVWIDTH { get; set; }
   public double PIXEL_FOVHEIGHT { get; set; }
-  public int FRAME_WIDTH_PIXELS { get; set; }
-  public int FRAME_HEIGHT_PIXELS { get; set; }
-  public int PIXEL_BIT_DEPTH { get; set; }
+  public ushort FRAME_WIDTH_PIXELS { get; set; }
+  public ushort FRAME_HEIGHT_PIXELS { get; set; }
+  public byte PIXEL_BIT_DEPTH { get; set; }
   public string ANNOTATION_KEY { get; set; }
   public string CALIBRATION_KEY { get; set; }
   public string FILENAME { get; set; }
@@ -504,8 +548,8 @@ public class SKIT
     this.ID = null;
     this.ON_ORBIT = null;
     this.ORIG_OBJECT_ID = null;
-    this.ID_SENSOR = null;
     this.SAT_NO = 0;
+    this.ID_SENSOR = null;
     this.ORIG_SENSOR_ID = null;
     this.SENLAT = 0.0;
     this.SENLON = 0.0;
@@ -515,7 +559,7 @@ public class SKIT
     this.SENZ = 0.0;
     this.SEN_QUAT = null;
     this.SEN_QUAT_DOT = null;
-    this.IMAGE_TYPE = null;
+    this.IMAGE_TYPE = imageType.VISIBLE;
     this.EXP_START_TIME = null;
     this.EXP_END_TIME = null;
     this.IMAGE_SOURCE_INFO = null;
@@ -562,8 +606,8 @@ static public class SKIVerify
       && verifier.VerifyString(tablePos, 4 /*ID*/, false)
       && verifier.VerifyString(tablePos, 6 /*ON_ORBIT*/, false)
       && verifier.VerifyString(tablePos, 8 /*ORIG_OBJECT_ID*/, false)
-      && verifier.VerifyString(tablePos, 10 /*ID_SENSOR*/, false)
-      && verifier.VerifyField(tablePos, 12 /*SAT_NO*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 10 /*SAT_NO*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 12 /*ID_SENSOR*/, false)
       && verifier.VerifyString(tablePos, 14 /*ORIG_SENSOR_ID*/, false)
       && verifier.VerifyField(tablePos, 16 /*SENLAT*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 18 /*SENLON*/, 8 /*double*/, 8, false)
@@ -571,9 +615,9 @@ static public class SKIVerify
       && verifier.VerifyField(tablePos, 22 /*SENX*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 24 /*SENY*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 26 /*SENZ*/, 8 /*double*/, 8, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 28 /*SEN_QUAT*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 30 /*SEN_QUAT_DOT*/, false)
-      && verifier.VerifyString(tablePos, 32 /*IMAGE_TYPE*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 28 /*SEN_QUAT*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 30 /*SEN_QUAT_DOT*/, 8 /*double*/, false)
+      && verifier.VerifyField(tablePos, 32 /*IMAGE_TYPE*/, 1 /*imageType*/, 1, false)
       && verifier.VerifyString(tablePos, 34 /*EXP_START_TIME*/, false)
       && verifier.VerifyString(tablePos, 36 /*EXP_END_TIME*/, false)
       && verifier.VerifyString(tablePos, 38 /*IMAGE_SOURCE_INFO*/, false)
@@ -582,15 +626,15 @@ static public class SKIVerify
       && verifier.VerifyField(tablePos, 44 /*TOP_LEFT_STOP_AZ*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 46 /*TOP_LEFT_STOP_EL*/, 8 /*double*/, 8, false)
       && verifier.VerifyString(tablePos, 48 /*IMAGE_SET_ID*/, false)
-      && verifier.VerifyField(tablePos, 50 /*IMAGE_SET_LENGTH*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 52 /*SEQUENCE_ID*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 50 /*IMAGE_SET_LENGTH*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyField(tablePos, 52 /*SEQUENCE_ID*/, 2 /*ushort*/, 2, false)
       && verifier.VerifyField(tablePos, 54 /*FRAME_FOVWIDTH*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 56 /*FRAME_FOVHEIGHT*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 58 /*PIXEL_FOVWIDTH*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 60 /*PIXEL_FOVHEIGHT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 62 /*FRAME_WIDTH_PIXELS*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 64 /*FRAME_HEIGHT_PIXELS*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 66 /*PIXEL_BIT_DEPTH*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 62 /*FRAME_WIDTH_PIXELS*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyField(tablePos, 64 /*FRAME_HEIGHT_PIXELS*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyField(tablePos, 66 /*PIXEL_BIT_DEPTH*/, 1 /*byte*/, 1, false)
       && verifier.VerifyString(tablePos, 68 /*ANNOTATION_KEY*/, false)
       && verifier.VerifyString(tablePos, 70 /*CALIBRATION_KEY*/, false)
       && verifier.VerifyString(tablePos, 72 /*FILENAME*/, false)

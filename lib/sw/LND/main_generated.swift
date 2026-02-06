@@ -4,6 +4,22 @@
 
 import FlatBuffers
 
+public enum launchDetectionType: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case irDetect = 0
+  case radarDetect = 1
+  case opticalDetect = 2
+  case elintDetect = 3
+  case combined = 4
+  case unknown = 5
+
+  public static var max: launchDetectionType { return .unknown }
+  public static var min: launchDetectionType { return .irDetect }
+}
+
+
 ///  Launch Detection
 public struct LND: FlatBufferObject, Verifiable {
 
@@ -18,57 +34,95 @@ public struct LND: FlatBufferObject, Verifiable {
 
   private enum VTOFFSET: VOffset {
     case ID = 4
-    case LAUNCH_TIME = 6
-    case MESSAGE_TYPE = 8
-    case LAUNCH_LATITUDE = 10
-    case LAUNCH_LONGITUDE = 12
-    case LAUNCH_AZIMUTH = 14
-    case RAAN = 16
-    case INCLINATION = 18
-    case OBSERVATION_TIME = 20
-    case OBSERVATION_LATITUDE = 22
-    case OBSERVATION_LONGITUDE = 24
-    case OBSERVATION_ALTITUDE = 26
-    case STEREO_FLAG = 28
-    case HIGH_ZENITH_AZIMUTH = 30
-    case SEQUENCE_NUMBER = 32
-    case EVENT_ID = 34
-    case DESCRIPTOR = 36
-    case TAGS = 38
+    case EVENT_ID = 6
+    case DETECTION_TYPE = 8
+    case MESSAGE_TYPE = 10
+    case LAUNCH_TIME = 12
+    case LAUNCH_LATITUDE = 14
+    case LAUNCH_LONGITUDE = 16
+    case LAUNCH_AZIMUTH = 18
+    case RAAN = 20
+    case INCLINATION = 22
+    case OBSERVATION_TIME = 24
+    case OBSERVATION_LATITUDE = 26
+    case OBSERVATION_LONGITUDE = 28
+    case OBSERVATION_ALTITUDE = 30
+    case STEREO_FLAG = 32
+    case HIGH_ZENITH_AZIMUTH = 34
+    case SEQUENCE_NUMBER = 36
+    case LAUNCH_SITE_ID = 38
+    case LAUNCH_VEHICLE = 40
+    case TRAJECTORY_TYPE = 42
+    case CONFIDENCE = 44
+    case DESCRIPTOR = 46
+    case TAGS = 48
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
+  ///  Unique identifier
   public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
-  public var LAUNCH_TIME: String? { let o = _accessor.offset(VTOFFSET.LAUNCH_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LAUNCH_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LAUNCH_TIME.v) }
-  public var MESSAGE_TYPE: String? { let o = _accessor.offset(VTOFFSET.MESSAGE_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MESSAGE_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MESSAGE_TYPE.v) }
-  public var LAUNCH_LATITUDE: Double { let o = _accessor.offset(VTOFFSET.LAUNCH_LATITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var LAUNCH_LONGITUDE: Double { let o = _accessor.offset(VTOFFSET.LAUNCH_LONGITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var LAUNCH_AZIMUTH: Double { let o = _accessor.offset(VTOFFSET.LAUNCH_AZIMUTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var RAAN: Double { let o = _accessor.offset(VTOFFSET.RAAN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var INCLINATION: Double { let o = _accessor.offset(VTOFFSET.INCLINATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var OBSERVATION_TIME: String? { let o = _accessor.offset(VTOFFSET.OBSERVATION_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var OBSERVATION_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBSERVATION_TIME.v) }
-  public var OBSERVATION_LATITUDE: Double { let o = _accessor.offset(VTOFFSET.OBSERVATION_LATITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var OBSERVATION_LONGITUDE: Double { let o = _accessor.offset(VTOFFSET.OBSERVATION_LONGITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var OBSERVATION_ALTITUDE: Double { let o = _accessor.offset(VTOFFSET.OBSERVATION_ALTITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var STEREO_FLAG: Bool { let o = _accessor.offset(VTOFFSET.STEREO_FLAG.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public var HIGH_ZENITH_AZIMUTH: Bool { let o = _accessor.offset(VTOFFSET.HIGH_ZENITH_AZIMUTH.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public var SEQUENCE_NUMBER: Int32 { let o = _accessor.offset(VTOFFSET.SEQUENCE_NUMBER.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Detection event identifier
   public var EVENT_ID: String? { let o = _accessor.offset(VTOFFSET.EVENT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var EVENT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EVENT_ID.v) }
+  ///  Detection type
+  public var DETECTION_TYPE: launchDetectionType { let o = _accessor.offset(VTOFFSET.DETECTION_TYPE.v); return o == 0 ? .irDetect : launchDetectionType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .irDetect }
+  ///  Detection message type code
+  public var MESSAGE_TYPE: String? { let o = _accessor.offset(VTOFFSET.MESSAGE_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MESSAGE_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MESSAGE_TYPE.v) }
+  ///  Time of launch detection (ISO 8601)
+  public var LAUNCH_TIME: String? { let o = _accessor.offset(VTOFFSET.LAUNCH_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAUNCH_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LAUNCH_TIME.v) }
+  ///  Launch site latitude (degrees)
+  public var LAUNCH_LATITUDE: Double { let o = _accessor.offset(VTOFFSET.LAUNCH_LATITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Launch site longitude (degrees)
+  public var LAUNCH_LONGITUDE: Double { let o = _accessor.offset(VTOFFSET.LAUNCH_LONGITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Launch azimuth (degrees from north)
+  public var LAUNCH_AZIMUTH: Double { let o = _accessor.offset(VTOFFSET.LAUNCH_AZIMUTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Estimated RAAN (degrees)
+  public var RAAN: Double { let o = _accessor.offset(VTOFFSET.RAAN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Estimated inclination (degrees)
+  public var INCLINATION: Double { let o = _accessor.offset(VTOFFSET.INCLINATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Time of trajectory observation (ISO 8601)
+  public var OBSERVATION_TIME: String? { let o = _accessor.offset(VTOFFSET.OBSERVATION_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBSERVATION_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBSERVATION_TIME.v) }
+  ///  Observation point latitude (degrees)
+  public var OBSERVATION_LATITUDE: Double { let o = _accessor.offset(VTOFFSET.OBSERVATION_LATITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Observation point longitude (degrees)
+  public var OBSERVATION_LONGITUDE: Double { let o = _accessor.offset(VTOFFSET.OBSERVATION_LONGITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Observation point altitude (km)
+  public var OBSERVATION_ALTITUDE: Double { let o = _accessor.offset(VTOFFSET.OBSERVATION_ALTITUDE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True if stereo observation (multiple sensors)
+  public var STEREO_FLAG: Bool { let o = _accessor.offset(VTOFFSET.STEREO_FLAG.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  True if high zenith angle observation
+  public var HIGH_ZENITH_AZIMUTH: Bool { let o = _accessor.offset(VTOFFSET.HIGH_ZENITH_AZIMUTH.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Sequence number in detection chain
+  public var SEQUENCE_NUMBER: UInt16 { let o = _accessor.offset(VTOFFSET.SEQUENCE_NUMBER.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Launch site identifier
+  public var LAUNCH_SITE_ID: String? { let o = _accessor.offset(VTOFFSET.LAUNCH_SITE_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAUNCH_SITE_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LAUNCH_SITE_ID.v) }
+  ///  Launch vehicle type (if identified)
+  public var LAUNCH_VEHICLE: String? { let o = _accessor.offset(VTOFFSET.LAUNCH_VEHICLE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAUNCH_VEHICLESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LAUNCH_VEHICLE.v) }
+  ///  Estimated trajectory type
+  public var TRAJECTORY_TYPE: String? { let o = _accessor.offset(VTOFFSET.TRAJECTORY_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRAJECTORY_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRAJECTORY_TYPE.v) }
+  ///  Detection confidence (0-1)
+  public var CONFIDENCE: Double { let o = _accessor.offset(VTOFFSET.CONFIDENCE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Event descriptor
   public var DESCRIPTOR: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTOR.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var DESCRIPTORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTOR.v) }
+  ///  Associated tags
   public var hasTags: Bool { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? false : true }
   public var TAGSCount: Int32 { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func TAGS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.TAGS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public static func startLND(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 18) }
+  public static func startLND(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 23) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(LAUNCH_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_TIME, at: VTOFFSET.LAUNCH_TIME.p) }
+  public static func add(EVENT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT_ID, at: VTOFFSET.EVENT_ID.p) }
+  public static func add(DETECTION_TYPE: launchDetectionType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DETECTION_TYPE.rawValue, def: 0, at: VTOFFSET.DETECTION_TYPE.p) }
   public static func add(MESSAGE_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MESSAGE_TYPE, at: VTOFFSET.MESSAGE_TYPE.p) }
+  public static func add(LAUNCH_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_TIME, at: VTOFFSET.LAUNCH_TIME.p) }
   public static func add(LAUNCH_LATITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAUNCH_LATITUDE, def: 0.0, at: VTOFFSET.LAUNCH_LATITUDE.p) }
   public static func add(LAUNCH_LONGITUDE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAUNCH_LONGITUDE, def: 0.0, at: VTOFFSET.LAUNCH_LONGITUDE.p) }
   public static func add(LAUNCH_AZIMUTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: LAUNCH_AZIMUTH, def: 0.0, at: VTOFFSET.LAUNCH_AZIMUTH.p) }
@@ -82,16 +136,21 @@ public struct LND: FlatBufferObject, Verifiable {
    at: VTOFFSET.STEREO_FLAG.p) }
   public static func add(HIGH_ZENITH_AZIMUTH: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: HIGH_ZENITH_AZIMUTH, def: false,
    at: VTOFFSET.HIGH_ZENITH_AZIMUTH.p) }
-  public static func add(SEQUENCE_NUMBER: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEQUENCE_NUMBER, def: 0, at: VTOFFSET.SEQUENCE_NUMBER.p) }
-  public static func add(EVENT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT_ID, at: VTOFFSET.EVENT_ID.p) }
+  public static func add(SEQUENCE_NUMBER: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEQUENCE_NUMBER, def: 0, at: VTOFFSET.SEQUENCE_NUMBER.p) }
+  public static func add(LAUNCH_SITE_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_SITE_ID, at: VTOFFSET.LAUNCH_SITE_ID.p) }
+  public static func add(LAUNCH_VEHICLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAUNCH_VEHICLE, at: VTOFFSET.LAUNCH_VEHICLE.p) }
+  public static func add(TRAJECTORY_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRAJECTORY_TYPE, at: VTOFFSET.TRAJECTORY_TYPE.p) }
+  public static func add(CONFIDENCE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONFIDENCE, def: 0.0, at: VTOFFSET.CONFIDENCE.p) }
   public static func add(DESCRIPTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTOR, at: VTOFFSET.DESCRIPTOR.p) }
   public static func addVectorOf(TAGS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TAGS, at: VTOFFSET.TAGS.p) }
   public static func endLND(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createLND(
     _ fbb: inout FlatBufferBuilder,
     IDOffset ID: Offset = Offset(),
-    LAUNCH_TIMEOffset LAUNCH_TIME: Offset = Offset(),
+    EVENT_IDOffset EVENT_ID: Offset = Offset(),
+    DETECTION_TYPE: launchDetectionType = .irDetect,
     MESSAGE_TYPEOffset MESSAGE_TYPE: Offset = Offset(),
+    LAUNCH_TIMEOffset LAUNCH_TIME: Offset = Offset(),
     LAUNCH_LATITUDE: Double = 0.0,
     LAUNCH_LONGITUDE: Double = 0.0,
     LAUNCH_AZIMUTH: Double = 0.0,
@@ -103,15 +162,20 @@ public struct LND: FlatBufferObject, Verifiable {
     OBSERVATION_ALTITUDE: Double = 0.0,
     STEREO_FLAG: Bool = false,
     HIGH_ZENITH_AZIMUTH: Bool = false,
-    SEQUENCE_NUMBER: Int32 = 0,
-    EVENT_IDOffset EVENT_ID: Offset = Offset(),
+    SEQUENCE_NUMBER: UInt16 = 0,
+    LAUNCH_SITE_IDOffset LAUNCH_SITE_ID: Offset = Offset(),
+    LAUNCH_VEHICLEOffset LAUNCH_VEHICLE: Offset = Offset(),
+    TRAJECTORY_TYPEOffset TRAJECTORY_TYPE: Offset = Offset(),
+    CONFIDENCE: Double = 0.0,
     DESCRIPTOROffset DESCRIPTOR: Offset = Offset(),
     TAGSVectorOffset TAGS: Offset = Offset()
   ) -> Offset {
     let __start = LND.startLND(&fbb)
     LND.add(ID: ID, &fbb)
-    LND.add(LAUNCH_TIME: LAUNCH_TIME, &fbb)
+    LND.add(EVENT_ID: EVENT_ID, &fbb)
+    LND.add(DETECTION_TYPE: DETECTION_TYPE, &fbb)
     LND.add(MESSAGE_TYPE: MESSAGE_TYPE, &fbb)
+    LND.add(LAUNCH_TIME: LAUNCH_TIME, &fbb)
     LND.add(LAUNCH_LATITUDE: LAUNCH_LATITUDE, &fbb)
     LND.add(LAUNCH_LONGITUDE: LAUNCH_LONGITUDE, &fbb)
     LND.add(LAUNCH_AZIMUTH: LAUNCH_AZIMUTH, &fbb)
@@ -124,7 +188,10 @@ public struct LND: FlatBufferObject, Verifiable {
     LND.add(STEREO_FLAG: STEREO_FLAG, &fbb)
     LND.add(HIGH_ZENITH_AZIMUTH: HIGH_ZENITH_AZIMUTH, &fbb)
     LND.add(SEQUENCE_NUMBER: SEQUENCE_NUMBER, &fbb)
-    LND.add(EVENT_ID: EVENT_ID, &fbb)
+    LND.add(LAUNCH_SITE_ID: LAUNCH_SITE_ID, &fbb)
+    LND.add(LAUNCH_VEHICLE: LAUNCH_VEHICLE, &fbb)
+    LND.add(TRAJECTORY_TYPE: TRAJECTORY_TYPE, &fbb)
+    LND.add(CONFIDENCE: CONFIDENCE, &fbb)
     LND.add(DESCRIPTOR: DESCRIPTOR, &fbb)
     LND.addVectorOf(TAGS: TAGS, &fbb)
     return LND.endLND(&fbb, start: __start)
@@ -133,8 +200,10 @@ public struct LND: FlatBufferObject, Verifiable {
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.LAUNCH_TIME.p, fieldName: "LAUNCH_TIME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.EVENT_ID.p, fieldName: "EVENT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.DETECTION_TYPE.p, fieldName: "DETECTION_TYPE", required: false, type: launchDetectionType.self)
     try _v.visit(field: VTOFFSET.MESSAGE_TYPE.p, fieldName: "MESSAGE_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.LAUNCH_TIME.p, fieldName: "LAUNCH_TIME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.LAUNCH_LATITUDE.p, fieldName: "LAUNCH_LATITUDE", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.LAUNCH_LONGITUDE.p, fieldName: "LAUNCH_LONGITUDE", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.LAUNCH_AZIMUTH.p, fieldName: "LAUNCH_AZIMUTH", required: false, type: Double.self)
@@ -146,8 +215,11 @@ public struct LND: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.OBSERVATION_ALTITUDE.p, fieldName: "OBSERVATION_ALTITUDE", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.STEREO_FLAG.p, fieldName: "STEREO_FLAG", required: false, type: Bool.self)
     try _v.visit(field: VTOFFSET.HIGH_ZENITH_AZIMUTH.p, fieldName: "HIGH_ZENITH_AZIMUTH", required: false, type: Bool.self)
-    try _v.visit(field: VTOFFSET.SEQUENCE_NUMBER.p, fieldName: "SEQUENCE_NUMBER", required: false, type: Int32.self)
-    try _v.visit(field: VTOFFSET.EVENT_ID.p, fieldName: "EVENT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.SEQUENCE_NUMBER.p, fieldName: "SEQUENCE_NUMBER", required: false, type: UInt16.self)
+    try _v.visit(field: VTOFFSET.LAUNCH_SITE_ID.p, fieldName: "LAUNCH_SITE_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.LAUNCH_VEHICLE.p, fieldName: "LAUNCH_VEHICLE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.TRAJECTORY_TYPE.p, fieldName: "TRAJECTORY_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.CONFIDENCE.p, fieldName: "CONFIDENCE", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.DESCRIPTOR.p, fieldName: "DESCRIPTOR", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.TAGS.p, fieldName: "TAGS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     _v.finish()

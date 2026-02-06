@@ -1,114 +1,153 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "doaCollectionMode" : {
+      "type" : "string",
+      "enum": ["TDOA", "FDOA", "TDOA_FDOA", "AOA", "COMBINED", "UNKNOWN"]
+    },
     "DOA" : {
       "type" : "object",
-      "description" : "Difference of Arrival",
+      "description" : "Difference of Arrival Geolocation",
       "properties" : {
         "ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique identifier"
               },
         "OB_TIME" : {
-                "type" : "string"
-              },
-        "ID_SENSOR1" : {
-                "type" : "string"
-              },
-        "ID_SENSOR2" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Observation time (ISO 8601)"
               },
         "SAT_NO" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "TASK_ID" : {
-                "type" : "string"
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Satellite catalog number"
               },
         "ORIG_OBJECT_ID" : {
-                "type" : "string"
-              },
-        "ORIG_SENSOR_ID1" : {
-                "type" : "string"
-              },
-        "ORIG_SENSOR_ID2" : {
-                "type" : "string"
-              },
-        "UCT" : {
-                "type" : "boolean"
-              },
-        "SENSOR1_DELAY" : {
-                "type" : "number"
-              },
-        "SENSOR2_DELAY" : {
-                "type" : "number"
-              },
-        "SENLAT" : {
-                "type" : "number"
-              },
-        "SENLON" : {
-                "type" : "number"
-              },
-        "SENALT" : {
-                "type" : "number"
-              },
-        "SEN2LAT" : {
-                "type" : "number"
-              },
-        "SEN2LON" : {
-                "type" : "number"
-              },
-        "SEN2ALT" : {
-                "type" : "number"
-              },
-        "FREQUENCY" : {
-                "type" : "number"
-              },
-        "BANDWIDTH" : {
-                "type" : "number"
-              },
-        "DELTA_RANGE" : {
-                "type" : "number"
-              },
-        "DELTA_RANGE_UNC" : {
-                "type" : "number"
-              },
-        "DELTA_RANGE_RATE" : {
-                "type" : "number"
-              },
-        "DELTA_RANGE_RATE_UNC" : {
-                "type" : "number"
-              },
-        "SNR" : {
-                "type" : "number"
-              },
-        "TDOA" : {
-                "type" : "number"
-              },
-        "TDOA_UNC" : {
-                "type" : "number"
-              },
-        "FDOA" : {
-                "type" : "number"
-              },
-        "FDOA_UNC" : {
-                "type" : "number"
-              },
-        "COLLECTION_MODE" : {
-                "type" : "string"
-              },
-        "RAW_FILE_URI" : {
-                "type" : "string"
-              },
-        "TAGS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "string",
+                "description" : "International designator"
               },
         "ON_ORBIT" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "On-orbit reference"
               },
-        "DESCRIPTOR" : {
-                "type" : "string"
+        "UCT" : {
+                "type" : "boolean",
+                "description" : "True if uncorrelated target"
+              },
+        "TASK_ID" : {
+                "type" : "string",
+                "description" : "Task identifier"
               },
         "TRANSACTION_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Transaction identifier"
+              },
+        "COLLECTION_MODE" : {
+                "$ref" : "#/definitions/doaCollectionMode",
+                "description" : "Collection mode"
+              },
+        "ID_SENSOR1" : {
+                "type" : "string",
+                "description" : "Sensor 1 identifier"
+              },
+        "ORIG_SENSOR_ID1" : {
+                "type" : "string",
+                "description" : "Sensor 1 original identifier"
+              },
+        "SENLAT" : {
+                "type" : "number",
+                "description" : "Sensor 1 latitude (degrees)"
+              },
+        "SENLON" : {
+                "type" : "number",
+                "description" : "Sensor 1 longitude (degrees)"
+              },
+        "SENALT" : {
+                "type" : "number",
+                "description" : "Sensor 1 altitude (km)"
+              },
+        "SENSOR1_DELAY" : {
+                "type" : "number",
+                "description" : "Sensor 1 processing delay (seconds)"
+              },
+        "ID_SENSOR2" : {
+                "type" : "string",
+                "description" : "Sensor 2 identifier"
+              },
+        "ORIG_SENSOR_ID2" : {
+                "type" : "string",
+                "description" : "Sensor 2 original identifier"
+              },
+        "SEN2LAT" : {
+                "type" : "number",
+                "description" : "Sensor 2 latitude (degrees)"
+              },
+        "SEN2LON" : {
+                "type" : "number",
+                "description" : "Sensor 2 longitude (degrees)"
+              },
+        "SEN2ALT" : {
+                "type" : "number",
+                "description" : "Sensor 2 altitude (km)"
+              },
+        "SENSOR2_DELAY" : {
+                "type" : "number",
+                "description" : "Sensor 2 processing delay (seconds)"
+              },
+        "FREQUENCY" : {
+                "type" : "number",
+                "description" : "Measured frequency (MHz)"
+              },
+        "BANDWIDTH" : {
+                "type" : "number",
+                "description" : "Measurement bandwidth (MHz)"
+              },
+        "SNR" : {
+                "type" : "number",
+                "description" : "Signal-to-noise ratio (dB)"
+              },
+        "DELTA_RANGE" : {
+                "type" : "number",
+                "description" : "Differential range (km)"
+              },
+        "DELTA_RANGE_UNC" : {
+                "type" : "number",
+                "description" : "Differential range uncertainty (km, 1-sigma)"
+              },
+        "DELTA_RANGE_RATE" : {
+                "type" : "number",
+                "description" : "Differential range rate (km/s)"
+              },
+        "DELTA_RANGE_RATE_UNC" : {
+                "type" : "number",
+                "description" : "Differential range rate uncertainty (km/s, 1-sigma)"
+              },
+        "TDOA" : {
+                "type" : "number",
+                "description" : "Time difference of arrival (seconds)"
+              },
+        "TDOA_UNC" : {
+                "type" : "number",
+                "description" : "TDOA uncertainty (seconds, 1-sigma)"
+              },
+        "FDOA" : {
+                "type" : "number",
+                "description" : "Frequency difference of arrival (Hz)"
+              },
+        "FDOA_UNC" : {
+                "type" : "number",
+                "description" : "FDOA uncertainty (Hz, 1-sigma)"
+              },
+        "RAW_FILE_URI" : {
+                "type" : "string",
+                "description" : "Reference to raw data file"
+              },
+        "DESCRIPTOR" : {
+                "type" : "string",
+                "description" : "Event descriptor"
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Associated tags"
               }
       },
       "additionalProperties" : false

@@ -41,38 +41,120 @@ class WTH extends Table
         return $this;
     }
 
+    /// Unique identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Sensor identifier
     public function getID_SENSOR()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Original sensor identifier
     public function getORIG_SENSOR_ID()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Observation time (ISO 8601)
     public function getOB_TIME()
     {
         $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// File creation time (ISO 8601)
+    public function getFILE_CREATION()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Quality control value
+    /**
+     * @return byte
+     */
+    public function getQC_VALUE()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
+    }
+
+    /// Terminal altitude (km)
+    /**
+     * @return double
+     */
+    public function getTERM_ALT()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Average transmit power (dBm)
+    /**
+     * @return double
+     */
+    public function getAVG_TX_PWR()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Average reflected power (dBm)
+    /**
+     * @return double
+     */
+    public function getAVG_REF_PWR()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Sector number
+    /**
+     * @return ushort
+     */
+    public function getSECTOR_NUM()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
+    }
+
+    /// Number of data elements
+    /**
+     * @return ushort
+     */
+    public function getNUM_ELEMENTS()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
+    }
+
+    /// Checksum
+    /**
+     * @return uint
+     */
+    public function getCHECKSUM()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Signal power values (dBm)
     /**
      * @param int offset
-     * @return string
+     * @return double
      */
     public function getSIG_PWRS($j)
     {
-        $o = $this->__offset(12);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
@@ -80,18 +162,19 @@ class WTH extends Table
      */
     public function getSIG_PWRSLength()
     {
-        $o = $this->__offset(12);
+        $o = $this->__offset(28);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Noise level values (dBm)
     /**
      * @param int offset
-     * @return string
+     * @return double
      */
     public function getNOISE_LVLS($j)
     {
-        $o = $this->__offset(14);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
@@ -99,18 +182,19 @@ class WTH extends Table
      */
     public function getNOISE_LVLSLength()
     {
-        $o = $this->__offset(14);
+        $o = $this->__offset(30);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Spectral width values (m/s)
     /**
      * @param int offset
-     * @return string
+     * @return double
      */
     public function getSPEC_WIDTHS($j)
     {
-        $o = $this->__offset(16);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
@@ -118,18 +202,19 @@ class WTH extends Table
      */
     public function getSPEC_WIDTHSLength()
     {
-        $o = $this->__offset(16);
+        $o = $this->__offset(32);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// First guess average values
     /**
      * @param int offset
-     * @return string
+     * @return double
      */
     public function getFIRST_GUESS_AVGS($j)
     {
-        $o = $this->__offset(18);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
@@ -137,78 +222,19 @@ class WTH extends Table
      */
     public function getFIRST_GUESS_AVGSLength()
     {
-        $o = $this->__offset(18);
+        $o = $this->__offset(34);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    /**
-     * @return int
-     */
-    public function getQC_VALUE()
-    {
-        $o = $this->__offset(20);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
-    }
-
-    public function getFILE_CREATION()
-    {
-        $o = $this->__offset(22);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /**
-     * @return double
-     */
-    public function getTERM_ALT()
-    {
-        $o = $this->__offset(24);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getAVG_TX_PWR()
-    {
-        $o = $this->__offset(26);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getAVG_REF_PWR()
-    {
-        $o = $this->__offset(28);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getSECTOR_NUM()
-    {
-        $o = $this->__offset(30);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getNUM_ELEMENTS()
-    {
-        $o = $this->__offset(32);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
-    }
-
+    /// Time domain average sample numbers
     /**
      * @param int offset
-     * @return string
+     * @return double
      */
     public function getTD_AVG_SAMPLE_NUMS($j)
     {
-        $o = $this->__offset(34);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
@@ -216,27 +242,19 @@ class WTH extends Table
      */
     public function getTD_AVG_SAMPLE_NUMSLength()
     {
-        $o = $this->__offset(34);
+        $o = $this->__offset(36);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    /**
-     * @return int
-     */
-    public function getCHECKSUM()
-    {
-        $o = $this->__offset(36);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
-    }
-
+    /// Co-integration values
     /**
      * @param int offset
-     * @return string
+     * @return double
      */
     public function getCO_INTEGS($j)
     {
         $o = $this->__offset(38);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
@@ -248,14 +266,15 @@ class WTH extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Spectral average values
     /**
      * @param int offset
-     * @return string
+     * @return double
      */
     public function getSPEC_AVGS($j)
     {
         $o = $this->__offset(40);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
@@ -267,14 +286,15 @@ class WTH extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Interpulse periods (microseconds)
     /**
      * @param int offset
-     * @return string
+     * @return double
      */
     public function getINTERPULSE_PERIODS($j)
     {
         $o = $this->__offset(42);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
@@ -286,14 +306,15 @@ class WTH extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Doppler velocities (m/s)
     /**
      * @param int offset
-     * @return string
+     * @return double
      */
     public function getDOPP_VELS($j)
     {
         $o = $this->__offset(44);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
@@ -305,14 +326,15 @@ class WTH extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Consecutive records count
     /**
      * @param int offset
-     * @return string
+     * @return double
      */
     public function getCONS_RECS($j)
     {
         $o = $this->__offset(46);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
@@ -324,14 +346,15 @@ class WTH extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Signal-to-noise ratios (dB)
     /**
      * @param int offset
-     * @return string
+     * @return double
      */
     public function getSNRS($j)
     {
         $o = $this->__offset(48);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
@@ -343,6 +366,7 @@ class WTH extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Signal strength (dBm)
     /**
      * @return double
      */
@@ -352,6 +376,7 @@ class WTH extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Error ellipse semi-major axis (km)
     /**
      * @return double
      */
@@ -361,6 +386,7 @@ class WTH extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Error ellipse semi-minor axis (km)
     /**
      * @return double
      */
@@ -370,6 +396,7 @@ class WTH extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Error ellipse orientation angle (degrees)
     /**
      * @return double
      */
@@ -379,15 +406,17 @@ class WTH extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Lightning event number
     /**
-     * @return int
+     * @return uint
      */
     public function getLIGHT_EVENT_NUM()
     {
         $o = $this->__offset(58);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
+    /// Lightning detection sensor identifiers
     /**
      * @param int offset
      * @return string
@@ -407,6 +436,7 @@ class WTH extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Position confidence (0-1)
     /**
      * @return double
      */
@@ -416,6 +446,7 @@ class WTH extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Source types
     /**
      * @param int offset
      * @return string
@@ -435,6 +466,7 @@ class WTH extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Source identifiers
     /**
      * @param int offset
      * @return string
@@ -467,26 +499,26 @@ class WTH extends Table
      * @param FlatBufferBuilder $builder
      * @return WTH
      */
-    public static function createWTH(FlatBufferBuilder $builder, $ID, $ID_SENSOR, $ORIG_SENSOR_ID, $OB_TIME, $SIG_PWRS, $NOISE_LVLS, $SPEC_WIDTHS, $FIRST_GUESS_AVGS, $QC_VALUE, $FILE_CREATION, $TERM_ALT, $AVG_TX_PWR, $AVG_REF_PWR, $SECTOR_NUM, $NUM_ELEMENTS, $TD_AVG_SAMPLE_NUMS, $CHECKSUM, $CO_INTEGS, $SPEC_AVGS, $INTERPULSE_PERIODS, $DOPP_VELS, $CONS_RECS, $SNRS, $SIG_STRENGTH, $SEMI_MAJOR_AXIS, $SEMI_MINOR_AXIS, $ANGLE_ORIENTATION, $LIGHT_EVENT_NUM, $LIGHT_DET_SENSORS, $POS_CONFIDENCE, $SRC_TYPS, $SRC_IDS)
+    public static function createWTH(FlatBufferBuilder $builder, $ID, $ID_SENSOR, $ORIG_SENSOR_ID, $OB_TIME, $FILE_CREATION, $QC_VALUE, $TERM_ALT, $AVG_TX_PWR, $AVG_REF_PWR, $SECTOR_NUM, $NUM_ELEMENTS, $CHECKSUM, $SIG_PWRS, $NOISE_LVLS, $SPEC_WIDTHS, $FIRST_GUESS_AVGS, $TD_AVG_SAMPLE_NUMS, $CO_INTEGS, $SPEC_AVGS, $INTERPULSE_PERIODS, $DOPP_VELS, $CONS_RECS, $SNRS, $SIG_STRENGTH, $SEMI_MAJOR_AXIS, $SEMI_MINOR_AXIS, $ANGLE_ORIENTATION, $LIGHT_EVENT_NUM, $LIGHT_DET_SENSORS, $POS_CONFIDENCE, $SRC_TYPS, $SRC_IDS)
     {
         $builder->startObject(32);
         self::addID($builder, $ID);
         self::addID_SENSOR($builder, $ID_SENSOR);
         self::addORIG_SENSOR_ID($builder, $ORIG_SENSOR_ID);
         self::addOB_TIME($builder, $OB_TIME);
-        self::addSIG_PWRS($builder, $SIG_PWRS);
-        self::addNOISE_LVLS($builder, $NOISE_LVLS);
-        self::addSPEC_WIDTHS($builder, $SPEC_WIDTHS);
-        self::addFIRST_GUESS_AVGS($builder, $FIRST_GUESS_AVGS);
-        self::addQC_VALUE($builder, $QC_VALUE);
         self::addFILE_CREATION($builder, $FILE_CREATION);
+        self::addQC_VALUE($builder, $QC_VALUE);
         self::addTERM_ALT($builder, $TERM_ALT);
         self::addAVG_TX_PWR($builder, $AVG_TX_PWR);
         self::addAVG_REF_PWR($builder, $AVG_REF_PWR);
         self::addSECTOR_NUM($builder, $SECTOR_NUM);
         self::addNUM_ELEMENTS($builder, $NUM_ELEMENTS);
-        self::addTD_AVG_SAMPLE_NUMS($builder, $TD_AVG_SAMPLE_NUMS);
         self::addCHECKSUM($builder, $CHECKSUM);
+        self::addSIG_PWRS($builder, $SIG_PWRS);
+        self::addNOISE_LVLS($builder, $NOISE_LVLS);
+        self::addSPEC_WIDTHS($builder, $SPEC_WIDTHS);
+        self::addFIRST_GUESS_AVGS($builder, $FIRST_GUESS_AVGS);
+        self::addTD_AVG_SAMPLE_NUMS($builder, $TD_AVG_SAMPLE_NUMS);
         self::addCO_INTEGS($builder, $CO_INTEGS);
         self::addSPEC_AVGS($builder, $SPEC_AVGS);
         self::addINTERPULSE_PERIODS($builder, $INTERPULSE_PERIODS);
@@ -548,12 +580,92 @@ class WTH extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addFILE_CREATION(FlatBufferBuilder $builder, $FILE_CREATION)
+    {
+        $builder->addOffsetX(4, $FILE_CREATION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addQC_VALUE(FlatBufferBuilder $builder, $QC_VALUE)
+    {
+        $builder->addByteX(5, $QC_VALUE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTERM_ALT(FlatBufferBuilder $builder, $TERM_ALT)
+    {
+        $builder->addDoubleX(6, $TERM_ALT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addAVG_TX_PWR(FlatBufferBuilder $builder, $AVG_TX_PWR)
+    {
+        $builder->addDoubleX(7, $AVG_TX_PWR, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addAVG_REF_PWR(FlatBufferBuilder $builder, $AVG_REF_PWR)
+    {
+        $builder->addDoubleX(8, $AVG_REF_PWR, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ushort
+     * @return void
+     */
+    public static function addSECTOR_NUM(FlatBufferBuilder $builder, $SECTOR_NUM)
+    {
+        $builder->addUshortX(9, $SECTOR_NUM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ushort
+     * @return void
+     */
+    public static function addNUM_ELEMENTS(FlatBufferBuilder $builder, $NUM_ELEMENTS)
+    {
+        $builder->addUshortX(10, $NUM_ELEMENTS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addCHECKSUM(FlatBufferBuilder $builder, $CHECKSUM)
+    {
+        $builder->addUintX(11, $CHECKSUM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param VectorOffset
      * @return void
      */
     public static function addSIG_PWRS(FlatBufferBuilder $builder, $SIG_PWRS)
     {
-        $builder->addOffsetX(4, $SIG_PWRS, 0);
+        $builder->addOffsetX(12, $SIG_PWRS, 0);
     }
 
     /**
@@ -563,9 +675,9 @@ class WTH extends Table
      */
     public static function createSIG_PWRSVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -577,7 +689,7 @@ class WTH extends Table
      */
     public static function startSIG_PWRSVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**
@@ -587,7 +699,7 @@ class WTH extends Table
      */
     public static function addNOISE_LVLS(FlatBufferBuilder $builder, $NOISE_LVLS)
     {
-        $builder->addOffsetX(5, $NOISE_LVLS, 0);
+        $builder->addOffsetX(13, $NOISE_LVLS, 0);
     }
 
     /**
@@ -597,9 +709,9 @@ class WTH extends Table
      */
     public static function createNOISE_LVLSVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -611,7 +723,7 @@ class WTH extends Table
      */
     public static function startNOISE_LVLSVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**
@@ -621,7 +733,7 @@ class WTH extends Table
      */
     public static function addSPEC_WIDTHS(FlatBufferBuilder $builder, $SPEC_WIDTHS)
     {
-        $builder->addOffsetX(6, $SPEC_WIDTHS, 0);
+        $builder->addOffsetX(14, $SPEC_WIDTHS, 0);
     }
 
     /**
@@ -631,9 +743,9 @@ class WTH extends Table
      */
     public static function createSPEC_WIDTHSVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -645,7 +757,7 @@ class WTH extends Table
      */
     public static function startSPEC_WIDTHSVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**
@@ -655,7 +767,7 @@ class WTH extends Table
      */
     public static function addFIRST_GUESS_AVGS(FlatBufferBuilder $builder, $FIRST_GUESS_AVGS)
     {
-        $builder->addOffsetX(7, $FIRST_GUESS_AVGS, 0);
+        $builder->addOffsetX(15, $FIRST_GUESS_AVGS, 0);
     }
 
     /**
@@ -665,9 +777,9 @@ class WTH extends Table
      */
     public static function createFIRST_GUESS_AVGSVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -679,77 +791,7 @@ class WTH extends Table
      */
     public static function startFIRST_GUESS_AVGSVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int
-     * @return void
-     */
-    public static function addQC_VALUE(FlatBufferBuilder $builder, $QC_VALUE)
-    {
-        $builder->addIntX(8, $QC_VALUE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addFILE_CREATION(FlatBufferBuilder $builder, $FILE_CREATION)
-    {
-        $builder->addOffsetX(9, $FILE_CREATION, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addTERM_ALT(FlatBufferBuilder $builder, $TERM_ALT)
-    {
-        $builder->addDoubleX(10, $TERM_ALT, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addAVG_TX_PWR(FlatBufferBuilder $builder, $AVG_TX_PWR)
-    {
-        $builder->addDoubleX(11, $AVG_TX_PWR, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addAVG_REF_PWR(FlatBufferBuilder $builder, $AVG_REF_PWR)
-    {
-        $builder->addDoubleX(12, $AVG_REF_PWR, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int
-     * @return void
-     */
-    public static function addSECTOR_NUM(FlatBufferBuilder $builder, $SECTOR_NUM)
-    {
-        $builder->addIntX(13, $SECTOR_NUM, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int
-     * @return void
-     */
-    public static function addNUM_ELEMENTS(FlatBufferBuilder $builder, $NUM_ELEMENTS)
-    {
-        $builder->addIntX(14, $NUM_ELEMENTS, 0);
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**
@@ -759,7 +801,7 @@ class WTH extends Table
      */
     public static function addTD_AVG_SAMPLE_NUMS(FlatBufferBuilder $builder, $TD_AVG_SAMPLE_NUMS)
     {
-        $builder->addOffsetX(15, $TD_AVG_SAMPLE_NUMS, 0);
+        $builder->addOffsetX(16, $TD_AVG_SAMPLE_NUMS, 0);
     }
 
     /**
@@ -769,9 +811,9 @@ class WTH extends Table
      */
     public static function createTD_AVG_SAMPLE_NUMSVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -783,17 +825,7 @@ class WTH extends Table
      */
     public static function startTD_AVG_SAMPLE_NUMSVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int
-     * @return void
-     */
-    public static function addCHECKSUM(FlatBufferBuilder $builder, $CHECKSUM)
-    {
-        $builder->addIntX(16, $CHECKSUM, 0);
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**
@@ -813,9 +845,9 @@ class WTH extends Table
      */
     public static function createCO_INTEGSVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -827,7 +859,7 @@ class WTH extends Table
      */
     public static function startCO_INTEGSVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**
@@ -847,9 +879,9 @@ class WTH extends Table
      */
     public static function createSPEC_AVGSVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -861,7 +893,7 @@ class WTH extends Table
      */
     public static function startSPEC_AVGSVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**
@@ -881,9 +913,9 @@ class WTH extends Table
      */
     public static function createINTERPULSE_PERIODSVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -895,7 +927,7 @@ class WTH extends Table
      */
     public static function startINTERPULSE_PERIODSVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**
@@ -915,9 +947,9 @@ class WTH extends Table
      */
     public static function createDOPP_VELSVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -929,7 +961,7 @@ class WTH extends Table
      */
     public static function startDOPP_VELSVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**
@@ -949,9 +981,9 @@ class WTH extends Table
      */
     public static function createCONS_RECSVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -963,7 +995,7 @@ class WTH extends Table
      */
     public static function startCONS_RECSVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**
@@ -983,9 +1015,9 @@ class WTH extends Table
      */
     public static function createSNRSVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -997,7 +1029,7 @@ class WTH extends Table
      */
     public static function startSNRSVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**
@@ -1042,12 +1074,12 @@ class WTH extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param uint
      * @return void
      */
     public static function addLIGHT_EVENT_NUM(FlatBufferBuilder $builder, $LIGHT_EVENT_NUM)
     {
-        $builder->addIntX(27, $LIGHT_EVENT_NUM, 0);
+        $builder->addUintX(27, $LIGHT_EVENT_NUM, 0);
     }
 
     /**

@@ -1,21 +1,60 @@
-// Hash: 0809f8a08fdb75405a5ddab885758b455241caab8bcfbd0a1ec64771b3a07db2
-// Version: 0.0.2
+// Hash: 62c5e8c07a1f013a4dd992f1e288fef566407101e9d740b4450df741acf8134c
+// Version: 0.0.3
 // -----------------------------------END_HEADER
+enum launchOutcome : byte {
+  SUCCESS,
+  PARTIAL_SUCCESS,
+  FAILURE,
+  IN_PROGRESS,
+  UNKNOWN
+}
+
 /// Launch Event
 table LNE {
+  /// Unique identifier
   ID:string;
+  /// Satellite catalog number of launched object
+  SAT_NO:uint32;
+  /// International designator (YYYY-NNNP)
   ORIG_OBJECT_ID:string;
+  /// Source record this event was derived from
   DERIVED_FROM:string;
+  /// Classification date (ISO 8601)
   DECLASSIFICATION_DATE:string;
+  /// Classification marking
   DECLASSIFICATION_STRING:string;
+  /// Message creation time (ISO 8601)
   MSG_CREATE_DATE:string;
-  LAUNCH_FAILURE_CODE:string;
+  /// Launch date and time (ISO 8601)
   LAUNCH_DATE:string;
+  /// Launch outcome
+  OUTCOME:launchOutcome;
+  /// Launch failure code (if applicable)
+  LAUNCH_FAILURE_CODE:string;
+  /// Basic encyclopedia number
   BE_NUMBER:string;
+  /// Object suffix identifier
   O_SUFFIX:string;
+  /// Launch facility name
   LAUNCH_FACILITY_NAME:string;
+  /// Launch facility code
+  LAUNCH_FACILITY_CODE:string;
+  /// Launch vehicle type
+  LAUNCH_VEHICLE:string;
+  /// Launch vehicle configuration
+  LAUNCH_VEHICLE_CONFIG:string;
+  /// Target orbit type (LEO, MEO, GEO, HEO, SSO, etc.)
+  TARGET_ORBIT:string;
+  /// Number of objects placed on orbit
+  OBJECTS_ON_ORBIT:uint16;
+  /// On-orbit reference identifier
   ON_ORBIT:string;
-  SAT_NO:int;
+  /// Launch country or operator
+  LAUNCH_COUNTRY:string;
+  /// Mission name or payload description
+  MISSION_NAME:string;
+  /// Additional remarks
+  REMARKS:string;
 }
 
 root_type LNE;

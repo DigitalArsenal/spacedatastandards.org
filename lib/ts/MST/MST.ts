@@ -4,6 +4,9 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { aouReportType } from './aouReportType.js';
+import { missileEnvironment } from './missileEnvironment.js';
+import { missileStatus } from './missileStatus.js';
 
 
 /**
@@ -31,6 +34,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$MST');
 }
 
+/**
+ * Unique identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,6 +44,9 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Message type code
+ */
 MSG_TYPE():string|null
 MSG_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 MSG_TYPE(optionalEncoding?:any):string|Uint8Array|null {
@@ -45,6 +54,9 @@ MSG_TYPE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Message sub-type
+ */
 MSG_SUB_TYPE():string|null
 MSG_SUB_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 MSG_SUB_TYPE(optionalEncoding?:any):string|Uint8Array|null {
@@ -52,6 +64,9 @@ MSG_SUB_TYPE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Message creation date (ISO 8601)
+ */
 MSG_CREATE_DATE():string|null
 MSG_CREATE_DATE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 MSG_CREATE_DATE(optionalEncoding?:any):string|Uint8Array|null {
@@ -59,13 +74,17 @@ MSG_CREATE_DATE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-ENVIRONMENT():string|null
-ENVIRONMENT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ENVIRONMENT(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Track environment
+ */
+ENVIRONMENT():missileEnvironment {
   const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : missileEnvironment.SPACE;
 }
 
+/**
+ * Object type classification
+ */
 OBJ_TYPE():string|null
 OBJ_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 OBJ_TYPE(optionalEncoding?:any):string|Uint8Array|null {
@@ -73,11 +92,17 @@ OBJ_TYPE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Object type confidence (0-100)
+ */
 OBJ_TYPE_CONF():number {
   const offset = this.bb!.__offset(this.bb_pos, 16);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Object platform type
+ */
 OBJ_PLAT():string|null
 OBJ_PLAT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 OBJ_PLAT(optionalEncoding?:any):string|Uint8Array|null {
@@ -85,6 +110,9 @@ OBJ_PLAT(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Object identity assessment
+ */
 OBJ_IDENT():string|null
 OBJ_IDENT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 OBJ_IDENT(optionalEncoding?:any):string|Uint8Array|null {
@@ -92,6 +120,9 @@ OBJ_IDENT(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Space amplification data
+ */
 SPACE_AMP():string|null
 SPACE_AMP(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 SPACE_AMP(optionalEncoding?:any):string|Uint8Array|null {
@@ -99,166 +130,243 @@ SPACE_AMP(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Space amplification confidence (0-100)
+ */
+SPACE_AMP_CONF():number {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Object activity
+ */
 OBJ_ACT():string|null
 OBJ_ACT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 OBJ_ACT(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-SPACE_SPEC_TYPE():string|null
-SPACE_SPEC_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-SPACE_SPEC_TYPE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-ACFT_SUB_TYPE():string|null
-ACFT_SUB_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ACFT_SUB_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Space specific type
+ */
+SPACE_SPEC_TYPE():string|null
+SPACE_SPEC_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SPACE_SPEC_TYPE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-NAME():string|null
-NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-NAME(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Aircraft sub-type (if applicable)
+ */
+ACFT_SUB_TYPE():string|null
+ACFT_SUB_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ACFT_SUB_TYPE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 30);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-CALL_SIGN():string|null
-CALL_SIGN(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-CALL_SIGN(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Object name
+ */
+NAME():string|null
+NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+NAME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-LOST_TRK_IND():boolean {
+/**
+ * Call sign
+ */
+CALL_SIGN():string|null
+CALL_SIGN(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CALL_SIGN(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 34);
-  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
-}
-
-TRACK_ID():string|null
-TRACK_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-TRACK_ID(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 36);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-PARENT_TRACK_ID():string|null
-PARENT_TRACK_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-PARENT_TRACK_ID(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * True if track is lost
+ */
+LOST_TRK_IND():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Track identifier
+ */
+TRACK_ID():string|null
+TRACK_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TRACK_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 38);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-MUID_SRC_TRK():string|null
-MUID_SRC_TRK(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-MUID_SRC_TRK(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Parent track identifier
+ */
+PARENT_TRACK_ID():string|null
+PARENT_TRACK_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PARENT_TRACK_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 40);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-MUID_SRC():string|null
-MUID_SRC(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-MUID_SRC(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Multi-unit identifier (source track)
+ */
+MUID_SRC_TRK():string|null
+MUID_SRC_TRK(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MUID_SRC_TRK(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 42);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-ALERT():string|null
-ALERT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ALERT(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Multi-unit identifier (source)
+ */
+MUID_SRC():string|null
+MUID_SRC(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MUID_SRC(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 44);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-MSL_STATUS():string|null
-MSL_STATUS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-MSL_STATUS(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Alert classification
+ */
+ALERT():string|null
+ALERT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ALERT(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 46);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Missile engagement status
+ */
+MSL_STATUS():missileStatus {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : missileStatus.BOOSTING;
+}
+
+/**
+ * Track timestamp (ISO 8601)
+ */
 TS():string|null
 TS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 TS(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 48);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-AOU_RPT_TYPE():string|null
-AOU_RPT_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-AOU_RPT_TYPE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 50);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-CONTAINMENT():number {
+/**
+ * AOU report type
+ */
+AOU_RPT_TYPE():aouReportType {
   const offset = this.bb!.__offset(this.bb_pos, 52);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : aouReportType.CIRCULAR;
 }
 
-TRK_CONF():number {
+/**
+ * Containment probability (0-1)
+ */
+CONTAINMENT():number {
   const offset = this.bb!.__offset(this.bb_pos, 54);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-TRK_QUAL():number {
+/**
+ * Track confidence (0-1)
+ */
+TRK_CONF():number {
   const offset = this.bb!.__offset(this.bb_pos, 56);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
-}
-
-ANG_ELEV():number {
-  const offset = this.bb!.__offset(this.bb_pos, 58);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Track quality (0-15)
+ */
+TRK_QUAL():number {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Elevation angle (degrees)
+ */
+ANG_ELEV():number {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Sensor mode
+ */
 SEN_MODE():string|null
 SEN_MODE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 SEN_MODE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 60);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-INFO_SOURCE():string|null
-INFO_SOURCE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-INFO_SOURCE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 62);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-BOOSTING():boolean {
+/**
+ * Information source
+ */
+INFO_SOURCE():string|null
+INFO_SOURCE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+INFO_SOURCE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * True if object is in boost phase
+ */
+BOOSTING():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 66);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Polar singularity latitude (degrees)
+ */
 POLAR_SING_LOC_LAT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 66);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-POLAR_SING_LOC_LON():number {
   const offset = this.bb!.__offset(this.bb_pos, 68);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-EMG_IND():boolean {
+/**
+ * Polar singularity longitude (degrees)
+ */
+POLAR_SING_LOC_LON():number {
   const offset = this.bb!.__offset(this.bb_pos, 70);
-  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-DROP_PT_IND():boolean {
+/**
+ * True if emergency indicator set
+ */
+EMG_IND():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 72);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
-SPACE_AMP_CONF():number {
+/**
+ * True if drop point indicator set
+ */
+DROP_PT_IND():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 74);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Launch time (ISO 8601)
+ */
 LAUNCH_TIME():string|null
 LAUNCH_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 LAUNCH_TIME(optionalEncoding?:any):string|Uint8Array|null {
@@ -266,33 +374,49 @@ LAUNCH_TIME(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Launch latitude (degrees)
+ */
 LAUNCH_LAT():number {
   const offset = this.bb!.__offset(this.bb_pos, 78);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Launch longitude (degrees)
+ */
 LAUNCH_LON():number {
   const offset = this.bb!.__offset(this.bb_pos, 80);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Azimuth correction (degrees)
+ */
 AZ_CORR():number {
   const offset = this.bb!.__offset(this.bb_pos, 82);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Burnout altitude (km)
+ */
 BURNOUT_ALT():number {
   const offset = this.bb!.__offset(this.bb_pos, 84);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-LAUNCH_AOU_TYPE():string|null
-LAUNCH_AOU_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-LAUNCH_AOU_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Launch AOU type
+ */
+LAUNCH_AOU_TYPE():aouReportType {
   const offset = this.bb!.__offset(this.bb_pos, 86);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : aouReportType.CIRCULAR;
 }
 
+/**
+ * Predicted impact time (ISO 8601)
+ */
 IMPACT_TIME():string|null
 IMPACT_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 IMPACT_TIME(optionalEncoding?:any):string|Uint8Array|null {
@@ -300,25 +424,32 @@ IMPACT_TIME(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Predicted impact latitude (degrees)
+ */
 IMPACT_LAT():number {
   const offset = this.bb!.__offset(this.bb_pos, 90);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Predicted impact longitude (degrees)
+ */
 IMPACT_LON():number {
   const offset = this.bb!.__offset(this.bb_pos, 92);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-IMPACT_AOU_TYPE():string|null
-IMPACT_AOU_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-IMPACT_AOU_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Impact AOU type
+ */
+IMPACT_AOU_TYPE():aouReportType {
   const offset = this.bb!.__offset(this.bb_pos, 94);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : aouReportType.CIRCULAR;
 }
 
 /**
- * Start time for vector data (ISO 8601 UTC format).
+ * Start time for vector data (ISO 8601)
  */
 VECTOR_START_TIME():string|null
 VECTOR_START_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -328,7 +459,7 @@ VECTOR_START_TIME(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Time interval between vector points in seconds.
+ * Time interval between vector points (seconds)
  */
 VECTOR_STEP_SIZE():number {
   const offset = this.bb!.__offset(this.bb_pos, 98);
@@ -336,7 +467,7 @@ VECTOR_STEP_SIZE():number {
 }
 
 /**
- * Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).
+ * Number of components per vector (default 6: X, Y, Z, VX, VY, VZ)
  */
 VECTOR_COMPONENTS():number {
   const offset = this.bb!.__offset(this.bb_pos, 100);
@@ -362,7 +493,7 @@ vectorsArray():Float64Array|null {
 }
 
 /**
- * AOU report data as flat array (layout depends on AOU_RPT_TYPE).
+ * AOU report data as flat array
  */
 AOU_RPT(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 104);
@@ -380,7 +511,7 @@ aouRptArray():Float64Array|null {
 }
 
 /**
- * Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).
+ * Launch AOU data as flat array
  */
 LAUNCH_AOU(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 106);
@@ -398,7 +529,7 @@ launchAouArray():Float64Array|null {
 }
 
 /**
- * Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).
+ * Impact AOU data as flat array
  */
 IMPACT_AOU(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 108);
@@ -435,8 +566,8 @@ static addMsgCreateDate(builder:flatbuffers.Builder, MSG_CREATE_DATEOffset:flatb
   builder.addFieldOffset(3, MSG_CREATE_DATEOffset, 0);
 }
 
-static addEnvironment(builder:flatbuffers.Builder, ENVIRONMENTOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(4, ENVIRONMENTOffset, 0);
+static addEnvironment(builder:flatbuffers.Builder, ENVIRONMENT:missileEnvironment) {
+  builder.addFieldInt8(4, ENVIRONMENT, missileEnvironment.SPACE);
 }
 
 static addObjType(builder:flatbuffers.Builder, OBJ_TYPEOffset:flatbuffers.Offset) {
@@ -444,7 +575,7 @@ static addObjType(builder:flatbuffers.Builder, OBJ_TYPEOffset:flatbuffers.Offset
 }
 
 static addObjTypeConf(builder:flatbuffers.Builder, OBJ_TYPE_CONF:number) {
-  builder.addFieldInt32(6, OBJ_TYPE_CONF, 0);
+  builder.addFieldInt8(6, OBJ_TYPE_CONF, 0);
 }
 
 static addObjPlat(builder:flatbuffers.Builder, OBJ_PLATOffset:flatbuffers.Offset) {
@@ -459,108 +590,108 @@ static addSpaceAmp(builder:flatbuffers.Builder, SPACE_AMPOffset:flatbuffers.Offs
   builder.addFieldOffset(9, SPACE_AMPOffset, 0);
 }
 
+static addSpaceAmpConf(builder:flatbuffers.Builder, SPACE_AMP_CONF:number) {
+  builder.addFieldInt8(10, SPACE_AMP_CONF, 0);
+}
+
 static addObjAct(builder:flatbuffers.Builder, OBJ_ACTOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(10, OBJ_ACTOffset, 0);
+  builder.addFieldOffset(11, OBJ_ACTOffset, 0);
 }
 
 static addSpaceSpecType(builder:flatbuffers.Builder, SPACE_SPEC_TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(11, SPACE_SPEC_TYPEOffset, 0);
+  builder.addFieldOffset(12, SPACE_SPEC_TYPEOffset, 0);
 }
 
 static addAcftSubType(builder:flatbuffers.Builder, ACFT_SUB_TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(12, ACFT_SUB_TYPEOffset, 0);
+  builder.addFieldOffset(13, ACFT_SUB_TYPEOffset, 0);
 }
 
 static addName(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(13, NAMEOffset, 0);
+  builder.addFieldOffset(14, NAMEOffset, 0);
 }
 
 static addCallSign(builder:flatbuffers.Builder, CALL_SIGNOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(14, CALL_SIGNOffset, 0);
+  builder.addFieldOffset(15, CALL_SIGNOffset, 0);
 }
 
 static addLostTrkInd(builder:flatbuffers.Builder, LOST_TRK_IND:boolean) {
-  builder.addFieldInt8(15, +LOST_TRK_IND, +false);
+  builder.addFieldInt8(16, +LOST_TRK_IND, +false);
 }
 
 static addTrackId(builder:flatbuffers.Builder, TRACK_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(16, TRACK_IDOffset, 0);
+  builder.addFieldOffset(17, TRACK_IDOffset, 0);
 }
 
 static addParentTrackId(builder:flatbuffers.Builder, PARENT_TRACK_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(17, PARENT_TRACK_IDOffset, 0);
+  builder.addFieldOffset(18, PARENT_TRACK_IDOffset, 0);
 }
 
 static addMuidSrcTrk(builder:flatbuffers.Builder, MUID_SRC_TRKOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(18, MUID_SRC_TRKOffset, 0);
+  builder.addFieldOffset(19, MUID_SRC_TRKOffset, 0);
 }
 
 static addMuidSrc(builder:flatbuffers.Builder, MUID_SRCOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(19, MUID_SRCOffset, 0);
+  builder.addFieldOffset(20, MUID_SRCOffset, 0);
 }
 
 static addAlert(builder:flatbuffers.Builder, ALERTOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(20, ALERTOffset, 0);
+  builder.addFieldOffset(21, ALERTOffset, 0);
 }
 
-static addMslStatus(builder:flatbuffers.Builder, MSL_STATUSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(21, MSL_STATUSOffset, 0);
+static addMslStatus(builder:flatbuffers.Builder, MSL_STATUS:missileStatus) {
+  builder.addFieldInt8(22, MSL_STATUS, missileStatus.BOOSTING);
 }
 
 static addTs(builder:flatbuffers.Builder, TSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(22, TSOffset, 0);
+  builder.addFieldOffset(23, TSOffset, 0);
 }
 
-static addAouRptType(builder:flatbuffers.Builder, AOU_RPT_TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(23, AOU_RPT_TYPEOffset, 0);
+static addAouRptType(builder:flatbuffers.Builder, AOU_RPT_TYPE:aouReportType) {
+  builder.addFieldInt8(24, AOU_RPT_TYPE, aouReportType.CIRCULAR);
 }
 
 static addContainment(builder:flatbuffers.Builder, CONTAINMENT:number) {
-  builder.addFieldFloat64(24, CONTAINMENT, 0.0);
+  builder.addFieldFloat64(25, CONTAINMENT, 0.0);
 }
 
 static addTrkConf(builder:flatbuffers.Builder, TRK_CONF:number) {
-  builder.addFieldFloat64(25, TRK_CONF, 0.0);
+  builder.addFieldFloat64(26, TRK_CONF, 0.0);
 }
 
 static addTrkQual(builder:flatbuffers.Builder, TRK_QUAL:number) {
-  builder.addFieldInt32(26, TRK_QUAL, 0);
+  builder.addFieldInt8(27, TRK_QUAL, 0);
 }
 
 static addAngElev(builder:flatbuffers.Builder, ANG_ELEV:number) {
-  builder.addFieldFloat64(27, ANG_ELEV, 0.0);
+  builder.addFieldFloat64(28, ANG_ELEV, 0.0);
 }
 
 static addSenMode(builder:flatbuffers.Builder, SEN_MODEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(28, SEN_MODEOffset, 0);
+  builder.addFieldOffset(29, SEN_MODEOffset, 0);
 }
 
 static addInfoSource(builder:flatbuffers.Builder, INFO_SOURCEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(29, INFO_SOURCEOffset, 0);
+  builder.addFieldOffset(30, INFO_SOURCEOffset, 0);
 }
 
 static addBoosting(builder:flatbuffers.Builder, BOOSTING:boolean) {
-  builder.addFieldInt8(30, +BOOSTING, +false);
+  builder.addFieldInt8(31, +BOOSTING, +false);
 }
 
 static addPolarSingLocLat(builder:flatbuffers.Builder, POLAR_SING_LOC_LAT:number) {
-  builder.addFieldFloat64(31, POLAR_SING_LOC_LAT, 0.0);
+  builder.addFieldFloat64(32, POLAR_SING_LOC_LAT, 0.0);
 }
 
 static addPolarSingLocLon(builder:flatbuffers.Builder, POLAR_SING_LOC_LON:number) {
-  builder.addFieldFloat64(32, POLAR_SING_LOC_LON, 0.0);
+  builder.addFieldFloat64(33, POLAR_SING_LOC_LON, 0.0);
 }
 
 static addEmgInd(builder:flatbuffers.Builder, EMG_IND:boolean) {
-  builder.addFieldInt8(33, +EMG_IND, +false);
+  builder.addFieldInt8(34, +EMG_IND, +false);
 }
 
 static addDropPtInd(builder:flatbuffers.Builder, DROP_PT_IND:boolean) {
-  builder.addFieldInt8(34, +DROP_PT_IND, +false);
-}
-
-static addSpaceAmpConf(builder:flatbuffers.Builder, SPACE_AMP_CONF:number) {
-  builder.addFieldInt32(35, SPACE_AMP_CONF, 0);
+  builder.addFieldInt8(35, +DROP_PT_IND, +false);
 }
 
 static addLaunchTime(builder:flatbuffers.Builder, LAUNCH_TIMEOffset:flatbuffers.Offset) {
@@ -583,8 +714,8 @@ static addBurnoutAlt(builder:flatbuffers.Builder, BURNOUT_ALT:number) {
   builder.addFieldFloat64(40, BURNOUT_ALT, 0.0);
 }
 
-static addLaunchAouType(builder:flatbuffers.Builder, LAUNCH_AOU_TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(41, LAUNCH_AOU_TYPEOffset, 0);
+static addLaunchAouType(builder:flatbuffers.Builder, LAUNCH_AOU_TYPE:aouReportType) {
+  builder.addFieldInt8(41, LAUNCH_AOU_TYPE, aouReportType.CIRCULAR);
 }
 
 static addImpactTime(builder:flatbuffers.Builder, IMPACT_TIMEOffset:flatbuffers.Offset) {
@@ -599,8 +730,8 @@ static addImpactLon(builder:flatbuffers.Builder, IMPACT_LON:number) {
   builder.addFieldFloat64(44, IMPACT_LON, 0.0);
 }
 
-static addImpactAouType(builder:flatbuffers.Builder, IMPACT_AOU_TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(45, IMPACT_AOU_TYPEOffset, 0);
+static addImpactAouType(builder:flatbuffers.Builder, IMPACT_AOU_TYPE:aouReportType) {
+  builder.addFieldInt8(45, IMPACT_AOU_TYPE, aouReportType.CIRCULAR);
 }
 
 static addVectorStartTime(builder:flatbuffers.Builder, VECTOR_START_TIMEOffset:flatbuffers.Offset) {
@@ -712,18 +843,19 @@ static finishSizePrefixedMSTBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$MST', true);
 }
 
-static createMST(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, MSG_TYPEOffset:flatbuffers.Offset, MSG_SUB_TYPEOffset:flatbuffers.Offset, MSG_CREATE_DATEOffset:flatbuffers.Offset, ENVIRONMENTOffset:flatbuffers.Offset, OBJ_TYPEOffset:flatbuffers.Offset, OBJ_TYPE_CONF:number, OBJ_PLATOffset:flatbuffers.Offset, OBJ_IDENTOffset:flatbuffers.Offset, SPACE_AMPOffset:flatbuffers.Offset, OBJ_ACTOffset:flatbuffers.Offset, SPACE_SPEC_TYPEOffset:flatbuffers.Offset, ACFT_SUB_TYPEOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, CALL_SIGNOffset:flatbuffers.Offset, LOST_TRK_IND:boolean, TRACK_IDOffset:flatbuffers.Offset, PARENT_TRACK_IDOffset:flatbuffers.Offset, MUID_SRC_TRKOffset:flatbuffers.Offset, MUID_SRCOffset:flatbuffers.Offset, ALERTOffset:flatbuffers.Offset, MSL_STATUSOffset:flatbuffers.Offset, TSOffset:flatbuffers.Offset, AOU_RPT_TYPEOffset:flatbuffers.Offset, CONTAINMENT:number, TRK_CONF:number, TRK_QUAL:number, ANG_ELEV:number, SEN_MODEOffset:flatbuffers.Offset, INFO_SOURCEOffset:flatbuffers.Offset, BOOSTING:boolean, POLAR_SING_LOC_LAT:number, POLAR_SING_LOC_LON:number, EMG_IND:boolean, DROP_PT_IND:boolean, SPACE_AMP_CONF:number, LAUNCH_TIMEOffset:flatbuffers.Offset, LAUNCH_LAT:number, LAUNCH_LON:number, AZ_CORR:number, BURNOUT_ALT:number, LAUNCH_AOU_TYPEOffset:flatbuffers.Offset, IMPACT_TIMEOffset:flatbuffers.Offset, IMPACT_LAT:number, IMPACT_LON:number, IMPACT_AOU_TYPEOffset:flatbuffers.Offset, VECTOR_START_TIMEOffset:flatbuffers.Offset, VECTOR_STEP_SIZE:number, VECTOR_COMPONENTS:number, VECTORSOffset:flatbuffers.Offset, AOU_RPTOffset:flatbuffers.Offset, LAUNCH_AOUOffset:flatbuffers.Offset, IMPACT_AOUOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createMST(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, MSG_TYPEOffset:flatbuffers.Offset, MSG_SUB_TYPEOffset:flatbuffers.Offset, MSG_CREATE_DATEOffset:flatbuffers.Offset, ENVIRONMENT:missileEnvironment, OBJ_TYPEOffset:flatbuffers.Offset, OBJ_TYPE_CONF:number, OBJ_PLATOffset:flatbuffers.Offset, OBJ_IDENTOffset:flatbuffers.Offset, SPACE_AMPOffset:flatbuffers.Offset, SPACE_AMP_CONF:number, OBJ_ACTOffset:flatbuffers.Offset, SPACE_SPEC_TYPEOffset:flatbuffers.Offset, ACFT_SUB_TYPEOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, CALL_SIGNOffset:flatbuffers.Offset, LOST_TRK_IND:boolean, TRACK_IDOffset:flatbuffers.Offset, PARENT_TRACK_IDOffset:flatbuffers.Offset, MUID_SRC_TRKOffset:flatbuffers.Offset, MUID_SRCOffset:flatbuffers.Offset, ALERTOffset:flatbuffers.Offset, MSL_STATUS:missileStatus, TSOffset:flatbuffers.Offset, AOU_RPT_TYPE:aouReportType, CONTAINMENT:number, TRK_CONF:number, TRK_QUAL:number, ANG_ELEV:number, SEN_MODEOffset:flatbuffers.Offset, INFO_SOURCEOffset:flatbuffers.Offset, BOOSTING:boolean, POLAR_SING_LOC_LAT:number, POLAR_SING_LOC_LON:number, EMG_IND:boolean, DROP_PT_IND:boolean, LAUNCH_TIMEOffset:flatbuffers.Offset, LAUNCH_LAT:number, LAUNCH_LON:number, AZ_CORR:number, BURNOUT_ALT:number, LAUNCH_AOU_TYPE:aouReportType, IMPACT_TIMEOffset:flatbuffers.Offset, IMPACT_LAT:number, IMPACT_LON:number, IMPACT_AOU_TYPE:aouReportType, VECTOR_START_TIMEOffset:flatbuffers.Offset, VECTOR_STEP_SIZE:number, VECTOR_COMPONENTS:number, VECTORSOffset:flatbuffers.Offset, AOU_RPTOffset:flatbuffers.Offset, LAUNCH_AOUOffset:flatbuffers.Offset, IMPACT_AOUOffset:flatbuffers.Offset):flatbuffers.Offset {
   MST.startMST(builder);
   MST.addId(builder, IDOffset);
   MST.addMsgType(builder, MSG_TYPEOffset);
   MST.addMsgSubType(builder, MSG_SUB_TYPEOffset);
   MST.addMsgCreateDate(builder, MSG_CREATE_DATEOffset);
-  MST.addEnvironment(builder, ENVIRONMENTOffset);
+  MST.addEnvironment(builder, ENVIRONMENT);
   MST.addObjType(builder, OBJ_TYPEOffset);
   MST.addObjTypeConf(builder, OBJ_TYPE_CONF);
   MST.addObjPlat(builder, OBJ_PLATOffset);
   MST.addObjIdent(builder, OBJ_IDENTOffset);
   MST.addSpaceAmp(builder, SPACE_AMPOffset);
+  MST.addSpaceAmpConf(builder, SPACE_AMP_CONF);
   MST.addObjAct(builder, OBJ_ACTOffset);
   MST.addSpaceSpecType(builder, SPACE_SPEC_TYPEOffset);
   MST.addAcftSubType(builder, ACFT_SUB_TYPEOffset);
@@ -735,9 +867,9 @@ static createMST(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, MSG_T
   MST.addMuidSrcTrk(builder, MUID_SRC_TRKOffset);
   MST.addMuidSrc(builder, MUID_SRCOffset);
   MST.addAlert(builder, ALERTOffset);
-  MST.addMslStatus(builder, MSL_STATUSOffset);
+  MST.addMslStatus(builder, MSL_STATUS);
   MST.addTs(builder, TSOffset);
-  MST.addAouRptType(builder, AOU_RPT_TYPEOffset);
+  MST.addAouRptType(builder, AOU_RPT_TYPE);
   MST.addContainment(builder, CONTAINMENT);
   MST.addTrkConf(builder, TRK_CONF);
   MST.addTrkQual(builder, TRK_QUAL);
@@ -749,17 +881,16 @@ static createMST(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, MSG_T
   MST.addPolarSingLocLon(builder, POLAR_SING_LOC_LON);
   MST.addEmgInd(builder, EMG_IND);
   MST.addDropPtInd(builder, DROP_PT_IND);
-  MST.addSpaceAmpConf(builder, SPACE_AMP_CONF);
   MST.addLaunchTime(builder, LAUNCH_TIMEOffset);
   MST.addLaunchLat(builder, LAUNCH_LAT);
   MST.addLaunchLon(builder, LAUNCH_LON);
   MST.addAzCorr(builder, AZ_CORR);
   MST.addBurnoutAlt(builder, BURNOUT_ALT);
-  MST.addLaunchAouType(builder, LAUNCH_AOU_TYPEOffset);
+  MST.addLaunchAouType(builder, LAUNCH_AOU_TYPE);
   MST.addImpactTime(builder, IMPACT_TIMEOffset);
   MST.addImpactLat(builder, IMPACT_LAT);
   MST.addImpactLon(builder, IMPACT_LON);
-  MST.addImpactAouType(builder, IMPACT_AOU_TYPEOffset);
+  MST.addImpactAouType(builder, IMPACT_AOU_TYPE);
   MST.addVectorStartTime(builder, VECTOR_START_TIMEOffset);
   MST.addVectorStepSize(builder, VECTOR_STEP_SIZE);
   MST.addVectorComponents(builder, VECTOR_COMPONENTS);
@@ -782,6 +913,7 @@ unpack(): MSTT {
     this.OBJ_PLAT(),
     this.OBJ_IDENT(),
     this.SPACE_AMP(),
+    this.SPACE_AMP_CONF(),
     this.OBJ_ACT(),
     this.SPACE_SPEC_TYPE(),
     this.ACFT_SUB_TYPE(),
@@ -807,7 +939,6 @@ unpack(): MSTT {
     this.POLAR_SING_LOC_LON(),
     this.EMG_IND(),
     this.DROP_PT_IND(),
-    this.SPACE_AMP_CONF(),
     this.LAUNCH_TIME(),
     this.LAUNCH_LAT(),
     this.LAUNCH_LON(),
@@ -840,6 +971,7 @@ unpackTo(_o: MSTT): void {
   _o.OBJ_PLAT = this.OBJ_PLAT();
   _o.OBJ_IDENT = this.OBJ_IDENT();
   _o.SPACE_AMP = this.SPACE_AMP();
+  _o.SPACE_AMP_CONF = this.SPACE_AMP_CONF();
   _o.OBJ_ACT = this.OBJ_ACT();
   _o.SPACE_SPEC_TYPE = this.SPACE_SPEC_TYPE();
   _o.ACFT_SUB_TYPE = this.ACFT_SUB_TYPE();
@@ -865,7 +997,6 @@ unpackTo(_o: MSTT): void {
   _o.POLAR_SING_LOC_LON = this.POLAR_SING_LOC_LON();
   _o.EMG_IND = this.EMG_IND();
   _o.DROP_PT_IND = this.DROP_PT_IND();
-  _o.SPACE_AMP_CONF = this.SPACE_AMP_CONF();
   _o.LAUNCH_TIME = this.LAUNCH_TIME();
   _o.LAUNCH_LAT = this.LAUNCH_LAT();
   _o.LAUNCH_LON = this.LAUNCH_LON();
@@ -892,12 +1023,13 @@ constructor(
   public MSG_TYPE: string|Uint8Array|null = null,
   public MSG_SUB_TYPE: string|Uint8Array|null = null,
   public MSG_CREATE_DATE: string|Uint8Array|null = null,
-  public ENVIRONMENT: string|Uint8Array|null = null,
+  public ENVIRONMENT: missileEnvironment = missileEnvironment.SPACE,
   public OBJ_TYPE: string|Uint8Array|null = null,
   public OBJ_TYPE_CONF: number = 0,
   public OBJ_PLAT: string|Uint8Array|null = null,
   public OBJ_IDENT: string|Uint8Array|null = null,
   public SPACE_AMP: string|Uint8Array|null = null,
+  public SPACE_AMP_CONF: number = 0,
   public OBJ_ACT: string|Uint8Array|null = null,
   public SPACE_SPEC_TYPE: string|Uint8Array|null = null,
   public ACFT_SUB_TYPE: string|Uint8Array|null = null,
@@ -909,9 +1041,9 @@ constructor(
   public MUID_SRC_TRK: string|Uint8Array|null = null,
   public MUID_SRC: string|Uint8Array|null = null,
   public ALERT: string|Uint8Array|null = null,
-  public MSL_STATUS: string|Uint8Array|null = null,
+  public MSL_STATUS: missileStatus = missileStatus.BOOSTING,
   public TS: string|Uint8Array|null = null,
-  public AOU_RPT_TYPE: string|Uint8Array|null = null,
+  public AOU_RPT_TYPE: aouReportType = aouReportType.CIRCULAR,
   public CONTAINMENT: number = 0.0,
   public TRK_CONF: number = 0.0,
   public TRK_QUAL: number = 0,
@@ -923,17 +1055,16 @@ constructor(
   public POLAR_SING_LOC_LON: number = 0.0,
   public EMG_IND: boolean = false,
   public DROP_PT_IND: boolean = false,
-  public SPACE_AMP_CONF: number = 0,
   public LAUNCH_TIME: string|Uint8Array|null = null,
   public LAUNCH_LAT: number = 0.0,
   public LAUNCH_LON: number = 0.0,
   public AZ_CORR: number = 0.0,
   public BURNOUT_ALT: number = 0.0,
-  public LAUNCH_AOU_TYPE: string|Uint8Array|null = null,
+  public LAUNCH_AOU_TYPE: aouReportType = aouReportType.CIRCULAR,
   public IMPACT_TIME: string|Uint8Array|null = null,
   public IMPACT_LAT: number = 0.0,
   public IMPACT_LON: number = 0.0,
-  public IMPACT_AOU_TYPE: string|Uint8Array|null = null,
+  public IMPACT_AOU_TYPE: aouReportType = aouReportType.CIRCULAR,
   public VECTOR_START_TIME: string|Uint8Array|null = null,
   public VECTOR_STEP_SIZE: number = 0.0,
   public VECTOR_COMPONENTS: number = 6,
@@ -949,7 +1080,6 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const MSG_TYPE = (this.MSG_TYPE !== null ? builder.createString(this.MSG_TYPE!) : 0);
   const MSG_SUB_TYPE = (this.MSG_SUB_TYPE !== null ? builder.createString(this.MSG_SUB_TYPE!) : 0);
   const MSG_CREATE_DATE = (this.MSG_CREATE_DATE !== null ? builder.createString(this.MSG_CREATE_DATE!) : 0);
-  const ENVIRONMENT = (this.ENVIRONMENT !== null ? builder.createString(this.ENVIRONMENT!) : 0);
   const OBJ_TYPE = (this.OBJ_TYPE !== null ? builder.createString(this.OBJ_TYPE!) : 0);
   const OBJ_PLAT = (this.OBJ_PLAT !== null ? builder.createString(this.OBJ_PLAT!) : 0);
   const OBJ_IDENT = (this.OBJ_IDENT !== null ? builder.createString(this.OBJ_IDENT!) : 0);
@@ -964,15 +1094,11 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const MUID_SRC_TRK = (this.MUID_SRC_TRK !== null ? builder.createString(this.MUID_SRC_TRK!) : 0);
   const MUID_SRC = (this.MUID_SRC !== null ? builder.createString(this.MUID_SRC!) : 0);
   const ALERT = (this.ALERT !== null ? builder.createString(this.ALERT!) : 0);
-  const MSL_STATUS = (this.MSL_STATUS !== null ? builder.createString(this.MSL_STATUS!) : 0);
   const TS = (this.TS !== null ? builder.createString(this.TS!) : 0);
-  const AOU_RPT_TYPE = (this.AOU_RPT_TYPE !== null ? builder.createString(this.AOU_RPT_TYPE!) : 0);
   const SEN_MODE = (this.SEN_MODE !== null ? builder.createString(this.SEN_MODE!) : 0);
   const INFO_SOURCE = (this.INFO_SOURCE !== null ? builder.createString(this.INFO_SOURCE!) : 0);
   const LAUNCH_TIME = (this.LAUNCH_TIME !== null ? builder.createString(this.LAUNCH_TIME!) : 0);
-  const LAUNCH_AOU_TYPE = (this.LAUNCH_AOU_TYPE !== null ? builder.createString(this.LAUNCH_AOU_TYPE!) : 0);
   const IMPACT_TIME = (this.IMPACT_TIME !== null ? builder.createString(this.IMPACT_TIME!) : 0);
-  const IMPACT_AOU_TYPE = (this.IMPACT_AOU_TYPE !== null ? builder.createString(this.IMPACT_AOU_TYPE!) : 0);
   const VECTOR_START_TIME = (this.VECTOR_START_TIME !== null ? builder.createString(this.VECTOR_START_TIME!) : 0);
   const VECTORS = MST.createVectorsVector(builder, this.VECTORS);
   const AOU_RPT = MST.createAouRptVector(builder, this.AOU_RPT);
@@ -984,12 +1110,13 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     MSG_TYPE,
     MSG_SUB_TYPE,
     MSG_CREATE_DATE,
-    ENVIRONMENT,
+    this.ENVIRONMENT,
     OBJ_TYPE,
     this.OBJ_TYPE_CONF,
     OBJ_PLAT,
     OBJ_IDENT,
     SPACE_AMP,
+    this.SPACE_AMP_CONF,
     OBJ_ACT,
     SPACE_SPEC_TYPE,
     ACFT_SUB_TYPE,
@@ -1001,9 +1128,9 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     MUID_SRC_TRK,
     MUID_SRC,
     ALERT,
-    MSL_STATUS,
+    this.MSL_STATUS,
     TS,
-    AOU_RPT_TYPE,
+    this.AOU_RPT_TYPE,
     this.CONTAINMENT,
     this.TRK_CONF,
     this.TRK_QUAL,
@@ -1015,17 +1142,16 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.POLAR_SING_LOC_LON,
     this.EMG_IND,
     this.DROP_PT_IND,
-    this.SPACE_AMP_CONF,
     LAUNCH_TIME,
     this.LAUNCH_LAT,
     this.LAUNCH_LON,
     this.AZ_CORR,
     this.BURNOUT_ALT,
-    LAUNCH_AOU_TYPE,
+    this.LAUNCH_AOU_TYPE,
     IMPACT_TIME,
     this.IMPACT_LAT,
     this.IMPACT_LON,
-    IMPACT_AOU_TYPE,
+    this.IMPACT_AOU_TYPE,
     VECTOR_START_TIME,
     this.VECTOR_STEP_SIZE,
     this.VECTOR_COMPONENTS,

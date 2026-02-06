@@ -16,66 +16,100 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct SWR;
 struct SWRBuilder;
 
-/// Short-Wave Infrared
+/// Short-Wave Infrared Observation
 struct SWR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef SWRBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
     VT_ON_ORBIT = 6,
-    VT_TS = 8,
-    VT_SOLAR_PHASE_ANGLE = 10,
-    VT_LAT = 12,
-    VT_LON = 14,
-    VT_LOCATION_NAME = 16,
-    VT_BAD_WAVE = 18,
-    VT_WAVELENGTHS = 20,
-    VT_ABS_FLUXES = 22,
-    VT_RATIO_WAVELENGTHS = 24,
-    VT_FLUX_RATIOS = 26,
-    VT_ORIG_OBJECT_ID = 28,
-    VT_SAT_NO = 30
+    VT_ORIG_OBJECT_ID = 8,
+    VT_SAT_NO = 10,
+    VT_TS = 12,
+    VT_SOLAR_PHASE_ANGLE = 14,
+    VT_LAT = 16,
+    VT_LON = 18,
+    VT_LOCATION_NAME = 20,
+    VT_BAD_WAVE = 22,
+    VT_WAVELENGTHS = 24,
+    VT_ABS_FLUXES = 26,
+    VT_RATIO_WAVELENGTHS = 28,
+    VT_FLUX_RATIOS = 30,
+    VT_TEMPERATURE = 32,
+    VT_SIGNAL_NOISE_RATIO = 34,
+    VT_INTEGRATION_TIME = 36,
+    VT_QUALITY = 38
   };
+  /// Unique identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
+  /// On-orbit reference
   const ::flatbuffers::String *ON_ORBIT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ON_ORBIT);
   }
-  const ::flatbuffers::String *TS() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TS);
-  }
-  double SOLAR_PHASE_ANGLE() const {
-    return GetField<double>(VT_SOLAR_PHASE_ANGLE, 0.0);
-  }
-  double LAT() const {
-    return GetField<double>(VT_LAT, 0.0);
-  }
-  double LON() const {
-    return GetField<double>(VT_LON, 0.0);
-  }
-  const ::flatbuffers::String *LOCATION_NAME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_LOCATION_NAME);
-  }
-  const ::flatbuffers::String *BAD_WAVE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_BAD_WAVE);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *WAVELENGTHS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_WAVELENGTHS);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *ABS_FLUXES() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_ABS_FLUXES);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *RATIO_WAVELENGTHS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_RATIO_WAVELENGTHS);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *FLUX_RATIOS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_FLUX_RATIOS);
-  }
+  /// International designator
   const ::flatbuffers::String *ORIG_OBJECT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIG_OBJECT_ID);
   }
-  int32_t SAT_NO() const {
-    return GetField<int32_t>(VT_SAT_NO, 0);
+  /// Satellite catalog number
+  uint32_t SAT_NO() const {
+    return GetField<uint32_t>(VT_SAT_NO, 0);
+  }
+  /// Observation timestamp (ISO 8601)
+  const ::flatbuffers::String *TS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TS);
+  }
+  /// Solar phase angle (degrees)
+  double SOLAR_PHASE_ANGLE() const {
+    return GetField<double>(VT_SOLAR_PHASE_ANGLE, 0.0);
+  }
+  /// Sub-observer latitude (degrees)
+  double LAT() const {
+    return GetField<double>(VT_LAT, 0.0);
+  }
+  /// Sub-observer longitude (degrees)
+  double LON() const {
+    return GetField<double>(VT_LON, 0.0);
+  }
+  /// Location name
+  const ::flatbuffers::String *LOCATION_NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LOCATION_NAME);
+  }
+  /// Bad wavelength flag or identifier
+  const ::flatbuffers::String *BAD_WAVE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_BAD_WAVE);
+  }
+  /// Measured wavelengths (micrometers)
+  const ::flatbuffers::Vector<double> *WAVELENGTHS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_WAVELENGTHS);
+  }
+  /// Absolute flux values (W/m^2/um)
+  const ::flatbuffers::Vector<double> *ABS_FLUXES() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_ABS_FLUXES);
+  }
+  /// Ratio reference wavelengths (micrometers)
+  const ::flatbuffers::Vector<double> *RATIO_WAVELENGTHS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_RATIO_WAVELENGTHS);
+  }
+  /// Flux ratios (normalized)
+  const ::flatbuffers::Vector<double> *FLUX_RATIOS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_FLUX_RATIOS);
+  }
+  /// Effective temperature (Kelvin)
+  double TEMPERATURE() const {
+    return GetField<double>(VT_TEMPERATURE, 0.0);
+  }
+  /// Signal-to-noise ratio
+  double SIGNAL_NOISE_RATIO() const {
+    return GetField<double>(VT_SIGNAL_NOISE_RATIO, 0.0);
+  }
+  /// Integration time (seconds)
+  double INTEGRATION_TIME() const {
+    return GetField<double>(VT_INTEGRATION_TIME, 0.0);
+  }
+  /// Data quality (0-9, 9=best)
+  uint8_t QUALITY() const {
+    return GetField<uint8_t>(VT_QUALITY, 0);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -83,6 +117,9 @@ struct SWR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(ID()) &&
            VerifyOffset(verifier, VT_ON_ORBIT) &&
            verifier.VerifyString(ON_ORBIT()) &&
+           VerifyOffset(verifier, VT_ORIG_OBJECT_ID) &&
+           verifier.VerifyString(ORIG_OBJECT_ID()) &&
+           VerifyField<uint32_t>(verifier, VT_SAT_NO, 4) &&
            VerifyOffset(verifier, VT_TS) &&
            verifier.VerifyString(TS()) &&
            VerifyField<double>(verifier, VT_SOLAR_PHASE_ANGLE, 8) &&
@@ -94,19 +131,16 @@ struct SWR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(BAD_WAVE()) &&
            VerifyOffset(verifier, VT_WAVELENGTHS) &&
            verifier.VerifyVector(WAVELENGTHS()) &&
-           verifier.VerifyVectorOfStrings(WAVELENGTHS()) &&
            VerifyOffset(verifier, VT_ABS_FLUXES) &&
            verifier.VerifyVector(ABS_FLUXES()) &&
-           verifier.VerifyVectorOfStrings(ABS_FLUXES()) &&
            VerifyOffset(verifier, VT_RATIO_WAVELENGTHS) &&
            verifier.VerifyVector(RATIO_WAVELENGTHS()) &&
-           verifier.VerifyVectorOfStrings(RATIO_WAVELENGTHS()) &&
            VerifyOffset(verifier, VT_FLUX_RATIOS) &&
            verifier.VerifyVector(FLUX_RATIOS()) &&
-           verifier.VerifyVectorOfStrings(FLUX_RATIOS()) &&
-           VerifyOffset(verifier, VT_ORIG_OBJECT_ID) &&
-           verifier.VerifyString(ORIG_OBJECT_ID()) &&
-           VerifyField<int32_t>(verifier, VT_SAT_NO, 4) &&
+           VerifyField<double>(verifier, VT_TEMPERATURE, 8) &&
+           VerifyField<double>(verifier, VT_SIGNAL_NOISE_RATIO, 8) &&
+           VerifyField<double>(verifier, VT_INTEGRATION_TIME, 8) &&
+           VerifyField<uint8_t>(verifier, VT_QUALITY, 1) &&
            verifier.EndTable();
   }
 };
@@ -120,6 +154,12 @@ struct SWRBuilder {
   }
   void add_ON_ORBIT(::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT) {
     fbb_.AddOffset(SWR::VT_ON_ORBIT, ON_ORBIT);
+  }
+  void add_ORIG_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID) {
+    fbb_.AddOffset(SWR::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
+  }
+  void add_SAT_NO(uint32_t SAT_NO) {
+    fbb_.AddElement<uint32_t>(SWR::VT_SAT_NO, SAT_NO, 0);
   }
   void add_TS(::flatbuffers::Offset<::flatbuffers::String> TS) {
     fbb_.AddOffset(SWR::VT_TS, TS);
@@ -139,23 +179,29 @@ struct SWRBuilder {
   void add_BAD_WAVE(::flatbuffers::Offset<::flatbuffers::String> BAD_WAVE) {
     fbb_.AddOffset(SWR::VT_BAD_WAVE, BAD_WAVE);
   }
-  void add_WAVELENGTHS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> WAVELENGTHS) {
+  void add_WAVELENGTHS(::flatbuffers::Offset<::flatbuffers::Vector<double>> WAVELENGTHS) {
     fbb_.AddOffset(SWR::VT_WAVELENGTHS, WAVELENGTHS);
   }
-  void add_ABS_FLUXES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ABS_FLUXES) {
+  void add_ABS_FLUXES(::flatbuffers::Offset<::flatbuffers::Vector<double>> ABS_FLUXES) {
     fbb_.AddOffset(SWR::VT_ABS_FLUXES, ABS_FLUXES);
   }
-  void add_RATIO_WAVELENGTHS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> RATIO_WAVELENGTHS) {
+  void add_RATIO_WAVELENGTHS(::flatbuffers::Offset<::flatbuffers::Vector<double>> RATIO_WAVELENGTHS) {
     fbb_.AddOffset(SWR::VT_RATIO_WAVELENGTHS, RATIO_WAVELENGTHS);
   }
-  void add_FLUX_RATIOS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> FLUX_RATIOS) {
+  void add_FLUX_RATIOS(::flatbuffers::Offset<::flatbuffers::Vector<double>> FLUX_RATIOS) {
     fbb_.AddOffset(SWR::VT_FLUX_RATIOS, FLUX_RATIOS);
   }
-  void add_ORIG_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID) {
-    fbb_.AddOffset(SWR::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
+  void add_TEMPERATURE(double TEMPERATURE) {
+    fbb_.AddElement<double>(SWR::VT_TEMPERATURE, TEMPERATURE, 0.0);
   }
-  void add_SAT_NO(int32_t SAT_NO) {
-    fbb_.AddElement<int32_t>(SWR::VT_SAT_NO, SAT_NO, 0);
+  void add_SIGNAL_NOISE_RATIO(double SIGNAL_NOISE_RATIO) {
+    fbb_.AddElement<double>(SWR::VT_SIGNAL_NOISE_RATIO, SIGNAL_NOISE_RATIO, 0.0);
+  }
+  void add_INTEGRATION_TIME(double INTEGRATION_TIME) {
+    fbb_.AddElement<double>(SWR::VT_INTEGRATION_TIME, INTEGRATION_TIME, 0.0);
+  }
+  void add_QUALITY(uint8_t QUALITY) {
+    fbb_.AddElement<uint8_t>(SWR::VT_QUALITY, QUALITY, 0);
   }
   explicit SWRBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -172,24 +218,29 @@ inline ::flatbuffers::Offset<SWR> CreateSWR(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID = 0,
+    uint32_t SAT_NO = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TS = 0,
     double SOLAR_PHASE_ANGLE = 0.0,
     double LAT = 0.0,
     double LON = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> LOCATION_NAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> BAD_WAVE = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> WAVELENGTHS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> ABS_FLUXES = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> RATIO_WAVELENGTHS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> FLUX_RATIOS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID = 0,
-    int32_t SAT_NO = 0) {
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> WAVELENGTHS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> ABS_FLUXES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> RATIO_WAVELENGTHS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> FLUX_RATIOS = 0,
+    double TEMPERATURE = 0.0,
+    double SIGNAL_NOISE_RATIO = 0.0,
+    double INTEGRATION_TIME = 0.0,
+    uint8_t QUALITY = 0) {
   SWRBuilder builder_(_fbb);
+  builder_.add_INTEGRATION_TIME(INTEGRATION_TIME);
+  builder_.add_SIGNAL_NOISE_RATIO(SIGNAL_NOISE_RATIO);
+  builder_.add_TEMPERATURE(TEMPERATURE);
   builder_.add_LON(LON);
   builder_.add_LAT(LAT);
   builder_.add_SOLAR_PHASE_ANGLE(SOLAR_PHASE_ANGLE);
-  builder_.add_SAT_NO(SAT_NO);
-  builder_.add_ORIG_OBJECT_ID(ORIG_OBJECT_ID);
   builder_.add_FLUX_RATIOS(FLUX_RATIOS);
   builder_.add_RATIO_WAVELENGTHS(RATIO_WAVELENGTHS);
   builder_.add_ABS_FLUXES(ABS_FLUXES);
@@ -197,8 +248,11 @@ inline ::flatbuffers::Offset<SWR> CreateSWR(
   builder_.add_BAD_WAVE(BAD_WAVE);
   builder_.add_LOCATION_NAME(LOCATION_NAME);
   builder_.add_TS(TS);
+  builder_.add_SAT_NO(SAT_NO);
+  builder_.add_ORIG_OBJECT_ID(ORIG_OBJECT_ID);
   builder_.add_ON_ORBIT(ON_ORBIT);
   builder_.add_ID(ID);
+  builder_.add_QUALITY(QUALITY);
   return builder_.Finish();
 }
 
@@ -206,32 +260,38 @@ inline ::flatbuffers::Offset<SWR> CreateSWRDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *ID = nullptr,
     const char *ON_ORBIT = nullptr,
+    const char *ORIG_OBJECT_ID = nullptr,
+    uint32_t SAT_NO = 0,
     const char *TS = nullptr,
     double SOLAR_PHASE_ANGLE = 0.0,
     double LAT = 0.0,
     double LON = 0.0,
     const char *LOCATION_NAME = nullptr,
     const char *BAD_WAVE = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *WAVELENGTHS = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *ABS_FLUXES = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *RATIO_WAVELENGTHS = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *FLUX_RATIOS = nullptr,
-    const char *ORIG_OBJECT_ID = nullptr,
-    int32_t SAT_NO = 0) {
+    const std::vector<double> *WAVELENGTHS = nullptr,
+    const std::vector<double> *ABS_FLUXES = nullptr,
+    const std::vector<double> *RATIO_WAVELENGTHS = nullptr,
+    const std::vector<double> *FLUX_RATIOS = nullptr,
+    double TEMPERATURE = 0.0,
+    double SIGNAL_NOISE_RATIO = 0.0,
+    double INTEGRATION_TIME = 0.0,
+    uint8_t QUALITY = 0) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto ON_ORBIT__ = ON_ORBIT ? _fbb.CreateString(ON_ORBIT) : 0;
+  auto ORIG_OBJECT_ID__ = ORIG_OBJECT_ID ? _fbb.CreateString(ORIG_OBJECT_ID) : 0;
   auto TS__ = TS ? _fbb.CreateString(TS) : 0;
   auto LOCATION_NAME__ = LOCATION_NAME ? _fbb.CreateString(LOCATION_NAME) : 0;
   auto BAD_WAVE__ = BAD_WAVE ? _fbb.CreateString(BAD_WAVE) : 0;
-  auto WAVELENGTHS__ = WAVELENGTHS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*WAVELENGTHS) : 0;
-  auto ABS_FLUXES__ = ABS_FLUXES ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*ABS_FLUXES) : 0;
-  auto RATIO_WAVELENGTHS__ = RATIO_WAVELENGTHS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*RATIO_WAVELENGTHS) : 0;
-  auto FLUX_RATIOS__ = FLUX_RATIOS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*FLUX_RATIOS) : 0;
-  auto ORIG_OBJECT_ID__ = ORIG_OBJECT_ID ? _fbb.CreateString(ORIG_OBJECT_ID) : 0;
+  auto WAVELENGTHS__ = WAVELENGTHS ? _fbb.CreateVector<double>(*WAVELENGTHS) : 0;
+  auto ABS_FLUXES__ = ABS_FLUXES ? _fbb.CreateVector<double>(*ABS_FLUXES) : 0;
+  auto RATIO_WAVELENGTHS__ = RATIO_WAVELENGTHS ? _fbb.CreateVector<double>(*RATIO_WAVELENGTHS) : 0;
+  auto FLUX_RATIOS__ = FLUX_RATIOS ? _fbb.CreateVector<double>(*FLUX_RATIOS) : 0;
   return CreateSWR(
       _fbb,
       ID__,
       ON_ORBIT__,
+      ORIG_OBJECT_ID__,
+      SAT_NO,
       TS__,
       SOLAR_PHASE_ANGLE,
       LAT,
@@ -242,8 +302,10 @@ inline ::flatbuffers::Offset<SWR> CreateSWRDirect(
       ABS_FLUXES__,
       RATIO_WAVELENGTHS__,
       FLUX_RATIOS__,
-      ORIG_OBJECT_ID__,
-      SAT_NO);
+      TEMPERATURE,
+      SIGNAL_NOISE_RATIO,
+      INTEGRATION_TIME,
+      QUALITY);
 }
 
 inline const SWR *GetSWR(const void *buf) {

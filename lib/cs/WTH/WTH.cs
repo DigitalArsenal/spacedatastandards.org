@@ -19,6 +19,7 @@ public struct WTH : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public WTH __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Unique identifier
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,6 +27,7 @@ public struct WTH : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
+  /// Sensor identifier
   public string ID_SENSOR { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetID_SENSORBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -33,6 +35,7 @@ public struct WTH : IFlatbufferObject
   public ArraySegment<byte>? GetID_SENSORBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetID_SENSORArray() { return __p.__vector_as_array<byte>(6); }
+  /// Original sensor identifier
   public string ORIG_SENSOR_ID { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetORIG_SENSOR_IDBytes() { return __p.__vector_as_span<byte>(8, 1); }
@@ -40,6 +43,7 @@ public struct WTH : IFlatbufferObject
   public ArraySegment<byte>? GetORIG_SENSOR_IDBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetORIG_SENSOR_IDArray() { return __p.__vector_as_array<byte>(8); }
+  /// Observation time (ISO 8601)
   public string OB_TIME { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetOB_TIMEBytes() { return __p.__vector_as_span<byte>(10, 1); }
@@ -47,52 +51,146 @@ public struct WTH : IFlatbufferObject
   public ArraySegment<byte>? GetOB_TIMEBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
   public byte[] GetOB_TIMEArray() { return __p.__vector_as_array<byte>(10); }
-  public string SIG_PWRS(int j) { int o = __p.__offset(12); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int SIG_PWRSLength { get { int o = __p.__offset(12); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string NOISE_LVLS(int j) { int o = __p.__offset(14); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int NOISE_LVLSLength { get { int o = __p.__offset(14); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string SPEC_WIDTHS(int j) { int o = __p.__offset(16); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int SPEC_WIDTHSLength { get { int o = __p.__offset(16); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string FIRST_GUESS_AVGS(int j) { int o = __p.__offset(18); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int FIRST_GUESS_AVGSLength { get { int o = __p.__offset(18); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public int QC_VALUE { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public string FILE_CREATION { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// File creation time (ISO 8601)
+  public string FILE_CREATION { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetFILE_CREATIONBytes() { return __p.__vector_as_span<byte>(22, 1); }
+  public Span<byte> GetFILE_CREATIONBytes() { return __p.__vector_as_span<byte>(12, 1); }
 #else
-  public ArraySegment<byte>? GetFILE_CREATIONBytes() { return __p.__vector_as_arraysegment(22); }
+  public ArraySegment<byte>? GetFILE_CREATIONBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
-  public byte[] GetFILE_CREATIONArray() { return __p.__vector_as_array<byte>(22); }
-  public double TERM_ALT { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double AVG_TX_PWR { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double AVG_REF_PWR { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public int SECTOR_NUM { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int NUM_ELEMENTS { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public string TD_AVG_SAMPLE_NUMS(int j) { int o = __p.__offset(34); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int TD_AVG_SAMPLE_NUMSLength { get { int o = __p.__offset(34); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public int CHECKSUM { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public string CO_INTEGS(int j) { int o = __p.__offset(38); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public byte[] GetFILE_CREATIONArray() { return __p.__vector_as_array<byte>(12); }
+  /// Quality control value
+  public byte QC_VALUE { get { int o = __p.__offset(14); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  /// Terminal altitude (km)
+  public double TERM_ALT { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Average transmit power (dBm)
+  public double AVG_TX_PWR { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Average reflected power (dBm)
+  public double AVG_REF_PWR { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sector number
+  public ushort SECTOR_NUM { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  /// Number of data elements
+  public ushort NUM_ELEMENTS { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  /// Checksum
+  public uint CHECKSUM { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Signal power values (dBm)
+  public double SIG_PWRS(int j) { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int SIG_PWRSLength { get { int o = __p.__offset(28); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetSIG_PWRSBytes() { return __p.__vector_as_span<double>(28, 8); }
+#else
+  public ArraySegment<byte>? GetSIG_PWRSBytes() { return __p.__vector_as_arraysegment(28); }
+#endif
+  public double[] GetSIG_PWRSArray() { return __p.__vector_as_array<double>(28); }
+  /// Noise level values (dBm)
+  public double NOISE_LVLS(int j) { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int NOISE_LVLSLength { get { int o = __p.__offset(30); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetNOISE_LVLSBytes() { return __p.__vector_as_span<double>(30, 8); }
+#else
+  public ArraySegment<byte>? GetNOISE_LVLSBytes() { return __p.__vector_as_arraysegment(30); }
+#endif
+  public double[] GetNOISE_LVLSArray() { return __p.__vector_as_array<double>(30); }
+  /// Spectral width values (m/s)
+  public double SPEC_WIDTHS(int j) { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int SPEC_WIDTHSLength { get { int o = __p.__offset(32); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetSPEC_WIDTHSBytes() { return __p.__vector_as_span<double>(32, 8); }
+#else
+  public ArraySegment<byte>? GetSPEC_WIDTHSBytes() { return __p.__vector_as_arraysegment(32); }
+#endif
+  public double[] GetSPEC_WIDTHSArray() { return __p.__vector_as_array<double>(32); }
+  /// First guess average values
+  public double FIRST_GUESS_AVGS(int j) { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int FIRST_GUESS_AVGSLength { get { int o = __p.__offset(34); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetFIRST_GUESS_AVGSBytes() { return __p.__vector_as_span<double>(34, 8); }
+#else
+  public ArraySegment<byte>? GetFIRST_GUESS_AVGSBytes() { return __p.__vector_as_arraysegment(34); }
+#endif
+  public double[] GetFIRST_GUESS_AVGSArray() { return __p.__vector_as_array<double>(34); }
+  /// Time domain average sample numbers
+  public double TD_AVG_SAMPLE_NUMS(int j) { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int TD_AVG_SAMPLE_NUMSLength { get { int o = __p.__offset(36); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetTD_AVG_SAMPLE_NUMSBytes() { return __p.__vector_as_span<double>(36, 8); }
+#else
+  public ArraySegment<byte>? GetTD_AVG_SAMPLE_NUMSBytes() { return __p.__vector_as_arraysegment(36); }
+#endif
+  public double[] GetTD_AVG_SAMPLE_NUMSArray() { return __p.__vector_as_array<double>(36); }
+  /// Co-integration values
+  public double CO_INTEGS(int j) { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
   public int CO_INTEGSLength { get { int o = __p.__offset(38); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string SPEC_AVGS(int j) { int o = __p.__offset(40); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+#if ENABLE_SPAN_T
+  public Span<double> GetCO_INTEGSBytes() { return __p.__vector_as_span<double>(38, 8); }
+#else
+  public ArraySegment<byte>? GetCO_INTEGSBytes() { return __p.__vector_as_arraysegment(38); }
+#endif
+  public double[] GetCO_INTEGSArray() { return __p.__vector_as_array<double>(38); }
+  /// Spectral average values
+  public double SPEC_AVGS(int j) { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
   public int SPEC_AVGSLength { get { int o = __p.__offset(40); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string INTERPULSE_PERIODS(int j) { int o = __p.__offset(42); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+#if ENABLE_SPAN_T
+  public Span<double> GetSPEC_AVGSBytes() { return __p.__vector_as_span<double>(40, 8); }
+#else
+  public ArraySegment<byte>? GetSPEC_AVGSBytes() { return __p.__vector_as_arraysegment(40); }
+#endif
+  public double[] GetSPEC_AVGSArray() { return __p.__vector_as_array<double>(40); }
+  /// Interpulse periods (microseconds)
+  public double INTERPULSE_PERIODS(int j) { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
   public int INTERPULSE_PERIODSLength { get { int o = __p.__offset(42); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string DOPP_VELS(int j) { int o = __p.__offset(44); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+#if ENABLE_SPAN_T
+  public Span<double> GetINTERPULSE_PERIODSBytes() { return __p.__vector_as_span<double>(42, 8); }
+#else
+  public ArraySegment<byte>? GetINTERPULSE_PERIODSBytes() { return __p.__vector_as_arraysegment(42); }
+#endif
+  public double[] GetINTERPULSE_PERIODSArray() { return __p.__vector_as_array<double>(42); }
+  /// Doppler velocities (m/s)
+  public double DOPP_VELS(int j) { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
   public int DOPP_VELSLength { get { int o = __p.__offset(44); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string CONS_RECS(int j) { int o = __p.__offset(46); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+#if ENABLE_SPAN_T
+  public Span<double> GetDOPP_VELSBytes() { return __p.__vector_as_span<double>(44, 8); }
+#else
+  public ArraySegment<byte>? GetDOPP_VELSBytes() { return __p.__vector_as_arraysegment(44); }
+#endif
+  public double[] GetDOPP_VELSArray() { return __p.__vector_as_array<double>(44); }
+  /// Consecutive records count
+  public double CONS_RECS(int j) { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
   public int CONS_RECSLength { get { int o = __p.__offset(46); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string SNRS(int j) { int o = __p.__offset(48); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+#if ENABLE_SPAN_T
+  public Span<double> GetCONS_RECSBytes() { return __p.__vector_as_span<double>(46, 8); }
+#else
+  public ArraySegment<byte>? GetCONS_RECSBytes() { return __p.__vector_as_arraysegment(46); }
+#endif
+  public double[] GetCONS_RECSArray() { return __p.__vector_as_array<double>(46); }
+  /// Signal-to-noise ratios (dB)
+  public double SNRS(int j) { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
   public int SNRSLength { get { int o = __p.__offset(48); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetSNRSBytes() { return __p.__vector_as_span<double>(48, 8); }
+#else
+  public ArraySegment<byte>? GetSNRSBytes() { return __p.__vector_as_arraysegment(48); }
+#endif
+  public double[] GetSNRSArray() { return __p.__vector_as_array<double>(48); }
+  /// Signal strength (dBm)
   public double SIG_STRENGTH { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Error ellipse semi-major axis (km)
   public double SEMI_MAJOR_AXIS { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Error ellipse semi-minor axis (km)
   public double SEMI_MINOR_AXIS { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Error ellipse orientation angle (degrees)
   public double ANGLE_ORIENTATION { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public int LIGHT_EVENT_NUM { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  /// Lightning event number
+  public uint LIGHT_EVENT_NUM { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Lightning detection sensor identifiers
   public string LIGHT_DET_SENSORS(int j) { int o = __p.__offset(60); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int LIGHT_DET_SENSORSLength { get { int o = __p.__offset(60); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Position confidence (0-1)
   public double POS_CONFIDENCE { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Source types
   public string SRC_TYPS(int j) { int o = __p.__offset(64); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int SRC_TYPSLength { get { int o = __p.__offset(64); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Source identifiers
   public string SRC_IDS(int j) { int o = __p.__offset(66); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int SRC_IDSLength { get { int o = __p.__offset(66); return o != 0 ? __p.__vector_len(o) : 0; } }
 
@@ -101,19 +199,19 @@ public struct WTH : IFlatbufferObject
       StringOffset ID_SENSOROffset = default(StringOffset),
       StringOffset ORIG_SENSOR_IDOffset = default(StringOffset),
       StringOffset OB_TIMEOffset = default(StringOffset),
+      StringOffset FILE_CREATIONOffset = default(StringOffset),
+      byte QC_VALUE = 0,
+      double TERM_ALT = 0.0,
+      double AVG_TX_PWR = 0.0,
+      double AVG_REF_PWR = 0.0,
+      ushort SECTOR_NUM = 0,
+      ushort NUM_ELEMENTS = 0,
+      uint CHECKSUM = 0,
       VectorOffset SIG_PWRSOffset = default(VectorOffset),
       VectorOffset NOISE_LVLSOffset = default(VectorOffset),
       VectorOffset SPEC_WIDTHSOffset = default(VectorOffset),
       VectorOffset FIRST_GUESS_AVGSOffset = default(VectorOffset),
-      int QC_VALUE = 0,
-      StringOffset FILE_CREATIONOffset = default(StringOffset),
-      double TERM_ALT = 0.0,
-      double AVG_TX_PWR = 0.0,
-      double AVG_REF_PWR = 0.0,
-      int SECTOR_NUM = 0,
-      int NUM_ELEMENTS = 0,
       VectorOffset TD_AVG_SAMPLE_NUMSOffset = default(VectorOffset),
-      int CHECKSUM = 0,
       VectorOffset CO_INTEGSOffset = default(VectorOffset),
       VectorOffset SPEC_AVGSOffset = default(VectorOffset),
       VectorOffset INTERPULSE_PERIODSOffset = default(VectorOffset),
@@ -124,7 +222,7 @@ public struct WTH : IFlatbufferObject
       double SEMI_MAJOR_AXIS = 0.0,
       double SEMI_MINOR_AXIS = 0.0,
       double ANGLE_ORIENTATION = 0.0,
-      int LIGHT_EVENT_NUM = 0,
+      uint LIGHT_EVENT_NUM = 0,
       VectorOffset LIGHT_DET_SENSORSOffset = default(VectorOffset),
       double POS_CONFIDENCE = 0.0,
       VectorOffset SRC_TYPSOffset = default(VectorOffset),
@@ -148,20 +246,20 @@ public struct WTH : IFlatbufferObject
     WTH.AddINTERPULSE_PERIODS(builder, INTERPULSE_PERIODSOffset);
     WTH.AddSPEC_AVGS(builder, SPEC_AVGSOffset);
     WTH.AddCO_INTEGS(builder, CO_INTEGSOffset);
-    WTH.AddCHECKSUM(builder, CHECKSUM);
     WTH.AddTD_AVG_SAMPLE_NUMS(builder, TD_AVG_SAMPLE_NUMSOffset);
-    WTH.AddNUM_ELEMENTS(builder, NUM_ELEMENTS);
-    WTH.AddSECTOR_NUM(builder, SECTOR_NUM);
-    WTH.AddFILE_CREATION(builder, FILE_CREATIONOffset);
-    WTH.AddQC_VALUE(builder, QC_VALUE);
     WTH.AddFIRST_GUESS_AVGS(builder, FIRST_GUESS_AVGSOffset);
     WTH.AddSPEC_WIDTHS(builder, SPEC_WIDTHSOffset);
     WTH.AddNOISE_LVLS(builder, NOISE_LVLSOffset);
     WTH.AddSIG_PWRS(builder, SIG_PWRSOffset);
+    WTH.AddCHECKSUM(builder, CHECKSUM);
+    WTH.AddFILE_CREATION(builder, FILE_CREATIONOffset);
     WTH.AddOB_TIME(builder, OB_TIMEOffset);
     WTH.AddORIG_SENSOR_ID(builder, ORIG_SENSOR_IDOffset);
     WTH.AddID_SENSOR(builder, ID_SENSOROffset);
     WTH.AddID(builder, IDOffset);
+    WTH.AddNUM_ELEMENTS(builder, NUM_ELEMENTS);
+    WTH.AddSECTOR_NUM(builder, SECTOR_NUM);
+    WTH.AddQC_VALUE(builder, QC_VALUE);
     return WTH.EndWTH(builder);
   }
 
@@ -170,85 +268,85 @@ public struct WTH : IFlatbufferObject
   public static void AddID_SENSOR(FlatBufferBuilder builder, StringOffset ID_SENSOROffset) { builder.AddOffset(1, ID_SENSOROffset.Value, 0); }
   public static void AddORIG_SENSOR_ID(FlatBufferBuilder builder, StringOffset ORIG_SENSOR_IDOffset) { builder.AddOffset(2, ORIG_SENSOR_IDOffset.Value, 0); }
   public static void AddOB_TIME(FlatBufferBuilder builder, StringOffset OB_TIMEOffset) { builder.AddOffset(3, OB_TIMEOffset.Value, 0); }
-  public static void AddSIG_PWRS(FlatBufferBuilder builder, VectorOffset SIG_PWRSOffset) { builder.AddOffset(4, SIG_PWRSOffset.Value, 0); }
-  public static VectorOffset CreateSIG_PWRSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateSIG_PWRSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateSIG_PWRSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateSIG_PWRSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartSIG_PWRSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddNOISE_LVLS(FlatBufferBuilder builder, VectorOffset NOISE_LVLSOffset) { builder.AddOffset(5, NOISE_LVLSOffset.Value, 0); }
-  public static VectorOffset CreateNOISE_LVLSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateNOISE_LVLSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateNOISE_LVLSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateNOISE_LVLSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartNOISE_LVLSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddSPEC_WIDTHS(FlatBufferBuilder builder, VectorOffset SPEC_WIDTHSOffset) { builder.AddOffset(6, SPEC_WIDTHSOffset.Value, 0); }
-  public static VectorOffset CreateSPEC_WIDTHSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateSPEC_WIDTHSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateSPEC_WIDTHSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateSPEC_WIDTHSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartSPEC_WIDTHSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddFIRST_GUESS_AVGS(FlatBufferBuilder builder, VectorOffset FIRST_GUESS_AVGSOffset) { builder.AddOffset(7, FIRST_GUESS_AVGSOffset.Value, 0); }
-  public static VectorOffset CreateFIRST_GUESS_AVGSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateFIRST_GUESS_AVGSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateFIRST_GUESS_AVGSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateFIRST_GUESS_AVGSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartFIRST_GUESS_AVGSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddQC_VALUE(FlatBufferBuilder builder, int QC_VALUE) { builder.AddInt(8, QC_VALUE, 0); }
-  public static void AddFILE_CREATION(FlatBufferBuilder builder, StringOffset FILE_CREATIONOffset) { builder.AddOffset(9, FILE_CREATIONOffset.Value, 0); }
-  public static void AddTERM_ALT(FlatBufferBuilder builder, double TERM_ALT) { builder.AddDouble(10, TERM_ALT, 0.0); }
-  public static void AddAVG_TX_PWR(FlatBufferBuilder builder, double AVG_TX_PWR) { builder.AddDouble(11, AVG_TX_PWR, 0.0); }
-  public static void AddAVG_REF_PWR(FlatBufferBuilder builder, double AVG_REF_PWR) { builder.AddDouble(12, AVG_REF_PWR, 0.0); }
-  public static void AddSECTOR_NUM(FlatBufferBuilder builder, int SECTOR_NUM) { builder.AddInt(13, SECTOR_NUM, 0); }
-  public static void AddNUM_ELEMENTS(FlatBufferBuilder builder, int NUM_ELEMENTS) { builder.AddInt(14, NUM_ELEMENTS, 0); }
-  public static void AddTD_AVG_SAMPLE_NUMS(FlatBufferBuilder builder, VectorOffset TD_AVG_SAMPLE_NUMSOffset) { builder.AddOffset(15, TD_AVG_SAMPLE_NUMSOffset.Value, 0); }
-  public static VectorOffset CreateTD_AVG_SAMPLE_NUMSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateTD_AVG_SAMPLE_NUMSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateTD_AVG_SAMPLE_NUMSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateTD_AVG_SAMPLE_NUMSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartTD_AVG_SAMPLE_NUMSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddCHECKSUM(FlatBufferBuilder builder, int CHECKSUM) { builder.AddInt(16, CHECKSUM, 0); }
+  public static void AddFILE_CREATION(FlatBufferBuilder builder, StringOffset FILE_CREATIONOffset) { builder.AddOffset(4, FILE_CREATIONOffset.Value, 0); }
+  public static void AddQC_VALUE(FlatBufferBuilder builder, byte QC_VALUE) { builder.AddByte(5, QC_VALUE, 0); }
+  public static void AddTERM_ALT(FlatBufferBuilder builder, double TERM_ALT) { builder.AddDouble(6, TERM_ALT, 0.0); }
+  public static void AddAVG_TX_PWR(FlatBufferBuilder builder, double AVG_TX_PWR) { builder.AddDouble(7, AVG_TX_PWR, 0.0); }
+  public static void AddAVG_REF_PWR(FlatBufferBuilder builder, double AVG_REF_PWR) { builder.AddDouble(8, AVG_REF_PWR, 0.0); }
+  public static void AddSECTOR_NUM(FlatBufferBuilder builder, ushort SECTOR_NUM) { builder.AddUshort(9, SECTOR_NUM, 0); }
+  public static void AddNUM_ELEMENTS(FlatBufferBuilder builder, ushort NUM_ELEMENTS) { builder.AddUshort(10, NUM_ELEMENTS, 0); }
+  public static void AddCHECKSUM(FlatBufferBuilder builder, uint CHECKSUM) { builder.AddUint(11, CHECKSUM, 0); }
+  public static void AddSIG_PWRS(FlatBufferBuilder builder, VectorOffset SIG_PWRSOffset) { builder.AddOffset(12, SIG_PWRSOffset.Value, 0); }
+  public static VectorOffset CreateSIG_PWRSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateSIG_PWRSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSIG_PWRSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSIG_PWRSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSIG_PWRSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddNOISE_LVLS(FlatBufferBuilder builder, VectorOffset NOISE_LVLSOffset) { builder.AddOffset(13, NOISE_LVLSOffset.Value, 0); }
+  public static VectorOffset CreateNOISE_LVLSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateNOISE_LVLSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateNOISE_LVLSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateNOISE_LVLSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartNOISE_LVLSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddSPEC_WIDTHS(FlatBufferBuilder builder, VectorOffset SPEC_WIDTHSOffset) { builder.AddOffset(14, SPEC_WIDTHSOffset.Value, 0); }
+  public static VectorOffset CreateSPEC_WIDTHSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateSPEC_WIDTHSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSPEC_WIDTHSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSPEC_WIDTHSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSPEC_WIDTHSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddFIRST_GUESS_AVGS(FlatBufferBuilder builder, VectorOffset FIRST_GUESS_AVGSOffset) { builder.AddOffset(15, FIRST_GUESS_AVGSOffset.Value, 0); }
+  public static VectorOffset CreateFIRST_GUESS_AVGSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateFIRST_GUESS_AVGSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateFIRST_GUESS_AVGSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateFIRST_GUESS_AVGSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartFIRST_GUESS_AVGSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddTD_AVG_SAMPLE_NUMS(FlatBufferBuilder builder, VectorOffset TD_AVG_SAMPLE_NUMSOffset) { builder.AddOffset(16, TD_AVG_SAMPLE_NUMSOffset.Value, 0); }
+  public static VectorOffset CreateTD_AVG_SAMPLE_NUMSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateTD_AVG_SAMPLE_NUMSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTD_AVG_SAMPLE_NUMSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateTD_AVG_SAMPLE_NUMSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartTD_AVG_SAMPLE_NUMSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
   public static void AddCO_INTEGS(FlatBufferBuilder builder, VectorOffset CO_INTEGSOffset) { builder.AddOffset(17, CO_INTEGSOffset.Value, 0); }
-  public static VectorOffset CreateCO_INTEGSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateCO_INTEGSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateCO_INTEGSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateCO_INTEGSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartCO_INTEGSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static VectorOffset CreateCO_INTEGSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateCO_INTEGSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCO_INTEGSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCO_INTEGSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCO_INTEGSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
   public static void AddSPEC_AVGS(FlatBufferBuilder builder, VectorOffset SPEC_AVGSOffset) { builder.AddOffset(18, SPEC_AVGSOffset.Value, 0); }
-  public static VectorOffset CreateSPEC_AVGSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateSPEC_AVGSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateSPEC_AVGSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateSPEC_AVGSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartSPEC_AVGSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static VectorOffset CreateSPEC_AVGSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateSPEC_AVGSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSPEC_AVGSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSPEC_AVGSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSPEC_AVGSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
   public static void AddINTERPULSE_PERIODS(FlatBufferBuilder builder, VectorOffset INTERPULSE_PERIODSOffset) { builder.AddOffset(19, INTERPULSE_PERIODSOffset.Value, 0); }
-  public static VectorOffset CreateINTERPULSE_PERIODSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateINTERPULSE_PERIODSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateINTERPULSE_PERIODSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateINTERPULSE_PERIODSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartINTERPULSE_PERIODSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static VectorOffset CreateINTERPULSE_PERIODSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateINTERPULSE_PERIODSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateINTERPULSE_PERIODSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateINTERPULSE_PERIODSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartINTERPULSE_PERIODSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
   public static void AddDOPP_VELS(FlatBufferBuilder builder, VectorOffset DOPP_VELSOffset) { builder.AddOffset(20, DOPP_VELSOffset.Value, 0); }
-  public static VectorOffset CreateDOPP_VELSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateDOPP_VELSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateDOPP_VELSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateDOPP_VELSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartDOPP_VELSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static VectorOffset CreateDOPP_VELSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateDOPP_VELSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDOPP_VELSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateDOPP_VELSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartDOPP_VELSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
   public static void AddCONS_RECS(FlatBufferBuilder builder, VectorOffset CONS_RECSOffset) { builder.AddOffset(21, CONS_RECSOffset.Value, 0); }
-  public static VectorOffset CreateCONS_RECSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateCONS_RECSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateCONS_RECSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateCONS_RECSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartCONS_RECSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static VectorOffset CreateCONS_RECSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateCONS_RECSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCONS_RECSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCONS_RECSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCONS_RECSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
   public static void AddSNRS(FlatBufferBuilder builder, VectorOffset SNRSOffset) { builder.AddOffset(22, SNRSOffset.Value, 0); }
-  public static VectorOffset CreateSNRSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateSNRSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateSNRSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateSNRSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartSNRSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static VectorOffset CreateSNRSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateSNRSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSNRSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSNRSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSNRSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
   public static void AddSIG_STRENGTH(FlatBufferBuilder builder, double SIG_STRENGTH) { builder.AddDouble(23, SIG_STRENGTH, 0.0); }
   public static void AddSEMI_MAJOR_AXIS(FlatBufferBuilder builder, double SEMI_MAJOR_AXIS) { builder.AddDouble(24, SEMI_MAJOR_AXIS, 0.0); }
   public static void AddSEMI_MINOR_AXIS(FlatBufferBuilder builder, double SEMI_MINOR_AXIS) { builder.AddDouble(25, SEMI_MINOR_AXIS, 0.0); }
   public static void AddANGLE_ORIENTATION(FlatBufferBuilder builder, double ANGLE_ORIENTATION) { builder.AddDouble(26, ANGLE_ORIENTATION, 0.0); }
-  public static void AddLIGHT_EVENT_NUM(FlatBufferBuilder builder, int LIGHT_EVENT_NUM) { builder.AddInt(27, LIGHT_EVENT_NUM, 0); }
+  public static void AddLIGHT_EVENT_NUM(FlatBufferBuilder builder, uint LIGHT_EVENT_NUM) { builder.AddUint(27, LIGHT_EVENT_NUM, 0); }
   public static void AddLIGHT_DET_SENSORS(FlatBufferBuilder builder, VectorOffset LIGHT_DET_SENSORSOffset) { builder.AddOffset(28, LIGHT_DET_SENSORSOffset.Value, 0); }
   public static VectorOffset CreateLIGHT_DET_SENSORSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateLIGHT_DET_SENSORSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
@@ -284,35 +382,35 @@ public struct WTH : IFlatbufferObject
     _o.ID_SENSOR = this.ID_SENSOR;
     _o.ORIG_SENSOR_ID = this.ORIG_SENSOR_ID;
     _o.OB_TIME = this.OB_TIME;
-    _o.SIG_PWRS = new List<string>();
-    for (var _j = 0; _j < this.SIG_PWRSLength; ++_j) {_o.SIG_PWRS.Add(this.SIG_PWRS(_j));}
-    _o.NOISE_LVLS = new List<string>();
-    for (var _j = 0; _j < this.NOISE_LVLSLength; ++_j) {_o.NOISE_LVLS.Add(this.NOISE_LVLS(_j));}
-    _o.SPEC_WIDTHS = new List<string>();
-    for (var _j = 0; _j < this.SPEC_WIDTHSLength; ++_j) {_o.SPEC_WIDTHS.Add(this.SPEC_WIDTHS(_j));}
-    _o.FIRST_GUESS_AVGS = new List<string>();
-    for (var _j = 0; _j < this.FIRST_GUESS_AVGSLength; ++_j) {_o.FIRST_GUESS_AVGS.Add(this.FIRST_GUESS_AVGS(_j));}
-    _o.QC_VALUE = this.QC_VALUE;
     _o.FILE_CREATION = this.FILE_CREATION;
+    _o.QC_VALUE = this.QC_VALUE;
     _o.TERM_ALT = this.TERM_ALT;
     _o.AVG_TX_PWR = this.AVG_TX_PWR;
     _o.AVG_REF_PWR = this.AVG_REF_PWR;
     _o.SECTOR_NUM = this.SECTOR_NUM;
     _o.NUM_ELEMENTS = this.NUM_ELEMENTS;
-    _o.TD_AVG_SAMPLE_NUMS = new List<string>();
-    for (var _j = 0; _j < this.TD_AVG_SAMPLE_NUMSLength; ++_j) {_o.TD_AVG_SAMPLE_NUMS.Add(this.TD_AVG_SAMPLE_NUMS(_j));}
     _o.CHECKSUM = this.CHECKSUM;
-    _o.CO_INTEGS = new List<string>();
+    _o.SIG_PWRS = new List<double>();
+    for (var _j = 0; _j < this.SIG_PWRSLength; ++_j) {_o.SIG_PWRS.Add(this.SIG_PWRS(_j));}
+    _o.NOISE_LVLS = new List<double>();
+    for (var _j = 0; _j < this.NOISE_LVLSLength; ++_j) {_o.NOISE_LVLS.Add(this.NOISE_LVLS(_j));}
+    _o.SPEC_WIDTHS = new List<double>();
+    for (var _j = 0; _j < this.SPEC_WIDTHSLength; ++_j) {_o.SPEC_WIDTHS.Add(this.SPEC_WIDTHS(_j));}
+    _o.FIRST_GUESS_AVGS = new List<double>();
+    for (var _j = 0; _j < this.FIRST_GUESS_AVGSLength; ++_j) {_o.FIRST_GUESS_AVGS.Add(this.FIRST_GUESS_AVGS(_j));}
+    _o.TD_AVG_SAMPLE_NUMS = new List<double>();
+    for (var _j = 0; _j < this.TD_AVG_SAMPLE_NUMSLength; ++_j) {_o.TD_AVG_SAMPLE_NUMS.Add(this.TD_AVG_SAMPLE_NUMS(_j));}
+    _o.CO_INTEGS = new List<double>();
     for (var _j = 0; _j < this.CO_INTEGSLength; ++_j) {_o.CO_INTEGS.Add(this.CO_INTEGS(_j));}
-    _o.SPEC_AVGS = new List<string>();
+    _o.SPEC_AVGS = new List<double>();
     for (var _j = 0; _j < this.SPEC_AVGSLength; ++_j) {_o.SPEC_AVGS.Add(this.SPEC_AVGS(_j));}
-    _o.INTERPULSE_PERIODS = new List<string>();
+    _o.INTERPULSE_PERIODS = new List<double>();
     for (var _j = 0; _j < this.INTERPULSE_PERIODSLength; ++_j) {_o.INTERPULSE_PERIODS.Add(this.INTERPULSE_PERIODS(_j));}
-    _o.DOPP_VELS = new List<string>();
+    _o.DOPP_VELS = new List<double>();
     for (var _j = 0; _j < this.DOPP_VELSLength; ++_j) {_o.DOPP_VELS.Add(this.DOPP_VELS(_j));}
-    _o.CONS_RECS = new List<string>();
+    _o.CONS_RECS = new List<double>();
     for (var _j = 0; _j < this.CONS_RECSLength; ++_j) {_o.CONS_RECS.Add(this.CONS_RECS(_j));}
-    _o.SNRS = new List<string>();
+    _o.SNRS = new List<double>();
     for (var _j = 0; _j < this.SNRSLength; ++_j) {_o.SNRS.Add(this.SNRS(_j));}
     _o.SIG_STRENGTH = this.SIG_STRENGTH;
     _o.SEMI_MAJOR_AXIS = this.SEMI_MAJOR_AXIS;
@@ -333,71 +431,60 @@ public struct WTH : IFlatbufferObject
     var _ID_SENSOR = _o.ID_SENSOR == null ? default(StringOffset) : builder.CreateString(_o.ID_SENSOR);
     var _ORIG_SENSOR_ID = _o.ORIG_SENSOR_ID == null ? default(StringOffset) : builder.CreateString(_o.ORIG_SENSOR_ID);
     var _OB_TIME = _o.OB_TIME == null ? default(StringOffset) : builder.CreateString(_o.OB_TIME);
+    var _FILE_CREATION = _o.FILE_CREATION == null ? default(StringOffset) : builder.CreateString(_o.FILE_CREATION);
     var _SIG_PWRS = default(VectorOffset);
     if (_o.SIG_PWRS != null) {
-      var __SIG_PWRS = new StringOffset[_o.SIG_PWRS.Count];
-      for (var _j = 0; _j < __SIG_PWRS.Length; ++_j) { __SIG_PWRS[_j] = builder.CreateString(_o.SIG_PWRS[_j]); }
+      var __SIG_PWRS = _o.SIG_PWRS.ToArray();
       _SIG_PWRS = CreateSIG_PWRSVector(builder, __SIG_PWRS);
     }
     var _NOISE_LVLS = default(VectorOffset);
     if (_o.NOISE_LVLS != null) {
-      var __NOISE_LVLS = new StringOffset[_o.NOISE_LVLS.Count];
-      for (var _j = 0; _j < __NOISE_LVLS.Length; ++_j) { __NOISE_LVLS[_j] = builder.CreateString(_o.NOISE_LVLS[_j]); }
+      var __NOISE_LVLS = _o.NOISE_LVLS.ToArray();
       _NOISE_LVLS = CreateNOISE_LVLSVector(builder, __NOISE_LVLS);
     }
     var _SPEC_WIDTHS = default(VectorOffset);
     if (_o.SPEC_WIDTHS != null) {
-      var __SPEC_WIDTHS = new StringOffset[_o.SPEC_WIDTHS.Count];
-      for (var _j = 0; _j < __SPEC_WIDTHS.Length; ++_j) { __SPEC_WIDTHS[_j] = builder.CreateString(_o.SPEC_WIDTHS[_j]); }
+      var __SPEC_WIDTHS = _o.SPEC_WIDTHS.ToArray();
       _SPEC_WIDTHS = CreateSPEC_WIDTHSVector(builder, __SPEC_WIDTHS);
     }
     var _FIRST_GUESS_AVGS = default(VectorOffset);
     if (_o.FIRST_GUESS_AVGS != null) {
-      var __FIRST_GUESS_AVGS = new StringOffset[_o.FIRST_GUESS_AVGS.Count];
-      for (var _j = 0; _j < __FIRST_GUESS_AVGS.Length; ++_j) { __FIRST_GUESS_AVGS[_j] = builder.CreateString(_o.FIRST_GUESS_AVGS[_j]); }
+      var __FIRST_GUESS_AVGS = _o.FIRST_GUESS_AVGS.ToArray();
       _FIRST_GUESS_AVGS = CreateFIRST_GUESS_AVGSVector(builder, __FIRST_GUESS_AVGS);
     }
-    var _FILE_CREATION = _o.FILE_CREATION == null ? default(StringOffset) : builder.CreateString(_o.FILE_CREATION);
     var _TD_AVG_SAMPLE_NUMS = default(VectorOffset);
     if (_o.TD_AVG_SAMPLE_NUMS != null) {
-      var __TD_AVG_SAMPLE_NUMS = new StringOffset[_o.TD_AVG_SAMPLE_NUMS.Count];
-      for (var _j = 0; _j < __TD_AVG_SAMPLE_NUMS.Length; ++_j) { __TD_AVG_SAMPLE_NUMS[_j] = builder.CreateString(_o.TD_AVG_SAMPLE_NUMS[_j]); }
+      var __TD_AVG_SAMPLE_NUMS = _o.TD_AVG_SAMPLE_NUMS.ToArray();
       _TD_AVG_SAMPLE_NUMS = CreateTD_AVG_SAMPLE_NUMSVector(builder, __TD_AVG_SAMPLE_NUMS);
     }
     var _CO_INTEGS = default(VectorOffset);
     if (_o.CO_INTEGS != null) {
-      var __CO_INTEGS = new StringOffset[_o.CO_INTEGS.Count];
-      for (var _j = 0; _j < __CO_INTEGS.Length; ++_j) { __CO_INTEGS[_j] = builder.CreateString(_o.CO_INTEGS[_j]); }
+      var __CO_INTEGS = _o.CO_INTEGS.ToArray();
       _CO_INTEGS = CreateCO_INTEGSVector(builder, __CO_INTEGS);
     }
     var _SPEC_AVGS = default(VectorOffset);
     if (_o.SPEC_AVGS != null) {
-      var __SPEC_AVGS = new StringOffset[_o.SPEC_AVGS.Count];
-      for (var _j = 0; _j < __SPEC_AVGS.Length; ++_j) { __SPEC_AVGS[_j] = builder.CreateString(_o.SPEC_AVGS[_j]); }
+      var __SPEC_AVGS = _o.SPEC_AVGS.ToArray();
       _SPEC_AVGS = CreateSPEC_AVGSVector(builder, __SPEC_AVGS);
     }
     var _INTERPULSE_PERIODS = default(VectorOffset);
     if (_o.INTERPULSE_PERIODS != null) {
-      var __INTERPULSE_PERIODS = new StringOffset[_o.INTERPULSE_PERIODS.Count];
-      for (var _j = 0; _j < __INTERPULSE_PERIODS.Length; ++_j) { __INTERPULSE_PERIODS[_j] = builder.CreateString(_o.INTERPULSE_PERIODS[_j]); }
+      var __INTERPULSE_PERIODS = _o.INTERPULSE_PERIODS.ToArray();
       _INTERPULSE_PERIODS = CreateINTERPULSE_PERIODSVector(builder, __INTERPULSE_PERIODS);
     }
     var _DOPP_VELS = default(VectorOffset);
     if (_o.DOPP_VELS != null) {
-      var __DOPP_VELS = new StringOffset[_o.DOPP_VELS.Count];
-      for (var _j = 0; _j < __DOPP_VELS.Length; ++_j) { __DOPP_VELS[_j] = builder.CreateString(_o.DOPP_VELS[_j]); }
+      var __DOPP_VELS = _o.DOPP_VELS.ToArray();
       _DOPP_VELS = CreateDOPP_VELSVector(builder, __DOPP_VELS);
     }
     var _CONS_RECS = default(VectorOffset);
     if (_o.CONS_RECS != null) {
-      var __CONS_RECS = new StringOffset[_o.CONS_RECS.Count];
-      for (var _j = 0; _j < __CONS_RECS.Length; ++_j) { __CONS_RECS[_j] = builder.CreateString(_o.CONS_RECS[_j]); }
+      var __CONS_RECS = _o.CONS_RECS.ToArray();
       _CONS_RECS = CreateCONS_RECSVector(builder, __CONS_RECS);
     }
     var _SNRS = default(VectorOffset);
     if (_o.SNRS != null) {
-      var __SNRS = new StringOffset[_o.SNRS.Count];
-      for (var _j = 0; _j < __SNRS.Length; ++_j) { __SNRS[_j] = builder.CreateString(_o.SNRS[_j]); }
+      var __SNRS = _o.SNRS.ToArray();
       _SNRS = CreateSNRSVector(builder, __SNRS);
     }
     var _LIGHT_DET_SENSORS = default(VectorOffset);
@@ -424,19 +511,19 @@ public struct WTH : IFlatbufferObject
       _ID_SENSOR,
       _ORIG_SENSOR_ID,
       _OB_TIME,
-      _SIG_PWRS,
-      _NOISE_LVLS,
-      _SPEC_WIDTHS,
-      _FIRST_GUESS_AVGS,
-      _o.QC_VALUE,
       _FILE_CREATION,
+      _o.QC_VALUE,
       _o.TERM_ALT,
       _o.AVG_TX_PWR,
       _o.AVG_REF_PWR,
       _o.SECTOR_NUM,
       _o.NUM_ELEMENTS,
-      _TD_AVG_SAMPLE_NUMS,
       _o.CHECKSUM,
+      _SIG_PWRS,
+      _NOISE_LVLS,
+      _SPEC_WIDTHS,
+      _FIRST_GUESS_AVGS,
+      _TD_AVG_SAMPLE_NUMS,
       _CO_INTEGS,
       _SPEC_AVGS,
       _INTERPULSE_PERIODS,
@@ -461,30 +548,30 @@ public class WTHT
   public string ID_SENSOR { get; set; }
   public string ORIG_SENSOR_ID { get; set; }
   public string OB_TIME { get; set; }
-  public List<string> SIG_PWRS { get; set; }
-  public List<string> NOISE_LVLS { get; set; }
-  public List<string> SPEC_WIDTHS { get; set; }
-  public List<string> FIRST_GUESS_AVGS { get; set; }
-  public int QC_VALUE { get; set; }
   public string FILE_CREATION { get; set; }
+  public byte QC_VALUE { get; set; }
   public double TERM_ALT { get; set; }
   public double AVG_TX_PWR { get; set; }
   public double AVG_REF_PWR { get; set; }
-  public int SECTOR_NUM { get; set; }
-  public int NUM_ELEMENTS { get; set; }
-  public List<string> TD_AVG_SAMPLE_NUMS { get; set; }
-  public int CHECKSUM { get; set; }
-  public List<string> CO_INTEGS { get; set; }
-  public List<string> SPEC_AVGS { get; set; }
-  public List<string> INTERPULSE_PERIODS { get; set; }
-  public List<string> DOPP_VELS { get; set; }
-  public List<string> CONS_RECS { get; set; }
-  public List<string> SNRS { get; set; }
+  public ushort SECTOR_NUM { get; set; }
+  public ushort NUM_ELEMENTS { get; set; }
+  public uint CHECKSUM { get; set; }
+  public List<double> SIG_PWRS { get; set; }
+  public List<double> NOISE_LVLS { get; set; }
+  public List<double> SPEC_WIDTHS { get; set; }
+  public List<double> FIRST_GUESS_AVGS { get; set; }
+  public List<double> TD_AVG_SAMPLE_NUMS { get; set; }
+  public List<double> CO_INTEGS { get; set; }
+  public List<double> SPEC_AVGS { get; set; }
+  public List<double> INTERPULSE_PERIODS { get; set; }
+  public List<double> DOPP_VELS { get; set; }
+  public List<double> CONS_RECS { get; set; }
+  public List<double> SNRS { get; set; }
   public double SIG_STRENGTH { get; set; }
   public double SEMI_MAJOR_AXIS { get; set; }
   public double SEMI_MINOR_AXIS { get; set; }
   public double ANGLE_ORIENTATION { get; set; }
-  public int LIGHT_EVENT_NUM { get; set; }
+  public uint LIGHT_EVENT_NUM { get; set; }
   public List<string> LIGHT_DET_SENSORS { get; set; }
   public double POS_CONFIDENCE { get; set; }
   public List<string> SRC_TYPS { get; set; }
@@ -495,19 +582,19 @@ public class WTHT
     this.ID_SENSOR = null;
     this.ORIG_SENSOR_ID = null;
     this.OB_TIME = null;
-    this.SIG_PWRS = null;
-    this.NOISE_LVLS = null;
-    this.SPEC_WIDTHS = null;
-    this.FIRST_GUESS_AVGS = null;
-    this.QC_VALUE = 0;
     this.FILE_CREATION = null;
+    this.QC_VALUE = 0;
     this.TERM_ALT = 0.0;
     this.AVG_TX_PWR = 0.0;
     this.AVG_REF_PWR = 0.0;
     this.SECTOR_NUM = 0;
     this.NUM_ELEMENTS = 0;
-    this.TD_AVG_SAMPLE_NUMS = null;
     this.CHECKSUM = 0;
+    this.SIG_PWRS = null;
+    this.NOISE_LVLS = null;
+    this.SPEC_WIDTHS = null;
+    this.FIRST_GUESS_AVGS = null;
+    this.TD_AVG_SAMPLE_NUMS = null;
     this.CO_INTEGS = null;
     this.SPEC_AVGS = null;
     this.INTERPULSE_PERIODS = null;
@@ -544,30 +631,30 @@ static public class WTHVerify
       && verifier.VerifyString(tablePos, 6 /*ID_SENSOR*/, false)
       && verifier.VerifyString(tablePos, 8 /*ORIG_SENSOR_ID*/, false)
       && verifier.VerifyString(tablePos, 10 /*OB_TIME*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 12 /*SIG_PWRS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 14 /*NOISE_LVLS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 16 /*SPEC_WIDTHS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 18 /*FIRST_GUESS_AVGS*/, false)
-      && verifier.VerifyField(tablePos, 20 /*QC_VALUE*/, 4 /*int*/, 4, false)
-      && verifier.VerifyString(tablePos, 22 /*FILE_CREATION*/, false)
-      && verifier.VerifyField(tablePos, 24 /*TERM_ALT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 26 /*AVG_TX_PWR*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 28 /*AVG_REF_PWR*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 30 /*SECTOR_NUM*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 32 /*NUM_ELEMENTS*/, 4 /*int*/, 4, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 34 /*TD_AVG_SAMPLE_NUMS*/, false)
-      && verifier.VerifyField(tablePos, 36 /*CHECKSUM*/, 4 /*int*/, 4, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 38 /*CO_INTEGS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 40 /*SPEC_AVGS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 42 /*INTERPULSE_PERIODS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 44 /*DOPP_VELS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 46 /*CONS_RECS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 48 /*SNRS*/, false)
+      && verifier.VerifyString(tablePos, 12 /*FILE_CREATION*/, false)
+      && verifier.VerifyField(tablePos, 14 /*QC_VALUE*/, 1 /*byte*/, 1, false)
+      && verifier.VerifyField(tablePos, 16 /*TERM_ALT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 18 /*AVG_TX_PWR*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 20 /*AVG_REF_PWR*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 22 /*SECTOR_NUM*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyField(tablePos, 24 /*NUM_ELEMENTS*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyField(tablePos, 26 /*CHECKSUM*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyVectorOfData(tablePos, 28 /*SIG_PWRS*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 30 /*NOISE_LVLS*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 32 /*SPEC_WIDTHS*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 34 /*FIRST_GUESS_AVGS*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 36 /*TD_AVG_SAMPLE_NUMS*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 38 /*CO_INTEGS*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 40 /*SPEC_AVGS*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 42 /*INTERPULSE_PERIODS*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 44 /*DOPP_VELS*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 46 /*CONS_RECS*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 48 /*SNRS*/, 8 /*double*/, false)
       && verifier.VerifyField(tablePos, 50 /*SIG_STRENGTH*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 52 /*SEMI_MAJOR_AXIS*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 54 /*SEMI_MINOR_AXIS*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 56 /*ANGLE_ORIENTATION*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 58 /*LIGHT_EVENT_NUM*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 58 /*LIGHT_EVENT_NUM*/, 4 /*uint*/, 4, false)
       && verifier.VerifyVectorOfStrings(tablePos, 60 /*LIGHT_DET_SENSORS*/, false)
       && verifier.VerifyField(tablePos, 62 /*POS_CONFIDENCE*/, 8 /*double*/, 8, false)
       && verifier.VerifyVectorOfStrings(tablePos, 64 /*SRC_TYPS*/, false)

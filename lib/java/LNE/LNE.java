@@ -29,89 +29,205 @@ public final class LNE extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public LNE __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
-  public String ORIG_OBJECT_ID() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ORIG_OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
-  public ByteBuffer ORIG_OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
-  public String DERIVED_FROM() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer DERIVED_FROMAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
-  public ByteBuffer DERIVED_FROMInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
-  public String DECLASSIFICATION_DATE() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer DECLASSIFICATION_DATEAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
-  public ByteBuffer DECLASSIFICATION_DATEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
-  public String DECLASSIFICATION_STRING() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer DECLASSIFICATION_STRINGAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
-  public ByteBuffer DECLASSIFICATION_STRINGInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
-  public String MSG_CREATE_DATE() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer MSG_CREATE_DATEAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
-  public ByteBuffer MSG_CREATE_DATEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
-  public String LAUNCH_FAILURE_CODE() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer LAUNCH_FAILURE_CODEAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
-  public ByteBuffer LAUNCH_FAILURE_CODEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  /**
+   * Satellite catalog number of launched object
+   */
+  public long SAT_NO() { int o = __offset(6); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * International designator (YYYY-NNNP)
+   */
+  public String ORIG_OBJECT_ID() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ORIG_OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
+  public ByteBuffer ORIG_OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * Source record this event was derived from
+   */
+  public String DERIVED_FROM() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DERIVED_FROMAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer DERIVED_FROMInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * Classification date (ISO 8601)
+   */
+  public String DECLASSIFICATION_DATE() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DECLASSIFICATION_DATEAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer DECLASSIFICATION_DATEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * Classification marking
+   */
+  public String DECLASSIFICATION_STRING() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DECLASSIFICATION_STRINGAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer DECLASSIFICATION_STRINGInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * Message creation time (ISO 8601)
+   */
+  public String MSG_CREATE_DATE() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MSG_CREATE_DATEAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
+  public ByteBuffer MSG_CREATE_DATEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  /**
+   * Launch date and time (ISO 8601)
+   */
   public String LAUNCH_DATE() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer LAUNCH_DATEAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
   public ByteBuffer LAUNCH_DATEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
-  public String BE_NUMBER() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer BE_NUMBERAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
-  public ByteBuffer BE_NUMBERInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
-  public String O_SUFFIX() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer O_SUFFIXAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
-  public ByteBuffer O_SUFFIXInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
-  public String LAUNCH_FACILITY_NAME() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer LAUNCH_FACILITY_NAMEAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
-  public ByteBuffer LAUNCH_FACILITY_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
-  public String ON_ORBIT() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ON_ORBITAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
-  public ByteBuffer ON_ORBITInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
-  public int SAT_NO() { int o = __offset(28); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Launch outcome
+   */
+  public byte OUTCOME() { int o = __offset(20); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Launch failure code (if applicable)
+   */
+  public String LAUNCH_FAILURE_CODE() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LAUNCH_FAILURE_CODEAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
+  public ByteBuffer LAUNCH_FAILURE_CODEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
+  /**
+   * Basic encyclopedia number
+   */
+  public String BE_NUMBER() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer BE_NUMBERAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
+  public ByteBuffer BE_NUMBERInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
+  /**
+   * Object suffix identifier
+   */
+  public String O_SUFFIX() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer O_SUFFIXAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
+  public ByteBuffer O_SUFFIXInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
+  /**
+   * Launch facility name
+   */
+  public String LAUNCH_FACILITY_NAME() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LAUNCH_FACILITY_NAMEAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
+  public ByteBuffer LAUNCH_FACILITY_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
+  /**
+   * Launch facility code
+   */
+  public String LAUNCH_FACILITY_CODE() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LAUNCH_FACILITY_CODEAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
+  public ByteBuffer LAUNCH_FACILITY_CODEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
+  /**
+   * Launch vehicle type
+   */
+  public String LAUNCH_VEHICLE() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LAUNCH_VEHICLEAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
+  public ByteBuffer LAUNCH_VEHICLEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
+  /**
+   * Launch vehicle configuration
+   */
+  public String LAUNCH_VEHICLE_CONFIG() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LAUNCH_VEHICLE_CONFIGAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
+  public ByteBuffer LAUNCH_VEHICLE_CONFIGInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  /**
+   * Target orbit type (LEO, MEO, GEO, HEO, SSO, etc.)
+   */
+  public String TARGET_ORBIT() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TARGET_ORBITAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
+  public ByteBuffer TARGET_ORBITInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
+  /**
+   * Number of objects placed on orbit
+   */
+  public int OBJECTS_ON_ORBIT() { int o = __offset(38); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * On-orbit reference identifier
+   */
+  public String ON_ORBIT() { int o = __offset(40); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ON_ORBITAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
+  public ByteBuffer ON_ORBITInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
+  /**
+   * Launch country or operator
+   */
+  public String LAUNCH_COUNTRY() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LAUNCH_COUNTRYAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
+  public ByteBuffer LAUNCH_COUNTRYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
+  /**
+   * Mission name or payload description
+   */
+  public String MISSION_NAME() { int o = __offset(44); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MISSION_NAMEAsByteBuffer() { return __vector_as_bytebuffer(44, 1); }
+  public ByteBuffer MISSION_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 44, 1); }
+  /**
+   * Additional remarks
+   */
+  public String REMARKS() { int o = __offset(46); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer REMARKSAsByteBuffer() { return __vector_as_bytebuffer(46, 1); }
+  public ByteBuffer REMARKSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 46, 1); }
 
   public static int createLNE(FlatBufferBuilder builder,
       int IDOffset,
+      long SAT_NO,
       int ORIG_OBJECT_IDOffset,
       int DERIVED_FROMOffset,
       int DECLASSIFICATION_DATEOffset,
       int DECLASSIFICATION_STRINGOffset,
       int MSG_CREATE_DATEOffset,
-      int LAUNCH_FAILURE_CODEOffset,
       int LAUNCH_DATEOffset,
+      byte OUTCOME,
+      int LAUNCH_FAILURE_CODEOffset,
       int BE_NUMBEROffset,
       int O_SUFFIXOffset,
       int LAUNCH_FACILITY_NAMEOffset,
+      int LAUNCH_FACILITY_CODEOffset,
+      int LAUNCH_VEHICLEOffset,
+      int LAUNCH_VEHICLE_CONFIGOffset,
+      int TARGET_ORBITOffset,
+      int OBJECTS_ON_ORBIT,
       int ON_ORBITOffset,
-      int SAT_NO) {
-    builder.startTable(13);
-    LNE.addSatNo(builder, SAT_NO);
+      int LAUNCH_COUNTRYOffset,
+      int MISSION_NAMEOffset,
+      int REMARKSOffset) {
+    builder.startTable(22);
+    LNE.addRemarks(builder, REMARKSOffset);
+    LNE.addMissionName(builder, MISSION_NAMEOffset);
+    LNE.addLaunchCountry(builder, LAUNCH_COUNTRYOffset);
     LNE.addOnOrbit(builder, ON_ORBITOffset);
+    LNE.addTargetOrbit(builder, TARGET_ORBITOffset);
+    LNE.addLaunchVehicleConfig(builder, LAUNCH_VEHICLE_CONFIGOffset);
+    LNE.addLaunchVehicle(builder, LAUNCH_VEHICLEOffset);
+    LNE.addLaunchFacilityCode(builder, LAUNCH_FACILITY_CODEOffset);
     LNE.addLaunchFacilityName(builder, LAUNCH_FACILITY_NAMEOffset);
     LNE.addOSuffix(builder, O_SUFFIXOffset);
     LNE.addBeNumber(builder, BE_NUMBEROffset);
-    LNE.addLaunchDate(builder, LAUNCH_DATEOffset);
     LNE.addLaunchFailureCode(builder, LAUNCH_FAILURE_CODEOffset);
+    LNE.addLaunchDate(builder, LAUNCH_DATEOffset);
     LNE.addMsgCreateDate(builder, MSG_CREATE_DATEOffset);
     LNE.addDeclassificationString(builder, DECLASSIFICATION_STRINGOffset);
     LNE.addDeclassificationDate(builder, DECLASSIFICATION_DATEOffset);
     LNE.addDerivedFrom(builder, DERIVED_FROMOffset);
     LNE.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
+    LNE.addSatNo(builder, SAT_NO);
     LNE.addId(builder, IDOffset);
+    LNE.addObjectsOnOrbit(builder, OBJECTS_ON_ORBIT);
+    LNE.addOutcome(builder, OUTCOME);
     return LNE.endLNE(builder);
   }
 
-  public static void startLNE(FlatBufferBuilder builder) { builder.startTable(13); }
+  public static void startLNE(FlatBufferBuilder builder) { builder.startTable(22); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
-  public static void addOrigObjectId(FlatBufferBuilder builder, int ORIG_OBJECT_IDOffset) { builder.addOffset(1, ORIG_OBJECT_IDOffset, 0); }
-  public static void addDerivedFrom(FlatBufferBuilder builder, int DERIVED_FROMOffset) { builder.addOffset(2, DERIVED_FROMOffset, 0); }
-  public static void addDeclassificationDate(FlatBufferBuilder builder, int DECLASSIFICATION_DATEOffset) { builder.addOffset(3, DECLASSIFICATION_DATEOffset, 0); }
-  public static void addDeclassificationString(FlatBufferBuilder builder, int DECLASSIFICATION_STRINGOffset) { builder.addOffset(4, DECLASSIFICATION_STRINGOffset, 0); }
-  public static void addMsgCreateDate(FlatBufferBuilder builder, int MSG_CREATE_DATEOffset) { builder.addOffset(5, MSG_CREATE_DATEOffset, 0); }
-  public static void addLaunchFailureCode(FlatBufferBuilder builder, int LAUNCH_FAILURE_CODEOffset) { builder.addOffset(6, LAUNCH_FAILURE_CODEOffset, 0); }
+  public static void addSatNo(FlatBufferBuilder builder, long SAT_NO) { builder.addInt(1, (int) SAT_NO, (int) 0L); }
+  public static void addOrigObjectId(FlatBufferBuilder builder, int ORIG_OBJECT_IDOffset) { builder.addOffset(2, ORIG_OBJECT_IDOffset, 0); }
+  public static void addDerivedFrom(FlatBufferBuilder builder, int DERIVED_FROMOffset) { builder.addOffset(3, DERIVED_FROMOffset, 0); }
+  public static void addDeclassificationDate(FlatBufferBuilder builder, int DECLASSIFICATION_DATEOffset) { builder.addOffset(4, DECLASSIFICATION_DATEOffset, 0); }
+  public static void addDeclassificationString(FlatBufferBuilder builder, int DECLASSIFICATION_STRINGOffset) { builder.addOffset(5, DECLASSIFICATION_STRINGOffset, 0); }
+  public static void addMsgCreateDate(FlatBufferBuilder builder, int MSG_CREATE_DATEOffset) { builder.addOffset(6, MSG_CREATE_DATEOffset, 0); }
   public static void addLaunchDate(FlatBufferBuilder builder, int LAUNCH_DATEOffset) { builder.addOffset(7, LAUNCH_DATEOffset, 0); }
-  public static void addBeNumber(FlatBufferBuilder builder, int BE_NUMBEROffset) { builder.addOffset(8, BE_NUMBEROffset, 0); }
-  public static void addOSuffix(FlatBufferBuilder builder, int O_SUFFIXOffset) { builder.addOffset(9, O_SUFFIXOffset, 0); }
-  public static void addLaunchFacilityName(FlatBufferBuilder builder, int LAUNCH_FACILITY_NAMEOffset) { builder.addOffset(10, LAUNCH_FACILITY_NAMEOffset, 0); }
-  public static void addOnOrbit(FlatBufferBuilder builder, int ON_ORBITOffset) { builder.addOffset(11, ON_ORBITOffset, 0); }
-  public static void addSatNo(FlatBufferBuilder builder, int SAT_NO) { builder.addInt(12, SAT_NO, 0); }
+  public static void addOutcome(FlatBufferBuilder builder, byte OUTCOME) { builder.addByte(8, OUTCOME, 0); }
+  public static void addLaunchFailureCode(FlatBufferBuilder builder, int LAUNCH_FAILURE_CODEOffset) { builder.addOffset(9, LAUNCH_FAILURE_CODEOffset, 0); }
+  public static void addBeNumber(FlatBufferBuilder builder, int BE_NUMBEROffset) { builder.addOffset(10, BE_NUMBEROffset, 0); }
+  public static void addOSuffix(FlatBufferBuilder builder, int O_SUFFIXOffset) { builder.addOffset(11, O_SUFFIXOffset, 0); }
+  public static void addLaunchFacilityName(FlatBufferBuilder builder, int LAUNCH_FACILITY_NAMEOffset) { builder.addOffset(12, LAUNCH_FACILITY_NAMEOffset, 0); }
+  public static void addLaunchFacilityCode(FlatBufferBuilder builder, int LAUNCH_FACILITY_CODEOffset) { builder.addOffset(13, LAUNCH_FACILITY_CODEOffset, 0); }
+  public static void addLaunchVehicle(FlatBufferBuilder builder, int LAUNCH_VEHICLEOffset) { builder.addOffset(14, LAUNCH_VEHICLEOffset, 0); }
+  public static void addLaunchVehicleConfig(FlatBufferBuilder builder, int LAUNCH_VEHICLE_CONFIGOffset) { builder.addOffset(15, LAUNCH_VEHICLE_CONFIGOffset, 0); }
+  public static void addTargetOrbit(FlatBufferBuilder builder, int TARGET_ORBITOffset) { builder.addOffset(16, TARGET_ORBITOffset, 0); }
+  public static void addObjectsOnOrbit(FlatBufferBuilder builder, int OBJECTS_ON_ORBIT) { builder.addShort(17, (short) OBJECTS_ON_ORBIT, (short) 0); }
+  public static void addOnOrbit(FlatBufferBuilder builder, int ON_ORBITOffset) { builder.addOffset(18, ON_ORBITOffset, 0); }
+  public static void addLaunchCountry(FlatBufferBuilder builder, int LAUNCH_COUNTRYOffset) { builder.addOffset(19, LAUNCH_COUNTRYOffset, 0); }
+  public static void addMissionName(FlatBufferBuilder builder, int MISSION_NAMEOffset) { builder.addOffset(20, MISSION_NAMEOffset, 0); }
+  public static void addRemarks(FlatBufferBuilder builder, int REMARKSOffset) { builder.addOffset(21, REMARKSOffset, 0); }
   public static int endLNE(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

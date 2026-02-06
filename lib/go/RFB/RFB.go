@@ -6,7 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// RF Band
+/// RF Band Specification
 type RFB struct {
 	_tab flatbuffers.Table
 }
@@ -54,6 +54,7 @@ func (rcv *RFB) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Unique identifier
 func (rcv *RFB) ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -62,6 +63,8 @@ func (rcv *RFB) ID() []byte {
 	return nil
 }
 
+/// Unique identifier
+/// Parent entity identifier
 func (rcv *RFB) ID_ENTITY() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -70,6 +73,8 @@ func (rcv *RFB) ID_ENTITY() []byte {
 	return nil
 }
 
+/// Parent entity identifier
+/// Band name or designation
 func (rcv *RFB) NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -78,14 +83,22 @@ func (rcv *RFB) NAME() []byte {
 	return nil
 }
 
-func (rcv *RFB) BAND() []byte {
+/// Band name or designation
+/// RF band designation
+func (rcv *RFB) BAND() rfBandDesignation {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return rfBandDesignation(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
-	return nil
+	return 0
 }
 
+/// RF band designation
+func (rcv *RFB) MutateBAND(n rfBandDesignation) bool {
+	return rcv._tab.MutateInt8Slot(10, int8(n))
+}
+
+/// Operating mode
 func (rcv *RFB) MODE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -94,6 +107,8 @@ func (rcv *RFB) MODE() []byte {
 	return nil
 }
 
+/// Operating mode
+/// Band purpose (e.g., TT&C, PAYLOAD, BEACON)
 func (rcv *RFB) PURPOSE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -102,6 +117,8 @@ func (rcv *RFB) PURPOSE() []byte {
 	return nil
 }
 
+/// Band purpose (e.g., TT&C, PAYLOAD, BEACON)
+/// Minimum frequency (MHz)
 func (rcv *RFB) FREQ_MIN() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -110,10 +127,12 @@ func (rcv *RFB) FREQ_MIN() float64 {
 	return 0.0
 }
 
+/// Minimum frequency (MHz)
 func (rcv *RFB) MutateFREQ_MIN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
 }
 
+/// Maximum frequency (MHz)
 func (rcv *RFB) FREQ_MAX() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -122,10 +141,12 @@ func (rcv *RFB) FREQ_MAX() float64 {
 	return 0.0
 }
 
+/// Maximum frequency (MHz)
 func (rcv *RFB) MutateFREQ_MAX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
 }
 
+/// Center frequency (MHz)
 func (rcv *RFB) CENTER_FREQ() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
@@ -134,11 +155,13 @@ func (rcv *RFB) CENTER_FREQ() float64 {
 	return 0.0
 }
 
+/// Center frequency (MHz)
 func (rcv *RFB) MutateCENTER_FREQ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
 }
 
-func (rcv *RFB) PEAK_GAIN() float64 {
+/// Bandwidth (MHz)
+func (rcv *RFB) BANDWIDTH() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -146,11 +169,13 @@ func (rcv *RFB) PEAK_GAIN() float64 {
 	return 0.0
 }
 
-func (rcv *RFB) MutatePEAK_GAIN(n float64) bool {
+/// Bandwidth (MHz)
+func (rcv *RFB) MutateBANDWIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(22, n)
 }
 
-func (rcv *RFB) EDGE_GAIN() float64 {
+/// Peak antenna gain (dBi)
+func (rcv *RFB) PEAK_GAIN() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -158,11 +183,13 @@ func (rcv *RFB) EDGE_GAIN() float64 {
 	return 0.0
 }
 
-func (rcv *RFB) MutateEDGE_GAIN(n float64) bool {
+/// Peak antenna gain (dBi)
+func (rcv *RFB) MutatePEAK_GAIN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(24, n)
 }
 
-func (rcv *RFB) BANDWIDTH() float64 {
+/// Edge-of-coverage gain (dBi)
+func (rcv *RFB) EDGE_GAIN() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -170,10 +197,12 @@ func (rcv *RFB) BANDWIDTH() float64 {
 	return 0.0
 }
 
-func (rcv *RFB) MutateBANDWIDTH(n float64) bool {
+/// Edge-of-coverage gain (dBi)
+func (rcv *RFB) MutateEDGE_GAIN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
 }
 
+/// Antenna beamwidth (degrees)
 func (rcv *RFB) BEAMWIDTH() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
@@ -182,18 +211,26 @@ func (rcv *RFB) BEAMWIDTH() float64 {
 	return 0.0
 }
 
+/// Antenna beamwidth (degrees)
 func (rcv *RFB) MutateBEAMWIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
 }
 
-func (rcv *RFB) POLARIZATION() []byte {
+/// Polarization
+func (rcv *RFB) POLARIZATION() rfPolarization {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return rfPolarization(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
-	return nil
+	return 0
 }
 
+/// Polarization
+func (rcv *RFB) MutatePOLARIZATION(n rfPolarization) bool {
+	return rcv._tab.MutateInt8Slot(30, int8(n))
+}
+
+/// Effective radiated power (dBW)
 func (rcv *RFB) ERP() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
@@ -202,10 +239,12 @@ func (rcv *RFB) ERP() float64 {
 	return 0.0
 }
 
+/// Effective radiated power (dBW)
 func (rcv *RFB) MutateERP(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
 }
 
+/// Effective isotropic radiated power (dBW)
 func (rcv *RFB) EIRP() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
@@ -214,6 +253,7 @@ func (rcv *RFB) EIRP() float64 {
 	return 0.0
 }
 
+/// Effective isotropic radiated power (dBW)
 func (rcv *RFB) MutateEIRP(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
 }
@@ -230,8 +270,8 @@ func RFBAddID_ENTITY(builder *flatbuffers.Builder, ID_ENTITY flatbuffers.UOffset
 func RFBAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(NAME), 0)
 }
-func RFBAddBAND(builder *flatbuffers.Builder, BAND flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(BAND), 0)
+func RFBAddBAND(builder *flatbuffers.Builder, BAND rfBandDesignation) {
+	builder.PrependInt8Slot(3, int8(BAND), 0)
 }
 func RFBAddMODE(builder *flatbuffers.Builder, MODE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(MODE), 0)
@@ -248,20 +288,20 @@ func RFBAddFREQ_MAX(builder *flatbuffers.Builder, FREQ_MAX float64) {
 func RFBAddCENTER_FREQ(builder *flatbuffers.Builder, CENTER_FREQ float64) {
 	builder.PrependFloat64Slot(8, CENTER_FREQ, 0.0)
 }
+func RFBAddBANDWIDTH(builder *flatbuffers.Builder, BANDWIDTH float64) {
+	builder.PrependFloat64Slot(9, BANDWIDTH, 0.0)
+}
 func RFBAddPEAK_GAIN(builder *flatbuffers.Builder, PEAK_GAIN float64) {
-	builder.PrependFloat64Slot(9, PEAK_GAIN, 0.0)
+	builder.PrependFloat64Slot(10, PEAK_GAIN, 0.0)
 }
 func RFBAddEDGE_GAIN(builder *flatbuffers.Builder, EDGE_GAIN float64) {
-	builder.PrependFloat64Slot(10, EDGE_GAIN, 0.0)
-}
-func RFBAddBANDWIDTH(builder *flatbuffers.Builder, BANDWIDTH float64) {
-	builder.PrependFloat64Slot(11, BANDWIDTH, 0.0)
+	builder.PrependFloat64Slot(11, EDGE_GAIN, 0.0)
 }
 func RFBAddBEAMWIDTH(builder *flatbuffers.Builder, BEAMWIDTH float64) {
 	builder.PrependFloat64Slot(12, BEAMWIDTH, 0.0)
 }
-func RFBAddPOLARIZATION(builder *flatbuffers.Builder, POLARIZATION flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(POLARIZATION), 0)
+func RFBAddPOLARIZATION(builder *flatbuffers.Builder, POLARIZATION rfPolarization) {
+	builder.PrependInt8Slot(13, int8(POLARIZATION), 0)
 }
 func RFBAddERP(builder *flatbuffers.Builder, ERP float64) {
 	builder.PrependFloat64Slot(14, ERP, 0.0)

@@ -16,6 +16,84 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct IRO;
 struct IROBuilder;
 
+enum irBand : int8_t {
+  irBand_SWIR = 0,
+  irBand_MWIR = 1,
+  irBand_LWIR = 2,
+  irBand_VLWIR = 3,
+  irBand_BROADBAND = 4,
+  irBand_MIN = irBand_SWIR,
+  irBand_MAX = irBand_BROADBAND
+};
+
+inline const irBand (&EnumValuesirBand())[5] {
+  static const irBand values[] = {
+    irBand_SWIR,
+    irBand_MWIR,
+    irBand_LWIR,
+    irBand_VLWIR,
+    irBand_BROADBAND
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesirBand() {
+  static const char * const names[6] = {
+    "SWIR",
+    "MWIR",
+    "LWIR",
+    "VLWIR",
+    "BROADBAND",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameirBand(irBand e) {
+  if (::flatbuffers::IsOutRange(e, irBand_SWIR, irBand_BROADBAND)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesirBand()[index];
+}
+
+enum irDetectionType : int8_t {
+  irDetectionType_POINT_SOURCE = 0,
+  irDetectionType_RESOLVED = 1,
+  irDetectionType_STREAK = 2,
+  irDetectionType_UNRESOLVED = 3,
+  irDetectionType_EXTENDED = 4,
+  irDetectionType_MIN = irDetectionType_POINT_SOURCE,
+  irDetectionType_MAX = irDetectionType_EXTENDED
+};
+
+inline const irDetectionType (&EnumValuesirDetectionType())[5] {
+  static const irDetectionType values[] = {
+    irDetectionType_POINT_SOURCE,
+    irDetectionType_RESOLVED,
+    irDetectionType_STREAK,
+    irDetectionType_UNRESOLVED,
+    irDetectionType_EXTENDED
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesirDetectionType() {
+  static const char * const names[6] = {
+    "POINT_SOURCE",
+    "RESOLVED",
+    "STREAK",
+    "UNRESOLVED",
+    "EXTENDED",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameirDetectionType(irDetectionType e) {
+  if (::flatbuffers::IsOutRange(e, irDetectionType_POINT_SOURCE, irDetectionType_EXTENDED)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesirDetectionType()[index];
+}
+
 /// Infrared Observation
 struct IRO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef IROBuilder Builder;
@@ -24,22 +102,152 @@ struct IRO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_ID_ENTITY = 6,
     VT_NAME = 8,
     VT_DESCRIPTION = 10,
-    VT_ENTITY = 12
+    VT_ENTITY = 12,
+    VT_EPOCH = 14,
+    VT_SENSOR_ID = 16,
+    VT_SAT_NO = 18,
+    VT_OBJECT_DESIGNATOR = 20,
+    VT_BAND = 22,
+    VT_DETECTION_TYPE = 24,
+    VT_RA = 26,
+    VT_DEC = 28,
+    VT_RA_UNC = 30,
+    VT_DEC_UNC = 32,
+    VT_AZIMUTH = 34,
+    VT_ELEVATION = 36,
+    VT_RANGE = 38,
+    VT_IRRADIANCE = 40,
+    VT_IRRADIANCE_UNC = 42,
+    VT_IR_MAG = 44,
+    VT_MAG_UNC = 46,
+    VT_TEMPERATURE = 48,
+    VT_INTEGRATION_TIME = 50,
+    VT_BACKGROUND = 52,
+    VT_SNR = 54,
+    VT_WAVELENGTHS = 56,
+    VT_SPECTRAL_VALUES = 58,
+    VT_QUALITY = 60,
+    VT_NOTES = 62
   };
+  /// Unique identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
+  /// Reference to source entity
   const ::flatbuffers::String *ID_ENTITY() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID_ENTITY);
   }
+  /// Sensor or observation name
   const ::flatbuffers::String *NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NAME);
   }
+  /// Description of observation
   const ::flatbuffers::String *DESCRIPTION() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
   }
+  /// Source entity designator
   const ::flatbuffers::String *ENTITY() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ENTITY);
+  }
+  /// Observation epoch (ISO 8601)
+  const ::flatbuffers::String *EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
+  }
+  /// Sensor identifier
+  const ::flatbuffers::String *SENSOR_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SENSOR_ID);
+  }
+  /// Target satellite number (if identified)
+  uint32_t SAT_NO() const {
+    return GetField<uint32_t>(VT_SAT_NO, 0);
+  }
+  /// Target object designator
+  const ::flatbuffers::String *OBJECT_DESIGNATOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OBJECT_DESIGNATOR);
+  }
+  /// IR spectral band
+  irBand BAND() const {
+    return static_cast<irBand>(GetField<int8_t>(VT_BAND, 0));
+  }
+  /// Detection type
+  irDetectionType DETECTION_TYPE() const {
+    return static_cast<irDetectionType>(GetField<int8_t>(VT_DETECTION_TYPE, 0));
+  }
+  /// Right ascension in degrees
+  double RA() const {
+    return GetField<double>(VT_RA, 0.0);
+  }
+  /// Declination in degrees
+  double DEC() const {
+    return GetField<double>(VT_DEC, 0.0);
+  }
+  /// Right ascension uncertainty in arcseconds
+  double RA_UNC() const {
+    return GetField<double>(VT_RA_UNC, 0.0);
+  }
+  /// Declination uncertainty in arcseconds
+  double DEC_UNC() const {
+    return GetField<double>(VT_DEC_UNC, 0.0);
+  }
+  /// Azimuth angle in degrees
+  double AZIMUTH() const {
+    return GetField<double>(VT_AZIMUTH, 0.0);
+  }
+  /// Elevation angle in degrees
+  double ELEVATION() const {
+    return GetField<double>(VT_ELEVATION, 0.0);
+  }
+  /// Range in km (if available)
+  double RANGE() const {
+    return GetField<double>(VT_RANGE, 0.0);
+  }
+  /// Irradiance in W/m^2
+  double IRRADIANCE() const {
+    return GetField<double>(VT_IRRADIANCE, 0.0);
+  }
+  /// Irradiance uncertainty in W/m^2
+  double IRRADIANCE_UNC() const {
+    return GetField<double>(VT_IRRADIANCE_UNC, 0.0);
+  }
+  /// Apparent IR magnitude
+  double IR_MAG() const {
+    return GetField<double>(VT_IR_MAG, 0.0);
+  }
+  /// Magnitude uncertainty
+  double MAG_UNC() const {
+    return GetField<double>(VT_MAG_UNC, 0.0);
+  }
+  /// Effective temperature in Kelvin
+  double TEMPERATURE() const {
+    return GetField<double>(VT_TEMPERATURE, 0.0);
+  }
+  /// Integration time in seconds
+  double INTEGRATION_TIME() const {
+    return GetField<double>(VT_INTEGRATION_TIME, 0.0);
+  }
+  /// Background irradiance in W/m^2/sr
+  double BACKGROUND() const {
+    return GetField<double>(VT_BACKGROUND, 0.0);
+  }
+  /// Signal-to-noise ratio
+  double SNR() const {
+    return GetField<double>(VT_SNR, 0.0);
+  }
+  /// Spectral data wavelengths in micrometers
+  const ::flatbuffers::Vector<double> *WAVELENGTHS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_WAVELENGTHS);
+  }
+  /// Spectral data values in W/m^2/um
+  const ::flatbuffers::Vector<double> *SPECTRAL_VALUES() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_SPECTRAL_VALUES);
+  }
+  /// Data quality indicator (0-9, 9=best)
+  uint8_t QUALITY() const {
+    return GetField<uint8_t>(VT_QUALITY, 0);
+  }
+  /// Additional notes
+  const ::flatbuffers::String *NOTES() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NOTES);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -53,6 +261,37 @@ struct IRO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(DESCRIPTION()) &&
            VerifyOffset(verifier, VT_ENTITY) &&
            verifier.VerifyString(ENTITY()) &&
+           VerifyOffset(verifier, VT_EPOCH) &&
+           verifier.VerifyString(EPOCH()) &&
+           VerifyOffset(verifier, VT_SENSOR_ID) &&
+           verifier.VerifyString(SENSOR_ID()) &&
+           VerifyField<uint32_t>(verifier, VT_SAT_NO, 4) &&
+           VerifyOffset(verifier, VT_OBJECT_DESIGNATOR) &&
+           verifier.VerifyString(OBJECT_DESIGNATOR()) &&
+           VerifyField<int8_t>(verifier, VT_BAND, 1) &&
+           VerifyField<int8_t>(verifier, VT_DETECTION_TYPE, 1) &&
+           VerifyField<double>(verifier, VT_RA, 8) &&
+           VerifyField<double>(verifier, VT_DEC, 8) &&
+           VerifyField<double>(verifier, VT_RA_UNC, 8) &&
+           VerifyField<double>(verifier, VT_DEC_UNC, 8) &&
+           VerifyField<double>(verifier, VT_AZIMUTH, 8) &&
+           VerifyField<double>(verifier, VT_ELEVATION, 8) &&
+           VerifyField<double>(verifier, VT_RANGE, 8) &&
+           VerifyField<double>(verifier, VT_IRRADIANCE, 8) &&
+           VerifyField<double>(verifier, VT_IRRADIANCE_UNC, 8) &&
+           VerifyField<double>(verifier, VT_IR_MAG, 8) &&
+           VerifyField<double>(verifier, VT_MAG_UNC, 8) &&
+           VerifyField<double>(verifier, VT_TEMPERATURE, 8) &&
+           VerifyField<double>(verifier, VT_INTEGRATION_TIME, 8) &&
+           VerifyField<double>(verifier, VT_BACKGROUND, 8) &&
+           VerifyField<double>(verifier, VT_SNR, 8) &&
+           VerifyOffset(verifier, VT_WAVELENGTHS) &&
+           verifier.VerifyVector(WAVELENGTHS()) &&
+           VerifyOffset(verifier, VT_SPECTRAL_VALUES) &&
+           verifier.VerifyVector(SPECTRAL_VALUES()) &&
+           VerifyField<uint8_t>(verifier, VT_QUALITY, 1) &&
+           VerifyOffset(verifier, VT_NOTES) &&
+           verifier.VerifyString(NOTES()) &&
            verifier.EndTable();
   }
 };
@@ -76,6 +315,81 @@ struct IROBuilder {
   void add_ENTITY(::flatbuffers::Offset<::flatbuffers::String> ENTITY) {
     fbb_.AddOffset(IRO::VT_ENTITY, ENTITY);
   }
+  void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
+    fbb_.AddOffset(IRO::VT_EPOCH, EPOCH);
+  }
+  void add_SENSOR_ID(::flatbuffers::Offset<::flatbuffers::String> SENSOR_ID) {
+    fbb_.AddOffset(IRO::VT_SENSOR_ID, SENSOR_ID);
+  }
+  void add_SAT_NO(uint32_t SAT_NO) {
+    fbb_.AddElement<uint32_t>(IRO::VT_SAT_NO, SAT_NO, 0);
+  }
+  void add_OBJECT_DESIGNATOR(::flatbuffers::Offset<::flatbuffers::String> OBJECT_DESIGNATOR) {
+    fbb_.AddOffset(IRO::VT_OBJECT_DESIGNATOR, OBJECT_DESIGNATOR);
+  }
+  void add_BAND(irBand BAND) {
+    fbb_.AddElement<int8_t>(IRO::VT_BAND, static_cast<int8_t>(BAND), 0);
+  }
+  void add_DETECTION_TYPE(irDetectionType DETECTION_TYPE) {
+    fbb_.AddElement<int8_t>(IRO::VT_DETECTION_TYPE, static_cast<int8_t>(DETECTION_TYPE), 0);
+  }
+  void add_RA(double RA) {
+    fbb_.AddElement<double>(IRO::VT_RA, RA, 0.0);
+  }
+  void add_DEC(double DEC) {
+    fbb_.AddElement<double>(IRO::VT_DEC, DEC, 0.0);
+  }
+  void add_RA_UNC(double RA_UNC) {
+    fbb_.AddElement<double>(IRO::VT_RA_UNC, RA_UNC, 0.0);
+  }
+  void add_DEC_UNC(double DEC_UNC) {
+    fbb_.AddElement<double>(IRO::VT_DEC_UNC, DEC_UNC, 0.0);
+  }
+  void add_AZIMUTH(double AZIMUTH) {
+    fbb_.AddElement<double>(IRO::VT_AZIMUTH, AZIMUTH, 0.0);
+  }
+  void add_ELEVATION(double ELEVATION) {
+    fbb_.AddElement<double>(IRO::VT_ELEVATION, ELEVATION, 0.0);
+  }
+  void add_RANGE(double RANGE) {
+    fbb_.AddElement<double>(IRO::VT_RANGE, RANGE, 0.0);
+  }
+  void add_IRRADIANCE(double IRRADIANCE) {
+    fbb_.AddElement<double>(IRO::VT_IRRADIANCE, IRRADIANCE, 0.0);
+  }
+  void add_IRRADIANCE_UNC(double IRRADIANCE_UNC) {
+    fbb_.AddElement<double>(IRO::VT_IRRADIANCE_UNC, IRRADIANCE_UNC, 0.0);
+  }
+  void add_IR_MAG(double IR_MAG) {
+    fbb_.AddElement<double>(IRO::VT_IR_MAG, IR_MAG, 0.0);
+  }
+  void add_MAG_UNC(double MAG_UNC) {
+    fbb_.AddElement<double>(IRO::VT_MAG_UNC, MAG_UNC, 0.0);
+  }
+  void add_TEMPERATURE(double TEMPERATURE) {
+    fbb_.AddElement<double>(IRO::VT_TEMPERATURE, TEMPERATURE, 0.0);
+  }
+  void add_INTEGRATION_TIME(double INTEGRATION_TIME) {
+    fbb_.AddElement<double>(IRO::VT_INTEGRATION_TIME, INTEGRATION_TIME, 0.0);
+  }
+  void add_BACKGROUND(double BACKGROUND) {
+    fbb_.AddElement<double>(IRO::VT_BACKGROUND, BACKGROUND, 0.0);
+  }
+  void add_SNR(double SNR) {
+    fbb_.AddElement<double>(IRO::VT_SNR, SNR, 0.0);
+  }
+  void add_WAVELENGTHS(::flatbuffers::Offset<::flatbuffers::Vector<double>> WAVELENGTHS) {
+    fbb_.AddOffset(IRO::VT_WAVELENGTHS, WAVELENGTHS);
+  }
+  void add_SPECTRAL_VALUES(::flatbuffers::Offset<::flatbuffers::Vector<double>> SPECTRAL_VALUES) {
+    fbb_.AddOffset(IRO::VT_SPECTRAL_VALUES, SPECTRAL_VALUES);
+  }
+  void add_QUALITY(uint8_t QUALITY) {
+    fbb_.AddElement<uint8_t>(IRO::VT_QUALITY, QUALITY, 0);
+  }
+  void add_NOTES(::flatbuffers::Offset<::flatbuffers::String> NOTES) {
+    fbb_.AddOffset(IRO::VT_NOTES, NOTES);
+  }
   explicit IROBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -93,13 +407,63 @@ inline ::flatbuffers::Offset<IRO> CreateIRO(
     ::flatbuffers::Offset<::flatbuffers::String> ID_ENTITY = 0,
     ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ENTITY = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> ENTITY = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SENSOR_ID = 0,
+    uint32_t SAT_NO = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> OBJECT_DESIGNATOR = 0,
+    irBand BAND = irBand_SWIR,
+    irDetectionType DETECTION_TYPE = irDetectionType_POINT_SOURCE,
+    double RA = 0.0,
+    double DEC = 0.0,
+    double RA_UNC = 0.0,
+    double DEC_UNC = 0.0,
+    double AZIMUTH = 0.0,
+    double ELEVATION = 0.0,
+    double RANGE = 0.0,
+    double IRRADIANCE = 0.0,
+    double IRRADIANCE_UNC = 0.0,
+    double IR_MAG = 0.0,
+    double MAG_UNC = 0.0,
+    double TEMPERATURE = 0.0,
+    double INTEGRATION_TIME = 0.0,
+    double BACKGROUND = 0.0,
+    double SNR = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> WAVELENGTHS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> SPECTRAL_VALUES = 0,
+    uint8_t QUALITY = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> NOTES = 0) {
   IROBuilder builder_(_fbb);
+  builder_.add_SNR(SNR);
+  builder_.add_BACKGROUND(BACKGROUND);
+  builder_.add_INTEGRATION_TIME(INTEGRATION_TIME);
+  builder_.add_TEMPERATURE(TEMPERATURE);
+  builder_.add_MAG_UNC(MAG_UNC);
+  builder_.add_IR_MAG(IR_MAG);
+  builder_.add_IRRADIANCE_UNC(IRRADIANCE_UNC);
+  builder_.add_IRRADIANCE(IRRADIANCE);
+  builder_.add_RANGE(RANGE);
+  builder_.add_ELEVATION(ELEVATION);
+  builder_.add_AZIMUTH(AZIMUTH);
+  builder_.add_DEC_UNC(DEC_UNC);
+  builder_.add_RA_UNC(RA_UNC);
+  builder_.add_DEC(DEC);
+  builder_.add_RA(RA);
+  builder_.add_NOTES(NOTES);
+  builder_.add_SPECTRAL_VALUES(SPECTRAL_VALUES);
+  builder_.add_WAVELENGTHS(WAVELENGTHS);
+  builder_.add_OBJECT_DESIGNATOR(OBJECT_DESIGNATOR);
+  builder_.add_SAT_NO(SAT_NO);
+  builder_.add_SENSOR_ID(SENSOR_ID);
+  builder_.add_EPOCH(EPOCH);
   builder_.add_ENTITY(ENTITY);
   builder_.add_DESCRIPTION(DESCRIPTION);
   builder_.add_NAME(NAME);
   builder_.add_ID_ENTITY(ID_ENTITY);
   builder_.add_ID(ID);
+  builder_.add_QUALITY(QUALITY);
+  builder_.add_DETECTION_TYPE(DETECTION_TYPE);
+  builder_.add_BAND(BAND);
   return builder_.Finish();
 }
 
@@ -109,19 +473,75 @@ inline ::flatbuffers::Offset<IRO> CreateIRODirect(
     const char *ID_ENTITY = nullptr,
     const char *NAME = nullptr,
     const char *DESCRIPTION = nullptr,
-    const char *ENTITY = nullptr) {
+    const char *ENTITY = nullptr,
+    const char *EPOCH = nullptr,
+    const char *SENSOR_ID = nullptr,
+    uint32_t SAT_NO = 0,
+    const char *OBJECT_DESIGNATOR = nullptr,
+    irBand BAND = irBand_SWIR,
+    irDetectionType DETECTION_TYPE = irDetectionType_POINT_SOURCE,
+    double RA = 0.0,
+    double DEC = 0.0,
+    double RA_UNC = 0.0,
+    double DEC_UNC = 0.0,
+    double AZIMUTH = 0.0,
+    double ELEVATION = 0.0,
+    double RANGE = 0.0,
+    double IRRADIANCE = 0.0,
+    double IRRADIANCE_UNC = 0.0,
+    double IR_MAG = 0.0,
+    double MAG_UNC = 0.0,
+    double TEMPERATURE = 0.0,
+    double INTEGRATION_TIME = 0.0,
+    double BACKGROUND = 0.0,
+    double SNR = 0.0,
+    const std::vector<double> *WAVELENGTHS = nullptr,
+    const std::vector<double> *SPECTRAL_VALUES = nullptr,
+    uint8_t QUALITY = 0,
+    const char *NOTES = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto ID_ENTITY__ = ID_ENTITY ? _fbb.CreateString(ID_ENTITY) : 0;
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
   auto ENTITY__ = ENTITY ? _fbb.CreateString(ENTITY) : 0;
+  auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
+  auto SENSOR_ID__ = SENSOR_ID ? _fbb.CreateString(SENSOR_ID) : 0;
+  auto OBJECT_DESIGNATOR__ = OBJECT_DESIGNATOR ? _fbb.CreateString(OBJECT_DESIGNATOR) : 0;
+  auto WAVELENGTHS__ = WAVELENGTHS ? _fbb.CreateVector<double>(*WAVELENGTHS) : 0;
+  auto SPECTRAL_VALUES__ = SPECTRAL_VALUES ? _fbb.CreateVector<double>(*SPECTRAL_VALUES) : 0;
+  auto NOTES__ = NOTES ? _fbb.CreateString(NOTES) : 0;
   return CreateIRO(
       _fbb,
       ID__,
       ID_ENTITY__,
       NAME__,
       DESCRIPTION__,
-      ENTITY__);
+      ENTITY__,
+      EPOCH__,
+      SENSOR_ID__,
+      SAT_NO,
+      OBJECT_DESIGNATOR__,
+      BAND,
+      DETECTION_TYPE,
+      RA,
+      DEC,
+      RA_UNC,
+      DEC_UNC,
+      AZIMUTH,
+      ELEVATION,
+      RANGE,
+      IRRADIANCE,
+      IRRADIANCE_UNC,
+      IR_MAG,
+      MAG_UNC,
+      TEMPERATURE,
+      INTEGRATION_TIME,
+      BACKGROUND,
+      SNR,
+      WAVELENGTHS__,
+      SPECTRAL_VALUES__,
+      QUALITY,
+      NOTES__);
 }
 
 inline const IRO *GetIRO(const void *buf) {

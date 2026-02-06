@@ -4,6 +4,35 @@
 
 import FlatBuffers
 
+public enum attMotionType: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case stabilized = 0
+  case spinning = 1
+  case tumbling = 2
+  case precessing = 3
+  case unknown = 4
+
+  public static var max: attMotionType { return .unknown }
+  public static var min: attMotionType { return .stabilized }
+}
+
+
+public enum attRepresentation: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case quaternion = 0
+  case euler = 1
+  case spin = 2
+  case directionCosine = 3
+
+  public static var max: attRepresentation { return .directionCosine }
+  public static var min: attRepresentation { return .quaternion }
+}
+
+
 ///  Attitude Data Point
 public struct ATD: FlatBufferObject, Verifiable {
 
@@ -21,154 +50,204 @@ public struct ATD: FlatBufferObject, Verifiable {
     case AS_ID = 6
     case SAT_NO = 8
     case ORIG_OBJECT_ID = 10
-    case TS = 12
-    case MOTION_TYPE = 14
-    case Q1 = 16
-    case Q2 = 18
-    case Q3 = 20
-    case QC = 22
-    case Q1_DOT = 24
-    case Q2_DOT = 26
-    case Q3_DOT = 28
-    case QC_DOT = 30
-    case X_ANGLE = 32
-    case Y_ANGLE = 34
-    case Z_ANGLE = 36
-    case X_RATE = 38
-    case Y_RATE = 40
-    case Z_RATE = 42
-    case RA = 44
-    case DECLINATION = 46
-    case CONING_ANGLE = 48
-    case PREC_PERIOD = 50
-    case SPIN_PERIOD = 52
+    case EPOCH = 12
+    case REPRESENTATION = 14
+    case MOTION_TYPE = 16
+    case QC = 18
+    case Q1 = 20
+    case Q2 = 22
+    case Q3 = 24
+    case QC_DOT = 26
+    case Q1_DOT = 28
+    case Q2_DOT = 30
+    case Q3_DOT = 32
+    case X_ANGLE = 34
+    case Y_ANGLE = 36
+    case Z_ANGLE = 38
+    case X_RATE = 40
+    case Y_RATE = 42
+    case Z_RATE = 44
+    case RA = 46
+    case DECLINATION = 48
+    case CONING_ANGLE = 50
+    case PREC_PERIOD = 52
+    case SPIN_PERIOD = 54
+    case ATTITUDE_UNC = 56
+    case RATE_UNC = 58
+    case QUALITY = 60
+    case REF_FRAME = 62
+    case SENSOR_ID = 64
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
+  ///  Unique identifier
   public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  ///  Attitude set identifier (groups time-series points)
   public var AS_ID: String? { let o = _accessor.offset(VTOFFSET.AS_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var AS_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.AS_ID.v) }
-  public var SAT_NO: Int32 { let o = _accessor.offset(VTOFFSET.SAT_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Satellite catalog number
+  public var SAT_NO: UInt32 { let o = _accessor.offset(VTOFFSET.SAT_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  International designator
   public var ORIG_OBJECT_ID: String? { let o = _accessor.offset(VTOFFSET.ORIG_OBJECT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ORIG_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_OBJECT_ID.v) }
-  public var TS: String? { let o = _accessor.offset(VTOFFSET.TS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var TSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TS.v) }
-  public var MOTION_TYPE: String? { let o = _accessor.offset(VTOFFSET.MOTION_TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var MOTION_TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MOTION_TYPE.v) }
-  public var Q1: Double { let o = _accessor.offset(VTOFFSET.Q1.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var Q2: Double { let o = _accessor.offset(VTOFFSET.Q2.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var Q3: Double { let o = _accessor.offset(VTOFFSET.Q3.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Observation epoch (ISO 8601)
+  public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
+  ///  Attitude representation used
+  public var REPRESENTATION: attRepresentation { let o = _accessor.offset(VTOFFSET.REPRESENTATION.v); return o == 0 ? .quaternion : attRepresentation(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .quaternion }
+  ///  Motion characterization
+  public var MOTION_TYPE: attMotionType { let o = _accessor.offset(VTOFFSET.MOTION_TYPE.v); return o == 0 ? .stabilized : attMotionType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .stabilized }
+  ///  Quaternion scalar component (q0 or qc)
   public var QC: Double { let o = _accessor.offset(VTOFFSET.QC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var Q1_DOT: Double { let o = _accessor.offset(VTOFFSET.Q1_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var Q2_DOT: Double { let o = _accessor.offset(VTOFFSET.Q2_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var Q3_DOT: Double { let o = _accessor.offset(VTOFFSET.Q3_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Quaternion vector component 1
+  public var Q1: Double { let o = _accessor.offset(VTOFFSET.Q1.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Quaternion vector component 2
+  public var Q2: Double { let o = _accessor.offset(VTOFFSET.Q2.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Quaternion vector component 3
+  public var Q3: Double { let o = _accessor.offset(VTOFFSET.Q3.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Quaternion scalar rate (rad/s)
   public var QC_DOT: Double { let o = _accessor.offset(VTOFFSET.QC_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var hasXAngle: Bool { let o = _accessor.offset(VTOFFSET.X_ANGLE.v); return o == 0 ? false : true }
-  public var X_ANGLECount: Int32 { let o = _accessor.offset(VTOFFSET.X_ANGLE.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func X_ANGLE(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.X_ANGLE.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public var hasYAngle: Bool { let o = _accessor.offset(VTOFFSET.Y_ANGLE.v); return o == 0 ? false : true }
-  public var Y_ANGLECount: Int32 { let o = _accessor.offset(VTOFFSET.Y_ANGLE.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func Y_ANGLE(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.Y_ANGLE.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public var hasZAngle: Bool { let o = _accessor.offset(VTOFFSET.Z_ANGLE.v); return o == 0 ? false : true }
-  public var Z_ANGLECount: Int32 { let o = _accessor.offset(VTOFFSET.Z_ANGLE.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func Z_ANGLE(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.Z_ANGLE.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public var hasXRate: Bool { let o = _accessor.offset(VTOFFSET.X_RATE.v); return o == 0 ? false : true }
-  public var X_RATECount: Int32 { let o = _accessor.offset(VTOFFSET.X_RATE.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func X_RATE(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.X_RATE.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public var hasYRate: Bool { let o = _accessor.offset(VTOFFSET.Y_RATE.v); return o == 0 ? false : true }
-  public var Y_RATECount: Int32 { let o = _accessor.offset(VTOFFSET.Y_RATE.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func Y_RATE(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.Y_RATE.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public var hasZRate: Bool { let o = _accessor.offset(VTOFFSET.Z_RATE.v); return o == 0 ? false : true }
-  public var Z_RATECount: Int32 { let o = _accessor.offset(VTOFFSET.Z_RATE.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func Z_RATE(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.Z_RATE.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  ///  Quaternion vector rate 1 (rad/s)
+  public var Q1_DOT: Double { let o = _accessor.offset(VTOFFSET.Q1_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Quaternion vector rate 2 (rad/s)
+  public var Q2_DOT: Double { let o = _accessor.offset(VTOFFSET.Q2_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Quaternion vector rate 3 (rad/s)
+  public var Q3_DOT: Double { let o = _accessor.offset(VTOFFSET.Q3_DOT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Euler angle X (degrees)
+  public var X_ANGLE: Double { let o = _accessor.offset(VTOFFSET.X_ANGLE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Euler angle Y (degrees)
+  public var Y_ANGLE: Double { let o = _accessor.offset(VTOFFSET.Y_ANGLE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Euler angle Z (degrees)
+  public var Z_ANGLE: Double { let o = _accessor.offset(VTOFFSET.Z_ANGLE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Angular rate about X (deg/s)
+  public var X_RATE: Double { let o = _accessor.offset(VTOFFSET.X_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Angular rate about Y (deg/s)
+  public var Y_RATE: Double { let o = _accessor.offset(VTOFFSET.Y_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Angular rate about Z (deg/s)
+  public var Z_RATE: Double { let o = _accessor.offset(VTOFFSET.Z_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Right ascension of spin axis (degrees)
   public var RA: Double { let o = _accessor.offset(VTOFFSET.RA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Declination of spin axis (degrees)
   public var DECLINATION: Double { let o = _accessor.offset(VTOFFSET.DECLINATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Coning half-angle (degrees)
   public var CONING_ANGLE: Double { let o = _accessor.offset(VTOFFSET.CONING_ANGLE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Precession period (seconds)
   public var PREC_PERIOD: Double { let o = _accessor.offset(VTOFFSET.PREC_PERIOD.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Spin period (seconds)
   public var SPIN_PERIOD: Double { let o = _accessor.offset(VTOFFSET.SPIN_PERIOD.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startATD(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 25) }
+  ///  Attitude uncertainty (degrees, 1-sigma)
+  public var ATTITUDE_UNC: Double { let o = _accessor.offset(VTOFFSET.ATTITUDE_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Rate uncertainty (deg/s, 1-sigma)
+  public var RATE_UNC: Double { let o = _accessor.offset(VTOFFSET.RATE_UNC.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Data quality (0-9, 9=best)
+  public var QUALITY: UInt8 { let o = _accessor.offset(VTOFFSET.QUALITY.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt8.self, at: o) }
+  ///  Reference frame for attitude
+  public var REF_FRAME: String? { let o = _accessor.offset(VTOFFSET.REF_FRAME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REF_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REF_FRAME.v) }
+  ///  Sensor identifier providing the observation
+  public var SENSOR_ID: String? { let o = _accessor.offset(VTOFFSET.SENSOR_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SENSOR_ID.v) }
+  public static func startATD(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 31) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(AS_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AS_ID, at: VTOFFSET.AS_ID.p) }
-  public static func add(SAT_NO: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }
+  public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }
   public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VTOFFSET.ORIG_OBJECT_ID.p) }
-  public static func add(TS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TS, at: VTOFFSET.TS.p) }
-  public static func add(MOTION_TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MOTION_TYPE, at: VTOFFSET.MOTION_TYPE.p) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VTOFFSET.EPOCH.p) }
+  public static func add(REPRESENTATION: attRepresentation, _ fbb: inout FlatBufferBuilder) { fbb.add(element: REPRESENTATION.rawValue, def: 0, at: VTOFFSET.REPRESENTATION.p) }
+  public static func add(MOTION_TYPE: attMotionType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MOTION_TYPE.rawValue, def: 0, at: VTOFFSET.MOTION_TYPE.p) }
+  public static func add(QC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QC, def: 0.0, at: VTOFFSET.QC.p) }
   public static func add(Q1: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q1, def: 0.0, at: VTOFFSET.Q1.p) }
   public static func add(Q2: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q2, def: 0.0, at: VTOFFSET.Q2.p) }
   public static func add(Q3: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q3, def: 0.0, at: VTOFFSET.Q3.p) }
-  public static func add(QC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QC, def: 0.0, at: VTOFFSET.QC.p) }
+  public static func add(QC_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QC_DOT, def: 0.0, at: VTOFFSET.QC_DOT.p) }
   public static func add(Q1_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q1_DOT, def: 0.0, at: VTOFFSET.Q1_DOT.p) }
   public static func add(Q2_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q2_DOT, def: 0.0, at: VTOFFSET.Q2_DOT.p) }
   public static func add(Q3_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Q3_DOT, def: 0.0, at: VTOFFSET.Q3_DOT.p) }
-  public static func add(QC_DOT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QC_DOT, def: 0.0, at: VTOFFSET.QC_DOT.p) }
-  public static func addVectorOf(X_ANGLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: X_ANGLE, at: VTOFFSET.X_ANGLE.p) }
-  public static func addVectorOf(Y_ANGLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: Y_ANGLE, at: VTOFFSET.Y_ANGLE.p) }
-  public static func addVectorOf(Z_ANGLE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: Z_ANGLE, at: VTOFFSET.Z_ANGLE.p) }
-  public static func addVectorOf(X_RATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: X_RATE, at: VTOFFSET.X_RATE.p) }
-  public static func addVectorOf(Y_RATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: Y_RATE, at: VTOFFSET.Y_RATE.p) }
-  public static func addVectorOf(Z_RATE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: Z_RATE, at: VTOFFSET.Z_RATE.p) }
+  public static func add(X_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_ANGLE, def: 0.0, at: VTOFFSET.X_ANGLE.p) }
+  public static func add(Y_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_ANGLE, def: 0.0, at: VTOFFSET.Y_ANGLE.p) }
+  public static func add(Z_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z_ANGLE, def: 0.0, at: VTOFFSET.Z_ANGLE.p) }
+  public static func add(X_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: X_RATE, def: 0.0, at: VTOFFSET.X_RATE.p) }
+  public static func add(Y_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Y_RATE, def: 0.0, at: VTOFFSET.Y_RATE.p) }
+  public static func add(Z_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: Z_RATE, def: 0.0, at: VTOFFSET.Z_RATE.p) }
   public static func add(RA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RA, def: 0.0, at: VTOFFSET.RA.p) }
   public static func add(DECLINATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DECLINATION, def: 0.0, at: VTOFFSET.DECLINATION.p) }
   public static func add(CONING_ANGLE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: CONING_ANGLE, def: 0.0, at: VTOFFSET.CONING_ANGLE.p) }
   public static func add(PREC_PERIOD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PREC_PERIOD, def: 0.0, at: VTOFFSET.PREC_PERIOD.p) }
   public static func add(SPIN_PERIOD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SPIN_PERIOD, def: 0.0, at: VTOFFSET.SPIN_PERIOD.p) }
+  public static func add(ATTITUDE_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ATTITUDE_UNC, def: 0.0, at: VTOFFSET.ATTITUDE_UNC.p) }
+  public static func add(RATE_UNC: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RATE_UNC, def: 0.0, at: VTOFFSET.RATE_UNC.p) }
+  public static func add(QUALITY: UInt8, _ fbb: inout FlatBufferBuilder) { fbb.add(element: QUALITY, def: 0, at: VTOFFSET.QUALITY.p) }
+  public static func add(REF_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME, at: VTOFFSET.REF_FRAME.p) }
+  public static func add(SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SENSOR_ID, at: VTOFFSET.SENSOR_ID.p) }
   public static func endATD(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createATD(
     _ fbb: inout FlatBufferBuilder,
     IDOffset ID: Offset = Offset(),
     AS_IDOffset AS_ID: Offset = Offset(),
-    SAT_NO: Int32 = 0,
+    SAT_NO: UInt32 = 0,
     ORIG_OBJECT_IDOffset ORIG_OBJECT_ID: Offset = Offset(),
-    TSOffset TS: Offset = Offset(),
-    MOTION_TYPEOffset MOTION_TYPE: Offset = Offset(),
+    EPOCHOffset EPOCH: Offset = Offset(),
+    REPRESENTATION: attRepresentation = .quaternion,
+    MOTION_TYPE: attMotionType = .stabilized,
+    QC: Double = 0.0,
     Q1: Double = 0.0,
     Q2: Double = 0.0,
     Q3: Double = 0.0,
-    QC: Double = 0.0,
+    QC_DOT: Double = 0.0,
     Q1_DOT: Double = 0.0,
     Q2_DOT: Double = 0.0,
     Q3_DOT: Double = 0.0,
-    QC_DOT: Double = 0.0,
-    X_ANGLEVectorOffset X_ANGLE: Offset = Offset(),
-    Y_ANGLEVectorOffset Y_ANGLE: Offset = Offset(),
-    Z_ANGLEVectorOffset Z_ANGLE: Offset = Offset(),
-    X_RATEVectorOffset X_RATE: Offset = Offset(),
-    Y_RATEVectorOffset Y_RATE: Offset = Offset(),
-    Z_RATEVectorOffset Z_RATE: Offset = Offset(),
+    X_ANGLE: Double = 0.0,
+    Y_ANGLE: Double = 0.0,
+    Z_ANGLE: Double = 0.0,
+    X_RATE: Double = 0.0,
+    Y_RATE: Double = 0.0,
+    Z_RATE: Double = 0.0,
     RA: Double = 0.0,
     DECLINATION: Double = 0.0,
     CONING_ANGLE: Double = 0.0,
     PREC_PERIOD: Double = 0.0,
-    SPIN_PERIOD: Double = 0.0
+    SPIN_PERIOD: Double = 0.0,
+    ATTITUDE_UNC: Double = 0.0,
+    RATE_UNC: Double = 0.0,
+    QUALITY: UInt8 = 0,
+    REF_FRAMEOffset REF_FRAME: Offset = Offset(),
+    SENSOR_IDOffset SENSOR_ID: Offset = Offset()
   ) -> Offset {
     let __start = ATD.startATD(&fbb)
     ATD.add(ID: ID, &fbb)
     ATD.add(AS_ID: AS_ID, &fbb)
     ATD.add(SAT_NO: SAT_NO, &fbb)
     ATD.add(ORIG_OBJECT_ID: ORIG_OBJECT_ID, &fbb)
-    ATD.add(TS: TS, &fbb)
+    ATD.add(EPOCH: EPOCH, &fbb)
+    ATD.add(REPRESENTATION: REPRESENTATION, &fbb)
     ATD.add(MOTION_TYPE: MOTION_TYPE, &fbb)
+    ATD.add(QC: QC, &fbb)
     ATD.add(Q1: Q1, &fbb)
     ATD.add(Q2: Q2, &fbb)
     ATD.add(Q3: Q3, &fbb)
-    ATD.add(QC: QC, &fbb)
+    ATD.add(QC_DOT: QC_DOT, &fbb)
     ATD.add(Q1_DOT: Q1_DOT, &fbb)
     ATD.add(Q2_DOT: Q2_DOT, &fbb)
     ATD.add(Q3_DOT: Q3_DOT, &fbb)
-    ATD.add(QC_DOT: QC_DOT, &fbb)
-    ATD.addVectorOf(X_ANGLE: X_ANGLE, &fbb)
-    ATD.addVectorOf(Y_ANGLE: Y_ANGLE, &fbb)
-    ATD.addVectorOf(Z_ANGLE: Z_ANGLE, &fbb)
-    ATD.addVectorOf(X_RATE: X_RATE, &fbb)
-    ATD.addVectorOf(Y_RATE: Y_RATE, &fbb)
-    ATD.addVectorOf(Z_RATE: Z_RATE, &fbb)
+    ATD.add(X_ANGLE: X_ANGLE, &fbb)
+    ATD.add(Y_ANGLE: Y_ANGLE, &fbb)
+    ATD.add(Z_ANGLE: Z_ANGLE, &fbb)
+    ATD.add(X_RATE: X_RATE, &fbb)
+    ATD.add(Y_RATE: Y_RATE, &fbb)
+    ATD.add(Z_RATE: Z_RATE, &fbb)
     ATD.add(RA: RA, &fbb)
     ATD.add(DECLINATION: DECLINATION, &fbb)
     ATD.add(CONING_ANGLE: CONING_ANGLE, &fbb)
     ATD.add(PREC_PERIOD: PREC_PERIOD, &fbb)
     ATD.add(SPIN_PERIOD: SPIN_PERIOD, &fbb)
+    ATD.add(ATTITUDE_UNC: ATTITUDE_UNC, &fbb)
+    ATD.add(RATE_UNC: RATE_UNC, &fbb)
+    ATD.add(QUALITY: QUALITY, &fbb)
+    ATD.add(REF_FRAME: REF_FRAME, &fbb)
+    ATD.add(SENSOR_ID: SENSOR_ID, &fbb)
     return ATD.endATD(&fbb, start: __start)
   }
 
@@ -176,29 +255,35 @@ public struct ATD: FlatBufferObject, Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.AS_ID.p, fieldName: "AS_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SAT_NO.p, fieldName: "SAT_NO", required: false, type: Int32.self)
+    try _v.visit(field: VTOFFSET.SAT_NO.p, fieldName: "SAT_NO", required: false, type: UInt32.self)
     try _v.visit(field: VTOFFSET.ORIG_OBJECT_ID.p, fieldName: "ORIG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TS.p, fieldName: "TS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.MOTION_TYPE.p, fieldName: "MOTION_TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.EPOCH.p, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.REPRESENTATION.p, fieldName: "REPRESENTATION", required: false, type: attRepresentation.self)
+    try _v.visit(field: VTOFFSET.MOTION_TYPE.p, fieldName: "MOTION_TYPE", required: false, type: attMotionType.self)
+    try _v.visit(field: VTOFFSET.QC.p, fieldName: "QC", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.Q1.p, fieldName: "Q1", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.Q2.p, fieldName: "Q2", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.Q3.p, fieldName: "Q3", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.QC.p, fieldName: "QC", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.QC_DOT.p, fieldName: "QC_DOT", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.Q1_DOT.p, fieldName: "Q1_DOT", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.Q2_DOT.p, fieldName: "Q2_DOT", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.Q3_DOT.p, fieldName: "Q3_DOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.QC_DOT.p, fieldName: "QC_DOT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.X_ANGLE.p, fieldName: "X_ANGLE", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.Y_ANGLE.p, fieldName: "Y_ANGLE", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.Z_ANGLE.p, fieldName: "Z_ANGLE", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.X_RATE.p, fieldName: "X_RATE", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.Y_RATE.p, fieldName: "Y_RATE", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.Z_RATE.p, fieldName: "Z_RATE", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VTOFFSET.X_ANGLE.p, fieldName: "X_ANGLE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.Y_ANGLE.p, fieldName: "Y_ANGLE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.Z_ANGLE.p, fieldName: "Z_ANGLE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.X_RATE.p, fieldName: "X_RATE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.Y_RATE.p, fieldName: "Y_RATE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.Z_RATE.p, fieldName: "Z_RATE", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.RA.p, fieldName: "RA", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.DECLINATION.p, fieldName: "DECLINATION", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.CONING_ANGLE.p, fieldName: "CONING_ANGLE", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.PREC_PERIOD.p, fieldName: "PREC_PERIOD", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.SPIN_PERIOD.p, fieldName: "SPIN_PERIOD", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.ATTITUDE_UNC.p, fieldName: "ATTITUDE_UNC", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.RATE_UNC.p, fieldName: "RATE_UNC", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.QUALITY.p, fieldName: "QUALITY", required: false, type: UInt8.self)
+    try _v.visit(field: VTOFFSET.REF_FRAME.p, fieldName: "REF_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.SENSOR_ID.p, fieldName: "SENSOR_ID", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

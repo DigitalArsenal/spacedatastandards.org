@@ -54,6 +54,7 @@ func (rcv *GDI) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Unique identifier
 func (rcv *GDI) ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -62,6 +63,8 @@ func (rcv *GDI) ID() []byte {
 	return nil
 }
 
+/// Unique identifier
+/// Sensor identifier
 func (rcv *GDI) ID_SENSOR() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -70,7 +73,9 @@ func (rcv *GDI) ID_SENSOR() []byte {
 	return nil
 }
 
-func (rcv *GDI) IMAGE_TIME() []byte {
+/// Sensor identifier
+/// Original sensor identifier
+func (rcv *GDI) ORIG_SENSOR_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -78,7 +83,9 @@ func (rcv *GDI) IMAGE_TIME() []byte {
 	return nil
 }
 
-func (rcv *GDI) FILENAME() []byte {
+/// Original sensor identifier
+/// Image capture time (ISO 8601)
+func (rcv *GDI) IMAGE_TIME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -86,7 +93,9 @@ func (rcv *GDI) FILENAME() []byte {
 	return nil
 }
 
-func (rcv *GDI) REGION() []byte {
+/// Image capture time (ISO 8601)
+/// Image filename
+func (rcv *GDI) FILENAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -94,23 +103,37 @@ func (rcv *GDI) REGION() []byte {
 	return nil
 }
 
-func (rcv *GDI) REGION_TEXT() []byte {
+/// Image filename
+/// Image format
+func (rcv *GDI) FORMAT() imageFormat {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return imageFormat(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
-	return nil
+	return 0
 }
 
-func (rcv *GDI) REGION_GEO_JSON() []byte {
+/// Image format
+func (rcv *GDI) MutateFORMAT(n imageFormat) bool {
+	return rcv._tab.MutateInt8Slot(14, int8(n))
+}
+
+/// File size (bytes)
+func (rcv *GDI) FILESIZE() int64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return rcv._tab.GetInt64(o + rcv._tab.Pos)
 	}
-	return nil
+	return 0
 }
 
-func (rcv *GDI) REGION_TYPE() []byte {
+/// File size (bytes)
+func (rcv *GDI) MutateFILESIZE(n int64) bool {
+	return rcv._tab.MutateInt64Slot(16, n)
+}
+
+/// File checksum value
+func (rcv *GDI) CHECKSUM_VALUE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -118,31 +141,29 @@ func (rcv *GDI) REGION_TYPE() []byte {
 	return nil
 }
 
-func (rcv *GDI) REGION_NDIMS() int32 {
+/// File checksum value
+/// Region GeoJSON boundary
+func (rcv *GDI) REGION_GEO_JSON() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
-	return 0
+	return nil
 }
 
-func (rcv *GDI) MutateREGION_NDIMS(n int32) bool {
-	return rcv._tab.MutateInt32Slot(20, n)
-}
-
-func (rcv *GDI) REGION_SRID() int32 {
+/// Region GeoJSON boundary
+/// Region text description
+func (rcv *GDI) REGION_TEXT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
-	return 0
+	return nil
 }
 
-func (rcv *GDI) MutateREGION_SRID(n int32) bool {
-	return rcv._tab.MutateInt32Slot(22, n)
-}
-
-func (rcv *GDI) ORIG_SENSOR_ID() []byte {
+/// Region text description
+/// Region name
+func (rcv *GDI) REGION() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -150,7 +171,9 @@ func (rcv *GDI) ORIG_SENSOR_ID() []byte {
 	return nil
 }
 
-func (rcv *GDI) SUBJECT_ID() []byte {
+/// Region name
+/// Region type
+func (rcv *GDI) REGION_TYPE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -158,24 +181,68 @@ func (rcv *GDI) SUBJECT_ID() []byte {
 	return nil
 }
 
-func (rcv *GDI) NAME() []byte {
+/// Region type
+/// Region geometry dimensions
+func (rcv *GDI) REGION_NDIMS() byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
 	}
-	return nil
+	return 0
 }
 
-func (rcv *GDI) TRANSACTION_ID() []byte {
+/// Region geometry dimensions
+func (rcv *GDI) MutateREGION_NDIMS(n byte) bool {
+	return rcv._tab.MutateByteSlot(28, n)
+}
+
+/// Region spatial reference ID
+func (rcv *GDI) REGION_SRID() uint16 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.GetUint16(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Region spatial reference ID
+func (rcv *GDI) MutateREGION_SRID(n uint16) bool {
+	return rcv._tab.MutateUint16Slot(30, n)
+}
+
+/// Subject object identifier
+func (rcv *GDI) SUBJECT_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
 }
 
+/// Subject object identifier
+/// Image name or title
+func (rcv *GDI) NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Image name or title
+/// Transaction identifier
+func (rcv *GDI) TRANSACTION_ID() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Transaction identifier
+/// Associated tags
 func (rcv *GDI) TAGS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -184,15 +251,17 @@ func (rcv *GDI) TAGS(j int) []byte {
 }
 
 func (rcv *GDI) TAGSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
+/// Associated tags
+/// Keywords for search/classification
 func (rcv *GDI) KEYWORDS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -201,42 +270,16 @@ func (rcv *GDI) KEYWORDS(j int) []byte {
 }
 
 func (rcv *GDI) KEYWORDSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
+/// Keywords for search/classification
+/// Notes
 func (rcv *GDI) NOTES() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-func (rcv *GDI) FORMAT() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-func (rcv *GDI) FILESIZE() int64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
-	if o != 0 {
-		return rcv._tab.GetInt64(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-func (rcv *GDI) MutateFILESIZE(n int64) bool {
-	return rcv._tab.MutateInt64Slot(40, n)
-}
-
-func (rcv *GDI) CHECKSUM_VALUE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -244,6 +287,7 @@ func (rcv *GDI) CHECKSUM_VALUE() []byte {
 	return nil
 }
 
+/// Notes
 func GDIStart(builder *flatbuffers.Builder) {
 	builder.StartObject(20)
 }
@@ -253,65 +297,65 @@ func GDIAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 func GDIAddID_SENSOR(builder *flatbuffers.Builder, ID_SENSOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ID_SENSOR), 0)
 }
+func GDIAddORIG_SENSOR_ID(builder *flatbuffers.Builder, ORIG_SENSOR_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ORIG_SENSOR_ID), 0)
+}
 func GDIAddIMAGE_TIME(builder *flatbuffers.Builder, IMAGE_TIME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(IMAGE_TIME), 0)
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(IMAGE_TIME), 0)
 }
 func GDIAddFILENAME(builder *flatbuffers.Builder, FILENAME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(FILENAME), 0)
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(FILENAME), 0)
 }
-func GDIAddREGION(builder *flatbuffers.Builder, REGION flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(REGION), 0)
+func GDIAddFORMAT(builder *flatbuffers.Builder, FORMAT imageFormat) {
+	builder.PrependInt8Slot(5, int8(FORMAT), 0)
 }
-func GDIAddREGION_TEXT(builder *flatbuffers.Builder, REGION_TEXT flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(REGION_TEXT), 0)
+func GDIAddFILESIZE(builder *flatbuffers.Builder, FILESIZE int64) {
+	builder.PrependInt64Slot(6, FILESIZE, 0)
+}
+func GDIAddCHECKSUM_VALUE(builder *flatbuffers.Builder, CHECKSUM_VALUE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(CHECKSUM_VALUE), 0)
 }
 func GDIAddREGION_GEO_JSON(builder *flatbuffers.Builder, REGION_GEO_JSON flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(REGION_GEO_JSON), 0)
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(REGION_GEO_JSON), 0)
+}
+func GDIAddREGION_TEXT(builder *flatbuffers.Builder, REGION_TEXT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(REGION_TEXT), 0)
+}
+func GDIAddREGION(builder *flatbuffers.Builder, REGION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(REGION), 0)
 }
 func GDIAddREGION_TYPE(builder *flatbuffers.Builder, REGION_TYPE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(REGION_TYPE), 0)
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(REGION_TYPE), 0)
 }
-func GDIAddREGION_NDIMS(builder *flatbuffers.Builder, REGION_NDIMS int32) {
-	builder.PrependInt32Slot(8, REGION_NDIMS, 0)
+func GDIAddREGION_NDIMS(builder *flatbuffers.Builder, REGION_NDIMS byte) {
+	builder.PrependByteSlot(12, REGION_NDIMS, 0)
 }
-func GDIAddREGION_SRID(builder *flatbuffers.Builder, REGION_SRID int32) {
-	builder.PrependInt32Slot(9, REGION_SRID, 0)
-}
-func GDIAddORIG_SENSOR_ID(builder *flatbuffers.Builder, ORIG_SENSOR_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(ORIG_SENSOR_ID), 0)
+func GDIAddREGION_SRID(builder *flatbuffers.Builder, REGION_SRID uint16) {
+	builder.PrependUint16Slot(13, REGION_SRID, 0)
 }
 func GDIAddSUBJECT_ID(builder *flatbuffers.Builder, SUBJECT_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(SUBJECT_ID), 0)
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(SUBJECT_ID), 0)
 }
 func GDIAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(NAME), 0)
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(NAME), 0)
 }
 func GDIAddTRANSACTION_ID(builder *flatbuffers.Builder, TRANSACTION_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(TRANSACTION_ID), 0)
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(TRANSACTION_ID), 0)
 }
 func GDIAddTAGS(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(TAGS), 0)
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(TAGS), 0)
 }
 func GDIStartTAGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
 func GDIAddKEYWORDS(builder *flatbuffers.Builder, KEYWORDS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(KEYWORDS), 0)
+	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(KEYWORDS), 0)
 }
 func GDIStartKEYWORDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
 func GDIAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(NOTES), 0)
-}
-func GDIAddFORMAT(builder *flatbuffers.Builder, FORMAT flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(FORMAT), 0)
-}
-func GDIAddFILESIZE(builder *flatbuffers.Builder, FILESIZE int64) {
-	builder.PrependInt64Slot(18, FILESIZE, 0)
-}
-func GDIAddCHECKSUM_VALUE(builder *flatbuffers.Builder, CHECKSUM_VALUE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(CHECKSUM_VALUE), 0)
+	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(NOTES), 0)
 }
 func GDIEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

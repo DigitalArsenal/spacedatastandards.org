@@ -29,126 +29,309 @@ public final class SOI extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public SOI __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * Message creation date (ISO 8601)
+   */
   public String MSG_CREATE_DATE() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer MSG_CREATE_DATEAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer MSG_CREATE_DATEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  /**
+   * Sensor identifier
+   */
   public String ID_SENSOR() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ID_SENSORAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer ID_SENSORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * Original sensor identifier
+   */
   public String ORIG_SENSOR_ID() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ORIG_SENSOR_IDAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
   public ByteBuffer ORIG_SENSOR_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * Sensor observation set identifier
+   */
   public String SENSOR_AS_ID() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer SENSOR_AS_IDAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
   public ByteBuffer SENSOR_AS_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
-  public int SAT_NO() { int o = __offset(14); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Satellite catalog number
+   */
+  public long SAT_NO() { int o = __offset(14); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * International designator
+   */
   public String ORIG_OBJECT_ID() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ORIG_OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
   public ByteBuffer ORIG_OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
-  public double SENLAT() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double SENLON() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double SENALT() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double SENX() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double SENY() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double SENZ() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double SENVELX() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double SENVELY() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double SENVELZ() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String START_TIME() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer START_TIMEAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
-  public ByteBuffer START_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
-  public String END_TIME() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer END_TIMEAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
-  public ByteBuffer END_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
-  public int NUM_OBS() { int o = __offset(40); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public String TYPE() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer TYPEAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
-  public ByteBuffer TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
-  public double POLAR_ANGLE_START() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double POLAR_ANGLE_END() { int o = __offset(46); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String REFERENCE_FRAME() { int o = __offset(48); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer REFERENCE_FRAMEAsByteBuffer() { return __vector_as_bytebuffer(48, 1); }
-  public ByteBuffer REFERENCE_FRAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 48, 1); }
-  public String SEN_REFERENCE_FRAME() { int o = __offset(50); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SEN_REFERENCE_FRAMEAsByteBuffer() { return __vector_as_bytebuffer(50, 1); }
-  public ByteBuffer SEN_REFERENCE_FRAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 50, 1); }
-  public double LOS_DECLINATION_START() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double LOS_DECLINATION_END() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double POINTING_ANGLE_AZ_START() { int o = __offset(56); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double POINTING_ANGLE_AZ_END() { int o = __offset(58); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double POINTING_ANGLE_EL_START() { int o = __offset(60); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double POINTING_ANGLE_EL_END() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public int PIXEL_ARRAY_WIDTH() { int o = __offset(64); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public int PIXEL_ARRAY_HEIGHT() { int o = __offset(66); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public int NUM_SPECTRAL_FILTERS() { int o = __offset(68); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public String SPECTRAL_FILTERS(int j) { int o = __offset(70); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int SPECTRAL_FILTERSLength() { int o = __offset(70); return o != 0 ? __vector_len(o) : 0; }
+  /**
+   * Satellite common name
+   */
+  public String SATELLITE_NAME() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SATELLITE_NAMEAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
+  public ByteBuffer SATELLITE_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
+  /**
+   * True if uncorrelated target
+   */
+  public boolean UCT() { int o = __offset(20); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Sensor geodetic latitude (degrees)
+   */
+  public double SENLAT() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sensor geodetic longitude (degrees)
+   */
+  public double SENLON() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sensor altitude (km)
+   */
+  public double SENALT() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sensor ECEF X position (km)
+   */
+  public double SENX() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sensor ECEF Y position (km)
+   */
+  public double SENY() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sensor ECEF Z position (km)
+   */
+  public double SENZ() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sensor ECEF X velocity (km/s)
+   */
+  public double SENVELX() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sensor ECEF Y velocity (km/s)
+   */
+  public double SENVELY() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sensor ECEF Z velocity (km/s)
+   */
+  public double SENVELZ() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sensor reference frame
+   */
+  public String SEN_REFERENCE_FRAME() { int o = __offset(40); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SEN_REFERENCE_FRAMEAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
+  public ByteBuffer SEN_REFERENCE_FRAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
+  /**
+   * Observation type
+   */
+  public byte OBS_TYPE() { int o = __offset(42); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Collection mode
+   */
+  public byte COLLECTION_MODE() { int o = __offset(44); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Observation start time (ISO 8601)
+   */
+  public String START_TIME() { int o = __offset(46); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer START_TIMEAsByteBuffer() { return __vector_as_bytebuffer(46, 1); }
+  public ByteBuffer START_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 46, 1); }
+  /**
+   * Observation end time (ISO 8601)
+   */
+  public String END_TIME() { int o = __offset(48); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer END_TIMEAsByteBuffer() { return __vector_as_bytebuffer(48, 1); }
+  public ByteBuffer END_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 48, 1); }
+  /**
+   * Number of observations in set
+   */
+  public long NUM_OBS() { int o = __offset(50); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Observation reference frame
+   */
+  public String REFERENCE_FRAME() { int o = __offset(52); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer REFERENCE_FRAMEAsByteBuffer() { return __vector_as_bytebuffer(52, 1); }
+  public ByteBuffer REFERENCE_FRAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 52, 1); }
+  /**
+   * Polar angle at start (degrees)
+   */
+  public double POLAR_ANGLE_START() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Polar angle at end (degrees)
+   */
+  public double POLAR_ANGLE_END() { int o = __offset(56); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Line-of-sight declination at start (degrees)
+   */
+  public double LOS_DECLINATION_START() { int o = __offset(58); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Line-of-sight declination at end (degrees)
+   */
+  public double LOS_DECLINATION_END() { int o = __offset(60); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Pointing azimuth at start (degrees)
+   */
+  public double POINTING_ANGLE_AZ_START() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Pointing azimuth at end (degrees)
+   */
+  public double POINTING_ANGLE_AZ_END() { int o = __offset(64); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Pointing elevation at start (degrees)
+   */
+  public double POINTING_ANGLE_EL_START() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Pointing elevation at end (degrees)
+   */
+  public double POINTING_ANGLE_EL_END() { int o = __offset(68); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Focal plane array width (pixels)
+   */
+  public int PIXEL_ARRAY_WIDTH() { int o = __offset(70); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * Focal plane array height (pixels)
+   */
+  public int PIXEL_ARRAY_HEIGHT() { int o = __offset(72); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * Number of spectral filters used
+   */
+  public int NUM_SPECTRAL_FILTERS() { int o = __offset(74); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Spectral filter identifiers
+   */
+  public String SPECTRAL_FILTERS(int j) { int o = __offset(76); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int SPECTRAL_FILTERSLength() { int o = __offset(76); return o != 0 ? __vector_len(o) : 0; }
   public StringVector spectralFiltersVector() { return spectralFiltersVector(new StringVector()); }
-  public StringVector spectralFiltersVector(StringVector obj) { int o = __offset(70); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String COLLECTION_MODE() { int o = __offset(72); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer COLLECTION_MODEAsByteBuffer() { return __vector_as_bytebuffer(72, 1); }
-  public ByteBuffer COLLECTION_MODEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 72, 1); }
-  public double GAIN() { int o = __offset(74); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public int BINNING_HORIZ() { int o = __offset(76); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public int BINNING_VERT() { int o = __offset(78); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public double SOLAR_MAG() { int o = __offset(80); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public int PIXEL_MIN() { int o = __offset(82); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public int PIXEL_MAX() { int o = __offset(84); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public String SOFTWARE_VERSION() { int o = __offset(86); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SOFTWARE_VERSIONAsByteBuffer() { return __vector_as_bytebuffer(86, 1); }
-  public ByteBuffer SOFTWARE_VERSIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 86, 1); }
-  public String SATELLITE_NAME() { int o = __offset(88); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SATELLITE_NAMEAsByteBuffer() { return __vector_as_bytebuffer(88, 1); }
-  public ByteBuffer SATELLITE_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 88, 1); }
-  public String STAR_CAT_NAME() { int o = __offset(90); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer STAR_CAT_NAMEAsByteBuffer() { return __vector_as_bytebuffer(90, 1); }
-  public ByteBuffer STAR_CAT_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 90, 1); }
-  public double CORR_QUALITY() { int o = __offset(92); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public boolean UCT() { int o = __offset(94); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public String VALID_CALIBRATIONS() { int o = __offset(96); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer VALID_CALIBRATIONSAsByteBuffer() { return __vector_as_bytebuffer(96, 1); }
-  public ByteBuffer VALID_CALIBRATIONSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 96, 1); }
-  public String CALIBRATION_TYPE() { int o = __offset(98); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer CALIBRATION_TYPEAsByteBuffer() { return __vector_as_bytebuffer(98, 1); }
-  public ByteBuffer CALIBRATION_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 98, 1); }
+  public StringVector spectralFiltersVector(StringVector obj) { int o = __offset(76); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Detector gain setting
+   */
+  public double GAIN() { int o = __offset(78); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Horizontal binning factor
+   */
+  public int BINNING_HORIZ() { int o = __offset(80); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Vertical binning factor
+   */
+  public int BINNING_VERT() { int o = __offset(82); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Solar visual magnitude
+   */
+  public double SOLAR_MAG() { int o = __offset(84); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Minimum pixel value in observation
+   */
+  public int PIXEL_MIN() { int o = __offset(86); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Maximum pixel value in observation
+   */
+  public int PIXEL_MAX() { int o = __offset(88); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Processing software version
+   */
+  public String SOFTWARE_VERSION() { int o = __offset(90); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SOFTWARE_VERSIONAsByteBuffer() { return __vector_as_bytebuffer(90, 1); }
+  public ByteBuffer SOFTWARE_VERSIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 90, 1); }
+  /**
+   * Star catalog used for calibration
+   */
+  public String STAR_CAT_NAME() { int o = __offset(92); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer STAR_CAT_NAMEAsByteBuffer() { return __vector_as_bytebuffer(92, 1); }
+  public ByteBuffer STAR_CAT_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 92, 1); }
+  /**
+   * Correlation quality score
+   */
+  public double CORR_QUALITY() { int o = __offset(94); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Calibration type
+   */
+  public byte CALIBRATION_TYPE() { int o = __offset(96); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Valid calibration identifiers
+   */
+  public String VALID_CALIBRATIONS() { int o = __offset(98); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer VALID_CALIBRATIONSAsByteBuffer() { return __vector_as_bytebuffer(98, 1); }
+  public ByteBuffer VALID_CALIBRATIONSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 98, 1); }
+  /**
+   * Percent saturation threshold
+   */
   public double PERCENT_SAT_THRESHOLD() { int o = __offset(100); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * True if change detected from baseline
+   */
   public boolean CHANGE_DETECTED() { int o = __offset(102); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * True if periodicity change detected
+   */
   public boolean PERIODICITY_CHANGE_DETECTED() { int o = __offset(104); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * True if brightness variance change detected
+   */
   public boolean BRIGHTNESS_VARIANCE_CHANGE_DETECTED() { int o = __offset(106); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * True if solar phase angle brightness change detected
+   */
   public boolean SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED() { int o = __offset(108); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Change confidence assessment
+   */
   public String CHANGE_CONF() { int o = __offset(110); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer CHANGE_CONFAsByteBuffer() { return __vector_as_bytebuffer(110, 1); }
   public ByteBuffer CHANGE_CONFInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 110, 1); }
+  /**
+   * Collection density confidence
+   */
   public String COLLECTION_DENSITY_CONF() { int o = __offset(112); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer COLLECTION_DENSITY_CONFAsByteBuffer() { return __vector_as_bytebuffer(112, 1); }
   public ByteBuffer COLLECTION_DENSITY_CONFInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 112, 1); }
+  /**
+   * Periodicity sampling confidence
+   */
   public String PERIODICITY_SAMPLING_CONF() { int o = __offset(114); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer PERIODICITY_SAMPLING_CONFAsByteBuffer() { return __vector_as_bytebuffer(114, 1); }
   public ByteBuffer PERIODICITY_SAMPLING_CONFInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 114, 1); }
+  /**
+   * Periodicity detection confidence
+   */
   public String PERIODICITY_DETECTION_CONF() { int o = __offset(116); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer PERIODICITY_DETECTION_CONFAsByteBuffer() { return __vector_as_bytebuffer(116, 1); }
   public ByteBuffer PERIODICITY_DETECTION_CONFInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 116, 1); }
+  /**
+   * Collection identifier
+   */
   public String COLLECTION_ID() { int o = __offset(118); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer COLLECTION_IDAsByteBuffer() { return __vector_as_bytebuffer(118, 1); }
   public ByteBuffer COLLECTION_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 118, 1); }
+  /**
+   * Calibration record references
+   */
   public String CALIBRATIONS(int j) { int o = __offset(120); return o != 0 ? __string(__vector(o) + j * 4) : null; }
   public int CALIBRATIONSLength() { int o = __offset(120); return o != 0 ? __vector_len(o) : 0; }
   public StringVector calibrationsVector() { return calibrationsVector(new StringVector()); }
   public StringVector calibrationsVector(StringVector obj) { int o = __offset(120); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Associated tags
+   */
   public String TAGS(int j) { int o = __offset(122); return o != 0 ? __string(__vector(o) + j * 4) : null; }
   public int TAGSLength() { int o = __offset(122); return o != 0 ? __vector_len(o) : 0; }
   public StringVector tagsVector() { return tagsVector(new StringVector()); }
   public StringVector tagsVector(StringVector obj) { int o = __offset(122); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Transaction identifier
+   */
   public String TRANSACTION_ID() { int o = __offset(124); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer TRANSACTION_IDAsByteBuffer() { return __vector_as_bytebuffer(124, 1); }
   public ByteBuffer TRANSACTION_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 124, 1); }
+  /**
+   * Optical SOI observation references
+   */
   public String OPTICAL_SOIOBSERVATION_LIST(int j) { int o = __offset(126); return o != 0 ? __string(__vector(o) + j * 4) : null; }
   public int OPTICAL_SOIOBSERVATION_LISTLength() { int o = __offset(126); return o != 0 ? __vector_len(o) : 0; }
   public StringVector opticalSoiobservationListVector() { return opticalSoiobservationListVector(new StringVector()); }
   public StringVector opticalSoiobservationListVector(StringVector obj) { int o = __offset(126); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Radar SOI observation references
+   */
   public String RADAR_SOIOBSERVATION_LIST(int j) { int o = __offset(128); return o != 0 ? __string(__vector(o) + j * 4) : null; }
   public int RADAR_SOIOBSERVATION_LISTLength() { int o = __offset(128); return o != 0 ? __vector_len(o) : 0; }
   public StringVector radarSoiobservationListVector() { return radarSoiobservationListVector(new StringVector()); }
@@ -160,8 +343,10 @@ public final class SOI extends Table {
       int ID_SENSOROffset,
       int ORIG_SENSOR_IDOffset,
       int SENSOR_AS_IDOffset,
-      int SAT_NO,
+      long SAT_NO,
       int ORIG_OBJECT_IDOffset,
+      int SATELLITE_NAMEOffset,
+      boolean UCT,
       double SENLAT,
       double SENLON,
       double SENALT,
@@ -171,14 +356,15 @@ public final class SOI extends Table {
       double SENVELX,
       double SENVELY,
       double SENVELZ,
+      int SEN_REFERENCE_FRAMEOffset,
+      byte OBS_TYPE,
+      byte COLLECTION_MODE,
       int START_TIMEOffset,
       int END_TIMEOffset,
-      int NUM_OBS,
-      int TYPEOffset,
+      long NUM_OBS,
+      int REFERENCE_FRAMEOffset,
       double POLAR_ANGLE_START,
       double POLAR_ANGLE_END,
-      int REFERENCE_FRAMEOffset,
-      int SEN_REFERENCE_FRAMEOffset,
       double LOS_DECLINATION_START,
       double LOS_DECLINATION_END,
       double POINTING_ANGLE_AZ_START,
@@ -189,7 +375,6 @@ public final class SOI extends Table {
       int PIXEL_ARRAY_HEIGHT,
       int NUM_SPECTRAL_FILTERS,
       int SPECTRAL_FILTERSOffset,
-      int COLLECTION_MODEOffset,
       double GAIN,
       int BINNING_HORIZ,
       int BINNING_VERT,
@@ -197,12 +382,10 @@ public final class SOI extends Table {
       int PIXEL_MIN,
       int PIXEL_MAX,
       int SOFTWARE_VERSIONOffset,
-      int SATELLITE_NAMEOffset,
       int STAR_CAT_NAMEOffset,
       double CORR_QUALITY,
-      boolean UCT,
+      byte CALIBRATION_TYPE,
       int VALID_CALIBRATIONSOffset,
-      int CALIBRATION_TYPEOffset,
       double PERCENT_SAT_THRESHOLD,
       boolean CHANGE_DETECTED,
       boolean PERIODICITY_CHANGE_DETECTED,
@@ -250,26 +433,18 @@ public final class SOI extends Table {
     SOI.addPeriodicitySamplingConf(builder, PERIODICITY_SAMPLING_CONFOffset);
     SOI.addCollectionDensityConf(builder, COLLECTION_DENSITY_CONFOffset);
     SOI.addChangeConf(builder, CHANGE_CONFOffset);
-    SOI.addCalibrationType(builder, CALIBRATION_TYPEOffset);
     SOI.addValidCalibrations(builder, VALID_CALIBRATIONSOffset);
     SOI.addStarCatName(builder, STAR_CAT_NAMEOffset);
-    SOI.addSatelliteName(builder, SATELLITE_NAMEOffset);
     SOI.addSoftwareVersion(builder, SOFTWARE_VERSIONOffset);
     SOI.addPixelMax(builder, PIXEL_MAX);
     SOI.addPixelMin(builder, PIXEL_MIN);
-    SOI.addBinningVert(builder, BINNING_VERT);
-    SOI.addBinningHoriz(builder, BINNING_HORIZ);
-    SOI.addCollectionMode(builder, COLLECTION_MODEOffset);
     SOI.addSpectralFilters(builder, SPECTRAL_FILTERSOffset);
-    SOI.addNumSpectralFilters(builder, NUM_SPECTRAL_FILTERS);
-    SOI.addPixelArrayHeight(builder, PIXEL_ARRAY_HEIGHT);
-    SOI.addPixelArrayWidth(builder, PIXEL_ARRAY_WIDTH);
-    SOI.addSenReferenceFrame(builder, SEN_REFERENCE_FRAMEOffset);
     SOI.addReferenceFrame(builder, REFERENCE_FRAMEOffset);
-    SOI.addType(builder, TYPEOffset);
     SOI.addNumObs(builder, NUM_OBS);
     SOI.addEndTime(builder, END_TIMEOffset);
     SOI.addStartTime(builder, START_TIMEOffset);
+    SOI.addSenReferenceFrame(builder, SEN_REFERENCE_FRAMEOffset);
+    SOI.addSatelliteName(builder, SATELLITE_NAMEOffset);
     SOI.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
     SOI.addSatNo(builder, SAT_NO);
     SOI.addSensorAsId(builder, SENSOR_AS_IDOffset);
@@ -277,10 +452,18 @@ public final class SOI extends Table {
     SOI.addIdSensor(builder, ID_SENSOROffset);
     SOI.addMsgCreateDate(builder, MSG_CREATE_DATEOffset);
     SOI.addId(builder, IDOffset);
+    SOI.addPixelArrayHeight(builder, PIXEL_ARRAY_HEIGHT);
+    SOI.addPixelArrayWidth(builder, PIXEL_ARRAY_WIDTH);
     SOI.addSolarPhaseAngleBrightnessChangeDetected(builder, SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED);
     SOI.addBrightnessVarianceChangeDetected(builder, BRIGHTNESS_VARIANCE_CHANGE_DETECTED);
     SOI.addPeriodicityChangeDetected(builder, PERIODICITY_CHANGE_DETECTED);
     SOI.addChangeDetected(builder, CHANGE_DETECTED);
+    SOI.addCalibrationType(builder, CALIBRATION_TYPE);
+    SOI.addBinningVert(builder, BINNING_VERT);
+    SOI.addBinningHoriz(builder, BINNING_HORIZ);
+    SOI.addNumSpectralFilters(builder, NUM_SPECTRAL_FILTERS);
+    SOI.addCollectionMode(builder, COLLECTION_MODE);
+    SOI.addObsType(builder, OBS_TYPE);
     SOI.addUct(builder, UCT);
     return SOI.endSOI(builder);
   }
@@ -291,51 +474,51 @@ public final class SOI extends Table {
   public static void addIdSensor(FlatBufferBuilder builder, int ID_SENSOROffset) { builder.addOffset(2, ID_SENSOROffset, 0); }
   public static void addOrigSensorId(FlatBufferBuilder builder, int ORIG_SENSOR_IDOffset) { builder.addOffset(3, ORIG_SENSOR_IDOffset, 0); }
   public static void addSensorAsId(FlatBufferBuilder builder, int SENSOR_AS_IDOffset) { builder.addOffset(4, SENSOR_AS_IDOffset, 0); }
-  public static void addSatNo(FlatBufferBuilder builder, int SAT_NO) { builder.addInt(5, SAT_NO, 0); }
+  public static void addSatNo(FlatBufferBuilder builder, long SAT_NO) { builder.addInt(5, (int) SAT_NO, (int) 0L); }
   public static void addOrigObjectId(FlatBufferBuilder builder, int ORIG_OBJECT_IDOffset) { builder.addOffset(6, ORIG_OBJECT_IDOffset, 0); }
-  public static void addSenlat(FlatBufferBuilder builder, double SENLAT) { builder.addDouble(7, SENLAT, 0.0); }
-  public static void addSenlon(FlatBufferBuilder builder, double SENLON) { builder.addDouble(8, SENLON, 0.0); }
-  public static void addSenalt(FlatBufferBuilder builder, double SENALT) { builder.addDouble(9, SENALT, 0.0); }
-  public static void addSenx(FlatBufferBuilder builder, double SENX) { builder.addDouble(10, SENX, 0.0); }
-  public static void addSeny(FlatBufferBuilder builder, double SENY) { builder.addDouble(11, SENY, 0.0); }
-  public static void addSenz(FlatBufferBuilder builder, double SENZ) { builder.addDouble(12, SENZ, 0.0); }
-  public static void addSenvelx(FlatBufferBuilder builder, double SENVELX) { builder.addDouble(13, SENVELX, 0.0); }
-  public static void addSenvely(FlatBufferBuilder builder, double SENVELY) { builder.addDouble(14, SENVELY, 0.0); }
-  public static void addSenvelz(FlatBufferBuilder builder, double SENVELZ) { builder.addDouble(15, SENVELZ, 0.0); }
-  public static void addStartTime(FlatBufferBuilder builder, int START_TIMEOffset) { builder.addOffset(16, START_TIMEOffset, 0); }
-  public static void addEndTime(FlatBufferBuilder builder, int END_TIMEOffset) { builder.addOffset(17, END_TIMEOffset, 0); }
-  public static void addNumObs(FlatBufferBuilder builder, int NUM_OBS) { builder.addInt(18, NUM_OBS, 0); }
-  public static void addType(FlatBufferBuilder builder, int TYPEOffset) { builder.addOffset(19, TYPEOffset, 0); }
-  public static void addPolarAngleStart(FlatBufferBuilder builder, double POLAR_ANGLE_START) { builder.addDouble(20, POLAR_ANGLE_START, 0.0); }
-  public static void addPolarAngleEnd(FlatBufferBuilder builder, double POLAR_ANGLE_END) { builder.addDouble(21, POLAR_ANGLE_END, 0.0); }
-  public static void addReferenceFrame(FlatBufferBuilder builder, int REFERENCE_FRAMEOffset) { builder.addOffset(22, REFERENCE_FRAMEOffset, 0); }
-  public static void addSenReferenceFrame(FlatBufferBuilder builder, int SEN_REFERENCE_FRAMEOffset) { builder.addOffset(23, SEN_REFERENCE_FRAMEOffset, 0); }
-  public static void addLosDeclinationStart(FlatBufferBuilder builder, double LOS_DECLINATION_START) { builder.addDouble(24, LOS_DECLINATION_START, 0.0); }
-  public static void addLosDeclinationEnd(FlatBufferBuilder builder, double LOS_DECLINATION_END) { builder.addDouble(25, LOS_DECLINATION_END, 0.0); }
-  public static void addPointingAngleAzStart(FlatBufferBuilder builder, double POINTING_ANGLE_AZ_START) { builder.addDouble(26, POINTING_ANGLE_AZ_START, 0.0); }
-  public static void addPointingAngleAzEnd(FlatBufferBuilder builder, double POINTING_ANGLE_AZ_END) { builder.addDouble(27, POINTING_ANGLE_AZ_END, 0.0); }
-  public static void addPointingAngleElStart(FlatBufferBuilder builder, double POINTING_ANGLE_EL_START) { builder.addDouble(28, POINTING_ANGLE_EL_START, 0.0); }
-  public static void addPointingAngleElEnd(FlatBufferBuilder builder, double POINTING_ANGLE_EL_END) { builder.addDouble(29, POINTING_ANGLE_EL_END, 0.0); }
-  public static void addPixelArrayWidth(FlatBufferBuilder builder, int PIXEL_ARRAY_WIDTH) { builder.addInt(30, PIXEL_ARRAY_WIDTH, 0); }
-  public static void addPixelArrayHeight(FlatBufferBuilder builder, int PIXEL_ARRAY_HEIGHT) { builder.addInt(31, PIXEL_ARRAY_HEIGHT, 0); }
-  public static void addNumSpectralFilters(FlatBufferBuilder builder, int NUM_SPECTRAL_FILTERS) { builder.addInt(32, NUM_SPECTRAL_FILTERS, 0); }
-  public static void addSpectralFilters(FlatBufferBuilder builder, int SPECTRAL_FILTERSOffset) { builder.addOffset(33, SPECTRAL_FILTERSOffset, 0); }
+  public static void addSatelliteName(FlatBufferBuilder builder, int SATELLITE_NAMEOffset) { builder.addOffset(7, SATELLITE_NAMEOffset, 0); }
+  public static void addUct(FlatBufferBuilder builder, boolean UCT) { builder.addBoolean(8, UCT, false); }
+  public static void addSenlat(FlatBufferBuilder builder, double SENLAT) { builder.addDouble(9, SENLAT, 0.0); }
+  public static void addSenlon(FlatBufferBuilder builder, double SENLON) { builder.addDouble(10, SENLON, 0.0); }
+  public static void addSenalt(FlatBufferBuilder builder, double SENALT) { builder.addDouble(11, SENALT, 0.0); }
+  public static void addSenx(FlatBufferBuilder builder, double SENX) { builder.addDouble(12, SENX, 0.0); }
+  public static void addSeny(FlatBufferBuilder builder, double SENY) { builder.addDouble(13, SENY, 0.0); }
+  public static void addSenz(FlatBufferBuilder builder, double SENZ) { builder.addDouble(14, SENZ, 0.0); }
+  public static void addSenvelx(FlatBufferBuilder builder, double SENVELX) { builder.addDouble(15, SENVELX, 0.0); }
+  public static void addSenvely(FlatBufferBuilder builder, double SENVELY) { builder.addDouble(16, SENVELY, 0.0); }
+  public static void addSenvelz(FlatBufferBuilder builder, double SENVELZ) { builder.addDouble(17, SENVELZ, 0.0); }
+  public static void addSenReferenceFrame(FlatBufferBuilder builder, int SEN_REFERENCE_FRAMEOffset) { builder.addOffset(18, SEN_REFERENCE_FRAMEOffset, 0); }
+  public static void addObsType(FlatBufferBuilder builder, byte OBS_TYPE) { builder.addByte(19, OBS_TYPE, 0); }
+  public static void addCollectionMode(FlatBufferBuilder builder, byte COLLECTION_MODE) { builder.addByte(20, COLLECTION_MODE, 0); }
+  public static void addStartTime(FlatBufferBuilder builder, int START_TIMEOffset) { builder.addOffset(21, START_TIMEOffset, 0); }
+  public static void addEndTime(FlatBufferBuilder builder, int END_TIMEOffset) { builder.addOffset(22, END_TIMEOffset, 0); }
+  public static void addNumObs(FlatBufferBuilder builder, long NUM_OBS) { builder.addInt(23, (int) NUM_OBS, (int) 0L); }
+  public static void addReferenceFrame(FlatBufferBuilder builder, int REFERENCE_FRAMEOffset) { builder.addOffset(24, REFERENCE_FRAMEOffset, 0); }
+  public static void addPolarAngleStart(FlatBufferBuilder builder, double POLAR_ANGLE_START) { builder.addDouble(25, POLAR_ANGLE_START, 0.0); }
+  public static void addPolarAngleEnd(FlatBufferBuilder builder, double POLAR_ANGLE_END) { builder.addDouble(26, POLAR_ANGLE_END, 0.0); }
+  public static void addLosDeclinationStart(FlatBufferBuilder builder, double LOS_DECLINATION_START) { builder.addDouble(27, LOS_DECLINATION_START, 0.0); }
+  public static void addLosDeclinationEnd(FlatBufferBuilder builder, double LOS_DECLINATION_END) { builder.addDouble(28, LOS_DECLINATION_END, 0.0); }
+  public static void addPointingAngleAzStart(FlatBufferBuilder builder, double POINTING_ANGLE_AZ_START) { builder.addDouble(29, POINTING_ANGLE_AZ_START, 0.0); }
+  public static void addPointingAngleAzEnd(FlatBufferBuilder builder, double POINTING_ANGLE_AZ_END) { builder.addDouble(30, POINTING_ANGLE_AZ_END, 0.0); }
+  public static void addPointingAngleElStart(FlatBufferBuilder builder, double POINTING_ANGLE_EL_START) { builder.addDouble(31, POINTING_ANGLE_EL_START, 0.0); }
+  public static void addPointingAngleElEnd(FlatBufferBuilder builder, double POINTING_ANGLE_EL_END) { builder.addDouble(32, POINTING_ANGLE_EL_END, 0.0); }
+  public static void addPixelArrayWidth(FlatBufferBuilder builder, int PIXEL_ARRAY_WIDTH) { builder.addShort(33, (short) PIXEL_ARRAY_WIDTH, (short) 0); }
+  public static void addPixelArrayHeight(FlatBufferBuilder builder, int PIXEL_ARRAY_HEIGHT) { builder.addShort(34, (short) PIXEL_ARRAY_HEIGHT, (short) 0); }
+  public static void addNumSpectralFilters(FlatBufferBuilder builder, int NUM_SPECTRAL_FILTERS) { builder.addByte(35, (byte) NUM_SPECTRAL_FILTERS, (byte) 0); }
+  public static void addSpectralFilters(FlatBufferBuilder builder, int SPECTRAL_FILTERSOffset) { builder.addOffset(36, SPECTRAL_FILTERSOffset, 0); }
   public static int createSpectralFiltersVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startSpectralFiltersVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addCollectionMode(FlatBufferBuilder builder, int COLLECTION_MODEOffset) { builder.addOffset(34, COLLECTION_MODEOffset, 0); }
-  public static void addGain(FlatBufferBuilder builder, double GAIN) { builder.addDouble(35, GAIN, 0.0); }
-  public static void addBinningHoriz(FlatBufferBuilder builder, int BINNING_HORIZ) { builder.addInt(36, BINNING_HORIZ, 0); }
-  public static void addBinningVert(FlatBufferBuilder builder, int BINNING_VERT) { builder.addInt(37, BINNING_VERT, 0); }
-  public static void addSolarMag(FlatBufferBuilder builder, double SOLAR_MAG) { builder.addDouble(38, SOLAR_MAG, 0.0); }
-  public static void addPixelMin(FlatBufferBuilder builder, int PIXEL_MIN) { builder.addInt(39, PIXEL_MIN, 0); }
-  public static void addPixelMax(FlatBufferBuilder builder, int PIXEL_MAX) { builder.addInt(40, PIXEL_MAX, 0); }
-  public static void addSoftwareVersion(FlatBufferBuilder builder, int SOFTWARE_VERSIONOffset) { builder.addOffset(41, SOFTWARE_VERSIONOffset, 0); }
-  public static void addSatelliteName(FlatBufferBuilder builder, int SATELLITE_NAMEOffset) { builder.addOffset(42, SATELLITE_NAMEOffset, 0); }
-  public static void addStarCatName(FlatBufferBuilder builder, int STAR_CAT_NAMEOffset) { builder.addOffset(43, STAR_CAT_NAMEOffset, 0); }
-  public static void addCorrQuality(FlatBufferBuilder builder, double CORR_QUALITY) { builder.addDouble(44, CORR_QUALITY, 0.0); }
-  public static void addUct(FlatBufferBuilder builder, boolean UCT) { builder.addBoolean(45, UCT, false); }
-  public static void addValidCalibrations(FlatBufferBuilder builder, int VALID_CALIBRATIONSOffset) { builder.addOffset(46, VALID_CALIBRATIONSOffset, 0); }
-  public static void addCalibrationType(FlatBufferBuilder builder, int CALIBRATION_TYPEOffset) { builder.addOffset(47, CALIBRATION_TYPEOffset, 0); }
+  public static void addGain(FlatBufferBuilder builder, double GAIN) { builder.addDouble(37, GAIN, 0.0); }
+  public static void addBinningHoriz(FlatBufferBuilder builder, int BINNING_HORIZ) { builder.addByte(38, (byte) BINNING_HORIZ, (byte) 0); }
+  public static void addBinningVert(FlatBufferBuilder builder, int BINNING_VERT) { builder.addByte(39, (byte) BINNING_VERT, (byte) 0); }
+  public static void addSolarMag(FlatBufferBuilder builder, double SOLAR_MAG) { builder.addDouble(40, SOLAR_MAG, 0.0); }
+  public static void addPixelMin(FlatBufferBuilder builder, int PIXEL_MIN) { builder.addInt(41, PIXEL_MIN, 0); }
+  public static void addPixelMax(FlatBufferBuilder builder, int PIXEL_MAX) { builder.addInt(42, PIXEL_MAX, 0); }
+  public static void addSoftwareVersion(FlatBufferBuilder builder, int SOFTWARE_VERSIONOffset) { builder.addOffset(43, SOFTWARE_VERSIONOffset, 0); }
+  public static void addStarCatName(FlatBufferBuilder builder, int STAR_CAT_NAMEOffset) { builder.addOffset(44, STAR_CAT_NAMEOffset, 0); }
+  public static void addCorrQuality(FlatBufferBuilder builder, double CORR_QUALITY) { builder.addDouble(45, CORR_QUALITY, 0.0); }
+  public static void addCalibrationType(FlatBufferBuilder builder, byte CALIBRATION_TYPE) { builder.addByte(46, CALIBRATION_TYPE, 0); }
+  public static void addValidCalibrations(FlatBufferBuilder builder, int VALID_CALIBRATIONSOffset) { builder.addOffset(47, VALID_CALIBRATIONSOffset, 0); }
   public static void addPercentSatThreshold(FlatBufferBuilder builder, double PERCENT_SAT_THRESHOLD) { builder.addDouble(48, PERCENT_SAT_THRESHOLD, 0.0); }
   public static void addChangeDetected(FlatBufferBuilder builder, boolean CHANGE_DETECTED) { builder.addBoolean(49, CHANGE_DETECTED, false); }
   public static void addPeriodicityChangeDetected(FlatBufferBuilder builder, boolean PERIODICITY_CHANGE_DETECTED) { builder.addBoolean(50, PERIODICITY_CHANGE_DETECTED, false); }

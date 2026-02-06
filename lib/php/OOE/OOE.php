@@ -41,321 +41,353 @@ class OOE extends Table
         return $this;
     }
 
+    /// Unique identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getDERIVED_FROM()
+    /// Satellite catalog number
+    /**
+     * @return uint
+     */
+    public function getSAT_NO()
     {
         $o = $this->__offset(6);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
-    public function getDECLASSIFICATION_DATE()
+    /// International designator
+    public function getORIG_OBJECT_ID()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getDECLASSIFICATION_STRING()
+    /// Source record this was derived from
+    public function getDERIVED_FROM()
     {
         $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /**
-     * @return int
-     */
-    public function getSAT_NO()
+    /// Classification date (ISO 8601)
+    public function getDECLASSIFICATION_DATE()
     {
         $o = $this->__offset(12);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getORIG_OBJECT_ID()
+    /// Classification marking
+    public function getDECLASSIFICATION_STRING()
     {
         $o = $this->__offset(14);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Event time (ISO 8601)
     public function getEVENT_TIME()
     {
         $o = $this->__offset(16);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Notes on event time accuracy
     public function getEVENT_TIME_NOTES()
     {
         $o = $this->__offset(18);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getOPERATOR_ORG_ID()
+    /// Event category
+    /**
+     * @return sbyte
+     */
+    public function getCATEGORY()
     {
         $o = $this->__offset(20);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \eventCategory::ANOMALY;
     }
 
-    public function getOWNER_ORG_ID()
+    /// Event result/outcome
+    /**
+     * @return sbyte
+     */
+    public function getRESULT()
     {
         $o = $this->__offset(22);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \eventResult::TOTAL_LOSS;
     }
 
-    public function getLESSEE_ORG_ID()
+    /// Event type detail
+    public function getEVENT_TYPE()
     {
         $o = $this->__offset(24);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getOPERATED_ON_BEHALF_OF_ORG_ID()
+    /// Operator organization identifier
+    public function getOPERATOR_ORG_ID()
     {
         $o = $this->__offset(26);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /**
-     * @return double
-     */
-    public function getGEO_POSITION()
+    /// Owner organization identifier
+    public function getOWNER_ORG_ID()
     {
         $o = $this->__offset(28);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getPLANE_SLOT()
+    /// Lessee organization identifier
+    public function getLESSEE_ORG_ID()
     {
         $o = $this->__offset(30);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getPLANE_NUMBER()
+    /// Operated on behalf of organization
+    public function getOPERATED_ON_BEHALF_OF_ORG_ID()
     {
         $o = $this->__offset(32);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getPOSITION_STATUS()
+    /// GEO longitude at event time (degrees east)
+    /**
+     * @return double
+     */
+    public function getGEO_POSITION()
     {
         $o = $this->__offset(34);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    public function getUNTIL_TIME()
+    /// Orbital plane slot
+    public function getPLANE_SLOT()
     {
         $o = $this->__offset(36);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getOFFICIAL_LOSS_DATE()
+    /// Orbital plane number
+    public function getPLANE_NUMBER()
     {
         $o = $this->__offset(38);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /**
-     * @return double
-     */
-    public function getNET_AMOUNT()
+    /// Position status at event time
+    public function getPOSITION_STATUS()
     {
         $o = $this->__offset(40);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getUNDERLYING_CAUSE()
+    /// Time until expected recovery (ISO 8601)
+    public function getUNTIL_TIME()
     {
         $o = $this->__offset(42);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /**
-     * @return double
-     */
-    public function getCAPABILITY_LOSS()
+    /// Official loss date (ISO 8601)
+    public function getOFFICIAL_LOSS_DATE()
     {
         $o = $this->__offset(44);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Financial loss amount (USD)
     /**
      * @return double
      */
-    public function getCAPACITY_LOSS()
+    public function getNET_AMOUNT()
     {
         $o = $this->__offset(46);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /**
-     * @return double
-     */
-    public function getINSURANCE_LOSS()
+    /// Root cause description
+    public function getUNDERLYING_CAUSE()
     {
         $o = $this->__offset(48);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Capability loss fraction (0-1)
     /**
      * @return double
      */
-    public function getTHIRD_PARTY_INSURANCE_LOSS()
+    public function getCAPABILITY_LOSS()
     {
         $o = $this->__offset(50);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /**
-     * @return int
-     */
-    public function getINJURED()
-    {
-        $o = $this->__offset(52);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getKILLED()
-    {
-        $o = $this->__offset(54);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
-    }
-
+    /// Capacity loss fraction (0-1)
     /**
      * @return double
      */
-    public function getLIFE_LOST()
+    public function getCAPACITY_LOSS()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Insurance loss amount (USD)
+    /**
+     * @return double
+     */
+    public function getINSURANCE_LOSS()
+    {
+        $o = $this->__offset(54);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Third-party insurance loss (USD)
+    /**
+     * @return double
+     */
+    public function getTHIRD_PARTY_INSURANCE_LOSS()
     {
         $o = $this->__offset(56);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Number of personnel injured
+    /**
+     * @return ushort
+     */
+    public function getINJURED()
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
+    }
+
+    /// Number of fatalities
+    /**
+     * @return ushort
+     */
+    public function getKILLED()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
+    }
+
+    /// Spacecraft age at event (years)
     /**
      * @return double
      */
     public function getAGE_AT_EVENT()
     {
-        $o = $this->__offset(58);
+        $o = $this->__offset(62);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    public function getACHIEVED_FLIGHT_PHASE()
-    {
-        $o = $this->__offset(60);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getOCCURRENCE_FLIGHT_PHASE()
-    {
-        $o = $this->__offset(62);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getSTAGE_AT_FAULT()
+    /// Design life remaining at event (years)
+    /**
+     * @return double
+     */
+    public function getLIFE_LOST()
     {
         $o = $this->__offset(64);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    public function getEQUIPMENT_AT_FAULT()
+    /// Flight phase achieved
+    public function getACHIEVED_FLIGHT_PHASE()
     {
         $o = $this->__offset(66);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getEQUIPMENT_TYPE_AT_FAULT()
+    /// Flight phase at occurrence
+    public function getOCCURRENCE_FLIGHT_PHASE()
     {
         $o = $this->__offset(68);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getEQUIPMENT_PART_AT_FAULT()
+    /// Stage at fault
+    public function getSTAGE_AT_FAULT()
     {
         $o = $this->__offset(70);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getCONSEQUENTIAL_EQUIPMENT_FAILURE()
+    /// Equipment at fault
+    public function getEQUIPMENT_AT_FAULT()
     {
         $o = $this->__offset(72);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /**
-     * @return bool
-     */
-    public function getINCLINED()
+    /// Equipment type at fault
+    public function getEQUIPMENT_TYPE_AT_FAULT()
     {
         $o = $this->__offset(74);
-        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getDESCRIPTION()
+    /// Equipment part at fault
+    public function getEQUIPMENT_PART_AT_FAULT()
     {
         $o = $this->__offset(76);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getREMARKS()
+    /// Consequential equipment failure
+    public function getCONSEQUENTIAL_EQUIPMENT_FAILURE()
     {
         $o = $this->__offset(78);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getINSURANCE_LOSS_NOTES()
+    /// True if orbit is inclined
+    /**
+     * @return bool
+     */
+    public function getINCLINED()
     {
         $o = $this->__offset(80);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
-    public function getCAPABILITY_LOSS_NOTES()
+    /// Event description
+    public function getDESCRIPTION()
     {
         $o = $this->__offset(82);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getINSURANCE_CARRIED_NOTES()
+    /// Additional remarks
+    public function getREMARKS()
     {
         $o = $this->__offset(84);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getEQUIPMENT_CAUSING_LOSS_NOTES()
+    /// Object status after event
+    public function getOBJECT_STATUS()
     {
         $o = $this->__offset(86);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getEVENT_TYPE()
+    /// Satellite position after event
+    public function getSATELLITE_POSITION()
     {
         $o = $this->__offset(88);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getEVENT_RESULT()
-    {
-        $o = $this->__offset(90);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getOBJECT_STATUS()
-    {
-        $o = $this->__offset(92);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getSATELLITE_POSITION()
-    {
-        $o = $this->__offset(94);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
+    /// On-orbit reference
     public function getON_ORBIT()
     {
-        $o = $this->__offset(96);
+        $o = $this->__offset(90);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
@@ -365,24 +397,27 @@ class OOE extends Table
      */
     public static function startOOE(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(47);
+        $builder->StartObject(44);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return OOE
      */
-    public static function createOOE(FlatBufferBuilder $builder, $ID, $DERIVED_FROM, $DECLASSIFICATION_DATE, $DECLASSIFICATION_STRING, $SAT_NO, $ORIG_OBJECT_ID, $EVENT_TIME, $EVENT_TIME_NOTES, $OPERATOR_ORG_ID, $OWNER_ORG_ID, $LESSEE_ORG_ID, $OPERATED_ON_BEHALF_OF_ORG_ID, $GEO_POSITION, $PLANE_SLOT, $PLANE_NUMBER, $POSITION_STATUS, $UNTIL_TIME, $OFFICIAL_LOSS_DATE, $NET_AMOUNT, $UNDERLYING_CAUSE, $CAPABILITY_LOSS, $CAPACITY_LOSS, $INSURANCE_LOSS, $THIRD_PARTY_INSURANCE_LOSS, $INJURED, $KILLED, $LIFE_LOST, $AGE_AT_EVENT, $ACHIEVED_FLIGHT_PHASE, $OCCURRENCE_FLIGHT_PHASE, $STAGE_AT_FAULT, $EQUIPMENT_AT_FAULT, $EQUIPMENT_TYPE_AT_FAULT, $EQUIPMENT_PART_AT_FAULT, $CONSEQUENTIAL_EQUIPMENT_FAILURE, $INCLINED, $DESCRIPTION, $REMARKS, $INSURANCE_LOSS_NOTES, $CAPABILITY_LOSS_NOTES, $INSURANCE_CARRIED_NOTES, $EQUIPMENT_CAUSING_LOSS_NOTES, $EVENT_TYPE, $EVENT_RESULT, $OBJECT_STATUS, $SATELLITE_POSITION, $ON_ORBIT)
+    public static function createOOE(FlatBufferBuilder $builder, $ID, $SAT_NO, $ORIG_OBJECT_ID, $DERIVED_FROM, $DECLASSIFICATION_DATE, $DECLASSIFICATION_STRING, $EVENT_TIME, $EVENT_TIME_NOTES, $CATEGORY, $RESULT, $EVENT_TYPE, $OPERATOR_ORG_ID, $OWNER_ORG_ID, $LESSEE_ORG_ID, $OPERATED_ON_BEHALF_OF_ORG_ID, $GEO_POSITION, $PLANE_SLOT, $PLANE_NUMBER, $POSITION_STATUS, $UNTIL_TIME, $OFFICIAL_LOSS_DATE, $NET_AMOUNT, $UNDERLYING_CAUSE, $CAPABILITY_LOSS, $CAPACITY_LOSS, $INSURANCE_LOSS, $THIRD_PARTY_INSURANCE_LOSS, $INJURED, $KILLED, $AGE_AT_EVENT, $LIFE_LOST, $ACHIEVED_FLIGHT_PHASE, $OCCURRENCE_FLIGHT_PHASE, $STAGE_AT_FAULT, $EQUIPMENT_AT_FAULT, $EQUIPMENT_TYPE_AT_FAULT, $EQUIPMENT_PART_AT_FAULT, $CONSEQUENTIAL_EQUIPMENT_FAILURE, $INCLINED, $DESCRIPTION, $REMARKS, $OBJECT_STATUS, $SATELLITE_POSITION, $ON_ORBIT)
     {
-        $builder->startObject(47);
+        $builder->startObject(44);
         self::addID($builder, $ID);
+        self::addSAT_NO($builder, $SAT_NO);
+        self::addORIG_OBJECT_ID($builder, $ORIG_OBJECT_ID);
         self::addDERIVED_FROM($builder, $DERIVED_FROM);
         self::addDECLASSIFICATION_DATE($builder, $DECLASSIFICATION_DATE);
         self::addDECLASSIFICATION_STRING($builder, $DECLASSIFICATION_STRING);
-        self::addSAT_NO($builder, $SAT_NO);
-        self::addORIG_OBJECT_ID($builder, $ORIG_OBJECT_ID);
         self::addEVENT_TIME($builder, $EVENT_TIME);
         self::addEVENT_TIME_NOTES($builder, $EVENT_TIME_NOTES);
+        self::addCATEGORY($builder, $CATEGORY);
+        self::addRESULT($builder, $RESULT);
+        self::addEVENT_TYPE($builder, $EVENT_TYPE);
         self::addOPERATOR_ORG_ID($builder, $OPERATOR_ORG_ID);
         self::addOWNER_ORG_ID($builder, $OWNER_ORG_ID);
         self::addLESSEE_ORG_ID($builder, $LESSEE_ORG_ID);
@@ -401,8 +436,8 @@ class OOE extends Table
         self::addTHIRD_PARTY_INSURANCE_LOSS($builder, $THIRD_PARTY_INSURANCE_LOSS);
         self::addINJURED($builder, $INJURED);
         self::addKILLED($builder, $KILLED);
-        self::addLIFE_LOST($builder, $LIFE_LOST);
         self::addAGE_AT_EVENT($builder, $AGE_AT_EVENT);
+        self::addLIFE_LOST($builder, $LIFE_LOST);
         self::addACHIEVED_FLIGHT_PHASE($builder, $ACHIEVED_FLIGHT_PHASE);
         self::addOCCURRENCE_FLIGHT_PHASE($builder, $OCCURRENCE_FLIGHT_PHASE);
         self::addSTAGE_AT_FAULT($builder, $STAGE_AT_FAULT);
@@ -413,12 +448,6 @@ class OOE extends Table
         self::addINCLINED($builder, $INCLINED);
         self::addDESCRIPTION($builder, $DESCRIPTION);
         self::addREMARKS($builder, $REMARKS);
-        self::addINSURANCE_LOSS_NOTES($builder, $INSURANCE_LOSS_NOTES);
-        self::addCAPABILITY_LOSS_NOTES($builder, $CAPABILITY_LOSS_NOTES);
-        self::addINSURANCE_CARRIED_NOTES($builder, $INSURANCE_CARRIED_NOTES);
-        self::addEQUIPMENT_CAUSING_LOSS_NOTES($builder, $EQUIPMENT_CAUSING_LOSS_NOTES);
-        self::addEVENT_TYPE($builder, $EVENT_TYPE);
-        self::addEVENT_RESULT($builder, $EVENT_RESULT);
         self::addOBJECT_STATUS($builder, $OBJECT_STATUS);
         self::addSATELLITE_POSITION($builder, $SATELLITE_POSITION);
         self::addON_ORBIT($builder, $ON_ORBIT);
@@ -438,42 +467,12 @@ class OOE extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addDERIVED_FROM(FlatBufferBuilder $builder, $DERIVED_FROM)
-    {
-        $builder->addOffsetX(1, $DERIVED_FROM, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addDECLASSIFICATION_DATE(FlatBufferBuilder $builder, $DECLASSIFICATION_DATE)
-    {
-        $builder->addOffsetX(2, $DECLASSIFICATION_DATE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addDECLASSIFICATION_STRING(FlatBufferBuilder $builder, $DECLASSIFICATION_STRING)
-    {
-        $builder->addOffsetX(3, $DECLASSIFICATION_STRING, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int
+     * @param uint
      * @return void
      */
     public static function addSAT_NO(FlatBufferBuilder $builder, $SAT_NO)
     {
-        $builder->addIntX(4, $SAT_NO, 0);
+        $builder->addUintX(1, $SAT_NO, 0);
     }
 
     /**
@@ -483,7 +482,37 @@ class OOE extends Table
      */
     public static function addORIG_OBJECT_ID(FlatBufferBuilder $builder, $ORIG_OBJECT_ID)
     {
-        $builder->addOffsetX(5, $ORIG_OBJECT_ID, 0);
+        $builder->addOffsetX(2, $ORIG_OBJECT_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDERIVED_FROM(FlatBufferBuilder $builder, $DERIVED_FROM)
+    {
+        $builder->addOffsetX(3, $DERIVED_FROM, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDECLASSIFICATION_DATE(FlatBufferBuilder $builder, $DECLASSIFICATION_DATE)
+    {
+        $builder->addOffsetX(4, $DECLASSIFICATION_DATE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDECLASSIFICATION_STRING(FlatBufferBuilder $builder, $DECLASSIFICATION_STRING)
+    {
+        $builder->addOffsetX(5, $DECLASSIFICATION_STRING, 0);
     }
 
     /**
@@ -508,342 +537,22 @@ class OOE extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
-    public static function addOPERATOR_ORG_ID(FlatBufferBuilder $builder, $OPERATOR_ORG_ID)
+    public static function addCATEGORY(FlatBufferBuilder $builder, $CATEGORY)
     {
-        $builder->addOffsetX(8, $OPERATOR_ORG_ID, 0);
+        $builder->addSbyteX(8, $CATEGORY, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
-    public static function addOWNER_ORG_ID(FlatBufferBuilder $builder, $OWNER_ORG_ID)
+    public static function addRESULT(FlatBufferBuilder $builder, $RESULT)
     {
-        $builder->addOffsetX(9, $OWNER_ORG_ID, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addLESSEE_ORG_ID(FlatBufferBuilder $builder, $LESSEE_ORG_ID)
-    {
-        $builder->addOffsetX(10, $LESSEE_ORG_ID, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addOPERATED_ON_BEHALF_OF_ORG_ID(FlatBufferBuilder $builder, $OPERATED_ON_BEHALF_OF_ORG_ID)
-    {
-        $builder->addOffsetX(11, $OPERATED_ON_BEHALF_OF_ORG_ID, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addGEO_POSITION(FlatBufferBuilder $builder, $GEO_POSITION)
-    {
-        $builder->addDoubleX(12, $GEO_POSITION, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addPLANE_SLOT(FlatBufferBuilder $builder, $PLANE_SLOT)
-    {
-        $builder->addOffsetX(13, $PLANE_SLOT, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addPLANE_NUMBER(FlatBufferBuilder $builder, $PLANE_NUMBER)
-    {
-        $builder->addOffsetX(14, $PLANE_NUMBER, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addPOSITION_STATUS(FlatBufferBuilder $builder, $POSITION_STATUS)
-    {
-        $builder->addOffsetX(15, $POSITION_STATUS, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addUNTIL_TIME(FlatBufferBuilder $builder, $UNTIL_TIME)
-    {
-        $builder->addOffsetX(16, $UNTIL_TIME, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addOFFICIAL_LOSS_DATE(FlatBufferBuilder $builder, $OFFICIAL_LOSS_DATE)
-    {
-        $builder->addOffsetX(17, $OFFICIAL_LOSS_DATE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addNET_AMOUNT(FlatBufferBuilder $builder, $NET_AMOUNT)
-    {
-        $builder->addDoubleX(18, $NET_AMOUNT, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addUNDERLYING_CAUSE(FlatBufferBuilder $builder, $UNDERLYING_CAUSE)
-    {
-        $builder->addOffsetX(19, $UNDERLYING_CAUSE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addCAPABILITY_LOSS(FlatBufferBuilder $builder, $CAPABILITY_LOSS)
-    {
-        $builder->addDoubleX(20, $CAPABILITY_LOSS, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addCAPACITY_LOSS(FlatBufferBuilder $builder, $CAPACITY_LOSS)
-    {
-        $builder->addDoubleX(21, $CAPACITY_LOSS, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addINSURANCE_LOSS(FlatBufferBuilder $builder, $INSURANCE_LOSS)
-    {
-        $builder->addDoubleX(22, $INSURANCE_LOSS, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addTHIRD_PARTY_INSURANCE_LOSS(FlatBufferBuilder $builder, $THIRD_PARTY_INSURANCE_LOSS)
-    {
-        $builder->addDoubleX(23, $THIRD_PARTY_INSURANCE_LOSS, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int
-     * @return void
-     */
-    public static function addINJURED(FlatBufferBuilder $builder, $INJURED)
-    {
-        $builder->addIntX(24, $INJURED, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int
-     * @return void
-     */
-    public static function addKILLED(FlatBufferBuilder $builder, $KILLED)
-    {
-        $builder->addIntX(25, $KILLED, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addLIFE_LOST(FlatBufferBuilder $builder, $LIFE_LOST)
-    {
-        $builder->addDoubleX(26, $LIFE_LOST, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addAGE_AT_EVENT(FlatBufferBuilder $builder, $AGE_AT_EVENT)
-    {
-        $builder->addDoubleX(27, $AGE_AT_EVENT, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addACHIEVED_FLIGHT_PHASE(FlatBufferBuilder $builder, $ACHIEVED_FLIGHT_PHASE)
-    {
-        $builder->addOffsetX(28, $ACHIEVED_FLIGHT_PHASE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addOCCURRENCE_FLIGHT_PHASE(FlatBufferBuilder $builder, $OCCURRENCE_FLIGHT_PHASE)
-    {
-        $builder->addOffsetX(29, $OCCURRENCE_FLIGHT_PHASE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addSTAGE_AT_FAULT(FlatBufferBuilder $builder, $STAGE_AT_FAULT)
-    {
-        $builder->addOffsetX(30, $STAGE_AT_FAULT, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addEQUIPMENT_AT_FAULT(FlatBufferBuilder $builder, $EQUIPMENT_AT_FAULT)
-    {
-        $builder->addOffsetX(31, $EQUIPMENT_AT_FAULT, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addEQUIPMENT_TYPE_AT_FAULT(FlatBufferBuilder $builder, $EQUIPMENT_TYPE_AT_FAULT)
-    {
-        $builder->addOffsetX(32, $EQUIPMENT_TYPE_AT_FAULT, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addEQUIPMENT_PART_AT_FAULT(FlatBufferBuilder $builder, $EQUIPMENT_PART_AT_FAULT)
-    {
-        $builder->addOffsetX(33, $EQUIPMENT_PART_AT_FAULT, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addCONSEQUENTIAL_EQUIPMENT_FAILURE(FlatBufferBuilder $builder, $CONSEQUENTIAL_EQUIPMENT_FAILURE)
-    {
-        $builder->addOffsetX(34, $CONSEQUENTIAL_EQUIPMENT_FAILURE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param bool
-     * @return void
-     */
-    public static function addINCLINED(FlatBufferBuilder $builder, $INCLINED)
-    {
-        $builder->addBoolX(35, $INCLINED, false);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addDESCRIPTION(FlatBufferBuilder $builder, $DESCRIPTION)
-    {
-        $builder->addOffsetX(36, $DESCRIPTION, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addREMARKS(FlatBufferBuilder $builder, $REMARKS)
-    {
-        $builder->addOffsetX(37, $REMARKS, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addINSURANCE_LOSS_NOTES(FlatBufferBuilder $builder, $INSURANCE_LOSS_NOTES)
-    {
-        $builder->addOffsetX(38, $INSURANCE_LOSS_NOTES, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addCAPABILITY_LOSS_NOTES(FlatBufferBuilder $builder, $CAPABILITY_LOSS_NOTES)
-    {
-        $builder->addOffsetX(39, $CAPABILITY_LOSS_NOTES, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addINSURANCE_CARRIED_NOTES(FlatBufferBuilder $builder, $INSURANCE_CARRIED_NOTES)
-    {
-        $builder->addOffsetX(40, $INSURANCE_CARRIED_NOTES, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addEQUIPMENT_CAUSING_LOSS_NOTES(FlatBufferBuilder $builder, $EQUIPMENT_CAUSING_LOSS_NOTES)
-    {
-        $builder->addOffsetX(41, $EQUIPMENT_CAUSING_LOSS_NOTES, 0);
+        $builder->addSbyteX(9, $RESULT, 0);
     }
 
     /**
@@ -853,7 +562,7 @@ class OOE extends Table
      */
     public static function addEVENT_TYPE(FlatBufferBuilder $builder, $EVENT_TYPE)
     {
-        $builder->addOffsetX(42, $EVENT_TYPE, 0);
+        $builder->addOffsetX(10, $EVENT_TYPE, 0);
     }
 
     /**
@@ -861,9 +570,299 @@ class OOE extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addEVENT_RESULT(FlatBufferBuilder $builder, $EVENT_RESULT)
+    public static function addOPERATOR_ORG_ID(FlatBufferBuilder $builder, $OPERATOR_ORG_ID)
     {
-        $builder->addOffsetX(43, $EVENT_RESULT, 0);
+        $builder->addOffsetX(11, $OPERATOR_ORG_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addOWNER_ORG_ID(FlatBufferBuilder $builder, $OWNER_ORG_ID)
+    {
+        $builder->addOffsetX(12, $OWNER_ORG_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addLESSEE_ORG_ID(FlatBufferBuilder $builder, $LESSEE_ORG_ID)
+    {
+        $builder->addOffsetX(13, $LESSEE_ORG_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addOPERATED_ON_BEHALF_OF_ORG_ID(FlatBufferBuilder $builder, $OPERATED_ON_BEHALF_OF_ORG_ID)
+    {
+        $builder->addOffsetX(14, $OPERATED_ON_BEHALF_OF_ORG_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addGEO_POSITION(FlatBufferBuilder $builder, $GEO_POSITION)
+    {
+        $builder->addDoubleX(15, $GEO_POSITION, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPLANE_SLOT(FlatBufferBuilder $builder, $PLANE_SLOT)
+    {
+        $builder->addOffsetX(16, $PLANE_SLOT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPLANE_NUMBER(FlatBufferBuilder $builder, $PLANE_NUMBER)
+    {
+        $builder->addOffsetX(17, $PLANE_NUMBER, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPOSITION_STATUS(FlatBufferBuilder $builder, $POSITION_STATUS)
+    {
+        $builder->addOffsetX(18, $POSITION_STATUS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addUNTIL_TIME(FlatBufferBuilder $builder, $UNTIL_TIME)
+    {
+        $builder->addOffsetX(19, $UNTIL_TIME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addOFFICIAL_LOSS_DATE(FlatBufferBuilder $builder, $OFFICIAL_LOSS_DATE)
+    {
+        $builder->addOffsetX(20, $OFFICIAL_LOSS_DATE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addNET_AMOUNT(FlatBufferBuilder $builder, $NET_AMOUNT)
+    {
+        $builder->addDoubleX(21, $NET_AMOUNT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addUNDERLYING_CAUSE(FlatBufferBuilder $builder, $UNDERLYING_CAUSE)
+    {
+        $builder->addOffsetX(22, $UNDERLYING_CAUSE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCAPABILITY_LOSS(FlatBufferBuilder $builder, $CAPABILITY_LOSS)
+    {
+        $builder->addDoubleX(23, $CAPABILITY_LOSS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCAPACITY_LOSS(FlatBufferBuilder $builder, $CAPACITY_LOSS)
+    {
+        $builder->addDoubleX(24, $CAPACITY_LOSS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addINSURANCE_LOSS(FlatBufferBuilder $builder, $INSURANCE_LOSS)
+    {
+        $builder->addDoubleX(25, $INSURANCE_LOSS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTHIRD_PARTY_INSURANCE_LOSS(FlatBufferBuilder $builder, $THIRD_PARTY_INSURANCE_LOSS)
+    {
+        $builder->addDoubleX(26, $THIRD_PARTY_INSURANCE_LOSS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ushort
+     * @return void
+     */
+    public static function addINJURED(FlatBufferBuilder $builder, $INJURED)
+    {
+        $builder->addUshortX(27, $INJURED, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param ushort
+     * @return void
+     */
+    public static function addKILLED(FlatBufferBuilder $builder, $KILLED)
+    {
+        $builder->addUshortX(28, $KILLED, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addAGE_AT_EVENT(FlatBufferBuilder $builder, $AGE_AT_EVENT)
+    {
+        $builder->addDoubleX(29, $AGE_AT_EVENT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addLIFE_LOST(FlatBufferBuilder $builder, $LIFE_LOST)
+    {
+        $builder->addDoubleX(30, $LIFE_LOST, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addACHIEVED_FLIGHT_PHASE(FlatBufferBuilder $builder, $ACHIEVED_FLIGHT_PHASE)
+    {
+        $builder->addOffsetX(31, $ACHIEVED_FLIGHT_PHASE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addOCCURRENCE_FLIGHT_PHASE(FlatBufferBuilder $builder, $OCCURRENCE_FLIGHT_PHASE)
+    {
+        $builder->addOffsetX(32, $OCCURRENCE_FLIGHT_PHASE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSTAGE_AT_FAULT(FlatBufferBuilder $builder, $STAGE_AT_FAULT)
+    {
+        $builder->addOffsetX(33, $STAGE_AT_FAULT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEQUIPMENT_AT_FAULT(FlatBufferBuilder $builder, $EQUIPMENT_AT_FAULT)
+    {
+        $builder->addOffsetX(34, $EQUIPMENT_AT_FAULT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEQUIPMENT_TYPE_AT_FAULT(FlatBufferBuilder $builder, $EQUIPMENT_TYPE_AT_FAULT)
+    {
+        $builder->addOffsetX(35, $EQUIPMENT_TYPE_AT_FAULT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEQUIPMENT_PART_AT_FAULT(FlatBufferBuilder $builder, $EQUIPMENT_PART_AT_FAULT)
+    {
+        $builder->addOffsetX(36, $EQUIPMENT_PART_AT_FAULT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCONSEQUENTIAL_EQUIPMENT_FAILURE(FlatBufferBuilder $builder, $CONSEQUENTIAL_EQUIPMENT_FAILURE)
+    {
+        $builder->addOffsetX(37, $CONSEQUENTIAL_EQUIPMENT_FAILURE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addINCLINED(FlatBufferBuilder $builder, $INCLINED)
+    {
+        $builder->addBoolX(38, $INCLINED, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addDESCRIPTION(FlatBufferBuilder $builder, $DESCRIPTION)
+    {
+        $builder->addOffsetX(39, $DESCRIPTION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addREMARKS(FlatBufferBuilder $builder, $REMARKS)
+    {
+        $builder->addOffsetX(40, $REMARKS, 0);
     }
 
     /**
@@ -873,7 +872,7 @@ class OOE extends Table
      */
     public static function addOBJECT_STATUS(FlatBufferBuilder $builder, $OBJECT_STATUS)
     {
-        $builder->addOffsetX(44, $OBJECT_STATUS, 0);
+        $builder->addOffsetX(41, $OBJECT_STATUS, 0);
     }
 
     /**
@@ -883,7 +882,7 @@ class OOE extends Table
      */
     public static function addSATELLITE_POSITION(FlatBufferBuilder $builder, $SATELLITE_POSITION)
     {
-        $builder->addOffsetX(45, $SATELLITE_POSITION, 0);
+        $builder->addOffsetX(42, $SATELLITE_POSITION, 0);
     }
 
     /**
@@ -893,7 +892,7 @@ class OOE extends Table
      */
     public static function addON_ORBIT(FlatBufferBuilder $builder, $ON_ORBIT)
     {
-        $builder->addOffsetX(46, $ON_ORBIT, 0);
+        $builder->addOffsetX(43, $ON_ORBIT, 0);
     }
 
     /**

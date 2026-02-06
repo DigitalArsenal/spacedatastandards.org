@@ -5,6 +5,894 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class AttitudeStateType {
+  final int value;
+  const AttitudeStateType._(this.value);
+
+  factory AttitudeStateType.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum AttitudeStateType');
+    }
+    return result;
+  }
+
+  static AttitudeStateType? _createOrNull(int? value) => 
+      value == null ? null : AttitudeStateType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const AttitudeStateType QUATERNION = AttitudeStateType._(0);
+  static const AttitudeStateType EULER_ANGLES = AttitudeStateType._(1);
+  static const AttitudeStateType SPIN = AttitudeStateType._(2);
+  static const AttitudeStateType DIRECTION_COSINE = AttitudeStateType._(3);
+  static const Map<int, AttitudeStateType> values = {
+    0: QUATERNION,
+    1: EULER_ANGLES,
+    2: SPIN,
+    3: DIRECTION_COSINE};
+
+  static const fb.Reader<AttitudeStateType> reader = _AttitudeStateTypeReader();
+
+  @override
+  String toString() {
+    return 'AttitudeStateType{value: $value}';
+  }
+}
+
+class _AttitudeStateTypeReader extends fb.Reader<AttitudeStateType> {
+  const _AttitudeStateTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  AttitudeStateType read(fb.BufferContext bc, int offset) =>
+      AttitudeStateType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class AttCovType {
+  final int value;
+  const AttCovType._(this.value);
+
+  factory AttCovType.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum AttCovType');
+    }
+    return result;
+  }
+
+  static AttCovType? _createOrNull(int? value) => 
+      value == null ? null : AttCovType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const AttCovType ANGLE = AttCovType._(0);
+  static const AttCovType ANGLE_GYROBIAS = AttCovType._(1);
+  static const AttCovType ANGLE_ANGVEL = AttCovType._(2);
+  static const AttCovType QUATERNION_COV = AttCovType._(3);
+  static const Map<int, AttCovType> values = {
+    0: ANGLE,
+    1: ANGLE_GYROBIAS,
+    2: ANGLE_ANGVEL,
+    3: QUATERNION_COV};
+
+  static const fb.Reader<AttCovType> reader = _AttCovTypeReader();
+
+  @override
+  String toString() {
+    return 'AttCovType{value: $value}';
+  }
+}
+
+class _AttCovTypeReader extends fb.Reader<AttCovType> {
+  const _AttCovTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  AttCovType read(fb.BufferContext bc, int offset) =>
+      AttCovType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class ManeuverableFlag {
+  final int value;
+  const ManeuverableFlag._(this.value);
+
+  factory ManeuverableFlag.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum ManeuverableFlag');
+    }
+    return result;
+  }
+
+  static ManeuverableFlag? _createOrNull(int? value) => 
+      value == null ? null : ManeuverableFlag.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const ManeuverableFlag YES = ManeuverableFlag._(0);
+  static const ManeuverableFlag NO = ManeuverableFlag._(1);
+  static const ManeuverableFlag UNKNOWN = ManeuverableFlag._(2);
+  static const Map<int, ManeuverableFlag> values = {
+    0: YES,
+    1: NO,
+    2: UNKNOWN};
+
+  static const fb.Reader<ManeuverableFlag> reader = _ManeuverableFlagReader();
+
+  @override
+  String toString() {
+    return 'ManeuverableFlag{value: $value}';
+  }
+}
+
+class _ManeuverableFlagReader extends fb.Reader<ManeuverableFlag> {
+  const _ManeuverableFlagReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  ManeuverableFlag read(fb.BufferContext bc, int offset) =>
+      ManeuverableFlag.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Attitude State Data
+class AttitudeState {
+  AttitudeState._(this._bc, this._bcOffset);
+  factory AttitudeState(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<AttitudeState> reader = _AttitudeStateReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Attitude state type
+  AttitudeStateType get ATT_TYPE => AttitudeStateType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  Reference frame A
+  String? get REF_FRAME_A => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Reference frame B
+  String? get REF_FRAME_B => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Attitude direction (A2B or B2A)
+  String? get ATT_DIR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Epoch (ISO 8601)
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Quaternion scalar component (q0 or qc)
+  double get Q1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  ///  Quaternion vector component i
+  double get Q2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Quaternion vector component j
+  double get Q3 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  ///  Quaternion vector component k
+  double get QC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  Euler angle X in degrees
+  double get ANGLE_1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Euler angle Y in degrees
+  double get ANGLE_2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  ///  Euler angle Z in degrees
+  double get ANGLE_3 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  ///  Euler rotation sequence (e.g., 321, 313)
+  String? get EULER_ROT_SEQ => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Angular velocity X in deg/s
+  double get ANGVEL_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  ///  Angular velocity Y in deg/s
+  double get ANGVEL_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  ///  Angular velocity Z in deg/s
+  double get ANGVEL_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  ///  Spin alpha in degrees
+  double get SPIN_ALPHA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  ///  Spin delta in degrees
+  double get SPIN_DELTA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  ///  Spin angle in degrees
+  double get SPIN_ANGLE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  ///  Spin angle velocity in deg/s
+  double get SPIN_ANGLE_VEL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  ///  Nutation angle in degrees
+  double get NUTATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  ///  Nutation period in seconds
+  double get NUTATION_PERIOD => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
+  ///  Nutation phase in degrees
+  double get NUTATION_PHASE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
+
+  @override
+  String toString() {
+    return 'AttitudeState{ATT_TYPE: ${ATT_TYPE}, REF_FRAME_A: ${REF_FRAME_A}, REF_FRAME_B: ${REF_FRAME_B}, ATT_DIR: ${ATT_DIR}, EPOCH: ${EPOCH}, Q1: ${Q1}, Q2: ${Q2}, Q3: ${Q3}, QC: ${QC}, ANGLE_1: ${ANGLE_1}, ANGLE_2: ${ANGLE_2}, ANGLE_3: ${ANGLE_3}, EULER_ROT_SEQ: ${EULER_ROT_SEQ}, ANGVEL_X: ${ANGVEL_X}, ANGVEL_Y: ${ANGVEL_Y}, ANGVEL_Z: ${ANGVEL_Z}, SPIN_ALPHA: ${SPIN_ALPHA}, SPIN_DELTA: ${SPIN_DELTA}, SPIN_ANGLE: ${SPIN_ANGLE}, SPIN_ANGLE_VEL: ${SPIN_ANGLE_VEL}, NUTATION: ${NUTATION}, NUTATION_PERIOD: ${NUTATION_PERIOD}, NUTATION_PHASE: ${NUTATION_PHASE}}';
+  }
+}
+
+class _AttitudeStateReader extends fb.TableReader<AttitudeState> {
+  const _AttitudeStateReader();
+
+  @override
+  AttitudeState createObject(fb.BufferContext bc, int offset) => 
+    AttitudeState._(bc, offset);
+}
+
+class AttitudeStateBuilder {
+  AttitudeStateBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(23);
+  }
+
+  int addAttType(AttitudeStateType? ATT_TYPE) {
+    fbBuilder.addInt8(0, ATT_TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addRefFrameAOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addRefFrameBOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addAttDirOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addQ1(double? Q1) {
+    fbBuilder.addFloat64(5, Q1);
+    return fbBuilder.offset;
+  }
+  int addQ2(double? Q2) {
+    fbBuilder.addFloat64(6, Q2);
+    return fbBuilder.offset;
+  }
+  int addQ3(double? Q3) {
+    fbBuilder.addFloat64(7, Q3);
+    return fbBuilder.offset;
+  }
+  int addQc(double? QC) {
+    fbBuilder.addFloat64(8, QC);
+    return fbBuilder.offset;
+  }
+  int addAngle1(double? ANGLE_1) {
+    fbBuilder.addFloat64(9, ANGLE_1);
+    return fbBuilder.offset;
+  }
+  int addAngle2(double? ANGLE_2) {
+    fbBuilder.addFloat64(10, ANGLE_2);
+    return fbBuilder.offset;
+  }
+  int addAngle3(double? ANGLE_3) {
+    fbBuilder.addFloat64(11, ANGLE_3);
+    return fbBuilder.offset;
+  }
+  int addEulerRotSeqOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addAngvelX(double? ANGVEL_X) {
+    fbBuilder.addFloat64(13, ANGVEL_X);
+    return fbBuilder.offset;
+  }
+  int addAngvelY(double? ANGVEL_Y) {
+    fbBuilder.addFloat64(14, ANGVEL_Y);
+    return fbBuilder.offset;
+  }
+  int addAngvelZ(double? ANGVEL_Z) {
+    fbBuilder.addFloat64(15, ANGVEL_Z);
+    return fbBuilder.offset;
+  }
+  int addSpinAlpha(double? SPIN_ALPHA) {
+    fbBuilder.addFloat64(16, SPIN_ALPHA);
+    return fbBuilder.offset;
+  }
+  int addSpinDelta(double? SPIN_DELTA) {
+    fbBuilder.addFloat64(17, SPIN_DELTA);
+    return fbBuilder.offset;
+  }
+  int addSpinAngle(double? SPIN_ANGLE) {
+    fbBuilder.addFloat64(18, SPIN_ANGLE);
+    return fbBuilder.offset;
+  }
+  int addSpinAngleVel(double? SPIN_ANGLE_VEL) {
+    fbBuilder.addFloat64(19, SPIN_ANGLE_VEL);
+    return fbBuilder.offset;
+  }
+  int addNutation(double? NUTATION) {
+    fbBuilder.addFloat64(20, NUTATION);
+    return fbBuilder.offset;
+  }
+  int addNutationPeriod(double? NUTATION_PERIOD) {
+    fbBuilder.addFloat64(21, NUTATION_PERIOD);
+    return fbBuilder.offset;
+  }
+  int addNutationPhase(double? NUTATION_PHASE) {
+    fbBuilder.addFloat64(22, NUTATION_PHASE);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class AttitudeStateObjectBuilder extends fb.ObjectBuilder {
+  final AttitudeStateType? _ATT_TYPE;
+  final String? _REF_FRAME_A;
+  final String? _REF_FRAME_B;
+  final String? _ATT_DIR;
+  final String? _EPOCH;
+  final double? _Q1;
+  final double? _Q2;
+  final double? _Q3;
+  final double? _QC;
+  final double? _ANGLE_1;
+  final double? _ANGLE_2;
+  final double? _ANGLE_3;
+  final String? _EULER_ROT_SEQ;
+  final double? _ANGVEL_X;
+  final double? _ANGVEL_Y;
+  final double? _ANGVEL_Z;
+  final double? _SPIN_ALPHA;
+  final double? _SPIN_DELTA;
+  final double? _SPIN_ANGLE;
+  final double? _SPIN_ANGLE_VEL;
+  final double? _NUTATION;
+  final double? _NUTATION_PERIOD;
+  final double? _NUTATION_PHASE;
+
+  AttitudeStateObjectBuilder({
+    AttitudeStateType? ATT_TYPE,
+    String? REF_FRAME_A,
+    String? REF_FRAME_B,
+    String? ATT_DIR,
+    String? EPOCH,
+    double? Q1,
+    double? Q2,
+    double? Q3,
+    double? QC,
+    double? ANGLE_1,
+    double? ANGLE_2,
+    double? ANGLE_3,
+    String? EULER_ROT_SEQ,
+    double? ANGVEL_X,
+    double? ANGVEL_Y,
+    double? ANGVEL_Z,
+    double? SPIN_ALPHA,
+    double? SPIN_DELTA,
+    double? SPIN_ANGLE,
+    double? SPIN_ANGLE_VEL,
+    double? NUTATION,
+    double? NUTATION_PERIOD,
+    double? NUTATION_PHASE,
+  })
+      : _ATT_TYPE = ATT_TYPE,
+        _REF_FRAME_A = REF_FRAME_A,
+        _REF_FRAME_B = REF_FRAME_B,
+        _ATT_DIR = ATT_DIR,
+        _EPOCH = EPOCH,
+        _Q1 = Q1,
+        _Q2 = Q2,
+        _Q3 = Q3,
+        _QC = QC,
+        _ANGLE_1 = ANGLE_1,
+        _ANGLE_2 = ANGLE_2,
+        _ANGLE_3 = ANGLE_3,
+        _EULER_ROT_SEQ = EULER_ROT_SEQ,
+        _ANGVEL_X = ANGVEL_X,
+        _ANGVEL_Y = ANGVEL_Y,
+        _ANGVEL_Z = ANGVEL_Z,
+        _SPIN_ALPHA = SPIN_ALPHA,
+        _SPIN_DELTA = SPIN_DELTA,
+        _SPIN_ANGLE = SPIN_ANGLE,
+        _SPIN_ANGLE_VEL = SPIN_ANGLE_VEL,
+        _NUTATION = NUTATION,
+        _NUTATION_PERIOD = NUTATION_PERIOD,
+        _NUTATION_PHASE = NUTATION_PHASE;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? REF_FRAME_AOffset = _REF_FRAME_A == null ? null
+        : fbBuilder.writeString(_REF_FRAME_A!);
+    final int? REF_FRAME_BOffset = _REF_FRAME_B == null ? null
+        : fbBuilder.writeString(_REF_FRAME_B!);
+    final int? ATT_DIROffset = _ATT_DIR == null ? null
+        : fbBuilder.writeString(_ATT_DIR!);
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    final int? EULER_ROT_SEQOffset = _EULER_ROT_SEQ == null ? null
+        : fbBuilder.writeString(_EULER_ROT_SEQ!);
+    fbBuilder.startTable(23);
+    fbBuilder.addInt8(0, _ATT_TYPE?.value);
+    fbBuilder.addOffset(1, REF_FRAME_AOffset);
+    fbBuilder.addOffset(2, REF_FRAME_BOffset);
+    fbBuilder.addOffset(3, ATT_DIROffset);
+    fbBuilder.addOffset(4, EPOCHOffset);
+    fbBuilder.addFloat64(5, _Q1);
+    fbBuilder.addFloat64(6, _Q2);
+    fbBuilder.addFloat64(7, _Q3);
+    fbBuilder.addFloat64(8, _QC);
+    fbBuilder.addFloat64(9, _ANGLE_1);
+    fbBuilder.addFloat64(10, _ANGLE_2);
+    fbBuilder.addFloat64(11, _ANGLE_3);
+    fbBuilder.addOffset(12, EULER_ROT_SEQOffset);
+    fbBuilder.addFloat64(13, _ANGVEL_X);
+    fbBuilder.addFloat64(14, _ANGVEL_Y);
+    fbBuilder.addFloat64(15, _ANGVEL_Z);
+    fbBuilder.addFloat64(16, _SPIN_ALPHA);
+    fbBuilder.addFloat64(17, _SPIN_DELTA);
+    fbBuilder.addFloat64(18, _SPIN_ANGLE);
+    fbBuilder.addFloat64(19, _SPIN_ANGLE_VEL);
+    fbBuilder.addFloat64(20, _NUTATION);
+    fbBuilder.addFloat64(21, _NUTATION_PERIOD);
+    fbBuilder.addFloat64(22, _NUTATION_PHASE);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Attitude Physical Characteristics
+class AttPhysicalProperties {
+  AttPhysicalProperties._(this._bc, this._bcOffset);
+  factory AttPhysicalProperties(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<AttPhysicalProperties> reader = _AttPhysicalPropertiesReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Drag coefficient
+  double get DRAG_COEFF => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 4, 0.0);
+  ///  Wet mass in kg
+  double get WET_MASS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Dry mass in kg
+  double get DRY_MASS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Center of pressure reference frame
+  String? get CP_REF_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Center of pressure X in m
+  double get CP_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  Center of pressure Y in m
+  double get CP_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  ///  Center of pressure Z in m
+  double get CP_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Inertia reference frame
+  String? get INERTIA_REF_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Moment of inertia about X axis in kg*m^2
+  double get IXX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  Moment of inertia about Y axis in kg*m^2
+  double get IYY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Moment of inertia about Z axis in kg*m^2
+  double get IZZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  ///  Product of inertia XY in kg*m^2
+  double get IXY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  ///  Product of inertia XZ in kg*m^2
+  double get IXZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  ///  Product of inertia YZ in kg*m^2
+  double get IYZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+
+  @override
+  String toString() {
+    return 'AttPhysicalProperties{DRAG_COEFF: ${DRAG_COEFF}, WET_MASS: ${WET_MASS}, DRY_MASS: ${DRY_MASS}, CP_REF_FRAME: ${CP_REF_FRAME}, CP_X: ${CP_X}, CP_Y: ${CP_Y}, CP_Z: ${CP_Z}, INERTIA_REF_FRAME: ${INERTIA_REF_FRAME}, IXX: ${IXX}, IYY: ${IYY}, IZZ: ${IZZ}, IXY: ${IXY}, IXZ: ${IXZ}, IYZ: ${IYZ}}';
+  }
+}
+
+class _AttPhysicalPropertiesReader extends fb.TableReader<AttPhysicalProperties> {
+  const _AttPhysicalPropertiesReader();
+
+  @override
+  AttPhysicalProperties createObject(fb.BufferContext bc, int offset) => 
+    AttPhysicalProperties._(bc, offset);
+}
+
+class AttPhysicalPropertiesBuilder {
+  AttPhysicalPropertiesBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(14);
+  }
+
+  int addDragCoeff(double? DRAG_COEFF) {
+    fbBuilder.addFloat64(0, DRAG_COEFF);
+    return fbBuilder.offset;
+  }
+  int addWetMass(double? WET_MASS) {
+    fbBuilder.addFloat64(1, WET_MASS);
+    return fbBuilder.offset;
+  }
+  int addDryMass(double? DRY_MASS) {
+    fbBuilder.addFloat64(2, DRY_MASS);
+    return fbBuilder.offset;
+  }
+  int addCpRefFrameOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addCpX(double? CP_X) {
+    fbBuilder.addFloat64(4, CP_X);
+    return fbBuilder.offset;
+  }
+  int addCpY(double? CP_Y) {
+    fbBuilder.addFloat64(5, CP_Y);
+    return fbBuilder.offset;
+  }
+  int addCpZ(double? CP_Z) {
+    fbBuilder.addFloat64(6, CP_Z);
+    return fbBuilder.offset;
+  }
+  int addInertiaRefFrameOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addIxx(double? IXX) {
+    fbBuilder.addFloat64(8, IXX);
+    return fbBuilder.offset;
+  }
+  int addIyy(double? IYY) {
+    fbBuilder.addFloat64(9, IYY);
+    return fbBuilder.offset;
+  }
+  int addIzz(double? IZZ) {
+    fbBuilder.addFloat64(10, IZZ);
+    return fbBuilder.offset;
+  }
+  int addIxy(double? IXY) {
+    fbBuilder.addFloat64(11, IXY);
+    return fbBuilder.offset;
+  }
+  int addIxz(double? IXZ) {
+    fbBuilder.addFloat64(12, IXZ);
+    return fbBuilder.offset;
+  }
+  int addIyz(double? IYZ) {
+    fbBuilder.addFloat64(13, IYZ);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class AttPhysicalPropertiesObjectBuilder extends fb.ObjectBuilder {
+  final double? _DRAG_COEFF;
+  final double? _WET_MASS;
+  final double? _DRY_MASS;
+  final String? _CP_REF_FRAME;
+  final double? _CP_X;
+  final double? _CP_Y;
+  final double? _CP_Z;
+  final String? _INERTIA_REF_FRAME;
+  final double? _IXX;
+  final double? _IYY;
+  final double? _IZZ;
+  final double? _IXY;
+  final double? _IXZ;
+  final double? _IYZ;
+
+  AttPhysicalPropertiesObjectBuilder({
+    double? DRAG_COEFF,
+    double? WET_MASS,
+    double? DRY_MASS,
+    String? CP_REF_FRAME,
+    double? CP_X,
+    double? CP_Y,
+    double? CP_Z,
+    String? INERTIA_REF_FRAME,
+    double? IXX,
+    double? IYY,
+    double? IZZ,
+    double? IXY,
+    double? IXZ,
+    double? IYZ,
+  })
+      : _DRAG_COEFF = DRAG_COEFF,
+        _WET_MASS = WET_MASS,
+        _DRY_MASS = DRY_MASS,
+        _CP_REF_FRAME = CP_REF_FRAME,
+        _CP_X = CP_X,
+        _CP_Y = CP_Y,
+        _CP_Z = CP_Z,
+        _INERTIA_REF_FRAME = INERTIA_REF_FRAME,
+        _IXX = IXX,
+        _IYY = IYY,
+        _IZZ = IZZ,
+        _IXY = IXY,
+        _IXZ = IXZ,
+        _IYZ = IYZ;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? CP_REF_FRAMEOffset = _CP_REF_FRAME == null ? null
+        : fbBuilder.writeString(_CP_REF_FRAME!);
+    final int? INERTIA_REF_FRAMEOffset = _INERTIA_REF_FRAME == null ? null
+        : fbBuilder.writeString(_INERTIA_REF_FRAME!);
+    fbBuilder.startTable(14);
+    fbBuilder.addFloat64(0, _DRAG_COEFF);
+    fbBuilder.addFloat64(1, _WET_MASS);
+    fbBuilder.addFloat64(2, _DRY_MASS);
+    fbBuilder.addOffset(3, CP_REF_FRAMEOffset);
+    fbBuilder.addFloat64(4, _CP_X);
+    fbBuilder.addFloat64(5, _CP_Y);
+    fbBuilder.addFloat64(6, _CP_Z);
+    fbBuilder.addOffset(7, INERTIA_REF_FRAMEOffset);
+    fbBuilder.addFloat64(8, _IXX);
+    fbBuilder.addFloat64(9, _IYY);
+    fbBuilder.addFloat64(10, _IZZ);
+    fbBuilder.addFloat64(11, _IXY);
+    fbBuilder.addFloat64(12, _IXZ);
+    fbBuilder.addFloat64(13, _IYZ);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Attitude Covariance
+class AttCovariance {
+  AttCovariance._(this._bc, this._bcOffset);
+  factory AttCovariance(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<AttCovariance> reader = _AttCovarianceReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Covariance type
+  AttCovType get COV_TYPE => AttCovType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 4, 0));
+  ///  Reference frame
+  String? get COV_REF_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Epoch (ISO 8601)
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Upper-triangular covariance matrix elements (row-major)
+  List<double>? get COV => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 10);
+
+  @override
+  String toString() {
+    return 'AttCovariance{COV_TYPE: ${COV_TYPE}, COV_REF_FRAME: ${COV_REF_FRAME}, EPOCH: ${EPOCH}, COV: ${COV}}';
+  }
+}
+
+class _AttCovarianceReader extends fb.TableReader<AttCovariance> {
+  const _AttCovarianceReader();
+
+  @override
+  AttCovariance createObject(fb.BufferContext bc, int offset) => 
+    AttCovariance._(bc, offset);
+}
+
+class AttCovarianceBuilder {
+  AttCovarianceBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(4);
+  }
+
+  int addCovType(AttCovType? COV_TYPE) {
+    fbBuilder.addInt8(0, COV_TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addCovRefFrameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addCovOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class AttCovarianceObjectBuilder extends fb.ObjectBuilder {
+  final AttCovType? _COV_TYPE;
+  final String? _COV_REF_FRAME;
+  final String? _EPOCH;
+  final List<double>? _COV;
+
+  AttCovarianceObjectBuilder({
+    AttCovType? COV_TYPE,
+    String? COV_REF_FRAME,
+    String? EPOCH,
+    List<double>? COV,
+  })
+      : _COV_TYPE = COV_TYPE,
+        _COV_REF_FRAME = COV_REF_FRAME,
+        _EPOCH = EPOCH,
+        _COV = COV;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? COV_REF_FRAMEOffset = _COV_REF_FRAME == null ? null
+        : fbBuilder.writeString(_COV_REF_FRAME!);
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    final int? COVOffset = _COV == null ? null
+        : fbBuilder.writeListFloat64(_COV!);
+    fbBuilder.startTable(4);
+    fbBuilder.addInt8(0, _COV_TYPE?.value);
+    fbBuilder.addOffset(1, COV_REF_FRAMEOffset);
+    fbBuilder.addOffset(2, EPOCHOffset);
+    fbBuilder.addOffset(3, COVOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Attitude Maneuver
+class AttManeuver {
+  AttManeuver._(this._bc, this._bcOffset);
+  factory AttManeuver(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<AttManeuver> reader = _AttManeuverReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Maneuver epoch start (ISO 8601)
+  String? get MAN_EPOCH_START => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Duration in seconds
+  double get DURATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Reference frame
+  String? get REF_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Torque about body X in N*m
+  double get TOR_1 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  Torque about body Y in N*m
+  double get TOR_2 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  Torque about body Z in N*m
+  double get TOR_3 => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+
+  @override
+  String toString() {
+    return 'AttManeuver{MAN_EPOCH_START: ${MAN_EPOCH_START}, DURATION: ${DURATION}, REF_FRAME: ${REF_FRAME}, TOR_1: ${TOR_1}, TOR_2: ${TOR_2}, TOR_3: ${TOR_3}}';
+  }
+}
+
+class _AttManeuverReader extends fb.TableReader<AttManeuver> {
+  const _AttManeuverReader();
+
+  @override
+  AttManeuver createObject(fb.BufferContext bc, int offset) => 
+    AttManeuver._(bc, offset);
+}
+
+class AttManeuverBuilder {
+  AttManeuverBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addManEpochStartOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addDuration(double? DURATION) {
+    fbBuilder.addFloat64(1, DURATION);
+    return fbBuilder.offset;
+  }
+  int addRefFrameOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addTor1(double? TOR_1) {
+    fbBuilder.addFloat64(3, TOR_1);
+    return fbBuilder.offset;
+  }
+  int addTor2(double? TOR_2) {
+    fbBuilder.addFloat64(4, TOR_2);
+    return fbBuilder.offset;
+  }
+  int addTor3(double? TOR_3) {
+    fbBuilder.addFloat64(5, TOR_3);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class AttManeuverObjectBuilder extends fb.ObjectBuilder {
+  final String? _MAN_EPOCH_START;
+  final double? _DURATION;
+  final String? _REF_FRAME;
+  final double? _TOR_1;
+  final double? _TOR_2;
+  final double? _TOR_3;
+
+  AttManeuverObjectBuilder({
+    String? MAN_EPOCH_START,
+    double? DURATION,
+    String? REF_FRAME,
+    double? TOR_1,
+    double? TOR_2,
+    double? TOR_3,
+  })
+      : _MAN_EPOCH_START = MAN_EPOCH_START,
+        _DURATION = DURATION,
+        _REF_FRAME = REF_FRAME,
+        _TOR_1 = TOR_1,
+        _TOR_2 = TOR_2,
+        _TOR_3 = TOR_3;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? MAN_EPOCH_STARTOffset = _MAN_EPOCH_START == null ? null
+        : fbBuilder.writeString(_MAN_EPOCH_START!);
+    final int? REF_FRAMEOffset = _REF_FRAME == null ? null
+        : fbBuilder.writeString(_REF_FRAME!);
+    fbBuilder.startTable(6);
+    fbBuilder.addOffset(0, MAN_EPOCH_STARTOffset);
+    fbBuilder.addFloat64(1, _DURATION);
+    fbBuilder.addOffset(2, REF_FRAMEOffset);
+    fbBuilder.addFloat64(3, _TOR_1);
+    fbBuilder.addFloat64(4, _TOR_2);
+    fbBuilder.addFloat64(5, _TOR_3);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Attitude Comprehensive Message
 class ACM {
   ACM._(this._bc, this._bcOffset);
@@ -18,15 +906,38 @@ class ACM {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  CCSDS ACM version
   String? get CCSDS_ACM_VERS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Message creation date (ISO 8601)
   String? get CREATION_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Creating organization
   String? get ORIGINATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Object name
   String? get OBJECT_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  International designator
   String? get OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Catalog name
+  String? get CATALOG_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Epoch of state (ISO 8601)
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Time system
+  String? get TIME_SYSTEM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Attitude states
+  List<AttitudeState>? get ATT_STATES => const fb.ListReader<AttitudeState>(AttitudeState.reader).vTableGetNullable(_bc, _bcOffset, 20);
+  ///  Physical properties
+  AttPhysicalProperties? get PHYS_PROPERTIES => AttPhysicalProperties.reader.vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Attitude covariance data
+  List<AttCovariance>? get COV_DATA => const fb.ListReader<AttCovariance>(AttCovariance.reader).vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Attitude maneuvers
+  List<AttManeuver>? get MANEUVERS => const fb.ListReader<AttManeuver>(AttManeuver.reader).vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Maneuverability status
+  ManeuverableFlag get MANEUVERABLE => ManeuverableFlag.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 28, 0));
+  ///  Additional comments
+  String? get COMMENT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
 
   @override
   String toString() {
-    return 'ACM{CCSDS_ACM_VERS: ${CCSDS_ACM_VERS}, CREATION_DATE: ${CREATION_DATE}, ORIGINATOR: ${ORIGINATOR}, OBJECT_NAME: ${OBJECT_NAME}, OBJECT_ID: ${OBJECT_ID}}';
+    return 'ACM{CCSDS_ACM_VERS: ${CCSDS_ACM_VERS}, CREATION_DATE: ${CREATION_DATE}, ORIGINATOR: ${ORIGINATOR}, OBJECT_NAME: ${OBJECT_NAME}, OBJECT_ID: ${OBJECT_ID}, CATALOG_NAME: ${CATALOG_NAME}, EPOCH: ${EPOCH}, TIME_SYSTEM: ${TIME_SYSTEM}, ATT_STATES: ${ATT_STATES}, PHYS_PROPERTIES: ${PHYS_PROPERTIES}, COV_DATA: ${COV_DATA}, MANEUVERS: ${MANEUVERS}, MANEUVERABLE: ${MANEUVERABLE}, COMMENT: ${COMMENT}}';
   }
 }
 
@@ -44,7 +955,7 @@ class ACMBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(5);
+    fbBuilder.startTable(14);
   }
 
   int addCcsdsAcmVersOffset(int? offset) {
@@ -67,6 +978,42 @@ class ACMBuilder {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
+  int addCatalogNameOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addTimeSystemOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addAttStatesOffset(int? offset) {
+    fbBuilder.addOffset(8, offset);
+    return fbBuilder.offset;
+  }
+  int addPhysPropertiesOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addCovDataOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addManeuversOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addManeuverable(ManeuverableFlag? MANEUVERABLE) {
+    fbBuilder.addInt8(12, MANEUVERABLE?.value);
+    return fbBuilder.offset;
+  }
+  int addCommentOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
 
   int finish() {
     return fbBuilder.endTable();
@@ -79,6 +1026,15 @@ class ACMObjectBuilder extends fb.ObjectBuilder {
   final String? _ORIGINATOR;
   final String? _OBJECT_NAME;
   final String? _OBJECT_ID;
+  final String? _CATALOG_NAME;
+  final String? _EPOCH;
+  final String? _TIME_SYSTEM;
+  final List<AttitudeStateObjectBuilder>? _ATT_STATES;
+  final AttPhysicalPropertiesObjectBuilder? _PHYS_PROPERTIES;
+  final List<AttCovarianceObjectBuilder>? _COV_DATA;
+  final List<AttManeuverObjectBuilder>? _MANEUVERS;
+  final ManeuverableFlag? _MANEUVERABLE;
+  final String? _COMMENT;
 
   ACMObjectBuilder({
     String? CCSDS_ACM_VERS,
@@ -86,12 +1042,30 @@ class ACMObjectBuilder extends fb.ObjectBuilder {
     String? ORIGINATOR,
     String? OBJECT_NAME,
     String? OBJECT_ID,
+    String? CATALOG_NAME,
+    String? EPOCH,
+    String? TIME_SYSTEM,
+    List<AttitudeStateObjectBuilder>? ATT_STATES,
+    AttPhysicalPropertiesObjectBuilder? PHYS_PROPERTIES,
+    List<AttCovarianceObjectBuilder>? COV_DATA,
+    List<AttManeuverObjectBuilder>? MANEUVERS,
+    ManeuverableFlag? MANEUVERABLE,
+    String? COMMENT,
   })
       : _CCSDS_ACM_VERS = CCSDS_ACM_VERS,
         _CREATION_DATE = CREATION_DATE,
         _ORIGINATOR = ORIGINATOR,
         _OBJECT_NAME = OBJECT_NAME,
-        _OBJECT_ID = OBJECT_ID;
+        _OBJECT_ID = OBJECT_ID,
+        _CATALOG_NAME = CATALOG_NAME,
+        _EPOCH = EPOCH,
+        _TIME_SYSTEM = TIME_SYSTEM,
+        _ATT_STATES = ATT_STATES,
+        _PHYS_PROPERTIES = PHYS_PROPERTIES,
+        _COV_DATA = COV_DATA,
+        _MANEUVERS = MANEUVERS,
+        _MANEUVERABLE = MANEUVERABLE,
+        _COMMENT = COMMENT;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -106,12 +1080,36 @@ class ACMObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_OBJECT_NAME!);
     final int? OBJECT_IDOffset = _OBJECT_ID == null ? null
         : fbBuilder.writeString(_OBJECT_ID!);
-    fbBuilder.startTable(5);
+    final int? CATALOG_NAMEOffset = _CATALOG_NAME == null ? null
+        : fbBuilder.writeString(_CATALOG_NAME!);
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    final int? TIME_SYSTEMOffset = _TIME_SYSTEM == null ? null
+        : fbBuilder.writeString(_TIME_SYSTEM!);
+    final int? ATT_STATESOffset = _ATT_STATES == null ? null
+        : fbBuilder.writeList(_ATT_STATES!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? PHYS_PROPERTIESOffset = _PHYS_PROPERTIES?.getOrCreateOffset(fbBuilder);
+    final int? COV_DATAOffset = _COV_DATA == null ? null
+        : fbBuilder.writeList(_COV_DATA!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? MANEUVERSOffset = _MANEUVERS == null ? null
+        : fbBuilder.writeList(_MANEUVERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? COMMENTOffset = _COMMENT == null ? null
+        : fbBuilder.writeString(_COMMENT!);
+    fbBuilder.startTable(14);
     fbBuilder.addOffset(0, CCSDS_ACM_VERSOffset);
     fbBuilder.addOffset(1, CREATION_DATEOffset);
     fbBuilder.addOffset(2, ORIGINATOROffset);
     fbBuilder.addOffset(3, OBJECT_NAMEOffset);
     fbBuilder.addOffset(4, OBJECT_IDOffset);
+    fbBuilder.addOffset(5, CATALOG_NAMEOffset);
+    fbBuilder.addOffset(6, EPOCHOffset);
+    fbBuilder.addOffset(7, TIME_SYSTEMOffset);
+    fbBuilder.addOffset(8, ATT_STATESOffset);
+    fbBuilder.addOffset(9, PHYS_PROPERTIESOffset);
+    fbBuilder.addOffset(10, COV_DATAOffset);
+    fbBuilder.addOffset(11, MANEUVERSOffset);
+    fbBuilder.addInt8(12, _MANEUVERABLE?.value);
+    fbBuilder.addOffset(13, COMMENTOffset);
     return fbBuilder.endTable();
   }
 

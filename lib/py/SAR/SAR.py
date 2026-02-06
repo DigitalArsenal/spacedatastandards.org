@@ -29,6 +29,7 @@ class SAR(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Unique identifier
     # SAR
     def ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,13 +37,15 @@ class SAR(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Satellite catalog number (of SAR platform)
     # SAR
     def SAT_NO(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
+    # International designator
     # SAR
     def ORIG_OBJECT_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -50,223 +53,255 @@ class SAR(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # On-orbit reference
     # SAR
-    def ID_SENSOR(self):
+    def ON_ORBIT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Sensor identifier
     # SAR
-    def ORIG_SENSOR_ID(self):
+    def ID_SENSOR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Original sensor identifier
     # SAR
-    def EXTERNAL_ID(self):
+    def ORIG_SENSOR_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # External reference identifier
     # SAR
-    def COLLECTION_ID(self):
+    def EXTERNAL_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Collection identifier
     # SAR
-    def DETECTION_ID(self):
+    def COLLECTION_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Detection identifier
     # SAR
-    def COLLECTION_START(self):
+    def DETECTION_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Collection start time (ISO 8601)
     # SAR
-    def COLLECTION_END(self):
+    def COLLECTION_START(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Collection end time (ISO 8601)
     # SAR
-    def CENTER_TIME(self):
+    def COLLECTION_END(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Center time of observation (ISO 8601)
     # SAR
-    def DETECTION_START(self):
+    def CENTER_TIME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Detection start time (ISO 8601)
     # SAR
-    def DETECTION_END(self):
+    def DETECTION_START(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Detection end time (ISO 8601)
     # SAR
-    def DWELL_TIME(self):
+    def DETECTION_END(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # SAR
-    def ORBIT_STATE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Integration/dwell time (seconds)
     # SAR
-    def SAR_MODE(self):
+    def DWELL_TIME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Orbit state description
+    # SAR
+    def ORBIT_STATE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # SAR imaging mode
+    # SAR
+    def SAR_MODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Operating RF band (e.g., X, C, L, S, P)
     # SAR
     def OPERATING_BAND(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Operating frequency (GHz)
     # SAR
     def OPERATING_FREQ(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # SAR
-    def SNR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Signal-to-noise ratio (dB)
     # SAR
-    def TX_POLARIZATION(self):
+    def SNR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # SAR
-    def RX_POLARIZATION(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # SAR
-    def GRAZE_ANGLE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Transmit polarization
     # SAR
-    def INCIDENCE_ANGLE(self):
+    def TX_POLARIZATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Receive polarization
+    # SAR
+    def RX_POLARIZATION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Grazing angle (degrees)
+    # SAR
+    def GRAZE_ANGLE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Incidence angle (degrees)
     # SAR
-    def SQUINT_ANGLE(self):
+    def INCIDENCE_ANGLE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Squint angle (degrees)
     # SAR
-    def PULSE_BANDWIDTH(self):
+    def SQUINT_ANGLE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Pulse bandwidth (MHz)
     # SAR
-    def PULSE_DURATION(self):
+    def PULSE_BANDWIDTH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Pulse duration (microseconds)
     # SAR
-    def CONTINUOUS_SPOT_ANGLE(self):
+    def PULSE_DURATION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Continuous spot angle (degrees)
     # SAR
-    def SLANT_RANGE(self):
+    def CONTINUOUS_SPOT_ANGLE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Slant range to target (km)
     # SAR
-    def NEAR_RANGE(self):
+    def SLANT_RANGE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Near range (km)
     # SAR
-    def FAR_RANGE(self):
+    def NEAR_RANGE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Far range (km)
     # SAR
-    def SWATH_LENGTH(self):
+    def FAR_RANGE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Swath length (km)
     # SAR
-    def AREA(self):
+    def SWATH_LENGTH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
 
+    # Image area GeoJSON
     # SAR
-    def ATEXT(self):
+    def AGJSON(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Image area text description
     # SAR
-    def AGJSON(self):
+    def ATEXT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Area type
     # SAR
     def ATYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
@@ -274,163 +309,170 @@ class SAR(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Coordinate system
     # SAR
-    def ANDIMS(self):
+    def COORD_SYS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
-    # SAR
-    def ASRID(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
+    # Range pixel spacing (meters)
     # SAR
     def SPACING_RANGE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Azimuth pixel spacing (meters)
+    # SAR
+    def SPACING_AZIMUTH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Number of azimuth looks
     # SAR
-    def SPACING_AZIMUTH(self):
+    def LOOKS_AZIMUTH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Number of range looks
+    # SAR
+    def LOOKS_RANGE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
+
+    # Range resolution (meters)
+    # SAR
+    def RESOLUTION_RANGE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Azimuth resolution (meters)
     # SAR
-    def LOOKS_AZIMUTH(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
-    # SAR
-    def LOOKS_RANGE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
-
-    # SAR
-    def RESOLUTION_RANGE(self):
+    def RESOLUTION_AZIMUTH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Observation direction (ASCENDING/DESCENDING)
     # SAR
-    def RESOLUTION_AZIMUTH(self):
+    def OB_DIRECTION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Target position X (km)
+    # SAR
+    def TARGETPOSX(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Target position Y (km)
     # SAR
-    def OB_DIRECTION(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # SAR
-    def COORD_SYS(self):
+    def TARGETPOSY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
 
+    # Target position Z (km)
     # SAR
-    def TARGETPOSX(self):
+    def TARGETPOSZ(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor altitude (km)
     # SAR
-    def TARGETPOSY(self):
+    def SENALT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor velocity X (km/s)
     # SAR
-    def TARGETPOSZ(self):
+    def SENVELX(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor velocity Y (km/s)
     # SAR
-    def SENALT(self):
+    def SENVELY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor velocity Z (km/s)
     # SAR
-    def SENVELX(self):
+    def SENVELZ(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor latitude at start (degrees)
     # SAR
-    def SENVELY(self):
+    def SENLAT_START(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor longitude at start (degrees)
     # SAR
-    def SENVELZ(self):
+    def SENLON_START(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(106))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor latitude at end (degrees)
     # SAR
-    def SENLAT_START(self):
+    def SENLAT_END(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(108))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Sensor longitude at end (degrees)
     # SAR
-    def SENLON_START(self):
+    def SENLON_END(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(110))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # SAR
-    def SENLAT_END(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # SAR
-    def SENLON_END(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
+    # Transaction identifier
     # SAR
     def TRANSACTION_ID(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(112))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Associated tags
     # SAR
     def TAGS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -438,19 +480,20 @@ class SAR(object):
 
     # SAR
     def TAGSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # SAR
     def TAGSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(114))
         return o == 0
 
+    # Source types
     # SAR
     def SRC_TYPS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -458,19 +501,20 @@ class SAR(object):
 
     # SAR
     def SRC_TYPSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # SAR
     def SRC_TYPSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(120))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(116))
         return o == 0
 
+    # Source identifiers
     # SAR
     def SRC_IDS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(122))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -478,25 +522,18 @@ class SAR(object):
 
     # SAR
     def SRC_IDSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(122))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # SAR
     def SRC_IDSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(122))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(118))
         return o == 0
 
-    # SAR
-    def ON_ORBIT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(124))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
 def SARStart(builder):
-    builder.StartObject(61)
+    builder.StartObject(58)
 
 def Start(builder):
     SARStart(builder)
@@ -508,7 +545,7 @@ def AddID(builder, ID):
     SARAddID(builder, ID)
 
 def SARAddSAT_NO(builder, SAT_NO):
-    builder.PrependInt32Slot(1, SAT_NO, 0)
+    builder.PrependUint32Slot(1, SAT_NO, 0)
 
 def AddSAT_NO(builder, SAT_NO):
     SARAddSAT_NO(builder, SAT_NO)
@@ -519,191 +556,191 @@ def SARAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
 def AddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
     SARAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
 
+def SARAddON_ORBIT(builder, ON_ORBIT):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ON_ORBIT), 0)
+
+def AddON_ORBIT(builder, ON_ORBIT):
+    SARAddON_ORBIT(builder, ON_ORBIT)
+
 def SARAddID_SENSOR(builder, ID_SENSOR):
-    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ID_SENSOR), 0)
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ID_SENSOR), 0)
 
 def AddID_SENSOR(builder, ID_SENSOR):
     SARAddID_SENSOR(builder, ID_SENSOR)
 
 def SARAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID):
-    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_SENSOR_ID), 0)
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_SENSOR_ID), 0)
 
 def AddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID):
     SARAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
 
 def SARAddEXTERNAL_ID(builder, EXTERNAL_ID):
-    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(EXTERNAL_ID), 0)
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(EXTERNAL_ID), 0)
 
 def AddEXTERNAL_ID(builder, EXTERNAL_ID):
     SARAddEXTERNAL_ID(builder, EXTERNAL_ID)
 
 def SARAddCOLLECTION_ID(builder, COLLECTION_ID):
-    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(COLLECTION_ID), 0)
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(COLLECTION_ID), 0)
 
 def AddCOLLECTION_ID(builder, COLLECTION_ID):
     SARAddCOLLECTION_ID(builder, COLLECTION_ID)
 
 def SARAddDETECTION_ID(builder, DETECTION_ID):
-    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(DETECTION_ID), 0)
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(DETECTION_ID), 0)
 
 def AddDETECTION_ID(builder, DETECTION_ID):
     SARAddDETECTION_ID(builder, DETECTION_ID)
 
 def SARAddCOLLECTION_START(builder, COLLECTION_START):
-    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(COLLECTION_START), 0)
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(COLLECTION_START), 0)
 
 def AddCOLLECTION_START(builder, COLLECTION_START):
     SARAddCOLLECTION_START(builder, COLLECTION_START)
 
 def SARAddCOLLECTION_END(builder, COLLECTION_END):
-    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(COLLECTION_END), 0)
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(COLLECTION_END), 0)
 
 def AddCOLLECTION_END(builder, COLLECTION_END):
     SARAddCOLLECTION_END(builder, COLLECTION_END)
 
 def SARAddCENTER_TIME(builder, CENTER_TIME):
-    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(CENTER_TIME), 0)
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(CENTER_TIME), 0)
 
 def AddCENTER_TIME(builder, CENTER_TIME):
     SARAddCENTER_TIME(builder, CENTER_TIME)
 
 def SARAddDETECTION_START(builder, DETECTION_START):
-    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(DETECTION_START), 0)
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(DETECTION_START), 0)
 
 def AddDETECTION_START(builder, DETECTION_START):
     SARAddDETECTION_START(builder, DETECTION_START)
 
 def SARAddDETECTION_END(builder, DETECTION_END):
-    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(DETECTION_END), 0)
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(DETECTION_END), 0)
 
 def AddDETECTION_END(builder, DETECTION_END):
     SARAddDETECTION_END(builder, DETECTION_END)
 
 def SARAddDWELL_TIME(builder, DWELL_TIME):
-    builder.PrependFloat64Slot(13, DWELL_TIME, 0.0)
+    builder.PrependFloat64Slot(14, DWELL_TIME, 0.0)
 
 def AddDWELL_TIME(builder, DWELL_TIME):
     SARAddDWELL_TIME(builder, DWELL_TIME)
 
 def SARAddORBIT_STATE(builder, ORBIT_STATE):
-    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(ORBIT_STATE), 0)
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(ORBIT_STATE), 0)
 
 def AddORBIT_STATE(builder, ORBIT_STATE):
     SARAddORBIT_STATE(builder, ORBIT_STATE)
 
 def SARAddSAR_MODE(builder, SAR_MODE):
-    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(SAR_MODE), 0)
+    builder.PrependInt8Slot(16, SAR_MODE, 0)
 
 def AddSAR_MODE(builder, SAR_MODE):
     SARAddSAR_MODE(builder, SAR_MODE)
 
 def SARAddOPERATING_BAND(builder, OPERATING_BAND):
-    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(OPERATING_BAND), 0)
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(OPERATING_BAND), 0)
 
 def AddOPERATING_BAND(builder, OPERATING_BAND):
     SARAddOPERATING_BAND(builder, OPERATING_BAND)
 
 def SARAddOPERATING_FREQ(builder, OPERATING_FREQ):
-    builder.PrependFloat64Slot(17, OPERATING_FREQ, 0.0)
+    builder.PrependFloat64Slot(18, OPERATING_FREQ, 0.0)
 
 def AddOPERATING_FREQ(builder, OPERATING_FREQ):
     SARAddOPERATING_FREQ(builder, OPERATING_FREQ)
 
 def SARAddSNR(builder, SNR):
-    builder.PrependFloat64Slot(18, SNR, 0.0)
+    builder.PrependFloat64Slot(19, SNR, 0.0)
 
 def AddSNR(builder, SNR):
     SARAddSNR(builder, SNR)
 
 def SARAddTX_POLARIZATION(builder, TX_POLARIZATION):
-    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(TX_POLARIZATION), 0)
+    builder.PrependInt8Slot(20, TX_POLARIZATION, 0)
 
 def AddTX_POLARIZATION(builder, TX_POLARIZATION):
     SARAddTX_POLARIZATION(builder, TX_POLARIZATION)
 
 def SARAddRX_POLARIZATION(builder, RX_POLARIZATION):
-    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(RX_POLARIZATION), 0)
+    builder.PrependInt8Slot(21, RX_POLARIZATION, 0)
 
 def AddRX_POLARIZATION(builder, RX_POLARIZATION):
     SARAddRX_POLARIZATION(builder, RX_POLARIZATION)
 
 def SARAddGRAZE_ANGLE(builder, GRAZE_ANGLE):
-    builder.PrependFloat64Slot(21, GRAZE_ANGLE, 0.0)
+    builder.PrependFloat64Slot(22, GRAZE_ANGLE, 0.0)
 
 def AddGRAZE_ANGLE(builder, GRAZE_ANGLE):
     SARAddGRAZE_ANGLE(builder, GRAZE_ANGLE)
 
 def SARAddINCIDENCE_ANGLE(builder, INCIDENCE_ANGLE):
-    builder.PrependFloat64Slot(22, INCIDENCE_ANGLE, 0.0)
+    builder.PrependFloat64Slot(23, INCIDENCE_ANGLE, 0.0)
 
 def AddINCIDENCE_ANGLE(builder, INCIDENCE_ANGLE):
     SARAddINCIDENCE_ANGLE(builder, INCIDENCE_ANGLE)
 
 def SARAddSQUINT_ANGLE(builder, SQUINT_ANGLE):
-    builder.PrependFloat64Slot(23, SQUINT_ANGLE, 0.0)
+    builder.PrependFloat64Slot(24, SQUINT_ANGLE, 0.0)
 
 def AddSQUINT_ANGLE(builder, SQUINT_ANGLE):
     SARAddSQUINT_ANGLE(builder, SQUINT_ANGLE)
 
 def SARAddPULSE_BANDWIDTH(builder, PULSE_BANDWIDTH):
-    builder.PrependFloat64Slot(24, PULSE_BANDWIDTH, 0.0)
+    builder.PrependFloat64Slot(25, PULSE_BANDWIDTH, 0.0)
 
 def AddPULSE_BANDWIDTH(builder, PULSE_BANDWIDTH):
     SARAddPULSE_BANDWIDTH(builder, PULSE_BANDWIDTH)
 
 def SARAddPULSE_DURATION(builder, PULSE_DURATION):
-    builder.PrependFloat64Slot(25, PULSE_DURATION, 0.0)
+    builder.PrependFloat64Slot(26, PULSE_DURATION, 0.0)
 
 def AddPULSE_DURATION(builder, PULSE_DURATION):
     SARAddPULSE_DURATION(builder, PULSE_DURATION)
 
 def SARAddCONTINUOUS_SPOT_ANGLE(builder, CONTINUOUS_SPOT_ANGLE):
-    builder.PrependFloat64Slot(26, CONTINUOUS_SPOT_ANGLE, 0.0)
+    builder.PrependFloat64Slot(27, CONTINUOUS_SPOT_ANGLE, 0.0)
 
 def AddCONTINUOUS_SPOT_ANGLE(builder, CONTINUOUS_SPOT_ANGLE):
     SARAddCONTINUOUS_SPOT_ANGLE(builder, CONTINUOUS_SPOT_ANGLE)
 
 def SARAddSLANT_RANGE(builder, SLANT_RANGE):
-    builder.PrependFloat64Slot(27, SLANT_RANGE, 0.0)
+    builder.PrependFloat64Slot(28, SLANT_RANGE, 0.0)
 
 def AddSLANT_RANGE(builder, SLANT_RANGE):
     SARAddSLANT_RANGE(builder, SLANT_RANGE)
 
 def SARAddNEAR_RANGE(builder, NEAR_RANGE):
-    builder.PrependFloat64Slot(28, NEAR_RANGE, 0.0)
+    builder.PrependFloat64Slot(29, NEAR_RANGE, 0.0)
 
 def AddNEAR_RANGE(builder, NEAR_RANGE):
     SARAddNEAR_RANGE(builder, NEAR_RANGE)
 
 def SARAddFAR_RANGE(builder, FAR_RANGE):
-    builder.PrependFloat64Slot(29, FAR_RANGE, 0.0)
+    builder.PrependFloat64Slot(30, FAR_RANGE, 0.0)
 
 def AddFAR_RANGE(builder, FAR_RANGE):
     SARAddFAR_RANGE(builder, FAR_RANGE)
 
 def SARAddSWATH_LENGTH(builder, SWATH_LENGTH):
-    builder.PrependFloat64Slot(30, SWATH_LENGTH, 0.0)
+    builder.PrependFloat64Slot(31, SWATH_LENGTH, 0.0)
 
 def AddSWATH_LENGTH(builder, SWATH_LENGTH):
     SARAddSWATH_LENGTH(builder, SWATH_LENGTH)
 
-def SARAddAREA(builder, AREA):
-    builder.PrependUOffsetTRelativeSlot(31, flatbuffers.number_types.UOffsetTFlags.py_type(AREA), 0)
-
-def AddAREA(builder, AREA):
-    SARAddAREA(builder, AREA)
-
-def SARAddATEXT(builder, ATEXT):
-    builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(ATEXT), 0)
-
-def AddATEXT(builder, ATEXT):
-    SARAddATEXT(builder, ATEXT)
-
 def SARAddAGJSON(builder, AGJSON):
-    builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(AGJSON), 0)
+    builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(AGJSON), 0)
 
 def AddAGJSON(builder, AGJSON):
     SARAddAGJSON(builder, AGJSON)
+
+def SARAddATEXT(builder, ATEXT):
+    builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(ATEXT), 0)
+
+def AddATEXT(builder, ATEXT):
+    SARAddATEXT(builder, ATEXT)
 
 def SARAddATYPE(builder, ATYPE):
     builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(ATYPE), 0)
@@ -711,140 +748,128 @@ def SARAddATYPE(builder, ATYPE):
 def AddATYPE(builder, ATYPE):
     SARAddATYPE(builder, ATYPE)
 
-def SARAddANDIMS(builder, ANDIMS):
-    builder.PrependInt32Slot(35, ANDIMS, 0)
+def SARAddCOORD_SYS(builder, COORD_SYS):
+    builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(COORD_SYS), 0)
 
-def AddANDIMS(builder, ANDIMS):
-    SARAddANDIMS(builder, ANDIMS)
-
-def SARAddASRID(builder, ASRID):
-    builder.PrependInt32Slot(36, ASRID, 0)
-
-def AddASRID(builder, ASRID):
-    SARAddASRID(builder, ASRID)
+def AddCOORD_SYS(builder, COORD_SYS):
+    SARAddCOORD_SYS(builder, COORD_SYS)
 
 def SARAddSPACING_RANGE(builder, SPACING_RANGE):
-    builder.PrependFloat64Slot(37, SPACING_RANGE, 0.0)
+    builder.PrependFloat64Slot(36, SPACING_RANGE, 0.0)
 
 def AddSPACING_RANGE(builder, SPACING_RANGE):
     SARAddSPACING_RANGE(builder, SPACING_RANGE)
 
 def SARAddSPACING_AZIMUTH(builder, SPACING_AZIMUTH):
-    builder.PrependFloat64Slot(38, SPACING_AZIMUTH, 0.0)
+    builder.PrependFloat64Slot(37, SPACING_AZIMUTH, 0.0)
 
 def AddSPACING_AZIMUTH(builder, SPACING_AZIMUTH):
     SARAddSPACING_AZIMUTH(builder, SPACING_AZIMUTH)
 
 def SARAddLOOKS_AZIMUTH(builder, LOOKS_AZIMUTH):
-    builder.PrependInt32Slot(39, LOOKS_AZIMUTH, 0)
+    builder.PrependUint8Slot(38, LOOKS_AZIMUTH, 0)
 
 def AddLOOKS_AZIMUTH(builder, LOOKS_AZIMUTH):
     SARAddLOOKS_AZIMUTH(builder, LOOKS_AZIMUTH)
 
 def SARAddLOOKS_RANGE(builder, LOOKS_RANGE):
-    builder.PrependInt32Slot(40, LOOKS_RANGE, 0)
+    builder.PrependUint8Slot(39, LOOKS_RANGE, 0)
 
 def AddLOOKS_RANGE(builder, LOOKS_RANGE):
     SARAddLOOKS_RANGE(builder, LOOKS_RANGE)
 
 def SARAddRESOLUTION_RANGE(builder, RESOLUTION_RANGE):
-    builder.PrependFloat64Slot(41, RESOLUTION_RANGE, 0.0)
+    builder.PrependFloat64Slot(40, RESOLUTION_RANGE, 0.0)
 
 def AddRESOLUTION_RANGE(builder, RESOLUTION_RANGE):
     SARAddRESOLUTION_RANGE(builder, RESOLUTION_RANGE)
 
 def SARAddRESOLUTION_AZIMUTH(builder, RESOLUTION_AZIMUTH):
-    builder.PrependFloat64Slot(42, RESOLUTION_AZIMUTH, 0.0)
+    builder.PrependFloat64Slot(41, RESOLUTION_AZIMUTH, 0.0)
 
 def AddRESOLUTION_AZIMUTH(builder, RESOLUTION_AZIMUTH):
     SARAddRESOLUTION_AZIMUTH(builder, RESOLUTION_AZIMUTH)
 
 def SARAddOB_DIRECTION(builder, OB_DIRECTION):
-    builder.PrependUOffsetTRelativeSlot(43, flatbuffers.number_types.UOffsetTFlags.py_type(OB_DIRECTION), 0)
+    builder.PrependUOffsetTRelativeSlot(42, flatbuffers.number_types.UOffsetTFlags.py_type(OB_DIRECTION), 0)
 
 def AddOB_DIRECTION(builder, OB_DIRECTION):
     SARAddOB_DIRECTION(builder, OB_DIRECTION)
 
-def SARAddCOORD_SYS(builder, COORD_SYS):
-    builder.PrependUOffsetTRelativeSlot(44, flatbuffers.number_types.UOffsetTFlags.py_type(COORD_SYS), 0)
-
-def AddCOORD_SYS(builder, COORD_SYS):
-    SARAddCOORD_SYS(builder, COORD_SYS)
-
 def SARAddTARGETPOSX(builder, TARGETPOSX):
-    builder.PrependFloat64Slot(45, TARGETPOSX, 0.0)
+    builder.PrependFloat64Slot(43, TARGETPOSX, 0.0)
 
 def AddTARGETPOSX(builder, TARGETPOSX):
     SARAddTARGETPOSX(builder, TARGETPOSX)
 
 def SARAddTARGETPOSY(builder, TARGETPOSY):
-    builder.PrependFloat64Slot(46, TARGETPOSY, 0.0)
+    builder.PrependFloat64Slot(44, TARGETPOSY, 0.0)
 
 def AddTARGETPOSY(builder, TARGETPOSY):
     SARAddTARGETPOSY(builder, TARGETPOSY)
 
 def SARAddTARGETPOSZ(builder, TARGETPOSZ):
-    builder.PrependFloat64Slot(47, TARGETPOSZ, 0.0)
+    builder.PrependFloat64Slot(45, TARGETPOSZ, 0.0)
 
 def AddTARGETPOSZ(builder, TARGETPOSZ):
     SARAddTARGETPOSZ(builder, TARGETPOSZ)
 
 def SARAddSENALT(builder, SENALT):
-    builder.PrependFloat64Slot(48, SENALT, 0.0)
+    builder.PrependFloat64Slot(46, SENALT, 0.0)
 
 def AddSENALT(builder, SENALT):
     SARAddSENALT(builder, SENALT)
 
 def SARAddSENVELX(builder, SENVELX):
-    builder.PrependFloat64Slot(49, SENVELX, 0.0)
+    builder.PrependFloat64Slot(47, SENVELX, 0.0)
 
 def AddSENVELX(builder, SENVELX):
     SARAddSENVELX(builder, SENVELX)
 
 def SARAddSENVELY(builder, SENVELY):
-    builder.PrependFloat64Slot(50, SENVELY, 0.0)
+    builder.PrependFloat64Slot(48, SENVELY, 0.0)
 
 def AddSENVELY(builder, SENVELY):
     SARAddSENVELY(builder, SENVELY)
 
 def SARAddSENVELZ(builder, SENVELZ):
-    builder.PrependFloat64Slot(51, SENVELZ, 0.0)
+    builder.PrependFloat64Slot(49, SENVELZ, 0.0)
 
 def AddSENVELZ(builder, SENVELZ):
     SARAddSENVELZ(builder, SENVELZ)
 
 def SARAddSENLAT_START(builder, SENLAT_START):
-    builder.PrependFloat64Slot(52, SENLAT_START, 0.0)
+    builder.PrependFloat64Slot(50, SENLAT_START, 0.0)
 
 def AddSENLAT_START(builder, SENLAT_START):
     SARAddSENLAT_START(builder, SENLAT_START)
 
 def SARAddSENLON_START(builder, SENLON_START):
-    builder.PrependFloat64Slot(53, SENLON_START, 0.0)
+    builder.PrependFloat64Slot(51, SENLON_START, 0.0)
 
 def AddSENLON_START(builder, SENLON_START):
     SARAddSENLON_START(builder, SENLON_START)
 
 def SARAddSENLAT_END(builder, SENLAT_END):
-    builder.PrependFloat64Slot(54, SENLAT_END, 0.0)
+    builder.PrependFloat64Slot(52, SENLAT_END, 0.0)
 
 def AddSENLAT_END(builder, SENLAT_END):
     SARAddSENLAT_END(builder, SENLAT_END)
 
 def SARAddSENLON_END(builder, SENLON_END):
-    builder.PrependFloat64Slot(55, SENLON_END, 0.0)
+    builder.PrependFloat64Slot(53, SENLON_END, 0.0)
 
 def AddSENLON_END(builder, SENLON_END):
     SARAddSENLON_END(builder, SENLON_END)
 
 def SARAddTRANSACTION_ID(builder, TRANSACTION_ID):
-    builder.PrependUOffsetTRelativeSlot(56, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSACTION_ID), 0)
+    builder.PrependUOffsetTRelativeSlot(54, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSACTION_ID), 0)
 
 def AddTRANSACTION_ID(builder, TRANSACTION_ID):
     SARAddTRANSACTION_ID(builder, TRANSACTION_ID)
 
 def SARAddTAGS(builder, TAGS):
-    builder.PrependUOffsetTRelativeSlot(57, flatbuffers.number_types.UOffsetTFlags.py_type(TAGS), 0)
+    builder.PrependUOffsetTRelativeSlot(55, flatbuffers.number_types.UOffsetTFlags.py_type(TAGS), 0)
 
 def AddTAGS(builder, TAGS):
     SARAddTAGS(builder, TAGS)
@@ -856,7 +881,7 @@ def StartTAGSVector(builder, numElems):
     return SARStartTAGSVector(builder, numElems)
 
 def SARAddSRC_TYPS(builder, SRC_TYPS):
-    builder.PrependUOffsetTRelativeSlot(58, flatbuffers.number_types.UOffsetTFlags.py_type(SRC_TYPS), 0)
+    builder.PrependUOffsetTRelativeSlot(56, flatbuffers.number_types.UOffsetTFlags.py_type(SRC_TYPS), 0)
 
 def AddSRC_TYPS(builder, SRC_TYPS):
     SARAddSRC_TYPS(builder, SRC_TYPS)
@@ -868,7 +893,7 @@ def StartSRC_TYPSVector(builder, numElems):
     return SARStartSRC_TYPSVector(builder, numElems)
 
 def SARAddSRC_IDS(builder, SRC_IDS):
-    builder.PrependUOffsetTRelativeSlot(59, flatbuffers.number_types.UOffsetTFlags.py_type(SRC_IDS), 0)
+    builder.PrependUOffsetTRelativeSlot(57, flatbuffers.number_types.UOffsetTFlags.py_type(SRC_IDS), 0)
 
 def AddSRC_IDS(builder, SRC_IDS):
     SARAddSRC_IDS(builder, SRC_IDS)
@@ -878,12 +903,6 @@ def SARStartSRC_IDSVector(builder, numElems):
 
 def StartSRC_IDSVector(builder, numElems):
     return SARStartSRC_IDSVector(builder, numElems)
-
-def SARAddON_ORBIT(builder, ON_ORBIT):
-    builder.PrependUOffsetTRelativeSlot(60, flatbuffers.number_types.UOffsetTFlags.py_type(ON_ORBIT), 0)
-
-def AddON_ORBIT(builder, ON_ORBIT):
-    SARAddON_ORBIT(builder, ON_ORBIT)
 
 def SAREnd(builder):
     return builder.EndObject()
@@ -903,6 +922,7 @@ class SART(object):
         self.ID = None  # type: str
         self.SAT_NO = 0  # type: int
         self.ORIG_OBJECT_ID = None  # type: str
+        self.ON_ORBIT = None  # type: str
         self.ID_SENSOR = None  # type: str
         self.ORIG_SENSOR_ID = None  # type: str
         self.EXTERNAL_ID = None  # type: str
@@ -915,12 +935,12 @@ class SART(object):
         self.DETECTION_END = None  # type: str
         self.DWELL_TIME = 0.0  # type: float
         self.ORBIT_STATE = None  # type: str
-        self.SAR_MODE = None  # type: str
+        self.SAR_MODE = 0  # type: int
         self.OPERATING_BAND = None  # type: str
         self.OPERATING_FREQ = 0.0  # type: float
         self.SNR = 0.0  # type: float
-        self.TX_POLARIZATION = None  # type: str
-        self.RX_POLARIZATION = None  # type: str
+        self.TX_POLARIZATION = 0  # type: int
+        self.RX_POLARIZATION = 0  # type: int
         self.GRAZE_ANGLE = 0.0  # type: float
         self.INCIDENCE_ANGLE = 0.0  # type: float
         self.SQUINT_ANGLE = 0.0  # type: float
@@ -931,12 +951,10 @@ class SART(object):
         self.NEAR_RANGE = 0.0  # type: float
         self.FAR_RANGE = 0.0  # type: float
         self.SWATH_LENGTH = 0.0  # type: float
-        self.AREA = None  # type: str
-        self.ATEXT = None  # type: str
         self.AGJSON = None  # type: str
+        self.ATEXT = None  # type: str
         self.ATYPE = None  # type: str
-        self.ANDIMS = 0  # type: int
-        self.ASRID = 0  # type: int
+        self.COORD_SYS = None  # type: str
         self.SPACING_RANGE = 0.0  # type: float
         self.SPACING_AZIMUTH = 0.0  # type: float
         self.LOOKS_AZIMUTH = 0  # type: int
@@ -944,7 +962,6 @@ class SART(object):
         self.RESOLUTION_RANGE = 0.0  # type: float
         self.RESOLUTION_AZIMUTH = 0.0  # type: float
         self.OB_DIRECTION = None  # type: str
-        self.COORD_SYS = None  # type: str
         self.TARGETPOSX = 0.0  # type: float
         self.TARGETPOSY = 0.0  # type: float
         self.TARGETPOSZ = 0.0  # type: float
@@ -960,7 +977,6 @@ class SART(object):
         self.TAGS = None  # type: List[str]
         self.SRC_TYPS = None  # type: List[str]
         self.SRC_IDS = None  # type: List[str]
-        self.ON_ORBIT = None  # type: str
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -986,6 +1002,7 @@ class SART(object):
         self.ID = SAR.ID()
         self.SAT_NO = SAR.SAT_NO()
         self.ORIG_OBJECT_ID = SAR.ORIG_OBJECT_ID()
+        self.ON_ORBIT = SAR.ON_ORBIT()
         self.ID_SENSOR = SAR.ID_SENSOR()
         self.ORIG_SENSOR_ID = SAR.ORIG_SENSOR_ID()
         self.EXTERNAL_ID = SAR.EXTERNAL_ID()
@@ -1014,12 +1031,10 @@ class SART(object):
         self.NEAR_RANGE = SAR.NEAR_RANGE()
         self.FAR_RANGE = SAR.FAR_RANGE()
         self.SWATH_LENGTH = SAR.SWATH_LENGTH()
-        self.AREA = SAR.AREA()
-        self.ATEXT = SAR.ATEXT()
         self.AGJSON = SAR.AGJSON()
+        self.ATEXT = SAR.ATEXT()
         self.ATYPE = SAR.ATYPE()
-        self.ANDIMS = SAR.ANDIMS()
-        self.ASRID = SAR.ASRID()
+        self.COORD_SYS = SAR.COORD_SYS()
         self.SPACING_RANGE = SAR.SPACING_RANGE()
         self.SPACING_AZIMUTH = SAR.SPACING_AZIMUTH()
         self.LOOKS_AZIMUTH = SAR.LOOKS_AZIMUTH()
@@ -1027,7 +1042,6 @@ class SART(object):
         self.RESOLUTION_RANGE = SAR.RESOLUTION_RANGE()
         self.RESOLUTION_AZIMUTH = SAR.RESOLUTION_AZIMUTH()
         self.OB_DIRECTION = SAR.OB_DIRECTION()
-        self.COORD_SYS = SAR.COORD_SYS()
         self.TARGETPOSX = SAR.TARGETPOSX()
         self.TARGETPOSY = SAR.TARGETPOSY()
         self.TARGETPOSZ = SAR.TARGETPOSZ()
@@ -1052,7 +1066,6 @@ class SART(object):
             self.SRC_IDS = []
             for i in range(SAR.SRC_IDSLength()):
                 self.SRC_IDS.append(SAR.SRC_IDS(i))
-        self.ON_ORBIT = SAR.ON_ORBIT()
 
     # SART
     def Pack(self, builder):
@@ -1060,6 +1073,8 @@ class SART(object):
             ID = builder.CreateString(self.ID)
         if self.ORIG_OBJECT_ID is not None:
             ORIG_OBJECT_ID = builder.CreateString(self.ORIG_OBJECT_ID)
+        if self.ON_ORBIT is not None:
+            ON_ORBIT = builder.CreateString(self.ON_ORBIT)
         if self.ID_SENSOR is not None:
             ID_SENSOR = builder.CreateString(self.ID_SENSOR)
         if self.ORIG_SENSOR_ID is not None:
@@ -1082,26 +1097,18 @@ class SART(object):
             DETECTION_END = builder.CreateString(self.DETECTION_END)
         if self.ORBIT_STATE is not None:
             ORBIT_STATE = builder.CreateString(self.ORBIT_STATE)
-        if self.SAR_MODE is not None:
-            SAR_MODE = builder.CreateString(self.SAR_MODE)
         if self.OPERATING_BAND is not None:
             OPERATING_BAND = builder.CreateString(self.OPERATING_BAND)
-        if self.TX_POLARIZATION is not None:
-            TX_POLARIZATION = builder.CreateString(self.TX_POLARIZATION)
-        if self.RX_POLARIZATION is not None:
-            RX_POLARIZATION = builder.CreateString(self.RX_POLARIZATION)
-        if self.AREA is not None:
-            AREA = builder.CreateString(self.AREA)
-        if self.ATEXT is not None:
-            ATEXT = builder.CreateString(self.ATEXT)
         if self.AGJSON is not None:
             AGJSON = builder.CreateString(self.AGJSON)
+        if self.ATEXT is not None:
+            ATEXT = builder.CreateString(self.ATEXT)
         if self.ATYPE is not None:
             ATYPE = builder.CreateString(self.ATYPE)
-        if self.OB_DIRECTION is not None:
-            OB_DIRECTION = builder.CreateString(self.OB_DIRECTION)
         if self.COORD_SYS is not None:
             COORD_SYS = builder.CreateString(self.COORD_SYS)
+        if self.OB_DIRECTION is not None:
+            OB_DIRECTION = builder.CreateString(self.OB_DIRECTION)
         if self.TRANSACTION_ID is not None:
             TRANSACTION_ID = builder.CreateString(self.TRANSACTION_ID)
         if self.TAGS is not None:
@@ -1128,14 +1135,14 @@ class SART(object):
             for i in reversed(range(len(self.SRC_IDS))):
                 builder.PrependUOffsetTRelative(SRC_IDSlist[i])
             SRC_IDS = builder.EndVector()
-        if self.ON_ORBIT is not None:
-            ON_ORBIT = builder.CreateString(self.ON_ORBIT)
         SARStart(builder)
         if self.ID is not None:
             SARAddID(builder, ID)
         SARAddSAT_NO(builder, self.SAT_NO)
         if self.ORIG_OBJECT_ID is not None:
             SARAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+        if self.ON_ORBIT is not None:
+            SARAddON_ORBIT(builder, ON_ORBIT)
         if self.ID_SENSOR is not None:
             SARAddID_SENSOR(builder, ID_SENSOR)
         if self.ORIG_SENSOR_ID is not None:
@@ -1159,16 +1166,13 @@ class SART(object):
         SARAddDWELL_TIME(builder, self.DWELL_TIME)
         if self.ORBIT_STATE is not None:
             SARAddORBIT_STATE(builder, ORBIT_STATE)
-        if self.SAR_MODE is not None:
-            SARAddSAR_MODE(builder, SAR_MODE)
+        SARAddSAR_MODE(builder, self.SAR_MODE)
         if self.OPERATING_BAND is not None:
             SARAddOPERATING_BAND(builder, OPERATING_BAND)
         SARAddOPERATING_FREQ(builder, self.OPERATING_FREQ)
         SARAddSNR(builder, self.SNR)
-        if self.TX_POLARIZATION is not None:
-            SARAddTX_POLARIZATION(builder, TX_POLARIZATION)
-        if self.RX_POLARIZATION is not None:
-            SARAddRX_POLARIZATION(builder, RX_POLARIZATION)
+        SARAddTX_POLARIZATION(builder, self.TX_POLARIZATION)
+        SARAddRX_POLARIZATION(builder, self.RX_POLARIZATION)
         SARAddGRAZE_ANGLE(builder, self.GRAZE_ANGLE)
         SARAddINCIDENCE_ANGLE(builder, self.INCIDENCE_ANGLE)
         SARAddSQUINT_ANGLE(builder, self.SQUINT_ANGLE)
@@ -1179,16 +1183,14 @@ class SART(object):
         SARAddNEAR_RANGE(builder, self.NEAR_RANGE)
         SARAddFAR_RANGE(builder, self.FAR_RANGE)
         SARAddSWATH_LENGTH(builder, self.SWATH_LENGTH)
-        if self.AREA is not None:
-            SARAddAREA(builder, AREA)
-        if self.ATEXT is not None:
-            SARAddATEXT(builder, ATEXT)
         if self.AGJSON is not None:
             SARAddAGJSON(builder, AGJSON)
+        if self.ATEXT is not None:
+            SARAddATEXT(builder, ATEXT)
         if self.ATYPE is not None:
             SARAddATYPE(builder, ATYPE)
-        SARAddANDIMS(builder, self.ANDIMS)
-        SARAddASRID(builder, self.ASRID)
+        if self.COORD_SYS is not None:
+            SARAddCOORD_SYS(builder, COORD_SYS)
         SARAddSPACING_RANGE(builder, self.SPACING_RANGE)
         SARAddSPACING_AZIMUTH(builder, self.SPACING_AZIMUTH)
         SARAddLOOKS_AZIMUTH(builder, self.LOOKS_AZIMUTH)
@@ -1197,8 +1199,6 @@ class SART(object):
         SARAddRESOLUTION_AZIMUTH(builder, self.RESOLUTION_AZIMUTH)
         if self.OB_DIRECTION is not None:
             SARAddOB_DIRECTION(builder, OB_DIRECTION)
-        if self.COORD_SYS is not None:
-            SARAddCOORD_SYS(builder, COORD_SYS)
         SARAddTARGETPOSX(builder, self.TARGETPOSX)
         SARAddTARGETPOSY(builder, self.TARGETPOSY)
         SARAddTARGETPOSZ(builder, self.TARGETPOSZ)
@@ -1218,7 +1218,5 @@ class SART(object):
             SARAddSRC_TYPS(builder, SRC_TYPS)
         if self.SRC_IDS is not None:
             SARAddSRC_IDS(builder, SRC_IDS)
-        if self.ON_ORBIT is not None:
-            SARAddON_ORBIT(builder, ON_ORBIT)
         SAR = SAREnd(builder)
         return SAR

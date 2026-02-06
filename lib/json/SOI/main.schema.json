@@ -1,198 +1,273 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "soiCollectionMode" : {
+      "type" : "string",
+      "enum": ["SIDEREAL", "RATE_TRACK", "STARE", "SEARCH", "SURVEY", "TASKED"]
+    },
+    "soiObsType" : {
+      "type" : "string",
+      "enum": ["OPTICAL", "RADAR", "COMBINED"]
+    },
+    "soiCalibrationType" : {
+      "type" : "string",
+      "enum": ["PHOTOMETRIC", "ASTROMETRIC", "RADIOMETRIC", "POLARIMETRIC", "TEMPORAL", "NONE"]
+    },
     "SOI" : {
       "type" : "object",
       "description" : "Space Object Identification Observation Set",
       "properties" : {
         "ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique identifier"
               },
         "MSG_CREATE_DATE" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Message creation date (ISO 8601)"
               },
         "ID_SENSOR" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Sensor identifier"
               },
         "ORIG_SENSOR_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Original sensor identifier"
               },
         "SENSOR_AS_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Sensor observation set identifier"
               },
         "SAT_NO" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Satellite catalog number"
               },
         "ORIG_OBJECT_ID" : {
-                "type" : "string"
-              },
-        "SENLAT" : {
-                "type" : "number"
-              },
-        "SENLON" : {
-                "type" : "number"
-              },
-        "SENALT" : {
-                "type" : "number"
-              },
-        "SENX" : {
-                "type" : "number"
-              },
-        "SENY" : {
-                "type" : "number"
-              },
-        "SENZ" : {
-                "type" : "number"
-              },
-        "SENVELX" : {
-                "type" : "number"
-              },
-        "SENVELY" : {
-                "type" : "number"
-              },
-        "SENVELZ" : {
-                "type" : "number"
-              },
-        "START_TIME" : {
-                "type" : "string"
-              },
-        "END_TIME" : {
-                "type" : "string"
-              },
-        "NUM_OBS" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "TYPE" : {
-                "type" : "string"
-              },
-        "POLAR_ANGLE_START" : {
-                "type" : "number"
-              },
-        "POLAR_ANGLE_END" : {
-                "type" : "number"
-              },
-        "REFERENCE_FRAME" : {
-                "type" : "string"
-              },
-        "SEN_REFERENCE_FRAME" : {
-                "type" : "string"
-              },
-        "LOS_DECLINATION_START" : {
-                "type" : "number"
-              },
-        "LOS_DECLINATION_END" : {
-                "type" : "number"
-              },
-        "POINTING_ANGLE_AZ_START" : {
-                "type" : "number"
-              },
-        "POINTING_ANGLE_AZ_END" : {
-                "type" : "number"
-              },
-        "POINTING_ANGLE_EL_START" : {
-                "type" : "number"
-              },
-        "POINTING_ANGLE_EL_END" : {
-                "type" : "number"
-              },
-        "PIXEL_ARRAY_WIDTH" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "PIXEL_ARRAY_HEIGHT" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "NUM_SPECTRAL_FILTERS" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "SPECTRAL_FILTERS" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
-        "COLLECTION_MODE" : {
-                "type" : "string"
-              },
-        "GAIN" : {
-                "type" : "number"
-              },
-        "BINNING_HORIZ" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "BINNING_VERT" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "SOLAR_MAG" : {
-                "type" : "number"
-              },
-        "PIXEL_MIN" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "PIXEL_MAX" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "SOFTWARE_VERSION" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "International designator"
               },
         "SATELLITE_NAME" : {
-                "type" : "string"
-              },
-        "STAR_CAT_NAME" : {
-                "type" : "string"
-              },
-        "CORR_QUALITY" : {
-                "type" : "number"
+                "type" : "string",
+                "description" : "Satellite common name"
               },
         "UCT" : {
-                "type" : "boolean"
+                "type" : "boolean",
+                "description" : "True if uncorrelated target"
               },
-        "VALID_CALIBRATIONS" : {
-                "type" : "string"
+        "SENLAT" : {
+                "type" : "number",
+                "description" : "Sensor geodetic latitude (degrees)"
+              },
+        "SENLON" : {
+                "type" : "number",
+                "description" : "Sensor geodetic longitude (degrees)"
+              },
+        "SENALT" : {
+                "type" : "number",
+                "description" : "Sensor altitude (km)"
+              },
+        "SENX" : {
+                "type" : "number",
+                "description" : "Sensor ECEF X position (km)"
+              },
+        "SENY" : {
+                "type" : "number",
+                "description" : "Sensor ECEF Y position (km)"
+              },
+        "SENZ" : {
+                "type" : "number",
+                "description" : "Sensor ECEF Z position (km)"
+              },
+        "SENVELX" : {
+                "type" : "number",
+                "description" : "Sensor ECEF X velocity (km/s)"
+              },
+        "SENVELY" : {
+                "type" : "number",
+                "description" : "Sensor ECEF Y velocity (km/s)"
+              },
+        "SENVELZ" : {
+                "type" : "number",
+                "description" : "Sensor ECEF Z velocity (km/s)"
+              },
+        "SEN_REFERENCE_FRAME" : {
+                "type" : "string",
+                "description" : "Sensor reference frame"
+              },
+        "OBS_TYPE" : {
+                "$ref" : "#/definitions/soiObsType",
+                "description" : "Observation type"
+              },
+        "COLLECTION_MODE" : {
+                "$ref" : "#/definitions/soiCollectionMode",
+                "description" : "Collection mode"
+              },
+        "START_TIME" : {
+                "type" : "string",
+                "description" : "Observation start time (ISO 8601)"
+              },
+        "END_TIME" : {
+                "type" : "string",
+                "description" : "Observation end time (ISO 8601)"
+              },
+        "NUM_OBS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of observations in set"
+              },
+        "REFERENCE_FRAME" : {
+                "type" : "string",
+                "description" : "Observation reference frame"
+              },
+        "POLAR_ANGLE_START" : {
+                "type" : "number",
+                "description" : "Polar angle at start (degrees)"
+              },
+        "POLAR_ANGLE_END" : {
+                "type" : "number",
+                "description" : "Polar angle at end (degrees)"
+              },
+        "LOS_DECLINATION_START" : {
+                "type" : "number",
+                "description" : "Line-of-sight declination at start (degrees)"
+              },
+        "LOS_DECLINATION_END" : {
+                "type" : "number",
+                "description" : "Line-of-sight declination at end (degrees)"
+              },
+        "POINTING_ANGLE_AZ_START" : {
+                "type" : "number",
+                "description" : "Pointing azimuth at start (degrees)"
+              },
+        "POINTING_ANGLE_AZ_END" : {
+                "type" : "number",
+                "description" : "Pointing azimuth at end (degrees)"
+              },
+        "POINTING_ANGLE_EL_START" : {
+                "type" : "number",
+                "description" : "Pointing elevation at start (degrees)"
+              },
+        "POINTING_ANGLE_EL_END" : {
+                "type" : "number",
+                "description" : "Pointing elevation at end (degrees)"
+              },
+        "PIXEL_ARRAY_WIDTH" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Focal plane array width (pixels)"
+              },
+        "PIXEL_ARRAY_HEIGHT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Focal plane array height (pixels)"
+              },
+        "NUM_SPECTRAL_FILTERS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Number of spectral filters used"
+              },
+        "SPECTRAL_FILTERS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Spectral filter identifiers"
+              },
+        "GAIN" : {
+                "type" : "number",
+                "description" : "Detector gain setting"
+              },
+        "BINNING_HORIZ" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Horizontal binning factor"
+              },
+        "BINNING_VERT" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Vertical binning factor"
+              },
+        "SOLAR_MAG" : {
+                "type" : "number",
+                "description" : "Solar visual magnitude"
+              },
+        "PIXEL_MIN" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Minimum pixel value in observation"
+              },
+        "PIXEL_MAX" : {
+                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647,
+                "description" : "Maximum pixel value in observation"
+              },
+        "SOFTWARE_VERSION" : {
+                "type" : "string",
+                "description" : "Processing software version"
+              },
+        "STAR_CAT_NAME" : {
+                "type" : "string",
+                "description" : "Star catalog used for calibration"
+              },
+        "CORR_QUALITY" : {
+                "type" : "number",
+                "description" : "Correlation quality score"
               },
         "CALIBRATION_TYPE" : {
-                "type" : "string"
+                "$ref" : "#/definitions/soiCalibrationType",
+                "description" : "Calibration type"
+              },
+        "VALID_CALIBRATIONS" : {
+                "type" : "string",
+                "description" : "Valid calibration identifiers"
               },
         "PERCENT_SAT_THRESHOLD" : {
-                "type" : "number"
+                "type" : "number",
+                "description" : "Percent saturation threshold"
               },
         "CHANGE_DETECTED" : {
-                "type" : "boolean"
+                "type" : "boolean",
+                "description" : "True if change detected from baseline"
               },
         "PERIODICITY_CHANGE_DETECTED" : {
-                "type" : "boolean"
+                "type" : "boolean",
+                "description" : "True if periodicity change detected"
               },
         "BRIGHTNESS_VARIANCE_CHANGE_DETECTED" : {
-                "type" : "boolean"
+                "type" : "boolean",
+                "description" : "True if brightness variance change detected"
               },
         "SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED" : {
-                "type" : "boolean"
+                "type" : "boolean",
+                "description" : "True if solar phase angle brightness change detected"
               },
         "CHANGE_CONF" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Change confidence assessment"
               },
         "COLLECTION_DENSITY_CONF" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Collection density confidence"
               },
         "PERIODICITY_SAMPLING_CONF" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Periodicity sampling confidence"
               },
         "PERIODICITY_DETECTION_CONF" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Periodicity detection confidence"
               },
         "COLLECTION_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Collection identifier"
               },
         "CALIBRATIONS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Calibration record references"
               },
         "TAGS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Associated tags"
               },
         "TRANSACTION_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Transaction identifier"
               },
         "OPTICAL_SOIOBSERVATION_LIST" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Optical SOI observation references"
               },
         "RADAR_SOIOBSERVATION_LIST" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Radar SOI observation references"
               }
       },
       "additionalProperties" : false

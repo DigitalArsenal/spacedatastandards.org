@@ -4,6 +4,166 @@
 
 import FlatBuffers
 
+public enum manifoldStatus: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case candidate = 0
+  case confirmed = 1
+  case rejected = 2
+  case correlated = 3
+  case expired = 4
+
+  public static var max: manifoldStatus { return .expired }
+  public static var min: manifoldStatus { return .candidate }
+}
+
+
+///  Manifold Element Set
+public struct manifoldElset: FlatBufferObject, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$MNF" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: manifoldElset.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private enum VTOFFSET: VOffset {
+    case EPOCH = 4
+    case SEMI_MAJOR_AXIS = 6
+    case ECCENTRICITY = 8
+    case INCLINATION = 10
+    case RA_OF_ASC_NODE = 12
+    case ARG_OF_PERICENTER = 14
+    case MEAN_ANOMALY = 16
+    case DELTA_V = 18
+    case DELTA_T = 20
+    case DV_X = 22
+    case DV_Y = 24
+    case DV_Z = 26
+    case WEIGHT = 28
+    case APOGEE = 30
+    case PERIGEE = 32
+    case PERIOD = 34
+    var v: Int32 { Int32(self.rawValue) }
+    var p: VOffset { self.rawValue }
+  }
+
+  ///  Epoch of element set (ISO 8601)
+  public var EPOCH: String? { let o = _accessor.offset(VTOFFSET.EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EPOCH.v) }
+  ///  Semi-major axis in km
+  public var SEMI_MAJOR_AXIS: Double { let o = _accessor.offset(VTOFFSET.SEMI_MAJOR_AXIS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Eccentricity
+  public var ECCENTRICITY: Double { let o = _accessor.offset(VTOFFSET.ECCENTRICITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Inclination in degrees
+  public var INCLINATION: Double { let o = _accessor.offset(VTOFFSET.INCLINATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Right ascension of ascending node in degrees
+  public var RA_OF_ASC_NODE: Double { let o = _accessor.offset(VTOFFSET.RA_OF_ASC_NODE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Argument of pericenter in degrees
+  public var ARG_OF_PERICENTER: Double { let o = _accessor.offset(VTOFFSET.ARG_OF_PERICENTER.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Mean anomaly in degrees
+  public var MEAN_ANOMALY: Double { let o = _accessor.offset(VTOFFSET.MEAN_ANOMALY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Applied delta-V in m/s
+  public var DELTA_V: Double { let o = _accessor.offset(VTOFFSET.DELTA_V.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Applied delta-T in seconds
+  public var DELTA_T: Double { let o = _accessor.offset(VTOFFSET.DELTA_T.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Delta-V direction X (unit vector)
+  public var DV_X: Double { let o = _accessor.offset(VTOFFSET.DV_X.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Delta-V direction Y (unit vector)
+  public var DV_Y: Double { let o = _accessor.offset(VTOFFSET.DV_Y.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Delta-V direction Z (unit vector)
+  public var DV_Z: Double { let o = _accessor.offset(VTOFFSET.DV_Z.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Probability weight (0.0-1.0)
+  public var WEIGHT: Double { let o = _accessor.offset(VTOFFSET.WEIGHT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Apogee altitude in km
+  public var APOGEE: Double { let o = _accessor.offset(VTOFFSET.APOGEE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Perigee altitude in km
+  public var PERIGEE: Double { let o = _accessor.offset(VTOFFSET.PERIGEE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Period in minutes
+  public var PERIOD: Double { let o = _accessor.offset(VTOFFSET.PERIOD.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startmanifoldElset(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 16) }
+  public static func add(EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EPOCH, at: VTOFFSET.EPOCH.p) }
+  public static func add(SEMI_MAJOR_AXIS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SEMI_MAJOR_AXIS, def: 0.0, at: VTOFFSET.SEMI_MAJOR_AXIS.p) }
+  public static func add(ECCENTRICITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ECCENTRICITY, def: 0.0, at: VTOFFSET.ECCENTRICITY.p) }
+  public static func add(INCLINATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INCLINATION, def: 0.0, at: VTOFFSET.INCLINATION.p) }
+  public static func add(RA_OF_ASC_NODE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RA_OF_ASC_NODE, def: 0.0, at: VTOFFSET.RA_OF_ASC_NODE.p) }
+  public static func add(ARG_OF_PERICENTER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ARG_OF_PERICENTER, def: 0.0, at: VTOFFSET.ARG_OF_PERICENTER.p) }
+  public static func add(MEAN_ANOMALY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MEAN_ANOMALY, def: 0.0, at: VTOFFSET.MEAN_ANOMALY.p) }
+  public static func add(DELTA_V: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_V, def: 0.0, at: VTOFFSET.DELTA_V.p) }
+  public static func add(DELTA_T: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_T, def: 0.0, at: VTOFFSET.DELTA_T.p) }
+  public static func add(DV_X: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DV_X, def: 0.0, at: VTOFFSET.DV_X.p) }
+  public static func add(DV_Y: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DV_Y, def: 0.0, at: VTOFFSET.DV_Y.p) }
+  public static func add(DV_Z: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DV_Z, def: 0.0, at: VTOFFSET.DV_Z.p) }
+  public static func add(WEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEIGHT, def: 0.0, at: VTOFFSET.WEIGHT.p) }
+  public static func add(APOGEE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: APOGEE, def: 0.0, at: VTOFFSET.APOGEE.p) }
+  public static func add(PERIGEE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERIGEE, def: 0.0, at: VTOFFSET.PERIGEE.p) }
+  public static func add(PERIOD: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: PERIOD, def: 0.0, at: VTOFFSET.PERIOD.p) }
+  public static func endmanifoldElset(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createmanifoldElset(
+    _ fbb: inout FlatBufferBuilder,
+    EPOCHOffset EPOCH: Offset = Offset(),
+    SEMI_MAJOR_AXIS: Double = 0.0,
+    ECCENTRICITY: Double = 0.0,
+    INCLINATION: Double = 0.0,
+    RA_OF_ASC_NODE: Double = 0.0,
+    ARG_OF_PERICENTER: Double = 0.0,
+    MEAN_ANOMALY: Double = 0.0,
+    DELTA_V: Double = 0.0,
+    DELTA_T: Double = 0.0,
+    DV_X: Double = 0.0,
+    DV_Y: Double = 0.0,
+    DV_Z: Double = 0.0,
+    WEIGHT: Double = 0.0,
+    APOGEE: Double = 0.0,
+    PERIGEE: Double = 0.0,
+    PERIOD: Double = 0.0
+  ) -> Offset {
+    let __start = manifoldElset.startmanifoldElset(&fbb)
+    manifoldElset.add(EPOCH: EPOCH, &fbb)
+    manifoldElset.add(SEMI_MAJOR_AXIS: SEMI_MAJOR_AXIS, &fbb)
+    manifoldElset.add(ECCENTRICITY: ECCENTRICITY, &fbb)
+    manifoldElset.add(INCLINATION: INCLINATION, &fbb)
+    manifoldElset.add(RA_OF_ASC_NODE: RA_OF_ASC_NODE, &fbb)
+    manifoldElset.add(ARG_OF_PERICENTER: ARG_OF_PERICENTER, &fbb)
+    manifoldElset.add(MEAN_ANOMALY: MEAN_ANOMALY, &fbb)
+    manifoldElset.add(DELTA_V: DELTA_V, &fbb)
+    manifoldElset.add(DELTA_T: DELTA_T, &fbb)
+    manifoldElset.add(DV_X: DV_X, &fbb)
+    manifoldElset.add(DV_Y: DV_Y, &fbb)
+    manifoldElset.add(DV_Z: DV_Z, &fbb)
+    manifoldElset.add(WEIGHT: WEIGHT, &fbb)
+    manifoldElset.add(APOGEE: APOGEE, &fbb)
+    manifoldElset.add(PERIGEE: PERIGEE, &fbb)
+    manifoldElset.add(PERIOD: PERIOD, &fbb)
+    return manifoldElset.endmanifoldElset(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VTOFFSET.EPOCH.p, fieldName: "EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.SEMI_MAJOR_AXIS.p, fieldName: "SEMI_MAJOR_AXIS", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.ECCENTRICITY.p, fieldName: "ECCENTRICITY", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.INCLINATION.p, fieldName: "INCLINATION", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.RA_OF_ASC_NODE.p, fieldName: "RA_OF_ASC_NODE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.ARG_OF_PERICENTER.p, fieldName: "ARG_OF_PERICENTER", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.MEAN_ANOMALY.p, fieldName: "MEAN_ANOMALY", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.DELTA_V.p, fieldName: "DELTA_V", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.DELTA_T.p, fieldName: "DELTA_T", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.DV_X.p, fieldName: "DV_X", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.DV_Y.p, fieldName: "DV_Y", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.DV_Z.p, fieldName: "DV_Z", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.WEIGHT.p, fieldName: "WEIGHT", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.APOGEE.p, fieldName: "APOGEE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.PERIGEE.p, fieldName: "PERIGEE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.PERIOD.p, fieldName: "PERIOD", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
 ///  Orbit Manifold
 public struct MNF: FlatBufferObject, Verifiable {
 
@@ -18,52 +178,169 @@ public struct MNF: FlatBufferObject, Verifiable {
 
   private enum VTOFFSET: VOffset {
     case ID = 4
-    case STATUS = 6
-    case WEIGHT = 8
-    case DELTA_V = 10
-    case DELTA_T = 12
+    case SAT_NO = 6
+    case OBJECT_DESIGNATOR = 8
+    case STATUS = 10
+    case EVENT_EPOCH = 12
+    case SOURCE = 14
+    case REF_FRAME = 16
+    case ORIG_SEMI_MAJOR_AXIS = 18
+    case ORIG_ECCENTRICITY = 20
+    case ORIG_INCLINATION = 22
+    case DELTA_V_MIN = 24
+    case DELTA_V_MAX = 26
+    case DELTA_V_STEP = 28
+    case DELTA_T_MIN = 30
+    case DELTA_T_MAX = 32
+    case DELTA_T_STEP = 34
+    case NUM_ELEMENTS = 36
+    case ELEMENTS = 38
+    case CORRELATED_ID = 40
+    case NOTES = 42
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
+  ///  Unique manifold identifier
   public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
-  public var STATUS: String? { let o = _accessor.offset(VTOFFSET.STATUS.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var STATUSSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.STATUS.v) }
-  public var WEIGHT: Double { let o = _accessor.offset(VTOFFSET.WEIGHT.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var DELTA_V: Double { let o = _accessor.offset(VTOFFSET.DELTA_V.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var DELTA_T: Double { let o = _accessor.offset(VTOFFSET.DELTA_T.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public static func startMNF(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 5) }
+  ///  Parent object satellite number
+  public var SAT_NO: UInt32 { let o = _accessor.offset(VTOFFSET.SAT_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Object designator
+  public var OBJECT_DESIGNATOR: String? { let o = _accessor.offset(VTOFFSET.OBJECT_DESIGNATOR.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var OBJECT_DESIGNATORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.OBJECT_DESIGNATOR.v) }
+  ///  Manifold status
+  public var STATUS: manifoldStatus { let o = _accessor.offset(VTOFFSET.STATUS.v); return o == 0 ? .candidate : manifoldStatus(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .candidate }
+  ///  Event epoch that spawned the manifold (ISO 8601)
+  public var EVENT_EPOCH: String? { let o = _accessor.offset(VTOFFSET.EVENT_EPOCH.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EVENT_EPOCHSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EVENT_EPOCH.v) }
+  ///  Source of detection (sensor ID or method)
+  public var SOURCE: String? { let o = _accessor.offset(VTOFFSET.SOURCE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SOURCE.v) }
+  ///  Reference frame
+  public var REF_FRAME: String? { let o = _accessor.offset(VTOFFSET.REF_FRAME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var REF_FRAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.REF_FRAME.v) }
+  ///  Original pre-event semi-major axis in km
+  public var ORIG_SEMI_MAJOR_AXIS: Double { let o = _accessor.offset(VTOFFSET.ORIG_SEMI_MAJOR_AXIS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Original pre-event eccentricity
+  public var ORIG_ECCENTRICITY: Double { let o = _accessor.offset(VTOFFSET.ORIG_ECCENTRICITY.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Original pre-event inclination in degrees
+  public var ORIG_INCLINATION: Double { let o = _accessor.offset(VTOFFSET.ORIG_INCLINATION.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Minimum delta-V sampled in m/s
+  public var DELTA_V_MIN: Double { let o = _accessor.offset(VTOFFSET.DELTA_V_MIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Maximum delta-V sampled in m/s
+  public var DELTA_V_MAX: Double { let o = _accessor.offset(VTOFFSET.DELTA_V_MAX.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Delta-V step size in m/s
+  public var DELTA_V_STEP: Double { let o = _accessor.offset(VTOFFSET.DELTA_V_STEP.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Minimum delta-T sampled in seconds
+  public var DELTA_T_MIN: Double { let o = _accessor.offset(VTOFFSET.DELTA_T_MIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Maximum delta-T sampled in seconds
+  public var DELTA_T_MAX: Double { let o = _accessor.offset(VTOFFSET.DELTA_T_MAX.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Delta-T step size in seconds
+  public var DELTA_T_STEP: Double { let o = _accessor.offset(VTOFFSET.DELTA_T_STEP.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Total number of manifold elements
+  public var NUM_ELEMENTS: UInt32 { let o = _accessor.offset(VTOFFSET.NUM_ELEMENTS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Theoretical element sets
+  public var hasElements: Bool { let o = _accessor.offset(VTOFFSET.ELEMENTS.v); return o == 0 ? false : true }
+  public var ELEMENTSCount: Int32 { let o = _accessor.offset(VTOFFSET.ELEMENTS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func ELEMENTS(at index: Int32) -> manifoldElset? { let o = _accessor.offset(VTOFFSET.ELEMENTS.v); return o == 0 ? nil : manifoldElset(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  ///  Correlated catalog object ID (if matched)
+  public var CORRELATED_ID: String? { let o = _accessor.offset(VTOFFSET.CORRELATED_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CORRELATED_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CORRELATED_ID.v) }
+  ///  Additional notes
+  public var NOTES: String? { let o = _accessor.offset(VTOFFSET.NOTES.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NOTES.v) }
+  public static func startMNF(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 20) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
-  public static func add(STATUS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: STATUS, at: VTOFFSET.STATUS.p) }
-  public static func add(WEIGHT: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WEIGHT, def: 0.0, at: VTOFFSET.WEIGHT.p) }
-  public static func add(DELTA_V: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_V, def: 0.0, at: VTOFFSET.DELTA_V.p) }
-  public static func add(DELTA_T: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_T, def: 0.0, at: VTOFFSET.DELTA_T.p) }
+  public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }
+  public static func add(OBJECT_DESIGNATOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OBJECT_DESIGNATOR, at: VTOFFSET.OBJECT_DESIGNATOR.p) }
+  public static func add(STATUS: manifoldStatus, _ fbb: inout FlatBufferBuilder) { fbb.add(element: STATUS.rawValue, def: 0, at: VTOFFSET.STATUS.p) }
+  public static func add(EVENT_EPOCH: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EVENT_EPOCH, at: VTOFFSET.EVENT_EPOCH.p) }
+  public static func add(SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SOURCE, at: VTOFFSET.SOURCE.p) }
+  public static func add(REF_FRAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REF_FRAME, at: VTOFFSET.REF_FRAME.p) }
+  public static func add(ORIG_SEMI_MAJOR_AXIS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORIG_SEMI_MAJOR_AXIS, def: 0.0, at: VTOFFSET.ORIG_SEMI_MAJOR_AXIS.p) }
+  public static func add(ORIG_ECCENTRICITY: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORIG_ECCENTRICITY, def: 0.0, at: VTOFFSET.ORIG_ECCENTRICITY.p) }
+  public static func add(ORIG_INCLINATION: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ORIG_INCLINATION, def: 0.0, at: VTOFFSET.ORIG_INCLINATION.p) }
+  public static func add(DELTA_V_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_V_MIN, def: 0.0, at: VTOFFSET.DELTA_V_MIN.p) }
+  public static func add(DELTA_V_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_V_MAX, def: 0.0, at: VTOFFSET.DELTA_V_MAX.p) }
+  public static func add(DELTA_V_STEP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_V_STEP, def: 0.0, at: VTOFFSET.DELTA_V_STEP.p) }
+  public static func add(DELTA_T_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_T_MIN, def: 0.0, at: VTOFFSET.DELTA_T_MIN.p) }
+  public static func add(DELTA_T_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_T_MAX, def: 0.0, at: VTOFFSET.DELTA_T_MAX.p) }
+  public static func add(DELTA_T_STEP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DELTA_T_STEP, def: 0.0, at: VTOFFSET.DELTA_T_STEP.p) }
+  public static func add(NUM_ELEMENTS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_ELEMENTS, def: 0, at: VTOFFSET.NUM_ELEMENTS.p) }
+  public static func addVectorOf(ELEMENTS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ELEMENTS, at: VTOFFSET.ELEMENTS.p) }
+  public static func add(CORRELATED_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CORRELATED_ID, at: VTOFFSET.CORRELATED_ID.p) }
+  public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VTOFFSET.NOTES.p) }
   public static func endMNF(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createMNF(
     _ fbb: inout FlatBufferBuilder,
     IDOffset ID: Offset = Offset(),
-    STATUSOffset STATUS: Offset = Offset(),
-    WEIGHT: Double = 0.0,
-    DELTA_V: Double = 0.0,
-    DELTA_T: Double = 0.0
+    SAT_NO: UInt32 = 0,
+    OBJECT_DESIGNATOROffset OBJECT_DESIGNATOR: Offset = Offset(),
+    STATUS: manifoldStatus = .candidate,
+    EVENT_EPOCHOffset EVENT_EPOCH: Offset = Offset(),
+    SOURCEOffset SOURCE: Offset = Offset(),
+    REF_FRAMEOffset REF_FRAME: Offset = Offset(),
+    ORIG_SEMI_MAJOR_AXIS: Double = 0.0,
+    ORIG_ECCENTRICITY: Double = 0.0,
+    ORIG_INCLINATION: Double = 0.0,
+    DELTA_V_MIN: Double = 0.0,
+    DELTA_V_MAX: Double = 0.0,
+    DELTA_V_STEP: Double = 0.0,
+    DELTA_T_MIN: Double = 0.0,
+    DELTA_T_MAX: Double = 0.0,
+    DELTA_T_STEP: Double = 0.0,
+    NUM_ELEMENTS: UInt32 = 0,
+    ELEMENTSVectorOffset ELEMENTS: Offset = Offset(),
+    CORRELATED_IDOffset CORRELATED_ID: Offset = Offset(),
+    NOTESOffset NOTES: Offset = Offset()
   ) -> Offset {
     let __start = MNF.startMNF(&fbb)
     MNF.add(ID: ID, &fbb)
+    MNF.add(SAT_NO: SAT_NO, &fbb)
+    MNF.add(OBJECT_DESIGNATOR: OBJECT_DESIGNATOR, &fbb)
     MNF.add(STATUS: STATUS, &fbb)
-    MNF.add(WEIGHT: WEIGHT, &fbb)
-    MNF.add(DELTA_V: DELTA_V, &fbb)
-    MNF.add(DELTA_T: DELTA_T, &fbb)
+    MNF.add(EVENT_EPOCH: EVENT_EPOCH, &fbb)
+    MNF.add(SOURCE: SOURCE, &fbb)
+    MNF.add(REF_FRAME: REF_FRAME, &fbb)
+    MNF.add(ORIG_SEMI_MAJOR_AXIS: ORIG_SEMI_MAJOR_AXIS, &fbb)
+    MNF.add(ORIG_ECCENTRICITY: ORIG_ECCENTRICITY, &fbb)
+    MNF.add(ORIG_INCLINATION: ORIG_INCLINATION, &fbb)
+    MNF.add(DELTA_V_MIN: DELTA_V_MIN, &fbb)
+    MNF.add(DELTA_V_MAX: DELTA_V_MAX, &fbb)
+    MNF.add(DELTA_V_STEP: DELTA_V_STEP, &fbb)
+    MNF.add(DELTA_T_MIN: DELTA_T_MIN, &fbb)
+    MNF.add(DELTA_T_MAX: DELTA_T_MAX, &fbb)
+    MNF.add(DELTA_T_STEP: DELTA_T_STEP, &fbb)
+    MNF.add(NUM_ELEMENTS: NUM_ELEMENTS, &fbb)
+    MNF.addVectorOf(ELEMENTS: ELEMENTS, &fbb)
+    MNF.add(CORRELATED_ID: CORRELATED_ID, &fbb)
+    MNF.add(NOTES: NOTES, &fbb)
     return MNF.endMNF(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.STATUS.p, fieldName: "STATUS", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.WEIGHT.p, fieldName: "WEIGHT", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DELTA_V.p, fieldName: "DELTA_V", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.DELTA_T.p, fieldName: "DELTA_T", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.SAT_NO.p, fieldName: "SAT_NO", required: false, type: UInt32.self)
+    try _v.visit(field: VTOFFSET.OBJECT_DESIGNATOR.p, fieldName: "OBJECT_DESIGNATOR", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.STATUS.p, fieldName: "STATUS", required: false, type: manifoldStatus.self)
+    try _v.visit(field: VTOFFSET.EVENT_EPOCH.p, fieldName: "EVENT_EPOCH", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.SOURCE.p, fieldName: "SOURCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.REF_FRAME.p, fieldName: "REF_FRAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.ORIG_SEMI_MAJOR_AXIS.p, fieldName: "ORIG_SEMI_MAJOR_AXIS", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.ORIG_ECCENTRICITY.p, fieldName: "ORIG_ECCENTRICITY", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.ORIG_INCLINATION.p, fieldName: "ORIG_INCLINATION", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.DELTA_V_MIN.p, fieldName: "DELTA_V_MIN", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.DELTA_V_MAX.p, fieldName: "DELTA_V_MAX", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.DELTA_V_STEP.p, fieldName: "DELTA_V_STEP", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.DELTA_T_MIN.p, fieldName: "DELTA_T_MIN", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.DELTA_T_MAX.p, fieldName: "DELTA_T_MAX", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.DELTA_T_STEP.p, fieldName: "DELTA_T_STEP", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.NUM_ELEMENTS.p, fieldName: "NUM_ELEMENTS", required: false, type: UInt32.self)
+    try _v.visit(field: VTOFFSET.ELEMENTS.p, fieldName: "ELEMENTS", required: false, type: ForwardOffset<Vector<ForwardOffset<manifoldElset>, manifoldElset>>.self)
+    try _v.visit(field: VTOFFSET.CORRELATED_ID.p, fieldName: "CORRELATED_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.NOTES.p, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

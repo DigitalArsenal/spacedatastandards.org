@@ -1,74 +1,139 @@
-// Hash: ebc718afa20fc09836e9675021b1f8eb8d3b40d6038a91dff7011784c4e1b755
-// Version: 2.0.1
+// Hash: f599d9d2b91d4fe1d099007f09c6e63e9bf372d6a14412169579d183273a762b
+// Version: 2.0.2
 // -----------------------------------END_HEADER
+enum missileStatus : byte {
+  BOOSTING,
+  MIDCOURSE,
+  TERMINAL,
+  IMPACT,
+  BURNOUT,
+  INTERCEPTED,
+  LOST,
+  UNKNOWN
+}
+
+enum missileEnvironment : byte {
+  SPACE,
+  ENDO_ATMOSPHERIC,
+  EXO_ATMOSPHERIC,
+  TRANSITIONAL,
+  UNKNOWN
+}
+
+enum aouReportType : byte {
+  CIRCULAR,
+  ELLIPTICAL,
+  RECTANGULAR,
+  NONE
+}
+
 /// Missile Track
 table MST {
+  /// Unique identifier
   ID:string;
+  /// Message type code
   MSG_TYPE:string;
+  /// Message sub-type
   MSG_SUB_TYPE:string;
+  /// Message creation date (ISO 8601)
   MSG_CREATE_DATE:string;
-  ENVIRONMENT:string;
+  /// Track environment
+  ENVIRONMENT:missileEnvironment;
+  /// Object type classification
   OBJ_TYPE:string;
-  OBJ_TYPE_CONF:int;
+  /// Object type confidence (0-100)
+  OBJ_TYPE_CONF:uint8;
+  /// Object platform type
   OBJ_PLAT:string;
+  /// Object identity assessment
   OBJ_IDENT:string;
+  /// Space amplification data
   SPACE_AMP:string;
+  /// Space amplification confidence (0-100)
+  SPACE_AMP_CONF:uint8;
+  /// Object activity
   OBJ_ACT:string;
+  /// Space specific type
   SPACE_SPEC_TYPE:string;
+  /// Aircraft sub-type (if applicable)
   ACFT_SUB_TYPE:string;
+  /// Object name
   NAME:string;
+  /// Call sign
   CALL_SIGN:string;
+  /// True if track is lost
   LOST_TRK_IND:bool;
+  /// Track identifier
   TRACK_ID:string;
+  /// Parent track identifier
   PARENT_TRACK_ID:string;
+  /// Multi-unit identifier (source track)
   MUID_SRC_TRK:string;
+  /// Multi-unit identifier (source)
   MUID_SRC:string;
+  /// Alert classification
   ALERT:string;
-  MSL_STATUS:string;
+  /// Missile engagement status
+  MSL_STATUS:missileStatus;
+  /// Track timestamp (ISO 8601)
   TS:string;
-  AOU_RPT_TYPE:string;
+  /// AOU report type
+  AOU_RPT_TYPE:aouReportType;
+  /// Containment probability (0-1)
   CONTAINMENT:double;
+  /// Track confidence (0-1)
   TRK_CONF:double;
-  TRK_QUAL:int;
+  /// Track quality (0-15)
+  TRK_QUAL:uint8;
+  /// Elevation angle (degrees)
   ANG_ELEV:double;
+  /// Sensor mode
   SEN_MODE:string;
+  /// Information source
   INFO_SOURCE:string;
+  /// True if object is in boost phase
   BOOSTING:bool;
+  /// Polar singularity latitude (degrees)
   POLAR_SING_LOC_LAT:double;
+  /// Polar singularity longitude (degrees)
   POLAR_SING_LOC_LON:double;
+  /// True if emergency indicator set
   EMG_IND:bool;
+  /// True if drop point indicator set
   DROP_PT_IND:bool;
-  SPACE_AMP_CONF:int;
+  /// Launch time (ISO 8601)
   LAUNCH_TIME:string;
+  /// Launch latitude (degrees)
   LAUNCH_LAT:double;
+  /// Launch longitude (degrees)
   LAUNCH_LON:double;
+  /// Azimuth correction (degrees)
   AZ_CORR:double;
+  /// Burnout altitude (km)
   BURNOUT_ALT:double;
-  LAUNCH_AOU_TYPE:string;
+  /// Launch AOU type
+  LAUNCH_AOU_TYPE:aouReportType;
+  /// Predicted impact time (ISO 8601)
   IMPACT_TIME:string;
+  /// Predicted impact latitude (degrees)
   IMPACT_LAT:double;
+  /// Predicted impact longitude (degrees)
   IMPACT_LON:double;
-  IMPACT_AOU_TYPE:string;
-
-  /// Start time for vector data (ISO 8601 UTC format).
+  /// Impact AOU type
+  IMPACT_AOU_TYPE:aouReportType;
+  /// Start time for vector data (ISO 8601)
   VECTOR_START_TIME:string;
-
-  /// Time interval between vector points in seconds.
+  /// Time interval between vector points (seconds)
   VECTOR_STEP_SIZE:double;
-
-  /// Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).
+  /// Number of components per vector (default 6: X, Y, Z, VX, VY, VZ)
   VECTOR_COMPONENTS:uint8 = 6;
-
   /// Vector data as flat array [X0, Y0, Z0, VX0, VY0, VZ0, X1, ...]
   VECTORS:[double];
-
-  /// AOU report data as flat array (layout depends on AOU_RPT_TYPE).
+  /// AOU report data as flat array
   AOU_RPT:[double];
-
-  /// Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).
+  /// Launch AOU data as flat array
   LAUNCH_AOU:[double];
-
-  /// Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).
+  /// Impact AOU data as flat array
   IMPACT_AOU:[double];
 }
 

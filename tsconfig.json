@@ -10,7 +10,7 @@
     "strict": true, // Enable all strict type-checking options
     "esModuleInterop": true, // Enables compatibility with default Babel imports
     "skipLibCheck": true, // Skip type checking for all declaration files (*.d.ts)
-    "forceConsistentCasingInFileNames": true, // Ensure consistent casing in user-specified imports
+    "forceConsistentCasingInFileNames": false, // Disabled: flatc generates camelCase enum files but PascalCase imports in REC union
     "moduleResolution": "NodeNext" // Use the latest module resolution strategy
   },
   "include": [

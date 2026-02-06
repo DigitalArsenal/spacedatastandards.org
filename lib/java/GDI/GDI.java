@@ -29,133 +29,191 @@ public final class GDI extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public GDI __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * Sensor identifier
+   */
   public String ID_SENSOR() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ID_SENSORAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer ID_SENSORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
-  public String IMAGE_TIME() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer IMAGE_TIMEAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
-  public ByteBuffer IMAGE_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
-  public String FILENAME() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer FILENAMEAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
-  public ByteBuffer FILENAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
-  public String REGION() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer REGIONAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
-  public ByteBuffer REGIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
-  public String REGION_TEXT() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer REGION_TEXTAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
-  public ByteBuffer REGION_TEXTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
-  public String REGION_GEO_JSON() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer REGION_GEO_JSONAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
-  public ByteBuffer REGION_GEO_JSONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
-  public String REGION_TYPE() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer REGION_TYPEAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
-  public ByteBuffer REGION_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
-  public int REGION_NDIMS() { int o = __offset(20); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public int REGION_SRID() { int o = __offset(22); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public String ORIG_SENSOR_ID() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ORIG_SENSOR_IDAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
-  public ByteBuffer ORIG_SENSOR_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
-  public String SUBJECT_ID() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SUBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
-  public ByteBuffer SUBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
-  public String NAME() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer NAMEAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
-  public ByteBuffer NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
-  public String TRANSACTION_ID() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer TRANSACTION_IDAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
-  public ByteBuffer TRANSACTION_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
-  public String TAGS(int j) { int o = __offset(32); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int TAGSLength() { int o = __offset(32); return o != 0 ? __vector_len(o) : 0; }
+  /**
+   * Original sensor identifier
+   */
+  public String ORIG_SENSOR_ID() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ORIG_SENSOR_IDAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
+  public ByteBuffer ORIG_SENSOR_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * Image capture time (ISO 8601)
+   */
+  public String IMAGE_TIME() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer IMAGE_TIMEAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer IMAGE_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * Image filename
+   */
+  public String FILENAME() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer FILENAMEAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer FILENAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * Image format
+   */
+  public byte FORMAT() { int o = __offset(14); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * File size (bytes)
+   */
+  public long FILESIZE() { int o = __offset(16); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
+  /**
+   * File checksum value
+   */
+  public String CHECKSUM_VALUE() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CHECKSUM_VALUEAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
+  public ByteBuffer CHECKSUM_VALUEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
+  /**
+   * Region GeoJSON boundary
+   */
+  public String REGION_GEO_JSON() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer REGION_GEO_JSONAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
+  public ByteBuffer REGION_GEO_JSONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
+  /**
+   * Region text description
+   */
+  public String REGION_TEXT() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer REGION_TEXTAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
+  public ByteBuffer REGION_TEXTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
+  /**
+   * Region name
+   */
+  public String REGION() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer REGIONAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
+  public ByteBuffer REGIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
+  /**
+   * Region type
+   */
+  public String REGION_TYPE() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer REGION_TYPEAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
+  public ByteBuffer REGION_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
+  /**
+   * Region geometry dimensions
+   */
+  public int REGION_NDIMS() { int o = __offset(28); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Region spatial reference ID
+   */
+  public int REGION_SRID() { int o = __offset(30); return o != 0 ? bb.getShort(o + bb_pos) & 0xFFFF : 0; }
+  /**
+   * Subject object identifier
+   */
+  public String SUBJECT_ID() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SUBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
+  public ByteBuffer SUBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
+  /**
+   * Image name or title
+   */
+  public String NAME() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer NAMEAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
+  public ByteBuffer NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  /**
+   * Transaction identifier
+   */
+  public String TRANSACTION_ID() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TRANSACTION_IDAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
+  public ByteBuffer TRANSACTION_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
+  /**
+   * Associated tags
+   */
+  public String TAGS(int j) { int o = __offset(38); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int TAGSLength() { int o = __offset(38); return o != 0 ? __vector_len(o) : 0; }
   public StringVector tagsVector() { return tagsVector(new StringVector()); }
-  public StringVector tagsVector(StringVector obj) { int o = __offset(32); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String KEYWORDS(int j) { int o = __offset(34); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int KEYWORDSLength() { int o = __offset(34); return o != 0 ? __vector_len(o) : 0; }
+  public StringVector tagsVector(StringVector obj) { int o = __offset(38); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Keywords for search/classification
+   */
+  public String KEYWORDS(int j) { int o = __offset(40); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int KEYWORDSLength() { int o = __offset(40); return o != 0 ? __vector_len(o) : 0; }
   public StringVector keywordsVector() { return keywordsVector(new StringVector()); }
-  public StringVector keywordsVector(StringVector obj) { int o = __offset(34); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String NOTES() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer NOTESAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
-  public ByteBuffer NOTESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
-  public String FORMAT() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer FORMATAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
-  public ByteBuffer FORMATInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
-  public long FILESIZE() { int o = __offset(40); return o != 0 ? bb.getLong(o + bb_pos) : 0L; }
-  public String CHECKSUM_VALUE() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer CHECKSUM_VALUEAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
-  public ByteBuffer CHECKSUM_VALUEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
+  public StringVector keywordsVector(StringVector obj) { int o = __offset(40); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Notes
+   */
+  public String NOTES() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer NOTESAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
+  public ByteBuffer NOTESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
 
   public static int createGDI(FlatBufferBuilder builder,
       int IDOffset,
       int ID_SENSOROffset,
+      int ORIG_SENSOR_IDOffset,
       int IMAGE_TIMEOffset,
       int FILENAMEOffset,
-      int REGIONOffset,
-      int REGION_TEXTOffset,
+      byte FORMAT,
+      long FILESIZE,
+      int CHECKSUM_VALUEOffset,
       int REGION_GEO_JSONOffset,
+      int REGION_TEXTOffset,
+      int REGIONOffset,
       int REGION_TYPEOffset,
       int REGION_NDIMS,
       int REGION_SRID,
-      int ORIG_SENSOR_IDOffset,
       int SUBJECT_IDOffset,
       int NAMEOffset,
       int TRANSACTION_IDOffset,
       int TAGSOffset,
       int KEYWORDSOffset,
-      int NOTESOffset,
-      int FORMATOffset,
-      long FILESIZE,
-      int CHECKSUM_VALUEOffset) {
+      int NOTESOffset) {
     builder.startTable(20);
     GDI.addFilesize(builder, FILESIZE);
-    GDI.addChecksumValue(builder, CHECKSUM_VALUEOffset);
-    GDI.addFormat(builder, FORMATOffset);
     GDI.addNotes(builder, NOTESOffset);
     GDI.addKeywords(builder, KEYWORDSOffset);
     GDI.addTags(builder, TAGSOffset);
     GDI.addTransactionId(builder, TRANSACTION_IDOffset);
     GDI.addName(builder, NAMEOffset);
     GDI.addSubjectId(builder, SUBJECT_IDOffset);
-    GDI.addOrigSensorId(builder, ORIG_SENSOR_IDOffset);
-    GDI.addRegionSrid(builder, REGION_SRID);
-    GDI.addRegionNdims(builder, REGION_NDIMS);
     GDI.addRegionType(builder, REGION_TYPEOffset);
-    GDI.addRegionGeoJson(builder, REGION_GEO_JSONOffset);
-    GDI.addRegionText(builder, REGION_TEXTOffset);
     GDI.addRegion(builder, REGIONOffset);
+    GDI.addRegionText(builder, REGION_TEXTOffset);
+    GDI.addRegionGeoJson(builder, REGION_GEO_JSONOffset);
+    GDI.addChecksumValue(builder, CHECKSUM_VALUEOffset);
     GDI.addFilename(builder, FILENAMEOffset);
     GDI.addImageTime(builder, IMAGE_TIMEOffset);
+    GDI.addOrigSensorId(builder, ORIG_SENSOR_IDOffset);
     GDI.addIdSensor(builder, ID_SENSOROffset);
     GDI.addId(builder, IDOffset);
+    GDI.addRegionSrid(builder, REGION_SRID);
+    GDI.addRegionNdims(builder, REGION_NDIMS);
+    GDI.addFormat(builder, FORMAT);
     return GDI.endGDI(builder);
   }
 
   public static void startGDI(FlatBufferBuilder builder) { builder.startTable(20); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addIdSensor(FlatBufferBuilder builder, int ID_SENSOROffset) { builder.addOffset(1, ID_SENSOROffset, 0); }
-  public static void addImageTime(FlatBufferBuilder builder, int IMAGE_TIMEOffset) { builder.addOffset(2, IMAGE_TIMEOffset, 0); }
-  public static void addFilename(FlatBufferBuilder builder, int FILENAMEOffset) { builder.addOffset(3, FILENAMEOffset, 0); }
-  public static void addRegion(FlatBufferBuilder builder, int REGIONOffset) { builder.addOffset(4, REGIONOffset, 0); }
-  public static void addRegionText(FlatBufferBuilder builder, int REGION_TEXTOffset) { builder.addOffset(5, REGION_TEXTOffset, 0); }
-  public static void addRegionGeoJson(FlatBufferBuilder builder, int REGION_GEO_JSONOffset) { builder.addOffset(6, REGION_GEO_JSONOffset, 0); }
-  public static void addRegionType(FlatBufferBuilder builder, int REGION_TYPEOffset) { builder.addOffset(7, REGION_TYPEOffset, 0); }
-  public static void addRegionNdims(FlatBufferBuilder builder, int REGION_NDIMS) { builder.addInt(8, REGION_NDIMS, 0); }
-  public static void addRegionSrid(FlatBufferBuilder builder, int REGION_SRID) { builder.addInt(9, REGION_SRID, 0); }
-  public static void addOrigSensorId(FlatBufferBuilder builder, int ORIG_SENSOR_IDOffset) { builder.addOffset(10, ORIG_SENSOR_IDOffset, 0); }
-  public static void addSubjectId(FlatBufferBuilder builder, int SUBJECT_IDOffset) { builder.addOffset(11, SUBJECT_IDOffset, 0); }
-  public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(12, NAMEOffset, 0); }
-  public static void addTransactionId(FlatBufferBuilder builder, int TRANSACTION_IDOffset) { builder.addOffset(13, TRANSACTION_IDOffset, 0); }
-  public static void addTags(FlatBufferBuilder builder, int TAGSOffset) { builder.addOffset(14, TAGSOffset, 0); }
+  public static void addOrigSensorId(FlatBufferBuilder builder, int ORIG_SENSOR_IDOffset) { builder.addOffset(2, ORIG_SENSOR_IDOffset, 0); }
+  public static void addImageTime(FlatBufferBuilder builder, int IMAGE_TIMEOffset) { builder.addOffset(3, IMAGE_TIMEOffset, 0); }
+  public static void addFilename(FlatBufferBuilder builder, int FILENAMEOffset) { builder.addOffset(4, FILENAMEOffset, 0); }
+  public static void addFormat(FlatBufferBuilder builder, byte FORMAT) { builder.addByte(5, FORMAT, 0); }
+  public static void addFilesize(FlatBufferBuilder builder, long FILESIZE) { builder.addLong(6, FILESIZE, 0L); }
+  public static void addChecksumValue(FlatBufferBuilder builder, int CHECKSUM_VALUEOffset) { builder.addOffset(7, CHECKSUM_VALUEOffset, 0); }
+  public static void addRegionGeoJson(FlatBufferBuilder builder, int REGION_GEO_JSONOffset) { builder.addOffset(8, REGION_GEO_JSONOffset, 0); }
+  public static void addRegionText(FlatBufferBuilder builder, int REGION_TEXTOffset) { builder.addOffset(9, REGION_TEXTOffset, 0); }
+  public static void addRegion(FlatBufferBuilder builder, int REGIONOffset) { builder.addOffset(10, REGIONOffset, 0); }
+  public static void addRegionType(FlatBufferBuilder builder, int REGION_TYPEOffset) { builder.addOffset(11, REGION_TYPEOffset, 0); }
+  public static void addRegionNdims(FlatBufferBuilder builder, int REGION_NDIMS) { builder.addByte(12, (byte) REGION_NDIMS, (byte) 0); }
+  public static void addRegionSrid(FlatBufferBuilder builder, int REGION_SRID) { builder.addShort(13, (short) REGION_SRID, (short) 0); }
+  public static void addSubjectId(FlatBufferBuilder builder, int SUBJECT_IDOffset) { builder.addOffset(14, SUBJECT_IDOffset, 0); }
+  public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(15, NAMEOffset, 0); }
+  public static void addTransactionId(FlatBufferBuilder builder, int TRANSACTION_IDOffset) { builder.addOffset(16, TRANSACTION_IDOffset, 0); }
+  public static void addTags(FlatBufferBuilder builder, int TAGSOffset) { builder.addOffset(17, TAGSOffset, 0); }
   public static int createTagsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startTagsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addKeywords(FlatBufferBuilder builder, int KEYWORDSOffset) { builder.addOffset(15, KEYWORDSOffset, 0); }
+  public static void addKeywords(FlatBufferBuilder builder, int KEYWORDSOffset) { builder.addOffset(18, KEYWORDSOffset, 0); }
   public static int createKeywordsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startKeywordsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addNotes(FlatBufferBuilder builder, int NOTESOffset) { builder.addOffset(16, NOTESOffset, 0); }
-  public static void addFormat(FlatBufferBuilder builder, int FORMATOffset) { builder.addOffset(17, FORMATOffset, 0); }
-  public static void addFilesize(FlatBufferBuilder builder, long FILESIZE) { builder.addLong(18, FILESIZE, 0L); }
-  public static void addChecksumValue(FlatBufferBuilder builder, int CHECKSUM_VALUEOffset) { builder.addOffset(19, CHECKSUM_VALUEOffset, 0); }
+  public static void addNotes(FlatBufferBuilder builder, int NOTESOffset) { builder.addOffset(19, NOTESOffset, 0); }
   public static int endGDI(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

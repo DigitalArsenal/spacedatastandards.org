@@ -1,69 +1,93 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "imageFormat" : {
+      "type" : "string",
+      "enum": ["FITS", "JPEG", "PNG", "TIFF", "RAW", "NITF", "GEOTIFF", "OTHER"]
+    },
     "GDI" : {
       "type" : "object",
       "description" : "Ground Imagery",
       "properties" : {
         "ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique identifier"
               },
         "ID_SENSOR" : {
-                "type" : "string"
-              },
-        "IMAGE_TIME" : {
-                "type" : "string"
-              },
-        "FILENAME" : {
-                "type" : "string"
-              },
-        "REGION" : {
-                "type" : "string"
-              },
-        "REGION_TEXT" : {
-                "type" : "string"
-              },
-        "REGION_GEO_JSON" : {
-                "type" : "string"
-              },
-        "REGION_TYPE" : {
-                "type" : "string"
-              },
-        "REGION_NDIMS" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "REGION_SRID" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "string",
+                "description" : "Sensor identifier"
               },
         "ORIG_SENSOR_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Original sensor identifier"
               },
-        "SUBJECT_ID" : {
-                "type" : "string"
+        "IMAGE_TIME" : {
+                "type" : "string",
+                "description" : "Image capture time (ISO 8601)"
               },
-        "NAME" : {
-                "type" : "string"
-              },
-        "TRANSACTION_ID" : {
-                "type" : "string"
-              },
-        "TAGS" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
-        "KEYWORDS" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
-        "NOTES" : {
-                "type" : "string"
+        "FILENAME" : {
+                "type" : "string",
+                "description" : "Image filename"
               },
         "FORMAT" : {
-                "type" : "string"
+                "$ref" : "#/definitions/imageFormat",
+                "description" : "Image format"
               },
         "FILESIZE" : {
-                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807
+                "type" : "integer", "minimum" : -9223372036854775808, "maximum" : 9223372036854775807,
+                "description" : "File size (bytes)"
               },
         "CHECKSUM_VALUE" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "File checksum value"
+              },
+        "REGION_GEO_JSON" : {
+                "type" : "string",
+                "description" : "Region GeoJSON boundary"
+              },
+        "REGION_TEXT" : {
+                "type" : "string",
+                "description" : "Region text description"
+              },
+        "REGION" : {
+                "type" : "string",
+                "description" : "Region name"
+              },
+        "REGION_TYPE" : {
+                "type" : "string",
+                "description" : "Region type"
+              },
+        "REGION_NDIMS" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Region geometry dimensions"
+              },
+        "REGION_SRID" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Region spatial reference ID"
+              },
+        "SUBJECT_ID" : {
+                "type" : "string",
+                "description" : "Subject object identifier"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Image name or title"
+              },
+        "TRANSACTION_ID" : {
+                "type" : "string",
+                "description" : "Transaction identifier"
+              },
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Associated tags"
+              },
+        "KEYWORDS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Keywords for search/classification"
+              },
+        "NOTES" : {
+                "type" : "string",
+                "description" : "Notes"
               }
       },
       "additionalProperties" : false

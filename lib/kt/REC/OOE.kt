@@ -29,6 +29,9 @@ class OOE : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Unique identifier
+     */
     val ID : String?
         get() {
             val o = __offset(4)
@@ -40,18 +43,18 @@ class OOE : Table() {
         }
     val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val DERIVED_FROM : String?
+    /**
+     * Satellite catalog number
+     */
+    val SAT_NO : UInt
         get() {
             val o = __offset(6)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
-    val DERIVED_FROMAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun DERIVED_FROMInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val DECLASSIFICATION_DATE : String?
+    /**
+     * International designator
+     */
+    val ORIG_OBJECT_ID : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -60,9 +63,12 @@ class OOE : Table() {
                 null
             }
         }
-    val DECLASSIFICATION_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun DECLASSIFICATION_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val DECLASSIFICATION_STRING : String?
+    val ORIG_OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
+    fun ORIG_OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    /**
+     * Source record this was derived from
+     */
+    val DERIVED_FROM : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -71,14 +77,26 @@ class OOE : Table() {
                 null
             }
         }
-    val DECLASSIFICATION_STRINGAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun DECLASSIFICATION_STRINGInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    val SAT_NO : Int
+    val DERIVED_FROMAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
+    fun DERIVED_FROMInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    /**
+     * Classification date (ISO 8601)
+     */
+    val DECLASSIFICATION_DATE : String?
         get() {
             val o = __offset(12)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
-    val ORIG_OBJECT_ID : String?
+    val DECLASSIFICATION_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
+    fun DECLASSIFICATION_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * Classification marking
+     */
+    val DECLASSIFICATION_STRING : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -87,8 +105,11 @@ class OOE : Table() {
                 null
             }
         }
-    val ORIG_OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun ORIG_OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    val DECLASSIFICATION_STRINGAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
+    fun DECLASSIFICATION_STRINGInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    /**
+     * Event time (ISO 8601)
+     */
     val EVENT_TIME : String?
         get() {
             val o = __offset(16)
@@ -100,6 +121,9 @@ class OOE : Table() {
         }
     val EVENT_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
     fun EVENT_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    /**
+     * Notes on event time accuracy
+     */
     val EVENT_TIME_NOTES : String?
         get() {
             val o = __offset(18)
@@ -111,29 +135,26 @@ class OOE : Table() {
         }
     val EVENT_TIME_NOTESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
     fun EVENT_TIME_NOTESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
-    val OPERATOR_ORG_ID : String?
+    /**
+     * Event category
+     */
+    val CATEGORY : Byte
         get() {
             val o = __offset(20)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val OPERATOR_ORG_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun OPERATOR_ORG_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
-    val OWNER_ORG_ID : String?
+    /**
+     * Event result/outcome
+     */
+    val RESULT : Byte
         get() {
             val o = __offset(22)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val OWNER_ORG_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun OWNER_ORG_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
-    val LESSEE_ORG_ID : String?
+    /**
+     * Event type detail
+     */
+    val EVENT_TYPE : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -142,9 +163,12 @@ class OOE : Table() {
                 null
             }
         }
-    val LESSEE_ORG_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun LESSEE_ORG_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
-    val OPERATED_ON_BEHALF_OF_ORG_ID : String?
+    val EVENT_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
+    fun EVENT_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    /**
+     * Operator organization identifier
+     */
+    val OPERATOR_ORG_ID : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -153,14 +177,26 @@ class OOE : Table() {
                 null
             }
         }
-    val OPERATED_ON_BEHALF_OF_ORG_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun OPERATED_ON_BEHALF_OF_ORG_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
-    val GEO_POSITION : Double
+    val OPERATOR_ORG_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
+    fun OPERATOR_ORG_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    /**
+     * Owner organization identifier
+     */
+    val OWNER_ORG_ID : String?
         get() {
             val o = __offset(28)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
-    val PLANE_SLOT : String?
+    val OWNER_ORG_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
+    fun OWNER_ORG_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    /**
+     * Lessee organization identifier
+     */
+    val LESSEE_ORG_ID : String?
         get() {
             val o = __offset(30)
             return if (o != 0) {
@@ -169,9 +205,12 @@ class OOE : Table() {
                 null
             }
         }
-    val PLANE_SLOTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
-    fun PLANE_SLOTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
-    val PLANE_NUMBER : String?
+    val LESSEE_ORG_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
+    fun LESSEE_ORG_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    /**
+     * Operated on behalf of organization
+     */
+    val OPERATED_ON_BEHALF_OF_ORG_ID : String?
         get() {
             val o = __offset(32)
             return if (o != 0) {
@@ -180,20 +219,20 @@ class OOE : Table() {
                 null
             }
         }
-    val PLANE_NUMBERAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
-    fun PLANE_NUMBERInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
-    val POSITION_STATUS : String?
+    val OPERATED_ON_BEHALF_OF_ORG_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
+    fun OPERATED_ON_BEHALF_OF_ORG_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
+    /**
+     * GEO longitude at event time (degrees east)
+     */
+    val GEO_POSITION : Double
         get() {
             val o = __offset(34)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val POSITION_STATUSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun POSITION_STATUSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
-    val UNTIL_TIME : String?
+    /**
+     * Orbital plane slot
+     */
+    val PLANE_SLOT : String?
         get() {
             val o = __offset(36)
             return if (o != 0) {
@@ -202,9 +241,12 @@ class OOE : Table() {
                 null
             }
         }
-    val UNTIL_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
-    fun UNTIL_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
-    val OFFICIAL_LOSS_DATE : String?
+    val PLANE_SLOTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
+    fun PLANE_SLOTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
+    /**
+     * Orbital plane number
+     */
+    val PLANE_NUMBER : String?
         get() {
             val o = __offset(38)
             return if (o != 0) {
@@ -213,14 +255,26 @@ class OOE : Table() {
                 null
             }
         }
-    val OFFICIAL_LOSS_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 1)
-    fun OFFICIAL_LOSS_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 1)
-    val NET_AMOUNT : Double
+    val PLANE_NUMBERAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 1)
+    fun PLANE_NUMBERInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 1)
+    /**
+     * Position status at event time
+     */
+    val POSITION_STATUS : String?
         get() {
             val o = __offset(40)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
-    val UNDERLYING_CAUSE : String?
+    val POSITION_STATUSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(40, 1)
+    fun POSITION_STATUSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 40, 1)
+    /**
+     * Time until expected recovery (ISO 8601)
+     */
+    val UNTIL_TIME : String?
         get() {
             val o = __offset(42)
             return if (o != 0) {
@@ -229,82 +283,112 @@ class OOE : Table() {
                 null
             }
         }
-    val UNDERLYING_CAUSEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(42, 1)
-    fun UNDERLYING_CAUSEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 42, 1)
-    val CAPABILITY_LOSS : Double
+    val UNTIL_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(42, 1)
+    fun UNTIL_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 42, 1)
+    /**
+     * Official loss date (ISO 8601)
+     */
+    val OFFICIAL_LOSS_DATE : String?
         get() {
             val o = __offset(44)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
-    val CAPACITY_LOSS : Double
+    val OFFICIAL_LOSS_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(44, 1)
+    fun OFFICIAL_LOSS_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 44, 1)
+    /**
+     * Financial loss amount (USD)
+     */
+    val NET_AMOUNT : Double
         get() {
             val o = __offset(46)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val INSURANCE_LOSS : Double
+    /**
+     * Root cause description
+     */
+    val UNDERLYING_CAUSE : String?
         get() {
             val o = __offset(48)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
-    val THIRD_PARTY_INSURANCE_LOSS : Double
+    val UNDERLYING_CAUSEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(48, 1)
+    fun UNDERLYING_CAUSEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 48, 1)
+    /**
+     * Capability loss fraction (0-1)
+     */
+    val CAPABILITY_LOSS : Double
         get() {
             val o = __offset(50)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val INJURED : Int
+    /**
+     * Capacity loss fraction (0-1)
+     */
+    val CAPACITY_LOSS : Double
         get() {
             val o = __offset(52)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val KILLED : Int
+    /**
+     * Insurance loss amount (USD)
+     */
+    val INSURANCE_LOSS : Double
         get() {
             val o = __offset(54)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val LIFE_LOST : Double
+    /**
+     * Third-party insurance loss (USD)
+     */
+    val THIRD_PARTY_INSURANCE_LOSS : Double
         get() {
             val o = __offset(56)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val AGE_AT_EVENT : Double
+    /**
+     * Number of personnel injured
+     */
+    val INJURED : UShort
         get() {
             val o = __offset(58)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
-    val ACHIEVED_FLIGHT_PHASE : String?
+    /**
+     * Number of fatalities
+     */
+    val KILLED : UShort
         get() {
             val o = __offset(60)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
         }
-    val ACHIEVED_FLIGHT_PHASEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(60, 1)
-    fun ACHIEVED_FLIGHT_PHASEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 60, 1)
-    val OCCURRENCE_FLIGHT_PHASE : String?
+    /**
+     * Spacecraft age at event (years)
+     */
+    val AGE_AT_EVENT : Double
         get() {
             val o = __offset(62)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val OCCURRENCE_FLIGHT_PHASEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(62, 1)
-    fun OCCURRENCE_FLIGHT_PHASEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 62, 1)
-    val STAGE_AT_FAULT : String?
+    /**
+     * Design life remaining at event (years)
+     */
+    val LIFE_LOST : Double
         get() {
             val o = __offset(64)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val STAGE_AT_FAULTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(64, 1)
-    fun STAGE_AT_FAULTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 64, 1)
-    val EQUIPMENT_AT_FAULT : String?
+    /**
+     * Flight phase achieved
+     */
+    val ACHIEVED_FLIGHT_PHASE : String?
         get() {
             val o = __offset(66)
             return if (o != 0) {
@@ -313,9 +397,12 @@ class OOE : Table() {
                 null
             }
         }
-    val EQUIPMENT_AT_FAULTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(66, 1)
-    fun EQUIPMENT_AT_FAULTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 66, 1)
-    val EQUIPMENT_TYPE_AT_FAULT : String?
+    val ACHIEVED_FLIGHT_PHASEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(66, 1)
+    fun ACHIEVED_FLIGHT_PHASEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 66, 1)
+    /**
+     * Flight phase at occurrence
+     */
+    val OCCURRENCE_FLIGHT_PHASE : String?
         get() {
             val o = __offset(68)
             return if (o != 0) {
@@ -324,9 +411,12 @@ class OOE : Table() {
                 null
             }
         }
-    val EQUIPMENT_TYPE_AT_FAULTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(68, 1)
-    fun EQUIPMENT_TYPE_AT_FAULTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 68, 1)
-    val EQUIPMENT_PART_AT_FAULT : String?
+    val OCCURRENCE_FLIGHT_PHASEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(68, 1)
+    fun OCCURRENCE_FLIGHT_PHASEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 68, 1)
+    /**
+     * Stage at fault
+     */
+    val STAGE_AT_FAULT : String?
         get() {
             val o = __offset(70)
             return if (o != 0) {
@@ -335,9 +425,12 @@ class OOE : Table() {
                 null
             }
         }
-    val EQUIPMENT_PART_AT_FAULTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(70, 1)
-    fun EQUIPMENT_PART_AT_FAULTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 70, 1)
-    val CONSEQUENTIAL_EQUIPMENT_FAILURE : String?
+    val STAGE_AT_FAULTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(70, 1)
+    fun STAGE_AT_FAULTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 70, 1)
+    /**
+     * Equipment at fault
+     */
+    val EQUIPMENT_AT_FAULT : String?
         get() {
             val o = __offset(72)
             return if (o != 0) {
@@ -346,14 +439,26 @@ class OOE : Table() {
                 null
             }
         }
-    val CONSEQUENTIAL_EQUIPMENT_FAILUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(72, 1)
-    fun CONSEQUENTIAL_EQUIPMENT_FAILUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 72, 1)
-    val INCLINED : Boolean
+    val EQUIPMENT_AT_FAULTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(72, 1)
+    fun EQUIPMENT_AT_FAULTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 72, 1)
+    /**
+     * Equipment type at fault
+     */
+    val EQUIPMENT_TYPE_AT_FAULT : String?
         get() {
             val o = __offset(74)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
-    val DESCRIPTION : String?
+    val EQUIPMENT_TYPE_AT_FAULTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(74, 1)
+    fun EQUIPMENT_TYPE_AT_FAULTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 74, 1)
+    /**
+     * Equipment part at fault
+     */
+    val EQUIPMENT_PART_AT_FAULT : String?
         get() {
             val o = __offset(76)
             return if (o != 0) {
@@ -362,9 +467,12 @@ class OOE : Table() {
                 null
             }
         }
-    val DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(76, 1)
-    fun DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 76, 1)
-    val REMARKS : String?
+    val EQUIPMENT_PART_AT_FAULTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(76, 1)
+    fun EQUIPMENT_PART_AT_FAULTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 76, 1)
+    /**
+     * Consequential equipment failure
+     */
+    val CONSEQUENTIAL_EQUIPMENT_FAILURE : String?
         get() {
             val o = __offset(78)
             return if (o != 0) {
@@ -373,20 +481,20 @@ class OOE : Table() {
                 null
             }
         }
-    val REMARKSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(78, 1)
-    fun REMARKSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 78, 1)
-    val INSURANCE_LOSS_NOTES : String?
+    val CONSEQUENTIAL_EQUIPMENT_FAILUREAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(78, 1)
+    fun CONSEQUENTIAL_EQUIPMENT_FAILUREInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 78, 1)
+    /**
+     * True if orbit is inclined
+     */
+    val INCLINED : Boolean
         get() {
             val o = __offset(80)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val INSURANCE_LOSS_NOTESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(80, 1)
-    fun INSURANCE_LOSS_NOTESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 80, 1)
-    val CAPABILITY_LOSS_NOTES : String?
+    /**
+     * Event description
+     */
+    val DESCRIPTION : String?
         get() {
             val o = __offset(82)
             return if (o != 0) {
@@ -395,9 +503,12 @@ class OOE : Table() {
                 null
             }
         }
-    val CAPABILITY_LOSS_NOTESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(82, 1)
-    fun CAPABILITY_LOSS_NOTESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 82, 1)
-    val INSURANCE_CARRIED_NOTES : String?
+    val DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(82, 1)
+    fun DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 82, 1)
+    /**
+     * Additional remarks
+     */
+    val REMARKS : String?
         get() {
             val o = __offset(84)
             return if (o != 0) {
@@ -406,9 +517,12 @@ class OOE : Table() {
                 null
             }
         }
-    val INSURANCE_CARRIED_NOTESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(84, 1)
-    fun INSURANCE_CARRIED_NOTESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 84, 1)
-    val EQUIPMENT_CAUSING_LOSS_NOTES : String?
+    val REMARKSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(84, 1)
+    fun REMARKSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 84, 1)
+    /**
+     * Object status after event
+     */
+    val OBJECT_STATUS : String?
         get() {
             val o = __offset(86)
             return if (o != 0) {
@@ -417,9 +531,12 @@ class OOE : Table() {
                 null
             }
         }
-    val EQUIPMENT_CAUSING_LOSS_NOTESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(86, 1)
-    fun EQUIPMENT_CAUSING_LOSS_NOTESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 86, 1)
-    val EVENT_TYPE : String?
+    val OBJECT_STATUSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(86, 1)
+    fun OBJECT_STATUSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 86, 1)
+    /**
+     * Satellite position after event
+     */
+    val SATELLITE_POSITION : String?
         get() {
             val o = __offset(88)
             return if (o != 0) {
@@ -428,9 +545,12 @@ class OOE : Table() {
                 null
             }
         }
-    val EVENT_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(88, 1)
-    fun EVENT_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 88, 1)
-    val EVENT_RESULT : String?
+    val SATELLITE_POSITIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(88, 1)
+    fun SATELLITE_POSITIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 88, 1)
+    /**
+     * On-orbit reference
+     */
+    val ON_ORBIT : String?
         get() {
             val o = __offset(90)
             return if (o != 0) {
@@ -439,41 +559,8 @@ class OOE : Table() {
                 null
             }
         }
-    val EVENT_RESULTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(90, 1)
-    fun EVENT_RESULTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 90, 1)
-    val OBJECT_STATUS : String?
-        get() {
-            val o = __offset(92)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val OBJECT_STATUSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(92, 1)
-    fun OBJECT_STATUSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 92, 1)
-    val SATELLITE_POSITION : String?
-        get() {
-            val o = __offset(94)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val SATELLITE_POSITIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(94, 1)
-    fun SATELLITE_POSITIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 94, 1)
-    val ON_ORBIT : String?
-        get() {
-            val o = __offset(96)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val ON_ORBITAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(96, 1)
-    fun ON_ORBITInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 96, 1)
+    val ON_ORBITAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(90, 1)
+    fun ON_ORBITInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 90, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsOOE(_bb: ByteBuffer): OOE = getRootAsOOE(_bb, OOE())
@@ -482,10 +569,10 @@ class OOE : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OOEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OOE")
-        fun createOOE(builder: FlatBufferBuilder, IDOffset: Int, DERIVED_FROMOffset: Int, DECLASSIFICATION_DATEOffset: Int, DECLASSIFICATION_STRINGOffset: Int, SAT_NO: Int, ORIG_OBJECT_IDOffset: Int, EVENT_TIMEOffset: Int, EVENT_TIME_NOTESOffset: Int, OPERATOR_ORG_IDOffset: Int, OWNER_ORG_IDOffset: Int, LESSEE_ORG_IDOffset: Int, OPERATED_ON_BEHALF_OF_ORG_IDOffset: Int, GEO_POSITION: Double, PLANE_SLOTOffset: Int, PLANE_NUMBEROffset: Int, POSITION_STATUSOffset: Int, UNTIL_TIMEOffset: Int, OFFICIAL_LOSS_DATEOffset: Int, NET_AMOUNT: Double, UNDERLYING_CAUSEOffset: Int, CAPABILITY_LOSS: Double, CAPACITY_LOSS: Double, INSURANCE_LOSS: Double, THIRD_PARTY_INSURANCE_LOSS: Double, INJURED: Int, KILLED: Int, LIFE_LOST: Double, AGE_AT_EVENT: Double, ACHIEVED_FLIGHT_PHASEOffset: Int, OCCURRENCE_FLIGHT_PHASEOffset: Int, STAGE_AT_FAULTOffset: Int, EQUIPMENT_AT_FAULTOffset: Int, EQUIPMENT_TYPE_AT_FAULTOffset: Int, EQUIPMENT_PART_AT_FAULTOffset: Int, CONSEQUENTIAL_EQUIPMENT_FAILUREOffset: Int, INCLINED: Boolean, DESCRIPTIONOffset: Int, REMARKSOffset: Int, INSURANCE_LOSS_NOTESOffset: Int, CAPABILITY_LOSS_NOTESOffset: Int, INSURANCE_CARRIED_NOTESOffset: Int, EQUIPMENT_CAUSING_LOSS_NOTESOffset: Int, EVENT_TYPEOffset: Int, EVENT_RESULTOffset: Int, OBJECT_STATUSOffset: Int, SATELLITE_POSITIONOffset: Int, ON_ORBITOffset: Int) : Int {
-            builder.startTable(47)
-            addAGE_AT_EVENT(builder, AGE_AT_EVENT)
+        fun createOOE(builder: FlatBufferBuilder, IDOffset: Int, SAT_NO: UInt, ORIG_OBJECT_IDOffset: Int, DERIVED_FROMOffset: Int, DECLASSIFICATION_DATEOffset: Int, DECLASSIFICATION_STRINGOffset: Int, EVENT_TIMEOffset: Int, EVENT_TIME_NOTESOffset: Int, CATEGORY: Byte, RESULT: Byte, EVENT_TYPEOffset: Int, OPERATOR_ORG_IDOffset: Int, OWNER_ORG_IDOffset: Int, LESSEE_ORG_IDOffset: Int, OPERATED_ON_BEHALF_OF_ORG_IDOffset: Int, GEO_POSITION: Double, PLANE_SLOTOffset: Int, PLANE_NUMBEROffset: Int, POSITION_STATUSOffset: Int, UNTIL_TIMEOffset: Int, OFFICIAL_LOSS_DATEOffset: Int, NET_AMOUNT: Double, UNDERLYING_CAUSEOffset: Int, CAPABILITY_LOSS: Double, CAPACITY_LOSS: Double, INSURANCE_LOSS: Double, THIRD_PARTY_INSURANCE_LOSS: Double, INJURED: UShort, KILLED: UShort, AGE_AT_EVENT: Double, LIFE_LOST: Double, ACHIEVED_FLIGHT_PHASEOffset: Int, OCCURRENCE_FLIGHT_PHASEOffset: Int, STAGE_AT_FAULTOffset: Int, EQUIPMENT_AT_FAULTOffset: Int, EQUIPMENT_TYPE_AT_FAULTOffset: Int, EQUIPMENT_PART_AT_FAULTOffset: Int, CONSEQUENTIAL_EQUIPMENT_FAILUREOffset: Int, INCLINED: Boolean, DESCRIPTIONOffset: Int, REMARKSOffset: Int, OBJECT_STATUSOffset: Int, SATELLITE_POSITIONOffset: Int, ON_ORBITOffset: Int) : Int {
+            builder.startTable(44)
             addLIFE_LOST(builder, LIFE_LOST)
+            addAGE_AT_EVENT(builder, AGE_AT_EVENT)
             addTHIRD_PARTY_INSURANCE_LOSS(builder, THIRD_PARTY_INSURANCE_LOSS)
             addINSURANCE_LOSS(builder, INSURANCE_LOSS)
             addCAPACITY_LOSS(builder, CAPACITY_LOSS)
@@ -495,12 +582,6 @@ class OOE : Table() {
             addON_ORBIT(builder, ON_ORBITOffset)
             addSATELLITE_POSITION(builder, SATELLITE_POSITIONOffset)
             addOBJECT_STATUS(builder, OBJECT_STATUSOffset)
-            addEVENT_RESULT(builder, EVENT_RESULTOffset)
-            addEVENT_TYPE(builder, EVENT_TYPEOffset)
-            addEQUIPMENT_CAUSING_LOSS_NOTES(builder, EQUIPMENT_CAUSING_LOSS_NOTESOffset)
-            addINSURANCE_CARRIED_NOTES(builder, INSURANCE_CARRIED_NOTESOffset)
-            addCAPABILITY_LOSS_NOTES(builder, CAPABILITY_LOSS_NOTESOffset)
-            addINSURANCE_LOSS_NOTES(builder, INSURANCE_LOSS_NOTESOffset)
             addREMARKS(builder, REMARKSOffset)
             addDESCRIPTION(builder, DESCRIPTIONOffset)
             addCONSEQUENTIAL_EQUIPMENT_FAILURE(builder, CONSEQUENTIAL_EQUIPMENT_FAILUREOffset)
@@ -510,8 +591,6 @@ class OOE : Table() {
             addSTAGE_AT_FAULT(builder, STAGE_AT_FAULTOffset)
             addOCCURRENCE_FLIGHT_PHASE(builder, OCCURRENCE_FLIGHT_PHASEOffset)
             addACHIEVED_FLIGHT_PHASE(builder, ACHIEVED_FLIGHT_PHASEOffset)
-            addKILLED(builder, KILLED)
-            addINJURED(builder, INJURED)
             addUNDERLYING_CAUSE(builder, UNDERLYING_CAUSEOffset)
             addOFFICIAL_LOSS_DATE(builder, OFFICIAL_LOSS_DATEOffset)
             addUNTIL_TIME(builder, UNTIL_TIMEOffset)
@@ -522,65 +601,67 @@ class OOE : Table() {
             addLESSEE_ORG_ID(builder, LESSEE_ORG_IDOffset)
             addOWNER_ORG_ID(builder, OWNER_ORG_IDOffset)
             addOPERATOR_ORG_ID(builder, OPERATOR_ORG_IDOffset)
+            addEVENT_TYPE(builder, EVENT_TYPEOffset)
             addEVENT_TIME_NOTES(builder, EVENT_TIME_NOTESOffset)
             addEVENT_TIME(builder, EVENT_TIMEOffset)
-            addORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset)
-            addSAT_NO(builder, SAT_NO)
             addDECLASSIFICATION_STRING(builder, DECLASSIFICATION_STRINGOffset)
             addDECLASSIFICATION_DATE(builder, DECLASSIFICATION_DATEOffset)
             addDERIVED_FROM(builder, DERIVED_FROMOffset)
+            addORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset)
+            addSAT_NO(builder, SAT_NO)
             addID(builder, IDOffset)
+            addKILLED(builder, KILLED)
+            addINJURED(builder, INJURED)
             addINCLINED(builder, INCLINED)
+            addRESULT(builder, RESULT)
+            addCATEGORY(builder, CATEGORY)
             return endOOE(builder)
         }
-        fun startOOE(builder: FlatBufferBuilder) = builder.startTable(47)
+        fun startOOE(builder: FlatBufferBuilder) = builder.startTable(44)
         fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addDERIVED_FROM(builder: FlatBufferBuilder, DERIVED_FROM: Int) = builder.addOffset(1, DERIVED_FROM, 0)
-        fun addDECLASSIFICATION_DATE(builder: FlatBufferBuilder, DECLASSIFICATION_DATE: Int) = builder.addOffset(2, DECLASSIFICATION_DATE, 0)
-        fun addDECLASSIFICATION_STRING(builder: FlatBufferBuilder, DECLASSIFICATION_STRING: Int) = builder.addOffset(3, DECLASSIFICATION_STRING, 0)
-        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: Int) = builder.addInt(4, SAT_NO, 0)
-        fun addORIG_OBJECT_ID(builder: FlatBufferBuilder, ORIG_OBJECT_ID: Int) = builder.addOffset(5, ORIG_OBJECT_ID, 0)
+        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: UInt) = builder.addInt(1, SAT_NO.toInt(), 0)
+        fun addORIG_OBJECT_ID(builder: FlatBufferBuilder, ORIG_OBJECT_ID: Int) = builder.addOffset(2, ORIG_OBJECT_ID, 0)
+        fun addDERIVED_FROM(builder: FlatBufferBuilder, DERIVED_FROM: Int) = builder.addOffset(3, DERIVED_FROM, 0)
+        fun addDECLASSIFICATION_DATE(builder: FlatBufferBuilder, DECLASSIFICATION_DATE: Int) = builder.addOffset(4, DECLASSIFICATION_DATE, 0)
+        fun addDECLASSIFICATION_STRING(builder: FlatBufferBuilder, DECLASSIFICATION_STRING: Int) = builder.addOffset(5, DECLASSIFICATION_STRING, 0)
         fun addEVENT_TIME(builder: FlatBufferBuilder, EVENT_TIME: Int) = builder.addOffset(6, EVENT_TIME, 0)
         fun addEVENT_TIME_NOTES(builder: FlatBufferBuilder, EVENT_TIME_NOTES: Int) = builder.addOffset(7, EVENT_TIME_NOTES, 0)
-        fun addOPERATOR_ORG_ID(builder: FlatBufferBuilder, OPERATOR_ORG_ID: Int) = builder.addOffset(8, OPERATOR_ORG_ID, 0)
-        fun addOWNER_ORG_ID(builder: FlatBufferBuilder, OWNER_ORG_ID: Int) = builder.addOffset(9, OWNER_ORG_ID, 0)
-        fun addLESSEE_ORG_ID(builder: FlatBufferBuilder, LESSEE_ORG_ID: Int) = builder.addOffset(10, LESSEE_ORG_ID, 0)
-        fun addOPERATED_ON_BEHALF_OF_ORG_ID(builder: FlatBufferBuilder, OPERATED_ON_BEHALF_OF_ORG_ID: Int) = builder.addOffset(11, OPERATED_ON_BEHALF_OF_ORG_ID, 0)
-        fun addGEO_POSITION(builder: FlatBufferBuilder, GEO_POSITION: Double) = builder.addDouble(12, GEO_POSITION, 0.0)
-        fun addPLANE_SLOT(builder: FlatBufferBuilder, PLANE_SLOT: Int) = builder.addOffset(13, PLANE_SLOT, 0)
-        fun addPLANE_NUMBER(builder: FlatBufferBuilder, PLANE_NUMBER: Int) = builder.addOffset(14, PLANE_NUMBER, 0)
-        fun addPOSITION_STATUS(builder: FlatBufferBuilder, POSITION_STATUS: Int) = builder.addOffset(15, POSITION_STATUS, 0)
-        fun addUNTIL_TIME(builder: FlatBufferBuilder, UNTIL_TIME: Int) = builder.addOffset(16, UNTIL_TIME, 0)
-        fun addOFFICIAL_LOSS_DATE(builder: FlatBufferBuilder, OFFICIAL_LOSS_DATE: Int) = builder.addOffset(17, OFFICIAL_LOSS_DATE, 0)
-        fun addNET_AMOUNT(builder: FlatBufferBuilder, NET_AMOUNT: Double) = builder.addDouble(18, NET_AMOUNT, 0.0)
-        fun addUNDERLYING_CAUSE(builder: FlatBufferBuilder, UNDERLYING_CAUSE: Int) = builder.addOffset(19, UNDERLYING_CAUSE, 0)
-        fun addCAPABILITY_LOSS(builder: FlatBufferBuilder, CAPABILITY_LOSS: Double) = builder.addDouble(20, CAPABILITY_LOSS, 0.0)
-        fun addCAPACITY_LOSS(builder: FlatBufferBuilder, CAPACITY_LOSS: Double) = builder.addDouble(21, CAPACITY_LOSS, 0.0)
-        fun addINSURANCE_LOSS(builder: FlatBufferBuilder, INSURANCE_LOSS: Double) = builder.addDouble(22, INSURANCE_LOSS, 0.0)
-        fun addTHIRD_PARTY_INSURANCE_LOSS(builder: FlatBufferBuilder, THIRD_PARTY_INSURANCE_LOSS: Double) = builder.addDouble(23, THIRD_PARTY_INSURANCE_LOSS, 0.0)
-        fun addINJURED(builder: FlatBufferBuilder, INJURED: Int) = builder.addInt(24, INJURED, 0)
-        fun addKILLED(builder: FlatBufferBuilder, KILLED: Int) = builder.addInt(25, KILLED, 0)
-        fun addLIFE_LOST(builder: FlatBufferBuilder, LIFE_LOST: Double) = builder.addDouble(26, LIFE_LOST, 0.0)
-        fun addAGE_AT_EVENT(builder: FlatBufferBuilder, AGE_AT_EVENT: Double) = builder.addDouble(27, AGE_AT_EVENT, 0.0)
-        fun addACHIEVED_FLIGHT_PHASE(builder: FlatBufferBuilder, ACHIEVED_FLIGHT_PHASE: Int) = builder.addOffset(28, ACHIEVED_FLIGHT_PHASE, 0)
-        fun addOCCURRENCE_FLIGHT_PHASE(builder: FlatBufferBuilder, OCCURRENCE_FLIGHT_PHASE: Int) = builder.addOffset(29, OCCURRENCE_FLIGHT_PHASE, 0)
-        fun addSTAGE_AT_FAULT(builder: FlatBufferBuilder, STAGE_AT_FAULT: Int) = builder.addOffset(30, STAGE_AT_FAULT, 0)
-        fun addEQUIPMENT_AT_FAULT(builder: FlatBufferBuilder, EQUIPMENT_AT_FAULT: Int) = builder.addOffset(31, EQUIPMENT_AT_FAULT, 0)
-        fun addEQUIPMENT_TYPE_AT_FAULT(builder: FlatBufferBuilder, EQUIPMENT_TYPE_AT_FAULT: Int) = builder.addOffset(32, EQUIPMENT_TYPE_AT_FAULT, 0)
-        fun addEQUIPMENT_PART_AT_FAULT(builder: FlatBufferBuilder, EQUIPMENT_PART_AT_FAULT: Int) = builder.addOffset(33, EQUIPMENT_PART_AT_FAULT, 0)
-        fun addCONSEQUENTIAL_EQUIPMENT_FAILURE(builder: FlatBufferBuilder, CONSEQUENTIAL_EQUIPMENT_FAILURE: Int) = builder.addOffset(34, CONSEQUENTIAL_EQUIPMENT_FAILURE, 0)
-        fun addINCLINED(builder: FlatBufferBuilder, INCLINED: Boolean) = builder.addBoolean(35, INCLINED, false)
-        fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(36, DESCRIPTION, 0)
-        fun addREMARKS(builder: FlatBufferBuilder, REMARKS: Int) = builder.addOffset(37, REMARKS, 0)
-        fun addINSURANCE_LOSS_NOTES(builder: FlatBufferBuilder, INSURANCE_LOSS_NOTES: Int) = builder.addOffset(38, INSURANCE_LOSS_NOTES, 0)
-        fun addCAPABILITY_LOSS_NOTES(builder: FlatBufferBuilder, CAPABILITY_LOSS_NOTES: Int) = builder.addOffset(39, CAPABILITY_LOSS_NOTES, 0)
-        fun addINSURANCE_CARRIED_NOTES(builder: FlatBufferBuilder, INSURANCE_CARRIED_NOTES: Int) = builder.addOffset(40, INSURANCE_CARRIED_NOTES, 0)
-        fun addEQUIPMENT_CAUSING_LOSS_NOTES(builder: FlatBufferBuilder, EQUIPMENT_CAUSING_LOSS_NOTES: Int) = builder.addOffset(41, EQUIPMENT_CAUSING_LOSS_NOTES, 0)
-        fun addEVENT_TYPE(builder: FlatBufferBuilder, EVENT_TYPE: Int) = builder.addOffset(42, EVENT_TYPE, 0)
-        fun addEVENT_RESULT(builder: FlatBufferBuilder, EVENT_RESULT: Int) = builder.addOffset(43, EVENT_RESULT, 0)
-        fun addOBJECT_STATUS(builder: FlatBufferBuilder, OBJECT_STATUS: Int) = builder.addOffset(44, OBJECT_STATUS, 0)
-        fun addSATELLITE_POSITION(builder: FlatBufferBuilder, SATELLITE_POSITION: Int) = builder.addOffset(45, SATELLITE_POSITION, 0)
-        fun addON_ORBIT(builder: FlatBufferBuilder, ON_ORBIT: Int) = builder.addOffset(46, ON_ORBIT, 0)
+        fun addCATEGORY(builder: FlatBufferBuilder, CATEGORY: Byte) = builder.addByte(8, CATEGORY, 0)
+        fun addRESULT(builder: FlatBufferBuilder, RESULT: Byte) = builder.addByte(9, RESULT, 0)
+        fun addEVENT_TYPE(builder: FlatBufferBuilder, EVENT_TYPE: Int) = builder.addOffset(10, EVENT_TYPE, 0)
+        fun addOPERATOR_ORG_ID(builder: FlatBufferBuilder, OPERATOR_ORG_ID: Int) = builder.addOffset(11, OPERATOR_ORG_ID, 0)
+        fun addOWNER_ORG_ID(builder: FlatBufferBuilder, OWNER_ORG_ID: Int) = builder.addOffset(12, OWNER_ORG_ID, 0)
+        fun addLESSEE_ORG_ID(builder: FlatBufferBuilder, LESSEE_ORG_ID: Int) = builder.addOffset(13, LESSEE_ORG_ID, 0)
+        fun addOPERATED_ON_BEHALF_OF_ORG_ID(builder: FlatBufferBuilder, OPERATED_ON_BEHALF_OF_ORG_ID: Int) = builder.addOffset(14, OPERATED_ON_BEHALF_OF_ORG_ID, 0)
+        fun addGEO_POSITION(builder: FlatBufferBuilder, GEO_POSITION: Double) = builder.addDouble(15, GEO_POSITION, 0.0)
+        fun addPLANE_SLOT(builder: FlatBufferBuilder, PLANE_SLOT: Int) = builder.addOffset(16, PLANE_SLOT, 0)
+        fun addPLANE_NUMBER(builder: FlatBufferBuilder, PLANE_NUMBER: Int) = builder.addOffset(17, PLANE_NUMBER, 0)
+        fun addPOSITION_STATUS(builder: FlatBufferBuilder, POSITION_STATUS: Int) = builder.addOffset(18, POSITION_STATUS, 0)
+        fun addUNTIL_TIME(builder: FlatBufferBuilder, UNTIL_TIME: Int) = builder.addOffset(19, UNTIL_TIME, 0)
+        fun addOFFICIAL_LOSS_DATE(builder: FlatBufferBuilder, OFFICIAL_LOSS_DATE: Int) = builder.addOffset(20, OFFICIAL_LOSS_DATE, 0)
+        fun addNET_AMOUNT(builder: FlatBufferBuilder, NET_AMOUNT: Double) = builder.addDouble(21, NET_AMOUNT, 0.0)
+        fun addUNDERLYING_CAUSE(builder: FlatBufferBuilder, UNDERLYING_CAUSE: Int) = builder.addOffset(22, UNDERLYING_CAUSE, 0)
+        fun addCAPABILITY_LOSS(builder: FlatBufferBuilder, CAPABILITY_LOSS: Double) = builder.addDouble(23, CAPABILITY_LOSS, 0.0)
+        fun addCAPACITY_LOSS(builder: FlatBufferBuilder, CAPACITY_LOSS: Double) = builder.addDouble(24, CAPACITY_LOSS, 0.0)
+        fun addINSURANCE_LOSS(builder: FlatBufferBuilder, INSURANCE_LOSS: Double) = builder.addDouble(25, INSURANCE_LOSS, 0.0)
+        fun addTHIRD_PARTY_INSURANCE_LOSS(builder: FlatBufferBuilder, THIRD_PARTY_INSURANCE_LOSS: Double) = builder.addDouble(26, THIRD_PARTY_INSURANCE_LOSS, 0.0)
+        fun addINJURED(builder: FlatBufferBuilder, INJURED: UShort) = builder.addShort(27, INJURED.toShort(), 0)
+        fun addKILLED(builder: FlatBufferBuilder, KILLED: UShort) = builder.addShort(28, KILLED.toShort(), 0)
+        fun addAGE_AT_EVENT(builder: FlatBufferBuilder, AGE_AT_EVENT: Double) = builder.addDouble(29, AGE_AT_EVENT, 0.0)
+        fun addLIFE_LOST(builder: FlatBufferBuilder, LIFE_LOST: Double) = builder.addDouble(30, LIFE_LOST, 0.0)
+        fun addACHIEVED_FLIGHT_PHASE(builder: FlatBufferBuilder, ACHIEVED_FLIGHT_PHASE: Int) = builder.addOffset(31, ACHIEVED_FLIGHT_PHASE, 0)
+        fun addOCCURRENCE_FLIGHT_PHASE(builder: FlatBufferBuilder, OCCURRENCE_FLIGHT_PHASE: Int) = builder.addOffset(32, OCCURRENCE_FLIGHT_PHASE, 0)
+        fun addSTAGE_AT_FAULT(builder: FlatBufferBuilder, STAGE_AT_FAULT: Int) = builder.addOffset(33, STAGE_AT_FAULT, 0)
+        fun addEQUIPMENT_AT_FAULT(builder: FlatBufferBuilder, EQUIPMENT_AT_FAULT: Int) = builder.addOffset(34, EQUIPMENT_AT_FAULT, 0)
+        fun addEQUIPMENT_TYPE_AT_FAULT(builder: FlatBufferBuilder, EQUIPMENT_TYPE_AT_FAULT: Int) = builder.addOffset(35, EQUIPMENT_TYPE_AT_FAULT, 0)
+        fun addEQUIPMENT_PART_AT_FAULT(builder: FlatBufferBuilder, EQUIPMENT_PART_AT_FAULT: Int) = builder.addOffset(36, EQUIPMENT_PART_AT_FAULT, 0)
+        fun addCONSEQUENTIAL_EQUIPMENT_FAILURE(builder: FlatBufferBuilder, CONSEQUENTIAL_EQUIPMENT_FAILURE: Int) = builder.addOffset(37, CONSEQUENTIAL_EQUIPMENT_FAILURE, 0)
+        fun addINCLINED(builder: FlatBufferBuilder, INCLINED: Boolean) = builder.addBoolean(38, INCLINED, false)
+        fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(39, DESCRIPTION, 0)
+        fun addREMARKS(builder: FlatBufferBuilder, REMARKS: Int) = builder.addOffset(40, REMARKS, 0)
+        fun addOBJECT_STATUS(builder: FlatBufferBuilder, OBJECT_STATUS: Int) = builder.addOffset(41, OBJECT_STATUS, 0)
+        fun addSATELLITE_POSITION(builder: FlatBufferBuilder, SATELLITE_POSITION: Int) = builder.addOffset(42, SATELLITE_POSITION, 0)
+        fun addON_ORBIT(builder: FlatBufferBuilder, ON_ORBIT: Int) = builder.addOffset(43, ON_ORBIT, 0)
         fun endOOE(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

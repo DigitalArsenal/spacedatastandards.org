@@ -54,6 +54,7 @@ func (rcv *SAR) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Unique identifier
 func (rcv *SAR) ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -62,18 +63,22 @@ func (rcv *SAR) ID() []byte {
 	return nil
 }
 
-func (rcv *SAR) SAT_NO() int32 {
+/// Unique identifier
+/// Satellite catalog number (of SAR platform)
+func (rcv *SAR) SAT_NO() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *SAR) MutateSAT_NO(n int32) bool {
-	return rcv._tab.MutateInt32Slot(6, n)
+/// Satellite catalog number (of SAR platform)
+func (rcv *SAR) MutateSAT_NO(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(6, n)
 }
 
+/// International designator
 func (rcv *SAR) ORIG_OBJECT_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -82,7 +87,9 @@ func (rcv *SAR) ORIG_OBJECT_ID() []byte {
 	return nil
 }
 
-func (rcv *SAR) ID_SENSOR() []byte {
+/// International designator
+/// On-orbit reference
+func (rcv *SAR) ON_ORBIT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -90,7 +97,9 @@ func (rcv *SAR) ID_SENSOR() []byte {
 	return nil
 }
 
-func (rcv *SAR) ORIG_SENSOR_ID() []byte {
+/// On-orbit reference
+/// Sensor identifier
+func (rcv *SAR) ID_SENSOR() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -98,7 +107,9 @@ func (rcv *SAR) ORIG_SENSOR_ID() []byte {
 	return nil
 }
 
-func (rcv *SAR) EXTERNAL_ID() []byte {
+/// Sensor identifier
+/// Original sensor identifier
+func (rcv *SAR) ORIG_SENSOR_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -106,7 +117,9 @@ func (rcv *SAR) EXTERNAL_ID() []byte {
 	return nil
 }
 
-func (rcv *SAR) COLLECTION_ID() []byte {
+/// Original sensor identifier
+/// External reference identifier
+func (rcv *SAR) EXTERNAL_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -114,7 +127,9 @@ func (rcv *SAR) COLLECTION_ID() []byte {
 	return nil
 }
 
-func (rcv *SAR) DETECTION_ID() []byte {
+/// External reference identifier
+/// Collection identifier
+func (rcv *SAR) COLLECTION_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -122,7 +137,9 @@ func (rcv *SAR) DETECTION_ID() []byte {
 	return nil
 }
 
-func (rcv *SAR) COLLECTION_START() []byte {
+/// Collection identifier
+/// Detection identifier
+func (rcv *SAR) DETECTION_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -130,7 +147,9 @@ func (rcv *SAR) COLLECTION_START() []byte {
 	return nil
 }
 
-func (rcv *SAR) COLLECTION_END() []byte {
+/// Detection identifier
+/// Collection start time (ISO 8601)
+func (rcv *SAR) COLLECTION_START() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -138,7 +157,9 @@ func (rcv *SAR) COLLECTION_END() []byte {
 	return nil
 }
 
-func (rcv *SAR) CENTER_TIME() []byte {
+/// Collection start time (ISO 8601)
+/// Collection end time (ISO 8601)
+func (rcv *SAR) COLLECTION_END() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -146,7 +167,9 @@ func (rcv *SAR) CENTER_TIME() []byte {
 	return nil
 }
 
-func (rcv *SAR) DETECTION_START() []byte {
+/// Collection end time (ISO 8601)
+/// Center time of observation (ISO 8601)
+func (rcv *SAR) CENTER_TIME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -154,7 +177,9 @@ func (rcv *SAR) DETECTION_START() []byte {
 	return nil
 }
 
-func (rcv *SAR) DETECTION_END() []byte {
+/// Center time of observation (ISO 8601)
+/// Detection start time (ISO 8601)
+func (rcv *SAR) DETECTION_START() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -162,27 +187,33 @@ func (rcv *SAR) DETECTION_END() []byte {
 	return nil
 }
 
-func (rcv *SAR) DWELL_TIME() float64 {
+/// Detection start time (ISO 8601)
+/// Detection end time (ISO 8601)
+func (rcv *SAR) DETECTION_END() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *SAR) MutateDWELL_TIME(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(30, n)
-}
-
-func (rcv *SAR) ORBIT_STATE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
 }
 
-func (rcv *SAR) SAR_MODE() []byte {
+/// Detection end time (ISO 8601)
+/// Integration/dwell time (seconds)
+func (rcv *SAR) DWELL_TIME() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Integration/dwell time (seconds)
+func (rcv *SAR) MutateDWELL_TIME(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+/// Orbit state description
+func (rcv *SAR) ORBIT_STATE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -190,27 +221,33 @@ func (rcv *SAR) SAR_MODE() []byte {
 	return nil
 }
 
-func (rcv *SAR) OPERATING_BAND() []byte {
+/// Orbit state description
+/// SAR imaging mode
+func (rcv *SAR) SAR_MODE() sarMode {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return sarMode(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// SAR imaging mode
+func (rcv *SAR) MutateSAR_MODE(n sarMode) bool {
+	return rcv._tab.MutateInt8Slot(36, int8(n))
+}
+
+/// Operating RF band (e.g., X, C, L, S, P)
+func (rcv *SAR) OPERATING_BAND() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
 }
 
+/// Operating RF band (e.g., X, C, L, S, P)
+/// Operating frequency (GHz)
 func (rcv *SAR) OPERATING_FREQ() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *SAR) MutateOPERATING_FREQ(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(38, n)
-}
-
-func (rcv *SAR) SNR() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -218,39 +255,55 @@ func (rcv *SAR) SNR() float64 {
 	return 0.0
 }
 
-func (rcv *SAR) MutateSNR(n float64) bool {
+/// Operating frequency (GHz)
+func (rcv *SAR) MutateOPERATING_FREQ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
 }
 
-func (rcv *SAR) TX_POLARIZATION() []byte {
+/// Signal-to-noise ratio (dB)
+func (rcv *SAR) SNR() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-func (rcv *SAR) RX_POLARIZATION() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-func (rcv *SAR) GRAZE_ANGLE() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
 	return 0.0
 }
 
-func (rcv *SAR) MutateGRAZE_ANGLE(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(46, n)
+/// Signal-to-noise ratio (dB)
+func (rcv *SAR) MutateSNR(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(42, n)
 }
 
-func (rcv *SAR) INCIDENCE_ANGLE() float64 {
+/// Transmit polarization
+func (rcv *SAR) TX_POLARIZATION() sarPolarization {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return sarPolarization(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// Transmit polarization
+func (rcv *SAR) MutateTX_POLARIZATION(n sarPolarization) bool {
+	return rcv._tab.MutateInt8Slot(44, int8(n))
+}
+
+/// Receive polarization
+func (rcv *SAR) RX_POLARIZATION() sarPolarization {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return sarPolarization(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// Receive polarization
+func (rcv *SAR) MutateRX_POLARIZATION(n sarPolarization) bool {
+	return rcv._tab.MutateInt8Slot(46, int8(n))
+}
+
+/// Grazing angle (degrees)
+func (rcv *SAR) GRAZE_ANGLE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -258,11 +311,13 @@ func (rcv *SAR) INCIDENCE_ANGLE() float64 {
 	return 0.0
 }
 
-func (rcv *SAR) MutateINCIDENCE_ANGLE(n float64) bool {
+/// Grazing angle (degrees)
+func (rcv *SAR) MutateGRAZE_ANGLE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(48, n)
 }
 
-func (rcv *SAR) SQUINT_ANGLE() float64 {
+/// Incidence angle (degrees)
+func (rcv *SAR) INCIDENCE_ANGLE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -270,11 +325,13 @@ func (rcv *SAR) SQUINT_ANGLE() float64 {
 	return 0.0
 }
 
-func (rcv *SAR) MutateSQUINT_ANGLE(n float64) bool {
+/// Incidence angle (degrees)
+func (rcv *SAR) MutateINCIDENCE_ANGLE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(50, n)
 }
 
-func (rcv *SAR) PULSE_BANDWIDTH() float64 {
+/// Squint angle (degrees)
+func (rcv *SAR) SQUINT_ANGLE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -282,11 +339,13 @@ func (rcv *SAR) PULSE_BANDWIDTH() float64 {
 	return 0.0
 }
 
-func (rcv *SAR) MutatePULSE_BANDWIDTH(n float64) bool {
+/// Squint angle (degrees)
+func (rcv *SAR) MutateSQUINT_ANGLE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(52, n)
 }
 
-func (rcv *SAR) PULSE_DURATION() float64 {
+/// Pulse bandwidth (MHz)
+func (rcv *SAR) PULSE_BANDWIDTH() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -294,11 +353,13 @@ func (rcv *SAR) PULSE_DURATION() float64 {
 	return 0.0
 }
 
-func (rcv *SAR) MutatePULSE_DURATION(n float64) bool {
+/// Pulse bandwidth (MHz)
+func (rcv *SAR) MutatePULSE_BANDWIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(54, n)
 }
 
-func (rcv *SAR) CONTINUOUS_SPOT_ANGLE() float64 {
+/// Pulse duration (microseconds)
+func (rcv *SAR) PULSE_DURATION() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -306,11 +367,13 @@ func (rcv *SAR) CONTINUOUS_SPOT_ANGLE() float64 {
 	return 0.0
 }
 
-func (rcv *SAR) MutateCONTINUOUS_SPOT_ANGLE(n float64) bool {
+/// Pulse duration (microseconds)
+func (rcv *SAR) MutatePULSE_DURATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(56, n)
 }
 
-func (rcv *SAR) SLANT_RANGE() float64 {
+/// Continuous spot angle (degrees)
+func (rcv *SAR) CONTINUOUS_SPOT_ANGLE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -318,11 +381,13 @@ func (rcv *SAR) SLANT_RANGE() float64 {
 	return 0.0
 }
 
-func (rcv *SAR) MutateSLANT_RANGE(n float64) bool {
+/// Continuous spot angle (degrees)
+func (rcv *SAR) MutateCONTINUOUS_SPOT_ANGLE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(58, n)
 }
 
-func (rcv *SAR) NEAR_RANGE() float64 {
+/// Slant range to target (km)
+func (rcv *SAR) SLANT_RANGE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -330,11 +395,13 @@ func (rcv *SAR) NEAR_RANGE() float64 {
 	return 0.0
 }
 
-func (rcv *SAR) MutateNEAR_RANGE(n float64) bool {
+/// Slant range to target (km)
+func (rcv *SAR) MutateSLANT_RANGE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(60, n)
 }
 
-func (rcv *SAR) FAR_RANGE() float64 {
+/// Near range (km)
+func (rcv *SAR) NEAR_RANGE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -342,11 +409,13 @@ func (rcv *SAR) FAR_RANGE() float64 {
 	return 0.0
 }
 
-func (rcv *SAR) MutateFAR_RANGE(n float64) bool {
+/// Near range (km)
+func (rcv *SAR) MutateNEAR_RANGE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(62, n)
 }
 
-func (rcv *SAR) SWATH_LENGTH() float64 {
+/// Far range (km)
+func (rcv *SAR) FAR_RANGE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -354,19 +423,27 @@ func (rcv *SAR) SWATH_LENGTH() float64 {
 	return 0.0
 }
 
-func (rcv *SAR) MutateSWATH_LENGTH(n float64) bool {
+/// Far range (km)
+func (rcv *SAR) MutateFAR_RANGE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(64, n)
 }
 
-func (rcv *SAR) AREA() []byte {
+/// Swath length (km)
+func (rcv *SAR) SWATH_LENGTH() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
-	return nil
+	return 0.0
 }
 
-func (rcv *SAR) ATEXT() []byte {
+/// Swath length (km)
+func (rcv *SAR) MutateSWATH_LENGTH(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(66, n)
+}
+
+/// Image area GeoJSON
+func (rcv *SAR) AGJSON() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -374,7 +451,9 @@ func (rcv *SAR) ATEXT() []byte {
 	return nil
 }
 
-func (rcv *SAR) AGJSON() []byte {
+/// Image area GeoJSON
+/// Image area text description
+func (rcv *SAR) ATEXT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -382,6 +461,8 @@ func (rcv *SAR) AGJSON() []byte {
 	return nil
 }
 
+/// Image area text description
+/// Area type
 func (rcv *SAR) ATYPE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
 	if o != 0 {
@@ -390,31 +471,33 @@ func (rcv *SAR) ATYPE() []byte {
 	return nil
 }
 
-func (rcv *SAR) ANDIMS() int32 {
+/// Area type
+/// Coordinate system
+func (rcv *SAR) COORD_SYS() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
-	return 0
+	return nil
 }
 
-func (rcv *SAR) MutateANDIMS(n int32) bool {
-	return rcv._tab.MutateInt32Slot(74, n)
-}
-
-func (rcv *SAR) ASRID() int32 {
+/// Coordinate system
+/// Range pixel spacing (meters)
+func (rcv *SAR) SPACING_RANGE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
-	return 0
+	return 0.0
 }
 
-func (rcv *SAR) MutateASRID(n int32) bool {
-	return rcv._tab.MutateInt32Slot(76, n)
+/// Range pixel spacing (meters)
+func (rcv *SAR) MutateSPACING_RANGE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(76, n)
 }
 
-func (rcv *SAR) SPACING_RANGE() float64 {
+/// Azimuth pixel spacing (meters)
+func (rcv *SAR) SPACING_AZIMUTH() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -422,47 +505,55 @@ func (rcv *SAR) SPACING_RANGE() float64 {
 	return 0.0
 }
 
-func (rcv *SAR) MutateSPACING_RANGE(n float64) bool {
+/// Azimuth pixel spacing (meters)
+func (rcv *SAR) MutateSPACING_AZIMUTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(78, n)
 }
 
-func (rcv *SAR) SPACING_AZIMUTH() float64 {
+/// Number of azimuth looks
+func (rcv *SAR) LOOKS_AZIMUTH() byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(80))
+	if o != 0 {
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Number of azimuth looks
+func (rcv *SAR) MutateLOOKS_AZIMUTH(n byte) bool {
+	return rcv._tab.MutateByteSlot(80, n)
+}
+
+/// Number of range looks
+func (rcv *SAR) LOOKS_RANGE() byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
+	if o != 0 {
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Number of range looks
+func (rcv *SAR) MutateLOOKS_RANGE(n byte) bool {
+	return rcv._tab.MutateByteSlot(82, n)
+}
+
+/// Range resolution (meters)
+func (rcv *SAR) RESOLUTION_RANGE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
 	return 0.0
 }
 
-func (rcv *SAR) MutateSPACING_AZIMUTH(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(80, n)
+/// Range resolution (meters)
+func (rcv *SAR) MutateRESOLUTION_RANGE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(84, n)
 }
 
-func (rcv *SAR) LOOKS_AZIMUTH() int32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(82))
-	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-func (rcv *SAR) MutateLOOKS_AZIMUTH(n int32) bool {
-	return rcv._tab.MutateInt32Slot(82, n)
-}
-
-func (rcv *SAR) LOOKS_RANGE() int32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(84))
-	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-func (rcv *SAR) MutateLOOKS_RANGE(n int32) bool {
-	return rcv._tab.MutateInt32Slot(84, n)
-}
-
-func (rcv *SAR) RESOLUTION_RANGE() float64 {
+/// Azimuth resolution (meters)
+func (rcv *SAR) RESOLUTION_AZIMUTH() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(86))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -470,39 +561,51 @@ func (rcv *SAR) RESOLUTION_RANGE() float64 {
 	return 0.0
 }
 
-func (rcv *SAR) MutateRESOLUTION_RANGE(n float64) bool {
+/// Azimuth resolution (meters)
+func (rcv *SAR) MutateRESOLUTION_AZIMUTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(86, n)
 }
 
-func (rcv *SAR) RESOLUTION_AZIMUTH() float64 {
+/// Observation direction (ASCENDING/DESCENDING)
+func (rcv *SAR) OB_DIRECTION() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(88))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Observation direction (ASCENDING/DESCENDING)
+/// Target position X (km)
+func (rcv *SAR) TARGETPOSX() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
 	return 0.0
 }
 
-func (rcv *SAR) MutateRESOLUTION_AZIMUTH(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(88, n)
+/// Target position X (km)
+func (rcv *SAR) MutateTARGETPOSX(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(90, n)
 }
 
-func (rcv *SAR) OB_DIRECTION() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(90))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-func (rcv *SAR) COORD_SYS() []byte {
+/// Target position Y (km)
+func (rcv *SAR) TARGETPOSY() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(92))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
-	return nil
+	return 0.0
 }
 
-func (rcv *SAR) TARGETPOSX() float64 {
+/// Target position Y (km)
+func (rcv *SAR) MutateTARGETPOSY(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(92, n)
+}
+
+/// Target position Z (km)
+func (rcv *SAR) TARGETPOSZ() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(94))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -510,11 +613,13 @@ func (rcv *SAR) TARGETPOSX() float64 {
 	return 0.0
 }
 
-func (rcv *SAR) MutateTARGETPOSX(n float64) bool {
+/// Target position Z (km)
+func (rcv *SAR) MutateTARGETPOSZ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(94, n)
 }
 
-func (rcv *SAR) TARGETPOSY() float64 {
+/// Sensor altitude (km)
+func (rcv *SAR) SENALT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(96))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -522,11 +627,13 @@ func (rcv *SAR) TARGETPOSY() float64 {
 	return 0.0
 }
 
-func (rcv *SAR) MutateTARGETPOSY(n float64) bool {
+/// Sensor altitude (km)
+func (rcv *SAR) MutateSENALT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(96, n)
 }
 
-func (rcv *SAR) TARGETPOSZ() float64 {
+/// Sensor velocity X (km/s)
+func (rcv *SAR) SENVELX() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(98))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -534,11 +641,13 @@ func (rcv *SAR) TARGETPOSZ() float64 {
 	return 0.0
 }
 
-func (rcv *SAR) MutateTARGETPOSZ(n float64) bool {
+/// Sensor velocity X (km/s)
+func (rcv *SAR) MutateSENVELX(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(98, n)
 }
 
-func (rcv *SAR) SENALT() float64 {
+/// Sensor velocity Y (km/s)
+func (rcv *SAR) SENVELY() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(100))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -546,11 +655,13 @@ func (rcv *SAR) SENALT() float64 {
 	return 0.0
 }
 
-func (rcv *SAR) MutateSENALT(n float64) bool {
+/// Sensor velocity Y (km/s)
+func (rcv *SAR) MutateSENVELY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(100, n)
 }
 
-func (rcv *SAR) SENVELX() float64 {
+/// Sensor velocity Z (km/s)
+func (rcv *SAR) SENVELZ() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(102))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -558,11 +669,13 @@ func (rcv *SAR) SENVELX() float64 {
 	return 0.0
 }
 
-func (rcv *SAR) MutateSENVELX(n float64) bool {
+/// Sensor velocity Z (km/s)
+func (rcv *SAR) MutateSENVELZ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(102, n)
 }
 
-func (rcv *SAR) SENVELY() float64 {
+/// Sensor latitude at start (degrees)
+func (rcv *SAR) SENLAT_START() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(104))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -570,11 +683,13 @@ func (rcv *SAR) SENVELY() float64 {
 	return 0.0
 }
 
-func (rcv *SAR) MutateSENVELY(n float64) bool {
+/// Sensor latitude at start (degrees)
+func (rcv *SAR) MutateSENLAT_START(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(104, n)
 }
 
-func (rcv *SAR) SENVELZ() float64 {
+/// Sensor longitude at start (degrees)
+func (rcv *SAR) SENLON_START() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(106))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -582,11 +697,13 @@ func (rcv *SAR) SENVELZ() float64 {
 	return 0.0
 }
 
-func (rcv *SAR) MutateSENVELZ(n float64) bool {
+/// Sensor longitude at start (degrees)
+func (rcv *SAR) MutateSENLON_START(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(106, n)
 }
 
-func (rcv *SAR) SENLAT_START() float64 {
+/// Sensor latitude at end (degrees)
+func (rcv *SAR) SENLAT_END() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(108))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -594,11 +711,13 @@ func (rcv *SAR) SENLAT_START() float64 {
 	return 0.0
 }
 
-func (rcv *SAR) MutateSENLAT_START(n float64) bool {
+/// Sensor latitude at end (degrees)
+func (rcv *SAR) MutateSENLAT_END(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(108, n)
 }
 
-func (rcv *SAR) SENLON_START() float64 {
+/// Sensor longitude at end (degrees)
+func (rcv *SAR) SENLON_END() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(110))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -606,44 +725,24 @@ func (rcv *SAR) SENLON_START() float64 {
 	return 0.0
 }
 
-func (rcv *SAR) MutateSENLON_START(n float64) bool {
+/// Sensor longitude at end (degrees)
+func (rcv *SAR) MutateSENLON_END(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(110, n)
 }
 
-func (rcv *SAR) SENLAT_END() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(112))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *SAR) MutateSENLAT_END(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(112, n)
-}
-
-func (rcv *SAR) SENLON_END() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *SAR) MutateSENLON_END(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(114, n)
-}
-
+/// Transaction identifier
 func (rcv *SAR) TRANSACTION_ID() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(112))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
 }
 
+/// Transaction identifier
+/// Associated tags
 func (rcv *SAR) TAGS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -652,15 +751,17 @@ func (rcv *SAR) TAGS(j int) []byte {
 }
 
 func (rcv *SAR) TAGSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(114))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
+/// Associated tags
+/// Source types
 func (rcv *SAR) SRC_TYPS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(120))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -669,15 +770,17 @@ func (rcv *SAR) SRC_TYPS(j int) []byte {
 }
 
 func (rcv *SAR) SRC_TYPSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(120))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(116))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
+/// Source types
+/// Source identifiers
 func (rcv *SAR) SRC_IDS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(122))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -686,215 +789,199 @@ func (rcv *SAR) SRC_IDS(j int) []byte {
 }
 
 func (rcv *SAR) SRC_IDSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(122))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(118))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
-func (rcv *SAR) ON_ORBIT() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(124))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
+/// Source identifiers
 func SARStart(builder *flatbuffers.Builder) {
-	builder.StartObject(61)
+	builder.StartObject(58)
 }
 func SARAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
-func SARAddSAT_NO(builder *flatbuffers.Builder, SAT_NO int32) {
-	builder.PrependInt32Slot(1, SAT_NO, 0)
+func SARAddSAT_NO(builder *flatbuffers.Builder, SAT_NO uint32) {
+	builder.PrependUint32Slot(1, SAT_NO, 0)
 }
 func SARAddORIG_OBJECT_ID(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ORIG_OBJECT_ID), 0)
 }
+func SARAddON_ORBIT(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ON_ORBIT), 0)
+}
 func SARAddID_SENSOR(builder *flatbuffers.Builder, ID_SENSOR flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ID_SENSOR), 0)
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ID_SENSOR), 0)
 }
 func SARAddORIG_SENSOR_ID(builder *flatbuffers.Builder, ORIG_SENSOR_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ORIG_SENSOR_ID), 0)
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(ORIG_SENSOR_ID), 0)
 }
 func SARAddEXTERNAL_ID(builder *flatbuffers.Builder, EXTERNAL_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(EXTERNAL_ID), 0)
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(EXTERNAL_ID), 0)
 }
 func SARAddCOLLECTION_ID(builder *flatbuffers.Builder, COLLECTION_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(COLLECTION_ID), 0)
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(COLLECTION_ID), 0)
 }
 func SARAddDETECTION_ID(builder *flatbuffers.Builder, DETECTION_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(DETECTION_ID), 0)
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(DETECTION_ID), 0)
 }
 func SARAddCOLLECTION_START(builder *flatbuffers.Builder, COLLECTION_START flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(COLLECTION_START), 0)
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(COLLECTION_START), 0)
 }
 func SARAddCOLLECTION_END(builder *flatbuffers.Builder, COLLECTION_END flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(COLLECTION_END), 0)
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(COLLECTION_END), 0)
 }
 func SARAddCENTER_TIME(builder *flatbuffers.Builder, CENTER_TIME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(CENTER_TIME), 0)
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(CENTER_TIME), 0)
 }
 func SARAddDETECTION_START(builder *flatbuffers.Builder, DETECTION_START flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(DETECTION_START), 0)
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(DETECTION_START), 0)
 }
 func SARAddDETECTION_END(builder *flatbuffers.Builder, DETECTION_END flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(DETECTION_END), 0)
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(DETECTION_END), 0)
 }
 func SARAddDWELL_TIME(builder *flatbuffers.Builder, DWELL_TIME float64) {
-	builder.PrependFloat64Slot(13, DWELL_TIME, 0.0)
+	builder.PrependFloat64Slot(14, DWELL_TIME, 0.0)
 }
 func SARAddORBIT_STATE(builder *flatbuffers.Builder, ORBIT_STATE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(ORBIT_STATE), 0)
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(ORBIT_STATE), 0)
 }
-func SARAddSAR_MODE(builder *flatbuffers.Builder, SAR_MODE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(SAR_MODE), 0)
+func SARAddSAR_MODE(builder *flatbuffers.Builder, SAR_MODE sarMode) {
+	builder.PrependInt8Slot(16, int8(SAR_MODE), 0)
 }
 func SARAddOPERATING_BAND(builder *flatbuffers.Builder, OPERATING_BAND flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(OPERATING_BAND), 0)
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(OPERATING_BAND), 0)
 }
 func SARAddOPERATING_FREQ(builder *flatbuffers.Builder, OPERATING_FREQ float64) {
-	builder.PrependFloat64Slot(17, OPERATING_FREQ, 0.0)
+	builder.PrependFloat64Slot(18, OPERATING_FREQ, 0.0)
 }
 func SARAddSNR(builder *flatbuffers.Builder, SNR float64) {
-	builder.PrependFloat64Slot(18, SNR, 0.0)
+	builder.PrependFloat64Slot(19, SNR, 0.0)
 }
-func SARAddTX_POLARIZATION(builder *flatbuffers.Builder, TX_POLARIZATION flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(TX_POLARIZATION), 0)
+func SARAddTX_POLARIZATION(builder *flatbuffers.Builder, TX_POLARIZATION sarPolarization) {
+	builder.PrependInt8Slot(20, int8(TX_POLARIZATION), 0)
 }
-func SARAddRX_POLARIZATION(builder *flatbuffers.Builder, RX_POLARIZATION flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(RX_POLARIZATION), 0)
+func SARAddRX_POLARIZATION(builder *flatbuffers.Builder, RX_POLARIZATION sarPolarization) {
+	builder.PrependInt8Slot(21, int8(RX_POLARIZATION), 0)
 }
 func SARAddGRAZE_ANGLE(builder *flatbuffers.Builder, GRAZE_ANGLE float64) {
-	builder.PrependFloat64Slot(21, GRAZE_ANGLE, 0.0)
+	builder.PrependFloat64Slot(22, GRAZE_ANGLE, 0.0)
 }
 func SARAddINCIDENCE_ANGLE(builder *flatbuffers.Builder, INCIDENCE_ANGLE float64) {
-	builder.PrependFloat64Slot(22, INCIDENCE_ANGLE, 0.0)
+	builder.PrependFloat64Slot(23, INCIDENCE_ANGLE, 0.0)
 }
 func SARAddSQUINT_ANGLE(builder *flatbuffers.Builder, SQUINT_ANGLE float64) {
-	builder.PrependFloat64Slot(23, SQUINT_ANGLE, 0.0)
+	builder.PrependFloat64Slot(24, SQUINT_ANGLE, 0.0)
 }
 func SARAddPULSE_BANDWIDTH(builder *flatbuffers.Builder, PULSE_BANDWIDTH float64) {
-	builder.PrependFloat64Slot(24, PULSE_BANDWIDTH, 0.0)
+	builder.PrependFloat64Slot(25, PULSE_BANDWIDTH, 0.0)
 }
 func SARAddPULSE_DURATION(builder *flatbuffers.Builder, PULSE_DURATION float64) {
-	builder.PrependFloat64Slot(25, PULSE_DURATION, 0.0)
+	builder.PrependFloat64Slot(26, PULSE_DURATION, 0.0)
 }
 func SARAddCONTINUOUS_SPOT_ANGLE(builder *flatbuffers.Builder, CONTINUOUS_SPOT_ANGLE float64) {
-	builder.PrependFloat64Slot(26, CONTINUOUS_SPOT_ANGLE, 0.0)
+	builder.PrependFloat64Slot(27, CONTINUOUS_SPOT_ANGLE, 0.0)
 }
 func SARAddSLANT_RANGE(builder *flatbuffers.Builder, SLANT_RANGE float64) {
-	builder.PrependFloat64Slot(27, SLANT_RANGE, 0.0)
+	builder.PrependFloat64Slot(28, SLANT_RANGE, 0.0)
 }
 func SARAddNEAR_RANGE(builder *flatbuffers.Builder, NEAR_RANGE float64) {
-	builder.PrependFloat64Slot(28, NEAR_RANGE, 0.0)
+	builder.PrependFloat64Slot(29, NEAR_RANGE, 0.0)
 }
 func SARAddFAR_RANGE(builder *flatbuffers.Builder, FAR_RANGE float64) {
-	builder.PrependFloat64Slot(29, FAR_RANGE, 0.0)
+	builder.PrependFloat64Slot(30, FAR_RANGE, 0.0)
 }
 func SARAddSWATH_LENGTH(builder *flatbuffers.Builder, SWATH_LENGTH float64) {
-	builder.PrependFloat64Slot(30, SWATH_LENGTH, 0.0)
-}
-func SARAddAREA(builder *flatbuffers.Builder, AREA flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(31, flatbuffers.UOffsetT(AREA), 0)
-}
-func SARAddATEXT(builder *flatbuffers.Builder, ATEXT flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(32, flatbuffers.UOffsetT(ATEXT), 0)
+	builder.PrependFloat64Slot(31, SWATH_LENGTH, 0.0)
 }
 func SARAddAGJSON(builder *flatbuffers.Builder, AGJSON flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(33, flatbuffers.UOffsetT(AGJSON), 0)
+	builder.PrependUOffsetTSlot(32, flatbuffers.UOffsetT(AGJSON), 0)
+}
+func SARAddATEXT(builder *flatbuffers.Builder, ATEXT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(33, flatbuffers.UOffsetT(ATEXT), 0)
 }
 func SARAddATYPE(builder *flatbuffers.Builder, ATYPE flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(ATYPE), 0)
 }
-func SARAddANDIMS(builder *flatbuffers.Builder, ANDIMS int32) {
-	builder.PrependInt32Slot(35, ANDIMS, 0)
-}
-func SARAddASRID(builder *flatbuffers.Builder, ASRID int32) {
-	builder.PrependInt32Slot(36, ASRID, 0)
+func SARAddCOORD_SYS(builder *flatbuffers.Builder, COORD_SYS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(35, flatbuffers.UOffsetT(COORD_SYS), 0)
 }
 func SARAddSPACING_RANGE(builder *flatbuffers.Builder, SPACING_RANGE float64) {
-	builder.PrependFloat64Slot(37, SPACING_RANGE, 0.0)
+	builder.PrependFloat64Slot(36, SPACING_RANGE, 0.0)
 }
 func SARAddSPACING_AZIMUTH(builder *flatbuffers.Builder, SPACING_AZIMUTH float64) {
-	builder.PrependFloat64Slot(38, SPACING_AZIMUTH, 0.0)
+	builder.PrependFloat64Slot(37, SPACING_AZIMUTH, 0.0)
 }
-func SARAddLOOKS_AZIMUTH(builder *flatbuffers.Builder, LOOKS_AZIMUTH int32) {
-	builder.PrependInt32Slot(39, LOOKS_AZIMUTH, 0)
+func SARAddLOOKS_AZIMUTH(builder *flatbuffers.Builder, LOOKS_AZIMUTH byte) {
+	builder.PrependByteSlot(38, LOOKS_AZIMUTH, 0)
 }
-func SARAddLOOKS_RANGE(builder *flatbuffers.Builder, LOOKS_RANGE int32) {
-	builder.PrependInt32Slot(40, LOOKS_RANGE, 0)
+func SARAddLOOKS_RANGE(builder *flatbuffers.Builder, LOOKS_RANGE byte) {
+	builder.PrependByteSlot(39, LOOKS_RANGE, 0)
 }
 func SARAddRESOLUTION_RANGE(builder *flatbuffers.Builder, RESOLUTION_RANGE float64) {
-	builder.PrependFloat64Slot(41, RESOLUTION_RANGE, 0.0)
+	builder.PrependFloat64Slot(40, RESOLUTION_RANGE, 0.0)
 }
 func SARAddRESOLUTION_AZIMUTH(builder *flatbuffers.Builder, RESOLUTION_AZIMUTH float64) {
-	builder.PrependFloat64Slot(42, RESOLUTION_AZIMUTH, 0.0)
+	builder.PrependFloat64Slot(41, RESOLUTION_AZIMUTH, 0.0)
 }
 func SARAddOB_DIRECTION(builder *flatbuffers.Builder, OB_DIRECTION flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(43, flatbuffers.UOffsetT(OB_DIRECTION), 0)
-}
-func SARAddCOORD_SYS(builder *flatbuffers.Builder, COORD_SYS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(44, flatbuffers.UOffsetT(COORD_SYS), 0)
+	builder.PrependUOffsetTSlot(42, flatbuffers.UOffsetT(OB_DIRECTION), 0)
 }
 func SARAddTARGETPOSX(builder *flatbuffers.Builder, TARGETPOSX float64) {
-	builder.PrependFloat64Slot(45, TARGETPOSX, 0.0)
+	builder.PrependFloat64Slot(43, TARGETPOSX, 0.0)
 }
 func SARAddTARGETPOSY(builder *flatbuffers.Builder, TARGETPOSY float64) {
-	builder.PrependFloat64Slot(46, TARGETPOSY, 0.0)
+	builder.PrependFloat64Slot(44, TARGETPOSY, 0.0)
 }
 func SARAddTARGETPOSZ(builder *flatbuffers.Builder, TARGETPOSZ float64) {
-	builder.PrependFloat64Slot(47, TARGETPOSZ, 0.0)
+	builder.PrependFloat64Slot(45, TARGETPOSZ, 0.0)
 }
 func SARAddSENALT(builder *flatbuffers.Builder, SENALT float64) {
-	builder.PrependFloat64Slot(48, SENALT, 0.0)
+	builder.PrependFloat64Slot(46, SENALT, 0.0)
 }
 func SARAddSENVELX(builder *flatbuffers.Builder, SENVELX float64) {
-	builder.PrependFloat64Slot(49, SENVELX, 0.0)
+	builder.PrependFloat64Slot(47, SENVELX, 0.0)
 }
 func SARAddSENVELY(builder *flatbuffers.Builder, SENVELY float64) {
-	builder.PrependFloat64Slot(50, SENVELY, 0.0)
+	builder.PrependFloat64Slot(48, SENVELY, 0.0)
 }
 func SARAddSENVELZ(builder *flatbuffers.Builder, SENVELZ float64) {
-	builder.PrependFloat64Slot(51, SENVELZ, 0.0)
+	builder.PrependFloat64Slot(49, SENVELZ, 0.0)
 }
 func SARAddSENLAT_START(builder *flatbuffers.Builder, SENLAT_START float64) {
-	builder.PrependFloat64Slot(52, SENLAT_START, 0.0)
+	builder.PrependFloat64Slot(50, SENLAT_START, 0.0)
 }
 func SARAddSENLON_START(builder *flatbuffers.Builder, SENLON_START float64) {
-	builder.PrependFloat64Slot(53, SENLON_START, 0.0)
+	builder.PrependFloat64Slot(51, SENLON_START, 0.0)
 }
 func SARAddSENLAT_END(builder *flatbuffers.Builder, SENLAT_END float64) {
-	builder.PrependFloat64Slot(54, SENLAT_END, 0.0)
+	builder.PrependFloat64Slot(52, SENLAT_END, 0.0)
 }
 func SARAddSENLON_END(builder *flatbuffers.Builder, SENLON_END float64) {
-	builder.PrependFloat64Slot(55, SENLON_END, 0.0)
+	builder.PrependFloat64Slot(53, SENLON_END, 0.0)
 }
 func SARAddTRANSACTION_ID(builder *flatbuffers.Builder, TRANSACTION_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(56, flatbuffers.UOffsetT(TRANSACTION_ID), 0)
+	builder.PrependUOffsetTSlot(54, flatbuffers.UOffsetT(TRANSACTION_ID), 0)
 }
 func SARAddTAGS(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(57, flatbuffers.UOffsetT(TAGS), 0)
+	builder.PrependUOffsetTSlot(55, flatbuffers.UOffsetT(TAGS), 0)
 }
 func SARStartTAGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
 func SARAddSRC_TYPS(builder *flatbuffers.Builder, SRC_TYPS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(58, flatbuffers.UOffsetT(SRC_TYPS), 0)
+	builder.PrependUOffsetTSlot(56, flatbuffers.UOffsetT(SRC_TYPS), 0)
 }
 func SARStartSRC_TYPSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
 }
 func SARAddSRC_IDS(builder *flatbuffers.Builder, SRC_IDS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(59, flatbuffers.UOffsetT(SRC_IDS), 0)
+	builder.PrependUOffsetTSlot(57, flatbuffers.UOffsetT(SRC_IDS), 0)
 }
 func SARStartSRC_IDSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
-}
-func SARAddON_ORBIT(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(60, flatbuffers.UOffsetT(ON_ORBIT), 0)
 }
 func SAREnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

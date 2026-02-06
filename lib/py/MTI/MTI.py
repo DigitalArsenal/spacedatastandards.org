@@ -29,6 +29,7 @@ class MTI(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Unique identifier
     # MTI
     def ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,51 +37,66 @@ class MTI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # MTI standard (e.g., STANAG 4607)
     # MTI
-    def P3(self):
+    def STANDARD(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
+    # Platform type (P3 field)
     # MTI
-    def P6(self):
+    def P3(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Platform activity (P6 field)
     # MTI
-    def P7(self):
+    def P6(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Sensor type (P7 field)
     # MTI
-    def P8(self):
+    def P7(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Sensor model (P8 field)
     # MTI
-    def P9(self):
+    def P8(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
+    # Reference time code (P9)
     # MTI
-    def P10(self):
+    def P9(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
+    # Security classification (P10)
+    # MTI
+    def P10(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Mission segment identifiers
     # MTI
     def MISSIONS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -88,19 +104,20 @@ class MTI(object):
 
     # MTI
     def MISSIONSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MTI
     def MISSIONSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         return o == 0
 
+    # Dwell segment data references
     # MTI
     def DWELLS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -108,19 +125,20 @@ class MTI(object):
 
     # MTI
     def DWELLSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MTI
     def DWELLSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         return o == 0
 
+    # High range resolution profile references
     # MTI
     def HRRS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -128,19 +146,20 @@ class MTI(object):
 
     # MTI
     def HRRSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MTI
     def HRRSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         return o == 0
 
+    # Job definition references
     # MTI
     def JOB_DEFS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -148,19 +167,20 @@ class MTI(object):
 
     # MTI
     def JOB_DEFSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MTI
     def JOB_DEFSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         return o == 0
 
+    # Free text entries
     # MTI
     def FREE_TEXTS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -168,19 +188,20 @@ class MTI(object):
 
     # MTI
     def FREE_TEXTSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MTI
     def FREE_TEXTSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         return o == 0
 
+    # Platform location data references
     # MTI
     def PLATFORM_LOCS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -188,19 +209,20 @@ class MTI(object):
 
     # MTI
     def PLATFORM_LOCSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MTI
     def PLATFORM_LOCSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         return o == 0
 
+    # Job request references
     # MTI
     def JOB_REQUESTS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -208,18 +230,18 @@ class MTI(object):
 
     # MTI
     def JOB_REQUESTSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # MTI
     def JOB_REQUESTSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         return o == 0
 
 def MTIStart(builder):
-    builder.StartObject(14)
+    builder.StartObject(15)
 
 def Start(builder):
     MTIStart(builder)
@@ -230,44 +252,50 @@ def MTIAddID(builder, ID):
 def AddID(builder, ID):
     MTIAddID(builder, ID)
 
+def MTIAddSTANDARD(builder, STANDARD):
+    builder.PrependInt8Slot(1, STANDARD, 0)
+
+def AddSTANDARD(builder, STANDARD):
+    MTIAddSTANDARD(builder, STANDARD)
+
 def MTIAddP3(builder, P3):
-    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(P3), 0)
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(P3), 0)
 
 def AddP3(builder, P3):
     MTIAddP3(builder, P3)
 
 def MTIAddP6(builder, P6):
-    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(P6), 0)
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(P6), 0)
 
 def AddP6(builder, P6):
     MTIAddP6(builder, P6)
 
 def MTIAddP7(builder, P7):
-    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(P7), 0)
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(P7), 0)
 
 def AddP7(builder, P7):
     MTIAddP7(builder, P7)
 
 def MTIAddP8(builder, P8):
-    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(P8), 0)
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(P8), 0)
 
 def AddP8(builder, P8):
     MTIAddP8(builder, P8)
 
 def MTIAddP9(builder, P9):
-    builder.PrependInt32Slot(5, P9, 0)
+    builder.PrependUint32Slot(6, P9, 0)
 
 def AddP9(builder, P9):
     MTIAddP9(builder, P9)
 
 def MTIAddP10(builder, P10):
-    builder.PrependInt32Slot(6, P10, 0)
+    builder.PrependUint16Slot(7, P10, 0)
 
 def AddP10(builder, P10):
     MTIAddP10(builder, P10)
 
 def MTIAddMISSIONS(builder, MISSIONS):
-    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(MISSIONS), 0)
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(MISSIONS), 0)
 
 def AddMISSIONS(builder, MISSIONS):
     MTIAddMISSIONS(builder, MISSIONS)
@@ -279,7 +307,7 @@ def StartMISSIONSVector(builder, numElems):
     return MTIStartMISSIONSVector(builder, numElems)
 
 def MTIAddDWELLS(builder, DWELLS):
-    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(DWELLS), 0)
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(DWELLS), 0)
 
 def AddDWELLS(builder, DWELLS):
     MTIAddDWELLS(builder, DWELLS)
@@ -291,7 +319,7 @@ def StartDWELLSVector(builder, numElems):
     return MTIStartDWELLSVector(builder, numElems)
 
 def MTIAddHRRS(builder, HRRS):
-    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(HRRS), 0)
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(HRRS), 0)
 
 def AddHRRS(builder, HRRS):
     MTIAddHRRS(builder, HRRS)
@@ -303,7 +331,7 @@ def StartHRRSVector(builder, numElems):
     return MTIStartHRRSVector(builder, numElems)
 
 def MTIAddJOB_DEFS(builder, JOB_DEFS):
-    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(JOB_DEFS), 0)
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(JOB_DEFS), 0)
 
 def AddJOB_DEFS(builder, JOB_DEFS):
     MTIAddJOB_DEFS(builder, JOB_DEFS)
@@ -315,7 +343,7 @@ def StartJOB_DEFSVector(builder, numElems):
     return MTIStartJOB_DEFSVector(builder, numElems)
 
 def MTIAddFREE_TEXTS(builder, FREE_TEXTS):
-    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(FREE_TEXTS), 0)
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(FREE_TEXTS), 0)
 
 def AddFREE_TEXTS(builder, FREE_TEXTS):
     MTIAddFREE_TEXTS(builder, FREE_TEXTS)
@@ -327,7 +355,7 @@ def StartFREE_TEXTSVector(builder, numElems):
     return MTIStartFREE_TEXTSVector(builder, numElems)
 
 def MTIAddPLATFORM_LOCS(builder, PLATFORM_LOCS):
-    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(PLATFORM_LOCS), 0)
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(PLATFORM_LOCS), 0)
 
 def AddPLATFORM_LOCS(builder, PLATFORM_LOCS):
     MTIAddPLATFORM_LOCS(builder, PLATFORM_LOCS)
@@ -339,7 +367,7 @@ def StartPLATFORM_LOCSVector(builder, numElems):
     return MTIStartPLATFORM_LOCSVector(builder, numElems)
 
 def MTIAddJOB_REQUESTS(builder, JOB_REQUESTS):
-    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(JOB_REQUESTS), 0)
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(JOB_REQUESTS), 0)
 
 def AddJOB_REQUESTS(builder, JOB_REQUESTS):
     MTIAddJOB_REQUESTS(builder, JOB_REQUESTS)
@@ -366,6 +394,7 @@ class MTIT(object):
     # MTIT
     def __init__(self):
         self.ID = None  # type: str
+        self.STANDARD = 0  # type: int
         self.P3 = None  # type: str
         self.P6 = None  # type: str
         self.P7 = None  # type: str
@@ -402,6 +431,7 @@ class MTIT(object):
         if MTI is None:
             return
         self.ID = MTI.ID()
+        self.STANDARD = MTI.STANDARD()
         self.P3 = MTI.P3()
         self.P6 = MTI.P6()
         self.P7 = MTI.P7()
@@ -508,6 +538,7 @@ class MTIT(object):
         MTIStart(builder)
         if self.ID is not None:
             MTIAddID(builder, ID)
+        MTIAddSTANDARD(builder, self.STANDARD)
         if self.P3 is not None:
             MTIAddP3(builder, P3)
         if self.P6 is not None:

@@ -4,6 +4,9 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { seoDataType } from './seoDataType.js';
+import { seoObservatoryType } from './seoObservatoryType.js';
+import { seoParticleType } from './seoParticleType.js';
 
 
 /**
@@ -31,6 +34,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$SEO');
 }
 
+/**
+ * Unique identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,6 +44,9 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Message type code
+ */
 MSG_TYPE():string|null
 MSG_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 MSG_TYPE(optionalEncoding?:any):string|Uint8Array|null {
@@ -45,6 +54,9 @@ MSG_TYPE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Generating system
+ */
 GEN_SYSTEM():string|null
 GEN_SYSTEM(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 GEN_SYSTEM(optionalEncoding?:any):string|Uint8Array|null {
@@ -52,6 +64,9 @@ GEN_SYSTEM(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * External reference identifier
+ */
 EXTERNAL_ID():string|null
 EXTERNAL_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 EXTERNAL_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -59,13 +74,17 @@ EXTERNAL_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-DATA_TYPE():string|null
-DATA_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-DATA_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Type of environmental data
+ */
+DATA_TYPE():seoDataType {
   const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : seoDataType.PARTICLE_COUNT;
 }
 
+/**
+ * Generation time (ISO 8601)
+ */
 GEN_TIME():string|null
 GEN_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 GEN_TIME(optionalEncoding?:any):string|Uint8Array|null {
@@ -73,21 +92,33 @@ GEN_TIME(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * True if this is a forecast
+ */
 FORECAST():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * True if derived from other measurements
+ */
 DERIVED():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Satellite catalog number (if space-based)
+ */
 SAT_NO():number {
   const offset = this.bb!.__offset(this.bb_pos, 20);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
+/**
+ * International designator
+ */
 ORIG_OBJECT_ID():string|null
 ORIG_OBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ORIG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -95,6 +126,9 @@ ORIG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Sensor identifier
+ */
 ID_SENSOR():string|null
 ID_SENSOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID_SENSOR(optionalEncoding?:any):string|Uint8Array|null {
@@ -102,6 +136,9 @@ ID_SENSOR(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Original sensor identifier
+ */
 ORIG_SENSOR_ID():string|null
 ORIG_SENSOR_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ORIG_SENSOR_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -109,13 +146,17 @@ ORIG_SENSOR_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-OBSERVATORY_TYPE():string|null
-OBSERVATORY_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-OBSERVATORY_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Observatory type
+ */
+OBSERVATORY_TYPE():seoObservatoryType {
   const offset = this.bb!.__offset(this.bb_pos, 28);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : seoObservatoryType.GROUND;
 }
 
+/**
+ * Observatory name
+ */
 OBSERVATORY_NAME():string|null
 OBSERVATORY_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 OBSERVATORY_NAME(optionalEncoding?:any):string|Uint8Array|null {
@@ -123,6 +164,9 @@ OBSERVATORY_NAME(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Observatory notes
+ */
 OBSERVATORY_NOTES():string|null
 OBSERVATORY_NOTES(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 OBSERVATORY_NOTES(optionalEncoding?:any):string|Uint8Array|null {
@@ -130,6 +174,9 @@ OBSERVATORY_NOTES(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Instrument type description
+ */
 INSTRUMENT_TYPE():string|null
 INSTRUMENT_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 INSTRUMENT_TYPE(optionalEncoding?:any):string|Uint8Array|null {
@@ -137,21 +184,33 @@ INSTRUMENT_TYPE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Observatory latitude (degrees)
+ */
 LAT():number {
   const offset = this.bb!.__offset(this.bb_pos, 36);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Observatory longitude (degrees)
+ */
 LON():number {
   const offset = this.bb!.__offset(this.bb_pos, 38);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Observatory altitude (km)
+ */
 ALT():number {
   const offset = this.bb!.__offset(this.bb_pos, 40);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Sensor reference frame
+ */
 SEN_REFERENCE_FRAME():string|null
 SEN_REFERENCE_FRAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 SEN_REFERENCE_FRAME(optionalEncoding?:any):string|Uint8Array|null {
@@ -159,11 +218,12 @@ SEN_REFERENCE_FRAME(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-SEN_POS(index: number):string
-SEN_POS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-SEN_POS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Sensor position (km, 3 components)
+ */
+SEN_POS(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 44);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
 }
 
 senPosLength():number {
@@ -171,11 +231,17 @@ senPosLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-SEN_VEL(index: number):string
-SEN_VEL(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-SEN_VEL(index: number,optionalEncoding?:any):string|Uint8Array|null {
+senPosArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Sensor velocity (km/s, 3 components)
+ */
+SEN_VEL(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 46);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
 }
 
 senVelLength():number {
@@ -183,6 +249,14 @@ senVelLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+senVelArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Measurement type description
+ */
 MEAS_TYPE():string|null
 MEAS_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 MEAS_TYPE(optionalEncoding?:any):string|Uint8Array|null {
@@ -190,27 +264,37 @@ MEAS_TYPE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Particle type measured
+ */
+PARTICLE_TYPE():seoParticleType {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : seoParticleType.PROTON;
+}
+
+/**
+ * Energy level or range (keV or MeV)
+ */
 SEN_ENERGY_LEVEL():string|null
 SEN_ENERGY_LEVEL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 SEN_ENERGY_LEVEL(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 50);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-OB_SET_ID():string|null
-OB_SET_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-OB_SET_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 52);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-PARTICLE_TYPE():string|null
-PARTICLE_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-PARTICLE_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Observation set identifier
+ */
+OB_SET_ID():string|null
+OB_SET_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OB_SET_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 54);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Observation time (ISO 8601)
+ */
 OB_TIME():string|null
 OB_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 OB_TIME(optionalEncoding?:any):string|Uint8Array|null {
@@ -218,65 +302,114 @@ OB_TIME(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-SEO_LIST(index: number):string
-SEO_LIST(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-SEO_LIST(index: number,optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Measurement values
+ */
+VALUES(index: number):number|null {
   const offset = this.bb!.__offset(this.bb_pos, 58);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
 }
 
-seoListLength():number {
+valuesLength():number {
   const offset = this.bb!.__offset(this.bb_pos, 58);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-QUALITY():string|null
-QUALITY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-QUALITY(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 60);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+valuesArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
 }
 
-DESCRIPTION():string|null
-DESCRIPTION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-DESCRIPTION(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Measurement uncertainties
+ */
+UNCERTAINTIES(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+uncertaintiesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+uncertaintiesArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Units for measurement values
+ */
+UNITS():string|null
+UNITS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+UNITS(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 62);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-DESCRIPTOR():string|null
-DESCRIPTOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-DESCRIPTOR(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Data quality indicator
+ */
+QUALITY():string|null
+QUALITY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+QUALITY(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 64);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Description
+ */
+DESCRIPTION():string|null
+DESCRIPTION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DESCRIPTION(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 66);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Event descriptor
+ */
+DESCRIPTOR():string|null
+DESCRIPTOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DESCRIPTOR(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 68);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Source types
+ */
 SRC_TYPS(index: number):string
 SRC_TYPS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 SRC_TYPS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 66);
+  const offset = this.bb!.__offset(this.bb_pos, 70);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 srcTypsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 66);
+  const offset = this.bb!.__offset(this.bb_pos, 70);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Source identifiers
+ */
 SRC_IDS(index: number):string
 SRC_IDS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 SRC_IDS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 68);
+  const offset = this.bb!.__offset(this.bb_pos, 72);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 srcIdsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 68);
+  const offset = this.bb!.__offset(this.bb_pos, 72);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 static startSEO(builder:flatbuffers.Builder) {
-  builder.startObject(33);
+  builder.startObject(35);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -295,8 +428,8 @@ static addExternalId(builder:flatbuffers.Builder, EXTERNAL_IDOffset:flatbuffers.
   builder.addFieldOffset(3, EXTERNAL_IDOffset, 0);
 }
 
-static addDataType(builder:flatbuffers.Builder, DATA_TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(4, DATA_TYPEOffset, 0);
+static addDataType(builder:flatbuffers.Builder, DATA_TYPE:seoDataType) {
+  builder.addFieldInt8(4, DATA_TYPE, seoDataType.PARTICLE_COUNT);
 }
 
 static addGenTime(builder:flatbuffers.Builder, GEN_TIMEOffset:flatbuffers.Offset) {
@@ -327,8 +460,8 @@ static addOrigSensorId(builder:flatbuffers.Builder, ORIG_SENSOR_IDOffset:flatbuf
   builder.addFieldOffset(11, ORIG_SENSOR_IDOffset, 0);
 }
 
-static addObservatoryType(builder:flatbuffers.Builder, OBSERVATORY_TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(12, OBSERVATORY_TYPEOffset, 0);
+static addObservatoryType(builder:flatbuffers.Builder, OBSERVATORY_TYPE:seoObservatoryType) {
+  builder.addFieldInt8(12, OBSERVATORY_TYPE, seoObservatoryType.GROUND);
 }
 
 static addObservatoryName(builder:flatbuffers.Builder, OBSERVATORY_NAMEOffset:flatbuffers.Offset) {
@@ -363,84 +496,124 @@ static addSenPos(builder:flatbuffers.Builder, SEN_POSOffset:flatbuffers.Offset) 
   builder.addFieldOffset(20, SEN_POSOffset, 0);
 }
 
-static createSenPosVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static createSenPosVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createSenPosVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createSenPosVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
 static startSenPosVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+  builder.startVector(8, numElems, 8);
 }
 
 static addSenVel(builder:flatbuffers.Builder, SEN_VELOffset:flatbuffers.Offset) {
   builder.addFieldOffset(21, SEN_VELOffset, 0);
 }
 
-static createSenVelVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static createSenVelVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createSenVelVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createSenVelVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
 static startSenVelVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+  builder.startVector(8, numElems, 8);
 }
 
 static addMeasType(builder:flatbuffers.Builder, MEAS_TYPEOffset:flatbuffers.Offset) {
   builder.addFieldOffset(22, MEAS_TYPEOffset, 0);
 }
 
+static addParticleType(builder:flatbuffers.Builder, PARTICLE_TYPE:seoParticleType) {
+  builder.addFieldInt8(23, PARTICLE_TYPE, seoParticleType.PROTON);
+}
+
 static addSenEnergyLevel(builder:flatbuffers.Builder, SEN_ENERGY_LEVELOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(23, SEN_ENERGY_LEVELOffset, 0);
+  builder.addFieldOffset(24, SEN_ENERGY_LEVELOffset, 0);
 }
 
 static addObSetId(builder:flatbuffers.Builder, OB_SET_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(24, OB_SET_IDOffset, 0);
-}
-
-static addParticleType(builder:flatbuffers.Builder, PARTICLE_TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(25, PARTICLE_TYPEOffset, 0);
+  builder.addFieldOffset(25, OB_SET_IDOffset, 0);
 }
 
 static addObTime(builder:flatbuffers.Builder, OB_TIMEOffset:flatbuffers.Offset) {
   builder.addFieldOffset(26, OB_TIMEOffset, 0);
 }
 
-static addSeoList(builder:flatbuffers.Builder, SEO_LISTOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(27, SEO_LISTOffset, 0);
+static addValues(builder:flatbuffers.Builder, VALUESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(27, VALUESOffset, 0);
 }
 
-static createSeoListVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
+static createValuesVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createValuesVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createValuesVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
   for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
+    builder.addFloat64(data[i]!);
   }
   return builder.endVector();
 }
 
-static startSeoListVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+static startValuesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addUncertainties(builder:flatbuffers.Builder, UNCERTAINTIESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(28, UNCERTAINTIESOffset, 0);
+}
+
+static createUncertaintiesVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createUncertaintiesVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createUncertaintiesVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startUncertaintiesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addUnits(builder:flatbuffers.Builder, UNITSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(29, UNITSOffset, 0);
 }
 
 static addQuality(builder:flatbuffers.Builder, QUALITYOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(28, QUALITYOffset, 0);
+  builder.addFieldOffset(30, QUALITYOffset, 0);
 }
 
 static addDescription(builder:flatbuffers.Builder, DESCRIPTIONOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(29, DESCRIPTIONOffset, 0);
+  builder.addFieldOffset(31, DESCRIPTIONOffset, 0);
 }
 
 static addDescriptor(builder:flatbuffers.Builder, DESCRIPTOROffset:flatbuffers.Offset) {
-  builder.addFieldOffset(30, DESCRIPTOROffset, 0);
+  builder.addFieldOffset(32, DESCRIPTOROffset, 0);
 }
 
 static addSrcTyps(builder:flatbuffers.Builder, SRC_TYPSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(31, SRC_TYPSOffset, 0);
+  builder.addFieldOffset(33, SRC_TYPSOffset, 0);
 }
 
 static createSrcTypsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -456,7 +629,7 @@ static startSrcTypsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addSrcIds(builder:flatbuffers.Builder, SRC_IDSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(32, SRC_IDSOffset, 0);
+  builder.addFieldOffset(34, SRC_IDSOffset, 0);
 }
 
 static createSrcIdsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -484,13 +657,13 @@ static finishSizePrefixedSEOBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$SEO', true);
 }
 
-static createSEO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, MSG_TYPEOffset:flatbuffers.Offset, GEN_SYSTEMOffset:flatbuffers.Offset, EXTERNAL_IDOffset:flatbuffers.Offset, DATA_TYPEOffset:flatbuffers.Offset, GEN_TIMEOffset:flatbuffers.Offset, FORECAST:boolean, DERIVED:boolean, SAT_NO:number, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ID_SENSOROffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, OBSERVATORY_TYPEOffset:flatbuffers.Offset, OBSERVATORY_NAMEOffset:flatbuffers.Offset, OBSERVATORY_NOTESOffset:flatbuffers.Offset, INSTRUMENT_TYPEOffset:flatbuffers.Offset, LAT:number, LON:number, ALT:number, SEN_REFERENCE_FRAMEOffset:flatbuffers.Offset, SEN_POSOffset:flatbuffers.Offset, SEN_VELOffset:flatbuffers.Offset, MEAS_TYPEOffset:flatbuffers.Offset, SEN_ENERGY_LEVELOffset:flatbuffers.Offset, OB_SET_IDOffset:flatbuffers.Offset, PARTICLE_TYPEOffset:flatbuffers.Offset, OB_TIMEOffset:flatbuffers.Offset, SEO_LISTOffset:flatbuffers.Offset, QUALITYOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, DESCRIPTOROffset:flatbuffers.Offset, SRC_TYPSOffset:flatbuffers.Offset, SRC_IDSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createSEO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, MSG_TYPEOffset:flatbuffers.Offset, GEN_SYSTEMOffset:flatbuffers.Offset, EXTERNAL_IDOffset:flatbuffers.Offset, DATA_TYPE:seoDataType, GEN_TIMEOffset:flatbuffers.Offset, FORECAST:boolean, DERIVED:boolean, SAT_NO:number, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ID_SENSOROffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, OBSERVATORY_TYPE:seoObservatoryType, OBSERVATORY_NAMEOffset:flatbuffers.Offset, OBSERVATORY_NOTESOffset:flatbuffers.Offset, INSTRUMENT_TYPEOffset:flatbuffers.Offset, LAT:number, LON:number, ALT:number, SEN_REFERENCE_FRAMEOffset:flatbuffers.Offset, SEN_POSOffset:flatbuffers.Offset, SEN_VELOffset:flatbuffers.Offset, MEAS_TYPEOffset:flatbuffers.Offset, PARTICLE_TYPE:seoParticleType, SEN_ENERGY_LEVELOffset:flatbuffers.Offset, OB_SET_IDOffset:flatbuffers.Offset, OB_TIMEOffset:flatbuffers.Offset, VALUESOffset:flatbuffers.Offset, UNCERTAINTIESOffset:flatbuffers.Offset, UNITSOffset:flatbuffers.Offset, QUALITYOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, DESCRIPTOROffset:flatbuffers.Offset, SRC_TYPSOffset:flatbuffers.Offset, SRC_IDSOffset:flatbuffers.Offset):flatbuffers.Offset {
   SEO.startSEO(builder);
   SEO.addId(builder, IDOffset);
   SEO.addMsgType(builder, MSG_TYPEOffset);
   SEO.addGenSystem(builder, GEN_SYSTEMOffset);
   SEO.addExternalId(builder, EXTERNAL_IDOffset);
-  SEO.addDataType(builder, DATA_TYPEOffset);
+  SEO.addDataType(builder, DATA_TYPE);
   SEO.addGenTime(builder, GEN_TIMEOffset);
   SEO.addForecast(builder, FORECAST);
   SEO.addDerived(builder, DERIVED);
@@ -498,7 +671,7 @@ static createSEO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, MSG_T
   SEO.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
   SEO.addIdSensor(builder, ID_SENSOROffset);
   SEO.addOrigSensorId(builder, ORIG_SENSOR_IDOffset);
-  SEO.addObservatoryType(builder, OBSERVATORY_TYPEOffset);
+  SEO.addObservatoryType(builder, OBSERVATORY_TYPE);
   SEO.addObservatoryName(builder, OBSERVATORY_NAMEOffset);
   SEO.addObservatoryNotes(builder, OBSERVATORY_NOTESOffset);
   SEO.addInstrumentType(builder, INSTRUMENT_TYPEOffset);
@@ -509,11 +682,13 @@ static createSEO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, MSG_T
   SEO.addSenPos(builder, SEN_POSOffset);
   SEO.addSenVel(builder, SEN_VELOffset);
   SEO.addMeasType(builder, MEAS_TYPEOffset);
+  SEO.addParticleType(builder, PARTICLE_TYPE);
   SEO.addSenEnergyLevel(builder, SEN_ENERGY_LEVELOffset);
   SEO.addObSetId(builder, OB_SET_IDOffset);
-  SEO.addParticleType(builder, PARTICLE_TYPEOffset);
   SEO.addObTime(builder, OB_TIMEOffset);
-  SEO.addSeoList(builder, SEO_LISTOffset);
+  SEO.addValues(builder, VALUESOffset);
+  SEO.addUncertainties(builder, UNCERTAINTIESOffset);
+  SEO.addUnits(builder, UNITSOffset);
   SEO.addQuality(builder, QUALITYOffset);
   SEO.addDescription(builder, DESCRIPTIONOffset);
   SEO.addDescriptor(builder, DESCRIPTOROffset);
@@ -544,14 +719,16 @@ unpack(): SEOT {
     this.LON(),
     this.ALT(),
     this.SEN_REFERENCE_FRAME(),
-    this.bb!.createScalarList<string>(this.SEN_POS.bind(this), this.senPosLength()),
-    this.bb!.createScalarList<string>(this.SEN_VEL.bind(this), this.senVelLength()),
+    this.bb!.createScalarList<number>(this.SEN_POS.bind(this), this.senPosLength()),
+    this.bb!.createScalarList<number>(this.SEN_VEL.bind(this), this.senVelLength()),
     this.MEAS_TYPE(),
+    this.PARTICLE_TYPE(),
     this.SEN_ENERGY_LEVEL(),
     this.OB_SET_ID(),
-    this.PARTICLE_TYPE(),
     this.OB_TIME(),
-    this.bb!.createScalarList<string>(this.SEO_LIST.bind(this), this.seoListLength()),
+    this.bb!.createScalarList<number>(this.VALUES.bind(this), this.valuesLength()),
+    this.bb!.createScalarList<number>(this.UNCERTAINTIES.bind(this), this.uncertaintiesLength()),
+    this.UNITS(),
     this.QUALITY(),
     this.DESCRIPTION(),
     this.DESCRIPTOR(),
@@ -582,14 +759,16 @@ unpackTo(_o: SEOT): void {
   _o.LON = this.LON();
   _o.ALT = this.ALT();
   _o.SEN_REFERENCE_FRAME = this.SEN_REFERENCE_FRAME();
-  _o.SEN_POS = this.bb!.createScalarList<string>(this.SEN_POS.bind(this), this.senPosLength());
-  _o.SEN_VEL = this.bb!.createScalarList<string>(this.SEN_VEL.bind(this), this.senVelLength());
+  _o.SEN_POS = this.bb!.createScalarList<number>(this.SEN_POS.bind(this), this.senPosLength());
+  _o.SEN_VEL = this.bb!.createScalarList<number>(this.SEN_VEL.bind(this), this.senVelLength());
   _o.MEAS_TYPE = this.MEAS_TYPE();
+  _o.PARTICLE_TYPE = this.PARTICLE_TYPE();
   _o.SEN_ENERGY_LEVEL = this.SEN_ENERGY_LEVEL();
   _o.OB_SET_ID = this.OB_SET_ID();
-  _o.PARTICLE_TYPE = this.PARTICLE_TYPE();
   _o.OB_TIME = this.OB_TIME();
-  _o.SEO_LIST = this.bb!.createScalarList<string>(this.SEO_LIST.bind(this), this.seoListLength());
+  _o.VALUES = this.bb!.createScalarList<number>(this.VALUES.bind(this), this.valuesLength());
+  _o.UNCERTAINTIES = this.bb!.createScalarList<number>(this.UNCERTAINTIES.bind(this), this.uncertaintiesLength());
+  _o.UNITS = this.UNITS();
   _o.QUALITY = this.QUALITY();
   _o.DESCRIPTION = this.DESCRIPTION();
   _o.DESCRIPTOR = this.DESCRIPTOR();
@@ -604,7 +783,7 @@ constructor(
   public MSG_TYPE: string|Uint8Array|null = null,
   public GEN_SYSTEM: string|Uint8Array|null = null,
   public EXTERNAL_ID: string|Uint8Array|null = null,
-  public DATA_TYPE: string|Uint8Array|null = null,
+  public DATA_TYPE: seoDataType = seoDataType.PARTICLE_COUNT,
   public GEN_TIME: string|Uint8Array|null = null,
   public FORECAST: boolean = false,
   public DERIVED: boolean = false,
@@ -612,7 +791,7 @@ constructor(
   public ORIG_OBJECT_ID: string|Uint8Array|null = null,
   public ID_SENSOR: string|Uint8Array|null = null,
   public ORIG_SENSOR_ID: string|Uint8Array|null = null,
-  public OBSERVATORY_TYPE: string|Uint8Array|null = null,
+  public OBSERVATORY_TYPE: seoObservatoryType = seoObservatoryType.GROUND,
   public OBSERVATORY_NAME: string|Uint8Array|null = null,
   public OBSERVATORY_NOTES: string|Uint8Array|null = null,
   public INSTRUMENT_TYPE: string|Uint8Array|null = null,
@@ -620,14 +799,16 @@ constructor(
   public LON: number = 0.0,
   public ALT: number = 0.0,
   public SEN_REFERENCE_FRAME: string|Uint8Array|null = null,
-  public SEN_POS: (string)[] = [],
-  public SEN_VEL: (string)[] = [],
+  public SEN_POS: (number)[] = [],
+  public SEN_VEL: (number)[] = [],
   public MEAS_TYPE: string|Uint8Array|null = null,
+  public PARTICLE_TYPE: seoParticleType = seoParticleType.PROTON,
   public SEN_ENERGY_LEVEL: string|Uint8Array|null = null,
   public OB_SET_ID: string|Uint8Array|null = null,
-  public PARTICLE_TYPE: string|Uint8Array|null = null,
   public OB_TIME: string|Uint8Array|null = null,
-  public SEO_LIST: (string)[] = [],
+  public VALUES: (number)[] = [],
+  public UNCERTAINTIES: (number)[] = [],
+  public UNITS: string|Uint8Array|null = null,
   public QUALITY: string|Uint8Array|null = null,
   public DESCRIPTION: string|Uint8Array|null = null,
   public DESCRIPTOR: string|Uint8Array|null = null,
@@ -641,24 +822,23 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const MSG_TYPE = (this.MSG_TYPE !== null ? builder.createString(this.MSG_TYPE!) : 0);
   const GEN_SYSTEM = (this.GEN_SYSTEM !== null ? builder.createString(this.GEN_SYSTEM!) : 0);
   const EXTERNAL_ID = (this.EXTERNAL_ID !== null ? builder.createString(this.EXTERNAL_ID!) : 0);
-  const DATA_TYPE = (this.DATA_TYPE !== null ? builder.createString(this.DATA_TYPE!) : 0);
   const GEN_TIME = (this.GEN_TIME !== null ? builder.createString(this.GEN_TIME!) : 0);
   const ORIG_OBJECT_ID = (this.ORIG_OBJECT_ID !== null ? builder.createString(this.ORIG_OBJECT_ID!) : 0);
   const ID_SENSOR = (this.ID_SENSOR !== null ? builder.createString(this.ID_SENSOR!) : 0);
   const ORIG_SENSOR_ID = (this.ORIG_SENSOR_ID !== null ? builder.createString(this.ORIG_SENSOR_ID!) : 0);
-  const OBSERVATORY_TYPE = (this.OBSERVATORY_TYPE !== null ? builder.createString(this.OBSERVATORY_TYPE!) : 0);
   const OBSERVATORY_NAME = (this.OBSERVATORY_NAME !== null ? builder.createString(this.OBSERVATORY_NAME!) : 0);
   const OBSERVATORY_NOTES = (this.OBSERVATORY_NOTES !== null ? builder.createString(this.OBSERVATORY_NOTES!) : 0);
   const INSTRUMENT_TYPE = (this.INSTRUMENT_TYPE !== null ? builder.createString(this.INSTRUMENT_TYPE!) : 0);
   const SEN_REFERENCE_FRAME = (this.SEN_REFERENCE_FRAME !== null ? builder.createString(this.SEN_REFERENCE_FRAME!) : 0);
-  const SEN_POS = SEO.createSenPosVector(builder, builder.createObjectOffsetList(this.SEN_POS));
-  const SEN_VEL = SEO.createSenVelVector(builder, builder.createObjectOffsetList(this.SEN_VEL));
+  const SEN_POS = SEO.createSenPosVector(builder, this.SEN_POS);
+  const SEN_VEL = SEO.createSenVelVector(builder, this.SEN_VEL);
   const MEAS_TYPE = (this.MEAS_TYPE !== null ? builder.createString(this.MEAS_TYPE!) : 0);
   const SEN_ENERGY_LEVEL = (this.SEN_ENERGY_LEVEL !== null ? builder.createString(this.SEN_ENERGY_LEVEL!) : 0);
   const OB_SET_ID = (this.OB_SET_ID !== null ? builder.createString(this.OB_SET_ID!) : 0);
-  const PARTICLE_TYPE = (this.PARTICLE_TYPE !== null ? builder.createString(this.PARTICLE_TYPE!) : 0);
   const OB_TIME = (this.OB_TIME !== null ? builder.createString(this.OB_TIME!) : 0);
-  const SEO_LIST = SEO.createSeoListVector(builder, builder.createObjectOffsetList(this.SEO_LIST));
+  const VALUES = SEO.createValuesVector(builder, this.VALUES);
+  const UNCERTAINTIES = SEO.createUncertaintiesVector(builder, this.UNCERTAINTIES);
+  const UNITS = (this.UNITS !== null ? builder.createString(this.UNITS!) : 0);
   const QUALITY = (this.QUALITY !== null ? builder.createString(this.QUALITY!) : 0);
   const DESCRIPTION = (this.DESCRIPTION !== null ? builder.createString(this.DESCRIPTION!) : 0);
   const DESCRIPTOR = (this.DESCRIPTOR !== null ? builder.createString(this.DESCRIPTOR!) : 0);
@@ -670,7 +850,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     MSG_TYPE,
     GEN_SYSTEM,
     EXTERNAL_ID,
-    DATA_TYPE,
+    this.DATA_TYPE,
     GEN_TIME,
     this.FORECAST,
     this.DERIVED,
@@ -678,7 +858,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     ORIG_OBJECT_ID,
     ID_SENSOR,
     ORIG_SENSOR_ID,
-    OBSERVATORY_TYPE,
+    this.OBSERVATORY_TYPE,
     OBSERVATORY_NAME,
     OBSERVATORY_NOTES,
     INSTRUMENT_TYPE,
@@ -689,11 +869,13 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     SEN_POS,
     SEN_VEL,
     MEAS_TYPE,
+    this.PARTICLE_TYPE,
     SEN_ENERGY_LEVEL,
     OB_SET_ID,
-    PARTICLE_TYPE,
     OB_TIME,
-    SEO_LIST,
+    VALUES,
+    UNCERTAINTIES,
+    UNITS,
     QUALITY,
     DESCRIPTION,
     DESCRIPTOR,

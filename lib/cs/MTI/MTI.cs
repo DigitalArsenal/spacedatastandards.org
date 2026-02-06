@@ -19,6 +19,7 @@ public struct MTI : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public MTI __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Unique identifier
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,59 +27,75 @@ public struct MTI : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
-  public string P3 { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// MTI standard (e.g., STANAG 4607)
+  public mtiStandard STANDARD { get { int o = __p.__offset(6); return o != 0 ? (mtiStandard)__p.bb.GetSbyte(o + __p.bb_pos) : mtiStandard.STANAG_4607; } }
+  /// Platform type (P3 field)
+  public string P3 { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetP3Bytes() { return __p.__vector_as_span<byte>(6, 1); }
+  public Span<byte> GetP3Bytes() { return __p.__vector_as_span<byte>(8, 1); }
 #else
-  public ArraySegment<byte>? GetP3Bytes() { return __p.__vector_as_arraysegment(6); }
+  public ArraySegment<byte>? GetP3Bytes() { return __p.__vector_as_arraysegment(8); }
 #endif
-  public byte[] GetP3Array() { return __p.__vector_as_array<byte>(6); }
-  public string P6 { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetP3Array() { return __p.__vector_as_array<byte>(8); }
+  /// Platform activity (P6 field)
+  public string P6 { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetP6Bytes() { return __p.__vector_as_span<byte>(8, 1); }
+  public Span<byte> GetP6Bytes() { return __p.__vector_as_span<byte>(10, 1); }
 #else
-  public ArraySegment<byte>? GetP6Bytes() { return __p.__vector_as_arraysegment(8); }
+  public ArraySegment<byte>? GetP6Bytes() { return __p.__vector_as_arraysegment(10); }
 #endif
-  public byte[] GetP6Array() { return __p.__vector_as_array<byte>(8); }
-  public string P7 { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetP6Array() { return __p.__vector_as_array<byte>(10); }
+  /// Sensor type (P7 field)
+  public string P7 { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetP7Bytes() { return __p.__vector_as_span<byte>(10, 1); }
+  public Span<byte> GetP7Bytes() { return __p.__vector_as_span<byte>(12, 1); }
 #else
-  public ArraySegment<byte>? GetP7Bytes() { return __p.__vector_as_arraysegment(10); }
+  public ArraySegment<byte>? GetP7Bytes() { return __p.__vector_as_arraysegment(12); }
 #endif
-  public byte[] GetP7Array() { return __p.__vector_as_array<byte>(10); }
-  public string P8 { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetP7Array() { return __p.__vector_as_array<byte>(12); }
+  /// Sensor model (P8 field)
+  public string P8 { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetP8Bytes() { return __p.__vector_as_span<byte>(12, 1); }
+  public Span<byte> GetP8Bytes() { return __p.__vector_as_span<byte>(14, 1); }
 #else
-  public ArraySegment<byte>? GetP8Bytes() { return __p.__vector_as_arraysegment(12); }
+  public ArraySegment<byte>? GetP8Bytes() { return __p.__vector_as_arraysegment(14); }
 #endif
-  public byte[] GetP8Array() { return __p.__vector_as_array<byte>(12); }
-  public int P9 { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int P10 { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public string MISSIONS(int j) { int o = __p.__offset(18); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int MISSIONSLength { get { int o = __p.__offset(18); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string DWELLS(int j) { int o = __p.__offset(20); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int DWELLSLength { get { int o = __p.__offset(20); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string HRRS(int j) { int o = __p.__offset(22); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int HRRSLength { get { int o = __p.__offset(22); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string JOB_DEFS(int j) { int o = __p.__offset(24); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int JOB_DEFSLength { get { int o = __p.__offset(24); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string FREE_TEXTS(int j) { int o = __p.__offset(26); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int FREE_TEXTSLength { get { int o = __p.__offset(26); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string PLATFORM_LOCS(int j) { int o = __p.__offset(28); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int PLATFORM_LOCSLength { get { int o = __p.__offset(28); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string JOB_REQUESTS(int j) { int o = __p.__offset(30); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int JOB_REQUESTSLength { get { int o = __p.__offset(30); return o != 0 ? __p.__vector_len(o) : 0; } }
+  public byte[] GetP8Array() { return __p.__vector_as_array<byte>(14); }
+  /// Reference time code (P9)
+  public uint P9 { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Security classification (P10)
+  public ushort P10 { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  /// Mission segment identifiers
+  public string MISSIONS(int j) { int o = __p.__offset(20); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int MISSIONSLength { get { int o = __p.__offset(20); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Dwell segment data references
+  public string DWELLS(int j) { int o = __p.__offset(22); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int DWELLSLength { get { int o = __p.__offset(22); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// High range resolution profile references
+  public string HRRS(int j) { int o = __p.__offset(24); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int HRRSLength { get { int o = __p.__offset(24); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Job definition references
+  public string JOB_DEFS(int j) { int o = __p.__offset(26); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int JOB_DEFSLength { get { int o = __p.__offset(26); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Free text entries
+  public string FREE_TEXTS(int j) { int o = __p.__offset(28); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int FREE_TEXTSLength { get { int o = __p.__offset(28); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Platform location data references
+  public string PLATFORM_LOCS(int j) { int o = __p.__offset(30); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int PLATFORM_LOCSLength { get { int o = __p.__offset(30); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Job request references
+  public string JOB_REQUESTS(int j) { int o = __p.__offset(32); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int JOB_REQUESTSLength { get { int o = __p.__offset(32); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<MTI> CreateMTI(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
+      mtiStandard STANDARD = mtiStandard.STANAG_4607,
       StringOffset P3Offset = default(StringOffset),
       StringOffset P6Offset = default(StringOffset),
       StringOffset P7Offset = default(StringOffset),
       StringOffset P8Offset = default(StringOffset),
-      int P9 = 0,
-      int P10 = 0,
+      uint P9 = 0,
+      ushort P10 = 0,
       VectorOffset MISSIONSOffset = default(VectorOffset),
       VectorOffset DWELLSOffset = default(VectorOffset),
       VectorOffset HRRSOffset = default(VectorOffset),
@@ -86,7 +103,7 @@ public struct MTI : IFlatbufferObject
       VectorOffset FREE_TEXTSOffset = default(VectorOffset),
       VectorOffset PLATFORM_LOCSOffset = default(VectorOffset),
       VectorOffset JOB_REQUESTSOffset = default(VectorOffset)) {
-    builder.StartTable(14);
+    builder.StartTable(15);
     MTI.AddJOB_REQUESTS(builder, JOB_REQUESTSOffset);
     MTI.AddPLATFORM_LOCS(builder, PLATFORM_LOCSOffset);
     MTI.AddFREE_TEXTS(builder, FREE_TEXTSOffset);
@@ -94,61 +111,63 @@ public struct MTI : IFlatbufferObject
     MTI.AddHRRS(builder, HRRSOffset);
     MTI.AddDWELLS(builder, DWELLSOffset);
     MTI.AddMISSIONS(builder, MISSIONSOffset);
-    MTI.AddP10(builder, P10);
     MTI.AddP9(builder, P9);
     MTI.AddP8(builder, P8Offset);
     MTI.AddP7(builder, P7Offset);
     MTI.AddP6(builder, P6Offset);
     MTI.AddP3(builder, P3Offset);
     MTI.AddID(builder, IDOffset);
+    MTI.AddP10(builder, P10);
+    MTI.AddSTANDARD(builder, STANDARD);
     return MTI.EndMTI(builder);
   }
 
-  public static void StartMTI(FlatBufferBuilder builder) { builder.StartTable(14); }
+  public static void StartMTI(FlatBufferBuilder builder) { builder.StartTable(15); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
-  public static void AddP3(FlatBufferBuilder builder, StringOffset P3Offset) { builder.AddOffset(1, P3Offset.Value, 0); }
-  public static void AddP6(FlatBufferBuilder builder, StringOffset P6Offset) { builder.AddOffset(2, P6Offset.Value, 0); }
-  public static void AddP7(FlatBufferBuilder builder, StringOffset P7Offset) { builder.AddOffset(3, P7Offset.Value, 0); }
-  public static void AddP8(FlatBufferBuilder builder, StringOffset P8Offset) { builder.AddOffset(4, P8Offset.Value, 0); }
-  public static void AddP9(FlatBufferBuilder builder, int P9) { builder.AddInt(5, P9, 0); }
-  public static void AddP10(FlatBufferBuilder builder, int P10) { builder.AddInt(6, P10, 0); }
-  public static void AddMISSIONS(FlatBufferBuilder builder, VectorOffset MISSIONSOffset) { builder.AddOffset(7, MISSIONSOffset.Value, 0); }
+  public static void AddSTANDARD(FlatBufferBuilder builder, mtiStandard STANDARD) { builder.AddSbyte(1, (sbyte)STANDARD, 0); }
+  public static void AddP3(FlatBufferBuilder builder, StringOffset P3Offset) { builder.AddOffset(2, P3Offset.Value, 0); }
+  public static void AddP6(FlatBufferBuilder builder, StringOffset P6Offset) { builder.AddOffset(3, P6Offset.Value, 0); }
+  public static void AddP7(FlatBufferBuilder builder, StringOffset P7Offset) { builder.AddOffset(4, P7Offset.Value, 0); }
+  public static void AddP8(FlatBufferBuilder builder, StringOffset P8Offset) { builder.AddOffset(5, P8Offset.Value, 0); }
+  public static void AddP9(FlatBufferBuilder builder, uint P9) { builder.AddUint(6, P9, 0); }
+  public static void AddP10(FlatBufferBuilder builder, ushort P10) { builder.AddUshort(7, P10, 0); }
+  public static void AddMISSIONS(FlatBufferBuilder builder, VectorOffset MISSIONSOffset) { builder.AddOffset(8, MISSIONSOffset.Value, 0); }
   public static VectorOffset CreateMISSIONSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateMISSIONSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateMISSIONSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateMISSIONSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartMISSIONSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddDWELLS(FlatBufferBuilder builder, VectorOffset DWELLSOffset) { builder.AddOffset(8, DWELLSOffset.Value, 0); }
+  public static void AddDWELLS(FlatBufferBuilder builder, VectorOffset DWELLSOffset) { builder.AddOffset(9, DWELLSOffset.Value, 0); }
   public static VectorOffset CreateDWELLSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateDWELLSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateDWELLSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateDWELLSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartDWELLSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddHRRS(FlatBufferBuilder builder, VectorOffset HRRSOffset) { builder.AddOffset(9, HRRSOffset.Value, 0); }
+  public static void AddHRRS(FlatBufferBuilder builder, VectorOffset HRRSOffset) { builder.AddOffset(10, HRRSOffset.Value, 0); }
   public static VectorOffset CreateHRRSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateHRRSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateHRRSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateHRRSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartHRRSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddJOB_DEFS(FlatBufferBuilder builder, VectorOffset JOB_DEFSOffset) { builder.AddOffset(10, JOB_DEFSOffset.Value, 0); }
+  public static void AddJOB_DEFS(FlatBufferBuilder builder, VectorOffset JOB_DEFSOffset) { builder.AddOffset(11, JOB_DEFSOffset.Value, 0); }
   public static VectorOffset CreateJOB_DEFSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateJOB_DEFSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateJOB_DEFSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateJOB_DEFSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartJOB_DEFSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddFREE_TEXTS(FlatBufferBuilder builder, VectorOffset FREE_TEXTSOffset) { builder.AddOffset(11, FREE_TEXTSOffset.Value, 0); }
+  public static void AddFREE_TEXTS(FlatBufferBuilder builder, VectorOffset FREE_TEXTSOffset) { builder.AddOffset(12, FREE_TEXTSOffset.Value, 0); }
   public static VectorOffset CreateFREE_TEXTSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateFREE_TEXTSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateFREE_TEXTSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateFREE_TEXTSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartFREE_TEXTSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddPLATFORM_LOCS(FlatBufferBuilder builder, VectorOffset PLATFORM_LOCSOffset) { builder.AddOffset(12, PLATFORM_LOCSOffset.Value, 0); }
+  public static void AddPLATFORM_LOCS(FlatBufferBuilder builder, VectorOffset PLATFORM_LOCSOffset) { builder.AddOffset(13, PLATFORM_LOCSOffset.Value, 0); }
   public static VectorOffset CreatePLATFORM_LOCSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreatePLATFORM_LOCSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreatePLATFORM_LOCSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreatePLATFORM_LOCSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartPLATFORM_LOCSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddJOB_REQUESTS(FlatBufferBuilder builder, VectorOffset JOB_REQUESTSOffset) { builder.AddOffset(13, JOB_REQUESTSOffset.Value, 0); }
+  public static void AddJOB_REQUESTS(FlatBufferBuilder builder, VectorOffset JOB_REQUESTSOffset) { builder.AddOffset(14, JOB_REQUESTSOffset.Value, 0); }
   public static VectorOffset CreateJOB_REQUESTSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateJOB_REQUESTSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateJOB_REQUESTSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
@@ -167,6 +186,7 @@ public struct MTI : IFlatbufferObject
   }
   public void UnPackTo(MTIT _o) {
     _o.ID = this.ID;
+    _o.STANDARD = this.STANDARD;
     _o.P3 = this.P3;
     _o.P6 = this.P6;
     _o.P7 = this.P7;
@@ -240,6 +260,7 @@ public struct MTI : IFlatbufferObject
     return CreateMTI(
       builder,
       _ID,
+      _o.STANDARD,
       _P3,
       _P6,
       _P7,
@@ -259,12 +280,13 @@ public struct MTI : IFlatbufferObject
 public class MTIT
 {
   public string ID { get; set; }
+  public mtiStandard STANDARD { get; set; }
   public string P3 { get; set; }
   public string P6 { get; set; }
   public string P7 { get; set; }
   public string P8 { get; set; }
-  public int P9 { get; set; }
-  public int P10 { get; set; }
+  public uint P9 { get; set; }
+  public ushort P10 { get; set; }
   public List<string> MISSIONS { get; set; }
   public List<string> DWELLS { get; set; }
   public List<string> HRRS { get; set; }
@@ -275,6 +297,7 @@ public class MTIT
 
   public MTIT() {
     this.ID = null;
+    this.STANDARD = mtiStandard.STANAG_4607;
     this.P3 = null;
     this.P6 = null;
     this.P7 = null;
@@ -306,19 +329,20 @@ static public class MTIVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*ID*/, false)
-      && verifier.VerifyString(tablePos, 6 /*P3*/, false)
-      && verifier.VerifyString(tablePos, 8 /*P6*/, false)
-      && verifier.VerifyString(tablePos, 10 /*P7*/, false)
-      && verifier.VerifyString(tablePos, 12 /*P8*/, false)
-      && verifier.VerifyField(tablePos, 14 /*P9*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 16 /*P10*/, 4 /*int*/, 4, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 18 /*MISSIONS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 20 /*DWELLS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 22 /*HRRS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 24 /*JOB_DEFS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 26 /*FREE_TEXTS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 28 /*PLATFORM_LOCS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 30 /*JOB_REQUESTS*/, false)
+      && verifier.VerifyField(tablePos, 6 /*STANDARD*/, 1 /*mtiStandard*/, 1, false)
+      && verifier.VerifyString(tablePos, 8 /*P3*/, false)
+      && verifier.VerifyString(tablePos, 10 /*P6*/, false)
+      && verifier.VerifyString(tablePos, 12 /*P7*/, false)
+      && verifier.VerifyString(tablePos, 14 /*P8*/, false)
+      && verifier.VerifyField(tablePos, 16 /*P9*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 18 /*P10*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 20 /*MISSIONS*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 22 /*DWELLS*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 24 /*HRRS*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 26 /*JOB_DEFS*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 28 /*FREE_TEXTS*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 30 /*PLATFORM_LOCS*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 32 /*JOB_REQUESTS*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

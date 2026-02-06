@@ -4,6 +4,8 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { eventCategory } from './eventCategory.js';
+import { eventResult } from './eventResult.js';
 
 
 /**
@@ -31,6 +33,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$OOE');
 }
 
+/**
+ * Unique identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,39 +43,57 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-DERIVED_FROM():string|null
-DERIVED_FROM(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-DERIVED_FROM(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Satellite catalog number
+ */
+SAT_NO():number {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
-DECLASSIFICATION_DATE():string|null
-DECLASSIFICATION_DATE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-DECLASSIFICATION_DATE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * International designator
+ */
+ORIG_OBJECT_ID():string|null
+ORIG_OBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ORIG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-DECLASSIFICATION_STRING():string|null
-DECLASSIFICATION_STRING(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-DECLASSIFICATION_STRING(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Source record this was derived from
+ */
+DERIVED_FROM():string|null
+DERIVED_FROM(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DERIVED_FROM(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-SAT_NO():number {
+/**
+ * Classification date (ISO 8601)
+ */
+DECLASSIFICATION_DATE():string|null
+DECLASSIFICATION_DATE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DECLASSIFICATION_DATE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-ORIG_OBJECT_ID():string|null
-ORIG_OBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ORIG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Classification marking
+ */
+DECLASSIFICATION_STRING():string|null
+DECLASSIFICATION_STRING(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DECLASSIFICATION_STRING(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Event time (ISO 8601)
+ */
 EVENT_TIME():string|null
 EVENT_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 EVENT_TIME(optionalEncoding?:any):string|Uint8Array|null {
@@ -78,6 +101,9 @@ EVENT_TIME(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Notes on event time accuracy
+ */
 EVENT_TIME_NOTES():string|null
 EVENT_TIME_NOTES(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 EVENT_TIME_NOTES(optionalEncoding?:any):string|Uint8Array|null {
@@ -85,283 +111,366 @@ EVENT_TIME_NOTES(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-OPERATOR_ORG_ID():string|null
-OPERATOR_ORG_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-OPERATOR_ORG_ID(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Event category
+ */
+CATEGORY():eventCategory {
   const offset = this.bb!.__offset(this.bb_pos, 20);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : eventCategory.ANOMALY;
 }
 
-OWNER_ORG_ID():string|null
-OWNER_ORG_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-OWNER_ORG_ID(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Event result/outcome
+ */
+RESULT():eventResult {
   const offset = this.bb!.__offset(this.bb_pos, 22);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : eventResult.TOTAL_LOSS;
 }
 
-LESSEE_ORG_ID():string|null
-LESSEE_ORG_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-LESSEE_ORG_ID(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Event type detail
+ */
+EVENT_TYPE():string|null
+EVENT_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EVENT_TYPE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-OPERATED_ON_BEHALF_OF_ORG_ID():string|null
-OPERATED_ON_BEHALF_OF_ORG_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-OPERATED_ON_BEHALF_OF_ORG_ID(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Operator organization identifier
+ */
+OPERATOR_ORG_ID():string|null
+OPERATOR_ORG_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OPERATOR_ORG_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-GEO_POSITION():number {
+/**
+ * Owner organization identifier
+ */
+OWNER_ORG_ID():string|null
+OWNER_ORG_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OWNER_ORG_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 28);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-PLANE_SLOT():string|null
-PLANE_SLOT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-PLANE_SLOT(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Lessee organization identifier
+ */
+LESSEE_ORG_ID():string|null
+LESSEE_ORG_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LESSEE_ORG_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 30);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-PLANE_NUMBER():string|null
-PLANE_NUMBER(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-PLANE_NUMBER(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Operated on behalf of organization
+ */
+OPERATED_ON_BEHALF_OF_ORG_ID():string|null
+OPERATED_ON_BEHALF_OF_ORG_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OPERATED_ON_BEHALF_OF_ORG_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-POSITION_STATUS():string|null
-POSITION_STATUS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-POSITION_STATUS(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * GEO longitude at event time (degrees east)
+ */
+GEO_POSITION():number {
   const offset = this.bb!.__offset(this.bb_pos, 34);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-UNTIL_TIME():string|null
-UNTIL_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-UNTIL_TIME(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Orbital plane slot
+ */
+PLANE_SLOT():string|null
+PLANE_SLOT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PLANE_SLOT(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 36);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-OFFICIAL_LOSS_DATE():string|null
-OFFICIAL_LOSS_DATE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-OFFICIAL_LOSS_DATE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Orbital plane number
+ */
+PLANE_NUMBER():string|null
+PLANE_NUMBER(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+PLANE_NUMBER(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 38);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-NET_AMOUNT():number {
+/**
+ * Position status at event time
+ */
+POSITION_STATUS():string|null
+POSITION_STATUS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+POSITION_STATUS(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 40);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-UNDERLYING_CAUSE():string|null
-UNDERLYING_CAUSE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-UNDERLYING_CAUSE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Time until expected recovery (ISO 8601)
+ */
+UNTIL_TIME():string|null
+UNTIL_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+UNTIL_TIME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 42);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-CAPABILITY_LOSS():number {
+/**
+ * Official loss date (ISO 8601)
+ */
+OFFICIAL_LOSS_DATE():string|null
+OFFICIAL_LOSS_DATE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OFFICIAL_LOSS_DATE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 44);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-CAPACITY_LOSS():number {
+/**
+ * Financial loss amount (USD)
+ */
+NET_AMOUNT():number {
   const offset = this.bb!.__offset(this.bb_pos, 46);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-INSURANCE_LOSS():number {
+/**
+ * Root cause description
+ */
+UNDERLYING_CAUSE():string|null
+UNDERLYING_CAUSE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+UNDERLYING_CAUSE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 48);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-THIRD_PARTY_INSURANCE_LOSS():number {
+/**
+ * Capability loss fraction (0-1)
+ */
+CAPABILITY_LOSS():number {
   const offset = this.bb!.__offset(this.bb_pos, 50);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-INJURED():number {
+/**
+ * Capacity loss fraction (0-1)
+ */
+CAPACITY_LOSS():number {
   const offset = this.bb!.__offset(this.bb_pos, 52);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-KILLED():number {
+/**
+ * Insurance loss amount (USD)
+ */
+INSURANCE_LOSS():number {
   const offset = this.bb!.__offset(this.bb_pos, 54);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-LIFE_LOST():number {
+/**
+ * Third-party insurance loss (USD)
+ */
+THIRD_PARTY_INSURANCE_LOSS():number {
   const offset = this.bb!.__offset(this.bb_pos, 56);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-AGE_AT_EVENT():number {
+/**
+ * Number of personnel injured
+ */
+INJURED():number {
   const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Number of fatalities
+ */
+KILLED():number {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Spacecraft age at event (years)
+ */
+AGE_AT_EVENT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Design life remaining at event (years)
+ */
+LIFE_LOST():number {
+  const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Flight phase achieved
+ */
 ACHIEVED_FLIGHT_PHASE():string|null
 ACHIEVED_FLIGHT_PHASE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ACHIEVED_FLIGHT_PHASE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 60);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-OCCURRENCE_FLIGHT_PHASE():string|null
-OCCURRENCE_FLIGHT_PHASE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-OCCURRENCE_FLIGHT_PHASE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 62);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-STAGE_AT_FAULT():string|null
-STAGE_AT_FAULT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-STAGE_AT_FAULT(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 64);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-EQUIPMENT_AT_FAULT():string|null
-EQUIPMENT_AT_FAULT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-EQUIPMENT_AT_FAULT(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 66);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-EQUIPMENT_TYPE_AT_FAULT():string|null
-EQUIPMENT_TYPE_AT_FAULT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-EQUIPMENT_TYPE_AT_FAULT(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Flight phase at occurrence
+ */
+OCCURRENCE_FLIGHT_PHASE():string|null
+OCCURRENCE_FLIGHT_PHASE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OCCURRENCE_FLIGHT_PHASE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 68);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-EQUIPMENT_PART_AT_FAULT():string|null
-EQUIPMENT_PART_AT_FAULT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-EQUIPMENT_PART_AT_FAULT(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Stage at fault
+ */
+STAGE_AT_FAULT():string|null
+STAGE_AT_FAULT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+STAGE_AT_FAULT(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 70);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-CONSEQUENTIAL_EQUIPMENT_FAILURE():string|null
-CONSEQUENTIAL_EQUIPMENT_FAILURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-CONSEQUENTIAL_EQUIPMENT_FAILURE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Equipment at fault
+ */
+EQUIPMENT_AT_FAULT():string|null
+EQUIPMENT_AT_FAULT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EQUIPMENT_AT_FAULT(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 72);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-INCLINED():boolean {
+/**
+ * Equipment type at fault
+ */
+EQUIPMENT_TYPE_AT_FAULT():string|null
+EQUIPMENT_TYPE_AT_FAULT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EQUIPMENT_TYPE_AT_FAULT(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 74);
-  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-DESCRIPTION():string|null
-DESCRIPTION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-DESCRIPTION(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Equipment part at fault
+ */
+EQUIPMENT_PART_AT_FAULT():string|null
+EQUIPMENT_PART_AT_FAULT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EQUIPMENT_PART_AT_FAULT(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 76);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-REMARKS():string|null
-REMARKS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-REMARKS(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Consequential equipment failure
+ */
+CONSEQUENTIAL_EQUIPMENT_FAILURE():string|null
+CONSEQUENTIAL_EQUIPMENT_FAILURE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CONSEQUENTIAL_EQUIPMENT_FAILURE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 78);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-INSURANCE_LOSS_NOTES():string|null
-INSURANCE_LOSS_NOTES(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-INSURANCE_LOSS_NOTES(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * True if orbit is inclined
+ */
+INCLINED():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 80);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
-CAPABILITY_LOSS_NOTES():string|null
-CAPABILITY_LOSS_NOTES(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-CAPABILITY_LOSS_NOTES(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Event description
+ */
+DESCRIPTION():string|null
+DESCRIPTION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DESCRIPTION(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 82);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-INSURANCE_CARRIED_NOTES():string|null
-INSURANCE_CARRIED_NOTES(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-INSURANCE_CARRIED_NOTES(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Additional remarks
+ */
+REMARKS():string|null
+REMARKS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+REMARKS(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 84);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-EQUIPMENT_CAUSING_LOSS_NOTES():string|null
-EQUIPMENT_CAUSING_LOSS_NOTES(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-EQUIPMENT_CAUSING_LOSS_NOTES(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Object status after event
+ */
+OBJECT_STATUS():string|null
+OBJECT_STATUS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OBJECT_STATUS(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 86);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-EVENT_TYPE():string|null
-EVENT_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-EVENT_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Satellite position after event
+ */
+SATELLITE_POSITION():string|null
+SATELLITE_POSITION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SATELLITE_POSITION(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 88);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-EVENT_RESULT():string|null
-EVENT_RESULT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-EVENT_RESULT(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * On-orbit reference
+ */
+ON_ORBIT():string|null
+ON_ORBIT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ON_ORBIT(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 90);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-OBJECT_STATUS():string|null
-OBJECT_STATUS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-OBJECT_STATUS(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 92);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-SATELLITE_POSITION():string|null
-SATELLITE_POSITION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-SATELLITE_POSITION(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 94);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-ON_ORBIT():string|null
-ON_ORBIT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ON_ORBIT(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 96);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
 static startOOE(builder:flatbuffers.Builder) {
-  builder.startObject(47);
+  builder.startObject(44);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
   builder.addFieldOffset(0, IDOffset, 0);
 }
 
-static addDerivedFrom(builder:flatbuffers.Builder, DERIVED_FROMOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, DERIVED_FROMOffset, 0);
-}
-
-static addDeclassificationDate(builder:flatbuffers.Builder, DECLASSIFICATION_DATEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, DECLASSIFICATION_DATEOffset, 0);
-}
-
-static addDeclassificationString(builder:flatbuffers.Builder, DECLASSIFICATION_STRINGOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, DECLASSIFICATION_STRINGOffset, 0);
-}
-
 static addSatNo(builder:flatbuffers.Builder, SAT_NO:number) {
-  builder.addFieldInt32(4, SAT_NO, 0);
+  builder.addFieldInt32(1, SAT_NO, 0);
 }
 
 static addOrigObjectId(builder:flatbuffers.Builder, ORIG_OBJECT_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, ORIG_OBJECT_IDOffset, 0);
+  builder.addFieldOffset(2, ORIG_OBJECT_IDOffset, 0);
+}
+
+static addDerivedFrom(builder:flatbuffers.Builder, DERIVED_FROMOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(3, DERIVED_FROMOffset, 0);
+}
+
+static addDeclassificationDate(builder:flatbuffers.Builder, DECLASSIFICATION_DATEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(4, DECLASSIFICATION_DATEOffset, 0);
+}
+
+static addDeclassificationString(builder:flatbuffers.Builder, DECLASSIFICATION_STRINGOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, DECLASSIFICATION_STRINGOffset, 0);
 }
 
 static addEventTime(builder:flatbuffers.Builder, EVENT_TIMEOffset:flatbuffers.Offset) {
@@ -372,160 +481,148 @@ static addEventTimeNotes(builder:flatbuffers.Builder, EVENT_TIME_NOTESOffset:fla
   builder.addFieldOffset(7, EVENT_TIME_NOTESOffset, 0);
 }
 
-static addOperatorOrgId(builder:flatbuffers.Builder, OPERATOR_ORG_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(8, OPERATOR_ORG_IDOffset, 0);
+static addCategory(builder:flatbuffers.Builder, CATEGORY:eventCategory) {
+  builder.addFieldInt8(8, CATEGORY, eventCategory.ANOMALY);
 }
 
-static addOwnerOrgId(builder:flatbuffers.Builder, OWNER_ORG_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(9, OWNER_ORG_IDOffset, 0);
-}
-
-static addLesseeOrgId(builder:flatbuffers.Builder, LESSEE_ORG_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(10, LESSEE_ORG_IDOffset, 0);
-}
-
-static addOperatedOnBehalfOfOrgId(builder:flatbuffers.Builder, OPERATED_ON_BEHALF_OF_ORG_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(11, OPERATED_ON_BEHALF_OF_ORG_IDOffset, 0);
-}
-
-static addGeoPosition(builder:flatbuffers.Builder, GEO_POSITION:number) {
-  builder.addFieldFloat64(12, GEO_POSITION, 0.0);
-}
-
-static addPlaneSlot(builder:flatbuffers.Builder, PLANE_SLOTOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(13, PLANE_SLOTOffset, 0);
-}
-
-static addPlaneNumber(builder:flatbuffers.Builder, PLANE_NUMBEROffset:flatbuffers.Offset) {
-  builder.addFieldOffset(14, PLANE_NUMBEROffset, 0);
-}
-
-static addPositionStatus(builder:flatbuffers.Builder, POSITION_STATUSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(15, POSITION_STATUSOffset, 0);
-}
-
-static addUntilTime(builder:flatbuffers.Builder, UNTIL_TIMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(16, UNTIL_TIMEOffset, 0);
-}
-
-static addOfficialLossDate(builder:flatbuffers.Builder, OFFICIAL_LOSS_DATEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(17, OFFICIAL_LOSS_DATEOffset, 0);
-}
-
-static addNetAmount(builder:flatbuffers.Builder, NET_AMOUNT:number) {
-  builder.addFieldFloat64(18, NET_AMOUNT, 0.0);
-}
-
-static addUnderlyingCause(builder:flatbuffers.Builder, UNDERLYING_CAUSEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(19, UNDERLYING_CAUSEOffset, 0);
-}
-
-static addCapabilityLoss(builder:flatbuffers.Builder, CAPABILITY_LOSS:number) {
-  builder.addFieldFloat64(20, CAPABILITY_LOSS, 0.0);
-}
-
-static addCapacityLoss(builder:flatbuffers.Builder, CAPACITY_LOSS:number) {
-  builder.addFieldFloat64(21, CAPACITY_LOSS, 0.0);
-}
-
-static addInsuranceLoss(builder:flatbuffers.Builder, INSURANCE_LOSS:number) {
-  builder.addFieldFloat64(22, INSURANCE_LOSS, 0.0);
-}
-
-static addThirdPartyInsuranceLoss(builder:flatbuffers.Builder, THIRD_PARTY_INSURANCE_LOSS:number) {
-  builder.addFieldFloat64(23, THIRD_PARTY_INSURANCE_LOSS, 0.0);
-}
-
-static addInjured(builder:flatbuffers.Builder, INJURED:number) {
-  builder.addFieldInt32(24, INJURED, 0);
-}
-
-static addKilled(builder:flatbuffers.Builder, KILLED:number) {
-  builder.addFieldInt32(25, KILLED, 0);
-}
-
-static addLifeLost(builder:flatbuffers.Builder, LIFE_LOST:number) {
-  builder.addFieldFloat64(26, LIFE_LOST, 0.0);
-}
-
-static addAgeAtEvent(builder:flatbuffers.Builder, AGE_AT_EVENT:number) {
-  builder.addFieldFloat64(27, AGE_AT_EVENT, 0.0);
-}
-
-static addAchievedFlightPhase(builder:flatbuffers.Builder, ACHIEVED_FLIGHT_PHASEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(28, ACHIEVED_FLIGHT_PHASEOffset, 0);
-}
-
-static addOccurrenceFlightPhase(builder:flatbuffers.Builder, OCCURRENCE_FLIGHT_PHASEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(29, OCCURRENCE_FLIGHT_PHASEOffset, 0);
-}
-
-static addStageAtFault(builder:flatbuffers.Builder, STAGE_AT_FAULTOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(30, STAGE_AT_FAULTOffset, 0);
-}
-
-static addEquipmentAtFault(builder:flatbuffers.Builder, EQUIPMENT_AT_FAULTOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(31, EQUIPMENT_AT_FAULTOffset, 0);
-}
-
-static addEquipmentTypeAtFault(builder:flatbuffers.Builder, EQUIPMENT_TYPE_AT_FAULTOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(32, EQUIPMENT_TYPE_AT_FAULTOffset, 0);
-}
-
-static addEquipmentPartAtFault(builder:flatbuffers.Builder, EQUIPMENT_PART_AT_FAULTOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(33, EQUIPMENT_PART_AT_FAULTOffset, 0);
-}
-
-static addConsequentialEquipmentFailure(builder:flatbuffers.Builder, CONSEQUENTIAL_EQUIPMENT_FAILUREOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(34, CONSEQUENTIAL_EQUIPMENT_FAILUREOffset, 0);
-}
-
-static addInclined(builder:flatbuffers.Builder, INCLINED:boolean) {
-  builder.addFieldInt8(35, +INCLINED, +false);
-}
-
-static addDescription(builder:flatbuffers.Builder, DESCRIPTIONOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(36, DESCRIPTIONOffset, 0);
-}
-
-static addRemarks(builder:flatbuffers.Builder, REMARKSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(37, REMARKSOffset, 0);
-}
-
-static addInsuranceLossNotes(builder:flatbuffers.Builder, INSURANCE_LOSS_NOTESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(38, INSURANCE_LOSS_NOTESOffset, 0);
-}
-
-static addCapabilityLossNotes(builder:flatbuffers.Builder, CAPABILITY_LOSS_NOTESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(39, CAPABILITY_LOSS_NOTESOffset, 0);
-}
-
-static addInsuranceCarriedNotes(builder:flatbuffers.Builder, INSURANCE_CARRIED_NOTESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(40, INSURANCE_CARRIED_NOTESOffset, 0);
-}
-
-static addEquipmentCausingLossNotes(builder:flatbuffers.Builder, EQUIPMENT_CAUSING_LOSS_NOTESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(41, EQUIPMENT_CAUSING_LOSS_NOTESOffset, 0);
+static addResult(builder:flatbuffers.Builder, RESULT:eventResult) {
+  builder.addFieldInt8(9, RESULT, eventResult.TOTAL_LOSS);
 }
 
 static addEventType(builder:flatbuffers.Builder, EVENT_TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(42, EVENT_TYPEOffset, 0);
+  builder.addFieldOffset(10, EVENT_TYPEOffset, 0);
 }
 
-static addEventResult(builder:flatbuffers.Builder, EVENT_RESULTOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(43, EVENT_RESULTOffset, 0);
+static addOperatorOrgId(builder:flatbuffers.Builder, OPERATOR_ORG_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, OPERATOR_ORG_IDOffset, 0);
+}
+
+static addOwnerOrgId(builder:flatbuffers.Builder, OWNER_ORG_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(12, OWNER_ORG_IDOffset, 0);
+}
+
+static addLesseeOrgId(builder:flatbuffers.Builder, LESSEE_ORG_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, LESSEE_ORG_IDOffset, 0);
+}
+
+static addOperatedOnBehalfOfOrgId(builder:flatbuffers.Builder, OPERATED_ON_BEHALF_OF_ORG_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, OPERATED_ON_BEHALF_OF_ORG_IDOffset, 0);
+}
+
+static addGeoPosition(builder:flatbuffers.Builder, GEO_POSITION:number) {
+  builder.addFieldFloat64(15, GEO_POSITION, 0.0);
+}
+
+static addPlaneSlot(builder:flatbuffers.Builder, PLANE_SLOTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, PLANE_SLOTOffset, 0);
+}
+
+static addPlaneNumber(builder:flatbuffers.Builder, PLANE_NUMBEROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, PLANE_NUMBEROffset, 0);
+}
+
+static addPositionStatus(builder:flatbuffers.Builder, POSITION_STATUSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(18, POSITION_STATUSOffset, 0);
+}
+
+static addUntilTime(builder:flatbuffers.Builder, UNTIL_TIMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(19, UNTIL_TIMEOffset, 0);
+}
+
+static addOfficialLossDate(builder:flatbuffers.Builder, OFFICIAL_LOSS_DATEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(20, OFFICIAL_LOSS_DATEOffset, 0);
+}
+
+static addNetAmount(builder:flatbuffers.Builder, NET_AMOUNT:number) {
+  builder.addFieldFloat64(21, NET_AMOUNT, 0.0);
+}
+
+static addUnderlyingCause(builder:flatbuffers.Builder, UNDERLYING_CAUSEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(22, UNDERLYING_CAUSEOffset, 0);
+}
+
+static addCapabilityLoss(builder:flatbuffers.Builder, CAPABILITY_LOSS:number) {
+  builder.addFieldFloat64(23, CAPABILITY_LOSS, 0.0);
+}
+
+static addCapacityLoss(builder:flatbuffers.Builder, CAPACITY_LOSS:number) {
+  builder.addFieldFloat64(24, CAPACITY_LOSS, 0.0);
+}
+
+static addInsuranceLoss(builder:flatbuffers.Builder, INSURANCE_LOSS:number) {
+  builder.addFieldFloat64(25, INSURANCE_LOSS, 0.0);
+}
+
+static addThirdPartyInsuranceLoss(builder:flatbuffers.Builder, THIRD_PARTY_INSURANCE_LOSS:number) {
+  builder.addFieldFloat64(26, THIRD_PARTY_INSURANCE_LOSS, 0.0);
+}
+
+static addInjured(builder:flatbuffers.Builder, INJURED:number) {
+  builder.addFieldInt16(27, INJURED, 0);
+}
+
+static addKilled(builder:flatbuffers.Builder, KILLED:number) {
+  builder.addFieldInt16(28, KILLED, 0);
+}
+
+static addAgeAtEvent(builder:flatbuffers.Builder, AGE_AT_EVENT:number) {
+  builder.addFieldFloat64(29, AGE_AT_EVENT, 0.0);
+}
+
+static addLifeLost(builder:flatbuffers.Builder, LIFE_LOST:number) {
+  builder.addFieldFloat64(30, LIFE_LOST, 0.0);
+}
+
+static addAchievedFlightPhase(builder:flatbuffers.Builder, ACHIEVED_FLIGHT_PHASEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(31, ACHIEVED_FLIGHT_PHASEOffset, 0);
+}
+
+static addOccurrenceFlightPhase(builder:flatbuffers.Builder, OCCURRENCE_FLIGHT_PHASEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(32, OCCURRENCE_FLIGHT_PHASEOffset, 0);
+}
+
+static addStageAtFault(builder:flatbuffers.Builder, STAGE_AT_FAULTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(33, STAGE_AT_FAULTOffset, 0);
+}
+
+static addEquipmentAtFault(builder:flatbuffers.Builder, EQUIPMENT_AT_FAULTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(34, EQUIPMENT_AT_FAULTOffset, 0);
+}
+
+static addEquipmentTypeAtFault(builder:flatbuffers.Builder, EQUIPMENT_TYPE_AT_FAULTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(35, EQUIPMENT_TYPE_AT_FAULTOffset, 0);
+}
+
+static addEquipmentPartAtFault(builder:flatbuffers.Builder, EQUIPMENT_PART_AT_FAULTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(36, EQUIPMENT_PART_AT_FAULTOffset, 0);
+}
+
+static addConsequentialEquipmentFailure(builder:flatbuffers.Builder, CONSEQUENTIAL_EQUIPMENT_FAILUREOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(37, CONSEQUENTIAL_EQUIPMENT_FAILUREOffset, 0);
+}
+
+static addInclined(builder:flatbuffers.Builder, INCLINED:boolean) {
+  builder.addFieldInt8(38, +INCLINED, +false);
+}
+
+static addDescription(builder:flatbuffers.Builder, DESCRIPTIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(39, DESCRIPTIONOffset, 0);
+}
+
+static addRemarks(builder:flatbuffers.Builder, REMARKSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(40, REMARKSOffset, 0);
 }
 
 static addObjectStatus(builder:flatbuffers.Builder, OBJECT_STATUSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(44, OBJECT_STATUSOffset, 0);
+  builder.addFieldOffset(41, OBJECT_STATUSOffset, 0);
 }
 
 static addSatellitePosition(builder:flatbuffers.Builder, SATELLITE_POSITIONOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(45, SATELLITE_POSITIONOffset, 0);
+  builder.addFieldOffset(42, SATELLITE_POSITIONOffset, 0);
 }
 
 static addOnOrbit(builder:flatbuffers.Builder, ON_ORBITOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(46, ON_ORBITOffset, 0);
+  builder.addFieldOffset(43, ON_ORBITOffset, 0);
 }
 
 static endOOE(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -541,16 +638,19 @@ static finishSizePrefixedOOEBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$OOE', true);
 }
 
-static createOOE(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, DERIVED_FROMOffset:flatbuffers.Offset, DECLASSIFICATION_DATEOffset:flatbuffers.Offset, DECLASSIFICATION_STRINGOffset:flatbuffers.Offset, SAT_NO:number, ORIG_OBJECT_IDOffset:flatbuffers.Offset, EVENT_TIMEOffset:flatbuffers.Offset, EVENT_TIME_NOTESOffset:flatbuffers.Offset, OPERATOR_ORG_IDOffset:flatbuffers.Offset, OWNER_ORG_IDOffset:flatbuffers.Offset, LESSEE_ORG_IDOffset:flatbuffers.Offset, OPERATED_ON_BEHALF_OF_ORG_IDOffset:flatbuffers.Offset, GEO_POSITION:number, PLANE_SLOTOffset:flatbuffers.Offset, PLANE_NUMBEROffset:flatbuffers.Offset, POSITION_STATUSOffset:flatbuffers.Offset, UNTIL_TIMEOffset:flatbuffers.Offset, OFFICIAL_LOSS_DATEOffset:flatbuffers.Offset, NET_AMOUNT:number, UNDERLYING_CAUSEOffset:flatbuffers.Offset, CAPABILITY_LOSS:number, CAPACITY_LOSS:number, INSURANCE_LOSS:number, THIRD_PARTY_INSURANCE_LOSS:number, INJURED:number, KILLED:number, LIFE_LOST:number, AGE_AT_EVENT:number, ACHIEVED_FLIGHT_PHASEOffset:flatbuffers.Offset, OCCURRENCE_FLIGHT_PHASEOffset:flatbuffers.Offset, STAGE_AT_FAULTOffset:flatbuffers.Offset, EQUIPMENT_AT_FAULTOffset:flatbuffers.Offset, EQUIPMENT_TYPE_AT_FAULTOffset:flatbuffers.Offset, EQUIPMENT_PART_AT_FAULTOffset:flatbuffers.Offset, CONSEQUENTIAL_EQUIPMENT_FAILUREOffset:flatbuffers.Offset, INCLINED:boolean, DESCRIPTIONOffset:flatbuffers.Offset, REMARKSOffset:flatbuffers.Offset, INSURANCE_LOSS_NOTESOffset:flatbuffers.Offset, CAPABILITY_LOSS_NOTESOffset:flatbuffers.Offset, INSURANCE_CARRIED_NOTESOffset:flatbuffers.Offset, EQUIPMENT_CAUSING_LOSS_NOTESOffset:flatbuffers.Offset, EVENT_TYPEOffset:flatbuffers.Offset, EVENT_RESULTOffset:flatbuffers.Offset, OBJECT_STATUSOffset:flatbuffers.Offset, SATELLITE_POSITIONOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createOOE(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, SAT_NO:number, ORIG_OBJECT_IDOffset:flatbuffers.Offset, DERIVED_FROMOffset:flatbuffers.Offset, DECLASSIFICATION_DATEOffset:flatbuffers.Offset, DECLASSIFICATION_STRINGOffset:flatbuffers.Offset, EVENT_TIMEOffset:flatbuffers.Offset, EVENT_TIME_NOTESOffset:flatbuffers.Offset, CATEGORY:eventCategory, RESULT:eventResult, EVENT_TYPEOffset:flatbuffers.Offset, OPERATOR_ORG_IDOffset:flatbuffers.Offset, OWNER_ORG_IDOffset:flatbuffers.Offset, LESSEE_ORG_IDOffset:flatbuffers.Offset, OPERATED_ON_BEHALF_OF_ORG_IDOffset:flatbuffers.Offset, GEO_POSITION:number, PLANE_SLOTOffset:flatbuffers.Offset, PLANE_NUMBEROffset:flatbuffers.Offset, POSITION_STATUSOffset:flatbuffers.Offset, UNTIL_TIMEOffset:flatbuffers.Offset, OFFICIAL_LOSS_DATEOffset:flatbuffers.Offset, NET_AMOUNT:number, UNDERLYING_CAUSEOffset:flatbuffers.Offset, CAPABILITY_LOSS:number, CAPACITY_LOSS:number, INSURANCE_LOSS:number, THIRD_PARTY_INSURANCE_LOSS:number, INJURED:number, KILLED:number, AGE_AT_EVENT:number, LIFE_LOST:number, ACHIEVED_FLIGHT_PHASEOffset:flatbuffers.Offset, OCCURRENCE_FLIGHT_PHASEOffset:flatbuffers.Offset, STAGE_AT_FAULTOffset:flatbuffers.Offset, EQUIPMENT_AT_FAULTOffset:flatbuffers.Offset, EQUIPMENT_TYPE_AT_FAULTOffset:flatbuffers.Offset, EQUIPMENT_PART_AT_FAULTOffset:flatbuffers.Offset, CONSEQUENTIAL_EQUIPMENT_FAILUREOffset:flatbuffers.Offset, INCLINED:boolean, DESCRIPTIONOffset:flatbuffers.Offset, REMARKSOffset:flatbuffers.Offset, OBJECT_STATUSOffset:flatbuffers.Offset, SATELLITE_POSITIONOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset):flatbuffers.Offset {
   OOE.startOOE(builder);
   OOE.addId(builder, IDOffset);
+  OOE.addSatNo(builder, SAT_NO);
+  OOE.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
   OOE.addDerivedFrom(builder, DERIVED_FROMOffset);
   OOE.addDeclassificationDate(builder, DECLASSIFICATION_DATEOffset);
   OOE.addDeclassificationString(builder, DECLASSIFICATION_STRINGOffset);
-  OOE.addSatNo(builder, SAT_NO);
-  OOE.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
   OOE.addEventTime(builder, EVENT_TIMEOffset);
   OOE.addEventTimeNotes(builder, EVENT_TIME_NOTESOffset);
+  OOE.addCategory(builder, CATEGORY);
+  OOE.addResult(builder, RESULT);
+  OOE.addEventType(builder, EVENT_TYPEOffset);
   OOE.addOperatorOrgId(builder, OPERATOR_ORG_IDOffset);
   OOE.addOwnerOrgId(builder, OWNER_ORG_IDOffset);
   OOE.addLesseeOrgId(builder, LESSEE_ORG_IDOffset);
@@ -569,8 +669,8 @@ static createOOE(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, DERIV
   OOE.addThirdPartyInsuranceLoss(builder, THIRD_PARTY_INSURANCE_LOSS);
   OOE.addInjured(builder, INJURED);
   OOE.addKilled(builder, KILLED);
-  OOE.addLifeLost(builder, LIFE_LOST);
   OOE.addAgeAtEvent(builder, AGE_AT_EVENT);
+  OOE.addLifeLost(builder, LIFE_LOST);
   OOE.addAchievedFlightPhase(builder, ACHIEVED_FLIGHT_PHASEOffset);
   OOE.addOccurrenceFlightPhase(builder, OCCURRENCE_FLIGHT_PHASEOffset);
   OOE.addStageAtFault(builder, STAGE_AT_FAULTOffset);
@@ -581,12 +681,6 @@ static createOOE(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, DERIV
   OOE.addInclined(builder, INCLINED);
   OOE.addDescription(builder, DESCRIPTIONOffset);
   OOE.addRemarks(builder, REMARKSOffset);
-  OOE.addInsuranceLossNotes(builder, INSURANCE_LOSS_NOTESOffset);
-  OOE.addCapabilityLossNotes(builder, CAPABILITY_LOSS_NOTESOffset);
-  OOE.addInsuranceCarriedNotes(builder, INSURANCE_CARRIED_NOTESOffset);
-  OOE.addEquipmentCausingLossNotes(builder, EQUIPMENT_CAUSING_LOSS_NOTESOffset);
-  OOE.addEventType(builder, EVENT_TYPEOffset);
-  OOE.addEventResult(builder, EVENT_RESULTOffset);
   OOE.addObjectStatus(builder, OBJECT_STATUSOffset);
   OOE.addSatellitePosition(builder, SATELLITE_POSITIONOffset);
   OOE.addOnOrbit(builder, ON_ORBITOffset);
@@ -596,13 +690,16 @@ static createOOE(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, DERIV
 unpack(): OOET {
   return new OOET(
     this.ID(),
+    this.SAT_NO(),
+    this.ORIG_OBJECT_ID(),
     this.DERIVED_FROM(),
     this.DECLASSIFICATION_DATE(),
     this.DECLASSIFICATION_STRING(),
-    this.SAT_NO(),
-    this.ORIG_OBJECT_ID(),
     this.EVENT_TIME(),
     this.EVENT_TIME_NOTES(),
+    this.CATEGORY(),
+    this.RESULT(),
+    this.EVENT_TYPE(),
     this.OPERATOR_ORG_ID(),
     this.OWNER_ORG_ID(),
     this.LESSEE_ORG_ID(),
@@ -621,8 +718,8 @@ unpack(): OOET {
     this.THIRD_PARTY_INSURANCE_LOSS(),
     this.INJURED(),
     this.KILLED(),
-    this.LIFE_LOST(),
     this.AGE_AT_EVENT(),
+    this.LIFE_LOST(),
     this.ACHIEVED_FLIGHT_PHASE(),
     this.OCCURRENCE_FLIGHT_PHASE(),
     this.STAGE_AT_FAULT(),
@@ -633,12 +730,6 @@ unpack(): OOET {
     this.INCLINED(),
     this.DESCRIPTION(),
     this.REMARKS(),
-    this.INSURANCE_LOSS_NOTES(),
-    this.CAPABILITY_LOSS_NOTES(),
-    this.INSURANCE_CARRIED_NOTES(),
-    this.EQUIPMENT_CAUSING_LOSS_NOTES(),
-    this.EVENT_TYPE(),
-    this.EVENT_RESULT(),
     this.OBJECT_STATUS(),
     this.SATELLITE_POSITION(),
     this.ON_ORBIT()
@@ -648,13 +739,16 @@ unpack(): OOET {
 
 unpackTo(_o: OOET): void {
   _o.ID = this.ID();
+  _o.SAT_NO = this.SAT_NO();
+  _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID();
   _o.DERIVED_FROM = this.DERIVED_FROM();
   _o.DECLASSIFICATION_DATE = this.DECLASSIFICATION_DATE();
   _o.DECLASSIFICATION_STRING = this.DECLASSIFICATION_STRING();
-  _o.SAT_NO = this.SAT_NO();
-  _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID();
   _o.EVENT_TIME = this.EVENT_TIME();
   _o.EVENT_TIME_NOTES = this.EVENT_TIME_NOTES();
+  _o.CATEGORY = this.CATEGORY();
+  _o.RESULT = this.RESULT();
+  _o.EVENT_TYPE = this.EVENT_TYPE();
   _o.OPERATOR_ORG_ID = this.OPERATOR_ORG_ID();
   _o.OWNER_ORG_ID = this.OWNER_ORG_ID();
   _o.LESSEE_ORG_ID = this.LESSEE_ORG_ID();
@@ -673,8 +767,8 @@ unpackTo(_o: OOET): void {
   _o.THIRD_PARTY_INSURANCE_LOSS = this.THIRD_PARTY_INSURANCE_LOSS();
   _o.INJURED = this.INJURED();
   _o.KILLED = this.KILLED();
-  _o.LIFE_LOST = this.LIFE_LOST();
   _o.AGE_AT_EVENT = this.AGE_AT_EVENT();
+  _o.LIFE_LOST = this.LIFE_LOST();
   _o.ACHIEVED_FLIGHT_PHASE = this.ACHIEVED_FLIGHT_PHASE();
   _o.OCCURRENCE_FLIGHT_PHASE = this.OCCURRENCE_FLIGHT_PHASE();
   _o.STAGE_AT_FAULT = this.STAGE_AT_FAULT();
@@ -685,12 +779,6 @@ unpackTo(_o: OOET): void {
   _o.INCLINED = this.INCLINED();
   _o.DESCRIPTION = this.DESCRIPTION();
   _o.REMARKS = this.REMARKS();
-  _o.INSURANCE_LOSS_NOTES = this.INSURANCE_LOSS_NOTES();
-  _o.CAPABILITY_LOSS_NOTES = this.CAPABILITY_LOSS_NOTES();
-  _o.INSURANCE_CARRIED_NOTES = this.INSURANCE_CARRIED_NOTES();
-  _o.EQUIPMENT_CAUSING_LOSS_NOTES = this.EQUIPMENT_CAUSING_LOSS_NOTES();
-  _o.EVENT_TYPE = this.EVENT_TYPE();
-  _o.EVENT_RESULT = this.EVENT_RESULT();
   _o.OBJECT_STATUS = this.OBJECT_STATUS();
   _o.SATELLITE_POSITION = this.SATELLITE_POSITION();
   _o.ON_ORBIT = this.ON_ORBIT();
@@ -700,13 +788,16 @@ unpackTo(_o: OOET): void {
 export class OOET implements flatbuffers.IGeneratedObject {
 constructor(
   public ID: string|Uint8Array|null = null,
+  public SAT_NO: number = 0,
+  public ORIG_OBJECT_ID: string|Uint8Array|null = null,
   public DERIVED_FROM: string|Uint8Array|null = null,
   public DECLASSIFICATION_DATE: string|Uint8Array|null = null,
   public DECLASSIFICATION_STRING: string|Uint8Array|null = null,
-  public SAT_NO: number = 0,
-  public ORIG_OBJECT_ID: string|Uint8Array|null = null,
   public EVENT_TIME: string|Uint8Array|null = null,
   public EVENT_TIME_NOTES: string|Uint8Array|null = null,
+  public CATEGORY: eventCategory = eventCategory.ANOMALY,
+  public RESULT: eventResult = eventResult.TOTAL_LOSS,
+  public EVENT_TYPE: string|Uint8Array|null = null,
   public OPERATOR_ORG_ID: string|Uint8Array|null = null,
   public OWNER_ORG_ID: string|Uint8Array|null = null,
   public LESSEE_ORG_ID: string|Uint8Array|null = null,
@@ -725,8 +816,8 @@ constructor(
   public THIRD_PARTY_INSURANCE_LOSS: number = 0.0,
   public INJURED: number = 0,
   public KILLED: number = 0,
-  public LIFE_LOST: number = 0.0,
   public AGE_AT_EVENT: number = 0.0,
+  public LIFE_LOST: number = 0.0,
   public ACHIEVED_FLIGHT_PHASE: string|Uint8Array|null = null,
   public OCCURRENCE_FLIGHT_PHASE: string|Uint8Array|null = null,
   public STAGE_AT_FAULT: string|Uint8Array|null = null,
@@ -737,12 +828,6 @@ constructor(
   public INCLINED: boolean = false,
   public DESCRIPTION: string|Uint8Array|null = null,
   public REMARKS: string|Uint8Array|null = null,
-  public INSURANCE_LOSS_NOTES: string|Uint8Array|null = null,
-  public CAPABILITY_LOSS_NOTES: string|Uint8Array|null = null,
-  public INSURANCE_CARRIED_NOTES: string|Uint8Array|null = null,
-  public EQUIPMENT_CAUSING_LOSS_NOTES: string|Uint8Array|null = null,
-  public EVENT_TYPE: string|Uint8Array|null = null,
-  public EVENT_RESULT: string|Uint8Array|null = null,
   public OBJECT_STATUS: string|Uint8Array|null = null,
   public SATELLITE_POSITION: string|Uint8Array|null = null,
   public ON_ORBIT: string|Uint8Array|null = null
@@ -751,12 +836,13 @@ constructor(
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ID = (this.ID !== null ? builder.createString(this.ID!) : 0);
+  const ORIG_OBJECT_ID = (this.ORIG_OBJECT_ID !== null ? builder.createString(this.ORIG_OBJECT_ID!) : 0);
   const DERIVED_FROM = (this.DERIVED_FROM !== null ? builder.createString(this.DERIVED_FROM!) : 0);
   const DECLASSIFICATION_DATE = (this.DECLASSIFICATION_DATE !== null ? builder.createString(this.DECLASSIFICATION_DATE!) : 0);
   const DECLASSIFICATION_STRING = (this.DECLASSIFICATION_STRING !== null ? builder.createString(this.DECLASSIFICATION_STRING!) : 0);
-  const ORIG_OBJECT_ID = (this.ORIG_OBJECT_ID !== null ? builder.createString(this.ORIG_OBJECT_ID!) : 0);
   const EVENT_TIME = (this.EVENT_TIME !== null ? builder.createString(this.EVENT_TIME!) : 0);
   const EVENT_TIME_NOTES = (this.EVENT_TIME_NOTES !== null ? builder.createString(this.EVENT_TIME_NOTES!) : 0);
+  const EVENT_TYPE = (this.EVENT_TYPE !== null ? builder.createString(this.EVENT_TYPE!) : 0);
   const OPERATOR_ORG_ID = (this.OPERATOR_ORG_ID !== null ? builder.createString(this.OPERATOR_ORG_ID!) : 0);
   const OWNER_ORG_ID = (this.OWNER_ORG_ID !== null ? builder.createString(this.OWNER_ORG_ID!) : 0);
   const LESSEE_ORG_ID = (this.LESSEE_ORG_ID !== null ? builder.createString(this.LESSEE_ORG_ID!) : 0);
@@ -776,25 +862,22 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const CONSEQUENTIAL_EQUIPMENT_FAILURE = (this.CONSEQUENTIAL_EQUIPMENT_FAILURE !== null ? builder.createString(this.CONSEQUENTIAL_EQUIPMENT_FAILURE!) : 0);
   const DESCRIPTION = (this.DESCRIPTION !== null ? builder.createString(this.DESCRIPTION!) : 0);
   const REMARKS = (this.REMARKS !== null ? builder.createString(this.REMARKS!) : 0);
-  const INSURANCE_LOSS_NOTES = (this.INSURANCE_LOSS_NOTES !== null ? builder.createString(this.INSURANCE_LOSS_NOTES!) : 0);
-  const CAPABILITY_LOSS_NOTES = (this.CAPABILITY_LOSS_NOTES !== null ? builder.createString(this.CAPABILITY_LOSS_NOTES!) : 0);
-  const INSURANCE_CARRIED_NOTES = (this.INSURANCE_CARRIED_NOTES !== null ? builder.createString(this.INSURANCE_CARRIED_NOTES!) : 0);
-  const EQUIPMENT_CAUSING_LOSS_NOTES = (this.EQUIPMENT_CAUSING_LOSS_NOTES !== null ? builder.createString(this.EQUIPMENT_CAUSING_LOSS_NOTES!) : 0);
-  const EVENT_TYPE = (this.EVENT_TYPE !== null ? builder.createString(this.EVENT_TYPE!) : 0);
-  const EVENT_RESULT = (this.EVENT_RESULT !== null ? builder.createString(this.EVENT_RESULT!) : 0);
   const OBJECT_STATUS = (this.OBJECT_STATUS !== null ? builder.createString(this.OBJECT_STATUS!) : 0);
   const SATELLITE_POSITION = (this.SATELLITE_POSITION !== null ? builder.createString(this.SATELLITE_POSITION!) : 0);
   const ON_ORBIT = (this.ON_ORBIT !== null ? builder.createString(this.ON_ORBIT!) : 0);
 
   return OOE.createOOE(builder,
     ID,
+    this.SAT_NO,
+    ORIG_OBJECT_ID,
     DERIVED_FROM,
     DECLASSIFICATION_DATE,
     DECLASSIFICATION_STRING,
-    this.SAT_NO,
-    ORIG_OBJECT_ID,
     EVENT_TIME,
     EVENT_TIME_NOTES,
+    this.CATEGORY,
+    this.RESULT,
+    EVENT_TYPE,
     OPERATOR_ORG_ID,
     OWNER_ORG_ID,
     LESSEE_ORG_ID,
@@ -813,8 +896,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.THIRD_PARTY_INSURANCE_LOSS,
     this.INJURED,
     this.KILLED,
-    this.LIFE_LOST,
     this.AGE_AT_EVENT,
+    this.LIFE_LOST,
     ACHIEVED_FLIGHT_PHASE,
     OCCURRENCE_FLIGHT_PHASE,
     STAGE_AT_FAULT,
@@ -825,12 +908,6 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.INCLINED,
     DESCRIPTION,
     REMARKS,
-    INSURANCE_LOSS_NOTES,
-    CAPABILITY_LOSS_NOTES,
-    INSURANCE_CARRIED_NOTES,
-    EQUIPMENT_CAUSING_LOSS_NOTES,
-    EVENT_TYPE,
-    EVENT_RESULT,
     OBJECT_STATUS,
     SATELLITE_POSITION,
     ON_ORBIT

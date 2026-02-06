@@ -29,83 +29,192 @@ public final class OBT extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public OBT __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
-  public int SAT_NO() { int o = __offset(6); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public String ON_ORBIT() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ON_ORBITAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
-  public ByteBuffer ON_ORBITInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
-  public String ORIG_OBJECT_ID() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ORIG_OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
-  public ByteBuffer ORIG_OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * Satellite catalog number
+   */
+  public long SAT_NO() { int o = __offset(6); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * International designator
+   */
+  public String ORIG_OBJECT_ID() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ORIG_OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
+  public ByteBuffer ORIG_OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * On-orbit reference
+   */
+  public String ON_ORBIT() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ON_ORBITAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer ON_ORBITInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * Track point timestamp (ISO 8601)
+   */
   public String TS() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer TSAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
   public ByteBuffer TSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * Latitude (degrees)
+   */
   public double LAT() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Longitude (degrees)
+   */
   public double LON() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Altitude (km)
+   */
   public double ALT() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double RDF_RF() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String CALL_SIGN() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer CALL_SIGNAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
-  public ByteBuffer CALL_SIGNInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
-  public String RPT_NUM() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer RPT_NUMAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
-  public ByteBuffer RPT_NUMInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
-  public String OBJ_IDENT() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer OBJ_IDENTAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
-  public ByteBuffer OBJ_IDENTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
-  public String IDENT_AMP() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer IDENT_AMPAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
-  public ByteBuffer IDENT_AMPInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
-  public String SAT_STATUS() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SAT_STATUSAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
-  public ByteBuffer SAT_STATUSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
-  public String OBJECT_TYPE() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer OBJECT_TYPEAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
-  public ByteBuffer OBJECT_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
-  public String COUNTRY_CODE() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer COUNTRY_CODEAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
-  public ByteBuffer COUNTRY_CODEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
-  public double DECAY() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String CHARLIE_LINE() { int o = __offset(38); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer CHARLIE_LINEAsByteBuffer() { return __vector_as_bytebuffer(38, 1); }
-  public ByteBuffer CHARLIE_LINEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 38, 1); }
-  public String AOU_TYPE() { int o = __offset(40); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer AOU_TYPEAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
-  public ByteBuffer AOU_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
-  public String AOU_DATA(int j) { int o = __offset(42); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int AOU_DATALength() { int o = __offset(42); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector aouDataVector() { return aouDataVector(new StringVector()); }
-  public StringVector aouDataVector(StringVector obj) { int o = __offset(42); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public double SPD() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double ANG_ELEV() { int o = __offset(46); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double CNTNMNT() { int o = __offset(48); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String XREF() { int o = __offset(50); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer XREFAsByteBuffer() { return __vector_as_bytebuffer(50, 1); }
-  public ByteBuffer XREFInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 50, 1); }
-  public String CH_XREF() { int o = __offset(52); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer CH_XREFAsByteBuffer() { return __vector_as_bytebuffer(52, 1); }
-  public ByteBuffer CH_XREFInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 52, 1); }
-  public String AMPLIFICATION() { int o = __offset(54); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer AMPLIFICATIONAsByteBuffer() { return __vector_as_bytebuffer(54, 1); }
-  public ByteBuffer AMPLIFICATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 54, 1); }
-  public String IFF() { int o = __offset(56); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer IFFAsByteBuffer() { return __vector_as_bytebuffer(56, 1); }
-  public ByteBuffer IFFInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 56, 1); }
-  public boolean REINFORCED() { int o = __offset(58); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public boolean REDUCED() { int o = __offset(60); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public boolean HQ() { int o = __offset(62); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public boolean DUMMY() { int o = __offset(64); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public boolean TASK_FORCE() { int o = __offset(66); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public boolean FEINT() { int o = __offset(68); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public boolean INSTALLATION() { int o = __offset(70); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
-  public String VEH_TYPE() { int o = __offset(72); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer VEH_TYPEAsByteBuffer() { return __vector_as_bytebuffer(72, 1); }
-  public ByteBuffer VEH_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 72, 1); }
-  public String TRK_ID() { int o = __offset(74); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer TRK_IDAsByteBuffer() { return __vector_as_bytebuffer(74, 1); }
-  public ByteBuffer TRK_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 74, 1); }
+  /**
+   * Speed (km/s)
+   */
+  public double SPD() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Elevation angle from observer (degrees)
+   */
+  public double ANG_ELEV() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Radar data fusion RF value
+   */
+  public double RDF_RF() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Call sign
+   */
+  public String CALL_SIGN() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CALL_SIGNAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
+  public ByteBuffer CALL_SIGNInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
+  /**
+   * Report number
+   */
+  public String RPT_NUM() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer RPT_NUMAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
+  public ByteBuffer RPT_NUMInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
+  /**
+   * Track identifier
+   */
+  public String TRK_ID() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TRK_IDAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
+  public ByteBuffer TRK_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
+  /**
+   * Object identity assessment
+   */
+  public String OBJ_IDENT() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OBJ_IDENTAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
+  public ByteBuffer OBJ_IDENTInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
+  /**
+   * Identity amplification
+   */
+  public String IDENT_AMP() { int o = __offset(34); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer IDENT_AMPAsByteBuffer() { return __vector_as_bytebuffer(34, 1); }
+  public ByteBuffer IDENT_AMPInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 34, 1); }
+  /**
+   * Satellite operational status
+   */
+  public String SAT_STATUS() { int o = __offset(36); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SAT_STATUSAsByteBuffer() { return __vector_as_bytebuffer(36, 1); }
+  public ByteBuffer SAT_STATUSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 36, 1); }
+  /**
+   * Object type
+   */
+  public byte OBJ_TYPE() { int o = __offset(38); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Country code (ISO 3166)
+   */
+  public String COUNTRY_CODE() { int o = __offset(40); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer COUNTRY_CODEAsByteBuffer() { return __vector_as_bytebuffer(40, 1); }
+  public ByteBuffer COUNTRY_CODEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 40, 1); }
+  /**
+   * Orbit decay rate (km/day)
+   */
+  public double DECAY() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Charlie line data (amplification text)
+   */
+  public String CHARLIE_LINE() { int o = __offset(44); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CHARLIE_LINEAsByteBuffer() { return __vector_as_bytebuffer(44, 1); }
+  public ByteBuffer CHARLIE_LINEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 44, 1); }
+  /**
+   * Area of uncertainty type
+   */
+  public byte AOU_TYPE() { int o = __offset(46); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Area of uncertainty data
+   */
+  public double AOU_DATA(int j) { int o = __offset(48); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int AOU_DATALength() { int o = __offset(48); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector aouDataVector() { return aouDataVector(new DoubleVector()); }
+  public DoubleVector aouDataVector(DoubleVector obj) { int o = __offset(48); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer AOU_DATAAsByteBuffer() { return __vector_as_bytebuffer(48, 8); }
+  public ByteBuffer AOU_DATAInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 48, 8); }
+  /**
+   * Containment probability (0-1)
+   */
+  public double CNTNMNT() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Cross-reference identifier
+   */
+  public String XREF() { int o = __offset(52); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer XREFAsByteBuffer() { return __vector_as_bytebuffer(52, 1); }
+  public ByteBuffer XREFInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 52, 1); }
+  /**
+   * Charlie cross-reference
+   */
+  public String CH_XREF() { int o = __offset(54); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer CH_XREFAsByteBuffer() { return __vector_as_bytebuffer(54, 1); }
+  public ByteBuffer CH_XREFInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 54, 1); }
+  /**
+   * Additional amplification text
+   */
+  public String AMPLIFICATION() { int o = __offset(56); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer AMPLIFICATIONAsByteBuffer() { return __vector_as_bytebuffer(56, 1); }
+  public ByteBuffer AMPLIFICATIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 56, 1); }
+  /**
+   * IFF mode/code
+   */
+  public String IFF() { int o = __offset(58); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer IFFAsByteBuffer() { return __vector_as_bytebuffer(58, 1); }
+  public ByteBuffer IFFInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 58, 1); }
+  /**
+   * Vehicle type
+   */
+  public String VEH_TYPE() { int o = __offset(60); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer VEH_TYPEAsByteBuffer() { return __vector_as_bytebuffer(60, 1); }
+  public ByteBuffer VEH_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 60, 1); }
+  /**
+   * True if reinforced unit
+   */
+  public boolean REINFORCED() { int o = __offset(62); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * True if reduced unit
+   */
+  public boolean REDUCED() { int o = __offset(64); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * True if headquarters element
+   */
+  public boolean HQ() { int o = __offset(66); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * True if dummy/exercise track
+   */
+  public boolean DUMMY() { int o = __offset(68); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * True if task force
+   */
+  public boolean TASK_FORCE() { int o = __offset(70); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * True if feint
+   */
+  public boolean FEINT() { int o = __offset(72); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * True if installation (not mobile)
+   */
+  public boolean INSTALLATION() { int o = __offset(74); return o != 0 ? 0!=bb.get(o + bb_pos) : false; }
+  /**
+   * Contributing track sensors
+   */
   public String TRACK_SENSORS(int j) { int o = __offset(76); return o != 0 ? __string(__vector(o) + j * 4) : null; }
   public int TRACK_SENSORSLength() { int o = __offset(76); return o != 0 ? __vector_len(o) : 0; }
   public StringVector trackSensorsVector() { return trackSensorsVector(new StringVector()); }
@@ -113,32 +222,34 @@ public final class OBT extends Table {
 
   public static int createOBT(FlatBufferBuilder builder,
       int IDOffset,
-      int SAT_NO,
-      int ON_ORBITOffset,
+      long SAT_NO,
       int ORIG_OBJECT_IDOffset,
+      int ON_ORBITOffset,
       int TSOffset,
       double LAT,
       double LON,
       double ALT,
+      double SPD,
+      double ANG_ELEV,
       double RDF_RF,
       int CALL_SIGNOffset,
       int RPT_NUMOffset,
+      int TRK_IDOffset,
       int OBJ_IDENTOffset,
       int IDENT_AMPOffset,
       int SAT_STATUSOffset,
-      int OBJECT_TYPEOffset,
+      byte OBJ_TYPE,
       int COUNTRY_CODEOffset,
       double DECAY,
       int CHARLIE_LINEOffset,
-      int AOU_TYPEOffset,
+      byte AOU_TYPE,
       int AOU_DATAOffset,
-      double SPD,
-      double ANG_ELEV,
       double CNTNMNT,
       int XREFOffset,
       int CH_XREFOffset,
       int AMPLIFICATIONOffset,
       int IFFOffset,
+      int VEH_TYPEOffset,
       boolean REINFORCED,
       boolean REDUCED,
       boolean HQ,
@@ -146,38 +257,34 @@ public final class OBT extends Table {
       boolean TASK_FORCE,
       boolean FEINT,
       boolean INSTALLATION,
-      int VEH_TYPEOffset,
-      int TRK_IDOffset,
       int TRACK_SENSORSOffset) {
     builder.startTable(37);
     OBT.addCntnmnt(builder, CNTNMNT);
-    OBT.addAngElev(builder, ANG_ELEV);
-    OBT.addSpd(builder, SPD);
     OBT.addDecay(builder, DECAY);
     OBT.addRdfRf(builder, RDF_RF);
+    OBT.addAngElev(builder, ANG_ELEV);
+    OBT.addSpd(builder, SPD);
     OBT.addAlt(builder, ALT);
     OBT.addLon(builder, LON);
     OBT.addLat(builder, LAT);
     OBT.addTrackSensors(builder, TRACK_SENSORSOffset);
-    OBT.addTrkId(builder, TRK_IDOffset);
     OBT.addVehType(builder, VEH_TYPEOffset);
     OBT.addIff(builder, IFFOffset);
     OBT.addAmplification(builder, AMPLIFICATIONOffset);
     OBT.addChXref(builder, CH_XREFOffset);
     OBT.addXref(builder, XREFOffset);
     OBT.addAouData(builder, AOU_DATAOffset);
-    OBT.addAouType(builder, AOU_TYPEOffset);
     OBT.addCharlieLine(builder, CHARLIE_LINEOffset);
     OBT.addCountryCode(builder, COUNTRY_CODEOffset);
-    OBT.addObjectType(builder, OBJECT_TYPEOffset);
     OBT.addSatStatus(builder, SAT_STATUSOffset);
     OBT.addIdentAmp(builder, IDENT_AMPOffset);
     OBT.addObjIdent(builder, OBJ_IDENTOffset);
+    OBT.addTrkId(builder, TRK_IDOffset);
     OBT.addRptNum(builder, RPT_NUMOffset);
     OBT.addCallSign(builder, CALL_SIGNOffset);
     OBT.addTs(builder, TSOffset);
-    OBT.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
     OBT.addOnOrbit(builder, ON_ORBITOffset);
+    OBT.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
     OBT.addSatNo(builder, SAT_NO);
     OBT.addId(builder, IDOffset);
     OBT.addInstallation(builder, INSTALLATION);
@@ -187,48 +294,50 @@ public final class OBT extends Table {
     OBT.addHq(builder, HQ);
     OBT.addReduced(builder, REDUCED);
     OBT.addReinforced(builder, REINFORCED);
+    OBT.addAouType(builder, AOU_TYPE);
+    OBT.addObjType(builder, OBJ_TYPE);
     return OBT.endOBT(builder);
   }
 
   public static void startOBT(FlatBufferBuilder builder) { builder.startTable(37); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
-  public static void addSatNo(FlatBufferBuilder builder, int SAT_NO) { builder.addInt(1, SAT_NO, 0); }
-  public static void addOnOrbit(FlatBufferBuilder builder, int ON_ORBITOffset) { builder.addOffset(2, ON_ORBITOffset, 0); }
-  public static void addOrigObjectId(FlatBufferBuilder builder, int ORIG_OBJECT_IDOffset) { builder.addOffset(3, ORIG_OBJECT_IDOffset, 0); }
+  public static void addSatNo(FlatBufferBuilder builder, long SAT_NO) { builder.addInt(1, (int) SAT_NO, (int) 0L); }
+  public static void addOrigObjectId(FlatBufferBuilder builder, int ORIG_OBJECT_IDOffset) { builder.addOffset(2, ORIG_OBJECT_IDOffset, 0); }
+  public static void addOnOrbit(FlatBufferBuilder builder, int ON_ORBITOffset) { builder.addOffset(3, ON_ORBITOffset, 0); }
   public static void addTs(FlatBufferBuilder builder, int TSOffset) { builder.addOffset(4, TSOffset, 0); }
   public static void addLat(FlatBufferBuilder builder, double LAT) { builder.addDouble(5, LAT, 0.0); }
   public static void addLon(FlatBufferBuilder builder, double LON) { builder.addDouble(6, LON, 0.0); }
   public static void addAlt(FlatBufferBuilder builder, double ALT) { builder.addDouble(7, ALT, 0.0); }
-  public static void addRdfRf(FlatBufferBuilder builder, double RDF_RF) { builder.addDouble(8, RDF_RF, 0.0); }
-  public static void addCallSign(FlatBufferBuilder builder, int CALL_SIGNOffset) { builder.addOffset(9, CALL_SIGNOffset, 0); }
-  public static void addRptNum(FlatBufferBuilder builder, int RPT_NUMOffset) { builder.addOffset(10, RPT_NUMOffset, 0); }
-  public static void addObjIdent(FlatBufferBuilder builder, int OBJ_IDENTOffset) { builder.addOffset(11, OBJ_IDENTOffset, 0); }
-  public static void addIdentAmp(FlatBufferBuilder builder, int IDENT_AMPOffset) { builder.addOffset(12, IDENT_AMPOffset, 0); }
-  public static void addSatStatus(FlatBufferBuilder builder, int SAT_STATUSOffset) { builder.addOffset(13, SAT_STATUSOffset, 0); }
-  public static void addObjectType(FlatBufferBuilder builder, int OBJECT_TYPEOffset) { builder.addOffset(14, OBJECT_TYPEOffset, 0); }
-  public static void addCountryCode(FlatBufferBuilder builder, int COUNTRY_CODEOffset) { builder.addOffset(15, COUNTRY_CODEOffset, 0); }
-  public static void addDecay(FlatBufferBuilder builder, double DECAY) { builder.addDouble(16, DECAY, 0.0); }
-  public static void addCharlieLine(FlatBufferBuilder builder, int CHARLIE_LINEOffset) { builder.addOffset(17, CHARLIE_LINEOffset, 0); }
-  public static void addAouType(FlatBufferBuilder builder, int AOU_TYPEOffset) { builder.addOffset(18, AOU_TYPEOffset, 0); }
-  public static void addAouData(FlatBufferBuilder builder, int AOU_DATAOffset) { builder.addOffset(19, AOU_DATAOffset, 0); }
-  public static int createAouDataVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startAouDataVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addSpd(FlatBufferBuilder builder, double SPD) { builder.addDouble(20, SPD, 0.0); }
-  public static void addAngElev(FlatBufferBuilder builder, double ANG_ELEV) { builder.addDouble(21, ANG_ELEV, 0.0); }
-  public static void addCntnmnt(FlatBufferBuilder builder, double CNTNMNT) { builder.addDouble(22, CNTNMNT, 0.0); }
-  public static void addXref(FlatBufferBuilder builder, int XREFOffset) { builder.addOffset(23, XREFOffset, 0); }
-  public static void addChXref(FlatBufferBuilder builder, int CH_XREFOffset) { builder.addOffset(24, CH_XREFOffset, 0); }
-  public static void addAmplification(FlatBufferBuilder builder, int AMPLIFICATIONOffset) { builder.addOffset(25, AMPLIFICATIONOffset, 0); }
-  public static void addIff(FlatBufferBuilder builder, int IFFOffset) { builder.addOffset(26, IFFOffset, 0); }
-  public static void addReinforced(FlatBufferBuilder builder, boolean REINFORCED) { builder.addBoolean(27, REINFORCED, false); }
-  public static void addReduced(FlatBufferBuilder builder, boolean REDUCED) { builder.addBoolean(28, REDUCED, false); }
-  public static void addHq(FlatBufferBuilder builder, boolean HQ) { builder.addBoolean(29, HQ, false); }
-  public static void addDummy(FlatBufferBuilder builder, boolean DUMMY) { builder.addBoolean(30, DUMMY, false); }
-  public static void addTaskForce(FlatBufferBuilder builder, boolean TASK_FORCE) { builder.addBoolean(31, TASK_FORCE, false); }
-  public static void addFeint(FlatBufferBuilder builder, boolean FEINT) { builder.addBoolean(32, FEINT, false); }
-  public static void addInstallation(FlatBufferBuilder builder, boolean INSTALLATION) { builder.addBoolean(33, INSTALLATION, false); }
-  public static void addVehType(FlatBufferBuilder builder, int VEH_TYPEOffset) { builder.addOffset(34, VEH_TYPEOffset, 0); }
-  public static void addTrkId(FlatBufferBuilder builder, int TRK_IDOffset) { builder.addOffset(35, TRK_IDOffset, 0); }
+  public static void addSpd(FlatBufferBuilder builder, double SPD) { builder.addDouble(8, SPD, 0.0); }
+  public static void addAngElev(FlatBufferBuilder builder, double ANG_ELEV) { builder.addDouble(9, ANG_ELEV, 0.0); }
+  public static void addRdfRf(FlatBufferBuilder builder, double RDF_RF) { builder.addDouble(10, RDF_RF, 0.0); }
+  public static void addCallSign(FlatBufferBuilder builder, int CALL_SIGNOffset) { builder.addOffset(11, CALL_SIGNOffset, 0); }
+  public static void addRptNum(FlatBufferBuilder builder, int RPT_NUMOffset) { builder.addOffset(12, RPT_NUMOffset, 0); }
+  public static void addTrkId(FlatBufferBuilder builder, int TRK_IDOffset) { builder.addOffset(13, TRK_IDOffset, 0); }
+  public static void addObjIdent(FlatBufferBuilder builder, int OBJ_IDENTOffset) { builder.addOffset(14, OBJ_IDENTOffset, 0); }
+  public static void addIdentAmp(FlatBufferBuilder builder, int IDENT_AMPOffset) { builder.addOffset(15, IDENT_AMPOffset, 0); }
+  public static void addSatStatus(FlatBufferBuilder builder, int SAT_STATUSOffset) { builder.addOffset(16, SAT_STATUSOffset, 0); }
+  public static void addObjType(FlatBufferBuilder builder, byte OBJ_TYPE) { builder.addByte(17, OBJ_TYPE, 0); }
+  public static void addCountryCode(FlatBufferBuilder builder, int COUNTRY_CODEOffset) { builder.addOffset(18, COUNTRY_CODEOffset, 0); }
+  public static void addDecay(FlatBufferBuilder builder, double DECAY) { builder.addDouble(19, DECAY, 0.0); }
+  public static void addCharlieLine(FlatBufferBuilder builder, int CHARLIE_LINEOffset) { builder.addOffset(20, CHARLIE_LINEOffset, 0); }
+  public static void addAouType(FlatBufferBuilder builder, byte AOU_TYPE) { builder.addByte(21, AOU_TYPE, 0); }
+  public static void addAouData(FlatBufferBuilder builder, int AOU_DATAOffset) { builder.addOffset(22, AOU_DATAOffset, 0); }
+  public static int createAouDataVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startAouDataVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addCntnmnt(FlatBufferBuilder builder, double CNTNMNT) { builder.addDouble(23, CNTNMNT, 0.0); }
+  public static void addXref(FlatBufferBuilder builder, int XREFOffset) { builder.addOffset(24, XREFOffset, 0); }
+  public static void addChXref(FlatBufferBuilder builder, int CH_XREFOffset) { builder.addOffset(25, CH_XREFOffset, 0); }
+  public static void addAmplification(FlatBufferBuilder builder, int AMPLIFICATIONOffset) { builder.addOffset(26, AMPLIFICATIONOffset, 0); }
+  public static void addIff(FlatBufferBuilder builder, int IFFOffset) { builder.addOffset(27, IFFOffset, 0); }
+  public static void addVehType(FlatBufferBuilder builder, int VEH_TYPEOffset) { builder.addOffset(28, VEH_TYPEOffset, 0); }
+  public static void addReinforced(FlatBufferBuilder builder, boolean REINFORCED) { builder.addBoolean(29, REINFORCED, false); }
+  public static void addReduced(FlatBufferBuilder builder, boolean REDUCED) { builder.addBoolean(30, REDUCED, false); }
+  public static void addHq(FlatBufferBuilder builder, boolean HQ) { builder.addBoolean(31, HQ, false); }
+  public static void addDummy(FlatBufferBuilder builder, boolean DUMMY) { builder.addBoolean(32, DUMMY, false); }
+  public static void addTaskForce(FlatBufferBuilder builder, boolean TASK_FORCE) { builder.addBoolean(33, TASK_FORCE, false); }
+  public static void addFeint(FlatBufferBuilder builder, boolean FEINT) { builder.addBoolean(34, FEINT, false); }
+  public static void addInstallation(FlatBufferBuilder builder, boolean INSTALLATION) { builder.addBoolean(35, INSTALLATION, false); }
   public static void addTrackSensors(FlatBufferBuilder builder, int TRACK_SENSORSOffset) { builder.addOffset(36, TRACK_SENSORSOffset, 0); }
   public static int createTrackSensorsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startTrackSensorsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }

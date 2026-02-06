@@ -1,45 +1,100 @@
-// Hash: b6d3e2d5303693c2cd382f8d921b3f232829d7e4fd60228d0659185bd39b100c
-// Version: 0.0.2
+// Hash: 0ecd2ba8048a907ae4ddc835d26104fafc0f41f726874ef2ef95b9c653fce1d2
+// Version: 0.0.3
 // -----------------------------------END_HEADER
+enum ooiStatus : byte {
+  ACTIVE,
+  PENDING,
+  CLOSED,
+  MONITORING,
+  URGENT,
+  ARCHIVED
+}
+
+enum ooiPriority : byte {
+  CRITICAL,
+  HIGH,
+  MEDIUM,
+  LOW,
+  ROUTINE
+}
+
 /// Object of Interest
 table OOI {
+  /// Unique identifier
   ID:string;
-  SAT_NO:int;
+  /// Satellite catalog number
+  SAT_NO:uint32;
+  /// Object name or designator
   NAME:string;
-  SENSOR_TASKING_START_TIME:string;
-  SENSOR_TASKING_STOP_TIME:string;
-  PRIORITY:int;
-  STATUS:string;
-  STATUS_DATE:string;
-  DESCRIPTION:string;
-  LAST_OB_TIME:string;
-  MISSED_OB_TIME:string;
-  DELTA_VS:[string];
-  DELTA_TS:[string];
-  SV_EPOCH:string;
-  X:double;
-  Y:double;
-  Z:double;
-  XVEL:double;
-  YVEL:double;
-  ZVEL:double;
-  ELSET_EPOCH:string;
-  MEAN_MOTION:double;
-  ECCENTRICITY:double;
-  INCLINATION:double;
-  RAAN:double;
-  ARG_OF_PERIGEE:double;
-  MEAN_ANOMALY:double;
-  REV_NO:int;
-  B_STAR:double;
-  MEAN_MOTION_DOT:double;
-  MEAN_MOTION_DDOT:double;
-  SEMI_MAJOR_AXIS:double;
-  PERIOD:double;
-  APOGEE:double;
-  PERIGEE:double;
-  AFFECTED_OBJECTS:[string];
+  /// On-orbit reference
   ON_ORBIT:string;
+  /// Tasking status
+  STATUS:ooiStatus;
+  /// Status update date (ISO 8601)
+  STATUS_DATE:string;
+  /// Collection priority
+  PRIORITY:ooiPriority;
+  /// Description of why object is of interest
+  DESCRIPTION:string;
+  /// Sensor tasking start time (ISO 8601)
+  SENSOR_TASKING_START_TIME:string;
+  /// Sensor tasking stop time (ISO 8601)
+  SENSOR_TASKING_STOP_TIME:string;
+  /// Last observation time (ISO 8601)
+  LAST_OB_TIME:string;
+  /// Last missed observation time (ISO 8601)
+  MISSED_OB_TIME:string;
+  /// State vector epoch (ISO 8601)
+  SV_EPOCH:string;
+  /// Position X (km, TEME)
+  X:double;
+  /// Position Y (km, TEME)
+  Y:double;
+  /// Position Z (km, TEME)
+  Z:double;
+  /// Velocity X (km/s, TEME)
+  XVEL:double;
+  /// Velocity Y (km/s, TEME)
+  YVEL:double;
+  /// Velocity Z (km/s, TEME)
+  ZVEL:double;
+  /// Element set epoch (ISO 8601)
+  ELSET_EPOCH:string;
+  /// Mean motion (rev/day)
+  MEAN_MOTION:double;
+  /// Eccentricity
+  ECCENTRICITY:double;
+  /// Inclination (degrees)
+  INCLINATION:double;
+  /// Right ascension of ascending node (degrees)
+  RAAN:double;
+  /// Argument of perigee (degrees)
+  ARG_OF_PERIGEE:double;
+  /// Mean anomaly (degrees)
+  MEAN_ANOMALY:double;
+  /// Revolution number at epoch
+  REV_NO:uint32;
+  /// BSTAR drag term (1/Earth radii)
+  B_STAR:double;
+  /// Mean motion first derivative (rev/day^2)
+  MEAN_MOTION_DOT:double;
+  /// Mean motion second derivative (rev/day^3)
+  MEAN_MOTION_DDOT:double;
+  /// Semi-major axis (km)
+  SEMI_MAJOR_AXIS:double;
+  /// Orbital period (minutes)
+  PERIOD:double;
+  /// Apogee altitude (km)
+  APOGEE:double;
+  /// Perigee altitude (km)
+  PERIGEE:double;
+  /// Delta-V estimates for maneuver hypotheses (m/s)
+  DELTA_VS:[double];
+  /// Delta-T estimates for maneuver timing (seconds)
+  DELTA_TS:[double];
+  /// Other affected satellite catalog numbers
+  AFFECTED_OBJECTS:[string];
+  /// Associated orbit manifold identifiers
   MANIFOLDS:[string];
 }
 

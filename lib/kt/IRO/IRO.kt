@@ -29,6 +29,9 @@ class IRO : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Unique identifier
+     */
     val ID : String?
         get() {
             val o = __offset(4)
@@ -40,6 +43,9 @@ class IRO : Table() {
         }
     val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    /**
+     * Reference to source entity
+     */
     val ID_ENTITY : String?
         get() {
             val o = __offset(6)
@@ -51,6 +57,9 @@ class IRO : Table() {
         }
     val ID_ENTITYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
     fun ID_ENTITYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    /**
+     * Sensor or observation name
+     */
     val NAME : String?
         get() {
             val o = __offset(8)
@@ -62,6 +71,9 @@ class IRO : Table() {
         }
     val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
     fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    /**
+     * Description of observation
+     */
     val DESCRIPTION : String?
         get() {
             val o = __offset(10)
@@ -73,6 +85,9 @@ class IRO : Table() {
         }
     val DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
     fun DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    /**
+     * Source entity designator
+     */
     val ENTITY : String?
         get() {
             val o = __offset(12)
@@ -84,6 +99,248 @@ class IRO : Table() {
         }
     val ENTITYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
     fun ENTITYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * Observation epoch (ISO 8601)
+     */
+    val EPOCH : String?
+        get() {
+            val o = __offset(14)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
+    fun EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    /**
+     * Sensor identifier
+     */
+    val SENSOR_ID : String?
+        get() {
+            val o = __offset(16)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val SENSOR_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
+    fun SENSOR_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    /**
+     * Target satellite number (if identified)
+     */
+    val SAT_NO : UInt
+        get() {
+            val o = __offset(18)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Target object designator
+     */
+    val OBJECT_DESIGNATOR : String?
+        get() {
+            val o = __offset(20)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val OBJECT_DESIGNATORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
+    fun OBJECT_DESIGNATORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    /**
+     * IR spectral band
+     */
+    val BAND : Byte
+        get() {
+            val o = __offset(22)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Detection type
+     */
+    val DETECTION_TYPE : Byte
+        get() {
+            val o = __offset(24)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Right ascension in degrees
+     */
+    val RA : Double
+        get() {
+            val o = __offset(26)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Declination in degrees
+     */
+    val DEC : Double
+        get() {
+            val o = __offset(28)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Right ascension uncertainty in arcseconds
+     */
+    val RA_UNC : Double
+        get() {
+            val o = __offset(30)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Declination uncertainty in arcseconds
+     */
+    val DEC_UNC : Double
+        get() {
+            val o = __offset(32)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Azimuth angle in degrees
+     */
+    val AZIMUTH : Double
+        get() {
+            val o = __offset(34)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Elevation angle in degrees
+     */
+    val ELEVATION : Double
+        get() {
+            val o = __offset(36)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Range in km (if available)
+     */
+    val RANGE : Double
+        get() {
+            val o = __offset(38)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Irradiance in W/m^2
+     */
+    val IRRADIANCE : Double
+        get() {
+            val o = __offset(40)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Irradiance uncertainty in W/m^2
+     */
+    val IRRADIANCE_UNC : Double
+        get() {
+            val o = __offset(42)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Apparent IR magnitude
+     */
+    val IR_MAG : Double
+        get() {
+            val o = __offset(44)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Magnitude uncertainty
+     */
+    val MAG_UNC : Double
+        get() {
+            val o = __offset(46)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Effective temperature in Kelvin
+     */
+    val TEMPERATURE : Double
+        get() {
+            val o = __offset(48)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Integration time in seconds
+     */
+    val INTEGRATION_TIME : Double
+        get() {
+            val o = __offset(50)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Background irradiance in W/m^2/sr
+     */
+    val BACKGROUND : Double
+        get() {
+            val o = __offset(52)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Signal-to-noise ratio
+     */
+    val SNR : Double
+        get() {
+            val o = __offset(54)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Spectral data wavelengths in micrometers
+     */
+    fun WAVELENGTHS(j: Int) : Double {
+        val o = __offset(56)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val WAVELENGTHSLength : Int
+        get() {
+            val o = __offset(56); return if (o != 0) __vector_len(o) else 0
+        }
+    val WAVELENGTHSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(56, 8)
+    fun WAVELENGTHSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 56, 8)
+    /**
+     * Spectral data values in W/m^2/um
+     */
+    fun SPECTRAL_VALUES(j: Int) : Double {
+        val o = __offset(58)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val SPECTRAL_VALUESLength : Int
+        get() {
+            val o = __offset(58); return if (o != 0) __vector_len(o) else 0
+        }
+    val SPECTRAL_VALUESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(58, 8)
+    fun SPECTRAL_VALUESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 58, 8)
+    /**
+     * Data quality indicator (0-9, 9=best)
+     */
+    val QUALITY : UByte
+        get() {
+            val o = __offset(60)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
+        }
+    /**
+     * Additional notes
+     */
+    val NOTES : String?
+        get() {
+            val o = __offset(62)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val NOTESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(62, 1)
+    fun NOTESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 62, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsIRO(_bb: ByteBuffer): IRO = getRootAsIRO(_bb, IRO())
@@ -92,21 +349,87 @@ class IRO : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun IROBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$IRO")
-        fun createIRO(builder: FlatBufferBuilder, IDOffset: Int, ID_ENTITYOffset: Int, NAMEOffset: Int, DESCRIPTIONOffset: Int, ENTITYOffset: Int) : Int {
-            builder.startTable(5)
+        fun createIRO(builder: FlatBufferBuilder, IDOffset: Int, ID_ENTITYOffset: Int, NAMEOffset: Int, DESCRIPTIONOffset: Int, ENTITYOffset: Int, EPOCHOffset: Int, SENSOR_IDOffset: Int, SAT_NO: UInt, OBJECT_DESIGNATOROffset: Int, BAND: Byte, DETECTION_TYPE: Byte, RA: Double, DEC: Double, RA_UNC: Double, DEC_UNC: Double, AZIMUTH: Double, ELEVATION: Double, RANGE: Double, IRRADIANCE: Double, IRRADIANCE_UNC: Double, IR_MAG: Double, MAG_UNC: Double, TEMPERATURE: Double, INTEGRATION_TIME: Double, BACKGROUND: Double, SNR: Double, WAVELENGTHSOffset: Int, SPECTRAL_VALUESOffset: Int, QUALITY: UByte, NOTESOffset: Int) : Int {
+            builder.startTable(30)
+            addSNR(builder, SNR)
+            addBACKGROUND(builder, BACKGROUND)
+            addINTEGRATION_TIME(builder, INTEGRATION_TIME)
+            addTEMPERATURE(builder, TEMPERATURE)
+            addMAG_UNC(builder, MAG_UNC)
+            addIR_MAG(builder, IR_MAG)
+            addIRRADIANCE_UNC(builder, IRRADIANCE_UNC)
+            addIRRADIANCE(builder, IRRADIANCE)
+            addRANGE(builder, RANGE)
+            addELEVATION(builder, ELEVATION)
+            addAZIMUTH(builder, AZIMUTH)
+            addDEC_UNC(builder, DEC_UNC)
+            addRA_UNC(builder, RA_UNC)
+            addDEC(builder, DEC)
+            addRA(builder, RA)
+            addNOTES(builder, NOTESOffset)
+            addSPECTRAL_VALUES(builder, SPECTRAL_VALUESOffset)
+            addWAVELENGTHS(builder, WAVELENGTHSOffset)
+            addOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOROffset)
+            addSAT_NO(builder, SAT_NO)
+            addSENSOR_ID(builder, SENSOR_IDOffset)
+            addEPOCH(builder, EPOCHOffset)
             addENTITY(builder, ENTITYOffset)
             addDESCRIPTION(builder, DESCRIPTIONOffset)
             addNAME(builder, NAMEOffset)
             addID_ENTITY(builder, ID_ENTITYOffset)
             addID(builder, IDOffset)
+            addQUALITY(builder, QUALITY)
+            addDETECTION_TYPE(builder, DETECTION_TYPE)
+            addBAND(builder, BAND)
             return endIRO(builder)
         }
-        fun startIRO(builder: FlatBufferBuilder) = builder.startTable(5)
+        fun startIRO(builder: FlatBufferBuilder) = builder.startTable(30)
         fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
         fun addID_ENTITY(builder: FlatBufferBuilder, ID_ENTITY: Int) = builder.addOffset(1, ID_ENTITY, 0)
         fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(2, NAME, 0)
         fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(3, DESCRIPTION, 0)
         fun addENTITY(builder: FlatBufferBuilder, ENTITY: Int) = builder.addOffset(4, ENTITY, 0)
+        fun addEPOCH(builder: FlatBufferBuilder, EPOCH: Int) = builder.addOffset(5, EPOCH, 0)
+        fun addSENSOR_ID(builder: FlatBufferBuilder, SENSOR_ID: Int) = builder.addOffset(6, SENSOR_ID, 0)
+        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: UInt) = builder.addInt(7, SAT_NO.toInt(), 0)
+        fun addOBJECT_DESIGNATOR(builder: FlatBufferBuilder, OBJECT_DESIGNATOR: Int) = builder.addOffset(8, OBJECT_DESIGNATOR, 0)
+        fun addBAND(builder: FlatBufferBuilder, BAND: Byte) = builder.addByte(9, BAND, 0)
+        fun addDETECTION_TYPE(builder: FlatBufferBuilder, DETECTION_TYPE: Byte) = builder.addByte(10, DETECTION_TYPE, 0)
+        fun addRA(builder: FlatBufferBuilder, RA: Double) = builder.addDouble(11, RA, 0.0)
+        fun addDEC(builder: FlatBufferBuilder, DEC: Double) = builder.addDouble(12, DEC, 0.0)
+        fun addRA_UNC(builder: FlatBufferBuilder, RA_UNC: Double) = builder.addDouble(13, RA_UNC, 0.0)
+        fun addDEC_UNC(builder: FlatBufferBuilder, DEC_UNC: Double) = builder.addDouble(14, DEC_UNC, 0.0)
+        fun addAZIMUTH(builder: FlatBufferBuilder, AZIMUTH: Double) = builder.addDouble(15, AZIMUTH, 0.0)
+        fun addELEVATION(builder: FlatBufferBuilder, ELEVATION: Double) = builder.addDouble(16, ELEVATION, 0.0)
+        fun addRANGE(builder: FlatBufferBuilder, RANGE: Double) = builder.addDouble(17, RANGE, 0.0)
+        fun addIRRADIANCE(builder: FlatBufferBuilder, IRRADIANCE: Double) = builder.addDouble(18, IRRADIANCE, 0.0)
+        fun addIRRADIANCE_UNC(builder: FlatBufferBuilder, IRRADIANCE_UNC: Double) = builder.addDouble(19, IRRADIANCE_UNC, 0.0)
+        fun addIR_MAG(builder: FlatBufferBuilder, IR_MAG: Double) = builder.addDouble(20, IR_MAG, 0.0)
+        fun addMAG_UNC(builder: FlatBufferBuilder, MAG_UNC: Double) = builder.addDouble(21, MAG_UNC, 0.0)
+        fun addTEMPERATURE(builder: FlatBufferBuilder, TEMPERATURE: Double) = builder.addDouble(22, TEMPERATURE, 0.0)
+        fun addINTEGRATION_TIME(builder: FlatBufferBuilder, INTEGRATION_TIME: Double) = builder.addDouble(23, INTEGRATION_TIME, 0.0)
+        fun addBACKGROUND(builder: FlatBufferBuilder, BACKGROUND: Double) = builder.addDouble(24, BACKGROUND, 0.0)
+        fun addSNR(builder: FlatBufferBuilder, SNR: Double) = builder.addDouble(25, SNR, 0.0)
+        fun addWAVELENGTHS(builder: FlatBufferBuilder, WAVELENGTHS: Int) = builder.addOffset(26, WAVELENGTHS, 0)
+        fun createWavelengthsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startWavelengthsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addSPECTRAL_VALUES(builder: FlatBufferBuilder, SPECTRAL_VALUES: Int) = builder.addOffset(27, SPECTRAL_VALUES, 0)
+        fun createSpectralValuesVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
+            for (i in data.size - 1 downTo 0) {
+                builder.addDouble(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startSpectralValuesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addQUALITY(builder: FlatBufferBuilder, QUALITY: UByte) = builder.addByte(28, QUALITY.toByte(), 0)
+        fun addNOTES(builder: FlatBufferBuilder, NOTES: Int) = builder.addOffset(29, NOTES, 0)
         fun endIRO(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -1,14 +1,111 @@
-// Hash: 2aef882b5e211b02abfc65bb3c9adbf87a4f809a0eaba5850fbe3454acec6dc9
-// Version: 0.0.2
+// Hash: dfe98d03d47b656131788a29461123b89a4dd599316453eda447a0bf12bcaf22
+// Version: 0.0.3
 // -----------------------------------END_HEADER
+enum emitterType : byte {
+  RADAR,
+  COMMUNICATIONS,
+  NAVIGATION,
+  JAMMER,
+  BEACON,
+  TRANSPONDER,
+  DATA_LINK,
+  TELEMETRY,
+  EW,
+  UNKNOWN
+}
+
+enum signalModulation : byte {
+  CW,
+  PULSE,
+  FMCW,
+  CHIRP,
+  BPSK,
+  QPSK,
+  FSK,
+  AM,
+  FM,
+  SPREAD_SPECTRUM,
+  PHASED_ARRAY,
+  AGILE,
+  UNKNOWN
+}
+
+/// RF Emitter Detail Record
+table rfEmitterDetail {
+  /// Mode name or identifier
+  MODE_NAME:string;
+  /// Center frequency in MHz
+  FREQUENCY:double;
+  /// Frequency minimum in MHz
+  FREQ_MIN:double;
+  /// Frequency maximum in MHz
+  FREQ_MAX:double;
+  /// Pulse repetition interval in microseconds
+  PRI:double;
+  /// PRI minimum in microseconds
+  PRI_MIN:double;
+  /// PRI maximum in microseconds
+  PRI_MAX:double;
+  /// Pulse width in microseconds
+  PULSE_WIDTH:double;
+  /// Pulse width minimum in microseconds
+  PW_MIN:double;
+  /// Pulse width maximum in microseconds
+  PW_MAX:double;
+  /// Scan period in seconds
+  SCAN_PERIOD:double;
+  /// Effective radiated power in dBW
+  ERP:double;
+  /// Signal modulation
+  MODULATION:signalModulation;
+  /// Antenna pattern type
+  ANTENNA_PATTERN:string;
+  /// 3dB beamwidth in degrees
+  BEAMWIDTH:double;
+}
+
 /// RF Emitter
 table RFE {
+  /// Unique emitter identifier
   ID:string;
+  /// Reference to parent entity
   ID_ENTITY:string;
+  /// Emitter name or designation
   NAME:string;
-  TYPE:string;
+  /// Emitter type
+  TYPE:emitterType;
+  /// Parent entity designator
   ENTITY:string;
-  RF_EMITTER_DETAILS:[string];
+  /// ELNOT (Electronic Notation)
+  ELNOT:string;
+  /// NATO reporting name
+  NATO_NAME:string;
+  /// Platform type (e.g., SHIP, AIRCRAFT, GROUND, SATELLITE)
+  PLATFORM_TYPE:string;
+  /// Country of origin
+  COUNTRY:string;
+  /// Primary function description
+  FUNCTION:string;
+  /// Operating band (e.g., HF, VHF, UHF, L, S, C, X, Ku, Ka)
+  BAND:string;
+  /// Minimum operating frequency in MHz
+  FREQ_MIN:double;
+  /// Maximum operating frequency in MHz
+  FREQ_MAX:double;
+  /// Peak power in kW
+  PEAK_POWER:double;
+  /// Average power in kW
+  AVG_POWER:double;
+  /// Antenna gain in dBi
+  ANTENNA_GAIN:double;
+  /// Number of operating modes
+  NUM_MODES:uint;
+  /// Emitter operating mode details
+  RF_EMITTER_DETAILS:[rfEmitterDetail];
+  /// Threat level assessment
+  THREAT_LEVEL:string;
+  /// Additional notes
+  NOTES:string;
 }
 
 root_type RFE;

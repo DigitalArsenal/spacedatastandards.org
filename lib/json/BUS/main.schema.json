@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "busSize" : {
+      "type" : "string",
+      "enum": ["FEMTO", "PICO", "NANO", "MICRO", "MINI", "SMALL", "MEDIUM", "LARGE", "HEAVY"]
+    },
+    "stabilizationType" : {
+      "type" : "string",
+      "enum": ["THREE_AXIS", "SPIN", "GRAVITY_GRADIENT", "MAGNETIC", "DUAL_SPIN", "NONE"]
+    },
+    "BUS" : {
+      "type" : "object",
+      "description" : "Satellite Bus Specification",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Unique identifier"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Bus name or model"
+              },
+        "MANUFACTURER" : {
+                "type" : "string",
+                "description" : "Manufacturer"
+              },
+        "SIZE" : {
+                "$ref" : "#/definitions/busSize",
+                "description" : "Bus size category"
+              },
+        "DRY_MASS" : {
+                "type" : "number",
+                "description" : "Dry mass in kg"
+              },
+        "WET_MASS" : {
+                "type" : "number",
+                "description" : "Maximum wet mass (with propellant) in kg"
+              },
+        "PAYLOAD_MASS" : {
+                "type" : "number",
+                "description" : "Maximum payload mass in kg"
+              },
+        "DIM_X" : {
+                "type" : "number",
+                "description" : "Bus dimensions X in meters"
+              },
+        "DIM_Y" : {
+                "type" : "number",
+                "description" : "Bus dimensions Y in meters"
+              },
+        "DIM_Z" : {
+                "type" : "number",
+                "description" : "Bus dimensions Z in meters"
+              },
+        "STOWED_X" : {
+                "type" : "number",
+                "description" : "Stowed dimensions X in meters"
+              },
+        "STOWED_Y" : {
+                "type" : "number",
+                "description" : "Stowed dimensions Y in meters"
+              },
+        "STOWED_Z" : {
+                "type" : "number",
+                "description" : "Stowed dimensions Z in meters"
+              },
+        "POWER_GENERATION" : {
+                "type" : "number",
+                "description" : "Total power generation in Watts"
+              },
+        "PAYLOAD_POWER" : {
+                "type" : "number",
+                "description" : "Available payload power in Watts"
+              },
+        "BATTERY_CAPACITY" : {
+                "type" : "number",
+                "description" : "Battery capacity in Watt-hours"
+              },
+        "STABILIZATION" : {
+                "$ref" : "#/definitions/stabilizationType",
+                "description" : "Stabilization method"
+              },
+        "POINTING_ACCURACY" : {
+                "type" : "number",
+                "description" : "Pointing accuracy in degrees"
+              },
+        "POINTING_KNOWLEDGE" : {
+                "type" : "number",
+                "description" : "Pointing knowledge in degrees"
+              },
+        "DESIGN_LIFE" : {
+                "type" : "number",
+                "description" : "Design life in years"
+              },
+        "DATA_STORAGE" : {
+                "type" : "number",
+                "description" : "Data storage capacity in Gbits"
+              },
+        "DOWNLINK_RATE" : {
+                "type" : "number",
+                "description" : "Downlink data rate in Mbps"
+              },
+        "PAYLOAD_SLOTS" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of payload slots/interfaces"
+              },
+        "HERITAGE_COUNT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Heritage missions count"
+              },
+        "NOTES" : {
+                "type" : "string",
+                "description" : "Additional notes"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/BUS"
+}

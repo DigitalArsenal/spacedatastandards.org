@@ -19,6 +19,7 @@ public struct DFH : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public DFH __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Unique identifier
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,30 +27,128 @@ public struct DFH : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
-  public string EFFECTIVE_UNTIL { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Satellite number
+  public uint SAT_NO { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Object designator
+  public string OBJECT_DESIGNATOR { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetEFFECTIVE_UNTILBytes() { return __p.__vector_as_span<byte>(6, 1); }
+  public Span<byte> GetOBJECT_DESIGNATORBytes() { return __p.__vector_as_span<byte>(8, 1); }
 #else
-  public ArraySegment<byte>? GetEFFECTIVE_UNTILBytes() { return __p.__vector_as_arraysegment(6); }
+  public ArraySegment<byte>? GetOBJECT_DESIGNATORBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
-  public byte[] GetEFFECTIVE_UNTILArray() { return __p.__vector_as_array<byte>(6); }
-  public double DRIFT_RATE { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public byte[] GetOBJECT_DESIGNATORArray() { return __p.__vector_as_array<byte>(8); }
+  /// Object common name
+  public string OBJECT_NAME { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetOBJECT_NAMEBytes() { return __p.__vector_as_span<byte>(10, 1); }
+#else
+  public ArraySegment<byte>? GetOBJECT_NAMEBytes() { return __p.__vector_as_arraysegment(10); }
+#endif
+  public byte[] GetOBJECT_NAMEArray() { return __p.__vector_as_array<byte>(10); }
+  /// History start time (ISO 8601)
+  public string START_TIME { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSTART_TIMEBytes() { return __p.__vector_as_span<byte>(12, 1); }
+#else
+  public ArraySegment<byte>? GetSTART_TIMEBytes() { return __p.__vector_as_arraysegment(12); }
+#endif
+  public byte[] GetSTART_TIMEArray() { return __p.__vector_as_array<byte>(12); }
+  /// History end time (ISO 8601)
+  public string END_TIME { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetEND_TIMEBytes() { return __p.__vector_as_span<byte>(14, 1); }
+#else
+  public ArraySegment<byte>? GetEND_TIMEBytes() { return __p.__vector_as_arraysegment(14); }
+#endif
+  public byte[] GetEND_TIMEArray() { return __p.__vector_as_array<byte>(14); }
+  /// Current effective until date (ISO 8601)
+  public string EFFECTIVE_UNTIL { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetEFFECTIVE_UNTILBytes() { return __p.__vector_as_span<byte>(16, 1); }
+#else
+  public ArraySegment<byte>? GetEFFECTIVE_UNTILBytes() { return __p.__vector_as_arraysegment(16); }
+#endif
+  public byte[] GetEFFECTIVE_UNTILArray() { return __p.__vector_as_array<byte>(16); }
+  /// Current drift rate in degrees/day
+  public double DRIFT_RATE { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Current mean longitude in degrees East
+  public double MEAN_LONGITUDE { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Longitude slot center in degrees East (if station-keeping)
+  public double SLOT_CENTER { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Longitude slot half-width in degrees
+  public double SLOT_HALF_WIDTH { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Whether object is actively station-keeping
+  public bool STATION_KEEPING { get { int o = __p.__offset(26); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Historical drift records
+  public driftRecord? RECORDS(int j) { int o = __p.__offset(28); return o != 0 ? (driftRecord?)(new driftRecord()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int RECORDSLength { get { int o = __p.__offset(28); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Number of records in history
+  public uint NUM_RECORDS { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Additional notes
+  public string NOTES { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetNOTESBytes() { return __p.__vector_as_span<byte>(32, 1); }
+#else
+  public ArraySegment<byte>? GetNOTESBytes() { return __p.__vector_as_arraysegment(32); }
+#endif
+  public byte[] GetNOTESArray() { return __p.__vector_as_array<byte>(32); }
 
   public static Offset<DFH> CreateDFH(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
+      uint SAT_NO = 0,
+      StringOffset OBJECT_DESIGNATOROffset = default(StringOffset),
+      StringOffset OBJECT_NAMEOffset = default(StringOffset),
+      StringOffset START_TIMEOffset = default(StringOffset),
+      StringOffset END_TIMEOffset = default(StringOffset),
       StringOffset EFFECTIVE_UNTILOffset = default(StringOffset),
-      double DRIFT_RATE = 0.0) {
-    builder.StartTable(3);
+      double DRIFT_RATE = 0.0,
+      double MEAN_LONGITUDE = 0.0,
+      double SLOT_CENTER = 0.0,
+      double SLOT_HALF_WIDTH = 0.0,
+      bool STATION_KEEPING = false,
+      VectorOffset RECORDSOffset = default(VectorOffset),
+      uint NUM_RECORDS = 0,
+      StringOffset NOTESOffset = default(StringOffset)) {
+    builder.StartTable(15);
+    DFH.AddSLOT_HALF_WIDTH(builder, SLOT_HALF_WIDTH);
+    DFH.AddSLOT_CENTER(builder, SLOT_CENTER);
+    DFH.AddMEAN_LONGITUDE(builder, MEAN_LONGITUDE);
     DFH.AddDRIFT_RATE(builder, DRIFT_RATE);
+    DFH.AddNOTES(builder, NOTESOffset);
+    DFH.AddNUM_RECORDS(builder, NUM_RECORDS);
+    DFH.AddRECORDS(builder, RECORDSOffset);
     DFH.AddEFFECTIVE_UNTIL(builder, EFFECTIVE_UNTILOffset);
+    DFH.AddEND_TIME(builder, END_TIMEOffset);
+    DFH.AddSTART_TIME(builder, START_TIMEOffset);
+    DFH.AddOBJECT_NAME(builder, OBJECT_NAMEOffset);
+    DFH.AddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOROffset);
+    DFH.AddSAT_NO(builder, SAT_NO);
     DFH.AddID(builder, IDOffset);
+    DFH.AddSTATION_KEEPING(builder, STATION_KEEPING);
     return DFH.EndDFH(builder);
   }
 
-  public static void StartDFH(FlatBufferBuilder builder) { builder.StartTable(3); }
+  public static void StartDFH(FlatBufferBuilder builder) { builder.StartTable(15); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
-  public static void AddEFFECTIVE_UNTIL(FlatBufferBuilder builder, StringOffset EFFECTIVE_UNTILOffset) { builder.AddOffset(1, EFFECTIVE_UNTILOffset.Value, 0); }
-  public static void AddDRIFT_RATE(FlatBufferBuilder builder, double DRIFT_RATE) { builder.AddDouble(2, DRIFT_RATE, 0.0); }
+  public static void AddSAT_NO(FlatBufferBuilder builder, uint SAT_NO) { builder.AddUint(1, SAT_NO, 0); }
+  public static void AddOBJECT_DESIGNATOR(FlatBufferBuilder builder, StringOffset OBJECT_DESIGNATOROffset) { builder.AddOffset(2, OBJECT_DESIGNATOROffset.Value, 0); }
+  public static void AddOBJECT_NAME(FlatBufferBuilder builder, StringOffset OBJECT_NAMEOffset) { builder.AddOffset(3, OBJECT_NAMEOffset.Value, 0); }
+  public static void AddSTART_TIME(FlatBufferBuilder builder, StringOffset START_TIMEOffset) { builder.AddOffset(4, START_TIMEOffset.Value, 0); }
+  public static void AddEND_TIME(FlatBufferBuilder builder, StringOffset END_TIMEOffset) { builder.AddOffset(5, END_TIMEOffset.Value, 0); }
+  public static void AddEFFECTIVE_UNTIL(FlatBufferBuilder builder, StringOffset EFFECTIVE_UNTILOffset) { builder.AddOffset(6, EFFECTIVE_UNTILOffset.Value, 0); }
+  public static void AddDRIFT_RATE(FlatBufferBuilder builder, double DRIFT_RATE) { builder.AddDouble(7, DRIFT_RATE, 0.0); }
+  public static void AddMEAN_LONGITUDE(FlatBufferBuilder builder, double MEAN_LONGITUDE) { builder.AddDouble(8, MEAN_LONGITUDE, 0.0); }
+  public static void AddSLOT_CENTER(FlatBufferBuilder builder, double SLOT_CENTER) { builder.AddDouble(9, SLOT_CENTER, 0.0); }
+  public static void AddSLOT_HALF_WIDTH(FlatBufferBuilder builder, double SLOT_HALF_WIDTH) { builder.AddDouble(10, SLOT_HALF_WIDTH, 0.0); }
+  public static void AddSTATION_KEEPING(FlatBufferBuilder builder, bool STATION_KEEPING) { builder.AddBool(11, STATION_KEEPING, false); }
+  public static void AddRECORDS(FlatBufferBuilder builder, VectorOffset RECORDSOffset) { builder.AddOffset(12, RECORDSOffset.Value, 0); }
+  public static VectorOffset CreateRECORDSVector(FlatBufferBuilder builder, Offset<driftRecord>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateRECORDSVectorBlock(FlatBufferBuilder builder, Offset<driftRecord>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateRECORDSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<driftRecord>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateRECORDSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<driftRecord>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartRECORDSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddNUM_RECORDS(FlatBufferBuilder builder, uint NUM_RECORDS) { builder.AddUint(13, NUM_RECORDS, 0); }
+  public static void AddNOTES(FlatBufferBuilder builder, StringOffset NOTESOffset) { builder.AddOffset(14, NOTESOffset.Value, 0); }
   public static Offset<DFH> EndDFH(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<DFH>(o);
@@ -63,31 +162,91 @@ public struct DFH : IFlatbufferObject
   }
   public void UnPackTo(DFHT _o) {
     _o.ID = this.ID;
+    _o.SAT_NO = this.SAT_NO;
+    _o.OBJECT_DESIGNATOR = this.OBJECT_DESIGNATOR;
+    _o.OBJECT_NAME = this.OBJECT_NAME;
+    _o.START_TIME = this.START_TIME;
+    _o.END_TIME = this.END_TIME;
     _o.EFFECTIVE_UNTIL = this.EFFECTIVE_UNTIL;
     _o.DRIFT_RATE = this.DRIFT_RATE;
+    _o.MEAN_LONGITUDE = this.MEAN_LONGITUDE;
+    _o.SLOT_CENTER = this.SLOT_CENTER;
+    _o.SLOT_HALF_WIDTH = this.SLOT_HALF_WIDTH;
+    _o.STATION_KEEPING = this.STATION_KEEPING;
+    _o.RECORDS = new List<driftRecordT>();
+    for (var _j = 0; _j < this.RECORDSLength; ++_j) {_o.RECORDS.Add(this.RECORDS(_j).HasValue ? this.RECORDS(_j).Value.UnPack() : null);}
+    _o.NUM_RECORDS = this.NUM_RECORDS;
+    _o.NOTES = this.NOTES;
   }
   public static Offset<DFH> Pack(FlatBufferBuilder builder, DFHT _o) {
     if (_o == null) return default(Offset<DFH>);
     var _ID = _o.ID == null ? default(StringOffset) : builder.CreateString(_o.ID);
+    var _OBJECT_DESIGNATOR = _o.OBJECT_DESIGNATOR == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_DESIGNATOR);
+    var _OBJECT_NAME = _o.OBJECT_NAME == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_NAME);
+    var _START_TIME = _o.START_TIME == null ? default(StringOffset) : builder.CreateString(_o.START_TIME);
+    var _END_TIME = _o.END_TIME == null ? default(StringOffset) : builder.CreateString(_o.END_TIME);
     var _EFFECTIVE_UNTIL = _o.EFFECTIVE_UNTIL == null ? default(StringOffset) : builder.CreateString(_o.EFFECTIVE_UNTIL);
+    var _RECORDS = default(VectorOffset);
+    if (_o.RECORDS != null) {
+      var __RECORDS = new Offset<driftRecord>[_o.RECORDS.Count];
+      for (var _j = 0; _j < __RECORDS.Length; ++_j) { __RECORDS[_j] = driftRecord.Pack(builder, _o.RECORDS[_j]); }
+      _RECORDS = CreateRECORDSVector(builder, __RECORDS);
+    }
+    var _NOTES = _o.NOTES == null ? default(StringOffset) : builder.CreateString(_o.NOTES);
     return CreateDFH(
       builder,
       _ID,
+      _o.SAT_NO,
+      _OBJECT_DESIGNATOR,
+      _OBJECT_NAME,
+      _START_TIME,
+      _END_TIME,
       _EFFECTIVE_UNTIL,
-      _o.DRIFT_RATE);
+      _o.DRIFT_RATE,
+      _o.MEAN_LONGITUDE,
+      _o.SLOT_CENTER,
+      _o.SLOT_HALF_WIDTH,
+      _o.STATION_KEEPING,
+      _RECORDS,
+      _o.NUM_RECORDS,
+      _NOTES);
   }
 }
 
 public class DFHT
 {
   public string ID { get; set; }
+  public uint SAT_NO { get; set; }
+  public string OBJECT_DESIGNATOR { get; set; }
+  public string OBJECT_NAME { get; set; }
+  public string START_TIME { get; set; }
+  public string END_TIME { get; set; }
   public string EFFECTIVE_UNTIL { get; set; }
   public double DRIFT_RATE { get; set; }
+  public double MEAN_LONGITUDE { get; set; }
+  public double SLOT_CENTER { get; set; }
+  public double SLOT_HALF_WIDTH { get; set; }
+  public bool STATION_KEEPING { get; set; }
+  public List<driftRecordT> RECORDS { get; set; }
+  public uint NUM_RECORDS { get; set; }
+  public string NOTES { get; set; }
 
   public DFHT() {
     this.ID = null;
+    this.SAT_NO = 0;
+    this.OBJECT_DESIGNATOR = null;
+    this.OBJECT_NAME = null;
+    this.START_TIME = null;
+    this.END_TIME = null;
     this.EFFECTIVE_UNTIL = null;
     this.DRIFT_RATE = 0.0;
+    this.MEAN_LONGITUDE = 0.0;
+    this.SLOT_CENTER = 0.0;
+    this.SLOT_HALF_WIDTH = 0.0;
+    this.STATION_KEEPING = false;
+    this.RECORDS = null;
+    this.NUM_RECORDS = 0;
+    this.NOTES = null;
   }
   public static DFHT DeserializeFromBinary(byte[] fbBuffer) {
     return DFH.GetRootAsDFH(new ByteBuffer(fbBuffer)).UnPack();
@@ -106,8 +265,20 @@ static public class DFHVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*ID*/, false)
-      && verifier.VerifyString(tablePos, 6 /*EFFECTIVE_UNTIL*/, false)
-      && verifier.VerifyField(tablePos, 8 /*DRIFT_RATE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 6 /*SAT_NO*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 8 /*OBJECT_DESIGNATOR*/, false)
+      && verifier.VerifyString(tablePos, 10 /*OBJECT_NAME*/, false)
+      && verifier.VerifyString(tablePos, 12 /*START_TIME*/, false)
+      && verifier.VerifyString(tablePos, 14 /*END_TIME*/, false)
+      && verifier.VerifyString(tablePos, 16 /*EFFECTIVE_UNTIL*/, false)
+      && verifier.VerifyField(tablePos, 18 /*DRIFT_RATE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 20 /*MEAN_LONGITUDE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 22 /*SLOT_CENTER*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 24 /*SLOT_HALF_WIDTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 26 /*STATION_KEEPING*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyVectorOfTables(tablePos, 28 /*RECORDS*/, driftRecordVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 30 /*NUM_RECORDS*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 32 /*NOTES*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

@@ -4,6 +4,8 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { irBand } from './irBand.js';
+import { irDetectionType } from './irDetectionType.js';
 
 
 /**
@@ -31,6 +33,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$IRO');
 }
 
+/**
+ * Unique identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,6 +43,9 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Reference to source entity
+ */
 ID_ENTITY():string|null
 ID_ENTITY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID_ENTITY(optionalEncoding?:any):string|Uint8Array|null {
@@ -45,6 +53,9 @@ ID_ENTITY(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Sensor or observation name
+ */
 NAME():string|null
 NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 NAME(optionalEncoding?:any):string|Uint8Array|null {
@@ -52,6 +63,9 @@ NAME(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Description of observation
+ */
 DESCRIPTION():string|null
 DESCRIPTION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 DESCRIPTION(optionalEncoding?:any):string|Uint8Array|null {
@@ -59,6 +73,9 @@ DESCRIPTION(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Source entity designator
+ */
 ENTITY():string|null
 ENTITY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ENTITY(optionalEncoding?:any):string|Uint8Array|null {
@@ -66,8 +83,236 @@ ENTITY(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Observation epoch (ISO 8601)
+ */
+EPOCH():string|null
+EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Sensor identifier
+ */
+SENSOR_ID():string|null
+SENSOR_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SENSOR_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Target satellite number (if identified)
+ */
+SAT_NO():number {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Target object designator
+ */
+OBJECT_DESIGNATOR():string|null
+OBJECT_DESIGNATOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OBJECT_DESIGNATOR(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * IR spectral band
+ */
+BAND():irBand {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : irBand.SWIR;
+}
+
+/**
+ * Detection type
+ */
+DETECTION_TYPE():irDetectionType {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : irDetectionType.POINT_SOURCE;
+}
+
+/**
+ * Right ascension in degrees
+ */
+RA():number {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Declination in degrees
+ */
+DEC():number {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Right ascension uncertainty in arcseconds
+ */
+RA_UNC():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Declination uncertainty in arcseconds
+ */
+DEC_UNC():number {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Azimuth angle in degrees
+ */
+AZIMUTH():number {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Elevation angle in degrees
+ */
+ELEVATION():number {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Range in km (if available)
+ */
+RANGE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Irradiance in W/m^2
+ */
+IRRADIANCE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Irradiance uncertainty in W/m^2
+ */
+IRRADIANCE_UNC():number {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Apparent IR magnitude
+ */
+IR_MAG():number {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Magnitude uncertainty
+ */
+MAG_UNC():number {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Effective temperature in Kelvin
+ */
+TEMPERATURE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 48);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Integration time in seconds
+ */
+INTEGRATION_TIME():number {
+  const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Background irradiance in W/m^2/sr
+ */
+BACKGROUND():number {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Signal-to-noise ratio
+ */
+SNR():number {
+  const offset = this.bb!.__offset(this.bb_pos, 54);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Spectral data wavelengths in micrometers
+ */
+WAVELENGTHS(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+wavelengthsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+wavelengthsArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Spectral data values in W/m^2/um
+ */
+SPECTRAL_VALUES(index: number):number|null {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? this.bb!.readFloat64(this.bb!.__vector(this.bb_pos + offset) + index * 8) : 0;
+}
+
+spectralValuesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+spectralValuesArray():Float64Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? new Float64Array(this.bb!.bytes().buffer, this.bb!.bytes().byteOffset + this.bb!.__vector(this.bb_pos + offset), this.bb!.__vector_len(this.bb_pos + offset)) : null;
+}
+
+/**
+ * Data quality indicator (0-9, 9=best)
+ */
+QUALITY():number {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Additional notes
+ */
+NOTES():string|null
+NOTES(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+NOTES(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startIRO(builder:flatbuffers.Builder) {
-  builder.startObject(5);
+  builder.startObject(30);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -90,6 +335,140 @@ static addEntity(builder:flatbuffers.Builder, ENTITYOffset:flatbuffers.Offset) {
   builder.addFieldOffset(4, ENTITYOffset, 0);
 }
 
+static addEpoch(builder:flatbuffers.Builder, EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, EPOCHOffset, 0);
+}
+
+static addSensorId(builder:flatbuffers.Builder, SENSOR_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, SENSOR_IDOffset, 0);
+}
+
+static addSatNo(builder:flatbuffers.Builder, SAT_NO:number) {
+  builder.addFieldInt32(7, SAT_NO, 0);
+}
+
+static addObjectDesignator(builder:flatbuffers.Builder, OBJECT_DESIGNATOROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(8, OBJECT_DESIGNATOROffset, 0);
+}
+
+static addBand(builder:flatbuffers.Builder, BAND:irBand) {
+  builder.addFieldInt8(9, BAND, irBand.SWIR);
+}
+
+static addDetectionType(builder:flatbuffers.Builder, DETECTION_TYPE:irDetectionType) {
+  builder.addFieldInt8(10, DETECTION_TYPE, irDetectionType.POINT_SOURCE);
+}
+
+static addRa(builder:flatbuffers.Builder, RA:number) {
+  builder.addFieldFloat64(11, RA, 0.0);
+}
+
+static addDec(builder:flatbuffers.Builder, DEC:number) {
+  builder.addFieldFloat64(12, DEC, 0.0);
+}
+
+static addRaUnc(builder:flatbuffers.Builder, RA_UNC:number) {
+  builder.addFieldFloat64(13, RA_UNC, 0.0);
+}
+
+static addDecUnc(builder:flatbuffers.Builder, DEC_UNC:number) {
+  builder.addFieldFloat64(14, DEC_UNC, 0.0);
+}
+
+static addAzimuth(builder:flatbuffers.Builder, AZIMUTH:number) {
+  builder.addFieldFloat64(15, AZIMUTH, 0.0);
+}
+
+static addElevation(builder:flatbuffers.Builder, ELEVATION:number) {
+  builder.addFieldFloat64(16, ELEVATION, 0.0);
+}
+
+static addRange(builder:flatbuffers.Builder, RANGE:number) {
+  builder.addFieldFloat64(17, RANGE, 0.0);
+}
+
+static addIrradiance(builder:flatbuffers.Builder, IRRADIANCE:number) {
+  builder.addFieldFloat64(18, IRRADIANCE, 0.0);
+}
+
+static addIrradianceUnc(builder:flatbuffers.Builder, IRRADIANCE_UNC:number) {
+  builder.addFieldFloat64(19, IRRADIANCE_UNC, 0.0);
+}
+
+static addIrMag(builder:flatbuffers.Builder, IR_MAG:number) {
+  builder.addFieldFloat64(20, IR_MAG, 0.0);
+}
+
+static addMagUnc(builder:flatbuffers.Builder, MAG_UNC:number) {
+  builder.addFieldFloat64(21, MAG_UNC, 0.0);
+}
+
+static addTemperature(builder:flatbuffers.Builder, TEMPERATURE:number) {
+  builder.addFieldFloat64(22, TEMPERATURE, 0.0);
+}
+
+static addIntegrationTime(builder:flatbuffers.Builder, INTEGRATION_TIME:number) {
+  builder.addFieldFloat64(23, INTEGRATION_TIME, 0.0);
+}
+
+static addBackground(builder:flatbuffers.Builder, BACKGROUND:number) {
+  builder.addFieldFloat64(24, BACKGROUND, 0.0);
+}
+
+static addSnr(builder:flatbuffers.Builder, SNR:number) {
+  builder.addFieldFloat64(25, SNR, 0.0);
+}
+
+static addWavelengths(builder:flatbuffers.Builder, WAVELENGTHSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(26, WAVELENGTHSOffset, 0);
+}
+
+static createWavelengthsVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createWavelengthsVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createWavelengthsVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startWavelengthsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addSpectralValues(builder:flatbuffers.Builder, SPECTRAL_VALUESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(27, SPECTRAL_VALUESOffset, 0);
+}
+
+static createSpectralValuesVector(builder:flatbuffers.Builder, data:number[]|Float64Array):flatbuffers.Offset;
+/**
+ * @deprecated This Uint8Array overload will be removed in the future.
+ */
+static createSpectralValuesVector(builder:flatbuffers.Builder, data:number[]|Uint8Array):flatbuffers.Offset;
+static createSpectralValuesVector(builder:flatbuffers.Builder, data:number[]|Float64Array|Uint8Array):flatbuffers.Offset {
+  builder.startVector(8, data.length, 8);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addFloat64(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startSpectralValuesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(8, numElems, 8);
+}
+
+static addQuality(builder:flatbuffers.Builder, QUALITY:number) {
+  builder.addFieldInt8(28, QUALITY, 0);
+}
+
+static addNotes(builder:flatbuffers.Builder, NOTESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(29, NOTESOffset, 0);
+}
+
 static endIRO(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -103,13 +482,38 @@ static finishSizePrefixedIROBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$IRO', true);
 }
 
-static createIRO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ID_ENTITYOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, ENTITYOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createIRO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ID_ENTITYOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, DESCRIPTIONOffset:flatbuffers.Offset, ENTITYOffset:flatbuffers.Offset, EPOCHOffset:flatbuffers.Offset, SENSOR_IDOffset:flatbuffers.Offset, SAT_NO:number, OBJECT_DESIGNATOROffset:flatbuffers.Offset, BAND:irBand, DETECTION_TYPE:irDetectionType, RA:number, DEC:number, RA_UNC:number, DEC_UNC:number, AZIMUTH:number, ELEVATION:number, RANGE:number, IRRADIANCE:number, IRRADIANCE_UNC:number, IR_MAG:number, MAG_UNC:number, TEMPERATURE:number, INTEGRATION_TIME:number, BACKGROUND:number, SNR:number, WAVELENGTHSOffset:flatbuffers.Offset, SPECTRAL_VALUESOffset:flatbuffers.Offset, QUALITY:number, NOTESOffset:flatbuffers.Offset):flatbuffers.Offset {
   IRO.startIRO(builder);
   IRO.addId(builder, IDOffset);
   IRO.addIdEntity(builder, ID_ENTITYOffset);
   IRO.addName(builder, NAMEOffset);
   IRO.addDescription(builder, DESCRIPTIONOffset);
   IRO.addEntity(builder, ENTITYOffset);
+  IRO.addEpoch(builder, EPOCHOffset);
+  IRO.addSensorId(builder, SENSOR_IDOffset);
+  IRO.addSatNo(builder, SAT_NO);
+  IRO.addObjectDesignator(builder, OBJECT_DESIGNATOROffset);
+  IRO.addBand(builder, BAND);
+  IRO.addDetectionType(builder, DETECTION_TYPE);
+  IRO.addRa(builder, RA);
+  IRO.addDec(builder, DEC);
+  IRO.addRaUnc(builder, RA_UNC);
+  IRO.addDecUnc(builder, DEC_UNC);
+  IRO.addAzimuth(builder, AZIMUTH);
+  IRO.addElevation(builder, ELEVATION);
+  IRO.addRange(builder, RANGE);
+  IRO.addIrradiance(builder, IRRADIANCE);
+  IRO.addIrradianceUnc(builder, IRRADIANCE_UNC);
+  IRO.addIrMag(builder, IR_MAG);
+  IRO.addMagUnc(builder, MAG_UNC);
+  IRO.addTemperature(builder, TEMPERATURE);
+  IRO.addIntegrationTime(builder, INTEGRATION_TIME);
+  IRO.addBackground(builder, BACKGROUND);
+  IRO.addSnr(builder, SNR);
+  IRO.addWavelengths(builder, WAVELENGTHSOffset);
+  IRO.addSpectralValues(builder, SPECTRAL_VALUESOffset);
+  IRO.addQuality(builder, QUALITY);
+  IRO.addNotes(builder, NOTESOffset);
   return IRO.endIRO(builder);
 }
 
@@ -119,7 +523,32 @@ unpack(): IROT {
     this.ID_ENTITY(),
     this.NAME(),
     this.DESCRIPTION(),
-    this.ENTITY()
+    this.ENTITY(),
+    this.EPOCH(),
+    this.SENSOR_ID(),
+    this.SAT_NO(),
+    this.OBJECT_DESIGNATOR(),
+    this.BAND(),
+    this.DETECTION_TYPE(),
+    this.RA(),
+    this.DEC(),
+    this.RA_UNC(),
+    this.DEC_UNC(),
+    this.AZIMUTH(),
+    this.ELEVATION(),
+    this.RANGE(),
+    this.IRRADIANCE(),
+    this.IRRADIANCE_UNC(),
+    this.IR_MAG(),
+    this.MAG_UNC(),
+    this.TEMPERATURE(),
+    this.INTEGRATION_TIME(),
+    this.BACKGROUND(),
+    this.SNR(),
+    this.bb!.createScalarList<number>(this.WAVELENGTHS.bind(this), this.wavelengthsLength()),
+    this.bb!.createScalarList<number>(this.SPECTRAL_VALUES.bind(this), this.spectralValuesLength()),
+    this.QUALITY(),
+    this.NOTES()
   );
 }
 
@@ -130,6 +559,31 @@ unpackTo(_o: IROT): void {
   _o.NAME = this.NAME();
   _o.DESCRIPTION = this.DESCRIPTION();
   _o.ENTITY = this.ENTITY();
+  _o.EPOCH = this.EPOCH();
+  _o.SENSOR_ID = this.SENSOR_ID();
+  _o.SAT_NO = this.SAT_NO();
+  _o.OBJECT_DESIGNATOR = this.OBJECT_DESIGNATOR();
+  _o.BAND = this.BAND();
+  _o.DETECTION_TYPE = this.DETECTION_TYPE();
+  _o.RA = this.RA();
+  _o.DEC = this.DEC();
+  _o.RA_UNC = this.RA_UNC();
+  _o.DEC_UNC = this.DEC_UNC();
+  _o.AZIMUTH = this.AZIMUTH();
+  _o.ELEVATION = this.ELEVATION();
+  _o.RANGE = this.RANGE();
+  _o.IRRADIANCE = this.IRRADIANCE();
+  _o.IRRADIANCE_UNC = this.IRRADIANCE_UNC();
+  _o.IR_MAG = this.IR_MAG();
+  _o.MAG_UNC = this.MAG_UNC();
+  _o.TEMPERATURE = this.TEMPERATURE();
+  _o.INTEGRATION_TIME = this.INTEGRATION_TIME();
+  _o.BACKGROUND = this.BACKGROUND();
+  _o.SNR = this.SNR();
+  _o.WAVELENGTHS = this.bb!.createScalarList<number>(this.WAVELENGTHS.bind(this), this.wavelengthsLength());
+  _o.SPECTRAL_VALUES = this.bb!.createScalarList<number>(this.SPECTRAL_VALUES.bind(this), this.spectralValuesLength());
+  _o.QUALITY = this.QUALITY();
+  _o.NOTES = this.NOTES();
 }
 }
 
@@ -139,7 +593,32 @@ constructor(
   public ID_ENTITY: string|Uint8Array|null = null,
   public NAME: string|Uint8Array|null = null,
   public DESCRIPTION: string|Uint8Array|null = null,
-  public ENTITY: string|Uint8Array|null = null
+  public ENTITY: string|Uint8Array|null = null,
+  public EPOCH: string|Uint8Array|null = null,
+  public SENSOR_ID: string|Uint8Array|null = null,
+  public SAT_NO: number = 0,
+  public OBJECT_DESIGNATOR: string|Uint8Array|null = null,
+  public BAND: irBand = irBand.SWIR,
+  public DETECTION_TYPE: irDetectionType = irDetectionType.POINT_SOURCE,
+  public RA: number = 0.0,
+  public DEC: number = 0.0,
+  public RA_UNC: number = 0.0,
+  public DEC_UNC: number = 0.0,
+  public AZIMUTH: number = 0.0,
+  public ELEVATION: number = 0.0,
+  public RANGE: number = 0.0,
+  public IRRADIANCE: number = 0.0,
+  public IRRADIANCE_UNC: number = 0.0,
+  public IR_MAG: number = 0.0,
+  public MAG_UNC: number = 0.0,
+  public TEMPERATURE: number = 0.0,
+  public INTEGRATION_TIME: number = 0.0,
+  public BACKGROUND: number = 0.0,
+  public SNR: number = 0.0,
+  public WAVELENGTHS: (number)[] = [],
+  public SPECTRAL_VALUES: (number)[] = [],
+  public QUALITY: number = 0,
+  public NOTES: string|Uint8Array|null = null
 ){}
 
 
@@ -149,13 +628,44 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const NAME = (this.NAME !== null ? builder.createString(this.NAME!) : 0);
   const DESCRIPTION = (this.DESCRIPTION !== null ? builder.createString(this.DESCRIPTION!) : 0);
   const ENTITY = (this.ENTITY !== null ? builder.createString(this.ENTITY!) : 0);
+  const EPOCH = (this.EPOCH !== null ? builder.createString(this.EPOCH!) : 0);
+  const SENSOR_ID = (this.SENSOR_ID !== null ? builder.createString(this.SENSOR_ID!) : 0);
+  const OBJECT_DESIGNATOR = (this.OBJECT_DESIGNATOR !== null ? builder.createString(this.OBJECT_DESIGNATOR!) : 0);
+  const WAVELENGTHS = IRO.createWavelengthsVector(builder, this.WAVELENGTHS);
+  const SPECTRAL_VALUES = IRO.createSpectralValuesVector(builder, this.SPECTRAL_VALUES);
+  const NOTES = (this.NOTES !== null ? builder.createString(this.NOTES!) : 0);
 
   return IRO.createIRO(builder,
     ID,
     ID_ENTITY,
     NAME,
     DESCRIPTION,
-    ENTITY
+    ENTITY,
+    EPOCH,
+    SENSOR_ID,
+    this.SAT_NO,
+    OBJECT_DESIGNATOR,
+    this.BAND,
+    this.DETECTION_TYPE,
+    this.RA,
+    this.DEC,
+    this.RA_UNC,
+    this.DEC_UNC,
+    this.AZIMUTH,
+    this.ELEVATION,
+    this.RANGE,
+    this.IRRADIANCE,
+    this.IRRADIANCE_UNC,
+    this.IR_MAG,
+    this.MAG_UNC,
+    this.TEMPERATURE,
+    this.INTEGRATION_TIME,
+    this.BACKGROUND,
+    this.SNR,
+    WAVELENGTHS,
+    SPECTRAL_VALUES,
+    this.QUALITY,
+    NOTES
   );
 }
 }

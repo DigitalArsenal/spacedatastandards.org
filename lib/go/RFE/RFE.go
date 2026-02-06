@@ -54,6 +54,7 @@ func (rcv *RFE) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Unique emitter identifier
 func (rcv *RFE) ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -62,6 +63,8 @@ func (rcv *RFE) ID() []byte {
 	return nil
 }
 
+/// Unique emitter identifier
+/// Reference to parent entity
 func (rcv *RFE) ID_ENTITY() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -70,6 +73,8 @@ func (rcv *RFE) ID_ENTITY() []byte {
 	return nil
 }
 
+/// Reference to parent entity
+/// Emitter name or designation
 func (rcv *RFE) NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -78,14 +83,22 @@ func (rcv *RFE) NAME() []byte {
 	return nil
 }
 
-func (rcv *RFE) TYPE() []byte {
+/// Emitter name or designation
+/// Emitter type
+func (rcv *RFE) TYPE() emitterType {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return emitterType(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
-	return nil
+	return 0
 }
 
+/// Emitter type
+func (rcv *RFE) MutateTYPE(n emitterType) bool {
+	return rcv._tab.MutateInt8Slot(10, int8(n))
+}
+
+/// Parent entity designator
 func (rcv *RFE) ENTITY() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -94,25 +107,195 @@ func (rcv *RFE) ENTITY() []byte {
 	return nil
 }
 
-func (rcv *RFE) RF_EMITTER_DETAILS(j int) []byte {
+/// Parent entity designator
+/// ELNOT (Electronic Notation)
+func (rcv *RFE) ELNOT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
 }
 
+/// ELNOT (Electronic Notation)
+/// NATO reporting name
+func (rcv *RFE) NATO_NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// NATO reporting name
+/// Platform type (e.g., SHIP, AIRCRAFT, GROUND, SATELLITE)
+func (rcv *RFE) PLATFORM_TYPE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Platform type (e.g., SHIP, AIRCRAFT, GROUND, SATELLITE)
+/// Country of origin
+func (rcv *RFE) COUNTRY() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Country of origin
+/// Primary function description
+func (rcv *RFE) FUNCTION() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Primary function description
+/// Operating band (e.g., HF, VHF, UHF, L, S, C, X, Ku, Ka)
+func (rcv *RFE) BAND() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Operating band (e.g., HF, VHF, UHF, L, S, C, X, Ku, Ka)
+/// Minimum operating frequency in MHz
+func (rcv *RFE) FREQ_MIN() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Minimum operating frequency in MHz
+func (rcv *RFE) MutateFREQ_MIN(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(26, n)
+}
+
+/// Maximum operating frequency in MHz
+func (rcv *RFE) FREQ_MAX() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Maximum operating frequency in MHz
+func (rcv *RFE) MutateFREQ_MAX(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(28, n)
+}
+
+/// Peak power in kW
+func (rcv *RFE) PEAK_POWER() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Peak power in kW
+func (rcv *RFE) MutatePEAK_POWER(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+/// Average power in kW
+func (rcv *RFE) AVG_POWER() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Average power in kW
+func (rcv *RFE) MutateAVG_POWER(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+/// Antenna gain in dBi
+func (rcv *RFE) ANTENNA_GAIN() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Antenna gain in dBi
+func (rcv *RFE) MutateANTENNA_GAIN(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+/// Number of operating modes
+func (rcv *RFE) NUM_MODES() uint32 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Number of operating modes
+func (rcv *RFE) MutateNUM_MODES(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(36, n)
+}
+
+/// Emitter operating mode details
+func (rcv *RFE) RF_EMITTER_DETAILS(obj *rfEmitterDetail, j int) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		x := rcv._tab.Vector(o)
+		x += flatbuffers.UOffsetT(j) * 4
+		x = rcv._tab.Indirect(x)
+		obj.Init(rcv._tab.Bytes, x)
+		return true
+	}
+	return false
+}
+
 func (rcv *RFE) RF_EMITTER_DETAILSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
+/// Emitter operating mode details
+/// Threat level assessment
+func (rcv *RFE) THREAT_LEVEL() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Threat level assessment
+/// Additional notes
+func (rcv *RFE) NOTES() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// Additional notes
 func RFEStart(builder *flatbuffers.Builder) {
-	builder.StartObject(6)
+	builder.StartObject(20)
 }
 func RFEAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
@@ -123,17 +306,59 @@ func RFEAddID_ENTITY(builder *flatbuffers.Builder, ID_ENTITY flatbuffers.UOffset
 func RFEAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(NAME), 0)
 }
-func RFEAddTYPE(builder *flatbuffers.Builder, TYPE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(TYPE), 0)
+func RFEAddTYPE(builder *flatbuffers.Builder, TYPE emitterType) {
+	builder.PrependInt8Slot(3, int8(TYPE), 0)
 }
 func RFEAddENTITY(builder *flatbuffers.Builder, ENTITY flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ENTITY), 0)
 }
+func RFEAddELNOT(builder *flatbuffers.Builder, ELNOT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(ELNOT), 0)
+}
+func RFEAddNATO_NAME(builder *flatbuffers.Builder, NATO_NAME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(NATO_NAME), 0)
+}
+func RFEAddPLATFORM_TYPE(builder *flatbuffers.Builder, PLATFORM_TYPE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(PLATFORM_TYPE), 0)
+}
+func RFEAddCOUNTRY(builder *flatbuffers.Builder, COUNTRY flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(COUNTRY), 0)
+}
+func RFEAddFUNCTION(builder *flatbuffers.Builder, FUNCTION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(FUNCTION), 0)
+}
+func RFEAddBAND(builder *flatbuffers.Builder, BAND flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(BAND), 0)
+}
+func RFEAddFREQ_MIN(builder *flatbuffers.Builder, FREQ_MIN float64) {
+	builder.PrependFloat64Slot(11, FREQ_MIN, 0.0)
+}
+func RFEAddFREQ_MAX(builder *flatbuffers.Builder, FREQ_MAX float64) {
+	builder.PrependFloat64Slot(12, FREQ_MAX, 0.0)
+}
+func RFEAddPEAK_POWER(builder *flatbuffers.Builder, PEAK_POWER float64) {
+	builder.PrependFloat64Slot(13, PEAK_POWER, 0.0)
+}
+func RFEAddAVG_POWER(builder *flatbuffers.Builder, AVG_POWER float64) {
+	builder.PrependFloat64Slot(14, AVG_POWER, 0.0)
+}
+func RFEAddANTENNA_GAIN(builder *flatbuffers.Builder, ANTENNA_GAIN float64) {
+	builder.PrependFloat64Slot(15, ANTENNA_GAIN, 0.0)
+}
+func RFEAddNUM_MODES(builder *flatbuffers.Builder, NUM_MODES uint32) {
+	builder.PrependUint32Slot(16, NUM_MODES, 0)
+}
 func RFEAddRF_EMITTER_DETAILS(builder *flatbuffers.Builder, RF_EMITTER_DETAILS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(RF_EMITTER_DETAILS), 0)
+	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(RF_EMITTER_DETAILS), 0)
 }
 func RFEStartRF_EMITTER_DETAILSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
+}
+func RFEAddTHREAT_LEVEL(builder *flatbuffers.Builder, THREAT_LEVEL flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(THREAT_LEVEL), 0)
+}
+func RFEAddNOTES(builder *flatbuffers.Builder, NOTES flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(NOTES), 0)
 }
 func RFEEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

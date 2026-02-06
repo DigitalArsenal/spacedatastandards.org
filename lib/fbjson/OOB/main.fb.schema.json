@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "OOB": {
+      "type": "object",
+      "description": "On-Orbit Battery",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Unique identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_ON_ORBIT": {
+          "type": "string",
+          "description": "Reference to parent on-orbit object",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_BATTERY": {
+          "type": "string",
+          "description": "Reference to battery specification",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Battery name or designation",
+          "x-flatbuffer-type": "string"
+        },
+        "CHEMISTRY": {
+          "type": "string",
+          "description": "Battery chemistry (e.g., LI_ION, NICD, NIMH, LIPO, SILVER_ZINC)",
+          "x-flatbuffer-type": "string"
+        },
+        "QUANTITY": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of batteries of this type",
+          "x-flatbuffer-type": "uint"
+        },
+        "VOLTAGE": {
+          "type": "number",
+          "description": "Nominal voltage in Volts",
+          "x-flatbuffer-type": "double"
+        },
+        "CAPACITY_AH": {
+          "type": "number",
+          "description": "Capacity in Amp-hours",
+          "x-flatbuffer-type": "double"
+        },
+        "ENERGY_WH": {
+          "type": "number",
+          "description": "Energy capacity in Watt-hours",
+          "x-flatbuffer-type": "double"
+        },
+        "MAX_DOD": {
+          "type": "number",
+          "description": "Maximum depth of discharge as fraction (0.0-1.0)",
+          "x-flatbuffer-type": "double"
+        },
+        "CYCLE_LIFE": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of charge/discharge cycles rated",
+          "x-flatbuffer-type": "uint"
+        },
+        "MASS": {
+          "type": "number",
+          "description": "Battery mass in kg",
+          "x-flatbuffer-type": "double"
+        },
+        "STATE_OF_HEALTH": {
+          "type": "number",
+          "description": "Current state of health as fraction (0.0-1.0)",
+          "x-flatbuffer-type": "double"
+        },
+        "NOTES": {
+          "type": "string",
+          "description": "Additional notes",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/OOB",
+  "x-flatbuffer-root-type": "OOB",
+  "x-flatbuffer-file-identifier": "$OOB"
+}

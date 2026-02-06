@@ -19,6 +19,7 @@ public struct MST : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public MST __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Unique identifier
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,6 +27,7 @@ public struct MST : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
+  /// Message type code
   public string MSG_TYPE { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetMSG_TYPEBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -33,6 +35,7 @@ public struct MST : IFlatbufferObject
   public ArraySegment<byte>? GetMSG_TYPEBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetMSG_TYPEArray() { return __p.__vector_as_array<byte>(6); }
+  /// Message sub-type
   public string MSG_SUB_TYPE { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetMSG_SUB_TYPEBytes() { return __p.__vector_as_span<byte>(8, 1); }
@@ -40,6 +43,7 @@ public struct MST : IFlatbufferObject
   public ArraySegment<byte>? GetMSG_SUB_TYPEBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetMSG_SUB_TYPEArray() { return __p.__vector_as_array<byte>(8); }
+  /// Message creation date (ISO 8601)
   public string MSG_CREATE_DATE { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetMSG_CREATE_DATEBytes() { return __p.__vector_as_span<byte>(10, 1); }
@@ -47,13 +51,9 @@ public struct MST : IFlatbufferObject
   public ArraySegment<byte>? GetMSG_CREATE_DATEBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
   public byte[] GetMSG_CREATE_DATEArray() { return __p.__vector_as_array<byte>(10); }
-  public string ENVIRONMENT { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetENVIRONMENTBytes() { return __p.__vector_as_span<byte>(12, 1); }
-#else
-  public ArraySegment<byte>? GetENVIRONMENTBytes() { return __p.__vector_as_arraysegment(12); }
-#endif
-  public byte[] GetENVIRONMENTArray() { return __p.__vector_as_array<byte>(12); }
+  /// Track environment
+  public missileEnvironment ENVIRONMENT { get { int o = __p.__offset(12); return o != 0 ? (missileEnvironment)__p.bb.GetSbyte(o + __p.bb_pos) : missileEnvironment.SPACE; } }
+  /// Object type classification
   public string OBJ_TYPE { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetOBJ_TYPEBytes() { return __p.__vector_as_span<byte>(14, 1); }
@@ -61,7 +61,9 @@ public struct MST : IFlatbufferObject
   public ArraySegment<byte>? GetOBJ_TYPEBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
   public byte[] GetOBJ_TYPEArray() { return __p.__vector_as_array<byte>(14); }
-  public int OBJ_TYPE_CONF { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  /// Object type confidence (0-100)
+  public byte OBJ_TYPE_CONF { get { int o = __p.__offset(16); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  /// Object platform type
   public string OBJ_PLAT { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetOBJ_PLATBytes() { return __p.__vector_as_span<byte>(18, 1); }
@@ -69,6 +71,7 @@ public struct MST : IFlatbufferObject
   public ArraySegment<byte>? GetOBJ_PLATBytes() { return __p.__vector_as_arraysegment(18); }
 #endif
   public byte[] GetOBJ_PLATArray() { return __p.__vector_as_array<byte>(18); }
+  /// Object identity assessment
   public string OBJ_IDENT { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetOBJ_IDENTBytes() { return __p.__vector_as_span<byte>(20, 1); }
@@ -76,6 +79,7 @@ public struct MST : IFlatbufferObject
   public ArraySegment<byte>? GetOBJ_IDENTBytes() { return __p.__vector_as_arraysegment(20); }
 #endif
   public byte[] GetOBJ_IDENTArray() { return __p.__vector_as_array<byte>(20); }
+  /// Space amplification data
   public string SPACE_AMP { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetSPACE_AMPBytes() { return __p.__vector_as_span<byte>(22, 1); }
@@ -83,122 +87,137 @@ public struct MST : IFlatbufferObject
   public ArraySegment<byte>? GetSPACE_AMPBytes() { return __p.__vector_as_arraysegment(22); }
 #endif
   public byte[] GetSPACE_AMPArray() { return __p.__vector_as_array<byte>(22); }
-  public string OBJ_ACT { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Space amplification confidence (0-100)
+  public byte SPACE_AMP_CONF { get { int o = __p.__offset(24); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  /// Object activity
+  public string OBJ_ACT { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetOBJ_ACTBytes() { return __p.__vector_as_span<byte>(24, 1); }
+  public Span<byte> GetOBJ_ACTBytes() { return __p.__vector_as_span<byte>(26, 1); }
 #else
-  public ArraySegment<byte>? GetOBJ_ACTBytes() { return __p.__vector_as_arraysegment(24); }
+  public ArraySegment<byte>? GetOBJ_ACTBytes() { return __p.__vector_as_arraysegment(26); }
 #endif
-  public byte[] GetOBJ_ACTArray() { return __p.__vector_as_array<byte>(24); }
-  public string SPACE_SPEC_TYPE { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetOBJ_ACTArray() { return __p.__vector_as_array<byte>(26); }
+  /// Space specific type
+  public string SPACE_SPEC_TYPE { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSPACE_SPEC_TYPEBytes() { return __p.__vector_as_span<byte>(26, 1); }
+  public Span<byte> GetSPACE_SPEC_TYPEBytes() { return __p.__vector_as_span<byte>(28, 1); }
 #else
-  public ArraySegment<byte>? GetSPACE_SPEC_TYPEBytes() { return __p.__vector_as_arraysegment(26); }
+  public ArraySegment<byte>? GetSPACE_SPEC_TYPEBytes() { return __p.__vector_as_arraysegment(28); }
 #endif
-  public byte[] GetSPACE_SPEC_TYPEArray() { return __p.__vector_as_array<byte>(26); }
-  public string ACFT_SUB_TYPE { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetSPACE_SPEC_TYPEArray() { return __p.__vector_as_array<byte>(28); }
+  /// Aircraft sub-type (if applicable)
+  public string ACFT_SUB_TYPE { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetACFT_SUB_TYPEBytes() { return __p.__vector_as_span<byte>(28, 1); }
+  public Span<byte> GetACFT_SUB_TYPEBytes() { return __p.__vector_as_span<byte>(30, 1); }
 #else
-  public ArraySegment<byte>? GetACFT_SUB_TYPEBytes() { return __p.__vector_as_arraysegment(28); }
+  public ArraySegment<byte>? GetACFT_SUB_TYPEBytes() { return __p.__vector_as_arraysegment(30); }
 #endif
-  public byte[] GetACFT_SUB_TYPEArray() { return __p.__vector_as_array<byte>(28); }
-  public string NAME { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetACFT_SUB_TYPEArray() { return __p.__vector_as_array<byte>(30); }
+  /// Object name
+  public string NAME { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetNAMEBytes() { return __p.__vector_as_span<byte>(30, 1); }
+  public Span<byte> GetNAMEBytes() { return __p.__vector_as_span<byte>(32, 1); }
 #else
-  public ArraySegment<byte>? GetNAMEBytes() { return __p.__vector_as_arraysegment(30); }
+  public ArraySegment<byte>? GetNAMEBytes() { return __p.__vector_as_arraysegment(32); }
 #endif
-  public byte[] GetNAMEArray() { return __p.__vector_as_array<byte>(30); }
-  public string CALL_SIGN { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetNAMEArray() { return __p.__vector_as_array<byte>(32); }
+  /// Call sign
+  public string CALL_SIGN { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetCALL_SIGNBytes() { return __p.__vector_as_span<byte>(32, 1); }
+  public Span<byte> GetCALL_SIGNBytes() { return __p.__vector_as_span<byte>(34, 1); }
 #else
-  public ArraySegment<byte>? GetCALL_SIGNBytes() { return __p.__vector_as_arraysegment(32); }
+  public ArraySegment<byte>? GetCALL_SIGNBytes() { return __p.__vector_as_arraysegment(34); }
 #endif
-  public byte[] GetCALL_SIGNArray() { return __p.__vector_as_array<byte>(32); }
-  public bool LOST_TRK_IND { get { int o = __p.__offset(34); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  public string TRACK_ID { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetCALL_SIGNArray() { return __p.__vector_as_array<byte>(34); }
+  /// True if track is lost
+  public bool LOST_TRK_IND { get { int o = __p.__offset(36); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Track identifier
+  public string TRACK_ID { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTRACK_IDBytes() { return __p.__vector_as_span<byte>(36, 1); }
+  public Span<byte> GetTRACK_IDBytes() { return __p.__vector_as_span<byte>(38, 1); }
 #else
-  public ArraySegment<byte>? GetTRACK_IDBytes() { return __p.__vector_as_arraysegment(36); }
+  public ArraySegment<byte>? GetTRACK_IDBytes() { return __p.__vector_as_arraysegment(38); }
 #endif
-  public byte[] GetTRACK_IDArray() { return __p.__vector_as_array<byte>(36); }
-  public string PARENT_TRACK_ID { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetTRACK_IDArray() { return __p.__vector_as_array<byte>(38); }
+  /// Parent track identifier
+  public string PARENT_TRACK_ID { get { int o = __p.__offset(40); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetPARENT_TRACK_IDBytes() { return __p.__vector_as_span<byte>(38, 1); }
+  public Span<byte> GetPARENT_TRACK_IDBytes() { return __p.__vector_as_span<byte>(40, 1); }
 #else
-  public ArraySegment<byte>? GetPARENT_TRACK_IDBytes() { return __p.__vector_as_arraysegment(38); }
+  public ArraySegment<byte>? GetPARENT_TRACK_IDBytes() { return __p.__vector_as_arraysegment(40); }
 #endif
-  public byte[] GetPARENT_TRACK_IDArray() { return __p.__vector_as_array<byte>(38); }
-  public string MUID_SRC_TRK { get { int o = __p.__offset(40); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetPARENT_TRACK_IDArray() { return __p.__vector_as_array<byte>(40); }
+  /// Multi-unit identifier (source track)
+  public string MUID_SRC_TRK { get { int o = __p.__offset(42); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetMUID_SRC_TRKBytes() { return __p.__vector_as_span<byte>(40, 1); }
+  public Span<byte> GetMUID_SRC_TRKBytes() { return __p.__vector_as_span<byte>(42, 1); }
 #else
-  public ArraySegment<byte>? GetMUID_SRC_TRKBytes() { return __p.__vector_as_arraysegment(40); }
+  public ArraySegment<byte>? GetMUID_SRC_TRKBytes() { return __p.__vector_as_arraysegment(42); }
 #endif
-  public byte[] GetMUID_SRC_TRKArray() { return __p.__vector_as_array<byte>(40); }
-  public string MUID_SRC { get { int o = __p.__offset(42); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetMUID_SRC_TRKArray() { return __p.__vector_as_array<byte>(42); }
+  /// Multi-unit identifier (source)
+  public string MUID_SRC { get { int o = __p.__offset(44); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetMUID_SRCBytes() { return __p.__vector_as_span<byte>(42, 1); }
+  public Span<byte> GetMUID_SRCBytes() { return __p.__vector_as_span<byte>(44, 1); }
 #else
-  public ArraySegment<byte>? GetMUID_SRCBytes() { return __p.__vector_as_arraysegment(42); }
+  public ArraySegment<byte>? GetMUID_SRCBytes() { return __p.__vector_as_arraysegment(44); }
 #endif
-  public byte[] GetMUID_SRCArray() { return __p.__vector_as_array<byte>(42); }
-  public string ALERT { get { int o = __p.__offset(44); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetMUID_SRCArray() { return __p.__vector_as_array<byte>(44); }
+  /// Alert classification
+  public string ALERT { get { int o = __p.__offset(46); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetALERTBytes() { return __p.__vector_as_span<byte>(44, 1); }
+  public Span<byte> GetALERTBytes() { return __p.__vector_as_span<byte>(46, 1); }
 #else
-  public ArraySegment<byte>? GetALERTBytes() { return __p.__vector_as_arraysegment(44); }
+  public ArraySegment<byte>? GetALERTBytes() { return __p.__vector_as_arraysegment(46); }
 #endif
-  public byte[] GetALERTArray() { return __p.__vector_as_array<byte>(44); }
-  public string MSL_STATUS { get { int o = __p.__offset(46); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetALERTArray() { return __p.__vector_as_array<byte>(46); }
+  /// Missile engagement status
+  public missileStatus MSL_STATUS { get { int o = __p.__offset(48); return o != 0 ? (missileStatus)__p.bb.GetSbyte(o + __p.bb_pos) : missileStatus.BOOSTING; } }
+  /// Track timestamp (ISO 8601)
+  public string TS { get { int o = __p.__offset(50); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetMSL_STATUSBytes() { return __p.__vector_as_span<byte>(46, 1); }
+  public Span<byte> GetTSBytes() { return __p.__vector_as_span<byte>(50, 1); }
 #else
-  public ArraySegment<byte>? GetMSL_STATUSBytes() { return __p.__vector_as_arraysegment(46); }
+  public ArraySegment<byte>? GetTSBytes() { return __p.__vector_as_arraysegment(50); }
 #endif
-  public byte[] GetMSL_STATUSArray() { return __p.__vector_as_array<byte>(46); }
-  public string TS { get { int o = __p.__offset(48); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetTSArray() { return __p.__vector_as_array<byte>(50); }
+  /// AOU report type
+  public aouReportType AOU_RPT_TYPE { get { int o = __p.__offset(52); return o != 0 ? (aouReportType)__p.bb.GetSbyte(o + __p.bb_pos) : aouReportType.CIRCULAR; } }
+  /// Containment probability (0-1)
+  public double CONTAINMENT { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Track confidence (0-1)
+  public double TRK_CONF { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Track quality (0-15)
+  public byte TRK_QUAL { get { int o = __p.__offset(58); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  /// Elevation angle (degrees)
+  public double ANG_ELEV { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sensor mode
+  public string SEN_MODE { get { int o = __p.__offset(62); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTSBytes() { return __p.__vector_as_span<byte>(48, 1); }
+  public Span<byte> GetSEN_MODEBytes() { return __p.__vector_as_span<byte>(62, 1); }
 #else
-  public ArraySegment<byte>? GetTSBytes() { return __p.__vector_as_arraysegment(48); }
+  public ArraySegment<byte>? GetSEN_MODEBytes() { return __p.__vector_as_arraysegment(62); }
 #endif
-  public byte[] GetTSArray() { return __p.__vector_as_array<byte>(48); }
-  public string AOU_RPT_TYPE { get { int o = __p.__offset(50); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetSEN_MODEArray() { return __p.__vector_as_array<byte>(62); }
+  /// Information source
+  public string INFO_SOURCE { get { int o = __p.__offset(64); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetAOU_RPT_TYPEBytes() { return __p.__vector_as_span<byte>(50, 1); }
+  public Span<byte> GetINFO_SOURCEBytes() { return __p.__vector_as_span<byte>(64, 1); }
 #else
-  public ArraySegment<byte>? GetAOU_RPT_TYPEBytes() { return __p.__vector_as_arraysegment(50); }
+  public ArraySegment<byte>? GetINFO_SOURCEBytes() { return __p.__vector_as_arraysegment(64); }
 #endif
-  public byte[] GetAOU_RPT_TYPEArray() { return __p.__vector_as_array<byte>(50); }
-  public double CONTAINMENT { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double TRK_CONF { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public int TRK_QUAL { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public double ANG_ELEV { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string SEN_MODE { get { int o = __p.__offset(60); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetSEN_MODEBytes() { return __p.__vector_as_span<byte>(60, 1); }
-#else
-  public ArraySegment<byte>? GetSEN_MODEBytes() { return __p.__vector_as_arraysegment(60); }
-#endif
-  public byte[] GetSEN_MODEArray() { return __p.__vector_as_array<byte>(60); }
-  public string INFO_SOURCE { get { int o = __p.__offset(62); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetINFO_SOURCEBytes() { return __p.__vector_as_span<byte>(62, 1); }
-#else
-  public ArraySegment<byte>? GetINFO_SOURCEBytes() { return __p.__vector_as_arraysegment(62); }
-#endif
-  public byte[] GetINFO_SOURCEArray() { return __p.__vector_as_array<byte>(62); }
-  public bool BOOSTING { get { int o = __p.__offset(64); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  public double POLAR_SING_LOC_LAT { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double POLAR_SING_LOC_LON { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public bool EMG_IND { get { int o = __p.__offset(70); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  public bool DROP_PT_IND { get { int o = __p.__offset(72); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  public int SPACE_AMP_CONF { get { int o = __p.__offset(74); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public byte[] GetINFO_SOURCEArray() { return __p.__vector_as_array<byte>(64); }
+  /// True if object is in boost phase
+  public bool BOOSTING { get { int o = __p.__offset(66); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Polar singularity latitude (degrees)
+  public double POLAR_SING_LOC_LAT { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Polar singularity longitude (degrees)
+  public double POLAR_SING_LOC_LON { get { int o = __p.__offset(70); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// True if emergency indicator set
+  public bool EMG_IND { get { int o = __p.__offset(72); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// True if drop point indicator set
+  public bool DROP_PT_IND { get { int o = __p.__offset(74); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Launch time (ISO 8601)
   public string LAUNCH_TIME { get { int o = __p.__offset(76); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetLAUNCH_TIMEBytes() { return __p.__vector_as_span<byte>(76, 1); }
@@ -206,17 +225,17 @@ public struct MST : IFlatbufferObject
   public ArraySegment<byte>? GetLAUNCH_TIMEBytes() { return __p.__vector_as_arraysegment(76); }
 #endif
   public byte[] GetLAUNCH_TIMEArray() { return __p.__vector_as_array<byte>(76); }
+  /// Launch latitude (degrees)
   public double LAUNCH_LAT { get { int o = __p.__offset(78); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Launch longitude (degrees)
   public double LAUNCH_LON { get { int o = __p.__offset(80); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Azimuth correction (degrees)
   public double AZ_CORR { get { int o = __p.__offset(82); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Burnout altitude (km)
   public double BURNOUT_ALT { get { int o = __p.__offset(84); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string LAUNCH_AOU_TYPE { get { int o = __p.__offset(86); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetLAUNCH_AOU_TYPEBytes() { return __p.__vector_as_span<byte>(86, 1); }
-#else
-  public ArraySegment<byte>? GetLAUNCH_AOU_TYPEBytes() { return __p.__vector_as_arraysegment(86); }
-#endif
-  public byte[] GetLAUNCH_AOU_TYPEArray() { return __p.__vector_as_array<byte>(86); }
+  /// Launch AOU type
+  public aouReportType LAUNCH_AOU_TYPE { get { int o = __p.__offset(86); return o != 0 ? (aouReportType)__p.bb.GetSbyte(o + __p.bb_pos) : aouReportType.CIRCULAR; } }
+  /// Predicted impact time (ISO 8601)
   public string IMPACT_TIME { get { int o = __p.__offset(88); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIMPACT_TIMEBytes() { return __p.__vector_as_span<byte>(88, 1); }
@@ -224,16 +243,13 @@ public struct MST : IFlatbufferObject
   public ArraySegment<byte>? GetIMPACT_TIMEBytes() { return __p.__vector_as_arraysegment(88); }
 #endif
   public byte[] GetIMPACT_TIMEArray() { return __p.__vector_as_array<byte>(88); }
+  /// Predicted impact latitude (degrees)
   public double IMPACT_LAT { get { int o = __p.__offset(90); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Predicted impact longitude (degrees)
   public double IMPACT_LON { get { int o = __p.__offset(92); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string IMPACT_AOU_TYPE { get { int o = __p.__offset(94); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetIMPACT_AOU_TYPEBytes() { return __p.__vector_as_span<byte>(94, 1); }
-#else
-  public ArraySegment<byte>? GetIMPACT_AOU_TYPEBytes() { return __p.__vector_as_arraysegment(94); }
-#endif
-  public byte[] GetIMPACT_AOU_TYPEArray() { return __p.__vector_as_array<byte>(94); }
-  /// Start time for vector data (ISO 8601 UTC format).
+  /// Impact AOU type
+  public aouReportType IMPACT_AOU_TYPE { get { int o = __p.__offset(94); return o != 0 ? (aouReportType)__p.bb.GetSbyte(o + __p.bb_pos) : aouReportType.CIRCULAR; } }
+  /// Start time for vector data (ISO 8601)
   public string VECTOR_START_TIME { get { int o = __p.__offset(96); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetVECTOR_START_TIMEBytes() { return __p.__vector_as_span<byte>(96, 1); }
@@ -241,9 +257,9 @@ public struct MST : IFlatbufferObject
   public ArraySegment<byte>? GetVECTOR_START_TIMEBytes() { return __p.__vector_as_arraysegment(96); }
 #endif
   public byte[] GetVECTOR_START_TIMEArray() { return __p.__vector_as_array<byte>(96); }
-  /// Time interval between vector points in seconds.
+  /// Time interval between vector points (seconds)
   public double VECTOR_STEP_SIZE { get { int o = __p.__offset(98); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).
+  /// Number of components per vector (default 6: X, Y, Z, VX, VY, VZ)
   public byte VECTOR_COMPONENTS { get { int o = __p.__offset(100); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)6; } }
   /// Vector data as flat array [X0, Y0, Z0, VX0, VY0, VZ0, X1, ...]
   public double VECTORS(int j) { int o = __p.__offset(102); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
@@ -254,7 +270,7 @@ public struct MST : IFlatbufferObject
   public ArraySegment<byte>? GetVECTORSBytes() { return __p.__vector_as_arraysegment(102); }
 #endif
   public double[] GetVECTORSArray() { return __p.__vector_as_array<double>(102); }
-  /// AOU report data as flat array (layout depends on AOU_RPT_TYPE).
+  /// AOU report data as flat array
   public double AOU_RPT(int j) { int o = __p.__offset(104); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
   public int AOU_RPTLength { get { int o = __p.__offset(104); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
@@ -263,7 +279,7 @@ public struct MST : IFlatbufferObject
   public ArraySegment<byte>? GetAOU_RPTBytes() { return __p.__vector_as_arraysegment(104); }
 #endif
   public double[] GetAOU_RPTArray() { return __p.__vector_as_array<double>(104); }
-  /// Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).
+  /// Launch AOU data as flat array
   public double LAUNCH_AOU(int j) { int o = __p.__offset(106); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
   public int LAUNCH_AOULength { get { int o = __p.__offset(106); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
@@ -272,7 +288,7 @@ public struct MST : IFlatbufferObject
   public ArraySegment<byte>? GetLAUNCH_AOUBytes() { return __p.__vector_as_arraysegment(106); }
 #endif
   public double[] GetLAUNCH_AOUArray() { return __p.__vector_as_array<double>(106); }
-  /// Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).
+  /// Impact AOU data as flat array
   public double IMPACT_AOU(int j) { int o = __p.__offset(108); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
   public int IMPACT_AOULength { get { int o = __p.__offset(108); return o != 0 ? __p.__vector_len(o) : 0; } }
 #if ENABLE_SPAN_T
@@ -287,12 +303,13 @@ public struct MST : IFlatbufferObject
       StringOffset MSG_TYPEOffset = default(StringOffset),
       StringOffset MSG_SUB_TYPEOffset = default(StringOffset),
       StringOffset MSG_CREATE_DATEOffset = default(StringOffset),
-      StringOffset ENVIRONMENTOffset = default(StringOffset),
+      missileEnvironment ENVIRONMENT = missileEnvironment.SPACE,
       StringOffset OBJ_TYPEOffset = default(StringOffset),
-      int OBJ_TYPE_CONF = 0,
+      byte OBJ_TYPE_CONF = 0,
       StringOffset OBJ_PLATOffset = default(StringOffset),
       StringOffset OBJ_IDENTOffset = default(StringOffset),
       StringOffset SPACE_AMPOffset = default(StringOffset),
+      byte SPACE_AMP_CONF = 0,
       StringOffset OBJ_ACTOffset = default(StringOffset),
       StringOffset SPACE_SPEC_TYPEOffset = default(StringOffset),
       StringOffset ACFT_SUB_TYPEOffset = default(StringOffset),
@@ -304,12 +321,12 @@ public struct MST : IFlatbufferObject
       StringOffset MUID_SRC_TRKOffset = default(StringOffset),
       StringOffset MUID_SRCOffset = default(StringOffset),
       StringOffset ALERTOffset = default(StringOffset),
-      StringOffset MSL_STATUSOffset = default(StringOffset),
+      missileStatus MSL_STATUS = missileStatus.BOOSTING,
       StringOffset TSOffset = default(StringOffset),
-      StringOffset AOU_RPT_TYPEOffset = default(StringOffset),
+      aouReportType AOU_RPT_TYPE = aouReportType.CIRCULAR,
       double CONTAINMENT = 0.0,
       double TRK_CONF = 0.0,
-      int TRK_QUAL = 0,
+      byte TRK_QUAL = 0,
       double ANG_ELEV = 0.0,
       StringOffset SEN_MODEOffset = default(StringOffset),
       StringOffset INFO_SOURCEOffset = default(StringOffset),
@@ -318,17 +335,16 @@ public struct MST : IFlatbufferObject
       double POLAR_SING_LOC_LON = 0.0,
       bool EMG_IND = false,
       bool DROP_PT_IND = false,
-      int SPACE_AMP_CONF = 0,
       StringOffset LAUNCH_TIMEOffset = default(StringOffset),
       double LAUNCH_LAT = 0.0,
       double LAUNCH_LON = 0.0,
       double AZ_CORR = 0.0,
       double BURNOUT_ALT = 0.0,
-      StringOffset LAUNCH_AOU_TYPEOffset = default(StringOffset),
+      aouReportType LAUNCH_AOU_TYPE = aouReportType.CIRCULAR,
       StringOffset IMPACT_TIMEOffset = default(StringOffset),
       double IMPACT_LAT = 0.0,
       double IMPACT_LON = 0.0,
-      StringOffset IMPACT_AOU_TYPEOffset = default(StringOffset),
+      aouReportType IMPACT_AOU_TYPE = aouReportType.CIRCULAR,
       StringOffset VECTOR_START_TIMEOffset = default(StringOffset),
       double VECTOR_STEP_SIZE = 0.0,
       byte VECTOR_COMPONENTS = 6,
@@ -354,17 +370,11 @@ public struct MST : IFlatbufferObject
     MST.AddAOU_RPT(builder, AOU_RPTOffset);
     MST.AddVECTORS(builder, VECTORSOffset);
     MST.AddVECTOR_START_TIME(builder, VECTOR_START_TIMEOffset);
-    MST.AddIMPACT_AOU_TYPE(builder, IMPACT_AOU_TYPEOffset);
     MST.AddIMPACT_TIME(builder, IMPACT_TIMEOffset);
-    MST.AddLAUNCH_AOU_TYPE(builder, LAUNCH_AOU_TYPEOffset);
     MST.AddLAUNCH_TIME(builder, LAUNCH_TIMEOffset);
-    MST.AddSPACE_AMP_CONF(builder, SPACE_AMP_CONF);
     MST.AddINFO_SOURCE(builder, INFO_SOURCEOffset);
     MST.AddSEN_MODE(builder, SEN_MODEOffset);
-    MST.AddTRK_QUAL(builder, TRK_QUAL);
-    MST.AddAOU_RPT_TYPE(builder, AOU_RPT_TYPEOffset);
     MST.AddTS(builder, TSOffset);
-    MST.AddMSL_STATUS(builder, MSL_STATUSOffset);
     MST.AddALERT(builder, ALERTOffset);
     MST.AddMUID_SRC(builder, MUID_SRCOffset);
     MST.AddMUID_SRC_TRK(builder, MUID_SRC_TRKOffset);
@@ -378,18 +388,24 @@ public struct MST : IFlatbufferObject
     MST.AddSPACE_AMP(builder, SPACE_AMPOffset);
     MST.AddOBJ_IDENT(builder, OBJ_IDENTOffset);
     MST.AddOBJ_PLAT(builder, OBJ_PLATOffset);
-    MST.AddOBJ_TYPE_CONF(builder, OBJ_TYPE_CONF);
     MST.AddOBJ_TYPE(builder, OBJ_TYPEOffset);
-    MST.AddENVIRONMENT(builder, ENVIRONMENTOffset);
     MST.AddMSG_CREATE_DATE(builder, MSG_CREATE_DATEOffset);
     MST.AddMSG_SUB_TYPE(builder, MSG_SUB_TYPEOffset);
     MST.AddMSG_TYPE(builder, MSG_TYPEOffset);
     MST.AddID(builder, IDOffset);
     MST.AddVECTOR_COMPONENTS(builder, VECTOR_COMPONENTS);
+    MST.AddIMPACT_AOU_TYPE(builder, IMPACT_AOU_TYPE);
+    MST.AddLAUNCH_AOU_TYPE(builder, LAUNCH_AOU_TYPE);
     MST.AddDROP_PT_IND(builder, DROP_PT_IND);
     MST.AddEMG_IND(builder, EMG_IND);
     MST.AddBOOSTING(builder, BOOSTING);
+    MST.AddTRK_QUAL(builder, TRK_QUAL);
+    MST.AddAOU_RPT_TYPE(builder, AOU_RPT_TYPE);
+    MST.AddMSL_STATUS(builder, MSL_STATUS);
     MST.AddLOST_TRK_IND(builder, LOST_TRK_IND);
+    MST.AddSPACE_AMP_CONF(builder, SPACE_AMP_CONF);
+    MST.AddOBJ_TYPE_CONF(builder, OBJ_TYPE_CONF);
+    MST.AddENVIRONMENT(builder, ENVIRONMENT);
     return MST.EndMST(builder);
   }
 
@@ -398,48 +414,48 @@ public struct MST : IFlatbufferObject
   public static void AddMSG_TYPE(FlatBufferBuilder builder, StringOffset MSG_TYPEOffset) { builder.AddOffset(1, MSG_TYPEOffset.Value, 0); }
   public static void AddMSG_SUB_TYPE(FlatBufferBuilder builder, StringOffset MSG_SUB_TYPEOffset) { builder.AddOffset(2, MSG_SUB_TYPEOffset.Value, 0); }
   public static void AddMSG_CREATE_DATE(FlatBufferBuilder builder, StringOffset MSG_CREATE_DATEOffset) { builder.AddOffset(3, MSG_CREATE_DATEOffset.Value, 0); }
-  public static void AddENVIRONMENT(FlatBufferBuilder builder, StringOffset ENVIRONMENTOffset) { builder.AddOffset(4, ENVIRONMENTOffset.Value, 0); }
+  public static void AddENVIRONMENT(FlatBufferBuilder builder, missileEnvironment ENVIRONMENT) { builder.AddSbyte(4, (sbyte)ENVIRONMENT, 0); }
   public static void AddOBJ_TYPE(FlatBufferBuilder builder, StringOffset OBJ_TYPEOffset) { builder.AddOffset(5, OBJ_TYPEOffset.Value, 0); }
-  public static void AddOBJ_TYPE_CONF(FlatBufferBuilder builder, int OBJ_TYPE_CONF) { builder.AddInt(6, OBJ_TYPE_CONF, 0); }
+  public static void AddOBJ_TYPE_CONF(FlatBufferBuilder builder, byte OBJ_TYPE_CONF) { builder.AddByte(6, OBJ_TYPE_CONF, 0); }
   public static void AddOBJ_PLAT(FlatBufferBuilder builder, StringOffset OBJ_PLATOffset) { builder.AddOffset(7, OBJ_PLATOffset.Value, 0); }
   public static void AddOBJ_IDENT(FlatBufferBuilder builder, StringOffset OBJ_IDENTOffset) { builder.AddOffset(8, OBJ_IDENTOffset.Value, 0); }
   public static void AddSPACE_AMP(FlatBufferBuilder builder, StringOffset SPACE_AMPOffset) { builder.AddOffset(9, SPACE_AMPOffset.Value, 0); }
-  public static void AddOBJ_ACT(FlatBufferBuilder builder, StringOffset OBJ_ACTOffset) { builder.AddOffset(10, OBJ_ACTOffset.Value, 0); }
-  public static void AddSPACE_SPEC_TYPE(FlatBufferBuilder builder, StringOffset SPACE_SPEC_TYPEOffset) { builder.AddOffset(11, SPACE_SPEC_TYPEOffset.Value, 0); }
-  public static void AddACFT_SUB_TYPE(FlatBufferBuilder builder, StringOffset ACFT_SUB_TYPEOffset) { builder.AddOffset(12, ACFT_SUB_TYPEOffset.Value, 0); }
-  public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(13, NAMEOffset.Value, 0); }
-  public static void AddCALL_SIGN(FlatBufferBuilder builder, StringOffset CALL_SIGNOffset) { builder.AddOffset(14, CALL_SIGNOffset.Value, 0); }
-  public static void AddLOST_TRK_IND(FlatBufferBuilder builder, bool LOST_TRK_IND) { builder.AddBool(15, LOST_TRK_IND, false); }
-  public static void AddTRACK_ID(FlatBufferBuilder builder, StringOffset TRACK_IDOffset) { builder.AddOffset(16, TRACK_IDOffset.Value, 0); }
-  public static void AddPARENT_TRACK_ID(FlatBufferBuilder builder, StringOffset PARENT_TRACK_IDOffset) { builder.AddOffset(17, PARENT_TRACK_IDOffset.Value, 0); }
-  public static void AddMUID_SRC_TRK(FlatBufferBuilder builder, StringOffset MUID_SRC_TRKOffset) { builder.AddOffset(18, MUID_SRC_TRKOffset.Value, 0); }
-  public static void AddMUID_SRC(FlatBufferBuilder builder, StringOffset MUID_SRCOffset) { builder.AddOffset(19, MUID_SRCOffset.Value, 0); }
-  public static void AddALERT(FlatBufferBuilder builder, StringOffset ALERTOffset) { builder.AddOffset(20, ALERTOffset.Value, 0); }
-  public static void AddMSL_STATUS(FlatBufferBuilder builder, StringOffset MSL_STATUSOffset) { builder.AddOffset(21, MSL_STATUSOffset.Value, 0); }
-  public static void AddTS(FlatBufferBuilder builder, StringOffset TSOffset) { builder.AddOffset(22, TSOffset.Value, 0); }
-  public static void AddAOU_RPT_TYPE(FlatBufferBuilder builder, StringOffset AOU_RPT_TYPEOffset) { builder.AddOffset(23, AOU_RPT_TYPEOffset.Value, 0); }
-  public static void AddCONTAINMENT(FlatBufferBuilder builder, double CONTAINMENT) { builder.AddDouble(24, CONTAINMENT, 0.0); }
-  public static void AddTRK_CONF(FlatBufferBuilder builder, double TRK_CONF) { builder.AddDouble(25, TRK_CONF, 0.0); }
-  public static void AddTRK_QUAL(FlatBufferBuilder builder, int TRK_QUAL) { builder.AddInt(26, TRK_QUAL, 0); }
-  public static void AddANG_ELEV(FlatBufferBuilder builder, double ANG_ELEV) { builder.AddDouble(27, ANG_ELEV, 0.0); }
-  public static void AddSEN_MODE(FlatBufferBuilder builder, StringOffset SEN_MODEOffset) { builder.AddOffset(28, SEN_MODEOffset.Value, 0); }
-  public static void AddINFO_SOURCE(FlatBufferBuilder builder, StringOffset INFO_SOURCEOffset) { builder.AddOffset(29, INFO_SOURCEOffset.Value, 0); }
-  public static void AddBOOSTING(FlatBufferBuilder builder, bool BOOSTING) { builder.AddBool(30, BOOSTING, false); }
-  public static void AddPOLAR_SING_LOC_LAT(FlatBufferBuilder builder, double POLAR_SING_LOC_LAT) { builder.AddDouble(31, POLAR_SING_LOC_LAT, 0.0); }
-  public static void AddPOLAR_SING_LOC_LON(FlatBufferBuilder builder, double POLAR_SING_LOC_LON) { builder.AddDouble(32, POLAR_SING_LOC_LON, 0.0); }
-  public static void AddEMG_IND(FlatBufferBuilder builder, bool EMG_IND) { builder.AddBool(33, EMG_IND, false); }
-  public static void AddDROP_PT_IND(FlatBufferBuilder builder, bool DROP_PT_IND) { builder.AddBool(34, DROP_PT_IND, false); }
-  public static void AddSPACE_AMP_CONF(FlatBufferBuilder builder, int SPACE_AMP_CONF) { builder.AddInt(35, SPACE_AMP_CONF, 0); }
+  public static void AddSPACE_AMP_CONF(FlatBufferBuilder builder, byte SPACE_AMP_CONF) { builder.AddByte(10, SPACE_AMP_CONF, 0); }
+  public static void AddOBJ_ACT(FlatBufferBuilder builder, StringOffset OBJ_ACTOffset) { builder.AddOffset(11, OBJ_ACTOffset.Value, 0); }
+  public static void AddSPACE_SPEC_TYPE(FlatBufferBuilder builder, StringOffset SPACE_SPEC_TYPEOffset) { builder.AddOffset(12, SPACE_SPEC_TYPEOffset.Value, 0); }
+  public static void AddACFT_SUB_TYPE(FlatBufferBuilder builder, StringOffset ACFT_SUB_TYPEOffset) { builder.AddOffset(13, ACFT_SUB_TYPEOffset.Value, 0); }
+  public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(14, NAMEOffset.Value, 0); }
+  public static void AddCALL_SIGN(FlatBufferBuilder builder, StringOffset CALL_SIGNOffset) { builder.AddOffset(15, CALL_SIGNOffset.Value, 0); }
+  public static void AddLOST_TRK_IND(FlatBufferBuilder builder, bool LOST_TRK_IND) { builder.AddBool(16, LOST_TRK_IND, false); }
+  public static void AddTRACK_ID(FlatBufferBuilder builder, StringOffset TRACK_IDOffset) { builder.AddOffset(17, TRACK_IDOffset.Value, 0); }
+  public static void AddPARENT_TRACK_ID(FlatBufferBuilder builder, StringOffset PARENT_TRACK_IDOffset) { builder.AddOffset(18, PARENT_TRACK_IDOffset.Value, 0); }
+  public static void AddMUID_SRC_TRK(FlatBufferBuilder builder, StringOffset MUID_SRC_TRKOffset) { builder.AddOffset(19, MUID_SRC_TRKOffset.Value, 0); }
+  public static void AddMUID_SRC(FlatBufferBuilder builder, StringOffset MUID_SRCOffset) { builder.AddOffset(20, MUID_SRCOffset.Value, 0); }
+  public static void AddALERT(FlatBufferBuilder builder, StringOffset ALERTOffset) { builder.AddOffset(21, ALERTOffset.Value, 0); }
+  public static void AddMSL_STATUS(FlatBufferBuilder builder, missileStatus MSL_STATUS) { builder.AddSbyte(22, (sbyte)MSL_STATUS, 0); }
+  public static void AddTS(FlatBufferBuilder builder, StringOffset TSOffset) { builder.AddOffset(23, TSOffset.Value, 0); }
+  public static void AddAOU_RPT_TYPE(FlatBufferBuilder builder, aouReportType AOU_RPT_TYPE) { builder.AddSbyte(24, (sbyte)AOU_RPT_TYPE, 0); }
+  public static void AddCONTAINMENT(FlatBufferBuilder builder, double CONTAINMENT) { builder.AddDouble(25, CONTAINMENT, 0.0); }
+  public static void AddTRK_CONF(FlatBufferBuilder builder, double TRK_CONF) { builder.AddDouble(26, TRK_CONF, 0.0); }
+  public static void AddTRK_QUAL(FlatBufferBuilder builder, byte TRK_QUAL) { builder.AddByte(27, TRK_QUAL, 0); }
+  public static void AddANG_ELEV(FlatBufferBuilder builder, double ANG_ELEV) { builder.AddDouble(28, ANG_ELEV, 0.0); }
+  public static void AddSEN_MODE(FlatBufferBuilder builder, StringOffset SEN_MODEOffset) { builder.AddOffset(29, SEN_MODEOffset.Value, 0); }
+  public static void AddINFO_SOURCE(FlatBufferBuilder builder, StringOffset INFO_SOURCEOffset) { builder.AddOffset(30, INFO_SOURCEOffset.Value, 0); }
+  public static void AddBOOSTING(FlatBufferBuilder builder, bool BOOSTING) { builder.AddBool(31, BOOSTING, false); }
+  public static void AddPOLAR_SING_LOC_LAT(FlatBufferBuilder builder, double POLAR_SING_LOC_LAT) { builder.AddDouble(32, POLAR_SING_LOC_LAT, 0.0); }
+  public static void AddPOLAR_SING_LOC_LON(FlatBufferBuilder builder, double POLAR_SING_LOC_LON) { builder.AddDouble(33, POLAR_SING_LOC_LON, 0.0); }
+  public static void AddEMG_IND(FlatBufferBuilder builder, bool EMG_IND) { builder.AddBool(34, EMG_IND, false); }
+  public static void AddDROP_PT_IND(FlatBufferBuilder builder, bool DROP_PT_IND) { builder.AddBool(35, DROP_PT_IND, false); }
   public static void AddLAUNCH_TIME(FlatBufferBuilder builder, StringOffset LAUNCH_TIMEOffset) { builder.AddOffset(36, LAUNCH_TIMEOffset.Value, 0); }
   public static void AddLAUNCH_LAT(FlatBufferBuilder builder, double LAUNCH_LAT) { builder.AddDouble(37, LAUNCH_LAT, 0.0); }
   public static void AddLAUNCH_LON(FlatBufferBuilder builder, double LAUNCH_LON) { builder.AddDouble(38, LAUNCH_LON, 0.0); }
   public static void AddAZ_CORR(FlatBufferBuilder builder, double AZ_CORR) { builder.AddDouble(39, AZ_CORR, 0.0); }
   public static void AddBURNOUT_ALT(FlatBufferBuilder builder, double BURNOUT_ALT) { builder.AddDouble(40, BURNOUT_ALT, 0.0); }
-  public static void AddLAUNCH_AOU_TYPE(FlatBufferBuilder builder, StringOffset LAUNCH_AOU_TYPEOffset) { builder.AddOffset(41, LAUNCH_AOU_TYPEOffset.Value, 0); }
+  public static void AddLAUNCH_AOU_TYPE(FlatBufferBuilder builder, aouReportType LAUNCH_AOU_TYPE) { builder.AddSbyte(41, (sbyte)LAUNCH_AOU_TYPE, 0); }
   public static void AddIMPACT_TIME(FlatBufferBuilder builder, StringOffset IMPACT_TIMEOffset) { builder.AddOffset(42, IMPACT_TIMEOffset.Value, 0); }
   public static void AddIMPACT_LAT(FlatBufferBuilder builder, double IMPACT_LAT) { builder.AddDouble(43, IMPACT_LAT, 0.0); }
   public static void AddIMPACT_LON(FlatBufferBuilder builder, double IMPACT_LON) { builder.AddDouble(44, IMPACT_LON, 0.0); }
-  public static void AddIMPACT_AOU_TYPE(FlatBufferBuilder builder, StringOffset IMPACT_AOU_TYPEOffset) { builder.AddOffset(45, IMPACT_AOU_TYPEOffset.Value, 0); }
+  public static void AddIMPACT_AOU_TYPE(FlatBufferBuilder builder, aouReportType IMPACT_AOU_TYPE) { builder.AddSbyte(45, (sbyte)IMPACT_AOU_TYPE, 0); }
   public static void AddVECTOR_START_TIME(FlatBufferBuilder builder, StringOffset VECTOR_START_TIMEOffset) { builder.AddOffset(46, VECTOR_START_TIMEOffset.Value, 0); }
   public static void AddVECTOR_STEP_SIZE(FlatBufferBuilder builder, double VECTOR_STEP_SIZE) { builder.AddDouble(47, VECTOR_STEP_SIZE, 0.0); }
   public static void AddVECTOR_COMPONENTS(FlatBufferBuilder builder, byte VECTOR_COMPONENTS) { builder.AddByte(48, VECTOR_COMPONENTS, 6); }
@@ -489,6 +505,7 @@ public struct MST : IFlatbufferObject
     _o.OBJ_PLAT = this.OBJ_PLAT;
     _o.OBJ_IDENT = this.OBJ_IDENT;
     _o.SPACE_AMP = this.SPACE_AMP;
+    _o.SPACE_AMP_CONF = this.SPACE_AMP_CONF;
     _o.OBJ_ACT = this.OBJ_ACT;
     _o.SPACE_SPEC_TYPE = this.SPACE_SPEC_TYPE;
     _o.ACFT_SUB_TYPE = this.ACFT_SUB_TYPE;
@@ -514,7 +531,6 @@ public struct MST : IFlatbufferObject
     _o.POLAR_SING_LOC_LON = this.POLAR_SING_LOC_LON;
     _o.EMG_IND = this.EMG_IND;
     _o.DROP_PT_IND = this.DROP_PT_IND;
-    _o.SPACE_AMP_CONF = this.SPACE_AMP_CONF;
     _o.LAUNCH_TIME = this.LAUNCH_TIME;
     _o.LAUNCH_LAT = this.LAUNCH_LAT;
     _o.LAUNCH_LON = this.LAUNCH_LON;
@@ -543,7 +559,6 @@ public struct MST : IFlatbufferObject
     var _MSG_TYPE = _o.MSG_TYPE == null ? default(StringOffset) : builder.CreateString(_o.MSG_TYPE);
     var _MSG_SUB_TYPE = _o.MSG_SUB_TYPE == null ? default(StringOffset) : builder.CreateString(_o.MSG_SUB_TYPE);
     var _MSG_CREATE_DATE = _o.MSG_CREATE_DATE == null ? default(StringOffset) : builder.CreateString(_o.MSG_CREATE_DATE);
-    var _ENVIRONMENT = _o.ENVIRONMENT == null ? default(StringOffset) : builder.CreateString(_o.ENVIRONMENT);
     var _OBJ_TYPE = _o.OBJ_TYPE == null ? default(StringOffset) : builder.CreateString(_o.OBJ_TYPE);
     var _OBJ_PLAT = _o.OBJ_PLAT == null ? default(StringOffset) : builder.CreateString(_o.OBJ_PLAT);
     var _OBJ_IDENT = _o.OBJ_IDENT == null ? default(StringOffset) : builder.CreateString(_o.OBJ_IDENT);
@@ -558,15 +573,11 @@ public struct MST : IFlatbufferObject
     var _MUID_SRC_TRK = _o.MUID_SRC_TRK == null ? default(StringOffset) : builder.CreateString(_o.MUID_SRC_TRK);
     var _MUID_SRC = _o.MUID_SRC == null ? default(StringOffset) : builder.CreateString(_o.MUID_SRC);
     var _ALERT = _o.ALERT == null ? default(StringOffset) : builder.CreateString(_o.ALERT);
-    var _MSL_STATUS = _o.MSL_STATUS == null ? default(StringOffset) : builder.CreateString(_o.MSL_STATUS);
     var _TS = _o.TS == null ? default(StringOffset) : builder.CreateString(_o.TS);
-    var _AOU_RPT_TYPE = _o.AOU_RPT_TYPE == null ? default(StringOffset) : builder.CreateString(_o.AOU_RPT_TYPE);
     var _SEN_MODE = _o.SEN_MODE == null ? default(StringOffset) : builder.CreateString(_o.SEN_MODE);
     var _INFO_SOURCE = _o.INFO_SOURCE == null ? default(StringOffset) : builder.CreateString(_o.INFO_SOURCE);
     var _LAUNCH_TIME = _o.LAUNCH_TIME == null ? default(StringOffset) : builder.CreateString(_o.LAUNCH_TIME);
-    var _LAUNCH_AOU_TYPE = _o.LAUNCH_AOU_TYPE == null ? default(StringOffset) : builder.CreateString(_o.LAUNCH_AOU_TYPE);
     var _IMPACT_TIME = _o.IMPACT_TIME == null ? default(StringOffset) : builder.CreateString(_o.IMPACT_TIME);
-    var _IMPACT_AOU_TYPE = _o.IMPACT_AOU_TYPE == null ? default(StringOffset) : builder.CreateString(_o.IMPACT_AOU_TYPE);
     var _VECTOR_START_TIME = _o.VECTOR_START_TIME == null ? default(StringOffset) : builder.CreateString(_o.VECTOR_START_TIME);
     var _VECTORS = default(VectorOffset);
     if (_o.VECTORS != null) {
@@ -594,12 +605,13 @@ public struct MST : IFlatbufferObject
       _MSG_TYPE,
       _MSG_SUB_TYPE,
       _MSG_CREATE_DATE,
-      _ENVIRONMENT,
+      _o.ENVIRONMENT,
       _OBJ_TYPE,
       _o.OBJ_TYPE_CONF,
       _OBJ_PLAT,
       _OBJ_IDENT,
       _SPACE_AMP,
+      _o.SPACE_AMP_CONF,
       _OBJ_ACT,
       _SPACE_SPEC_TYPE,
       _ACFT_SUB_TYPE,
@@ -611,9 +623,9 @@ public struct MST : IFlatbufferObject
       _MUID_SRC_TRK,
       _MUID_SRC,
       _ALERT,
-      _MSL_STATUS,
+      _o.MSL_STATUS,
       _TS,
-      _AOU_RPT_TYPE,
+      _o.AOU_RPT_TYPE,
       _o.CONTAINMENT,
       _o.TRK_CONF,
       _o.TRK_QUAL,
@@ -625,17 +637,16 @@ public struct MST : IFlatbufferObject
       _o.POLAR_SING_LOC_LON,
       _o.EMG_IND,
       _o.DROP_PT_IND,
-      _o.SPACE_AMP_CONF,
       _LAUNCH_TIME,
       _o.LAUNCH_LAT,
       _o.LAUNCH_LON,
       _o.AZ_CORR,
       _o.BURNOUT_ALT,
-      _LAUNCH_AOU_TYPE,
+      _o.LAUNCH_AOU_TYPE,
       _IMPACT_TIME,
       _o.IMPACT_LAT,
       _o.IMPACT_LON,
-      _IMPACT_AOU_TYPE,
+      _o.IMPACT_AOU_TYPE,
       _VECTOR_START_TIME,
       _o.VECTOR_STEP_SIZE,
       _o.VECTOR_COMPONENTS,
@@ -652,12 +663,13 @@ public class MSTT
   public string MSG_TYPE { get; set; }
   public string MSG_SUB_TYPE { get; set; }
   public string MSG_CREATE_DATE { get; set; }
-  public string ENVIRONMENT { get; set; }
+  public missileEnvironment ENVIRONMENT { get; set; }
   public string OBJ_TYPE { get; set; }
-  public int OBJ_TYPE_CONF { get; set; }
+  public byte OBJ_TYPE_CONF { get; set; }
   public string OBJ_PLAT { get; set; }
   public string OBJ_IDENT { get; set; }
   public string SPACE_AMP { get; set; }
+  public byte SPACE_AMP_CONF { get; set; }
   public string OBJ_ACT { get; set; }
   public string SPACE_SPEC_TYPE { get; set; }
   public string ACFT_SUB_TYPE { get; set; }
@@ -669,12 +681,12 @@ public class MSTT
   public string MUID_SRC_TRK { get; set; }
   public string MUID_SRC { get; set; }
   public string ALERT { get; set; }
-  public string MSL_STATUS { get; set; }
+  public missileStatus MSL_STATUS { get; set; }
   public string TS { get; set; }
-  public string AOU_RPT_TYPE { get; set; }
+  public aouReportType AOU_RPT_TYPE { get; set; }
   public double CONTAINMENT { get; set; }
   public double TRK_CONF { get; set; }
-  public int TRK_QUAL { get; set; }
+  public byte TRK_QUAL { get; set; }
   public double ANG_ELEV { get; set; }
   public string SEN_MODE { get; set; }
   public string INFO_SOURCE { get; set; }
@@ -683,17 +695,16 @@ public class MSTT
   public double POLAR_SING_LOC_LON { get; set; }
   public bool EMG_IND { get; set; }
   public bool DROP_PT_IND { get; set; }
-  public int SPACE_AMP_CONF { get; set; }
   public string LAUNCH_TIME { get; set; }
   public double LAUNCH_LAT { get; set; }
   public double LAUNCH_LON { get; set; }
   public double AZ_CORR { get; set; }
   public double BURNOUT_ALT { get; set; }
-  public string LAUNCH_AOU_TYPE { get; set; }
+  public aouReportType LAUNCH_AOU_TYPE { get; set; }
   public string IMPACT_TIME { get; set; }
   public double IMPACT_LAT { get; set; }
   public double IMPACT_LON { get; set; }
-  public string IMPACT_AOU_TYPE { get; set; }
+  public aouReportType IMPACT_AOU_TYPE { get; set; }
   public string VECTOR_START_TIME { get; set; }
   public double VECTOR_STEP_SIZE { get; set; }
   public byte VECTOR_COMPONENTS { get; set; }
@@ -707,12 +718,13 @@ public class MSTT
     this.MSG_TYPE = null;
     this.MSG_SUB_TYPE = null;
     this.MSG_CREATE_DATE = null;
-    this.ENVIRONMENT = null;
+    this.ENVIRONMENT = missileEnvironment.SPACE;
     this.OBJ_TYPE = null;
     this.OBJ_TYPE_CONF = 0;
     this.OBJ_PLAT = null;
     this.OBJ_IDENT = null;
     this.SPACE_AMP = null;
+    this.SPACE_AMP_CONF = 0;
     this.OBJ_ACT = null;
     this.SPACE_SPEC_TYPE = null;
     this.ACFT_SUB_TYPE = null;
@@ -724,9 +736,9 @@ public class MSTT
     this.MUID_SRC_TRK = null;
     this.MUID_SRC = null;
     this.ALERT = null;
-    this.MSL_STATUS = null;
+    this.MSL_STATUS = missileStatus.BOOSTING;
     this.TS = null;
-    this.AOU_RPT_TYPE = null;
+    this.AOU_RPT_TYPE = aouReportType.CIRCULAR;
     this.CONTAINMENT = 0.0;
     this.TRK_CONF = 0.0;
     this.TRK_QUAL = 0;
@@ -738,17 +750,16 @@ public class MSTT
     this.POLAR_SING_LOC_LON = 0.0;
     this.EMG_IND = false;
     this.DROP_PT_IND = false;
-    this.SPACE_AMP_CONF = 0;
     this.LAUNCH_TIME = null;
     this.LAUNCH_LAT = 0.0;
     this.LAUNCH_LON = 0.0;
     this.AZ_CORR = 0.0;
     this.BURNOUT_ALT = 0.0;
-    this.LAUNCH_AOU_TYPE = null;
+    this.LAUNCH_AOU_TYPE = aouReportType.CIRCULAR;
     this.IMPACT_TIME = null;
     this.IMPACT_LAT = 0.0;
     this.IMPACT_LON = 0.0;
-    this.IMPACT_AOU_TYPE = null;
+    this.IMPACT_AOU_TYPE = aouReportType.CIRCULAR;
     this.VECTOR_START_TIME = null;
     this.VECTOR_STEP_SIZE = 0.0;
     this.VECTOR_COMPONENTS = 6;
@@ -777,48 +788,48 @@ static public class MSTVerify
       && verifier.VerifyString(tablePos, 6 /*MSG_TYPE*/, false)
       && verifier.VerifyString(tablePos, 8 /*MSG_SUB_TYPE*/, false)
       && verifier.VerifyString(tablePos, 10 /*MSG_CREATE_DATE*/, false)
-      && verifier.VerifyString(tablePos, 12 /*ENVIRONMENT*/, false)
+      && verifier.VerifyField(tablePos, 12 /*ENVIRONMENT*/, 1 /*missileEnvironment*/, 1, false)
       && verifier.VerifyString(tablePos, 14 /*OBJ_TYPE*/, false)
-      && verifier.VerifyField(tablePos, 16 /*OBJ_TYPE_CONF*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 16 /*OBJ_TYPE_CONF*/, 1 /*byte*/, 1, false)
       && verifier.VerifyString(tablePos, 18 /*OBJ_PLAT*/, false)
       && verifier.VerifyString(tablePos, 20 /*OBJ_IDENT*/, false)
       && verifier.VerifyString(tablePos, 22 /*SPACE_AMP*/, false)
-      && verifier.VerifyString(tablePos, 24 /*OBJ_ACT*/, false)
-      && verifier.VerifyString(tablePos, 26 /*SPACE_SPEC_TYPE*/, false)
-      && verifier.VerifyString(tablePos, 28 /*ACFT_SUB_TYPE*/, false)
-      && verifier.VerifyString(tablePos, 30 /*NAME*/, false)
-      && verifier.VerifyString(tablePos, 32 /*CALL_SIGN*/, false)
-      && verifier.VerifyField(tablePos, 34 /*LOST_TRK_IND*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyString(tablePos, 36 /*TRACK_ID*/, false)
-      && verifier.VerifyString(tablePos, 38 /*PARENT_TRACK_ID*/, false)
-      && verifier.VerifyString(tablePos, 40 /*MUID_SRC_TRK*/, false)
-      && verifier.VerifyString(tablePos, 42 /*MUID_SRC*/, false)
-      && verifier.VerifyString(tablePos, 44 /*ALERT*/, false)
-      && verifier.VerifyString(tablePos, 46 /*MSL_STATUS*/, false)
-      && verifier.VerifyString(tablePos, 48 /*TS*/, false)
-      && verifier.VerifyString(tablePos, 50 /*AOU_RPT_TYPE*/, false)
-      && verifier.VerifyField(tablePos, 52 /*CONTAINMENT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 54 /*TRK_CONF*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 56 /*TRK_QUAL*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 58 /*ANG_ELEV*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 60 /*SEN_MODE*/, false)
-      && verifier.VerifyString(tablePos, 62 /*INFO_SOURCE*/, false)
-      && verifier.VerifyField(tablePos, 64 /*BOOSTING*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyField(tablePos, 66 /*POLAR_SING_LOC_LAT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 68 /*POLAR_SING_LOC_LON*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 70 /*EMG_IND*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyField(tablePos, 72 /*DROP_PT_IND*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyField(tablePos, 74 /*SPACE_AMP_CONF*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 24 /*SPACE_AMP_CONF*/, 1 /*byte*/, 1, false)
+      && verifier.VerifyString(tablePos, 26 /*OBJ_ACT*/, false)
+      && verifier.VerifyString(tablePos, 28 /*SPACE_SPEC_TYPE*/, false)
+      && verifier.VerifyString(tablePos, 30 /*ACFT_SUB_TYPE*/, false)
+      && verifier.VerifyString(tablePos, 32 /*NAME*/, false)
+      && verifier.VerifyString(tablePos, 34 /*CALL_SIGN*/, false)
+      && verifier.VerifyField(tablePos, 36 /*LOST_TRK_IND*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyString(tablePos, 38 /*TRACK_ID*/, false)
+      && verifier.VerifyString(tablePos, 40 /*PARENT_TRACK_ID*/, false)
+      && verifier.VerifyString(tablePos, 42 /*MUID_SRC_TRK*/, false)
+      && verifier.VerifyString(tablePos, 44 /*MUID_SRC*/, false)
+      && verifier.VerifyString(tablePos, 46 /*ALERT*/, false)
+      && verifier.VerifyField(tablePos, 48 /*MSL_STATUS*/, 1 /*missileStatus*/, 1, false)
+      && verifier.VerifyString(tablePos, 50 /*TS*/, false)
+      && verifier.VerifyField(tablePos, 52 /*AOU_RPT_TYPE*/, 1 /*aouReportType*/, 1, false)
+      && verifier.VerifyField(tablePos, 54 /*CONTAINMENT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 56 /*TRK_CONF*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 58 /*TRK_QUAL*/, 1 /*byte*/, 1, false)
+      && verifier.VerifyField(tablePos, 60 /*ANG_ELEV*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 62 /*SEN_MODE*/, false)
+      && verifier.VerifyString(tablePos, 64 /*INFO_SOURCE*/, false)
+      && verifier.VerifyField(tablePos, 66 /*BOOSTING*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 68 /*POLAR_SING_LOC_LAT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 70 /*POLAR_SING_LOC_LON*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 72 /*EMG_IND*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 74 /*DROP_PT_IND*/, 1 /*bool*/, 1, false)
       && verifier.VerifyString(tablePos, 76 /*LAUNCH_TIME*/, false)
       && verifier.VerifyField(tablePos, 78 /*LAUNCH_LAT*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 80 /*LAUNCH_LON*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 82 /*AZ_CORR*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 84 /*BURNOUT_ALT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 86 /*LAUNCH_AOU_TYPE*/, false)
+      && verifier.VerifyField(tablePos, 86 /*LAUNCH_AOU_TYPE*/, 1 /*aouReportType*/, 1, false)
       && verifier.VerifyString(tablePos, 88 /*IMPACT_TIME*/, false)
       && verifier.VerifyField(tablePos, 90 /*IMPACT_LAT*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 92 /*IMPACT_LON*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 94 /*IMPACT_AOU_TYPE*/, false)
+      && verifier.VerifyField(tablePos, 94 /*IMPACT_AOU_TYPE*/, 1 /*aouReportType*/, 1, false)
       && verifier.VerifyString(tablePos, 96 /*VECTOR_START_TIME*/, false)
       && verifier.VerifyField(tablePos, 98 /*VECTOR_STEP_SIZE*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 100 /*VECTOR_COMPONENTS*/, 1 /*byte*/, 1, false)

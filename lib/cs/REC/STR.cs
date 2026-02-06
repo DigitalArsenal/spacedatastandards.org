@@ -19,6 +19,7 @@ public struct STR : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public STR __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Unique internal identifier
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,10 +27,15 @@ public struct STR : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
+  /// CelesTrak Star catalog identifier
   public long CS_ID { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
-  public int GNC_CAT_ID { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  /// GNC star catalog identifier
+  public uint GNC_CAT_ID { get { int o = __p.__offset(8); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Gaia DR3 source identifier
   public long GAIADR3_CAT_ID { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetLong(o + __p.bb_pos) : (long)0; } }
-  public int HIP_CAT_ID { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  /// Hipparcos catalog identifier
+  public uint HIP_CAT_ID { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Catalog version string
   public string CAT_VERSION { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCAT_VERSIONBytes() { return __p.__vector_as_span<byte>(14, 1); }
@@ -37,53 +43,88 @@ public struct STR : IFlatbufferObject
   public ArraySegment<byte>? GetCAT_VERSIONBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
   public byte[] GetCAT_VERSIONArray() { return __p.__vector_as_array<byte>(14); }
-  public double RA { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double RA_UNC { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double DEC { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double DEC_UNC { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public bool POS_UNC_FLAG { get { int o = __p.__offset(24); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  public double PARALLAX { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double PARALLAX_UNC { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double PMRA { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double PMRA_UNC { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double PMDEC { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double PMDEC_UNC { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public bool PM_UNC_FLAG { get { int o = __p.__offset(38); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  public string ASTROMETRY_ORIGIN { get { int o = __p.__offset(40); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Astrometry source description
+  public string ASTROMETRY_ORIGIN { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetASTROMETRY_ORIGINBytes() { return __p.__vector_as_span<byte>(40, 1); }
+  public Span<byte> GetASTROMETRY_ORIGINBytes() { return __p.__vector_as_span<byte>(16, 1); }
 #else
-  public ArraySegment<byte>? GetASTROMETRY_ORIGINBytes() { return __p.__vector_as_arraysegment(40); }
+  public ArraySegment<byte>? GetASTROMETRY_ORIGINBytes() { return __p.__vector_as_arraysegment(16); }
 #endif
-  public byte[] GetASTROMETRY_ORIGINArray() { return __p.__vector_as_array<byte>(40); }
-  public double STAR_EPOCH { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public byte[] GetASTROMETRY_ORIGINArray() { return __p.__vector_as_array<byte>(16); }
+  /// Epoch of stellar position (Julian years)
+  public double STAR_EPOCH { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Right ascension (degrees, ICRS)
+  public double RA { get { int o = __p.__offset(20); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Right ascension uncertainty (arcseconds)
+  public double RA_UNC { get { int o = __p.__offset(22); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Declination (degrees, ICRS)
+  public double DEC { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Declination uncertainty (arcseconds)
+  public double DEC_UNC { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// True if position uncertainty is flagged
+  public bool POS_UNC_FLAG { get { int o = __p.__offset(28); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Parallax (milliarcseconds)
+  public double PARALLAX { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Parallax uncertainty (milliarcseconds)
+  public double PARALLAX_UNC { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Proper motion in RA (milliarcseconds/year)
+  public double PMRA { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Proper motion in RA uncertainty (milliarcseconds/year)
+  public double PMRA_UNC { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Proper motion in DEC (milliarcseconds/year)
+  public double PMDEC { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Proper motion in DEC uncertainty (milliarcseconds/year)
+  public double PMDEC_UNC { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// True if proper motion uncertainty is flagged
+  public bool PM_UNC_FLAG { get { int o = __p.__offset(42); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Gaia G-band magnitude
   public double GMAG { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Gaia G-band magnitude uncertainty
   public double GMAG_UNC { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Gaia BP-band magnitude (blue photometer)
   public double BPMAG { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Gaia BP-band magnitude uncertainty
   public double BPMAG_UNC { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Gaia RP-band magnitude (red photometer)
   public double RPMAG { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Gaia RP-band magnitude uncertainty
   public double RPMAG_UNC { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// 2MASS J-band magnitude (1.25 um)
   public double JMAG { get { int o = __p.__offset(56); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// J-band magnitude uncertainty
   public double JMAG_UNC { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// 2MASS K-band magnitude (2.17 um)
   public double KMAG { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// K-band magnitude uncertainty
   public double KMAG_UNC { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// 2MASS H-band magnitude (1.65 um)
   public double HMAG { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// H-band magnitude uncertainty
   public double HMAG_UNC { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// True if star is variable
   public bool VAR_FLAG { get { int o = __p.__offset(68); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// True if star is in a multiple system
   public bool MULT_FLAG { get { int o = __p.__offset(70); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  public int NEIGHBOR_ID { get { int o = __p.__offset(72); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  /// Nearest neighbor catalog identifier
+  public uint NEIGHBOR_ID { get { int o = __p.__offset(72); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// True if nearest neighbor is within confusion radius
   public bool NEIGHBOR_FLAG { get { int o = __p.__offset(74); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Distance to nearest neighbor (arcseconds)
   public double NEIGHBOR_DISTANCE { get { int o = __p.__offset(76); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// True if position shift detected between catalogs
   public bool SHIFT_FLAG { get { int o = __p.__offset(78); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Position shift magnitude (arcseconds)
   public double SHIFT { get { int o = __p.__offset(80); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
 
   public static Offset<STR> CreateSTR(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
       long CS_ID = 0,
-      int GNC_CAT_ID = 0,
+      uint GNC_CAT_ID = 0,
       long GAIADR3_CAT_ID = 0,
-      int HIP_CAT_ID = 0,
+      uint HIP_CAT_ID = 0,
       StringOffset CAT_VERSIONOffset = default(StringOffset),
+      StringOffset ASTROMETRY_ORIGINOffset = default(StringOffset),
+      double STAR_EPOCH = 0.0,
       double RA = 0.0,
       double RA_UNC = 0.0,
       double DEC = 0.0,
@@ -96,8 +137,6 @@ public struct STR : IFlatbufferObject
       double PMDEC = 0.0,
       double PMDEC_UNC = 0.0,
       bool PM_UNC_FLAG = false,
-      StringOffset ASTROMETRY_ORIGINOffset = default(StringOffset),
-      double STAR_EPOCH = 0.0,
       double GMAG = 0.0,
       double GMAG_UNC = 0.0,
       double BPMAG = 0.0,
@@ -112,7 +151,7 @@ public struct STR : IFlatbufferObject
       double HMAG_UNC = 0.0,
       bool VAR_FLAG = false,
       bool MULT_FLAG = false,
-      int NEIGHBOR_ID = 0,
+      uint NEIGHBOR_ID = 0,
       bool NEIGHBOR_FLAG = false,
       double NEIGHBOR_DISTANCE = 0.0,
       bool SHIFT_FLAG = false,
@@ -132,7 +171,6 @@ public struct STR : IFlatbufferObject
     STR.AddBPMAG(builder, BPMAG);
     STR.AddGMAG_UNC(builder, GMAG_UNC);
     STR.AddGMAG(builder, GMAG);
-    STR.AddSTAR_EPOCH(builder, STAR_EPOCH);
     STR.AddPMDEC_UNC(builder, PMDEC_UNC);
     STR.AddPMDEC(builder, PMDEC);
     STR.AddPMRA_UNC(builder, PMRA_UNC);
@@ -143,6 +181,7 @@ public struct STR : IFlatbufferObject
     STR.AddDEC(builder, DEC);
     STR.AddRA_UNC(builder, RA_UNC);
     STR.AddRA(builder, RA);
+    STR.AddSTAR_EPOCH(builder, STAR_EPOCH);
     STR.AddGAIADR3_CAT_ID(builder, GAIADR3_CAT_ID);
     STR.AddCS_ID(builder, CS_ID);
     STR.AddNEIGHBOR_ID(builder, NEIGHBOR_ID);
@@ -163,24 +202,24 @@ public struct STR : IFlatbufferObject
   public static void StartSTR(FlatBufferBuilder builder) { builder.StartTable(39); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddCS_ID(FlatBufferBuilder builder, long CS_ID) { builder.AddLong(1, CS_ID, 0); }
-  public static void AddGNC_CAT_ID(FlatBufferBuilder builder, int GNC_CAT_ID) { builder.AddInt(2, GNC_CAT_ID, 0); }
+  public static void AddGNC_CAT_ID(FlatBufferBuilder builder, uint GNC_CAT_ID) { builder.AddUint(2, GNC_CAT_ID, 0); }
   public static void AddGAIADR3_CAT_ID(FlatBufferBuilder builder, long GAIADR3_CAT_ID) { builder.AddLong(3, GAIADR3_CAT_ID, 0); }
-  public static void AddHIP_CAT_ID(FlatBufferBuilder builder, int HIP_CAT_ID) { builder.AddInt(4, HIP_CAT_ID, 0); }
+  public static void AddHIP_CAT_ID(FlatBufferBuilder builder, uint HIP_CAT_ID) { builder.AddUint(4, HIP_CAT_ID, 0); }
   public static void AddCAT_VERSION(FlatBufferBuilder builder, StringOffset CAT_VERSIONOffset) { builder.AddOffset(5, CAT_VERSIONOffset.Value, 0); }
-  public static void AddRA(FlatBufferBuilder builder, double RA) { builder.AddDouble(6, RA, 0.0); }
-  public static void AddRA_UNC(FlatBufferBuilder builder, double RA_UNC) { builder.AddDouble(7, RA_UNC, 0.0); }
-  public static void AddDEC(FlatBufferBuilder builder, double DEC) { builder.AddDouble(8, DEC, 0.0); }
-  public static void AddDEC_UNC(FlatBufferBuilder builder, double DEC_UNC) { builder.AddDouble(9, DEC_UNC, 0.0); }
-  public static void AddPOS_UNC_FLAG(FlatBufferBuilder builder, bool POS_UNC_FLAG) { builder.AddBool(10, POS_UNC_FLAG, false); }
-  public static void AddPARALLAX(FlatBufferBuilder builder, double PARALLAX) { builder.AddDouble(11, PARALLAX, 0.0); }
-  public static void AddPARALLAX_UNC(FlatBufferBuilder builder, double PARALLAX_UNC) { builder.AddDouble(12, PARALLAX_UNC, 0.0); }
-  public static void AddPMRA(FlatBufferBuilder builder, double PMRA) { builder.AddDouble(13, PMRA, 0.0); }
-  public static void AddPMRA_UNC(FlatBufferBuilder builder, double PMRA_UNC) { builder.AddDouble(14, PMRA_UNC, 0.0); }
-  public static void AddPMDEC(FlatBufferBuilder builder, double PMDEC) { builder.AddDouble(15, PMDEC, 0.0); }
-  public static void AddPMDEC_UNC(FlatBufferBuilder builder, double PMDEC_UNC) { builder.AddDouble(16, PMDEC_UNC, 0.0); }
-  public static void AddPM_UNC_FLAG(FlatBufferBuilder builder, bool PM_UNC_FLAG) { builder.AddBool(17, PM_UNC_FLAG, false); }
-  public static void AddASTROMETRY_ORIGIN(FlatBufferBuilder builder, StringOffset ASTROMETRY_ORIGINOffset) { builder.AddOffset(18, ASTROMETRY_ORIGINOffset.Value, 0); }
-  public static void AddSTAR_EPOCH(FlatBufferBuilder builder, double STAR_EPOCH) { builder.AddDouble(19, STAR_EPOCH, 0.0); }
+  public static void AddASTROMETRY_ORIGIN(FlatBufferBuilder builder, StringOffset ASTROMETRY_ORIGINOffset) { builder.AddOffset(6, ASTROMETRY_ORIGINOffset.Value, 0); }
+  public static void AddSTAR_EPOCH(FlatBufferBuilder builder, double STAR_EPOCH) { builder.AddDouble(7, STAR_EPOCH, 0.0); }
+  public static void AddRA(FlatBufferBuilder builder, double RA) { builder.AddDouble(8, RA, 0.0); }
+  public static void AddRA_UNC(FlatBufferBuilder builder, double RA_UNC) { builder.AddDouble(9, RA_UNC, 0.0); }
+  public static void AddDEC(FlatBufferBuilder builder, double DEC) { builder.AddDouble(10, DEC, 0.0); }
+  public static void AddDEC_UNC(FlatBufferBuilder builder, double DEC_UNC) { builder.AddDouble(11, DEC_UNC, 0.0); }
+  public static void AddPOS_UNC_FLAG(FlatBufferBuilder builder, bool POS_UNC_FLAG) { builder.AddBool(12, POS_UNC_FLAG, false); }
+  public static void AddPARALLAX(FlatBufferBuilder builder, double PARALLAX) { builder.AddDouble(13, PARALLAX, 0.0); }
+  public static void AddPARALLAX_UNC(FlatBufferBuilder builder, double PARALLAX_UNC) { builder.AddDouble(14, PARALLAX_UNC, 0.0); }
+  public static void AddPMRA(FlatBufferBuilder builder, double PMRA) { builder.AddDouble(15, PMRA, 0.0); }
+  public static void AddPMRA_UNC(FlatBufferBuilder builder, double PMRA_UNC) { builder.AddDouble(16, PMRA_UNC, 0.0); }
+  public static void AddPMDEC(FlatBufferBuilder builder, double PMDEC) { builder.AddDouble(17, PMDEC, 0.0); }
+  public static void AddPMDEC_UNC(FlatBufferBuilder builder, double PMDEC_UNC) { builder.AddDouble(18, PMDEC_UNC, 0.0); }
+  public static void AddPM_UNC_FLAG(FlatBufferBuilder builder, bool PM_UNC_FLAG) { builder.AddBool(19, PM_UNC_FLAG, false); }
   public static void AddGMAG(FlatBufferBuilder builder, double GMAG) { builder.AddDouble(20, GMAG, 0.0); }
   public static void AddGMAG_UNC(FlatBufferBuilder builder, double GMAG_UNC) { builder.AddDouble(21, GMAG_UNC, 0.0); }
   public static void AddBPMAG(FlatBufferBuilder builder, double BPMAG) { builder.AddDouble(22, BPMAG, 0.0); }
@@ -195,7 +234,7 @@ public struct STR : IFlatbufferObject
   public static void AddHMAG_UNC(FlatBufferBuilder builder, double HMAG_UNC) { builder.AddDouble(31, HMAG_UNC, 0.0); }
   public static void AddVAR_FLAG(FlatBufferBuilder builder, bool VAR_FLAG) { builder.AddBool(32, VAR_FLAG, false); }
   public static void AddMULT_FLAG(FlatBufferBuilder builder, bool MULT_FLAG) { builder.AddBool(33, MULT_FLAG, false); }
-  public static void AddNEIGHBOR_ID(FlatBufferBuilder builder, int NEIGHBOR_ID) { builder.AddInt(34, NEIGHBOR_ID, 0); }
+  public static void AddNEIGHBOR_ID(FlatBufferBuilder builder, uint NEIGHBOR_ID) { builder.AddUint(34, NEIGHBOR_ID, 0); }
   public static void AddNEIGHBOR_FLAG(FlatBufferBuilder builder, bool NEIGHBOR_FLAG) { builder.AddBool(35, NEIGHBOR_FLAG, false); }
   public static void AddNEIGHBOR_DISTANCE(FlatBufferBuilder builder, double NEIGHBOR_DISTANCE) { builder.AddDouble(36, NEIGHBOR_DISTANCE, 0.0); }
   public static void AddSHIFT_FLAG(FlatBufferBuilder builder, bool SHIFT_FLAG) { builder.AddBool(37, SHIFT_FLAG, false); }
@@ -218,6 +257,8 @@ public struct STR : IFlatbufferObject
     _o.GAIADR3_CAT_ID = this.GAIADR3_CAT_ID;
     _o.HIP_CAT_ID = this.HIP_CAT_ID;
     _o.CAT_VERSION = this.CAT_VERSION;
+    _o.ASTROMETRY_ORIGIN = this.ASTROMETRY_ORIGIN;
+    _o.STAR_EPOCH = this.STAR_EPOCH;
     _o.RA = this.RA;
     _o.RA_UNC = this.RA_UNC;
     _o.DEC = this.DEC;
@@ -230,8 +271,6 @@ public struct STR : IFlatbufferObject
     _o.PMDEC = this.PMDEC;
     _o.PMDEC_UNC = this.PMDEC_UNC;
     _o.PM_UNC_FLAG = this.PM_UNC_FLAG;
-    _o.ASTROMETRY_ORIGIN = this.ASTROMETRY_ORIGIN;
-    _o.STAR_EPOCH = this.STAR_EPOCH;
     _o.GMAG = this.GMAG;
     _o.GMAG_UNC = this.GMAG_UNC;
     _o.BPMAG = this.BPMAG;
@@ -265,6 +304,8 @@ public struct STR : IFlatbufferObject
       _o.GAIADR3_CAT_ID,
       _o.HIP_CAT_ID,
       _CAT_VERSION,
+      _ASTROMETRY_ORIGIN,
+      _o.STAR_EPOCH,
       _o.RA,
       _o.RA_UNC,
       _o.DEC,
@@ -277,8 +318,6 @@ public struct STR : IFlatbufferObject
       _o.PMDEC,
       _o.PMDEC_UNC,
       _o.PM_UNC_FLAG,
-      _ASTROMETRY_ORIGIN,
-      _o.STAR_EPOCH,
       _o.GMAG,
       _o.GMAG_UNC,
       _o.BPMAG,
@@ -305,10 +344,12 @@ public class STRT
 {
   public string ID { get; set; }
   public long CS_ID { get; set; }
-  public int GNC_CAT_ID { get; set; }
+  public uint GNC_CAT_ID { get; set; }
   public long GAIADR3_CAT_ID { get; set; }
-  public int HIP_CAT_ID { get; set; }
+  public uint HIP_CAT_ID { get; set; }
   public string CAT_VERSION { get; set; }
+  public string ASTROMETRY_ORIGIN { get; set; }
+  public double STAR_EPOCH { get; set; }
   public double RA { get; set; }
   public double RA_UNC { get; set; }
   public double DEC { get; set; }
@@ -321,8 +362,6 @@ public class STRT
   public double PMDEC { get; set; }
   public double PMDEC_UNC { get; set; }
   public bool PM_UNC_FLAG { get; set; }
-  public string ASTROMETRY_ORIGIN { get; set; }
-  public double STAR_EPOCH { get; set; }
   public double GMAG { get; set; }
   public double GMAG_UNC { get; set; }
   public double BPMAG { get; set; }
@@ -337,7 +376,7 @@ public class STRT
   public double HMAG_UNC { get; set; }
   public bool VAR_FLAG { get; set; }
   public bool MULT_FLAG { get; set; }
-  public int NEIGHBOR_ID { get; set; }
+  public uint NEIGHBOR_ID { get; set; }
   public bool NEIGHBOR_FLAG { get; set; }
   public double NEIGHBOR_DISTANCE { get; set; }
   public bool SHIFT_FLAG { get; set; }
@@ -350,6 +389,8 @@ public class STRT
     this.GAIADR3_CAT_ID = 0;
     this.HIP_CAT_ID = 0;
     this.CAT_VERSION = null;
+    this.ASTROMETRY_ORIGIN = null;
+    this.STAR_EPOCH = 0.0;
     this.RA = 0.0;
     this.RA_UNC = 0.0;
     this.DEC = 0.0;
@@ -362,8 +403,6 @@ public class STRT
     this.PMDEC = 0.0;
     this.PMDEC_UNC = 0.0;
     this.PM_UNC_FLAG = false;
-    this.ASTROMETRY_ORIGIN = null;
-    this.STAR_EPOCH = 0.0;
     this.GMAG = 0.0;
     this.GMAG_UNC = 0.0;
     this.BPMAG = 0.0;
@@ -402,24 +441,24 @@ static public class STRVerify
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*ID*/, false)
       && verifier.VerifyField(tablePos, 6 /*CS_ID*/, 8 /*long*/, 8, false)
-      && verifier.VerifyField(tablePos, 8 /*GNC_CAT_ID*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 8 /*GNC_CAT_ID*/, 4 /*uint*/, 4, false)
       && verifier.VerifyField(tablePos, 10 /*GAIADR3_CAT_ID*/, 8 /*long*/, 8, false)
-      && verifier.VerifyField(tablePos, 12 /*HIP_CAT_ID*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 12 /*HIP_CAT_ID*/, 4 /*uint*/, 4, false)
       && verifier.VerifyString(tablePos, 14 /*CAT_VERSION*/, false)
-      && verifier.VerifyField(tablePos, 16 /*RA*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 18 /*RA_UNC*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 20 /*DEC*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 22 /*DEC_UNC*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 24 /*POS_UNC_FLAG*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyField(tablePos, 26 /*PARALLAX*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 28 /*PARALLAX_UNC*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 30 /*PMRA*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 32 /*PMRA_UNC*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 34 /*PMDEC*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 36 /*PMDEC_UNC*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 38 /*PM_UNC_FLAG*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyString(tablePos, 40 /*ASTROMETRY_ORIGIN*/, false)
-      && verifier.VerifyField(tablePos, 42 /*STAR_EPOCH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 16 /*ASTROMETRY_ORIGIN*/, false)
+      && verifier.VerifyField(tablePos, 18 /*STAR_EPOCH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 20 /*RA*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 22 /*RA_UNC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 24 /*DEC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 26 /*DEC_UNC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 28 /*POS_UNC_FLAG*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyField(tablePos, 30 /*PARALLAX*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 32 /*PARALLAX_UNC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 34 /*PMRA*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 36 /*PMRA_UNC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 38 /*PMDEC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 40 /*PMDEC_UNC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 42 /*PM_UNC_FLAG*/, 1 /*bool*/, 1, false)
       && verifier.VerifyField(tablePos, 44 /*GMAG*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 46 /*GMAG_UNC*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 48 /*BPMAG*/, 8 /*double*/, 8, false)
@@ -434,7 +473,7 @@ static public class STRVerify
       && verifier.VerifyField(tablePos, 66 /*HMAG_UNC*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 68 /*VAR_FLAG*/, 1 /*bool*/, 1, false)
       && verifier.VerifyField(tablePos, 70 /*MULT_FLAG*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyField(tablePos, 72 /*NEIGHBOR_ID*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 72 /*NEIGHBOR_ID*/, 4 /*uint*/, 4, false)
       && verifier.VerifyField(tablePos, 74 /*NEIGHBOR_FLAG*/, 1 /*bool*/, 1, false)
       && verifier.VerifyField(tablePos, 76 /*NEIGHBOR_DISTANCE*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 78 /*SHIFT_FLAG*/, 1 /*bool*/, 1, false)

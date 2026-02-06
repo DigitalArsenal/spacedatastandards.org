@@ -6,7 +6,7 @@ using global::System;
 using global::System.Collections.Generic;
 using global::Google.FlatBuffers;
 
-/// Short-Wave Infrared
+/// Short-Wave Infrared Observation
 public struct SWR : IFlatbufferObject
 {
   private Table __p;
@@ -19,6 +19,7 @@ public struct SWR : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public SWR __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Unique identifier
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,6 +27,7 @@ public struct SWR : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
+  /// On-orbit reference
   public string ON_ORBIT { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetON_ORBITBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -33,50 +35,96 @@ public struct SWR : IFlatbufferObject
   public ArraySegment<byte>? GetON_ORBITBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetON_ORBITArray() { return __p.__vector_as_array<byte>(6); }
-  public string TS { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// International designator
+  public string ORIG_OBJECT_ID { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetTSBytes() { return __p.__vector_as_span<byte>(8, 1); }
+  public Span<byte> GetORIG_OBJECT_IDBytes() { return __p.__vector_as_span<byte>(8, 1); }
 #else
-  public ArraySegment<byte>? GetTSBytes() { return __p.__vector_as_arraysegment(8); }
+  public ArraySegment<byte>? GetORIG_OBJECT_IDBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
-  public byte[] GetTSArray() { return __p.__vector_as_array<byte>(8); }
-  public double SOLAR_PHASE_ANGLE { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double LAT { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double LON { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string LOCATION_NAME { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetORIG_OBJECT_IDArray() { return __p.__vector_as_array<byte>(8); }
+  /// Satellite catalog number
+  public uint SAT_NO { get { int o = __p.__offset(10); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Observation timestamp (ISO 8601)
+  public string TS { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetLOCATION_NAMEBytes() { return __p.__vector_as_span<byte>(16, 1); }
+  public Span<byte> GetTSBytes() { return __p.__vector_as_span<byte>(12, 1); }
 #else
-  public ArraySegment<byte>? GetLOCATION_NAMEBytes() { return __p.__vector_as_arraysegment(16); }
+  public ArraySegment<byte>? GetTSBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
-  public byte[] GetLOCATION_NAMEArray() { return __p.__vector_as_array<byte>(16); }
-  public string BAD_WAVE { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetTSArray() { return __p.__vector_as_array<byte>(12); }
+  /// Solar phase angle (degrees)
+  public double SOLAR_PHASE_ANGLE { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sub-observer latitude (degrees)
+  public double LAT { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Sub-observer longitude (degrees)
+  public double LON { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Location name
+  public string LOCATION_NAME { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetBAD_WAVEBytes() { return __p.__vector_as_span<byte>(18, 1); }
+  public Span<byte> GetLOCATION_NAMEBytes() { return __p.__vector_as_span<byte>(20, 1); }
 #else
-  public ArraySegment<byte>? GetBAD_WAVEBytes() { return __p.__vector_as_arraysegment(18); }
+  public ArraySegment<byte>? GetLOCATION_NAMEBytes() { return __p.__vector_as_arraysegment(20); }
 #endif
-  public byte[] GetBAD_WAVEArray() { return __p.__vector_as_array<byte>(18); }
-  public string WAVELENGTHS(int j) { int o = __p.__offset(20); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int WAVELENGTHSLength { get { int o = __p.__offset(20); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string ABS_FLUXES(int j) { int o = __p.__offset(22); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int ABS_FLUXESLength { get { int o = __p.__offset(22); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string RATIO_WAVELENGTHS(int j) { int o = __p.__offset(24); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int RATIO_WAVELENGTHSLength { get { int o = __p.__offset(24); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string FLUX_RATIOS(int j) { int o = __p.__offset(26); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int FLUX_RATIOSLength { get { int o = __p.__offset(26); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string ORIG_OBJECT_ID { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetLOCATION_NAMEArray() { return __p.__vector_as_array<byte>(20); }
+  /// Bad wavelength flag or identifier
+  public string BAD_WAVE { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetORIG_OBJECT_IDBytes() { return __p.__vector_as_span<byte>(28, 1); }
+  public Span<byte> GetBAD_WAVEBytes() { return __p.__vector_as_span<byte>(22, 1); }
 #else
-  public ArraySegment<byte>? GetORIG_OBJECT_IDBytes() { return __p.__vector_as_arraysegment(28); }
+  public ArraySegment<byte>? GetBAD_WAVEBytes() { return __p.__vector_as_arraysegment(22); }
 #endif
-  public byte[] GetORIG_OBJECT_IDArray() { return __p.__vector_as_array<byte>(28); }
-  public int SAT_NO { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  public byte[] GetBAD_WAVEArray() { return __p.__vector_as_array<byte>(22); }
+  /// Measured wavelengths (micrometers)
+  public double WAVELENGTHS(int j) { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int WAVELENGTHSLength { get { int o = __p.__offset(24); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetWAVELENGTHSBytes() { return __p.__vector_as_span<double>(24, 8); }
+#else
+  public ArraySegment<byte>? GetWAVELENGTHSBytes() { return __p.__vector_as_arraysegment(24); }
+#endif
+  public double[] GetWAVELENGTHSArray() { return __p.__vector_as_array<double>(24); }
+  /// Absolute flux values (W/m^2/um)
+  public double ABS_FLUXES(int j) { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int ABS_FLUXESLength { get { int o = __p.__offset(26); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetABS_FLUXESBytes() { return __p.__vector_as_span<double>(26, 8); }
+#else
+  public ArraySegment<byte>? GetABS_FLUXESBytes() { return __p.__vector_as_arraysegment(26); }
+#endif
+  public double[] GetABS_FLUXESArray() { return __p.__vector_as_array<double>(26); }
+  /// Ratio reference wavelengths (micrometers)
+  public double RATIO_WAVELENGTHS(int j) { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int RATIO_WAVELENGTHSLength { get { int o = __p.__offset(28); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetRATIO_WAVELENGTHSBytes() { return __p.__vector_as_span<double>(28, 8); }
+#else
+  public ArraySegment<byte>? GetRATIO_WAVELENGTHSBytes() { return __p.__vector_as_arraysegment(28); }
+#endif
+  public double[] GetRATIO_WAVELENGTHSArray() { return __p.__vector_as_array<double>(28); }
+  /// Flux ratios (normalized)
+  public double FLUX_RATIOS(int j) { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int FLUX_RATIOSLength { get { int o = __p.__offset(30); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetFLUX_RATIOSBytes() { return __p.__vector_as_span<double>(30, 8); }
+#else
+  public ArraySegment<byte>? GetFLUX_RATIOSBytes() { return __p.__vector_as_arraysegment(30); }
+#endif
+  public double[] GetFLUX_RATIOSArray() { return __p.__vector_as_array<double>(30); }
+  /// Effective temperature (Kelvin)
+  public double TEMPERATURE { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Signal-to-noise ratio
+  public double SIGNAL_NOISE_RATIO { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Integration time (seconds)
+  public double INTEGRATION_TIME { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Data quality (0-9, 9=best)
+  public byte QUALITY { get { int o = __p.__offset(38); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
 
   public static Offset<SWR> CreateSWR(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
       StringOffset ON_ORBITOffset = default(StringOffset),
+      StringOffset ORIG_OBJECT_IDOffset = default(StringOffset),
+      uint SAT_NO = 0,
       StringOffset TSOffset = default(StringOffset),
       double SOLAR_PHASE_ANGLE = 0.0,
       double LAT = 0.0,
@@ -87,14 +135,17 @@ public struct SWR : IFlatbufferObject
       VectorOffset ABS_FLUXESOffset = default(VectorOffset),
       VectorOffset RATIO_WAVELENGTHSOffset = default(VectorOffset),
       VectorOffset FLUX_RATIOSOffset = default(VectorOffset),
-      StringOffset ORIG_OBJECT_IDOffset = default(StringOffset),
-      int SAT_NO = 0) {
-    builder.StartTable(14);
+      double TEMPERATURE = 0.0,
+      double SIGNAL_NOISE_RATIO = 0.0,
+      double INTEGRATION_TIME = 0.0,
+      byte QUALITY = 0) {
+    builder.StartTable(18);
+    SWR.AddINTEGRATION_TIME(builder, INTEGRATION_TIME);
+    SWR.AddSIGNAL_NOISE_RATIO(builder, SIGNAL_NOISE_RATIO);
+    SWR.AddTEMPERATURE(builder, TEMPERATURE);
     SWR.AddLON(builder, LON);
     SWR.AddLAT(builder, LAT);
     SWR.AddSOLAR_PHASE_ANGLE(builder, SOLAR_PHASE_ANGLE);
-    SWR.AddSAT_NO(builder, SAT_NO);
-    SWR.AddORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset);
     SWR.AddFLUX_RATIOS(builder, FLUX_RATIOSOffset);
     SWR.AddRATIO_WAVELENGTHS(builder, RATIO_WAVELENGTHSOffset);
     SWR.AddABS_FLUXES(builder, ABS_FLUXESOffset);
@@ -102,46 +153,53 @@ public struct SWR : IFlatbufferObject
     SWR.AddBAD_WAVE(builder, BAD_WAVEOffset);
     SWR.AddLOCATION_NAME(builder, LOCATION_NAMEOffset);
     SWR.AddTS(builder, TSOffset);
+    SWR.AddSAT_NO(builder, SAT_NO);
+    SWR.AddORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset);
     SWR.AddON_ORBIT(builder, ON_ORBITOffset);
     SWR.AddID(builder, IDOffset);
+    SWR.AddQUALITY(builder, QUALITY);
     return SWR.EndSWR(builder);
   }
 
-  public static void StartSWR(FlatBufferBuilder builder) { builder.StartTable(14); }
+  public static void StartSWR(FlatBufferBuilder builder) { builder.StartTable(18); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddON_ORBIT(FlatBufferBuilder builder, StringOffset ON_ORBITOffset) { builder.AddOffset(1, ON_ORBITOffset.Value, 0); }
-  public static void AddTS(FlatBufferBuilder builder, StringOffset TSOffset) { builder.AddOffset(2, TSOffset.Value, 0); }
-  public static void AddSOLAR_PHASE_ANGLE(FlatBufferBuilder builder, double SOLAR_PHASE_ANGLE) { builder.AddDouble(3, SOLAR_PHASE_ANGLE, 0.0); }
-  public static void AddLAT(FlatBufferBuilder builder, double LAT) { builder.AddDouble(4, LAT, 0.0); }
-  public static void AddLON(FlatBufferBuilder builder, double LON) { builder.AddDouble(5, LON, 0.0); }
-  public static void AddLOCATION_NAME(FlatBufferBuilder builder, StringOffset LOCATION_NAMEOffset) { builder.AddOffset(6, LOCATION_NAMEOffset.Value, 0); }
-  public static void AddBAD_WAVE(FlatBufferBuilder builder, StringOffset BAD_WAVEOffset) { builder.AddOffset(7, BAD_WAVEOffset.Value, 0); }
-  public static void AddWAVELENGTHS(FlatBufferBuilder builder, VectorOffset WAVELENGTHSOffset) { builder.AddOffset(8, WAVELENGTHSOffset.Value, 0); }
-  public static VectorOffset CreateWAVELENGTHSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateWAVELENGTHSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateWAVELENGTHSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateWAVELENGTHSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartWAVELENGTHSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddABS_FLUXES(FlatBufferBuilder builder, VectorOffset ABS_FLUXESOffset) { builder.AddOffset(9, ABS_FLUXESOffset.Value, 0); }
-  public static VectorOffset CreateABS_FLUXESVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateABS_FLUXESVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateABS_FLUXESVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateABS_FLUXESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartABS_FLUXESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddRATIO_WAVELENGTHS(FlatBufferBuilder builder, VectorOffset RATIO_WAVELENGTHSOffset) { builder.AddOffset(10, RATIO_WAVELENGTHSOffset.Value, 0); }
-  public static VectorOffset CreateRATIO_WAVELENGTHSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateRATIO_WAVELENGTHSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateRATIO_WAVELENGTHSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateRATIO_WAVELENGTHSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartRATIO_WAVELENGTHSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddFLUX_RATIOS(FlatBufferBuilder builder, VectorOffset FLUX_RATIOSOffset) { builder.AddOffset(11, FLUX_RATIOSOffset.Value, 0); }
-  public static VectorOffset CreateFLUX_RATIOSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateFLUX_RATIOSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateFLUX_RATIOSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateFLUX_RATIOSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartFLUX_RATIOSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddORIG_OBJECT_ID(FlatBufferBuilder builder, StringOffset ORIG_OBJECT_IDOffset) { builder.AddOffset(12, ORIG_OBJECT_IDOffset.Value, 0); }
-  public static void AddSAT_NO(FlatBufferBuilder builder, int SAT_NO) { builder.AddInt(13, SAT_NO, 0); }
+  public static void AddORIG_OBJECT_ID(FlatBufferBuilder builder, StringOffset ORIG_OBJECT_IDOffset) { builder.AddOffset(2, ORIG_OBJECT_IDOffset.Value, 0); }
+  public static void AddSAT_NO(FlatBufferBuilder builder, uint SAT_NO) { builder.AddUint(3, SAT_NO, 0); }
+  public static void AddTS(FlatBufferBuilder builder, StringOffset TSOffset) { builder.AddOffset(4, TSOffset.Value, 0); }
+  public static void AddSOLAR_PHASE_ANGLE(FlatBufferBuilder builder, double SOLAR_PHASE_ANGLE) { builder.AddDouble(5, SOLAR_PHASE_ANGLE, 0.0); }
+  public static void AddLAT(FlatBufferBuilder builder, double LAT) { builder.AddDouble(6, LAT, 0.0); }
+  public static void AddLON(FlatBufferBuilder builder, double LON) { builder.AddDouble(7, LON, 0.0); }
+  public static void AddLOCATION_NAME(FlatBufferBuilder builder, StringOffset LOCATION_NAMEOffset) { builder.AddOffset(8, LOCATION_NAMEOffset.Value, 0); }
+  public static void AddBAD_WAVE(FlatBufferBuilder builder, StringOffset BAD_WAVEOffset) { builder.AddOffset(9, BAD_WAVEOffset.Value, 0); }
+  public static void AddWAVELENGTHS(FlatBufferBuilder builder, VectorOffset WAVELENGTHSOffset) { builder.AddOffset(10, WAVELENGTHSOffset.Value, 0); }
+  public static VectorOffset CreateWAVELENGTHSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateWAVELENGTHSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateWAVELENGTHSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateWAVELENGTHSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartWAVELENGTHSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddABS_FLUXES(FlatBufferBuilder builder, VectorOffset ABS_FLUXESOffset) { builder.AddOffset(11, ABS_FLUXESOffset.Value, 0); }
+  public static VectorOffset CreateABS_FLUXESVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateABS_FLUXESVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateABS_FLUXESVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateABS_FLUXESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartABS_FLUXESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddRATIO_WAVELENGTHS(FlatBufferBuilder builder, VectorOffset RATIO_WAVELENGTHSOffset) { builder.AddOffset(12, RATIO_WAVELENGTHSOffset.Value, 0); }
+  public static VectorOffset CreateRATIO_WAVELENGTHSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateRATIO_WAVELENGTHSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateRATIO_WAVELENGTHSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateRATIO_WAVELENGTHSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartRATIO_WAVELENGTHSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddFLUX_RATIOS(FlatBufferBuilder builder, VectorOffset FLUX_RATIOSOffset) { builder.AddOffset(13, FLUX_RATIOSOffset.Value, 0); }
+  public static VectorOffset CreateFLUX_RATIOSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateFLUX_RATIOSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateFLUX_RATIOSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateFLUX_RATIOSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartFLUX_RATIOSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddTEMPERATURE(FlatBufferBuilder builder, double TEMPERATURE) { builder.AddDouble(14, TEMPERATURE, 0.0); }
+  public static void AddSIGNAL_NOISE_RATIO(FlatBufferBuilder builder, double SIGNAL_NOISE_RATIO) { builder.AddDouble(15, SIGNAL_NOISE_RATIO, 0.0); }
+  public static void AddINTEGRATION_TIME(FlatBufferBuilder builder, double INTEGRATION_TIME) { builder.AddDouble(16, INTEGRATION_TIME, 0.0); }
+  public static void AddQUALITY(FlatBufferBuilder builder, byte QUALITY) { builder.AddByte(17, QUALITY, 0); }
   public static Offset<SWR> EndSWR(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<SWR>(o);
@@ -156,59 +214,61 @@ public struct SWR : IFlatbufferObject
   public void UnPackTo(SWRT _o) {
     _o.ID = this.ID;
     _o.ON_ORBIT = this.ON_ORBIT;
+    _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID;
+    _o.SAT_NO = this.SAT_NO;
     _o.TS = this.TS;
     _o.SOLAR_PHASE_ANGLE = this.SOLAR_PHASE_ANGLE;
     _o.LAT = this.LAT;
     _o.LON = this.LON;
     _o.LOCATION_NAME = this.LOCATION_NAME;
     _o.BAD_WAVE = this.BAD_WAVE;
-    _o.WAVELENGTHS = new List<string>();
+    _o.WAVELENGTHS = new List<double>();
     for (var _j = 0; _j < this.WAVELENGTHSLength; ++_j) {_o.WAVELENGTHS.Add(this.WAVELENGTHS(_j));}
-    _o.ABS_FLUXES = new List<string>();
+    _o.ABS_FLUXES = new List<double>();
     for (var _j = 0; _j < this.ABS_FLUXESLength; ++_j) {_o.ABS_FLUXES.Add(this.ABS_FLUXES(_j));}
-    _o.RATIO_WAVELENGTHS = new List<string>();
+    _o.RATIO_WAVELENGTHS = new List<double>();
     for (var _j = 0; _j < this.RATIO_WAVELENGTHSLength; ++_j) {_o.RATIO_WAVELENGTHS.Add(this.RATIO_WAVELENGTHS(_j));}
-    _o.FLUX_RATIOS = new List<string>();
+    _o.FLUX_RATIOS = new List<double>();
     for (var _j = 0; _j < this.FLUX_RATIOSLength; ++_j) {_o.FLUX_RATIOS.Add(this.FLUX_RATIOS(_j));}
-    _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID;
-    _o.SAT_NO = this.SAT_NO;
+    _o.TEMPERATURE = this.TEMPERATURE;
+    _o.SIGNAL_NOISE_RATIO = this.SIGNAL_NOISE_RATIO;
+    _o.INTEGRATION_TIME = this.INTEGRATION_TIME;
+    _o.QUALITY = this.QUALITY;
   }
   public static Offset<SWR> Pack(FlatBufferBuilder builder, SWRT _o) {
     if (_o == null) return default(Offset<SWR>);
     var _ID = _o.ID == null ? default(StringOffset) : builder.CreateString(_o.ID);
     var _ON_ORBIT = _o.ON_ORBIT == null ? default(StringOffset) : builder.CreateString(_o.ON_ORBIT);
+    var _ORIG_OBJECT_ID = _o.ORIG_OBJECT_ID == null ? default(StringOffset) : builder.CreateString(_o.ORIG_OBJECT_ID);
     var _TS = _o.TS == null ? default(StringOffset) : builder.CreateString(_o.TS);
     var _LOCATION_NAME = _o.LOCATION_NAME == null ? default(StringOffset) : builder.CreateString(_o.LOCATION_NAME);
     var _BAD_WAVE = _o.BAD_WAVE == null ? default(StringOffset) : builder.CreateString(_o.BAD_WAVE);
     var _WAVELENGTHS = default(VectorOffset);
     if (_o.WAVELENGTHS != null) {
-      var __WAVELENGTHS = new StringOffset[_o.WAVELENGTHS.Count];
-      for (var _j = 0; _j < __WAVELENGTHS.Length; ++_j) { __WAVELENGTHS[_j] = builder.CreateString(_o.WAVELENGTHS[_j]); }
+      var __WAVELENGTHS = _o.WAVELENGTHS.ToArray();
       _WAVELENGTHS = CreateWAVELENGTHSVector(builder, __WAVELENGTHS);
     }
     var _ABS_FLUXES = default(VectorOffset);
     if (_o.ABS_FLUXES != null) {
-      var __ABS_FLUXES = new StringOffset[_o.ABS_FLUXES.Count];
-      for (var _j = 0; _j < __ABS_FLUXES.Length; ++_j) { __ABS_FLUXES[_j] = builder.CreateString(_o.ABS_FLUXES[_j]); }
+      var __ABS_FLUXES = _o.ABS_FLUXES.ToArray();
       _ABS_FLUXES = CreateABS_FLUXESVector(builder, __ABS_FLUXES);
     }
     var _RATIO_WAVELENGTHS = default(VectorOffset);
     if (_o.RATIO_WAVELENGTHS != null) {
-      var __RATIO_WAVELENGTHS = new StringOffset[_o.RATIO_WAVELENGTHS.Count];
-      for (var _j = 0; _j < __RATIO_WAVELENGTHS.Length; ++_j) { __RATIO_WAVELENGTHS[_j] = builder.CreateString(_o.RATIO_WAVELENGTHS[_j]); }
+      var __RATIO_WAVELENGTHS = _o.RATIO_WAVELENGTHS.ToArray();
       _RATIO_WAVELENGTHS = CreateRATIO_WAVELENGTHSVector(builder, __RATIO_WAVELENGTHS);
     }
     var _FLUX_RATIOS = default(VectorOffset);
     if (_o.FLUX_RATIOS != null) {
-      var __FLUX_RATIOS = new StringOffset[_o.FLUX_RATIOS.Count];
-      for (var _j = 0; _j < __FLUX_RATIOS.Length; ++_j) { __FLUX_RATIOS[_j] = builder.CreateString(_o.FLUX_RATIOS[_j]); }
+      var __FLUX_RATIOS = _o.FLUX_RATIOS.ToArray();
       _FLUX_RATIOS = CreateFLUX_RATIOSVector(builder, __FLUX_RATIOS);
     }
-    var _ORIG_OBJECT_ID = _o.ORIG_OBJECT_ID == null ? default(StringOffset) : builder.CreateString(_o.ORIG_OBJECT_ID);
     return CreateSWR(
       builder,
       _ID,
       _ON_ORBIT,
+      _ORIG_OBJECT_ID,
+      _o.SAT_NO,
       _TS,
       _o.SOLAR_PHASE_ANGLE,
       _o.LAT,
@@ -219,8 +279,10 @@ public struct SWR : IFlatbufferObject
       _ABS_FLUXES,
       _RATIO_WAVELENGTHS,
       _FLUX_RATIOS,
-      _ORIG_OBJECT_ID,
-      _o.SAT_NO);
+      _o.TEMPERATURE,
+      _o.SIGNAL_NOISE_RATIO,
+      _o.INTEGRATION_TIME,
+      _o.QUALITY);
   }
 }
 
@@ -228,22 +290,28 @@ public class SWRT
 {
   public string ID { get; set; }
   public string ON_ORBIT { get; set; }
+  public string ORIG_OBJECT_ID { get; set; }
+  public uint SAT_NO { get; set; }
   public string TS { get; set; }
   public double SOLAR_PHASE_ANGLE { get; set; }
   public double LAT { get; set; }
   public double LON { get; set; }
   public string LOCATION_NAME { get; set; }
   public string BAD_WAVE { get; set; }
-  public List<string> WAVELENGTHS { get; set; }
-  public List<string> ABS_FLUXES { get; set; }
-  public List<string> RATIO_WAVELENGTHS { get; set; }
-  public List<string> FLUX_RATIOS { get; set; }
-  public string ORIG_OBJECT_ID { get; set; }
-  public int SAT_NO { get; set; }
+  public List<double> WAVELENGTHS { get; set; }
+  public List<double> ABS_FLUXES { get; set; }
+  public List<double> RATIO_WAVELENGTHS { get; set; }
+  public List<double> FLUX_RATIOS { get; set; }
+  public double TEMPERATURE { get; set; }
+  public double SIGNAL_NOISE_RATIO { get; set; }
+  public double INTEGRATION_TIME { get; set; }
+  public byte QUALITY { get; set; }
 
   public SWRT() {
     this.ID = null;
     this.ON_ORBIT = null;
+    this.ORIG_OBJECT_ID = null;
+    this.SAT_NO = 0;
     this.TS = null;
     this.SOLAR_PHASE_ANGLE = 0.0;
     this.LAT = 0.0;
@@ -254,8 +322,10 @@ public class SWRT
     this.ABS_FLUXES = null;
     this.RATIO_WAVELENGTHS = null;
     this.FLUX_RATIOS = null;
-    this.ORIG_OBJECT_ID = null;
-    this.SAT_NO = 0;
+    this.TEMPERATURE = 0.0;
+    this.SIGNAL_NOISE_RATIO = 0.0;
+    this.INTEGRATION_TIME = 0.0;
+    this.QUALITY = 0;
   }
   public static SWRT DeserializeFromBinary(byte[] fbBuffer) {
     return SWR.GetRootAsSWR(new ByteBuffer(fbBuffer)).UnPack();
@@ -275,18 +345,22 @@ static public class SWRVerify
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*ID*/, false)
       && verifier.VerifyString(tablePos, 6 /*ON_ORBIT*/, false)
-      && verifier.VerifyString(tablePos, 8 /*TS*/, false)
-      && verifier.VerifyField(tablePos, 10 /*SOLAR_PHASE_ANGLE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 12 /*LAT*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 14 /*LON*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 16 /*LOCATION_NAME*/, false)
-      && verifier.VerifyString(tablePos, 18 /*BAD_WAVE*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 20 /*WAVELENGTHS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 22 /*ABS_FLUXES*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 24 /*RATIO_WAVELENGTHS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 26 /*FLUX_RATIOS*/, false)
-      && verifier.VerifyString(tablePos, 28 /*ORIG_OBJECT_ID*/, false)
-      && verifier.VerifyField(tablePos, 30 /*SAT_NO*/, 4 /*int*/, 4, false)
+      && verifier.VerifyString(tablePos, 8 /*ORIG_OBJECT_ID*/, false)
+      && verifier.VerifyField(tablePos, 10 /*SAT_NO*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 12 /*TS*/, false)
+      && verifier.VerifyField(tablePos, 14 /*SOLAR_PHASE_ANGLE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 16 /*LAT*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 18 /*LON*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 20 /*LOCATION_NAME*/, false)
+      && verifier.VerifyString(tablePos, 22 /*BAD_WAVE*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 24 /*WAVELENGTHS*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 26 /*ABS_FLUXES*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 28 /*RATIO_WAVELENGTHS*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 30 /*FLUX_RATIOS*/, 8 /*double*/, false)
+      && verifier.VerifyField(tablePos, 32 /*TEMPERATURE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 34 /*SIGNAL_NOISE_RATIO*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 36 /*INTEGRATION_TIME*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 38 /*QUALITY*/, 1 /*byte*/, 1, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

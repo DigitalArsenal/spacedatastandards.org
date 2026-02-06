@@ -26,20 +26,20 @@ struct STR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_GAIADR3_CAT_ID = 10,
     VT_HIP_CAT_ID = 12,
     VT_CAT_VERSION = 14,
-    VT_RA = 16,
-    VT_RA_UNC = 18,
-    VT_DEC = 20,
-    VT_DEC_UNC = 22,
-    VT_POS_UNC_FLAG = 24,
-    VT_PARALLAX = 26,
-    VT_PARALLAX_UNC = 28,
-    VT_PMRA = 30,
-    VT_PMRA_UNC = 32,
-    VT_PMDEC = 34,
-    VT_PMDEC_UNC = 36,
-    VT_PM_UNC_FLAG = 38,
-    VT_ASTROMETRY_ORIGIN = 40,
-    VT_STAR_EPOCH = 42,
+    VT_ASTROMETRY_ORIGIN = 16,
+    VT_STAR_EPOCH = 18,
+    VT_RA = 20,
+    VT_RA_UNC = 22,
+    VT_DEC = 24,
+    VT_DEC_UNC = 26,
+    VT_POS_UNC_FLAG = 28,
+    VT_PARALLAX = 30,
+    VT_PARALLAX_UNC = 32,
+    VT_PMRA = 34,
+    VT_PMRA_UNC = 36,
+    VT_PMDEC = 38,
+    VT_PMDEC_UNC = 40,
+    VT_PM_UNC_FLAG = 42,
     VT_GMAG = 44,
     VT_GMAG_UNC = 46,
     VT_BPMAG = 48,
@@ -60,120 +60,159 @@ struct STR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_SHIFT_FLAG = 78,
     VT_SHIFT = 80
   };
+  /// Unique internal identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
+  /// CelesTrak Star catalog identifier
   int64_t CS_ID() const {
     return GetField<int64_t>(VT_CS_ID, 0);
   }
-  int32_t GNC_CAT_ID() const {
-    return GetField<int32_t>(VT_GNC_CAT_ID, 0);
+  /// GNC star catalog identifier
+  uint32_t GNC_CAT_ID() const {
+    return GetField<uint32_t>(VT_GNC_CAT_ID, 0);
   }
+  /// Gaia DR3 source identifier
   int64_t GAIADR3_CAT_ID() const {
     return GetField<int64_t>(VT_GAIADR3_CAT_ID, 0);
   }
-  int32_t HIP_CAT_ID() const {
-    return GetField<int32_t>(VT_HIP_CAT_ID, 0);
+  /// Hipparcos catalog identifier
+  uint32_t HIP_CAT_ID() const {
+    return GetField<uint32_t>(VT_HIP_CAT_ID, 0);
   }
+  /// Catalog version string
   const ::flatbuffers::String *CAT_VERSION() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CAT_VERSION);
   }
-  double RA() const {
-    return GetField<double>(VT_RA, 0.0);
-  }
-  double RA_UNC() const {
-    return GetField<double>(VT_RA_UNC, 0.0);
-  }
-  double DEC() const {
-    return GetField<double>(VT_DEC, 0.0);
-  }
-  double DEC_UNC() const {
-    return GetField<double>(VT_DEC_UNC, 0.0);
-  }
-  bool POS_UNC_FLAG() const {
-    return GetField<uint8_t>(VT_POS_UNC_FLAG, 0) != 0;
-  }
-  double PARALLAX() const {
-    return GetField<double>(VT_PARALLAX, 0.0);
-  }
-  double PARALLAX_UNC() const {
-    return GetField<double>(VT_PARALLAX_UNC, 0.0);
-  }
-  double PMRA() const {
-    return GetField<double>(VT_PMRA, 0.0);
-  }
-  double PMRA_UNC() const {
-    return GetField<double>(VT_PMRA_UNC, 0.0);
-  }
-  double PMDEC() const {
-    return GetField<double>(VT_PMDEC, 0.0);
-  }
-  double PMDEC_UNC() const {
-    return GetField<double>(VT_PMDEC_UNC, 0.0);
-  }
-  bool PM_UNC_FLAG() const {
-    return GetField<uint8_t>(VT_PM_UNC_FLAG, 0) != 0;
-  }
+  /// Astrometry source description
   const ::flatbuffers::String *ASTROMETRY_ORIGIN() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ASTROMETRY_ORIGIN);
   }
+  /// Epoch of stellar position (Julian years)
   double STAR_EPOCH() const {
     return GetField<double>(VT_STAR_EPOCH, 0.0);
   }
+  /// Right ascension (degrees, ICRS)
+  double RA() const {
+    return GetField<double>(VT_RA, 0.0);
+  }
+  /// Right ascension uncertainty (arcseconds)
+  double RA_UNC() const {
+    return GetField<double>(VT_RA_UNC, 0.0);
+  }
+  /// Declination (degrees, ICRS)
+  double DEC() const {
+    return GetField<double>(VT_DEC, 0.0);
+  }
+  /// Declination uncertainty (arcseconds)
+  double DEC_UNC() const {
+    return GetField<double>(VT_DEC_UNC, 0.0);
+  }
+  /// True if position uncertainty is flagged
+  bool POS_UNC_FLAG() const {
+    return GetField<uint8_t>(VT_POS_UNC_FLAG, 0) != 0;
+  }
+  /// Parallax (milliarcseconds)
+  double PARALLAX() const {
+    return GetField<double>(VT_PARALLAX, 0.0);
+  }
+  /// Parallax uncertainty (milliarcseconds)
+  double PARALLAX_UNC() const {
+    return GetField<double>(VT_PARALLAX_UNC, 0.0);
+  }
+  /// Proper motion in RA (milliarcseconds/year)
+  double PMRA() const {
+    return GetField<double>(VT_PMRA, 0.0);
+  }
+  /// Proper motion in RA uncertainty (milliarcseconds/year)
+  double PMRA_UNC() const {
+    return GetField<double>(VT_PMRA_UNC, 0.0);
+  }
+  /// Proper motion in DEC (milliarcseconds/year)
+  double PMDEC() const {
+    return GetField<double>(VT_PMDEC, 0.0);
+  }
+  /// Proper motion in DEC uncertainty (milliarcseconds/year)
+  double PMDEC_UNC() const {
+    return GetField<double>(VT_PMDEC_UNC, 0.0);
+  }
+  /// True if proper motion uncertainty is flagged
+  bool PM_UNC_FLAG() const {
+    return GetField<uint8_t>(VT_PM_UNC_FLAG, 0) != 0;
+  }
+  /// Gaia G-band magnitude
   double GMAG() const {
     return GetField<double>(VT_GMAG, 0.0);
   }
+  /// Gaia G-band magnitude uncertainty
   double GMAG_UNC() const {
     return GetField<double>(VT_GMAG_UNC, 0.0);
   }
+  /// Gaia BP-band magnitude (blue photometer)
   double BPMAG() const {
     return GetField<double>(VT_BPMAG, 0.0);
   }
+  /// Gaia BP-band magnitude uncertainty
   double BPMAG_UNC() const {
     return GetField<double>(VT_BPMAG_UNC, 0.0);
   }
+  /// Gaia RP-band magnitude (red photometer)
   double RPMAG() const {
     return GetField<double>(VT_RPMAG, 0.0);
   }
+  /// Gaia RP-band magnitude uncertainty
   double RPMAG_UNC() const {
     return GetField<double>(VT_RPMAG_UNC, 0.0);
   }
+  /// 2MASS J-band magnitude (1.25 um)
   double JMAG() const {
     return GetField<double>(VT_JMAG, 0.0);
   }
+  /// J-band magnitude uncertainty
   double JMAG_UNC() const {
     return GetField<double>(VT_JMAG_UNC, 0.0);
   }
+  /// 2MASS K-band magnitude (2.17 um)
   double KMAG() const {
     return GetField<double>(VT_KMAG, 0.0);
   }
+  /// K-band magnitude uncertainty
   double KMAG_UNC() const {
     return GetField<double>(VT_KMAG_UNC, 0.0);
   }
+  /// 2MASS H-band magnitude (1.65 um)
   double HMAG() const {
     return GetField<double>(VT_HMAG, 0.0);
   }
+  /// H-band magnitude uncertainty
   double HMAG_UNC() const {
     return GetField<double>(VT_HMAG_UNC, 0.0);
   }
+  /// True if star is variable
   bool VAR_FLAG() const {
     return GetField<uint8_t>(VT_VAR_FLAG, 0) != 0;
   }
+  /// True if star is in a multiple system
   bool MULT_FLAG() const {
     return GetField<uint8_t>(VT_MULT_FLAG, 0) != 0;
   }
-  int32_t NEIGHBOR_ID() const {
-    return GetField<int32_t>(VT_NEIGHBOR_ID, 0);
+  /// Nearest neighbor catalog identifier
+  uint32_t NEIGHBOR_ID() const {
+    return GetField<uint32_t>(VT_NEIGHBOR_ID, 0);
   }
+  /// True if nearest neighbor is within confusion radius
   bool NEIGHBOR_FLAG() const {
     return GetField<uint8_t>(VT_NEIGHBOR_FLAG, 0) != 0;
   }
+  /// Distance to nearest neighbor (arcseconds)
   double NEIGHBOR_DISTANCE() const {
     return GetField<double>(VT_NEIGHBOR_DISTANCE, 0.0);
   }
+  /// True if position shift detected between catalogs
   bool SHIFT_FLAG() const {
     return GetField<uint8_t>(VT_SHIFT_FLAG, 0) != 0;
   }
+  /// Position shift magnitude (arcseconds)
   double SHIFT() const {
     return GetField<double>(VT_SHIFT, 0.0);
   }
@@ -182,11 +221,14 @@ struct STR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyOffset(verifier, VT_ID) &&
            verifier.VerifyString(ID()) &&
            VerifyField<int64_t>(verifier, VT_CS_ID, 8) &&
-           VerifyField<int32_t>(verifier, VT_GNC_CAT_ID, 4) &&
+           VerifyField<uint32_t>(verifier, VT_GNC_CAT_ID, 4) &&
            VerifyField<int64_t>(verifier, VT_GAIADR3_CAT_ID, 8) &&
-           VerifyField<int32_t>(verifier, VT_HIP_CAT_ID, 4) &&
+           VerifyField<uint32_t>(verifier, VT_HIP_CAT_ID, 4) &&
            VerifyOffset(verifier, VT_CAT_VERSION) &&
            verifier.VerifyString(CAT_VERSION()) &&
+           VerifyOffset(verifier, VT_ASTROMETRY_ORIGIN) &&
+           verifier.VerifyString(ASTROMETRY_ORIGIN()) &&
+           VerifyField<double>(verifier, VT_STAR_EPOCH, 8) &&
            VerifyField<double>(verifier, VT_RA, 8) &&
            VerifyField<double>(verifier, VT_RA_UNC, 8) &&
            VerifyField<double>(verifier, VT_DEC, 8) &&
@@ -199,9 +241,6 @@ struct STR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_PMDEC, 8) &&
            VerifyField<double>(verifier, VT_PMDEC_UNC, 8) &&
            VerifyField<uint8_t>(verifier, VT_PM_UNC_FLAG, 1) &&
-           VerifyOffset(verifier, VT_ASTROMETRY_ORIGIN) &&
-           verifier.VerifyString(ASTROMETRY_ORIGIN()) &&
-           VerifyField<double>(verifier, VT_STAR_EPOCH, 8) &&
            VerifyField<double>(verifier, VT_GMAG, 8) &&
            VerifyField<double>(verifier, VT_GMAG_UNC, 8) &&
            VerifyField<double>(verifier, VT_BPMAG, 8) &&
@@ -216,7 +255,7 @@ struct STR FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_HMAG_UNC, 8) &&
            VerifyField<uint8_t>(verifier, VT_VAR_FLAG, 1) &&
            VerifyField<uint8_t>(verifier, VT_MULT_FLAG, 1) &&
-           VerifyField<int32_t>(verifier, VT_NEIGHBOR_ID, 4) &&
+           VerifyField<uint32_t>(verifier, VT_NEIGHBOR_ID, 4) &&
            VerifyField<uint8_t>(verifier, VT_NEIGHBOR_FLAG, 1) &&
            VerifyField<double>(verifier, VT_NEIGHBOR_DISTANCE, 8) &&
            VerifyField<uint8_t>(verifier, VT_SHIFT_FLAG, 1) &&
@@ -235,17 +274,23 @@ struct STRBuilder {
   void add_CS_ID(int64_t CS_ID) {
     fbb_.AddElement<int64_t>(STR::VT_CS_ID, CS_ID, 0);
   }
-  void add_GNC_CAT_ID(int32_t GNC_CAT_ID) {
-    fbb_.AddElement<int32_t>(STR::VT_GNC_CAT_ID, GNC_CAT_ID, 0);
+  void add_GNC_CAT_ID(uint32_t GNC_CAT_ID) {
+    fbb_.AddElement<uint32_t>(STR::VT_GNC_CAT_ID, GNC_CAT_ID, 0);
   }
   void add_GAIADR3_CAT_ID(int64_t GAIADR3_CAT_ID) {
     fbb_.AddElement<int64_t>(STR::VT_GAIADR3_CAT_ID, GAIADR3_CAT_ID, 0);
   }
-  void add_HIP_CAT_ID(int32_t HIP_CAT_ID) {
-    fbb_.AddElement<int32_t>(STR::VT_HIP_CAT_ID, HIP_CAT_ID, 0);
+  void add_HIP_CAT_ID(uint32_t HIP_CAT_ID) {
+    fbb_.AddElement<uint32_t>(STR::VT_HIP_CAT_ID, HIP_CAT_ID, 0);
   }
   void add_CAT_VERSION(::flatbuffers::Offset<::flatbuffers::String> CAT_VERSION) {
     fbb_.AddOffset(STR::VT_CAT_VERSION, CAT_VERSION);
+  }
+  void add_ASTROMETRY_ORIGIN(::flatbuffers::Offset<::flatbuffers::String> ASTROMETRY_ORIGIN) {
+    fbb_.AddOffset(STR::VT_ASTROMETRY_ORIGIN, ASTROMETRY_ORIGIN);
+  }
+  void add_STAR_EPOCH(double STAR_EPOCH) {
+    fbb_.AddElement<double>(STR::VT_STAR_EPOCH, STAR_EPOCH, 0.0);
   }
   void add_RA(double RA) {
     fbb_.AddElement<double>(STR::VT_RA, RA, 0.0);
@@ -282,12 +327,6 @@ struct STRBuilder {
   }
   void add_PM_UNC_FLAG(bool PM_UNC_FLAG) {
     fbb_.AddElement<uint8_t>(STR::VT_PM_UNC_FLAG, static_cast<uint8_t>(PM_UNC_FLAG), 0);
-  }
-  void add_ASTROMETRY_ORIGIN(::flatbuffers::Offset<::flatbuffers::String> ASTROMETRY_ORIGIN) {
-    fbb_.AddOffset(STR::VT_ASTROMETRY_ORIGIN, ASTROMETRY_ORIGIN);
-  }
-  void add_STAR_EPOCH(double STAR_EPOCH) {
-    fbb_.AddElement<double>(STR::VT_STAR_EPOCH, STAR_EPOCH, 0.0);
   }
   void add_GMAG(double GMAG) {
     fbb_.AddElement<double>(STR::VT_GMAG, GMAG, 0.0);
@@ -331,8 +370,8 @@ struct STRBuilder {
   void add_MULT_FLAG(bool MULT_FLAG) {
     fbb_.AddElement<uint8_t>(STR::VT_MULT_FLAG, static_cast<uint8_t>(MULT_FLAG), 0);
   }
-  void add_NEIGHBOR_ID(int32_t NEIGHBOR_ID) {
-    fbb_.AddElement<int32_t>(STR::VT_NEIGHBOR_ID, NEIGHBOR_ID, 0);
+  void add_NEIGHBOR_ID(uint32_t NEIGHBOR_ID) {
+    fbb_.AddElement<uint32_t>(STR::VT_NEIGHBOR_ID, NEIGHBOR_ID, 0);
   }
   void add_NEIGHBOR_FLAG(bool NEIGHBOR_FLAG) {
     fbb_.AddElement<uint8_t>(STR::VT_NEIGHBOR_FLAG, static_cast<uint8_t>(NEIGHBOR_FLAG), 0);
@@ -361,10 +400,12 @@ inline ::flatbuffers::Offset<STR> CreateSTR(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
     int64_t CS_ID = 0,
-    int32_t GNC_CAT_ID = 0,
+    uint32_t GNC_CAT_ID = 0,
     int64_t GAIADR3_CAT_ID = 0,
-    int32_t HIP_CAT_ID = 0,
+    uint32_t HIP_CAT_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CAT_VERSION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ASTROMETRY_ORIGIN = 0,
+    double STAR_EPOCH = 0.0,
     double RA = 0.0,
     double RA_UNC = 0.0,
     double DEC = 0.0,
@@ -377,8 +418,6 @@ inline ::flatbuffers::Offset<STR> CreateSTR(
     double PMDEC = 0.0,
     double PMDEC_UNC = 0.0,
     bool PM_UNC_FLAG = false,
-    ::flatbuffers::Offset<::flatbuffers::String> ASTROMETRY_ORIGIN = 0,
-    double STAR_EPOCH = 0.0,
     double GMAG = 0.0,
     double GMAG_UNC = 0.0,
     double BPMAG = 0.0,
@@ -393,7 +432,7 @@ inline ::flatbuffers::Offset<STR> CreateSTR(
     double HMAG_UNC = 0.0,
     bool VAR_FLAG = false,
     bool MULT_FLAG = false,
-    int32_t NEIGHBOR_ID = 0,
+    uint32_t NEIGHBOR_ID = 0,
     bool NEIGHBOR_FLAG = false,
     double NEIGHBOR_DISTANCE = 0.0,
     bool SHIFT_FLAG = false,
@@ -413,7 +452,6 @@ inline ::flatbuffers::Offset<STR> CreateSTR(
   builder_.add_BPMAG(BPMAG);
   builder_.add_GMAG_UNC(GMAG_UNC);
   builder_.add_GMAG(GMAG);
-  builder_.add_STAR_EPOCH(STAR_EPOCH);
   builder_.add_PMDEC_UNC(PMDEC_UNC);
   builder_.add_PMDEC(PMDEC);
   builder_.add_PMRA_UNC(PMRA_UNC);
@@ -424,6 +462,7 @@ inline ::flatbuffers::Offset<STR> CreateSTR(
   builder_.add_DEC(DEC);
   builder_.add_RA_UNC(RA_UNC);
   builder_.add_RA(RA);
+  builder_.add_STAR_EPOCH(STAR_EPOCH);
   builder_.add_GAIADR3_CAT_ID(GAIADR3_CAT_ID);
   builder_.add_CS_ID(CS_ID);
   builder_.add_NEIGHBOR_ID(NEIGHBOR_ID);
@@ -445,10 +484,12 @@ inline ::flatbuffers::Offset<STR> CreateSTRDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *ID = nullptr,
     int64_t CS_ID = 0,
-    int32_t GNC_CAT_ID = 0,
+    uint32_t GNC_CAT_ID = 0,
     int64_t GAIADR3_CAT_ID = 0,
-    int32_t HIP_CAT_ID = 0,
+    uint32_t HIP_CAT_ID = 0,
     const char *CAT_VERSION = nullptr,
+    const char *ASTROMETRY_ORIGIN = nullptr,
+    double STAR_EPOCH = 0.0,
     double RA = 0.0,
     double RA_UNC = 0.0,
     double DEC = 0.0,
@@ -461,8 +502,6 @@ inline ::flatbuffers::Offset<STR> CreateSTRDirect(
     double PMDEC = 0.0,
     double PMDEC_UNC = 0.0,
     bool PM_UNC_FLAG = false,
-    const char *ASTROMETRY_ORIGIN = nullptr,
-    double STAR_EPOCH = 0.0,
     double GMAG = 0.0,
     double GMAG_UNC = 0.0,
     double BPMAG = 0.0,
@@ -477,7 +516,7 @@ inline ::flatbuffers::Offset<STR> CreateSTRDirect(
     double HMAG_UNC = 0.0,
     bool VAR_FLAG = false,
     bool MULT_FLAG = false,
-    int32_t NEIGHBOR_ID = 0,
+    uint32_t NEIGHBOR_ID = 0,
     bool NEIGHBOR_FLAG = false,
     double NEIGHBOR_DISTANCE = 0.0,
     bool SHIFT_FLAG = false,
@@ -493,6 +532,8 @@ inline ::flatbuffers::Offset<STR> CreateSTRDirect(
       GAIADR3_CAT_ID,
       HIP_CAT_ID,
       CAT_VERSION__,
+      ASTROMETRY_ORIGIN__,
+      STAR_EPOCH,
       RA,
       RA_UNC,
       DEC,
@@ -505,8 +546,6 @@ inline ::flatbuffers::Offset<STR> CreateSTRDirect(
       PMDEC,
       PMDEC_UNC,
       PM_UNC_FLAG,
-      ASTROMETRY_ORIGIN__,
-      STAR_EPOCH,
       GMAG,
       GMAG_UNC,
       BPMAG,

@@ -1,202 +1,363 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "eventCategory": {
+      "type": "string",
+      "enum": [
+        "ANOMALY",
+        "FAILURE",
+        "RETIREMENT",
+        "DEORBIT",
+        "BREAKUP",
+        "COLLISION",
+        "STATUS_CHANGE",
+        "REPOSITIONING",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ANOMALY": {
+          "value": 0
+        },
+        "FAILURE": {
+          "value": 1
+        },
+        "RETIREMENT": {
+          "value": 2
+        },
+        "DEORBIT": {
+          "value": 3
+        },
+        "BREAKUP": {
+          "value": 4
+        },
+        "COLLISION": {
+          "value": 5
+        },
+        "STATUS_CHANGE": {
+          "value": 6
+        },
+        "REPOSITIONING": {
+          "value": 7
+        },
+        "UNKNOWN": {
+          "value": 8
+        }
+      }
+    },
+    "eventResult": {
+      "type": "string",
+      "enum": [
+        "TOTAL_LOSS",
+        "PARTIAL_LOSS",
+        "DEGRADED",
+        "RECOVERED",
+        "NOMINAL",
+        "PENDING"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "TOTAL_LOSS": {
+          "value": 0
+        },
+        "PARTIAL_LOSS": {
+          "value": 1
+        },
+        "DEGRADED": {
+          "value": 2
+        },
+        "RECOVERED": {
+          "value": 3
+        },
+        "NOMINAL": {
+          "value": 4
+        },
+        "PENDING": {
+          "value": 5
+        }
+      }
+    },
     "OOE": {
       "type": "object",
       "description": "On-Orbit Event",
       "properties": {
         "ID": {
           "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "DERIVED_FROM": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "DECLASSIFICATION_DATE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "DECLASSIFICATION_STRING": {
-          "type": "string",
+          "description": "Unique identifier",
           "x-flatbuffer-type": "string"
         },
         "SAT_NO": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Satellite catalog number",
+          "x-flatbuffer-type": "uint32"
         },
         "ORIG_OBJECT_ID": {
           "type": "string",
+          "description": "International designator",
+          "x-flatbuffer-type": "string"
+        },
+        "DERIVED_FROM": {
+          "type": "string",
+          "description": "Source record this was derived from",
+          "x-flatbuffer-type": "string"
+        },
+        "DECLASSIFICATION_DATE": {
+          "type": "string",
+          "description": "Classification date (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "DECLASSIFICATION_STRING": {
+          "type": "string",
+          "description": "Classification marking",
           "x-flatbuffer-type": "string"
         },
         "EVENT_TIME": {
           "type": "string",
+          "description": "Event time (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "EVENT_TIME_NOTES": {
           "type": "string",
+          "description": "Notes on event time accuracy",
+          "x-flatbuffer-type": "string"
+        },
+        "CATEGORY": {
+          "$ref": "#/definitions/eventCategory",
+          "description": "Event category",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ANOMALY": {
+              "value": 0
+            },
+            "FAILURE": {
+              "value": 1
+            },
+            "RETIREMENT": {
+              "value": 2
+            },
+            "DEORBIT": {
+              "value": 3
+            },
+            "BREAKUP": {
+              "value": 4
+            },
+            "COLLISION": {
+              "value": 5
+            },
+            "STATUS_CHANGE": {
+              "value": 6
+            },
+            "REPOSITIONING": {
+              "value": 7
+            },
+            "UNKNOWN": {
+              "value": 8
+            }
+          }
+        },
+        "RESULT": {
+          "$ref": "#/definitions/eventResult",
+          "description": "Event result/outcome",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "TOTAL_LOSS": {
+              "value": 0
+            },
+            "PARTIAL_LOSS": {
+              "value": 1
+            },
+            "DEGRADED": {
+              "value": 2
+            },
+            "RECOVERED": {
+              "value": 3
+            },
+            "NOMINAL": {
+              "value": 4
+            },
+            "PENDING": {
+              "value": 5
+            }
+          }
+        },
+        "EVENT_TYPE": {
+          "type": "string",
+          "description": "Event type detail",
           "x-flatbuffer-type": "string"
         },
         "OPERATOR_ORG_ID": {
           "type": "string",
+          "description": "Operator organization identifier",
           "x-flatbuffer-type": "string"
         },
         "OWNER_ORG_ID": {
           "type": "string",
+          "description": "Owner organization identifier",
           "x-flatbuffer-type": "string"
         },
         "LESSEE_ORG_ID": {
           "type": "string",
+          "description": "Lessee organization identifier",
           "x-flatbuffer-type": "string"
         },
         "OPERATED_ON_BEHALF_OF_ORG_ID": {
           "type": "string",
+          "description": "Operated on behalf of organization",
           "x-flatbuffer-type": "string"
         },
         "GEO_POSITION": {
           "type": "number",
+          "description": "GEO longitude at event time (degrees east)",
           "x-flatbuffer-type": "double"
         },
         "PLANE_SLOT": {
           "type": "string",
+          "description": "Orbital plane slot",
           "x-flatbuffer-type": "string"
         },
         "PLANE_NUMBER": {
           "type": "string",
+          "description": "Orbital plane number",
           "x-flatbuffer-type": "string"
         },
         "POSITION_STATUS": {
           "type": "string",
+          "description": "Position status at event time",
           "x-flatbuffer-type": "string"
         },
         "UNTIL_TIME": {
           "type": "string",
+          "description": "Time until expected recovery (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "OFFICIAL_LOSS_DATE": {
           "type": "string",
+          "description": "Official loss date (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "NET_AMOUNT": {
           "type": "number",
+          "description": "Financial loss amount (USD)",
           "x-flatbuffer-type": "double"
         },
         "UNDERLYING_CAUSE": {
           "type": "string",
+          "description": "Root cause description",
           "x-flatbuffer-type": "string"
         },
         "CAPABILITY_LOSS": {
           "type": "number",
+          "description": "Capability loss fraction (0-1)",
           "x-flatbuffer-type": "double"
         },
         "CAPACITY_LOSS": {
           "type": "number",
+          "description": "Capacity loss fraction (0-1)",
           "x-flatbuffer-type": "double"
         },
         "INSURANCE_LOSS": {
           "type": "number",
+          "description": "Insurance loss amount (USD)",
           "x-flatbuffer-type": "double"
         },
         "THIRD_PARTY_INSURANCE_LOSS": {
           "type": "number",
+          "description": "Third-party insurance loss (USD)",
           "x-flatbuffer-type": "double"
         },
         "INJURED": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Number of personnel injured",
+          "x-flatbuffer-type": "uint16"
         },
         "KILLED": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
-        },
-        "LIFE_LOST": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Number of fatalities",
+          "x-flatbuffer-type": "uint16"
         },
         "AGE_AT_EVENT": {
           "type": "number",
+          "description": "Spacecraft age at event (years)",
+          "x-flatbuffer-type": "double"
+        },
+        "LIFE_LOST": {
+          "type": "number",
+          "description": "Design life remaining at event (years)",
           "x-flatbuffer-type": "double"
         },
         "ACHIEVED_FLIGHT_PHASE": {
           "type": "string",
+          "description": "Flight phase achieved",
           "x-flatbuffer-type": "string"
         },
         "OCCURRENCE_FLIGHT_PHASE": {
           "type": "string",
+          "description": "Flight phase at occurrence",
           "x-flatbuffer-type": "string"
         },
         "STAGE_AT_FAULT": {
           "type": "string",
+          "description": "Stage at fault",
           "x-flatbuffer-type": "string"
         },
         "EQUIPMENT_AT_FAULT": {
           "type": "string",
+          "description": "Equipment at fault",
           "x-flatbuffer-type": "string"
         },
         "EQUIPMENT_TYPE_AT_FAULT": {
           "type": "string",
+          "description": "Equipment type at fault",
           "x-flatbuffer-type": "string"
         },
         "EQUIPMENT_PART_AT_FAULT": {
           "type": "string",
+          "description": "Equipment part at fault",
           "x-flatbuffer-type": "string"
         },
         "CONSEQUENTIAL_EQUIPMENT_FAILURE": {
           "type": "string",
+          "description": "Consequential equipment failure",
           "x-flatbuffer-type": "string"
         },
         "INCLINED": {
           "type": "boolean",
+          "description": "True if orbit is inclined",
           "x-flatbuffer-type": "bool"
         },
         "DESCRIPTION": {
           "type": "string",
+          "description": "Event description",
           "x-flatbuffer-type": "string"
         },
         "REMARKS": {
           "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "INSURANCE_LOSS_NOTES": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "CAPABILITY_LOSS_NOTES": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "INSURANCE_CARRIED_NOTES": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "EQUIPMENT_CAUSING_LOSS_NOTES": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "EVENT_TYPE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "EVENT_RESULT": {
-          "type": "string",
+          "description": "Additional remarks",
           "x-flatbuffer-type": "string"
         },
         "OBJECT_STATUS": {
           "type": "string",
+          "description": "Object status after event",
           "x-flatbuffer-type": "string"
         },
         "SATELLITE_POSITION": {
           "type": "string",
+          "description": "Satellite position after event",
           "x-flatbuffer-type": "string"
         },
         "ON_ORBIT": {
           "type": "string",
+          "description": "On-orbit reference",
           "x-flatbuffer-type": "string"
         }
       },

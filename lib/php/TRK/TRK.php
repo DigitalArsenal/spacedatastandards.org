@@ -41,177 +41,211 @@ class TRK extends Table
         return $this;
     }
 
+    /// Unique identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Contact reference
     public function getCNTCT()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Message timestamp (ISO 8601)
     public function getMSG_TS()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Mission identifier
     public function getMSN_ID()
     {
         $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Asset nationality
     public function getASSET_NAT()
     {
         $o = $this->__offset(12);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Asset identifier
     public function getASSET()
     {
         $o = $this->__offset(14);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getSEN()
+    /// Sensor identifier
+    public function getSENSOR_ID()
     {
         $o = $this->__offset(16);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Sensor quality assessment
     public function getSEN_QUAL()
     {
         $o = $this->__offset(18);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Track identifier
     public function getTRK_ID()
     {
         $o = $this->__offset(20);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Track number
     public function getTRK_NUM()
     {
         $o = $this->__offset(22);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Track status
+    /**
+     * @return sbyte
+     */
     public function getTRK_STAT()
     {
         $o = $this->__offset(24);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \trackStatus::ACTIVE;
     }
 
+    /// Object nationality
     public function getOBJ_NAT()
     {
         $o = $this->__offset(26);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Object identifier
     public function getOBJ_ID()
     {
         $o = $this->__offset(28);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Object type classification
     public function getOBJ_TYPE()
     {
         $o = $this->__offset(30);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Object specific type
     public function getOBJ_SPEC()
     {
         $o = $this->__offset(32);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Object platform type
     public function getOBJ_PLAT()
     {
         $o = $this->__offset(34);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Object activity
     public function getOBJ_ACT()
     {
         $o = $this->__offset(36);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Mode type
     public function getMOD_TYPE()
     {
         $o = $this->__offset(38);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Track item identifier
     public function getTRK_ITM_ID()
     {
         $o = $this->__offset(40);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Track point timestamp (ISO 8601)
     public function getTS()
     {
         $o = $this->__offset(42);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Track quality (0-15)
     /**
-     * @return int
+     * @return byte
      */
     public function getTRK_QUAL()
     {
         $o = $this->__offset(44);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
     }
 
+    /// Track point type
     public function getTRK_PT_TYPE()
     {
         $o = $this->__offset(46);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Object identity assessment
     public function getOBJ_IDENT()
     {
         $o = $this->__offset(48);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Identity credibility (1-6)
     /**
-     * @return int
+     * @return byte
      */
     public function getIDENT_CRED()
     {
         $o = $this->__offset(50);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
     }
 
+    /// Identity reliability (A-F)
     /**
-     * @return int
+     * @return byte
      */
     public function getIDENT_REL()
     {
         $o = $this->__offset(52);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
     }
 
+    /// Identity amplification
     public function getIDENT_AMP()
     {
         $o = $this->__offset(54);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Track environment
+    /**
+     * @return sbyte
+     */
     public function getENVIRONMENT()
     {
         $o = $this->__offset(56);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \trackEnvironment::SPACE;
     }
 
+    /// Environment confidence (0-1)
     /**
      * @return double
      */
@@ -221,6 +255,7 @@ class TRK extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Track confidence (0-1)
     /**
      * @return double
      */
@@ -230,6 +265,7 @@ class TRK extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Latitude (degrees)
     /**
      * @return double
      */
@@ -239,6 +275,7 @@ class TRK extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Longitude (degrees)
     /**
      * @return double
      */
@@ -248,6 +285,7 @@ class TRK extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Altitude (km)
     /**
      * @return double
      */
@@ -257,6 +295,7 @@ class TRK extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Speed (km/s)
     /**
      * @return double
      */
@@ -266,6 +305,7 @@ class TRK extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Heading (degrees from north)
     /**
      * @return double
      */
@@ -275,6 +315,7 @@ class TRK extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Course (degrees from north)
     /**
      * @return double
      */
@@ -284,6 +325,7 @@ class TRK extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Source types
     /**
      * @param int offset
      * @return string
@@ -303,6 +345,7 @@ class TRK extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Source identifiers
     /**
      * @param int offset
      * @return string
@@ -322,12 +365,14 @@ class TRK extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Call sign
     public function getCALL_SIGN()
     {
         $o = $this->__offset(78);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// True if fused from multiple sources
     /**
      * @return bool
      */
@@ -337,75 +382,84 @@ class TRK extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// J-series message type
     public function getJ_SERIES()
     {
         $o = $this->__offset(82);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Force strength indicator
     /**
-     * @return int
+     * @return ushort
      */
     public function getSTRENGTH()
     {
         $o = $this->__offset(84);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
     }
 
+    /// Mode 1 code
     /**
-     * @return int
+     * @return ushort
      */
     public function getM1()
     {
         $o = $this->__offset(86);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
     }
 
+    /// Mode 1 validity
     /**
-     * @return int
+     * @return byte
      */
     public function getM1V()
     {
         $o = $this->__offset(88);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
     }
 
+    /// Mode 2 code
     /**
-     * @return int
+     * @return ushort
      */
     public function getM2()
     {
         $o = $this->__offset(90);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
     }
 
+    /// Mode 2 validity
     /**
-     * @return int
+     * @return byte
      */
     public function getM2V()
     {
         $o = $this->__offset(92);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
     }
 
+    /// Mode 3A code
     /**
-     * @return int
+     * @return ushort
      */
     public function getM3A()
     {
         $o = $this->__offset(94);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
     }
 
+    /// Mode 3A validity
     /**
-     * @return int
+     * @return byte
      */
     public function getM3AV()
     {
         $o = $this->__offset(96);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
     }
 
+    /// Associated tags
     /**
      * @param int offset
      * @return string
@@ -425,14 +479,14 @@ class TRK extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    /// Start time for track data (ISO 8601 UTC format).
+    /// Start time for track data (ISO 8601)
     public function getTRACK_START_TIME()
     {
         $o = $this->__offset(100);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Time interval between track points in seconds.
+    /// Time interval between track points (seconds)
     /**
      * @return double
      */
@@ -442,7 +496,7 @@ class TRK extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Number of components per point (default 3 for X, Y, Z).
+    /// Number of components per point (default 3 for X, Y, Z)
     /**
      * @return byte
      */
@@ -625,7 +679,7 @@ class TRK extends Table
      * @param FlatBufferBuilder $builder
      * @return TRK
      */
-    public static function createTRK(FlatBufferBuilder $builder, $ID, $CNTCT, $MSG_TS, $MSN_ID, $ASSET_NAT, $ASSET, $SEN, $SEN_QUAL, $TRK_ID, $TRK_NUM, $TRK_STAT, $OBJ_NAT, $OBJ_ID, $OBJ_TYPE, $OBJ_SPEC, $OBJ_PLAT, $OBJ_ACT, $MOD_TYPE, $TRK_ITM_ID, $TS, $TRK_QUAL, $TRK_PT_TYPE, $OBJ_IDENT, $IDENT_CRED, $IDENT_REL, $IDENT_AMP, $ENVIRONMENT, $ENVIRONMENT_CONF, $TRK_CONF, $LAT, $LON, $ALT, $SPD, $HDNG, $COURSE, $SRC_TYPS, $SRC_IDS, $CALL_SIGN, $MULTI_SOURCE, $J_SERIES, $STRENGTH, $M1, $M1V, $M2, $M2V, $M3A, $M3AV, $TAGS, $TRACK_START_TIME, $TRACK_STEP_SIZE, $TRACK_COMPONENTS, $ECEF_POS, $ECEF_VEL, $ECEF_ACC, $LC_POS, $LC_VEL, $LC_ACC, $COV, $ERR_ELLP)
+    public static function createTRK(FlatBufferBuilder $builder, $ID, $CNTCT, $MSG_TS, $MSN_ID, $ASSET_NAT, $ASSET, $SENSOR_ID, $SEN_QUAL, $TRK_ID, $TRK_NUM, $TRK_STAT, $OBJ_NAT, $OBJ_ID, $OBJ_TYPE, $OBJ_SPEC, $OBJ_PLAT, $OBJ_ACT, $MOD_TYPE, $TRK_ITM_ID, $TS, $TRK_QUAL, $TRK_PT_TYPE, $OBJ_IDENT, $IDENT_CRED, $IDENT_REL, $IDENT_AMP, $ENVIRONMENT, $ENVIRONMENT_CONF, $TRK_CONF, $LAT, $LON, $ALT, $SPD, $HDNG, $COURSE, $SRC_TYPS, $SRC_IDS, $CALL_SIGN, $MULTI_SOURCE, $J_SERIES, $STRENGTH, $M1, $M1V, $M2, $M2V, $M3A, $M3AV, $TAGS, $TRACK_START_TIME, $TRACK_STEP_SIZE, $TRACK_COMPONENTS, $ECEF_POS, $ECEF_VEL, $ECEF_ACC, $LC_POS, $LC_VEL, $LC_ACC, $COV, $ERR_ELLP)
     {
         $builder->startObject(59);
         self::addID($builder, $ID);
@@ -634,7 +688,7 @@ class TRK extends Table
         self::addMSN_ID($builder, $MSN_ID);
         self::addASSET_NAT($builder, $ASSET_NAT);
         self::addASSET($builder, $ASSET);
-        self::addSEN($builder, $SEN);
+        self::addSENSOR_ID($builder, $SENSOR_ID);
         self::addSEN_QUAL($builder, $SEN_QUAL);
         self::addTRK_ID($builder, $TRK_ID);
         self::addTRK_NUM($builder, $TRK_NUM);
@@ -756,9 +810,9 @@ class TRK extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addSEN(FlatBufferBuilder $builder, $SEN)
+    public static function addSENSOR_ID(FlatBufferBuilder $builder, $SENSOR_ID)
     {
-        $builder->addOffsetX(6, $SEN, 0);
+        $builder->addOffsetX(6, $SENSOR_ID, 0);
     }
 
     /**
@@ -793,12 +847,12 @@ class TRK extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addTRK_STAT(FlatBufferBuilder $builder, $TRK_STAT)
     {
-        $builder->addOffsetX(10, $TRK_STAT, 0);
+        $builder->addSbyteX(10, $TRK_STAT, 0);
     }
 
     /**
@@ -893,12 +947,12 @@ class TRK extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param byte
      * @return void
      */
     public static function addTRK_QUAL(FlatBufferBuilder $builder, $TRK_QUAL)
     {
-        $builder->addIntX(20, $TRK_QUAL, 0);
+        $builder->addByteX(20, $TRK_QUAL, 0);
     }
 
     /**
@@ -923,22 +977,22 @@ class TRK extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param byte
      * @return void
      */
     public static function addIDENT_CRED(FlatBufferBuilder $builder, $IDENT_CRED)
     {
-        $builder->addIntX(23, $IDENT_CRED, 0);
+        $builder->addByteX(23, $IDENT_CRED, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param byte
      * @return void
      */
     public static function addIDENT_REL(FlatBufferBuilder $builder, $IDENT_REL)
     {
-        $builder->addIntX(24, $IDENT_REL, 0);
+        $builder->addByteX(24, $IDENT_REL, 0);
     }
 
     /**
@@ -953,12 +1007,12 @@ class TRK extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addENVIRONMENT(FlatBufferBuilder $builder, $ENVIRONMENT)
     {
-        $builder->addOffsetX(26, $ENVIRONMENT, 0);
+        $builder->addSbyteX(26, $ENVIRONMENT, 0);
     }
 
     /**
@@ -1141,72 +1195,72 @@ class TRK extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param ushort
      * @return void
      */
     public static function addSTRENGTH(FlatBufferBuilder $builder, $STRENGTH)
     {
-        $builder->addIntX(40, $STRENGTH, 0);
+        $builder->addUshortX(40, $STRENGTH, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param ushort
      * @return void
      */
     public static function addM1(FlatBufferBuilder $builder, $M1)
     {
-        $builder->addIntX(41, $M1, 0);
+        $builder->addUshortX(41, $M1, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param byte
      * @return void
      */
     public static function addM1V(FlatBufferBuilder $builder, $M1V)
     {
-        $builder->addIntX(42, $M1V, 0);
+        $builder->addByteX(42, $M1V, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param ushort
      * @return void
      */
     public static function addM2(FlatBufferBuilder $builder, $M2)
     {
-        $builder->addIntX(43, $M2, 0);
+        $builder->addUshortX(43, $M2, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param byte
      * @return void
      */
     public static function addM2V(FlatBufferBuilder $builder, $M2V)
     {
-        $builder->addIntX(44, $M2V, 0);
+        $builder->addByteX(44, $M2V, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param ushort
      * @return void
      */
     public static function addM3A(FlatBufferBuilder $builder, $M3A)
     {
-        $builder->addIntX(45, $M3A, 0);
+        $builder->addUshortX(45, $M3A, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param byte
      * @return void
      */
     public static function addM3AV(FlatBufferBuilder $builder, $M3AV)
     {
-        $builder->addIntX(46, $M3AV, 0);
+        $builder->addByteX(46, $M3AV, 0);
     }
 
     /**

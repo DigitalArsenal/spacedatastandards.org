@@ -41,37 +41,213 @@ class GNO extends Table
         return $this;
     }
 
-    public function getGNSS_SAT_ID()
+    /// Unique identifier
+    public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /**
-     * @return int
-     */
-    public function getTRACKING_STATUS()
+    /// Receiver identifier
+    public function getRECEIVER_ID()
     {
         $o = $this->__offset(6);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Receiver type/model
+    public function getRECEIVER_TYPE()
+    {
+        $o = $this->__offset(8);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Antenna identifier
+    public function getANTENNA_ID()
+    {
+        $o = $this->__offset(10);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Antenna type/model
+    public function getANTENNA_TYPE()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Receiver firmware version
+    public function getFIRMWARE_VERSION()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Observation epoch (ISO 8601)
+    public function getEPOCH()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Receiver clock offset in seconds
+    /**
+     * @return double
+     */
+    public function getCLOCK_OFFSET()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Receiver clock drift in seconds/second
+    /**
+     * @return double
+     */
+    public function getCLOCK_DRIFT()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Receiver geodetic latitude in degrees
+    /**
+     * @return double
+     */
+    public function getLATITUDE()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Receiver geodetic longitude in degrees
+    /**
+     * @return double
+     */
+    public function getLONGITUDE()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Receiver altitude in meters above WGS-84
+    /**
+     * @return double
+     */
+    public function getALTITUDE()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Approximate position X in meters (ECEF)
+    /**
+     * @return double
+     */
+    public function getAPPROX_X()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Approximate position Y in meters (ECEF)
+    /**
+     * @return double
+     */
+    public function getAPPROX_Y()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Approximate position Z in meters (ECEF)
+    /**
+     * @return double
+     */
+    public function getAPPROX_Z()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Observation interval in seconds
+    /**
+     * @return double
+     */
+    public function getINTERVAL()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Number of satellites observed
+    /**
+     * @return uint
+     */
+    public function getNUM_SATS()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// PDOP
+    /**
+     * @return double
+     */
+    public function getPDOP()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// HDOP
+    /**
+     * @return double
+     */
+    public function getHDOP()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// VDOP
+    /**
+     * @return double
+     */
+    public function getVDOP()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Satellite observations
+    /**
+     * @returnVectorOffset
+     */
+    public function getSAT_OBS($j)
+    {
+        $o = $this->__offset(44);
+        $obj = new GnssSatObs();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
 
     /**
      * @return int
      */
-    public function getAGC_STATE()
+    public function getSAT_OBSLength()
     {
-        $o = $this->__offset(8);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Observation code set identifiers
     /**
      * @param int offset
      * @return string
      */
     public function getOBS_CODE_SET($j)
     {
-        $o = $this->__offset(10);
+        $o = $this->__offset(46);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -80,27 +256,15 @@ class GNO extends Table
      */
     public function getOBS_CODE_SETLength()
     {
-        $o = $this->__offset(10);
+        $o = $this->__offset(46);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    /**
-     * @param int offset
-     * @return string
-     */
-    public function getOB($j)
+    /// Additional notes
+    public function getNOTES()
     {
-        $o = $this->__offset(12);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getOBLength()
-    {
-        $o = $this->__offset(12);
-        return $o != 0 ? $this->__vector_len($o) : 0;
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /**
@@ -109,21 +273,39 @@ class GNO extends Table
      */
     public static function startGNO(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(5);
+        $builder->StartObject(23);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return GNO
      */
-    public static function createGNO(FlatBufferBuilder $builder, $GNSS_SAT_ID, $TRACKING_STATUS, $AGC_STATE, $OBS_CODE_SET, $OB)
+    public static function createGNO(FlatBufferBuilder $builder, $ID, $RECEIVER_ID, $RECEIVER_TYPE, $ANTENNA_ID, $ANTENNA_TYPE, $FIRMWARE_VERSION, $EPOCH, $CLOCK_OFFSET, $CLOCK_DRIFT, $LATITUDE, $LONGITUDE, $ALTITUDE, $APPROX_X, $APPROX_Y, $APPROX_Z, $INTERVAL, $NUM_SATS, $PDOP, $HDOP, $VDOP, $SAT_OBS, $OBS_CODE_SET, $NOTES)
     {
-        $builder->startObject(5);
-        self::addGNSS_SAT_ID($builder, $GNSS_SAT_ID);
-        self::addTRACKING_STATUS($builder, $TRACKING_STATUS);
-        self::addAGC_STATE($builder, $AGC_STATE);
+        $builder->startObject(23);
+        self::addID($builder, $ID);
+        self::addRECEIVER_ID($builder, $RECEIVER_ID);
+        self::addRECEIVER_TYPE($builder, $RECEIVER_TYPE);
+        self::addANTENNA_ID($builder, $ANTENNA_ID);
+        self::addANTENNA_TYPE($builder, $ANTENNA_TYPE);
+        self::addFIRMWARE_VERSION($builder, $FIRMWARE_VERSION);
+        self::addEPOCH($builder, $EPOCH);
+        self::addCLOCK_OFFSET($builder, $CLOCK_OFFSET);
+        self::addCLOCK_DRIFT($builder, $CLOCK_DRIFT);
+        self::addLATITUDE($builder, $LATITUDE);
+        self::addLONGITUDE($builder, $LONGITUDE);
+        self::addALTITUDE($builder, $ALTITUDE);
+        self::addAPPROX_X($builder, $APPROX_X);
+        self::addAPPROX_Y($builder, $APPROX_Y);
+        self::addAPPROX_Z($builder, $APPROX_Z);
+        self::addINTERVAL($builder, $INTERVAL);
+        self::addNUM_SATS($builder, $NUM_SATS);
+        self::addPDOP($builder, $PDOP);
+        self::addHDOP($builder, $HDOP);
+        self::addVDOP($builder, $VDOP);
+        self::addSAT_OBS($builder, $SAT_OBS);
         self::addOBS_CODE_SET($builder, $OBS_CODE_SET);
-        self::addOB($builder, $OB);
+        self::addNOTES($builder, $NOTES);
         $o = $builder->endObject();
         return $o;
     }
@@ -133,29 +315,233 @@ class GNO extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addGNSS_SAT_ID(FlatBufferBuilder $builder, $GNSS_SAT_ID)
+    public static function addID(FlatBufferBuilder $builder, $ID)
     {
-        $builder->addOffsetX(0, $GNSS_SAT_ID, 0);
+        $builder->addOffsetX(0, $ID, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param StringOffset
      * @return void
      */
-    public static function addTRACKING_STATUS(FlatBufferBuilder $builder, $TRACKING_STATUS)
+    public static function addRECEIVER_ID(FlatBufferBuilder $builder, $RECEIVER_ID)
     {
-        $builder->addIntX(1, $TRACKING_STATUS, 0);
+        $builder->addOffsetX(1, $RECEIVER_ID, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param StringOffset
      * @return void
      */
-    public static function addAGC_STATE(FlatBufferBuilder $builder, $AGC_STATE)
+    public static function addRECEIVER_TYPE(FlatBufferBuilder $builder, $RECEIVER_TYPE)
     {
-        $builder->addIntX(2, $AGC_STATE, 0);
+        $builder->addOffsetX(2, $RECEIVER_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addANTENNA_ID(FlatBufferBuilder $builder, $ANTENNA_ID)
+    {
+        $builder->addOffsetX(3, $ANTENNA_ID, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addANTENNA_TYPE(FlatBufferBuilder $builder, $ANTENNA_TYPE)
+    {
+        $builder->addOffsetX(4, $ANTENNA_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addFIRMWARE_VERSION(FlatBufferBuilder $builder, $FIRMWARE_VERSION)
+    {
+        $builder->addOffsetX(5, $FIRMWARE_VERSION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEPOCH(FlatBufferBuilder $builder, $EPOCH)
+    {
+        $builder->addOffsetX(6, $EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCLOCK_OFFSET(FlatBufferBuilder $builder, $CLOCK_OFFSET)
+    {
+        $builder->addDoubleX(7, $CLOCK_OFFSET, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addCLOCK_DRIFT(FlatBufferBuilder $builder, $CLOCK_DRIFT)
+    {
+        $builder->addDoubleX(8, $CLOCK_DRIFT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addLATITUDE(FlatBufferBuilder $builder, $LATITUDE)
+    {
+        $builder->addDoubleX(9, $LATITUDE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addLONGITUDE(FlatBufferBuilder $builder, $LONGITUDE)
+    {
+        $builder->addDoubleX(10, $LONGITUDE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addALTITUDE(FlatBufferBuilder $builder, $ALTITUDE)
+    {
+        $builder->addDoubleX(11, $ALTITUDE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addAPPROX_X(FlatBufferBuilder $builder, $APPROX_X)
+    {
+        $builder->addDoubleX(12, $APPROX_X, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addAPPROX_Y(FlatBufferBuilder $builder, $APPROX_Y)
+    {
+        $builder->addDoubleX(13, $APPROX_Y, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addAPPROX_Z(FlatBufferBuilder $builder, $APPROX_Z)
+    {
+        $builder->addDoubleX(14, $APPROX_Z, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addINTERVAL(FlatBufferBuilder $builder, $INTERVAL)
+    {
+        $builder->addDoubleX(15, $INTERVAL, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addNUM_SATS(FlatBufferBuilder $builder, $NUM_SATS)
+    {
+        $builder->addUintX(16, $NUM_SATS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPDOP(FlatBufferBuilder $builder, $PDOP)
+    {
+        $builder->addDoubleX(17, $PDOP, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addHDOP(FlatBufferBuilder $builder, $HDOP)
+    {
+        $builder->addDoubleX(18, $HDOP, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addVDOP(FlatBufferBuilder $builder, $VDOP)
+    {
+        $builder->addDoubleX(19, $VDOP, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addSAT_OBS(FlatBufferBuilder $builder, $SAT_OBS)
+    {
+        $builder->addOffsetX(20, $SAT_OBS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createSAT_OBSVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(4, count($data), 4);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putOffset($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startSAT_OBSVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(4, $numElems, 4);
     }
 
     /**
@@ -165,7 +551,7 @@ class GNO extends Table
      */
     public static function addOBS_CODE_SET(FlatBufferBuilder $builder, $OBS_CODE_SET)
     {
-        $builder->addOffsetX(3, $OBS_CODE_SET, 0);
+        $builder->addOffsetX(21, $OBS_CODE_SET, 0);
     }
 
     /**
@@ -194,36 +580,12 @@ class GNO extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param VectorOffset
+     * @param StringOffset
      * @return void
      */
-    public static function addOB(FlatBufferBuilder $builder, $OB)
+    public static function addNOTES(FlatBufferBuilder $builder, $NOTES)
     {
-        $builder->addOffsetX(4, $OB, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param array offset array
-     * @return int vector offset
-     */
-    public static function createOBVector(FlatBufferBuilder $builder, array $data)
-    {
-        $builder->startVector(4, count($data), 4);
-        for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
-        }
-        return $builder->endVector();
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int $numElems
-     * @return void
-     */
-    public static function startOBVector(FlatBufferBuilder $builder, $numElems)
-    {
-        $builder->startVector(4, $numElems, 4);
+        $builder->addOffsetX(22, $NOTES, 0);
     }
 
     /**

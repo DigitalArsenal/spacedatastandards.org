@@ -9,6 +9,720 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_GNSS_CONSTELLATION: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_GNSS_CONSTELLATION: i8 = 7;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_GNSS_CONSTELLATION: [gnssConstellation; 8] = [
+  gnssConstellation::GPS,
+  gnssConstellation::GLONASS,
+  gnssConstellation::GALILEO,
+  gnssConstellation::BEIDOU,
+  gnssConstellation::QZSS,
+  gnssConstellation::IRNSS,
+  gnssConstellation::SBAS,
+  gnssConstellation::MIXED,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct gnssConstellation(pub i8);
+#[allow(non_upper_case_globals)]
+impl gnssConstellation {
+  pub const GPS: Self = Self(0);
+  pub const GLONASS: Self = Self(1);
+  pub const GALILEO: Self = Self(2);
+  pub const BEIDOU: Self = Self(3);
+  pub const QZSS: Self = Self(4);
+  pub const IRNSS: Self = Self(5);
+  pub const SBAS: Self = Self(6);
+  pub const MIXED: Self = Self(7);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 7;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::GPS,
+    Self::GLONASS,
+    Self::GALILEO,
+    Self::BEIDOU,
+    Self::QZSS,
+    Self::IRNSS,
+    Self::SBAS,
+    Self::MIXED,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::GPS => Some("GPS"),
+      Self::GLONASS => Some("GLONASS"),
+      Self::GALILEO => Some("GALILEO"),
+      Self::BEIDOU => Some("BEIDOU"),
+      Self::QZSS => Some("QZSS"),
+      Self::IRNSS => Some("IRNSS"),
+      Self::SBAS => Some("SBAS"),
+      Self::MIXED => Some("MIXED"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for gnssConstellation {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for gnssConstellation {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for gnssConstellation {
+    type Output = gnssConstellation;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for gnssConstellation {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for gnssConstellation {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for gnssConstellation {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_GNSS_OBS_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_GNSS_OBS_TYPE: i8 = 4;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_GNSS_OBS_TYPE: [gnssObsType; 5] = [
+  gnssObsType::PSEUDORANGE,
+  gnssObsType::CARRIER_PHASE,
+  gnssObsType::DOPPLER,
+  gnssObsType::SNR,
+  gnssObsType::RAW_IF,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct gnssObsType(pub i8);
+#[allow(non_upper_case_globals)]
+impl gnssObsType {
+  pub const PSEUDORANGE: Self = Self(0);
+  pub const CARRIER_PHASE: Self = Self(1);
+  pub const DOPPLER: Self = Self(2);
+  pub const SNR: Self = Self(3);
+  pub const RAW_IF: Self = Self(4);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 4;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::PSEUDORANGE,
+    Self::CARRIER_PHASE,
+    Self::DOPPLER,
+    Self::SNR,
+    Self::RAW_IF,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::PSEUDORANGE => Some("PSEUDORANGE"),
+      Self::CARRIER_PHASE => Some("CARRIER_PHASE"),
+      Self::DOPPLER => Some("DOPPLER"),
+      Self::SNR => Some("SNR"),
+      Self::RAW_IF => Some("RAW_IF"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for gnssObsType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for gnssObsType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for gnssObsType {
+    type Output = gnssObsType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for gnssObsType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for gnssObsType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for gnssObsType {}
+pub enum gnssObsDataOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// GNSS Observation Data Point
+pub struct gnssObsData<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for gnssObsData<'a> {
+  type Inner = gnssObsData<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> gnssObsData<'a> {
+  pub const VT_SIGNAL: flatbuffers::VOffsetT = 4;
+  pub const VT_OBS_TYPE: flatbuffers::VOffsetT = 6;
+  pub const VT_VALUE: flatbuffers::VOffsetT = 8;
+  pub const VT_LLI: flatbuffers::VOffsetT = 10;
+  pub const VT_SSI: flatbuffers::VOffsetT = 12;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    gnssObsData { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args gnssObsDataArgs<'args>
+  ) -> flatbuffers::WIPOffset<gnssObsData<'bldr>> {
+    let mut builder = gnssObsDataBuilder::new(_fbb);
+    builder.add_VALUE(args.VALUE);
+    if let Some(x) = args.SIGNAL { builder.add_SIGNAL(x); }
+    builder.add_SSI(args.SSI);
+    builder.add_LLI(args.LLI);
+    builder.add_OBS_TYPE(args.OBS_TYPE);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> gnssObsDataT {
+    let SIGNAL = self.SIGNAL().map(|x| {
+      x.to_string()
+    });
+    let OBS_TYPE = self.OBS_TYPE();
+    let VALUE = self.VALUE();
+    let LLI = self.LLI();
+    let SSI = self.SSI();
+    gnssObsDataT {
+      SIGNAL,
+      OBS_TYPE,
+      VALUE,
+      LLI,
+      SSI,
+    }
+  }
+
+  /// Signal type code (e.g., L1C, L2P, L5Q, E1B)
+  #[inline]
+  pub fn SIGNAL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(gnssObsData::VT_SIGNAL, None)}
+  }
+  /// Observation type
+  #[inline]
+  pub fn OBS_TYPE(&self) -> gnssObsType {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<gnssObsType>(gnssObsData::VT_OBS_TYPE, Some(gnssObsType::PSEUDORANGE)).unwrap()}
+  }
+  /// Observation value (units depend on type: m, cycles, Hz, dB-Hz)
+  #[inline]
+  pub fn VALUE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(gnssObsData::VT_VALUE, Some(0.0)).unwrap()}
+  }
+  /// Loss of lock indicator
+  #[inline]
+  pub fn LLI(&self) -> u8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u8>(gnssObsData::VT_LLI, Some(0)).unwrap()}
+  }
+  /// Signal strength indicator (1-9)
+  #[inline]
+  pub fn SSI(&self) -> u8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u8>(gnssObsData::VT_SSI, Some(0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for gnssObsData<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SIGNAL", Self::VT_SIGNAL, false)?
+     .visit_field::<gnssObsType>("OBS_TYPE", Self::VT_OBS_TYPE, false)?
+     .visit_field::<f64>("VALUE", Self::VT_VALUE, false)?
+     .visit_field::<u8>("LLI", Self::VT_LLI, false)?
+     .visit_field::<u8>("SSI", Self::VT_SSI, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct gnssObsDataArgs<'a> {
+    pub SIGNAL: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub OBS_TYPE: gnssObsType,
+    pub VALUE: f64,
+    pub LLI: u8,
+    pub SSI: u8,
+}
+impl<'a> Default for gnssObsDataArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    gnssObsDataArgs {
+      SIGNAL: None,
+      OBS_TYPE: gnssObsType::PSEUDORANGE,
+      VALUE: 0.0,
+      LLI: 0,
+      SSI: 0,
+    }
+  }
+}
+
+pub struct gnssObsDataBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> gnssObsDataBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_SIGNAL(&mut self, SIGNAL: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(gnssObsData::VT_SIGNAL, SIGNAL);
+  }
+  #[inline]
+  pub fn add_OBS_TYPE(&mut self, OBS_TYPE: gnssObsType) {
+    self.fbb_.push_slot::<gnssObsType>(gnssObsData::VT_OBS_TYPE, OBS_TYPE, gnssObsType::PSEUDORANGE);
+  }
+  #[inline]
+  pub fn add_VALUE(&mut self, VALUE: f64) {
+    self.fbb_.push_slot::<f64>(gnssObsData::VT_VALUE, VALUE, 0.0);
+  }
+  #[inline]
+  pub fn add_LLI(&mut self, LLI: u8) {
+    self.fbb_.push_slot::<u8>(gnssObsData::VT_LLI, LLI, 0);
+  }
+  #[inline]
+  pub fn add_SSI(&mut self, SSI: u8) {
+    self.fbb_.push_slot::<u8>(gnssObsData::VT_SSI, SSI, 0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> gnssObsDataBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    gnssObsDataBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<gnssObsData<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for gnssObsData<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("gnssObsData");
+      ds.field("SIGNAL", &self.SIGNAL());
+      ds.field("OBS_TYPE", &self.OBS_TYPE());
+      ds.field("VALUE", &self.VALUE());
+      ds.field("LLI", &self.LLI());
+      ds.field("SSI", &self.SSI());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct gnssObsDataT {
+  pub SIGNAL: Option<String>,
+  pub OBS_TYPE: gnssObsType,
+  pub VALUE: f64,
+  pub LLI: u8,
+  pub SSI: u8,
+}
+impl Default for gnssObsDataT {
+  fn default() -> Self {
+    Self {
+      SIGNAL: None,
+      OBS_TYPE: gnssObsType::PSEUDORANGE,
+      VALUE: 0.0,
+      LLI: 0,
+      SSI: 0,
+    }
+  }
+}
+impl gnssObsDataT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<gnssObsData<'b>> {
+    let SIGNAL = self.SIGNAL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OBS_TYPE = self.OBS_TYPE;
+    let VALUE = self.VALUE;
+    let LLI = self.LLI;
+    let SSI = self.SSI;
+    gnssObsData::create(_fbb, &gnssObsDataArgs{
+      SIGNAL,
+      OBS_TYPE,
+      VALUE,
+      LLI,
+      SSI,
+    })
+  }
+}
+pub enum gnssSatObsOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// GNSS Satellite Observation
+pub struct gnssSatObs<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for gnssSatObs<'a> {
+  type Inner = gnssSatObs<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> gnssSatObs<'a> {
+  pub const VT_GNSS_SAT_ID: flatbuffers::VOffsetT = 4;
+  pub const VT_CONSTELLATION: flatbuffers::VOffsetT = 6;
+  pub const VT_ELEVATION: flatbuffers::VOffsetT = 8;
+  pub const VT_AZIMUTH: flatbuffers::VOffsetT = 10;
+  pub const VT_TRACKING_STATUS: flatbuffers::VOffsetT = 12;
+  pub const VT_AGC_STATE: flatbuffers::VOffsetT = 14;
+  pub const VT_OBSERVATIONS: flatbuffers::VOffsetT = 16;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    gnssSatObs { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args gnssSatObsArgs<'args>
+  ) -> flatbuffers::WIPOffset<gnssSatObs<'bldr>> {
+    let mut builder = gnssSatObsBuilder::new(_fbb);
+    builder.add_AZIMUTH(args.AZIMUTH);
+    builder.add_ELEVATION(args.ELEVATION);
+    if let Some(x) = args.OBSERVATIONS { builder.add_OBSERVATIONS(x); }
+    builder.add_AGC_STATE(args.AGC_STATE);
+    builder.add_TRACKING_STATUS(args.TRACKING_STATUS);
+    if let Some(x) = args.GNSS_SAT_ID { builder.add_GNSS_SAT_ID(x); }
+    builder.add_CONSTELLATION(args.CONSTELLATION);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> gnssSatObsT {
+    let GNSS_SAT_ID = self.GNSS_SAT_ID().map(|x| {
+      x.to_string()
+    });
+    let CONSTELLATION = self.CONSTELLATION();
+    let ELEVATION = self.ELEVATION();
+    let AZIMUTH = self.AZIMUTH();
+    let TRACKING_STATUS = self.TRACKING_STATUS();
+    let AGC_STATE = self.AGC_STATE();
+    let OBSERVATIONS = self.OBSERVATIONS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    gnssSatObsT {
+      GNSS_SAT_ID,
+      CONSTELLATION,
+      ELEVATION,
+      AZIMUTH,
+      TRACKING_STATUS,
+      AGC_STATE,
+      OBSERVATIONS,
+    }
+  }
+
+  /// GNSS satellite identifier (e.g., G01, R24, E05, C03)
+  #[inline]
+  pub fn GNSS_SAT_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(gnssSatObs::VT_GNSS_SAT_ID, None)}
+  }
+  /// Constellation
+  #[inline]
+  pub fn CONSTELLATION(&self) -> gnssConstellation {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<gnssConstellation>(gnssSatObs::VT_CONSTELLATION, Some(gnssConstellation::GPS)).unwrap()}
+  }
+  /// Elevation angle in degrees
+  #[inline]
+  pub fn ELEVATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(gnssSatObs::VT_ELEVATION, Some(0.0)).unwrap()}
+  }
+  /// Azimuth angle in degrees
+  #[inline]
+  pub fn AZIMUTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(gnssSatObs::VT_AZIMUTH, Some(0.0)).unwrap()}
+  }
+  /// Tracking status (0=not tracked, 1=tracking, 2=locked)
+  #[inline]
+  pub fn TRACKING_STATUS(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(gnssSatObs::VT_TRACKING_STATUS, Some(0)).unwrap()}
+  }
+  /// AGC state
+  #[inline]
+  pub fn AGC_STATE(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(gnssSatObs::VT_AGC_STATE, Some(0)).unwrap()}
+  }
+  /// Observations for this satellite
+  #[inline]
+  pub fn OBSERVATIONS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<gnssObsData<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<gnssObsData>>>>(gnssSatObs::VT_OBSERVATIONS, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for gnssSatObs<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("GNSS_SAT_ID", Self::VT_GNSS_SAT_ID, false)?
+     .visit_field::<gnssConstellation>("CONSTELLATION", Self::VT_CONSTELLATION, false)?
+     .visit_field::<f64>("ELEVATION", Self::VT_ELEVATION, false)?
+     .visit_field::<f64>("AZIMUTH", Self::VT_AZIMUTH, false)?
+     .visit_field::<i32>("TRACKING_STATUS", Self::VT_TRACKING_STATUS, false)?
+     .visit_field::<i32>("AGC_STATE", Self::VT_AGC_STATE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<gnssObsData>>>>("OBSERVATIONS", Self::VT_OBSERVATIONS, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct gnssSatObsArgs<'a> {
+    pub GNSS_SAT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub CONSTELLATION: gnssConstellation,
+    pub ELEVATION: f64,
+    pub AZIMUTH: f64,
+    pub TRACKING_STATUS: i32,
+    pub AGC_STATE: i32,
+    pub OBSERVATIONS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<gnssObsData<'a>>>>>,
+}
+impl<'a> Default for gnssSatObsArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    gnssSatObsArgs {
+      GNSS_SAT_ID: None,
+      CONSTELLATION: gnssConstellation::GPS,
+      ELEVATION: 0.0,
+      AZIMUTH: 0.0,
+      TRACKING_STATUS: 0,
+      AGC_STATE: 0,
+      OBSERVATIONS: None,
+    }
+  }
+}
+
+pub struct gnssSatObsBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> gnssSatObsBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_GNSS_SAT_ID(&mut self, GNSS_SAT_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(gnssSatObs::VT_GNSS_SAT_ID, GNSS_SAT_ID);
+  }
+  #[inline]
+  pub fn add_CONSTELLATION(&mut self, CONSTELLATION: gnssConstellation) {
+    self.fbb_.push_slot::<gnssConstellation>(gnssSatObs::VT_CONSTELLATION, CONSTELLATION, gnssConstellation::GPS);
+  }
+  #[inline]
+  pub fn add_ELEVATION(&mut self, ELEVATION: f64) {
+    self.fbb_.push_slot::<f64>(gnssSatObs::VT_ELEVATION, ELEVATION, 0.0);
+  }
+  #[inline]
+  pub fn add_AZIMUTH(&mut self, AZIMUTH: f64) {
+    self.fbb_.push_slot::<f64>(gnssSatObs::VT_AZIMUTH, AZIMUTH, 0.0);
+  }
+  #[inline]
+  pub fn add_TRACKING_STATUS(&mut self, TRACKING_STATUS: i32) {
+    self.fbb_.push_slot::<i32>(gnssSatObs::VT_TRACKING_STATUS, TRACKING_STATUS, 0);
+  }
+  #[inline]
+  pub fn add_AGC_STATE(&mut self, AGC_STATE: i32) {
+    self.fbb_.push_slot::<i32>(gnssSatObs::VT_AGC_STATE, AGC_STATE, 0);
+  }
+  #[inline]
+  pub fn add_OBSERVATIONS(&mut self, OBSERVATIONS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<gnssObsData<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(gnssSatObs::VT_OBSERVATIONS, OBSERVATIONS);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> gnssSatObsBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    gnssSatObsBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<gnssSatObs<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for gnssSatObs<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("gnssSatObs");
+      ds.field("GNSS_SAT_ID", &self.GNSS_SAT_ID());
+      ds.field("CONSTELLATION", &self.CONSTELLATION());
+      ds.field("ELEVATION", &self.ELEVATION());
+      ds.field("AZIMUTH", &self.AZIMUTH());
+      ds.field("TRACKING_STATUS", &self.TRACKING_STATUS());
+      ds.field("AGC_STATE", &self.AGC_STATE());
+      ds.field("OBSERVATIONS", &self.OBSERVATIONS());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct gnssSatObsT {
+  pub GNSS_SAT_ID: Option<String>,
+  pub CONSTELLATION: gnssConstellation,
+  pub ELEVATION: f64,
+  pub AZIMUTH: f64,
+  pub TRACKING_STATUS: i32,
+  pub AGC_STATE: i32,
+  pub OBSERVATIONS: Option<Vec<gnssObsDataT>>,
+}
+impl Default for gnssSatObsT {
+  fn default() -> Self {
+    Self {
+      GNSS_SAT_ID: None,
+      CONSTELLATION: gnssConstellation::GPS,
+      ELEVATION: 0.0,
+      AZIMUTH: 0.0,
+      TRACKING_STATUS: 0,
+      AGC_STATE: 0,
+      OBSERVATIONS: None,
+    }
+  }
+}
+impl gnssSatObsT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<gnssSatObs<'b>> {
+    let GNSS_SAT_ID = self.GNSS_SAT_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CONSTELLATION = self.CONSTELLATION;
+    let ELEVATION = self.ELEVATION;
+    let AZIMUTH = self.AZIMUTH;
+    let TRACKING_STATUS = self.TRACKING_STATUS;
+    let AGC_STATE = self.AGC_STATE;
+    let OBSERVATIONS = self.OBSERVATIONS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    gnssSatObs::create(_fbb, &gnssSatObsArgs{
+      GNSS_SAT_ID,
+      CONSTELLATION,
+      ELEVATION,
+      AZIMUTH,
+      TRACKING_STATUS,
+      AGC_STATE,
+      OBSERVATIONS,
+    })
+  }
+}
 pub enum GNOOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -26,11 +740,29 @@ impl<'a> flatbuffers::Follow<'a> for GNO<'a> {
 }
 
 impl<'a> GNO<'a> {
-  pub const VT_GNSS_SAT_ID: flatbuffers::VOffsetT = 4;
-  pub const VT_TRACKING_STATUS: flatbuffers::VOffsetT = 6;
-  pub const VT_AGC_STATE: flatbuffers::VOffsetT = 8;
-  pub const VT_OBS_CODE_SET: flatbuffers::VOffsetT = 10;
-  pub const VT_OB: flatbuffers::VOffsetT = 12;
+  pub const VT_ID: flatbuffers::VOffsetT = 4;
+  pub const VT_RECEIVER_ID: flatbuffers::VOffsetT = 6;
+  pub const VT_RECEIVER_TYPE: flatbuffers::VOffsetT = 8;
+  pub const VT_ANTENNA_ID: flatbuffers::VOffsetT = 10;
+  pub const VT_ANTENNA_TYPE: flatbuffers::VOffsetT = 12;
+  pub const VT_FIRMWARE_VERSION: flatbuffers::VOffsetT = 14;
+  pub const VT_EPOCH: flatbuffers::VOffsetT = 16;
+  pub const VT_CLOCK_OFFSET: flatbuffers::VOffsetT = 18;
+  pub const VT_CLOCK_DRIFT: flatbuffers::VOffsetT = 20;
+  pub const VT_LATITUDE: flatbuffers::VOffsetT = 22;
+  pub const VT_LONGITUDE: flatbuffers::VOffsetT = 24;
+  pub const VT_ALTITUDE: flatbuffers::VOffsetT = 26;
+  pub const VT_APPROX_X: flatbuffers::VOffsetT = 28;
+  pub const VT_APPROX_Y: flatbuffers::VOffsetT = 30;
+  pub const VT_APPROX_Z: flatbuffers::VOffsetT = 32;
+  pub const VT_INTERVAL: flatbuffers::VOffsetT = 34;
+  pub const VT_NUM_SATS: flatbuffers::VOffsetT = 36;
+  pub const VT_PDOP: flatbuffers::VOffsetT = 38;
+  pub const VT_HDOP: flatbuffers::VOffsetT = 40;
+  pub const VT_VDOP: flatbuffers::VOffsetT = 42;
+  pub const VT_SAT_OBS: flatbuffers::VOffsetT = 44;
+  pub const VT_OBS_CODE_SET: flatbuffers::VOffsetT = 46;
+  pub const VT_NOTES: flatbuffers::VOffsetT = 48;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -42,56 +774,272 @@ impl<'a> GNO<'a> {
     args: &'args GNOArgs<'args>
   ) -> flatbuffers::WIPOffset<GNO<'bldr>> {
     let mut builder = GNOBuilder::new(_fbb);
-    if let Some(x) = args.OB { builder.add_OB(x); }
+    builder.add_VDOP(args.VDOP);
+    builder.add_HDOP(args.HDOP);
+    builder.add_PDOP(args.PDOP);
+    builder.add_INTERVAL(args.INTERVAL);
+    builder.add_APPROX_Z(args.APPROX_Z);
+    builder.add_APPROX_Y(args.APPROX_Y);
+    builder.add_APPROX_X(args.APPROX_X);
+    builder.add_ALTITUDE(args.ALTITUDE);
+    builder.add_LONGITUDE(args.LONGITUDE);
+    builder.add_LATITUDE(args.LATITUDE);
+    builder.add_CLOCK_DRIFT(args.CLOCK_DRIFT);
+    builder.add_CLOCK_OFFSET(args.CLOCK_OFFSET);
+    if let Some(x) = args.NOTES { builder.add_NOTES(x); }
     if let Some(x) = args.OBS_CODE_SET { builder.add_OBS_CODE_SET(x); }
-    builder.add_AGC_STATE(args.AGC_STATE);
-    builder.add_TRACKING_STATUS(args.TRACKING_STATUS);
-    if let Some(x) = args.GNSS_SAT_ID { builder.add_GNSS_SAT_ID(x); }
+    if let Some(x) = args.SAT_OBS { builder.add_SAT_OBS(x); }
+    builder.add_NUM_SATS(args.NUM_SATS);
+    if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
+    if let Some(x) = args.FIRMWARE_VERSION { builder.add_FIRMWARE_VERSION(x); }
+    if let Some(x) = args.ANTENNA_TYPE { builder.add_ANTENNA_TYPE(x); }
+    if let Some(x) = args.ANTENNA_ID { builder.add_ANTENNA_ID(x); }
+    if let Some(x) = args.RECEIVER_TYPE { builder.add_RECEIVER_TYPE(x); }
+    if let Some(x) = args.RECEIVER_ID { builder.add_RECEIVER_ID(x); }
+    if let Some(x) = args.ID { builder.add_ID(x); }
     builder.finish()
   }
 
   pub fn unpack(&self) -> GNOT {
-    let GNSS_SAT_ID = self.GNSS_SAT_ID().map(|x| {
+    let ID = self.ID().map(|x| {
       x.to_string()
     });
-    let TRACKING_STATUS = self.TRACKING_STATUS();
-    let AGC_STATE = self.AGC_STATE();
+    let RECEIVER_ID = self.RECEIVER_ID().map(|x| {
+      x.to_string()
+    });
+    let RECEIVER_TYPE = self.RECEIVER_TYPE().map(|x| {
+      x.to_string()
+    });
+    let ANTENNA_ID = self.ANTENNA_ID().map(|x| {
+      x.to_string()
+    });
+    let ANTENNA_TYPE = self.ANTENNA_TYPE().map(|x| {
+      x.to_string()
+    });
+    let FIRMWARE_VERSION = self.FIRMWARE_VERSION().map(|x| {
+      x.to_string()
+    });
+    let EPOCH = self.EPOCH().map(|x| {
+      x.to_string()
+    });
+    let CLOCK_OFFSET = self.CLOCK_OFFSET();
+    let CLOCK_DRIFT = self.CLOCK_DRIFT();
+    let LATITUDE = self.LATITUDE();
+    let LONGITUDE = self.LONGITUDE();
+    let ALTITUDE = self.ALTITUDE();
+    let APPROX_X = self.APPROX_X();
+    let APPROX_Y = self.APPROX_Y();
+    let APPROX_Z = self.APPROX_Z();
+    let INTERVAL = self.INTERVAL();
+    let NUM_SATS = self.NUM_SATS();
+    let PDOP = self.PDOP();
+    let HDOP = self.HDOP();
+    let VDOP = self.VDOP();
+    let SAT_OBS = self.SAT_OBS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
     let OBS_CODE_SET = self.OBS_CODE_SET().map(|x| {
       x.iter().map(|s| s.to_string()).collect()
     });
-    let OB = self.OB().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
+    let NOTES = self.NOTES().map(|x| {
+      x.to_string()
     });
     GNOT {
-      GNSS_SAT_ID,
-      TRACKING_STATUS,
-      AGC_STATE,
+      ID,
+      RECEIVER_ID,
+      RECEIVER_TYPE,
+      ANTENNA_ID,
+      ANTENNA_TYPE,
+      FIRMWARE_VERSION,
+      EPOCH,
+      CLOCK_OFFSET,
+      CLOCK_DRIFT,
+      LATITUDE,
+      LONGITUDE,
+      ALTITUDE,
+      APPROX_X,
+      APPROX_Y,
+      APPROX_Z,
+      INTERVAL,
+      NUM_SATS,
+      PDOP,
+      HDOP,
+      VDOP,
+      SAT_OBS,
       OBS_CODE_SET,
-      OB,
+      NOTES,
     }
   }
 
+  /// Unique identifier
   #[inline]
-  pub fn GNSS_SAT_ID(&self) -> Option<&'a str> {
+  pub fn ID(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GNO::VT_GNSS_SAT_ID, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GNO::VT_ID, None)}
   }
+  /// Receiver identifier
   #[inline]
-  pub fn TRACKING_STATUS(&self) -> i32 {
+  pub fn RECEIVER_ID(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(GNO::VT_TRACKING_STATUS, Some(0)).unwrap()}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GNO::VT_RECEIVER_ID, None)}
   }
+  /// Receiver type/model
   #[inline]
-  pub fn AGC_STATE(&self) -> i32 {
+  pub fn RECEIVER_TYPE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(GNO::VT_AGC_STATE, Some(0)).unwrap()}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GNO::VT_RECEIVER_TYPE, None)}
   }
+  /// Antenna identifier
+  #[inline]
+  pub fn ANTENNA_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GNO::VT_ANTENNA_ID, None)}
+  }
+  /// Antenna type/model
+  #[inline]
+  pub fn ANTENNA_TYPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GNO::VT_ANTENNA_TYPE, None)}
+  }
+  /// Receiver firmware version
+  #[inline]
+  pub fn FIRMWARE_VERSION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GNO::VT_FIRMWARE_VERSION, None)}
+  }
+  /// Observation epoch (ISO 8601)
+  #[inline]
+  pub fn EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GNO::VT_EPOCH, None)}
+  }
+  /// Receiver clock offset in seconds
+  #[inline]
+  pub fn CLOCK_OFFSET(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GNO::VT_CLOCK_OFFSET, Some(0.0)).unwrap()}
+  }
+  /// Receiver clock drift in seconds/second
+  #[inline]
+  pub fn CLOCK_DRIFT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GNO::VT_CLOCK_DRIFT, Some(0.0)).unwrap()}
+  }
+  /// Receiver geodetic latitude in degrees
+  #[inline]
+  pub fn LATITUDE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GNO::VT_LATITUDE, Some(0.0)).unwrap()}
+  }
+  /// Receiver geodetic longitude in degrees
+  #[inline]
+  pub fn LONGITUDE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GNO::VT_LONGITUDE, Some(0.0)).unwrap()}
+  }
+  /// Receiver altitude in meters above WGS-84
+  #[inline]
+  pub fn ALTITUDE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GNO::VT_ALTITUDE, Some(0.0)).unwrap()}
+  }
+  /// Approximate position X in meters (ECEF)
+  #[inline]
+  pub fn APPROX_X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GNO::VT_APPROX_X, Some(0.0)).unwrap()}
+  }
+  /// Approximate position Y in meters (ECEF)
+  #[inline]
+  pub fn APPROX_Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GNO::VT_APPROX_Y, Some(0.0)).unwrap()}
+  }
+  /// Approximate position Z in meters (ECEF)
+  #[inline]
+  pub fn APPROX_Z(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GNO::VT_APPROX_Z, Some(0.0)).unwrap()}
+  }
+  /// Observation interval in seconds
+  #[inline]
+  pub fn INTERVAL(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GNO::VT_INTERVAL, Some(0.0)).unwrap()}
+  }
+  /// Number of satellites observed
+  #[inline]
+  pub fn NUM_SATS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(GNO::VT_NUM_SATS, Some(0)).unwrap()}
+  }
+  /// PDOP
+  #[inline]
+  pub fn PDOP(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GNO::VT_PDOP, Some(0.0)).unwrap()}
+  }
+  /// HDOP
+  #[inline]
+  pub fn HDOP(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GNO::VT_HDOP, Some(0.0)).unwrap()}
+  }
+  /// VDOP
+  #[inline]
+  pub fn VDOP(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(GNO::VT_VDOP, Some(0.0)).unwrap()}
+  }
+  /// Satellite observations
+  #[inline]
+  pub fn SAT_OBS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<gnssSatObs<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<gnssSatObs>>>>(GNO::VT_SAT_OBS, None)}
+  }
+  /// Observation code set identifiers
   #[inline]
   pub fn OBS_CODE_SET(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -99,12 +1047,13 @@ impl<'a> GNO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(GNO::VT_OBS_CODE_SET, None)}
   }
+  /// Additional notes
   #[inline]
-  pub fn OB(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+  pub fn NOTES(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(GNO::VT_OB, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GNO::VT_NOTES, None)}
   }
 }
 
@@ -115,31 +1064,85 @@ impl flatbuffers::Verifiable for GNO<'_> {
   ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("GNSS_SAT_ID", Self::VT_GNSS_SAT_ID, false)?
-     .visit_field::<i32>("TRACKING_STATUS", Self::VT_TRACKING_STATUS, false)?
-     .visit_field::<i32>("AGC_STATE", Self::VT_AGC_STATE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("RECEIVER_ID", Self::VT_RECEIVER_ID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("RECEIVER_TYPE", Self::VT_RECEIVER_TYPE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ANTENNA_ID", Self::VT_ANTENNA_ID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ANTENNA_TYPE", Self::VT_ANTENNA_TYPE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("FIRMWARE_VERSION", Self::VT_FIRMWARE_VERSION, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
+     .visit_field::<f64>("CLOCK_OFFSET", Self::VT_CLOCK_OFFSET, false)?
+     .visit_field::<f64>("CLOCK_DRIFT", Self::VT_CLOCK_DRIFT, false)?
+     .visit_field::<f64>("LATITUDE", Self::VT_LATITUDE, false)?
+     .visit_field::<f64>("LONGITUDE", Self::VT_LONGITUDE, false)?
+     .visit_field::<f64>("ALTITUDE", Self::VT_ALTITUDE, false)?
+     .visit_field::<f64>("APPROX_X", Self::VT_APPROX_X, false)?
+     .visit_field::<f64>("APPROX_Y", Self::VT_APPROX_Y, false)?
+     .visit_field::<f64>("APPROX_Z", Self::VT_APPROX_Z, false)?
+     .visit_field::<f64>("INTERVAL", Self::VT_INTERVAL, false)?
+     .visit_field::<u32>("NUM_SATS", Self::VT_NUM_SATS, false)?
+     .visit_field::<f64>("PDOP", Self::VT_PDOP, false)?
+     .visit_field::<f64>("HDOP", Self::VT_HDOP, false)?
+     .visit_field::<f64>("VDOP", Self::VT_VDOP, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<gnssSatObs>>>>("SAT_OBS", Self::VT_SAT_OBS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("OBS_CODE_SET", Self::VT_OBS_CODE_SET, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("OB", Self::VT_OB, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NOTES", Self::VT_NOTES, false)?
      .finish();
     Ok(())
   }
 }
 pub struct GNOArgs<'a> {
-    pub GNSS_SAT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub TRACKING_STATUS: i32,
-    pub AGC_STATE: i32,
+    pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub RECEIVER_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub RECEIVER_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ANTENNA_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ANTENNA_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub FIRMWARE_VERSION: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub CLOCK_OFFSET: f64,
+    pub CLOCK_DRIFT: f64,
+    pub LATITUDE: f64,
+    pub LONGITUDE: f64,
+    pub ALTITUDE: f64,
+    pub APPROX_X: f64,
+    pub APPROX_Y: f64,
+    pub APPROX_Z: f64,
+    pub INTERVAL: f64,
+    pub NUM_SATS: u32,
+    pub PDOP: f64,
+    pub HDOP: f64,
+    pub VDOP: f64,
+    pub SAT_OBS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<gnssSatObs<'a>>>>>,
     pub OBS_CODE_SET: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub OB: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub NOTES: Option<flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for GNOArgs<'a> {
   #[inline]
   fn default() -> Self {
     GNOArgs {
-      GNSS_SAT_ID: None,
-      TRACKING_STATUS: 0,
-      AGC_STATE: 0,
+      ID: None,
+      RECEIVER_ID: None,
+      RECEIVER_TYPE: None,
+      ANTENNA_ID: None,
+      ANTENNA_TYPE: None,
+      FIRMWARE_VERSION: None,
+      EPOCH: None,
+      CLOCK_OFFSET: 0.0,
+      CLOCK_DRIFT: 0.0,
+      LATITUDE: 0.0,
+      LONGITUDE: 0.0,
+      ALTITUDE: 0.0,
+      APPROX_X: 0.0,
+      APPROX_Y: 0.0,
+      APPROX_Z: 0.0,
+      INTERVAL: 0.0,
+      NUM_SATS: 0,
+      PDOP: 0.0,
+      HDOP: 0.0,
+      VDOP: 0.0,
+      SAT_OBS: None,
       OBS_CODE_SET: None,
-      OB: None,
+      NOTES: None,
     }
   }
 }
@@ -150,24 +1153,96 @@ pub struct GNOBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
 }
 impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> GNOBuilder<'a, 'b, A> {
   #[inline]
-  pub fn add_GNSS_SAT_ID(&mut self, GNSS_SAT_ID: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GNO::VT_GNSS_SAT_ID, GNSS_SAT_ID);
+  pub fn add_ID(&mut self, ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GNO::VT_ID, ID);
   }
   #[inline]
-  pub fn add_TRACKING_STATUS(&mut self, TRACKING_STATUS: i32) {
-    self.fbb_.push_slot::<i32>(GNO::VT_TRACKING_STATUS, TRACKING_STATUS, 0);
+  pub fn add_RECEIVER_ID(&mut self, RECEIVER_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GNO::VT_RECEIVER_ID, RECEIVER_ID);
   }
   #[inline]
-  pub fn add_AGC_STATE(&mut self, AGC_STATE: i32) {
-    self.fbb_.push_slot::<i32>(GNO::VT_AGC_STATE, AGC_STATE, 0);
+  pub fn add_RECEIVER_TYPE(&mut self, RECEIVER_TYPE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GNO::VT_RECEIVER_TYPE, RECEIVER_TYPE);
+  }
+  #[inline]
+  pub fn add_ANTENNA_ID(&mut self, ANTENNA_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GNO::VT_ANTENNA_ID, ANTENNA_ID);
+  }
+  #[inline]
+  pub fn add_ANTENNA_TYPE(&mut self, ANTENNA_TYPE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GNO::VT_ANTENNA_TYPE, ANTENNA_TYPE);
+  }
+  #[inline]
+  pub fn add_FIRMWARE_VERSION(&mut self, FIRMWARE_VERSION: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GNO::VT_FIRMWARE_VERSION, FIRMWARE_VERSION);
+  }
+  #[inline]
+  pub fn add_EPOCH(&mut self, EPOCH: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GNO::VT_EPOCH, EPOCH);
+  }
+  #[inline]
+  pub fn add_CLOCK_OFFSET(&mut self, CLOCK_OFFSET: f64) {
+    self.fbb_.push_slot::<f64>(GNO::VT_CLOCK_OFFSET, CLOCK_OFFSET, 0.0);
+  }
+  #[inline]
+  pub fn add_CLOCK_DRIFT(&mut self, CLOCK_DRIFT: f64) {
+    self.fbb_.push_slot::<f64>(GNO::VT_CLOCK_DRIFT, CLOCK_DRIFT, 0.0);
+  }
+  #[inline]
+  pub fn add_LATITUDE(&mut self, LATITUDE: f64) {
+    self.fbb_.push_slot::<f64>(GNO::VT_LATITUDE, LATITUDE, 0.0);
+  }
+  #[inline]
+  pub fn add_LONGITUDE(&mut self, LONGITUDE: f64) {
+    self.fbb_.push_slot::<f64>(GNO::VT_LONGITUDE, LONGITUDE, 0.0);
+  }
+  #[inline]
+  pub fn add_ALTITUDE(&mut self, ALTITUDE: f64) {
+    self.fbb_.push_slot::<f64>(GNO::VT_ALTITUDE, ALTITUDE, 0.0);
+  }
+  #[inline]
+  pub fn add_APPROX_X(&mut self, APPROX_X: f64) {
+    self.fbb_.push_slot::<f64>(GNO::VT_APPROX_X, APPROX_X, 0.0);
+  }
+  #[inline]
+  pub fn add_APPROX_Y(&mut self, APPROX_Y: f64) {
+    self.fbb_.push_slot::<f64>(GNO::VT_APPROX_Y, APPROX_Y, 0.0);
+  }
+  #[inline]
+  pub fn add_APPROX_Z(&mut self, APPROX_Z: f64) {
+    self.fbb_.push_slot::<f64>(GNO::VT_APPROX_Z, APPROX_Z, 0.0);
+  }
+  #[inline]
+  pub fn add_INTERVAL(&mut self, INTERVAL: f64) {
+    self.fbb_.push_slot::<f64>(GNO::VT_INTERVAL, INTERVAL, 0.0);
+  }
+  #[inline]
+  pub fn add_NUM_SATS(&mut self, NUM_SATS: u32) {
+    self.fbb_.push_slot::<u32>(GNO::VT_NUM_SATS, NUM_SATS, 0);
+  }
+  #[inline]
+  pub fn add_PDOP(&mut self, PDOP: f64) {
+    self.fbb_.push_slot::<f64>(GNO::VT_PDOP, PDOP, 0.0);
+  }
+  #[inline]
+  pub fn add_HDOP(&mut self, HDOP: f64) {
+    self.fbb_.push_slot::<f64>(GNO::VT_HDOP, HDOP, 0.0);
+  }
+  #[inline]
+  pub fn add_VDOP(&mut self, VDOP: f64) {
+    self.fbb_.push_slot::<f64>(GNO::VT_VDOP, VDOP, 0.0);
+  }
+  #[inline]
+  pub fn add_SAT_OBS(&mut self, SAT_OBS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<gnssSatObs<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GNO::VT_SAT_OBS, SAT_OBS);
   }
   #[inline]
   pub fn add_OBS_CODE_SET(&mut self, OBS_CODE_SET: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GNO::VT_OBS_CODE_SET, OBS_CODE_SET);
   }
   #[inline]
-  pub fn add_OB(&mut self, OB: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GNO::VT_OB, OB);
+  pub fn add_NOTES(&mut self, NOTES: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GNO::VT_NOTES, NOTES);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> GNOBuilder<'a, 'b, A> {
@@ -187,31 +1262,85 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> GNOBuilder<'a, 'b, A> {
 impl core::fmt::Debug for GNO<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
     let mut ds = f.debug_struct("GNO");
-      ds.field("GNSS_SAT_ID", &self.GNSS_SAT_ID());
-      ds.field("TRACKING_STATUS", &self.TRACKING_STATUS());
-      ds.field("AGC_STATE", &self.AGC_STATE());
+      ds.field("ID", &self.ID());
+      ds.field("RECEIVER_ID", &self.RECEIVER_ID());
+      ds.field("RECEIVER_TYPE", &self.RECEIVER_TYPE());
+      ds.field("ANTENNA_ID", &self.ANTENNA_ID());
+      ds.field("ANTENNA_TYPE", &self.ANTENNA_TYPE());
+      ds.field("FIRMWARE_VERSION", &self.FIRMWARE_VERSION());
+      ds.field("EPOCH", &self.EPOCH());
+      ds.field("CLOCK_OFFSET", &self.CLOCK_OFFSET());
+      ds.field("CLOCK_DRIFT", &self.CLOCK_DRIFT());
+      ds.field("LATITUDE", &self.LATITUDE());
+      ds.field("LONGITUDE", &self.LONGITUDE());
+      ds.field("ALTITUDE", &self.ALTITUDE());
+      ds.field("APPROX_X", &self.APPROX_X());
+      ds.field("APPROX_Y", &self.APPROX_Y());
+      ds.field("APPROX_Z", &self.APPROX_Z());
+      ds.field("INTERVAL", &self.INTERVAL());
+      ds.field("NUM_SATS", &self.NUM_SATS());
+      ds.field("PDOP", &self.PDOP());
+      ds.field("HDOP", &self.HDOP());
+      ds.field("VDOP", &self.VDOP());
+      ds.field("SAT_OBS", &self.SAT_OBS());
       ds.field("OBS_CODE_SET", &self.OBS_CODE_SET());
-      ds.field("OB", &self.OB());
+      ds.field("NOTES", &self.NOTES());
       ds.finish()
   }
 }
 #[non_exhaustive]
 #[derive(Debug, Clone, PartialEq)]
 pub struct GNOT {
-  pub GNSS_SAT_ID: Option<String>,
-  pub TRACKING_STATUS: i32,
-  pub AGC_STATE: i32,
+  pub ID: Option<String>,
+  pub RECEIVER_ID: Option<String>,
+  pub RECEIVER_TYPE: Option<String>,
+  pub ANTENNA_ID: Option<String>,
+  pub ANTENNA_TYPE: Option<String>,
+  pub FIRMWARE_VERSION: Option<String>,
+  pub EPOCH: Option<String>,
+  pub CLOCK_OFFSET: f64,
+  pub CLOCK_DRIFT: f64,
+  pub LATITUDE: f64,
+  pub LONGITUDE: f64,
+  pub ALTITUDE: f64,
+  pub APPROX_X: f64,
+  pub APPROX_Y: f64,
+  pub APPROX_Z: f64,
+  pub INTERVAL: f64,
+  pub NUM_SATS: u32,
+  pub PDOP: f64,
+  pub HDOP: f64,
+  pub VDOP: f64,
+  pub SAT_OBS: Option<Vec<gnssSatObsT>>,
   pub OBS_CODE_SET: Option<Vec<String>>,
-  pub OB: Option<Vec<String>>,
+  pub NOTES: Option<String>,
 }
 impl Default for GNOT {
   fn default() -> Self {
     Self {
-      GNSS_SAT_ID: None,
-      TRACKING_STATUS: 0,
-      AGC_STATE: 0,
+      ID: None,
+      RECEIVER_ID: None,
+      RECEIVER_TYPE: None,
+      ANTENNA_ID: None,
+      ANTENNA_TYPE: None,
+      FIRMWARE_VERSION: None,
+      EPOCH: None,
+      CLOCK_OFFSET: 0.0,
+      CLOCK_DRIFT: 0.0,
+      LATITUDE: 0.0,
+      LONGITUDE: 0.0,
+      ALTITUDE: 0.0,
+      APPROX_X: 0.0,
+      APPROX_Y: 0.0,
+      APPROX_Z: 0.0,
+      INTERVAL: 0.0,
+      NUM_SATS: 0,
+      PDOP: 0.0,
+      HDOP: 0.0,
+      VDOP: 0.0,
+      SAT_OBS: None,
       OBS_CODE_SET: None,
-      OB: None,
+      NOTES: None,
     }
   }
 }
@@ -220,23 +1349,73 @@ impl GNOT {
     &self,
     _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
   ) -> flatbuffers::WIPOffset<GNO<'b>> {
-    let GNSS_SAT_ID = self.GNSS_SAT_ID.as_ref().map(|x|{
+    let ID = self.ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let TRACKING_STATUS = self.TRACKING_STATUS;
-    let AGC_STATE = self.AGC_STATE;
+    let RECEIVER_ID = self.RECEIVER_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let RECEIVER_TYPE = self.RECEIVER_TYPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ANTENNA_ID = self.ANTENNA_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ANTENNA_TYPE = self.ANTENNA_TYPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let FIRMWARE_VERSION = self.FIRMWARE_VERSION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EPOCH = self.EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CLOCK_OFFSET = self.CLOCK_OFFSET;
+    let CLOCK_DRIFT = self.CLOCK_DRIFT;
+    let LATITUDE = self.LATITUDE;
+    let LONGITUDE = self.LONGITUDE;
+    let ALTITUDE = self.ALTITUDE;
+    let APPROX_X = self.APPROX_X;
+    let APPROX_Y = self.APPROX_Y;
+    let APPROX_Z = self.APPROX_Z;
+    let INTERVAL = self.INTERVAL;
+    let NUM_SATS = self.NUM_SATS;
+    let PDOP = self.PDOP;
+    let HDOP = self.HDOP;
+    let VDOP = self.VDOP;
+    let SAT_OBS = self.SAT_OBS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
     let OBS_CODE_SET = self.OBS_CODE_SET.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
-    let OB = self.OB.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    let NOTES = self.NOTES.as_ref().map(|x|{
+      _fbb.create_string(x)
     });
     GNO::create(_fbb, &GNOArgs{
-      GNSS_SAT_ID,
-      TRACKING_STATUS,
-      AGC_STATE,
+      ID,
+      RECEIVER_ID,
+      RECEIVER_TYPE,
+      ANTENNA_ID,
+      ANTENNA_TYPE,
+      FIRMWARE_VERSION,
+      EPOCH,
+      CLOCK_OFFSET,
+      CLOCK_DRIFT,
+      LATITUDE,
+      LONGITUDE,
+      ALTITUDE,
+      APPROX_X,
+      APPROX_Y,
+      APPROX_Z,
+      INTERVAL,
+      NUM_SATS,
+      PDOP,
+      HDOP,
+      VDOP,
+      SAT_OBS,
       OBS_CODE_SET,
-      OB,
+      NOTES,
     })
   }
 }

@@ -41,42 +41,52 @@ class SEO extends Table
         return $this;
     }
 
+    /// Unique identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Message type code
     public function getMSG_TYPE()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Generating system
     public function getGEN_SYSTEM()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// External reference identifier
     public function getEXTERNAL_ID()
     {
         $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Type of environmental data
+    /**
+     * @return sbyte
+     */
     public function getDATA_TYPE()
     {
         $o = $this->__offset(12);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \seoDataType::PARTICLE_COUNT;
     }
 
+    /// Generation time (ISO 8601)
     public function getGEN_TIME()
     {
         $o = $this->__offset(14);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// True if this is a forecast
     /**
      * @return bool
      */
@@ -86,6 +96,7 @@ class SEO extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// True if derived from other measurements
     /**
      * @return bool
      */
@@ -95,57 +106,69 @@ class SEO extends Table
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Satellite catalog number (if space-based)
     /**
-     * @return int
+     * @return uint
      */
     public function getSAT_NO()
     {
         $o = $this->__offset(20);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
+    /// International designator
     public function getORIG_OBJECT_ID()
     {
         $o = $this->__offset(22);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Sensor identifier
     public function getID_SENSOR()
     {
         $o = $this->__offset(24);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Original sensor identifier
     public function getORIG_SENSOR_ID()
     {
         $o = $this->__offset(26);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Observatory type
+    /**
+     * @return sbyte
+     */
     public function getOBSERVATORY_TYPE()
     {
         $o = $this->__offset(28);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \seoObservatoryType::GROUND;
     }
 
+    /// Observatory name
     public function getOBSERVATORY_NAME()
     {
         $o = $this->__offset(30);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Observatory notes
     public function getOBSERVATORY_NOTES()
     {
         $o = $this->__offset(32);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Instrument type description
     public function getINSTRUMENT_TYPE()
     {
         $o = $this->__offset(34);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Observatory latitude (degrees)
     /**
      * @return double
      */
@@ -155,6 +178,7 @@ class SEO extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Observatory longitude (degrees)
     /**
      * @return double
      */
@@ -164,6 +188,7 @@ class SEO extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Observatory altitude (km)
     /**
      * @return double
      */
@@ -173,20 +198,22 @@ class SEO extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor reference frame
     public function getSEN_REFERENCE_FRAME()
     {
         $o = $this->__offset(42);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Sensor position (km, 3 components)
     /**
      * @param int offset
-     * @return string
+     * @return double
      */
     public function getSEN_POS($j)
     {
         $o = $this->__offset(44);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
@@ -198,14 +225,15 @@ class SEO extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Sensor velocity (km/s, 3 components)
     /**
      * @param int offset
-     * @return string
+     * @return double
      */
     public function getSEN_VEL($j)
     {
         $o = $this->__offset(46);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
@@ -217,80 +245,120 @@ class SEO extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Measurement type description
     public function getMEAS_TYPE()
     {
         $o = $this->__offset(48);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getSEN_ENERGY_LEVEL()
+    /// Particle type measured
+    /**
+     * @return sbyte
+     */
+    public function getPARTICLE_TYPE()
     {
         $o = $this->__offset(50);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \seoParticleType::PROTON;
     }
 
-    public function getOB_SET_ID()
+    /// Energy level or range (keV or MeV)
+    public function getSEN_ENERGY_LEVEL()
     {
         $o = $this->__offset(52);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getPARTICLE_TYPE()
+    /// Observation set identifier
+    public function getOB_SET_ID()
     {
         $o = $this->__offset(54);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Observation time (ISO 8601)
     public function getOB_TIME()
     {
         $o = $this->__offset(56);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Measurement values
     /**
      * @param int offset
-     * @return string
+     * @return double
      */
-    public function getSEO_LIST($j)
+    public function getVALUES($j)
     {
         $o = $this->__offset(58);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
      * @return int
      */
-    public function getSEO_LISTLength()
+    public function getVALUESLength()
     {
         $o = $this->__offset(58);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    public function getQUALITY()
+    /// Measurement uncertainties
+    /**
+     * @param int offset
+     * @return double
+     */
+    public function getUNCERTAINTIES($j)
     {
         $o = $this->__offset(60);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
-    public function getDESCRIPTION()
+    /**
+     * @return int
+     */
+    public function getUNCERTAINTIESLength()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Units for measurement values
+    public function getUNITS()
     {
         $o = $this->__offset(62);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getDESCRIPTOR()
+    /// Data quality indicator
+    public function getQUALITY()
     {
         $o = $this->__offset(64);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Description
+    public function getDESCRIPTION()
+    {
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Event descriptor
+    public function getDESCRIPTOR()
+    {
+        $o = $this->__offset(68);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Source types
     /**
      * @param int offset
      * @return string
      */
     public function getSRC_TYPS($j)
     {
-        $o = $this->__offset(66);
+        $o = $this->__offset(70);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -299,17 +367,18 @@ class SEO extends Table
      */
     public function getSRC_TYPSLength()
     {
-        $o = $this->__offset(66);
+        $o = $this->__offset(70);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Source identifiers
     /**
      * @param int offset
      * @return string
      */
     public function getSRC_IDS($j)
     {
-        $o = $this->__offset(68);
+        $o = $this->__offset(72);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -318,7 +387,7 @@ class SEO extends Table
      */
     public function getSRC_IDSLength()
     {
-        $o = $this->__offset(68);
+        $o = $this->__offset(72);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
@@ -328,16 +397,16 @@ class SEO extends Table
      */
     public static function startSEO(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(33);
+        $builder->StartObject(35);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return SEO
      */
-    public static function createSEO(FlatBufferBuilder $builder, $ID, $MSG_TYPE, $GEN_SYSTEM, $EXTERNAL_ID, $DATA_TYPE, $GEN_TIME, $FORECAST, $DERIVED, $SAT_NO, $ORIG_OBJECT_ID, $ID_SENSOR, $ORIG_SENSOR_ID, $OBSERVATORY_TYPE, $OBSERVATORY_NAME, $OBSERVATORY_NOTES, $INSTRUMENT_TYPE, $LAT, $LON, $ALT, $SEN_REFERENCE_FRAME, $SEN_POS, $SEN_VEL, $MEAS_TYPE, $SEN_ENERGY_LEVEL, $OB_SET_ID, $PARTICLE_TYPE, $OB_TIME, $SEO_LIST, $QUALITY, $DESCRIPTION, $DESCRIPTOR, $SRC_TYPS, $SRC_IDS)
+    public static function createSEO(FlatBufferBuilder $builder, $ID, $MSG_TYPE, $GEN_SYSTEM, $EXTERNAL_ID, $DATA_TYPE, $GEN_TIME, $FORECAST, $DERIVED, $SAT_NO, $ORIG_OBJECT_ID, $ID_SENSOR, $ORIG_SENSOR_ID, $OBSERVATORY_TYPE, $OBSERVATORY_NAME, $OBSERVATORY_NOTES, $INSTRUMENT_TYPE, $LAT, $LON, $ALT, $SEN_REFERENCE_FRAME, $SEN_POS, $SEN_VEL, $MEAS_TYPE, $PARTICLE_TYPE, $SEN_ENERGY_LEVEL, $OB_SET_ID, $OB_TIME, $VALUES, $UNCERTAINTIES, $UNITS, $QUALITY, $DESCRIPTION, $DESCRIPTOR, $SRC_TYPS, $SRC_IDS)
     {
-        $builder->startObject(33);
+        $builder->startObject(35);
         self::addID($builder, $ID);
         self::addMSG_TYPE($builder, $MSG_TYPE);
         self::addGEN_SYSTEM($builder, $GEN_SYSTEM);
@@ -361,11 +430,13 @@ class SEO extends Table
         self::addSEN_POS($builder, $SEN_POS);
         self::addSEN_VEL($builder, $SEN_VEL);
         self::addMEAS_TYPE($builder, $MEAS_TYPE);
+        self::addPARTICLE_TYPE($builder, $PARTICLE_TYPE);
         self::addSEN_ENERGY_LEVEL($builder, $SEN_ENERGY_LEVEL);
         self::addOB_SET_ID($builder, $OB_SET_ID);
-        self::addPARTICLE_TYPE($builder, $PARTICLE_TYPE);
         self::addOB_TIME($builder, $OB_TIME);
-        self::addSEO_LIST($builder, $SEO_LIST);
+        self::addVALUES($builder, $VALUES);
+        self::addUNCERTAINTIES($builder, $UNCERTAINTIES);
+        self::addUNITS($builder, $UNITS);
         self::addQUALITY($builder, $QUALITY);
         self::addDESCRIPTION($builder, $DESCRIPTION);
         self::addDESCRIPTOR($builder, $DESCRIPTOR);
@@ -417,12 +488,12 @@ class SEO extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addDATA_TYPE(FlatBufferBuilder $builder, $DATA_TYPE)
     {
-        $builder->addOffsetX(4, $DATA_TYPE, 0);
+        $builder->addSbyteX(4, $DATA_TYPE, 0);
     }
 
     /**
@@ -457,12 +528,12 @@ class SEO extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param uint
      * @return void
      */
     public static function addSAT_NO(FlatBufferBuilder $builder, $SAT_NO)
     {
-        $builder->addIntX(8, $SAT_NO, 0);
+        $builder->addUintX(8, $SAT_NO, 0);
     }
 
     /**
@@ -497,12 +568,12 @@ class SEO extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addOBSERVATORY_TYPE(FlatBufferBuilder $builder, $OBSERVATORY_TYPE)
     {
-        $builder->addOffsetX(12, $OBSERVATORY_TYPE, 0);
+        $builder->addSbyteX(12, $OBSERVATORY_TYPE, 0);
     }
 
     /**
@@ -592,9 +663,9 @@ class SEO extends Table
      */
     public static function createSEN_POSVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -606,7 +677,7 @@ class SEO extends Table
      */
     public static function startSEN_POSVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**
@@ -626,9 +697,9 @@ class SEO extends Table
      */
     public static function createSEN_VELVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -640,7 +711,7 @@ class SEO extends Table
      */
     public static function startSEN_VELVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**
@@ -655,12 +726,22 @@ class SEO extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addPARTICLE_TYPE(FlatBufferBuilder $builder, $PARTICLE_TYPE)
+    {
+        $builder->addSbyteX(23, $PARTICLE_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param StringOffset
      * @return void
      */
     public static function addSEN_ENERGY_LEVEL(FlatBufferBuilder $builder, $SEN_ENERGY_LEVEL)
     {
-        $builder->addOffsetX(23, $SEN_ENERGY_LEVEL, 0);
+        $builder->addOffsetX(24, $SEN_ENERGY_LEVEL, 0);
     }
 
     /**
@@ -670,17 +751,7 @@ class SEO extends Table
      */
     public static function addOB_SET_ID(FlatBufferBuilder $builder, $OB_SET_ID)
     {
-        $builder->addOffsetX(24, $OB_SET_ID, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addPARTICLE_TYPE(FlatBufferBuilder $builder, $PARTICLE_TYPE)
-    {
-        $builder->addOffsetX(25, $PARTICLE_TYPE, 0);
+        $builder->addOffsetX(25, $OB_SET_ID, 0);
     }
 
     /**
@@ -698,9 +769,9 @@ class SEO extends Table
      * @param VectorOffset
      * @return void
      */
-    public static function addSEO_LIST(FlatBufferBuilder $builder, $SEO_LIST)
+    public static function addVALUES(FlatBufferBuilder $builder, $VALUES)
     {
-        $builder->addOffsetX(27, $SEO_LIST, 0);
+        $builder->addOffsetX(27, $VALUES, 0);
     }
 
     /**
@@ -708,11 +779,11 @@ class SEO extends Table
      * @param array offset array
      * @return int vector offset
      */
-    public static function createSEO_LISTVector(FlatBufferBuilder $builder, array $data)
+    public static function createVALUESVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -722,9 +793,53 @@ class SEO extends Table
      * @param int $numElems
      * @return void
      */
-    public static function startSEO_LISTVector(FlatBufferBuilder $builder, $numElems)
+    public static function startVALUESVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param VectorOffset
+     * @return void
+     */
+    public static function addUNCERTAINTIES(FlatBufferBuilder $builder, $UNCERTAINTIES)
+    {
+        $builder->addOffsetX(28, $UNCERTAINTIES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param array offset array
+     * @return int vector offset
+     */
+    public static function createUNCERTAINTIESVector(FlatBufferBuilder $builder, array $data)
+    {
+        $builder->startVector(8, count($data), 8);
+        for ($i = count($data) - 1; $i >= 0; $i--) {
+            $builder->putDouble($data[$i]);
+        }
+        return $builder->endVector();
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param int $numElems
+     * @return void
+     */
+    public static function startUNCERTAINTIESVector(FlatBufferBuilder $builder, $numElems)
+    {
+        $builder->startVector(8, $numElems, 8);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addUNITS(FlatBufferBuilder $builder, $UNITS)
+    {
+        $builder->addOffsetX(29, $UNITS, 0);
     }
 
     /**
@@ -734,7 +849,7 @@ class SEO extends Table
      */
     public static function addQUALITY(FlatBufferBuilder $builder, $QUALITY)
     {
-        $builder->addOffsetX(28, $QUALITY, 0);
+        $builder->addOffsetX(30, $QUALITY, 0);
     }
 
     /**
@@ -744,7 +859,7 @@ class SEO extends Table
      */
     public static function addDESCRIPTION(FlatBufferBuilder $builder, $DESCRIPTION)
     {
-        $builder->addOffsetX(29, $DESCRIPTION, 0);
+        $builder->addOffsetX(31, $DESCRIPTION, 0);
     }
 
     /**
@@ -754,7 +869,7 @@ class SEO extends Table
      */
     public static function addDESCRIPTOR(FlatBufferBuilder $builder, $DESCRIPTOR)
     {
-        $builder->addOffsetX(30, $DESCRIPTOR, 0);
+        $builder->addOffsetX(32, $DESCRIPTOR, 0);
     }
 
     /**
@@ -764,7 +879,7 @@ class SEO extends Table
      */
     public static function addSRC_TYPS(FlatBufferBuilder $builder, $SRC_TYPS)
     {
-        $builder->addOffsetX(31, $SRC_TYPS, 0);
+        $builder->addOffsetX(33, $SRC_TYPS, 0);
     }
 
     /**
@@ -798,7 +913,7 @@ class SEO extends Table
      */
     public static function addSRC_IDS(FlatBufferBuilder $builder, $SRC_IDS)
     {
-        $builder->addOffsetX(32, $SRC_IDS, 0);
+        $builder->addOffsetX(34, $SRC_IDS, 0);
     }
 
     /**

@@ -5,7 +5,7 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
-///  Short-Wave Infrared
+///  Short-Wave Infrared Observation
 class SWR {
   SWR._(this._bc, this._bcOffset);
   factory SWR(List<int> bytes) {
@@ -18,24 +18,46 @@ class SWR {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  On-orbit reference
   String? get ON_ORBIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get TS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  double get SOLAR_PHASE_ANGLE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  double get LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
-  double get LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  String? get LOCATION_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  String? get BAD_WAVE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  List<String>? get WAVELENGTHS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 20);
-  List<String>? get ABS_FLUXES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 22);
-  List<String>? get RATIO_WAVELENGTHS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 24);
-  List<String>? get FLUX_RATIOS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 26);
-  String? get ORIG_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
-  int get SAT_NO => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 30, 0);
+  ///  International designator
+  String? get ORIG_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Satellite catalog number
+  int get SAT_NO => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  ///  Observation timestamp (ISO 8601)
+  String? get TS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Solar phase angle (degrees)
+  double get SOLAR_PHASE_ANGLE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  ///  Sub-observer latitude (degrees)
+  double get LAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Sub-observer longitude (degrees)
+  double get LON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  ///  Location name
+  String? get LOCATION_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
+  ///  Bad wavelength flag or identifier
+  String? get BAD_WAVE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Measured wavelengths (micrometers)
+  List<double>? get WAVELENGTHS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Absolute flux values (W/m^2/um)
+  List<double>? get ABS_FLUXES => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Ratio reference wavelengths (micrometers)
+  List<double>? get RATIO_WAVELENGTHS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Flux ratios (normalized)
+  List<double>? get FLUX_RATIOS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 30);
+  ///  Effective temperature (Kelvin)
+  double get TEMPERATURE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  ///  Signal-to-noise ratio
+  double get SIGNAL_NOISE_RATIO => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  ///  Integration time (seconds)
+  double get INTEGRATION_TIME => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  ///  Data quality (0-9, 9=best)
+  int get QUALITY => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 38, 0);
 
   @override
   String toString() {
-    return 'SWR{ID: ${ID}, ON_ORBIT: ${ON_ORBIT}, TS: ${TS}, SOLAR_PHASE_ANGLE: ${SOLAR_PHASE_ANGLE}, LAT: ${LAT}, LON: ${LON}, LOCATION_NAME: ${LOCATION_NAME}, BAD_WAVE: ${BAD_WAVE}, WAVELENGTHS: ${WAVELENGTHS}, ABS_FLUXES: ${ABS_FLUXES}, RATIO_WAVELENGTHS: ${RATIO_WAVELENGTHS}, FLUX_RATIOS: ${FLUX_RATIOS}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, SAT_NO: ${SAT_NO}}';
+    return 'SWR{ID: ${ID}, ON_ORBIT: ${ON_ORBIT}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, SAT_NO: ${SAT_NO}, TS: ${TS}, SOLAR_PHASE_ANGLE: ${SOLAR_PHASE_ANGLE}, LAT: ${LAT}, LON: ${LON}, LOCATION_NAME: ${LOCATION_NAME}, BAD_WAVE: ${BAD_WAVE}, WAVELENGTHS: ${WAVELENGTHS}, ABS_FLUXES: ${ABS_FLUXES}, RATIO_WAVELENGTHS: ${RATIO_WAVELENGTHS}, FLUX_RATIOS: ${FLUX_RATIOS}, TEMPERATURE: ${TEMPERATURE}, SIGNAL_NOISE_RATIO: ${SIGNAL_NOISE_RATIO}, INTEGRATION_TIME: ${INTEGRATION_TIME}, QUALITY: ${QUALITY}}';
   }
 }
 
@@ -53,7 +75,7 @@ class SWRBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(14);
+    fbBuilder.startTable(18);
   }
 
   int addIdOffset(int? offset) {
@@ -64,52 +86,68 @@ class SWRBuilder {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addTsOffset(int? offset) {
+  int addOrigObjectIdOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
+  int addSatNo(int? SAT_NO) {
+    fbBuilder.addUint32(3, SAT_NO);
+    return fbBuilder.offset;
+  }
+  int addTsOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
   int addSolarPhaseAngle(double? SOLAR_PHASE_ANGLE) {
-    fbBuilder.addFloat64(3, SOLAR_PHASE_ANGLE);
+    fbBuilder.addFloat64(5, SOLAR_PHASE_ANGLE);
     return fbBuilder.offset;
   }
   int addLat(double? LAT) {
-    fbBuilder.addFloat64(4, LAT);
+    fbBuilder.addFloat64(6, LAT);
     return fbBuilder.offset;
   }
   int addLon(double? LON) {
-    fbBuilder.addFloat64(5, LON);
+    fbBuilder.addFloat64(7, LON);
     return fbBuilder.offset;
   }
   int addLocationNameOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addBadWaveOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addWavelengthsOffset(int? offset) {
     fbBuilder.addOffset(8, offset);
     return fbBuilder.offset;
   }
-  int addAbsFluxesOffset(int? offset) {
+  int addBadWaveOffset(int? offset) {
     fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
-  int addRatioWavelengthsOffset(int? offset) {
+  int addWavelengthsOffset(int? offset) {
     fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
-  int addFluxRatiosOffset(int? offset) {
+  int addAbsFluxesOffset(int? offset) {
     fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
-  int addOrigObjectIdOffset(int? offset) {
+  int addRatioWavelengthsOffset(int? offset) {
     fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
-  int addSatNo(int? SAT_NO) {
-    fbBuilder.addInt32(13, SAT_NO);
+  int addFluxRatiosOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addTemperature(double? TEMPERATURE) {
+    fbBuilder.addFloat64(14, TEMPERATURE);
+    return fbBuilder.offset;
+  }
+  int addSignalNoiseRatio(double? SIGNAL_NOISE_RATIO) {
+    fbBuilder.addFloat64(15, SIGNAL_NOISE_RATIO);
+    return fbBuilder.offset;
+  }
+  int addIntegrationTime(double? INTEGRATION_TIME) {
+    fbBuilder.addFloat64(16, INTEGRATION_TIME);
+    return fbBuilder.offset;
+  }
+  int addQuality(int? QUALITY) {
+    fbBuilder.addUint8(17, QUALITY);
     return fbBuilder.offset;
   }
 
@@ -121,37 +159,47 @@ class SWRBuilder {
 class SWRObjectBuilder extends fb.ObjectBuilder {
   final String? _ID;
   final String? _ON_ORBIT;
+  final String? _ORIG_OBJECT_ID;
+  final int? _SAT_NO;
   final String? _TS;
   final double? _SOLAR_PHASE_ANGLE;
   final double? _LAT;
   final double? _LON;
   final String? _LOCATION_NAME;
   final String? _BAD_WAVE;
-  final List<String>? _WAVELENGTHS;
-  final List<String>? _ABS_FLUXES;
-  final List<String>? _RATIO_WAVELENGTHS;
-  final List<String>? _FLUX_RATIOS;
-  final String? _ORIG_OBJECT_ID;
-  final int? _SAT_NO;
+  final List<double>? _WAVELENGTHS;
+  final List<double>? _ABS_FLUXES;
+  final List<double>? _RATIO_WAVELENGTHS;
+  final List<double>? _FLUX_RATIOS;
+  final double? _TEMPERATURE;
+  final double? _SIGNAL_NOISE_RATIO;
+  final double? _INTEGRATION_TIME;
+  final int? _QUALITY;
 
   SWRObjectBuilder({
     String? ID,
     String? ON_ORBIT,
+    String? ORIG_OBJECT_ID,
+    int? SAT_NO,
     String? TS,
     double? SOLAR_PHASE_ANGLE,
     double? LAT,
     double? LON,
     String? LOCATION_NAME,
     String? BAD_WAVE,
-    List<String>? WAVELENGTHS,
-    List<String>? ABS_FLUXES,
-    List<String>? RATIO_WAVELENGTHS,
-    List<String>? FLUX_RATIOS,
-    String? ORIG_OBJECT_ID,
-    int? SAT_NO,
+    List<double>? WAVELENGTHS,
+    List<double>? ABS_FLUXES,
+    List<double>? RATIO_WAVELENGTHS,
+    List<double>? FLUX_RATIOS,
+    double? TEMPERATURE,
+    double? SIGNAL_NOISE_RATIO,
+    double? INTEGRATION_TIME,
+    int? QUALITY,
   })
       : _ID = ID,
         _ON_ORBIT = ON_ORBIT,
+        _ORIG_OBJECT_ID = ORIG_OBJECT_ID,
+        _SAT_NO = SAT_NO,
         _TS = TS,
         _SOLAR_PHASE_ANGLE = SOLAR_PHASE_ANGLE,
         _LAT = LAT,
@@ -162,8 +210,10 @@ class SWRObjectBuilder extends fb.ObjectBuilder {
         _ABS_FLUXES = ABS_FLUXES,
         _RATIO_WAVELENGTHS = RATIO_WAVELENGTHS,
         _FLUX_RATIOS = FLUX_RATIOS,
-        _ORIG_OBJECT_ID = ORIG_OBJECT_ID,
-        _SAT_NO = SAT_NO;
+        _TEMPERATURE = TEMPERATURE,
+        _SIGNAL_NOISE_RATIO = SIGNAL_NOISE_RATIO,
+        _INTEGRATION_TIME = INTEGRATION_TIME,
+        _QUALITY = QUALITY;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -172,6 +222,8 @@ class SWRObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ID!);
     final int? ON_ORBITOffset = _ON_ORBIT == null ? null
         : fbBuilder.writeString(_ON_ORBIT!);
+    final int? ORIG_OBJECT_IDOffset = _ORIG_OBJECT_ID == null ? null
+        : fbBuilder.writeString(_ORIG_OBJECT_ID!);
     final int? TSOffset = _TS == null ? null
         : fbBuilder.writeString(_TS!);
     final int? LOCATION_NAMEOffset = _LOCATION_NAME == null ? null
@@ -179,30 +231,32 @@ class SWRObjectBuilder extends fb.ObjectBuilder {
     final int? BAD_WAVEOffset = _BAD_WAVE == null ? null
         : fbBuilder.writeString(_BAD_WAVE!);
     final int? WAVELENGTHSOffset = _WAVELENGTHS == null ? null
-        : fbBuilder.writeList(_WAVELENGTHS!.map(fbBuilder.writeString).toList());
+        : fbBuilder.writeListFloat64(_WAVELENGTHS!);
     final int? ABS_FLUXESOffset = _ABS_FLUXES == null ? null
-        : fbBuilder.writeList(_ABS_FLUXES!.map(fbBuilder.writeString).toList());
+        : fbBuilder.writeListFloat64(_ABS_FLUXES!);
     final int? RATIO_WAVELENGTHSOffset = _RATIO_WAVELENGTHS == null ? null
-        : fbBuilder.writeList(_RATIO_WAVELENGTHS!.map(fbBuilder.writeString).toList());
+        : fbBuilder.writeListFloat64(_RATIO_WAVELENGTHS!);
     final int? FLUX_RATIOSOffset = _FLUX_RATIOS == null ? null
-        : fbBuilder.writeList(_FLUX_RATIOS!.map(fbBuilder.writeString).toList());
-    final int? ORIG_OBJECT_IDOffset = _ORIG_OBJECT_ID == null ? null
-        : fbBuilder.writeString(_ORIG_OBJECT_ID!);
-    fbBuilder.startTable(14);
+        : fbBuilder.writeListFloat64(_FLUX_RATIOS!);
+    fbBuilder.startTable(18);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, ON_ORBITOffset);
-    fbBuilder.addOffset(2, TSOffset);
-    fbBuilder.addFloat64(3, _SOLAR_PHASE_ANGLE);
-    fbBuilder.addFloat64(4, _LAT);
-    fbBuilder.addFloat64(5, _LON);
-    fbBuilder.addOffset(6, LOCATION_NAMEOffset);
-    fbBuilder.addOffset(7, BAD_WAVEOffset);
-    fbBuilder.addOffset(8, WAVELENGTHSOffset);
-    fbBuilder.addOffset(9, ABS_FLUXESOffset);
-    fbBuilder.addOffset(10, RATIO_WAVELENGTHSOffset);
-    fbBuilder.addOffset(11, FLUX_RATIOSOffset);
-    fbBuilder.addOffset(12, ORIG_OBJECT_IDOffset);
-    fbBuilder.addInt32(13, _SAT_NO);
+    fbBuilder.addOffset(2, ORIG_OBJECT_IDOffset);
+    fbBuilder.addUint32(3, _SAT_NO);
+    fbBuilder.addOffset(4, TSOffset);
+    fbBuilder.addFloat64(5, _SOLAR_PHASE_ANGLE);
+    fbBuilder.addFloat64(6, _LAT);
+    fbBuilder.addFloat64(7, _LON);
+    fbBuilder.addOffset(8, LOCATION_NAMEOffset);
+    fbBuilder.addOffset(9, BAD_WAVEOffset);
+    fbBuilder.addOffset(10, WAVELENGTHSOffset);
+    fbBuilder.addOffset(11, ABS_FLUXESOffset);
+    fbBuilder.addOffset(12, RATIO_WAVELENGTHSOffset);
+    fbBuilder.addOffset(13, FLUX_RATIOSOffset);
+    fbBuilder.addFloat64(14, _TEMPERATURE);
+    fbBuilder.addFloat64(15, _SIGNAL_NOISE_RATIO);
+    fbBuilder.addFloat64(16, _INTEGRATION_TIME);
+    fbBuilder.addUint8(17, _QUALITY);
     return fbBuilder.endTable();
   }
 

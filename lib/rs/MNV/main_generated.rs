@@ -9,6 +9,924 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_MANEUVER_STATUS: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_MANEUVER_STATUS: i8 = 6;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_MANEUVER_STATUS: [maneuverStatus; 7] = [
+  maneuverStatus::DETECTED,
+  maneuverStatus::CONFIRMED,
+  maneuverStatus::PREDICTED,
+  maneuverStatus::PLANNED,
+  maneuverStatus::EXECUTED,
+  maneuverStatus::CANCELLED,
+  maneuverStatus::UNKNOWN,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct maneuverStatus(pub i8);
+#[allow(non_upper_case_globals)]
+impl maneuverStatus {
+  pub const DETECTED: Self = Self(0);
+  pub const CONFIRMED: Self = Self(1);
+  pub const PREDICTED: Self = Self(2);
+  pub const PLANNED: Self = Self(3);
+  pub const EXECUTED: Self = Self(4);
+  pub const CANCELLED: Self = Self(5);
+  pub const UNKNOWN: Self = Self(6);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 6;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::DETECTED,
+    Self::CONFIRMED,
+    Self::PREDICTED,
+    Self::PLANNED,
+    Self::EXECUTED,
+    Self::CANCELLED,
+    Self::UNKNOWN,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::DETECTED => Some("DETECTED"),
+      Self::CONFIRMED => Some("CONFIRMED"),
+      Self::PREDICTED => Some("PREDICTED"),
+      Self::PLANNED => Some("PLANNED"),
+      Self::EXECUTED => Some("EXECUTED"),
+      Self::CANCELLED => Some("CANCELLED"),
+      Self::UNKNOWN => Some("UNKNOWN"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for maneuverStatus {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for maneuverStatus {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for maneuverStatus {
+    type Output = maneuverStatus;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for maneuverStatus {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for maneuverStatus {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for maneuverStatus {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_MANEUVER_CHARACTERIZATION: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_MANEUVER_CHARACTERIZATION: i8 = 9;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_MANEUVER_CHARACTERIZATION: [maneuverCharacterization; 10] = [
+  maneuverCharacterization::IN_PLANE,
+  maneuverCharacterization::OUT_OF_PLANE,
+  maneuverCharacterization::COMBINED,
+  maneuverCharacterization::STATION_KEEPING,
+  maneuverCharacterization::ORBIT_RAISING,
+  maneuverCharacterization::ORBIT_LOWERING,
+  maneuverCharacterization::PHASING,
+  maneuverCharacterization::DEORBIT,
+  maneuverCharacterization::COLLISION_AVOIDANCE,
+  maneuverCharacterization::UNKNOWN,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct maneuverCharacterization(pub i8);
+#[allow(non_upper_case_globals)]
+impl maneuverCharacterization {
+  pub const IN_PLANE: Self = Self(0);
+  pub const OUT_OF_PLANE: Self = Self(1);
+  pub const COMBINED: Self = Self(2);
+  pub const STATION_KEEPING: Self = Self(3);
+  pub const ORBIT_RAISING: Self = Self(4);
+  pub const ORBIT_LOWERING: Self = Self(5);
+  pub const PHASING: Self = Self(6);
+  pub const DEORBIT: Self = Self(7);
+  pub const COLLISION_AVOIDANCE: Self = Self(8);
+  pub const UNKNOWN: Self = Self(9);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 9;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::IN_PLANE,
+    Self::OUT_OF_PLANE,
+    Self::COMBINED,
+    Self::STATION_KEEPING,
+    Self::ORBIT_RAISING,
+    Self::ORBIT_LOWERING,
+    Self::PHASING,
+    Self::DEORBIT,
+    Self::COLLISION_AVOIDANCE,
+    Self::UNKNOWN,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::IN_PLANE => Some("IN_PLANE"),
+      Self::OUT_OF_PLANE => Some("OUT_OF_PLANE"),
+      Self::COMBINED => Some("COMBINED"),
+      Self::STATION_KEEPING => Some("STATION_KEEPING"),
+      Self::ORBIT_RAISING => Some("ORBIT_RAISING"),
+      Self::ORBIT_LOWERING => Some("ORBIT_LOWERING"),
+      Self::PHASING => Some("PHASING"),
+      Self::DEORBIT => Some("DEORBIT"),
+      Self::COLLISION_AVOIDANCE => Some("COLLISION_AVOIDANCE"),
+      Self::UNKNOWN => Some("UNKNOWN"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for maneuverCharacterization {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for maneuverCharacterization {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for maneuverCharacterization {
+    type Output = maneuverCharacterization;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for maneuverCharacterization {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for maneuverCharacterization {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for maneuverCharacterization {}
+pub enum mnvOrbitalStateOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Pre/post-maneuver orbital state
+pub struct mnvOrbitalState<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for mnvOrbitalState<'a> {
+  type Inner = mnvOrbitalState<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> mnvOrbitalState<'a> {
+  pub const VT_ID_ELSET: flatbuffers::VOffsetT = 4;
+  pub const VT_ELSET: flatbuffers::VOffsetT = 6;
+  pub const VT_ID_STATE_VECTOR: flatbuffers::VOffsetT = 8;
+  pub const VT_STATE_VECTOR: flatbuffers::VOffsetT = 10;
+  pub const VT_POS_X: flatbuffers::VOffsetT = 12;
+  pub const VT_POS_Y: flatbuffers::VOffsetT = 14;
+  pub const VT_POS_Z: flatbuffers::VOffsetT = 16;
+  pub const VT_VEL_X: flatbuffers::VOffsetT = 18;
+  pub const VT_VEL_Y: flatbuffers::VOffsetT = 20;
+  pub const VT_VEL_Z: flatbuffers::VOffsetT = 22;
+  pub const VT_RADIATION_PRESS_COEFF: flatbuffers::VOffsetT = 24;
+  pub const VT_BALLISTIC_COEFF: flatbuffers::VOffsetT = 26;
+  pub const VT_APOGEE: flatbuffers::VOffsetT = 28;
+  pub const VT_PERIGEE: flatbuffers::VOffsetT = 30;
+  pub const VT_INCLINATION: flatbuffers::VOffsetT = 32;
+  pub const VT_ECCENTRICITY: flatbuffers::VOffsetT = 34;
+  pub const VT_PERIOD: flatbuffers::VOffsetT = 36;
+  pub const VT_RAAN: flatbuffers::VOffsetT = 38;
+  pub const VT_SMA: flatbuffers::VOffsetT = 40;
+  pub const VT_GEO_LONGITUDE: flatbuffers::VOffsetT = 42;
+  pub const VT_DRIFT_RATE: flatbuffers::VOffsetT = 44;
+  pub const VT_SIGMA_U: flatbuffers::VOffsetT = 46;
+  pub const VT_SIGMA_V: flatbuffers::VOffsetT = 48;
+  pub const VT_SIGMA_W: flatbuffers::VOffsetT = 50;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    mnvOrbitalState { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args mnvOrbitalStateArgs<'args>
+  ) -> flatbuffers::WIPOffset<mnvOrbitalState<'bldr>> {
+    let mut builder = mnvOrbitalStateBuilder::new(_fbb);
+    builder.add_SIGMA_W(args.SIGMA_W);
+    builder.add_SIGMA_V(args.SIGMA_V);
+    builder.add_SIGMA_U(args.SIGMA_U);
+    builder.add_DRIFT_RATE(args.DRIFT_RATE);
+    builder.add_GEO_LONGITUDE(args.GEO_LONGITUDE);
+    builder.add_SMA(args.SMA);
+    builder.add_RAAN(args.RAAN);
+    builder.add_PERIOD(args.PERIOD);
+    builder.add_ECCENTRICITY(args.ECCENTRICITY);
+    builder.add_INCLINATION(args.INCLINATION);
+    builder.add_PERIGEE(args.PERIGEE);
+    builder.add_APOGEE(args.APOGEE);
+    builder.add_BALLISTIC_COEFF(args.BALLISTIC_COEFF);
+    builder.add_RADIATION_PRESS_COEFF(args.RADIATION_PRESS_COEFF);
+    builder.add_VEL_Z(args.VEL_Z);
+    builder.add_VEL_Y(args.VEL_Y);
+    builder.add_VEL_X(args.VEL_X);
+    builder.add_POS_Z(args.POS_Z);
+    builder.add_POS_Y(args.POS_Y);
+    builder.add_POS_X(args.POS_X);
+    if let Some(x) = args.STATE_VECTOR { builder.add_STATE_VECTOR(x); }
+    if let Some(x) = args.ID_STATE_VECTOR { builder.add_ID_STATE_VECTOR(x); }
+    if let Some(x) = args.ELSET { builder.add_ELSET(x); }
+    if let Some(x) = args.ID_ELSET { builder.add_ID_ELSET(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> mnvOrbitalStateT {
+    let ID_ELSET = self.ID_ELSET().map(|x| {
+      x.to_string()
+    });
+    let ELSET = self.ELSET().map(|x| {
+      x.to_string()
+    });
+    let ID_STATE_VECTOR = self.ID_STATE_VECTOR().map(|x| {
+      x.to_string()
+    });
+    let STATE_VECTOR = self.STATE_VECTOR().map(|x| {
+      x.to_string()
+    });
+    let POS_X = self.POS_X();
+    let POS_Y = self.POS_Y();
+    let POS_Z = self.POS_Z();
+    let VEL_X = self.VEL_X();
+    let VEL_Y = self.VEL_Y();
+    let VEL_Z = self.VEL_Z();
+    let RADIATION_PRESS_COEFF = self.RADIATION_PRESS_COEFF();
+    let BALLISTIC_COEFF = self.BALLISTIC_COEFF();
+    let APOGEE = self.APOGEE();
+    let PERIGEE = self.PERIGEE();
+    let INCLINATION = self.INCLINATION();
+    let ECCENTRICITY = self.ECCENTRICITY();
+    let PERIOD = self.PERIOD();
+    let RAAN = self.RAAN();
+    let SMA = self.SMA();
+    let GEO_LONGITUDE = self.GEO_LONGITUDE();
+    let DRIFT_RATE = self.DRIFT_RATE();
+    let SIGMA_U = self.SIGMA_U();
+    let SIGMA_V = self.SIGMA_V();
+    let SIGMA_W = self.SIGMA_W();
+    mnvOrbitalStateT {
+      ID_ELSET,
+      ELSET,
+      ID_STATE_VECTOR,
+      STATE_VECTOR,
+      POS_X,
+      POS_Y,
+      POS_Z,
+      VEL_X,
+      VEL_Y,
+      VEL_Z,
+      RADIATION_PRESS_COEFF,
+      BALLISTIC_COEFF,
+      APOGEE,
+      PERIGEE,
+      INCLINATION,
+      ECCENTRICITY,
+      PERIOD,
+      RAAN,
+      SMA,
+      GEO_LONGITUDE,
+      DRIFT_RATE,
+      SIGMA_U,
+      SIGMA_V,
+      SIGMA_W,
+    }
+  }
+
+  /// Element set identifier
+  #[inline]
+  pub fn ID_ELSET(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(mnvOrbitalState::VT_ID_ELSET, None)}
+  }
+  /// Element set data reference
+  #[inline]
+  pub fn ELSET(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(mnvOrbitalState::VT_ELSET, None)}
+  }
+  /// State vector identifier
+  #[inline]
+  pub fn ID_STATE_VECTOR(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(mnvOrbitalState::VT_ID_STATE_VECTOR, None)}
+  }
+  /// State vector data reference
+  #[inline]
+  pub fn STATE_VECTOR(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(mnvOrbitalState::VT_STATE_VECTOR, None)}
+  }
+  /// Position X (km)
+  #[inline]
+  pub fn POS_X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(mnvOrbitalState::VT_POS_X, Some(0.0)).unwrap()}
+  }
+  /// Position Y (km)
+  #[inline]
+  pub fn POS_Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(mnvOrbitalState::VT_POS_Y, Some(0.0)).unwrap()}
+  }
+  /// Position Z (km)
+  #[inline]
+  pub fn POS_Z(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(mnvOrbitalState::VT_POS_Z, Some(0.0)).unwrap()}
+  }
+  /// Velocity X (km/s)
+  #[inline]
+  pub fn VEL_X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(mnvOrbitalState::VT_VEL_X, Some(0.0)).unwrap()}
+  }
+  /// Velocity Y (km/s)
+  #[inline]
+  pub fn VEL_Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(mnvOrbitalState::VT_VEL_Y, Some(0.0)).unwrap()}
+  }
+  /// Velocity Z (km/s)
+  #[inline]
+  pub fn VEL_Z(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(mnvOrbitalState::VT_VEL_Z, Some(0.0)).unwrap()}
+  }
+  /// Radiation pressure coefficient (Cr)
+  #[inline]
+  pub fn RADIATION_PRESS_COEFF(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(mnvOrbitalState::VT_RADIATION_PRESS_COEFF, Some(0.0)).unwrap()}
+  }
+  /// Ballistic coefficient (m^2/kg)
+  #[inline]
+  pub fn BALLISTIC_COEFF(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(mnvOrbitalState::VT_BALLISTIC_COEFF, Some(0.0)).unwrap()}
+  }
+  /// Apogee altitude (km)
+  #[inline]
+  pub fn APOGEE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(mnvOrbitalState::VT_APOGEE, Some(0.0)).unwrap()}
+  }
+  /// Perigee altitude (km)
+  #[inline]
+  pub fn PERIGEE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(mnvOrbitalState::VT_PERIGEE, Some(0.0)).unwrap()}
+  }
+  /// Inclination (degrees)
+  #[inline]
+  pub fn INCLINATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(mnvOrbitalState::VT_INCLINATION, Some(0.0)).unwrap()}
+  }
+  /// Eccentricity
+  #[inline]
+  pub fn ECCENTRICITY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(mnvOrbitalState::VT_ECCENTRICITY, Some(0.0)).unwrap()}
+  }
+  /// Orbital period (minutes)
+  #[inline]
+  pub fn PERIOD(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(mnvOrbitalState::VT_PERIOD, Some(0.0)).unwrap()}
+  }
+  /// Right ascension of ascending node (degrees)
+  #[inline]
+  pub fn RAAN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(mnvOrbitalState::VT_RAAN, Some(0.0)).unwrap()}
+  }
+  /// Semi-major axis (km)
+  #[inline]
+  pub fn SMA(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(mnvOrbitalState::VT_SMA, Some(0.0)).unwrap()}
+  }
+  /// GEO longitude (degrees east)
+  #[inline]
+  pub fn GEO_LONGITUDE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(mnvOrbitalState::VT_GEO_LONGITUDE, Some(0.0)).unwrap()}
+  }
+  /// Longitude drift rate (degrees/day)
+  #[inline]
+  pub fn DRIFT_RATE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(mnvOrbitalState::VT_DRIFT_RATE, Some(0.0)).unwrap()}
+  }
+  /// Position uncertainty U (km, 1-sigma)
+  #[inline]
+  pub fn SIGMA_U(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(mnvOrbitalState::VT_SIGMA_U, Some(0.0)).unwrap()}
+  }
+  /// Position uncertainty V (km, 1-sigma)
+  #[inline]
+  pub fn SIGMA_V(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(mnvOrbitalState::VT_SIGMA_V, Some(0.0)).unwrap()}
+  }
+  /// Position uncertainty W (km, 1-sigma)
+  #[inline]
+  pub fn SIGMA_W(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(mnvOrbitalState::VT_SIGMA_W, Some(0.0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for mnvOrbitalState<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID_ELSET", Self::VT_ID_ELSET, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ELSET", Self::VT_ELSET, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID_STATE_VECTOR", Self::VT_ID_STATE_VECTOR, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("STATE_VECTOR", Self::VT_STATE_VECTOR, false)?
+     .visit_field::<f64>("POS_X", Self::VT_POS_X, false)?
+     .visit_field::<f64>("POS_Y", Self::VT_POS_Y, false)?
+     .visit_field::<f64>("POS_Z", Self::VT_POS_Z, false)?
+     .visit_field::<f64>("VEL_X", Self::VT_VEL_X, false)?
+     .visit_field::<f64>("VEL_Y", Self::VT_VEL_Y, false)?
+     .visit_field::<f64>("VEL_Z", Self::VT_VEL_Z, false)?
+     .visit_field::<f64>("RADIATION_PRESS_COEFF", Self::VT_RADIATION_PRESS_COEFF, false)?
+     .visit_field::<f64>("BALLISTIC_COEFF", Self::VT_BALLISTIC_COEFF, false)?
+     .visit_field::<f64>("APOGEE", Self::VT_APOGEE, false)?
+     .visit_field::<f64>("PERIGEE", Self::VT_PERIGEE, false)?
+     .visit_field::<f64>("INCLINATION", Self::VT_INCLINATION, false)?
+     .visit_field::<f64>("ECCENTRICITY", Self::VT_ECCENTRICITY, false)?
+     .visit_field::<f64>("PERIOD", Self::VT_PERIOD, false)?
+     .visit_field::<f64>("RAAN", Self::VT_RAAN, false)?
+     .visit_field::<f64>("SMA", Self::VT_SMA, false)?
+     .visit_field::<f64>("GEO_LONGITUDE", Self::VT_GEO_LONGITUDE, false)?
+     .visit_field::<f64>("DRIFT_RATE", Self::VT_DRIFT_RATE, false)?
+     .visit_field::<f64>("SIGMA_U", Self::VT_SIGMA_U, false)?
+     .visit_field::<f64>("SIGMA_V", Self::VT_SIGMA_V, false)?
+     .visit_field::<f64>("SIGMA_W", Self::VT_SIGMA_W, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct mnvOrbitalStateArgs<'a> {
+    pub ID_ELSET: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ELSET: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ID_STATE_VECTOR: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub STATE_VECTOR: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub POS_X: f64,
+    pub POS_Y: f64,
+    pub POS_Z: f64,
+    pub VEL_X: f64,
+    pub VEL_Y: f64,
+    pub VEL_Z: f64,
+    pub RADIATION_PRESS_COEFF: f64,
+    pub BALLISTIC_COEFF: f64,
+    pub APOGEE: f64,
+    pub PERIGEE: f64,
+    pub INCLINATION: f64,
+    pub ECCENTRICITY: f64,
+    pub PERIOD: f64,
+    pub RAAN: f64,
+    pub SMA: f64,
+    pub GEO_LONGITUDE: f64,
+    pub DRIFT_RATE: f64,
+    pub SIGMA_U: f64,
+    pub SIGMA_V: f64,
+    pub SIGMA_W: f64,
+}
+impl<'a> Default for mnvOrbitalStateArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    mnvOrbitalStateArgs {
+      ID_ELSET: None,
+      ELSET: None,
+      ID_STATE_VECTOR: None,
+      STATE_VECTOR: None,
+      POS_X: 0.0,
+      POS_Y: 0.0,
+      POS_Z: 0.0,
+      VEL_X: 0.0,
+      VEL_Y: 0.0,
+      VEL_Z: 0.0,
+      RADIATION_PRESS_COEFF: 0.0,
+      BALLISTIC_COEFF: 0.0,
+      APOGEE: 0.0,
+      PERIGEE: 0.0,
+      INCLINATION: 0.0,
+      ECCENTRICITY: 0.0,
+      PERIOD: 0.0,
+      RAAN: 0.0,
+      SMA: 0.0,
+      GEO_LONGITUDE: 0.0,
+      DRIFT_RATE: 0.0,
+      SIGMA_U: 0.0,
+      SIGMA_V: 0.0,
+      SIGMA_W: 0.0,
+    }
+  }
+}
+
+pub struct mnvOrbitalStateBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> mnvOrbitalStateBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_ID_ELSET(&mut self, ID_ELSET: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(mnvOrbitalState::VT_ID_ELSET, ID_ELSET);
+  }
+  #[inline]
+  pub fn add_ELSET(&mut self, ELSET: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(mnvOrbitalState::VT_ELSET, ELSET);
+  }
+  #[inline]
+  pub fn add_ID_STATE_VECTOR(&mut self, ID_STATE_VECTOR: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(mnvOrbitalState::VT_ID_STATE_VECTOR, ID_STATE_VECTOR);
+  }
+  #[inline]
+  pub fn add_STATE_VECTOR(&mut self, STATE_VECTOR: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(mnvOrbitalState::VT_STATE_VECTOR, STATE_VECTOR);
+  }
+  #[inline]
+  pub fn add_POS_X(&mut self, POS_X: f64) {
+    self.fbb_.push_slot::<f64>(mnvOrbitalState::VT_POS_X, POS_X, 0.0);
+  }
+  #[inline]
+  pub fn add_POS_Y(&mut self, POS_Y: f64) {
+    self.fbb_.push_slot::<f64>(mnvOrbitalState::VT_POS_Y, POS_Y, 0.0);
+  }
+  #[inline]
+  pub fn add_POS_Z(&mut self, POS_Z: f64) {
+    self.fbb_.push_slot::<f64>(mnvOrbitalState::VT_POS_Z, POS_Z, 0.0);
+  }
+  #[inline]
+  pub fn add_VEL_X(&mut self, VEL_X: f64) {
+    self.fbb_.push_slot::<f64>(mnvOrbitalState::VT_VEL_X, VEL_X, 0.0);
+  }
+  #[inline]
+  pub fn add_VEL_Y(&mut self, VEL_Y: f64) {
+    self.fbb_.push_slot::<f64>(mnvOrbitalState::VT_VEL_Y, VEL_Y, 0.0);
+  }
+  #[inline]
+  pub fn add_VEL_Z(&mut self, VEL_Z: f64) {
+    self.fbb_.push_slot::<f64>(mnvOrbitalState::VT_VEL_Z, VEL_Z, 0.0);
+  }
+  #[inline]
+  pub fn add_RADIATION_PRESS_COEFF(&mut self, RADIATION_PRESS_COEFF: f64) {
+    self.fbb_.push_slot::<f64>(mnvOrbitalState::VT_RADIATION_PRESS_COEFF, RADIATION_PRESS_COEFF, 0.0);
+  }
+  #[inline]
+  pub fn add_BALLISTIC_COEFF(&mut self, BALLISTIC_COEFF: f64) {
+    self.fbb_.push_slot::<f64>(mnvOrbitalState::VT_BALLISTIC_COEFF, BALLISTIC_COEFF, 0.0);
+  }
+  #[inline]
+  pub fn add_APOGEE(&mut self, APOGEE: f64) {
+    self.fbb_.push_slot::<f64>(mnvOrbitalState::VT_APOGEE, APOGEE, 0.0);
+  }
+  #[inline]
+  pub fn add_PERIGEE(&mut self, PERIGEE: f64) {
+    self.fbb_.push_slot::<f64>(mnvOrbitalState::VT_PERIGEE, PERIGEE, 0.0);
+  }
+  #[inline]
+  pub fn add_INCLINATION(&mut self, INCLINATION: f64) {
+    self.fbb_.push_slot::<f64>(mnvOrbitalState::VT_INCLINATION, INCLINATION, 0.0);
+  }
+  #[inline]
+  pub fn add_ECCENTRICITY(&mut self, ECCENTRICITY: f64) {
+    self.fbb_.push_slot::<f64>(mnvOrbitalState::VT_ECCENTRICITY, ECCENTRICITY, 0.0);
+  }
+  #[inline]
+  pub fn add_PERIOD(&mut self, PERIOD: f64) {
+    self.fbb_.push_slot::<f64>(mnvOrbitalState::VT_PERIOD, PERIOD, 0.0);
+  }
+  #[inline]
+  pub fn add_RAAN(&mut self, RAAN: f64) {
+    self.fbb_.push_slot::<f64>(mnvOrbitalState::VT_RAAN, RAAN, 0.0);
+  }
+  #[inline]
+  pub fn add_SMA(&mut self, SMA: f64) {
+    self.fbb_.push_slot::<f64>(mnvOrbitalState::VT_SMA, SMA, 0.0);
+  }
+  #[inline]
+  pub fn add_GEO_LONGITUDE(&mut self, GEO_LONGITUDE: f64) {
+    self.fbb_.push_slot::<f64>(mnvOrbitalState::VT_GEO_LONGITUDE, GEO_LONGITUDE, 0.0);
+  }
+  #[inline]
+  pub fn add_DRIFT_RATE(&mut self, DRIFT_RATE: f64) {
+    self.fbb_.push_slot::<f64>(mnvOrbitalState::VT_DRIFT_RATE, DRIFT_RATE, 0.0);
+  }
+  #[inline]
+  pub fn add_SIGMA_U(&mut self, SIGMA_U: f64) {
+    self.fbb_.push_slot::<f64>(mnvOrbitalState::VT_SIGMA_U, SIGMA_U, 0.0);
+  }
+  #[inline]
+  pub fn add_SIGMA_V(&mut self, SIGMA_V: f64) {
+    self.fbb_.push_slot::<f64>(mnvOrbitalState::VT_SIGMA_V, SIGMA_V, 0.0);
+  }
+  #[inline]
+  pub fn add_SIGMA_W(&mut self, SIGMA_W: f64) {
+    self.fbb_.push_slot::<f64>(mnvOrbitalState::VT_SIGMA_W, SIGMA_W, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> mnvOrbitalStateBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    mnvOrbitalStateBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<mnvOrbitalState<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for mnvOrbitalState<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("mnvOrbitalState");
+      ds.field("ID_ELSET", &self.ID_ELSET());
+      ds.field("ELSET", &self.ELSET());
+      ds.field("ID_STATE_VECTOR", &self.ID_STATE_VECTOR());
+      ds.field("STATE_VECTOR", &self.STATE_VECTOR());
+      ds.field("POS_X", &self.POS_X());
+      ds.field("POS_Y", &self.POS_Y());
+      ds.field("POS_Z", &self.POS_Z());
+      ds.field("VEL_X", &self.VEL_X());
+      ds.field("VEL_Y", &self.VEL_Y());
+      ds.field("VEL_Z", &self.VEL_Z());
+      ds.field("RADIATION_PRESS_COEFF", &self.RADIATION_PRESS_COEFF());
+      ds.field("BALLISTIC_COEFF", &self.BALLISTIC_COEFF());
+      ds.field("APOGEE", &self.APOGEE());
+      ds.field("PERIGEE", &self.PERIGEE());
+      ds.field("INCLINATION", &self.INCLINATION());
+      ds.field("ECCENTRICITY", &self.ECCENTRICITY());
+      ds.field("PERIOD", &self.PERIOD());
+      ds.field("RAAN", &self.RAAN());
+      ds.field("SMA", &self.SMA());
+      ds.field("GEO_LONGITUDE", &self.GEO_LONGITUDE());
+      ds.field("DRIFT_RATE", &self.DRIFT_RATE());
+      ds.field("SIGMA_U", &self.SIGMA_U());
+      ds.field("SIGMA_V", &self.SIGMA_V());
+      ds.field("SIGMA_W", &self.SIGMA_W());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct mnvOrbitalStateT {
+  pub ID_ELSET: Option<String>,
+  pub ELSET: Option<String>,
+  pub ID_STATE_VECTOR: Option<String>,
+  pub STATE_VECTOR: Option<String>,
+  pub POS_X: f64,
+  pub POS_Y: f64,
+  pub POS_Z: f64,
+  pub VEL_X: f64,
+  pub VEL_Y: f64,
+  pub VEL_Z: f64,
+  pub RADIATION_PRESS_COEFF: f64,
+  pub BALLISTIC_COEFF: f64,
+  pub APOGEE: f64,
+  pub PERIGEE: f64,
+  pub INCLINATION: f64,
+  pub ECCENTRICITY: f64,
+  pub PERIOD: f64,
+  pub RAAN: f64,
+  pub SMA: f64,
+  pub GEO_LONGITUDE: f64,
+  pub DRIFT_RATE: f64,
+  pub SIGMA_U: f64,
+  pub SIGMA_V: f64,
+  pub SIGMA_W: f64,
+}
+impl Default for mnvOrbitalStateT {
+  fn default() -> Self {
+    Self {
+      ID_ELSET: None,
+      ELSET: None,
+      ID_STATE_VECTOR: None,
+      STATE_VECTOR: None,
+      POS_X: 0.0,
+      POS_Y: 0.0,
+      POS_Z: 0.0,
+      VEL_X: 0.0,
+      VEL_Y: 0.0,
+      VEL_Z: 0.0,
+      RADIATION_PRESS_COEFF: 0.0,
+      BALLISTIC_COEFF: 0.0,
+      APOGEE: 0.0,
+      PERIGEE: 0.0,
+      INCLINATION: 0.0,
+      ECCENTRICITY: 0.0,
+      PERIOD: 0.0,
+      RAAN: 0.0,
+      SMA: 0.0,
+      GEO_LONGITUDE: 0.0,
+      DRIFT_RATE: 0.0,
+      SIGMA_U: 0.0,
+      SIGMA_V: 0.0,
+      SIGMA_W: 0.0,
+    }
+  }
+}
+impl mnvOrbitalStateT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<mnvOrbitalState<'b>> {
+    let ID_ELSET = self.ID_ELSET.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ELSET = self.ELSET.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ID_STATE_VECTOR = self.ID_STATE_VECTOR.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let STATE_VECTOR = self.STATE_VECTOR.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let POS_X = self.POS_X;
+    let POS_Y = self.POS_Y;
+    let POS_Z = self.POS_Z;
+    let VEL_X = self.VEL_X;
+    let VEL_Y = self.VEL_Y;
+    let VEL_Z = self.VEL_Z;
+    let RADIATION_PRESS_COEFF = self.RADIATION_PRESS_COEFF;
+    let BALLISTIC_COEFF = self.BALLISTIC_COEFF;
+    let APOGEE = self.APOGEE;
+    let PERIGEE = self.PERIGEE;
+    let INCLINATION = self.INCLINATION;
+    let ECCENTRICITY = self.ECCENTRICITY;
+    let PERIOD = self.PERIOD;
+    let RAAN = self.RAAN;
+    let SMA = self.SMA;
+    let GEO_LONGITUDE = self.GEO_LONGITUDE;
+    let DRIFT_RATE = self.DRIFT_RATE;
+    let SIGMA_U = self.SIGMA_U;
+    let SIGMA_V = self.SIGMA_V;
+    let SIGMA_W = self.SIGMA_W;
+    mnvOrbitalState::create(_fbb, &mnvOrbitalStateArgs{
+      ID_ELSET,
+      ELSET,
+      ID_STATE_VECTOR,
+      STATE_VECTOR,
+      POS_X,
+      POS_Y,
+      POS_Z,
+      VEL_X,
+      VEL_Y,
+      VEL_Z,
+      RADIATION_PRESS_COEFF,
+      BALLISTIC_COEFF,
+      APOGEE,
+      PERIGEE,
+      INCLINATION,
+      ECCENTRICITY,
+      PERIOD,
+      RAAN,
+      SMA,
+      GEO_LONGITUDE,
+      DRIFT_RATE,
+      SIGMA_U,
+      SIGMA_V,
+      SIGMA_W,
+    })
+  }
+}
 pub enum MNVOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -28,95 +946,49 @@ impl<'a> flatbuffers::Follow<'a> for MNV<'a> {
 impl<'a> MNV<'a> {
   pub const VT_ID: flatbuffers::VOffsetT = 4;
   pub const VT_SAT_NO: flatbuffers::VOffsetT = 6;
-  pub const VT_REPORT_TIME: flatbuffers::VOffsetT = 8;
-  pub const VT_EVENT_START_TIME: flatbuffers::VOffsetT = 10;
-  pub const VT_EVENT_END_TIME: flatbuffers::VOffsetT = 12;
-  pub const VT_TOTAL_BURN_TIME: flatbuffers::VOffsetT = 14;
-  pub const VT_OD_FIT_END_TIME: flatbuffers::VOffsetT = 16;
-  pub const VT_ID_SENSOR: flatbuffers::VOffsetT = 18;
-  pub const VT_UCT: flatbuffers::VOffsetT = 20;
-  pub const VT_MANEUVER_UNC: flatbuffers::VOffsetT = 22;
-  pub const VT_CHARACTERIZATION: flatbuffers::VOffsetT = 24;
-  pub const VT_CHARACTERIZATION_UNC: flatbuffers::VOffsetT = 26;
-  pub const VT_EVENT_ID: flatbuffers::VOffsetT = 28;
-  pub const VT_ORIG_OBJECT_ID: flatbuffers::VOffsetT = 30;
-  pub const VT_ORIG_SENSOR_ID: flatbuffers::VOffsetT = 32;
-  pub const VT_STATUS: flatbuffers::VOffsetT = 34;
-  pub const VT_DELTA_POS: flatbuffers::VOffsetT = 36;
-  pub const VT_DELTA_POS_U: flatbuffers::VOffsetT = 38;
-  pub const VT_DELTA_POS_V: flatbuffers::VOffsetT = 40;
-  pub const VT_DELTA_POS_W: flatbuffers::VOffsetT = 42;
-  pub const VT_DELTA_VEL: flatbuffers::VOffsetT = 44;
-  pub const VT_DELTA_VEL_U: flatbuffers::VOffsetT = 46;
-  pub const VT_DELTA_VEL_V: flatbuffers::VOffsetT = 48;
-  pub const VT_DELTA_VEL_W: flatbuffers::VOffsetT = 50;
-  pub const VT_DELTA_MASS: flatbuffers::VOffsetT = 52;
-  pub const VT_PRE_EVENT_ID_ELSET: flatbuffers::VOffsetT = 54;
-  pub const VT_PRE_EVENT_ELSET: flatbuffers::VOffsetT = 56;
-  pub const VT_PRE_EVENT_ID_STATE_VECTOR: flatbuffers::VOffsetT = 58;
-  pub const VT_PRE_EVENT_STATE_VECTOR: flatbuffers::VOffsetT = 60;
-  pub const VT_PRE_POS_X: flatbuffers::VOffsetT = 62;
-  pub const VT_PRE_POS_Y: flatbuffers::VOffsetT = 64;
-  pub const VT_PRE_POS_Z: flatbuffers::VOffsetT = 66;
-  pub const VT_PRE_VEL_X: flatbuffers::VOffsetT = 68;
-  pub const VT_PRE_VEL_Y: flatbuffers::VOffsetT = 70;
-  pub const VT_PRE_VEL_Z: flatbuffers::VOffsetT = 72;
-  pub const VT_PRE_RADIATION_PRESS_COEFF: flatbuffers::VOffsetT = 74;
-  pub const VT_PRE_BALLISTIC_COEFF: flatbuffers::VOffsetT = 76;
-  pub const VT_PRE_APOGEE: flatbuffers::VOffsetT = 78;
-  pub const VT_PRE_PERIGEE: flatbuffers::VOffsetT = 80;
-  pub const VT_PRE_INCLINATION: flatbuffers::VOffsetT = 82;
-  pub const VT_PRE_ECCENTRICITY: flatbuffers::VOffsetT = 84;
-  pub const VT_PRE_PERIOD: flatbuffers::VOffsetT = 86;
-  pub const VT_PRE_RAAN: flatbuffers::VOffsetT = 88;
-  pub const VT_PRE_SMA: flatbuffers::VOffsetT = 90;
-  pub const VT_PRE_GEO_LONGITUDE: flatbuffers::VOffsetT = 92;
-  pub const VT_PRE_DRIFT_RATE: flatbuffers::VOffsetT = 94;
-  pub const VT_PRE_SIGMA_U: flatbuffers::VOffsetT = 96;
-  pub const VT_PRE_SIGMA_V: flatbuffers::VOffsetT = 98;
-  pub const VT_PRE_SIGMA_W: flatbuffers::VOffsetT = 100;
-  pub const VT_POST_EVENT_ID_ELSET: flatbuffers::VOffsetT = 102;
-  pub const VT_POST_EVENT_ELSET: flatbuffers::VOffsetT = 104;
-  pub const VT_POST_EVENT_ID_STATE_VECTOR: flatbuffers::VOffsetT = 106;
-  pub const VT_POST_EVENT_STATE_VECTOR: flatbuffers::VOffsetT = 108;
-  pub const VT_POST_POS_X: flatbuffers::VOffsetT = 110;
-  pub const VT_POST_POS_Y: flatbuffers::VOffsetT = 112;
-  pub const VT_POST_POS_Z: flatbuffers::VOffsetT = 114;
-  pub const VT_POST_VEL_X: flatbuffers::VOffsetT = 116;
-  pub const VT_POST_VEL_Y: flatbuffers::VOffsetT = 118;
-  pub const VT_POST_VEL_Z: flatbuffers::VOffsetT = 120;
-  pub const VT_POST_RADIATION_PRESS_COEFF: flatbuffers::VOffsetT = 122;
-  pub const VT_POST_BALLISTIC_COEFF: flatbuffers::VOffsetT = 124;
-  pub const VT_POST_APOGEE: flatbuffers::VOffsetT = 126;
-  pub const VT_POST_PERIGEE: flatbuffers::VOffsetT = 128;
-  pub const VT_POST_INCLINATION: flatbuffers::VOffsetT = 130;
-  pub const VT_POST_ECCENTRICITY: flatbuffers::VOffsetT = 132;
-  pub const VT_POST_PERIOD: flatbuffers::VOffsetT = 134;
-  pub const VT_POST_RAAN: flatbuffers::VOffsetT = 136;
-  pub const VT_POST_SMA: flatbuffers::VOffsetT = 138;
-  pub const VT_POST_GEO_LONGITUDE: flatbuffers::VOffsetT = 140;
-  pub const VT_POST_DRIFT_RATE: flatbuffers::VOffsetT = 142;
-  pub const VT_POST_SIGMA_U: flatbuffers::VOffsetT = 144;
-  pub const VT_POST_SIGMA_V: flatbuffers::VOffsetT = 146;
-  pub const VT_POST_SIGMA_W: flatbuffers::VOffsetT = 148;
-  pub const VT_COV: flatbuffers::VOffsetT = 150;
-  pub const VT_POST_MASS: flatbuffers::VOffsetT = 152;
-  pub const VT_POST_AREA: flatbuffers::VOffsetT = 154;
-  pub const VT_NUM_OBS: flatbuffers::VOffsetT = 156;
-  pub const VT_DESCRIPTION: flatbuffers::VOffsetT = 158;
-  pub const VT_DESCRIPTOR: flatbuffers::VOffsetT = 160;
-  pub const VT_STATE_MODEL: flatbuffers::VOffsetT = 162;
-  pub const VT_STATE_MODEL_VERSION: flatbuffers::VOffsetT = 164;
-  pub const VT_NUM_ACCEL_POINTS: flatbuffers::VOffsetT = 166;
-  pub const VT_MNVR_ACCEL_TIMES: flatbuffers::VOffsetT = 168;
-  pub const VT_MNVR_ACCELS: flatbuffers::VOffsetT = 170;
-  pub const VT_MNVR_ACCEL_UNCS: flatbuffers::VOffsetT = 172;
-  pub const VT_TAGS: flatbuffers::VOffsetT = 174;
-  pub const VT_ALGORITHM: flatbuffers::VOffsetT = 176;
-  pub const VT_SOURCED_DATA: flatbuffers::VOffsetT = 178;
-  pub const VT_SOURCED_DATA_TYPES: flatbuffers::VOffsetT = 180;
-  pub const VT_ON_ORBIT: flatbuffers::VOffsetT = 182;
-  pub const VT_TRANSACTION_ID: flatbuffers::VOffsetT = 184;
+  pub const VT_ORIG_OBJECT_ID: flatbuffers::VOffsetT = 8;
+  pub const VT_ON_ORBIT: flatbuffers::VOffsetT = 10;
+  pub const VT_STATUS: flatbuffers::VOffsetT = 12;
+  pub const VT_CHARACTERIZATION: flatbuffers::VOffsetT = 14;
+  pub const VT_CHARACTERIZATION_UNC: flatbuffers::VOffsetT = 16;
+  pub const VT_REPORT_TIME: flatbuffers::VOffsetT = 18;
+  pub const VT_EVENT_START_TIME: flatbuffers::VOffsetT = 20;
+  pub const VT_EVENT_END_TIME: flatbuffers::VOffsetT = 22;
+  pub const VT_TOTAL_BURN_TIME: flatbuffers::VOffsetT = 24;
+  pub const VT_OD_FIT_END_TIME: flatbuffers::VOffsetT = 26;
+  pub const VT_ID_SENSOR: flatbuffers::VOffsetT = 28;
+  pub const VT_ORIG_SENSOR_ID: flatbuffers::VOffsetT = 30;
+  pub const VT_EVENT_ID: flatbuffers::VOffsetT = 32;
+  pub const VT_UCT: flatbuffers::VOffsetT = 34;
+  pub const VT_MANEUVER_UNC: flatbuffers::VOffsetT = 36;
+  pub const VT_DELTA_VEL: flatbuffers::VOffsetT = 38;
+  pub const VT_DELTA_VEL_U: flatbuffers::VOffsetT = 40;
+  pub const VT_DELTA_VEL_V: flatbuffers::VOffsetT = 42;
+  pub const VT_DELTA_VEL_W: flatbuffers::VOffsetT = 44;
+  pub const VT_DELTA_POS: flatbuffers::VOffsetT = 46;
+  pub const VT_DELTA_POS_U: flatbuffers::VOffsetT = 48;
+  pub const VT_DELTA_POS_V: flatbuffers::VOffsetT = 50;
+  pub const VT_DELTA_POS_W: flatbuffers::VOffsetT = 52;
+  pub const VT_DELTA_MASS: flatbuffers::VOffsetT = 54;
+  pub const VT_PRE_EVENT: flatbuffers::VOffsetT = 56;
+  pub const VT_POST_EVENT: flatbuffers::VOffsetT = 58;
+  pub const VT_POST_MASS: flatbuffers::VOffsetT = 60;
+  pub const VT_POST_AREA: flatbuffers::VOffsetT = 62;
+  pub const VT_COV: flatbuffers::VOffsetT = 64;
+  pub const VT_NUM_OBS: flatbuffers::VOffsetT = 66;
+  pub const VT_STATE_MODEL: flatbuffers::VOffsetT = 68;
+  pub const VT_STATE_MODEL_VERSION: flatbuffers::VOffsetT = 70;
+  pub const VT_NUM_ACCEL_POINTS: flatbuffers::VOffsetT = 72;
+  pub const VT_MNVR_ACCEL_TIMES: flatbuffers::VOffsetT = 74;
+  pub const VT_MNVR_ACCELS: flatbuffers::VOffsetT = 76;
+  pub const VT_MNVR_ACCEL_UNCS: flatbuffers::VOffsetT = 78;
+  pub const VT_DESCRIPTION: flatbuffers::VOffsetT = 80;
+  pub const VT_DESCRIPTOR: flatbuffers::VOffsetT = 82;
+  pub const VT_ALGORITHM: flatbuffers::VOffsetT = 84;
+  pub const VT_TAGS: flatbuffers::VOffsetT = 86;
+  pub const VT_SOURCED_DATA: flatbuffers::VOffsetT = 88;
+  pub const VT_SOURCED_DATA_TYPES: flatbuffers::VOffsetT = 90;
+  pub const VT_TRANSACTION_ID: flatbuffers::VOffsetT = 92;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -131,94 +1003,48 @@ impl<'a> MNV<'a> {
     builder.add_STATE_MODEL_VERSION(args.STATE_MODEL_VERSION);
     builder.add_POST_AREA(args.POST_AREA);
     builder.add_POST_MASS(args.POST_MASS);
-    builder.add_POST_SIGMA_W(args.POST_SIGMA_W);
-    builder.add_POST_SIGMA_V(args.POST_SIGMA_V);
-    builder.add_POST_SIGMA_U(args.POST_SIGMA_U);
-    builder.add_POST_DRIFT_RATE(args.POST_DRIFT_RATE);
-    builder.add_POST_GEO_LONGITUDE(args.POST_GEO_LONGITUDE);
-    builder.add_POST_SMA(args.POST_SMA);
-    builder.add_POST_RAAN(args.POST_RAAN);
-    builder.add_POST_PERIOD(args.POST_PERIOD);
-    builder.add_POST_ECCENTRICITY(args.POST_ECCENTRICITY);
-    builder.add_POST_INCLINATION(args.POST_INCLINATION);
-    builder.add_POST_PERIGEE(args.POST_PERIGEE);
-    builder.add_POST_APOGEE(args.POST_APOGEE);
-    builder.add_POST_BALLISTIC_COEFF(args.POST_BALLISTIC_COEFF);
-    builder.add_POST_RADIATION_PRESS_COEFF(args.POST_RADIATION_PRESS_COEFF);
-    builder.add_POST_VEL_Z(args.POST_VEL_Z);
-    builder.add_POST_VEL_Y(args.POST_VEL_Y);
-    builder.add_POST_VEL_X(args.POST_VEL_X);
-    builder.add_POST_POS_Z(args.POST_POS_Z);
-    builder.add_POST_POS_Y(args.POST_POS_Y);
-    builder.add_POST_POS_X(args.POST_POS_X);
-    builder.add_PRE_SIGMA_W(args.PRE_SIGMA_W);
-    builder.add_PRE_SIGMA_V(args.PRE_SIGMA_V);
-    builder.add_PRE_SIGMA_U(args.PRE_SIGMA_U);
-    builder.add_PRE_DRIFT_RATE(args.PRE_DRIFT_RATE);
-    builder.add_PRE_GEO_LONGITUDE(args.PRE_GEO_LONGITUDE);
-    builder.add_PRE_SMA(args.PRE_SMA);
-    builder.add_PRE_RAAN(args.PRE_RAAN);
-    builder.add_PRE_PERIOD(args.PRE_PERIOD);
-    builder.add_PRE_ECCENTRICITY(args.PRE_ECCENTRICITY);
-    builder.add_PRE_INCLINATION(args.PRE_INCLINATION);
-    builder.add_PRE_PERIGEE(args.PRE_PERIGEE);
-    builder.add_PRE_APOGEE(args.PRE_APOGEE);
-    builder.add_PRE_BALLISTIC_COEFF(args.PRE_BALLISTIC_COEFF);
-    builder.add_PRE_RADIATION_PRESS_COEFF(args.PRE_RADIATION_PRESS_COEFF);
-    builder.add_PRE_VEL_Z(args.PRE_VEL_Z);
-    builder.add_PRE_VEL_Y(args.PRE_VEL_Y);
-    builder.add_PRE_VEL_X(args.PRE_VEL_X);
-    builder.add_PRE_POS_Z(args.PRE_POS_Z);
-    builder.add_PRE_POS_Y(args.PRE_POS_Y);
-    builder.add_PRE_POS_X(args.PRE_POS_X);
     builder.add_DELTA_MASS(args.DELTA_MASS);
-    builder.add_DELTA_VEL_W(args.DELTA_VEL_W);
-    builder.add_DELTA_VEL_V(args.DELTA_VEL_V);
-    builder.add_DELTA_VEL_U(args.DELTA_VEL_U);
-    builder.add_DELTA_VEL(args.DELTA_VEL);
     builder.add_DELTA_POS_W(args.DELTA_POS_W);
     builder.add_DELTA_POS_V(args.DELTA_POS_V);
     builder.add_DELTA_POS_U(args.DELTA_POS_U);
     builder.add_DELTA_POS(args.DELTA_POS);
-    builder.add_CHARACTERIZATION_UNC(args.CHARACTERIZATION_UNC);
+    builder.add_DELTA_VEL_W(args.DELTA_VEL_W);
+    builder.add_DELTA_VEL_V(args.DELTA_VEL_V);
+    builder.add_DELTA_VEL_U(args.DELTA_VEL_U);
+    builder.add_DELTA_VEL(args.DELTA_VEL);
     builder.add_MANEUVER_UNC(args.MANEUVER_UNC);
     builder.add_TOTAL_BURN_TIME(args.TOTAL_BURN_TIME);
+    builder.add_CHARACTERIZATION_UNC(args.CHARACTERIZATION_UNC);
     if let Some(x) = args.TRANSACTION_ID { builder.add_TRANSACTION_ID(x); }
-    if let Some(x) = args.ON_ORBIT { builder.add_ON_ORBIT(x); }
     if let Some(x) = args.SOURCED_DATA_TYPES { builder.add_SOURCED_DATA_TYPES(x); }
     if let Some(x) = args.SOURCED_DATA { builder.add_SOURCED_DATA(x); }
-    if let Some(x) = args.ALGORITHM { builder.add_ALGORITHM(x); }
     if let Some(x) = args.TAGS { builder.add_TAGS(x); }
+    if let Some(x) = args.ALGORITHM { builder.add_ALGORITHM(x); }
+    if let Some(x) = args.DESCRIPTOR { builder.add_DESCRIPTOR(x); }
+    if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
     if let Some(x) = args.MNVR_ACCEL_UNCS { builder.add_MNVR_ACCEL_UNCS(x); }
     if let Some(x) = args.MNVR_ACCELS { builder.add_MNVR_ACCELS(x); }
     if let Some(x) = args.MNVR_ACCEL_TIMES { builder.add_MNVR_ACCEL_TIMES(x); }
-    builder.add_NUM_ACCEL_POINTS(args.NUM_ACCEL_POINTS);
     if let Some(x) = args.STATE_MODEL { builder.add_STATE_MODEL(x); }
-    if let Some(x) = args.DESCRIPTOR { builder.add_DESCRIPTOR(x); }
-    if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
     builder.add_NUM_OBS(args.NUM_OBS);
     if let Some(x) = args.COV { builder.add_COV(x); }
-    if let Some(x) = args.POST_EVENT_STATE_VECTOR { builder.add_POST_EVENT_STATE_VECTOR(x); }
-    if let Some(x) = args.POST_EVENT_ID_STATE_VECTOR { builder.add_POST_EVENT_ID_STATE_VECTOR(x); }
-    if let Some(x) = args.POST_EVENT_ELSET { builder.add_POST_EVENT_ELSET(x); }
-    if let Some(x) = args.POST_EVENT_ID_ELSET { builder.add_POST_EVENT_ID_ELSET(x); }
-    if let Some(x) = args.PRE_EVENT_STATE_VECTOR { builder.add_PRE_EVENT_STATE_VECTOR(x); }
-    if let Some(x) = args.PRE_EVENT_ID_STATE_VECTOR { builder.add_PRE_EVENT_ID_STATE_VECTOR(x); }
-    if let Some(x) = args.PRE_EVENT_ELSET { builder.add_PRE_EVENT_ELSET(x); }
-    if let Some(x) = args.PRE_EVENT_ID_ELSET { builder.add_PRE_EVENT_ID_ELSET(x); }
-    if let Some(x) = args.STATUS { builder.add_STATUS(x); }
-    if let Some(x) = args.ORIG_SENSOR_ID { builder.add_ORIG_SENSOR_ID(x); }
-    if let Some(x) = args.ORIG_OBJECT_ID { builder.add_ORIG_OBJECT_ID(x); }
+    if let Some(x) = args.POST_EVENT { builder.add_POST_EVENT(x); }
+    if let Some(x) = args.PRE_EVENT { builder.add_PRE_EVENT(x); }
     if let Some(x) = args.EVENT_ID { builder.add_EVENT_ID(x); }
-    if let Some(x) = args.CHARACTERIZATION { builder.add_CHARACTERIZATION(x); }
+    if let Some(x) = args.ORIG_SENSOR_ID { builder.add_ORIG_SENSOR_ID(x); }
     if let Some(x) = args.ID_SENSOR { builder.add_ID_SENSOR(x); }
     if let Some(x) = args.OD_FIT_END_TIME { builder.add_OD_FIT_END_TIME(x); }
     if let Some(x) = args.EVENT_END_TIME { builder.add_EVENT_END_TIME(x); }
     if let Some(x) = args.EVENT_START_TIME { builder.add_EVENT_START_TIME(x); }
     if let Some(x) = args.REPORT_TIME { builder.add_REPORT_TIME(x); }
+    if let Some(x) = args.ON_ORBIT { builder.add_ON_ORBIT(x); }
+    if let Some(x) = args.ORIG_OBJECT_ID { builder.add_ORIG_OBJECT_ID(x); }
     builder.add_SAT_NO(args.SAT_NO);
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_NUM_ACCEL_POINTS(args.NUM_ACCEL_POINTS);
     builder.add_UCT(args.UCT);
+    builder.add_CHARACTERIZATION(args.CHARACTERIZATION);
+    builder.add_STATUS(args.STATUS);
     builder.finish()
   }
 
@@ -227,6 +1053,15 @@ impl<'a> MNV<'a> {
       x.to_string()
     });
     let SAT_NO = self.SAT_NO();
+    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID().map(|x| {
+      x.to_string()
+    });
+    let ON_ORBIT = self.ON_ORBIT().map(|x| {
+      x.to_string()
+    });
+    let STATUS = self.STATUS();
+    let CHARACTERIZATION = self.CHARACTERIZATION();
+    let CHARACTERIZATION_UNC = self.CHARACTERIZATION_UNC();
     let REPORT_TIME = self.REPORT_TIME().map(|x| {
       x.to_string()
     });
@@ -243,109 +1078,35 @@ impl<'a> MNV<'a> {
     let ID_SENSOR = self.ID_SENSOR().map(|x| {
       x.to_string()
     });
-    let UCT = self.UCT();
-    let MANEUVER_UNC = self.MANEUVER_UNC();
-    let CHARACTERIZATION = self.CHARACTERIZATION().map(|x| {
-      x.to_string()
-    });
-    let CHARACTERIZATION_UNC = self.CHARACTERIZATION_UNC();
-    let EVENT_ID = self.EVENT_ID().map(|x| {
-      x.to_string()
-    });
-    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID().map(|x| {
-      x.to_string()
-    });
     let ORIG_SENSOR_ID = self.ORIG_SENSOR_ID().map(|x| {
       x.to_string()
     });
-    let STATUS = self.STATUS().map(|x| {
+    let EVENT_ID = self.EVENT_ID().map(|x| {
       x.to_string()
     });
-    let DELTA_POS = self.DELTA_POS();
-    let DELTA_POS_U = self.DELTA_POS_U();
-    let DELTA_POS_V = self.DELTA_POS_V();
-    let DELTA_POS_W = self.DELTA_POS_W();
+    let UCT = self.UCT();
+    let MANEUVER_UNC = self.MANEUVER_UNC();
     let DELTA_VEL = self.DELTA_VEL();
     let DELTA_VEL_U = self.DELTA_VEL_U();
     let DELTA_VEL_V = self.DELTA_VEL_V();
     let DELTA_VEL_W = self.DELTA_VEL_W();
+    let DELTA_POS = self.DELTA_POS();
+    let DELTA_POS_U = self.DELTA_POS_U();
+    let DELTA_POS_V = self.DELTA_POS_V();
+    let DELTA_POS_W = self.DELTA_POS_W();
     let DELTA_MASS = self.DELTA_MASS();
-    let PRE_EVENT_ID_ELSET = self.PRE_EVENT_ID_ELSET().map(|x| {
-      x.to_string()
+    let PRE_EVENT = self.PRE_EVENT().map(|x| {
+      Box::new(x.unpack())
     });
-    let PRE_EVENT_ELSET = self.PRE_EVENT_ELSET().map(|x| {
-      x.to_string()
-    });
-    let PRE_EVENT_ID_STATE_VECTOR = self.PRE_EVENT_ID_STATE_VECTOR().map(|x| {
-      x.to_string()
-    });
-    let PRE_EVENT_STATE_VECTOR = self.PRE_EVENT_STATE_VECTOR().map(|x| {
-      x.to_string()
-    });
-    let PRE_POS_X = self.PRE_POS_X();
-    let PRE_POS_Y = self.PRE_POS_Y();
-    let PRE_POS_Z = self.PRE_POS_Z();
-    let PRE_VEL_X = self.PRE_VEL_X();
-    let PRE_VEL_Y = self.PRE_VEL_Y();
-    let PRE_VEL_Z = self.PRE_VEL_Z();
-    let PRE_RADIATION_PRESS_COEFF = self.PRE_RADIATION_PRESS_COEFF();
-    let PRE_BALLISTIC_COEFF = self.PRE_BALLISTIC_COEFF();
-    let PRE_APOGEE = self.PRE_APOGEE();
-    let PRE_PERIGEE = self.PRE_PERIGEE();
-    let PRE_INCLINATION = self.PRE_INCLINATION();
-    let PRE_ECCENTRICITY = self.PRE_ECCENTRICITY();
-    let PRE_PERIOD = self.PRE_PERIOD();
-    let PRE_RAAN = self.PRE_RAAN();
-    let PRE_SMA = self.PRE_SMA();
-    let PRE_GEO_LONGITUDE = self.PRE_GEO_LONGITUDE();
-    let PRE_DRIFT_RATE = self.PRE_DRIFT_RATE();
-    let PRE_SIGMA_U = self.PRE_SIGMA_U();
-    let PRE_SIGMA_V = self.PRE_SIGMA_V();
-    let PRE_SIGMA_W = self.PRE_SIGMA_W();
-    let POST_EVENT_ID_ELSET = self.POST_EVENT_ID_ELSET().map(|x| {
-      x.to_string()
-    });
-    let POST_EVENT_ELSET = self.POST_EVENT_ELSET().map(|x| {
-      x.to_string()
-    });
-    let POST_EVENT_ID_STATE_VECTOR = self.POST_EVENT_ID_STATE_VECTOR().map(|x| {
-      x.to_string()
-    });
-    let POST_EVENT_STATE_VECTOR = self.POST_EVENT_STATE_VECTOR().map(|x| {
-      x.to_string()
-    });
-    let POST_POS_X = self.POST_POS_X();
-    let POST_POS_Y = self.POST_POS_Y();
-    let POST_POS_Z = self.POST_POS_Z();
-    let POST_VEL_X = self.POST_VEL_X();
-    let POST_VEL_Y = self.POST_VEL_Y();
-    let POST_VEL_Z = self.POST_VEL_Z();
-    let POST_RADIATION_PRESS_COEFF = self.POST_RADIATION_PRESS_COEFF();
-    let POST_BALLISTIC_COEFF = self.POST_BALLISTIC_COEFF();
-    let POST_APOGEE = self.POST_APOGEE();
-    let POST_PERIGEE = self.POST_PERIGEE();
-    let POST_INCLINATION = self.POST_INCLINATION();
-    let POST_ECCENTRICITY = self.POST_ECCENTRICITY();
-    let POST_PERIOD = self.POST_PERIOD();
-    let POST_RAAN = self.POST_RAAN();
-    let POST_SMA = self.POST_SMA();
-    let POST_GEO_LONGITUDE = self.POST_GEO_LONGITUDE();
-    let POST_DRIFT_RATE = self.POST_DRIFT_RATE();
-    let POST_SIGMA_U = self.POST_SIGMA_U();
-    let POST_SIGMA_V = self.POST_SIGMA_V();
-    let POST_SIGMA_W = self.POST_SIGMA_W();
-    let COV = self.COV().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
+    let POST_EVENT = self.POST_EVENT().map(|x| {
+      Box::new(x.unpack())
     });
     let POST_MASS = self.POST_MASS();
     let POST_AREA = self.POST_AREA();
+    let COV = self.COV().map(|x| {
+      x.into_iter().collect()
+    });
     let NUM_OBS = self.NUM_OBS();
-    let DESCRIPTION = self.DESCRIPTION().map(|x| {
-      x.to_string()
-    });
-    let DESCRIPTOR = self.DESCRIPTOR().map(|x| {
-      x.to_string()
-    });
     let STATE_MODEL = self.STATE_MODEL().map(|x| {
       x.to_string()
     });
@@ -355,24 +1116,27 @@ impl<'a> MNV<'a> {
       x.iter().map(|s| s.to_string()).collect()
     });
     let MNVR_ACCELS = self.MNVR_ACCELS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
+      x.into_iter().collect()
     });
     let MNVR_ACCEL_UNCS = self.MNVR_ACCEL_UNCS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
+      x.into_iter().collect()
     });
-    let TAGS = self.TAGS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
+    let DESCRIPTION = self.DESCRIPTION().map(|x| {
+      x.to_string()
+    });
+    let DESCRIPTOR = self.DESCRIPTOR().map(|x| {
+      x.to_string()
     });
     let ALGORITHM = self.ALGORITHM().map(|x| {
       x.to_string()
+    });
+    let TAGS = self.TAGS().map(|x| {
+      x.iter().map(|s| s.to_string()).collect()
     });
     let SOURCED_DATA = self.SOURCED_DATA().map(|x| {
       x.iter().map(|s| s.to_string()).collect()
     });
     let SOURCED_DATA_TYPES = self.SOURCED_DATA_TYPES().map(|x| {
-      x.to_string()
-    });
-    let ON_ORBIT = self.ON_ORBIT().map(|x| {
       x.to_string()
     });
     let TRANSACTION_ID = self.TRANSACTION_ID().map(|x| {
@@ -381,98 +1145,53 @@ impl<'a> MNV<'a> {
     MNVT {
       ID,
       SAT_NO,
+      ORIG_OBJECT_ID,
+      ON_ORBIT,
+      STATUS,
+      CHARACTERIZATION,
+      CHARACTERIZATION_UNC,
       REPORT_TIME,
       EVENT_START_TIME,
       EVENT_END_TIME,
       TOTAL_BURN_TIME,
       OD_FIT_END_TIME,
       ID_SENSOR,
+      ORIG_SENSOR_ID,
+      EVENT_ID,
       UCT,
       MANEUVER_UNC,
-      CHARACTERIZATION,
-      CHARACTERIZATION_UNC,
-      EVENT_ID,
-      ORIG_OBJECT_ID,
-      ORIG_SENSOR_ID,
-      STATUS,
-      DELTA_POS,
-      DELTA_POS_U,
-      DELTA_POS_V,
-      DELTA_POS_W,
       DELTA_VEL,
       DELTA_VEL_U,
       DELTA_VEL_V,
       DELTA_VEL_W,
+      DELTA_POS,
+      DELTA_POS_U,
+      DELTA_POS_V,
+      DELTA_POS_W,
       DELTA_MASS,
-      PRE_EVENT_ID_ELSET,
-      PRE_EVENT_ELSET,
-      PRE_EVENT_ID_STATE_VECTOR,
-      PRE_EVENT_STATE_VECTOR,
-      PRE_POS_X,
-      PRE_POS_Y,
-      PRE_POS_Z,
-      PRE_VEL_X,
-      PRE_VEL_Y,
-      PRE_VEL_Z,
-      PRE_RADIATION_PRESS_COEFF,
-      PRE_BALLISTIC_COEFF,
-      PRE_APOGEE,
-      PRE_PERIGEE,
-      PRE_INCLINATION,
-      PRE_ECCENTRICITY,
-      PRE_PERIOD,
-      PRE_RAAN,
-      PRE_SMA,
-      PRE_GEO_LONGITUDE,
-      PRE_DRIFT_RATE,
-      PRE_SIGMA_U,
-      PRE_SIGMA_V,
-      PRE_SIGMA_W,
-      POST_EVENT_ID_ELSET,
-      POST_EVENT_ELSET,
-      POST_EVENT_ID_STATE_VECTOR,
-      POST_EVENT_STATE_VECTOR,
-      POST_POS_X,
-      POST_POS_Y,
-      POST_POS_Z,
-      POST_VEL_X,
-      POST_VEL_Y,
-      POST_VEL_Z,
-      POST_RADIATION_PRESS_COEFF,
-      POST_BALLISTIC_COEFF,
-      POST_APOGEE,
-      POST_PERIGEE,
-      POST_INCLINATION,
-      POST_ECCENTRICITY,
-      POST_PERIOD,
-      POST_RAAN,
-      POST_SMA,
-      POST_GEO_LONGITUDE,
-      POST_DRIFT_RATE,
-      POST_SIGMA_U,
-      POST_SIGMA_V,
-      POST_SIGMA_W,
-      COV,
+      PRE_EVENT,
+      POST_EVENT,
       POST_MASS,
       POST_AREA,
+      COV,
       NUM_OBS,
-      DESCRIPTION,
-      DESCRIPTOR,
       STATE_MODEL,
       STATE_MODEL_VERSION,
       NUM_ACCEL_POINTS,
       MNVR_ACCEL_TIMES,
       MNVR_ACCELS,
       MNVR_ACCEL_UNCS,
-      TAGS,
+      DESCRIPTION,
+      DESCRIPTOR,
       ALGORITHM,
+      TAGS,
       SOURCED_DATA,
       SOURCED_DATA_TYPES,
-      ON_ORBIT,
       TRANSACTION_ID,
     }
   }
 
+  /// Unique identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -480,90 +1199,15 @@ impl<'a> MNV<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_ID, None)}
   }
+  /// Satellite catalog number
   #[inline]
-  pub fn SAT_NO(&self) -> i32 {
+  pub fn SAT_NO(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(MNV::VT_SAT_NO, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u32>(MNV::VT_SAT_NO, Some(0)).unwrap()}
   }
-  #[inline]
-  pub fn REPORT_TIME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_REPORT_TIME, None)}
-  }
-  #[inline]
-  pub fn EVENT_START_TIME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_EVENT_START_TIME, None)}
-  }
-  #[inline]
-  pub fn EVENT_END_TIME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_EVENT_END_TIME, None)}
-  }
-  #[inline]
-  pub fn TOTAL_BURN_TIME(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_TOTAL_BURN_TIME, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn OD_FIT_END_TIME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_OD_FIT_END_TIME, None)}
-  }
-  #[inline]
-  pub fn ID_SENSOR(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_ID_SENSOR, None)}
-  }
-  #[inline]
-  pub fn UCT(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(MNV::VT_UCT, Some(false)).unwrap()}
-  }
-  #[inline]
-  pub fn MANEUVER_UNC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_MANEUVER_UNC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn CHARACTERIZATION(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_CHARACTERIZATION, None)}
-  }
-  #[inline]
-  pub fn CHARACTERIZATION_UNC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_CHARACTERIZATION_UNC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn EVENT_ID(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_EVENT_ID, None)}
-  }
+  /// International designator
   #[inline]
   pub fn ORIG_OBJECT_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -571,531 +1215,7 @@ impl<'a> MNV<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_ORIG_OBJECT_ID, None)}
   }
-  #[inline]
-  pub fn ORIG_SENSOR_ID(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_ORIG_SENSOR_ID, None)}
-  }
-  #[inline]
-  pub fn STATUS(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_STATUS, None)}
-  }
-  #[inline]
-  pub fn DELTA_POS(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_DELTA_POS, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn DELTA_POS_U(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_DELTA_POS_U, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn DELTA_POS_V(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_DELTA_POS_V, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn DELTA_POS_W(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_DELTA_POS_W, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn DELTA_VEL(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_DELTA_VEL, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn DELTA_VEL_U(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_DELTA_VEL_U, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn DELTA_VEL_V(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_DELTA_VEL_V, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn DELTA_VEL_W(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_DELTA_VEL_W, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn DELTA_MASS(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_DELTA_MASS, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PRE_EVENT_ID_ELSET(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_PRE_EVENT_ID_ELSET, None)}
-  }
-  #[inline]
-  pub fn PRE_EVENT_ELSET(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_PRE_EVENT_ELSET, None)}
-  }
-  #[inline]
-  pub fn PRE_EVENT_ID_STATE_VECTOR(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_PRE_EVENT_ID_STATE_VECTOR, None)}
-  }
-  #[inline]
-  pub fn PRE_EVENT_STATE_VECTOR(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_PRE_EVENT_STATE_VECTOR, None)}
-  }
-  #[inline]
-  pub fn PRE_POS_X(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_PRE_POS_X, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PRE_POS_Y(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_PRE_POS_Y, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PRE_POS_Z(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_PRE_POS_Z, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PRE_VEL_X(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_PRE_VEL_X, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PRE_VEL_Y(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_PRE_VEL_Y, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PRE_VEL_Z(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_PRE_VEL_Z, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PRE_RADIATION_PRESS_COEFF(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_PRE_RADIATION_PRESS_COEFF, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PRE_BALLISTIC_COEFF(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_PRE_BALLISTIC_COEFF, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PRE_APOGEE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_PRE_APOGEE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PRE_PERIGEE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_PRE_PERIGEE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PRE_INCLINATION(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_PRE_INCLINATION, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PRE_ECCENTRICITY(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_PRE_ECCENTRICITY, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PRE_PERIOD(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_PRE_PERIOD, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PRE_RAAN(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_PRE_RAAN, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PRE_SMA(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_PRE_SMA, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PRE_GEO_LONGITUDE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_PRE_GEO_LONGITUDE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PRE_DRIFT_RATE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_PRE_DRIFT_RATE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PRE_SIGMA_U(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_PRE_SIGMA_U, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PRE_SIGMA_V(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_PRE_SIGMA_V, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PRE_SIGMA_W(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_PRE_SIGMA_W, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POST_EVENT_ID_ELSET(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_POST_EVENT_ID_ELSET, None)}
-  }
-  #[inline]
-  pub fn POST_EVENT_ELSET(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_POST_EVENT_ELSET, None)}
-  }
-  #[inline]
-  pub fn POST_EVENT_ID_STATE_VECTOR(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_POST_EVENT_ID_STATE_VECTOR, None)}
-  }
-  #[inline]
-  pub fn POST_EVENT_STATE_VECTOR(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_POST_EVENT_STATE_VECTOR, None)}
-  }
-  #[inline]
-  pub fn POST_POS_X(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_POST_POS_X, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POST_POS_Y(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_POST_POS_Y, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POST_POS_Z(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_POST_POS_Z, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POST_VEL_X(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_POST_VEL_X, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POST_VEL_Y(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_POST_VEL_Y, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POST_VEL_Z(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_POST_VEL_Z, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POST_RADIATION_PRESS_COEFF(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_POST_RADIATION_PRESS_COEFF, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POST_BALLISTIC_COEFF(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_POST_BALLISTIC_COEFF, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POST_APOGEE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_POST_APOGEE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POST_PERIGEE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_POST_PERIGEE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POST_INCLINATION(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_POST_INCLINATION, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POST_ECCENTRICITY(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_POST_ECCENTRICITY, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POST_PERIOD(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_POST_PERIOD, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POST_RAAN(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_POST_RAAN, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POST_SMA(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_POST_SMA, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POST_GEO_LONGITUDE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_POST_GEO_LONGITUDE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POST_DRIFT_RATE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_POST_DRIFT_RATE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POST_SIGMA_U(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_POST_SIGMA_U, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POST_SIGMA_V(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_POST_SIGMA_V, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POST_SIGMA_W(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_POST_SIGMA_W, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn COV(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(MNV::VT_COV, None)}
-  }
-  #[inline]
-  pub fn POST_MASS(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_POST_MASS, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POST_AREA(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_POST_AREA, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn NUM_OBS(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(MNV::VT_NUM_OBS, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn DESCRIPTION(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_DESCRIPTION, None)}
-  }
-  #[inline]
-  pub fn DESCRIPTOR(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_DESCRIPTOR, None)}
-  }
-  #[inline]
-  pub fn STATE_MODEL(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_STATE_MODEL, None)}
-  }
-  #[inline]
-  pub fn STATE_MODEL_VERSION(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(MNV::VT_STATE_MODEL_VERSION, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn NUM_ACCEL_POINTS(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(MNV::VT_NUM_ACCEL_POINTS, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn MNVR_ACCEL_TIMES(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(MNV::VT_MNVR_ACCEL_TIMES, None)}
-  }
-  #[inline]
-  pub fn MNVR_ACCELS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(MNV::VT_MNVR_ACCELS, None)}
-  }
-  #[inline]
-  pub fn MNVR_ACCEL_UNCS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(MNV::VT_MNVR_ACCEL_UNCS, None)}
-  }
-  #[inline]
-  pub fn TAGS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(MNV::VT_TAGS, None)}
-  }
-  #[inline]
-  pub fn ALGORITHM(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_ALGORITHM, None)}
-  }
-  #[inline]
-  pub fn SOURCED_DATA(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(MNV::VT_SOURCED_DATA, None)}
-  }
-  #[inline]
-  pub fn SOURCED_DATA_TYPES(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_SOURCED_DATA_TYPES, None)}
-  }
+  /// On-orbit reference
   #[inline]
   pub fn ON_ORBIT(&self) -> Option<&'a str> {
     // Safety:
@@ -1103,6 +1223,327 @@ impl<'a> MNV<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_ON_ORBIT, None)}
   }
+  /// Maneuver status
+  #[inline]
+  pub fn STATUS(&self) -> maneuverStatus {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<maneuverStatus>(MNV::VT_STATUS, Some(maneuverStatus::DETECTED)).unwrap()}
+  }
+  /// Maneuver characterization
+  #[inline]
+  pub fn CHARACTERIZATION(&self) -> maneuverCharacterization {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<maneuverCharacterization>(MNV::VT_CHARACTERIZATION, Some(maneuverCharacterization::IN_PLANE)).unwrap()}
+  }
+  /// Characterization uncertainty (0-1)
+  #[inline]
+  pub fn CHARACTERIZATION_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MNV::VT_CHARACTERIZATION_UNC, Some(0.0)).unwrap()}
+  }
+  /// Detection report time (ISO 8601)
+  #[inline]
+  pub fn REPORT_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_REPORT_TIME, None)}
+  }
+  /// Maneuver start time (ISO 8601)
+  #[inline]
+  pub fn EVENT_START_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_EVENT_START_TIME, None)}
+  }
+  /// Maneuver end time (ISO 8601)
+  #[inline]
+  pub fn EVENT_END_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_EVENT_END_TIME, None)}
+  }
+  /// Total burn time (seconds)
+  #[inline]
+  pub fn TOTAL_BURN_TIME(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MNV::VT_TOTAL_BURN_TIME, Some(0.0)).unwrap()}
+  }
+  /// OD fit end time (ISO 8601)
+  #[inline]
+  pub fn OD_FIT_END_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_OD_FIT_END_TIME, None)}
+  }
+  /// Detecting sensor identifier
+  #[inline]
+  pub fn ID_SENSOR(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_ID_SENSOR, None)}
+  }
+  /// Original sensor identifier
+  #[inline]
+  pub fn ORIG_SENSOR_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_ORIG_SENSOR_ID, None)}
+  }
+  /// Maneuver event identifier
+  #[inline]
+  pub fn EVENT_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_EVENT_ID, None)}
+  }
+  /// True if object is uncorrelated
+  #[inline]
+  pub fn UCT(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(MNV::VT_UCT, Some(false)).unwrap()}
+  }
+  /// Maneuver detection uncertainty (km)
+  #[inline]
+  pub fn MANEUVER_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MNV::VT_MANEUVER_UNC, Some(0.0)).unwrap()}
+  }
+  /// Total delta-V magnitude (km/s)
+  #[inline]
+  pub fn DELTA_VEL(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MNV::VT_DELTA_VEL, Some(0.0)).unwrap()}
+  }
+  /// Delta-V along-track/U component (km/s)
+  #[inline]
+  pub fn DELTA_VEL_U(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MNV::VT_DELTA_VEL_U, Some(0.0)).unwrap()}
+  }
+  /// Delta-V cross-track/V component (km/s)
+  #[inline]
+  pub fn DELTA_VEL_V(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MNV::VT_DELTA_VEL_V, Some(0.0)).unwrap()}
+  }
+  /// Delta-V radial/W component (km/s)
+  #[inline]
+  pub fn DELTA_VEL_W(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MNV::VT_DELTA_VEL_W, Some(0.0)).unwrap()}
+  }
+  /// Total delta position (km)
+  #[inline]
+  pub fn DELTA_POS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MNV::VT_DELTA_POS, Some(0.0)).unwrap()}
+  }
+  /// Delta position U component (km)
+  #[inline]
+  pub fn DELTA_POS_U(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MNV::VT_DELTA_POS_U, Some(0.0)).unwrap()}
+  }
+  /// Delta position V component (km)
+  #[inline]
+  pub fn DELTA_POS_V(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MNV::VT_DELTA_POS_V, Some(0.0)).unwrap()}
+  }
+  /// Delta position W component (km)
+  #[inline]
+  pub fn DELTA_POS_W(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MNV::VT_DELTA_POS_W, Some(0.0)).unwrap()}
+  }
+  /// Propellant mass consumed (kg)
+  #[inline]
+  pub fn DELTA_MASS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MNV::VT_DELTA_MASS, Some(0.0)).unwrap()}
+  }
+  /// Pre-maneuver orbital state
+  #[inline]
+  pub fn PRE_EVENT(&self) -> Option<mnvOrbitalState<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<mnvOrbitalState>>(MNV::VT_PRE_EVENT, None)}
+  }
+  /// Post-maneuver orbital state
+  #[inline]
+  pub fn POST_EVENT(&self) -> Option<mnvOrbitalState<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<mnvOrbitalState>>(MNV::VT_POST_EVENT, None)}
+  }
+  /// Post-maneuver mass (kg)
+  #[inline]
+  pub fn POST_MASS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MNV::VT_POST_MASS, Some(0.0)).unwrap()}
+  }
+  /// Post-maneuver cross-sectional area (m^2)
+  #[inline]
+  pub fn POST_AREA(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MNV::VT_POST_AREA, Some(0.0)).unwrap()}
+  }
+  /// 6x6 covariance matrix (upper triangle, row-major)
+  #[inline]
+  pub fn COV(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(MNV::VT_COV, None)}
+  }
+  /// Number of observations used
+  #[inline]
+  pub fn NUM_OBS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(MNV::VT_NUM_OBS, Some(0)).unwrap()}
+  }
+  /// State model used
+  #[inline]
+  pub fn STATE_MODEL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_STATE_MODEL, None)}
+  }
+  /// State model version
+  #[inline]
+  pub fn STATE_MODEL_VERSION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(MNV::VT_STATE_MODEL_VERSION, Some(0.0)).unwrap()}
+  }
+  /// Number of acceleration profile points
+  #[inline]
+  pub fn NUM_ACCEL_POINTS(&self) -> u16 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u16>(MNV::VT_NUM_ACCEL_POINTS, Some(0)).unwrap()}
+  }
+  /// Acceleration profile times (ISO 8601)
+  #[inline]
+  pub fn MNVR_ACCEL_TIMES(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(MNV::VT_MNVR_ACCEL_TIMES, None)}
+  }
+  /// Acceleration values (km/s^2, 3 components per point)
+  #[inline]
+  pub fn MNVR_ACCELS(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(MNV::VT_MNVR_ACCELS, None)}
+  }
+  /// Acceleration uncertainties (km/s^2)
+  #[inline]
+  pub fn MNVR_ACCEL_UNCS(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(MNV::VT_MNVR_ACCEL_UNCS, None)}
+  }
+  /// Description
+  #[inline]
+  pub fn DESCRIPTION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_DESCRIPTION, None)}
+  }
+  /// Event descriptor
+  #[inline]
+  pub fn DESCRIPTOR(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_DESCRIPTOR, None)}
+  }
+  /// Algorithm used for detection
+  #[inline]
+  pub fn ALGORITHM(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_ALGORITHM, None)}
+  }
+  /// Associated tags
+  #[inline]
+  pub fn TAGS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(MNV::VT_TAGS, None)}
+  }
+  /// Sourced data references
+  #[inline]
+  pub fn SOURCED_DATA(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(MNV::VT_SOURCED_DATA, None)}
+  }
+  /// Sourced data types
+  #[inline]
+  pub fn SOURCED_DATA_TYPES(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MNV::VT_SOURCED_DATA_TYPES, None)}
+  }
+  /// Transaction identifier
   #[inline]
   pub fn TRANSACTION_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -1120,95 +1561,49 @@ impl flatbuffers::Verifiable for MNV<'_> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
-     .visit_field::<i32>("SAT_NO", Self::VT_SAT_NO, false)?
+     .visit_field::<u32>("SAT_NO", Self::VT_SAT_NO, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_OBJECT_ID", Self::VT_ORIG_OBJECT_ID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ON_ORBIT", Self::VT_ON_ORBIT, false)?
+     .visit_field::<maneuverStatus>("STATUS", Self::VT_STATUS, false)?
+     .visit_field::<maneuverCharacterization>("CHARACTERIZATION", Self::VT_CHARACTERIZATION, false)?
+     .visit_field::<f64>("CHARACTERIZATION_UNC", Self::VT_CHARACTERIZATION_UNC, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REPORT_TIME", Self::VT_REPORT_TIME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EVENT_START_TIME", Self::VT_EVENT_START_TIME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EVENT_END_TIME", Self::VT_EVENT_END_TIME, false)?
      .visit_field::<f64>("TOTAL_BURN_TIME", Self::VT_TOTAL_BURN_TIME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OD_FIT_END_TIME", Self::VT_OD_FIT_END_TIME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID_SENSOR", Self::VT_ID_SENSOR, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_SENSOR_ID", Self::VT_ORIG_SENSOR_ID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EVENT_ID", Self::VT_EVENT_ID, false)?
      .visit_field::<bool>("UCT", Self::VT_UCT, false)?
      .visit_field::<f64>("MANEUVER_UNC", Self::VT_MANEUVER_UNC, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CHARACTERIZATION", Self::VT_CHARACTERIZATION, false)?
-     .visit_field::<f64>("CHARACTERIZATION_UNC", Self::VT_CHARACTERIZATION_UNC, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EVENT_ID", Self::VT_EVENT_ID, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_OBJECT_ID", Self::VT_ORIG_OBJECT_ID, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_SENSOR_ID", Self::VT_ORIG_SENSOR_ID, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("STATUS", Self::VT_STATUS, false)?
-     .visit_field::<f64>("DELTA_POS", Self::VT_DELTA_POS, false)?
-     .visit_field::<f64>("DELTA_POS_U", Self::VT_DELTA_POS_U, false)?
-     .visit_field::<f64>("DELTA_POS_V", Self::VT_DELTA_POS_V, false)?
-     .visit_field::<f64>("DELTA_POS_W", Self::VT_DELTA_POS_W, false)?
      .visit_field::<f64>("DELTA_VEL", Self::VT_DELTA_VEL, false)?
      .visit_field::<f64>("DELTA_VEL_U", Self::VT_DELTA_VEL_U, false)?
      .visit_field::<f64>("DELTA_VEL_V", Self::VT_DELTA_VEL_V, false)?
      .visit_field::<f64>("DELTA_VEL_W", Self::VT_DELTA_VEL_W, false)?
+     .visit_field::<f64>("DELTA_POS", Self::VT_DELTA_POS, false)?
+     .visit_field::<f64>("DELTA_POS_U", Self::VT_DELTA_POS_U, false)?
+     .visit_field::<f64>("DELTA_POS_V", Self::VT_DELTA_POS_V, false)?
+     .visit_field::<f64>("DELTA_POS_W", Self::VT_DELTA_POS_W, false)?
      .visit_field::<f64>("DELTA_MASS", Self::VT_DELTA_MASS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("PRE_EVENT_ID_ELSET", Self::VT_PRE_EVENT_ID_ELSET, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("PRE_EVENT_ELSET", Self::VT_PRE_EVENT_ELSET, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("PRE_EVENT_ID_STATE_VECTOR", Self::VT_PRE_EVENT_ID_STATE_VECTOR, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("PRE_EVENT_STATE_VECTOR", Self::VT_PRE_EVENT_STATE_VECTOR, false)?
-     .visit_field::<f64>("PRE_POS_X", Self::VT_PRE_POS_X, false)?
-     .visit_field::<f64>("PRE_POS_Y", Self::VT_PRE_POS_Y, false)?
-     .visit_field::<f64>("PRE_POS_Z", Self::VT_PRE_POS_Z, false)?
-     .visit_field::<f64>("PRE_VEL_X", Self::VT_PRE_VEL_X, false)?
-     .visit_field::<f64>("PRE_VEL_Y", Self::VT_PRE_VEL_Y, false)?
-     .visit_field::<f64>("PRE_VEL_Z", Self::VT_PRE_VEL_Z, false)?
-     .visit_field::<f64>("PRE_RADIATION_PRESS_COEFF", Self::VT_PRE_RADIATION_PRESS_COEFF, false)?
-     .visit_field::<f64>("PRE_BALLISTIC_COEFF", Self::VT_PRE_BALLISTIC_COEFF, false)?
-     .visit_field::<f64>("PRE_APOGEE", Self::VT_PRE_APOGEE, false)?
-     .visit_field::<f64>("PRE_PERIGEE", Self::VT_PRE_PERIGEE, false)?
-     .visit_field::<f64>("PRE_INCLINATION", Self::VT_PRE_INCLINATION, false)?
-     .visit_field::<f64>("PRE_ECCENTRICITY", Self::VT_PRE_ECCENTRICITY, false)?
-     .visit_field::<f64>("PRE_PERIOD", Self::VT_PRE_PERIOD, false)?
-     .visit_field::<f64>("PRE_RAAN", Self::VT_PRE_RAAN, false)?
-     .visit_field::<f64>("PRE_SMA", Self::VT_PRE_SMA, false)?
-     .visit_field::<f64>("PRE_GEO_LONGITUDE", Self::VT_PRE_GEO_LONGITUDE, false)?
-     .visit_field::<f64>("PRE_DRIFT_RATE", Self::VT_PRE_DRIFT_RATE, false)?
-     .visit_field::<f64>("PRE_SIGMA_U", Self::VT_PRE_SIGMA_U, false)?
-     .visit_field::<f64>("PRE_SIGMA_V", Self::VT_PRE_SIGMA_V, false)?
-     .visit_field::<f64>("PRE_SIGMA_W", Self::VT_PRE_SIGMA_W, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("POST_EVENT_ID_ELSET", Self::VT_POST_EVENT_ID_ELSET, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("POST_EVENT_ELSET", Self::VT_POST_EVENT_ELSET, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("POST_EVENT_ID_STATE_VECTOR", Self::VT_POST_EVENT_ID_STATE_VECTOR, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("POST_EVENT_STATE_VECTOR", Self::VT_POST_EVENT_STATE_VECTOR, false)?
-     .visit_field::<f64>("POST_POS_X", Self::VT_POST_POS_X, false)?
-     .visit_field::<f64>("POST_POS_Y", Self::VT_POST_POS_Y, false)?
-     .visit_field::<f64>("POST_POS_Z", Self::VT_POST_POS_Z, false)?
-     .visit_field::<f64>("POST_VEL_X", Self::VT_POST_VEL_X, false)?
-     .visit_field::<f64>("POST_VEL_Y", Self::VT_POST_VEL_Y, false)?
-     .visit_field::<f64>("POST_VEL_Z", Self::VT_POST_VEL_Z, false)?
-     .visit_field::<f64>("POST_RADIATION_PRESS_COEFF", Self::VT_POST_RADIATION_PRESS_COEFF, false)?
-     .visit_field::<f64>("POST_BALLISTIC_COEFF", Self::VT_POST_BALLISTIC_COEFF, false)?
-     .visit_field::<f64>("POST_APOGEE", Self::VT_POST_APOGEE, false)?
-     .visit_field::<f64>("POST_PERIGEE", Self::VT_POST_PERIGEE, false)?
-     .visit_field::<f64>("POST_INCLINATION", Self::VT_POST_INCLINATION, false)?
-     .visit_field::<f64>("POST_ECCENTRICITY", Self::VT_POST_ECCENTRICITY, false)?
-     .visit_field::<f64>("POST_PERIOD", Self::VT_POST_PERIOD, false)?
-     .visit_field::<f64>("POST_RAAN", Self::VT_POST_RAAN, false)?
-     .visit_field::<f64>("POST_SMA", Self::VT_POST_SMA, false)?
-     .visit_field::<f64>("POST_GEO_LONGITUDE", Self::VT_POST_GEO_LONGITUDE, false)?
-     .visit_field::<f64>("POST_DRIFT_RATE", Self::VT_POST_DRIFT_RATE, false)?
-     .visit_field::<f64>("POST_SIGMA_U", Self::VT_POST_SIGMA_U, false)?
-     .visit_field::<f64>("POST_SIGMA_V", Self::VT_POST_SIGMA_V, false)?
-     .visit_field::<f64>("POST_SIGMA_W", Self::VT_POST_SIGMA_W, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("COV", Self::VT_COV, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<mnvOrbitalState>>("PRE_EVENT", Self::VT_PRE_EVENT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<mnvOrbitalState>>("POST_EVENT", Self::VT_POST_EVENT, false)?
      .visit_field::<f64>("POST_MASS", Self::VT_POST_MASS, false)?
      .visit_field::<f64>("POST_AREA", Self::VT_POST_AREA, false)?
-     .visit_field::<i32>("NUM_OBS", Self::VT_NUM_OBS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DESCRIPTOR", Self::VT_DESCRIPTOR, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("COV", Self::VT_COV, false)?
+     .visit_field::<u32>("NUM_OBS", Self::VT_NUM_OBS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("STATE_MODEL", Self::VT_STATE_MODEL, false)?
      .visit_field::<f64>("STATE_MODEL_VERSION", Self::VT_STATE_MODEL_VERSION, false)?
-     .visit_field::<i32>("NUM_ACCEL_POINTS", Self::VT_NUM_ACCEL_POINTS, false)?
+     .visit_field::<u16>("NUM_ACCEL_POINTS", Self::VT_NUM_ACCEL_POINTS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("MNVR_ACCEL_TIMES", Self::VT_MNVR_ACCEL_TIMES, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("MNVR_ACCELS", Self::VT_MNVR_ACCELS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("MNVR_ACCEL_UNCS", Self::VT_MNVR_ACCEL_UNCS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("TAGS", Self::VT_TAGS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("MNVR_ACCELS", Self::VT_MNVR_ACCELS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("MNVR_ACCEL_UNCS", Self::VT_MNVR_ACCEL_UNCS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DESCRIPTOR", Self::VT_DESCRIPTOR, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ALGORITHM", Self::VT_ALGORITHM, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("TAGS", Self::VT_TAGS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("SOURCED_DATA", Self::VT_SOURCED_DATA, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SOURCED_DATA_TYPES", Self::VT_SOURCED_DATA_TYPES, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ON_ORBIT", Self::VT_ON_ORBIT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRANSACTION_ID", Self::VT_TRANSACTION_ID, false)?
      .finish();
     Ok(())
@@ -1216,95 +1611,49 @@ impl flatbuffers::Verifiable for MNV<'_> {
 }
 pub struct MNVArgs<'a> {
     pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SAT_NO: i32,
+    pub SAT_NO: u32,
+    pub ORIG_OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ON_ORBIT: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub STATUS: maneuverStatus,
+    pub CHARACTERIZATION: maneuverCharacterization,
+    pub CHARACTERIZATION_UNC: f64,
     pub REPORT_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub EVENT_START_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub EVENT_END_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TOTAL_BURN_TIME: f64,
     pub OD_FIT_END_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ID_SENSOR: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ORIG_SENSOR_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub EVENT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub UCT: bool,
     pub MANEUVER_UNC: f64,
-    pub CHARACTERIZATION: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub CHARACTERIZATION_UNC: f64,
-    pub EVENT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ORIG_OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ORIG_SENSOR_ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub STATUS: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub DELTA_POS: f64,
-    pub DELTA_POS_U: f64,
-    pub DELTA_POS_V: f64,
-    pub DELTA_POS_W: f64,
     pub DELTA_VEL: f64,
     pub DELTA_VEL_U: f64,
     pub DELTA_VEL_V: f64,
     pub DELTA_VEL_W: f64,
+    pub DELTA_POS: f64,
+    pub DELTA_POS_U: f64,
+    pub DELTA_POS_V: f64,
+    pub DELTA_POS_W: f64,
     pub DELTA_MASS: f64,
-    pub PRE_EVENT_ID_ELSET: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub PRE_EVENT_ELSET: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub PRE_EVENT_ID_STATE_VECTOR: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub PRE_EVENT_STATE_VECTOR: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub PRE_POS_X: f64,
-    pub PRE_POS_Y: f64,
-    pub PRE_POS_Z: f64,
-    pub PRE_VEL_X: f64,
-    pub PRE_VEL_Y: f64,
-    pub PRE_VEL_Z: f64,
-    pub PRE_RADIATION_PRESS_COEFF: f64,
-    pub PRE_BALLISTIC_COEFF: f64,
-    pub PRE_APOGEE: f64,
-    pub PRE_PERIGEE: f64,
-    pub PRE_INCLINATION: f64,
-    pub PRE_ECCENTRICITY: f64,
-    pub PRE_PERIOD: f64,
-    pub PRE_RAAN: f64,
-    pub PRE_SMA: f64,
-    pub PRE_GEO_LONGITUDE: f64,
-    pub PRE_DRIFT_RATE: f64,
-    pub PRE_SIGMA_U: f64,
-    pub PRE_SIGMA_V: f64,
-    pub PRE_SIGMA_W: f64,
-    pub POST_EVENT_ID_ELSET: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub POST_EVENT_ELSET: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub POST_EVENT_ID_STATE_VECTOR: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub POST_EVENT_STATE_VECTOR: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub POST_POS_X: f64,
-    pub POST_POS_Y: f64,
-    pub POST_POS_Z: f64,
-    pub POST_VEL_X: f64,
-    pub POST_VEL_Y: f64,
-    pub POST_VEL_Z: f64,
-    pub POST_RADIATION_PRESS_COEFF: f64,
-    pub POST_BALLISTIC_COEFF: f64,
-    pub POST_APOGEE: f64,
-    pub POST_PERIGEE: f64,
-    pub POST_INCLINATION: f64,
-    pub POST_ECCENTRICITY: f64,
-    pub POST_PERIOD: f64,
-    pub POST_RAAN: f64,
-    pub POST_SMA: f64,
-    pub POST_GEO_LONGITUDE: f64,
-    pub POST_DRIFT_RATE: f64,
-    pub POST_SIGMA_U: f64,
-    pub POST_SIGMA_V: f64,
-    pub POST_SIGMA_W: f64,
-    pub COV: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub PRE_EVENT: Option<flatbuffers::WIPOffset<mnvOrbitalState<'a>>>,
+    pub POST_EVENT: Option<flatbuffers::WIPOffset<mnvOrbitalState<'a>>>,
     pub POST_MASS: f64,
     pub POST_AREA: f64,
-    pub NUM_OBS: i32,
-    pub DESCRIPTION: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub DESCRIPTOR: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub COV: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub NUM_OBS: u32,
     pub STATE_MODEL: Option<flatbuffers::WIPOffset<&'a str>>,
     pub STATE_MODEL_VERSION: f64,
-    pub NUM_ACCEL_POINTS: i32,
+    pub NUM_ACCEL_POINTS: u16,
     pub MNVR_ACCEL_TIMES: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub MNVR_ACCELS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub MNVR_ACCEL_UNCS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub TAGS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub MNVR_ACCELS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub MNVR_ACCEL_UNCS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub DESCRIPTION: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub DESCRIPTOR: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ALGORITHM: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub TAGS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub SOURCED_DATA: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub SOURCED_DATA_TYPES: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ON_ORBIT: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TRANSACTION_ID: Option<flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for MNVArgs<'a> {
@@ -1313,94 +1662,48 @@ impl<'a> Default for MNVArgs<'a> {
     MNVArgs {
       ID: None,
       SAT_NO: 0,
+      ORIG_OBJECT_ID: None,
+      ON_ORBIT: None,
+      STATUS: maneuverStatus::DETECTED,
+      CHARACTERIZATION: maneuverCharacterization::IN_PLANE,
+      CHARACTERIZATION_UNC: 0.0,
       REPORT_TIME: None,
       EVENT_START_TIME: None,
       EVENT_END_TIME: None,
       TOTAL_BURN_TIME: 0.0,
       OD_FIT_END_TIME: None,
       ID_SENSOR: None,
+      ORIG_SENSOR_ID: None,
+      EVENT_ID: None,
       UCT: false,
       MANEUVER_UNC: 0.0,
-      CHARACTERIZATION: None,
-      CHARACTERIZATION_UNC: 0.0,
-      EVENT_ID: None,
-      ORIG_OBJECT_ID: None,
-      ORIG_SENSOR_ID: None,
-      STATUS: None,
-      DELTA_POS: 0.0,
-      DELTA_POS_U: 0.0,
-      DELTA_POS_V: 0.0,
-      DELTA_POS_W: 0.0,
       DELTA_VEL: 0.0,
       DELTA_VEL_U: 0.0,
       DELTA_VEL_V: 0.0,
       DELTA_VEL_W: 0.0,
+      DELTA_POS: 0.0,
+      DELTA_POS_U: 0.0,
+      DELTA_POS_V: 0.0,
+      DELTA_POS_W: 0.0,
       DELTA_MASS: 0.0,
-      PRE_EVENT_ID_ELSET: None,
-      PRE_EVENT_ELSET: None,
-      PRE_EVENT_ID_STATE_VECTOR: None,
-      PRE_EVENT_STATE_VECTOR: None,
-      PRE_POS_X: 0.0,
-      PRE_POS_Y: 0.0,
-      PRE_POS_Z: 0.0,
-      PRE_VEL_X: 0.0,
-      PRE_VEL_Y: 0.0,
-      PRE_VEL_Z: 0.0,
-      PRE_RADIATION_PRESS_COEFF: 0.0,
-      PRE_BALLISTIC_COEFF: 0.0,
-      PRE_APOGEE: 0.0,
-      PRE_PERIGEE: 0.0,
-      PRE_INCLINATION: 0.0,
-      PRE_ECCENTRICITY: 0.0,
-      PRE_PERIOD: 0.0,
-      PRE_RAAN: 0.0,
-      PRE_SMA: 0.0,
-      PRE_GEO_LONGITUDE: 0.0,
-      PRE_DRIFT_RATE: 0.0,
-      PRE_SIGMA_U: 0.0,
-      PRE_SIGMA_V: 0.0,
-      PRE_SIGMA_W: 0.0,
-      POST_EVENT_ID_ELSET: None,
-      POST_EVENT_ELSET: None,
-      POST_EVENT_ID_STATE_VECTOR: None,
-      POST_EVENT_STATE_VECTOR: None,
-      POST_POS_X: 0.0,
-      POST_POS_Y: 0.0,
-      POST_POS_Z: 0.0,
-      POST_VEL_X: 0.0,
-      POST_VEL_Y: 0.0,
-      POST_VEL_Z: 0.0,
-      POST_RADIATION_PRESS_COEFF: 0.0,
-      POST_BALLISTIC_COEFF: 0.0,
-      POST_APOGEE: 0.0,
-      POST_PERIGEE: 0.0,
-      POST_INCLINATION: 0.0,
-      POST_ECCENTRICITY: 0.0,
-      POST_PERIOD: 0.0,
-      POST_RAAN: 0.0,
-      POST_SMA: 0.0,
-      POST_GEO_LONGITUDE: 0.0,
-      POST_DRIFT_RATE: 0.0,
-      POST_SIGMA_U: 0.0,
-      POST_SIGMA_V: 0.0,
-      POST_SIGMA_W: 0.0,
-      COV: None,
+      PRE_EVENT: None,
+      POST_EVENT: None,
       POST_MASS: 0.0,
       POST_AREA: 0.0,
+      COV: None,
       NUM_OBS: 0,
-      DESCRIPTION: None,
-      DESCRIPTOR: None,
       STATE_MODEL: None,
       STATE_MODEL_VERSION: 0.0,
       NUM_ACCEL_POINTS: 0,
       MNVR_ACCEL_TIMES: None,
       MNVR_ACCELS: None,
       MNVR_ACCEL_UNCS: None,
-      TAGS: None,
+      DESCRIPTION: None,
+      DESCRIPTOR: None,
       ALGORITHM: None,
+      TAGS: None,
       SOURCED_DATA: None,
       SOURCED_DATA_TYPES: None,
-      ON_ORBIT: None,
       TRANSACTION_ID: None,
     }
   }
@@ -1416,8 +1719,28 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> MNVBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_ID, ID);
   }
   #[inline]
-  pub fn add_SAT_NO(&mut self, SAT_NO: i32) {
-    self.fbb_.push_slot::<i32>(MNV::VT_SAT_NO, SAT_NO, 0);
+  pub fn add_SAT_NO(&mut self, SAT_NO: u32) {
+    self.fbb_.push_slot::<u32>(MNV::VT_SAT_NO, SAT_NO, 0);
+  }
+  #[inline]
+  pub fn add_ORIG_OBJECT_ID(&mut self, ORIG_OBJECT_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
+  }
+  #[inline]
+  pub fn add_ON_ORBIT(&mut self, ON_ORBIT: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_ON_ORBIT, ON_ORBIT);
+  }
+  #[inline]
+  pub fn add_STATUS(&mut self, STATUS: maneuverStatus) {
+    self.fbb_.push_slot::<maneuverStatus>(MNV::VT_STATUS, STATUS, maneuverStatus::DETECTED);
+  }
+  #[inline]
+  pub fn add_CHARACTERIZATION(&mut self, CHARACTERIZATION: maneuverCharacterization) {
+    self.fbb_.push_slot::<maneuverCharacterization>(MNV::VT_CHARACTERIZATION, CHARACTERIZATION, maneuverCharacterization::IN_PLANE);
+  }
+  #[inline]
+  pub fn add_CHARACTERIZATION_UNC(&mut self, CHARACTERIZATION_UNC: f64) {
+    self.fbb_.push_slot::<f64>(MNV::VT_CHARACTERIZATION_UNC, CHARACTERIZATION_UNC, 0.0);
   }
   #[inline]
   pub fn add_REPORT_TIME(&mut self, REPORT_TIME: flatbuffers::WIPOffset<&'b  str>) {
@@ -1444,52 +1767,20 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> MNVBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_ID_SENSOR, ID_SENSOR);
   }
   #[inline]
-  pub fn add_UCT(&mut self, UCT: bool) {
-    self.fbb_.push_slot::<bool>(MNV::VT_UCT, UCT, false);
-  }
-  #[inline]
-  pub fn add_MANEUVER_UNC(&mut self, MANEUVER_UNC: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_MANEUVER_UNC, MANEUVER_UNC, 0.0);
-  }
-  #[inline]
-  pub fn add_CHARACTERIZATION(&mut self, CHARACTERIZATION: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_CHARACTERIZATION, CHARACTERIZATION);
-  }
-  #[inline]
-  pub fn add_CHARACTERIZATION_UNC(&mut self, CHARACTERIZATION_UNC: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_CHARACTERIZATION_UNC, CHARACTERIZATION_UNC, 0.0);
+  pub fn add_ORIG_SENSOR_ID(&mut self, ORIG_SENSOR_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_ORIG_SENSOR_ID, ORIG_SENSOR_ID);
   }
   #[inline]
   pub fn add_EVENT_ID(&mut self, EVENT_ID: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_EVENT_ID, EVENT_ID);
   }
   #[inline]
-  pub fn add_ORIG_OBJECT_ID(&mut self, ORIG_OBJECT_ID: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
+  pub fn add_UCT(&mut self, UCT: bool) {
+    self.fbb_.push_slot::<bool>(MNV::VT_UCT, UCT, false);
   }
   #[inline]
-  pub fn add_ORIG_SENSOR_ID(&mut self, ORIG_SENSOR_ID: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_ORIG_SENSOR_ID, ORIG_SENSOR_ID);
-  }
-  #[inline]
-  pub fn add_STATUS(&mut self, STATUS: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_STATUS, STATUS);
-  }
-  #[inline]
-  pub fn add_DELTA_POS(&mut self, DELTA_POS: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_DELTA_POS, DELTA_POS, 0.0);
-  }
-  #[inline]
-  pub fn add_DELTA_POS_U(&mut self, DELTA_POS_U: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_DELTA_POS_U, DELTA_POS_U, 0.0);
-  }
-  #[inline]
-  pub fn add_DELTA_POS_V(&mut self, DELTA_POS_V: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_DELTA_POS_V, DELTA_POS_V, 0.0);
-  }
-  #[inline]
-  pub fn add_DELTA_POS_W(&mut self, DELTA_POS_W: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_DELTA_POS_W, DELTA_POS_W, 0.0);
+  pub fn add_MANEUVER_UNC(&mut self, MANEUVER_UNC: f64) {
+    self.fbb_.push_slot::<f64>(MNV::VT_MANEUVER_UNC, MANEUVER_UNC, 0.0);
   }
   #[inline]
   pub fn add_DELTA_VEL(&mut self, DELTA_VEL: f64) {
@@ -1508,204 +1799,32 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> MNVBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(MNV::VT_DELTA_VEL_W, DELTA_VEL_W, 0.0);
   }
   #[inline]
+  pub fn add_DELTA_POS(&mut self, DELTA_POS: f64) {
+    self.fbb_.push_slot::<f64>(MNV::VT_DELTA_POS, DELTA_POS, 0.0);
+  }
+  #[inline]
+  pub fn add_DELTA_POS_U(&mut self, DELTA_POS_U: f64) {
+    self.fbb_.push_slot::<f64>(MNV::VT_DELTA_POS_U, DELTA_POS_U, 0.0);
+  }
+  #[inline]
+  pub fn add_DELTA_POS_V(&mut self, DELTA_POS_V: f64) {
+    self.fbb_.push_slot::<f64>(MNV::VT_DELTA_POS_V, DELTA_POS_V, 0.0);
+  }
+  #[inline]
+  pub fn add_DELTA_POS_W(&mut self, DELTA_POS_W: f64) {
+    self.fbb_.push_slot::<f64>(MNV::VT_DELTA_POS_W, DELTA_POS_W, 0.0);
+  }
+  #[inline]
   pub fn add_DELTA_MASS(&mut self, DELTA_MASS: f64) {
     self.fbb_.push_slot::<f64>(MNV::VT_DELTA_MASS, DELTA_MASS, 0.0);
   }
   #[inline]
-  pub fn add_PRE_EVENT_ID_ELSET(&mut self, PRE_EVENT_ID_ELSET: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_PRE_EVENT_ID_ELSET, PRE_EVENT_ID_ELSET);
+  pub fn add_PRE_EVENT(&mut self, PRE_EVENT: flatbuffers::WIPOffset<mnvOrbitalState<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<mnvOrbitalState>>(MNV::VT_PRE_EVENT, PRE_EVENT);
   }
   #[inline]
-  pub fn add_PRE_EVENT_ELSET(&mut self, PRE_EVENT_ELSET: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_PRE_EVENT_ELSET, PRE_EVENT_ELSET);
-  }
-  #[inline]
-  pub fn add_PRE_EVENT_ID_STATE_VECTOR(&mut self, PRE_EVENT_ID_STATE_VECTOR: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_PRE_EVENT_ID_STATE_VECTOR, PRE_EVENT_ID_STATE_VECTOR);
-  }
-  #[inline]
-  pub fn add_PRE_EVENT_STATE_VECTOR(&mut self, PRE_EVENT_STATE_VECTOR: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_PRE_EVENT_STATE_VECTOR, PRE_EVENT_STATE_VECTOR);
-  }
-  #[inline]
-  pub fn add_PRE_POS_X(&mut self, PRE_POS_X: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_PRE_POS_X, PRE_POS_X, 0.0);
-  }
-  #[inline]
-  pub fn add_PRE_POS_Y(&mut self, PRE_POS_Y: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_PRE_POS_Y, PRE_POS_Y, 0.0);
-  }
-  #[inline]
-  pub fn add_PRE_POS_Z(&mut self, PRE_POS_Z: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_PRE_POS_Z, PRE_POS_Z, 0.0);
-  }
-  #[inline]
-  pub fn add_PRE_VEL_X(&mut self, PRE_VEL_X: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_PRE_VEL_X, PRE_VEL_X, 0.0);
-  }
-  #[inline]
-  pub fn add_PRE_VEL_Y(&mut self, PRE_VEL_Y: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_PRE_VEL_Y, PRE_VEL_Y, 0.0);
-  }
-  #[inline]
-  pub fn add_PRE_VEL_Z(&mut self, PRE_VEL_Z: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_PRE_VEL_Z, PRE_VEL_Z, 0.0);
-  }
-  #[inline]
-  pub fn add_PRE_RADIATION_PRESS_COEFF(&mut self, PRE_RADIATION_PRESS_COEFF: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_PRE_RADIATION_PRESS_COEFF, PRE_RADIATION_PRESS_COEFF, 0.0);
-  }
-  #[inline]
-  pub fn add_PRE_BALLISTIC_COEFF(&mut self, PRE_BALLISTIC_COEFF: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_PRE_BALLISTIC_COEFF, PRE_BALLISTIC_COEFF, 0.0);
-  }
-  #[inline]
-  pub fn add_PRE_APOGEE(&mut self, PRE_APOGEE: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_PRE_APOGEE, PRE_APOGEE, 0.0);
-  }
-  #[inline]
-  pub fn add_PRE_PERIGEE(&mut self, PRE_PERIGEE: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_PRE_PERIGEE, PRE_PERIGEE, 0.0);
-  }
-  #[inline]
-  pub fn add_PRE_INCLINATION(&mut self, PRE_INCLINATION: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_PRE_INCLINATION, PRE_INCLINATION, 0.0);
-  }
-  #[inline]
-  pub fn add_PRE_ECCENTRICITY(&mut self, PRE_ECCENTRICITY: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_PRE_ECCENTRICITY, PRE_ECCENTRICITY, 0.0);
-  }
-  #[inline]
-  pub fn add_PRE_PERIOD(&mut self, PRE_PERIOD: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_PRE_PERIOD, PRE_PERIOD, 0.0);
-  }
-  #[inline]
-  pub fn add_PRE_RAAN(&mut self, PRE_RAAN: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_PRE_RAAN, PRE_RAAN, 0.0);
-  }
-  #[inline]
-  pub fn add_PRE_SMA(&mut self, PRE_SMA: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_PRE_SMA, PRE_SMA, 0.0);
-  }
-  #[inline]
-  pub fn add_PRE_GEO_LONGITUDE(&mut self, PRE_GEO_LONGITUDE: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_PRE_GEO_LONGITUDE, PRE_GEO_LONGITUDE, 0.0);
-  }
-  #[inline]
-  pub fn add_PRE_DRIFT_RATE(&mut self, PRE_DRIFT_RATE: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_PRE_DRIFT_RATE, PRE_DRIFT_RATE, 0.0);
-  }
-  #[inline]
-  pub fn add_PRE_SIGMA_U(&mut self, PRE_SIGMA_U: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_PRE_SIGMA_U, PRE_SIGMA_U, 0.0);
-  }
-  #[inline]
-  pub fn add_PRE_SIGMA_V(&mut self, PRE_SIGMA_V: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_PRE_SIGMA_V, PRE_SIGMA_V, 0.0);
-  }
-  #[inline]
-  pub fn add_PRE_SIGMA_W(&mut self, PRE_SIGMA_W: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_PRE_SIGMA_W, PRE_SIGMA_W, 0.0);
-  }
-  #[inline]
-  pub fn add_POST_EVENT_ID_ELSET(&mut self, POST_EVENT_ID_ELSET: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_POST_EVENT_ID_ELSET, POST_EVENT_ID_ELSET);
-  }
-  #[inline]
-  pub fn add_POST_EVENT_ELSET(&mut self, POST_EVENT_ELSET: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_POST_EVENT_ELSET, POST_EVENT_ELSET);
-  }
-  #[inline]
-  pub fn add_POST_EVENT_ID_STATE_VECTOR(&mut self, POST_EVENT_ID_STATE_VECTOR: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_POST_EVENT_ID_STATE_VECTOR, POST_EVENT_ID_STATE_VECTOR);
-  }
-  #[inline]
-  pub fn add_POST_EVENT_STATE_VECTOR(&mut self, POST_EVENT_STATE_VECTOR: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_POST_EVENT_STATE_VECTOR, POST_EVENT_STATE_VECTOR);
-  }
-  #[inline]
-  pub fn add_POST_POS_X(&mut self, POST_POS_X: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_POST_POS_X, POST_POS_X, 0.0);
-  }
-  #[inline]
-  pub fn add_POST_POS_Y(&mut self, POST_POS_Y: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_POST_POS_Y, POST_POS_Y, 0.0);
-  }
-  #[inline]
-  pub fn add_POST_POS_Z(&mut self, POST_POS_Z: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_POST_POS_Z, POST_POS_Z, 0.0);
-  }
-  #[inline]
-  pub fn add_POST_VEL_X(&mut self, POST_VEL_X: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_POST_VEL_X, POST_VEL_X, 0.0);
-  }
-  #[inline]
-  pub fn add_POST_VEL_Y(&mut self, POST_VEL_Y: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_POST_VEL_Y, POST_VEL_Y, 0.0);
-  }
-  #[inline]
-  pub fn add_POST_VEL_Z(&mut self, POST_VEL_Z: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_POST_VEL_Z, POST_VEL_Z, 0.0);
-  }
-  #[inline]
-  pub fn add_POST_RADIATION_PRESS_COEFF(&mut self, POST_RADIATION_PRESS_COEFF: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_POST_RADIATION_PRESS_COEFF, POST_RADIATION_PRESS_COEFF, 0.0);
-  }
-  #[inline]
-  pub fn add_POST_BALLISTIC_COEFF(&mut self, POST_BALLISTIC_COEFF: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_POST_BALLISTIC_COEFF, POST_BALLISTIC_COEFF, 0.0);
-  }
-  #[inline]
-  pub fn add_POST_APOGEE(&mut self, POST_APOGEE: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_POST_APOGEE, POST_APOGEE, 0.0);
-  }
-  #[inline]
-  pub fn add_POST_PERIGEE(&mut self, POST_PERIGEE: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_POST_PERIGEE, POST_PERIGEE, 0.0);
-  }
-  #[inline]
-  pub fn add_POST_INCLINATION(&mut self, POST_INCLINATION: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_POST_INCLINATION, POST_INCLINATION, 0.0);
-  }
-  #[inline]
-  pub fn add_POST_ECCENTRICITY(&mut self, POST_ECCENTRICITY: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_POST_ECCENTRICITY, POST_ECCENTRICITY, 0.0);
-  }
-  #[inline]
-  pub fn add_POST_PERIOD(&mut self, POST_PERIOD: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_POST_PERIOD, POST_PERIOD, 0.0);
-  }
-  #[inline]
-  pub fn add_POST_RAAN(&mut self, POST_RAAN: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_POST_RAAN, POST_RAAN, 0.0);
-  }
-  #[inline]
-  pub fn add_POST_SMA(&mut self, POST_SMA: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_POST_SMA, POST_SMA, 0.0);
-  }
-  #[inline]
-  pub fn add_POST_GEO_LONGITUDE(&mut self, POST_GEO_LONGITUDE: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_POST_GEO_LONGITUDE, POST_GEO_LONGITUDE, 0.0);
-  }
-  #[inline]
-  pub fn add_POST_DRIFT_RATE(&mut self, POST_DRIFT_RATE: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_POST_DRIFT_RATE, POST_DRIFT_RATE, 0.0);
-  }
-  #[inline]
-  pub fn add_POST_SIGMA_U(&mut self, POST_SIGMA_U: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_POST_SIGMA_U, POST_SIGMA_U, 0.0);
-  }
-  #[inline]
-  pub fn add_POST_SIGMA_V(&mut self, POST_SIGMA_V: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_POST_SIGMA_V, POST_SIGMA_V, 0.0);
-  }
-  #[inline]
-  pub fn add_POST_SIGMA_W(&mut self, POST_SIGMA_W: f64) {
-    self.fbb_.push_slot::<f64>(MNV::VT_POST_SIGMA_W, POST_SIGMA_W, 0.0);
-  }
-  #[inline]
-  pub fn add_COV(&mut self, COV: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_COV, COV);
+  pub fn add_POST_EVENT(&mut self, POST_EVENT: flatbuffers::WIPOffset<mnvOrbitalState<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<mnvOrbitalState>>(MNV::VT_POST_EVENT, POST_EVENT);
   }
   #[inline]
   pub fn add_POST_MASS(&mut self, POST_MASS: f64) {
@@ -1716,16 +1835,12 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> MNVBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(MNV::VT_POST_AREA, POST_AREA, 0.0);
   }
   #[inline]
-  pub fn add_NUM_OBS(&mut self, NUM_OBS: i32) {
-    self.fbb_.push_slot::<i32>(MNV::VT_NUM_OBS, NUM_OBS, 0);
+  pub fn add_COV(&mut self, COV: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_COV, COV);
   }
   #[inline]
-  pub fn add_DESCRIPTION(&mut self, DESCRIPTION: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_DESCRIPTION, DESCRIPTION);
-  }
-  #[inline]
-  pub fn add_DESCRIPTOR(&mut self, DESCRIPTOR: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_DESCRIPTOR, DESCRIPTOR);
+  pub fn add_NUM_OBS(&mut self, NUM_OBS: u32) {
+    self.fbb_.push_slot::<u32>(MNV::VT_NUM_OBS, NUM_OBS, 0);
   }
   #[inline]
   pub fn add_STATE_MODEL(&mut self, STATE_MODEL: flatbuffers::WIPOffset<&'b  str>) {
@@ -1736,28 +1851,36 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> MNVBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(MNV::VT_STATE_MODEL_VERSION, STATE_MODEL_VERSION, 0.0);
   }
   #[inline]
-  pub fn add_NUM_ACCEL_POINTS(&mut self, NUM_ACCEL_POINTS: i32) {
-    self.fbb_.push_slot::<i32>(MNV::VT_NUM_ACCEL_POINTS, NUM_ACCEL_POINTS, 0);
+  pub fn add_NUM_ACCEL_POINTS(&mut self, NUM_ACCEL_POINTS: u16) {
+    self.fbb_.push_slot::<u16>(MNV::VT_NUM_ACCEL_POINTS, NUM_ACCEL_POINTS, 0);
   }
   #[inline]
   pub fn add_MNVR_ACCEL_TIMES(&mut self, MNVR_ACCEL_TIMES: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_MNVR_ACCEL_TIMES, MNVR_ACCEL_TIMES);
   }
   #[inline]
-  pub fn add_MNVR_ACCELS(&mut self, MNVR_ACCELS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+  pub fn add_MNVR_ACCELS(&mut self, MNVR_ACCELS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_MNVR_ACCELS, MNVR_ACCELS);
   }
   #[inline]
-  pub fn add_MNVR_ACCEL_UNCS(&mut self, MNVR_ACCEL_UNCS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+  pub fn add_MNVR_ACCEL_UNCS(&mut self, MNVR_ACCEL_UNCS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_MNVR_ACCEL_UNCS, MNVR_ACCEL_UNCS);
   }
   #[inline]
-  pub fn add_TAGS(&mut self, TAGS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_TAGS, TAGS);
+  pub fn add_DESCRIPTION(&mut self, DESCRIPTION: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_DESCRIPTION, DESCRIPTION);
+  }
+  #[inline]
+  pub fn add_DESCRIPTOR(&mut self, DESCRIPTOR: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_DESCRIPTOR, DESCRIPTOR);
   }
   #[inline]
   pub fn add_ALGORITHM(&mut self, ALGORITHM: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_ALGORITHM, ALGORITHM);
+  }
+  #[inline]
+  pub fn add_TAGS(&mut self, TAGS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_TAGS, TAGS);
   }
   #[inline]
   pub fn add_SOURCED_DATA(&mut self, SOURCED_DATA: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
@@ -1766,10 +1889,6 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> MNVBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_SOURCED_DATA_TYPES(&mut self, SOURCED_DATA_TYPES: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_SOURCED_DATA_TYPES, SOURCED_DATA_TYPES);
-  }
-  #[inline]
-  pub fn add_ON_ORBIT(&mut self, ON_ORBIT: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MNV::VT_ON_ORBIT, ON_ORBIT);
   }
   #[inline]
   pub fn add_TRANSACTION_ID(&mut self, TRANSACTION_ID: flatbuffers::WIPOffset<&'b  str>) {
@@ -1795,94 +1914,48 @@ impl core::fmt::Debug for MNV<'_> {
     let mut ds = f.debug_struct("MNV");
       ds.field("ID", &self.ID());
       ds.field("SAT_NO", &self.SAT_NO());
+      ds.field("ORIG_OBJECT_ID", &self.ORIG_OBJECT_ID());
+      ds.field("ON_ORBIT", &self.ON_ORBIT());
+      ds.field("STATUS", &self.STATUS());
+      ds.field("CHARACTERIZATION", &self.CHARACTERIZATION());
+      ds.field("CHARACTERIZATION_UNC", &self.CHARACTERIZATION_UNC());
       ds.field("REPORT_TIME", &self.REPORT_TIME());
       ds.field("EVENT_START_TIME", &self.EVENT_START_TIME());
       ds.field("EVENT_END_TIME", &self.EVENT_END_TIME());
       ds.field("TOTAL_BURN_TIME", &self.TOTAL_BURN_TIME());
       ds.field("OD_FIT_END_TIME", &self.OD_FIT_END_TIME());
       ds.field("ID_SENSOR", &self.ID_SENSOR());
+      ds.field("ORIG_SENSOR_ID", &self.ORIG_SENSOR_ID());
+      ds.field("EVENT_ID", &self.EVENT_ID());
       ds.field("UCT", &self.UCT());
       ds.field("MANEUVER_UNC", &self.MANEUVER_UNC());
-      ds.field("CHARACTERIZATION", &self.CHARACTERIZATION());
-      ds.field("CHARACTERIZATION_UNC", &self.CHARACTERIZATION_UNC());
-      ds.field("EVENT_ID", &self.EVENT_ID());
-      ds.field("ORIG_OBJECT_ID", &self.ORIG_OBJECT_ID());
-      ds.field("ORIG_SENSOR_ID", &self.ORIG_SENSOR_ID());
-      ds.field("STATUS", &self.STATUS());
-      ds.field("DELTA_POS", &self.DELTA_POS());
-      ds.field("DELTA_POS_U", &self.DELTA_POS_U());
-      ds.field("DELTA_POS_V", &self.DELTA_POS_V());
-      ds.field("DELTA_POS_W", &self.DELTA_POS_W());
       ds.field("DELTA_VEL", &self.DELTA_VEL());
       ds.field("DELTA_VEL_U", &self.DELTA_VEL_U());
       ds.field("DELTA_VEL_V", &self.DELTA_VEL_V());
       ds.field("DELTA_VEL_W", &self.DELTA_VEL_W());
+      ds.field("DELTA_POS", &self.DELTA_POS());
+      ds.field("DELTA_POS_U", &self.DELTA_POS_U());
+      ds.field("DELTA_POS_V", &self.DELTA_POS_V());
+      ds.field("DELTA_POS_W", &self.DELTA_POS_W());
       ds.field("DELTA_MASS", &self.DELTA_MASS());
-      ds.field("PRE_EVENT_ID_ELSET", &self.PRE_EVENT_ID_ELSET());
-      ds.field("PRE_EVENT_ELSET", &self.PRE_EVENT_ELSET());
-      ds.field("PRE_EVENT_ID_STATE_VECTOR", &self.PRE_EVENT_ID_STATE_VECTOR());
-      ds.field("PRE_EVENT_STATE_VECTOR", &self.PRE_EVENT_STATE_VECTOR());
-      ds.field("PRE_POS_X", &self.PRE_POS_X());
-      ds.field("PRE_POS_Y", &self.PRE_POS_Y());
-      ds.field("PRE_POS_Z", &self.PRE_POS_Z());
-      ds.field("PRE_VEL_X", &self.PRE_VEL_X());
-      ds.field("PRE_VEL_Y", &self.PRE_VEL_Y());
-      ds.field("PRE_VEL_Z", &self.PRE_VEL_Z());
-      ds.field("PRE_RADIATION_PRESS_COEFF", &self.PRE_RADIATION_PRESS_COEFF());
-      ds.field("PRE_BALLISTIC_COEFF", &self.PRE_BALLISTIC_COEFF());
-      ds.field("PRE_APOGEE", &self.PRE_APOGEE());
-      ds.field("PRE_PERIGEE", &self.PRE_PERIGEE());
-      ds.field("PRE_INCLINATION", &self.PRE_INCLINATION());
-      ds.field("PRE_ECCENTRICITY", &self.PRE_ECCENTRICITY());
-      ds.field("PRE_PERIOD", &self.PRE_PERIOD());
-      ds.field("PRE_RAAN", &self.PRE_RAAN());
-      ds.field("PRE_SMA", &self.PRE_SMA());
-      ds.field("PRE_GEO_LONGITUDE", &self.PRE_GEO_LONGITUDE());
-      ds.field("PRE_DRIFT_RATE", &self.PRE_DRIFT_RATE());
-      ds.field("PRE_SIGMA_U", &self.PRE_SIGMA_U());
-      ds.field("PRE_SIGMA_V", &self.PRE_SIGMA_V());
-      ds.field("PRE_SIGMA_W", &self.PRE_SIGMA_W());
-      ds.field("POST_EVENT_ID_ELSET", &self.POST_EVENT_ID_ELSET());
-      ds.field("POST_EVENT_ELSET", &self.POST_EVENT_ELSET());
-      ds.field("POST_EVENT_ID_STATE_VECTOR", &self.POST_EVENT_ID_STATE_VECTOR());
-      ds.field("POST_EVENT_STATE_VECTOR", &self.POST_EVENT_STATE_VECTOR());
-      ds.field("POST_POS_X", &self.POST_POS_X());
-      ds.field("POST_POS_Y", &self.POST_POS_Y());
-      ds.field("POST_POS_Z", &self.POST_POS_Z());
-      ds.field("POST_VEL_X", &self.POST_VEL_X());
-      ds.field("POST_VEL_Y", &self.POST_VEL_Y());
-      ds.field("POST_VEL_Z", &self.POST_VEL_Z());
-      ds.field("POST_RADIATION_PRESS_COEFF", &self.POST_RADIATION_PRESS_COEFF());
-      ds.field("POST_BALLISTIC_COEFF", &self.POST_BALLISTIC_COEFF());
-      ds.field("POST_APOGEE", &self.POST_APOGEE());
-      ds.field("POST_PERIGEE", &self.POST_PERIGEE());
-      ds.field("POST_INCLINATION", &self.POST_INCLINATION());
-      ds.field("POST_ECCENTRICITY", &self.POST_ECCENTRICITY());
-      ds.field("POST_PERIOD", &self.POST_PERIOD());
-      ds.field("POST_RAAN", &self.POST_RAAN());
-      ds.field("POST_SMA", &self.POST_SMA());
-      ds.field("POST_GEO_LONGITUDE", &self.POST_GEO_LONGITUDE());
-      ds.field("POST_DRIFT_RATE", &self.POST_DRIFT_RATE());
-      ds.field("POST_SIGMA_U", &self.POST_SIGMA_U());
-      ds.field("POST_SIGMA_V", &self.POST_SIGMA_V());
-      ds.field("POST_SIGMA_W", &self.POST_SIGMA_W());
-      ds.field("COV", &self.COV());
+      ds.field("PRE_EVENT", &self.PRE_EVENT());
+      ds.field("POST_EVENT", &self.POST_EVENT());
       ds.field("POST_MASS", &self.POST_MASS());
       ds.field("POST_AREA", &self.POST_AREA());
+      ds.field("COV", &self.COV());
       ds.field("NUM_OBS", &self.NUM_OBS());
-      ds.field("DESCRIPTION", &self.DESCRIPTION());
-      ds.field("DESCRIPTOR", &self.DESCRIPTOR());
       ds.field("STATE_MODEL", &self.STATE_MODEL());
       ds.field("STATE_MODEL_VERSION", &self.STATE_MODEL_VERSION());
       ds.field("NUM_ACCEL_POINTS", &self.NUM_ACCEL_POINTS());
       ds.field("MNVR_ACCEL_TIMES", &self.MNVR_ACCEL_TIMES());
       ds.field("MNVR_ACCELS", &self.MNVR_ACCELS());
       ds.field("MNVR_ACCEL_UNCS", &self.MNVR_ACCEL_UNCS());
-      ds.field("TAGS", &self.TAGS());
+      ds.field("DESCRIPTION", &self.DESCRIPTION());
+      ds.field("DESCRIPTOR", &self.DESCRIPTOR());
       ds.field("ALGORITHM", &self.ALGORITHM());
+      ds.field("TAGS", &self.TAGS());
       ds.field("SOURCED_DATA", &self.SOURCED_DATA());
       ds.field("SOURCED_DATA_TYPES", &self.SOURCED_DATA_TYPES());
-      ds.field("ON_ORBIT", &self.ON_ORBIT());
       ds.field("TRANSACTION_ID", &self.TRANSACTION_ID());
       ds.finish()
   }
@@ -1891,95 +1964,49 @@ impl core::fmt::Debug for MNV<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct MNVT {
   pub ID: Option<String>,
-  pub SAT_NO: i32,
+  pub SAT_NO: u32,
+  pub ORIG_OBJECT_ID: Option<String>,
+  pub ON_ORBIT: Option<String>,
+  pub STATUS: maneuverStatus,
+  pub CHARACTERIZATION: maneuverCharacterization,
+  pub CHARACTERIZATION_UNC: f64,
   pub REPORT_TIME: Option<String>,
   pub EVENT_START_TIME: Option<String>,
   pub EVENT_END_TIME: Option<String>,
   pub TOTAL_BURN_TIME: f64,
   pub OD_FIT_END_TIME: Option<String>,
   pub ID_SENSOR: Option<String>,
+  pub ORIG_SENSOR_ID: Option<String>,
+  pub EVENT_ID: Option<String>,
   pub UCT: bool,
   pub MANEUVER_UNC: f64,
-  pub CHARACTERIZATION: Option<String>,
-  pub CHARACTERIZATION_UNC: f64,
-  pub EVENT_ID: Option<String>,
-  pub ORIG_OBJECT_ID: Option<String>,
-  pub ORIG_SENSOR_ID: Option<String>,
-  pub STATUS: Option<String>,
-  pub DELTA_POS: f64,
-  pub DELTA_POS_U: f64,
-  pub DELTA_POS_V: f64,
-  pub DELTA_POS_W: f64,
   pub DELTA_VEL: f64,
   pub DELTA_VEL_U: f64,
   pub DELTA_VEL_V: f64,
   pub DELTA_VEL_W: f64,
+  pub DELTA_POS: f64,
+  pub DELTA_POS_U: f64,
+  pub DELTA_POS_V: f64,
+  pub DELTA_POS_W: f64,
   pub DELTA_MASS: f64,
-  pub PRE_EVENT_ID_ELSET: Option<String>,
-  pub PRE_EVENT_ELSET: Option<String>,
-  pub PRE_EVENT_ID_STATE_VECTOR: Option<String>,
-  pub PRE_EVENT_STATE_VECTOR: Option<String>,
-  pub PRE_POS_X: f64,
-  pub PRE_POS_Y: f64,
-  pub PRE_POS_Z: f64,
-  pub PRE_VEL_X: f64,
-  pub PRE_VEL_Y: f64,
-  pub PRE_VEL_Z: f64,
-  pub PRE_RADIATION_PRESS_COEFF: f64,
-  pub PRE_BALLISTIC_COEFF: f64,
-  pub PRE_APOGEE: f64,
-  pub PRE_PERIGEE: f64,
-  pub PRE_INCLINATION: f64,
-  pub PRE_ECCENTRICITY: f64,
-  pub PRE_PERIOD: f64,
-  pub PRE_RAAN: f64,
-  pub PRE_SMA: f64,
-  pub PRE_GEO_LONGITUDE: f64,
-  pub PRE_DRIFT_RATE: f64,
-  pub PRE_SIGMA_U: f64,
-  pub PRE_SIGMA_V: f64,
-  pub PRE_SIGMA_W: f64,
-  pub POST_EVENT_ID_ELSET: Option<String>,
-  pub POST_EVENT_ELSET: Option<String>,
-  pub POST_EVENT_ID_STATE_VECTOR: Option<String>,
-  pub POST_EVENT_STATE_VECTOR: Option<String>,
-  pub POST_POS_X: f64,
-  pub POST_POS_Y: f64,
-  pub POST_POS_Z: f64,
-  pub POST_VEL_X: f64,
-  pub POST_VEL_Y: f64,
-  pub POST_VEL_Z: f64,
-  pub POST_RADIATION_PRESS_COEFF: f64,
-  pub POST_BALLISTIC_COEFF: f64,
-  pub POST_APOGEE: f64,
-  pub POST_PERIGEE: f64,
-  pub POST_INCLINATION: f64,
-  pub POST_ECCENTRICITY: f64,
-  pub POST_PERIOD: f64,
-  pub POST_RAAN: f64,
-  pub POST_SMA: f64,
-  pub POST_GEO_LONGITUDE: f64,
-  pub POST_DRIFT_RATE: f64,
-  pub POST_SIGMA_U: f64,
-  pub POST_SIGMA_V: f64,
-  pub POST_SIGMA_W: f64,
-  pub COV: Option<Vec<String>>,
+  pub PRE_EVENT: Option<Box<mnvOrbitalStateT>>,
+  pub POST_EVENT: Option<Box<mnvOrbitalStateT>>,
   pub POST_MASS: f64,
   pub POST_AREA: f64,
-  pub NUM_OBS: i32,
-  pub DESCRIPTION: Option<String>,
-  pub DESCRIPTOR: Option<String>,
+  pub COV: Option<Vec<f64>>,
+  pub NUM_OBS: u32,
   pub STATE_MODEL: Option<String>,
   pub STATE_MODEL_VERSION: f64,
-  pub NUM_ACCEL_POINTS: i32,
+  pub NUM_ACCEL_POINTS: u16,
   pub MNVR_ACCEL_TIMES: Option<Vec<String>>,
-  pub MNVR_ACCELS: Option<Vec<String>>,
-  pub MNVR_ACCEL_UNCS: Option<Vec<String>>,
-  pub TAGS: Option<Vec<String>>,
+  pub MNVR_ACCELS: Option<Vec<f64>>,
+  pub MNVR_ACCEL_UNCS: Option<Vec<f64>>,
+  pub DESCRIPTION: Option<String>,
+  pub DESCRIPTOR: Option<String>,
   pub ALGORITHM: Option<String>,
+  pub TAGS: Option<Vec<String>>,
   pub SOURCED_DATA: Option<Vec<String>>,
   pub SOURCED_DATA_TYPES: Option<String>,
-  pub ON_ORBIT: Option<String>,
   pub TRANSACTION_ID: Option<String>,
 }
 impl Default for MNVT {
@@ -1987,94 +2014,48 @@ impl Default for MNVT {
     Self {
       ID: None,
       SAT_NO: 0,
+      ORIG_OBJECT_ID: None,
+      ON_ORBIT: None,
+      STATUS: maneuverStatus::DETECTED,
+      CHARACTERIZATION: maneuverCharacterization::IN_PLANE,
+      CHARACTERIZATION_UNC: 0.0,
       REPORT_TIME: None,
       EVENT_START_TIME: None,
       EVENT_END_TIME: None,
       TOTAL_BURN_TIME: 0.0,
       OD_FIT_END_TIME: None,
       ID_SENSOR: None,
+      ORIG_SENSOR_ID: None,
+      EVENT_ID: None,
       UCT: false,
       MANEUVER_UNC: 0.0,
-      CHARACTERIZATION: None,
-      CHARACTERIZATION_UNC: 0.0,
-      EVENT_ID: None,
-      ORIG_OBJECT_ID: None,
-      ORIG_SENSOR_ID: None,
-      STATUS: None,
-      DELTA_POS: 0.0,
-      DELTA_POS_U: 0.0,
-      DELTA_POS_V: 0.0,
-      DELTA_POS_W: 0.0,
       DELTA_VEL: 0.0,
       DELTA_VEL_U: 0.0,
       DELTA_VEL_V: 0.0,
       DELTA_VEL_W: 0.0,
+      DELTA_POS: 0.0,
+      DELTA_POS_U: 0.0,
+      DELTA_POS_V: 0.0,
+      DELTA_POS_W: 0.0,
       DELTA_MASS: 0.0,
-      PRE_EVENT_ID_ELSET: None,
-      PRE_EVENT_ELSET: None,
-      PRE_EVENT_ID_STATE_VECTOR: None,
-      PRE_EVENT_STATE_VECTOR: None,
-      PRE_POS_X: 0.0,
-      PRE_POS_Y: 0.0,
-      PRE_POS_Z: 0.0,
-      PRE_VEL_X: 0.0,
-      PRE_VEL_Y: 0.0,
-      PRE_VEL_Z: 0.0,
-      PRE_RADIATION_PRESS_COEFF: 0.0,
-      PRE_BALLISTIC_COEFF: 0.0,
-      PRE_APOGEE: 0.0,
-      PRE_PERIGEE: 0.0,
-      PRE_INCLINATION: 0.0,
-      PRE_ECCENTRICITY: 0.0,
-      PRE_PERIOD: 0.0,
-      PRE_RAAN: 0.0,
-      PRE_SMA: 0.0,
-      PRE_GEO_LONGITUDE: 0.0,
-      PRE_DRIFT_RATE: 0.0,
-      PRE_SIGMA_U: 0.0,
-      PRE_SIGMA_V: 0.0,
-      PRE_SIGMA_W: 0.0,
-      POST_EVENT_ID_ELSET: None,
-      POST_EVENT_ELSET: None,
-      POST_EVENT_ID_STATE_VECTOR: None,
-      POST_EVENT_STATE_VECTOR: None,
-      POST_POS_X: 0.0,
-      POST_POS_Y: 0.0,
-      POST_POS_Z: 0.0,
-      POST_VEL_X: 0.0,
-      POST_VEL_Y: 0.0,
-      POST_VEL_Z: 0.0,
-      POST_RADIATION_PRESS_COEFF: 0.0,
-      POST_BALLISTIC_COEFF: 0.0,
-      POST_APOGEE: 0.0,
-      POST_PERIGEE: 0.0,
-      POST_INCLINATION: 0.0,
-      POST_ECCENTRICITY: 0.0,
-      POST_PERIOD: 0.0,
-      POST_RAAN: 0.0,
-      POST_SMA: 0.0,
-      POST_GEO_LONGITUDE: 0.0,
-      POST_DRIFT_RATE: 0.0,
-      POST_SIGMA_U: 0.0,
-      POST_SIGMA_V: 0.0,
-      POST_SIGMA_W: 0.0,
-      COV: None,
+      PRE_EVENT: None,
+      POST_EVENT: None,
       POST_MASS: 0.0,
       POST_AREA: 0.0,
+      COV: None,
       NUM_OBS: 0,
-      DESCRIPTION: None,
-      DESCRIPTOR: None,
       STATE_MODEL: None,
       STATE_MODEL_VERSION: 0.0,
       NUM_ACCEL_POINTS: 0,
       MNVR_ACCEL_TIMES: None,
       MNVR_ACCELS: None,
       MNVR_ACCEL_UNCS: None,
-      TAGS: None,
+      DESCRIPTION: None,
+      DESCRIPTOR: None,
       ALGORITHM: None,
+      TAGS: None,
       SOURCED_DATA: None,
       SOURCED_DATA_TYPES: None,
-      ON_ORBIT: None,
       TRANSACTION_ID: None,
     }
   }
@@ -2088,6 +2069,15 @@ impl MNVT {
       _fbb.create_string(x)
     });
     let SAT_NO = self.SAT_NO;
+    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ON_ORBIT = self.ON_ORBIT.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let STATUS = self.STATUS;
+    let CHARACTERIZATION = self.CHARACTERIZATION;
+    let CHARACTERIZATION_UNC = self.CHARACTERIZATION_UNC;
     let REPORT_TIME = self.REPORT_TIME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -2104,109 +2094,35 @@ impl MNVT {
     let ID_SENSOR = self.ID_SENSOR.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let UCT = self.UCT;
-    let MANEUVER_UNC = self.MANEUVER_UNC;
-    let CHARACTERIZATION = self.CHARACTERIZATION.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let CHARACTERIZATION_UNC = self.CHARACTERIZATION_UNC;
-    let EVENT_ID = self.EVENT_ID.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
     let ORIG_SENSOR_ID = self.ORIG_SENSOR_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let STATUS = self.STATUS.as_ref().map(|x|{
+    let EVENT_ID = self.EVENT_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let DELTA_POS = self.DELTA_POS;
-    let DELTA_POS_U = self.DELTA_POS_U;
-    let DELTA_POS_V = self.DELTA_POS_V;
-    let DELTA_POS_W = self.DELTA_POS_W;
+    let UCT = self.UCT;
+    let MANEUVER_UNC = self.MANEUVER_UNC;
     let DELTA_VEL = self.DELTA_VEL;
     let DELTA_VEL_U = self.DELTA_VEL_U;
     let DELTA_VEL_V = self.DELTA_VEL_V;
     let DELTA_VEL_W = self.DELTA_VEL_W;
+    let DELTA_POS = self.DELTA_POS;
+    let DELTA_POS_U = self.DELTA_POS_U;
+    let DELTA_POS_V = self.DELTA_POS_V;
+    let DELTA_POS_W = self.DELTA_POS_W;
     let DELTA_MASS = self.DELTA_MASS;
-    let PRE_EVENT_ID_ELSET = self.PRE_EVENT_ID_ELSET.as_ref().map(|x|{
-      _fbb.create_string(x)
+    let PRE_EVENT = self.PRE_EVENT.as_ref().map(|x|{
+      x.pack(_fbb)
     });
-    let PRE_EVENT_ELSET = self.PRE_EVENT_ELSET.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let PRE_EVENT_ID_STATE_VECTOR = self.PRE_EVENT_ID_STATE_VECTOR.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let PRE_EVENT_STATE_VECTOR = self.PRE_EVENT_STATE_VECTOR.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let PRE_POS_X = self.PRE_POS_X;
-    let PRE_POS_Y = self.PRE_POS_Y;
-    let PRE_POS_Z = self.PRE_POS_Z;
-    let PRE_VEL_X = self.PRE_VEL_X;
-    let PRE_VEL_Y = self.PRE_VEL_Y;
-    let PRE_VEL_Z = self.PRE_VEL_Z;
-    let PRE_RADIATION_PRESS_COEFF = self.PRE_RADIATION_PRESS_COEFF;
-    let PRE_BALLISTIC_COEFF = self.PRE_BALLISTIC_COEFF;
-    let PRE_APOGEE = self.PRE_APOGEE;
-    let PRE_PERIGEE = self.PRE_PERIGEE;
-    let PRE_INCLINATION = self.PRE_INCLINATION;
-    let PRE_ECCENTRICITY = self.PRE_ECCENTRICITY;
-    let PRE_PERIOD = self.PRE_PERIOD;
-    let PRE_RAAN = self.PRE_RAAN;
-    let PRE_SMA = self.PRE_SMA;
-    let PRE_GEO_LONGITUDE = self.PRE_GEO_LONGITUDE;
-    let PRE_DRIFT_RATE = self.PRE_DRIFT_RATE;
-    let PRE_SIGMA_U = self.PRE_SIGMA_U;
-    let PRE_SIGMA_V = self.PRE_SIGMA_V;
-    let PRE_SIGMA_W = self.PRE_SIGMA_W;
-    let POST_EVENT_ID_ELSET = self.POST_EVENT_ID_ELSET.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let POST_EVENT_ELSET = self.POST_EVENT_ELSET.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let POST_EVENT_ID_STATE_VECTOR = self.POST_EVENT_ID_STATE_VECTOR.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let POST_EVENT_STATE_VECTOR = self.POST_EVENT_STATE_VECTOR.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let POST_POS_X = self.POST_POS_X;
-    let POST_POS_Y = self.POST_POS_Y;
-    let POST_POS_Z = self.POST_POS_Z;
-    let POST_VEL_X = self.POST_VEL_X;
-    let POST_VEL_Y = self.POST_VEL_Y;
-    let POST_VEL_Z = self.POST_VEL_Z;
-    let POST_RADIATION_PRESS_COEFF = self.POST_RADIATION_PRESS_COEFF;
-    let POST_BALLISTIC_COEFF = self.POST_BALLISTIC_COEFF;
-    let POST_APOGEE = self.POST_APOGEE;
-    let POST_PERIGEE = self.POST_PERIGEE;
-    let POST_INCLINATION = self.POST_INCLINATION;
-    let POST_ECCENTRICITY = self.POST_ECCENTRICITY;
-    let POST_PERIOD = self.POST_PERIOD;
-    let POST_RAAN = self.POST_RAAN;
-    let POST_SMA = self.POST_SMA;
-    let POST_GEO_LONGITUDE = self.POST_GEO_LONGITUDE;
-    let POST_DRIFT_RATE = self.POST_DRIFT_RATE;
-    let POST_SIGMA_U = self.POST_SIGMA_U;
-    let POST_SIGMA_V = self.POST_SIGMA_V;
-    let POST_SIGMA_W = self.POST_SIGMA_W;
-    let COV = self.COV.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    let POST_EVENT = self.POST_EVENT.as_ref().map(|x|{
+      x.pack(_fbb)
     });
     let POST_MASS = self.POST_MASS;
     let POST_AREA = self.POST_AREA;
+    let COV = self.COV.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
     let NUM_OBS = self.NUM_OBS;
-    let DESCRIPTION = self.DESCRIPTION.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let DESCRIPTOR = self.DESCRIPTOR.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
     let STATE_MODEL = self.STATE_MODEL.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -2216,24 +2132,27 @@ impl MNVT {
       let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
     let MNVR_ACCELS = self.MNVR_ACCELS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+      _fbb.create_vector(x)
     });
     let MNVR_ACCEL_UNCS = self.MNVR_ACCEL_UNCS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+      _fbb.create_vector(x)
     });
-    let TAGS = self.TAGS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    let DESCRIPTION = self.DESCRIPTION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DESCRIPTOR = self.DESCRIPTOR.as_ref().map(|x|{
+      _fbb.create_string(x)
     });
     let ALGORITHM = self.ALGORITHM.as_ref().map(|x|{
       _fbb.create_string(x)
+    });
+    let TAGS = self.TAGS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
     let SOURCED_DATA = self.SOURCED_DATA.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
     let SOURCED_DATA_TYPES = self.SOURCED_DATA_TYPES.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let ON_ORBIT = self.ON_ORBIT.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let TRANSACTION_ID = self.TRANSACTION_ID.as_ref().map(|x|{
@@ -2242,94 +2161,48 @@ impl MNVT {
     MNV::create(_fbb, &MNVArgs{
       ID,
       SAT_NO,
+      ORIG_OBJECT_ID,
+      ON_ORBIT,
+      STATUS,
+      CHARACTERIZATION,
+      CHARACTERIZATION_UNC,
       REPORT_TIME,
       EVENT_START_TIME,
       EVENT_END_TIME,
       TOTAL_BURN_TIME,
       OD_FIT_END_TIME,
       ID_SENSOR,
+      ORIG_SENSOR_ID,
+      EVENT_ID,
       UCT,
       MANEUVER_UNC,
-      CHARACTERIZATION,
-      CHARACTERIZATION_UNC,
-      EVENT_ID,
-      ORIG_OBJECT_ID,
-      ORIG_SENSOR_ID,
-      STATUS,
-      DELTA_POS,
-      DELTA_POS_U,
-      DELTA_POS_V,
-      DELTA_POS_W,
       DELTA_VEL,
       DELTA_VEL_U,
       DELTA_VEL_V,
       DELTA_VEL_W,
+      DELTA_POS,
+      DELTA_POS_U,
+      DELTA_POS_V,
+      DELTA_POS_W,
       DELTA_MASS,
-      PRE_EVENT_ID_ELSET,
-      PRE_EVENT_ELSET,
-      PRE_EVENT_ID_STATE_VECTOR,
-      PRE_EVENT_STATE_VECTOR,
-      PRE_POS_X,
-      PRE_POS_Y,
-      PRE_POS_Z,
-      PRE_VEL_X,
-      PRE_VEL_Y,
-      PRE_VEL_Z,
-      PRE_RADIATION_PRESS_COEFF,
-      PRE_BALLISTIC_COEFF,
-      PRE_APOGEE,
-      PRE_PERIGEE,
-      PRE_INCLINATION,
-      PRE_ECCENTRICITY,
-      PRE_PERIOD,
-      PRE_RAAN,
-      PRE_SMA,
-      PRE_GEO_LONGITUDE,
-      PRE_DRIFT_RATE,
-      PRE_SIGMA_U,
-      PRE_SIGMA_V,
-      PRE_SIGMA_W,
-      POST_EVENT_ID_ELSET,
-      POST_EVENT_ELSET,
-      POST_EVENT_ID_STATE_VECTOR,
-      POST_EVENT_STATE_VECTOR,
-      POST_POS_X,
-      POST_POS_Y,
-      POST_POS_Z,
-      POST_VEL_X,
-      POST_VEL_Y,
-      POST_VEL_Z,
-      POST_RADIATION_PRESS_COEFF,
-      POST_BALLISTIC_COEFF,
-      POST_APOGEE,
-      POST_PERIGEE,
-      POST_INCLINATION,
-      POST_ECCENTRICITY,
-      POST_PERIOD,
-      POST_RAAN,
-      POST_SMA,
-      POST_GEO_LONGITUDE,
-      POST_DRIFT_RATE,
-      POST_SIGMA_U,
-      POST_SIGMA_V,
-      POST_SIGMA_W,
-      COV,
+      PRE_EVENT,
+      POST_EVENT,
       POST_MASS,
       POST_AREA,
+      COV,
       NUM_OBS,
-      DESCRIPTION,
-      DESCRIPTOR,
       STATE_MODEL,
       STATE_MODEL_VERSION,
       NUM_ACCEL_POINTS,
       MNVR_ACCEL_TIMES,
       MNVR_ACCELS,
       MNVR_ACCEL_UNCS,
-      TAGS,
+      DESCRIPTION,
+      DESCRIPTOR,
       ALGORITHM,
+      TAGS,
       SOURCED_DATA,
       SOURCED_DATA_TYPES,
-      ON_ORBIT,
       TRANSACTION_ID,
     })
   }

@@ -4,6 +4,8 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { odMethod } from './odMethod.js';
+import { odSensorContribution, odSensorContributionT } from './odSensorContribution.js';
 
 
 /**
@@ -31,6 +33,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$OBD');
 }
 
+/**
+ * Unique identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,374 +43,519 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-START_TIME():string|null
-START_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-START_TIME(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Satellite catalog number
+ */
+SAT_NO():number {
   const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
-END_TIME():string|null
-END_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-END_TIME(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * International designator
+ */
+ORIG_OBJECT_ID():string|null
+ORIG_OBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ORIG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-ORIG_OBJECT_ID():string|null
-ORIG_OBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ORIG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * On-orbit reference
+ */
+ON_ORBIT():string|null
+ON_ORBIT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ON_ORBIT(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-SAT_NO():number {
+/**
+ * OD fit start time (ISO 8601)
+ */
+START_TIME():string|null
+START_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+START_TIME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-APRIORI_ID_ELSET():string|null
-APRIORI_ID_ELSET(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-APRIORI_ID_ELSET(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * OD fit end time (ISO 8601)
+ */
+END_TIME():string|null
+END_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+END_TIME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-APRIORI_ELSET():string|null
-APRIORI_ELSET(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-APRIORI_ELSET(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * OD method used
+ */
+METHOD():odMethod {
   const offset = this.bb!.__offset(this.bb_pos, 16);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : odMethod.BATCH_LEAST_SQUARES;
 }
 
-APRIORI_ID_STATE_VECTOR():string|null
-APRIORI_ID_STATE_VECTOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-APRIORI_ID_STATE_VECTOR(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Method source or software
+ */
+METHOD_SOURCE():string|null
+METHOD_SOURCE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+METHOD_SOURCE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-APRIORI_STATE_VECTOR():string|null
-APRIORI_STATE_VECTOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-APRIORI_STATE_VECTOR(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 20);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
+/**
+ * True if this is an initial orbit determination
+ */
 INITIAL_OD():boolean {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
-LAST_OB_START():string|null
-LAST_OB_START(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-LAST_OB_START(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * A priori element set identifier
+ */
+APRIORI_ID_ELSET():string|null
+APRIORI_ID_ELSET(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+APRIORI_ID_ELSET(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * A priori element set data reference
+ */
+APRIORI_ELSET():string|null
+APRIORI_ELSET(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+APRIORI_ELSET(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-LAST_OB_END():string|null
-LAST_OB_END(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-LAST_OB_END(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * A priori state vector identifier
+ */
+APRIORI_ID_STATE_VECTOR():string|null
+APRIORI_ID_STATE_VECTOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+APRIORI_ID_STATE_VECTOR(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-TIME_SPAN():number {
+/**
+ * A priori state vector data reference
+ */
+APRIORI_STATE_VECTOR():string|null
+APRIORI_STATE_VECTOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+APRIORI_STATE_VECTOR(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 28);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-EFFECTIVE_FROM():string|null
-EFFECTIVE_FROM(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-EFFECTIVE_FROM(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Start of last observation arc (ISO 8601)
+ */
+LAST_OB_START():string|null
+LAST_OB_START(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LAST_OB_START(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 30);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-EFFECTIVE_UNTIL():string|null
-EFFECTIVE_UNTIL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-EFFECTIVE_UNTIL(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * End of last observation arc (ISO 8601)
+ */
+LAST_OB_END():string|null
+LAST_OB_END(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LAST_OB_END(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-WRMS():number {
+/**
+ * Observation time span (days)
+ */
+TIME_SPAN():number {
   const offset = this.bb!.__offset(this.bb_pos, 34);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-PREVIOUS_WRMS():number {
+/**
+ * Fit span in days
+ */
+FIT_SPAN():number {
   const offset = this.bb!.__offset(this.bb_pos, 36);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-FIRST_PASS_WRMS():number {
+/**
+ * Solution effective from (ISO 8601)
+ */
+EFFECTIVE_FROM():string|null
+EFFECTIVE_FROM(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EFFECTIVE_FROM(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 38);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-BEST_PASS_WRMS():number {
+/**
+ * Solution effective until (ISO 8601)
+ */
+EFFECTIVE_UNTIL():string|null
+EFFECTIVE_UNTIL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EFFECTIVE_UNTIL(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 40);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-ERROR_GROWTH_RATE():number {
+/**
+ * Weighted RMS of residuals
+ */
+WRMS():number {
   const offset = this.bb!.__offset(this.bb_pos, 42);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-EDR():number {
+/**
+ * Previous solution WRMS
+ */
+PREVIOUS_WRMS():number {
   const offset = this.bb!.__offset(this.bb_pos, 44);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-METHOD():string|null
-METHOD(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-METHOD(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * First pass WRMS
+ */
+FIRST_PASS_WRMS():number {
   const offset = this.bb!.__offset(this.bb_pos, 46);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-METHOD_SOURCE():string|null
-METHOD_SOURCE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-METHOD_SOURCE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Best pass WRMS
+ */
+BEST_PASS_WRMS():number {
   const offset = this.bb!.__offset(this.bb_pos, 48);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-FIT_SPAN():number {
+/**
+ * Error growth rate (km/day)
+ */
+ERROR_GROWTH_RATE():number {
   const offset = this.bb!.__offset(this.bb_pos, 50);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-BALLISTIC_COEFF_EST():boolean {
+/**
+ * Energy dissipation rate
+ */
+EDR():number {
   const offset = this.bb!.__offset(this.bb_pos, 52);
-  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
-}
-
-BALLISTIC_COEFF_MODEL():string|null
-BALLISTIC_COEFF_MODEL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-BALLISTIC_COEFF_MODEL(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 54);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-AGOM_EST():boolean {
-  const offset = this.bb!.__offset(this.bb_pos, 56);
-  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
-}
-
-AGOM_MODEL():string|null
-AGOM_MODEL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-AGOM_MODEL(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 58);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-RMS_CONVERGENCE_CRITERIA():number {
-  const offset = this.bb!.__offset(this.bb_pos, 60);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-NUM_ITERATIONS():number {
-  const offset = this.bb!.__offset(this.bb_pos, 62);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+/**
+ * True if ballistic coefficient was estimated
+ */
+BALLISTIC_COEFF_EST():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 54);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Ballistic coefficient model
+ */
+BALLISTIC_COEFF_MODEL():string|null
+BALLISTIC_COEFF_MODEL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+BALLISTIC_COEFF_MODEL(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * True if area-to-mass ratio was estimated
+ */
+AGOM_EST():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Area-to-mass ratio model
+ */
+AGOM_MODEL():string|null
+AGOM_MODEL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+AGOM_MODEL(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * RMS convergence criteria
+ */
+RMS_CONVERGENCE_CRITERIA():number {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Number of iterations to converge
+ */
+NUM_ITERATIONS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Total accepted observations
+ */
+NUM_ACCEPTED_OBS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 66);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Total rejected observations
+ */
+NUM_REJECTED_OBS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 68);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Sensor contributions to this solution
+ */
+SENSORS(index: number, obj?:odSensorContribution):odSensorContribution|null {
+  const offset = this.bb!.__offset(this.bb_pos, 70);
+  return offset ? (obj || new odSensorContribution()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+sensorsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 70);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Accepted observation types
+ */
 ACCEPTED_OB_TYPS(index: number):string
 ACCEPTED_OB_TYPS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 ACCEPTED_OB_TYPS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 64);
+  const offset = this.bb!.__offset(this.bb_pos, 72);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 acceptedObTypsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 64);
+  const offset = this.bb!.__offset(this.bb_pos, 72);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Accepted observation identifiers
+ */
 ACCEPTED_OB_IDS(index: number):string
 ACCEPTED_OB_IDS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 ACCEPTED_OB_IDS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 66);
+  const offset = this.bb!.__offset(this.bb_pos, 74);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 acceptedObIdsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 66);
+  const offset = this.bb!.__offset(this.bb_pos, 74);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Rejected observation types
+ */
 REJECTED_OB_TYPS(index: number):string
 REJECTED_OB_TYPS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 REJECTED_OB_TYPS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 68);
+  const offset = this.bb!.__offset(this.bb_pos, 76);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 rejectedObTypsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 68);
+  const offset = this.bb!.__offset(this.bb_pos, 76);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Rejected observation identifiers
+ */
 REJECTED_OB_IDS(index: number):string
 REJECTED_OB_IDS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 REJECTED_OB_IDS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 70);
+  const offset = this.bb!.__offset(this.bb_pos, 78);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 rejectedObIdsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 70);
+  const offset = this.bb!.__offset(this.bb_pos, 78);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-SENSOR_IDS(index: number):string
-SENSOR_IDS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-SENSOR_IDS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 72);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
-}
-
-sensorIdsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 72);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-ON_ORBIT():string|null
-ON_ORBIT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ON_ORBIT(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 74);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 static startOBD(builder:flatbuffers.Builder) {
-  builder.startObject(36);
+  builder.startObject(38);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
   builder.addFieldOffset(0, IDOffset, 0);
 }
 
-static addStartTime(builder:flatbuffers.Builder, START_TIMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, START_TIMEOffset, 0);
-}
-
-static addEndTime(builder:flatbuffers.Builder, END_TIMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, END_TIMEOffset, 0);
+static addSatNo(builder:flatbuffers.Builder, SAT_NO:number) {
+  builder.addFieldInt32(1, SAT_NO, 0);
 }
 
 static addOrigObjectId(builder:flatbuffers.Builder, ORIG_OBJECT_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, ORIG_OBJECT_IDOffset, 0);
+  builder.addFieldOffset(2, ORIG_OBJECT_IDOffset, 0);
 }
 
-static addSatNo(builder:flatbuffers.Builder, SAT_NO:number) {
-  builder.addFieldInt32(4, SAT_NO, 0);
+static addOnOrbit(builder:flatbuffers.Builder, ON_ORBITOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(3, ON_ORBITOffset, 0);
 }
 
-static addAprioriIdElset(builder:flatbuffers.Builder, APRIORI_ID_ELSETOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, APRIORI_ID_ELSETOffset, 0);
+static addStartTime(builder:flatbuffers.Builder, START_TIMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(4, START_TIMEOffset, 0);
 }
 
-static addAprioriElset(builder:flatbuffers.Builder, APRIORI_ELSETOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(6, APRIORI_ELSETOffset, 0);
+static addEndTime(builder:flatbuffers.Builder, END_TIMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, END_TIMEOffset, 0);
 }
 
-static addAprioriIdStateVector(builder:flatbuffers.Builder, APRIORI_ID_STATE_VECTOROffset:flatbuffers.Offset) {
-  builder.addFieldOffset(7, APRIORI_ID_STATE_VECTOROffset, 0);
-}
-
-static addAprioriStateVector(builder:flatbuffers.Builder, APRIORI_STATE_VECTOROffset:flatbuffers.Offset) {
-  builder.addFieldOffset(8, APRIORI_STATE_VECTOROffset, 0);
-}
-
-static addInitialOd(builder:flatbuffers.Builder, INITIAL_OD:boolean) {
-  builder.addFieldInt8(9, +INITIAL_OD, +false);
-}
-
-static addLastObStart(builder:flatbuffers.Builder, LAST_OB_STARTOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(10, LAST_OB_STARTOffset, 0);
-}
-
-static addLastObEnd(builder:flatbuffers.Builder, LAST_OB_ENDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(11, LAST_OB_ENDOffset, 0);
-}
-
-static addTimeSpan(builder:flatbuffers.Builder, TIME_SPAN:number) {
-  builder.addFieldFloat64(12, TIME_SPAN, 0.0);
-}
-
-static addEffectiveFrom(builder:flatbuffers.Builder, EFFECTIVE_FROMOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(13, EFFECTIVE_FROMOffset, 0);
-}
-
-static addEffectiveUntil(builder:flatbuffers.Builder, EFFECTIVE_UNTILOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(14, EFFECTIVE_UNTILOffset, 0);
-}
-
-static addWrms(builder:flatbuffers.Builder, WRMS:number) {
-  builder.addFieldFloat64(15, WRMS, 0.0);
-}
-
-static addPreviousWrms(builder:flatbuffers.Builder, PREVIOUS_WRMS:number) {
-  builder.addFieldFloat64(16, PREVIOUS_WRMS, 0.0);
-}
-
-static addFirstPassWrms(builder:flatbuffers.Builder, FIRST_PASS_WRMS:number) {
-  builder.addFieldFloat64(17, FIRST_PASS_WRMS, 0.0);
-}
-
-static addBestPassWrms(builder:flatbuffers.Builder, BEST_PASS_WRMS:number) {
-  builder.addFieldFloat64(18, BEST_PASS_WRMS, 0.0);
-}
-
-static addErrorGrowthRate(builder:flatbuffers.Builder, ERROR_GROWTH_RATE:number) {
-  builder.addFieldFloat64(19, ERROR_GROWTH_RATE, 0.0);
-}
-
-static addEdr(builder:flatbuffers.Builder, EDR:number) {
-  builder.addFieldFloat64(20, EDR, 0.0);
-}
-
-static addMethod(builder:flatbuffers.Builder, METHODOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(21, METHODOffset, 0);
+static addMethod(builder:flatbuffers.Builder, METHOD:odMethod) {
+  builder.addFieldInt8(6, METHOD, odMethod.BATCH_LEAST_SQUARES);
 }
 
 static addMethodSource(builder:flatbuffers.Builder, METHOD_SOURCEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(22, METHOD_SOURCEOffset, 0);
+  builder.addFieldOffset(7, METHOD_SOURCEOffset, 0);
+}
+
+static addInitialOd(builder:flatbuffers.Builder, INITIAL_OD:boolean) {
+  builder.addFieldInt8(8, +INITIAL_OD, +false);
+}
+
+static addAprioriIdElset(builder:flatbuffers.Builder, APRIORI_ID_ELSETOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, APRIORI_ID_ELSETOffset, 0);
+}
+
+static addAprioriElset(builder:flatbuffers.Builder, APRIORI_ELSETOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(10, APRIORI_ELSETOffset, 0);
+}
+
+static addAprioriIdStateVector(builder:flatbuffers.Builder, APRIORI_ID_STATE_VECTOROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, APRIORI_ID_STATE_VECTOROffset, 0);
+}
+
+static addAprioriStateVector(builder:flatbuffers.Builder, APRIORI_STATE_VECTOROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(12, APRIORI_STATE_VECTOROffset, 0);
+}
+
+static addLastObStart(builder:flatbuffers.Builder, LAST_OB_STARTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, LAST_OB_STARTOffset, 0);
+}
+
+static addLastObEnd(builder:flatbuffers.Builder, LAST_OB_ENDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, LAST_OB_ENDOffset, 0);
+}
+
+static addTimeSpan(builder:flatbuffers.Builder, TIME_SPAN:number) {
+  builder.addFieldFloat64(15, TIME_SPAN, 0.0);
 }
 
 static addFitSpan(builder:flatbuffers.Builder, FIT_SPAN:number) {
-  builder.addFieldFloat64(23, FIT_SPAN, 0.0);
+  builder.addFieldFloat64(16, FIT_SPAN, 0.0);
+}
+
+static addEffectiveFrom(builder:flatbuffers.Builder, EFFECTIVE_FROMOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, EFFECTIVE_FROMOffset, 0);
+}
+
+static addEffectiveUntil(builder:flatbuffers.Builder, EFFECTIVE_UNTILOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(18, EFFECTIVE_UNTILOffset, 0);
+}
+
+static addWrms(builder:flatbuffers.Builder, WRMS:number) {
+  builder.addFieldFloat64(19, WRMS, 0.0);
+}
+
+static addPreviousWrms(builder:flatbuffers.Builder, PREVIOUS_WRMS:number) {
+  builder.addFieldFloat64(20, PREVIOUS_WRMS, 0.0);
+}
+
+static addFirstPassWrms(builder:flatbuffers.Builder, FIRST_PASS_WRMS:number) {
+  builder.addFieldFloat64(21, FIRST_PASS_WRMS, 0.0);
+}
+
+static addBestPassWrms(builder:flatbuffers.Builder, BEST_PASS_WRMS:number) {
+  builder.addFieldFloat64(22, BEST_PASS_WRMS, 0.0);
+}
+
+static addErrorGrowthRate(builder:flatbuffers.Builder, ERROR_GROWTH_RATE:number) {
+  builder.addFieldFloat64(23, ERROR_GROWTH_RATE, 0.0);
+}
+
+static addEdr(builder:flatbuffers.Builder, EDR:number) {
+  builder.addFieldFloat64(24, EDR, 0.0);
 }
 
 static addBallisticCoeffEst(builder:flatbuffers.Builder, BALLISTIC_COEFF_EST:boolean) {
-  builder.addFieldInt8(24, +BALLISTIC_COEFF_EST, +false);
+  builder.addFieldInt8(25, +BALLISTIC_COEFF_EST, +false);
 }
 
 static addBallisticCoeffModel(builder:flatbuffers.Builder, BALLISTIC_COEFF_MODELOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(25, BALLISTIC_COEFF_MODELOffset, 0);
+  builder.addFieldOffset(26, BALLISTIC_COEFF_MODELOffset, 0);
 }
 
 static addAgomEst(builder:flatbuffers.Builder, AGOM_EST:boolean) {
-  builder.addFieldInt8(26, +AGOM_EST, +false);
+  builder.addFieldInt8(27, +AGOM_EST, +false);
 }
 
 static addAgomModel(builder:flatbuffers.Builder, AGOM_MODELOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(27, AGOM_MODELOffset, 0);
+  builder.addFieldOffset(28, AGOM_MODELOffset, 0);
 }
 
 static addRmsConvergenceCriteria(builder:flatbuffers.Builder, RMS_CONVERGENCE_CRITERIA:number) {
-  builder.addFieldFloat64(28, RMS_CONVERGENCE_CRITERIA, 0.0);
+  builder.addFieldFloat64(29, RMS_CONVERGENCE_CRITERIA, 0.0);
 }
 
 static addNumIterations(builder:flatbuffers.Builder, NUM_ITERATIONS:number) {
-  builder.addFieldInt32(29, NUM_ITERATIONS, 0);
+  builder.addFieldInt16(30, NUM_ITERATIONS, 0);
+}
+
+static addNumAcceptedObs(builder:flatbuffers.Builder, NUM_ACCEPTED_OBS:number) {
+  builder.addFieldInt32(31, NUM_ACCEPTED_OBS, 0);
+}
+
+static addNumRejectedObs(builder:flatbuffers.Builder, NUM_REJECTED_OBS:number) {
+  builder.addFieldInt32(32, NUM_REJECTED_OBS, 0);
+}
+
+static addSensors(builder:flatbuffers.Builder, SENSORSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(33, SENSORSOffset, 0);
+}
+
+static createSensorsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startSensorsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
 }
 
 static addAcceptedObTyps(builder:flatbuffers.Builder, ACCEPTED_OB_TYPSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(30, ACCEPTED_OB_TYPSOffset, 0);
+  builder.addFieldOffset(34, ACCEPTED_OB_TYPSOffset, 0);
 }
 
 static createAcceptedObTypsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -421,7 +571,7 @@ static startAcceptedObTypsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addAcceptedObIds(builder:flatbuffers.Builder, ACCEPTED_OB_IDSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(31, ACCEPTED_OB_IDSOffset, 0);
+  builder.addFieldOffset(35, ACCEPTED_OB_IDSOffset, 0);
 }
 
 static createAcceptedObIdsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -437,7 +587,7 @@ static startAcceptedObIdsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addRejectedObTyps(builder:flatbuffers.Builder, REJECTED_OB_TYPSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(32, REJECTED_OB_TYPSOffset, 0);
+  builder.addFieldOffset(36, REJECTED_OB_TYPSOffset, 0);
 }
 
 static createRejectedObTypsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -453,7 +603,7 @@ static startRejectedObTypsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addRejectedObIds(builder:flatbuffers.Builder, REJECTED_OB_IDSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(33, REJECTED_OB_IDSOffset, 0);
+  builder.addFieldOffset(37, REJECTED_OB_IDSOffset, 0);
 }
 
 static createRejectedObIdsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -466,26 +616,6 @@ static createRejectedObIdsVector(builder:flatbuffers.Builder, data:flatbuffers.O
 
 static startRejectedObIdsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
-}
-
-static addSensorIds(builder:flatbuffers.Builder, SENSOR_IDSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(34, SENSOR_IDSOffset, 0);
-}
-
-static createSensorIdsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startSensorIdsVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
-static addOnOrbit(builder:flatbuffers.Builder, ON_ORBITOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(35, ON_ORBITOffset, 0);
 }
 
 static endOBD(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -501,21 +631,25 @@ static finishSizePrefixedOBDBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$OBD', true);
 }
 
-static createOBD(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, START_TIMEOffset:flatbuffers.Offset, END_TIMEOffset:flatbuffers.Offset, ORIG_OBJECT_IDOffset:flatbuffers.Offset, SAT_NO:number, APRIORI_ID_ELSETOffset:flatbuffers.Offset, APRIORI_ELSETOffset:flatbuffers.Offset, APRIORI_ID_STATE_VECTOROffset:flatbuffers.Offset, APRIORI_STATE_VECTOROffset:flatbuffers.Offset, INITIAL_OD:boolean, LAST_OB_STARTOffset:flatbuffers.Offset, LAST_OB_ENDOffset:flatbuffers.Offset, TIME_SPAN:number, EFFECTIVE_FROMOffset:flatbuffers.Offset, EFFECTIVE_UNTILOffset:flatbuffers.Offset, WRMS:number, PREVIOUS_WRMS:number, FIRST_PASS_WRMS:number, BEST_PASS_WRMS:number, ERROR_GROWTH_RATE:number, EDR:number, METHODOffset:flatbuffers.Offset, METHOD_SOURCEOffset:flatbuffers.Offset, FIT_SPAN:number, BALLISTIC_COEFF_EST:boolean, BALLISTIC_COEFF_MODELOffset:flatbuffers.Offset, AGOM_EST:boolean, AGOM_MODELOffset:flatbuffers.Offset, RMS_CONVERGENCE_CRITERIA:number, NUM_ITERATIONS:number, ACCEPTED_OB_TYPSOffset:flatbuffers.Offset, ACCEPTED_OB_IDSOffset:flatbuffers.Offset, REJECTED_OB_TYPSOffset:flatbuffers.Offset, REJECTED_OB_IDSOffset:flatbuffers.Offset, SENSOR_IDSOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createOBD(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, SAT_NO:number, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset, START_TIMEOffset:flatbuffers.Offset, END_TIMEOffset:flatbuffers.Offset, METHOD:odMethod, METHOD_SOURCEOffset:flatbuffers.Offset, INITIAL_OD:boolean, APRIORI_ID_ELSETOffset:flatbuffers.Offset, APRIORI_ELSETOffset:flatbuffers.Offset, APRIORI_ID_STATE_VECTOROffset:flatbuffers.Offset, APRIORI_STATE_VECTOROffset:flatbuffers.Offset, LAST_OB_STARTOffset:flatbuffers.Offset, LAST_OB_ENDOffset:flatbuffers.Offset, TIME_SPAN:number, FIT_SPAN:number, EFFECTIVE_FROMOffset:flatbuffers.Offset, EFFECTIVE_UNTILOffset:flatbuffers.Offset, WRMS:number, PREVIOUS_WRMS:number, FIRST_PASS_WRMS:number, BEST_PASS_WRMS:number, ERROR_GROWTH_RATE:number, EDR:number, BALLISTIC_COEFF_EST:boolean, BALLISTIC_COEFF_MODELOffset:flatbuffers.Offset, AGOM_EST:boolean, AGOM_MODELOffset:flatbuffers.Offset, RMS_CONVERGENCE_CRITERIA:number, NUM_ITERATIONS:number, NUM_ACCEPTED_OBS:number, NUM_REJECTED_OBS:number, SENSORSOffset:flatbuffers.Offset, ACCEPTED_OB_TYPSOffset:flatbuffers.Offset, ACCEPTED_OB_IDSOffset:flatbuffers.Offset, REJECTED_OB_TYPSOffset:flatbuffers.Offset, REJECTED_OB_IDSOffset:flatbuffers.Offset):flatbuffers.Offset {
   OBD.startOBD(builder);
   OBD.addId(builder, IDOffset);
+  OBD.addSatNo(builder, SAT_NO);
+  OBD.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
+  OBD.addOnOrbit(builder, ON_ORBITOffset);
   OBD.addStartTime(builder, START_TIMEOffset);
   OBD.addEndTime(builder, END_TIMEOffset);
-  OBD.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
-  OBD.addSatNo(builder, SAT_NO);
+  OBD.addMethod(builder, METHOD);
+  OBD.addMethodSource(builder, METHOD_SOURCEOffset);
+  OBD.addInitialOd(builder, INITIAL_OD);
   OBD.addAprioriIdElset(builder, APRIORI_ID_ELSETOffset);
   OBD.addAprioriElset(builder, APRIORI_ELSETOffset);
   OBD.addAprioriIdStateVector(builder, APRIORI_ID_STATE_VECTOROffset);
   OBD.addAprioriStateVector(builder, APRIORI_STATE_VECTOROffset);
-  OBD.addInitialOd(builder, INITIAL_OD);
   OBD.addLastObStart(builder, LAST_OB_STARTOffset);
   OBD.addLastObEnd(builder, LAST_OB_ENDOffset);
   OBD.addTimeSpan(builder, TIME_SPAN);
+  OBD.addFitSpan(builder, FIT_SPAN);
   OBD.addEffectiveFrom(builder, EFFECTIVE_FROMOffset);
   OBD.addEffectiveUntil(builder, EFFECTIVE_UNTILOffset);
   OBD.addWrms(builder, WRMS);
@@ -524,39 +658,41 @@ static createOBD(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, START
   OBD.addBestPassWrms(builder, BEST_PASS_WRMS);
   OBD.addErrorGrowthRate(builder, ERROR_GROWTH_RATE);
   OBD.addEdr(builder, EDR);
-  OBD.addMethod(builder, METHODOffset);
-  OBD.addMethodSource(builder, METHOD_SOURCEOffset);
-  OBD.addFitSpan(builder, FIT_SPAN);
   OBD.addBallisticCoeffEst(builder, BALLISTIC_COEFF_EST);
   OBD.addBallisticCoeffModel(builder, BALLISTIC_COEFF_MODELOffset);
   OBD.addAgomEst(builder, AGOM_EST);
   OBD.addAgomModel(builder, AGOM_MODELOffset);
   OBD.addRmsConvergenceCriteria(builder, RMS_CONVERGENCE_CRITERIA);
   OBD.addNumIterations(builder, NUM_ITERATIONS);
+  OBD.addNumAcceptedObs(builder, NUM_ACCEPTED_OBS);
+  OBD.addNumRejectedObs(builder, NUM_REJECTED_OBS);
+  OBD.addSensors(builder, SENSORSOffset);
   OBD.addAcceptedObTyps(builder, ACCEPTED_OB_TYPSOffset);
   OBD.addAcceptedObIds(builder, ACCEPTED_OB_IDSOffset);
   OBD.addRejectedObTyps(builder, REJECTED_OB_TYPSOffset);
   OBD.addRejectedObIds(builder, REJECTED_OB_IDSOffset);
-  OBD.addSensorIds(builder, SENSOR_IDSOffset);
-  OBD.addOnOrbit(builder, ON_ORBITOffset);
   return OBD.endOBD(builder);
 }
 
 unpack(): OBDT {
   return new OBDT(
     this.ID(),
+    this.SAT_NO(),
+    this.ORIG_OBJECT_ID(),
+    this.ON_ORBIT(),
     this.START_TIME(),
     this.END_TIME(),
-    this.ORIG_OBJECT_ID(),
-    this.SAT_NO(),
+    this.METHOD(),
+    this.METHOD_SOURCE(),
+    this.INITIAL_OD(),
     this.APRIORI_ID_ELSET(),
     this.APRIORI_ELSET(),
     this.APRIORI_ID_STATE_VECTOR(),
     this.APRIORI_STATE_VECTOR(),
-    this.INITIAL_OD(),
     this.LAST_OB_START(),
     this.LAST_OB_END(),
     this.TIME_SPAN(),
+    this.FIT_SPAN(),
     this.EFFECTIVE_FROM(),
     this.EFFECTIVE_UNTIL(),
     this.WRMS(),
@@ -565,39 +701,41 @@ unpack(): OBDT {
     this.BEST_PASS_WRMS(),
     this.ERROR_GROWTH_RATE(),
     this.EDR(),
-    this.METHOD(),
-    this.METHOD_SOURCE(),
-    this.FIT_SPAN(),
     this.BALLISTIC_COEFF_EST(),
     this.BALLISTIC_COEFF_MODEL(),
     this.AGOM_EST(),
     this.AGOM_MODEL(),
     this.RMS_CONVERGENCE_CRITERIA(),
     this.NUM_ITERATIONS(),
+    this.NUM_ACCEPTED_OBS(),
+    this.NUM_REJECTED_OBS(),
+    this.bb!.createObjList<odSensorContribution, odSensorContributionT>(this.SENSORS.bind(this), this.sensorsLength()),
     this.bb!.createScalarList<string>(this.ACCEPTED_OB_TYPS.bind(this), this.acceptedObTypsLength()),
     this.bb!.createScalarList<string>(this.ACCEPTED_OB_IDS.bind(this), this.acceptedObIdsLength()),
     this.bb!.createScalarList<string>(this.REJECTED_OB_TYPS.bind(this), this.rejectedObTypsLength()),
-    this.bb!.createScalarList<string>(this.REJECTED_OB_IDS.bind(this), this.rejectedObIdsLength()),
-    this.bb!.createScalarList<string>(this.SENSOR_IDS.bind(this), this.sensorIdsLength()),
-    this.ON_ORBIT()
+    this.bb!.createScalarList<string>(this.REJECTED_OB_IDS.bind(this), this.rejectedObIdsLength())
   );
 }
 
 
 unpackTo(_o: OBDT): void {
   _o.ID = this.ID();
+  _o.SAT_NO = this.SAT_NO();
+  _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID();
+  _o.ON_ORBIT = this.ON_ORBIT();
   _o.START_TIME = this.START_TIME();
   _o.END_TIME = this.END_TIME();
-  _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID();
-  _o.SAT_NO = this.SAT_NO();
+  _o.METHOD = this.METHOD();
+  _o.METHOD_SOURCE = this.METHOD_SOURCE();
+  _o.INITIAL_OD = this.INITIAL_OD();
   _o.APRIORI_ID_ELSET = this.APRIORI_ID_ELSET();
   _o.APRIORI_ELSET = this.APRIORI_ELSET();
   _o.APRIORI_ID_STATE_VECTOR = this.APRIORI_ID_STATE_VECTOR();
   _o.APRIORI_STATE_VECTOR = this.APRIORI_STATE_VECTOR();
-  _o.INITIAL_OD = this.INITIAL_OD();
   _o.LAST_OB_START = this.LAST_OB_START();
   _o.LAST_OB_END = this.LAST_OB_END();
   _o.TIME_SPAN = this.TIME_SPAN();
+  _o.FIT_SPAN = this.FIT_SPAN();
   _o.EFFECTIVE_FROM = this.EFFECTIVE_FROM();
   _o.EFFECTIVE_UNTIL = this.EFFECTIVE_UNTIL();
   _o.WRMS = this.WRMS();
@@ -606,39 +744,41 @@ unpackTo(_o: OBDT): void {
   _o.BEST_PASS_WRMS = this.BEST_PASS_WRMS();
   _o.ERROR_GROWTH_RATE = this.ERROR_GROWTH_RATE();
   _o.EDR = this.EDR();
-  _o.METHOD = this.METHOD();
-  _o.METHOD_SOURCE = this.METHOD_SOURCE();
-  _o.FIT_SPAN = this.FIT_SPAN();
   _o.BALLISTIC_COEFF_EST = this.BALLISTIC_COEFF_EST();
   _o.BALLISTIC_COEFF_MODEL = this.BALLISTIC_COEFF_MODEL();
   _o.AGOM_EST = this.AGOM_EST();
   _o.AGOM_MODEL = this.AGOM_MODEL();
   _o.RMS_CONVERGENCE_CRITERIA = this.RMS_CONVERGENCE_CRITERIA();
   _o.NUM_ITERATIONS = this.NUM_ITERATIONS();
+  _o.NUM_ACCEPTED_OBS = this.NUM_ACCEPTED_OBS();
+  _o.NUM_REJECTED_OBS = this.NUM_REJECTED_OBS();
+  _o.SENSORS = this.bb!.createObjList<odSensorContribution, odSensorContributionT>(this.SENSORS.bind(this), this.sensorsLength());
   _o.ACCEPTED_OB_TYPS = this.bb!.createScalarList<string>(this.ACCEPTED_OB_TYPS.bind(this), this.acceptedObTypsLength());
   _o.ACCEPTED_OB_IDS = this.bb!.createScalarList<string>(this.ACCEPTED_OB_IDS.bind(this), this.acceptedObIdsLength());
   _o.REJECTED_OB_TYPS = this.bb!.createScalarList<string>(this.REJECTED_OB_TYPS.bind(this), this.rejectedObTypsLength());
   _o.REJECTED_OB_IDS = this.bb!.createScalarList<string>(this.REJECTED_OB_IDS.bind(this), this.rejectedObIdsLength());
-  _o.SENSOR_IDS = this.bb!.createScalarList<string>(this.SENSOR_IDS.bind(this), this.sensorIdsLength());
-  _o.ON_ORBIT = this.ON_ORBIT();
 }
 }
 
 export class OBDT implements flatbuffers.IGeneratedObject {
 constructor(
   public ID: string|Uint8Array|null = null,
+  public SAT_NO: number = 0,
+  public ORIG_OBJECT_ID: string|Uint8Array|null = null,
+  public ON_ORBIT: string|Uint8Array|null = null,
   public START_TIME: string|Uint8Array|null = null,
   public END_TIME: string|Uint8Array|null = null,
-  public ORIG_OBJECT_ID: string|Uint8Array|null = null,
-  public SAT_NO: number = 0,
+  public METHOD: odMethod = odMethod.BATCH_LEAST_SQUARES,
+  public METHOD_SOURCE: string|Uint8Array|null = null,
+  public INITIAL_OD: boolean = false,
   public APRIORI_ID_ELSET: string|Uint8Array|null = null,
   public APRIORI_ELSET: string|Uint8Array|null = null,
   public APRIORI_ID_STATE_VECTOR: string|Uint8Array|null = null,
   public APRIORI_STATE_VECTOR: string|Uint8Array|null = null,
-  public INITIAL_OD: boolean = false,
   public LAST_OB_START: string|Uint8Array|null = null,
   public LAST_OB_END: string|Uint8Array|null = null,
   public TIME_SPAN: number = 0.0,
+  public FIT_SPAN: number = 0.0,
   public EFFECTIVE_FROM: string|Uint8Array|null = null,
   public EFFECTIVE_UNTIL: string|Uint8Array|null = null,
   public WRMS: number = 0.0,
@@ -647,29 +787,29 @@ constructor(
   public BEST_PASS_WRMS: number = 0.0,
   public ERROR_GROWTH_RATE: number = 0.0,
   public EDR: number = 0.0,
-  public METHOD: string|Uint8Array|null = null,
-  public METHOD_SOURCE: string|Uint8Array|null = null,
-  public FIT_SPAN: number = 0.0,
   public BALLISTIC_COEFF_EST: boolean = false,
   public BALLISTIC_COEFF_MODEL: string|Uint8Array|null = null,
   public AGOM_EST: boolean = false,
   public AGOM_MODEL: string|Uint8Array|null = null,
   public RMS_CONVERGENCE_CRITERIA: number = 0.0,
   public NUM_ITERATIONS: number = 0,
+  public NUM_ACCEPTED_OBS: number = 0,
+  public NUM_REJECTED_OBS: number = 0,
+  public SENSORS: (odSensorContributionT)[] = [],
   public ACCEPTED_OB_TYPS: (string)[] = [],
   public ACCEPTED_OB_IDS: (string)[] = [],
   public REJECTED_OB_TYPS: (string)[] = [],
-  public REJECTED_OB_IDS: (string)[] = [],
-  public SENSOR_IDS: (string)[] = [],
-  public ON_ORBIT: string|Uint8Array|null = null
+  public REJECTED_OB_IDS: (string)[] = []
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ID = (this.ID !== null ? builder.createString(this.ID!) : 0);
+  const ORIG_OBJECT_ID = (this.ORIG_OBJECT_ID !== null ? builder.createString(this.ORIG_OBJECT_ID!) : 0);
+  const ON_ORBIT = (this.ON_ORBIT !== null ? builder.createString(this.ON_ORBIT!) : 0);
   const START_TIME = (this.START_TIME !== null ? builder.createString(this.START_TIME!) : 0);
   const END_TIME = (this.END_TIME !== null ? builder.createString(this.END_TIME!) : 0);
-  const ORIG_OBJECT_ID = (this.ORIG_OBJECT_ID !== null ? builder.createString(this.ORIG_OBJECT_ID!) : 0);
+  const METHOD_SOURCE = (this.METHOD_SOURCE !== null ? builder.createString(this.METHOD_SOURCE!) : 0);
   const APRIORI_ID_ELSET = (this.APRIORI_ID_ELSET !== null ? builder.createString(this.APRIORI_ID_ELSET!) : 0);
   const APRIORI_ELSET = (this.APRIORI_ELSET !== null ? builder.createString(this.APRIORI_ELSET!) : 0);
   const APRIORI_ID_STATE_VECTOR = (this.APRIORI_ID_STATE_VECTOR !== null ? builder.createString(this.APRIORI_ID_STATE_VECTOR!) : 0);
@@ -678,31 +818,32 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const LAST_OB_END = (this.LAST_OB_END !== null ? builder.createString(this.LAST_OB_END!) : 0);
   const EFFECTIVE_FROM = (this.EFFECTIVE_FROM !== null ? builder.createString(this.EFFECTIVE_FROM!) : 0);
   const EFFECTIVE_UNTIL = (this.EFFECTIVE_UNTIL !== null ? builder.createString(this.EFFECTIVE_UNTIL!) : 0);
-  const METHOD = (this.METHOD !== null ? builder.createString(this.METHOD!) : 0);
-  const METHOD_SOURCE = (this.METHOD_SOURCE !== null ? builder.createString(this.METHOD_SOURCE!) : 0);
   const BALLISTIC_COEFF_MODEL = (this.BALLISTIC_COEFF_MODEL !== null ? builder.createString(this.BALLISTIC_COEFF_MODEL!) : 0);
   const AGOM_MODEL = (this.AGOM_MODEL !== null ? builder.createString(this.AGOM_MODEL!) : 0);
+  const SENSORS = OBD.createSensorsVector(builder, builder.createObjectOffsetList(this.SENSORS));
   const ACCEPTED_OB_TYPS = OBD.createAcceptedObTypsVector(builder, builder.createObjectOffsetList(this.ACCEPTED_OB_TYPS));
   const ACCEPTED_OB_IDS = OBD.createAcceptedObIdsVector(builder, builder.createObjectOffsetList(this.ACCEPTED_OB_IDS));
   const REJECTED_OB_TYPS = OBD.createRejectedObTypsVector(builder, builder.createObjectOffsetList(this.REJECTED_OB_TYPS));
   const REJECTED_OB_IDS = OBD.createRejectedObIdsVector(builder, builder.createObjectOffsetList(this.REJECTED_OB_IDS));
-  const SENSOR_IDS = OBD.createSensorIdsVector(builder, builder.createObjectOffsetList(this.SENSOR_IDS));
-  const ON_ORBIT = (this.ON_ORBIT !== null ? builder.createString(this.ON_ORBIT!) : 0);
 
   return OBD.createOBD(builder,
     ID,
+    this.SAT_NO,
+    ORIG_OBJECT_ID,
+    ON_ORBIT,
     START_TIME,
     END_TIME,
-    ORIG_OBJECT_ID,
-    this.SAT_NO,
+    this.METHOD,
+    METHOD_SOURCE,
+    this.INITIAL_OD,
     APRIORI_ID_ELSET,
     APRIORI_ELSET,
     APRIORI_ID_STATE_VECTOR,
     APRIORI_STATE_VECTOR,
-    this.INITIAL_OD,
     LAST_OB_START,
     LAST_OB_END,
     this.TIME_SPAN,
+    this.FIT_SPAN,
     EFFECTIVE_FROM,
     EFFECTIVE_UNTIL,
     this.WRMS,
@@ -711,21 +852,19 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.BEST_PASS_WRMS,
     this.ERROR_GROWTH_RATE,
     this.EDR,
-    METHOD,
-    METHOD_SOURCE,
-    this.FIT_SPAN,
     this.BALLISTIC_COEFF_EST,
     BALLISTIC_COEFF_MODEL,
     this.AGOM_EST,
     AGOM_MODEL,
     this.RMS_CONVERGENCE_CRITERIA,
     this.NUM_ITERATIONS,
+    this.NUM_ACCEPTED_OBS,
+    this.NUM_REJECTED_OBS,
+    SENSORS,
     ACCEPTED_OB_TYPS,
     ACCEPTED_OB_IDS,
     REJECTED_OB_TYPS,
-    REJECTED_OB_IDS,
-    SENSOR_IDS,
-    ON_ORBIT
+    REJECTED_OB_IDS
   );
 }
 }

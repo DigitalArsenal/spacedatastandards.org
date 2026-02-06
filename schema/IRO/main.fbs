@@ -1,13 +1,84 @@
-// Hash: e7ac746df05078a5108a269c02719c9427dbfeed44de644800caf81917684d78
-// Version: 0.0.2
+// Hash: 01ceefeae0c49265cbe769ec5ccf4ef1b65e5dca52c5b2699824f3fba34cd194
+// Version: 0.0.3
 // -----------------------------------END_HEADER
+enum irBand : byte {
+  SWIR,
+  MWIR,
+  LWIR,
+  VLWIR,
+  BROADBAND
+}
+
+enum irDetectionType : byte {
+  POINT_SOURCE,
+  RESOLVED,
+  STREAK,
+  UNRESOLVED,
+  EXTENDED
+}
+
 /// Infrared Observation
 table IRO {
+  /// Unique identifier
   ID:string;
+  /// Reference to source entity
   ID_ENTITY:string;
+  /// Sensor or observation name
   NAME:string;
+  /// Description of observation
   DESCRIPTION:string;
+  /// Source entity designator
   ENTITY:string;
+  /// Observation epoch (ISO 8601)
+  EPOCH:string;
+  /// Sensor identifier
+  SENSOR_ID:string;
+  /// Target satellite number (if identified)
+  SAT_NO:uint32;
+  /// Target object designator
+  OBJECT_DESIGNATOR:string;
+  /// IR spectral band
+  BAND:irBand;
+  /// Detection type
+  DETECTION_TYPE:irDetectionType;
+  /// Right ascension in degrees
+  RA:double;
+  /// Declination in degrees
+  DEC:double;
+  /// Right ascension uncertainty in arcseconds
+  RA_UNC:double;
+  /// Declination uncertainty in arcseconds
+  DEC_UNC:double;
+  /// Azimuth angle in degrees
+  AZIMUTH:double;
+  /// Elevation angle in degrees
+  ELEVATION:double;
+  /// Range in km (if available)
+  RANGE:double;
+  /// Irradiance in W/m^2
+  IRRADIANCE:double;
+  /// Irradiance uncertainty in W/m^2
+  IRRADIANCE_UNC:double;
+  /// Apparent IR magnitude
+  IR_MAG:double;
+  /// Magnitude uncertainty
+  MAG_UNC:double;
+  /// Effective temperature in Kelvin
+  TEMPERATURE:double;
+  /// Integration time in seconds
+  INTEGRATION_TIME:double;
+  /// Background irradiance in W/m^2/sr
+  BACKGROUND:double;
+  /// Signal-to-noise ratio
+  SNR:double;
+  /// Spectral data wavelengths in micrometers
+  WAVELENGTHS:[double];
+  /// Spectral data values in W/m^2/um
+  SPECTRAL_VALUES:[double];
+  /// Data quality indicator (0-9, 9=best)
+  QUALITY:uint8;
+  /// Additional notes
+  NOTES:string;
 }
 
 root_type IRO;

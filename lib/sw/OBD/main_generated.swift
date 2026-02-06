@@ -4,6 +4,102 @@
 
 import FlatBuffers
 
+public enum odMethod: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case batchLeastSquares = 0
+  case sequentialLeastSquares = 1
+  case extendedKalman = 2
+  case unscentedKalman = 3
+  case specialPerturbations = 4
+  case generalPerturbations = 5
+  case differentialCorrection = 6
+  case unknown = 7
+
+  public static var max: odMethod { return .unknown }
+  public static var min: odMethod { return .batchLeastSquares }
+}
+
+
+///  Sensor contribution to an orbit determination solution
+public struct odSensorContribution: FlatBufferObject, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$OBD" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: odSensorContribution.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private enum VTOFFSET: VOffset {
+    case SENSOR_ID = 4
+    case ORIG_SENSOR_ID = 6
+    case NUM_ACCEPTED = 8
+    case NUM_REJECTED = 10
+    case WRMS = 12
+    case OB_TYPES = 14
+    var v: Int32 { Int32(self.rawValue) }
+    var p: VOffset { self.rawValue }
+  }
+
+  ///  Sensor identifier
+  public var SENSOR_ID: String? { let o = _accessor.offset(VTOFFSET.SENSOR_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.SENSOR_ID.v) }
+  ///  Original sensor identifier
+  public var ORIG_SENSOR_ID: String? { let o = _accessor.offset(VTOFFSET.ORIG_SENSOR_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ORIG_SENSOR_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_SENSOR_ID.v) }
+  ///  Number of accepted observations from this sensor
+  public var NUM_ACCEPTED: UInt32 { let o = _accessor.offset(VTOFFSET.NUM_ACCEPTED.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Number of rejected observations from this sensor
+  public var NUM_REJECTED: UInt32 { let o = _accessor.offset(VTOFFSET.NUM_REJECTED.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Weighted RMS for this sensor's observations
+  public var WRMS: Double { let o = _accessor.offset(VTOFFSET.WRMS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Observation types from this sensor
+  public var hasObTypes: Bool { let o = _accessor.offset(VTOFFSET.OB_TYPES.v); return o == 0 ? false : true }
+  public var OB_TYPESCount: Int32 { let o = _accessor.offset(VTOFFSET.OB_TYPES.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func OB_TYPES(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.OB_TYPES.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  public static func startodSensorContribution(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public static func add(SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SENSOR_ID, at: VTOFFSET.SENSOR_ID.p) }
+  public static func add(ORIG_SENSOR_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_SENSOR_ID, at: VTOFFSET.ORIG_SENSOR_ID.p) }
+  public static func add(NUM_ACCEPTED: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_ACCEPTED, def: 0, at: VTOFFSET.NUM_ACCEPTED.p) }
+  public static func add(NUM_REJECTED: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_REJECTED, def: 0, at: VTOFFSET.NUM_REJECTED.p) }
+  public static func add(WRMS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WRMS, def: 0.0, at: VTOFFSET.WRMS.p) }
+  public static func addVectorOf(OB_TYPES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: OB_TYPES, at: VTOFFSET.OB_TYPES.p) }
+  public static func endodSensorContribution(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createodSensorContribution(
+    _ fbb: inout FlatBufferBuilder,
+    SENSOR_IDOffset SENSOR_ID: Offset = Offset(),
+    ORIG_SENSOR_IDOffset ORIG_SENSOR_ID: Offset = Offset(),
+    NUM_ACCEPTED: UInt32 = 0,
+    NUM_REJECTED: UInt32 = 0,
+    WRMS: Double = 0.0,
+    OB_TYPESVectorOffset OB_TYPES: Offset = Offset()
+  ) -> Offset {
+    let __start = odSensorContribution.startodSensorContribution(&fbb)
+    odSensorContribution.add(SENSOR_ID: SENSOR_ID, &fbb)
+    odSensorContribution.add(ORIG_SENSOR_ID: ORIG_SENSOR_ID, &fbb)
+    odSensorContribution.add(NUM_ACCEPTED: NUM_ACCEPTED, &fbb)
+    odSensorContribution.add(NUM_REJECTED: NUM_REJECTED, &fbb)
+    odSensorContribution.add(WRMS: WRMS, &fbb)
+    odSensorContribution.addVectorOf(OB_TYPES: OB_TYPES, &fbb)
+    return odSensorContribution.endodSensorContribution(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VTOFFSET.SENSOR_ID.p, fieldName: "SENSOR_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.ORIG_SENSOR_ID.p, fieldName: "ORIG_SENSOR_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.NUM_ACCEPTED.p, fieldName: "NUM_ACCEPTED", required: false, type: UInt32.self)
+    try _v.visit(field: VTOFFSET.NUM_REJECTED.p, fieldName: "NUM_REJECTED", required: false, type: UInt32.self)
+    try _v.visit(field: VTOFFSET.WRMS.p, fieldName: "WRMS", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.OB_TYPES.p, fieldName: "OB_TYPES", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    _v.finish()
+  }
+}
+
 ///  Orbit Determination Results
 public struct OBD: FlatBufferObject, Verifiable {
 
@@ -18,123 +114,168 @@ public struct OBD: FlatBufferObject, Verifiable {
 
   private enum VTOFFSET: VOffset {
     case ID = 4
-    case START_TIME = 6
-    case END_TIME = 8
-    case ORIG_OBJECT_ID = 10
-    case SAT_NO = 12
-    case APRIORI_ID_ELSET = 14
-    case APRIORI_ELSET = 16
-    case APRIORI_ID_STATE_VECTOR = 18
-    case APRIORI_STATE_VECTOR = 20
-    case INITIAL_OD = 22
-    case LAST_OB_START = 24
-    case LAST_OB_END = 26
-    case TIME_SPAN = 28
-    case EFFECTIVE_FROM = 30
-    case EFFECTIVE_UNTIL = 32
-    case WRMS = 34
-    case PREVIOUS_WRMS = 36
-    case FIRST_PASS_WRMS = 38
-    case BEST_PASS_WRMS = 40
-    case ERROR_GROWTH_RATE = 42
-    case EDR = 44
-    case METHOD = 46
-    case METHOD_SOURCE = 48
-    case FIT_SPAN = 50
-    case BALLISTIC_COEFF_EST = 52
-    case BALLISTIC_COEFF_MODEL = 54
-    case AGOM_EST = 56
-    case AGOM_MODEL = 58
-    case RMS_CONVERGENCE_CRITERIA = 60
-    case NUM_ITERATIONS = 62
-    case ACCEPTED_OB_TYPS = 64
-    case ACCEPTED_OB_IDS = 66
-    case REJECTED_OB_TYPS = 68
-    case REJECTED_OB_IDS = 70
-    case SENSOR_IDS = 72
-    case ON_ORBIT = 74
+    case SAT_NO = 6
+    case ORIG_OBJECT_ID = 8
+    case ON_ORBIT = 10
+    case START_TIME = 12
+    case END_TIME = 14
+    case METHOD = 16
+    case METHOD_SOURCE = 18
+    case INITIAL_OD = 20
+    case APRIORI_ID_ELSET = 22
+    case APRIORI_ELSET = 24
+    case APRIORI_ID_STATE_VECTOR = 26
+    case APRIORI_STATE_VECTOR = 28
+    case LAST_OB_START = 30
+    case LAST_OB_END = 32
+    case TIME_SPAN = 34
+    case FIT_SPAN = 36
+    case EFFECTIVE_FROM = 38
+    case EFFECTIVE_UNTIL = 40
+    case WRMS = 42
+    case PREVIOUS_WRMS = 44
+    case FIRST_PASS_WRMS = 46
+    case BEST_PASS_WRMS = 48
+    case ERROR_GROWTH_RATE = 50
+    case EDR = 52
+    case BALLISTIC_COEFF_EST = 54
+    case BALLISTIC_COEFF_MODEL = 56
+    case AGOM_EST = 58
+    case AGOM_MODEL = 60
+    case RMS_CONVERGENCE_CRITERIA = 62
+    case NUM_ITERATIONS = 64
+    case NUM_ACCEPTED_OBS = 66
+    case NUM_REJECTED_OBS = 68
+    case SENSORS = 70
+    case ACCEPTED_OB_TYPS = 72
+    case ACCEPTED_OB_IDS = 74
+    case REJECTED_OB_TYPS = 76
+    case REJECTED_OB_IDS = 78
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
+  ///  Unique identifier
   public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
-  public var START_TIME: String? { let o = _accessor.offset(VTOFFSET.START_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.START_TIME.v) }
-  public var END_TIME: String? { let o = _accessor.offset(VTOFFSET.END_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var END_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.END_TIME.v) }
+  ///  Satellite catalog number
+  public var SAT_NO: UInt32 { let o = _accessor.offset(VTOFFSET.SAT_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  International designator
   public var ORIG_OBJECT_ID: String? { let o = _accessor.offset(VTOFFSET.ORIG_OBJECT_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ORIG_OBJECT_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ORIG_OBJECT_ID.v) }
-  public var SAT_NO: Int32 { let o = _accessor.offset(VTOFFSET.SAT_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
-  public var APRIORI_ID_ELSET: String? { let o = _accessor.offset(VTOFFSET.APRIORI_ID_ELSET.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var APRIORI_ID_ELSETSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.APRIORI_ID_ELSET.v) }
-  public var APRIORI_ELSET: String? { let o = _accessor.offset(VTOFFSET.APRIORI_ELSET.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var APRIORI_ELSETSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.APRIORI_ELSET.v) }
-  public var APRIORI_ID_STATE_VECTOR: String? { let o = _accessor.offset(VTOFFSET.APRIORI_ID_STATE_VECTOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var APRIORI_ID_STATE_VECTORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.APRIORI_ID_STATE_VECTOR.v) }
-  public var APRIORI_STATE_VECTOR: String? { let o = _accessor.offset(VTOFFSET.APRIORI_STATE_VECTOR.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var APRIORI_STATE_VECTORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.APRIORI_STATE_VECTOR.v) }
-  public var INITIAL_OD: Bool { let o = _accessor.offset(VTOFFSET.INITIAL_OD.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
-  public var LAST_OB_START: String? { let o = _accessor.offset(VTOFFSET.LAST_OB_START.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LAST_OB_STARTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LAST_OB_START.v) }
-  public var LAST_OB_END: String? { let o = _accessor.offset(VTOFFSET.LAST_OB_END.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var LAST_OB_ENDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LAST_OB_END.v) }
-  public var TIME_SPAN: Double { let o = _accessor.offset(VTOFFSET.TIME_SPAN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var EFFECTIVE_FROM: String? { let o = _accessor.offset(VTOFFSET.EFFECTIVE_FROM.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EFFECTIVE_FROMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EFFECTIVE_FROM.v) }
-  public var EFFECTIVE_UNTIL: String? { let o = _accessor.offset(VTOFFSET.EFFECTIVE_UNTIL.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var EFFECTIVE_UNTILSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EFFECTIVE_UNTIL.v) }
-  public var WRMS: Double { let o = _accessor.offset(VTOFFSET.WRMS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var PREVIOUS_WRMS: Double { let o = _accessor.offset(VTOFFSET.PREVIOUS_WRMS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var FIRST_PASS_WRMS: Double { let o = _accessor.offset(VTOFFSET.FIRST_PASS_WRMS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var BEST_PASS_WRMS: Double { let o = _accessor.offset(VTOFFSET.BEST_PASS_WRMS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var ERROR_GROWTH_RATE: Double { let o = _accessor.offset(VTOFFSET.ERROR_GROWTH_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var EDR: Double { let o = _accessor.offset(VTOFFSET.EDR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var METHOD: String? { let o = _accessor.offset(VTOFFSET.METHOD.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var METHODSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.METHOD.v) }
+  ///  On-orbit reference
+  public var ON_ORBIT: String? { let o = _accessor.offset(VTOFFSET.ON_ORBIT.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var ON_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ON_ORBIT.v) }
+  ///  OD fit start time (ISO 8601)
+  public var START_TIME: String? { let o = _accessor.offset(VTOFFSET.START_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var START_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.START_TIME.v) }
+  ///  OD fit end time (ISO 8601)
+  public var END_TIME: String? { let o = _accessor.offset(VTOFFSET.END_TIME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var END_TIMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.END_TIME.v) }
+  ///  OD method used
+  public var METHOD: odMethod { let o = _accessor.offset(VTOFFSET.METHOD.v); return o == 0 ? .batchLeastSquares : odMethod(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .batchLeastSquares }
+  ///  Method source or software
   public var METHOD_SOURCE: String? { let o = _accessor.offset(VTOFFSET.METHOD_SOURCE.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var METHOD_SOURCESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.METHOD_SOURCE.v) }
+  ///  True if this is an initial orbit determination
+  public var INITIAL_OD: Bool { let o = _accessor.offset(VTOFFSET.INITIAL_OD.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  A priori element set identifier
+  public var APRIORI_ID_ELSET: String? { let o = _accessor.offset(VTOFFSET.APRIORI_ID_ELSET.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var APRIORI_ID_ELSETSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.APRIORI_ID_ELSET.v) }
+  ///  A priori element set data reference
+  public var APRIORI_ELSET: String? { let o = _accessor.offset(VTOFFSET.APRIORI_ELSET.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var APRIORI_ELSETSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.APRIORI_ELSET.v) }
+  ///  A priori state vector identifier
+  public var APRIORI_ID_STATE_VECTOR: String? { let o = _accessor.offset(VTOFFSET.APRIORI_ID_STATE_VECTOR.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var APRIORI_ID_STATE_VECTORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.APRIORI_ID_STATE_VECTOR.v) }
+  ///  A priori state vector data reference
+  public var APRIORI_STATE_VECTOR: String? { let o = _accessor.offset(VTOFFSET.APRIORI_STATE_VECTOR.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var APRIORI_STATE_VECTORSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.APRIORI_STATE_VECTOR.v) }
+  ///  Start of last observation arc (ISO 8601)
+  public var LAST_OB_START: String? { let o = _accessor.offset(VTOFFSET.LAST_OB_START.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAST_OB_STARTSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LAST_OB_START.v) }
+  ///  End of last observation arc (ISO 8601)
+  public var LAST_OB_END: String? { let o = _accessor.offset(VTOFFSET.LAST_OB_END.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var LAST_OB_ENDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.LAST_OB_END.v) }
+  ///  Observation time span (days)
+  public var TIME_SPAN: Double { let o = _accessor.offset(VTOFFSET.TIME_SPAN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Fit span in days
   public var FIT_SPAN: Double { let o = _accessor.offset(VTOFFSET.FIT_SPAN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Solution effective from (ISO 8601)
+  public var EFFECTIVE_FROM: String? { let o = _accessor.offset(VTOFFSET.EFFECTIVE_FROM.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EFFECTIVE_FROMSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EFFECTIVE_FROM.v) }
+  ///  Solution effective until (ISO 8601)
+  public var EFFECTIVE_UNTIL: String? { let o = _accessor.offset(VTOFFSET.EFFECTIVE_UNTIL.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var EFFECTIVE_UNTILSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.EFFECTIVE_UNTIL.v) }
+  ///  Weighted RMS of residuals
+  public var WRMS: Double { let o = _accessor.offset(VTOFFSET.WRMS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Previous solution WRMS
+  public var PREVIOUS_WRMS: Double { let o = _accessor.offset(VTOFFSET.PREVIOUS_WRMS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  First pass WRMS
+  public var FIRST_PASS_WRMS: Double { let o = _accessor.offset(VTOFFSET.FIRST_PASS_WRMS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Best pass WRMS
+  public var BEST_PASS_WRMS: Double { let o = _accessor.offset(VTOFFSET.BEST_PASS_WRMS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Error growth rate (km/day)
+  public var ERROR_GROWTH_RATE: Double { let o = _accessor.offset(VTOFFSET.ERROR_GROWTH_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Energy dissipation rate
+  public var EDR: Double { let o = _accessor.offset(VTOFFSET.EDR.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  True if ballistic coefficient was estimated
   public var BALLISTIC_COEFF_EST: Bool { let o = _accessor.offset(VTOFFSET.BALLISTIC_COEFF_EST.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Ballistic coefficient model
   public var BALLISTIC_COEFF_MODEL: String? { let o = _accessor.offset(VTOFFSET.BALLISTIC_COEFF_MODEL.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var BALLISTIC_COEFF_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BALLISTIC_COEFF_MODEL.v) }
+  ///  True if area-to-mass ratio was estimated
   public var AGOM_EST: Bool { let o = _accessor.offset(VTOFFSET.AGOM_EST.v); return o == 0 ? false : _accessor.readBuffer(of: Bool.self, at: o) }
+  ///  Area-to-mass ratio model
   public var AGOM_MODEL: String? { let o = _accessor.offset(VTOFFSET.AGOM_MODEL.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var AGOM_MODELSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.AGOM_MODEL.v) }
+  ///  RMS convergence criteria
   public var RMS_CONVERGENCE_CRITERIA: Double { let o = _accessor.offset(VTOFFSET.RMS_CONVERGENCE_CRITERIA.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
-  public var NUM_ITERATIONS: Int32 { let o = _accessor.offset(VTOFFSET.NUM_ITERATIONS.v); return o == 0 ? 0 : _accessor.readBuffer(of: Int32.self, at: o) }
+  ///  Number of iterations to converge
+  public var NUM_ITERATIONS: UInt16 { let o = _accessor.offset(VTOFFSET.NUM_ITERATIONS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt16.self, at: o) }
+  ///  Total accepted observations
+  public var NUM_ACCEPTED_OBS: UInt32 { let o = _accessor.offset(VTOFFSET.NUM_ACCEPTED_OBS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Total rejected observations
+  public var NUM_REJECTED_OBS: UInt32 { let o = _accessor.offset(VTOFFSET.NUM_REJECTED_OBS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Sensor contributions to this solution
+  public var hasSensors: Bool { let o = _accessor.offset(VTOFFSET.SENSORS.v); return o == 0 ? false : true }
+  public var SENSORSCount: Int32 { let o = _accessor.offset(VTOFFSET.SENSORS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func SENSORS(at index: Int32) -> odSensorContribution? { let o = _accessor.offset(VTOFFSET.SENSORS.v); return o == 0 ? nil : odSensorContribution(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  ///  Accepted observation types
   public var hasAcceptedObTyps: Bool { let o = _accessor.offset(VTOFFSET.ACCEPTED_OB_TYPS.v); return o == 0 ? false : true }
   public var ACCEPTED_OB_TYPSCount: Int32 { let o = _accessor.offset(VTOFFSET.ACCEPTED_OB_TYPS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func ACCEPTED_OB_TYPS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.ACCEPTED_OB_TYPS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  ///  Accepted observation identifiers
   public var hasAcceptedObIds: Bool { let o = _accessor.offset(VTOFFSET.ACCEPTED_OB_IDS.v); return o == 0 ? false : true }
   public var ACCEPTED_OB_IDSCount: Int32 { let o = _accessor.offset(VTOFFSET.ACCEPTED_OB_IDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func ACCEPTED_OB_IDS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.ACCEPTED_OB_IDS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  ///  Rejected observation types
   public var hasRejectedObTyps: Bool { let o = _accessor.offset(VTOFFSET.REJECTED_OB_TYPS.v); return o == 0 ? false : true }
   public var REJECTED_OB_TYPSCount: Int32 { let o = _accessor.offset(VTOFFSET.REJECTED_OB_TYPS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func REJECTED_OB_TYPS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.REJECTED_OB_TYPS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
+  ///  Rejected observation identifiers
   public var hasRejectedObIds: Bool { let o = _accessor.offset(VTOFFSET.REJECTED_OB_IDS.v); return o == 0 ? false : true }
   public var REJECTED_OB_IDSCount: Int32 { let o = _accessor.offset(VTOFFSET.REJECTED_OB_IDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
   public func REJECTED_OB_IDS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.REJECTED_OB_IDS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public var hasSensorIds: Bool { let o = _accessor.offset(VTOFFSET.SENSOR_IDS.v); return o == 0 ? false : true }
-  public var SENSOR_IDSCount: Int32 { let o = _accessor.offset(VTOFFSET.SENSOR_IDS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func SENSOR_IDS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.SENSOR_IDS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public var ON_ORBIT: String? { let o = _accessor.offset(VTOFFSET.ON_ORBIT.v); return o == 0 ? nil : _accessor.string(at: o) }
-  public var ON_ORBITSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ON_ORBIT.v) }
-  public static func startOBD(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 36) }
+  public static func startOBD(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 38) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
+  public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }
+  public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VTOFFSET.ORIG_OBJECT_ID.p) }
+  public static func add(ON_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ON_ORBIT, at: VTOFFSET.ON_ORBIT.p) }
   public static func add(START_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: START_TIME, at: VTOFFSET.START_TIME.p) }
   public static func add(END_TIME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: END_TIME, at: VTOFFSET.END_TIME.p) }
-  public static func add(ORIG_OBJECT_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ORIG_OBJECT_ID, at: VTOFFSET.ORIG_OBJECT_ID.p) }
-  public static func add(SAT_NO: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }
+  public static func add(METHOD: odMethod, _ fbb: inout FlatBufferBuilder) { fbb.add(element: METHOD.rawValue, def: 0, at: VTOFFSET.METHOD.p) }
+  public static func add(METHOD_SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: METHOD_SOURCE, at: VTOFFSET.METHOD_SOURCE.p) }
+  public static func add(INITIAL_OD: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INITIAL_OD, def: false,
+   at: VTOFFSET.INITIAL_OD.p) }
   public static func add(APRIORI_ID_ELSET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: APRIORI_ID_ELSET, at: VTOFFSET.APRIORI_ID_ELSET.p) }
   public static func add(APRIORI_ELSET: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: APRIORI_ELSET, at: VTOFFSET.APRIORI_ELSET.p) }
   public static func add(APRIORI_ID_STATE_VECTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: APRIORI_ID_STATE_VECTOR, at: VTOFFSET.APRIORI_ID_STATE_VECTOR.p) }
   public static func add(APRIORI_STATE_VECTOR: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: APRIORI_STATE_VECTOR, at: VTOFFSET.APRIORI_STATE_VECTOR.p) }
-  public static func add(INITIAL_OD: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: INITIAL_OD, def: false,
-   at: VTOFFSET.INITIAL_OD.p) }
   public static func add(LAST_OB_START: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAST_OB_START, at: VTOFFSET.LAST_OB_START.p) }
   public static func add(LAST_OB_END: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: LAST_OB_END, at: VTOFFSET.LAST_OB_END.p) }
   public static func add(TIME_SPAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TIME_SPAN, def: 0.0, at: VTOFFSET.TIME_SPAN.p) }
+  public static func add(FIT_SPAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIT_SPAN, def: 0.0, at: VTOFFSET.FIT_SPAN.p) }
   public static func add(EFFECTIVE_FROM: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EFFECTIVE_FROM, at: VTOFFSET.EFFECTIVE_FROM.p) }
   public static func add(EFFECTIVE_UNTIL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: EFFECTIVE_UNTIL, at: VTOFFSET.EFFECTIVE_UNTIL.p) }
   public static func add(WRMS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: WRMS, def: 0.0, at: VTOFFSET.WRMS.p) }
@@ -143,9 +284,6 @@ public struct OBD: FlatBufferObject, Verifiable {
   public static func add(BEST_PASS_WRMS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BEST_PASS_WRMS, def: 0.0, at: VTOFFSET.BEST_PASS_WRMS.p) }
   public static func add(ERROR_GROWTH_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ERROR_GROWTH_RATE, def: 0.0, at: VTOFFSET.ERROR_GROWTH_RATE.p) }
   public static func add(EDR: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EDR, def: 0.0, at: VTOFFSET.EDR.p) }
-  public static func add(METHOD: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: METHOD, at: VTOFFSET.METHOD.p) }
-  public static func add(METHOD_SOURCE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: METHOD_SOURCE, at: VTOFFSET.METHOD_SOURCE.p) }
-  public static func add(FIT_SPAN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FIT_SPAN, def: 0.0, at: VTOFFSET.FIT_SPAN.p) }
   public static func add(BALLISTIC_COEFF_EST: Bool, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BALLISTIC_COEFF_EST, def: false,
    at: VTOFFSET.BALLISTIC_COEFF_EST.p) }
   public static func add(BALLISTIC_COEFF_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BALLISTIC_COEFF_MODEL, at: VTOFFSET.BALLISTIC_COEFF_MODEL.p) }
@@ -153,29 +291,34 @@ public struct OBD: FlatBufferObject, Verifiable {
    at: VTOFFSET.AGOM_EST.p) }
   public static func add(AGOM_MODEL: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: AGOM_MODEL, at: VTOFFSET.AGOM_MODEL.p) }
   public static func add(RMS_CONVERGENCE_CRITERIA: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: RMS_CONVERGENCE_CRITERIA, def: 0.0, at: VTOFFSET.RMS_CONVERGENCE_CRITERIA.p) }
-  public static func add(NUM_ITERATIONS: Int32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_ITERATIONS, def: 0, at: VTOFFSET.NUM_ITERATIONS.p) }
+  public static func add(NUM_ITERATIONS: UInt16, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_ITERATIONS, def: 0, at: VTOFFSET.NUM_ITERATIONS.p) }
+  public static func add(NUM_ACCEPTED_OBS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_ACCEPTED_OBS, def: 0, at: VTOFFSET.NUM_ACCEPTED_OBS.p) }
+  public static func add(NUM_REJECTED_OBS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_REJECTED_OBS, def: 0, at: VTOFFSET.NUM_REJECTED_OBS.p) }
+  public static func addVectorOf(SENSORS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SENSORS, at: VTOFFSET.SENSORS.p) }
   public static func addVectorOf(ACCEPTED_OB_TYPS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACCEPTED_OB_TYPS, at: VTOFFSET.ACCEPTED_OB_TYPS.p) }
   public static func addVectorOf(ACCEPTED_OB_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ACCEPTED_OB_IDS, at: VTOFFSET.ACCEPTED_OB_IDS.p) }
   public static func addVectorOf(REJECTED_OB_TYPS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REJECTED_OB_TYPS, at: VTOFFSET.REJECTED_OB_TYPS.p) }
   public static func addVectorOf(REJECTED_OB_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: REJECTED_OB_IDS, at: VTOFFSET.REJECTED_OB_IDS.p) }
-  public static func addVectorOf(SENSOR_IDS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: SENSOR_IDS, at: VTOFFSET.SENSOR_IDS.p) }
-  public static func add(ON_ORBIT: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ON_ORBIT, at: VTOFFSET.ON_ORBIT.p) }
   public static func endOBD(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createOBD(
     _ fbb: inout FlatBufferBuilder,
     IDOffset ID: Offset = Offset(),
+    SAT_NO: UInt32 = 0,
+    ORIG_OBJECT_IDOffset ORIG_OBJECT_ID: Offset = Offset(),
+    ON_ORBITOffset ON_ORBIT: Offset = Offset(),
     START_TIMEOffset START_TIME: Offset = Offset(),
     END_TIMEOffset END_TIME: Offset = Offset(),
-    ORIG_OBJECT_IDOffset ORIG_OBJECT_ID: Offset = Offset(),
-    SAT_NO: Int32 = 0,
+    METHOD: odMethod = .batchLeastSquares,
+    METHOD_SOURCEOffset METHOD_SOURCE: Offset = Offset(),
+    INITIAL_OD: Bool = false,
     APRIORI_ID_ELSETOffset APRIORI_ID_ELSET: Offset = Offset(),
     APRIORI_ELSETOffset APRIORI_ELSET: Offset = Offset(),
     APRIORI_ID_STATE_VECTOROffset APRIORI_ID_STATE_VECTOR: Offset = Offset(),
     APRIORI_STATE_VECTOROffset APRIORI_STATE_VECTOR: Offset = Offset(),
-    INITIAL_OD: Bool = false,
     LAST_OB_STARTOffset LAST_OB_START: Offset = Offset(),
     LAST_OB_ENDOffset LAST_OB_END: Offset = Offset(),
     TIME_SPAN: Double = 0.0,
+    FIT_SPAN: Double = 0.0,
     EFFECTIVE_FROMOffset EFFECTIVE_FROM: Offset = Offset(),
     EFFECTIVE_UNTILOffset EFFECTIVE_UNTIL: Offset = Offset(),
     WRMS: Double = 0.0,
@@ -184,36 +327,38 @@ public struct OBD: FlatBufferObject, Verifiable {
     BEST_PASS_WRMS: Double = 0.0,
     ERROR_GROWTH_RATE: Double = 0.0,
     EDR: Double = 0.0,
-    METHODOffset METHOD: Offset = Offset(),
-    METHOD_SOURCEOffset METHOD_SOURCE: Offset = Offset(),
-    FIT_SPAN: Double = 0.0,
     BALLISTIC_COEFF_EST: Bool = false,
     BALLISTIC_COEFF_MODELOffset BALLISTIC_COEFF_MODEL: Offset = Offset(),
     AGOM_EST: Bool = false,
     AGOM_MODELOffset AGOM_MODEL: Offset = Offset(),
     RMS_CONVERGENCE_CRITERIA: Double = 0.0,
-    NUM_ITERATIONS: Int32 = 0,
+    NUM_ITERATIONS: UInt16 = 0,
+    NUM_ACCEPTED_OBS: UInt32 = 0,
+    NUM_REJECTED_OBS: UInt32 = 0,
+    SENSORSVectorOffset SENSORS: Offset = Offset(),
     ACCEPTED_OB_TYPSVectorOffset ACCEPTED_OB_TYPS: Offset = Offset(),
     ACCEPTED_OB_IDSVectorOffset ACCEPTED_OB_IDS: Offset = Offset(),
     REJECTED_OB_TYPSVectorOffset REJECTED_OB_TYPS: Offset = Offset(),
-    REJECTED_OB_IDSVectorOffset REJECTED_OB_IDS: Offset = Offset(),
-    SENSOR_IDSVectorOffset SENSOR_IDS: Offset = Offset(),
-    ON_ORBITOffset ON_ORBIT: Offset = Offset()
+    REJECTED_OB_IDSVectorOffset REJECTED_OB_IDS: Offset = Offset()
   ) -> Offset {
     let __start = OBD.startOBD(&fbb)
     OBD.add(ID: ID, &fbb)
+    OBD.add(SAT_NO: SAT_NO, &fbb)
+    OBD.add(ORIG_OBJECT_ID: ORIG_OBJECT_ID, &fbb)
+    OBD.add(ON_ORBIT: ON_ORBIT, &fbb)
     OBD.add(START_TIME: START_TIME, &fbb)
     OBD.add(END_TIME: END_TIME, &fbb)
-    OBD.add(ORIG_OBJECT_ID: ORIG_OBJECT_ID, &fbb)
-    OBD.add(SAT_NO: SAT_NO, &fbb)
+    OBD.add(METHOD: METHOD, &fbb)
+    OBD.add(METHOD_SOURCE: METHOD_SOURCE, &fbb)
+    OBD.add(INITIAL_OD: INITIAL_OD, &fbb)
     OBD.add(APRIORI_ID_ELSET: APRIORI_ID_ELSET, &fbb)
     OBD.add(APRIORI_ELSET: APRIORI_ELSET, &fbb)
     OBD.add(APRIORI_ID_STATE_VECTOR: APRIORI_ID_STATE_VECTOR, &fbb)
     OBD.add(APRIORI_STATE_VECTOR: APRIORI_STATE_VECTOR, &fbb)
-    OBD.add(INITIAL_OD: INITIAL_OD, &fbb)
     OBD.add(LAST_OB_START: LAST_OB_START, &fbb)
     OBD.add(LAST_OB_END: LAST_OB_END, &fbb)
     OBD.add(TIME_SPAN: TIME_SPAN, &fbb)
+    OBD.add(FIT_SPAN: FIT_SPAN, &fbb)
     OBD.add(EFFECTIVE_FROM: EFFECTIVE_FROM, &fbb)
     OBD.add(EFFECTIVE_UNTIL: EFFECTIVE_UNTIL, &fbb)
     OBD.add(WRMS: WRMS, &fbb)
@@ -222,39 +367,41 @@ public struct OBD: FlatBufferObject, Verifiable {
     OBD.add(BEST_PASS_WRMS: BEST_PASS_WRMS, &fbb)
     OBD.add(ERROR_GROWTH_RATE: ERROR_GROWTH_RATE, &fbb)
     OBD.add(EDR: EDR, &fbb)
-    OBD.add(METHOD: METHOD, &fbb)
-    OBD.add(METHOD_SOURCE: METHOD_SOURCE, &fbb)
-    OBD.add(FIT_SPAN: FIT_SPAN, &fbb)
     OBD.add(BALLISTIC_COEFF_EST: BALLISTIC_COEFF_EST, &fbb)
     OBD.add(BALLISTIC_COEFF_MODEL: BALLISTIC_COEFF_MODEL, &fbb)
     OBD.add(AGOM_EST: AGOM_EST, &fbb)
     OBD.add(AGOM_MODEL: AGOM_MODEL, &fbb)
     OBD.add(RMS_CONVERGENCE_CRITERIA: RMS_CONVERGENCE_CRITERIA, &fbb)
     OBD.add(NUM_ITERATIONS: NUM_ITERATIONS, &fbb)
+    OBD.add(NUM_ACCEPTED_OBS: NUM_ACCEPTED_OBS, &fbb)
+    OBD.add(NUM_REJECTED_OBS: NUM_REJECTED_OBS, &fbb)
+    OBD.addVectorOf(SENSORS: SENSORS, &fbb)
     OBD.addVectorOf(ACCEPTED_OB_TYPS: ACCEPTED_OB_TYPS, &fbb)
     OBD.addVectorOf(ACCEPTED_OB_IDS: ACCEPTED_OB_IDS, &fbb)
     OBD.addVectorOf(REJECTED_OB_TYPS: REJECTED_OB_TYPS, &fbb)
     OBD.addVectorOf(REJECTED_OB_IDS: REJECTED_OB_IDS, &fbb)
-    OBD.addVectorOf(SENSOR_IDS: SENSOR_IDS, &fbb)
-    OBD.add(ON_ORBIT: ON_ORBIT, &fbb)
     return OBD.endOBD(&fbb, start: __start)
   }
 
   public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
     var _v = try verifier.visitTable(at: position)
     try _v.visit(field: VTOFFSET.ID.p, fieldName: "ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.SAT_NO.p, fieldName: "SAT_NO", required: false, type: UInt32.self)
+    try _v.visit(field: VTOFFSET.ORIG_OBJECT_ID.p, fieldName: "ORIG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.ON_ORBIT.p, fieldName: "ON_ORBIT", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.START_TIME.p, fieldName: "START_TIME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.END_TIME.p, fieldName: "END_TIME", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.ORIG_OBJECT_ID.p, fieldName: "ORIG_OBJECT_ID", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.SAT_NO.p, fieldName: "SAT_NO", required: false, type: Int32.self)
+    try _v.visit(field: VTOFFSET.METHOD.p, fieldName: "METHOD", required: false, type: odMethod.self)
+    try _v.visit(field: VTOFFSET.METHOD_SOURCE.p, fieldName: "METHOD_SOURCE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.INITIAL_OD.p, fieldName: "INITIAL_OD", required: false, type: Bool.self)
     try _v.visit(field: VTOFFSET.APRIORI_ID_ELSET.p, fieldName: "APRIORI_ID_ELSET", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.APRIORI_ELSET.p, fieldName: "APRIORI_ELSET", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.APRIORI_ID_STATE_VECTOR.p, fieldName: "APRIORI_ID_STATE_VECTOR", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.APRIORI_STATE_VECTOR.p, fieldName: "APRIORI_STATE_VECTOR", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.INITIAL_OD.p, fieldName: "INITIAL_OD", required: false, type: Bool.self)
     try _v.visit(field: VTOFFSET.LAST_OB_START.p, fieldName: "LAST_OB_START", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.LAST_OB_END.p, fieldName: "LAST_OB_END", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.TIME_SPAN.p, fieldName: "TIME_SPAN", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.FIT_SPAN.p, fieldName: "FIT_SPAN", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.EFFECTIVE_FROM.p, fieldName: "EFFECTIVE_FROM", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.EFFECTIVE_UNTIL.p, fieldName: "EFFECTIVE_UNTIL", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.WRMS.p, fieldName: "WRMS", required: false, type: Double.self)
@@ -263,21 +410,19 @@ public struct OBD: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.BEST_PASS_WRMS.p, fieldName: "BEST_PASS_WRMS", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.ERROR_GROWTH_RATE.p, fieldName: "ERROR_GROWTH_RATE", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.EDR.p, fieldName: "EDR", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.METHOD.p, fieldName: "METHOD", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.METHOD_SOURCE.p, fieldName: "METHOD_SOURCE", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.FIT_SPAN.p, fieldName: "FIT_SPAN", required: false, type: Double.self)
     try _v.visit(field: VTOFFSET.BALLISTIC_COEFF_EST.p, fieldName: "BALLISTIC_COEFF_EST", required: false, type: Bool.self)
     try _v.visit(field: VTOFFSET.BALLISTIC_COEFF_MODEL.p, fieldName: "BALLISTIC_COEFF_MODEL", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.AGOM_EST.p, fieldName: "AGOM_EST", required: false, type: Bool.self)
     try _v.visit(field: VTOFFSET.AGOM_MODEL.p, fieldName: "AGOM_MODEL", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.RMS_CONVERGENCE_CRITERIA.p, fieldName: "RMS_CONVERGENCE_CRITERIA", required: false, type: Double.self)
-    try _v.visit(field: VTOFFSET.NUM_ITERATIONS.p, fieldName: "NUM_ITERATIONS", required: false, type: Int32.self)
+    try _v.visit(field: VTOFFSET.NUM_ITERATIONS.p, fieldName: "NUM_ITERATIONS", required: false, type: UInt16.self)
+    try _v.visit(field: VTOFFSET.NUM_ACCEPTED_OBS.p, fieldName: "NUM_ACCEPTED_OBS", required: false, type: UInt32.self)
+    try _v.visit(field: VTOFFSET.NUM_REJECTED_OBS.p, fieldName: "NUM_REJECTED_OBS", required: false, type: UInt32.self)
+    try _v.visit(field: VTOFFSET.SENSORS.p, fieldName: "SENSORS", required: false, type: ForwardOffset<Vector<ForwardOffset<odSensorContribution>, odSensorContribution>>.self)
     try _v.visit(field: VTOFFSET.ACCEPTED_OB_TYPS.p, fieldName: "ACCEPTED_OB_TYPS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VTOFFSET.ACCEPTED_OB_IDS.p, fieldName: "ACCEPTED_OB_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VTOFFSET.REJECTED_OB_TYPS.p, fieldName: "REJECTED_OB_TYPS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
     try _v.visit(field: VTOFFSET.REJECTED_OB_IDS.p, fieldName: "REJECTED_OB_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.SENSOR_IDS.p, fieldName: "SENSOR_IDS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
-    try _v.visit(field: VTOFFSET.ON_ORBIT.p, fieldName: "ON_ORBIT", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

@@ -5,6 +5,131 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+///  GEO Drift History Record
+class DriftRecord {
+  DriftRecord._(this._bc, this._bcOffset);
+  factory DriftRecord(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<DriftRecord> reader = _DriftRecordReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Epoch of drift measurement (ISO 8601)
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Longitude drift rate in degrees/day
+  double get DRIFT_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 6, 0.0);
+  ///  Mean longitude in degrees East
+  double get MEAN_LONGITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Longitude oscillation amplitude in degrees
+  double get LONGITUDE_AMPLITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  Eccentricity
+  double get ECCENTRICITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  Inclination in degrees
+  double get INCLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+
+  @override
+  String toString() {
+    return 'DriftRecord{EPOCH: ${EPOCH}, DRIFT_RATE: ${DRIFT_RATE}, MEAN_LONGITUDE: ${MEAN_LONGITUDE}, LONGITUDE_AMPLITUDE: ${LONGITUDE_AMPLITUDE}, ECCENTRICITY: ${ECCENTRICITY}, INCLINATION: ${INCLINATION}}';
+  }
+}
+
+class _DriftRecordReader extends fb.TableReader<DriftRecord> {
+  const _DriftRecordReader();
+
+  @override
+  DriftRecord createObject(fb.BufferContext bc, int offset) => 
+    DriftRecord._(bc, offset);
+}
+
+class DriftRecordBuilder {
+  DriftRecordBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addDriftRate(double? DRIFT_RATE) {
+    fbBuilder.addFloat64(1, DRIFT_RATE);
+    return fbBuilder.offset;
+  }
+  int addMeanLongitude(double? MEAN_LONGITUDE) {
+    fbBuilder.addFloat64(2, MEAN_LONGITUDE);
+    return fbBuilder.offset;
+  }
+  int addLongitudeAmplitude(double? LONGITUDE_AMPLITUDE) {
+    fbBuilder.addFloat64(3, LONGITUDE_AMPLITUDE);
+    return fbBuilder.offset;
+  }
+  int addEccentricity(double? ECCENTRICITY) {
+    fbBuilder.addFloat64(4, ECCENTRICITY);
+    return fbBuilder.offset;
+  }
+  int addInclination(double? INCLINATION) {
+    fbBuilder.addFloat64(5, INCLINATION);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class DriftRecordObjectBuilder extends fb.ObjectBuilder {
+  final String? _EPOCH;
+  final double? _DRIFT_RATE;
+  final double? _MEAN_LONGITUDE;
+  final double? _LONGITUDE_AMPLITUDE;
+  final double? _ECCENTRICITY;
+  final double? _INCLINATION;
+
+  DriftRecordObjectBuilder({
+    String? EPOCH,
+    double? DRIFT_RATE,
+    double? MEAN_LONGITUDE,
+    double? LONGITUDE_AMPLITUDE,
+    double? ECCENTRICITY,
+    double? INCLINATION,
+  })
+      : _EPOCH = EPOCH,
+        _DRIFT_RATE = DRIFT_RATE,
+        _MEAN_LONGITUDE = MEAN_LONGITUDE,
+        _LONGITUDE_AMPLITUDE = LONGITUDE_AMPLITUDE,
+        _ECCENTRICITY = ECCENTRICITY,
+        _INCLINATION = INCLINATION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    fbBuilder.startTable(6);
+    fbBuilder.addOffset(0, EPOCHOffset);
+    fbBuilder.addFloat64(1, _DRIFT_RATE);
+    fbBuilder.addFloat64(2, _MEAN_LONGITUDE);
+    fbBuilder.addFloat64(3, _LONGITUDE_AMPLITUDE);
+    fbBuilder.addFloat64(4, _ECCENTRICITY);
+    fbBuilder.addFloat64(5, _INCLINATION);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  GEO Drift History
 class DFH {
   DFH._(this._bc, this._bcOffset);
@@ -18,13 +143,40 @@ class DFH {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get EFFECTIVE_UNTIL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  double get DRIFT_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Satellite number
+  int get SAT_NO => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  ///  Object designator
+  String? get OBJECT_DESIGNATOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Object common name
+  String? get OBJECT_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  History start time (ISO 8601)
+  String? get START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  History end time (ISO 8601)
+  String? get END_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Current effective until date (ISO 8601)
+  String? get EFFECTIVE_UNTIL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Current drift rate in degrees/day
+  double get DRIFT_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  ///  Current mean longitude in degrees East
+  double get MEAN_LONGITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  Longitude slot center in degrees East (if station-keeping)
+  double get SLOT_CENTER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Longitude slot half-width in degrees
+  double get SLOT_HALF_WIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  ///  Whether object is actively station-keeping
+  bool get STATION_KEEPING => const fb.BoolReader().vTableGet(_bc, _bcOffset, 26, false);
+  ///  Historical drift records
+  List<DriftRecord>? get RECORDS => const fb.ListReader<DriftRecord>(DriftRecord.reader).vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Number of records in history
+  int get NUM_RECORDS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 30, 0);
+  ///  Additional notes
+  String? get NOTES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
 
   @override
   String toString() {
-    return 'DFH{ID: ${ID}, EFFECTIVE_UNTIL: ${EFFECTIVE_UNTIL}, DRIFT_RATE: ${DRIFT_RATE}}';
+    return 'DFH{ID: ${ID}, SAT_NO: ${SAT_NO}, OBJECT_DESIGNATOR: ${OBJECT_DESIGNATOR}, OBJECT_NAME: ${OBJECT_NAME}, START_TIME: ${START_TIME}, END_TIME: ${END_TIME}, EFFECTIVE_UNTIL: ${EFFECTIVE_UNTIL}, DRIFT_RATE: ${DRIFT_RATE}, MEAN_LONGITUDE: ${MEAN_LONGITUDE}, SLOT_CENTER: ${SLOT_CENTER}, SLOT_HALF_WIDTH: ${SLOT_HALF_WIDTH}, STATION_KEEPING: ${STATION_KEEPING}, RECORDS: ${RECORDS}, NUM_RECORDS: ${NUM_RECORDS}, NOTES: ${NOTES}}';
   }
 }
 
@@ -42,19 +194,67 @@ class DFHBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(3);
+    fbBuilder.startTable(15);
   }
 
   int addIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
+  int addSatNo(int? SAT_NO) {
+    fbBuilder.addUint32(1, SAT_NO);
+    return fbBuilder.offset;
+  }
+  int addObjectDesignatorOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addObjectNameOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addStartTimeOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addEndTimeOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
   int addEffectiveUntilOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
+    fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
   int addDriftRate(double? DRIFT_RATE) {
-    fbBuilder.addFloat64(2, DRIFT_RATE);
+    fbBuilder.addFloat64(7, DRIFT_RATE);
+    return fbBuilder.offset;
+  }
+  int addMeanLongitude(double? MEAN_LONGITUDE) {
+    fbBuilder.addFloat64(8, MEAN_LONGITUDE);
+    return fbBuilder.offset;
+  }
+  int addSlotCenter(double? SLOT_CENTER) {
+    fbBuilder.addFloat64(9, SLOT_CENTER);
+    return fbBuilder.offset;
+  }
+  int addSlotHalfWidth(double? SLOT_HALF_WIDTH) {
+    fbBuilder.addFloat64(10, SLOT_HALF_WIDTH);
+    return fbBuilder.offset;
+  }
+  int addStationKeeping(bool? STATION_KEEPING) {
+    fbBuilder.addBool(11, STATION_KEEPING);
+    return fbBuilder.offset;
+  }
+  int addRecordsOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addNumRecords(int? NUM_RECORDS) {
+    fbBuilder.addUint32(13, NUM_RECORDS);
+    return fbBuilder.offset;
+  }
+  int addNotesOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
     return fbBuilder.offset;
   }
 
@@ -65,29 +265,89 @@ class DFHBuilder {
 
 class DFHObjectBuilder extends fb.ObjectBuilder {
   final String? _ID;
+  final int? _SAT_NO;
+  final String? _OBJECT_DESIGNATOR;
+  final String? _OBJECT_NAME;
+  final String? _START_TIME;
+  final String? _END_TIME;
   final String? _EFFECTIVE_UNTIL;
   final double? _DRIFT_RATE;
+  final double? _MEAN_LONGITUDE;
+  final double? _SLOT_CENTER;
+  final double? _SLOT_HALF_WIDTH;
+  final bool? _STATION_KEEPING;
+  final List<DriftRecordObjectBuilder>? _RECORDS;
+  final int? _NUM_RECORDS;
+  final String? _NOTES;
 
   DFHObjectBuilder({
     String? ID,
+    int? SAT_NO,
+    String? OBJECT_DESIGNATOR,
+    String? OBJECT_NAME,
+    String? START_TIME,
+    String? END_TIME,
     String? EFFECTIVE_UNTIL,
     double? DRIFT_RATE,
+    double? MEAN_LONGITUDE,
+    double? SLOT_CENTER,
+    double? SLOT_HALF_WIDTH,
+    bool? STATION_KEEPING,
+    List<DriftRecordObjectBuilder>? RECORDS,
+    int? NUM_RECORDS,
+    String? NOTES,
   })
       : _ID = ID,
+        _SAT_NO = SAT_NO,
+        _OBJECT_DESIGNATOR = OBJECT_DESIGNATOR,
+        _OBJECT_NAME = OBJECT_NAME,
+        _START_TIME = START_TIME,
+        _END_TIME = END_TIME,
         _EFFECTIVE_UNTIL = EFFECTIVE_UNTIL,
-        _DRIFT_RATE = DRIFT_RATE;
+        _DRIFT_RATE = DRIFT_RATE,
+        _MEAN_LONGITUDE = MEAN_LONGITUDE,
+        _SLOT_CENTER = SLOT_CENTER,
+        _SLOT_HALF_WIDTH = SLOT_HALF_WIDTH,
+        _STATION_KEEPING = STATION_KEEPING,
+        _RECORDS = RECORDS,
+        _NUM_RECORDS = NUM_RECORDS,
+        _NOTES = NOTES;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? IDOffset = _ID == null ? null
         : fbBuilder.writeString(_ID!);
+    final int? OBJECT_DESIGNATOROffset = _OBJECT_DESIGNATOR == null ? null
+        : fbBuilder.writeString(_OBJECT_DESIGNATOR!);
+    final int? OBJECT_NAMEOffset = _OBJECT_NAME == null ? null
+        : fbBuilder.writeString(_OBJECT_NAME!);
+    final int? START_TIMEOffset = _START_TIME == null ? null
+        : fbBuilder.writeString(_START_TIME!);
+    final int? END_TIMEOffset = _END_TIME == null ? null
+        : fbBuilder.writeString(_END_TIME!);
     final int? EFFECTIVE_UNTILOffset = _EFFECTIVE_UNTIL == null ? null
         : fbBuilder.writeString(_EFFECTIVE_UNTIL!);
-    fbBuilder.startTable(3);
+    final int? RECORDSOffset = _RECORDS == null ? null
+        : fbBuilder.writeList(_RECORDS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? NOTESOffset = _NOTES == null ? null
+        : fbBuilder.writeString(_NOTES!);
+    fbBuilder.startTable(15);
     fbBuilder.addOffset(0, IDOffset);
-    fbBuilder.addOffset(1, EFFECTIVE_UNTILOffset);
-    fbBuilder.addFloat64(2, _DRIFT_RATE);
+    fbBuilder.addUint32(1, _SAT_NO);
+    fbBuilder.addOffset(2, OBJECT_DESIGNATOROffset);
+    fbBuilder.addOffset(3, OBJECT_NAMEOffset);
+    fbBuilder.addOffset(4, START_TIMEOffset);
+    fbBuilder.addOffset(5, END_TIMEOffset);
+    fbBuilder.addOffset(6, EFFECTIVE_UNTILOffset);
+    fbBuilder.addFloat64(7, _DRIFT_RATE);
+    fbBuilder.addFloat64(8, _MEAN_LONGITUDE);
+    fbBuilder.addFloat64(9, _SLOT_CENTER);
+    fbBuilder.addFloat64(10, _SLOT_HALF_WIDTH);
+    fbBuilder.addBool(11, _STATION_KEEPING);
+    fbBuilder.addOffset(12, RECORDSOffset);
+    fbBuilder.addUint32(13, _NUM_RECORDS);
+    fbBuilder.addOffset(14, NOTESOffset);
     return fbBuilder.endTable();
   }
 

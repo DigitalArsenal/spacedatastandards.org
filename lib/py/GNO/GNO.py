@@ -29,30 +29,196 @@ class GNO(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Unique identifier
     # GNO
-    def GNSS_SAT_ID(self):
+    def ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Receiver identifier
     # GNO
-    def TRACKING_STATUS(self):
+    def RECEIVER_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
+    # Receiver type/model
     # GNO
-    def AGC_STATE(self):
+    def RECEIVER_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Antenna identifier
+    # GNO
+    def ANTENNA_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Antenna type/model
+    # GNO
+    def ANTENNA_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Receiver firmware version
+    # GNO
+    def FIRMWARE_VERSION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Observation epoch (ISO 8601)
+    # GNO
+    def EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Receiver clock offset in seconds
+    # GNO
+    def CLOCK_OFFSET(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Receiver clock drift in seconds/second
+    # GNO
+    def CLOCK_DRIFT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Receiver geodetic latitude in degrees
+    # GNO
+    def LATITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Receiver geodetic longitude in degrees
+    # GNO
+    def LONGITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Receiver altitude in meters above WGS-84
+    # GNO
+    def ALTITUDE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Approximate position X in meters (ECEF)
+    # GNO
+    def APPROX_X(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Approximate position Y in meters (ECEF)
+    # GNO
+    def APPROX_Y(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Approximate position Z in meters (ECEF)
+    # GNO
+    def APPROX_Z(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Observation interval in seconds
+    # GNO
+    def INTERVAL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Number of satellites observed
+    # GNO
+    def NUM_SATS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # PDOP
+    # GNO
+    def PDOP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # HDOP
+    # GNO
+    def HDOP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # VDOP
+    # GNO
+    def VDOP(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Satellite observations
+    # GNO
+    def SAT_OBS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from gnssSatObs import gnssSatObs
+            obj = gnssSatObs()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # GNO
+    def SAT_OBSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.VectorLen(o)
         return 0
 
     # GNO
+    def SAT_OBSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        return o == 0
+
+    # Observation code set identifiers
+    # GNO
     def OBS_CODE_SET(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -60,62 +226,164 @@ class GNO(object):
 
     # GNO
     def OBS_CODE_SETLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # GNO
     def OBS_CODE_SETIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         return o == 0
 
+    # Additional notes
     # GNO
-    def OB(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
+    def NOTES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
-            a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
-
-    # GNO
-    def OBLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
-
-    # GNO
-    def OBIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
-        return o == 0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
 def GNOStart(builder):
-    builder.StartObject(5)
+    builder.StartObject(23)
 
 def Start(builder):
     GNOStart(builder)
 
-def GNOAddGNSS_SAT_ID(builder, GNSS_SAT_ID):
-    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(GNSS_SAT_ID), 0)
+def GNOAddID(builder, ID):
+    builder.PrependUOffsetTRelativeSlot(0, flatbuffers.number_types.UOffsetTFlags.py_type(ID), 0)
 
-def AddGNSS_SAT_ID(builder, GNSS_SAT_ID):
-    GNOAddGNSS_SAT_ID(builder, GNSS_SAT_ID)
+def AddID(builder, ID):
+    GNOAddID(builder, ID)
 
-def GNOAddTRACKING_STATUS(builder, TRACKING_STATUS):
-    builder.PrependInt32Slot(1, TRACKING_STATUS, 0)
+def GNOAddRECEIVER_ID(builder, RECEIVER_ID):
+    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(RECEIVER_ID), 0)
 
-def AddTRACKING_STATUS(builder, TRACKING_STATUS):
-    GNOAddTRACKING_STATUS(builder, TRACKING_STATUS)
+def AddRECEIVER_ID(builder, RECEIVER_ID):
+    GNOAddRECEIVER_ID(builder, RECEIVER_ID)
 
-def GNOAddAGC_STATE(builder, AGC_STATE):
-    builder.PrependInt32Slot(2, AGC_STATE, 0)
+def GNOAddRECEIVER_TYPE(builder, RECEIVER_TYPE):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(RECEIVER_TYPE), 0)
 
-def AddAGC_STATE(builder, AGC_STATE):
-    GNOAddAGC_STATE(builder, AGC_STATE)
+def AddRECEIVER_TYPE(builder, RECEIVER_TYPE):
+    GNOAddRECEIVER_TYPE(builder, RECEIVER_TYPE)
+
+def GNOAddANTENNA_ID(builder, ANTENNA_ID):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ANTENNA_ID), 0)
+
+def AddANTENNA_ID(builder, ANTENNA_ID):
+    GNOAddANTENNA_ID(builder, ANTENNA_ID)
+
+def GNOAddANTENNA_TYPE(builder, ANTENNA_TYPE):
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(ANTENNA_TYPE), 0)
+
+def AddANTENNA_TYPE(builder, ANTENNA_TYPE):
+    GNOAddANTENNA_TYPE(builder, ANTENNA_TYPE)
+
+def GNOAddFIRMWARE_VERSION(builder, FIRMWARE_VERSION):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(FIRMWARE_VERSION), 0)
+
+def AddFIRMWARE_VERSION(builder, FIRMWARE_VERSION):
+    GNOAddFIRMWARE_VERSION(builder, FIRMWARE_VERSION)
+
+def GNOAddEPOCH(builder, EPOCH):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH), 0)
+
+def AddEPOCH(builder, EPOCH):
+    GNOAddEPOCH(builder, EPOCH)
+
+def GNOAddCLOCK_OFFSET(builder, CLOCK_OFFSET):
+    builder.PrependFloat64Slot(7, CLOCK_OFFSET, 0.0)
+
+def AddCLOCK_OFFSET(builder, CLOCK_OFFSET):
+    GNOAddCLOCK_OFFSET(builder, CLOCK_OFFSET)
+
+def GNOAddCLOCK_DRIFT(builder, CLOCK_DRIFT):
+    builder.PrependFloat64Slot(8, CLOCK_DRIFT, 0.0)
+
+def AddCLOCK_DRIFT(builder, CLOCK_DRIFT):
+    GNOAddCLOCK_DRIFT(builder, CLOCK_DRIFT)
+
+def GNOAddLATITUDE(builder, LATITUDE):
+    builder.PrependFloat64Slot(9, LATITUDE, 0.0)
+
+def AddLATITUDE(builder, LATITUDE):
+    GNOAddLATITUDE(builder, LATITUDE)
+
+def GNOAddLONGITUDE(builder, LONGITUDE):
+    builder.PrependFloat64Slot(10, LONGITUDE, 0.0)
+
+def AddLONGITUDE(builder, LONGITUDE):
+    GNOAddLONGITUDE(builder, LONGITUDE)
+
+def GNOAddALTITUDE(builder, ALTITUDE):
+    builder.PrependFloat64Slot(11, ALTITUDE, 0.0)
+
+def AddALTITUDE(builder, ALTITUDE):
+    GNOAddALTITUDE(builder, ALTITUDE)
+
+def GNOAddAPPROX_X(builder, APPROX_X):
+    builder.PrependFloat64Slot(12, APPROX_X, 0.0)
+
+def AddAPPROX_X(builder, APPROX_X):
+    GNOAddAPPROX_X(builder, APPROX_X)
+
+def GNOAddAPPROX_Y(builder, APPROX_Y):
+    builder.PrependFloat64Slot(13, APPROX_Y, 0.0)
+
+def AddAPPROX_Y(builder, APPROX_Y):
+    GNOAddAPPROX_Y(builder, APPROX_Y)
+
+def GNOAddAPPROX_Z(builder, APPROX_Z):
+    builder.PrependFloat64Slot(14, APPROX_Z, 0.0)
+
+def AddAPPROX_Z(builder, APPROX_Z):
+    GNOAddAPPROX_Z(builder, APPROX_Z)
+
+def GNOAddINTERVAL(builder, INTERVAL):
+    builder.PrependFloat64Slot(15, INTERVAL, 0.0)
+
+def AddINTERVAL(builder, INTERVAL):
+    GNOAddINTERVAL(builder, INTERVAL)
+
+def GNOAddNUM_SATS(builder, NUM_SATS):
+    builder.PrependUint32Slot(16, NUM_SATS, 0)
+
+def AddNUM_SATS(builder, NUM_SATS):
+    GNOAddNUM_SATS(builder, NUM_SATS)
+
+def GNOAddPDOP(builder, PDOP):
+    builder.PrependFloat64Slot(17, PDOP, 0.0)
+
+def AddPDOP(builder, PDOP):
+    GNOAddPDOP(builder, PDOP)
+
+def GNOAddHDOP(builder, HDOP):
+    builder.PrependFloat64Slot(18, HDOP, 0.0)
+
+def AddHDOP(builder, HDOP):
+    GNOAddHDOP(builder, HDOP)
+
+def GNOAddVDOP(builder, VDOP):
+    builder.PrependFloat64Slot(19, VDOP, 0.0)
+
+def AddVDOP(builder, VDOP):
+    GNOAddVDOP(builder, VDOP)
+
+def GNOAddSAT_OBS(builder, SAT_OBS):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(SAT_OBS), 0)
+
+def AddSAT_OBS(builder, SAT_OBS):
+    GNOAddSAT_OBS(builder, SAT_OBS)
+
+def GNOStartSAT_OBSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSAT_OBSVector(builder, numElems):
+    return GNOStartSAT_OBSVector(builder, numElems)
 
 def GNOAddOBS_CODE_SET(builder, OBS_CODE_SET):
-    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(OBS_CODE_SET), 0)
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(OBS_CODE_SET), 0)
 
 def AddOBS_CODE_SET(builder, OBS_CODE_SET):
     GNOAddOBS_CODE_SET(builder, OBS_CODE_SET)
@@ -126,17 +394,11 @@ def GNOStartOBS_CODE_SETVector(builder, numElems):
 def StartOBS_CODE_SETVector(builder, numElems):
     return GNOStartOBS_CODE_SETVector(builder, numElems)
 
-def GNOAddOB(builder, OB):
-    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(OB), 0)
+def GNOAddNOTES(builder, NOTES):
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(NOTES), 0)
 
-def AddOB(builder, OB):
-    GNOAddOB(builder, OB)
-
-def GNOStartOBVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
-
-def StartOBVector(builder, numElems):
-    return GNOStartOBVector(builder, numElems)
+def AddNOTES(builder, NOTES):
+    GNOAddNOTES(builder, NOTES)
 
 def GNOEnd(builder):
     return builder.EndObject()
@@ -144,6 +406,7 @@ def GNOEnd(builder):
 def End(builder):
     return GNOEnd(builder)
 
+import gnssSatObs
 try:
     from typing import List
 except:
@@ -153,11 +416,29 @@ class GNOT(object):
 
     # GNOT
     def __init__(self):
-        self.GNSS_SAT_ID = None  # type: str
-        self.TRACKING_STATUS = 0  # type: int
-        self.AGC_STATE = 0  # type: int
+        self.ID = None  # type: str
+        self.RECEIVER_ID = None  # type: str
+        self.RECEIVER_TYPE = None  # type: str
+        self.ANTENNA_ID = None  # type: str
+        self.ANTENNA_TYPE = None  # type: str
+        self.FIRMWARE_VERSION = None  # type: str
+        self.EPOCH = None  # type: str
+        self.CLOCK_OFFSET = 0.0  # type: float
+        self.CLOCK_DRIFT = 0.0  # type: float
+        self.LATITUDE = 0.0  # type: float
+        self.LONGITUDE = 0.0  # type: float
+        self.ALTITUDE = 0.0  # type: float
+        self.APPROX_X = 0.0  # type: float
+        self.APPROX_Y = 0.0  # type: float
+        self.APPROX_Z = 0.0  # type: float
+        self.INTERVAL = 0.0  # type: float
+        self.NUM_SATS = 0  # type: int
+        self.PDOP = 0.0  # type: float
+        self.HDOP = 0.0  # type: float
+        self.VDOP = 0.0  # type: float
+        self.SAT_OBS = None  # type: List[gnssSatObs.gnssSatObsT]
         self.OBS_CODE_SET = None  # type: List[str]
-        self.OB = None  # type: List[str]
+        self.NOTES = None  # type: str
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -180,22 +461,64 @@ class GNOT(object):
     def _UnPack(self, GNO):
         if GNO is None:
             return
-        self.GNSS_SAT_ID = GNO.GNSS_SAT_ID()
-        self.TRACKING_STATUS = GNO.TRACKING_STATUS()
-        self.AGC_STATE = GNO.AGC_STATE()
+        self.ID = GNO.ID()
+        self.RECEIVER_ID = GNO.RECEIVER_ID()
+        self.RECEIVER_TYPE = GNO.RECEIVER_TYPE()
+        self.ANTENNA_ID = GNO.ANTENNA_ID()
+        self.ANTENNA_TYPE = GNO.ANTENNA_TYPE()
+        self.FIRMWARE_VERSION = GNO.FIRMWARE_VERSION()
+        self.EPOCH = GNO.EPOCH()
+        self.CLOCK_OFFSET = GNO.CLOCK_OFFSET()
+        self.CLOCK_DRIFT = GNO.CLOCK_DRIFT()
+        self.LATITUDE = GNO.LATITUDE()
+        self.LONGITUDE = GNO.LONGITUDE()
+        self.ALTITUDE = GNO.ALTITUDE()
+        self.APPROX_X = GNO.APPROX_X()
+        self.APPROX_Y = GNO.APPROX_Y()
+        self.APPROX_Z = GNO.APPROX_Z()
+        self.INTERVAL = GNO.INTERVAL()
+        self.NUM_SATS = GNO.NUM_SATS()
+        self.PDOP = GNO.PDOP()
+        self.HDOP = GNO.HDOP()
+        self.VDOP = GNO.VDOP()
+        if not GNO.SAT_OBSIsNone():
+            self.SAT_OBS = []
+            for i in range(GNO.SAT_OBSLength()):
+                if GNO.SAT_OBS(i) is None:
+                    self.SAT_OBS.append(None)
+                else:
+                    gnssSatObs_ = gnssSatObs.gnssSatObsT.InitFromObj(GNO.SAT_OBS(i))
+                    self.SAT_OBS.append(gnssSatObs_)
         if not GNO.OBS_CODE_SETIsNone():
             self.OBS_CODE_SET = []
             for i in range(GNO.OBS_CODE_SETLength()):
                 self.OBS_CODE_SET.append(GNO.OBS_CODE_SET(i))
-        if not GNO.OBIsNone():
-            self.OB = []
-            for i in range(GNO.OBLength()):
-                self.OB.append(GNO.OB(i))
+        self.NOTES = GNO.NOTES()
 
     # GNOT
     def Pack(self, builder):
-        if self.GNSS_SAT_ID is not None:
-            GNSS_SAT_ID = builder.CreateString(self.GNSS_SAT_ID)
+        if self.ID is not None:
+            ID = builder.CreateString(self.ID)
+        if self.RECEIVER_ID is not None:
+            RECEIVER_ID = builder.CreateString(self.RECEIVER_ID)
+        if self.RECEIVER_TYPE is not None:
+            RECEIVER_TYPE = builder.CreateString(self.RECEIVER_TYPE)
+        if self.ANTENNA_ID is not None:
+            ANTENNA_ID = builder.CreateString(self.ANTENNA_ID)
+        if self.ANTENNA_TYPE is not None:
+            ANTENNA_TYPE = builder.CreateString(self.ANTENNA_TYPE)
+        if self.FIRMWARE_VERSION is not None:
+            FIRMWARE_VERSION = builder.CreateString(self.FIRMWARE_VERSION)
+        if self.EPOCH is not None:
+            EPOCH = builder.CreateString(self.EPOCH)
+        if self.SAT_OBS is not None:
+            SAT_OBSlist = []
+            for i in range(len(self.SAT_OBS)):
+                SAT_OBSlist.append(self.SAT_OBS[i].Pack(builder))
+            GNOStartSAT_OBSVector(builder, len(self.SAT_OBS))
+            for i in reversed(range(len(self.SAT_OBS))):
+                builder.PrependUOffsetTRelative(SAT_OBSlist[i])
+            SAT_OBS = builder.EndVector()
         if self.OBS_CODE_SET is not None:
             OBS_CODE_SETlist = []
             for i in range(len(self.OBS_CODE_SET)):
@@ -204,22 +527,41 @@ class GNOT(object):
             for i in reversed(range(len(self.OBS_CODE_SET))):
                 builder.PrependUOffsetTRelative(OBS_CODE_SETlist[i])
             OBS_CODE_SET = builder.EndVector()
-        if self.OB is not None:
-            OBlist = []
-            for i in range(len(self.OB)):
-                OBlist.append(builder.CreateString(self.OB[i]))
-            GNOStartOBVector(builder, len(self.OB))
-            for i in reversed(range(len(self.OB))):
-                builder.PrependUOffsetTRelative(OBlist[i])
-            OB = builder.EndVector()
+        if self.NOTES is not None:
+            NOTES = builder.CreateString(self.NOTES)
         GNOStart(builder)
-        if self.GNSS_SAT_ID is not None:
-            GNOAddGNSS_SAT_ID(builder, GNSS_SAT_ID)
-        GNOAddTRACKING_STATUS(builder, self.TRACKING_STATUS)
-        GNOAddAGC_STATE(builder, self.AGC_STATE)
+        if self.ID is not None:
+            GNOAddID(builder, ID)
+        if self.RECEIVER_ID is not None:
+            GNOAddRECEIVER_ID(builder, RECEIVER_ID)
+        if self.RECEIVER_TYPE is not None:
+            GNOAddRECEIVER_TYPE(builder, RECEIVER_TYPE)
+        if self.ANTENNA_ID is not None:
+            GNOAddANTENNA_ID(builder, ANTENNA_ID)
+        if self.ANTENNA_TYPE is not None:
+            GNOAddANTENNA_TYPE(builder, ANTENNA_TYPE)
+        if self.FIRMWARE_VERSION is not None:
+            GNOAddFIRMWARE_VERSION(builder, FIRMWARE_VERSION)
+        if self.EPOCH is not None:
+            GNOAddEPOCH(builder, EPOCH)
+        GNOAddCLOCK_OFFSET(builder, self.CLOCK_OFFSET)
+        GNOAddCLOCK_DRIFT(builder, self.CLOCK_DRIFT)
+        GNOAddLATITUDE(builder, self.LATITUDE)
+        GNOAddLONGITUDE(builder, self.LONGITUDE)
+        GNOAddALTITUDE(builder, self.ALTITUDE)
+        GNOAddAPPROX_X(builder, self.APPROX_X)
+        GNOAddAPPROX_Y(builder, self.APPROX_Y)
+        GNOAddAPPROX_Z(builder, self.APPROX_Z)
+        GNOAddINTERVAL(builder, self.INTERVAL)
+        GNOAddNUM_SATS(builder, self.NUM_SATS)
+        GNOAddPDOP(builder, self.PDOP)
+        GNOAddHDOP(builder, self.HDOP)
+        GNOAddVDOP(builder, self.VDOP)
+        if self.SAT_OBS is not None:
+            GNOAddSAT_OBS(builder, SAT_OBS)
         if self.OBS_CODE_SET is not None:
             GNOAddOBS_CODE_SET(builder, OBS_CODE_SET)
-        if self.OB is not None:
-            GNOAddOB(builder, OB)
+        if self.NOTES is not None:
+            GNOAddNOTES(builder, NOTES)
         GNO = GNOEnd(builder)
         return GNO

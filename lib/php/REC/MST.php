@@ -41,264 +41,311 @@ class MST extends Table
         return $this;
     }
 
+    /// Unique identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Message type code
     public function getMSG_TYPE()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Message sub-type
     public function getMSG_SUB_TYPE()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Message creation date (ISO 8601)
     public function getMSG_CREATE_DATE()
     {
         $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Track environment
+    /**
+     * @return sbyte
+     */
     public function getENVIRONMENT()
     {
         $o = $this->__offset(12);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \missileEnvironment::SPACE;
     }
 
+    /// Object type classification
     public function getOBJ_TYPE()
     {
         $o = $this->__offset(14);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Object type confidence (0-100)
     /**
-     * @return int
+     * @return byte
      */
     public function getOBJ_TYPE_CONF()
     {
         $o = $this->__offset(16);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
     }
 
+    /// Object platform type
     public function getOBJ_PLAT()
     {
         $o = $this->__offset(18);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Object identity assessment
     public function getOBJ_IDENT()
     {
         $o = $this->__offset(20);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Space amplification data
     public function getSPACE_AMP()
     {
         $o = $this->__offset(22);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getOBJ_ACT()
+    /// Space amplification confidence (0-100)
+    /**
+     * @return byte
+     */
+    public function getSPACE_AMP_CONF()
     {
         $o = $this->__offset(24);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
     }
 
-    public function getSPACE_SPEC_TYPE()
+    /// Object activity
+    public function getOBJ_ACT()
     {
         $o = $this->__offset(26);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getACFT_SUB_TYPE()
+    /// Space specific type
+    public function getSPACE_SPEC_TYPE()
     {
         $o = $this->__offset(28);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getNAME()
+    /// Aircraft sub-type (if applicable)
+    public function getACFT_SUB_TYPE()
     {
         $o = $this->__offset(30);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getCALL_SIGN()
+    /// Object name
+    public function getNAME()
     {
         $o = $this->__offset(32);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Call sign
+    public function getCALL_SIGN()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// True if track is lost
     /**
      * @return bool
      */
     public function getLOST_TRK_IND()
     {
-        $o = $this->__offset(34);
+        $o = $this->__offset(36);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Track identifier
     public function getTRACK_ID()
-    {
-        $o = $this->__offset(36);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getPARENT_TRACK_ID()
     {
         $o = $this->__offset(38);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getMUID_SRC_TRK()
+    /// Parent track identifier
+    public function getPARENT_TRACK_ID()
     {
         $o = $this->__offset(40);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getMUID_SRC()
+    /// Multi-unit identifier (source track)
+    public function getMUID_SRC_TRK()
     {
         $o = $this->__offset(42);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getALERT()
+    /// Multi-unit identifier (source)
+    public function getMUID_SRC()
     {
         $o = $this->__offset(44);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getMSL_STATUS()
+    /// Alert classification
+    public function getALERT()
     {
         $o = $this->__offset(46);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getTS()
+    /// Missile engagement status
+    /**
+     * @return sbyte
+     */
+    public function getMSL_STATUS()
     {
         $o = $this->__offset(48);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \missileStatus::BOOSTING;
     }
 
-    public function getAOU_RPT_TYPE()
+    /// Track timestamp (ISO 8601)
+    public function getTS()
     {
         $o = $this->__offset(50);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// AOU report type
+    /**
+     * @return sbyte
+     */
+    public function getAOU_RPT_TYPE()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \aouReportType::CIRCULAR;
+    }
+
+    /// Containment probability (0-1)
     /**
      * @return double
      */
     public function getCONTAINMENT()
     {
-        $o = $this->__offset(52);
+        $o = $this->__offset(54);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Track confidence (0-1)
     /**
      * @return double
      */
     public function getTRK_CONF()
     {
-        $o = $this->__offset(54);
+        $o = $this->__offset(56);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Track quality (0-15)
     /**
-     * @return int
+     * @return byte
      */
     public function getTRK_QUAL()
     {
-        $o = $this->__offset(56);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
     }
 
+    /// Elevation angle (degrees)
     /**
      * @return double
      */
     public function getANG_ELEV()
     {
-        $o = $this->__offset(58);
+        $o = $this->__offset(60);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor mode
     public function getSEN_MODE()
-    {
-        $o = $this->__offset(60);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getINFO_SOURCE()
     {
         $o = $this->__offset(62);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Information source
+    public function getINFO_SOURCE()
+    {
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// True if object is in boost phase
     /**
      * @return bool
      */
     public function getBOOSTING()
     {
-        $o = $this->__offset(64);
+        $o = $this->__offset(66);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// Polar singularity latitude (degrees)
     /**
      * @return double
      */
     public function getPOLAR_SING_LOC_LAT()
     {
-        $o = $this->__offset(66);
+        $o = $this->__offset(68);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Polar singularity longitude (degrees)
     /**
      * @return double
      */
     public function getPOLAR_SING_LOC_LON()
     {
-        $o = $this->__offset(68);
+        $o = $this->__offset(70);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// True if emergency indicator set
     /**
      * @return bool
      */
     public function getEMG_IND()
     {
-        $o = $this->__offset(70);
+        $o = $this->__offset(72);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
+    /// True if drop point indicator set
     /**
      * @return bool
      */
     public function getDROP_PT_IND()
     {
-        $o = $this->__offset(72);
+        $o = $this->__offset(74);
         return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
-    /**
-     * @return int
-     */
-    public function getSPACE_AMP_CONF()
-    {
-        $o = $this->__offset(74);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
-    }
-
+    /// Launch time (ISO 8601)
     public function getLAUNCH_TIME()
     {
         $o = $this->__offset(76);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Launch latitude (degrees)
     /**
      * @return double
      */
@@ -308,6 +355,7 @@ class MST extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Launch longitude (degrees)
     /**
      * @return double
      */
@@ -317,6 +365,7 @@ class MST extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Azimuth correction (degrees)
     /**
      * @return double
      */
@@ -326,6 +375,7 @@ class MST extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Burnout altitude (km)
     /**
      * @return double
      */
@@ -335,18 +385,24 @@ class MST extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Launch AOU type
+    /**
+     * @return sbyte
+     */
     public function getLAUNCH_AOU_TYPE()
     {
         $o = $this->__offset(86);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \aouReportType::CIRCULAR;
     }
 
+    /// Predicted impact time (ISO 8601)
     public function getIMPACT_TIME()
     {
         $o = $this->__offset(88);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Predicted impact latitude (degrees)
     /**
      * @return double
      */
@@ -356,6 +412,7 @@ class MST extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Predicted impact longitude (degrees)
     /**
      * @return double
      */
@@ -365,20 +422,24 @@ class MST extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Impact AOU type
+    /**
+     * @return sbyte
+     */
     public function getIMPACT_AOU_TYPE()
     {
         $o = $this->__offset(94);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \aouReportType::CIRCULAR;
     }
 
-    /// Start time for vector data (ISO 8601 UTC format).
+    /// Start time for vector data (ISO 8601)
     public function getVECTOR_START_TIME()
     {
         $o = $this->__offset(96);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    /// Time interval between vector points in seconds.
+    /// Time interval between vector points (seconds)
     /**
      * @return double
      */
@@ -388,7 +449,7 @@ class MST extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    /// Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).
+    /// Number of components per vector (default 6: X, Y, Z, VX, VY, VZ)
     /**
      * @return byte
      */
@@ -418,7 +479,7 @@ class MST extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    /// AOU report data as flat array (layout depends on AOU_RPT_TYPE).
+    /// AOU report data as flat array
     /**
      * @param int offset
      * @return double
@@ -438,7 +499,7 @@ class MST extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    /// Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).
+    /// Launch AOU data as flat array
     /**
      * @param int offset
      * @return double
@@ -458,7 +519,7 @@ class MST extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    /// Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).
+    /// Impact AOU data as flat array
     /**
      * @param int offset
      * @return double
@@ -491,7 +552,7 @@ class MST extends Table
      * @param FlatBufferBuilder $builder
      * @return MST
      */
-    public static function createMST(FlatBufferBuilder $builder, $ID, $MSG_TYPE, $MSG_SUB_TYPE, $MSG_CREATE_DATE, $ENVIRONMENT, $OBJ_TYPE, $OBJ_TYPE_CONF, $OBJ_PLAT, $OBJ_IDENT, $SPACE_AMP, $OBJ_ACT, $SPACE_SPEC_TYPE, $ACFT_SUB_TYPE, $NAME, $CALL_SIGN, $LOST_TRK_IND, $TRACK_ID, $PARENT_TRACK_ID, $MUID_SRC_TRK, $MUID_SRC, $ALERT, $MSL_STATUS, $TS, $AOU_RPT_TYPE, $CONTAINMENT, $TRK_CONF, $TRK_QUAL, $ANG_ELEV, $SEN_MODE, $INFO_SOURCE, $BOOSTING, $POLAR_SING_LOC_LAT, $POLAR_SING_LOC_LON, $EMG_IND, $DROP_PT_IND, $SPACE_AMP_CONF, $LAUNCH_TIME, $LAUNCH_LAT, $LAUNCH_LON, $AZ_CORR, $BURNOUT_ALT, $LAUNCH_AOU_TYPE, $IMPACT_TIME, $IMPACT_LAT, $IMPACT_LON, $IMPACT_AOU_TYPE, $VECTOR_START_TIME, $VECTOR_STEP_SIZE, $VECTOR_COMPONENTS, $VECTORS, $AOU_RPT, $LAUNCH_AOU, $IMPACT_AOU)
+    public static function createMST(FlatBufferBuilder $builder, $ID, $MSG_TYPE, $MSG_SUB_TYPE, $MSG_CREATE_DATE, $ENVIRONMENT, $OBJ_TYPE, $OBJ_TYPE_CONF, $OBJ_PLAT, $OBJ_IDENT, $SPACE_AMP, $SPACE_AMP_CONF, $OBJ_ACT, $SPACE_SPEC_TYPE, $ACFT_SUB_TYPE, $NAME, $CALL_SIGN, $LOST_TRK_IND, $TRACK_ID, $PARENT_TRACK_ID, $MUID_SRC_TRK, $MUID_SRC, $ALERT, $MSL_STATUS, $TS, $AOU_RPT_TYPE, $CONTAINMENT, $TRK_CONF, $TRK_QUAL, $ANG_ELEV, $SEN_MODE, $INFO_SOURCE, $BOOSTING, $POLAR_SING_LOC_LAT, $POLAR_SING_LOC_LON, $EMG_IND, $DROP_PT_IND, $LAUNCH_TIME, $LAUNCH_LAT, $LAUNCH_LON, $AZ_CORR, $BURNOUT_ALT, $LAUNCH_AOU_TYPE, $IMPACT_TIME, $IMPACT_LAT, $IMPACT_LON, $IMPACT_AOU_TYPE, $VECTOR_START_TIME, $VECTOR_STEP_SIZE, $VECTOR_COMPONENTS, $VECTORS, $AOU_RPT, $LAUNCH_AOU, $IMPACT_AOU)
     {
         $builder->startObject(53);
         self::addID($builder, $ID);
@@ -504,6 +565,7 @@ class MST extends Table
         self::addOBJ_PLAT($builder, $OBJ_PLAT);
         self::addOBJ_IDENT($builder, $OBJ_IDENT);
         self::addSPACE_AMP($builder, $SPACE_AMP);
+        self::addSPACE_AMP_CONF($builder, $SPACE_AMP_CONF);
         self::addOBJ_ACT($builder, $OBJ_ACT);
         self::addSPACE_SPEC_TYPE($builder, $SPACE_SPEC_TYPE);
         self::addACFT_SUB_TYPE($builder, $ACFT_SUB_TYPE);
@@ -529,7 +591,6 @@ class MST extends Table
         self::addPOLAR_SING_LOC_LON($builder, $POLAR_SING_LOC_LON);
         self::addEMG_IND($builder, $EMG_IND);
         self::addDROP_PT_IND($builder, $DROP_PT_IND);
-        self::addSPACE_AMP_CONF($builder, $SPACE_AMP_CONF);
         self::addLAUNCH_TIME($builder, $LAUNCH_TIME);
         self::addLAUNCH_LAT($builder, $LAUNCH_LAT);
         self::addLAUNCH_LON($builder, $LAUNCH_LON);
@@ -593,12 +654,12 @@ class MST extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addENVIRONMENT(FlatBufferBuilder $builder, $ENVIRONMENT)
     {
-        $builder->addOffsetX(4, $ENVIRONMENT, 0);
+        $builder->addSbyteX(4, $ENVIRONMENT, 0);
     }
 
     /**
@@ -613,12 +674,12 @@ class MST extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param byte
      * @return void
      */
     public static function addOBJ_TYPE_CONF(FlatBufferBuilder $builder, $OBJ_TYPE_CONF)
     {
-        $builder->addIntX(6, $OBJ_TYPE_CONF, 0);
+        $builder->addByteX(6, $OBJ_TYPE_CONF, 0);
     }
 
     /**
@@ -653,12 +714,22 @@ class MST extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param byte
+     * @return void
+     */
+    public static function addSPACE_AMP_CONF(FlatBufferBuilder $builder, $SPACE_AMP_CONF)
+    {
+        $builder->addByteX(10, $SPACE_AMP_CONF, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param StringOffset
      * @return void
      */
     public static function addOBJ_ACT(FlatBufferBuilder $builder, $OBJ_ACT)
     {
-        $builder->addOffsetX(10, $OBJ_ACT, 0);
+        $builder->addOffsetX(11, $OBJ_ACT, 0);
     }
 
     /**
@@ -668,7 +739,7 @@ class MST extends Table
      */
     public static function addSPACE_SPEC_TYPE(FlatBufferBuilder $builder, $SPACE_SPEC_TYPE)
     {
-        $builder->addOffsetX(11, $SPACE_SPEC_TYPE, 0);
+        $builder->addOffsetX(12, $SPACE_SPEC_TYPE, 0);
     }
 
     /**
@@ -678,7 +749,7 @@ class MST extends Table
      */
     public static function addACFT_SUB_TYPE(FlatBufferBuilder $builder, $ACFT_SUB_TYPE)
     {
-        $builder->addOffsetX(12, $ACFT_SUB_TYPE, 0);
+        $builder->addOffsetX(13, $ACFT_SUB_TYPE, 0);
     }
 
     /**
@@ -688,7 +759,7 @@ class MST extends Table
      */
     public static function addNAME(FlatBufferBuilder $builder, $NAME)
     {
-        $builder->addOffsetX(13, $NAME, 0);
+        $builder->addOffsetX(14, $NAME, 0);
     }
 
     /**
@@ -698,7 +769,7 @@ class MST extends Table
      */
     public static function addCALL_SIGN(FlatBufferBuilder $builder, $CALL_SIGN)
     {
-        $builder->addOffsetX(14, $CALL_SIGN, 0);
+        $builder->addOffsetX(15, $CALL_SIGN, 0);
     }
 
     /**
@@ -708,7 +779,7 @@ class MST extends Table
      */
     public static function addLOST_TRK_IND(FlatBufferBuilder $builder, $LOST_TRK_IND)
     {
-        $builder->addBoolX(15, $LOST_TRK_IND, false);
+        $builder->addBoolX(16, $LOST_TRK_IND, false);
     }
 
     /**
@@ -718,7 +789,7 @@ class MST extends Table
      */
     public static function addTRACK_ID(FlatBufferBuilder $builder, $TRACK_ID)
     {
-        $builder->addOffsetX(16, $TRACK_ID, 0);
+        $builder->addOffsetX(17, $TRACK_ID, 0);
     }
 
     /**
@@ -728,7 +799,7 @@ class MST extends Table
      */
     public static function addPARENT_TRACK_ID(FlatBufferBuilder $builder, $PARENT_TRACK_ID)
     {
-        $builder->addOffsetX(17, $PARENT_TRACK_ID, 0);
+        $builder->addOffsetX(18, $PARENT_TRACK_ID, 0);
     }
 
     /**
@@ -738,7 +809,7 @@ class MST extends Table
      */
     public static function addMUID_SRC_TRK(FlatBufferBuilder $builder, $MUID_SRC_TRK)
     {
-        $builder->addOffsetX(18, $MUID_SRC_TRK, 0);
+        $builder->addOffsetX(19, $MUID_SRC_TRK, 0);
     }
 
     /**
@@ -748,7 +819,7 @@ class MST extends Table
      */
     public static function addMUID_SRC(FlatBufferBuilder $builder, $MUID_SRC)
     {
-        $builder->addOffsetX(19, $MUID_SRC, 0);
+        $builder->addOffsetX(20, $MUID_SRC, 0);
     }
 
     /**
@@ -758,17 +829,17 @@ class MST extends Table
      */
     public static function addALERT(FlatBufferBuilder $builder, $ALERT)
     {
-        $builder->addOffsetX(20, $ALERT, 0);
+        $builder->addOffsetX(21, $ALERT, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addMSL_STATUS(FlatBufferBuilder $builder, $MSL_STATUS)
     {
-        $builder->addOffsetX(21, $MSL_STATUS, 0);
+        $builder->addSbyteX(22, $MSL_STATUS, 0);
     }
 
     /**
@@ -778,17 +849,17 @@ class MST extends Table
      */
     public static function addTS(FlatBufferBuilder $builder, $TS)
     {
-        $builder->addOffsetX(22, $TS, 0);
+        $builder->addOffsetX(23, $TS, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addAOU_RPT_TYPE(FlatBufferBuilder $builder, $AOU_RPT_TYPE)
     {
-        $builder->addOffsetX(23, $AOU_RPT_TYPE, 0);
+        $builder->addSbyteX(24, $AOU_RPT_TYPE, 0);
     }
 
     /**
@@ -798,7 +869,7 @@ class MST extends Table
      */
     public static function addCONTAINMENT(FlatBufferBuilder $builder, $CONTAINMENT)
     {
-        $builder->addDoubleX(24, $CONTAINMENT, 0.0);
+        $builder->addDoubleX(25, $CONTAINMENT, 0.0);
     }
 
     /**
@@ -808,17 +879,17 @@ class MST extends Table
      */
     public static function addTRK_CONF(FlatBufferBuilder $builder, $TRK_CONF)
     {
-        $builder->addDoubleX(25, $TRK_CONF, 0.0);
+        $builder->addDoubleX(26, $TRK_CONF, 0.0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param byte
      * @return void
      */
     public static function addTRK_QUAL(FlatBufferBuilder $builder, $TRK_QUAL)
     {
-        $builder->addIntX(26, $TRK_QUAL, 0);
+        $builder->addByteX(27, $TRK_QUAL, 0);
     }
 
     /**
@@ -828,7 +899,7 @@ class MST extends Table
      */
     public static function addANG_ELEV(FlatBufferBuilder $builder, $ANG_ELEV)
     {
-        $builder->addDoubleX(27, $ANG_ELEV, 0.0);
+        $builder->addDoubleX(28, $ANG_ELEV, 0.0);
     }
 
     /**
@@ -838,7 +909,7 @@ class MST extends Table
      */
     public static function addSEN_MODE(FlatBufferBuilder $builder, $SEN_MODE)
     {
-        $builder->addOffsetX(28, $SEN_MODE, 0);
+        $builder->addOffsetX(29, $SEN_MODE, 0);
     }
 
     /**
@@ -848,7 +919,7 @@ class MST extends Table
      */
     public static function addINFO_SOURCE(FlatBufferBuilder $builder, $INFO_SOURCE)
     {
-        $builder->addOffsetX(29, $INFO_SOURCE, 0);
+        $builder->addOffsetX(30, $INFO_SOURCE, 0);
     }
 
     /**
@@ -858,7 +929,7 @@ class MST extends Table
      */
     public static function addBOOSTING(FlatBufferBuilder $builder, $BOOSTING)
     {
-        $builder->addBoolX(30, $BOOSTING, false);
+        $builder->addBoolX(31, $BOOSTING, false);
     }
 
     /**
@@ -868,7 +939,7 @@ class MST extends Table
      */
     public static function addPOLAR_SING_LOC_LAT(FlatBufferBuilder $builder, $POLAR_SING_LOC_LAT)
     {
-        $builder->addDoubleX(31, $POLAR_SING_LOC_LAT, 0.0);
+        $builder->addDoubleX(32, $POLAR_SING_LOC_LAT, 0.0);
     }
 
     /**
@@ -878,7 +949,7 @@ class MST extends Table
      */
     public static function addPOLAR_SING_LOC_LON(FlatBufferBuilder $builder, $POLAR_SING_LOC_LON)
     {
-        $builder->addDoubleX(32, $POLAR_SING_LOC_LON, 0.0);
+        $builder->addDoubleX(33, $POLAR_SING_LOC_LON, 0.0);
     }
 
     /**
@@ -888,7 +959,7 @@ class MST extends Table
      */
     public static function addEMG_IND(FlatBufferBuilder $builder, $EMG_IND)
     {
-        $builder->addBoolX(33, $EMG_IND, false);
+        $builder->addBoolX(34, $EMG_IND, false);
     }
 
     /**
@@ -898,17 +969,7 @@ class MST extends Table
      */
     public static function addDROP_PT_IND(FlatBufferBuilder $builder, $DROP_PT_IND)
     {
-        $builder->addBoolX(34, $DROP_PT_IND, false);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int
-     * @return void
-     */
-    public static function addSPACE_AMP_CONF(FlatBufferBuilder $builder, $SPACE_AMP_CONF)
-    {
-        $builder->addIntX(35, $SPACE_AMP_CONF, 0);
+        $builder->addBoolX(35, $DROP_PT_IND, false);
     }
 
     /**
@@ -963,12 +1024,12 @@ class MST extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addLAUNCH_AOU_TYPE(FlatBufferBuilder $builder, $LAUNCH_AOU_TYPE)
     {
-        $builder->addOffsetX(41, $LAUNCH_AOU_TYPE, 0);
+        $builder->addSbyteX(41, $LAUNCH_AOU_TYPE, 0);
     }
 
     /**
@@ -1003,12 +1064,12 @@ class MST extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addIMPACT_AOU_TYPE(FlatBufferBuilder $builder, $IMPACT_AOU_TYPE)
     {
-        $builder->addOffsetX(45, $IMPACT_AOU_TYPE, 0);
+        $builder->addSbyteX(45, $IMPACT_AOU_TYPE, 0);
     }
 
     /**

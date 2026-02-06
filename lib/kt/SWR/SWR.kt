@@ -17,7 +17,7 @@ import java.nio.ByteOrder
 import kotlin.math.sign
 
 /**
- * Short-Wave Infrared
+ * Short-Wave Infrared Observation
  */
 @Suppress("unused")
 class SWR : Table() {
@@ -29,6 +29,9 @@ class SWR : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Unique identifier
+     */
     val ID : String?
         get() {
             val o = __offset(4)
@@ -40,6 +43,9 @@ class SWR : Table() {
         }
     val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    /**
+     * On-orbit reference
+     */
     val ON_ORBIT : String?
         get() {
             val o = __offset(6)
@@ -51,7 +57,10 @@ class SWR : Table() {
         }
     val ON_ORBITAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
     fun ON_ORBITInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val TS : String?
+    /**
+     * International designator
+     */
+    val ORIG_OBJECT_ID : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -60,108 +69,181 @@ class SWR : Table() {
                 null
             }
         }
-    val TSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun TSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val SOLAR_PHASE_ANGLE : Double
+    val ORIG_OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
+    fun ORIG_OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    /**
+     * Satellite catalog number
+     */
+    val SAT_NO : UInt
         get() {
             val o = __offset(10)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
-    val LAT : Double
+    /**
+     * Observation timestamp (ISO 8601)
+     */
+    val TS : String?
         get() {
             val o = __offset(12)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
-    val LON : Double
+    val TSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
+    fun TSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * Solar phase angle (degrees)
+     */
+    val SOLAR_PHASE_ANGLE : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val LOCATION_NAME : String?
+    /**
+     * Sub-observer latitude (degrees)
+     */
+    val LAT : Double
         get() {
             val o = __offset(16)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val LOCATION_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun LOCATION_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
-    val BAD_WAVE : String?
+    /**
+     * Sub-observer longitude (degrees)
+     */
+    val LON : Double
         get() {
             val o = __offset(18)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Location name
+     */
+    val LOCATION_NAME : String?
+        get() {
+            val o = __offset(20)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val BAD_WAVEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun BAD_WAVEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
-    fun WAVELENGTHS(j: Int) : String? {
-        val o = __offset(20)
+    val LOCATION_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
+    fun LOCATION_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    /**
+     * Bad wavelength flag or identifier
+     */
+    val BAD_WAVE : String?
+        get() {
+            val o = __offset(22)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val BAD_WAVEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
+    fun BAD_WAVEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    /**
+     * Measured wavelengths (micrometers)
+     */
+    fun WAVELENGTHS(j: Int) : Double {
+        val o = __offset(24)
         return if (o != 0) {
-            __string(__vector(o) + j * 4)
+            bb.getDouble(__vector(o) + j * 8)
         } else {
-            null
+            0.0
         }
     }
     val WAVELENGTHSLength : Int
         get() {
-            val o = __offset(20); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(24); return if (o != 0) __vector_len(o) else 0
         }
-    fun ABS_FLUXES(j: Int) : String? {
-        val o = __offset(22)
+    val WAVELENGTHSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 8)
+    fun WAVELENGTHSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 8)
+    /**
+     * Absolute flux values (W/m^2/um)
+     */
+    fun ABS_FLUXES(j: Int) : Double {
+        val o = __offset(26)
         return if (o != 0) {
-            __string(__vector(o) + j * 4)
+            bb.getDouble(__vector(o) + j * 8)
         } else {
-            null
+            0.0
         }
     }
     val ABS_FLUXESLength : Int
         get() {
-            val o = __offset(22); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(26); return if (o != 0) __vector_len(o) else 0
         }
-    fun RATIO_WAVELENGTHS(j: Int) : String? {
-        val o = __offset(24)
+    val ABS_FLUXESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 8)
+    fun ABS_FLUXESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 8)
+    /**
+     * Ratio reference wavelengths (micrometers)
+     */
+    fun RATIO_WAVELENGTHS(j: Int) : Double {
+        val o = __offset(28)
         return if (o != 0) {
-            __string(__vector(o) + j * 4)
+            bb.getDouble(__vector(o) + j * 8)
         } else {
-            null
+            0.0
         }
     }
     val RATIO_WAVELENGTHSLength : Int
         get() {
-            val o = __offset(24); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(28); return if (o != 0) __vector_len(o) else 0
         }
-    fun FLUX_RATIOS(j: Int) : String? {
-        val o = __offset(26)
+    val RATIO_WAVELENGTHSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 8)
+    fun RATIO_WAVELENGTHSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 8)
+    /**
+     * Flux ratios (normalized)
+     */
+    fun FLUX_RATIOS(j: Int) : Double {
+        val o = __offset(30)
         return if (o != 0) {
-            __string(__vector(o) + j * 4)
+            bb.getDouble(__vector(o) + j * 8)
         } else {
-            null
+            0.0
         }
     }
     val FLUX_RATIOSLength : Int
         get() {
-            val o = __offset(26); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(30); return if (o != 0) __vector_len(o) else 0
         }
-    val ORIG_OBJECT_ID : String?
+    val FLUX_RATIOSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 8)
+    fun FLUX_RATIOSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 8)
+    /**
+     * Effective temperature (Kelvin)
+     */
+    val TEMPERATURE : Double
         get() {
-            val o = __offset(28)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            val o = __offset(32)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val ORIG_OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun ORIG_OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
-    val SAT_NO : Int
+    /**
+     * Signal-to-noise ratio
+     */
+    val SIGNAL_NOISE_RATIO : Double
         get() {
-            val o = __offset(30)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            val o = __offset(34)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Integration time (seconds)
+     */
+    val INTEGRATION_TIME : Double
+        get() {
+            val o = __offset(36)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Data quality (0-9, 9=best)
+     */
+    val QUALITY : UByte
+        get() {
+            val o = __offset(38)
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
@@ -171,13 +253,14 @@ class SWR : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SWRBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SWR")
-        fun createSWR(builder: FlatBufferBuilder, IDOffset: Int, ON_ORBITOffset: Int, TSOffset: Int, SOLAR_PHASE_ANGLE: Double, LAT: Double, LON: Double, LOCATION_NAMEOffset: Int, BAD_WAVEOffset: Int, WAVELENGTHSOffset: Int, ABS_FLUXESOffset: Int, RATIO_WAVELENGTHSOffset: Int, FLUX_RATIOSOffset: Int, ORIG_OBJECT_IDOffset: Int, SAT_NO: Int) : Int {
-            builder.startTable(14)
+        fun createSWR(builder: FlatBufferBuilder, IDOffset: Int, ON_ORBITOffset: Int, ORIG_OBJECT_IDOffset: Int, SAT_NO: UInt, TSOffset: Int, SOLAR_PHASE_ANGLE: Double, LAT: Double, LON: Double, LOCATION_NAMEOffset: Int, BAD_WAVEOffset: Int, WAVELENGTHSOffset: Int, ABS_FLUXESOffset: Int, RATIO_WAVELENGTHSOffset: Int, FLUX_RATIOSOffset: Int, TEMPERATURE: Double, SIGNAL_NOISE_RATIO: Double, INTEGRATION_TIME: Double, QUALITY: UByte) : Int {
+            builder.startTable(18)
+            addINTEGRATION_TIME(builder, INTEGRATION_TIME)
+            addSIGNAL_NOISE_RATIO(builder, SIGNAL_NOISE_RATIO)
+            addTEMPERATURE(builder, TEMPERATURE)
             addLON(builder, LON)
             addLAT(builder, LAT)
             addSOLAR_PHASE_ANGLE(builder, SOLAR_PHASE_ANGLE)
-            addSAT_NO(builder, SAT_NO)
-            addORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset)
             addFLUX_RATIOS(builder, FLUX_RATIOSOffset)
             addRATIO_WAVELENGTHS(builder, RATIO_WAVELENGTHSOffset)
             addABS_FLUXES(builder, ABS_FLUXESOffset)
@@ -185,57 +268,64 @@ class SWR : Table() {
             addBAD_WAVE(builder, BAD_WAVEOffset)
             addLOCATION_NAME(builder, LOCATION_NAMEOffset)
             addTS(builder, TSOffset)
+            addSAT_NO(builder, SAT_NO)
+            addORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset)
             addON_ORBIT(builder, ON_ORBITOffset)
             addID(builder, IDOffset)
+            addQUALITY(builder, QUALITY)
             return endSWR(builder)
         }
-        fun startSWR(builder: FlatBufferBuilder) = builder.startTable(14)
+        fun startSWR(builder: FlatBufferBuilder) = builder.startTable(18)
         fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
         fun addON_ORBIT(builder: FlatBufferBuilder, ON_ORBIT: Int) = builder.addOffset(1, ON_ORBIT, 0)
-        fun addTS(builder: FlatBufferBuilder, TS: Int) = builder.addOffset(2, TS, 0)
-        fun addSOLAR_PHASE_ANGLE(builder: FlatBufferBuilder, SOLAR_PHASE_ANGLE: Double) = builder.addDouble(3, SOLAR_PHASE_ANGLE, 0.0)
-        fun addLAT(builder: FlatBufferBuilder, LAT: Double) = builder.addDouble(4, LAT, 0.0)
-        fun addLON(builder: FlatBufferBuilder, LON: Double) = builder.addDouble(5, LON, 0.0)
-        fun addLOCATION_NAME(builder: FlatBufferBuilder, LOCATION_NAME: Int) = builder.addOffset(6, LOCATION_NAME, 0)
-        fun addBAD_WAVE(builder: FlatBufferBuilder, BAD_WAVE: Int) = builder.addOffset(7, BAD_WAVE, 0)
-        fun addWAVELENGTHS(builder: FlatBufferBuilder, WAVELENGTHS: Int) = builder.addOffset(8, WAVELENGTHS, 0)
-        fun createWavelengthsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
+        fun addORIG_OBJECT_ID(builder: FlatBufferBuilder, ORIG_OBJECT_ID: Int) = builder.addOffset(2, ORIG_OBJECT_ID, 0)
+        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: UInt) = builder.addInt(3, SAT_NO.toInt(), 0)
+        fun addTS(builder: FlatBufferBuilder, TS: Int) = builder.addOffset(4, TS, 0)
+        fun addSOLAR_PHASE_ANGLE(builder: FlatBufferBuilder, SOLAR_PHASE_ANGLE: Double) = builder.addDouble(5, SOLAR_PHASE_ANGLE, 0.0)
+        fun addLAT(builder: FlatBufferBuilder, LAT: Double) = builder.addDouble(6, LAT, 0.0)
+        fun addLON(builder: FlatBufferBuilder, LON: Double) = builder.addDouble(7, LON, 0.0)
+        fun addLOCATION_NAME(builder: FlatBufferBuilder, LOCATION_NAME: Int) = builder.addOffset(8, LOCATION_NAME, 0)
+        fun addBAD_WAVE(builder: FlatBufferBuilder, BAD_WAVE: Int) = builder.addOffset(9, BAD_WAVE, 0)
+        fun addWAVELENGTHS(builder: FlatBufferBuilder, WAVELENGTHS: Int) = builder.addOffset(10, WAVELENGTHS, 0)
+        fun createWavelengthsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
+                builder.addDouble(data[i])
             }
             return builder.endVector()
         }
-        fun startWavelengthsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addABS_FLUXES(builder: FlatBufferBuilder, ABS_FLUXES: Int) = builder.addOffset(9, ABS_FLUXES, 0)
-        fun createAbsFluxesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
+        fun startWavelengthsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addABS_FLUXES(builder: FlatBufferBuilder, ABS_FLUXES: Int) = builder.addOffset(11, ABS_FLUXES, 0)
+        fun createAbsFluxesVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
+                builder.addDouble(data[i])
             }
             return builder.endVector()
         }
-        fun startAbsFluxesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addRATIO_WAVELENGTHS(builder: FlatBufferBuilder, RATIO_WAVELENGTHS: Int) = builder.addOffset(10, RATIO_WAVELENGTHS, 0)
-        fun createRatioWavelengthsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
+        fun startAbsFluxesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addRATIO_WAVELENGTHS(builder: FlatBufferBuilder, RATIO_WAVELENGTHS: Int) = builder.addOffset(12, RATIO_WAVELENGTHS, 0)
+        fun createRatioWavelengthsVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
+                builder.addDouble(data[i])
             }
             return builder.endVector()
         }
-        fun startRatioWavelengthsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addFLUX_RATIOS(builder: FlatBufferBuilder, FLUX_RATIOS: Int) = builder.addOffset(11, FLUX_RATIOS, 0)
-        fun createFluxRatiosVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
+        fun startRatioWavelengthsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addFLUX_RATIOS(builder: FlatBufferBuilder, FLUX_RATIOS: Int) = builder.addOffset(13, FLUX_RATIOS, 0)
+        fun createFluxRatiosVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
+                builder.addDouble(data[i])
             }
             return builder.endVector()
         }
-        fun startFluxRatiosVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addORIG_OBJECT_ID(builder: FlatBufferBuilder, ORIG_OBJECT_ID: Int) = builder.addOffset(12, ORIG_OBJECT_ID, 0)
-        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: Int) = builder.addInt(13, SAT_NO, 0)
+        fun startFluxRatiosVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addTEMPERATURE(builder: FlatBufferBuilder, TEMPERATURE: Double) = builder.addDouble(14, TEMPERATURE, 0.0)
+        fun addSIGNAL_NOISE_RATIO(builder: FlatBufferBuilder, SIGNAL_NOISE_RATIO: Double) = builder.addDouble(15, SIGNAL_NOISE_RATIO, 0.0)
+        fun addINTEGRATION_TIME(builder: FlatBufferBuilder, INTEGRATION_TIME: Double) = builder.addDouble(16, INTEGRATION_TIME, 0.0)
+        fun addQUALITY(builder: FlatBufferBuilder, QUALITY: UByte) = builder.addByte(17, QUALITY.toByte(), 0)
         fun endSWR(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

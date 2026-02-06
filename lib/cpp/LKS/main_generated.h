@@ -16,106 +16,214 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct LKS;
 struct LKSBuilder;
 
+enum linkType : int8_t {
+  linkType_UPLINK = 0,
+  linkType_DOWNLINK = 1,
+  linkType_CROSSLINK = 2,
+  linkType_INTER_SATELLITE = 3,
+  linkType_GROUND_TO_GROUND = 4,
+  linkType_RELAY = 5,
+  linkType_MIN = linkType_UPLINK,
+  linkType_MAX = linkType_RELAY
+};
+
+inline const linkType (&EnumValueslinkType())[6] {
+  static const linkType values[] = {
+    linkType_UPLINK,
+    linkType_DOWNLINK,
+    linkType_CROSSLINK,
+    linkType_INTER_SATELLITE,
+    linkType_GROUND_TO_GROUND,
+    linkType_RELAY
+  };
+  return values;
+}
+
+inline const char * const *EnumNameslinkType() {
+  static const char * const names[7] = {
+    "UPLINK",
+    "DOWNLINK",
+    "CROSSLINK",
+    "INTER_SATELLITE",
+    "GROUND_TO_GROUND",
+    "RELAY",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamelinkType(linkType e) {
+  if (::flatbuffers::IsOutRange(e, linkType_UPLINK, linkType_RELAY)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNameslinkType()[index];
+}
+
+enum linkState : int8_t {
+  linkState_ESTABLISHED = 0,
+  linkState_DEGRADED = 1,
+  linkState_INTERRUPTED = 2,
+  linkState_PLANNED = 3,
+  linkState_TERMINATED = 4,
+  linkState_UNKNOWN = 5,
+  linkState_MIN = linkState_ESTABLISHED,
+  linkState_MAX = linkState_UNKNOWN
+};
+
+inline const linkState (&EnumValueslinkState())[6] {
+  static const linkState values[] = {
+    linkState_ESTABLISHED,
+    linkState_DEGRADED,
+    linkState_INTERRUPTED,
+    linkState_PLANNED,
+    linkState_TERMINATED,
+    linkState_UNKNOWN
+  };
+  return values;
+}
+
+inline const char * const *EnumNameslinkState() {
+  static const char * const names[7] = {
+    "ESTABLISHED",
+    "DEGRADED",
+    "INTERRUPTED",
+    "PLANNED",
+    "TERMINATED",
+    "UNKNOWN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamelinkState(linkState e) {
+  if (::flatbuffers::IsOutRange(e, linkState_ESTABLISHED, linkState_UNKNOWN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNameslinkState()[index];
+}
+
 /// Link Status
 struct LKS FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef LKSBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
     VT_ID_ON_ORBIT1 = 6,
-    VT_ID_ON_ORBIT2 = 8,
-    VT_LINK_START_TIME = 10,
-    VT_LINK_STOP_TIME = 12,
+    VT_SAT_NO1 = 8,
+    VT_ID_ON_ORBIT2 = 10,
+    VT_SAT_NO2 = 12,
     VT_CONSTELLATION = 14,
     VT_LINK_NAME = 16,
     VT_LINK_TYPE = 18,
-    VT_BAND = 20,
-    VT_ID_BEAM1 = 22,
-    VT_END_POINT1_NAME = 24,
-    VT_END_POINT1_LAT = 26,
-    VT_END_POINT1_LON = 28,
-    VT_ID_BEAM2 = 30,
-    VT_END_POINT2_NAME = 32,
-    VT_END_POINT2_LAT = 34,
-    VT_END_POINT2_LON = 36,
-    VT_DATA_RATE1_TO2 = 38,
-    VT_DATA_RATE2_TO1 = 40,
-    VT_LINK_STATE = 42,
-    VT_SYS_CAP = 44,
-    VT_OPS_CAP = 46,
-    VT_SAT_NO1 = 48,
-    VT_SAT_NO2 = 50
+    VT_LINK_STATE = 20,
+    VT_BAND = 22,
+    VT_LINK_START_TIME = 24,
+    VT_LINK_STOP_TIME = 26,
+    VT_ID_BEAM1 = 28,
+    VT_END_POINT1_NAME = 30,
+    VT_END_POINT1_LAT = 32,
+    VT_END_POINT1_LON = 34,
+    VT_ID_BEAM2 = 36,
+    VT_END_POINT2_NAME = 38,
+    VT_END_POINT2_LAT = 40,
+    VT_END_POINT2_LON = 42,
+    VT_DATA_RATE1_TO2 = 44,
+    VT_DATA_RATE2_TO1 = 46,
+    VT_SYS_CAP = 48,
+    VT_OPS_CAP = 50
   };
+  /// Unique identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
+  /// First endpoint on-orbit identifier
   const ::flatbuffers::String *ID_ON_ORBIT1() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID_ON_ORBIT1);
   }
+  /// First endpoint satellite catalog number
+  uint32_t SAT_NO1() const {
+    return GetField<uint32_t>(VT_SAT_NO1, 0);
+  }
+  /// Second endpoint on-orbit identifier
   const ::flatbuffers::String *ID_ON_ORBIT2() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID_ON_ORBIT2);
   }
-  const ::flatbuffers::String *LINK_START_TIME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_LINK_START_TIME);
+  /// Second endpoint satellite catalog number
+  uint32_t SAT_NO2() const {
+    return GetField<uint32_t>(VT_SAT_NO2, 0);
   }
-  const ::flatbuffers::String *LINK_STOP_TIME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_LINK_STOP_TIME);
-  }
+  /// Constellation name
   const ::flatbuffers::String *CONSTELLATION() const {
     return GetPointer<const ::flatbuffers::String *>(VT_CONSTELLATION);
   }
+  /// Link name or identifier
   const ::flatbuffers::String *LINK_NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_LINK_NAME);
   }
-  const ::flatbuffers::String *LINK_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_LINK_TYPE);
+  /// Link type
+  linkType LINK_TYPE() const {
+    return static_cast<linkType>(GetField<int8_t>(VT_LINK_TYPE, 0));
   }
+  /// Link state
+  linkState LINK_STATE() const {
+    return static_cast<linkState>(GetField<int8_t>(VT_LINK_STATE, 0));
+  }
+  /// RF band
   const ::flatbuffers::String *BAND() const {
     return GetPointer<const ::flatbuffers::String *>(VT_BAND);
   }
+  /// Link start time (ISO 8601)
+  const ::flatbuffers::String *LINK_START_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LINK_START_TIME);
+  }
+  /// Link stop time (ISO 8601)
+  const ::flatbuffers::String *LINK_STOP_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LINK_STOP_TIME);
+  }
+  /// First endpoint beam identifier
   const ::flatbuffers::String *ID_BEAM1() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID_BEAM1);
   }
+  /// First endpoint name
   const ::flatbuffers::String *END_POINT1_NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_END_POINT1_NAME);
   }
+  /// First endpoint latitude (degrees)
   double END_POINT1_LAT() const {
     return GetField<double>(VT_END_POINT1_LAT, 0.0);
   }
+  /// First endpoint longitude (degrees)
   double END_POINT1_LON() const {
     return GetField<double>(VT_END_POINT1_LON, 0.0);
   }
+  /// Second endpoint beam identifier
   const ::flatbuffers::String *ID_BEAM2() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID_BEAM2);
   }
+  /// Second endpoint name
   const ::flatbuffers::String *END_POINT2_NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_END_POINT2_NAME);
   }
+  /// Second endpoint latitude (degrees)
   double END_POINT2_LAT() const {
     return GetField<double>(VT_END_POINT2_LAT, 0.0);
   }
+  /// Second endpoint longitude (degrees)
   double END_POINT2_LON() const {
     return GetField<double>(VT_END_POINT2_LON, 0.0);
   }
+  /// Data rate from endpoint 1 to 2 (Mbps)
   double DATA_RATE1_TO2() const {
     return GetField<double>(VT_DATA_RATE1_TO2, 0.0);
   }
+  /// Data rate from endpoint 2 to 1 (Mbps)
   double DATA_RATE2_TO1() const {
     return GetField<double>(VT_DATA_RATE2_TO1, 0.0);
   }
-  const ::flatbuffers::String *LINK_STATE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_LINK_STATE);
-  }
+  /// System capability status
   const ::flatbuffers::String *SYS_CAP() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SYS_CAP);
   }
+  /// Operational capability status
   const ::flatbuffers::String *OPS_CAP() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OPS_CAP);
-  }
-  int32_t SAT_NO1() const {
-    return GetField<int32_t>(VT_SAT_NO1, 0);
-  }
-  int32_t SAT_NO2() const {
-    return GetField<int32_t>(VT_SAT_NO2, 0);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -123,20 +231,22 @@ struct LKS FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(ID()) &&
            VerifyOffset(verifier, VT_ID_ON_ORBIT1) &&
            verifier.VerifyString(ID_ON_ORBIT1()) &&
+           VerifyField<uint32_t>(verifier, VT_SAT_NO1, 4) &&
            VerifyOffset(verifier, VT_ID_ON_ORBIT2) &&
            verifier.VerifyString(ID_ON_ORBIT2()) &&
-           VerifyOffset(verifier, VT_LINK_START_TIME) &&
-           verifier.VerifyString(LINK_START_TIME()) &&
-           VerifyOffset(verifier, VT_LINK_STOP_TIME) &&
-           verifier.VerifyString(LINK_STOP_TIME()) &&
+           VerifyField<uint32_t>(verifier, VT_SAT_NO2, 4) &&
            VerifyOffset(verifier, VT_CONSTELLATION) &&
            verifier.VerifyString(CONSTELLATION()) &&
            VerifyOffset(verifier, VT_LINK_NAME) &&
            verifier.VerifyString(LINK_NAME()) &&
-           VerifyOffset(verifier, VT_LINK_TYPE) &&
-           verifier.VerifyString(LINK_TYPE()) &&
+           VerifyField<int8_t>(verifier, VT_LINK_TYPE, 1) &&
+           VerifyField<int8_t>(verifier, VT_LINK_STATE, 1) &&
            VerifyOffset(verifier, VT_BAND) &&
            verifier.VerifyString(BAND()) &&
+           VerifyOffset(verifier, VT_LINK_START_TIME) &&
+           verifier.VerifyString(LINK_START_TIME()) &&
+           VerifyOffset(verifier, VT_LINK_STOP_TIME) &&
+           verifier.VerifyString(LINK_STOP_TIME()) &&
            VerifyOffset(verifier, VT_ID_BEAM1) &&
            verifier.VerifyString(ID_BEAM1()) &&
            VerifyOffset(verifier, VT_END_POINT1_NAME) &&
@@ -151,14 +261,10 @@ struct LKS FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_END_POINT2_LON, 8) &&
            VerifyField<double>(verifier, VT_DATA_RATE1_TO2, 8) &&
            VerifyField<double>(verifier, VT_DATA_RATE2_TO1, 8) &&
-           VerifyOffset(verifier, VT_LINK_STATE) &&
-           verifier.VerifyString(LINK_STATE()) &&
            VerifyOffset(verifier, VT_SYS_CAP) &&
            verifier.VerifyString(SYS_CAP()) &&
            VerifyOffset(verifier, VT_OPS_CAP) &&
            verifier.VerifyString(OPS_CAP()) &&
-           VerifyField<int32_t>(verifier, VT_SAT_NO1, 4) &&
-           VerifyField<int32_t>(verifier, VT_SAT_NO2, 4) &&
            verifier.EndTable();
   }
 };
@@ -173,14 +279,14 @@ struct LKSBuilder {
   void add_ID_ON_ORBIT1(::flatbuffers::Offset<::flatbuffers::String> ID_ON_ORBIT1) {
     fbb_.AddOffset(LKS::VT_ID_ON_ORBIT1, ID_ON_ORBIT1);
   }
+  void add_SAT_NO1(uint32_t SAT_NO1) {
+    fbb_.AddElement<uint32_t>(LKS::VT_SAT_NO1, SAT_NO1, 0);
+  }
   void add_ID_ON_ORBIT2(::flatbuffers::Offset<::flatbuffers::String> ID_ON_ORBIT2) {
     fbb_.AddOffset(LKS::VT_ID_ON_ORBIT2, ID_ON_ORBIT2);
   }
-  void add_LINK_START_TIME(::flatbuffers::Offset<::flatbuffers::String> LINK_START_TIME) {
-    fbb_.AddOffset(LKS::VT_LINK_START_TIME, LINK_START_TIME);
-  }
-  void add_LINK_STOP_TIME(::flatbuffers::Offset<::flatbuffers::String> LINK_STOP_TIME) {
-    fbb_.AddOffset(LKS::VT_LINK_STOP_TIME, LINK_STOP_TIME);
+  void add_SAT_NO2(uint32_t SAT_NO2) {
+    fbb_.AddElement<uint32_t>(LKS::VT_SAT_NO2, SAT_NO2, 0);
   }
   void add_CONSTELLATION(::flatbuffers::Offset<::flatbuffers::String> CONSTELLATION) {
     fbb_.AddOffset(LKS::VT_CONSTELLATION, CONSTELLATION);
@@ -188,11 +294,20 @@ struct LKSBuilder {
   void add_LINK_NAME(::flatbuffers::Offset<::flatbuffers::String> LINK_NAME) {
     fbb_.AddOffset(LKS::VT_LINK_NAME, LINK_NAME);
   }
-  void add_LINK_TYPE(::flatbuffers::Offset<::flatbuffers::String> LINK_TYPE) {
-    fbb_.AddOffset(LKS::VT_LINK_TYPE, LINK_TYPE);
+  void add_LINK_TYPE(linkType LINK_TYPE) {
+    fbb_.AddElement<int8_t>(LKS::VT_LINK_TYPE, static_cast<int8_t>(LINK_TYPE), 0);
+  }
+  void add_LINK_STATE(linkState LINK_STATE) {
+    fbb_.AddElement<int8_t>(LKS::VT_LINK_STATE, static_cast<int8_t>(LINK_STATE), 0);
   }
   void add_BAND(::flatbuffers::Offset<::flatbuffers::String> BAND) {
     fbb_.AddOffset(LKS::VT_BAND, BAND);
+  }
+  void add_LINK_START_TIME(::flatbuffers::Offset<::flatbuffers::String> LINK_START_TIME) {
+    fbb_.AddOffset(LKS::VT_LINK_START_TIME, LINK_START_TIME);
+  }
+  void add_LINK_STOP_TIME(::flatbuffers::Offset<::flatbuffers::String> LINK_STOP_TIME) {
+    fbb_.AddOffset(LKS::VT_LINK_STOP_TIME, LINK_STOP_TIME);
   }
   void add_ID_BEAM1(::flatbuffers::Offset<::flatbuffers::String> ID_BEAM1) {
     fbb_.AddOffset(LKS::VT_ID_BEAM1, ID_BEAM1);
@@ -224,20 +339,11 @@ struct LKSBuilder {
   void add_DATA_RATE2_TO1(double DATA_RATE2_TO1) {
     fbb_.AddElement<double>(LKS::VT_DATA_RATE2_TO1, DATA_RATE2_TO1, 0.0);
   }
-  void add_LINK_STATE(::flatbuffers::Offset<::flatbuffers::String> LINK_STATE) {
-    fbb_.AddOffset(LKS::VT_LINK_STATE, LINK_STATE);
-  }
   void add_SYS_CAP(::flatbuffers::Offset<::flatbuffers::String> SYS_CAP) {
     fbb_.AddOffset(LKS::VT_SYS_CAP, SYS_CAP);
   }
   void add_OPS_CAP(::flatbuffers::Offset<::flatbuffers::String> OPS_CAP) {
     fbb_.AddOffset(LKS::VT_OPS_CAP, OPS_CAP);
-  }
-  void add_SAT_NO1(int32_t SAT_NO1) {
-    fbb_.AddElement<int32_t>(LKS::VT_SAT_NO1, SAT_NO1, 0);
-  }
-  void add_SAT_NO2(int32_t SAT_NO2) {
-    fbb_.AddElement<int32_t>(LKS::VT_SAT_NO2, SAT_NO2, 0);
   }
   explicit LKSBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -254,13 +360,16 @@ inline ::flatbuffers::Offset<LKS> CreateLKS(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ID_ON_ORBIT1 = 0,
+    uint32_t SAT_NO1 = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ID_ON_ORBIT2 = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> LINK_START_TIME = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> LINK_STOP_TIME = 0,
+    uint32_t SAT_NO2 = 0,
     ::flatbuffers::Offset<::flatbuffers::String> CONSTELLATION = 0,
     ::flatbuffers::Offset<::flatbuffers::String> LINK_NAME = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> LINK_TYPE = 0,
+    linkType LINK_TYPE = linkType_UPLINK,
+    linkState LINK_STATE = linkState_ESTABLISHED,
     ::flatbuffers::Offset<::flatbuffers::String> BAND = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> LINK_START_TIME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> LINK_STOP_TIME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ID_BEAM1 = 0,
     ::flatbuffers::Offset<::flatbuffers::String> END_POINT1_NAME = 0,
     double END_POINT1_LAT = 0.0,
@@ -271,11 +380,8 @@ inline ::flatbuffers::Offset<LKS> CreateLKS(
     double END_POINT2_LON = 0.0,
     double DATA_RATE1_TO2 = 0.0,
     double DATA_RATE2_TO1 = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::String> LINK_STATE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SYS_CAP = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> OPS_CAP = 0,
-    int32_t SAT_NO1 = 0,
-    int32_t SAT_NO2 = 0) {
+    ::flatbuffers::Offset<::flatbuffers::String> OPS_CAP = 0) {
   LKSBuilder builder_(_fbb);
   builder_.add_DATA_RATE2_TO1(DATA_RATE2_TO1);
   builder_.add_DATA_RATE1_TO2(DATA_RATE1_TO2);
@@ -283,24 +389,24 @@ inline ::flatbuffers::Offset<LKS> CreateLKS(
   builder_.add_END_POINT2_LAT(END_POINT2_LAT);
   builder_.add_END_POINT1_LON(END_POINT1_LON);
   builder_.add_END_POINT1_LAT(END_POINT1_LAT);
-  builder_.add_SAT_NO2(SAT_NO2);
-  builder_.add_SAT_NO1(SAT_NO1);
   builder_.add_OPS_CAP(OPS_CAP);
   builder_.add_SYS_CAP(SYS_CAP);
-  builder_.add_LINK_STATE(LINK_STATE);
   builder_.add_END_POINT2_NAME(END_POINT2_NAME);
   builder_.add_ID_BEAM2(ID_BEAM2);
   builder_.add_END_POINT1_NAME(END_POINT1_NAME);
   builder_.add_ID_BEAM1(ID_BEAM1);
-  builder_.add_BAND(BAND);
-  builder_.add_LINK_TYPE(LINK_TYPE);
-  builder_.add_LINK_NAME(LINK_NAME);
-  builder_.add_CONSTELLATION(CONSTELLATION);
   builder_.add_LINK_STOP_TIME(LINK_STOP_TIME);
   builder_.add_LINK_START_TIME(LINK_START_TIME);
+  builder_.add_BAND(BAND);
+  builder_.add_LINK_NAME(LINK_NAME);
+  builder_.add_CONSTELLATION(CONSTELLATION);
+  builder_.add_SAT_NO2(SAT_NO2);
   builder_.add_ID_ON_ORBIT2(ID_ON_ORBIT2);
+  builder_.add_SAT_NO1(SAT_NO1);
   builder_.add_ID_ON_ORBIT1(ID_ON_ORBIT1);
   builder_.add_ID(ID);
+  builder_.add_LINK_STATE(LINK_STATE);
+  builder_.add_LINK_TYPE(LINK_TYPE);
   return builder_.Finish();
 }
 
@@ -308,13 +414,16 @@ inline ::flatbuffers::Offset<LKS> CreateLKSDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *ID = nullptr,
     const char *ID_ON_ORBIT1 = nullptr,
+    uint32_t SAT_NO1 = 0,
     const char *ID_ON_ORBIT2 = nullptr,
-    const char *LINK_START_TIME = nullptr,
-    const char *LINK_STOP_TIME = nullptr,
+    uint32_t SAT_NO2 = 0,
     const char *CONSTELLATION = nullptr,
     const char *LINK_NAME = nullptr,
-    const char *LINK_TYPE = nullptr,
+    linkType LINK_TYPE = linkType_UPLINK,
+    linkState LINK_STATE = linkState_ESTABLISHED,
     const char *BAND = nullptr,
+    const char *LINK_START_TIME = nullptr,
+    const char *LINK_STOP_TIME = nullptr,
     const char *ID_BEAM1 = nullptr,
     const char *END_POINT1_NAME = nullptr,
     double END_POINT1_LAT = 0.0,
@@ -325,38 +434,36 @@ inline ::flatbuffers::Offset<LKS> CreateLKSDirect(
     double END_POINT2_LON = 0.0,
     double DATA_RATE1_TO2 = 0.0,
     double DATA_RATE2_TO1 = 0.0,
-    const char *LINK_STATE = nullptr,
     const char *SYS_CAP = nullptr,
-    const char *OPS_CAP = nullptr,
-    int32_t SAT_NO1 = 0,
-    int32_t SAT_NO2 = 0) {
+    const char *OPS_CAP = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto ID_ON_ORBIT1__ = ID_ON_ORBIT1 ? _fbb.CreateString(ID_ON_ORBIT1) : 0;
   auto ID_ON_ORBIT2__ = ID_ON_ORBIT2 ? _fbb.CreateString(ID_ON_ORBIT2) : 0;
-  auto LINK_START_TIME__ = LINK_START_TIME ? _fbb.CreateString(LINK_START_TIME) : 0;
-  auto LINK_STOP_TIME__ = LINK_STOP_TIME ? _fbb.CreateString(LINK_STOP_TIME) : 0;
   auto CONSTELLATION__ = CONSTELLATION ? _fbb.CreateString(CONSTELLATION) : 0;
   auto LINK_NAME__ = LINK_NAME ? _fbb.CreateString(LINK_NAME) : 0;
-  auto LINK_TYPE__ = LINK_TYPE ? _fbb.CreateString(LINK_TYPE) : 0;
   auto BAND__ = BAND ? _fbb.CreateString(BAND) : 0;
+  auto LINK_START_TIME__ = LINK_START_TIME ? _fbb.CreateString(LINK_START_TIME) : 0;
+  auto LINK_STOP_TIME__ = LINK_STOP_TIME ? _fbb.CreateString(LINK_STOP_TIME) : 0;
   auto ID_BEAM1__ = ID_BEAM1 ? _fbb.CreateString(ID_BEAM1) : 0;
   auto END_POINT1_NAME__ = END_POINT1_NAME ? _fbb.CreateString(END_POINT1_NAME) : 0;
   auto ID_BEAM2__ = ID_BEAM2 ? _fbb.CreateString(ID_BEAM2) : 0;
   auto END_POINT2_NAME__ = END_POINT2_NAME ? _fbb.CreateString(END_POINT2_NAME) : 0;
-  auto LINK_STATE__ = LINK_STATE ? _fbb.CreateString(LINK_STATE) : 0;
   auto SYS_CAP__ = SYS_CAP ? _fbb.CreateString(SYS_CAP) : 0;
   auto OPS_CAP__ = OPS_CAP ? _fbb.CreateString(OPS_CAP) : 0;
   return CreateLKS(
       _fbb,
       ID__,
       ID_ON_ORBIT1__,
+      SAT_NO1,
       ID_ON_ORBIT2__,
-      LINK_START_TIME__,
-      LINK_STOP_TIME__,
+      SAT_NO2,
       CONSTELLATION__,
       LINK_NAME__,
-      LINK_TYPE__,
+      LINK_TYPE,
+      LINK_STATE,
       BAND__,
+      LINK_START_TIME__,
+      LINK_STOP_TIME__,
       ID_BEAM1__,
       END_POINT1_NAME__,
       END_POINT1_LAT,
@@ -367,11 +474,8 @@ inline ::flatbuffers::Offset<LKS> CreateLKSDirect(
       END_POINT2_LON,
       DATA_RATE1_TO2,
       DATA_RATE2_TO1,
-      LINK_STATE__,
       SYS_CAP__,
-      OPS_CAP__,
-      SAT_NO1,
-      SAT_NO2);
+      OPS_CAP__);
 }
 
 inline const LKS *GetLKS(const void *buf) {

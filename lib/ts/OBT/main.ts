@@ -3,3 +3,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export { OBT, OBTT } from './OBT.js';
+export { aouType } from './aouType.js';
+export { orbitObjectType } from './orbitObjectType.js';

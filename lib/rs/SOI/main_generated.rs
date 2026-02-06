@@ -9,6 +9,297 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_SOI_COLLECTION_MODE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_SOI_COLLECTION_MODE: i8 = 5;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_SOI_COLLECTION_MODE: [soiCollectionMode; 6] = [
+  soiCollectionMode::SIDEREAL,
+  soiCollectionMode::RATE_TRACK,
+  soiCollectionMode::STARE,
+  soiCollectionMode::SEARCH,
+  soiCollectionMode::SURVEY,
+  soiCollectionMode::TASKED,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct soiCollectionMode(pub i8);
+#[allow(non_upper_case_globals)]
+impl soiCollectionMode {
+  pub const SIDEREAL: Self = Self(0);
+  pub const RATE_TRACK: Self = Self(1);
+  pub const STARE: Self = Self(2);
+  pub const SEARCH: Self = Self(3);
+  pub const SURVEY: Self = Self(4);
+  pub const TASKED: Self = Self(5);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 5;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::SIDEREAL,
+    Self::RATE_TRACK,
+    Self::STARE,
+    Self::SEARCH,
+    Self::SURVEY,
+    Self::TASKED,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::SIDEREAL => Some("SIDEREAL"),
+      Self::RATE_TRACK => Some("RATE_TRACK"),
+      Self::STARE => Some("STARE"),
+      Self::SEARCH => Some("SEARCH"),
+      Self::SURVEY => Some("SURVEY"),
+      Self::TASKED => Some("TASKED"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for soiCollectionMode {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for soiCollectionMode {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for soiCollectionMode {
+    type Output = soiCollectionMode;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for soiCollectionMode {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for soiCollectionMode {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for soiCollectionMode {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_SOI_OBS_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_SOI_OBS_TYPE: i8 = 2;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_SOI_OBS_TYPE: [soiObsType; 3] = [
+  soiObsType::OPTICAL,
+  soiObsType::RADAR,
+  soiObsType::COMBINED,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct soiObsType(pub i8);
+#[allow(non_upper_case_globals)]
+impl soiObsType {
+  pub const OPTICAL: Self = Self(0);
+  pub const RADAR: Self = Self(1);
+  pub const COMBINED: Self = Self(2);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 2;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::OPTICAL,
+    Self::RADAR,
+    Self::COMBINED,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::OPTICAL => Some("OPTICAL"),
+      Self::RADAR => Some("RADAR"),
+      Self::COMBINED => Some("COMBINED"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for soiObsType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for soiObsType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for soiObsType {
+    type Output = soiObsType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for soiObsType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for soiObsType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for soiObsType {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_SOI_CALIBRATION_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_SOI_CALIBRATION_TYPE: i8 = 5;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_SOI_CALIBRATION_TYPE: [soiCalibrationType; 6] = [
+  soiCalibrationType::PHOTOMETRIC,
+  soiCalibrationType::ASTROMETRIC,
+  soiCalibrationType::RADIOMETRIC,
+  soiCalibrationType::POLARIMETRIC,
+  soiCalibrationType::TEMPORAL,
+  soiCalibrationType::NONE,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct soiCalibrationType(pub i8);
+#[allow(non_upper_case_globals)]
+impl soiCalibrationType {
+  pub const PHOTOMETRIC: Self = Self(0);
+  pub const ASTROMETRIC: Self = Self(1);
+  pub const RADIOMETRIC: Self = Self(2);
+  pub const POLARIMETRIC: Self = Self(3);
+  pub const TEMPORAL: Self = Self(4);
+  pub const NONE: Self = Self(5);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 5;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::PHOTOMETRIC,
+    Self::ASTROMETRIC,
+    Self::RADIOMETRIC,
+    Self::POLARIMETRIC,
+    Self::TEMPORAL,
+    Self::NONE,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::PHOTOMETRIC => Some("PHOTOMETRIC"),
+      Self::ASTROMETRIC => Some("ASTROMETRIC"),
+      Self::RADIOMETRIC => Some("RADIOMETRIC"),
+      Self::POLARIMETRIC => Some("POLARIMETRIC"),
+      Self::TEMPORAL => Some("TEMPORAL"),
+      Self::NONE => Some("NONE"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for soiCalibrationType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for soiCalibrationType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for soiCalibrationType {
+    type Output = soiCalibrationType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for soiCalibrationType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for soiCalibrationType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for soiCalibrationType {}
 pub enum SOIOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -33,47 +324,47 @@ impl<'a> SOI<'a> {
   pub const VT_SENSOR_AS_ID: flatbuffers::VOffsetT = 12;
   pub const VT_SAT_NO: flatbuffers::VOffsetT = 14;
   pub const VT_ORIG_OBJECT_ID: flatbuffers::VOffsetT = 16;
-  pub const VT_SENLAT: flatbuffers::VOffsetT = 18;
-  pub const VT_SENLON: flatbuffers::VOffsetT = 20;
-  pub const VT_SENALT: flatbuffers::VOffsetT = 22;
-  pub const VT_SENX: flatbuffers::VOffsetT = 24;
-  pub const VT_SENY: flatbuffers::VOffsetT = 26;
-  pub const VT_SENZ: flatbuffers::VOffsetT = 28;
-  pub const VT_SENVELX: flatbuffers::VOffsetT = 30;
-  pub const VT_SENVELY: flatbuffers::VOffsetT = 32;
-  pub const VT_SENVELZ: flatbuffers::VOffsetT = 34;
-  pub const VT_START_TIME: flatbuffers::VOffsetT = 36;
-  pub const VT_END_TIME: flatbuffers::VOffsetT = 38;
-  pub const VT_NUM_OBS: flatbuffers::VOffsetT = 40;
-  pub const VT_TYPE: flatbuffers::VOffsetT = 42;
-  pub const VT_POLAR_ANGLE_START: flatbuffers::VOffsetT = 44;
-  pub const VT_POLAR_ANGLE_END: flatbuffers::VOffsetT = 46;
-  pub const VT_REFERENCE_FRAME: flatbuffers::VOffsetT = 48;
-  pub const VT_SEN_REFERENCE_FRAME: flatbuffers::VOffsetT = 50;
-  pub const VT_LOS_DECLINATION_START: flatbuffers::VOffsetT = 52;
-  pub const VT_LOS_DECLINATION_END: flatbuffers::VOffsetT = 54;
-  pub const VT_POINTING_ANGLE_AZ_START: flatbuffers::VOffsetT = 56;
-  pub const VT_POINTING_ANGLE_AZ_END: flatbuffers::VOffsetT = 58;
-  pub const VT_POINTING_ANGLE_EL_START: flatbuffers::VOffsetT = 60;
-  pub const VT_POINTING_ANGLE_EL_END: flatbuffers::VOffsetT = 62;
-  pub const VT_PIXEL_ARRAY_WIDTH: flatbuffers::VOffsetT = 64;
-  pub const VT_PIXEL_ARRAY_HEIGHT: flatbuffers::VOffsetT = 66;
-  pub const VT_NUM_SPECTRAL_FILTERS: flatbuffers::VOffsetT = 68;
-  pub const VT_SPECTRAL_FILTERS: flatbuffers::VOffsetT = 70;
-  pub const VT_COLLECTION_MODE: flatbuffers::VOffsetT = 72;
-  pub const VT_GAIN: flatbuffers::VOffsetT = 74;
-  pub const VT_BINNING_HORIZ: flatbuffers::VOffsetT = 76;
-  pub const VT_BINNING_VERT: flatbuffers::VOffsetT = 78;
-  pub const VT_SOLAR_MAG: flatbuffers::VOffsetT = 80;
-  pub const VT_PIXEL_MIN: flatbuffers::VOffsetT = 82;
-  pub const VT_PIXEL_MAX: flatbuffers::VOffsetT = 84;
-  pub const VT_SOFTWARE_VERSION: flatbuffers::VOffsetT = 86;
-  pub const VT_SATELLITE_NAME: flatbuffers::VOffsetT = 88;
-  pub const VT_STAR_CAT_NAME: flatbuffers::VOffsetT = 90;
-  pub const VT_CORR_QUALITY: flatbuffers::VOffsetT = 92;
-  pub const VT_UCT: flatbuffers::VOffsetT = 94;
-  pub const VT_VALID_CALIBRATIONS: flatbuffers::VOffsetT = 96;
-  pub const VT_CALIBRATION_TYPE: flatbuffers::VOffsetT = 98;
+  pub const VT_SATELLITE_NAME: flatbuffers::VOffsetT = 18;
+  pub const VT_UCT: flatbuffers::VOffsetT = 20;
+  pub const VT_SENLAT: flatbuffers::VOffsetT = 22;
+  pub const VT_SENLON: flatbuffers::VOffsetT = 24;
+  pub const VT_SENALT: flatbuffers::VOffsetT = 26;
+  pub const VT_SENX: flatbuffers::VOffsetT = 28;
+  pub const VT_SENY: flatbuffers::VOffsetT = 30;
+  pub const VT_SENZ: flatbuffers::VOffsetT = 32;
+  pub const VT_SENVELX: flatbuffers::VOffsetT = 34;
+  pub const VT_SENVELY: flatbuffers::VOffsetT = 36;
+  pub const VT_SENVELZ: flatbuffers::VOffsetT = 38;
+  pub const VT_SEN_REFERENCE_FRAME: flatbuffers::VOffsetT = 40;
+  pub const VT_OBS_TYPE: flatbuffers::VOffsetT = 42;
+  pub const VT_COLLECTION_MODE: flatbuffers::VOffsetT = 44;
+  pub const VT_START_TIME: flatbuffers::VOffsetT = 46;
+  pub const VT_END_TIME: flatbuffers::VOffsetT = 48;
+  pub const VT_NUM_OBS: flatbuffers::VOffsetT = 50;
+  pub const VT_REFERENCE_FRAME: flatbuffers::VOffsetT = 52;
+  pub const VT_POLAR_ANGLE_START: flatbuffers::VOffsetT = 54;
+  pub const VT_POLAR_ANGLE_END: flatbuffers::VOffsetT = 56;
+  pub const VT_LOS_DECLINATION_START: flatbuffers::VOffsetT = 58;
+  pub const VT_LOS_DECLINATION_END: flatbuffers::VOffsetT = 60;
+  pub const VT_POINTING_ANGLE_AZ_START: flatbuffers::VOffsetT = 62;
+  pub const VT_POINTING_ANGLE_AZ_END: flatbuffers::VOffsetT = 64;
+  pub const VT_POINTING_ANGLE_EL_START: flatbuffers::VOffsetT = 66;
+  pub const VT_POINTING_ANGLE_EL_END: flatbuffers::VOffsetT = 68;
+  pub const VT_PIXEL_ARRAY_WIDTH: flatbuffers::VOffsetT = 70;
+  pub const VT_PIXEL_ARRAY_HEIGHT: flatbuffers::VOffsetT = 72;
+  pub const VT_NUM_SPECTRAL_FILTERS: flatbuffers::VOffsetT = 74;
+  pub const VT_SPECTRAL_FILTERS: flatbuffers::VOffsetT = 76;
+  pub const VT_GAIN: flatbuffers::VOffsetT = 78;
+  pub const VT_BINNING_HORIZ: flatbuffers::VOffsetT = 80;
+  pub const VT_BINNING_VERT: flatbuffers::VOffsetT = 82;
+  pub const VT_SOLAR_MAG: flatbuffers::VOffsetT = 84;
+  pub const VT_PIXEL_MIN: flatbuffers::VOffsetT = 86;
+  pub const VT_PIXEL_MAX: flatbuffers::VOffsetT = 88;
+  pub const VT_SOFTWARE_VERSION: flatbuffers::VOffsetT = 90;
+  pub const VT_STAR_CAT_NAME: flatbuffers::VOffsetT = 92;
+  pub const VT_CORR_QUALITY: flatbuffers::VOffsetT = 94;
+  pub const VT_CALIBRATION_TYPE: flatbuffers::VOffsetT = 96;
+  pub const VT_VALID_CALIBRATIONS: flatbuffers::VOffsetT = 98;
   pub const VT_PERCENT_SAT_THRESHOLD: flatbuffers::VOffsetT = 100;
   pub const VT_CHANGE_DETECTED: flatbuffers::VOffsetT = 102;
   pub const VT_PERIODICITY_CHANGE_DETECTED: flatbuffers::VOffsetT = 104;
@@ -131,26 +422,18 @@ impl<'a> SOI<'a> {
     if let Some(x) = args.PERIODICITY_SAMPLING_CONF { builder.add_PERIODICITY_SAMPLING_CONF(x); }
     if let Some(x) = args.COLLECTION_DENSITY_CONF { builder.add_COLLECTION_DENSITY_CONF(x); }
     if let Some(x) = args.CHANGE_CONF { builder.add_CHANGE_CONF(x); }
-    if let Some(x) = args.CALIBRATION_TYPE { builder.add_CALIBRATION_TYPE(x); }
     if let Some(x) = args.VALID_CALIBRATIONS { builder.add_VALID_CALIBRATIONS(x); }
     if let Some(x) = args.STAR_CAT_NAME { builder.add_STAR_CAT_NAME(x); }
-    if let Some(x) = args.SATELLITE_NAME { builder.add_SATELLITE_NAME(x); }
     if let Some(x) = args.SOFTWARE_VERSION { builder.add_SOFTWARE_VERSION(x); }
     builder.add_PIXEL_MAX(args.PIXEL_MAX);
     builder.add_PIXEL_MIN(args.PIXEL_MIN);
-    builder.add_BINNING_VERT(args.BINNING_VERT);
-    builder.add_BINNING_HORIZ(args.BINNING_HORIZ);
-    if let Some(x) = args.COLLECTION_MODE { builder.add_COLLECTION_MODE(x); }
     if let Some(x) = args.SPECTRAL_FILTERS { builder.add_SPECTRAL_FILTERS(x); }
-    builder.add_NUM_SPECTRAL_FILTERS(args.NUM_SPECTRAL_FILTERS);
-    builder.add_PIXEL_ARRAY_HEIGHT(args.PIXEL_ARRAY_HEIGHT);
-    builder.add_PIXEL_ARRAY_WIDTH(args.PIXEL_ARRAY_WIDTH);
-    if let Some(x) = args.SEN_REFERENCE_FRAME { builder.add_SEN_REFERENCE_FRAME(x); }
     if let Some(x) = args.REFERENCE_FRAME { builder.add_REFERENCE_FRAME(x); }
-    if let Some(x) = args.TYPE { builder.add_TYPE(x); }
     builder.add_NUM_OBS(args.NUM_OBS);
     if let Some(x) = args.END_TIME { builder.add_END_TIME(x); }
     if let Some(x) = args.START_TIME { builder.add_START_TIME(x); }
+    if let Some(x) = args.SEN_REFERENCE_FRAME { builder.add_SEN_REFERENCE_FRAME(x); }
+    if let Some(x) = args.SATELLITE_NAME { builder.add_SATELLITE_NAME(x); }
     if let Some(x) = args.ORIG_OBJECT_ID { builder.add_ORIG_OBJECT_ID(x); }
     builder.add_SAT_NO(args.SAT_NO);
     if let Some(x) = args.SENSOR_AS_ID { builder.add_SENSOR_AS_ID(x); }
@@ -158,10 +441,18 @@ impl<'a> SOI<'a> {
     if let Some(x) = args.ID_SENSOR { builder.add_ID_SENSOR(x); }
     if let Some(x) = args.MSG_CREATE_DATE { builder.add_MSG_CREATE_DATE(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_PIXEL_ARRAY_HEIGHT(args.PIXEL_ARRAY_HEIGHT);
+    builder.add_PIXEL_ARRAY_WIDTH(args.PIXEL_ARRAY_WIDTH);
     builder.add_SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED(args.SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED);
     builder.add_BRIGHTNESS_VARIANCE_CHANGE_DETECTED(args.BRIGHTNESS_VARIANCE_CHANGE_DETECTED);
     builder.add_PERIODICITY_CHANGE_DETECTED(args.PERIODICITY_CHANGE_DETECTED);
     builder.add_CHANGE_DETECTED(args.CHANGE_DETECTED);
+    builder.add_CALIBRATION_TYPE(args.CALIBRATION_TYPE);
+    builder.add_BINNING_VERT(args.BINNING_VERT);
+    builder.add_BINNING_HORIZ(args.BINNING_HORIZ);
+    builder.add_NUM_SPECTRAL_FILTERS(args.NUM_SPECTRAL_FILTERS);
+    builder.add_COLLECTION_MODE(args.COLLECTION_MODE);
+    builder.add_OBS_TYPE(args.OBS_TYPE);
     builder.add_UCT(args.UCT);
     builder.finish()
   }
@@ -186,6 +477,10 @@ impl<'a> SOI<'a> {
     let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID().map(|x| {
       x.to_string()
     });
+    let SATELLITE_NAME = self.SATELLITE_NAME().map(|x| {
+      x.to_string()
+    });
+    let UCT = self.UCT();
     let SENLAT = self.SENLAT();
     let SENLON = self.SENLON();
     let SENALT = self.SENALT();
@@ -195,6 +490,11 @@ impl<'a> SOI<'a> {
     let SENVELX = self.SENVELX();
     let SENVELY = self.SENVELY();
     let SENVELZ = self.SENVELZ();
+    let SEN_REFERENCE_FRAME = self.SEN_REFERENCE_FRAME().map(|x| {
+      x.to_string()
+    });
+    let OBS_TYPE = self.OBS_TYPE();
+    let COLLECTION_MODE = self.COLLECTION_MODE();
     let START_TIME = self.START_TIME().map(|x| {
       x.to_string()
     });
@@ -202,17 +502,11 @@ impl<'a> SOI<'a> {
       x.to_string()
     });
     let NUM_OBS = self.NUM_OBS();
-    let TYPE = self.TYPE().map(|x| {
+    let REFERENCE_FRAME = self.REFERENCE_FRAME().map(|x| {
       x.to_string()
     });
     let POLAR_ANGLE_START = self.POLAR_ANGLE_START();
     let POLAR_ANGLE_END = self.POLAR_ANGLE_END();
-    let REFERENCE_FRAME = self.REFERENCE_FRAME().map(|x| {
-      x.to_string()
-    });
-    let SEN_REFERENCE_FRAME = self.SEN_REFERENCE_FRAME().map(|x| {
-      x.to_string()
-    });
     let LOS_DECLINATION_START = self.LOS_DECLINATION_START();
     let LOS_DECLINATION_END = self.LOS_DECLINATION_END();
     let POINTING_ANGLE_AZ_START = self.POINTING_ANGLE_AZ_START();
@@ -225,9 +519,6 @@ impl<'a> SOI<'a> {
     let SPECTRAL_FILTERS = self.SPECTRAL_FILTERS().map(|x| {
       x.iter().map(|s| s.to_string()).collect()
     });
-    let COLLECTION_MODE = self.COLLECTION_MODE().map(|x| {
-      x.to_string()
-    });
     let GAIN = self.GAIN();
     let BINNING_HORIZ = self.BINNING_HORIZ();
     let BINNING_VERT = self.BINNING_VERT();
@@ -237,18 +528,12 @@ impl<'a> SOI<'a> {
     let SOFTWARE_VERSION = self.SOFTWARE_VERSION().map(|x| {
       x.to_string()
     });
-    let SATELLITE_NAME = self.SATELLITE_NAME().map(|x| {
-      x.to_string()
-    });
     let STAR_CAT_NAME = self.STAR_CAT_NAME().map(|x| {
       x.to_string()
     });
     let CORR_QUALITY = self.CORR_QUALITY();
-    let UCT = self.UCT();
+    let CALIBRATION_TYPE = self.CALIBRATION_TYPE();
     let VALID_CALIBRATIONS = self.VALID_CALIBRATIONS().map(|x| {
-      x.to_string()
-    });
-    let CALIBRATION_TYPE = self.CALIBRATION_TYPE().map(|x| {
       x.to_string()
     });
     let PERCENT_SAT_THRESHOLD = self.PERCENT_SAT_THRESHOLD();
@@ -294,6 +579,8 @@ impl<'a> SOI<'a> {
       SENSOR_AS_ID,
       SAT_NO,
       ORIG_OBJECT_ID,
+      SATELLITE_NAME,
+      UCT,
       SENLAT,
       SENLON,
       SENALT,
@@ -303,14 +590,15 @@ impl<'a> SOI<'a> {
       SENVELX,
       SENVELY,
       SENVELZ,
+      SEN_REFERENCE_FRAME,
+      OBS_TYPE,
+      COLLECTION_MODE,
       START_TIME,
       END_TIME,
       NUM_OBS,
-      TYPE,
+      REFERENCE_FRAME,
       POLAR_ANGLE_START,
       POLAR_ANGLE_END,
-      REFERENCE_FRAME,
-      SEN_REFERENCE_FRAME,
       LOS_DECLINATION_START,
       LOS_DECLINATION_END,
       POINTING_ANGLE_AZ_START,
@@ -321,7 +609,6 @@ impl<'a> SOI<'a> {
       PIXEL_ARRAY_HEIGHT,
       NUM_SPECTRAL_FILTERS,
       SPECTRAL_FILTERS,
-      COLLECTION_MODE,
       GAIN,
       BINNING_HORIZ,
       BINNING_VERT,
@@ -329,12 +616,10 @@ impl<'a> SOI<'a> {
       PIXEL_MIN,
       PIXEL_MAX,
       SOFTWARE_VERSION,
-      SATELLITE_NAME,
       STAR_CAT_NAME,
       CORR_QUALITY,
-      UCT,
-      VALID_CALIBRATIONS,
       CALIBRATION_TYPE,
+      VALID_CALIBRATIONS,
       PERCENT_SAT_THRESHOLD,
       CHANGE_DETECTED,
       PERIODICITY_CHANGE_DETECTED,
@@ -353,6 +638,7 @@ impl<'a> SOI<'a> {
     }
   }
 
+  /// Unique identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -360,6 +646,7 @@ impl<'a> SOI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_ID, None)}
   }
+  /// Message creation date (ISO 8601)
   #[inline]
   pub fn MSG_CREATE_DATE(&self) -> Option<&'a str> {
     // Safety:
@@ -367,6 +654,7 @@ impl<'a> SOI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_MSG_CREATE_DATE, None)}
   }
+  /// Sensor identifier
   #[inline]
   pub fn ID_SENSOR(&self) -> Option<&'a str> {
     // Safety:
@@ -374,6 +662,7 @@ impl<'a> SOI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_ID_SENSOR, None)}
   }
+  /// Original sensor identifier
   #[inline]
   pub fn ORIG_SENSOR_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -381,6 +670,7 @@ impl<'a> SOI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_ORIG_SENSOR_ID, None)}
   }
+  /// Sensor observation set identifier
   #[inline]
   pub fn SENSOR_AS_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -388,13 +678,15 @@ impl<'a> SOI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_SENSOR_AS_ID, None)}
   }
+  /// Satellite catalog number
   #[inline]
-  pub fn SAT_NO(&self) -> i32 {
+  pub fn SAT_NO(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(SOI::VT_SAT_NO, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u32>(SOI::VT_SAT_NO, Some(0)).unwrap()}
   }
+  /// International designator
   #[inline]
   pub fn ORIG_OBJECT_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -402,251 +694,7 @@ impl<'a> SOI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_ORIG_OBJECT_ID, None)}
   }
-  #[inline]
-  pub fn SENLAT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SOI::VT_SENLAT, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SENLON(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SOI::VT_SENLON, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SENALT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SOI::VT_SENALT, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SENX(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SOI::VT_SENX, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SENY(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SOI::VT_SENY, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SENZ(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SOI::VT_SENZ, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SENVELX(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SOI::VT_SENVELX, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SENVELY(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SOI::VT_SENVELY, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SENVELZ(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SOI::VT_SENVELZ, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn START_TIME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_START_TIME, None)}
-  }
-  #[inline]
-  pub fn END_TIME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_END_TIME, None)}
-  }
-  #[inline]
-  pub fn NUM_OBS(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(SOI::VT_NUM_OBS, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn TYPE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_TYPE, None)}
-  }
-  #[inline]
-  pub fn POLAR_ANGLE_START(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SOI::VT_POLAR_ANGLE_START, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POLAR_ANGLE_END(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SOI::VT_POLAR_ANGLE_END, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn REFERENCE_FRAME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_REFERENCE_FRAME, None)}
-  }
-  #[inline]
-  pub fn SEN_REFERENCE_FRAME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_SEN_REFERENCE_FRAME, None)}
-  }
-  #[inline]
-  pub fn LOS_DECLINATION_START(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SOI::VT_LOS_DECLINATION_START, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn LOS_DECLINATION_END(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SOI::VT_LOS_DECLINATION_END, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POINTING_ANGLE_AZ_START(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SOI::VT_POINTING_ANGLE_AZ_START, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POINTING_ANGLE_AZ_END(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SOI::VT_POINTING_ANGLE_AZ_END, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POINTING_ANGLE_EL_START(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SOI::VT_POINTING_ANGLE_EL_START, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn POINTING_ANGLE_EL_END(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SOI::VT_POINTING_ANGLE_EL_END, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PIXEL_ARRAY_WIDTH(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(SOI::VT_PIXEL_ARRAY_WIDTH, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn PIXEL_ARRAY_HEIGHT(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(SOI::VT_PIXEL_ARRAY_HEIGHT, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn NUM_SPECTRAL_FILTERS(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(SOI::VT_NUM_SPECTRAL_FILTERS, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn SPECTRAL_FILTERS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(SOI::VT_SPECTRAL_FILTERS, None)}
-  }
-  #[inline]
-  pub fn COLLECTION_MODE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_COLLECTION_MODE, None)}
-  }
-  #[inline]
-  pub fn GAIN(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SOI::VT_GAIN, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn BINNING_HORIZ(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(SOI::VT_BINNING_HORIZ, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn BINNING_VERT(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(SOI::VT_BINNING_VERT, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn SOLAR_MAG(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SOI::VT_SOLAR_MAG, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PIXEL_MIN(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(SOI::VT_PIXEL_MIN, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn PIXEL_MAX(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(SOI::VT_PIXEL_MAX, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn SOFTWARE_VERSION(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_SOFTWARE_VERSION, None)}
-  }
+  /// Satellite common name
   #[inline]
   pub fn SATELLITE_NAME(&self) -> Option<&'a str> {
     // Safety:
@@ -654,20 +702,7 @@ impl<'a> SOI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_SATELLITE_NAME, None)}
   }
-  #[inline]
-  pub fn STAR_CAT_NAME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_STAR_CAT_NAME, None)}
-  }
-  #[inline]
-  pub fn CORR_QUALITY(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(SOI::VT_CORR_QUALITY, Some(0.0)).unwrap()}
-  }
+  /// True if uncorrelated target
   #[inline]
   pub fn UCT(&self) -> bool {
     // Safety:
@@ -675,6 +710,311 @@ impl<'a> SOI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(SOI::VT_UCT, Some(false)).unwrap()}
   }
+  /// Sensor geodetic latitude (degrees)
+  #[inline]
+  pub fn SENLAT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SOI::VT_SENLAT, Some(0.0)).unwrap()}
+  }
+  /// Sensor geodetic longitude (degrees)
+  #[inline]
+  pub fn SENLON(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SOI::VT_SENLON, Some(0.0)).unwrap()}
+  }
+  /// Sensor altitude (km)
+  #[inline]
+  pub fn SENALT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SOI::VT_SENALT, Some(0.0)).unwrap()}
+  }
+  /// Sensor ECEF X position (km)
+  #[inline]
+  pub fn SENX(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SOI::VT_SENX, Some(0.0)).unwrap()}
+  }
+  /// Sensor ECEF Y position (km)
+  #[inline]
+  pub fn SENY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SOI::VT_SENY, Some(0.0)).unwrap()}
+  }
+  /// Sensor ECEF Z position (km)
+  #[inline]
+  pub fn SENZ(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SOI::VT_SENZ, Some(0.0)).unwrap()}
+  }
+  /// Sensor ECEF X velocity (km/s)
+  #[inline]
+  pub fn SENVELX(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SOI::VT_SENVELX, Some(0.0)).unwrap()}
+  }
+  /// Sensor ECEF Y velocity (km/s)
+  #[inline]
+  pub fn SENVELY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SOI::VT_SENVELY, Some(0.0)).unwrap()}
+  }
+  /// Sensor ECEF Z velocity (km/s)
+  #[inline]
+  pub fn SENVELZ(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SOI::VT_SENVELZ, Some(0.0)).unwrap()}
+  }
+  /// Sensor reference frame
+  #[inline]
+  pub fn SEN_REFERENCE_FRAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_SEN_REFERENCE_FRAME, None)}
+  }
+  /// Observation type
+  #[inline]
+  pub fn OBS_TYPE(&self) -> soiObsType {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<soiObsType>(SOI::VT_OBS_TYPE, Some(soiObsType::OPTICAL)).unwrap()}
+  }
+  /// Collection mode
+  #[inline]
+  pub fn COLLECTION_MODE(&self) -> soiCollectionMode {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<soiCollectionMode>(SOI::VT_COLLECTION_MODE, Some(soiCollectionMode::SIDEREAL)).unwrap()}
+  }
+  /// Observation start time (ISO 8601)
+  #[inline]
+  pub fn START_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_START_TIME, None)}
+  }
+  /// Observation end time (ISO 8601)
+  #[inline]
+  pub fn END_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_END_TIME, None)}
+  }
+  /// Number of observations in set
+  #[inline]
+  pub fn NUM_OBS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(SOI::VT_NUM_OBS, Some(0)).unwrap()}
+  }
+  /// Observation reference frame
+  #[inline]
+  pub fn REFERENCE_FRAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_REFERENCE_FRAME, None)}
+  }
+  /// Polar angle at start (degrees)
+  #[inline]
+  pub fn POLAR_ANGLE_START(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SOI::VT_POLAR_ANGLE_START, Some(0.0)).unwrap()}
+  }
+  /// Polar angle at end (degrees)
+  #[inline]
+  pub fn POLAR_ANGLE_END(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SOI::VT_POLAR_ANGLE_END, Some(0.0)).unwrap()}
+  }
+  /// Line-of-sight declination at start (degrees)
+  #[inline]
+  pub fn LOS_DECLINATION_START(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SOI::VT_LOS_DECLINATION_START, Some(0.0)).unwrap()}
+  }
+  /// Line-of-sight declination at end (degrees)
+  #[inline]
+  pub fn LOS_DECLINATION_END(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SOI::VT_LOS_DECLINATION_END, Some(0.0)).unwrap()}
+  }
+  /// Pointing azimuth at start (degrees)
+  #[inline]
+  pub fn POINTING_ANGLE_AZ_START(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SOI::VT_POINTING_ANGLE_AZ_START, Some(0.0)).unwrap()}
+  }
+  /// Pointing azimuth at end (degrees)
+  #[inline]
+  pub fn POINTING_ANGLE_AZ_END(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SOI::VT_POINTING_ANGLE_AZ_END, Some(0.0)).unwrap()}
+  }
+  /// Pointing elevation at start (degrees)
+  #[inline]
+  pub fn POINTING_ANGLE_EL_START(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SOI::VT_POINTING_ANGLE_EL_START, Some(0.0)).unwrap()}
+  }
+  /// Pointing elevation at end (degrees)
+  #[inline]
+  pub fn POINTING_ANGLE_EL_END(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SOI::VT_POINTING_ANGLE_EL_END, Some(0.0)).unwrap()}
+  }
+  /// Focal plane array width (pixels)
+  #[inline]
+  pub fn PIXEL_ARRAY_WIDTH(&self) -> u16 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u16>(SOI::VT_PIXEL_ARRAY_WIDTH, Some(0)).unwrap()}
+  }
+  /// Focal plane array height (pixels)
+  #[inline]
+  pub fn PIXEL_ARRAY_HEIGHT(&self) -> u16 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u16>(SOI::VT_PIXEL_ARRAY_HEIGHT, Some(0)).unwrap()}
+  }
+  /// Number of spectral filters used
+  #[inline]
+  pub fn NUM_SPECTRAL_FILTERS(&self) -> u8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u8>(SOI::VT_NUM_SPECTRAL_FILTERS, Some(0)).unwrap()}
+  }
+  /// Spectral filter identifiers
+  #[inline]
+  pub fn SPECTRAL_FILTERS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(SOI::VT_SPECTRAL_FILTERS, None)}
+  }
+  /// Detector gain setting
+  #[inline]
+  pub fn GAIN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SOI::VT_GAIN, Some(0.0)).unwrap()}
+  }
+  /// Horizontal binning factor
+  #[inline]
+  pub fn BINNING_HORIZ(&self) -> u8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u8>(SOI::VT_BINNING_HORIZ, Some(0)).unwrap()}
+  }
+  /// Vertical binning factor
+  #[inline]
+  pub fn BINNING_VERT(&self) -> u8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u8>(SOI::VT_BINNING_VERT, Some(0)).unwrap()}
+  }
+  /// Solar visual magnitude
+  #[inline]
+  pub fn SOLAR_MAG(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SOI::VT_SOLAR_MAG, Some(0.0)).unwrap()}
+  }
+  /// Minimum pixel value in observation
+  #[inline]
+  pub fn PIXEL_MIN(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(SOI::VT_PIXEL_MIN, Some(0)).unwrap()}
+  }
+  /// Maximum pixel value in observation
+  #[inline]
+  pub fn PIXEL_MAX(&self) -> i32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<i32>(SOI::VT_PIXEL_MAX, Some(0)).unwrap()}
+  }
+  /// Processing software version
+  #[inline]
+  pub fn SOFTWARE_VERSION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_SOFTWARE_VERSION, None)}
+  }
+  /// Star catalog used for calibration
+  #[inline]
+  pub fn STAR_CAT_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_STAR_CAT_NAME, None)}
+  }
+  /// Correlation quality score
+  #[inline]
+  pub fn CORR_QUALITY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(SOI::VT_CORR_QUALITY, Some(0.0)).unwrap()}
+  }
+  /// Calibration type
+  #[inline]
+  pub fn CALIBRATION_TYPE(&self) -> soiCalibrationType {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<soiCalibrationType>(SOI::VT_CALIBRATION_TYPE, Some(soiCalibrationType::PHOTOMETRIC)).unwrap()}
+  }
+  /// Valid calibration identifiers
   #[inline]
   pub fn VALID_CALIBRATIONS(&self) -> Option<&'a str> {
     // Safety:
@@ -682,13 +1022,7 @@ impl<'a> SOI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_VALID_CALIBRATIONS, None)}
   }
-  #[inline]
-  pub fn CALIBRATION_TYPE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_CALIBRATION_TYPE, None)}
-  }
+  /// Percent saturation threshold
   #[inline]
   pub fn PERCENT_SAT_THRESHOLD(&self) -> f64 {
     // Safety:
@@ -696,6 +1030,7 @@ impl<'a> SOI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SOI::VT_PERCENT_SAT_THRESHOLD, Some(0.0)).unwrap()}
   }
+  /// True if change detected from baseline
   #[inline]
   pub fn CHANGE_DETECTED(&self) -> bool {
     // Safety:
@@ -703,6 +1038,7 @@ impl<'a> SOI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(SOI::VT_CHANGE_DETECTED, Some(false)).unwrap()}
   }
+  /// True if periodicity change detected
   #[inline]
   pub fn PERIODICITY_CHANGE_DETECTED(&self) -> bool {
     // Safety:
@@ -710,6 +1046,7 @@ impl<'a> SOI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(SOI::VT_PERIODICITY_CHANGE_DETECTED, Some(false)).unwrap()}
   }
+  /// True if brightness variance change detected
   #[inline]
   pub fn BRIGHTNESS_VARIANCE_CHANGE_DETECTED(&self) -> bool {
     // Safety:
@@ -717,6 +1054,7 @@ impl<'a> SOI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(SOI::VT_BRIGHTNESS_VARIANCE_CHANGE_DETECTED, Some(false)).unwrap()}
   }
+  /// True if solar phase angle brightness change detected
   #[inline]
   pub fn SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED(&self) -> bool {
     // Safety:
@@ -724,6 +1062,7 @@ impl<'a> SOI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(SOI::VT_SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED, Some(false)).unwrap()}
   }
+  /// Change confidence assessment
   #[inline]
   pub fn CHANGE_CONF(&self) -> Option<&'a str> {
     // Safety:
@@ -731,6 +1070,7 @@ impl<'a> SOI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_CHANGE_CONF, None)}
   }
+  /// Collection density confidence
   #[inline]
   pub fn COLLECTION_DENSITY_CONF(&self) -> Option<&'a str> {
     // Safety:
@@ -738,6 +1078,7 @@ impl<'a> SOI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_COLLECTION_DENSITY_CONF, None)}
   }
+  /// Periodicity sampling confidence
   #[inline]
   pub fn PERIODICITY_SAMPLING_CONF(&self) -> Option<&'a str> {
     // Safety:
@@ -745,6 +1086,7 @@ impl<'a> SOI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_PERIODICITY_SAMPLING_CONF, None)}
   }
+  /// Periodicity detection confidence
   #[inline]
   pub fn PERIODICITY_DETECTION_CONF(&self) -> Option<&'a str> {
     // Safety:
@@ -752,6 +1094,7 @@ impl<'a> SOI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_PERIODICITY_DETECTION_CONF, None)}
   }
+  /// Collection identifier
   #[inline]
   pub fn COLLECTION_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -759,6 +1102,7 @@ impl<'a> SOI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_COLLECTION_ID, None)}
   }
+  /// Calibration record references
   #[inline]
   pub fn CALIBRATIONS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -766,6 +1110,7 @@ impl<'a> SOI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(SOI::VT_CALIBRATIONS, None)}
   }
+  /// Associated tags
   #[inline]
   pub fn TAGS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -773,6 +1118,7 @@ impl<'a> SOI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(SOI::VT_TAGS, None)}
   }
+  /// Transaction identifier
   #[inline]
   pub fn TRANSACTION_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -780,6 +1126,7 @@ impl<'a> SOI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SOI::VT_TRANSACTION_ID, None)}
   }
+  /// Optical SOI observation references
   #[inline]
   pub fn OPTICAL_SOIOBSERVATION_LIST(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -787,6 +1134,7 @@ impl<'a> SOI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(SOI::VT_OPTICAL_SOIOBSERVATION_LIST, None)}
   }
+  /// Radar SOI observation references
   #[inline]
   pub fn RADAR_SOIOBSERVATION_LIST(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -808,8 +1156,10 @@ impl flatbuffers::Verifiable for SOI<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID_SENSOR", Self::VT_ID_SENSOR, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_SENSOR_ID", Self::VT_ORIG_SENSOR_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SENSOR_AS_ID", Self::VT_SENSOR_AS_ID, false)?
-     .visit_field::<i32>("SAT_NO", Self::VT_SAT_NO, false)?
+     .visit_field::<u32>("SAT_NO", Self::VT_SAT_NO, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_OBJECT_ID", Self::VT_ORIG_OBJECT_ID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SATELLITE_NAME", Self::VT_SATELLITE_NAME, false)?
+     .visit_field::<bool>("UCT", Self::VT_UCT, false)?
      .visit_field::<f64>("SENLAT", Self::VT_SENLAT, false)?
      .visit_field::<f64>("SENLON", Self::VT_SENLON, false)?
      .visit_field::<f64>("SENALT", Self::VT_SENALT, false)?
@@ -819,38 +1169,36 @@ impl flatbuffers::Verifiable for SOI<'_> {
      .visit_field::<f64>("SENVELX", Self::VT_SENVELX, false)?
      .visit_field::<f64>("SENVELY", Self::VT_SENVELY, false)?
      .visit_field::<f64>("SENVELZ", Self::VT_SENVELZ, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SEN_REFERENCE_FRAME", Self::VT_SEN_REFERENCE_FRAME, false)?
+     .visit_field::<soiObsType>("OBS_TYPE", Self::VT_OBS_TYPE, false)?
+     .visit_field::<soiCollectionMode>("COLLECTION_MODE", Self::VT_COLLECTION_MODE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("START_TIME", Self::VT_START_TIME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("END_TIME", Self::VT_END_TIME, false)?
-     .visit_field::<i32>("NUM_OBS", Self::VT_NUM_OBS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TYPE", Self::VT_TYPE, false)?
+     .visit_field::<u32>("NUM_OBS", Self::VT_NUM_OBS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
      .visit_field::<f64>("POLAR_ANGLE_START", Self::VT_POLAR_ANGLE_START, false)?
      .visit_field::<f64>("POLAR_ANGLE_END", Self::VT_POLAR_ANGLE_END, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REFERENCE_FRAME", Self::VT_REFERENCE_FRAME, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SEN_REFERENCE_FRAME", Self::VT_SEN_REFERENCE_FRAME, false)?
      .visit_field::<f64>("LOS_DECLINATION_START", Self::VT_LOS_DECLINATION_START, false)?
      .visit_field::<f64>("LOS_DECLINATION_END", Self::VT_LOS_DECLINATION_END, false)?
      .visit_field::<f64>("POINTING_ANGLE_AZ_START", Self::VT_POINTING_ANGLE_AZ_START, false)?
      .visit_field::<f64>("POINTING_ANGLE_AZ_END", Self::VT_POINTING_ANGLE_AZ_END, false)?
      .visit_field::<f64>("POINTING_ANGLE_EL_START", Self::VT_POINTING_ANGLE_EL_START, false)?
      .visit_field::<f64>("POINTING_ANGLE_EL_END", Self::VT_POINTING_ANGLE_EL_END, false)?
-     .visit_field::<i32>("PIXEL_ARRAY_WIDTH", Self::VT_PIXEL_ARRAY_WIDTH, false)?
-     .visit_field::<i32>("PIXEL_ARRAY_HEIGHT", Self::VT_PIXEL_ARRAY_HEIGHT, false)?
-     .visit_field::<i32>("NUM_SPECTRAL_FILTERS", Self::VT_NUM_SPECTRAL_FILTERS, false)?
+     .visit_field::<u16>("PIXEL_ARRAY_WIDTH", Self::VT_PIXEL_ARRAY_WIDTH, false)?
+     .visit_field::<u16>("PIXEL_ARRAY_HEIGHT", Self::VT_PIXEL_ARRAY_HEIGHT, false)?
+     .visit_field::<u8>("NUM_SPECTRAL_FILTERS", Self::VT_NUM_SPECTRAL_FILTERS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("SPECTRAL_FILTERS", Self::VT_SPECTRAL_FILTERS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COLLECTION_MODE", Self::VT_COLLECTION_MODE, false)?
      .visit_field::<f64>("GAIN", Self::VT_GAIN, false)?
-     .visit_field::<i32>("BINNING_HORIZ", Self::VT_BINNING_HORIZ, false)?
-     .visit_field::<i32>("BINNING_VERT", Self::VT_BINNING_VERT, false)?
+     .visit_field::<u8>("BINNING_HORIZ", Self::VT_BINNING_HORIZ, false)?
+     .visit_field::<u8>("BINNING_VERT", Self::VT_BINNING_VERT, false)?
      .visit_field::<f64>("SOLAR_MAG", Self::VT_SOLAR_MAG, false)?
      .visit_field::<i32>("PIXEL_MIN", Self::VT_PIXEL_MIN, false)?
      .visit_field::<i32>("PIXEL_MAX", Self::VT_PIXEL_MAX, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SOFTWARE_VERSION", Self::VT_SOFTWARE_VERSION, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SATELLITE_NAME", Self::VT_SATELLITE_NAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("STAR_CAT_NAME", Self::VT_STAR_CAT_NAME, false)?
      .visit_field::<f64>("CORR_QUALITY", Self::VT_CORR_QUALITY, false)?
-     .visit_field::<bool>("UCT", Self::VT_UCT, false)?
+     .visit_field::<soiCalibrationType>("CALIBRATION_TYPE", Self::VT_CALIBRATION_TYPE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("VALID_CALIBRATIONS", Self::VT_VALID_CALIBRATIONS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CALIBRATION_TYPE", Self::VT_CALIBRATION_TYPE, false)?
      .visit_field::<f64>("PERCENT_SAT_THRESHOLD", Self::VT_PERCENT_SAT_THRESHOLD, false)?
      .visit_field::<bool>("CHANGE_DETECTED", Self::VT_CHANGE_DETECTED, false)?
      .visit_field::<bool>("PERIODICITY_CHANGE_DETECTED", Self::VT_PERIODICITY_CHANGE_DETECTED, false)?
@@ -876,8 +1224,10 @@ pub struct SOIArgs<'a> {
     pub ID_SENSOR: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ORIG_SENSOR_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub SENSOR_AS_ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SAT_NO: i32,
+    pub SAT_NO: u32,
     pub ORIG_OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SATELLITE_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub UCT: bool,
     pub SENLAT: f64,
     pub SENLON: f64,
     pub SENALT: f64,
@@ -887,38 +1237,36 @@ pub struct SOIArgs<'a> {
     pub SENVELX: f64,
     pub SENVELY: f64,
     pub SENVELZ: f64,
+    pub SEN_REFERENCE_FRAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub OBS_TYPE: soiObsType,
+    pub COLLECTION_MODE: soiCollectionMode,
     pub START_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub END_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub NUM_OBS: i32,
-    pub TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub NUM_OBS: u32,
+    pub REFERENCE_FRAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub POLAR_ANGLE_START: f64,
     pub POLAR_ANGLE_END: f64,
-    pub REFERENCE_FRAME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SEN_REFERENCE_FRAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub LOS_DECLINATION_START: f64,
     pub LOS_DECLINATION_END: f64,
     pub POINTING_ANGLE_AZ_START: f64,
     pub POINTING_ANGLE_AZ_END: f64,
     pub POINTING_ANGLE_EL_START: f64,
     pub POINTING_ANGLE_EL_END: f64,
-    pub PIXEL_ARRAY_WIDTH: i32,
-    pub PIXEL_ARRAY_HEIGHT: i32,
-    pub NUM_SPECTRAL_FILTERS: i32,
+    pub PIXEL_ARRAY_WIDTH: u16,
+    pub PIXEL_ARRAY_HEIGHT: u16,
+    pub NUM_SPECTRAL_FILTERS: u8,
     pub SPECTRAL_FILTERS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub COLLECTION_MODE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub GAIN: f64,
-    pub BINNING_HORIZ: i32,
-    pub BINNING_VERT: i32,
+    pub BINNING_HORIZ: u8,
+    pub BINNING_VERT: u8,
     pub SOLAR_MAG: f64,
     pub PIXEL_MIN: i32,
     pub PIXEL_MAX: i32,
     pub SOFTWARE_VERSION: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SATELLITE_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub STAR_CAT_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub CORR_QUALITY: f64,
-    pub UCT: bool,
+    pub CALIBRATION_TYPE: soiCalibrationType,
     pub VALID_CALIBRATIONS: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub CALIBRATION_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub PERCENT_SAT_THRESHOLD: f64,
     pub CHANGE_DETECTED: bool,
     pub PERIODICITY_CHANGE_DETECTED: bool,
@@ -946,6 +1294,8 @@ impl<'a> Default for SOIArgs<'a> {
       SENSOR_AS_ID: None,
       SAT_NO: 0,
       ORIG_OBJECT_ID: None,
+      SATELLITE_NAME: None,
+      UCT: false,
       SENLAT: 0.0,
       SENLON: 0.0,
       SENALT: 0.0,
@@ -955,14 +1305,15 @@ impl<'a> Default for SOIArgs<'a> {
       SENVELX: 0.0,
       SENVELY: 0.0,
       SENVELZ: 0.0,
+      SEN_REFERENCE_FRAME: None,
+      OBS_TYPE: soiObsType::OPTICAL,
+      COLLECTION_MODE: soiCollectionMode::SIDEREAL,
       START_TIME: None,
       END_TIME: None,
       NUM_OBS: 0,
-      TYPE: None,
+      REFERENCE_FRAME: None,
       POLAR_ANGLE_START: 0.0,
       POLAR_ANGLE_END: 0.0,
-      REFERENCE_FRAME: None,
-      SEN_REFERENCE_FRAME: None,
       LOS_DECLINATION_START: 0.0,
       LOS_DECLINATION_END: 0.0,
       POINTING_ANGLE_AZ_START: 0.0,
@@ -973,7 +1324,6 @@ impl<'a> Default for SOIArgs<'a> {
       PIXEL_ARRAY_HEIGHT: 0,
       NUM_SPECTRAL_FILTERS: 0,
       SPECTRAL_FILTERS: None,
-      COLLECTION_MODE: None,
       GAIN: 0.0,
       BINNING_HORIZ: 0,
       BINNING_VERT: 0,
@@ -981,12 +1331,10 @@ impl<'a> Default for SOIArgs<'a> {
       PIXEL_MIN: 0,
       PIXEL_MAX: 0,
       SOFTWARE_VERSION: None,
-      SATELLITE_NAME: None,
       STAR_CAT_NAME: None,
       CORR_QUALITY: 0.0,
-      UCT: false,
+      CALIBRATION_TYPE: soiCalibrationType::PHOTOMETRIC,
       VALID_CALIBRATIONS: None,
-      CALIBRATION_TYPE: None,
       PERCENT_SAT_THRESHOLD: 0.0,
       CHANGE_DETECTED: false,
       PERIODICITY_CHANGE_DETECTED: false,
@@ -1032,12 +1380,20 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SOIBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SOI::VT_SENSOR_AS_ID, SENSOR_AS_ID);
   }
   #[inline]
-  pub fn add_SAT_NO(&mut self, SAT_NO: i32) {
-    self.fbb_.push_slot::<i32>(SOI::VT_SAT_NO, SAT_NO, 0);
+  pub fn add_SAT_NO(&mut self, SAT_NO: u32) {
+    self.fbb_.push_slot::<u32>(SOI::VT_SAT_NO, SAT_NO, 0);
   }
   #[inline]
   pub fn add_ORIG_OBJECT_ID(&mut self, ORIG_OBJECT_ID: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SOI::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
+  }
+  #[inline]
+  pub fn add_SATELLITE_NAME(&mut self, SATELLITE_NAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SOI::VT_SATELLITE_NAME, SATELLITE_NAME);
+  }
+  #[inline]
+  pub fn add_UCT(&mut self, UCT: bool) {
+    self.fbb_.push_slot::<bool>(SOI::VT_UCT, UCT, false);
   }
   #[inline]
   pub fn add_SENLAT(&mut self, SENLAT: f64) {
@@ -1076,6 +1432,18 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SOIBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(SOI::VT_SENVELZ, SENVELZ, 0.0);
   }
   #[inline]
+  pub fn add_SEN_REFERENCE_FRAME(&mut self, SEN_REFERENCE_FRAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SOI::VT_SEN_REFERENCE_FRAME, SEN_REFERENCE_FRAME);
+  }
+  #[inline]
+  pub fn add_OBS_TYPE(&mut self, OBS_TYPE: soiObsType) {
+    self.fbb_.push_slot::<soiObsType>(SOI::VT_OBS_TYPE, OBS_TYPE, soiObsType::OPTICAL);
+  }
+  #[inline]
+  pub fn add_COLLECTION_MODE(&mut self, COLLECTION_MODE: soiCollectionMode) {
+    self.fbb_.push_slot::<soiCollectionMode>(SOI::VT_COLLECTION_MODE, COLLECTION_MODE, soiCollectionMode::SIDEREAL);
+  }
+  #[inline]
   pub fn add_START_TIME(&mut self, START_TIME: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SOI::VT_START_TIME, START_TIME);
   }
@@ -1084,12 +1452,12 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SOIBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SOI::VT_END_TIME, END_TIME);
   }
   #[inline]
-  pub fn add_NUM_OBS(&mut self, NUM_OBS: i32) {
-    self.fbb_.push_slot::<i32>(SOI::VT_NUM_OBS, NUM_OBS, 0);
+  pub fn add_NUM_OBS(&mut self, NUM_OBS: u32) {
+    self.fbb_.push_slot::<u32>(SOI::VT_NUM_OBS, NUM_OBS, 0);
   }
   #[inline]
-  pub fn add_TYPE(&mut self, TYPE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SOI::VT_TYPE, TYPE);
+  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SOI::VT_REFERENCE_FRAME, REFERENCE_FRAME);
   }
   #[inline]
   pub fn add_POLAR_ANGLE_START(&mut self, POLAR_ANGLE_START: f64) {
@@ -1098,14 +1466,6 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SOIBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_POLAR_ANGLE_END(&mut self, POLAR_ANGLE_END: f64) {
     self.fbb_.push_slot::<f64>(SOI::VT_POLAR_ANGLE_END, POLAR_ANGLE_END, 0.0);
-  }
-  #[inline]
-  pub fn add_REFERENCE_FRAME(&mut self, REFERENCE_FRAME: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SOI::VT_REFERENCE_FRAME, REFERENCE_FRAME);
-  }
-  #[inline]
-  pub fn add_SEN_REFERENCE_FRAME(&mut self, SEN_REFERENCE_FRAME: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SOI::VT_SEN_REFERENCE_FRAME, SEN_REFERENCE_FRAME);
   }
   #[inline]
   pub fn add_LOS_DECLINATION_START(&mut self, LOS_DECLINATION_START: f64) {
@@ -1132,36 +1492,32 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SOIBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(SOI::VT_POINTING_ANGLE_EL_END, POINTING_ANGLE_EL_END, 0.0);
   }
   #[inline]
-  pub fn add_PIXEL_ARRAY_WIDTH(&mut self, PIXEL_ARRAY_WIDTH: i32) {
-    self.fbb_.push_slot::<i32>(SOI::VT_PIXEL_ARRAY_WIDTH, PIXEL_ARRAY_WIDTH, 0);
+  pub fn add_PIXEL_ARRAY_WIDTH(&mut self, PIXEL_ARRAY_WIDTH: u16) {
+    self.fbb_.push_slot::<u16>(SOI::VT_PIXEL_ARRAY_WIDTH, PIXEL_ARRAY_WIDTH, 0);
   }
   #[inline]
-  pub fn add_PIXEL_ARRAY_HEIGHT(&mut self, PIXEL_ARRAY_HEIGHT: i32) {
-    self.fbb_.push_slot::<i32>(SOI::VT_PIXEL_ARRAY_HEIGHT, PIXEL_ARRAY_HEIGHT, 0);
+  pub fn add_PIXEL_ARRAY_HEIGHT(&mut self, PIXEL_ARRAY_HEIGHT: u16) {
+    self.fbb_.push_slot::<u16>(SOI::VT_PIXEL_ARRAY_HEIGHT, PIXEL_ARRAY_HEIGHT, 0);
   }
   #[inline]
-  pub fn add_NUM_SPECTRAL_FILTERS(&mut self, NUM_SPECTRAL_FILTERS: i32) {
-    self.fbb_.push_slot::<i32>(SOI::VT_NUM_SPECTRAL_FILTERS, NUM_SPECTRAL_FILTERS, 0);
+  pub fn add_NUM_SPECTRAL_FILTERS(&mut self, NUM_SPECTRAL_FILTERS: u8) {
+    self.fbb_.push_slot::<u8>(SOI::VT_NUM_SPECTRAL_FILTERS, NUM_SPECTRAL_FILTERS, 0);
   }
   #[inline]
   pub fn add_SPECTRAL_FILTERS(&mut self, SPECTRAL_FILTERS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SOI::VT_SPECTRAL_FILTERS, SPECTRAL_FILTERS);
   }
   #[inline]
-  pub fn add_COLLECTION_MODE(&mut self, COLLECTION_MODE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SOI::VT_COLLECTION_MODE, COLLECTION_MODE);
-  }
-  #[inline]
   pub fn add_GAIN(&mut self, GAIN: f64) {
     self.fbb_.push_slot::<f64>(SOI::VT_GAIN, GAIN, 0.0);
   }
   #[inline]
-  pub fn add_BINNING_HORIZ(&mut self, BINNING_HORIZ: i32) {
-    self.fbb_.push_slot::<i32>(SOI::VT_BINNING_HORIZ, BINNING_HORIZ, 0);
+  pub fn add_BINNING_HORIZ(&mut self, BINNING_HORIZ: u8) {
+    self.fbb_.push_slot::<u8>(SOI::VT_BINNING_HORIZ, BINNING_HORIZ, 0);
   }
   #[inline]
-  pub fn add_BINNING_VERT(&mut self, BINNING_VERT: i32) {
-    self.fbb_.push_slot::<i32>(SOI::VT_BINNING_VERT, BINNING_VERT, 0);
+  pub fn add_BINNING_VERT(&mut self, BINNING_VERT: u8) {
+    self.fbb_.push_slot::<u8>(SOI::VT_BINNING_VERT, BINNING_VERT, 0);
   }
   #[inline]
   pub fn add_SOLAR_MAG(&mut self, SOLAR_MAG: f64) {
@@ -1180,10 +1536,6 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SOIBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SOI::VT_SOFTWARE_VERSION, SOFTWARE_VERSION);
   }
   #[inline]
-  pub fn add_SATELLITE_NAME(&mut self, SATELLITE_NAME: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SOI::VT_SATELLITE_NAME, SATELLITE_NAME);
-  }
-  #[inline]
   pub fn add_STAR_CAT_NAME(&mut self, STAR_CAT_NAME: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SOI::VT_STAR_CAT_NAME, STAR_CAT_NAME);
   }
@@ -1192,16 +1544,12 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SOIBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(SOI::VT_CORR_QUALITY, CORR_QUALITY, 0.0);
   }
   #[inline]
-  pub fn add_UCT(&mut self, UCT: bool) {
-    self.fbb_.push_slot::<bool>(SOI::VT_UCT, UCT, false);
+  pub fn add_CALIBRATION_TYPE(&mut self, CALIBRATION_TYPE: soiCalibrationType) {
+    self.fbb_.push_slot::<soiCalibrationType>(SOI::VT_CALIBRATION_TYPE, CALIBRATION_TYPE, soiCalibrationType::PHOTOMETRIC);
   }
   #[inline]
   pub fn add_VALID_CALIBRATIONS(&mut self, VALID_CALIBRATIONS: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SOI::VT_VALID_CALIBRATIONS, VALID_CALIBRATIONS);
-  }
-  #[inline]
-  pub fn add_CALIBRATION_TYPE(&mut self, CALIBRATION_TYPE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SOI::VT_CALIBRATION_TYPE, CALIBRATION_TYPE);
   }
   #[inline]
   pub fn add_PERCENT_SAT_THRESHOLD(&mut self, PERCENT_SAT_THRESHOLD: f64) {
@@ -1288,6 +1636,8 @@ impl core::fmt::Debug for SOI<'_> {
       ds.field("SENSOR_AS_ID", &self.SENSOR_AS_ID());
       ds.field("SAT_NO", &self.SAT_NO());
       ds.field("ORIG_OBJECT_ID", &self.ORIG_OBJECT_ID());
+      ds.field("SATELLITE_NAME", &self.SATELLITE_NAME());
+      ds.field("UCT", &self.UCT());
       ds.field("SENLAT", &self.SENLAT());
       ds.field("SENLON", &self.SENLON());
       ds.field("SENALT", &self.SENALT());
@@ -1297,14 +1647,15 @@ impl core::fmt::Debug for SOI<'_> {
       ds.field("SENVELX", &self.SENVELX());
       ds.field("SENVELY", &self.SENVELY());
       ds.field("SENVELZ", &self.SENVELZ());
+      ds.field("SEN_REFERENCE_FRAME", &self.SEN_REFERENCE_FRAME());
+      ds.field("OBS_TYPE", &self.OBS_TYPE());
+      ds.field("COLLECTION_MODE", &self.COLLECTION_MODE());
       ds.field("START_TIME", &self.START_TIME());
       ds.field("END_TIME", &self.END_TIME());
       ds.field("NUM_OBS", &self.NUM_OBS());
-      ds.field("TYPE", &self.TYPE());
+      ds.field("REFERENCE_FRAME", &self.REFERENCE_FRAME());
       ds.field("POLAR_ANGLE_START", &self.POLAR_ANGLE_START());
       ds.field("POLAR_ANGLE_END", &self.POLAR_ANGLE_END());
-      ds.field("REFERENCE_FRAME", &self.REFERENCE_FRAME());
-      ds.field("SEN_REFERENCE_FRAME", &self.SEN_REFERENCE_FRAME());
       ds.field("LOS_DECLINATION_START", &self.LOS_DECLINATION_START());
       ds.field("LOS_DECLINATION_END", &self.LOS_DECLINATION_END());
       ds.field("POINTING_ANGLE_AZ_START", &self.POINTING_ANGLE_AZ_START());
@@ -1315,7 +1666,6 @@ impl core::fmt::Debug for SOI<'_> {
       ds.field("PIXEL_ARRAY_HEIGHT", &self.PIXEL_ARRAY_HEIGHT());
       ds.field("NUM_SPECTRAL_FILTERS", &self.NUM_SPECTRAL_FILTERS());
       ds.field("SPECTRAL_FILTERS", &self.SPECTRAL_FILTERS());
-      ds.field("COLLECTION_MODE", &self.COLLECTION_MODE());
       ds.field("GAIN", &self.GAIN());
       ds.field("BINNING_HORIZ", &self.BINNING_HORIZ());
       ds.field("BINNING_VERT", &self.BINNING_VERT());
@@ -1323,12 +1673,10 @@ impl core::fmt::Debug for SOI<'_> {
       ds.field("PIXEL_MIN", &self.PIXEL_MIN());
       ds.field("PIXEL_MAX", &self.PIXEL_MAX());
       ds.field("SOFTWARE_VERSION", &self.SOFTWARE_VERSION());
-      ds.field("SATELLITE_NAME", &self.SATELLITE_NAME());
       ds.field("STAR_CAT_NAME", &self.STAR_CAT_NAME());
       ds.field("CORR_QUALITY", &self.CORR_QUALITY());
-      ds.field("UCT", &self.UCT());
-      ds.field("VALID_CALIBRATIONS", &self.VALID_CALIBRATIONS());
       ds.field("CALIBRATION_TYPE", &self.CALIBRATION_TYPE());
+      ds.field("VALID_CALIBRATIONS", &self.VALID_CALIBRATIONS());
       ds.field("PERCENT_SAT_THRESHOLD", &self.PERCENT_SAT_THRESHOLD());
       ds.field("CHANGE_DETECTED", &self.CHANGE_DETECTED());
       ds.field("PERIODICITY_CHANGE_DETECTED", &self.PERIODICITY_CHANGE_DETECTED());
@@ -1355,8 +1703,10 @@ pub struct SOIT {
   pub ID_SENSOR: Option<String>,
   pub ORIG_SENSOR_ID: Option<String>,
   pub SENSOR_AS_ID: Option<String>,
-  pub SAT_NO: i32,
+  pub SAT_NO: u32,
   pub ORIG_OBJECT_ID: Option<String>,
+  pub SATELLITE_NAME: Option<String>,
+  pub UCT: bool,
   pub SENLAT: f64,
   pub SENLON: f64,
   pub SENALT: f64,
@@ -1366,38 +1716,36 @@ pub struct SOIT {
   pub SENVELX: f64,
   pub SENVELY: f64,
   pub SENVELZ: f64,
+  pub SEN_REFERENCE_FRAME: Option<String>,
+  pub OBS_TYPE: soiObsType,
+  pub COLLECTION_MODE: soiCollectionMode,
   pub START_TIME: Option<String>,
   pub END_TIME: Option<String>,
-  pub NUM_OBS: i32,
-  pub TYPE: Option<String>,
+  pub NUM_OBS: u32,
+  pub REFERENCE_FRAME: Option<String>,
   pub POLAR_ANGLE_START: f64,
   pub POLAR_ANGLE_END: f64,
-  pub REFERENCE_FRAME: Option<String>,
-  pub SEN_REFERENCE_FRAME: Option<String>,
   pub LOS_DECLINATION_START: f64,
   pub LOS_DECLINATION_END: f64,
   pub POINTING_ANGLE_AZ_START: f64,
   pub POINTING_ANGLE_AZ_END: f64,
   pub POINTING_ANGLE_EL_START: f64,
   pub POINTING_ANGLE_EL_END: f64,
-  pub PIXEL_ARRAY_WIDTH: i32,
-  pub PIXEL_ARRAY_HEIGHT: i32,
-  pub NUM_SPECTRAL_FILTERS: i32,
+  pub PIXEL_ARRAY_WIDTH: u16,
+  pub PIXEL_ARRAY_HEIGHT: u16,
+  pub NUM_SPECTRAL_FILTERS: u8,
   pub SPECTRAL_FILTERS: Option<Vec<String>>,
-  pub COLLECTION_MODE: Option<String>,
   pub GAIN: f64,
-  pub BINNING_HORIZ: i32,
-  pub BINNING_VERT: i32,
+  pub BINNING_HORIZ: u8,
+  pub BINNING_VERT: u8,
   pub SOLAR_MAG: f64,
   pub PIXEL_MIN: i32,
   pub PIXEL_MAX: i32,
   pub SOFTWARE_VERSION: Option<String>,
-  pub SATELLITE_NAME: Option<String>,
   pub STAR_CAT_NAME: Option<String>,
   pub CORR_QUALITY: f64,
-  pub UCT: bool,
+  pub CALIBRATION_TYPE: soiCalibrationType,
   pub VALID_CALIBRATIONS: Option<String>,
-  pub CALIBRATION_TYPE: Option<String>,
   pub PERCENT_SAT_THRESHOLD: f64,
   pub CHANGE_DETECTED: bool,
   pub PERIODICITY_CHANGE_DETECTED: bool,
@@ -1424,6 +1772,8 @@ impl Default for SOIT {
       SENSOR_AS_ID: None,
       SAT_NO: 0,
       ORIG_OBJECT_ID: None,
+      SATELLITE_NAME: None,
+      UCT: false,
       SENLAT: 0.0,
       SENLON: 0.0,
       SENALT: 0.0,
@@ -1433,14 +1783,15 @@ impl Default for SOIT {
       SENVELX: 0.0,
       SENVELY: 0.0,
       SENVELZ: 0.0,
+      SEN_REFERENCE_FRAME: None,
+      OBS_TYPE: soiObsType::OPTICAL,
+      COLLECTION_MODE: soiCollectionMode::SIDEREAL,
       START_TIME: None,
       END_TIME: None,
       NUM_OBS: 0,
-      TYPE: None,
+      REFERENCE_FRAME: None,
       POLAR_ANGLE_START: 0.0,
       POLAR_ANGLE_END: 0.0,
-      REFERENCE_FRAME: None,
-      SEN_REFERENCE_FRAME: None,
       LOS_DECLINATION_START: 0.0,
       LOS_DECLINATION_END: 0.0,
       POINTING_ANGLE_AZ_START: 0.0,
@@ -1451,7 +1802,6 @@ impl Default for SOIT {
       PIXEL_ARRAY_HEIGHT: 0,
       NUM_SPECTRAL_FILTERS: 0,
       SPECTRAL_FILTERS: None,
-      COLLECTION_MODE: None,
       GAIN: 0.0,
       BINNING_HORIZ: 0,
       BINNING_VERT: 0,
@@ -1459,12 +1809,10 @@ impl Default for SOIT {
       PIXEL_MIN: 0,
       PIXEL_MAX: 0,
       SOFTWARE_VERSION: None,
-      SATELLITE_NAME: None,
       STAR_CAT_NAME: None,
       CORR_QUALITY: 0.0,
-      UCT: false,
+      CALIBRATION_TYPE: soiCalibrationType::PHOTOMETRIC,
       VALID_CALIBRATIONS: None,
-      CALIBRATION_TYPE: None,
       PERCENT_SAT_THRESHOLD: 0.0,
       CHANGE_DETECTED: false,
       PERIODICITY_CHANGE_DETECTED: false,
@@ -1507,6 +1855,10 @@ impl SOIT {
     let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let SATELLITE_NAME = self.SATELLITE_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let UCT = self.UCT;
     let SENLAT = self.SENLAT;
     let SENLON = self.SENLON;
     let SENALT = self.SENALT;
@@ -1516,6 +1868,11 @@ impl SOIT {
     let SENVELX = self.SENVELX;
     let SENVELY = self.SENVELY;
     let SENVELZ = self.SENVELZ;
+    let SEN_REFERENCE_FRAME = self.SEN_REFERENCE_FRAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let OBS_TYPE = self.OBS_TYPE;
+    let COLLECTION_MODE = self.COLLECTION_MODE;
     let START_TIME = self.START_TIME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -1523,17 +1880,11 @@ impl SOIT {
       _fbb.create_string(x)
     });
     let NUM_OBS = self.NUM_OBS;
-    let TYPE = self.TYPE.as_ref().map(|x|{
+    let REFERENCE_FRAME = self.REFERENCE_FRAME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let POLAR_ANGLE_START = self.POLAR_ANGLE_START;
     let POLAR_ANGLE_END = self.POLAR_ANGLE_END;
-    let REFERENCE_FRAME = self.REFERENCE_FRAME.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let SEN_REFERENCE_FRAME = self.SEN_REFERENCE_FRAME.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
     let LOS_DECLINATION_START = self.LOS_DECLINATION_START;
     let LOS_DECLINATION_END = self.LOS_DECLINATION_END;
     let POINTING_ANGLE_AZ_START = self.POINTING_ANGLE_AZ_START;
@@ -1546,9 +1897,6 @@ impl SOIT {
     let SPECTRAL_FILTERS = self.SPECTRAL_FILTERS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
-    let COLLECTION_MODE = self.COLLECTION_MODE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
     let GAIN = self.GAIN;
     let BINNING_HORIZ = self.BINNING_HORIZ;
     let BINNING_VERT = self.BINNING_VERT;
@@ -1558,18 +1906,12 @@ impl SOIT {
     let SOFTWARE_VERSION = self.SOFTWARE_VERSION.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let SATELLITE_NAME = self.SATELLITE_NAME.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
     let STAR_CAT_NAME = self.STAR_CAT_NAME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let CORR_QUALITY = self.CORR_QUALITY;
-    let UCT = self.UCT;
+    let CALIBRATION_TYPE = self.CALIBRATION_TYPE;
     let VALID_CALIBRATIONS = self.VALID_CALIBRATIONS.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let CALIBRATION_TYPE = self.CALIBRATION_TYPE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let PERCENT_SAT_THRESHOLD = self.PERCENT_SAT_THRESHOLD;
@@ -1615,6 +1957,8 @@ impl SOIT {
       SENSOR_AS_ID,
       SAT_NO,
       ORIG_OBJECT_ID,
+      SATELLITE_NAME,
+      UCT,
       SENLAT,
       SENLON,
       SENALT,
@@ -1624,14 +1968,15 @@ impl SOIT {
       SENVELX,
       SENVELY,
       SENVELZ,
+      SEN_REFERENCE_FRAME,
+      OBS_TYPE,
+      COLLECTION_MODE,
       START_TIME,
       END_TIME,
       NUM_OBS,
-      TYPE,
+      REFERENCE_FRAME,
       POLAR_ANGLE_START,
       POLAR_ANGLE_END,
-      REFERENCE_FRAME,
-      SEN_REFERENCE_FRAME,
       LOS_DECLINATION_START,
       LOS_DECLINATION_END,
       POINTING_ANGLE_AZ_START,
@@ -1642,7 +1987,6 @@ impl SOIT {
       PIXEL_ARRAY_HEIGHT,
       NUM_SPECTRAL_FILTERS,
       SPECTRAL_FILTERS,
-      COLLECTION_MODE,
       GAIN,
       BINNING_HORIZ,
       BINNING_VERT,
@@ -1650,12 +1994,10 @@ impl SOIT {
       PIXEL_MIN,
       PIXEL_MAX,
       SOFTWARE_VERSION,
-      SATELLITE_NAME,
       STAR_CAT_NAME,
       CORR_QUALITY,
-      UCT,
-      VALID_CALIBRATIONS,
       CALIBRATION_TYPE,
+      VALID_CALIBRATIONS,
       PERCENT_SAT_THRESHOLD,
       CHANGE_DETECTED,
       PERIODICITY_CHANGE_DETECTED,

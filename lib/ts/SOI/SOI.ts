@@ -4,6 +4,9 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { soiCalibrationType } from './soiCalibrationType.js';
+import { soiCollectionMode } from './soiCollectionMode.js';
+import { soiObsType } from './soiObsType.js';
 
 
 /**
@@ -31,6 +34,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$SOI');
 }
 
+/**
+ * Unique identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,6 +44,9 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Message creation date (ISO 8601)
+ */
 MSG_CREATE_DATE():string|null
 MSG_CREATE_DATE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 MSG_CREATE_DATE(optionalEncoding?:any):string|Uint8Array|null {
@@ -45,6 +54,9 @@ MSG_CREATE_DATE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Sensor identifier
+ */
 ID_SENSOR():string|null
 ID_SENSOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID_SENSOR(optionalEncoding?:any):string|Uint8Array|null {
@@ -52,6 +64,9 @@ ID_SENSOR(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Original sensor identifier
+ */
 ORIG_SENSOR_ID():string|null
 ORIG_SENSOR_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ORIG_SENSOR_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -59,6 +74,9 @@ ORIG_SENSOR_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Sensor observation set identifier
+ */
 SENSOR_AS_ID():string|null
 SENSOR_AS_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 SENSOR_AS_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -66,11 +84,17 @@ SENSOR_AS_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Satellite catalog number
+ */
 SAT_NO():number {
   const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
+/**
+ * International designator
+ */
 ORIG_OBJECT_ID():string|null
 ORIG_OBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ORIG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -78,265 +102,400 @@ ORIG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-SENLAT():number {
+/**
+ * Satellite common name
+ */
+SATELLITE_NAME():string|null
+SATELLITE_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SATELLITE_NAME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 18);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-SENLON():number {
+/**
+ * True if uncorrelated target
+ */
+UCT():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 20);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
-SENALT():number {
+/**
+ * Sensor geodetic latitude (degrees)
+ */
+SENLAT():number {
   const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SENX():number {
+/**
+ * Sensor geodetic longitude (degrees)
+ */
+SENLON():number {
   const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SENY():number {
+/**
+ * Sensor altitude (km)
+ */
+SENALT():number {
   const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SENZ():number {
+/**
+ * Sensor ECEF X position (km)
+ */
+SENX():number {
   const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SENVELX():number {
+/**
+ * Sensor ECEF Y position (km)
+ */
+SENY():number {
   const offset = this.bb!.__offset(this.bb_pos, 30);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SENVELY():number {
+/**
+ * Sensor ECEF Z position (km)
+ */
+SENZ():number {
   const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SENVELZ():number {
+/**
+ * Sensor ECEF X velocity (km/s)
+ */
+SENVELX():number {
   const offset = this.bb!.__offset(this.bb_pos, 34);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Sensor ECEF Y velocity (km/s)
+ */
+SENVELY():number {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Sensor ECEF Z velocity (km/s)
+ */
+SENVELZ():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Sensor reference frame
+ */
+SEN_REFERENCE_FRAME():string|null
+SEN_REFERENCE_FRAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SEN_REFERENCE_FRAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Observation type
+ */
+OBS_TYPE():soiObsType {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : soiObsType.OPTICAL;
+}
+
+/**
+ * Collection mode
+ */
+COLLECTION_MODE():soiCollectionMode {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : soiCollectionMode.SIDEREAL;
+}
+
+/**
+ * Observation start time (ISO 8601)
+ */
 START_TIME():string|null
 START_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 START_TIME(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 36);
+  const offset = this.bb!.__offset(this.bb_pos, 46);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Observation end time (ISO 8601)
+ */
 END_TIME():string|null
 END_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 END_TIME(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 38);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-NUM_OBS():number {
-  const offset = this.bb!.__offset(this.bb_pos, 40);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
-}
-
-TYPE():string|null
-TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-TYPE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 42);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-POLAR_ANGLE_START():number {
-  const offset = this.bb!.__offset(this.bb_pos, 44);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-POLAR_ANGLE_END():number {
-  const offset = this.bb!.__offset(this.bb_pos, 46);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-REFERENCE_FRAME():string|null
-REFERENCE_FRAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-REFERENCE_FRAME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 48);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-SEN_REFERENCE_FRAME():string|null
-SEN_REFERENCE_FRAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-SEN_REFERENCE_FRAME(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Number of observations in set
+ */
+NUM_OBS():number {
   const offset = this.bb!.__offset(this.bb_pos, 50);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Observation reference frame
+ */
+REFERENCE_FRAME():string|null
+REFERENCE_FRAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+REFERENCE_FRAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 52);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-LOS_DECLINATION_START():number {
-  const offset = this.bb!.__offset(this.bb_pos, 52);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-LOS_DECLINATION_END():number {
+/**
+ * Polar angle at start (degrees)
+ */
+POLAR_ANGLE_START():number {
   const offset = this.bb!.__offset(this.bb_pos, 54);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-POINTING_ANGLE_AZ_START():number {
+/**
+ * Polar angle at end (degrees)
+ */
+POLAR_ANGLE_END():number {
   const offset = this.bb!.__offset(this.bb_pos, 56);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-POINTING_ANGLE_AZ_END():number {
+/**
+ * Line-of-sight declination at start (degrees)
+ */
+LOS_DECLINATION_START():number {
   const offset = this.bb!.__offset(this.bb_pos, 58);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-POINTING_ANGLE_EL_START():number {
+/**
+ * Line-of-sight declination at end (degrees)
+ */
+LOS_DECLINATION_END():number {
   const offset = this.bb!.__offset(this.bb_pos, 60);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-POINTING_ANGLE_EL_END():number {
+/**
+ * Pointing azimuth at start (degrees)
+ */
+POINTING_ANGLE_AZ_START():number {
   const offset = this.bb!.__offset(this.bb_pos, 62);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-PIXEL_ARRAY_WIDTH():number {
+/**
+ * Pointing azimuth at end (degrees)
+ */
+POINTING_ANGLE_AZ_END():number {
   const offset = this.bb!.__offset(this.bb_pos, 64);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-PIXEL_ARRAY_HEIGHT():number {
+/**
+ * Pointing elevation at start (degrees)
+ */
+POINTING_ANGLE_EL_START():number {
   const offset = this.bb!.__offset(this.bb_pos, 66);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-NUM_SPECTRAL_FILTERS():number {
+/**
+ * Pointing elevation at end (degrees)
+ */
+POINTING_ANGLE_EL_END():number {
   const offset = this.bb!.__offset(this.bb_pos, 68);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Focal plane array width (pixels)
+ */
+PIXEL_ARRAY_WIDTH():number {
+  const offset = this.bb!.__offset(this.bb_pos, 70);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Focal plane array height (pixels)
+ */
+PIXEL_ARRAY_HEIGHT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 72);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Number of spectral filters used
+ */
+NUM_SPECTRAL_FILTERS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 74);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Spectral filter identifiers
+ */
 SPECTRAL_FILTERS(index: number):string
 SPECTRAL_FILTERS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 SPECTRAL_FILTERS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 70);
+  const offset = this.bb!.__offset(this.bb_pos, 76);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 spectralFiltersLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 70);
+  const offset = this.bb!.__offset(this.bb_pos, 76);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
-COLLECTION_MODE():string|null
-COLLECTION_MODE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-COLLECTION_MODE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 72);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
+/**
+ * Detector gain setting
+ */
 GAIN():number {
-  const offset = this.bb!.__offset(this.bb_pos, 74);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-BINNING_HORIZ():number {
-  const offset = this.bb!.__offset(this.bb_pos, 76);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
-}
-
-BINNING_VERT():number {
   const offset = this.bb!.__offset(this.bb_pos, 78);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
-}
-
-SOLAR_MAG():number {
-  const offset = this.bb!.__offset(this.bb_pos, 80);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-PIXEL_MIN():number {
+/**
+ * Horizontal binning factor
+ */
+BINNING_HORIZ():number {
+  const offset = this.bb!.__offset(this.bb_pos, 80);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Vertical binning factor
+ */
+BINNING_VERT():number {
   const offset = this.bb!.__offset(this.bb_pos, 82);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
 }
 
-PIXEL_MAX():number {
+/**
+ * Solar visual magnitude
+ */
+SOLAR_MAG():number {
   const offset = this.bb!.__offset(this.bb_pos, 84);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Minimum pixel value in observation
+ */
+PIXEL_MIN():number {
+  const offset = this.bb!.__offset(this.bb_pos, 86);
   return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Maximum pixel value in observation
+ */
+PIXEL_MAX():number {
+  const offset = this.bb!.__offset(this.bb_pos, 88);
+  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Processing software version
+ */
 SOFTWARE_VERSION():string|null
 SOFTWARE_VERSION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 SOFTWARE_VERSION(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 86);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-SATELLITE_NAME():string|null
-SATELLITE_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-SATELLITE_NAME(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 88);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-STAR_CAT_NAME():string|null
-STAR_CAT_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-STAR_CAT_NAME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 90);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-CORR_QUALITY():number {
+/**
+ * Star catalog used for calibration
+ */
+STAR_CAT_NAME():string|null
+STAR_CAT_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+STAR_CAT_NAME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 92);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-UCT():boolean {
-  const offset = this.bb!.__offset(this.bb_pos, 94);
-  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
-}
-
-VALID_CALIBRATIONS():string|null
-VALID_CALIBRATIONS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-VALID_CALIBRATIONS(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 96);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-CALIBRATION_TYPE():string|null
-CALIBRATION_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-CALIBRATION_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Correlation quality score
+ */
+CORR_QUALITY():number {
+  const offset = this.bb!.__offset(this.bb_pos, 94);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Calibration type
+ */
+CALIBRATION_TYPE():soiCalibrationType {
+  const offset = this.bb!.__offset(this.bb_pos, 96);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : soiCalibrationType.PHOTOMETRIC;
+}
+
+/**
+ * Valid calibration identifiers
+ */
+VALID_CALIBRATIONS():string|null
+VALID_CALIBRATIONS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+VALID_CALIBRATIONS(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 98);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Percent saturation threshold
+ */
 PERCENT_SAT_THRESHOLD():number {
   const offset = this.bb!.__offset(this.bb_pos, 100);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * True if change detected from baseline
+ */
 CHANGE_DETECTED():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 102);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * True if periodicity change detected
+ */
 PERIODICITY_CHANGE_DETECTED():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 104);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * True if brightness variance change detected
+ */
 BRIGHTNESS_VARIANCE_CHANGE_DETECTED():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 106);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * True if solar phase angle brightness change detected
+ */
 SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 108);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * Change confidence assessment
+ */
 CHANGE_CONF():string|null
 CHANGE_CONF(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 CHANGE_CONF(optionalEncoding?:any):string|Uint8Array|null {
@@ -344,6 +503,9 @@ CHANGE_CONF(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Collection density confidence
+ */
 COLLECTION_DENSITY_CONF():string|null
 COLLECTION_DENSITY_CONF(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 COLLECTION_DENSITY_CONF(optionalEncoding?:any):string|Uint8Array|null {
@@ -351,6 +513,9 @@ COLLECTION_DENSITY_CONF(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Periodicity sampling confidence
+ */
 PERIODICITY_SAMPLING_CONF():string|null
 PERIODICITY_SAMPLING_CONF(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 PERIODICITY_SAMPLING_CONF(optionalEncoding?:any):string|Uint8Array|null {
@@ -358,6 +523,9 @@ PERIODICITY_SAMPLING_CONF(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Periodicity detection confidence
+ */
 PERIODICITY_DETECTION_CONF():string|null
 PERIODICITY_DETECTION_CONF(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 PERIODICITY_DETECTION_CONF(optionalEncoding?:any):string|Uint8Array|null {
@@ -365,6 +533,9 @@ PERIODICITY_DETECTION_CONF(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Collection identifier
+ */
 COLLECTION_ID():string|null
 COLLECTION_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 COLLECTION_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -372,6 +543,9 @@ COLLECTION_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Calibration record references
+ */
 CALIBRATIONS(index: number):string
 CALIBRATIONS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 CALIBRATIONS(index: number,optionalEncoding?:any):string|Uint8Array|null {
@@ -384,6 +558,9 @@ calibrationsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Associated tags
+ */
 TAGS(index: number):string
 TAGS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 TAGS(index: number,optionalEncoding?:any):string|Uint8Array|null {
@@ -396,6 +573,9 @@ tagsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Transaction identifier
+ */
 TRANSACTION_ID():string|null
 TRANSACTION_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 TRANSACTION_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -403,6 +583,9 @@ TRANSACTION_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Optical SOI observation references
+ */
 OPTICAL_SOIOBSERVATION_LIST(index: number):string
 OPTICAL_SOIOBSERVATION_LIST(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 OPTICAL_SOIOBSERVATION_LIST(index: number,optionalEncoding?:any):string|Uint8Array|null {
@@ -415,6 +598,9 @@ opticalSoiobservationListLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Radar SOI observation references
+ */
 RADAR_SOIOBSERVATION_LIST(index: number):string
 RADAR_SOIOBSERVATION_LIST(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 RADAR_SOIOBSERVATION_LIST(index: number,optionalEncoding?:any):string|Uint8Array|null {
@@ -459,112 +645,124 @@ static addOrigObjectId(builder:flatbuffers.Builder, ORIG_OBJECT_IDOffset:flatbuf
   builder.addFieldOffset(6, ORIG_OBJECT_IDOffset, 0);
 }
 
+static addSatelliteName(builder:flatbuffers.Builder, SATELLITE_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, SATELLITE_NAMEOffset, 0);
+}
+
+static addUct(builder:flatbuffers.Builder, UCT:boolean) {
+  builder.addFieldInt8(8, +UCT, +false);
+}
+
 static addSenlat(builder:flatbuffers.Builder, SENLAT:number) {
-  builder.addFieldFloat64(7, SENLAT, 0.0);
+  builder.addFieldFloat64(9, SENLAT, 0.0);
 }
 
 static addSenlon(builder:flatbuffers.Builder, SENLON:number) {
-  builder.addFieldFloat64(8, SENLON, 0.0);
+  builder.addFieldFloat64(10, SENLON, 0.0);
 }
 
 static addSenalt(builder:flatbuffers.Builder, SENALT:number) {
-  builder.addFieldFloat64(9, SENALT, 0.0);
+  builder.addFieldFloat64(11, SENALT, 0.0);
 }
 
 static addSenx(builder:flatbuffers.Builder, SENX:number) {
-  builder.addFieldFloat64(10, SENX, 0.0);
+  builder.addFieldFloat64(12, SENX, 0.0);
 }
 
 static addSeny(builder:flatbuffers.Builder, SENY:number) {
-  builder.addFieldFloat64(11, SENY, 0.0);
+  builder.addFieldFloat64(13, SENY, 0.0);
 }
 
 static addSenz(builder:flatbuffers.Builder, SENZ:number) {
-  builder.addFieldFloat64(12, SENZ, 0.0);
+  builder.addFieldFloat64(14, SENZ, 0.0);
 }
 
 static addSenvelx(builder:flatbuffers.Builder, SENVELX:number) {
-  builder.addFieldFloat64(13, SENVELX, 0.0);
+  builder.addFieldFloat64(15, SENVELX, 0.0);
 }
 
 static addSenvely(builder:flatbuffers.Builder, SENVELY:number) {
-  builder.addFieldFloat64(14, SENVELY, 0.0);
+  builder.addFieldFloat64(16, SENVELY, 0.0);
 }
 
 static addSenvelz(builder:flatbuffers.Builder, SENVELZ:number) {
-  builder.addFieldFloat64(15, SENVELZ, 0.0);
-}
-
-static addStartTime(builder:flatbuffers.Builder, START_TIMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(16, START_TIMEOffset, 0);
-}
-
-static addEndTime(builder:flatbuffers.Builder, END_TIMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(17, END_TIMEOffset, 0);
-}
-
-static addNumObs(builder:flatbuffers.Builder, NUM_OBS:number) {
-  builder.addFieldInt32(18, NUM_OBS, 0);
-}
-
-static addType(builder:flatbuffers.Builder, TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(19, TYPEOffset, 0);
-}
-
-static addPolarAngleStart(builder:flatbuffers.Builder, POLAR_ANGLE_START:number) {
-  builder.addFieldFloat64(20, POLAR_ANGLE_START, 0.0);
-}
-
-static addPolarAngleEnd(builder:flatbuffers.Builder, POLAR_ANGLE_END:number) {
-  builder.addFieldFloat64(21, POLAR_ANGLE_END, 0.0);
-}
-
-static addReferenceFrame(builder:flatbuffers.Builder, REFERENCE_FRAMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(22, REFERENCE_FRAMEOffset, 0);
+  builder.addFieldFloat64(17, SENVELZ, 0.0);
 }
 
 static addSenReferenceFrame(builder:flatbuffers.Builder, SEN_REFERENCE_FRAMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(23, SEN_REFERENCE_FRAMEOffset, 0);
+  builder.addFieldOffset(18, SEN_REFERENCE_FRAMEOffset, 0);
+}
+
+static addObsType(builder:flatbuffers.Builder, OBS_TYPE:soiObsType) {
+  builder.addFieldInt8(19, OBS_TYPE, soiObsType.OPTICAL);
+}
+
+static addCollectionMode(builder:flatbuffers.Builder, COLLECTION_MODE:soiCollectionMode) {
+  builder.addFieldInt8(20, COLLECTION_MODE, soiCollectionMode.SIDEREAL);
+}
+
+static addStartTime(builder:flatbuffers.Builder, START_TIMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(21, START_TIMEOffset, 0);
+}
+
+static addEndTime(builder:flatbuffers.Builder, END_TIMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(22, END_TIMEOffset, 0);
+}
+
+static addNumObs(builder:flatbuffers.Builder, NUM_OBS:number) {
+  builder.addFieldInt32(23, NUM_OBS, 0);
+}
+
+static addReferenceFrame(builder:flatbuffers.Builder, REFERENCE_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(24, REFERENCE_FRAMEOffset, 0);
+}
+
+static addPolarAngleStart(builder:flatbuffers.Builder, POLAR_ANGLE_START:number) {
+  builder.addFieldFloat64(25, POLAR_ANGLE_START, 0.0);
+}
+
+static addPolarAngleEnd(builder:flatbuffers.Builder, POLAR_ANGLE_END:number) {
+  builder.addFieldFloat64(26, POLAR_ANGLE_END, 0.0);
 }
 
 static addLosDeclinationStart(builder:flatbuffers.Builder, LOS_DECLINATION_START:number) {
-  builder.addFieldFloat64(24, LOS_DECLINATION_START, 0.0);
+  builder.addFieldFloat64(27, LOS_DECLINATION_START, 0.0);
 }
 
 static addLosDeclinationEnd(builder:flatbuffers.Builder, LOS_DECLINATION_END:number) {
-  builder.addFieldFloat64(25, LOS_DECLINATION_END, 0.0);
+  builder.addFieldFloat64(28, LOS_DECLINATION_END, 0.0);
 }
 
 static addPointingAngleAzStart(builder:flatbuffers.Builder, POINTING_ANGLE_AZ_START:number) {
-  builder.addFieldFloat64(26, POINTING_ANGLE_AZ_START, 0.0);
+  builder.addFieldFloat64(29, POINTING_ANGLE_AZ_START, 0.0);
 }
 
 static addPointingAngleAzEnd(builder:flatbuffers.Builder, POINTING_ANGLE_AZ_END:number) {
-  builder.addFieldFloat64(27, POINTING_ANGLE_AZ_END, 0.0);
+  builder.addFieldFloat64(30, POINTING_ANGLE_AZ_END, 0.0);
 }
 
 static addPointingAngleElStart(builder:flatbuffers.Builder, POINTING_ANGLE_EL_START:number) {
-  builder.addFieldFloat64(28, POINTING_ANGLE_EL_START, 0.0);
+  builder.addFieldFloat64(31, POINTING_ANGLE_EL_START, 0.0);
 }
 
 static addPointingAngleElEnd(builder:flatbuffers.Builder, POINTING_ANGLE_EL_END:number) {
-  builder.addFieldFloat64(29, POINTING_ANGLE_EL_END, 0.0);
+  builder.addFieldFloat64(32, POINTING_ANGLE_EL_END, 0.0);
 }
 
 static addPixelArrayWidth(builder:flatbuffers.Builder, PIXEL_ARRAY_WIDTH:number) {
-  builder.addFieldInt32(30, PIXEL_ARRAY_WIDTH, 0);
+  builder.addFieldInt16(33, PIXEL_ARRAY_WIDTH, 0);
 }
 
 static addPixelArrayHeight(builder:flatbuffers.Builder, PIXEL_ARRAY_HEIGHT:number) {
-  builder.addFieldInt32(31, PIXEL_ARRAY_HEIGHT, 0);
+  builder.addFieldInt16(34, PIXEL_ARRAY_HEIGHT, 0);
 }
 
 static addNumSpectralFilters(builder:flatbuffers.Builder, NUM_SPECTRAL_FILTERS:number) {
-  builder.addFieldInt32(32, NUM_SPECTRAL_FILTERS, 0);
+  builder.addFieldInt8(35, NUM_SPECTRAL_FILTERS, 0);
 }
 
 static addSpectralFilters(builder:flatbuffers.Builder, SPECTRAL_FILTERSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(33, SPECTRAL_FILTERSOffset, 0);
+  builder.addFieldOffset(36, SPECTRAL_FILTERSOffset, 0);
 }
 
 static createSpectralFiltersVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -579,60 +777,48 @@ static startSpectralFiltersVector(builder:flatbuffers.Builder, numElems:number) 
   builder.startVector(4, numElems, 4);
 }
 
-static addCollectionMode(builder:flatbuffers.Builder, COLLECTION_MODEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(34, COLLECTION_MODEOffset, 0);
-}
-
 static addGain(builder:flatbuffers.Builder, GAIN:number) {
-  builder.addFieldFloat64(35, GAIN, 0.0);
+  builder.addFieldFloat64(37, GAIN, 0.0);
 }
 
 static addBinningHoriz(builder:flatbuffers.Builder, BINNING_HORIZ:number) {
-  builder.addFieldInt32(36, BINNING_HORIZ, 0);
+  builder.addFieldInt8(38, BINNING_HORIZ, 0);
 }
 
 static addBinningVert(builder:flatbuffers.Builder, BINNING_VERT:number) {
-  builder.addFieldInt32(37, BINNING_VERT, 0);
+  builder.addFieldInt8(39, BINNING_VERT, 0);
 }
 
 static addSolarMag(builder:flatbuffers.Builder, SOLAR_MAG:number) {
-  builder.addFieldFloat64(38, SOLAR_MAG, 0.0);
+  builder.addFieldFloat64(40, SOLAR_MAG, 0.0);
 }
 
 static addPixelMin(builder:flatbuffers.Builder, PIXEL_MIN:number) {
-  builder.addFieldInt32(39, PIXEL_MIN, 0);
+  builder.addFieldInt32(41, PIXEL_MIN, 0);
 }
 
 static addPixelMax(builder:flatbuffers.Builder, PIXEL_MAX:number) {
-  builder.addFieldInt32(40, PIXEL_MAX, 0);
+  builder.addFieldInt32(42, PIXEL_MAX, 0);
 }
 
 static addSoftwareVersion(builder:flatbuffers.Builder, SOFTWARE_VERSIONOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(41, SOFTWARE_VERSIONOffset, 0);
-}
-
-static addSatelliteName(builder:flatbuffers.Builder, SATELLITE_NAMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(42, SATELLITE_NAMEOffset, 0);
+  builder.addFieldOffset(43, SOFTWARE_VERSIONOffset, 0);
 }
 
 static addStarCatName(builder:flatbuffers.Builder, STAR_CAT_NAMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(43, STAR_CAT_NAMEOffset, 0);
+  builder.addFieldOffset(44, STAR_CAT_NAMEOffset, 0);
 }
 
 static addCorrQuality(builder:flatbuffers.Builder, CORR_QUALITY:number) {
-  builder.addFieldFloat64(44, CORR_QUALITY, 0.0);
+  builder.addFieldFloat64(45, CORR_QUALITY, 0.0);
 }
 
-static addUct(builder:flatbuffers.Builder, UCT:boolean) {
-  builder.addFieldInt8(45, +UCT, +false);
+static addCalibrationType(builder:flatbuffers.Builder, CALIBRATION_TYPE:soiCalibrationType) {
+  builder.addFieldInt8(46, CALIBRATION_TYPE, soiCalibrationType.PHOTOMETRIC);
 }
 
 static addValidCalibrations(builder:flatbuffers.Builder, VALID_CALIBRATIONSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(46, VALID_CALIBRATIONSOffset, 0);
-}
-
-static addCalibrationType(builder:flatbuffers.Builder, CALIBRATION_TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(47, CALIBRATION_TYPEOffset, 0);
+  builder.addFieldOffset(47, VALID_CALIBRATIONSOffset, 0);
 }
 
 static addPercentSatThreshold(builder:flatbuffers.Builder, PERCENT_SAT_THRESHOLD:number) {
@@ -756,7 +942,7 @@ static finishSizePrefixedSOIBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$SOI', true);
 }
 
-static createSOI(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, MSG_CREATE_DATEOffset:flatbuffers.Offset, ID_SENSOROffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, SENSOR_AS_IDOffset:flatbuffers.Offset, SAT_NO:number, ORIG_OBJECT_IDOffset:flatbuffers.Offset, SENLAT:number, SENLON:number, SENALT:number, SENX:number, SENY:number, SENZ:number, SENVELX:number, SENVELY:number, SENVELZ:number, START_TIMEOffset:flatbuffers.Offset, END_TIMEOffset:flatbuffers.Offset, NUM_OBS:number, TYPEOffset:flatbuffers.Offset, POLAR_ANGLE_START:number, POLAR_ANGLE_END:number, REFERENCE_FRAMEOffset:flatbuffers.Offset, SEN_REFERENCE_FRAMEOffset:flatbuffers.Offset, LOS_DECLINATION_START:number, LOS_DECLINATION_END:number, POINTING_ANGLE_AZ_START:number, POINTING_ANGLE_AZ_END:number, POINTING_ANGLE_EL_START:number, POINTING_ANGLE_EL_END:number, PIXEL_ARRAY_WIDTH:number, PIXEL_ARRAY_HEIGHT:number, NUM_SPECTRAL_FILTERS:number, SPECTRAL_FILTERSOffset:flatbuffers.Offset, COLLECTION_MODEOffset:flatbuffers.Offset, GAIN:number, BINNING_HORIZ:number, BINNING_VERT:number, SOLAR_MAG:number, PIXEL_MIN:number, PIXEL_MAX:number, SOFTWARE_VERSIONOffset:flatbuffers.Offset, SATELLITE_NAMEOffset:flatbuffers.Offset, STAR_CAT_NAMEOffset:flatbuffers.Offset, CORR_QUALITY:number, UCT:boolean, VALID_CALIBRATIONSOffset:flatbuffers.Offset, CALIBRATION_TYPEOffset:flatbuffers.Offset, PERCENT_SAT_THRESHOLD:number, CHANGE_DETECTED:boolean, PERIODICITY_CHANGE_DETECTED:boolean, BRIGHTNESS_VARIANCE_CHANGE_DETECTED:boolean, SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED:boolean, CHANGE_CONFOffset:flatbuffers.Offset, COLLECTION_DENSITY_CONFOffset:flatbuffers.Offset, PERIODICITY_SAMPLING_CONFOffset:flatbuffers.Offset, PERIODICITY_DETECTION_CONFOffset:flatbuffers.Offset, COLLECTION_IDOffset:flatbuffers.Offset, CALIBRATIONSOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, TRANSACTION_IDOffset:flatbuffers.Offset, OPTICAL_SOIOBSERVATION_LISTOffset:flatbuffers.Offset, RADAR_SOIOBSERVATION_LISTOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createSOI(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, MSG_CREATE_DATEOffset:flatbuffers.Offset, ID_SENSOROffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, SENSOR_AS_IDOffset:flatbuffers.Offset, SAT_NO:number, ORIG_OBJECT_IDOffset:flatbuffers.Offset, SATELLITE_NAMEOffset:flatbuffers.Offset, UCT:boolean, SENLAT:number, SENLON:number, SENALT:number, SENX:number, SENY:number, SENZ:number, SENVELX:number, SENVELY:number, SENVELZ:number, SEN_REFERENCE_FRAMEOffset:flatbuffers.Offset, OBS_TYPE:soiObsType, COLLECTION_MODE:soiCollectionMode, START_TIMEOffset:flatbuffers.Offset, END_TIMEOffset:flatbuffers.Offset, NUM_OBS:number, REFERENCE_FRAMEOffset:flatbuffers.Offset, POLAR_ANGLE_START:number, POLAR_ANGLE_END:number, LOS_DECLINATION_START:number, LOS_DECLINATION_END:number, POINTING_ANGLE_AZ_START:number, POINTING_ANGLE_AZ_END:number, POINTING_ANGLE_EL_START:number, POINTING_ANGLE_EL_END:number, PIXEL_ARRAY_WIDTH:number, PIXEL_ARRAY_HEIGHT:number, NUM_SPECTRAL_FILTERS:number, SPECTRAL_FILTERSOffset:flatbuffers.Offset, GAIN:number, BINNING_HORIZ:number, BINNING_VERT:number, SOLAR_MAG:number, PIXEL_MIN:number, PIXEL_MAX:number, SOFTWARE_VERSIONOffset:flatbuffers.Offset, STAR_CAT_NAMEOffset:flatbuffers.Offset, CORR_QUALITY:number, CALIBRATION_TYPE:soiCalibrationType, VALID_CALIBRATIONSOffset:flatbuffers.Offset, PERCENT_SAT_THRESHOLD:number, CHANGE_DETECTED:boolean, PERIODICITY_CHANGE_DETECTED:boolean, BRIGHTNESS_VARIANCE_CHANGE_DETECTED:boolean, SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED:boolean, CHANGE_CONFOffset:flatbuffers.Offset, COLLECTION_DENSITY_CONFOffset:flatbuffers.Offset, PERIODICITY_SAMPLING_CONFOffset:flatbuffers.Offset, PERIODICITY_DETECTION_CONFOffset:flatbuffers.Offset, COLLECTION_IDOffset:flatbuffers.Offset, CALIBRATIONSOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, TRANSACTION_IDOffset:flatbuffers.Offset, OPTICAL_SOIOBSERVATION_LISTOffset:flatbuffers.Offset, RADAR_SOIOBSERVATION_LISTOffset:flatbuffers.Offset):flatbuffers.Offset {
   SOI.startSOI(builder);
   SOI.addId(builder, IDOffset);
   SOI.addMsgCreateDate(builder, MSG_CREATE_DATEOffset);
@@ -765,6 +951,8 @@ static createSOI(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, MSG_C
   SOI.addSensorAsId(builder, SENSOR_AS_IDOffset);
   SOI.addSatNo(builder, SAT_NO);
   SOI.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
+  SOI.addSatelliteName(builder, SATELLITE_NAMEOffset);
+  SOI.addUct(builder, UCT);
   SOI.addSenlat(builder, SENLAT);
   SOI.addSenlon(builder, SENLON);
   SOI.addSenalt(builder, SENALT);
@@ -774,14 +962,15 @@ static createSOI(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, MSG_C
   SOI.addSenvelx(builder, SENVELX);
   SOI.addSenvely(builder, SENVELY);
   SOI.addSenvelz(builder, SENVELZ);
+  SOI.addSenReferenceFrame(builder, SEN_REFERENCE_FRAMEOffset);
+  SOI.addObsType(builder, OBS_TYPE);
+  SOI.addCollectionMode(builder, COLLECTION_MODE);
   SOI.addStartTime(builder, START_TIMEOffset);
   SOI.addEndTime(builder, END_TIMEOffset);
   SOI.addNumObs(builder, NUM_OBS);
-  SOI.addType(builder, TYPEOffset);
+  SOI.addReferenceFrame(builder, REFERENCE_FRAMEOffset);
   SOI.addPolarAngleStart(builder, POLAR_ANGLE_START);
   SOI.addPolarAngleEnd(builder, POLAR_ANGLE_END);
-  SOI.addReferenceFrame(builder, REFERENCE_FRAMEOffset);
-  SOI.addSenReferenceFrame(builder, SEN_REFERENCE_FRAMEOffset);
   SOI.addLosDeclinationStart(builder, LOS_DECLINATION_START);
   SOI.addLosDeclinationEnd(builder, LOS_DECLINATION_END);
   SOI.addPointingAngleAzStart(builder, POINTING_ANGLE_AZ_START);
@@ -792,7 +981,6 @@ static createSOI(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, MSG_C
   SOI.addPixelArrayHeight(builder, PIXEL_ARRAY_HEIGHT);
   SOI.addNumSpectralFilters(builder, NUM_SPECTRAL_FILTERS);
   SOI.addSpectralFilters(builder, SPECTRAL_FILTERSOffset);
-  SOI.addCollectionMode(builder, COLLECTION_MODEOffset);
   SOI.addGain(builder, GAIN);
   SOI.addBinningHoriz(builder, BINNING_HORIZ);
   SOI.addBinningVert(builder, BINNING_VERT);
@@ -800,12 +988,10 @@ static createSOI(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, MSG_C
   SOI.addPixelMin(builder, PIXEL_MIN);
   SOI.addPixelMax(builder, PIXEL_MAX);
   SOI.addSoftwareVersion(builder, SOFTWARE_VERSIONOffset);
-  SOI.addSatelliteName(builder, SATELLITE_NAMEOffset);
   SOI.addStarCatName(builder, STAR_CAT_NAMEOffset);
   SOI.addCorrQuality(builder, CORR_QUALITY);
-  SOI.addUct(builder, UCT);
+  SOI.addCalibrationType(builder, CALIBRATION_TYPE);
   SOI.addValidCalibrations(builder, VALID_CALIBRATIONSOffset);
-  SOI.addCalibrationType(builder, CALIBRATION_TYPEOffset);
   SOI.addPercentSatThreshold(builder, PERCENT_SAT_THRESHOLD);
   SOI.addChangeDetected(builder, CHANGE_DETECTED);
   SOI.addPeriodicityChangeDetected(builder, PERIODICITY_CHANGE_DETECTED);
@@ -833,6 +1019,8 @@ unpack(): SOIT {
     this.SENSOR_AS_ID(),
     this.SAT_NO(),
     this.ORIG_OBJECT_ID(),
+    this.SATELLITE_NAME(),
+    this.UCT(),
     this.SENLAT(),
     this.SENLON(),
     this.SENALT(),
@@ -842,14 +1030,15 @@ unpack(): SOIT {
     this.SENVELX(),
     this.SENVELY(),
     this.SENVELZ(),
+    this.SEN_REFERENCE_FRAME(),
+    this.OBS_TYPE(),
+    this.COLLECTION_MODE(),
     this.START_TIME(),
     this.END_TIME(),
     this.NUM_OBS(),
-    this.TYPE(),
+    this.REFERENCE_FRAME(),
     this.POLAR_ANGLE_START(),
     this.POLAR_ANGLE_END(),
-    this.REFERENCE_FRAME(),
-    this.SEN_REFERENCE_FRAME(),
     this.LOS_DECLINATION_START(),
     this.LOS_DECLINATION_END(),
     this.POINTING_ANGLE_AZ_START(),
@@ -860,7 +1049,6 @@ unpack(): SOIT {
     this.PIXEL_ARRAY_HEIGHT(),
     this.NUM_SPECTRAL_FILTERS(),
     this.bb!.createScalarList<string>(this.SPECTRAL_FILTERS.bind(this), this.spectralFiltersLength()),
-    this.COLLECTION_MODE(),
     this.GAIN(),
     this.BINNING_HORIZ(),
     this.BINNING_VERT(),
@@ -868,12 +1056,10 @@ unpack(): SOIT {
     this.PIXEL_MIN(),
     this.PIXEL_MAX(),
     this.SOFTWARE_VERSION(),
-    this.SATELLITE_NAME(),
     this.STAR_CAT_NAME(),
     this.CORR_QUALITY(),
-    this.UCT(),
-    this.VALID_CALIBRATIONS(),
     this.CALIBRATION_TYPE(),
+    this.VALID_CALIBRATIONS(),
     this.PERCENT_SAT_THRESHOLD(),
     this.CHANGE_DETECTED(),
     this.PERIODICITY_CHANGE_DETECTED(),
@@ -901,6 +1087,8 @@ unpackTo(_o: SOIT): void {
   _o.SENSOR_AS_ID = this.SENSOR_AS_ID();
   _o.SAT_NO = this.SAT_NO();
   _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID();
+  _o.SATELLITE_NAME = this.SATELLITE_NAME();
+  _o.UCT = this.UCT();
   _o.SENLAT = this.SENLAT();
   _o.SENLON = this.SENLON();
   _o.SENALT = this.SENALT();
@@ -910,14 +1098,15 @@ unpackTo(_o: SOIT): void {
   _o.SENVELX = this.SENVELX();
   _o.SENVELY = this.SENVELY();
   _o.SENVELZ = this.SENVELZ();
+  _o.SEN_REFERENCE_FRAME = this.SEN_REFERENCE_FRAME();
+  _o.OBS_TYPE = this.OBS_TYPE();
+  _o.COLLECTION_MODE = this.COLLECTION_MODE();
   _o.START_TIME = this.START_TIME();
   _o.END_TIME = this.END_TIME();
   _o.NUM_OBS = this.NUM_OBS();
-  _o.TYPE = this.TYPE();
+  _o.REFERENCE_FRAME = this.REFERENCE_FRAME();
   _o.POLAR_ANGLE_START = this.POLAR_ANGLE_START();
   _o.POLAR_ANGLE_END = this.POLAR_ANGLE_END();
-  _o.REFERENCE_FRAME = this.REFERENCE_FRAME();
-  _o.SEN_REFERENCE_FRAME = this.SEN_REFERENCE_FRAME();
   _o.LOS_DECLINATION_START = this.LOS_DECLINATION_START();
   _o.LOS_DECLINATION_END = this.LOS_DECLINATION_END();
   _o.POINTING_ANGLE_AZ_START = this.POINTING_ANGLE_AZ_START();
@@ -928,7 +1117,6 @@ unpackTo(_o: SOIT): void {
   _o.PIXEL_ARRAY_HEIGHT = this.PIXEL_ARRAY_HEIGHT();
   _o.NUM_SPECTRAL_FILTERS = this.NUM_SPECTRAL_FILTERS();
   _o.SPECTRAL_FILTERS = this.bb!.createScalarList<string>(this.SPECTRAL_FILTERS.bind(this), this.spectralFiltersLength());
-  _o.COLLECTION_MODE = this.COLLECTION_MODE();
   _o.GAIN = this.GAIN();
   _o.BINNING_HORIZ = this.BINNING_HORIZ();
   _o.BINNING_VERT = this.BINNING_VERT();
@@ -936,12 +1124,10 @@ unpackTo(_o: SOIT): void {
   _o.PIXEL_MIN = this.PIXEL_MIN();
   _o.PIXEL_MAX = this.PIXEL_MAX();
   _o.SOFTWARE_VERSION = this.SOFTWARE_VERSION();
-  _o.SATELLITE_NAME = this.SATELLITE_NAME();
   _o.STAR_CAT_NAME = this.STAR_CAT_NAME();
   _o.CORR_QUALITY = this.CORR_QUALITY();
-  _o.UCT = this.UCT();
-  _o.VALID_CALIBRATIONS = this.VALID_CALIBRATIONS();
   _o.CALIBRATION_TYPE = this.CALIBRATION_TYPE();
+  _o.VALID_CALIBRATIONS = this.VALID_CALIBRATIONS();
   _o.PERCENT_SAT_THRESHOLD = this.PERCENT_SAT_THRESHOLD();
   _o.CHANGE_DETECTED = this.CHANGE_DETECTED();
   _o.PERIODICITY_CHANGE_DETECTED = this.PERIODICITY_CHANGE_DETECTED();
@@ -969,6 +1155,8 @@ constructor(
   public SENSOR_AS_ID: string|Uint8Array|null = null,
   public SAT_NO: number = 0,
   public ORIG_OBJECT_ID: string|Uint8Array|null = null,
+  public SATELLITE_NAME: string|Uint8Array|null = null,
+  public UCT: boolean = false,
   public SENLAT: number = 0.0,
   public SENLON: number = 0.0,
   public SENALT: number = 0.0,
@@ -978,14 +1166,15 @@ constructor(
   public SENVELX: number = 0.0,
   public SENVELY: number = 0.0,
   public SENVELZ: number = 0.0,
+  public SEN_REFERENCE_FRAME: string|Uint8Array|null = null,
+  public OBS_TYPE: soiObsType = soiObsType.OPTICAL,
+  public COLLECTION_MODE: soiCollectionMode = soiCollectionMode.SIDEREAL,
   public START_TIME: string|Uint8Array|null = null,
   public END_TIME: string|Uint8Array|null = null,
   public NUM_OBS: number = 0,
-  public TYPE: string|Uint8Array|null = null,
+  public REFERENCE_FRAME: string|Uint8Array|null = null,
   public POLAR_ANGLE_START: number = 0.0,
   public POLAR_ANGLE_END: number = 0.0,
-  public REFERENCE_FRAME: string|Uint8Array|null = null,
-  public SEN_REFERENCE_FRAME: string|Uint8Array|null = null,
   public LOS_DECLINATION_START: number = 0.0,
   public LOS_DECLINATION_END: number = 0.0,
   public POINTING_ANGLE_AZ_START: number = 0.0,
@@ -996,7 +1185,6 @@ constructor(
   public PIXEL_ARRAY_HEIGHT: number = 0,
   public NUM_SPECTRAL_FILTERS: number = 0,
   public SPECTRAL_FILTERS: (string)[] = [],
-  public COLLECTION_MODE: string|Uint8Array|null = null,
   public GAIN: number = 0.0,
   public BINNING_HORIZ: number = 0,
   public BINNING_VERT: number = 0,
@@ -1004,12 +1192,10 @@ constructor(
   public PIXEL_MIN: number = 0,
   public PIXEL_MAX: number = 0,
   public SOFTWARE_VERSION: string|Uint8Array|null = null,
-  public SATELLITE_NAME: string|Uint8Array|null = null,
   public STAR_CAT_NAME: string|Uint8Array|null = null,
   public CORR_QUALITY: number = 0.0,
-  public UCT: boolean = false,
+  public CALIBRATION_TYPE: soiCalibrationType = soiCalibrationType.PHOTOMETRIC,
   public VALID_CALIBRATIONS: string|Uint8Array|null = null,
-  public CALIBRATION_TYPE: string|Uint8Array|null = null,
   public PERCENT_SAT_THRESHOLD: number = 0.0,
   public CHANGE_DETECTED: boolean = false,
   public PERIODICITY_CHANGE_DETECTED: boolean = false,
@@ -1035,18 +1221,15 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ORIG_SENSOR_ID = (this.ORIG_SENSOR_ID !== null ? builder.createString(this.ORIG_SENSOR_ID!) : 0);
   const SENSOR_AS_ID = (this.SENSOR_AS_ID !== null ? builder.createString(this.SENSOR_AS_ID!) : 0);
   const ORIG_OBJECT_ID = (this.ORIG_OBJECT_ID !== null ? builder.createString(this.ORIG_OBJECT_ID!) : 0);
+  const SATELLITE_NAME = (this.SATELLITE_NAME !== null ? builder.createString(this.SATELLITE_NAME!) : 0);
+  const SEN_REFERENCE_FRAME = (this.SEN_REFERENCE_FRAME !== null ? builder.createString(this.SEN_REFERENCE_FRAME!) : 0);
   const START_TIME = (this.START_TIME !== null ? builder.createString(this.START_TIME!) : 0);
   const END_TIME = (this.END_TIME !== null ? builder.createString(this.END_TIME!) : 0);
-  const TYPE = (this.TYPE !== null ? builder.createString(this.TYPE!) : 0);
   const REFERENCE_FRAME = (this.REFERENCE_FRAME !== null ? builder.createString(this.REFERENCE_FRAME!) : 0);
-  const SEN_REFERENCE_FRAME = (this.SEN_REFERENCE_FRAME !== null ? builder.createString(this.SEN_REFERENCE_FRAME!) : 0);
   const SPECTRAL_FILTERS = SOI.createSpectralFiltersVector(builder, builder.createObjectOffsetList(this.SPECTRAL_FILTERS));
-  const COLLECTION_MODE = (this.COLLECTION_MODE !== null ? builder.createString(this.COLLECTION_MODE!) : 0);
   const SOFTWARE_VERSION = (this.SOFTWARE_VERSION !== null ? builder.createString(this.SOFTWARE_VERSION!) : 0);
-  const SATELLITE_NAME = (this.SATELLITE_NAME !== null ? builder.createString(this.SATELLITE_NAME!) : 0);
   const STAR_CAT_NAME = (this.STAR_CAT_NAME !== null ? builder.createString(this.STAR_CAT_NAME!) : 0);
   const VALID_CALIBRATIONS = (this.VALID_CALIBRATIONS !== null ? builder.createString(this.VALID_CALIBRATIONS!) : 0);
-  const CALIBRATION_TYPE = (this.CALIBRATION_TYPE !== null ? builder.createString(this.CALIBRATION_TYPE!) : 0);
   const CHANGE_CONF = (this.CHANGE_CONF !== null ? builder.createString(this.CHANGE_CONF!) : 0);
   const COLLECTION_DENSITY_CONF = (this.COLLECTION_DENSITY_CONF !== null ? builder.createString(this.COLLECTION_DENSITY_CONF!) : 0);
   const PERIODICITY_SAMPLING_CONF = (this.PERIODICITY_SAMPLING_CONF !== null ? builder.createString(this.PERIODICITY_SAMPLING_CONF!) : 0);
@@ -1066,6 +1249,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     SENSOR_AS_ID,
     this.SAT_NO,
     ORIG_OBJECT_ID,
+    SATELLITE_NAME,
+    this.UCT,
     this.SENLAT,
     this.SENLON,
     this.SENALT,
@@ -1075,14 +1260,15 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.SENVELX,
     this.SENVELY,
     this.SENVELZ,
+    SEN_REFERENCE_FRAME,
+    this.OBS_TYPE,
+    this.COLLECTION_MODE,
     START_TIME,
     END_TIME,
     this.NUM_OBS,
-    TYPE,
+    REFERENCE_FRAME,
     this.POLAR_ANGLE_START,
     this.POLAR_ANGLE_END,
-    REFERENCE_FRAME,
-    SEN_REFERENCE_FRAME,
     this.LOS_DECLINATION_START,
     this.LOS_DECLINATION_END,
     this.POINTING_ANGLE_AZ_START,
@@ -1093,7 +1279,6 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.PIXEL_ARRAY_HEIGHT,
     this.NUM_SPECTRAL_FILTERS,
     SPECTRAL_FILTERS,
-    COLLECTION_MODE,
     this.GAIN,
     this.BINNING_HORIZ,
     this.BINNING_VERT,
@@ -1101,12 +1286,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.PIXEL_MIN,
     this.PIXEL_MAX,
     SOFTWARE_VERSION,
-    SATELLITE_NAME,
     STAR_CAT_NAME,
     this.CORR_QUALITY,
-    this.UCT,
+    this.CALIBRATION_TYPE,
     VALID_CALIBRATIONS,
-    CALIBRATION_TYPE,
     this.PERCENT_SAT_THRESHOLD,
     this.CHANGE_DETECTED,
     this.PERIODICITY_CHANGE_DETECTED,

@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { radarObsType } from './radarObsType.js';
 
 
 /**
@@ -31,6 +32,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$RDO');
 }
 
+/**
+ * Unique identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,6 +42,9 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Observation time (ISO 8601)
+ */
 OB_TIME():string|null
 OB_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 OB_TIME(optionalEncoding?:any):string|Uint8Array|null {
@@ -45,6 +52,9 @@ OB_TIME(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Sensor identifier
+ */
 ID_SENSOR():string|null
 ID_SENSOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID_SENSOR(optionalEncoding?:any):string|Uint8Array|null {
@@ -52,266 +62,403 @@ ID_SENSOR(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-SAT_NO():number {
+/**
+ * Original sensor identifier
+ */
+ORIG_SENSOR_ID():string|null
+ORIG_SENSOR_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ORIG_SENSOR_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
-}
-
-TASK_ID():string|null
-TASK_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-TASK_ID(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-TRANSACTION_ID():string|null
-TRANSACTION_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-TRANSACTION_ID(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Satellite catalog number
+ */
+SAT_NO():number {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * International designator
+ */
+ORIG_OBJECT_ID():string|null
+ORIG_OBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ORIG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-TRACK_ID():string|null
-TRACK_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-TRACK_ID(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * On-orbit reference
+ */
+ON_ORBIT():string|null
+ON_ORBIT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ON_ORBIT(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-OB_POSITION():string|null
-OB_POSITION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-OB_POSITION(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * True if uncorrelated target
+ */
+UCT():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 18);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
-ORIG_OBJECT_ID():string|null
-ORIG_OBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ORIG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Observation type
+ */
+OBS_TYPE():radarObsType {
   const offset = this.bb!.__offset(this.bb_pos, 20);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : radarObsType.DETECTION;
 }
 
-ORIG_SENSOR_ID():string|null
-ORIG_SENSOR_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ORIG_SENSOR_ID(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Task identifier
+ */
+TASK_ID():string|null
+TASK_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TASK_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-UCT():boolean {
+/**
+ * Transaction identifier
+ */
+TRANSACTION_ID():string|null
+TRANSACTION_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TRANSACTION_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 24);
-  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-AZIMUTH():number {
+/**
+ * Track identifier
+ */
+TRACK_ID():string|null
+TRACK_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TRACK_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 26);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-AZIMUTH_UNC():number {
+/**
+ * Observation position identifier
+ */
+OB_POSITION():string|null
+OB_POSITION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OB_POSITION(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 28);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-AZIMUTH_BIAS():number {
+/**
+ * Sensor reference frame
+ */
+SEN_REFERENCE_FRAME():string|null
+SEN_REFERENCE_FRAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SEN_REFERENCE_FRAME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 30);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-AZIMUTH_RATE():number {
+/**
+ * Azimuth angle (degrees)
+ */
+AZIMUTH():number {
   const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-ELEVATION():number {
+/**
+ * Azimuth uncertainty (degrees, 1-sigma)
+ */
+AZIMUTH_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 34);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-ELEVATION_UNC():number {
+/**
+ * Azimuth bias (degrees)
+ */
+AZIMUTH_BIAS():number {
   const offset = this.bb!.__offset(this.bb_pos, 36);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-ELEVATION_BIAS():number {
+/**
+ * Azimuth rate (degrees/s)
+ */
+AZIMUTH_RATE():number {
   const offset = this.bb!.__offset(this.bb_pos, 38);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-ELEVATION_RATE():number {
+/**
+ * Elevation angle (degrees)
+ */
+ELEVATION():number {
   const offset = this.bb!.__offset(this.bb_pos, 40);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-RANGE():number {
+/**
+ * Elevation uncertainty (degrees, 1-sigma)
+ */
+ELEVATION_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 42);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-RANGE_ACCEL():number {
+/**
+ * Elevation bias (degrees)
+ */
+ELEVATION_BIAS():number {
   const offset = this.bb!.__offset(this.bb_pos, 44);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-RANGE_ACCEL_UNC():number {
+/**
+ * Elevation rate (degrees/s)
+ */
+ELEVATION_RATE():number {
   const offset = this.bb!.__offset(this.bb_pos, 46);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-RANGE_UNC():number {
+/**
+ * Slant range (km)
+ */
+RANGE():number {
   const offset = this.bb!.__offset(this.bb_pos, 48);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-RANGE_BIAS():number {
+/**
+ * Range uncertainty (km, 1-sigma)
+ */
+RANGE_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 50);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-RANGE_RATE():number {
+/**
+ * Range bias (km)
+ */
+RANGE_BIAS():number {
   const offset = this.bb!.__offset(this.bb_pos, 52);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-RANGE_RATE_UNC():number {
+/**
+ * Range rate (km/s)
+ */
+RANGE_RATE():number {
   const offset = this.bb!.__offset(this.bb_pos, 54);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-DOPPLER():number {
+/**
+ * Range rate uncertainty (km/s, 1-sigma)
+ */
+RANGE_RATE_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 56);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-DOPPLER_UNC():number {
+/**
+ * Range acceleration (km/s^2)
+ */
+RANGE_ACCEL():number {
   const offset = this.bb!.__offset(this.bb_pos, 58);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-RA():number {
+/**
+ * Range acceleration uncertainty (km/s^2, 1-sigma)
+ */
+RANGE_ACCEL_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 60);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-DECLINATION():number {
+/**
+ * Doppler shift (Hz)
+ */
+DOPPLER():number {
   const offset = this.bb!.__offset(this.bb_pos, 62);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-X():number {
+/**
+ * Doppler uncertainty (Hz, 1-sigma)
+ */
+DOPPLER_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 64);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-Y():number {
+/**
+ * Right ascension (degrees)
+ */
+RA():number {
   const offset = this.bb!.__offset(this.bb_pos, 66);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-Z():number {
+/**
+ * Declination (degrees)
+ */
+DECLINATION():number {
   const offset = this.bb!.__offset(this.bb_pos, 68);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-XVEL():number {
+/**
+ * Target position X (km, ECI)
+ */
+X():number {
   const offset = this.bb!.__offset(this.bb_pos, 70);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-YVEL():number {
+/**
+ * Target position Y (km, ECI)
+ */
+Y():number {
   const offset = this.bb!.__offset(this.bb_pos, 72);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-ZVEL():number {
+/**
+ * Target position Z (km, ECI)
+ */
+Z():number {
   const offset = this.bb!.__offset(this.bb_pos, 74);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SENX():number {
+/**
+ * Target velocity X (km/s, ECI)
+ */
+XVEL():number {
   const offset = this.bb!.__offset(this.bb_pos, 76);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SENY():number {
+/**
+ * Target velocity Y (km/s, ECI)
+ */
+YVEL():number {
   const offset = this.bb!.__offset(this.bb_pos, 78);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SENZ():number {
+/**
+ * Target velocity Z (km/s, ECI)
+ */
+ZVEL():number {
   const offset = this.bb!.__offset(this.bb_pos, 80);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-RCS():number {
+/**
+ * Sensor position X (km, ECEF)
+ */
+SENX():number {
   const offset = this.bb!.__offset(this.bb_pos, 82);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-RCS_UNC():number {
+/**
+ * Sensor position Y (km, ECEF)
+ */
+SENY():number {
   const offset = this.bb!.__offset(this.bb_pos, 84);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-ORTHOGONAL_RCS():number {
+/**
+ * Sensor position Z (km, ECEF)
+ */
+SENZ():number {
   const offset = this.bb!.__offset(this.bb_pos, 86);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-ORTHOGONAL_RCS_UNC():number {
+/**
+ * Radar cross-section (dBsm)
+ */
+RCS():number {
   const offset = this.bb!.__offset(this.bb_pos, 88);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SNR():number {
+/**
+ * RCS uncertainty (dBsm, 1-sigma)
+ */
+RCS_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 90);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-BEAM():number {
+/**
+ * Orthogonal polarization RCS (dBsm)
+ */
+ORTHOGONAL_RCS():number {
   const offset = this.bb!.__offset(this.bb_pos, 92);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-TIMING_BIAS():number {
+/**
+ * Orthogonal RCS uncertainty (dBsm, 1-sigma)
+ */
+ORTHOGONAL_RCS_UNC():number {
   const offset = this.bb!.__offset(this.bb_pos, 94);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Signal-to-noise ratio (dB)
+ */
+SNR():number {
+  const offset = this.bb!.__offset(this.bb_pos, 96);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Beam identifier
+ */
+BEAM():number {
+  const offset = this.bb!.__offset(this.bb_pos, 98);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Timing bias (seconds)
+ */
+TIMING_BIAS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 100);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Reference to raw data file
+ */
 RAW_FILE_URI():string|null
 RAW_FILE_URI(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 RAW_FILE_URI(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 96);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-TAGS(index: number):string
-TAGS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-TAGS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 98);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
-}
-
-tagsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 98);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-ON_ORBIT():string|null
-ON_ORBIT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ON_ORBIT(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 100);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-SEN_REFERENCE_FRAME():string|null
-SEN_REFERENCE_FRAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-SEN_REFERENCE_FRAME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 102);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Event descriptor
+ */
 DESCRIPTOR():string|null
 DESCRIPTOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 DESCRIPTOR(optionalEncoding?:any):string|Uint8Array|null {
@@ -319,11 +466,19 @@ DESCRIPTOR(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-TYPE():string|null
-TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-TYPE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Associated tags
+ */
+TAGS(index: number):string
+TAGS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+TAGS(index: number,optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 106);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+}
+
+tagsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 106);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 static startRDO(builder:flatbuffers.Builder) {
@@ -342,184 +497,200 @@ static addIdSensor(builder:flatbuffers.Builder, ID_SENSOROffset:flatbuffers.Offs
   builder.addFieldOffset(2, ID_SENSOROffset, 0);
 }
 
+static addOrigSensorId(builder:flatbuffers.Builder, ORIG_SENSOR_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(3, ORIG_SENSOR_IDOffset, 0);
+}
+
 static addSatNo(builder:flatbuffers.Builder, SAT_NO:number) {
-  builder.addFieldInt32(3, SAT_NO, 0);
-}
-
-static addTaskId(builder:flatbuffers.Builder, TASK_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(4, TASK_IDOffset, 0);
-}
-
-static addTransactionId(builder:flatbuffers.Builder, TRANSACTION_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, TRANSACTION_IDOffset, 0);
-}
-
-static addTrackId(builder:flatbuffers.Builder, TRACK_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(6, TRACK_IDOffset, 0);
-}
-
-static addObPosition(builder:flatbuffers.Builder, OB_POSITIONOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(7, OB_POSITIONOffset, 0);
+  builder.addFieldInt32(4, SAT_NO, 0);
 }
 
 static addOrigObjectId(builder:flatbuffers.Builder, ORIG_OBJECT_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(8, ORIG_OBJECT_IDOffset, 0);
+  builder.addFieldOffset(5, ORIG_OBJECT_IDOffset, 0);
 }
 
-static addOrigSensorId(builder:flatbuffers.Builder, ORIG_SENSOR_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(9, ORIG_SENSOR_IDOffset, 0);
+static addOnOrbit(builder:flatbuffers.Builder, ON_ORBITOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, ON_ORBITOffset, 0);
 }
 
 static addUct(builder:flatbuffers.Builder, UCT:boolean) {
-  builder.addFieldInt8(10, +UCT, +false);
+  builder.addFieldInt8(7, +UCT, +false);
+}
+
+static addObsType(builder:flatbuffers.Builder, OBS_TYPE:radarObsType) {
+  builder.addFieldInt8(8, OBS_TYPE, radarObsType.DETECTION);
+}
+
+static addTaskId(builder:flatbuffers.Builder, TASK_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, TASK_IDOffset, 0);
+}
+
+static addTransactionId(builder:flatbuffers.Builder, TRANSACTION_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(10, TRANSACTION_IDOffset, 0);
+}
+
+static addTrackId(builder:flatbuffers.Builder, TRACK_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, TRACK_IDOffset, 0);
+}
+
+static addObPosition(builder:flatbuffers.Builder, OB_POSITIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(12, OB_POSITIONOffset, 0);
+}
+
+static addSenReferenceFrame(builder:flatbuffers.Builder, SEN_REFERENCE_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, SEN_REFERENCE_FRAMEOffset, 0);
 }
 
 static addAzimuth(builder:flatbuffers.Builder, AZIMUTH:number) {
-  builder.addFieldFloat64(11, AZIMUTH, 0.0);
+  builder.addFieldFloat64(14, AZIMUTH, 0.0);
 }
 
 static addAzimuthUnc(builder:flatbuffers.Builder, AZIMUTH_UNC:number) {
-  builder.addFieldFloat64(12, AZIMUTH_UNC, 0.0);
+  builder.addFieldFloat64(15, AZIMUTH_UNC, 0.0);
 }
 
 static addAzimuthBias(builder:flatbuffers.Builder, AZIMUTH_BIAS:number) {
-  builder.addFieldFloat64(13, AZIMUTH_BIAS, 0.0);
+  builder.addFieldFloat64(16, AZIMUTH_BIAS, 0.0);
 }
 
 static addAzimuthRate(builder:flatbuffers.Builder, AZIMUTH_RATE:number) {
-  builder.addFieldFloat64(14, AZIMUTH_RATE, 0.0);
+  builder.addFieldFloat64(17, AZIMUTH_RATE, 0.0);
 }
 
 static addElevation(builder:flatbuffers.Builder, ELEVATION:number) {
-  builder.addFieldFloat64(15, ELEVATION, 0.0);
+  builder.addFieldFloat64(18, ELEVATION, 0.0);
 }
 
 static addElevationUnc(builder:flatbuffers.Builder, ELEVATION_UNC:number) {
-  builder.addFieldFloat64(16, ELEVATION_UNC, 0.0);
+  builder.addFieldFloat64(19, ELEVATION_UNC, 0.0);
 }
 
 static addElevationBias(builder:flatbuffers.Builder, ELEVATION_BIAS:number) {
-  builder.addFieldFloat64(17, ELEVATION_BIAS, 0.0);
+  builder.addFieldFloat64(20, ELEVATION_BIAS, 0.0);
 }
 
 static addElevationRate(builder:flatbuffers.Builder, ELEVATION_RATE:number) {
-  builder.addFieldFloat64(18, ELEVATION_RATE, 0.0);
+  builder.addFieldFloat64(21, ELEVATION_RATE, 0.0);
 }
 
 static addRange(builder:flatbuffers.Builder, RANGE:number) {
-  builder.addFieldFloat64(19, RANGE, 0.0);
-}
-
-static addRangeAccel(builder:flatbuffers.Builder, RANGE_ACCEL:number) {
-  builder.addFieldFloat64(20, RANGE_ACCEL, 0.0);
-}
-
-static addRangeAccelUnc(builder:flatbuffers.Builder, RANGE_ACCEL_UNC:number) {
-  builder.addFieldFloat64(21, RANGE_ACCEL_UNC, 0.0);
+  builder.addFieldFloat64(22, RANGE, 0.0);
 }
 
 static addRangeUnc(builder:flatbuffers.Builder, RANGE_UNC:number) {
-  builder.addFieldFloat64(22, RANGE_UNC, 0.0);
+  builder.addFieldFloat64(23, RANGE_UNC, 0.0);
 }
 
 static addRangeBias(builder:flatbuffers.Builder, RANGE_BIAS:number) {
-  builder.addFieldFloat64(23, RANGE_BIAS, 0.0);
+  builder.addFieldFloat64(24, RANGE_BIAS, 0.0);
 }
 
 static addRangeRate(builder:flatbuffers.Builder, RANGE_RATE:number) {
-  builder.addFieldFloat64(24, RANGE_RATE, 0.0);
+  builder.addFieldFloat64(25, RANGE_RATE, 0.0);
 }
 
 static addRangeRateUnc(builder:flatbuffers.Builder, RANGE_RATE_UNC:number) {
-  builder.addFieldFloat64(25, RANGE_RATE_UNC, 0.0);
+  builder.addFieldFloat64(26, RANGE_RATE_UNC, 0.0);
+}
+
+static addRangeAccel(builder:flatbuffers.Builder, RANGE_ACCEL:number) {
+  builder.addFieldFloat64(27, RANGE_ACCEL, 0.0);
+}
+
+static addRangeAccelUnc(builder:flatbuffers.Builder, RANGE_ACCEL_UNC:number) {
+  builder.addFieldFloat64(28, RANGE_ACCEL_UNC, 0.0);
 }
 
 static addDoppler(builder:flatbuffers.Builder, DOPPLER:number) {
-  builder.addFieldFloat64(26, DOPPLER, 0.0);
+  builder.addFieldFloat64(29, DOPPLER, 0.0);
 }
 
 static addDopplerUnc(builder:flatbuffers.Builder, DOPPLER_UNC:number) {
-  builder.addFieldFloat64(27, DOPPLER_UNC, 0.0);
+  builder.addFieldFloat64(30, DOPPLER_UNC, 0.0);
 }
 
 static addRa(builder:flatbuffers.Builder, RA:number) {
-  builder.addFieldFloat64(28, RA, 0.0);
+  builder.addFieldFloat64(31, RA, 0.0);
 }
 
 static addDeclination(builder:flatbuffers.Builder, DECLINATION:number) {
-  builder.addFieldFloat64(29, DECLINATION, 0.0);
+  builder.addFieldFloat64(32, DECLINATION, 0.0);
 }
 
 static addX(builder:flatbuffers.Builder, X:number) {
-  builder.addFieldFloat64(30, X, 0.0);
+  builder.addFieldFloat64(33, X, 0.0);
 }
 
 static addY(builder:flatbuffers.Builder, Y:number) {
-  builder.addFieldFloat64(31, Y, 0.0);
+  builder.addFieldFloat64(34, Y, 0.0);
 }
 
 static addZ(builder:flatbuffers.Builder, Z:number) {
-  builder.addFieldFloat64(32, Z, 0.0);
+  builder.addFieldFloat64(35, Z, 0.0);
 }
 
 static addXvel(builder:flatbuffers.Builder, XVEL:number) {
-  builder.addFieldFloat64(33, XVEL, 0.0);
+  builder.addFieldFloat64(36, XVEL, 0.0);
 }
 
 static addYvel(builder:flatbuffers.Builder, YVEL:number) {
-  builder.addFieldFloat64(34, YVEL, 0.0);
+  builder.addFieldFloat64(37, YVEL, 0.0);
 }
 
 static addZvel(builder:flatbuffers.Builder, ZVEL:number) {
-  builder.addFieldFloat64(35, ZVEL, 0.0);
+  builder.addFieldFloat64(38, ZVEL, 0.0);
 }
 
 static addSenx(builder:flatbuffers.Builder, SENX:number) {
-  builder.addFieldFloat64(36, SENX, 0.0);
+  builder.addFieldFloat64(39, SENX, 0.0);
 }
 
 static addSeny(builder:flatbuffers.Builder, SENY:number) {
-  builder.addFieldFloat64(37, SENY, 0.0);
+  builder.addFieldFloat64(40, SENY, 0.0);
 }
 
 static addSenz(builder:flatbuffers.Builder, SENZ:number) {
-  builder.addFieldFloat64(38, SENZ, 0.0);
+  builder.addFieldFloat64(41, SENZ, 0.0);
 }
 
 static addRcs(builder:flatbuffers.Builder, RCS:number) {
-  builder.addFieldFloat64(39, RCS, 0.0);
+  builder.addFieldFloat64(42, RCS, 0.0);
 }
 
 static addRcsUnc(builder:flatbuffers.Builder, RCS_UNC:number) {
-  builder.addFieldFloat64(40, RCS_UNC, 0.0);
+  builder.addFieldFloat64(43, RCS_UNC, 0.0);
 }
 
 static addOrthogonalRcs(builder:flatbuffers.Builder, ORTHOGONAL_RCS:number) {
-  builder.addFieldFloat64(41, ORTHOGONAL_RCS, 0.0);
+  builder.addFieldFloat64(44, ORTHOGONAL_RCS, 0.0);
 }
 
 static addOrthogonalRcsUnc(builder:flatbuffers.Builder, ORTHOGONAL_RCS_UNC:number) {
-  builder.addFieldFloat64(42, ORTHOGONAL_RCS_UNC, 0.0);
+  builder.addFieldFloat64(45, ORTHOGONAL_RCS_UNC, 0.0);
 }
 
 static addSnr(builder:flatbuffers.Builder, SNR:number) {
-  builder.addFieldFloat64(43, SNR, 0.0);
+  builder.addFieldFloat64(46, SNR, 0.0);
 }
 
 static addBeam(builder:flatbuffers.Builder, BEAM:number) {
-  builder.addFieldFloat64(44, BEAM, 0.0);
+  builder.addFieldFloat64(47, BEAM, 0.0);
 }
 
 static addTimingBias(builder:flatbuffers.Builder, TIMING_BIAS:number) {
-  builder.addFieldFloat64(45, TIMING_BIAS, 0.0);
+  builder.addFieldFloat64(48, TIMING_BIAS, 0.0);
 }
 
 static addRawFileUri(builder:flatbuffers.Builder, RAW_FILE_URIOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(46, RAW_FILE_URIOffset, 0);
+  builder.addFieldOffset(49, RAW_FILE_URIOffset, 0);
+}
+
+static addDescriptor(builder:flatbuffers.Builder, DESCRIPTOROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(50, DESCRIPTOROffset, 0);
 }
 
 static addTags(builder:flatbuffers.Builder, TAGSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(47, TAGSOffset, 0);
+  builder.addFieldOffset(51, TAGSOffset, 0);
 }
 
 static createTagsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -532,22 +703,6 @@ static createTagsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):
 
 static startTagsVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
-}
-
-static addOnOrbit(builder:flatbuffers.Builder, ON_ORBITOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(48, ON_ORBITOffset, 0);
-}
-
-static addSenReferenceFrame(builder:flatbuffers.Builder, SEN_REFERENCE_FRAMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(49, SEN_REFERENCE_FRAMEOffset, 0);
-}
-
-static addDescriptor(builder:flatbuffers.Builder, DESCRIPTOROffset:flatbuffers.Offset) {
-  builder.addFieldOffset(50, DESCRIPTOROffset, 0);
-}
-
-static addType(builder:flatbuffers.Builder, TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(51, TYPEOffset, 0);
 }
 
 static endRDO(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -563,19 +718,22 @@ static finishSizePrefixedRDOBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$RDO', true);
 }
 
-static createRDO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, OB_TIMEOffset:flatbuffers.Offset, ID_SENSOROffset:flatbuffers.Offset, SAT_NO:number, TASK_IDOffset:flatbuffers.Offset, TRANSACTION_IDOffset:flatbuffers.Offset, TRACK_IDOffset:flatbuffers.Offset, OB_POSITIONOffset:flatbuffers.Offset, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, UCT:boolean, AZIMUTH:number, AZIMUTH_UNC:number, AZIMUTH_BIAS:number, AZIMUTH_RATE:number, ELEVATION:number, ELEVATION_UNC:number, ELEVATION_BIAS:number, ELEVATION_RATE:number, RANGE:number, RANGE_ACCEL:number, RANGE_ACCEL_UNC:number, RANGE_UNC:number, RANGE_BIAS:number, RANGE_RATE:number, RANGE_RATE_UNC:number, DOPPLER:number, DOPPLER_UNC:number, RA:number, DECLINATION:number, X:number, Y:number, Z:number, XVEL:number, YVEL:number, ZVEL:number, SENX:number, SENY:number, SENZ:number, RCS:number, RCS_UNC:number, ORTHOGONAL_RCS:number, ORTHOGONAL_RCS_UNC:number, SNR:number, BEAM:number, TIMING_BIAS:number, RAW_FILE_URIOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset, SEN_REFERENCE_FRAMEOffset:flatbuffers.Offset, DESCRIPTOROffset:flatbuffers.Offset, TYPEOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createRDO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, OB_TIMEOffset:flatbuffers.Offset, ID_SENSOROffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, SAT_NO:number, ORIG_OBJECT_IDOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset, UCT:boolean, OBS_TYPE:radarObsType, TASK_IDOffset:flatbuffers.Offset, TRANSACTION_IDOffset:flatbuffers.Offset, TRACK_IDOffset:flatbuffers.Offset, OB_POSITIONOffset:flatbuffers.Offset, SEN_REFERENCE_FRAMEOffset:flatbuffers.Offset, AZIMUTH:number, AZIMUTH_UNC:number, AZIMUTH_BIAS:number, AZIMUTH_RATE:number, ELEVATION:number, ELEVATION_UNC:number, ELEVATION_BIAS:number, ELEVATION_RATE:number, RANGE:number, RANGE_UNC:number, RANGE_BIAS:number, RANGE_RATE:number, RANGE_RATE_UNC:number, RANGE_ACCEL:number, RANGE_ACCEL_UNC:number, DOPPLER:number, DOPPLER_UNC:number, RA:number, DECLINATION:number, X:number, Y:number, Z:number, XVEL:number, YVEL:number, ZVEL:number, SENX:number, SENY:number, SENZ:number, RCS:number, RCS_UNC:number, ORTHOGONAL_RCS:number, ORTHOGONAL_RCS_UNC:number, SNR:number, BEAM:number, TIMING_BIAS:number, RAW_FILE_URIOffset:flatbuffers.Offset, DESCRIPTOROffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset):flatbuffers.Offset {
   RDO.startRDO(builder);
   RDO.addId(builder, IDOffset);
   RDO.addObTime(builder, OB_TIMEOffset);
   RDO.addIdSensor(builder, ID_SENSOROffset);
+  RDO.addOrigSensorId(builder, ORIG_SENSOR_IDOffset);
   RDO.addSatNo(builder, SAT_NO);
+  RDO.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
+  RDO.addOnOrbit(builder, ON_ORBITOffset);
+  RDO.addUct(builder, UCT);
+  RDO.addObsType(builder, OBS_TYPE);
   RDO.addTaskId(builder, TASK_IDOffset);
   RDO.addTransactionId(builder, TRANSACTION_IDOffset);
   RDO.addTrackId(builder, TRACK_IDOffset);
   RDO.addObPosition(builder, OB_POSITIONOffset);
-  RDO.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
-  RDO.addOrigSensorId(builder, ORIG_SENSOR_IDOffset);
-  RDO.addUct(builder, UCT);
+  RDO.addSenReferenceFrame(builder, SEN_REFERENCE_FRAMEOffset);
   RDO.addAzimuth(builder, AZIMUTH);
   RDO.addAzimuthUnc(builder, AZIMUTH_UNC);
   RDO.addAzimuthBias(builder, AZIMUTH_BIAS);
@@ -585,12 +743,12 @@ static createRDO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, OB_TI
   RDO.addElevationBias(builder, ELEVATION_BIAS);
   RDO.addElevationRate(builder, ELEVATION_RATE);
   RDO.addRange(builder, RANGE);
-  RDO.addRangeAccel(builder, RANGE_ACCEL);
-  RDO.addRangeAccelUnc(builder, RANGE_ACCEL_UNC);
   RDO.addRangeUnc(builder, RANGE_UNC);
   RDO.addRangeBias(builder, RANGE_BIAS);
   RDO.addRangeRate(builder, RANGE_RATE);
   RDO.addRangeRateUnc(builder, RANGE_RATE_UNC);
+  RDO.addRangeAccel(builder, RANGE_ACCEL);
+  RDO.addRangeAccelUnc(builder, RANGE_ACCEL_UNC);
   RDO.addDoppler(builder, DOPPLER);
   RDO.addDopplerUnc(builder, DOPPLER_UNC);
   RDO.addRa(builder, RA);
@@ -612,11 +770,8 @@ static createRDO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, OB_TI
   RDO.addBeam(builder, BEAM);
   RDO.addTimingBias(builder, TIMING_BIAS);
   RDO.addRawFileUri(builder, RAW_FILE_URIOffset);
-  RDO.addTags(builder, TAGSOffset);
-  RDO.addOnOrbit(builder, ON_ORBITOffset);
-  RDO.addSenReferenceFrame(builder, SEN_REFERENCE_FRAMEOffset);
   RDO.addDescriptor(builder, DESCRIPTOROffset);
-  RDO.addType(builder, TYPEOffset);
+  RDO.addTags(builder, TAGSOffset);
   return RDO.endRDO(builder);
 }
 
@@ -625,14 +780,17 @@ unpack(): RDOT {
     this.ID(),
     this.OB_TIME(),
     this.ID_SENSOR(),
+    this.ORIG_SENSOR_ID(),
     this.SAT_NO(),
+    this.ORIG_OBJECT_ID(),
+    this.ON_ORBIT(),
+    this.UCT(),
+    this.OBS_TYPE(),
     this.TASK_ID(),
     this.TRANSACTION_ID(),
     this.TRACK_ID(),
     this.OB_POSITION(),
-    this.ORIG_OBJECT_ID(),
-    this.ORIG_SENSOR_ID(),
-    this.UCT(),
+    this.SEN_REFERENCE_FRAME(),
     this.AZIMUTH(),
     this.AZIMUTH_UNC(),
     this.AZIMUTH_BIAS(),
@@ -642,12 +800,12 @@ unpack(): RDOT {
     this.ELEVATION_BIAS(),
     this.ELEVATION_RATE(),
     this.RANGE(),
-    this.RANGE_ACCEL(),
-    this.RANGE_ACCEL_UNC(),
     this.RANGE_UNC(),
     this.RANGE_BIAS(),
     this.RANGE_RATE(),
     this.RANGE_RATE_UNC(),
+    this.RANGE_ACCEL(),
+    this.RANGE_ACCEL_UNC(),
     this.DOPPLER(),
     this.DOPPLER_UNC(),
     this.RA(),
@@ -669,11 +827,8 @@ unpack(): RDOT {
     this.BEAM(),
     this.TIMING_BIAS(),
     this.RAW_FILE_URI(),
-    this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength()),
-    this.ON_ORBIT(),
-    this.SEN_REFERENCE_FRAME(),
     this.DESCRIPTOR(),
-    this.TYPE()
+    this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength())
   );
 }
 
@@ -682,14 +837,17 @@ unpackTo(_o: RDOT): void {
   _o.ID = this.ID();
   _o.OB_TIME = this.OB_TIME();
   _o.ID_SENSOR = this.ID_SENSOR();
+  _o.ORIG_SENSOR_ID = this.ORIG_SENSOR_ID();
   _o.SAT_NO = this.SAT_NO();
+  _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID();
+  _o.ON_ORBIT = this.ON_ORBIT();
+  _o.UCT = this.UCT();
+  _o.OBS_TYPE = this.OBS_TYPE();
   _o.TASK_ID = this.TASK_ID();
   _o.TRANSACTION_ID = this.TRANSACTION_ID();
   _o.TRACK_ID = this.TRACK_ID();
   _o.OB_POSITION = this.OB_POSITION();
-  _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID();
-  _o.ORIG_SENSOR_ID = this.ORIG_SENSOR_ID();
-  _o.UCT = this.UCT();
+  _o.SEN_REFERENCE_FRAME = this.SEN_REFERENCE_FRAME();
   _o.AZIMUTH = this.AZIMUTH();
   _o.AZIMUTH_UNC = this.AZIMUTH_UNC();
   _o.AZIMUTH_BIAS = this.AZIMUTH_BIAS();
@@ -699,12 +857,12 @@ unpackTo(_o: RDOT): void {
   _o.ELEVATION_BIAS = this.ELEVATION_BIAS();
   _o.ELEVATION_RATE = this.ELEVATION_RATE();
   _o.RANGE = this.RANGE();
-  _o.RANGE_ACCEL = this.RANGE_ACCEL();
-  _o.RANGE_ACCEL_UNC = this.RANGE_ACCEL_UNC();
   _o.RANGE_UNC = this.RANGE_UNC();
   _o.RANGE_BIAS = this.RANGE_BIAS();
   _o.RANGE_RATE = this.RANGE_RATE();
   _o.RANGE_RATE_UNC = this.RANGE_RATE_UNC();
+  _o.RANGE_ACCEL = this.RANGE_ACCEL();
+  _o.RANGE_ACCEL_UNC = this.RANGE_ACCEL_UNC();
   _o.DOPPLER = this.DOPPLER();
   _o.DOPPLER_UNC = this.DOPPLER_UNC();
   _o.RA = this.RA();
@@ -726,11 +884,8 @@ unpackTo(_o: RDOT): void {
   _o.BEAM = this.BEAM();
   _o.TIMING_BIAS = this.TIMING_BIAS();
   _o.RAW_FILE_URI = this.RAW_FILE_URI();
-  _o.TAGS = this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength());
-  _o.ON_ORBIT = this.ON_ORBIT();
-  _o.SEN_REFERENCE_FRAME = this.SEN_REFERENCE_FRAME();
   _o.DESCRIPTOR = this.DESCRIPTOR();
-  _o.TYPE = this.TYPE();
+  _o.TAGS = this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength());
 }
 }
 
@@ -739,14 +894,17 @@ constructor(
   public ID: string|Uint8Array|null = null,
   public OB_TIME: string|Uint8Array|null = null,
   public ID_SENSOR: string|Uint8Array|null = null,
+  public ORIG_SENSOR_ID: string|Uint8Array|null = null,
   public SAT_NO: number = 0,
+  public ORIG_OBJECT_ID: string|Uint8Array|null = null,
+  public ON_ORBIT: string|Uint8Array|null = null,
+  public UCT: boolean = false,
+  public OBS_TYPE: radarObsType = radarObsType.DETECTION,
   public TASK_ID: string|Uint8Array|null = null,
   public TRANSACTION_ID: string|Uint8Array|null = null,
   public TRACK_ID: string|Uint8Array|null = null,
   public OB_POSITION: string|Uint8Array|null = null,
-  public ORIG_OBJECT_ID: string|Uint8Array|null = null,
-  public ORIG_SENSOR_ID: string|Uint8Array|null = null,
-  public UCT: boolean = false,
+  public SEN_REFERENCE_FRAME: string|Uint8Array|null = null,
   public AZIMUTH: number = 0.0,
   public AZIMUTH_UNC: number = 0.0,
   public AZIMUTH_BIAS: number = 0.0,
@@ -756,12 +914,12 @@ constructor(
   public ELEVATION_BIAS: number = 0.0,
   public ELEVATION_RATE: number = 0.0,
   public RANGE: number = 0.0,
-  public RANGE_ACCEL: number = 0.0,
-  public RANGE_ACCEL_UNC: number = 0.0,
   public RANGE_UNC: number = 0.0,
   public RANGE_BIAS: number = 0.0,
   public RANGE_RATE: number = 0.0,
   public RANGE_RATE_UNC: number = 0.0,
+  public RANGE_ACCEL: number = 0.0,
+  public RANGE_ACCEL_UNC: number = 0.0,
   public DOPPLER: number = 0.0,
   public DOPPLER_UNC: number = 0.0,
   public RA: number = 0.0,
@@ -783,11 +941,8 @@ constructor(
   public BEAM: number = 0.0,
   public TIMING_BIAS: number = 0.0,
   public RAW_FILE_URI: string|Uint8Array|null = null,
-  public TAGS: (string)[] = [],
-  public ON_ORBIT: string|Uint8Array|null = null,
-  public SEN_REFERENCE_FRAME: string|Uint8Array|null = null,
   public DESCRIPTOR: string|Uint8Array|null = null,
-  public TYPE: string|Uint8Array|null = null
+  public TAGS: (string)[] = []
 ){}
 
 
@@ -795,31 +950,33 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ID = (this.ID !== null ? builder.createString(this.ID!) : 0);
   const OB_TIME = (this.OB_TIME !== null ? builder.createString(this.OB_TIME!) : 0);
   const ID_SENSOR = (this.ID_SENSOR !== null ? builder.createString(this.ID_SENSOR!) : 0);
+  const ORIG_SENSOR_ID = (this.ORIG_SENSOR_ID !== null ? builder.createString(this.ORIG_SENSOR_ID!) : 0);
+  const ORIG_OBJECT_ID = (this.ORIG_OBJECT_ID !== null ? builder.createString(this.ORIG_OBJECT_ID!) : 0);
+  const ON_ORBIT = (this.ON_ORBIT !== null ? builder.createString(this.ON_ORBIT!) : 0);
   const TASK_ID = (this.TASK_ID !== null ? builder.createString(this.TASK_ID!) : 0);
   const TRANSACTION_ID = (this.TRANSACTION_ID !== null ? builder.createString(this.TRANSACTION_ID!) : 0);
   const TRACK_ID = (this.TRACK_ID !== null ? builder.createString(this.TRACK_ID!) : 0);
   const OB_POSITION = (this.OB_POSITION !== null ? builder.createString(this.OB_POSITION!) : 0);
-  const ORIG_OBJECT_ID = (this.ORIG_OBJECT_ID !== null ? builder.createString(this.ORIG_OBJECT_ID!) : 0);
-  const ORIG_SENSOR_ID = (this.ORIG_SENSOR_ID !== null ? builder.createString(this.ORIG_SENSOR_ID!) : 0);
-  const RAW_FILE_URI = (this.RAW_FILE_URI !== null ? builder.createString(this.RAW_FILE_URI!) : 0);
-  const TAGS = RDO.createTagsVector(builder, builder.createObjectOffsetList(this.TAGS));
-  const ON_ORBIT = (this.ON_ORBIT !== null ? builder.createString(this.ON_ORBIT!) : 0);
   const SEN_REFERENCE_FRAME = (this.SEN_REFERENCE_FRAME !== null ? builder.createString(this.SEN_REFERENCE_FRAME!) : 0);
+  const RAW_FILE_URI = (this.RAW_FILE_URI !== null ? builder.createString(this.RAW_FILE_URI!) : 0);
   const DESCRIPTOR = (this.DESCRIPTOR !== null ? builder.createString(this.DESCRIPTOR!) : 0);
-  const TYPE = (this.TYPE !== null ? builder.createString(this.TYPE!) : 0);
+  const TAGS = RDO.createTagsVector(builder, builder.createObjectOffsetList(this.TAGS));
 
   return RDO.createRDO(builder,
     ID,
     OB_TIME,
     ID_SENSOR,
+    ORIG_SENSOR_ID,
     this.SAT_NO,
+    ORIG_OBJECT_ID,
+    ON_ORBIT,
+    this.UCT,
+    this.OBS_TYPE,
     TASK_ID,
     TRANSACTION_ID,
     TRACK_ID,
     OB_POSITION,
-    ORIG_OBJECT_ID,
-    ORIG_SENSOR_ID,
-    this.UCT,
+    SEN_REFERENCE_FRAME,
     this.AZIMUTH,
     this.AZIMUTH_UNC,
     this.AZIMUTH_BIAS,
@@ -829,12 +986,12 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.ELEVATION_BIAS,
     this.ELEVATION_RATE,
     this.RANGE,
-    this.RANGE_ACCEL,
-    this.RANGE_ACCEL_UNC,
     this.RANGE_UNC,
     this.RANGE_BIAS,
     this.RANGE_RATE,
     this.RANGE_RATE_UNC,
+    this.RANGE_ACCEL,
+    this.RANGE_ACCEL_UNC,
     this.DOPPLER,
     this.DOPPLER_UNC,
     this.RA,
@@ -856,11 +1013,8 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.BEAM,
     this.TIMING_BIAS,
     RAW_FILE_URI,
-    TAGS,
-    ON_ORBIT,
-    SEN_REFERENCE_FRAME,
     DESCRIPTOR,
-    TYPE
+    TAGS
   );
 }
 }

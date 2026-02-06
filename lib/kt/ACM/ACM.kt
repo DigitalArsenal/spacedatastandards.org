@@ -29,6 +29,9 @@ class ACM : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * CCSDS ACM version
+     */
     val CCSDS_ACM_VERS : String?
         get() {
             val o = __offset(4)
@@ -40,6 +43,9 @@ class ACM : Table() {
         }
     val CCSDS_ACM_VERSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun CCSDS_ACM_VERSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    /**
+     * Message creation date (ISO 8601)
+     */
     val CREATION_DATE : String?
         get() {
             val o = __offset(6)
@@ -51,6 +57,9 @@ class ACM : Table() {
         }
     val CREATION_DATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
     fun CREATION_DATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    /**
+     * Creating organization
+     */
     val ORIGINATOR : String?
         get() {
             val o = __offset(8)
@@ -62,6 +71,9 @@ class ACM : Table() {
         }
     val ORIGINATORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
     fun ORIGINATORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    /**
+     * Object name
+     */
     val OBJECT_NAME : String?
         get() {
             val o = __offset(10)
@@ -73,6 +85,9 @@ class ACM : Table() {
         }
     val OBJECT_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
     fun OBJECT_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    /**
+     * International designator
+     */
     val OBJECT_ID : String?
         get() {
             val o = __offset(12)
@@ -84,6 +99,130 @@ class ACM : Table() {
         }
     val OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
     fun OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * Catalog name
+     */
+    val CATALOG_NAME : String?
+        get() {
+            val o = __offset(14)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val CATALOG_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
+    fun CATALOG_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    /**
+     * Epoch of state (ISO 8601)
+     */
+    val EPOCH : String?
+        get() {
+            val o = __offset(16)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val EPOCHAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
+    fun EPOCHInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    /**
+     * Time system
+     */
+    val TIME_SYSTEM : String?
+        get() {
+            val o = __offset(18)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val TIME_SYSTEMAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
+    fun TIME_SYSTEMInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    /**
+     * Attitude states
+     */
+    fun ATT_STATES(j: Int) : attitudeState? = ATT_STATES(attitudeState(), j)
+    fun ATT_STATES(obj: attitudeState, j: Int) : attitudeState? {
+        val o = __offset(20)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val ATT_STATESLength : Int
+        get() {
+            val o = __offset(20); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Physical properties
+     */
+    val PHYS_PROPERTIES : attPhysicalProperties? get() = PHYS_PROPERTIES(attPhysicalProperties())
+    fun PHYS_PROPERTIES(obj: attPhysicalProperties) : attPhysicalProperties? {
+        val o = __offset(22)
+        return if (o != 0) {
+            obj.__assign(__indirect(o + bb_pos), bb)
+        } else {
+            null
+        }
+    }
+    /**
+     * Attitude covariance data
+     */
+    fun COV_DATA(j: Int) : attCovariance? = COV_DATA(attCovariance(), j)
+    fun COV_DATA(obj: attCovariance, j: Int) : attCovariance? {
+        val o = __offset(24)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val COV_DATALength : Int
+        get() {
+            val o = __offset(24); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Attitude maneuvers
+     */
+    fun MANEUVERS(j: Int) : attManeuver? = MANEUVERS(attManeuver(), j)
+    fun MANEUVERS(obj: attManeuver, j: Int) : attManeuver? {
+        val o = __offset(26)
+        return if (o != 0) {
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
+        } else {
+            null
+        }
+    }
+    val MANEUVERSLength : Int
+        get() {
+            val o = __offset(26); return if (o != 0) __vector_len(o) else 0
+        }
+    /**
+     * Maneuverability status
+     */
+    val MANEUVERABLE : Byte
+        get() {
+            val o = __offset(28)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Additional comments
+     */
+    val COMMENT : String?
+        get() {
+            val o = __offset(30)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val COMMENTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
+    fun COMMENTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsACM(_bb: ByteBuffer): ACM = getRootAsACM(_bb, ACM())
@@ -92,21 +231,63 @@ class ACM : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun ACMBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$ACM")
-        fun createACM(builder: FlatBufferBuilder, CCSDS_ACM_VERSOffset: Int, CREATION_DATEOffset: Int, ORIGINATOROffset: Int, OBJECT_NAMEOffset: Int, OBJECT_IDOffset: Int) : Int {
-            builder.startTable(5)
+        fun createACM(builder: FlatBufferBuilder, CCSDS_ACM_VERSOffset: Int, CREATION_DATEOffset: Int, ORIGINATOROffset: Int, OBJECT_NAMEOffset: Int, OBJECT_IDOffset: Int, CATALOG_NAMEOffset: Int, EPOCHOffset: Int, TIME_SYSTEMOffset: Int, ATT_STATESOffset: Int, PHYS_PROPERTIESOffset: Int, COV_DATAOffset: Int, MANEUVERSOffset: Int, MANEUVERABLE: Byte, COMMENTOffset: Int) : Int {
+            builder.startTable(14)
+            addCOMMENT(builder, COMMENTOffset)
+            addMANEUVERS(builder, MANEUVERSOffset)
+            addCOV_DATA(builder, COV_DATAOffset)
+            addPHYS_PROPERTIES(builder, PHYS_PROPERTIESOffset)
+            addATT_STATES(builder, ATT_STATESOffset)
+            addTIME_SYSTEM(builder, TIME_SYSTEMOffset)
+            addEPOCH(builder, EPOCHOffset)
+            addCATALOG_NAME(builder, CATALOG_NAMEOffset)
             addOBJECT_ID(builder, OBJECT_IDOffset)
             addOBJECT_NAME(builder, OBJECT_NAMEOffset)
             addORIGINATOR(builder, ORIGINATOROffset)
             addCREATION_DATE(builder, CREATION_DATEOffset)
             addCCSDS_ACM_VERS(builder, CCSDS_ACM_VERSOffset)
+            addMANEUVERABLE(builder, MANEUVERABLE)
             return endACM(builder)
         }
-        fun startACM(builder: FlatBufferBuilder) = builder.startTable(5)
+        fun startACM(builder: FlatBufferBuilder) = builder.startTable(14)
         fun addCCSDS_ACM_VERS(builder: FlatBufferBuilder, CCSDS_ACM_VERS: Int) = builder.addOffset(0, CCSDS_ACM_VERS, 0)
         fun addCREATION_DATE(builder: FlatBufferBuilder, CREATION_DATE: Int) = builder.addOffset(1, CREATION_DATE, 0)
         fun addORIGINATOR(builder: FlatBufferBuilder, ORIGINATOR: Int) = builder.addOffset(2, ORIGINATOR, 0)
         fun addOBJECT_NAME(builder: FlatBufferBuilder, OBJECT_NAME: Int) = builder.addOffset(3, OBJECT_NAME, 0)
         fun addOBJECT_ID(builder: FlatBufferBuilder, OBJECT_ID: Int) = builder.addOffset(4, OBJECT_ID, 0)
+        fun addCATALOG_NAME(builder: FlatBufferBuilder, CATALOG_NAME: Int) = builder.addOffset(5, CATALOG_NAME, 0)
+        fun addEPOCH(builder: FlatBufferBuilder, EPOCH: Int) = builder.addOffset(6, EPOCH, 0)
+        fun addTIME_SYSTEM(builder: FlatBufferBuilder, TIME_SYSTEM: Int) = builder.addOffset(7, TIME_SYSTEM, 0)
+        fun addATT_STATES(builder: FlatBufferBuilder, ATT_STATES: Int) = builder.addOffset(8, ATT_STATES, 0)
+        fun createAttStatesVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startAttStatesVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addPHYS_PROPERTIES(builder: FlatBufferBuilder, PHYS_PROPERTIES: Int) = builder.addOffset(9, PHYS_PROPERTIES, 0)
+        fun addCOV_DATA(builder: FlatBufferBuilder, COV_DATA: Int) = builder.addOffset(10, COV_DATA, 0)
+        fun createCovDataVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startCovDataVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addMANEUVERS(builder: FlatBufferBuilder, MANEUVERS: Int) = builder.addOffset(11, MANEUVERS, 0)
+        fun createManeuversVector(builder: FlatBufferBuilder, data: IntArray) : Int {
+            builder.startVector(4, data.size, 4)
+            for (i in data.size - 1 downTo 0) {
+                builder.addOffset(data[i])
+            }
+            return builder.endVector()
+        }
+        fun startManeuversVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addMANEUVERABLE(builder: FlatBufferBuilder, MANEUVERABLE: Byte) = builder.addByte(12, MANEUVERABLE, 0)
+        fun addCOMMENT(builder: FlatBufferBuilder, COMMENT: Int) = builder.addOffset(13, COMMENT, 0)
         fun endACM(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

@@ -3,77 +3,113 @@
   "definitions": {
     "SWR": {
       "type": "object",
-      "description": "Short-Wave Infrared",
+      "description": "Short-Wave Infrared Observation",
       "properties": {
         "ID": {
           "type": "string",
+          "description": "Unique identifier",
           "x-flatbuffer-type": "string"
         },
         "ON_ORBIT": {
           "type": "string",
+          "description": "On-orbit reference",
           "x-flatbuffer-type": "string"
+        },
+        "ORIG_OBJECT_ID": {
+          "type": "string",
+          "description": "International designator",
+          "x-flatbuffer-type": "string"
+        },
+        "SAT_NO": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Satellite catalog number",
+          "x-flatbuffer-type": "uint32"
         },
         "TS": {
           "type": "string",
+          "description": "Observation timestamp (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "SOLAR_PHASE_ANGLE": {
           "type": "number",
+          "description": "Solar phase angle (degrees)",
           "x-flatbuffer-type": "double"
         },
         "LAT": {
           "type": "number",
+          "description": "Sub-observer latitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "LON": {
           "type": "number",
+          "description": "Sub-observer longitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "LOCATION_NAME": {
           "type": "string",
+          "description": "Location name",
           "x-flatbuffer-type": "string"
         },
         "BAD_WAVE": {
           "type": "string",
+          "description": "Bad wavelength flag or identifier",
           "x-flatbuffer-type": "string"
         },
         "WAVELENGTHS": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "number"
           },
-          "x-flatbuffer-type": "[string]"
+          "description": "Measured wavelengths (micrometers)",
+          "x-flatbuffer-type": "[double]"
         },
         "ABS_FLUXES": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "number"
           },
-          "x-flatbuffer-type": "[string]"
+          "description": "Absolute flux values (W/m^2/um)",
+          "x-flatbuffer-type": "[double]"
         },
         "RATIO_WAVELENGTHS": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "number"
           },
-          "x-flatbuffer-type": "[string]"
+          "description": "Ratio reference wavelengths (micrometers)",
+          "x-flatbuffer-type": "[double]"
         },
         "FLUX_RATIOS": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "number"
           },
-          "x-flatbuffer-type": "[string]"
+          "description": "Flux ratios (normalized)",
+          "x-flatbuffer-type": "[double]"
         },
-        "ORIG_OBJECT_ID": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
+        "TEMPERATURE": {
+          "type": "number",
+          "description": "Effective temperature (Kelvin)",
+          "x-flatbuffer-type": "double"
         },
-        "SAT_NO": {
+        "SIGNAL_NOISE_RATIO": {
+          "type": "number",
+          "description": "Signal-to-noise ratio",
+          "x-flatbuffer-type": "double"
+        },
+        "INTEGRATION_TIME": {
+          "type": "number",
+          "description": "Integration time (seconds)",
+          "x-flatbuffer-type": "double"
+        },
+        "QUALITY": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Data quality (0-9, 9=best)",
+          "x-flatbuffer-type": "uint8"
         }
       },
       "additionalProperties": false

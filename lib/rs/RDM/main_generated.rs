@@ -9,6 +9,1008 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_REENTRY_DISPOSITION: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_REENTRY_DISPOSITION: i8 = 2;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_REENTRY_DISPOSITION: [reentryDisposition; 3] = [
+  reentryDisposition::CONTROLLED,
+  reentryDisposition::UNCONTROLLED,
+  reentryDisposition::SEMI_CONTROLLED,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct reentryDisposition(pub i8);
+#[allow(non_upper_case_globals)]
+impl reentryDisposition {
+  pub const CONTROLLED: Self = Self(0);
+  pub const UNCONTROLLED: Self = Self(1);
+  pub const SEMI_CONTROLLED: Self = Self(2);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 2;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::CONTROLLED,
+    Self::UNCONTROLLED,
+    Self::SEMI_CONTROLLED,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::CONTROLLED => Some("CONTROLLED"),
+      Self::UNCONTROLLED => Some("UNCONTROLLED"),
+      Self::SEMI_CONTROLLED => Some("SEMI_CONTROLLED"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for reentryDisposition {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for reentryDisposition {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for reentryDisposition {
+    type Output = reentryDisposition;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for reentryDisposition {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for reentryDisposition {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for reentryDisposition {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_REENTRY_REASON: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_REENTRY_REASON: i8 = 5;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_REENTRY_REASON: [reentryReason; 6] = [
+  reentryReason::NATURAL_DECAY,
+  reentryReason::COMMANDED_DEORBIT,
+  reentryReason::PROPULSION_FAILURE,
+  reentryReason::COLLISION,
+  reentryReason::FRAGMENTATION,
+  reentryReason::UNKNOWN,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct reentryReason(pub i8);
+#[allow(non_upper_case_globals)]
+impl reentryReason {
+  pub const NATURAL_DECAY: Self = Self(0);
+  pub const COMMANDED_DEORBIT: Self = Self(1);
+  pub const PROPULSION_FAILURE: Self = Self(2);
+  pub const COLLISION: Self = Self(3);
+  pub const FRAGMENTATION: Self = Self(4);
+  pub const UNKNOWN: Self = Self(5);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 5;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::NATURAL_DECAY,
+    Self::COMMANDED_DEORBIT,
+    Self::PROPULSION_FAILURE,
+    Self::COLLISION,
+    Self::FRAGMENTATION,
+    Self::UNKNOWN,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::NATURAL_DECAY => Some("NATURAL_DECAY"),
+      Self::COMMANDED_DEORBIT => Some("COMMANDED_DEORBIT"),
+      Self::PROPULSION_FAILURE => Some("PROPULSION_FAILURE"),
+      Self::COLLISION => Some("COLLISION"),
+      Self::FRAGMENTATION => Some("FRAGMENTATION"),
+      Self::UNKNOWN => Some("UNKNOWN"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for reentryReason {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for reentryReason {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for reentryReason {
+    type Output = reentryReason;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for reentryReason {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for reentryReason {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for reentryReason {}
+pub enum reentryStateVectorOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Reentry State Vector
+pub struct reentryStateVector<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for reentryStateVector<'a> {
+  type Inner = reentryStateVector<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> reentryStateVector<'a> {
+  pub const VT_EPOCH: flatbuffers::VOffsetT = 4;
+  pub const VT_REF_FRAME: flatbuffers::VOffsetT = 6;
+  pub const VT_X: flatbuffers::VOffsetT = 8;
+  pub const VT_Y: flatbuffers::VOffsetT = 10;
+  pub const VT_Z: flatbuffers::VOffsetT = 12;
+  pub const VT_X_DOT: flatbuffers::VOffsetT = 14;
+  pub const VT_Y_DOT: flatbuffers::VOffsetT = 16;
+  pub const VT_Z_DOT: flatbuffers::VOffsetT = 18;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    reentryStateVector { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args reentryStateVectorArgs<'args>
+  ) -> flatbuffers::WIPOffset<reentryStateVector<'bldr>> {
+    let mut builder = reentryStateVectorBuilder::new(_fbb);
+    builder.add_Z_DOT(args.Z_DOT);
+    builder.add_Y_DOT(args.Y_DOT);
+    builder.add_X_DOT(args.X_DOT);
+    builder.add_Z(args.Z);
+    builder.add_Y(args.Y);
+    builder.add_X(args.X);
+    if let Some(x) = args.REF_FRAME { builder.add_REF_FRAME(x); }
+    if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> reentryStateVectorT {
+    let EPOCH = self.EPOCH().map(|x| {
+      x.to_string()
+    });
+    let REF_FRAME = self.REF_FRAME().map(|x| {
+      x.to_string()
+    });
+    let X = self.X();
+    let Y = self.Y();
+    let Z = self.Z();
+    let X_DOT = self.X_DOT();
+    let Y_DOT = self.Y_DOT();
+    let Z_DOT = self.Z_DOT();
+    reentryStateVectorT {
+      EPOCH,
+      REF_FRAME,
+      X,
+      Y,
+      Z,
+      X_DOT,
+      Y_DOT,
+      Z_DOT,
+    }
+  }
+
+  /// Epoch (ISO 8601)
+  #[inline]
+  pub fn EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(reentryStateVector::VT_EPOCH, None)}
+  }
+  /// Reference frame
+  #[inline]
+  pub fn REF_FRAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(reentryStateVector::VT_REF_FRAME, None)}
+  }
+  /// Position X in km
+  #[inline]
+  pub fn X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(reentryStateVector::VT_X, Some(0.0)).unwrap()}
+  }
+  /// Position Y in km
+  #[inline]
+  pub fn Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(reentryStateVector::VT_Y, Some(0.0)).unwrap()}
+  }
+  /// Position Z in km
+  #[inline]
+  pub fn Z(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(reentryStateVector::VT_Z, Some(0.0)).unwrap()}
+  }
+  /// Velocity X in km/s
+  #[inline]
+  pub fn X_DOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(reentryStateVector::VT_X_DOT, Some(0.0)).unwrap()}
+  }
+  /// Velocity Y in km/s
+  #[inline]
+  pub fn Y_DOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(reentryStateVector::VT_Y_DOT, Some(0.0)).unwrap()}
+  }
+  /// Velocity Z in km/s
+  #[inline]
+  pub fn Z_DOT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(reentryStateVector::VT_Z_DOT, Some(0.0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for reentryStateVector<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REF_FRAME", Self::VT_REF_FRAME, false)?
+     .visit_field::<f64>("X", Self::VT_X, false)?
+     .visit_field::<f64>("Y", Self::VT_Y, false)?
+     .visit_field::<f64>("Z", Self::VT_Z, false)?
+     .visit_field::<f64>("X_DOT", Self::VT_X_DOT, false)?
+     .visit_field::<f64>("Y_DOT", Self::VT_Y_DOT, false)?
+     .visit_field::<f64>("Z_DOT", Self::VT_Z_DOT, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct reentryStateVectorArgs<'a> {
+    pub EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub REF_FRAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub X: f64,
+    pub Y: f64,
+    pub Z: f64,
+    pub X_DOT: f64,
+    pub Y_DOT: f64,
+    pub Z_DOT: f64,
+}
+impl<'a> Default for reentryStateVectorArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    reentryStateVectorArgs {
+      EPOCH: None,
+      REF_FRAME: None,
+      X: 0.0,
+      Y: 0.0,
+      Z: 0.0,
+      X_DOT: 0.0,
+      Y_DOT: 0.0,
+      Z_DOT: 0.0,
+    }
+  }
+}
+
+pub struct reentryStateVectorBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> reentryStateVectorBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_EPOCH(&mut self, EPOCH: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(reentryStateVector::VT_EPOCH, EPOCH);
+  }
+  #[inline]
+  pub fn add_REF_FRAME(&mut self, REF_FRAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(reentryStateVector::VT_REF_FRAME, REF_FRAME);
+  }
+  #[inline]
+  pub fn add_X(&mut self, X: f64) {
+    self.fbb_.push_slot::<f64>(reentryStateVector::VT_X, X, 0.0);
+  }
+  #[inline]
+  pub fn add_Y(&mut self, Y: f64) {
+    self.fbb_.push_slot::<f64>(reentryStateVector::VT_Y, Y, 0.0);
+  }
+  #[inline]
+  pub fn add_Z(&mut self, Z: f64) {
+    self.fbb_.push_slot::<f64>(reentryStateVector::VT_Z, Z, 0.0);
+  }
+  #[inline]
+  pub fn add_X_DOT(&mut self, X_DOT: f64) {
+    self.fbb_.push_slot::<f64>(reentryStateVector::VT_X_DOT, X_DOT, 0.0);
+  }
+  #[inline]
+  pub fn add_Y_DOT(&mut self, Y_DOT: f64) {
+    self.fbb_.push_slot::<f64>(reentryStateVector::VT_Y_DOT, Y_DOT, 0.0);
+  }
+  #[inline]
+  pub fn add_Z_DOT(&mut self, Z_DOT: f64) {
+    self.fbb_.push_slot::<f64>(reentryStateVector::VT_Z_DOT, Z_DOT, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> reentryStateVectorBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    reentryStateVectorBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<reentryStateVector<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for reentryStateVector<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("reentryStateVector");
+      ds.field("EPOCH", &self.EPOCH());
+      ds.field("REF_FRAME", &self.REF_FRAME());
+      ds.field("X", &self.X());
+      ds.field("Y", &self.Y());
+      ds.field("Z", &self.Z());
+      ds.field("X_DOT", &self.X_DOT());
+      ds.field("Y_DOT", &self.Y_DOT());
+      ds.field("Z_DOT", &self.Z_DOT());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct reentryStateVectorT {
+  pub EPOCH: Option<String>,
+  pub REF_FRAME: Option<String>,
+  pub X: f64,
+  pub Y: f64,
+  pub Z: f64,
+  pub X_DOT: f64,
+  pub Y_DOT: f64,
+  pub Z_DOT: f64,
+}
+impl Default for reentryStateVectorT {
+  fn default() -> Self {
+    Self {
+      EPOCH: None,
+      REF_FRAME: None,
+      X: 0.0,
+      Y: 0.0,
+      Z: 0.0,
+      X_DOT: 0.0,
+      Y_DOT: 0.0,
+      Z_DOT: 0.0,
+    }
+  }
+}
+impl reentryStateVectorT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<reentryStateVector<'b>> {
+    let EPOCH = self.EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let REF_FRAME = self.REF_FRAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let X = self.X;
+    let Y = self.Y;
+    let Z = self.Z;
+    let X_DOT = self.X_DOT;
+    let Y_DOT = self.Y_DOT;
+    let Z_DOT = self.Z_DOT;
+    reentryStateVector::create(_fbb, &reentryStateVectorArgs{
+      EPOCH,
+      REF_FRAME,
+      X,
+      Y,
+      Z,
+      X_DOT,
+      Y_DOT,
+      Z_DOT,
+    })
+  }
+}
+pub enum reentryImpactOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Reentry Ground Impact Prediction
+pub struct reentryImpact<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for reentryImpact<'a> {
+  type Inner = reentryImpact<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> reentryImpact<'a> {
+  pub const VT_IMPACT_EPOCH: flatbuffers::VOffsetT = 4;
+  pub const VT_EPOCH_UNCERTAINTY: flatbuffers::VOffsetT = 6;
+  pub const VT_LATITUDE: flatbuffers::VOffsetT = 8;
+  pub const VT_LONGITUDE: flatbuffers::VOffsetT = 10;
+  pub const VT_ALONG_TRACK_UNC: flatbuffers::VOffsetT = 12;
+  pub const VT_CROSS_TRACK_UNC: flatbuffers::VOffsetT = 14;
+  pub const VT_IMPACT_PROBABILITY: flatbuffers::VOffsetT = 16;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    reentryImpact { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args reentryImpactArgs<'args>
+  ) -> flatbuffers::WIPOffset<reentryImpact<'bldr>> {
+    let mut builder = reentryImpactBuilder::new(_fbb);
+    builder.add_IMPACT_PROBABILITY(args.IMPACT_PROBABILITY);
+    builder.add_CROSS_TRACK_UNC(args.CROSS_TRACK_UNC);
+    builder.add_ALONG_TRACK_UNC(args.ALONG_TRACK_UNC);
+    builder.add_LONGITUDE(args.LONGITUDE);
+    builder.add_LATITUDE(args.LATITUDE);
+    builder.add_EPOCH_UNCERTAINTY(args.EPOCH_UNCERTAINTY);
+    if let Some(x) = args.IMPACT_EPOCH { builder.add_IMPACT_EPOCH(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> reentryImpactT {
+    let IMPACT_EPOCH = self.IMPACT_EPOCH().map(|x| {
+      x.to_string()
+    });
+    let EPOCH_UNCERTAINTY = self.EPOCH_UNCERTAINTY();
+    let LATITUDE = self.LATITUDE();
+    let LONGITUDE = self.LONGITUDE();
+    let ALONG_TRACK_UNC = self.ALONG_TRACK_UNC();
+    let CROSS_TRACK_UNC = self.CROSS_TRACK_UNC();
+    let IMPACT_PROBABILITY = self.IMPACT_PROBABILITY();
+    reentryImpactT {
+      IMPACT_EPOCH,
+      EPOCH_UNCERTAINTY,
+      LATITUDE,
+      LONGITUDE,
+      ALONG_TRACK_UNC,
+      CROSS_TRACK_UNC,
+      IMPACT_PROBABILITY,
+    }
+  }
+
+  /// Predicted impact epoch (ISO 8601)
+  #[inline]
+  pub fn IMPACT_EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(reentryImpact::VT_IMPACT_EPOCH, None)}
+  }
+  /// Epoch uncertainty window in seconds
+  #[inline]
+  pub fn EPOCH_UNCERTAINTY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(reentryImpact::VT_EPOCH_UNCERTAINTY, Some(0.0)).unwrap()}
+  }
+  /// Impact latitude in degrees
+  #[inline]
+  pub fn LATITUDE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(reentryImpact::VT_LATITUDE, Some(0.0)).unwrap()}
+  }
+  /// Impact longitude in degrees
+  #[inline]
+  pub fn LONGITUDE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(reentryImpact::VT_LONGITUDE, Some(0.0)).unwrap()}
+  }
+  /// Along-track uncertainty in km
+  #[inline]
+  pub fn ALONG_TRACK_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(reentryImpact::VT_ALONG_TRACK_UNC, Some(0.0)).unwrap()}
+  }
+  /// Cross-track uncertainty in km
+  #[inline]
+  pub fn CROSS_TRACK_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(reentryImpact::VT_CROSS_TRACK_UNC, Some(0.0)).unwrap()}
+  }
+  /// Impact probability (0.0-1.0)
+  #[inline]
+  pub fn IMPACT_PROBABILITY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(reentryImpact::VT_IMPACT_PROBABILITY, Some(0.0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for reentryImpact<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("IMPACT_EPOCH", Self::VT_IMPACT_EPOCH, false)?
+     .visit_field::<f64>("EPOCH_UNCERTAINTY", Self::VT_EPOCH_UNCERTAINTY, false)?
+     .visit_field::<f64>("LATITUDE", Self::VT_LATITUDE, false)?
+     .visit_field::<f64>("LONGITUDE", Self::VT_LONGITUDE, false)?
+     .visit_field::<f64>("ALONG_TRACK_UNC", Self::VT_ALONG_TRACK_UNC, false)?
+     .visit_field::<f64>("CROSS_TRACK_UNC", Self::VT_CROSS_TRACK_UNC, false)?
+     .visit_field::<f64>("IMPACT_PROBABILITY", Self::VT_IMPACT_PROBABILITY, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct reentryImpactArgs<'a> {
+    pub IMPACT_EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub EPOCH_UNCERTAINTY: f64,
+    pub LATITUDE: f64,
+    pub LONGITUDE: f64,
+    pub ALONG_TRACK_UNC: f64,
+    pub CROSS_TRACK_UNC: f64,
+    pub IMPACT_PROBABILITY: f64,
+}
+impl<'a> Default for reentryImpactArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    reentryImpactArgs {
+      IMPACT_EPOCH: None,
+      EPOCH_UNCERTAINTY: 0.0,
+      LATITUDE: 0.0,
+      LONGITUDE: 0.0,
+      ALONG_TRACK_UNC: 0.0,
+      CROSS_TRACK_UNC: 0.0,
+      IMPACT_PROBABILITY: 0.0,
+    }
+  }
+}
+
+pub struct reentryImpactBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> reentryImpactBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_IMPACT_EPOCH(&mut self, IMPACT_EPOCH: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(reentryImpact::VT_IMPACT_EPOCH, IMPACT_EPOCH);
+  }
+  #[inline]
+  pub fn add_EPOCH_UNCERTAINTY(&mut self, EPOCH_UNCERTAINTY: f64) {
+    self.fbb_.push_slot::<f64>(reentryImpact::VT_EPOCH_UNCERTAINTY, EPOCH_UNCERTAINTY, 0.0);
+  }
+  #[inline]
+  pub fn add_LATITUDE(&mut self, LATITUDE: f64) {
+    self.fbb_.push_slot::<f64>(reentryImpact::VT_LATITUDE, LATITUDE, 0.0);
+  }
+  #[inline]
+  pub fn add_LONGITUDE(&mut self, LONGITUDE: f64) {
+    self.fbb_.push_slot::<f64>(reentryImpact::VT_LONGITUDE, LONGITUDE, 0.0);
+  }
+  #[inline]
+  pub fn add_ALONG_TRACK_UNC(&mut self, ALONG_TRACK_UNC: f64) {
+    self.fbb_.push_slot::<f64>(reentryImpact::VT_ALONG_TRACK_UNC, ALONG_TRACK_UNC, 0.0);
+  }
+  #[inline]
+  pub fn add_CROSS_TRACK_UNC(&mut self, CROSS_TRACK_UNC: f64) {
+    self.fbb_.push_slot::<f64>(reentryImpact::VT_CROSS_TRACK_UNC, CROSS_TRACK_UNC, 0.0);
+  }
+  #[inline]
+  pub fn add_IMPACT_PROBABILITY(&mut self, IMPACT_PROBABILITY: f64) {
+    self.fbb_.push_slot::<f64>(reentryImpact::VT_IMPACT_PROBABILITY, IMPACT_PROBABILITY, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> reentryImpactBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    reentryImpactBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<reentryImpact<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for reentryImpact<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("reentryImpact");
+      ds.field("IMPACT_EPOCH", &self.IMPACT_EPOCH());
+      ds.field("EPOCH_UNCERTAINTY", &self.EPOCH_UNCERTAINTY());
+      ds.field("LATITUDE", &self.LATITUDE());
+      ds.field("LONGITUDE", &self.LONGITUDE());
+      ds.field("ALONG_TRACK_UNC", &self.ALONG_TRACK_UNC());
+      ds.field("CROSS_TRACK_UNC", &self.CROSS_TRACK_UNC());
+      ds.field("IMPACT_PROBABILITY", &self.IMPACT_PROBABILITY());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct reentryImpactT {
+  pub IMPACT_EPOCH: Option<String>,
+  pub EPOCH_UNCERTAINTY: f64,
+  pub LATITUDE: f64,
+  pub LONGITUDE: f64,
+  pub ALONG_TRACK_UNC: f64,
+  pub CROSS_TRACK_UNC: f64,
+  pub IMPACT_PROBABILITY: f64,
+}
+impl Default for reentryImpactT {
+  fn default() -> Self {
+    Self {
+      IMPACT_EPOCH: None,
+      EPOCH_UNCERTAINTY: 0.0,
+      LATITUDE: 0.0,
+      LONGITUDE: 0.0,
+      ALONG_TRACK_UNC: 0.0,
+      CROSS_TRACK_UNC: 0.0,
+      IMPACT_PROBABILITY: 0.0,
+    }
+  }
+}
+impl reentryImpactT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<reentryImpact<'b>> {
+    let IMPACT_EPOCH = self.IMPACT_EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let EPOCH_UNCERTAINTY = self.EPOCH_UNCERTAINTY;
+    let LATITUDE = self.LATITUDE;
+    let LONGITUDE = self.LONGITUDE;
+    let ALONG_TRACK_UNC = self.ALONG_TRACK_UNC;
+    let CROSS_TRACK_UNC = self.CROSS_TRACK_UNC;
+    let IMPACT_PROBABILITY = self.IMPACT_PROBABILITY;
+    reentryImpact::create(_fbb, &reentryImpactArgs{
+      IMPACT_EPOCH,
+      EPOCH_UNCERTAINTY,
+      LATITUDE,
+      LONGITUDE,
+      ALONG_TRACK_UNC,
+      CROSS_TRACK_UNC,
+      IMPACT_PROBABILITY,
+    })
+  }
+}
+pub enum survivingDebrisOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Surviving Debris Prediction
+pub struct survivingDebris<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for survivingDebris<'a> {
+  type Inner = survivingDebris<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> survivingDebris<'a> {
+  pub const VT_FRAGMENT_ID: flatbuffers::VOffsetT = 4;
+  pub const VT_MATERIAL: flatbuffers::VOffsetT = 6;
+  pub const VT_MASS: flatbuffers::VOffsetT = 8;
+  pub const VT_CASUALTY_AREA: flatbuffers::VOffsetT = 10;
+  pub const VT_SURVIVAL_PROBABILITY: flatbuffers::VOffsetT = 12;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    survivingDebris { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args survivingDebrisArgs<'args>
+  ) -> flatbuffers::WIPOffset<survivingDebris<'bldr>> {
+    let mut builder = survivingDebrisBuilder::new(_fbb);
+    builder.add_SURVIVAL_PROBABILITY(args.SURVIVAL_PROBABILITY);
+    builder.add_CASUALTY_AREA(args.CASUALTY_AREA);
+    builder.add_MASS(args.MASS);
+    if let Some(x) = args.MATERIAL { builder.add_MATERIAL(x); }
+    if let Some(x) = args.FRAGMENT_ID { builder.add_FRAGMENT_ID(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> survivingDebrisT {
+    let FRAGMENT_ID = self.FRAGMENT_ID().map(|x| {
+      x.to_string()
+    });
+    let MATERIAL = self.MATERIAL().map(|x| {
+      x.to_string()
+    });
+    let MASS = self.MASS();
+    let CASUALTY_AREA = self.CASUALTY_AREA();
+    let SURVIVAL_PROBABILITY = self.SURVIVAL_PROBABILITY();
+    survivingDebrisT {
+      FRAGMENT_ID,
+      MATERIAL,
+      MASS,
+      CASUALTY_AREA,
+      SURVIVAL_PROBABILITY,
+    }
+  }
+
+  /// Fragment identifier
+  #[inline]
+  pub fn FRAGMENT_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(survivingDebris::VT_FRAGMENT_ID, None)}
+  }
+  /// Material type
+  #[inline]
+  pub fn MATERIAL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(survivingDebris::VT_MATERIAL, None)}
+  }
+  /// Fragment mass in kg
+  #[inline]
+  pub fn MASS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(survivingDebris::VT_MASS, Some(0.0)).unwrap()}
+  }
+  /// Casualty area in m^2
+  #[inline]
+  pub fn CASUALTY_AREA(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(survivingDebris::VT_CASUALTY_AREA, Some(0.0)).unwrap()}
+  }
+  /// Survival probability (0.0-1.0)
+  #[inline]
+  pub fn SURVIVAL_PROBABILITY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(survivingDebris::VT_SURVIVAL_PROBABILITY, Some(0.0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for survivingDebris<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("FRAGMENT_ID", Self::VT_FRAGMENT_ID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MATERIAL", Self::VT_MATERIAL, false)?
+     .visit_field::<f64>("MASS", Self::VT_MASS, false)?
+     .visit_field::<f64>("CASUALTY_AREA", Self::VT_CASUALTY_AREA, false)?
+     .visit_field::<f64>("SURVIVAL_PROBABILITY", Self::VT_SURVIVAL_PROBABILITY, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct survivingDebrisArgs<'a> {
+    pub FRAGMENT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub MATERIAL: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub MASS: f64,
+    pub CASUALTY_AREA: f64,
+    pub SURVIVAL_PROBABILITY: f64,
+}
+impl<'a> Default for survivingDebrisArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    survivingDebrisArgs {
+      FRAGMENT_ID: None,
+      MATERIAL: None,
+      MASS: 0.0,
+      CASUALTY_AREA: 0.0,
+      SURVIVAL_PROBABILITY: 0.0,
+    }
+  }
+}
+
+pub struct survivingDebrisBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> survivingDebrisBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_FRAGMENT_ID(&mut self, FRAGMENT_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(survivingDebris::VT_FRAGMENT_ID, FRAGMENT_ID);
+  }
+  #[inline]
+  pub fn add_MATERIAL(&mut self, MATERIAL: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(survivingDebris::VT_MATERIAL, MATERIAL);
+  }
+  #[inline]
+  pub fn add_MASS(&mut self, MASS: f64) {
+    self.fbb_.push_slot::<f64>(survivingDebris::VT_MASS, MASS, 0.0);
+  }
+  #[inline]
+  pub fn add_CASUALTY_AREA(&mut self, CASUALTY_AREA: f64) {
+    self.fbb_.push_slot::<f64>(survivingDebris::VT_CASUALTY_AREA, CASUALTY_AREA, 0.0);
+  }
+  #[inline]
+  pub fn add_SURVIVAL_PROBABILITY(&mut self, SURVIVAL_PROBABILITY: f64) {
+    self.fbb_.push_slot::<f64>(survivingDebris::VT_SURVIVAL_PROBABILITY, SURVIVAL_PROBABILITY, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> survivingDebrisBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    survivingDebrisBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<survivingDebris<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for survivingDebris<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("survivingDebris");
+      ds.field("FRAGMENT_ID", &self.FRAGMENT_ID());
+      ds.field("MATERIAL", &self.MATERIAL());
+      ds.field("MASS", &self.MASS());
+      ds.field("CASUALTY_AREA", &self.CASUALTY_AREA());
+      ds.field("SURVIVAL_PROBABILITY", &self.SURVIVAL_PROBABILITY());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct survivingDebrisT {
+  pub FRAGMENT_ID: Option<String>,
+  pub MATERIAL: Option<String>,
+  pub MASS: f64,
+  pub CASUALTY_AREA: f64,
+  pub SURVIVAL_PROBABILITY: f64,
+}
+impl Default for survivingDebrisT {
+  fn default() -> Self {
+    Self {
+      FRAGMENT_ID: None,
+      MATERIAL: None,
+      MASS: 0.0,
+      CASUALTY_AREA: 0.0,
+      SURVIVAL_PROBABILITY: 0.0,
+    }
+  }
+}
+impl survivingDebrisT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<survivingDebris<'b>> {
+    let FRAGMENT_ID = self.FRAGMENT_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MATERIAL = self.MATERIAL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let MASS = self.MASS;
+    let CASUALTY_AREA = self.CASUALTY_AREA;
+    let SURVIVAL_PROBABILITY = self.SURVIVAL_PROBABILITY;
+    survivingDebris::create(_fbb, &survivingDebrisArgs{
+      FRAGMENT_ID,
+      MATERIAL,
+      MASS,
+      CASUALTY_AREA,
+      SURVIVAL_PROBABILITY,
+    })
+  }
+}
 pub enum RDMOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -31,9 +1033,28 @@ impl<'a> RDM<'a> {
   pub const VT_ORIGINATOR: flatbuffers::VOffsetT = 8;
   pub const VT_OBJECT_NAME: flatbuffers::VOffsetT = 10;
   pub const VT_OBJECT_ID: flatbuffers::VOffsetT = 12;
-  pub const VT_REENTRY_EPOCH: flatbuffers::VOffsetT = 14;
-  pub const VT_REENTRY_LATITUDE: flatbuffers::VOffsetT = 16;
-  pub const VT_REENTRY_LONGITUDE: flatbuffers::VOffsetT = 18;
+  pub const VT_NORAD_CAT_ID: flatbuffers::VOffsetT = 14;
+  pub const VT_OBJECT_TYPE: flatbuffers::VOffsetT = 16;
+  pub const VT_DISPOSITION: flatbuffers::VOffsetT = 18;
+  pub const VT_REASON: flatbuffers::VOffsetT = 20;
+  pub const VT_REENTRY_EPOCH: flatbuffers::VOffsetT = 22;
+  pub const VT_REENTRY_EPOCH_UNC: flatbuffers::VOffsetT = 24;
+  pub const VT_REENTRY_LATITUDE: flatbuffers::VOffsetT = 26;
+  pub const VT_REENTRY_LONGITUDE: flatbuffers::VOffsetT = 28;
+  pub const VT_REENTRY_ALTITUDE: flatbuffers::VOffsetT = 30;
+  pub const VT_TIME_SYSTEM: flatbuffers::VOffsetT = 32;
+  pub const VT_PREV_PREDICTION_EPOCH: flatbuffers::VOffsetT = 34;
+  pub const VT_BALLISTIC_COEFF: flatbuffers::VOffsetT = 36;
+  pub const VT_MASS: flatbuffers::VOffsetT = 38;
+  pub const VT_SOLAR_RAD_AREA: flatbuffers::VOffsetT = 40;
+  pub const VT_DRAG_AREA: flatbuffers::VOffsetT = 42;
+  pub const VT_INITIAL_STATE: flatbuffers::VOffsetT = 44;
+  pub const VT_IMPACT_PREDICTIONS: flatbuffers::VOffsetT = 46;
+  pub const VT_SURVIVING_DEBRIS: flatbuffers::VOffsetT = 48;
+  pub const VT_CASUALTY_EXPECTATION: flatbuffers::VOffsetT = 50;
+  pub const VT_NUM_FRAGMENTS: flatbuffers::VOffsetT = 52;
+  pub const VT_SURVIVING_MASS: flatbuffers::VOffsetT = 54;
+  pub const VT_COMMENT: flatbuffers::VOffsetT = 56;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -45,14 +1066,33 @@ impl<'a> RDM<'a> {
     args: &'args RDMArgs<'args>
   ) -> flatbuffers::WIPOffset<RDM<'bldr>> {
     let mut builder = RDMBuilder::new(_fbb);
+    builder.add_SURVIVING_MASS(args.SURVIVING_MASS);
+    builder.add_CASUALTY_EXPECTATION(args.CASUALTY_EXPECTATION);
+    builder.add_DRAG_AREA(args.DRAG_AREA);
+    builder.add_SOLAR_RAD_AREA(args.SOLAR_RAD_AREA);
+    builder.add_MASS(args.MASS);
+    builder.add_BALLISTIC_COEFF(args.BALLISTIC_COEFF);
+    builder.add_REENTRY_ALTITUDE(args.REENTRY_ALTITUDE);
     builder.add_REENTRY_LONGITUDE(args.REENTRY_LONGITUDE);
     builder.add_REENTRY_LATITUDE(args.REENTRY_LATITUDE);
+    builder.add_REENTRY_EPOCH_UNC(args.REENTRY_EPOCH_UNC);
+    if let Some(x) = args.COMMENT { builder.add_COMMENT(x); }
+    builder.add_NUM_FRAGMENTS(args.NUM_FRAGMENTS);
+    if let Some(x) = args.SURVIVING_DEBRIS { builder.add_SURVIVING_DEBRIS(x); }
+    if let Some(x) = args.IMPACT_PREDICTIONS { builder.add_IMPACT_PREDICTIONS(x); }
+    if let Some(x) = args.INITIAL_STATE { builder.add_INITIAL_STATE(x); }
+    if let Some(x) = args.PREV_PREDICTION_EPOCH { builder.add_PREV_PREDICTION_EPOCH(x); }
+    if let Some(x) = args.TIME_SYSTEM { builder.add_TIME_SYSTEM(x); }
     if let Some(x) = args.REENTRY_EPOCH { builder.add_REENTRY_EPOCH(x); }
+    if let Some(x) = args.OBJECT_TYPE { builder.add_OBJECT_TYPE(x); }
+    builder.add_NORAD_CAT_ID(args.NORAD_CAT_ID);
     if let Some(x) = args.OBJECT_ID { builder.add_OBJECT_ID(x); }
     if let Some(x) = args.OBJECT_NAME { builder.add_OBJECT_NAME(x); }
     if let Some(x) = args.ORIGINATOR { builder.add_ORIGINATOR(x); }
     if let Some(x) = args.CREATION_DATE { builder.add_CREATION_DATE(x); }
     if let Some(x) = args.CCSDS_RDM_VERS { builder.add_CCSDS_RDM_VERS(x); }
+    builder.add_REASON(args.REASON);
+    builder.add_DISPOSITION(args.DISPOSITION);
     builder.finish()
   }
 
@@ -72,23 +1112,76 @@ impl<'a> RDM<'a> {
     let OBJECT_ID = self.OBJECT_ID().map(|x| {
       x.to_string()
     });
+    let NORAD_CAT_ID = self.NORAD_CAT_ID();
+    let OBJECT_TYPE = self.OBJECT_TYPE().map(|x| {
+      x.to_string()
+    });
+    let DISPOSITION = self.DISPOSITION();
+    let REASON = self.REASON();
     let REENTRY_EPOCH = self.REENTRY_EPOCH().map(|x| {
       x.to_string()
     });
+    let REENTRY_EPOCH_UNC = self.REENTRY_EPOCH_UNC();
     let REENTRY_LATITUDE = self.REENTRY_LATITUDE();
     let REENTRY_LONGITUDE = self.REENTRY_LONGITUDE();
+    let REENTRY_ALTITUDE = self.REENTRY_ALTITUDE();
+    let TIME_SYSTEM = self.TIME_SYSTEM().map(|x| {
+      x.to_string()
+    });
+    let PREV_PREDICTION_EPOCH = self.PREV_PREDICTION_EPOCH().map(|x| {
+      x.to_string()
+    });
+    let BALLISTIC_COEFF = self.BALLISTIC_COEFF();
+    let MASS = self.MASS();
+    let SOLAR_RAD_AREA = self.SOLAR_RAD_AREA();
+    let DRAG_AREA = self.DRAG_AREA();
+    let INITIAL_STATE = self.INITIAL_STATE().map(|x| {
+      Box::new(x.unpack())
+    });
+    let IMPACT_PREDICTIONS = self.IMPACT_PREDICTIONS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let SURVIVING_DEBRIS = self.SURVIVING_DEBRIS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let CASUALTY_EXPECTATION = self.CASUALTY_EXPECTATION();
+    let NUM_FRAGMENTS = self.NUM_FRAGMENTS();
+    let SURVIVING_MASS = self.SURVIVING_MASS();
+    let COMMENT = self.COMMENT().map(|x| {
+      x.to_string()
+    });
     RDMT {
       CCSDS_RDM_VERS,
       CREATION_DATE,
       ORIGINATOR,
       OBJECT_NAME,
       OBJECT_ID,
+      NORAD_CAT_ID,
+      OBJECT_TYPE,
+      DISPOSITION,
+      REASON,
       REENTRY_EPOCH,
+      REENTRY_EPOCH_UNC,
       REENTRY_LATITUDE,
       REENTRY_LONGITUDE,
+      REENTRY_ALTITUDE,
+      TIME_SYSTEM,
+      PREV_PREDICTION_EPOCH,
+      BALLISTIC_COEFF,
+      MASS,
+      SOLAR_RAD_AREA,
+      DRAG_AREA,
+      INITIAL_STATE,
+      IMPACT_PREDICTIONS,
+      SURVIVING_DEBRIS,
+      CASUALTY_EXPECTATION,
+      NUM_FRAGMENTS,
+      SURVIVING_MASS,
+      COMMENT,
     }
   }
 
+  /// CCSDS RDM version
   #[inline]
   pub fn CCSDS_RDM_VERS(&self) -> Option<&'a str> {
     // Safety:
@@ -96,6 +1189,7 @@ impl<'a> RDM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDM::VT_CCSDS_RDM_VERS, None)}
   }
+  /// Message creation date (ISO 8601)
   #[inline]
   pub fn CREATION_DATE(&self) -> Option<&'a str> {
     // Safety:
@@ -103,6 +1197,7 @@ impl<'a> RDM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDM::VT_CREATION_DATE, None)}
   }
+  /// Creating organization
   #[inline]
   pub fn ORIGINATOR(&self) -> Option<&'a str> {
     // Safety:
@@ -110,6 +1205,7 @@ impl<'a> RDM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDM::VT_ORIGINATOR, None)}
   }
+  /// Object name
   #[inline]
   pub fn OBJECT_NAME(&self) -> Option<&'a str> {
     // Safety:
@@ -117,6 +1213,7 @@ impl<'a> RDM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDM::VT_OBJECT_NAME, None)}
   }
+  /// International designator
   #[inline]
   pub fn OBJECT_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -124,6 +1221,39 @@ impl<'a> RDM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDM::VT_OBJECT_ID, None)}
   }
+  /// NORAD catalog number
+  #[inline]
+  pub fn NORAD_CAT_ID(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(RDM::VT_NORAD_CAT_ID, Some(0)).unwrap()}
+  }
+  /// Object type (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN)
+  #[inline]
+  pub fn OBJECT_TYPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDM::VT_OBJECT_TYPE, None)}
+  }
+  /// Reentry disposition
+  #[inline]
+  pub fn DISPOSITION(&self) -> reentryDisposition {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<reentryDisposition>(RDM::VT_DISPOSITION, Some(reentryDisposition::CONTROLLED)).unwrap()}
+  }
+  /// Reentry reason
+  #[inline]
+  pub fn REASON(&self) -> reentryReason {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<reentryReason>(RDM::VT_REASON, Some(reentryReason::NATURAL_DECAY)).unwrap()}
+  }
+  /// Predicted reentry epoch (ISO 8601)
   #[inline]
   pub fn REENTRY_EPOCH(&self) -> Option<&'a str> {
     // Safety:
@@ -131,6 +1261,15 @@ impl<'a> RDM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDM::VT_REENTRY_EPOCH, None)}
   }
+  /// Reentry epoch uncertainty window in hours
+  #[inline]
+  pub fn REENTRY_EPOCH_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDM::VT_REENTRY_EPOCH_UNC, Some(0.0)).unwrap()}
+  }
+  /// Reentry latitude in degrees
   #[inline]
   pub fn REENTRY_LATITUDE(&self) -> f64 {
     // Safety:
@@ -138,12 +1277,125 @@ impl<'a> RDM<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(RDM::VT_REENTRY_LATITUDE, Some(0.0)).unwrap()}
   }
+  /// Reentry longitude in degrees
   #[inline]
   pub fn REENTRY_LONGITUDE(&self) -> f64 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(RDM::VT_REENTRY_LONGITUDE, Some(0.0)).unwrap()}
+  }
+  /// Reentry altitude in km
+  #[inline]
+  pub fn REENTRY_ALTITUDE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDM::VT_REENTRY_ALTITUDE, Some(0.0)).unwrap()}
+  }
+  /// Time system
+  #[inline]
+  pub fn TIME_SYSTEM(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDM::VT_TIME_SYSTEM, None)}
+  }
+  /// Previous predicted reentry epoch for comparison (ISO 8601)
+  #[inline]
+  pub fn PREV_PREDICTION_EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDM::VT_PREV_PREDICTION_EPOCH, None)}
+  }
+  /// Ballistic coefficient in kg/m^2
+  #[inline]
+  pub fn BALLISTIC_COEFF(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDM::VT_BALLISTIC_COEFF, Some(0.0)).unwrap()}
+  }
+  /// Object mass in kg
+  #[inline]
+  pub fn MASS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDM::VT_MASS, Some(0.0)).unwrap()}
+  }
+  /// Solar radiation pressure area in m^2
+  #[inline]
+  pub fn SOLAR_RAD_AREA(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDM::VT_SOLAR_RAD_AREA, Some(0.0)).unwrap()}
+  }
+  /// Drag area in m^2
+  #[inline]
+  pub fn DRAG_AREA(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDM::VT_DRAG_AREA, Some(0.0)).unwrap()}
+  }
+  /// Initial state vector
+  #[inline]
+  pub fn INITIAL_STATE(&self) -> Option<reentryStateVector<'a>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<reentryStateVector>>(RDM::VT_INITIAL_STATE, None)}
+  }
+  /// Ground impact predictions
+  #[inline]
+  pub fn IMPACT_PREDICTIONS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<reentryImpact<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<reentryImpact>>>>(RDM::VT_IMPACT_PREDICTIONS, None)}
+  }
+  /// Predicted surviving debris
+  #[inline]
+  pub fn SURVIVING_DEBRIS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<survivingDebris<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<survivingDebris>>>>(RDM::VT_SURVIVING_DEBRIS, None)}
+  }
+  /// Casualty expectation
+  #[inline]
+  pub fn CASUALTY_EXPECTATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDM::VT_CASUALTY_EXPECTATION, Some(0.0)).unwrap()}
+  }
+  /// Number of breakup fragments predicted
+  #[inline]
+  pub fn NUM_FRAGMENTS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(RDM::VT_NUM_FRAGMENTS, Some(0)).unwrap()}
+  }
+  /// Total surviving mass in kg
+  #[inline]
+  pub fn SURVIVING_MASS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDM::VT_SURVIVING_MASS, Some(0.0)).unwrap()}
+  }
+  /// Additional comments
+  #[inline]
+  pub fn COMMENT(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDM::VT_COMMENT, None)}
   }
 }
 
@@ -159,9 +1411,28 @@ impl flatbuffers::Verifiable for RDM<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIGINATOR", Self::VT_ORIGINATOR, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJECT_NAME", Self::VT_OBJECT_NAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJECT_ID", Self::VT_OBJECT_ID, false)?
+     .visit_field::<u32>("NORAD_CAT_ID", Self::VT_NORAD_CAT_ID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJECT_TYPE", Self::VT_OBJECT_TYPE, false)?
+     .visit_field::<reentryDisposition>("DISPOSITION", Self::VT_DISPOSITION, false)?
+     .visit_field::<reentryReason>("REASON", Self::VT_REASON, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REENTRY_EPOCH", Self::VT_REENTRY_EPOCH, false)?
+     .visit_field::<f64>("REENTRY_EPOCH_UNC", Self::VT_REENTRY_EPOCH_UNC, false)?
      .visit_field::<f64>("REENTRY_LATITUDE", Self::VT_REENTRY_LATITUDE, false)?
      .visit_field::<f64>("REENTRY_LONGITUDE", Self::VT_REENTRY_LONGITUDE, false)?
+     .visit_field::<f64>("REENTRY_ALTITUDE", Self::VT_REENTRY_ALTITUDE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TIME_SYSTEM", Self::VT_TIME_SYSTEM, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("PREV_PREDICTION_EPOCH", Self::VT_PREV_PREDICTION_EPOCH, false)?
+     .visit_field::<f64>("BALLISTIC_COEFF", Self::VT_BALLISTIC_COEFF, false)?
+     .visit_field::<f64>("MASS", Self::VT_MASS, false)?
+     .visit_field::<f64>("SOLAR_RAD_AREA", Self::VT_SOLAR_RAD_AREA, false)?
+     .visit_field::<f64>("DRAG_AREA", Self::VT_DRAG_AREA, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<reentryStateVector>>("INITIAL_STATE", Self::VT_INITIAL_STATE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<reentryImpact>>>>("IMPACT_PREDICTIONS", Self::VT_IMPACT_PREDICTIONS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<survivingDebris>>>>("SURVIVING_DEBRIS", Self::VT_SURVIVING_DEBRIS, false)?
+     .visit_field::<f64>("CASUALTY_EXPECTATION", Self::VT_CASUALTY_EXPECTATION, false)?
+     .visit_field::<u32>("NUM_FRAGMENTS", Self::VT_NUM_FRAGMENTS, false)?
+     .visit_field::<f64>("SURVIVING_MASS", Self::VT_SURVIVING_MASS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COMMENT", Self::VT_COMMENT, false)?
      .finish();
     Ok(())
   }
@@ -172,9 +1443,28 @@ pub struct RDMArgs<'a> {
     pub ORIGINATOR: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OBJECT_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub NORAD_CAT_ID: u32,
+    pub OBJECT_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub DISPOSITION: reentryDisposition,
+    pub REASON: reentryReason,
     pub REENTRY_EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub REENTRY_EPOCH_UNC: f64,
     pub REENTRY_LATITUDE: f64,
     pub REENTRY_LONGITUDE: f64,
+    pub REENTRY_ALTITUDE: f64,
+    pub TIME_SYSTEM: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub PREV_PREDICTION_EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub BALLISTIC_COEFF: f64,
+    pub MASS: f64,
+    pub SOLAR_RAD_AREA: f64,
+    pub DRAG_AREA: f64,
+    pub INITIAL_STATE: Option<flatbuffers::WIPOffset<reentryStateVector<'a>>>,
+    pub IMPACT_PREDICTIONS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<reentryImpact<'a>>>>>,
+    pub SURVIVING_DEBRIS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<survivingDebris<'a>>>>>,
+    pub CASUALTY_EXPECTATION: f64,
+    pub NUM_FRAGMENTS: u32,
+    pub SURVIVING_MASS: f64,
+    pub COMMENT: Option<flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for RDMArgs<'a> {
   #[inline]
@@ -185,9 +1475,28 @@ impl<'a> Default for RDMArgs<'a> {
       ORIGINATOR: None,
       OBJECT_NAME: None,
       OBJECT_ID: None,
+      NORAD_CAT_ID: 0,
+      OBJECT_TYPE: None,
+      DISPOSITION: reentryDisposition::CONTROLLED,
+      REASON: reentryReason::NATURAL_DECAY,
       REENTRY_EPOCH: None,
+      REENTRY_EPOCH_UNC: 0.0,
       REENTRY_LATITUDE: 0.0,
       REENTRY_LONGITUDE: 0.0,
+      REENTRY_ALTITUDE: 0.0,
+      TIME_SYSTEM: None,
+      PREV_PREDICTION_EPOCH: None,
+      BALLISTIC_COEFF: 0.0,
+      MASS: 0.0,
+      SOLAR_RAD_AREA: 0.0,
+      DRAG_AREA: 0.0,
+      INITIAL_STATE: None,
+      IMPACT_PREDICTIONS: None,
+      SURVIVING_DEBRIS: None,
+      CASUALTY_EXPECTATION: 0.0,
+      NUM_FRAGMENTS: 0,
+      SURVIVING_MASS: 0.0,
+      COMMENT: None,
     }
   }
 }
@@ -218,8 +1527,28 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RDMBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RDM::VT_OBJECT_ID, OBJECT_ID);
   }
   #[inline]
+  pub fn add_NORAD_CAT_ID(&mut self, NORAD_CAT_ID: u32) {
+    self.fbb_.push_slot::<u32>(RDM::VT_NORAD_CAT_ID, NORAD_CAT_ID, 0);
+  }
+  #[inline]
+  pub fn add_OBJECT_TYPE(&mut self, OBJECT_TYPE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RDM::VT_OBJECT_TYPE, OBJECT_TYPE);
+  }
+  #[inline]
+  pub fn add_DISPOSITION(&mut self, DISPOSITION: reentryDisposition) {
+    self.fbb_.push_slot::<reentryDisposition>(RDM::VT_DISPOSITION, DISPOSITION, reentryDisposition::CONTROLLED);
+  }
+  #[inline]
+  pub fn add_REASON(&mut self, REASON: reentryReason) {
+    self.fbb_.push_slot::<reentryReason>(RDM::VT_REASON, REASON, reentryReason::NATURAL_DECAY);
+  }
+  #[inline]
   pub fn add_REENTRY_EPOCH(&mut self, REENTRY_EPOCH: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RDM::VT_REENTRY_EPOCH, REENTRY_EPOCH);
+  }
+  #[inline]
+  pub fn add_REENTRY_EPOCH_UNC(&mut self, REENTRY_EPOCH_UNC: f64) {
+    self.fbb_.push_slot::<f64>(RDM::VT_REENTRY_EPOCH_UNC, REENTRY_EPOCH_UNC, 0.0);
   }
   #[inline]
   pub fn add_REENTRY_LATITUDE(&mut self, REENTRY_LATITUDE: f64) {
@@ -228,6 +1557,62 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RDMBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_REENTRY_LONGITUDE(&mut self, REENTRY_LONGITUDE: f64) {
     self.fbb_.push_slot::<f64>(RDM::VT_REENTRY_LONGITUDE, REENTRY_LONGITUDE, 0.0);
+  }
+  #[inline]
+  pub fn add_REENTRY_ALTITUDE(&mut self, REENTRY_ALTITUDE: f64) {
+    self.fbb_.push_slot::<f64>(RDM::VT_REENTRY_ALTITUDE, REENTRY_ALTITUDE, 0.0);
+  }
+  #[inline]
+  pub fn add_TIME_SYSTEM(&mut self, TIME_SYSTEM: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RDM::VT_TIME_SYSTEM, TIME_SYSTEM);
+  }
+  #[inline]
+  pub fn add_PREV_PREDICTION_EPOCH(&mut self, PREV_PREDICTION_EPOCH: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RDM::VT_PREV_PREDICTION_EPOCH, PREV_PREDICTION_EPOCH);
+  }
+  #[inline]
+  pub fn add_BALLISTIC_COEFF(&mut self, BALLISTIC_COEFF: f64) {
+    self.fbb_.push_slot::<f64>(RDM::VT_BALLISTIC_COEFF, BALLISTIC_COEFF, 0.0);
+  }
+  #[inline]
+  pub fn add_MASS(&mut self, MASS: f64) {
+    self.fbb_.push_slot::<f64>(RDM::VT_MASS, MASS, 0.0);
+  }
+  #[inline]
+  pub fn add_SOLAR_RAD_AREA(&mut self, SOLAR_RAD_AREA: f64) {
+    self.fbb_.push_slot::<f64>(RDM::VT_SOLAR_RAD_AREA, SOLAR_RAD_AREA, 0.0);
+  }
+  #[inline]
+  pub fn add_DRAG_AREA(&mut self, DRAG_AREA: f64) {
+    self.fbb_.push_slot::<f64>(RDM::VT_DRAG_AREA, DRAG_AREA, 0.0);
+  }
+  #[inline]
+  pub fn add_INITIAL_STATE(&mut self, INITIAL_STATE: flatbuffers::WIPOffset<reentryStateVector<'b >>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<reentryStateVector>>(RDM::VT_INITIAL_STATE, INITIAL_STATE);
+  }
+  #[inline]
+  pub fn add_IMPACT_PREDICTIONS(&mut self, IMPACT_PREDICTIONS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<reentryImpact<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RDM::VT_IMPACT_PREDICTIONS, IMPACT_PREDICTIONS);
+  }
+  #[inline]
+  pub fn add_SURVIVING_DEBRIS(&mut self, SURVIVING_DEBRIS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<survivingDebris<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RDM::VT_SURVIVING_DEBRIS, SURVIVING_DEBRIS);
+  }
+  #[inline]
+  pub fn add_CASUALTY_EXPECTATION(&mut self, CASUALTY_EXPECTATION: f64) {
+    self.fbb_.push_slot::<f64>(RDM::VT_CASUALTY_EXPECTATION, CASUALTY_EXPECTATION, 0.0);
+  }
+  #[inline]
+  pub fn add_NUM_FRAGMENTS(&mut self, NUM_FRAGMENTS: u32) {
+    self.fbb_.push_slot::<u32>(RDM::VT_NUM_FRAGMENTS, NUM_FRAGMENTS, 0);
+  }
+  #[inline]
+  pub fn add_SURVIVING_MASS(&mut self, SURVIVING_MASS: f64) {
+    self.fbb_.push_slot::<f64>(RDM::VT_SURVIVING_MASS, SURVIVING_MASS, 0.0);
+  }
+  #[inline]
+  pub fn add_COMMENT(&mut self, COMMENT: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RDM::VT_COMMENT, COMMENT);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> RDMBuilder<'a, 'b, A> {
@@ -252,9 +1637,28 @@ impl core::fmt::Debug for RDM<'_> {
       ds.field("ORIGINATOR", &self.ORIGINATOR());
       ds.field("OBJECT_NAME", &self.OBJECT_NAME());
       ds.field("OBJECT_ID", &self.OBJECT_ID());
+      ds.field("NORAD_CAT_ID", &self.NORAD_CAT_ID());
+      ds.field("OBJECT_TYPE", &self.OBJECT_TYPE());
+      ds.field("DISPOSITION", &self.DISPOSITION());
+      ds.field("REASON", &self.REASON());
       ds.field("REENTRY_EPOCH", &self.REENTRY_EPOCH());
+      ds.field("REENTRY_EPOCH_UNC", &self.REENTRY_EPOCH_UNC());
       ds.field("REENTRY_LATITUDE", &self.REENTRY_LATITUDE());
       ds.field("REENTRY_LONGITUDE", &self.REENTRY_LONGITUDE());
+      ds.field("REENTRY_ALTITUDE", &self.REENTRY_ALTITUDE());
+      ds.field("TIME_SYSTEM", &self.TIME_SYSTEM());
+      ds.field("PREV_PREDICTION_EPOCH", &self.PREV_PREDICTION_EPOCH());
+      ds.field("BALLISTIC_COEFF", &self.BALLISTIC_COEFF());
+      ds.field("MASS", &self.MASS());
+      ds.field("SOLAR_RAD_AREA", &self.SOLAR_RAD_AREA());
+      ds.field("DRAG_AREA", &self.DRAG_AREA());
+      ds.field("INITIAL_STATE", &self.INITIAL_STATE());
+      ds.field("IMPACT_PREDICTIONS", &self.IMPACT_PREDICTIONS());
+      ds.field("SURVIVING_DEBRIS", &self.SURVIVING_DEBRIS());
+      ds.field("CASUALTY_EXPECTATION", &self.CASUALTY_EXPECTATION());
+      ds.field("NUM_FRAGMENTS", &self.NUM_FRAGMENTS());
+      ds.field("SURVIVING_MASS", &self.SURVIVING_MASS());
+      ds.field("COMMENT", &self.COMMENT());
       ds.finish()
   }
 }
@@ -266,9 +1670,28 @@ pub struct RDMT {
   pub ORIGINATOR: Option<String>,
   pub OBJECT_NAME: Option<String>,
   pub OBJECT_ID: Option<String>,
+  pub NORAD_CAT_ID: u32,
+  pub OBJECT_TYPE: Option<String>,
+  pub DISPOSITION: reentryDisposition,
+  pub REASON: reentryReason,
   pub REENTRY_EPOCH: Option<String>,
+  pub REENTRY_EPOCH_UNC: f64,
   pub REENTRY_LATITUDE: f64,
   pub REENTRY_LONGITUDE: f64,
+  pub REENTRY_ALTITUDE: f64,
+  pub TIME_SYSTEM: Option<String>,
+  pub PREV_PREDICTION_EPOCH: Option<String>,
+  pub BALLISTIC_COEFF: f64,
+  pub MASS: f64,
+  pub SOLAR_RAD_AREA: f64,
+  pub DRAG_AREA: f64,
+  pub INITIAL_STATE: Option<Box<reentryStateVectorT>>,
+  pub IMPACT_PREDICTIONS: Option<Vec<reentryImpactT>>,
+  pub SURVIVING_DEBRIS: Option<Vec<survivingDebrisT>>,
+  pub CASUALTY_EXPECTATION: f64,
+  pub NUM_FRAGMENTS: u32,
+  pub SURVIVING_MASS: f64,
+  pub COMMENT: Option<String>,
 }
 impl Default for RDMT {
   fn default() -> Self {
@@ -278,9 +1701,28 @@ impl Default for RDMT {
       ORIGINATOR: None,
       OBJECT_NAME: None,
       OBJECT_ID: None,
+      NORAD_CAT_ID: 0,
+      OBJECT_TYPE: None,
+      DISPOSITION: reentryDisposition::CONTROLLED,
+      REASON: reentryReason::NATURAL_DECAY,
       REENTRY_EPOCH: None,
+      REENTRY_EPOCH_UNC: 0.0,
       REENTRY_LATITUDE: 0.0,
       REENTRY_LONGITUDE: 0.0,
+      REENTRY_ALTITUDE: 0.0,
+      TIME_SYSTEM: None,
+      PREV_PREDICTION_EPOCH: None,
+      BALLISTIC_COEFF: 0.0,
+      MASS: 0.0,
+      SOLAR_RAD_AREA: 0.0,
+      DRAG_AREA: 0.0,
+      INITIAL_STATE: None,
+      IMPACT_PREDICTIONS: None,
+      SURVIVING_DEBRIS: None,
+      CASUALTY_EXPECTATION: 0.0,
+      NUM_FRAGMENTS: 0,
+      SURVIVING_MASS: 0.0,
+      COMMENT: None,
     }
   }
 }
@@ -304,20 +1746,72 @@ impl RDMT {
     let OBJECT_ID = self.OBJECT_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let NORAD_CAT_ID = self.NORAD_CAT_ID;
+    let OBJECT_TYPE = self.OBJECT_TYPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let DISPOSITION = self.DISPOSITION;
+    let REASON = self.REASON;
     let REENTRY_EPOCH = self.REENTRY_EPOCH.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let REENTRY_EPOCH_UNC = self.REENTRY_EPOCH_UNC;
     let REENTRY_LATITUDE = self.REENTRY_LATITUDE;
     let REENTRY_LONGITUDE = self.REENTRY_LONGITUDE;
+    let REENTRY_ALTITUDE = self.REENTRY_ALTITUDE;
+    let TIME_SYSTEM = self.TIME_SYSTEM.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PREV_PREDICTION_EPOCH = self.PREV_PREDICTION_EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let BALLISTIC_COEFF = self.BALLISTIC_COEFF;
+    let MASS = self.MASS;
+    let SOLAR_RAD_AREA = self.SOLAR_RAD_AREA;
+    let DRAG_AREA = self.DRAG_AREA;
+    let INITIAL_STATE = self.INITIAL_STATE.as_ref().map(|x|{
+      x.pack(_fbb)
+    });
+    let IMPACT_PREDICTIONS = self.IMPACT_PREDICTIONS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let SURVIVING_DEBRIS = self.SURVIVING_DEBRIS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let CASUALTY_EXPECTATION = self.CASUALTY_EXPECTATION;
+    let NUM_FRAGMENTS = self.NUM_FRAGMENTS;
+    let SURVIVING_MASS = self.SURVIVING_MASS;
+    let COMMENT = self.COMMENT.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     RDM::create(_fbb, &RDMArgs{
       CCSDS_RDM_VERS,
       CREATION_DATE,
       ORIGINATOR,
       OBJECT_NAME,
       OBJECT_ID,
+      NORAD_CAT_ID,
+      OBJECT_TYPE,
+      DISPOSITION,
+      REASON,
       REENTRY_EPOCH,
+      REENTRY_EPOCH_UNC,
       REENTRY_LATITUDE,
       REENTRY_LONGITUDE,
+      REENTRY_ALTITUDE,
+      TIME_SYSTEM,
+      PREV_PREDICTION_EPOCH,
+      BALLISTIC_COEFF,
+      MASS,
+      SOLAR_RAD_AREA,
+      DRAG_AREA,
+      INITIAL_STATE,
+      IMPACT_PREDICTIONS,
+      SURVIVING_DEBRIS,
+      CASUALTY_EXPECTATION,
+      NUM_FRAGMENTS,
+      SURVIVING_MASS,
+      COMMENT,
     })
   }
 }

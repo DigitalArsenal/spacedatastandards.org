@@ -5,6 +5,152 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class GeoStationKeeping {
+  final int value;
+  const GeoStationKeeping._(this.value);
+
+  factory GeoStationKeeping.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum GeoStationKeeping');
+    }
+    return result;
+  }
+
+  static GeoStationKeeping? _createOrNull(int? value) => 
+      value == null ? null : GeoStationKeeping.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 5;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const GeoStationKeeping ACTIVE = GeoStationKeeping._(0);
+  static const GeoStationKeeping DRIFTING = GeoStationKeeping._(1);
+  static const GeoStationKeeping INCLINED = GeoStationKeeping._(2);
+  static const GeoStationKeeping GRAVEYARD = GeoStationKeeping._(3);
+  static const GeoStationKeeping REPOSITIONING = GeoStationKeeping._(4);
+  static const GeoStationKeeping UNKNOWN = GeoStationKeeping._(5);
+  static const Map<int, GeoStationKeeping> values = {
+    0: ACTIVE,
+    1: DRIFTING,
+    2: INCLINED,
+    3: GRAVEYARD,
+    4: REPOSITIONING,
+    5: UNKNOWN};
+
+  static const fb.Reader<GeoStationKeeping> reader = _GeoStationKeepingReader();
+
+  @override
+  String toString() {
+    return 'GeoStationKeeping{value: $value}';
+  }
+}
+
+class _GeoStationKeepingReader extends fb.Reader<GeoStationKeeping> {
+  const _GeoStationKeepingReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  GeoStationKeeping read(fb.BufferContext bc, int offset) =>
+      GeoStationKeeping.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class GeoConfidence {
+  final int value;
+  const GeoConfidence._(this.value);
+
+  factory GeoConfidence.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum GeoConfidence');
+    }
+    return result;
+  }
+
+  static GeoConfidence? _createOrNull(int? value) => 
+      value == null ? null : GeoConfidence.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 3;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const GeoConfidence HIGH = GeoConfidence._(0);
+  static const GeoConfidence MEDIUM = GeoConfidence._(1);
+  static const GeoConfidence LOW = GeoConfidence._(2);
+  static const GeoConfidence TENTATIVE = GeoConfidence._(3);
+  static const Map<int, GeoConfidence> values = {
+    0: HIGH,
+    1: MEDIUM,
+    2: LOW,
+    3: TENTATIVE};
+
+  static const fb.Reader<GeoConfidence> reader = _GeoConfidenceReader();
+
+  @override
+  String toString() {
+    return 'GeoConfidence{value: $value}';
+  }
+}
+
+class _GeoConfidenceReader extends fb.Reader<GeoConfidence> {
+  const _GeoConfidenceReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  GeoConfidence read(fb.BufferContext bc, int offset) =>
+      GeoConfidence.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class TroughType {
+  final int value;
+  const TroughType._(this.value);
+
+  factory TroughType.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum TroughType');
+    }
+    return result;
+  }
+
+  static TroughType? _createOrNull(int? value) => 
+      value == null ? null : TroughType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 2;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const TroughType EAST = TroughType._(0);
+  static const TroughType WEST = TroughType._(1);
+  static const TroughType NEITHER = TroughType._(2);
+  static const Map<int, TroughType> values = {
+    0: EAST,
+    1: WEST,
+    2: NEITHER};
+
+  static const fb.Reader<TroughType> reader = _TroughTypeReader();
+
+  @override
+  String toString() {
+    return 'TroughType{value: $value}';
+  }
+}
+
+class _TroughTypeReader extends fb.Reader<TroughType> {
+  const _TroughTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  TroughType read(fb.BufferContext bc, int offset) =>
+      TroughType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 ///  GEO Spacecraft Status
 class GEO {
   GEO._(this._bc, this._bcOffset);
@@ -18,27 +164,52 @@ class GEO {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  International designator
   String? get ORIG_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  double get SS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
-  double get SC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
-  double get RELATIVE_ENERGY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
-  double get LONGITUDE_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
-  double get LONGITUDE_MIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
-  double get LONGITUDE_MAX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
-  String? get CONFIDENCE_LEVEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  String? get PLANE_CHANGE_STATUS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  String? get TROUGH_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
-  bool get LOST_FLAG => const fb.BoolReader().vTableGet(_bc, _bcOffset, 26, false);
-  bool get SEMI_ANNUAL_CORR_FLAG => const fb.BoolReader().vTableGet(_bc, _bcOffset, 28, false);
-  String? get OBJECT_STATUS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
-  String? get RAW_FILE_URI => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
-  String? get ON_ORBIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
-  int get SAT_NO => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 36, 0);
+  ///  Satellite catalog number
+  int get SAT_NO => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  ///  On-orbit reference identifier
+  String? get ON_ORBIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Station-keeping status
+  GeoStationKeeping get STATION_KEEPING => GeoStationKeeping.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 12, 0));
+  ///  Subsatellite point longitude (degrees east)
+  double get SS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  ///  Longitude of ascending node (degrees)
+  double get SC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Relative energy (km^2/s^2)
+  double get RELATIVE_ENERGY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  ///  Longitude drift rate (degrees/day)
+  double get LONGITUDE_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  Western longitude boundary of slot (degrees east)
+  double get LONGITUDE_MIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Eastern longitude boundary of slot (degrees east)
+  double get LONGITUDE_MAX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  ///  Assessment confidence level
+  GeoConfidence get CONFIDENCE => GeoConfidence.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 26, 0));
+  ///  Trough type (east/west gravitational well)
+  TroughType get TROUGH => TroughType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 28, 0));
+  ///  Plane change status description
+  String? get PLANE_CHANGE_STATUS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  ///  True if object is lost/not tracked
+  bool get LOST_FLAG => const fb.BoolReader().vTableGet(_bc, _bcOffset, 32, false);
+  ///  True if semi-annual correction applied
+  bool get SEMI_ANNUAL_CORR_FLAG => const fb.BoolReader().vTableGet(_bc, _bcOffset, 34, false);
+  ///  Current operational status
+  String? get OBJECT_STATUS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  ///  Inclination (degrees)
+  double get INCLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  ///  Eccentricity
+  double get ECCENTRICITY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  ///  Epoch of status (ISO 8601)
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
+  ///  Reference to raw data file
+  String? get RAW_FILE_URI => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
 
   @override
   String toString() {
-    return 'GEO{ID: ${ID}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, SS: ${SS}, SC: ${SC}, RELATIVE_ENERGY: ${RELATIVE_ENERGY}, LONGITUDE_RATE: ${LONGITUDE_RATE}, LONGITUDE_MIN: ${LONGITUDE_MIN}, LONGITUDE_MAX: ${LONGITUDE_MAX}, CONFIDENCE_LEVEL: ${CONFIDENCE_LEVEL}, PLANE_CHANGE_STATUS: ${PLANE_CHANGE_STATUS}, TROUGH_TYPE: ${TROUGH_TYPE}, LOST_FLAG: ${LOST_FLAG}, SEMI_ANNUAL_CORR_FLAG: ${SEMI_ANNUAL_CORR_FLAG}, OBJECT_STATUS: ${OBJECT_STATUS}, RAW_FILE_URI: ${RAW_FILE_URI}, ON_ORBIT: ${ON_ORBIT}, SAT_NO: ${SAT_NO}}';
+    return 'GEO{ID: ${ID}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, SAT_NO: ${SAT_NO}, ON_ORBIT: ${ON_ORBIT}, STATION_KEEPING: ${STATION_KEEPING}, SS: ${SS}, SC: ${SC}, RELATIVE_ENERGY: ${RELATIVE_ENERGY}, LONGITUDE_RATE: ${LONGITUDE_RATE}, LONGITUDE_MIN: ${LONGITUDE_MIN}, LONGITUDE_MAX: ${LONGITUDE_MAX}, CONFIDENCE: ${CONFIDENCE}, TROUGH: ${TROUGH}, PLANE_CHANGE_STATUS: ${PLANE_CHANGE_STATUS}, LOST_FLAG: ${LOST_FLAG}, SEMI_ANNUAL_CORR_FLAG: ${SEMI_ANNUAL_CORR_FLAG}, OBJECT_STATUS: ${OBJECT_STATUS}, INCLINATION: ${INCLINATION}, ECCENTRICITY: ${ECCENTRICITY}, EPOCH: ${EPOCH}, RAW_FILE_URI: ${RAW_FILE_URI}}';
   }
 }
 
@@ -56,7 +227,7 @@ class GEOBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(17);
+    fbBuilder.startTable(21);
   }
 
   int addIdOffset(int? offset) {
@@ -67,64 +238,80 @@ class GEOBuilder {
     fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addSs(double? SS) {
-    fbBuilder.addFloat64(2, SS);
-    return fbBuilder.offset;
-  }
-  int addSc(double? SC) {
-    fbBuilder.addFloat64(3, SC);
-    return fbBuilder.offset;
-  }
-  int addRelativeEnergy(double? RELATIVE_ENERGY) {
-    fbBuilder.addFloat64(4, RELATIVE_ENERGY);
-    return fbBuilder.offset;
-  }
-  int addLongitudeRate(double? LONGITUDE_RATE) {
-    fbBuilder.addFloat64(5, LONGITUDE_RATE);
-    return fbBuilder.offset;
-  }
-  int addLongitudeMin(double? LONGITUDE_MIN) {
-    fbBuilder.addFloat64(6, LONGITUDE_MIN);
-    return fbBuilder.offset;
-  }
-  int addLongitudeMax(double? LONGITUDE_MAX) {
-    fbBuilder.addFloat64(7, LONGITUDE_MAX);
-    return fbBuilder.offset;
-  }
-  int addConfidenceLevelOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-  int addPlaneChangeStatusOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
-    return fbBuilder.offset;
-  }
-  int addTroughTypeOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
-    return fbBuilder.offset;
-  }
-  int addLostFlag(bool? LOST_FLAG) {
-    fbBuilder.addBool(11, LOST_FLAG);
-    return fbBuilder.offset;
-  }
-  int addSemiAnnualCorrFlag(bool? SEMI_ANNUAL_CORR_FLAG) {
-    fbBuilder.addBool(12, SEMI_ANNUAL_CORR_FLAG);
-    return fbBuilder.offset;
-  }
-  int addObjectStatusOffset(int? offset) {
-    fbBuilder.addOffset(13, offset);
-    return fbBuilder.offset;
-  }
-  int addRawFileUriOffset(int? offset) {
-    fbBuilder.addOffset(14, offset);
+  int addSatNo(int? SAT_NO) {
+    fbBuilder.addUint32(2, SAT_NO);
     return fbBuilder.offset;
   }
   int addOnOrbitOffset(int? offset) {
-    fbBuilder.addOffset(15, offset);
+    fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addSatNo(int? SAT_NO) {
-    fbBuilder.addInt32(16, SAT_NO);
+  int addStationKeeping(GeoStationKeeping? STATION_KEEPING) {
+    fbBuilder.addInt8(4, STATION_KEEPING?.value);
+    return fbBuilder.offset;
+  }
+  int addSs(double? SS) {
+    fbBuilder.addFloat64(5, SS);
+    return fbBuilder.offset;
+  }
+  int addSc(double? SC) {
+    fbBuilder.addFloat64(6, SC);
+    return fbBuilder.offset;
+  }
+  int addRelativeEnergy(double? RELATIVE_ENERGY) {
+    fbBuilder.addFloat64(7, RELATIVE_ENERGY);
+    return fbBuilder.offset;
+  }
+  int addLongitudeRate(double? LONGITUDE_RATE) {
+    fbBuilder.addFloat64(8, LONGITUDE_RATE);
+    return fbBuilder.offset;
+  }
+  int addLongitudeMin(double? LONGITUDE_MIN) {
+    fbBuilder.addFloat64(9, LONGITUDE_MIN);
+    return fbBuilder.offset;
+  }
+  int addLongitudeMax(double? LONGITUDE_MAX) {
+    fbBuilder.addFloat64(10, LONGITUDE_MAX);
+    return fbBuilder.offset;
+  }
+  int addConfidence(GeoConfidence? CONFIDENCE) {
+    fbBuilder.addInt8(11, CONFIDENCE?.value);
+    return fbBuilder.offset;
+  }
+  int addTrough(TroughType? TROUGH) {
+    fbBuilder.addInt8(12, TROUGH?.value);
+    return fbBuilder.offset;
+  }
+  int addPlaneChangeStatusOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addLostFlag(bool? LOST_FLAG) {
+    fbBuilder.addBool(14, LOST_FLAG);
+    return fbBuilder.offset;
+  }
+  int addSemiAnnualCorrFlag(bool? SEMI_ANNUAL_CORR_FLAG) {
+    fbBuilder.addBool(15, SEMI_ANNUAL_CORR_FLAG);
+    return fbBuilder.offset;
+  }
+  int addObjectStatusOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addInclination(double? INCLINATION) {
+    fbBuilder.addFloat64(17, INCLINATION);
+    return fbBuilder.offset;
+  }
+  int addEccentricity(double? ECCENTRICITY) {
+    fbBuilder.addFloat64(18, ECCENTRICITY);
+    return fbBuilder.offset;
+  }
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addRawFileUriOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
     return fbBuilder.offset;
   }
 
@@ -136,58 +323,70 @@ class GEOBuilder {
 class GEOObjectBuilder extends fb.ObjectBuilder {
   final String? _ID;
   final String? _ORIG_OBJECT_ID;
+  final int? _SAT_NO;
+  final String? _ON_ORBIT;
+  final GeoStationKeeping? _STATION_KEEPING;
   final double? _SS;
   final double? _SC;
   final double? _RELATIVE_ENERGY;
   final double? _LONGITUDE_RATE;
   final double? _LONGITUDE_MIN;
   final double? _LONGITUDE_MAX;
-  final String? _CONFIDENCE_LEVEL;
+  final GeoConfidence? _CONFIDENCE;
+  final TroughType? _TROUGH;
   final String? _PLANE_CHANGE_STATUS;
-  final String? _TROUGH_TYPE;
   final bool? _LOST_FLAG;
   final bool? _SEMI_ANNUAL_CORR_FLAG;
   final String? _OBJECT_STATUS;
+  final double? _INCLINATION;
+  final double? _ECCENTRICITY;
+  final String? _EPOCH;
   final String? _RAW_FILE_URI;
-  final String? _ON_ORBIT;
-  final int? _SAT_NO;
 
   GEOObjectBuilder({
     String? ID,
     String? ORIG_OBJECT_ID,
+    int? SAT_NO,
+    String? ON_ORBIT,
+    GeoStationKeeping? STATION_KEEPING,
     double? SS,
     double? SC,
     double? RELATIVE_ENERGY,
     double? LONGITUDE_RATE,
     double? LONGITUDE_MIN,
     double? LONGITUDE_MAX,
-    String? CONFIDENCE_LEVEL,
+    GeoConfidence? CONFIDENCE,
+    TroughType? TROUGH,
     String? PLANE_CHANGE_STATUS,
-    String? TROUGH_TYPE,
     bool? LOST_FLAG,
     bool? SEMI_ANNUAL_CORR_FLAG,
     String? OBJECT_STATUS,
+    double? INCLINATION,
+    double? ECCENTRICITY,
+    String? EPOCH,
     String? RAW_FILE_URI,
-    String? ON_ORBIT,
-    int? SAT_NO,
   })
       : _ID = ID,
         _ORIG_OBJECT_ID = ORIG_OBJECT_ID,
+        _SAT_NO = SAT_NO,
+        _ON_ORBIT = ON_ORBIT,
+        _STATION_KEEPING = STATION_KEEPING,
         _SS = SS,
         _SC = SC,
         _RELATIVE_ENERGY = RELATIVE_ENERGY,
         _LONGITUDE_RATE = LONGITUDE_RATE,
         _LONGITUDE_MIN = LONGITUDE_MIN,
         _LONGITUDE_MAX = LONGITUDE_MAX,
-        _CONFIDENCE_LEVEL = CONFIDENCE_LEVEL,
+        _CONFIDENCE = CONFIDENCE,
+        _TROUGH = TROUGH,
         _PLANE_CHANGE_STATUS = PLANE_CHANGE_STATUS,
-        _TROUGH_TYPE = TROUGH_TYPE,
         _LOST_FLAG = LOST_FLAG,
         _SEMI_ANNUAL_CORR_FLAG = SEMI_ANNUAL_CORR_FLAG,
         _OBJECT_STATUS = OBJECT_STATUS,
-        _RAW_FILE_URI = RAW_FILE_URI,
-        _ON_ORBIT = ON_ORBIT,
-        _SAT_NO = SAT_NO;
+        _INCLINATION = INCLINATION,
+        _ECCENTRICITY = ECCENTRICITY,
+        _EPOCH = EPOCH,
+        _RAW_FILE_URI = RAW_FILE_URI;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -196,36 +395,38 @@ class GEOObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ID!);
     final int? ORIG_OBJECT_IDOffset = _ORIG_OBJECT_ID == null ? null
         : fbBuilder.writeString(_ORIG_OBJECT_ID!);
-    final int? CONFIDENCE_LEVELOffset = _CONFIDENCE_LEVEL == null ? null
-        : fbBuilder.writeString(_CONFIDENCE_LEVEL!);
-    final int? PLANE_CHANGE_STATUSOffset = _PLANE_CHANGE_STATUS == null ? null
-        : fbBuilder.writeString(_PLANE_CHANGE_STATUS!);
-    final int? TROUGH_TYPEOffset = _TROUGH_TYPE == null ? null
-        : fbBuilder.writeString(_TROUGH_TYPE!);
-    final int? OBJECT_STATUSOffset = _OBJECT_STATUS == null ? null
-        : fbBuilder.writeString(_OBJECT_STATUS!);
-    final int? RAW_FILE_URIOffset = _RAW_FILE_URI == null ? null
-        : fbBuilder.writeString(_RAW_FILE_URI!);
     final int? ON_ORBITOffset = _ON_ORBIT == null ? null
         : fbBuilder.writeString(_ON_ORBIT!);
-    fbBuilder.startTable(17);
+    final int? PLANE_CHANGE_STATUSOffset = _PLANE_CHANGE_STATUS == null ? null
+        : fbBuilder.writeString(_PLANE_CHANGE_STATUS!);
+    final int? OBJECT_STATUSOffset = _OBJECT_STATUS == null ? null
+        : fbBuilder.writeString(_OBJECT_STATUS!);
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    final int? RAW_FILE_URIOffset = _RAW_FILE_URI == null ? null
+        : fbBuilder.writeString(_RAW_FILE_URI!);
+    fbBuilder.startTable(21);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, ORIG_OBJECT_IDOffset);
-    fbBuilder.addFloat64(2, _SS);
-    fbBuilder.addFloat64(3, _SC);
-    fbBuilder.addFloat64(4, _RELATIVE_ENERGY);
-    fbBuilder.addFloat64(5, _LONGITUDE_RATE);
-    fbBuilder.addFloat64(6, _LONGITUDE_MIN);
-    fbBuilder.addFloat64(7, _LONGITUDE_MAX);
-    fbBuilder.addOffset(8, CONFIDENCE_LEVELOffset);
-    fbBuilder.addOffset(9, PLANE_CHANGE_STATUSOffset);
-    fbBuilder.addOffset(10, TROUGH_TYPEOffset);
-    fbBuilder.addBool(11, _LOST_FLAG);
-    fbBuilder.addBool(12, _SEMI_ANNUAL_CORR_FLAG);
-    fbBuilder.addOffset(13, OBJECT_STATUSOffset);
-    fbBuilder.addOffset(14, RAW_FILE_URIOffset);
-    fbBuilder.addOffset(15, ON_ORBITOffset);
-    fbBuilder.addInt32(16, _SAT_NO);
+    fbBuilder.addUint32(2, _SAT_NO);
+    fbBuilder.addOffset(3, ON_ORBITOffset);
+    fbBuilder.addInt8(4, _STATION_KEEPING?.value);
+    fbBuilder.addFloat64(5, _SS);
+    fbBuilder.addFloat64(6, _SC);
+    fbBuilder.addFloat64(7, _RELATIVE_ENERGY);
+    fbBuilder.addFloat64(8, _LONGITUDE_RATE);
+    fbBuilder.addFloat64(9, _LONGITUDE_MIN);
+    fbBuilder.addFloat64(10, _LONGITUDE_MAX);
+    fbBuilder.addInt8(11, _CONFIDENCE?.value);
+    fbBuilder.addInt8(12, _TROUGH?.value);
+    fbBuilder.addOffset(13, PLANE_CHANGE_STATUSOffset);
+    fbBuilder.addBool(14, _LOST_FLAG);
+    fbBuilder.addBool(15, _SEMI_ANNUAL_CORR_FLAG);
+    fbBuilder.addOffset(16, OBJECT_STATUSOffset);
+    fbBuilder.addFloat64(17, _INCLINATION);
+    fbBuilder.addFloat64(18, _ECCENTRICITY);
+    fbBuilder.addOffset(19, EPOCHOffset);
+    fbBuilder.addOffset(20, RAW_FILE_URIOffset);
     return fbBuilder.endTable();
   }
 

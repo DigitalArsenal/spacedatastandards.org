@@ -9,6 +9,208 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_LINK_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_LINK_TYPE: i8 = 5;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_LINK_TYPE: [linkType; 6] = [
+  linkType::UPLINK,
+  linkType::DOWNLINK,
+  linkType::CROSSLINK,
+  linkType::INTER_SATELLITE,
+  linkType::GROUND_TO_GROUND,
+  linkType::RELAY,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct linkType(pub i8);
+#[allow(non_upper_case_globals)]
+impl linkType {
+  pub const UPLINK: Self = Self(0);
+  pub const DOWNLINK: Self = Self(1);
+  pub const CROSSLINK: Self = Self(2);
+  pub const INTER_SATELLITE: Self = Self(3);
+  pub const GROUND_TO_GROUND: Self = Self(4);
+  pub const RELAY: Self = Self(5);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 5;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::UPLINK,
+    Self::DOWNLINK,
+    Self::CROSSLINK,
+    Self::INTER_SATELLITE,
+    Self::GROUND_TO_GROUND,
+    Self::RELAY,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::UPLINK => Some("UPLINK"),
+      Self::DOWNLINK => Some("DOWNLINK"),
+      Self::CROSSLINK => Some("CROSSLINK"),
+      Self::INTER_SATELLITE => Some("INTER_SATELLITE"),
+      Self::GROUND_TO_GROUND => Some("GROUND_TO_GROUND"),
+      Self::RELAY => Some("RELAY"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for linkType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for linkType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for linkType {
+    type Output = linkType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for linkType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for linkType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for linkType {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_LINK_STATE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_LINK_STATE: i8 = 5;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_LINK_STATE: [linkState; 6] = [
+  linkState::ESTABLISHED,
+  linkState::DEGRADED,
+  linkState::INTERRUPTED,
+  linkState::PLANNED,
+  linkState::TERMINATED,
+  linkState::UNKNOWN,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct linkState(pub i8);
+#[allow(non_upper_case_globals)]
+impl linkState {
+  pub const ESTABLISHED: Self = Self(0);
+  pub const DEGRADED: Self = Self(1);
+  pub const INTERRUPTED: Self = Self(2);
+  pub const PLANNED: Self = Self(3);
+  pub const TERMINATED: Self = Self(4);
+  pub const UNKNOWN: Self = Self(5);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 5;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::ESTABLISHED,
+    Self::DEGRADED,
+    Self::INTERRUPTED,
+    Self::PLANNED,
+    Self::TERMINATED,
+    Self::UNKNOWN,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::ESTABLISHED => Some("ESTABLISHED"),
+      Self::DEGRADED => Some("DEGRADED"),
+      Self::INTERRUPTED => Some("INTERRUPTED"),
+      Self::PLANNED => Some("PLANNED"),
+      Self::TERMINATED => Some("TERMINATED"),
+      Self::UNKNOWN => Some("UNKNOWN"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for linkState {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for linkState {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for linkState {
+    type Output = linkState;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for linkState {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for linkState {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for linkState {}
 pub enum LKSOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -28,28 +230,28 @@ impl<'a> flatbuffers::Follow<'a> for LKS<'a> {
 impl<'a> LKS<'a> {
   pub const VT_ID: flatbuffers::VOffsetT = 4;
   pub const VT_ID_ON_ORBIT1: flatbuffers::VOffsetT = 6;
-  pub const VT_ID_ON_ORBIT2: flatbuffers::VOffsetT = 8;
-  pub const VT_LINK_START_TIME: flatbuffers::VOffsetT = 10;
-  pub const VT_LINK_STOP_TIME: flatbuffers::VOffsetT = 12;
+  pub const VT_SAT_NO1: flatbuffers::VOffsetT = 8;
+  pub const VT_ID_ON_ORBIT2: flatbuffers::VOffsetT = 10;
+  pub const VT_SAT_NO2: flatbuffers::VOffsetT = 12;
   pub const VT_CONSTELLATION: flatbuffers::VOffsetT = 14;
   pub const VT_LINK_NAME: flatbuffers::VOffsetT = 16;
   pub const VT_LINK_TYPE: flatbuffers::VOffsetT = 18;
-  pub const VT_BAND: flatbuffers::VOffsetT = 20;
-  pub const VT_ID_BEAM1: flatbuffers::VOffsetT = 22;
-  pub const VT_END_POINT1_NAME: flatbuffers::VOffsetT = 24;
-  pub const VT_END_POINT1_LAT: flatbuffers::VOffsetT = 26;
-  pub const VT_END_POINT1_LON: flatbuffers::VOffsetT = 28;
-  pub const VT_ID_BEAM2: flatbuffers::VOffsetT = 30;
-  pub const VT_END_POINT2_NAME: flatbuffers::VOffsetT = 32;
-  pub const VT_END_POINT2_LAT: flatbuffers::VOffsetT = 34;
-  pub const VT_END_POINT2_LON: flatbuffers::VOffsetT = 36;
-  pub const VT_DATA_RATE1_TO2: flatbuffers::VOffsetT = 38;
-  pub const VT_DATA_RATE2_TO1: flatbuffers::VOffsetT = 40;
-  pub const VT_LINK_STATE: flatbuffers::VOffsetT = 42;
-  pub const VT_SYS_CAP: flatbuffers::VOffsetT = 44;
-  pub const VT_OPS_CAP: flatbuffers::VOffsetT = 46;
-  pub const VT_SAT_NO1: flatbuffers::VOffsetT = 48;
-  pub const VT_SAT_NO2: flatbuffers::VOffsetT = 50;
+  pub const VT_LINK_STATE: flatbuffers::VOffsetT = 20;
+  pub const VT_BAND: flatbuffers::VOffsetT = 22;
+  pub const VT_LINK_START_TIME: flatbuffers::VOffsetT = 24;
+  pub const VT_LINK_STOP_TIME: flatbuffers::VOffsetT = 26;
+  pub const VT_ID_BEAM1: flatbuffers::VOffsetT = 28;
+  pub const VT_END_POINT1_NAME: flatbuffers::VOffsetT = 30;
+  pub const VT_END_POINT1_LAT: flatbuffers::VOffsetT = 32;
+  pub const VT_END_POINT1_LON: flatbuffers::VOffsetT = 34;
+  pub const VT_ID_BEAM2: flatbuffers::VOffsetT = 36;
+  pub const VT_END_POINT2_NAME: flatbuffers::VOffsetT = 38;
+  pub const VT_END_POINT2_LAT: flatbuffers::VOffsetT = 40;
+  pub const VT_END_POINT2_LON: flatbuffers::VOffsetT = 42;
+  pub const VT_DATA_RATE1_TO2: flatbuffers::VOffsetT = 44;
+  pub const VT_DATA_RATE2_TO1: flatbuffers::VOffsetT = 46;
+  pub const VT_SYS_CAP: flatbuffers::VOffsetT = 48;
+  pub const VT_OPS_CAP: flatbuffers::VOffsetT = 50;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -67,24 +269,24 @@ impl<'a> LKS<'a> {
     builder.add_END_POINT2_LAT(args.END_POINT2_LAT);
     builder.add_END_POINT1_LON(args.END_POINT1_LON);
     builder.add_END_POINT1_LAT(args.END_POINT1_LAT);
-    builder.add_SAT_NO2(args.SAT_NO2);
-    builder.add_SAT_NO1(args.SAT_NO1);
     if let Some(x) = args.OPS_CAP { builder.add_OPS_CAP(x); }
     if let Some(x) = args.SYS_CAP { builder.add_SYS_CAP(x); }
-    if let Some(x) = args.LINK_STATE { builder.add_LINK_STATE(x); }
     if let Some(x) = args.END_POINT2_NAME { builder.add_END_POINT2_NAME(x); }
     if let Some(x) = args.ID_BEAM2 { builder.add_ID_BEAM2(x); }
     if let Some(x) = args.END_POINT1_NAME { builder.add_END_POINT1_NAME(x); }
     if let Some(x) = args.ID_BEAM1 { builder.add_ID_BEAM1(x); }
-    if let Some(x) = args.BAND { builder.add_BAND(x); }
-    if let Some(x) = args.LINK_TYPE { builder.add_LINK_TYPE(x); }
-    if let Some(x) = args.LINK_NAME { builder.add_LINK_NAME(x); }
-    if let Some(x) = args.CONSTELLATION { builder.add_CONSTELLATION(x); }
     if let Some(x) = args.LINK_STOP_TIME { builder.add_LINK_STOP_TIME(x); }
     if let Some(x) = args.LINK_START_TIME { builder.add_LINK_START_TIME(x); }
+    if let Some(x) = args.BAND { builder.add_BAND(x); }
+    if let Some(x) = args.LINK_NAME { builder.add_LINK_NAME(x); }
+    if let Some(x) = args.CONSTELLATION { builder.add_CONSTELLATION(x); }
+    builder.add_SAT_NO2(args.SAT_NO2);
     if let Some(x) = args.ID_ON_ORBIT2 { builder.add_ID_ON_ORBIT2(x); }
+    builder.add_SAT_NO1(args.SAT_NO1);
     if let Some(x) = args.ID_ON_ORBIT1 { builder.add_ID_ON_ORBIT1(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_LINK_STATE(args.LINK_STATE);
+    builder.add_LINK_TYPE(args.LINK_TYPE);
     builder.finish()
   }
 
@@ -95,25 +297,26 @@ impl<'a> LKS<'a> {
     let ID_ON_ORBIT1 = self.ID_ON_ORBIT1().map(|x| {
       x.to_string()
     });
+    let SAT_NO1 = self.SAT_NO1();
     let ID_ON_ORBIT2 = self.ID_ON_ORBIT2().map(|x| {
       x.to_string()
     });
-    let LINK_START_TIME = self.LINK_START_TIME().map(|x| {
-      x.to_string()
-    });
-    let LINK_STOP_TIME = self.LINK_STOP_TIME().map(|x| {
-      x.to_string()
-    });
+    let SAT_NO2 = self.SAT_NO2();
     let CONSTELLATION = self.CONSTELLATION().map(|x| {
       x.to_string()
     });
     let LINK_NAME = self.LINK_NAME().map(|x| {
       x.to_string()
     });
-    let LINK_TYPE = self.LINK_TYPE().map(|x| {
+    let LINK_TYPE = self.LINK_TYPE();
+    let LINK_STATE = self.LINK_STATE();
+    let BAND = self.BAND().map(|x| {
       x.to_string()
     });
-    let BAND = self.BAND().map(|x| {
+    let LINK_START_TIME = self.LINK_START_TIME().map(|x| {
+      x.to_string()
+    });
+    let LINK_STOP_TIME = self.LINK_STOP_TIME().map(|x| {
       x.to_string()
     });
     let ID_BEAM1 = self.ID_BEAM1().map(|x| {
@@ -134,27 +337,25 @@ impl<'a> LKS<'a> {
     let END_POINT2_LON = self.END_POINT2_LON();
     let DATA_RATE1_TO2 = self.DATA_RATE1_TO2();
     let DATA_RATE2_TO1 = self.DATA_RATE2_TO1();
-    let LINK_STATE = self.LINK_STATE().map(|x| {
-      x.to_string()
-    });
     let SYS_CAP = self.SYS_CAP().map(|x| {
       x.to_string()
     });
     let OPS_CAP = self.OPS_CAP().map(|x| {
       x.to_string()
     });
-    let SAT_NO1 = self.SAT_NO1();
-    let SAT_NO2 = self.SAT_NO2();
     LKST {
       ID,
       ID_ON_ORBIT1,
+      SAT_NO1,
       ID_ON_ORBIT2,
-      LINK_START_TIME,
-      LINK_STOP_TIME,
+      SAT_NO2,
       CONSTELLATION,
       LINK_NAME,
       LINK_TYPE,
+      LINK_STATE,
       BAND,
+      LINK_START_TIME,
+      LINK_STOP_TIME,
       ID_BEAM1,
       END_POINT1_NAME,
       END_POINT1_LAT,
@@ -165,14 +366,12 @@ impl<'a> LKS<'a> {
       END_POINT2_LON,
       DATA_RATE1_TO2,
       DATA_RATE2_TO1,
-      LINK_STATE,
       SYS_CAP,
       OPS_CAP,
-      SAT_NO1,
-      SAT_NO2,
     }
   }
 
+  /// Unique identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -180,6 +379,7 @@ impl<'a> LKS<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LKS::VT_ID, None)}
   }
+  /// First endpoint on-orbit identifier
   #[inline]
   pub fn ID_ON_ORBIT1(&self) -> Option<&'a str> {
     // Safety:
@@ -187,6 +387,15 @@ impl<'a> LKS<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LKS::VT_ID_ON_ORBIT1, None)}
   }
+  /// First endpoint satellite catalog number
+  #[inline]
+  pub fn SAT_NO1(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(LKS::VT_SAT_NO1, Some(0)).unwrap()}
+  }
+  /// Second endpoint on-orbit identifier
   #[inline]
   pub fn ID_ON_ORBIT2(&self) -> Option<&'a str> {
     // Safety:
@@ -194,20 +403,15 @@ impl<'a> LKS<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LKS::VT_ID_ON_ORBIT2, None)}
   }
+  /// Second endpoint satellite catalog number
   #[inline]
-  pub fn LINK_START_TIME(&self) -> Option<&'a str> {
+  pub fn SAT_NO2(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LKS::VT_LINK_START_TIME, None)}
+    unsafe { self._tab.get::<u32>(LKS::VT_SAT_NO2, Some(0)).unwrap()}
   }
-  #[inline]
-  pub fn LINK_STOP_TIME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LKS::VT_LINK_STOP_TIME, None)}
-  }
+  /// Constellation name
   #[inline]
   pub fn CONSTELLATION(&self) -> Option<&'a str> {
     // Safety:
@@ -215,6 +419,7 @@ impl<'a> LKS<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LKS::VT_CONSTELLATION, None)}
   }
+  /// Link name or identifier
   #[inline]
   pub fn LINK_NAME(&self) -> Option<&'a str> {
     // Safety:
@@ -222,13 +427,23 @@ impl<'a> LKS<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LKS::VT_LINK_NAME, None)}
   }
+  /// Link type
   #[inline]
-  pub fn LINK_TYPE(&self) -> Option<&'a str> {
+  pub fn LINK_TYPE(&self) -> linkType {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LKS::VT_LINK_TYPE, None)}
+    unsafe { self._tab.get::<linkType>(LKS::VT_LINK_TYPE, Some(linkType::UPLINK)).unwrap()}
   }
+  /// Link state
+  #[inline]
+  pub fn LINK_STATE(&self) -> linkState {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<linkState>(LKS::VT_LINK_STATE, Some(linkState::ESTABLISHED)).unwrap()}
+  }
+  /// RF band
   #[inline]
   pub fn BAND(&self) -> Option<&'a str> {
     // Safety:
@@ -236,6 +451,23 @@ impl<'a> LKS<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LKS::VT_BAND, None)}
   }
+  /// Link start time (ISO 8601)
+  #[inline]
+  pub fn LINK_START_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LKS::VT_LINK_START_TIME, None)}
+  }
+  /// Link stop time (ISO 8601)
+  #[inline]
+  pub fn LINK_STOP_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LKS::VT_LINK_STOP_TIME, None)}
+  }
+  /// First endpoint beam identifier
   #[inline]
   pub fn ID_BEAM1(&self) -> Option<&'a str> {
     // Safety:
@@ -243,6 +475,7 @@ impl<'a> LKS<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LKS::VT_ID_BEAM1, None)}
   }
+  /// First endpoint name
   #[inline]
   pub fn END_POINT1_NAME(&self) -> Option<&'a str> {
     // Safety:
@@ -250,6 +483,7 @@ impl<'a> LKS<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LKS::VT_END_POINT1_NAME, None)}
   }
+  /// First endpoint latitude (degrees)
   #[inline]
   pub fn END_POINT1_LAT(&self) -> f64 {
     // Safety:
@@ -257,6 +491,7 @@ impl<'a> LKS<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(LKS::VT_END_POINT1_LAT, Some(0.0)).unwrap()}
   }
+  /// First endpoint longitude (degrees)
   #[inline]
   pub fn END_POINT1_LON(&self) -> f64 {
     // Safety:
@@ -264,6 +499,7 @@ impl<'a> LKS<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(LKS::VT_END_POINT1_LON, Some(0.0)).unwrap()}
   }
+  /// Second endpoint beam identifier
   #[inline]
   pub fn ID_BEAM2(&self) -> Option<&'a str> {
     // Safety:
@@ -271,6 +507,7 @@ impl<'a> LKS<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LKS::VT_ID_BEAM2, None)}
   }
+  /// Second endpoint name
   #[inline]
   pub fn END_POINT2_NAME(&self) -> Option<&'a str> {
     // Safety:
@@ -278,6 +515,7 @@ impl<'a> LKS<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LKS::VT_END_POINT2_NAME, None)}
   }
+  /// Second endpoint latitude (degrees)
   #[inline]
   pub fn END_POINT2_LAT(&self) -> f64 {
     // Safety:
@@ -285,6 +523,7 @@ impl<'a> LKS<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(LKS::VT_END_POINT2_LAT, Some(0.0)).unwrap()}
   }
+  /// Second endpoint longitude (degrees)
   #[inline]
   pub fn END_POINT2_LON(&self) -> f64 {
     // Safety:
@@ -292,6 +531,7 @@ impl<'a> LKS<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(LKS::VT_END_POINT2_LON, Some(0.0)).unwrap()}
   }
+  /// Data rate from endpoint 1 to 2 (Mbps)
   #[inline]
   pub fn DATA_RATE1_TO2(&self) -> f64 {
     // Safety:
@@ -299,6 +539,7 @@ impl<'a> LKS<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(LKS::VT_DATA_RATE1_TO2, Some(0.0)).unwrap()}
   }
+  /// Data rate from endpoint 2 to 1 (Mbps)
   #[inline]
   pub fn DATA_RATE2_TO1(&self) -> f64 {
     // Safety:
@@ -306,13 +547,7 @@ impl<'a> LKS<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(LKS::VT_DATA_RATE2_TO1, Some(0.0)).unwrap()}
   }
-  #[inline]
-  pub fn LINK_STATE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LKS::VT_LINK_STATE, None)}
-  }
+  /// System capability status
   #[inline]
   pub fn SYS_CAP(&self) -> Option<&'a str> {
     // Safety:
@@ -320,26 +555,13 @@ impl<'a> LKS<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LKS::VT_SYS_CAP, None)}
   }
+  /// Operational capability status
   #[inline]
   pub fn OPS_CAP(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(LKS::VT_OPS_CAP, None)}
-  }
-  #[inline]
-  pub fn SAT_NO1(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(LKS::VT_SAT_NO1, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn SAT_NO2(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(LKS::VT_SAT_NO2, Some(0)).unwrap()}
   }
 }
 
@@ -352,13 +574,16 @@ impl flatbuffers::Verifiable for LKS<'_> {
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID_ON_ORBIT1", Self::VT_ID_ON_ORBIT1, false)?
+     .visit_field::<u32>("SAT_NO1", Self::VT_SAT_NO1, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID_ON_ORBIT2", Self::VT_ID_ON_ORBIT2, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LINK_START_TIME", Self::VT_LINK_START_TIME, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LINK_STOP_TIME", Self::VT_LINK_STOP_TIME, false)?
+     .visit_field::<u32>("SAT_NO2", Self::VT_SAT_NO2, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CONSTELLATION", Self::VT_CONSTELLATION, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LINK_NAME", Self::VT_LINK_NAME, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LINK_TYPE", Self::VT_LINK_TYPE, false)?
+     .visit_field::<linkType>("LINK_TYPE", Self::VT_LINK_TYPE, false)?
+     .visit_field::<linkState>("LINK_STATE", Self::VT_LINK_STATE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("BAND", Self::VT_BAND, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LINK_START_TIME", Self::VT_LINK_START_TIME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LINK_STOP_TIME", Self::VT_LINK_STOP_TIME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID_BEAM1", Self::VT_ID_BEAM1, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("END_POINT1_NAME", Self::VT_END_POINT1_NAME, false)?
      .visit_field::<f64>("END_POINT1_LAT", Self::VT_END_POINT1_LAT, false)?
@@ -369,11 +594,8 @@ impl flatbuffers::Verifiable for LKS<'_> {
      .visit_field::<f64>("END_POINT2_LON", Self::VT_END_POINT2_LON, false)?
      .visit_field::<f64>("DATA_RATE1_TO2", Self::VT_DATA_RATE1_TO2, false)?
      .visit_field::<f64>("DATA_RATE2_TO1", Self::VT_DATA_RATE2_TO1, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LINK_STATE", Self::VT_LINK_STATE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SYS_CAP", Self::VT_SYS_CAP, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OPS_CAP", Self::VT_OPS_CAP, false)?
-     .visit_field::<i32>("SAT_NO1", Self::VT_SAT_NO1, false)?
-     .visit_field::<i32>("SAT_NO2", Self::VT_SAT_NO2, false)?
      .finish();
     Ok(())
   }
@@ -381,13 +603,16 @@ impl flatbuffers::Verifiable for LKS<'_> {
 pub struct LKSArgs<'a> {
     pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ID_ON_ORBIT1: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SAT_NO1: u32,
     pub ID_ON_ORBIT2: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub LINK_START_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub LINK_STOP_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SAT_NO2: u32,
     pub CONSTELLATION: Option<flatbuffers::WIPOffset<&'a str>>,
     pub LINK_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub LINK_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub LINK_TYPE: linkType,
+    pub LINK_STATE: linkState,
     pub BAND: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub LINK_START_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub LINK_STOP_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ID_BEAM1: Option<flatbuffers::WIPOffset<&'a str>>,
     pub END_POINT1_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub END_POINT1_LAT: f64,
@@ -398,11 +623,8 @@ pub struct LKSArgs<'a> {
     pub END_POINT2_LON: f64,
     pub DATA_RATE1_TO2: f64,
     pub DATA_RATE2_TO1: f64,
-    pub LINK_STATE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub SYS_CAP: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OPS_CAP: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SAT_NO1: i32,
-    pub SAT_NO2: i32,
 }
 impl<'a> Default for LKSArgs<'a> {
   #[inline]
@@ -410,13 +632,16 @@ impl<'a> Default for LKSArgs<'a> {
     LKSArgs {
       ID: None,
       ID_ON_ORBIT1: None,
+      SAT_NO1: 0,
       ID_ON_ORBIT2: None,
-      LINK_START_TIME: None,
-      LINK_STOP_TIME: None,
+      SAT_NO2: 0,
       CONSTELLATION: None,
       LINK_NAME: None,
-      LINK_TYPE: None,
+      LINK_TYPE: linkType::UPLINK,
+      LINK_STATE: linkState::ESTABLISHED,
       BAND: None,
+      LINK_START_TIME: None,
+      LINK_STOP_TIME: None,
       ID_BEAM1: None,
       END_POINT1_NAME: None,
       END_POINT1_LAT: 0.0,
@@ -427,11 +652,8 @@ impl<'a> Default for LKSArgs<'a> {
       END_POINT2_LON: 0.0,
       DATA_RATE1_TO2: 0.0,
       DATA_RATE2_TO1: 0.0,
-      LINK_STATE: None,
       SYS_CAP: None,
       OPS_CAP: None,
-      SAT_NO1: 0,
-      SAT_NO2: 0,
     }
   }
 }
@@ -450,16 +672,16 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> LKSBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LKS::VT_ID_ON_ORBIT1, ID_ON_ORBIT1);
   }
   #[inline]
+  pub fn add_SAT_NO1(&mut self, SAT_NO1: u32) {
+    self.fbb_.push_slot::<u32>(LKS::VT_SAT_NO1, SAT_NO1, 0);
+  }
+  #[inline]
   pub fn add_ID_ON_ORBIT2(&mut self, ID_ON_ORBIT2: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LKS::VT_ID_ON_ORBIT2, ID_ON_ORBIT2);
   }
   #[inline]
-  pub fn add_LINK_START_TIME(&mut self, LINK_START_TIME: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LKS::VT_LINK_START_TIME, LINK_START_TIME);
-  }
-  #[inline]
-  pub fn add_LINK_STOP_TIME(&mut self, LINK_STOP_TIME: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LKS::VT_LINK_STOP_TIME, LINK_STOP_TIME);
+  pub fn add_SAT_NO2(&mut self, SAT_NO2: u32) {
+    self.fbb_.push_slot::<u32>(LKS::VT_SAT_NO2, SAT_NO2, 0);
   }
   #[inline]
   pub fn add_CONSTELLATION(&mut self, CONSTELLATION: flatbuffers::WIPOffset<&'b  str>) {
@@ -470,12 +692,24 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> LKSBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LKS::VT_LINK_NAME, LINK_NAME);
   }
   #[inline]
-  pub fn add_LINK_TYPE(&mut self, LINK_TYPE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LKS::VT_LINK_TYPE, LINK_TYPE);
+  pub fn add_LINK_TYPE(&mut self, LINK_TYPE: linkType) {
+    self.fbb_.push_slot::<linkType>(LKS::VT_LINK_TYPE, LINK_TYPE, linkType::UPLINK);
+  }
+  #[inline]
+  pub fn add_LINK_STATE(&mut self, LINK_STATE: linkState) {
+    self.fbb_.push_slot::<linkState>(LKS::VT_LINK_STATE, LINK_STATE, linkState::ESTABLISHED);
   }
   #[inline]
   pub fn add_BAND(&mut self, BAND: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LKS::VT_BAND, BAND);
+  }
+  #[inline]
+  pub fn add_LINK_START_TIME(&mut self, LINK_START_TIME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LKS::VT_LINK_START_TIME, LINK_START_TIME);
+  }
+  #[inline]
+  pub fn add_LINK_STOP_TIME(&mut self, LINK_STOP_TIME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LKS::VT_LINK_STOP_TIME, LINK_STOP_TIME);
   }
   #[inline]
   pub fn add_ID_BEAM1(&mut self, ID_BEAM1: flatbuffers::WIPOffset<&'b  str>) {
@@ -518,24 +752,12 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> LKSBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(LKS::VT_DATA_RATE2_TO1, DATA_RATE2_TO1, 0.0);
   }
   #[inline]
-  pub fn add_LINK_STATE(&mut self, LINK_STATE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LKS::VT_LINK_STATE, LINK_STATE);
-  }
-  #[inline]
   pub fn add_SYS_CAP(&mut self, SYS_CAP: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LKS::VT_SYS_CAP, SYS_CAP);
   }
   #[inline]
   pub fn add_OPS_CAP(&mut self, OPS_CAP: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(LKS::VT_OPS_CAP, OPS_CAP);
-  }
-  #[inline]
-  pub fn add_SAT_NO1(&mut self, SAT_NO1: i32) {
-    self.fbb_.push_slot::<i32>(LKS::VT_SAT_NO1, SAT_NO1, 0);
-  }
-  #[inline]
-  pub fn add_SAT_NO2(&mut self, SAT_NO2: i32) {
-    self.fbb_.push_slot::<i32>(LKS::VT_SAT_NO2, SAT_NO2, 0);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> LKSBuilder<'a, 'b, A> {
@@ -557,13 +779,16 @@ impl core::fmt::Debug for LKS<'_> {
     let mut ds = f.debug_struct("LKS");
       ds.field("ID", &self.ID());
       ds.field("ID_ON_ORBIT1", &self.ID_ON_ORBIT1());
+      ds.field("SAT_NO1", &self.SAT_NO1());
       ds.field("ID_ON_ORBIT2", &self.ID_ON_ORBIT2());
-      ds.field("LINK_START_TIME", &self.LINK_START_TIME());
-      ds.field("LINK_STOP_TIME", &self.LINK_STOP_TIME());
+      ds.field("SAT_NO2", &self.SAT_NO2());
       ds.field("CONSTELLATION", &self.CONSTELLATION());
       ds.field("LINK_NAME", &self.LINK_NAME());
       ds.field("LINK_TYPE", &self.LINK_TYPE());
+      ds.field("LINK_STATE", &self.LINK_STATE());
       ds.field("BAND", &self.BAND());
+      ds.field("LINK_START_TIME", &self.LINK_START_TIME());
+      ds.field("LINK_STOP_TIME", &self.LINK_STOP_TIME());
       ds.field("ID_BEAM1", &self.ID_BEAM1());
       ds.field("END_POINT1_NAME", &self.END_POINT1_NAME());
       ds.field("END_POINT1_LAT", &self.END_POINT1_LAT());
@@ -574,11 +799,8 @@ impl core::fmt::Debug for LKS<'_> {
       ds.field("END_POINT2_LON", &self.END_POINT2_LON());
       ds.field("DATA_RATE1_TO2", &self.DATA_RATE1_TO2());
       ds.field("DATA_RATE2_TO1", &self.DATA_RATE2_TO1());
-      ds.field("LINK_STATE", &self.LINK_STATE());
       ds.field("SYS_CAP", &self.SYS_CAP());
       ds.field("OPS_CAP", &self.OPS_CAP());
-      ds.field("SAT_NO1", &self.SAT_NO1());
-      ds.field("SAT_NO2", &self.SAT_NO2());
       ds.finish()
   }
 }
@@ -587,13 +809,16 @@ impl core::fmt::Debug for LKS<'_> {
 pub struct LKST {
   pub ID: Option<String>,
   pub ID_ON_ORBIT1: Option<String>,
+  pub SAT_NO1: u32,
   pub ID_ON_ORBIT2: Option<String>,
-  pub LINK_START_TIME: Option<String>,
-  pub LINK_STOP_TIME: Option<String>,
+  pub SAT_NO2: u32,
   pub CONSTELLATION: Option<String>,
   pub LINK_NAME: Option<String>,
-  pub LINK_TYPE: Option<String>,
+  pub LINK_TYPE: linkType,
+  pub LINK_STATE: linkState,
   pub BAND: Option<String>,
+  pub LINK_START_TIME: Option<String>,
+  pub LINK_STOP_TIME: Option<String>,
   pub ID_BEAM1: Option<String>,
   pub END_POINT1_NAME: Option<String>,
   pub END_POINT1_LAT: f64,
@@ -604,24 +829,24 @@ pub struct LKST {
   pub END_POINT2_LON: f64,
   pub DATA_RATE1_TO2: f64,
   pub DATA_RATE2_TO1: f64,
-  pub LINK_STATE: Option<String>,
   pub SYS_CAP: Option<String>,
   pub OPS_CAP: Option<String>,
-  pub SAT_NO1: i32,
-  pub SAT_NO2: i32,
 }
 impl Default for LKST {
   fn default() -> Self {
     Self {
       ID: None,
       ID_ON_ORBIT1: None,
+      SAT_NO1: 0,
       ID_ON_ORBIT2: None,
-      LINK_START_TIME: None,
-      LINK_STOP_TIME: None,
+      SAT_NO2: 0,
       CONSTELLATION: None,
       LINK_NAME: None,
-      LINK_TYPE: None,
+      LINK_TYPE: linkType::UPLINK,
+      LINK_STATE: linkState::ESTABLISHED,
       BAND: None,
+      LINK_START_TIME: None,
+      LINK_STOP_TIME: None,
       ID_BEAM1: None,
       END_POINT1_NAME: None,
       END_POINT1_LAT: 0.0,
@@ -632,11 +857,8 @@ impl Default for LKST {
       END_POINT2_LON: 0.0,
       DATA_RATE1_TO2: 0.0,
       DATA_RATE2_TO1: 0.0,
-      LINK_STATE: None,
       SYS_CAP: None,
       OPS_CAP: None,
-      SAT_NO1: 0,
-      SAT_NO2: 0,
     }
   }
 }
@@ -651,25 +873,26 @@ impl LKST {
     let ID_ON_ORBIT1 = self.ID_ON_ORBIT1.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let SAT_NO1 = self.SAT_NO1;
     let ID_ON_ORBIT2 = self.ID_ON_ORBIT2.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let LINK_START_TIME = self.LINK_START_TIME.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let LINK_STOP_TIME = self.LINK_STOP_TIME.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+    let SAT_NO2 = self.SAT_NO2;
     let CONSTELLATION = self.CONSTELLATION.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let LINK_NAME = self.LINK_NAME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let LINK_TYPE = self.LINK_TYPE.as_ref().map(|x|{
+    let LINK_TYPE = self.LINK_TYPE;
+    let LINK_STATE = self.LINK_STATE;
+    let BAND = self.BAND.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let BAND = self.BAND.as_ref().map(|x|{
+    let LINK_START_TIME = self.LINK_START_TIME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let LINK_STOP_TIME = self.LINK_STOP_TIME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let ID_BEAM1 = self.ID_BEAM1.as_ref().map(|x|{
@@ -690,27 +913,25 @@ impl LKST {
     let END_POINT2_LON = self.END_POINT2_LON;
     let DATA_RATE1_TO2 = self.DATA_RATE1_TO2;
     let DATA_RATE2_TO1 = self.DATA_RATE2_TO1;
-    let LINK_STATE = self.LINK_STATE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
     let SYS_CAP = self.SYS_CAP.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let OPS_CAP = self.OPS_CAP.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let SAT_NO1 = self.SAT_NO1;
-    let SAT_NO2 = self.SAT_NO2;
     LKS::create(_fbb, &LKSArgs{
       ID,
       ID_ON_ORBIT1,
+      SAT_NO1,
       ID_ON_ORBIT2,
-      LINK_START_TIME,
-      LINK_STOP_TIME,
+      SAT_NO2,
       CONSTELLATION,
       LINK_NAME,
       LINK_TYPE,
+      LINK_STATE,
       BAND,
+      LINK_START_TIME,
+      LINK_STOP_TIME,
       ID_BEAM1,
       END_POINT1_NAME,
       END_POINT1_LAT,
@@ -721,11 +942,8 @@ impl LKST {
       END_POINT2_LON,
       DATA_RATE1_TO2,
       DATA_RATE2_TO1,
-      LINK_STATE,
       SYS_CAP,
       OPS_CAP,
-      SAT_NO1,
-      SAT_NO2,
     })
   }
 }

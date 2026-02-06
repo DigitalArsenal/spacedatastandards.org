@@ -9,6 +9,200 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_IR_BAND: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_IR_BAND: i8 = 4;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_IR_BAND: [irBand; 5] = [
+  irBand::SWIR,
+  irBand::MWIR,
+  irBand::LWIR,
+  irBand::VLWIR,
+  irBand::BROADBAND,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct irBand(pub i8);
+#[allow(non_upper_case_globals)]
+impl irBand {
+  pub const SWIR: Self = Self(0);
+  pub const MWIR: Self = Self(1);
+  pub const LWIR: Self = Self(2);
+  pub const VLWIR: Self = Self(3);
+  pub const BROADBAND: Self = Self(4);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 4;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::SWIR,
+    Self::MWIR,
+    Self::LWIR,
+    Self::VLWIR,
+    Self::BROADBAND,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::SWIR => Some("SWIR"),
+      Self::MWIR => Some("MWIR"),
+      Self::LWIR => Some("LWIR"),
+      Self::VLWIR => Some("VLWIR"),
+      Self::BROADBAND => Some("BROADBAND"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for irBand {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for irBand {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for irBand {
+    type Output = irBand;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for irBand {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for irBand {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for irBand {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_IR_DETECTION_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_IR_DETECTION_TYPE: i8 = 4;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_IR_DETECTION_TYPE: [irDetectionType; 5] = [
+  irDetectionType::POINT_SOURCE,
+  irDetectionType::RESOLVED,
+  irDetectionType::STREAK,
+  irDetectionType::UNRESOLVED,
+  irDetectionType::EXTENDED,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct irDetectionType(pub i8);
+#[allow(non_upper_case_globals)]
+impl irDetectionType {
+  pub const POINT_SOURCE: Self = Self(0);
+  pub const RESOLVED: Self = Self(1);
+  pub const STREAK: Self = Self(2);
+  pub const UNRESOLVED: Self = Self(3);
+  pub const EXTENDED: Self = Self(4);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 4;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::POINT_SOURCE,
+    Self::RESOLVED,
+    Self::STREAK,
+    Self::UNRESOLVED,
+    Self::EXTENDED,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::POINT_SOURCE => Some("POINT_SOURCE"),
+      Self::RESOLVED => Some("RESOLVED"),
+      Self::STREAK => Some("STREAK"),
+      Self::UNRESOLVED => Some("UNRESOLVED"),
+      Self::EXTENDED => Some("EXTENDED"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for irDetectionType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for irDetectionType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for irDetectionType {
+    type Output = irDetectionType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for irDetectionType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for irDetectionType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for irDetectionType {}
 pub enum IROOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -31,6 +225,31 @@ impl<'a> IRO<'a> {
   pub const VT_NAME: flatbuffers::VOffsetT = 8;
   pub const VT_DESCRIPTION: flatbuffers::VOffsetT = 10;
   pub const VT_ENTITY: flatbuffers::VOffsetT = 12;
+  pub const VT_EPOCH: flatbuffers::VOffsetT = 14;
+  pub const VT_SENSOR_ID: flatbuffers::VOffsetT = 16;
+  pub const VT_SAT_NO: flatbuffers::VOffsetT = 18;
+  pub const VT_OBJECT_DESIGNATOR: flatbuffers::VOffsetT = 20;
+  pub const VT_BAND: flatbuffers::VOffsetT = 22;
+  pub const VT_DETECTION_TYPE: flatbuffers::VOffsetT = 24;
+  pub const VT_RA: flatbuffers::VOffsetT = 26;
+  pub const VT_DEC: flatbuffers::VOffsetT = 28;
+  pub const VT_RA_UNC: flatbuffers::VOffsetT = 30;
+  pub const VT_DEC_UNC: flatbuffers::VOffsetT = 32;
+  pub const VT_AZIMUTH: flatbuffers::VOffsetT = 34;
+  pub const VT_ELEVATION: flatbuffers::VOffsetT = 36;
+  pub const VT_RANGE: flatbuffers::VOffsetT = 38;
+  pub const VT_IRRADIANCE: flatbuffers::VOffsetT = 40;
+  pub const VT_IRRADIANCE_UNC: flatbuffers::VOffsetT = 42;
+  pub const VT_IR_MAG: flatbuffers::VOffsetT = 44;
+  pub const VT_MAG_UNC: flatbuffers::VOffsetT = 46;
+  pub const VT_TEMPERATURE: flatbuffers::VOffsetT = 48;
+  pub const VT_INTEGRATION_TIME: flatbuffers::VOffsetT = 50;
+  pub const VT_BACKGROUND: flatbuffers::VOffsetT = 52;
+  pub const VT_SNR: flatbuffers::VOffsetT = 54;
+  pub const VT_WAVELENGTHS: flatbuffers::VOffsetT = 56;
+  pub const VT_SPECTRAL_VALUES: flatbuffers::VOffsetT = 58;
+  pub const VT_QUALITY: flatbuffers::VOffsetT = 60;
+  pub const VT_NOTES: flatbuffers::VOffsetT = 62;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -42,11 +261,36 @@ impl<'a> IRO<'a> {
     args: &'args IROArgs<'args>
   ) -> flatbuffers::WIPOffset<IRO<'bldr>> {
     let mut builder = IROBuilder::new(_fbb);
+    builder.add_SNR(args.SNR);
+    builder.add_BACKGROUND(args.BACKGROUND);
+    builder.add_INTEGRATION_TIME(args.INTEGRATION_TIME);
+    builder.add_TEMPERATURE(args.TEMPERATURE);
+    builder.add_MAG_UNC(args.MAG_UNC);
+    builder.add_IR_MAG(args.IR_MAG);
+    builder.add_IRRADIANCE_UNC(args.IRRADIANCE_UNC);
+    builder.add_IRRADIANCE(args.IRRADIANCE);
+    builder.add_RANGE(args.RANGE);
+    builder.add_ELEVATION(args.ELEVATION);
+    builder.add_AZIMUTH(args.AZIMUTH);
+    builder.add_DEC_UNC(args.DEC_UNC);
+    builder.add_RA_UNC(args.RA_UNC);
+    builder.add_DEC(args.DEC);
+    builder.add_RA(args.RA);
+    if let Some(x) = args.NOTES { builder.add_NOTES(x); }
+    if let Some(x) = args.SPECTRAL_VALUES { builder.add_SPECTRAL_VALUES(x); }
+    if let Some(x) = args.WAVELENGTHS { builder.add_WAVELENGTHS(x); }
+    if let Some(x) = args.OBJECT_DESIGNATOR { builder.add_OBJECT_DESIGNATOR(x); }
+    builder.add_SAT_NO(args.SAT_NO);
+    if let Some(x) = args.SENSOR_ID { builder.add_SENSOR_ID(x); }
+    if let Some(x) = args.EPOCH { builder.add_EPOCH(x); }
     if let Some(x) = args.ENTITY { builder.add_ENTITY(x); }
     if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
     if let Some(x) = args.NAME { builder.add_NAME(x); }
     if let Some(x) = args.ID_ENTITY { builder.add_ID_ENTITY(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_QUALITY(args.QUALITY);
+    builder.add_DETECTION_TYPE(args.DETECTION_TYPE);
+    builder.add_BAND(args.BAND);
     builder.finish()
   }
 
@@ -66,15 +310,78 @@ impl<'a> IRO<'a> {
     let ENTITY = self.ENTITY().map(|x| {
       x.to_string()
     });
+    let EPOCH = self.EPOCH().map(|x| {
+      x.to_string()
+    });
+    let SENSOR_ID = self.SENSOR_ID().map(|x| {
+      x.to_string()
+    });
+    let SAT_NO = self.SAT_NO();
+    let OBJECT_DESIGNATOR = self.OBJECT_DESIGNATOR().map(|x| {
+      x.to_string()
+    });
+    let BAND = self.BAND();
+    let DETECTION_TYPE = self.DETECTION_TYPE();
+    let RA = self.RA();
+    let DEC = self.DEC();
+    let RA_UNC = self.RA_UNC();
+    let DEC_UNC = self.DEC_UNC();
+    let AZIMUTH = self.AZIMUTH();
+    let ELEVATION = self.ELEVATION();
+    let RANGE = self.RANGE();
+    let IRRADIANCE = self.IRRADIANCE();
+    let IRRADIANCE_UNC = self.IRRADIANCE_UNC();
+    let IR_MAG = self.IR_MAG();
+    let MAG_UNC = self.MAG_UNC();
+    let TEMPERATURE = self.TEMPERATURE();
+    let INTEGRATION_TIME = self.INTEGRATION_TIME();
+    let BACKGROUND = self.BACKGROUND();
+    let SNR = self.SNR();
+    let WAVELENGTHS = self.WAVELENGTHS().map(|x| {
+      x.into_iter().collect()
+    });
+    let SPECTRAL_VALUES = self.SPECTRAL_VALUES().map(|x| {
+      x.into_iter().collect()
+    });
+    let QUALITY = self.QUALITY();
+    let NOTES = self.NOTES().map(|x| {
+      x.to_string()
+    });
     IROT {
       ID,
       ID_ENTITY,
       NAME,
       DESCRIPTION,
       ENTITY,
+      EPOCH,
+      SENSOR_ID,
+      SAT_NO,
+      OBJECT_DESIGNATOR,
+      BAND,
+      DETECTION_TYPE,
+      RA,
+      DEC,
+      RA_UNC,
+      DEC_UNC,
+      AZIMUTH,
+      ELEVATION,
+      RANGE,
+      IRRADIANCE,
+      IRRADIANCE_UNC,
+      IR_MAG,
+      MAG_UNC,
+      TEMPERATURE,
+      INTEGRATION_TIME,
+      BACKGROUND,
+      SNR,
+      WAVELENGTHS,
+      SPECTRAL_VALUES,
+      QUALITY,
+      NOTES,
     }
   }
 
+  /// Unique identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -82,6 +389,7 @@ impl<'a> IRO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(IRO::VT_ID, None)}
   }
+  /// Reference to source entity
   #[inline]
   pub fn ID_ENTITY(&self) -> Option<&'a str> {
     // Safety:
@@ -89,6 +397,7 @@ impl<'a> IRO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(IRO::VT_ID_ENTITY, None)}
   }
+  /// Sensor or observation name
   #[inline]
   pub fn NAME(&self) -> Option<&'a str> {
     // Safety:
@@ -96,6 +405,7 @@ impl<'a> IRO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(IRO::VT_NAME, None)}
   }
+  /// Description of observation
   #[inline]
   pub fn DESCRIPTION(&self) -> Option<&'a str> {
     // Safety:
@@ -103,12 +413,213 @@ impl<'a> IRO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(IRO::VT_DESCRIPTION, None)}
   }
+  /// Source entity designator
   #[inline]
   pub fn ENTITY(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(IRO::VT_ENTITY, None)}
+  }
+  /// Observation epoch (ISO 8601)
+  #[inline]
+  pub fn EPOCH(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(IRO::VT_EPOCH, None)}
+  }
+  /// Sensor identifier
+  #[inline]
+  pub fn SENSOR_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(IRO::VT_SENSOR_ID, None)}
+  }
+  /// Target satellite number (if identified)
+  #[inline]
+  pub fn SAT_NO(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(IRO::VT_SAT_NO, Some(0)).unwrap()}
+  }
+  /// Target object designator
+  #[inline]
+  pub fn OBJECT_DESIGNATOR(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(IRO::VT_OBJECT_DESIGNATOR, None)}
+  }
+  /// IR spectral band
+  #[inline]
+  pub fn BAND(&self) -> irBand {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<irBand>(IRO::VT_BAND, Some(irBand::SWIR)).unwrap()}
+  }
+  /// Detection type
+  #[inline]
+  pub fn DETECTION_TYPE(&self) -> irDetectionType {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<irDetectionType>(IRO::VT_DETECTION_TYPE, Some(irDetectionType::POINT_SOURCE)).unwrap()}
+  }
+  /// Right ascension in degrees
+  #[inline]
+  pub fn RA(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(IRO::VT_RA, Some(0.0)).unwrap()}
+  }
+  /// Declination in degrees
+  #[inline]
+  pub fn DEC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(IRO::VT_DEC, Some(0.0)).unwrap()}
+  }
+  /// Right ascension uncertainty in arcseconds
+  #[inline]
+  pub fn RA_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(IRO::VT_RA_UNC, Some(0.0)).unwrap()}
+  }
+  /// Declination uncertainty in arcseconds
+  #[inline]
+  pub fn DEC_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(IRO::VT_DEC_UNC, Some(0.0)).unwrap()}
+  }
+  /// Azimuth angle in degrees
+  #[inline]
+  pub fn AZIMUTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(IRO::VT_AZIMUTH, Some(0.0)).unwrap()}
+  }
+  /// Elevation angle in degrees
+  #[inline]
+  pub fn ELEVATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(IRO::VT_ELEVATION, Some(0.0)).unwrap()}
+  }
+  /// Range in km (if available)
+  #[inline]
+  pub fn RANGE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(IRO::VT_RANGE, Some(0.0)).unwrap()}
+  }
+  /// Irradiance in W/m^2
+  #[inline]
+  pub fn IRRADIANCE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(IRO::VT_IRRADIANCE, Some(0.0)).unwrap()}
+  }
+  /// Irradiance uncertainty in W/m^2
+  #[inline]
+  pub fn IRRADIANCE_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(IRO::VT_IRRADIANCE_UNC, Some(0.0)).unwrap()}
+  }
+  /// Apparent IR magnitude
+  #[inline]
+  pub fn IR_MAG(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(IRO::VT_IR_MAG, Some(0.0)).unwrap()}
+  }
+  /// Magnitude uncertainty
+  #[inline]
+  pub fn MAG_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(IRO::VT_MAG_UNC, Some(0.0)).unwrap()}
+  }
+  /// Effective temperature in Kelvin
+  #[inline]
+  pub fn TEMPERATURE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(IRO::VT_TEMPERATURE, Some(0.0)).unwrap()}
+  }
+  /// Integration time in seconds
+  #[inline]
+  pub fn INTEGRATION_TIME(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(IRO::VT_INTEGRATION_TIME, Some(0.0)).unwrap()}
+  }
+  /// Background irradiance in W/m^2/sr
+  #[inline]
+  pub fn BACKGROUND(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(IRO::VT_BACKGROUND, Some(0.0)).unwrap()}
+  }
+  /// Signal-to-noise ratio
+  #[inline]
+  pub fn SNR(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(IRO::VT_SNR, Some(0.0)).unwrap()}
+  }
+  /// Spectral data wavelengths in micrometers
+  #[inline]
+  pub fn WAVELENGTHS(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(IRO::VT_WAVELENGTHS, None)}
+  }
+  /// Spectral data values in W/m^2/um
+  #[inline]
+  pub fn SPECTRAL_VALUES(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(IRO::VT_SPECTRAL_VALUES, None)}
+  }
+  /// Data quality indicator (0-9, 9=best)
+  #[inline]
+  pub fn QUALITY(&self) -> u8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u8>(IRO::VT_QUALITY, Some(0)).unwrap()}
+  }
+  /// Additional notes
+  #[inline]
+  pub fn NOTES(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(IRO::VT_NOTES, None)}
   }
 }
 
@@ -124,6 +635,31 @@ impl flatbuffers::Verifiable for IRO<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ENTITY", Self::VT_ENTITY, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EPOCH", Self::VT_EPOCH, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SENSOR_ID", Self::VT_SENSOR_ID, false)?
+     .visit_field::<u32>("SAT_NO", Self::VT_SAT_NO, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJECT_DESIGNATOR", Self::VT_OBJECT_DESIGNATOR, false)?
+     .visit_field::<irBand>("BAND", Self::VT_BAND, false)?
+     .visit_field::<irDetectionType>("DETECTION_TYPE", Self::VT_DETECTION_TYPE, false)?
+     .visit_field::<f64>("RA", Self::VT_RA, false)?
+     .visit_field::<f64>("DEC", Self::VT_DEC, false)?
+     .visit_field::<f64>("RA_UNC", Self::VT_RA_UNC, false)?
+     .visit_field::<f64>("DEC_UNC", Self::VT_DEC_UNC, false)?
+     .visit_field::<f64>("AZIMUTH", Self::VT_AZIMUTH, false)?
+     .visit_field::<f64>("ELEVATION", Self::VT_ELEVATION, false)?
+     .visit_field::<f64>("RANGE", Self::VT_RANGE, false)?
+     .visit_field::<f64>("IRRADIANCE", Self::VT_IRRADIANCE, false)?
+     .visit_field::<f64>("IRRADIANCE_UNC", Self::VT_IRRADIANCE_UNC, false)?
+     .visit_field::<f64>("IR_MAG", Self::VT_IR_MAG, false)?
+     .visit_field::<f64>("MAG_UNC", Self::VT_MAG_UNC, false)?
+     .visit_field::<f64>("TEMPERATURE", Self::VT_TEMPERATURE, false)?
+     .visit_field::<f64>("INTEGRATION_TIME", Self::VT_INTEGRATION_TIME, false)?
+     .visit_field::<f64>("BACKGROUND", Self::VT_BACKGROUND, false)?
+     .visit_field::<f64>("SNR", Self::VT_SNR, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("WAVELENGTHS", Self::VT_WAVELENGTHS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("SPECTRAL_VALUES", Self::VT_SPECTRAL_VALUES, false)?
+     .visit_field::<u8>("QUALITY", Self::VT_QUALITY, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NOTES", Self::VT_NOTES, false)?
      .finish();
     Ok(())
   }
@@ -134,6 +670,31 @@ pub struct IROArgs<'a> {
     pub NAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub DESCRIPTION: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ENTITY: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub EPOCH: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SENSOR_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SAT_NO: u32,
+    pub OBJECT_DESIGNATOR: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub BAND: irBand,
+    pub DETECTION_TYPE: irDetectionType,
+    pub RA: f64,
+    pub DEC: f64,
+    pub RA_UNC: f64,
+    pub DEC_UNC: f64,
+    pub AZIMUTH: f64,
+    pub ELEVATION: f64,
+    pub RANGE: f64,
+    pub IRRADIANCE: f64,
+    pub IRRADIANCE_UNC: f64,
+    pub IR_MAG: f64,
+    pub MAG_UNC: f64,
+    pub TEMPERATURE: f64,
+    pub INTEGRATION_TIME: f64,
+    pub BACKGROUND: f64,
+    pub SNR: f64,
+    pub WAVELENGTHS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub SPECTRAL_VALUES: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub QUALITY: u8,
+    pub NOTES: Option<flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for IROArgs<'a> {
   #[inline]
@@ -144,6 +705,31 @@ impl<'a> Default for IROArgs<'a> {
       NAME: None,
       DESCRIPTION: None,
       ENTITY: None,
+      EPOCH: None,
+      SENSOR_ID: None,
+      SAT_NO: 0,
+      OBJECT_DESIGNATOR: None,
+      BAND: irBand::SWIR,
+      DETECTION_TYPE: irDetectionType::POINT_SOURCE,
+      RA: 0.0,
+      DEC: 0.0,
+      RA_UNC: 0.0,
+      DEC_UNC: 0.0,
+      AZIMUTH: 0.0,
+      ELEVATION: 0.0,
+      RANGE: 0.0,
+      IRRADIANCE: 0.0,
+      IRRADIANCE_UNC: 0.0,
+      IR_MAG: 0.0,
+      MAG_UNC: 0.0,
+      TEMPERATURE: 0.0,
+      INTEGRATION_TIME: 0.0,
+      BACKGROUND: 0.0,
+      SNR: 0.0,
+      WAVELENGTHS: None,
+      SPECTRAL_VALUES: None,
+      QUALITY: 0,
+      NOTES: None,
     }
   }
 }
@@ -174,6 +760,106 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> IROBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(IRO::VT_ENTITY, ENTITY);
   }
   #[inline]
+  pub fn add_EPOCH(&mut self, EPOCH: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(IRO::VT_EPOCH, EPOCH);
+  }
+  #[inline]
+  pub fn add_SENSOR_ID(&mut self, SENSOR_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(IRO::VT_SENSOR_ID, SENSOR_ID);
+  }
+  #[inline]
+  pub fn add_SAT_NO(&mut self, SAT_NO: u32) {
+    self.fbb_.push_slot::<u32>(IRO::VT_SAT_NO, SAT_NO, 0);
+  }
+  #[inline]
+  pub fn add_OBJECT_DESIGNATOR(&mut self, OBJECT_DESIGNATOR: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(IRO::VT_OBJECT_DESIGNATOR, OBJECT_DESIGNATOR);
+  }
+  #[inline]
+  pub fn add_BAND(&mut self, BAND: irBand) {
+    self.fbb_.push_slot::<irBand>(IRO::VT_BAND, BAND, irBand::SWIR);
+  }
+  #[inline]
+  pub fn add_DETECTION_TYPE(&mut self, DETECTION_TYPE: irDetectionType) {
+    self.fbb_.push_slot::<irDetectionType>(IRO::VT_DETECTION_TYPE, DETECTION_TYPE, irDetectionType::POINT_SOURCE);
+  }
+  #[inline]
+  pub fn add_RA(&mut self, RA: f64) {
+    self.fbb_.push_slot::<f64>(IRO::VT_RA, RA, 0.0);
+  }
+  #[inline]
+  pub fn add_DEC(&mut self, DEC: f64) {
+    self.fbb_.push_slot::<f64>(IRO::VT_DEC, DEC, 0.0);
+  }
+  #[inline]
+  pub fn add_RA_UNC(&mut self, RA_UNC: f64) {
+    self.fbb_.push_slot::<f64>(IRO::VT_RA_UNC, RA_UNC, 0.0);
+  }
+  #[inline]
+  pub fn add_DEC_UNC(&mut self, DEC_UNC: f64) {
+    self.fbb_.push_slot::<f64>(IRO::VT_DEC_UNC, DEC_UNC, 0.0);
+  }
+  #[inline]
+  pub fn add_AZIMUTH(&mut self, AZIMUTH: f64) {
+    self.fbb_.push_slot::<f64>(IRO::VT_AZIMUTH, AZIMUTH, 0.0);
+  }
+  #[inline]
+  pub fn add_ELEVATION(&mut self, ELEVATION: f64) {
+    self.fbb_.push_slot::<f64>(IRO::VT_ELEVATION, ELEVATION, 0.0);
+  }
+  #[inline]
+  pub fn add_RANGE(&mut self, RANGE: f64) {
+    self.fbb_.push_slot::<f64>(IRO::VT_RANGE, RANGE, 0.0);
+  }
+  #[inline]
+  pub fn add_IRRADIANCE(&mut self, IRRADIANCE: f64) {
+    self.fbb_.push_slot::<f64>(IRO::VT_IRRADIANCE, IRRADIANCE, 0.0);
+  }
+  #[inline]
+  pub fn add_IRRADIANCE_UNC(&mut self, IRRADIANCE_UNC: f64) {
+    self.fbb_.push_slot::<f64>(IRO::VT_IRRADIANCE_UNC, IRRADIANCE_UNC, 0.0);
+  }
+  #[inline]
+  pub fn add_IR_MAG(&mut self, IR_MAG: f64) {
+    self.fbb_.push_slot::<f64>(IRO::VT_IR_MAG, IR_MAG, 0.0);
+  }
+  #[inline]
+  pub fn add_MAG_UNC(&mut self, MAG_UNC: f64) {
+    self.fbb_.push_slot::<f64>(IRO::VT_MAG_UNC, MAG_UNC, 0.0);
+  }
+  #[inline]
+  pub fn add_TEMPERATURE(&mut self, TEMPERATURE: f64) {
+    self.fbb_.push_slot::<f64>(IRO::VT_TEMPERATURE, TEMPERATURE, 0.0);
+  }
+  #[inline]
+  pub fn add_INTEGRATION_TIME(&mut self, INTEGRATION_TIME: f64) {
+    self.fbb_.push_slot::<f64>(IRO::VT_INTEGRATION_TIME, INTEGRATION_TIME, 0.0);
+  }
+  #[inline]
+  pub fn add_BACKGROUND(&mut self, BACKGROUND: f64) {
+    self.fbb_.push_slot::<f64>(IRO::VT_BACKGROUND, BACKGROUND, 0.0);
+  }
+  #[inline]
+  pub fn add_SNR(&mut self, SNR: f64) {
+    self.fbb_.push_slot::<f64>(IRO::VT_SNR, SNR, 0.0);
+  }
+  #[inline]
+  pub fn add_WAVELENGTHS(&mut self, WAVELENGTHS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(IRO::VT_WAVELENGTHS, WAVELENGTHS);
+  }
+  #[inline]
+  pub fn add_SPECTRAL_VALUES(&mut self, SPECTRAL_VALUES: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(IRO::VT_SPECTRAL_VALUES, SPECTRAL_VALUES);
+  }
+  #[inline]
+  pub fn add_QUALITY(&mut self, QUALITY: u8) {
+    self.fbb_.push_slot::<u8>(IRO::VT_QUALITY, QUALITY, 0);
+  }
+  #[inline]
+  pub fn add_NOTES(&mut self, NOTES: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(IRO::VT_NOTES, NOTES);
+  }
+  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> IROBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     IROBuilder {
@@ -196,6 +882,31 @@ impl core::fmt::Debug for IRO<'_> {
       ds.field("NAME", &self.NAME());
       ds.field("DESCRIPTION", &self.DESCRIPTION());
       ds.field("ENTITY", &self.ENTITY());
+      ds.field("EPOCH", &self.EPOCH());
+      ds.field("SENSOR_ID", &self.SENSOR_ID());
+      ds.field("SAT_NO", &self.SAT_NO());
+      ds.field("OBJECT_DESIGNATOR", &self.OBJECT_DESIGNATOR());
+      ds.field("BAND", &self.BAND());
+      ds.field("DETECTION_TYPE", &self.DETECTION_TYPE());
+      ds.field("RA", &self.RA());
+      ds.field("DEC", &self.DEC());
+      ds.field("RA_UNC", &self.RA_UNC());
+      ds.field("DEC_UNC", &self.DEC_UNC());
+      ds.field("AZIMUTH", &self.AZIMUTH());
+      ds.field("ELEVATION", &self.ELEVATION());
+      ds.field("RANGE", &self.RANGE());
+      ds.field("IRRADIANCE", &self.IRRADIANCE());
+      ds.field("IRRADIANCE_UNC", &self.IRRADIANCE_UNC());
+      ds.field("IR_MAG", &self.IR_MAG());
+      ds.field("MAG_UNC", &self.MAG_UNC());
+      ds.field("TEMPERATURE", &self.TEMPERATURE());
+      ds.field("INTEGRATION_TIME", &self.INTEGRATION_TIME());
+      ds.field("BACKGROUND", &self.BACKGROUND());
+      ds.field("SNR", &self.SNR());
+      ds.field("WAVELENGTHS", &self.WAVELENGTHS());
+      ds.field("SPECTRAL_VALUES", &self.SPECTRAL_VALUES());
+      ds.field("QUALITY", &self.QUALITY());
+      ds.field("NOTES", &self.NOTES());
       ds.finish()
   }
 }
@@ -207,6 +918,31 @@ pub struct IROT {
   pub NAME: Option<String>,
   pub DESCRIPTION: Option<String>,
   pub ENTITY: Option<String>,
+  pub EPOCH: Option<String>,
+  pub SENSOR_ID: Option<String>,
+  pub SAT_NO: u32,
+  pub OBJECT_DESIGNATOR: Option<String>,
+  pub BAND: irBand,
+  pub DETECTION_TYPE: irDetectionType,
+  pub RA: f64,
+  pub DEC: f64,
+  pub RA_UNC: f64,
+  pub DEC_UNC: f64,
+  pub AZIMUTH: f64,
+  pub ELEVATION: f64,
+  pub RANGE: f64,
+  pub IRRADIANCE: f64,
+  pub IRRADIANCE_UNC: f64,
+  pub IR_MAG: f64,
+  pub MAG_UNC: f64,
+  pub TEMPERATURE: f64,
+  pub INTEGRATION_TIME: f64,
+  pub BACKGROUND: f64,
+  pub SNR: f64,
+  pub WAVELENGTHS: Option<Vec<f64>>,
+  pub SPECTRAL_VALUES: Option<Vec<f64>>,
+  pub QUALITY: u8,
+  pub NOTES: Option<String>,
 }
 impl Default for IROT {
   fn default() -> Self {
@@ -216,6 +952,31 @@ impl Default for IROT {
       NAME: None,
       DESCRIPTION: None,
       ENTITY: None,
+      EPOCH: None,
+      SENSOR_ID: None,
+      SAT_NO: 0,
+      OBJECT_DESIGNATOR: None,
+      BAND: irBand::SWIR,
+      DETECTION_TYPE: irDetectionType::POINT_SOURCE,
+      RA: 0.0,
+      DEC: 0.0,
+      RA_UNC: 0.0,
+      DEC_UNC: 0.0,
+      AZIMUTH: 0.0,
+      ELEVATION: 0.0,
+      RANGE: 0.0,
+      IRRADIANCE: 0.0,
+      IRRADIANCE_UNC: 0.0,
+      IR_MAG: 0.0,
+      MAG_UNC: 0.0,
+      TEMPERATURE: 0.0,
+      INTEGRATION_TIME: 0.0,
+      BACKGROUND: 0.0,
+      SNR: 0.0,
+      WAVELENGTHS: None,
+      SPECTRAL_VALUES: None,
+      QUALITY: 0,
+      NOTES: None,
     }
   }
 }
@@ -239,12 +1000,74 @@ impl IROT {
     let ENTITY = self.ENTITY.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let EPOCH = self.EPOCH.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SENSOR_ID = self.SENSOR_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let SAT_NO = self.SAT_NO;
+    let OBJECT_DESIGNATOR = self.OBJECT_DESIGNATOR.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let BAND = self.BAND;
+    let DETECTION_TYPE = self.DETECTION_TYPE;
+    let RA = self.RA;
+    let DEC = self.DEC;
+    let RA_UNC = self.RA_UNC;
+    let DEC_UNC = self.DEC_UNC;
+    let AZIMUTH = self.AZIMUTH;
+    let ELEVATION = self.ELEVATION;
+    let RANGE = self.RANGE;
+    let IRRADIANCE = self.IRRADIANCE;
+    let IRRADIANCE_UNC = self.IRRADIANCE_UNC;
+    let IR_MAG = self.IR_MAG;
+    let MAG_UNC = self.MAG_UNC;
+    let TEMPERATURE = self.TEMPERATURE;
+    let INTEGRATION_TIME = self.INTEGRATION_TIME;
+    let BACKGROUND = self.BACKGROUND;
+    let SNR = self.SNR;
+    let WAVELENGTHS = self.WAVELENGTHS.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let SPECTRAL_VALUES = self.SPECTRAL_VALUES.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let QUALITY = self.QUALITY;
+    let NOTES = self.NOTES.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     IRO::create(_fbb, &IROArgs{
       ID,
       ID_ENTITY,
       NAME,
       DESCRIPTION,
       ENTITY,
+      EPOCH,
+      SENSOR_ID,
+      SAT_NO,
+      OBJECT_DESIGNATOR,
+      BAND,
+      DETECTION_TYPE,
+      RA,
+      DEC,
+      RA_UNC,
+      DEC_UNC,
+      AZIMUTH,
+      ELEVATION,
+      RANGE,
+      IRRADIANCE,
+      IRRADIANCE_UNC,
+      IR_MAG,
+      MAG_UNC,
+      TEMPERATURE,
+      INTEGRATION_TIME,
+      BACKGROUND,
+      SNR,
+      WAVELENGTHS,
+      SPECTRAL_VALUES,
+      QUALITY,
+      NOTES,
     })
   }
 }

@@ -13,8 +13,468 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
               FLATBUFFERS_VERSION_REVISION == 25,
              "Non-compatible flatbuffers version included");
 
+struct mnvOrbitalState;
+struct mnvOrbitalStateBuilder;
+
 struct MNV;
 struct MNVBuilder;
+
+enum maneuverStatus : int8_t {
+  maneuverStatus_DETECTED = 0,
+  maneuverStatus_CONFIRMED = 1,
+  maneuverStatus_PREDICTED = 2,
+  maneuverStatus_PLANNED = 3,
+  maneuverStatus_EXECUTED = 4,
+  maneuverStatus_CANCELLED = 5,
+  maneuverStatus_UNKNOWN = 6,
+  maneuverStatus_MIN = maneuverStatus_DETECTED,
+  maneuverStatus_MAX = maneuverStatus_UNKNOWN
+};
+
+inline const maneuverStatus (&EnumValuesmaneuverStatus())[7] {
+  static const maneuverStatus values[] = {
+    maneuverStatus_DETECTED,
+    maneuverStatus_CONFIRMED,
+    maneuverStatus_PREDICTED,
+    maneuverStatus_PLANNED,
+    maneuverStatus_EXECUTED,
+    maneuverStatus_CANCELLED,
+    maneuverStatus_UNKNOWN
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesmaneuverStatus() {
+  static const char * const names[8] = {
+    "DETECTED",
+    "CONFIRMED",
+    "PREDICTED",
+    "PLANNED",
+    "EXECUTED",
+    "CANCELLED",
+    "UNKNOWN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamemaneuverStatus(maneuverStatus e) {
+  if (::flatbuffers::IsOutRange(e, maneuverStatus_DETECTED, maneuverStatus_UNKNOWN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesmaneuverStatus()[index];
+}
+
+enum maneuverCharacterization : int8_t {
+  maneuverCharacterization_IN_PLANE = 0,
+  maneuverCharacterization_OUT_OF_PLANE = 1,
+  maneuverCharacterization_COMBINED = 2,
+  maneuverCharacterization_STATION_KEEPING = 3,
+  maneuverCharacterization_ORBIT_RAISING = 4,
+  maneuverCharacterization_ORBIT_LOWERING = 5,
+  maneuverCharacterization_PHASING = 6,
+  maneuverCharacterization_DEORBIT = 7,
+  maneuverCharacterization_COLLISION_AVOIDANCE = 8,
+  maneuverCharacterization_UNKNOWN = 9,
+  maneuverCharacterization_MIN = maneuverCharacterization_IN_PLANE,
+  maneuverCharacterization_MAX = maneuverCharacterization_UNKNOWN
+};
+
+inline const maneuverCharacterization (&EnumValuesmaneuverCharacterization())[10] {
+  static const maneuverCharacterization values[] = {
+    maneuverCharacterization_IN_PLANE,
+    maneuverCharacterization_OUT_OF_PLANE,
+    maneuverCharacterization_COMBINED,
+    maneuverCharacterization_STATION_KEEPING,
+    maneuverCharacterization_ORBIT_RAISING,
+    maneuverCharacterization_ORBIT_LOWERING,
+    maneuverCharacterization_PHASING,
+    maneuverCharacterization_DEORBIT,
+    maneuverCharacterization_COLLISION_AVOIDANCE,
+    maneuverCharacterization_UNKNOWN
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesmaneuverCharacterization() {
+  static const char * const names[11] = {
+    "IN_PLANE",
+    "OUT_OF_PLANE",
+    "COMBINED",
+    "STATION_KEEPING",
+    "ORBIT_RAISING",
+    "ORBIT_LOWERING",
+    "PHASING",
+    "DEORBIT",
+    "COLLISION_AVOIDANCE",
+    "UNKNOWN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamemaneuverCharacterization(maneuverCharacterization e) {
+  if (::flatbuffers::IsOutRange(e, maneuverCharacterization_IN_PLANE, maneuverCharacterization_UNKNOWN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesmaneuverCharacterization()[index];
+}
+
+/// Pre/post-maneuver orbital state
+struct mnvOrbitalState FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef mnvOrbitalStateBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_ID_ELSET = 4,
+    VT_ELSET = 6,
+    VT_ID_STATE_VECTOR = 8,
+    VT_STATE_VECTOR = 10,
+    VT_POS_X = 12,
+    VT_POS_Y = 14,
+    VT_POS_Z = 16,
+    VT_VEL_X = 18,
+    VT_VEL_Y = 20,
+    VT_VEL_Z = 22,
+    VT_RADIATION_PRESS_COEFF = 24,
+    VT_BALLISTIC_COEFF = 26,
+    VT_APOGEE = 28,
+    VT_PERIGEE = 30,
+    VT_INCLINATION = 32,
+    VT_ECCENTRICITY = 34,
+    VT_PERIOD = 36,
+    VT_RAAN = 38,
+    VT_SMA = 40,
+    VT_GEO_LONGITUDE = 42,
+    VT_DRIFT_RATE = 44,
+    VT_SIGMA_U = 46,
+    VT_SIGMA_V = 48,
+    VT_SIGMA_W = 50
+  };
+  /// Element set identifier
+  const ::flatbuffers::String *ID_ELSET() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ID_ELSET);
+  }
+  /// Element set data reference
+  const ::flatbuffers::String *ELSET() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ELSET);
+  }
+  /// State vector identifier
+  const ::flatbuffers::String *ID_STATE_VECTOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ID_STATE_VECTOR);
+  }
+  /// State vector data reference
+  const ::flatbuffers::String *STATE_VECTOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_STATE_VECTOR);
+  }
+  /// Position X (km)
+  double POS_X() const {
+    return GetField<double>(VT_POS_X, 0.0);
+  }
+  /// Position Y (km)
+  double POS_Y() const {
+    return GetField<double>(VT_POS_Y, 0.0);
+  }
+  /// Position Z (km)
+  double POS_Z() const {
+    return GetField<double>(VT_POS_Z, 0.0);
+  }
+  /// Velocity X (km/s)
+  double VEL_X() const {
+    return GetField<double>(VT_VEL_X, 0.0);
+  }
+  /// Velocity Y (km/s)
+  double VEL_Y() const {
+    return GetField<double>(VT_VEL_Y, 0.0);
+  }
+  /// Velocity Z (km/s)
+  double VEL_Z() const {
+    return GetField<double>(VT_VEL_Z, 0.0);
+  }
+  /// Radiation pressure coefficient (Cr)
+  double RADIATION_PRESS_COEFF() const {
+    return GetField<double>(VT_RADIATION_PRESS_COEFF, 0.0);
+  }
+  /// Ballistic coefficient (m^2/kg)
+  double BALLISTIC_COEFF() const {
+    return GetField<double>(VT_BALLISTIC_COEFF, 0.0);
+  }
+  /// Apogee altitude (km)
+  double APOGEE() const {
+    return GetField<double>(VT_APOGEE, 0.0);
+  }
+  /// Perigee altitude (km)
+  double PERIGEE() const {
+    return GetField<double>(VT_PERIGEE, 0.0);
+  }
+  /// Inclination (degrees)
+  double INCLINATION() const {
+    return GetField<double>(VT_INCLINATION, 0.0);
+  }
+  /// Eccentricity
+  double ECCENTRICITY() const {
+    return GetField<double>(VT_ECCENTRICITY, 0.0);
+  }
+  /// Orbital period (minutes)
+  double PERIOD() const {
+    return GetField<double>(VT_PERIOD, 0.0);
+  }
+  /// Right ascension of ascending node (degrees)
+  double RAAN() const {
+    return GetField<double>(VT_RAAN, 0.0);
+  }
+  /// Semi-major axis (km)
+  double SMA() const {
+    return GetField<double>(VT_SMA, 0.0);
+  }
+  /// GEO longitude (degrees east)
+  double GEO_LONGITUDE() const {
+    return GetField<double>(VT_GEO_LONGITUDE, 0.0);
+  }
+  /// Longitude drift rate (degrees/day)
+  double DRIFT_RATE() const {
+    return GetField<double>(VT_DRIFT_RATE, 0.0);
+  }
+  /// Position uncertainty U (km, 1-sigma)
+  double SIGMA_U() const {
+    return GetField<double>(VT_SIGMA_U, 0.0);
+  }
+  /// Position uncertainty V (km, 1-sigma)
+  double SIGMA_V() const {
+    return GetField<double>(VT_SIGMA_V, 0.0);
+  }
+  /// Position uncertainty W (km, 1-sigma)
+  double SIGMA_W() const {
+    return GetField<double>(VT_SIGMA_W, 0.0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_ID_ELSET) &&
+           verifier.VerifyString(ID_ELSET()) &&
+           VerifyOffset(verifier, VT_ELSET) &&
+           verifier.VerifyString(ELSET()) &&
+           VerifyOffset(verifier, VT_ID_STATE_VECTOR) &&
+           verifier.VerifyString(ID_STATE_VECTOR()) &&
+           VerifyOffset(verifier, VT_STATE_VECTOR) &&
+           verifier.VerifyString(STATE_VECTOR()) &&
+           VerifyField<double>(verifier, VT_POS_X, 8) &&
+           VerifyField<double>(verifier, VT_POS_Y, 8) &&
+           VerifyField<double>(verifier, VT_POS_Z, 8) &&
+           VerifyField<double>(verifier, VT_VEL_X, 8) &&
+           VerifyField<double>(verifier, VT_VEL_Y, 8) &&
+           VerifyField<double>(verifier, VT_VEL_Z, 8) &&
+           VerifyField<double>(verifier, VT_RADIATION_PRESS_COEFF, 8) &&
+           VerifyField<double>(verifier, VT_BALLISTIC_COEFF, 8) &&
+           VerifyField<double>(verifier, VT_APOGEE, 8) &&
+           VerifyField<double>(verifier, VT_PERIGEE, 8) &&
+           VerifyField<double>(verifier, VT_INCLINATION, 8) &&
+           VerifyField<double>(verifier, VT_ECCENTRICITY, 8) &&
+           VerifyField<double>(verifier, VT_PERIOD, 8) &&
+           VerifyField<double>(verifier, VT_RAAN, 8) &&
+           VerifyField<double>(verifier, VT_SMA, 8) &&
+           VerifyField<double>(verifier, VT_GEO_LONGITUDE, 8) &&
+           VerifyField<double>(verifier, VT_DRIFT_RATE, 8) &&
+           VerifyField<double>(verifier, VT_SIGMA_U, 8) &&
+           VerifyField<double>(verifier, VT_SIGMA_V, 8) &&
+           VerifyField<double>(verifier, VT_SIGMA_W, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct mnvOrbitalStateBuilder {
+  typedef mnvOrbitalState Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_ID_ELSET(::flatbuffers::Offset<::flatbuffers::String> ID_ELSET) {
+    fbb_.AddOffset(mnvOrbitalState::VT_ID_ELSET, ID_ELSET);
+  }
+  void add_ELSET(::flatbuffers::Offset<::flatbuffers::String> ELSET) {
+    fbb_.AddOffset(mnvOrbitalState::VT_ELSET, ELSET);
+  }
+  void add_ID_STATE_VECTOR(::flatbuffers::Offset<::flatbuffers::String> ID_STATE_VECTOR) {
+    fbb_.AddOffset(mnvOrbitalState::VT_ID_STATE_VECTOR, ID_STATE_VECTOR);
+  }
+  void add_STATE_VECTOR(::flatbuffers::Offset<::flatbuffers::String> STATE_VECTOR) {
+    fbb_.AddOffset(mnvOrbitalState::VT_STATE_VECTOR, STATE_VECTOR);
+  }
+  void add_POS_X(double POS_X) {
+    fbb_.AddElement<double>(mnvOrbitalState::VT_POS_X, POS_X, 0.0);
+  }
+  void add_POS_Y(double POS_Y) {
+    fbb_.AddElement<double>(mnvOrbitalState::VT_POS_Y, POS_Y, 0.0);
+  }
+  void add_POS_Z(double POS_Z) {
+    fbb_.AddElement<double>(mnvOrbitalState::VT_POS_Z, POS_Z, 0.0);
+  }
+  void add_VEL_X(double VEL_X) {
+    fbb_.AddElement<double>(mnvOrbitalState::VT_VEL_X, VEL_X, 0.0);
+  }
+  void add_VEL_Y(double VEL_Y) {
+    fbb_.AddElement<double>(mnvOrbitalState::VT_VEL_Y, VEL_Y, 0.0);
+  }
+  void add_VEL_Z(double VEL_Z) {
+    fbb_.AddElement<double>(mnvOrbitalState::VT_VEL_Z, VEL_Z, 0.0);
+  }
+  void add_RADIATION_PRESS_COEFF(double RADIATION_PRESS_COEFF) {
+    fbb_.AddElement<double>(mnvOrbitalState::VT_RADIATION_PRESS_COEFF, RADIATION_PRESS_COEFF, 0.0);
+  }
+  void add_BALLISTIC_COEFF(double BALLISTIC_COEFF) {
+    fbb_.AddElement<double>(mnvOrbitalState::VT_BALLISTIC_COEFF, BALLISTIC_COEFF, 0.0);
+  }
+  void add_APOGEE(double APOGEE) {
+    fbb_.AddElement<double>(mnvOrbitalState::VT_APOGEE, APOGEE, 0.0);
+  }
+  void add_PERIGEE(double PERIGEE) {
+    fbb_.AddElement<double>(mnvOrbitalState::VT_PERIGEE, PERIGEE, 0.0);
+  }
+  void add_INCLINATION(double INCLINATION) {
+    fbb_.AddElement<double>(mnvOrbitalState::VT_INCLINATION, INCLINATION, 0.0);
+  }
+  void add_ECCENTRICITY(double ECCENTRICITY) {
+    fbb_.AddElement<double>(mnvOrbitalState::VT_ECCENTRICITY, ECCENTRICITY, 0.0);
+  }
+  void add_PERIOD(double PERIOD) {
+    fbb_.AddElement<double>(mnvOrbitalState::VT_PERIOD, PERIOD, 0.0);
+  }
+  void add_RAAN(double RAAN) {
+    fbb_.AddElement<double>(mnvOrbitalState::VT_RAAN, RAAN, 0.0);
+  }
+  void add_SMA(double SMA) {
+    fbb_.AddElement<double>(mnvOrbitalState::VT_SMA, SMA, 0.0);
+  }
+  void add_GEO_LONGITUDE(double GEO_LONGITUDE) {
+    fbb_.AddElement<double>(mnvOrbitalState::VT_GEO_LONGITUDE, GEO_LONGITUDE, 0.0);
+  }
+  void add_DRIFT_RATE(double DRIFT_RATE) {
+    fbb_.AddElement<double>(mnvOrbitalState::VT_DRIFT_RATE, DRIFT_RATE, 0.0);
+  }
+  void add_SIGMA_U(double SIGMA_U) {
+    fbb_.AddElement<double>(mnvOrbitalState::VT_SIGMA_U, SIGMA_U, 0.0);
+  }
+  void add_SIGMA_V(double SIGMA_V) {
+    fbb_.AddElement<double>(mnvOrbitalState::VT_SIGMA_V, SIGMA_V, 0.0);
+  }
+  void add_SIGMA_W(double SIGMA_W) {
+    fbb_.AddElement<double>(mnvOrbitalState::VT_SIGMA_W, SIGMA_W, 0.0);
+  }
+  explicit mnvOrbitalStateBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<mnvOrbitalState> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<mnvOrbitalState>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<mnvOrbitalState> CreatemnvOrbitalState(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> ID_ELSET = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ELSET = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ID_STATE_VECTOR = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> STATE_VECTOR = 0,
+    double POS_X = 0.0,
+    double POS_Y = 0.0,
+    double POS_Z = 0.0,
+    double VEL_X = 0.0,
+    double VEL_Y = 0.0,
+    double VEL_Z = 0.0,
+    double RADIATION_PRESS_COEFF = 0.0,
+    double BALLISTIC_COEFF = 0.0,
+    double APOGEE = 0.0,
+    double PERIGEE = 0.0,
+    double INCLINATION = 0.0,
+    double ECCENTRICITY = 0.0,
+    double PERIOD = 0.0,
+    double RAAN = 0.0,
+    double SMA = 0.0,
+    double GEO_LONGITUDE = 0.0,
+    double DRIFT_RATE = 0.0,
+    double SIGMA_U = 0.0,
+    double SIGMA_V = 0.0,
+    double SIGMA_W = 0.0) {
+  mnvOrbitalStateBuilder builder_(_fbb);
+  builder_.add_SIGMA_W(SIGMA_W);
+  builder_.add_SIGMA_V(SIGMA_V);
+  builder_.add_SIGMA_U(SIGMA_U);
+  builder_.add_DRIFT_RATE(DRIFT_RATE);
+  builder_.add_GEO_LONGITUDE(GEO_LONGITUDE);
+  builder_.add_SMA(SMA);
+  builder_.add_RAAN(RAAN);
+  builder_.add_PERIOD(PERIOD);
+  builder_.add_ECCENTRICITY(ECCENTRICITY);
+  builder_.add_INCLINATION(INCLINATION);
+  builder_.add_PERIGEE(PERIGEE);
+  builder_.add_APOGEE(APOGEE);
+  builder_.add_BALLISTIC_COEFF(BALLISTIC_COEFF);
+  builder_.add_RADIATION_PRESS_COEFF(RADIATION_PRESS_COEFF);
+  builder_.add_VEL_Z(VEL_Z);
+  builder_.add_VEL_Y(VEL_Y);
+  builder_.add_VEL_X(VEL_X);
+  builder_.add_POS_Z(POS_Z);
+  builder_.add_POS_Y(POS_Y);
+  builder_.add_POS_X(POS_X);
+  builder_.add_STATE_VECTOR(STATE_VECTOR);
+  builder_.add_ID_STATE_VECTOR(ID_STATE_VECTOR);
+  builder_.add_ELSET(ELSET);
+  builder_.add_ID_ELSET(ID_ELSET);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<mnvOrbitalState> CreatemnvOrbitalStateDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *ID_ELSET = nullptr,
+    const char *ELSET = nullptr,
+    const char *ID_STATE_VECTOR = nullptr,
+    const char *STATE_VECTOR = nullptr,
+    double POS_X = 0.0,
+    double POS_Y = 0.0,
+    double POS_Z = 0.0,
+    double VEL_X = 0.0,
+    double VEL_Y = 0.0,
+    double VEL_Z = 0.0,
+    double RADIATION_PRESS_COEFF = 0.0,
+    double BALLISTIC_COEFF = 0.0,
+    double APOGEE = 0.0,
+    double PERIGEE = 0.0,
+    double INCLINATION = 0.0,
+    double ECCENTRICITY = 0.0,
+    double PERIOD = 0.0,
+    double RAAN = 0.0,
+    double SMA = 0.0,
+    double GEO_LONGITUDE = 0.0,
+    double DRIFT_RATE = 0.0,
+    double SIGMA_U = 0.0,
+    double SIGMA_V = 0.0,
+    double SIGMA_W = 0.0) {
+  auto ID_ELSET__ = ID_ELSET ? _fbb.CreateString(ID_ELSET) : 0;
+  auto ELSET__ = ELSET ? _fbb.CreateString(ELSET) : 0;
+  auto ID_STATE_VECTOR__ = ID_STATE_VECTOR ? _fbb.CreateString(ID_STATE_VECTOR) : 0;
+  auto STATE_VECTOR__ = STATE_VECTOR ? _fbb.CreateString(STATE_VECTOR) : 0;
+  return CreatemnvOrbitalState(
+      _fbb,
+      ID_ELSET__,
+      ELSET__,
+      ID_STATE_VECTOR__,
+      STATE_VECTOR__,
+      POS_X,
+      POS_Y,
+      POS_Z,
+      VEL_X,
+      VEL_Y,
+      VEL_Z,
+      RADIATION_PRESS_COEFF,
+      BALLISTIC_COEFF,
+      APOGEE,
+      PERIGEE,
+      INCLINATION,
+      ECCENTRICITY,
+      PERIOD,
+      RAAN,
+      SMA,
+      GEO_LONGITUDE,
+      DRIFT_RATE,
+      SIGMA_U,
+      SIGMA_V,
+      SIGMA_W);
+}
 
 /// Spacecraft Maneuver
 struct MNV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
@@ -22,366 +482,227 @@ struct MNV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
     VT_SAT_NO = 6,
-    VT_REPORT_TIME = 8,
-    VT_EVENT_START_TIME = 10,
-    VT_EVENT_END_TIME = 12,
-    VT_TOTAL_BURN_TIME = 14,
-    VT_OD_FIT_END_TIME = 16,
-    VT_ID_SENSOR = 18,
-    VT_UCT = 20,
-    VT_MANEUVER_UNC = 22,
-    VT_CHARACTERIZATION = 24,
-    VT_CHARACTERIZATION_UNC = 26,
-    VT_EVENT_ID = 28,
-    VT_ORIG_OBJECT_ID = 30,
-    VT_ORIG_SENSOR_ID = 32,
-    VT_STATUS = 34,
-    VT_DELTA_POS = 36,
-    VT_DELTA_POS_U = 38,
-    VT_DELTA_POS_V = 40,
-    VT_DELTA_POS_W = 42,
-    VT_DELTA_VEL = 44,
-    VT_DELTA_VEL_U = 46,
-    VT_DELTA_VEL_V = 48,
-    VT_DELTA_VEL_W = 50,
-    VT_DELTA_MASS = 52,
-    VT_PRE_EVENT_ID_ELSET = 54,
-    VT_PRE_EVENT_ELSET = 56,
-    VT_PRE_EVENT_ID_STATE_VECTOR = 58,
-    VT_PRE_EVENT_STATE_VECTOR = 60,
-    VT_PRE_POS_X = 62,
-    VT_PRE_POS_Y = 64,
-    VT_PRE_POS_Z = 66,
-    VT_PRE_VEL_X = 68,
-    VT_PRE_VEL_Y = 70,
-    VT_PRE_VEL_Z = 72,
-    VT_PRE_RADIATION_PRESS_COEFF = 74,
-    VT_PRE_BALLISTIC_COEFF = 76,
-    VT_PRE_APOGEE = 78,
-    VT_PRE_PERIGEE = 80,
-    VT_PRE_INCLINATION = 82,
-    VT_PRE_ECCENTRICITY = 84,
-    VT_PRE_PERIOD = 86,
-    VT_PRE_RAAN = 88,
-    VT_PRE_SMA = 90,
-    VT_PRE_GEO_LONGITUDE = 92,
-    VT_PRE_DRIFT_RATE = 94,
-    VT_PRE_SIGMA_U = 96,
-    VT_PRE_SIGMA_V = 98,
-    VT_PRE_SIGMA_W = 100,
-    VT_POST_EVENT_ID_ELSET = 102,
-    VT_POST_EVENT_ELSET = 104,
-    VT_POST_EVENT_ID_STATE_VECTOR = 106,
-    VT_POST_EVENT_STATE_VECTOR = 108,
-    VT_POST_POS_X = 110,
-    VT_POST_POS_Y = 112,
-    VT_POST_POS_Z = 114,
-    VT_POST_VEL_X = 116,
-    VT_POST_VEL_Y = 118,
-    VT_POST_VEL_Z = 120,
-    VT_POST_RADIATION_PRESS_COEFF = 122,
-    VT_POST_BALLISTIC_COEFF = 124,
-    VT_POST_APOGEE = 126,
-    VT_POST_PERIGEE = 128,
-    VT_POST_INCLINATION = 130,
-    VT_POST_ECCENTRICITY = 132,
-    VT_POST_PERIOD = 134,
-    VT_POST_RAAN = 136,
-    VT_POST_SMA = 138,
-    VT_POST_GEO_LONGITUDE = 140,
-    VT_POST_DRIFT_RATE = 142,
-    VT_POST_SIGMA_U = 144,
-    VT_POST_SIGMA_V = 146,
-    VT_POST_SIGMA_W = 148,
-    VT_COV = 150,
-    VT_POST_MASS = 152,
-    VT_POST_AREA = 154,
-    VT_NUM_OBS = 156,
-    VT_DESCRIPTION = 158,
-    VT_DESCRIPTOR = 160,
-    VT_STATE_MODEL = 162,
-    VT_STATE_MODEL_VERSION = 164,
-    VT_NUM_ACCEL_POINTS = 166,
-    VT_MNVR_ACCEL_TIMES = 168,
-    VT_MNVR_ACCELS = 170,
-    VT_MNVR_ACCEL_UNCS = 172,
-    VT_TAGS = 174,
-    VT_ALGORITHM = 176,
-    VT_SOURCED_DATA = 178,
-    VT_SOURCED_DATA_TYPES = 180,
-    VT_ON_ORBIT = 182,
-    VT_TRANSACTION_ID = 184
+    VT_ORIG_OBJECT_ID = 8,
+    VT_ON_ORBIT = 10,
+    VT_STATUS = 12,
+    VT_CHARACTERIZATION = 14,
+    VT_CHARACTERIZATION_UNC = 16,
+    VT_REPORT_TIME = 18,
+    VT_EVENT_START_TIME = 20,
+    VT_EVENT_END_TIME = 22,
+    VT_TOTAL_BURN_TIME = 24,
+    VT_OD_FIT_END_TIME = 26,
+    VT_ID_SENSOR = 28,
+    VT_ORIG_SENSOR_ID = 30,
+    VT_EVENT_ID = 32,
+    VT_UCT = 34,
+    VT_MANEUVER_UNC = 36,
+    VT_DELTA_VEL = 38,
+    VT_DELTA_VEL_U = 40,
+    VT_DELTA_VEL_V = 42,
+    VT_DELTA_VEL_W = 44,
+    VT_DELTA_POS = 46,
+    VT_DELTA_POS_U = 48,
+    VT_DELTA_POS_V = 50,
+    VT_DELTA_POS_W = 52,
+    VT_DELTA_MASS = 54,
+    VT_PRE_EVENT = 56,
+    VT_POST_EVENT = 58,
+    VT_POST_MASS = 60,
+    VT_POST_AREA = 62,
+    VT_COV = 64,
+    VT_NUM_OBS = 66,
+    VT_STATE_MODEL = 68,
+    VT_STATE_MODEL_VERSION = 70,
+    VT_NUM_ACCEL_POINTS = 72,
+    VT_MNVR_ACCEL_TIMES = 74,
+    VT_MNVR_ACCELS = 76,
+    VT_MNVR_ACCEL_UNCS = 78,
+    VT_DESCRIPTION = 80,
+    VT_DESCRIPTOR = 82,
+    VT_ALGORITHM = 84,
+    VT_TAGS = 86,
+    VT_SOURCED_DATA = 88,
+    VT_SOURCED_DATA_TYPES = 90,
+    VT_TRANSACTION_ID = 92
   };
+  /// Unique identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
-  int32_t SAT_NO() const {
-    return GetField<int32_t>(VT_SAT_NO, 0);
+  /// Satellite catalog number
+  uint32_t SAT_NO() const {
+    return GetField<uint32_t>(VT_SAT_NO, 0);
   }
-  const ::flatbuffers::String *REPORT_TIME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_REPORT_TIME);
-  }
-  const ::flatbuffers::String *EVENT_START_TIME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_EVENT_START_TIME);
-  }
-  const ::flatbuffers::String *EVENT_END_TIME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_EVENT_END_TIME);
-  }
-  double TOTAL_BURN_TIME() const {
-    return GetField<double>(VT_TOTAL_BURN_TIME, 0.0);
-  }
-  const ::flatbuffers::String *OD_FIT_END_TIME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OD_FIT_END_TIME);
-  }
-  const ::flatbuffers::String *ID_SENSOR() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ID_SENSOR);
-  }
-  bool UCT() const {
-    return GetField<uint8_t>(VT_UCT, 0) != 0;
-  }
-  double MANEUVER_UNC() const {
-    return GetField<double>(VT_MANEUVER_UNC, 0.0);
-  }
-  const ::flatbuffers::String *CHARACTERIZATION() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_CHARACTERIZATION);
-  }
-  double CHARACTERIZATION_UNC() const {
-    return GetField<double>(VT_CHARACTERIZATION_UNC, 0.0);
-  }
-  const ::flatbuffers::String *EVENT_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_EVENT_ID);
-  }
+  /// International designator
   const ::flatbuffers::String *ORIG_OBJECT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIG_OBJECT_ID);
   }
-  const ::flatbuffers::String *ORIG_SENSOR_ID() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ORIG_SENSOR_ID);
-  }
-  const ::flatbuffers::String *STATUS() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_STATUS);
-  }
-  double DELTA_POS() const {
-    return GetField<double>(VT_DELTA_POS, 0.0);
-  }
-  double DELTA_POS_U() const {
-    return GetField<double>(VT_DELTA_POS_U, 0.0);
-  }
-  double DELTA_POS_V() const {
-    return GetField<double>(VT_DELTA_POS_V, 0.0);
-  }
-  double DELTA_POS_W() const {
-    return GetField<double>(VT_DELTA_POS_W, 0.0);
-  }
-  double DELTA_VEL() const {
-    return GetField<double>(VT_DELTA_VEL, 0.0);
-  }
-  double DELTA_VEL_U() const {
-    return GetField<double>(VT_DELTA_VEL_U, 0.0);
-  }
-  double DELTA_VEL_V() const {
-    return GetField<double>(VT_DELTA_VEL_V, 0.0);
-  }
-  double DELTA_VEL_W() const {
-    return GetField<double>(VT_DELTA_VEL_W, 0.0);
-  }
-  double DELTA_MASS() const {
-    return GetField<double>(VT_DELTA_MASS, 0.0);
-  }
-  const ::flatbuffers::String *PRE_EVENT_ID_ELSET() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_PRE_EVENT_ID_ELSET);
-  }
-  const ::flatbuffers::String *PRE_EVENT_ELSET() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_PRE_EVENT_ELSET);
-  }
-  const ::flatbuffers::String *PRE_EVENT_ID_STATE_VECTOR() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_PRE_EVENT_ID_STATE_VECTOR);
-  }
-  const ::flatbuffers::String *PRE_EVENT_STATE_VECTOR() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_PRE_EVENT_STATE_VECTOR);
-  }
-  double PRE_POS_X() const {
-    return GetField<double>(VT_PRE_POS_X, 0.0);
-  }
-  double PRE_POS_Y() const {
-    return GetField<double>(VT_PRE_POS_Y, 0.0);
-  }
-  double PRE_POS_Z() const {
-    return GetField<double>(VT_PRE_POS_Z, 0.0);
-  }
-  double PRE_VEL_X() const {
-    return GetField<double>(VT_PRE_VEL_X, 0.0);
-  }
-  double PRE_VEL_Y() const {
-    return GetField<double>(VT_PRE_VEL_Y, 0.0);
-  }
-  double PRE_VEL_Z() const {
-    return GetField<double>(VT_PRE_VEL_Z, 0.0);
-  }
-  double PRE_RADIATION_PRESS_COEFF() const {
-    return GetField<double>(VT_PRE_RADIATION_PRESS_COEFF, 0.0);
-  }
-  double PRE_BALLISTIC_COEFF() const {
-    return GetField<double>(VT_PRE_BALLISTIC_COEFF, 0.0);
-  }
-  double PRE_APOGEE() const {
-    return GetField<double>(VT_PRE_APOGEE, 0.0);
-  }
-  double PRE_PERIGEE() const {
-    return GetField<double>(VT_PRE_PERIGEE, 0.0);
-  }
-  double PRE_INCLINATION() const {
-    return GetField<double>(VT_PRE_INCLINATION, 0.0);
-  }
-  double PRE_ECCENTRICITY() const {
-    return GetField<double>(VT_PRE_ECCENTRICITY, 0.0);
-  }
-  double PRE_PERIOD() const {
-    return GetField<double>(VT_PRE_PERIOD, 0.0);
-  }
-  double PRE_RAAN() const {
-    return GetField<double>(VT_PRE_RAAN, 0.0);
-  }
-  double PRE_SMA() const {
-    return GetField<double>(VT_PRE_SMA, 0.0);
-  }
-  double PRE_GEO_LONGITUDE() const {
-    return GetField<double>(VT_PRE_GEO_LONGITUDE, 0.0);
-  }
-  double PRE_DRIFT_RATE() const {
-    return GetField<double>(VT_PRE_DRIFT_RATE, 0.0);
-  }
-  double PRE_SIGMA_U() const {
-    return GetField<double>(VT_PRE_SIGMA_U, 0.0);
-  }
-  double PRE_SIGMA_V() const {
-    return GetField<double>(VT_PRE_SIGMA_V, 0.0);
-  }
-  double PRE_SIGMA_W() const {
-    return GetField<double>(VT_PRE_SIGMA_W, 0.0);
-  }
-  const ::flatbuffers::String *POST_EVENT_ID_ELSET() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_POST_EVENT_ID_ELSET);
-  }
-  const ::flatbuffers::String *POST_EVENT_ELSET() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_POST_EVENT_ELSET);
-  }
-  const ::flatbuffers::String *POST_EVENT_ID_STATE_VECTOR() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_POST_EVENT_ID_STATE_VECTOR);
-  }
-  const ::flatbuffers::String *POST_EVENT_STATE_VECTOR() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_POST_EVENT_STATE_VECTOR);
-  }
-  double POST_POS_X() const {
-    return GetField<double>(VT_POST_POS_X, 0.0);
-  }
-  double POST_POS_Y() const {
-    return GetField<double>(VT_POST_POS_Y, 0.0);
-  }
-  double POST_POS_Z() const {
-    return GetField<double>(VT_POST_POS_Z, 0.0);
-  }
-  double POST_VEL_X() const {
-    return GetField<double>(VT_POST_VEL_X, 0.0);
-  }
-  double POST_VEL_Y() const {
-    return GetField<double>(VT_POST_VEL_Y, 0.0);
-  }
-  double POST_VEL_Z() const {
-    return GetField<double>(VT_POST_VEL_Z, 0.0);
-  }
-  double POST_RADIATION_PRESS_COEFF() const {
-    return GetField<double>(VT_POST_RADIATION_PRESS_COEFF, 0.0);
-  }
-  double POST_BALLISTIC_COEFF() const {
-    return GetField<double>(VT_POST_BALLISTIC_COEFF, 0.0);
-  }
-  double POST_APOGEE() const {
-    return GetField<double>(VT_POST_APOGEE, 0.0);
-  }
-  double POST_PERIGEE() const {
-    return GetField<double>(VT_POST_PERIGEE, 0.0);
-  }
-  double POST_INCLINATION() const {
-    return GetField<double>(VT_POST_INCLINATION, 0.0);
-  }
-  double POST_ECCENTRICITY() const {
-    return GetField<double>(VT_POST_ECCENTRICITY, 0.0);
-  }
-  double POST_PERIOD() const {
-    return GetField<double>(VT_POST_PERIOD, 0.0);
-  }
-  double POST_RAAN() const {
-    return GetField<double>(VT_POST_RAAN, 0.0);
-  }
-  double POST_SMA() const {
-    return GetField<double>(VT_POST_SMA, 0.0);
-  }
-  double POST_GEO_LONGITUDE() const {
-    return GetField<double>(VT_POST_GEO_LONGITUDE, 0.0);
-  }
-  double POST_DRIFT_RATE() const {
-    return GetField<double>(VT_POST_DRIFT_RATE, 0.0);
-  }
-  double POST_SIGMA_U() const {
-    return GetField<double>(VT_POST_SIGMA_U, 0.0);
-  }
-  double POST_SIGMA_V() const {
-    return GetField<double>(VT_POST_SIGMA_V, 0.0);
-  }
-  double POST_SIGMA_W() const {
-    return GetField<double>(VT_POST_SIGMA_W, 0.0);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *COV() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_COV);
-  }
-  double POST_MASS() const {
-    return GetField<double>(VT_POST_MASS, 0.0);
-  }
-  double POST_AREA() const {
-    return GetField<double>(VT_POST_AREA, 0.0);
-  }
-  int32_t NUM_OBS() const {
-    return GetField<int32_t>(VT_NUM_OBS, 0);
-  }
-  const ::flatbuffers::String *DESCRIPTION() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
-  }
-  const ::flatbuffers::String *DESCRIPTOR() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTOR);
-  }
-  const ::flatbuffers::String *STATE_MODEL() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_STATE_MODEL);
-  }
-  double STATE_MODEL_VERSION() const {
-    return GetField<double>(VT_STATE_MODEL_VERSION, 0.0);
-  }
-  int32_t NUM_ACCEL_POINTS() const {
-    return GetField<int32_t>(VT_NUM_ACCEL_POINTS, 0);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *MNVR_ACCEL_TIMES() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_MNVR_ACCEL_TIMES);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *MNVR_ACCELS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_MNVR_ACCELS);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *MNVR_ACCEL_UNCS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_MNVR_ACCEL_UNCS);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_TAGS);
-  }
-  const ::flatbuffers::String *ALGORITHM() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_ALGORITHM);
-  }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SOURCED_DATA() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SOURCED_DATA);
-  }
-  const ::flatbuffers::String *SOURCED_DATA_TYPES() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_SOURCED_DATA_TYPES);
-  }
+  /// On-orbit reference
   const ::flatbuffers::String *ON_ORBIT() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ON_ORBIT);
   }
+  /// Maneuver status
+  maneuverStatus STATUS() const {
+    return static_cast<maneuverStatus>(GetField<int8_t>(VT_STATUS, 0));
+  }
+  /// Maneuver characterization
+  maneuverCharacterization CHARACTERIZATION() const {
+    return static_cast<maneuverCharacterization>(GetField<int8_t>(VT_CHARACTERIZATION, 0));
+  }
+  /// Characterization uncertainty (0-1)
+  double CHARACTERIZATION_UNC() const {
+    return GetField<double>(VT_CHARACTERIZATION_UNC, 0.0);
+  }
+  /// Detection report time (ISO 8601)
+  const ::flatbuffers::String *REPORT_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REPORT_TIME);
+  }
+  /// Maneuver start time (ISO 8601)
+  const ::flatbuffers::String *EVENT_START_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EVENT_START_TIME);
+  }
+  /// Maneuver end time (ISO 8601)
+  const ::flatbuffers::String *EVENT_END_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EVENT_END_TIME);
+  }
+  /// Total burn time (seconds)
+  double TOTAL_BURN_TIME() const {
+    return GetField<double>(VT_TOTAL_BURN_TIME, 0.0);
+  }
+  /// OD fit end time (ISO 8601)
+  const ::flatbuffers::String *OD_FIT_END_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OD_FIT_END_TIME);
+  }
+  /// Detecting sensor identifier
+  const ::flatbuffers::String *ID_SENSOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ID_SENSOR);
+  }
+  /// Original sensor identifier
+  const ::flatbuffers::String *ORIG_SENSOR_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ORIG_SENSOR_ID);
+  }
+  /// Maneuver event identifier
+  const ::flatbuffers::String *EVENT_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EVENT_ID);
+  }
+  /// True if object is uncorrelated
+  bool UCT() const {
+    return GetField<uint8_t>(VT_UCT, 0) != 0;
+  }
+  /// Maneuver detection uncertainty (km)
+  double MANEUVER_UNC() const {
+    return GetField<double>(VT_MANEUVER_UNC, 0.0);
+  }
+  /// Total delta-V magnitude (km/s)
+  double DELTA_VEL() const {
+    return GetField<double>(VT_DELTA_VEL, 0.0);
+  }
+  /// Delta-V along-track/U component (km/s)
+  double DELTA_VEL_U() const {
+    return GetField<double>(VT_DELTA_VEL_U, 0.0);
+  }
+  /// Delta-V cross-track/V component (km/s)
+  double DELTA_VEL_V() const {
+    return GetField<double>(VT_DELTA_VEL_V, 0.0);
+  }
+  /// Delta-V radial/W component (km/s)
+  double DELTA_VEL_W() const {
+    return GetField<double>(VT_DELTA_VEL_W, 0.0);
+  }
+  /// Total delta position (km)
+  double DELTA_POS() const {
+    return GetField<double>(VT_DELTA_POS, 0.0);
+  }
+  /// Delta position U component (km)
+  double DELTA_POS_U() const {
+    return GetField<double>(VT_DELTA_POS_U, 0.0);
+  }
+  /// Delta position V component (km)
+  double DELTA_POS_V() const {
+    return GetField<double>(VT_DELTA_POS_V, 0.0);
+  }
+  /// Delta position W component (km)
+  double DELTA_POS_W() const {
+    return GetField<double>(VT_DELTA_POS_W, 0.0);
+  }
+  /// Propellant mass consumed (kg)
+  double DELTA_MASS() const {
+    return GetField<double>(VT_DELTA_MASS, 0.0);
+  }
+  /// Pre-maneuver orbital state
+  const mnvOrbitalState *PRE_EVENT() const {
+    return GetPointer<const mnvOrbitalState *>(VT_PRE_EVENT);
+  }
+  /// Post-maneuver orbital state
+  const mnvOrbitalState *POST_EVENT() const {
+    return GetPointer<const mnvOrbitalState *>(VT_POST_EVENT);
+  }
+  /// Post-maneuver mass (kg)
+  double POST_MASS() const {
+    return GetField<double>(VT_POST_MASS, 0.0);
+  }
+  /// Post-maneuver cross-sectional area (m^2)
+  double POST_AREA() const {
+    return GetField<double>(VT_POST_AREA, 0.0);
+  }
+  /// 6x6 covariance matrix (upper triangle, row-major)
+  const ::flatbuffers::Vector<double> *COV() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_COV);
+  }
+  /// Number of observations used
+  uint32_t NUM_OBS() const {
+    return GetField<uint32_t>(VT_NUM_OBS, 0);
+  }
+  /// State model used
+  const ::flatbuffers::String *STATE_MODEL() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_STATE_MODEL);
+  }
+  /// State model version
+  double STATE_MODEL_VERSION() const {
+    return GetField<double>(VT_STATE_MODEL_VERSION, 0.0);
+  }
+  /// Number of acceleration profile points
+  uint16_t NUM_ACCEL_POINTS() const {
+    return GetField<uint16_t>(VT_NUM_ACCEL_POINTS, 0);
+  }
+  /// Acceleration profile times (ISO 8601)
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *MNVR_ACCEL_TIMES() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_MNVR_ACCEL_TIMES);
+  }
+  /// Acceleration values (km/s^2, 3 components per point)
+  const ::flatbuffers::Vector<double> *MNVR_ACCELS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_MNVR_ACCELS);
+  }
+  /// Acceleration uncertainties (km/s^2)
+  const ::flatbuffers::Vector<double> *MNVR_ACCEL_UNCS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_MNVR_ACCEL_UNCS);
+  }
+  /// Description
+  const ::flatbuffers::String *DESCRIPTION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
+  }
+  /// Event descriptor
+  const ::flatbuffers::String *DESCRIPTOR() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTOR);
+  }
+  /// Algorithm used for detection
+  const ::flatbuffers::String *ALGORITHM() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_ALGORITHM);
+  }
+  /// Associated tags
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_TAGS);
+  }
+  /// Sourced data references
+  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SOURCED_DATA() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SOURCED_DATA);
+  }
+  /// Sourced data types
+  const ::flatbuffers::String *SOURCED_DATA_TYPES() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SOURCED_DATA_TYPES);
+  }
+  /// Transaction identifier
   const ::flatbuffers::String *TRANSACTION_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_TRANSACTION_ID);
   }
@@ -389,7 +710,14 @@ struct MNV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
            verifier.VerifyString(ID()) &&
-           VerifyField<int32_t>(verifier, VT_SAT_NO, 4) &&
+           VerifyField<uint32_t>(verifier, VT_SAT_NO, 4) &&
+           VerifyOffset(verifier, VT_ORIG_OBJECT_ID) &&
+           verifier.VerifyString(ORIG_OBJECT_ID()) &&
+           VerifyOffset(verifier, VT_ON_ORBIT) &&
+           verifier.VerifyString(ON_ORBIT()) &&
+           VerifyField<int8_t>(verifier, VT_STATUS, 1) &&
+           VerifyField<int8_t>(verifier, VT_CHARACTERIZATION, 1) &&
+           VerifyField<double>(verifier, VT_CHARACTERIZATION_UNC, 8) &&
            VerifyOffset(verifier, VT_REPORT_TIME) &&
            verifier.VerifyString(REPORT_TIME()) &&
            VerifyOffset(verifier, VT_EVENT_START_TIME) &&
@@ -401,119 +729,55 @@ struct MNV FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(OD_FIT_END_TIME()) &&
            VerifyOffset(verifier, VT_ID_SENSOR) &&
            verifier.VerifyString(ID_SENSOR()) &&
-           VerifyField<uint8_t>(verifier, VT_UCT, 1) &&
-           VerifyField<double>(verifier, VT_MANEUVER_UNC, 8) &&
-           VerifyOffset(verifier, VT_CHARACTERIZATION) &&
-           verifier.VerifyString(CHARACTERIZATION()) &&
-           VerifyField<double>(verifier, VT_CHARACTERIZATION_UNC, 8) &&
-           VerifyOffset(verifier, VT_EVENT_ID) &&
-           verifier.VerifyString(EVENT_ID()) &&
-           VerifyOffset(verifier, VT_ORIG_OBJECT_ID) &&
-           verifier.VerifyString(ORIG_OBJECT_ID()) &&
            VerifyOffset(verifier, VT_ORIG_SENSOR_ID) &&
            verifier.VerifyString(ORIG_SENSOR_ID()) &&
-           VerifyOffset(verifier, VT_STATUS) &&
-           verifier.VerifyString(STATUS()) &&
-           VerifyField<double>(verifier, VT_DELTA_POS, 8) &&
-           VerifyField<double>(verifier, VT_DELTA_POS_U, 8) &&
-           VerifyField<double>(verifier, VT_DELTA_POS_V, 8) &&
-           VerifyField<double>(verifier, VT_DELTA_POS_W, 8) &&
+           VerifyOffset(verifier, VT_EVENT_ID) &&
+           verifier.VerifyString(EVENT_ID()) &&
+           VerifyField<uint8_t>(verifier, VT_UCT, 1) &&
+           VerifyField<double>(verifier, VT_MANEUVER_UNC, 8) &&
            VerifyField<double>(verifier, VT_DELTA_VEL, 8) &&
            VerifyField<double>(verifier, VT_DELTA_VEL_U, 8) &&
            VerifyField<double>(verifier, VT_DELTA_VEL_V, 8) &&
            VerifyField<double>(verifier, VT_DELTA_VEL_W, 8) &&
+           VerifyField<double>(verifier, VT_DELTA_POS, 8) &&
+           VerifyField<double>(verifier, VT_DELTA_POS_U, 8) &&
+           VerifyField<double>(verifier, VT_DELTA_POS_V, 8) &&
+           VerifyField<double>(verifier, VT_DELTA_POS_W, 8) &&
            VerifyField<double>(verifier, VT_DELTA_MASS, 8) &&
-           VerifyOffset(verifier, VT_PRE_EVENT_ID_ELSET) &&
-           verifier.VerifyString(PRE_EVENT_ID_ELSET()) &&
-           VerifyOffset(verifier, VT_PRE_EVENT_ELSET) &&
-           verifier.VerifyString(PRE_EVENT_ELSET()) &&
-           VerifyOffset(verifier, VT_PRE_EVENT_ID_STATE_VECTOR) &&
-           verifier.VerifyString(PRE_EVENT_ID_STATE_VECTOR()) &&
-           VerifyOffset(verifier, VT_PRE_EVENT_STATE_VECTOR) &&
-           verifier.VerifyString(PRE_EVENT_STATE_VECTOR()) &&
-           VerifyField<double>(verifier, VT_PRE_POS_X, 8) &&
-           VerifyField<double>(verifier, VT_PRE_POS_Y, 8) &&
-           VerifyField<double>(verifier, VT_PRE_POS_Z, 8) &&
-           VerifyField<double>(verifier, VT_PRE_VEL_X, 8) &&
-           VerifyField<double>(verifier, VT_PRE_VEL_Y, 8) &&
-           VerifyField<double>(verifier, VT_PRE_VEL_Z, 8) &&
-           VerifyField<double>(verifier, VT_PRE_RADIATION_PRESS_COEFF, 8) &&
-           VerifyField<double>(verifier, VT_PRE_BALLISTIC_COEFF, 8) &&
-           VerifyField<double>(verifier, VT_PRE_APOGEE, 8) &&
-           VerifyField<double>(verifier, VT_PRE_PERIGEE, 8) &&
-           VerifyField<double>(verifier, VT_PRE_INCLINATION, 8) &&
-           VerifyField<double>(verifier, VT_PRE_ECCENTRICITY, 8) &&
-           VerifyField<double>(verifier, VT_PRE_PERIOD, 8) &&
-           VerifyField<double>(verifier, VT_PRE_RAAN, 8) &&
-           VerifyField<double>(verifier, VT_PRE_SMA, 8) &&
-           VerifyField<double>(verifier, VT_PRE_GEO_LONGITUDE, 8) &&
-           VerifyField<double>(verifier, VT_PRE_DRIFT_RATE, 8) &&
-           VerifyField<double>(verifier, VT_PRE_SIGMA_U, 8) &&
-           VerifyField<double>(verifier, VT_PRE_SIGMA_V, 8) &&
-           VerifyField<double>(verifier, VT_PRE_SIGMA_W, 8) &&
-           VerifyOffset(verifier, VT_POST_EVENT_ID_ELSET) &&
-           verifier.VerifyString(POST_EVENT_ID_ELSET()) &&
-           VerifyOffset(verifier, VT_POST_EVENT_ELSET) &&
-           verifier.VerifyString(POST_EVENT_ELSET()) &&
-           VerifyOffset(verifier, VT_POST_EVENT_ID_STATE_VECTOR) &&
-           verifier.VerifyString(POST_EVENT_ID_STATE_VECTOR()) &&
-           VerifyOffset(verifier, VT_POST_EVENT_STATE_VECTOR) &&
-           verifier.VerifyString(POST_EVENT_STATE_VECTOR()) &&
-           VerifyField<double>(verifier, VT_POST_POS_X, 8) &&
-           VerifyField<double>(verifier, VT_POST_POS_Y, 8) &&
-           VerifyField<double>(verifier, VT_POST_POS_Z, 8) &&
-           VerifyField<double>(verifier, VT_POST_VEL_X, 8) &&
-           VerifyField<double>(verifier, VT_POST_VEL_Y, 8) &&
-           VerifyField<double>(verifier, VT_POST_VEL_Z, 8) &&
-           VerifyField<double>(verifier, VT_POST_RADIATION_PRESS_COEFF, 8) &&
-           VerifyField<double>(verifier, VT_POST_BALLISTIC_COEFF, 8) &&
-           VerifyField<double>(verifier, VT_POST_APOGEE, 8) &&
-           VerifyField<double>(verifier, VT_POST_PERIGEE, 8) &&
-           VerifyField<double>(verifier, VT_POST_INCLINATION, 8) &&
-           VerifyField<double>(verifier, VT_POST_ECCENTRICITY, 8) &&
-           VerifyField<double>(verifier, VT_POST_PERIOD, 8) &&
-           VerifyField<double>(verifier, VT_POST_RAAN, 8) &&
-           VerifyField<double>(verifier, VT_POST_SMA, 8) &&
-           VerifyField<double>(verifier, VT_POST_GEO_LONGITUDE, 8) &&
-           VerifyField<double>(verifier, VT_POST_DRIFT_RATE, 8) &&
-           VerifyField<double>(verifier, VT_POST_SIGMA_U, 8) &&
-           VerifyField<double>(verifier, VT_POST_SIGMA_V, 8) &&
-           VerifyField<double>(verifier, VT_POST_SIGMA_W, 8) &&
-           VerifyOffset(verifier, VT_COV) &&
-           verifier.VerifyVector(COV()) &&
-           verifier.VerifyVectorOfStrings(COV()) &&
+           VerifyOffset(verifier, VT_PRE_EVENT) &&
+           verifier.VerifyTable(PRE_EVENT()) &&
+           VerifyOffset(verifier, VT_POST_EVENT) &&
+           verifier.VerifyTable(POST_EVENT()) &&
            VerifyField<double>(verifier, VT_POST_MASS, 8) &&
            VerifyField<double>(verifier, VT_POST_AREA, 8) &&
-           VerifyField<int32_t>(verifier, VT_NUM_OBS, 4) &&
-           VerifyOffset(verifier, VT_DESCRIPTION) &&
-           verifier.VerifyString(DESCRIPTION()) &&
-           VerifyOffset(verifier, VT_DESCRIPTOR) &&
-           verifier.VerifyString(DESCRIPTOR()) &&
+           VerifyOffset(verifier, VT_COV) &&
+           verifier.VerifyVector(COV()) &&
+           VerifyField<uint32_t>(verifier, VT_NUM_OBS, 4) &&
            VerifyOffset(verifier, VT_STATE_MODEL) &&
            verifier.VerifyString(STATE_MODEL()) &&
            VerifyField<double>(verifier, VT_STATE_MODEL_VERSION, 8) &&
-           VerifyField<int32_t>(verifier, VT_NUM_ACCEL_POINTS, 4) &&
+           VerifyField<uint16_t>(verifier, VT_NUM_ACCEL_POINTS, 2) &&
            VerifyOffset(verifier, VT_MNVR_ACCEL_TIMES) &&
            verifier.VerifyVector(MNVR_ACCEL_TIMES()) &&
            verifier.VerifyVectorOfStrings(MNVR_ACCEL_TIMES()) &&
            VerifyOffset(verifier, VT_MNVR_ACCELS) &&
            verifier.VerifyVector(MNVR_ACCELS()) &&
-           verifier.VerifyVectorOfStrings(MNVR_ACCELS()) &&
            VerifyOffset(verifier, VT_MNVR_ACCEL_UNCS) &&
            verifier.VerifyVector(MNVR_ACCEL_UNCS()) &&
-           verifier.VerifyVectorOfStrings(MNVR_ACCEL_UNCS()) &&
+           VerifyOffset(verifier, VT_DESCRIPTION) &&
+           verifier.VerifyString(DESCRIPTION()) &&
+           VerifyOffset(verifier, VT_DESCRIPTOR) &&
+           verifier.VerifyString(DESCRIPTOR()) &&
+           VerifyOffset(verifier, VT_ALGORITHM) &&
+           verifier.VerifyString(ALGORITHM()) &&
            VerifyOffset(verifier, VT_TAGS) &&
            verifier.VerifyVector(TAGS()) &&
            verifier.VerifyVectorOfStrings(TAGS()) &&
-           VerifyOffset(verifier, VT_ALGORITHM) &&
-           verifier.VerifyString(ALGORITHM()) &&
            VerifyOffset(verifier, VT_SOURCED_DATA) &&
            verifier.VerifyVector(SOURCED_DATA()) &&
            verifier.VerifyVectorOfStrings(SOURCED_DATA()) &&
            VerifyOffset(verifier, VT_SOURCED_DATA_TYPES) &&
            verifier.VerifyString(SOURCED_DATA_TYPES()) &&
-           VerifyOffset(verifier, VT_ON_ORBIT) &&
-           verifier.VerifyString(ON_ORBIT()) &&
            VerifyOffset(verifier, VT_TRANSACTION_ID) &&
            verifier.VerifyString(TRANSACTION_ID()) &&
            verifier.EndTable();
@@ -527,8 +791,23 @@ struct MNVBuilder {
   void add_ID(::flatbuffers::Offset<::flatbuffers::String> ID) {
     fbb_.AddOffset(MNV::VT_ID, ID);
   }
-  void add_SAT_NO(int32_t SAT_NO) {
-    fbb_.AddElement<int32_t>(MNV::VT_SAT_NO, SAT_NO, 0);
+  void add_SAT_NO(uint32_t SAT_NO) {
+    fbb_.AddElement<uint32_t>(MNV::VT_SAT_NO, SAT_NO, 0);
+  }
+  void add_ORIG_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID) {
+    fbb_.AddOffset(MNV::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
+  }
+  void add_ON_ORBIT(::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT) {
+    fbb_.AddOffset(MNV::VT_ON_ORBIT, ON_ORBIT);
+  }
+  void add_STATUS(maneuverStatus STATUS) {
+    fbb_.AddElement<int8_t>(MNV::VT_STATUS, static_cast<int8_t>(STATUS), 0);
+  }
+  void add_CHARACTERIZATION(maneuverCharacterization CHARACTERIZATION) {
+    fbb_.AddElement<int8_t>(MNV::VT_CHARACTERIZATION, static_cast<int8_t>(CHARACTERIZATION), 0);
+  }
+  void add_CHARACTERIZATION_UNC(double CHARACTERIZATION_UNC) {
+    fbb_.AddElement<double>(MNV::VT_CHARACTERIZATION_UNC, CHARACTERIZATION_UNC, 0.0);
   }
   void add_REPORT_TIME(::flatbuffers::Offset<::flatbuffers::String> REPORT_TIME) {
     fbb_.AddOffset(MNV::VT_REPORT_TIME, REPORT_TIME);
@@ -548,41 +827,17 @@ struct MNVBuilder {
   void add_ID_SENSOR(::flatbuffers::Offset<::flatbuffers::String> ID_SENSOR) {
     fbb_.AddOffset(MNV::VT_ID_SENSOR, ID_SENSOR);
   }
+  void add_ORIG_SENSOR_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID) {
+    fbb_.AddOffset(MNV::VT_ORIG_SENSOR_ID, ORIG_SENSOR_ID);
+  }
+  void add_EVENT_ID(::flatbuffers::Offset<::flatbuffers::String> EVENT_ID) {
+    fbb_.AddOffset(MNV::VT_EVENT_ID, EVENT_ID);
+  }
   void add_UCT(bool UCT) {
     fbb_.AddElement<uint8_t>(MNV::VT_UCT, static_cast<uint8_t>(UCT), 0);
   }
   void add_MANEUVER_UNC(double MANEUVER_UNC) {
     fbb_.AddElement<double>(MNV::VT_MANEUVER_UNC, MANEUVER_UNC, 0.0);
-  }
-  void add_CHARACTERIZATION(::flatbuffers::Offset<::flatbuffers::String> CHARACTERIZATION) {
-    fbb_.AddOffset(MNV::VT_CHARACTERIZATION, CHARACTERIZATION);
-  }
-  void add_CHARACTERIZATION_UNC(double CHARACTERIZATION_UNC) {
-    fbb_.AddElement<double>(MNV::VT_CHARACTERIZATION_UNC, CHARACTERIZATION_UNC, 0.0);
-  }
-  void add_EVENT_ID(::flatbuffers::Offset<::flatbuffers::String> EVENT_ID) {
-    fbb_.AddOffset(MNV::VT_EVENT_ID, EVENT_ID);
-  }
-  void add_ORIG_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID) {
-    fbb_.AddOffset(MNV::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
-  }
-  void add_ORIG_SENSOR_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID) {
-    fbb_.AddOffset(MNV::VT_ORIG_SENSOR_ID, ORIG_SENSOR_ID);
-  }
-  void add_STATUS(::flatbuffers::Offset<::flatbuffers::String> STATUS) {
-    fbb_.AddOffset(MNV::VT_STATUS, STATUS);
-  }
-  void add_DELTA_POS(double DELTA_POS) {
-    fbb_.AddElement<double>(MNV::VT_DELTA_POS, DELTA_POS, 0.0);
-  }
-  void add_DELTA_POS_U(double DELTA_POS_U) {
-    fbb_.AddElement<double>(MNV::VT_DELTA_POS_U, DELTA_POS_U, 0.0);
-  }
-  void add_DELTA_POS_V(double DELTA_POS_V) {
-    fbb_.AddElement<double>(MNV::VT_DELTA_POS_V, DELTA_POS_V, 0.0);
-  }
-  void add_DELTA_POS_W(double DELTA_POS_W) {
-    fbb_.AddElement<double>(MNV::VT_DELTA_POS_W, DELTA_POS_W, 0.0);
   }
   void add_DELTA_VEL(double DELTA_VEL) {
     fbb_.AddElement<double>(MNV::VT_DELTA_VEL, DELTA_VEL, 0.0);
@@ -596,155 +851,26 @@ struct MNVBuilder {
   void add_DELTA_VEL_W(double DELTA_VEL_W) {
     fbb_.AddElement<double>(MNV::VT_DELTA_VEL_W, DELTA_VEL_W, 0.0);
   }
+  void add_DELTA_POS(double DELTA_POS) {
+    fbb_.AddElement<double>(MNV::VT_DELTA_POS, DELTA_POS, 0.0);
+  }
+  void add_DELTA_POS_U(double DELTA_POS_U) {
+    fbb_.AddElement<double>(MNV::VT_DELTA_POS_U, DELTA_POS_U, 0.0);
+  }
+  void add_DELTA_POS_V(double DELTA_POS_V) {
+    fbb_.AddElement<double>(MNV::VT_DELTA_POS_V, DELTA_POS_V, 0.0);
+  }
+  void add_DELTA_POS_W(double DELTA_POS_W) {
+    fbb_.AddElement<double>(MNV::VT_DELTA_POS_W, DELTA_POS_W, 0.0);
+  }
   void add_DELTA_MASS(double DELTA_MASS) {
     fbb_.AddElement<double>(MNV::VT_DELTA_MASS, DELTA_MASS, 0.0);
   }
-  void add_PRE_EVENT_ID_ELSET(::flatbuffers::Offset<::flatbuffers::String> PRE_EVENT_ID_ELSET) {
-    fbb_.AddOffset(MNV::VT_PRE_EVENT_ID_ELSET, PRE_EVENT_ID_ELSET);
+  void add_PRE_EVENT(::flatbuffers::Offset<mnvOrbitalState> PRE_EVENT) {
+    fbb_.AddOffset(MNV::VT_PRE_EVENT, PRE_EVENT);
   }
-  void add_PRE_EVENT_ELSET(::flatbuffers::Offset<::flatbuffers::String> PRE_EVENT_ELSET) {
-    fbb_.AddOffset(MNV::VT_PRE_EVENT_ELSET, PRE_EVENT_ELSET);
-  }
-  void add_PRE_EVENT_ID_STATE_VECTOR(::flatbuffers::Offset<::flatbuffers::String> PRE_EVENT_ID_STATE_VECTOR) {
-    fbb_.AddOffset(MNV::VT_PRE_EVENT_ID_STATE_VECTOR, PRE_EVENT_ID_STATE_VECTOR);
-  }
-  void add_PRE_EVENT_STATE_VECTOR(::flatbuffers::Offset<::flatbuffers::String> PRE_EVENT_STATE_VECTOR) {
-    fbb_.AddOffset(MNV::VT_PRE_EVENT_STATE_VECTOR, PRE_EVENT_STATE_VECTOR);
-  }
-  void add_PRE_POS_X(double PRE_POS_X) {
-    fbb_.AddElement<double>(MNV::VT_PRE_POS_X, PRE_POS_X, 0.0);
-  }
-  void add_PRE_POS_Y(double PRE_POS_Y) {
-    fbb_.AddElement<double>(MNV::VT_PRE_POS_Y, PRE_POS_Y, 0.0);
-  }
-  void add_PRE_POS_Z(double PRE_POS_Z) {
-    fbb_.AddElement<double>(MNV::VT_PRE_POS_Z, PRE_POS_Z, 0.0);
-  }
-  void add_PRE_VEL_X(double PRE_VEL_X) {
-    fbb_.AddElement<double>(MNV::VT_PRE_VEL_X, PRE_VEL_X, 0.0);
-  }
-  void add_PRE_VEL_Y(double PRE_VEL_Y) {
-    fbb_.AddElement<double>(MNV::VT_PRE_VEL_Y, PRE_VEL_Y, 0.0);
-  }
-  void add_PRE_VEL_Z(double PRE_VEL_Z) {
-    fbb_.AddElement<double>(MNV::VT_PRE_VEL_Z, PRE_VEL_Z, 0.0);
-  }
-  void add_PRE_RADIATION_PRESS_COEFF(double PRE_RADIATION_PRESS_COEFF) {
-    fbb_.AddElement<double>(MNV::VT_PRE_RADIATION_PRESS_COEFF, PRE_RADIATION_PRESS_COEFF, 0.0);
-  }
-  void add_PRE_BALLISTIC_COEFF(double PRE_BALLISTIC_COEFF) {
-    fbb_.AddElement<double>(MNV::VT_PRE_BALLISTIC_COEFF, PRE_BALLISTIC_COEFF, 0.0);
-  }
-  void add_PRE_APOGEE(double PRE_APOGEE) {
-    fbb_.AddElement<double>(MNV::VT_PRE_APOGEE, PRE_APOGEE, 0.0);
-  }
-  void add_PRE_PERIGEE(double PRE_PERIGEE) {
-    fbb_.AddElement<double>(MNV::VT_PRE_PERIGEE, PRE_PERIGEE, 0.0);
-  }
-  void add_PRE_INCLINATION(double PRE_INCLINATION) {
-    fbb_.AddElement<double>(MNV::VT_PRE_INCLINATION, PRE_INCLINATION, 0.0);
-  }
-  void add_PRE_ECCENTRICITY(double PRE_ECCENTRICITY) {
-    fbb_.AddElement<double>(MNV::VT_PRE_ECCENTRICITY, PRE_ECCENTRICITY, 0.0);
-  }
-  void add_PRE_PERIOD(double PRE_PERIOD) {
-    fbb_.AddElement<double>(MNV::VT_PRE_PERIOD, PRE_PERIOD, 0.0);
-  }
-  void add_PRE_RAAN(double PRE_RAAN) {
-    fbb_.AddElement<double>(MNV::VT_PRE_RAAN, PRE_RAAN, 0.0);
-  }
-  void add_PRE_SMA(double PRE_SMA) {
-    fbb_.AddElement<double>(MNV::VT_PRE_SMA, PRE_SMA, 0.0);
-  }
-  void add_PRE_GEO_LONGITUDE(double PRE_GEO_LONGITUDE) {
-    fbb_.AddElement<double>(MNV::VT_PRE_GEO_LONGITUDE, PRE_GEO_LONGITUDE, 0.0);
-  }
-  void add_PRE_DRIFT_RATE(double PRE_DRIFT_RATE) {
-    fbb_.AddElement<double>(MNV::VT_PRE_DRIFT_RATE, PRE_DRIFT_RATE, 0.0);
-  }
-  void add_PRE_SIGMA_U(double PRE_SIGMA_U) {
-    fbb_.AddElement<double>(MNV::VT_PRE_SIGMA_U, PRE_SIGMA_U, 0.0);
-  }
-  void add_PRE_SIGMA_V(double PRE_SIGMA_V) {
-    fbb_.AddElement<double>(MNV::VT_PRE_SIGMA_V, PRE_SIGMA_V, 0.0);
-  }
-  void add_PRE_SIGMA_W(double PRE_SIGMA_W) {
-    fbb_.AddElement<double>(MNV::VT_PRE_SIGMA_W, PRE_SIGMA_W, 0.0);
-  }
-  void add_POST_EVENT_ID_ELSET(::flatbuffers::Offset<::flatbuffers::String> POST_EVENT_ID_ELSET) {
-    fbb_.AddOffset(MNV::VT_POST_EVENT_ID_ELSET, POST_EVENT_ID_ELSET);
-  }
-  void add_POST_EVENT_ELSET(::flatbuffers::Offset<::flatbuffers::String> POST_EVENT_ELSET) {
-    fbb_.AddOffset(MNV::VT_POST_EVENT_ELSET, POST_EVENT_ELSET);
-  }
-  void add_POST_EVENT_ID_STATE_VECTOR(::flatbuffers::Offset<::flatbuffers::String> POST_EVENT_ID_STATE_VECTOR) {
-    fbb_.AddOffset(MNV::VT_POST_EVENT_ID_STATE_VECTOR, POST_EVENT_ID_STATE_VECTOR);
-  }
-  void add_POST_EVENT_STATE_VECTOR(::flatbuffers::Offset<::flatbuffers::String> POST_EVENT_STATE_VECTOR) {
-    fbb_.AddOffset(MNV::VT_POST_EVENT_STATE_VECTOR, POST_EVENT_STATE_VECTOR);
-  }
-  void add_POST_POS_X(double POST_POS_X) {
-    fbb_.AddElement<double>(MNV::VT_POST_POS_X, POST_POS_X, 0.0);
-  }
-  void add_POST_POS_Y(double POST_POS_Y) {
-    fbb_.AddElement<double>(MNV::VT_POST_POS_Y, POST_POS_Y, 0.0);
-  }
-  void add_POST_POS_Z(double POST_POS_Z) {
-    fbb_.AddElement<double>(MNV::VT_POST_POS_Z, POST_POS_Z, 0.0);
-  }
-  void add_POST_VEL_X(double POST_VEL_X) {
-    fbb_.AddElement<double>(MNV::VT_POST_VEL_X, POST_VEL_X, 0.0);
-  }
-  void add_POST_VEL_Y(double POST_VEL_Y) {
-    fbb_.AddElement<double>(MNV::VT_POST_VEL_Y, POST_VEL_Y, 0.0);
-  }
-  void add_POST_VEL_Z(double POST_VEL_Z) {
-    fbb_.AddElement<double>(MNV::VT_POST_VEL_Z, POST_VEL_Z, 0.0);
-  }
-  void add_POST_RADIATION_PRESS_COEFF(double POST_RADIATION_PRESS_COEFF) {
-    fbb_.AddElement<double>(MNV::VT_POST_RADIATION_PRESS_COEFF, POST_RADIATION_PRESS_COEFF, 0.0);
-  }
-  void add_POST_BALLISTIC_COEFF(double POST_BALLISTIC_COEFF) {
-    fbb_.AddElement<double>(MNV::VT_POST_BALLISTIC_COEFF, POST_BALLISTIC_COEFF, 0.0);
-  }
-  void add_POST_APOGEE(double POST_APOGEE) {
-    fbb_.AddElement<double>(MNV::VT_POST_APOGEE, POST_APOGEE, 0.0);
-  }
-  void add_POST_PERIGEE(double POST_PERIGEE) {
-    fbb_.AddElement<double>(MNV::VT_POST_PERIGEE, POST_PERIGEE, 0.0);
-  }
-  void add_POST_INCLINATION(double POST_INCLINATION) {
-    fbb_.AddElement<double>(MNV::VT_POST_INCLINATION, POST_INCLINATION, 0.0);
-  }
-  void add_POST_ECCENTRICITY(double POST_ECCENTRICITY) {
-    fbb_.AddElement<double>(MNV::VT_POST_ECCENTRICITY, POST_ECCENTRICITY, 0.0);
-  }
-  void add_POST_PERIOD(double POST_PERIOD) {
-    fbb_.AddElement<double>(MNV::VT_POST_PERIOD, POST_PERIOD, 0.0);
-  }
-  void add_POST_RAAN(double POST_RAAN) {
-    fbb_.AddElement<double>(MNV::VT_POST_RAAN, POST_RAAN, 0.0);
-  }
-  void add_POST_SMA(double POST_SMA) {
-    fbb_.AddElement<double>(MNV::VT_POST_SMA, POST_SMA, 0.0);
-  }
-  void add_POST_GEO_LONGITUDE(double POST_GEO_LONGITUDE) {
-    fbb_.AddElement<double>(MNV::VT_POST_GEO_LONGITUDE, POST_GEO_LONGITUDE, 0.0);
-  }
-  void add_POST_DRIFT_RATE(double POST_DRIFT_RATE) {
-    fbb_.AddElement<double>(MNV::VT_POST_DRIFT_RATE, POST_DRIFT_RATE, 0.0);
-  }
-  void add_POST_SIGMA_U(double POST_SIGMA_U) {
-    fbb_.AddElement<double>(MNV::VT_POST_SIGMA_U, POST_SIGMA_U, 0.0);
-  }
-  void add_POST_SIGMA_V(double POST_SIGMA_V) {
-    fbb_.AddElement<double>(MNV::VT_POST_SIGMA_V, POST_SIGMA_V, 0.0);
-  }
-  void add_POST_SIGMA_W(double POST_SIGMA_W) {
-    fbb_.AddElement<double>(MNV::VT_POST_SIGMA_W, POST_SIGMA_W, 0.0);
-  }
-  void add_COV(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> COV) {
-    fbb_.AddOffset(MNV::VT_COV, COV);
+  void add_POST_EVENT(::flatbuffers::Offset<mnvOrbitalState> POST_EVENT) {
+    fbb_.AddOffset(MNV::VT_POST_EVENT, POST_EVENT);
   }
   void add_POST_MASS(double POST_MASS) {
     fbb_.AddElement<double>(MNV::VT_POST_MASS, POST_MASS, 0.0);
@@ -752,14 +878,11 @@ struct MNVBuilder {
   void add_POST_AREA(double POST_AREA) {
     fbb_.AddElement<double>(MNV::VT_POST_AREA, POST_AREA, 0.0);
   }
-  void add_NUM_OBS(int32_t NUM_OBS) {
-    fbb_.AddElement<int32_t>(MNV::VT_NUM_OBS, NUM_OBS, 0);
+  void add_COV(::flatbuffers::Offset<::flatbuffers::Vector<double>> COV) {
+    fbb_.AddOffset(MNV::VT_COV, COV);
   }
-  void add_DESCRIPTION(::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION) {
-    fbb_.AddOffset(MNV::VT_DESCRIPTION, DESCRIPTION);
-  }
-  void add_DESCRIPTOR(::flatbuffers::Offset<::flatbuffers::String> DESCRIPTOR) {
-    fbb_.AddOffset(MNV::VT_DESCRIPTOR, DESCRIPTOR);
+  void add_NUM_OBS(uint32_t NUM_OBS) {
+    fbb_.AddElement<uint32_t>(MNV::VT_NUM_OBS, NUM_OBS, 0);
   }
   void add_STATE_MODEL(::flatbuffers::Offset<::flatbuffers::String> STATE_MODEL) {
     fbb_.AddOffset(MNV::VT_STATE_MODEL, STATE_MODEL);
@@ -767,32 +890,35 @@ struct MNVBuilder {
   void add_STATE_MODEL_VERSION(double STATE_MODEL_VERSION) {
     fbb_.AddElement<double>(MNV::VT_STATE_MODEL_VERSION, STATE_MODEL_VERSION, 0.0);
   }
-  void add_NUM_ACCEL_POINTS(int32_t NUM_ACCEL_POINTS) {
-    fbb_.AddElement<int32_t>(MNV::VT_NUM_ACCEL_POINTS, NUM_ACCEL_POINTS, 0);
+  void add_NUM_ACCEL_POINTS(uint16_t NUM_ACCEL_POINTS) {
+    fbb_.AddElement<uint16_t>(MNV::VT_NUM_ACCEL_POINTS, NUM_ACCEL_POINTS, 0);
   }
   void add_MNVR_ACCEL_TIMES(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> MNVR_ACCEL_TIMES) {
     fbb_.AddOffset(MNV::VT_MNVR_ACCEL_TIMES, MNVR_ACCEL_TIMES);
   }
-  void add_MNVR_ACCELS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> MNVR_ACCELS) {
+  void add_MNVR_ACCELS(::flatbuffers::Offset<::flatbuffers::Vector<double>> MNVR_ACCELS) {
     fbb_.AddOffset(MNV::VT_MNVR_ACCELS, MNVR_ACCELS);
   }
-  void add_MNVR_ACCEL_UNCS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> MNVR_ACCEL_UNCS) {
+  void add_MNVR_ACCEL_UNCS(::flatbuffers::Offset<::flatbuffers::Vector<double>> MNVR_ACCEL_UNCS) {
     fbb_.AddOffset(MNV::VT_MNVR_ACCEL_UNCS, MNVR_ACCEL_UNCS);
   }
-  void add_TAGS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS) {
-    fbb_.AddOffset(MNV::VT_TAGS, TAGS);
+  void add_DESCRIPTION(::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION) {
+    fbb_.AddOffset(MNV::VT_DESCRIPTION, DESCRIPTION);
+  }
+  void add_DESCRIPTOR(::flatbuffers::Offset<::flatbuffers::String> DESCRIPTOR) {
+    fbb_.AddOffset(MNV::VT_DESCRIPTOR, DESCRIPTOR);
   }
   void add_ALGORITHM(::flatbuffers::Offset<::flatbuffers::String> ALGORITHM) {
     fbb_.AddOffset(MNV::VT_ALGORITHM, ALGORITHM);
+  }
+  void add_TAGS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS) {
+    fbb_.AddOffset(MNV::VT_TAGS, TAGS);
   }
   void add_SOURCED_DATA(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SOURCED_DATA) {
     fbb_.AddOffset(MNV::VT_SOURCED_DATA, SOURCED_DATA);
   }
   void add_SOURCED_DATA_TYPES(::flatbuffers::Offset<::flatbuffers::String> SOURCED_DATA_TYPES) {
     fbb_.AddOffset(MNV::VT_SOURCED_DATA_TYPES, SOURCED_DATA_TYPES);
-  }
-  void add_ON_ORBIT(::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT) {
-    fbb_.AddOffset(MNV::VT_ON_ORBIT, ON_ORBIT);
   }
   void add_TRANSACTION_ID(::flatbuffers::Offset<::flatbuffers::String> TRANSACTION_ID) {
     fbb_.AddOffset(MNV::VT_TRANSACTION_ID, TRANSACTION_ID);
@@ -811,408 +937,214 @@ struct MNVBuilder {
 inline ::flatbuffers::Offset<MNV> CreateMNV(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
-    int32_t SAT_NO = 0,
+    uint32_t SAT_NO = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT = 0,
+    maneuverStatus STATUS = maneuverStatus_DETECTED,
+    maneuverCharacterization CHARACTERIZATION = maneuverCharacterization_IN_PLANE,
+    double CHARACTERIZATION_UNC = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> REPORT_TIME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> EVENT_START_TIME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> EVENT_END_TIME = 0,
     double TOTAL_BURN_TIME = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> OD_FIT_END_TIME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ID_SENSOR = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EVENT_ID = 0,
     bool UCT = false,
     double MANEUVER_UNC = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::String> CHARACTERIZATION = 0,
-    double CHARACTERIZATION_UNC = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::String> EVENT_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> STATUS = 0,
-    double DELTA_POS = 0.0,
-    double DELTA_POS_U = 0.0,
-    double DELTA_POS_V = 0.0,
-    double DELTA_POS_W = 0.0,
     double DELTA_VEL = 0.0,
     double DELTA_VEL_U = 0.0,
     double DELTA_VEL_V = 0.0,
     double DELTA_VEL_W = 0.0,
+    double DELTA_POS = 0.0,
+    double DELTA_POS_U = 0.0,
+    double DELTA_POS_V = 0.0,
+    double DELTA_POS_W = 0.0,
     double DELTA_MASS = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::String> PRE_EVENT_ID_ELSET = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> PRE_EVENT_ELSET = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> PRE_EVENT_ID_STATE_VECTOR = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> PRE_EVENT_STATE_VECTOR = 0,
-    double PRE_POS_X = 0.0,
-    double PRE_POS_Y = 0.0,
-    double PRE_POS_Z = 0.0,
-    double PRE_VEL_X = 0.0,
-    double PRE_VEL_Y = 0.0,
-    double PRE_VEL_Z = 0.0,
-    double PRE_RADIATION_PRESS_COEFF = 0.0,
-    double PRE_BALLISTIC_COEFF = 0.0,
-    double PRE_APOGEE = 0.0,
-    double PRE_PERIGEE = 0.0,
-    double PRE_INCLINATION = 0.0,
-    double PRE_ECCENTRICITY = 0.0,
-    double PRE_PERIOD = 0.0,
-    double PRE_RAAN = 0.0,
-    double PRE_SMA = 0.0,
-    double PRE_GEO_LONGITUDE = 0.0,
-    double PRE_DRIFT_RATE = 0.0,
-    double PRE_SIGMA_U = 0.0,
-    double PRE_SIGMA_V = 0.0,
-    double PRE_SIGMA_W = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::String> POST_EVENT_ID_ELSET = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> POST_EVENT_ELSET = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> POST_EVENT_ID_STATE_VECTOR = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> POST_EVENT_STATE_VECTOR = 0,
-    double POST_POS_X = 0.0,
-    double POST_POS_Y = 0.0,
-    double POST_POS_Z = 0.0,
-    double POST_VEL_X = 0.0,
-    double POST_VEL_Y = 0.0,
-    double POST_VEL_Z = 0.0,
-    double POST_RADIATION_PRESS_COEFF = 0.0,
-    double POST_BALLISTIC_COEFF = 0.0,
-    double POST_APOGEE = 0.0,
-    double POST_PERIGEE = 0.0,
-    double POST_INCLINATION = 0.0,
-    double POST_ECCENTRICITY = 0.0,
-    double POST_PERIOD = 0.0,
-    double POST_RAAN = 0.0,
-    double POST_SMA = 0.0,
-    double POST_GEO_LONGITUDE = 0.0,
-    double POST_DRIFT_RATE = 0.0,
-    double POST_SIGMA_U = 0.0,
-    double POST_SIGMA_V = 0.0,
-    double POST_SIGMA_W = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> COV = 0,
+    ::flatbuffers::Offset<mnvOrbitalState> PRE_EVENT = 0,
+    ::flatbuffers::Offset<mnvOrbitalState> POST_EVENT = 0,
     double POST_MASS = 0.0,
     double POST_AREA = 0.0,
-    int32_t NUM_OBS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTOR = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> COV = 0,
+    uint32_t NUM_OBS = 0,
     ::flatbuffers::Offset<::flatbuffers::String> STATE_MODEL = 0,
     double STATE_MODEL_VERSION = 0.0,
-    int32_t NUM_ACCEL_POINTS = 0,
+    uint16_t NUM_ACCEL_POINTS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> MNVR_ACCEL_TIMES = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> MNVR_ACCELS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> MNVR_ACCEL_UNCS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> MNVR_ACCELS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> MNVR_ACCEL_UNCS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTOR = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ALGORITHM = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SOURCED_DATA = 0,
     ::flatbuffers::Offset<::flatbuffers::String> SOURCED_DATA_TYPES = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> ON_ORBIT = 0,
     ::flatbuffers::Offset<::flatbuffers::String> TRANSACTION_ID = 0) {
   MNVBuilder builder_(_fbb);
   builder_.add_STATE_MODEL_VERSION(STATE_MODEL_VERSION);
   builder_.add_POST_AREA(POST_AREA);
   builder_.add_POST_MASS(POST_MASS);
-  builder_.add_POST_SIGMA_W(POST_SIGMA_W);
-  builder_.add_POST_SIGMA_V(POST_SIGMA_V);
-  builder_.add_POST_SIGMA_U(POST_SIGMA_U);
-  builder_.add_POST_DRIFT_RATE(POST_DRIFT_RATE);
-  builder_.add_POST_GEO_LONGITUDE(POST_GEO_LONGITUDE);
-  builder_.add_POST_SMA(POST_SMA);
-  builder_.add_POST_RAAN(POST_RAAN);
-  builder_.add_POST_PERIOD(POST_PERIOD);
-  builder_.add_POST_ECCENTRICITY(POST_ECCENTRICITY);
-  builder_.add_POST_INCLINATION(POST_INCLINATION);
-  builder_.add_POST_PERIGEE(POST_PERIGEE);
-  builder_.add_POST_APOGEE(POST_APOGEE);
-  builder_.add_POST_BALLISTIC_COEFF(POST_BALLISTIC_COEFF);
-  builder_.add_POST_RADIATION_PRESS_COEFF(POST_RADIATION_PRESS_COEFF);
-  builder_.add_POST_VEL_Z(POST_VEL_Z);
-  builder_.add_POST_VEL_Y(POST_VEL_Y);
-  builder_.add_POST_VEL_X(POST_VEL_X);
-  builder_.add_POST_POS_Z(POST_POS_Z);
-  builder_.add_POST_POS_Y(POST_POS_Y);
-  builder_.add_POST_POS_X(POST_POS_X);
-  builder_.add_PRE_SIGMA_W(PRE_SIGMA_W);
-  builder_.add_PRE_SIGMA_V(PRE_SIGMA_V);
-  builder_.add_PRE_SIGMA_U(PRE_SIGMA_U);
-  builder_.add_PRE_DRIFT_RATE(PRE_DRIFT_RATE);
-  builder_.add_PRE_GEO_LONGITUDE(PRE_GEO_LONGITUDE);
-  builder_.add_PRE_SMA(PRE_SMA);
-  builder_.add_PRE_RAAN(PRE_RAAN);
-  builder_.add_PRE_PERIOD(PRE_PERIOD);
-  builder_.add_PRE_ECCENTRICITY(PRE_ECCENTRICITY);
-  builder_.add_PRE_INCLINATION(PRE_INCLINATION);
-  builder_.add_PRE_PERIGEE(PRE_PERIGEE);
-  builder_.add_PRE_APOGEE(PRE_APOGEE);
-  builder_.add_PRE_BALLISTIC_COEFF(PRE_BALLISTIC_COEFF);
-  builder_.add_PRE_RADIATION_PRESS_COEFF(PRE_RADIATION_PRESS_COEFF);
-  builder_.add_PRE_VEL_Z(PRE_VEL_Z);
-  builder_.add_PRE_VEL_Y(PRE_VEL_Y);
-  builder_.add_PRE_VEL_X(PRE_VEL_X);
-  builder_.add_PRE_POS_Z(PRE_POS_Z);
-  builder_.add_PRE_POS_Y(PRE_POS_Y);
-  builder_.add_PRE_POS_X(PRE_POS_X);
   builder_.add_DELTA_MASS(DELTA_MASS);
-  builder_.add_DELTA_VEL_W(DELTA_VEL_W);
-  builder_.add_DELTA_VEL_V(DELTA_VEL_V);
-  builder_.add_DELTA_VEL_U(DELTA_VEL_U);
-  builder_.add_DELTA_VEL(DELTA_VEL);
   builder_.add_DELTA_POS_W(DELTA_POS_W);
   builder_.add_DELTA_POS_V(DELTA_POS_V);
   builder_.add_DELTA_POS_U(DELTA_POS_U);
   builder_.add_DELTA_POS(DELTA_POS);
-  builder_.add_CHARACTERIZATION_UNC(CHARACTERIZATION_UNC);
+  builder_.add_DELTA_VEL_W(DELTA_VEL_W);
+  builder_.add_DELTA_VEL_V(DELTA_VEL_V);
+  builder_.add_DELTA_VEL_U(DELTA_VEL_U);
+  builder_.add_DELTA_VEL(DELTA_VEL);
   builder_.add_MANEUVER_UNC(MANEUVER_UNC);
   builder_.add_TOTAL_BURN_TIME(TOTAL_BURN_TIME);
+  builder_.add_CHARACTERIZATION_UNC(CHARACTERIZATION_UNC);
   builder_.add_TRANSACTION_ID(TRANSACTION_ID);
-  builder_.add_ON_ORBIT(ON_ORBIT);
   builder_.add_SOURCED_DATA_TYPES(SOURCED_DATA_TYPES);
   builder_.add_SOURCED_DATA(SOURCED_DATA);
-  builder_.add_ALGORITHM(ALGORITHM);
   builder_.add_TAGS(TAGS);
+  builder_.add_ALGORITHM(ALGORITHM);
+  builder_.add_DESCRIPTOR(DESCRIPTOR);
+  builder_.add_DESCRIPTION(DESCRIPTION);
   builder_.add_MNVR_ACCEL_UNCS(MNVR_ACCEL_UNCS);
   builder_.add_MNVR_ACCELS(MNVR_ACCELS);
   builder_.add_MNVR_ACCEL_TIMES(MNVR_ACCEL_TIMES);
-  builder_.add_NUM_ACCEL_POINTS(NUM_ACCEL_POINTS);
   builder_.add_STATE_MODEL(STATE_MODEL);
-  builder_.add_DESCRIPTOR(DESCRIPTOR);
-  builder_.add_DESCRIPTION(DESCRIPTION);
   builder_.add_NUM_OBS(NUM_OBS);
   builder_.add_COV(COV);
-  builder_.add_POST_EVENT_STATE_VECTOR(POST_EVENT_STATE_VECTOR);
-  builder_.add_POST_EVENT_ID_STATE_VECTOR(POST_EVENT_ID_STATE_VECTOR);
-  builder_.add_POST_EVENT_ELSET(POST_EVENT_ELSET);
-  builder_.add_POST_EVENT_ID_ELSET(POST_EVENT_ID_ELSET);
-  builder_.add_PRE_EVENT_STATE_VECTOR(PRE_EVENT_STATE_VECTOR);
-  builder_.add_PRE_EVENT_ID_STATE_VECTOR(PRE_EVENT_ID_STATE_VECTOR);
-  builder_.add_PRE_EVENT_ELSET(PRE_EVENT_ELSET);
-  builder_.add_PRE_EVENT_ID_ELSET(PRE_EVENT_ID_ELSET);
-  builder_.add_STATUS(STATUS);
-  builder_.add_ORIG_SENSOR_ID(ORIG_SENSOR_ID);
-  builder_.add_ORIG_OBJECT_ID(ORIG_OBJECT_ID);
+  builder_.add_POST_EVENT(POST_EVENT);
+  builder_.add_PRE_EVENT(PRE_EVENT);
   builder_.add_EVENT_ID(EVENT_ID);
-  builder_.add_CHARACTERIZATION(CHARACTERIZATION);
+  builder_.add_ORIG_SENSOR_ID(ORIG_SENSOR_ID);
   builder_.add_ID_SENSOR(ID_SENSOR);
   builder_.add_OD_FIT_END_TIME(OD_FIT_END_TIME);
   builder_.add_EVENT_END_TIME(EVENT_END_TIME);
   builder_.add_EVENT_START_TIME(EVENT_START_TIME);
   builder_.add_REPORT_TIME(REPORT_TIME);
+  builder_.add_ON_ORBIT(ON_ORBIT);
+  builder_.add_ORIG_OBJECT_ID(ORIG_OBJECT_ID);
   builder_.add_SAT_NO(SAT_NO);
   builder_.add_ID(ID);
+  builder_.add_NUM_ACCEL_POINTS(NUM_ACCEL_POINTS);
   builder_.add_UCT(UCT);
+  builder_.add_CHARACTERIZATION(CHARACTERIZATION);
+  builder_.add_STATUS(STATUS);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<MNV> CreateMNVDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *ID = nullptr,
-    int32_t SAT_NO = 0,
+    uint32_t SAT_NO = 0,
+    const char *ORIG_OBJECT_ID = nullptr,
+    const char *ON_ORBIT = nullptr,
+    maneuverStatus STATUS = maneuverStatus_DETECTED,
+    maneuverCharacterization CHARACTERIZATION = maneuverCharacterization_IN_PLANE,
+    double CHARACTERIZATION_UNC = 0.0,
     const char *REPORT_TIME = nullptr,
     const char *EVENT_START_TIME = nullptr,
     const char *EVENT_END_TIME = nullptr,
     double TOTAL_BURN_TIME = 0.0,
     const char *OD_FIT_END_TIME = nullptr,
     const char *ID_SENSOR = nullptr,
+    const char *ORIG_SENSOR_ID = nullptr,
+    const char *EVENT_ID = nullptr,
     bool UCT = false,
     double MANEUVER_UNC = 0.0,
-    const char *CHARACTERIZATION = nullptr,
-    double CHARACTERIZATION_UNC = 0.0,
-    const char *EVENT_ID = nullptr,
-    const char *ORIG_OBJECT_ID = nullptr,
-    const char *ORIG_SENSOR_ID = nullptr,
-    const char *STATUS = nullptr,
-    double DELTA_POS = 0.0,
-    double DELTA_POS_U = 0.0,
-    double DELTA_POS_V = 0.0,
-    double DELTA_POS_W = 0.0,
     double DELTA_VEL = 0.0,
     double DELTA_VEL_U = 0.0,
     double DELTA_VEL_V = 0.0,
     double DELTA_VEL_W = 0.0,
+    double DELTA_POS = 0.0,
+    double DELTA_POS_U = 0.0,
+    double DELTA_POS_V = 0.0,
+    double DELTA_POS_W = 0.0,
     double DELTA_MASS = 0.0,
-    const char *PRE_EVENT_ID_ELSET = nullptr,
-    const char *PRE_EVENT_ELSET = nullptr,
-    const char *PRE_EVENT_ID_STATE_VECTOR = nullptr,
-    const char *PRE_EVENT_STATE_VECTOR = nullptr,
-    double PRE_POS_X = 0.0,
-    double PRE_POS_Y = 0.0,
-    double PRE_POS_Z = 0.0,
-    double PRE_VEL_X = 0.0,
-    double PRE_VEL_Y = 0.0,
-    double PRE_VEL_Z = 0.0,
-    double PRE_RADIATION_PRESS_COEFF = 0.0,
-    double PRE_BALLISTIC_COEFF = 0.0,
-    double PRE_APOGEE = 0.0,
-    double PRE_PERIGEE = 0.0,
-    double PRE_INCLINATION = 0.0,
-    double PRE_ECCENTRICITY = 0.0,
-    double PRE_PERIOD = 0.0,
-    double PRE_RAAN = 0.0,
-    double PRE_SMA = 0.0,
-    double PRE_GEO_LONGITUDE = 0.0,
-    double PRE_DRIFT_RATE = 0.0,
-    double PRE_SIGMA_U = 0.0,
-    double PRE_SIGMA_V = 0.0,
-    double PRE_SIGMA_W = 0.0,
-    const char *POST_EVENT_ID_ELSET = nullptr,
-    const char *POST_EVENT_ELSET = nullptr,
-    const char *POST_EVENT_ID_STATE_VECTOR = nullptr,
-    const char *POST_EVENT_STATE_VECTOR = nullptr,
-    double POST_POS_X = 0.0,
-    double POST_POS_Y = 0.0,
-    double POST_POS_Z = 0.0,
-    double POST_VEL_X = 0.0,
-    double POST_VEL_Y = 0.0,
-    double POST_VEL_Z = 0.0,
-    double POST_RADIATION_PRESS_COEFF = 0.0,
-    double POST_BALLISTIC_COEFF = 0.0,
-    double POST_APOGEE = 0.0,
-    double POST_PERIGEE = 0.0,
-    double POST_INCLINATION = 0.0,
-    double POST_ECCENTRICITY = 0.0,
-    double POST_PERIOD = 0.0,
-    double POST_RAAN = 0.0,
-    double POST_SMA = 0.0,
-    double POST_GEO_LONGITUDE = 0.0,
-    double POST_DRIFT_RATE = 0.0,
-    double POST_SIGMA_U = 0.0,
-    double POST_SIGMA_V = 0.0,
-    double POST_SIGMA_W = 0.0,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *COV = nullptr,
+    ::flatbuffers::Offset<mnvOrbitalState> PRE_EVENT = 0,
+    ::flatbuffers::Offset<mnvOrbitalState> POST_EVENT = 0,
     double POST_MASS = 0.0,
     double POST_AREA = 0.0,
-    int32_t NUM_OBS = 0,
-    const char *DESCRIPTION = nullptr,
-    const char *DESCRIPTOR = nullptr,
+    const std::vector<double> *COV = nullptr,
+    uint32_t NUM_OBS = 0,
     const char *STATE_MODEL = nullptr,
     double STATE_MODEL_VERSION = 0.0,
-    int32_t NUM_ACCEL_POINTS = 0,
+    uint16_t NUM_ACCEL_POINTS = 0,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *MNVR_ACCEL_TIMES = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *MNVR_ACCELS = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *MNVR_ACCEL_UNCS = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS = nullptr,
+    const std::vector<double> *MNVR_ACCELS = nullptr,
+    const std::vector<double> *MNVR_ACCEL_UNCS = nullptr,
+    const char *DESCRIPTION = nullptr,
+    const char *DESCRIPTOR = nullptr,
     const char *ALGORITHM = nullptr,
+    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *SOURCED_DATA = nullptr,
     const char *SOURCED_DATA_TYPES = nullptr,
-    const char *ON_ORBIT = nullptr,
     const char *TRANSACTION_ID = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
+  auto ORIG_OBJECT_ID__ = ORIG_OBJECT_ID ? _fbb.CreateString(ORIG_OBJECT_ID) : 0;
+  auto ON_ORBIT__ = ON_ORBIT ? _fbb.CreateString(ON_ORBIT) : 0;
   auto REPORT_TIME__ = REPORT_TIME ? _fbb.CreateString(REPORT_TIME) : 0;
   auto EVENT_START_TIME__ = EVENT_START_TIME ? _fbb.CreateString(EVENT_START_TIME) : 0;
   auto EVENT_END_TIME__ = EVENT_END_TIME ? _fbb.CreateString(EVENT_END_TIME) : 0;
   auto OD_FIT_END_TIME__ = OD_FIT_END_TIME ? _fbb.CreateString(OD_FIT_END_TIME) : 0;
   auto ID_SENSOR__ = ID_SENSOR ? _fbb.CreateString(ID_SENSOR) : 0;
-  auto CHARACTERIZATION__ = CHARACTERIZATION ? _fbb.CreateString(CHARACTERIZATION) : 0;
-  auto EVENT_ID__ = EVENT_ID ? _fbb.CreateString(EVENT_ID) : 0;
-  auto ORIG_OBJECT_ID__ = ORIG_OBJECT_ID ? _fbb.CreateString(ORIG_OBJECT_ID) : 0;
   auto ORIG_SENSOR_ID__ = ORIG_SENSOR_ID ? _fbb.CreateString(ORIG_SENSOR_ID) : 0;
-  auto STATUS__ = STATUS ? _fbb.CreateString(STATUS) : 0;
-  auto PRE_EVENT_ID_ELSET__ = PRE_EVENT_ID_ELSET ? _fbb.CreateString(PRE_EVENT_ID_ELSET) : 0;
-  auto PRE_EVENT_ELSET__ = PRE_EVENT_ELSET ? _fbb.CreateString(PRE_EVENT_ELSET) : 0;
-  auto PRE_EVENT_ID_STATE_VECTOR__ = PRE_EVENT_ID_STATE_VECTOR ? _fbb.CreateString(PRE_EVENT_ID_STATE_VECTOR) : 0;
-  auto PRE_EVENT_STATE_VECTOR__ = PRE_EVENT_STATE_VECTOR ? _fbb.CreateString(PRE_EVENT_STATE_VECTOR) : 0;
-  auto POST_EVENT_ID_ELSET__ = POST_EVENT_ID_ELSET ? _fbb.CreateString(POST_EVENT_ID_ELSET) : 0;
-  auto POST_EVENT_ELSET__ = POST_EVENT_ELSET ? _fbb.CreateString(POST_EVENT_ELSET) : 0;
-  auto POST_EVENT_ID_STATE_VECTOR__ = POST_EVENT_ID_STATE_VECTOR ? _fbb.CreateString(POST_EVENT_ID_STATE_VECTOR) : 0;
-  auto POST_EVENT_STATE_VECTOR__ = POST_EVENT_STATE_VECTOR ? _fbb.CreateString(POST_EVENT_STATE_VECTOR) : 0;
-  auto COV__ = COV ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*COV) : 0;
-  auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
-  auto DESCRIPTOR__ = DESCRIPTOR ? _fbb.CreateString(DESCRIPTOR) : 0;
+  auto EVENT_ID__ = EVENT_ID ? _fbb.CreateString(EVENT_ID) : 0;
+  auto COV__ = COV ? _fbb.CreateVector<double>(*COV) : 0;
   auto STATE_MODEL__ = STATE_MODEL ? _fbb.CreateString(STATE_MODEL) : 0;
   auto MNVR_ACCEL_TIMES__ = MNVR_ACCEL_TIMES ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*MNVR_ACCEL_TIMES) : 0;
-  auto MNVR_ACCELS__ = MNVR_ACCELS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*MNVR_ACCELS) : 0;
-  auto MNVR_ACCEL_UNCS__ = MNVR_ACCEL_UNCS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*MNVR_ACCEL_UNCS) : 0;
-  auto TAGS__ = TAGS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*TAGS) : 0;
+  auto MNVR_ACCELS__ = MNVR_ACCELS ? _fbb.CreateVector<double>(*MNVR_ACCELS) : 0;
+  auto MNVR_ACCEL_UNCS__ = MNVR_ACCEL_UNCS ? _fbb.CreateVector<double>(*MNVR_ACCEL_UNCS) : 0;
+  auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
+  auto DESCRIPTOR__ = DESCRIPTOR ? _fbb.CreateString(DESCRIPTOR) : 0;
   auto ALGORITHM__ = ALGORITHM ? _fbb.CreateString(ALGORITHM) : 0;
+  auto TAGS__ = TAGS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*TAGS) : 0;
   auto SOURCED_DATA__ = SOURCED_DATA ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SOURCED_DATA) : 0;
   auto SOURCED_DATA_TYPES__ = SOURCED_DATA_TYPES ? _fbb.CreateString(SOURCED_DATA_TYPES) : 0;
-  auto ON_ORBIT__ = ON_ORBIT ? _fbb.CreateString(ON_ORBIT) : 0;
   auto TRANSACTION_ID__ = TRANSACTION_ID ? _fbb.CreateString(TRANSACTION_ID) : 0;
   return CreateMNV(
       _fbb,
       ID__,
       SAT_NO,
+      ORIG_OBJECT_ID__,
+      ON_ORBIT__,
+      STATUS,
+      CHARACTERIZATION,
+      CHARACTERIZATION_UNC,
       REPORT_TIME__,
       EVENT_START_TIME__,
       EVENT_END_TIME__,
       TOTAL_BURN_TIME,
       OD_FIT_END_TIME__,
       ID_SENSOR__,
+      ORIG_SENSOR_ID__,
+      EVENT_ID__,
       UCT,
       MANEUVER_UNC,
-      CHARACTERIZATION__,
-      CHARACTERIZATION_UNC,
-      EVENT_ID__,
-      ORIG_OBJECT_ID__,
-      ORIG_SENSOR_ID__,
-      STATUS__,
-      DELTA_POS,
-      DELTA_POS_U,
-      DELTA_POS_V,
-      DELTA_POS_W,
       DELTA_VEL,
       DELTA_VEL_U,
       DELTA_VEL_V,
       DELTA_VEL_W,
+      DELTA_POS,
+      DELTA_POS_U,
+      DELTA_POS_V,
+      DELTA_POS_W,
       DELTA_MASS,
-      PRE_EVENT_ID_ELSET__,
-      PRE_EVENT_ELSET__,
-      PRE_EVENT_ID_STATE_VECTOR__,
-      PRE_EVENT_STATE_VECTOR__,
-      PRE_POS_X,
-      PRE_POS_Y,
-      PRE_POS_Z,
-      PRE_VEL_X,
-      PRE_VEL_Y,
-      PRE_VEL_Z,
-      PRE_RADIATION_PRESS_COEFF,
-      PRE_BALLISTIC_COEFF,
-      PRE_APOGEE,
-      PRE_PERIGEE,
-      PRE_INCLINATION,
-      PRE_ECCENTRICITY,
-      PRE_PERIOD,
-      PRE_RAAN,
-      PRE_SMA,
-      PRE_GEO_LONGITUDE,
-      PRE_DRIFT_RATE,
-      PRE_SIGMA_U,
-      PRE_SIGMA_V,
-      PRE_SIGMA_W,
-      POST_EVENT_ID_ELSET__,
-      POST_EVENT_ELSET__,
-      POST_EVENT_ID_STATE_VECTOR__,
-      POST_EVENT_STATE_VECTOR__,
-      POST_POS_X,
-      POST_POS_Y,
-      POST_POS_Z,
-      POST_VEL_X,
-      POST_VEL_Y,
-      POST_VEL_Z,
-      POST_RADIATION_PRESS_COEFF,
-      POST_BALLISTIC_COEFF,
-      POST_APOGEE,
-      POST_PERIGEE,
-      POST_INCLINATION,
-      POST_ECCENTRICITY,
-      POST_PERIOD,
-      POST_RAAN,
-      POST_SMA,
-      POST_GEO_LONGITUDE,
-      POST_DRIFT_RATE,
-      POST_SIGMA_U,
-      POST_SIGMA_V,
-      POST_SIGMA_W,
-      COV__,
+      PRE_EVENT,
+      POST_EVENT,
       POST_MASS,
       POST_AREA,
+      COV__,
       NUM_OBS,
-      DESCRIPTION__,
-      DESCRIPTOR__,
       STATE_MODEL__,
       STATE_MODEL_VERSION,
       NUM_ACCEL_POINTS,
       MNVR_ACCEL_TIMES__,
       MNVR_ACCELS__,
       MNVR_ACCEL_UNCS__,
-      TAGS__,
+      DESCRIPTION__,
+      DESCRIPTOR__,
       ALGORITHM__,
+      TAGS__,
       SOURCED_DATA__,
       SOURCED_DATA_TYPES__,
-      ON_ORBIT__,
       TRANSACTION_ID__);
 }
 

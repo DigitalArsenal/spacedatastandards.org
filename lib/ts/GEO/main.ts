@@ -3,3 +3,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export { GEO, GEOT } from './GEO.js';
+export { geoConfidence } from './geoConfidence.js';
+export { geoStationKeeping } from './geoStationKeeping.js';
+export { troughType } from './troughType.js';

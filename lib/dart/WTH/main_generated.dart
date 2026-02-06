@@ -18,42 +18,74 @@ class WTH {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Sensor identifier
   String? get ID_SENSOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Original sensor identifier
   String? get ORIG_SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Observation time (ISO 8601)
   String? get OB_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  List<String>? get SIG_PWRS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 12);
-  List<String>? get NOISE_LVLS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 14);
-  List<String>? get SPEC_WIDTHS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 16);
-  List<String>? get FIRST_GUESS_AVGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 18);
-  int get QC_VALUE => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 20, 0);
-  String? get FILE_CREATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  double get TERM_ALT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
-  double get AVG_TX_PWR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
-  double get AVG_REF_PWR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
-  int get SECTOR_NUM => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 30, 0);
-  int get NUM_ELEMENTS => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 32, 0);
-  List<String>? get TD_AVG_SAMPLE_NUMS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 34);
-  int get CHECKSUM => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 36, 0);
-  List<String>? get CO_INTEGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 38);
-  List<String>? get SPEC_AVGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 40);
-  List<String>? get INTERPULSE_PERIODS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 42);
-  List<String>? get DOPP_VELS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 44);
-  List<String>? get CONS_RECS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 46);
-  List<String>? get SNRS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 48);
+  ///  File creation time (ISO 8601)
+  String? get FILE_CREATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Quality control value
+  int get QC_VALUE => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  ///  Terminal altitude (km)
+  double get TERM_ALT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Average transmit power (dBm)
+  double get AVG_TX_PWR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  ///  Average reflected power (dBm)
+  double get AVG_REF_PWR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  Sector number
+  int get SECTOR_NUM => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 22, 0);
+  ///  Number of data elements
+  int get NUM_ELEMENTS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 24, 0);
+  ///  Checksum
+  int get CHECKSUM => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 26, 0);
+  ///  Signal power values (dBm)
+  List<double>? get SIG_PWRS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Noise level values (dBm)
+  List<double>? get NOISE_LVLS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 30);
+  ///  Spectral width values (m/s)
+  List<double>? get SPEC_WIDTHS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 32);
+  ///  First guess average values
+  List<double>? get FIRST_GUESS_AVGS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 34);
+  ///  Time domain average sample numbers
+  List<double>? get TD_AVG_SAMPLE_NUMS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 36);
+  ///  Co-integration values
+  List<double>? get CO_INTEGS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 38);
+  ///  Spectral average values
+  List<double>? get SPEC_AVGS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 40);
+  ///  Interpulse periods (microseconds)
+  List<double>? get INTERPULSE_PERIODS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 42);
+  ///  Doppler velocities (m/s)
+  List<double>? get DOPP_VELS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 44);
+  ///  Consecutive records count
+  List<double>? get CONS_RECS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 46);
+  ///  Signal-to-noise ratios (dB)
+  List<double>? get SNRS => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 48);
+  ///  Signal strength (dBm)
   double get SIG_STRENGTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
+  ///  Error ellipse semi-major axis (km)
   double get SEMI_MAJOR_AXIS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
+  ///  Error ellipse semi-minor axis (km)
   double get SEMI_MINOR_AXIS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
+  ///  Error ellipse orientation angle (degrees)
   double get ANGLE_ORIENTATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, 0.0);
-  int get LIGHT_EVENT_NUM => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 58, 0);
+  ///  Lightning event number
+  int get LIGHT_EVENT_NUM => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 58, 0);
+  ///  Lightning detection sensor identifiers
   List<String>? get LIGHT_DET_SENSORS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 60);
+  ///  Position confidence (0-1)
   double get POS_CONFIDENCE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
+  ///  Source types
   List<String>? get SRC_TYPS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 64);
+  ///  Source identifiers
   List<String>? get SRC_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 66);
 
   @override
   String toString() {
-    return 'WTH{ID: ${ID}, ID_SENSOR: ${ID_SENSOR}, ORIG_SENSOR_ID: ${ORIG_SENSOR_ID}, OB_TIME: ${OB_TIME}, SIG_PWRS: ${SIG_PWRS}, NOISE_LVLS: ${NOISE_LVLS}, SPEC_WIDTHS: ${SPEC_WIDTHS}, FIRST_GUESS_AVGS: ${FIRST_GUESS_AVGS}, QC_VALUE: ${QC_VALUE}, FILE_CREATION: ${FILE_CREATION}, TERM_ALT: ${TERM_ALT}, AVG_TX_PWR: ${AVG_TX_PWR}, AVG_REF_PWR: ${AVG_REF_PWR}, SECTOR_NUM: ${SECTOR_NUM}, NUM_ELEMENTS: ${NUM_ELEMENTS}, TD_AVG_SAMPLE_NUMS: ${TD_AVG_SAMPLE_NUMS}, CHECKSUM: ${CHECKSUM}, CO_INTEGS: ${CO_INTEGS}, SPEC_AVGS: ${SPEC_AVGS}, INTERPULSE_PERIODS: ${INTERPULSE_PERIODS}, DOPP_VELS: ${DOPP_VELS}, CONS_RECS: ${CONS_RECS}, SNRS: ${SNRS}, SIG_STRENGTH: ${SIG_STRENGTH}, SEMI_MAJOR_AXIS: ${SEMI_MAJOR_AXIS}, SEMI_MINOR_AXIS: ${SEMI_MINOR_AXIS}, ANGLE_ORIENTATION: ${ANGLE_ORIENTATION}, LIGHT_EVENT_NUM: ${LIGHT_EVENT_NUM}, LIGHT_DET_SENSORS: ${LIGHT_DET_SENSORS}, POS_CONFIDENCE: ${POS_CONFIDENCE}, SRC_TYPS: ${SRC_TYPS}, SRC_IDS: ${SRC_IDS}}';
+    return 'WTH{ID: ${ID}, ID_SENSOR: ${ID_SENSOR}, ORIG_SENSOR_ID: ${ORIG_SENSOR_ID}, OB_TIME: ${OB_TIME}, FILE_CREATION: ${FILE_CREATION}, QC_VALUE: ${QC_VALUE}, TERM_ALT: ${TERM_ALT}, AVG_TX_PWR: ${AVG_TX_PWR}, AVG_REF_PWR: ${AVG_REF_PWR}, SECTOR_NUM: ${SECTOR_NUM}, NUM_ELEMENTS: ${NUM_ELEMENTS}, CHECKSUM: ${CHECKSUM}, SIG_PWRS: ${SIG_PWRS}, NOISE_LVLS: ${NOISE_LVLS}, SPEC_WIDTHS: ${SPEC_WIDTHS}, FIRST_GUESS_AVGS: ${FIRST_GUESS_AVGS}, TD_AVG_SAMPLE_NUMS: ${TD_AVG_SAMPLE_NUMS}, CO_INTEGS: ${CO_INTEGS}, SPEC_AVGS: ${SPEC_AVGS}, INTERPULSE_PERIODS: ${INTERPULSE_PERIODS}, DOPP_VELS: ${DOPP_VELS}, CONS_RECS: ${CONS_RECS}, SNRS: ${SNRS}, SIG_STRENGTH: ${SIG_STRENGTH}, SEMI_MAJOR_AXIS: ${SEMI_MAJOR_AXIS}, SEMI_MINOR_AXIS: ${SEMI_MINOR_AXIS}, ANGLE_ORIENTATION: ${ANGLE_ORIENTATION}, LIGHT_EVENT_NUM: ${LIGHT_EVENT_NUM}, LIGHT_DET_SENSORS: ${LIGHT_DET_SENSORS}, POS_CONFIDENCE: ${POS_CONFIDENCE}, SRC_TYPS: ${SRC_TYPS}, SRC_IDS: ${SRC_IDS}}';
   }
 }
 
@@ -90,56 +122,56 @@ class WTHBuilder {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addSigPwrsOffset(int? offset) {
+  int addFileCreationOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addNoiseLvlsOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addSpecWidthsOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addFirstGuessAvgsOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
   int addQcValue(int? QC_VALUE) {
-    fbBuilder.addInt32(8, QC_VALUE);
-    return fbBuilder.offset;
-  }
-  int addFileCreationOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
+    fbBuilder.addUint8(5, QC_VALUE);
     return fbBuilder.offset;
   }
   int addTermAlt(double? TERM_ALT) {
-    fbBuilder.addFloat64(10, TERM_ALT);
+    fbBuilder.addFloat64(6, TERM_ALT);
     return fbBuilder.offset;
   }
   int addAvgTxPwr(double? AVG_TX_PWR) {
-    fbBuilder.addFloat64(11, AVG_TX_PWR);
+    fbBuilder.addFloat64(7, AVG_TX_PWR);
     return fbBuilder.offset;
   }
   int addAvgRefPwr(double? AVG_REF_PWR) {
-    fbBuilder.addFloat64(12, AVG_REF_PWR);
+    fbBuilder.addFloat64(8, AVG_REF_PWR);
     return fbBuilder.offset;
   }
   int addSectorNum(int? SECTOR_NUM) {
-    fbBuilder.addInt32(13, SECTOR_NUM);
+    fbBuilder.addUint16(9, SECTOR_NUM);
     return fbBuilder.offset;
   }
   int addNumElements(int? NUM_ELEMENTS) {
-    fbBuilder.addInt32(14, NUM_ELEMENTS);
-    return fbBuilder.offset;
-  }
-  int addTdAvgSampleNumsOffset(int? offset) {
-    fbBuilder.addOffset(15, offset);
+    fbBuilder.addUint16(10, NUM_ELEMENTS);
     return fbBuilder.offset;
   }
   int addChecksum(int? CHECKSUM) {
-    fbBuilder.addInt32(16, CHECKSUM);
+    fbBuilder.addUint32(11, CHECKSUM);
+    return fbBuilder.offset;
+  }
+  int addSigPwrsOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addNoiseLvlsOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addSpecWidthsOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addFirstGuessAvgsOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addTdAvgSampleNumsOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
     return fbBuilder.offset;
   }
   int addCoIntegsOffset(int? offset) {
@@ -183,7 +215,7 @@ class WTHBuilder {
     return fbBuilder.offset;
   }
   int addLightEventNum(int? LIGHT_EVENT_NUM) {
-    fbBuilder.addInt32(27, LIGHT_EVENT_NUM);
+    fbBuilder.addUint32(27, LIGHT_EVENT_NUM);
     return fbBuilder.offset;
   }
   int addLightDetSensorsOffset(int? offset) {
@@ -213,25 +245,25 @@ class WTHObjectBuilder extends fb.ObjectBuilder {
   final String? _ID_SENSOR;
   final String? _ORIG_SENSOR_ID;
   final String? _OB_TIME;
-  final List<String>? _SIG_PWRS;
-  final List<String>? _NOISE_LVLS;
-  final List<String>? _SPEC_WIDTHS;
-  final List<String>? _FIRST_GUESS_AVGS;
-  final int? _QC_VALUE;
   final String? _FILE_CREATION;
+  final int? _QC_VALUE;
   final double? _TERM_ALT;
   final double? _AVG_TX_PWR;
   final double? _AVG_REF_PWR;
   final int? _SECTOR_NUM;
   final int? _NUM_ELEMENTS;
-  final List<String>? _TD_AVG_SAMPLE_NUMS;
   final int? _CHECKSUM;
-  final List<String>? _CO_INTEGS;
-  final List<String>? _SPEC_AVGS;
-  final List<String>? _INTERPULSE_PERIODS;
-  final List<String>? _DOPP_VELS;
-  final List<String>? _CONS_RECS;
-  final List<String>? _SNRS;
+  final List<double>? _SIG_PWRS;
+  final List<double>? _NOISE_LVLS;
+  final List<double>? _SPEC_WIDTHS;
+  final List<double>? _FIRST_GUESS_AVGS;
+  final List<double>? _TD_AVG_SAMPLE_NUMS;
+  final List<double>? _CO_INTEGS;
+  final List<double>? _SPEC_AVGS;
+  final List<double>? _INTERPULSE_PERIODS;
+  final List<double>? _DOPP_VELS;
+  final List<double>? _CONS_RECS;
+  final List<double>? _SNRS;
   final double? _SIG_STRENGTH;
   final double? _SEMI_MAJOR_AXIS;
   final double? _SEMI_MINOR_AXIS;
@@ -247,25 +279,25 @@ class WTHObjectBuilder extends fb.ObjectBuilder {
     String? ID_SENSOR,
     String? ORIG_SENSOR_ID,
     String? OB_TIME,
-    List<String>? SIG_PWRS,
-    List<String>? NOISE_LVLS,
-    List<String>? SPEC_WIDTHS,
-    List<String>? FIRST_GUESS_AVGS,
-    int? QC_VALUE,
     String? FILE_CREATION,
+    int? QC_VALUE,
     double? TERM_ALT,
     double? AVG_TX_PWR,
     double? AVG_REF_PWR,
     int? SECTOR_NUM,
     int? NUM_ELEMENTS,
-    List<String>? TD_AVG_SAMPLE_NUMS,
     int? CHECKSUM,
-    List<String>? CO_INTEGS,
-    List<String>? SPEC_AVGS,
-    List<String>? INTERPULSE_PERIODS,
-    List<String>? DOPP_VELS,
-    List<String>? CONS_RECS,
-    List<String>? SNRS,
+    List<double>? SIG_PWRS,
+    List<double>? NOISE_LVLS,
+    List<double>? SPEC_WIDTHS,
+    List<double>? FIRST_GUESS_AVGS,
+    List<double>? TD_AVG_SAMPLE_NUMS,
+    List<double>? CO_INTEGS,
+    List<double>? SPEC_AVGS,
+    List<double>? INTERPULSE_PERIODS,
+    List<double>? DOPP_VELS,
+    List<double>? CONS_RECS,
+    List<double>? SNRS,
     double? SIG_STRENGTH,
     double? SEMI_MAJOR_AXIS,
     double? SEMI_MINOR_AXIS,
@@ -280,19 +312,19 @@ class WTHObjectBuilder extends fb.ObjectBuilder {
         _ID_SENSOR = ID_SENSOR,
         _ORIG_SENSOR_ID = ORIG_SENSOR_ID,
         _OB_TIME = OB_TIME,
-        _SIG_PWRS = SIG_PWRS,
-        _NOISE_LVLS = NOISE_LVLS,
-        _SPEC_WIDTHS = SPEC_WIDTHS,
-        _FIRST_GUESS_AVGS = FIRST_GUESS_AVGS,
-        _QC_VALUE = QC_VALUE,
         _FILE_CREATION = FILE_CREATION,
+        _QC_VALUE = QC_VALUE,
         _TERM_ALT = TERM_ALT,
         _AVG_TX_PWR = AVG_TX_PWR,
         _AVG_REF_PWR = AVG_REF_PWR,
         _SECTOR_NUM = SECTOR_NUM,
         _NUM_ELEMENTS = NUM_ELEMENTS,
-        _TD_AVG_SAMPLE_NUMS = TD_AVG_SAMPLE_NUMS,
         _CHECKSUM = CHECKSUM,
+        _SIG_PWRS = SIG_PWRS,
+        _NOISE_LVLS = NOISE_LVLS,
+        _SPEC_WIDTHS = SPEC_WIDTHS,
+        _FIRST_GUESS_AVGS = FIRST_GUESS_AVGS,
+        _TD_AVG_SAMPLE_NUMS = TD_AVG_SAMPLE_NUMS,
         _CO_INTEGS = CO_INTEGS,
         _SPEC_AVGS = SPEC_AVGS,
         _INTERPULSE_PERIODS = INTERPULSE_PERIODS,
@@ -320,30 +352,30 @@ class WTHObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_ORIG_SENSOR_ID!);
     final int? OB_TIMEOffset = _OB_TIME == null ? null
         : fbBuilder.writeString(_OB_TIME!);
-    final int? SIG_PWRSOffset = _SIG_PWRS == null ? null
-        : fbBuilder.writeList(_SIG_PWRS!.map(fbBuilder.writeString).toList());
-    final int? NOISE_LVLSOffset = _NOISE_LVLS == null ? null
-        : fbBuilder.writeList(_NOISE_LVLS!.map(fbBuilder.writeString).toList());
-    final int? SPEC_WIDTHSOffset = _SPEC_WIDTHS == null ? null
-        : fbBuilder.writeList(_SPEC_WIDTHS!.map(fbBuilder.writeString).toList());
-    final int? FIRST_GUESS_AVGSOffset = _FIRST_GUESS_AVGS == null ? null
-        : fbBuilder.writeList(_FIRST_GUESS_AVGS!.map(fbBuilder.writeString).toList());
     final int? FILE_CREATIONOffset = _FILE_CREATION == null ? null
         : fbBuilder.writeString(_FILE_CREATION!);
+    final int? SIG_PWRSOffset = _SIG_PWRS == null ? null
+        : fbBuilder.writeListFloat64(_SIG_PWRS!);
+    final int? NOISE_LVLSOffset = _NOISE_LVLS == null ? null
+        : fbBuilder.writeListFloat64(_NOISE_LVLS!);
+    final int? SPEC_WIDTHSOffset = _SPEC_WIDTHS == null ? null
+        : fbBuilder.writeListFloat64(_SPEC_WIDTHS!);
+    final int? FIRST_GUESS_AVGSOffset = _FIRST_GUESS_AVGS == null ? null
+        : fbBuilder.writeListFloat64(_FIRST_GUESS_AVGS!);
     final int? TD_AVG_SAMPLE_NUMSOffset = _TD_AVG_SAMPLE_NUMS == null ? null
-        : fbBuilder.writeList(_TD_AVG_SAMPLE_NUMS!.map(fbBuilder.writeString).toList());
+        : fbBuilder.writeListFloat64(_TD_AVG_SAMPLE_NUMS!);
     final int? CO_INTEGSOffset = _CO_INTEGS == null ? null
-        : fbBuilder.writeList(_CO_INTEGS!.map(fbBuilder.writeString).toList());
+        : fbBuilder.writeListFloat64(_CO_INTEGS!);
     final int? SPEC_AVGSOffset = _SPEC_AVGS == null ? null
-        : fbBuilder.writeList(_SPEC_AVGS!.map(fbBuilder.writeString).toList());
+        : fbBuilder.writeListFloat64(_SPEC_AVGS!);
     final int? INTERPULSE_PERIODSOffset = _INTERPULSE_PERIODS == null ? null
-        : fbBuilder.writeList(_INTERPULSE_PERIODS!.map(fbBuilder.writeString).toList());
+        : fbBuilder.writeListFloat64(_INTERPULSE_PERIODS!);
     final int? DOPP_VELSOffset = _DOPP_VELS == null ? null
-        : fbBuilder.writeList(_DOPP_VELS!.map(fbBuilder.writeString).toList());
+        : fbBuilder.writeListFloat64(_DOPP_VELS!);
     final int? CONS_RECSOffset = _CONS_RECS == null ? null
-        : fbBuilder.writeList(_CONS_RECS!.map(fbBuilder.writeString).toList());
+        : fbBuilder.writeListFloat64(_CONS_RECS!);
     final int? SNRSOffset = _SNRS == null ? null
-        : fbBuilder.writeList(_SNRS!.map(fbBuilder.writeString).toList());
+        : fbBuilder.writeListFloat64(_SNRS!);
     final int? LIGHT_DET_SENSORSOffset = _LIGHT_DET_SENSORS == null ? null
         : fbBuilder.writeList(_LIGHT_DET_SENSORS!.map(fbBuilder.writeString).toList());
     final int? SRC_TYPSOffset = _SRC_TYPS == null ? null
@@ -355,19 +387,19 @@ class WTHObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(1, ID_SENSOROffset);
     fbBuilder.addOffset(2, ORIG_SENSOR_IDOffset);
     fbBuilder.addOffset(3, OB_TIMEOffset);
-    fbBuilder.addOffset(4, SIG_PWRSOffset);
-    fbBuilder.addOffset(5, NOISE_LVLSOffset);
-    fbBuilder.addOffset(6, SPEC_WIDTHSOffset);
-    fbBuilder.addOffset(7, FIRST_GUESS_AVGSOffset);
-    fbBuilder.addInt32(8, _QC_VALUE);
-    fbBuilder.addOffset(9, FILE_CREATIONOffset);
-    fbBuilder.addFloat64(10, _TERM_ALT);
-    fbBuilder.addFloat64(11, _AVG_TX_PWR);
-    fbBuilder.addFloat64(12, _AVG_REF_PWR);
-    fbBuilder.addInt32(13, _SECTOR_NUM);
-    fbBuilder.addInt32(14, _NUM_ELEMENTS);
-    fbBuilder.addOffset(15, TD_AVG_SAMPLE_NUMSOffset);
-    fbBuilder.addInt32(16, _CHECKSUM);
+    fbBuilder.addOffset(4, FILE_CREATIONOffset);
+    fbBuilder.addUint8(5, _QC_VALUE);
+    fbBuilder.addFloat64(6, _TERM_ALT);
+    fbBuilder.addFloat64(7, _AVG_TX_PWR);
+    fbBuilder.addFloat64(8, _AVG_REF_PWR);
+    fbBuilder.addUint16(9, _SECTOR_NUM);
+    fbBuilder.addUint16(10, _NUM_ELEMENTS);
+    fbBuilder.addUint32(11, _CHECKSUM);
+    fbBuilder.addOffset(12, SIG_PWRSOffset);
+    fbBuilder.addOffset(13, NOISE_LVLSOffset);
+    fbBuilder.addOffset(14, SPEC_WIDTHSOffset);
+    fbBuilder.addOffset(15, FIRST_GUESS_AVGSOffset);
+    fbBuilder.addOffset(16, TD_AVG_SAMPLE_NUMSOffset);
     fbBuilder.addOffset(17, CO_INTEGSOffset);
     fbBuilder.addOffset(18, SPEC_AVGSOffset);
     fbBuilder.addOffset(19, INTERPULSE_PERIODSOffset);
@@ -378,7 +410,7 @@ class WTHObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(24, _SEMI_MAJOR_AXIS);
     fbBuilder.addFloat64(25, _SEMI_MINOR_AXIS);
     fbBuilder.addFloat64(26, _ANGLE_ORIENTATION);
-    fbBuilder.addInt32(27, _LIGHT_EVENT_NUM);
+    fbBuilder.addUint32(27, _LIGHT_EVENT_NUM);
     fbBuilder.addOffset(28, LIGHT_DET_SENSORSOffset);
     fbBuilder.addFloat64(29, _POS_CONFIDENCE);
     fbBuilder.addOffset(30, SRC_TYPSOffset);

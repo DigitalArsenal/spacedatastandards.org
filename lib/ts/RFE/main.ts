@@ -3,3 +3,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
 
 export { RFE, RFET } from './RFE.js';
+export { emitterType } from './emitterType.js';
+export { rfEmitterDetail, rfEmitterDetailT } from './rfEmitterDetail.js';
+export { signalModulation } from './signalModulation.js';

@@ -4,6 +4,11 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { attCovariance, attCovarianceT } from './attCovariance.js';
+import { attManeuver, attManeuverT } from './attManeuver.js';
+import { attPhysicalProperties, attPhysicalPropertiesT } from './attPhysicalProperties.js';
+import { attitudeState, attitudeStateT } from './attitudeState.js';
+import { maneuverableFlag } from './maneuverableFlag.js';
 
 
 /**
@@ -31,6 +36,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$ACM');
 }
 
+/**
+ * CCSDS ACM version
+ */
 CCSDS_ACM_VERS():string|null
 CCSDS_ACM_VERS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 CCSDS_ACM_VERS(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,6 +46,9 @@ CCSDS_ACM_VERS(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Message creation date (ISO 8601)
+ */
 CREATION_DATE():string|null
 CREATION_DATE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 CREATION_DATE(optionalEncoding?:any):string|Uint8Array|null {
@@ -45,6 +56,9 @@ CREATION_DATE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Creating organization
+ */
 ORIGINATOR():string|null
 ORIGINATOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ORIGINATOR(optionalEncoding?:any):string|Uint8Array|null {
@@ -52,6 +66,9 @@ ORIGINATOR(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Object name
+ */
 OBJECT_NAME():string|null
 OBJECT_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 OBJECT_NAME(optionalEncoding?:any):string|Uint8Array|null {
@@ -59,6 +76,9 @@ OBJECT_NAME(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * International designator
+ */
 OBJECT_ID():string|null
 OBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -66,8 +86,103 @@ OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Catalog name
+ */
+CATALOG_NAME():string|null
+CATALOG_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CATALOG_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Epoch of state (ISO 8601)
+ */
+EPOCH():string|null
+EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Time system
+ */
+TIME_SYSTEM():string|null
+TIME_SYSTEM(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TIME_SYSTEM(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Attitude states
+ */
+ATT_STATES(index: number, obj?:attitudeState):attitudeState|null {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? (obj || new attitudeState()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+attStatesLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Physical properties
+ */
+PHYS_PROPERTIES(obj?:attPhysicalProperties):attPhysicalProperties|null {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? (obj || new attPhysicalProperties()).__init(this.bb!.__indirect(this.bb_pos + offset), this.bb!) : null;
+}
+
+/**
+ * Attitude covariance data
+ */
+COV_DATA(index: number, obj?:attCovariance):attCovariance|null {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? (obj || new attCovariance()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+covDataLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Attitude maneuvers
+ */
+MANEUVERS(index: number, obj?:attManeuver):attManeuver|null {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? (obj || new attManeuver()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+maneuversLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Maneuverability status
+ */
+MANEUVERABLE():maneuverableFlag {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : maneuverableFlag.YES;
+}
+
+/**
+ * Additional comments
+ */
+COMMENT():string|null
+COMMENT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+COMMENT(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startACM(builder:flatbuffers.Builder) {
-  builder.startObject(5);
+  builder.startObject(14);
 }
 
 static addCcsdsAcmVers(builder:flatbuffers.Builder, CCSDS_ACM_VERSOffset:flatbuffers.Offset) {
@@ -90,6 +205,78 @@ static addObjectId(builder:flatbuffers.Builder, OBJECT_IDOffset:flatbuffers.Offs
   builder.addFieldOffset(4, OBJECT_IDOffset, 0);
 }
 
+static addCatalogName(builder:flatbuffers.Builder, CATALOG_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, CATALOG_NAMEOffset, 0);
+}
+
+static addEpoch(builder:flatbuffers.Builder, EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, EPOCHOffset, 0);
+}
+
+static addTimeSystem(builder:flatbuffers.Builder, TIME_SYSTEMOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, TIME_SYSTEMOffset, 0);
+}
+
+static addAttStates(builder:flatbuffers.Builder, ATT_STATESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(8, ATT_STATESOffset, 0);
+}
+
+static createAttStatesVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startAttStatesVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addPhysProperties(builder:flatbuffers.Builder, PHYS_PROPERTIESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, PHYS_PROPERTIESOffset, 0);
+}
+
+static addCovData(builder:flatbuffers.Builder, COV_DATAOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(10, COV_DATAOffset, 0);
+}
+
+static createCovDataVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startCovDataVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addManeuvers(builder:flatbuffers.Builder, MANEUVERSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(11, MANEUVERSOffset, 0);
+}
+
+static createManeuversVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startManeuversVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addManeuverable(builder:flatbuffers.Builder, MANEUVERABLE:maneuverableFlag) {
+  builder.addFieldInt8(12, MANEUVERABLE, maneuverableFlag.YES);
+}
+
+static addComment(builder:flatbuffers.Builder, COMMENTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, COMMENTOffset, 0);
+}
+
 static endACM(builder:flatbuffers.Builder):flatbuffers.Offset {
   const offset = builder.endObject();
   return offset;
@@ -103,15 +290,6 @@ static finishSizePrefixedACMBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$ACM', true);
 }
 
-static createACM(builder:flatbuffers.Builder, CCSDS_ACM_VERSOffset:flatbuffers.Offset, CREATION_DATEOffset:flatbuffers.Offset, ORIGINATOROffset:flatbuffers.Offset, OBJECT_NAMEOffset:flatbuffers.Offset, OBJECT_IDOffset:flatbuffers.Offset):flatbuffers.Offset {
-  ACM.startACM(builder);
-  ACM.addCcsdsAcmVers(builder, CCSDS_ACM_VERSOffset);
-  ACM.addCreationDate(builder, CREATION_DATEOffset);
-  ACM.addOriginator(builder, ORIGINATOROffset);
-  ACM.addObjectName(builder, OBJECT_NAMEOffset);
-  ACM.addObjectId(builder, OBJECT_IDOffset);
-  return ACM.endACM(builder);
-}
 
 unpack(): ACMT {
   return new ACMT(
@@ -119,7 +297,16 @@ unpack(): ACMT {
     this.CREATION_DATE(),
     this.ORIGINATOR(),
     this.OBJECT_NAME(),
-    this.OBJECT_ID()
+    this.OBJECT_ID(),
+    this.CATALOG_NAME(),
+    this.EPOCH(),
+    this.TIME_SYSTEM(),
+    this.bb!.createObjList<attitudeState, attitudeStateT>(this.ATT_STATES.bind(this), this.attStatesLength()),
+    (this.PHYS_PROPERTIES() !== null ? this.PHYS_PROPERTIES()!.unpack() : null),
+    this.bb!.createObjList<attCovariance, attCovarianceT>(this.COV_DATA.bind(this), this.covDataLength()),
+    this.bb!.createObjList<attManeuver, attManeuverT>(this.MANEUVERS.bind(this), this.maneuversLength()),
+    this.MANEUVERABLE(),
+    this.COMMENT()
   );
 }
 
@@ -130,6 +317,15 @@ unpackTo(_o: ACMT): void {
   _o.ORIGINATOR = this.ORIGINATOR();
   _o.OBJECT_NAME = this.OBJECT_NAME();
   _o.OBJECT_ID = this.OBJECT_ID();
+  _o.CATALOG_NAME = this.CATALOG_NAME();
+  _o.EPOCH = this.EPOCH();
+  _o.TIME_SYSTEM = this.TIME_SYSTEM();
+  _o.ATT_STATES = this.bb!.createObjList<attitudeState, attitudeStateT>(this.ATT_STATES.bind(this), this.attStatesLength());
+  _o.PHYS_PROPERTIES = (this.PHYS_PROPERTIES() !== null ? this.PHYS_PROPERTIES()!.unpack() : null);
+  _o.COV_DATA = this.bb!.createObjList<attCovariance, attCovarianceT>(this.COV_DATA.bind(this), this.covDataLength());
+  _o.MANEUVERS = this.bb!.createObjList<attManeuver, attManeuverT>(this.MANEUVERS.bind(this), this.maneuversLength());
+  _o.MANEUVERABLE = this.MANEUVERABLE();
+  _o.COMMENT = this.COMMENT();
 }
 }
 
@@ -139,7 +335,16 @@ constructor(
   public CREATION_DATE: string|Uint8Array|null = null,
   public ORIGINATOR: string|Uint8Array|null = null,
   public OBJECT_NAME: string|Uint8Array|null = null,
-  public OBJECT_ID: string|Uint8Array|null = null
+  public OBJECT_ID: string|Uint8Array|null = null,
+  public CATALOG_NAME: string|Uint8Array|null = null,
+  public EPOCH: string|Uint8Array|null = null,
+  public TIME_SYSTEM: string|Uint8Array|null = null,
+  public ATT_STATES: (attitudeStateT)[] = [],
+  public PHYS_PROPERTIES: attPhysicalPropertiesT|null = null,
+  public COV_DATA: (attCovarianceT)[] = [],
+  public MANEUVERS: (attManeuverT)[] = [],
+  public MANEUVERABLE: maneuverableFlag = maneuverableFlag.YES,
+  public COMMENT: string|Uint8Array|null = null
 ){}
 
 
@@ -149,13 +354,31 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ORIGINATOR = (this.ORIGINATOR !== null ? builder.createString(this.ORIGINATOR!) : 0);
   const OBJECT_NAME = (this.OBJECT_NAME !== null ? builder.createString(this.OBJECT_NAME!) : 0);
   const OBJECT_ID = (this.OBJECT_ID !== null ? builder.createString(this.OBJECT_ID!) : 0);
+  const CATALOG_NAME = (this.CATALOG_NAME !== null ? builder.createString(this.CATALOG_NAME!) : 0);
+  const EPOCH = (this.EPOCH !== null ? builder.createString(this.EPOCH!) : 0);
+  const TIME_SYSTEM = (this.TIME_SYSTEM !== null ? builder.createString(this.TIME_SYSTEM!) : 0);
+  const ATT_STATES = ACM.createAttStatesVector(builder, builder.createObjectOffsetList(this.ATT_STATES));
+  const PHYS_PROPERTIES = (this.PHYS_PROPERTIES !== null ? this.PHYS_PROPERTIES!.pack(builder) : 0);
+  const COV_DATA = ACM.createCovDataVector(builder, builder.createObjectOffsetList(this.COV_DATA));
+  const MANEUVERS = ACM.createManeuversVector(builder, builder.createObjectOffsetList(this.MANEUVERS));
+  const COMMENT = (this.COMMENT !== null ? builder.createString(this.COMMENT!) : 0);
 
-  return ACM.createACM(builder,
-    CCSDS_ACM_VERS,
-    CREATION_DATE,
-    ORIGINATOR,
-    OBJECT_NAME,
-    OBJECT_ID
-  );
+  ACM.startACM(builder);
+  ACM.addCcsdsAcmVers(builder, CCSDS_ACM_VERS);
+  ACM.addCreationDate(builder, CREATION_DATE);
+  ACM.addOriginator(builder, ORIGINATOR);
+  ACM.addObjectName(builder, OBJECT_NAME);
+  ACM.addObjectId(builder, OBJECT_ID);
+  ACM.addCatalogName(builder, CATALOG_NAME);
+  ACM.addEpoch(builder, EPOCH);
+  ACM.addTimeSystem(builder, TIME_SYSTEM);
+  ACM.addAttStates(builder, ATT_STATES);
+  ACM.addPhysProperties(builder, PHYS_PROPERTIES);
+  ACM.addCovData(builder, COV_DATA);
+  ACM.addManeuvers(builder, MANEUVERS);
+  ACM.addManeuverable(builder, this.MANEUVERABLE);
+  ACM.addComment(builder, COMMENT);
+
+  return ACM.endACM(builder);
 }
 }

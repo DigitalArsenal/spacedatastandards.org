@@ -4,6 +4,8 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { trackEnvironment } from './trackEnvironment.js';
+import { trackStatus } from './trackStatus.js';
 
 
 /**
@@ -31,6 +33,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$TRK');
 }
 
+/**
+ * Unique identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,6 +43,9 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Contact reference
+ */
 CNTCT():string|null
 CNTCT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 CNTCT(optionalEncoding?:any):string|Uint8Array|null {
@@ -45,6 +53,9 @@ CNTCT(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Message timestamp (ISO 8601)
+ */
 MSG_TS():string|null
 MSG_TS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 MSG_TS(optionalEncoding?:any):string|Uint8Array|null {
@@ -52,6 +63,9 @@ MSG_TS(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Mission identifier
+ */
 MSN_ID():string|null
 MSN_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 MSN_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -59,6 +73,9 @@ MSN_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Asset nationality
+ */
 ASSET_NAT():string|null
 ASSET_NAT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ASSET_NAT(optionalEncoding?:any):string|Uint8Array|null {
@@ -66,6 +83,9 @@ ASSET_NAT(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Asset identifier
+ */
 ASSET():string|null
 ASSET(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ASSET(optionalEncoding?:any):string|Uint8Array|null {
@@ -73,13 +93,19 @@ ASSET(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-SEN():string|null
-SEN(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-SEN(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Sensor identifier
+ */
+SENSOR_ID():string|null
+SENSOR_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SENSOR_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Sensor quality assessment
+ */
 SEN_QUAL():string|null
 SEN_QUAL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 SEN_QUAL(optionalEncoding?:any):string|Uint8Array|null {
@@ -87,6 +113,9 @@ SEN_QUAL(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Track identifier
+ */
 TRK_ID():string|null
 TRK_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 TRK_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -94,6 +123,9 @@ TRK_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Track number
+ */
 TRK_NUM():string|null
 TRK_NUM(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 TRK_NUM(optionalEncoding?:any):string|Uint8Array|null {
@@ -101,13 +133,17 @@ TRK_NUM(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-TRK_STAT():string|null
-TRK_STAT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-TRK_STAT(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Track status
+ */
+TRK_STAT():trackStatus {
   const offset = this.bb!.__offset(this.bb_pos, 24);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : trackStatus.ACTIVE;
 }
 
+/**
+ * Object nationality
+ */
 OBJ_NAT():string|null
 OBJ_NAT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 OBJ_NAT(optionalEncoding?:any):string|Uint8Array|null {
@@ -115,6 +151,9 @@ OBJ_NAT(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Object identifier
+ */
 OBJ_ID():string|null
 OBJ_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 OBJ_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -122,6 +161,9 @@ OBJ_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Object type classification
+ */
 OBJ_TYPE():string|null
 OBJ_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 OBJ_TYPE(optionalEncoding?:any):string|Uint8Array|null {
@@ -129,6 +171,9 @@ OBJ_TYPE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Object specific type
+ */
 OBJ_SPEC():string|null
 OBJ_SPEC(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 OBJ_SPEC(optionalEncoding?:any):string|Uint8Array|null {
@@ -136,6 +181,9 @@ OBJ_SPEC(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Object platform type
+ */
 OBJ_PLAT():string|null
 OBJ_PLAT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 OBJ_PLAT(optionalEncoding?:any):string|Uint8Array|null {
@@ -143,6 +191,9 @@ OBJ_PLAT(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Object activity
+ */
 OBJ_ACT():string|null
 OBJ_ACT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 OBJ_ACT(optionalEncoding?:any):string|Uint8Array|null {
@@ -150,6 +201,9 @@ OBJ_ACT(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Mode type
+ */
 MOD_TYPE():string|null
 MOD_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 MOD_TYPE(optionalEncoding?:any):string|Uint8Array|null {
@@ -157,6 +211,9 @@ MOD_TYPE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Track item identifier
+ */
 TRK_ITM_ID():string|null
 TRK_ITM_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 TRK_ITM_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -164,6 +221,9 @@ TRK_ITM_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Track point timestamp (ISO 8601)
+ */
 TS():string|null
 TS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 TS(optionalEncoding?:any):string|Uint8Array|null {
@@ -171,11 +231,17 @@ TS(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Track quality (0-15)
+ */
 TRK_QUAL():number {
   const offset = this.bb!.__offset(this.bb_pos, 44);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Track point type
+ */
 TRK_PT_TYPE():string|null
 TRK_PT_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 TRK_PT_TYPE(optionalEncoding?:any):string|Uint8Array|null {
@@ -183,6 +249,9 @@ TRK_PT_TYPE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Object identity assessment
+ */
 OBJ_IDENT():string|null
 OBJ_IDENT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 OBJ_IDENT(optionalEncoding?:any):string|Uint8Array|null {
@@ -190,16 +259,25 @@ OBJ_IDENT(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Identity credibility (1-6)
+ */
 IDENT_CRED():number {
   const offset = this.bb!.__offset(this.bb_pos, 50);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Identity reliability (A-F)
+ */
 IDENT_REL():number {
   const offset = this.bb!.__offset(this.bb_pos, 52);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Identity amplification
+ */
 IDENT_AMP():string|null
 IDENT_AMP(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 IDENT_AMP(optionalEncoding?:any):string|Uint8Array|null {
@@ -207,53 +285,81 @@ IDENT_AMP(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-ENVIRONMENT():string|null
-ENVIRONMENT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ENVIRONMENT(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Track environment
+ */
+ENVIRONMENT():trackEnvironment {
   const offset = this.bb!.__offset(this.bb_pos, 56);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : trackEnvironment.SPACE;
 }
 
+/**
+ * Environment confidence (0-1)
+ */
 ENVIRONMENT_CONF():number {
   const offset = this.bb!.__offset(this.bb_pos, 58);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Track confidence (0-1)
+ */
 TRK_CONF():number {
   const offset = this.bb!.__offset(this.bb_pos, 60);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Latitude (degrees)
+ */
 LAT():number {
   const offset = this.bb!.__offset(this.bb_pos, 62);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Longitude (degrees)
+ */
 LON():number {
   const offset = this.bb!.__offset(this.bb_pos, 64);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Altitude (km)
+ */
 ALT():number {
   const offset = this.bb!.__offset(this.bb_pos, 66);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Speed (km/s)
+ */
 SPD():number {
   const offset = this.bb!.__offset(this.bb_pos, 68);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Heading (degrees from north)
+ */
 HDNG():number {
   const offset = this.bb!.__offset(this.bb_pos, 70);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Course (degrees from north)
+ */
 COURSE():number {
   const offset = this.bb!.__offset(this.bb_pos, 72);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Source types
+ */
 SRC_TYPS(index: number):string
 SRC_TYPS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 SRC_TYPS(index: number,optionalEncoding?:any):string|Uint8Array|null {
@@ -266,6 +372,9 @@ srcTypsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Source identifiers
+ */
 SRC_IDS(index: number):string
 SRC_IDS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 SRC_IDS(index: number,optionalEncoding?:any):string|Uint8Array|null {
@@ -278,6 +387,9 @@ srcIdsLength():number {
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Call sign
+ */
 CALL_SIGN():string|null
 CALL_SIGN(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 CALL_SIGN(optionalEncoding?:any):string|Uint8Array|null {
@@ -285,11 +397,17 @@ CALL_SIGN(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * True if fused from multiple sources
+ */
 MULTI_SOURCE():boolean {
   const offset = this.bb!.__offset(this.bb_pos, 80);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
+/**
+ * J-series message type
+ */
 J_SERIES():string|null
 J_SERIES(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 J_SERIES(optionalEncoding?:any):string|Uint8Array|null {
@@ -297,41 +415,65 @@ J_SERIES(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Force strength indicator
+ */
 STRENGTH():number {
   const offset = this.bb!.__offset(this.bb_pos, 84);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Mode 1 code
+ */
 M1():number {
   const offset = this.bb!.__offset(this.bb_pos, 86);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Mode 1 validity
+ */
 M1V():number {
   const offset = this.bb!.__offset(this.bb_pos, 88);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Mode 2 code
+ */
 M2():number {
   const offset = this.bb!.__offset(this.bb_pos, 90);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Mode 2 validity
+ */
 M2V():number {
   const offset = this.bb!.__offset(this.bb_pos, 92);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Mode 3A code
+ */
 M3A():number {
   const offset = this.bb!.__offset(this.bb_pos, 94);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Mode 3A validity
+ */
 M3AV():number {
   const offset = this.bb!.__offset(this.bb_pos, 96);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Associated tags
+ */
 TAGS(index: number):string
 TAGS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 TAGS(index: number,optionalEncoding?:any):string|Uint8Array|null {
@@ -345,7 +487,7 @@ tagsLength():number {
 }
 
 /**
- * Start time for track data (ISO 8601 UTC format).
+ * Start time for track data (ISO 8601)
  */
 TRACK_START_TIME():string|null
 TRACK_START_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
@@ -355,7 +497,7 @@ TRACK_START_TIME(optionalEncoding?:any):string|Uint8Array|null {
 }
 
 /**
- * Time interval between track points in seconds.
+ * Time interval between track points (seconds)
  */
 TRACK_STEP_SIZE():number {
   const offset = this.bb!.__offset(this.bb_pos, 102);
@@ -363,7 +505,7 @@ TRACK_STEP_SIZE():number {
 }
 
 /**
- * Number of components per point (default 3 for X, Y, Z).
+ * Number of components per point (default 3 for X, Y, Z)
  */
 TRACK_COMPONENTS():number {
   const offset = this.bb!.__offset(this.bb_pos, 104);
@@ -542,8 +684,8 @@ static addAsset(builder:flatbuffers.Builder, ASSETOffset:flatbuffers.Offset) {
   builder.addFieldOffset(5, ASSETOffset, 0);
 }
 
-static addSen(builder:flatbuffers.Builder, SENOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(6, SENOffset, 0);
+static addSensorId(builder:flatbuffers.Builder, SENSOR_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, SENSOR_IDOffset, 0);
 }
 
 static addSenQual(builder:flatbuffers.Builder, SEN_QUALOffset:flatbuffers.Offset) {
@@ -558,8 +700,8 @@ static addTrkNum(builder:flatbuffers.Builder, TRK_NUMOffset:flatbuffers.Offset) 
   builder.addFieldOffset(9, TRK_NUMOffset, 0);
 }
 
-static addTrkStat(builder:flatbuffers.Builder, TRK_STATOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(10, TRK_STATOffset, 0);
+static addTrkStat(builder:flatbuffers.Builder, TRK_STAT:trackStatus) {
+  builder.addFieldInt8(10, TRK_STAT, trackStatus.ACTIVE);
 }
 
 static addObjNat(builder:flatbuffers.Builder, OBJ_NATOffset:flatbuffers.Offset) {
@@ -599,7 +741,7 @@ static addTs(builder:flatbuffers.Builder, TSOffset:flatbuffers.Offset) {
 }
 
 static addTrkQual(builder:flatbuffers.Builder, TRK_QUAL:number) {
-  builder.addFieldInt32(20, TRK_QUAL, 0);
+  builder.addFieldInt8(20, TRK_QUAL, 0);
 }
 
 static addTrkPtType(builder:flatbuffers.Builder, TRK_PT_TYPEOffset:flatbuffers.Offset) {
@@ -611,19 +753,19 @@ static addObjIdent(builder:flatbuffers.Builder, OBJ_IDENTOffset:flatbuffers.Offs
 }
 
 static addIdentCred(builder:flatbuffers.Builder, IDENT_CRED:number) {
-  builder.addFieldInt32(23, IDENT_CRED, 0);
+  builder.addFieldInt8(23, IDENT_CRED, 0);
 }
 
 static addIdentRel(builder:flatbuffers.Builder, IDENT_REL:number) {
-  builder.addFieldInt32(24, IDENT_REL, 0);
+  builder.addFieldInt8(24, IDENT_REL, 0);
 }
 
 static addIdentAmp(builder:flatbuffers.Builder, IDENT_AMPOffset:flatbuffers.Offset) {
   builder.addFieldOffset(25, IDENT_AMPOffset, 0);
 }
 
-static addEnvironment(builder:flatbuffers.Builder, ENVIRONMENTOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(26, ENVIRONMENTOffset, 0);
+static addEnvironment(builder:flatbuffers.Builder, ENVIRONMENT:trackEnvironment) {
+  builder.addFieldInt8(26, ENVIRONMENT, trackEnvironment.SPACE);
 }
 
 static addEnvironmentConf(builder:flatbuffers.Builder, ENVIRONMENT_CONF:number) {
@@ -703,31 +845,31 @@ static addJSeries(builder:flatbuffers.Builder, J_SERIESOffset:flatbuffers.Offset
 }
 
 static addStrength(builder:flatbuffers.Builder, STRENGTH:number) {
-  builder.addFieldInt32(40, STRENGTH, 0);
+  builder.addFieldInt16(40, STRENGTH, 0);
 }
 
 static addM1(builder:flatbuffers.Builder, M1:number) {
-  builder.addFieldInt32(41, M1, 0);
+  builder.addFieldInt16(41, M1, 0);
 }
 
 static addM1V(builder:flatbuffers.Builder, M1V:number) {
-  builder.addFieldInt32(42, M1V, 0);
+  builder.addFieldInt8(42, M1V, 0);
 }
 
 static addM2(builder:flatbuffers.Builder, M2:number) {
-  builder.addFieldInt32(43, M2, 0);
+  builder.addFieldInt16(43, M2, 0);
 }
 
 static addM2V(builder:flatbuffers.Builder, M2V:number) {
-  builder.addFieldInt32(44, M2V, 0);
+  builder.addFieldInt8(44, M2V, 0);
 }
 
 static addM3A(builder:flatbuffers.Builder, M3A:number) {
-  builder.addFieldInt32(45, M3A, 0);
+  builder.addFieldInt16(45, M3A, 0);
 }
 
 static addM3Av(builder:flatbuffers.Builder, M3AV:number) {
-  builder.addFieldInt32(46, M3AV, 0);
+  builder.addFieldInt8(46, M3AV, 0);
 }
 
 static addTags(builder:flatbuffers.Builder, TAGSOffset:flatbuffers.Offset) {
@@ -939,7 +1081,7 @@ static finishSizePrefixedTRKBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$TRK', true);
 }
 
-static createTRK(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CNTCTOffset:flatbuffers.Offset, MSG_TSOffset:flatbuffers.Offset, MSN_IDOffset:flatbuffers.Offset, ASSET_NATOffset:flatbuffers.Offset, ASSETOffset:flatbuffers.Offset, SENOffset:flatbuffers.Offset, SEN_QUALOffset:flatbuffers.Offset, TRK_IDOffset:flatbuffers.Offset, TRK_NUMOffset:flatbuffers.Offset, TRK_STATOffset:flatbuffers.Offset, OBJ_NATOffset:flatbuffers.Offset, OBJ_IDOffset:flatbuffers.Offset, OBJ_TYPEOffset:flatbuffers.Offset, OBJ_SPECOffset:flatbuffers.Offset, OBJ_PLATOffset:flatbuffers.Offset, OBJ_ACTOffset:flatbuffers.Offset, MOD_TYPEOffset:flatbuffers.Offset, TRK_ITM_IDOffset:flatbuffers.Offset, TSOffset:flatbuffers.Offset, TRK_QUAL:number, TRK_PT_TYPEOffset:flatbuffers.Offset, OBJ_IDENTOffset:flatbuffers.Offset, IDENT_CRED:number, IDENT_REL:number, IDENT_AMPOffset:flatbuffers.Offset, ENVIRONMENTOffset:flatbuffers.Offset, ENVIRONMENT_CONF:number, TRK_CONF:number, LAT:number, LON:number, ALT:number, SPD:number, HDNG:number, COURSE:number, SRC_TYPSOffset:flatbuffers.Offset, SRC_IDSOffset:flatbuffers.Offset, CALL_SIGNOffset:flatbuffers.Offset, MULTI_SOURCE:boolean, J_SERIESOffset:flatbuffers.Offset, STRENGTH:number, M1:number, M1V:number, M2:number, M2V:number, M3A:number, M3AV:number, TAGSOffset:flatbuffers.Offset, TRACK_START_TIMEOffset:flatbuffers.Offset, TRACK_STEP_SIZE:number, TRACK_COMPONENTS:number, ECEF_POSOffset:flatbuffers.Offset, ECEF_VELOffset:flatbuffers.Offset, ECEF_ACCOffset:flatbuffers.Offset, LC_POSOffset:flatbuffers.Offset, LC_VELOffset:flatbuffers.Offset, LC_ACCOffset:flatbuffers.Offset, COVOffset:flatbuffers.Offset, ERR_ELLPOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createTRK(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CNTCTOffset:flatbuffers.Offset, MSG_TSOffset:flatbuffers.Offset, MSN_IDOffset:flatbuffers.Offset, ASSET_NATOffset:flatbuffers.Offset, ASSETOffset:flatbuffers.Offset, SENSOR_IDOffset:flatbuffers.Offset, SEN_QUALOffset:flatbuffers.Offset, TRK_IDOffset:flatbuffers.Offset, TRK_NUMOffset:flatbuffers.Offset, TRK_STAT:trackStatus, OBJ_NATOffset:flatbuffers.Offset, OBJ_IDOffset:flatbuffers.Offset, OBJ_TYPEOffset:flatbuffers.Offset, OBJ_SPECOffset:flatbuffers.Offset, OBJ_PLATOffset:flatbuffers.Offset, OBJ_ACTOffset:flatbuffers.Offset, MOD_TYPEOffset:flatbuffers.Offset, TRK_ITM_IDOffset:flatbuffers.Offset, TSOffset:flatbuffers.Offset, TRK_QUAL:number, TRK_PT_TYPEOffset:flatbuffers.Offset, OBJ_IDENTOffset:flatbuffers.Offset, IDENT_CRED:number, IDENT_REL:number, IDENT_AMPOffset:flatbuffers.Offset, ENVIRONMENT:trackEnvironment, ENVIRONMENT_CONF:number, TRK_CONF:number, LAT:number, LON:number, ALT:number, SPD:number, HDNG:number, COURSE:number, SRC_TYPSOffset:flatbuffers.Offset, SRC_IDSOffset:flatbuffers.Offset, CALL_SIGNOffset:flatbuffers.Offset, MULTI_SOURCE:boolean, J_SERIESOffset:flatbuffers.Offset, STRENGTH:number, M1:number, M1V:number, M2:number, M2V:number, M3A:number, M3AV:number, TAGSOffset:flatbuffers.Offset, TRACK_START_TIMEOffset:flatbuffers.Offset, TRACK_STEP_SIZE:number, TRACK_COMPONENTS:number, ECEF_POSOffset:flatbuffers.Offset, ECEF_VELOffset:flatbuffers.Offset, ECEF_ACCOffset:flatbuffers.Offset, LC_POSOffset:flatbuffers.Offset, LC_VELOffset:flatbuffers.Offset, LC_ACCOffset:flatbuffers.Offset, COVOffset:flatbuffers.Offset, ERR_ELLPOffset:flatbuffers.Offset):flatbuffers.Offset {
   TRK.startTRK(builder);
   TRK.addId(builder, IDOffset);
   TRK.addCntct(builder, CNTCTOffset);
@@ -947,11 +1089,11 @@ static createTRK(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CNTCT
   TRK.addMsnId(builder, MSN_IDOffset);
   TRK.addAssetNat(builder, ASSET_NATOffset);
   TRK.addAsset(builder, ASSETOffset);
-  TRK.addSen(builder, SENOffset);
+  TRK.addSensorId(builder, SENSOR_IDOffset);
   TRK.addSenQual(builder, SEN_QUALOffset);
   TRK.addTrkId(builder, TRK_IDOffset);
   TRK.addTrkNum(builder, TRK_NUMOffset);
-  TRK.addTrkStat(builder, TRK_STATOffset);
+  TRK.addTrkStat(builder, TRK_STAT);
   TRK.addObjNat(builder, OBJ_NATOffset);
   TRK.addObjId(builder, OBJ_IDOffset);
   TRK.addObjType(builder, OBJ_TYPEOffset);
@@ -967,7 +1109,7 @@ static createTRK(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, CNTCT
   TRK.addIdentCred(builder, IDENT_CRED);
   TRK.addIdentRel(builder, IDENT_REL);
   TRK.addIdentAmp(builder, IDENT_AMPOffset);
-  TRK.addEnvironment(builder, ENVIRONMENTOffset);
+  TRK.addEnvironment(builder, ENVIRONMENT);
   TRK.addEnvironmentConf(builder, ENVIRONMENT_CONF);
   TRK.addTrkConf(builder, TRK_CONF);
   TRK.addLat(builder, LAT);
@@ -1011,7 +1153,7 @@ unpack(): TRKT {
     this.MSN_ID(),
     this.ASSET_NAT(),
     this.ASSET(),
-    this.SEN(),
+    this.SENSOR_ID(),
     this.SEN_QUAL(),
     this.TRK_ID(),
     this.TRK_NUM(),
@@ -1075,7 +1217,7 @@ unpackTo(_o: TRKT): void {
   _o.MSN_ID = this.MSN_ID();
   _o.ASSET_NAT = this.ASSET_NAT();
   _o.ASSET = this.ASSET();
-  _o.SEN = this.SEN();
+  _o.SENSOR_ID = this.SENSOR_ID();
   _o.SEN_QUAL = this.SEN_QUAL();
   _o.TRK_ID = this.TRK_ID();
   _o.TRK_NUM = this.TRK_NUM();
@@ -1139,11 +1281,11 @@ constructor(
   public MSN_ID: string|Uint8Array|null = null,
   public ASSET_NAT: string|Uint8Array|null = null,
   public ASSET: string|Uint8Array|null = null,
-  public SEN: string|Uint8Array|null = null,
+  public SENSOR_ID: string|Uint8Array|null = null,
   public SEN_QUAL: string|Uint8Array|null = null,
   public TRK_ID: string|Uint8Array|null = null,
   public TRK_NUM: string|Uint8Array|null = null,
-  public TRK_STAT: string|Uint8Array|null = null,
+  public TRK_STAT: trackStatus = trackStatus.ACTIVE,
   public OBJ_NAT: string|Uint8Array|null = null,
   public OBJ_ID: string|Uint8Array|null = null,
   public OBJ_TYPE: string|Uint8Array|null = null,
@@ -1159,7 +1301,7 @@ constructor(
   public IDENT_CRED: number = 0,
   public IDENT_REL: number = 0,
   public IDENT_AMP: string|Uint8Array|null = null,
-  public ENVIRONMENT: string|Uint8Array|null = null,
+  public ENVIRONMENT: trackEnvironment = trackEnvironment.SPACE,
   public ENVIRONMENT_CONF: number = 0.0,
   public TRK_CONF: number = 0.0,
   public LAT: number = 0.0,
@@ -1202,11 +1344,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const MSN_ID = (this.MSN_ID !== null ? builder.createString(this.MSN_ID!) : 0);
   const ASSET_NAT = (this.ASSET_NAT !== null ? builder.createString(this.ASSET_NAT!) : 0);
   const ASSET = (this.ASSET !== null ? builder.createString(this.ASSET!) : 0);
-  const SEN = (this.SEN !== null ? builder.createString(this.SEN!) : 0);
+  const SENSOR_ID = (this.SENSOR_ID !== null ? builder.createString(this.SENSOR_ID!) : 0);
   const SEN_QUAL = (this.SEN_QUAL !== null ? builder.createString(this.SEN_QUAL!) : 0);
   const TRK_ID = (this.TRK_ID !== null ? builder.createString(this.TRK_ID!) : 0);
   const TRK_NUM = (this.TRK_NUM !== null ? builder.createString(this.TRK_NUM!) : 0);
-  const TRK_STAT = (this.TRK_STAT !== null ? builder.createString(this.TRK_STAT!) : 0);
   const OBJ_NAT = (this.OBJ_NAT !== null ? builder.createString(this.OBJ_NAT!) : 0);
   const OBJ_ID = (this.OBJ_ID !== null ? builder.createString(this.OBJ_ID!) : 0);
   const OBJ_TYPE = (this.OBJ_TYPE !== null ? builder.createString(this.OBJ_TYPE!) : 0);
@@ -1219,7 +1360,6 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const TRK_PT_TYPE = (this.TRK_PT_TYPE !== null ? builder.createString(this.TRK_PT_TYPE!) : 0);
   const OBJ_IDENT = (this.OBJ_IDENT !== null ? builder.createString(this.OBJ_IDENT!) : 0);
   const IDENT_AMP = (this.IDENT_AMP !== null ? builder.createString(this.IDENT_AMP!) : 0);
-  const ENVIRONMENT = (this.ENVIRONMENT !== null ? builder.createString(this.ENVIRONMENT!) : 0);
   const SRC_TYPS = TRK.createSrcTypsVector(builder, builder.createObjectOffsetList(this.SRC_TYPS));
   const SRC_IDS = TRK.createSrcIdsVector(builder, builder.createObjectOffsetList(this.SRC_IDS));
   const CALL_SIGN = (this.CALL_SIGN !== null ? builder.createString(this.CALL_SIGN!) : 0);
@@ -1242,11 +1382,11 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     MSN_ID,
     ASSET_NAT,
     ASSET,
-    SEN,
+    SENSOR_ID,
     SEN_QUAL,
     TRK_ID,
     TRK_NUM,
-    TRK_STAT,
+    this.TRK_STAT,
     OBJ_NAT,
     OBJ_ID,
     OBJ_TYPE,
@@ -1262,7 +1402,7 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.IDENT_CRED,
     this.IDENT_REL,
     IDENT_AMP,
-    ENVIRONMENT,
+    this.ENVIRONMENT,
     this.ENVIRONMENT_CONF,
     this.TRK_CONF,
     this.LAT,

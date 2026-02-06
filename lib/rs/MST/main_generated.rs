@@ -9,6 +9,305 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_MISSILE_STATUS: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_MISSILE_STATUS: i8 = 7;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_MISSILE_STATUS: [missileStatus; 8] = [
+  missileStatus::BOOSTING,
+  missileStatus::MIDCOURSE,
+  missileStatus::TERMINAL,
+  missileStatus::IMPACT,
+  missileStatus::BURNOUT,
+  missileStatus::INTERCEPTED,
+  missileStatus::LOST,
+  missileStatus::UNKNOWN,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct missileStatus(pub i8);
+#[allow(non_upper_case_globals)]
+impl missileStatus {
+  pub const BOOSTING: Self = Self(0);
+  pub const MIDCOURSE: Self = Self(1);
+  pub const TERMINAL: Self = Self(2);
+  pub const IMPACT: Self = Self(3);
+  pub const BURNOUT: Self = Self(4);
+  pub const INTERCEPTED: Self = Self(5);
+  pub const LOST: Self = Self(6);
+  pub const UNKNOWN: Self = Self(7);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 7;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::BOOSTING,
+    Self::MIDCOURSE,
+    Self::TERMINAL,
+    Self::IMPACT,
+    Self::BURNOUT,
+    Self::INTERCEPTED,
+    Self::LOST,
+    Self::UNKNOWN,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::BOOSTING => Some("BOOSTING"),
+      Self::MIDCOURSE => Some("MIDCOURSE"),
+      Self::TERMINAL => Some("TERMINAL"),
+      Self::IMPACT => Some("IMPACT"),
+      Self::BURNOUT => Some("BURNOUT"),
+      Self::INTERCEPTED => Some("INTERCEPTED"),
+      Self::LOST => Some("LOST"),
+      Self::UNKNOWN => Some("UNKNOWN"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for missileStatus {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for missileStatus {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for missileStatus {
+    type Output = missileStatus;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for missileStatus {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for missileStatus {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for missileStatus {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_MISSILE_ENVIRONMENT: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_MISSILE_ENVIRONMENT: i8 = 4;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_MISSILE_ENVIRONMENT: [missileEnvironment; 5] = [
+  missileEnvironment::SPACE,
+  missileEnvironment::ENDO_ATMOSPHERIC,
+  missileEnvironment::EXO_ATMOSPHERIC,
+  missileEnvironment::TRANSITIONAL,
+  missileEnvironment::UNKNOWN,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct missileEnvironment(pub i8);
+#[allow(non_upper_case_globals)]
+impl missileEnvironment {
+  pub const SPACE: Self = Self(0);
+  pub const ENDO_ATMOSPHERIC: Self = Self(1);
+  pub const EXO_ATMOSPHERIC: Self = Self(2);
+  pub const TRANSITIONAL: Self = Self(3);
+  pub const UNKNOWN: Self = Self(4);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 4;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::SPACE,
+    Self::ENDO_ATMOSPHERIC,
+    Self::EXO_ATMOSPHERIC,
+    Self::TRANSITIONAL,
+    Self::UNKNOWN,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::SPACE => Some("SPACE"),
+      Self::ENDO_ATMOSPHERIC => Some("ENDO_ATMOSPHERIC"),
+      Self::EXO_ATMOSPHERIC => Some("EXO_ATMOSPHERIC"),
+      Self::TRANSITIONAL => Some("TRANSITIONAL"),
+      Self::UNKNOWN => Some("UNKNOWN"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for missileEnvironment {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for missileEnvironment {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for missileEnvironment {
+    type Output = missileEnvironment;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for missileEnvironment {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for missileEnvironment {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for missileEnvironment {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_AOU_REPORT_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_AOU_REPORT_TYPE: i8 = 3;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_AOU_REPORT_TYPE: [aouReportType; 4] = [
+  aouReportType::CIRCULAR,
+  aouReportType::ELLIPTICAL,
+  aouReportType::RECTANGULAR,
+  aouReportType::NONE,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct aouReportType(pub i8);
+#[allow(non_upper_case_globals)]
+impl aouReportType {
+  pub const CIRCULAR: Self = Self(0);
+  pub const ELLIPTICAL: Self = Self(1);
+  pub const RECTANGULAR: Self = Self(2);
+  pub const NONE: Self = Self(3);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 3;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::CIRCULAR,
+    Self::ELLIPTICAL,
+    Self::RECTANGULAR,
+    Self::NONE,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::CIRCULAR => Some("CIRCULAR"),
+      Self::ELLIPTICAL => Some("ELLIPTICAL"),
+      Self::RECTANGULAR => Some("RECTANGULAR"),
+      Self::NONE => Some("NONE"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for aouReportType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for aouReportType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for aouReportType {
+    type Output = aouReportType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for aouReportType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for aouReportType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for aouReportType {}
 pub enum MSTOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -36,32 +335,32 @@ impl<'a> MST<'a> {
   pub const VT_OBJ_PLAT: flatbuffers::VOffsetT = 18;
   pub const VT_OBJ_IDENT: flatbuffers::VOffsetT = 20;
   pub const VT_SPACE_AMP: flatbuffers::VOffsetT = 22;
-  pub const VT_OBJ_ACT: flatbuffers::VOffsetT = 24;
-  pub const VT_SPACE_SPEC_TYPE: flatbuffers::VOffsetT = 26;
-  pub const VT_ACFT_SUB_TYPE: flatbuffers::VOffsetT = 28;
-  pub const VT_NAME: flatbuffers::VOffsetT = 30;
-  pub const VT_CALL_SIGN: flatbuffers::VOffsetT = 32;
-  pub const VT_LOST_TRK_IND: flatbuffers::VOffsetT = 34;
-  pub const VT_TRACK_ID: flatbuffers::VOffsetT = 36;
-  pub const VT_PARENT_TRACK_ID: flatbuffers::VOffsetT = 38;
-  pub const VT_MUID_SRC_TRK: flatbuffers::VOffsetT = 40;
-  pub const VT_MUID_SRC: flatbuffers::VOffsetT = 42;
-  pub const VT_ALERT: flatbuffers::VOffsetT = 44;
-  pub const VT_MSL_STATUS: flatbuffers::VOffsetT = 46;
-  pub const VT_TS: flatbuffers::VOffsetT = 48;
-  pub const VT_AOU_RPT_TYPE: flatbuffers::VOffsetT = 50;
-  pub const VT_CONTAINMENT: flatbuffers::VOffsetT = 52;
-  pub const VT_TRK_CONF: flatbuffers::VOffsetT = 54;
-  pub const VT_TRK_QUAL: flatbuffers::VOffsetT = 56;
-  pub const VT_ANG_ELEV: flatbuffers::VOffsetT = 58;
-  pub const VT_SEN_MODE: flatbuffers::VOffsetT = 60;
-  pub const VT_INFO_SOURCE: flatbuffers::VOffsetT = 62;
-  pub const VT_BOOSTING: flatbuffers::VOffsetT = 64;
-  pub const VT_POLAR_SING_LOC_LAT: flatbuffers::VOffsetT = 66;
-  pub const VT_POLAR_SING_LOC_LON: flatbuffers::VOffsetT = 68;
-  pub const VT_EMG_IND: flatbuffers::VOffsetT = 70;
-  pub const VT_DROP_PT_IND: flatbuffers::VOffsetT = 72;
-  pub const VT_SPACE_AMP_CONF: flatbuffers::VOffsetT = 74;
+  pub const VT_SPACE_AMP_CONF: flatbuffers::VOffsetT = 24;
+  pub const VT_OBJ_ACT: flatbuffers::VOffsetT = 26;
+  pub const VT_SPACE_SPEC_TYPE: flatbuffers::VOffsetT = 28;
+  pub const VT_ACFT_SUB_TYPE: flatbuffers::VOffsetT = 30;
+  pub const VT_NAME: flatbuffers::VOffsetT = 32;
+  pub const VT_CALL_SIGN: flatbuffers::VOffsetT = 34;
+  pub const VT_LOST_TRK_IND: flatbuffers::VOffsetT = 36;
+  pub const VT_TRACK_ID: flatbuffers::VOffsetT = 38;
+  pub const VT_PARENT_TRACK_ID: flatbuffers::VOffsetT = 40;
+  pub const VT_MUID_SRC_TRK: flatbuffers::VOffsetT = 42;
+  pub const VT_MUID_SRC: flatbuffers::VOffsetT = 44;
+  pub const VT_ALERT: flatbuffers::VOffsetT = 46;
+  pub const VT_MSL_STATUS: flatbuffers::VOffsetT = 48;
+  pub const VT_TS: flatbuffers::VOffsetT = 50;
+  pub const VT_AOU_RPT_TYPE: flatbuffers::VOffsetT = 52;
+  pub const VT_CONTAINMENT: flatbuffers::VOffsetT = 54;
+  pub const VT_TRK_CONF: flatbuffers::VOffsetT = 56;
+  pub const VT_TRK_QUAL: flatbuffers::VOffsetT = 58;
+  pub const VT_ANG_ELEV: flatbuffers::VOffsetT = 60;
+  pub const VT_SEN_MODE: flatbuffers::VOffsetT = 62;
+  pub const VT_INFO_SOURCE: flatbuffers::VOffsetT = 64;
+  pub const VT_BOOSTING: flatbuffers::VOffsetT = 66;
+  pub const VT_POLAR_SING_LOC_LAT: flatbuffers::VOffsetT = 68;
+  pub const VT_POLAR_SING_LOC_LON: flatbuffers::VOffsetT = 70;
+  pub const VT_EMG_IND: flatbuffers::VOffsetT = 72;
+  pub const VT_DROP_PT_IND: flatbuffers::VOffsetT = 74;
   pub const VT_LAUNCH_TIME: flatbuffers::VOffsetT = 76;
   pub const VT_LAUNCH_LAT: flatbuffers::VOffsetT = 78;
   pub const VT_LAUNCH_LON: flatbuffers::VOffsetT = 80;
@@ -107,17 +406,11 @@ impl<'a> MST<'a> {
     if let Some(x) = args.AOU_RPT { builder.add_AOU_RPT(x); }
     if let Some(x) = args.VECTORS { builder.add_VECTORS(x); }
     if let Some(x) = args.VECTOR_START_TIME { builder.add_VECTOR_START_TIME(x); }
-    if let Some(x) = args.IMPACT_AOU_TYPE { builder.add_IMPACT_AOU_TYPE(x); }
     if let Some(x) = args.IMPACT_TIME { builder.add_IMPACT_TIME(x); }
-    if let Some(x) = args.LAUNCH_AOU_TYPE { builder.add_LAUNCH_AOU_TYPE(x); }
     if let Some(x) = args.LAUNCH_TIME { builder.add_LAUNCH_TIME(x); }
-    builder.add_SPACE_AMP_CONF(args.SPACE_AMP_CONF);
     if let Some(x) = args.INFO_SOURCE { builder.add_INFO_SOURCE(x); }
     if let Some(x) = args.SEN_MODE { builder.add_SEN_MODE(x); }
-    builder.add_TRK_QUAL(args.TRK_QUAL);
-    if let Some(x) = args.AOU_RPT_TYPE { builder.add_AOU_RPT_TYPE(x); }
     if let Some(x) = args.TS { builder.add_TS(x); }
-    if let Some(x) = args.MSL_STATUS { builder.add_MSL_STATUS(x); }
     if let Some(x) = args.ALERT { builder.add_ALERT(x); }
     if let Some(x) = args.MUID_SRC { builder.add_MUID_SRC(x); }
     if let Some(x) = args.MUID_SRC_TRK { builder.add_MUID_SRC_TRK(x); }
@@ -131,18 +424,24 @@ impl<'a> MST<'a> {
     if let Some(x) = args.SPACE_AMP { builder.add_SPACE_AMP(x); }
     if let Some(x) = args.OBJ_IDENT { builder.add_OBJ_IDENT(x); }
     if let Some(x) = args.OBJ_PLAT { builder.add_OBJ_PLAT(x); }
-    builder.add_OBJ_TYPE_CONF(args.OBJ_TYPE_CONF);
     if let Some(x) = args.OBJ_TYPE { builder.add_OBJ_TYPE(x); }
-    if let Some(x) = args.ENVIRONMENT { builder.add_ENVIRONMENT(x); }
     if let Some(x) = args.MSG_CREATE_DATE { builder.add_MSG_CREATE_DATE(x); }
     if let Some(x) = args.MSG_SUB_TYPE { builder.add_MSG_SUB_TYPE(x); }
     if let Some(x) = args.MSG_TYPE { builder.add_MSG_TYPE(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
     builder.add_VECTOR_COMPONENTS(args.VECTOR_COMPONENTS);
+    builder.add_IMPACT_AOU_TYPE(args.IMPACT_AOU_TYPE);
+    builder.add_LAUNCH_AOU_TYPE(args.LAUNCH_AOU_TYPE);
     builder.add_DROP_PT_IND(args.DROP_PT_IND);
     builder.add_EMG_IND(args.EMG_IND);
     builder.add_BOOSTING(args.BOOSTING);
+    builder.add_TRK_QUAL(args.TRK_QUAL);
+    builder.add_AOU_RPT_TYPE(args.AOU_RPT_TYPE);
+    builder.add_MSL_STATUS(args.MSL_STATUS);
     builder.add_LOST_TRK_IND(args.LOST_TRK_IND);
+    builder.add_SPACE_AMP_CONF(args.SPACE_AMP_CONF);
+    builder.add_OBJ_TYPE_CONF(args.OBJ_TYPE_CONF);
+    builder.add_ENVIRONMENT(args.ENVIRONMENT);
     builder.finish()
   }
 
@@ -159,9 +458,7 @@ impl<'a> MST<'a> {
     let MSG_CREATE_DATE = self.MSG_CREATE_DATE().map(|x| {
       x.to_string()
     });
-    let ENVIRONMENT = self.ENVIRONMENT().map(|x| {
-      x.to_string()
-    });
+    let ENVIRONMENT = self.ENVIRONMENT();
     let OBJ_TYPE = self.OBJ_TYPE().map(|x| {
       x.to_string()
     });
@@ -175,6 +472,7 @@ impl<'a> MST<'a> {
     let SPACE_AMP = self.SPACE_AMP().map(|x| {
       x.to_string()
     });
+    let SPACE_AMP_CONF = self.SPACE_AMP_CONF();
     let OBJ_ACT = self.OBJ_ACT().map(|x| {
       x.to_string()
     });
@@ -206,15 +504,11 @@ impl<'a> MST<'a> {
     let ALERT = self.ALERT().map(|x| {
       x.to_string()
     });
-    let MSL_STATUS = self.MSL_STATUS().map(|x| {
-      x.to_string()
-    });
+    let MSL_STATUS = self.MSL_STATUS();
     let TS = self.TS().map(|x| {
       x.to_string()
     });
-    let AOU_RPT_TYPE = self.AOU_RPT_TYPE().map(|x| {
-      x.to_string()
-    });
+    let AOU_RPT_TYPE = self.AOU_RPT_TYPE();
     let CONTAINMENT = self.CONTAINMENT();
     let TRK_CONF = self.TRK_CONF();
     let TRK_QUAL = self.TRK_QUAL();
@@ -230,7 +524,6 @@ impl<'a> MST<'a> {
     let POLAR_SING_LOC_LON = self.POLAR_SING_LOC_LON();
     let EMG_IND = self.EMG_IND();
     let DROP_PT_IND = self.DROP_PT_IND();
-    let SPACE_AMP_CONF = self.SPACE_AMP_CONF();
     let LAUNCH_TIME = self.LAUNCH_TIME().map(|x| {
       x.to_string()
     });
@@ -238,17 +531,13 @@ impl<'a> MST<'a> {
     let LAUNCH_LON = self.LAUNCH_LON();
     let AZ_CORR = self.AZ_CORR();
     let BURNOUT_ALT = self.BURNOUT_ALT();
-    let LAUNCH_AOU_TYPE = self.LAUNCH_AOU_TYPE().map(|x| {
-      x.to_string()
-    });
+    let LAUNCH_AOU_TYPE = self.LAUNCH_AOU_TYPE();
     let IMPACT_TIME = self.IMPACT_TIME().map(|x| {
       x.to_string()
     });
     let IMPACT_LAT = self.IMPACT_LAT();
     let IMPACT_LON = self.IMPACT_LON();
-    let IMPACT_AOU_TYPE = self.IMPACT_AOU_TYPE().map(|x| {
-      x.to_string()
-    });
+    let IMPACT_AOU_TYPE = self.IMPACT_AOU_TYPE();
     let VECTOR_START_TIME = self.VECTOR_START_TIME().map(|x| {
       x.to_string()
     });
@@ -277,6 +566,7 @@ impl<'a> MST<'a> {
       OBJ_PLAT,
       OBJ_IDENT,
       SPACE_AMP,
+      SPACE_AMP_CONF,
       OBJ_ACT,
       SPACE_SPEC_TYPE,
       ACFT_SUB_TYPE,
@@ -302,7 +592,6 @@ impl<'a> MST<'a> {
       POLAR_SING_LOC_LON,
       EMG_IND,
       DROP_PT_IND,
-      SPACE_AMP_CONF,
       LAUNCH_TIME,
       LAUNCH_LAT,
       LAUNCH_LON,
@@ -323,6 +612,7 @@ impl<'a> MST<'a> {
     }
   }
 
+  /// Unique identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -330,6 +620,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_ID, None)}
   }
+  /// Message type code
   #[inline]
   pub fn MSG_TYPE(&self) -> Option<&'a str> {
     // Safety:
@@ -337,6 +628,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_MSG_TYPE, None)}
   }
+  /// Message sub-type
   #[inline]
   pub fn MSG_SUB_TYPE(&self) -> Option<&'a str> {
     // Safety:
@@ -344,6 +636,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_MSG_SUB_TYPE, None)}
   }
+  /// Message creation date (ISO 8601)
   #[inline]
   pub fn MSG_CREATE_DATE(&self) -> Option<&'a str> {
     // Safety:
@@ -351,13 +644,15 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_MSG_CREATE_DATE, None)}
   }
+  /// Track environment
   #[inline]
-  pub fn ENVIRONMENT(&self) -> Option<&'a str> {
+  pub fn ENVIRONMENT(&self) -> missileEnvironment {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_ENVIRONMENT, None)}
+    unsafe { self._tab.get::<missileEnvironment>(MST::VT_ENVIRONMENT, Some(missileEnvironment::SPACE)).unwrap()}
   }
+  /// Object type classification
   #[inline]
   pub fn OBJ_TYPE(&self) -> Option<&'a str> {
     // Safety:
@@ -365,13 +660,15 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_OBJ_TYPE, None)}
   }
+  /// Object type confidence (0-100)
   #[inline]
-  pub fn OBJ_TYPE_CONF(&self) -> i32 {
+  pub fn OBJ_TYPE_CONF(&self) -> u8 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(MST::VT_OBJ_TYPE_CONF, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u8>(MST::VT_OBJ_TYPE_CONF, Some(0)).unwrap()}
   }
+  /// Object platform type
   #[inline]
   pub fn OBJ_PLAT(&self) -> Option<&'a str> {
     // Safety:
@@ -379,6 +676,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_OBJ_PLAT, None)}
   }
+  /// Object identity assessment
   #[inline]
   pub fn OBJ_IDENT(&self) -> Option<&'a str> {
     // Safety:
@@ -386,6 +684,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_OBJ_IDENT, None)}
   }
+  /// Space amplification data
   #[inline]
   pub fn SPACE_AMP(&self) -> Option<&'a str> {
     // Safety:
@@ -393,6 +692,15 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_SPACE_AMP, None)}
   }
+  /// Space amplification confidence (0-100)
+  #[inline]
+  pub fn SPACE_AMP_CONF(&self) -> u8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u8>(MST::VT_SPACE_AMP_CONF, Some(0)).unwrap()}
+  }
+  /// Object activity
   #[inline]
   pub fn OBJ_ACT(&self) -> Option<&'a str> {
     // Safety:
@@ -400,6 +708,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_OBJ_ACT, None)}
   }
+  /// Space specific type
   #[inline]
   pub fn SPACE_SPEC_TYPE(&self) -> Option<&'a str> {
     // Safety:
@@ -407,6 +716,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_SPACE_SPEC_TYPE, None)}
   }
+  /// Aircraft sub-type (if applicable)
   #[inline]
   pub fn ACFT_SUB_TYPE(&self) -> Option<&'a str> {
     // Safety:
@@ -414,6 +724,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_ACFT_SUB_TYPE, None)}
   }
+  /// Object name
   #[inline]
   pub fn NAME(&self) -> Option<&'a str> {
     // Safety:
@@ -421,6 +732,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_NAME, None)}
   }
+  /// Call sign
   #[inline]
   pub fn CALL_SIGN(&self) -> Option<&'a str> {
     // Safety:
@@ -428,6 +740,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_CALL_SIGN, None)}
   }
+  /// True if track is lost
   #[inline]
   pub fn LOST_TRK_IND(&self) -> bool {
     // Safety:
@@ -435,6 +748,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(MST::VT_LOST_TRK_IND, Some(false)).unwrap()}
   }
+  /// Track identifier
   #[inline]
   pub fn TRACK_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -442,6 +756,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_TRACK_ID, None)}
   }
+  /// Parent track identifier
   #[inline]
   pub fn PARENT_TRACK_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -449,6 +764,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_PARENT_TRACK_ID, None)}
   }
+  /// Multi-unit identifier (source track)
   #[inline]
   pub fn MUID_SRC_TRK(&self) -> Option<&'a str> {
     // Safety:
@@ -456,6 +772,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_MUID_SRC_TRK, None)}
   }
+  /// Multi-unit identifier (source)
   #[inline]
   pub fn MUID_SRC(&self) -> Option<&'a str> {
     // Safety:
@@ -463,6 +780,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_MUID_SRC, None)}
   }
+  /// Alert classification
   #[inline]
   pub fn ALERT(&self) -> Option<&'a str> {
     // Safety:
@@ -470,13 +788,15 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_ALERT, None)}
   }
+  /// Missile engagement status
   #[inline]
-  pub fn MSL_STATUS(&self) -> Option<&'a str> {
+  pub fn MSL_STATUS(&self) -> missileStatus {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_MSL_STATUS, None)}
+    unsafe { self._tab.get::<missileStatus>(MST::VT_MSL_STATUS, Some(missileStatus::BOOSTING)).unwrap()}
   }
+  /// Track timestamp (ISO 8601)
   #[inline]
   pub fn TS(&self) -> Option<&'a str> {
     // Safety:
@@ -484,13 +804,15 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_TS, None)}
   }
+  /// AOU report type
   #[inline]
-  pub fn AOU_RPT_TYPE(&self) -> Option<&'a str> {
+  pub fn AOU_RPT_TYPE(&self) -> aouReportType {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_AOU_RPT_TYPE, None)}
+    unsafe { self._tab.get::<aouReportType>(MST::VT_AOU_RPT_TYPE, Some(aouReportType::CIRCULAR)).unwrap()}
   }
+  /// Containment probability (0-1)
   #[inline]
   pub fn CONTAINMENT(&self) -> f64 {
     // Safety:
@@ -498,6 +820,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(MST::VT_CONTAINMENT, Some(0.0)).unwrap()}
   }
+  /// Track confidence (0-1)
   #[inline]
   pub fn TRK_CONF(&self) -> f64 {
     // Safety:
@@ -505,13 +828,15 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(MST::VT_TRK_CONF, Some(0.0)).unwrap()}
   }
+  /// Track quality (0-15)
   #[inline]
-  pub fn TRK_QUAL(&self) -> i32 {
+  pub fn TRK_QUAL(&self) -> u8 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(MST::VT_TRK_QUAL, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u8>(MST::VT_TRK_QUAL, Some(0)).unwrap()}
   }
+  /// Elevation angle (degrees)
   #[inline]
   pub fn ANG_ELEV(&self) -> f64 {
     // Safety:
@@ -519,6 +844,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(MST::VT_ANG_ELEV, Some(0.0)).unwrap()}
   }
+  /// Sensor mode
   #[inline]
   pub fn SEN_MODE(&self) -> Option<&'a str> {
     // Safety:
@@ -526,6 +852,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_SEN_MODE, None)}
   }
+  /// Information source
   #[inline]
   pub fn INFO_SOURCE(&self) -> Option<&'a str> {
     // Safety:
@@ -533,6 +860,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_INFO_SOURCE, None)}
   }
+  /// True if object is in boost phase
   #[inline]
   pub fn BOOSTING(&self) -> bool {
     // Safety:
@@ -540,6 +868,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(MST::VT_BOOSTING, Some(false)).unwrap()}
   }
+  /// Polar singularity latitude (degrees)
   #[inline]
   pub fn POLAR_SING_LOC_LAT(&self) -> f64 {
     // Safety:
@@ -547,6 +876,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(MST::VT_POLAR_SING_LOC_LAT, Some(0.0)).unwrap()}
   }
+  /// Polar singularity longitude (degrees)
   #[inline]
   pub fn POLAR_SING_LOC_LON(&self) -> f64 {
     // Safety:
@@ -554,6 +884,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(MST::VT_POLAR_SING_LOC_LON, Some(0.0)).unwrap()}
   }
+  /// True if emergency indicator set
   #[inline]
   pub fn EMG_IND(&self) -> bool {
     // Safety:
@@ -561,6 +892,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(MST::VT_EMG_IND, Some(false)).unwrap()}
   }
+  /// True if drop point indicator set
   #[inline]
   pub fn DROP_PT_IND(&self) -> bool {
     // Safety:
@@ -568,13 +900,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(MST::VT_DROP_PT_IND, Some(false)).unwrap()}
   }
-  #[inline]
-  pub fn SPACE_AMP_CONF(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(MST::VT_SPACE_AMP_CONF, Some(0)).unwrap()}
-  }
+  /// Launch time (ISO 8601)
   #[inline]
   pub fn LAUNCH_TIME(&self) -> Option<&'a str> {
     // Safety:
@@ -582,6 +908,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_LAUNCH_TIME, None)}
   }
+  /// Launch latitude (degrees)
   #[inline]
   pub fn LAUNCH_LAT(&self) -> f64 {
     // Safety:
@@ -589,6 +916,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(MST::VT_LAUNCH_LAT, Some(0.0)).unwrap()}
   }
+  /// Launch longitude (degrees)
   #[inline]
   pub fn LAUNCH_LON(&self) -> f64 {
     // Safety:
@@ -596,6 +924,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(MST::VT_LAUNCH_LON, Some(0.0)).unwrap()}
   }
+  /// Azimuth correction (degrees)
   #[inline]
   pub fn AZ_CORR(&self) -> f64 {
     // Safety:
@@ -603,6 +932,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(MST::VT_AZ_CORR, Some(0.0)).unwrap()}
   }
+  /// Burnout altitude (km)
   #[inline]
   pub fn BURNOUT_ALT(&self) -> f64 {
     // Safety:
@@ -610,13 +940,15 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(MST::VT_BURNOUT_ALT, Some(0.0)).unwrap()}
   }
+  /// Launch AOU type
   #[inline]
-  pub fn LAUNCH_AOU_TYPE(&self) -> Option<&'a str> {
+  pub fn LAUNCH_AOU_TYPE(&self) -> aouReportType {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_LAUNCH_AOU_TYPE, None)}
+    unsafe { self._tab.get::<aouReportType>(MST::VT_LAUNCH_AOU_TYPE, Some(aouReportType::CIRCULAR)).unwrap()}
   }
+  /// Predicted impact time (ISO 8601)
   #[inline]
   pub fn IMPACT_TIME(&self) -> Option<&'a str> {
     // Safety:
@@ -624,6 +956,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_IMPACT_TIME, None)}
   }
+  /// Predicted impact latitude (degrees)
   #[inline]
   pub fn IMPACT_LAT(&self) -> f64 {
     // Safety:
@@ -631,6 +964,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(MST::VT_IMPACT_LAT, Some(0.0)).unwrap()}
   }
+  /// Predicted impact longitude (degrees)
   #[inline]
   pub fn IMPACT_LON(&self) -> f64 {
     // Safety:
@@ -638,14 +972,15 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(MST::VT_IMPACT_LON, Some(0.0)).unwrap()}
   }
+  /// Impact AOU type
   #[inline]
-  pub fn IMPACT_AOU_TYPE(&self) -> Option<&'a str> {
+  pub fn IMPACT_AOU_TYPE(&self) -> aouReportType {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_IMPACT_AOU_TYPE, None)}
+    unsafe { self._tab.get::<aouReportType>(MST::VT_IMPACT_AOU_TYPE, Some(aouReportType::CIRCULAR)).unwrap()}
   }
-  /// Start time for vector data (ISO 8601 UTC format).
+  /// Start time for vector data (ISO 8601)
   #[inline]
   pub fn VECTOR_START_TIME(&self) -> Option<&'a str> {
     // Safety:
@@ -653,7 +988,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(MST::VT_VECTOR_START_TIME, None)}
   }
-  /// Time interval between vector points in seconds.
+  /// Time interval between vector points (seconds)
   #[inline]
   pub fn VECTOR_STEP_SIZE(&self) -> f64 {
     // Safety:
@@ -661,7 +996,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(MST::VT_VECTOR_STEP_SIZE, Some(0.0)).unwrap()}
   }
-  /// Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).
+  /// Number of components per vector (default 6: X, Y, Z, VX, VY, VZ)
   #[inline]
   pub fn VECTOR_COMPONENTS(&self) -> u8 {
     // Safety:
@@ -677,7 +1012,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(MST::VT_VECTORS, None)}
   }
-  /// AOU report data as flat array (layout depends on AOU_RPT_TYPE).
+  /// AOU report data as flat array
   #[inline]
   pub fn AOU_RPT(&self) -> Option<flatbuffers::Vector<'a, f64>> {
     // Safety:
@@ -685,7 +1020,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(MST::VT_AOU_RPT, None)}
   }
-  /// Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).
+  /// Launch AOU data as flat array
   #[inline]
   pub fn LAUNCH_AOU(&self) -> Option<flatbuffers::Vector<'a, f64>> {
     // Safety:
@@ -693,7 +1028,7 @@ impl<'a> MST<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(MST::VT_LAUNCH_AOU, None)}
   }
-  /// Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).
+  /// Impact AOU data as flat array
   #[inline]
   pub fn IMPACT_AOU(&self) -> Option<flatbuffers::Vector<'a, f64>> {
     // Safety:
@@ -714,12 +1049,13 @@ impl flatbuffers::Verifiable for MST<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MSG_TYPE", Self::VT_MSG_TYPE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MSG_SUB_TYPE", Self::VT_MSG_SUB_TYPE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MSG_CREATE_DATE", Self::VT_MSG_CREATE_DATE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ENVIRONMENT", Self::VT_ENVIRONMENT, false)?
+     .visit_field::<missileEnvironment>("ENVIRONMENT", Self::VT_ENVIRONMENT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJ_TYPE", Self::VT_OBJ_TYPE, false)?
-     .visit_field::<i32>("OBJ_TYPE_CONF", Self::VT_OBJ_TYPE_CONF, false)?
+     .visit_field::<u8>("OBJ_TYPE_CONF", Self::VT_OBJ_TYPE_CONF, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJ_PLAT", Self::VT_OBJ_PLAT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJ_IDENT", Self::VT_OBJ_IDENT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SPACE_AMP", Self::VT_SPACE_AMP, false)?
+     .visit_field::<u8>("SPACE_AMP_CONF", Self::VT_SPACE_AMP_CONF, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJ_ACT", Self::VT_OBJ_ACT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SPACE_SPEC_TYPE", Self::VT_SPACE_SPEC_TYPE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ACFT_SUB_TYPE", Self::VT_ACFT_SUB_TYPE, false)?
@@ -731,12 +1067,12 @@ impl flatbuffers::Verifiable for MST<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MUID_SRC_TRK", Self::VT_MUID_SRC_TRK, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MUID_SRC", Self::VT_MUID_SRC, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ALERT", Self::VT_ALERT, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MSL_STATUS", Self::VT_MSL_STATUS, false)?
+     .visit_field::<missileStatus>("MSL_STATUS", Self::VT_MSL_STATUS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TS", Self::VT_TS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("AOU_RPT_TYPE", Self::VT_AOU_RPT_TYPE, false)?
+     .visit_field::<aouReportType>("AOU_RPT_TYPE", Self::VT_AOU_RPT_TYPE, false)?
      .visit_field::<f64>("CONTAINMENT", Self::VT_CONTAINMENT, false)?
      .visit_field::<f64>("TRK_CONF", Self::VT_TRK_CONF, false)?
-     .visit_field::<i32>("TRK_QUAL", Self::VT_TRK_QUAL, false)?
+     .visit_field::<u8>("TRK_QUAL", Self::VT_TRK_QUAL, false)?
      .visit_field::<f64>("ANG_ELEV", Self::VT_ANG_ELEV, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SEN_MODE", Self::VT_SEN_MODE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("INFO_SOURCE", Self::VT_INFO_SOURCE, false)?
@@ -745,17 +1081,16 @@ impl flatbuffers::Verifiable for MST<'_> {
      .visit_field::<f64>("POLAR_SING_LOC_LON", Self::VT_POLAR_SING_LOC_LON, false)?
      .visit_field::<bool>("EMG_IND", Self::VT_EMG_IND, false)?
      .visit_field::<bool>("DROP_PT_IND", Self::VT_DROP_PT_IND, false)?
-     .visit_field::<i32>("SPACE_AMP_CONF", Self::VT_SPACE_AMP_CONF, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LAUNCH_TIME", Self::VT_LAUNCH_TIME, false)?
      .visit_field::<f64>("LAUNCH_LAT", Self::VT_LAUNCH_LAT, false)?
      .visit_field::<f64>("LAUNCH_LON", Self::VT_LAUNCH_LON, false)?
      .visit_field::<f64>("AZ_CORR", Self::VT_AZ_CORR, false)?
      .visit_field::<f64>("BURNOUT_ALT", Self::VT_BURNOUT_ALT, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LAUNCH_AOU_TYPE", Self::VT_LAUNCH_AOU_TYPE, false)?
+     .visit_field::<aouReportType>("LAUNCH_AOU_TYPE", Self::VT_LAUNCH_AOU_TYPE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("IMPACT_TIME", Self::VT_IMPACT_TIME, false)?
      .visit_field::<f64>("IMPACT_LAT", Self::VT_IMPACT_LAT, false)?
      .visit_field::<f64>("IMPACT_LON", Self::VT_IMPACT_LON, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("IMPACT_AOU_TYPE", Self::VT_IMPACT_AOU_TYPE, false)?
+     .visit_field::<aouReportType>("IMPACT_AOU_TYPE", Self::VT_IMPACT_AOU_TYPE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("VECTOR_START_TIME", Self::VT_VECTOR_START_TIME, false)?
      .visit_field::<f64>("VECTOR_STEP_SIZE", Self::VT_VECTOR_STEP_SIZE, false)?
      .visit_field::<u8>("VECTOR_COMPONENTS", Self::VT_VECTOR_COMPONENTS, false)?
@@ -772,12 +1107,13 @@ pub struct MSTArgs<'a> {
     pub MSG_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub MSG_SUB_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub MSG_CREATE_DATE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ENVIRONMENT: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ENVIRONMENT: missileEnvironment,
     pub OBJ_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub OBJ_TYPE_CONF: i32,
+    pub OBJ_TYPE_CONF: u8,
     pub OBJ_PLAT: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OBJ_IDENT: Option<flatbuffers::WIPOffset<&'a str>>,
     pub SPACE_AMP: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SPACE_AMP_CONF: u8,
     pub OBJ_ACT: Option<flatbuffers::WIPOffset<&'a str>>,
     pub SPACE_SPEC_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ACFT_SUB_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -789,12 +1125,12 @@ pub struct MSTArgs<'a> {
     pub MUID_SRC_TRK: Option<flatbuffers::WIPOffset<&'a str>>,
     pub MUID_SRC: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ALERT: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub MSL_STATUS: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub MSL_STATUS: missileStatus,
     pub TS: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub AOU_RPT_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub AOU_RPT_TYPE: aouReportType,
     pub CONTAINMENT: f64,
     pub TRK_CONF: f64,
-    pub TRK_QUAL: i32,
+    pub TRK_QUAL: u8,
     pub ANG_ELEV: f64,
     pub SEN_MODE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub INFO_SOURCE: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -803,17 +1139,16 @@ pub struct MSTArgs<'a> {
     pub POLAR_SING_LOC_LON: f64,
     pub EMG_IND: bool,
     pub DROP_PT_IND: bool,
-    pub SPACE_AMP_CONF: i32,
     pub LAUNCH_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub LAUNCH_LAT: f64,
     pub LAUNCH_LON: f64,
     pub AZ_CORR: f64,
     pub BURNOUT_ALT: f64,
-    pub LAUNCH_AOU_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub LAUNCH_AOU_TYPE: aouReportType,
     pub IMPACT_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub IMPACT_LAT: f64,
     pub IMPACT_LON: f64,
-    pub IMPACT_AOU_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub IMPACT_AOU_TYPE: aouReportType,
     pub VECTOR_START_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub VECTOR_STEP_SIZE: f64,
     pub VECTOR_COMPONENTS: u8,
@@ -830,12 +1165,13 @@ impl<'a> Default for MSTArgs<'a> {
       MSG_TYPE: None,
       MSG_SUB_TYPE: None,
       MSG_CREATE_DATE: None,
-      ENVIRONMENT: None,
+      ENVIRONMENT: missileEnvironment::SPACE,
       OBJ_TYPE: None,
       OBJ_TYPE_CONF: 0,
       OBJ_PLAT: None,
       OBJ_IDENT: None,
       SPACE_AMP: None,
+      SPACE_AMP_CONF: 0,
       OBJ_ACT: None,
       SPACE_SPEC_TYPE: None,
       ACFT_SUB_TYPE: None,
@@ -847,9 +1183,9 @@ impl<'a> Default for MSTArgs<'a> {
       MUID_SRC_TRK: None,
       MUID_SRC: None,
       ALERT: None,
-      MSL_STATUS: None,
+      MSL_STATUS: missileStatus::BOOSTING,
       TS: None,
-      AOU_RPT_TYPE: None,
+      AOU_RPT_TYPE: aouReportType::CIRCULAR,
       CONTAINMENT: 0.0,
       TRK_CONF: 0.0,
       TRK_QUAL: 0,
@@ -861,17 +1197,16 @@ impl<'a> Default for MSTArgs<'a> {
       POLAR_SING_LOC_LON: 0.0,
       EMG_IND: false,
       DROP_PT_IND: false,
-      SPACE_AMP_CONF: 0,
       LAUNCH_TIME: None,
       LAUNCH_LAT: 0.0,
       LAUNCH_LON: 0.0,
       AZ_CORR: 0.0,
       BURNOUT_ALT: 0.0,
-      LAUNCH_AOU_TYPE: None,
+      LAUNCH_AOU_TYPE: aouReportType::CIRCULAR,
       IMPACT_TIME: None,
       IMPACT_LAT: 0.0,
       IMPACT_LON: 0.0,
-      IMPACT_AOU_TYPE: None,
+      IMPACT_AOU_TYPE: aouReportType::CIRCULAR,
       VECTOR_START_TIME: None,
       VECTOR_STEP_SIZE: 0.0,
       VECTOR_COMPONENTS: 6,
@@ -905,16 +1240,16 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> MSTBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MST::VT_MSG_CREATE_DATE, MSG_CREATE_DATE);
   }
   #[inline]
-  pub fn add_ENVIRONMENT(&mut self, ENVIRONMENT: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MST::VT_ENVIRONMENT, ENVIRONMENT);
+  pub fn add_ENVIRONMENT(&mut self, ENVIRONMENT: missileEnvironment) {
+    self.fbb_.push_slot::<missileEnvironment>(MST::VT_ENVIRONMENT, ENVIRONMENT, missileEnvironment::SPACE);
   }
   #[inline]
   pub fn add_OBJ_TYPE(&mut self, OBJ_TYPE: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MST::VT_OBJ_TYPE, OBJ_TYPE);
   }
   #[inline]
-  pub fn add_OBJ_TYPE_CONF(&mut self, OBJ_TYPE_CONF: i32) {
-    self.fbb_.push_slot::<i32>(MST::VT_OBJ_TYPE_CONF, OBJ_TYPE_CONF, 0);
+  pub fn add_OBJ_TYPE_CONF(&mut self, OBJ_TYPE_CONF: u8) {
+    self.fbb_.push_slot::<u8>(MST::VT_OBJ_TYPE_CONF, OBJ_TYPE_CONF, 0);
   }
   #[inline]
   pub fn add_OBJ_PLAT(&mut self, OBJ_PLAT: flatbuffers::WIPOffset<&'b  str>) {
@@ -927,6 +1262,10 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> MSTBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_SPACE_AMP(&mut self, SPACE_AMP: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MST::VT_SPACE_AMP, SPACE_AMP);
+  }
+  #[inline]
+  pub fn add_SPACE_AMP_CONF(&mut self, SPACE_AMP_CONF: u8) {
+    self.fbb_.push_slot::<u8>(MST::VT_SPACE_AMP_CONF, SPACE_AMP_CONF, 0);
   }
   #[inline]
   pub fn add_OBJ_ACT(&mut self, OBJ_ACT: flatbuffers::WIPOffset<&'b  str>) {
@@ -973,16 +1312,16 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> MSTBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MST::VT_ALERT, ALERT);
   }
   #[inline]
-  pub fn add_MSL_STATUS(&mut self, MSL_STATUS: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MST::VT_MSL_STATUS, MSL_STATUS);
+  pub fn add_MSL_STATUS(&mut self, MSL_STATUS: missileStatus) {
+    self.fbb_.push_slot::<missileStatus>(MST::VT_MSL_STATUS, MSL_STATUS, missileStatus::BOOSTING);
   }
   #[inline]
   pub fn add_TS(&mut self, TS: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MST::VT_TS, TS);
   }
   #[inline]
-  pub fn add_AOU_RPT_TYPE(&mut self, AOU_RPT_TYPE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MST::VT_AOU_RPT_TYPE, AOU_RPT_TYPE);
+  pub fn add_AOU_RPT_TYPE(&mut self, AOU_RPT_TYPE: aouReportType) {
+    self.fbb_.push_slot::<aouReportType>(MST::VT_AOU_RPT_TYPE, AOU_RPT_TYPE, aouReportType::CIRCULAR);
   }
   #[inline]
   pub fn add_CONTAINMENT(&mut self, CONTAINMENT: f64) {
@@ -993,8 +1332,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> MSTBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(MST::VT_TRK_CONF, TRK_CONF, 0.0);
   }
   #[inline]
-  pub fn add_TRK_QUAL(&mut self, TRK_QUAL: i32) {
-    self.fbb_.push_slot::<i32>(MST::VT_TRK_QUAL, TRK_QUAL, 0);
+  pub fn add_TRK_QUAL(&mut self, TRK_QUAL: u8) {
+    self.fbb_.push_slot::<u8>(MST::VT_TRK_QUAL, TRK_QUAL, 0);
   }
   #[inline]
   pub fn add_ANG_ELEV(&mut self, ANG_ELEV: f64) {
@@ -1029,10 +1368,6 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> MSTBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<bool>(MST::VT_DROP_PT_IND, DROP_PT_IND, false);
   }
   #[inline]
-  pub fn add_SPACE_AMP_CONF(&mut self, SPACE_AMP_CONF: i32) {
-    self.fbb_.push_slot::<i32>(MST::VT_SPACE_AMP_CONF, SPACE_AMP_CONF, 0);
-  }
-  #[inline]
   pub fn add_LAUNCH_TIME(&mut self, LAUNCH_TIME: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MST::VT_LAUNCH_TIME, LAUNCH_TIME);
   }
@@ -1053,8 +1388,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> MSTBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(MST::VT_BURNOUT_ALT, BURNOUT_ALT, 0.0);
   }
   #[inline]
-  pub fn add_LAUNCH_AOU_TYPE(&mut self, LAUNCH_AOU_TYPE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MST::VT_LAUNCH_AOU_TYPE, LAUNCH_AOU_TYPE);
+  pub fn add_LAUNCH_AOU_TYPE(&mut self, LAUNCH_AOU_TYPE: aouReportType) {
+    self.fbb_.push_slot::<aouReportType>(MST::VT_LAUNCH_AOU_TYPE, LAUNCH_AOU_TYPE, aouReportType::CIRCULAR);
   }
   #[inline]
   pub fn add_IMPACT_TIME(&mut self, IMPACT_TIME: flatbuffers::WIPOffset<&'b  str>) {
@@ -1069,8 +1404,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> MSTBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(MST::VT_IMPACT_LON, IMPACT_LON, 0.0);
   }
   #[inline]
-  pub fn add_IMPACT_AOU_TYPE(&mut self, IMPACT_AOU_TYPE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(MST::VT_IMPACT_AOU_TYPE, IMPACT_AOU_TYPE);
+  pub fn add_IMPACT_AOU_TYPE(&mut self, IMPACT_AOU_TYPE: aouReportType) {
+    self.fbb_.push_slot::<aouReportType>(MST::VT_IMPACT_AOU_TYPE, IMPACT_AOU_TYPE, aouReportType::CIRCULAR);
   }
   #[inline]
   pub fn add_VECTOR_START_TIME(&mut self, VECTOR_START_TIME: flatbuffers::WIPOffset<&'b  str>) {
@@ -1128,6 +1463,7 @@ impl core::fmt::Debug for MST<'_> {
       ds.field("OBJ_PLAT", &self.OBJ_PLAT());
       ds.field("OBJ_IDENT", &self.OBJ_IDENT());
       ds.field("SPACE_AMP", &self.SPACE_AMP());
+      ds.field("SPACE_AMP_CONF", &self.SPACE_AMP_CONF());
       ds.field("OBJ_ACT", &self.OBJ_ACT());
       ds.field("SPACE_SPEC_TYPE", &self.SPACE_SPEC_TYPE());
       ds.field("ACFT_SUB_TYPE", &self.ACFT_SUB_TYPE());
@@ -1153,7 +1489,6 @@ impl core::fmt::Debug for MST<'_> {
       ds.field("POLAR_SING_LOC_LON", &self.POLAR_SING_LOC_LON());
       ds.field("EMG_IND", &self.EMG_IND());
       ds.field("DROP_PT_IND", &self.DROP_PT_IND());
-      ds.field("SPACE_AMP_CONF", &self.SPACE_AMP_CONF());
       ds.field("LAUNCH_TIME", &self.LAUNCH_TIME());
       ds.field("LAUNCH_LAT", &self.LAUNCH_LAT());
       ds.field("LAUNCH_LON", &self.LAUNCH_LON());
@@ -1181,12 +1516,13 @@ pub struct MSTT {
   pub MSG_TYPE: Option<String>,
   pub MSG_SUB_TYPE: Option<String>,
   pub MSG_CREATE_DATE: Option<String>,
-  pub ENVIRONMENT: Option<String>,
+  pub ENVIRONMENT: missileEnvironment,
   pub OBJ_TYPE: Option<String>,
-  pub OBJ_TYPE_CONF: i32,
+  pub OBJ_TYPE_CONF: u8,
   pub OBJ_PLAT: Option<String>,
   pub OBJ_IDENT: Option<String>,
   pub SPACE_AMP: Option<String>,
+  pub SPACE_AMP_CONF: u8,
   pub OBJ_ACT: Option<String>,
   pub SPACE_SPEC_TYPE: Option<String>,
   pub ACFT_SUB_TYPE: Option<String>,
@@ -1198,12 +1534,12 @@ pub struct MSTT {
   pub MUID_SRC_TRK: Option<String>,
   pub MUID_SRC: Option<String>,
   pub ALERT: Option<String>,
-  pub MSL_STATUS: Option<String>,
+  pub MSL_STATUS: missileStatus,
   pub TS: Option<String>,
-  pub AOU_RPT_TYPE: Option<String>,
+  pub AOU_RPT_TYPE: aouReportType,
   pub CONTAINMENT: f64,
   pub TRK_CONF: f64,
-  pub TRK_QUAL: i32,
+  pub TRK_QUAL: u8,
   pub ANG_ELEV: f64,
   pub SEN_MODE: Option<String>,
   pub INFO_SOURCE: Option<String>,
@@ -1212,17 +1548,16 @@ pub struct MSTT {
   pub POLAR_SING_LOC_LON: f64,
   pub EMG_IND: bool,
   pub DROP_PT_IND: bool,
-  pub SPACE_AMP_CONF: i32,
   pub LAUNCH_TIME: Option<String>,
   pub LAUNCH_LAT: f64,
   pub LAUNCH_LON: f64,
   pub AZ_CORR: f64,
   pub BURNOUT_ALT: f64,
-  pub LAUNCH_AOU_TYPE: Option<String>,
+  pub LAUNCH_AOU_TYPE: aouReportType,
   pub IMPACT_TIME: Option<String>,
   pub IMPACT_LAT: f64,
   pub IMPACT_LON: f64,
-  pub IMPACT_AOU_TYPE: Option<String>,
+  pub IMPACT_AOU_TYPE: aouReportType,
   pub VECTOR_START_TIME: Option<String>,
   pub VECTOR_STEP_SIZE: f64,
   pub VECTOR_COMPONENTS: u8,
@@ -1238,12 +1573,13 @@ impl Default for MSTT {
       MSG_TYPE: None,
       MSG_SUB_TYPE: None,
       MSG_CREATE_DATE: None,
-      ENVIRONMENT: None,
+      ENVIRONMENT: missileEnvironment::SPACE,
       OBJ_TYPE: None,
       OBJ_TYPE_CONF: 0,
       OBJ_PLAT: None,
       OBJ_IDENT: None,
       SPACE_AMP: None,
+      SPACE_AMP_CONF: 0,
       OBJ_ACT: None,
       SPACE_SPEC_TYPE: None,
       ACFT_SUB_TYPE: None,
@@ -1255,9 +1591,9 @@ impl Default for MSTT {
       MUID_SRC_TRK: None,
       MUID_SRC: None,
       ALERT: None,
-      MSL_STATUS: None,
+      MSL_STATUS: missileStatus::BOOSTING,
       TS: None,
-      AOU_RPT_TYPE: None,
+      AOU_RPT_TYPE: aouReportType::CIRCULAR,
       CONTAINMENT: 0.0,
       TRK_CONF: 0.0,
       TRK_QUAL: 0,
@@ -1269,17 +1605,16 @@ impl Default for MSTT {
       POLAR_SING_LOC_LON: 0.0,
       EMG_IND: false,
       DROP_PT_IND: false,
-      SPACE_AMP_CONF: 0,
       LAUNCH_TIME: None,
       LAUNCH_LAT: 0.0,
       LAUNCH_LON: 0.0,
       AZ_CORR: 0.0,
       BURNOUT_ALT: 0.0,
-      LAUNCH_AOU_TYPE: None,
+      LAUNCH_AOU_TYPE: aouReportType::CIRCULAR,
       IMPACT_TIME: None,
       IMPACT_LAT: 0.0,
       IMPACT_LON: 0.0,
-      IMPACT_AOU_TYPE: None,
+      IMPACT_AOU_TYPE: aouReportType::CIRCULAR,
       VECTOR_START_TIME: None,
       VECTOR_STEP_SIZE: 0.0,
       VECTOR_COMPONENTS: 6,
@@ -1307,9 +1642,7 @@ impl MSTT {
     let MSG_CREATE_DATE = self.MSG_CREATE_DATE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let ENVIRONMENT = self.ENVIRONMENT.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+    let ENVIRONMENT = self.ENVIRONMENT;
     let OBJ_TYPE = self.OBJ_TYPE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -1323,6 +1656,7 @@ impl MSTT {
     let SPACE_AMP = self.SPACE_AMP.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let SPACE_AMP_CONF = self.SPACE_AMP_CONF;
     let OBJ_ACT = self.OBJ_ACT.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -1354,15 +1688,11 @@ impl MSTT {
     let ALERT = self.ALERT.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let MSL_STATUS = self.MSL_STATUS.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+    let MSL_STATUS = self.MSL_STATUS;
     let TS = self.TS.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let AOU_RPT_TYPE = self.AOU_RPT_TYPE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+    let AOU_RPT_TYPE = self.AOU_RPT_TYPE;
     let CONTAINMENT = self.CONTAINMENT;
     let TRK_CONF = self.TRK_CONF;
     let TRK_QUAL = self.TRK_QUAL;
@@ -1378,7 +1708,6 @@ impl MSTT {
     let POLAR_SING_LOC_LON = self.POLAR_SING_LOC_LON;
     let EMG_IND = self.EMG_IND;
     let DROP_PT_IND = self.DROP_PT_IND;
-    let SPACE_AMP_CONF = self.SPACE_AMP_CONF;
     let LAUNCH_TIME = self.LAUNCH_TIME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -1386,17 +1715,13 @@ impl MSTT {
     let LAUNCH_LON = self.LAUNCH_LON;
     let AZ_CORR = self.AZ_CORR;
     let BURNOUT_ALT = self.BURNOUT_ALT;
-    let LAUNCH_AOU_TYPE = self.LAUNCH_AOU_TYPE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+    let LAUNCH_AOU_TYPE = self.LAUNCH_AOU_TYPE;
     let IMPACT_TIME = self.IMPACT_TIME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let IMPACT_LAT = self.IMPACT_LAT;
     let IMPACT_LON = self.IMPACT_LON;
-    let IMPACT_AOU_TYPE = self.IMPACT_AOU_TYPE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+    let IMPACT_AOU_TYPE = self.IMPACT_AOU_TYPE;
     let VECTOR_START_TIME = self.VECTOR_START_TIME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -1425,6 +1750,7 @@ impl MSTT {
       OBJ_PLAT,
       OBJ_IDENT,
       SPACE_AMP,
+      SPACE_AMP_CONF,
       OBJ_ACT,
       SPACE_SPEC_TYPE,
       ACFT_SUB_TYPE,
@@ -1450,7 +1776,6 @@ impl MSTT {
       POLAR_SING_LOC_LON,
       EMG_IND,
       DROP_PT_IND,
-      SPACE_AMP_CONF,
       LAUNCH_TIME,
       LAUNCH_LAT,
       LAUNCH_LON,

@@ -41,44 +41,155 @@ class RFE extends Table
         return $this;
     }
 
+    /// Unique emitter identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Reference to parent entity
     public function getID_ENTITY()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Emitter name or designation
     public function getNAME()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Emitter type
+    /**
+     * @return sbyte
+     */
     public function getTYPE()
     {
         $o = $this->__offset(10);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \emitterType::RADAR;
     }
 
+    /// Parent entity designator
     public function getENTITY()
     {
         $o = $this->__offset(12);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// ELNOT (Electronic Notation)
+    public function getELNOT()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// NATO reporting name
+    public function getNATO_NAME()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Platform type (e.g., SHIP, AIRCRAFT, GROUND, SATELLITE)
+    public function getPLATFORM_TYPE()
+    {
+        $o = $this->__offset(18);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Country of origin
+    public function getCOUNTRY()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Primary function description
+    public function getFUNCTION()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Operating band (e.g., HF, VHF, UHF, L, S, C, X, Ku, Ka)
+    public function getBAND()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Minimum operating frequency in MHz
     /**
-     * @param int offset
-     * @return string
+     * @return double
+     */
+    public function getFREQ_MIN()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Maximum operating frequency in MHz
+    /**
+     * @return double
+     */
+    public function getFREQ_MAX()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Peak power in kW
+    /**
+     * @return double
+     */
+    public function getPEAK_POWER()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Average power in kW
+    /**
+     * @return double
+     */
+    public function getAVG_POWER()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Antenna gain in dBi
+    /**
+     * @return double
+     */
+    public function getANTENNA_GAIN()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Number of operating modes
+    /**
+     * @return uint
+     */
+    public function getNUM_MODES()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Emitter operating mode details
+    /**
+     * @returnVectorOffset
      */
     public function getRF_EMITTER_DETAILS($j)
     {
-        $o = $this->__offset(14);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        $o = $this->__offset(38);
+        $obj = new RfEmitterDetail();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
 
     /**
@@ -86,8 +197,22 @@ class RFE extends Table
      */
     public function getRF_EMITTER_DETAILSLength()
     {
-        $o = $this->__offset(14);
+        $o = $this->__offset(38);
         return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Threat level assessment
+    public function getTHREAT_LEVEL()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Additional notes
+    public function getNOTES()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /**
@@ -96,22 +221,36 @@ class RFE extends Table
      */
     public static function startRFE(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(6);
+        $builder->StartObject(20);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return RFE
      */
-    public static function createRFE(FlatBufferBuilder $builder, $ID, $ID_ENTITY, $NAME, $TYPE, $ENTITY, $RF_EMITTER_DETAILS)
+    public static function createRFE(FlatBufferBuilder $builder, $ID, $ID_ENTITY, $NAME, $TYPE, $ENTITY, $ELNOT, $NATO_NAME, $PLATFORM_TYPE, $COUNTRY, $FUNCTION, $BAND, $FREQ_MIN, $FREQ_MAX, $PEAK_POWER, $AVG_POWER, $ANTENNA_GAIN, $NUM_MODES, $RF_EMITTER_DETAILS, $THREAT_LEVEL, $NOTES)
     {
-        $builder->startObject(6);
+        $builder->startObject(20);
         self::addID($builder, $ID);
         self::addID_ENTITY($builder, $ID_ENTITY);
         self::addNAME($builder, $NAME);
         self::addTYPE($builder, $TYPE);
         self::addENTITY($builder, $ENTITY);
+        self::addELNOT($builder, $ELNOT);
+        self::addNATO_NAME($builder, $NATO_NAME);
+        self::addPLATFORM_TYPE($builder, $PLATFORM_TYPE);
+        self::addCOUNTRY($builder, $COUNTRY);
+        self::addFUNCTION($builder, $FUNCTION);
+        self::addBAND($builder, $BAND);
+        self::addFREQ_MIN($builder, $FREQ_MIN);
+        self::addFREQ_MAX($builder, $FREQ_MAX);
+        self::addPEAK_POWER($builder, $PEAK_POWER);
+        self::addAVG_POWER($builder, $AVG_POWER);
+        self::addANTENNA_GAIN($builder, $ANTENNA_GAIN);
+        self::addNUM_MODES($builder, $NUM_MODES);
         self::addRF_EMITTER_DETAILS($builder, $RF_EMITTER_DETAILS);
+        self::addTHREAT_LEVEL($builder, $THREAT_LEVEL);
+        self::addNOTES($builder, $NOTES);
         $o = $builder->endObject();
         return $o;
     }
@@ -148,12 +287,12 @@ class RFE extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addTYPE(FlatBufferBuilder $builder, $TYPE)
     {
-        $builder->addOffsetX(3, $TYPE, 0);
+        $builder->addSbyteX(3, $TYPE, 0);
     }
 
     /**
@@ -168,12 +307,132 @@ class RFE extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addELNOT(FlatBufferBuilder $builder, $ELNOT)
+    {
+        $builder->addOffsetX(5, $ELNOT, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addNATO_NAME(FlatBufferBuilder $builder, $NATO_NAME)
+    {
+        $builder->addOffsetX(6, $NATO_NAME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPLATFORM_TYPE(FlatBufferBuilder $builder, $PLATFORM_TYPE)
+    {
+        $builder->addOffsetX(7, $PLATFORM_TYPE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCOUNTRY(FlatBufferBuilder $builder, $COUNTRY)
+    {
+        $builder->addOffsetX(8, $COUNTRY, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addFUNCTION(FlatBufferBuilder $builder, $FUNCTION)
+    {
+        $builder->addOffsetX(9, $FUNCTION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addBAND(FlatBufferBuilder $builder, $BAND)
+    {
+        $builder->addOffsetX(10, $BAND, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addFREQ_MIN(FlatBufferBuilder $builder, $FREQ_MIN)
+    {
+        $builder->addDoubleX(11, $FREQ_MIN, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addFREQ_MAX(FlatBufferBuilder $builder, $FREQ_MAX)
+    {
+        $builder->addDoubleX(12, $FREQ_MAX, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPEAK_POWER(FlatBufferBuilder $builder, $PEAK_POWER)
+    {
+        $builder->addDoubleX(13, $PEAK_POWER, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addAVG_POWER(FlatBufferBuilder $builder, $AVG_POWER)
+    {
+        $builder->addDoubleX(14, $AVG_POWER, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addANTENNA_GAIN(FlatBufferBuilder $builder, $ANTENNA_GAIN)
+    {
+        $builder->addDoubleX(15, $ANTENNA_GAIN, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addNUM_MODES(FlatBufferBuilder $builder, $NUM_MODES)
+    {
+        $builder->addUintX(16, $NUM_MODES, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param VectorOffset
      * @return void
      */
     public static function addRF_EMITTER_DETAILS(FlatBufferBuilder $builder, $RF_EMITTER_DETAILS)
     {
-        $builder->addOffsetX(5, $RF_EMITTER_DETAILS, 0);
+        $builder->addOffsetX(17, $RF_EMITTER_DETAILS, 0);
     }
 
     /**
@@ -198,6 +457,26 @@ class RFE extends Table
     public static function startRF_EMITTER_DETAILSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addTHREAT_LEVEL(FlatBufferBuilder $builder, $THREAT_LEVEL)
+    {
+        $builder->addOffsetX(18, $THREAT_LEVEL, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addNOTES(FlatBufferBuilder $builder, $NOTES)
+    {
+        $builder->addOffsetX(19, $NOTES, 0);
     }
 
     /**

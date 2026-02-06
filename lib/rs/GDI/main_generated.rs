@@ -9,6 +9,115 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_IMAGE_FORMAT: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_IMAGE_FORMAT: i8 = 7;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_IMAGE_FORMAT: [imageFormat; 8] = [
+  imageFormat::FITS,
+  imageFormat::JPEG,
+  imageFormat::PNG,
+  imageFormat::TIFF,
+  imageFormat::RAW,
+  imageFormat::NITF,
+  imageFormat::GEOTIFF,
+  imageFormat::OTHER,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct imageFormat(pub i8);
+#[allow(non_upper_case_globals)]
+impl imageFormat {
+  pub const FITS: Self = Self(0);
+  pub const JPEG: Self = Self(1);
+  pub const PNG: Self = Self(2);
+  pub const TIFF: Self = Self(3);
+  pub const RAW: Self = Self(4);
+  pub const NITF: Self = Self(5);
+  pub const GEOTIFF: Self = Self(6);
+  pub const OTHER: Self = Self(7);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 7;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::FITS,
+    Self::JPEG,
+    Self::PNG,
+    Self::TIFF,
+    Self::RAW,
+    Self::NITF,
+    Self::GEOTIFF,
+    Self::OTHER,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::FITS => Some("FITS"),
+      Self::JPEG => Some("JPEG"),
+      Self::PNG => Some("PNG"),
+      Self::TIFF => Some("TIFF"),
+      Self::RAW => Some("RAW"),
+      Self::NITF => Some("NITF"),
+      Self::GEOTIFF => Some("GEOTIFF"),
+      Self::OTHER => Some("OTHER"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for imageFormat {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for imageFormat {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for imageFormat {
+    type Output = imageFormat;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for imageFormat {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for imageFormat {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for imageFormat {}
 pub enum GDIOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -28,24 +137,24 @@ impl<'a> flatbuffers::Follow<'a> for GDI<'a> {
 impl<'a> GDI<'a> {
   pub const VT_ID: flatbuffers::VOffsetT = 4;
   pub const VT_ID_SENSOR: flatbuffers::VOffsetT = 6;
-  pub const VT_IMAGE_TIME: flatbuffers::VOffsetT = 8;
-  pub const VT_FILENAME: flatbuffers::VOffsetT = 10;
-  pub const VT_REGION: flatbuffers::VOffsetT = 12;
-  pub const VT_REGION_TEXT: flatbuffers::VOffsetT = 14;
-  pub const VT_REGION_GEO_JSON: flatbuffers::VOffsetT = 16;
-  pub const VT_REGION_TYPE: flatbuffers::VOffsetT = 18;
-  pub const VT_REGION_NDIMS: flatbuffers::VOffsetT = 20;
-  pub const VT_REGION_SRID: flatbuffers::VOffsetT = 22;
-  pub const VT_ORIG_SENSOR_ID: flatbuffers::VOffsetT = 24;
-  pub const VT_SUBJECT_ID: flatbuffers::VOffsetT = 26;
-  pub const VT_NAME: flatbuffers::VOffsetT = 28;
-  pub const VT_TRANSACTION_ID: flatbuffers::VOffsetT = 30;
-  pub const VT_TAGS: flatbuffers::VOffsetT = 32;
-  pub const VT_KEYWORDS: flatbuffers::VOffsetT = 34;
-  pub const VT_NOTES: flatbuffers::VOffsetT = 36;
-  pub const VT_FORMAT: flatbuffers::VOffsetT = 38;
-  pub const VT_FILESIZE: flatbuffers::VOffsetT = 40;
-  pub const VT_CHECKSUM_VALUE: flatbuffers::VOffsetT = 42;
+  pub const VT_ORIG_SENSOR_ID: flatbuffers::VOffsetT = 8;
+  pub const VT_IMAGE_TIME: flatbuffers::VOffsetT = 10;
+  pub const VT_FILENAME: flatbuffers::VOffsetT = 12;
+  pub const VT_FORMAT: flatbuffers::VOffsetT = 14;
+  pub const VT_FILESIZE: flatbuffers::VOffsetT = 16;
+  pub const VT_CHECKSUM_VALUE: flatbuffers::VOffsetT = 18;
+  pub const VT_REGION_GEO_JSON: flatbuffers::VOffsetT = 20;
+  pub const VT_REGION_TEXT: flatbuffers::VOffsetT = 22;
+  pub const VT_REGION: flatbuffers::VOffsetT = 24;
+  pub const VT_REGION_TYPE: flatbuffers::VOffsetT = 26;
+  pub const VT_REGION_NDIMS: flatbuffers::VOffsetT = 28;
+  pub const VT_REGION_SRID: flatbuffers::VOffsetT = 30;
+  pub const VT_SUBJECT_ID: flatbuffers::VOffsetT = 32;
+  pub const VT_NAME: flatbuffers::VOffsetT = 34;
+  pub const VT_TRANSACTION_ID: flatbuffers::VOffsetT = 36;
+  pub const VT_TAGS: flatbuffers::VOffsetT = 38;
+  pub const VT_KEYWORDS: flatbuffers::VOffsetT = 40;
+  pub const VT_NOTES: flatbuffers::VOffsetT = 42;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -58,25 +167,25 @@ impl<'a> GDI<'a> {
   ) -> flatbuffers::WIPOffset<GDI<'bldr>> {
     let mut builder = GDIBuilder::new(_fbb);
     builder.add_FILESIZE(args.FILESIZE);
-    if let Some(x) = args.CHECKSUM_VALUE { builder.add_CHECKSUM_VALUE(x); }
-    if let Some(x) = args.FORMAT { builder.add_FORMAT(x); }
     if let Some(x) = args.NOTES { builder.add_NOTES(x); }
     if let Some(x) = args.KEYWORDS { builder.add_KEYWORDS(x); }
     if let Some(x) = args.TAGS { builder.add_TAGS(x); }
     if let Some(x) = args.TRANSACTION_ID { builder.add_TRANSACTION_ID(x); }
     if let Some(x) = args.NAME { builder.add_NAME(x); }
     if let Some(x) = args.SUBJECT_ID { builder.add_SUBJECT_ID(x); }
-    if let Some(x) = args.ORIG_SENSOR_ID { builder.add_ORIG_SENSOR_ID(x); }
-    builder.add_REGION_SRID(args.REGION_SRID);
-    builder.add_REGION_NDIMS(args.REGION_NDIMS);
     if let Some(x) = args.REGION_TYPE { builder.add_REGION_TYPE(x); }
-    if let Some(x) = args.REGION_GEO_JSON { builder.add_REGION_GEO_JSON(x); }
-    if let Some(x) = args.REGION_TEXT { builder.add_REGION_TEXT(x); }
     if let Some(x) = args.REGION { builder.add_REGION(x); }
+    if let Some(x) = args.REGION_TEXT { builder.add_REGION_TEXT(x); }
+    if let Some(x) = args.REGION_GEO_JSON { builder.add_REGION_GEO_JSON(x); }
+    if let Some(x) = args.CHECKSUM_VALUE { builder.add_CHECKSUM_VALUE(x); }
     if let Some(x) = args.FILENAME { builder.add_FILENAME(x); }
     if let Some(x) = args.IMAGE_TIME { builder.add_IMAGE_TIME(x); }
+    if let Some(x) = args.ORIG_SENSOR_ID { builder.add_ORIG_SENSOR_ID(x); }
     if let Some(x) = args.ID_SENSOR { builder.add_ID_SENSOR(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_REGION_SRID(args.REGION_SRID);
+    builder.add_REGION_NDIMS(args.REGION_NDIMS);
+    builder.add_FORMAT(args.FORMAT);
     builder.finish()
   }
 
@@ -87,19 +196,27 @@ impl<'a> GDI<'a> {
     let ID_SENSOR = self.ID_SENSOR().map(|x| {
       x.to_string()
     });
+    let ORIG_SENSOR_ID = self.ORIG_SENSOR_ID().map(|x| {
+      x.to_string()
+    });
     let IMAGE_TIME = self.IMAGE_TIME().map(|x| {
       x.to_string()
     });
     let FILENAME = self.FILENAME().map(|x| {
       x.to_string()
     });
-    let REGION = self.REGION().map(|x| {
+    let FORMAT = self.FORMAT();
+    let FILESIZE = self.FILESIZE();
+    let CHECKSUM_VALUE = self.CHECKSUM_VALUE().map(|x| {
+      x.to_string()
+    });
+    let REGION_GEO_JSON = self.REGION_GEO_JSON().map(|x| {
       x.to_string()
     });
     let REGION_TEXT = self.REGION_TEXT().map(|x| {
       x.to_string()
     });
-    let REGION_GEO_JSON = self.REGION_GEO_JSON().map(|x| {
+    let REGION = self.REGION().map(|x| {
       x.to_string()
     });
     let REGION_TYPE = self.REGION_TYPE().map(|x| {
@@ -107,9 +224,6 @@ impl<'a> GDI<'a> {
     });
     let REGION_NDIMS = self.REGION_NDIMS();
     let REGION_SRID = self.REGION_SRID();
-    let ORIG_SENSOR_ID = self.ORIG_SENSOR_ID().map(|x| {
-      x.to_string()
-    });
     let SUBJECT_ID = self.SUBJECT_ID().map(|x| {
       x.to_string()
     });
@@ -128,37 +242,31 @@ impl<'a> GDI<'a> {
     let NOTES = self.NOTES().map(|x| {
       x.to_string()
     });
-    let FORMAT = self.FORMAT().map(|x| {
-      x.to_string()
-    });
-    let FILESIZE = self.FILESIZE();
-    let CHECKSUM_VALUE = self.CHECKSUM_VALUE().map(|x| {
-      x.to_string()
-    });
     GDIT {
       ID,
       ID_SENSOR,
+      ORIG_SENSOR_ID,
       IMAGE_TIME,
       FILENAME,
-      REGION,
-      REGION_TEXT,
+      FORMAT,
+      FILESIZE,
+      CHECKSUM_VALUE,
       REGION_GEO_JSON,
+      REGION_TEXT,
+      REGION,
       REGION_TYPE,
       REGION_NDIMS,
       REGION_SRID,
-      ORIG_SENSOR_ID,
       SUBJECT_ID,
       NAME,
       TRANSACTION_ID,
       TAGS,
       KEYWORDS,
       NOTES,
-      FORMAT,
-      FILESIZE,
-      CHECKSUM_VALUE,
     }
   }
 
+  /// Unique identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -166,6 +274,7 @@ impl<'a> GDI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GDI::VT_ID, None)}
   }
+  /// Sensor identifier
   #[inline]
   pub fn ID_SENSOR(&self) -> Option<&'a str> {
     // Safety:
@@ -173,62 +282,7 @@ impl<'a> GDI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GDI::VT_ID_SENSOR, None)}
   }
-  #[inline]
-  pub fn IMAGE_TIME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GDI::VT_IMAGE_TIME, None)}
-  }
-  #[inline]
-  pub fn FILENAME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GDI::VT_FILENAME, None)}
-  }
-  #[inline]
-  pub fn REGION(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GDI::VT_REGION, None)}
-  }
-  #[inline]
-  pub fn REGION_TEXT(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GDI::VT_REGION_TEXT, None)}
-  }
-  #[inline]
-  pub fn REGION_GEO_JSON(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GDI::VT_REGION_GEO_JSON, None)}
-  }
-  #[inline]
-  pub fn REGION_TYPE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GDI::VT_REGION_TYPE, None)}
-  }
-  #[inline]
-  pub fn REGION_NDIMS(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(GDI::VT_REGION_NDIMS, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn REGION_SRID(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(GDI::VT_REGION_SRID, Some(0)).unwrap()}
-  }
+  /// Original sensor identifier
   #[inline]
   pub fn ORIG_SENSOR_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -236,55 +290,31 @@ impl<'a> GDI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GDI::VT_ORIG_SENSOR_ID, None)}
   }
+  /// Image capture time (ISO 8601)
   #[inline]
-  pub fn SUBJECT_ID(&self) -> Option<&'a str> {
+  pub fn IMAGE_TIME(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GDI::VT_SUBJECT_ID, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GDI::VT_IMAGE_TIME, None)}
   }
+  /// Image filename
   #[inline]
-  pub fn NAME(&self) -> Option<&'a str> {
+  pub fn FILENAME(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GDI::VT_NAME, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GDI::VT_FILENAME, None)}
   }
+  /// Image format
   #[inline]
-  pub fn TRANSACTION_ID(&self) -> Option<&'a str> {
+  pub fn FORMAT(&self) -> imageFormat {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GDI::VT_TRANSACTION_ID, None)}
+    unsafe { self._tab.get::<imageFormat>(GDI::VT_FORMAT, Some(imageFormat::FITS)).unwrap()}
   }
-  #[inline]
-  pub fn TAGS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(GDI::VT_TAGS, None)}
-  }
-  #[inline]
-  pub fn KEYWORDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(GDI::VT_KEYWORDS, None)}
-  }
-  #[inline]
-  pub fn NOTES(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GDI::VT_NOTES, None)}
-  }
-  #[inline]
-  pub fn FORMAT(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GDI::VT_FORMAT, None)}
-  }
+  /// File size (bytes)
   #[inline]
   pub fn FILESIZE(&self) -> i64 {
     // Safety:
@@ -292,12 +322,109 @@ impl<'a> GDI<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<i64>(GDI::VT_FILESIZE, Some(0)).unwrap()}
   }
+  /// File checksum value
   #[inline]
   pub fn CHECKSUM_VALUE(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GDI::VT_CHECKSUM_VALUE, None)}
+  }
+  /// Region GeoJSON boundary
+  #[inline]
+  pub fn REGION_GEO_JSON(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GDI::VT_REGION_GEO_JSON, None)}
+  }
+  /// Region text description
+  #[inline]
+  pub fn REGION_TEXT(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GDI::VT_REGION_TEXT, None)}
+  }
+  /// Region name
+  #[inline]
+  pub fn REGION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GDI::VT_REGION, None)}
+  }
+  /// Region type
+  #[inline]
+  pub fn REGION_TYPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GDI::VT_REGION_TYPE, None)}
+  }
+  /// Region geometry dimensions
+  #[inline]
+  pub fn REGION_NDIMS(&self) -> u8 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u8>(GDI::VT_REGION_NDIMS, Some(0)).unwrap()}
+  }
+  /// Region spatial reference ID
+  #[inline]
+  pub fn REGION_SRID(&self) -> u16 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u16>(GDI::VT_REGION_SRID, Some(0)).unwrap()}
+  }
+  /// Subject object identifier
+  #[inline]
+  pub fn SUBJECT_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GDI::VT_SUBJECT_ID, None)}
+  }
+  /// Image name or title
+  #[inline]
+  pub fn NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GDI::VT_NAME, None)}
+  }
+  /// Transaction identifier
+  #[inline]
+  pub fn TRANSACTION_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GDI::VT_TRANSACTION_ID, None)}
+  }
+  /// Associated tags
+  #[inline]
+  pub fn TAGS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(GDI::VT_TAGS, None)}
+  }
+  /// Keywords for search/classification
+  #[inline]
+  pub fn KEYWORDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(GDI::VT_KEYWORDS, None)}
+  }
+  /// Notes
+  #[inline]
+  pub fn NOTES(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(GDI::VT_NOTES, None)}
   }
 }
 
@@ -310,24 +437,24 @@ impl flatbuffers::Verifiable for GDI<'_> {
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID_SENSOR", Self::VT_ID_SENSOR, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_SENSOR_ID", Self::VT_ORIG_SENSOR_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("IMAGE_TIME", Self::VT_IMAGE_TIME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("FILENAME", Self::VT_FILENAME, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REGION", Self::VT_REGION, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REGION_TEXT", Self::VT_REGION_TEXT, false)?
+     .visit_field::<imageFormat>("FORMAT", Self::VT_FORMAT, false)?
+     .visit_field::<i64>("FILESIZE", Self::VT_FILESIZE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CHECKSUM_VALUE", Self::VT_CHECKSUM_VALUE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REGION_GEO_JSON", Self::VT_REGION_GEO_JSON, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REGION_TEXT", Self::VT_REGION_TEXT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REGION", Self::VT_REGION, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REGION_TYPE", Self::VT_REGION_TYPE, false)?
-     .visit_field::<i32>("REGION_NDIMS", Self::VT_REGION_NDIMS, false)?
-     .visit_field::<i32>("REGION_SRID", Self::VT_REGION_SRID, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_SENSOR_ID", Self::VT_ORIG_SENSOR_ID, false)?
+     .visit_field::<u8>("REGION_NDIMS", Self::VT_REGION_NDIMS, false)?
+     .visit_field::<u16>("REGION_SRID", Self::VT_REGION_SRID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SUBJECT_ID", Self::VT_SUBJECT_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRANSACTION_ID", Self::VT_TRANSACTION_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("TAGS", Self::VT_TAGS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("KEYWORDS", Self::VT_KEYWORDS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NOTES", Self::VT_NOTES, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("FORMAT", Self::VT_FORMAT, false)?
-     .visit_field::<i64>("FILESIZE", Self::VT_FILESIZE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CHECKSUM_VALUE", Self::VT_CHECKSUM_VALUE, false)?
      .finish();
     Ok(())
   }
@@ -335,24 +462,24 @@ impl flatbuffers::Verifiable for GDI<'_> {
 pub struct GDIArgs<'a> {
     pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ID_SENSOR: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ORIG_SENSOR_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub IMAGE_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub FILENAME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub REGION: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub REGION_TEXT: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub FORMAT: imageFormat,
+    pub FILESIZE: i64,
+    pub CHECKSUM_VALUE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub REGION_GEO_JSON: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub REGION_TEXT: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub REGION: Option<flatbuffers::WIPOffset<&'a str>>,
     pub REGION_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub REGION_NDIMS: i32,
-    pub REGION_SRID: i32,
-    pub ORIG_SENSOR_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub REGION_NDIMS: u8,
+    pub REGION_SRID: u16,
     pub SUBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub NAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TRANSACTION_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TAGS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub KEYWORDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub NOTES: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub FORMAT: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub FILESIZE: i64,
-    pub CHECKSUM_VALUE: Option<flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for GDIArgs<'a> {
   #[inline]
@@ -360,24 +487,24 @@ impl<'a> Default for GDIArgs<'a> {
     GDIArgs {
       ID: None,
       ID_SENSOR: None,
+      ORIG_SENSOR_ID: None,
       IMAGE_TIME: None,
       FILENAME: None,
-      REGION: None,
-      REGION_TEXT: None,
+      FORMAT: imageFormat::FITS,
+      FILESIZE: 0,
+      CHECKSUM_VALUE: None,
       REGION_GEO_JSON: None,
+      REGION_TEXT: None,
+      REGION: None,
       REGION_TYPE: None,
       REGION_NDIMS: 0,
       REGION_SRID: 0,
-      ORIG_SENSOR_ID: None,
       SUBJECT_ID: None,
       NAME: None,
       TRANSACTION_ID: None,
       TAGS: None,
       KEYWORDS: None,
       NOTES: None,
-      FORMAT: None,
-      FILESIZE: 0,
-      CHECKSUM_VALUE: None,
     }
   }
 }
@@ -396,6 +523,10 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> GDIBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GDI::VT_ID_SENSOR, ID_SENSOR);
   }
   #[inline]
+  pub fn add_ORIG_SENSOR_ID(&mut self, ORIG_SENSOR_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GDI::VT_ORIG_SENSOR_ID, ORIG_SENSOR_ID);
+  }
+  #[inline]
   pub fn add_IMAGE_TIME(&mut self, IMAGE_TIME: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GDI::VT_IMAGE_TIME, IMAGE_TIME);
   }
@@ -404,32 +535,40 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> GDIBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GDI::VT_FILENAME, FILENAME);
   }
   #[inline]
-  pub fn add_REGION(&mut self, REGION: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GDI::VT_REGION, REGION);
+  pub fn add_FORMAT(&mut self, FORMAT: imageFormat) {
+    self.fbb_.push_slot::<imageFormat>(GDI::VT_FORMAT, FORMAT, imageFormat::FITS);
   }
   #[inline]
-  pub fn add_REGION_TEXT(&mut self, REGION_TEXT: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GDI::VT_REGION_TEXT, REGION_TEXT);
+  pub fn add_FILESIZE(&mut self, FILESIZE: i64) {
+    self.fbb_.push_slot::<i64>(GDI::VT_FILESIZE, FILESIZE, 0);
+  }
+  #[inline]
+  pub fn add_CHECKSUM_VALUE(&mut self, CHECKSUM_VALUE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GDI::VT_CHECKSUM_VALUE, CHECKSUM_VALUE);
   }
   #[inline]
   pub fn add_REGION_GEO_JSON(&mut self, REGION_GEO_JSON: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GDI::VT_REGION_GEO_JSON, REGION_GEO_JSON);
   }
   #[inline]
+  pub fn add_REGION_TEXT(&mut self, REGION_TEXT: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GDI::VT_REGION_TEXT, REGION_TEXT);
+  }
+  #[inline]
+  pub fn add_REGION(&mut self, REGION: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GDI::VT_REGION, REGION);
+  }
+  #[inline]
   pub fn add_REGION_TYPE(&mut self, REGION_TYPE: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GDI::VT_REGION_TYPE, REGION_TYPE);
   }
   #[inline]
-  pub fn add_REGION_NDIMS(&mut self, REGION_NDIMS: i32) {
-    self.fbb_.push_slot::<i32>(GDI::VT_REGION_NDIMS, REGION_NDIMS, 0);
+  pub fn add_REGION_NDIMS(&mut self, REGION_NDIMS: u8) {
+    self.fbb_.push_slot::<u8>(GDI::VT_REGION_NDIMS, REGION_NDIMS, 0);
   }
   #[inline]
-  pub fn add_REGION_SRID(&mut self, REGION_SRID: i32) {
-    self.fbb_.push_slot::<i32>(GDI::VT_REGION_SRID, REGION_SRID, 0);
-  }
-  #[inline]
-  pub fn add_ORIG_SENSOR_ID(&mut self, ORIG_SENSOR_ID: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GDI::VT_ORIG_SENSOR_ID, ORIG_SENSOR_ID);
+  pub fn add_REGION_SRID(&mut self, REGION_SRID: u16) {
+    self.fbb_.push_slot::<u16>(GDI::VT_REGION_SRID, REGION_SRID, 0);
   }
   #[inline]
   pub fn add_SUBJECT_ID(&mut self, SUBJECT_ID: flatbuffers::WIPOffset<&'b  str>) {
@@ -456,18 +595,6 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> GDIBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GDI::VT_NOTES, NOTES);
   }
   #[inline]
-  pub fn add_FORMAT(&mut self, FORMAT: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GDI::VT_FORMAT, FORMAT);
-  }
-  #[inline]
-  pub fn add_FILESIZE(&mut self, FILESIZE: i64) {
-    self.fbb_.push_slot::<i64>(GDI::VT_FILESIZE, FILESIZE, 0);
-  }
-  #[inline]
-  pub fn add_CHECKSUM_VALUE(&mut self, CHECKSUM_VALUE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(GDI::VT_CHECKSUM_VALUE, CHECKSUM_VALUE);
-  }
-  #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> GDIBuilder<'a, 'b, A> {
     let start = _fbb.start_table();
     GDIBuilder {
@@ -487,24 +614,24 @@ impl core::fmt::Debug for GDI<'_> {
     let mut ds = f.debug_struct("GDI");
       ds.field("ID", &self.ID());
       ds.field("ID_SENSOR", &self.ID_SENSOR());
+      ds.field("ORIG_SENSOR_ID", &self.ORIG_SENSOR_ID());
       ds.field("IMAGE_TIME", &self.IMAGE_TIME());
       ds.field("FILENAME", &self.FILENAME());
-      ds.field("REGION", &self.REGION());
-      ds.field("REGION_TEXT", &self.REGION_TEXT());
+      ds.field("FORMAT", &self.FORMAT());
+      ds.field("FILESIZE", &self.FILESIZE());
+      ds.field("CHECKSUM_VALUE", &self.CHECKSUM_VALUE());
       ds.field("REGION_GEO_JSON", &self.REGION_GEO_JSON());
+      ds.field("REGION_TEXT", &self.REGION_TEXT());
+      ds.field("REGION", &self.REGION());
       ds.field("REGION_TYPE", &self.REGION_TYPE());
       ds.field("REGION_NDIMS", &self.REGION_NDIMS());
       ds.field("REGION_SRID", &self.REGION_SRID());
-      ds.field("ORIG_SENSOR_ID", &self.ORIG_SENSOR_ID());
       ds.field("SUBJECT_ID", &self.SUBJECT_ID());
       ds.field("NAME", &self.NAME());
       ds.field("TRANSACTION_ID", &self.TRANSACTION_ID());
       ds.field("TAGS", &self.TAGS());
       ds.field("KEYWORDS", &self.KEYWORDS());
       ds.field("NOTES", &self.NOTES());
-      ds.field("FORMAT", &self.FORMAT());
-      ds.field("FILESIZE", &self.FILESIZE());
-      ds.field("CHECKSUM_VALUE", &self.CHECKSUM_VALUE());
       ds.finish()
   }
 }
@@ -513,48 +640,48 @@ impl core::fmt::Debug for GDI<'_> {
 pub struct GDIT {
   pub ID: Option<String>,
   pub ID_SENSOR: Option<String>,
+  pub ORIG_SENSOR_ID: Option<String>,
   pub IMAGE_TIME: Option<String>,
   pub FILENAME: Option<String>,
-  pub REGION: Option<String>,
-  pub REGION_TEXT: Option<String>,
+  pub FORMAT: imageFormat,
+  pub FILESIZE: i64,
+  pub CHECKSUM_VALUE: Option<String>,
   pub REGION_GEO_JSON: Option<String>,
+  pub REGION_TEXT: Option<String>,
+  pub REGION: Option<String>,
   pub REGION_TYPE: Option<String>,
-  pub REGION_NDIMS: i32,
-  pub REGION_SRID: i32,
-  pub ORIG_SENSOR_ID: Option<String>,
+  pub REGION_NDIMS: u8,
+  pub REGION_SRID: u16,
   pub SUBJECT_ID: Option<String>,
   pub NAME: Option<String>,
   pub TRANSACTION_ID: Option<String>,
   pub TAGS: Option<Vec<String>>,
   pub KEYWORDS: Option<Vec<String>>,
   pub NOTES: Option<String>,
-  pub FORMAT: Option<String>,
-  pub FILESIZE: i64,
-  pub CHECKSUM_VALUE: Option<String>,
 }
 impl Default for GDIT {
   fn default() -> Self {
     Self {
       ID: None,
       ID_SENSOR: None,
+      ORIG_SENSOR_ID: None,
       IMAGE_TIME: None,
       FILENAME: None,
-      REGION: None,
-      REGION_TEXT: None,
+      FORMAT: imageFormat::FITS,
+      FILESIZE: 0,
+      CHECKSUM_VALUE: None,
       REGION_GEO_JSON: None,
+      REGION_TEXT: None,
+      REGION: None,
       REGION_TYPE: None,
       REGION_NDIMS: 0,
       REGION_SRID: 0,
-      ORIG_SENSOR_ID: None,
       SUBJECT_ID: None,
       NAME: None,
       TRANSACTION_ID: None,
       TAGS: None,
       KEYWORDS: None,
       NOTES: None,
-      FORMAT: None,
-      FILESIZE: 0,
-      CHECKSUM_VALUE: None,
     }
   }
 }
@@ -569,19 +696,27 @@ impl GDIT {
     let ID_SENSOR = self.ID_SENSOR.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let ORIG_SENSOR_ID = self.ORIG_SENSOR_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     let IMAGE_TIME = self.IMAGE_TIME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let FILENAME = self.FILENAME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let REGION = self.REGION.as_ref().map(|x|{
+    let FORMAT = self.FORMAT;
+    let FILESIZE = self.FILESIZE;
+    let CHECKSUM_VALUE = self.CHECKSUM_VALUE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let REGION_GEO_JSON = self.REGION_GEO_JSON.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let REGION_TEXT = self.REGION_TEXT.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let REGION_GEO_JSON = self.REGION_GEO_JSON.as_ref().map(|x|{
+    let REGION = self.REGION.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let REGION_TYPE = self.REGION_TYPE.as_ref().map(|x|{
@@ -589,9 +724,6 @@ impl GDIT {
     });
     let REGION_NDIMS = self.REGION_NDIMS;
     let REGION_SRID = self.REGION_SRID;
-    let ORIG_SENSOR_ID = self.ORIG_SENSOR_ID.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
     let SUBJECT_ID = self.SUBJECT_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -610,34 +742,27 @@ impl GDIT {
     let NOTES = self.NOTES.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let FORMAT = self.FORMAT.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let FILESIZE = self.FILESIZE;
-    let CHECKSUM_VALUE = self.CHECKSUM_VALUE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
     GDI::create(_fbb, &GDIArgs{
       ID,
       ID_SENSOR,
+      ORIG_SENSOR_ID,
       IMAGE_TIME,
       FILENAME,
-      REGION,
-      REGION_TEXT,
+      FORMAT,
+      FILESIZE,
+      CHECKSUM_VALUE,
       REGION_GEO_JSON,
+      REGION_TEXT,
+      REGION,
       REGION_TYPE,
       REGION_NDIMS,
       REGION_SRID,
-      ORIG_SENSOR_ID,
       SUBJECT_ID,
       NAME,
       TRANSACTION_ID,
       TAGS,
       KEYWORDS,
       NOTES,
-      FORMAT,
-      FILESIZE,
-      CHECKSUM_VALUE,
     })
   }
 }

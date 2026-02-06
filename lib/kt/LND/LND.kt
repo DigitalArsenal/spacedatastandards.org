@@ -29,6 +29,9 @@ class LND : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Unique identifier
+     */
     val ID : String?
         get() {
             val o = __offset(4)
@@ -40,7 +43,10 @@ class LND : Table() {
         }
     val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val LAUNCH_TIME : String?
+    /**
+     * Detection event identifier
+     */
+    val EVENT_ID : String?
         get() {
             val o = __offset(6)
             return if (o != 0) {
@@ -49,109 +55,215 @@ class LND : Table() {
                 null
             }
         }
-    val LAUNCH_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
-    fun LAUNCH_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
-    val MESSAGE_TYPE : String?
+    val EVENT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
+    fun EVENT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    /**
+     * Detection type
+     */
+    val DETECTION_TYPE : Byte
         get() {
             val o = __offset(8)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Detection message type code
+     */
+    val MESSAGE_TYPE : String?
+        get() {
+            val o = __offset(10)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val MESSAGE_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun MESSAGE_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val LAUNCH_LATITUDE : Double
-        get() {
-            val o = __offset(10)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val LAUNCH_LONGITUDE : Double
+    val MESSAGE_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
+    fun MESSAGE_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    /**
+     * Time of launch detection (ISO 8601)
+     */
+    val LAUNCH_TIME : String?
         get() {
             val o = __offset(12)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
-    val LAUNCH_AZIMUTH : Double
+    val LAUNCH_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
+    fun LAUNCH_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * Launch site latitude (degrees)
+     */
+    val LAUNCH_LATITUDE : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val RAAN : Double
+    /**
+     * Launch site longitude (degrees)
+     */
+    val LAUNCH_LONGITUDE : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val INCLINATION : Double
+    /**
+     * Launch azimuth (degrees from north)
+     */
+    val LAUNCH_AZIMUTH : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val OBSERVATION_TIME : String?
+    /**
+     * Estimated RAAN (degrees)
+     */
+    val RAAN : Double
         get() {
             val o = __offset(20)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val OBSERVATION_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun OBSERVATION_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
-    val OBSERVATION_LATITUDE : Double
+    /**
+     * Estimated inclination (degrees)
+     */
+    val INCLINATION : Double
         get() {
             val o = __offset(22)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val OBSERVATION_LONGITUDE : Double
+    /**
+     * Time of trajectory observation (ISO 8601)
+     */
+    val OBSERVATION_TIME : String?
         get() {
             val o = __offset(24)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
-    val OBSERVATION_ALTITUDE : Double
+    val OBSERVATION_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
+    fun OBSERVATION_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    /**
+     * Observation point latitude (degrees)
+     */
+    val OBSERVATION_LATITUDE : Double
         get() {
             val o = __offset(26)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val STEREO_FLAG : Boolean
+    /**
+     * Observation point longitude (degrees)
+     */
+    val OBSERVATION_LONGITUDE : Double
         get() {
             val o = __offset(28)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val HIGH_ZENITH_AZIMUTH : Boolean
+    /**
+     * Observation point altitude (km)
+     */
+    val OBSERVATION_ALTITUDE : Double
         get() {
             val o = __offset(30)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SEQUENCE_NUMBER : Int
+    /**
+     * True if stereo observation (multiple sensors)
+     */
+    val STEREO_FLAG : Boolean
         get() {
             val o = __offset(32)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val EVENT_ID : String?
+    /**
+     * True if high zenith angle observation
+     */
+    val HIGH_ZENITH_AZIMUTH : Boolean
         get() {
             val o = __offset(34)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val EVENT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun EVENT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
-    val DESCRIPTOR : String?
+    /**
+     * Sequence number in detection chain
+     */
+    val SEQUENCE_NUMBER : UShort
         get() {
             val o = __offset(36)
+            return if(o != 0) bb.getShort(o + bb_pos).toUShort() else 0u
+        }
+    /**
+     * Launch site identifier
+     */
+    val LAUNCH_SITE_ID : String?
+        get() {
+            val o = __offset(38)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val DESCRIPTORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
-    fun DESCRIPTORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
+    val LAUNCH_SITE_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 1)
+    fun LAUNCH_SITE_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 1)
+    /**
+     * Launch vehicle type (if identified)
+     */
+    val LAUNCH_VEHICLE : String?
+        get() {
+            val o = __offset(40)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val LAUNCH_VEHICLEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(40, 1)
+    fun LAUNCH_VEHICLEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 40, 1)
+    /**
+     * Estimated trajectory type
+     */
+    val TRAJECTORY_TYPE : String?
+        get() {
+            val o = __offset(42)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val TRAJECTORY_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(42, 1)
+    fun TRAJECTORY_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 42, 1)
+    /**
+     * Detection confidence (0-1)
+     */
+    val CONFIDENCE : Double
+        get() {
+            val o = __offset(44)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Event descriptor
+     */
+    val DESCRIPTOR : String?
+        get() {
+            val o = __offset(46)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val DESCRIPTORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(46, 1)
+    fun DESCRIPTORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 46, 1)
+    /**
+     * Associated tags
+     */
     fun TAGS(j: Int) : String? {
-        val o = __offset(38)
+        val o = __offset(48)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -160,7 +272,7 @@ class LND : Table() {
     }
     val TAGSLength : Int
         get() {
-            val o = __offset(38); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(48); return if (o != 0) __vector_len(o) else 0
         }
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
@@ -170,8 +282,9 @@ class LND : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun LNDBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$LND")
-        fun createLND(builder: FlatBufferBuilder, IDOffset: Int, LAUNCH_TIMEOffset: Int, MESSAGE_TYPEOffset: Int, LAUNCH_LATITUDE: Double, LAUNCH_LONGITUDE: Double, LAUNCH_AZIMUTH: Double, RAAN: Double, INCLINATION: Double, OBSERVATION_TIMEOffset: Int, OBSERVATION_LATITUDE: Double, OBSERVATION_LONGITUDE: Double, OBSERVATION_ALTITUDE: Double, STEREO_FLAG: Boolean, HIGH_ZENITH_AZIMUTH: Boolean, SEQUENCE_NUMBER: Int, EVENT_IDOffset: Int, DESCRIPTOROffset: Int, TAGSOffset: Int) : Int {
-            builder.startTable(18)
+        fun createLND(builder: FlatBufferBuilder, IDOffset: Int, EVENT_IDOffset: Int, DETECTION_TYPE: Byte, MESSAGE_TYPEOffset: Int, LAUNCH_TIMEOffset: Int, LAUNCH_LATITUDE: Double, LAUNCH_LONGITUDE: Double, LAUNCH_AZIMUTH: Double, RAAN: Double, INCLINATION: Double, OBSERVATION_TIMEOffset: Int, OBSERVATION_LATITUDE: Double, OBSERVATION_LONGITUDE: Double, OBSERVATION_ALTITUDE: Double, STEREO_FLAG: Boolean, HIGH_ZENITH_AZIMUTH: Boolean, SEQUENCE_NUMBER: UShort, LAUNCH_SITE_IDOffset: Int, LAUNCH_VEHICLEOffset: Int, TRAJECTORY_TYPEOffset: Int, CONFIDENCE: Double, DESCRIPTOROffset: Int, TAGSOffset: Int) : Int {
+            builder.startTable(23)
+            addCONFIDENCE(builder, CONFIDENCE)
             addOBSERVATION_ALTITUDE(builder, OBSERVATION_ALTITUDE)
             addOBSERVATION_LONGITUDE(builder, OBSERVATION_LONGITUDE)
             addOBSERVATION_LATITUDE(builder, OBSERVATION_LATITUDE)
@@ -182,35 +295,44 @@ class LND : Table() {
             addLAUNCH_LATITUDE(builder, LAUNCH_LATITUDE)
             addTAGS(builder, TAGSOffset)
             addDESCRIPTOR(builder, DESCRIPTOROffset)
-            addEVENT_ID(builder, EVENT_IDOffset)
-            addSEQUENCE_NUMBER(builder, SEQUENCE_NUMBER)
+            addTRAJECTORY_TYPE(builder, TRAJECTORY_TYPEOffset)
+            addLAUNCH_VEHICLE(builder, LAUNCH_VEHICLEOffset)
+            addLAUNCH_SITE_ID(builder, LAUNCH_SITE_IDOffset)
             addOBSERVATION_TIME(builder, OBSERVATION_TIMEOffset)
-            addMESSAGE_TYPE(builder, MESSAGE_TYPEOffset)
             addLAUNCH_TIME(builder, LAUNCH_TIMEOffset)
+            addMESSAGE_TYPE(builder, MESSAGE_TYPEOffset)
+            addEVENT_ID(builder, EVENT_IDOffset)
             addID(builder, IDOffset)
+            addSEQUENCE_NUMBER(builder, SEQUENCE_NUMBER)
             addHIGH_ZENITH_AZIMUTH(builder, HIGH_ZENITH_AZIMUTH)
             addSTEREO_FLAG(builder, STEREO_FLAG)
+            addDETECTION_TYPE(builder, DETECTION_TYPE)
             return endLND(builder)
         }
-        fun startLND(builder: FlatBufferBuilder) = builder.startTable(18)
+        fun startLND(builder: FlatBufferBuilder) = builder.startTable(23)
         fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addLAUNCH_TIME(builder: FlatBufferBuilder, LAUNCH_TIME: Int) = builder.addOffset(1, LAUNCH_TIME, 0)
-        fun addMESSAGE_TYPE(builder: FlatBufferBuilder, MESSAGE_TYPE: Int) = builder.addOffset(2, MESSAGE_TYPE, 0)
-        fun addLAUNCH_LATITUDE(builder: FlatBufferBuilder, LAUNCH_LATITUDE: Double) = builder.addDouble(3, LAUNCH_LATITUDE, 0.0)
-        fun addLAUNCH_LONGITUDE(builder: FlatBufferBuilder, LAUNCH_LONGITUDE: Double) = builder.addDouble(4, LAUNCH_LONGITUDE, 0.0)
-        fun addLAUNCH_AZIMUTH(builder: FlatBufferBuilder, LAUNCH_AZIMUTH: Double) = builder.addDouble(5, LAUNCH_AZIMUTH, 0.0)
-        fun addRAAN(builder: FlatBufferBuilder, RAAN: Double) = builder.addDouble(6, RAAN, 0.0)
-        fun addINCLINATION(builder: FlatBufferBuilder, INCLINATION: Double) = builder.addDouble(7, INCLINATION, 0.0)
-        fun addOBSERVATION_TIME(builder: FlatBufferBuilder, OBSERVATION_TIME: Int) = builder.addOffset(8, OBSERVATION_TIME, 0)
-        fun addOBSERVATION_LATITUDE(builder: FlatBufferBuilder, OBSERVATION_LATITUDE: Double) = builder.addDouble(9, OBSERVATION_LATITUDE, 0.0)
-        fun addOBSERVATION_LONGITUDE(builder: FlatBufferBuilder, OBSERVATION_LONGITUDE: Double) = builder.addDouble(10, OBSERVATION_LONGITUDE, 0.0)
-        fun addOBSERVATION_ALTITUDE(builder: FlatBufferBuilder, OBSERVATION_ALTITUDE: Double) = builder.addDouble(11, OBSERVATION_ALTITUDE, 0.0)
-        fun addSTEREO_FLAG(builder: FlatBufferBuilder, STEREO_FLAG: Boolean) = builder.addBoolean(12, STEREO_FLAG, false)
-        fun addHIGH_ZENITH_AZIMUTH(builder: FlatBufferBuilder, HIGH_ZENITH_AZIMUTH: Boolean) = builder.addBoolean(13, HIGH_ZENITH_AZIMUTH, false)
-        fun addSEQUENCE_NUMBER(builder: FlatBufferBuilder, SEQUENCE_NUMBER: Int) = builder.addInt(14, SEQUENCE_NUMBER, 0)
-        fun addEVENT_ID(builder: FlatBufferBuilder, EVENT_ID: Int) = builder.addOffset(15, EVENT_ID, 0)
-        fun addDESCRIPTOR(builder: FlatBufferBuilder, DESCRIPTOR: Int) = builder.addOffset(16, DESCRIPTOR, 0)
-        fun addTAGS(builder: FlatBufferBuilder, TAGS: Int) = builder.addOffset(17, TAGS, 0)
+        fun addEVENT_ID(builder: FlatBufferBuilder, EVENT_ID: Int) = builder.addOffset(1, EVENT_ID, 0)
+        fun addDETECTION_TYPE(builder: FlatBufferBuilder, DETECTION_TYPE: Byte) = builder.addByte(2, DETECTION_TYPE, 0)
+        fun addMESSAGE_TYPE(builder: FlatBufferBuilder, MESSAGE_TYPE: Int) = builder.addOffset(3, MESSAGE_TYPE, 0)
+        fun addLAUNCH_TIME(builder: FlatBufferBuilder, LAUNCH_TIME: Int) = builder.addOffset(4, LAUNCH_TIME, 0)
+        fun addLAUNCH_LATITUDE(builder: FlatBufferBuilder, LAUNCH_LATITUDE: Double) = builder.addDouble(5, LAUNCH_LATITUDE, 0.0)
+        fun addLAUNCH_LONGITUDE(builder: FlatBufferBuilder, LAUNCH_LONGITUDE: Double) = builder.addDouble(6, LAUNCH_LONGITUDE, 0.0)
+        fun addLAUNCH_AZIMUTH(builder: FlatBufferBuilder, LAUNCH_AZIMUTH: Double) = builder.addDouble(7, LAUNCH_AZIMUTH, 0.0)
+        fun addRAAN(builder: FlatBufferBuilder, RAAN: Double) = builder.addDouble(8, RAAN, 0.0)
+        fun addINCLINATION(builder: FlatBufferBuilder, INCLINATION: Double) = builder.addDouble(9, INCLINATION, 0.0)
+        fun addOBSERVATION_TIME(builder: FlatBufferBuilder, OBSERVATION_TIME: Int) = builder.addOffset(10, OBSERVATION_TIME, 0)
+        fun addOBSERVATION_LATITUDE(builder: FlatBufferBuilder, OBSERVATION_LATITUDE: Double) = builder.addDouble(11, OBSERVATION_LATITUDE, 0.0)
+        fun addOBSERVATION_LONGITUDE(builder: FlatBufferBuilder, OBSERVATION_LONGITUDE: Double) = builder.addDouble(12, OBSERVATION_LONGITUDE, 0.0)
+        fun addOBSERVATION_ALTITUDE(builder: FlatBufferBuilder, OBSERVATION_ALTITUDE: Double) = builder.addDouble(13, OBSERVATION_ALTITUDE, 0.0)
+        fun addSTEREO_FLAG(builder: FlatBufferBuilder, STEREO_FLAG: Boolean) = builder.addBoolean(14, STEREO_FLAG, false)
+        fun addHIGH_ZENITH_AZIMUTH(builder: FlatBufferBuilder, HIGH_ZENITH_AZIMUTH: Boolean) = builder.addBoolean(15, HIGH_ZENITH_AZIMUTH, false)
+        fun addSEQUENCE_NUMBER(builder: FlatBufferBuilder, SEQUENCE_NUMBER: UShort) = builder.addShort(16, SEQUENCE_NUMBER.toShort(), 0)
+        fun addLAUNCH_SITE_ID(builder: FlatBufferBuilder, LAUNCH_SITE_ID: Int) = builder.addOffset(17, LAUNCH_SITE_ID, 0)
+        fun addLAUNCH_VEHICLE(builder: FlatBufferBuilder, LAUNCH_VEHICLE: Int) = builder.addOffset(18, LAUNCH_VEHICLE, 0)
+        fun addTRAJECTORY_TYPE(builder: FlatBufferBuilder, TRAJECTORY_TYPE: Int) = builder.addOffset(19, TRAJECTORY_TYPE, 0)
+        fun addCONFIDENCE(builder: FlatBufferBuilder, CONFIDENCE: Double) = builder.addDouble(20, CONFIDENCE, 0.0)
+        fun addDESCRIPTOR(builder: FlatBufferBuilder, DESCRIPTOR: Int) = builder.addOffset(21, DESCRIPTOR, 0)
+        fun addTAGS(builder: FlatBufferBuilder, TAGS: Int) = builder.addOffset(22, TAGS, 0)
         fun createTagsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {

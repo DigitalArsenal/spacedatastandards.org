@@ -4,6 +4,9 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { beamContour, beamContourT } from './beamContour.js';
+import { beamPolarization } from './beamPolarization.js';
+import { beamType } from './beamType.js';
 
 
 /**
@@ -31,6 +34,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$BEM');
 }
 
+/**
+ * Unique beam identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,6 +44,9 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Beam name or designation
+ */
 BEAM_NAME():string|null
 BEAM_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 BEAM_NAME(optionalEncoding?:any):string|Uint8Array|null {
@@ -45,27 +54,139 @@ BEAM_NAME(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-NOTES():string|null
-NOTES(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-NOTES(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Reference to parent entity (satellite/transponder)
+ */
+ID_ENTITY():string|null
+ID_ENTITY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ID_ENTITY(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-BEAM_CONTOURS(index: number):string
-BEAM_CONTOURS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-BEAM_CONTOURS(index: number,optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Reference to parent antenna
+ */
+ID_ANTENNA():string|null
+ID_ANTENNA(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ID_ANTENNA(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Beam type
+ */
+TYPE():beamType {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : beamType.SPOT;
+}
+
+/**
+ * Beam polarization
+ */
+POLARIZATION():beamPolarization {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : beamPolarization.RHCP;
+}
+
+/**
+ * Peak gain in dBi
+ */
+PEAK_GAIN():number {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Edge-of-coverage gain in dBi
+ */
+EOC_GAIN():number {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Beam center latitude in degrees
+ */
+CENTER_LATITUDE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Beam center longitude in degrees
+ */
+CENTER_LONGITUDE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Beamwidth (3dB) in degrees
+ */
+BEAMWIDTH():number {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Operating frequency in MHz
+ */
+FREQUENCY():number {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * EIRP at beam center in dBW
+ */
+EIRP():number {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * G/T at beam center in dB/K
+ */
+G_OVER_T():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Beam footprint area in km^2
+ */
+FOOTPRINT_AREA():number {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Beam contour definitions
+ */
+BEAM_CONTOURS(index: number, obj?:beamContour):beamContour|null {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? (obj || new beamContour()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
 }
 
 beamContoursLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 10);
+  const offset = this.bb!.__offset(this.bb_pos, 34);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
+/**
+ * Additional notes
+ */
+NOTES():string|null
+NOTES(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+NOTES(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startBEM(builder:flatbuffers.Builder) {
-  builder.startObject(4);
+  builder.startObject(17);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -76,12 +197,60 @@ static addBeamName(builder:flatbuffers.Builder, BEAM_NAMEOffset:flatbuffers.Offs
   builder.addFieldOffset(1, BEAM_NAMEOffset, 0);
 }
 
-static addNotes(builder:flatbuffers.Builder, NOTESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, NOTESOffset, 0);
+static addIdEntity(builder:flatbuffers.Builder, ID_ENTITYOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(2, ID_ENTITYOffset, 0);
+}
+
+static addIdAntenna(builder:flatbuffers.Builder, ID_ANTENNAOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(3, ID_ANTENNAOffset, 0);
+}
+
+static addType(builder:flatbuffers.Builder, TYPE:beamType) {
+  builder.addFieldInt8(4, TYPE, beamType.SPOT);
+}
+
+static addPolarization(builder:flatbuffers.Builder, POLARIZATION:beamPolarization) {
+  builder.addFieldInt8(5, POLARIZATION, beamPolarization.RHCP);
+}
+
+static addPeakGain(builder:flatbuffers.Builder, PEAK_GAIN:number) {
+  builder.addFieldFloat64(6, PEAK_GAIN, 0.0);
+}
+
+static addEocGain(builder:flatbuffers.Builder, EOC_GAIN:number) {
+  builder.addFieldFloat64(7, EOC_GAIN, 0.0);
+}
+
+static addCenterLatitude(builder:flatbuffers.Builder, CENTER_LATITUDE:number) {
+  builder.addFieldFloat64(8, CENTER_LATITUDE, 0.0);
+}
+
+static addCenterLongitude(builder:flatbuffers.Builder, CENTER_LONGITUDE:number) {
+  builder.addFieldFloat64(9, CENTER_LONGITUDE, 0.0);
+}
+
+static addBeamwidth(builder:flatbuffers.Builder, BEAMWIDTH:number) {
+  builder.addFieldFloat64(10, BEAMWIDTH, 0.0);
+}
+
+static addFrequency(builder:flatbuffers.Builder, FREQUENCY:number) {
+  builder.addFieldFloat64(11, FREQUENCY, 0.0);
+}
+
+static addEirp(builder:flatbuffers.Builder, EIRP:number) {
+  builder.addFieldFloat64(12, EIRP, 0.0);
+}
+
+static addGOverT(builder:flatbuffers.Builder, G_OVER_T:number) {
+  builder.addFieldFloat64(13, G_OVER_T, 0.0);
+}
+
+static addFootprintArea(builder:flatbuffers.Builder, FOOTPRINT_AREA:number) {
+  builder.addFieldFloat64(14, FOOTPRINT_AREA, 0.0);
 }
 
 static addBeamContours(builder:flatbuffers.Builder, BEAM_CONTOURSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, BEAM_CONTOURSOffset, 0);
+  builder.addFieldOffset(15, BEAM_CONTOURSOffset, 0);
 }
 
 static createBeamContoursVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -94,6 +263,10 @@ static createBeamContoursVector(builder:flatbuffers.Builder, data:flatbuffers.Of
 
 static startBeamContoursVector(builder:flatbuffers.Builder, numElems:number) {
   builder.startVector(4, numElems, 4);
+}
+
+static addNotes(builder:flatbuffers.Builder, NOTESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, NOTESOffset, 0);
 }
 
 static endBEM(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -109,12 +282,25 @@ static finishSizePrefixedBEMBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$BEM', true);
 }
 
-static createBEM(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, BEAM_NAMEOffset:flatbuffers.Offset, NOTESOffset:flatbuffers.Offset, BEAM_CONTOURSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createBEM(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, BEAM_NAMEOffset:flatbuffers.Offset, ID_ENTITYOffset:flatbuffers.Offset, ID_ANTENNAOffset:flatbuffers.Offset, TYPE:beamType, POLARIZATION:beamPolarization, PEAK_GAIN:number, EOC_GAIN:number, CENTER_LATITUDE:number, CENTER_LONGITUDE:number, BEAMWIDTH:number, FREQUENCY:number, EIRP:number, G_OVER_T:number, FOOTPRINT_AREA:number, BEAM_CONTOURSOffset:flatbuffers.Offset, NOTESOffset:flatbuffers.Offset):flatbuffers.Offset {
   BEM.startBEM(builder);
   BEM.addId(builder, IDOffset);
   BEM.addBeamName(builder, BEAM_NAMEOffset);
-  BEM.addNotes(builder, NOTESOffset);
+  BEM.addIdEntity(builder, ID_ENTITYOffset);
+  BEM.addIdAntenna(builder, ID_ANTENNAOffset);
+  BEM.addType(builder, TYPE);
+  BEM.addPolarization(builder, POLARIZATION);
+  BEM.addPeakGain(builder, PEAK_GAIN);
+  BEM.addEocGain(builder, EOC_GAIN);
+  BEM.addCenterLatitude(builder, CENTER_LATITUDE);
+  BEM.addCenterLongitude(builder, CENTER_LONGITUDE);
+  BEM.addBeamwidth(builder, BEAMWIDTH);
+  BEM.addFrequency(builder, FREQUENCY);
+  BEM.addEirp(builder, EIRP);
+  BEM.addGOverT(builder, G_OVER_T);
+  BEM.addFootprintArea(builder, FOOTPRINT_AREA);
   BEM.addBeamContours(builder, BEAM_CONTOURSOffset);
+  BEM.addNotes(builder, NOTESOffset);
   return BEM.endBEM(builder);
 }
 
@@ -122,8 +308,21 @@ unpack(): BEMT {
   return new BEMT(
     this.ID(),
     this.BEAM_NAME(),
-    this.NOTES(),
-    this.bb!.createScalarList<string>(this.BEAM_CONTOURS.bind(this), this.beamContoursLength())
+    this.ID_ENTITY(),
+    this.ID_ANTENNA(),
+    this.TYPE(),
+    this.POLARIZATION(),
+    this.PEAK_GAIN(),
+    this.EOC_GAIN(),
+    this.CENTER_LATITUDE(),
+    this.CENTER_LONGITUDE(),
+    this.BEAMWIDTH(),
+    this.FREQUENCY(),
+    this.EIRP(),
+    this.G_OVER_T(),
+    this.FOOTPRINT_AREA(),
+    this.bb!.createObjList<beamContour, beamContourT>(this.BEAM_CONTOURS.bind(this), this.beamContoursLength()),
+    this.NOTES()
   );
 }
 
@@ -131,8 +330,21 @@ unpack(): BEMT {
 unpackTo(_o: BEMT): void {
   _o.ID = this.ID();
   _o.BEAM_NAME = this.BEAM_NAME();
+  _o.ID_ENTITY = this.ID_ENTITY();
+  _o.ID_ANTENNA = this.ID_ANTENNA();
+  _o.TYPE = this.TYPE();
+  _o.POLARIZATION = this.POLARIZATION();
+  _o.PEAK_GAIN = this.PEAK_GAIN();
+  _o.EOC_GAIN = this.EOC_GAIN();
+  _o.CENTER_LATITUDE = this.CENTER_LATITUDE();
+  _o.CENTER_LONGITUDE = this.CENTER_LONGITUDE();
+  _o.BEAMWIDTH = this.BEAMWIDTH();
+  _o.FREQUENCY = this.FREQUENCY();
+  _o.EIRP = this.EIRP();
+  _o.G_OVER_T = this.G_OVER_T();
+  _o.FOOTPRINT_AREA = this.FOOTPRINT_AREA();
+  _o.BEAM_CONTOURS = this.bb!.createObjList<beamContour, beamContourT>(this.BEAM_CONTOURS.bind(this), this.beamContoursLength());
   _o.NOTES = this.NOTES();
-  _o.BEAM_CONTOURS = this.bb!.createScalarList<string>(this.BEAM_CONTOURS.bind(this), this.beamContoursLength());
 }
 }
 
@@ -140,22 +352,50 @@ export class BEMT implements flatbuffers.IGeneratedObject {
 constructor(
   public ID: string|Uint8Array|null = null,
   public BEAM_NAME: string|Uint8Array|null = null,
-  public NOTES: string|Uint8Array|null = null,
-  public BEAM_CONTOURS: (string)[] = []
+  public ID_ENTITY: string|Uint8Array|null = null,
+  public ID_ANTENNA: string|Uint8Array|null = null,
+  public TYPE: beamType = beamType.SPOT,
+  public POLARIZATION: beamPolarization = beamPolarization.RHCP,
+  public PEAK_GAIN: number = 0.0,
+  public EOC_GAIN: number = 0.0,
+  public CENTER_LATITUDE: number = 0.0,
+  public CENTER_LONGITUDE: number = 0.0,
+  public BEAMWIDTH: number = 0.0,
+  public FREQUENCY: number = 0.0,
+  public EIRP: number = 0.0,
+  public G_OVER_T: number = 0.0,
+  public FOOTPRINT_AREA: number = 0.0,
+  public BEAM_CONTOURS: (beamContourT)[] = [],
+  public NOTES: string|Uint8Array|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ID = (this.ID !== null ? builder.createString(this.ID!) : 0);
   const BEAM_NAME = (this.BEAM_NAME !== null ? builder.createString(this.BEAM_NAME!) : 0);
-  const NOTES = (this.NOTES !== null ? builder.createString(this.NOTES!) : 0);
+  const ID_ENTITY = (this.ID_ENTITY !== null ? builder.createString(this.ID_ENTITY!) : 0);
+  const ID_ANTENNA = (this.ID_ANTENNA !== null ? builder.createString(this.ID_ANTENNA!) : 0);
   const BEAM_CONTOURS = BEM.createBeamContoursVector(builder, builder.createObjectOffsetList(this.BEAM_CONTOURS));
+  const NOTES = (this.NOTES !== null ? builder.createString(this.NOTES!) : 0);
 
   return BEM.createBEM(builder,
     ID,
     BEAM_NAME,
-    NOTES,
-    BEAM_CONTOURS
+    ID_ENTITY,
+    ID_ANTENNA,
+    this.TYPE,
+    this.POLARIZATION,
+    this.PEAK_GAIN,
+    this.EOC_GAIN,
+    this.CENTER_LATITUDE,
+    this.CENTER_LONGITUDE,
+    this.BEAMWIDTH,
+    this.FREQUENCY,
+    this.EIRP,
+    this.G_OVER_T,
+    this.FOOTPRINT_AREA,
+    BEAM_CONTOURS,
+    NOTES
   );
 }
 }

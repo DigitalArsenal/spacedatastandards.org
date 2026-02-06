@@ -1,79 +1,243 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "geoStationKeeping": {
+      "type": "string",
+      "enum": [
+        "ACTIVE",
+        "DRIFTING",
+        "INCLINED",
+        "GRAVEYARD",
+        "REPOSITIONING",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "ACTIVE": {
+          "value": 0
+        },
+        "DRIFTING": {
+          "value": 1
+        },
+        "INCLINED": {
+          "value": 2
+        },
+        "GRAVEYARD": {
+          "value": 3
+        },
+        "REPOSITIONING": {
+          "value": 4
+        },
+        "UNKNOWN": {
+          "value": 5
+        }
+      }
+    },
+    "geoConfidence": {
+      "type": "string",
+      "enum": [
+        "HIGH",
+        "MEDIUM",
+        "LOW",
+        "TENTATIVE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "HIGH": {
+          "value": 0
+        },
+        "MEDIUM": {
+          "value": 1
+        },
+        "LOW": {
+          "value": 2
+        },
+        "TENTATIVE": {
+          "value": 3
+        }
+      }
+    },
+    "troughType": {
+      "type": "string",
+      "enum": [
+        "EAST",
+        "WEST",
+        "NEITHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "EAST": {
+          "value": 0
+        },
+        "WEST": {
+          "value": 1
+        },
+        "NEITHER": {
+          "value": 2
+        }
+      }
+    },
     "GEO": {
       "type": "object",
       "description": "GEO Spacecraft Status",
       "properties": {
         "ID": {
           "type": "string",
+          "description": "Unique identifier",
           "x-flatbuffer-type": "string"
         },
         "ORIG_OBJECT_ID": {
           "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "SS": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "SC": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "RELATIVE_ENERGY": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "LONGITUDE_RATE": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "LONGITUDE_MIN": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "LONGITUDE_MAX": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "CONFIDENCE_LEVEL": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "PLANE_CHANGE_STATUS": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "TROUGH_TYPE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "LOST_FLAG": {
-          "type": "boolean",
-          "x-flatbuffer-type": "bool"
-        },
-        "SEMI_ANNUAL_CORR_FLAG": {
-          "type": "boolean",
-          "x-flatbuffer-type": "bool"
-        },
-        "OBJECT_STATUS": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "RAW_FILE_URI": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "ON_ORBIT": {
-          "type": "string",
+          "description": "International designator",
           "x-flatbuffer-type": "string"
         },
         "SAT_NO": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Satellite catalog number",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ON_ORBIT": {
+          "type": "string",
+          "description": "On-orbit reference identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "STATION_KEEPING": {
+          "$ref": "#/definitions/geoStationKeeping",
+          "description": "Station-keeping status",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "ACTIVE": {
+              "value": 0
+            },
+            "DRIFTING": {
+              "value": 1
+            },
+            "INCLINED": {
+              "value": 2
+            },
+            "GRAVEYARD": {
+              "value": 3
+            },
+            "REPOSITIONING": {
+              "value": 4
+            },
+            "UNKNOWN": {
+              "value": 5
+            }
+          }
+        },
+        "SS": {
+          "type": "number",
+          "description": "Subsatellite point longitude (degrees east)",
+          "x-flatbuffer-type": "double"
+        },
+        "SC": {
+          "type": "number",
+          "description": "Longitude of ascending node (degrees)",
+          "x-flatbuffer-type": "double"
+        },
+        "RELATIVE_ENERGY": {
+          "type": "number",
+          "description": "Relative energy (km^2/s^2)",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE_RATE": {
+          "type": "number",
+          "description": "Longitude drift rate (degrees/day)",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE_MIN": {
+          "type": "number",
+          "description": "Western longitude boundary of slot (degrees east)",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE_MAX": {
+          "type": "number",
+          "description": "Eastern longitude boundary of slot (degrees east)",
+          "x-flatbuffer-type": "double"
+        },
+        "CONFIDENCE": {
+          "$ref": "#/definitions/geoConfidence",
+          "description": "Assessment confidence level",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "HIGH": {
+              "value": 0
+            },
+            "MEDIUM": {
+              "value": 1
+            },
+            "LOW": {
+              "value": 2
+            },
+            "TENTATIVE": {
+              "value": 3
+            }
+          }
+        },
+        "TROUGH": {
+          "$ref": "#/definitions/troughType",
+          "description": "Trough type (east/west gravitational well)",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "EAST": {
+              "value": 0
+            },
+            "WEST": {
+              "value": 1
+            },
+            "NEITHER": {
+              "value": 2
+            }
+          }
+        },
+        "PLANE_CHANGE_STATUS": {
+          "type": "string",
+          "description": "Plane change status description",
+          "x-flatbuffer-type": "string"
+        },
+        "LOST_FLAG": {
+          "type": "boolean",
+          "description": "True if object is lost/not tracked",
+          "x-flatbuffer-type": "bool"
+        },
+        "SEMI_ANNUAL_CORR_FLAG": {
+          "type": "boolean",
+          "description": "True if semi-annual correction applied",
+          "x-flatbuffer-type": "bool"
+        },
+        "OBJECT_STATUS": {
+          "type": "string",
+          "description": "Current operational status",
+          "x-flatbuffer-type": "string"
+        },
+        "INCLINATION": {
+          "type": "number",
+          "description": "Inclination (degrees)",
+          "x-flatbuffer-type": "double"
+        },
+        "ECCENTRICITY": {
+          "type": "number",
+          "description": "Eccentricity",
+          "x-flatbuffer-type": "double"
+        },
+        "EPOCH": {
+          "type": "string",
+          "description": "Epoch of status (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "RAW_FILE_URI": {
+          "type": "string",
+          "description": "Reference to raw data file",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

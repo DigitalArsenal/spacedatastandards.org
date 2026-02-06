@@ -1,261 +1,460 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "soiCollectionMode": {
+      "type": "string",
+      "enum": [
+        "SIDEREAL",
+        "RATE_TRACK",
+        "STARE",
+        "SEARCH",
+        "SURVEY",
+        "TASKED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "SIDEREAL": {
+          "value": 0
+        },
+        "RATE_TRACK": {
+          "value": 1
+        },
+        "STARE": {
+          "value": 2
+        },
+        "SEARCH": {
+          "value": 3
+        },
+        "SURVEY": {
+          "value": 4
+        },
+        "TASKED": {
+          "value": 5
+        }
+      }
+    },
+    "soiObsType": {
+      "type": "string",
+      "enum": [
+        "OPTICAL",
+        "RADAR",
+        "COMBINED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "OPTICAL": {
+          "value": 0
+        },
+        "RADAR": {
+          "value": 1
+        },
+        "COMBINED": {
+          "value": 2
+        }
+      }
+    },
+    "soiCalibrationType": {
+      "type": "string",
+      "enum": [
+        "PHOTOMETRIC",
+        "ASTROMETRIC",
+        "RADIOMETRIC",
+        "POLARIMETRIC",
+        "TEMPORAL",
+        "NONE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "PHOTOMETRIC": {
+          "value": 0
+        },
+        "ASTROMETRIC": {
+          "value": 1
+        },
+        "RADIOMETRIC": {
+          "value": 2
+        },
+        "POLARIMETRIC": {
+          "value": 3
+        },
+        "TEMPORAL": {
+          "value": 4
+        },
+        "NONE": {
+          "value": 5
+        }
+      }
+    },
     "SOI": {
       "type": "object",
       "description": "Space Object Identification Observation Set",
       "properties": {
         "ID": {
           "type": "string",
+          "description": "Unique identifier",
           "x-flatbuffer-type": "string"
         },
         "MSG_CREATE_DATE": {
           "type": "string",
+          "description": "Message creation date (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "ID_SENSOR": {
           "type": "string",
+          "description": "Sensor identifier",
           "x-flatbuffer-type": "string"
         },
         "ORIG_SENSOR_ID": {
           "type": "string",
+          "description": "Original sensor identifier",
           "x-flatbuffer-type": "string"
         },
         "SENSOR_AS_ID": {
           "type": "string",
+          "description": "Sensor observation set identifier",
           "x-flatbuffer-type": "string"
         },
         "SAT_NO": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Satellite catalog number",
+          "x-flatbuffer-type": "uint32"
         },
         "ORIG_OBJECT_ID": {
           "type": "string",
+          "description": "International designator",
           "x-flatbuffer-type": "string"
+        },
+        "SATELLITE_NAME": {
+          "type": "string",
+          "description": "Satellite common name",
+          "x-flatbuffer-type": "string"
+        },
+        "UCT": {
+          "type": "boolean",
+          "description": "True if uncorrelated target",
+          "x-flatbuffer-type": "bool"
         },
         "SENLAT": {
           "type": "number",
+          "description": "Sensor geodetic latitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "SENLON": {
           "type": "number",
+          "description": "Sensor geodetic longitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "SENALT": {
           "type": "number",
+          "description": "Sensor altitude (km)",
           "x-flatbuffer-type": "double"
         },
         "SENX": {
           "type": "number",
+          "description": "Sensor ECEF X position (km)",
           "x-flatbuffer-type": "double"
         },
         "SENY": {
           "type": "number",
+          "description": "Sensor ECEF Y position (km)",
           "x-flatbuffer-type": "double"
         },
         "SENZ": {
           "type": "number",
+          "description": "Sensor ECEF Z position (km)",
           "x-flatbuffer-type": "double"
         },
         "SENVELX": {
           "type": "number",
+          "description": "Sensor ECEF X velocity (km/s)",
           "x-flatbuffer-type": "double"
         },
         "SENVELY": {
           "type": "number",
+          "description": "Sensor ECEF Y velocity (km/s)",
           "x-flatbuffer-type": "double"
         },
         "SENVELZ": {
           "type": "number",
+          "description": "Sensor ECEF Z velocity (km/s)",
           "x-flatbuffer-type": "double"
+        },
+        "SEN_REFERENCE_FRAME": {
+          "type": "string",
+          "description": "Sensor reference frame",
+          "x-flatbuffer-type": "string"
+        },
+        "OBS_TYPE": {
+          "$ref": "#/definitions/soiObsType",
+          "description": "Observation type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "OPTICAL": {
+              "value": 0
+            },
+            "RADAR": {
+              "value": 1
+            },
+            "COMBINED": {
+              "value": 2
+            }
+          }
+        },
+        "COLLECTION_MODE": {
+          "$ref": "#/definitions/soiCollectionMode",
+          "description": "Collection mode",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "SIDEREAL": {
+              "value": 0
+            },
+            "RATE_TRACK": {
+              "value": 1
+            },
+            "STARE": {
+              "value": 2
+            },
+            "SEARCH": {
+              "value": 3
+            },
+            "SURVEY": {
+              "value": 4
+            },
+            "TASKED": {
+              "value": 5
+            }
+          }
         },
         "START_TIME": {
           "type": "string",
+          "description": "Observation start time (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "END_TIME": {
           "type": "string",
+          "description": "Observation end time (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "NUM_OBS": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of observations in set",
+          "x-flatbuffer-type": "uint32"
         },
-        "TYPE": {
+        "REFERENCE_FRAME": {
           "type": "string",
+          "description": "Observation reference frame",
           "x-flatbuffer-type": "string"
         },
         "POLAR_ANGLE_START": {
           "type": "number",
+          "description": "Polar angle at start (degrees)",
           "x-flatbuffer-type": "double"
         },
         "POLAR_ANGLE_END": {
           "type": "number",
+          "description": "Polar angle at end (degrees)",
           "x-flatbuffer-type": "double"
-        },
-        "REFERENCE_FRAME": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "SEN_REFERENCE_FRAME": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
         },
         "LOS_DECLINATION_START": {
           "type": "number",
+          "description": "Line-of-sight declination at start (degrees)",
           "x-flatbuffer-type": "double"
         },
         "LOS_DECLINATION_END": {
           "type": "number",
+          "description": "Line-of-sight declination at end (degrees)",
           "x-flatbuffer-type": "double"
         },
         "POINTING_ANGLE_AZ_START": {
           "type": "number",
+          "description": "Pointing azimuth at start (degrees)",
           "x-flatbuffer-type": "double"
         },
         "POINTING_ANGLE_AZ_END": {
           "type": "number",
+          "description": "Pointing azimuth at end (degrees)",
           "x-flatbuffer-type": "double"
         },
         "POINTING_ANGLE_EL_START": {
           "type": "number",
+          "description": "Pointing elevation at start (degrees)",
           "x-flatbuffer-type": "double"
         },
         "POINTING_ANGLE_EL_END": {
           "type": "number",
+          "description": "Pointing elevation at end (degrees)",
           "x-flatbuffer-type": "double"
         },
         "PIXEL_ARRAY_WIDTH": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Focal plane array width (pixels)",
+          "x-flatbuffer-type": "uint16"
         },
         "PIXEL_ARRAY_HEIGHT": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Focal plane array height (pixels)",
+          "x-flatbuffer-type": "uint16"
         },
         "NUM_SPECTRAL_FILTERS": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Number of spectral filters used",
+          "x-flatbuffer-type": "uint8"
         },
         "SPECTRAL_FILTERS": {
           "type": "array",
           "items": {
             "type": "string"
           },
+          "description": "Spectral filter identifiers",
           "x-flatbuffer-type": "[string]"
-        },
-        "COLLECTION_MODE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
         },
         "GAIN": {
           "type": "number",
+          "description": "Detector gain setting",
           "x-flatbuffer-type": "double"
         },
         "BINNING_HORIZ": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Horizontal binning factor",
+          "x-flatbuffer-type": "uint8"
         },
         "BINNING_VERT": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Vertical binning factor",
+          "x-flatbuffer-type": "uint8"
         },
         "SOLAR_MAG": {
           "type": "number",
+          "description": "Solar visual magnitude",
           "x-flatbuffer-type": "double"
         },
         "PIXEL_MIN": {
           "type": "integer",
           "minimum": -2147483648,
           "maximum": 2147483647,
+          "description": "Minimum pixel value in observation",
           "x-flatbuffer-type": "int"
         },
         "PIXEL_MAX": {
           "type": "integer",
           "minimum": -2147483648,
           "maximum": 2147483647,
+          "description": "Maximum pixel value in observation",
           "x-flatbuffer-type": "int"
         },
         "SOFTWARE_VERSION": {
           "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "SATELLITE_NAME": {
-          "type": "string",
+          "description": "Processing software version",
           "x-flatbuffer-type": "string"
         },
         "STAR_CAT_NAME": {
           "type": "string",
+          "description": "Star catalog used for calibration",
           "x-flatbuffer-type": "string"
         },
         "CORR_QUALITY": {
           "type": "number",
+          "description": "Correlation quality score",
           "x-flatbuffer-type": "double"
         },
-        "UCT": {
-          "type": "boolean",
-          "x-flatbuffer-type": "bool"
+        "CALIBRATION_TYPE": {
+          "$ref": "#/definitions/soiCalibrationType",
+          "description": "Calibration type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "PHOTOMETRIC": {
+              "value": 0
+            },
+            "ASTROMETRIC": {
+              "value": 1
+            },
+            "RADIOMETRIC": {
+              "value": 2
+            },
+            "POLARIMETRIC": {
+              "value": 3
+            },
+            "TEMPORAL": {
+              "value": 4
+            },
+            "NONE": {
+              "value": 5
+            }
+          }
         },
         "VALID_CALIBRATIONS": {
           "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "CALIBRATION_TYPE": {
-          "type": "string",
+          "description": "Valid calibration identifiers",
           "x-flatbuffer-type": "string"
         },
         "PERCENT_SAT_THRESHOLD": {
           "type": "number",
+          "description": "Percent saturation threshold",
           "x-flatbuffer-type": "double"
         },
         "CHANGE_DETECTED": {
           "type": "boolean",
+          "description": "True if change detected from baseline",
           "x-flatbuffer-type": "bool"
         },
         "PERIODICITY_CHANGE_DETECTED": {
           "type": "boolean",
+          "description": "True if periodicity change detected",
           "x-flatbuffer-type": "bool"
         },
         "BRIGHTNESS_VARIANCE_CHANGE_DETECTED": {
           "type": "boolean",
+          "description": "True if brightness variance change detected",
           "x-flatbuffer-type": "bool"
         },
         "SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED": {
           "type": "boolean",
+          "description": "True if solar phase angle brightness change detected",
           "x-flatbuffer-type": "bool"
         },
         "CHANGE_CONF": {
           "type": "string",
+          "description": "Change confidence assessment",
           "x-flatbuffer-type": "string"
         },
         "COLLECTION_DENSITY_CONF": {
           "type": "string",
+          "description": "Collection density confidence",
           "x-flatbuffer-type": "string"
         },
         "PERIODICITY_SAMPLING_CONF": {
           "type": "string",
+          "description": "Periodicity sampling confidence",
           "x-flatbuffer-type": "string"
         },
         "PERIODICITY_DETECTION_CONF": {
           "type": "string",
+          "description": "Periodicity detection confidence",
           "x-flatbuffer-type": "string"
         },
         "COLLECTION_ID": {
           "type": "string",
+          "description": "Collection identifier",
           "x-flatbuffer-type": "string"
         },
         "CALIBRATIONS": {
@@ -263,6 +462,7 @@
           "items": {
             "type": "string"
           },
+          "description": "Calibration record references",
           "x-flatbuffer-type": "[string]"
         },
         "TAGS": {
@@ -270,10 +470,12 @@
           "items": {
             "type": "string"
           },
+          "description": "Associated tags",
           "x-flatbuffer-type": "[string]"
         },
         "TRANSACTION_ID": {
           "type": "string",
+          "description": "Transaction identifier",
           "x-flatbuffer-type": "string"
         },
         "OPTICAL_SOIOBSERVATION_LIST": {
@@ -281,6 +483,7 @@
           "items": {
             "type": "string"
           },
+          "description": "Optical SOI observation references",
           "x-flatbuffer-type": "[string]"
         },
         "RADAR_SOIOBSERVATION_LIST": {
@@ -288,6 +491,7 @@
           "items": {
             "type": "string"
           },
+          "description": "Radar SOI observation references",
           "x-flatbuffer-type": "[string]"
         }
       },

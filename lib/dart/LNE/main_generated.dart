@@ -5,6 +5,56 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class LaunchOutcome {
+  final int value;
+  const LaunchOutcome._(this.value);
+
+  factory LaunchOutcome.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum LaunchOutcome');
+    }
+    return result;
+  }
+
+  static LaunchOutcome? _createOrNull(int? value) => 
+      value == null ? null : LaunchOutcome.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const LaunchOutcome SUCCESS = LaunchOutcome._(0);
+  static const LaunchOutcome PARTIAL_SUCCESS = LaunchOutcome._(1);
+  static const LaunchOutcome FAILURE = LaunchOutcome._(2);
+  static const LaunchOutcome IN_PROGRESS = LaunchOutcome._(3);
+  static const LaunchOutcome UNKNOWN = LaunchOutcome._(4);
+  static const Map<int, LaunchOutcome> values = {
+    0: SUCCESS,
+    1: PARTIAL_SUCCESS,
+    2: FAILURE,
+    3: IN_PROGRESS,
+    4: UNKNOWN};
+
+  static const fb.Reader<LaunchOutcome> reader = _LaunchOutcomeReader();
+
+  @override
+  String toString() {
+    return 'LaunchOutcome{value: $value}';
+  }
+}
+
+class _LaunchOutcomeReader extends fb.Reader<LaunchOutcome> {
+  const _LaunchOutcomeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  LaunchOutcome read(fb.BufferContext bc, int offset) =>
+      LaunchOutcome.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 ///  Launch Event
 class LNE {
   LNE._(this._bc, this._bcOffset);
@@ -18,23 +68,54 @@ class LNE {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get ORIG_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get DERIVED_FROM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get DECLASSIFICATION_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  String? get DECLASSIFICATION_STRING => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get MSG_CREATE_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get LAUNCH_FAILURE_CODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Satellite catalog number of launched object
+  int get SAT_NO => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  ///  International designator (YYYY-NNNP)
+  String? get ORIG_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Source record this event was derived from
+  String? get DERIVED_FROM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Classification date (ISO 8601)
+  String? get DECLASSIFICATION_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Classification marking
+  String? get DECLASSIFICATION_STRING => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Message creation time (ISO 8601)
+  String? get MSG_CREATE_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Launch date and time (ISO 8601)
   String? get LAUNCH_DATE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  String? get BE_NUMBER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  String? get O_SUFFIX => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  String? get LAUNCH_FACILITY_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
-  String? get ON_ORBIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
-  int get SAT_NO => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 28, 0);
+  ///  Launch outcome
+  LaunchOutcome get OUTCOME => LaunchOutcome.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 0));
+  ///  Launch failure code (if applicable)
+  String? get LAUNCH_FAILURE_CODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Basic encyclopedia number
+  String? get BE_NUMBER => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Object suffix identifier
+  String? get O_SUFFIX => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Launch facility name
+  String? get LAUNCH_FACILITY_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Launch facility code
+  String? get LAUNCH_FACILITY_CODE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  ///  Launch vehicle type
+  String? get LAUNCH_VEHICLE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  ///  Launch vehicle configuration
+  String? get LAUNCH_VEHICLE_CONFIG => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  ///  Target orbit type (LEO, MEO, GEO, HEO, SSO, etc.)
+  String? get TARGET_ORBIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  ///  Number of objects placed on orbit
+  int get OBJECTS_ON_ORBIT => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 38, 0);
+  ///  On-orbit reference identifier
+  String? get ON_ORBIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+  ///  Launch country or operator
+  String? get LAUNCH_COUNTRY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 42);
+  ///  Mission name or payload description
+  String? get MISSION_NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 44);
+  ///  Additional remarks
+  String? get REMARKS => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
 
   @override
   String toString() {
-    return 'LNE{ID: ${ID}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, DERIVED_FROM: ${DERIVED_FROM}, DECLASSIFICATION_DATE: ${DECLASSIFICATION_DATE}, DECLASSIFICATION_STRING: ${DECLASSIFICATION_STRING}, MSG_CREATE_DATE: ${MSG_CREATE_DATE}, LAUNCH_FAILURE_CODE: ${LAUNCH_FAILURE_CODE}, LAUNCH_DATE: ${LAUNCH_DATE}, BE_NUMBER: ${BE_NUMBER}, O_SUFFIX: ${O_SUFFIX}, LAUNCH_FACILITY_NAME: ${LAUNCH_FACILITY_NAME}, ON_ORBIT: ${ON_ORBIT}, SAT_NO: ${SAT_NO}}';
+    return 'LNE{ID: ${ID}, SAT_NO: ${SAT_NO}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, DERIVED_FROM: ${DERIVED_FROM}, DECLASSIFICATION_DATE: ${DECLASSIFICATION_DATE}, DECLASSIFICATION_STRING: ${DECLASSIFICATION_STRING}, MSG_CREATE_DATE: ${MSG_CREATE_DATE}, LAUNCH_DATE: ${LAUNCH_DATE}, OUTCOME: ${OUTCOME}, LAUNCH_FAILURE_CODE: ${LAUNCH_FAILURE_CODE}, BE_NUMBER: ${BE_NUMBER}, O_SUFFIX: ${O_SUFFIX}, LAUNCH_FACILITY_NAME: ${LAUNCH_FACILITY_NAME}, LAUNCH_FACILITY_CODE: ${LAUNCH_FACILITY_CODE}, LAUNCH_VEHICLE: ${LAUNCH_VEHICLE}, LAUNCH_VEHICLE_CONFIG: ${LAUNCH_VEHICLE_CONFIG}, TARGET_ORBIT: ${TARGET_ORBIT}, OBJECTS_ON_ORBIT: ${OBJECTS_ON_ORBIT}, ON_ORBIT: ${ON_ORBIT}, LAUNCH_COUNTRY: ${LAUNCH_COUNTRY}, MISSION_NAME: ${MISSION_NAME}, REMARKS: ${REMARKS}}';
   }
 }
 
@@ -52,34 +133,34 @@ class LNEBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(13);
+    fbBuilder.startTable(22);
   }
 
   int addIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addOrigObjectIdOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
+  int addSatNo(int? SAT_NO) {
+    fbBuilder.addUint32(1, SAT_NO);
     return fbBuilder.offset;
   }
-  int addDerivedFromOffset(int? offset) {
+  int addOrigObjectIdOffset(int? offset) {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addDeclassificationDateOffset(int? offset) {
+  int addDerivedFromOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addDeclassificationStringOffset(int? offset) {
+  int addDeclassificationDateOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
-  int addMsgCreateDateOffset(int? offset) {
+  int addDeclassificationStringOffset(int? offset) {
     fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
-  int addLaunchFailureCodeOffset(int? offset) {
+  int addMsgCreateDateOffset(int? offset) {
     fbBuilder.addOffset(6, offset);
     return fbBuilder.offset;
   }
@@ -87,24 +168,60 @@ class LNEBuilder {
     fbBuilder.addOffset(7, offset);
     return fbBuilder.offset;
   }
-  int addBeNumberOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
+  int addOutcome(LaunchOutcome? OUTCOME) {
+    fbBuilder.addInt8(8, OUTCOME?.value);
     return fbBuilder.offset;
   }
-  int addOSuffixOffset(int? offset) {
+  int addLaunchFailureCodeOffset(int? offset) {
     fbBuilder.addOffset(9, offset);
     return fbBuilder.offset;
   }
-  int addLaunchFacilityNameOffset(int? offset) {
+  int addBeNumberOffset(int? offset) {
     fbBuilder.addOffset(10, offset);
     return fbBuilder.offset;
   }
-  int addOnOrbitOffset(int? offset) {
+  int addOSuffixOffset(int? offset) {
     fbBuilder.addOffset(11, offset);
     return fbBuilder.offset;
   }
-  int addSatNo(int? SAT_NO) {
-    fbBuilder.addInt32(12, SAT_NO);
+  int addLaunchFacilityNameOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addLaunchFacilityCodeOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addLaunchVehicleOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addLaunchVehicleConfigOffset(int? offset) {
+    fbBuilder.addOffset(15, offset);
+    return fbBuilder.offset;
+  }
+  int addTargetOrbitOffset(int? offset) {
+    fbBuilder.addOffset(16, offset);
+    return fbBuilder.offset;
+  }
+  int addObjectsOnOrbit(int? OBJECTS_ON_ORBIT) {
+    fbBuilder.addUint16(17, OBJECTS_ON_ORBIT);
+    return fbBuilder.offset;
+  }
+  int addOnOrbitOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addLaunchCountryOffset(int? offset) {
+    fbBuilder.addOffset(19, offset);
+    return fbBuilder.offset;
+  }
+  int addMissionNameOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addRemarksOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
     return fbBuilder.offset;
   }
 
@@ -115,47 +232,74 @@ class LNEBuilder {
 
 class LNEObjectBuilder extends fb.ObjectBuilder {
   final String? _ID;
+  final int? _SAT_NO;
   final String? _ORIG_OBJECT_ID;
   final String? _DERIVED_FROM;
   final String? _DECLASSIFICATION_DATE;
   final String? _DECLASSIFICATION_STRING;
   final String? _MSG_CREATE_DATE;
-  final String? _LAUNCH_FAILURE_CODE;
   final String? _LAUNCH_DATE;
+  final LaunchOutcome? _OUTCOME;
+  final String? _LAUNCH_FAILURE_CODE;
   final String? _BE_NUMBER;
   final String? _O_SUFFIX;
   final String? _LAUNCH_FACILITY_NAME;
+  final String? _LAUNCH_FACILITY_CODE;
+  final String? _LAUNCH_VEHICLE;
+  final String? _LAUNCH_VEHICLE_CONFIG;
+  final String? _TARGET_ORBIT;
+  final int? _OBJECTS_ON_ORBIT;
   final String? _ON_ORBIT;
-  final int? _SAT_NO;
+  final String? _LAUNCH_COUNTRY;
+  final String? _MISSION_NAME;
+  final String? _REMARKS;
 
   LNEObjectBuilder({
     String? ID,
+    int? SAT_NO,
     String? ORIG_OBJECT_ID,
     String? DERIVED_FROM,
     String? DECLASSIFICATION_DATE,
     String? DECLASSIFICATION_STRING,
     String? MSG_CREATE_DATE,
-    String? LAUNCH_FAILURE_CODE,
     String? LAUNCH_DATE,
+    LaunchOutcome? OUTCOME,
+    String? LAUNCH_FAILURE_CODE,
     String? BE_NUMBER,
     String? O_SUFFIX,
     String? LAUNCH_FACILITY_NAME,
+    String? LAUNCH_FACILITY_CODE,
+    String? LAUNCH_VEHICLE,
+    String? LAUNCH_VEHICLE_CONFIG,
+    String? TARGET_ORBIT,
+    int? OBJECTS_ON_ORBIT,
     String? ON_ORBIT,
-    int? SAT_NO,
+    String? LAUNCH_COUNTRY,
+    String? MISSION_NAME,
+    String? REMARKS,
   })
       : _ID = ID,
+        _SAT_NO = SAT_NO,
         _ORIG_OBJECT_ID = ORIG_OBJECT_ID,
         _DERIVED_FROM = DERIVED_FROM,
         _DECLASSIFICATION_DATE = DECLASSIFICATION_DATE,
         _DECLASSIFICATION_STRING = DECLASSIFICATION_STRING,
         _MSG_CREATE_DATE = MSG_CREATE_DATE,
-        _LAUNCH_FAILURE_CODE = LAUNCH_FAILURE_CODE,
         _LAUNCH_DATE = LAUNCH_DATE,
+        _OUTCOME = OUTCOME,
+        _LAUNCH_FAILURE_CODE = LAUNCH_FAILURE_CODE,
         _BE_NUMBER = BE_NUMBER,
         _O_SUFFIX = O_SUFFIX,
         _LAUNCH_FACILITY_NAME = LAUNCH_FACILITY_NAME,
+        _LAUNCH_FACILITY_CODE = LAUNCH_FACILITY_CODE,
+        _LAUNCH_VEHICLE = LAUNCH_VEHICLE,
+        _LAUNCH_VEHICLE_CONFIG = LAUNCH_VEHICLE_CONFIG,
+        _TARGET_ORBIT = TARGET_ORBIT,
+        _OBJECTS_ON_ORBIT = OBJECTS_ON_ORBIT,
         _ON_ORBIT = ON_ORBIT,
-        _SAT_NO = SAT_NO;
+        _LAUNCH_COUNTRY = LAUNCH_COUNTRY,
+        _MISSION_NAME = MISSION_NAME,
+        _REMARKS = REMARKS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -172,32 +316,55 @@ class LNEObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_DECLASSIFICATION_STRING!);
     final int? MSG_CREATE_DATEOffset = _MSG_CREATE_DATE == null ? null
         : fbBuilder.writeString(_MSG_CREATE_DATE!);
-    final int? LAUNCH_FAILURE_CODEOffset = _LAUNCH_FAILURE_CODE == null ? null
-        : fbBuilder.writeString(_LAUNCH_FAILURE_CODE!);
     final int? LAUNCH_DATEOffset = _LAUNCH_DATE == null ? null
         : fbBuilder.writeString(_LAUNCH_DATE!);
+    final int? LAUNCH_FAILURE_CODEOffset = _LAUNCH_FAILURE_CODE == null ? null
+        : fbBuilder.writeString(_LAUNCH_FAILURE_CODE!);
     final int? BE_NUMBEROffset = _BE_NUMBER == null ? null
         : fbBuilder.writeString(_BE_NUMBER!);
     final int? O_SUFFIXOffset = _O_SUFFIX == null ? null
         : fbBuilder.writeString(_O_SUFFIX!);
     final int? LAUNCH_FACILITY_NAMEOffset = _LAUNCH_FACILITY_NAME == null ? null
         : fbBuilder.writeString(_LAUNCH_FACILITY_NAME!);
+    final int? LAUNCH_FACILITY_CODEOffset = _LAUNCH_FACILITY_CODE == null ? null
+        : fbBuilder.writeString(_LAUNCH_FACILITY_CODE!);
+    final int? LAUNCH_VEHICLEOffset = _LAUNCH_VEHICLE == null ? null
+        : fbBuilder.writeString(_LAUNCH_VEHICLE!);
+    final int? LAUNCH_VEHICLE_CONFIGOffset = _LAUNCH_VEHICLE_CONFIG == null ? null
+        : fbBuilder.writeString(_LAUNCH_VEHICLE_CONFIG!);
+    final int? TARGET_ORBITOffset = _TARGET_ORBIT == null ? null
+        : fbBuilder.writeString(_TARGET_ORBIT!);
     final int? ON_ORBITOffset = _ON_ORBIT == null ? null
         : fbBuilder.writeString(_ON_ORBIT!);
-    fbBuilder.startTable(13);
+    final int? LAUNCH_COUNTRYOffset = _LAUNCH_COUNTRY == null ? null
+        : fbBuilder.writeString(_LAUNCH_COUNTRY!);
+    final int? MISSION_NAMEOffset = _MISSION_NAME == null ? null
+        : fbBuilder.writeString(_MISSION_NAME!);
+    final int? REMARKSOffset = _REMARKS == null ? null
+        : fbBuilder.writeString(_REMARKS!);
+    fbBuilder.startTable(22);
     fbBuilder.addOffset(0, IDOffset);
-    fbBuilder.addOffset(1, ORIG_OBJECT_IDOffset);
-    fbBuilder.addOffset(2, DERIVED_FROMOffset);
-    fbBuilder.addOffset(3, DECLASSIFICATION_DATEOffset);
-    fbBuilder.addOffset(4, DECLASSIFICATION_STRINGOffset);
-    fbBuilder.addOffset(5, MSG_CREATE_DATEOffset);
-    fbBuilder.addOffset(6, LAUNCH_FAILURE_CODEOffset);
+    fbBuilder.addUint32(1, _SAT_NO);
+    fbBuilder.addOffset(2, ORIG_OBJECT_IDOffset);
+    fbBuilder.addOffset(3, DERIVED_FROMOffset);
+    fbBuilder.addOffset(4, DECLASSIFICATION_DATEOffset);
+    fbBuilder.addOffset(5, DECLASSIFICATION_STRINGOffset);
+    fbBuilder.addOffset(6, MSG_CREATE_DATEOffset);
     fbBuilder.addOffset(7, LAUNCH_DATEOffset);
-    fbBuilder.addOffset(8, BE_NUMBEROffset);
-    fbBuilder.addOffset(9, O_SUFFIXOffset);
-    fbBuilder.addOffset(10, LAUNCH_FACILITY_NAMEOffset);
-    fbBuilder.addOffset(11, ON_ORBITOffset);
-    fbBuilder.addInt32(12, _SAT_NO);
+    fbBuilder.addInt8(8, _OUTCOME?.value);
+    fbBuilder.addOffset(9, LAUNCH_FAILURE_CODEOffset);
+    fbBuilder.addOffset(10, BE_NUMBEROffset);
+    fbBuilder.addOffset(11, O_SUFFIXOffset);
+    fbBuilder.addOffset(12, LAUNCH_FACILITY_NAMEOffset);
+    fbBuilder.addOffset(13, LAUNCH_FACILITY_CODEOffset);
+    fbBuilder.addOffset(14, LAUNCH_VEHICLEOffset);
+    fbBuilder.addOffset(15, LAUNCH_VEHICLE_CONFIGOffset);
+    fbBuilder.addOffset(16, TARGET_ORBITOffset);
+    fbBuilder.addUint16(17, _OBJECTS_ON_ORBIT);
+    fbBuilder.addOffset(18, ON_ORBITOffset);
+    fbBuilder.addOffset(19, LAUNCH_COUNTRYOffset);
+    fbBuilder.addOffset(20, MISSION_NAMEOffset);
+    fbBuilder.addOffset(21, REMARKSOffset);
     return fbBuilder.endTable();
   }
 

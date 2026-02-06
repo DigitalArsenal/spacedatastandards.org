@@ -21,3 +21,10 @@ dist-ssr
 *.sln
 *.sw?
 test-go/
+
+# Emscripten SDK (auto-downloaded by CMake)
+packages/emsdk/
+
+# WASM build artifacts
+packages/ccsds-parser/wasm/
+packages/ccsds-parser/build/

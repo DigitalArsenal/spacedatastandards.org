@@ -29,6 +29,7 @@ class LNE(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Unique identifier
     # LNE
     def ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,48 +37,55 @@ class LNE(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Satellite catalog number of launched object
     # LNE
-    def ORIG_OBJECT_ID(self):
+    def SAT_NO(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
 
+    # International designator (YYYY-NNNP)
     # LNE
-    def DERIVED_FROM(self):
+    def ORIG_OBJECT_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Source record this event was derived from
     # LNE
-    def DECLASSIFICATION_DATE(self):
+    def DERIVED_FROM(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Classification date (ISO 8601)
     # LNE
-    def DECLASSIFICATION_STRING(self):
+    def DECLASSIFICATION_DATE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Classification marking
     # LNE
-    def MSG_CREATE_DATE(self):
+    def DECLASSIFICATION_STRING(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Message creation time (ISO 8601)
     # LNE
-    def LAUNCH_FAILURE_CODE(self):
+    def MSG_CREATE_DATE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Launch date and time (ISO 8601)
     # LNE
     def LAUNCH_DATE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
@@ -85,43 +93,120 @@ class LNE(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Launch outcome
     # LNE
-    def BE_NUMBER(self):
+    def OUTCOME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
+    # Launch failure code (if applicable)
     # LNE
-    def O_SUFFIX(self):
+    def LAUNCH_FAILURE_CODE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Basic encyclopedia number
     # LNE
-    def LAUNCH_FACILITY_NAME(self):
+    def BE_NUMBER(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Object suffix identifier
     # LNE
-    def ON_ORBIT(self):
+    def O_SUFFIX(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Launch facility name
     # LNE
-    def SAT_NO(self):
+    def LAUNCH_FACILITY_NAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Launch facility code
+    # LNE
+    def LAUNCH_FACILITY_CODE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Launch vehicle type
+    # LNE
+    def LAUNCH_VEHICLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Launch vehicle configuration
+    # LNE
+    def LAUNCH_VEHICLE_CONFIG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Target orbit type (LEO, MEO, GEO, HEO, SSO, etc.)
+    # LNE
+    def TARGET_ORBIT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Number of objects placed on orbit
+    # LNE
+    def OBJECTS_ON_ORBIT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
         return 0
 
+    # On-orbit reference identifier
+    # LNE
+    def ON_ORBIT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Launch country or operator
+    # LNE
+    def LAUNCH_COUNTRY(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Mission name or payload description
+    # LNE
+    def MISSION_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Additional remarks
+    # LNE
+    def REMARKS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def LNEStart(builder):
-    builder.StartObject(13)
+    builder.StartObject(22)
 
 def Start(builder):
     LNEStart(builder)
@@ -132,41 +217,41 @@ def LNEAddID(builder, ID):
 def AddID(builder, ID):
     LNEAddID(builder, ID)
 
+def LNEAddSAT_NO(builder, SAT_NO):
+    builder.PrependUint32Slot(1, SAT_NO, 0)
+
+def AddSAT_NO(builder, SAT_NO):
+    LNEAddSAT_NO(builder, SAT_NO)
+
 def LNEAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
-    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_OBJECT_ID), 0)
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_OBJECT_ID), 0)
 
 def AddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
     LNEAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
 
 def LNEAddDERIVED_FROM(builder, DERIVED_FROM):
-    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(DERIVED_FROM), 0)
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(DERIVED_FROM), 0)
 
 def AddDERIVED_FROM(builder, DERIVED_FROM):
     LNEAddDERIVED_FROM(builder, DERIVED_FROM)
 
 def LNEAddDECLASSIFICATION_DATE(builder, DECLASSIFICATION_DATE):
-    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(DECLASSIFICATION_DATE), 0)
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(DECLASSIFICATION_DATE), 0)
 
 def AddDECLASSIFICATION_DATE(builder, DECLASSIFICATION_DATE):
     LNEAddDECLASSIFICATION_DATE(builder, DECLASSIFICATION_DATE)
 
 def LNEAddDECLASSIFICATION_STRING(builder, DECLASSIFICATION_STRING):
-    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(DECLASSIFICATION_STRING), 0)
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(DECLASSIFICATION_STRING), 0)
 
 def AddDECLASSIFICATION_STRING(builder, DECLASSIFICATION_STRING):
     LNEAddDECLASSIFICATION_STRING(builder, DECLASSIFICATION_STRING)
 
 def LNEAddMSG_CREATE_DATE(builder, MSG_CREATE_DATE):
-    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(MSG_CREATE_DATE), 0)
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(MSG_CREATE_DATE), 0)
 
 def AddMSG_CREATE_DATE(builder, MSG_CREATE_DATE):
     LNEAddMSG_CREATE_DATE(builder, MSG_CREATE_DATE)
-
-def LNEAddLAUNCH_FAILURE_CODE(builder, LAUNCH_FAILURE_CODE):
-    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(LAUNCH_FAILURE_CODE), 0)
-
-def AddLAUNCH_FAILURE_CODE(builder, LAUNCH_FAILURE_CODE):
-    LNEAddLAUNCH_FAILURE_CODE(builder, LAUNCH_FAILURE_CODE)
 
 def LNEAddLAUNCH_DATE(builder, LAUNCH_DATE):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(LAUNCH_DATE), 0)
@@ -174,35 +259,89 @@ def LNEAddLAUNCH_DATE(builder, LAUNCH_DATE):
 def AddLAUNCH_DATE(builder, LAUNCH_DATE):
     LNEAddLAUNCH_DATE(builder, LAUNCH_DATE)
 
+def LNEAddOUTCOME(builder, OUTCOME):
+    builder.PrependInt8Slot(8, OUTCOME, 0)
+
+def AddOUTCOME(builder, OUTCOME):
+    LNEAddOUTCOME(builder, OUTCOME)
+
+def LNEAddLAUNCH_FAILURE_CODE(builder, LAUNCH_FAILURE_CODE):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(LAUNCH_FAILURE_CODE), 0)
+
+def AddLAUNCH_FAILURE_CODE(builder, LAUNCH_FAILURE_CODE):
+    LNEAddLAUNCH_FAILURE_CODE(builder, LAUNCH_FAILURE_CODE)
+
 def LNEAddBE_NUMBER(builder, BE_NUMBER):
-    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(BE_NUMBER), 0)
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(BE_NUMBER), 0)
 
 def AddBE_NUMBER(builder, BE_NUMBER):
     LNEAddBE_NUMBER(builder, BE_NUMBER)
 
 def LNEAddO_SUFFIX(builder, O_SUFFIX):
-    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(O_SUFFIX), 0)
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(O_SUFFIX), 0)
 
 def AddO_SUFFIX(builder, O_SUFFIX):
     LNEAddO_SUFFIX(builder, O_SUFFIX)
 
 def LNEAddLAUNCH_FACILITY_NAME(builder, LAUNCH_FACILITY_NAME):
-    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(LAUNCH_FACILITY_NAME), 0)
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(LAUNCH_FACILITY_NAME), 0)
 
 def AddLAUNCH_FACILITY_NAME(builder, LAUNCH_FACILITY_NAME):
     LNEAddLAUNCH_FACILITY_NAME(builder, LAUNCH_FACILITY_NAME)
 
+def LNEAddLAUNCH_FACILITY_CODE(builder, LAUNCH_FACILITY_CODE):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(LAUNCH_FACILITY_CODE), 0)
+
+def AddLAUNCH_FACILITY_CODE(builder, LAUNCH_FACILITY_CODE):
+    LNEAddLAUNCH_FACILITY_CODE(builder, LAUNCH_FACILITY_CODE)
+
+def LNEAddLAUNCH_VEHICLE(builder, LAUNCH_VEHICLE):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(LAUNCH_VEHICLE), 0)
+
+def AddLAUNCH_VEHICLE(builder, LAUNCH_VEHICLE):
+    LNEAddLAUNCH_VEHICLE(builder, LAUNCH_VEHICLE)
+
+def LNEAddLAUNCH_VEHICLE_CONFIG(builder, LAUNCH_VEHICLE_CONFIG):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(LAUNCH_VEHICLE_CONFIG), 0)
+
+def AddLAUNCH_VEHICLE_CONFIG(builder, LAUNCH_VEHICLE_CONFIG):
+    LNEAddLAUNCH_VEHICLE_CONFIG(builder, LAUNCH_VEHICLE_CONFIG)
+
+def LNEAddTARGET_ORBIT(builder, TARGET_ORBIT):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(TARGET_ORBIT), 0)
+
+def AddTARGET_ORBIT(builder, TARGET_ORBIT):
+    LNEAddTARGET_ORBIT(builder, TARGET_ORBIT)
+
+def LNEAddOBJECTS_ON_ORBIT(builder, OBJECTS_ON_ORBIT):
+    builder.PrependUint16Slot(17, OBJECTS_ON_ORBIT, 0)
+
+def AddOBJECTS_ON_ORBIT(builder, OBJECTS_ON_ORBIT):
+    LNEAddOBJECTS_ON_ORBIT(builder, OBJECTS_ON_ORBIT)
+
 def LNEAddON_ORBIT(builder, ON_ORBIT):
-    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(ON_ORBIT), 0)
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(ON_ORBIT), 0)
 
 def AddON_ORBIT(builder, ON_ORBIT):
     LNEAddON_ORBIT(builder, ON_ORBIT)
 
-def LNEAddSAT_NO(builder, SAT_NO):
-    builder.PrependInt32Slot(12, SAT_NO, 0)
+def LNEAddLAUNCH_COUNTRY(builder, LAUNCH_COUNTRY):
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(LAUNCH_COUNTRY), 0)
 
-def AddSAT_NO(builder, SAT_NO):
-    LNEAddSAT_NO(builder, SAT_NO)
+def AddLAUNCH_COUNTRY(builder, LAUNCH_COUNTRY):
+    LNEAddLAUNCH_COUNTRY(builder, LAUNCH_COUNTRY)
+
+def LNEAddMISSION_NAME(builder, MISSION_NAME):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(MISSION_NAME), 0)
+
+def AddMISSION_NAME(builder, MISSION_NAME):
+    LNEAddMISSION_NAME(builder, MISSION_NAME)
+
+def LNEAddREMARKS(builder, REMARKS):
+    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(REMARKS), 0)
+
+def AddREMARKS(builder, REMARKS):
+    LNEAddREMARKS(builder, REMARKS)
 
 def LNEEnd(builder):
     return builder.EndObject()
@@ -216,18 +355,27 @@ class LNET(object):
     # LNET
     def __init__(self):
         self.ID = None  # type: str
+        self.SAT_NO = 0  # type: int
         self.ORIG_OBJECT_ID = None  # type: str
         self.DERIVED_FROM = None  # type: str
         self.DECLASSIFICATION_DATE = None  # type: str
         self.DECLASSIFICATION_STRING = None  # type: str
         self.MSG_CREATE_DATE = None  # type: str
-        self.LAUNCH_FAILURE_CODE = None  # type: str
         self.LAUNCH_DATE = None  # type: str
+        self.OUTCOME = 0  # type: int
+        self.LAUNCH_FAILURE_CODE = None  # type: str
         self.BE_NUMBER = None  # type: str
         self.O_SUFFIX = None  # type: str
         self.LAUNCH_FACILITY_NAME = None  # type: str
+        self.LAUNCH_FACILITY_CODE = None  # type: str
+        self.LAUNCH_VEHICLE = None  # type: str
+        self.LAUNCH_VEHICLE_CONFIG = None  # type: str
+        self.TARGET_ORBIT = None  # type: str
+        self.OBJECTS_ON_ORBIT = 0  # type: int
         self.ON_ORBIT = None  # type: str
-        self.SAT_NO = 0  # type: int
+        self.LAUNCH_COUNTRY = None  # type: str
+        self.MISSION_NAME = None  # type: str
+        self.REMARKS = None  # type: str
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -251,18 +399,27 @@ class LNET(object):
         if LNE is None:
             return
         self.ID = LNE.ID()
+        self.SAT_NO = LNE.SAT_NO()
         self.ORIG_OBJECT_ID = LNE.ORIG_OBJECT_ID()
         self.DERIVED_FROM = LNE.DERIVED_FROM()
         self.DECLASSIFICATION_DATE = LNE.DECLASSIFICATION_DATE()
         self.DECLASSIFICATION_STRING = LNE.DECLASSIFICATION_STRING()
         self.MSG_CREATE_DATE = LNE.MSG_CREATE_DATE()
-        self.LAUNCH_FAILURE_CODE = LNE.LAUNCH_FAILURE_CODE()
         self.LAUNCH_DATE = LNE.LAUNCH_DATE()
+        self.OUTCOME = LNE.OUTCOME()
+        self.LAUNCH_FAILURE_CODE = LNE.LAUNCH_FAILURE_CODE()
         self.BE_NUMBER = LNE.BE_NUMBER()
         self.O_SUFFIX = LNE.O_SUFFIX()
         self.LAUNCH_FACILITY_NAME = LNE.LAUNCH_FACILITY_NAME()
+        self.LAUNCH_FACILITY_CODE = LNE.LAUNCH_FACILITY_CODE()
+        self.LAUNCH_VEHICLE = LNE.LAUNCH_VEHICLE()
+        self.LAUNCH_VEHICLE_CONFIG = LNE.LAUNCH_VEHICLE_CONFIG()
+        self.TARGET_ORBIT = LNE.TARGET_ORBIT()
+        self.OBJECTS_ON_ORBIT = LNE.OBJECTS_ON_ORBIT()
         self.ON_ORBIT = LNE.ON_ORBIT()
-        self.SAT_NO = LNE.SAT_NO()
+        self.LAUNCH_COUNTRY = LNE.LAUNCH_COUNTRY()
+        self.MISSION_NAME = LNE.MISSION_NAME()
+        self.REMARKS = LNE.REMARKS()
 
     # LNET
     def Pack(self, builder):
@@ -278,21 +435,36 @@ class LNET(object):
             DECLASSIFICATION_STRING = builder.CreateString(self.DECLASSIFICATION_STRING)
         if self.MSG_CREATE_DATE is not None:
             MSG_CREATE_DATE = builder.CreateString(self.MSG_CREATE_DATE)
-        if self.LAUNCH_FAILURE_CODE is not None:
-            LAUNCH_FAILURE_CODE = builder.CreateString(self.LAUNCH_FAILURE_CODE)
         if self.LAUNCH_DATE is not None:
             LAUNCH_DATE = builder.CreateString(self.LAUNCH_DATE)
+        if self.LAUNCH_FAILURE_CODE is not None:
+            LAUNCH_FAILURE_CODE = builder.CreateString(self.LAUNCH_FAILURE_CODE)
         if self.BE_NUMBER is not None:
             BE_NUMBER = builder.CreateString(self.BE_NUMBER)
         if self.O_SUFFIX is not None:
             O_SUFFIX = builder.CreateString(self.O_SUFFIX)
         if self.LAUNCH_FACILITY_NAME is not None:
             LAUNCH_FACILITY_NAME = builder.CreateString(self.LAUNCH_FACILITY_NAME)
+        if self.LAUNCH_FACILITY_CODE is not None:
+            LAUNCH_FACILITY_CODE = builder.CreateString(self.LAUNCH_FACILITY_CODE)
+        if self.LAUNCH_VEHICLE is not None:
+            LAUNCH_VEHICLE = builder.CreateString(self.LAUNCH_VEHICLE)
+        if self.LAUNCH_VEHICLE_CONFIG is not None:
+            LAUNCH_VEHICLE_CONFIG = builder.CreateString(self.LAUNCH_VEHICLE_CONFIG)
+        if self.TARGET_ORBIT is not None:
+            TARGET_ORBIT = builder.CreateString(self.TARGET_ORBIT)
         if self.ON_ORBIT is not None:
             ON_ORBIT = builder.CreateString(self.ON_ORBIT)
+        if self.LAUNCH_COUNTRY is not None:
+            LAUNCH_COUNTRY = builder.CreateString(self.LAUNCH_COUNTRY)
+        if self.MISSION_NAME is not None:
+            MISSION_NAME = builder.CreateString(self.MISSION_NAME)
+        if self.REMARKS is not None:
+            REMARKS = builder.CreateString(self.REMARKS)
         LNEStart(builder)
         if self.ID is not None:
             LNEAddID(builder, ID)
+        LNEAddSAT_NO(builder, self.SAT_NO)
         if self.ORIG_OBJECT_ID is not None:
             LNEAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
         if self.DERIVED_FROM is not None:
@@ -303,18 +475,33 @@ class LNET(object):
             LNEAddDECLASSIFICATION_STRING(builder, DECLASSIFICATION_STRING)
         if self.MSG_CREATE_DATE is not None:
             LNEAddMSG_CREATE_DATE(builder, MSG_CREATE_DATE)
-        if self.LAUNCH_FAILURE_CODE is not None:
-            LNEAddLAUNCH_FAILURE_CODE(builder, LAUNCH_FAILURE_CODE)
         if self.LAUNCH_DATE is not None:
             LNEAddLAUNCH_DATE(builder, LAUNCH_DATE)
+        LNEAddOUTCOME(builder, self.OUTCOME)
+        if self.LAUNCH_FAILURE_CODE is not None:
+            LNEAddLAUNCH_FAILURE_CODE(builder, LAUNCH_FAILURE_CODE)
         if self.BE_NUMBER is not None:
             LNEAddBE_NUMBER(builder, BE_NUMBER)
         if self.O_SUFFIX is not None:
             LNEAddO_SUFFIX(builder, O_SUFFIX)
         if self.LAUNCH_FACILITY_NAME is not None:
             LNEAddLAUNCH_FACILITY_NAME(builder, LAUNCH_FACILITY_NAME)
+        if self.LAUNCH_FACILITY_CODE is not None:
+            LNEAddLAUNCH_FACILITY_CODE(builder, LAUNCH_FACILITY_CODE)
+        if self.LAUNCH_VEHICLE is not None:
+            LNEAddLAUNCH_VEHICLE(builder, LAUNCH_VEHICLE)
+        if self.LAUNCH_VEHICLE_CONFIG is not None:
+            LNEAddLAUNCH_VEHICLE_CONFIG(builder, LAUNCH_VEHICLE_CONFIG)
+        if self.TARGET_ORBIT is not None:
+            LNEAddTARGET_ORBIT(builder, TARGET_ORBIT)
+        LNEAddOBJECTS_ON_ORBIT(builder, self.OBJECTS_ON_ORBIT)
         if self.ON_ORBIT is not None:
             LNEAddON_ORBIT(builder, ON_ORBIT)
-        LNEAddSAT_NO(builder, self.SAT_NO)
+        if self.LAUNCH_COUNTRY is not None:
+            LNEAddLAUNCH_COUNTRY(builder, LAUNCH_COUNTRY)
+        if self.MISSION_NAME is not None:
+            LNEAddMISSION_NAME(builder, MISSION_NAME)
+        if self.REMARKS is not None:
+            LNEAddREMARKS(builder, REMARKS)
         LNE = LNEEnd(builder)
         return LNE

@@ -41,45 +41,52 @@ class SKI extends Table
         return $this;
     }
 
+    /// Unique identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// On-orbit reference
     public function getON_ORBIT()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// International designator
     public function getORIG_OBJECT_ID()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getID_SENSOR()
-    {
-        $o = $this->__offset(10);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
+    /// Satellite catalog number
     /**
-     * @return int
+     * @return uint
      */
     public function getSAT_NO()
     {
-        $o = $this->__offset(12);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        $o = $this->__offset(10);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
+    /// Sensor identifier
+    public function getID_SENSOR()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Original sensor identifier
     public function getORIG_SENSOR_ID()
     {
         $o = $this->__offset(14);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Sensor geodetic latitude (degrees)
     /**
      * @return double
      */
@@ -89,6 +96,7 @@ class SKI extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor geodetic longitude (degrees)
     /**
      * @return double
      */
@@ -98,6 +106,7 @@ class SKI extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor altitude (km)
     /**
      * @return double
      */
@@ -107,6 +116,7 @@ class SKI extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor ECEF X position (km)
     /**
      * @return double
      */
@@ -116,6 +126,7 @@ class SKI extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor ECEF Y position (km)
     /**
      * @return double
      */
@@ -125,6 +136,7 @@ class SKI extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor ECEF Z position (km)
     /**
      * @return double
      */
@@ -134,14 +146,15 @@ class SKI extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Sensor quaternion (scalar-last: q1, q2, q3, q0)
     /**
      * @param int offset
-     * @return string
+     * @return double
      */
     public function getSEN_QUAT($j)
     {
         $o = $this->__offset(28);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
@@ -153,14 +166,15 @@ class SKI extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Sensor quaternion rate
     /**
      * @param int offset
-     * @return string
+     * @return double
      */
     public function getSEN_QUAT_DOT($j)
     {
         $o = $this->__offset(30);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
@@ -172,30 +186,38 @@ class SKI extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Image type
+    /**
+     * @return sbyte
+     */
     public function getIMAGE_TYPE()
     {
         $o = $this->__offset(32);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \imageType::VISIBLE;
     }
 
+    /// Exposure start time (ISO 8601)
     public function getEXP_START_TIME()
     {
         $o = $this->__offset(34);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Exposure end time (ISO 8601)
     public function getEXP_END_TIME()
     {
         $o = $this->__offset(36);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Image source information
     public function getIMAGE_SOURCE_INFO()
     {
         $o = $this->__offset(38);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Top-left corner start azimuth (degrees)
     /**
      * @return double
      */
@@ -205,6 +227,7 @@ class SKI extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Top-left corner start elevation (degrees)
     /**
      * @return double
      */
@@ -214,6 +237,7 @@ class SKI extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Top-left corner stop azimuth (degrees)
     /**
      * @return double
      */
@@ -223,6 +247,7 @@ class SKI extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Top-left corner stop elevation (degrees)
     /**
      * @return double
      */
@@ -232,30 +257,34 @@ class SKI extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Image set identifier
     public function getIMAGE_SET_ID()
     {
         $o = $this->__offset(48);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Number of images in set
     /**
-     * @return int
+     * @return ushort
      */
     public function getIMAGE_SET_LENGTH()
     {
         $o = $this->__offset(50);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
     }
 
+    /// Sequence number within set
     /**
-     * @return int
+     * @return ushort
      */
     public function getSEQUENCE_ID()
     {
         $o = $this->__offset(52);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
     }
 
+    /// Frame field-of-view width (degrees)
     /**
      * @return double
      */
@@ -265,6 +294,7 @@ class SKI extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Frame field-of-view height (degrees)
     /**
      * @return double
      */
@@ -274,6 +304,7 @@ class SKI extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Pixel field-of-view width (arcseconds)
     /**
      * @return double
      */
@@ -283,6 +314,7 @@ class SKI extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Pixel field-of-view height (arcseconds)
     /**
      * @return double
      */
@@ -292,51 +324,58 @@ class SKI extends Table
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Frame width (pixels)
     /**
-     * @return int
+     * @return ushort
      */
     public function getFRAME_WIDTH_PIXELS()
     {
         $o = $this->__offset(62);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
     }
 
+    /// Frame height (pixels)
     /**
-     * @return int
+     * @return ushort
      */
     public function getFRAME_HEIGHT_PIXELS()
     {
         $o = $this->__offset(64);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->bb->getUshort($o + $this->bb_pos) : 0;
     }
 
+    /// Pixel bit depth
     /**
-     * @return int
+     * @return byte
      */
     public function getPIXEL_BIT_DEPTH()
     {
         $o = $this->__offset(66);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->bb->getByte($o + $this->bb_pos) : 0;
     }
 
+    /// Annotation key reference
     public function getANNOTATION_KEY()
     {
         $o = $this->__offset(68);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Calibration key reference
     public function getCALIBRATION_KEY()
     {
         $o = $this->__offset(70);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Image filename
     public function getFILENAME()
     {
         $o = $this->__offset(72);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// File size (bytes)
     /**
      * @return long
      */
@@ -346,18 +385,21 @@ class SKI extends Table
         return $o != 0 ? $this->bb->getLong($o + $this->bb_pos) : 0;
     }
 
+    /// File checksum value
     public function getCHECKSUM_VALUE()
     {
         $o = $this->__offset(76);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Transaction identifier
     public function getTRANSACTION_ID()
     {
         $o = $this->__offset(78);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Associated tags
     /**
      * @param int offset
      * @return string
@@ -377,12 +419,14 @@ class SKI extends Table
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Description
     public function getDESCRIPTION()
     {
         $o = $this->__offset(82);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Associated EO observation references
     /**
      * @param int offset
      * @return string
@@ -415,14 +459,14 @@ class SKI extends Table
      * @param FlatBufferBuilder $builder
      * @return SKI
      */
-    public static function createSKI(FlatBufferBuilder $builder, $ID, $ON_ORBIT, $ORIG_OBJECT_ID, $ID_SENSOR, $SAT_NO, $ORIG_SENSOR_ID, $SENLAT, $SENLON, $SENALT, $SENX, $SENY, $SENZ, $SEN_QUAT, $SEN_QUAT_DOT, $IMAGE_TYPE, $EXP_START_TIME, $EXP_END_TIME, $IMAGE_SOURCE_INFO, $TOP_LEFT_START_AZ, $TOP_LEFT_START_EL, $TOP_LEFT_STOP_AZ, $TOP_LEFT_STOP_EL, $IMAGE_SET_ID, $IMAGE_SET_LENGTH, $SEQUENCE_ID, $FRAME_FOVWIDTH, $FRAME_FOVHEIGHT, $PIXEL_FOVWIDTH, $PIXEL_FOVHEIGHT, $FRAME_WIDTH_PIXELS, $FRAME_HEIGHT_PIXELS, $PIXEL_BIT_DEPTH, $ANNOTATION_KEY, $CALIBRATION_KEY, $FILENAME, $FILESIZE, $CHECKSUM_VALUE, $TRANSACTION_ID, $TAGS, $DESCRIPTION, $EO_OBSERVATIONS)
+    public static function createSKI(FlatBufferBuilder $builder, $ID, $ON_ORBIT, $ORIG_OBJECT_ID, $SAT_NO, $ID_SENSOR, $ORIG_SENSOR_ID, $SENLAT, $SENLON, $SENALT, $SENX, $SENY, $SENZ, $SEN_QUAT, $SEN_QUAT_DOT, $IMAGE_TYPE, $EXP_START_TIME, $EXP_END_TIME, $IMAGE_SOURCE_INFO, $TOP_LEFT_START_AZ, $TOP_LEFT_START_EL, $TOP_LEFT_STOP_AZ, $TOP_LEFT_STOP_EL, $IMAGE_SET_ID, $IMAGE_SET_LENGTH, $SEQUENCE_ID, $FRAME_FOVWIDTH, $FRAME_FOVHEIGHT, $PIXEL_FOVWIDTH, $PIXEL_FOVHEIGHT, $FRAME_WIDTH_PIXELS, $FRAME_HEIGHT_PIXELS, $PIXEL_BIT_DEPTH, $ANNOTATION_KEY, $CALIBRATION_KEY, $FILENAME, $FILESIZE, $CHECKSUM_VALUE, $TRANSACTION_ID, $TAGS, $DESCRIPTION, $EO_OBSERVATIONS)
     {
         $builder->startObject(41);
         self::addID($builder, $ID);
         self::addON_ORBIT($builder, $ON_ORBIT);
         self::addORIG_OBJECT_ID($builder, $ORIG_OBJECT_ID);
-        self::addID_SENSOR($builder, $ID_SENSOR);
         self::addSAT_NO($builder, $SAT_NO);
+        self::addID_SENSOR($builder, $ID_SENSOR);
         self::addORIG_SENSOR_ID($builder, $ORIG_SENSOR_ID);
         self::addSENLAT($builder, $SENLAT);
         self::addSENLON($builder, $SENLON);
@@ -495,22 +539,22 @@ class SKI extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addSAT_NO(FlatBufferBuilder $builder, $SAT_NO)
+    {
+        $builder->addUintX(3, $SAT_NO, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param StringOffset
      * @return void
      */
     public static function addID_SENSOR(FlatBufferBuilder $builder, $ID_SENSOR)
     {
-        $builder->addOffsetX(3, $ID_SENSOR, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int
-     * @return void
-     */
-    public static function addSAT_NO(FlatBufferBuilder $builder, $SAT_NO)
-    {
-        $builder->addIntX(4, $SAT_NO, 0);
+        $builder->addOffsetX(4, $ID_SENSOR, 0);
     }
 
     /**
@@ -600,9 +644,9 @@ class SKI extends Table
      */
     public static function createSEN_QUATVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -614,7 +658,7 @@ class SKI extends Table
      */
     public static function startSEN_QUATVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**
@@ -634,9 +678,9 @@ class SKI extends Table
      */
     public static function createSEN_QUAT_DOTVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -648,17 +692,17 @@ class SKI extends Table
      */
     public static function startSEN_QUAT_DOTVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addIMAGE_TYPE(FlatBufferBuilder $builder, $IMAGE_TYPE)
     {
-        $builder->addOffsetX(14, $IMAGE_TYPE, 0);
+        $builder->addSbyteX(14, $IMAGE_TYPE, 0);
     }
 
     /**
@@ -743,22 +787,22 @@ class SKI extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param ushort
      * @return void
      */
     public static function addIMAGE_SET_LENGTH(FlatBufferBuilder $builder, $IMAGE_SET_LENGTH)
     {
-        $builder->addIntX(23, $IMAGE_SET_LENGTH, 0);
+        $builder->addUshortX(23, $IMAGE_SET_LENGTH, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param ushort
      * @return void
      */
     public static function addSEQUENCE_ID(FlatBufferBuilder $builder, $SEQUENCE_ID)
     {
-        $builder->addIntX(24, $SEQUENCE_ID, 0);
+        $builder->addUshortX(24, $SEQUENCE_ID, 0);
     }
 
     /**
@@ -803,32 +847,32 @@ class SKI extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param ushort
      * @return void
      */
     public static function addFRAME_WIDTH_PIXELS(FlatBufferBuilder $builder, $FRAME_WIDTH_PIXELS)
     {
-        $builder->addIntX(29, $FRAME_WIDTH_PIXELS, 0);
+        $builder->addUshortX(29, $FRAME_WIDTH_PIXELS, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param ushort
      * @return void
      */
     public static function addFRAME_HEIGHT_PIXELS(FlatBufferBuilder $builder, $FRAME_HEIGHT_PIXELS)
     {
-        $builder->addIntX(30, $FRAME_HEIGHT_PIXELS, 0);
+        $builder->addUshortX(30, $FRAME_HEIGHT_PIXELS, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param byte
      * @return void
      */
     public static function addPIXEL_BIT_DEPTH(FlatBufferBuilder $builder, $PIXEL_BIT_DEPTH)
     {
-        $builder->addIntX(31, $PIXEL_BIT_DEPTH, 0);
+        $builder->addByteX(31, $PIXEL_BIT_DEPTH, 0);
     }
 
     /**

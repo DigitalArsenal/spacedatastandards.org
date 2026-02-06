@@ -19,6 +19,7 @@ public struct OBD : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public OBD __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Unique identifier
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,157 +27,194 @@ public struct OBD : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
-  public string START_TIME { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Satellite catalog number
+  public uint SAT_NO { get { int o = __p.__offset(6); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// International designator
+  public string ORIG_OBJECT_ID { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSTART_TIMEBytes() { return __p.__vector_as_span<byte>(6, 1); }
+  public Span<byte> GetORIG_OBJECT_IDBytes() { return __p.__vector_as_span<byte>(8, 1); }
 #else
-  public ArraySegment<byte>? GetSTART_TIMEBytes() { return __p.__vector_as_arraysegment(6); }
+  public ArraySegment<byte>? GetORIG_OBJECT_IDBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
-  public byte[] GetSTART_TIMEArray() { return __p.__vector_as_array<byte>(6); }
-  public string END_TIME { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetORIG_OBJECT_IDArray() { return __p.__vector_as_array<byte>(8); }
+  /// On-orbit reference
+  public string ON_ORBIT { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetEND_TIMEBytes() { return __p.__vector_as_span<byte>(8, 1); }
+  public Span<byte> GetON_ORBITBytes() { return __p.__vector_as_span<byte>(10, 1); }
 #else
-  public ArraySegment<byte>? GetEND_TIMEBytes() { return __p.__vector_as_arraysegment(8); }
+  public ArraySegment<byte>? GetON_ORBITBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
-  public byte[] GetEND_TIMEArray() { return __p.__vector_as_array<byte>(8); }
-  public string ORIG_OBJECT_ID { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetON_ORBITArray() { return __p.__vector_as_array<byte>(10); }
+  /// OD fit start time (ISO 8601)
+  public string START_TIME { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetORIG_OBJECT_IDBytes() { return __p.__vector_as_span<byte>(10, 1); }
+  public Span<byte> GetSTART_TIMEBytes() { return __p.__vector_as_span<byte>(12, 1); }
 #else
-  public ArraySegment<byte>? GetORIG_OBJECT_IDBytes() { return __p.__vector_as_arraysegment(10); }
+  public ArraySegment<byte>? GetSTART_TIMEBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
-  public byte[] GetORIG_OBJECT_IDArray() { return __p.__vector_as_array<byte>(10); }
-  public int SAT_NO { get { int o = __p.__offset(12); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public string APRIORI_ID_ELSET { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetSTART_TIMEArray() { return __p.__vector_as_array<byte>(12); }
+  /// OD fit end time (ISO 8601)
+  public string END_TIME { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetAPRIORI_ID_ELSETBytes() { return __p.__vector_as_span<byte>(14, 1); }
+  public Span<byte> GetEND_TIMEBytes() { return __p.__vector_as_span<byte>(14, 1); }
 #else
-  public ArraySegment<byte>? GetAPRIORI_ID_ELSETBytes() { return __p.__vector_as_arraysegment(14); }
+  public ArraySegment<byte>? GetEND_TIMEBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
-  public byte[] GetAPRIORI_ID_ELSETArray() { return __p.__vector_as_array<byte>(14); }
-  public string APRIORI_ELSET { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetEND_TIMEArray() { return __p.__vector_as_array<byte>(14); }
+  /// OD method used
+  public odMethod METHOD { get { int o = __p.__offset(16); return o != 0 ? (odMethod)__p.bb.GetSbyte(o + __p.bb_pos) : odMethod.BATCH_LEAST_SQUARES; } }
+  /// Method source or software
+  public string METHOD_SOURCE { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetAPRIORI_ELSETBytes() { return __p.__vector_as_span<byte>(16, 1); }
+  public Span<byte> GetMETHOD_SOURCEBytes() { return __p.__vector_as_span<byte>(18, 1); }
 #else
-  public ArraySegment<byte>? GetAPRIORI_ELSETBytes() { return __p.__vector_as_arraysegment(16); }
+  public ArraySegment<byte>? GetMETHOD_SOURCEBytes() { return __p.__vector_as_arraysegment(18); }
 #endif
-  public byte[] GetAPRIORI_ELSETArray() { return __p.__vector_as_array<byte>(16); }
-  public string APRIORI_ID_STATE_VECTOR { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetMETHOD_SOURCEArray() { return __p.__vector_as_array<byte>(18); }
+  /// True if this is an initial orbit determination
+  public bool INITIAL_OD { get { int o = __p.__offset(20); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// A priori element set identifier
+  public string APRIORI_ID_ELSET { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetAPRIORI_ID_STATE_VECTORBytes() { return __p.__vector_as_span<byte>(18, 1); }
+  public Span<byte> GetAPRIORI_ID_ELSETBytes() { return __p.__vector_as_span<byte>(22, 1); }
 #else
-  public ArraySegment<byte>? GetAPRIORI_ID_STATE_VECTORBytes() { return __p.__vector_as_arraysegment(18); }
+  public ArraySegment<byte>? GetAPRIORI_ID_ELSETBytes() { return __p.__vector_as_arraysegment(22); }
 #endif
-  public byte[] GetAPRIORI_ID_STATE_VECTORArray() { return __p.__vector_as_array<byte>(18); }
-  public string APRIORI_STATE_VECTOR { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetAPRIORI_ID_ELSETArray() { return __p.__vector_as_array<byte>(22); }
+  /// A priori element set data reference
+  public string APRIORI_ELSET { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetAPRIORI_STATE_VECTORBytes() { return __p.__vector_as_span<byte>(20, 1); }
+  public Span<byte> GetAPRIORI_ELSETBytes() { return __p.__vector_as_span<byte>(24, 1); }
 #else
-  public ArraySegment<byte>? GetAPRIORI_STATE_VECTORBytes() { return __p.__vector_as_arraysegment(20); }
+  public ArraySegment<byte>? GetAPRIORI_ELSETBytes() { return __p.__vector_as_arraysegment(24); }
 #endif
-  public byte[] GetAPRIORI_STATE_VECTORArray() { return __p.__vector_as_array<byte>(20); }
-  public bool INITIAL_OD { get { int o = __p.__offset(22); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  public string LAST_OB_START { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetAPRIORI_ELSETArray() { return __p.__vector_as_array<byte>(24); }
+  /// A priori state vector identifier
+  public string APRIORI_ID_STATE_VECTOR { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetLAST_OB_STARTBytes() { return __p.__vector_as_span<byte>(24, 1); }
+  public Span<byte> GetAPRIORI_ID_STATE_VECTORBytes() { return __p.__vector_as_span<byte>(26, 1); }
 #else
-  public ArraySegment<byte>? GetLAST_OB_STARTBytes() { return __p.__vector_as_arraysegment(24); }
+  public ArraySegment<byte>? GetAPRIORI_ID_STATE_VECTORBytes() { return __p.__vector_as_arraysegment(26); }
 #endif
-  public byte[] GetLAST_OB_STARTArray() { return __p.__vector_as_array<byte>(24); }
-  public string LAST_OB_END { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetAPRIORI_ID_STATE_VECTORArray() { return __p.__vector_as_array<byte>(26); }
+  /// A priori state vector data reference
+  public string APRIORI_STATE_VECTOR { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetLAST_OB_ENDBytes() { return __p.__vector_as_span<byte>(26, 1); }
+  public Span<byte> GetAPRIORI_STATE_VECTORBytes() { return __p.__vector_as_span<byte>(28, 1); }
 #else
-  public ArraySegment<byte>? GetLAST_OB_ENDBytes() { return __p.__vector_as_arraysegment(26); }
+  public ArraySegment<byte>? GetAPRIORI_STATE_VECTORBytes() { return __p.__vector_as_arraysegment(28); }
 #endif
-  public byte[] GetLAST_OB_ENDArray() { return __p.__vector_as_array<byte>(26); }
-  public double TIME_SPAN { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string EFFECTIVE_FROM { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetAPRIORI_STATE_VECTORArray() { return __p.__vector_as_array<byte>(28); }
+  /// Start of last observation arc (ISO 8601)
+  public string LAST_OB_START { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetEFFECTIVE_FROMBytes() { return __p.__vector_as_span<byte>(30, 1); }
+  public Span<byte> GetLAST_OB_STARTBytes() { return __p.__vector_as_span<byte>(30, 1); }
 #else
-  public ArraySegment<byte>? GetEFFECTIVE_FROMBytes() { return __p.__vector_as_arraysegment(30); }
+  public ArraySegment<byte>? GetLAST_OB_STARTBytes() { return __p.__vector_as_arraysegment(30); }
 #endif
-  public byte[] GetEFFECTIVE_FROMArray() { return __p.__vector_as_array<byte>(30); }
-  public string EFFECTIVE_UNTIL { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetLAST_OB_STARTArray() { return __p.__vector_as_array<byte>(30); }
+  /// End of last observation arc (ISO 8601)
+  public string LAST_OB_END { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetEFFECTIVE_UNTILBytes() { return __p.__vector_as_span<byte>(32, 1); }
+  public Span<byte> GetLAST_OB_ENDBytes() { return __p.__vector_as_span<byte>(32, 1); }
 #else
-  public ArraySegment<byte>? GetEFFECTIVE_UNTILBytes() { return __p.__vector_as_arraysegment(32); }
+  public ArraySegment<byte>? GetLAST_OB_ENDBytes() { return __p.__vector_as_arraysegment(32); }
 #endif
-  public byte[] GetEFFECTIVE_UNTILArray() { return __p.__vector_as_array<byte>(32); }
-  public double WRMS { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double PREVIOUS_WRMS { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double FIRST_PASS_WRMS { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double BEST_PASS_WRMS { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double ERROR_GROWTH_RATE { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double EDR { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public string METHOD { get { int o = __p.__offset(46); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetLAST_OB_ENDArray() { return __p.__vector_as_array<byte>(32); }
+  /// Observation time span (days)
+  public double TIME_SPAN { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Fit span in days
+  public double FIT_SPAN { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Solution effective from (ISO 8601)
+  public string EFFECTIVE_FROM { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetMETHODBytes() { return __p.__vector_as_span<byte>(46, 1); }
+  public Span<byte> GetEFFECTIVE_FROMBytes() { return __p.__vector_as_span<byte>(38, 1); }
 #else
-  public ArraySegment<byte>? GetMETHODBytes() { return __p.__vector_as_arraysegment(46); }
+  public ArraySegment<byte>? GetEFFECTIVE_FROMBytes() { return __p.__vector_as_arraysegment(38); }
 #endif
-  public byte[] GetMETHODArray() { return __p.__vector_as_array<byte>(46); }
-  public string METHOD_SOURCE { get { int o = __p.__offset(48); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetEFFECTIVE_FROMArray() { return __p.__vector_as_array<byte>(38); }
+  /// Solution effective until (ISO 8601)
+  public string EFFECTIVE_UNTIL { get { int o = __p.__offset(40); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetMETHOD_SOURCEBytes() { return __p.__vector_as_span<byte>(48, 1); }
+  public Span<byte> GetEFFECTIVE_UNTILBytes() { return __p.__vector_as_span<byte>(40, 1); }
 #else
-  public ArraySegment<byte>? GetMETHOD_SOURCEBytes() { return __p.__vector_as_arraysegment(48); }
+  public ArraySegment<byte>? GetEFFECTIVE_UNTILBytes() { return __p.__vector_as_arraysegment(40); }
 #endif
-  public byte[] GetMETHOD_SOURCEArray() { return __p.__vector_as_array<byte>(48); }
-  public double FIT_SPAN { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public bool BALLISTIC_COEFF_EST { get { int o = __p.__offset(52); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  public string BALLISTIC_COEFF_MODEL { get { int o = __p.__offset(54); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetEFFECTIVE_UNTILArray() { return __p.__vector_as_array<byte>(40); }
+  /// Weighted RMS of residuals
+  public double WRMS { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Previous solution WRMS
+  public double PREVIOUS_WRMS { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// First pass WRMS
+  public double FIRST_PASS_WRMS { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Best pass WRMS
+  public double BEST_PASS_WRMS { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Error growth rate (km/day)
+  public double ERROR_GROWTH_RATE { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Energy dissipation rate
+  public double EDR { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// True if ballistic coefficient was estimated
+  public bool BALLISTIC_COEFF_EST { get { int o = __p.__offset(54); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Ballistic coefficient model
+  public string BALLISTIC_COEFF_MODEL { get { int o = __p.__offset(56); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetBALLISTIC_COEFF_MODELBytes() { return __p.__vector_as_span<byte>(54, 1); }
+  public Span<byte> GetBALLISTIC_COEFF_MODELBytes() { return __p.__vector_as_span<byte>(56, 1); }
 #else
-  public ArraySegment<byte>? GetBALLISTIC_COEFF_MODELBytes() { return __p.__vector_as_arraysegment(54); }
+  public ArraySegment<byte>? GetBALLISTIC_COEFF_MODELBytes() { return __p.__vector_as_arraysegment(56); }
 #endif
-  public byte[] GetBALLISTIC_COEFF_MODELArray() { return __p.__vector_as_array<byte>(54); }
-  public bool AGOM_EST { get { int o = __p.__offset(56); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
-  public string AGOM_MODEL { get { int o = __p.__offset(58); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  public byte[] GetBALLISTIC_COEFF_MODELArray() { return __p.__vector_as_array<byte>(56); }
+  /// True if area-to-mass ratio was estimated
+  public bool AGOM_EST { get { int o = __p.__offset(58); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// Area-to-mass ratio model
+  public string AGOM_MODEL { get { int o = __p.__offset(60); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetAGOM_MODELBytes() { return __p.__vector_as_span<byte>(58, 1); }
+  public Span<byte> GetAGOM_MODELBytes() { return __p.__vector_as_span<byte>(60, 1); }
 #else
-  public ArraySegment<byte>? GetAGOM_MODELBytes() { return __p.__vector_as_arraysegment(58); }
+  public ArraySegment<byte>? GetAGOM_MODELBytes() { return __p.__vector_as_arraysegment(60); }
 #endif
-  public byte[] GetAGOM_MODELArray() { return __p.__vector_as_array<byte>(58); }
-  public double RMS_CONVERGENCE_CRITERIA { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public int NUM_ITERATIONS { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public string ACCEPTED_OB_TYPS(int j) { int o = __p.__offset(64); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int ACCEPTED_OB_TYPSLength { get { int o = __p.__offset(64); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string ACCEPTED_OB_IDS(int j) { int o = __p.__offset(66); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int ACCEPTED_OB_IDSLength { get { int o = __p.__offset(66); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string REJECTED_OB_TYPS(int j) { int o = __p.__offset(68); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int REJECTED_OB_TYPSLength { get { int o = __p.__offset(68); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string REJECTED_OB_IDS(int j) { int o = __p.__offset(70); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int REJECTED_OB_IDSLength { get { int o = __p.__offset(70); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string SENSOR_IDS(int j) { int o = __p.__offset(72); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
-  public int SENSOR_IDSLength { get { int o = __p.__offset(72); return o != 0 ? __p.__vector_len(o) : 0; } }
-  public string ON_ORBIT { get { int o = __p.__offset(74); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetON_ORBITBytes() { return __p.__vector_as_span<byte>(74, 1); }
-#else
-  public ArraySegment<byte>? GetON_ORBITBytes() { return __p.__vector_as_arraysegment(74); }
-#endif
-  public byte[] GetON_ORBITArray() { return __p.__vector_as_array<byte>(74); }
+  public byte[] GetAGOM_MODELArray() { return __p.__vector_as_array<byte>(60); }
+  /// RMS convergence criteria
+  public double RMS_CONVERGENCE_CRITERIA { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Number of iterations to converge
+  public ushort NUM_ITERATIONS { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  /// Total accepted observations
+  public uint NUM_ACCEPTED_OBS { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Total rejected observations
+  public uint NUM_REJECTED_OBS { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Sensor contributions to this solution
+  public odSensorContribution? SENSORS(int j) { int o = __p.__offset(70); return o != 0 ? (odSensorContribution?)(new odSensorContribution()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int SENSORSLength { get { int o = __p.__offset(70); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Accepted observation types
+  public string ACCEPTED_OB_TYPS(int j) { int o = __p.__offset(72); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int ACCEPTED_OB_TYPSLength { get { int o = __p.__offset(72); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Accepted observation identifiers
+  public string ACCEPTED_OB_IDS(int j) { int o = __p.__offset(74); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int ACCEPTED_OB_IDSLength { get { int o = __p.__offset(74); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Rejected observation types
+  public string REJECTED_OB_TYPS(int j) { int o = __p.__offset(76); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int REJECTED_OB_TYPSLength { get { int o = __p.__offset(76); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Rejected observation identifiers
+  public string REJECTED_OB_IDS(int j) { int o = __p.__offset(78); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
+  public int REJECTED_OB_IDSLength { get { int o = __p.__offset(78); return o != 0 ? __p.__vector_len(o) : 0; } }
 
   public static Offset<OBD> CreateOBD(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
+      uint SAT_NO = 0,
+      StringOffset ORIG_OBJECT_IDOffset = default(StringOffset),
+      StringOffset ON_ORBITOffset = default(StringOffset),
       StringOffset START_TIMEOffset = default(StringOffset),
       StringOffset END_TIMEOffset = default(StringOffset),
-      StringOffset ORIG_OBJECT_IDOffset = default(StringOffset),
-      int SAT_NO = 0,
+      odMethod METHOD = odMethod.BATCH_LEAST_SQUARES,
+      StringOffset METHOD_SOURCEOffset = default(StringOffset),
+      bool INITIAL_OD = false,
       StringOffset APRIORI_ID_ELSETOffset = default(StringOffset),
       StringOffset APRIORI_ELSETOffset = default(StringOffset),
       StringOffset APRIORI_ID_STATE_VECTOROffset = default(StringOffset),
       StringOffset APRIORI_STATE_VECTOROffset = default(StringOffset),
-      bool INITIAL_OD = false,
       StringOffset LAST_OB_STARTOffset = default(StringOffset),
       StringOffset LAST_OB_ENDOffset = default(StringOffset),
       double TIME_SPAN = 0.0,
+      double FIT_SPAN = 0.0,
       StringOffset EFFECTIVE_FROMOffset = default(StringOffset),
       StringOffset EFFECTIVE_UNTILOffset = default(StringOffset),
       double WRMS = 0.0,
@@ -185,42 +223,38 @@ public struct OBD : IFlatbufferObject
       double BEST_PASS_WRMS = 0.0,
       double ERROR_GROWTH_RATE = 0.0,
       double EDR = 0.0,
-      StringOffset METHODOffset = default(StringOffset),
-      StringOffset METHOD_SOURCEOffset = default(StringOffset),
-      double FIT_SPAN = 0.0,
       bool BALLISTIC_COEFF_EST = false,
       StringOffset BALLISTIC_COEFF_MODELOffset = default(StringOffset),
       bool AGOM_EST = false,
       StringOffset AGOM_MODELOffset = default(StringOffset),
       double RMS_CONVERGENCE_CRITERIA = 0.0,
-      int NUM_ITERATIONS = 0,
+      ushort NUM_ITERATIONS = 0,
+      uint NUM_ACCEPTED_OBS = 0,
+      uint NUM_REJECTED_OBS = 0,
+      VectorOffset SENSORSOffset = default(VectorOffset),
       VectorOffset ACCEPTED_OB_TYPSOffset = default(VectorOffset),
       VectorOffset ACCEPTED_OB_IDSOffset = default(VectorOffset),
       VectorOffset REJECTED_OB_TYPSOffset = default(VectorOffset),
-      VectorOffset REJECTED_OB_IDSOffset = default(VectorOffset),
-      VectorOffset SENSOR_IDSOffset = default(VectorOffset),
-      StringOffset ON_ORBITOffset = default(StringOffset)) {
-    builder.StartTable(36);
+      VectorOffset REJECTED_OB_IDSOffset = default(VectorOffset)) {
+    builder.StartTable(38);
     OBD.AddRMS_CONVERGENCE_CRITERIA(builder, RMS_CONVERGENCE_CRITERIA);
-    OBD.AddFIT_SPAN(builder, FIT_SPAN);
     OBD.AddEDR(builder, EDR);
     OBD.AddERROR_GROWTH_RATE(builder, ERROR_GROWTH_RATE);
     OBD.AddBEST_PASS_WRMS(builder, BEST_PASS_WRMS);
     OBD.AddFIRST_PASS_WRMS(builder, FIRST_PASS_WRMS);
     OBD.AddPREVIOUS_WRMS(builder, PREVIOUS_WRMS);
     OBD.AddWRMS(builder, WRMS);
+    OBD.AddFIT_SPAN(builder, FIT_SPAN);
     OBD.AddTIME_SPAN(builder, TIME_SPAN);
-    OBD.AddON_ORBIT(builder, ON_ORBITOffset);
-    OBD.AddSENSOR_IDS(builder, SENSOR_IDSOffset);
     OBD.AddREJECTED_OB_IDS(builder, REJECTED_OB_IDSOffset);
     OBD.AddREJECTED_OB_TYPS(builder, REJECTED_OB_TYPSOffset);
     OBD.AddACCEPTED_OB_IDS(builder, ACCEPTED_OB_IDSOffset);
     OBD.AddACCEPTED_OB_TYPS(builder, ACCEPTED_OB_TYPSOffset);
-    OBD.AddNUM_ITERATIONS(builder, NUM_ITERATIONS);
+    OBD.AddSENSORS(builder, SENSORSOffset);
+    OBD.AddNUM_REJECTED_OBS(builder, NUM_REJECTED_OBS);
+    OBD.AddNUM_ACCEPTED_OBS(builder, NUM_ACCEPTED_OBS);
     OBD.AddAGOM_MODEL(builder, AGOM_MODELOffset);
     OBD.AddBALLISTIC_COEFF_MODEL(builder, BALLISTIC_COEFF_MODELOffset);
-    OBD.AddMETHOD_SOURCE(builder, METHOD_SOURCEOffset);
-    OBD.AddMETHOD(builder, METHODOffset);
     OBD.AddEFFECTIVE_UNTIL(builder, EFFECTIVE_UNTILOffset);
     OBD.AddEFFECTIVE_FROM(builder, EFFECTIVE_FROMOffset);
     OBD.AddLAST_OB_END(builder, LAST_OB_ENDOffset);
@@ -229,79 +263,85 @@ public struct OBD : IFlatbufferObject
     OBD.AddAPRIORI_ID_STATE_VECTOR(builder, APRIORI_ID_STATE_VECTOROffset);
     OBD.AddAPRIORI_ELSET(builder, APRIORI_ELSETOffset);
     OBD.AddAPRIORI_ID_ELSET(builder, APRIORI_ID_ELSETOffset);
-    OBD.AddSAT_NO(builder, SAT_NO);
-    OBD.AddORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset);
+    OBD.AddMETHOD_SOURCE(builder, METHOD_SOURCEOffset);
     OBD.AddEND_TIME(builder, END_TIMEOffset);
     OBD.AddSTART_TIME(builder, START_TIMEOffset);
+    OBD.AddON_ORBIT(builder, ON_ORBITOffset);
+    OBD.AddORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset);
+    OBD.AddSAT_NO(builder, SAT_NO);
     OBD.AddID(builder, IDOffset);
+    OBD.AddNUM_ITERATIONS(builder, NUM_ITERATIONS);
     OBD.AddAGOM_EST(builder, AGOM_EST);
     OBD.AddBALLISTIC_COEFF_EST(builder, BALLISTIC_COEFF_EST);
     OBD.AddINITIAL_OD(builder, INITIAL_OD);
+    OBD.AddMETHOD(builder, METHOD);
     return OBD.EndOBD(builder);
   }
 
-  public static void StartOBD(FlatBufferBuilder builder) { builder.StartTable(36); }
+  public static void StartOBD(FlatBufferBuilder builder) { builder.StartTable(38); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
-  public static void AddSTART_TIME(FlatBufferBuilder builder, StringOffset START_TIMEOffset) { builder.AddOffset(1, START_TIMEOffset.Value, 0); }
-  public static void AddEND_TIME(FlatBufferBuilder builder, StringOffset END_TIMEOffset) { builder.AddOffset(2, END_TIMEOffset.Value, 0); }
-  public static void AddORIG_OBJECT_ID(FlatBufferBuilder builder, StringOffset ORIG_OBJECT_IDOffset) { builder.AddOffset(3, ORIG_OBJECT_IDOffset.Value, 0); }
-  public static void AddSAT_NO(FlatBufferBuilder builder, int SAT_NO) { builder.AddInt(4, SAT_NO, 0); }
-  public static void AddAPRIORI_ID_ELSET(FlatBufferBuilder builder, StringOffset APRIORI_ID_ELSETOffset) { builder.AddOffset(5, APRIORI_ID_ELSETOffset.Value, 0); }
-  public static void AddAPRIORI_ELSET(FlatBufferBuilder builder, StringOffset APRIORI_ELSETOffset) { builder.AddOffset(6, APRIORI_ELSETOffset.Value, 0); }
-  public static void AddAPRIORI_ID_STATE_VECTOR(FlatBufferBuilder builder, StringOffset APRIORI_ID_STATE_VECTOROffset) { builder.AddOffset(7, APRIORI_ID_STATE_VECTOROffset.Value, 0); }
-  public static void AddAPRIORI_STATE_VECTOR(FlatBufferBuilder builder, StringOffset APRIORI_STATE_VECTOROffset) { builder.AddOffset(8, APRIORI_STATE_VECTOROffset.Value, 0); }
-  public static void AddINITIAL_OD(FlatBufferBuilder builder, bool INITIAL_OD) { builder.AddBool(9, INITIAL_OD, false); }
-  public static void AddLAST_OB_START(FlatBufferBuilder builder, StringOffset LAST_OB_STARTOffset) { builder.AddOffset(10, LAST_OB_STARTOffset.Value, 0); }
-  public static void AddLAST_OB_END(FlatBufferBuilder builder, StringOffset LAST_OB_ENDOffset) { builder.AddOffset(11, LAST_OB_ENDOffset.Value, 0); }
-  public static void AddTIME_SPAN(FlatBufferBuilder builder, double TIME_SPAN) { builder.AddDouble(12, TIME_SPAN, 0.0); }
-  public static void AddEFFECTIVE_FROM(FlatBufferBuilder builder, StringOffset EFFECTIVE_FROMOffset) { builder.AddOffset(13, EFFECTIVE_FROMOffset.Value, 0); }
-  public static void AddEFFECTIVE_UNTIL(FlatBufferBuilder builder, StringOffset EFFECTIVE_UNTILOffset) { builder.AddOffset(14, EFFECTIVE_UNTILOffset.Value, 0); }
-  public static void AddWRMS(FlatBufferBuilder builder, double WRMS) { builder.AddDouble(15, WRMS, 0.0); }
-  public static void AddPREVIOUS_WRMS(FlatBufferBuilder builder, double PREVIOUS_WRMS) { builder.AddDouble(16, PREVIOUS_WRMS, 0.0); }
-  public static void AddFIRST_PASS_WRMS(FlatBufferBuilder builder, double FIRST_PASS_WRMS) { builder.AddDouble(17, FIRST_PASS_WRMS, 0.0); }
-  public static void AddBEST_PASS_WRMS(FlatBufferBuilder builder, double BEST_PASS_WRMS) { builder.AddDouble(18, BEST_PASS_WRMS, 0.0); }
-  public static void AddERROR_GROWTH_RATE(FlatBufferBuilder builder, double ERROR_GROWTH_RATE) { builder.AddDouble(19, ERROR_GROWTH_RATE, 0.0); }
-  public static void AddEDR(FlatBufferBuilder builder, double EDR) { builder.AddDouble(20, EDR, 0.0); }
-  public static void AddMETHOD(FlatBufferBuilder builder, StringOffset METHODOffset) { builder.AddOffset(21, METHODOffset.Value, 0); }
-  public static void AddMETHOD_SOURCE(FlatBufferBuilder builder, StringOffset METHOD_SOURCEOffset) { builder.AddOffset(22, METHOD_SOURCEOffset.Value, 0); }
-  public static void AddFIT_SPAN(FlatBufferBuilder builder, double FIT_SPAN) { builder.AddDouble(23, FIT_SPAN, 0.0); }
-  public static void AddBALLISTIC_COEFF_EST(FlatBufferBuilder builder, bool BALLISTIC_COEFF_EST) { builder.AddBool(24, BALLISTIC_COEFF_EST, false); }
-  public static void AddBALLISTIC_COEFF_MODEL(FlatBufferBuilder builder, StringOffset BALLISTIC_COEFF_MODELOffset) { builder.AddOffset(25, BALLISTIC_COEFF_MODELOffset.Value, 0); }
-  public static void AddAGOM_EST(FlatBufferBuilder builder, bool AGOM_EST) { builder.AddBool(26, AGOM_EST, false); }
-  public static void AddAGOM_MODEL(FlatBufferBuilder builder, StringOffset AGOM_MODELOffset) { builder.AddOffset(27, AGOM_MODELOffset.Value, 0); }
-  public static void AddRMS_CONVERGENCE_CRITERIA(FlatBufferBuilder builder, double RMS_CONVERGENCE_CRITERIA) { builder.AddDouble(28, RMS_CONVERGENCE_CRITERIA, 0.0); }
-  public static void AddNUM_ITERATIONS(FlatBufferBuilder builder, int NUM_ITERATIONS) { builder.AddInt(29, NUM_ITERATIONS, 0); }
-  public static void AddACCEPTED_OB_TYPS(FlatBufferBuilder builder, VectorOffset ACCEPTED_OB_TYPSOffset) { builder.AddOffset(30, ACCEPTED_OB_TYPSOffset.Value, 0); }
+  public static void AddSAT_NO(FlatBufferBuilder builder, uint SAT_NO) { builder.AddUint(1, SAT_NO, 0); }
+  public static void AddORIG_OBJECT_ID(FlatBufferBuilder builder, StringOffset ORIG_OBJECT_IDOffset) { builder.AddOffset(2, ORIG_OBJECT_IDOffset.Value, 0); }
+  public static void AddON_ORBIT(FlatBufferBuilder builder, StringOffset ON_ORBITOffset) { builder.AddOffset(3, ON_ORBITOffset.Value, 0); }
+  public static void AddSTART_TIME(FlatBufferBuilder builder, StringOffset START_TIMEOffset) { builder.AddOffset(4, START_TIMEOffset.Value, 0); }
+  public static void AddEND_TIME(FlatBufferBuilder builder, StringOffset END_TIMEOffset) { builder.AddOffset(5, END_TIMEOffset.Value, 0); }
+  public static void AddMETHOD(FlatBufferBuilder builder, odMethod METHOD) { builder.AddSbyte(6, (sbyte)METHOD, 0); }
+  public static void AddMETHOD_SOURCE(FlatBufferBuilder builder, StringOffset METHOD_SOURCEOffset) { builder.AddOffset(7, METHOD_SOURCEOffset.Value, 0); }
+  public static void AddINITIAL_OD(FlatBufferBuilder builder, bool INITIAL_OD) { builder.AddBool(8, INITIAL_OD, false); }
+  public static void AddAPRIORI_ID_ELSET(FlatBufferBuilder builder, StringOffset APRIORI_ID_ELSETOffset) { builder.AddOffset(9, APRIORI_ID_ELSETOffset.Value, 0); }
+  public static void AddAPRIORI_ELSET(FlatBufferBuilder builder, StringOffset APRIORI_ELSETOffset) { builder.AddOffset(10, APRIORI_ELSETOffset.Value, 0); }
+  public static void AddAPRIORI_ID_STATE_VECTOR(FlatBufferBuilder builder, StringOffset APRIORI_ID_STATE_VECTOROffset) { builder.AddOffset(11, APRIORI_ID_STATE_VECTOROffset.Value, 0); }
+  public static void AddAPRIORI_STATE_VECTOR(FlatBufferBuilder builder, StringOffset APRIORI_STATE_VECTOROffset) { builder.AddOffset(12, APRIORI_STATE_VECTOROffset.Value, 0); }
+  public static void AddLAST_OB_START(FlatBufferBuilder builder, StringOffset LAST_OB_STARTOffset) { builder.AddOffset(13, LAST_OB_STARTOffset.Value, 0); }
+  public static void AddLAST_OB_END(FlatBufferBuilder builder, StringOffset LAST_OB_ENDOffset) { builder.AddOffset(14, LAST_OB_ENDOffset.Value, 0); }
+  public static void AddTIME_SPAN(FlatBufferBuilder builder, double TIME_SPAN) { builder.AddDouble(15, TIME_SPAN, 0.0); }
+  public static void AddFIT_SPAN(FlatBufferBuilder builder, double FIT_SPAN) { builder.AddDouble(16, FIT_SPAN, 0.0); }
+  public static void AddEFFECTIVE_FROM(FlatBufferBuilder builder, StringOffset EFFECTIVE_FROMOffset) { builder.AddOffset(17, EFFECTIVE_FROMOffset.Value, 0); }
+  public static void AddEFFECTIVE_UNTIL(FlatBufferBuilder builder, StringOffset EFFECTIVE_UNTILOffset) { builder.AddOffset(18, EFFECTIVE_UNTILOffset.Value, 0); }
+  public static void AddWRMS(FlatBufferBuilder builder, double WRMS) { builder.AddDouble(19, WRMS, 0.0); }
+  public static void AddPREVIOUS_WRMS(FlatBufferBuilder builder, double PREVIOUS_WRMS) { builder.AddDouble(20, PREVIOUS_WRMS, 0.0); }
+  public static void AddFIRST_PASS_WRMS(FlatBufferBuilder builder, double FIRST_PASS_WRMS) { builder.AddDouble(21, FIRST_PASS_WRMS, 0.0); }
+  public static void AddBEST_PASS_WRMS(FlatBufferBuilder builder, double BEST_PASS_WRMS) { builder.AddDouble(22, BEST_PASS_WRMS, 0.0); }
+  public static void AddERROR_GROWTH_RATE(FlatBufferBuilder builder, double ERROR_GROWTH_RATE) { builder.AddDouble(23, ERROR_GROWTH_RATE, 0.0); }
+  public static void AddEDR(FlatBufferBuilder builder, double EDR) { builder.AddDouble(24, EDR, 0.0); }
+  public static void AddBALLISTIC_COEFF_EST(FlatBufferBuilder builder, bool BALLISTIC_COEFF_EST) { builder.AddBool(25, BALLISTIC_COEFF_EST, false); }
+  public static void AddBALLISTIC_COEFF_MODEL(FlatBufferBuilder builder, StringOffset BALLISTIC_COEFF_MODELOffset) { builder.AddOffset(26, BALLISTIC_COEFF_MODELOffset.Value, 0); }
+  public static void AddAGOM_EST(FlatBufferBuilder builder, bool AGOM_EST) { builder.AddBool(27, AGOM_EST, false); }
+  public static void AddAGOM_MODEL(FlatBufferBuilder builder, StringOffset AGOM_MODELOffset) { builder.AddOffset(28, AGOM_MODELOffset.Value, 0); }
+  public static void AddRMS_CONVERGENCE_CRITERIA(FlatBufferBuilder builder, double RMS_CONVERGENCE_CRITERIA) { builder.AddDouble(29, RMS_CONVERGENCE_CRITERIA, 0.0); }
+  public static void AddNUM_ITERATIONS(FlatBufferBuilder builder, ushort NUM_ITERATIONS) { builder.AddUshort(30, NUM_ITERATIONS, 0); }
+  public static void AddNUM_ACCEPTED_OBS(FlatBufferBuilder builder, uint NUM_ACCEPTED_OBS) { builder.AddUint(31, NUM_ACCEPTED_OBS, 0); }
+  public static void AddNUM_REJECTED_OBS(FlatBufferBuilder builder, uint NUM_REJECTED_OBS) { builder.AddUint(32, NUM_REJECTED_OBS, 0); }
+  public static void AddSENSORS(FlatBufferBuilder builder, VectorOffset SENSORSOffset) { builder.AddOffset(33, SENSORSOffset.Value, 0); }
+  public static VectorOffset CreateSENSORSVector(FlatBufferBuilder builder, Offset<odSensorContribution>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateSENSORSVectorBlock(FlatBufferBuilder builder, Offset<odSensorContribution>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSENSORSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<odSensorContribution>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSENSORSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<odSensorContribution>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSENSORSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddACCEPTED_OB_TYPS(FlatBufferBuilder builder, VectorOffset ACCEPTED_OB_TYPSOffset) { builder.AddOffset(34, ACCEPTED_OB_TYPSOffset.Value, 0); }
   public static VectorOffset CreateACCEPTED_OB_TYPSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateACCEPTED_OB_TYPSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateACCEPTED_OB_TYPSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateACCEPTED_OB_TYPSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartACCEPTED_OB_TYPSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddACCEPTED_OB_IDS(FlatBufferBuilder builder, VectorOffset ACCEPTED_OB_IDSOffset) { builder.AddOffset(31, ACCEPTED_OB_IDSOffset.Value, 0); }
+  public static void AddACCEPTED_OB_IDS(FlatBufferBuilder builder, VectorOffset ACCEPTED_OB_IDSOffset) { builder.AddOffset(35, ACCEPTED_OB_IDSOffset.Value, 0); }
   public static VectorOffset CreateACCEPTED_OB_IDSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateACCEPTED_OB_IDSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateACCEPTED_OB_IDSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateACCEPTED_OB_IDSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartACCEPTED_OB_IDSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddREJECTED_OB_TYPS(FlatBufferBuilder builder, VectorOffset REJECTED_OB_TYPSOffset) { builder.AddOffset(32, REJECTED_OB_TYPSOffset.Value, 0); }
+  public static void AddREJECTED_OB_TYPS(FlatBufferBuilder builder, VectorOffset REJECTED_OB_TYPSOffset) { builder.AddOffset(36, REJECTED_OB_TYPSOffset.Value, 0); }
   public static VectorOffset CreateREJECTED_OB_TYPSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateREJECTED_OB_TYPSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateREJECTED_OB_TYPSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateREJECTED_OB_TYPSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartREJECTED_OB_TYPSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddREJECTED_OB_IDS(FlatBufferBuilder builder, VectorOffset REJECTED_OB_IDSOffset) { builder.AddOffset(33, REJECTED_OB_IDSOffset.Value, 0); }
+  public static void AddREJECTED_OB_IDS(FlatBufferBuilder builder, VectorOffset REJECTED_OB_IDSOffset) { builder.AddOffset(37, REJECTED_OB_IDSOffset.Value, 0); }
   public static VectorOffset CreateREJECTED_OB_IDSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateREJECTED_OB_IDSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateREJECTED_OB_IDSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
   public static VectorOffset CreateREJECTED_OB_IDSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
   public static void StartREJECTED_OB_IDSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddSENSOR_IDS(FlatBufferBuilder builder, VectorOffset SENSOR_IDSOffset) { builder.AddOffset(34, SENSOR_IDSOffset.Value, 0); }
-  public static VectorOffset CreateSENSOR_IDSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
-  public static VectorOffset CreateSENSOR_IDSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateSENSOR_IDSVectorBlock(FlatBufferBuilder builder, ArraySegment<StringOffset> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
-  public static VectorOffset CreateSENSOR_IDSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<StringOffset>(dataPtr, sizeInBytes); return builder.EndVector(); }
-  public static void StartSENSOR_IDSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
-  public static void AddON_ORBIT(FlatBufferBuilder builder, StringOffset ON_ORBITOffset) { builder.AddOffset(35, ON_ORBITOffset.Value, 0); }
   public static Offset<OBD> EndOBD(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<OBD>(o);
@@ -315,18 +355,22 @@ public struct OBD : IFlatbufferObject
   }
   public void UnPackTo(OBDT _o) {
     _o.ID = this.ID;
+    _o.SAT_NO = this.SAT_NO;
+    _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID;
+    _o.ON_ORBIT = this.ON_ORBIT;
     _o.START_TIME = this.START_TIME;
     _o.END_TIME = this.END_TIME;
-    _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID;
-    _o.SAT_NO = this.SAT_NO;
+    _o.METHOD = this.METHOD;
+    _o.METHOD_SOURCE = this.METHOD_SOURCE;
+    _o.INITIAL_OD = this.INITIAL_OD;
     _o.APRIORI_ID_ELSET = this.APRIORI_ID_ELSET;
     _o.APRIORI_ELSET = this.APRIORI_ELSET;
     _o.APRIORI_ID_STATE_VECTOR = this.APRIORI_ID_STATE_VECTOR;
     _o.APRIORI_STATE_VECTOR = this.APRIORI_STATE_VECTOR;
-    _o.INITIAL_OD = this.INITIAL_OD;
     _o.LAST_OB_START = this.LAST_OB_START;
     _o.LAST_OB_END = this.LAST_OB_END;
     _o.TIME_SPAN = this.TIME_SPAN;
+    _o.FIT_SPAN = this.FIT_SPAN;
     _o.EFFECTIVE_FROM = this.EFFECTIVE_FROM;
     _o.EFFECTIVE_UNTIL = this.EFFECTIVE_UNTIL;
     _o.WRMS = this.WRMS;
@@ -335,15 +379,16 @@ public struct OBD : IFlatbufferObject
     _o.BEST_PASS_WRMS = this.BEST_PASS_WRMS;
     _o.ERROR_GROWTH_RATE = this.ERROR_GROWTH_RATE;
     _o.EDR = this.EDR;
-    _o.METHOD = this.METHOD;
-    _o.METHOD_SOURCE = this.METHOD_SOURCE;
-    _o.FIT_SPAN = this.FIT_SPAN;
     _o.BALLISTIC_COEFF_EST = this.BALLISTIC_COEFF_EST;
     _o.BALLISTIC_COEFF_MODEL = this.BALLISTIC_COEFF_MODEL;
     _o.AGOM_EST = this.AGOM_EST;
     _o.AGOM_MODEL = this.AGOM_MODEL;
     _o.RMS_CONVERGENCE_CRITERIA = this.RMS_CONVERGENCE_CRITERIA;
     _o.NUM_ITERATIONS = this.NUM_ITERATIONS;
+    _o.NUM_ACCEPTED_OBS = this.NUM_ACCEPTED_OBS;
+    _o.NUM_REJECTED_OBS = this.NUM_REJECTED_OBS;
+    _o.SENSORS = new List<odSensorContributionT>();
+    for (var _j = 0; _j < this.SENSORSLength; ++_j) {_o.SENSORS.Add(this.SENSORS(_j).HasValue ? this.SENSORS(_j).Value.UnPack() : null);}
     _o.ACCEPTED_OB_TYPS = new List<string>();
     for (var _j = 0; _j < this.ACCEPTED_OB_TYPSLength; ++_j) {_o.ACCEPTED_OB_TYPS.Add(this.ACCEPTED_OB_TYPS(_j));}
     _o.ACCEPTED_OB_IDS = new List<string>();
@@ -352,16 +397,15 @@ public struct OBD : IFlatbufferObject
     for (var _j = 0; _j < this.REJECTED_OB_TYPSLength; ++_j) {_o.REJECTED_OB_TYPS.Add(this.REJECTED_OB_TYPS(_j));}
     _o.REJECTED_OB_IDS = new List<string>();
     for (var _j = 0; _j < this.REJECTED_OB_IDSLength; ++_j) {_o.REJECTED_OB_IDS.Add(this.REJECTED_OB_IDS(_j));}
-    _o.SENSOR_IDS = new List<string>();
-    for (var _j = 0; _j < this.SENSOR_IDSLength; ++_j) {_o.SENSOR_IDS.Add(this.SENSOR_IDS(_j));}
-    _o.ON_ORBIT = this.ON_ORBIT;
   }
   public static Offset<OBD> Pack(FlatBufferBuilder builder, OBDT _o) {
     if (_o == null) return default(Offset<OBD>);
     var _ID = _o.ID == null ? default(StringOffset) : builder.CreateString(_o.ID);
+    var _ORIG_OBJECT_ID = _o.ORIG_OBJECT_ID == null ? default(StringOffset) : builder.CreateString(_o.ORIG_OBJECT_ID);
+    var _ON_ORBIT = _o.ON_ORBIT == null ? default(StringOffset) : builder.CreateString(_o.ON_ORBIT);
     var _START_TIME = _o.START_TIME == null ? default(StringOffset) : builder.CreateString(_o.START_TIME);
     var _END_TIME = _o.END_TIME == null ? default(StringOffset) : builder.CreateString(_o.END_TIME);
-    var _ORIG_OBJECT_ID = _o.ORIG_OBJECT_ID == null ? default(StringOffset) : builder.CreateString(_o.ORIG_OBJECT_ID);
+    var _METHOD_SOURCE = _o.METHOD_SOURCE == null ? default(StringOffset) : builder.CreateString(_o.METHOD_SOURCE);
     var _APRIORI_ID_ELSET = _o.APRIORI_ID_ELSET == null ? default(StringOffset) : builder.CreateString(_o.APRIORI_ID_ELSET);
     var _APRIORI_ELSET = _o.APRIORI_ELSET == null ? default(StringOffset) : builder.CreateString(_o.APRIORI_ELSET);
     var _APRIORI_ID_STATE_VECTOR = _o.APRIORI_ID_STATE_VECTOR == null ? default(StringOffset) : builder.CreateString(_o.APRIORI_ID_STATE_VECTOR);
@@ -370,10 +414,14 @@ public struct OBD : IFlatbufferObject
     var _LAST_OB_END = _o.LAST_OB_END == null ? default(StringOffset) : builder.CreateString(_o.LAST_OB_END);
     var _EFFECTIVE_FROM = _o.EFFECTIVE_FROM == null ? default(StringOffset) : builder.CreateString(_o.EFFECTIVE_FROM);
     var _EFFECTIVE_UNTIL = _o.EFFECTIVE_UNTIL == null ? default(StringOffset) : builder.CreateString(_o.EFFECTIVE_UNTIL);
-    var _METHOD = _o.METHOD == null ? default(StringOffset) : builder.CreateString(_o.METHOD);
-    var _METHOD_SOURCE = _o.METHOD_SOURCE == null ? default(StringOffset) : builder.CreateString(_o.METHOD_SOURCE);
     var _BALLISTIC_COEFF_MODEL = _o.BALLISTIC_COEFF_MODEL == null ? default(StringOffset) : builder.CreateString(_o.BALLISTIC_COEFF_MODEL);
     var _AGOM_MODEL = _o.AGOM_MODEL == null ? default(StringOffset) : builder.CreateString(_o.AGOM_MODEL);
+    var _SENSORS = default(VectorOffset);
+    if (_o.SENSORS != null) {
+      var __SENSORS = new Offset<odSensorContribution>[_o.SENSORS.Count];
+      for (var _j = 0; _j < __SENSORS.Length; ++_j) { __SENSORS[_j] = odSensorContribution.Pack(builder, _o.SENSORS[_j]); }
+      _SENSORS = CreateSENSORSVector(builder, __SENSORS);
+    }
     var _ACCEPTED_OB_TYPS = default(VectorOffset);
     if (_o.ACCEPTED_OB_TYPS != null) {
       var __ACCEPTED_OB_TYPS = new StringOffset[_o.ACCEPTED_OB_TYPS.Count];
@@ -398,28 +446,25 @@ public struct OBD : IFlatbufferObject
       for (var _j = 0; _j < __REJECTED_OB_IDS.Length; ++_j) { __REJECTED_OB_IDS[_j] = builder.CreateString(_o.REJECTED_OB_IDS[_j]); }
       _REJECTED_OB_IDS = CreateREJECTED_OB_IDSVector(builder, __REJECTED_OB_IDS);
     }
-    var _SENSOR_IDS = default(VectorOffset);
-    if (_o.SENSOR_IDS != null) {
-      var __SENSOR_IDS = new StringOffset[_o.SENSOR_IDS.Count];
-      for (var _j = 0; _j < __SENSOR_IDS.Length; ++_j) { __SENSOR_IDS[_j] = builder.CreateString(_o.SENSOR_IDS[_j]); }
-      _SENSOR_IDS = CreateSENSOR_IDSVector(builder, __SENSOR_IDS);
-    }
-    var _ON_ORBIT = _o.ON_ORBIT == null ? default(StringOffset) : builder.CreateString(_o.ON_ORBIT);
     return CreateOBD(
       builder,
       _ID,
+      _o.SAT_NO,
+      _ORIG_OBJECT_ID,
+      _ON_ORBIT,
       _START_TIME,
       _END_TIME,
-      _ORIG_OBJECT_ID,
-      _o.SAT_NO,
+      _o.METHOD,
+      _METHOD_SOURCE,
+      _o.INITIAL_OD,
       _APRIORI_ID_ELSET,
       _APRIORI_ELSET,
       _APRIORI_ID_STATE_VECTOR,
       _APRIORI_STATE_VECTOR,
-      _o.INITIAL_OD,
       _LAST_OB_START,
       _LAST_OB_END,
       _o.TIME_SPAN,
+      _o.FIT_SPAN,
       _EFFECTIVE_FROM,
       _EFFECTIVE_UNTIL,
       _o.WRMS,
@@ -428,39 +473,41 @@ public struct OBD : IFlatbufferObject
       _o.BEST_PASS_WRMS,
       _o.ERROR_GROWTH_RATE,
       _o.EDR,
-      _METHOD,
-      _METHOD_SOURCE,
-      _o.FIT_SPAN,
       _o.BALLISTIC_COEFF_EST,
       _BALLISTIC_COEFF_MODEL,
       _o.AGOM_EST,
       _AGOM_MODEL,
       _o.RMS_CONVERGENCE_CRITERIA,
       _o.NUM_ITERATIONS,
+      _o.NUM_ACCEPTED_OBS,
+      _o.NUM_REJECTED_OBS,
+      _SENSORS,
       _ACCEPTED_OB_TYPS,
       _ACCEPTED_OB_IDS,
       _REJECTED_OB_TYPS,
-      _REJECTED_OB_IDS,
-      _SENSOR_IDS,
-      _ON_ORBIT);
+      _REJECTED_OB_IDS);
   }
 }
 
 public class OBDT
 {
   public string ID { get; set; }
+  public uint SAT_NO { get; set; }
+  public string ORIG_OBJECT_ID { get; set; }
+  public string ON_ORBIT { get; set; }
   public string START_TIME { get; set; }
   public string END_TIME { get; set; }
-  public string ORIG_OBJECT_ID { get; set; }
-  public int SAT_NO { get; set; }
+  public odMethod METHOD { get; set; }
+  public string METHOD_SOURCE { get; set; }
+  public bool INITIAL_OD { get; set; }
   public string APRIORI_ID_ELSET { get; set; }
   public string APRIORI_ELSET { get; set; }
   public string APRIORI_ID_STATE_VECTOR { get; set; }
   public string APRIORI_STATE_VECTOR { get; set; }
-  public bool INITIAL_OD { get; set; }
   public string LAST_OB_START { get; set; }
   public string LAST_OB_END { get; set; }
   public double TIME_SPAN { get; set; }
+  public double FIT_SPAN { get; set; }
   public string EFFECTIVE_FROM { get; set; }
   public string EFFECTIVE_UNTIL { get; set; }
   public double WRMS { get; set; }
@@ -469,36 +516,38 @@ public class OBDT
   public double BEST_PASS_WRMS { get; set; }
   public double ERROR_GROWTH_RATE { get; set; }
   public double EDR { get; set; }
-  public string METHOD { get; set; }
-  public string METHOD_SOURCE { get; set; }
-  public double FIT_SPAN { get; set; }
   public bool BALLISTIC_COEFF_EST { get; set; }
   public string BALLISTIC_COEFF_MODEL { get; set; }
   public bool AGOM_EST { get; set; }
   public string AGOM_MODEL { get; set; }
   public double RMS_CONVERGENCE_CRITERIA { get; set; }
-  public int NUM_ITERATIONS { get; set; }
+  public ushort NUM_ITERATIONS { get; set; }
+  public uint NUM_ACCEPTED_OBS { get; set; }
+  public uint NUM_REJECTED_OBS { get; set; }
+  public List<odSensorContributionT> SENSORS { get; set; }
   public List<string> ACCEPTED_OB_TYPS { get; set; }
   public List<string> ACCEPTED_OB_IDS { get; set; }
   public List<string> REJECTED_OB_TYPS { get; set; }
   public List<string> REJECTED_OB_IDS { get; set; }
-  public List<string> SENSOR_IDS { get; set; }
-  public string ON_ORBIT { get; set; }
 
   public OBDT() {
     this.ID = null;
+    this.SAT_NO = 0;
+    this.ORIG_OBJECT_ID = null;
+    this.ON_ORBIT = null;
     this.START_TIME = null;
     this.END_TIME = null;
-    this.ORIG_OBJECT_ID = null;
-    this.SAT_NO = 0;
+    this.METHOD = odMethod.BATCH_LEAST_SQUARES;
+    this.METHOD_SOURCE = null;
+    this.INITIAL_OD = false;
     this.APRIORI_ID_ELSET = null;
     this.APRIORI_ELSET = null;
     this.APRIORI_ID_STATE_VECTOR = null;
     this.APRIORI_STATE_VECTOR = null;
-    this.INITIAL_OD = false;
     this.LAST_OB_START = null;
     this.LAST_OB_END = null;
     this.TIME_SPAN = 0.0;
+    this.FIT_SPAN = 0.0;
     this.EFFECTIVE_FROM = null;
     this.EFFECTIVE_UNTIL = null;
     this.WRMS = 0.0;
@@ -507,21 +556,19 @@ public class OBDT
     this.BEST_PASS_WRMS = 0.0;
     this.ERROR_GROWTH_RATE = 0.0;
     this.EDR = 0.0;
-    this.METHOD = null;
-    this.METHOD_SOURCE = null;
-    this.FIT_SPAN = 0.0;
     this.BALLISTIC_COEFF_EST = false;
     this.BALLISTIC_COEFF_MODEL = null;
     this.AGOM_EST = false;
     this.AGOM_MODEL = null;
     this.RMS_CONVERGENCE_CRITERIA = 0.0;
     this.NUM_ITERATIONS = 0;
+    this.NUM_ACCEPTED_OBS = 0;
+    this.NUM_REJECTED_OBS = 0;
+    this.SENSORS = null;
     this.ACCEPTED_OB_TYPS = null;
     this.ACCEPTED_OB_IDS = null;
     this.REJECTED_OB_TYPS = null;
     this.REJECTED_OB_IDS = null;
-    this.SENSOR_IDS = null;
-    this.ON_ORBIT = null;
   }
   public static OBDT DeserializeFromBinary(byte[] fbBuffer) {
     return OBD.GetRootAsOBD(new ByteBuffer(fbBuffer)).UnPack();
@@ -540,41 +587,43 @@ static public class OBDVerify
   {
     return verifier.VerifyTableStart(tablePos)
       && verifier.VerifyString(tablePos, 4 /*ID*/, false)
-      && verifier.VerifyString(tablePos, 6 /*START_TIME*/, false)
-      && verifier.VerifyString(tablePos, 8 /*END_TIME*/, false)
-      && verifier.VerifyString(tablePos, 10 /*ORIG_OBJECT_ID*/, false)
-      && verifier.VerifyField(tablePos, 12 /*SAT_NO*/, 4 /*int*/, 4, false)
-      && verifier.VerifyString(tablePos, 14 /*APRIORI_ID_ELSET*/, false)
-      && verifier.VerifyString(tablePos, 16 /*APRIORI_ELSET*/, false)
-      && verifier.VerifyString(tablePos, 18 /*APRIORI_ID_STATE_VECTOR*/, false)
-      && verifier.VerifyString(tablePos, 20 /*APRIORI_STATE_VECTOR*/, false)
-      && verifier.VerifyField(tablePos, 22 /*INITIAL_OD*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyString(tablePos, 24 /*LAST_OB_START*/, false)
-      && verifier.VerifyString(tablePos, 26 /*LAST_OB_END*/, false)
-      && verifier.VerifyField(tablePos, 28 /*TIME_SPAN*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 30 /*EFFECTIVE_FROM*/, false)
-      && verifier.VerifyString(tablePos, 32 /*EFFECTIVE_UNTIL*/, false)
-      && verifier.VerifyField(tablePos, 34 /*WRMS*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 36 /*PREVIOUS_WRMS*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 38 /*FIRST_PASS_WRMS*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 40 /*BEST_PASS_WRMS*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 42 /*ERROR_GROWTH_RATE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 44 /*EDR*/, 8 /*double*/, 8, false)
-      && verifier.VerifyString(tablePos, 46 /*METHOD*/, false)
-      && verifier.VerifyString(tablePos, 48 /*METHOD_SOURCE*/, false)
-      && verifier.VerifyField(tablePos, 50 /*FIT_SPAN*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 52 /*BALLISTIC_COEFF_EST*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyString(tablePos, 54 /*BALLISTIC_COEFF_MODEL*/, false)
-      && verifier.VerifyField(tablePos, 56 /*AGOM_EST*/, 1 /*bool*/, 1, false)
-      && verifier.VerifyString(tablePos, 58 /*AGOM_MODEL*/, false)
-      && verifier.VerifyField(tablePos, 60 /*RMS_CONVERGENCE_CRITERIA*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 62 /*NUM_ITERATIONS*/, 4 /*int*/, 4, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 64 /*ACCEPTED_OB_TYPS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 66 /*ACCEPTED_OB_IDS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 68 /*REJECTED_OB_TYPS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 70 /*REJECTED_OB_IDS*/, false)
-      && verifier.VerifyVectorOfStrings(tablePos, 72 /*SENSOR_IDS*/, false)
-      && verifier.VerifyString(tablePos, 74 /*ON_ORBIT*/, false)
+      && verifier.VerifyField(tablePos, 6 /*SAT_NO*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 8 /*ORIG_OBJECT_ID*/, false)
+      && verifier.VerifyString(tablePos, 10 /*ON_ORBIT*/, false)
+      && verifier.VerifyString(tablePos, 12 /*START_TIME*/, false)
+      && verifier.VerifyString(tablePos, 14 /*END_TIME*/, false)
+      && verifier.VerifyField(tablePos, 16 /*METHOD*/, 1 /*odMethod*/, 1, false)
+      && verifier.VerifyString(tablePos, 18 /*METHOD_SOURCE*/, false)
+      && verifier.VerifyField(tablePos, 20 /*INITIAL_OD*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyString(tablePos, 22 /*APRIORI_ID_ELSET*/, false)
+      && verifier.VerifyString(tablePos, 24 /*APRIORI_ELSET*/, false)
+      && verifier.VerifyString(tablePos, 26 /*APRIORI_ID_STATE_VECTOR*/, false)
+      && verifier.VerifyString(tablePos, 28 /*APRIORI_STATE_VECTOR*/, false)
+      && verifier.VerifyString(tablePos, 30 /*LAST_OB_START*/, false)
+      && verifier.VerifyString(tablePos, 32 /*LAST_OB_END*/, false)
+      && verifier.VerifyField(tablePos, 34 /*TIME_SPAN*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 36 /*FIT_SPAN*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 38 /*EFFECTIVE_FROM*/, false)
+      && verifier.VerifyString(tablePos, 40 /*EFFECTIVE_UNTIL*/, false)
+      && verifier.VerifyField(tablePos, 42 /*WRMS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 44 /*PREVIOUS_WRMS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 46 /*FIRST_PASS_WRMS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 48 /*BEST_PASS_WRMS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 50 /*ERROR_GROWTH_RATE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 52 /*EDR*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 54 /*BALLISTIC_COEFF_EST*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyString(tablePos, 56 /*BALLISTIC_COEFF_MODEL*/, false)
+      && verifier.VerifyField(tablePos, 58 /*AGOM_EST*/, 1 /*bool*/, 1, false)
+      && verifier.VerifyString(tablePos, 60 /*AGOM_MODEL*/, false)
+      && verifier.VerifyField(tablePos, 62 /*RMS_CONVERGENCE_CRITERIA*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 64 /*NUM_ITERATIONS*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyField(tablePos, 66 /*NUM_ACCEPTED_OBS*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 68 /*NUM_REJECTED_OBS*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyVectorOfTables(tablePos, 70 /*SENSORS*/, odSensorContributionVerify.Verify, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 72 /*ACCEPTED_OB_TYPS*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 74 /*ACCEPTED_OB_IDS*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 76 /*REJECTED_OB_TYPS*/, false)
+      && verifier.VerifyVectorOfStrings(tablePos, 78 /*REJECTED_OB_IDS*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

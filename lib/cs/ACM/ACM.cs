@@ -19,6 +19,7 @@ public struct ACM : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public ACM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// CCSDS ACM version
   public string CCSDS_ACM_VERS { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCCSDS_ACM_VERSBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,6 +27,7 @@ public struct ACM : IFlatbufferObject
   public ArraySegment<byte>? GetCCSDS_ACM_VERSBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetCCSDS_ACM_VERSArray() { return __p.__vector_as_array<byte>(4); }
+  /// Message creation date (ISO 8601)
   public string CREATION_DATE { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCREATION_DATEBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -33,6 +35,7 @@ public struct ACM : IFlatbufferObject
   public ArraySegment<byte>? GetCREATION_DATEBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetCREATION_DATEArray() { return __p.__vector_as_array<byte>(6); }
+  /// Creating organization
   public string ORIGINATOR { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetORIGINATORBytes() { return __p.__vector_as_span<byte>(8, 1); }
@@ -40,6 +43,7 @@ public struct ACM : IFlatbufferObject
   public ArraySegment<byte>? GetORIGINATORBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetORIGINATORArray() { return __p.__vector_as_array<byte>(8); }
+  /// Object name
   public string OBJECT_NAME { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetOBJECT_NAMEBytes() { return __p.__vector_as_span<byte>(10, 1); }
@@ -47,6 +51,7 @@ public struct ACM : IFlatbufferObject
   public ArraySegment<byte>? GetOBJECT_NAMEBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
   public byte[] GetOBJECT_NAMEArray() { return __p.__vector_as_array<byte>(10); }
+  /// International designator
   public string OBJECT_ID { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetOBJECT_IDBytes() { return __p.__vector_as_span<byte>(12, 1); }
@@ -54,28 +59,115 @@ public struct ACM : IFlatbufferObject
   public ArraySegment<byte>? GetOBJECT_IDBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
   public byte[] GetOBJECT_IDArray() { return __p.__vector_as_array<byte>(12); }
+  /// Catalog name
+  public string CATALOG_NAME { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCATALOG_NAMEBytes() { return __p.__vector_as_span<byte>(14, 1); }
+#else
+  public ArraySegment<byte>? GetCATALOG_NAMEBytes() { return __p.__vector_as_arraysegment(14); }
+#endif
+  public byte[] GetCATALOG_NAMEArray() { return __p.__vector_as_array<byte>(14); }
+  /// Epoch of state (ISO 8601)
+  public string EPOCH { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetEPOCHBytes() { return __p.__vector_as_span<byte>(16, 1); }
+#else
+  public ArraySegment<byte>? GetEPOCHBytes() { return __p.__vector_as_arraysegment(16); }
+#endif
+  public byte[] GetEPOCHArray() { return __p.__vector_as_array<byte>(16); }
+  /// Time system
+  public string TIME_SYSTEM { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetTIME_SYSTEMBytes() { return __p.__vector_as_span<byte>(18, 1); }
+#else
+  public ArraySegment<byte>? GetTIME_SYSTEMBytes() { return __p.__vector_as_arraysegment(18); }
+#endif
+  public byte[] GetTIME_SYSTEMArray() { return __p.__vector_as_array<byte>(18); }
+  /// Attitude states
+  public attitudeState? ATT_STATES(int j) { int o = __p.__offset(20); return o != 0 ? (attitudeState?)(new attitudeState()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int ATT_STATESLength { get { int o = __p.__offset(20); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Physical properties
+  public attPhysicalProperties? PHYS_PROPERTIES { get { int o = __p.__offset(22); return o != 0 ? (attPhysicalProperties?)(new attPhysicalProperties()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Attitude covariance data
+  public attCovariance? COV_DATA(int j) { int o = __p.__offset(24); return o != 0 ? (attCovariance?)(new attCovariance()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int COV_DATALength { get { int o = __p.__offset(24); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Attitude maneuvers
+  public attManeuver? MANEUVERS(int j) { int o = __p.__offset(26); return o != 0 ? (attManeuver?)(new attManeuver()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int MANEUVERSLength { get { int o = __p.__offset(26); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Maneuverability status
+  public maneuverableFlag MANEUVERABLE { get { int o = __p.__offset(28); return o != 0 ? (maneuverableFlag)__p.bb.GetSbyte(o + __p.bb_pos) : maneuverableFlag.YES; } }
+  /// Additional comments
+  public string COMMENT { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCOMMENTBytes() { return __p.__vector_as_span<byte>(30, 1); }
+#else
+  public ArraySegment<byte>? GetCOMMENTBytes() { return __p.__vector_as_arraysegment(30); }
+#endif
+  public byte[] GetCOMMENTArray() { return __p.__vector_as_array<byte>(30); }
 
   public static Offset<ACM> CreateACM(FlatBufferBuilder builder,
       StringOffset CCSDS_ACM_VERSOffset = default(StringOffset),
       StringOffset CREATION_DATEOffset = default(StringOffset),
       StringOffset ORIGINATOROffset = default(StringOffset),
       StringOffset OBJECT_NAMEOffset = default(StringOffset),
-      StringOffset OBJECT_IDOffset = default(StringOffset)) {
-    builder.StartTable(5);
+      StringOffset OBJECT_IDOffset = default(StringOffset),
+      StringOffset CATALOG_NAMEOffset = default(StringOffset),
+      StringOffset EPOCHOffset = default(StringOffset),
+      StringOffset TIME_SYSTEMOffset = default(StringOffset),
+      VectorOffset ATT_STATESOffset = default(VectorOffset),
+      Offset<attPhysicalProperties> PHYS_PROPERTIESOffset = default(Offset<attPhysicalProperties>),
+      VectorOffset COV_DATAOffset = default(VectorOffset),
+      VectorOffset MANEUVERSOffset = default(VectorOffset),
+      maneuverableFlag MANEUVERABLE = maneuverableFlag.YES,
+      StringOffset COMMENTOffset = default(StringOffset)) {
+    builder.StartTable(14);
+    ACM.AddCOMMENT(builder, COMMENTOffset);
+    ACM.AddMANEUVERS(builder, MANEUVERSOffset);
+    ACM.AddCOV_DATA(builder, COV_DATAOffset);
+    ACM.AddPHYS_PROPERTIES(builder, PHYS_PROPERTIESOffset);
+    ACM.AddATT_STATES(builder, ATT_STATESOffset);
+    ACM.AddTIME_SYSTEM(builder, TIME_SYSTEMOffset);
+    ACM.AddEPOCH(builder, EPOCHOffset);
+    ACM.AddCATALOG_NAME(builder, CATALOG_NAMEOffset);
     ACM.AddOBJECT_ID(builder, OBJECT_IDOffset);
     ACM.AddOBJECT_NAME(builder, OBJECT_NAMEOffset);
     ACM.AddORIGINATOR(builder, ORIGINATOROffset);
     ACM.AddCREATION_DATE(builder, CREATION_DATEOffset);
     ACM.AddCCSDS_ACM_VERS(builder, CCSDS_ACM_VERSOffset);
+    ACM.AddMANEUVERABLE(builder, MANEUVERABLE);
     return ACM.EndACM(builder);
   }
 
-  public static void StartACM(FlatBufferBuilder builder) { builder.StartTable(5); }
+  public static void StartACM(FlatBufferBuilder builder) { builder.StartTable(14); }
   public static void AddCCSDS_ACM_VERS(FlatBufferBuilder builder, StringOffset CCSDS_ACM_VERSOffset) { builder.AddOffset(0, CCSDS_ACM_VERSOffset.Value, 0); }
   public static void AddCREATION_DATE(FlatBufferBuilder builder, StringOffset CREATION_DATEOffset) { builder.AddOffset(1, CREATION_DATEOffset.Value, 0); }
   public static void AddORIGINATOR(FlatBufferBuilder builder, StringOffset ORIGINATOROffset) { builder.AddOffset(2, ORIGINATOROffset.Value, 0); }
   public static void AddOBJECT_NAME(FlatBufferBuilder builder, StringOffset OBJECT_NAMEOffset) { builder.AddOffset(3, OBJECT_NAMEOffset.Value, 0); }
   public static void AddOBJECT_ID(FlatBufferBuilder builder, StringOffset OBJECT_IDOffset) { builder.AddOffset(4, OBJECT_IDOffset.Value, 0); }
+  public static void AddCATALOG_NAME(FlatBufferBuilder builder, StringOffset CATALOG_NAMEOffset) { builder.AddOffset(5, CATALOG_NAMEOffset.Value, 0); }
+  public static void AddEPOCH(FlatBufferBuilder builder, StringOffset EPOCHOffset) { builder.AddOffset(6, EPOCHOffset.Value, 0); }
+  public static void AddTIME_SYSTEM(FlatBufferBuilder builder, StringOffset TIME_SYSTEMOffset) { builder.AddOffset(7, TIME_SYSTEMOffset.Value, 0); }
+  public static void AddATT_STATES(FlatBufferBuilder builder, VectorOffset ATT_STATESOffset) { builder.AddOffset(8, ATT_STATESOffset.Value, 0); }
+  public static VectorOffset CreateATT_STATESVector(FlatBufferBuilder builder, Offset<attitudeState>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateATT_STATESVectorBlock(FlatBufferBuilder builder, Offset<attitudeState>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateATT_STATESVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<attitudeState>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateATT_STATESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<attitudeState>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartATT_STATESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddPHYS_PROPERTIES(FlatBufferBuilder builder, Offset<attPhysicalProperties> PHYS_PROPERTIESOffset) { builder.AddOffset(9, PHYS_PROPERTIESOffset.Value, 0); }
+  public static void AddCOV_DATA(FlatBufferBuilder builder, VectorOffset COV_DATAOffset) { builder.AddOffset(10, COV_DATAOffset.Value, 0); }
+  public static VectorOffset CreateCOV_DATAVector(FlatBufferBuilder builder, Offset<attCovariance>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateCOV_DATAVectorBlock(FlatBufferBuilder builder, Offset<attCovariance>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOV_DATAVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<attCovariance>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateCOV_DATAVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<attCovariance>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartCOV_DATAVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddMANEUVERS(FlatBufferBuilder builder, VectorOffset MANEUVERSOffset) { builder.AddOffset(11, MANEUVERSOffset.Value, 0); }
+  public static VectorOffset CreateMANEUVERSVector(FlatBufferBuilder builder, Offset<attManeuver>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateMANEUVERSVectorBlock(FlatBufferBuilder builder, Offset<attManeuver>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateMANEUVERSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<attManeuver>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateMANEUVERSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<attManeuver>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartMANEUVERSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddMANEUVERABLE(FlatBufferBuilder builder, maneuverableFlag MANEUVERABLE) { builder.AddSbyte(12, (sbyte)MANEUVERABLE, 0); }
+  public static void AddCOMMENT(FlatBufferBuilder builder, StringOffset COMMENTOffset) { builder.AddOffset(13, COMMENTOffset.Value, 0); }
   public static Offset<ACM> EndACM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<ACM>(o);
@@ -93,6 +185,18 @@ public struct ACM : IFlatbufferObject
     _o.ORIGINATOR = this.ORIGINATOR;
     _o.OBJECT_NAME = this.OBJECT_NAME;
     _o.OBJECT_ID = this.OBJECT_ID;
+    _o.CATALOG_NAME = this.CATALOG_NAME;
+    _o.EPOCH = this.EPOCH;
+    _o.TIME_SYSTEM = this.TIME_SYSTEM;
+    _o.ATT_STATES = new List<attitudeStateT>();
+    for (var _j = 0; _j < this.ATT_STATESLength; ++_j) {_o.ATT_STATES.Add(this.ATT_STATES(_j).HasValue ? this.ATT_STATES(_j).Value.UnPack() : null);}
+    _o.PHYS_PROPERTIES = this.PHYS_PROPERTIES.HasValue ? this.PHYS_PROPERTIES.Value.UnPack() : null;
+    _o.COV_DATA = new List<attCovarianceT>();
+    for (var _j = 0; _j < this.COV_DATALength; ++_j) {_o.COV_DATA.Add(this.COV_DATA(_j).HasValue ? this.COV_DATA(_j).Value.UnPack() : null);}
+    _o.MANEUVERS = new List<attManeuverT>();
+    for (var _j = 0; _j < this.MANEUVERSLength; ++_j) {_o.MANEUVERS.Add(this.MANEUVERS(_j).HasValue ? this.MANEUVERS(_j).Value.UnPack() : null);}
+    _o.MANEUVERABLE = this.MANEUVERABLE;
+    _o.COMMENT = this.COMMENT;
   }
   public static Offset<ACM> Pack(FlatBufferBuilder builder, ACMT _o) {
     if (_o == null) return default(Offset<ACM>);
@@ -101,13 +205,45 @@ public struct ACM : IFlatbufferObject
     var _ORIGINATOR = _o.ORIGINATOR == null ? default(StringOffset) : builder.CreateString(_o.ORIGINATOR);
     var _OBJECT_NAME = _o.OBJECT_NAME == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_NAME);
     var _OBJECT_ID = _o.OBJECT_ID == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_ID);
+    var _CATALOG_NAME = _o.CATALOG_NAME == null ? default(StringOffset) : builder.CreateString(_o.CATALOG_NAME);
+    var _EPOCH = _o.EPOCH == null ? default(StringOffset) : builder.CreateString(_o.EPOCH);
+    var _TIME_SYSTEM = _o.TIME_SYSTEM == null ? default(StringOffset) : builder.CreateString(_o.TIME_SYSTEM);
+    var _ATT_STATES = default(VectorOffset);
+    if (_o.ATT_STATES != null) {
+      var __ATT_STATES = new Offset<attitudeState>[_o.ATT_STATES.Count];
+      for (var _j = 0; _j < __ATT_STATES.Length; ++_j) { __ATT_STATES[_j] = attitudeState.Pack(builder, _o.ATT_STATES[_j]); }
+      _ATT_STATES = CreateATT_STATESVector(builder, __ATT_STATES);
+    }
+    var _PHYS_PROPERTIES = _o.PHYS_PROPERTIES == null ? default(Offset<attPhysicalProperties>) : attPhysicalProperties.Pack(builder, _o.PHYS_PROPERTIES);
+    var _COV_DATA = default(VectorOffset);
+    if (_o.COV_DATA != null) {
+      var __COV_DATA = new Offset<attCovariance>[_o.COV_DATA.Count];
+      for (var _j = 0; _j < __COV_DATA.Length; ++_j) { __COV_DATA[_j] = attCovariance.Pack(builder, _o.COV_DATA[_j]); }
+      _COV_DATA = CreateCOV_DATAVector(builder, __COV_DATA);
+    }
+    var _MANEUVERS = default(VectorOffset);
+    if (_o.MANEUVERS != null) {
+      var __MANEUVERS = new Offset<attManeuver>[_o.MANEUVERS.Count];
+      for (var _j = 0; _j < __MANEUVERS.Length; ++_j) { __MANEUVERS[_j] = attManeuver.Pack(builder, _o.MANEUVERS[_j]); }
+      _MANEUVERS = CreateMANEUVERSVector(builder, __MANEUVERS);
+    }
+    var _COMMENT = _o.COMMENT == null ? default(StringOffset) : builder.CreateString(_o.COMMENT);
     return CreateACM(
       builder,
       _CCSDS_ACM_VERS,
       _CREATION_DATE,
       _ORIGINATOR,
       _OBJECT_NAME,
-      _OBJECT_ID);
+      _OBJECT_ID,
+      _CATALOG_NAME,
+      _EPOCH,
+      _TIME_SYSTEM,
+      _ATT_STATES,
+      _PHYS_PROPERTIES,
+      _COV_DATA,
+      _MANEUVERS,
+      _o.MANEUVERABLE,
+      _COMMENT);
   }
 }
 
@@ -118,6 +254,15 @@ public class ACMT
   public string ORIGINATOR { get; set; }
   public string OBJECT_NAME { get; set; }
   public string OBJECT_ID { get; set; }
+  public string CATALOG_NAME { get; set; }
+  public string EPOCH { get; set; }
+  public string TIME_SYSTEM { get; set; }
+  public List<attitudeStateT> ATT_STATES { get; set; }
+  public attPhysicalPropertiesT PHYS_PROPERTIES { get; set; }
+  public List<attCovarianceT> COV_DATA { get; set; }
+  public List<attManeuverT> MANEUVERS { get; set; }
+  public maneuverableFlag MANEUVERABLE { get; set; }
+  public string COMMENT { get; set; }
 
   public ACMT() {
     this.CCSDS_ACM_VERS = null;
@@ -125,6 +270,15 @@ public class ACMT
     this.ORIGINATOR = null;
     this.OBJECT_NAME = null;
     this.OBJECT_ID = null;
+    this.CATALOG_NAME = null;
+    this.EPOCH = null;
+    this.TIME_SYSTEM = null;
+    this.ATT_STATES = null;
+    this.PHYS_PROPERTIES = null;
+    this.COV_DATA = null;
+    this.MANEUVERS = null;
+    this.MANEUVERABLE = maneuverableFlag.YES;
+    this.COMMENT = null;
   }
   public static ACMT DeserializeFromBinary(byte[] fbBuffer) {
     return ACM.GetRootAsACM(new ByteBuffer(fbBuffer)).UnPack();
@@ -147,6 +301,15 @@ static public class ACMVerify
       && verifier.VerifyString(tablePos, 8 /*ORIGINATOR*/, false)
       && verifier.VerifyString(tablePos, 10 /*OBJECT_NAME*/, false)
       && verifier.VerifyString(tablePos, 12 /*OBJECT_ID*/, false)
+      && verifier.VerifyString(tablePos, 14 /*CATALOG_NAME*/, false)
+      && verifier.VerifyString(tablePos, 16 /*EPOCH*/, false)
+      && verifier.VerifyString(tablePos, 18 /*TIME_SYSTEM*/, false)
+      && verifier.VerifyVectorOfTables(tablePos, 20 /*ATT_STATES*/, attitudeStateVerify.Verify, false)
+      && verifier.VerifyTable(tablePos, 22 /*PHYS_PROPERTIES*/, attPhysicalPropertiesVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 24 /*COV_DATA*/, attCovarianceVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 26 /*MANEUVERS*/, attManeuverVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 28 /*MANEUVERABLE*/, 1 /*maneuverableFlag*/, 1, false)
+      && verifier.VerifyString(tablePos, 30 /*COMMENT*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

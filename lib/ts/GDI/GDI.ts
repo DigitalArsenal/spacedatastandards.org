@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { imageFormat } from './imageFormat.js';
 
 
 /**
@@ -31,6 +32,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$GDI');
 }
 
+/**
+ * Unique identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,6 +42,9 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Sensor identifier
+ */
 ID_SENSOR():string|null
 ID_SENSOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID_SENSOR(optionalEncoding?:any):string|Uint8Array|null {
@@ -45,132 +52,184 @@ ID_SENSOR(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-IMAGE_TIME():string|null
-IMAGE_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-IMAGE_TIME(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Original sensor identifier
+ */
+ORIG_SENSOR_ID():string|null
+ORIG_SENSOR_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ORIG_SENSOR_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-FILENAME():string|null
-FILENAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-FILENAME(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Image capture time (ISO 8601)
+ */
+IMAGE_TIME():string|null
+IMAGE_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+IMAGE_TIME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-REGION():string|null
-REGION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-REGION(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Image filename
+ */
+FILENAME():string|null
+FILENAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+FILENAME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-REGION_TEXT():string|null
-REGION_TEXT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-REGION_TEXT(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Image format
+ */
+FORMAT():imageFormat {
   const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : imageFormat.FITS;
 }
 
-REGION_GEO_JSON():string|null
-REGION_GEO_JSON(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-REGION_GEO_JSON(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * File size (bytes)
+ */
+FILESIZE():bigint {
   const offset = this.bb!.__offset(this.bb_pos, 16);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readInt64(this.bb_pos + offset) : BigInt('0');
 }
 
-REGION_TYPE():string|null
-REGION_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-REGION_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * File checksum value
+ */
+CHECKSUM_VALUE():string|null
+CHECKSUM_VALUE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CHECKSUM_VALUE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-REGION_NDIMS():number {
+/**
+ * Region GeoJSON boundary
+ */
+REGION_GEO_JSON():string|null
+REGION_GEO_JSON(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+REGION_GEO_JSON(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 20);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-REGION_SRID():number {
+/**
+ * Region text description
+ */
+REGION_TEXT():string|null
+REGION_TEXT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+REGION_TEXT(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 22);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-ORIG_SENSOR_ID():string|null
-ORIG_SENSOR_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ORIG_SENSOR_ID(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Region name
+ */
+REGION():string|null
+REGION(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+REGION(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-SUBJECT_ID():string|null
-SUBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-SUBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Region type
+ */
+REGION_TYPE():string|null
+REGION_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+REGION_TYPE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Region geometry dimensions
+ */
+REGION_NDIMS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Region spatial reference ID
+ */
+REGION_SRID():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Subject object identifier
+ */
+SUBJECT_ID():string|null
+SUBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SUBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Image name or title
+ */
 NAME():string|null
 NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 NAME(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 28);
+  const offset = this.bb!.__offset(this.bb_pos, 34);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Transaction identifier
+ */
 TRANSACTION_ID():string|null
 TRANSACTION_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 TRANSACTION_ID(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 30);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-TAGS(index: number):string
-TAGS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-TAGS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 32);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
-}
-
-tagsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 32);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-KEYWORDS(index: number):string
-KEYWORDS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-KEYWORDS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 34);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
-}
-
-keywordsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 34);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-NOTES():string|null
-NOTES(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-NOTES(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 36);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-FORMAT():string|null
-FORMAT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-FORMAT(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Associated tags
+ */
+TAGS(index: number):string
+TAGS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+TAGS(index: number,optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 38);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
-FILESIZE():bigint {
+tagsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Keywords for search/classification
+ */
+KEYWORDS(index: number):string
+KEYWORDS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
+KEYWORDS(index: number,optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 40);
-  return offset ? this.bb!.readInt64(this.bb_pos + offset) : BigInt('0');
+  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
-CHECKSUM_VALUE():string|null
-CHECKSUM_VALUE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-CHECKSUM_VALUE(optionalEncoding?:any):string|Uint8Array|null {
+keywordsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Notes
+ */
+NOTES():string|null
+NOTES(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+NOTES(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 42);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
@@ -187,56 +246,68 @@ static addIdSensor(builder:flatbuffers.Builder, ID_SENSOROffset:flatbuffers.Offs
   builder.addFieldOffset(1, ID_SENSOROffset, 0);
 }
 
+static addOrigSensorId(builder:flatbuffers.Builder, ORIG_SENSOR_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(2, ORIG_SENSOR_IDOffset, 0);
+}
+
 static addImageTime(builder:flatbuffers.Builder, IMAGE_TIMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, IMAGE_TIMEOffset, 0);
+  builder.addFieldOffset(3, IMAGE_TIMEOffset, 0);
 }
 
 static addFilename(builder:flatbuffers.Builder, FILENAMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, FILENAMEOffset, 0);
+  builder.addFieldOffset(4, FILENAMEOffset, 0);
 }
 
-static addRegion(builder:flatbuffers.Builder, REGIONOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(4, REGIONOffset, 0);
+static addFormat(builder:flatbuffers.Builder, FORMAT:imageFormat) {
+  builder.addFieldInt8(5, FORMAT, imageFormat.FITS);
 }
 
-static addRegionText(builder:flatbuffers.Builder, REGION_TEXTOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, REGION_TEXTOffset, 0);
+static addFilesize(builder:flatbuffers.Builder, FILESIZE:bigint) {
+  builder.addFieldInt64(6, FILESIZE, BigInt('0'));
+}
+
+static addChecksumValue(builder:flatbuffers.Builder, CHECKSUM_VALUEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(7, CHECKSUM_VALUEOffset, 0);
 }
 
 static addRegionGeoJson(builder:flatbuffers.Builder, REGION_GEO_JSONOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(6, REGION_GEO_JSONOffset, 0);
+  builder.addFieldOffset(8, REGION_GEO_JSONOffset, 0);
+}
+
+static addRegionText(builder:flatbuffers.Builder, REGION_TEXTOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, REGION_TEXTOffset, 0);
+}
+
+static addRegion(builder:flatbuffers.Builder, REGIONOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(10, REGIONOffset, 0);
 }
 
 static addRegionType(builder:flatbuffers.Builder, REGION_TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(7, REGION_TYPEOffset, 0);
+  builder.addFieldOffset(11, REGION_TYPEOffset, 0);
 }
 
 static addRegionNdims(builder:flatbuffers.Builder, REGION_NDIMS:number) {
-  builder.addFieldInt32(8, REGION_NDIMS, 0);
+  builder.addFieldInt8(12, REGION_NDIMS, 0);
 }
 
 static addRegionSrid(builder:flatbuffers.Builder, REGION_SRID:number) {
-  builder.addFieldInt32(9, REGION_SRID, 0);
-}
-
-static addOrigSensorId(builder:flatbuffers.Builder, ORIG_SENSOR_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(10, ORIG_SENSOR_IDOffset, 0);
+  builder.addFieldInt16(13, REGION_SRID, 0);
 }
 
 static addSubjectId(builder:flatbuffers.Builder, SUBJECT_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(11, SUBJECT_IDOffset, 0);
+  builder.addFieldOffset(14, SUBJECT_IDOffset, 0);
 }
 
 static addName(builder:flatbuffers.Builder, NAMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(12, NAMEOffset, 0);
+  builder.addFieldOffset(15, NAMEOffset, 0);
 }
 
 static addTransactionId(builder:flatbuffers.Builder, TRANSACTION_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(13, TRANSACTION_IDOffset, 0);
+  builder.addFieldOffset(16, TRANSACTION_IDOffset, 0);
 }
 
 static addTags(builder:flatbuffers.Builder, TAGSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(14, TAGSOffset, 0);
+  builder.addFieldOffset(17, TAGSOffset, 0);
 }
 
 static createTagsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -252,7 +323,7 @@ static startTagsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addKeywords(builder:flatbuffers.Builder, KEYWORDSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(15, KEYWORDSOffset, 0);
+  builder.addFieldOffset(18, KEYWORDSOffset, 0);
 }
 
 static createKeywordsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -268,19 +339,7 @@ static startKeywordsVector(builder:flatbuffers.Builder, numElems:number) {
 }
 
 static addNotes(builder:flatbuffers.Builder, NOTESOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(16, NOTESOffset, 0);
-}
-
-static addFormat(builder:flatbuffers.Builder, FORMATOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(17, FORMATOffset, 0);
-}
-
-static addFilesize(builder:flatbuffers.Builder, FILESIZE:bigint) {
-  builder.addFieldInt64(18, FILESIZE, BigInt('0'));
-}
-
-static addChecksumValue(builder:flatbuffers.Builder, CHECKSUM_VALUEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(19, CHECKSUM_VALUEOffset, 0);
+  builder.addFieldOffset(19, NOTESOffset, 0);
 }
 
 static endGDI(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -296,28 +355,28 @@ static finishSizePrefixedGDIBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$GDI', true);
 }
 
-static createGDI(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ID_SENSOROffset:flatbuffers.Offset, IMAGE_TIMEOffset:flatbuffers.Offset, FILENAMEOffset:flatbuffers.Offset, REGIONOffset:flatbuffers.Offset, REGION_TEXTOffset:flatbuffers.Offset, REGION_GEO_JSONOffset:flatbuffers.Offset, REGION_TYPEOffset:flatbuffers.Offset, REGION_NDIMS:number, REGION_SRID:number, ORIG_SENSOR_IDOffset:flatbuffers.Offset, SUBJECT_IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, TRANSACTION_IDOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, KEYWORDSOffset:flatbuffers.Offset, NOTESOffset:flatbuffers.Offset, FORMATOffset:flatbuffers.Offset, FILESIZE:bigint, CHECKSUM_VALUEOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createGDI(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ID_SENSOROffset:flatbuffers.Offset, ORIG_SENSOR_IDOffset:flatbuffers.Offset, IMAGE_TIMEOffset:flatbuffers.Offset, FILENAMEOffset:flatbuffers.Offset, FORMAT:imageFormat, FILESIZE:bigint, CHECKSUM_VALUEOffset:flatbuffers.Offset, REGION_GEO_JSONOffset:flatbuffers.Offset, REGION_TEXTOffset:flatbuffers.Offset, REGIONOffset:flatbuffers.Offset, REGION_TYPEOffset:flatbuffers.Offset, REGION_NDIMS:number, REGION_SRID:number, SUBJECT_IDOffset:flatbuffers.Offset, NAMEOffset:flatbuffers.Offset, TRANSACTION_IDOffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset, KEYWORDSOffset:flatbuffers.Offset, NOTESOffset:flatbuffers.Offset):flatbuffers.Offset {
   GDI.startGDI(builder);
   GDI.addId(builder, IDOffset);
   GDI.addIdSensor(builder, ID_SENSOROffset);
+  GDI.addOrigSensorId(builder, ORIG_SENSOR_IDOffset);
   GDI.addImageTime(builder, IMAGE_TIMEOffset);
   GDI.addFilename(builder, FILENAMEOffset);
-  GDI.addRegion(builder, REGIONOffset);
-  GDI.addRegionText(builder, REGION_TEXTOffset);
+  GDI.addFormat(builder, FORMAT);
+  GDI.addFilesize(builder, FILESIZE);
+  GDI.addChecksumValue(builder, CHECKSUM_VALUEOffset);
   GDI.addRegionGeoJson(builder, REGION_GEO_JSONOffset);
+  GDI.addRegionText(builder, REGION_TEXTOffset);
+  GDI.addRegion(builder, REGIONOffset);
   GDI.addRegionType(builder, REGION_TYPEOffset);
   GDI.addRegionNdims(builder, REGION_NDIMS);
   GDI.addRegionSrid(builder, REGION_SRID);
-  GDI.addOrigSensorId(builder, ORIG_SENSOR_IDOffset);
   GDI.addSubjectId(builder, SUBJECT_IDOffset);
   GDI.addName(builder, NAMEOffset);
   GDI.addTransactionId(builder, TRANSACTION_IDOffset);
   GDI.addTags(builder, TAGSOffset);
   GDI.addKeywords(builder, KEYWORDSOffset);
   GDI.addNotes(builder, NOTESOffset);
-  GDI.addFormat(builder, FORMATOffset);
-  GDI.addFilesize(builder, FILESIZE);
-  GDI.addChecksumValue(builder, CHECKSUM_VALUEOffset);
   return GDI.endGDI(builder);
 }
 
@@ -325,24 +384,24 @@ unpack(): GDIT {
   return new GDIT(
     this.ID(),
     this.ID_SENSOR(),
+    this.ORIG_SENSOR_ID(),
     this.IMAGE_TIME(),
     this.FILENAME(),
-    this.REGION(),
-    this.REGION_TEXT(),
+    this.FORMAT(),
+    this.FILESIZE(),
+    this.CHECKSUM_VALUE(),
     this.REGION_GEO_JSON(),
+    this.REGION_TEXT(),
+    this.REGION(),
     this.REGION_TYPE(),
     this.REGION_NDIMS(),
     this.REGION_SRID(),
-    this.ORIG_SENSOR_ID(),
     this.SUBJECT_ID(),
     this.NAME(),
     this.TRANSACTION_ID(),
     this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength()),
     this.bb!.createScalarList<string>(this.KEYWORDS.bind(this), this.keywordsLength()),
-    this.NOTES(),
-    this.FORMAT(),
-    this.FILESIZE(),
-    this.CHECKSUM_VALUE()
+    this.NOTES()
   );
 }
 
@@ -350,24 +409,24 @@ unpack(): GDIT {
 unpackTo(_o: GDIT): void {
   _o.ID = this.ID();
   _o.ID_SENSOR = this.ID_SENSOR();
+  _o.ORIG_SENSOR_ID = this.ORIG_SENSOR_ID();
   _o.IMAGE_TIME = this.IMAGE_TIME();
   _o.FILENAME = this.FILENAME();
-  _o.REGION = this.REGION();
-  _o.REGION_TEXT = this.REGION_TEXT();
+  _o.FORMAT = this.FORMAT();
+  _o.FILESIZE = this.FILESIZE();
+  _o.CHECKSUM_VALUE = this.CHECKSUM_VALUE();
   _o.REGION_GEO_JSON = this.REGION_GEO_JSON();
+  _o.REGION_TEXT = this.REGION_TEXT();
+  _o.REGION = this.REGION();
   _o.REGION_TYPE = this.REGION_TYPE();
   _o.REGION_NDIMS = this.REGION_NDIMS();
   _o.REGION_SRID = this.REGION_SRID();
-  _o.ORIG_SENSOR_ID = this.ORIG_SENSOR_ID();
   _o.SUBJECT_ID = this.SUBJECT_ID();
   _o.NAME = this.NAME();
   _o.TRANSACTION_ID = this.TRANSACTION_ID();
   _o.TAGS = this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength());
   _o.KEYWORDS = this.bb!.createScalarList<string>(this.KEYWORDS.bind(this), this.keywordsLength());
   _o.NOTES = this.NOTES();
-  _o.FORMAT = this.FORMAT();
-  _o.FILESIZE = this.FILESIZE();
-  _o.CHECKSUM_VALUE = this.CHECKSUM_VALUE();
 }
 }
 
@@ -375,67 +434,66 @@ export class GDIT implements flatbuffers.IGeneratedObject {
 constructor(
   public ID: string|Uint8Array|null = null,
   public ID_SENSOR: string|Uint8Array|null = null,
+  public ORIG_SENSOR_ID: string|Uint8Array|null = null,
   public IMAGE_TIME: string|Uint8Array|null = null,
   public FILENAME: string|Uint8Array|null = null,
-  public REGION: string|Uint8Array|null = null,
-  public REGION_TEXT: string|Uint8Array|null = null,
+  public FORMAT: imageFormat = imageFormat.FITS,
+  public FILESIZE: bigint = BigInt('0'),
+  public CHECKSUM_VALUE: string|Uint8Array|null = null,
   public REGION_GEO_JSON: string|Uint8Array|null = null,
+  public REGION_TEXT: string|Uint8Array|null = null,
+  public REGION: string|Uint8Array|null = null,
   public REGION_TYPE: string|Uint8Array|null = null,
   public REGION_NDIMS: number = 0,
   public REGION_SRID: number = 0,
-  public ORIG_SENSOR_ID: string|Uint8Array|null = null,
   public SUBJECT_ID: string|Uint8Array|null = null,
   public NAME: string|Uint8Array|null = null,
   public TRANSACTION_ID: string|Uint8Array|null = null,
   public TAGS: (string)[] = [],
   public KEYWORDS: (string)[] = [],
-  public NOTES: string|Uint8Array|null = null,
-  public FORMAT: string|Uint8Array|null = null,
-  public FILESIZE: bigint = BigInt('0'),
-  public CHECKSUM_VALUE: string|Uint8Array|null = null
+  public NOTES: string|Uint8Array|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ID = (this.ID !== null ? builder.createString(this.ID!) : 0);
   const ID_SENSOR = (this.ID_SENSOR !== null ? builder.createString(this.ID_SENSOR!) : 0);
+  const ORIG_SENSOR_ID = (this.ORIG_SENSOR_ID !== null ? builder.createString(this.ORIG_SENSOR_ID!) : 0);
   const IMAGE_TIME = (this.IMAGE_TIME !== null ? builder.createString(this.IMAGE_TIME!) : 0);
   const FILENAME = (this.FILENAME !== null ? builder.createString(this.FILENAME!) : 0);
-  const REGION = (this.REGION !== null ? builder.createString(this.REGION!) : 0);
-  const REGION_TEXT = (this.REGION_TEXT !== null ? builder.createString(this.REGION_TEXT!) : 0);
+  const CHECKSUM_VALUE = (this.CHECKSUM_VALUE !== null ? builder.createString(this.CHECKSUM_VALUE!) : 0);
   const REGION_GEO_JSON = (this.REGION_GEO_JSON !== null ? builder.createString(this.REGION_GEO_JSON!) : 0);
+  const REGION_TEXT = (this.REGION_TEXT !== null ? builder.createString(this.REGION_TEXT!) : 0);
+  const REGION = (this.REGION !== null ? builder.createString(this.REGION!) : 0);
   const REGION_TYPE = (this.REGION_TYPE !== null ? builder.createString(this.REGION_TYPE!) : 0);
-  const ORIG_SENSOR_ID = (this.ORIG_SENSOR_ID !== null ? builder.createString(this.ORIG_SENSOR_ID!) : 0);
   const SUBJECT_ID = (this.SUBJECT_ID !== null ? builder.createString(this.SUBJECT_ID!) : 0);
   const NAME = (this.NAME !== null ? builder.createString(this.NAME!) : 0);
   const TRANSACTION_ID = (this.TRANSACTION_ID !== null ? builder.createString(this.TRANSACTION_ID!) : 0);
   const TAGS = GDI.createTagsVector(builder, builder.createObjectOffsetList(this.TAGS));
   const KEYWORDS = GDI.createKeywordsVector(builder, builder.createObjectOffsetList(this.KEYWORDS));
   const NOTES = (this.NOTES !== null ? builder.createString(this.NOTES!) : 0);
-  const FORMAT = (this.FORMAT !== null ? builder.createString(this.FORMAT!) : 0);
-  const CHECKSUM_VALUE = (this.CHECKSUM_VALUE !== null ? builder.createString(this.CHECKSUM_VALUE!) : 0);
 
   return GDI.createGDI(builder,
     ID,
     ID_SENSOR,
+    ORIG_SENSOR_ID,
     IMAGE_TIME,
     FILENAME,
-    REGION,
-    REGION_TEXT,
+    this.FORMAT,
+    this.FILESIZE,
+    CHECKSUM_VALUE,
     REGION_GEO_JSON,
+    REGION_TEXT,
+    REGION,
     REGION_TYPE,
     this.REGION_NDIMS,
     this.REGION_SRID,
-    ORIG_SENSOR_ID,
     SUBJECT_ID,
     NAME,
     TRANSACTION_ID,
     TAGS,
     KEYWORDS,
-    NOTES,
-    FORMAT,
-    this.FILESIZE,
-    CHECKSUM_VALUE
+    NOTES
   );
 }
 }

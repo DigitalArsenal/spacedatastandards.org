@@ -54,6 +54,7 @@ func (rcv *OOI) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Unique identifier
 func (rcv *OOI) ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -62,18 +63,22 @@ func (rcv *OOI) ID() []byte {
 	return nil
 }
 
-func (rcv *OOI) SAT_NO() int32 {
+/// Unique identifier
+/// Satellite catalog number
+func (rcv *OOI) SAT_NO() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *OOI) MutateSAT_NO(n int32) bool {
-	return rcv._tab.MutateInt32Slot(6, n)
+/// Satellite catalog number
+func (rcv *OOI) MutateSAT_NO(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(6, n)
 }
 
+/// Object name or designator
 func (rcv *OOI) NAME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
@@ -82,7 +87,9 @@ func (rcv *OOI) NAME() []byte {
 	return nil
 }
 
-func (rcv *OOI) SENSOR_TASKING_START_TIME() []byte {
+/// Object name or designator
+/// On-orbit reference
+func (rcv *OOI) ON_ORBIT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -90,35 +97,47 @@ func (rcv *OOI) SENSOR_TASKING_START_TIME() []byte {
 	return nil
 }
 
-func (rcv *OOI) SENSOR_TASKING_STOP_TIME() []byte {
+/// On-orbit reference
+/// Tasking status
+func (rcv *OOI) STATUS() ooiStatus {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-func (rcv *OOI) PRIORITY() int32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
-	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return ooiStatus(rcv._tab.GetInt8(o + rcv._tab.Pos))
 	}
 	return 0
 }
 
-func (rcv *OOI) MutatePRIORITY(n int32) bool {
-	return rcv._tab.MutateInt32Slot(14, n)
+/// Tasking status
+func (rcv *OOI) MutateSTATUS(n ooiStatus) bool {
+	return rcv._tab.MutateInt8Slot(12, int8(n))
 }
 
-func (rcv *OOI) STATUS() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+/// Status update date (ISO 8601)
+func (rcv *OOI) STATUS_DATE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
 }
 
-func (rcv *OOI) STATUS_DATE() []byte {
+/// Status update date (ISO 8601)
+/// Collection priority
+func (rcv *OOI) PRIORITY() ooiPriority {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
+	if o != 0 {
+		return ooiPriority(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// Collection priority
+func (rcv *OOI) MutatePRIORITY(n ooiPriority) bool {
+	return rcv._tab.MutateInt8Slot(16, int8(n))
+}
+
+/// Description of why object is of interest
+func (rcv *OOI) DESCRIPTION() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -126,7 +145,9 @@ func (rcv *OOI) STATUS_DATE() []byte {
 	return nil
 }
 
-func (rcv *OOI) DESCRIPTION() []byte {
+/// Description of why object is of interest
+/// Sensor tasking start time (ISO 8601)
+func (rcv *OOI) SENSOR_TASKING_START_TIME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -134,7 +155,9 @@ func (rcv *OOI) DESCRIPTION() []byte {
 	return nil
 }
 
-func (rcv *OOI) LAST_OB_TIME() []byte {
+/// Sensor tasking start time (ISO 8601)
+/// Sensor tasking stop time (ISO 8601)
+func (rcv *OOI) SENSOR_TASKING_STOP_TIME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -142,7 +165,9 @@ func (rcv *OOI) LAST_OB_TIME() []byte {
 	return nil
 }
 
-func (rcv *OOI) MISSED_OB_TIME() []byte {
+/// Sensor tasking stop time (ISO 8601)
+/// Last observation time (ISO 8601)
+func (rcv *OOI) LAST_OB_TIME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -150,49 +175,43 @@ func (rcv *OOI) MISSED_OB_TIME() []byte {
 	return nil
 }
 
-func (rcv *OOI) DELTA_VS(j int) []byte {
+/// Last observation time (ISO 8601)
+/// Last missed observation time (ISO 8601)
+func (rcv *OOI) MISSED_OB_TIME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
-	}
-	return nil
-}
-
-func (rcv *OOI) DELTA_VSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *OOI) DELTA_TS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
-	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
-	}
-	return nil
-}
-
-func (rcv *OOI) DELTA_TSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
-}
-
-func (rcv *OOI) SV_EPOCH() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
 }
 
+/// Last missed observation time (ISO 8601)
+/// State vector epoch (ISO 8601)
+func (rcv *OOI) SV_EPOCH() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+	}
+	return nil
+}
+
+/// State vector epoch (ISO 8601)
+/// Position X (km, TEME)
 func (rcv *OOI) X() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Position X (km, TEME)
+func (rcv *OOI) MutateX(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(30, n)
+}
+
+/// Position Y (km, TEME)
+func (rcv *OOI) Y() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -200,11 +219,13 @@ func (rcv *OOI) X() float64 {
 	return 0.0
 }
 
-func (rcv *OOI) MutateX(n float64) bool {
+/// Position Y (km, TEME)
+func (rcv *OOI) MutateY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
 }
 
-func (rcv *OOI) Y() float64 {
+/// Position Z (km, TEME)
+func (rcv *OOI) Z() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -212,11 +233,13 @@ func (rcv *OOI) Y() float64 {
 	return 0.0
 }
 
-func (rcv *OOI) MutateY(n float64) bool {
+/// Position Z (km, TEME)
+func (rcv *OOI) MutateZ(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(34, n)
 }
 
-func (rcv *OOI) Z() float64 {
+/// Velocity X (km/s, TEME)
+func (rcv *OOI) XVEL() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -224,11 +247,13 @@ func (rcv *OOI) Z() float64 {
 	return 0.0
 }
 
-func (rcv *OOI) MutateZ(n float64) bool {
+/// Velocity X (km/s, TEME)
+func (rcv *OOI) MutateXVEL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(36, n)
 }
 
-func (rcv *OOI) XVEL() float64 {
+/// Velocity Y (km/s, TEME)
+func (rcv *OOI) YVEL() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -236,11 +261,13 @@ func (rcv *OOI) XVEL() float64 {
 	return 0.0
 }
 
-func (rcv *OOI) MutateXVEL(n float64) bool {
+/// Velocity Y (km/s, TEME)
+func (rcv *OOI) MutateYVEL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
 }
 
-func (rcv *OOI) YVEL() float64 {
+/// Velocity Z (km/s, TEME)
+func (rcv *OOI) ZVEL() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -248,31 +275,37 @@ func (rcv *OOI) YVEL() float64 {
 	return 0.0
 }
 
-func (rcv *OOI) MutateYVEL(n float64) bool {
+/// Velocity Z (km/s, TEME)
+func (rcv *OOI) MutateZVEL(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
 }
 
-func (rcv *OOI) ZVEL() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *OOI) MutateZVEL(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(42, n)
-}
-
+/// Element set epoch (ISO 8601)
 func (rcv *OOI) ELSET_EPOCH() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
 }
 
+/// Element set epoch (ISO 8601)
+/// Mean motion (rev/day)
 func (rcv *OOI) MEAN_MOTION() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Mean motion (rev/day)
+func (rcv *OOI) MutateMEAN_MOTION(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(44, n)
+}
+
+/// Eccentricity
+func (rcv *OOI) ECCENTRICITY() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -280,11 +313,13 @@ func (rcv *OOI) MEAN_MOTION() float64 {
 	return 0.0
 }
 
-func (rcv *OOI) MutateMEAN_MOTION(n float64) bool {
+/// Eccentricity
+func (rcv *OOI) MutateECCENTRICITY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
 }
 
-func (rcv *OOI) ECCENTRICITY() float64 {
+/// Inclination (degrees)
+func (rcv *OOI) INCLINATION() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -292,11 +327,13 @@ func (rcv *OOI) ECCENTRICITY() float64 {
 	return 0.0
 }
 
-func (rcv *OOI) MutateECCENTRICITY(n float64) bool {
+/// Inclination (degrees)
+func (rcv *OOI) MutateINCLINATION(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(48, n)
 }
 
-func (rcv *OOI) INCLINATION() float64 {
+/// Right ascension of ascending node (degrees)
+func (rcv *OOI) RAAN() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -304,11 +341,13 @@ func (rcv *OOI) INCLINATION() float64 {
 	return 0.0
 }
 
-func (rcv *OOI) MutateINCLINATION(n float64) bool {
+/// Right ascension of ascending node (degrees)
+func (rcv *OOI) MutateRAAN(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(50, n)
 }
 
-func (rcv *OOI) RAAN() float64 {
+/// Argument of perigee (degrees)
+func (rcv *OOI) ARG_OF_PERIGEE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -316,11 +355,13 @@ func (rcv *OOI) RAAN() float64 {
 	return 0.0
 }
 
-func (rcv *OOI) MutateRAAN(n float64) bool {
+/// Argument of perigee (degrees)
+func (rcv *OOI) MutateARG_OF_PERIGEE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(52, n)
 }
 
-func (rcv *OOI) ARG_OF_PERIGEE() float64 {
+/// Mean anomaly (degrees)
+func (rcv *OOI) MEAN_ANOMALY() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -328,35 +369,41 @@ func (rcv *OOI) ARG_OF_PERIGEE() float64 {
 	return 0.0
 }
 
-func (rcv *OOI) MutateARG_OF_PERIGEE(n float64) bool {
+/// Mean anomaly (degrees)
+func (rcv *OOI) MutateMEAN_ANOMALY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(54, n)
 }
 
-func (rcv *OOI) MEAN_ANOMALY() float64 {
+/// Revolution number at epoch
+func (rcv *OOI) REV_NO() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
+	if o != 0 {
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
+	}
+	return 0
+}
+
+/// Revolution number at epoch
+func (rcv *OOI) MutateREV_NO(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(56, n)
+}
+
+/// BSTAR drag term (1/Earth radii)
+func (rcv *OOI) B_STAR() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
 	return 0.0
 }
 
-func (rcv *OOI) MutateMEAN_ANOMALY(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(56, n)
+/// BSTAR drag term (1/Earth radii)
+func (rcv *OOI) MutateB_STAR(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(58, n)
 }
 
-func (rcv *OOI) REV_NO() int32 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
-	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-func (rcv *OOI) MutateREV_NO(n int32) bool {
-	return rcv._tab.MutateInt32Slot(58, n)
-}
-
-func (rcv *OOI) B_STAR() float64 {
+/// Mean motion first derivative (rev/day^2)
+func (rcv *OOI) MEAN_MOTION_DOT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -364,11 +411,13 @@ func (rcv *OOI) B_STAR() float64 {
 	return 0.0
 }
 
-func (rcv *OOI) MutateB_STAR(n float64) bool {
+/// Mean motion first derivative (rev/day^2)
+func (rcv *OOI) MutateMEAN_MOTION_DOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(60, n)
 }
 
-func (rcv *OOI) MEAN_MOTION_DOT() float64 {
+/// Mean motion second derivative (rev/day^3)
+func (rcv *OOI) MEAN_MOTION_DDOT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -376,11 +425,13 @@ func (rcv *OOI) MEAN_MOTION_DOT() float64 {
 	return 0.0
 }
 
-func (rcv *OOI) MutateMEAN_MOTION_DOT(n float64) bool {
+/// Mean motion second derivative (rev/day^3)
+func (rcv *OOI) MutateMEAN_MOTION_DDOT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(62, n)
 }
 
-func (rcv *OOI) MEAN_MOTION_DDOT() float64 {
+/// Semi-major axis (km)
+func (rcv *OOI) SEMI_MAJOR_AXIS() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -388,11 +439,13 @@ func (rcv *OOI) MEAN_MOTION_DDOT() float64 {
 	return 0.0
 }
 
-func (rcv *OOI) MutateMEAN_MOTION_DDOT(n float64) bool {
+/// Semi-major axis (km)
+func (rcv *OOI) MutateSEMI_MAJOR_AXIS(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(64, n)
 }
 
-func (rcv *OOI) SEMI_MAJOR_AXIS() float64 {
+/// Orbital period (minutes)
+func (rcv *OOI) PERIOD() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -400,11 +453,13 @@ func (rcv *OOI) SEMI_MAJOR_AXIS() float64 {
 	return 0.0
 }
 
-func (rcv *OOI) MutateSEMI_MAJOR_AXIS(n float64) bool {
+/// Orbital period (minutes)
+func (rcv *OOI) MutatePERIOD(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(66, n)
 }
 
-func (rcv *OOI) PERIOD() float64 {
+/// Apogee altitude (km)
+func (rcv *OOI) APOGEE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -412,11 +467,13 @@ func (rcv *OOI) PERIOD() float64 {
 	return 0.0
 }
 
-func (rcv *OOI) MutatePERIOD(n float64) bool {
+/// Apogee altitude (km)
+func (rcv *OOI) MutateAPOGEE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(68, n)
 }
 
-func (rcv *OOI) APOGEE() float64 {
+/// Perigee altitude (km)
+func (rcv *OOI) PERIGEE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -424,24 +481,70 @@ func (rcv *OOI) APOGEE() float64 {
 	return 0.0
 }
 
-func (rcv *OOI) MutateAPOGEE(n float64) bool {
+/// Perigee altitude (km)
+func (rcv *OOI) MutatePERIGEE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(70, n)
 }
 
-func (rcv *OOI) PERIGEE() float64 {
+/// Delta-V estimates for maneuver hypotheses (m/s)
+func (rcv *OOI) DELTA_VS(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
 	}
-	return 0.0
+	return 0
 }
 
-func (rcv *OOI) MutatePERIGEE(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(72, n)
+func (rcv *OOI) DELTA_VSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
 }
 
-func (rcv *OOI) AFFECTED_OBJECTS(j int) []byte {
+/// Delta-V estimates for maneuver hypotheses (m/s)
+func (rcv *OOI) MutateDELTA_VS(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// Delta-T estimates for maneuver timing (seconds)
+func (rcv *OOI) DELTA_TS(j int) float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *OOI) DELTA_TSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Delta-T estimates for maneuver timing (seconds)
+func (rcv *OOI) MutateDELTA_TS(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// Other affected satellite catalog numbers
+func (rcv *OOI) AFFECTED_OBJECTS(j int) []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
 		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
@@ -450,21 +553,15 @@ func (rcv *OOI) AFFECTED_OBJECTS(j int) []byte {
 }
 
 func (rcv *OOI) AFFECTED_OBJECTSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
-func (rcv *OOI) ON_ORBIT() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
+/// Other affected satellite catalog numbers
+/// Associated orbit manifold identifiers
 func (rcv *OOI) MANIFOLDS(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(78))
 	if o != 0 {
@@ -482,128 +579,129 @@ func (rcv *OOI) MANIFOLDSLength() int {
 	return 0
 }
 
+/// Associated orbit manifold identifiers
 func OOIStart(builder *flatbuffers.Builder) {
 	builder.StartObject(38)
 }
 func OOIAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
-func OOIAddSAT_NO(builder *flatbuffers.Builder, SAT_NO int32) {
-	builder.PrependInt32Slot(1, SAT_NO, 0)
+func OOIAddSAT_NO(builder *flatbuffers.Builder, SAT_NO uint32) {
+	builder.PrependUint32Slot(1, SAT_NO, 0)
 }
 func OOIAddNAME(builder *flatbuffers.Builder, NAME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(NAME), 0)
 }
-func OOIAddSENSOR_TASKING_START_TIME(builder *flatbuffers.Builder, SENSOR_TASKING_START_TIME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(SENSOR_TASKING_START_TIME), 0)
+func OOIAddON_ORBIT(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ON_ORBIT), 0)
 }
-func OOIAddSENSOR_TASKING_STOP_TIME(builder *flatbuffers.Builder, SENSOR_TASKING_STOP_TIME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(SENSOR_TASKING_STOP_TIME), 0)
-}
-func OOIAddPRIORITY(builder *flatbuffers.Builder, PRIORITY int32) {
-	builder.PrependInt32Slot(5, PRIORITY, 0)
-}
-func OOIAddSTATUS(builder *flatbuffers.Builder, STATUS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(STATUS), 0)
+func OOIAddSTATUS(builder *flatbuffers.Builder, STATUS ooiStatus) {
+	builder.PrependInt8Slot(4, int8(STATUS), 0)
 }
 func OOIAddSTATUS_DATE(builder *flatbuffers.Builder, STATUS_DATE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(STATUS_DATE), 0)
+	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(STATUS_DATE), 0)
+}
+func OOIAddPRIORITY(builder *flatbuffers.Builder, PRIORITY ooiPriority) {
+	builder.PrependInt8Slot(6, int8(PRIORITY), 0)
 }
 func OOIAddDESCRIPTION(builder *flatbuffers.Builder, DESCRIPTION flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(DESCRIPTION), 0)
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(DESCRIPTION), 0)
+}
+func OOIAddSENSOR_TASKING_START_TIME(builder *flatbuffers.Builder, SENSOR_TASKING_START_TIME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(SENSOR_TASKING_START_TIME), 0)
+}
+func OOIAddSENSOR_TASKING_STOP_TIME(builder *flatbuffers.Builder, SENSOR_TASKING_STOP_TIME flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(SENSOR_TASKING_STOP_TIME), 0)
 }
 func OOIAddLAST_OB_TIME(builder *flatbuffers.Builder, LAST_OB_TIME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(LAST_OB_TIME), 0)
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(LAST_OB_TIME), 0)
 }
 func OOIAddMISSED_OB_TIME(builder *flatbuffers.Builder, MISSED_OB_TIME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(MISSED_OB_TIME), 0)
-}
-func OOIAddDELTA_VS(builder *flatbuffers.Builder, DELTA_VS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(DELTA_VS), 0)
-}
-func OOIStartDELTA_VSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
-func OOIAddDELTA_TS(builder *flatbuffers.Builder, DELTA_TS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(DELTA_TS), 0)
-}
-func OOIStartDELTA_TSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(MISSED_OB_TIME), 0)
 }
 func OOIAddSV_EPOCH(builder *flatbuffers.Builder, SV_EPOCH flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(SV_EPOCH), 0)
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(SV_EPOCH), 0)
 }
 func OOIAddX(builder *flatbuffers.Builder, X float64) {
-	builder.PrependFloat64Slot(14, X, 0.0)
+	builder.PrependFloat64Slot(13, X, 0.0)
 }
 func OOIAddY(builder *flatbuffers.Builder, Y float64) {
-	builder.PrependFloat64Slot(15, Y, 0.0)
+	builder.PrependFloat64Slot(14, Y, 0.0)
 }
 func OOIAddZ(builder *flatbuffers.Builder, Z float64) {
-	builder.PrependFloat64Slot(16, Z, 0.0)
+	builder.PrependFloat64Slot(15, Z, 0.0)
 }
 func OOIAddXVEL(builder *flatbuffers.Builder, XVEL float64) {
-	builder.PrependFloat64Slot(17, XVEL, 0.0)
+	builder.PrependFloat64Slot(16, XVEL, 0.0)
 }
 func OOIAddYVEL(builder *flatbuffers.Builder, YVEL float64) {
-	builder.PrependFloat64Slot(18, YVEL, 0.0)
+	builder.PrependFloat64Slot(17, YVEL, 0.0)
 }
 func OOIAddZVEL(builder *flatbuffers.Builder, ZVEL float64) {
-	builder.PrependFloat64Slot(19, ZVEL, 0.0)
+	builder.PrependFloat64Slot(18, ZVEL, 0.0)
 }
 func OOIAddELSET_EPOCH(builder *flatbuffers.Builder, ELSET_EPOCH flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(ELSET_EPOCH), 0)
+	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(ELSET_EPOCH), 0)
 }
 func OOIAddMEAN_MOTION(builder *flatbuffers.Builder, MEAN_MOTION float64) {
-	builder.PrependFloat64Slot(21, MEAN_MOTION, 0.0)
+	builder.PrependFloat64Slot(20, MEAN_MOTION, 0.0)
 }
 func OOIAddECCENTRICITY(builder *flatbuffers.Builder, ECCENTRICITY float64) {
-	builder.PrependFloat64Slot(22, ECCENTRICITY, 0.0)
+	builder.PrependFloat64Slot(21, ECCENTRICITY, 0.0)
 }
 func OOIAddINCLINATION(builder *flatbuffers.Builder, INCLINATION float64) {
-	builder.PrependFloat64Slot(23, INCLINATION, 0.0)
+	builder.PrependFloat64Slot(22, INCLINATION, 0.0)
 }
 func OOIAddRAAN(builder *flatbuffers.Builder, RAAN float64) {
-	builder.PrependFloat64Slot(24, RAAN, 0.0)
+	builder.PrependFloat64Slot(23, RAAN, 0.0)
 }
 func OOIAddARG_OF_PERIGEE(builder *flatbuffers.Builder, ARG_OF_PERIGEE float64) {
-	builder.PrependFloat64Slot(25, ARG_OF_PERIGEE, 0.0)
+	builder.PrependFloat64Slot(24, ARG_OF_PERIGEE, 0.0)
 }
 func OOIAddMEAN_ANOMALY(builder *flatbuffers.Builder, MEAN_ANOMALY float64) {
-	builder.PrependFloat64Slot(26, MEAN_ANOMALY, 0.0)
+	builder.PrependFloat64Slot(25, MEAN_ANOMALY, 0.0)
 }
-func OOIAddREV_NO(builder *flatbuffers.Builder, REV_NO int32) {
-	builder.PrependInt32Slot(27, REV_NO, 0)
+func OOIAddREV_NO(builder *flatbuffers.Builder, REV_NO uint32) {
+	builder.PrependUint32Slot(26, REV_NO, 0)
 }
 func OOIAddB_STAR(builder *flatbuffers.Builder, B_STAR float64) {
-	builder.PrependFloat64Slot(28, B_STAR, 0.0)
+	builder.PrependFloat64Slot(27, B_STAR, 0.0)
 }
 func OOIAddMEAN_MOTION_DOT(builder *flatbuffers.Builder, MEAN_MOTION_DOT float64) {
-	builder.PrependFloat64Slot(29, MEAN_MOTION_DOT, 0.0)
+	builder.PrependFloat64Slot(28, MEAN_MOTION_DOT, 0.0)
 }
 func OOIAddMEAN_MOTION_DDOT(builder *flatbuffers.Builder, MEAN_MOTION_DDOT float64) {
-	builder.PrependFloat64Slot(30, MEAN_MOTION_DDOT, 0.0)
+	builder.PrependFloat64Slot(29, MEAN_MOTION_DDOT, 0.0)
 }
 func OOIAddSEMI_MAJOR_AXIS(builder *flatbuffers.Builder, SEMI_MAJOR_AXIS float64) {
-	builder.PrependFloat64Slot(31, SEMI_MAJOR_AXIS, 0.0)
+	builder.PrependFloat64Slot(30, SEMI_MAJOR_AXIS, 0.0)
 }
 func OOIAddPERIOD(builder *flatbuffers.Builder, PERIOD float64) {
-	builder.PrependFloat64Slot(32, PERIOD, 0.0)
+	builder.PrependFloat64Slot(31, PERIOD, 0.0)
 }
 func OOIAddAPOGEE(builder *flatbuffers.Builder, APOGEE float64) {
-	builder.PrependFloat64Slot(33, APOGEE, 0.0)
+	builder.PrependFloat64Slot(32, APOGEE, 0.0)
 }
 func OOIAddPERIGEE(builder *flatbuffers.Builder, PERIGEE float64) {
-	builder.PrependFloat64Slot(34, PERIGEE, 0.0)
+	builder.PrependFloat64Slot(33, PERIGEE, 0.0)
+}
+func OOIAddDELTA_VS(builder *flatbuffers.Builder, DELTA_VS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(DELTA_VS), 0)
+}
+func OOIStartDELTA_VSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func OOIAddDELTA_TS(builder *flatbuffers.Builder, DELTA_TS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(35, flatbuffers.UOffsetT(DELTA_TS), 0)
+}
+func OOIStartDELTA_TSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
 }
 func OOIAddAFFECTED_OBJECTS(builder *flatbuffers.Builder, AFFECTED_OBJECTS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(35, flatbuffers.UOffsetT(AFFECTED_OBJECTS), 0)
+	builder.PrependUOffsetTSlot(36, flatbuffers.UOffsetT(AFFECTED_OBJECTS), 0)
 }
 func OOIStartAFFECTED_OBJECTSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
 	return builder.StartVector(4, numElems, 4)
-}
-func OOIAddON_ORBIT(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(36, flatbuffers.UOffsetT(ON_ORBIT), 0)
 }
 func OOIAddMANIFOLDS(builder *flatbuffers.Builder, MANIFOLDS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(37, flatbuffers.UOffsetT(MANIFOLDS), 0)

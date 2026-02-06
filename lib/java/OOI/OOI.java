@@ -29,76 +29,192 @@ public final class OOI extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public OOI __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
-  public int SAT_NO() { int o = __offset(6); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Satellite catalog number
+   */
+  public long SAT_NO() { int o = __offset(6); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Object name or designator
+   */
   public String NAME() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer NAMEAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
-  public String SENSOR_TASKING_START_TIME() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SENSOR_TASKING_START_TIMEAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
-  public ByteBuffer SENSOR_TASKING_START_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
-  public String SENSOR_TASKING_STOP_TIME() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SENSOR_TASKING_STOP_TIMEAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
-  public ByteBuffer SENSOR_TASKING_STOP_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
-  public int PRIORITY() { int o = __offset(14); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public String STATUS() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer STATUSAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
-  public ByteBuffer STATUSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
-  public String STATUS_DATE() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer STATUS_DATEAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
-  public ByteBuffer STATUS_DATEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
-  public String DESCRIPTION() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer DESCRIPTIONAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
-  public ByteBuffer DESCRIPTIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
-  public String LAST_OB_TIME() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer LAST_OB_TIMEAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
-  public ByteBuffer LAST_OB_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
-  public String MISSED_OB_TIME() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer MISSED_OB_TIMEAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
-  public ByteBuffer MISSED_OB_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
-  public String DELTA_VS(int j) { int o = __offset(26); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int DELTA_VSLength() { int o = __offset(26); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector deltaVsVector() { return deltaVsVector(new StringVector()); }
-  public StringVector deltaVsVector(StringVector obj) { int o = __offset(26); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String DELTA_TS(int j) { int o = __offset(28); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int DELTA_TSLength() { int o = __offset(28); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector deltaTsVector() { return deltaTsVector(new StringVector()); }
-  public StringVector deltaTsVector(StringVector obj) { int o = __offset(28); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String SV_EPOCH() { int o = __offset(30); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer SV_EPOCHAsByteBuffer() { return __vector_as_bytebuffer(30, 1); }
-  public ByteBuffer SV_EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 1); }
-  public double X() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double Y() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double Z() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double XVEL() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double YVEL() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double ZVEL() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String ELSET_EPOCH() { int o = __offset(44); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ELSET_EPOCHAsByteBuffer() { return __vector_as_bytebuffer(44, 1); }
-  public ByteBuffer ELSET_EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 44, 1); }
-  public double MEAN_MOTION() { int o = __offset(46); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double ECCENTRICITY() { int o = __offset(48); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double INCLINATION() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double RAAN() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double ARG_OF_PERIGEE() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double MEAN_ANOMALY() { int o = __offset(56); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public int REV_NO() { int o = __offset(58); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
-  public double B_STAR() { int o = __offset(60); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double MEAN_MOTION_DOT() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double MEAN_MOTION_DDOT() { int o = __offset(64); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double SEMI_MAJOR_AXIS() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double PERIOD() { int o = __offset(68); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double APOGEE() { int o = __offset(70); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double PERIGEE() { int o = __offset(72); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String AFFECTED_OBJECTS(int j) { int o = __offset(74); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int AFFECTED_OBJECTSLength() { int o = __offset(74); return o != 0 ? __vector_len(o) : 0; }
+  /**
+   * On-orbit reference
+   */
+  public String ON_ORBIT() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ON_ORBITAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
+  public ByteBuffer ON_ORBITInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * Tasking status
+   */
+  public byte STATUS() { int o = __offset(12); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Status update date (ISO 8601)
+   */
+  public String STATUS_DATE() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer STATUS_DATEAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer STATUS_DATEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * Collection priority
+   */
+  public byte PRIORITY() { int o = __offset(16); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Description of why object is of interest
+   */
+  public String DESCRIPTION() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer DESCRIPTIONAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
+  public ByteBuffer DESCRIPTIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
+  /**
+   * Sensor tasking start time (ISO 8601)
+   */
+  public String SENSOR_TASKING_START_TIME() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SENSOR_TASKING_START_TIMEAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
+  public ByteBuffer SENSOR_TASKING_START_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
+  /**
+   * Sensor tasking stop time (ISO 8601)
+   */
+  public String SENSOR_TASKING_STOP_TIME() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SENSOR_TASKING_STOP_TIMEAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
+  public ByteBuffer SENSOR_TASKING_STOP_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
+  /**
+   * Last observation time (ISO 8601)
+   */
+  public String LAST_OB_TIME() { int o = __offset(24); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LAST_OB_TIMEAsByteBuffer() { return __vector_as_bytebuffer(24, 1); }
+  public ByteBuffer LAST_OB_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 1); }
+  /**
+   * Last missed observation time (ISO 8601)
+   */
+  public String MISSED_OB_TIME() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MISSED_OB_TIMEAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
+  public ByteBuffer MISSED_OB_TIMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
+  /**
+   * State vector epoch (ISO 8601)
+   */
+  public String SV_EPOCH() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SV_EPOCHAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
+  public ByteBuffer SV_EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
+  /**
+   * Position X (km, TEME)
+   */
+  public double X() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Position Y (km, TEME)
+   */
+  public double Y() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Position Z (km, TEME)
+   */
+  public double Z() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Velocity X (km/s, TEME)
+   */
+  public double XVEL() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Velocity Y (km/s, TEME)
+   */
+  public double YVEL() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Velocity Z (km/s, TEME)
+   */
+  public double ZVEL() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Element set epoch (ISO 8601)
+   */
+  public String ELSET_EPOCH() { int o = __offset(42); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ELSET_EPOCHAsByteBuffer() { return __vector_as_bytebuffer(42, 1); }
+  public ByteBuffer ELSET_EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 42, 1); }
+  /**
+   * Mean motion (rev/day)
+   */
+  public double MEAN_MOTION() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Eccentricity
+   */
+  public double ECCENTRICITY() { int o = __offset(46); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Inclination (degrees)
+   */
+  public double INCLINATION() { int o = __offset(48); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Right ascension of ascending node (degrees)
+   */
+  public double RAAN() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Argument of perigee (degrees)
+   */
+  public double ARG_OF_PERIGEE() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Mean anomaly (degrees)
+   */
+  public double MEAN_ANOMALY() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Revolution number at epoch
+   */
+  public long REV_NO() { int o = __offset(56); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * BSTAR drag term (1/Earth radii)
+   */
+  public double B_STAR() { int o = __offset(58); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Mean motion first derivative (rev/day^2)
+   */
+  public double MEAN_MOTION_DOT() { int o = __offset(60); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Mean motion second derivative (rev/day^3)
+   */
+  public double MEAN_MOTION_DDOT() { int o = __offset(62); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Semi-major axis (km)
+   */
+  public double SEMI_MAJOR_AXIS() { int o = __offset(64); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Orbital period (minutes)
+   */
+  public double PERIOD() { int o = __offset(66); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Apogee altitude (km)
+   */
+  public double APOGEE() { int o = __offset(68); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Perigee altitude (km)
+   */
+  public double PERIGEE() { int o = __offset(70); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Delta-V estimates for maneuver hypotheses (m/s)
+   */
+  public double DELTA_VS(int j) { int o = __offset(72); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int DELTA_VSLength() { int o = __offset(72); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector deltaVsVector() { return deltaVsVector(new DoubleVector()); }
+  public DoubleVector deltaVsVector(DoubleVector obj) { int o = __offset(72); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer DELTA_VSAsByteBuffer() { return __vector_as_bytebuffer(72, 8); }
+  public ByteBuffer DELTA_VSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 72, 8); }
+  /**
+   * Delta-T estimates for maneuver timing (seconds)
+   */
+  public double DELTA_TS(int j) { int o = __offset(74); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int DELTA_TSLength() { int o = __offset(74); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector deltaTsVector() { return deltaTsVector(new DoubleVector()); }
+  public DoubleVector deltaTsVector(DoubleVector obj) { int o = __offset(74); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer DELTA_TSAsByteBuffer() { return __vector_as_bytebuffer(74, 8); }
+  public ByteBuffer DELTA_TSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 74, 8); }
+  /**
+   * Other affected satellite catalog numbers
+   */
+  public String AFFECTED_OBJECTS(int j) { int o = __offset(76); return o != 0 ? __string(__vector(o) + j * 4) : null; }
+  public int AFFECTED_OBJECTSLength() { int o = __offset(76); return o != 0 ? __vector_len(o) : 0; }
   public StringVector affectedObjectsVector() { return affectedObjectsVector(new StringVector()); }
-  public StringVector affectedObjectsVector(StringVector obj) { int o = __offset(74); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String ON_ORBIT() { int o = __offset(76); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ON_ORBITAsByteBuffer() { return __vector_as_bytebuffer(76, 1); }
-  public ByteBuffer ON_ORBITInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 76, 1); }
+  public StringVector affectedObjectsVector(StringVector obj) { int o = __offset(76); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Associated orbit manifold identifiers
+   */
   public String MANIFOLDS(int j) { int o = __offset(78); return o != 0 ? __string(__vector(o) + j * 4) : null; }
   public int MANIFOLDSLength() { int o = __offset(78); return o != 0 ? __vector_len(o) : 0; }
   public StringVector manifoldsVector() { return manifoldsVector(new StringVector()); }
@@ -106,18 +222,17 @@ public final class OOI extends Table {
 
   public static int createOOI(FlatBufferBuilder builder,
       int IDOffset,
-      int SAT_NO,
+      long SAT_NO,
       int NAMEOffset,
+      int ON_ORBITOffset,
+      byte STATUS,
+      int STATUS_DATEOffset,
+      byte PRIORITY,
+      int DESCRIPTIONOffset,
       int SENSOR_TASKING_START_TIMEOffset,
       int SENSOR_TASKING_STOP_TIMEOffset,
-      int PRIORITY,
-      int STATUSOffset,
-      int STATUS_DATEOffset,
-      int DESCRIPTIONOffset,
       int LAST_OB_TIMEOffset,
       int MISSED_OB_TIMEOffset,
-      int DELTA_VSOffset,
-      int DELTA_TSOffset,
       int SV_EPOCHOffset,
       double X,
       double Y,
@@ -132,7 +247,7 @@ public final class OOI extends Table {
       double RAAN,
       double ARG_OF_PERIGEE,
       double MEAN_ANOMALY,
-      int REV_NO,
+      long REV_NO,
       double B_STAR,
       double MEAN_MOTION_DOT,
       double MEAN_MOTION_DDOT,
@@ -140,8 +255,9 @@ public final class OOI extends Table {
       double PERIOD,
       double APOGEE,
       double PERIGEE,
+      int DELTA_VSOffset,
+      int DELTA_TSOffset,
       int AFFECTED_OBJECTSOffset,
-      int ON_ORBITOffset,
       int MANIFOLDSOffset) {
     builder.startTable(38);
     OOI.addPerigee(builder, PERIGEE);
@@ -164,71 +280,71 @@ public final class OOI extends Table {
     OOI.addY(builder, Y);
     OOI.addX(builder, X);
     OOI.addManifolds(builder, MANIFOLDSOffset);
-    OOI.addOnOrbit(builder, ON_ORBITOffset);
     OOI.addAffectedObjects(builder, AFFECTED_OBJECTSOffset);
+    OOI.addDeltaTs(builder, DELTA_TSOffset);
+    OOI.addDeltaVs(builder, DELTA_VSOffset);
     OOI.addRevNo(builder, REV_NO);
     OOI.addElsetEpoch(builder, ELSET_EPOCHOffset);
     OOI.addSvEpoch(builder, SV_EPOCHOffset);
-    OOI.addDeltaTs(builder, DELTA_TSOffset);
-    OOI.addDeltaVs(builder, DELTA_VSOffset);
     OOI.addMissedObTime(builder, MISSED_OB_TIMEOffset);
     OOI.addLastObTime(builder, LAST_OB_TIMEOffset);
-    OOI.addDescription(builder, DESCRIPTIONOffset);
-    OOI.addStatusDate(builder, STATUS_DATEOffset);
-    OOI.addStatus(builder, STATUSOffset);
-    OOI.addPriority(builder, PRIORITY);
     OOI.addSensorTaskingStopTime(builder, SENSOR_TASKING_STOP_TIMEOffset);
     OOI.addSensorTaskingStartTime(builder, SENSOR_TASKING_START_TIMEOffset);
+    OOI.addDescription(builder, DESCRIPTIONOffset);
+    OOI.addStatusDate(builder, STATUS_DATEOffset);
+    OOI.addOnOrbit(builder, ON_ORBITOffset);
     OOI.addName(builder, NAMEOffset);
     OOI.addSatNo(builder, SAT_NO);
     OOI.addId(builder, IDOffset);
+    OOI.addPriority(builder, PRIORITY);
+    OOI.addStatus(builder, STATUS);
     return OOI.endOOI(builder);
   }
 
   public static void startOOI(FlatBufferBuilder builder) { builder.startTable(38); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
-  public static void addSatNo(FlatBufferBuilder builder, int SAT_NO) { builder.addInt(1, SAT_NO, 0); }
+  public static void addSatNo(FlatBufferBuilder builder, long SAT_NO) { builder.addInt(1, (int) SAT_NO, (int) 0L); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(2, NAMEOffset, 0); }
-  public static void addSensorTaskingStartTime(FlatBufferBuilder builder, int SENSOR_TASKING_START_TIMEOffset) { builder.addOffset(3, SENSOR_TASKING_START_TIMEOffset, 0); }
-  public static void addSensorTaskingStopTime(FlatBufferBuilder builder, int SENSOR_TASKING_STOP_TIMEOffset) { builder.addOffset(4, SENSOR_TASKING_STOP_TIMEOffset, 0); }
-  public static void addPriority(FlatBufferBuilder builder, int PRIORITY) { builder.addInt(5, PRIORITY, 0); }
-  public static void addStatus(FlatBufferBuilder builder, int STATUSOffset) { builder.addOffset(6, STATUSOffset, 0); }
-  public static void addStatusDate(FlatBufferBuilder builder, int STATUS_DATEOffset) { builder.addOffset(7, STATUS_DATEOffset, 0); }
-  public static void addDescription(FlatBufferBuilder builder, int DESCRIPTIONOffset) { builder.addOffset(8, DESCRIPTIONOffset, 0); }
-  public static void addLastObTime(FlatBufferBuilder builder, int LAST_OB_TIMEOffset) { builder.addOffset(9, LAST_OB_TIMEOffset, 0); }
-  public static void addMissedObTime(FlatBufferBuilder builder, int MISSED_OB_TIMEOffset) { builder.addOffset(10, MISSED_OB_TIMEOffset, 0); }
-  public static void addDeltaVs(FlatBufferBuilder builder, int DELTA_VSOffset) { builder.addOffset(11, DELTA_VSOffset, 0); }
-  public static int createDeltaVsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startDeltaVsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addDeltaTs(FlatBufferBuilder builder, int DELTA_TSOffset) { builder.addOffset(12, DELTA_TSOffset, 0); }
-  public static int createDeltaTsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startDeltaTsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addSvEpoch(FlatBufferBuilder builder, int SV_EPOCHOffset) { builder.addOffset(13, SV_EPOCHOffset, 0); }
-  public static void addX(FlatBufferBuilder builder, double X) { builder.addDouble(14, X, 0.0); }
-  public static void addY(FlatBufferBuilder builder, double Y) { builder.addDouble(15, Y, 0.0); }
-  public static void addZ(FlatBufferBuilder builder, double Z) { builder.addDouble(16, Z, 0.0); }
-  public static void addXvel(FlatBufferBuilder builder, double XVEL) { builder.addDouble(17, XVEL, 0.0); }
-  public static void addYvel(FlatBufferBuilder builder, double YVEL) { builder.addDouble(18, YVEL, 0.0); }
-  public static void addZvel(FlatBufferBuilder builder, double ZVEL) { builder.addDouble(19, ZVEL, 0.0); }
-  public static void addElsetEpoch(FlatBufferBuilder builder, int ELSET_EPOCHOffset) { builder.addOffset(20, ELSET_EPOCHOffset, 0); }
-  public static void addMeanMotion(FlatBufferBuilder builder, double MEAN_MOTION) { builder.addDouble(21, MEAN_MOTION, 0.0); }
-  public static void addEccentricity(FlatBufferBuilder builder, double ECCENTRICITY) { builder.addDouble(22, ECCENTRICITY, 0.0); }
-  public static void addInclination(FlatBufferBuilder builder, double INCLINATION) { builder.addDouble(23, INCLINATION, 0.0); }
-  public static void addRaan(FlatBufferBuilder builder, double RAAN) { builder.addDouble(24, RAAN, 0.0); }
-  public static void addArgOfPerigee(FlatBufferBuilder builder, double ARG_OF_PERIGEE) { builder.addDouble(25, ARG_OF_PERIGEE, 0.0); }
-  public static void addMeanAnomaly(FlatBufferBuilder builder, double MEAN_ANOMALY) { builder.addDouble(26, MEAN_ANOMALY, 0.0); }
-  public static void addRevNo(FlatBufferBuilder builder, int REV_NO) { builder.addInt(27, REV_NO, 0); }
-  public static void addBStar(FlatBufferBuilder builder, double B_STAR) { builder.addDouble(28, B_STAR, 0.0); }
-  public static void addMeanMotionDot(FlatBufferBuilder builder, double MEAN_MOTION_DOT) { builder.addDouble(29, MEAN_MOTION_DOT, 0.0); }
-  public static void addMeanMotionDdot(FlatBufferBuilder builder, double MEAN_MOTION_DDOT) { builder.addDouble(30, MEAN_MOTION_DDOT, 0.0); }
-  public static void addSemiMajorAxis(FlatBufferBuilder builder, double SEMI_MAJOR_AXIS) { builder.addDouble(31, SEMI_MAJOR_AXIS, 0.0); }
-  public static void addPeriod(FlatBufferBuilder builder, double PERIOD) { builder.addDouble(32, PERIOD, 0.0); }
-  public static void addApogee(FlatBufferBuilder builder, double APOGEE) { builder.addDouble(33, APOGEE, 0.0); }
-  public static void addPerigee(FlatBufferBuilder builder, double PERIGEE) { builder.addDouble(34, PERIGEE, 0.0); }
-  public static void addAffectedObjects(FlatBufferBuilder builder, int AFFECTED_OBJECTSOffset) { builder.addOffset(35, AFFECTED_OBJECTSOffset, 0); }
+  public static void addOnOrbit(FlatBufferBuilder builder, int ON_ORBITOffset) { builder.addOffset(3, ON_ORBITOffset, 0); }
+  public static void addStatus(FlatBufferBuilder builder, byte STATUS) { builder.addByte(4, STATUS, 0); }
+  public static void addStatusDate(FlatBufferBuilder builder, int STATUS_DATEOffset) { builder.addOffset(5, STATUS_DATEOffset, 0); }
+  public static void addPriority(FlatBufferBuilder builder, byte PRIORITY) { builder.addByte(6, PRIORITY, 0); }
+  public static void addDescription(FlatBufferBuilder builder, int DESCRIPTIONOffset) { builder.addOffset(7, DESCRIPTIONOffset, 0); }
+  public static void addSensorTaskingStartTime(FlatBufferBuilder builder, int SENSOR_TASKING_START_TIMEOffset) { builder.addOffset(8, SENSOR_TASKING_START_TIMEOffset, 0); }
+  public static void addSensorTaskingStopTime(FlatBufferBuilder builder, int SENSOR_TASKING_STOP_TIMEOffset) { builder.addOffset(9, SENSOR_TASKING_STOP_TIMEOffset, 0); }
+  public static void addLastObTime(FlatBufferBuilder builder, int LAST_OB_TIMEOffset) { builder.addOffset(10, LAST_OB_TIMEOffset, 0); }
+  public static void addMissedObTime(FlatBufferBuilder builder, int MISSED_OB_TIMEOffset) { builder.addOffset(11, MISSED_OB_TIMEOffset, 0); }
+  public static void addSvEpoch(FlatBufferBuilder builder, int SV_EPOCHOffset) { builder.addOffset(12, SV_EPOCHOffset, 0); }
+  public static void addX(FlatBufferBuilder builder, double X) { builder.addDouble(13, X, 0.0); }
+  public static void addY(FlatBufferBuilder builder, double Y) { builder.addDouble(14, Y, 0.0); }
+  public static void addZ(FlatBufferBuilder builder, double Z) { builder.addDouble(15, Z, 0.0); }
+  public static void addXvel(FlatBufferBuilder builder, double XVEL) { builder.addDouble(16, XVEL, 0.0); }
+  public static void addYvel(FlatBufferBuilder builder, double YVEL) { builder.addDouble(17, YVEL, 0.0); }
+  public static void addZvel(FlatBufferBuilder builder, double ZVEL) { builder.addDouble(18, ZVEL, 0.0); }
+  public static void addElsetEpoch(FlatBufferBuilder builder, int ELSET_EPOCHOffset) { builder.addOffset(19, ELSET_EPOCHOffset, 0); }
+  public static void addMeanMotion(FlatBufferBuilder builder, double MEAN_MOTION) { builder.addDouble(20, MEAN_MOTION, 0.0); }
+  public static void addEccentricity(FlatBufferBuilder builder, double ECCENTRICITY) { builder.addDouble(21, ECCENTRICITY, 0.0); }
+  public static void addInclination(FlatBufferBuilder builder, double INCLINATION) { builder.addDouble(22, INCLINATION, 0.0); }
+  public static void addRaan(FlatBufferBuilder builder, double RAAN) { builder.addDouble(23, RAAN, 0.0); }
+  public static void addArgOfPerigee(FlatBufferBuilder builder, double ARG_OF_PERIGEE) { builder.addDouble(24, ARG_OF_PERIGEE, 0.0); }
+  public static void addMeanAnomaly(FlatBufferBuilder builder, double MEAN_ANOMALY) { builder.addDouble(25, MEAN_ANOMALY, 0.0); }
+  public static void addRevNo(FlatBufferBuilder builder, long REV_NO) { builder.addInt(26, (int) REV_NO, (int) 0L); }
+  public static void addBStar(FlatBufferBuilder builder, double B_STAR) { builder.addDouble(27, B_STAR, 0.0); }
+  public static void addMeanMotionDot(FlatBufferBuilder builder, double MEAN_MOTION_DOT) { builder.addDouble(28, MEAN_MOTION_DOT, 0.0); }
+  public static void addMeanMotionDdot(FlatBufferBuilder builder, double MEAN_MOTION_DDOT) { builder.addDouble(29, MEAN_MOTION_DDOT, 0.0); }
+  public static void addSemiMajorAxis(FlatBufferBuilder builder, double SEMI_MAJOR_AXIS) { builder.addDouble(30, SEMI_MAJOR_AXIS, 0.0); }
+  public static void addPeriod(FlatBufferBuilder builder, double PERIOD) { builder.addDouble(31, PERIOD, 0.0); }
+  public static void addApogee(FlatBufferBuilder builder, double APOGEE) { builder.addDouble(32, APOGEE, 0.0); }
+  public static void addPerigee(FlatBufferBuilder builder, double PERIGEE) { builder.addDouble(33, PERIGEE, 0.0); }
+  public static void addDeltaVs(FlatBufferBuilder builder, int DELTA_VSOffset) { builder.addOffset(34, DELTA_VSOffset, 0); }
+  public static int createDeltaVsVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startDeltaVsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addDeltaTs(FlatBufferBuilder builder, int DELTA_TSOffset) { builder.addOffset(35, DELTA_TSOffset, 0); }
+  public static int createDeltaTsVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startDeltaTsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addAffectedObjects(FlatBufferBuilder builder, int AFFECTED_OBJECTSOffset) { builder.addOffset(36, AFFECTED_OBJECTSOffset, 0); }
   public static int createAffectedObjectsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startAffectedObjectsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addOnOrbit(FlatBufferBuilder builder, int ON_ORBITOffset) { builder.addOffset(36, ON_ORBITOffset, 0); }
   public static void addManifolds(FlatBufferBuilder builder, int MANIFOLDSOffset) { builder.addOffset(37, MANIFOLDSOffset, 0); }
   public static int createManifoldsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startManifoldsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }

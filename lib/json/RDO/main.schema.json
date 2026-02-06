@@ -1,165 +1,221 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "radarObsType" : {
+      "type" : "string",
+      "enum": ["DETECTION", "TRACK", "METRIC", "SIGNATURE", "SEARCH_FENCE", "UNKNOWN"]
+    },
     "RDO" : {
       "type" : "object",
       "description" : "Radar Observation",
       "properties" : {
         "ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique identifier"
               },
         "OB_TIME" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Observation time (ISO 8601)"
               },
         "ID_SENSOR" : {
-                "type" : "string"
-              },
-        "SAT_NO" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "TASK_ID" : {
-                "type" : "string"
-              },
-        "TRANSACTION_ID" : {
-                "type" : "string"
-              },
-        "TRACK_ID" : {
-                "type" : "string"
-              },
-        "OB_POSITION" : {
-                "type" : "string"
-              },
-        "ORIG_OBJECT_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Sensor identifier"
               },
         "ORIG_SENSOR_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Original sensor identifier"
               },
-        "UCT" : {
-                "type" : "boolean"
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Satellite catalog number"
               },
-        "AZIMUTH" : {
-                "type" : "number"
-              },
-        "AZIMUTH_UNC" : {
-                "type" : "number"
-              },
-        "AZIMUTH_BIAS" : {
-                "type" : "number"
-              },
-        "AZIMUTH_RATE" : {
-                "type" : "number"
-              },
-        "ELEVATION" : {
-                "type" : "number"
-              },
-        "ELEVATION_UNC" : {
-                "type" : "number"
-              },
-        "ELEVATION_BIAS" : {
-                "type" : "number"
-              },
-        "ELEVATION_RATE" : {
-                "type" : "number"
-              },
-        "RANGE" : {
-                "type" : "number"
-              },
-        "RANGE_ACCEL" : {
-                "type" : "number"
-              },
-        "RANGE_ACCEL_UNC" : {
-                "type" : "number"
-              },
-        "RANGE_UNC" : {
-                "type" : "number"
-              },
-        "RANGE_BIAS" : {
-                "type" : "number"
-              },
-        "RANGE_RATE" : {
-                "type" : "number"
-              },
-        "RANGE_RATE_UNC" : {
-                "type" : "number"
-              },
-        "DOPPLER" : {
-                "type" : "number"
-              },
-        "DOPPLER_UNC" : {
-                "type" : "number"
-              },
-        "RA" : {
-                "type" : "number"
-              },
-        "DECLINATION" : {
-                "type" : "number"
-              },
-        "X" : {
-                "type" : "number"
-              },
-        "Y" : {
-                "type" : "number"
-              },
-        "Z" : {
-                "type" : "number"
-              },
-        "XVEL" : {
-                "type" : "number"
-              },
-        "YVEL" : {
-                "type" : "number"
-              },
-        "ZVEL" : {
-                "type" : "number"
-              },
-        "SENX" : {
-                "type" : "number"
-              },
-        "SENY" : {
-                "type" : "number"
-              },
-        "SENZ" : {
-                "type" : "number"
-              },
-        "RCS" : {
-                "type" : "number"
-              },
-        "RCS_UNC" : {
-                "type" : "number"
-              },
-        "ORTHOGONAL_RCS" : {
-                "type" : "number"
-              },
-        "ORTHOGONAL_RCS_UNC" : {
-                "type" : "number"
-              },
-        "SNR" : {
-                "type" : "number"
-              },
-        "BEAM" : {
-                "type" : "number"
-              },
-        "TIMING_BIAS" : {
-                "type" : "number"
-              },
-        "RAW_FILE_URI" : {
-                "type" : "string"
-              },
-        "TAGS" : {
-                "type" : "array", "items" : {"type" : "string"}
+        "ORIG_OBJECT_ID" : {
+                "type" : "string",
+                "description" : "International designator"
               },
         "ON_ORBIT" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "On-orbit reference"
+              },
+        "UCT" : {
+                "type" : "boolean",
+                "description" : "True if uncorrelated target"
+              },
+        "OBS_TYPE" : {
+                "$ref" : "#/definitions/radarObsType",
+                "description" : "Observation type"
+              },
+        "TASK_ID" : {
+                "type" : "string",
+                "description" : "Task identifier"
+              },
+        "TRANSACTION_ID" : {
+                "type" : "string",
+                "description" : "Transaction identifier"
+              },
+        "TRACK_ID" : {
+                "type" : "string",
+                "description" : "Track identifier"
+              },
+        "OB_POSITION" : {
+                "type" : "string",
+                "description" : "Observation position identifier"
               },
         "SEN_REFERENCE_FRAME" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Sensor reference frame"
+              },
+        "AZIMUTH" : {
+                "type" : "number",
+                "description" : "Azimuth angle (degrees)"
+              },
+        "AZIMUTH_UNC" : {
+                "type" : "number",
+                "description" : "Azimuth uncertainty (degrees, 1-sigma)"
+              },
+        "AZIMUTH_BIAS" : {
+                "type" : "number",
+                "description" : "Azimuth bias (degrees)"
+              },
+        "AZIMUTH_RATE" : {
+                "type" : "number",
+                "description" : "Azimuth rate (degrees/s)"
+              },
+        "ELEVATION" : {
+                "type" : "number",
+                "description" : "Elevation angle (degrees)"
+              },
+        "ELEVATION_UNC" : {
+                "type" : "number",
+                "description" : "Elevation uncertainty (degrees, 1-sigma)"
+              },
+        "ELEVATION_BIAS" : {
+                "type" : "number",
+                "description" : "Elevation bias (degrees)"
+              },
+        "ELEVATION_RATE" : {
+                "type" : "number",
+                "description" : "Elevation rate (degrees/s)"
+              },
+        "RANGE" : {
+                "type" : "number",
+                "description" : "Slant range (km)"
+              },
+        "RANGE_UNC" : {
+                "type" : "number",
+                "description" : "Range uncertainty (km, 1-sigma)"
+              },
+        "RANGE_BIAS" : {
+                "type" : "number",
+                "description" : "Range bias (km)"
+              },
+        "RANGE_RATE" : {
+                "type" : "number",
+                "description" : "Range rate (km/s)"
+              },
+        "RANGE_RATE_UNC" : {
+                "type" : "number",
+                "description" : "Range rate uncertainty (km/s, 1-sigma)"
+              },
+        "RANGE_ACCEL" : {
+                "type" : "number",
+                "description" : "Range acceleration (km/s^2)"
+              },
+        "RANGE_ACCEL_UNC" : {
+                "type" : "number",
+                "description" : "Range acceleration uncertainty (km/s^2, 1-sigma)"
+              },
+        "DOPPLER" : {
+                "type" : "number",
+                "description" : "Doppler shift (Hz)"
+              },
+        "DOPPLER_UNC" : {
+                "type" : "number",
+                "description" : "Doppler uncertainty (Hz, 1-sigma)"
+              },
+        "RA" : {
+                "type" : "number",
+                "description" : "Right ascension (degrees)"
+              },
+        "DECLINATION" : {
+                "type" : "number",
+                "description" : "Declination (degrees)"
+              },
+        "X" : {
+                "type" : "number",
+                "description" : "Target position X (km, ECI)"
+              },
+        "Y" : {
+                "type" : "number",
+                "description" : "Target position Y (km, ECI)"
+              },
+        "Z" : {
+                "type" : "number",
+                "description" : "Target position Z (km, ECI)"
+              },
+        "XVEL" : {
+                "type" : "number",
+                "description" : "Target velocity X (km/s, ECI)"
+              },
+        "YVEL" : {
+                "type" : "number",
+                "description" : "Target velocity Y (km/s, ECI)"
+              },
+        "ZVEL" : {
+                "type" : "number",
+                "description" : "Target velocity Z (km/s, ECI)"
+              },
+        "SENX" : {
+                "type" : "number",
+                "description" : "Sensor position X (km, ECEF)"
+              },
+        "SENY" : {
+                "type" : "number",
+                "description" : "Sensor position Y (km, ECEF)"
+              },
+        "SENZ" : {
+                "type" : "number",
+                "description" : "Sensor position Z (km, ECEF)"
+              },
+        "RCS" : {
+                "type" : "number",
+                "description" : "Radar cross-section (dBsm)"
+              },
+        "RCS_UNC" : {
+                "type" : "number",
+                "description" : "RCS uncertainty (dBsm, 1-sigma)"
+              },
+        "ORTHOGONAL_RCS" : {
+                "type" : "number",
+                "description" : "Orthogonal polarization RCS (dBsm)"
+              },
+        "ORTHOGONAL_RCS_UNC" : {
+                "type" : "number",
+                "description" : "Orthogonal RCS uncertainty (dBsm, 1-sigma)"
+              },
+        "SNR" : {
+                "type" : "number",
+                "description" : "Signal-to-noise ratio (dB)"
+              },
+        "BEAM" : {
+                "type" : "number",
+                "description" : "Beam identifier"
+              },
+        "TIMING_BIAS" : {
+                "type" : "number",
+                "description" : "Timing bias (seconds)"
+              },
+        "RAW_FILE_URI" : {
+                "type" : "string",
+                "description" : "Reference to raw data file"
               },
         "DESCRIPTOR" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Event descriptor"
               },
-        "TYPE" : {
-                "type" : "string"
+        "TAGS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Associated tags"
               }
       },
       "additionalProperties" : false

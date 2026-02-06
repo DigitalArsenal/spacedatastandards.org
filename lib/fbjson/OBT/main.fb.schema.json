@@ -1,164 +1,288 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "orbitObjectType": {
+      "type": "string",
+      "enum": [
+        "PAYLOAD",
+        "ROCKET_BODY",
+        "DEBRIS",
+        "TBA",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "PAYLOAD": {
+          "value": 0
+        },
+        "ROCKET_BODY": {
+          "value": 1
+        },
+        "DEBRIS": {
+          "value": 2
+        },
+        "TBA": {
+          "value": 3
+        },
+        "UNKNOWN": {
+          "value": 4
+        }
+      }
+    },
+    "aouType": {
+      "type": "string",
+      "enum": [
+        "CIRCULAR",
+        "ELLIPTICAL",
+        "RECTANGULAR",
+        "NONE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "CIRCULAR": {
+          "value": 0
+        },
+        "ELLIPTICAL": {
+          "value": 1
+        },
+        "RECTANGULAR": {
+          "value": 2
+        },
+        "NONE": {
+          "value": 3
+        }
+      }
+    },
     "OBT": {
       "type": "object",
       "description": "Orbit Track",
       "properties": {
         "ID": {
           "type": "string",
+          "description": "Unique identifier",
           "x-flatbuffer-type": "string"
         },
         "SAT_NO": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
-        },
-        "ON_ORBIT": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Satellite catalog number",
+          "x-flatbuffer-type": "uint32"
         },
         "ORIG_OBJECT_ID": {
           "type": "string",
+          "description": "International designator",
+          "x-flatbuffer-type": "string"
+        },
+        "ON_ORBIT": {
+          "type": "string",
+          "description": "On-orbit reference",
           "x-flatbuffer-type": "string"
         },
         "TS": {
           "type": "string",
+          "description": "Track point timestamp (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "LAT": {
           "type": "number",
+          "description": "Latitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "LON": {
           "type": "number",
+          "description": "Longitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "ALT": {
           "type": "number",
+          "description": "Altitude (km)",
           "x-flatbuffer-type": "double"
-        },
-        "RDF_RF": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "CALL_SIGN": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "RPT_NUM": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "OBJ_IDENT": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "IDENT_AMP": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "SAT_STATUS": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "OBJECT_TYPE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "COUNTRY_CODE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "DECAY": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "CHARLIE_LINE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "AOU_TYPE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "AOU_DATA": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "x-flatbuffer-type": "[string]"
         },
         "SPD": {
           "type": "number",
+          "description": "Speed (km/s)",
           "x-flatbuffer-type": "double"
         },
         "ANG_ELEV": {
           "type": "number",
+          "description": "Elevation angle from observer (degrees)",
           "x-flatbuffer-type": "double"
         },
-        "CNTNMNT": {
+        "RDF_RF": {
           "type": "number",
+          "description": "Radar data fusion RF value",
           "x-flatbuffer-type": "double"
         },
-        "XREF": {
+        "CALL_SIGN": {
           "type": "string",
+          "description": "Call sign",
           "x-flatbuffer-type": "string"
         },
-        "CH_XREF": {
+        "RPT_NUM": {
           "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "AMPLIFICATION": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "IFF": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "REINFORCED": {
-          "type": "boolean",
-          "x-flatbuffer-type": "bool"
-        },
-        "REDUCED": {
-          "type": "boolean",
-          "x-flatbuffer-type": "bool"
-        },
-        "HQ": {
-          "type": "boolean",
-          "x-flatbuffer-type": "bool"
-        },
-        "DUMMY": {
-          "type": "boolean",
-          "x-flatbuffer-type": "bool"
-        },
-        "TASK_FORCE": {
-          "type": "boolean",
-          "x-flatbuffer-type": "bool"
-        },
-        "FEINT": {
-          "type": "boolean",
-          "x-flatbuffer-type": "bool"
-        },
-        "INSTALLATION": {
-          "type": "boolean",
-          "x-flatbuffer-type": "bool"
-        },
-        "VEH_TYPE": {
-          "type": "string",
+          "description": "Report number",
           "x-flatbuffer-type": "string"
         },
         "TRK_ID": {
           "type": "string",
+          "description": "Track identifier",
           "x-flatbuffer-type": "string"
+        },
+        "OBJ_IDENT": {
+          "type": "string",
+          "description": "Object identity assessment",
+          "x-flatbuffer-type": "string"
+        },
+        "IDENT_AMP": {
+          "type": "string",
+          "description": "Identity amplification",
+          "x-flatbuffer-type": "string"
+        },
+        "SAT_STATUS": {
+          "type": "string",
+          "description": "Satellite operational status",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJ_TYPE": {
+          "$ref": "#/definitions/orbitObjectType",
+          "description": "Object type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "PAYLOAD": {
+              "value": 0
+            },
+            "ROCKET_BODY": {
+              "value": 1
+            },
+            "DEBRIS": {
+              "value": 2
+            },
+            "TBA": {
+              "value": 3
+            },
+            "UNKNOWN": {
+              "value": 4
+            }
+          }
+        },
+        "COUNTRY_CODE": {
+          "type": "string",
+          "description": "Country code (ISO 3166)",
+          "x-flatbuffer-type": "string"
+        },
+        "DECAY": {
+          "type": "number",
+          "description": "Orbit decay rate (km/day)",
+          "x-flatbuffer-type": "double"
+        },
+        "CHARLIE_LINE": {
+          "type": "string",
+          "description": "Charlie line data (amplification text)",
+          "x-flatbuffer-type": "string"
+        },
+        "AOU_TYPE": {
+          "$ref": "#/definitions/aouType",
+          "description": "Area of uncertainty type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "CIRCULAR": {
+              "value": 0
+            },
+            "ELLIPTICAL": {
+              "value": 1
+            },
+            "RECTANGULAR": {
+              "value": 2
+            },
+            "NONE": {
+              "value": 3
+            }
+          }
+        },
+        "AOU_DATA": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Area of uncertainty data",
+          "x-flatbuffer-type": "[double]"
+        },
+        "CNTNMNT": {
+          "type": "number",
+          "description": "Containment probability (0-1)",
+          "x-flatbuffer-type": "double"
+        },
+        "XREF": {
+          "type": "string",
+          "description": "Cross-reference identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "CH_XREF": {
+          "type": "string",
+          "description": "Charlie cross-reference",
+          "x-flatbuffer-type": "string"
+        },
+        "AMPLIFICATION": {
+          "type": "string",
+          "description": "Additional amplification text",
+          "x-flatbuffer-type": "string"
+        },
+        "IFF": {
+          "type": "string",
+          "description": "IFF mode/code",
+          "x-flatbuffer-type": "string"
+        },
+        "VEH_TYPE": {
+          "type": "string",
+          "description": "Vehicle type",
+          "x-flatbuffer-type": "string"
+        },
+        "REINFORCED": {
+          "type": "boolean",
+          "description": "True if reinforced unit",
+          "x-flatbuffer-type": "bool"
+        },
+        "REDUCED": {
+          "type": "boolean",
+          "description": "True if reduced unit",
+          "x-flatbuffer-type": "bool"
+        },
+        "HQ": {
+          "type": "boolean",
+          "description": "True if headquarters element",
+          "x-flatbuffer-type": "bool"
+        },
+        "DUMMY": {
+          "type": "boolean",
+          "description": "True if dummy/exercise track",
+          "x-flatbuffer-type": "bool"
+        },
+        "TASK_FORCE": {
+          "type": "boolean",
+          "description": "True if task force",
+          "x-flatbuffer-type": "bool"
+        },
+        "FEINT": {
+          "type": "boolean",
+          "description": "True if feint",
+          "x-flatbuffer-type": "bool"
+        },
+        "INSTALLATION": {
+          "type": "boolean",
+          "description": "True if installation (not mobile)",
+          "x-flatbuffer-type": "bool"
         },
         "TRACK_SENSORS": {
           "type": "array",
           "items": {
             "type": "string"
           },
+          "description": "Contributing track sensors",
           "x-flatbuffer-type": "[string]"
         }
       },

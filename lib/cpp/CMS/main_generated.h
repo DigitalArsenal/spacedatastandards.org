@@ -13,8 +13,536 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
               FLATBUFFERS_VERSION_REVISION == 25,
              "Non-compatible flatbuffers version included");
 
+struct commsChannel;
+struct commsChannelBuilder;
+
+struct commsTransponder;
+struct commsTransponderBuilder;
+
 struct CMS;
 struct CMSBuilder;
+
+enum modulationType : int8_t {
+  modulationType_BPSK = 0,
+  modulationType_QPSK = 1,
+  modulationType_OQPSK = 2,
+  modulationType_PSK8 = 3,
+  modulationType_QAM16 = 4,
+  modulationType_QAM64 = 5,
+  modulationType_FSK = 6,
+  modulationType_MSK = 7,
+  modulationType_GMSK = 8,
+  modulationType_AM = 9,
+  modulationType_FM = 10,
+  modulationType_PM = 11,
+  modulationType_SPREAD_SPECTRUM = 12,
+  modulationType_DVB_S2 = 13,
+  modulationType_DVB_S2X = 14,
+  modulationType_MIN = modulationType_BPSK,
+  modulationType_MAX = modulationType_DVB_S2X
+};
+
+inline const modulationType (&EnumValuesmodulationType())[15] {
+  static const modulationType values[] = {
+    modulationType_BPSK,
+    modulationType_QPSK,
+    modulationType_OQPSK,
+    modulationType_PSK8,
+    modulationType_QAM16,
+    modulationType_QAM64,
+    modulationType_FSK,
+    modulationType_MSK,
+    modulationType_GMSK,
+    modulationType_AM,
+    modulationType_FM,
+    modulationType_PM,
+    modulationType_SPREAD_SPECTRUM,
+    modulationType_DVB_S2,
+    modulationType_DVB_S2X
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesmodulationType() {
+  static const char * const names[16] = {
+    "BPSK",
+    "QPSK",
+    "OQPSK",
+    "PSK8",
+    "QAM16",
+    "QAM64",
+    "FSK",
+    "MSK",
+    "GMSK",
+    "AM",
+    "FM",
+    "PM",
+    "SPREAD_SPECTRUM",
+    "DVB_S2",
+    "DVB_S2X",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamemodulationType(modulationType e) {
+  if (::flatbuffers::IsOutRange(e, modulationType_BPSK, modulationType_DVB_S2X)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesmodulationType()[index];
+}
+
+enum encryptionType : int8_t {
+  encryptionType_NONE = 0,
+  encryptionType_DES = 1,
+  encryptionType_TRIPLE_DES = 2,
+  encryptionType_AES_128 = 3,
+  encryptionType_AES_256 = 4,
+  encryptionType_TYPE_1 = 5,
+  encryptionType_TYPE_2 = 6,
+  encryptionType_CUSTOM = 7,
+  encryptionType_MIN = encryptionType_NONE,
+  encryptionType_MAX = encryptionType_CUSTOM
+};
+
+inline const encryptionType (&EnumValuesencryptionType())[8] {
+  static const encryptionType values[] = {
+    encryptionType_NONE,
+    encryptionType_DES,
+    encryptionType_TRIPLE_DES,
+    encryptionType_AES_128,
+    encryptionType_AES_256,
+    encryptionType_TYPE_1,
+    encryptionType_TYPE_2,
+    encryptionType_CUSTOM
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesencryptionType() {
+  static const char * const names[9] = {
+    "NONE",
+    "DES",
+    "TRIPLE_DES",
+    "AES_128",
+    "AES_256",
+    "TYPE_1",
+    "TYPE_2",
+    "CUSTOM",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameencryptionType(encryptionType e) {
+  if (::flatbuffers::IsOutRange(e, encryptionType_NONE, encryptionType_CUSTOM)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesencryptionType()[index];
+}
+
+/// Transponder Channel
+struct commsChannel FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef commsChannelBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_CHANNEL_ID = 4,
+    VT_NAME = 6,
+    VT_UPLINK_FREQ = 8,
+    VT_DOWNLINK_FREQ = 10,
+    VT_BANDWIDTH = 12,
+    VT_MODULATION = 14,
+    VT_DATA_RATE = 16,
+    VT_ENCRYPTION = 18,
+    VT_FEC_RATE = 20,
+    VT_POWER = 22
+  };
+  /// Channel identifier
+  const ::flatbuffers::String *CHANNEL_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_CHANNEL_ID);
+  }
+  /// Channel name
+  const ::flatbuffers::String *NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  /// Uplink frequency in MHz
+  double UPLINK_FREQ() const {
+    return GetField<double>(VT_UPLINK_FREQ, 0.0);
+  }
+  /// Downlink frequency in MHz
+  double DOWNLINK_FREQ() const {
+    return GetField<double>(VT_DOWNLINK_FREQ, 0.0);
+  }
+  /// Channel bandwidth in MHz
+  double BANDWIDTH() const {
+    return GetField<double>(VT_BANDWIDTH, 0.0);
+  }
+  /// Modulation type
+  modulationType MODULATION() const {
+    return static_cast<modulationType>(GetField<int8_t>(VT_MODULATION, 0));
+  }
+  /// Data rate in Mbps
+  double DATA_RATE() const {
+    return GetField<double>(VT_DATA_RATE, 0.0);
+  }
+  /// Encryption method
+  encryptionType ENCRYPTION() const {
+    return static_cast<encryptionType>(GetField<int8_t>(VT_ENCRYPTION, 0));
+  }
+  /// Forward error correction coding rate (e.g., 0.5, 0.75)
+  double FEC_RATE() const {
+    return GetField<double>(VT_FEC_RATE, 0.0);
+  }
+  /// Channel power in dBW
+  double POWER() const {
+    return GetField<double>(VT_POWER, 0.0);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_CHANNEL_ID) &&
+           verifier.VerifyString(CHANNEL_ID()) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(NAME()) &&
+           VerifyField<double>(verifier, VT_UPLINK_FREQ, 8) &&
+           VerifyField<double>(verifier, VT_DOWNLINK_FREQ, 8) &&
+           VerifyField<double>(verifier, VT_BANDWIDTH, 8) &&
+           VerifyField<int8_t>(verifier, VT_MODULATION, 1) &&
+           VerifyField<double>(verifier, VT_DATA_RATE, 8) &&
+           VerifyField<int8_t>(verifier, VT_ENCRYPTION, 1) &&
+           VerifyField<double>(verifier, VT_FEC_RATE, 8) &&
+           VerifyField<double>(verifier, VT_POWER, 8) &&
+           verifier.EndTable();
+  }
+};
+
+struct commsChannelBuilder {
+  typedef commsChannel Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_CHANNEL_ID(::flatbuffers::Offset<::flatbuffers::String> CHANNEL_ID) {
+    fbb_.AddOffset(commsChannel::VT_CHANNEL_ID, CHANNEL_ID);
+  }
+  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
+    fbb_.AddOffset(commsChannel::VT_NAME, NAME);
+  }
+  void add_UPLINK_FREQ(double UPLINK_FREQ) {
+    fbb_.AddElement<double>(commsChannel::VT_UPLINK_FREQ, UPLINK_FREQ, 0.0);
+  }
+  void add_DOWNLINK_FREQ(double DOWNLINK_FREQ) {
+    fbb_.AddElement<double>(commsChannel::VT_DOWNLINK_FREQ, DOWNLINK_FREQ, 0.0);
+  }
+  void add_BANDWIDTH(double BANDWIDTH) {
+    fbb_.AddElement<double>(commsChannel::VT_BANDWIDTH, BANDWIDTH, 0.0);
+  }
+  void add_MODULATION(modulationType MODULATION) {
+    fbb_.AddElement<int8_t>(commsChannel::VT_MODULATION, static_cast<int8_t>(MODULATION), 0);
+  }
+  void add_DATA_RATE(double DATA_RATE) {
+    fbb_.AddElement<double>(commsChannel::VT_DATA_RATE, DATA_RATE, 0.0);
+  }
+  void add_ENCRYPTION(encryptionType ENCRYPTION) {
+    fbb_.AddElement<int8_t>(commsChannel::VT_ENCRYPTION, static_cast<int8_t>(ENCRYPTION), 0);
+  }
+  void add_FEC_RATE(double FEC_RATE) {
+    fbb_.AddElement<double>(commsChannel::VT_FEC_RATE, FEC_RATE, 0.0);
+  }
+  void add_POWER(double POWER) {
+    fbb_.AddElement<double>(commsChannel::VT_POWER, POWER, 0.0);
+  }
+  explicit commsChannelBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<commsChannel> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<commsChannel>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<commsChannel> CreatecommsChannel(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> CHANNEL_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
+    double UPLINK_FREQ = 0.0,
+    double DOWNLINK_FREQ = 0.0,
+    double BANDWIDTH = 0.0,
+    modulationType MODULATION = modulationType_BPSK,
+    double DATA_RATE = 0.0,
+    encryptionType ENCRYPTION = encryptionType_NONE,
+    double FEC_RATE = 0.0,
+    double POWER = 0.0) {
+  commsChannelBuilder builder_(_fbb);
+  builder_.add_POWER(POWER);
+  builder_.add_FEC_RATE(FEC_RATE);
+  builder_.add_DATA_RATE(DATA_RATE);
+  builder_.add_BANDWIDTH(BANDWIDTH);
+  builder_.add_DOWNLINK_FREQ(DOWNLINK_FREQ);
+  builder_.add_UPLINK_FREQ(UPLINK_FREQ);
+  builder_.add_NAME(NAME);
+  builder_.add_CHANNEL_ID(CHANNEL_ID);
+  builder_.add_ENCRYPTION(ENCRYPTION);
+  builder_.add_MODULATION(MODULATION);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<commsChannel> CreatecommsChannelDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *CHANNEL_ID = nullptr,
+    const char *NAME = nullptr,
+    double UPLINK_FREQ = 0.0,
+    double DOWNLINK_FREQ = 0.0,
+    double BANDWIDTH = 0.0,
+    modulationType MODULATION = modulationType_BPSK,
+    double DATA_RATE = 0.0,
+    encryptionType ENCRYPTION = encryptionType_NONE,
+    double FEC_RATE = 0.0,
+    double POWER = 0.0) {
+  auto CHANNEL_ID__ = CHANNEL_ID ? _fbb.CreateString(CHANNEL_ID) : 0;
+  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
+  return CreatecommsChannel(
+      _fbb,
+      CHANNEL_ID__,
+      NAME__,
+      UPLINK_FREQ,
+      DOWNLINK_FREQ,
+      BANDWIDTH,
+      MODULATION,
+      DATA_RATE,
+      ENCRYPTION,
+      FEC_RATE,
+      POWER);
+}
+
+/// Transponder
+struct commsTransponder FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
+  typedef commsTransponderBuilder Builder;
+  enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
+    VT_TRANSPONDER_ID = 4,
+    VT_NAME = 6,
+    VT_TYPE = 8,
+    VT_BAND = 10,
+    VT_UPLINK_FREQ_MIN = 12,
+    VT_UPLINK_FREQ_MAX = 14,
+    VT_DOWNLINK_FREQ_MIN = 16,
+    VT_DOWNLINK_FREQ_MAX = 18,
+    VT_EIRP = 20,
+    VT_G_OVER_T = 22,
+    VT_BANDWIDTH = 24,
+    VT_NUM_CHANNELS = 26,
+    VT_CHANNELS = 28,
+    VT_POLARIZATION = 30
+  };
+  /// Transponder identifier
+  const ::flatbuffers::String *TRANSPONDER_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TRANSPONDER_ID);
+  }
+  /// Transponder name
+  const ::flatbuffers::String *NAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NAME);
+  }
+  /// Transponder type (e.g., BENT_PIPE, REGENERATIVE, OBP)
+  const ::flatbuffers::String *TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TYPE);
+  }
+  /// Operating band (e.g., C, Ku, Ka, L, S, X)
+  const ::flatbuffers::String *BAND() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_BAND);
+  }
+  /// Uplink frequency range minimum in MHz
+  double UPLINK_FREQ_MIN() const {
+    return GetField<double>(VT_UPLINK_FREQ_MIN, 0.0);
+  }
+  /// Uplink frequency range maximum in MHz
+  double UPLINK_FREQ_MAX() const {
+    return GetField<double>(VT_UPLINK_FREQ_MAX, 0.0);
+  }
+  /// Downlink frequency range minimum in MHz
+  double DOWNLINK_FREQ_MIN() const {
+    return GetField<double>(VT_DOWNLINK_FREQ_MIN, 0.0);
+  }
+  /// Downlink frequency range maximum in MHz
+  double DOWNLINK_FREQ_MAX() const {
+    return GetField<double>(VT_DOWNLINK_FREQ_MAX, 0.0);
+  }
+  /// Saturated EIRP in dBW
+  double EIRP() const {
+    return GetField<double>(VT_EIRP, 0.0);
+  }
+  /// G/T in dB/K
+  double G_OVER_T() const {
+    return GetField<double>(VT_G_OVER_T, 0.0);
+  }
+  /// Total bandwidth in MHz
+  double BANDWIDTH() const {
+    return GetField<double>(VT_BANDWIDTH, 0.0);
+  }
+  /// Number of channels
+  uint32_t NUM_CHANNELS() const {
+    return GetField<uint32_t>(VT_NUM_CHANNELS, 0);
+  }
+  /// Channels on this transponder
+  const ::flatbuffers::Vector<::flatbuffers::Offset<commsChannel>> *CHANNELS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<commsChannel>> *>(VT_CHANNELS);
+  }
+  /// Polarization (e.g., RHCP, LHCP, LINEAR_H, LINEAR_V)
+  const ::flatbuffers::String *POLARIZATION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_POLARIZATION);
+  }
+  bool Verify(::flatbuffers::Verifier &verifier) const {
+    return VerifyTableStart(verifier) &&
+           VerifyOffset(verifier, VT_TRANSPONDER_ID) &&
+           verifier.VerifyString(TRANSPONDER_ID()) &&
+           VerifyOffset(verifier, VT_NAME) &&
+           verifier.VerifyString(NAME()) &&
+           VerifyOffset(verifier, VT_TYPE) &&
+           verifier.VerifyString(TYPE()) &&
+           VerifyOffset(verifier, VT_BAND) &&
+           verifier.VerifyString(BAND()) &&
+           VerifyField<double>(verifier, VT_UPLINK_FREQ_MIN, 8) &&
+           VerifyField<double>(verifier, VT_UPLINK_FREQ_MAX, 8) &&
+           VerifyField<double>(verifier, VT_DOWNLINK_FREQ_MIN, 8) &&
+           VerifyField<double>(verifier, VT_DOWNLINK_FREQ_MAX, 8) &&
+           VerifyField<double>(verifier, VT_EIRP, 8) &&
+           VerifyField<double>(verifier, VT_G_OVER_T, 8) &&
+           VerifyField<double>(verifier, VT_BANDWIDTH, 8) &&
+           VerifyField<uint32_t>(verifier, VT_NUM_CHANNELS, 4) &&
+           VerifyOffset(verifier, VT_CHANNELS) &&
+           verifier.VerifyVector(CHANNELS()) &&
+           verifier.VerifyVectorOfTables(CHANNELS()) &&
+           VerifyOffset(verifier, VT_POLARIZATION) &&
+           verifier.VerifyString(POLARIZATION()) &&
+           verifier.EndTable();
+  }
+};
+
+struct commsTransponderBuilder {
+  typedef commsTransponder Table;
+  ::flatbuffers::FlatBufferBuilder &fbb_;
+  ::flatbuffers::uoffset_t start_;
+  void add_TRANSPONDER_ID(::flatbuffers::Offset<::flatbuffers::String> TRANSPONDER_ID) {
+    fbb_.AddOffset(commsTransponder::VT_TRANSPONDER_ID, TRANSPONDER_ID);
+  }
+  void add_NAME(::flatbuffers::Offset<::flatbuffers::String> NAME) {
+    fbb_.AddOffset(commsTransponder::VT_NAME, NAME);
+  }
+  void add_TYPE(::flatbuffers::Offset<::flatbuffers::String> TYPE) {
+    fbb_.AddOffset(commsTransponder::VT_TYPE, TYPE);
+  }
+  void add_BAND(::flatbuffers::Offset<::flatbuffers::String> BAND) {
+    fbb_.AddOffset(commsTransponder::VT_BAND, BAND);
+  }
+  void add_UPLINK_FREQ_MIN(double UPLINK_FREQ_MIN) {
+    fbb_.AddElement<double>(commsTransponder::VT_UPLINK_FREQ_MIN, UPLINK_FREQ_MIN, 0.0);
+  }
+  void add_UPLINK_FREQ_MAX(double UPLINK_FREQ_MAX) {
+    fbb_.AddElement<double>(commsTransponder::VT_UPLINK_FREQ_MAX, UPLINK_FREQ_MAX, 0.0);
+  }
+  void add_DOWNLINK_FREQ_MIN(double DOWNLINK_FREQ_MIN) {
+    fbb_.AddElement<double>(commsTransponder::VT_DOWNLINK_FREQ_MIN, DOWNLINK_FREQ_MIN, 0.0);
+  }
+  void add_DOWNLINK_FREQ_MAX(double DOWNLINK_FREQ_MAX) {
+    fbb_.AddElement<double>(commsTransponder::VT_DOWNLINK_FREQ_MAX, DOWNLINK_FREQ_MAX, 0.0);
+  }
+  void add_EIRP(double EIRP) {
+    fbb_.AddElement<double>(commsTransponder::VT_EIRP, EIRP, 0.0);
+  }
+  void add_G_OVER_T(double G_OVER_T) {
+    fbb_.AddElement<double>(commsTransponder::VT_G_OVER_T, G_OVER_T, 0.0);
+  }
+  void add_BANDWIDTH(double BANDWIDTH) {
+    fbb_.AddElement<double>(commsTransponder::VT_BANDWIDTH, BANDWIDTH, 0.0);
+  }
+  void add_NUM_CHANNELS(uint32_t NUM_CHANNELS) {
+    fbb_.AddElement<uint32_t>(commsTransponder::VT_NUM_CHANNELS, NUM_CHANNELS, 0);
+  }
+  void add_CHANNELS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<commsChannel>>> CHANNELS) {
+    fbb_.AddOffset(commsTransponder::VT_CHANNELS, CHANNELS);
+  }
+  void add_POLARIZATION(::flatbuffers::Offset<::flatbuffers::String> POLARIZATION) {
+    fbb_.AddOffset(commsTransponder::VT_POLARIZATION, POLARIZATION);
+  }
+  explicit commsTransponderBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
+        : fbb_(_fbb) {
+    start_ = fbb_.StartTable();
+  }
+  ::flatbuffers::Offset<commsTransponder> Finish() {
+    const auto end = fbb_.EndTable(start_);
+    auto o = ::flatbuffers::Offset<commsTransponder>(end);
+    return o;
+  }
+};
+
+inline ::flatbuffers::Offset<commsTransponder> CreatecommsTransponder(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    ::flatbuffers::Offset<::flatbuffers::String> TRANSPONDER_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> TYPE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> BAND = 0,
+    double UPLINK_FREQ_MIN = 0.0,
+    double UPLINK_FREQ_MAX = 0.0,
+    double DOWNLINK_FREQ_MIN = 0.0,
+    double DOWNLINK_FREQ_MAX = 0.0,
+    double EIRP = 0.0,
+    double G_OVER_T = 0.0,
+    double BANDWIDTH = 0.0,
+    uint32_t NUM_CHANNELS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<commsChannel>>> CHANNELS = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> POLARIZATION = 0) {
+  commsTransponderBuilder builder_(_fbb);
+  builder_.add_BANDWIDTH(BANDWIDTH);
+  builder_.add_G_OVER_T(G_OVER_T);
+  builder_.add_EIRP(EIRP);
+  builder_.add_DOWNLINK_FREQ_MAX(DOWNLINK_FREQ_MAX);
+  builder_.add_DOWNLINK_FREQ_MIN(DOWNLINK_FREQ_MIN);
+  builder_.add_UPLINK_FREQ_MAX(UPLINK_FREQ_MAX);
+  builder_.add_UPLINK_FREQ_MIN(UPLINK_FREQ_MIN);
+  builder_.add_POLARIZATION(POLARIZATION);
+  builder_.add_CHANNELS(CHANNELS);
+  builder_.add_NUM_CHANNELS(NUM_CHANNELS);
+  builder_.add_BAND(BAND);
+  builder_.add_TYPE(TYPE);
+  builder_.add_NAME(NAME);
+  builder_.add_TRANSPONDER_ID(TRANSPONDER_ID);
+  return builder_.Finish();
+}
+
+inline ::flatbuffers::Offset<commsTransponder> CreatecommsTransponderDirect(
+    ::flatbuffers::FlatBufferBuilder &_fbb,
+    const char *TRANSPONDER_ID = nullptr,
+    const char *NAME = nullptr,
+    const char *TYPE = nullptr,
+    const char *BAND = nullptr,
+    double UPLINK_FREQ_MIN = 0.0,
+    double UPLINK_FREQ_MAX = 0.0,
+    double DOWNLINK_FREQ_MIN = 0.0,
+    double DOWNLINK_FREQ_MAX = 0.0,
+    double EIRP = 0.0,
+    double G_OVER_T = 0.0,
+    double BANDWIDTH = 0.0,
+    uint32_t NUM_CHANNELS = 0,
+    const std::vector<::flatbuffers::Offset<commsChannel>> *CHANNELS = nullptr,
+    const char *POLARIZATION = nullptr) {
+  auto TRANSPONDER_ID__ = TRANSPONDER_ID ? _fbb.CreateString(TRANSPONDER_ID) : 0;
+  auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
+  auto TYPE__ = TYPE ? _fbb.CreateString(TYPE) : 0;
+  auto BAND__ = BAND ? _fbb.CreateString(BAND) : 0;
+  auto CHANNELS__ = CHANNELS ? _fbb.CreateVector<::flatbuffers::Offset<commsChannel>>(*CHANNELS) : 0;
+  auto POLARIZATION__ = POLARIZATION ? _fbb.CreateString(POLARIZATION) : 0;
+  return CreatecommsTransponder(
+      _fbb,
+      TRANSPONDER_ID__,
+      NAME__,
+      TYPE__,
+      BAND__,
+      UPLINK_FREQ_MIN,
+      UPLINK_FREQ_MAX,
+      DOWNLINK_FREQ_MIN,
+      DOWNLINK_FREQ_MAX,
+      EIRP,
+      G_OVER_T,
+      BANDWIDTH,
+      NUM_CHANNELS,
+      CHANNELS__,
+      POLARIZATION__);
+}
 
 /// Communications Payload
 struct CMS FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
@@ -25,25 +553,76 @@ struct CMS FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_NAME = 8,
     VT_DESCRIPTION = 10,
     VT_ENTITY = 12,
-    VT_TRANSPONDERS = 14
+    VT_SAT_NO = 14,
+    VT_NUM_TRANSPONDERS = 16,
+    VT_TRANSPONDERS = 18,
+    VT_TOTAL_POWER = 20,
+    VT_TOTAL_MASS = 22,
+    VT_TOTAL_BANDWIDTH = 24,
+    VT_MISSION = 26,
+    VT_COVERAGE = 28,
+    VT_DESIGN_LIFE = 30,
+    VT_NOTES = 32
   };
+  /// Unique identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
+  /// Reference to parent entity
   const ::flatbuffers::String *ID_ENTITY() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID_ENTITY);
   }
+  /// Communications payload name
   const ::flatbuffers::String *NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_NAME);
   }
+  /// Description
   const ::flatbuffers::String *DESCRIPTION() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
   }
+  /// Parent entity designator
   const ::flatbuffers::String *ENTITY() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ENTITY);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *TRANSPONDERS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_TRANSPONDERS);
+  /// Satellite number
+  uint32_t SAT_NO() const {
+    return GetField<uint32_t>(VT_SAT_NO, 0);
+  }
+  /// Number of transponders
+  uint32_t NUM_TRANSPONDERS() const {
+    return GetField<uint32_t>(VT_NUM_TRANSPONDERS, 0);
+  }
+  /// Transponders
+  const ::flatbuffers::Vector<::flatbuffers::Offset<commsTransponder>> *TRANSPONDERS() const {
+    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<commsTransponder>> *>(VT_TRANSPONDERS);
+  }
+  /// Total payload power in Watts
+  double TOTAL_POWER() const {
+    return GetField<double>(VT_TOTAL_POWER, 0.0);
+  }
+  /// Total payload mass in kg
+  double TOTAL_MASS() const {
+    return GetField<double>(VT_TOTAL_MASS, 0.0);
+  }
+  /// Total aggregate bandwidth in MHz
+  double TOTAL_BANDWIDTH() const {
+    return GetField<double>(VT_TOTAL_BANDWIDTH, 0.0);
+  }
+  /// Primary mission (e.g., FIXED_SAT, BROADCAST, MOBILE, RELAY, MILSATCOM)
+  const ::flatbuffers::String *MISSION() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MISSION);
+  }
+  /// Coverage region description
+  const ::flatbuffers::String *COVERAGE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_COVERAGE);
+  }
+  /// Design lifetime in years
+  double DESIGN_LIFE() const {
+    return GetField<double>(VT_DESIGN_LIFE, 0.0);
+  }
+  /// Additional notes
+  const ::flatbuffers::String *NOTES() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_NOTES);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -57,9 +636,21 @@ struct CMS FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(DESCRIPTION()) &&
            VerifyOffset(verifier, VT_ENTITY) &&
            verifier.VerifyString(ENTITY()) &&
+           VerifyField<uint32_t>(verifier, VT_SAT_NO, 4) &&
+           VerifyField<uint32_t>(verifier, VT_NUM_TRANSPONDERS, 4) &&
            VerifyOffset(verifier, VT_TRANSPONDERS) &&
            verifier.VerifyVector(TRANSPONDERS()) &&
-           verifier.VerifyVectorOfStrings(TRANSPONDERS()) &&
+           verifier.VerifyVectorOfTables(TRANSPONDERS()) &&
+           VerifyField<double>(verifier, VT_TOTAL_POWER, 8) &&
+           VerifyField<double>(verifier, VT_TOTAL_MASS, 8) &&
+           VerifyField<double>(verifier, VT_TOTAL_BANDWIDTH, 8) &&
+           VerifyOffset(verifier, VT_MISSION) &&
+           verifier.VerifyString(MISSION()) &&
+           VerifyOffset(verifier, VT_COVERAGE) &&
+           verifier.VerifyString(COVERAGE()) &&
+           VerifyField<double>(verifier, VT_DESIGN_LIFE, 8) &&
+           VerifyOffset(verifier, VT_NOTES) &&
+           verifier.VerifyString(NOTES()) &&
            verifier.EndTable();
   }
 };
@@ -83,8 +674,35 @@ struct CMSBuilder {
   void add_ENTITY(::flatbuffers::Offset<::flatbuffers::String> ENTITY) {
     fbb_.AddOffset(CMS::VT_ENTITY, ENTITY);
   }
-  void add_TRANSPONDERS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TRANSPONDERS) {
+  void add_SAT_NO(uint32_t SAT_NO) {
+    fbb_.AddElement<uint32_t>(CMS::VT_SAT_NO, SAT_NO, 0);
+  }
+  void add_NUM_TRANSPONDERS(uint32_t NUM_TRANSPONDERS) {
+    fbb_.AddElement<uint32_t>(CMS::VT_NUM_TRANSPONDERS, NUM_TRANSPONDERS, 0);
+  }
+  void add_TRANSPONDERS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<commsTransponder>>> TRANSPONDERS) {
     fbb_.AddOffset(CMS::VT_TRANSPONDERS, TRANSPONDERS);
+  }
+  void add_TOTAL_POWER(double TOTAL_POWER) {
+    fbb_.AddElement<double>(CMS::VT_TOTAL_POWER, TOTAL_POWER, 0.0);
+  }
+  void add_TOTAL_MASS(double TOTAL_MASS) {
+    fbb_.AddElement<double>(CMS::VT_TOTAL_MASS, TOTAL_MASS, 0.0);
+  }
+  void add_TOTAL_BANDWIDTH(double TOTAL_BANDWIDTH) {
+    fbb_.AddElement<double>(CMS::VT_TOTAL_BANDWIDTH, TOTAL_BANDWIDTH, 0.0);
+  }
+  void add_MISSION(::flatbuffers::Offset<::flatbuffers::String> MISSION) {
+    fbb_.AddOffset(CMS::VT_MISSION, MISSION);
+  }
+  void add_COVERAGE(::flatbuffers::Offset<::flatbuffers::String> COVERAGE) {
+    fbb_.AddOffset(CMS::VT_COVERAGE, COVERAGE);
+  }
+  void add_DESIGN_LIFE(double DESIGN_LIFE) {
+    fbb_.AddElement<double>(CMS::VT_DESIGN_LIFE, DESIGN_LIFE, 0.0);
+  }
+  void add_NOTES(::flatbuffers::Offset<::flatbuffers::String> NOTES) {
+    fbb_.AddOffset(CMS::VT_NOTES, NOTES);
   }
   explicit CMSBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
@@ -104,9 +722,27 @@ inline ::flatbuffers::Offset<CMS> CreateCMS(
     ::flatbuffers::Offset<::flatbuffers::String> NAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ENTITY = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TRANSPONDERS = 0) {
+    uint32_t SAT_NO = 0,
+    uint32_t NUM_TRANSPONDERS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<commsTransponder>>> TRANSPONDERS = 0,
+    double TOTAL_POWER = 0.0,
+    double TOTAL_MASS = 0.0,
+    double TOTAL_BANDWIDTH = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> MISSION = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> COVERAGE = 0,
+    double DESIGN_LIFE = 0.0,
+    ::flatbuffers::Offset<::flatbuffers::String> NOTES = 0) {
   CMSBuilder builder_(_fbb);
+  builder_.add_DESIGN_LIFE(DESIGN_LIFE);
+  builder_.add_TOTAL_BANDWIDTH(TOTAL_BANDWIDTH);
+  builder_.add_TOTAL_MASS(TOTAL_MASS);
+  builder_.add_TOTAL_POWER(TOTAL_POWER);
+  builder_.add_NOTES(NOTES);
+  builder_.add_COVERAGE(COVERAGE);
+  builder_.add_MISSION(MISSION);
   builder_.add_TRANSPONDERS(TRANSPONDERS);
+  builder_.add_NUM_TRANSPONDERS(NUM_TRANSPONDERS);
+  builder_.add_SAT_NO(SAT_NO);
   builder_.add_ENTITY(ENTITY);
   builder_.add_DESCRIPTION(DESCRIPTION);
   builder_.add_NAME(NAME);
@@ -122,13 +758,25 @@ inline ::flatbuffers::Offset<CMS> CreateCMSDirect(
     const char *NAME = nullptr,
     const char *DESCRIPTION = nullptr,
     const char *ENTITY = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *TRANSPONDERS = nullptr) {
+    uint32_t SAT_NO = 0,
+    uint32_t NUM_TRANSPONDERS = 0,
+    const std::vector<::flatbuffers::Offset<commsTransponder>> *TRANSPONDERS = nullptr,
+    double TOTAL_POWER = 0.0,
+    double TOTAL_MASS = 0.0,
+    double TOTAL_BANDWIDTH = 0.0,
+    const char *MISSION = nullptr,
+    const char *COVERAGE = nullptr,
+    double DESIGN_LIFE = 0.0,
+    const char *NOTES = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto ID_ENTITY__ = ID_ENTITY ? _fbb.CreateString(ID_ENTITY) : 0;
   auto NAME__ = NAME ? _fbb.CreateString(NAME) : 0;
   auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
   auto ENTITY__ = ENTITY ? _fbb.CreateString(ENTITY) : 0;
-  auto TRANSPONDERS__ = TRANSPONDERS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*TRANSPONDERS) : 0;
+  auto TRANSPONDERS__ = TRANSPONDERS ? _fbb.CreateVector<::flatbuffers::Offset<commsTransponder>>(*TRANSPONDERS) : 0;
+  auto MISSION__ = MISSION ? _fbb.CreateString(MISSION) : 0;
+  auto COVERAGE__ = COVERAGE ? _fbb.CreateString(COVERAGE) : 0;
+  auto NOTES__ = NOTES ? _fbb.CreateString(NOTES) : 0;
   return CreateCMS(
       _fbb,
       ID__,
@@ -136,7 +784,16 @@ inline ::flatbuffers::Offset<CMS> CreateCMSDirect(
       NAME__,
       DESCRIPTION__,
       ENTITY__,
-      TRANSPONDERS__);
+      SAT_NO,
+      NUM_TRANSPONDERS,
+      TRANSPONDERS__,
+      TOTAL_POWER,
+      TOTAL_MASS,
+      TOTAL_BANDWIDTH,
+      MISSION__,
+      COVERAGE__,
+      DESIGN_LIFE,
+      NOTES__);
 }
 
 inline const CMS *GetCMS(const void *buf) {

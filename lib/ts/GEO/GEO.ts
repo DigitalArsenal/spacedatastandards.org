@@ -4,6 +4,9 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { geoConfidence } from './geoConfidence.js';
+import { geoStationKeeping } from './geoStationKeeping.js';
+import { troughType } from './troughType.js';
 
 
 /**
@@ -31,6 +34,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$GEO');
 }
 
+/**
+ * Unique identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,6 +44,9 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * International designator
+ */
 ORIG_OBJECT_ID():string|null
 ORIG_OBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ORIG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -45,95 +54,170 @@ ORIG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-SS():number {
+/**
+ * Satellite catalog number
+ */
+SAT_NO():number {
   const offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
-SC():number {
+/**
+ * On-orbit reference identifier
+ */
+ON_ORBIT():string|null
+ON_ORBIT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ON_ORBIT(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-RELATIVE_ENERGY():number {
+/**
+ * Station-keeping status
+ */
+STATION_KEEPING():geoStationKeeping {
   const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : geoStationKeeping.ACTIVE;
 }
 
-LONGITUDE_RATE():number {
+/**
+ * Subsatellite point longitude (degrees east)
+ */
+SS():number {
   const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-LONGITUDE_MIN():number {
+/**
+ * Longitude of ascending node (degrees)
+ */
+SC():number {
   const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-LONGITUDE_MAX():number {
+/**
+ * Relative energy (km^2/s^2)
+ */
+RELATIVE_ENERGY():number {
   const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-CONFIDENCE_LEVEL():string|null
-CONFIDENCE_LEVEL(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-CONFIDENCE_LEVEL(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Longitude drift rate (degrees/day)
+ */
+LONGITUDE_RATE():number {
   const offset = this.bb!.__offset(this.bb_pos, 20);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Western longitude boundary of slot (degrees east)
+ */
+LONGITUDE_MIN():number {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Eastern longitude boundary of slot (degrees east)
+ */
+LONGITUDE_MAX():number {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Assessment confidence level
+ */
+CONFIDENCE():geoConfidence {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : geoConfidence.HIGH;
+}
+
+/**
+ * Trough type (east/west gravitational well)
+ */
+TROUGH():troughType {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : troughType.EAST;
+}
+
+/**
+ * Plane change status description
+ */
 PLANE_CHANGE_STATUS():string|null
 PLANE_CHANGE_STATUS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 PLANE_CHANGE_STATUS(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 22);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-TROUGH_TYPE():string|null
-TROUGH_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-TROUGH_TYPE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 24);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-LOST_FLAG():boolean {
-  const offset = this.bb!.__offset(this.bb_pos, 26);
-  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
-}
-
-SEMI_ANNUAL_CORR_FLAG():boolean {
-  const offset = this.bb!.__offset(this.bb_pos, 28);
-  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
-}
-
-OBJECT_STATUS():string|null
-OBJECT_STATUS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-OBJECT_STATUS(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 30);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * True if object is lost/not tracked
+ */
+LOST_FLAG():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * True if semi-annual correction applied
+ */
+SEMI_ANNUAL_CORR_FLAG():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+}
+
+/**
+ * Current operational status
+ */
+OBJECT_STATUS():string|null
+OBJECT_STATUS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OBJECT_STATUS(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Inclination (degrees)
+ */
+INCLINATION():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Eccentricity
+ */
+ECCENTRICITY():number {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Epoch of status (ISO 8601)
+ */
+EPOCH():string|null
+EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Reference to raw data file
+ */
 RAW_FILE_URI():string|null
 RAW_FILE_URI(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 RAW_FILE_URI(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 32);
+  const offset = this.bb!.__offset(this.bb_pos, 44);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-ON_ORBIT():string|null
-ON_ORBIT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ON_ORBIT(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 34);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-SAT_NO():number {
-  const offset = this.bb!.__offset(this.bb_pos, 36);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
 }
 
 static startGEO(builder:flatbuffers.Builder) {
-  builder.startObject(17);
+  builder.startObject(21);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -144,64 +228,80 @@ static addOrigObjectId(builder:flatbuffers.Builder, ORIG_OBJECT_IDOffset:flatbuf
   builder.addFieldOffset(1, ORIG_OBJECT_IDOffset, 0);
 }
 
-static addSs(builder:flatbuffers.Builder, SS:number) {
-  builder.addFieldFloat64(2, SS, 0.0);
-}
-
-static addSc(builder:flatbuffers.Builder, SC:number) {
-  builder.addFieldFloat64(3, SC, 0.0);
-}
-
-static addRelativeEnergy(builder:flatbuffers.Builder, RELATIVE_ENERGY:number) {
-  builder.addFieldFloat64(4, RELATIVE_ENERGY, 0.0);
-}
-
-static addLongitudeRate(builder:flatbuffers.Builder, LONGITUDE_RATE:number) {
-  builder.addFieldFloat64(5, LONGITUDE_RATE, 0.0);
-}
-
-static addLongitudeMin(builder:flatbuffers.Builder, LONGITUDE_MIN:number) {
-  builder.addFieldFloat64(6, LONGITUDE_MIN, 0.0);
-}
-
-static addLongitudeMax(builder:flatbuffers.Builder, LONGITUDE_MAX:number) {
-  builder.addFieldFloat64(7, LONGITUDE_MAX, 0.0);
-}
-
-static addConfidenceLevel(builder:flatbuffers.Builder, CONFIDENCE_LEVELOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(8, CONFIDENCE_LEVELOffset, 0);
-}
-
-static addPlaneChangeStatus(builder:flatbuffers.Builder, PLANE_CHANGE_STATUSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(9, PLANE_CHANGE_STATUSOffset, 0);
-}
-
-static addTroughType(builder:flatbuffers.Builder, TROUGH_TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(10, TROUGH_TYPEOffset, 0);
-}
-
-static addLostFlag(builder:flatbuffers.Builder, LOST_FLAG:boolean) {
-  builder.addFieldInt8(11, +LOST_FLAG, +false);
-}
-
-static addSemiAnnualCorrFlag(builder:flatbuffers.Builder, SEMI_ANNUAL_CORR_FLAG:boolean) {
-  builder.addFieldInt8(12, +SEMI_ANNUAL_CORR_FLAG, +false);
-}
-
-static addObjectStatus(builder:flatbuffers.Builder, OBJECT_STATUSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(13, OBJECT_STATUSOffset, 0);
-}
-
-static addRawFileUri(builder:flatbuffers.Builder, RAW_FILE_URIOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(14, RAW_FILE_URIOffset, 0);
+static addSatNo(builder:flatbuffers.Builder, SAT_NO:number) {
+  builder.addFieldInt32(2, SAT_NO, 0);
 }
 
 static addOnOrbit(builder:flatbuffers.Builder, ON_ORBITOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(15, ON_ORBITOffset, 0);
+  builder.addFieldOffset(3, ON_ORBITOffset, 0);
 }
 
-static addSatNo(builder:flatbuffers.Builder, SAT_NO:number) {
-  builder.addFieldInt32(16, SAT_NO, 0);
+static addStationKeeping(builder:flatbuffers.Builder, STATION_KEEPING:geoStationKeeping) {
+  builder.addFieldInt8(4, STATION_KEEPING, geoStationKeeping.ACTIVE);
+}
+
+static addSs(builder:flatbuffers.Builder, SS:number) {
+  builder.addFieldFloat64(5, SS, 0.0);
+}
+
+static addSc(builder:flatbuffers.Builder, SC:number) {
+  builder.addFieldFloat64(6, SC, 0.0);
+}
+
+static addRelativeEnergy(builder:flatbuffers.Builder, RELATIVE_ENERGY:number) {
+  builder.addFieldFloat64(7, RELATIVE_ENERGY, 0.0);
+}
+
+static addLongitudeRate(builder:flatbuffers.Builder, LONGITUDE_RATE:number) {
+  builder.addFieldFloat64(8, LONGITUDE_RATE, 0.0);
+}
+
+static addLongitudeMin(builder:flatbuffers.Builder, LONGITUDE_MIN:number) {
+  builder.addFieldFloat64(9, LONGITUDE_MIN, 0.0);
+}
+
+static addLongitudeMax(builder:flatbuffers.Builder, LONGITUDE_MAX:number) {
+  builder.addFieldFloat64(10, LONGITUDE_MAX, 0.0);
+}
+
+static addConfidence(builder:flatbuffers.Builder, CONFIDENCE:geoConfidence) {
+  builder.addFieldInt8(11, CONFIDENCE, geoConfidence.HIGH);
+}
+
+static addTrough(builder:flatbuffers.Builder, TROUGH:troughType) {
+  builder.addFieldInt8(12, TROUGH, troughType.EAST);
+}
+
+static addPlaneChangeStatus(builder:flatbuffers.Builder, PLANE_CHANGE_STATUSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, PLANE_CHANGE_STATUSOffset, 0);
+}
+
+static addLostFlag(builder:flatbuffers.Builder, LOST_FLAG:boolean) {
+  builder.addFieldInt8(14, +LOST_FLAG, +false);
+}
+
+static addSemiAnnualCorrFlag(builder:flatbuffers.Builder, SEMI_ANNUAL_CORR_FLAG:boolean) {
+  builder.addFieldInt8(15, +SEMI_ANNUAL_CORR_FLAG, +false);
+}
+
+static addObjectStatus(builder:flatbuffers.Builder, OBJECT_STATUSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, OBJECT_STATUSOffset, 0);
+}
+
+static addInclination(builder:flatbuffers.Builder, INCLINATION:number) {
+  builder.addFieldFloat64(17, INCLINATION, 0.0);
+}
+
+static addEccentricity(builder:flatbuffers.Builder, ECCENTRICITY:number) {
+  builder.addFieldFloat64(18, ECCENTRICITY, 0.0);
+}
+
+static addEpoch(builder:flatbuffers.Builder, EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(19, EPOCHOffset, 0);
+}
+
+static addRawFileUri(builder:flatbuffers.Builder, RAW_FILE_URIOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(20, RAW_FILE_URIOffset, 0);
 }
 
 static endGEO(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -217,25 +317,29 @@ static finishSizePrefixedGEOBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$GEO', true);
 }
 
-static createGEO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ORIG_OBJECT_IDOffset:flatbuffers.Offset, SS:number, SC:number, RELATIVE_ENERGY:number, LONGITUDE_RATE:number, LONGITUDE_MIN:number, LONGITUDE_MAX:number, CONFIDENCE_LEVELOffset:flatbuffers.Offset, PLANE_CHANGE_STATUSOffset:flatbuffers.Offset, TROUGH_TYPEOffset:flatbuffers.Offset, LOST_FLAG:boolean, SEMI_ANNUAL_CORR_FLAG:boolean, OBJECT_STATUSOffset:flatbuffers.Offset, RAW_FILE_URIOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset, SAT_NO:number):flatbuffers.Offset {
+static createGEO(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ORIG_OBJECT_IDOffset:flatbuffers.Offset, SAT_NO:number, ON_ORBITOffset:flatbuffers.Offset, STATION_KEEPING:geoStationKeeping, SS:number, SC:number, RELATIVE_ENERGY:number, LONGITUDE_RATE:number, LONGITUDE_MIN:number, LONGITUDE_MAX:number, CONFIDENCE:geoConfidence, TROUGH:troughType, PLANE_CHANGE_STATUSOffset:flatbuffers.Offset, LOST_FLAG:boolean, SEMI_ANNUAL_CORR_FLAG:boolean, OBJECT_STATUSOffset:flatbuffers.Offset, INCLINATION:number, ECCENTRICITY:number, EPOCHOffset:flatbuffers.Offset, RAW_FILE_URIOffset:flatbuffers.Offset):flatbuffers.Offset {
   GEO.startGEO(builder);
   GEO.addId(builder, IDOffset);
   GEO.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
+  GEO.addSatNo(builder, SAT_NO);
+  GEO.addOnOrbit(builder, ON_ORBITOffset);
+  GEO.addStationKeeping(builder, STATION_KEEPING);
   GEO.addSs(builder, SS);
   GEO.addSc(builder, SC);
   GEO.addRelativeEnergy(builder, RELATIVE_ENERGY);
   GEO.addLongitudeRate(builder, LONGITUDE_RATE);
   GEO.addLongitudeMin(builder, LONGITUDE_MIN);
   GEO.addLongitudeMax(builder, LONGITUDE_MAX);
-  GEO.addConfidenceLevel(builder, CONFIDENCE_LEVELOffset);
+  GEO.addConfidence(builder, CONFIDENCE);
+  GEO.addTrough(builder, TROUGH);
   GEO.addPlaneChangeStatus(builder, PLANE_CHANGE_STATUSOffset);
-  GEO.addTroughType(builder, TROUGH_TYPEOffset);
   GEO.addLostFlag(builder, LOST_FLAG);
   GEO.addSemiAnnualCorrFlag(builder, SEMI_ANNUAL_CORR_FLAG);
   GEO.addObjectStatus(builder, OBJECT_STATUSOffset);
+  GEO.addInclination(builder, INCLINATION);
+  GEO.addEccentricity(builder, ECCENTRICITY);
+  GEO.addEpoch(builder, EPOCHOffset);
   GEO.addRawFileUri(builder, RAW_FILE_URIOffset);
-  GEO.addOnOrbit(builder, ON_ORBITOffset);
-  GEO.addSatNo(builder, SAT_NO);
   return GEO.endGEO(builder);
 }
 
@@ -243,21 +347,25 @@ unpack(): GEOT {
   return new GEOT(
     this.ID(),
     this.ORIG_OBJECT_ID(),
+    this.SAT_NO(),
+    this.ON_ORBIT(),
+    this.STATION_KEEPING(),
     this.SS(),
     this.SC(),
     this.RELATIVE_ENERGY(),
     this.LONGITUDE_RATE(),
     this.LONGITUDE_MIN(),
     this.LONGITUDE_MAX(),
-    this.CONFIDENCE_LEVEL(),
+    this.CONFIDENCE(),
+    this.TROUGH(),
     this.PLANE_CHANGE_STATUS(),
-    this.TROUGH_TYPE(),
     this.LOST_FLAG(),
     this.SEMI_ANNUAL_CORR_FLAG(),
     this.OBJECT_STATUS(),
-    this.RAW_FILE_URI(),
-    this.ON_ORBIT(),
-    this.SAT_NO()
+    this.INCLINATION(),
+    this.ECCENTRICITY(),
+    this.EPOCH(),
+    this.RAW_FILE_URI()
   );
 }
 
@@ -265,21 +373,25 @@ unpack(): GEOT {
 unpackTo(_o: GEOT): void {
   _o.ID = this.ID();
   _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID();
+  _o.SAT_NO = this.SAT_NO();
+  _o.ON_ORBIT = this.ON_ORBIT();
+  _o.STATION_KEEPING = this.STATION_KEEPING();
   _o.SS = this.SS();
   _o.SC = this.SC();
   _o.RELATIVE_ENERGY = this.RELATIVE_ENERGY();
   _o.LONGITUDE_RATE = this.LONGITUDE_RATE();
   _o.LONGITUDE_MIN = this.LONGITUDE_MIN();
   _o.LONGITUDE_MAX = this.LONGITUDE_MAX();
-  _o.CONFIDENCE_LEVEL = this.CONFIDENCE_LEVEL();
+  _o.CONFIDENCE = this.CONFIDENCE();
+  _o.TROUGH = this.TROUGH();
   _o.PLANE_CHANGE_STATUS = this.PLANE_CHANGE_STATUS();
-  _o.TROUGH_TYPE = this.TROUGH_TYPE();
   _o.LOST_FLAG = this.LOST_FLAG();
   _o.SEMI_ANNUAL_CORR_FLAG = this.SEMI_ANNUAL_CORR_FLAG();
   _o.OBJECT_STATUS = this.OBJECT_STATUS();
+  _o.INCLINATION = this.INCLINATION();
+  _o.ECCENTRICITY = this.ECCENTRICITY();
+  _o.EPOCH = this.EPOCH();
   _o.RAW_FILE_URI = this.RAW_FILE_URI();
-  _o.ON_ORBIT = this.ON_ORBIT();
-  _o.SAT_NO = this.SAT_NO();
 }
 }
 
@@ -287,52 +399,59 @@ export class GEOT implements flatbuffers.IGeneratedObject {
 constructor(
   public ID: string|Uint8Array|null = null,
   public ORIG_OBJECT_ID: string|Uint8Array|null = null,
+  public SAT_NO: number = 0,
+  public ON_ORBIT: string|Uint8Array|null = null,
+  public STATION_KEEPING: geoStationKeeping = geoStationKeeping.ACTIVE,
   public SS: number = 0.0,
   public SC: number = 0.0,
   public RELATIVE_ENERGY: number = 0.0,
   public LONGITUDE_RATE: number = 0.0,
   public LONGITUDE_MIN: number = 0.0,
   public LONGITUDE_MAX: number = 0.0,
-  public CONFIDENCE_LEVEL: string|Uint8Array|null = null,
+  public CONFIDENCE: geoConfidence = geoConfidence.HIGH,
+  public TROUGH: troughType = troughType.EAST,
   public PLANE_CHANGE_STATUS: string|Uint8Array|null = null,
-  public TROUGH_TYPE: string|Uint8Array|null = null,
   public LOST_FLAG: boolean = false,
   public SEMI_ANNUAL_CORR_FLAG: boolean = false,
   public OBJECT_STATUS: string|Uint8Array|null = null,
-  public RAW_FILE_URI: string|Uint8Array|null = null,
-  public ON_ORBIT: string|Uint8Array|null = null,
-  public SAT_NO: number = 0
+  public INCLINATION: number = 0.0,
+  public ECCENTRICITY: number = 0.0,
+  public EPOCH: string|Uint8Array|null = null,
+  public RAW_FILE_URI: string|Uint8Array|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ID = (this.ID !== null ? builder.createString(this.ID!) : 0);
   const ORIG_OBJECT_ID = (this.ORIG_OBJECT_ID !== null ? builder.createString(this.ORIG_OBJECT_ID!) : 0);
-  const CONFIDENCE_LEVEL = (this.CONFIDENCE_LEVEL !== null ? builder.createString(this.CONFIDENCE_LEVEL!) : 0);
-  const PLANE_CHANGE_STATUS = (this.PLANE_CHANGE_STATUS !== null ? builder.createString(this.PLANE_CHANGE_STATUS!) : 0);
-  const TROUGH_TYPE = (this.TROUGH_TYPE !== null ? builder.createString(this.TROUGH_TYPE!) : 0);
-  const OBJECT_STATUS = (this.OBJECT_STATUS !== null ? builder.createString(this.OBJECT_STATUS!) : 0);
-  const RAW_FILE_URI = (this.RAW_FILE_URI !== null ? builder.createString(this.RAW_FILE_URI!) : 0);
   const ON_ORBIT = (this.ON_ORBIT !== null ? builder.createString(this.ON_ORBIT!) : 0);
+  const PLANE_CHANGE_STATUS = (this.PLANE_CHANGE_STATUS !== null ? builder.createString(this.PLANE_CHANGE_STATUS!) : 0);
+  const OBJECT_STATUS = (this.OBJECT_STATUS !== null ? builder.createString(this.OBJECT_STATUS!) : 0);
+  const EPOCH = (this.EPOCH !== null ? builder.createString(this.EPOCH!) : 0);
+  const RAW_FILE_URI = (this.RAW_FILE_URI !== null ? builder.createString(this.RAW_FILE_URI!) : 0);
 
   return GEO.createGEO(builder,
     ID,
     ORIG_OBJECT_ID,
+    this.SAT_NO,
+    ON_ORBIT,
+    this.STATION_KEEPING,
     this.SS,
     this.SC,
     this.RELATIVE_ENERGY,
     this.LONGITUDE_RATE,
     this.LONGITUDE_MIN,
     this.LONGITUDE_MAX,
-    CONFIDENCE_LEVEL,
+    this.CONFIDENCE,
+    this.TROUGH,
     PLANE_CHANGE_STATUS,
-    TROUGH_TYPE,
     this.LOST_FLAG,
     this.SEMI_ANNUAL_CORR_FLAG,
     OBJECT_STATUS,
-    RAW_FILE_URI,
-    ON_ORBIT,
-    this.SAT_NO
+    this.INCLINATION,
+    this.ECCENTRICITY,
+    EPOCH,
+    RAW_FILE_URI
   );
 }
 }

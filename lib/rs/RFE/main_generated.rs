@@ -9,6 +9,724 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_EMITTER_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_EMITTER_TYPE: i8 = 9;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_EMITTER_TYPE: [emitterType; 10] = [
+  emitterType::RADAR,
+  emitterType::COMMUNICATIONS,
+  emitterType::NAVIGATION,
+  emitterType::JAMMER,
+  emitterType::BEACON,
+  emitterType::TRANSPONDER,
+  emitterType::DATA_LINK,
+  emitterType::TELEMETRY,
+  emitterType::EW,
+  emitterType::UNKNOWN,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct emitterType(pub i8);
+#[allow(non_upper_case_globals)]
+impl emitterType {
+  pub const RADAR: Self = Self(0);
+  pub const COMMUNICATIONS: Self = Self(1);
+  pub const NAVIGATION: Self = Self(2);
+  pub const JAMMER: Self = Self(3);
+  pub const BEACON: Self = Self(4);
+  pub const TRANSPONDER: Self = Self(5);
+  pub const DATA_LINK: Self = Self(6);
+  pub const TELEMETRY: Self = Self(7);
+  pub const EW: Self = Self(8);
+  pub const UNKNOWN: Self = Self(9);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 9;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::RADAR,
+    Self::COMMUNICATIONS,
+    Self::NAVIGATION,
+    Self::JAMMER,
+    Self::BEACON,
+    Self::TRANSPONDER,
+    Self::DATA_LINK,
+    Self::TELEMETRY,
+    Self::EW,
+    Self::UNKNOWN,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::RADAR => Some("RADAR"),
+      Self::COMMUNICATIONS => Some("COMMUNICATIONS"),
+      Self::NAVIGATION => Some("NAVIGATION"),
+      Self::JAMMER => Some("JAMMER"),
+      Self::BEACON => Some("BEACON"),
+      Self::TRANSPONDER => Some("TRANSPONDER"),
+      Self::DATA_LINK => Some("DATA_LINK"),
+      Self::TELEMETRY => Some("TELEMETRY"),
+      Self::EW => Some("EW"),
+      Self::UNKNOWN => Some("UNKNOWN"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for emitterType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for emitterType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for emitterType {
+    type Output = emitterType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for emitterType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for emitterType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for emitterType {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_SIGNAL_MODULATION: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_SIGNAL_MODULATION: i8 = 12;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_SIGNAL_MODULATION: [signalModulation; 13] = [
+  signalModulation::CW,
+  signalModulation::PULSE,
+  signalModulation::FMCW,
+  signalModulation::CHIRP,
+  signalModulation::BPSK,
+  signalModulation::QPSK,
+  signalModulation::FSK,
+  signalModulation::AM,
+  signalModulation::FM,
+  signalModulation::SPREAD_SPECTRUM,
+  signalModulation::PHASED_ARRAY,
+  signalModulation::AGILE,
+  signalModulation::UNKNOWN,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct signalModulation(pub i8);
+#[allow(non_upper_case_globals)]
+impl signalModulation {
+  pub const CW: Self = Self(0);
+  pub const PULSE: Self = Self(1);
+  pub const FMCW: Self = Self(2);
+  pub const CHIRP: Self = Self(3);
+  pub const BPSK: Self = Self(4);
+  pub const QPSK: Self = Self(5);
+  pub const FSK: Self = Self(6);
+  pub const AM: Self = Self(7);
+  pub const FM: Self = Self(8);
+  pub const SPREAD_SPECTRUM: Self = Self(9);
+  pub const PHASED_ARRAY: Self = Self(10);
+  pub const AGILE: Self = Self(11);
+  pub const UNKNOWN: Self = Self(12);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 12;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::CW,
+    Self::PULSE,
+    Self::FMCW,
+    Self::CHIRP,
+    Self::BPSK,
+    Self::QPSK,
+    Self::FSK,
+    Self::AM,
+    Self::FM,
+    Self::SPREAD_SPECTRUM,
+    Self::PHASED_ARRAY,
+    Self::AGILE,
+    Self::UNKNOWN,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::CW => Some("CW"),
+      Self::PULSE => Some("PULSE"),
+      Self::FMCW => Some("FMCW"),
+      Self::CHIRP => Some("CHIRP"),
+      Self::BPSK => Some("BPSK"),
+      Self::QPSK => Some("QPSK"),
+      Self::FSK => Some("FSK"),
+      Self::AM => Some("AM"),
+      Self::FM => Some("FM"),
+      Self::SPREAD_SPECTRUM => Some("SPREAD_SPECTRUM"),
+      Self::PHASED_ARRAY => Some("PHASED_ARRAY"),
+      Self::AGILE => Some("AGILE"),
+      Self::UNKNOWN => Some("UNKNOWN"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for signalModulation {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for signalModulation {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for signalModulation {
+    type Output = signalModulation;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for signalModulation {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for signalModulation {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for signalModulation {}
+pub enum rfEmitterDetailOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// RF Emitter Detail Record
+pub struct rfEmitterDetail<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for rfEmitterDetail<'a> {
+  type Inner = rfEmitterDetail<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> rfEmitterDetail<'a> {
+  pub const VT_MODE_NAME: flatbuffers::VOffsetT = 4;
+  pub const VT_FREQUENCY: flatbuffers::VOffsetT = 6;
+  pub const VT_FREQ_MIN: flatbuffers::VOffsetT = 8;
+  pub const VT_FREQ_MAX: flatbuffers::VOffsetT = 10;
+  pub const VT_PRI: flatbuffers::VOffsetT = 12;
+  pub const VT_PRI_MIN: flatbuffers::VOffsetT = 14;
+  pub const VT_PRI_MAX: flatbuffers::VOffsetT = 16;
+  pub const VT_PULSE_WIDTH: flatbuffers::VOffsetT = 18;
+  pub const VT_PW_MIN: flatbuffers::VOffsetT = 20;
+  pub const VT_PW_MAX: flatbuffers::VOffsetT = 22;
+  pub const VT_SCAN_PERIOD: flatbuffers::VOffsetT = 24;
+  pub const VT_ERP: flatbuffers::VOffsetT = 26;
+  pub const VT_MODULATION: flatbuffers::VOffsetT = 28;
+  pub const VT_ANTENNA_PATTERN: flatbuffers::VOffsetT = 30;
+  pub const VT_BEAMWIDTH: flatbuffers::VOffsetT = 32;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    rfEmitterDetail { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args rfEmitterDetailArgs<'args>
+  ) -> flatbuffers::WIPOffset<rfEmitterDetail<'bldr>> {
+    let mut builder = rfEmitterDetailBuilder::new(_fbb);
+    builder.add_BEAMWIDTH(args.BEAMWIDTH);
+    builder.add_ERP(args.ERP);
+    builder.add_SCAN_PERIOD(args.SCAN_PERIOD);
+    builder.add_PW_MAX(args.PW_MAX);
+    builder.add_PW_MIN(args.PW_MIN);
+    builder.add_PULSE_WIDTH(args.PULSE_WIDTH);
+    builder.add_PRI_MAX(args.PRI_MAX);
+    builder.add_PRI_MIN(args.PRI_MIN);
+    builder.add_PRI(args.PRI);
+    builder.add_FREQ_MAX(args.FREQ_MAX);
+    builder.add_FREQ_MIN(args.FREQ_MIN);
+    builder.add_FREQUENCY(args.FREQUENCY);
+    if let Some(x) = args.ANTENNA_PATTERN { builder.add_ANTENNA_PATTERN(x); }
+    if let Some(x) = args.MODE_NAME { builder.add_MODE_NAME(x); }
+    builder.add_MODULATION(args.MODULATION);
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> rfEmitterDetailT {
+    let MODE_NAME = self.MODE_NAME().map(|x| {
+      x.to_string()
+    });
+    let FREQUENCY = self.FREQUENCY();
+    let FREQ_MIN = self.FREQ_MIN();
+    let FREQ_MAX = self.FREQ_MAX();
+    let PRI = self.PRI();
+    let PRI_MIN = self.PRI_MIN();
+    let PRI_MAX = self.PRI_MAX();
+    let PULSE_WIDTH = self.PULSE_WIDTH();
+    let PW_MIN = self.PW_MIN();
+    let PW_MAX = self.PW_MAX();
+    let SCAN_PERIOD = self.SCAN_PERIOD();
+    let ERP = self.ERP();
+    let MODULATION = self.MODULATION();
+    let ANTENNA_PATTERN = self.ANTENNA_PATTERN().map(|x| {
+      x.to_string()
+    });
+    let BEAMWIDTH = self.BEAMWIDTH();
+    rfEmitterDetailT {
+      MODE_NAME,
+      FREQUENCY,
+      FREQ_MIN,
+      FREQ_MAX,
+      PRI,
+      PRI_MIN,
+      PRI_MAX,
+      PULSE_WIDTH,
+      PW_MIN,
+      PW_MAX,
+      SCAN_PERIOD,
+      ERP,
+      MODULATION,
+      ANTENNA_PATTERN,
+      BEAMWIDTH,
+    }
+  }
+
+  /// Mode name or identifier
+  #[inline]
+  pub fn MODE_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(rfEmitterDetail::VT_MODE_NAME, None)}
+  }
+  /// Center frequency in MHz
+  #[inline]
+  pub fn FREQUENCY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(rfEmitterDetail::VT_FREQUENCY, Some(0.0)).unwrap()}
+  }
+  /// Frequency minimum in MHz
+  #[inline]
+  pub fn FREQ_MIN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(rfEmitterDetail::VT_FREQ_MIN, Some(0.0)).unwrap()}
+  }
+  /// Frequency maximum in MHz
+  #[inline]
+  pub fn FREQ_MAX(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(rfEmitterDetail::VT_FREQ_MAX, Some(0.0)).unwrap()}
+  }
+  /// Pulse repetition interval in microseconds
+  #[inline]
+  pub fn PRI(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(rfEmitterDetail::VT_PRI, Some(0.0)).unwrap()}
+  }
+  /// PRI minimum in microseconds
+  #[inline]
+  pub fn PRI_MIN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(rfEmitterDetail::VT_PRI_MIN, Some(0.0)).unwrap()}
+  }
+  /// PRI maximum in microseconds
+  #[inline]
+  pub fn PRI_MAX(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(rfEmitterDetail::VT_PRI_MAX, Some(0.0)).unwrap()}
+  }
+  /// Pulse width in microseconds
+  #[inline]
+  pub fn PULSE_WIDTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(rfEmitterDetail::VT_PULSE_WIDTH, Some(0.0)).unwrap()}
+  }
+  /// Pulse width minimum in microseconds
+  #[inline]
+  pub fn PW_MIN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(rfEmitterDetail::VT_PW_MIN, Some(0.0)).unwrap()}
+  }
+  /// Pulse width maximum in microseconds
+  #[inline]
+  pub fn PW_MAX(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(rfEmitterDetail::VT_PW_MAX, Some(0.0)).unwrap()}
+  }
+  /// Scan period in seconds
+  #[inline]
+  pub fn SCAN_PERIOD(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(rfEmitterDetail::VT_SCAN_PERIOD, Some(0.0)).unwrap()}
+  }
+  /// Effective radiated power in dBW
+  #[inline]
+  pub fn ERP(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(rfEmitterDetail::VT_ERP, Some(0.0)).unwrap()}
+  }
+  /// Signal modulation
+  #[inline]
+  pub fn MODULATION(&self) -> signalModulation {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<signalModulation>(rfEmitterDetail::VT_MODULATION, Some(signalModulation::CW)).unwrap()}
+  }
+  /// Antenna pattern type
+  #[inline]
+  pub fn ANTENNA_PATTERN(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(rfEmitterDetail::VT_ANTENNA_PATTERN, None)}
+  }
+  /// 3dB beamwidth in degrees
+  #[inline]
+  pub fn BEAMWIDTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(rfEmitterDetail::VT_BEAMWIDTH, Some(0.0)).unwrap()}
+  }
+}
+
+impl flatbuffers::Verifiable for rfEmitterDetail<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MODE_NAME", Self::VT_MODE_NAME, false)?
+     .visit_field::<f64>("FREQUENCY", Self::VT_FREQUENCY, false)?
+     .visit_field::<f64>("FREQ_MIN", Self::VT_FREQ_MIN, false)?
+     .visit_field::<f64>("FREQ_MAX", Self::VT_FREQ_MAX, false)?
+     .visit_field::<f64>("PRI", Self::VT_PRI, false)?
+     .visit_field::<f64>("PRI_MIN", Self::VT_PRI_MIN, false)?
+     .visit_field::<f64>("PRI_MAX", Self::VT_PRI_MAX, false)?
+     .visit_field::<f64>("PULSE_WIDTH", Self::VT_PULSE_WIDTH, false)?
+     .visit_field::<f64>("PW_MIN", Self::VT_PW_MIN, false)?
+     .visit_field::<f64>("PW_MAX", Self::VT_PW_MAX, false)?
+     .visit_field::<f64>("SCAN_PERIOD", Self::VT_SCAN_PERIOD, false)?
+     .visit_field::<f64>("ERP", Self::VT_ERP, false)?
+     .visit_field::<signalModulation>("MODULATION", Self::VT_MODULATION, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ANTENNA_PATTERN", Self::VT_ANTENNA_PATTERN, false)?
+     .visit_field::<f64>("BEAMWIDTH", Self::VT_BEAMWIDTH, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct rfEmitterDetailArgs<'a> {
+    pub MODE_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub FREQUENCY: f64,
+    pub FREQ_MIN: f64,
+    pub FREQ_MAX: f64,
+    pub PRI: f64,
+    pub PRI_MIN: f64,
+    pub PRI_MAX: f64,
+    pub PULSE_WIDTH: f64,
+    pub PW_MIN: f64,
+    pub PW_MAX: f64,
+    pub SCAN_PERIOD: f64,
+    pub ERP: f64,
+    pub MODULATION: signalModulation,
+    pub ANTENNA_PATTERN: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub BEAMWIDTH: f64,
+}
+impl<'a> Default for rfEmitterDetailArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    rfEmitterDetailArgs {
+      MODE_NAME: None,
+      FREQUENCY: 0.0,
+      FREQ_MIN: 0.0,
+      FREQ_MAX: 0.0,
+      PRI: 0.0,
+      PRI_MIN: 0.0,
+      PRI_MAX: 0.0,
+      PULSE_WIDTH: 0.0,
+      PW_MIN: 0.0,
+      PW_MAX: 0.0,
+      SCAN_PERIOD: 0.0,
+      ERP: 0.0,
+      MODULATION: signalModulation::CW,
+      ANTENNA_PATTERN: None,
+      BEAMWIDTH: 0.0,
+    }
+  }
+}
+
+pub struct rfEmitterDetailBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> rfEmitterDetailBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_MODE_NAME(&mut self, MODE_NAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(rfEmitterDetail::VT_MODE_NAME, MODE_NAME);
+  }
+  #[inline]
+  pub fn add_FREQUENCY(&mut self, FREQUENCY: f64) {
+    self.fbb_.push_slot::<f64>(rfEmitterDetail::VT_FREQUENCY, FREQUENCY, 0.0);
+  }
+  #[inline]
+  pub fn add_FREQ_MIN(&mut self, FREQ_MIN: f64) {
+    self.fbb_.push_slot::<f64>(rfEmitterDetail::VT_FREQ_MIN, FREQ_MIN, 0.0);
+  }
+  #[inline]
+  pub fn add_FREQ_MAX(&mut self, FREQ_MAX: f64) {
+    self.fbb_.push_slot::<f64>(rfEmitterDetail::VT_FREQ_MAX, FREQ_MAX, 0.0);
+  }
+  #[inline]
+  pub fn add_PRI(&mut self, PRI: f64) {
+    self.fbb_.push_slot::<f64>(rfEmitterDetail::VT_PRI, PRI, 0.0);
+  }
+  #[inline]
+  pub fn add_PRI_MIN(&mut self, PRI_MIN: f64) {
+    self.fbb_.push_slot::<f64>(rfEmitterDetail::VT_PRI_MIN, PRI_MIN, 0.0);
+  }
+  #[inline]
+  pub fn add_PRI_MAX(&mut self, PRI_MAX: f64) {
+    self.fbb_.push_slot::<f64>(rfEmitterDetail::VT_PRI_MAX, PRI_MAX, 0.0);
+  }
+  #[inline]
+  pub fn add_PULSE_WIDTH(&mut self, PULSE_WIDTH: f64) {
+    self.fbb_.push_slot::<f64>(rfEmitterDetail::VT_PULSE_WIDTH, PULSE_WIDTH, 0.0);
+  }
+  #[inline]
+  pub fn add_PW_MIN(&mut self, PW_MIN: f64) {
+    self.fbb_.push_slot::<f64>(rfEmitterDetail::VT_PW_MIN, PW_MIN, 0.0);
+  }
+  #[inline]
+  pub fn add_PW_MAX(&mut self, PW_MAX: f64) {
+    self.fbb_.push_slot::<f64>(rfEmitterDetail::VT_PW_MAX, PW_MAX, 0.0);
+  }
+  #[inline]
+  pub fn add_SCAN_PERIOD(&mut self, SCAN_PERIOD: f64) {
+    self.fbb_.push_slot::<f64>(rfEmitterDetail::VT_SCAN_PERIOD, SCAN_PERIOD, 0.0);
+  }
+  #[inline]
+  pub fn add_ERP(&mut self, ERP: f64) {
+    self.fbb_.push_slot::<f64>(rfEmitterDetail::VT_ERP, ERP, 0.0);
+  }
+  #[inline]
+  pub fn add_MODULATION(&mut self, MODULATION: signalModulation) {
+    self.fbb_.push_slot::<signalModulation>(rfEmitterDetail::VT_MODULATION, MODULATION, signalModulation::CW);
+  }
+  #[inline]
+  pub fn add_ANTENNA_PATTERN(&mut self, ANTENNA_PATTERN: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(rfEmitterDetail::VT_ANTENNA_PATTERN, ANTENNA_PATTERN);
+  }
+  #[inline]
+  pub fn add_BEAMWIDTH(&mut self, BEAMWIDTH: f64) {
+    self.fbb_.push_slot::<f64>(rfEmitterDetail::VT_BEAMWIDTH, BEAMWIDTH, 0.0);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> rfEmitterDetailBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    rfEmitterDetailBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<rfEmitterDetail<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for rfEmitterDetail<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("rfEmitterDetail");
+      ds.field("MODE_NAME", &self.MODE_NAME());
+      ds.field("FREQUENCY", &self.FREQUENCY());
+      ds.field("FREQ_MIN", &self.FREQ_MIN());
+      ds.field("FREQ_MAX", &self.FREQ_MAX());
+      ds.field("PRI", &self.PRI());
+      ds.field("PRI_MIN", &self.PRI_MIN());
+      ds.field("PRI_MAX", &self.PRI_MAX());
+      ds.field("PULSE_WIDTH", &self.PULSE_WIDTH());
+      ds.field("PW_MIN", &self.PW_MIN());
+      ds.field("PW_MAX", &self.PW_MAX());
+      ds.field("SCAN_PERIOD", &self.SCAN_PERIOD());
+      ds.field("ERP", &self.ERP());
+      ds.field("MODULATION", &self.MODULATION());
+      ds.field("ANTENNA_PATTERN", &self.ANTENNA_PATTERN());
+      ds.field("BEAMWIDTH", &self.BEAMWIDTH());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct rfEmitterDetailT {
+  pub MODE_NAME: Option<String>,
+  pub FREQUENCY: f64,
+  pub FREQ_MIN: f64,
+  pub FREQ_MAX: f64,
+  pub PRI: f64,
+  pub PRI_MIN: f64,
+  pub PRI_MAX: f64,
+  pub PULSE_WIDTH: f64,
+  pub PW_MIN: f64,
+  pub PW_MAX: f64,
+  pub SCAN_PERIOD: f64,
+  pub ERP: f64,
+  pub MODULATION: signalModulation,
+  pub ANTENNA_PATTERN: Option<String>,
+  pub BEAMWIDTH: f64,
+}
+impl Default for rfEmitterDetailT {
+  fn default() -> Self {
+    Self {
+      MODE_NAME: None,
+      FREQUENCY: 0.0,
+      FREQ_MIN: 0.0,
+      FREQ_MAX: 0.0,
+      PRI: 0.0,
+      PRI_MIN: 0.0,
+      PRI_MAX: 0.0,
+      PULSE_WIDTH: 0.0,
+      PW_MIN: 0.0,
+      PW_MAX: 0.0,
+      SCAN_PERIOD: 0.0,
+      ERP: 0.0,
+      MODULATION: signalModulation::CW,
+      ANTENNA_PATTERN: None,
+      BEAMWIDTH: 0.0,
+    }
+  }
+}
+impl rfEmitterDetailT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<rfEmitterDetail<'b>> {
+    let MODE_NAME = self.MODE_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let FREQUENCY = self.FREQUENCY;
+    let FREQ_MIN = self.FREQ_MIN;
+    let FREQ_MAX = self.FREQ_MAX;
+    let PRI = self.PRI;
+    let PRI_MIN = self.PRI_MIN;
+    let PRI_MAX = self.PRI_MAX;
+    let PULSE_WIDTH = self.PULSE_WIDTH;
+    let PW_MIN = self.PW_MIN;
+    let PW_MAX = self.PW_MAX;
+    let SCAN_PERIOD = self.SCAN_PERIOD;
+    let ERP = self.ERP;
+    let MODULATION = self.MODULATION;
+    let ANTENNA_PATTERN = self.ANTENNA_PATTERN.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let BEAMWIDTH = self.BEAMWIDTH;
+    rfEmitterDetail::create(_fbb, &rfEmitterDetailArgs{
+      MODE_NAME,
+      FREQUENCY,
+      FREQ_MIN,
+      FREQ_MAX,
+      PRI,
+      PRI_MIN,
+      PRI_MAX,
+      PULSE_WIDTH,
+      PW_MIN,
+      PW_MAX,
+      SCAN_PERIOD,
+      ERP,
+      MODULATION,
+      ANTENNA_PATTERN,
+      BEAMWIDTH,
+    })
+  }
+}
 pub enum RFEOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -31,7 +749,21 @@ impl<'a> RFE<'a> {
   pub const VT_NAME: flatbuffers::VOffsetT = 8;
   pub const VT_TYPE: flatbuffers::VOffsetT = 10;
   pub const VT_ENTITY: flatbuffers::VOffsetT = 12;
-  pub const VT_RF_EMITTER_DETAILS: flatbuffers::VOffsetT = 14;
+  pub const VT_ELNOT: flatbuffers::VOffsetT = 14;
+  pub const VT_NATO_NAME: flatbuffers::VOffsetT = 16;
+  pub const VT_PLATFORM_TYPE: flatbuffers::VOffsetT = 18;
+  pub const VT_COUNTRY: flatbuffers::VOffsetT = 20;
+  pub const VT_FUNCTION: flatbuffers::VOffsetT = 22;
+  pub const VT_BAND: flatbuffers::VOffsetT = 24;
+  pub const VT_FREQ_MIN: flatbuffers::VOffsetT = 26;
+  pub const VT_FREQ_MAX: flatbuffers::VOffsetT = 28;
+  pub const VT_PEAK_POWER: flatbuffers::VOffsetT = 30;
+  pub const VT_AVG_POWER: flatbuffers::VOffsetT = 32;
+  pub const VT_ANTENNA_GAIN: flatbuffers::VOffsetT = 34;
+  pub const VT_NUM_MODES: flatbuffers::VOffsetT = 36;
+  pub const VT_RF_EMITTER_DETAILS: flatbuffers::VOffsetT = 38;
+  pub const VT_THREAT_LEVEL: flatbuffers::VOffsetT = 40;
+  pub const VT_NOTES: flatbuffers::VOffsetT = 42;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -43,12 +775,26 @@ impl<'a> RFE<'a> {
     args: &'args RFEArgs<'args>
   ) -> flatbuffers::WIPOffset<RFE<'bldr>> {
     let mut builder = RFEBuilder::new(_fbb);
+    builder.add_ANTENNA_GAIN(args.ANTENNA_GAIN);
+    builder.add_AVG_POWER(args.AVG_POWER);
+    builder.add_PEAK_POWER(args.PEAK_POWER);
+    builder.add_FREQ_MAX(args.FREQ_MAX);
+    builder.add_FREQ_MIN(args.FREQ_MIN);
+    if let Some(x) = args.NOTES { builder.add_NOTES(x); }
+    if let Some(x) = args.THREAT_LEVEL { builder.add_THREAT_LEVEL(x); }
     if let Some(x) = args.RF_EMITTER_DETAILS { builder.add_RF_EMITTER_DETAILS(x); }
+    builder.add_NUM_MODES(args.NUM_MODES);
+    if let Some(x) = args.BAND { builder.add_BAND(x); }
+    if let Some(x) = args.FUNCTION { builder.add_FUNCTION(x); }
+    if let Some(x) = args.COUNTRY { builder.add_COUNTRY(x); }
+    if let Some(x) = args.PLATFORM_TYPE { builder.add_PLATFORM_TYPE(x); }
+    if let Some(x) = args.NATO_NAME { builder.add_NATO_NAME(x); }
+    if let Some(x) = args.ELNOT { builder.add_ELNOT(x); }
     if let Some(x) = args.ENTITY { builder.add_ENTITY(x); }
-    if let Some(x) = args.TYPE { builder.add_TYPE(x); }
     if let Some(x) = args.NAME { builder.add_NAME(x); }
     if let Some(x) = args.ID_ENTITY { builder.add_ID_ENTITY(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_TYPE(args.TYPE);
     builder.finish()
   }
 
@@ -62,14 +808,42 @@ impl<'a> RFE<'a> {
     let NAME = self.NAME().map(|x| {
       x.to_string()
     });
-    let TYPE = self.TYPE().map(|x| {
-      x.to_string()
-    });
+    let TYPE = self.TYPE();
     let ENTITY = self.ENTITY().map(|x| {
       x.to_string()
     });
+    let ELNOT = self.ELNOT().map(|x| {
+      x.to_string()
+    });
+    let NATO_NAME = self.NATO_NAME().map(|x| {
+      x.to_string()
+    });
+    let PLATFORM_TYPE = self.PLATFORM_TYPE().map(|x| {
+      x.to_string()
+    });
+    let COUNTRY = self.COUNTRY().map(|x| {
+      x.to_string()
+    });
+    let FUNCTION = self.FUNCTION().map(|x| {
+      x.to_string()
+    });
+    let BAND = self.BAND().map(|x| {
+      x.to_string()
+    });
+    let FREQ_MIN = self.FREQ_MIN();
+    let FREQ_MAX = self.FREQ_MAX();
+    let PEAK_POWER = self.PEAK_POWER();
+    let AVG_POWER = self.AVG_POWER();
+    let ANTENNA_GAIN = self.ANTENNA_GAIN();
+    let NUM_MODES = self.NUM_MODES();
     let RF_EMITTER_DETAILS = self.RF_EMITTER_DETAILS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
+      x.iter().map(|t| t.unpack()).collect()
+    });
+    let THREAT_LEVEL = self.THREAT_LEVEL().map(|x| {
+      x.to_string()
+    });
+    let NOTES = self.NOTES().map(|x| {
+      x.to_string()
     });
     RFET {
       ID,
@@ -77,10 +851,25 @@ impl<'a> RFE<'a> {
       NAME,
       TYPE,
       ENTITY,
+      ELNOT,
+      NATO_NAME,
+      PLATFORM_TYPE,
+      COUNTRY,
+      FUNCTION,
+      BAND,
+      FREQ_MIN,
+      FREQ_MAX,
+      PEAK_POWER,
+      AVG_POWER,
+      ANTENNA_GAIN,
+      NUM_MODES,
       RF_EMITTER_DETAILS,
+      THREAT_LEVEL,
+      NOTES,
     }
   }
 
+  /// Unique emitter identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -88,6 +877,7 @@ impl<'a> RFE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFE::VT_ID, None)}
   }
+  /// Reference to parent entity
   #[inline]
   pub fn ID_ENTITY(&self) -> Option<&'a str> {
     // Safety:
@@ -95,6 +885,7 @@ impl<'a> RFE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFE::VT_ID_ENTITY, None)}
   }
+  /// Emitter name or designation
   #[inline]
   pub fn NAME(&self) -> Option<&'a str> {
     // Safety:
@@ -102,13 +893,15 @@ impl<'a> RFE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFE::VT_NAME, None)}
   }
+  /// Emitter type
   #[inline]
-  pub fn TYPE(&self) -> Option<&'a str> {
+  pub fn TYPE(&self) -> emitterType {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFE::VT_TYPE, None)}
+    unsafe { self._tab.get::<emitterType>(RFE::VT_TYPE, Some(emitterType::RADAR)).unwrap()}
   }
+  /// Parent entity designator
   #[inline]
   pub fn ENTITY(&self) -> Option<&'a str> {
     // Safety:
@@ -116,12 +909,125 @@ impl<'a> RFE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFE::VT_ENTITY, None)}
   }
+  /// ELNOT (Electronic Notation)
   #[inline]
-  pub fn RF_EMITTER_DETAILS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+  pub fn ELNOT(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(RFE::VT_RF_EMITTER_DETAILS, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFE::VT_ELNOT, None)}
+  }
+  /// NATO reporting name
+  #[inline]
+  pub fn NATO_NAME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFE::VT_NATO_NAME, None)}
+  }
+  /// Platform type (e.g., SHIP, AIRCRAFT, GROUND, SATELLITE)
+  #[inline]
+  pub fn PLATFORM_TYPE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFE::VT_PLATFORM_TYPE, None)}
+  }
+  /// Country of origin
+  #[inline]
+  pub fn COUNTRY(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFE::VT_COUNTRY, None)}
+  }
+  /// Primary function description
+  #[inline]
+  pub fn FUNCTION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFE::VT_FUNCTION, None)}
+  }
+  /// Operating band (e.g., HF, VHF, UHF, L, S, C, X, Ku, Ka)
+  #[inline]
+  pub fn BAND(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFE::VT_BAND, None)}
+  }
+  /// Minimum operating frequency in MHz
+  #[inline]
+  pub fn FREQ_MIN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFE::VT_FREQ_MIN, Some(0.0)).unwrap()}
+  }
+  /// Maximum operating frequency in MHz
+  #[inline]
+  pub fn FREQ_MAX(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFE::VT_FREQ_MAX, Some(0.0)).unwrap()}
+  }
+  /// Peak power in kW
+  #[inline]
+  pub fn PEAK_POWER(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFE::VT_PEAK_POWER, Some(0.0)).unwrap()}
+  }
+  /// Average power in kW
+  #[inline]
+  pub fn AVG_POWER(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFE::VT_AVG_POWER, Some(0.0)).unwrap()}
+  }
+  /// Antenna gain in dBi
+  #[inline]
+  pub fn ANTENNA_GAIN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RFE::VT_ANTENNA_GAIN, Some(0.0)).unwrap()}
+  }
+  /// Number of operating modes
+  #[inline]
+  pub fn NUM_MODES(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(RFE::VT_NUM_MODES, Some(0)).unwrap()}
+  }
+  /// Emitter operating mode details
+  #[inline]
+  pub fn RF_EMITTER_DETAILS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<rfEmitterDetail<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<rfEmitterDetail>>>>(RFE::VT_RF_EMITTER_DETAILS, None)}
+  }
+  /// Threat level assessment
+  #[inline]
+  pub fn THREAT_LEVEL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFE::VT_THREAT_LEVEL, None)}
+  }
+  /// Additional notes
+  #[inline]
+  pub fn NOTES(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RFE::VT_NOTES, None)}
   }
 }
 
@@ -135,9 +1041,23 @@ impl flatbuffers::Verifiable for RFE<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID_ENTITY", Self::VT_ID_ENTITY, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NAME", Self::VT_NAME, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TYPE", Self::VT_TYPE, false)?
+     .visit_field::<emitterType>("TYPE", Self::VT_TYPE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ENTITY", Self::VT_ENTITY, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("RF_EMITTER_DETAILS", Self::VT_RF_EMITTER_DETAILS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ELNOT", Self::VT_ELNOT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NATO_NAME", Self::VT_NATO_NAME, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("PLATFORM_TYPE", Self::VT_PLATFORM_TYPE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("COUNTRY", Self::VT_COUNTRY, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("FUNCTION", Self::VT_FUNCTION, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("BAND", Self::VT_BAND, false)?
+     .visit_field::<f64>("FREQ_MIN", Self::VT_FREQ_MIN, false)?
+     .visit_field::<f64>("FREQ_MAX", Self::VT_FREQ_MAX, false)?
+     .visit_field::<f64>("PEAK_POWER", Self::VT_PEAK_POWER, false)?
+     .visit_field::<f64>("AVG_POWER", Self::VT_AVG_POWER, false)?
+     .visit_field::<f64>("ANTENNA_GAIN", Self::VT_ANTENNA_GAIN, false)?
+     .visit_field::<u32>("NUM_MODES", Self::VT_NUM_MODES, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<rfEmitterDetail>>>>("RF_EMITTER_DETAILS", Self::VT_RF_EMITTER_DETAILS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("THREAT_LEVEL", Self::VT_THREAT_LEVEL, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("NOTES", Self::VT_NOTES, false)?
      .finish();
     Ok(())
   }
@@ -146,9 +1066,23 @@ pub struct RFEArgs<'a> {
     pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ID_ENTITY: Option<flatbuffers::WIPOffset<&'a str>>,
     pub NAME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub TYPE: emitterType,
     pub ENTITY: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub RF_EMITTER_DETAILS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub ELNOT: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub NATO_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub PLATFORM_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub COUNTRY: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub FUNCTION: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub BAND: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub FREQ_MIN: f64,
+    pub FREQ_MAX: f64,
+    pub PEAK_POWER: f64,
+    pub AVG_POWER: f64,
+    pub ANTENNA_GAIN: f64,
+    pub NUM_MODES: u32,
+    pub RF_EMITTER_DETAILS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<rfEmitterDetail<'a>>>>>,
+    pub THREAT_LEVEL: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub NOTES: Option<flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for RFEArgs<'a> {
   #[inline]
@@ -157,9 +1091,23 @@ impl<'a> Default for RFEArgs<'a> {
       ID: None,
       ID_ENTITY: None,
       NAME: None,
-      TYPE: None,
+      TYPE: emitterType::RADAR,
       ENTITY: None,
+      ELNOT: None,
+      NATO_NAME: None,
+      PLATFORM_TYPE: None,
+      COUNTRY: None,
+      FUNCTION: None,
+      BAND: None,
+      FREQ_MIN: 0.0,
+      FREQ_MAX: 0.0,
+      PEAK_POWER: 0.0,
+      AVG_POWER: 0.0,
+      ANTENNA_GAIN: 0.0,
+      NUM_MODES: 0,
       RF_EMITTER_DETAILS: None,
+      THREAT_LEVEL: None,
+      NOTES: None,
     }
   }
 }
@@ -182,16 +1130,72 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RFEBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFE::VT_NAME, NAME);
   }
   #[inline]
-  pub fn add_TYPE(&mut self, TYPE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFE::VT_TYPE, TYPE);
+  pub fn add_TYPE(&mut self, TYPE: emitterType) {
+    self.fbb_.push_slot::<emitterType>(RFE::VT_TYPE, TYPE, emitterType::RADAR);
   }
   #[inline]
   pub fn add_ENTITY(&mut self, ENTITY: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFE::VT_ENTITY, ENTITY);
   }
   #[inline]
-  pub fn add_RF_EMITTER_DETAILS(&mut self, RF_EMITTER_DETAILS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+  pub fn add_ELNOT(&mut self, ELNOT: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFE::VT_ELNOT, ELNOT);
+  }
+  #[inline]
+  pub fn add_NATO_NAME(&mut self, NATO_NAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFE::VT_NATO_NAME, NATO_NAME);
+  }
+  #[inline]
+  pub fn add_PLATFORM_TYPE(&mut self, PLATFORM_TYPE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFE::VT_PLATFORM_TYPE, PLATFORM_TYPE);
+  }
+  #[inline]
+  pub fn add_COUNTRY(&mut self, COUNTRY: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFE::VT_COUNTRY, COUNTRY);
+  }
+  #[inline]
+  pub fn add_FUNCTION(&mut self, FUNCTION: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFE::VT_FUNCTION, FUNCTION);
+  }
+  #[inline]
+  pub fn add_BAND(&mut self, BAND: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFE::VT_BAND, BAND);
+  }
+  #[inline]
+  pub fn add_FREQ_MIN(&mut self, FREQ_MIN: f64) {
+    self.fbb_.push_slot::<f64>(RFE::VT_FREQ_MIN, FREQ_MIN, 0.0);
+  }
+  #[inline]
+  pub fn add_FREQ_MAX(&mut self, FREQ_MAX: f64) {
+    self.fbb_.push_slot::<f64>(RFE::VT_FREQ_MAX, FREQ_MAX, 0.0);
+  }
+  #[inline]
+  pub fn add_PEAK_POWER(&mut self, PEAK_POWER: f64) {
+    self.fbb_.push_slot::<f64>(RFE::VT_PEAK_POWER, PEAK_POWER, 0.0);
+  }
+  #[inline]
+  pub fn add_AVG_POWER(&mut self, AVG_POWER: f64) {
+    self.fbb_.push_slot::<f64>(RFE::VT_AVG_POWER, AVG_POWER, 0.0);
+  }
+  #[inline]
+  pub fn add_ANTENNA_GAIN(&mut self, ANTENNA_GAIN: f64) {
+    self.fbb_.push_slot::<f64>(RFE::VT_ANTENNA_GAIN, ANTENNA_GAIN, 0.0);
+  }
+  #[inline]
+  pub fn add_NUM_MODES(&mut self, NUM_MODES: u32) {
+    self.fbb_.push_slot::<u32>(RFE::VT_NUM_MODES, NUM_MODES, 0);
+  }
+  #[inline]
+  pub fn add_RF_EMITTER_DETAILS(&mut self, RF_EMITTER_DETAILS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<rfEmitterDetail<'b >>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFE::VT_RF_EMITTER_DETAILS, RF_EMITTER_DETAILS);
+  }
+  #[inline]
+  pub fn add_THREAT_LEVEL(&mut self, THREAT_LEVEL: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFE::VT_THREAT_LEVEL, THREAT_LEVEL);
+  }
+  #[inline]
+  pub fn add_NOTES(&mut self, NOTES: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RFE::VT_NOTES, NOTES);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> RFEBuilder<'a, 'b, A> {
@@ -216,7 +1220,21 @@ impl core::fmt::Debug for RFE<'_> {
       ds.field("NAME", &self.NAME());
       ds.field("TYPE", &self.TYPE());
       ds.field("ENTITY", &self.ENTITY());
+      ds.field("ELNOT", &self.ELNOT());
+      ds.field("NATO_NAME", &self.NATO_NAME());
+      ds.field("PLATFORM_TYPE", &self.PLATFORM_TYPE());
+      ds.field("COUNTRY", &self.COUNTRY());
+      ds.field("FUNCTION", &self.FUNCTION());
+      ds.field("BAND", &self.BAND());
+      ds.field("FREQ_MIN", &self.FREQ_MIN());
+      ds.field("FREQ_MAX", &self.FREQ_MAX());
+      ds.field("PEAK_POWER", &self.PEAK_POWER());
+      ds.field("AVG_POWER", &self.AVG_POWER());
+      ds.field("ANTENNA_GAIN", &self.ANTENNA_GAIN());
+      ds.field("NUM_MODES", &self.NUM_MODES());
       ds.field("RF_EMITTER_DETAILS", &self.RF_EMITTER_DETAILS());
+      ds.field("THREAT_LEVEL", &self.THREAT_LEVEL());
+      ds.field("NOTES", &self.NOTES());
       ds.finish()
   }
 }
@@ -226,9 +1244,23 @@ pub struct RFET {
   pub ID: Option<String>,
   pub ID_ENTITY: Option<String>,
   pub NAME: Option<String>,
-  pub TYPE: Option<String>,
+  pub TYPE: emitterType,
   pub ENTITY: Option<String>,
-  pub RF_EMITTER_DETAILS: Option<Vec<String>>,
+  pub ELNOT: Option<String>,
+  pub NATO_NAME: Option<String>,
+  pub PLATFORM_TYPE: Option<String>,
+  pub COUNTRY: Option<String>,
+  pub FUNCTION: Option<String>,
+  pub BAND: Option<String>,
+  pub FREQ_MIN: f64,
+  pub FREQ_MAX: f64,
+  pub PEAK_POWER: f64,
+  pub AVG_POWER: f64,
+  pub ANTENNA_GAIN: f64,
+  pub NUM_MODES: u32,
+  pub RF_EMITTER_DETAILS: Option<Vec<rfEmitterDetailT>>,
+  pub THREAT_LEVEL: Option<String>,
+  pub NOTES: Option<String>,
 }
 impl Default for RFET {
   fn default() -> Self {
@@ -236,9 +1268,23 @@ impl Default for RFET {
       ID: None,
       ID_ENTITY: None,
       NAME: None,
-      TYPE: None,
+      TYPE: emitterType::RADAR,
       ENTITY: None,
+      ELNOT: None,
+      NATO_NAME: None,
+      PLATFORM_TYPE: None,
+      COUNTRY: None,
+      FUNCTION: None,
+      BAND: None,
+      FREQ_MIN: 0.0,
+      FREQ_MAX: 0.0,
+      PEAK_POWER: 0.0,
+      AVG_POWER: 0.0,
+      ANTENNA_GAIN: 0.0,
+      NUM_MODES: 0,
       RF_EMITTER_DETAILS: None,
+      THREAT_LEVEL: None,
+      NOTES: None,
     }
   }
 }
@@ -256,14 +1302,42 @@ impl RFET {
     let NAME = self.NAME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let TYPE = self.TYPE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+    let TYPE = self.TYPE;
     let ENTITY = self.ENTITY.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let ELNOT = self.ELNOT.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let NATO_NAME = self.NATO_NAME.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let PLATFORM_TYPE = self.PLATFORM_TYPE.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let COUNTRY = self.COUNTRY.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let FUNCTION = self.FUNCTION.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let BAND = self.BAND.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let FREQ_MIN = self.FREQ_MIN;
+    let FREQ_MAX = self.FREQ_MAX;
+    let PEAK_POWER = self.PEAK_POWER;
+    let AVG_POWER = self.AVG_POWER;
+    let ANTENNA_GAIN = self.ANTENNA_GAIN;
+    let NUM_MODES = self.NUM_MODES;
     let RF_EMITTER_DETAILS = self.RF_EMITTER_DETAILS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
+    let THREAT_LEVEL = self.THREAT_LEVEL.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let NOTES = self.NOTES.as_ref().map(|x|{
+      _fbb.create_string(x)
     });
     RFE::create(_fbb, &RFEArgs{
       ID,
@@ -271,7 +1345,21 @@ impl RFET {
       NAME,
       TYPE,
       ENTITY,
+      ELNOT,
+      NATO_NAME,
+      PLATFORM_TYPE,
+      COUNTRY,
+      FUNCTION,
+      BAND,
+      FREQ_MIN,
+      FREQ_MAX,
+      PEAK_POWER,
+      AVG_POWER,
+      ANTENNA_GAIN,
+      NUM_MODES,
       RF_EMITTER_DETAILS,
+      THREAT_LEVEL,
+      NOTES,
     })
   }
 }

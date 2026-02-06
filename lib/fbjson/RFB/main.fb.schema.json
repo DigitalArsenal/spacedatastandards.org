@@ -1,72 +1,252 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "rfBandDesignation": {
+      "type": "string",
+      "enum": [
+        "UHF",
+        "L",
+        "S",
+        "C",
+        "X",
+        "KU",
+        "K",
+        "KA",
+        "V",
+        "W",
+        "Q",
+        "EHF",
+        "OTHER"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "UHF": {
+          "value": 0
+        },
+        "L": {
+          "value": 1
+        },
+        "S": {
+          "value": 2
+        },
+        "C": {
+          "value": 3
+        },
+        "X": {
+          "value": 4
+        },
+        "KU": {
+          "value": 5
+        },
+        "K": {
+          "value": 6
+        },
+        "KA": {
+          "value": 7
+        },
+        "V": {
+          "value": 8
+        },
+        "W": {
+          "value": 9
+        },
+        "Q": {
+          "value": 10
+        },
+        "EHF": {
+          "value": 11
+        },
+        "OTHER": {
+          "value": 12
+        }
+      }
+    },
+    "rfPolarization": {
+      "type": "string",
+      "enum": [
+        "LHCP",
+        "RHCP",
+        "LINEAR_H",
+        "LINEAR_V",
+        "DUAL",
+        "CROSS",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "LHCP": {
+          "value": 0
+        },
+        "RHCP": {
+          "value": 1
+        },
+        "LINEAR_H": {
+          "value": 2
+        },
+        "LINEAR_V": {
+          "value": 3
+        },
+        "DUAL": {
+          "value": 4
+        },
+        "CROSS": {
+          "value": 5
+        },
+        "UNKNOWN": {
+          "value": 6
+        }
+      }
+    },
     "RFB": {
       "type": "object",
-      "description": "RF Band",
+      "description": "RF Band Specification",
       "properties": {
         "ID": {
           "type": "string",
+          "description": "Unique identifier",
           "x-flatbuffer-type": "string"
         },
         "ID_ENTITY": {
           "type": "string",
+          "description": "Parent entity identifier",
           "x-flatbuffer-type": "string"
         },
         "NAME": {
           "type": "string",
+          "description": "Band name or designation",
           "x-flatbuffer-type": "string"
         },
         "BAND": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
+          "$ref": "#/definitions/rfBandDesignation",
+          "description": "RF band designation",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "UHF": {
+              "value": 0
+            },
+            "L": {
+              "value": 1
+            },
+            "S": {
+              "value": 2
+            },
+            "C": {
+              "value": 3
+            },
+            "X": {
+              "value": 4
+            },
+            "KU": {
+              "value": 5
+            },
+            "K": {
+              "value": 6
+            },
+            "KA": {
+              "value": 7
+            },
+            "V": {
+              "value": 8
+            },
+            "W": {
+              "value": 9
+            },
+            "Q": {
+              "value": 10
+            },
+            "EHF": {
+              "value": 11
+            },
+            "OTHER": {
+              "value": 12
+            }
+          }
         },
         "MODE": {
           "type": "string",
+          "description": "Operating mode",
           "x-flatbuffer-type": "string"
         },
         "PURPOSE": {
           "type": "string",
+          "description": "Band purpose (e.g., TT&C, PAYLOAD, BEACON)",
           "x-flatbuffer-type": "string"
         },
         "FREQ_MIN": {
           "type": "number",
+          "description": "Minimum frequency (MHz)",
           "x-flatbuffer-type": "double"
         },
         "FREQ_MAX": {
           "type": "number",
+          "description": "Maximum frequency (MHz)",
           "x-flatbuffer-type": "double"
         },
         "CENTER_FREQ": {
           "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "PEAK_GAIN": {
-          "type": "number",
-          "x-flatbuffer-type": "double"
-        },
-        "EDGE_GAIN": {
-          "type": "number",
+          "description": "Center frequency (MHz)",
           "x-flatbuffer-type": "double"
         },
         "BANDWIDTH": {
           "type": "number",
+          "description": "Bandwidth (MHz)",
+          "x-flatbuffer-type": "double"
+        },
+        "PEAK_GAIN": {
+          "type": "number",
+          "description": "Peak antenna gain (dBi)",
+          "x-flatbuffer-type": "double"
+        },
+        "EDGE_GAIN": {
+          "type": "number",
+          "description": "Edge-of-coverage gain (dBi)",
           "x-flatbuffer-type": "double"
         },
         "BEAMWIDTH": {
           "type": "number",
+          "description": "Antenna beamwidth (degrees)",
           "x-flatbuffer-type": "double"
         },
         "POLARIZATION": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
+          "$ref": "#/definitions/rfPolarization",
+          "description": "Polarization",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "LHCP": {
+              "value": 0
+            },
+            "RHCP": {
+              "value": 1
+            },
+            "LINEAR_H": {
+              "value": 2
+            },
+            "LINEAR_V": {
+              "value": 3
+            },
+            "DUAL": {
+              "value": 4
+            },
+            "CROSS": {
+              "value": 5
+            },
+            "UNKNOWN": {
+              "value": 6
+            }
+          }
         },
         "ERP": {
           "type": "number",
+          "description": "Effective radiated power (dBW)",
           "x-flatbuffer-type": "double"
         },
         "EIRP": {
           "type": "number",
+          "description": "Effective isotropic radiated power (dBW)",
           "x-flatbuffer-type": "double"
         }
       },

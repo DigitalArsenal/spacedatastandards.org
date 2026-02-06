@@ -1,123 +1,169 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "ooiStatus" : {
+      "type" : "string",
+      "enum": ["ACTIVE", "PENDING", "CLOSED", "MONITORING", "URGENT", "ARCHIVED"]
+    },
+    "ooiPriority" : {
+      "type" : "string",
+      "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW", "ROUTINE"]
+    },
     "OOI" : {
       "type" : "object",
       "description" : "Object of Interest",
       "properties" : {
         "ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique identifier"
               },
         "SAT_NO" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Satellite catalog number"
               },
         "NAME" : {
-                "type" : "string"
-              },
-        "SENSOR_TASKING_START_TIME" : {
-                "type" : "string"
-              },
-        "SENSOR_TASKING_STOP_TIME" : {
-                "type" : "string"
-              },
-        "PRIORITY" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "STATUS" : {
-                "type" : "string"
-              },
-        "STATUS_DATE" : {
-                "type" : "string"
-              },
-        "DESCRIPTION" : {
-                "type" : "string"
-              },
-        "LAST_OB_TIME" : {
-                "type" : "string"
-              },
-        "MISSED_OB_TIME" : {
-                "type" : "string"
-              },
-        "DELTA_VS" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
-        "DELTA_TS" : {
-                "type" : "array", "items" : {"type" : "string"}
-              },
-        "SV_EPOCH" : {
-                "type" : "string"
-              },
-        "X" : {
-                "type" : "number"
-              },
-        "Y" : {
-                "type" : "number"
-              },
-        "Z" : {
-                "type" : "number"
-              },
-        "XVEL" : {
-                "type" : "number"
-              },
-        "YVEL" : {
-                "type" : "number"
-              },
-        "ZVEL" : {
-                "type" : "number"
-              },
-        "ELSET_EPOCH" : {
-                "type" : "string"
-              },
-        "MEAN_MOTION" : {
-                "type" : "number"
-              },
-        "ECCENTRICITY" : {
-                "type" : "number"
-              },
-        "INCLINATION" : {
-                "type" : "number"
-              },
-        "RAAN" : {
-                "type" : "number"
-              },
-        "ARG_OF_PERIGEE" : {
-                "type" : "number"
-              },
-        "MEAN_ANOMALY" : {
-                "type" : "number"
-              },
-        "REV_NO" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
-              },
-        "B_STAR" : {
-                "type" : "number"
-              },
-        "MEAN_MOTION_DOT" : {
-                "type" : "number"
-              },
-        "MEAN_MOTION_DDOT" : {
-                "type" : "number"
-              },
-        "SEMI_MAJOR_AXIS" : {
-                "type" : "number"
-              },
-        "PERIOD" : {
-                "type" : "number"
-              },
-        "APOGEE" : {
-                "type" : "number"
-              },
-        "PERIGEE" : {
-                "type" : "number"
-              },
-        "AFFECTED_OBJECTS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "string",
+                "description" : "Object name or designator"
               },
         "ON_ORBIT" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "On-orbit reference"
+              },
+        "STATUS" : {
+                "$ref" : "#/definitions/ooiStatus",
+                "description" : "Tasking status"
+              },
+        "STATUS_DATE" : {
+                "type" : "string",
+                "description" : "Status update date (ISO 8601)"
+              },
+        "PRIORITY" : {
+                "$ref" : "#/definitions/ooiPriority",
+                "description" : "Collection priority"
+              },
+        "DESCRIPTION" : {
+                "type" : "string",
+                "description" : "Description of why object is of interest"
+              },
+        "SENSOR_TASKING_START_TIME" : {
+                "type" : "string",
+                "description" : "Sensor tasking start time (ISO 8601)"
+              },
+        "SENSOR_TASKING_STOP_TIME" : {
+                "type" : "string",
+                "description" : "Sensor tasking stop time (ISO 8601)"
+              },
+        "LAST_OB_TIME" : {
+                "type" : "string",
+                "description" : "Last observation time (ISO 8601)"
+              },
+        "MISSED_OB_TIME" : {
+                "type" : "string",
+                "description" : "Last missed observation time (ISO 8601)"
+              },
+        "SV_EPOCH" : {
+                "type" : "string",
+                "description" : "State vector epoch (ISO 8601)"
+              },
+        "X" : {
+                "type" : "number",
+                "description" : "Position X (km, TEME)"
+              },
+        "Y" : {
+                "type" : "number",
+                "description" : "Position Y (km, TEME)"
+              },
+        "Z" : {
+                "type" : "number",
+                "description" : "Position Z (km, TEME)"
+              },
+        "XVEL" : {
+                "type" : "number",
+                "description" : "Velocity X (km/s, TEME)"
+              },
+        "YVEL" : {
+                "type" : "number",
+                "description" : "Velocity Y (km/s, TEME)"
+              },
+        "ZVEL" : {
+                "type" : "number",
+                "description" : "Velocity Z (km/s, TEME)"
+              },
+        "ELSET_EPOCH" : {
+                "type" : "string",
+                "description" : "Element set epoch (ISO 8601)"
+              },
+        "MEAN_MOTION" : {
+                "type" : "number",
+                "description" : "Mean motion (rev/day)"
+              },
+        "ECCENTRICITY" : {
+                "type" : "number",
+                "description" : "Eccentricity"
+              },
+        "INCLINATION" : {
+                "type" : "number",
+                "description" : "Inclination (degrees)"
+              },
+        "RAAN" : {
+                "type" : "number",
+                "description" : "Right ascension of ascending node (degrees)"
+              },
+        "ARG_OF_PERIGEE" : {
+                "type" : "number",
+                "description" : "Argument of perigee (degrees)"
+              },
+        "MEAN_ANOMALY" : {
+                "type" : "number",
+                "description" : "Mean anomaly (degrees)"
+              },
+        "REV_NO" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Revolution number at epoch"
+              },
+        "B_STAR" : {
+                "type" : "number",
+                "description" : "BSTAR drag term (1/Earth radii)"
+              },
+        "MEAN_MOTION_DOT" : {
+                "type" : "number",
+                "description" : "Mean motion first derivative (rev/day^2)"
+              },
+        "MEAN_MOTION_DDOT" : {
+                "type" : "number",
+                "description" : "Mean motion second derivative (rev/day^3)"
+              },
+        "SEMI_MAJOR_AXIS" : {
+                "type" : "number",
+                "description" : "Semi-major axis (km)"
+              },
+        "PERIOD" : {
+                "type" : "number",
+                "description" : "Orbital period (minutes)"
+              },
+        "APOGEE" : {
+                "type" : "number",
+                "description" : "Apogee altitude (km)"
+              },
+        "PERIGEE" : {
+                "type" : "number",
+                "description" : "Perigee altitude (km)"
+              },
+        "DELTA_VS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Delta-V estimates for maneuver hypotheses (m/s)"
+              },
+        "DELTA_TS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Delta-T estimates for maneuver timing (seconds)"
+              },
+        "AFFECTED_OBJECTS" : {
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Other affected satellite catalog numbers"
               },
         "MANIFOLDS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Associated orbit manifold identifiers"
               }
       },
       "additionalProperties" : false

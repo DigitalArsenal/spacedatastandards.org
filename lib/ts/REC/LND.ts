@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { launchDetectionType } from './launchDetectionType.js';
 
 
 /**
@@ -31,6 +32,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$LND');
 }
 
+/**
+ * Unique identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,182 +42,299 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-LAUNCH_TIME():string|null
-LAUNCH_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-LAUNCH_TIME(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Detection event identifier
+ */
+EVENT_ID():string|null
+EVENT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EVENT_ID(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 6);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Detection type
+ */
+DETECTION_TYPE():launchDetectionType {
+  const offset = this.bb!.__offset(this.bb_pos, 8);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : launchDetectionType.IR_DETECT;
+}
+
+/**
+ * Detection message type code
+ */
 MESSAGE_TYPE():string|null
 MESSAGE_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 MESSAGE_TYPE(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 8);
+  const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-LAUNCH_LATITUDE():number {
-  const offset = this.bb!.__offset(this.bb_pos, 10);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-LAUNCH_LONGITUDE():number {
+/**
+ * Time of launch detection (ISO 8601)
+ */
+LAUNCH_TIME():string|null
+LAUNCH_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LAUNCH_TIME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 12);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-LAUNCH_AZIMUTH():number {
+/**
+ * Launch site latitude (degrees)
+ */
+LAUNCH_LATITUDE():number {
   const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-RAAN():number {
+/**
+ * Launch site longitude (degrees)
+ */
+LAUNCH_LONGITUDE():number {
   const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-INCLINATION():number {
+/**
+ * Launch azimuth (degrees from north)
+ */
+LAUNCH_AZIMUTH():number {
   const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-OBSERVATION_TIME():string|null
-OBSERVATION_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-OBSERVATION_TIME(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Estimated RAAN (degrees)
+ */
+RAAN():number {
   const offset = this.bb!.__offset(this.bb_pos, 20);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-OBSERVATION_LATITUDE():number {
+/**
+ * Estimated inclination (degrees)
+ */
+INCLINATION():number {
   const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-OBSERVATION_LONGITUDE():number {
+/**
+ * Time of trajectory observation (ISO 8601)
+ */
+OBSERVATION_TIME():string|null
+OBSERVATION_TIME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OBSERVATION_TIME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 24);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-OBSERVATION_ALTITUDE():number {
+/**
+ * Observation point latitude (degrees)
+ */
+OBSERVATION_LATITUDE():number {
   const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-STEREO_FLAG():boolean {
+/**
+ * Observation point longitude (degrees)
+ */
+OBSERVATION_LONGITUDE():number {
   const offset = this.bb!.__offset(this.bb_pos, 28);
-  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-HIGH_ZENITH_AZIMUTH():boolean {
+/**
+ * Observation point altitude (km)
+ */
+OBSERVATION_ALTITUDE():number {
   const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * True if stereo observation (multiple sensors)
+ */
+STEREO_FLAG():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
   return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
-SEQUENCE_NUMBER():number {
-  const offset = this.bb!.__offset(this.bb_pos, 32);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+/**
+ * True if high zenith angle observation
+ */
+HIGH_ZENITH_AZIMUTH():boolean {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? !!this.bb!.readInt8(this.bb_pos + offset) : false;
 }
 
-EVENT_ID():string|null
-EVENT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-EVENT_ID(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 34);
+/**
+ * Sequence number in detection chain
+ */
+SEQUENCE_NUMBER():number {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Launch site identifier
+ */
+LAUNCH_SITE_ID():string|null
+LAUNCH_SITE_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LAUNCH_SITE_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Launch vehicle type (if identified)
+ */
+LAUNCH_VEHICLE():string|null
+LAUNCH_VEHICLE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LAUNCH_VEHICLE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Estimated trajectory type
+ */
+TRAJECTORY_TYPE():string|null
+TRAJECTORY_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TRAJECTORY_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Detection confidence (0-1)
+ */
+CONFIDENCE():number {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Event descriptor
+ */
 DESCRIPTOR():string|null
 DESCRIPTOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 DESCRIPTOR(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 36);
+  const offset = this.bb!.__offset(this.bb_pos, 46);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Associated tags
+ */
 TAGS(index: number):string
 TAGS(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
 TAGS(index: number,optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 38);
+  const offset = this.bb!.__offset(this.bb_pos, 48);
   return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
 }
 
 tagsLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 38);
+  const offset = this.bb!.__offset(this.bb_pos, 48);
   return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
 }
 
 static startLND(builder:flatbuffers.Builder) {
-  builder.startObject(18);
+  builder.startObject(23);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
   builder.addFieldOffset(0, IDOffset, 0);
 }
 
-static addLaunchTime(builder:flatbuffers.Builder, LAUNCH_TIMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, LAUNCH_TIMEOffset, 0);
+static addEventId(builder:flatbuffers.Builder, EVENT_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(1, EVENT_IDOffset, 0);
+}
+
+static addDetectionType(builder:flatbuffers.Builder, DETECTION_TYPE:launchDetectionType) {
+  builder.addFieldInt8(2, DETECTION_TYPE, launchDetectionType.IR_DETECT);
 }
 
 static addMessageType(builder:flatbuffers.Builder, MESSAGE_TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, MESSAGE_TYPEOffset, 0);
+  builder.addFieldOffset(3, MESSAGE_TYPEOffset, 0);
+}
+
+static addLaunchTime(builder:flatbuffers.Builder, LAUNCH_TIMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(4, LAUNCH_TIMEOffset, 0);
 }
 
 static addLaunchLatitude(builder:flatbuffers.Builder, LAUNCH_LATITUDE:number) {
-  builder.addFieldFloat64(3, LAUNCH_LATITUDE, 0.0);
+  builder.addFieldFloat64(5, LAUNCH_LATITUDE, 0.0);
 }
 
 static addLaunchLongitude(builder:flatbuffers.Builder, LAUNCH_LONGITUDE:number) {
-  builder.addFieldFloat64(4, LAUNCH_LONGITUDE, 0.0);
+  builder.addFieldFloat64(6, LAUNCH_LONGITUDE, 0.0);
 }
 
 static addLaunchAzimuth(builder:flatbuffers.Builder, LAUNCH_AZIMUTH:number) {
-  builder.addFieldFloat64(5, LAUNCH_AZIMUTH, 0.0);
+  builder.addFieldFloat64(7, LAUNCH_AZIMUTH, 0.0);
 }
 
 static addRaan(builder:flatbuffers.Builder, RAAN:number) {
-  builder.addFieldFloat64(6, RAAN, 0.0);
+  builder.addFieldFloat64(8, RAAN, 0.0);
 }
 
 static addInclination(builder:flatbuffers.Builder, INCLINATION:number) {
-  builder.addFieldFloat64(7, INCLINATION, 0.0);
+  builder.addFieldFloat64(9, INCLINATION, 0.0);
 }
 
 static addObservationTime(builder:flatbuffers.Builder, OBSERVATION_TIMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(8, OBSERVATION_TIMEOffset, 0);
+  builder.addFieldOffset(10, OBSERVATION_TIMEOffset, 0);
 }
 
 static addObservationLatitude(builder:flatbuffers.Builder, OBSERVATION_LATITUDE:number) {
-  builder.addFieldFloat64(9, OBSERVATION_LATITUDE, 0.0);
+  builder.addFieldFloat64(11, OBSERVATION_LATITUDE, 0.0);
 }
 
 static addObservationLongitude(builder:flatbuffers.Builder, OBSERVATION_LONGITUDE:number) {
-  builder.addFieldFloat64(10, OBSERVATION_LONGITUDE, 0.0);
+  builder.addFieldFloat64(12, OBSERVATION_LONGITUDE, 0.0);
 }
 
 static addObservationAltitude(builder:flatbuffers.Builder, OBSERVATION_ALTITUDE:number) {
-  builder.addFieldFloat64(11, OBSERVATION_ALTITUDE, 0.0);
+  builder.addFieldFloat64(13, OBSERVATION_ALTITUDE, 0.0);
 }
 
 static addStereoFlag(builder:flatbuffers.Builder, STEREO_FLAG:boolean) {
-  builder.addFieldInt8(12, +STEREO_FLAG, +false);
+  builder.addFieldInt8(14, +STEREO_FLAG, +false);
 }
 
 static addHighZenithAzimuth(builder:flatbuffers.Builder, HIGH_ZENITH_AZIMUTH:boolean) {
-  builder.addFieldInt8(13, +HIGH_ZENITH_AZIMUTH, +false);
+  builder.addFieldInt8(15, +HIGH_ZENITH_AZIMUTH, +false);
 }
 
 static addSequenceNumber(builder:flatbuffers.Builder, SEQUENCE_NUMBER:number) {
-  builder.addFieldInt32(14, SEQUENCE_NUMBER, 0);
+  builder.addFieldInt16(16, SEQUENCE_NUMBER, 0);
 }
 
-static addEventId(builder:flatbuffers.Builder, EVENT_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(15, EVENT_IDOffset, 0);
+static addLaunchSiteId(builder:flatbuffers.Builder, LAUNCH_SITE_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, LAUNCH_SITE_IDOffset, 0);
+}
+
+static addLaunchVehicle(builder:flatbuffers.Builder, LAUNCH_VEHICLEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(18, LAUNCH_VEHICLEOffset, 0);
+}
+
+static addTrajectoryType(builder:flatbuffers.Builder, TRAJECTORY_TYPEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(19, TRAJECTORY_TYPEOffset, 0);
+}
+
+static addConfidence(builder:flatbuffers.Builder, CONFIDENCE:number) {
+  builder.addFieldFloat64(20, CONFIDENCE, 0.0);
 }
 
 static addDescriptor(builder:flatbuffers.Builder, DESCRIPTOROffset:flatbuffers.Offset) {
-  builder.addFieldOffset(16, DESCRIPTOROffset, 0);
+  builder.addFieldOffset(21, DESCRIPTOROffset, 0);
 }
 
 static addTags(builder:flatbuffers.Builder, TAGSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(17, TAGSOffset, 0);
+  builder.addFieldOffset(22, TAGSOffset, 0);
 }
 
 static createTagsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
@@ -241,11 +362,13 @@ static finishSizePrefixedLNDBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$LND', true);
 }
 
-static createLND(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, LAUNCH_TIMEOffset:flatbuffers.Offset, MESSAGE_TYPEOffset:flatbuffers.Offset, LAUNCH_LATITUDE:number, LAUNCH_LONGITUDE:number, LAUNCH_AZIMUTH:number, RAAN:number, INCLINATION:number, OBSERVATION_TIMEOffset:flatbuffers.Offset, OBSERVATION_LATITUDE:number, OBSERVATION_LONGITUDE:number, OBSERVATION_ALTITUDE:number, STEREO_FLAG:boolean, HIGH_ZENITH_AZIMUTH:boolean, SEQUENCE_NUMBER:number, EVENT_IDOffset:flatbuffers.Offset, DESCRIPTOROffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset):flatbuffers.Offset {
+static createLND(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, EVENT_IDOffset:flatbuffers.Offset, DETECTION_TYPE:launchDetectionType, MESSAGE_TYPEOffset:flatbuffers.Offset, LAUNCH_TIMEOffset:flatbuffers.Offset, LAUNCH_LATITUDE:number, LAUNCH_LONGITUDE:number, LAUNCH_AZIMUTH:number, RAAN:number, INCLINATION:number, OBSERVATION_TIMEOffset:flatbuffers.Offset, OBSERVATION_LATITUDE:number, OBSERVATION_LONGITUDE:number, OBSERVATION_ALTITUDE:number, STEREO_FLAG:boolean, HIGH_ZENITH_AZIMUTH:boolean, SEQUENCE_NUMBER:number, LAUNCH_SITE_IDOffset:flatbuffers.Offset, LAUNCH_VEHICLEOffset:flatbuffers.Offset, TRAJECTORY_TYPEOffset:flatbuffers.Offset, CONFIDENCE:number, DESCRIPTOROffset:flatbuffers.Offset, TAGSOffset:flatbuffers.Offset):flatbuffers.Offset {
   LND.startLND(builder);
   LND.addId(builder, IDOffset);
-  LND.addLaunchTime(builder, LAUNCH_TIMEOffset);
+  LND.addEventId(builder, EVENT_IDOffset);
+  LND.addDetectionType(builder, DETECTION_TYPE);
   LND.addMessageType(builder, MESSAGE_TYPEOffset);
+  LND.addLaunchTime(builder, LAUNCH_TIMEOffset);
   LND.addLaunchLatitude(builder, LAUNCH_LATITUDE);
   LND.addLaunchLongitude(builder, LAUNCH_LONGITUDE);
   LND.addLaunchAzimuth(builder, LAUNCH_AZIMUTH);
@@ -258,7 +381,10 @@ static createLND(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, LAUNC
   LND.addStereoFlag(builder, STEREO_FLAG);
   LND.addHighZenithAzimuth(builder, HIGH_ZENITH_AZIMUTH);
   LND.addSequenceNumber(builder, SEQUENCE_NUMBER);
-  LND.addEventId(builder, EVENT_IDOffset);
+  LND.addLaunchSiteId(builder, LAUNCH_SITE_IDOffset);
+  LND.addLaunchVehicle(builder, LAUNCH_VEHICLEOffset);
+  LND.addTrajectoryType(builder, TRAJECTORY_TYPEOffset);
+  LND.addConfidence(builder, CONFIDENCE);
   LND.addDescriptor(builder, DESCRIPTOROffset);
   LND.addTags(builder, TAGSOffset);
   return LND.endLND(builder);
@@ -267,8 +393,10 @@ static createLND(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, LAUNC
 unpack(): LNDT {
   return new LNDT(
     this.ID(),
-    this.LAUNCH_TIME(),
+    this.EVENT_ID(),
+    this.DETECTION_TYPE(),
     this.MESSAGE_TYPE(),
+    this.LAUNCH_TIME(),
     this.LAUNCH_LATITUDE(),
     this.LAUNCH_LONGITUDE(),
     this.LAUNCH_AZIMUTH(),
@@ -281,7 +409,10 @@ unpack(): LNDT {
     this.STEREO_FLAG(),
     this.HIGH_ZENITH_AZIMUTH(),
     this.SEQUENCE_NUMBER(),
-    this.EVENT_ID(),
+    this.LAUNCH_SITE_ID(),
+    this.LAUNCH_VEHICLE(),
+    this.TRAJECTORY_TYPE(),
+    this.CONFIDENCE(),
     this.DESCRIPTOR(),
     this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength())
   );
@@ -290,8 +421,10 @@ unpack(): LNDT {
 
 unpackTo(_o: LNDT): void {
   _o.ID = this.ID();
-  _o.LAUNCH_TIME = this.LAUNCH_TIME();
+  _o.EVENT_ID = this.EVENT_ID();
+  _o.DETECTION_TYPE = this.DETECTION_TYPE();
   _o.MESSAGE_TYPE = this.MESSAGE_TYPE();
+  _o.LAUNCH_TIME = this.LAUNCH_TIME();
   _o.LAUNCH_LATITUDE = this.LAUNCH_LATITUDE();
   _o.LAUNCH_LONGITUDE = this.LAUNCH_LONGITUDE();
   _o.LAUNCH_AZIMUTH = this.LAUNCH_AZIMUTH();
@@ -304,7 +437,10 @@ unpackTo(_o: LNDT): void {
   _o.STEREO_FLAG = this.STEREO_FLAG();
   _o.HIGH_ZENITH_AZIMUTH = this.HIGH_ZENITH_AZIMUTH();
   _o.SEQUENCE_NUMBER = this.SEQUENCE_NUMBER();
-  _o.EVENT_ID = this.EVENT_ID();
+  _o.LAUNCH_SITE_ID = this.LAUNCH_SITE_ID();
+  _o.LAUNCH_VEHICLE = this.LAUNCH_VEHICLE();
+  _o.TRAJECTORY_TYPE = this.TRAJECTORY_TYPE();
+  _o.CONFIDENCE = this.CONFIDENCE();
   _o.DESCRIPTOR = this.DESCRIPTOR();
   _o.TAGS = this.bb!.createScalarList<string>(this.TAGS.bind(this), this.tagsLength());
 }
@@ -313,8 +449,10 @@ unpackTo(_o: LNDT): void {
 export class LNDT implements flatbuffers.IGeneratedObject {
 constructor(
   public ID: string|Uint8Array|null = null,
-  public LAUNCH_TIME: string|Uint8Array|null = null,
+  public EVENT_ID: string|Uint8Array|null = null,
+  public DETECTION_TYPE: launchDetectionType = launchDetectionType.IR_DETECT,
   public MESSAGE_TYPE: string|Uint8Array|null = null,
+  public LAUNCH_TIME: string|Uint8Array|null = null,
   public LAUNCH_LATITUDE: number = 0.0,
   public LAUNCH_LONGITUDE: number = 0.0,
   public LAUNCH_AZIMUTH: number = 0.0,
@@ -327,7 +465,10 @@ constructor(
   public STEREO_FLAG: boolean = false,
   public HIGH_ZENITH_AZIMUTH: boolean = false,
   public SEQUENCE_NUMBER: number = 0,
-  public EVENT_ID: string|Uint8Array|null = null,
+  public LAUNCH_SITE_ID: string|Uint8Array|null = null,
+  public LAUNCH_VEHICLE: string|Uint8Array|null = null,
+  public TRAJECTORY_TYPE: string|Uint8Array|null = null,
+  public CONFIDENCE: number = 0.0,
   public DESCRIPTOR: string|Uint8Array|null = null,
   public TAGS: (string)[] = []
 ){}
@@ -335,17 +476,22 @@ constructor(
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ID = (this.ID !== null ? builder.createString(this.ID!) : 0);
-  const LAUNCH_TIME = (this.LAUNCH_TIME !== null ? builder.createString(this.LAUNCH_TIME!) : 0);
-  const MESSAGE_TYPE = (this.MESSAGE_TYPE !== null ? builder.createString(this.MESSAGE_TYPE!) : 0);
-  const OBSERVATION_TIME = (this.OBSERVATION_TIME !== null ? builder.createString(this.OBSERVATION_TIME!) : 0);
   const EVENT_ID = (this.EVENT_ID !== null ? builder.createString(this.EVENT_ID!) : 0);
+  const MESSAGE_TYPE = (this.MESSAGE_TYPE !== null ? builder.createString(this.MESSAGE_TYPE!) : 0);
+  const LAUNCH_TIME = (this.LAUNCH_TIME !== null ? builder.createString(this.LAUNCH_TIME!) : 0);
+  const OBSERVATION_TIME = (this.OBSERVATION_TIME !== null ? builder.createString(this.OBSERVATION_TIME!) : 0);
+  const LAUNCH_SITE_ID = (this.LAUNCH_SITE_ID !== null ? builder.createString(this.LAUNCH_SITE_ID!) : 0);
+  const LAUNCH_VEHICLE = (this.LAUNCH_VEHICLE !== null ? builder.createString(this.LAUNCH_VEHICLE!) : 0);
+  const TRAJECTORY_TYPE = (this.TRAJECTORY_TYPE !== null ? builder.createString(this.TRAJECTORY_TYPE!) : 0);
   const DESCRIPTOR = (this.DESCRIPTOR !== null ? builder.createString(this.DESCRIPTOR!) : 0);
   const TAGS = LND.createTagsVector(builder, builder.createObjectOffsetList(this.TAGS));
 
   return LND.createLND(builder,
     ID,
-    LAUNCH_TIME,
+    EVENT_ID,
+    this.DETECTION_TYPE,
     MESSAGE_TYPE,
+    LAUNCH_TIME,
     this.LAUNCH_LATITUDE,
     this.LAUNCH_LONGITUDE,
     this.LAUNCH_AZIMUTH,
@@ -358,7 +504,10 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
     this.STEREO_FLAG,
     this.HIGH_ZENITH_AZIMUTH,
     this.SEQUENCE_NUMBER,
-    EVENT_ID,
+    LAUNCH_SITE_ID,
+    LAUNCH_VEHICLE,
+    TRAJECTORY_TYPE,
+    this.CONFIDENCE,
     DESCRIPTOR,
     TAGS
   );

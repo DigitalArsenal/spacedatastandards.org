@@ -9,6 +9,107 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_RADAR_OBS_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_RADAR_OBS_TYPE: i8 = 5;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_RADAR_OBS_TYPE: [radarObsType; 6] = [
+  radarObsType::DETECTION,
+  radarObsType::TRACK,
+  radarObsType::METRIC,
+  radarObsType::SIGNATURE,
+  radarObsType::SEARCH_FENCE,
+  radarObsType::UNKNOWN,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct radarObsType(pub i8);
+#[allow(non_upper_case_globals)]
+impl radarObsType {
+  pub const DETECTION: Self = Self(0);
+  pub const TRACK: Self = Self(1);
+  pub const METRIC: Self = Self(2);
+  pub const SIGNATURE: Self = Self(3);
+  pub const SEARCH_FENCE: Self = Self(4);
+  pub const UNKNOWN: Self = Self(5);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 5;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::DETECTION,
+    Self::TRACK,
+    Self::METRIC,
+    Self::SIGNATURE,
+    Self::SEARCH_FENCE,
+    Self::UNKNOWN,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::DETECTION => Some("DETECTION"),
+      Self::TRACK => Some("TRACK"),
+      Self::METRIC => Some("METRIC"),
+      Self::SIGNATURE => Some("SIGNATURE"),
+      Self::SEARCH_FENCE => Some("SEARCH_FENCE"),
+      Self::UNKNOWN => Some("UNKNOWN"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for radarObsType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for radarObsType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for radarObsType {
+    type Output = radarObsType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for radarObsType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for radarObsType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for radarObsType {}
 pub enum RDOOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -29,55 +130,55 @@ impl<'a> RDO<'a> {
   pub const VT_ID: flatbuffers::VOffsetT = 4;
   pub const VT_OB_TIME: flatbuffers::VOffsetT = 6;
   pub const VT_ID_SENSOR: flatbuffers::VOffsetT = 8;
-  pub const VT_SAT_NO: flatbuffers::VOffsetT = 10;
-  pub const VT_TASK_ID: flatbuffers::VOffsetT = 12;
-  pub const VT_TRANSACTION_ID: flatbuffers::VOffsetT = 14;
-  pub const VT_TRACK_ID: flatbuffers::VOffsetT = 16;
-  pub const VT_OB_POSITION: flatbuffers::VOffsetT = 18;
-  pub const VT_ORIG_OBJECT_ID: flatbuffers::VOffsetT = 20;
-  pub const VT_ORIG_SENSOR_ID: flatbuffers::VOffsetT = 22;
-  pub const VT_UCT: flatbuffers::VOffsetT = 24;
-  pub const VT_AZIMUTH: flatbuffers::VOffsetT = 26;
-  pub const VT_AZIMUTH_UNC: flatbuffers::VOffsetT = 28;
-  pub const VT_AZIMUTH_BIAS: flatbuffers::VOffsetT = 30;
-  pub const VT_AZIMUTH_RATE: flatbuffers::VOffsetT = 32;
-  pub const VT_ELEVATION: flatbuffers::VOffsetT = 34;
-  pub const VT_ELEVATION_UNC: flatbuffers::VOffsetT = 36;
-  pub const VT_ELEVATION_BIAS: flatbuffers::VOffsetT = 38;
-  pub const VT_ELEVATION_RATE: flatbuffers::VOffsetT = 40;
-  pub const VT_RANGE: flatbuffers::VOffsetT = 42;
-  pub const VT_RANGE_ACCEL: flatbuffers::VOffsetT = 44;
-  pub const VT_RANGE_ACCEL_UNC: flatbuffers::VOffsetT = 46;
-  pub const VT_RANGE_UNC: flatbuffers::VOffsetT = 48;
-  pub const VT_RANGE_BIAS: flatbuffers::VOffsetT = 50;
-  pub const VT_RANGE_RATE: flatbuffers::VOffsetT = 52;
-  pub const VT_RANGE_RATE_UNC: flatbuffers::VOffsetT = 54;
-  pub const VT_DOPPLER: flatbuffers::VOffsetT = 56;
-  pub const VT_DOPPLER_UNC: flatbuffers::VOffsetT = 58;
-  pub const VT_RA: flatbuffers::VOffsetT = 60;
-  pub const VT_DECLINATION: flatbuffers::VOffsetT = 62;
-  pub const VT_X: flatbuffers::VOffsetT = 64;
-  pub const VT_Y: flatbuffers::VOffsetT = 66;
-  pub const VT_Z: flatbuffers::VOffsetT = 68;
-  pub const VT_XVEL: flatbuffers::VOffsetT = 70;
-  pub const VT_YVEL: flatbuffers::VOffsetT = 72;
-  pub const VT_ZVEL: flatbuffers::VOffsetT = 74;
-  pub const VT_SENX: flatbuffers::VOffsetT = 76;
-  pub const VT_SENY: flatbuffers::VOffsetT = 78;
-  pub const VT_SENZ: flatbuffers::VOffsetT = 80;
-  pub const VT_RCS: flatbuffers::VOffsetT = 82;
-  pub const VT_RCS_UNC: flatbuffers::VOffsetT = 84;
-  pub const VT_ORTHOGONAL_RCS: flatbuffers::VOffsetT = 86;
-  pub const VT_ORTHOGONAL_RCS_UNC: flatbuffers::VOffsetT = 88;
-  pub const VT_SNR: flatbuffers::VOffsetT = 90;
-  pub const VT_BEAM: flatbuffers::VOffsetT = 92;
-  pub const VT_TIMING_BIAS: flatbuffers::VOffsetT = 94;
-  pub const VT_RAW_FILE_URI: flatbuffers::VOffsetT = 96;
-  pub const VT_TAGS: flatbuffers::VOffsetT = 98;
-  pub const VT_ON_ORBIT: flatbuffers::VOffsetT = 100;
-  pub const VT_SEN_REFERENCE_FRAME: flatbuffers::VOffsetT = 102;
+  pub const VT_ORIG_SENSOR_ID: flatbuffers::VOffsetT = 10;
+  pub const VT_SAT_NO: flatbuffers::VOffsetT = 12;
+  pub const VT_ORIG_OBJECT_ID: flatbuffers::VOffsetT = 14;
+  pub const VT_ON_ORBIT: flatbuffers::VOffsetT = 16;
+  pub const VT_UCT: flatbuffers::VOffsetT = 18;
+  pub const VT_OBS_TYPE: flatbuffers::VOffsetT = 20;
+  pub const VT_TASK_ID: flatbuffers::VOffsetT = 22;
+  pub const VT_TRANSACTION_ID: flatbuffers::VOffsetT = 24;
+  pub const VT_TRACK_ID: flatbuffers::VOffsetT = 26;
+  pub const VT_OB_POSITION: flatbuffers::VOffsetT = 28;
+  pub const VT_SEN_REFERENCE_FRAME: flatbuffers::VOffsetT = 30;
+  pub const VT_AZIMUTH: flatbuffers::VOffsetT = 32;
+  pub const VT_AZIMUTH_UNC: flatbuffers::VOffsetT = 34;
+  pub const VT_AZIMUTH_BIAS: flatbuffers::VOffsetT = 36;
+  pub const VT_AZIMUTH_RATE: flatbuffers::VOffsetT = 38;
+  pub const VT_ELEVATION: flatbuffers::VOffsetT = 40;
+  pub const VT_ELEVATION_UNC: flatbuffers::VOffsetT = 42;
+  pub const VT_ELEVATION_BIAS: flatbuffers::VOffsetT = 44;
+  pub const VT_ELEVATION_RATE: flatbuffers::VOffsetT = 46;
+  pub const VT_RANGE: flatbuffers::VOffsetT = 48;
+  pub const VT_RANGE_UNC: flatbuffers::VOffsetT = 50;
+  pub const VT_RANGE_BIAS: flatbuffers::VOffsetT = 52;
+  pub const VT_RANGE_RATE: flatbuffers::VOffsetT = 54;
+  pub const VT_RANGE_RATE_UNC: flatbuffers::VOffsetT = 56;
+  pub const VT_RANGE_ACCEL: flatbuffers::VOffsetT = 58;
+  pub const VT_RANGE_ACCEL_UNC: flatbuffers::VOffsetT = 60;
+  pub const VT_DOPPLER: flatbuffers::VOffsetT = 62;
+  pub const VT_DOPPLER_UNC: flatbuffers::VOffsetT = 64;
+  pub const VT_RA: flatbuffers::VOffsetT = 66;
+  pub const VT_DECLINATION: flatbuffers::VOffsetT = 68;
+  pub const VT_X: flatbuffers::VOffsetT = 70;
+  pub const VT_Y: flatbuffers::VOffsetT = 72;
+  pub const VT_Z: flatbuffers::VOffsetT = 74;
+  pub const VT_XVEL: flatbuffers::VOffsetT = 76;
+  pub const VT_YVEL: flatbuffers::VOffsetT = 78;
+  pub const VT_ZVEL: flatbuffers::VOffsetT = 80;
+  pub const VT_SENX: flatbuffers::VOffsetT = 82;
+  pub const VT_SENY: flatbuffers::VOffsetT = 84;
+  pub const VT_SENZ: flatbuffers::VOffsetT = 86;
+  pub const VT_RCS: flatbuffers::VOffsetT = 88;
+  pub const VT_RCS_UNC: flatbuffers::VOffsetT = 90;
+  pub const VT_ORTHOGONAL_RCS: flatbuffers::VOffsetT = 92;
+  pub const VT_ORTHOGONAL_RCS_UNC: flatbuffers::VOffsetT = 94;
+  pub const VT_SNR: flatbuffers::VOffsetT = 96;
+  pub const VT_BEAM: flatbuffers::VOffsetT = 98;
+  pub const VT_TIMING_BIAS: flatbuffers::VOffsetT = 100;
+  pub const VT_RAW_FILE_URI: flatbuffers::VOffsetT = 102;
   pub const VT_DESCRIPTOR: flatbuffers::VOffsetT = 104;
-  pub const VT_TYPE: flatbuffers::VOffsetT = 106;
+  pub const VT_TAGS: flatbuffers::VOffsetT = 106;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -109,12 +210,12 @@ impl<'a> RDO<'a> {
     builder.add_RA(args.RA);
     builder.add_DOPPLER_UNC(args.DOPPLER_UNC);
     builder.add_DOPPLER(args.DOPPLER);
+    builder.add_RANGE_ACCEL_UNC(args.RANGE_ACCEL_UNC);
+    builder.add_RANGE_ACCEL(args.RANGE_ACCEL);
     builder.add_RANGE_RATE_UNC(args.RANGE_RATE_UNC);
     builder.add_RANGE_RATE(args.RANGE_RATE);
     builder.add_RANGE_BIAS(args.RANGE_BIAS);
     builder.add_RANGE_UNC(args.RANGE_UNC);
-    builder.add_RANGE_ACCEL_UNC(args.RANGE_ACCEL_UNC);
-    builder.add_RANGE_ACCEL(args.RANGE_ACCEL);
     builder.add_RANGE(args.RANGE);
     builder.add_ELEVATION_RATE(args.ELEVATION_RATE);
     builder.add_ELEVATION_BIAS(args.ELEVATION_BIAS);
@@ -124,22 +225,22 @@ impl<'a> RDO<'a> {
     builder.add_AZIMUTH_BIAS(args.AZIMUTH_BIAS);
     builder.add_AZIMUTH_UNC(args.AZIMUTH_UNC);
     builder.add_AZIMUTH(args.AZIMUTH);
-    if let Some(x) = args.TYPE { builder.add_TYPE(x); }
-    if let Some(x) = args.DESCRIPTOR { builder.add_DESCRIPTOR(x); }
-    if let Some(x) = args.SEN_REFERENCE_FRAME { builder.add_SEN_REFERENCE_FRAME(x); }
-    if let Some(x) = args.ON_ORBIT { builder.add_ON_ORBIT(x); }
     if let Some(x) = args.TAGS { builder.add_TAGS(x); }
+    if let Some(x) = args.DESCRIPTOR { builder.add_DESCRIPTOR(x); }
     if let Some(x) = args.RAW_FILE_URI { builder.add_RAW_FILE_URI(x); }
-    if let Some(x) = args.ORIG_SENSOR_ID { builder.add_ORIG_SENSOR_ID(x); }
-    if let Some(x) = args.ORIG_OBJECT_ID { builder.add_ORIG_OBJECT_ID(x); }
+    if let Some(x) = args.SEN_REFERENCE_FRAME { builder.add_SEN_REFERENCE_FRAME(x); }
     if let Some(x) = args.OB_POSITION { builder.add_OB_POSITION(x); }
     if let Some(x) = args.TRACK_ID { builder.add_TRACK_ID(x); }
     if let Some(x) = args.TRANSACTION_ID { builder.add_TRANSACTION_ID(x); }
     if let Some(x) = args.TASK_ID { builder.add_TASK_ID(x); }
+    if let Some(x) = args.ON_ORBIT { builder.add_ON_ORBIT(x); }
+    if let Some(x) = args.ORIG_OBJECT_ID { builder.add_ORIG_OBJECT_ID(x); }
     builder.add_SAT_NO(args.SAT_NO);
+    if let Some(x) = args.ORIG_SENSOR_ID { builder.add_ORIG_SENSOR_ID(x); }
     if let Some(x) = args.ID_SENSOR { builder.add_ID_SENSOR(x); }
     if let Some(x) = args.OB_TIME { builder.add_OB_TIME(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_OBS_TYPE(args.OBS_TYPE);
     builder.add_UCT(args.UCT);
     builder.finish()
   }
@@ -154,7 +255,18 @@ impl<'a> RDO<'a> {
     let ID_SENSOR = self.ID_SENSOR().map(|x| {
       x.to_string()
     });
+    let ORIG_SENSOR_ID = self.ORIG_SENSOR_ID().map(|x| {
+      x.to_string()
+    });
     let SAT_NO = self.SAT_NO();
+    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID().map(|x| {
+      x.to_string()
+    });
+    let ON_ORBIT = self.ON_ORBIT().map(|x| {
+      x.to_string()
+    });
+    let UCT = self.UCT();
+    let OBS_TYPE = self.OBS_TYPE();
     let TASK_ID = self.TASK_ID().map(|x| {
       x.to_string()
     });
@@ -167,13 +279,9 @@ impl<'a> RDO<'a> {
     let OB_POSITION = self.OB_POSITION().map(|x| {
       x.to_string()
     });
-    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID().map(|x| {
+    let SEN_REFERENCE_FRAME = self.SEN_REFERENCE_FRAME().map(|x| {
       x.to_string()
     });
-    let ORIG_SENSOR_ID = self.ORIG_SENSOR_ID().map(|x| {
-      x.to_string()
-    });
-    let UCT = self.UCT();
     let AZIMUTH = self.AZIMUTH();
     let AZIMUTH_UNC = self.AZIMUTH_UNC();
     let AZIMUTH_BIAS = self.AZIMUTH_BIAS();
@@ -183,12 +291,12 @@ impl<'a> RDO<'a> {
     let ELEVATION_BIAS = self.ELEVATION_BIAS();
     let ELEVATION_RATE = self.ELEVATION_RATE();
     let RANGE = self.RANGE();
-    let RANGE_ACCEL = self.RANGE_ACCEL();
-    let RANGE_ACCEL_UNC = self.RANGE_ACCEL_UNC();
     let RANGE_UNC = self.RANGE_UNC();
     let RANGE_BIAS = self.RANGE_BIAS();
     let RANGE_RATE = self.RANGE_RATE();
     let RANGE_RATE_UNC = self.RANGE_RATE_UNC();
+    let RANGE_ACCEL = self.RANGE_ACCEL();
+    let RANGE_ACCEL_UNC = self.RANGE_ACCEL_UNC();
     let DOPPLER = self.DOPPLER();
     let DOPPLER_UNC = self.DOPPLER_UNC();
     let RA = self.RA();
@@ -212,33 +320,27 @@ impl<'a> RDO<'a> {
     let RAW_FILE_URI = self.RAW_FILE_URI().map(|x| {
       x.to_string()
     });
-    let TAGS = self.TAGS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
-    let ON_ORBIT = self.ON_ORBIT().map(|x| {
-      x.to_string()
-    });
-    let SEN_REFERENCE_FRAME = self.SEN_REFERENCE_FRAME().map(|x| {
-      x.to_string()
-    });
     let DESCRIPTOR = self.DESCRIPTOR().map(|x| {
       x.to_string()
     });
-    let TYPE = self.TYPE().map(|x| {
-      x.to_string()
+    let TAGS = self.TAGS().map(|x| {
+      x.iter().map(|s| s.to_string()).collect()
     });
     RDOT {
       ID,
       OB_TIME,
       ID_SENSOR,
+      ORIG_SENSOR_ID,
       SAT_NO,
+      ORIG_OBJECT_ID,
+      ON_ORBIT,
+      UCT,
+      OBS_TYPE,
       TASK_ID,
       TRANSACTION_ID,
       TRACK_ID,
       OB_POSITION,
-      ORIG_OBJECT_ID,
-      ORIG_SENSOR_ID,
-      UCT,
+      SEN_REFERENCE_FRAME,
       AZIMUTH,
       AZIMUTH_UNC,
       AZIMUTH_BIAS,
@@ -248,12 +350,12 @@ impl<'a> RDO<'a> {
       ELEVATION_BIAS,
       ELEVATION_RATE,
       RANGE,
-      RANGE_ACCEL,
-      RANGE_ACCEL_UNC,
       RANGE_UNC,
       RANGE_BIAS,
       RANGE_RATE,
       RANGE_RATE_UNC,
+      RANGE_ACCEL,
+      RANGE_ACCEL_UNC,
       DOPPLER,
       DOPPLER_UNC,
       RA,
@@ -275,14 +377,12 @@ impl<'a> RDO<'a> {
       BEAM,
       TIMING_BIAS,
       RAW_FILE_URI,
-      TAGS,
-      ON_ORBIT,
-      SEN_REFERENCE_FRAME,
       DESCRIPTOR,
-      TYPE,
+      TAGS,
     }
   }
 
+  /// Unique identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -290,6 +390,7 @@ impl<'a> RDO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDO::VT_ID, None)}
   }
+  /// Observation time (ISO 8601)
   #[inline]
   pub fn OB_TIME(&self) -> Option<&'a str> {
     // Safety:
@@ -297,6 +398,7 @@ impl<'a> RDO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDO::VT_OB_TIME, None)}
   }
+  /// Sensor identifier
   #[inline]
   pub fn ID_SENSOR(&self) -> Option<&'a str> {
     // Safety:
@@ -304,48 +406,7 @@ impl<'a> RDO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDO::VT_ID_SENSOR, None)}
   }
-  #[inline]
-  pub fn SAT_NO(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(RDO::VT_SAT_NO, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn TASK_ID(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDO::VT_TASK_ID, None)}
-  }
-  #[inline]
-  pub fn TRANSACTION_ID(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDO::VT_TRANSACTION_ID, None)}
-  }
-  #[inline]
-  pub fn TRACK_ID(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDO::VT_TRACK_ID, None)}
-  }
-  #[inline]
-  pub fn OB_POSITION(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDO::VT_OB_POSITION, None)}
-  }
-  #[inline]
-  pub fn ORIG_OBJECT_ID(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDO::VT_ORIG_OBJECT_ID, None)}
-  }
+  /// Original sensor identifier
   #[inline]
   pub fn ORIG_SENSOR_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -353,272 +414,23 @@ impl<'a> RDO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDO::VT_ORIG_SENSOR_ID, None)}
   }
+  /// Satellite catalog number
   #[inline]
-  pub fn UCT(&self) -> bool {
+  pub fn SAT_NO(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(RDO::VT_UCT, Some(false)).unwrap()}
+    unsafe { self._tab.get::<u32>(RDO::VT_SAT_NO, Some(0)).unwrap()}
   }
+  /// International designator
   #[inline]
-  pub fn AZIMUTH(&self) -> f64 {
+  pub fn ORIG_OBJECT_ID(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_AZIMUTH, Some(0.0)).unwrap()}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDO::VT_ORIG_OBJECT_ID, None)}
   }
-  #[inline]
-  pub fn AZIMUTH_UNC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_AZIMUTH_UNC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn AZIMUTH_BIAS(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_AZIMUTH_BIAS, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn AZIMUTH_RATE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_AZIMUTH_RATE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn ELEVATION(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_ELEVATION, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn ELEVATION_UNC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_ELEVATION_UNC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn ELEVATION_BIAS(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_ELEVATION_BIAS, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn ELEVATION_RATE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_ELEVATION_RATE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn RANGE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_RANGE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn RANGE_ACCEL(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_RANGE_ACCEL, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn RANGE_ACCEL_UNC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_RANGE_ACCEL_UNC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn RANGE_UNC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_RANGE_UNC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn RANGE_BIAS(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_RANGE_BIAS, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn RANGE_RATE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_RANGE_RATE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn RANGE_RATE_UNC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_RANGE_RATE_UNC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn DOPPLER(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_DOPPLER, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn DOPPLER_UNC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_DOPPLER_UNC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn RA(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_RA, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn DECLINATION(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_DECLINATION, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn X(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_X, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn Y(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_Y, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn Z(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_Z, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn XVEL(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_XVEL, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn YVEL(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_YVEL, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn ZVEL(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_ZVEL, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SENX(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_SENX, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SENY(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_SENY, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SENZ(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_SENZ, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn RCS(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_RCS, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn RCS_UNC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_RCS_UNC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn ORTHOGONAL_RCS(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_ORTHOGONAL_RCS, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn ORTHOGONAL_RCS_UNC(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_ORTHOGONAL_RCS_UNC, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn SNR(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_SNR, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn BEAM(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_BEAM, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn TIMING_BIAS(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(RDO::VT_TIMING_BIAS, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn RAW_FILE_URI(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDO::VT_RAW_FILE_URI, None)}
-  }
-  #[inline]
-  pub fn TAGS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(RDO::VT_TAGS, None)}
-  }
+  /// On-orbit reference
   #[inline]
   pub fn ON_ORBIT(&self) -> Option<&'a str> {
     // Safety:
@@ -626,6 +438,55 @@ impl<'a> RDO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDO::VT_ON_ORBIT, None)}
   }
+  /// True if uncorrelated target
+  #[inline]
+  pub fn UCT(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(RDO::VT_UCT, Some(false)).unwrap()}
+  }
+  /// Observation type
+  #[inline]
+  pub fn OBS_TYPE(&self) -> radarObsType {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<radarObsType>(RDO::VT_OBS_TYPE, Some(radarObsType::DETECTION)).unwrap()}
+  }
+  /// Task identifier
+  #[inline]
+  pub fn TASK_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDO::VT_TASK_ID, None)}
+  }
+  /// Transaction identifier
+  #[inline]
+  pub fn TRANSACTION_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDO::VT_TRANSACTION_ID, None)}
+  }
+  /// Track identifier
+  #[inline]
+  pub fn TRACK_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDO::VT_TRACK_ID, None)}
+  }
+  /// Observation position identifier
+  #[inline]
+  pub fn OB_POSITION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDO::VT_OB_POSITION, None)}
+  }
+  /// Sensor reference frame
   #[inline]
   pub fn SEN_REFERENCE_FRAME(&self) -> Option<&'a str> {
     // Safety:
@@ -633,6 +494,295 @@ impl<'a> RDO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDO::VT_SEN_REFERENCE_FRAME, None)}
   }
+  /// Azimuth angle (degrees)
+  #[inline]
+  pub fn AZIMUTH(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_AZIMUTH, Some(0.0)).unwrap()}
+  }
+  /// Azimuth uncertainty (degrees, 1-sigma)
+  #[inline]
+  pub fn AZIMUTH_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_AZIMUTH_UNC, Some(0.0)).unwrap()}
+  }
+  /// Azimuth bias (degrees)
+  #[inline]
+  pub fn AZIMUTH_BIAS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_AZIMUTH_BIAS, Some(0.0)).unwrap()}
+  }
+  /// Azimuth rate (degrees/s)
+  #[inline]
+  pub fn AZIMUTH_RATE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_AZIMUTH_RATE, Some(0.0)).unwrap()}
+  }
+  /// Elevation angle (degrees)
+  #[inline]
+  pub fn ELEVATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_ELEVATION, Some(0.0)).unwrap()}
+  }
+  /// Elevation uncertainty (degrees, 1-sigma)
+  #[inline]
+  pub fn ELEVATION_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_ELEVATION_UNC, Some(0.0)).unwrap()}
+  }
+  /// Elevation bias (degrees)
+  #[inline]
+  pub fn ELEVATION_BIAS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_ELEVATION_BIAS, Some(0.0)).unwrap()}
+  }
+  /// Elevation rate (degrees/s)
+  #[inline]
+  pub fn ELEVATION_RATE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_ELEVATION_RATE, Some(0.0)).unwrap()}
+  }
+  /// Slant range (km)
+  #[inline]
+  pub fn RANGE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_RANGE, Some(0.0)).unwrap()}
+  }
+  /// Range uncertainty (km, 1-sigma)
+  #[inline]
+  pub fn RANGE_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_RANGE_UNC, Some(0.0)).unwrap()}
+  }
+  /// Range bias (km)
+  #[inline]
+  pub fn RANGE_BIAS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_RANGE_BIAS, Some(0.0)).unwrap()}
+  }
+  /// Range rate (km/s)
+  #[inline]
+  pub fn RANGE_RATE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_RANGE_RATE, Some(0.0)).unwrap()}
+  }
+  /// Range rate uncertainty (km/s, 1-sigma)
+  #[inline]
+  pub fn RANGE_RATE_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_RANGE_RATE_UNC, Some(0.0)).unwrap()}
+  }
+  /// Range acceleration (km/s^2)
+  #[inline]
+  pub fn RANGE_ACCEL(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_RANGE_ACCEL, Some(0.0)).unwrap()}
+  }
+  /// Range acceleration uncertainty (km/s^2, 1-sigma)
+  #[inline]
+  pub fn RANGE_ACCEL_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_RANGE_ACCEL_UNC, Some(0.0)).unwrap()}
+  }
+  /// Doppler shift (Hz)
+  #[inline]
+  pub fn DOPPLER(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_DOPPLER, Some(0.0)).unwrap()}
+  }
+  /// Doppler uncertainty (Hz, 1-sigma)
+  #[inline]
+  pub fn DOPPLER_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_DOPPLER_UNC, Some(0.0)).unwrap()}
+  }
+  /// Right ascension (degrees)
+  #[inline]
+  pub fn RA(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_RA, Some(0.0)).unwrap()}
+  }
+  /// Declination (degrees)
+  #[inline]
+  pub fn DECLINATION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_DECLINATION, Some(0.0)).unwrap()}
+  }
+  /// Target position X (km, ECI)
+  #[inline]
+  pub fn X(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_X, Some(0.0)).unwrap()}
+  }
+  /// Target position Y (km, ECI)
+  #[inline]
+  pub fn Y(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_Y, Some(0.0)).unwrap()}
+  }
+  /// Target position Z (km, ECI)
+  #[inline]
+  pub fn Z(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_Z, Some(0.0)).unwrap()}
+  }
+  /// Target velocity X (km/s, ECI)
+  #[inline]
+  pub fn XVEL(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_XVEL, Some(0.0)).unwrap()}
+  }
+  /// Target velocity Y (km/s, ECI)
+  #[inline]
+  pub fn YVEL(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_YVEL, Some(0.0)).unwrap()}
+  }
+  /// Target velocity Z (km/s, ECI)
+  #[inline]
+  pub fn ZVEL(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_ZVEL, Some(0.0)).unwrap()}
+  }
+  /// Sensor position X (km, ECEF)
+  #[inline]
+  pub fn SENX(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_SENX, Some(0.0)).unwrap()}
+  }
+  /// Sensor position Y (km, ECEF)
+  #[inline]
+  pub fn SENY(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_SENY, Some(0.0)).unwrap()}
+  }
+  /// Sensor position Z (km, ECEF)
+  #[inline]
+  pub fn SENZ(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_SENZ, Some(0.0)).unwrap()}
+  }
+  /// Radar cross-section (dBsm)
+  #[inline]
+  pub fn RCS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_RCS, Some(0.0)).unwrap()}
+  }
+  /// RCS uncertainty (dBsm, 1-sigma)
+  #[inline]
+  pub fn RCS_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_RCS_UNC, Some(0.0)).unwrap()}
+  }
+  /// Orthogonal polarization RCS (dBsm)
+  #[inline]
+  pub fn ORTHOGONAL_RCS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_ORTHOGONAL_RCS, Some(0.0)).unwrap()}
+  }
+  /// Orthogonal RCS uncertainty (dBsm, 1-sigma)
+  #[inline]
+  pub fn ORTHOGONAL_RCS_UNC(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_ORTHOGONAL_RCS_UNC, Some(0.0)).unwrap()}
+  }
+  /// Signal-to-noise ratio (dB)
+  #[inline]
+  pub fn SNR(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_SNR, Some(0.0)).unwrap()}
+  }
+  /// Beam identifier
+  #[inline]
+  pub fn BEAM(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_BEAM, Some(0.0)).unwrap()}
+  }
+  /// Timing bias (seconds)
+  #[inline]
+  pub fn TIMING_BIAS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(RDO::VT_TIMING_BIAS, Some(0.0)).unwrap()}
+  }
+  /// Reference to raw data file
+  #[inline]
+  pub fn RAW_FILE_URI(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDO::VT_RAW_FILE_URI, None)}
+  }
+  /// Event descriptor
   #[inline]
   pub fn DESCRIPTOR(&self) -> Option<&'a str> {
     // Safety:
@@ -640,12 +790,13 @@ impl<'a> RDO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDO::VT_DESCRIPTOR, None)}
   }
+  /// Associated tags
   #[inline]
-  pub fn TYPE(&self) -> Option<&'a str> {
+  pub fn TAGS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(RDO::VT_TYPE, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(RDO::VT_TAGS, None)}
   }
 }
 
@@ -659,14 +810,17 @@ impl flatbuffers::Verifiable for RDO<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OB_TIME", Self::VT_OB_TIME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID_SENSOR", Self::VT_ID_SENSOR, false)?
-     .visit_field::<i32>("SAT_NO", Self::VT_SAT_NO, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_SENSOR_ID", Self::VT_ORIG_SENSOR_ID, false)?
+     .visit_field::<u32>("SAT_NO", Self::VT_SAT_NO, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_OBJECT_ID", Self::VT_ORIG_OBJECT_ID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ON_ORBIT", Self::VT_ON_ORBIT, false)?
+     .visit_field::<bool>("UCT", Self::VT_UCT, false)?
+     .visit_field::<radarObsType>("OBS_TYPE", Self::VT_OBS_TYPE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TASK_ID", Self::VT_TASK_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRANSACTION_ID", Self::VT_TRANSACTION_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TRACK_ID", Self::VT_TRACK_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OB_POSITION", Self::VT_OB_POSITION, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_OBJECT_ID", Self::VT_ORIG_OBJECT_ID, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_SENSOR_ID", Self::VT_ORIG_SENSOR_ID, false)?
-     .visit_field::<bool>("UCT", Self::VT_UCT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SEN_REFERENCE_FRAME", Self::VT_SEN_REFERENCE_FRAME, false)?
      .visit_field::<f64>("AZIMUTH", Self::VT_AZIMUTH, false)?
      .visit_field::<f64>("AZIMUTH_UNC", Self::VT_AZIMUTH_UNC, false)?
      .visit_field::<f64>("AZIMUTH_BIAS", Self::VT_AZIMUTH_BIAS, false)?
@@ -676,12 +830,12 @@ impl flatbuffers::Verifiable for RDO<'_> {
      .visit_field::<f64>("ELEVATION_BIAS", Self::VT_ELEVATION_BIAS, false)?
      .visit_field::<f64>("ELEVATION_RATE", Self::VT_ELEVATION_RATE, false)?
      .visit_field::<f64>("RANGE", Self::VT_RANGE, false)?
-     .visit_field::<f64>("RANGE_ACCEL", Self::VT_RANGE_ACCEL, false)?
-     .visit_field::<f64>("RANGE_ACCEL_UNC", Self::VT_RANGE_ACCEL_UNC, false)?
      .visit_field::<f64>("RANGE_UNC", Self::VT_RANGE_UNC, false)?
      .visit_field::<f64>("RANGE_BIAS", Self::VT_RANGE_BIAS, false)?
      .visit_field::<f64>("RANGE_RATE", Self::VT_RANGE_RATE, false)?
      .visit_field::<f64>("RANGE_RATE_UNC", Self::VT_RANGE_RATE_UNC, false)?
+     .visit_field::<f64>("RANGE_ACCEL", Self::VT_RANGE_ACCEL, false)?
+     .visit_field::<f64>("RANGE_ACCEL_UNC", Self::VT_RANGE_ACCEL_UNC, false)?
      .visit_field::<f64>("DOPPLER", Self::VT_DOPPLER, false)?
      .visit_field::<f64>("DOPPLER_UNC", Self::VT_DOPPLER_UNC, false)?
      .visit_field::<f64>("RA", Self::VT_RA, false)?
@@ -703,11 +857,8 @@ impl flatbuffers::Verifiable for RDO<'_> {
      .visit_field::<f64>("BEAM", Self::VT_BEAM, false)?
      .visit_field::<f64>("TIMING_BIAS", Self::VT_TIMING_BIAS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("RAW_FILE_URI", Self::VT_RAW_FILE_URI, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("TAGS", Self::VT_TAGS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ON_ORBIT", Self::VT_ON_ORBIT, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SEN_REFERENCE_FRAME", Self::VT_SEN_REFERENCE_FRAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DESCRIPTOR", Self::VT_DESCRIPTOR, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("TYPE", Self::VT_TYPE, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("TAGS", Self::VT_TAGS, false)?
      .finish();
     Ok(())
   }
@@ -716,14 +867,17 @@ pub struct RDOArgs<'a> {
     pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OB_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ID_SENSOR: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SAT_NO: i32,
+    pub ORIG_SENSOR_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SAT_NO: u32,
+    pub ORIG_OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ON_ORBIT: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub UCT: bool,
+    pub OBS_TYPE: radarObsType,
     pub TASK_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TRANSACTION_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TRACK_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OB_POSITION: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ORIG_OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ORIG_SENSOR_ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub UCT: bool,
+    pub SEN_REFERENCE_FRAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub AZIMUTH: f64,
     pub AZIMUTH_UNC: f64,
     pub AZIMUTH_BIAS: f64,
@@ -733,12 +887,12 @@ pub struct RDOArgs<'a> {
     pub ELEVATION_BIAS: f64,
     pub ELEVATION_RATE: f64,
     pub RANGE: f64,
-    pub RANGE_ACCEL: f64,
-    pub RANGE_ACCEL_UNC: f64,
     pub RANGE_UNC: f64,
     pub RANGE_BIAS: f64,
     pub RANGE_RATE: f64,
     pub RANGE_RATE_UNC: f64,
+    pub RANGE_ACCEL: f64,
+    pub RANGE_ACCEL_UNC: f64,
     pub DOPPLER: f64,
     pub DOPPLER_UNC: f64,
     pub RA: f64,
@@ -760,11 +914,8 @@ pub struct RDOArgs<'a> {
     pub BEAM: f64,
     pub TIMING_BIAS: f64,
     pub RAW_FILE_URI: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub TAGS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub ON_ORBIT: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SEN_REFERENCE_FRAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub DESCRIPTOR: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub TAGS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
 }
 impl<'a> Default for RDOArgs<'a> {
   #[inline]
@@ -773,14 +924,17 @@ impl<'a> Default for RDOArgs<'a> {
       ID: None,
       OB_TIME: None,
       ID_SENSOR: None,
+      ORIG_SENSOR_ID: None,
       SAT_NO: 0,
+      ORIG_OBJECT_ID: None,
+      ON_ORBIT: None,
+      UCT: false,
+      OBS_TYPE: radarObsType::DETECTION,
       TASK_ID: None,
       TRANSACTION_ID: None,
       TRACK_ID: None,
       OB_POSITION: None,
-      ORIG_OBJECT_ID: None,
-      ORIG_SENSOR_ID: None,
-      UCT: false,
+      SEN_REFERENCE_FRAME: None,
       AZIMUTH: 0.0,
       AZIMUTH_UNC: 0.0,
       AZIMUTH_BIAS: 0.0,
@@ -790,12 +944,12 @@ impl<'a> Default for RDOArgs<'a> {
       ELEVATION_BIAS: 0.0,
       ELEVATION_RATE: 0.0,
       RANGE: 0.0,
-      RANGE_ACCEL: 0.0,
-      RANGE_ACCEL_UNC: 0.0,
       RANGE_UNC: 0.0,
       RANGE_BIAS: 0.0,
       RANGE_RATE: 0.0,
       RANGE_RATE_UNC: 0.0,
+      RANGE_ACCEL: 0.0,
+      RANGE_ACCEL_UNC: 0.0,
       DOPPLER: 0.0,
       DOPPLER_UNC: 0.0,
       RA: 0.0,
@@ -817,11 +971,8 @@ impl<'a> Default for RDOArgs<'a> {
       BEAM: 0.0,
       TIMING_BIAS: 0.0,
       RAW_FILE_URI: None,
-      TAGS: None,
-      ON_ORBIT: None,
-      SEN_REFERENCE_FRAME: None,
       DESCRIPTOR: None,
-      TYPE: None,
+      TAGS: None,
     }
   }
 }
@@ -844,8 +995,28 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RDOBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RDO::VT_ID_SENSOR, ID_SENSOR);
   }
   #[inline]
-  pub fn add_SAT_NO(&mut self, SAT_NO: i32) {
-    self.fbb_.push_slot::<i32>(RDO::VT_SAT_NO, SAT_NO, 0);
+  pub fn add_ORIG_SENSOR_ID(&mut self, ORIG_SENSOR_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RDO::VT_ORIG_SENSOR_ID, ORIG_SENSOR_ID);
+  }
+  #[inline]
+  pub fn add_SAT_NO(&mut self, SAT_NO: u32) {
+    self.fbb_.push_slot::<u32>(RDO::VT_SAT_NO, SAT_NO, 0);
+  }
+  #[inline]
+  pub fn add_ORIG_OBJECT_ID(&mut self, ORIG_OBJECT_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RDO::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
+  }
+  #[inline]
+  pub fn add_ON_ORBIT(&mut self, ON_ORBIT: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RDO::VT_ON_ORBIT, ON_ORBIT);
+  }
+  #[inline]
+  pub fn add_UCT(&mut self, UCT: bool) {
+    self.fbb_.push_slot::<bool>(RDO::VT_UCT, UCT, false);
+  }
+  #[inline]
+  pub fn add_OBS_TYPE(&mut self, OBS_TYPE: radarObsType) {
+    self.fbb_.push_slot::<radarObsType>(RDO::VT_OBS_TYPE, OBS_TYPE, radarObsType::DETECTION);
   }
   #[inline]
   pub fn add_TASK_ID(&mut self, TASK_ID: flatbuffers::WIPOffset<&'b  str>) {
@@ -864,16 +1035,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RDOBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RDO::VT_OB_POSITION, OB_POSITION);
   }
   #[inline]
-  pub fn add_ORIG_OBJECT_ID(&mut self, ORIG_OBJECT_ID: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RDO::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
-  }
-  #[inline]
-  pub fn add_ORIG_SENSOR_ID(&mut self, ORIG_SENSOR_ID: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RDO::VT_ORIG_SENSOR_ID, ORIG_SENSOR_ID);
-  }
-  #[inline]
-  pub fn add_UCT(&mut self, UCT: bool) {
-    self.fbb_.push_slot::<bool>(RDO::VT_UCT, UCT, false);
+  pub fn add_SEN_REFERENCE_FRAME(&mut self, SEN_REFERENCE_FRAME: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RDO::VT_SEN_REFERENCE_FRAME, SEN_REFERENCE_FRAME);
   }
   #[inline]
   pub fn add_AZIMUTH(&mut self, AZIMUTH: f64) {
@@ -912,14 +1075,6 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RDOBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(RDO::VT_RANGE, RANGE, 0.0);
   }
   #[inline]
-  pub fn add_RANGE_ACCEL(&mut self, RANGE_ACCEL: f64) {
-    self.fbb_.push_slot::<f64>(RDO::VT_RANGE_ACCEL, RANGE_ACCEL, 0.0);
-  }
-  #[inline]
-  pub fn add_RANGE_ACCEL_UNC(&mut self, RANGE_ACCEL_UNC: f64) {
-    self.fbb_.push_slot::<f64>(RDO::VT_RANGE_ACCEL_UNC, RANGE_ACCEL_UNC, 0.0);
-  }
-  #[inline]
   pub fn add_RANGE_UNC(&mut self, RANGE_UNC: f64) {
     self.fbb_.push_slot::<f64>(RDO::VT_RANGE_UNC, RANGE_UNC, 0.0);
   }
@@ -934,6 +1089,14 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RDOBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_RANGE_RATE_UNC(&mut self, RANGE_RATE_UNC: f64) {
     self.fbb_.push_slot::<f64>(RDO::VT_RANGE_RATE_UNC, RANGE_RATE_UNC, 0.0);
+  }
+  #[inline]
+  pub fn add_RANGE_ACCEL(&mut self, RANGE_ACCEL: f64) {
+    self.fbb_.push_slot::<f64>(RDO::VT_RANGE_ACCEL, RANGE_ACCEL, 0.0);
+  }
+  #[inline]
+  pub fn add_RANGE_ACCEL_UNC(&mut self, RANGE_ACCEL_UNC: f64) {
+    self.fbb_.push_slot::<f64>(RDO::VT_RANGE_ACCEL_UNC, RANGE_ACCEL_UNC, 0.0);
   }
   #[inline]
   pub fn add_DOPPLER(&mut self, DOPPLER: f64) {
@@ -1020,24 +1183,12 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> RDOBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RDO::VT_RAW_FILE_URI, RAW_FILE_URI);
   }
   #[inline]
-  pub fn add_TAGS(&mut self, TAGS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RDO::VT_TAGS, TAGS);
-  }
-  #[inline]
-  pub fn add_ON_ORBIT(&mut self, ON_ORBIT: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RDO::VT_ON_ORBIT, ON_ORBIT);
-  }
-  #[inline]
-  pub fn add_SEN_REFERENCE_FRAME(&mut self, SEN_REFERENCE_FRAME: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RDO::VT_SEN_REFERENCE_FRAME, SEN_REFERENCE_FRAME);
-  }
-  #[inline]
   pub fn add_DESCRIPTOR(&mut self, DESCRIPTOR: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RDO::VT_DESCRIPTOR, DESCRIPTOR);
   }
   #[inline]
-  pub fn add_TYPE(&mut self, TYPE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RDO::VT_TYPE, TYPE);
+  pub fn add_TAGS(&mut self, TAGS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(RDO::VT_TAGS, TAGS);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> RDOBuilder<'a, 'b, A> {
@@ -1060,14 +1211,17 @@ impl core::fmt::Debug for RDO<'_> {
       ds.field("ID", &self.ID());
       ds.field("OB_TIME", &self.OB_TIME());
       ds.field("ID_SENSOR", &self.ID_SENSOR());
+      ds.field("ORIG_SENSOR_ID", &self.ORIG_SENSOR_ID());
       ds.field("SAT_NO", &self.SAT_NO());
+      ds.field("ORIG_OBJECT_ID", &self.ORIG_OBJECT_ID());
+      ds.field("ON_ORBIT", &self.ON_ORBIT());
+      ds.field("UCT", &self.UCT());
+      ds.field("OBS_TYPE", &self.OBS_TYPE());
       ds.field("TASK_ID", &self.TASK_ID());
       ds.field("TRANSACTION_ID", &self.TRANSACTION_ID());
       ds.field("TRACK_ID", &self.TRACK_ID());
       ds.field("OB_POSITION", &self.OB_POSITION());
-      ds.field("ORIG_OBJECT_ID", &self.ORIG_OBJECT_ID());
-      ds.field("ORIG_SENSOR_ID", &self.ORIG_SENSOR_ID());
-      ds.field("UCT", &self.UCT());
+      ds.field("SEN_REFERENCE_FRAME", &self.SEN_REFERENCE_FRAME());
       ds.field("AZIMUTH", &self.AZIMUTH());
       ds.field("AZIMUTH_UNC", &self.AZIMUTH_UNC());
       ds.field("AZIMUTH_BIAS", &self.AZIMUTH_BIAS());
@@ -1077,12 +1231,12 @@ impl core::fmt::Debug for RDO<'_> {
       ds.field("ELEVATION_BIAS", &self.ELEVATION_BIAS());
       ds.field("ELEVATION_RATE", &self.ELEVATION_RATE());
       ds.field("RANGE", &self.RANGE());
-      ds.field("RANGE_ACCEL", &self.RANGE_ACCEL());
-      ds.field("RANGE_ACCEL_UNC", &self.RANGE_ACCEL_UNC());
       ds.field("RANGE_UNC", &self.RANGE_UNC());
       ds.field("RANGE_BIAS", &self.RANGE_BIAS());
       ds.field("RANGE_RATE", &self.RANGE_RATE());
       ds.field("RANGE_RATE_UNC", &self.RANGE_RATE_UNC());
+      ds.field("RANGE_ACCEL", &self.RANGE_ACCEL());
+      ds.field("RANGE_ACCEL_UNC", &self.RANGE_ACCEL_UNC());
       ds.field("DOPPLER", &self.DOPPLER());
       ds.field("DOPPLER_UNC", &self.DOPPLER_UNC());
       ds.field("RA", &self.RA());
@@ -1104,11 +1258,8 @@ impl core::fmt::Debug for RDO<'_> {
       ds.field("BEAM", &self.BEAM());
       ds.field("TIMING_BIAS", &self.TIMING_BIAS());
       ds.field("RAW_FILE_URI", &self.RAW_FILE_URI());
-      ds.field("TAGS", &self.TAGS());
-      ds.field("ON_ORBIT", &self.ON_ORBIT());
-      ds.field("SEN_REFERENCE_FRAME", &self.SEN_REFERENCE_FRAME());
       ds.field("DESCRIPTOR", &self.DESCRIPTOR());
-      ds.field("TYPE", &self.TYPE());
+      ds.field("TAGS", &self.TAGS());
       ds.finish()
   }
 }
@@ -1118,14 +1269,17 @@ pub struct RDOT {
   pub ID: Option<String>,
   pub OB_TIME: Option<String>,
   pub ID_SENSOR: Option<String>,
-  pub SAT_NO: i32,
+  pub ORIG_SENSOR_ID: Option<String>,
+  pub SAT_NO: u32,
+  pub ORIG_OBJECT_ID: Option<String>,
+  pub ON_ORBIT: Option<String>,
+  pub UCT: bool,
+  pub OBS_TYPE: radarObsType,
   pub TASK_ID: Option<String>,
   pub TRANSACTION_ID: Option<String>,
   pub TRACK_ID: Option<String>,
   pub OB_POSITION: Option<String>,
-  pub ORIG_OBJECT_ID: Option<String>,
-  pub ORIG_SENSOR_ID: Option<String>,
-  pub UCT: bool,
+  pub SEN_REFERENCE_FRAME: Option<String>,
   pub AZIMUTH: f64,
   pub AZIMUTH_UNC: f64,
   pub AZIMUTH_BIAS: f64,
@@ -1135,12 +1289,12 @@ pub struct RDOT {
   pub ELEVATION_BIAS: f64,
   pub ELEVATION_RATE: f64,
   pub RANGE: f64,
-  pub RANGE_ACCEL: f64,
-  pub RANGE_ACCEL_UNC: f64,
   pub RANGE_UNC: f64,
   pub RANGE_BIAS: f64,
   pub RANGE_RATE: f64,
   pub RANGE_RATE_UNC: f64,
+  pub RANGE_ACCEL: f64,
+  pub RANGE_ACCEL_UNC: f64,
   pub DOPPLER: f64,
   pub DOPPLER_UNC: f64,
   pub RA: f64,
@@ -1162,11 +1316,8 @@ pub struct RDOT {
   pub BEAM: f64,
   pub TIMING_BIAS: f64,
   pub RAW_FILE_URI: Option<String>,
-  pub TAGS: Option<Vec<String>>,
-  pub ON_ORBIT: Option<String>,
-  pub SEN_REFERENCE_FRAME: Option<String>,
   pub DESCRIPTOR: Option<String>,
-  pub TYPE: Option<String>,
+  pub TAGS: Option<Vec<String>>,
 }
 impl Default for RDOT {
   fn default() -> Self {
@@ -1174,14 +1325,17 @@ impl Default for RDOT {
       ID: None,
       OB_TIME: None,
       ID_SENSOR: None,
+      ORIG_SENSOR_ID: None,
       SAT_NO: 0,
+      ORIG_OBJECT_ID: None,
+      ON_ORBIT: None,
+      UCT: false,
+      OBS_TYPE: radarObsType::DETECTION,
       TASK_ID: None,
       TRANSACTION_ID: None,
       TRACK_ID: None,
       OB_POSITION: None,
-      ORIG_OBJECT_ID: None,
-      ORIG_SENSOR_ID: None,
-      UCT: false,
+      SEN_REFERENCE_FRAME: None,
       AZIMUTH: 0.0,
       AZIMUTH_UNC: 0.0,
       AZIMUTH_BIAS: 0.0,
@@ -1191,12 +1345,12 @@ impl Default for RDOT {
       ELEVATION_BIAS: 0.0,
       ELEVATION_RATE: 0.0,
       RANGE: 0.0,
-      RANGE_ACCEL: 0.0,
-      RANGE_ACCEL_UNC: 0.0,
       RANGE_UNC: 0.0,
       RANGE_BIAS: 0.0,
       RANGE_RATE: 0.0,
       RANGE_RATE_UNC: 0.0,
+      RANGE_ACCEL: 0.0,
+      RANGE_ACCEL_UNC: 0.0,
       DOPPLER: 0.0,
       DOPPLER_UNC: 0.0,
       RA: 0.0,
@@ -1218,11 +1372,8 @@ impl Default for RDOT {
       BEAM: 0.0,
       TIMING_BIAS: 0.0,
       RAW_FILE_URI: None,
-      TAGS: None,
-      ON_ORBIT: None,
-      SEN_REFERENCE_FRAME: None,
       DESCRIPTOR: None,
-      TYPE: None,
+      TAGS: None,
     }
   }
 }
@@ -1240,7 +1391,18 @@ impl RDOT {
     let ID_SENSOR = self.ID_SENSOR.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let ORIG_SENSOR_ID = self.ORIG_SENSOR_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     let SAT_NO = self.SAT_NO;
+    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ON_ORBIT = self.ON_ORBIT.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let UCT = self.UCT;
+    let OBS_TYPE = self.OBS_TYPE;
     let TASK_ID = self.TASK_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -1253,13 +1415,9 @@ impl RDOT {
     let OB_POSITION = self.OB_POSITION.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID.as_ref().map(|x|{
+    let SEN_REFERENCE_FRAME = self.SEN_REFERENCE_FRAME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let ORIG_SENSOR_ID = self.ORIG_SENSOR_ID.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let UCT = self.UCT;
     let AZIMUTH = self.AZIMUTH;
     let AZIMUTH_UNC = self.AZIMUTH_UNC;
     let AZIMUTH_BIAS = self.AZIMUTH_BIAS;
@@ -1269,12 +1427,12 @@ impl RDOT {
     let ELEVATION_BIAS = self.ELEVATION_BIAS;
     let ELEVATION_RATE = self.ELEVATION_RATE;
     let RANGE = self.RANGE;
-    let RANGE_ACCEL = self.RANGE_ACCEL;
-    let RANGE_ACCEL_UNC = self.RANGE_ACCEL_UNC;
     let RANGE_UNC = self.RANGE_UNC;
     let RANGE_BIAS = self.RANGE_BIAS;
     let RANGE_RATE = self.RANGE_RATE;
     let RANGE_RATE_UNC = self.RANGE_RATE_UNC;
+    let RANGE_ACCEL = self.RANGE_ACCEL;
+    let RANGE_ACCEL_UNC = self.RANGE_ACCEL_UNC;
     let DOPPLER = self.DOPPLER;
     let DOPPLER_UNC = self.DOPPLER_UNC;
     let RA = self.RA;
@@ -1298,33 +1456,27 @@ impl RDOT {
     let RAW_FILE_URI = self.RAW_FILE_URI.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let TAGS = self.TAGS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    let ON_ORBIT = self.ON_ORBIT.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let SEN_REFERENCE_FRAME = self.SEN_REFERENCE_FRAME.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
     let DESCRIPTOR = self.DESCRIPTOR.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let TYPE = self.TYPE.as_ref().map(|x|{
-      _fbb.create_string(x)
+    let TAGS = self.TAGS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
     RDO::create(_fbb, &RDOArgs{
       ID,
       OB_TIME,
       ID_SENSOR,
+      ORIG_SENSOR_ID,
       SAT_NO,
+      ORIG_OBJECT_ID,
+      ON_ORBIT,
+      UCT,
+      OBS_TYPE,
       TASK_ID,
       TRANSACTION_ID,
       TRACK_ID,
       OB_POSITION,
-      ORIG_OBJECT_ID,
-      ORIG_SENSOR_ID,
-      UCT,
+      SEN_REFERENCE_FRAME,
       AZIMUTH,
       AZIMUTH_UNC,
       AZIMUTH_BIAS,
@@ -1334,12 +1486,12 @@ impl RDOT {
       ELEVATION_BIAS,
       ELEVATION_RATE,
       RANGE,
-      RANGE_ACCEL,
-      RANGE_ACCEL_UNC,
       RANGE_UNC,
       RANGE_BIAS,
       RANGE_RATE,
       RANGE_RATE_UNC,
+      RANGE_ACCEL,
+      RANGE_ACCEL_UNC,
       DOPPLER,
       DOPPLER_UNC,
       RA,
@@ -1361,11 +1513,8 @@ impl RDOT {
       BEAM,
       TIMING_BIAS,
       RAW_FILE_URI,
-      TAGS,
-      ON_ORBIT,
-      SEN_REFERENCE_FRAME,
       DESCRIPTOR,
-      TYPE,
+      TAGS,
     })
   }
 }

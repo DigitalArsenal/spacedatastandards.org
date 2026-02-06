@@ -29,6 +29,7 @@ class STR(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Unique internal identifier
     # STR
     def ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +37,7 @@ class STR(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # CelesTrak Star catalog identifier
     # STR
     def CS_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -43,13 +45,15 @@ class STR(object):
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
+    # GNC star catalog identifier
     # STR
     def GNC_CAT_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
+    # Gaia DR3 source identifier
     # STR
     def GAIADR3_CAT_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
@@ -57,13 +61,15 @@ class STR(object):
             return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
         return 0
 
+    # Hipparcos catalog identifier
     # STR
     def HIP_CAT_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
+    # Catalog version string
     # STR
     def CAT_VERSION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
@@ -71,104 +77,119 @@ class STR(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Astrometry source description
     # STR
-    def RA(self):
+    def ASTROMETRY_ORIGIN(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
+    # Epoch of stellar position (Julian years)
     # STR
-    def RA_UNC(self):
+    def STAR_EPOCH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Right ascension (degrees, ICRS)
     # STR
-    def DEC(self):
+    def RA(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Right ascension uncertainty (arcseconds)
     # STR
-    def DEC_UNC(self):
+    def RA_UNC(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Declination (degrees, ICRS)
     # STR
-    def POS_UNC_FLAG(self):
+    def DEC(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
 
+    # Declination uncertainty (arcseconds)
     # STR
-    def PARALLAX(self):
+    def DEC_UNC(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # True if position uncertainty is flagged
     # STR
-    def PARALLAX_UNC(self):
+    def POS_UNC_FLAG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
 
+    # Parallax (milliarcseconds)
     # STR
-    def PMRA(self):
+    def PARALLAX(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Parallax uncertainty (milliarcseconds)
     # STR
-    def PMRA_UNC(self):
+    def PARALLAX_UNC(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Proper motion in RA (milliarcseconds/year)
     # STR
-    def PMDEC(self):
+    def PMRA(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Proper motion in RA uncertainty (milliarcseconds/year)
     # STR
-    def PMDEC_UNC(self):
+    def PMRA_UNC(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Proper motion in DEC (milliarcseconds/year)
     # STR
-    def PM_UNC_FLAG(self):
+    def PMDEC(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
-        if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
-
-    # STR
-    def ASTROMETRY_ORIGIN(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # STR
-    def STAR_EPOCH(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Proper motion in DEC uncertainty (milliarcseconds/year)
+    # STR
+    def PMDEC_UNC(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # True if proper motion uncertainty is flagged
+    # STR
+    def PM_UNC_FLAG(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Gaia G-band magnitude
     # STR
     def GMAG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
@@ -176,6 +197,7 @@ class STR(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Gaia G-band magnitude uncertainty
     # STR
     def GMAG_UNC(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
@@ -183,6 +205,7 @@ class STR(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Gaia BP-band magnitude (blue photometer)
     # STR
     def BPMAG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
@@ -190,6 +213,7 @@ class STR(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Gaia BP-band magnitude uncertainty
     # STR
     def BPMAG_UNC(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
@@ -197,6 +221,7 @@ class STR(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Gaia RP-band magnitude (red photometer)
     # STR
     def RPMAG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
@@ -204,6 +229,7 @@ class STR(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Gaia RP-band magnitude uncertainty
     # STR
     def RPMAG_UNC(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
@@ -211,6 +237,7 @@ class STR(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # 2MASS J-band magnitude (1.25 um)
     # STR
     def JMAG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
@@ -218,6 +245,7 @@ class STR(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # J-band magnitude uncertainty
     # STR
     def JMAG_UNC(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
@@ -225,6 +253,7 @@ class STR(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # 2MASS K-band magnitude (2.17 um)
     # STR
     def KMAG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
@@ -232,6 +261,7 @@ class STR(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # K-band magnitude uncertainty
     # STR
     def KMAG_UNC(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
@@ -239,6 +269,7 @@ class STR(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # 2MASS H-band magnitude (1.65 um)
     # STR
     def HMAG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
@@ -246,6 +277,7 @@ class STR(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # H-band magnitude uncertainty
     # STR
     def HMAG_UNC(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
@@ -253,6 +285,7 @@ class STR(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # True if star is variable
     # STR
     def VAR_FLAG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
@@ -260,6 +293,7 @@ class STR(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # True if star is in a multiple system
     # STR
     def MULT_FLAG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
@@ -267,13 +301,15 @@ class STR(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # Nearest neighbor catalog identifier
     # STR
     def NEIGHBOR_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
+    # True if nearest neighbor is within confusion radius
     # STR
     def NEIGHBOR_FLAG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
@@ -281,6 +317,7 @@ class STR(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # Distance to nearest neighbor (arcseconds)
     # STR
     def NEIGHBOR_DISTANCE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
@@ -288,6 +325,7 @@ class STR(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # True if position shift detected between catalogs
     # STR
     def SHIFT_FLAG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
@@ -295,6 +333,7 @@ class STR(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # Position shift magnitude (arcseconds)
     # STR
     def SHIFT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
@@ -321,7 +360,7 @@ def AddCS_ID(builder, CS_ID):
     STRAddCS_ID(builder, CS_ID)
 
 def STRAddGNC_CAT_ID(builder, GNC_CAT_ID):
-    builder.PrependInt32Slot(2, GNC_CAT_ID, 0)
+    builder.PrependUint32Slot(2, GNC_CAT_ID, 0)
 
 def AddGNC_CAT_ID(builder, GNC_CAT_ID):
     STRAddGNC_CAT_ID(builder, GNC_CAT_ID)
@@ -333,7 +372,7 @@ def AddGAIADR3_CAT_ID(builder, GAIADR3_CAT_ID):
     STRAddGAIADR3_CAT_ID(builder, GAIADR3_CAT_ID)
 
 def STRAddHIP_CAT_ID(builder, HIP_CAT_ID):
-    builder.PrependInt32Slot(4, HIP_CAT_ID, 0)
+    builder.PrependUint32Slot(4, HIP_CAT_ID, 0)
 
 def AddHIP_CAT_ID(builder, HIP_CAT_ID):
     STRAddHIP_CAT_ID(builder, HIP_CAT_ID)
@@ -344,89 +383,89 @@ def STRAddCAT_VERSION(builder, CAT_VERSION):
 def AddCAT_VERSION(builder, CAT_VERSION):
     STRAddCAT_VERSION(builder, CAT_VERSION)
 
-def STRAddRA(builder, RA):
-    builder.PrependFloat64Slot(6, RA, 0.0)
-
-def AddRA(builder, RA):
-    STRAddRA(builder, RA)
-
-def STRAddRA_UNC(builder, RA_UNC):
-    builder.PrependFloat64Slot(7, RA_UNC, 0.0)
-
-def AddRA_UNC(builder, RA_UNC):
-    STRAddRA_UNC(builder, RA_UNC)
-
-def STRAddDEC(builder, DEC):
-    builder.PrependFloat64Slot(8, DEC, 0.0)
-
-def AddDEC(builder, DEC):
-    STRAddDEC(builder, DEC)
-
-def STRAddDEC_UNC(builder, DEC_UNC):
-    builder.PrependFloat64Slot(9, DEC_UNC, 0.0)
-
-def AddDEC_UNC(builder, DEC_UNC):
-    STRAddDEC_UNC(builder, DEC_UNC)
-
-def STRAddPOS_UNC_FLAG(builder, POS_UNC_FLAG):
-    builder.PrependBoolSlot(10, POS_UNC_FLAG, 0)
-
-def AddPOS_UNC_FLAG(builder, POS_UNC_FLAG):
-    STRAddPOS_UNC_FLAG(builder, POS_UNC_FLAG)
-
-def STRAddPARALLAX(builder, PARALLAX):
-    builder.PrependFloat64Slot(11, PARALLAX, 0.0)
-
-def AddPARALLAX(builder, PARALLAX):
-    STRAddPARALLAX(builder, PARALLAX)
-
-def STRAddPARALLAX_UNC(builder, PARALLAX_UNC):
-    builder.PrependFloat64Slot(12, PARALLAX_UNC, 0.0)
-
-def AddPARALLAX_UNC(builder, PARALLAX_UNC):
-    STRAddPARALLAX_UNC(builder, PARALLAX_UNC)
-
-def STRAddPMRA(builder, PMRA):
-    builder.PrependFloat64Slot(13, PMRA, 0.0)
-
-def AddPMRA(builder, PMRA):
-    STRAddPMRA(builder, PMRA)
-
-def STRAddPMRA_UNC(builder, PMRA_UNC):
-    builder.PrependFloat64Slot(14, PMRA_UNC, 0.0)
-
-def AddPMRA_UNC(builder, PMRA_UNC):
-    STRAddPMRA_UNC(builder, PMRA_UNC)
-
-def STRAddPMDEC(builder, PMDEC):
-    builder.PrependFloat64Slot(15, PMDEC, 0.0)
-
-def AddPMDEC(builder, PMDEC):
-    STRAddPMDEC(builder, PMDEC)
-
-def STRAddPMDEC_UNC(builder, PMDEC_UNC):
-    builder.PrependFloat64Slot(16, PMDEC_UNC, 0.0)
-
-def AddPMDEC_UNC(builder, PMDEC_UNC):
-    STRAddPMDEC_UNC(builder, PMDEC_UNC)
-
-def STRAddPM_UNC_FLAG(builder, PM_UNC_FLAG):
-    builder.PrependBoolSlot(17, PM_UNC_FLAG, 0)
-
-def AddPM_UNC_FLAG(builder, PM_UNC_FLAG):
-    STRAddPM_UNC_FLAG(builder, PM_UNC_FLAG)
-
 def STRAddASTROMETRY_ORIGIN(builder, ASTROMETRY_ORIGIN):
-    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(ASTROMETRY_ORIGIN), 0)
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(ASTROMETRY_ORIGIN), 0)
 
 def AddASTROMETRY_ORIGIN(builder, ASTROMETRY_ORIGIN):
     STRAddASTROMETRY_ORIGIN(builder, ASTROMETRY_ORIGIN)
 
 def STRAddSTAR_EPOCH(builder, STAR_EPOCH):
-    builder.PrependFloat64Slot(19, STAR_EPOCH, 0.0)
+    builder.PrependFloat64Slot(7, STAR_EPOCH, 0.0)
 
 def AddSTAR_EPOCH(builder, STAR_EPOCH):
     STRAddSTAR_EPOCH(builder, STAR_EPOCH)
+
+def STRAddRA(builder, RA):
+    builder.PrependFloat64Slot(8, RA, 0.0)
+
+def AddRA(builder, RA):
+    STRAddRA(builder, RA)
+
+def STRAddRA_UNC(builder, RA_UNC):
+    builder.PrependFloat64Slot(9, RA_UNC, 0.0)
+
+def AddRA_UNC(builder, RA_UNC):
+    STRAddRA_UNC(builder, RA_UNC)
+
+def STRAddDEC(builder, DEC):
+    builder.PrependFloat64Slot(10, DEC, 0.0)
+
+def AddDEC(builder, DEC):
+    STRAddDEC(builder, DEC)
+
+def STRAddDEC_UNC(builder, DEC_UNC):
+    builder.PrependFloat64Slot(11, DEC_UNC, 0.0)
+
+def AddDEC_UNC(builder, DEC_UNC):
+    STRAddDEC_UNC(builder, DEC_UNC)
+
+def STRAddPOS_UNC_FLAG(builder, POS_UNC_FLAG):
+    builder.PrependBoolSlot(12, POS_UNC_FLAG, 0)
+
+def AddPOS_UNC_FLAG(builder, POS_UNC_FLAG):
+    STRAddPOS_UNC_FLAG(builder, POS_UNC_FLAG)
+
+def STRAddPARALLAX(builder, PARALLAX):
+    builder.PrependFloat64Slot(13, PARALLAX, 0.0)
+
+def AddPARALLAX(builder, PARALLAX):
+    STRAddPARALLAX(builder, PARALLAX)
+
+def STRAddPARALLAX_UNC(builder, PARALLAX_UNC):
+    builder.PrependFloat64Slot(14, PARALLAX_UNC, 0.0)
+
+def AddPARALLAX_UNC(builder, PARALLAX_UNC):
+    STRAddPARALLAX_UNC(builder, PARALLAX_UNC)
+
+def STRAddPMRA(builder, PMRA):
+    builder.PrependFloat64Slot(15, PMRA, 0.0)
+
+def AddPMRA(builder, PMRA):
+    STRAddPMRA(builder, PMRA)
+
+def STRAddPMRA_UNC(builder, PMRA_UNC):
+    builder.PrependFloat64Slot(16, PMRA_UNC, 0.0)
+
+def AddPMRA_UNC(builder, PMRA_UNC):
+    STRAddPMRA_UNC(builder, PMRA_UNC)
+
+def STRAddPMDEC(builder, PMDEC):
+    builder.PrependFloat64Slot(17, PMDEC, 0.0)
+
+def AddPMDEC(builder, PMDEC):
+    STRAddPMDEC(builder, PMDEC)
+
+def STRAddPMDEC_UNC(builder, PMDEC_UNC):
+    builder.PrependFloat64Slot(18, PMDEC_UNC, 0.0)
+
+def AddPMDEC_UNC(builder, PMDEC_UNC):
+    STRAddPMDEC_UNC(builder, PMDEC_UNC)
+
+def STRAddPM_UNC_FLAG(builder, PM_UNC_FLAG):
+    builder.PrependBoolSlot(19, PM_UNC_FLAG, 0)
+
+def AddPM_UNC_FLAG(builder, PM_UNC_FLAG):
+    STRAddPM_UNC_FLAG(builder, PM_UNC_FLAG)
 
 def STRAddGMAG(builder, GMAG):
     builder.PrependFloat64Slot(20, GMAG, 0.0)
@@ -513,7 +552,7 @@ def AddMULT_FLAG(builder, MULT_FLAG):
     STRAddMULT_FLAG(builder, MULT_FLAG)
 
 def STRAddNEIGHBOR_ID(builder, NEIGHBOR_ID):
-    builder.PrependInt32Slot(34, NEIGHBOR_ID, 0)
+    builder.PrependUint32Slot(34, NEIGHBOR_ID, 0)
 
 def AddNEIGHBOR_ID(builder, NEIGHBOR_ID):
     STRAddNEIGHBOR_ID(builder, NEIGHBOR_ID)
@@ -559,6 +598,8 @@ class STRT(object):
         self.GAIADR3_CAT_ID = 0  # type: int
         self.HIP_CAT_ID = 0  # type: int
         self.CAT_VERSION = None  # type: str
+        self.ASTROMETRY_ORIGIN = None  # type: str
+        self.STAR_EPOCH = 0.0  # type: float
         self.RA = 0.0  # type: float
         self.RA_UNC = 0.0  # type: float
         self.DEC = 0.0  # type: float
@@ -571,8 +612,6 @@ class STRT(object):
         self.PMDEC = 0.0  # type: float
         self.PMDEC_UNC = 0.0  # type: float
         self.PM_UNC_FLAG = False  # type: bool
-        self.ASTROMETRY_ORIGIN = None  # type: str
-        self.STAR_EPOCH = 0.0  # type: float
         self.GMAG = 0.0  # type: float
         self.GMAG_UNC = 0.0  # type: float
         self.BPMAG = 0.0  # type: float
@@ -620,6 +659,8 @@ class STRT(object):
         self.GAIADR3_CAT_ID = STR.GAIADR3_CAT_ID()
         self.HIP_CAT_ID = STR.HIP_CAT_ID()
         self.CAT_VERSION = STR.CAT_VERSION()
+        self.ASTROMETRY_ORIGIN = STR.ASTROMETRY_ORIGIN()
+        self.STAR_EPOCH = STR.STAR_EPOCH()
         self.RA = STR.RA()
         self.RA_UNC = STR.RA_UNC()
         self.DEC = STR.DEC()
@@ -632,8 +673,6 @@ class STRT(object):
         self.PMDEC = STR.PMDEC()
         self.PMDEC_UNC = STR.PMDEC_UNC()
         self.PM_UNC_FLAG = STR.PM_UNC_FLAG()
-        self.ASTROMETRY_ORIGIN = STR.ASTROMETRY_ORIGIN()
-        self.STAR_EPOCH = STR.STAR_EPOCH()
         self.GMAG = STR.GMAG()
         self.GMAG_UNC = STR.GMAG_UNC()
         self.BPMAG = STR.BPMAG()
@@ -671,6 +710,9 @@ class STRT(object):
         STRAddHIP_CAT_ID(builder, self.HIP_CAT_ID)
         if self.CAT_VERSION is not None:
             STRAddCAT_VERSION(builder, CAT_VERSION)
+        if self.ASTROMETRY_ORIGIN is not None:
+            STRAddASTROMETRY_ORIGIN(builder, ASTROMETRY_ORIGIN)
+        STRAddSTAR_EPOCH(builder, self.STAR_EPOCH)
         STRAddRA(builder, self.RA)
         STRAddRA_UNC(builder, self.RA_UNC)
         STRAddDEC(builder, self.DEC)
@@ -683,9 +725,6 @@ class STRT(object):
         STRAddPMDEC(builder, self.PMDEC)
         STRAddPMDEC_UNC(builder, self.PMDEC_UNC)
         STRAddPM_UNC_FLAG(builder, self.PM_UNC_FLAG)
-        if self.ASTROMETRY_ORIGIN is not None:
-            STRAddASTROMETRY_ORIGIN(builder, ASTROMETRY_ORIGIN)
-        STRAddSTAR_EPOCH(builder, self.STAR_EPOCH)
         STRAddGMAG(builder, self.GMAG)
         STRAddGMAG_UNC(builder, self.GMAG_UNC)
         STRAddBPMAG(builder, self.BPMAG)

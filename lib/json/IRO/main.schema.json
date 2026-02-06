@@ -1,24 +1,137 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "irBand" : {
+      "type" : "string",
+      "enum": ["SWIR", "MWIR", "LWIR", "VLWIR", "BROADBAND"]
+    },
+    "irDetectionType" : {
+      "type" : "string",
+      "enum": ["POINT_SOURCE", "RESOLVED", "STREAK", "UNRESOLVED", "EXTENDED"]
+    },
     "IRO" : {
       "type" : "object",
       "description" : "Infrared Observation",
       "properties" : {
         "ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique identifier"
               },
         "ID_ENTITY" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Reference to source entity"
               },
         "NAME" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Sensor or observation name"
               },
         "DESCRIPTION" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Description of observation"
               },
         "ENTITY" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Source entity designator"
+              },
+        "EPOCH" : {
+                "type" : "string",
+                "description" : "Observation epoch (ISO 8601)"
+              },
+        "SENSOR_ID" : {
+                "type" : "string",
+                "description" : "Sensor identifier"
+              },
+        "SAT_NO" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Target satellite number (if identified)"
+              },
+        "OBJECT_DESIGNATOR" : {
+                "type" : "string",
+                "description" : "Target object designator"
+              },
+        "BAND" : {
+                "$ref" : "#/definitions/irBand",
+                "description" : "IR spectral band"
+              },
+        "DETECTION_TYPE" : {
+                "$ref" : "#/definitions/irDetectionType",
+                "description" : "Detection type"
+              },
+        "RA" : {
+                "type" : "number",
+                "description" : "Right ascension in degrees"
+              },
+        "DEC" : {
+                "type" : "number",
+                "description" : "Declination in degrees"
+              },
+        "RA_UNC" : {
+                "type" : "number",
+                "description" : "Right ascension uncertainty in arcseconds"
+              },
+        "DEC_UNC" : {
+                "type" : "number",
+                "description" : "Declination uncertainty in arcseconds"
+              },
+        "AZIMUTH" : {
+                "type" : "number",
+                "description" : "Azimuth angle in degrees"
+              },
+        "ELEVATION" : {
+                "type" : "number",
+                "description" : "Elevation angle in degrees"
+              },
+        "RANGE" : {
+                "type" : "number",
+                "description" : "Range in km (if available)"
+              },
+        "IRRADIANCE" : {
+                "type" : "number",
+                "description" : "Irradiance in W/m^2"
+              },
+        "IRRADIANCE_UNC" : {
+                "type" : "number",
+                "description" : "Irradiance uncertainty in W/m^2"
+              },
+        "IR_MAG" : {
+                "type" : "number",
+                "description" : "Apparent IR magnitude"
+              },
+        "MAG_UNC" : {
+                "type" : "number",
+                "description" : "Magnitude uncertainty"
+              },
+        "TEMPERATURE" : {
+                "type" : "number",
+                "description" : "Effective temperature in Kelvin"
+              },
+        "INTEGRATION_TIME" : {
+                "type" : "number",
+                "description" : "Integration time in seconds"
+              },
+        "BACKGROUND" : {
+                "type" : "number",
+                "description" : "Background irradiance in W/m^2/sr"
+              },
+        "SNR" : {
+                "type" : "number",
+                "description" : "Signal-to-noise ratio"
+              },
+        "WAVELENGTHS" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Spectral data wavelengths in micrometers"
+              },
+        "SPECTRAL_VALUES" : {
+                "type" : "array", "items" : {"type" : "number"},
+                "description" : "Spectral data values in W/m^2/um"
+              },
+        "QUALITY" : {
+                "type" : "integer", "minimum" : 0, "maximum" :255,
+                "description" : "Data quality indicator (0-9, 9=best)"
+              },
+        "NOTES" : {
+                "type" : "string",
+                "description" : "Additional notes"
               }
       },
       "additionalProperties" : false

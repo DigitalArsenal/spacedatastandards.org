@@ -41,133 +41,193 @@ class GEO extends Table
         return $this;
     }
 
+    /// Unique identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// International designator
     public function getORIG_OBJECT_ID()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Satellite catalog number
+    /**
+     * @return uint
+     */
+    public function getSAT_NO()
+    {
+        $o = $this->__offset(8);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// On-orbit reference identifier
+    public function getON_ORBIT()
+    {
+        $o = $this->__offset(10);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Station-keeping status
+    /**
+     * @return sbyte
+     */
+    public function getSTATION_KEEPING()
+    {
+        $o = $this->__offset(12);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \geoStationKeeping::ACTIVE;
+    }
+
+    /// Subsatellite point longitude (degrees east)
     /**
      * @return double
      */
     public function getSS()
     {
-        $o = $this->__offset(8);
+        $o = $this->__offset(14);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Longitude of ascending node (degrees)
     /**
      * @return double
      */
     public function getSC()
     {
-        $o = $this->__offset(10);
+        $o = $this->__offset(16);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Relative energy (km^2/s^2)
     /**
      * @return double
      */
     public function getRELATIVE_ENERGY()
     {
-        $o = $this->__offset(12);
+        $o = $this->__offset(18);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Longitude drift rate (degrees/day)
     /**
      * @return double
      */
     public function getLONGITUDE_RATE()
     {
-        $o = $this->__offset(14);
+        $o = $this->__offset(20);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Western longitude boundary of slot (degrees east)
     /**
      * @return double
      */
     public function getLONGITUDE_MIN()
     {
-        $o = $this->__offset(16);
+        $o = $this->__offset(22);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
+    /// Eastern longitude boundary of slot (degrees east)
     /**
      * @return double
      */
     public function getLONGITUDE_MAX()
     {
-        $o = $this->__offset(18);
+        $o = $this->__offset(24);
         return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
     }
 
-    public function getCONFIDENCE_LEVEL()
-    {
-        $o = $this->__offset(20);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getPLANE_CHANGE_STATUS()
-    {
-        $o = $this->__offset(22);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    public function getTROUGH_TYPE()
-    {
-        $o = $this->__offset(24);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
+    /// Assessment confidence level
     /**
-     * @return bool
+     * @return sbyte
      */
-    public function getLOST_FLAG()
+    public function getCONFIDENCE()
     {
         $o = $this->__offset(26);
-        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \geoConfidence::HIGH;
     }
 
+    /// Trough type (east/west gravitational well)
     /**
-     * @return bool
+     * @return sbyte
      */
-    public function getSEMI_ANNUAL_CORR_FLAG()
+    public function getTROUGH()
     {
         $o = $this->__offset(28);
-        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \troughType::EAST;
     }
 
-    public function getOBJECT_STATUS()
+    /// Plane change status description
+    public function getPLANE_CHANGE_STATUS()
     {
         $o = $this->__offset(30);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getRAW_FILE_URI()
+    /// True if object is lost/not tracked
+    /**
+     * @return bool
+     */
+    public function getLOST_FLAG()
     {
         $o = $this->__offset(32);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
     }
 
-    public function getON_ORBIT()
+    /// True if semi-annual correction applied
+    /**
+     * @return bool
+     */
+    public function getSEMI_ANNUAL_CORR_FLAG()
     {
         $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getBool($o + $this->bb_pos) : false;
+    }
+
+    /// Current operational status
+    public function getOBJECT_STATUS()
+    {
+        $o = $this->__offset(36);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Inclination (degrees)
     /**
-     * @return int
+     * @return double
      */
-    public function getSAT_NO()
+    public function getINCLINATION()
     {
-        $o = $this->__offset(36);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Eccentricity
+    /**
+     * @return double
+     */
+    public function getECCENTRICITY()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Epoch of status (ISO 8601)
+    public function getEPOCH()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Reference to raw data file
+    public function getRAW_FILE_URI()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /**
@@ -176,33 +236,37 @@ class GEO extends Table
      */
     public static function startGEO(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(17);
+        $builder->StartObject(21);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return GEO
      */
-    public static function createGEO(FlatBufferBuilder $builder, $ID, $ORIG_OBJECT_ID, $SS, $SC, $RELATIVE_ENERGY, $LONGITUDE_RATE, $LONGITUDE_MIN, $LONGITUDE_MAX, $CONFIDENCE_LEVEL, $PLANE_CHANGE_STATUS, $TROUGH_TYPE, $LOST_FLAG, $SEMI_ANNUAL_CORR_FLAG, $OBJECT_STATUS, $RAW_FILE_URI, $ON_ORBIT, $SAT_NO)
+    public static function createGEO(FlatBufferBuilder $builder, $ID, $ORIG_OBJECT_ID, $SAT_NO, $ON_ORBIT, $STATION_KEEPING, $SS, $SC, $RELATIVE_ENERGY, $LONGITUDE_RATE, $LONGITUDE_MIN, $LONGITUDE_MAX, $CONFIDENCE, $TROUGH, $PLANE_CHANGE_STATUS, $LOST_FLAG, $SEMI_ANNUAL_CORR_FLAG, $OBJECT_STATUS, $INCLINATION, $ECCENTRICITY, $EPOCH, $RAW_FILE_URI)
     {
-        $builder->startObject(17);
+        $builder->startObject(21);
         self::addID($builder, $ID);
         self::addORIG_OBJECT_ID($builder, $ORIG_OBJECT_ID);
+        self::addSAT_NO($builder, $SAT_NO);
+        self::addON_ORBIT($builder, $ON_ORBIT);
+        self::addSTATION_KEEPING($builder, $STATION_KEEPING);
         self::addSS($builder, $SS);
         self::addSC($builder, $SC);
         self::addRELATIVE_ENERGY($builder, $RELATIVE_ENERGY);
         self::addLONGITUDE_RATE($builder, $LONGITUDE_RATE);
         self::addLONGITUDE_MIN($builder, $LONGITUDE_MIN);
         self::addLONGITUDE_MAX($builder, $LONGITUDE_MAX);
-        self::addCONFIDENCE_LEVEL($builder, $CONFIDENCE_LEVEL);
+        self::addCONFIDENCE($builder, $CONFIDENCE);
+        self::addTROUGH($builder, $TROUGH);
         self::addPLANE_CHANGE_STATUS($builder, $PLANE_CHANGE_STATUS);
-        self::addTROUGH_TYPE($builder, $TROUGH_TYPE);
         self::addLOST_FLAG($builder, $LOST_FLAG);
         self::addSEMI_ANNUAL_CORR_FLAG($builder, $SEMI_ANNUAL_CORR_FLAG);
         self::addOBJECT_STATUS($builder, $OBJECT_STATUS);
+        self::addINCLINATION($builder, $INCLINATION);
+        self::addECCENTRICITY($builder, $ECCENTRICITY);
+        self::addEPOCH($builder, $EPOCH);
         self::addRAW_FILE_URI($builder, $RAW_FILE_URI);
-        self::addON_ORBIT($builder, $ON_ORBIT);
-        self::addSAT_NO($builder, $SAT_NO);
         $o = $builder->endObject();
         return $o;
     }
@@ -229,132 +293,12 @@ class GEO extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param double
+     * @param uint
      * @return void
      */
-    public static function addSS(FlatBufferBuilder $builder, $SS)
+    public static function addSAT_NO(FlatBufferBuilder $builder, $SAT_NO)
     {
-        $builder->addDoubleX(2, $SS, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addSC(FlatBufferBuilder $builder, $SC)
-    {
-        $builder->addDoubleX(3, $SC, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addRELATIVE_ENERGY(FlatBufferBuilder $builder, $RELATIVE_ENERGY)
-    {
-        $builder->addDoubleX(4, $RELATIVE_ENERGY, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addLONGITUDE_RATE(FlatBufferBuilder $builder, $LONGITUDE_RATE)
-    {
-        $builder->addDoubleX(5, $LONGITUDE_RATE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addLONGITUDE_MIN(FlatBufferBuilder $builder, $LONGITUDE_MIN)
-    {
-        $builder->addDoubleX(6, $LONGITUDE_MIN, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addLONGITUDE_MAX(FlatBufferBuilder $builder, $LONGITUDE_MAX)
-    {
-        $builder->addDoubleX(7, $LONGITUDE_MAX, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addCONFIDENCE_LEVEL(FlatBufferBuilder $builder, $CONFIDENCE_LEVEL)
-    {
-        $builder->addOffsetX(8, $CONFIDENCE_LEVEL, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addPLANE_CHANGE_STATUS(FlatBufferBuilder $builder, $PLANE_CHANGE_STATUS)
-    {
-        $builder->addOffsetX(9, $PLANE_CHANGE_STATUS, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addTROUGH_TYPE(FlatBufferBuilder $builder, $TROUGH_TYPE)
-    {
-        $builder->addOffsetX(10, $TROUGH_TYPE, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param bool
-     * @return void
-     */
-    public static function addLOST_FLAG(FlatBufferBuilder $builder, $LOST_FLAG)
-    {
-        $builder->addBoolX(11, $LOST_FLAG, false);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param bool
-     * @return void
-     */
-    public static function addSEMI_ANNUAL_CORR_FLAG(FlatBufferBuilder $builder, $SEMI_ANNUAL_CORR_FLAG)
-    {
-        $builder->addBoolX(12, $SEMI_ANNUAL_CORR_FLAG, false);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addOBJECT_STATUS(FlatBufferBuilder $builder, $OBJECT_STATUS)
-    {
-        $builder->addOffsetX(13, $OBJECT_STATUS, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addRAW_FILE_URI(FlatBufferBuilder $builder, $RAW_FILE_URI)
-    {
-        $builder->addOffsetX(14, $RAW_FILE_URI, 0);
+        $builder->addUintX(2, $SAT_NO, 0);
     }
 
     /**
@@ -364,17 +308,177 @@ class GEO extends Table
      */
     public static function addON_ORBIT(FlatBufferBuilder $builder, $ON_ORBIT)
     {
-        $builder->addOffsetX(15, $ON_ORBIT, 0);
+        $builder->addOffsetX(3, $ON_ORBIT, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param sbyte
      * @return void
      */
-    public static function addSAT_NO(FlatBufferBuilder $builder, $SAT_NO)
+    public static function addSTATION_KEEPING(FlatBufferBuilder $builder, $STATION_KEEPING)
     {
-        $builder->addIntX(16, $SAT_NO, 0);
+        $builder->addSbyteX(4, $STATION_KEEPING, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addSS(FlatBufferBuilder $builder, $SS)
+    {
+        $builder->addDoubleX(5, $SS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addSC(FlatBufferBuilder $builder, $SC)
+    {
+        $builder->addDoubleX(6, $SC, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addRELATIVE_ENERGY(FlatBufferBuilder $builder, $RELATIVE_ENERGY)
+    {
+        $builder->addDoubleX(7, $RELATIVE_ENERGY, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addLONGITUDE_RATE(FlatBufferBuilder $builder, $LONGITUDE_RATE)
+    {
+        $builder->addDoubleX(8, $LONGITUDE_RATE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addLONGITUDE_MIN(FlatBufferBuilder $builder, $LONGITUDE_MIN)
+    {
+        $builder->addDoubleX(9, $LONGITUDE_MIN, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addLONGITUDE_MAX(FlatBufferBuilder $builder, $LONGITUDE_MAX)
+    {
+        $builder->addDoubleX(10, $LONGITUDE_MAX, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addCONFIDENCE(FlatBufferBuilder $builder, $CONFIDENCE)
+    {
+        $builder->addSbyteX(11, $CONFIDENCE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addTROUGH(FlatBufferBuilder $builder, $TROUGH)
+    {
+        $builder->addSbyteX(12, $TROUGH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addPLANE_CHANGE_STATUS(FlatBufferBuilder $builder, $PLANE_CHANGE_STATUS)
+    {
+        $builder->addOffsetX(13, $PLANE_CHANGE_STATUS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addLOST_FLAG(FlatBufferBuilder $builder, $LOST_FLAG)
+    {
+        $builder->addBoolX(14, $LOST_FLAG, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param bool
+     * @return void
+     */
+    public static function addSEMI_ANNUAL_CORR_FLAG(FlatBufferBuilder $builder, $SEMI_ANNUAL_CORR_FLAG)
+    {
+        $builder->addBoolX(15, $SEMI_ANNUAL_CORR_FLAG, false);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addOBJECT_STATUS(FlatBufferBuilder $builder, $OBJECT_STATUS)
+    {
+        $builder->addOffsetX(16, $OBJECT_STATUS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addINCLINATION(FlatBufferBuilder $builder, $INCLINATION)
+    {
+        $builder->addDoubleX(17, $INCLINATION, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addECCENTRICITY(FlatBufferBuilder $builder, $ECCENTRICITY)
+    {
+        $builder->addDoubleX(18, $ECCENTRICITY, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addEPOCH(FlatBufferBuilder $builder, $EPOCH)
+    {
+        $builder->addOffsetX(19, $EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addRAW_FILE_URI(FlatBufferBuilder $builder, $RAW_FILE_URI)
+    {
+        $builder->addOffsetX(20, $RAW_FILE_URI, 0);
     }
 
     /**

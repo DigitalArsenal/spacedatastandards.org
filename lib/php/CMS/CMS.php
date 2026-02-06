@@ -41,44 +41,70 @@ class CMS extends Table
         return $this;
     }
 
+    /// Unique identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Reference to parent entity
     public function getID_ENTITY()
     {
         $o = $this->__offset(6);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Communications payload name
     public function getNAME()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Description
     public function getDESCRIPTION()
     {
         $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Parent entity designator
     public function getENTITY()
     {
         $o = $this->__offset(12);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Satellite number
     /**
-     * @param int offset
-     * @return string
+     * @return uint
+     */
+    public function getSAT_NO()
+    {
+        $o = $this->__offset(14);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Number of transponders
+    /**
+     * @return uint
+     */
+    public function getNUM_TRANSPONDERS()
+    {
+        $o = $this->__offset(16);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// Transponders
+    /**
+     * @returnVectorOffset
      */
     public function getTRANSPONDERS($j)
     {
-        $o = $this->__offset(14);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        $o = $this->__offset(18);
+        $obj = new CommsTransponder();
+        return $o != 0 ? $obj->init($this->__indirect($this->__vector($o) + $j * 4), $this->bb) : null;
     }
 
     /**
@@ -86,8 +112,69 @@ class CMS extends Table
      */
     public function getTRANSPONDERSLength()
     {
-        $o = $this->__offset(14);
+        $o = $this->__offset(18);
         return $o != 0 ? $this->__vector_len($o) : 0;
+    }
+
+    /// Total payload power in Watts
+    /**
+     * @return double
+     */
+    public function getTOTAL_POWER()
+    {
+        $o = $this->__offset(20);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Total payload mass in kg
+    /**
+     * @return double
+     */
+    public function getTOTAL_MASS()
+    {
+        $o = $this->__offset(22);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Total aggregate bandwidth in MHz
+    /**
+     * @return double
+     */
+    public function getTOTAL_BANDWIDTH()
+    {
+        $o = $this->__offset(24);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Primary mission (e.g., FIXED_SAT, BROADCAST, MOBILE, RELAY, MILSATCOM)
+    public function getMISSION()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Coverage region description
+    public function getCOVERAGE()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Design lifetime in years
+    /**
+     * @return double
+     */
+    public function getDESIGN_LIFE()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Additional notes
+    public function getNOTES()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
     /**
@@ -96,22 +183,31 @@ class CMS extends Table
      */
     public static function startCMS(FlatBufferBuilder $builder)
     {
-        $builder->StartObject(6);
+        $builder->StartObject(15);
     }
 
     /**
      * @param FlatBufferBuilder $builder
      * @return CMS
      */
-    public static function createCMS(FlatBufferBuilder $builder, $ID, $ID_ENTITY, $NAME, $DESCRIPTION, $ENTITY, $TRANSPONDERS)
+    public static function createCMS(FlatBufferBuilder $builder, $ID, $ID_ENTITY, $NAME, $DESCRIPTION, $ENTITY, $SAT_NO, $NUM_TRANSPONDERS, $TRANSPONDERS, $TOTAL_POWER, $TOTAL_MASS, $TOTAL_BANDWIDTH, $MISSION, $COVERAGE, $DESIGN_LIFE, $NOTES)
     {
-        $builder->startObject(6);
+        $builder->startObject(15);
         self::addID($builder, $ID);
         self::addID_ENTITY($builder, $ID_ENTITY);
         self::addNAME($builder, $NAME);
         self::addDESCRIPTION($builder, $DESCRIPTION);
         self::addENTITY($builder, $ENTITY);
+        self::addSAT_NO($builder, $SAT_NO);
+        self::addNUM_TRANSPONDERS($builder, $NUM_TRANSPONDERS);
         self::addTRANSPONDERS($builder, $TRANSPONDERS);
+        self::addTOTAL_POWER($builder, $TOTAL_POWER);
+        self::addTOTAL_MASS($builder, $TOTAL_MASS);
+        self::addTOTAL_BANDWIDTH($builder, $TOTAL_BANDWIDTH);
+        self::addMISSION($builder, $MISSION);
+        self::addCOVERAGE($builder, $COVERAGE);
+        self::addDESIGN_LIFE($builder, $DESIGN_LIFE);
+        self::addNOTES($builder, $NOTES);
         $o = $builder->endObject();
         return $o;
     }
@@ -168,12 +264,32 @@ class CMS extends Table
 
     /**
      * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addSAT_NO(FlatBufferBuilder $builder, $SAT_NO)
+    {
+        $builder->addUintX(5, $SAT_NO, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addNUM_TRANSPONDERS(FlatBufferBuilder $builder, $NUM_TRANSPONDERS)
+    {
+        $builder->addUintX(6, $NUM_TRANSPONDERS, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
      * @param VectorOffset
      * @return void
      */
     public static function addTRANSPONDERS(FlatBufferBuilder $builder, $TRANSPONDERS)
     {
-        $builder->addOffsetX(5, $TRANSPONDERS, 0);
+        $builder->addOffsetX(7, $TRANSPONDERS, 0);
     }
 
     /**
@@ -198,6 +314,76 @@ class CMS extends Table
     public static function startTRANSPONDERSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTOTAL_POWER(FlatBufferBuilder $builder, $TOTAL_POWER)
+    {
+        $builder->addDoubleX(8, $TOTAL_POWER, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTOTAL_MASS(FlatBufferBuilder $builder, $TOTAL_MASS)
+    {
+        $builder->addDoubleX(9, $TOTAL_MASS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addTOTAL_BANDWIDTH(FlatBufferBuilder $builder, $TOTAL_BANDWIDTH)
+    {
+        $builder->addDoubleX(10, $TOTAL_BANDWIDTH, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addMISSION(FlatBufferBuilder $builder, $MISSION)
+    {
+        $builder->addOffsetX(11, $MISSION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addCOVERAGE(FlatBufferBuilder $builder, $COVERAGE)
+    {
+        $builder->addOffsetX(12, $COVERAGE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addDESIGN_LIFE(FlatBufferBuilder $builder, $DESIGN_LIFE)
+    {
+        $builder->addDoubleX(13, $DESIGN_LIFE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addNOTES(FlatBufferBuilder $builder, $NOTES)
+    {
+        $builder->addOffsetX(14, $NOTES, 0);
     }
 
     /**

@@ -29,25 +29,86 @@ public final class CMS extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public CMS __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * Reference to parent entity
+   */
   public String ID_ENTITY() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ID_ENTITYAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer ID_ENTITYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  /**
+   * Communications payload name
+   */
   public String NAME() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer NAMEAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * Description
+   */
   public String DESCRIPTION() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer DESCRIPTIONAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
   public ByteBuffer DESCRIPTIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * Parent entity designator
+   */
   public String ENTITY() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ENTITYAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
   public ByteBuffer ENTITYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
-  public String TRANSPONDERS(int j) { int o = __offset(14); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int TRANSPONDERSLength() { int o = __offset(14); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector transpondersVector() { return transpondersVector(new StringVector()); }
-  public StringVector transpondersVector(StringVector obj) { int o = __offset(14); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Satellite number
+   */
+  public long SAT_NO() { int o = __offset(14); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Number of transponders
+   */
+  public long NUM_TRANSPONDERS() { int o = __offset(16); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Transponders
+   */
+  public commsTransponder TRANSPONDERS(int j) { return TRANSPONDERS(new commsTransponder(), j); }
+  public commsTransponder TRANSPONDERS(commsTransponder obj, int j) { int o = __offset(18); return o != 0 ? obj.__assign(__indirect(__vector(o) + j * 4), bb) : null; }
+  public int TRANSPONDERSLength() { int o = __offset(18); return o != 0 ? __vector_len(o) : 0; }
+  public commsTransponder.Vector transpondersVector() { return transpondersVector(new commsTransponder.Vector()); }
+  public commsTransponder.Vector transpondersVector(commsTransponder.Vector obj) { int o = __offset(18); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
+  /**
+   * Total payload power in Watts
+   */
+  public double TOTAL_POWER() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Total payload mass in kg
+   */
+  public double TOTAL_MASS() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Total aggregate bandwidth in MHz
+   */
+  public double TOTAL_BANDWIDTH() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Primary mission (e.g., FIXED_SAT, BROADCAST, MOBILE, RELAY, MILSATCOM)
+   */
+  public String MISSION() { int o = __offset(26); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer MISSIONAsByteBuffer() { return __vector_as_bytebuffer(26, 1); }
+  public ByteBuffer MISSIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 1); }
+  /**
+   * Coverage region description
+   */
+  public String COVERAGE() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer COVERAGEAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
+  public ByteBuffer COVERAGEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
+  /**
+   * Design lifetime in years
+   */
+  public double DESIGN_LIFE() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Additional notes
+   */
+  public String NOTES() { int o = __offset(32); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer NOTESAsByteBuffer() { return __vector_as_bytebuffer(32, 1); }
+  public ByteBuffer NOTESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 32, 1); }
 
   public static int createCMS(FlatBufferBuilder builder,
       int IDOffset,
@@ -55,9 +116,27 @@ public final class CMS extends Table {
       int NAMEOffset,
       int DESCRIPTIONOffset,
       int ENTITYOffset,
-      int TRANSPONDERSOffset) {
-    builder.startTable(6);
+      long SAT_NO,
+      long NUM_TRANSPONDERS,
+      int TRANSPONDERSOffset,
+      double TOTAL_POWER,
+      double TOTAL_MASS,
+      double TOTAL_BANDWIDTH,
+      int MISSIONOffset,
+      int COVERAGEOffset,
+      double DESIGN_LIFE,
+      int NOTESOffset) {
+    builder.startTable(15);
+    CMS.addDesignLife(builder, DESIGN_LIFE);
+    CMS.addTotalBandwidth(builder, TOTAL_BANDWIDTH);
+    CMS.addTotalMass(builder, TOTAL_MASS);
+    CMS.addTotalPower(builder, TOTAL_POWER);
+    CMS.addNotes(builder, NOTESOffset);
+    CMS.addCoverage(builder, COVERAGEOffset);
+    CMS.addMission(builder, MISSIONOffset);
     CMS.addTransponders(builder, TRANSPONDERSOffset);
+    CMS.addNumTransponders(builder, NUM_TRANSPONDERS);
+    CMS.addSatNo(builder, SAT_NO);
     CMS.addEntity(builder, ENTITYOffset);
     CMS.addDescription(builder, DESCRIPTIONOffset);
     CMS.addName(builder, NAMEOffset);
@@ -66,15 +145,24 @@ public final class CMS extends Table {
     return CMS.endCMS(builder);
   }
 
-  public static void startCMS(FlatBufferBuilder builder) { builder.startTable(6); }
+  public static void startCMS(FlatBufferBuilder builder) { builder.startTable(15); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addIdEntity(FlatBufferBuilder builder, int ID_ENTITYOffset) { builder.addOffset(1, ID_ENTITYOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(2, NAMEOffset, 0); }
   public static void addDescription(FlatBufferBuilder builder, int DESCRIPTIONOffset) { builder.addOffset(3, DESCRIPTIONOffset, 0); }
   public static void addEntity(FlatBufferBuilder builder, int ENTITYOffset) { builder.addOffset(4, ENTITYOffset, 0); }
-  public static void addTransponders(FlatBufferBuilder builder, int TRANSPONDERSOffset) { builder.addOffset(5, TRANSPONDERSOffset, 0); }
+  public static void addSatNo(FlatBufferBuilder builder, long SAT_NO) { builder.addInt(5, (int) SAT_NO, (int) 0L); }
+  public static void addNumTransponders(FlatBufferBuilder builder, long NUM_TRANSPONDERS) { builder.addInt(6, (int) NUM_TRANSPONDERS, (int) 0L); }
+  public static void addTransponders(FlatBufferBuilder builder, int TRANSPONDERSOffset) { builder.addOffset(7, TRANSPONDERSOffset, 0); }
   public static int createTranspondersVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
   public static void startTranspondersVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
+  public static void addTotalPower(FlatBufferBuilder builder, double TOTAL_POWER) { builder.addDouble(8, TOTAL_POWER, 0.0); }
+  public static void addTotalMass(FlatBufferBuilder builder, double TOTAL_MASS) { builder.addDouble(9, TOTAL_MASS, 0.0); }
+  public static void addTotalBandwidth(FlatBufferBuilder builder, double TOTAL_BANDWIDTH) { builder.addDouble(10, TOTAL_BANDWIDTH, 0.0); }
+  public static void addMission(FlatBufferBuilder builder, int MISSIONOffset) { builder.addOffset(11, MISSIONOffset, 0); }
+  public static void addCoverage(FlatBufferBuilder builder, int COVERAGEOffset) { builder.addOffset(12, COVERAGEOffset, 0); }
+  public static void addDesignLife(FlatBufferBuilder builder, double DESIGN_LIFE) { builder.addDouble(13, DESIGN_LIFE, 0.0); }
+  public static void addNotes(FlatBufferBuilder builder, int NOTESOffset) { builder.addOffset(14, NOTESOffset, 0); }
   public static int endCMS(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

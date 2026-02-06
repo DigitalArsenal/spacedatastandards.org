@@ -29,153 +29,242 @@ public final class ATD extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public ATD __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * Attitude set identifier (groups time-series points)
+   */
   public String AS_ID() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer AS_IDAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer AS_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
-  public int SAT_NO() { int o = __offset(8); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * Satellite catalog number
+   */
+  public long SAT_NO() { int o = __offset(8); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * International designator
+   */
   public String ORIG_OBJECT_ID() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ORIG_OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
   public ByteBuffer ORIG_OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
-  public String TS() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer TSAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
-  public ByteBuffer TSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
-  public String MOTION_TYPE() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer MOTION_TYPEAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
-  public ByteBuffer MOTION_TYPEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
-  public double Q1() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double Q2() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double Q3() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double QC() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double Q1_DOT() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double Q2_DOT() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double Q3_DOT() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double QC_DOT() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String X_ANGLE(int j) { int o = __offset(32); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int X_ANGLELength() { int o = __offset(32); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector xAngleVector() { return xAngleVector(new StringVector()); }
-  public StringVector xAngleVector(StringVector obj) { int o = __offset(32); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String Y_ANGLE(int j) { int o = __offset(34); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int Y_ANGLELength() { int o = __offset(34); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector yAngleVector() { return yAngleVector(new StringVector()); }
-  public StringVector yAngleVector(StringVector obj) { int o = __offset(34); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String Z_ANGLE(int j) { int o = __offset(36); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int Z_ANGLELength() { int o = __offset(36); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector zAngleVector() { return zAngleVector(new StringVector()); }
-  public StringVector zAngleVector(StringVector obj) { int o = __offset(36); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String X_RATE(int j) { int o = __offset(38); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int X_RATELength() { int o = __offset(38); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector xRateVector() { return xRateVector(new StringVector()); }
-  public StringVector xRateVector(StringVector obj) { int o = __offset(38); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String Y_RATE(int j) { int o = __offset(40); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int Y_RATELength() { int o = __offset(40); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector yRateVector() { return yRateVector(new StringVector()); }
-  public StringVector yRateVector(StringVector obj) { int o = __offset(40); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String Z_RATE(int j) { int o = __offset(42); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int Z_RATELength() { int o = __offset(42); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector zRateVector() { return zRateVector(new StringVector()); }
-  public StringVector zRateVector(StringVector obj) { int o = __offset(42); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public double RA() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double DECLINATION() { int o = __offset(46); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double CONING_ANGLE() { int o = __offset(48); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double PREC_PERIOD() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double SPIN_PERIOD() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Observation epoch (ISO 8601)
+   */
+  public String EPOCH() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EPOCHAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * Attitude representation used
+   */
+  public byte REPRESENTATION() { int o = __offset(14); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Motion characterization
+   */
+  public byte MOTION_TYPE() { int o = __offset(16); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Quaternion scalar component (q0 or qc)
+   */
+  public double QC() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Quaternion vector component 1
+   */
+  public double Q1() { int o = __offset(20); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Quaternion vector component 2
+   */
+  public double Q2() { int o = __offset(22); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Quaternion vector component 3
+   */
+  public double Q3() { int o = __offset(24); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Quaternion scalar rate (rad/s)
+   */
+  public double QC_DOT() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Quaternion vector rate 1 (rad/s)
+   */
+  public double Q1_DOT() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Quaternion vector rate 2 (rad/s)
+   */
+  public double Q2_DOT() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Quaternion vector rate 3 (rad/s)
+   */
+  public double Q3_DOT() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Euler angle X (degrees)
+   */
+  public double X_ANGLE() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Euler angle Y (degrees)
+   */
+  public double Y_ANGLE() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Euler angle Z (degrees)
+   */
+  public double Z_ANGLE() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Angular rate about X (deg/s)
+   */
+  public double X_RATE() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Angular rate about Y (deg/s)
+   */
+  public double Y_RATE() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Angular rate about Z (deg/s)
+   */
+  public double Z_RATE() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Right ascension of spin axis (degrees)
+   */
+  public double RA() { int o = __offset(46); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Declination of spin axis (degrees)
+   */
+  public double DECLINATION() { int o = __offset(48); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Coning half-angle (degrees)
+   */
+  public double CONING_ANGLE() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Precession period (seconds)
+   */
+  public double PREC_PERIOD() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Spin period (seconds)
+   */
+  public double SPIN_PERIOD() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Attitude uncertainty (degrees, 1-sigma)
+   */
+  public double ATTITUDE_UNC() { int o = __offset(56); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Rate uncertainty (deg/s, 1-sigma)
+   */
+  public double RATE_UNC() { int o = __offset(58); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Data quality (0-9, 9=best)
+   */
+  public int QUALITY() { int o = __offset(60); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Reference frame for attitude
+   */
+  public String REF_FRAME() { int o = __offset(62); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer REF_FRAMEAsByteBuffer() { return __vector_as_bytebuffer(62, 1); }
+  public ByteBuffer REF_FRAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 62, 1); }
+  /**
+   * Sensor identifier providing the observation
+   */
+  public String SENSOR_ID() { int o = __offset(64); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SENSOR_IDAsByteBuffer() { return __vector_as_bytebuffer(64, 1); }
+  public ByteBuffer SENSOR_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 64, 1); }
 
   public static int createATD(FlatBufferBuilder builder,
       int IDOffset,
       int AS_IDOffset,
-      int SAT_NO,
+      long SAT_NO,
       int ORIG_OBJECT_IDOffset,
-      int TSOffset,
-      int MOTION_TYPEOffset,
+      int EPOCHOffset,
+      byte REPRESENTATION,
+      byte MOTION_TYPE,
+      double QC,
       double Q1,
       double Q2,
       double Q3,
-      double QC,
+      double QC_DOT,
       double Q1_DOT,
       double Q2_DOT,
       double Q3_DOT,
-      double QC_DOT,
-      int X_ANGLEOffset,
-      int Y_ANGLEOffset,
-      int Z_ANGLEOffset,
-      int X_RATEOffset,
-      int Y_RATEOffset,
-      int Z_RATEOffset,
+      double X_ANGLE,
+      double Y_ANGLE,
+      double Z_ANGLE,
+      double X_RATE,
+      double Y_RATE,
+      double Z_RATE,
       double RA,
       double DECLINATION,
       double CONING_ANGLE,
       double PREC_PERIOD,
-      double SPIN_PERIOD) {
-    builder.startTable(25);
+      double SPIN_PERIOD,
+      double ATTITUDE_UNC,
+      double RATE_UNC,
+      int QUALITY,
+      int REF_FRAMEOffset,
+      int SENSOR_IDOffset) {
+    builder.startTable(31);
+    ATD.addRateUnc(builder, RATE_UNC);
+    ATD.addAttitudeUnc(builder, ATTITUDE_UNC);
     ATD.addSpinPeriod(builder, SPIN_PERIOD);
     ATD.addPrecPeriod(builder, PREC_PERIOD);
     ATD.addConingAngle(builder, CONING_ANGLE);
     ATD.addDeclination(builder, DECLINATION);
     ATD.addRa(builder, RA);
-    ATD.addQcDot(builder, QC_DOT);
+    ATD.addZRate(builder, Z_RATE);
+    ATD.addYRate(builder, Y_RATE);
+    ATD.addXRate(builder, X_RATE);
+    ATD.addZAngle(builder, Z_ANGLE);
+    ATD.addYAngle(builder, Y_ANGLE);
+    ATD.addXAngle(builder, X_ANGLE);
     ATD.addQ3Dot(builder, Q3_DOT);
     ATD.addQ2Dot(builder, Q2_DOT);
     ATD.addQ1Dot(builder, Q1_DOT);
-    ATD.addQc(builder, QC);
+    ATD.addQcDot(builder, QC_DOT);
     ATD.addQ3(builder, Q3);
     ATD.addQ2(builder, Q2);
     ATD.addQ1(builder, Q1);
-    ATD.addZRate(builder, Z_RATEOffset);
-    ATD.addYRate(builder, Y_RATEOffset);
-    ATD.addXRate(builder, X_RATEOffset);
-    ATD.addZAngle(builder, Z_ANGLEOffset);
-    ATD.addYAngle(builder, Y_ANGLEOffset);
-    ATD.addXAngle(builder, X_ANGLEOffset);
-    ATD.addMotionType(builder, MOTION_TYPEOffset);
-    ATD.addTs(builder, TSOffset);
+    ATD.addQc(builder, QC);
+    ATD.addSensorId(builder, SENSOR_IDOffset);
+    ATD.addRefFrame(builder, REF_FRAMEOffset);
+    ATD.addEpoch(builder, EPOCHOffset);
     ATD.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
     ATD.addSatNo(builder, SAT_NO);
     ATD.addAsId(builder, AS_IDOffset);
     ATD.addId(builder, IDOffset);
+    ATD.addQuality(builder, QUALITY);
+    ATD.addMotionType(builder, MOTION_TYPE);
+    ATD.addRepresentation(builder, REPRESENTATION);
     return ATD.endATD(builder);
   }
 
-  public static void startATD(FlatBufferBuilder builder) { builder.startTable(25); }
+  public static void startATD(FlatBufferBuilder builder) { builder.startTable(31); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addAsId(FlatBufferBuilder builder, int AS_IDOffset) { builder.addOffset(1, AS_IDOffset, 0); }
-  public static void addSatNo(FlatBufferBuilder builder, int SAT_NO) { builder.addInt(2, SAT_NO, 0); }
+  public static void addSatNo(FlatBufferBuilder builder, long SAT_NO) { builder.addInt(2, (int) SAT_NO, (int) 0L); }
   public static void addOrigObjectId(FlatBufferBuilder builder, int ORIG_OBJECT_IDOffset) { builder.addOffset(3, ORIG_OBJECT_IDOffset, 0); }
-  public static void addTs(FlatBufferBuilder builder, int TSOffset) { builder.addOffset(4, TSOffset, 0); }
-  public static void addMotionType(FlatBufferBuilder builder, int MOTION_TYPEOffset) { builder.addOffset(5, MOTION_TYPEOffset, 0); }
-  public static void addQ1(FlatBufferBuilder builder, double Q1) { builder.addDouble(6, Q1, 0.0); }
-  public static void addQ2(FlatBufferBuilder builder, double Q2) { builder.addDouble(7, Q2, 0.0); }
-  public static void addQ3(FlatBufferBuilder builder, double Q3) { builder.addDouble(8, Q3, 0.0); }
-  public static void addQc(FlatBufferBuilder builder, double QC) { builder.addDouble(9, QC, 0.0); }
-  public static void addQ1Dot(FlatBufferBuilder builder, double Q1_DOT) { builder.addDouble(10, Q1_DOT, 0.0); }
-  public static void addQ2Dot(FlatBufferBuilder builder, double Q2_DOT) { builder.addDouble(11, Q2_DOT, 0.0); }
-  public static void addQ3Dot(FlatBufferBuilder builder, double Q3_DOT) { builder.addDouble(12, Q3_DOT, 0.0); }
-  public static void addQcDot(FlatBufferBuilder builder, double QC_DOT) { builder.addDouble(13, QC_DOT, 0.0); }
-  public static void addXAngle(FlatBufferBuilder builder, int X_ANGLEOffset) { builder.addOffset(14, X_ANGLEOffset, 0); }
-  public static int createXAngleVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startXAngleVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addYAngle(FlatBufferBuilder builder, int Y_ANGLEOffset) { builder.addOffset(15, Y_ANGLEOffset, 0); }
-  public static int createYAngleVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startYAngleVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addZAngle(FlatBufferBuilder builder, int Z_ANGLEOffset) { builder.addOffset(16, Z_ANGLEOffset, 0); }
-  public static int createZAngleVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startZAngleVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addXRate(FlatBufferBuilder builder, int X_RATEOffset) { builder.addOffset(17, X_RATEOffset, 0); }
-  public static int createXRateVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startXRateVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addYRate(FlatBufferBuilder builder, int Y_RATEOffset) { builder.addOffset(18, Y_RATEOffset, 0); }
-  public static int createYRateVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startYRateVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addZRate(FlatBufferBuilder builder, int Z_RATEOffset) { builder.addOffset(19, Z_RATEOffset, 0); }
-  public static int createZRateVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startZRateVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addRa(FlatBufferBuilder builder, double RA) { builder.addDouble(20, RA, 0.0); }
-  public static void addDeclination(FlatBufferBuilder builder, double DECLINATION) { builder.addDouble(21, DECLINATION, 0.0); }
-  public static void addConingAngle(FlatBufferBuilder builder, double CONING_ANGLE) { builder.addDouble(22, CONING_ANGLE, 0.0); }
-  public static void addPrecPeriod(FlatBufferBuilder builder, double PREC_PERIOD) { builder.addDouble(23, PREC_PERIOD, 0.0); }
-  public static void addSpinPeriod(FlatBufferBuilder builder, double SPIN_PERIOD) { builder.addDouble(24, SPIN_PERIOD, 0.0); }
+  public static void addEpoch(FlatBufferBuilder builder, int EPOCHOffset) { builder.addOffset(4, EPOCHOffset, 0); }
+  public static void addRepresentation(FlatBufferBuilder builder, byte REPRESENTATION) { builder.addByte(5, REPRESENTATION, 0); }
+  public static void addMotionType(FlatBufferBuilder builder, byte MOTION_TYPE) { builder.addByte(6, MOTION_TYPE, 0); }
+  public static void addQc(FlatBufferBuilder builder, double QC) { builder.addDouble(7, QC, 0.0); }
+  public static void addQ1(FlatBufferBuilder builder, double Q1) { builder.addDouble(8, Q1, 0.0); }
+  public static void addQ2(FlatBufferBuilder builder, double Q2) { builder.addDouble(9, Q2, 0.0); }
+  public static void addQ3(FlatBufferBuilder builder, double Q3) { builder.addDouble(10, Q3, 0.0); }
+  public static void addQcDot(FlatBufferBuilder builder, double QC_DOT) { builder.addDouble(11, QC_DOT, 0.0); }
+  public static void addQ1Dot(FlatBufferBuilder builder, double Q1_DOT) { builder.addDouble(12, Q1_DOT, 0.0); }
+  public static void addQ2Dot(FlatBufferBuilder builder, double Q2_DOT) { builder.addDouble(13, Q2_DOT, 0.0); }
+  public static void addQ3Dot(FlatBufferBuilder builder, double Q3_DOT) { builder.addDouble(14, Q3_DOT, 0.0); }
+  public static void addXAngle(FlatBufferBuilder builder, double X_ANGLE) { builder.addDouble(15, X_ANGLE, 0.0); }
+  public static void addYAngle(FlatBufferBuilder builder, double Y_ANGLE) { builder.addDouble(16, Y_ANGLE, 0.0); }
+  public static void addZAngle(FlatBufferBuilder builder, double Z_ANGLE) { builder.addDouble(17, Z_ANGLE, 0.0); }
+  public static void addXRate(FlatBufferBuilder builder, double X_RATE) { builder.addDouble(18, X_RATE, 0.0); }
+  public static void addYRate(FlatBufferBuilder builder, double Y_RATE) { builder.addDouble(19, Y_RATE, 0.0); }
+  public static void addZRate(FlatBufferBuilder builder, double Z_RATE) { builder.addDouble(20, Z_RATE, 0.0); }
+  public static void addRa(FlatBufferBuilder builder, double RA) { builder.addDouble(21, RA, 0.0); }
+  public static void addDeclination(FlatBufferBuilder builder, double DECLINATION) { builder.addDouble(22, DECLINATION, 0.0); }
+  public static void addConingAngle(FlatBufferBuilder builder, double CONING_ANGLE) { builder.addDouble(23, CONING_ANGLE, 0.0); }
+  public static void addPrecPeriod(FlatBufferBuilder builder, double PREC_PERIOD) { builder.addDouble(24, PREC_PERIOD, 0.0); }
+  public static void addSpinPeriod(FlatBufferBuilder builder, double SPIN_PERIOD) { builder.addDouble(25, SPIN_PERIOD, 0.0); }
+  public static void addAttitudeUnc(FlatBufferBuilder builder, double ATTITUDE_UNC) { builder.addDouble(26, ATTITUDE_UNC, 0.0); }
+  public static void addRateUnc(FlatBufferBuilder builder, double RATE_UNC) { builder.addDouble(27, RATE_UNC, 0.0); }
+  public static void addQuality(FlatBufferBuilder builder, int QUALITY) { builder.addByte(28, (byte) QUALITY, (byte) 0); }
+  public static void addRefFrame(FlatBufferBuilder builder, int REF_FRAMEOffset) { builder.addOffset(29, REF_FRAMEOffset, 0); }
+  public static void addSensorId(FlatBufferBuilder builder, int SENSOR_IDOffset) { builder.addOffset(30, SENSOR_IDOffset, 0); }
   public static int endATD(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

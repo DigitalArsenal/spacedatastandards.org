@@ -9,6 +9,375 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_OD_METHOD: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_OD_METHOD: i8 = 7;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_OD_METHOD: [odMethod; 8] = [
+  odMethod::BATCH_LEAST_SQUARES,
+  odMethod::SEQUENTIAL_LEAST_SQUARES,
+  odMethod::EXTENDED_KALMAN,
+  odMethod::UNSCENTED_KALMAN,
+  odMethod::SPECIAL_PERTURBATIONS,
+  odMethod::GENERAL_PERTURBATIONS,
+  odMethod::DIFFERENTIAL_CORRECTION,
+  odMethod::UNKNOWN,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct odMethod(pub i8);
+#[allow(non_upper_case_globals)]
+impl odMethod {
+  pub const BATCH_LEAST_SQUARES: Self = Self(0);
+  pub const SEQUENTIAL_LEAST_SQUARES: Self = Self(1);
+  pub const EXTENDED_KALMAN: Self = Self(2);
+  pub const UNSCENTED_KALMAN: Self = Self(3);
+  pub const SPECIAL_PERTURBATIONS: Self = Self(4);
+  pub const GENERAL_PERTURBATIONS: Self = Self(5);
+  pub const DIFFERENTIAL_CORRECTION: Self = Self(6);
+  pub const UNKNOWN: Self = Self(7);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 7;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::BATCH_LEAST_SQUARES,
+    Self::SEQUENTIAL_LEAST_SQUARES,
+    Self::EXTENDED_KALMAN,
+    Self::UNSCENTED_KALMAN,
+    Self::SPECIAL_PERTURBATIONS,
+    Self::GENERAL_PERTURBATIONS,
+    Self::DIFFERENTIAL_CORRECTION,
+    Self::UNKNOWN,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::BATCH_LEAST_SQUARES => Some("BATCH_LEAST_SQUARES"),
+      Self::SEQUENTIAL_LEAST_SQUARES => Some("SEQUENTIAL_LEAST_SQUARES"),
+      Self::EXTENDED_KALMAN => Some("EXTENDED_KALMAN"),
+      Self::UNSCENTED_KALMAN => Some("UNSCENTED_KALMAN"),
+      Self::SPECIAL_PERTURBATIONS => Some("SPECIAL_PERTURBATIONS"),
+      Self::GENERAL_PERTURBATIONS => Some("GENERAL_PERTURBATIONS"),
+      Self::DIFFERENTIAL_CORRECTION => Some("DIFFERENTIAL_CORRECTION"),
+      Self::UNKNOWN => Some("UNKNOWN"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for odMethod {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for odMethod {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for odMethod {
+    type Output = odMethod;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for odMethod {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for odMethod {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for odMethod {}
+pub enum odSensorContributionOffset {}
+#[derive(Copy, Clone, PartialEq)]
+
+/// Sensor contribution to an orbit determination solution
+pub struct odSensorContribution<'a> {
+  pub _tab: flatbuffers::Table<'a>,
+}
+
+impl<'a> flatbuffers::Follow<'a> for odSensorContribution<'a> {
+  type Inner = odSensorContribution<'a>;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    Self { _tab: flatbuffers::Table::new(buf, loc) }
+  }
+}
+
+impl<'a> odSensorContribution<'a> {
+  pub const VT_SENSOR_ID: flatbuffers::VOffsetT = 4;
+  pub const VT_ORIG_SENSOR_ID: flatbuffers::VOffsetT = 6;
+  pub const VT_NUM_ACCEPTED: flatbuffers::VOffsetT = 8;
+  pub const VT_NUM_REJECTED: flatbuffers::VOffsetT = 10;
+  pub const VT_WRMS: flatbuffers::VOffsetT = 12;
+  pub const VT_OB_TYPES: flatbuffers::VOffsetT = 14;
+
+  #[inline]
+  pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
+    odSensorContribution { _tab: table }
+  }
+  #[allow(unused_mut)]
+  pub fn create<'bldr: 'args, 'args: 'mut_bldr, 'mut_bldr, A: flatbuffers::Allocator + 'bldr>(
+    _fbb: &'mut_bldr mut flatbuffers::FlatBufferBuilder<'bldr, A>,
+    args: &'args odSensorContributionArgs<'args>
+  ) -> flatbuffers::WIPOffset<odSensorContribution<'bldr>> {
+    let mut builder = odSensorContributionBuilder::new(_fbb);
+    builder.add_WRMS(args.WRMS);
+    if let Some(x) = args.OB_TYPES { builder.add_OB_TYPES(x); }
+    builder.add_NUM_REJECTED(args.NUM_REJECTED);
+    builder.add_NUM_ACCEPTED(args.NUM_ACCEPTED);
+    if let Some(x) = args.ORIG_SENSOR_ID { builder.add_ORIG_SENSOR_ID(x); }
+    if let Some(x) = args.SENSOR_ID { builder.add_SENSOR_ID(x); }
+    builder.finish()
+  }
+
+  pub fn unpack(&self) -> odSensorContributionT {
+    let SENSOR_ID = self.SENSOR_ID().map(|x| {
+      x.to_string()
+    });
+    let ORIG_SENSOR_ID = self.ORIG_SENSOR_ID().map(|x| {
+      x.to_string()
+    });
+    let NUM_ACCEPTED = self.NUM_ACCEPTED();
+    let NUM_REJECTED = self.NUM_REJECTED();
+    let WRMS = self.WRMS();
+    let OB_TYPES = self.OB_TYPES().map(|x| {
+      x.iter().map(|s| s.to_string()).collect()
+    });
+    odSensorContributionT {
+      SENSOR_ID,
+      ORIG_SENSOR_ID,
+      NUM_ACCEPTED,
+      NUM_REJECTED,
+      WRMS,
+      OB_TYPES,
+    }
+  }
+
+  /// Sensor identifier
+  #[inline]
+  pub fn SENSOR_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(odSensorContribution::VT_SENSOR_ID, None)}
+  }
+  /// Original sensor identifier
+  #[inline]
+  pub fn ORIG_SENSOR_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(odSensorContribution::VT_ORIG_SENSOR_ID, None)}
+  }
+  /// Number of accepted observations from this sensor
+  #[inline]
+  pub fn NUM_ACCEPTED(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(odSensorContribution::VT_NUM_ACCEPTED, Some(0)).unwrap()}
+  }
+  /// Number of rejected observations from this sensor
+  #[inline]
+  pub fn NUM_REJECTED(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(odSensorContribution::VT_NUM_REJECTED, Some(0)).unwrap()}
+  }
+  /// Weighted RMS for this sensor's observations
+  #[inline]
+  pub fn WRMS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(odSensorContribution::VT_WRMS, Some(0.0)).unwrap()}
+  }
+  /// Observation types from this sensor
+  #[inline]
+  pub fn OB_TYPES(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(odSensorContribution::VT_OB_TYPES, None)}
+  }
+}
+
+impl flatbuffers::Verifiable for odSensorContribution<'_> {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    v.visit_table(pos)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SENSOR_ID", Self::VT_SENSOR_ID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_SENSOR_ID", Self::VT_ORIG_SENSOR_ID, false)?
+     .visit_field::<u32>("NUM_ACCEPTED", Self::VT_NUM_ACCEPTED, false)?
+     .visit_field::<u32>("NUM_REJECTED", Self::VT_NUM_REJECTED, false)?
+     .visit_field::<f64>("WRMS", Self::VT_WRMS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("OB_TYPES", Self::VT_OB_TYPES, false)?
+     .finish();
+    Ok(())
+  }
+}
+pub struct odSensorContributionArgs<'a> {
+    pub SENSOR_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ORIG_SENSOR_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub NUM_ACCEPTED: u32,
+    pub NUM_REJECTED: u32,
+    pub WRMS: f64,
+    pub OB_TYPES: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
+}
+impl<'a> Default for odSensorContributionArgs<'a> {
+  #[inline]
+  fn default() -> Self {
+    odSensorContributionArgs {
+      SENSOR_ID: None,
+      ORIG_SENSOR_ID: None,
+      NUM_ACCEPTED: 0,
+      NUM_REJECTED: 0,
+      WRMS: 0.0,
+      OB_TYPES: None,
+    }
+  }
+}
+
+pub struct odSensorContributionBuilder<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> {
+  fbb_: &'b mut flatbuffers::FlatBufferBuilder<'a, A>,
+  start_: flatbuffers::WIPOffset<flatbuffers::TableUnfinishedWIPOffset>,
+}
+impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> odSensorContributionBuilder<'a, 'b, A> {
+  #[inline]
+  pub fn add_SENSOR_ID(&mut self, SENSOR_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(odSensorContribution::VT_SENSOR_ID, SENSOR_ID);
+  }
+  #[inline]
+  pub fn add_ORIG_SENSOR_ID(&mut self, ORIG_SENSOR_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(odSensorContribution::VT_ORIG_SENSOR_ID, ORIG_SENSOR_ID);
+  }
+  #[inline]
+  pub fn add_NUM_ACCEPTED(&mut self, NUM_ACCEPTED: u32) {
+    self.fbb_.push_slot::<u32>(odSensorContribution::VT_NUM_ACCEPTED, NUM_ACCEPTED, 0);
+  }
+  #[inline]
+  pub fn add_NUM_REJECTED(&mut self, NUM_REJECTED: u32) {
+    self.fbb_.push_slot::<u32>(odSensorContribution::VT_NUM_REJECTED, NUM_REJECTED, 0);
+  }
+  #[inline]
+  pub fn add_WRMS(&mut self, WRMS: f64) {
+    self.fbb_.push_slot::<f64>(odSensorContribution::VT_WRMS, WRMS, 0.0);
+  }
+  #[inline]
+  pub fn add_OB_TYPES(&mut self, OB_TYPES: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(odSensorContribution::VT_OB_TYPES, OB_TYPES);
+  }
+  #[inline]
+  pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> odSensorContributionBuilder<'a, 'b, A> {
+    let start = _fbb.start_table();
+    odSensorContributionBuilder {
+      fbb_: _fbb,
+      start_: start,
+    }
+  }
+  #[inline]
+  pub fn finish(self) -> flatbuffers::WIPOffset<odSensorContribution<'a>> {
+    let o = self.fbb_.end_table(self.start_);
+    flatbuffers::WIPOffset::new(o.value())
+  }
+}
+
+impl core::fmt::Debug for odSensorContribution<'_> {
+  fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+    let mut ds = f.debug_struct("odSensorContribution");
+      ds.field("SENSOR_ID", &self.SENSOR_ID());
+      ds.field("ORIG_SENSOR_ID", &self.ORIG_SENSOR_ID());
+      ds.field("NUM_ACCEPTED", &self.NUM_ACCEPTED());
+      ds.field("NUM_REJECTED", &self.NUM_REJECTED());
+      ds.field("WRMS", &self.WRMS());
+      ds.field("OB_TYPES", &self.OB_TYPES());
+      ds.finish()
+  }
+}
+#[non_exhaustive]
+#[derive(Debug, Clone, PartialEq)]
+pub struct odSensorContributionT {
+  pub SENSOR_ID: Option<String>,
+  pub ORIG_SENSOR_ID: Option<String>,
+  pub NUM_ACCEPTED: u32,
+  pub NUM_REJECTED: u32,
+  pub WRMS: f64,
+  pub OB_TYPES: Option<Vec<String>>,
+}
+impl Default for odSensorContributionT {
+  fn default() -> Self {
+    Self {
+      SENSOR_ID: None,
+      ORIG_SENSOR_ID: None,
+      NUM_ACCEPTED: 0,
+      NUM_REJECTED: 0,
+      WRMS: 0.0,
+      OB_TYPES: None,
+    }
+  }
+}
+impl odSensorContributionT {
+  pub fn pack<'b, A: flatbuffers::Allocator + 'b>(
+    &self,
+    _fbb: &mut flatbuffers::FlatBufferBuilder<'b, A>
+  ) -> flatbuffers::WIPOffset<odSensorContribution<'b>> {
+    let SENSOR_ID = self.SENSOR_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ORIG_SENSOR_ID = self.ORIG_SENSOR_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let NUM_ACCEPTED = self.NUM_ACCEPTED;
+    let NUM_REJECTED = self.NUM_REJECTED;
+    let WRMS = self.WRMS;
+    let OB_TYPES = self.OB_TYPES.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    });
+    odSensorContribution::create(_fbb, &odSensorContributionArgs{
+      SENSOR_ID,
+      ORIG_SENSOR_ID,
+      NUM_ACCEPTED,
+      NUM_REJECTED,
+      WRMS,
+      OB_TYPES,
+    })
+  }
+}
 pub enum OBDOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -27,41 +396,43 @@ impl<'a> flatbuffers::Follow<'a> for OBD<'a> {
 
 impl<'a> OBD<'a> {
   pub const VT_ID: flatbuffers::VOffsetT = 4;
-  pub const VT_START_TIME: flatbuffers::VOffsetT = 6;
-  pub const VT_END_TIME: flatbuffers::VOffsetT = 8;
-  pub const VT_ORIG_OBJECT_ID: flatbuffers::VOffsetT = 10;
-  pub const VT_SAT_NO: flatbuffers::VOffsetT = 12;
-  pub const VT_APRIORI_ID_ELSET: flatbuffers::VOffsetT = 14;
-  pub const VT_APRIORI_ELSET: flatbuffers::VOffsetT = 16;
-  pub const VT_APRIORI_ID_STATE_VECTOR: flatbuffers::VOffsetT = 18;
-  pub const VT_APRIORI_STATE_VECTOR: flatbuffers::VOffsetT = 20;
-  pub const VT_INITIAL_OD: flatbuffers::VOffsetT = 22;
-  pub const VT_LAST_OB_START: flatbuffers::VOffsetT = 24;
-  pub const VT_LAST_OB_END: flatbuffers::VOffsetT = 26;
-  pub const VT_TIME_SPAN: flatbuffers::VOffsetT = 28;
-  pub const VT_EFFECTIVE_FROM: flatbuffers::VOffsetT = 30;
-  pub const VT_EFFECTIVE_UNTIL: flatbuffers::VOffsetT = 32;
-  pub const VT_WRMS: flatbuffers::VOffsetT = 34;
-  pub const VT_PREVIOUS_WRMS: flatbuffers::VOffsetT = 36;
-  pub const VT_FIRST_PASS_WRMS: flatbuffers::VOffsetT = 38;
-  pub const VT_BEST_PASS_WRMS: flatbuffers::VOffsetT = 40;
-  pub const VT_ERROR_GROWTH_RATE: flatbuffers::VOffsetT = 42;
-  pub const VT_EDR: flatbuffers::VOffsetT = 44;
-  pub const VT_METHOD: flatbuffers::VOffsetT = 46;
-  pub const VT_METHOD_SOURCE: flatbuffers::VOffsetT = 48;
-  pub const VT_FIT_SPAN: flatbuffers::VOffsetT = 50;
-  pub const VT_BALLISTIC_COEFF_EST: flatbuffers::VOffsetT = 52;
-  pub const VT_BALLISTIC_COEFF_MODEL: flatbuffers::VOffsetT = 54;
-  pub const VT_AGOM_EST: flatbuffers::VOffsetT = 56;
-  pub const VT_AGOM_MODEL: flatbuffers::VOffsetT = 58;
-  pub const VT_RMS_CONVERGENCE_CRITERIA: flatbuffers::VOffsetT = 60;
-  pub const VT_NUM_ITERATIONS: flatbuffers::VOffsetT = 62;
-  pub const VT_ACCEPTED_OB_TYPS: flatbuffers::VOffsetT = 64;
-  pub const VT_ACCEPTED_OB_IDS: flatbuffers::VOffsetT = 66;
-  pub const VT_REJECTED_OB_TYPS: flatbuffers::VOffsetT = 68;
-  pub const VT_REJECTED_OB_IDS: flatbuffers::VOffsetT = 70;
-  pub const VT_SENSOR_IDS: flatbuffers::VOffsetT = 72;
-  pub const VT_ON_ORBIT: flatbuffers::VOffsetT = 74;
+  pub const VT_SAT_NO: flatbuffers::VOffsetT = 6;
+  pub const VT_ORIG_OBJECT_ID: flatbuffers::VOffsetT = 8;
+  pub const VT_ON_ORBIT: flatbuffers::VOffsetT = 10;
+  pub const VT_START_TIME: flatbuffers::VOffsetT = 12;
+  pub const VT_END_TIME: flatbuffers::VOffsetT = 14;
+  pub const VT_METHOD: flatbuffers::VOffsetT = 16;
+  pub const VT_METHOD_SOURCE: flatbuffers::VOffsetT = 18;
+  pub const VT_INITIAL_OD: flatbuffers::VOffsetT = 20;
+  pub const VT_APRIORI_ID_ELSET: flatbuffers::VOffsetT = 22;
+  pub const VT_APRIORI_ELSET: flatbuffers::VOffsetT = 24;
+  pub const VT_APRIORI_ID_STATE_VECTOR: flatbuffers::VOffsetT = 26;
+  pub const VT_APRIORI_STATE_VECTOR: flatbuffers::VOffsetT = 28;
+  pub const VT_LAST_OB_START: flatbuffers::VOffsetT = 30;
+  pub const VT_LAST_OB_END: flatbuffers::VOffsetT = 32;
+  pub const VT_TIME_SPAN: flatbuffers::VOffsetT = 34;
+  pub const VT_FIT_SPAN: flatbuffers::VOffsetT = 36;
+  pub const VT_EFFECTIVE_FROM: flatbuffers::VOffsetT = 38;
+  pub const VT_EFFECTIVE_UNTIL: flatbuffers::VOffsetT = 40;
+  pub const VT_WRMS: flatbuffers::VOffsetT = 42;
+  pub const VT_PREVIOUS_WRMS: flatbuffers::VOffsetT = 44;
+  pub const VT_FIRST_PASS_WRMS: flatbuffers::VOffsetT = 46;
+  pub const VT_BEST_PASS_WRMS: flatbuffers::VOffsetT = 48;
+  pub const VT_ERROR_GROWTH_RATE: flatbuffers::VOffsetT = 50;
+  pub const VT_EDR: flatbuffers::VOffsetT = 52;
+  pub const VT_BALLISTIC_COEFF_EST: flatbuffers::VOffsetT = 54;
+  pub const VT_BALLISTIC_COEFF_MODEL: flatbuffers::VOffsetT = 56;
+  pub const VT_AGOM_EST: flatbuffers::VOffsetT = 58;
+  pub const VT_AGOM_MODEL: flatbuffers::VOffsetT = 60;
+  pub const VT_RMS_CONVERGENCE_CRITERIA: flatbuffers::VOffsetT = 62;
+  pub const VT_NUM_ITERATIONS: flatbuffers::VOffsetT = 64;
+  pub const VT_NUM_ACCEPTED_OBS: flatbuffers::VOffsetT = 66;
+  pub const VT_NUM_REJECTED_OBS: flatbuffers::VOffsetT = 68;
+  pub const VT_SENSORS: flatbuffers::VOffsetT = 70;
+  pub const VT_ACCEPTED_OB_TYPS: flatbuffers::VOffsetT = 72;
+  pub const VT_ACCEPTED_OB_IDS: flatbuffers::VOffsetT = 74;
+  pub const VT_REJECTED_OB_TYPS: flatbuffers::VOffsetT = 76;
+  pub const VT_REJECTED_OB_IDS: flatbuffers::VOffsetT = 78;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -74,25 +445,23 @@ impl<'a> OBD<'a> {
   ) -> flatbuffers::WIPOffset<OBD<'bldr>> {
     let mut builder = OBDBuilder::new(_fbb);
     builder.add_RMS_CONVERGENCE_CRITERIA(args.RMS_CONVERGENCE_CRITERIA);
-    builder.add_FIT_SPAN(args.FIT_SPAN);
     builder.add_EDR(args.EDR);
     builder.add_ERROR_GROWTH_RATE(args.ERROR_GROWTH_RATE);
     builder.add_BEST_PASS_WRMS(args.BEST_PASS_WRMS);
     builder.add_FIRST_PASS_WRMS(args.FIRST_PASS_WRMS);
     builder.add_PREVIOUS_WRMS(args.PREVIOUS_WRMS);
     builder.add_WRMS(args.WRMS);
+    builder.add_FIT_SPAN(args.FIT_SPAN);
     builder.add_TIME_SPAN(args.TIME_SPAN);
-    if let Some(x) = args.ON_ORBIT { builder.add_ON_ORBIT(x); }
-    if let Some(x) = args.SENSOR_IDS { builder.add_SENSOR_IDS(x); }
     if let Some(x) = args.REJECTED_OB_IDS { builder.add_REJECTED_OB_IDS(x); }
     if let Some(x) = args.REJECTED_OB_TYPS { builder.add_REJECTED_OB_TYPS(x); }
     if let Some(x) = args.ACCEPTED_OB_IDS { builder.add_ACCEPTED_OB_IDS(x); }
     if let Some(x) = args.ACCEPTED_OB_TYPS { builder.add_ACCEPTED_OB_TYPS(x); }
-    builder.add_NUM_ITERATIONS(args.NUM_ITERATIONS);
+    if let Some(x) = args.SENSORS { builder.add_SENSORS(x); }
+    builder.add_NUM_REJECTED_OBS(args.NUM_REJECTED_OBS);
+    builder.add_NUM_ACCEPTED_OBS(args.NUM_ACCEPTED_OBS);
     if let Some(x) = args.AGOM_MODEL { builder.add_AGOM_MODEL(x); }
     if let Some(x) = args.BALLISTIC_COEFF_MODEL { builder.add_BALLISTIC_COEFF_MODEL(x); }
-    if let Some(x) = args.METHOD_SOURCE { builder.add_METHOD_SOURCE(x); }
-    if let Some(x) = args.METHOD { builder.add_METHOD(x); }
     if let Some(x) = args.EFFECTIVE_UNTIL { builder.add_EFFECTIVE_UNTIL(x); }
     if let Some(x) = args.EFFECTIVE_FROM { builder.add_EFFECTIVE_FROM(x); }
     if let Some(x) = args.LAST_OB_END { builder.add_LAST_OB_END(x); }
@@ -101,19 +470,30 @@ impl<'a> OBD<'a> {
     if let Some(x) = args.APRIORI_ID_STATE_VECTOR { builder.add_APRIORI_ID_STATE_VECTOR(x); }
     if let Some(x) = args.APRIORI_ELSET { builder.add_APRIORI_ELSET(x); }
     if let Some(x) = args.APRIORI_ID_ELSET { builder.add_APRIORI_ID_ELSET(x); }
-    builder.add_SAT_NO(args.SAT_NO);
-    if let Some(x) = args.ORIG_OBJECT_ID { builder.add_ORIG_OBJECT_ID(x); }
+    if let Some(x) = args.METHOD_SOURCE { builder.add_METHOD_SOURCE(x); }
     if let Some(x) = args.END_TIME { builder.add_END_TIME(x); }
     if let Some(x) = args.START_TIME { builder.add_START_TIME(x); }
+    if let Some(x) = args.ON_ORBIT { builder.add_ON_ORBIT(x); }
+    if let Some(x) = args.ORIG_OBJECT_ID { builder.add_ORIG_OBJECT_ID(x); }
+    builder.add_SAT_NO(args.SAT_NO);
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_NUM_ITERATIONS(args.NUM_ITERATIONS);
     builder.add_AGOM_EST(args.AGOM_EST);
     builder.add_BALLISTIC_COEFF_EST(args.BALLISTIC_COEFF_EST);
     builder.add_INITIAL_OD(args.INITIAL_OD);
+    builder.add_METHOD(args.METHOD);
     builder.finish()
   }
 
   pub fn unpack(&self) -> OBDT {
     let ID = self.ID().map(|x| {
+      x.to_string()
+    });
+    let SAT_NO = self.SAT_NO();
+    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID().map(|x| {
+      x.to_string()
+    });
+    let ON_ORBIT = self.ON_ORBIT().map(|x| {
       x.to_string()
     });
     let START_TIME = self.START_TIME().map(|x| {
@@ -122,10 +502,11 @@ impl<'a> OBD<'a> {
     let END_TIME = self.END_TIME().map(|x| {
       x.to_string()
     });
-    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID().map(|x| {
+    let METHOD = self.METHOD();
+    let METHOD_SOURCE = self.METHOD_SOURCE().map(|x| {
       x.to_string()
     });
-    let SAT_NO = self.SAT_NO();
+    let INITIAL_OD = self.INITIAL_OD();
     let APRIORI_ID_ELSET = self.APRIORI_ID_ELSET().map(|x| {
       x.to_string()
     });
@@ -138,7 +519,6 @@ impl<'a> OBD<'a> {
     let APRIORI_STATE_VECTOR = self.APRIORI_STATE_VECTOR().map(|x| {
       x.to_string()
     });
-    let INITIAL_OD = self.INITIAL_OD();
     let LAST_OB_START = self.LAST_OB_START().map(|x| {
       x.to_string()
     });
@@ -146,6 +526,7 @@ impl<'a> OBD<'a> {
       x.to_string()
     });
     let TIME_SPAN = self.TIME_SPAN();
+    let FIT_SPAN = self.FIT_SPAN();
     let EFFECTIVE_FROM = self.EFFECTIVE_FROM().map(|x| {
       x.to_string()
     });
@@ -158,13 +539,6 @@ impl<'a> OBD<'a> {
     let BEST_PASS_WRMS = self.BEST_PASS_WRMS();
     let ERROR_GROWTH_RATE = self.ERROR_GROWTH_RATE();
     let EDR = self.EDR();
-    let METHOD = self.METHOD().map(|x| {
-      x.to_string()
-    });
-    let METHOD_SOURCE = self.METHOD_SOURCE().map(|x| {
-      x.to_string()
-    });
-    let FIT_SPAN = self.FIT_SPAN();
     let BALLISTIC_COEFF_EST = self.BALLISTIC_COEFF_EST();
     let BALLISTIC_COEFF_MODEL = self.BALLISTIC_COEFF_MODEL().map(|x| {
       x.to_string()
@@ -175,6 +549,11 @@ impl<'a> OBD<'a> {
     });
     let RMS_CONVERGENCE_CRITERIA = self.RMS_CONVERGENCE_CRITERIA();
     let NUM_ITERATIONS = self.NUM_ITERATIONS();
+    let NUM_ACCEPTED_OBS = self.NUM_ACCEPTED_OBS();
+    let NUM_REJECTED_OBS = self.NUM_REJECTED_OBS();
+    let SENSORS = self.SENSORS().map(|x| {
+      x.iter().map(|t| t.unpack()).collect()
+    });
     let ACCEPTED_OB_TYPS = self.ACCEPTED_OB_TYPS().map(|x| {
       x.iter().map(|s| s.to_string()).collect()
     });
@@ -187,26 +566,24 @@ impl<'a> OBD<'a> {
     let REJECTED_OB_IDS = self.REJECTED_OB_IDS().map(|x| {
       x.iter().map(|s| s.to_string()).collect()
     });
-    let SENSOR_IDS = self.SENSOR_IDS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
-    });
-    let ON_ORBIT = self.ON_ORBIT().map(|x| {
-      x.to_string()
-    });
     OBDT {
       ID,
+      SAT_NO,
+      ORIG_OBJECT_ID,
+      ON_ORBIT,
       START_TIME,
       END_TIME,
-      ORIG_OBJECT_ID,
-      SAT_NO,
+      METHOD,
+      METHOD_SOURCE,
+      INITIAL_OD,
       APRIORI_ID_ELSET,
       APRIORI_ELSET,
       APRIORI_ID_STATE_VECTOR,
       APRIORI_STATE_VECTOR,
-      INITIAL_OD,
       LAST_OB_START,
       LAST_OB_END,
       TIME_SPAN,
+      FIT_SPAN,
       EFFECTIVE_FROM,
       EFFECTIVE_UNTIL,
       WRMS,
@@ -215,24 +592,23 @@ impl<'a> OBD<'a> {
       BEST_PASS_WRMS,
       ERROR_GROWTH_RATE,
       EDR,
-      METHOD,
-      METHOD_SOURCE,
-      FIT_SPAN,
       BALLISTIC_COEFF_EST,
       BALLISTIC_COEFF_MODEL,
       AGOM_EST,
       AGOM_MODEL,
       RMS_CONVERGENCE_CRITERIA,
       NUM_ITERATIONS,
+      NUM_ACCEPTED_OBS,
+      NUM_REJECTED_OBS,
+      SENSORS,
       ACCEPTED_OB_TYPS,
       ACCEPTED_OB_IDS,
       REJECTED_OB_TYPS,
       REJECTED_OB_IDS,
-      SENSOR_IDS,
-      ON_ORBIT,
     }
   }
 
+  /// Unique identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -240,20 +616,15 @@ impl<'a> OBD<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_ID, None)}
   }
+  /// Satellite catalog number
   #[inline]
-  pub fn START_TIME(&self) -> Option<&'a str> {
+  pub fn SAT_NO(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_START_TIME, None)}
+    unsafe { self._tab.get::<u32>(OBD::VT_SAT_NO, Some(0)).unwrap()}
   }
-  #[inline]
-  pub fn END_TIME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_END_TIME, None)}
-  }
+  /// International designator
   #[inline]
   pub fn ORIG_OBJECT_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -261,132 +632,39 @@ impl<'a> OBD<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_ORIG_OBJECT_ID, None)}
   }
+  /// On-orbit reference
   #[inline]
-  pub fn SAT_NO(&self) -> i32 {
+  pub fn ON_ORBIT(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(OBD::VT_SAT_NO, Some(0)).unwrap()}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_ON_ORBIT, None)}
   }
+  /// OD fit start time (ISO 8601)
   #[inline]
-  pub fn APRIORI_ID_ELSET(&self) -> Option<&'a str> {
+  pub fn START_TIME(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_APRIORI_ID_ELSET, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_START_TIME, None)}
   }
+  /// OD fit end time (ISO 8601)
   #[inline]
-  pub fn APRIORI_ELSET(&self) -> Option<&'a str> {
+  pub fn END_TIME(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_APRIORI_ELSET, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_END_TIME, None)}
   }
+  /// OD method used
   #[inline]
-  pub fn APRIORI_ID_STATE_VECTOR(&self) -> Option<&'a str> {
+  pub fn METHOD(&self) -> odMethod {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_APRIORI_ID_STATE_VECTOR, None)}
+    unsafe { self._tab.get::<odMethod>(OBD::VT_METHOD, Some(odMethod::BATCH_LEAST_SQUARES)).unwrap()}
   }
-  #[inline]
-  pub fn APRIORI_STATE_VECTOR(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_APRIORI_STATE_VECTOR, None)}
-  }
-  #[inline]
-  pub fn INITIAL_OD(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(OBD::VT_INITIAL_OD, Some(false)).unwrap()}
-  }
-  #[inline]
-  pub fn LAST_OB_START(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_LAST_OB_START, None)}
-  }
-  #[inline]
-  pub fn LAST_OB_END(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_LAST_OB_END, None)}
-  }
-  #[inline]
-  pub fn TIME_SPAN(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OBD::VT_TIME_SPAN, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn EFFECTIVE_FROM(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_EFFECTIVE_FROM, None)}
-  }
-  #[inline]
-  pub fn EFFECTIVE_UNTIL(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_EFFECTIVE_UNTIL, None)}
-  }
-  #[inline]
-  pub fn WRMS(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OBD::VT_WRMS, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PREVIOUS_WRMS(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OBD::VT_PREVIOUS_WRMS, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn FIRST_PASS_WRMS(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OBD::VT_FIRST_PASS_WRMS, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn BEST_PASS_WRMS(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OBD::VT_BEST_PASS_WRMS, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn ERROR_GROWTH_RATE(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OBD::VT_ERROR_GROWTH_RATE, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn EDR(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OBD::VT_EDR, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn METHOD(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_METHOD, None)}
-  }
+  /// Method source or software
   #[inline]
   pub fn METHOD_SOURCE(&self) -> Option<&'a str> {
     // Safety:
@@ -394,6 +672,71 @@ impl<'a> OBD<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_METHOD_SOURCE, None)}
   }
+  /// True if this is an initial orbit determination
+  #[inline]
+  pub fn INITIAL_OD(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(OBD::VT_INITIAL_OD, Some(false)).unwrap()}
+  }
+  /// A priori element set identifier
+  #[inline]
+  pub fn APRIORI_ID_ELSET(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_APRIORI_ID_ELSET, None)}
+  }
+  /// A priori element set data reference
+  #[inline]
+  pub fn APRIORI_ELSET(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_APRIORI_ELSET, None)}
+  }
+  /// A priori state vector identifier
+  #[inline]
+  pub fn APRIORI_ID_STATE_VECTOR(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_APRIORI_ID_STATE_VECTOR, None)}
+  }
+  /// A priori state vector data reference
+  #[inline]
+  pub fn APRIORI_STATE_VECTOR(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_APRIORI_STATE_VECTOR, None)}
+  }
+  /// Start of last observation arc (ISO 8601)
+  #[inline]
+  pub fn LAST_OB_START(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_LAST_OB_START, None)}
+  }
+  /// End of last observation arc (ISO 8601)
+  #[inline]
+  pub fn LAST_OB_END(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_LAST_OB_END, None)}
+  }
+  /// Observation time span (days)
+  #[inline]
+  pub fn TIME_SPAN(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OBD::VT_TIME_SPAN, Some(0.0)).unwrap()}
+  }
+  /// Fit span in days
   #[inline]
   pub fn FIT_SPAN(&self) -> f64 {
     // Safety:
@@ -401,6 +744,71 @@ impl<'a> OBD<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OBD::VT_FIT_SPAN, Some(0.0)).unwrap()}
   }
+  /// Solution effective from (ISO 8601)
+  #[inline]
+  pub fn EFFECTIVE_FROM(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_EFFECTIVE_FROM, None)}
+  }
+  /// Solution effective until (ISO 8601)
+  #[inline]
+  pub fn EFFECTIVE_UNTIL(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_EFFECTIVE_UNTIL, None)}
+  }
+  /// Weighted RMS of residuals
+  #[inline]
+  pub fn WRMS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OBD::VT_WRMS, Some(0.0)).unwrap()}
+  }
+  /// Previous solution WRMS
+  #[inline]
+  pub fn PREVIOUS_WRMS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OBD::VT_PREVIOUS_WRMS, Some(0.0)).unwrap()}
+  }
+  /// First pass WRMS
+  #[inline]
+  pub fn FIRST_PASS_WRMS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OBD::VT_FIRST_PASS_WRMS, Some(0.0)).unwrap()}
+  }
+  /// Best pass WRMS
+  #[inline]
+  pub fn BEST_PASS_WRMS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OBD::VT_BEST_PASS_WRMS, Some(0.0)).unwrap()}
+  }
+  /// Error growth rate (km/day)
+  #[inline]
+  pub fn ERROR_GROWTH_RATE(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OBD::VT_ERROR_GROWTH_RATE, Some(0.0)).unwrap()}
+  }
+  /// Energy dissipation rate
+  #[inline]
+  pub fn EDR(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OBD::VT_EDR, Some(0.0)).unwrap()}
+  }
+  /// True if ballistic coefficient was estimated
   #[inline]
   pub fn BALLISTIC_COEFF_EST(&self) -> bool {
     // Safety:
@@ -408,6 +816,7 @@ impl<'a> OBD<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(OBD::VT_BALLISTIC_COEFF_EST, Some(false)).unwrap()}
   }
+  /// Ballistic coefficient model
   #[inline]
   pub fn BALLISTIC_COEFF_MODEL(&self) -> Option<&'a str> {
     // Safety:
@@ -415,6 +824,7 @@ impl<'a> OBD<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_BALLISTIC_COEFF_MODEL, None)}
   }
+  /// True if area-to-mass ratio was estimated
   #[inline]
   pub fn AGOM_EST(&self) -> bool {
     // Safety:
@@ -422,6 +832,7 @@ impl<'a> OBD<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(OBD::VT_AGOM_EST, Some(false)).unwrap()}
   }
+  /// Area-to-mass ratio model
   #[inline]
   pub fn AGOM_MODEL(&self) -> Option<&'a str> {
     // Safety:
@@ -429,6 +840,7 @@ impl<'a> OBD<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_AGOM_MODEL, None)}
   }
+  /// RMS convergence criteria
   #[inline]
   pub fn RMS_CONVERGENCE_CRITERIA(&self) -> f64 {
     // Safety:
@@ -436,13 +848,39 @@ impl<'a> OBD<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(OBD::VT_RMS_CONVERGENCE_CRITERIA, Some(0.0)).unwrap()}
   }
+  /// Number of iterations to converge
   #[inline]
-  pub fn NUM_ITERATIONS(&self) -> i32 {
+  pub fn NUM_ITERATIONS(&self) -> u16 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(OBD::VT_NUM_ITERATIONS, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u16>(OBD::VT_NUM_ITERATIONS, Some(0)).unwrap()}
   }
+  /// Total accepted observations
+  #[inline]
+  pub fn NUM_ACCEPTED_OBS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(OBD::VT_NUM_ACCEPTED_OBS, Some(0)).unwrap()}
+  }
+  /// Total rejected observations
+  #[inline]
+  pub fn NUM_REJECTED_OBS(&self) -> u32 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u32>(OBD::VT_NUM_REJECTED_OBS, Some(0)).unwrap()}
+  }
+  /// Sensor contributions to this solution
+  #[inline]
+  pub fn SENSORS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<odSensorContribution<'a>>>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<odSensorContribution>>>>(OBD::VT_SENSORS, None)}
+  }
+  /// Accepted observation types
   #[inline]
   pub fn ACCEPTED_OB_TYPS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -450,6 +888,7 @@ impl<'a> OBD<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(OBD::VT_ACCEPTED_OB_TYPS, None)}
   }
+  /// Accepted observation identifiers
   #[inline]
   pub fn ACCEPTED_OB_IDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -457,6 +896,7 @@ impl<'a> OBD<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(OBD::VT_ACCEPTED_OB_IDS, None)}
   }
+  /// Rejected observation types
   #[inline]
   pub fn REJECTED_OB_TYPS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -464,26 +904,13 @@ impl<'a> OBD<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(OBD::VT_REJECTED_OB_TYPS, None)}
   }
+  /// Rejected observation identifiers
   #[inline]
   pub fn REJECTED_OB_IDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(OBD::VT_REJECTED_OB_IDS, None)}
-  }
-  #[inline]
-  pub fn SENSOR_IDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(OBD::VT_SENSOR_IDS, None)}
-  }
-  #[inline]
-  pub fn ON_ORBIT(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OBD::VT_ON_ORBIT, None)}
   }
 }
 
@@ -495,18 +922,22 @@ impl flatbuffers::Verifiable for OBD<'_> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
+     .visit_field::<u32>("SAT_NO", Self::VT_SAT_NO, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_OBJECT_ID", Self::VT_ORIG_OBJECT_ID, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ON_ORBIT", Self::VT_ON_ORBIT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("START_TIME", Self::VT_START_TIME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("END_TIME", Self::VT_END_TIME, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_OBJECT_ID", Self::VT_ORIG_OBJECT_ID, false)?
-     .visit_field::<i32>("SAT_NO", Self::VT_SAT_NO, false)?
+     .visit_field::<odMethod>("METHOD", Self::VT_METHOD, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("METHOD_SOURCE", Self::VT_METHOD_SOURCE, false)?
+     .visit_field::<bool>("INITIAL_OD", Self::VT_INITIAL_OD, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("APRIORI_ID_ELSET", Self::VT_APRIORI_ID_ELSET, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("APRIORI_ELSET", Self::VT_APRIORI_ELSET, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("APRIORI_ID_STATE_VECTOR", Self::VT_APRIORI_ID_STATE_VECTOR, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("APRIORI_STATE_VECTOR", Self::VT_APRIORI_STATE_VECTOR, false)?
-     .visit_field::<bool>("INITIAL_OD", Self::VT_INITIAL_OD, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LAST_OB_START", Self::VT_LAST_OB_START, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LAST_OB_END", Self::VT_LAST_OB_END, false)?
      .visit_field::<f64>("TIME_SPAN", Self::VT_TIME_SPAN, false)?
+     .visit_field::<f64>("FIT_SPAN", Self::VT_FIT_SPAN, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EFFECTIVE_FROM", Self::VT_EFFECTIVE_FROM, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EFFECTIVE_UNTIL", Self::VT_EFFECTIVE_UNTIL, false)?
      .visit_field::<f64>("WRMS", Self::VT_WRMS, false)?
@@ -515,39 +946,41 @@ impl flatbuffers::Verifiable for OBD<'_> {
      .visit_field::<f64>("BEST_PASS_WRMS", Self::VT_BEST_PASS_WRMS, false)?
      .visit_field::<f64>("ERROR_GROWTH_RATE", Self::VT_ERROR_GROWTH_RATE, false)?
      .visit_field::<f64>("EDR", Self::VT_EDR, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("METHOD", Self::VT_METHOD, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("METHOD_SOURCE", Self::VT_METHOD_SOURCE, false)?
-     .visit_field::<f64>("FIT_SPAN", Self::VT_FIT_SPAN, false)?
      .visit_field::<bool>("BALLISTIC_COEFF_EST", Self::VT_BALLISTIC_COEFF_EST, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("BALLISTIC_COEFF_MODEL", Self::VT_BALLISTIC_COEFF_MODEL, false)?
      .visit_field::<bool>("AGOM_EST", Self::VT_AGOM_EST, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("AGOM_MODEL", Self::VT_AGOM_MODEL, false)?
      .visit_field::<f64>("RMS_CONVERGENCE_CRITERIA", Self::VT_RMS_CONVERGENCE_CRITERIA, false)?
-     .visit_field::<i32>("NUM_ITERATIONS", Self::VT_NUM_ITERATIONS, false)?
+     .visit_field::<u16>("NUM_ITERATIONS", Self::VT_NUM_ITERATIONS, false)?
+     .visit_field::<u32>("NUM_ACCEPTED_OBS", Self::VT_NUM_ACCEPTED_OBS, false)?
+     .visit_field::<u32>("NUM_REJECTED_OBS", Self::VT_NUM_REJECTED_OBS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<odSensorContribution>>>>("SENSORS", Self::VT_SENSORS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("ACCEPTED_OB_TYPS", Self::VT_ACCEPTED_OB_TYPS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("ACCEPTED_OB_IDS", Self::VT_ACCEPTED_OB_IDS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("REJECTED_OB_TYPS", Self::VT_REJECTED_OB_TYPS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("REJECTED_OB_IDS", Self::VT_REJECTED_OB_IDS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("SENSOR_IDS", Self::VT_SENSOR_IDS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ON_ORBIT", Self::VT_ON_ORBIT, false)?
      .finish();
     Ok(())
   }
 }
 pub struct OBDArgs<'a> {
     pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SAT_NO: u32,
+    pub ORIG_OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub ON_ORBIT: Option<flatbuffers::WIPOffset<&'a str>>,
     pub START_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub END_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub ORIG_OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SAT_NO: i32,
+    pub METHOD: odMethod,
+    pub METHOD_SOURCE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub INITIAL_OD: bool,
     pub APRIORI_ID_ELSET: Option<flatbuffers::WIPOffset<&'a str>>,
     pub APRIORI_ELSET: Option<flatbuffers::WIPOffset<&'a str>>,
     pub APRIORI_ID_STATE_VECTOR: Option<flatbuffers::WIPOffset<&'a str>>,
     pub APRIORI_STATE_VECTOR: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub INITIAL_OD: bool,
     pub LAST_OB_START: Option<flatbuffers::WIPOffset<&'a str>>,
     pub LAST_OB_END: Option<flatbuffers::WIPOffset<&'a str>>,
     pub TIME_SPAN: f64,
+    pub FIT_SPAN: f64,
     pub EFFECTIVE_FROM: Option<flatbuffers::WIPOffset<&'a str>>,
     pub EFFECTIVE_UNTIL: Option<flatbuffers::WIPOffset<&'a str>>,
     pub WRMS: f64,
@@ -556,39 +989,41 @@ pub struct OBDArgs<'a> {
     pub BEST_PASS_WRMS: f64,
     pub ERROR_GROWTH_RATE: f64,
     pub EDR: f64,
-    pub METHOD: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub METHOD_SOURCE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub FIT_SPAN: f64,
     pub BALLISTIC_COEFF_EST: bool,
     pub BALLISTIC_COEFF_MODEL: Option<flatbuffers::WIPOffset<&'a str>>,
     pub AGOM_EST: bool,
     pub AGOM_MODEL: Option<flatbuffers::WIPOffset<&'a str>>,
     pub RMS_CONVERGENCE_CRITERIA: f64,
-    pub NUM_ITERATIONS: i32,
+    pub NUM_ITERATIONS: u16,
+    pub NUM_ACCEPTED_OBS: u32,
+    pub NUM_REJECTED_OBS: u32,
+    pub SENSORS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<odSensorContribution<'a>>>>>,
     pub ACCEPTED_OB_TYPS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub ACCEPTED_OB_IDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub REJECTED_OB_TYPS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
     pub REJECTED_OB_IDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub SENSOR_IDS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub ON_ORBIT: Option<flatbuffers::WIPOffset<&'a str>>,
 }
 impl<'a> Default for OBDArgs<'a> {
   #[inline]
   fn default() -> Self {
     OBDArgs {
       ID: None,
+      SAT_NO: 0,
+      ORIG_OBJECT_ID: None,
+      ON_ORBIT: None,
       START_TIME: None,
       END_TIME: None,
-      ORIG_OBJECT_ID: None,
-      SAT_NO: 0,
+      METHOD: odMethod::BATCH_LEAST_SQUARES,
+      METHOD_SOURCE: None,
+      INITIAL_OD: false,
       APRIORI_ID_ELSET: None,
       APRIORI_ELSET: None,
       APRIORI_ID_STATE_VECTOR: None,
       APRIORI_STATE_VECTOR: None,
-      INITIAL_OD: false,
       LAST_OB_START: None,
       LAST_OB_END: None,
       TIME_SPAN: 0.0,
+      FIT_SPAN: 0.0,
       EFFECTIVE_FROM: None,
       EFFECTIVE_UNTIL: None,
       WRMS: 0.0,
@@ -597,21 +1032,19 @@ impl<'a> Default for OBDArgs<'a> {
       BEST_PASS_WRMS: 0.0,
       ERROR_GROWTH_RATE: 0.0,
       EDR: 0.0,
-      METHOD: None,
-      METHOD_SOURCE: None,
-      FIT_SPAN: 0.0,
       BALLISTIC_COEFF_EST: false,
       BALLISTIC_COEFF_MODEL: None,
       AGOM_EST: false,
       AGOM_MODEL: None,
       RMS_CONVERGENCE_CRITERIA: 0.0,
       NUM_ITERATIONS: 0,
+      NUM_ACCEPTED_OBS: 0,
+      NUM_REJECTED_OBS: 0,
+      SENSORS: None,
       ACCEPTED_OB_TYPS: None,
       ACCEPTED_OB_IDS: None,
       REJECTED_OB_TYPS: None,
       REJECTED_OB_IDS: None,
-      SENSOR_IDS: None,
-      ON_ORBIT: None,
     }
   }
 }
@@ -626,6 +1059,18 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OBDBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBD::VT_ID, ID);
   }
   #[inline]
+  pub fn add_SAT_NO(&mut self, SAT_NO: u32) {
+    self.fbb_.push_slot::<u32>(OBD::VT_SAT_NO, SAT_NO, 0);
+  }
+  #[inline]
+  pub fn add_ORIG_OBJECT_ID(&mut self, ORIG_OBJECT_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBD::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
+  }
+  #[inline]
+  pub fn add_ON_ORBIT(&mut self, ON_ORBIT: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBD::VT_ON_ORBIT, ON_ORBIT);
+  }
+  #[inline]
   pub fn add_START_TIME(&mut self, START_TIME: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBD::VT_START_TIME, START_TIME);
   }
@@ -634,12 +1079,16 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OBDBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBD::VT_END_TIME, END_TIME);
   }
   #[inline]
-  pub fn add_ORIG_OBJECT_ID(&mut self, ORIG_OBJECT_ID: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBD::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
+  pub fn add_METHOD(&mut self, METHOD: odMethod) {
+    self.fbb_.push_slot::<odMethod>(OBD::VT_METHOD, METHOD, odMethod::BATCH_LEAST_SQUARES);
   }
   #[inline]
-  pub fn add_SAT_NO(&mut self, SAT_NO: i32) {
-    self.fbb_.push_slot::<i32>(OBD::VT_SAT_NO, SAT_NO, 0);
+  pub fn add_METHOD_SOURCE(&mut self, METHOD_SOURCE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBD::VT_METHOD_SOURCE, METHOD_SOURCE);
+  }
+  #[inline]
+  pub fn add_INITIAL_OD(&mut self, INITIAL_OD: bool) {
+    self.fbb_.push_slot::<bool>(OBD::VT_INITIAL_OD, INITIAL_OD, false);
   }
   #[inline]
   pub fn add_APRIORI_ID_ELSET(&mut self, APRIORI_ID_ELSET: flatbuffers::WIPOffset<&'b  str>) {
@@ -658,10 +1107,6 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OBDBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBD::VT_APRIORI_STATE_VECTOR, APRIORI_STATE_VECTOR);
   }
   #[inline]
-  pub fn add_INITIAL_OD(&mut self, INITIAL_OD: bool) {
-    self.fbb_.push_slot::<bool>(OBD::VT_INITIAL_OD, INITIAL_OD, false);
-  }
-  #[inline]
   pub fn add_LAST_OB_START(&mut self, LAST_OB_START: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBD::VT_LAST_OB_START, LAST_OB_START);
   }
@@ -672,6 +1117,10 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OBDBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_TIME_SPAN(&mut self, TIME_SPAN: f64) {
     self.fbb_.push_slot::<f64>(OBD::VT_TIME_SPAN, TIME_SPAN, 0.0);
+  }
+  #[inline]
+  pub fn add_FIT_SPAN(&mut self, FIT_SPAN: f64) {
+    self.fbb_.push_slot::<f64>(OBD::VT_FIT_SPAN, FIT_SPAN, 0.0);
   }
   #[inline]
   pub fn add_EFFECTIVE_FROM(&mut self, EFFECTIVE_FROM: flatbuffers::WIPOffset<&'b  str>) {
@@ -706,18 +1155,6 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OBDBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(OBD::VT_EDR, EDR, 0.0);
   }
   #[inline]
-  pub fn add_METHOD(&mut self, METHOD: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBD::VT_METHOD, METHOD);
-  }
-  #[inline]
-  pub fn add_METHOD_SOURCE(&mut self, METHOD_SOURCE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBD::VT_METHOD_SOURCE, METHOD_SOURCE);
-  }
-  #[inline]
-  pub fn add_FIT_SPAN(&mut self, FIT_SPAN: f64) {
-    self.fbb_.push_slot::<f64>(OBD::VT_FIT_SPAN, FIT_SPAN, 0.0);
-  }
-  #[inline]
   pub fn add_BALLISTIC_COEFF_EST(&mut self, BALLISTIC_COEFF_EST: bool) {
     self.fbb_.push_slot::<bool>(OBD::VT_BALLISTIC_COEFF_EST, BALLISTIC_COEFF_EST, false);
   }
@@ -738,8 +1175,20 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OBDBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(OBD::VT_RMS_CONVERGENCE_CRITERIA, RMS_CONVERGENCE_CRITERIA, 0.0);
   }
   #[inline]
-  pub fn add_NUM_ITERATIONS(&mut self, NUM_ITERATIONS: i32) {
-    self.fbb_.push_slot::<i32>(OBD::VT_NUM_ITERATIONS, NUM_ITERATIONS, 0);
+  pub fn add_NUM_ITERATIONS(&mut self, NUM_ITERATIONS: u16) {
+    self.fbb_.push_slot::<u16>(OBD::VT_NUM_ITERATIONS, NUM_ITERATIONS, 0);
+  }
+  #[inline]
+  pub fn add_NUM_ACCEPTED_OBS(&mut self, NUM_ACCEPTED_OBS: u32) {
+    self.fbb_.push_slot::<u32>(OBD::VT_NUM_ACCEPTED_OBS, NUM_ACCEPTED_OBS, 0);
+  }
+  #[inline]
+  pub fn add_NUM_REJECTED_OBS(&mut self, NUM_REJECTED_OBS: u32) {
+    self.fbb_.push_slot::<u32>(OBD::VT_NUM_REJECTED_OBS, NUM_REJECTED_OBS, 0);
+  }
+  #[inline]
+  pub fn add_SENSORS(&mut self, SENSORS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<odSensorContribution<'b >>>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBD::VT_SENSORS, SENSORS);
   }
   #[inline]
   pub fn add_ACCEPTED_OB_TYPS(&mut self, ACCEPTED_OB_TYPS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
@@ -756,14 +1205,6 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OBDBuilder<'a, 'b, A> {
   #[inline]
   pub fn add_REJECTED_OB_IDS(&mut self, REJECTED_OB_IDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBD::VT_REJECTED_OB_IDS, REJECTED_OB_IDS);
-  }
-  #[inline]
-  pub fn add_SENSOR_IDS(&mut self, SENSOR_IDS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBD::VT_SENSOR_IDS, SENSOR_IDS);
-  }
-  #[inline]
-  pub fn add_ON_ORBIT(&mut self, ON_ORBIT: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OBD::VT_ON_ORBIT, ON_ORBIT);
   }
   #[inline]
   pub fn new(_fbb: &'b mut flatbuffers::FlatBufferBuilder<'a, A>) -> OBDBuilder<'a, 'b, A> {
@@ -784,18 +1225,22 @@ impl core::fmt::Debug for OBD<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
     let mut ds = f.debug_struct("OBD");
       ds.field("ID", &self.ID());
+      ds.field("SAT_NO", &self.SAT_NO());
+      ds.field("ORIG_OBJECT_ID", &self.ORIG_OBJECT_ID());
+      ds.field("ON_ORBIT", &self.ON_ORBIT());
       ds.field("START_TIME", &self.START_TIME());
       ds.field("END_TIME", &self.END_TIME());
-      ds.field("ORIG_OBJECT_ID", &self.ORIG_OBJECT_ID());
-      ds.field("SAT_NO", &self.SAT_NO());
+      ds.field("METHOD", &self.METHOD());
+      ds.field("METHOD_SOURCE", &self.METHOD_SOURCE());
+      ds.field("INITIAL_OD", &self.INITIAL_OD());
       ds.field("APRIORI_ID_ELSET", &self.APRIORI_ID_ELSET());
       ds.field("APRIORI_ELSET", &self.APRIORI_ELSET());
       ds.field("APRIORI_ID_STATE_VECTOR", &self.APRIORI_ID_STATE_VECTOR());
       ds.field("APRIORI_STATE_VECTOR", &self.APRIORI_STATE_VECTOR());
-      ds.field("INITIAL_OD", &self.INITIAL_OD());
       ds.field("LAST_OB_START", &self.LAST_OB_START());
       ds.field("LAST_OB_END", &self.LAST_OB_END());
       ds.field("TIME_SPAN", &self.TIME_SPAN());
+      ds.field("FIT_SPAN", &self.FIT_SPAN());
       ds.field("EFFECTIVE_FROM", &self.EFFECTIVE_FROM());
       ds.field("EFFECTIVE_UNTIL", &self.EFFECTIVE_UNTIL());
       ds.field("WRMS", &self.WRMS());
@@ -804,21 +1249,19 @@ impl core::fmt::Debug for OBD<'_> {
       ds.field("BEST_PASS_WRMS", &self.BEST_PASS_WRMS());
       ds.field("ERROR_GROWTH_RATE", &self.ERROR_GROWTH_RATE());
       ds.field("EDR", &self.EDR());
-      ds.field("METHOD", &self.METHOD());
-      ds.field("METHOD_SOURCE", &self.METHOD_SOURCE());
-      ds.field("FIT_SPAN", &self.FIT_SPAN());
       ds.field("BALLISTIC_COEFF_EST", &self.BALLISTIC_COEFF_EST());
       ds.field("BALLISTIC_COEFF_MODEL", &self.BALLISTIC_COEFF_MODEL());
       ds.field("AGOM_EST", &self.AGOM_EST());
       ds.field("AGOM_MODEL", &self.AGOM_MODEL());
       ds.field("RMS_CONVERGENCE_CRITERIA", &self.RMS_CONVERGENCE_CRITERIA());
       ds.field("NUM_ITERATIONS", &self.NUM_ITERATIONS());
+      ds.field("NUM_ACCEPTED_OBS", &self.NUM_ACCEPTED_OBS());
+      ds.field("NUM_REJECTED_OBS", &self.NUM_REJECTED_OBS());
+      ds.field("SENSORS", &self.SENSORS());
       ds.field("ACCEPTED_OB_TYPS", &self.ACCEPTED_OB_TYPS());
       ds.field("ACCEPTED_OB_IDS", &self.ACCEPTED_OB_IDS());
       ds.field("REJECTED_OB_TYPS", &self.REJECTED_OB_TYPS());
       ds.field("REJECTED_OB_IDS", &self.REJECTED_OB_IDS());
-      ds.field("SENSOR_IDS", &self.SENSOR_IDS());
-      ds.field("ON_ORBIT", &self.ON_ORBIT());
       ds.finish()
   }
 }
@@ -826,18 +1269,22 @@ impl core::fmt::Debug for OBD<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct OBDT {
   pub ID: Option<String>,
+  pub SAT_NO: u32,
+  pub ORIG_OBJECT_ID: Option<String>,
+  pub ON_ORBIT: Option<String>,
   pub START_TIME: Option<String>,
   pub END_TIME: Option<String>,
-  pub ORIG_OBJECT_ID: Option<String>,
-  pub SAT_NO: i32,
+  pub METHOD: odMethod,
+  pub METHOD_SOURCE: Option<String>,
+  pub INITIAL_OD: bool,
   pub APRIORI_ID_ELSET: Option<String>,
   pub APRIORI_ELSET: Option<String>,
   pub APRIORI_ID_STATE_VECTOR: Option<String>,
   pub APRIORI_STATE_VECTOR: Option<String>,
-  pub INITIAL_OD: bool,
   pub LAST_OB_START: Option<String>,
   pub LAST_OB_END: Option<String>,
   pub TIME_SPAN: f64,
+  pub FIT_SPAN: f64,
   pub EFFECTIVE_FROM: Option<String>,
   pub EFFECTIVE_UNTIL: Option<String>,
   pub WRMS: f64,
@@ -846,38 +1293,40 @@ pub struct OBDT {
   pub BEST_PASS_WRMS: f64,
   pub ERROR_GROWTH_RATE: f64,
   pub EDR: f64,
-  pub METHOD: Option<String>,
-  pub METHOD_SOURCE: Option<String>,
-  pub FIT_SPAN: f64,
   pub BALLISTIC_COEFF_EST: bool,
   pub BALLISTIC_COEFF_MODEL: Option<String>,
   pub AGOM_EST: bool,
   pub AGOM_MODEL: Option<String>,
   pub RMS_CONVERGENCE_CRITERIA: f64,
-  pub NUM_ITERATIONS: i32,
+  pub NUM_ITERATIONS: u16,
+  pub NUM_ACCEPTED_OBS: u32,
+  pub NUM_REJECTED_OBS: u32,
+  pub SENSORS: Option<Vec<odSensorContributionT>>,
   pub ACCEPTED_OB_TYPS: Option<Vec<String>>,
   pub ACCEPTED_OB_IDS: Option<Vec<String>>,
   pub REJECTED_OB_TYPS: Option<Vec<String>>,
   pub REJECTED_OB_IDS: Option<Vec<String>>,
-  pub SENSOR_IDS: Option<Vec<String>>,
-  pub ON_ORBIT: Option<String>,
 }
 impl Default for OBDT {
   fn default() -> Self {
     Self {
       ID: None,
+      SAT_NO: 0,
+      ORIG_OBJECT_ID: None,
+      ON_ORBIT: None,
       START_TIME: None,
       END_TIME: None,
-      ORIG_OBJECT_ID: None,
-      SAT_NO: 0,
+      METHOD: odMethod::BATCH_LEAST_SQUARES,
+      METHOD_SOURCE: None,
+      INITIAL_OD: false,
       APRIORI_ID_ELSET: None,
       APRIORI_ELSET: None,
       APRIORI_ID_STATE_VECTOR: None,
       APRIORI_STATE_VECTOR: None,
-      INITIAL_OD: false,
       LAST_OB_START: None,
       LAST_OB_END: None,
       TIME_SPAN: 0.0,
+      FIT_SPAN: 0.0,
       EFFECTIVE_FROM: None,
       EFFECTIVE_UNTIL: None,
       WRMS: 0.0,
@@ -886,21 +1335,19 @@ impl Default for OBDT {
       BEST_PASS_WRMS: 0.0,
       ERROR_GROWTH_RATE: 0.0,
       EDR: 0.0,
-      METHOD: None,
-      METHOD_SOURCE: None,
-      FIT_SPAN: 0.0,
       BALLISTIC_COEFF_EST: false,
       BALLISTIC_COEFF_MODEL: None,
       AGOM_EST: false,
       AGOM_MODEL: None,
       RMS_CONVERGENCE_CRITERIA: 0.0,
       NUM_ITERATIONS: 0,
+      NUM_ACCEPTED_OBS: 0,
+      NUM_REJECTED_OBS: 0,
+      SENSORS: None,
       ACCEPTED_OB_TYPS: None,
       ACCEPTED_OB_IDS: None,
       REJECTED_OB_TYPS: None,
       REJECTED_OB_IDS: None,
-      SENSOR_IDS: None,
-      ON_ORBIT: None,
     }
   }
 }
@@ -912,16 +1359,24 @@ impl OBDT {
     let ID = self.ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let SAT_NO = self.SAT_NO;
+    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let ON_ORBIT = self.ON_ORBIT.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     let START_TIME = self.START_TIME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let END_TIME = self.END_TIME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID.as_ref().map(|x|{
+    let METHOD = self.METHOD;
+    let METHOD_SOURCE = self.METHOD_SOURCE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let SAT_NO = self.SAT_NO;
+    let INITIAL_OD = self.INITIAL_OD;
     let APRIORI_ID_ELSET = self.APRIORI_ID_ELSET.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -934,7 +1389,6 @@ impl OBDT {
     let APRIORI_STATE_VECTOR = self.APRIORI_STATE_VECTOR.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let INITIAL_OD = self.INITIAL_OD;
     let LAST_OB_START = self.LAST_OB_START.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -942,6 +1396,7 @@ impl OBDT {
       _fbb.create_string(x)
     });
     let TIME_SPAN = self.TIME_SPAN;
+    let FIT_SPAN = self.FIT_SPAN;
     let EFFECTIVE_FROM = self.EFFECTIVE_FROM.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -954,13 +1409,6 @@ impl OBDT {
     let BEST_PASS_WRMS = self.BEST_PASS_WRMS;
     let ERROR_GROWTH_RATE = self.ERROR_GROWTH_RATE;
     let EDR = self.EDR;
-    let METHOD = self.METHOD.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let METHOD_SOURCE = self.METHOD_SOURCE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let FIT_SPAN = self.FIT_SPAN;
     let BALLISTIC_COEFF_EST = self.BALLISTIC_COEFF_EST;
     let BALLISTIC_COEFF_MODEL = self.BALLISTIC_COEFF_MODEL.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -971,6 +1419,11 @@ impl OBDT {
     });
     let RMS_CONVERGENCE_CRITERIA = self.RMS_CONVERGENCE_CRITERIA;
     let NUM_ITERATIONS = self.NUM_ITERATIONS;
+    let NUM_ACCEPTED_OBS = self.NUM_ACCEPTED_OBS;
+    let NUM_REJECTED_OBS = self.NUM_REJECTED_OBS;
+    let SENSORS = self.SENSORS.as_ref().map(|x|{
+      let w: Vec<_> = x.iter().map(|t| t.pack(_fbb)).collect();_fbb.create_vector(&w)
+    });
     let ACCEPTED_OB_TYPS = self.ACCEPTED_OB_TYPS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
@@ -983,26 +1436,24 @@ impl OBDT {
     let REJECTED_OB_IDS = self.REJECTED_OB_IDS.as_ref().map(|x|{
       let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
     });
-    let SENSOR_IDS = self.SENSOR_IDS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
-    });
-    let ON_ORBIT = self.ON_ORBIT.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
     OBD::create(_fbb, &OBDArgs{
       ID,
+      SAT_NO,
+      ORIG_OBJECT_ID,
+      ON_ORBIT,
       START_TIME,
       END_TIME,
-      ORIG_OBJECT_ID,
-      SAT_NO,
+      METHOD,
+      METHOD_SOURCE,
+      INITIAL_OD,
       APRIORI_ID_ELSET,
       APRIORI_ELSET,
       APRIORI_ID_STATE_VECTOR,
       APRIORI_STATE_VECTOR,
-      INITIAL_OD,
       LAST_OB_START,
       LAST_OB_END,
       TIME_SPAN,
+      FIT_SPAN,
       EFFECTIVE_FROM,
       EFFECTIVE_UNTIL,
       WRMS,
@@ -1011,21 +1462,19 @@ impl OBDT {
       BEST_PASS_WRMS,
       ERROR_GROWTH_RATE,
       EDR,
-      METHOD,
-      METHOD_SOURCE,
-      FIT_SPAN,
       BALLISTIC_COEFF_EST,
       BALLISTIC_COEFF_MODEL,
       AGOM_EST,
       AGOM_MODEL,
       RMS_CONVERGENCE_CRITERIA,
       NUM_ITERATIONS,
+      NUM_ACCEPTED_OBS,
+      NUM_REJECTED_OBS,
+      SENSORS,
       ACCEPTED_OB_TYPS,
       ACCEPTED_OB_IDS,
       REJECTED_OB_TYPS,
       REJECTED_OB_IDS,
-      SENSOR_IDS,
-      ON_ORBIT,
     })
   }
 }

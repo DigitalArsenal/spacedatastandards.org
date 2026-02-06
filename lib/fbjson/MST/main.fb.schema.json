@@ -1,215 +1,446 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "missileStatus": {
+      "type": "string",
+      "enum": [
+        "BOOSTING",
+        "MIDCOURSE",
+        "TERMINAL",
+        "IMPACT",
+        "BURNOUT",
+        "INTERCEPTED",
+        "LOST",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "BOOSTING": {
+          "value": 0
+        },
+        "MIDCOURSE": {
+          "value": 1
+        },
+        "TERMINAL": {
+          "value": 2
+        },
+        "IMPACT": {
+          "value": 3
+        },
+        "BURNOUT": {
+          "value": 4
+        },
+        "INTERCEPTED": {
+          "value": 5
+        },
+        "LOST": {
+          "value": 6
+        },
+        "UNKNOWN": {
+          "value": 7
+        }
+      }
+    },
+    "missileEnvironment": {
+      "type": "string",
+      "enum": [
+        "SPACE",
+        "ENDO_ATMOSPHERIC",
+        "EXO_ATMOSPHERIC",
+        "TRANSITIONAL",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "SPACE": {
+          "value": 0
+        },
+        "ENDO_ATMOSPHERIC": {
+          "value": 1
+        },
+        "EXO_ATMOSPHERIC": {
+          "value": 2
+        },
+        "TRANSITIONAL": {
+          "value": 3
+        },
+        "UNKNOWN": {
+          "value": 4
+        }
+      }
+    },
+    "aouReportType": {
+      "type": "string",
+      "enum": [
+        "CIRCULAR",
+        "ELLIPTICAL",
+        "RECTANGULAR",
+        "NONE"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "CIRCULAR": {
+          "value": 0
+        },
+        "ELLIPTICAL": {
+          "value": 1
+        },
+        "RECTANGULAR": {
+          "value": 2
+        },
+        "NONE": {
+          "value": 3
+        }
+      }
+    },
     "MST": {
       "type": "object",
       "description": "Missile Track",
       "properties": {
         "ID": {
           "type": "string",
+          "description": "Unique identifier",
           "x-flatbuffer-type": "string"
         },
         "MSG_TYPE": {
           "type": "string",
+          "description": "Message type code",
           "x-flatbuffer-type": "string"
         },
         "MSG_SUB_TYPE": {
           "type": "string",
+          "description": "Message sub-type",
           "x-flatbuffer-type": "string"
         },
         "MSG_CREATE_DATE": {
           "type": "string",
+          "description": "Message creation date (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "ENVIRONMENT": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
+          "$ref": "#/definitions/missileEnvironment",
+          "description": "Track environment",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "SPACE": {
+              "value": 0
+            },
+            "ENDO_ATMOSPHERIC": {
+              "value": 1
+            },
+            "EXO_ATMOSPHERIC": {
+              "value": 2
+            },
+            "TRANSITIONAL": {
+              "value": 3
+            },
+            "UNKNOWN": {
+              "value": 4
+            }
+          }
         },
         "OBJ_TYPE": {
           "type": "string",
+          "description": "Object type classification",
           "x-flatbuffer-type": "string"
         },
         "OBJ_TYPE_CONF": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Object type confidence (0-100)",
+          "x-flatbuffer-type": "uint8"
         },
         "OBJ_PLAT": {
           "type": "string",
+          "description": "Object platform type",
           "x-flatbuffer-type": "string"
         },
         "OBJ_IDENT": {
           "type": "string",
+          "description": "Object identity assessment",
           "x-flatbuffer-type": "string"
         },
         "SPACE_AMP": {
           "type": "string",
+          "description": "Space amplification data",
           "x-flatbuffer-type": "string"
+        },
+        "SPACE_AMP_CONF": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Space amplification confidence (0-100)",
+          "x-flatbuffer-type": "uint8"
         },
         "OBJ_ACT": {
           "type": "string",
+          "description": "Object activity",
           "x-flatbuffer-type": "string"
         },
         "SPACE_SPEC_TYPE": {
           "type": "string",
+          "description": "Space specific type",
           "x-flatbuffer-type": "string"
         },
         "ACFT_SUB_TYPE": {
           "type": "string",
+          "description": "Aircraft sub-type (if applicable)",
           "x-flatbuffer-type": "string"
         },
         "NAME": {
           "type": "string",
+          "description": "Object name",
           "x-flatbuffer-type": "string"
         },
         "CALL_SIGN": {
           "type": "string",
+          "description": "Call sign",
           "x-flatbuffer-type": "string"
         },
         "LOST_TRK_IND": {
           "type": "boolean",
+          "description": "True if track is lost",
           "x-flatbuffer-type": "bool"
         },
         "TRACK_ID": {
           "type": "string",
+          "description": "Track identifier",
           "x-flatbuffer-type": "string"
         },
         "PARENT_TRACK_ID": {
           "type": "string",
+          "description": "Parent track identifier",
           "x-flatbuffer-type": "string"
         },
         "MUID_SRC_TRK": {
           "type": "string",
+          "description": "Multi-unit identifier (source track)",
           "x-flatbuffer-type": "string"
         },
         "MUID_SRC": {
           "type": "string",
+          "description": "Multi-unit identifier (source)",
           "x-flatbuffer-type": "string"
         },
         "ALERT": {
           "type": "string",
+          "description": "Alert classification",
           "x-flatbuffer-type": "string"
         },
         "MSL_STATUS": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
+          "$ref": "#/definitions/missileStatus",
+          "description": "Missile engagement status",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "BOOSTING": {
+              "value": 0
+            },
+            "MIDCOURSE": {
+              "value": 1
+            },
+            "TERMINAL": {
+              "value": 2
+            },
+            "IMPACT": {
+              "value": 3
+            },
+            "BURNOUT": {
+              "value": 4
+            },
+            "INTERCEPTED": {
+              "value": 5
+            },
+            "LOST": {
+              "value": 6
+            },
+            "UNKNOWN": {
+              "value": 7
+            }
+          }
         },
         "TS": {
           "type": "string",
+          "description": "Track timestamp (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "AOU_RPT_TYPE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
+          "$ref": "#/definitions/aouReportType",
+          "description": "AOU report type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "CIRCULAR": {
+              "value": 0
+            },
+            "ELLIPTICAL": {
+              "value": 1
+            },
+            "RECTANGULAR": {
+              "value": 2
+            },
+            "NONE": {
+              "value": 3
+            }
+          }
         },
         "CONTAINMENT": {
           "type": "number",
+          "description": "Containment probability (0-1)",
           "x-flatbuffer-type": "double"
         },
         "TRK_CONF": {
           "type": "number",
+          "description": "Track confidence (0-1)",
           "x-flatbuffer-type": "double"
         },
         "TRK_QUAL": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 255,
+          "description": "Track quality (0-15)",
+          "x-flatbuffer-type": "uint8"
         },
         "ANG_ELEV": {
           "type": "number",
+          "description": "Elevation angle (degrees)",
           "x-flatbuffer-type": "double"
         },
         "SEN_MODE": {
           "type": "string",
+          "description": "Sensor mode",
           "x-flatbuffer-type": "string"
         },
         "INFO_SOURCE": {
           "type": "string",
+          "description": "Information source",
           "x-flatbuffer-type": "string"
         },
         "BOOSTING": {
           "type": "boolean",
+          "description": "True if object is in boost phase",
           "x-flatbuffer-type": "bool"
         },
         "POLAR_SING_LOC_LAT": {
           "type": "number",
+          "description": "Polar singularity latitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "POLAR_SING_LOC_LON": {
           "type": "number",
+          "description": "Polar singularity longitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "EMG_IND": {
           "type": "boolean",
+          "description": "True if emergency indicator set",
           "x-flatbuffer-type": "bool"
         },
         "DROP_PT_IND": {
           "type": "boolean",
+          "description": "True if drop point indicator set",
           "x-flatbuffer-type": "bool"
-        },
-        "SPACE_AMP_CONF": {
-          "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
         },
         "LAUNCH_TIME": {
           "type": "string",
+          "description": "Launch time (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "LAUNCH_LAT": {
           "type": "number",
+          "description": "Launch latitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "LAUNCH_LON": {
           "type": "number",
+          "description": "Launch longitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "AZ_CORR": {
           "type": "number",
+          "description": "Azimuth correction (degrees)",
           "x-flatbuffer-type": "double"
         },
         "BURNOUT_ALT": {
           "type": "number",
+          "description": "Burnout altitude (km)",
           "x-flatbuffer-type": "double"
         },
         "LAUNCH_AOU_TYPE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
+          "$ref": "#/definitions/aouReportType",
+          "description": "Launch AOU type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "CIRCULAR": {
+              "value": 0
+            },
+            "ELLIPTICAL": {
+              "value": 1
+            },
+            "RECTANGULAR": {
+              "value": 2
+            },
+            "NONE": {
+              "value": 3
+            }
+          }
         },
         "IMPACT_TIME": {
           "type": "string",
+          "description": "Predicted impact time (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "IMPACT_LAT": {
           "type": "number",
+          "description": "Predicted impact latitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "IMPACT_LON": {
           "type": "number",
+          "description": "Predicted impact longitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "IMPACT_AOU_TYPE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
+          "$ref": "#/definitions/aouReportType",
+          "description": "Impact AOU type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "CIRCULAR": {
+              "value": 0
+            },
+            "ELLIPTICAL": {
+              "value": 1
+            },
+            "RECTANGULAR": {
+              "value": 2
+            },
+            "NONE": {
+              "value": 3
+            }
+          }
         },
         "VECTOR_START_TIME": {
           "type": "string",
-          "description": "Start time for vector data (ISO 8601 UTC format).",
+          "description": "Start time for vector data (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "VECTOR_STEP_SIZE": {
           "type": "number",
-          "description": "Time interval between vector points in seconds.",
+          "description": "Time interval between vector points (seconds)",
           "x-flatbuffer-type": "double"
         },
         "VECTOR_COMPONENTS": {
           "type": "integer",
           "minimum": 0,
           "maximum": 255,
-          "description": "Number of components per vector (default 6: X, Y, Z, VX, VY, VZ).",
+          "description": "Number of components per vector (default 6: X, Y, Z, VX, VY, VZ)",
           "x-flatbuffer-type": "uint8"
         },
         "VECTORS": {
@@ -225,7 +456,7 @@
           "items": {
             "type": "number"
           },
-          "description": "AOU report data as flat array (layout depends on AOU_RPT_TYPE).",
+          "description": "AOU report data as flat array",
           "x-flatbuffer-type": "[double]"
         },
         "LAUNCH_AOU": {
@@ -233,7 +464,7 @@
           "items": {
             "type": "number"
           },
-          "description": "Launch AOU data as flat array (layout depends on LAUNCH_AOU_TYPE).",
+          "description": "Launch AOU data as flat array",
           "x-flatbuffer-type": "[double]"
         },
         "IMPACT_AOU": {
@@ -241,7 +472,7 @@
           "items": {
             "type": "number"
           },
-          "description": "Impact AOU data as flat array (layout depends on IMPACT_AOU_TYPE).",
+          "description": "Impact AOU data as flat array",
           "x-flatbuffer-type": "[double]"
         }
       },

@@ -1,28 +1,259 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "beamType": {
+      "type": "string",
+      "enum": [
+        "SPOT",
+        "REGIONAL",
+        "GLOBAL",
+        "SHAPED",
+        "STEERABLE",
+        "HOPPING"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "SPOT": {
+          "value": 0
+        },
+        "REGIONAL": {
+          "value": 1
+        },
+        "GLOBAL": {
+          "value": 2
+        },
+        "SHAPED": {
+          "value": 3
+        },
+        "STEERABLE": {
+          "value": 4
+        },
+        "HOPPING": {
+          "value": 5
+        }
+      }
+    },
+    "beamPolarization": {
+      "type": "string",
+      "enum": [
+        "RHCP",
+        "LHCP",
+        "LINEAR_H",
+        "LINEAR_V",
+        "DUAL_CIRCULAR",
+        "DUAL_LINEAR",
+        "CROSS_POL"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "RHCP": {
+          "value": 0
+        },
+        "LHCP": {
+          "value": 1
+        },
+        "LINEAR_H": {
+          "value": 2
+        },
+        "LINEAR_V": {
+          "value": 3
+        },
+        "DUAL_CIRCULAR": {
+          "value": 4
+        },
+        "DUAL_LINEAR": {
+          "value": 5
+        },
+        "CROSS_POL": {
+          "value": 6
+        }
+      }
+    },
+    "beamContourPoint": {
+      "type": "object",
+      "description": "Beam Contour Point (gain pattern boundary)",
+      "properties": {
+        "LATITUDE": {
+          "type": "number",
+          "description": "Latitude in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "LONGITUDE": {
+          "type": "number",
+          "description": "Longitude in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "GAIN": {
+          "type": "number",
+          "description": "Gain level in dBi at this contour",
+          "x-flatbuffer-type": "double"
+        }
+      },
+      "additionalProperties": false
+    },
+    "beamContour": {
+      "type": "object",
+      "description": "Beam Contour (iso-gain boundary)",
+      "properties": {
+        "CONTOUR_ID": {
+          "type": "string",
+          "description": "Contour level identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "GAIN_LEVEL": {
+          "type": "number",
+          "description": "Gain level in dBi",
+          "x-flatbuffer-type": "double"
+        },
+        "POINTS": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/beamContourPoint"
+          },
+          "description": "Contour boundary points",
+          "x-flatbuffer-type": "[beamContourPoint]"
+        }
+      },
+      "additionalProperties": false
+    },
     "BEM": {
       "type": "object",
       "description": "Antenna Beam",
       "properties": {
         "ID": {
           "type": "string",
+          "description": "Unique beam identifier",
           "x-flatbuffer-type": "string"
         },
         "BEAM_NAME": {
           "type": "string",
+          "description": "Beam name or designation",
           "x-flatbuffer-type": "string"
         },
-        "NOTES": {
+        "ID_ENTITY": {
           "type": "string",
+          "description": "Reference to parent entity (satellite/transponder)",
           "x-flatbuffer-type": "string"
+        },
+        "ID_ANTENNA": {
+          "type": "string",
+          "description": "Reference to parent antenna",
+          "x-flatbuffer-type": "string"
+        },
+        "TYPE": {
+          "$ref": "#/definitions/beamType",
+          "description": "Beam type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "SPOT": {
+              "value": 0
+            },
+            "REGIONAL": {
+              "value": 1
+            },
+            "GLOBAL": {
+              "value": 2
+            },
+            "SHAPED": {
+              "value": 3
+            },
+            "STEERABLE": {
+              "value": 4
+            },
+            "HOPPING": {
+              "value": 5
+            }
+          }
+        },
+        "POLARIZATION": {
+          "$ref": "#/definitions/beamPolarization",
+          "description": "Beam polarization",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "RHCP": {
+              "value": 0
+            },
+            "LHCP": {
+              "value": 1
+            },
+            "LINEAR_H": {
+              "value": 2
+            },
+            "LINEAR_V": {
+              "value": 3
+            },
+            "DUAL_CIRCULAR": {
+              "value": 4
+            },
+            "DUAL_LINEAR": {
+              "value": 5
+            },
+            "CROSS_POL": {
+              "value": 6
+            }
+          }
+        },
+        "PEAK_GAIN": {
+          "type": "number",
+          "description": "Peak gain in dBi",
+          "x-flatbuffer-type": "double"
+        },
+        "EOC_GAIN": {
+          "type": "number",
+          "description": "Edge-of-coverage gain in dBi",
+          "x-flatbuffer-type": "double"
+        },
+        "CENTER_LATITUDE": {
+          "type": "number",
+          "description": "Beam center latitude in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "CENTER_LONGITUDE": {
+          "type": "number",
+          "description": "Beam center longitude in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "BEAMWIDTH": {
+          "type": "number",
+          "description": "Beamwidth (3dB) in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "FREQUENCY": {
+          "type": "number",
+          "description": "Operating frequency in MHz",
+          "x-flatbuffer-type": "double"
+        },
+        "EIRP": {
+          "type": "number",
+          "description": "EIRP at beam center in dBW",
+          "x-flatbuffer-type": "double"
+        },
+        "G_OVER_T": {
+          "type": "number",
+          "description": "G/T at beam center in dB/K",
+          "x-flatbuffer-type": "double"
+        },
+        "FOOTPRINT_AREA": {
+          "type": "number",
+          "description": "Beam footprint area in km^2",
+          "x-flatbuffer-type": "double"
         },
         "BEAM_CONTOURS": {
           "type": "array",
           "items": {
-            "type": "string"
+            "$ref": "#/definitions/beamContour"
           },
-          "x-flatbuffer-type": "[string]"
+          "description": "Beam contour definitions",
+          "x-flatbuffer-type": "[beamContour]"
+        },
+        "NOTES": {
+          "type": "string",
+          "description": "Additional notes",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

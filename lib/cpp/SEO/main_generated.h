@@ -16,6 +16,144 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct SEO;
 struct SEOBuilder;
 
+enum seoDataType : int8_t {
+  seoDataType_PARTICLE_COUNT = 0,
+  seoDataType_MAGNETIC_FIELD = 1,
+  seoDataType_RADIATION_DOSE = 2,
+  seoDataType_PLASMA_DENSITY = 3,
+  seoDataType_ENERGETIC_PARTICLE = 4,
+  seoDataType_SOLAR_WIND = 5,
+  seoDataType_CHARGING = 6,
+  seoDataType_UNKNOWN = 7,
+  seoDataType_MIN = seoDataType_PARTICLE_COUNT,
+  seoDataType_MAX = seoDataType_UNKNOWN
+};
+
+inline const seoDataType (&EnumValuesseoDataType())[8] {
+  static const seoDataType values[] = {
+    seoDataType_PARTICLE_COUNT,
+    seoDataType_MAGNETIC_FIELD,
+    seoDataType_RADIATION_DOSE,
+    seoDataType_PLASMA_DENSITY,
+    seoDataType_ENERGETIC_PARTICLE,
+    seoDataType_SOLAR_WIND,
+    seoDataType_CHARGING,
+    seoDataType_UNKNOWN
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesseoDataType() {
+  static const char * const names[9] = {
+    "PARTICLE_COUNT",
+    "MAGNETIC_FIELD",
+    "RADIATION_DOSE",
+    "PLASMA_DENSITY",
+    "ENERGETIC_PARTICLE",
+    "SOLAR_WIND",
+    "CHARGING",
+    "UNKNOWN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameseoDataType(seoDataType e) {
+  if (::flatbuffers::IsOutRange(e, seoDataType_PARTICLE_COUNT, seoDataType_UNKNOWN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesseoDataType()[index];
+}
+
+enum seoParticleType : int8_t {
+  seoParticleType_PROTON = 0,
+  seoParticleType_ELECTRON = 1,
+  seoParticleType_ALPHA = 2,
+  seoParticleType_HEAVY_ION = 3,
+  seoParticleType_NEUTRON = 4,
+  seoParticleType_COSMIC_RAY = 5,
+  seoParticleType_MIXED = 6,
+  seoParticleType_MIN = seoParticleType_PROTON,
+  seoParticleType_MAX = seoParticleType_MIXED
+};
+
+inline const seoParticleType (&EnumValuesseoParticleType())[7] {
+  static const seoParticleType values[] = {
+    seoParticleType_PROTON,
+    seoParticleType_ELECTRON,
+    seoParticleType_ALPHA,
+    seoParticleType_HEAVY_ION,
+    seoParticleType_NEUTRON,
+    seoParticleType_COSMIC_RAY,
+    seoParticleType_MIXED
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesseoParticleType() {
+  static const char * const names[8] = {
+    "PROTON",
+    "ELECTRON",
+    "ALPHA",
+    "HEAVY_ION",
+    "NEUTRON",
+    "COSMIC_RAY",
+    "MIXED",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameseoParticleType(seoParticleType e) {
+  if (::flatbuffers::IsOutRange(e, seoParticleType_PROTON, seoParticleType_MIXED)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesseoParticleType()[index];
+}
+
+enum seoObservatoryType : int8_t {
+  seoObservatoryType_GROUND = 0,
+  seoObservatoryType_LEO = 1,
+  seoObservatoryType_GEO = 2,
+  seoObservatoryType_L1 = 3,
+  seoObservatoryType_L2 = 4,
+  seoObservatoryType_INTERPLANETARY = 5,
+  seoObservatoryType_SOLAR = 6,
+  seoObservatoryType_MIN = seoObservatoryType_GROUND,
+  seoObservatoryType_MAX = seoObservatoryType_SOLAR
+};
+
+inline const seoObservatoryType (&EnumValuesseoObservatoryType())[7] {
+  static const seoObservatoryType values[] = {
+    seoObservatoryType_GROUND,
+    seoObservatoryType_LEO,
+    seoObservatoryType_GEO,
+    seoObservatoryType_L1,
+    seoObservatoryType_L2,
+    seoObservatoryType_INTERPLANETARY,
+    seoObservatoryType_SOLAR
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesseoObservatoryType() {
+  static const char * const names[8] = {
+    "GROUND",
+    "LEO",
+    "GEO",
+    "L1",
+    "L2",
+    "INTERPLANETARY",
+    "SOLAR",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameseoObservatoryType(seoObservatoryType e) {
+  if (::flatbuffers::IsOutRange(e, seoObservatoryType_GROUND, seoObservatoryType_SOLAR)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesseoObservatoryType()[index];
+}
+
 /// Space Environment Observation
 struct SEO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef SEOBuilder Builder;
@@ -43,113 +181,156 @@ struct SEO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_SEN_POS = 44,
     VT_SEN_VEL = 46,
     VT_MEAS_TYPE = 48,
-    VT_SEN_ENERGY_LEVEL = 50,
-    VT_OB_SET_ID = 52,
-    VT_PARTICLE_TYPE = 54,
+    VT_PARTICLE_TYPE = 50,
+    VT_SEN_ENERGY_LEVEL = 52,
+    VT_OB_SET_ID = 54,
     VT_OB_TIME = 56,
-    VT_SEO_LIST = 58,
-    VT_QUALITY = 60,
-    VT_DESCRIPTION = 62,
-    VT_DESCRIPTOR = 64,
-    VT_SRC_TYPS = 66,
-    VT_SRC_IDS = 68
+    VT_VALUES = 58,
+    VT_UNCERTAINTIES = 60,
+    VT_UNITS = 62,
+    VT_QUALITY = 64,
+    VT_DESCRIPTION = 66,
+    VT_DESCRIPTOR = 68,
+    VT_SRC_TYPS = 70,
+    VT_SRC_IDS = 72
   };
+  /// Unique identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
+  /// Message type code
   const ::flatbuffers::String *MSG_TYPE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_MSG_TYPE);
   }
+  /// Generating system
   const ::flatbuffers::String *GEN_SYSTEM() const {
     return GetPointer<const ::flatbuffers::String *>(VT_GEN_SYSTEM);
   }
+  /// External reference identifier
   const ::flatbuffers::String *EXTERNAL_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_EXTERNAL_ID);
   }
-  const ::flatbuffers::String *DATA_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_DATA_TYPE);
+  /// Type of environmental data
+  seoDataType DATA_TYPE() const {
+    return static_cast<seoDataType>(GetField<int8_t>(VT_DATA_TYPE, 0));
   }
+  /// Generation time (ISO 8601)
   const ::flatbuffers::String *GEN_TIME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_GEN_TIME);
   }
+  /// True if this is a forecast
   bool FORECAST() const {
     return GetField<uint8_t>(VT_FORECAST, 0) != 0;
   }
+  /// True if derived from other measurements
   bool DERIVED() const {
     return GetField<uint8_t>(VT_DERIVED, 0) != 0;
   }
-  int32_t SAT_NO() const {
-    return GetField<int32_t>(VT_SAT_NO, 0);
+  /// Satellite catalog number (if space-based)
+  uint32_t SAT_NO() const {
+    return GetField<uint32_t>(VT_SAT_NO, 0);
   }
+  /// International designator
   const ::flatbuffers::String *ORIG_OBJECT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIG_OBJECT_ID);
   }
+  /// Sensor identifier
   const ::flatbuffers::String *ID_SENSOR() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID_SENSOR);
   }
+  /// Original sensor identifier
   const ::flatbuffers::String *ORIG_SENSOR_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIG_SENSOR_ID);
   }
-  const ::flatbuffers::String *OBSERVATORY_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OBSERVATORY_TYPE);
+  /// Observatory type
+  seoObservatoryType OBSERVATORY_TYPE() const {
+    return static_cast<seoObservatoryType>(GetField<int8_t>(VT_OBSERVATORY_TYPE, 0));
   }
+  /// Observatory name
   const ::flatbuffers::String *OBSERVATORY_NAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBSERVATORY_NAME);
   }
+  /// Observatory notes
   const ::flatbuffers::String *OBSERVATORY_NOTES() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OBSERVATORY_NOTES);
   }
+  /// Instrument type description
   const ::flatbuffers::String *INSTRUMENT_TYPE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_INSTRUMENT_TYPE);
   }
+  /// Observatory latitude (degrees)
   double LAT() const {
     return GetField<double>(VT_LAT, 0.0);
   }
+  /// Observatory longitude (degrees)
   double LON() const {
     return GetField<double>(VT_LON, 0.0);
   }
+  /// Observatory altitude (km)
   double ALT() const {
     return GetField<double>(VT_ALT, 0.0);
   }
+  /// Sensor reference frame
   const ::flatbuffers::String *SEN_REFERENCE_FRAME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SEN_REFERENCE_FRAME);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SEN_POS() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SEN_POS);
+  /// Sensor position (km, 3 components)
+  const ::flatbuffers::Vector<double> *SEN_POS() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_SEN_POS);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SEN_VEL() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SEN_VEL);
+  /// Sensor velocity (km/s, 3 components)
+  const ::flatbuffers::Vector<double> *SEN_VEL() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_SEN_VEL);
   }
+  /// Measurement type description
   const ::flatbuffers::String *MEAS_TYPE() const {
     return GetPointer<const ::flatbuffers::String *>(VT_MEAS_TYPE);
   }
+  /// Particle type measured
+  seoParticleType PARTICLE_TYPE() const {
+    return static_cast<seoParticleType>(GetField<int8_t>(VT_PARTICLE_TYPE, 0));
+  }
+  /// Energy level or range (keV or MeV)
   const ::flatbuffers::String *SEN_ENERGY_LEVEL() const {
     return GetPointer<const ::flatbuffers::String *>(VT_SEN_ENERGY_LEVEL);
   }
+  /// Observation set identifier
   const ::flatbuffers::String *OB_SET_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OB_SET_ID);
   }
-  const ::flatbuffers::String *PARTICLE_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_PARTICLE_TYPE);
-  }
+  /// Observation time (ISO 8601)
   const ::flatbuffers::String *OB_TIME() const {
     return GetPointer<const ::flatbuffers::String *>(VT_OB_TIME);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SEO_LIST() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SEO_LIST);
+  /// Measurement values
+  const ::flatbuffers::Vector<double> *VALUES() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_VALUES);
   }
+  /// Measurement uncertainties
+  const ::flatbuffers::Vector<double> *UNCERTAINTIES() const {
+    return GetPointer<const ::flatbuffers::Vector<double> *>(VT_UNCERTAINTIES);
+  }
+  /// Units for measurement values
+  const ::flatbuffers::String *UNITS() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_UNITS);
+  }
+  /// Data quality indicator
   const ::flatbuffers::String *QUALITY() const {
     return GetPointer<const ::flatbuffers::String *>(VT_QUALITY);
   }
+  /// Description
   const ::flatbuffers::String *DESCRIPTION() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTION);
   }
+  /// Event descriptor
   const ::flatbuffers::String *DESCRIPTOR() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTOR);
   }
+  /// Source types
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SRC_TYPS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SRC_TYPS);
   }
+  /// Source identifiers
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *SRC_IDS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_SRC_IDS);
   }
@@ -163,21 +344,19 @@ struct SEO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(GEN_SYSTEM()) &&
            VerifyOffset(verifier, VT_EXTERNAL_ID) &&
            verifier.VerifyString(EXTERNAL_ID()) &&
-           VerifyOffset(verifier, VT_DATA_TYPE) &&
-           verifier.VerifyString(DATA_TYPE()) &&
+           VerifyField<int8_t>(verifier, VT_DATA_TYPE, 1) &&
            VerifyOffset(verifier, VT_GEN_TIME) &&
            verifier.VerifyString(GEN_TIME()) &&
            VerifyField<uint8_t>(verifier, VT_FORECAST, 1) &&
            VerifyField<uint8_t>(verifier, VT_DERIVED, 1) &&
-           VerifyField<int32_t>(verifier, VT_SAT_NO, 4) &&
+           VerifyField<uint32_t>(verifier, VT_SAT_NO, 4) &&
            VerifyOffset(verifier, VT_ORIG_OBJECT_ID) &&
            verifier.VerifyString(ORIG_OBJECT_ID()) &&
            VerifyOffset(verifier, VT_ID_SENSOR) &&
            verifier.VerifyString(ID_SENSOR()) &&
            VerifyOffset(verifier, VT_ORIG_SENSOR_ID) &&
            verifier.VerifyString(ORIG_SENSOR_ID()) &&
-           VerifyOffset(verifier, VT_OBSERVATORY_TYPE) &&
-           verifier.VerifyString(OBSERVATORY_TYPE()) &&
+           VerifyField<int8_t>(verifier, VT_OBSERVATORY_TYPE, 1) &&
            VerifyOffset(verifier, VT_OBSERVATORY_NAME) &&
            verifier.VerifyString(OBSERVATORY_NAME()) &&
            VerifyOffset(verifier, VT_OBSERVATORY_NOTES) &&
@@ -191,23 +370,23 @@ struct SEO FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(SEN_REFERENCE_FRAME()) &&
            VerifyOffset(verifier, VT_SEN_POS) &&
            verifier.VerifyVector(SEN_POS()) &&
-           verifier.VerifyVectorOfStrings(SEN_POS()) &&
            VerifyOffset(verifier, VT_SEN_VEL) &&
            verifier.VerifyVector(SEN_VEL()) &&
-           verifier.VerifyVectorOfStrings(SEN_VEL()) &&
            VerifyOffset(verifier, VT_MEAS_TYPE) &&
            verifier.VerifyString(MEAS_TYPE()) &&
+           VerifyField<int8_t>(verifier, VT_PARTICLE_TYPE, 1) &&
            VerifyOffset(verifier, VT_SEN_ENERGY_LEVEL) &&
            verifier.VerifyString(SEN_ENERGY_LEVEL()) &&
            VerifyOffset(verifier, VT_OB_SET_ID) &&
            verifier.VerifyString(OB_SET_ID()) &&
-           VerifyOffset(verifier, VT_PARTICLE_TYPE) &&
-           verifier.VerifyString(PARTICLE_TYPE()) &&
            VerifyOffset(verifier, VT_OB_TIME) &&
            verifier.VerifyString(OB_TIME()) &&
-           VerifyOffset(verifier, VT_SEO_LIST) &&
-           verifier.VerifyVector(SEO_LIST()) &&
-           verifier.VerifyVectorOfStrings(SEO_LIST()) &&
+           VerifyOffset(verifier, VT_VALUES) &&
+           verifier.VerifyVector(VALUES()) &&
+           VerifyOffset(verifier, VT_UNCERTAINTIES) &&
+           verifier.VerifyVector(UNCERTAINTIES()) &&
+           VerifyOffset(verifier, VT_UNITS) &&
+           verifier.VerifyString(UNITS()) &&
            VerifyOffset(verifier, VT_QUALITY) &&
            verifier.VerifyString(QUALITY()) &&
            VerifyOffset(verifier, VT_DESCRIPTION) &&
@@ -240,8 +419,8 @@ struct SEOBuilder {
   void add_EXTERNAL_ID(::flatbuffers::Offset<::flatbuffers::String> EXTERNAL_ID) {
     fbb_.AddOffset(SEO::VT_EXTERNAL_ID, EXTERNAL_ID);
   }
-  void add_DATA_TYPE(::flatbuffers::Offset<::flatbuffers::String> DATA_TYPE) {
-    fbb_.AddOffset(SEO::VT_DATA_TYPE, DATA_TYPE);
+  void add_DATA_TYPE(seoDataType DATA_TYPE) {
+    fbb_.AddElement<int8_t>(SEO::VT_DATA_TYPE, static_cast<int8_t>(DATA_TYPE), 0);
   }
   void add_GEN_TIME(::flatbuffers::Offset<::flatbuffers::String> GEN_TIME) {
     fbb_.AddOffset(SEO::VT_GEN_TIME, GEN_TIME);
@@ -252,8 +431,8 @@ struct SEOBuilder {
   void add_DERIVED(bool DERIVED) {
     fbb_.AddElement<uint8_t>(SEO::VT_DERIVED, static_cast<uint8_t>(DERIVED), 0);
   }
-  void add_SAT_NO(int32_t SAT_NO) {
-    fbb_.AddElement<int32_t>(SEO::VT_SAT_NO, SAT_NO, 0);
+  void add_SAT_NO(uint32_t SAT_NO) {
+    fbb_.AddElement<uint32_t>(SEO::VT_SAT_NO, SAT_NO, 0);
   }
   void add_ORIG_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID) {
     fbb_.AddOffset(SEO::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
@@ -264,8 +443,8 @@ struct SEOBuilder {
   void add_ORIG_SENSOR_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID) {
     fbb_.AddOffset(SEO::VT_ORIG_SENSOR_ID, ORIG_SENSOR_ID);
   }
-  void add_OBSERVATORY_TYPE(::flatbuffers::Offset<::flatbuffers::String> OBSERVATORY_TYPE) {
-    fbb_.AddOffset(SEO::VT_OBSERVATORY_TYPE, OBSERVATORY_TYPE);
+  void add_OBSERVATORY_TYPE(seoObservatoryType OBSERVATORY_TYPE) {
+    fbb_.AddElement<int8_t>(SEO::VT_OBSERVATORY_TYPE, static_cast<int8_t>(OBSERVATORY_TYPE), 0);
   }
   void add_OBSERVATORY_NAME(::flatbuffers::Offset<::flatbuffers::String> OBSERVATORY_NAME) {
     fbb_.AddOffset(SEO::VT_OBSERVATORY_NAME, OBSERVATORY_NAME);
@@ -288,14 +467,17 @@ struct SEOBuilder {
   void add_SEN_REFERENCE_FRAME(::flatbuffers::Offset<::flatbuffers::String> SEN_REFERENCE_FRAME) {
     fbb_.AddOffset(SEO::VT_SEN_REFERENCE_FRAME, SEN_REFERENCE_FRAME);
   }
-  void add_SEN_POS(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SEN_POS) {
+  void add_SEN_POS(::flatbuffers::Offset<::flatbuffers::Vector<double>> SEN_POS) {
     fbb_.AddOffset(SEO::VT_SEN_POS, SEN_POS);
   }
-  void add_SEN_VEL(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SEN_VEL) {
+  void add_SEN_VEL(::flatbuffers::Offset<::flatbuffers::Vector<double>> SEN_VEL) {
     fbb_.AddOffset(SEO::VT_SEN_VEL, SEN_VEL);
   }
   void add_MEAS_TYPE(::flatbuffers::Offset<::flatbuffers::String> MEAS_TYPE) {
     fbb_.AddOffset(SEO::VT_MEAS_TYPE, MEAS_TYPE);
+  }
+  void add_PARTICLE_TYPE(seoParticleType PARTICLE_TYPE) {
+    fbb_.AddElement<int8_t>(SEO::VT_PARTICLE_TYPE, static_cast<int8_t>(PARTICLE_TYPE), 0);
   }
   void add_SEN_ENERGY_LEVEL(::flatbuffers::Offset<::flatbuffers::String> SEN_ENERGY_LEVEL) {
     fbb_.AddOffset(SEO::VT_SEN_ENERGY_LEVEL, SEN_ENERGY_LEVEL);
@@ -303,14 +485,17 @@ struct SEOBuilder {
   void add_OB_SET_ID(::flatbuffers::Offset<::flatbuffers::String> OB_SET_ID) {
     fbb_.AddOffset(SEO::VT_OB_SET_ID, OB_SET_ID);
   }
-  void add_PARTICLE_TYPE(::flatbuffers::Offset<::flatbuffers::String> PARTICLE_TYPE) {
-    fbb_.AddOffset(SEO::VT_PARTICLE_TYPE, PARTICLE_TYPE);
-  }
   void add_OB_TIME(::flatbuffers::Offset<::flatbuffers::String> OB_TIME) {
     fbb_.AddOffset(SEO::VT_OB_TIME, OB_TIME);
   }
-  void add_SEO_LIST(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SEO_LIST) {
-    fbb_.AddOffset(SEO::VT_SEO_LIST, SEO_LIST);
+  void add_VALUES(::flatbuffers::Offset<::flatbuffers::Vector<double>> VALUES) {
+    fbb_.AddOffset(SEO::VT_VALUES, VALUES);
+  }
+  void add_UNCERTAINTIES(::flatbuffers::Offset<::flatbuffers::Vector<double>> UNCERTAINTIES) {
+    fbb_.AddOffset(SEO::VT_UNCERTAINTIES, UNCERTAINTIES);
+  }
+  void add_UNITS(::flatbuffers::Offset<::flatbuffers::String> UNITS) {
+    fbb_.AddOffset(SEO::VT_UNITS, UNITS);
   }
   void add_QUALITY(::flatbuffers::Offset<::flatbuffers::String> QUALITY) {
     fbb_.AddOffset(SEO::VT_QUALITY, QUALITY);
@@ -344,15 +529,15 @@ inline ::flatbuffers::Offset<SEO> CreateSEO(
     ::flatbuffers::Offset<::flatbuffers::String> MSG_TYPE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> GEN_SYSTEM = 0,
     ::flatbuffers::Offset<::flatbuffers::String> EXTERNAL_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> DATA_TYPE = 0,
+    seoDataType DATA_TYPE = seoDataType_PARTICLE_COUNT,
     ::flatbuffers::Offset<::flatbuffers::String> GEN_TIME = 0,
     bool FORECAST = false,
     bool DERIVED = false,
-    int32_t SAT_NO = 0,
+    uint32_t SAT_NO = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ID_SENSOR = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ORIG_SENSOR_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> OBSERVATORY_TYPE = 0,
+    seoObservatoryType OBSERVATORY_TYPE = seoObservatoryType_GROUND,
     ::flatbuffers::Offset<::flatbuffers::String> OBSERVATORY_NAME = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OBSERVATORY_NOTES = 0,
     ::flatbuffers::Offset<::flatbuffers::String> INSTRUMENT_TYPE = 0,
@@ -360,14 +545,16 @@ inline ::flatbuffers::Offset<SEO> CreateSEO(
     double LON = 0.0,
     double ALT = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> SEN_REFERENCE_FRAME = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SEN_POS = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SEN_VEL = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> SEN_POS = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> SEN_VEL = 0,
     ::flatbuffers::Offset<::flatbuffers::String> MEAS_TYPE = 0,
+    seoParticleType PARTICLE_TYPE = seoParticleType_PROTON,
     ::flatbuffers::Offset<::flatbuffers::String> SEN_ENERGY_LEVEL = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OB_SET_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> PARTICLE_TYPE = 0,
     ::flatbuffers::Offset<::flatbuffers::String> OB_TIME = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> SEO_LIST = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> VALUES = 0,
+    ::flatbuffers::Offset<::flatbuffers::Vector<double>> UNCERTAINTIES = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> UNITS = 0,
     ::flatbuffers::Offset<::flatbuffers::String> QUALITY = 0,
     ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTION = 0,
     ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTOR = 0,
@@ -382,9 +569,10 @@ inline ::flatbuffers::Offset<SEO> CreateSEO(
   builder_.add_DESCRIPTOR(DESCRIPTOR);
   builder_.add_DESCRIPTION(DESCRIPTION);
   builder_.add_QUALITY(QUALITY);
-  builder_.add_SEO_LIST(SEO_LIST);
+  builder_.add_UNITS(UNITS);
+  builder_.add_UNCERTAINTIES(UNCERTAINTIES);
+  builder_.add_VALUES(VALUES);
   builder_.add_OB_TIME(OB_TIME);
-  builder_.add_PARTICLE_TYPE(PARTICLE_TYPE);
   builder_.add_OB_SET_ID(OB_SET_ID);
   builder_.add_SEN_ENERGY_LEVEL(SEN_ENERGY_LEVEL);
   builder_.add_MEAS_TYPE(MEAS_TYPE);
@@ -394,19 +582,20 @@ inline ::flatbuffers::Offset<SEO> CreateSEO(
   builder_.add_INSTRUMENT_TYPE(INSTRUMENT_TYPE);
   builder_.add_OBSERVATORY_NOTES(OBSERVATORY_NOTES);
   builder_.add_OBSERVATORY_NAME(OBSERVATORY_NAME);
-  builder_.add_OBSERVATORY_TYPE(OBSERVATORY_TYPE);
   builder_.add_ORIG_SENSOR_ID(ORIG_SENSOR_ID);
   builder_.add_ID_SENSOR(ID_SENSOR);
   builder_.add_ORIG_OBJECT_ID(ORIG_OBJECT_ID);
   builder_.add_SAT_NO(SAT_NO);
   builder_.add_GEN_TIME(GEN_TIME);
-  builder_.add_DATA_TYPE(DATA_TYPE);
   builder_.add_EXTERNAL_ID(EXTERNAL_ID);
   builder_.add_GEN_SYSTEM(GEN_SYSTEM);
   builder_.add_MSG_TYPE(MSG_TYPE);
   builder_.add_ID(ID);
+  builder_.add_PARTICLE_TYPE(PARTICLE_TYPE);
+  builder_.add_OBSERVATORY_TYPE(OBSERVATORY_TYPE);
   builder_.add_DERIVED(DERIVED);
   builder_.add_FORECAST(FORECAST);
+  builder_.add_DATA_TYPE(DATA_TYPE);
   return builder_.Finish();
 }
 
@@ -416,15 +605,15 @@ inline ::flatbuffers::Offset<SEO> CreateSEODirect(
     const char *MSG_TYPE = nullptr,
     const char *GEN_SYSTEM = nullptr,
     const char *EXTERNAL_ID = nullptr,
-    const char *DATA_TYPE = nullptr,
+    seoDataType DATA_TYPE = seoDataType_PARTICLE_COUNT,
     const char *GEN_TIME = nullptr,
     bool FORECAST = false,
     bool DERIVED = false,
-    int32_t SAT_NO = 0,
+    uint32_t SAT_NO = 0,
     const char *ORIG_OBJECT_ID = nullptr,
     const char *ID_SENSOR = nullptr,
     const char *ORIG_SENSOR_ID = nullptr,
-    const char *OBSERVATORY_TYPE = nullptr,
+    seoObservatoryType OBSERVATORY_TYPE = seoObservatoryType_GROUND,
     const char *OBSERVATORY_NAME = nullptr,
     const char *OBSERVATORY_NOTES = nullptr,
     const char *INSTRUMENT_TYPE = nullptr,
@@ -432,14 +621,16 @@ inline ::flatbuffers::Offset<SEO> CreateSEODirect(
     double LON = 0.0,
     double ALT = 0.0,
     const char *SEN_REFERENCE_FRAME = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *SEN_POS = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *SEN_VEL = nullptr,
+    const std::vector<double> *SEN_POS = nullptr,
+    const std::vector<double> *SEN_VEL = nullptr,
     const char *MEAS_TYPE = nullptr,
+    seoParticleType PARTICLE_TYPE = seoParticleType_PROTON,
     const char *SEN_ENERGY_LEVEL = nullptr,
     const char *OB_SET_ID = nullptr,
-    const char *PARTICLE_TYPE = nullptr,
     const char *OB_TIME = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *SEO_LIST = nullptr,
+    const std::vector<double> *VALUES = nullptr,
+    const std::vector<double> *UNCERTAINTIES = nullptr,
+    const char *UNITS = nullptr,
     const char *QUALITY = nullptr,
     const char *DESCRIPTION = nullptr,
     const char *DESCRIPTOR = nullptr,
@@ -449,24 +640,23 @@ inline ::flatbuffers::Offset<SEO> CreateSEODirect(
   auto MSG_TYPE__ = MSG_TYPE ? _fbb.CreateString(MSG_TYPE) : 0;
   auto GEN_SYSTEM__ = GEN_SYSTEM ? _fbb.CreateString(GEN_SYSTEM) : 0;
   auto EXTERNAL_ID__ = EXTERNAL_ID ? _fbb.CreateString(EXTERNAL_ID) : 0;
-  auto DATA_TYPE__ = DATA_TYPE ? _fbb.CreateString(DATA_TYPE) : 0;
   auto GEN_TIME__ = GEN_TIME ? _fbb.CreateString(GEN_TIME) : 0;
   auto ORIG_OBJECT_ID__ = ORIG_OBJECT_ID ? _fbb.CreateString(ORIG_OBJECT_ID) : 0;
   auto ID_SENSOR__ = ID_SENSOR ? _fbb.CreateString(ID_SENSOR) : 0;
   auto ORIG_SENSOR_ID__ = ORIG_SENSOR_ID ? _fbb.CreateString(ORIG_SENSOR_ID) : 0;
-  auto OBSERVATORY_TYPE__ = OBSERVATORY_TYPE ? _fbb.CreateString(OBSERVATORY_TYPE) : 0;
   auto OBSERVATORY_NAME__ = OBSERVATORY_NAME ? _fbb.CreateString(OBSERVATORY_NAME) : 0;
   auto OBSERVATORY_NOTES__ = OBSERVATORY_NOTES ? _fbb.CreateString(OBSERVATORY_NOTES) : 0;
   auto INSTRUMENT_TYPE__ = INSTRUMENT_TYPE ? _fbb.CreateString(INSTRUMENT_TYPE) : 0;
   auto SEN_REFERENCE_FRAME__ = SEN_REFERENCE_FRAME ? _fbb.CreateString(SEN_REFERENCE_FRAME) : 0;
-  auto SEN_POS__ = SEN_POS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SEN_POS) : 0;
-  auto SEN_VEL__ = SEN_VEL ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SEN_VEL) : 0;
+  auto SEN_POS__ = SEN_POS ? _fbb.CreateVector<double>(*SEN_POS) : 0;
+  auto SEN_VEL__ = SEN_VEL ? _fbb.CreateVector<double>(*SEN_VEL) : 0;
   auto MEAS_TYPE__ = MEAS_TYPE ? _fbb.CreateString(MEAS_TYPE) : 0;
   auto SEN_ENERGY_LEVEL__ = SEN_ENERGY_LEVEL ? _fbb.CreateString(SEN_ENERGY_LEVEL) : 0;
   auto OB_SET_ID__ = OB_SET_ID ? _fbb.CreateString(OB_SET_ID) : 0;
-  auto PARTICLE_TYPE__ = PARTICLE_TYPE ? _fbb.CreateString(PARTICLE_TYPE) : 0;
   auto OB_TIME__ = OB_TIME ? _fbb.CreateString(OB_TIME) : 0;
-  auto SEO_LIST__ = SEO_LIST ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*SEO_LIST) : 0;
+  auto VALUES__ = VALUES ? _fbb.CreateVector<double>(*VALUES) : 0;
+  auto UNCERTAINTIES__ = UNCERTAINTIES ? _fbb.CreateVector<double>(*UNCERTAINTIES) : 0;
+  auto UNITS__ = UNITS ? _fbb.CreateString(UNITS) : 0;
   auto QUALITY__ = QUALITY ? _fbb.CreateString(QUALITY) : 0;
   auto DESCRIPTION__ = DESCRIPTION ? _fbb.CreateString(DESCRIPTION) : 0;
   auto DESCRIPTOR__ = DESCRIPTOR ? _fbb.CreateString(DESCRIPTOR) : 0;
@@ -478,7 +668,7 @@ inline ::flatbuffers::Offset<SEO> CreateSEODirect(
       MSG_TYPE__,
       GEN_SYSTEM__,
       EXTERNAL_ID__,
-      DATA_TYPE__,
+      DATA_TYPE,
       GEN_TIME__,
       FORECAST,
       DERIVED,
@@ -486,7 +676,7 @@ inline ::flatbuffers::Offset<SEO> CreateSEODirect(
       ORIG_OBJECT_ID__,
       ID_SENSOR__,
       ORIG_SENSOR_ID__,
-      OBSERVATORY_TYPE__,
+      OBSERVATORY_TYPE,
       OBSERVATORY_NAME__,
       OBSERVATORY_NOTES__,
       INSTRUMENT_TYPE__,
@@ -497,11 +687,13 @@ inline ::flatbuffers::Offset<SEO> CreateSEODirect(
       SEN_POS__,
       SEN_VEL__,
       MEAS_TYPE__,
+      PARTICLE_TYPE,
       SEN_ENERGY_LEVEL__,
       OB_SET_ID__,
-      PARTICLE_TYPE__,
       OB_TIME__,
-      SEO_LIST__,
+      VALUES__,
+      UNCERTAINTIES__,
+      UNITS__,
       QUALITY__,
       DESCRIPTION__,
       DESCRIPTOR__,

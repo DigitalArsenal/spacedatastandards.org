@@ -5,6 +5,191 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class OdMethod {
+  final int value;
+  const OdMethod._(this.value);
+
+  factory OdMethod.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum OdMethod');
+    }
+    return result;
+  }
+
+  static OdMethod? _createOrNull(int? value) => 
+      value == null ? null : OdMethod.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 7;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const OdMethod BATCH_LEAST_SQUARES = OdMethod._(0);
+  static const OdMethod SEQUENTIAL_LEAST_SQUARES = OdMethod._(1);
+  static const OdMethod EXTENDED_KALMAN = OdMethod._(2);
+  static const OdMethod UNSCENTED_KALMAN = OdMethod._(3);
+  static const OdMethod SPECIAL_PERTURBATIONS = OdMethod._(4);
+  static const OdMethod GENERAL_PERTURBATIONS = OdMethod._(5);
+  static const OdMethod DIFFERENTIAL_CORRECTION = OdMethod._(6);
+  static const OdMethod UNKNOWN = OdMethod._(7);
+  static const Map<int, OdMethod> values = {
+    0: BATCH_LEAST_SQUARES,
+    1: SEQUENTIAL_LEAST_SQUARES,
+    2: EXTENDED_KALMAN,
+    3: UNSCENTED_KALMAN,
+    4: SPECIAL_PERTURBATIONS,
+    5: GENERAL_PERTURBATIONS,
+    6: DIFFERENTIAL_CORRECTION,
+    7: UNKNOWN};
+
+  static const fb.Reader<OdMethod> reader = _OdMethodReader();
+
+  @override
+  String toString() {
+    return 'OdMethod{value: $value}';
+  }
+}
+
+class _OdMethodReader extends fb.Reader<OdMethod> {
+  const _OdMethodReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  OdMethod read(fb.BufferContext bc, int offset) =>
+      OdMethod.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Sensor contribution to an orbit determination solution
+class OdSensorContribution {
+  OdSensorContribution._(this._bc, this._bcOffset);
+  factory OdSensorContribution(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<OdSensorContribution> reader = _OdSensorContributionReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Sensor identifier
+  String? get SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Original sensor identifier
+  String? get ORIG_SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Number of accepted observations from this sensor
+  int get NUM_ACCEPTED => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 8, 0);
+  ///  Number of rejected observations from this sensor
+  int get NUM_REJECTED => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  ///  Weighted RMS for this sensor's observations
+  double get WRMS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  Observation types from this sensor
+  List<String>? get OB_TYPES => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 14);
+
+  @override
+  String toString() {
+    return 'OdSensorContribution{SENSOR_ID: ${SENSOR_ID}, ORIG_SENSOR_ID: ${ORIG_SENSOR_ID}, NUM_ACCEPTED: ${NUM_ACCEPTED}, NUM_REJECTED: ${NUM_REJECTED}, WRMS: ${WRMS}, OB_TYPES: ${OB_TYPES}}';
+  }
+}
+
+class _OdSensorContributionReader extends fb.TableReader<OdSensorContribution> {
+  const _OdSensorContributionReader();
+
+  @override
+  OdSensorContribution createObject(fb.BufferContext bc, int offset) => 
+    OdSensorContribution._(bc, offset);
+}
+
+class OdSensorContributionBuilder {
+  OdSensorContributionBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(6);
+  }
+
+  int addSensorIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addOrigSensorIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addNumAccepted(int? NUM_ACCEPTED) {
+    fbBuilder.addUint32(2, NUM_ACCEPTED);
+    return fbBuilder.offset;
+  }
+  int addNumRejected(int? NUM_REJECTED) {
+    fbBuilder.addUint32(3, NUM_REJECTED);
+    return fbBuilder.offset;
+  }
+  int addWrms(double? WRMS) {
+    fbBuilder.addFloat64(4, WRMS);
+    return fbBuilder.offset;
+  }
+  int addObTypesOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class OdSensorContributionObjectBuilder extends fb.ObjectBuilder {
+  final String? _SENSOR_ID;
+  final String? _ORIG_SENSOR_ID;
+  final int? _NUM_ACCEPTED;
+  final int? _NUM_REJECTED;
+  final double? _WRMS;
+  final List<String>? _OB_TYPES;
+
+  OdSensorContributionObjectBuilder({
+    String? SENSOR_ID,
+    String? ORIG_SENSOR_ID,
+    int? NUM_ACCEPTED,
+    int? NUM_REJECTED,
+    double? WRMS,
+    List<String>? OB_TYPES,
+  })
+      : _SENSOR_ID = SENSOR_ID,
+        _ORIG_SENSOR_ID = ORIG_SENSOR_ID,
+        _NUM_ACCEPTED = NUM_ACCEPTED,
+        _NUM_REJECTED = NUM_REJECTED,
+        _WRMS = WRMS,
+        _OB_TYPES = OB_TYPES;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SENSOR_IDOffset = _SENSOR_ID == null ? null
+        : fbBuilder.writeString(_SENSOR_ID!);
+    final int? ORIG_SENSOR_IDOffset = _ORIG_SENSOR_ID == null ? null
+        : fbBuilder.writeString(_ORIG_SENSOR_ID!);
+    final int? OB_TYPESOffset = _OB_TYPES == null ? null
+        : fbBuilder.writeList(_OB_TYPES!.map(fbBuilder.writeString).toList());
+    fbBuilder.startTable(6);
+    fbBuilder.addOffset(0, SENSOR_IDOffset);
+    fbBuilder.addOffset(1, ORIG_SENSOR_IDOffset);
+    fbBuilder.addUint32(2, _NUM_ACCEPTED);
+    fbBuilder.addUint32(3, _NUM_REJECTED);
+    fbBuilder.addFloat64(4, _WRMS);
+    fbBuilder.addOffset(5, OB_TYPESOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Orbit Determination Results
 class OBD {
   OBD._(this._bc, this._bcOffset);
@@ -18,46 +203,86 @@ class OBD {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  String? get START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
-  String? get END_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get ORIG_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  int get SAT_NO => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 12, 0);
-  String? get APRIORI_ID_ELSET => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get APRIORI_ELSET => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  String? get APRIORI_ID_STATE_VECTOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  String? get APRIORI_STATE_VECTOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  bool get INITIAL_OD => const fb.BoolReader().vTableGet(_bc, _bcOffset, 22, false);
-  String? get LAST_OB_START => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
-  String? get LAST_OB_END => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
-  double get TIME_SPAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
-  String? get EFFECTIVE_FROM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
-  String? get EFFECTIVE_UNTIL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
-  double get WRMS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
-  double get PREVIOUS_WRMS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
-  double get FIRST_PASS_WRMS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
-  double get BEST_PASS_WRMS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
-  double get ERROR_GROWTH_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
-  double get EDR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
-  String? get METHOD => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 46);
-  String? get METHOD_SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
-  double get FIT_SPAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
-  bool get BALLISTIC_COEFF_EST => const fb.BoolReader().vTableGet(_bc, _bcOffset, 52, false);
-  String? get BALLISTIC_COEFF_MODEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 54);
-  bool get AGOM_EST => const fb.BoolReader().vTableGet(_bc, _bcOffset, 56, false);
-  String? get AGOM_MODEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 58);
-  double get RMS_CONVERGENCE_CRITERIA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 60, 0.0);
-  int get NUM_ITERATIONS => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 62, 0);
-  List<String>? get ACCEPTED_OB_TYPS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 64);
-  List<String>? get ACCEPTED_OB_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 66);
-  List<String>? get REJECTED_OB_TYPS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 68);
-  List<String>? get REJECTED_OB_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 70);
-  List<String>? get SENSOR_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 72);
-  String? get ON_ORBIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 74);
+  ///  Satellite catalog number
+  int get SAT_NO => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 6, 0);
+  ///  International designator
+  String? get ORIG_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  On-orbit reference
+  String? get ON_ORBIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  OD fit start time (ISO 8601)
+  String? get START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  OD fit end time (ISO 8601)
+  String? get END_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  OD method used
+  OdMethod get METHOD => OdMethod.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 16, 0));
+  ///  Method source or software
+  String? get METHOD_SOURCE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
+  ///  True if this is an initial orbit determination
+  bool get INITIAL_OD => const fb.BoolReader().vTableGet(_bc, _bcOffset, 20, false);
+  ///  A priori element set identifier
+  String? get APRIORI_ID_ELSET => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  ///  A priori element set data reference
+  String? get APRIORI_ELSET => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  ///  A priori state vector identifier
+  String? get APRIORI_ID_STATE_VECTOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  ///  A priori state vector data reference
+  String? get APRIORI_STATE_VECTOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Start of last observation arc (ISO 8601)
+  String? get LAST_OB_START => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  ///  End of last observation arc (ISO 8601)
+  String? get LAST_OB_END => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  ///  Observation time span (days)
+  double get TIME_SPAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  ///  Fit span in days
+  double get FIT_SPAN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  ///  Solution effective from (ISO 8601)
+  String? get EFFECTIVE_FROM => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  ///  Solution effective until (ISO 8601)
+  String? get EFFECTIVE_UNTIL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 40);
+  ///  Weighted RMS of residuals
+  double get WRMS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  ///  Previous solution WRMS
+  double get PREVIOUS_WRMS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  ///  First pass WRMS
+  double get FIRST_PASS_WRMS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
+  ///  Best pass WRMS
+  double get BEST_PASS_WRMS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
+  ///  Error growth rate (km/day)
+  double get ERROR_GROWTH_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
+  ///  Energy dissipation rate
+  double get EDR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
+  ///  True if ballistic coefficient was estimated
+  bool get BALLISTIC_COEFF_EST => const fb.BoolReader().vTableGet(_bc, _bcOffset, 54, false);
+  ///  Ballistic coefficient model
+  String? get BALLISTIC_COEFF_MODEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 56);
+  ///  True if area-to-mass ratio was estimated
+  bool get AGOM_EST => const fb.BoolReader().vTableGet(_bc, _bcOffset, 58, false);
+  ///  Area-to-mass ratio model
+  String? get AGOM_MODEL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 60);
+  ///  RMS convergence criteria
+  double get RMS_CONVERGENCE_CRITERIA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
+  ///  Number of iterations to converge
+  int get NUM_ITERATIONS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 64, 0);
+  ///  Total accepted observations
+  int get NUM_ACCEPTED_OBS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 66, 0);
+  ///  Total rejected observations
+  int get NUM_REJECTED_OBS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 68, 0);
+  ///  Sensor contributions to this solution
+  List<OdSensorContribution>? get SENSORS => const fb.ListReader<OdSensorContribution>(OdSensorContribution.reader).vTableGetNullable(_bc, _bcOffset, 70);
+  ///  Accepted observation types
+  List<String>? get ACCEPTED_OB_TYPS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 72);
+  ///  Accepted observation identifiers
+  List<String>? get ACCEPTED_OB_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 74);
+  ///  Rejected observation types
+  List<String>? get REJECTED_OB_TYPS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 76);
+  ///  Rejected observation identifiers
+  List<String>? get REJECTED_OB_IDS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 78);
 
   @override
   String toString() {
-    return 'OBD{ID: ${ID}, START_TIME: ${START_TIME}, END_TIME: ${END_TIME}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, SAT_NO: ${SAT_NO}, APRIORI_ID_ELSET: ${APRIORI_ID_ELSET}, APRIORI_ELSET: ${APRIORI_ELSET}, APRIORI_ID_STATE_VECTOR: ${APRIORI_ID_STATE_VECTOR}, APRIORI_STATE_VECTOR: ${APRIORI_STATE_VECTOR}, INITIAL_OD: ${INITIAL_OD}, LAST_OB_START: ${LAST_OB_START}, LAST_OB_END: ${LAST_OB_END}, TIME_SPAN: ${TIME_SPAN}, EFFECTIVE_FROM: ${EFFECTIVE_FROM}, EFFECTIVE_UNTIL: ${EFFECTIVE_UNTIL}, WRMS: ${WRMS}, PREVIOUS_WRMS: ${PREVIOUS_WRMS}, FIRST_PASS_WRMS: ${FIRST_PASS_WRMS}, BEST_PASS_WRMS: ${BEST_PASS_WRMS}, ERROR_GROWTH_RATE: ${ERROR_GROWTH_RATE}, EDR: ${EDR}, METHOD: ${METHOD}, METHOD_SOURCE: ${METHOD_SOURCE}, FIT_SPAN: ${FIT_SPAN}, BALLISTIC_COEFF_EST: ${BALLISTIC_COEFF_EST}, BALLISTIC_COEFF_MODEL: ${BALLISTIC_COEFF_MODEL}, AGOM_EST: ${AGOM_EST}, AGOM_MODEL: ${AGOM_MODEL}, RMS_CONVERGENCE_CRITERIA: ${RMS_CONVERGENCE_CRITERIA}, NUM_ITERATIONS: ${NUM_ITERATIONS}, ACCEPTED_OB_TYPS: ${ACCEPTED_OB_TYPS}, ACCEPTED_OB_IDS: ${ACCEPTED_OB_IDS}, REJECTED_OB_TYPS: ${REJECTED_OB_TYPS}, REJECTED_OB_IDS: ${REJECTED_OB_IDS}, SENSOR_IDS: ${SENSOR_IDS}, ON_ORBIT: ${ON_ORBIT}}';
+    return 'OBD{ID: ${ID}, SAT_NO: ${SAT_NO}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, ON_ORBIT: ${ON_ORBIT}, START_TIME: ${START_TIME}, END_TIME: ${END_TIME}, METHOD: ${METHOD}, METHOD_SOURCE: ${METHOD_SOURCE}, INITIAL_OD: ${INITIAL_OD}, APRIORI_ID_ELSET: ${APRIORI_ID_ELSET}, APRIORI_ELSET: ${APRIORI_ELSET}, APRIORI_ID_STATE_VECTOR: ${APRIORI_ID_STATE_VECTOR}, APRIORI_STATE_VECTOR: ${APRIORI_STATE_VECTOR}, LAST_OB_START: ${LAST_OB_START}, LAST_OB_END: ${LAST_OB_END}, TIME_SPAN: ${TIME_SPAN}, FIT_SPAN: ${FIT_SPAN}, EFFECTIVE_FROM: ${EFFECTIVE_FROM}, EFFECTIVE_UNTIL: ${EFFECTIVE_UNTIL}, WRMS: ${WRMS}, PREVIOUS_WRMS: ${PREVIOUS_WRMS}, FIRST_PASS_WRMS: ${FIRST_PASS_WRMS}, BEST_PASS_WRMS: ${BEST_PASS_WRMS}, ERROR_GROWTH_RATE: ${ERROR_GROWTH_RATE}, EDR: ${EDR}, BALLISTIC_COEFF_EST: ${BALLISTIC_COEFF_EST}, BALLISTIC_COEFF_MODEL: ${BALLISTIC_COEFF_MODEL}, AGOM_EST: ${AGOM_EST}, AGOM_MODEL: ${AGOM_MODEL}, RMS_CONVERGENCE_CRITERIA: ${RMS_CONVERGENCE_CRITERIA}, NUM_ITERATIONS: ${NUM_ITERATIONS}, NUM_ACCEPTED_OBS: ${NUM_ACCEPTED_OBS}, NUM_REJECTED_OBS: ${NUM_REJECTED_OBS}, SENSORS: ${SENSORS}, ACCEPTED_OB_TYPS: ${ACCEPTED_OB_TYPS}, ACCEPTED_OB_IDS: ${ACCEPTED_OB_IDS}, REJECTED_OB_TYPS: ${REJECTED_OB_TYPS}, REJECTED_OB_IDS: ${REJECTED_OB_IDS}}';
   }
 }
 
@@ -75,151 +300,159 @@ class OBDBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(36);
+    fbBuilder.startTable(38);
   }
 
   int addIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addStartTimeOffset(int? offset) {
-    fbBuilder.addOffset(1, offset);
-    return fbBuilder.offset;
-  }
-  int addEndTimeOffset(int? offset) {
-    fbBuilder.addOffset(2, offset);
+  int addSatNo(int? SAT_NO) {
+    fbBuilder.addUint32(1, SAT_NO);
     return fbBuilder.offset;
   }
   int addOrigObjectIdOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
-    return fbBuilder.offset;
-  }
-  int addSatNo(int? SAT_NO) {
-    fbBuilder.addInt32(4, SAT_NO);
-    return fbBuilder.offset;
-  }
-  int addAprioriIdElsetOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addAprioriElsetOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addAprioriIdStateVectorOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
-    return fbBuilder.offset;
-  }
-  int addAprioriStateVectorOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-  int addInitialOd(bool? INITIAL_OD) {
-    fbBuilder.addBool(9, INITIAL_OD);
-    return fbBuilder.offset;
-  }
-  int addLastObStartOffset(int? offset) {
-    fbBuilder.addOffset(10, offset);
-    return fbBuilder.offset;
-  }
-  int addLastObEndOffset(int? offset) {
-    fbBuilder.addOffset(11, offset);
-    return fbBuilder.offset;
-  }
-  int addTimeSpan(double? TIME_SPAN) {
-    fbBuilder.addFloat64(12, TIME_SPAN);
-    return fbBuilder.offset;
-  }
-  int addEffectiveFromOffset(int? offset) {
-    fbBuilder.addOffset(13, offset);
-    return fbBuilder.offset;
-  }
-  int addEffectiveUntilOffset(int? offset) {
-    fbBuilder.addOffset(14, offset);
-    return fbBuilder.offset;
-  }
-  int addWrms(double? WRMS) {
-    fbBuilder.addFloat64(15, WRMS);
-    return fbBuilder.offset;
-  }
-  int addPreviousWrms(double? PREVIOUS_WRMS) {
-    fbBuilder.addFloat64(16, PREVIOUS_WRMS);
-    return fbBuilder.offset;
-  }
-  int addFirstPassWrms(double? FIRST_PASS_WRMS) {
-    fbBuilder.addFloat64(17, FIRST_PASS_WRMS);
-    return fbBuilder.offset;
-  }
-  int addBestPassWrms(double? BEST_PASS_WRMS) {
-    fbBuilder.addFloat64(18, BEST_PASS_WRMS);
-    return fbBuilder.offset;
-  }
-  int addErrorGrowthRate(double? ERROR_GROWTH_RATE) {
-    fbBuilder.addFloat64(19, ERROR_GROWTH_RATE);
-    return fbBuilder.offset;
-  }
-  int addEdr(double? EDR) {
-    fbBuilder.addFloat64(20, EDR);
-    return fbBuilder.offset;
-  }
-  int addMethodOffset(int? offset) {
-    fbBuilder.addOffset(21, offset);
-    return fbBuilder.offset;
-  }
-  int addMethodSourceOffset(int? offset) {
-    fbBuilder.addOffset(22, offset);
-    return fbBuilder.offset;
-  }
-  int addFitSpan(double? FIT_SPAN) {
-    fbBuilder.addFloat64(23, FIT_SPAN);
-    return fbBuilder.offset;
-  }
-  int addBallisticCoeffEst(bool? BALLISTIC_COEFF_EST) {
-    fbBuilder.addBool(24, BALLISTIC_COEFF_EST);
-    return fbBuilder.offset;
-  }
-  int addBallisticCoeffModelOffset(int? offset) {
-    fbBuilder.addOffset(25, offset);
-    return fbBuilder.offset;
-  }
-  int addAgomEst(bool? AGOM_EST) {
-    fbBuilder.addBool(26, AGOM_EST);
-    return fbBuilder.offset;
-  }
-  int addAgomModelOffset(int? offset) {
-    fbBuilder.addOffset(27, offset);
-    return fbBuilder.offset;
-  }
-  int addRmsConvergenceCriteria(double? RMS_CONVERGENCE_CRITERIA) {
-    fbBuilder.addFloat64(28, RMS_CONVERGENCE_CRITERIA);
-    return fbBuilder.offset;
-  }
-  int addNumIterations(int? NUM_ITERATIONS) {
-    fbBuilder.addInt32(29, NUM_ITERATIONS);
-    return fbBuilder.offset;
-  }
-  int addAcceptedObTypsOffset(int? offset) {
-    fbBuilder.addOffset(30, offset);
-    return fbBuilder.offset;
-  }
-  int addAcceptedObIdsOffset(int? offset) {
-    fbBuilder.addOffset(31, offset);
-    return fbBuilder.offset;
-  }
-  int addRejectedObTypsOffset(int? offset) {
-    fbBuilder.addOffset(32, offset);
-    return fbBuilder.offset;
-  }
-  int addRejectedObIdsOffset(int? offset) {
-    fbBuilder.addOffset(33, offset);
-    return fbBuilder.offset;
-  }
-  int addSensorIdsOffset(int? offset) {
-    fbBuilder.addOffset(34, offset);
+    fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
   int addOnOrbitOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addStartTimeOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addEndTimeOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addMethod(OdMethod? METHOD) {
+    fbBuilder.addInt8(6, METHOD?.value);
+    return fbBuilder.offset;
+  }
+  int addMethodSourceOffset(int? offset) {
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addInitialOd(bool? INITIAL_OD) {
+    fbBuilder.addBool(8, INITIAL_OD);
+    return fbBuilder.offset;
+  }
+  int addAprioriIdElsetOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addAprioriElsetOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addAprioriIdStateVectorOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addAprioriStateVectorOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addLastObStartOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addLastObEndOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
+    return fbBuilder.offset;
+  }
+  int addTimeSpan(double? TIME_SPAN) {
+    fbBuilder.addFloat64(15, TIME_SPAN);
+    return fbBuilder.offset;
+  }
+  int addFitSpan(double? FIT_SPAN) {
+    fbBuilder.addFloat64(16, FIT_SPAN);
+    return fbBuilder.offset;
+  }
+  int addEffectiveFromOffset(int? offset) {
+    fbBuilder.addOffset(17, offset);
+    return fbBuilder.offset;
+  }
+  int addEffectiveUntilOffset(int? offset) {
+    fbBuilder.addOffset(18, offset);
+    return fbBuilder.offset;
+  }
+  int addWrms(double? WRMS) {
+    fbBuilder.addFloat64(19, WRMS);
+    return fbBuilder.offset;
+  }
+  int addPreviousWrms(double? PREVIOUS_WRMS) {
+    fbBuilder.addFloat64(20, PREVIOUS_WRMS);
+    return fbBuilder.offset;
+  }
+  int addFirstPassWrms(double? FIRST_PASS_WRMS) {
+    fbBuilder.addFloat64(21, FIRST_PASS_WRMS);
+    return fbBuilder.offset;
+  }
+  int addBestPassWrms(double? BEST_PASS_WRMS) {
+    fbBuilder.addFloat64(22, BEST_PASS_WRMS);
+    return fbBuilder.offset;
+  }
+  int addErrorGrowthRate(double? ERROR_GROWTH_RATE) {
+    fbBuilder.addFloat64(23, ERROR_GROWTH_RATE);
+    return fbBuilder.offset;
+  }
+  int addEdr(double? EDR) {
+    fbBuilder.addFloat64(24, EDR);
+    return fbBuilder.offset;
+  }
+  int addBallisticCoeffEst(bool? BALLISTIC_COEFF_EST) {
+    fbBuilder.addBool(25, BALLISTIC_COEFF_EST);
+    return fbBuilder.offset;
+  }
+  int addBallisticCoeffModelOffset(int? offset) {
+    fbBuilder.addOffset(26, offset);
+    return fbBuilder.offset;
+  }
+  int addAgomEst(bool? AGOM_EST) {
+    fbBuilder.addBool(27, AGOM_EST);
+    return fbBuilder.offset;
+  }
+  int addAgomModelOffset(int? offset) {
+    fbBuilder.addOffset(28, offset);
+    return fbBuilder.offset;
+  }
+  int addRmsConvergenceCriteria(double? RMS_CONVERGENCE_CRITERIA) {
+    fbBuilder.addFloat64(29, RMS_CONVERGENCE_CRITERIA);
+    return fbBuilder.offset;
+  }
+  int addNumIterations(int? NUM_ITERATIONS) {
+    fbBuilder.addUint16(30, NUM_ITERATIONS);
+    return fbBuilder.offset;
+  }
+  int addNumAcceptedObs(int? NUM_ACCEPTED_OBS) {
+    fbBuilder.addUint32(31, NUM_ACCEPTED_OBS);
+    return fbBuilder.offset;
+  }
+  int addNumRejectedObs(int? NUM_REJECTED_OBS) {
+    fbBuilder.addUint32(32, NUM_REJECTED_OBS);
+    return fbBuilder.offset;
+  }
+  int addSensorsOffset(int? offset) {
+    fbBuilder.addOffset(33, offset);
+    return fbBuilder.offset;
+  }
+  int addAcceptedObTypsOffset(int? offset) {
+    fbBuilder.addOffset(34, offset);
+    return fbBuilder.offset;
+  }
+  int addAcceptedObIdsOffset(int? offset) {
     fbBuilder.addOffset(35, offset);
+    return fbBuilder.offset;
+  }
+  int addRejectedObTypsOffset(int? offset) {
+    fbBuilder.addOffset(36, offset);
+    return fbBuilder.offset;
+  }
+  int addRejectedObIdsOffset(int? offset) {
+    fbBuilder.addOffset(37, offset);
     return fbBuilder.offset;
   }
 
@@ -230,18 +463,22 @@ class OBDBuilder {
 
 class OBDObjectBuilder extends fb.ObjectBuilder {
   final String? _ID;
+  final int? _SAT_NO;
+  final String? _ORIG_OBJECT_ID;
+  final String? _ON_ORBIT;
   final String? _START_TIME;
   final String? _END_TIME;
-  final String? _ORIG_OBJECT_ID;
-  final int? _SAT_NO;
+  final OdMethod? _METHOD;
+  final String? _METHOD_SOURCE;
+  final bool? _INITIAL_OD;
   final String? _APRIORI_ID_ELSET;
   final String? _APRIORI_ELSET;
   final String? _APRIORI_ID_STATE_VECTOR;
   final String? _APRIORI_STATE_VECTOR;
-  final bool? _INITIAL_OD;
   final String? _LAST_OB_START;
   final String? _LAST_OB_END;
   final double? _TIME_SPAN;
+  final double? _FIT_SPAN;
   final String? _EFFECTIVE_FROM;
   final String? _EFFECTIVE_UNTIL;
   final double? _WRMS;
@@ -250,36 +487,38 @@ class OBDObjectBuilder extends fb.ObjectBuilder {
   final double? _BEST_PASS_WRMS;
   final double? _ERROR_GROWTH_RATE;
   final double? _EDR;
-  final String? _METHOD;
-  final String? _METHOD_SOURCE;
-  final double? _FIT_SPAN;
   final bool? _BALLISTIC_COEFF_EST;
   final String? _BALLISTIC_COEFF_MODEL;
   final bool? _AGOM_EST;
   final String? _AGOM_MODEL;
   final double? _RMS_CONVERGENCE_CRITERIA;
   final int? _NUM_ITERATIONS;
+  final int? _NUM_ACCEPTED_OBS;
+  final int? _NUM_REJECTED_OBS;
+  final List<OdSensorContributionObjectBuilder>? _SENSORS;
   final List<String>? _ACCEPTED_OB_TYPS;
   final List<String>? _ACCEPTED_OB_IDS;
   final List<String>? _REJECTED_OB_TYPS;
   final List<String>? _REJECTED_OB_IDS;
-  final List<String>? _SENSOR_IDS;
-  final String? _ON_ORBIT;
 
   OBDObjectBuilder({
     String? ID,
+    int? SAT_NO,
+    String? ORIG_OBJECT_ID,
+    String? ON_ORBIT,
     String? START_TIME,
     String? END_TIME,
-    String? ORIG_OBJECT_ID,
-    int? SAT_NO,
+    OdMethod? METHOD,
+    String? METHOD_SOURCE,
+    bool? INITIAL_OD,
     String? APRIORI_ID_ELSET,
     String? APRIORI_ELSET,
     String? APRIORI_ID_STATE_VECTOR,
     String? APRIORI_STATE_VECTOR,
-    bool? INITIAL_OD,
     String? LAST_OB_START,
     String? LAST_OB_END,
     double? TIME_SPAN,
+    double? FIT_SPAN,
     String? EFFECTIVE_FROM,
     String? EFFECTIVE_UNTIL,
     double? WRMS,
@@ -288,35 +527,37 @@ class OBDObjectBuilder extends fb.ObjectBuilder {
     double? BEST_PASS_WRMS,
     double? ERROR_GROWTH_RATE,
     double? EDR,
-    String? METHOD,
-    String? METHOD_SOURCE,
-    double? FIT_SPAN,
     bool? BALLISTIC_COEFF_EST,
     String? BALLISTIC_COEFF_MODEL,
     bool? AGOM_EST,
     String? AGOM_MODEL,
     double? RMS_CONVERGENCE_CRITERIA,
     int? NUM_ITERATIONS,
+    int? NUM_ACCEPTED_OBS,
+    int? NUM_REJECTED_OBS,
+    List<OdSensorContributionObjectBuilder>? SENSORS,
     List<String>? ACCEPTED_OB_TYPS,
     List<String>? ACCEPTED_OB_IDS,
     List<String>? REJECTED_OB_TYPS,
     List<String>? REJECTED_OB_IDS,
-    List<String>? SENSOR_IDS,
-    String? ON_ORBIT,
   })
       : _ID = ID,
+        _SAT_NO = SAT_NO,
+        _ORIG_OBJECT_ID = ORIG_OBJECT_ID,
+        _ON_ORBIT = ON_ORBIT,
         _START_TIME = START_TIME,
         _END_TIME = END_TIME,
-        _ORIG_OBJECT_ID = ORIG_OBJECT_ID,
-        _SAT_NO = SAT_NO,
+        _METHOD = METHOD,
+        _METHOD_SOURCE = METHOD_SOURCE,
+        _INITIAL_OD = INITIAL_OD,
         _APRIORI_ID_ELSET = APRIORI_ID_ELSET,
         _APRIORI_ELSET = APRIORI_ELSET,
         _APRIORI_ID_STATE_VECTOR = APRIORI_ID_STATE_VECTOR,
         _APRIORI_STATE_VECTOR = APRIORI_STATE_VECTOR,
-        _INITIAL_OD = INITIAL_OD,
         _LAST_OB_START = LAST_OB_START,
         _LAST_OB_END = LAST_OB_END,
         _TIME_SPAN = TIME_SPAN,
+        _FIT_SPAN = FIT_SPAN,
         _EFFECTIVE_FROM = EFFECTIVE_FROM,
         _EFFECTIVE_UNTIL = EFFECTIVE_UNTIL,
         _WRMS = WRMS,
@@ -325,33 +566,35 @@ class OBDObjectBuilder extends fb.ObjectBuilder {
         _BEST_PASS_WRMS = BEST_PASS_WRMS,
         _ERROR_GROWTH_RATE = ERROR_GROWTH_RATE,
         _EDR = EDR,
-        _METHOD = METHOD,
-        _METHOD_SOURCE = METHOD_SOURCE,
-        _FIT_SPAN = FIT_SPAN,
         _BALLISTIC_COEFF_EST = BALLISTIC_COEFF_EST,
         _BALLISTIC_COEFF_MODEL = BALLISTIC_COEFF_MODEL,
         _AGOM_EST = AGOM_EST,
         _AGOM_MODEL = AGOM_MODEL,
         _RMS_CONVERGENCE_CRITERIA = RMS_CONVERGENCE_CRITERIA,
         _NUM_ITERATIONS = NUM_ITERATIONS,
+        _NUM_ACCEPTED_OBS = NUM_ACCEPTED_OBS,
+        _NUM_REJECTED_OBS = NUM_REJECTED_OBS,
+        _SENSORS = SENSORS,
         _ACCEPTED_OB_TYPS = ACCEPTED_OB_TYPS,
         _ACCEPTED_OB_IDS = ACCEPTED_OB_IDS,
         _REJECTED_OB_TYPS = REJECTED_OB_TYPS,
-        _REJECTED_OB_IDS = REJECTED_OB_IDS,
-        _SENSOR_IDS = SENSOR_IDS,
-        _ON_ORBIT = ON_ORBIT;
+        _REJECTED_OB_IDS = REJECTED_OB_IDS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
     final int? IDOffset = _ID == null ? null
         : fbBuilder.writeString(_ID!);
+    final int? ORIG_OBJECT_IDOffset = _ORIG_OBJECT_ID == null ? null
+        : fbBuilder.writeString(_ORIG_OBJECT_ID!);
+    final int? ON_ORBITOffset = _ON_ORBIT == null ? null
+        : fbBuilder.writeString(_ON_ORBIT!);
     final int? START_TIMEOffset = _START_TIME == null ? null
         : fbBuilder.writeString(_START_TIME!);
     final int? END_TIMEOffset = _END_TIME == null ? null
         : fbBuilder.writeString(_END_TIME!);
-    final int? ORIG_OBJECT_IDOffset = _ORIG_OBJECT_ID == null ? null
-        : fbBuilder.writeString(_ORIG_OBJECT_ID!);
+    final int? METHOD_SOURCEOffset = _METHOD_SOURCE == null ? null
+        : fbBuilder.writeString(_METHOD_SOURCE!);
     final int? APRIORI_ID_ELSETOffset = _APRIORI_ID_ELSET == null ? null
         : fbBuilder.writeString(_APRIORI_ID_ELSET!);
     final int? APRIORI_ELSETOffset = _APRIORI_ELSET == null ? null
@@ -368,14 +611,12 @@ class OBDObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_EFFECTIVE_FROM!);
     final int? EFFECTIVE_UNTILOffset = _EFFECTIVE_UNTIL == null ? null
         : fbBuilder.writeString(_EFFECTIVE_UNTIL!);
-    final int? METHODOffset = _METHOD == null ? null
-        : fbBuilder.writeString(_METHOD!);
-    final int? METHOD_SOURCEOffset = _METHOD_SOURCE == null ? null
-        : fbBuilder.writeString(_METHOD_SOURCE!);
     final int? BALLISTIC_COEFF_MODELOffset = _BALLISTIC_COEFF_MODEL == null ? null
         : fbBuilder.writeString(_BALLISTIC_COEFF_MODEL!);
     final int? AGOM_MODELOffset = _AGOM_MODEL == null ? null
         : fbBuilder.writeString(_AGOM_MODEL!);
+    final int? SENSORSOffset = _SENSORS == null ? null
+        : fbBuilder.writeList(_SENSORS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? ACCEPTED_OB_TYPSOffset = _ACCEPTED_OB_TYPS == null ? null
         : fbBuilder.writeList(_ACCEPTED_OB_TYPS!.map(fbBuilder.writeString).toList());
     final int? ACCEPTED_OB_IDSOffset = _ACCEPTED_OB_IDS == null ? null
@@ -384,47 +625,45 @@ class OBDObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeList(_REJECTED_OB_TYPS!.map(fbBuilder.writeString).toList());
     final int? REJECTED_OB_IDSOffset = _REJECTED_OB_IDS == null ? null
         : fbBuilder.writeList(_REJECTED_OB_IDS!.map(fbBuilder.writeString).toList());
-    final int? SENSOR_IDSOffset = _SENSOR_IDS == null ? null
-        : fbBuilder.writeList(_SENSOR_IDS!.map(fbBuilder.writeString).toList());
-    final int? ON_ORBITOffset = _ON_ORBIT == null ? null
-        : fbBuilder.writeString(_ON_ORBIT!);
-    fbBuilder.startTable(36);
+    fbBuilder.startTable(38);
     fbBuilder.addOffset(0, IDOffset);
-    fbBuilder.addOffset(1, START_TIMEOffset);
-    fbBuilder.addOffset(2, END_TIMEOffset);
-    fbBuilder.addOffset(3, ORIG_OBJECT_IDOffset);
-    fbBuilder.addInt32(4, _SAT_NO);
-    fbBuilder.addOffset(5, APRIORI_ID_ELSETOffset);
-    fbBuilder.addOffset(6, APRIORI_ELSETOffset);
-    fbBuilder.addOffset(7, APRIORI_ID_STATE_VECTOROffset);
-    fbBuilder.addOffset(8, APRIORI_STATE_VECTOROffset);
-    fbBuilder.addBool(9, _INITIAL_OD);
-    fbBuilder.addOffset(10, LAST_OB_STARTOffset);
-    fbBuilder.addOffset(11, LAST_OB_ENDOffset);
-    fbBuilder.addFloat64(12, _TIME_SPAN);
-    fbBuilder.addOffset(13, EFFECTIVE_FROMOffset);
-    fbBuilder.addOffset(14, EFFECTIVE_UNTILOffset);
-    fbBuilder.addFloat64(15, _WRMS);
-    fbBuilder.addFloat64(16, _PREVIOUS_WRMS);
-    fbBuilder.addFloat64(17, _FIRST_PASS_WRMS);
-    fbBuilder.addFloat64(18, _BEST_PASS_WRMS);
-    fbBuilder.addFloat64(19, _ERROR_GROWTH_RATE);
-    fbBuilder.addFloat64(20, _EDR);
-    fbBuilder.addOffset(21, METHODOffset);
-    fbBuilder.addOffset(22, METHOD_SOURCEOffset);
-    fbBuilder.addFloat64(23, _FIT_SPAN);
-    fbBuilder.addBool(24, _BALLISTIC_COEFF_EST);
-    fbBuilder.addOffset(25, BALLISTIC_COEFF_MODELOffset);
-    fbBuilder.addBool(26, _AGOM_EST);
-    fbBuilder.addOffset(27, AGOM_MODELOffset);
-    fbBuilder.addFloat64(28, _RMS_CONVERGENCE_CRITERIA);
-    fbBuilder.addInt32(29, _NUM_ITERATIONS);
-    fbBuilder.addOffset(30, ACCEPTED_OB_TYPSOffset);
-    fbBuilder.addOffset(31, ACCEPTED_OB_IDSOffset);
-    fbBuilder.addOffset(32, REJECTED_OB_TYPSOffset);
-    fbBuilder.addOffset(33, REJECTED_OB_IDSOffset);
-    fbBuilder.addOffset(34, SENSOR_IDSOffset);
-    fbBuilder.addOffset(35, ON_ORBITOffset);
+    fbBuilder.addUint32(1, _SAT_NO);
+    fbBuilder.addOffset(2, ORIG_OBJECT_IDOffset);
+    fbBuilder.addOffset(3, ON_ORBITOffset);
+    fbBuilder.addOffset(4, START_TIMEOffset);
+    fbBuilder.addOffset(5, END_TIMEOffset);
+    fbBuilder.addInt8(6, _METHOD?.value);
+    fbBuilder.addOffset(7, METHOD_SOURCEOffset);
+    fbBuilder.addBool(8, _INITIAL_OD);
+    fbBuilder.addOffset(9, APRIORI_ID_ELSETOffset);
+    fbBuilder.addOffset(10, APRIORI_ELSETOffset);
+    fbBuilder.addOffset(11, APRIORI_ID_STATE_VECTOROffset);
+    fbBuilder.addOffset(12, APRIORI_STATE_VECTOROffset);
+    fbBuilder.addOffset(13, LAST_OB_STARTOffset);
+    fbBuilder.addOffset(14, LAST_OB_ENDOffset);
+    fbBuilder.addFloat64(15, _TIME_SPAN);
+    fbBuilder.addFloat64(16, _FIT_SPAN);
+    fbBuilder.addOffset(17, EFFECTIVE_FROMOffset);
+    fbBuilder.addOffset(18, EFFECTIVE_UNTILOffset);
+    fbBuilder.addFloat64(19, _WRMS);
+    fbBuilder.addFloat64(20, _PREVIOUS_WRMS);
+    fbBuilder.addFloat64(21, _FIRST_PASS_WRMS);
+    fbBuilder.addFloat64(22, _BEST_PASS_WRMS);
+    fbBuilder.addFloat64(23, _ERROR_GROWTH_RATE);
+    fbBuilder.addFloat64(24, _EDR);
+    fbBuilder.addBool(25, _BALLISTIC_COEFF_EST);
+    fbBuilder.addOffset(26, BALLISTIC_COEFF_MODELOffset);
+    fbBuilder.addBool(27, _AGOM_EST);
+    fbBuilder.addOffset(28, AGOM_MODELOffset);
+    fbBuilder.addFloat64(29, _RMS_CONVERGENCE_CRITERIA);
+    fbBuilder.addUint16(30, _NUM_ITERATIONS);
+    fbBuilder.addUint32(31, _NUM_ACCEPTED_OBS);
+    fbBuilder.addUint32(32, _NUM_REJECTED_OBS);
+    fbBuilder.addOffset(33, SENSORSOffset);
+    fbBuilder.addOffset(34, ACCEPTED_OB_TYPSOffset);
+    fbBuilder.addOffset(35, ACCEPTED_OB_IDSOffset);
+    fbBuilder.addOffset(36, REJECTED_OB_TYPSOffset);
+    fbBuilder.addOffset(37, REJECTED_OB_IDSOffset);
     return fbBuilder.endTable();
   }
 

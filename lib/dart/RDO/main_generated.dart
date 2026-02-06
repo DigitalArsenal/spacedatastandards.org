@@ -5,6 +5,58 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class RadarObsType {
+  final int value;
+  const RadarObsType._(this.value);
+
+  factory RadarObsType.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum RadarObsType');
+    }
+    return result;
+  }
+
+  static RadarObsType? _createOrNull(int? value) => 
+      value == null ? null : RadarObsType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 5;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const RadarObsType DETECTION = RadarObsType._(0);
+  static const RadarObsType TRACK = RadarObsType._(1);
+  static const RadarObsType METRIC = RadarObsType._(2);
+  static const RadarObsType SIGNATURE = RadarObsType._(3);
+  static const RadarObsType SEARCH_FENCE = RadarObsType._(4);
+  static const RadarObsType UNKNOWN = RadarObsType._(5);
+  static const Map<int, RadarObsType> values = {
+    0: DETECTION,
+    1: TRACK,
+    2: METRIC,
+    3: SIGNATURE,
+    4: SEARCH_FENCE,
+    5: UNKNOWN};
+
+  static const fb.Reader<RadarObsType> reader = _RadarObsTypeReader();
+
+  @override
+  String toString() {
+    return 'RadarObsType{value: $value}';
+  }
+}
+
+class _RadarObsTypeReader extends fb.Reader<RadarObsType> {
+  const _RadarObsTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  RadarObsType read(fb.BufferContext bc, int offset) =>
+      RadarObsType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 ///  Radar Observation
 class RDO {
   RDO._(this._bc, this._bcOffset);
@@ -18,62 +70,114 @@ class RDO {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Observation time (ISO 8601)
   String? get OB_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Sensor identifier
   String? get ID_SENSOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  int get SAT_NO => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 10, 0);
-  String? get TASK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  String? get TRANSACTION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
-  String? get TRACK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
-  String? get OB_POSITION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 18);
-  String? get ORIG_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 20);
-  String? get ORIG_SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
-  bool get UCT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 24, false);
-  double get AZIMUTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
-  double get AZIMUTH_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
-  double get AZIMUTH_BIAS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
-  double get AZIMUTH_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
-  double get ELEVATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
-  double get ELEVATION_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
-  double get ELEVATION_BIAS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
-  double get ELEVATION_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
-  double get RANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
-  double get RANGE_ACCEL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
-  double get RANGE_ACCEL_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
-  double get RANGE_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
-  double get RANGE_BIAS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
-  double get RANGE_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
-  double get RANGE_RATE_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
-  double get DOPPLER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, 0.0);
-  double get DOPPLER_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
-  double get RA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 60, 0.0);
-  double get DECLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
-  double get X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
-  double get Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, 0.0);
-  double get Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, 0.0);
-  double get XVEL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 70, 0.0);
-  double get YVEL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 72, 0.0);
-  double get ZVEL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 74, 0.0);
-  double get SENX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 76, 0.0);
-  double get SENY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 78, 0.0);
-  double get SENZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 80, 0.0);
-  double get RCS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 82, 0.0);
-  double get RCS_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 84, 0.0);
-  double get ORTHOGONAL_RCS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 86, 0.0);
-  double get ORTHOGONAL_RCS_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 88, 0.0);
-  double get SNR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 90, 0.0);
-  double get BEAM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 92, 0.0);
-  double get TIMING_BIAS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 94, 0.0);
-  String? get RAW_FILE_URI => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 96);
-  List<String>? get TAGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 98);
-  String? get ON_ORBIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 100);
-  String? get SEN_REFERENCE_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 102);
+  ///  Original sensor identifier
+  String? get ORIG_SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Satellite catalog number
+  int get SAT_NO => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  ///  International designator
+  String? get ORIG_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  On-orbit reference
+  String? get ON_ORBIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  True if uncorrelated target
+  bool get UCT => const fb.BoolReader().vTableGet(_bc, _bcOffset, 18, false);
+  ///  Observation type
+  RadarObsType get OBS_TYPE => RadarObsType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 20, 0));
+  ///  Task identifier
+  String? get TASK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 22);
+  ///  Transaction identifier
+  String? get TRANSACTION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 24);
+  ///  Track identifier
+  String? get TRACK_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Observation position identifier
+  String? get OB_POSITION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Sensor reference frame
+  String? get SEN_REFERENCE_FRAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+  ///  Azimuth angle (degrees)
+  double get AZIMUTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  ///  Azimuth uncertainty (degrees, 1-sigma)
+  double get AZIMUTH_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  ///  Azimuth bias (degrees)
+  double get AZIMUTH_BIAS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 36, 0.0);
+  ///  Azimuth rate (degrees/s)
+  double get AZIMUTH_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  ///  Elevation angle (degrees)
+  double get ELEVATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  ///  Elevation uncertainty (degrees, 1-sigma)
+  double get ELEVATION_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  ///  Elevation bias (degrees)
+  double get ELEVATION_BIAS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  ///  Elevation rate (degrees/s)
+  double get ELEVATION_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
+  ///  Slant range (km)
+  double get RANGE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 48, 0.0);
+  ///  Range uncertainty (km, 1-sigma)
+  double get RANGE_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 50, 0.0);
+  ///  Range bias (km)
+  double get RANGE_BIAS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 52, 0.0);
+  ///  Range rate (km/s)
+  double get RANGE_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
+  ///  Range rate uncertainty (km/s, 1-sigma)
+  double get RANGE_RATE_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, 0.0);
+  ///  Range acceleration (km/s^2)
+  double get RANGE_ACCEL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
+  ///  Range acceleration uncertainty (km/s^2, 1-sigma)
+  double get RANGE_ACCEL_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 60, 0.0);
+  ///  Doppler shift (Hz)
+  double get DOPPLER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 62, 0.0);
+  ///  Doppler uncertainty (Hz, 1-sigma)
+  double get DOPPLER_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 64, 0.0);
+  ///  Right ascension (degrees)
+  double get RA => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 66, 0.0);
+  ///  Declination (degrees)
+  double get DECLINATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 68, 0.0);
+  ///  Target position X (km, ECI)
+  double get X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 70, 0.0);
+  ///  Target position Y (km, ECI)
+  double get Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 72, 0.0);
+  ///  Target position Z (km, ECI)
+  double get Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 74, 0.0);
+  ///  Target velocity X (km/s, ECI)
+  double get XVEL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 76, 0.0);
+  ///  Target velocity Y (km/s, ECI)
+  double get YVEL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 78, 0.0);
+  ///  Target velocity Z (km/s, ECI)
+  double get ZVEL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 80, 0.0);
+  ///  Sensor position X (km, ECEF)
+  double get SENX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 82, 0.0);
+  ///  Sensor position Y (km, ECEF)
+  double get SENY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 84, 0.0);
+  ///  Sensor position Z (km, ECEF)
+  double get SENZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 86, 0.0);
+  ///  Radar cross-section (dBsm)
+  double get RCS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 88, 0.0);
+  ///  RCS uncertainty (dBsm, 1-sigma)
+  double get RCS_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 90, 0.0);
+  ///  Orthogonal polarization RCS (dBsm)
+  double get ORTHOGONAL_RCS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 92, 0.0);
+  ///  Orthogonal RCS uncertainty (dBsm, 1-sigma)
+  double get ORTHOGONAL_RCS_UNC => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 94, 0.0);
+  ///  Signal-to-noise ratio (dB)
+  double get SNR => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 96, 0.0);
+  ///  Beam identifier
+  double get BEAM => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 98, 0.0);
+  ///  Timing bias (seconds)
+  double get TIMING_BIAS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 100, 0.0);
+  ///  Reference to raw data file
+  String? get RAW_FILE_URI => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 102);
+  ///  Event descriptor
   String? get DESCRIPTOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 104);
-  String? get TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 106);
+  ///  Associated tags
+  List<String>? get TAGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 106);
 
   @override
   String toString() {
-    return 'RDO{ID: ${ID}, OB_TIME: ${OB_TIME}, ID_SENSOR: ${ID_SENSOR}, SAT_NO: ${SAT_NO}, TASK_ID: ${TASK_ID}, TRANSACTION_ID: ${TRANSACTION_ID}, TRACK_ID: ${TRACK_ID}, OB_POSITION: ${OB_POSITION}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, ORIG_SENSOR_ID: ${ORIG_SENSOR_ID}, UCT: ${UCT}, AZIMUTH: ${AZIMUTH}, AZIMUTH_UNC: ${AZIMUTH_UNC}, AZIMUTH_BIAS: ${AZIMUTH_BIAS}, AZIMUTH_RATE: ${AZIMUTH_RATE}, ELEVATION: ${ELEVATION}, ELEVATION_UNC: ${ELEVATION_UNC}, ELEVATION_BIAS: ${ELEVATION_BIAS}, ELEVATION_RATE: ${ELEVATION_RATE}, RANGE: ${RANGE}, RANGE_ACCEL: ${RANGE_ACCEL}, RANGE_ACCEL_UNC: ${RANGE_ACCEL_UNC}, RANGE_UNC: ${RANGE_UNC}, RANGE_BIAS: ${RANGE_BIAS}, RANGE_RATE: ${RANGE_RATE}, RANGE_RATE_UNC: ${RANGE_RATE_UNC}, DOPPLER: ${DOPPLER}, DOPPLER_UNC: ${DOPPLER_UNC}, RA: ${RA}, DECLINATION: ${DECLINATION}, X: ${X}, Y: ${Y}, Z: ${Z}, XVEL: ${XVEL}, YVEL: ${YVEL}, ZVEL: ${ZVEL}, SENX: ${SENX}, SENY: ${SENY}, SENZ: ${SENZ}, RCS: ${RCS}, RCS_UNC: ${RCS_UNC}, ORTHOGONAL_RCS: ${ORTHOGONAL_RCS}, ORTHOGONAL_RCS_UNC: ${ORTHOGONAL_RCS_UNC}, SNR: ${SNR}, BEAM: ${BEAM}, TIMING_BIAS: ${TIMING_BIAS}, RAW_FILE_URI: ${RAW_FILE_URI}, TAGS: ${TAGS}, ON_ORBIT: ${ON_ORBIT}, SEN_REFERENCE_FRAME: ${SEN_REFERENCE_FRAME}, DESCRIPTOR: ${DESCRIPTOR}, TYPE: ${TYPE}}';
+    return 'RDO{ID: ${ID}, OB_TIME: ${OB_TIME}, ID_SENSOR: ${ID_SENSOR}, ORIG_SENSOR_ID: ${ORIG_SENSOR_ID}, SAT_NO: ${SAT_NO}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, ON_ORBIT: ${ON_ORBIT}, UCT: ${UCT}, OBS_TYPE: ${OBS_TYPE}, TASK_ID: ${TASK_ID}, TRANSACTION_ID: ${TRANSACTION_ID}, TRACK_ID: ${TRACK_ID}, OB_POSITION: ${OB_POSITION}, SEN_REFERENCE_FRAME: ${SEN_REFERENCE_FRAME}, AZIMUTH: ${AZIMUTH}, AZIMUTH_UNC: ${AZIMUTH_UNC}, AZIMUTH_BIAS: ${AZIMUTH_BIAS}, AZIMUTH_RATE: ${AZIMUTH_RATE}, ELEVATION: ${ELEVATION}, ELEVATION_UNC: ${ELEVATION_UNC}, ELEVATION_BIAS: ${ELEVATION_BIAS}, ELEVATION_RATE: ${ELEVATION_RATE}, RANGE: ${RANGE}, RANGE_UNC: ${RANGE_UNC}, RANGE_BIAS: ${RANGE_BIAS}, RANGE_RATE: ${RANGE_RATE}, RANGE_RATE_UNC: ${RANGE_RATE_UNC}, RANGE_ACCEL: ${RANGE_ACCEL}, RANGE_ACCEL_UNC: ${RANGE_ACCEL_UNC}, DOPPLER: ${DOPPLER}, DOPPLER_UNC: ${DOPPLER_UNC}, RA: ${RA}, DECLINATION: ${DECLINATION}, X: ${X}, Y: ${Y}, Z: ${Z}, XVEL: ${XVEL}, YVEL: ${YVEL}, ZVEL: ${ZVEL}, SENX: ${SENX}, SENY: ${SENY}, SENZ: ${SENZ}, RCS: ${RCS}, RCS_UNC: ${RCS_UNC}, ORTHOGONAL_RCS: ${ORTHOGONAL_RCS}, ORTHOGONAL_RCS_UNC: ${ORTHOGONAL_RCS_UNC}, SNR: ${SNR}, BEAM: ${BEAM}, TIMING_BIAS: ${TIMING_BIAS}, RAW_FILE_URI: ${RAW_FILE_URI}, DESCRIPTOR: ${DESCRIPTOR}, TAGS: ${TAGS}}';
   }
 }
 
@@ -106,191 +210,191 @@ class RDOBuilder {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
+  int addOrigSensorIdOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
   int addSatNo(int? SAT_NO) {
-    fbBuilder.addInt32(3, SAT_NO);
-    return fbBuilder.offset;
-  }
-  int addTaskIdOffset(int? offset) {
-    fbBuilder.addOffset(4, offset);
-    return fbBuilder.offset;
-  }
-  int addTransactionIdOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
-    return fbBuilder.offset;
-  }
-  int addTrackIdOffset(int? offset) {
-    fbBuilder.addOffset(6, offset);
-    return fbBuilder.offset;
-  }
-  int addObPositionOffset(int? offset) {
-    fbBuilder.addOffset(7, offset);
+    fbBuilder.addUint32(4, SAT_NO);
     return fbBuilder.offset;
   }
   int addOrigObjectIdOffset(int? offset) {
-    fbBuilder.addOffset(8, offset);
-    return fbBuilder.offset;
-  }
-  int addOrigSensorIdOffset(int? offset) {
-    fbBuilder.addOffset(9, offset);
-    return fbBuilder.offset;
-  }
-  int addUct(bool? UCT) {
-    fbBuilder.addBool(10, UCT);
-    return fbBuilder.offset;
-  }
-  int addAzimuth(double? AZIMUTH) {
-    fbBuilder.addFloat64(11, AZIMUTH);
-    return fbBuilder.offset;
-  }
-  int addAzimuthUnc(double? AZIMUTH_UNC) {
-    fbBuilder.addFloat64(12, AZIMUTH_UNC);
-    return fbBuilder.offset;
-  }
-  int addAzimuthBias(double? AZIMUTH_BIAS) {
-    fbBuilder.addFloat64(13, AZIMUTH_BIAS);
-    return fbBuilder.offset;
-  }
-  int addAzimuthRate(double? AZIMUTH_RATE) {
-    fbBuilder.addFloat64(14, AZIMUTH_RATE);
-    return fbBuilder.offset;
-  }
-  int addElevation(double? ELEVATION) {
-    fbBuilder.addFloat64(15, ELEVATION);
-    return fbBuilder.offset;
-  }
-  int addElevationUnc(double? ELEVATION_UNC) {
-    fbBuilder.addFloat64(16, ELEVATION_UNC);
-    return fbBuilder.offset;
-  }
-  int addElevationBias(double? ELEVATION_BIAS) {
-    fbBuilder.addFloat64(17, ELEVATION_BIAS);
-    return fbBuilder.offset;
-  }
-  int addElevationRate(double? ELEVATION_RATE) {
-    fbBuilder.addFloat64(18, ELEVATION_RATE);
-    return fbBuilder.offset;
-  }
-  int addRange(double? RANGE) {
-    fbBuilder.addFloat64(19, RANGE);
-    return fbBuilder.offset;
-  }
-  int addRangeAccel(double? RANGE_ACCEL) {
-    fbBuilder.addFloat64(20, RANGE_ACCEL);
-    return fbBuilder.offset;
-  }
-  int addRangeAccelUnc(double? RANGE_ACCEL_UNC) {
-    fbBuilder.addFloat64(21, RANGE_ACCEL_UNC);
-    return fbBuilder.offset;
-  }
-  int addRangeUnc(double? RANGE_UNC) {
-    fbBuilder.addFloat64(22, RANGE_UNC);
-    return fbBuilder.offset;
-  }
-  int addRangeBias(double? RANGE_BIAS) {
-    fbBuilder.addFloat64(23, RANGE_BIAS);
-    return fbBuilder.offset;
-  }
-  int addRangeRate(double? RANGE_RATE) {
-    fbBuilder.addFloat64(24, RANGE_RATE);
-    return fbBuilder.offset;
-  }
-  int addRangeRateUnc(double? RANGE_RATE_UNC) {
-    fbBuilder.addFloat64(25, RANGE_RATE_UNC);
-    return fbBuilder.offset;
-  }
-  int addDoppler(double? DOPPLER) {
-    fbBuilder.addFloat64(26, DOPPLER);
-    return fbBuilder.offset;
-  }
-  int addDopplerUnc(double? DOPPLER_UNC) {
-    fbBuilder.addFloat64(27, DOPPLER_UNC);
-    return fbBuilder.offset;
-  }
-  int addRa(double? RA) {
-    fbBuilder.addFloat64(28, RA);
-    return fbBuilder.offset;
-  }
-  int addDeclination(double? DECLINATION) {
-    fbBuilder.addFloat64(29, DECLINATION);
-    return fbBuilder.offset;
-  }
-  int addX(double? X) {
-    fbBuilder.addFloat64(30, X);
-    return fbBuilder.offset;
-  }
-  int addY(double? Y) {
-    fbBuilder.addFloat64(31, Y);
-    return fbBuilder.offset;
-  }
-  int addZ(double? Z) {
-    fbBuilder.addFloat64(32, Z);
-    return fbBuilder.offset;
-  }
-  int addXvel(double? XVEL) {
-    fbBuilder.addFloat64(33, XVEL);
-    return fbBuilder.offset;
-  }
-  int addYvel(double? YVEL) {
-    fbBuilder.addFloat64(34, YVEL);
-    return fbBuilder.offset;
-  }
-  int addZvel(double? ZVEL) {
-    fbBuilder.addFloat64(35, ZVEL);
-    return fbBuilder.offset;
-  }
-  int addSenx(double? SENX) {
-    fbBuilder.addFloat64(36, SENX);
-    return fbBuilder.offset;
-  }
-  int addSeny(double? SENY) {
-    fbBuilder.addFloat64(37, SENY);
-    return fbBuilder.offset;
-  }
-  int addSenz(double? SENZ) {
-    fbBuilder.addFloat64(38, SENZ);
-    return fbBuilder.offset;
-  }
-  int addRcs(double? RCS) {
-    fbBuilder.addFloat64(39, RCS);
-    return fbBuilder.offset;
-  }
-  int addRcsUnc(double? RCS_UNC) {
-    fbBuilder.addFloat64(40, RCS_UNC);
-    return fbBuilder.offset;
-  }
-  int addOrthogonalRcs(double? ORTHOGONAL_RCS) {
-    fbBuilder.addFloat64(41, ORTHOGONAL_RCS);
-    return fbBuilder.offset;
-  }
-  int addOrthogonalRcsUnc(double? ORTHOGONAL_RCS_UNC) {
-    fbBuilder.addFloat64(42, ORTHOGONAL_RCS_UNC);
-    return fbBuilder.offset;
-  }
-  int addSnr(double? SNR) {
-    fbBuilder.addFloat64(43, SNR);
-    return fbBuilder.offset;
-  }
-  int addBeam(double? BEAM) {
-    fbBuilder.addFloat64(44, BEAM);
-    return fbBuilder.offset;
-  }
-  int addTimingBias(double? TIMING_BIAS) {
-    fbBuilder.addFloat64(45, TIMING_BIAS);
-    return fbBuilder.offset;
-  }
-  int addRawFileUriOffset(int? offset) {
-    fbBuilder.addOffset(46, offset);
-    return fbBuilder.offset;
-  }
-  int addTagsOffset(int? offset) {
-    fbBuilder.addOffset(47, offset);
+    fbBuilder.addOffset(5, offset);
     return fbBuilder.offset;
   }
   int addOnOrbitOffset(int? offset) {
-    fbBuilder.addOffset(48, offset);
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addUct(bool? UCT) {
+    fbBuilder.addBool(7, UCT);
+    return fbBuilder.offset;
+  }
+  int addObsType(RadarObsType? OBS_TYPE) {
+    fbBuilder.addInt8(8, OBS_TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addTaskIdOffset(int? offset) {
+    fbBuilder.addOffset(9, offset);
+    return fbBuilder.offset;
+  }
+  int addTransactionIdOffset(int? offset) {
+    fbBuilder.addOffset(10, offset);
+    return fbBuilder.offset;
+  }
+  int addTrackIdOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addObPositionOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
     return fbBuilder.offset;
   }
   int addSenReferenceFrameOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+  int addAzimuth(double? AZIMUTH) {
+    fbBuilder.addFloat64(14, AZIMUTH);
+    return fbBuilder.offset;
+  }
+  int addAzimuthUnc(double? AZIMUTH_UNC) {
+    fbBuilder.addFloat64(15, AZIMUTH_UNC);
+    return fbBuilder.offset;
+  }
+  int addAzimuthBias(double? AZIMUTH_BIAS) {
+    fbBuilder.addFloat64(16, AZIMUTH_BIAS);
+    return fbBuilder.offset;
+  }
+  int addAzimuthRate(double? AZIMUTH_RATE) {
+    fbBuilder.addFloat64(17, AZIMUTH_RATE);
+    return fbBuilder.offset;
+  }
+  int addElevation(double? ELEVATION) {
+    fbBuilder.addFloat64(18, ELEVATION);
+    return fbBuilder.offset;
+  }
+  int addElevationUnc(double? ELEVATION_UNC) {
+    fbBuilder.addFloat64(19, ELEVATION_UNC);
+    return fbBuilder.offset;
+  }
+  int addElevationBias(double? ELEVATION_BIAS) {
+    fbBuilder.addFloat64(20, ELEVATION_BIAS);
+    return fbBuilder.offset;
+  }
+  int addElevationRate(double? ELEVATION_RATE) {
+    fbBuilder.addFloat64(21, ELEVATION_RATE);
+    return fbBuilder.offset;
+  }
+  int addRange(double? RANGE) {
+    fbBuilder.addFloat64(22, RANGE);
+    return fbBuilder.offset;
+  }
+  int addRangeUnc(double? RANGE_UNC) {
+    fbBuilder.addFloat64(23, RANGE_UNC);
+    return fbBuilder.offset;
+  }
+  int addRangeBias(double? RANGE_BIAS) {
+    fbBuilder.addFloat64(24, RANGE_BIAS);
+    return fbBuilder.offset;
+  }
+  int addRangeRate(double? RANGE_RATE) {
+    fbBuilder.addFloat64(25, RANGE_RATE);
+    return fbBuilder.offset;
+  }
+  int addRangeRateUnc(double? RANGE_RATE_UNC) {
+    fbBuilder.addFloat64(26, RANGE_RATE_UNC);
+    return fbBuilder.offset;
+  }
+  int addRangeAccel(double? RANGE_ACCEL) {
+    fbBuilder.addFloat64(27, RANGE_ACCEL);
+    return fbBuilder.offset;
+  }
+  int addRangeAccelUnc(double? RANGE_ACCEL_UNC) {
+    fbBuilder.addFloat64(28, RANGE_ACCEL_UNC);
+    return fbBuilder.offset;
+  }
+  int addDoppler(double? DOPPLER) {
+    fbBuilder.addFloat64(29, DOPPLER);
+    return fbBuilder.offset;
+  }
+  int addDopplerUnc(double? DOPPLER_UNC) {
+    fbBuilder.addFloat64(30, DOPPLER_UNC);
+    return fbBuilder.offset;
+  }
+  int addRa(double? RA) {
+    fbBuilder.addFloat64(31, RA);
+    return fbBuilder.offset;
+  }
+  int addDeclination(double? DECLINATION) {
+    fbBuilder.addFloat64(32, DECLINATION);
+    return fbBuilder.offset;
+  }
+  int addX(double? X) {
+    fbBuilder.addFloat64(33, X);
+    return fbBuilder.offset;
+  }
+  int addY(double? Y) {
+    fbBuilder.addFloat64(34, Y);
+    return fbBuilder.offset;
+  }
+  int addZ(double? Z) {
+    fbBuilder.addFloat64(35, Z);
+    return fbBuilder.offset;
+  }
+  int addXvel(double? XVEL) {
+    fbBuilder.addFloat64(36, XVEL);
+    return fbBuilder.offset;
+  }
+  int addYvel(double? YVEL) {
+    fbBuilder.addFloat64(37, YVEL);
+    return fbBuilder.offset;
+  }
+  int addZvel(double? ZVEL) {
+    fbBuilder.addFloat64(38, ZVEL);
+    return fbBuilder.offset;
+  }
+  int addSenx(double? SENX) {
+    fbBuilder.addFloat64(39, SENX);
+    return fbBuilder.offset;
+  }
+  int addSeny(double? SENY) {
+    fbBuilder.addFloat64(40, SENY);
+    return fbBuilder.offset;
+  }
+  int addSenz(double? SENZ) {
+    fbBuilder.addFloat64(41, SENZ);
+    return fbBuilder.offset;
+  }
+  int addRcs(double? RCS) {
+    fbBuilder.addFloat64(42, RCS);
+    return fbBuilder.offset;
+  }
+  int addRcsUnc(double? RCS_UNC) {
+    fbBuilder.addFloat64(43, RCS_UNC);
+    return fbBuilder.offset;
+  }
+  int addOrthogonalRcs(double? ORTHOGONAL_RCS) {
+    fbBuilder.addFloat64(44, ORTHOGONAL_RCS);
+    return fbBuilder.offset;
+  }
+  int addOrthogonalRcsUnc(double? ORTHOGONAL_RCS_UNC) {
+    fbBuilder.addFloat64(45, ORTHOGONAL_RCS_UNC);
+    return fbBuilder.offset;
+  }
+  int addSnr(double? SNR) {
+    fbBuilder.addFloat64(46, SNR);
+    return fbBuilder.offset;
+  }
+  int addBeam(double? BEAM) {
+    fbBuilder.addFloat64(47, BEAM);
+    return fbBuilder.offset;
+  }
+  int addTimingBias(double? TIMING_BIAS) {
+    fbBuilder.addFloat64(48, TIMING_BIAS);
+    return fbBuilder.offset;
+  }
+  int addRawFileUriOffset(int? offset) {
     fbBuilder.addOffset(49, offset);
     return fbBuilder.offset;
   }
@@ -298,7 +402,7 @@ class RDOBuilder {
     fbBuilder.addOffset(50, offset);
     return fbBuilder.offset;
   }
-  int addTypeOffset(int? offset) {
+  int addTagsOffset(int? offset) {
     fbBuilder.addOffset(51, offset);
     return fbBuilder.offset;
   }
@@ -312,14 +416,17 @@ class RDOObjectBuilder extends fb.ObjectBuilder {
   final String? _ID;
   final String? _OB_TIME;
   final String? _ID_SENSOR;
+  final String? _ORIG_SENSOR_ID;
   final int? _SAT_NO;
+  final String? _ORIG_OBJECT_ID;
+  final String? _ON_ORBIT;
+  final bool? _UCT;
+  final RadarObsType? _OBS_TYPE;
   final String? _TASK_ID;
   final String? _TRANSACTION_ID;
   final String? _TRACK_ID;
   final String? _OB_POSITION;
-  final String? _ORIG_OBJECT_ID;
-  final String? _ORIG_SENSOR_ID;
-  final bool? _UCT;
+  final String? _SEN_REFERENCE_FRAME;
   final double? _AZIMUTH;
   final double? _AZIMUTH_UNC;
   final double? _AZIMUTH_BIAS;
@@ -329,12 +436,12 @@ class RDOObjectBuilder extends fb.ObjectBuilder {
   final double? _ELEVATION_BIAS;
   final double? _ELEVATION_RATE;
   final double? _RANGE;
-  final double? _RANGE_ACCEL;
-  final double? _RANGE_ACCEL_UNC;
   final double? _RANGE_UNC;
   final double? _RANGE_BIAS;
   final double? _RANGE_RATE;
   final double? _RANGE_RATE_UNC;
+  final double? _RANGE_ACCEL;
+  final double? _RANGE_ACCEL_UNC;
   final double? _DOPPLER;
   final double? _DOPPLER_UNC;
   final double? _RA;
@@ -356,24 +463,24 @@ class RDOObjectBuilder extends fb.ObjectBuilder {
   final double? _BEAM;
   final double? _TIMING_BIAS;
   final String? _RAW_FILE_URI;
-  final List<String>? _TAGS;
-  final String? _ON_ORBIT;
-  final String? _SEN_REFERENCE_FRAME;
   final String? _DESCRIPTOR;
-  final String? _TYPE;
+  final List<String>? _TAGS;
 
   RDOObjectBuilder({
     String? ID,
     String? OB_TIME,
     String? ID_SENSOR,
+    String? ORIG_SENSOR_ID,
     int? SAT_NO,
+    String? ORIG_OBJECT_ID,
+    String? ON_ORBIT,
+    bool? UCT,
+    RadarObsType? OBS_TYPE,
     String? TASK_ID,
     String? TRANSACTION_ID,
     String? TRACK_ID,
     String? OB_POSITION,
-    String? ORIG_OBJECT_ID,
-    String? ORIG_SENSOR_ID,
-    bool? UCT,
+    String? SEN_REFERENCE_FRAME,
     double? AZIMUTH,
     double? AZIMUTH_UNC,
     double? AZIMUTH_BIAS,
@@ -383,12 +490,12 @@ class RDOObjectBuilder extends fb.ObjectBuilder {
     double? ELEVATION_BIAS,
     double? ELEVATION_RATE,
     double? RANGE,
-    double? RANGE_ACCEL,
-    double? RANGE_ACCEL_UNC,
     double? RANGE_UNC,
     double? RANGE_BIAS,
     double? RANGE_RATE,
     double? RANGE_RATE_UNC,
+    double? RANGE_ACCEL,
+    double? RANGE_ACCEL_UNC,
     double? DOPPLER,
     double? DOPPLER_UNC,
     double? RA,
@@ -410,23 +517,23 @@ class RDOObjectBuilder extends fb.ObjectBuilder {
     double? BEAM,
     double? TIMING_BIAS,
     String? RAW_FILE_URI,
-    List<String>? TAGS,
-    String? ON_ORBIT,
-    String? SEN_REFERENCE_FRAME,
     String? DESCRIPTOR,
-    String? TYPE,
+    List<String>? TAGS,
   })
       : _ID = ID,
         _OB_TIME = OB_TIME,
         _ID_SENSOR = ID_SENSOR,
+        _ORIG_SENSOR_ID = ORIG_SENSOR_ID,
         _SAT_NO = SAT_NO,
+        _ORIG_OBJECT_ID = ORIG_OBJECT_ID,
+        _ON_ORBIT = ON_ORBIT,
+        _UCT = UCT,
+        _OBS_TYPE = OBS_TYPE,
         _TASK_ID = TASK_ID,
         _TRANSACTION_ID = TRANSACTION_ID,
         _TRACK_ID = TRACK_ID,
         _OB_POSITION = OB_POSITION,
-        _ORIG_OBJECT_ID = ORIG_OBJECT_ID,
-        _ORIG_SENSOR_ID = ORIG_SENSOR_ID,
-        _UCT = UCT,
+        _SEN_REFERENCE_FRAME = SEN_REFERENCE_FRAME,
         _AZIMUTH = AZIMUTH,
         _AZIMUTH_UNC = AZIMUTH_UNC,
         _AZIMUTH_BIAS = AZIMUTH_BIAS,
@@ -436,12 +543,12 @@ class RDOObjectBuilder extends fb.ObjectBuilder {
         _ELEVATION_BIAS = ELEVATION_BIAS,
         _ELEVATION_RATE = ELEVATION_RATE,
         _RANGE = RANGE,
-        _RANGE_ACCEL = RANGE_ACCEL,
-        _RANGE_ACCEL_UNC = RANGE_ACCEL_UNC,
         _RANGE_UNC = RANGE_UNC,
         _RANGE_BIAS = RANGE_BIAS,
         _RANGE_RATE = RANGE_RATE,
         _RANGE_RATE_UNC = RANGE_RATE_UNC,
+        _RANGE_ACCEL = RANGE_ACCEL,
+        _RANGE_ACCEL_UNC = RANGE_ACCEL_UNC,
         _DOPPLER = DOPPLER,
         _DOPPLER_UNC = DOPPLER_UNC,
         _RA = RA,
@@ -463,11 +570,8 @@ class RDOObjectBuilder extends fb.ObjectBuilder {
         _BEAM = BEAM,
         _TIMING_BIAS = TIMING_BIAS,
         _RAW_FILE_URI = RAW_FILE_URI,
-        _TAGS = TAGS,
-        _ON_ORBIT = ON_ORBIT,
-        _SEN_REFERENCE_FRAME = SEN_REFERENCE_FRAME,
         _DESCRIPTOR = DESCRIPTOR,
-        _TYPE = TYPE;
+        _TAGS = TAGS;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -478,6 +582,12 @@ class RDOObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_OB_TIME!);
     final int? ID_SENSOROffset = _ID_SENSOR == null ? null
         : fbBuilder.writeString(_ID_SENSOR!);
+    final int? ORIG_SENSOR_IDOffset = _ORIG_SENSOR_ID == null ? null
+        : fbBuilder.writeString(_ORIG_SENSOR_ID!);
+    final int? ORIG_OBJECT_IDOffset = _ORIG_OBJECT_ID == null ? null
+        : fbBuilder.writeString(_ORIG_OBJECT_ID!);
+    final int? ON_ORBITOffset = _ON_ORBIT == null ? null
+        : fbBuilder.writeString(_ON_ORBIT!);
     final int? TASK_IDOffset = _TASK_ID == null ? null
         : fbBuilder.writeString(_TASK_ID!);
     final int? TRANSACTION_IDOffset = _TRANSACTION_ID == null ? null
@@ -486,75 +596,67 @@ class RDOObjectBuilder extends fb.ObjectBuilder {
         : fbBuilder.writeString(_TRACK_ID!);
     final int? OB_POSITIONOffset = _OB_POSITION == null ? null
         : fbBuilder.writeString(_OB_POSITION!);
-    final int? ORIG_OBJECT_IDOffset = _ORIG_OBJECT_ID == null ? null
-        : fbBuilder.writeString(_ORIG_OBJECT_ID!);
-    final int? ORIG_SENSOR_IDOffset = _ORIG_SENSOR_ID == null ? null
-        : fbBuilder.writeString(_ORIG_SENSOR_ID!);
-    final int? RAW_FILE_URIOffset = _RAW_FILE_URI == null ? null
-        : fbBuilder.writeString(_RAW_FILE_URI!);
-    final int? TAGSOffset = _TAGS == null ? null
-        : fbBuilder.writeList(_TAGS!.map(fbBuilder.writeString).toList());
-    final int? ON_ORBITOffset = _ON_ORBIT == null ? null
-        : fbBuilder.writeString(_ON_ORBIT!);
     final int? SEN_REFERENCE_FRAMEOffset = _SEN_REFERENCE_FRAME == null ? null
         : fbBuilder.writeString(_SEN_REFERENCE_FRAME!);
+    final int? RAW_FILE_URIOffset = _RAW_FILE_URI == null ? null
+        : fbBuilder.writeString(_RAW_FILE_URI!);
     final int? DESCRIPTOROffset = _DESCRIPTOR == null ? null
         : fbBuilder.writeString(_DESCRIPTOR!);
-    final int? TYPEOffset = _TYPE == null ? null
-        : fbBuilder.writeString(_TYPE!);
+    final int? TAGSOffset = _TAGS == null ? null
+        : fbBuilder.writeList(_TAGS!.map(fbBuilder.writeString).toList());
     fbBuilder.startTable(52);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, OB_TIMEOffset);
     fbBuilder.addOffset(2, ID_SENSOROffset);
-    fbBuilder.addInt32(3, _SAT_NO);
-    fbBuilder.addOffset(4, TASK_IDOffset);
-    fbBuilder.addOffset(5, TRANSACTION_IDOffset);
-    fbBuilder.addOffset(6, TRACK_IDOffset);
-    fbBuilder.addOffset(7, OB_POSITIONOffset);
-    fbBuilder.addOffset(8, ORIG_OBJECT_IDOffset);
-    fbBuilder.addOffset(9, ORIG_SENSOR_IDOffset);
-    fbBuilder.addBool(10, _UCT);
-    fbBuilder.addFloat64(11, _AZIMUTH);
-    fbBuilder.addFloat64(12, _AZIMUTH_UNC);
-    fbBuilder.addFloat64(13, _AZIMUTH_BIAS);
-    fbBuilder.addFloat64(14, _AZIMUTH_RATE);
-    fbBuilder.addFloat64(15, _ELEVATION);
-    fbBuilder.addFloat64(16, _ELEVATION_UNC);
-    fbBuilder.addFloat64(17, _ELEVATION_BIAS);
-    fbBuilder.addFloat64(18, _ELEVATION_RATE);
-    fbBuilder.addFloat64(19, _RANGE);
-    fbBuilder.addFloat64(20, _RANGE_ACCEL);
-    fbBuilder.addFloat64(21, _RANGE_ACCEL_UNC);
-    fbBuilder.addFloat64(22, _RANGE_UNC);
-    fbBuilder.addFloat64(23, _RANGE_BIAS);
-    fbBuilder.addFloat64(24, _RANGE_RATE);
-    fbBuilder.addFloat64(25, _RANGE_RATE_UNC);
-    fbBuilder.addFloat64(26, _DOPPLER);
-    fbBuilder.addFloat64(27, _DOPPLER_UNC);
-    fbBuilder.addFloat64(28, _RA);
-    fbBuilder.addFloat64(29, _DECLINATION);
-    fbBuilder.addFloat64(30, _X);
-    fbBuilder.addFloat64(31, _Y);
-    fbBuilder.addFloat64(32, _Z);
-    fbBuilder.addFloat64(33, _XVEL);
-    fbBuilder.addFloat64(34, _YVEL);
-    fbBuilder.addFloat64(35, _ZVEL);
-    fbBuilder.addFloat64(36, _SENX);
-    fbBuilder.addFloat64(37, _SENY);
-    fbBuilder.addFloat64(38, _SENZ);
-    fbBuilder.addFloat64(39, _RCS);
-    fbBuilder.addFloat64(40, _RCS_UNC);
-    fbBuilder.addFloat64(41, _ORTHOGONAL_RCS);
-    fbBuilder.addFloat64(42, _ORTHOGONAL_RCS_UNC);
-    fbBuilder.addFloat64(43, _SNR);
-    fbBuilder.addFloat64(44, _BEAM);
-    fbBuilder.addFloat64(45, _TIMING_BIAS);
-    fbBuilder.addOffset(46, RAW_FILE_URIOffset);
-    fbBuilder.addOffset(47, TAGSOffset);
-    fbBuilder.addOffset(48, ON_ORBITOffset);
-    fbBuilder.addOffset(49, SEN_REFERENCE_FRAMEOffset);
+    fbBuilder.addOffset(3, ORIG_SENSOR_IDOffset);
+    fbBuilder.addUint32(4, _SAT_NO);
+    fbBuilder.addOffset(5, ORIG_OBJECT_IDOffset);
+    fbBuilder.addOffset(6, ON_ORBITOffset);
+    fbBuilder.addBool(7, _UCT);
+    fbBuilder.addInt8(8, _OBS_TYPE?.value);
+    fbBuilder.addOffset(9, TASK_IDOffset);
+    fbBuilder.addOffset(10, TRANSACTION_IDOffset);
+    fbBuilder.addOffset(11, TRACK_IDOffset);
+    fbBuilder.addOffset(12, OB_POSITIONOffset);
+    fbBuilder.addOffset(13, SEN_REFERENCE_FRAMEOffset);
+    fbBuilder.addFloat64(14, _AZIMUTH);
+    fbBuilder.addFloat64(15, _AZIMUTH_UNC);
+    fbBuilder.addFloat64(16, _AZIMUTH_BIAS);
+    fbBuilder.addFloat64(17, _AZIMUTH_RATE);
+    fbBuilder.addFloat64(18, _ELEVATION);
+    fbBuilder.addFloat64(19, _ELEVATION_UNC);
+    fbBuilder.addFloat64(20, _ELEVATION_BIAS);
+    fbBuilder.addFloat64(21, _ELEVATION_RATE);
+    fbBuilder.addFloat64(22, _RANGE);
+    fbBuilder.addFloat64(23, _RANGE_UNC);
+    fbBuilder.addFloat64(24, _RANGE_BIAS);
+    fbBuilder.addFloat64(25, _RANGE_RATE);
+    fbBuilder.addFloat64(26, _RANGE_RATE_UNC);
+    fbBuilder.addFloat64(27, _RANGE_ACCEL);
+    fbBuilder.addFloat64(28, _RANGE_ACCEL_UNC);
+    fbBuilder.addFloat64(29, _DOPPLER);
+    fbBuilder.addFloat64(30, _DOPPLER_UNC);
+    fbBuilder.addFloat64(31, _RA);
+    fbBuilder.addFloat64(32, _DECLINATION);
+    fbBuilder.addFloat64(33, _X);
+    fbBuilder.addFloat64(34, _Y);
+    fbBuilder.addFloat64(35, _Z);
+    fbBuilder.addFloat64(36, _XVEL);
+    fbBuilder.addFloat64(37, _YVEL);
+    fbBuilder.addFloat64(38, _ZVEL);
+    fbBuilder.addFloat64(39, _SENX);
+    fbBuilder.addFloat64(40, _SENY);
+    fbBuilder.addFloat64(41, _SENZ);
+    fbBuilder.addFloat64(42, _RCS);
+    fbBuilder.addFloat64(43, _RCS_UNC);
+    fbBuilder.addFloat64(44, _ORTHOGONAL_RCS);
+    fbBuilder.addFloat64(45, _ORTHOGONAL_RCS_UNC);
+    fbBuilder.addFloat64(46, _SNR);
+    fbBuilder.addFloat64(47, _BEAM);
+    fbBuilder.addFloat64(48, _TIMING_BIAS);
+    fbBuilder.addOffset(49, RAW_FILE_URIOffset);
     fbBuilder.addOffset(50, DESCRIPTOROffset);
-    fbBuilder.addOffset(51, TYPEOffset);
+    fbBuilder.addOffset(51, TAGSOffset);
     return fbBuilder.endTable();
   }
 

@@ -6,7 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Difference of Arrival
+/// Difference of Arrival Geolocation
 type DOA struct {
 	_tab flatbuffers.Table
 }
@@ -54,6 +54,7 @@ func (rcv *DOA) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Unique identifier
 func (rcv *DOA) ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -62,6 +63,8 @@ func (rcv *DOA) ID() []byte {
 	return nil
 }
 
+/// Unique identifier
+/// Observation time (ISO 8601)
 func (rcv *DOA) OB_TIME() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -70,15 +73,23 @@ func (rcv *DOA) OB_TIME() []byte {
 	return nil
 }
 
-func (rcv *DOA) ID_SENSOR1() []byte {
+/// Observation time (ISO 8601)
+/// Satellite catalog number
+func (rcv *DOA) SAT_NO() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
 	}
-	return nil
+	return 0
 }
 
-func (rcv *DOA) ID_SENSOR2() []byte {
+/// Satellite catalog number
+func (rcv *DOA) MutateSAT_NO(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(8, n)
+}
+
+/// International designator
+func (rcv *DOA) ORIG_OBJECT_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -86,27 +97,33 @@ func (rcv *DOA) ID_SENSOR2() []byte {
 	return nil
 }
 
-func (rcv *DOA) SAT_NO() int32 {
+/// International designator
+/// On-orbit reference
+func (rcv *DOA) ON_ORBIT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
-	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
-	}
-	return 0
-}
-
-func (rcv *DOA) MutateSAT_NO(n int32) bool {
-	return rcv._tab.MutateInt32Slot(12, n)
-}
-
-func (rcv *DOA) TASK_ID() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
 }
 
-func (rcv *DOA) ORIG_OBJECT_ID() []byte {
+/// On-orbit reference
+/// True if uncorrelated target
+func (rcv *DOA) UCT() bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
+	if o != 0 {
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
+	}
+	return false
+}
+
+/// True if uncorrelated target
+func (rcv *DOA) MutateUCT(n bool) bool {
+	return rcv._tab.MutateBoolSlot(14, n)
+}
+
+/// Task identifier
+func (rcv *DOA) TASK_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -114,7 +131,9 @@ func (rcv *DOA) ORIG_OBJECT_ID() []byte {
 	return nil
 }
 
-func (rcv *DOA) ORIG_SENSOR_ID1() []byte {
+/// Task identifier
+/// Transaction identifier
+func (rcv *DOA) TRANSACTION_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -122,39 +141,43 @@ func (rcv *DOA) ORIG_SENSOR_ID1() []byte {
 	return nil
 }
 
-func (rcv *DOA) ORIG_SENSOR_ID2() []byte {
+/// Transaction identifier
+/// Collection mode
+func (rcv *DOA) COLLECTION_MODE() doaCollectionMode {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
+		return doaCollectionMode(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// Collection mode
+func (rcv *DOA) MutateCOLLECTION_MODE(n doaCollectionMode) bool {
+	return rcv._tab.MutateInt8Slot(20, int8(n))
+}
+
+/// Sensor 1 identifier
+func (rcv *DOA) ID_SENSOR1() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
 }
 
-func (rcv *DOA) UCT() bool {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
-	if o != 0 {
-		return rcv._tab.GetBool(o + rcv._tab.Pos)
-	}
-	return false
-}
-
-func (rcv *DOA) MutateUCT(n bool) bool {
-	return rcv._tab.MutateBoolSlot(22, n)
-}
-
-func (rcv *DOA) SENSOR1_DELAY() float64 {
+/// Sensor 1 identifier
+/// Sensor 1 original identifier
+func (rcv *DOA) ORIG_SENSOR_ID1() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
-	return 0.0
+	return nil
 }
 
-func (rcv *DOA) MutateSENSOR1_DELAY(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(24, n)
-}
-
-func (rcv *DOA) SENSOR2_DELAY() float64 {
+/// Sensor 1 original identifier
+/// Sensor 1 latitude (degrees)
+func (rcv *DOA) SENLAT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -162,11 +185,13 @@ func (rcv *DOA) SENSOR2_DELAY() float64 {
 	return 0.0
 }
 
-func (rcv *DOA) MutateSENSOR2_DELAY(n float64) bool {
+/// Sensor 1 latitude (degrees)
+func (rcv *DOA) MutateSENLAT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(26, n)
 }
 
-func (rcv *DOA) SENLAT() float64 {
+/// Sensor 1 longitude (degrees)
+func (rcv *DOA) SENLON() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -174,11 +199,13 @@ func (rcv *DOA) SENLAT() float64 {
 	return 0.0
 }
 
-func (rcv *DOA) MutateSENLAT(n float64) bool {
+/// Sensor 1 longitude (degrees)
+func (rcv *DOA) MutateSENLON(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(28, n)
 }
 
-func (rcv *DOA) SENLON() float64 {
+/// Sensor 1 altitude (km)
+func (rcv *DOA) SENALT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -186,11 +213,13 @@ func (rcv *DOA) SENLON() float64 {
 	return 0.0
 }
 
-func (rcv *DOA) MutateSENLON(n float64) bool {
+/// Sensor 1 altitude (km)
+func (rcv *DOA) MutateSENALT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(30, n)
 }
 
-func (rcv *DOA) SENALT() float64 {
+/// Sensor 1 processing delay (seconds)
+func (rcv *DOA) SENSOR1_DELAY() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -198,35 +227,33 @@ func (rcv *DOA) SENALT() float64 {
 	return 0.0
 }
 
-func (rcv *DOA) MutateSENALT(n float64) bool {
+/// Sensor 1 processing delay (seconds)
+func (rcv *DOA) MutateSENSOR1_DELAY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(32, n)
 }
 
-func (rcv *DOA) SEN2LAT() float64 {
+/// Sensor 2 identifier
+func (rcv *DOA) ID_SENSOR2() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
-	return 0.0
+	return nil
 }
 
-func (rcv *DOA) MutateSEN2LAT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(34, n)
-}
-
-func (rcv *DOA) SEN2LON() float64 {
+/// Sensor 2 identifier
+/// Sensor 2 original identifier
+func (rcv *DOA) ORIG_SENSOR_ID2() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
-	return 0.0
+	return nil
 }
 
-func (rcv *DOA) MutateSEN2LON(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(36, n)
-}
-
-func (rcv *DOA) SEN2ALT() float64 {
+/// Sensor 2 original identifier
+/// Sensor 2 latitude (degrees)
+func (rcv *DOA) SEN2LAT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -234,11 +261,13 @@ func (rcv *DOA) SEN2ALT() float64 {
 	return 0.0
 }
 
-func (rcv *DOA) MutateSEN2ALT(n float64) bool {
+/// Sensor 2 latitude (degrees)
+func (rcv *DOA) MutateSEN2LAT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(38, n)
 }
 
-func (rcv *DOA) FREQUENCY() float64 {
+/// Sensor 2 longitude (degrees)
+func (rcv *DOA) SEN2LON() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -246,11 +275,13 @@ func (rcv *DOA) FREQUENCY() float64 {
 	return 0.0
 }
 
-func (rcv *DOA) MutateFREQUENCY(n float64) bool {
+/// Sensor 2 longitude (degrees)
+func (rcv *DOA) MutateSEN2LON(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(40, n)
 }
 
-func (rcv *DOA) BANDWIDTH() float64 {
+/// Sensor 2 altitude (km)
+func (rcv *DOA) SEN2ALT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -258,11 +289,13 @@ func (rcv *DOA) BANDWIDTH() float64 {
 	return 0.0
 }
 
-func (rcv *DOA) MutateBANDWIDTH(n float64) bool {
+/// Sensor 2 altitude (km)
+func (rcv *DOA) MutateSEN2ALT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(42, n)
 }
 
-func (rcv *DOA) DELTA_RANGE() float64 {
+/// Sensor 2 processing delay (seconds)
+func (rcv *DOA) SENSOR2_DELAY() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -270,11 +303,13 @@ func (rcv *DOA) DELTA_RANGE() float64 {
 	return 0.0
 }
 
-func (rcv *DOA) MutateDELTA_RANGE(n float64) bool {
+/// Sensor 2 processing delay (seconds)
+func (rcv *DOA) MutateSENSOR2_DELAY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(44, n)
 }
 
-func (rcv *DOA) DELTA_RANGE_UNC() float64 {
+/// Measured frequency (MHz)
+func (rcv *DOA) FREQUENCY() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -282,11 +317,13 @@ func (rcv *DOA) DELTA_RANGE_UNC() float64 {
 	return 0.0
 }
 
-func (rcv *DOA) MutateDELTA_RANGE_UNC(n float64) bool {
+/// Measured frequency (MHz)
+func (rcv *DOA) MutateFREQUENCY(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(46, n)
 }
 
-func (rcv *DOA) DELTA_RANGE_RATE() float64 {
+/// Measurement bandwidth (MHz)
+func (rcv *DOA) BANDWIDTH() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -294,11 +331,13 @@ func (rcv *DOA) DELTA_RANGE_RATE() float64 {
 	return 0.0
 }
 
-func (rcv *DOA) MutateDELTA_RANGE_RATE(n float64) bool {
+/// Measurement bandwidth (MHz)
+func (rcv *DOA) MutateBANDWIDTH(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(48, n)
 }
 
-func (rcv *DOA) DELTA_RANGE_RATE_UNC() float64 {
+/// Signal-to-noise ratio (dB)
+func (rcv *DOA) SNR() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -306,11 +345,13 @@ func (rcv *DOA) DELTA_RANGE_RATE_UNC() float64 {
 	return 0.0
 }
 
-func (rcv *DOA) MutateDELTA_RANGE_RATE_UNC(n float64) bool {
+/// Signal-to-noise ratio (dB)
+func (rcv *DOA) MutateSNR(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(50, n)
 }
 
-func (rcv *DOA) SNR() float64 {
+/// Differential range (km)
+func (rcv *DOA) DELTA_RANGE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -318,11 +359,13 @@ func (rcv *DOA) SNR() float64 {
 	return 0.0
 }
 
-func (rcv *DOA) MutateSNR(n float64) bool {
+/// Differential range (km)
+func (rcv *DOA) MutateDELTA_RANGE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(52, n)
 }
 
-func (rcv *DOA) TDOA() float64 {
+/// Differential range uncertainty (km, 1-sigma)
+func (rcv *DOA) DELTA_RANGE_UNC() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -330,11 +373,13 @@ func (rcv *DOA) TDOA() float64 {
 	return 0.0
 }
 
-func (rcv *DOA) MutateTDOA(n float64) bool {
+/// Differential range uncertainty (km, 1-sigma)
+func (rcv *DOA) MutateDELTA_RANGE_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(54, n)
 }
 
-func (rcv *DOA) TDOA_UNC() float64 {
+/// Differential range rate (km/s)
+func (rcv *DOA) DELTA_RANGE_RATE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -342,11 +387,13 @@ func (rcv *DOA) TDOA_UNC() float64 {
 	return 0.0
 }
 
-func (rcv *DOA) MutateTDOA_UNC(n float64) bool {
+/// Differential range rate (km/s)
+func (rcv *DOA) MutateDELTA_RANGE_RATE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(56, n)
 }
 
-func (rcv *DOA) FDOA() float64 {
+/// Differential range rate uncertainty (km/s, 1-sigma)
+func (rcv *DOA) DELTA_RANGE_RATE_UNC() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -354,11 +401,13 @@ func (rcv *DOA) FDOA() float64 {
 	return 0.0
 }
 
-func (rcv *DOA) MutateFDOA(n float64) bool {
+/// Differential range rate uncertainty (km/s, 1-sigma)
+func (rcv *DOA) MutateDELTA_RANGE_RATE_UNC(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(58, n)
 }
 
-func (rcv *DOA) FDOA_UNC() float64 {
+/// Time difference of arrival (seconds)
+func (rcv *DOA) TDOA() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -366,44 +415,55 @@ func (rcv *DOA) FDOA_UNC() float64 {
 	return 0.0
 }
 
-func (rcv *DOA) MutateFDOA_UNC(n float64) bool {
+/// Time difference of arrival (seconds)
+func (rcv *DOA) MutateTDOA(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(60, n)
 }
 
-func (rcv *DOA) COLLECTION_MODE() []byte {
+/// TDOA uncertainty (seconds, 1-sigma)
+func (rcv *DOA) TDOA_UNC() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
-	return nil
+	return 0.0
 }
 
-func (rcv *DOA) RAW_FILE_URI() []byte {
+/// TDOA uncertainty (seconds, 1-sigma)
+func (rcv *DOA) MutateTDOA_UNC(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(62, n)
+}
+
+/// Frequency difference of arrival (Hz)
+func (rcv *DOA) FDOA() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
-	return nil
+	return 0.0
 }
 
-func (rcv *DOA) TAGS(j int) []byte {
+/// Frequency difference of arrival (Hz)
+func (rcv *DOA) MutateFDOA(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(64, n)
+}
+
+/// FDOA uncertainty (Hz, 1-sigma)
+func (rcv *DOA) FDOA_UNC() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
 	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
-	return nil
+	return 0.0
 }
 
-func (rcv *DOA) TAGSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
+/// FDOA uncertainty (Hz, 1-sigma)
+func (rcv *DOA) MutateFDOA_UNC(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(66, n)
 }
 
-func (rcv *DOA) ON_ORBIT() []byte {
+/// Reference to raw data file
+func (rcv *DOA) RAW_FILE_URI() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -411,6 +471,8 @@ func (rcv *DOA) ON_ORBIT() []byte {
 	return nil
 }
 
+/// Reference to raw data file
+/// Event descriptor
 func (rcv *DOA) DESCRIPTOR() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
 	if o != 0 {
@@ -419,14 +481,26 @@ func (rcv *DOA) DESCRIPTOR() []byte {
 	return nil
 }
 
-func (rcv *DOA) TRANSACTION_ID() []byte {
+/// Event descriptor
+/// Associated tags
+func (rcv *DOA) TAGS(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		a := rcv._tab.Vector(o)
+		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
 	}
 	return nil
 }
 
+func (rcv *DOA) TAGSLength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Associated tags
 func DOAStart(builder *flatbuffers.Builder) {
 	builder.StartObject(35)
 }
@@ -436,107 +510,107 @@ func DOAAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 func DOAAddOB_TIME(builder *flatbuffers.Builder, OB_TIME flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(OB_TIME), 0)
 }
-func DOAAddID_SENSOR1(builder *flatbuffers.Builder, ID_SENSOR1 flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ID_SENSOR1), 0)
-}
-func DOAAddID_SENSOR2(builder *flatbuffers.Builder, ID_SENSOR2 flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ID_SENSOR2), 0)
-}
-func DOAAddSAT_NO(builder *flatbuffers.Builder, SAT_NO int32) {
-	builder.PrependInt32Slot(4, SAT_NO, 0)
-}
-func DOAAddTASK_ID(builder *flatbuffers.Builder, TASK_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(5, flatbuffers.UOffsetT(TASK_ID), 0)
+func DOAAddSAT_NO(builder *flatbuffers.Builder, SAT_NO uint32) {
+	builder.PrependUint32Slot(2, SAT_NO, 0)
 }
 func DOAAddORIG_OBJECT_ID(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(ORIG_OBJECT_ID), 0)
-}
-func DOAAddORIG_SENSOR_ID1(builder *flatbuffers.Builder, ORIG_SENSOR_ID1 flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(ORIG_SENSOR_ID1), 0)
-}
-func DOAAddORIG_SENSOR_ID2(builder *flatbuffers.Builder, ORIG_SENSOR_ID2 flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(ORIG_SENSOR_ID2), 0)
-}
-func DOAAddUCT(builder *flatbuffers.Builder, UCT bool) {
-	builder.PrependBoolSlot(9, UCT, false)
-}
-func DOAAddSENSOR1_DELAY(builder *flatbuffers.Builder, SENSOR1_DELAY float64) {
-	builder.PrependFloat64Slot(10, SENSOR1_DELAY, 0.0)
-}
-func DOAAddSENSOR2_DELAY(builder *flatbuffers.Builder, SENSOR2_DELAY float64) {
-	builder.PrependFloat64Slot(11, SENSOR2_DELAY, 0.0)
-}
-func DOAAddSENLAT(builder *flatbuffers.Builder, SENLAT float64) {
-	builder.PrependFloat64Slot(12, SENLAT, 0.0)
-}
-func DOAAddSENLON(builder *flatbuffers.Builder, SENLON float64) {
-	builder.PrependFloat64Slot(13, SENLON, 0.0)
-}
-func DOAAddSENALT(builder *flatbuffers.Builder, SENALT float64) {
-	builder.PrependFloat64Slot(14, SENALT, 0.0)
-}
-func DOAAddSEN2LAT(builder *flatbuffers.Builder, SEN2LAT float64) {
-	builder.PrependFloat64Slot(15, SEN2LAT, 0.0)
-}
-func DOAAddSEN2LON(builder *flatbuffers.Builder, SEN2LON float64) {
-	builder.PrependFloat64Slot(16, SEN2LON, 0.0)
-}
-func DOAAddSEN2ALT(builder *flatbuffers.Builder, SEN2ALT float64) {
-	builder.PrependFloat64Slot(17, SEN2ALT, 0.0)
-}
-func DOAAddFREQUENCY(builder *flatbuffers.Builder, FREQUENCY float64) {
-	builder.PrependFloat64Slot(18, FREQUENCY, 0.0)
-}
-func DOAAddBANDWIDTH(builder *flatbuffers.Builder, BANDWIDTH float64) {
-	builder.PrependFloat64Slot(19, BANDWIDTH, 0.0)
-}
-func DOAAddDELTA_RANGE(builder *flatbuffers.Builder, DELTA_RANGE float64) {
-	builder.PrependFloat64Slot(20, DELTA_RANGE, 0.0)
-}
-func DOAAddDELTA_RANGE_UNC(builder *flatbuffers.Builder, DELTA_RANGE_UNC float64) {
-	builder.PrependFloat64Slot(21, DELTA_RANGE_UNC, 0.0)
-}
-func DOAAddDELTA_RANGE_RATE(builder *flatbuffers.Builder, DELTA_RANGE_RATE float64) {
-	builder.PrependFloat64Slot(22, DELTA_RANGE_RATE, 0.0)
-}
-func DOAAddDELTA_RANGE_RATE_UNC(builder *flatbuffers.Builder, DELTA_RANGE_RATE_UNC float64) {
-	builder.PrependFloat64Slot(23, DELTA_RANGE_RATE_UNC, 0.0)
-}
-func DOAAddSNR(builder *flatbuffers.Builder, SNR float64) {
-	builder.PrependFloat64Slot(24, SNR, 0.0)
-}
-func DOAAddTDOA(builder *flatbuffers.Builder, TDOA float64) {
-	builder.PrependFloat64Slot(25, TDOA, 0.0)
-}
-func DOAAddTDOA_UNC(builder *flatbuffers.Builder, TDOA_UNC float64) {
-	builder.PrependFloat64Slot(26, TDOA_UNC, 0.0)
-}
-func DOAAddFDOA(builder *flatbuffers.Builder, FDOA float64) {
-	builder.PrependFloat64Slot(27, FDOA, 0.0)
-}
-func DOAAddFDOA_UNC(builder *flatbuffers.Builder, FDOA_UNC float64) {
-	builder.PrependFloat64Slot(28, FDOA_UNC, 0.0)
-}
-func DOAAddCOLLECTION_MODE(builder *flatbuffers.Builder, COLLECTION_MODE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(29, flatbuffers.UOffsetT(COLLECTION_MODE), 0)
-}
-func DOAAddRAW_FILE_URI(builder *flatbuffers.Builder, RAW_FILE_URI flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(30, flatbuffers.UOffsetT(RAW_FILE_URI), 0)
-}
-func DOAAddTAGS(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(31, flatbuffers.UOffsetT(TAGS), 0)
-}
-func DOAStartTAGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ORIG_OBJECT_ID), 0)
 }
 func DOAAddON_ORBIT(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(32, flatbuffers.UOffsetT(ON_ORBIT), 0)
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(ON_ORBIT), 0)
+}
+func DOAAddUCT(builder *flatbuffers.Builder, UCT bool) {
+	builder.PrependBoolSlot(5, UCT, false)
+}
+func DOAAddTASK_ID(builder *flatbuffers.Builder, TASK_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(TASK_ID), 0)
+}
+func DOAAddTRANSACTION_ID(builder *flatbuffers.Builder, TRANSACTION_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(TRANSACTION_ID), 0)
+}
+func DOAAddCOLLECTION_MODE(builder *flatbuffers.Builder, COLLECTION_MODE doaCollectionMode) {
+	builder.PrependInt8Slot(8, int8(COLLECTION_MODE), 0)
+}
+func DOAAddID_SENSOR1(builder *flatbuffers.Builder, ID_SENSOR1 flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(ID_SENSOR1), 0)
+}
+func DOAAddORIG_SENSOR_ID1(builder *flatbuffers.Builder, ORIG_SENSOR_ID1 flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(ORIG_SENSOR_ID1), 0)
+}
+func DOAAddSENLAT(builder *flatbuffers.Builder, SENLAT float64) {
+	builder.PrependFloat64Slot(11, SENLAT, 0.0)
+}
+func DOAAddSENLON(builder *flatbuffers.Builder, SENLON float64) {
+	builder.PrependFloat64Slot(12, SENLON, 0.0)
+}
+func DOAAddSENALT(builder *flatbuffers.Builder, SENALT float64) {
+	builder.PrependFloat64Slot(13, SENALT, 0.0)
+}
+func DOAAddSENSOR1_DELAY(builder *flatbuffers.Builder, SENSOR1_DELAY float64) {
+	builder.PrependFloat64Slot(14, SENSOR1_DELAY, 0.0)
+}
+func DOAAddID_SENSOR2(builder *flatbuffers.Builder, ID_SENSOR2 flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(ID_SENSOR2), 0)
+}
+func DOAAddORIG_SENSOR_ID2(builder *flatbuffers.Builder, ORIG_SENSOR_ID2 flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(ORIG_SENSOR_ID2), 0)
+}
+func DOAAddSEN2LAT(builder *flatbuffers.Builder, SEN2LAT float64) {
+	builder.PrependFloat64Slot(17, SEN2LAT, 0.0)
+}
+func DOAAddSEN2LON(builder *flatbuffers.Builder, SEN2LON float64) {
+	builder.PrependFloat64Slot(18, SEN2LON, 0.0)
+}
+func DOAAddSEN2ALT(builder *flatbuffers.Builder, SEN2ALT float64) {
+	builder.PrependFloat64Slot(19, SEN2ALT, 0.0)
+}
+func DOAAddSENSOR2_DELAY(builder *flatbuffers.Builder, SENSOR2_DELAY float64) {
+	builder.PrependFloat64Slot(20, SENSOR2_DELAY, 0.0)
+}
+func DOAAddFREQUENCY(builder *flatbuffers.Builder, FREQUENCY float64) {
+	builder.PrependFloat64Slot(21, FREQUENCY, 0.0)
+}
+func DOAAddBANDWIDTH(builder *flatbuffers.Builder, BANDWIDTH float64) {
+	builder.PrependFloat64Slot(22, BANDWIDTH, 0.0)
+}
+func DOAAddSNR(builder *flatbuffers.Builder, SNR float64) {
+	builder.PrependFloat64Slot(23, SNR, 0.0)
+}
+func DOAAddDELTA_RANGE(builder *flatbuffers.Builder, DELTA_RANGE float64) {
+	builder.PrependFloat64Slot(24, DELTA_RANGE, 0.0)
+}
+func DOAAddDELTA_RANGE_UNC(builder *flatbuffers.Builder, DELTA_RANGE_UNC float64) {
+	builder.PrependFloat64Slot(25, DELTA_RANGE_UNC, 0.0)
+}
+func DOAAddDELTA_RANGE_RATE(builder *flatbuffers.Builder, DELTA_RANGE_RATE float64) {
+	builder.PrependFloat64Slot(26, DELTA_RANGE_RATE, 0.0)
+}
+func DOAAddDELTA_RANGE_RATE_UNC(builder *flatbuffers.Builder, DELTA_RANGE_RATE_UNC float64) {
+	builder.PrependFloat64Slot(27, DELTA_RANGE_RATE_UNC, 0.0)
+}
+func DOAAddTDOA(builder *flatbuffers.Builder, TDOA float64) {
+	builder.PrependFloat64Slot(28, TDOA, 0.0)
+}
+func DOAAddTDOA_UNC(builder *flatbuffers.Builder, TDOA_UNC float64) {
+	builder.PrependFloat64Slot(29, TDOA_UNC, 0.0)
+}
+func DOAAddFDOA(builder *flatbuffers.Builder, FDOA float64) {
+	builder.PrependFloat64Slot(30, FDOA, 0.0)
+}
+func DOAAddFDOA_UNC(builder *flatbuffers.Builder, FDOA_UNC float64) {
+	builder.PrependFloat64Slot(31, FDOA_UNC, 0.0)
+}
+func DOAAddRAW_FILE_URI(builder *flatbuffers.Builder, RAW_FILE_URI flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(32, flatbuffers.UOffsetT(RAW_FILE_URI), 0)
 }
 func DOAAddDESCRIPTOR(builder *flatbuffers.Builder, DESCRIPTOR flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(33, flatbuffers.UOffsetT(DESCRIPTOR), 0)
 }
-func DOAAddTRANSACTION_ID(builder *flatbuffers.Builder, TRANSACTION_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(TRANSACTION_ID), 0)
+func DOAAddTAGS(builder *flatbuffers.Builder, TAGS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(TAGS), 0)
+}
+func DOAStartTAGSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(4, numElems, 4)
 }
 func DOAEnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

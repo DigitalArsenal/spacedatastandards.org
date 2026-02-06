@@ -29,6 +29,9 @@ class CMS : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Unique identifier
+     */
     val ID : String?
         get() {
             val o = __offset(4)
@@ -40,6 +43,9 @@ class CMS : Table() {
         }
     val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    /**
+     * Reference to parent entity
+     */
     val ID_ENTITY : String?
         get() {
             val o = __offset(6)
@@ -51,6 +57,9 @@ class CMS : Table() {
         }
     val ID_ENTITYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
     fun ID_ENTITYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    /**
+     * Communications payload name
+     */
     val NAME : String?
         get() {
             val o = __offset(8)
@@ -62,6 +71,9 @@ class CMS : Table() {
         }
     val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
     fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    /**
+     * Description
+     */
     val DESCRIPTION : String?
         get() {
             val o = __offset(10)
@@ -73,6 +85,9 @@ class CMS : Table() {
         }
     val DESCRIPTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
     fun DESCRIPTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    /**
+     * Parent entity designator
+     */
     val ENTITY : String?
         get() {
             val o = __offset(12)
@@ -84,18 +99,112 @@ class CMS : Table() {
         }
     val ENTITYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
     fun ENTITYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
-    fun TRANSPONDERS(j: Int) : String? {
-        val o = __offset(14)
+    /**
+     * Satellite number
+     */
+    val SAT_NO : UInt
+        get() {
+            val o = __offset(14)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Number of transponders
+     */
+    val NUM_TRANSPONDERS : UInt
+        get() {
+            val o = __offset(16)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Transponders
+     */
+    fun TRANSPONDERS(j: Int) : commsTransponder? = TRANSPONDERS(commsTransponder(), j)
+    fun TRANSPONDERS(obj: commsTransponder, j: Int) : commsTransponder? {
+        val o = __offset(18)
         return if (o != 0) {
-            __string(__vector(o) + j * 4)
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
             null
         }
     }
     val TRANSPONDERSLength : Int
         get() {
-            val o = __offset(14); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(18); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Total payload power in Watts
+     */
+    val TOTAL_POWER : Double
+        get() {
+            val o = __offset(20)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Total payload mass in kg
+     */
+    val TOTAL_MASS : Double
+        get() {
+            val o = __offset(22)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Total aggregate bandwidth in MHz
+     */
+    val TOTAL_BANDWIDTH : Double
+        get() {
+            val o = __offset(24)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Primary mission (e.g., FIXED_SAT, BROADCAST, MOBILE, RELAY, MILSATCOM)
+     */
+    val MISSION : String?
+        get() {
+            val o = __offset(26)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val MISSIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
+    fun MISSIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    /**
+     * Coverage region description
+     */
+    val COVERAGE : String?
+        get() {
+            val o = __offset(28)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val COVERAGEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
+    fun COVERAGEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    /**
+     * Design lifetime in years
+     */
+    val DESIGN_LIFE : Double
+        get() {
+            val o = __offset(30)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Additional notes
+     */
+    val NOTES : String?
+        get() {
+            val o = __offset(32)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val NOTESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
+    fun NOTESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsCMS(_bb: ByteBuffer): CMS = getRootAsCMS(_bb, CMS())
@@ -104,9 +213,18 @@ class CMS : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun CMSBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$CMS")
-        fun createCMS(builder: FlatBufferBuilder, IDOffset: Int, ID_ENTITYOffset: Int, NAMEOffset: Int, DESCRIPTIONOffset: Int, ENTITYOffset: Int, TRANSPONDERSOffset: Int) : Int {
-            builder.startTable(6)
+        fun createCMS(builder: FlatBufferBuilder, IDOffset: Int, ID_ENTITYOffset: Int, NAMEOffset: Int, DESCRIPTIONOffset: Int, ENTITYOffset: Int, SAT_NO: UInt, NUM_TRANSPONDERS: UInt, TRANSPONDERSOffset: Int, TOTAL_POWER: Double, TOTAL_MASS: Double, TOTAL_BANDWIDTH: Double, MISSIONOffset: Int, COVERAGEOffset: Int, DESIGN_LIFE: Double, NOTESOffset: Int) : Int {
+            builder.startTable(15)
+            addDESIGN_LIFE(builder, DESIGN_LIFE)
+            addTOTAL_BANDWIDTH(builder, TOTAL_BANDWIDTH)
+            addTOTAL_MASS(builder, TOTAL_MASS)
+            addTOTAL_POWER(builder, TOTAL_POWER)
+            addNOTES(builder, NOTESOffset)
+            addCOVERAGE(builder, COVERAGEOffset)
+            addMISSION(builder, MISSIONOffset)
             addTRANSPONDERS(builder, TRANSPONDERSOffset)
+            addNUM_TRANSPONDERS(builder, NUM_TRANSPONDERS)
+            addSAT_NO(builder, SAT_NO)
             addENTITY(builder, ENTITYOffset)
             addDESCRIPTION(builder, DESCRIPTIONOffset)
             addNAME(builder, NAMEOffset)
@@ -114,13 +232,15 @@ class CMS : Table() {
             addID(builder, IDOffset)
             return endCMS(builder)
         }
-        fun startCMS(builder: FlatBufferBuilder) = builder.startTable(6)
+        fun startCMS(builder: FlatBufferBuilder) = builder.startTable(15)
         fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
         fun addID_ENTITY(builder: FlatBufferBuilder, ID_ENTITY: Int) = builder.addOffset(1, ID_ENTITY, 0)
         fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(2, NAME, 0)
         fun addDESCRIPTION(builder: FlatBufferBuilder, DESCRIPTION: Int) = builder.addOffset(3, DESCRIPTION, 0)
         fun addENTITY(builder: FlatBufferBuilder, ENTITY: Int) = builder.addOffset(4, ENTITY, 0)
-        fun addTRANSPONDERS(builder: FlatBufferBuilder, TRANSPONDERS: Int) = builder.addOffset(5, TRANSPONDERS, 0)
+        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: UInt) = builder.addInt(5, SAT_NO.toInt(), 0)
+        fun addNUM_TRANSPONDERS(builder: FlatBufferBuilder, NUM_TRANSPONDERS: UInt) = builder.addInt(6, NUM_TRANSPONDERS.toInt(), 0)
+        fun addTRANSPONDERS(builder: FlatBufferBuilder, TRANSPONDERS: Int) = builder.addOffset(7, TRANSPONDERS, 0)
         fun createTranspondersVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -129,6 +249,13 @@ class CMS : Table() {
             return builder.endVector()
         }
         fun startTranspondersVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addTOTAL_POWER(builder: FlatBufferBuilder, TOTAL_POWER: Double) = builder.addDouble(8, TOTAL_POWER, 0.0)
+        fun addTOTAL_MASS(builder: FlatBufferBuilder, TOTAL_MASS: Double) = builder.addDouble(9, TOTAL_MASS, 0.0)
+        fun addTOTAL_BANDWIDTH(builder: FlatBufferBuilder, TOTAL_BANDWIDTH: Double) = builder.addDouble(10, TOTAL_BANDWIDTH, 0.0)
+        fun addMISSION(builder: FlatBufferBuilder, MISSION: Int) = builder.addOffset(11, MISSION, 0)
+        fun addCOVERAGE(builder: FlatBufferBuilder, COVERAGE: Int) = builder.addOffset(12, COVERAGE, 0)
+        fun addDESIGN_LIFE(builder: FlatBufferBuilder, DESIGN_LIFE: Double) = builder.addDouble(13, DESIGN_LIFE, 0.0)
+        fun addNOTES(builder: FlatBufferBuilder, NOTES: Int) = builder.addOffset(14, NOTES, 0)
         fun endCMS(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

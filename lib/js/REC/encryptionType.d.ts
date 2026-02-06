@@ -1,0 +1,11 @@
+export declare enum encryptionType {
+    NONE = 0,
+    DES = 1,
+    TRIPLE_DES = 2,
+    AES_128 = 3,
+    AES_256 = 4,
+    TYPE_1 = 5,
+    TYPE_2 = 6,
+    CUSTOM = 7
+}
+//# sourceMappingURL=encryptionType.d.ts.map

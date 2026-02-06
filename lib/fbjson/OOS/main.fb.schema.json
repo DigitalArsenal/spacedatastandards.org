@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "OOS": {
+      "type": "object",
+      "description": "On-Orbit Solar Array",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Unique identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_ON_ORBIT": {
+          "type": "string",
+          "description": "Reference to parent on-orbit object",
+          "x-flatbuffer-type": "string"
+        },
+        "ID_SOLAR_ARRAY": {
+          "type": "string",
+          "description": "Reference to solar array specification",
+          "x-flatbuffer-type": "string"
+        },
+        "NAME": {
+          "type": "string",
+          "description": "Solar array name or designation",
+          "x-flatbuffer-type": "string"
+        },
+        "CELL_TYPE": {
+          "type": "string",
+          "description": "Solar cell type (e.g., SILICON, GAAS, MULTI_JUNCTION, THIN_FILM, PEROVSKITE)",
+          "x-flatbuffer-type": "string"
+        },
+        "QUANTITY": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of solar arrays of this type",
+          "x-flatbuffer-type": "uint"
+        },
+        "AREA": {
+          "type": "number",
+          "description": "Total array area in square meters",
+          "x-flatbuffer-type": "double"
+        },
+        "POWER_BOL": {
+          "type": "number",
+          "description": "Beginning of life power output in Watts",
+          "x-flatbuffer-type": "double"
+        },
+        "POWER_EOL": {
+          "type": "number",
+          "description": "End of life power output in Watts",
+          "x-flatbuffer-type": "double"
+        },
+        "EFFICIENCY": {
+          "type": "number",
+          "description": "Conversion efficiency as fraction (0.0-1.0)",
+          "x-flatbuffer-type": "double"
+        },
+        "DEGRADATION_RATE": {
+          "type": "number",
+          "description": "Degradation rate per year as fraction",
+          "x-flatbuffer-type": "double"
+        },
+        "NUM_PANELS": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Number of panels per array",
+          "x-flatbuffer-type": "uint"
+        },
+        "DEPLOYABLE": {
+          "type": "boolean",
+          "description": "Whether the array is deployable",
+          "x-flatbuffer-type": "bool"
+        },
+        "TRACKING": {
+          "type": "boolean",
+          "description": "Whether the array is articulable/tracking",
+          "x-flatbuffer-type": "bool"
+        },
+        "MASS": {
+          "type": "number",
+          "description": "Array mass in kg",
+          "x-flatbuffer-type": "double"
+        },
+        "NOTES": {
+          "type": "string",
+          "description": "Additional notes",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/OOS",
+  "x-flatbuffer-root-type": "OOS",
+  "x-flatbuffer-file-identifier": "$OOS"
+}

@@ -1,25 +1,62 @@
-// Hash: 8e2bfebf2b6064dfad8e80e89671220644a603bd7c7cc5b501918169154165f6
-// Version: 0.0.2
+// Hash: ac43aa560809cd6c4ec0e7fc0772b02dec6ea5a8ce97d759187bf0c3a17b9d23
+// Version: 0.0.3
 // -----------------------------------END_HEADER
+enum launchDetectionType : byte {
+  IR_DETECT,
+  RADAR_DETECT,
+  OPTICAL_DETECT,
+  ELINT_DETECT,
+  COMBINED,
+  UNKNOWN
+}
+
 /// Launch Detection
 table LND {
+  /// Unique identifier
   ID:string;
-  LAUNCH_TIME:string;
-  MESSAGE_TYPE:string;
-  LAUNCH_LATITUDE:double;
-  LAUNCH_LONGITUDE:double;
-  LAUNCH_AZIMUTH:double;
-  RAAN:double;
-  INCLINATION:double;
-  OBSERVATION_TIME:string;
-  OBSERVATION_LATITUDE:double;
-  OBSERVATION_LONGITUDE:double;
-  OBSERVATION_ALTITUDE:double;
-  STEREO_FLAG:bool;
-  HIGH_ZENITH_AZIMUTH:bool;
-  SEQUENCE_NUMBER:int;
+  /// Detection event identifier
   EVENT_ID:string;
+  /// Detection type
+  DETECTION_TYPE:launchDetectionType;
+  /// Detection message type code
+  MESSAGE_TYPE:string;
+  /// Time of launch detection (ISO 8601)
+  LAUNCH_TIME:string;
+  /// Launch site latitude (degrees)
+  LAUNCH_LATITUDE:double;
+  /// Launch site longitude (degrees)
+  LAUNCH_LONGITUDE:double;
+  /// Launch azimuth (degrees from north)
+  LAUNCH_AZIMUTH:double;
+  /// Estimated RAAN (degrees)
+  RAAN:double;
+  /// Estimated inclination (degrees)
+  INCLINATION:double;
+  /// Time of trajectory observation (ISO 8601)
+  OBSERVATION_TIME:string;
+  /// Observation point latitude (degrees)
+  OBSERVATION_LATITUDE:double;
+  /// Observation point longitude (degrees)
+  OBSERVATION_LONGITUDE:double;
+  /// Observation point altitude (km)
+  OBSERVATION_ALTITUDE:double;
+  /// True if stereo observation (multiple sensors)
+  STEREO_FLAG:bool;
+  /// True if high zenith angle observation
+  HIGH_ZENITH_AZIMUTH:bool;
+  /// Sequence number in detection chain
+  SEQUENCE_NUMBER:uint16;
+  /// Launch site identifier
+  LAUNCH_SITE_ID:string;
+  /// Launch vehicle type (if identified)
+  LAUNCH_VEHICLE:string;
+  /// Estimated trajectory type
+  TRAJECTORY_TYPE:string;
+  /// Detection confidence (0-1)
+  CONFIDENCE:double;
+  /// Event descriptor
   DESCRIPTOR:string;
+  /// Associated tags
   TAGS:[string];
 }
 

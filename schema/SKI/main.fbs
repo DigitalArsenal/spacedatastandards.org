@@ -1,48 +1,98 @@
-// Hash: 87803001607ea5a19c4256f05c20081a34554bd20102fc61cc11ec25ea01ca02
-// Version: 0.0.2
+// Hash: 6d7619cc89b54a7fe3afaaf2300d6d9bfcd5ff5d7764cb3dbba15ace1ee093e6
+// Version: 0.0.3
 // -----------------------------------END_HEADER
+enum imageType : byte {
+  VISIBLE,
+  INFRARED,
+  MULTISPECTRAL,
+  HYPERSPECTRAL,
+  UV,
+  BROADBAND
+}
+
 /// Sky Imagery
 table SKI {
+  /// Unique identifier
   ID:string;
+  /// On-orbit reference
   ON_ORBIT:string;
+  /// International designator
   ORIG_OBJECT_ID:string;
+  /// Satellite catalog number
+  SAT_NO:uint32;
+  /// Sensor identifier
   ID_SENSOR:string;
-  SAT_NO:int;
+  /// Original sensor identifier
   ORIG_SENSOR_ID:string;
+  /// Sensor geodetic latitude (degrees)
   SENLAT:double;
+  /// Sensor geodetic longitude (degrees)
   SENLON:double;
+  /// Sensor altitude (km)
   SENALT:double;
+  /// Sensor ECEF X position (km)
   SENX:double;
+  /// Sensor ECEF Y position (km)
   SENY:double;
+  /// Sensor ECEF Z position (km)
   SENZ:double;
-  SEN_QUAT:[string];
-  SEN_QUAT_DOT:[string];
-  IMAGE_TYPE:string;
+  /// Sensor quaternion (scalar-last: q1, q2, q3, q0)
+  SEN_QUAT:[double];
+  /// Sensor quaternion rate
+  SEN_QUAT_DOT:[double];
+  /// Image type
+  IMAGE_TYPE:imageType;
+  /// Exposure start time (ISO 8601)
   EXP_START_TIME:string;
+  /// Exposure end time (ISO 8601)
   EXP_END_TIME:string;
+  /// Image source information
   IMAGE_SOURCE_INFO:string;
+  /// Top-left corner start azimuth (degrees)
   TOP_LEFT_START_AZ:double;
+  /// Top-left corner start elevation (degrees)
   TOP_LEFT_START_EL:double;
+  /// Top-left corner stop azimuth (degrees)
   TOP_LEFT_STOP_AZ:double;
+  /// Top-left corner stop elevation (degrees)
   TOP_LEFT_STOP_EL:double;
+  /// Image set identifier
   IMAGE_SET_ID:string;
-  IMAGE_SET_LENGTH:int;
-  SEQUENCE_ID:int;
+  /// Number of images in set
+  IMAGE_SET_LENGTH:uint16;
+  /// Sequence number within set
+  SEQUENCE_ID:uint16;
+  /// Frame field-of-view width (degrees)
   FRAME_FOVWIDTH:double;
+  /// Frame field-of-view height (degrees)
   FRAME_FOVHEIGHT:double;
+  /// Pixel field-of-view width (arcseconds)
   PIXEL_FOVWIDTH:double;
+  /// Pixel field-of-view height (arcseconds)
   PIXEL_FOVHEIGHT:double;
-  FRAME_WIDTH_PIXELS:int;
-  FRAME_HEIGHT_PIXELS:int;
-  PIXEL_BIT_DEPTH:int;
+  /// Frame width (pixels)
+  FRAME_WIDTH_PIXELS:uint16;
+  /// Frame height (pixels)
+  FRAME_HEIGHT_PIXELS:uint16;
+  /// Pixel bit depth
+  PIXEL_BIT_DEPTH:uint8;
+  /// Annotation key reference
   ANNOTATION_KEY:string;
+  /// Calibration key reference
   CALIBRATION_KEY:string;
+  /// Image filename
   FILENAME:string;
+  /// File size (bytes)
   FILESIZE:long;
+  /// File checksum value
   CHECKSUM_VALUE:string;
+  /// Transaction identifier
   TRANSACTION_ID:string;
+  /// Associated tags
   TAGS:[string];
+  /// Description
   DESCRIPTION:string;
+  /// Associated EO observation references
   EO_OBSERVATIONS:[string];
 }
 

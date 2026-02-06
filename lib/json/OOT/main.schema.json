@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "thrusterType" : {
+      "type" : "string",
+      "enum": ["CHEMICAL_MONO", "CHEMICAL_BI", "COLD_GAS", "ELECTRIC_HALL", "ELECTRIC_ION", "ELECTRIC_PPT", "ELECTRIC_ARCJET", "ELECTRIC_RESISTOJET", "ELECTRIC_COLLOID", "SOLID", "HYBRID", "NUCLEAR_THERMAL", "SOLAR_THERMAL"]
+    },
+    "OOT" : {
+      "type" : "object",
+      "description" : "On-Orbit Thruster",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Unique identifier"
+              },
+        "ID_ON_ORBIT" : {
+                "type" : "string",
+                "description" : "Reference to parent on-orbit object"
+              },
+        "ID_THRUSTER" : {
+                "type" : "string",
+                "description" : "Reference to thruster specification"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Thruster name or designation"
+              },
+        "TYPE" : {
+                "$ref" : "#/definitions/thrusterType",
+                "description" : "Thruster type"
+              },
+        "QUANTITY" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of thrusters of this type"
+              },
+        "THRUST" : {
+                "type" : "number",
+                "description" : "Thrust output in Newtons"
+              },
+        "ISP" : {
+                "type" : "number",
+                "description" : "Specific impulse in seconds"
+              },
+        "PROPELLANT" : {
+                "type" : "string",
+                "description" : "Propellant type (e.g., HYDRAZINE, XENON, KRYPTON, MMH_NTO, N2, GN2)"
+              },
+        "PROPELLANT_MASS" : {
+                "type" : "number",
+                "description" : "Total propellant mass in kg"
+              },
+        "PROPELLANT_REMAINING" : {
+                "type" : "number",
+                "description" : "Remaining propellant mass in kg"
+              },
+        "DELTA_V_TOTAL" : {
+                "type" : "number",
+                "description" : "Total delta-V capability in m/s"
+              },
+        "DELTA_V_REMAINING" : {
+                "type" : "number",
+                "description" : "Remaining delta-V in m/s"
+              },
+        "TOTAL_IMPULSE" : {
+                "type" : "number",
+                "description" : "Total impulse in Newton-seconds"
+              },
+        "MASS" : {
+                "type" : "number",
+                "description" : "Thruster dry mass in kg"
+              },
+        "PURPOSE" : {
+                "type" : "string",
+                "description" : "Purpose (e.g., ORBIT_RAISING, STATION_KEEPING, ATTITUDE_CONTROL, DEORBIT)"
+              },
+        "NOTES" : {
+                "type" : "string",
+                "description" : "Additional notes"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/OOT"
+}

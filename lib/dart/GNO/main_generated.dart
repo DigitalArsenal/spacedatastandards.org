@@ -5,6 +5,364 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class GnssConstellation {
+  final int value;
+  const GnssConstellation._(this.value);
+
+  factory GnssConstellation.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum GnssConstellation');
+    }
+    return result;
+  }
+
+  static GnssConstellation? _createOrNull(int? value) => 
+      value == null ? null : GnssConstellation.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 7;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const GnssConstellation GPS = GnssConstellation._(0);
+  static const GnssConstellation GLONASS = GnssConstellation._(1);
+  static const GnssConstellation GALILEO = GnssConstellation._(2);
+  static const GnssConstellation BEIDOU = GnssConstellation._(3);
+  static const GnssConstellation QZSS = GnssConstellation._(4);
+  static const GnssConstellation IRNSS = GnssConstellation._(5);
+  static const GnssConstellation SBAS = GnssConstellation._(6);
+  static const GnssConstellation MIXED = GnssConstellation._(7);
+  static const Map<int, GnssConstellation> values = {
+    0: GPS,
+    1: GLONASS,
+    2: GALILEO,
+    3: BEIDOU,
+    4: QZSS,
+    5: IRNSS,
+    6: SBAS,
+    7: MIXED};
+
+  static const fb.Reader<GnssConstellation> reader = _GnssConstellationReader();
+
+  @override
+  String toString() {
+    return 'GnssConstellation{value: $value}';
+  }
+}
+
+class _GnssConstellationReader extends fb.Reader<GnssConstellation> {
+  const _GnssConstellationReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  GnssConstellation read(fb.BufferContext bc, int offset) =>
+      GnssConstellation.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class GnssObsType {
+  final int value;
+  const GnssObsType._(this.value);
+
+  factory GnssObsType.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum GnssObsType');
+    }
+    return result;
+  }
+
+  static GnssObsType? _createOrNull(int? value) => 
+      value == null ? null : GnssObsType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 4;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const GnssObsType PSEUDORANGE = GnssObsType._(0);
+  static const GnssObsType CARRIER_PHASE = GnssObsType._(1);
+  static const GnssObsType DOPPLER = GnssObsType._(2);
+  static const GnssObsType SNR = GnssObsType._(3);
+  static const GnssObsType RAW_IF = GnssObsType._(4);
+  static const Map<int, GnssObsType> values = {
+    0: PSEUDORANGE,
+    1: CARRIER_PHASE,
+    2: DOPPLER,
+    3: SNR,
+    4: RAW_IF};
+
+  static const fb.Reader<GnssObsType> reader = _GnssObsTypeReader();
+
+  @override
+  String toString() {
+    return 'GnssObsType{value: $value}';
+  }
+}
+
+class _GnssObsTypeReader extends fb.Reader<GnssObsType> {
+  const _GnssObsTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  GnssObsType read(fb.BufferContext bc, int offset) =>
+      GnssObsType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  GNSS Observation Data Point
+class GnssObsData {
+  GnssObsData._(this._bc, this._bcOffset);
+  factory GnssObsData(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<GnssObsData> reader = _GnssObsDataReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Signal type code (e.g., L1C, L2P, L5Q, E1B)
+  String? get SIGNAL => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Observation type
+  GnssObsType get OBS_TYPE => GnssObsType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  ///  Observation value (units depend on type: m, cycles, Hz, dB-Hz)
+  double get VALUE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Loss of lock indicator
+  int get LLI => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  ///  Signal strength indicator (1-9)
+  int get SSI => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 12, 0);
+
+  @override
+  String toString() {
+    return 'GnssObsData{SIGNAL: ${SIGNAL}, OBS_TYPE: ${OBS_TYPE}, VALUE: ${VALUE}, LLI: ${LLI}, SSI: ${SSI}}';
+  }
+}
+
+class _GnssObsDataReader extends fb.TableReader<GnssObsData> {
+  const _GnssObsDataReader();
+
+  @override
+  GnssObsData createObject(fb.BufferContext bc, int offset) => 
+    GnssObsData._(bc, offset);
+}
+
+class GnssObsDataBuilder {
+  GnssObsDataBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(5);
+  }
+
+  int addSignalOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addObsType(GnssObsType? OBS_TYPE) {
+    fbBuilder.addInt8(1, OBS_TYPE?.value);
+    return fbBuilder.offset;
+  }
+  int addValue(double? VALUE) {
+    fbBuilder.addFloat64(2, VALUE);
+    return fbBuilder.offset;
+  }
+  int addLli(int? LLI) {
+    fbBuilder.addUint8(3, LLI);
+    return fbBuilder.offset;
+  }
+  int addSsi(int? SSI) {
+    fbBuilder.addUint8(4, SSI);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class GnssObsDataObjectBuilder extends fb.ObjectBuilder {
+  final String? _SIGNAL;
+  final GnssObsType? _OBS_TYPE;
+  final double? _VALUE;
+  final int? _LLI;
+  final int? _SSI;
+
+  GnssObsDataObjectBuilder({
+    String? SIGNAL,
+    GnssObsType? OBS_TYPE,
+    double? VALUE,
+    int? LLI,
+    int? SSI,
+  })
+      : _SIGNAL = SIGNAL,
+        _OBS_TYPE = OBS_TYPE,
+        _VALUE = VALUE,
+        _LLI = LLI,
+        _SSI = SSI;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? SIGNALOffset = _SIGNAL == null ? null
+        : fbBuilder.writeString(_SIGNAL!);
+    fbBuilder.startTable(5);
+    fbBuilder.addOffset(0, SIGNALOffset);
+    fbBuilder.addInt8(1, _OBS_TYPE?.value);
+    fbBuilder.addFloat64(2, _VALUE);
+    fbBuilder.addUint8(3, _LLI);
+    fbBuilder.addUint8(4, _SSI);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  GNSS Satellite Observation
+class GnssSatObs {
+  GnssSatObs._(this._bc, this._bcOffset);
+  factory GnssSatObs(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<GnssSatObs> reader = _GnssSatObsReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  GNSS satellite identifier (e.g., G01, R24, E05, C03)
+  String? get GNSS_SAT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Constellation
+  GnssConstellation get CONSTELLATION => GnssConstellation.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 6, 0));
+  ///  Elevation angle in degrees
+  double get ELEVATION => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Azimuth angle in degrees
+  double get AZIMUTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  Tracking status (0=not tracked, 1=tracking, 2=locked)
+  int get TRACKING_STATUS => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  ///  AGC state
+  int get AGC_STATE => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  ///  Observations for this satellite
+  List<GnssObsData>? get OBSERVATIONS => const fb.ListReader<GnssObsData>(GnssObsData.reader).vTableGetNullable(_bc, _bcOffset, 16);
+
+  @override
+  String toString() {
+    return 'GnssSatObs{GNSS_SAT_ID: ${GNSS_SAT_ID}, CONSTELLATION: ${CONSTELLATION}, ELEVATION: ${ELEVATION}, AZIMUTH: ${AZIMUTH}, TRACKING_STATUS: ${TRACKING_STATUS}, AGC_STATE: ${AGC_STATE}, OBSERVATIONS: ${OBSERVATIONS}}';
+  }
+}
+
+class _GnssSatObsReader extends fb.TableReader<GnssSatObs> {
+  const _GnssSatObsReader();
+
+  @override
+  GnssSatObs createObject(fb.BufferContext bc, int offset) => 
+    GnssSatObs._(bc, offset);
+}
+
+class GnssSatObsBuilder {
+  GnssSatObsBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(7);
+  }
+
+  int addGnssSatIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addConstellation(GnssConstellation? CONSTELLATION) {
+    fbBuilder.addInt8(1, CONSTELLATION?.value);
+    return fbBuilder.offset;
+  }
+  int addElevation(double? ELEVATION) {
+    fbBuilder.addFloat64(2, ELEVATION);
+    return fbBuilder.offset;
+  }
+  int addAzimuth(double? AZIMUTH) {
+    fbBuilder.addFloat64(3, AZIMUTH);
+    return fbBuilder.offset;
+  }
+  int addTrackingStatus(int? TRACKING_STATUS) {
+    fbBuilder.addInt32(4, TRACKING_STATUS);
+    return fbBuilder.offset;
+  }
+  int addAgcState(int? AGC_STATE) {
+    fbBuilder.addInt32(5, AGC_STATE);
+    return fbBuilder.offset;
+  }
+  int addObservationsOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class GnssSatObsObjectBuilder extends fb.ObjectBuilder {
+  final String? _GNSS_SAT_ID;
+  final GnssConstellation? _CONSTELLATION;
+  final double? _ELEVATION;
+  final double? _AZIMUTH;
+  final int? _TRACKING_STATUS;
+  final int? _AGC_STATE;
+  final List<GnssObsDataObjectBuilder>? _OBSERVATIONS;
+
+  GnssSatObsObjectBuilder({
+    String? GNSS_SAT_ID,
+    GnssConstellation? CONSTELLATION,
+    double? ELEVATION,
+    double? AZIMUTH,
+    int? TRACKING_STATUS,
+    int? AGC_STATE,
+    List<GnssObsDataObjectBuilder>? OBSERVATIONS,
+  })
+      : _GNSS_SAT_ID = GNSS_SAT_ID,
+        _CONSTELLATION = CONSTELLATION,
+        _ELEVATION = ELEVATION,
+        _AZIMUTH = AZIMUTH,
+        _TRACKING_STATUS = TRACKING_STATUS,
+        _AGC_STATE = AGC_STATE,
+        _OBSERVATIONS = OBSERVATIONS;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? GNSS_SAT_IDOffset = _GNSS_SAT_ID == null ? null
+        : fbBuilder.writeString(_GNSS_SAT_ID!);
+    final int? OBSERVATIONSOffset = _OBSERVATIONS == null ? null
+        : fbBuilder.writeList(_OBSERVATIONS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    fbBuilder.startTable(7);
+    fbBuilder.addOffset(0, GNSS_SAT_IDOffset);
+    fbBuilder.addInt8(1, _CONSTELLATION?.value);
+    fbBuilder.addFloat64(2, _ELEVATION);
+    fbBuilder.addFloat64(3, _AZIMUTH);
+    fbBuilder.addInt32(4, _TRACKING_STATUS);
+    fbBuilder.addInt32(5, _AGC_STATE);
+    fbBuilder.addOffset(6, OBSERVATIONSOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  GNSS Observation
 class GNO {
   GNO._(this._bc, this._bcOffset);
@@ -18,15 +376,56 @@ class GNO {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
-  String? get GNSS_SAT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
-  int get TRACKING_STATUS => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 6, 0);
-  int get AGC_STATE => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 8, 0);
-  List<String>? get OBS_CODE_SET => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 10);
-  List<String>? get OB => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Unique identifier
+  String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Receiver identifier
+  String? get RECEIVER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Receiver type/model
+  String? get RECEIVER_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Antenna identifier
+  String? get ANTENNA_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Antenna type/model
+  String? get ANTENNA_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Receiver firmware version
+  String? get FIRMWARE_VERSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Observation epoch (ISO 8601)
+  String? get EPOCH => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 16);
+  ///  Receiver clock offset in seconds
+  double get CLOCK_OFFSET => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  ///  Receiver clock drift in seconds/second
+  double get CLOCK_DRIFT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  Receiver geodetic latitude in degrees
+  double get LATITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Receiver geodetic longitude in degrees
+  double get LONGITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  ///  Receiver altitude in meters above WGS-84
+  double get ALTITUDE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
+  ///  Approximate position X in meters (ECEF)
+  double get APPROX_X => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 28, 0.0);
+  ///  Approximate position Y in meters (ECEF)
+  double get APPROX_Y => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  ///  Approximate position Z in meters (ECEF)
+  double get APPROX_Z => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 32, 0.0);
+  ///  Observation interval in seconds
+  double get INTERVAL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 34, 0.0);
+  ///  Number of satellites observed
+  int get NUM_SATS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 36, 0);
+  ///  PDOP
+  double get PDOP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 38, 0.0);
+  ///  HDOP
+  double get HDOP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  ///  VDOP
+  double get VDOP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  ///  Satellite observations
+  List<GnssSatObs>? get SAT_OBS => const fb.ListReader<GnssSatObs>(GnssSatObs.reader).vTableGetNullable(_bc, _bcOffset, 44);
+  ///  Observation code set identifiers
+  List<String>? get OBS_CODE_SET => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 46);
+  ///  Additional notes
+  String? get NOTES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
 
   @override
   String toString() {
-    return 'GNO{GNSS_SAT_ID: ${GNSS_SAT_ID}, TRACKING_STATUS: ${TRACKING_STATUS}, AGC_STATE: ${AGC_STATE}, OBS_CODE_SET: ${OBS_CODE_SET}, OB: ${OB}}';
+    return 'GNO{ID: ${ID}, RECEIVER_ID: ${RECEIVER_ID}, RECEIVER_TYPE: ${RECEIVER_TYPE}, ANTENNA_ID: ${ANTENNA_ID}, ANTENNA_TYPE: ${ANTENNA_TYPE}, FIRMWARE_VERSION: ${FIRMWARE_VERSION}, EPOCH: ${EPOCH}, CLOCK_OFFSET: ${CLOCK_OFFSET}, CLOCK_DRIFT: ${CLOCK_DRIFT}, LATITUDE: ${LATITUDE}, LONGITUDE: ${LONGITUDE}, ALTITUDE: ${ALTITUDE}, APPROX_X: ${APPROX_X}, APPROX_Y: ${APPROX_Y}, APPROX_Z: ${APPROX_Z}, INTERVAL: ${INTERVAL}, NUM_SATS: ${NUM_SATS}, PDOP: ${PDOP}, HDOP: ${HDOP}, VDOP: ${VDOP}, SAT_OBS: ${SAT_OBS}, OBS_CODE_SET: ${OBS_CODE_SET}, NOTES: ${NOTES}}';
   }
 }
 
@@ -44,27 +443,99 @@ class GNOBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(5);
+    fbBuilder.startTable(23);
   }
 
-  int addGnssSatIdOffset(int? offset) {
+  int addIdOffset(int? offset) {
     fbBuilder.addOffset(0, offset);
     return fbBuilder.offset;
   }
-  int addTrackingStatus(int? TRACKING_STATUS) {
-    fbBuilder.addInt32(1, TRACKING_STATUS);
+  int addReceiverIdOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
     return fbBuilder.offset;
   }
-  int addAgcState(int? AGC_STATE) {
-    fbBuilder.addInt32(2, AGC_STATE);
+  int addReceiverTypeOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addObsCodeSetOffset(int? offset) {
+  int addAntennaIdOffset(int? offset) {
     fbBuilder.addOffset(3, offset);
     return fbBuilder.offset;
   }
-  int addObOffset(int? offset) {
+  int addAntennaTypeOffset(int? offset) {
     fbBuilder.addOffset(4, offset);
+    return fbBuilder.offset;
+  }
+  int addFirmwareVersionOffset(int? offset) {
+    fbBuilder.addOffset(5, offset);
+    return fbBuilder.offset;
+  }
+  int addEpochOffset(int? offset) {
+    fbBuilder.addOffset(6, offset);
+    return fbBuilder.offset;
+  }
+  int addClockOffset(double? CLOCK_OFFSET) {
+    fbBuilder.addFloat64(7, CLOCK_OFFSET);
+    return fbBuilder.offset;
+  }
+  int addClockDrift(double? CLOCK_DRIFT) {
+    fbBuilder.addFloat64(8, CLOCK_DRIFT);
+    return fbBuilder.offset;
+  }
+  int addLatitude(double? LATITUDE) {
+    fbBuilder.addFloat64(9, LATITUDE);
+    return fbBuilder.offset;
+  }
+  int addLongitude(double? LONGITUDE) {
+    fbBuilder.addFloat64(10, LONGITUDE);
+    return fbBuilder.offset;
+  }
+  int addAltitude(double? ALTITUDE) {
+    fbBuilder.addFloat64(11, ALTITUDE);
+    return fbBuilder.offset;
+  }
+  int addApproxX(double? APPROX_X) {
+    fbBuilder.addFloat64(12, APPROX_X);
+    return fbBuilder.offset;
+  }
+  int addApproxY(double? APPROX_Y) {
+    fbBuilder.addFloat64(13, APPROX_Y);
+    return fbBuilder.offset;
+  }
+  int addApproxZ(double? APPROX_Z) {
+    fbBuilder.addFloat64(14, APPROX_Z);
+    return fbBuilder.offset;
+  }
+  int addInterval(double? INTERVAL) {
+    fbBuilder.addFloat64(15, INTERVAL);
+    return fbBuilder.offset;
+  }
+  int addNumSats(int? NUM_SATS) {
+    fbBuilder.addUint32(16, NUM_SATS);
+    return fbBuilder.offset;
+  }
+  int addPdop(double? PDOP) {
+    fbBuilder.addFloat64(17, PDOP);
+    return fbBuilder.offset;
+  }
+  int addHdop(double? HDOP) {
+    fbBuilder.addFloat64(18, HDOP);
+    return fbBuilder.offset;
+  }
+  int addVdop(double? VDOP) {
+    fbBuilder.addFloat64(19, VDOP);
+    return fbBuilder.offset;
+  }
+  int addSatObsOffset(int? offset) {
+    fbBuilder.addOffset(20, offset);
+    return fbBuilder.offset;
+  }
+  int addObsCodeSetOffset(int? offset) {
+    fbBuilder.addOffset(21, offset);
+    return fbBuilder.offset;
+  }
+  int addNotesOffset(int? offset) {
+    fbBuilder.addOffset(22, offset);
     return fbBuilder.offset;
   }
 
@@ -74,40 +545,126 @@ class GNOBuilder {
 }
 
 class GNOObjectBuilder extends fb.ObjectBuilder {
-  final String? _GNSS_SAT_ID;
-  final int? _TRACKING_STATUS;
-  final int? _AGC_STATE;
+  final String? _ID;
+  final String? _RECEIVER_ID;
+  final String? _RECEIVER_TYPE;
+  final String? _ANTENNA_ID;
+  final String? _ANTENNA_TYPE;
+  final String? _FIRMWARE_VERSION;
+  final String? _EPOCH;
+  final double? _CLOCK_OFFSET;
+  final double? _CLOCK_DRIFT;
+  final double? _LATITUDE;
+  final double? _LONGITUDE;
+  final double? _ALTITUDE;
+  final double? _APPROX_X;
+  final double? _APPROX_Y;
+  final double? _APPROX_Z;
+  final double? _INTERVAL;
+  final int? _NUM_SATS;
+  final double? _PDOP;
+  final double? _HDOP;
+  final double? _VDOP;
+  final List<GnssSatObsObjectBuilder>? _SAT_OBS;
   final List<String>? _OBS_CODE_SET;
-  final List<String>? _OB;
+  final String? _NOTES;
 
   GNOObjectBuilder({
-    String? GNSS_SAT_ID,
-    int? TRACKING_STATUS,
-    int? AGC_STATE,
+    String? ID,
+    String? RECEIVER_ID,
+    String? RECEIVER_TYPE,
+    String? ANTENNA_ID,
+    String? ANTENNA_TYPE,
+    String? FIRMWARE_VERSION,
+    String? EPOCH,
+    double? CLOCK_OFFSET,
+    double? CLOCK_DRIFT,
+    double? LATITUDE,
+    double? LONGITUDE,
+    double? ALTITUDE,
+    double? APPROX_X,
+    double? APPROX_Y,
+    double? APPROX_Z,
+    double? INTERVAL,
+    int? NUM_SATS,
+    double? PDOP,
+    double? HDOP,
+    double? VDOP,
+    List<GnssSatObsObjectBuilder>? SAT_OBS,
     List<String>? OBS_CODE_SET,
-    List<String>? OB,
+    String? NOTES,
   })
-      : _GNSS_SAT_ID = GNSS_SAT_ID,
-        _TRACKING_STATUS = TRACKING_STATUS,
-        _AGC_STATE = AGC_STATE,
+      : _ID = ID,
+        _RECEIVER_ID = RECEIVER_ID,
+        _RECEIVER_TYPE = RECEIVER_TYPE,
+        _ANTENNA_ID = ANTENNA_ID,
+        _ANTENNA_TYPE = ANTENNA_TYPE,
+        _FIRMWARE_VERSION = FIRMWARE_VERSION,
+        _EPOCH = EPOCH,
+        _CLOCK_OFFSET = CLOCK_OFFSET,
+        _CLOCK_DRIFT = CLOCK_DRIFT,
+        _LATITUDE = LATITUDE,
+        _LONGITUDE = LONGITUDE,
+        _ALTITUDE = ALTITUDE,
+        _APPROX_X = APPROX_X,
+        _APPROX_Y = APPROX_Y,
+        _APPROX_Z = APPROX_Z,
+        _INTERVAL = INTERVAL,
+        _NUM_SATS = NUM_SATS,
+        _PDOP = PDOP,
+        _HDOP = HDOP,
+        _VDOP = VDOP,
+        _SAT_OBS = SAT_OBS,
         _OBS_CODE_SET = OBS_CODE_SET,
-        _OB = OB;
+        _NOTES = NOTES;
 
   /// Finish building, and store into the [fbBuilder].
   @override
   int finish(fb.Builder fbBuilder) {
-    final int? GNSS_SAT_IDOffset = _GNSS_SAT_ID == null ? null
-        : fbBuilder.writeString(_GNSS_SAT_ID!);
+    final int? IDOffset = _ID == null ? null
+        : fbBuilder.writeString(_ID!);
+    final int? RECEIVER_IDOffset = _RECEIVER_ID == null ? null
+        : fbBuilder.writeString(_RECEIVER_ID!);
+    final int? RECEIVER_TYPEOffset = _RECEIVER_TYPE == null ? null
+        : fbBuilder.writeString(_RECEIVER_TYPE!);
+    final int? ANTENNA_IDOffset = _ANTENNA_ID == null ? null
+        : fbBuilder.writeString(_ANTENNA_ID!);
+    final int? ANTENNA_TYPEOffset = _ANTENNA_TYPE == null ? null
+        : fbBuilder.writeString(_ANTENNA_TYPE!);
+    final int? FIRMWARE_VERSIONOffset = _FIRMWARE_VERSION == null ? null
+        : fbBuilder.writeString(_FIRMWARE_VERSION!);
+    final int? EPOCHOffset = _EPOCH == null ? null
+        : fbBuilder.writeString(_EPOCH!);
+    final int? SAT_OBSOffset = _SAT_OBS == null ? null
+        : fbBuilder.writeList(_SAT_OBS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
     final int? OBS_CODE_SETOffset = _OBS_CODE_SET == null ? null
         : fbBuilder.writeList(_OBS_CODE_SET!.map(fbBuilder.writeString).toList());
-    final int? OBOffset = _OB == null ? null
-        : fbBuilder.writeList(_OB!.map(fbBuilder.writeString).toList());
-    fbBuilder.startTable(5);
-    fbBuilder.addOffset(0, GNSS_SAT_IDOffset);
-    fbBuilder.addInt32(1, _TRACKING_STATUS);
-    fbBuilder.addInt32(2, _AGC_STATE);
-    fbBuilder.addOffset(3, OBS_CODE_SETOffset);
-    fbBuilder.addOffset(4, OBOffset);
+    final int? NOTESOffset = _NOTES == null ? null
+        : fbBuilder.writeString(_NOTES!);
+    fbBuilder.startTable(23);
+    fbBuilder.addOffset(0, IDOffset);
+    fbBuilder.addOffset(1, RECEIVER_IDOffset);
+    fbBuilder.addOffset(2, RECEIVER_TYPEOffset);
+    fbBuilder.addOffset(3, ANTENNA_IDOffset);
+    fbBuilder.addOffset(4, ANTENNA_TYPEOffset);
+    fbBuilder.addOffset(5, FIRMWARE_VERSIONOffset);
+    fbBuilder.addOffset(6, EPOCHOffset);
+    fbBuilder.addFloat64(7, _CLOCK_OFFSET);
+    fbBuilder.addFloat64(8, _CLOCK_DRIFT);
+    fbBuilder.addFloat64(9, _LATITUDE);
+    fbBuilder.addFloat64(10, _LONGITUDE);
+    fbBuilder.addFloat64(11, _ALTITUDE);
+    fbBuilder.addFloat64(12, _APPROX_X);
+    fbBuilder.addFloat64(13, _APPROX_Y);
+    fbBuilder.addFloat64(14, _APPROX_Z);
+    fbBuilder.addFloat64(15, _INTERVAL);
+    fbBuilder.addUint32(16, _NUM_SATS);
+    fbBuilder.addFloat64(17, _PDOP);
+    fbBuilder.addFloat64(18, _HDOP);
+    fbBuilder.addFloat64(19, _VDOP);
+    fbBuilder.addOffset(20, SAT_OBSOffset);
+    fbBuilder.addOffset(21, OBS_CODE_SETOffset);
+    fbBuilder.addOffset(22, NOTESOffset);
     return fbBuilder.endTable();
   }
 

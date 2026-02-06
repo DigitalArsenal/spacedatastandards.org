@@ -41,86 +41,322 @@ class OOI extends Table
         return $this;
     }
 
+    /// Unique identifier
     public function getID()
     {
         $o = $this->__offset(4);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Satellite catalog number
     /**
-     * @return int
+     * @return uint
      */
     public function getSAT_NO()
     {
         $o = $this->__offset(6);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
     }
 
+    /// Object name or designator
     public function getNAME()
     {
         $o = $this->__offset(8);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getSENSOR_TASKING_START_TIME()
+    /// On-orbit reference
+    public function getON_ORBIT()
     {
         $o = $this->__offset(10);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getSENSOR_TASKING_STOP_TIME()
+    /// Tasking status
+    /**
+     * @return sbyte
+     */
+    public function getSTATUS()
     {
         $o = $this->__offset(12);
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \ooiStatus::ACTIVE;
+    }
+
+    /// Status update date (ISO 8601)
+    public function getSTATUS_DATE()
+    {
+        $o = $this->__offset(14);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Collection priority
     /**
-     * @return int
+     * @return sbyte
      */
     public function getPRIORITY()
     {
-        $o = $this->__offset(14);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
-    }
-
-    public function getSTATUS()
-    {
         $o = $this->__offset(16);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+        return $o != 0 ? $this->bb->getSbyte($o + $this->bb_pos) : \ooiPriority::CRITICAL;
     }
 
-    public function getSTATUS_DATE()
+    /// Description of why object is of interest
+    public function getDESCRIPTION()
     {
         $o = $this->__offset(18);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getDESCRIPTION()
+    /// Sensor tasking start time (ISO 8601)
+    public function getSENSOR_TASKING_START_TIME()
     {
         $o = $this->__offset(20);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getLAST_OB_TIME()
+    /// Sensor tasking stop time (ISO 8601)
+    public function getSENSOR_TASKING_STOP_TIME()
     {
         $o = $this->__offset(22);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
-    public function getMISSED_OB_TIME()
+    /// Last observation time (ISO 8601)
+    public function getLAST_OB_TIME()
     {
         $o = $this->__offset(24);
         return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
     }
 
+    /// Last missed observation time (ISO 8601)
+    public function getMISSED_OB_TIME()
+    {
+        $o = $this->__offset(26);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// State vector epoch (ISO 8601)
+    public function getSV_EPOCH()
+    {
+        $o = $this->__offset(28);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Position X (km, TEME)
+    /**
+     * @return double
+     */
+    public function getX()
+    {
+        $o = $this->__offset(30);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Position Y (km, TEME)
+    /**
+     * @return double
+     */
+    public function getY()
+    {
+        $o = $this->__offset(32);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Position Z (km, TEME)
+    /**
+     * @return double
+     */
+    public function getZ()
+    {
+        $o = $this->__offset(34);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Velocity X (km/s, TEME)
+    /**
+     * @return double
+     */
+    public function getXVEL()
+    {
+        $o = $this->__offset(36);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Velocity Y (km/s, TEME)
+    /**
+     * @return double
+     */
+    public function getYVEL()
+    {
+        $o = $this->__offset(38);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Velocity Z (km/s, TEME)
+    /**
+     * @return double
+     */
+    public function getZVEL()
+    {
+        $o = $this->__offset(40);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Element set epoch (ISO 8601)
+    public function getELSET_EPOCH()
+    {
+        $o = $this->__offset(42);
+        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
+    }
+
+    /// Mean motion (rev/day)
+    /**
+     * @return double
+     */
+    public function getMEAN_MOTION()
+    {
+        $o = $this->__offset(44);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Eccentricity
+    /**
+     * @return double
+     */
+    public function getECCENTRICITY()
+    {
+        $o = $this->__offset(46);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Inclination (degrees)
+    /**
+     * @return double
+     */
+    public function getINCLINATION()
+    {
+        $o = $this->__offset(48);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Right ascension of ascending node (degrees)
+    /**
+     * @return double
+     */
+    public function getRAAN()
+    {
+        $o = $this->__offset(50);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Argument of perigee (degrees)
+    /**
+     * @return double
+     */
+    public function getARG_OF_PERIGEE()
+    {
+        $o = $this->__offset(52);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Mean anomaly (degrees)
+    /**
+     * @return double
+     */
+    public function getMEAN_ANOMALY()
+    {
+        $o = $this->__offset(54);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Revolution number at epoch
+    /**
+     * @return uint
+     */
+    public function getREV_NO()
+    {
+        $o = $this->__offset(56);
+        return $o != 0 ? $this->bb->getUint($o + $this->bb_pos) : 0;
+    }
+
+    /// BSTAR drag term (1/Earth radii)
+    /**
+     * @return double
+     */
+    public function getB_STAR()
+    {
+        $o = $this->__offset(58);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Mean motion first derivative (rev/day^2)
+    /**
+     * @return double
+     */
+    public function getMEAN_MOTION_DOT()
+    {
+        $o = $this->__offset(60);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Mean motion second derivative (rev/day^3)
+    /**
+     * @return double
+     */
+    public function getMEAN_MOTION_DDOT()
+    {
+        $o = $this->__offset(62);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Semi-major axis (km)
+    /**
+     * @return double
+     */
+    public function getSEMI_MAJOR_AXIS()
+    {
+        $o = $this->__offset(64);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Orbital period (minutes)
+    /**
+     * @return double
+     */
+    public function getPERIOD()
+    {
+        $o = $this->__offset(66);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Apogee altitude (km)
+    /**
+     * @return double
+     */
+    public function getAPOGEE()
+    {
+        $o = $this->__offset(68);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Perigee altitude (km)
+    /**
+     * @return double
+     */
+    public function getPERIGEE()
+    {
+        $o = $this->__offset(70);
+        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
+    }
+
+    /// Delta-V estimates for maneuver hypotheses (m/s)
     /**
      * @param int offset
-     * @return string
+     * @return double
      */
     public function getDELTA_VS($j)
     {
-        $o = $this->__offset(26);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        $o = $this->__offset(72);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
@@ -128,18 +364,19 @@ class OOI extends Table
      */
     public function getDELTA_VSLength()
     {
-        $o = $this->__offset(26);
+        $o = $this->__offset(72);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
+    /// Delta-T estimates for maneuver timing (seconds)
     /**
      * @param int offset
-     * @return string
+     * @return double
      */
     public function getDELTA_TS($j)
     {
-        $o = $this->__offset(28);
-        return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
+        $o = $this->__offset(74);
+        return $o != 0 ? $this->bb->getDouble($this->__vector($o) + $j * 8) : 0;
     }
 
     /**
@@ -147,209 +384,18 @@ class OOI extends Table
      */
     public function getDELTA_TSLength()
     {
-        $o = $this->__offset(28);
+        $o = $this->__offset(74);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    public function getSV_EPOCH()
-    {
-        $o = $this->__offset(30);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /**
-     * @return double
-     */
-    public function getX()
-    {
-        $o = $this->__offset(32);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getY()
-    {
-        $o = $this->__offset(34);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getZ()
-    {
-        $o = $this->__offset(36);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getXVEL()
-    {
-        $o = $this->__offset(38);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getYVEL()
-    {
-        $o = $this->__offset(40);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getZVEL()
-    {
-        $o = $this->__offset(42);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    public function getELSET_EPOCH()
-    {
-        $o = $this->__offset(44);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
-    /**
-     * @return double
-     */
-    public function getMEAN_MOTION()
-    {
-        $o = $this->__offset(46);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getECCENTRICITY()
-    {
-        $o = $this->__offset(48);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getINCLINATION()
-    {
-        $o = $this->__offset(50);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getRAAN()
-    {
-        $o = $this->__offset(52);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getARG_OF_PERIGEE()
-    {
-        $o = $this->__offset(54);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getMEAN_ANOMALY()
-    {
-        $o = $this->__offset(56);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return int
-     */
-    public function getREV_NO()
-    {
-        $o = $this->__offset(58);
-        return $o != 0 ? $this->bb->getInt($o + $this->bb_pos) : 0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getB_STAR()
-    {
-        $o = $this->__offset(60);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getMEAN_MOTION_DOT()
-    {
-        $o = $this->__offset(62);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getMEAN_MOTION_DDOT()
-    {
-        $o = $this->__offset(64);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getSEMI_MAJOR_AXIS()
-    {
-        $o = $this->__offset(66);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPERIOD()
-    {
-        $o = $this->__offset(68);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getAPOGEE()
-    {
-        $o = $this->__offset(70);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
-    /**
-     * @return double
-     */
-    public function getPERIGEE()
-    {
-        $o = $this->__offset(72);
-        return $o != 0 ? $this->bb->getDouble($o + $this->bb_pos) : 0.0;
-    }
-
+    /// Other affected satellite catalog numbers
     /**
      * @param int offset
      * @return string
      */
     public function getAFFECTED_OBJECTS($j)
     {
-        $o = $this->__offset(74);
+        $o = $this->__offset(76);
         return $o != 0 ? $this->__string($this->__vector($o) + $j * 4) : 0;
     }
 
@@ -358,16 +404,11 @@ class OOI extends Table
      */
     public function getAFFECTED_OBJECTSLength()
     {
-        $o = $this->__offset(74);
+        $o = $this->__offset(76);
         return $o != 0 ? $this->__vector_len($o) : 0;
     }
 
-    public function getON_ORBIT()
-    {
-        $o = $this->__offset(76);
-        return $o != 0 ? $this->__string($o + $this->bb_pos) : null;
-    }
-
+    /// Associated orbit manifold identifiers
     /**
      * @param int offset
      * @return string
@@ -400,22 +441,21 @@ class OOI extends Table
      * @param FlatBufferBuilder $builder
      * @return OOI
      */
-    public static function createOOI(FlatBufferBuilder $builder, $ID, $SAT_NO, $NAME, $SENSOR_TASKING_START_TIME, $SENSOR_TASKING_STOP_TIME, $PRIORITY, $STATUS, $STATUS_DATE, $DESCRIPTION, $LAST_OB_TIME, $MISSED_OB_TIME, $DELTA_VS, $DELTA_TS, $SV_EPOCH, $X, $Y, $Z, $XVEL, $YVEL, $ZVEL, $ELSET_EPOCH, $MEAN_MOTION, $ECCENTRICITY, $INCLINATION, $RAAN, $ARG_OF_PERIGEE, $MEAN_ANOMALY, $REV_NO, $B_STAR, $MEAN_MOTION_DOT, $MEAN_MOTION_DDOT, $SEMI_MAJOR_AXIS, $PERIOD, $APOGEE, $PERIGEE, $AFFECTED_OBJECTS, $ON_ORBIT, $MANIFOLDS)
+    public static function createOOI(FlatBufferBuilder $builder, $ID, $SAT_NO, $NAME, $ON_ORBIT, $STATUS, $STATUS_DATE, $PRIORITY, $DESCRIPTION, $SENSOR_TASKING_START_TIME, $SENSOR_TASKING_STOP_TIME, $LAST_OB_TIME, $MISSED_OB_TIME, $SV_EPOCH, $X, $Y, $Z, $XVEL, $YVEL, $ZVEL, $ELSET_EPOCH, $MEAN_MOTION, $ECCENTRICITY, $INCLINATION, $RAAN, $ARG_OF_PERIGEE, $MEAN_ANOMALY, $REV_NO, $B_STAR, $MEAN_MOTION_DOT, $MEAN_MOTION_DDOT, $SEMI_MAJOR_AXIS, $PERIOD, $APOGEE, $PERIGEE, $DELTA_VS, $DELTA_TS, $AFFECTED_OBJECTS, $MANIFOLDS)
     {
         $builder->startObject(38);
         self::addID($builder, $ID);
         self::addSAT_NO($builder, $SAT_NO);
         self::addNAME($builder, $NAME);
-        self::addSENSOR_TASKING_START_TIME($builder, $SENSOR_TASKING_START_TIME);
-        self::addSENSOR_TASKING_STOP_TIME($builder, $SENSOR_TASKING_STOP_TIME);
-        self::addPRIORITY($builder, $PRIORITY);
+        self::addON_ORBIT($builder, $ON_ORBIT);
         self::addSTATUS($builder, $STATUS);
         self::addSTATUS_DATE($builder, $STATUS_DATE);
+        self::addPRIORITY($builder, $PRIORITY);
         self::addDESCRIPTION($builder, $DESCRIPTION);
+        self::addSENSOR_TASKING_START_TIME($builder, $SENSOR_TASKING_START_TIME);
+        self::addSENSOR_TASKING_STOP_TIME($builder, $SENSOR_TASKING_STOP_TIME);
         self::addLAST_OB_TIME($builder, $LAST_OB_TIME);
         self::addMISSED_OB_TIME($builder, $MISSED_OB_TIME);
-        self::addDELTA_VS($builder, $DELTA_VS);
-        self::addDELTA_TS($builder, $DELTA_TS);
         self::addSV_EPOCH($builder, $SV_EPOCH);
         self::addX($builder, $X);
         self::addY($builder, $Y);
@@ -438,8 +478,9 @@ class OOI extends Table
         self::addPERIOD($builder, $PERIOD);
         self::addAPOGEE($builder, $APOGEE);
         self::addPERIGEE($builder, $PERIGEE);
+        self::addDELTA_VS($builder, $DELTA_VS);
+        self::addDELTA_TS($builder, $DELTA_TS);
         self::addAFFECTED_OBJECTS($builder, $AFFECTED_OBJECTS);
-        self::addON_ORBIT($builder, $ON_ORBIT);
         self::addMANIFOLDS($builder, $MANIFOLDS);
         $o = $builder->endObject();
         return $o;
@@ -457,12 +498,12 @@ class OOI extends Table
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param int
+     * @param uint
      * @return void
      */
     public static function addSAT_NO(FlatBufferBuilder $builder, $SAT_NO)
     {
-        $builder->addIntX(1, $SAT_NO, 0);
+        $builder->addUintX(1, $SAT_NO, 0);
     }
 
     /**
@@ -480,39 +521,19 @@ class OOI extends Table
      * @param StringOffset
      * @return void
      */
-    public static function addSENSOR_TASKING_START_TIME(FlatBufferBuilder $builder, $SENSOR_TASKING_START_TIME)
+    public static function addON_ORBIT(FlatBufferBuilder $builder, $ON_ORBIT)
     {
-        $builder->addOffsetX(3, $SENSOR_TASKING_START_TIME, 0);
+        $builder->addOffsetX(3, $ON_ORBIT, 0);
     }
 
     /**
      * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addSENSOR_TASKING_STOP_TIME(FlatBufferBuilder $builder, $SENSOR_TASKING_STOP_TIME)
-    {
-        $builder->addOffsetX(4, $SENSOR_TASKING_STOP_TIME, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int
-     * @return void
-     */
-    public static function addPRIORITY(FlatBufferBuilder $builder, $PRIORITY)
-    {
-        $builder->addIntX(5, $PRIORITY, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
+     * @param sbyte
      * @return void
      */
     public static function addSTATUS(FlatBufferBuilder $builder, $STATUS)
     {
-        $builder->addOffsetX(6, $STATUS, 0);
+        $builder->addSbyteX(4, $STATUS, 0);
     }
 
     /**
@@ -522,7 +543,17 @@ class OOI extends Table
      */
     public static function addSTATUS_DATE(FlatBufferBuilder $builder, $STATUS_DATE)
     {
-        $builder->addOffsetX(7, $STATUS_DATE, 0);
+        $builder->addOffsetX(5, $STATUS_DATE, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param sbyte
+     * @return void
+     */
+    public static function addPRIORITY(FlatBufferBuilder $builder, $PRIORITY)
+    {
+        $builder->addSbyteX(6, $PRIORITY, 0);
     }
 
     /**
@@ -532,7 +563,27 @@ class OOI extends Table
      */
     public static function addDESCRIPTION(FlatBufferBuilder $builder, $DESCRIPTION)
     {
-        $builder->addOffsetX(8, $DESCRIPTION, 0);
+        $builder->addOffsetX(7, $DESCRIPTION, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSENSOR_TASKING_START_TIME(FlatBufferBuilder $builder, $SENSOR_TASKING_START_TIME)
+    {
+        $builder->addOffsetX(8, $SENSOR_TASKING_START_TIME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSENSOR_TASKING_STOP_TIME(FlatBufferBuilder $builder, $SENSOR_TASKING_STOP_TIME)
+    {
+        $builder->addOffsetX(9, $SENSOR_TASKING_STOP_TIME, 0);
     }
 
     /**
@@ -542,7 +593,7 @@ class OOI extends Table
      */
     public static function addLAST_OB_TIME(FlatBufferBuilder $builder, $LAST_OB_TIME)
     {
-        $builder->addOffsetX(9, $LAST_OB_TIME, 0);
+        $builder->addOffsetX(10, $LAST_OB_TIME, 0);
     }
 
     /**
@@ -552,7 +603,227 @@ class OOI extends Table
      */
     public static function addMISSED_OB_TIME(FlatBufferBuilder $builder, $MISSED_OB_TIME)
     {
-        $builder->addOffsetX(10, $MISSED_OB_TIME, 0);
+        $builder->addOffsetX(11, $MISSED_OB_TIME, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addSV_EPOCH(FlatBufferBuilder $builder, $SV_EPOCH)
+    {
+        $builder->addOffsetX(12, $SV_EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addX(FlatBufferBuilder $builder, $X)
+    {
+        $builder->addDoubleX(13, $X, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addY(FlatBufferBuilder $builder, $Y)
+    {
+        $builder->addDoubleX(14, $Y, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addZ(FlatBufferBuilder $builder, $Z)
+    {
+        $builder->addDoubleX(15, $Z, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addXVEL(FlatBufferBuilder $builder, $XVEL)
+    {
+        $builder->addDoubleX(16, $XVEL, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addYVEL(FlatBufferBuilder $builder, $YVEL)
+    {
+        $builder->addDoubleX(17, $YVEL, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addZVEL(FlatBufferBuilder $builder, $ZVEL)
+    {
+        $builder->addDoubleX(18, $ZVEL, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param StringOffset
+     * @return void
+     */
+    public static function addELSET_EPOCH(FlatBufferBuilder $builder, $ELSET_EPOCH)
+    {
+        $builder->addOffsetX(19, $ELSET_EPOCH, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addMEAN_MOTION(FlatBufferBuilder $builder, $MEAN_MOTION)
+    {
+        $builder->addDoubleX(20, $MEAN_MOTION, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addECCENTRICITY(FlatBufferBuilder $builder, $ECCENTRICITY)
+    {
+        $builder->addDoubleX(21, $ECCENTRICITY, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addINCLINATION(FlatBufferBuilder $builder, $INCLINATION)
+    {
+        $builder->addDoubleX(22, $INCLINATION, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addRAAN(FlatBufferBuilder $builder, $RAAN)
+    {
+        $builder->addDoubleX(23, $RAAN, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addARG_OF_PERIGEE(FlatBufferBuilder $builder, $ARG_OF_PERIGEE)
+    {
+        $builder->addDoubleX(24, $ARG_OF_PERIGEE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addMEAN_ANOMALY(FlatBufferBuilder $builder, $MEAN_ANOMALY)
+    {
+        $builder->addDoubleX(25, $MEAN_ANOMALY, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param uint
+     * @return void
+     */
+    public static function addREV_NO(FlatBufferBuilder $builder, $REV_NO)
+    {
+        $builder->addUintX(26, $REV_NO, 0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addB_STAR(FlatBufferBuilder $builder, $B_STAR)
+    {
+        $builder->addDoubleX(27, $B_STAR, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addMEAN_MOTION_DOT(FlatBufferBuilder $builder, $MEAN_MOTION_DOT)
+    {
+        $builder->addDoubleX(28, $MEAN_MOTION_DOT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addMEAN_MOTION_DDOT(FlatBufferBuilder $builder, $MEAN_MOTION_DDOT)
+    {
+        $builder->addDoubleX(29, $MEAN_MOTION_DDOT, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addSEMI_MAJOR_AXIS(FlatBufferBuilder $builder, $SEMI_MAJOR_AXIS)
+    {
+        $builder->addDoubleX(30, $SEMI_MAJOR_AXIS, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPERIOD(FlatBufferBuilder $builder, $PERIOD)
+    {
+        $builder->addDoubleX(31, $PERIOD, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addAPOGEE(FlatBufferBuilder $builder, $APOGEE)
+    {
+        $builder->addDoubleX(32, $APOGEE, 0.0);
+    }
+
+    /**
+     * @param FlatBufferBuilder $builder
+     * @param double
+     * @return void
+     */
+    public static function addPERIGEE(FlatBufferBuilder $builder, $PERIGEE)
+    {
+        $builder->addDoubleX(33, $PERIGEE, 0.0);
     }
 
     /**
@@ -562,7 +833,7 @@ class OOI extends Table
      */
     public static function addDELTA_VS(FlatBufferBuilder $builder, $DELTA_VS)
     {
-        $builder->addOffsetX(11, $DELTA_VS, 0);
+        $builder->addOffsetX(34, $DELTA_VS, 0);
     }
 
     /**
@@ -572,9 +843,9 @@ class OOI extends Table
      */
     public static function createDELTA_VSVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -586,7 +857,7 @@ class OOI extends Table
      */
     public static function startDELTA_VSVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**
@@ -596,7 +867,7 @@ class OOI extends Table
      */
     public static function addDELTA_TS(FlatBufferBuilder $builder, $DELTA_TS)
     {
-        $builder->addOffsetX(12, $DELTA_TS, 0);
+        $builder->addOffsetX(35, $DELTA_TS, 0);
     }
 
     /**
@@ -606,9 +877,9 @@ class OOI extends Table
      */
     public static function createDELTA_TSVector(FlatBufferBuilder $builder, array $data)
     {
-        $builder->startVector(4, count($data), 4);
+        $builder->startVector(8, count($data), 8);
         for ($i = count($data) - 1; $i >= 0; $i--) {
-            $builder->putOffset($data[$i]);
+            $builder->putDouble($data[$i]);
         }
         return $builder->endVector();
     }
@@ -620,227 +891,7 @@ class OOI extends Table
      */
     public static function startDELTA_TSVector(FlatBufferBuilder $builder, $numElems)
     {
-        $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addSV_EPOCH(FlatBufferBuilder $builder, $SV_EPOCH)
-    {
-        $builder->addOffsetX(13, $SV_EPOCH, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addX(FlatBufferBuilder $builder, $X)
-    {
-        $builder->addDoubleX(14, $X, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addY(FlatBufferBuilder $builder, $Y)
-    {
-        $builder->addDoubleX(15, $Y, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addZ(FlatBufferBuilder $builder, $Z)
-    {
-        $builder->addDoubleX(16, $Z, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addXVEL(FlatBufferBuilder $builder, $XVEL)
-    {
-        $builder->addDoubleX(17, $XVEL, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addYVEL(FlatBufferBuilder $builder, $YVEL)
-    {
-        $builder->addDoubleX(18, $YVEL, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addZVEL(FlatBufferBuilder $builder, $ZVEL)
-    {
-        $builder->addDoubleX(19, $ZVEL, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addELSET_EPOCH(FlatBufferBuilder $builder, $ELSET_EPOCH)
-    {
-        $builder->addOffsetX(20, $ELSET_EPOCH, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addMEAN_MOTION(FlatBufferBuilder $builder, $MEAN_MOTION)
-    {
-        $builder->addDoubleX(21, $MEAN_MOTION, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addECCENTRICITY(FlatBufferBuilder $builder, $ECCENTRICITY)
-    {
-        $builder->addDoubleX(22, $ECCENTRICITY, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addINCLINATION(FlatBufferBuilder $builder, $INCLINATION)
-    {
-        $builder->addDoubleX(23, $INCLINATION, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addRAAN(FlatBufferBuilder $builder, $RAAN)
-    {
-        $builder->addDoubleX(24, $RAAN, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addARG_OF_PERIGEE(FlatBufferBuilder $builder, $ARG_OF_PERIGEE)
-    {
-        $builder->addDoubleX(25, $ARG_OF_PERIGEE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addMEAN_ANOMALY(FlatBufferBuilder $builder, $MEAN_ANOMALY)
-    {
-        $builder->addDoubleX(26, $MEAN_ANOMALY, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param int
-     * @return void
-     */
-    public static function addREV_NO(FlatBufferBuilder $builder, $REV_NO)
-    {
-        $builder->addIntX(27, $REV_NO, 0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addB_STAR(FlatBufferBuilder $builder, $B_STAR)
-    {
-        $builder->addDoubleX(28, $B_STAR, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addMEAN_MOTION_DOT(FlatBufferBuilder $builder, $MEAN_MOTION_DOT)
-    {
-        $builder->addDoubleX(29, $MEAN_MOTION_DOT, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addMEAN_MOTION_DDOT(FlatBufferBuilder $builder, $MEAN_MOTION_DDOT)
-    {
-        $builder->addDoubleX(30, $MEAN_MOTION_DDOT, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addSEMI_MAJOR_AXIS(FlatBufferBuilder $builder, $SEMI_MAJOR_AXIS)
-    {
-        $builder->addDoubleX(31, $SEMI_MAJOR_AXIS, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPERIOD(FlatBufferBuilder $builder, $PERIOD)
-    {
-        $builder->addDoubleX(32, $PERIOD, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addAPOGEE(FlatBufferBuilder $builder, $APOGEE)
-    {
-        $builder->addDoubleX(33, $APOGEE, 0.0);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param double
-     * @return void
-     */
-    public static function addPERIGEE(FlatBufferBuilder $builder, $PERIGEE)
-    {
-        $builder->addDoubleX(34, $PERIGEE, 0.0);
+        $builder->startVector(8, $numElems, 8);
     }
 
     /**
@@ -850,7 +901,7 @@ class OOI extends Table
      */
     public static function addAFFECTED_OBJECTS(FlatBufferBuilder $builder, $AFFECTED_OBJECTS)
     {
-        $builder->addOffsetX(35, $AFFECTED_OBJECTS, 0);
+        $builder->addOffsetX(36, $AFFECTED_OBJECTS, 0);
     }
 
     /**
@@ -875,16 +926,6 @@ class OOI extends Table
     public static function startAFFECTED_OBJECTSVector(FlatBufferBuilder $builder, $numElems)
     {
         $builder->startVector(4, $numElems, 4);
-    }
-
-    /**
-     * @param FlatBufferBuilder $builder
-     * @param StringOffset
-     * @return void
-     */
-    public static function addON_ORBIT(FlatBufferBuilder $builder, $ON_ORBIT)
-    {
-        $builder->addOffsetX(36, $ON_ORBIT, 0);
     }
 
     /**

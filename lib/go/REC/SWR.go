@@ -6,7 +6,7 @@ import (
 	flatbuffers "github.com/google/flatbuffers/go"
 )
 
-/// Short-Wave Infrared
+/// Short-Wave Infrared Observation
 type SWR struct {
 	_tab flatbuffers.Table
 }
@@ -54,6 +54,7 @@ func (rcv *SWR) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Unique identifier
 func (rcv *SWR) ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -62,6 +63,8 @@ func (rcv *SWR) ID() []byte {
 	return nil
 }
 
+/// Unique identifier
+/// On-orbit reference
 func (rcv *SWR) ON_ORBIT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
@@ -70,7 +73,9 @@ func (rcv *SWR) ON_ORBIT() []byte {
 	return nil
 }
 
-func (rcv *SWR) TS() []byte {
+/// On-orbit reference
+/// International designator
+func (rcv *SWR) ORIG_OBJECT_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -78,31 +83,33 @@ func (rcv *SWR) TS() []byte {
 	return nil
 }
 
-func (rcv *SWR) SOLAR_PHASE_ANGLE() float64 {
+/// International designator
+/// Satellite catalog number
+func (rcv *SWR) SAT_NO() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
 	}
-	return 0.0
+	return 0
 }
 
-func (rcv *SWR) MutateSOLAR_PHASE_ANGLE(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(10, n)
+/// Satellite catalog number
+func (rcv *SWR) MutateSAT_NO(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(10, n)
 }
 
-func (rcv *SWR) LAT() float64 {
+/// Observation timestamp (ISO 8601)
+func (rcv *SWR) TS() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
-	return 0.0
+	return nil
 }
 
-func (rcv *SWR) MutateLAT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(12, n)
-}
-
-func (rcv *SWR) LON() float64 {
+/// Observation timestamp (ISO 8601)
+/// Solar phase angle (degrees)
+func (rcv *SWR) SOLAR_PHASE_ANGLE() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -110,116 +117,229 @@ func (rcv *SWR) LON() float64 {
 	return 0.0
 }
 
-func (rcv *SWR) MutateLON(n float64) bool {
+/// Solar phase angle (degrees)
+func (rcv *SWR) MutateSOLAR_PHASE_ANGLE(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
 }
 
-func (rcv *SWR) LOCATION_NAME() []byte {
+/// Sub-observer latitude (degrees)
+func (rcv *SWR) LAT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
-	return nil
+	return 0.0
 }
 
-func (rcv *SWR) BAD_WAVE() []byte {
+/// Sub-observer latitude (degrees)
+func (rcv *SWR) MutateLAT(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(16, n)
+}
+
+/// Sub-observer longitude (degrees)
+func (rcv *SWR) LON() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Sub-observer longitude (degrees)
+func (rcv *SWR) MutateLON(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(18, n)
+}
+
+/// Location name
+func (rcv *SWR) LOCATION_NAME() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
 }
 
-func (rcv *SWR) WAVELENGTHS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+/// Location name
+/// Bad wavelength flag or identifier
+func (rcv *SWR) BAD_WAVE() []byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
+}
+
+/// Bad wavelength flag or identifier
+/// Measured wavelengths (micrometers)
+func (rcv *SWR) WAVELENGTHS(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
 }
 
 func (rcv *SWR) WAVELENGTHSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
-func (rcv *SWR) ABS_FLUXES(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+/// Measured wavelengths (micrometers)
+func (rcv *SWR) MutateWAVELENGTHS(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
 	}
-	return nil
+	return false
+}
+
+/// Absolute flux values (W/m^2/um)
+func (rcv *SWR) ABS_FLUXES(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
 }
 
 func (rcv *SWR) ABS_FLUXESLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
-func (rcv *SWR) RATIO_WAVELENGTHS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+/// Absolute flux values (W/m^2/um)
+func (rcv *SWR) MutateABS_FLUXES(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
 	}
-	return nil
+	return false
+}
+
+/// Ratio reference wavelengths (micrometers)
+func (rcv *SWR) RATIO_WAVELENGTHS(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
 }
 
 func (rcv *SWR) RATIO_WAVELENGTHSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
-func (rcv *SWR) FLUX_RATIOS(j int) []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+/// Ratio reference wavelengths (micrometers)
+func (rcv *SWR) MutateRATIO_WAVELENGTHS(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
 	}
-	return nil
+	return false
+}
+
+/// Flux ratios (normalized)
+func (rcv *SWR) FLUX_RATIOS(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
 }
 
 func (rcv *SWR) FLUX_RATIOSLength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		return rcv._tab.VectorLen(o)
 	}
 	return 0
 }
 
-func (rcv *SWR) ORIG_OBJECT_ID() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
-	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
-	}
-	return nil
-}
-
-func (rcv *SWR) SAT_NO() int32 {
+/// Flux ratios (normalized)
+func (rcv *SWR) MutateFLUX_RATIOS(j int, n float64) bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// Effective temperature (Kelvin)
+func (rcv *SWR) TEMPERATURE() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Effective temperature (Kelvin)
+func (rcv *SWR) MutateTEMPERATURE(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(32, n)
+}
+
+/// Signal-to-noise ratio
+func (rcv *SWR) SIGNAL_NOISE_RATIO() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Signal-to-noise ratio
+func (rcv *SWR) MutateSIGNAL_NOISE_RATIO(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(34, n)
+}
+
+/// Integration time (seconds)
+func (rcv *SWR) INTEGRATION_TIME() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Integration time (seconds)
+func (rcv *SWR) MutateINTEGRATION_TIME(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(36, n)
+}
+
+/// Data quality (0-9, 9=best)
+func (rcv *SWR) QUALITY() byte {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return rcv._tab.GetByte(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *SWR) MutateSAT_NO(n int32) bool {
-	return rcv._tab.MutateInt32Slot(30, n)
+/// Data quality (0-9, 9=best)
+func (rcv *SWR) MutateQUALITY(n byte) bool {
+	return rcv._tab.MutateByteSlot(38, n)
 }
 
 func SWRStart(builder *flatbuffers.Builder) {
-	builder.StartObject(14)
+	builder.StartObject(18)
 }
 func SWRAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
@@ -227,53 +347,65 @@ func SWRAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 func SWRAddON_ORBIT(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(1, flatbuffers.UOffsetT(ON_ORBIT), 0)
 }
+func SWRAddORIG_OBJECT_ID(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ORIG_OBJECT_ID), 0)
+}
+func SWRAddSAT_NO(builder *flatbuffers.Builder, SAT_NO uint32) {
+	builder.PrependUint32Slot(3, SAT_NO, 0)
+}
 func SWRAddTS(builder *flatbuffers.Builder, TS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(TS), 0)
+	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(TS), 0)
 }
 func SWRAddSOLAR_PHASE_ANGLE(builder *flatbuffers.Builder, SOLAR_PHASE_ANGLE float64) {
-	builder.PrependFloat64Slot(3, SOLAR_PHASE_ANGLE, 0.0)
+	builder.PrependFloat64Slot(5, SOLAR_PHASE_ANGLE, 0.0)
 }
 func SWRAddLAT(builder *flatbuffers.Builder, LAT float64) {
-	builder.PrependFloat64Slot(4, LAT, 0.0)
+	builder.PrependFloat64Slot(6, LAT, 0.0)
 }
 func SWRAddLON(builder *flatbuffers.Builder, LON float64) {
-	builder.PrependFloat64Slot(5, LON, 0.0)
+	builder.PrependFloat64Slot(7, LON, 0.0)
 }
 func SWRAddLOCATION_NAME(builder *flatbuffers.Builder, LOCATION_NAME flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(6, flatbuffers.UOffsetT(LOCATION_NAME), 0)
+	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(LOCATION_NAME), 0)
 }
 func SWRAddBAD_WAVE(builder *flatbuffers.Builder, BAD_WAVE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(7, flatbuffers.UOffsetT(BAD_WAVE), 0)
+	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(BAD_WAVE), 0)
 }
 func SWRAddWAVELENGTHS(builder *flatbuffers.Builder, WAVELENGTHS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(8, flatbuffers.UOffsetT(WAVELENGTHS), 0)
+	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(WAVELENGTHS), 0)
 }
 func SWRStartWAVELENGTHSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
+	return builder.StartVector(8, numElems, 8)
 }
 func SWRAddABS_FLUXES(builder *flatbuffers.Builder, ABS_FLUXES flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(ABS_FLUXES), 0)
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(ABS_FLUXES), 0)
 }
 func SWRStartABS_FLUXESVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
+	return builder.StartVector(8, numElems, 8)
 }
 func SWRAddRATIO_WAVELENGTHS(builder *flatbuffers.Builder, RATIO_WAVELENGTHS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(RATIO_WAVELENGTHS), 0)
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(RATIO_WAVELENGTHS), 0)
 }
 func SWRStartRATIO_WAVELENGTHSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
+	return builder.StartVector(8, numElems, 8)
 }
 func SWRAddFLUX_RATIOS(builder *flatbuffers.Builder, FLUX_RATIOS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(FLUX_RATIOS), 0)
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(FLUX_RATIOS), 0)
 }
 func SWRStartFLUX_RATIOSVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
+	return builder.StartVector(8, numElems, 8)
 }
-func SWRAddORIG_OBJECT_ID(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(ORIG_OBJECT_ID), 0)
+func SWRAddTEMPERATURE(builder *flatbuffers.Builder, TEMPERATURE float64) {
+	builder.PrependFloat64Slot(14, TEMPERATURE, 0.0)
 }
-func SWRAddSAT_NO(builder *flatbuffers.Builder, SAT_NO int32) {
-	builder.PrependInt32Slot(13, SAT_NO, 0)
+func SWRAddSIGNAL_NOISE_RATIO(builder *flatbuffers.Builder, SIGNAL_NOISE_RATIO float64) {
+	builder.PrependFloat64Slot(15, SIGNAL_NOISE_RATIO, 0.0)
+}
+func SWRAddINTEGRATION_TIME(builder *flatbuffers.Builder, INTEGRATION_TIME float64) {
+	builder.PrependFloat64Slot(16, INTEGRATION_TIME, 0.0)
+}
+func SWRAddQUALITY(builder *flatbuffers.Builder, QUALITY byte) {
+	builder.PrependByteSlot(17, QUALITY, 0)
 }
 func SWREnd(builder *flatbuffers.Builder) flatbuffers.UOffsetT {
 	return builder.EndObject()

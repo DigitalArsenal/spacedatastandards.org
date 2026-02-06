@@ -19,6 +19,7 @@ public struct IRO : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public IRO __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Unique identifier
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,6 +27,7 @@ public struct IRO : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
+  /// Reference to source entity
   public string ID_ENTITY { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetID_ENTITYBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -33,6 +35,7 @@ public struct IRO : IFlatbufferObject
   public ArraySegment<byte>? GetID_ENTITYBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetID_ENTITYArray() { return __p.__vector_as_array<byte>(6); }
+  /// Sensor or observation name
   public string NAME { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetNAMEBytes() { return __p.__vector_as_span<byte>(8, 1); }
@@ -40,6 +43,7 @@ public struct IRO : IFlatbufferObject
   public ArraySegment<byte>? GetNAMEBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetNAMEArray() { return __p.__vector_as_array<byte>(8); }
+  /// Description of observation
   public string DESCRIPTION { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetDESCRIPTIONBytes() { return __p.__vector_as_span<byte>(10, 1); }
@@ -47,6 +51,7 @@ public struct IRO : IFlatbufferObject
   public ArraySegment<byte>? GetDESCRIPTIONBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
   public byte[] GetDESCRIPTIONArray() { return __p.__vector_as_array<byte>(10); }
+  /// Source entity designator
   public string ENTITY { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetENTITYBytes() { return __p.__vector_as_span<byte>(12, 1); }
@@ -54,28 +59,201 @@ public struct IRO : IFlatbufferObject
   public ArraySegment<byte>? GetENTITYBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
   public byte[] GetENTITYArray() { return __p.__vector_as_array<byte>(12); }
+  /// Observation epoch (ISO 8601)
+  public string EPOCH { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetEPOCHBytes() { return __p.__vector_as_span<byte>(14, 1); }
+#else
+  public ArraySegment<byte>? GetEPOCHBytes() { return __p.__vector_as_arraysegment(14); }
+#endif
+  public byte[] GetEPOCHArray() { return __p.__vector_as_array<byte>(14); }
+  /// Sensor identifier
+  public string SENSOR_ID { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetSENSOR_IDBytes() { return __p.__vector_as_span<byte>(16, 1); }
+#else
+  public ArraySegment<byte>? GetSENSOR_IDBytes() { return __p.__vector_as_arraysegment(16); }
+#endif
+  public byte[] GetSENSOR_IDArray() { return __p.__vector_as_array<byte>(16); }
+  /// Target satellite number (if identified)
+  public uint SAT_NO { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Target object designator
+  public string OBJECT_DESIGNATOR { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetOBJECT_DESIGNATORBytes() { return __p.__vector_as_span<byte>(20, 1); }
+#else
+  public ArraySegment<byte>? GetOBJECT_DESIGNATORBytes() { return __p.__vector_as_arraysegment(20); }
+#endif
+  public byte[] GetOBJECT_DESIGNATORArray() { return __p.__vector_as_array<byte>(20); }
+  /// IR spectral band
+  public irBand BAND { get { int o = __p.__offset(22); return o != 0 ? (irBand)__p.bb.GetSbyte(o + __p.bb_pos) : irBand.SWIR; } }
+  /// Detection type
+  public irDetectionType DETECTION_TYPE { get { int o = __p.__offset(24); return o != 0 ? (irDetectionType)__p.bb.GetSbyte(o + __p.bb_pos) : irDetectionType.POINT_SOURCE; } }
+  /// Right ascension in degrees
+  public double RA { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Declination in degrees
+  public double DEC { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Right ascension uncertainty in arcseconds
+  public double RA_UNC { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Declination uncertainty in arcseconds
+  public double DEC_UNC { get { int o = __p.__offset(32); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Azimuth angle in degrees
+  public double AZIMUTH { get { int o = __p.__offset(34); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Elevation angle in degrees
+  public double ELEVATION { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Range in km (if available)
+  public double RANGE { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Irradiance in W/m^2
+  public double IRRADIANCE { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Irradiance uncertainty in W/m^2
+  public double IRRADIANCE_UNC { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Apparent IR magnitude
+  public double IR_MAG { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Magnitude uncertainty
+  public double MAG_UNC { get { int o = __p.__offset(46); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Effective temperature in Kelvin
+  public double TEMPERATURE { get { int o = __p.__offset(48); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Integration time in seconds
+  public double INTEGRATION_TIME { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Background irradiance in W/m^2/sr
+  public double BACKGROUND { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Signal-to-noise ratio
+  public double SNR { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Spectral data wavelengths in micrometers
+  public double WAVELENGTHS(int j) { int o = __p.__offset(56); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int WAVELENGTHSLength { get { int o = __p.__offset(56); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetWAVELENGTHSBytes() { return __p.__vector_as_span<double>(56, 8); }
+#else
+  public ArraySegment<byte>? GetWAVELENGTHSBytes() { return __p.__vector_as_arraysegment(56); }
+#endif
+  public double[] GetWAVELENGTHSArray() { return __p.__vector_as_array<double>(56); }
+  /// Spectral data values in W/m^2/um
+  public double SPECTRAL_VALUES(int j) { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
+  public int SPECTRAL_VALUESLength { get { int o = __p.__offset(58); return o != 0 ? __p.__vector_len(o) : 0; } }
+#if ENABLE_SPAN_T
+  public Span<double> GetSPECTRAL_VALUESBytes() { return __p.__vector_as_span<double>(58, 8); }
+#else
+  public ArraySegment<byte>? GetSPECTRAL_VALUESBytes() { return __p.__vector_as_arraysegment(58); }
+#endif
+  public double[] GetSPECTRAL_VALUESArray() { return __p.__vector_as_array<double>(58); }
+  /// Data quality indicator (0-9, 9=best)
+  public byte QUALITY { get { int o = __p.__offset(60); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  /// Additional notes
+  public string NOTES { get { int o = __p.__offset(62); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetNOTESBytes() { return __p.__vector_as_span<byte>(62, 1); }
+#else
+  public ArraySegment<byte>? GetNOTESBytes() { return __p.__vector_as_arraysegment(62); }
+#endif
+  public byte[] GetNOTESArray() { return __p.__vector_as_array<byte>(62); }
 
   public static Offset<IRO> CreateIRO(FlatBufferBuilder builder,
       StringOffset IDOffset = default(StringOffset),
       StringOffset ID_ENTITYOffset = default(StringOffset),
       StringOffset NAMEOffset = default(StringOffset),
       StringOffset DESCRIPTIONOffset = default(StringOffset),
-      StringOffset ENTITYOffset = default(StringOffset)) {
-    builder.StartTable(5);
+      StringOffset ENTITYOffset = default(StringOffset),
+      StringOffset EPOCHOffset = default(StringOffset),
+      StringOffset SENSOR_IDOffset = default(StringOffset),
+      uint SAT_NO = 0,
+      StringOffset OBJECT_DESIGNATOROffset = default(StringOffset),
+      irBand BAND = irBand.SWIR,
+      irDetectionType DETECTION_TYPE = irDetectionType.POINT_SOURCE,
+      double RA = 0.0,
+      double DEC = 0.0,
+      double RA_UNC = 0.0,
+      double DEC_UNC = 0.0,
+      double AZIMUTH = 0.0,
+      double ELEVATION = 0.0,
+      double RANGE = 0.0,
+      double IRRADIANCE = 0.0,
+      double IRRADIANCE_UNC = 0.0,
+      double IR_MAG = 0.0,
+      double MAG_UNC = 0.0,
+      double TEMPERATURE = 0.0,
+      double INTEGRATION_TIME = 0.0,
+      double BACKGROUND = 0.0,
+      double SNR = 0.0,
+      VectorOffset WAVELENGTHSOffset = default(VectorOffset),
+      VectorOffset SPECTRAL_VALUESOffset = default(VectorOffset),
+      byte QUALITY = 0,
+      StringOffset NOTESOffset = default(StringOffset)) {
+    builder.StartTable(30);
+    IRO.AddSNR(builder, SNR);
+    IRO.AddBACKGROUND(builder, BACKGROUND);
+    IRO.AddINTEGRATION_TIME(builder, INTEGRATION_TIME);
+    IRO.AddTEMPERATURE(builder, TEMPERATURE);
+    IRO.AddMAG_UNC(builder, MAG_UNC);
+    IRO.AddIR_MAG(builder, IR_MAG);
+    IRO.AddIRRADIANCE_UNC(builder, IRRADIANCE_UNC);
+    IRO.AddIRRADIANCE(builder, IRRADIANCE);
+    IRO.AddRANGE(builder, RANGE);
+    IRO.AddELEVATION(builder, ELEVATION);
+    IRO.AddAZIMUTH(builder, AZIMUTH);
+    IRO.AddDEC_UNC(builder, DEC_UNC);
+    IRO.AddRA_UNC(builder, RA_UNC);
+    IRO.AddDEC(builder, DEC);
+    IRO.AddRA(builder, RA);
+    IRO.AddNOTES(builder, NOTESOffset);
+    IRO.AddSPECTRAL_VALUES(builder, SPECTRAL_VALUESOffset);
+    IRO.AddWAVELENGTHS(builder, WAVELENGTHSOffset);
+    IRO.AddOBJECT_DESIGNATOR(builder, OBJECT_DESIGNATOROffset);
+    IRO.AddSAT_NO(builder, SAT_NO);
+    IRO.AddSENSOR_ID(builder, SENSOR_IDOffset);
+    IRO.AddEPOCH(builder, EPOCHOffset);
     IRO.AddENTITY(builder, ENTITYOffset);
     IRO.AddDESCRIPTION(builder, DESCRIPTIONOffset);
     IRO.AddNAME(builder, NAMEOffset);
     IRO.AddID_ENTITY(builder, ID_ENTITYOffset);
     IRO.AddID(builder, IDOffset);
+    IRO.AddQUALITY(builder, QUALITY);
+    IRO.AddDETECTION_TYPE(builder, DETECTION_TYPE);
+    IRO.AddBAND(builder, BAND);
     return IRO.EndIRO(builder);
   }
 
-  public static void StartIRO(FlatBufferBuilder builder) { builder.StartTable(5); }
+  public static void StartIRO(FlatBufferBuilder builder) { builder.StartTable(30); }
   public static void AddID(FlatBufferBuilder builder, StringOffset IDOffset) { builder.AddOffset(0, IDOffset.Value, 0); }
   public static void AddID_ENTITY(FlatBufferBuilder builder, StringOffset ID_ENTITYOffset) { builder.AddOffset(1, ID_ENTITYOffset.Value, 0); }
   public static void AddNAME(FlatBufferBuilder builder, StringOffset NAMEOffset) { builder.AddOffset(2, NAMEOffset.Value, 0); }
   public static void AddDESCRIPTION(FlatBufferBuilder builder, StringOffset DESCRIPTIONOffset) { builder.AddOffset(3, DESCRIPTIONOffset.Value, 0); }
   public static void AddENTITY(FlatBufferBuilder builder, StringOffset ENTITYOffset) { builder.AddOffset(4, ENTITYOffset.Value, 0); }
+  public static void AddEPOCH(FlatBufferBuilder builder, StringOffset EPOCHOffset) { builder.AddOffset(5, EPOCHOffset.Value, 0); }
+  public static void AddSENSOR_ID(FlatBufferBuilder builder, StringOffset SENSOR_IDOffset) { builder.AddOffset(6, SENSOR_IDOffset.Value, 0); }
+  public static void AddSAT_NO(FlatBufferBuilder builder, uint SAT_NO) { builder.AddUint(7, SAT_NO, 0); }
+  public static void AddOBJECT_DESIGNATOR(FlatBufferBuilder builder, StringOffset OBJECT_DESIGNATOROffset) { builder.AddOffset(8, OBJECT_DESIGNATOROffset.Value, 0); }
+  public static void AddBAND(FlatBufferBuilder builder, irBand BAND) { builder.AddSbyte(9, (sbyte)BAND, 0); }
+  public static void AddDETECTION_TYPE(FlatBufferBuilder builder, irDetectionType DETECTION_TYPE) { builder.AddSbyte(10, (sbyte)DETECTION_TYPE, 0); }
+  public static void AddRA(FlatBufferBuilder builder, double RA) { builder.AddDouble(11, RA, 0.0); }
+  public static void AddDEC(FlatBufferBuilder builder, double DEC) { builder.AddDouble(12, DEC, 0.0); }
+  public static void AddRA_UNC(FlatBufferBuilder builder, double RA_UNC) { builder.AddDouble(13, RA_UNC, 0.0); }
+  public static void AddDEC_UNC(FlatBufferBuilder builder, double DEC_UNC) { builder.AddDouble(14, DEC_UNC, 0.0); }
+  public static void AddAZIMUTH(FlatBufferBuilder builder, double AZIMUTH) { builder.AddDouble(15, AZIMUTH, 0.0); }
+  public static void AddELEVATION(FlatBufferBuilder builder, double ELEVATION) { builder.AddDouble(16, ELEVATION, 0.0); }
+  public static void AddRANGE(FlatBufferBuilder builder, double RANGE) { builder.AddDouble(17, RANGE, 0.0); }
+  public static void AddIRRADIANCE(FlatBufferBuilder builder, double IRRADIANCE) { builder.AddDouble(18, IRRADIANCE, 0.0); }
+  public static void AddIRRADIANCE_UNC(FlatBufferBuilder builder, double IRRADIANCE_UNC) { builder.AddDouble(19, IRRADIANCE_UNC, 0.0); }
+  public static void AddIR_MAG(FlatBufferBuilder builder, double IR_MAG) { builder.AddDouble(20, IR_MAG, 0.0); }
+  public static void AddMAG_UNC(FlatBufferBuilder builder, double MAG_UNC) { builder.AddDouble(21, MAG_UNC, 0.0); }
+  public static void AddTEMPERATURE(FlatBufferBuilder builder, double TEMPERATURE) { builder.AddDouble(22, TEMPERATURE, 0.0); }
+  public static void AddINTEGRATION_TIME(FlatBufferBuilder builder, double INTEGRATION_TIME) { builder.AddDouble(23, INTEGRATION_TIME, 0.0); }
+  public static void AddBACKGROUND(FlatBufferBuilder builder, double BACKGROUND) { builder.AddDouble(24, BACKGROUND, 0.0); }
+  public static void AddSNR(FlatBufferBuilder builder, double SNR) { builder.AddDouble(25, SNR, 0.0); }
+  public static void AddWAVELENGTHS(FlatBufferBuilder builder, VectorOffset WAVELENGTHSOffset) { builder.AddOffset(26, WAVELENGTHSOffset.Value, 0); }
+  public static VectorOffset CreateWAVELENGTHSVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateWAVELENGTHSVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateWAVELENGTHSVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateWAVELENGTHSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartWAVELENGTHSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddSPECTRAL_VALUES(FlatBufferBuilder builder, VectorOffset SPECTRAL_VALUESOffset) { builder.AddOffset(27, SPECTRAL_VALUESOffset.Value, 0); }
+  public static VectorOffset CreateSPECTRAL_VALUESVector(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); for (int i = data.Length - 1; i >= 0; i--) builder.AddDouble(data[i]); return builder.EndVector(); }
+  public static VectorOffset CreateSPECTRAL_VALUESVectorBlock(FlatBufferBuilder builder, double[] data) { builder.StartVector(8, data.Length, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSPECTRAL_VALUESVectorBlock(FlatBufferBuilder builder, ArraySegment<double> data) { builder.StartVector(8, data.Count, 8); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSPECTRAL_VALUESVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<double>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSPECTRAL_VALUESVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(8, numElems, 8); }
+  public static void AddQUALITY(FlatBufferBuilder builder, byte QUALITY) { builder.AddByte(28, QUALITY, 0); }
+  public static void AddNOTES(FlatBufferBuilder builder, StringOffset NOTESOffset) { builder.AddOffset(29, NOTESOffset.Value, 0); }
   public static Offset<IRO> EndIRO(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<IRO>(o);
@@ -93,6 +271,33 @@ public struct IRO : IFlatbufferObject
     _o.NAME = this.NAME;
     _o.DESCRIPTION = this.DESCRIPTION;
     _o.ENTITY = this.ENTITY;
+    _o.EPOCH = this.EPOCH;
+    _o.SENSOR_ID = this.SENSOR_ID;
+    _o.SAT_NO = this.SAT_NO;
+    _o.OBJECT_DESIGNATOR = this.OBJECT_DESIGNATOR;
+    _o.BAND = this.BAND;
+    _o.DETECTION_TYPE = this.DETECTION_TYPE;
+    _o.RA = this.RA;
+    _o.DEC = this.DEC;
+    _o.RA_UNC = this.RA_UNC;
+    _o.DEC_UNC = this.DEC_UNC;
+    _o.AZIMUTH = this.AZIMUTH;
+    _o.ELEVATION = this.ELEVATION;
+    _o.RANGE = this.RANGE;
+    _o.IRRADIANCE = this.IRRADIANCE;
+    _o.IRRADIANCE_UNC = this.IRRADIANCE_UNC;
+    _o.IR_MAG = this.IR_MAG;
+    _o.MAG_UNC = this.MAG_UNC;
+    _o.TEMPERATURE = this.TEMPERATURE;
+    _o.INTEGRATION_TIME = this.INTEGRATION_TIME;
+    _o.BACKGROUND = this.BACKGROUND;
+    _o.SNR = this.SNR;
+    _o.WAVELENGTHS = new List<double>();
+    for (var _j = 0; _j < this.WAVELENGTHSLength; ++_j) {_o.WAVELENGTHS.Add(this.WAVELENGTHS(_j));}
+    _o.SPECTRAL_VALUES = new List<double>();
+    for (var _j = 0; _j < this.SPECTRAL_VALUESLength; ++_j) {_o.SPECTRAL_VALUES.Add(this.SPECTRAL_VALUES(_j));}
+    _o.QUALITY = this.QUALITY;
+    _o.NOTES = this.NOTES;
   }
   public static Offset<IRO> Pack(FlatBufferBuilder builder, IROT _o) {
     if (_o == null) return default(Offset<IRO>);
@@ -101,13 +306,52 @@ public struct IRO : IFlatbufferObject
     var _NAME = _o.NAME == null ? default(StringOffset) : builder.CreateString(_o.NAME);
     var _DESCRIPTION = _o.DESCRIPTION == null ? default(StringOffset) : builder.CreateString(_o.DESCRIPTION);
     var _ENTITY = _o.ENTITY == null ? default(StringOffset) : builder.CreateString(_o.ENTITY);
+    var _EPOCH = _o.EPOCH == null ? default(StringOffset) : builder.CreateString(_o.EPOCH);
+    var _SENSOR_ID = _o.SENSOR_ID == null ? default(StringOffset) : builder.CreateString(_o.SENSOR_ID);
+    var _OBJECT_DESIGNATOR = _o.OBJECT_DESIGNATOR == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_DESIGNATOR);
+    var _WAVELENGTHS = default(VectorOffset);
+    if (_o.WAVELENGTHS != null) {
+      var __WAVELENGTHS = _o.WAVELENGTHS.ToArray();
+      _WAVELENGTHS = CreateWAVELENGTHSVector(builder, __WAVELENGTHS);
+    }
+    var _SPECTRAL_VALUES = default(VectorOffset);
+    if (_o.SPECTRAL_VALUES != null) {
+      var __SPECTRAL_VALUES = _o.SPECTRAL_VALUES.ToArray();
+      _SPECTRAL_VALUES = CreateSPECTRAL_VALUESVector(builder, __SPECTRAL_VALUES);
+    }
+    var _NOTES = _o.NOTES == null ? default(StringOffset) : builder.CreateString(_o.NOTES);
     return CreateIRO(
       builder,
       _ID,
       _ID_ENTITY,
       _NAME,
       _DESCRIPTION,
-      _ENTITY);
+      _ENTITY,
+      _EPOCH,
+      _SENSOR_ID,
+      _o.SAT_NO,
+      _OBJECT_DESIGNATOR,
+      _o.BAND,
+      _o.DETECTION_TYPE,
+      _o.RA,
+      _o.DEC,
+      _o.RA_UNC,
+      _o.DEC_UNC,
+      _o.AZIMUTH,
+      _o.ELEVATION,
+      _o.RANGE,
+      _o.IRRADIANCE,
+      _o.IRRADIANCE_UNC,
+      _o.IR_MAG,
+      _o.MAG_UNC,
+      _o.TEMPERATURE,
+      _o.INTEGRATION_TIME,
+      _o.BACKGROUND,
+      _o.SNR,
+      _WAVELENGTHS,
+      _SPECTRAL_VALUES,
+      _o.QUALITY,
+      _NOTES);
   }
 }
 
@@ -118,6 +362,31 @@ public class IROT
   public string NAME { get; set; }
   public string DESCRIPTION { get; set; }
   public string ENTITY { get; set; }
+  public string EPOCH { get; set; }
+  public string SENSOR_ID { get; set; }
+  public uint SAT_NO { get; set; }
+  public string OBJECT_DESIGNATOR { get; set; }
+  public irBand BAND { get; set; }
+  public irDetectionType DETECTION_TYPE { get; set; }
+  public double RA { get; set; }
+  public double DEC { get; set; }
+  public double RA_UNC { get; set; }
+  public double DEC_UNC { get; set; }
+  public double AZIMUTH { get; set; }
+  public double ELEVATION { get; set; }
+  public double RANGE { get; set; }
+  public double IRRADIANCE { get; set; }
+  public double IRRADIANCE_UNC { get; set; }
+  public double IR_MAG { get; set; }
+  public double MAG_UNC { get; set; }
+  public double TEMPERATURE { get; set; }
+  public double INTEGRATION_TIME { get; set; }
+  public double BACKGROUND { get; set; }
+  public double SNR { get; set; }
+  public List<double> WAVELENGTHS { get; set; }
+  public List<double> SPECTRAL_VALUES { get; set; }
+  public byte QUALITY { get; set; }
+  public string NOTES { get; set; }
 
   public IROT() {
     this.ID = null;
@@ -125,6 +394,31 @@ public class IROT
     this.NAME = null;
     this.DESCRIPTION = null;
     this.ENTITY = null;
+    this.EPOCH = null;
+    this.SENSOR_ID = null;
+    this.SAT_NO = 0;
+    this.OBJECT_DESIGNATOR = null;
+    this.BAND = irBand.SWIR;
+    this.DETECTION_TYPE = irDetectionType.POINT_SOURCE;
+    this.RA = 0.0;
+    this.DEC = 0.0;
+    this.RA_UNC = 0.0;
+    this.DEC_UNC = 0.0;
+    this.AZIMUTH = 0.0;
+    this.ELEVATION = 0.0;
+    this.RANGE = 0.0;
+    this.IRRADIANCE = 0.0;
+    this.IRRADIANCE_UNC = 0.0;
+    this.IR_MAG = 0.0;
+    this.MAG_UNC = 0.0;
+    this.TEMPERATURE = 0.0;
+    this.INTEGRATION_TIME = 0.0;
+    this.BACKGROUND = 0.0;
+    this.SNR = 0.0;
+    this.WAVELENGTHS = null;
+    this.SPECTRAL_VALUES = null;
+    this.QUALITY = 0;
+    this.NOTES = null;
   }
   public static IROT DeserializeFromBinary(byte[] fbBuffer) {
     return IRO.GetRootAsIRO(new ByteBuffer(fbBuffer)).UnPack();
@@ -147,6 +441,31 @@ static public class IROVerify
       && verifier.VerifyString(tablePos, 8 /*NAME*/, false)
       && verifier.VerifyString(tablePos, 10 /*DESCRIPTION*/, false)
       && verifier.VerifyString(tablePos, 12 /*ENTITY*/, false)
+      && verifier.VerifyString(tablePos, 14 /*EPOCH*/, false)
+      && verifier.VerifyString(tablePos, 16 /*SENSOR_ID*/, false)
+      && verifier.VerifyField(tablePos, 18 /*SAT_NO*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 20 /*OBJECT_DESIGNATOR*/, false)
+      && verifier.VerifyField(tablePos, 22 /*BAND*/, 1 /*irBand*/, 1, false)
+      && verifier.VerifyField(tablePos, 24 /*DETECTION_TYPE*/, 1 /*irDetectionType*/, 1, false)
+      && verifier.VerifyField(tablePos, 26 /*RA*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 28 /*DEC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 30 /*RA_UNC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 32 /*DEC_UNC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 34 /*AZIMUTH*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 36 /*ELEVATION*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 38 /*RANGE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 40 /*IRRADIANCE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 42 /*IRRADIANCE_UNC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 44 /*IR_MAG*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 46 /*MAG_UNC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 48 /*TEMPERATURE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 50 /*INTEGRATION_TIME*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 52 /*BACKGROUND*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 54 /*SNR*/, 8 /*double*/, 8, false)
+      && verifier.VerifyVectorOfData(tablePos, 56 /*WAVELENGTHS*/, 8 /*double*/, false)
+      && verifier.VerifyVectorOfData(tablePos, 58 /*SPECTRAL_VALUES*/, 8 /*double*/, false)
+      && verifier.VerifyField(tablePos, 60 /*QUALITY*/, 1 /*byte*/, 1, false)
+      && verifier.VerifyString(tablePos, 62 /*NOTES*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

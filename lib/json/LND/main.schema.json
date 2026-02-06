@@ -1,63 +1,105 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "launchDetectionType" : {
+      "type" : "string",
+      "enum": ["IR_DETECT", "RADAR_DETECT", "OPTICAL_DETECT", "ELINT_DETECT", "COMBINED", "UNKNOWN"]
+    },
     "LND" : {
       "type" : "object",
       "description" : "Launch Detection",
       "properties" : {
         "ID" : {
-                "type" : "string"
-              },
-        "LAUNCH_TIME" : {
-                "type" : "string"
-              },
-        "MESSAGE_TYPE" : {
-                "type" : "string"
-              },
-        "LAUNCH_LATITUDE" : {
-                "type" : "number"
-              },
-        "LAUNCH_LONGITUDE" : {
-                "type" : "number"
-              },
-        "LAUNCH_AZIMUTH" : {
-                "type" : "number"
-              },
-        "RAAN" : {
-                "type" : "number"
-              },
-        "INCLINATION" : {
-                "type" : "number"
-              },
-        "OBSERVATION_TIME" : {
-                "type" : "string"
-              },
-        "OBSERVATION_LATITUDE" : {
-                "type" : "number"
-              },
-        "OBSERVATION_LONGITUDE" : {
-                "type" : "number"
-              },
-        "OBSERVATION_ALTITUDE" : {
-                "type" : "number"
-              },
-        "STEREO_FLAG" : {
-                "type" : "boolean"
-              },
-        "HIGH_ZENITH_AZIMUTH" : {
-                "type" : "boolean"
-              },
-        "SEQUENCE_NUMBER" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "string",
+                "description" : "Unique identifier"
               },
         "EVENT_ID" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Detection event identifier"
+              },
+        "DETECTION_TYPE" : {
+                "$ref" : "#/definitions/launchDetectionType",
+                "description" : "Detection type"
+              },
+        "MESSAGE_TYPE" : {
+                "type" : "string",
+                "description" : "Detection message type code"
+              },
+        "LAUNCH_TIME" : {
+                "type" : "string",
+                "description" : "Time of launch detection (ISO 8601)"
+              },
+        "LAUNCH_LATITUDE" : {
+                "type" : "number",
+                "description" : "Launch site latitude (degrees)"
+              },
+        "LAUNCH_LONGITUDE" : {
+                "type" : "number",
+                "description" : "Launch site longitude (degrees)"
+              },
+        "LAUNCH_AZIMUTH" : {
+                "type" : "number",
+                "description" : "Launch azimuth (degrees from north)"
+              },
+        "RAAN" : {
+                "type" : "number",
+                "description" : "Estimated RAAN (degrees)"
+              },
+        "INCLINATION" : {
+                "type" : "number",
+                "description" : "Estimated inclination (degrees)"
+              },
+        "OBSERVATION_TIME" : {
+                "type" : "string",
+                "description" : "Time of trajectory observation (ISO 8601)"
+              },
+        "OBSERVATION_LATITUDE" : {
+                "type" : "number",
+                "description" : "Observation point latitude (degrees)"
+              },
+        "OBSERVATION_LONGITUDE" : {
+                "type" : "number",
+                "description" : "Observation point longitude (degrees)"
+              },
+        "OBSERVATION_ALTITUDE" : {
+                "type" : "number",
+                "description" : "Observation point altitude (km)"
+              },
+        "STEREO_FLAG" : {
+                "type" : "boolean",
+                "description" : "True if stereo observation (multiple sensors)"
+              },
+        "HIGH_ZENITH_AZIMUTH" : {
+                "type" : "boolean",
+                "description" : "True if high zenith angle observation"
+              },
+        "SEQUENCE_NUMBER" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Sequence number in detection chain"
+              },
+        "LAUNCH_SITE_ID" : {
+                "type" : "string",
+                "description" : "Launch site identifier"
+              },
+        "LAUNCH_VEHICLE" : {
+                "type" : "string",
+                "description" : "Launch vehicle type (if identified)"
+              },
+        "TRAJECTORY_TYPE" : {
+                "type" : "string",
+                "description" : "Estimated trajectory type"
+              },
+        "CONFIDENCE" : {
+                "type" : "number",
+                "description" : "Detection confidence (0-1)"
               },
         "DESCRIPTOR" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Event descriptor"
               },
         "TAGS" : {
-                "type" : "array", "items" : {"type" : "string"}
+                "type" : "array", "items" : {"type" : "string"},
+                "description" : "Associated tags"
               }
       },
       "additionalProperties" : false

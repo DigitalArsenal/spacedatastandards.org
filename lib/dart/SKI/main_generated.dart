@@ -5,6 +5,58 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class ImageType {
+  final int value;
+  const ImageType._(this.value);
+
+  factory ImageType.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum ImageType');
+    }
+    return result;
+  }
+
+  static ImageType? _createOrNull(int? value) => 
+      value == null ? null : ImageType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 5;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const ImageType VISIBLE = ImageType._(0);
+  static const ImageType INFRARED = ImageType._(1);
+  static const ImageType MULTISPECTRAL = ImageType._(2);
+  static const ImageType HYPERSPECTRAL = ImageType._(3);
+  static const ImageType UV = ImageType._(4);
+  static const ImageType BROADBAND = ImageType._(5);
+  static const Map<int, ImageType> values = {
+    0: VISIBLE,
+    1: INFRARED,
+    2: MULTISPECTRAL,
+    3: HYPERSPECTRAL,
+    4: UV,
+    5: BROADBAND};
+
+  static const fb.Reader<ImageType> reader = _ImageTypeReader();
+
+  @override
+  String toString() {
+    return 'ImageType{value: $value}';
+  }
+}
+
+class _ImageTypeReader extends fb.Reader<ImageType> {
+  const _ImageTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  ImageType read(fb.BufferContext bc, int offset) =>
+      ImageType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
 ///  Sky Imagery
 class SKI {
   SKI._(this._bc, this._bcOffset);
@@ -18,51 +70,92 @@ class SKI {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  On-orbit reference
   String? get ON_ORBIT => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  International designator
   String? get ORIG_OBJECT_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
-  String? get ID_SENSOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
-  int get SAT_NO => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 12, 0);
+  ///  Satellite catalog number
+  int get SAT_NO => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 10, 0);
+  ///  Sensor identifier
+  String? get ID_SENSOR => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
+  ///  Original sensor identifier
   String? get ORIG_SENSOR_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Sensor geodetic latitude (degrees)
   double get SENLAT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Sensor geodetic longitude (degrees)
   double get SENLON => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  ///  Sensor altitude (km)
   double get SENALT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  Sensor ECEF X position (km)
   double get SENX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Sensor ECEF Y position (km)
   double get SENY => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  ///  Sensor ECEF Z position (km)
   double get SENZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 26, 0.0);
-  List<String>? get SEN_QUAT => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 28);
-  List<String>? get SEN_QUAT_DOT => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 30);
-  String? get IMAGE_TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
+  ///  Sensor quaternion (scalar-last: q1, q2, q3, q0)
+  List<double>? get SEN_QUAT => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Sensor quaternion rate
+  List<double>? get SEN_QUAT_DOT => const fb.ListReader<double>(fb.Float64Reader()).vTableGetNullable(_bc, _bcOffset, 30);
+  ///  Image type
+  ImageType get IMAGE_TYPE => ImageType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 32, 0));
+  ///  Exposure start time (ISO 8601)
   String? get EXP_START_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 34);
+  ///  Exposure end time (ISO 8601)
   String? get EXP_END_TIME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 36);
+  ///  Image source information
   String? get IMAGE_SOURCE_INFO => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 38);
+  ///  Top-left corner start azimuth (degrees)
   double get TOP_LEFT_START_AZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 40, 0.0);
+  ///  Top-left corner start elevation (degrees)
   double get TOP_LEFT_START_EL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 42, 0.0);
+  ///  Top-left corner stop azimuth (degrees)
   double get TOP_LEFT_STOP_AZ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 44, 0.0);
+  ///  Top-left corner stop elevation (degrees)
   double get TOP_LEFT_STOP_EL => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 46, 0.0);
+  ///  Image set identifier
   String? get IMAGE_SET_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 48);
-  int get IMAGE_SET_LENGTH => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 50, 0);
-  int get SEQUENCE_ID => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 52, 0);
+  ///  Number of images in set
+  int get IMAGE_SET_LENGTH => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 50, 0);
+  ///  Sequence number within set
+  int get SEQUENCE_ID => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 52, 0);
+  ///  Frame field-of-view width (degrees)
   double get FRAME_FOVWIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 54, 0.0);
+  ///  Frame field-of-view height (degrees)
   double get FRAME_FOVHEIGHT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 56, 0.0);
+  ///  Pixel field-of-view width (arcseconds)
   double get PIXEL_FOVWIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 58, 0.0);
+  ///  Pixel field-of-view height (arcseconds)
   double get PIXEL_FOVHEIGHT => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 60, 0.0);
-  int get FRAME_WIDTH_PIXELS => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 62, 0);
-  int get FRAME_HEIGHT_PIXELS => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 64, 0);
-  int get PIXEL_BIT_DEPTH => const fb.Int32Reader().vTableGet(_bc, _bcOffset, 66, 0);
+  ///  Frame width (pixels)
+  int get FRAME_WIDTH_PIXELS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 62, 0);
+  ///  Frame height (pixels)
+  int get FRAME_HEIGHT_PIXELS => const fb.Uint16Reader().vTableGet(_bc, _bcOffset, 64, 0);
+  ///  Pixel bit depth
+  int get PIXEL_BIT_DEPTH => const fb.Uint8Reader().vTableGet(_bc, _bcOffset, 66, 0);
+  ///  Annotation key reference
   String? get ANNOTATION_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 68);
+  ///  Calibration key reference
   String? get CALIBRATION_KEY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 70);
+  ///  Image filename
   String? get FILENAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 72);
+  ///  File size (bytes)
   int get FILESIZE => const fb.Int64Reader().vTableGet(_bc, _bcOffset, 74, 0);
+  ///  File checksum value
   String? get CHECKSUM_VALUE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 76);
+  ///  Transaction identifier
   String? get TRANSACTION_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 78);
+  ///  Associated tags
   List<String>? get TAGS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 80);
+  ///  Description
   String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 82);
+  ///  Associated EO observation references
   List<String>? get EO_OBSERVATIONS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 84);
 
   @override
   String toString() {
-    return 'SKI{ID: ${ID}, ON_ORBIT: ${ON_ORBIT}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, ID_SENSOR: ${ID_SENSOR}, SAT_NO: ${SAT_NO}, ORIG_SENSOR_ID: ${ORIG_SENSOR_ID}, SENLAT: ${SENLAT}, SENLON: ${SENLON}, SENALT: ${SENALT}, SENX: ${SENX}, SENY: ${SENY}, SENZ: ${SENZ}, SEN_QUAT: ${SEN_QUAT}, SEN_QUAT_DOT: ${SEN_QUAT_DOT}, IMAGE_TYPE: ${IMAGE_TYPE}, EXP_START_TIME: ${EXP_START_TIME}, EXP_END_TIME: ${EXP_END_TIME}, IMAGE_SOURCE_INFO: ${IMAGE_SOURCE_INFO}, TOP_LEFT_START_AZ: ${TOP_LEFT_START_AZ}, TOP_LEFT_START_EL: ${TOP_LEFT_START_EL}, TOP_LEFT_STOP_AZ: ${TOP_LEFT_STOP_AZ}, TOP_LEFT_STOP_EL: ${TOP_LEFT_STOP_EL}, IMAGE_SET_ID: ${IMAGE_SET_ID}, IMAGE_SET_LENGTH: ${IMAGE_SET_LENGTH}, SEQUENCE_ID: ${SEQUENCE_ID}, FRAME_FOVWIDTH: ${FRAME_FOVWIDTH}, FRAME_FOVHEIGHT: ${FRAME_FOVHEIGHT}, PIXEL_FOVWIDTH: ${PIXEL_FOVWIDTH}, PIXEL_FOVHEIGHT: ${PIXEL_FOVHEIGHT}, FRAME_WIDTH_PIXELS: ${FRAME_WIDTH_PIXELS}, FRAME_HEIGHT_PIXELS: ${FRAME_HEIGHT_PIXELS}, PIXEL_BIT_DEPTH: ${PIXEL_BIT_DEPTH}, ANNOTATION_KEY: ${ANNOTATION_KEY}, CALIBRATION_KEY: ${CALIBRATION_KEY}, FILENAME: ${FILENAME}, FILESIZE: ${FILESIZE}, CHECKSUM_VALUE: ${CHECKSUM_VALUE}, TRANSACTION_ID: ${TRANSACTION_ID}, TAGS: ${TAGS}, DESCRIPTION: ${DESCRIPTION}, EO_OBSERVATIONS: ${EO_OBSERVATIONS}}';
+    return 'SKI{ID: ${ID}, ON_ORBIT: ${ON_ORBIT}, ORIG_OBJECT_ID: ${ORIG_OBJECT_ID}, SAT_NO: ${SAT_NO}, ID_SENSOR: ${ID_SENSOR}, ORIG_SENSOR_ID: ${ORIG_SENSOR_ID}, SENLAT: ${SENLAT}, SENLON: ${SENLON}, SENALT: ${SENALT}, SENX: ${SENX}, SENY: ${SENY}, SENZ: ${SENZ}, SEN_QUAT: ${SEN_QUAT}, SEN_QUAT_DOT: ${SEN_QUAT_DOT}, IMAGE_TYPE: ${IMAGE_TYPE}, EXP_START_TIME: ${EXP_START_TIME}, EXP_END_TIME: ${EXP_END_TIME}, IMAGE_SOURCE_INFO: ${IMAGE_SOURCE_INFO}, TOP_LEFT_START_AZ: ${TOP_LEFT_START_AZ}, TOP_LEFT_START_EL: ${TOP_LEFT_START_EL}, TOP_LEFT_STOP_AZ: ${TOP_LEFT_STOP_AZ}, TOP_LEFT_STOP_EL: ${TOP_LEFT_STOP_EL}, IMAGE_SET_ID: ${IMAGE_SET_ID}, IMAGE_SET_LENGTH: ${IMAGE_SET_LENGTH}, SEQUENCE_ID: ${SEQUENCE_ID}, FRAME_FOVWIDTH: ${FRAME_FOVWIDTH}, FRAME_FOVHEIGHT: ${FRAME_FOVHEIGHT}, PIXEL_FOVWIDTH: ${PIXEL_FOVWIDTH}, PIXEL_FOVHEIGHT: ${PIXEL_FOVHEIGHT}, FRAME_WIDTH_PIXELS: ${FRAME_WIDTH_PIXELS}, FRAME_HEIGHT_PIXELS: ${FRAME_HEIGHT_PIXELS}, PIXEL_BIT_DEPTH: ${PIXEL_BIT_DEPTH}, ANNOTATION_KEY: ${ANNOTATION_KEY}, CALIBRATION_KEY: ${CALIBRATION_KEY}, FILENAME: ${FILENAME}, FILESIZE: ${FILESIZE}, CHECKSUM_VALUE: ${CHECKSUM_VALUE}, TRANSACTION_ID: ${TRANSACTION_ID}, TAGS: ${TAGS}, DESCRIPTION: ${DESCRIPTION}, EO_OBSERVATIONS: ${EO_OBSERVATIONS}}';
   }
 }
 
@@ -95,12 +188,12 @@ class SKIBuilder {
     fbBuilder.addOffset(2, offset);
     return fbBuilder.offset;
   }
-  int addIdSensorOffset(int? offset) {
-    fbBuilder.addOffset(3, offset);
+  int addSatNo(int? SAT_NO) {
+    fbBuilder.addUint32(3, SAT_NO);
     return fbBuilder.offset;
   }
-  int addSatNo(int? SAT_NO) {
-    fbBuilder.addInt32(4, SAT_NO);
+  int addIdSensorOffset(int? offset) {
+    fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
   int addOrigSensorIdOffset(int? offset) {
@@ -139,8 +232,8 @@ class SKIBuilder {
     fbBuilder.addOffset(13, offset);
     return fbBuilder.offset;
   }
-  int addImageTypeOffset(int? offset) {
-    fbBuilder.addOffset(14, offset);
+  int addImageType(ImageType? IMAGE_TYPE) {
+    fbBuilder.addInt8(14, IMAGE_TYPE?.value);
     return fbBuilder.offset;
   }
   int addExpStartTimeOffset(int? offset) {
@@ -176,11 +269,11 @@ class SKIBuilder {
     return fbBuilder.offset;
   }
   int addImageSetLength(int? IMAGE_SET_LENGTH) {
-    fbBuilder.addInt32(23, IMAGE_SET_LENGTH);
+    fbBuilder.addUint16(23, IMAGE_SET_LENGTH);
     return fbBuilder.offset;
   }
   int addSequenceId(int? SEQUENCE_ID) {
-    fbBuilder.addInt32(24, SEQUENCE_ID);
+    fbBuilder.addUint16(24, SEQUENCE_ID);
     return fbBuilder.offset;
   }
   int addFrameFovwidth(double? FRAME_FOVWIDTH) {
@@ -200,15 +293,15 @@ class SKIBuilder {
     return fbBuilder.offset;
   }
   int addFrameWidthPixels(int? FRAME_WIDTH_PIXELS) {
-    fbBuilder.addInt32(29, FRAME_WIDTH_PIXELS);
+    fbBuilder.addUint16(29, FRAME_WIDTH_PIXELS);
     return fbBuilder.offset;
   }
   int addFrameHeightPixels(int? FRAME_HEIGHT_PIXELS) {
-    fbBuilder.addInt32(30, FRAME_HEIGHT_PIXELS);
+    fbBuilder.addUint16(30, FRAME_HEIGHT_PIXELS);
     return fbBuilder.offset;
   }
   int addPixelBitDepth(int? PIXEL_BIT_DEPTH) {
-    fbBuilder.addInt32(31, PIXEL_BIT_DEPTH);
+    fbBuilder.addUint8(31, PIXEL_BIT_DEPTH);
     return fbBuilder.offset;
   }
   int addAnnotationKeyOffset(int? offset) {
@@ -257,8 +350,8 @@ class SKIObjectBuilder extends fb.ObjectBuilder {
   final String? _ID;
   final String? _ON_ORBIT;
   final String? _ORIG_OBJECT_ID;
-  final String? _ID_SENSOR;
   final int? _SAT_NO;
+  final String? _ID_SENSOR;
   final String? _ORIG_SENSOR_ID;
   final double? _SENLAT;
   final double? _SENLON;
@@ -266,9 +359,9 @@ class SKIObjectBuilder extends fb.ObjectBuilder {
   final double? _SENX;
   final double? _SENY;
   final double? _SENZ;
-  final List<String>? _SEN_QUAT;
-  final List<String>? _SEN_QUAT_DOT;
-  final String? _IMAGE_TYPE;
+  final List<double>? _SEN_QUAT;
+  final List<double>? _SEN_QUAT_DOT;
+  final ImageType? _IMAGE_TYPE;
   final String? _EXP_START_TIME;
   final String? _EXP_END_TIME;
   final String? _IMAGE_SOURCE_INFO;
@@ -300,8 +393,8 @@ class SKIObjectBuilder extends fb.ObjectBuilder {
     String? ID,
     String? ON_ORBIT,
     String? ORIG_OBJECT_ID,
-    String? ID_SENSOR,
     int? SAT_NO,
+    String? ID_SENSOR,
     String? ORIG_SENSOR_ID,
     double? SENLAT,
     double? SENLON,
@@ -309,9 +402,9 @@ class SKIObjectBuilder extends fb.ObjectBuilder {
     double? SENX,
     double? SENY,
     double? SENZ,
-    List<String>? SEN_QUAT,
-    List<String>? SEN_QUAT_DOT,
-    String? IMAGE_TYPE,
+    List<double>? SEN_QUAT,
+    List<double>? SEN_QUAT_DOT,
+    ImageType? IMAGE_TYPE,
     String? EXP_START_TIME,
     String? EXP_END_TIME,
     String? IMAGE_SOURCE_INFO,
@@ -342,8 +435,8 @@ class SKIObjectBuilder extends fb.ObjectBuilder {
       : _ID = ID,
         _ON_ORBIT = ON_ORBIT,
         _ORIG_OBJECT_ID = ORIG_OBJECT_ID,
-        _ID_SENSOR = ID_SENSOR,
         _SAT_NO = SAT_NO,
+        _ID_SENSOR = ID_SENSOR,
         _ORIG_SENSOR_ID = ORIG_SENSOR_ID,
         _SENLAT = SENLAT,
         _SENLON = SENLON,
@@ -395,11 +488,9 @@ class SKIObjectBuilder extends fb.ObjectBuilder {
     final int? ORIG_SENSOR_IDOffset = _ORIG_SENSOR_ID == null ? null
         : fbBuilder.writeString(_ORIG_SENSOR_ID!);
     final int? SEN_QUATOffset = _SEN_QUAT == null ? null
-        : fbBuilder.writeList(_SEN_QUAT!.map(fbBuilder.writeString).toList());
+        : fbBuilder.writeListFloat64(_SEN_QUAT!);
     final int? SEN_QUAT_DOTOffset = _SEN_QUAT_DOT == null ? null
-        : fbBuilder.writeList(_SEN_QUAT_DOT!.map(fbBuilder.writeString).toList());
-    final int? IMAGE_TYPEOffset = _IMAGE_TYPE == null ? null
-        : fbBuilder.writeString(_IMAGE_TYPE!);
+        : fbBuilder.writeListFloat64(_SEN_QUAT_DOT!);
     final int? EXP_START_TIMEOffset = _EXP_START_TIME == null ? null
         : fbBuilder.writeString(_EXP_START_TIME!);
     final int? EXP_END_TIMEOffset = _EXP_END_TIME == null ? null
@@ -428,8 +519,8 @@ class SKIObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, ON_ORBITOffset);
     fbBuilder.addOffset(2, ORIG_OBJECT_IDOffset);
-    fbBuilder.addOffset(3, ID_SENSOROffset);
-    fbBuilder.addInt32(4, _SAT_NO);
+    fbBuilder.addUint32(3, _SAT_NO);
+    fbBuilder.addOffset(4, ID_SENSOROffset);
     fbBuilder.addOffset(5, ORIG_SENSOR_IDOffset);
     fbBuilder.addFloat64(6, _SENLAT);
     fbBuilder.addFloat64(7, _SENLON);
@@ -439,7 +530,7 @@ class SKIObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(11, _SENZ);
     fbBuilder.addOffset(12, SEN_QUATOffset);
     fbBuilder.addOffset(13, SEN_QUAT_DOTOffset);
-    fbBuilder.addOffset(14, IMAGE_TYPEOffset);
+    fbBuilder.addInt8(14, _IMAGE_TYPE?.value);
     fbBuilder.addOffset(15, EXP_START_TIMEOffset);
     fbBuilder.addOffset(16, EXP_END_TIMEOffset);
     fbBuilder.addOffset(17, IMAGE_SOURCE_INFOOffset);
@@ -448,15 +539,15 @@ class SKIObjectBuilder extends fb.ObjectBuilder {
     fbBuilder.addFloat64(20, _TOP_LEFT_STOP_AZ);
     fbBuilder.addFloat64(21, _TOP_LEFT_STOP_EL);
     fbBuilder.addOffset(22, IMAGE_SET_IDOffset);
-    fbBuilder.addInt32(23, _IMAGE_SET_LENGTH);
-    fbBuilder.addInt32(24, _SEQUENCE_ID);
+    fbBuilder.addUint16(23, _IMAGE_SET_LENGTH);
+    fbBuilder.addUint16(24, _SEQUENCE_ID);
     fbBuilder.addFloat64(25, _FRAME_FOVWIDTH);
     fbBuilder.addFloat64(26, _FRAME_FOVHEIGHT);
     fbBuilder.addFloat64(27, _PIXEL_FOVWIDTH);
     fbBuilder.addFloat64(28, _PIXEL_FOVHEIGHT);
-    fbBuilder.addInt32(29, _FRAME_WIDTH_PIXELS);
-    fbBuilder.addInt32(30, _FRAME_HEIGHT_PIXELS);
-    fbBuilder.addInt32(31, _PIXEL_BIT_DEPTH);
+    fbBuilder.addUint16(29, _FRAME_WIDTH_PIXELS);
+    fbBuilder.addUint16(30, _FRAME_HEIGHT_PIXELS);
+    fbBuilder.addUint8(31, _PIXEL_BIT_DEPTH);
     fbBuilder.addOffset(32, ANNOTATION_KEYOffset);
     fbBuilder.addOffset(33, CALIBRATION_KEYOffset);
     fbBuilder.addOffset(34, FILENAMEOffset);

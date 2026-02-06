@@ -5,6 +5,514 @@ import 'dart:typed_data' show Uint8List;
 import 'package:flat_buffers/flat_buffers.dart' as fb;
 
 
+class ModulationType {
+  final int value;
+  const ModulationType._(this.value);
+
+  factory ModulationType.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum ModulationType');
+    }
+    return result;
+  }
+
+  static ModulationType? _createOrNull(int? value) => 
+      value == null ? null : ModulationType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 14;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const ModulationType BPSK = ModulationType._(0);
+  static const ModulationType QPSK = ModulationType._(1);
+  static const ModulationType OQPSK = ModulationType._(2);
+  static const ModulationType PSK8 = ModulationType._(3);
+  static const ModulationType QAM16 = ModulationType._(4);
+  static const ModulationType QAM64 = ModulationType._(5);
+  static const ModulationType FSK = ModulationType._(6);
+  static const ModulationType MSK = ModulationType._(7);
+  static const ModulationType GMSK = ModulationType._(8);
+  static const ModulationType AM = ModulationType._(9);
+  static const ModulationType FM = ModulationType._(10);
+  static const ModulationType PM = ModulationType._(11);
+  static const ModulationType SPREAD_SPECTRUM = ModulationType._(12);
+  static const ModulationType DVB_S2 = ModulationType._(13);
+  static const ModulationType DVB_S2X = ModulationType._(14);
+  static const Map<int, ModulationType> values = {
+    0: BPSK,
+    1: QPSK,
+    2: OQPSK,
+    3: PSK8,
+    4: QAM16,
+    5: QAM64,
+    6: FSK,
+    7: MSK,
+    8: GMSK,
+    9: AM,
+    10: FM,
+    11: PM,
+    12: SPREAD_SPECTRUM,
+    13: DVB_S2,
+    14: DVB_S2X};
+
+  static const fb.Reader<ModulationType> reader = _ModulationTypeReader();
+
+  @override
+  String toString() {
+    return 'ModulationType{value: $value}';
+  }
+}
+
+class _ModulationTypeReader extends fb.Reader<ModulationType> {
+  const _ModulationTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  ModulationType read(fb.BufferContext bc, int offset) =>
+      ModulationType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+class EncryptionType {
+  final int value;
+  const EncryptionType._(this.value);
+
+  factory EncryptionType.fromValue(int value) {
+    final result = values[value];
+    if (result == null) {
+        throw StateError('Invalid value $value for bit flag enum EncryptionType');
+    }
+    return result;
+  }
+
+  static EncryptionType? _createOrNull(int? value) => 
+      value == null ? null : EncryptionType.fromValue(value);
+
+  static const int minValue = 0;
+  static const int maxValue = 7;
+  static bool containsValue(int value) => values.containsKey(value);
+
+  static const EncryptionType NONE = EncryptionType._(0);
+  static const EncryptionType DES = EncryptionType._(1);
+  static const EncryptionType TRIPLE_DES = EncryptionType._(2);
+  static const EncryptionType AES_128 = EncryptionType._(3);
+  static const EncryptionType AES_256 = EncryptionType._(4);
+  static const EncryptionType TYPE_1 = EncryptionType._(5);
+  static const EncryptionType TYPE_2 = EncryptionType._(6);
+  static const EncryptionType CUSTOM = EncryptionType._(7);
+  static const Map<int, EncryptionType> values = {
+    0: NONE,
+    1: DES,
+    2: TRIPLE_DES,
+    3: AES_128,
+    4: AES_256,
+    5: TYPE_1,
+    6: TYPE_2,
+    7: CUSTOM};
+
+  static const fb.Reader<EncryptionType> reader = _EncryptionTypeReader();
+
+  @override
+  String toString() {
+    return 'EncryptionType{value: $value}';
+  }
+}
+
+class _EncryptionTypeReader extends fb.Reader<EncryptionType> {
+  const _EncryptionTypeReader();
+
+  @override
+  int get size => 1;
+
+  @override
+  EncryptionType read(fb.BufferContext bc, int offset) =>
+      EncryptionType.fromValue(const fb.Int8Reader().read(bc, offset));
+}
+
+///  Transponder Channel
+class CommsChannel {
+  CommsChannel._(this._bc, this._bcOffset);
+  factory CommsChannel(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CommsChannel> reader = _CommsChannelReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Channel identifier
+  String? get CHANNEL_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Channel name
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Uplink frequency in MHz
+  double get UPLINK_FREQ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 8, 0.0);
+  ///  Downlink frequency in MHz
+  double get DOWNLINK_FREQ => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 10, 0.0);
+  ///  Channel bandwidth in MHz
+  double get BANDWIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  Modulation type
+  ModulationType get MODULATION => ModulationType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 14, 0));
+  ///  Data rate in Mbps
+  double get DATA_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Encryption method
+  EncryptionType get ENCRYPTION => EncryptionType.fromValue(const fb.Int8Reader().vTableGet(_bc, _bcOffset, 18, 0));
+  ///  Forward error correction coding rate (e.g., 0.5, 0.75)
+  double get FEC_RATE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  Channel power in dBW
+  double get POWER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+
+  @override
+  String toString() {
+    return 'CommsChannel{CHANNEL_ID: ${CHANNEL_ID}, NAME: ${NAME}, UPLINK_FREQ: ${UPLINK_FREQ}, DOWNLINK_FREQ: ${DOWNLINK_FREQ}, BANDWIDTH: ${BANDWIDTH}, MODULATION: ${MODULATION}, DATA_RATE: ${DATA_RATE}, ENCRYPTION: ${ENCRYPTION}, FEC_RATE: ${FEC_RATE}, POWER: ${POWER}}';
+  }
+}
+
+class _CommsChannelReader extends fb.TableReader<CommsChannel> {
+  const _CommsChannelReader();
+
+  @override
+  CommsChannel createObject(fb.BufferContext bc, int offset) => 
+    CommsChannel._(bc, offset);
+}
+
+class CommsChannelBuilder {
+  CommsChannelBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(10);
+  }
+
+  int addChannelIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addUplinkFreq(double? UPLINK_FREQ) {
+    fbBuilder.addFloat64(2, UPLINK_FREQ);
+    return fbBuilder.offset;
+  }
+  int addDownlinkFreq(double? DOWNLINK_FREQ) {
+    fbBuilder.addFloat64(3, DOWNLINK_FREQ);
+    return fbBuilder.offset;
+  }
+  int addBandwidth(double? BANDWIDTH) {
+    fbBuilder.addFloat64(4, BANDWIDTH);
+    return fbBuilder.offset;
+  }
+  int addModulation(ModulationType? MODULATION) {
+    fbBuilder.addInt8(5, MODULATION?.value);
+    return fbBuilder.offset;
+  }
+  int addDataRate(double? DATA_RATE) {
+    fbBuilder.addFloat64(6, DATA_RATE);
+    return fbBuilder.offset;
+  }
+  int addEncryption(EncryptionType? ENCRYPTION) {
+    fbBuilder.addInt8(7, ENCRYPTION?.value);
+    return fbBuilder.offset;
+  }
+  int addFecRate(double? FEC_RATE) {
+    fbBuilder.addFloat64(8, FEC_RATE);
+    return fbBuilder.offset;
+  }
+  int addPower(double? POWER) {
+    fbBuilder.addFloat64(9, POWER);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CommsChannelObjectBuilder extends fb.ObjectBuilder {
+  final String? _CHANNEL_ID;
+  final String? _NAME;
+  final double? _UPLINK_FREQ;
+  final double? _DOWNLINK_FREQ;
+  final double? _BANDWIDTH;
+  final ModulationType? _MODULATION;
+  final double? _DATA_RATE;
+  final EncryptionType? _ENCRYPTION;
+  final double? _FEC_RATE;
+  final double? _POWER;
+
+  CommsChannelObjectBuilder({
+    String? CHANNEL_ID,
+    String? NAME,
+    double? UPLINK_FREQ,
+    double? DOWNLINK_FREQ,
+    double? BANDWIDTH,
+    ModulationType? MODULATION,
+    double? DATA_RATE,
+    EncryptionType? ENCRYPTION,
+    double? FEC_RATE,
+    double? POWER,
+  })
+      : _CHANNEL_ID = CHANNEL_ID,
+        _NAME = NAME,
+        _UPLINK_FREQ = UPLINK_FREQ,
+        _DOWNLINK_FREQ = DOWNLINK_FREQ,
+        _BANDWIDTH = BANDWIDTH,
+        _MODULATION = MODULATION,
+        _DATA_RATE = DATA_RATE,
+        _ENCRYPTION = ENCRYPTION,
+        _FEC_RATE = FEC_RATE,
+        _POWER = POWER;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? CHANNEL_IDOffset = _CHANNEL_ID == null ? null
+        : fbBuilder.writeString(_CHANNEL_ID!);
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    fbBuilder.startTable(10);
+    fbBuilder.addOffset(0, CHANNEL_IDOffset);
+    fbBuilder.addOffset(1, NAMEOffset);
+    fbBuilder.addFloat64(2, _UPLINK_FREQ);
+    fbBuilder.addFloat64(3, _DOWNLINK_FREQ);
+    fbBuilder.addFloat64(4, _BANDWIDTH);
+    fbBuilder.addInt8(5, _MODULATION?.value);
+    fbBuilder.addFloat64(6, _DATA_RATE);
+    fbBuilder.addInt8(7, _ENCRYPTION?.value);
+    fbBuilder.addFloat64(8, _FEC_RATE);
+    fbBuilder.addFloat64(9, _POWER);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
+///  Transponder
+class CommsTransponder {
+  CommsTransponder._(this._bc, this._bcOffset);
+  factory CommsTransponder(List<int> bytes) {
+    final rootRef = fb.BufferContext.fromBytes(bytes);
+    return reader.read(rootRef, 0);
+  }
+
+  static const fb.Reader<CommsTransponder> reader = _CommsTransponderReader();
+
+  final fb.BufferContext _bc;
+  final int _bcOffset;
+
+  ///  Transponder identifier
+  String? get TRANSPONDER_ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Transponder name
+  String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Transponder type (e.g., BENT_PIPE, REGENERATIVE, OBP)
+  String? get TYPE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Operating band (e.g., C, Ku, Ka, L, S, X)
+  String? get BAND => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Uplink frequency range minimum in MHz
+  double get UPLINK_FREQ_MIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 12, 0.0);
+  ///  Uplink frequency range maximum in MHz
+  double get UPLINK_FREQ_MAX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 14, 0.0);
+  ///  Downlink frequency range minimum in MHz
+  double get DOWNLINK_FREQ_MIN => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 16, 0.0);
+  ///  Downlink frequency range maximum in MHz
+  double get DOWNLINK_FREQ_MAX => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 18, 0.0);
+  ///  Saturated EIRP in dBW
+  double get EIRP => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  G/T in dB/K
+  double get G_OVER_T => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Total bandwidth in MHz
+  double get BANDWIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  ///  Number of channels
+  int get NUM_CHANNELS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 26, 0);
+  ///  Channels on this transponder
+  List<CommsChannel>? get CHANNELS => const fb.ListReader<CommsChannel>(CommsChannel.reader).vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Polarization (e.g., RHCP, LHCP, LINEAR_H, LINEAR_V)
+  String? get POLARIZATION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 30);
+
+  @override
+  String toString() {
+    return 'CommsTransponder{TRANSPONDER_ID: ${TRANSPONDER_ID}, NAME: ${NAME}, TYPE: ${TYPE}, BAND: ${BAND}, UPLINK_FREQ_MIN: ${UPLINK_FREQ_MIN}, UPLINK_FREQ_MAX: ${UPLINK_FREQ_MAX}, DOWNLINK_FREQ_MIN: ${DOWNLINK_FREQ_MIN}, DOWNLINK_FREQ_MAX: ${DOWNLINK_FREQ_MAX}, EIRP: ${EIRP}, G_OVER_T: ${G_OVER_T}, BANDWIDTH: ${BANDWIDTH}, NUM_CHANNELS: ${NUM_CHANNELS}, CHANNELS: ${CHANNELS}, POLARIZATION: ${POLARIZATION}}';
+  }
+}
+
+class _CommsTransponderReader extends fb.TableReader<CommsTransponder> {
+  const _CommsTransponderReader();
+
+  @override
+  CommsTransponder createObject(fb.BufferContext bc, int offset) => 
+    CommsTransponder._(bc, offset);
+}
+
+class CommsTransponderBuilder {
+  CommsTransponderBuilder(this.fbBuilder);
+
+  final fb.Builder fbBuilder;
+
+  void begin() {
+    fbBuilder.startTable(14);
+  }
+
+  int addTransponderIdOffset(int? offset) {
+    fbBuilder.addOffset(0, offset);
+    return fbBuilder.offset;
+  }
+  int addNameOffset(int? offset) {
+    fbBuilder.addOffset(1, offset);
+    return fbBuilder.offset;
+  }
+  int addTypeOffset(int? offset) {
+    fbBuilder.addOffset(2, offset);
+    return fbBuilder.offset;
+  }
+  int addBandOffset(int? offset) {
+    fbBuilder.addOffset(3, offset);
+    return fbBuilder.offset;
+  }
+  int addUplinkFreqMin(double? UPLINK_FREQ_MIN) {
+    fbBuilder.addFloat64(4, UPLINK_FREQ_MIN);
+    return fbBuilder.offset;
+  }
+  int addUplinkFreqMax(double? UPLINK_FREQ_MAX) {
+    fbBuilder.addFloat64(5, UPLINK_FREQ_MAX);
+    return fbBuilder.offset;
+  }
+  int addDownlinkFreqMin(double? DOWNLINK_FREQ_MIN) {
+    fbBuilder.addFloat64(6, DOWNLINK_FREQ_MIN);
+    return fbBuilder.offset;
+  }
+  int addDownlinkFreqMax(double? DOWNLINK_FREQ_MAX) {
+    fbBuilder.addFloat64(7, DOWNLINK_FREQ_MAX);
+    return fbBuilder.offset;
+  }
+  int addEirp(double? EIRP) {
+    fbBuilder.addFloat64(8, EIRP);
+    return fbBuilder.offset;
+  }
+  int addGOverT(double? G_OVER_T) {
+    fbBuilder.addFloat64(9, G_OVER_T);
+    return fbBuilder.offset;
+  }
+  int addBandwidth(double? BANDWIDTH) {
+    fbBuilder.addFloat64(10, BANDWIDTH);
+    return fbBuilder.offset;
+  }
+  int addNumChannels(int? NUM_CHANNELS) {
+    fbBuilder.addUint32(11, NUM_CHANNELS);
+    return fbBuilder.offset;
+  }
+  int addChannelsOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addPolarizationOffset(int? offset) {
+    fbBuilder.addOffset(13, offset);
+    return fbBuilder.offset;
+  }
+
+  int finish() {
+    return fbBuilder.endTable();
+  }
+}
+
+class CommsTransponderObjectBuilder extends fb.ObjectBuilder {
+  final String? _TRANSPONDER_ID;
+  final String? _NAME;
+  final String? _TYPE;
+  final String? _BAND;
+  final double? _UPLINK_FREQ_MIN;
+  final double? _UPLINK_FREQ_MAX;
+  final double? _DOWNLINK_FREQ_MIN;
+  final double? _DOWNLINK_FREQ_MAX;
+  final double? _EIRP;
+  final double? _G_OVER_T;
+  final double? _BANDWIDTH;
+  final int? _NUM_CHANNELS;
+  final List<CommsChannelObjectBuilder>? _CHANNELS;
+  final String? _POLARIZATION;
+
+  CommsTransponderObjectBuilder({
+    String? TRANSPONDER_ID,
+    String? NAME,
+    String? TYPE,
+    String? BAND,
+    double? UPLINK_FREQ_MIN,
+    double? UPLINK_FREQ_MAX,
+    double? DOWNLINK_FREQ_MIN,
+    double? DOWNLINK_FREQ_MAX,
+    double? EIRP,
+    double? G_OVER_T,
+    double? BANDWIDTH,
+    int? NUM_CHANNELS,
+    List<CommsChannelObjectBuilder>? CHANNELS,
+    String? POLARIZATION,
+  })
+      : _TRANSPONDER_ID = TRANSPONDER_ID,
+        _NAME = NAME,
+        _TYPE = TYPE,
+        _BAND = BAND,
+        _UPLINK_FREQ_MIN = UPLINK_FREQ_MIN,
+        _UPLINK_FREQ_MAX = UPLINK_FREQ_MAX,
+        _DOWNLINK_FREQ_MIN = DOWNLINK_FREQ_MIN,
+        _DOWNLINK_FREQ_MAX = DOWNLINK_FREQ_MAX,
+        _EIRP = EIRP,
+        _G_OVER_T = G_OVER_T,
+        _BANDWIDTH = BANDWIDTH,
+        _NUM_CHANNELS = NUM_CHANNELS,
+        _CHANNELS = CHANNELS,
+        _POLARIZATION = POLARIZATION;
+
+  /// Finish building, and store into the [fbBuilder].
+  @override
+  int finish(fb.Builder fbBuilder) {
+    final int? TRANSPONDER_IDOffset = _TRANSPONDER_ID == null ? null
+        : fbBuilder.writeString(_TRANSPONDER_ID!);
+    final int? NAMEOffset = _NAME == null ? null
+        : fbBuilder.writeString(_NAME!);
+    final int? TYPEOffset = _TYPE == null ? null
+        : fbBuilder.writeString(_TYPE!);
+    final int? BANDOffset = _BAND == null ? null
+        : fbBuilder.writeString(_BAND!);
+    final int? CHANNELSOffset = _CHANNELS == null ? null
+        : fbBuilder.writeList(_CHANNELS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? POLARIZATIONOffset = _POLARIZATION == null ? null
+        : fbBuilder.writeString(_POLARIZATION!);
+    fbBuilder.startTable(14);
+    fbBuilder.addOffset(0, TRANSPONDER_IDOffset);
+    fbBuilder.addOffset(1, NAMEOffset);
+    fbBuilder.addOffset(2, TYPEOffset);
+    fbBuilder.addOffset(3, BANDOffset);
+    fbBuilder.addFloat64(4, _UPLINK_FREQ_MIN);
+    fbBuilder.addFloat64(5, _UPLINK_FREQ_MAX);
+    fbBuilder.addFloat64(6, _DOWNLINK_FREQ_MIN);
+    fbBuilder.addFloat64(7, _DOWNLINK_FREQ_MAX);
+    fbBuilder.addFloat64(8, _EIRP);
+    fbBuilder.addFloat64(9, _G_OVER_T);
+    fbBuilder.addFloat64(10, _BANDWIDTH);
+    fbBuilder.addUint32(11, _NUM_CHANNELS);
+    fbBuilder.addOffset(12, CHANNELSOffset);
+    fbBuilder.addOffset(13, POLARIZATIONOffset);
+    return fbBuilder.endTable();
+  }
+
+  /// Convenience method to serialize to byte list.
+  @override
+  Uint8List toBytes([String? fileIdentifier]) {
+    final fbBuilder = fb.Builder(deduplicateTables: false);
+    fbBuilder.finish(finish(fbBuilder), fileIdentifier);
+    return fbBuilder.buffer;
+  }
+}
 ///  Communications Payload
 class CMS {
   CMS._(this._bc, this._bcOffset);
@@ -18,16 +526,40 @@ class CMS {
   final fb.BufferContext _bc;
   final int _bcOffset;
 
+  ///  Unique identifier
   String? get ID => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 4);
+  ///  Reference to parent entity
   String? get ID_ENTITY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 6);
+  ///  Communications payload name
   String? get NAME => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 8);
+  ///  Description
   String? get DESCRIPTION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 10);
+  ///  Parent entity designator
   String? get ENTITY => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 12);
-  List<String>? get TRANSPONDERS => const fb.ListReader<String>(fb.StringReader()).vTableGetNullable(_bc, _bcOffset, 14);
+  ///  Satellite number
+  int get SAT_NO => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 14, 0);
+  ///  Number of transponders
+  int get NUM_TRANSPONDERS => const fb.Uint32Reader().vTableGet(_bc, _bcOffset, 16, 0);
+  ///  Transponders
+  List<CommsTransponder>? get TRANSPONDERS => const fb.ListReader<CommsTransponder>(CommsTransponder.reader).vTableGetNullable(_bc, _bcOffset, 18);
+  ///  Total payload power in Watts
+  double get TOTAL_POWER => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 20, 0.0);
+  ///  Total payload mass in kg
+  double get TOTAL_MASS => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 22, 0.0);
+  ///  Total aggregate bandwidth in MHz
+  double get TOTAL_BANDWIDTH => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 24, 0.0);
+  ///  Primary mission (e.g., FIXED_SAT, BROADCAST, MOBILE, RELAY, MILSATCOM)
+  String? get MISSION => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 26);
+  ///  Coverage region description
+  String? get COVERAGE => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 28);
+  ///  Design lifetime in years
+  double get DESIGN_LIFE => const fb.Float64Reader().vTableGet(_bc, _bcOffset, 30, 0.0);
+  ///  Additional notes
+  String? get NOTES => const fb.StringReader().vTableGetNullable(_bc, _bcOffset, 32);
 
   @override
   String toString() {
-    return 'CMS{ID: ${ID}, ID_ENTITY: ${ID_ENTITY}, NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, ENTITY: ${ENTITY}, TRANSPONDERS: ${TRANSPONDERS}}';
+    return 'CMS{ID: ${ID}, ID_ENTITY: ${ID_ENTITY}, NAME: ${NAME}, DESCRIPTION: ${DESCRIPTION}, ENTITY: ${ENTITY}, SAT_NO: ${SAT_NO}, NUM_TRANSPONDERS: ${NUM_TRANSPONDERS}, TRANSPONDERS: ${TRANSPONDERS}, TOTAL_POWER: ${TOTAL_POWER}, TOTAL_MASS: ${TOTAL_MASS}, TOTAL_BANDWIDTH: ${TOTAL_BANDWIDTH}, MISSION: ${MISSION}, COVERAGE: ${COVERAGE}, DESIGN_LIFE: ${DESIGN_LIFE}, NOTES: ${NOTES}}';
   }
 }
 
@@ -45,7 +577,7 @@ class CMSBuilder {
   final fb.Builder fbBuilder;
 
   void begin() {
-    fbBuilder.startTable(6);
+    fbBuilder.startTable(15);
   }
 
   int addIdOffset(int? offset) {
@@ -68,8 +600,44 @@ class CMSBuilder {
     fbBuilder.addOffset(4, offset);
     return fbBuilder.offset;
   }
+  int addSatNo(int? SAT_NO) {
+    fbBuilder.addUint32(5, SAT_NO);
+    return fbBuilder.offset;
+  }
+  int addNumTransponders(int? NUM_TRANSPONDERS) {
+    fbBuilder.addUint32(6, NUM_TRANSPONDERS);
+    return fbBuilder.offset;
+  }
   int addTranspondersOffset(int? offset) {
-    fbBuilder.addOffset(5, offset);
+    fbBuilder.addOffset(7, offset);
+    return fbBuilder.offset;
+  }
+  int addTotalPower(double? TOTAL_POWER) {
+    fbBuilder.addFloat64(8, TOTAL_POWER);
+    return fbBuilder.offset;
+  }
+  int addTotalMass(double? TOTAL_MASS) {
+    fbBuilder.addFloat64(9, TOTAL_MASS);
+    return fbBuilder.offset;
+  }
+  int addTotalBandwidth(double? TOTAL_BANDWIDTH) {
+    fbBuilder.addFloat64(10, TOTAL_BANDWIDTH);
+    return fbBuilder.offset;
+  }
+  int addMissionOffset(int? offset) {
+    fbBuilder.addOffset(11, offset);
+    return fbBuilder.offset;
+  }
+  int addCoverageOffset(int? offset) {
+    fbBuilder.addOffset(12, offset);
+    return fbBuilder.offset;
+  }
+  int addDesignLife(double? DESIGN_LIFE) {
+    fbBuilder.addFloat64(13, DESIGN_LIFE);
+    return fbBuilder.offset;
+  }
+  int addNotesOffset(int? offset) {
+    fbBuilder.addOffset(14, offset);
     return fbBuilder.offset;
   }
 
@@ -84,7 +652,16 @@ class CMSObjectBuilder extends fb.ObjectBuilder {
   final String? _NAME;
   final String? _DESCRIPTION;
   final String? _ENTITY;
-  final List<String>? _TRANSPONDERS;
+  final int? _SAT_NO;
+  final int? _NUM_TRANSPONDERS;
+  final List<CommsTransponderObjectBuilder>? _TRANSPONDERS;
+  final double? _TOTAL_POWER;
+  final double? _TOTAL_MASS;
+  final double? _TOTAL_BANDWIDTH;
+  final String? _MISSION;
+  final String? _COVERAGE;
+  final double? _DESIGN_LIFE;
+  final String? _NOTES;
 
   CMSObjectBuilder({
     String? ID,
@@ -92,14 +669,32 @@ class CMSObjectBuilder extends fb.ObjectBuilder {
     String? NAME,
     String? DESCRIPTION,
     String? ENTITY,
-    List<String>? TRANSPONDERS,
+    int? SAT_NO,
+    int? NUM_TRANSPONDERS,
+    List<CommsTransponderObjectBuilder>? TRANSPONDERS,
+    double? TOTAL_POWER,
+    double? TOTAL_MASS,
+    double? TOTAL_BANDWIDTH,
+    String? MISSION,
+    String? COVERAGE,
+    double? DESIGN_LIFE,
+    String? NOTES,
   })
       : _ID = ID,
         _ID_ENTITY = ID_ENTITY,
         _NAME = NAME,
         _DESCRIPTION = DESCRIPTION,
         _ENTITY = ENTITY,
-        _TRANSPONDERS = TRANSPONDERS;
+        _SAT_NO = SAT_NO,
+        _NUM_TRANSPONDERS = NUM_TRANSPONDERS,
+        _TRANSPONDERS = TRANSPONDERS,
+        _TOTAL_POWER = TOTAL_POWER,
+        _TOTAL_MASS = TOTAL_MASS,
+        _TOTAL_BANDWIDTH = TOTAL_BANDWIDTH,
+        _MISSION = MISSION,
+        _COVERAGE = COVERAGE,
+        _DESIGN_LIFE = DESIGN_LIFE,
+        _NOTES = NOTES;
 
   /// Finish building, and store into the [fbBuilder].
   @override
@@ -115,14 +710,29 @@ class CMSObjectBuilder extends fb.ObjectBuilder {
     final int? ENTITYOffset = _ENTITY == null ? null
         : fbBuilder.writeString(_ENTITY!);
     final int? TRANSPONDERSOffset = _TRANSPONDERS == null ? null
-        : fbBuilder.writeList(_TRANSPONDERS!.map(fbBuilder.writeString).toList());
-    fbBuilder.startTable(6);
+        : fbBuilder.writeList(_TRANSPONDERS!.map((b) => b.getOrCreateOffset(fbBuilder)).toList());
+    final int? MISSIONOffset = _MISSION == null ? null
+        : fbBuilder.writeString(_MISSION!);
+    final int? COVERAGEOffset = _COVERAGE == null ? null
+        : fbBuilder.writeString(_COVERAGE!);
+    final int? NOTESOffset = _NOTES == null ? null
+        : fbBuilder.writeString(_NOTES!);
+    fbBuilder.startTable(15);
     fbBuilder.addOffset(0, IDOffset);
     fbBuilder.addOffset(1, ID_ENTITYOffset);
     fbBuilder.addOffset(2, NAMEOffset);
     fbBuilder.addOffset(3, DESCRIPTIONOffset);
     fbBuilder.addOffset(4, ENTITYOffset);
-    fbBuilder.addOffset(5, TRANSPONDERSOffset);
+    fbBuilder.addUint32(5, _SAT_NO);
+    fbBuilder.addUint32(6, _NUM_TRANSPONDERS);
+    fbBuilder.addOffset(7, TRANSPONDERSOffset);
+    fbBuilder.addFloat64(8, _TOTAL_POWER);
+    fbBuilder.addFloat64(9, _TOTAL_MASS);
+    fbBuilder.addFloat64(10, _TOTAL_BANDWIDTH);
+    fbBuilder.addOffset(11, MISSIONOffset);
+    fbBuilder.addOffset(12, COVERAGEOffset);
+    fbBuilder.addFloat64(13, _DESIGN_LIFE);
+    fbBuilder.addOffset(14, NOTESOffset);
     return fbBuilder.endTable();
   }
 

@@ -4,6 +4,8 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { attMotionType } from './attMotionType.js';
+import { attRepresentation } from './attRepresentation.js';
 
 
 /**
@@ -31,6 +33,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$ATD');
 }
 
+/**
+ * Unique identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,6 +43,9 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Attitude set identifier (groups time-series points)
+ */
 AS_ID():string|null
 AS_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 AS_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -45,11 +53,17 @@ AS_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Satellite catalog number
+ */
 SAT_NO():number {
   const offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
 }
 
+/**
+ * International designator
+ */
 ORIG_OBJECT_ID():string|null
 ORIG_OBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ORIG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -57,159 +71,230 @@ ORIG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-TS():string|null
-TS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-TS(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Observation epoch (ISO 8601)
+ */
+EPOCH():string|null
+EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EPOCH(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-MOTION_TYPE():string|null
-MOTION_TYPE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-MOTION_TYPE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Attitude representation used
+ */
+REPRESENTATION():attRepresentation {
   const offset = this.bb!.__offset(this.bb_pos, 14);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : attRepresentation.QUATERNION;
 }
 
-Q1():number {
+/**
+ * Motion characterization
+ */
+MOTION_TYPE():attMotionType {
   const offset = this.bb!.__offset(this.bb_pos, 16);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : attMotionType.STABILIZED;
 }
 
-Q2():number {
+/**
+ * Quaternion scalar component (q0 or qc)
+ */
+QC():number {
   const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-Q3():number {
+/**
+ * Quaternion vector component 1
+ */
+Q1():number {
   const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-QC():number {
+/**
+ * Quaternion vector component 2
+ */
+Q2():number {
   const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-Q1_DOT():number {
+/**
+ * Quaternion vector component 3
+ */
+Q3():number {
   const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-Q2_DOT():number {
+/**
+ * Quaternion scalar rate (rad/s)
+ */
+QC_DOT():number {
   const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-Q3_DOT():number {
+/**
+ * Quaternion vector rate 1 (rad/s)
+ */
+Q1_DOT():number {
   const offset = this.bb!.__offset(this.bb_pos, 28);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-QC_DOT():number {
+/**
+ * Quaternion vector rate 2 (rad/s)
+ */
+Q2_DOT():number {
   const offset = this.bb!.__offset(this.bb_pos, 30);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-X_ANGLE(index: number):string
-X_ANGLE(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-X_ANGLE(index: number,optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Quaternion vector rate 3 (rad/s)
+ */
+Q3_DOT():number {
   const offset = this.bb!.__offset(this.bb_pos, 32);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-xAngleLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 32);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-Y_ANGLE(index: number):string
-Y_ANGLE(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-Y_ANGLE(index: number,optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Euler angle X (degrees)
+ */
+X_ANGLE():number {
   const offset = this.bb!.__offset(this.bb_pos, 34);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-yAngleLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 34);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-Z_ANGLE(index: number):string
-Z_ANGLE(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-Z_ANGLE(index: number,optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Euler angle Y (degrees)
+ */
+Y_ANGLE():number {
   const offset = this.bb!.__offset(this.bb_pos, 36);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-zAngleLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 36);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-X_RATE(index: number):string
-X_RATE(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-X_RATE(index: number,optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Euler angle Z (degrees)
+ */
+Z_ANGLE():number {
   const offset = this.bb!.__offset(this.bb_pos, 38);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-xRateLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 38);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-Y_RATE(index: number):string
-Y_RATE(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-Y_RATE(index: number,optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Angular rate about X (deg/s)
+ */
+X_RATE():number {
   const offset = this.bb!.__offset(this.bb_pos, 40);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-yRateLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 40);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-Z_RATE(index: number):string
-Z_RATE(index: number,optionalEncoding:flatbuffers.Encoding):string|Uint8Array
-Z_RATE(index: number,optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Angular rate about Y (deg/s)
+ */
+Y_RATE():number {
   const offset = this.bb!.__offset(this.bb_pos, 42);
-  return offset ? this.bb!.__string(this.bb!.__vector(this.bb_pos + offset) + index * 4, optionalEncoding) : null;
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-zRateLength():number {
-  const offset = this.bb!.__offset(this.bb_pos, 42);
-  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
-}
-
-RA():number {
+/**
+ * Angular rate about Z (deg/s)
+ */
+Z_RATE():number {
   const offset = this.bb!.__offset(this.bb_pos, 44);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-DECLINATION():number {
+/**
+ * Right ascension of spin axis (degrees)
+ */
+RA():number {
   const offset = this.bb!.__offset(this.bb_pos, 46);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-CONING_ANGLE():number {
+/**
+ * Declination of spin axis (degrees)
+ */
+DECLINATION():number {
   const offset = this.bb!.__offset(this.bb_pos, 48);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-PREC_PERIOD():number {
+/**
+ * Coning half-angle (degrees)
+ */
+CONING_ANGLE():number {
   const offset = this.bb!.__offset(this.bb_pos, 50);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-SPIN_PERIOD():number {
+/**
+ * Precession period (seconds)
+ */
+PREC_PERIOD():number {
   const offset = this.bb!.__offset(this.bb_pos, 52);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
+/**
+ * Spin period (seconds)
+ */
+SPIN_PERIOD():number {
+  const offset = this.bb!.__offset(this.bb_pos, 54);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Attitude uncertainty (degrees, 1-sigma)
+ */
+ATTITUDE_UNC():number {
+  const offset = this.bb!.__offset(this.bb_pos, 56);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Rate uncertainty (deg/s, 1-sigma)
+ */
+RATE_UNC():number {
+  const offset = this.bb!.__offset(this.bb_pos, 58);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Data quality (0-9, 9=best)
+ */
+QUALITY():number {
+  const offset = this.bb!.__offset(this.bb_pos, 60);
+  return offset ? this.bb!.readUint8(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Reference frame for attitude
+ */
+REF_FRAME():string|null
+REF_FRAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+REF_FRAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 62);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Sensor identifier providing the observation
+ */
+SENSOR_ID():string|null
+SENSOR_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SENSOR_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 64);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
 static startATD(builder:flatbuffers.Builder) {
-  builder.startObject(25);
+  builder.startObject(31);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
@@ -228,160 +313,112 @@ static addOrigObjectId(builder:flatbuffers.Builder, ORIG_OBJECT_IDOffset:flatbuf
   builder.addFieldOffset(3, ORIG_OBJECT_IDOffset, 0);
 }
 
-static addTs(builder:flatbuffers.Builder, TSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(4, TSOffset, 0);
+static addEpoch(builder:flatbuffers.Builder, EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(4, EPOCHOffset, 0);
 }
 
-static addMotionType(builder:flatbuffers.Builder, MOTION_TYPEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, MOTION_TYPEOffset, 0);
+static addRepresentation(builder:flatbuffers.Builder, REPRESENTATION:attRepresentation) {
+  builder.addFieldInt8(5, REPRESENTATION, attRepresentation.QUATERNION);
 }
 
-static addQ1(builder:flatbuffers.Builder, Q1:number) {
-  builder.addFieldFloat64(6, Q1, 0.0);
-}
-
-static addQ2(builder:flatbuffers.Builder, Q2:number) {
-  builder.addFieldFloat64(7, Q2, 0.0);
-}
-
-static addQ3(builder:flatbuffers.Builder, Q3:number) {
-  builder.addFieldFloat64(8, Q3, 0.0);
+static addMotionType(builder:flatbuffers.Builder, MOTION_TYPE:attMotionType) {
+  builder.addFieldInt8(6, MOTION_TYPE, attMotionType.STABILIZED);
 }
 
 static addQc(builder:flatbuffers.Builder, QC:number) {
-  builder.addFieldFloat64(9, QC, 0.0);
+  builder.addFieldFloat64(7, QC, 0.0);
 }
 
-static addQ1Dot(builder:flatbuffers.Builder, Q1_DOT:number) {
-  builder.addFieldFloat64(10, Q1_DOT, 0.0);
+static addQ1(builder:flatbuffers.Builder, Q1:number) {
+  builder.addFieldFloat64(8, Q1, 0.0);
 }
 
-static addQ2Dot(builder:flatbuffers.Builder, Q2_DOT:number) {
-  builder.addFieldFloat64(11, Q2_DOT, 0.0);
+static addQ2(builder:flatbuffers.Builder, Q2:number) {
+  builder.addFieldFloat64(9, Q2, 0.0);
 }
 
-static addQ3Dot(builder:flatbuffers.Builder, Q3_DOT:number) {
-  builder.addFieldFloat64(12, Q3_DOT, 0.0);
+static addQ3(builder:flatbuffers.Builder, Q3:number) {
+  builder.addFieldFloat64(10, Q3, 0.0);
 }
 
 static addQcDot(builder:flatbuffers.Builder, QC_DOT:number) {
-  builder.addFieldFloat64(13, QC_DOT, 0.0);
+  builder.addFieldFloat64(11, QC_DOT, 0.0);
 }
 
-static addXAngle(builder:flatbuffers.Builder, X_ANGLEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(14, X_ANGLEOffset, 0);
+static addQ1Dot(builder:flatbuffers.Builder, Q1_DOT:number) {
+  builder.addFieldFloat64(12, Q1_DOT, 0.0);
 }
 
-static createXAngleVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
+static addQ2Dot(builder:flatbuffers.Builder, Q2_DOT:number) {
+  builder.addFieldFloat64(13, Q2_DOT, 0.0);
 }
 
-static startXAngleVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+static addQ3Dot(builder:flatbuffers.Builder, Q3_DOT:number) {
+  builder.addFieldFloat64(14, Q3_DOT, 0.0);
 }
 
-static addYAngle(builder:flatbuffers.Builder, Y_ANGLEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(15, Y_ANGLEOffset, 0);
+static addXAngle(builder:flatbuffers.Builder, X_ANGLE:number) {
+  builder.addFieldFloat64(15, X_ANGLE, 0.0);
 }
 
-static createYAngleVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
+static addYAngle(builder:flatbuffers.Builder, Y_ANGLE:number) {
+  builder.addFieldFloat64(16, Y_ANGLE, 0.0);
 }
 
-static startYAngleVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+static addZAngle(builder:flatbuffers.Builder, Z_ANGLE:number) {
+  builder.addFieldFloat64(17, Z_ANGLE, 0.0);
 }
 
-static addZAngle(builder:flatbuffers.Builder, Z_ANGLEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(16, Z_ANGLEOffset, 0);
+static addXRate(builder:flatbuffers.Builder, X_RATE:number) {
+  builder.addFieldFloat64(18, X_RATE, 0.0);
 }
 
-static createZAngleVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
+static addYRate(builder:flatbuffers.Builder, Y_RATE:number) {
+  builder.addFieldFloat64(19, Y_RATE, 0.0);
 }
 
-static startZAngleVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
-static addXRate(builder:flatbuffers.Builder, X_RATEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(17, X_RATEOffset, 0);
-}
-
-static createXRateVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startXRateVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
-static addYRate(builder:flatbuffers.Builder, Y_RATEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(18, Y_RATEOffset, 0);
-}
-
-static createYRateVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startYRateVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
-}
-
-static addZRate(builder:flatbuffers.Builder, Z_RATEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(19, Z_RATEOffset, 0);
-}
-
-static createZRateVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
-  builder.startVector(4, data.length, 4);
-  for (let i = data.length - 1; i >= 0; i--) {
-    builder.addOffset(data[i]!);
-  }
-  return builder.endVector();
-}
-
-static startZRateVector(builder:flatbuffers.Builder, numElems:number) {
-  builder.startVector(4, numElems, 4);
+static addZRate(builder:flatbuffers.Builder, Z_RATE:number) {
+  builder.addFieldFloat64(20, Z_RATE, 0.0);
 }
 
 static addRa(builder:flatbuffers.Builder, RA:number) {
-  builder.addFieldFloat64(20, RA, 0.0);
+  builder.addFieldFloat64(21, RA, 0.0);
 }
 
 static addDeclination(builder:flatbuffers.Builder, DECLINATION:number) {
-  builder.addFieldFloat64(21, DECLINATION, 0.0);
+  builder.addFieldFloat64(22, DECLINATION, 0.0);
 }
 
 static addConingAngle(builder:flatbuffers.Builder, CONING_ANGLE:number) {
-  builder.addFieldFloat64(22, CONING_ANGLE, 0.0);
+  builder.addFieldFloat64(23, CONING_ANGLE, 0.0);
 }
 
 static addPrecPeriod(builder:flatbuffers.Builder, PREC_PERIOD:number) {
-  builder.addFieldFloat64(23, PREC_PERIOD, 0.0);
+  builder.addFieldFloat64(24, PREC_PERIOD, 0.0);
 }
 
 static addSpinPeriod(builder:flatbuffers.Builder, SPIN_PERIOD:number) {
-  builder.addFieldFloat64(24, SPIN_PERIOD, 0.0);
+  builder.addFieldFloat64(25, SPIN_PERIOD, 0.0);
+}
+
+static addAttitudeUnc(builder:flatbuffers.Builder, ATTITUDE_UNC:number) {
+  builder.addFieldFloat64(26, ATTITUDE_UNC, 0.0);
+}
+
+static addRateUnc(builder:flatbuffers.Builder, RATE_UNC:number) {
+  builder.addFieldFloat64(27, RATE_UNC, 0.0);
+}
+
+static addQuality(builder:flatbuffers.Builder, QUALITY:number) {
+  builder.addFieldInt8(28, QUALITY, 0);
+}
+
+static addRefFrame(builder:flatbuffers.Builder, REF_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(29, REF_FRAMEOffset, 0);
+}
+
+static addSensorId(builder:flatbuffers.Builder, SENSOR_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(30, SENSOR_IDOffset, 0);
 }
 
 static endATD(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -397,33 +434,39 @@ static finishSizePrefixedATDBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$ATD', true);
 }
 
-static createATD(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, AS_IDOffset:flatbuffers.Offset, SAT_NO:number, ORIG_OBJECT_IDOffset:flatbuffers.Offset, TSOffset:flatbuffers.Offset, MOTION_TYPEOffset:flatbuffers.Offset, Q1:number, Q2:number, Q3:number, QC:number, Q1_DOT:number, Q2_DOT:number, Q3_DOT:number, QC_DOT:number, X_ANGLEOffset:flatbuffers.Offset, Y_ANGLEOffset:flatbuffers.Offset, Z_ANGLEOffset:flatbuffers.Offset, X_RATEOffset:flatbuffers.Offset, Y_RATEOffset:flatbuffers.Offset, Z_RATEOffset:flatbuffers.Offset, RA:number, DECLINATION:number, CONING_ANGLE:number, PREC_PERIOD:number, SPIN_PERIOD:number):flatbuffers.Offset {
+static createATD(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, AS_IDOffset:flatbuffers.Offset, SAT_NO:number, ORIG_OBJECT_IDOffset:flatbuffers.Offset, EPOCHOffset:flatbuffers.Offset, REPRESENTATION:attRepresentation, MOTION_TYPE:attMotionType, QC:number, Q1:number, Q2:number, Q3:number, QC_DOT:number, Q1_DOT:number, Q2_DOT:number, Q3_DOT:number, X_ANGLE:number, Y_ANGLE:number, Z_ANGLE:number, X_RATE:number, Y_RATE:number, Z_RATE:number, RA:number, DECLINATION:number, CONING_ANGLE:number, PREC_PERIOD:number, SPIN_PERIOD:number, ATTITUDE_UNC:number, RATE_UNC:number, QUALITY:number, REF_FRAMEOffset:flatbuffers.Offset, SENSOR_IDOffset:flatbuffers.Offset):flatbuffers.Offset {
   ATD.startATD(builder);
   ATD.addId(builder, IDOffset);
   ATD.addAsId(builder, AS_IDOffset);
   ATD.addSatNo(builder, SAT_NO);
   ATD.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
-  ATD.addTs(builder, TSOffset);
-  ATD.addMotionType(builder, MOTION_TYPEOffset);
+  ATD.addEpoch(builder, EPOCHOffset);
+  ATD.addRepresentation(builder, REPRESENTATION);
+  ATD.addMotionType(builder, MOTION_TYPE);
+  ATD.addQc(builder, QC);
   ATD.addQ1(builder, Q1);
   ATD.addQ2(builder, Q2);
   ATD.addQ3(builder, Q3);
-  ATD.addQc(builder, QC);
+  ATD.addQcDot(builder, QC_DOT);
   ATD.addQ1Dot(builder, Q1_DOT);
   ATD.addQ2Dot(builder, Q2_DOT);
   ATD.addQ3Dot(builder, Q3_DOT);
-  ATD.addQcDot(builder, QC_DOT);
-  ATD.addXAngle(builder, X_ANGLEOffset);
-  ATD.addYAngle(builder, Y_ANGLEOffset);
-  ATD.addZAngle(builder, Z_ANGLEOffset);
-  ATD.addXRate(builder, X_RATEOffset);
-  ATD.addYRate(builder, Y_RATEOffset);
-  ATD.addZRate(builder, Z_RATEOffset);
+  ATD.addXAngle(builder, X_ANGLE);
+  ATD.addYAngle(builder, Y_ANGLE);
+  ATD.addZAngle(builder, Z_ANGLE);
+  ATD.addXRate(builder, X_RATE);
+  ATD.addYRate(builder, Y_RATE);
+  ATD.addZRate(builder, Z_RATE);
   ATD.addRa(builder, RA);
   ATD.addDeclination(builder, DECLINATION);
   ATD.addConingAngle(builder, CONING_ANGLE);
   ATD.addPrecPeriod(builder, PREC_PERIOD);
   ATD.addSpinPeriod(builder, SPIN_PERIOD);
+  ATD.addAttitudeUnc(builder, ATTITUDE_UNC);
+  ATD.addRateUnc(builder, RATE_UNC);
+  ATD.addQuality(builder, QUALITY);
+  ATD.addRefFrame(builder, REF_FRAMEOffset);
+  ATD.addSensorId(builder, SENSOR_IDOffset);
   return ATD.endATD(builder);
 }
 
@@ -433,27 +476,33 @@ unpack(): ATDT {
     this.AS_ID(),
     this.SAT_NO(),
     this.ORIG_OBJECT_ID(),
-    this.TS(),
+    this.EPOCH(),
+    this.REPRESENTATION(),
     this.MOTION_TYPE(),
+    this.QC(),
     this.Q1(),
     this.Q2(),
     this.Q3(),
-    this.QC(),
+    this.QC_DOT(),
     this.Q1_DOT(),
     this.Q2_DOT(),
     this.Q3_DOT(),
-    this.QC_DOT(),
-    this.bb!.createScalarList<string>(this.X_ANGLE.bind(this), this.xAngleLength()),
-    this.bb!.createScalarList<string>(this.Y_ANGLE.bind(this), this.yAngleLength()),
-    this.bb!.createScalarList<string>(this.Z_ANGLE.bind(this), this.zAngleLength()),
-    this.bb!.createScalarList<string>(this.X_RATE.bind(this), this.xRateLength()),
-    this.bb!.createScalarList<string>(this.Y_RATE.bind(this), this.yRateLength()),
-    this.bb!.createScalarList<string>(this.Z_RATE.bind(this), this.zRateLength()),
+    this.X_ANGLE(),
+    this.Y_ANGLE(),
+    this.Z_ANGLE(),
+    this.X_RATE(),
+    this.Y_RATE(),
+    this.Z_RATE(),
     this.RA(),
     this.DECLINATION(),
     this.CONING_ANGLE(),
     this.PREC_PERIOD(),
-    this.SPIN_PERIOD()
+    this.SPIN_PERIOD(),
+    this.ATTITUDE_UNC(),
+    this.RATE_UNC(),
+    this.QUALITY(),
+    this.REF_FRAME(),
+    this.SENSOR_ID()
   );
 }
 
@@ -463,27 +512,33 @@ unpackTo(_o: ATDT): void {
   _o.AS_ID = this.AS_ID();
   _o.SAT_NO = this.SAT_NO();
   _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID();
-  _o.TS = this.TS();
+  _o.EPOCH = this.EPOCH();
+  _o.REPRESENTATION = this.REPRESENTATION();
   _o.MOTION_TYPE = this.MOTION_TYPE();
+  _o.QC = this.QC();
   _o.Q1 = this.Q1();
   _o.Q2 = this.Q2();
   _o.Q3 = this.Q3();
-  _o.QC = this.QC();
+  _o.QC_DOT = this.QC_DOT();
   _o.Q1_DOT = this.Q1_DOT();
   _o.Q2_DOT = this.Q2_DOT();
   _o.Q3_DOT = this.Q3_DOT();
-  _o.QC_DOT = this.QC_DOT();
-  _o.X_ANGLE = this.bb!.createScalarList<string>(this.X_ANGLE.bind(this), this.xAngleLength());
-  _o.Y_ANGLE = this.bb!.createScalarList<string>(this.Y_ANGLE.bind(this), this.yAngleLength());
-  _o.Z_ANGLE = this.bb!.createScalarList<string>(this.Z_ANGLE.bind(this), this.zAngleLength());
-  _o.X_RATE = this.bb!.createScalarList<string>(this.X_RATE.bind(this), this.xRateLength());
-  _o.Y_RATE = this.bb!.createScalarList<string>(this.Y_RATE.bind(this), this.yRateLength());
-  _o.Z_RATE = this.bb!.createScalarList<string>(this.Z_RATE.bind(this), this.zRateLength());
+  _o.X_ANGLE = this.X_ANGLE();
+  _o.Y_ANGLE = this.Y_ANGLE();
+  _o.Z_ANGLE = this.Z_ANGLE();
+  _o.X_RATE = this.X_RATE();
+  _o.Y_RATE = this.Y_RATE();
+  _o.Z_RATE = this.Z_RATE();
   _o.RA = this.RA();
   _o.DECLINATION = this.DECLINATION();
   _o.CONING_ANGLE = this.CONING_ANGLE();
   _o.PREC_PERIOD = this.PREC_PERIOD();
   _o.SPIN_PERIOD = this.SPIN_PERIOD();
+  _o.ATTITUDE_UNC = this.ATTITUDE_UNC();
+  _o.RATE_UNC = this.RATE_UNC();
+  _o.QUALITY = this.QUALITY();
+  _o.REF_FRAME = this.REF_FRAME();
+  _o.SENSOR_ID = this.SENSOR_ID();
 }
 }
 
@@ -493,27 +548,33 @@ constructor(
   public AS_ID: string|Uint8Array|null = null,
   public SAT_NO: number = 0,
   public ORIG_OBJECT_ID: string|Uint8Array|null = null,
-  public TS: string|Uint8Array|null = null,
-  public MOTION_TYPE: string|Uint8Array|null = null,
+  public EPOCH: string|Uint8Array|null = null,
+  public REPRESENTATION: attRepresentation = attRepresentation.QUATERNION,
+  public MOTION_TYPE: attMotionType = attMotionType.STABILIZED,
+  public QC: number = 0.0,
   public Q1: number = 0.0,
   public Q2: number = 0.0,
   public Q3: number = 0.0,
-  public QC: number = 0.0,
+  public QC_DOT: number = 0.0,
   public Q1_DOT: number = 0.0,
   public Q2_DOT: number = 0.0,
   public Q3_DOT: number = 0.0,
-  public QC_DOT: number = 0.0,
-  public X_ANGLE: (string)[] = [],
-  public Y_ANGLE: (string)[] = [],
-  public Z_ANGLE: (string)[] = [],
-  public X_RATE: (string)[] = [],
-  public Y_RATE: (string)[] = [],
-  public Z_RATE: (string)[] = [],
+  public X_ANGLE: number = 0.0,
+  public Y_ANGLE: number = 0.0,
+  public Z_ANGLE: number = 0.0,
+  public X_RATE: number = 0.0,
+  public Y_RATE: number = 0.0,
+  public Z_RATE: number = 0.0,
   public RA: number = 0.0,
   public DECLINATION: number = 0.0,
   public CONING_ANGLE: number = 0.0,
   public PREC_PERIOD: number = 0.0,
-  public SPIN_PERIOD: number = 0.0
+  public SPIN_PERIOD: number = 0.0,
+  public ATTITUDE_UNC: number = 0.0,
+  public RATE_UNC: number = 0.0,
+  public QUALITY: number = 0,
+  public REF_FRAME: string|Uint8Array|null = null,
+  public SENSOR_ID: string|Uint8Array|null = null
 ){}
 
 
@@ -521,41 +582,42 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ID = (this.ID !== null ? builder.createString(this.ID!) : 0);
   const AS_ID = (this.AS_ID !== null ? builder.createString(this.AS_ID!) : 0);
   const ORIG_OBJECT_ID = (this.ORIG_OBJECT_ID !== null ? builder.createString(this.ORIG_OBJECT_ID!) : 0);
-  const TS = (this.TS !== null ? builder.createString(this.TS!) : 0);
-  const MOTION_TYPE = (this.MOTION_TYPE !== null ? builder.createString(this.MOTION_TYPE!) : 0);
-  const X_ANGLE = ATD.createXAngleVector(builder, builder.createObjectOffsetList(this.X_ANGLE));
-  const Y_ANGLE = ATD.createYAngleVector(builder, builder.createObjectOffsetList(this.Y_ANGLE));
-  const Z_ANGLE = ATD.createZAngleVector(builder, builder.createObjectOffsetList(this.Z_ANGLE));
-  const X_RATE = ATD.createXRateVector(builder, builder.createObjectOffsetList(this.X_RATE));
-  const Y_RATE = ATD.createYRateVector(builder, builder.createObjectOffsetList(this.Y_RATE));
-  const Z_RATE = ATD.createZRateVector(builder, builder.createObjectOffsetList(this.Z_RATE));
+  const EPOCH = (this.EPOCH !== null ? builder.createString(this.EPOCH!) : 0);
+  const REF_FRAME = (this.REF_FRAME !== null ? builder.createString(this.REF_FRAME!) : 0);
+  const SENSOR_ID = (this.SENSOR_ID !== null ? builder.createString(this.SENSOR_ID!) : 0);
 
   return ATD.createATD(builder,
     ID,
     AS_ID,
     this.SAT_NO,
     ORIG_OBJECT_ID,
-    TS,
-    MOTION_TYPE,
+    EPOCH,
+    this.REPRESENTATION,
+    this.MOTION_TYPE,
+    this.QC,
     this.Q1,
     this.Q2,
     this.Q3,
-    this.QC,
+    this.QC_DOT,
     this.Q1_DOT,
     this.Q2_DOT,
     this.Q3_DOT,
-    this.QC_DOT,
-    X_ANGLE,
-    Y_ANGLE,
-    Z_ANGLE,
-    X_RATE,
-    Y_RATE,
-    Z_RATE,
+    this.X_ANGLE,
+    this.Y_ANGLE,
+    this.Z_ANGLE,
+    this.X_RATE,
+    this.Y_RATE,
+    this.Z_RATE,
     this.RA,
     this.DECLINATION,
     this.CONING_ANGLE,
     this.PREC_PERIOD,
-    this.SPIN_PERIOD
+    this.SPIN_PERIOD,
+    this.ATTITUDE_UNC,
+    this.RATE_UNC,
+    this.QUALITY,
+    REF_FRAME,
+    SENSOR_ID
   );
 }
 }

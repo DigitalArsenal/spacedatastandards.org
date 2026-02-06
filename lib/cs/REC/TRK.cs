@@ -19,6 +19,7 @@ public struct TRK : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public TRK __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// Unique identifier
   public string ID { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,6 +27,7 @@ public struct TRK : IFlatbufferObject
   public ArraySegment<byte>? GetIDBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetIDArray() { return __p.__vector_as_array<byte>(4); }
+  /// Contact reference
   public string CNTCT { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCNTCTBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -33,6 +35,7 @@ public struct TRK : IFlatbufferObject
   public ArraySegment<byte>? GetCNTCTBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetCNTCTArray() { return __p.__vector_as_array<byte>(6); }
+  /// Message timestamp (ISO 8601)
   public string MSG_TS { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetMSG_TSBytes() { return __p.__vector_as_span<byte>(8, 1); }
@@ -40,6 +43,7 @@ public struct TRK : IFlatbufferObject
   public ArraySegment<byte>? GetMSG_TSBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetMSG_TSArray() { return __p.__vector_as_array<byte>(8); }
+  /// Mission identifier
   public string MSN_ID { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetMSN_IDBytes() { return __p.__vector_as_span<byte>(10, 1); }
@@ -47,6 +51,7 @@ public struct TRK : IFlatbufferObject
   public ArraySegment<byte>? GetMSN_IDBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
   public byte[] GetMSN_IDArray() { return __p.__vector_as_array<byte>(10); }
+  /// Asset nationality
   public string ASSET_NAT { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetASSET_NATBytes() { return __p.__vector_as_span<byte>(12, 1); }
@@ -54,6 +59,7 @@ public struct TRK : IFlatbufferObject
   public ArraySegment<byte>? GetASSET_NATBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
   public byte[] GetASSET_NATArray() { return __p.__vector_as_array<byte>(12); }
+  /// Asset identifier
   public string ASSET { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetASSETBytes() { return __p.__vector_as_span<byte>(14, 1); }
@@ -61,13 +67,15 @@ public struct TRK : IFlatbufferObject
   public ArraySegment<byte>? GetASSETBytes() { return __p.__vector_as_arraysegment(14); }
 #endif
   public byte[] GetASSETArray() { return __p.__vector_as_array<byte>(14); }
-  public string SEN { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// Sensor identifier
+  public string SENSOR_ID { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetSENBytes() { return __p.__vector_as_span<byte>(16, 1); }
+  public Span<byte> GetSENSOR_IDBytes() { return __p.__vector_as_span<byte>(16, 1); }
 #else
-  public ArraySegment<byte>? GetSENBytes() { return __p.__vector_as_arraysegment(16); }
+  public ArraySegment<byte>? GetSENSOR_IDBytes() { return __p.__vector_as_arraysegment(16); }
 #endif
-  public byte[] GetSENArray() { return __p.__vector_as_array<byte>(16); }
+  public byte[] GetSENSOR_IDArray() { return __p.__vector_as_array<byte>(16); }
+  /// Sensor quality assessment
   public string SEN_QUAL { get { int o = __p.__offset(18); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetSEN_QUALBytes() { return __p.__vector_as_span<byte>(18, 1); }
@@ -75,6 +83,7 @@ public struct TRK : IFlatbufferObject
   public ArraySegment<byte>? GetSEN_QUALBytes() { return __p.__vector_as_arraysegment(18); }
 #endif
   public byte[] GetSEN_QUALArray() { return __p.__vector_as_array<byte>(18); }
+  /// Track identifier
   public string TRK_ID { get { int o = __p.__offset(20); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetTRK_IDBytes() { return __p.__vector_as_span<byte>(20, 1); }
@@ -82,6 +91,7 @@ public struct TRK : IFlatbufferObject
   public ArraySegment<byte>? GetTRK_IDBytes() { return __p.__vector_as_arraysegment(20); }
 #endif
   public byte[] GetTRK_IDArray() { return __p.__vector_as_array<byte>(20); }
+  /// Track number
   public string TRK_NUM { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetTRK_NUMBytes() { return __p.__vector_as_span<byte>(22, 1); }
@@ -89,13 +99,9 @@ public struct TRK : IFlatbufferObject
   public ArraySegment<byte>? GetTRK_NUMBytes() { return __p.__vector_as_arraysegment(22); }
 #endif
   public byte[] GetTRK_NUMArray() { return __p.__vector_as_array<byte>(22); }
-  public string TRK_STAT { get { int o = __p.__offset(24); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetTRK_STATBytes() { return __p.__vector_as_span<byte>(24, 1); }
-#else
-  public ArraySegment<byte>? GetTRK_STATBytes() { return __p.__vector_as_arraysegment(24); }
-#endif
-  public byte[] GetTRK_STATArray() { return __p.__vector_as_array<byte>(24); }
+  /// Track status
+  public trackStatus TRK_STAT { get { int o = __p.__offset(24); return o != 0 ? (trackStatus)__p.bb.GetSbyte(o + __p.bb_pos) : trackStatus.ACTIVE; } }
+  /// Object nationality
   public string OBJ_NAT { get { int o = __p.__offset(26); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetOBJ_NATBytes() { return __p.__vector_as_span<byte>(26, 1); }
@@ -103,6 +109,7 @@ public struct TRK : IFlatbufferObject
   public ArraySegment<byte>? GetOBJ_NATBytes() { return __p.__vector_as_arraysegment(26); }
 #endif
   public byte[] GetOBJ_NATArray() { return __p.__vector_as_array<byte>(26); }
+  /// Object identifier
   public string OBJ_ID { get { int o = __p.__offset(28); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetOBJ_IDBytes() { return __p.__vector_as_span<byte>(28, 1); }
@@ -110,6 +117,7 @@ public struct TRK : IFlatbufferObject
   public ArraySegment<byte>? GetOBJ_IDBytes() { return __p.__vector_as_arraysegment(28); }
 #endif
   public byte[] GetOBJ_IDArray() { return __p.__vector_as_array<byte>(28); }
+  /// Object type classification
   public string OBJ_TYPE { get { int o = __p.__offset(30); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetOBJ_TYPEBytes() { return __p.__vector_as_span<byte>(30, 1); }
@@ -117,6 +125,7 @@ public struct TRK : IFlatbufferObject
   public ArraySegment<byte>? GetOBJ_TYPEBytes() { return __p.__vector_as_arraysegment(30); }
 #endif
   public byte[] GetOBJ_TYPEArray() { return __p.__vector_as_array<byte>(30); }
+  /// Object specific type
   public string OBJ_SPEC { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetOBJ_SPECBytes() { return __p.__vector_as_span<byte>(32, 1); }
@@ -124,6 +133,7 @@ public struct TRK : IFlatbufferObject
   public ArraySegment<byte>? GetOBJ_SPECBytes() { return __p.__vector_as_arraysegment(32); }
 #endif
   public byte[] GetOBJ_SPECArray() { return __p.__vector_as_array<byte>(32); }
+  /// Object platform type
   public string OBJ_PLAT { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetOBJ_PLATBytes() { return __p.__vector_as_span<byte>(34, 1); }
@@ -131,6 +141,7 @@ public struct TRK : IFlatbufferObject
   public ArraySegment<byte>? GetOBJ_PLATBytes() { return __p.__vector_as_arraysegment(34); }
 #endif
   public byte[] GetOBJ_PLATArray() { return __p.__vector_as_array<byte>(34); }
+  /// Object activity
   public string OBJ_ACT { get { int o = __p.__offset(36); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetOBJ_ACTBytes() { return __p.__vector_as_span<byte>(36, 1); }
@@ -138,6 +149,7 @@ public struct TRK : IFlatbufferObject
   public ArraySegment<byte>? GetOBJ_ACTBytes() { return __p.__vector_as_arraysegment(36); }
 #endif
   public byte[] GetOBJ_ACTArray() { return __p.__vector_as_array<byte>(36); }
+  /// Mode type
   public string MOD_TYPE { get { int o = __p.__offset(38); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetMOD_TYPEBytes() { return __p.__vector_as_span<byte>(38, 1); }
@@ -145,6 +157,7 @@ public struct TRK : IFlatbufferObject
   public ArraySegment<byte>? GetMOD_TYPEBytes() { return __p.__vector_as_arraysegment(38); }
 #endif
   public byte[] GetMOD_TYPEArray() { return __p.__vector_as_array<byte>(38); }
+  /// Track item identifier
   public string TRK_ITM_ID { get { int o = __p.__offset(40); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetTRK_ITM_IDBytes() { return __p.__vector_as_span<byte>(40, 1); }
@@ -152,6 +165,7 @@ public struct TRK : IFlatbufferObject
   public ArraySegment<byte>? GetTRK_ITM_IDBytes() { return __p.__vector_as_arraysegment(40); }
 #endif
   public byte[] GetTRK_ITM_IDArray() { return __p.__vector_as_array<byte>(40); }
+  /// Track point timestamp (ISO 8601)
   public string TS { get { int o = __p.__offset(42); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetTSBytes() { return __p.__vector_as_span<byte>(42, 1); }
@@ -159,7 +173,9 @@ public struct TRK : IFlatbufferObject
   public ArraySegment<byte>? GetTSBytes() { return __p.__vector_as_arraysegment(42); }
 #endif
   public byte[] GetTSArray() { return __p.__vector_as_array<byte>(42); }
-  public int TRK_QUAL { get { int o = __p.__offset(44); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  /// Track quality (0-15)
+  public byte TRK_QUAL { get { int o = __p.__offset(44); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  /// Track point type
   public string TRK_PT_TYPE { get { int o = __p.__offset(46); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetTRK_PT_TYPEBytes() { return __p.__vector_as_span<byte>(46, 1); }
@@ -167,6 +183,7 @@ public struct TRK : IFlatbufferObject
   public ArraySegment<byte>? GetTRK_PT_TYPEBytes() { return __p.__vector_as_arraysegment(46); }
 #endif
   public byte[] GetTRK_PT_TYPEArray() { return __p.__vector_as_array<byte>(46); }
+  /// Object identity assessment
   public string OBJ_IDENT { get { int o = __p.__offset(48); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetOBJ_IDENTBytes() { return __p.__vector_as_span<byte>(48, 1); }
@@ -174,8 +191,11 @@ public struct TRK : IFlatbufferObject
   public ArraySegment<byte>? GetOBJ_IDENTBytes() { return __p.__vector_as_arraysegment(48); }
 #endif
   public byte[] GetOBJ_IDENTArray() { return __p.__vector_as_array<byte>(48); }
-  public int IDENT_CRED { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int IDENT_REL { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  /// Identity credibility (1-6)
+  public byte IDENT_CRED { get { int o = __p.__offset(50); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  /// Identity reliability (A-F)
+  public byte IDENT_REL { get { int o = __p.__offset(52); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  /// Identity amplification
   public string IDENT_AMP { get { int o = __p.__offset(54); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetIDENT_AMPBytes() { return __p.__vector_as_span<byte>(54, 1); }
@@ -183,25 +203,31 @@ public struct TRK : IFlatbufferObject
   public ArraySegment<byte>? GetIDENT_AMPBytes() { return __p.__vector_as_arraysegment(54); }
 #endif
   public byte[] GetIDENT_AMPArray() { return __p.__vector_as_array<byte>(54); }
-  public string ENVIRONMENT { get { int o = __p.__offset(56); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
-#if ENABLE_SPAN_T
-  public Span<byte> GetENVIRONMENTBytes() { return __p.__vector_as_span<byte>(56, 1); }
-#else
-  public ArraySegment<byte>? GetENVIRONMENTBytes() { return __p.__vector_as_arraysegment(56); }
-#endif
-  public byte[] GetENVIRONMENTArray() { return __p.__vector_as_array<byte>(56); }
+  /// Track environment
+  public trackEnvironment ENVIRONMENT { get { int o = __p.__offset(56); return o != 0 ? (trackEnvironment)__p.bb.GetSbyte(o + __p.bb_pos) : trackEnvironment.SPACE; } }
+  /// Environment confidence (0-1)
   public double ENVIRONMENT_CONF { get { int o = __p.__offset(58); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Track confidence (0-1)
   public double TRK_CONF { get { int o = __p.__offset(60); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Latitude (degrees)
   public double LAT { get { int o = __p.__offset(62); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Longitude (degrees)
   public double LON { get { int o = __p.__offset(64); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Altitude (km)
   public double ALT { get { int o = __p.__offset(66); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Speed (km/s)
   public double SPD { get { int o = __p.__offset(68); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Heading (degrees from north)
   public double HDNG { get { int o = __p.__offset(70); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Course (degrees from north)
   public double COURSE { get { int o = __p.__offset(72); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Source types
   public string SRC_TYPS(int j) { int o = __p.__offset(74); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int SRC_TYPSLength { get { int o = __p.__offset(74); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Source identifiers
   public string SRC_IDS(int j) { int o = __p.__offset(76); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int SRC_IDSLength { get { int o = __p.__offset(76); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Call sign
   public string CALL_SIGN { get { int o = __p.__offset(78); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCALL_SIGNBytes() { return __p.__vector_as_span<byte>(78, 1); }
@@ -209,7 +235,9 @@ public struct TRK : IFlatbufferObject
   public ArraySegment<byte>? GetCALL_SIGNBytes() { return __p.__vector_as_arraysegment(78); }
 #endif
   public byte[] GetCALL_SIGNArray() { return __p.__vector_as_array<byte>(78); }
+  /// True if fused from multiple sources
   public bool MULTI_SOURCE { get { int o = __p.__offset(80); return o != 0 ? 0!=__p.bb.Get(o + __p.bb_pos) : (bool)false; } }
+  /// J-series message type
   public string J_SERIES { get { int o = __p.__offset(82); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetJ_SERIESBytes() { return __p.__vector_as_span<byte>(82, 1); }
@@ -217,16 +245,24 @@ public struct TRK : IFlatbufferObject
   public ArraySegment<byte>? GetJ_SERIESBytes() { return __p.__vector_as_arraysegment(82); }
 #endif
   public byte[] GetJ_SERIESArray() { return __p.__vector_as_array<byte>(82); }
-  public int STRENGTH { get { int o = __p.__offset(84); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int M1 { get { int o = __p.__offset(86); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int M1V { get { int o = __p.__offset(88); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int M2 { get { int o = __p.__offset(90); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int M2V { get { int o = __p.__offset(92); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int M3A { get { int o = __p.__offset(94); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
-  public int M3AV { get { int o = __p.__offset(96); return o != 0 ? __p.bb.GetInt(o + __p.bb_pos) : (int)0; } }
+  /// Force strength indicator
+  public ushort STRENGTH { get { int o = __p.__offset(84); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  /// Mode 1 code
+  public ushort M1 { get { int o = __p.__offset(86); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  /// Mode 1 validity
+  public byte M1V { get { int o = __p.__offset(88); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  /// Mode 2 code
+  public ushort M2 { get { int o = __p.__offset(90); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  /// Mode 2 validity
+  public byte M2V { get { int o = __p.__offset(92); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  /// Mode 3A code
+  public ushort M3A { get { int o = __p.__offset(94); return o != 0 ? __p.bb.GetUshort(o + __p.bb_pos) : (ushort)0; } }
+  /// Mode 3A validity
+  public byte M3AV { get { int o = __p.__offset(96); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)0; } }
+  /// Associated tags
   public string TAGS(int j) { int o = __p.__offset(98); return o != 0 ? __p.__string(__p.__vector(o) + j * 4) : null; }
   public int TAGSLength { get { int o = __p.__offset(98); return o != 0 ? __p.__vector_len(o) : 0; } }
-  /// Start time for track data (ISO 8601 UTC format).
+  /// Start time for track data (ISO 8601)
   public string TRACK_START_TIME { get { int o = __p.__offset(100); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetTRACK_START_TIMEBytes() { return __p.__vector_as_span<byte>(100, 1); }
@@ -234,9 +270,9 @@ public struct TRK : IFlatbufferObject
   public ArraySegment<byte>? GetTRACK_START_TIMEBytes() { return __p.__vector_as_arraysegment(100); }
 #endif
   public byte[] GetTRACK_START_TIMEArray() { return __p.__vector_as_array<byte>(100); }
-  /// Time interval between track points in seconds.
+  /// Time interval between track points (seconds)
   public double TRACK_STEP_SIZE { get { int o = __p.__offset(102); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  /// Number of components per point (default 3 for X, Y, Z).
+  /// Number of components per point (default 3 for X, Y, Z)
   public byte TRACK_COMPONENTS { get { int o = __p.__offset(104); return o != 0 ? __p.bb.Get(o + __p.bb_pos) : (byte)3; } }
   /// ECEF position as flat array [X0, Y0, Z0, X1, Y1, Z1, ...]
   public double ECEF_POS(int j) { int o = __p.__offset(106); return o != 0 ? __p.bb.GetDouble(__p.__vector(o) + j * 8) : (double)0; }
@@ -318,11 +354,11 @@ public struct TRK : IFlatbufferObject
       StringOffset MSN_IDOffset = default(StringOffset),
       StringOffset ASSET_NATOffset = default(StringOffset),
       StringOffset ASSETOffset = default(StringOffset),
-      StringOffset SENOffset = default(StringOffset),
+      StringOffset SENSOR_IDOffset = default(StringOffset),
       StringOffset SEN_QUALOffset = default(StringOffset),
       StringOffset TRK_IDOffset = default(StringOffset),
       StringOffset TRK_NUMOffset = default(StringOffset),
-      StringOffset TRK_STATOffset = default(StringOffset),
+      trackStatus TRK_STAT = trackStatus.ACTIVE,
       StringOffset OBJ_NATOffset = default(StringOffset),
       StringOffset OBJ_IDOffset = default(StringOffset),
       StringOffset OBJ_TYPEOffset = default(StringOffset),
@@ -332,13 +368,13 @@ public struct TRK : IFlatbufferObject
       StringOffset MOD_TYPEOffset = default(StringOffset),
       StringOffset TRK_ITM_IDOffset = default(StringOffset),
       StringOffset TSOffset = default(StringOffset),
-      int TRK_QUAL = 0,
+      byte TRK_QUAL = 0,
       StringOffset TRK_PT_TYPEOffset = default(StringOffset),
       StringOffset OBJ_IDENTOffset = default(StringOffset),
-      int IDENT_CRED = 0,
-      int IDENT_REL = 0,
+      byte IDENT_CRED = 0,
+      byte IDENT_REL = 0,
       StringOffset IDENT_AMPOffset = default(StringOffset),
-      StringOffset ENVIRONMENTOffset = default(StringOffset),
+      trackEnvironment ENVIRONMENT = trackEnvironment.SPACE,
       double ENVIRONMENT_CONF = 0.0,
       double TRK_CONF = 0.0,
       double LAT = 0.0,
@@ -352,13 +388,13 @@ public struct TRK : IFlatbufferObject
       StringOffset CALL_SIGNOffset = default(StringOffset),
       bool MULTI_SOURCE = false,
       StringOffset J_SERIESOffset = default(StringOffset),
-      int STRENGTH = 0,
-      int M1 = 0,
-      int M1V = 0,
-      int M2 = 0,
-      int M2V = 0,
-      int M3A = 0,
-      int M3AV = 0,
+      ushort STRENGTH = 0,
+      ushort M1 = 0,
+      byte M1V = 0,
+      ushort M2 = 0,
+      byte M2V = 0,
+      ushort M3A = 0,
+      byte M3AV = 0,
       VectorOffset TAGSOffset = default(VectorOffset),
       StringOffset TRACK_START_TIMEOffset = default(StringOffset),
       double TRACK_STEP_SIZE = 0.0,
@@ -391,24 +427,13 @@ public struct TRK : IFlatbufferObject
     TRK.AddECEF_POS(builder, ECEF_POSOffset);
     TRK.AddTRACK_START_TIME(builder, TRACK_START_TIMEOffset);
     TRK.AddTAGS(builder, TAGSOffset);
-    TRK.AddM3AV(builder, M3AV);
-    TRK.AddM3A(builder, M3A);
-    TRK.AddM2V(builder, M2V);
-    TRK.AddM2(builder, M2);
-    TRK.AddM1V(builder, M1V);
-    TRK.AddM1(builder, M1);
-    TRK.AddSTRENGTH(builder, STRENGTH);
     TRK.AddJ_SERIES(builder, J_SERIESOffset);
     TRK.AddCALL_SIGN(builder, CALL_SIGNOffset);
     TRK.AddSRC_IDS(builder, SRC_IDSOffset);
     TRK.AddSRC_TYPS(builder, SRC_TYPSOffset);
-    TRK.AddENVIRONMENT(builder, ENVIRONMENTOffset);
     TRK.AddIDENT_AMP(builder, IDENT_AMPOffset);
-    TRK.AddIDENT_REL(builder, IDENT_REL);
-    TRK.AddIDENT_CRED(builder, IDENT_CRED);
     TRK.AddOBJ_IDENT(builder, OBJ_IDENTOffset);
     TRK.AddTRK_PT_TYPE(builder, TRK_PT_TYPEOffset);
-    TRK.AddTRK_QUAL(builder, TRK_QUAL);
     TRK.AddTS(builder, TSOffset);
     TRK.AddTRK_ITM_ID(builder, TRK_ITM_IDOffset);
     TRK.AddMOD_TYPE(builder, MOD_TYPEOffset);
@@ -418,19 +443,30 @@ public struct TRK : IFlatbufferObject
     TRK.AddOBJ_TYPE(builder, OBJ_TYPEOffset);
     TRK.AddOBJ_ID(builder, OBJ_IDOffset);
     TRK.AddOBJ_NAT(builder, OBJ_NATOffset);
-    TRK.AddTRK_STAT(builder, TRK_STATOffset);
     TRK.AddTRK_NUM(builder, TRK_NUMOffset);
     TRK.AddTRK_ID(builder, TRK_IDOffset);
     TRK.AddSEN_QUAL(builder, SEN_QUALOffset);
-    TRK.AddSEN(builder, SENOffset);
+    TRK.AddSENSOR_ID(builder, SENSOR_IDOffset);
     TRK.AddASSET(builder, ASSETOffset);
     TRK.AddASSET_NAT(builder, ASSET_NATOffset);
     TRK.AddMSN_ID(builder, MSN_IDOffset);
     TRK.AddMSG_TS(builder, MSG_TSOffset);
     TRK.AddCNTCT(builder, CNTCTOffset);
     TRK.AddID(builder, IDOffset);
+    TRK.AddM3A(builder, M3A);
+    TRK.AddM2(builder, M2);
+    TRK.AddM1(builder, M1);
+    TRK.AddSTRENGTH(builder, STRENGTH);
     TRK.AddTRACK_COMPONENTS(builder, TRACK_COMPONENTS);
+    TRK.AddM3AV(builder, M3AV);
+    TRK.AddM2V(builder, M2V);
+    TRK.AddM1V(builder, M1V);
     TRK.AddMULTI_SOURCE(builder, MULTI_SOURCE);
+    TRK.AddENVIRONMENT(builder, ENVIRONMENT);
+    TRK.AddIDENT_REL(builder, IDENT_REL);
+    TRK.AddIDENT_CRED(builder, IDENT_CRED);
+    TRK.AddTRK_QUAL(builder, TRK_QUAL);
+    TRK.AddTRK_STAT(builder, TRK_STAT);
     return TRK.EndTRK(builder);
   }
 
@@ -441,11 +477,11 @@ public struct TRK : IFlatbufferObject
   public static void AddMSN_ID(FlatBufferBuilder builder, StringOffset MSN_IDOffset) { builder.AddOffset(3, MSN_IDOffset.Value, 0); }
   public static void AddASSET_NAT(FlatBufferBuilder builder, StringOffset ASSET_NATOffset) { builder.AddOffset(4, ASSET_NATOffset.Value, 0); }
   public static void AddASSET(FlatBufferBuilder builder, StringOffset ASSETOffset) { builder.AddOffset(5, ASSETOffset.Value, 0); }
-  public static void AddSEN(FlatBufferBuilder builder, StringOffset SENOffset) { builder.AddOffset(6, SENOffset.Value, 0); }
+  public static void AddSENSOR_ID(FlatBufferBuilder builder, StringOffset SENSOR_IDOffset) { builder.AddOffset(6, SENSOR_IDOffset.Value, 0); }
   public static void AddSEN_QUAL(FlatBufferBuilder builder, StringOffset SEN_QUALOffset) { builder.AddOffset(7, SEN_QUALOffset.Value, 0); }
   public static void AddTRK_ID(FlatBufferBuilder builder, StringOffset TRK_IDOffset) { builder.AddOffset(8, TRK_IDOffset.Value, 0); }
   public static void AddTRK_NUM(FlatBufferBuilder builder, StringOffset TRK_NUMOffset) { builder.AddOffset(9, TRK_NUMOffset.Value, 0); }
-  public static void AddTRK_STAT(FlatBufferBuilder builder, StringOffset TRK_STATOffset) { builder.AddOffset(10, TRK_STATOffset.Value, 0); }
+  public static void AddTRK_STAT(FlatBufferBuilder builder, trackStatus TRK_STAT) { builder.AddSbyte(10, (sbyte)TRK_STAT, 0); }
   public static void AddOBJ_NAT(FlatBufferBuilder builder, StringOffset OBJ_NATOffset) { builder.AddOffset(11, OBJ_NATOffset.Value, 0); }
   public static void AddOBJ_ID(FlatBufferBuilder builder, StringOffset OBJ_IDOffset) { builder.AddOffset(12, OBJ_IDOffset.Value, 0); }
   public static void AddOBJ_TYPE(FlatBufferBuilder builder, StringOffset OBJ_TYPEOffset) { builder.AddOffset(13, OBJ_TYPEOffset.Value, 0); }
@@ -455,13 +491,13 @@ public struct TRK : IFlatbufferObject
   public static void AddMOD_TYPE(FlatBufferBuilder builder, StringOffset MOD_TYPEOffset) { builder.AddOffset(17, MOD_TYPEOffset.Value, 0); }
   public static void AddTRK_ITM_ID(FlatBufferBuilder builder, StringOffset TRK_ITM_IDOffset) { builder.AddOffset(18, TRK_ITM_IDOffset.Value, 0); }
   public static void AddTS(FlatBufferBuilder builder, StringOffset TSOffset) { builder.AddOffset(19, TSOffset.Value, 0); }
-  public static void AddTRK_QUAL(FlatBufferBuilder builder, int TRK_QUAL) { builder.AddInt(20, TRK_QUAL, 0); }
+  public static void AddTRK_QUAL(FlatBufferBuilder builder, byte TRK_QUAL) { builder.AddByte(20, TRK_QUAL, 0); }
   public static void AddTRK_PT_TYPE(FlatBufferBuilder builder, StringOffset TRK_PT_TYPEOffset) { builder.AddOffset(21, TRK_PT_TYPEOffset.Value, 0); }
   public static void AddOBJ_IDENT(FlatBufferBuilder builder, StringOffset OBJ_IDENTOffset) { builder.AddOffset(22, OBJ_IDENTOffset.Value, 0); }
-  public static void AddIDENT_CRED(FlatBufferBuilder builder, int IDENT_CRED) { builder.AddInt(23, IDENT_CRED, 0); }
-  public static void AddIDENT_REL(FlatBufferBuilder builder, int IDENT_REL) { builder.AddInt(24, IDENT_REL, 0); }
+  public static void AddIDENT_CRED(FlatBufferBuilder builder, byte IDENT_CRED) { builder.AddByte(23, IDENT_CRED, 0); }
+  public static void AddIDENT_REL(FlatBufferBuilder builder, byte IDENT_REL) { builder.AddByte(24, IDENT_REL, 0); }
   public static void AddIDENT_AMP(FlatBufferBuilder builder, StringOffset IDENT_AMPOffset) { builder.AddOffset(25, IDENT_AMPOffset.Value, 0); }
-  public static void AddENVIRONMENT(FlatBufferBuilder builder, StringOffset ENVIRONMENTOffset) { builder.AddOffset(26, ENVIRONMENTOffset.Value, 0); }
+  public static void AddENVIRONMENT(FlatBufferBuilder builder, trackEnvironment ENVIRONMENT) { builder.AddSbyte(26, (sbyte)ENVIRONMENT, 0); }
   public static void AddENVIRONMENT_CONF(FlatBufferBuilder builder, double ENVIRONMENT_CONF) { builder.AddDouble(27, ENVIRONMENT_CONF, 0.0); }
   public static void AddTRK_CONF(FlatBufferBuilder builder, double TRK_CONF) { builder.AddDouble(28, TRK_CONF, 0.0); }
   public static void AddLAT(FlatBufferBuilder builder, double LAT) { builder.AddDouble(29, LAT, 0.0); }
@@ -485,13 +521,13 @@ public struct TRK : IFlatbufferObject
   public static void AddCALL_SIGN(FlatBufferBuilder builder, StringOffset CALL_SIGNOffset) { builder.AddOffset(37, CALL_SIGNOffset.Value, 0); }
   public static void AddMULTI_SOURCE(FlatBufferBuilder builder, bool MULTI_SOURCE) { builder.AddBool(38, MULTI_SOURCE, false); }
   public static void AddJ_SERIES(FlatBufferBuilder builder, StringOffset J_SERIESOffset) { builder.AddOffset(39, J_SERIESOffset.Value, 0); }
-  public static void AddSTRENGTH(FlatBufferBuilder builder, int STRENGTH) { builder.AddInt(40, STRENGTH, 0); }
-  public static void AddM1(FlatBufferBuilder builder, int M1) { builder.AddInt(41, M1, 0); }
-  public static void AddM1V(FlatBufferBuilder builder, int M1V) { builder.AddInt(42, M1V, 0); }
-  public static void AddM2(FlatBufferBuilder builder, int M2) { builder.AddInt(43, M2, 0); }
-  public static void AddM2V(FlatBufferBuilder builder, int M2V) { builder.AddInt(44, M2V, 0); }
-  public static void AddM3A(FlatBufferBuilder builder, int M3A) { builder.AddInt(45, M3A, 0); }
-  public static void AddM3AV(FlatBufferBuilder builder, int M3AV) { builder.AddInt(46, M3AV, 0); }
+  public static void AddSTRENGTH(FlatBufferBuilder builder, ushort STRENGTH) { builder.AddUshort(40, STRENGTH, 0); }
+  public static void AddM1(FlatBufferBuilder builder, ushort M1) { builder.AddUshort(41, M1, 0); }
+  public static void AddM1V(FlatBufferBuilder builder, byte M1V) { builder.AddByte(42, M1V, 0); }
+  public static void AddM2(FlatBufferBuilder builder, ushort M2) { builder.AddUshort(43, M2, 0); }
+  public static void AddM2V(FlatBufferBuilder builder, byte M2V) { builder.AddByte(44, M2V, 0); }
+  public static void AddM3A(FlatBufferBuilder builder, ushort M3A) { builder.AddUshort(45, M3A, 0); }
+  public static void AddM3AV(FlatBufferBuilder builder, byte M3AV) { builder.AddByte(46, M3AV, 0); }
   public static void AddTAGS(FlatBufferBuilder builder, VectorOffset TAGSOffset) { builder.AddOffset(47, TAGSOffset.Value, 0); }
   public static VectorOffset CreateTAGSVector(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
   public static VectorOffset CreateTAGSVectorBlock(FlatBufferBuilder builder, StringOffset[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
@@ -567,7 +603,7 @@ public struct TRK : IFlatbufferObject
     _o.MSN_ID = this.MSN_ID;
     _o.ASSET_NAT = this.ASSET_NAT;
     _o.ASSET = this.ASSET;
-    _o.SEN = this.SEN;
+    _o.SENSOR_ID = this.SENSOR_ID;
     _o.SEN_QUAL = this.SEN_QUAL;
     _o.TRK_ID = this.TRK_ID;
     _o.TRK_NUM = this.TRK_NUM;
@@ -640,11 +676,10 @@ public struct TRK : IFlatbufferObject
     var _MSN_ID = _o.MSN_ID == null ? default(StringOffset) : builder.CreateString(_o.MSN_ID);
     var _ASSET_NAT = _o.ASSET_NAT == null ? default(StringOffset) : builder.CreateString(_o.ASSET_NAT);
     var _ASSET = _o.ASSET == null ? default(StringOffset) : builder.CreateString(_o.ASSET);
-    var _SEN = _o.SEN == null ? default(StringOffset) : builder.CreateString(_o.SEN);
+    var _SENSOR_ID = _o.SENSOR_ID == null ? default(StringOffset) : builder.CreateString(_o.SENSOR_ID);
     var _SEN_QUAL = _o.SEN_QUAL == null ? default(StringOffset) : builder.CreateString(_o.SEN_QUAL);
     var _TRK_ID = _o.TRK_ID == null ? default(StringOffset) : builder.CreateString(_o.TRK_ID);
     var _TRK_NUM = _o.TRK_NUM == null ? default(StringOffset) : builder.CreateString(_o.TRK_NUM);
-    var _TRK_STAT = _o.TRK_STAT == null ? default(StringOffset) : builder.CreateString(_o.TRK_STAT);
     var _OBJ_NAT = _o.OBJ_NAT == null ? default(StringOffset) : builder.CreateString(_o.OBJ_NAT);
     var _OBJ_ID = _o.OBJ_ID == null ? default(StringOffset) : builder.CreateString(_o.OBJ_ID);
     var _OBJ_TYPE = _o.OBJ_TYPE == null ? default(StringOffset) : builder.CreateString(_o.OBJ_TYPE);
@@ -657,7 +692,6 @@ public struct TRK : IFlatbufferObject
     var _TRK_PT_TYPE = _o.TRK_PT_TYPE == null ? default(StringOffset) : builder.CreateString(_o.TRK_PT_TYPE);
     var _OBJ_IDENT = _o.OBJ_IDENT == null ? default(StringOffset) : builder.CreateString(_o.OBJ_IDENT);
     var _IDENT_AMP = _o.IDENT_AMP == null ? default(StringOffset) : builder.CreateString(_o.IDENT_AMP);
-    var _ENVIRONMENT = _o.ENVIRONMENT == null ? default(StringOffset) : builder.CreateString(_o.ENVIRONMENT);
     var _SRC_TYPS = default(VectorOffset);
     if (_o.SRC_TYPS != null) {
       var __SRC_TYPS = new StringOffset[_o.SRC_TYPS.Count];
@@ -727,11 +761,11 @@ public struct TRK : IFlatbufferObject
       _MSN_ID,
       _ASSET_NAT,
       _ASSET,
-      _SEN,
+      _SENSOR_ID,
       _SEN_QUAL,
       _TRK_ID,
       _TRK_NUM,
-      _TRK_STAT,
+      _o.TRK_STAT,
       _OBJ_NAT,
       _OBJ_ID,
       _OBJ_TYPE,
@@ -747,7 +781,7 @@ public struct TRK : IFlatbufferObject
       _o.IDENT_CRED,
       _o.IDENT_REL,
       _IDENT_AMP,
-      _ENVIRONMENT,
+      _o.ENVIRONMENT,
       _o.ENVIRONMENT_CONF,
       _o.TRK_CONF,
       _o.LAT,
@@ -791,11 +825,11 @@ public class TRKT
   public string MSN_ID { get; set; }
   public string ASSET_NAT { get; set; }
   public string ASSET { get; set; }
-  public string SEN { get; set; }
+  public string SENSOR_ID { get; set; }
   public string SEN_QUAL { get; set; }
   public string TRK_ID { get; set; }
   public string TRK_NUM { get; set; }
-  public string TRK_STAT { get; set; }
+  public trackStatus TRK_STAT { get; set; }
   public string OBJ_NAT { get; set; }
   public string OBJ_ID { get; set; }
   public string OBJ_TYPE { get; set; }
@@ -805,13 +839,13 @@ public class TRKT
   public string MOD_TYPE { get; set; }
   public string TRK_ITM_ID { get; set; }
   public string TS { get; set; }
-  public int TRK_QUAL { get; set; }
+  public byte TRK_QUAL { get; set; }
   public string TRK_PT_TYPE { get; set; }
   public string OBJ_IDENT { get; set; }
-  public int IDENT_CRED { get; set; }
-  public int IDENT_REL { get; set; }
+  public byte IDENT_CRED { get; set; }
+  public byte IDENT_REL { get; set; }
   public string IDENT_AMP { get; set; }
-  public string ENVIRONMENT { get; set; }
+  public trackEnvironment ENVIRONMENT { get; set; }
   public double ENVIRONMENT_CONF { get; set; }
   public double TRK_CONF { get; set; }
   public double LAT { get; set; }
@@ -825,13 +859,13 @@ public class TRKT
   public string CALL_SIGN { get; set; }
   public bool MULTI_SOURCE { get; set; }
   public string J_SERIES { get; set; }
-  public int STRENGTH { get; set; }
-  public int M1 { get; set; }
-  public int M1V { get; set; }
-  public int M2 { get; set; }
-  public int M2V { get; set; }
-  public int M3A { get; set; }
-  public int M3AV { get; set; }
+  public ushort STRENGTH { get; set; }
+  public ushort M1 { get; set; }
+  public byte M1V { get; set; }
+  public ushort M2 { get; set; }
+  public byte M2V { get; set; }
+  public ushort M3A { get; set; }
+  public byte M3AV { get; set; }
   public List<string> TAGS { get; set; }
   public string TRACK_START_TIME { get; set; }
   public double TRACK_STEP_SIZE { get; set; }
@@ -852,11 +886,11 @@ public class TRKT
     this.MSN_ID = null;
     this.ASSET_NAT = null;
     this.ASSET = null;
-    this.SEN = null;
+    this.SENSOR_ID = null;
     this.SEN_QUAL = null;
     this.TRK_ID = null;
     this.TRK_NUM = null;
-    this.TRK_STAT = null;
+    this.TRK_STAT = trackStatus.ACTIVE;
     this.OBJ_NAT = null;
     this.OBJ_ID = null;
     this.OBJ_TYPE = null;
@@ -872,7 +906,7 @@ public class TRKT
     this.IDENT_CRED = 0;
     this.IDENT_REL = 0;
     this.IDENT_AMP = null;
-    this.ENVIRONMENT = null;
+    this.ENVIRONMENT = trackEnvironment.SPACE;
     this.ENVIRONMENT_CONF = 0.0;
     this.TRK_CONF = 0.0;
     this.LAT = 0.0;
@@ -928,11 +962,11 @@ static public class TRKVerify
       && verifier.VerifyString(tablePos, 10 /*MSN_ID*/, false)
       && verifier.VerifyString(tablePos, 12 /*ASSET_NAT*/, false)
       && verifier.VerifyString(tablePos, 14 /*ASSET*/, false)
-      && verifier.VerifyString(tablePos, 16 /*SEN*/, false)
+      && verifier.VerifyString(tablePos, 16 /*SENSOR_ID*/, false)
       && verifier.VerifyString(tablePos, 18 /*SEN_QUAL*/, false)
       && verifier.VerifyString(tablePos, 20 /*TRK_ID*/, false)
       && verifier.VerifyString(tablePos, 22 /*TRK_NUM*/, false)
-      && verifier.VerifyString(tablePos, 24 /*TRK_STAT*/, false)
+      && verifier.VerifyField(tablePos, 24 /*TRK_STAT*/, 1 /*trackStatus*/, 1, false)
       && verifier.VerifyString(tablePos, 26 /*OBJ_NAT*/, false)
       && verifier.VerifyString(tablePos, 28 /*OBJ_ID*/, false)
       && verifier.VerifyString(tablePos, 30 /*OBJ_TYPE*/, false)
@@ -942,13 +976,13 @@ static public class TRKVerify
       && verifier.VerifyString(tablePos, 38 /*MOD_TYPE*/, false)
       && verifier.VerifyString(tablePos, 40 /*TRK_ITM_ID*/, false)
       && verifier.VerifyString(tablePos, 42 /*TS*/, false)
-      && verifier.VerifyField(tablePos, 44 /*TRK_QUAL*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 44 /*TRK_QUAL*/, 1 /*byte*/, 1, false)
       && verifier.VerifyString(tablePos, 46 /*TRK_PT_TYPE*/, false)
       && verifier.VerifyString(tablePos, 48 /*OBJ_IDENT*/, false)
-      && verifier.VerifyField(tablePos, 50 /*IDENT_CRED*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 52 /*IDENT_REL*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 50 /*IDENT_CRED*/, 1 /*byte*/, 1, false)
+      && verifier.VerifyField(tablePos, 52 /*IDENT_REL*/, 1 /*byte*/, 1, false)
       && verifier.VerifyString(tablePos, 54 /*IDENT_AMP*/, false)
-      && verifier.VerifyString(tablePos, 56 /*ENVIRONMENT*/, false)
+      && verifier.VerifyField(tablePos, 56 /*ENVIRONMENT*/, 1 /*trackEnvironment*/, 1, false)
       && verifier.VerifyField(tablePos, 58 /*ENVIRONMENT_CONF*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 60 /*TRK_CONF*/, 8 /*double*/, 8, false)
       && verifier.VerifyField(tablePos, 62 /*LAT*/, 8 /*double*/, 8, false)
@@ -962,13 +996,13 @@ static public class TRKVerify
       && verifier.VerifyString(tablePos, 78 /*CALL_SIGN*/, false)
       && verifier.VerifyField(tablePos, 80 /*MULTI_SOURCE*/, 1 /*bool*/, 1, false)
       && verifier.VerifyString(tablePos, 82 /*J_SERIES*/, false)
-      && verifier.VerifyField(tablePos, 84 /*STRENGTH*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 86 /*M1*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 88 /*M1V*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 90 /*M2*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 92 /*M2V*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 94 /*M3A*/, 4 /*int*/, 4, false)
-      && verifier.VerifyField(tablePos, 96 /*M3AV*/, 4 /*int*/, 4, false)
+      && verifier.VerifyField(tablePos, 84 /*STRENGTH*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyField(tablePos, 86 /*M1*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyField(tablePos, 88 /*M1V*/, 1 /*byte*/, 1, false)
+      && verifier.VerifyField(tablePos, 90 /*M2*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyField(tablePos, 92 /*M2V*/, 1 /*byte*/, 1, false)
+      && verifier.VerifyField(tablePos, 94 /*M3A*/, 2 /*ushort*/, 2, false)
+      && verifier.VerifyField(tablePos, 96 /*M3AV*/, 1 /*byte*/, 1, false)
       && verifier.VerifyVectorOfStrings(tablePos, 98 /*TAGS*/, false)
       && verifier.VerifyString(tablePos, 100 /*TRACK_START_TIME*/, false)
       && verifier.VerifyField(tablePos, 102 /*TRACK_STEP_SIZE*/, 8 /*double*/, 8, false)

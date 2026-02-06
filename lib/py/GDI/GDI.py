@@ -29,6 +29,7 @@ class GDI(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Unique identifier
     # GDI
     def ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +37,7 @@ class GDI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Sensor identifier
     # GDI
     def ID_SENSOR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -43,93 +45,130 @@ class GDI(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Original sensor identifier
     # GDI
-    def IMAGE_TIME(self):
+    def ORIG_SENSOR_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Image capture time (ISO 8601)
     # GDI
-    def FILENAME(self):
+    def IMAGE_TIME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Image filename
     # GDI
-    def REGION(self):
+    def FILENAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Image format
     # GDI
-    def REGION_TEXT(self):
+    def FORMAT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
+    # File size (bytes)
     # GDI
-    def REGION_GEO_JSON(self):
+    def FILESIZE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
+        return 0
 
+    # File checksum value
     # GDI
-    def REGION_TYPE(self):
+    def CHECKSUM_VALUE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Region GeoJSON boundary
     # GDI
-    def REGION_NDIMS(self):
+    def REGION_GEO_JSON(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
+    # Region text description
     # GDI
-    def REGION_SRID(self):
+    def REGION_TEXT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
+    # Region name
     # GDI
-    def ORIG_SENSOR_ID(self):
+    def REGION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Region type
     # GDI
-    def SUBJECT_ID(self):
+    def REGION_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Region geometry dimensions
     # GDI
-    def NAME(self):
+    def REGION_NDIMS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
+        return 0
 
+    # Region spatial reference ID
     # GDI
-    def TRANSACTION_ID(self):
+    def REGION_SRID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Subject object identifier
+    # GDI
+    def SUBJECT_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Image name or title
+    # GDI
+    def NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Transaction identifier
+    # GDI
+    def TRANSACTION_ID(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Associated tags
     # GDI
     def TAGS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -137,19 +176,20 @@ class GDI(object):
 
     # GDI
     def TAGSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # GDI
     def TAGSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         return o == 0
 
+    # Keywords for search/classification
     # GDI
     def KEYWORDS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -157,39 +197,19 @@ class GDI(object):
 
     # GDI
     def KEYWORDSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # GDI
     def KEYWORDSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         return o == 0
 
+    # Notes
     # GDI
     def NOTES(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # GDI
-    def FORMAT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # GDI
-    def FILESIZE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int64Flags, o + self._tab.Pos)
-        return 0
-
-    # GDI
-    def CHECKSUM_VALUE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
@@ -213,80 +233,98 @@ def GDIAddID_SENSOR(builder, ID_SENSOR):
 def AddID_SENSOR(builder, ID_SENSOR):
     GDIAddID_SENSOR(builder, ID_SENSOR)
 
+def GDIAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_SENSOR_ID), 0)
+
+def AddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID):
+    GDIAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
+
 def GDIAddIMAGE_TIME(builder, IMAGE_TIME):
-    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(IMAGE_TIME), 0)
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(IMAGE_TIME), 0)
 
 def AddIMAGE_TIME(builder, IMAGE_TIME):
     GDIAddIMAGE_TIME(builder, IMAGE_TIME)
 
 def GDIAddFILENAME(builder, FILENAME):
-    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(FILENAME), 0)
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(FILENAME), 0)
 
 def AddFILENAME(builder, FILENAME):
     GDIAddFILENAME(builder, FILENAME)
 
-def GDIAddREGION(builder, REGION):
-    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(REGION), 0)
+def GDIAddFORMAT(builder, FORMAT):
+    builder.PrependInt8Slot(5, FORMAT, 0)
 
-def AddREGION(builder, REGION):
-    GDIAddREGION(builder, REGION)
+def AddFORMAT(builder, FORMAT):
+    GDIAddFORMAT(builder, FORMAT)
 
-def GDIAddREGION_TEXT(builder, REGION_TEXT):
-    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(REGION_TEXT), 0)
+def GDIAddFILESIZE(builder, FILESIZE):
+    builder.PrependInt64Slot(6, FILESIZE, 0)
 
-def AddREGION_TEXT(builder, REGION_TEXT):
-    GDIAddREGION_TEXT(builder, REGION_TEXT)
+def AddFILESIZE(builder, FILESIZE):
+    GDIAddFILESIZE(builder, FILESIZE)
+
+def GDIAddCHECKSUM_VALUE(builder, CHECKSUM_VALUE):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(CHECKSUM_VALUE), 0)
+
+def AddCHECKSUM_VALUE(builder, CHECKSUM_VALUE):
+    GDIAddCHECKSUM_VALUE(builder, CHECKSUM_VALUE)
 
 def GDIAddREGION_GEO_JSON(builder, REGION_GEO_JSON):
-    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(REGION_GEO_JSON), 0)
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(REGION_GEO_JSON), 0)
 
 def AddREGION_GEO_JSON(builder, REGION_GEO_JSON):
     GDIAddREGION_GEO_JSON(builder, REGION_GEO_JSON)
 
+def GDIAddREGION_TEXT(builder, REGION_TEXT):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(REGION_TEXT), 0)
+
+def AddREGION_TEXT(builder, REGION_TEXT):
+    GDIAddREGION_TEXT(builder, REGION_TEXT)
+
+def GDIAddREGION(builder, REGION):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(REGION), 0)
+
+def AddREGION(builder, REGION):
+    GDIAddREGION(builder, REGION)
+
 def GDIAddREGION_TYPE(builder, REGION_TYPE):
-    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(REGION_TYPE), 0)
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(REGION_TYPE), 0)
 
 def AddREGION_TYPE(builder, REGION_TYPE):
     GDIAddREGION_TYPE(builder, REGION_TYPE)
 
 def GDIAddREGION_NDIMS(builder, REGION_NDIMS):
-    builder.PrependInt32Slot(8, REGION_NDIMS, 0)
+    builder.PrependUint8Slot(12, REGION_NDIMS, 0)
 
 def AddREGION_NDIMS(builder, REGION_NDIMS):
     GDIAddREGION_NDIMS(builder, REGION_NDIMS)
 
 def GDIAddREGION_SRID(builder, REGION_SRID):
-    builder.PrependInt32Slot(9, REGION_SRID, 0)
+    builder.PrependUint16Slot(13, REGION_SRID, 0)
 
 def AddREGION_SRID(builder, REGION_SRID):
     GDIAddREGION_SRID(builder, REGION_SRID)
 
-def GDIAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID):
-    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_SENSOR_ID), 0)
-
-def AddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID):
-    GDIAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
-
 def GDIAddSUBJECT_ID(builder, SUBJECT_ID):
-    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(SUBJECT_ID), 0)
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(SUBJECT_ID), 0)
 
 def AddSUBJECT_ID(builder, SUBJECT_ID):
     GDIAddSUBJECT_ID(builder, SUBJECT_ID)
 
 def GDIAddNAME(builder, NAME):
-    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(NAME), 0)
 
 def AddNAME(builder, NAME):
     GDIAddNAME(builder, NAME)
 
 def GDIAddTRANSACTION_ID(builder, TRANSACTION_ID):
-    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSACTION_ID), 0)
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSACTION_ID), 0)
 
 def AddTRANSACTION_ID(builder, TRANSACTION_ID):
     GDIAddTRANSACTION_ID(builder, TRANSACTION_ID)
 
 def GDIAddTAGS(builder, TAGS):
-    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(TAGS), 0)
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(TAGS), 0)
 
 def AddTAGS(builder, TAGS):
     GDIAddTAGS(builder, TAGS)
@@ -298,7 +336,7 @@ def StartTAGSVector(builder, numElems):
     return GDIStartTAGSVector(builder, numElems)
 
 def GDIAddKEYWORDS(builder, KEYWORDS):
-    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(KEYWORDS), 0)
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(KEYWORDS), 0)
 
 def AddKEYWORDS(builder, KEYWORDS):
     GDIAddKEYWORDS(builder, KEYWORDS)
@@ -310,28 +348,10 @@ def StartKEYWORDSVector(builder, numElems):
     return GDIStartKEYWORDSVector(builder, numElems)
 
 def GDIAddNOTES(builder, NOTES):
-    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(NOTES), 0)
+    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(NOTES), 0)
 
 def AddNOTES(builder, NOTES):
     GDIAddNOTES(builder, NOTES)
-
-def GDIAddFORMAT(builder, FORMAT):
-    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(FORMAT), 0)
-
-def AddFORMAT(builder, FORMAT):
-    GDIAddFORMAT(builder, FORMAT)
-
-def GDIAddFILESIZE(builder, FILESIZE):
-    builder.PrependInt64Slot(18, FILESIZE, 0)
-
-def AddFILESIZE(builder, FILESIZE):
-    GDIAddFILESIZE(builder, FILESIZE)
-
-def GDIAddCHECKSUM_VALUE(builder, CHECKSUM_VALUE):
-    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(CHECKSUM_VALUE), 0)
-
-def AddCHECKSUM_VALUE(builder, CHECKSUM_VALUE):
-    GDIAddCHECKSUM_VALUE(builder, CHECKSUM_VALUE)
 
 def GDIEnd(builder):
     return builder.EndObject()
@@ -350,24 +370,24 @@ class GDIT(object):
     def __init__(self):
         self.ID = None  # type: str
         self.ID_SENSOR = None  # type: str
+        self.ORIG_SENSOR_ID = None  # type: str
         self.IMAGE_TIME = None  # type: str
         self.FILENAME = None  # type: str
-        self.REGION = None  # type: str
-        self.REGION_TEXT = None  # type: str
+        self.FORMAT = 0  # type: int
+        self.FILESIZE = 0  # type: int
+        self.CHECKSUM_VALUE = None  # type: str
         self.REGION_GEO_JSON = None  # type: str
+        self.REGION_TEXT = None  # type: str
+        self.REGION = None  # type: str
         self.REGION_TYPE = None  # type: str
         self.REGION_NDIMS = 0  # type: int
         self.REGION_SRID = 0  # type: int
-        self.ORIG_SENSOR_ID = None  # type: str
         self.SUBJECT_ID = None  # type: str
         self.NAME = None  # type: str
         self.TRANSACTION_ID = None  # type: str
         self.TAGS = None  # type: List[str]
         self.KEYWORDS = None  # type: List[str]
         self.NOTES = None  # type: str
-        self.FORMAT = None  # type: str
-        self.FILESIZE = 0  # type: int
-        self.CHECKSUM_VALUE = None  # type: str
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -392,15 +412,18 @@ class GDIT(object):
             return
         self.ID = GDI.ID()
         self.ID_SENSOR = GDI.ID_SENSOR()
+        self.ORIG_SENSOR_ID = GDI.ORIG_SENSOR_ID()
         self.IMAGE_TIME = GDI.IMAGE_TIME()
         self.FILENAME = GDI.FILENAME()
-        self.REGION = GDI.REGION()
-        self.REGION_TEXT = GDI.REGION_TEXT()
+        self.FORMAT = GDI.FORMAT()
+        self.FILESIZE = GDI.FILESIZE()
+        self.CHECKSUM_VALUE = GDI.CHECKSUM_VALUE()
         self.REGION_GEO_JSON = GDI.REGION_GEO_JSON()
+        self.REGION_TEXT = GDI.REGION_TEXT()
+        self.REGION = GDI.REGION()
         self.REGION_TYPE = GDI.REGION_TYPE()
         self.REGION_NDIMS = GDI.REGION_NDIMS()
         self.REGION_SRID = GDI.REGION_SRID()
-        self.ORIG_SENSOR_ID = GDI.ORIG_SENSOR_ID()
         self.SUBJECT_ID = GDI.SUBJECT_ID()
         self.NAME = GDI.NAME()
         self.TRANSACTION_ID = GDI.TRANSACTION_ID()
@@ -413,9 +436,6 @@ class GDIT(object):
             for i in range(GDI.KEYWORDSLength()):
                 self.KEYWORDS.append(GDI.KEYWORDS(i))
         self.NOTES = GDI.NOTES()
-        self.FORMAT = GDI.FORMAT()
-        self.FILESIZE = GDI.FILESIZE()
-        self.CHECKSUM_VALUE = GDI.CHECKSUM_VALUE()
 
     # GDIT
     def Pack(self, builder):
@@ -423,20 +443,22 @@ class GDIT(object):
             ID = builder.CreateString(self.ID)
         if self.ID_SENSOR is not None:
             ID_SENSOR = builder.CreateString(self.ID_SENSOR)
+        if self.ORIG_SENSOR_ID is not None:
+            ORIG_SENSOR_ID = builder.CreateString(self.ORIG_SENSOR_ID)
         if self.IMAGE_TIME is not None:
             IMAGE_TIME = builder.CreateString(self.IMAGE_TIME)
         if self.FILENAME is not None:
             FILENAME = builder.CreateString(self.FILENAME)
-        if self.REGION is not None:
-            REGION = builder.CreateString(self.REGION)
-        if self.REGION_TEXT is not None:
-            REGION_TEXT = builder.CreateString(self.REGION_TEXT)
+        if self.CHECKSUM_VALUE is not None:
+            CHECKSUM_VALUE = builder.CreateString(self.CHECKSUM_VALUE)
         if self.REGION_GEO_JSON is not None:
             REGION_GEO_JSON = builder.CreateString(self.REGION_GEO_JSON)
+        if self.REGION_TEXT is not None:
+            REGION_TEXT = builder.CreateString(self.REGION_TEXT)
+        if self.REGION is not None:
+            REGION = builder.CreateString(self.REGION)
         if self.REGION_TYPE is not None:
             REGION_TYPE = builder.CreateString(self.REGION_TYPE)
-        if self.ORIG_SENSOR_ID is not None:
-            ORIG_SENSOR_ID = builder.CreateString(self.ORIG_SENSOR_ID)
         if self.SUBJECT_ID is not None:
             SUBJECT_ID = builder.CreateString(self.SUBJECT_ID)
         if self.NAME is not None:
@@ -461,31 +483,31 @@ class GDIT(object):
             KEYWORDS = builder.EndVector()
         if self.NOTES is not None:
             NOTES = builder.CreateString(self.NOTES)
-        if self.FORMAT is not None:
-            FORMAT = builder.CreateString(self.FORMAT)
-        if self.CHECKSUM_VALUE is not None:
-            CHECKSUM_VALUE = builder.CreateString(self.CHECKSUM_VALUE)
         GDIStart(builder)
         if self.ID is not None:
             GDIAddID(builder, ID)
         if self.ID_SENSOR is not None:
             GDIAddID_SENSOR(builder, ID_SENSOR)
+        if self.ORIG_SENSOR_ID is not None:
+            GDIAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
         if self.IMAGE_TIME is not None:
             GDIAddIMAGE_TIME(builder, IMAGE_TIME)
         if self.FILENAME is not None:
             GDIAddFILENAME(builder, FILENAME)
-        if self.REGION is not None:
-            GDIAddREGION(builder, REGION)
-        if self.REGION_TEXT is not None:
-            GDIAddREGION_TEXT(builder, REGION_TEXT)
+        GDIAddFORMAT(builder, self.FORMAT)
+        GDIAddFILESIZE(builder, self.FILESIZE)
+        if self.CHECKSUM_VALUE is not None:
+            GDIAddCHECKSUM_VALUE(builder, CHECKSUM_VALUE)
         if self.REGION_GEO_JSON is not None:
             GDIAddREGION_GEO_JSON(builder, REGION_GEO_JSON)
+        if self.REGION_TEXT is not None:
+            GDIAddREGION_TEXT(builder, REGION_TEXT)
+        if self.REGION is not None:
+            GDIAddREGION(builder, REGION)
         if self.REGION_TYPE is not None:
             GDIAddREGION_TYPE(builder, REGION_TYPE)
         GDIAddREGION_NDIMS(builder, self.REGION_NDIMS)
         GDIAddREGION_SRID(builder, self.REGION_SRID)
-        if self.ORIG_SENSOR_ID is not None:
-            GDIAddORIG_SENSOR_ID(builder, ORIG_SENSOR_ID)
         if self.SUBJECT_ID is not None:
             GDIAddSUBJECT_ID(builder, SUBJECT_ID)
         if self.NAME is not None:
@@ -498,10 +520,5 @@ class GDIT(object):
             GDIAddKEYWORDS(builder, KEYWORDS)
         if self.NOTES is not None:
             GDIAddNOTES(builder, NOTES)
-        if self.FORMAT is not None:
-            GDIAddFORMAT(builder, FORMAT)
-        GDIAddFILESIZE(builder, self.FILESIZE)
-        if self.CHECKSUM_VALUE is not None:
-            GDIAddCHECKSUM_VALUE(builder, CHECKSUM_VALUE)
         GDI = GDIEnd(builder)
         return GDI

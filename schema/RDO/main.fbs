@@ -1,60 +1,121 @@
-// Hash: 260b64900b461cf4a3fa8fc6127603aa2bdd4aac11b245bf3ac44246804e4d07
-// Version: 0.0.2
+// Hash: a5ec7b5c21df888e4605bd26687b608916f2ca4eaf930c43b5a58820e44f597b
+// Version: 0.0.3
 // -----------------------------------END_HEADER
+enum radarObsType : byte {
+  DETECTION,
+  TRACK,
+  METRIC,
+  SIGNATURE,
+  SEARCH_FENCE,
+  UNKNOWN
+}
+
 /// Radar Observation
 table RDO {
+  /// Unique identifier
   ID:string;
+  /// Observation time (ISO 8601)
   OB_TIME:string;
+  /// Sensor identifier
   ID_SENSOR:string;
-  SAT_NO:int;
-  TASK_ID:string;
-  TRANSACTION_ID:string;
-  TRACK_ID:string;
-  OB_POSITION:string;
-  ORIG_OBJECT_ID:string;
+  /// Original sensor identifier
   ORIG_SENSOR_ID:string;
-  UCT:bool;
-  AZIMUTH:double;
-  AZIMUTH_UNC:double;
-  AZIMUTH_BIAS:double;
-  AZIMUTH_RATE:double;
-  ELEVATION:double;
-  ELEVATION_UNC:double;
-  ELEVATION_BIAS:double;
-  ELEVATION_RATE:double;
-  RANGE:double;
-  RANGE_ACCEL:double;
-  RANGE_ACCEL_UNC:double;
-  RANGE_UNC:double;
-  RANGE_BIAS:double;
-  RANGE_RATE:double;
-  RANGE_RATE_UNC:double;
-  DOPPLER:double;
-  DOPPLER_UNC:double;
-  RA:double;
-  DECLINATION:double;
-  X:double;
-  Y:double;
-  Z:double;
-  XVEL:double;
-  YVEL:double;
-  ZVEL:double;
-  SENX:double;
-  SENY:double;
-  SENZ:double;
-  RCS:double;
-  RCS_UNC:double;
-  ORTHOGONAL_RCS:double;
-  ORTHOGONAL_RCS_UNC:double;
-  SNR:double;
-  BEAM:double;
-  TIMING_BIAS:double;
-  RAW_FILE_URI:string;
-  TAGS:[string];
+  /// Satellite catalog number
+  SAT_NO:uint32;
+  /// International designator
+  ORIG_OBJECT_ID:string;
+  /// On-orbit reference
   ON_ORBIT:string;
+  /// True if uncorrelated target
+  UCT:bool;
+  /// Observation type
+  OBS_TYPE:radarObsType;
+  /// Task identifier
+  TASK_ID:string;
+  /// Transaction identifier
+  TRANSACTION_ID:string;
+  /// Track identifier
+  TRACK_ID:string;
+  /// Observation position identifier
+  OB_POSITION:string;
+  /// Sensor reference frame
   SEN_REFERENCE_FRAME:string;
+  /// Azimuth angle (degrees)
+  AZIMUTH:double;
+  /// Azimuth uncertainty (degrees, 1-sigma)
+  AZIMUTH_UNC:double;
+  /// Azimuth bias (degrees)
+  AZIMUTH_BIAS:double;
+  /// Azimuth rate (degrees/s)
+  AZIMUTH_RATE:double;
+  /// Elevation angle (degrees)
+  ELEVATION:double;
+  /// Elevation uncertainty (degrees, 1-sigma)
+  ELEVATION_UNC:double;
+  /// Elevation bias (degrees)
+  ELEVATION_BIAS:double;
+  /// Elevation rate (degrees/s)
+  ELEVATION_RATE:double;
+  /// Slant range (km)
+  RANGE:double;
+  /// Range uncertainty (km, 1-sigma)
+  RANGE_UNC:double;
+  /// Range bias (km)
+  RANGE_BIAS:double;
+  /// Range rate (km/s)
+  RANGE_RATE:double;
+  /// Range rate uncertainty (km/s, 1-sigma)
+  RANGE_RATE_UNC:double;
+  /// Range acceleration (km/s^2)
+  RANGE_ACCEL:double;
+  /// Range acceleration uncertainty (km/s^2, 1-sigma)
+  RANGE_ACCEL_UNC:double;
+  /// Doppler shift (Hz)
+  DOPPLER:double;
+  /// Doppler uncertainty (Hz, 1-sigma)
+  DOPPLER_UNC:double;
+  /// Right ascension (degrees)
+  RA:double;
+  /// Declination (degrees)
+  DECLINATION:double;
+  /// Target position X (km, ECI)
+  X:double;
+  /// Target position Y (km, ECI)
+  Y:double;
+  /// Target position Z (km, ECI)
+  Z:double;
+  /// Target velocity X (km/s, ECI)
+  XVEL:double;
+  /// Target velocity Y (km/s, ECI)
+  YVEL:double;
+  /// Target velocity Z (km/s, ECI)
+  ZVEL:double;
+  /// Sensor position X (km, ECEF)
+  SENX:double;
+  /// Sensor position Y (km, ECEF)
+  SENY:double;
+  /// Sensor position Z (km, ECEF)
+  SENZ:double;
+  /// Radar cross-section (dBsm)
+  RCS:double;
+  /// RCS uncertainty (dBsm, 1-sigma)
+  RCS_UNC:double;
+  /// Orthogonal polarization RCS (dBsm)
+  ORTHOGONAL_RCS:double;
+  /// Orthogonal RCS uncertainty (dBsm, 1-sigma)
+  ORTHOGONAL_RCS_UNC:double;
+  /// Signal-to-noise ratio (dB)
+  SNR:double;
+  /// Beam identifier
+  BEAM:double;
+  /// Timing bias (seconds)
+  TIMING_BIAS:double;
+  /// Reference to raw data file
+  RAW_FILE_URI:string;
+  /// Event descriptor
   DESCRIPTOR:string;
-  TYPE:string;
+  /// Associated tags
+  TAGS:[string];
 }
 
 root_type RDO;

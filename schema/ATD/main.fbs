@@ -1,33 +1,85 @@
-// Hash: c4944a84ed159ab22e6fedd7a3e83602d125d248cff34e568a9d3653acce2def
-// Version: 0.0.2
+// Hash: 63fd9cb8d8f4a74f429ef9c837fcfe0d48ec03949ae94ab2739632fafe81971b
+// Version: 0.0.3
 // -----------------------------------END_HEADER
+enum attMotionType : byte {
+  STABILIZED,
+  SPINNING,
+  TUMBLING,
+  PRECESSING,
+  UNKNOWN
+}
+
+enum attRepresentation : byte {
+  QUATERNION,
+  EULER,
+  SPIN,
+  DIRECTION_COSINE
+}
+
 /// Attitude Data Point
 table ATD {
+  /// Unique identifier
   ID:string;
+  /// Attitude set identifier (groups time-series points)
   AS_ID:string;
-  SAT_NO:int;
+  /// Satellite catalog number
+  SAT_NO:uint32;
+  /// International designator
   ORIG_OBJECT_ID:string;
-  TS:string;
-  MOTION_TYPE:string;
-  Q1:double;
-  Q2:double;
-  Q3:double;
+  /// Observation epoch (ISO 8601)
+  EPOCH:string;
+  /// Attitude representation used
+  REPRESENTATION:attRepresentation;
+  /// Motion characterization
+  MOTION_TYPE:attMotionType;
+  /// Quaternion scalar component (q0 or qc)
   QC:double;
-  Q1_DOT:double;
-  Q2_DOT:double;
-  Q3_DOT:double;
+  /// Quaternion vector component 1
+  Q1:double;
+  /// Quaternion vector component 2
+  Q2:double;
+  /// Quaternion vector component 3
+  Q3:double;
+  /// Quaternion scalar rate (rad/s)
   QC_DOT:double;
-  X_ANGLE:[string];
-  Y_ANGLE:[string];
-  Z_ANGLE:[string];
-  X_RATE:[string];
-  Y_RATE:[string];
-  Z_RATE:[string];
+  /// Quaternion vector rate 1 (rad/s)
+  Q1_DOT:double;
+  /// Quaternion vector rate 2 (rad/s)
+  Q2_DOT:double;
+  /// Quaternion vector rate 3 (rad/s)
+  Q3_DOT:double;
+  /// Euler angle X (degrees)
+  X_ANGLE:double;
+  /// Euler angle Y (degrees)
+  Y_ANGLE:double;
+  /// Euler angle Z (degrees)
+  Z_ANGLE:double;
+  /// Angular rate about X (deg/s)
+  X_RATE:double;
+  /// Angular rate about Y (deg/s)
+  Y_RATE:double;
+  /// Angular rate about Z (deg/s)
+  Z_RATE:double;
+  /// Right ascension of spin axis (degrees)
   RA:double;
+  /// Declination of spin axis (degrees)
   DECLINATION:double;
+  /// Coning half-angle (degrees)
   CONING_ANGLE:double;
+  /// Precession period (seconds)
   PREC_PERIOD:double;
+  /// Spin period (seconds)
   SPIN_PERIOD:double;
+  /// Attitude uncertainty (degrees, 1-sigma)
+  ATTITUDE_UNC:double;
+  /// Rate uncertainty (deg/s, 1-sigma)
+  RATE_UNC:double;
+  /// Data quality (0-9, 9=best)
+  QUALITY:uint8;
+  /// Reference frame for attitude
+  REF_FRAME:string;
+  /// Sensor identifier providing the observation
+  SENSOR_ID:string;
 }
 
 root_type ATD;

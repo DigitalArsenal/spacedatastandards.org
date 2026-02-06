@@ -9,6 +9,220 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_EVENT_CATEGORY: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_EVENT_CATEGORY: i8 = 8;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_EVENT_CATEGORY: [eventCategory; 9] = [
+  eventCategory::ANOMALY,
+  eventCategory::FAILURE,
+  eventCategory::RETIREMENT,
+  eventCategory::DEORBIT,
+  eventCategory::BREAKUP,
+  eventCategory::COLLISION,
+  eventCategory::STATUS_CHANGE,
+  eventCategory::REPOSITIONING,
+  eventCategory::UNKNOWN,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct eventCategory(pub i8);
+#[allow(non_upper_case_globals)]
+impl eventCategory {
+  pub const ANOMALY: Self = Self(0);
+  pub const FAILURE: Self = Self(1);
+  pub const RETIREMENT: Self = Self(2);
+  pub const DEORBIT: Self = Self(3);
+  pub const BREAKUP: Self = Self(4);
+  pub const COLLISION: Self = Self(5);
+  pub const STATUS_CHANGE: Self = Self(6);
+  pub const REPOSITIONING: Self = Self(7);
+  pub const UNKNOWN: Self = Self(8);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 8;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::ANOMALY,
+    Self::FAILURE,
+    Self::RETIREMENT,
+    Self::DEORBIT,
+    Self::BREAKUP,
+    Self::COLLISION,
+    Self::STATUS_CHANGE,
+    Self::REPOSITIONING,
+    Self::UNKNOWN,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::ANOMALY => Some("ANOMALY"),
+      Self::FAILURE => Some("FAILURE"),
+      Self::RETIREMENT => Some("RETIREMENT"),
+      Self::DEORBIT => Some("DEORBIT"),
+      Self::BREAKUP => Some("BREAKUP"),
+      Self::COLLISION => Some("COLLISION"),
+      Self::STATUS_CHANGE => Some("STATUS_CHANGE"),
+      Self::REPOSITIONING => Some("REPOSITIONING"),
+      Self::UNKNOWN => Some("UNKNOWN"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for eventCategory {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for eventCategory {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for eventCategory {
+    type Output = eventCategory;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for eventCategory {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for eventCategory {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for eventCategory {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_EVENT_RESULT: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_EVENT_RESULT: i8 = 5;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_EVENT_RESULT: [eventResult; 6] = [
+  eventResult::TOTAL_LOSS,
+  eventResult::PARTIAL_LOSS,
+  eventResult::DEGRADED,
+  eventResult::RECOVERED,
+  eventResult::NOMINAL,
+  eventResult::PENDING,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct eventResult(pub i8);
+#[allow(non_upper_case_globals)]
+impl eventResult {
+  pub const TOTAL_LOSS: Self = Self(0);
+  pub const PARTIAL_LOSS: Self = Self(1);
+  pub const DEGRADED: Self = Self(2);
+  pub const RECOVERED: Self = Self(3);
+  pub const NOMINAL: Self = Self(4);
+  pub const PENDING: Self = Self(5);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 5;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::TOTAL_LOSS,
+    Self::PARTIAL_LOSS,
+    Self::DEGRADED,
+    Self::RECOVERED,
+    Self::NOMINAL,
+    Self::PENDING,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::TOTAL_LOSS => Some("TOTAL_LOSS"),
+      Self::PARTIAL_LOSS => Some("PARTIAL_LOSS"),
+      Self::DEGRADED => Some("DEGRADED"),
+      Self::RECOVERED => Some("RECOVERED"),
+      Self::NOMINAL => Some("NOMINAL"),
+      Self::PENDING => Some("PENDING"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for eventResult {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for eventResult {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for eventResult {
+    type Output = eventResult;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for eventResult {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for eventResult {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for eventResult {}
 pub enum OOEOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -27,52 +241,49 @@ impl<'a> flatbuffers::Follow<'a> for OOE<'a> {
 
 impl<'a> OOE<'a> {
   pub const VT_ID: flatbuffers::VOffsetT = 4;
-  pub const VT_DERIVED_FROM: flatbuffers::VOffsetT = 6;
-  pub const VT_DECLASSIFICATION_DATE: flatbuffers::VOffsetT = 8;
-  pub const VT_DECLASSIFICATION_STRING: flatbuffers::VOffsetT = 10;
-  pub const VT_SAT_NO: flatbuffers::VOffsetT = 12;
-  pub const VT_ORIG_OBJECT_ID: flatbuffers::VOffsetT = 14;
+  pub const VT_SAT_NO: flatbuffers::VOffsetT = 6;
+  pub const VT_ORIG_OBJECT_ID: flatbuffers::VOffsetT = 8;
+  pub const VT_DERIVED_FROM: flatbuffers::VOffsetT = 10;
+  pub const VT_DECLASSIFICATION_DATE: flatbuffers::VOffsetT = 12;
+  pub const VT_DECLASSIFICATION_STRING: flatbuffers::VOffsetT = 14;
   pub const VT_EVENT_TIME: flatbuffers::VOffsetT = 16;
   pub const VT_EVENT_TIME_NOTES: flatbuffers::VOffsetT = 18;
-  pub const VT_OPERATOR_ORG_ID: flatbuffers::VOffsetT = 20;
-  pub const VT_OWNER_ORG_ID: flatbuffers::VOffsetT = 22;
-  pub const VT_LESSEE_ORG_ID: flatbuffers::VOffsetT = 24;
-  pub const VT_OPERATED_ON_BEHALF_OF_ORG_ID: flatbuffers::VOffsetT = 26;
-  pub const VT_GEO_POSITION: flatbuffers::VOffsetT = 28;
-  pub const VT_PLANE_SLOT: flatbuffers::VOffsetT = 30;
-  pub const VT_PLANE_NUMBER: flatbuffers::VOffsetT = 32;
-  pub const VT_POSITION_STATUS: flatbuffers::VOffsetT = 34;
-  pub const VT_UNTIL_TIME: flatbuffers::VOffsetT = 36;
-  pub const VT_OFFICIAL_LOSS_DATE: flatbuffers::VOffsetT = 38;
-  pub const VT_NET_AMOUNT: flatbuffers::VOffsetT = 40;
-  pub const VT_UNDERLYING_CAUSE: flatbuffers::VOffsetT = 42;
-  pub const VT_CAPABILITY_LOSS: flatbuffers::VOffsetT = 44;
-  pub const VT_CAPACITY_LOSS: flatbuffers::VOffsetT = 46;
-  pub const VT_INSURANCE_LOSS: flatbuffers::VOffsetT = 48;
-  pub const VT_THIRD_PARTY_INSURANCE_LOSS: flatbuffers::VOffsetT = 50;
-  pub const VT_INJURED: flatbuffers::VOffsetT = 52;
-  pub const VT_KILLED: flatbuffers::VOffsetT = 54;
-  pub const VT_LIFE_LOST: flatbuffers::VOffsetT = 56;
-  pub const VT_AGE_AT_EVENT: flatbuffers::VOffsetT = 58;
-  pub const VT_ACHIEVED_FLIGHT_PHASE: flatbuffers::VOffsetT = 60;
-  pub const VT_OCCURRENCE_FLIGHT_PHASE: flatbuffers::VOffsetT = 62;
-  pub const VT_STAGE_AT_FAULT: flatbuffers::VOffsetT = 64;
-  pub const VT_EQUIPMENT_AT_FAULT: flatbuffers::VOffsetT = 66;
-  pub const VT_EQUIPMENT_TYPE_AT_FAULT: flatbuffers::VOffsetT = 68;
-  pub const VT_EQUIPMENT_PART_AT_FAULT: flatbuffers::VOffsetT = 70;
-  pub const VT_CONSEQUENTIAL_EQUIPMENT_FAILURE: flatbuffers::VOffsetT = 72;
-  pub const VT_INCLINED: flatbuffers::VOffsetT = 74;
-  pub const VT_DESCRIPTION: flatbuffers::VOffsetT = 76;
-  pub const VT_REMARKS: flatbuffers::VOffsetT = 78;
-  pub const VT_INSURANCE_LOSS_NOTES: flatbuffers::VOffsetT = 80;
-  pub const VT_CAPABILITY_LOSS_NOTES: flatbuffers::VOffsetT = 82;
-  pub const VT_INSURANCE_CARRIED_NOTES: flatbuffers::VOffsetT = 84;
-  pub const VT_EQUIPMENT_CAUSING_LOSS_NOTES: flatbuffers::VOffsetT = 86;
-  pub const VT_EVENT_TYPE: flatbuffers::VOffsetT = 88;
-  pub const VT_EVENT_RESULT: flatbuffers::VOffsetT = 90;
-  pub const VT_OBJECT_STATUS: flatbuffers::VOffsetT = 92;
-  pub const VT_SATELLITE_POSITION: flatbuffers::VOffsetT = 94;
-  pub const VT_ON_ORBIT: flatbuffers::VOffsetT = 96;
+  pub const VT_CATEGORY: flatbuffers::VOffsetT = 20;
+  pub const VT_RESULT: flatbuffers::VOffsetT = 22;
+  pub const VT_EVENT_TYPE: flatbuffers::VOffsetT = 24;
+  pub const VT_OPERATOR_ORG_ID: flatbuffers::VOffsetT = 26;
+  pub const VT_OWNER_ORG_ID: flatbuffers::VOffsetT = 28;
+  pub const VT_LESSEE_ORG_ID: flatbuffers::VOffsetT = 30;
+  pub const VT_OPERATED_ON_BEHALF_OF_ORG_ID: flatbuffers::VOffsetT = 32;
+  pub const VT_GEO_POSITION: flatbuffers::VOffsetT = 34;
+  pub const VT_PLANE_SLOT: flatbuffers::VOffsetT = 36;
+  pub const VT_PLANE_NUMBER: flatbuffers::VOffsetT = 38;
+  pub const VT_POSITION_STATUS: flatbuffers::VOffsetT = 40;
+  pub const VT_UNTIL_TIME: flatbuffers::VOffsetT = 42;
+  pub const VT_OFFICIAL_LOSS_DATE: flatbuffers::VOffsetT = 44;
+  pub const VT_NET_AMOUNT: flatbuffers::VOffsetT = 46;
+  pub const VT_UNDERLYING_CAUSE: flatbuffers::VOffsetT = 48;
+  pub const VT_CAPABILITY_LOSS: flatbuffers::VOffsetT = 50;
+  pub const VT_CAPACITY_LOSS: flatbuffers::VOffsetT = 52;
+  pub const VT_INSURANCE_LOSS: flatbuffers::VOffsetT = 54;
+  pub const VT_THIRD_PARTY_INSURANCE_LOSS: flatbuffers::VOffsetT = 56;
+  pub const VT_INJURED: flatbuffers::VOffsetT = 58;
+  pub const VT_KILLED: flatbuffers::VOffsetT = 60;
+  pub const VT_AGE_AT_EVENT: flatbuffers::VOffsetT = 62;
+  pub const VT_LIFE_LOST: flatbuffers::VOffsetT = 64;
+  pub const VT_ACHIEVED_FLIGHT_PHASE: flatbuffers::VOffsetT = 66;
+  pub const VT_OCCURRENCE_FLIGHT_PHASE: flatbuffers::VOffsetT = 68;
+  pub const VT_STAGE_AT_FAULT: flatbuffers::VOffsetT = 70;
+  pub const VT_EQUIPMENT_AT_FAULT: flatbuffers::VOffsetT = 72;
+  pub const VT_EQUIPMENT_TYPE_AT_FAULT: flatbuffers::VOffsetT = 74;
+  pub const VT_EQUIPMENT_PART_AT_FAULT: flatbuffers::VOffsetT = 76;
+  pub const VT_CONSEQUENTIAL_EQUIPMENT_FAILURE: flatbuffers::VOffsetT = 78;
+  pub const VT_INCLINED: flatbuffers::VOffsetT = 80;
+  pub const VT_DESCRIPTION: flatbuffers::VOffsetT = 82;
+  pub const VT_REMARKS: flatbuffers::VOffsetT = 84;
+  pub const VT_OBJECT_STATUS: flatbuffers::VOffsetT = 86;
+  pub const VT_SATELLITE_POSITION: flatbuffers::VOffsetT = 88;
+  pub const VT_ON_ORBIT: flatbuffers::VOffsetT = 90;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -84,8 +295,8 @@ impl<'a> OOE<'a> {
     args: &'args OOEArgs<'args>
   ) -> flatbuffers::WIPOffset<OOE<'bldr>> {
     let mut builder = OOEBuilder::new(_fbb);
-    builder.add_AGE_AT_EVENT(args.AGE_AT_EVENT);
     builder.add_LIFE_LOST(args.LIFE_LOST);
+    builder.add_AGE_AT_EVENT(args.AGE_AT_EVENT);
     builder.add_THIRD_PARTY_INSURANCE_LOSS(args.THIRD_PARTY_INSURANCE_LOSS);
     builder.add_INSURANCE_LOSS(args.INSURANCE_LOSS);
     builder.add_CAPACITY_LOSS(args.CAPACITY_LOSS);
@@ -95,12 +306,6 @@ impl<'a> OOE<'a> {
     if let Some(x) = args.ON_ORBIT { builder.add_ON_ORBIT(x); }
     if let Some(x) = args.SATELLITE_POSITION { builder.add_SATELLITE_POSITION(x); }
     if let Some(x) = args.OBJECT_STATUS { builder.add_OBJECT_STATUS(x); }
-    if let Some(x) = args.EVENT_RESULT { builder.add_EVENT_RESULT(x); }
-    if let Some(x) = args.EVENT_TYPE { builder.add_EVENT_TYPE(x); }
-    if let Some(x) = args.EQUIPMENT_CAUSING_LOSS_NOTES { builder.add_EQUIPMENT_CAUSING_LOSS_NOTES(x); }
-    if let Some(x) = args.INSURANCE_CARRIED_NOTES { builder.add_INSURANCE_CARRIED_NOTES(x); }
-    if let Some(x) = args.CAPABILITY_LOSS_NOTES { builder.add_CAPABILITY_LOSS_NOTES(x); }
-    if let Some(x) = args.INSURANCE_LOSS_NOTES { builder.add_INSURANCE_LOSS_NOTES(x); }
     if let Some(x) = args.REMARKS { builder.add_REMARKS(x); }
     if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
     if let Some(x) = args.CONSEQUENTIAL_EQUIPMENT_FAILURE { builder.add_CONSEQUENTIAL_EQUIPMENT_FAILURE(x); }
@@ -110,8 +315,6 @@ impl<'a> OOE<'a> {
     if let Some(x) = args.STAGE_AT_FAULT { builder.add_STAGE_AT_FAULT(x); }
     if let Some(x) = args.OCCURRENCE_FLIGHT_PHASE { builder.add_OCCURRENCE_FLIGHT_PHASE(x); }
     if let Some(x) = args.ACHIEVED_FLIGHT_PHASE { builder.add_ACHIEVED_FLIGHT_PHASE(x); }
-    builder.add_KILLED(args.KILLED);
-    builder.add_INJURED(args.INJURED);
     if let Some(x) = args.UNDERLYING_CAUSE { builder.add_UNDERLYING_CAUSE(x); }
     if let Some(x) = args.OFFICIAL_LOSS_DATE { builder.add_OFFICIAL_LOSS_DATE(x); }
     if let Some(x) = args.UNTIL_TIME { builder.add_UNTIL_TIME(x); }
@@ -122,20 +325,29 @@ impl<'a> OOE<'a> {
     if let Some(x) = args.LESSEE_ORG_ID { builder.add_LESSEE_ORG_ID(x); }
     if let Some(x) = args.OWNER_ORG_ID { builder.add_OWNER_ORG_ID(x); }
     if let Some(x) = args.OPERATOR_ORG_ID { builder.add_OPERATOR_ORG_ID(x); }
+    if let Some(x) = args.EVENT_TYPE { builder.add_EVENT_TYPE(x); }
     if let Some(x) = args.EVENT_TIME_NOTES { builder.add_EVENT_TIME_NOTES(x); }
     if let Some(x) = args.EVENT_TIME { builder.add_EVENT_TIME(x); }
-    if let Some(x) = args.ORIG_OBJECT_ID { builder.add_ORIG_OBJECT_ID(x); }
-    builder.add_SAT_NO(args.SAT_NO);
     if let Some(x) = args.DECLASSIFICATION_STRING { builder.add_DECLASSIFICATION_STRING(x); }
     if let Some(x) = args.DECLASSIFICATION_DATE { builder.add_DECLASSIFICATION_DATE(x); }
     if let Some(x) = args.DERIVED_FROM { builder.add_DERIVED_FROM(x); }
+    if let Some(x) = args.ORIG_OBJECT_ID { builder.add_ORIG_OBJECT_ID(x); }
+    builder.add_SAT_NO(args.SAT_NO);
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_KILLED(args.KILLED);
+    builder.add_INJURED(args.INJURED);
     builder.add_INCLINED(args.INCLINED);
+    builder.add_RESULT(args.RESULT);
+    builder.add_CATEGORY(args.CATEGORY);
     builder.finish()
   }
 
   pub fn unpack(&self) -> OOET {
     let ID = self.ID().map(|x| {
+      x.to_string()
+    });
+    let SAT_NO = self.SAT_NO();
+    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID().map(|x| {
       x.to_string()
     });
     let DERIVED_FROM = self.DERIVED_FROM().map(|x| {
@@ -147,14 +359,15 @@ impl<'a> OOE<'a> {
     let DECLASSIFICATION_STRING = self.DECLASSIFICATION_STRING().map(|x| {
       x.to_string()
     });
-    let SAT_NO = self.SAT_NO();
-    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID().map(|x| {
-      x.to_string()
-    });
     let EVENT_TIME = self.EVENT_TIME().map(|x| {
       x.to_string()
     });
     let EVENT_TIME_NOTES = self.EVENT_TIME_NOTES().map(|x| {
+      x.to_string()
+    });
+    let CATEGORY = self.CATEGORY();
+    let RESULT = self.RESULT();
+    let EVENT_TYPE = self.EVENT_TYPE().map(|x| {
       x.to_string()
     });
     let OPERATOR_ORG_ID = self.OPERATOR_ORG_ID().map(|x| {
@@ -195,8 +408,8 @@ impl<'a> OOE<'a> {
     let THIRD_PARTY_INSURANCE_LOSS = self.THIRD_PARTY_INSURANCE_LOSS();
     let INJURED = self.INJURED();
     let KILLED = self.KILLED();
-    let LIFE_LOST = self.LIFE_LOST();
     let AGE_AT_EVENT = self.AGE_AT_EVENT();
+    let LIFE_LOST = self.LIFE_LOST();
     let ACHIEVED_FLIGHT_PHASE = self.ACHIEVED_FLIGHT_PHASE().map(|x| {
       x.to_string()
     });
@@ -225,24 +438,6 @@ impl<'a> OOE<'a> {
     let REMARKS = self.REMARKS().map(|x| {
       x.to_string()
     });
-    let INSURANCE_LOSS_NOTES = self.INSURANCE_LOSS_NOTES().map(|x| {
-      x.to_string()
-    });
-    let CAPABILITY_LOSS_NOTES = self.CAPABILITY_LOSS_NOTES().map(|x| {
-      x.to_string()
-    });
-    let INSURANCE_CARRIED_NOTES = self.INSURANCE_CARRIED_NOTES().map(|x| {
-      x.to_string()
-    });
-    let EQUIPMENT_CAUSING_LOSS_NOTES = self.EQUIPMENT_CAUSING_LOSS_NOTES().map(|x| {
-      x.to_string()
-    });
-    let EVENT_TYPE = self.EVENT_TYPE().map(|x| {
-      x.to_string()
-    });
-    let EVENT_RESULT = self.EVENT_RESULT().map(|x| {
-      x.to_string()
-    });
     let OBJECT_STATUS = self.OBJECT_STATUS().map(|x| {
       x.to_string()
     });
@@ -254,13 +449,16 @@ impl<'a> OOE<'a> {
     });
     OOET {
       ID,
+      SAT_NO,
+      ORIG_OBJECT_ID,
       DERIVED_FROM,
       DECLASSIFICATION_DATE,
       DECLASSIFICATION_STRING,
-      SAT_NO,
-      ORIG_OBJECT_ID,
       EVENT_TIME,
       EVENT_TIME_NOTES,
+      CATEGORY,
+      RESULT,
+      EVENT_TYPE,
       OPERATOR_ORG_ID,
       OWNER_ORG_ID,
       LESSEE_ORG_ID,
@@ -279,8 +477,8 @@ impl<'a> OOE<'a> {
       THIRD_PARTY_INSURANCE_LOSS,
       INJURED,
       KILLED,
-      LIFE_LOST,
       AGE_AT_EVENT,
+      LIFE_LOST,
       ACHIEVED_FLIGHT_PHASE,
       OCCURRENCE_FLIGHT_PHASE,
       STAGE_AT_FAULT,
@@ -291,18 +489,13 @@ impl<'a> OOE<'a> {
       INCLINED,
       DESCRIPTION,
       REMARKS,
-      INSURANCE_LOSS_NOTES,
-      CAPABILITY_LOSS_NOTES,
-      INSURANCE_CARRIED_NOTES,
-      EQUIPMENT_CAUSING_LOSS_NOTES,
-      EVENT_TYPE,
-      EVENT_RESULT,
       OBJECT_STATUS,
       SATELLITE_POSITION,
       ON_ORBIT,
     }
   }
 
+  /// Unique identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -310,34 +503,15 @@ impl<'a> OOE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_ID, None)}
   }
+  /// Satellite catalog number
   #[inline]
-  pub fn DERIVED_FROM(&self) -> Option<&'a str> {
+  pub fn SAT_NO(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_DERIVED_FROM, None)}
+    unsafe { self._tab.get::<u32>(OOE::VT_SAT_NO, Some(0)).unwrap()}
   }
-  #[inline]
-  pub fn DECLASSIFICATION_DATE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_DECLASSIFICATION_DATE, None)}
-  }
-  #[inline]
-  pub fn DECLASSIFICATION_STRING(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_DECLASSIFICATION_STRING, None)}
-  }
-  #[inline]
-  pub fn SAT_NO(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(OOE::VT_SAT_NO, Some(0)).unwrap()}
-  }
+  /// International designator
   #[inline]
   pub fn ORIG_OBJECT_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -345,6 +519,31 @@ impl<'a> OOE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_ORIG_OBJECT_ID, None)}
   }
+  /// Source record this was derived from
+  #[inline]
+  pub fn DERIVED_FROM(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_DERIVED_FROM, None)}
+  }
+  /// Classification date (ISO 8601)
+  #[inline]
+  pub fn DECLASSIFICATION_DATE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_DECLASSIFICATION_DATE, None)}
+  }
+  /// Classification marking
+  #[inline]
+  pub fn DECLASSIFICATION_STRING(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_DECLASSIFICATION_STRING, None)}
+  }
+  /// Event time (ISO 8601)
   #[inline]
   pub fn EVENT_TIME(&self) -> Option<&'a str> {
     // Safety:
@@ -352,6 +551,7 @@ impl<'a> OOE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_EVENT_TIME, None)}
   }
+  /// Notes on event time accuracy
   #[inline]
   pub fn EVENT_TIME_NOTES(&self) -> Option<&'a str> {
     // Safety:
@@ -359,244 +559,23 @@ impl<'a> OOE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_EVENT_TIME_NOTES, None)}
   }
+  /// Event category
   #[inline]
-  pub fn OPERATOR_ORG_ID(&self) -> Option<&'a str> {
+  pub fn CATEGORY(&self) -> eventCategory {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_OPERATOR_ORG_ID, None)}
+    unsafe { self._tab.get::<eventCategory>(OOE::VT_CATEGORY, Some(eventCategory::ANOMALY)).unwrap()}
   }
+  /// Event result/outcome
   #[inline]
-  pub fn OWNER_ORG_ID(&self) -> Option<&'a str> {
+  pub fn RESULT(&self) -> eventResult {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_OWNER_ORG_ID, None)}
+    unsafe { self._tab.get::<eventResult>(OOE::VT_RESULT, Some(eventResult::TOTAL_LOSS)).unwrap()}
   }
-  #[inline]
-  pub fn LESSEE_ORG_ID(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_LESSEE_ORG_ID, None)}
-  }
-  #[inline]
-  pub fn OPERATED_ON_BEHALF_OF_ORG_ID(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_OPERATED_ON_BEHALF_OF_ORG_ID, None)}
-  }
-  #[inline]
-  pub fn GEO_POSITION(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OOE::VT_GEO_POSITION, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn PLANE_SLOT(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_PLANE_SLOT, None)}
-  }
-  #[inline]
-  pub fn PLANE_NUMBER(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_PLANE_NUMBER, None)}
-  }
-  #[inline]
-  pub fn POSITION_STATUS(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_POSITION_STATUS, None)}
-  }
-  #[inline]
-  pub fn UNTIL_TIME(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_UNTIL_TIME, None)}
-  }
-  #[inline]
-  pub fn OFFICIAL_LOSS_DATE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_OFFICIAL_LOSS_DATE, None)}
-  }
-  #[inline]
-  pub fn NET_AMOUNT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OOE::VT_NET_AMOUNT, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn UNDERLYING_CAUSE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_UNDERLYING_CAUSE, None)}
-  }
-  #[inline]
-  pub fn CAPABILITY_LOSS(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OOE::VT_CAPABILITY_LOSS, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn CAPACITY_LOSS(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OOE::VT_CAPACITY_LOSS, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn INSURANCE_LOSS(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OOE::VT_INSURANCE_LOSS, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn THIRD_PARTY_INSURANCE_LOSS(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OOE::VT_THIRD_PARTY_INSURANCE_LOSS, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn INJURED(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(OOE::VT_INJURED, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn KILLED(&self) -> i32 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(OOE::VT_KILLED, Some(0)).unwrap()}
-  }
-  #[inline]
-  pub fn LIFE_LOST(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OOE::VT_LIFE_LOST, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn AGE_AT_EVENT(&self) -> f64 {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<f64>(OOE::VT_AGE_AT_EVENT, Some(0.0)).unwrap()}
-  }
-  #[inline]
-  pub fn ACHIEVED_FLIGHT_PHASE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_ACHIEVED_FLIGHT_PHASE, None)}
-  }
-  #[inline]
-  pub fn OCCURRENCE_FLIGHT_PHASE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_OCCURRENCE_FLIGHT_PHASE, None)}
-  }
-  #[inline]
-  pub fn STAGE_AT_FAULT(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_STAGE_AT_FAULT, None)}
-  }
-  #[inline]
-  pub fn EQUIPMENT_AT_FAULT(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_EQUIPMENT_AT_FAULT, None)}
-  }
-  #[inline]
-  pub fn EQUIPMENT_TYPE_AT_FAULT(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_EQUIPMENT_TYPE_AT_FAULT, None)}
-  }
-  #[inline]
-  pub fn EQUIPMENT_PART_AT_FAULT(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_EQUIPMENT_PART_AT_FAULT, None)}
-  }
-  #[inline]
-  pub fn CONSEQUENTIAL_EQUIPMENT_FAILURE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_CONSEQUENTIAL_EQUIPMENT_FAILURE, None)}
-  }
-  #[inline]
-  pub fn INCLINED(&self) -> bool {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<bool>(OOE::VT_INCLINED, Some(false)).unwrap()}
-  }
-  #[inline]
-  pub fn DESCRIPTION(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_DESCRIPTION, None)}
-  }
-  #[inline]
-  pub fn REMARKS(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_REMARKS, None)}
-  }
-  #[inline]
-  pub fn INSURANCE_LOSS_NOTES(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_INSURANCE_LOSS_NOTES, None)}
-  }
-  #[inline]
-  pub fn CAPABILITY_LOSS_NOTES(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_CAPABILITY_LOSS_NOTES, None)}
-  }
-  #[inline]
-  pub fn INSURANCE_CARRIED_NOTES(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_INSURANCE_CARRIED_NOTES, None)}
-  }
-  #[inline]
-  pub fn EQUIPMENT_CAUSING_LOSS_NOTES(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_EQUIPMENT_CAUSING_LOSS_NOTES, None)}
-  }
+  /// Event type detail
   #[inline]
   pub fn EVENT_TYPE(&self) -> Option<&'a str> {
     // Safety:
@@ -604,13 +583,247 @@ impl<'a> OOE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_EVENT_TYPE, None)}
   }
+  /// Operator organization identifier
   #[inline]
-  pub fn EVENT_RESULT(&self) -> Option<&'a str> {
+  pub fn OPERATOR_ORG_ID(&self) -> Option<&'a str> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_EVENT_RESULT, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_OPERATOR_ORG_ID, None)}
   }
+  /// Owner organization identifier
+  #[inline]
+  pub fn OWNER_ORG_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_OWNER_ORG_ID, None)}
+  }
+  /// Lessee organization identifier
+  #[inline]
+  pub fn LESSEE_ORG_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_LESSEE_ORG_ID, None)}
+  }
+  /// Operated on behalf of organization
+  #[inline]
+  pub fn OPERATED_ON_BEHALF_OF_ORG_ID(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_OPERATED_ON_BEHALF_OF_ORG_ID, None)}
+  }
+  /// GEO longitude at event time (degrees east)
+  #[inline]
+  pub fn GEO_POSITION(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OOE::VT_GEO_POSITION, Some(0.0)).unwrap()}
+  }
+  /// Orbital plane slot
+  #[inline]
+  pub fn PLANE_SLOT(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_PLANE_SLOT, None)}
+  }
+  /// Orbital plane number
+  #[inline]
+  pub fn PLANE_NUMBER(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_PLANE_NUMBER, None)}
+  }
+  /// Position status at event time
+  #[inline]
+  pub fn POSITION_STATUS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_POSITION_STATUS, None)}
+  }
+  /// Time until expected recovery (ISO 8601)
+  #[inline]
+  pub fn UNTIL_TIME(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_UNTIL_TIME, None)}
+  }
+  /// Official loss date (ISO 8601)
+  #[inline]
+  pub fn OFFICIAL_LOSS_DATE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_OFFICIAL_LOSS_DATE, None)}
+  }
+  /// Financial loss amount (USD)
+  #[inline]
+  pub fn NET_AMOUNT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OOE::VT_NET_AMOUNT, Some(0.0)).unwrap()}
+  }
+  /// Root cause description
+  #[inline]
+  pub fn UNDERLYING_CAUSE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_UNDERLYING_CAUSE, None)}
+  }
+  /// Capability loss fraction (0-1)
+  #[inline]
+  pub fn CAPABILITY_LOSS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OOE::VT_CAPABILITY_LOSS, Some(0.0)).unwrap()}
+  }
+  /// Capacity loss fraction (0-1)
+  #[inline]
+  pub fn CAPACITY_LOSS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OOE::VT_CAPACITY_LOSS, Some(0.0)).unwrap()}
+  }
+  /// Insurance loss amount (USD)
+  #[inline]
+  pub fn INSURANCE_LOSS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OOE::VT_INSURANCE_LOSS, Some(0.0)).unwrap()}
+  }
+  /// Third-party insurance loss (USD)
+  #[inline]
+  pub fn THIRD_PARTY_INSURANCE_LOSS(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OOE::VT_THIRD_PARTY_INSURANCE_LOSS, Some(0.0)).unwrap()}
+  }
+  /// Number of personnel injured
+  #[inline]
+  pub fn INJURED(&self) -> u16 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u16>(OOE::VT_INJURED, Some(0)).unwrap()}
+  }
+  /// Number of fatalities
+  #[inline]
+  pub fn KILLED(&self) -> u16 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<u16>(OOE::VT_KILLED, Some(0)).unwrap()}
+  }
+  /// Spacecraft age at event (years)
+  #[inline]
+  pub fn AGE_AT_EVENT(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OOE::VT_AGE_AT_EVENT, Some(0.0)).unwrap()}
+  }
+  /// Design life remaining at event (years)
+  #[inline]
+  pub fn LIFE_LOST(&self) -> f64 {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<f64>(OOE::VT_LIFE_LOST, Some(0.0)).unwrap()}
+  }
+  /// Flight phase achieved
+  #[inline]
+  pub fn ACHIEVED_FLIGHT_PHASE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_ACHIEVED_FLIGHT_PHASE, None)}
+  }
+  /// Flight phase at occurrence
+  #[inline]
+  pub fn OCCURRENCE_FLIGHT_PHASE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_OCCURRENCE_FLIGHT_PHASE, None)}
+  }
+  /// Stage at fault
+  #[inline]
+  pub fn STAGE_AT_FAULT(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_STAGE_AT_FAULT, None)}
+  }
+  /// Equipment at fault
+  #[inline]
+  pub fn EQUIPMENT_AT_FAULT(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_EQUIPMENT_AT_FAULT, None)}
+  }
+  /// Equipment type at fault
+  #[inline]
+  pub fn EQUIPMENT_TYPE_AT_FAULT(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_EQUIPMENT_TYPE_AT_FAULT, None)}
+  }
+  /// Equipment part at fault
+  #[inline]
+  pub fn EQUIPMENT_PART_AT_FAULT(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_EQUIPMENT_PART_AT_FAULT, None)}
+  }
+  /// Consequential equipment failure
+  #[inline]
+  pub fn CONSEQUENTIAL_EQUIPMENT_FAILURE(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_CONSEQUENTIAL_EQUIPMENT_FAILURE, None)}
+  }
+  /// True if orbit is inclined
+  #[inline]
+  pub fn INCLINED(&self) -> bool {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<bool>(OOE::VT_INCLINED, Some(false)).unwrap()}
+  }
+  /// Event description
+  #[inline]
+  pub fn DESCRIPTION(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_DESCRIPTION, None)}
+  }
+  /// Additional remarks
+  #[inline]
+  pub fn REMARKS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_REMARKS, None)}
+  }
+  /// Object status after event
   #[inline]
   pub fn OBJECT_STATUS(&self) -> Option<&'a str> {
     // Safety:
@@ -618,6 +831,7 @@ impl<'a> OOE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_OBJECT_STATUS, None)}
   }
+  /// Satellite position after event
   #[inline]
   pub fn SATELLITE_POSITION(&self) -> Option<&'a str> {
     // Safety:
@@ -625,6 +839,7 @@ impl<'a> OOE<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(OOE::VT_SATELLITE_POSITION, None)}
   }
+  /// On-orbit reference
   #[inline]
   pub fn ON_ORBIT(&self) -> Option<&'a str> {
     // Safety:
@@ -642,13 +857,16 @@ impl flatbuffers::Verifiable for OOE<'_> {
     use self::flatbuffers::Verifiable;
     v.visit_table(pos)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID", Self::VT_ID, false)?
+     .visit_field::<u32>("SAT_NO", Self::VT_SAT_NO, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_OBJECT_ID", Self::VT_ORIG_OBJECT_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DERIVED_FROM", Self::VT_DERIVED_FROM, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DECLASSIFICATION_DATE", Self::VT_DECLASSIFICATION_DATE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DECLASSIFICATION_STRING", Self::VT_DECLASSIFICATION_STRING, false)?
-     .visit_field::<i32>("SAT_NO", Self::VT_SAT_NO, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_OBJECT_ID", Self::VT_ORIG_OBJECT_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EVENT_TIME", Self::VT_EVENT_TIME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EVENT_TIME_NOTES", Self::VT_EVENT_TIME_NOTES, false)?
+     .visit_field::<eventCategory>("CATEGORY", Self::VT_CATEGORY, false)?
+     .visit_field::<eventResult>("RESULT", Self::VT_RESULT, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EVENT_TYPE", Self::VT_EVENT_TYPE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OPERATOR_ORG_ID", Self::VT_OPERATOR_ORG_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OWNER_ORG_ID", Self::VT_OWNER_ORG_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("LESSEE_ORG_ID", Self::VT_LESSEE_ORG_ID, false)?
@@ -665,10 +883,10 @@ impl flatbuffers::Verifiable for OOE<'_> {
      .visit_field::<f64>("CAPACITY_LOSS", Self::VT_CAPACITY_LOSS, false)?
      .visit_field::<f64>("INSURANCE_LOSS", Self::VT_INSURANCE_LOSS, false)?
      .visit_field::<f64>("THIRD_PARTY_INSURANCE_LOSS", Self::VT_THIRD_PARTY_INSURANCE_LOSS, false)?
-     .visit_field::<i32>("INJURED", Self::VT_INJURED, false)?
-     .visit_field::<i32>("KILLED", Self::VT_KILLED, false)?
-     .visit_field::<f64>("LIFE_LOST", Self::VT_LIFE_LOST, false)?
+     .visit_field::<u16>("INJURED", Self::VT_INJURED, false)?
+     .visit_field::<u16>("KILLED", Self::VT_KILLED, false)?
      .visit_field::<f64>("AGE_AT_EVENT", Self::VT_AGE_AT_EVENT, false)?
+     .visit_field::<f64>("LIFE_LOST", Self::VT_LIFE_LOST, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ACHIEVED_FLIGHT_PHASE", Self::VT_ACHIEVED_FLIGHT_PHASE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OCCURRENCE_FLIGHT_PHASE", Self::VT_OCCURRENCE_FLIGHT_PHASE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("STAGE_AT_FAULT", Self::VT_STAGE_AT_FAULT, false)?
@@ -679,12 +897,6 @@ impl flatbuffers::Verifiable for OOE<'_> {
      .visit_field::<bool>("INCLINED", Self::VT_INCLINED, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("REMARKS", Self::VT_REMARKS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("INSURANCE_LOSS_NOTES", Self::VT_INSURANCE_LOSS_NOTES, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("CAPABILITY_LOSS_NOTES", Self::VT_CAPABILITY_LOSS_NOTES, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("INSURANCE_CARRIED_NOTES", Self::VT_INSURANCE_CARRIED_NOTES, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EQUIPMENT_CAUSING_LOSS_NOTES", Self::VT_EQUIPMENT_CAUSING_LOSS_NOTES, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EVENT_TYPE", Self::VT_EVENT_TYPE, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EVENT_RESULT", Self::VT_EVENT_RESULT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBJECT_STATUS", Self::VT_OBJECT_STATUS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SATELLITE_POSITION", Self::VT_SATELLITE_POSITION, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ON_ORBIT", Self::VT_ON_ORBIT, false)?
@@ -694,13 +906,16 @@ impl flatbuffers::Verifiable for OOE<'_> {
 }
 pub struct OOEArgs<'a> {
     pub ID: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub SAT_NO: u32,
+    pub ORIG_OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub DERIVED_FROM: Option<flatbuffers::WIPOffset<&'a str>>,
     pub DECLASSIFICATION_DATE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub DECLASSIFICATION_STRING: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SAT_NO: i32,
-    pub ORIG_OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub EVENT_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub EVENT_TIME_NOTES: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub CATEGORY: eventCategory,
+    pub RESULT: eventResult,
+    pub EVENT_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OPERATOR_ORG_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OWNER_ORG_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub LESSEE_ORG_ID: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -717,10 +932,10 @@ pub struct OOEArgs<'a> {
     pub CAPACITY_LOSS: f64,
     pub INSURANCE_LOSS: f64,
     pub THIRD_PARTY_INSURANCE_LOSS: f64,
-    pub INJURED: i32,
-    pub KILLED: i32,
-    pub LIFE_LOST: f64,
+    pub INJURED: u16,
+    pub KILLED: u16,
     pub AGE_AT_EVENT: f64,
+    pub LIFE_LOST: f64,
     pub ACHIEVED_FLIGHT_PHASE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OCCURRENCE_FLIGHT_PHASE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub STAGE_AT_FAULT: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -731,12 +946,6 @@ pub struct OOEArgs<'a> {
     pub INCLINED: bool,
     pub DESCRIPTION: Option<flatbuffers::WIPOffset<&'a str>>,
     pub REMARKS: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub INSURANCE_LOSS_NOTES: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub CAPABILITY_LOSS_NOTES: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub INSURANCE_CARRIED_NOTES: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub EQUIPMENT_CAUSING_LOSS_NOTES: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub EVENT_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub EVENT_RESULT: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OBJECT_STATUS: Option<flatbuffers::WIPOffset<&'a str>>,
     pub SATELLITE_POSITION: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ON_ORBIT: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -746,13 +955,16 @@ impl<'a> Default for OOEArgs<'a> {
   fn default() -> Self {
     OOEArgs {
       ID: None,
+      SAT_NO: 0,
+      ORIG_OBJECT_ID: None,
       DERIVED_FROM: None,
       DECLASSIFICATION_DATE: None,
       DECLASSIFICATION_STRING: None,
-      SAT_NO: 0,
-      ORIG_OBJECT_ID: None,
       EVENT_TIME: None,
       EVENT_TIME_NOTES: None,
+      CATEGORY: eventCategory::ANOMALY,
+      RESULT: eventResult::TOTAL_LOSS,
+      EVENT_TYPE: None,
       OPERATOR_ORG_ID: None,
       OWNER_ORG_ID: None,
       LESSEE_ORG_ID: None,
@@ -771,8 +983,8 @@ impl<'a> Default for OOEArgs<'a> {
       THIRD_PARTY_INSURANCE_LOSS: 0.0,
       INJURED: 0,
       KILLED: 0,
-      LIFE_LOST: 0.0,
       AGE_AT_EVENT: 0.0,
+      LIFE_LOST: 0.0,
       ACHIEVED_FLIGHT_PHASE: None,
       OCCURRENCE_FLIGHT_PHASE: None,
       STAGE_AT_FAULT: None,
@@ -783,12 +995,6 @@ impl<'a> Default for OOEArgs<'a> {
       INCLINED: false,
       DESCRIPTION: None,
       REMARKS: None,
-      INSURANCE_LOSS_NOTES: None,
-      CAPABILITY_LOSS_NOTES: None,
-      INSURANCE_CARRIED_NOTES: None,
-      EQUIPMENT_CAUSING_LOSS_NOTES: None,
-      EVENT_TYPE: None,
-      EVENT_RESULT: None,
       OBJECT_STATUS: None,
       SATELLITE_POSITION: None,
       ON_ORBIT: None,
@@ -806,6 +1012,14 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OOEBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOE::VT_ID, ID);
   }
   #[inline]
+  pub fn add_SAT_NO(&mut self, SAT_NO: u32) {
+    self.fbb_.push_slot::<u32>(OOE::VT_SAT_NO, SAT_NO, 0);
+  }
+  #[inline]
+  pub fn add_ORIG_OBJECT_ID(&mut self, ORIG_OBJECT_ID: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOE::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
+  }
+  #[inline]
   pub fn add_DERIVED_FROM(&mut self, DERIVED_FROM: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOE::VT_DERIVED_FROM, DERIVED_FROM);
   }
@@ -818,20 +1032,24 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OOEBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOE::VT_DECLASSIFICATION_STRING, DECLASSIFICATION_STRING);
   }
   #[inline]
-  pub fn add_SAT_NO(&mut self, SAT_NO: i32) {
-    self.fbb_.push_slot::<i32>(OOE::VT_SAT_NO, SAT_NO, 0);
-  }
-  #[inline]
-  pub fn add_ORIG_OBJECT_ID(&mut self, ORIG_OBJECT_ID: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOE::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
-  }
-  #[inline]
   pub fn add_EVENT_TIME(&mut self, EVENT_TIME: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOE::VT_EVENT_TIME, EVENT_TIME);
   }
   #[inline]
   pub fn add_EVENT_TIME_NOTES(&mut self, EVENT_TIME_NOTES: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOE::VT_EVENT_TIME_NOTES, EVENT_TIME_NOTES);
+  }
+  #[inline]
+  pub fn add_CATEGORY(&mut self, CATEGORY: eventCategory) {
+    self.fbb_.push_slot::<eventCategory>(OOE::VT_CATEGORY, CATEGORY, eventCategory::ANOMALY);
+  }
+  #[inline]
+  pub fn add_RESULT(&mut self, RESULT: eventResult) {
+    self.fbb_.push_slot::<eventResult>(OOE::VT_RESULT, RESULT, eventResult::TOTAL_LOSS);
+  }
+  #[inline]
+  pub fn add_EVENT_TYPE(&mut self, EVENT_TYPE: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOE::VT_EVENT_TYPE, EVENT_TYPE);
   }
   #[inline]
   pub fn add_OPERATOR_ORG_ID(&mut self, OPERATOR_ORG_ID: flatbuffers::WIPOffset<&'b  str>) {
@@ -898,20 +1116,20 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OOEBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<f64>(OOE::VT_THIRD_PARTY_INSURANCE_LOSS, THIRD_PARTY_INSURANCE_LOSS, 0.0);
   }
   #[inline]
-  pub fn add_INJURED(&mut self, INJURED: i32) {
-    self.fbb_.push_slot::<i32>(OOE::VT_INJURED, INJURED, 0);
+  pub fn add_INJURED(&mut self, INJURED: u16) {
+    self.fbb_.push_slot::<u16>(OOE::VT_INJURED, INJURED, 0);
   }
   #[inline]
-  pub fn add_KILLED(&mut self, KILLED: i32) {
-    self.fbb_.push_slot::<i32>(OOE::VT_KILLED, KILLED, 0);
-  }
-  #[inline]
-  pub fn add_LIFE_LOST(&mut self, LIFE_LOST: f64) {
-    self.fbb_.push_slot::<f64>(OOE::VT_LIFE_LOST, LIFE_LOST, 0.0);
+  pub fn add_KILLED(&mut self, KILLED: u16) {
+    self.fbb_.push_slot::<u16>(OOE::VT_KILLED, KILLED, 0);
   }
   #[inline]
   pub fn add_AGE_AT_EVENT(&mut self, AGE_AT_EVENT: f64) {
     self.fbb_.push_slot::<f64>(OOE::VT_AGE_AT_EVENT, AGE_AT_EVENT, 0.0);
+  }
+  #[inline]
+  pub fn add_LIFE_LOST(&mut self, LIFE_LOST: f64) {
+    self.fbb_.push_slot::<f64>(OOE::VT_LIFE_LOST, LIFE_LOST, 0.0);
   }
   #[inline]
   pub fn add_ACHIEVED_FLIGHT_PHASE(&mut self, ACHIEVED_FLIGHT_PHASE: flatbuffers::WIPOffset<&'b  str>) {
@@ -954,30 +1172,6 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> OOEBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOE::VT_REMARKS, REMARKS);
   }
   #[inline]
-  pub fn add_INSURANCE_LOSS_NOTES(&mut self, INSURANCE_LOSS_NOTES: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOE::VT_INSURANCE_LOSS_NOTES, INSURANCE_LOSS_NOTES);
-  }
-  #[inline]
-  pub fn add_CAPABILITY_LOSS_NOTES(&mut self, CAPABILITY_LOSS_NOTES: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOE::VT_CAPABILITY_LOSS_NOTES, CAPABILITY_LOSS_NOTES);
-  }
-  #[inline]
-  pub fn add_INSURANCE_CARRIED_NOTES(&mut self, INSURANCE_CARRIED_NOTES: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOE::VT_INSURANCE_CARRIED_NOTES, INSURANCE_CARRIED_NOTES);
-  }
-  #[inline]
-  pub fn add_EQUIPMENT_CAUSING_LOSS_NOTES(&mut self, EQUIPMENT_CAUSING_LOSS_NOTES: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOE::VT_EQUIPMENT_CAUSING_LOSS_NOTES, EQUIPMENT_CAUSING_LOSS_NOTES);
-  }
-  #[inline]
-  pub fn add_EVENT_TYPE(&mut self, EVENT_TYPE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOE::VT_EVENT_TYPE, EVENT_TYPE);
-  }
-  #[inline]
-  pub fn add_EVENT_RESULT(&mut self, EVENT_RESULT: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOE::VT_EVENT_RESULT, EVENT_RESULT);
-  }
-  #[inline]
   pub fn add_OBJECT_STATUS(&mut self, OBJECT_STATUS: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(OOE::VT_OBJECT_STATUS, OBJECT_STATUS);
   }
@@ -1008,13 +1202,16 @@ impl core::fmt::Debug for OOE<'_> {
   fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
     let mut ds = f.debug_struct("OOE");
       ds.field("ID", &self.ID());
+      ds.field("SAT_NO", &self.SAT_NO());
+      ds.field("ORIG_OBJECT_ID", &self.ORIG_OBJECT_ID());
       ds.field("DERIVED_FROM", &self.DERIVED_FROM());
       ds.field("DECLASSIFICATION_DATE", &self.DECLASSIFICATION_DATE());
       ds.field("DECLASSIFICATION_STRING", &self.DECLASSIFICATION_STRING());
-      ds.field("SAT_NO", &self.SAT_NO());
-      ds.field("ORIG_OBJECT_ID", &self.ORIG_OBJECT_ID());
       ds.field("EVENT_TIME", &self.EVENT_TIME());
       ds.field("EVENT_TIME_NOTES", &self.EVENT_TIME_NOTES());
+      ds.field("CATEGORY", &self.CATEGORY());
+      ds.field("RESULT", &self.RESULT());
+      ds.field("EVENT_TYPE", &self.EVENT_TYPE());
       ds.field("OPERATOR_ORG_ID", &self.OPERATOR_ORG_ID());
       ds.field("OWNER_ORG_ID", &self.OWNER_ORG_ID());
       ds.field("LESSEE_ORG_ID", &self.LESSEE_ORG_ID());
@@ -1033,8 +1230,8 @@ impl core::fmt::Debug for OOE<'_> {
       ds.field("THIRD_PARTY_INSURANCE_LOSS", &self.THIRD_PARTY_INSURANCE_LOSS());
       ds.field("INJURED", &self.INJURED());
       ds.field("KILLED", &self.KILLED());
-      ds.field("LIFE_LOST", &self.LIFE_LOST());
       ds.field("AGE_AT_EVENT", &self.AGE_AT_EVENT());
+      ds.field("LIFE_LOST", &self.LIFE_LOST());
       ds.field("ACHIEVED_FLIGHT_PHASE", &self.ACHIEVED_FLIGHT_PHASE());
       ds.field("OCCURRENCE_FLIGHT_PHASE", &self.OCCURRENCE_FLIGHT_PHASE());
       ds.field("STAGE_AT_FAULT", &self.STAGE_AT_FAULT());
@@ -1045,12 +1242,6 @@ impl core::fmt::Debug for OOE<'_> {
       ds.field("INCLINED", &self.INCLINED());
       ds.field("DESCRIPTION", &self.DESCRIPTION());
       ds.field("REMARKS", &self.REMARKS());
-      ds.field("INSURANCE_LOSS_NOTES", &self.INSURANCE_LOSS_NOTES());
-      ds.field("CAPABILITY_LOSS_NOTES", &self.CAPABILITY_LOSS_NOTES());
-      ds.field("INSURANCE_CARRIED_NOTES", &self.INSURANCE_CARRIED_NOTES());
-      ds.field("EQUIPMENT_CAUSING_LOSS_NOTES", &self.EQUIPMENT_CAUSING_LOSS_NOTES());
-      ds.field("EVENT_TYPE", &self.EVENT_TYPE());
-      ds.field("EVENT_RESULT", &self.EVENT_RESULT());
       ds.field("OBJECT_STATUS", &self.OBJECT_STATUS());
       ds.field("SATELLITE_POSITION", &self.SATELLITE_POSITION());
       ds.field("ON_ORBIT", &self.ON_ORBIT());
@@ -1061,13 +1252,16 @@ impl core::fmt::Debug for OOE<'_> {
 #[derive(Debug, Clone, PartialEq)]
 pub struct OOET {
   pub ID: Option<String>,
+  pub SAT_NO: u32,
+  pub ORIG_OBJECT_ID: Option<String>,
   pub DERIVED_FROM: Option<String>,
   pub DECLASSIFICATION_DATE: Option<String>,
   pub DECLASSIFICATION_STRING: Option<String>,
-  pub SAT_NO: i32,
-  pub ORIG_OBJECT_ID: Option<String>,
   pub EVENT_TIME: Option<String>,
   pub EVENT_TIME_NOTES: Option<String>,
+  pub CATEGORY: eventCategory,
+  pub RESULT: eventResult,
+  pub EVENT_TYPE: Option<String>,
   pub OPERATOR_ORG_ID: Option<String>,
   pub OWNER_ORG_ID: Option<String>,
   pub LESSEE_ORG_ID: Option<String>,
@@ -1084,10 +1278,10 @@ pub struct OOET {
   pub CAPACITY_LOSS: f64,
   pub INSURANCE_LOSS: f64,
   pub THIRD_PARTY_INSURANCE_LOSS: f64,
-  pub INJURED: i32,
-  pub KILLED: i32,
-  pub LIFE_LOST: f64,
+  pub INJURED: u16,
+  pub KILLED: u16,
   pub AGE_AT_EVENT: f64,
+  pub LIFE_LOST: f64,
   pub ACHIEVED_FLIGHT_PHASE: Option<String>,
   pub OCCURRENCE_FLIGHT_PHASE: Option<String>,
   pub STAGE_AT_FAULT: Option<String>,
@@ -1098,12 +1292,6 @@ pub struct OOET {
   pub INCLINED: bool,
   pub DESCRIPTION: Option<String>,
   pub REMARKS: Option<String>,
-  pub INSURANCE_LOSS_NOTES: Option<String>,
-  pub CAPABILITY_LOSS_NOTES: Option<String>,
-  pub INSURANCE_CARRIED_NOTES: Option<String>,
-  pub EQUIPMENT_CAUSING_LOSS_NOTES: Option<String>,
-  pub EVENT_TYPE: Option<String>,
-  pub EVENT_RESULT: Option<String>,
   pub OBJECT_STATUS: Option<String>,
   pub SATELLITE_POSITION: Option<String>,
   pub ON_ORBIT: Option<String>,
@@ -1112,13 +1300,16 @@ impl Default for OOET {
   fn default() -> Self {
     Self {
       ID: None,
+      SAT_NO: 0,
+      ORIG_OBJECT_ID: None,
       DERIVED_FROM: None,
       DECLASSIFICATION_DATE: None,
       DECLASSIFICATION_STRING: None,
-      SAT_NO: 0,
-      ORIG_OBJECT_ID: None,
       EVENT_TIME: None,
       EVENT_TIME_NOTES: None,
+      CATEGORY: eventCategory::ANOMALY,
+      RESULT: eventResult::TOTAL_LOSS,
+      EVENT_TYPE: None,
       OPERATOR_ORG_ID: None,
       OWNER_ORG_ID: None,
       LESSEE_ORG_ID: None,
@@ -1137,8 +1328,8 @@ impl Default for OOET {
       THIRD_PARTY_INSURANCE_LOSS: 0.0,
       INJURED: 0,
       KILLED: 0,
-      LIFE_LOST: 0.0,
       AGE_AT_EVENT: 0.0,
+      LIFE_LOST: 0.0,
       ACHIEVED_FLIGHT_PHASE: None,
       OCCURRENCE_FLIGHT_PHASE: None,
       STAGE_AT_FAULT: None,
@@ -1149,12 +1340,6 @@ impl Default for OOET {
       INCLINED: false,
       DESCRIPTION: None,
       REMARKS: None,
-      INSURANCE_LOSS_NOTES: None,
-      CAPABILITY_LOSS_NOTES: None,
-      INSURANCE_CARRIED_NOTES: None,
-      EQUIPMENT_CAUSING_LOSS_NOTES: None,
-      EVENT_TYPE: None,
-      EVENT_RESULT: None,
       OBJECT_STATUS: None,
       SATELLITE_POSITION: None,
       ON_ORBIT: None,
@@ -1169,6 +1354,10 @@ impl OOET {
     let ID = self.ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let SAT_NO = self.SAT_NO;
+    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
     let DERIVED_FROM = self.DERIVED_FROM.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -1178,14 +1367,15 @@ impl OOET {
     let DECLASSIFICATION_STRING = self.DECLASSIFICATION_STRING.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let SAT_NO = self.SAT_NO;
-    let ORIG_OBJECT_ID = self.ORIG_OBJECT_ID.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
     let EVENT_TIME = self.EVENT_TIME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let EVENT_TIME_NOTES = self.EVENT_TIME_NOTES.as_ref().map(|x|{
+      _fbb.create_string(x)
+    });
+    let CATEGORY = self.CATEGORY;
+    let RESULT = self.RESULT;
+    let EVENT_TYPE = self.EVENT_TYPE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let OPERATOR_ORG_ID = self.OPERATOR_ORG_ID.as_ref().map(|x|{
@@ -1226,8 +1416,8 @@ impl OOET {
     let THIRD_PARTY_INSURANCE_LOSS = self.THIRD_PARTY_INSURANCE_LOSS;
     let INJURED = self.INJURED;
     let KILLED = self.KILLED;
-    let LIFE_LOST = self.LIFE_LOST;
     let AGE_AT_EVENT = self.AGE_AT_EVENT;
+    let LIFE_LOST = self.LIFE_LOST;
     let ACHIEVED_FLIGHT_PHASE = self.ACHIEVED_FLIGHT_PHASE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -1256,24 +1446,6 @@ impl OOET {
     let REMARKS = self.REMARKS.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let INSURANCE_LOSS_NOTES = self.INSURANCE_LOSS_NOTES.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let CAPABILITY_LOSS_NOTES = self.CAPABILITY_LOSS_NOTES.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let INSURANCE_CARRIED_NOTES = self.INSURANCE_CARRIED_NOTES.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let EQUIPMENT_CAUSING_LOSS_NOTES = self.EQUIPMENT_CAUSING_LOSS_NOTES.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let EVENT_TYPE = self.EVENT_TYPE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
-    let EVENT_RESULT = self.EVENT_RESULT.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
     let OBJECT_STATUS = self.OBJECT_STATUS.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -1285,13 +1457,16 @@ impl OOET {
     });
     OOE::create(_fbb, &OOEArgs{
       ID,
+      SAT_NO,
+      ORIG_OBJECT_ID,
       DERIVED_FROM,
       DECLASSIFICATION_DATE,
       DECLASSIFICATION_STRING,
-      SAT_NO,
-      ORIG_OBJECT_ID,
       EVENT_TIME,
       EVENT_TIME_NOTES,
+      CATEGORY,
+      RESULT,
+      EVENT_TYPE,
       OPERATOR_ORG_ID,
       OWNER_ORG_ID,
       LESSEE_ORG_ID,
@@ -1310,8 +1485,8 @@ impl OOET {
       THIRD_PARTY_INSURANCE_LOSS,
       INJURED,
       KILLED,
-      LIFE_LOST,
       AGE_AT_EVENT,
+      LIFE_LOST,
       ACHIEVED_FLIGHT_PHASE,
       OCCURRENCE_FLIGHT_PHASE,
       STAGE_AT_FAULT,
@@ -1322,12 +1497,6 @@ impl OOET {
       INCLINED,
       DESCRIPTION,
       REMARKS,
-      INSURANCE_LOSS_NOTES,
-      CAPABILITY_LOSS_NOTES,
-      INSURANCE_CARRIED_NOTES,
-      EQUIPMENT_CAUSING_LOSS_NOTES,
-      EVENT_TYPE,
-      EVENT_RESULT,
       OBJECT_STATUS,
       SATELLITE_POSITION,
       ON_ORBIT,

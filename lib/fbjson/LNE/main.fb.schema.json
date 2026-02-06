@@ -1,63 +1,170 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "launchOutcome": {
+      "type": "string",
+      "enum": [
+        "SUCCESS",
+        "PARTIAL_SUCCESS",
+        "FAILURE",
+        "IN_PROGRESS",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "SUCCESS": {
+          "value": 0
+        },
+        "PARTIAL_SUCCESS": {
+          "value": 1
+        },
+        "FAILURE": {
+          "value": 2
+        },
+        "IN_PROGRESS": {
+          "value": 3
+        },
+        "UNKNOWN": {
+          "value": 4
+        }
+      }
+    },
     "LNE": {
       "type": "object",
       "description": "Launch Event",
       "properties": {
         "ID": {
           "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "ORIG_OBJECT_ID": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "DERIVED_FROM": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "DECLASSIFICATION_DATE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "DECLASSIFICATION_STRING": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "MSG_CREATE_DATE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "LAUNCH_FAILURE_CODE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "LAUNCH_DATE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "BE_NUMBER": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "O_SUFFIX": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "LAUNCH_FACILITY_NAME": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "ON_ORBIT": {
-          "type": "string",
+          "description": "Unique identifier",
           "x-flatbuffer-type": "string"
         },
         "SAT_NO": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Satellite catalog number of launched object",
+          "x-flatbuffer-type": "uint32"
+        },
+        "ORIG_OBJECT_ID": {
+          "type": "string",
+          "description": "International designator (YYYY-NNNP)",
+          "x-flatbuffer-type": "string"
+        },
+        "DERIVED_FROM": {
+          "type": "string",
+          "description": "Source record this event was derived from",
+          "x-flatbuffer-type": "string"
+        },
+        "DECLASSIFICATION_DATE": {
+          "type": "string",
+          "description": "Classification date (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "DECLASSIFICATION_STRING": {
+          "type": "string",
+          "description": "Classification marking",
+          "x-flatbuffer-type": "string"
+        },
+        "MSG_CREATE_DATE": {
+          "type": "string",
+          "description": "Message creation time (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "LAUNCH_DATE": {
+          "type": "string",
+          "description": "Launch date and time (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "OUTCOME": {
+          "$ref": "#/definitions/launchOutcome",
+          "description": "Launch outcome",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "SUCCESS": {
+              "value": 0
+            },
+            "PARTIAL_SUCCESS": {
+              "value": 1
+            },
+            "FAILURE": {
+              "value": 2
+            },
+            "IN_PROGRESS": {
+              "value": 3
+            },
+            "UNKNOWN": {
+              "value": 4
+            }
+          }
+        },
+        "LAUNCH_FAILURE_CODE": {
+          "type": "string",
+          "description": "Launch failure code (if applicable)",
+          "x-flatbuffer-type": "string"
+        },
+        "BE_NUMBER": {
+          "type": "string",
+          "description": "Basic encyclopedia number",
+          "x-flatbuffer-type": "string"
+        },
+        "O_SUFFIX": {
+          "type": "string",
+          "description": "Object suffix identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "LAUNCH_FACILITY_NAME": {
+          "type": "string",
+          "description": "Launch facility name",
+          "x-flatbuffer-type": "string"
+        },
+        "LAUNCH_FACILITY_CODE": {
+          "type": "string",
+          "description": "Launch facility code",
+          "x-flatbuffer-type": "string"
+        },
+        "LAUNCH_VEHICLE": {
+          "type": "string",
+          "description": "Launch vehicle type",
+          "x-flatbuffer-type": "string"
+        },
+        "LAUNCH_VEHICLE_CONFIG": {
+          "type": "string",
+          "description": "Launch vehicle configuration",
+          "x-flatbuffer-type": "string"
+        },
+        "TARGET_ORBIT": {
+          "type": "string",
+          "description": "Target orbit type (LEO, MEO, GEO, HEO, SSO, etc.)",
+          "x-flatbuffer-type": "string"
+        },
+        "OBJECTS_ON_ORBIT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Number of objects placed on orbit",
+          "x-flatbuffer-type": "uint16"
+        },
+        "ON_ORBIT": {
+          "type": "string",
+          "description": "On-orbit reference identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "LAUNCH_COUNTRY": {
+          "type": "string",
+          "description": "Launch country or operator",
+          "x-flatbuffer-type": "string"
+        },
+        "MISSION_NAME": {
+          "type": "string",
+          "description": "Mission name or payload description",
+          "x-flatbuffer-type": "string"
+        },
+        "REMARKS": {
+          "type": "string",
+          "description": "Additional remarks",
+          "x-flatbuffer-type": "string"
         }
       },
       "additionalProperties": false

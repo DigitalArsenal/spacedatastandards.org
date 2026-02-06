@@ -29,6 +29,7 @@ class CMS(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Unique identifier
     # CMS
     def ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +37,7 @@ class CMS(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Reference to parent entity
     # CMS
     def ID_ENTITY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -43,6 +45,7 @@ class CMS(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Communications payload name
     # CMS
     def NAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -50,6 +53,7 @@ class CMS(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Description
     # CMS
     def DESCRIPTION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
@@ -57,6 +61,7 @@ class CMS(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Parent entity designator
     # CMS
     def ENTITY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -64,28 +69,106 @@ class CMS(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Satellite number
     # CMS
-    def TRANSPONDERS(self, j):
+    def SAT_NO(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
-            a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Number of transponders
+    # CMS
+    def NUM_TRANSPONDERS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Transponders
+    # CMS
+    def TRANSPONDERS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from commsTransponder import commsTransponder
+            obj = commsTransponder()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
 
     # CMS
     def TRANSPONDERSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # CMS
     def TRANSPONDERSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         return o == 0
 
+    # Total payload power in Watts
+    # CMS
+    def TOTAL_POWER(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Total payload mass in kg
+    # CMS
+    def TOTAL_MASS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Total aggregate bandwidth in MHz
+    # CMS
+    def TOTAL_BANDWIDTH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Primary mission (e.g., FIXED_SAT, BROADCAST, MOBILE, RELAY, MILSATCOM)
+    # CMS
+    def MISSION(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Coverage region description
+    # CMS
+    def COVERAGE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Design lifetime in years
+    # CMS
+    def DESIGN_LIFE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Additional notes
+    # CMS
+    def NOTES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def CMSStart(builder):
-    builder.StartObject(6)
+    builder.StartObject(15)
 
 def Start(builder):
     CMSStart(builder)
@@ -120,8 +203,20 @@ def CMSAddENTITY(builder, ENTITY):
 def AddENTITY(builder, ENTITY):
     CMSAddENTITY(builder, ENTITY)
 
+def CMSAddSAT_NO(builder, SAT_NO):
+    builder.PrependUint32Slot(5, SAT_NO, 0)
+
+def AddSAT_NO(builder, SAT_NO):
+    CMSAddSAT_NO(builder, SAT_NO)
+
+def CMSAddNUM_TRANSPONDERS(builder, NUM_TRANSPONDERS):
+    builder.PrependUint32Slot(6, NUM_TRANSPONDERS, 0)
+
+def AddNUM_TRANSPONDERS(builder, NUM_TRANSPONDERS):
+    CMSAddNUM_TRANSPONDERS(builder, NUM_TRANSPONDERS)
+
 def CMSAddTRANSPONDERS(builder, TRANSPONDERS):
-    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSPONDERS), 0)
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(TRANSPONDERS), 0)
 
 def AddTRANSPONDERS(builder, TRANSPONDERS):
     CMSAddTRANSPONDERS(builder, TRANSPONDERS)
@@ -132,12 +227,55 @@ def CMSStartTRANSPONDERSVector(builder, numElems):
 def StartTRANSPONDERSVector(builder, numElems):
     return CMSStartTRANSPONDERSVector(builder, numElems)
 
+def CMSAddTOTAL_POWER(builder, TOTAL_POWER):
+    builder.PrependFloat64Slot(8, TOTAL_POWER, 0.0)
+
+def AddTOTAL_POWER(builder, TOTAL_POWER):
+    CMSAddTOTAL_POWER(builder, TOTAL_POWER)
+
+def CMSAddTOTAL_MASS(builder, TOTAL_MASS):
+    builder.PrependFloat64Slot(9, TOTAL_MASS, 0.0)
+
+def AddTOTAL_MASS(builder, TOTAL_MASS):
+    CMSAddTOTAL_MASS(builder, TOTAL_MASS)
+
+def CMSAddTOTAL_BANDWIDTH(builder, TOTAL_BANDWIDTH):
+    builder.PrependFloat64Slot(10, TOTAL_BANDWIDTH, 0.0)
+
+def AddTOTAL_BANDWIDTH(builder, TOTAL_BANDWIDTH):
+    CMSAddTOTAL_BANDWIDTH(builder, TOTAL_BANDWIDTH)
+
+def CMSAddMISSION(builder, MISSION):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(MISSION), 0)
+
+def AddMISSION(builder, MISSION):
+    CMSAddMISSION(builder, MISSION)
+
+def CMSAddCOVERAGE(builder, COVERAGE):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(COVERAGE), 0)
+
+def AddCOVERAGE(builder, COVERAGE):
+    CMSAddCOVERAGE(builder, COVERAGE)
+
+def CMSAddDESIGN_LIFE(builder, DESIGN_LIFE):
+    builder.PrependFloat64Slot(13, DESIGN_LIFE, 0.0)
+
+def AddDESIGN_LIFE(builder, DESIGN_LIFE):
+    CMSAddDESIGN_LIFE(builder, DESIGN_LIFE)
+
+def CMSAddNOTES(builder, NOTES):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(NOTES), 0)
+
+def AddNOTES(builder, NOTES):
+    CMSAddNOTES(builder, NOTES)
+
 def CMSEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return CMSEnd(builder)
 
+import commsTransponder
 try:
     from typing import List
 except:
@@ -152,7 +290,16 @@ class CMST(object):
         self.NAME = None  # type: str
         self.DESCRIPTION = None  # type: str
         self.ENTITY = None  # type: str
-        self.TRANSPONDERS = None  # type: List[str]
+        self.SAT_NO = 0  # type: int
+        self.NUM_TRANSPONDERS = 0  # type: int
+        self.TRANSPONDERS = None  # type: List[commsTransponder.commsTransponderT]
+        self.TOTAL_POWER = 0.0  # type: float
+        self.TOTAL_MASS = 0.0  # type: float
+        self.TOTAL_BANDWIDTH = 0.0  # type: float
+        self.MISSION = None  # type: str
+        self.COVERAGE = None  # type: str
+        self.DESIGN_LIFE = 0.0  # type: float
+        self.NOTES = None  # type: str
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -180,10 +327,23 @@ class CMST(object):
         self.NAME = CMS.NAME()
         self.DESCRIPTION = CMS.DESCRIPTION()
         self.ENTITY = CMS.ENTITY()
+        self.SAT_NO = CMS.SAT_NO()
+        self.NUM_TRANSPONDERS = CMS.NUM_TRANSPONDERS()
         if not CMS.TRANSPONDERSIsNone():
             self.TRANSPONDERS = []
             for i in range(CMS.TRANSPONDERSLength()):
-                self.TRANSPONDERS.append(CMS.TRANSPONDERS(i))
+                if CMS.TRANSPONDERS(i) is None:
+                    self.TRANSPONDERS.append(None)
+                else:
+                    commsTransponder_ = commsTransponder.commsTransponderT.InitFromObj(CMS.TRANSPONDERS(i))
+                    self.TRANSPONDERS.append(commsTransponder_)
+        self.TOTAL_POWER = CMS.TOTAL_POWER()
+        self.TOTAL_MASS = CMS.TOTAL_MASS()
+        self.TOTAL_BANDWIDTH = CMS.TOTAL_BANDWIDTH()
+        self.MISSION = CMS.MISSION()
+        self.COVERAGE = CMS.COVERAGE()
+        self.DESIGN_LIFE = CMS.DESIGN_LIFE()
+        self.NOTES = CMS.NOTES()
 
     # CMST
     def Pack(self, builder):
@@ -200,11 +360,17 @@ class CMST(object):
         if self.TRANSPONDERS is not None:
             TRANSPONDERSlist = []
             for i in range(len(self.TRANSPONDERS)):
-                TRANSPONDERSlist.append(builder.CreateString(self.TRANSPONDERS[i]))
+                TRANSPONDERSlist.append(self.TRANSPONDERS[i].Pack(builder))
             CMSStartTRANSPONDERSVector(builder, len(self.TRANSPONDERS))
             for i in reversed(range(len(self.TRANSPONDERS))):
                 builder.PrependUOffsetTRelative(TRANSPONDERSlist[i])
             TRANSPONDERS = builder.EndVector()
+        if self.MISSION is not None:
+            MISSION = builder.CreateString(self.MISSION)
+        if self.COVERAGE is not None:
+            COVERAGE = builder.CreateString(self.COVERAGE)
+        if self.NOTES is not None:
+            NOTES = builder.CreateString(self.NOTES)
         CMSStart(builder)
         if self.ID is not None:
             CMSAddID(builder, ID)
@@ -216,7 +382,19 @@ class CMST(object):
             CMSAddDESCRIPTION(builder, DESCRIPTION)
         if self.ENTITY is not None:
             CMSAddENTITY(builder, ENTITY)
+        CMSAddSAT_NO(builder, self.SAT_NO)
+        CMSAddNUM_TRANSPONDERS(builder, self.NUM_TRANSPONDERS)
         if self.TRANSPONDERS is not None:
             CMSAddTRANSPONDERS(builder, TRANSPONDERS)
+        CMSAddTOTAL_POWER(builder, self.TOTAL_POWER)
+        CMSAddTOTAL_MASS(builder, self.TOTAL_MASS)
+        CMSAddTOTAL_BANDWIDTH(builder, self.TOTAL_BANDWIDTH)
+        if self.MISSION is not None:
+            CMSAddMISSION(builder, MISSION)
+        if self.COVERAGE is not None:
+            CMSAddCOVERAGE(builder, COVERAGE)
+        CMSAddDESIGN_LIFE(builder, self.DESIGN_LIFE)
+        if self.NOTES is not None:
+            CMSAddNOTES(builder, NOTES)
         CMS = CMSEnd(builder)
         return CMS

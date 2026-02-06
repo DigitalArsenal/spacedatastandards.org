@@ -29,6 +29,9 @@ class RFE : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Unique emitter identifier
+     */
     val ID : String?
         get() {
             val o = __offset(4)
@@ -40,6 +43,9 @@ class RFE : Table() {
         }
     val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
+    /**
+     * Reference to parent entity
+     */
     val ID_ENTITY : String?
         get() {
             val o = __offset(6)
@@ -51,6 +57,9 @@ class RFE : Table() {
         }
     val ID_ENTITYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(6, 1)
     fun ID_ENTITYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 6, 1)
+    /**
+     * Emitter name or designation
+     */
     val NAME : String?
         get() {
             val o = __offset(8)
@@ -62,17 +71,17 @@ class RFE : Table() {
         }
     val NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
     fun NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val TYPE : String?
+    /**
+     * Emitter type
+     */
+    val TYPE : Byte
         get() {
             val o = __offset(10)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.get(o + bb_pos) else 0
         }
-    val TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    /**
+     * Parent entity designator
+     */
     val ENTITY : String?
         get() {
             val o = __offset(12)
@@ -84,18 +93,182 @@ class RFE : Table() {
         }
     val ENTITYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
     fun ENTITYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
-    fun RF_EMITTER_DETAILS(j: Int) : String? {
-        val o = __offset(14)
+    /**
+     * ELNOT (Electronic Notation)
+     */
+    val ELNOT : String?
+        get() {
+            val o = __offset(14)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val ELNOTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
+    fun ELNOTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    /**
+     * NATO reporting name
+     */
+    val NATO_NAME : String?
+        get() {
+            val o = __offset(16)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val NATO_NAMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
+    fun NATO_NAMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    /**
+     * Platform type (e.g., SHIP, AIRCRAFT, GROUND, SATELLITE)
+     */
+    val PLATFORM_TYPE : String?
+        get() {
+            val o = __offset(18)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val PLATFORM_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
+    fun PLATFORM_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    /**
+     * Country of origin
+     */
+    val COUNTRY : String?
+        get() {
+            val o = __offset(20)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val COUNTRYAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
+    fun COUNTRYInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    /**
+     * Primary function description
+     */
+    val FUNCTION : String?
+        get() {
+            val o = __offset(22)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val FUNCTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
+    fun FUNCTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    /**
+     * Operating band (e.g., HF, VHF, UHF, L, S, C, X, Ku, Ka)
+     */
+    val BAND : String?
+        get() {
+            val o = __offset(24)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val BANDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
+    fun BANDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    /**
+     * Minimum operating frequency in MHz
+     */
+    val FREQ_MIN : Double
+        get() {
+            val o = __offset(26)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Maximum operating frequency in MHz
+     */
+    val FREQ_MAX : Double
+        get() {
+            val o = __offset(28)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Peak power in kW
+     */
+    val PEAK_POWER : Double
+        get() {
+            val o = __offset(30)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Average power in kW
+     */
+    val AVG_POWER : Double
+        get() {
+            val o = __offset(32)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Antenna gain in dBi
+     */
+    val ANTENNA_GAIN : Double
+        get() {
+            val o = __offset(34)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Number of operating modes
+     */
+    val NUM_MODES : UInt
+        get() {
+            val o = __offset(36)
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
+        }
+    /**
+     * Emitter operating mode details
+     */
+    fun RF_EMITTER_DETAILS(j: Int) : rfEmitterDetail? = RF_EMITTER_DETAILS(rfEmitterDetail(), j)
+    fun RF_EMITTER_DETAILS(obj: rfEmitterDetail, j: Int) : rfEmitterDetail? {
+        val o = __offset(38)
         return if (o != 0) {
-            __string(__vector(o) + j * 4)
+            obj.__assign(__indirect(__vector(o) + j * 4), bb)
         } else {
             null
         }
     }
     val RF_EMITTER_DETAILSLength : Int
         get() {
-            val o = __offset(14); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(38); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Threat level assessment
+     */
+    val THREAT_LEVEL : String?
+        get() {
+            val o = __offset(40)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val THREAT_LEVELAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(40, 1)
+    fun THREAT_LEVELInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 40, 1)
+    /**
+     * Additional notes
+     */
+    val NOTES : String?
+        get() {
+            val o = __offset(42)
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
+        }
+    val NOTESAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(42, 1)
+    fun NOTESInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 42, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsRFE(_bb: ByteBuffer): RFE = getRootAsRFE(_bb, RFE())
@@ -104,23 +277,49 @@ class RFE : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun RFEBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$RFE")
-        fun createRFE(builder: FlatBufferBuilder, IDOffset: Int, ID_ENTITYOffset: Int, NAMEOffset: Int, TYPEOffset: Int, ENTITYOffset: Int, RF_EMITTER_DETAILSOffset: Int) : Int {
-            builder.startTable(6)
+        fun createRFE(builder: FlatBufferBuilder, IDOffset: Int, ID_ENTITYOffset: Int, NAMEOffset: Int, TYPE: Byte, ENTITYOffset: Int, ELNOTOffset: Int, NATO_NAMEOffset: Int, PLATFORM_TYPEOffset: Int, COUNTRYOffset: Int, FUNCTIONOffset: Int, BANDOffset: Int, FREQ_MIN: Double, FREQ_MAX: Double, PEAK_POWER: Double, AVG_POWER: Double, ANTENNA_GAIN: Double, NUM_MODES: UInt, RF_EMITTER_DETAILSOffset: Int, THREAT_LEVELOffset: Int, NOTESOffset: Int) : Int {
+            builder.startTable(20)
+            addANTENNA_GAIN(builder, ANTENNA_GAIN)
+            addAVG_POWER(builder, AVG_POWER)
+            addPEAK_POWER(builder, PEAK_POWER)
+            addFREQ_MAX(builder, FREQ_MAX)
+            addFREQ_MIN(builder, FREQ_MIN)
+            addNOTES(builder, NOTESOffset)
+            addTHREAT_LEVEL(builder, THREAT_LEVELOffset)
             addRF_EMITTER_DETAILS(builder, RF_EMITTER_DETAILSOffset)
+            addNUM_MODES(builder, NUM_MODES)
+            addBAND(builder, BANDOffset)
+            addFUNCTION(builder, FUNCTIONOffset)
+            addCOUNTRY(builder, COUNTRYOffset)
+            addPLATFORM_TYPE(builder, PLATFORM_TYPEOffset)
+            addNATO_NAME(builder, NATO_NAMEOffset)
+            addELNOT(builder, ELNOTOffset)
             addENTITY(builder, ENTITYOffset)
-            addTYPE(builder, TYPEOffset)
             addNAME(builder, NAMEOffset)
             addID_ENTITY(builder, ID_ENTITYOffset)
             addID(builder, IDOffset)
+            addTYPE(builder, TYPE)
             return endRFE(builder)
         }
-        fun startRFE(builder: FlatBufferBuilder) = builder.startTable(6)
+        fun startRFE(builder: FlatBufferBuilder) = builder.startTable(20)
         fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
         fun addID_ENTITY(builder: FlatBufferBuilder, ID_ENTITY: Int) = builder.addOffset(1, ID_ENTITY, 0)
         fun addNAME(builder: FlatBufferBuilder, NAME: Int) = builder.addOffset(2, NAME, 0)
-        fun addTYPE(builder: FlatBufferBuilder, TYPE: Int) = builder.addOffset(3, TYPE, 0)
+        fun addTYPE(builder: FlatBufferBuilder, TYPE: Byte) = builder.addByte(3, TYPE, 0)
         fun addENTITY(builder: FlatBufferBuilder, ENTITY: Int) = builder.addOffset(4, ENTITY, 0)
-        fun addRF_EMITTER_DETAILS(builder: FlatBufferBuilder, RF_EMITTER_DETAILS: Int) = builder.addOffset(5, RF_EMITTER_DETAILS, 0)
+        fun addELNOT(builder: FlatBufferBuilder, ELNOT: Int) = builder.addOffset(5, ELNOT, 0)
+        fun addNATO_NAME(builder: FlatBufferBuilder, NATO_NAME: Int) = builder.addOffset(6, NATO_NAME, 0)
+        fun addPLATFORM_TYPE(builder: FlatBufferBuilder, PLATFORM_TYPE: Int) = builder.addOffset(7, PLATFORM_TYPE, 0)
+        fun addCOUNTRY(builder: FlatBufferBuilder, COUNTRY: Int) = builder.addOffset(8, COUNTRY, 0)
+        fun addFUNCTION(builder: FlatBufferBuilder, FUNCTION: Int) = builder.addOffset(9, FUNCTION, 0)
+        fun addBAND(builder: FlatBufferBuilder, BAND: Int) = builder.addOffset(10, BAND, 0)
+        fun addFREQ_MIN(builder: FlatBufferBuilder, FREQ_MIN: Double) = builder.addDouble(11, FREQ_MIN, 0.0)
+        fun addFREQ_MAX(builder: FlatBufferBuilder, FREQ_MAX: Double) = builder.addDouble(12, FREQ_MAX, 0.0)
+        fun addPEAK_POWER(builder: FlatBufferBuilder, PEAK_POWER: Double) = builder.addDouble(13, PEAK_POWER, 0.0)
+        fun addAVG_POWER(builder: FlatBufferBuilder, AVG_POWER: Double) = builder.addDouble(14, AVG_POWER, 0.0)
+        fun addANTENNA_GAIN(builder: FlatBufferBuilder, ANTENNA_GAIN: Double) = builder.addDouble(15, ANTENNA_GAIN, 0.0)
+        fun addNUM_MODES(builder: FlatBufferBuilder, NUM_MODES: UInt) = builder.addInt(16, NUM_MODES.toInt(), 0)
+        fun addRF_EMITTER_DETAILS(builder: FlatBufferBuilder, RF_EMITTER_DETAILS: Int) = builder.addOffset(17, RF_EMITTER_DETAILS, 0)
         fun createRfEmitterDetailsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -129,6 +328,8 @@ class RFE : Table() {
             return builder.endVector()
         }
         fun startRfEmitterDetailsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
+        fun addTHREAT_LEVEL(builder: FlatBufferBuilder, THREAT_LEVEL: Int) = builder.addOffset(18, THREAT_LEVEL, 0)
+        fun addNOTES(builder: FlatBufferBuilder, NOTES: Int) = builder.addOffset(19, NOTES, 0)
         fun endRFE(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

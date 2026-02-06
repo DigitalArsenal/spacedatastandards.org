@@ -29,6 +29,9 @@ class OBT : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Unique identifier
+     */
     val ID : String?
         get() {
             val o = __offset(4)
@@ -40,12 +43,18 @@ class OBT : Table() {
         }
     val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val SAT_NO : Int
+    /**
+     * Satellite catalog number
+     */
+    val SAT_NO : UInt
         get() {
             val o = __offset(6)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
-    val ON_ORBIT : String?
+    /**
+     * International designator
+     */
+    val ORIG_OBJECT_ID : String?
         get() {
             val o = __offset(8)
             return if (o != 0) {
@@ -54,9 +63,12 @@ class OBT : Table() {
                 null
             }
         }
-    val ON_ORBITAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
-    fun ON_ORBITInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val ORIG_OBJECT_ID : String?
+    val ORIG_OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
+    fun ORIG_OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
+    /**
+     * On-orbit reference
+     */
+    val ON_ORBIT : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -65,8 +77,11 @@ class OBT : Table() {
                 null
             }
         }
-    val ORIG_OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun ORIG_OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    val ON_ORBITAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
+    fun ON_ORBITInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    /**
+     * Track point timestamp (ISO 8601)
+     */
     val TS : String?
         get() {
             val o = __offset(12)
@@ -78,49 +93,58 @@ class OBT : Table() {
         }
     val TSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
     fun TSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * Latitude (degrees)
+     */
     val LAT : Double
         get() {
             val o = __offset(14)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Longitude (degrees)
+     */
     val LON : Double
         get() {
             val o = __offset(16)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
+    /**
+     * Altitude (km)
+     */
     val ALT : Double
         get() {
             val o = __offset(18)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val RDF_RF : Double
+    /**
+     * Speed (km/s)
+     */
+    val SPD : Double
         get() {
             val o = __offset(20)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val CALL_SIGN : String?
+    /**
+     * Elevation angle from observer (degrees)
+     */
+    val ANG_ELEV : Double
         get() {
             val o = __offset(22)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val CALL_SIGNAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun CALL_SIGNInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
-    val RPT_NUM : String?
+    /**
+     * Radar data fusion RF value
+     */
+    val RDF_RF : Double
         get() {
             val o = __offset(24)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val RPT_NUMAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun RPT_NUMInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
-    val OBJ_IDENT : String?
+    /**
+     * Call sign
+     */
+    val CALL_SIGN : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -129,9 +153,12 @@ class OBT : Table() {
                 null
             }
         }
-    val OBJ_IDENTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun OBJ_IDENTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
-    val IDENT_AMP : String?
+    val CALL_SIGNAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
+    fun CALL_SIGNInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    /**
+     * Report number
+     */
+    val RPT_NUM : String?
         get() {
             val o = __offset(28)
             return if (o != 0) {
@@ -140,9 +167,12 @@ class OBT : Table() {
                 null
             }
         }
-    val IDENT_AMPAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun IDENT_AMPInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
-    val SAT_STATUS : String?
+    val RPT_NUMAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
+    fun RPT_NUMInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    /**
+     * Track identifier
+     */
+    val TRK_ID : String?
         get() {
             val o = __offset(30)
             return if (o != 0) {
@@ -151,9 +181,12 @@ class OBT : Table() {
                 null
             }
         }
-    val SAT_STATUSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
-    fun SAT_STATUSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
-    val OBJECT_TYPE : String?
+    val TRK_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
+    fun TRK_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    /**
+     * Object identity assessment
+     */
+    val OBJ_IDENT : String?
         get() {
             val o = __offset(32)
             return if (o != 0) {
@@ -162,9 +195,12 @@ class OBT : Table() {
                 null
             }
         }
-    val OBJECT_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
-    fun OBJECT_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
-    val COUNTRY_CODE : String?
+    val OBJ_IDENTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
+    fun OBJ_IDENTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
+    /**
+     * Identity amplification
+     */
+    val IDENT_AMP : String?
         get() {
             val o = __offset(34)
             return if (o != 0) {
@@ -173,25 +209,34 @@ class OBT : Table() {
                 null
             }
         }
-    val COUNTRY_CODEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun COUNTRY_CODEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
-    val DECAY : Double
+    val IDENT_AMPAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
+    fun IDENT_AMPInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    /**
+     * Satellite operational status
+     */
+    val SAT_STATUS : String?
         get() {
             val o = __offset(36)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val CHARLIE_LINE : String?
-        get() {
-            val o = __offset(38)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val CHARLIE_LINEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 1)
-    fun CHARLIE_LINEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 1)
-    val AOU_TYPE : String?
+    val SAT_STATUSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
+    fun SAT_STATUSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
+    /**
+     * Object type
+     */
+    val OBJ_TYPE : Byte
+        get() {
+            val o = __offset(38)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Country code (ISO 3166)
+     */
+    val COUNTRY_CODE : String?
         get() {
             val o = __offset(40)
             return if (o != 0) {
@@ -200,47 +245,67 @@ class OBT : Table() {
                 null
             }
         }
-    val AOU_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(40, 1)
-    fun AOU_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 40, 1)
-    fun AOU_DATA(j: Int) : String? {
-        val o = __offset(42)
-        return if (o != 0) {
-            __string(__vector(o) + j * 4)
-        } else {
-            null
-        }
-    }
-    val AOU_DATALength : Int
+    val COUNTRY_CODEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(40, 1)
+    fun COUNTRY_CODEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 40, 1)
+    /**
+     * Orbit decay rate (km/day)
+     */
+    val DECAY : Double
         get() {
-            val o = __offset(42); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(42)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SPD : Double
+    /**
+     * Charlie line data (amplification text)
+     */
+    val CHARLIE_LINE : String?
         get() {
             val o = __offset(44)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val ANG_ELEV : Double
-        get() {
-            val o = __offset(46)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val CNTNMNT : Double
-        get() {
-            val o = __offset(48)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val XREF : String?
-        get() {
-            val o = __offset(50)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val XREFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(50, 1)
-    fun XREFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 50, 1)
-    val CH_XREF : String?
+    val CHARLIE_LINEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(44, 1)
+    fun CHARLIE_LINEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 44, 1)
+    /**
+     * Area of uncertainty type
+     */
+    val AOU_TYPE : Byte
+        get() {
+            val o = __offset(46)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Area of uncertainty data
+     */
+    fun AOU_DATA(j: Int) : Double {
+        val o = __offset(48)
+        return if (o != 0) {
+            bb.getDouble(__vector(o) + j * 8)
+        } else {
+            0.0
+        }
+    }
+    val AOU_DATALength : Int
+        get() {
+            val o = __offset(48); return if (o != 0) __vector_len(o) else 0
+        }
+    val AOU_DATAAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(48, 8)
+    fun AOU_DATAInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 48, 8)
+    /**
+     * Containment probability (0-1)
+     */
+    val CNTNMNT : Double
+        get() {
+            val o = __offset(50)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Cross-reference identifier
+     */
+    val XREF : String?
         get() {
             val o = __offset(52)
             return if (o != 0) {
@@ -249,9 +314,12 @@ class OBT : Table() {
                 null
             }
         }
-    val CH_XREFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(52, 1)
-    fun CH_XREFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 52, 1)
-    val AMPLIFICATION : String?
+    val XREFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(52, 1)
+    fun XREFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 52, 1)
+    /**
+     * Charlie cross-reference
+     */
+    val CH_XREF : String?
         get() {
             val o = __offset(54)
             return if (o != 0) {
@@ -260,9 +328,12 @@ class OBT : Table() {
                 null
             }
         }
-    val AMPLIFICATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(54, 1)
-    fun AMPLIFICATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 54, 1)
-    val IFF : String?
+    val CH_XREFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(54, 1)
+    fun CH_XREFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 54, 1)
+    /**
+     * Additional amplification text
+     */
+    val AMPLIFICATION : String?
         get() {
             val o = __offset(56)
             return if (o != 0) {
@@ -271,65 +342,95 @@ class OBT : Table() {
                 null
             }
         }
-    val IFFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(56, 1)
-    fun IFFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 56, 1)
-    val REINFORCED : Boolean
+    val AMPLIFICATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(56, 1)
+    fun AMPLIFICATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 56, 1)
+    /**
+     * IFF mode/code
+     */
+    val IFF : String?
         get() {
             val o = __offset(58)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
-    val REDUCED : Boolean
+    val IFFAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(58, 1)
+    fun IFFInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 58, 1)
+    /**
+     * Vehicle type
+     */
+    val VEH_TYPE : String?
         get() {
             val o = __offset(60)
-            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
-    val HQ : Boolean
+    val VEH_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(60, 1)
+    fun VEH_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 60, 1)
+    /**
+     * True if reinforced unit
+     */
+    val REINFORCED : Boolean
         get() {
             val o = __offset(62)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val DUMMY : Boolean
+    /**
+     * True if reduced unit
+     */
+    val REDUCED : Boolean
         get() {
             val o = __offset(64)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val TASK_FORCE : Boolean
+    /**
+     * True if headquarters element
+     */
+    val HQ : Boolean
         get() {
             val o = __offset(66)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val FEINT : Boolean
+    /**
+     * True if dummy/exercise track
+     */
+    val DUMMY : Boolean
         get() {
             val o = __offset(68)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val INSTALLATION : Boolean
+    /**
+     * True if task force
+     */
+    val TASK_FORCE : Boolean
         get() {
             val o = __offset(70)
             return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val VEH_TYPE : String?
+    /**
+     * True if feint
+     */
+    val FEINT : Boolean
         get() {
             val o = __offset(72)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val VEH_TYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(72, 1)
-    fun VEH_TYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 72, 1)
-    val TRK_ID : String?
+    /**
+     * True if installation (not mobile)
+     */
+    val INSTALLATION : Boolean
         get() {
             val o = __offset(74)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) 0.toByte() != bb.get(o + bb_pos) else false
         }
-    val TRK_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(74, 1)
-    fun TRK_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 74, 1)
+    /**
+     * Contributing track sensors
+     */
     fun TRACK_SENSORS(j: Int) : String? {
         val o = __offset(76)
         return if (o != 0) {
@@ -350,36 +451,34 @@ class OBT : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun OBTBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$OBT")
-        fun createOBT(builder: FlatBufferBuilder, IDOffset: Int, SAT_NO: Int, ON_ORBITOffset: Int, ORIG_OBJECT_IDOffset: Int, TSOffset: Int, LAT: Double, LON: Double, ALT: Double, RDF_RF: Double, CALL_SIGNOffset: Int, RPT_NUMOffset: Int, OBJ_IDENTOffset: Int, IDENT_AMPOffset: Int, SAT_STATUSOffset: Int, OBJECT_TYPEOffset: Int, COUNTRY_CODEOffset: Int, DECAY: Double, CHARLIE_LINEOffset: Int, AOU_TYPEOffset: Int, AOU_DATAOffset: Int, SPD: Double, ANG_ELEV: Double, CNTNMNT: Double, XREFOffset: Int, CH_XREFOffset: Int, AMPLIFICATIONOffset: Int, IFFOffset: Int, REINFORCED: Boolean, REDUCED: Boolean, HQ: Boolean, DUMMY: Boolean, TASK_FORCE: Boolean, FEINT: Boolean, INSTALLATION: Boolean, VEH_TYPEOffset: Int, TRK_IDOffset: Int, TRACK_SENSORSOffset: Int) : Int {
+        fun createOBT(builder: FlatBufferBuilder, IDOffset: Int, SAT_NO: UInt, ORIG_OBJECT_IDOffset: Int, ON_ORBITOffset: Int, TSOffset: Int, LAT: Double, LON: Double, ALT: Double, SPD: Double, ANG_ELEV: Double, RDF_RF: Double, CALL_SIGNOffset: Int, RPT_NUMOffset: Int, TRK_IDOffset: Int, OBJ_IDENTOffset: Int, IDENT_AMPOffset: Int, SAT_STATUSOffset: Int, OBJ_TYPE: Byte, COUNTRY_CODEOffset: Int, DECAY: Double, CHARLIE_LINEOffset: Int, AOU_TYPE: Byte, AOU_DATAOffset: Int, CNTNMNT: Double, XREFOffset: Int, CH_XREFOffset: Int, AMPLIFICATIONOffset: Int, IFFOffset: Int, VEH_TYPEOffset: Int, REINFORCED: Boolean, REDUCED: Boolean, HQ: Boolean, DUMMY: Boolean, TASK_FORCE: Boolean, FEINT: Boolean, INSTALLATION: Boolean, TRACK_SENSORSOffset: Int) : Int {
             builder.startTable(37)
             addCNTNMNT(builder, CNTNMNT)
-            addANG_ELEV(builder, ANG_ELEV)
-            addSPD(builder, SPD)
             addDECAY(builder, DECAY)
             addRDF_RF(builder, RDF_RF)
+            addANG_ELEV(builder, ANG_ELEV)
+            addSPD(builder, SPD)
             addALT(builder, ALT)
             addLON(builder, LON)
             addLAT(builder, LAT)
             addTRACK_SENSORS(builder, TRACK_SENSORSOffset)
-            addTRK_ID(builder, TRK_IDOffset)
             addVEH_TYPE(builder, VEH_TYPEOffset)
             addIFF(builder, IFFOffset)
             addAMPLIFICATION(builder, AMPLIFICATIONOffset)
             addCH_XREF(builder, CH_XREFOffset)
             addXREF(builder, XREFOffset)
             addAOU_DATA(builder, AOU_DATAOffset)
-            addAOU_TYPE(builder, AOU_TYPEOffset)
             addCHARLIE_LINE(builder, CHARLIE_LINEOffset)
             addCOUNTRY_CODE(builder, COUNTRY_CODEOffset)
-            addOBJECT_TYPE(builder, OBJECT_TYPEOffset)
             addSAT_STATUS(builder, SAT_STATUSOffset)
             addIDENT_AMP(builder, IDENT_AMPOffset)
             addOBJ_IDENT(builder, OBJ_IDENTOffset)
+            addTRK_ID(builder, TRK_IDOffset)
             addRPT_NUM(builder, RPT_NUMOffset)
             addCALL_SIGN(builder, CALL_SIGNOffset)
             addTS(builder, TSOffset)
-            addORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset)
             addON_ORBIT(builder, ON_ORBITOffset)
+            addORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset)
             addSAT_NO(builder, SAT_NO)
             addID(builder, IDOffset)
             addINSTALLATION(builder, INSTALLATION)
@@ -389,53 +488,55 @@ class OBT : Table() {
             addHQ(builder, HQ)
             addREDUCED(builder, REDUCED)
             addREINFORCED(builder, REINFORCED)
+            addAOU_TYPE(builder, AOU_TYPE)
+            addOBJ_TYPE(builder, OBJ_TYPE)
             return endOBT(builder)
         }
         fun startOBT(builder: FlatBufferBuilder) = builder.startTable(37)
         fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: Int) = builder.addInt(1, SAT_NO, 0)
-        fun addON_ORBIT(builder: FlatBufferBuilder, ON_ORBIT: Int) = builder.addOffset(2, ON_ORBIT, 0)
-        fun addORIG_OBJECT_ID(builder: FlatBufferBuilder, ORIG_OBJECT_ID: Int) = builder.addOffset(3, ORIG_OBJECT_ID, 0)
+        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: UInt) = builder.addInt(1, SAT_NO.toInt(), 0)
+        fun addORIG_OBJECT_ID(builder: FlatBufferBuilder, ORIG_OBJECT_ID: Int) = builder.addOffset(2, ORIG_OBJECT_ID, 0)
+        fun addON_ORBIT(builder: FlatBufferBuilder, ON_ORBIT: Int) = builder.addOffset(3, ON_ORBIT, 0)
         fun addTS(builder: FlatBufferBuilder, TS: Int) = builder.addOffset(4, TS, 0)
         fun addLAT(builder: FlatBufferBuilder, LAT: Double) = builder.addDouble(5, LAT, 0.0)
         fun addLON(builder: FlatBufferBuilder, LON: Double) = builder.addDouble(6, LON, 0.0)
         fun addALT(builder: FlatBufferBuilder, ALT: Double) = builder.addDouble(7, ALT, 0.0)
-        fun addRDF_RF(builder: FlatBufferBuilder, RDF_RF: Double) = builder.addDouble(8, RDF_RF, 0.0)
-        fun addCALL_SIGN(builder: FlatBufferBuilder, CALL_SIGN: Int) = builder.addOffset(9, CALL_SIGN, 0)
-        fun addRPT_NUM(builder: FlatBufferBuilder, RPT_NUM: Int) = builder.addOffset(10, RPT_NUM, 0)
-        fun addOBJ_IDENT(builder: FlatBufferBuilder, OBJ_IDENT: Int) = builder.addOffset(11, OBJ_IDENT, 0)
-        fun addIDENT_AMP(builder: FlatBufferBuilder, IDENT_AMP: Int) = builder.addOffset(12, IDENT_AMP, 0)
-        fun addSAT_STATUS(builder: FlatBufferBuilder, SAT_STATUS: Int) = builder.addOffset(13, SAT_STATUS, 0)
-        fun addOBJECT_TYPE(builder: FlatBufferBuilder, OBJECT_TYPE: Int) = builder.addOffset(14, OBJECT_TYPE, 0)
-        fun addCOUNTRY_CODE(builder: FlatBufferBuilder, COUNTRY_CODE: Int) = builder.addOffset(15, COUNTRY_CODE, 0)
-        fun addDECAY(builder: FlatBufferBuilder, DECAY: Double) = builder.addDouble(16, DECAY, 0.0)
-        fun addCHARLIE_LINE(builder: FlatBufferBuilder, CHARLIE_LINE: Int) = builder.addOffset(17, CHARLIE_LINE, 0)
-        fun addAOU_TYPE(builder: FlatBufferBuilder, AOU_TYPE: Int) = builder.addOffset(18, AOU_TYPE, 0)
-        fun addAOU_DATA(builder: FlatBufferBuilder, AOU_DATA: Int) = builder.addOffset(19, AOU_DATA, 0)
-        fun createAouDataVector(builder: FlatBufferBuilder, data: IntArray) : Int {
-            builder.startVector(4, data.size, 4)
+        fun addSPD(builder: FlatBufferBuilder, SPD: Double) = builder.addDouble(8, SPD, 0.0)
+        fun addANG_ELEV(builder: FlatBufferBuilder, ANG_ELEV: Double) = builder.addDouble(9, ANG_ELEV, 0.0)
+        fun addRDF_RF(builder: FlatBufferBuilder, RDF_RF: Double) = builder.addDouble(10, RDF_RF, 0.0)
+        fun addCALL_SIGN(builder: FlatBufferBuilder, CALL_SIGN: Int) = builder.addOffset(11, CALL_SIGN, 0)
+        fun addRPT_NUM(builder: FlatBufferBuilder, RPT_NUM: Int) = builder.addOffset(12, RPT_NUM, 0)
+        fun addTRK_ID(builder: FlatBufferBuilder, TRK_ID: Int) = builder.addOffset(13, TRK_ID, 0)
+        fun addOBJ_IDENT(builder: FlatBufferBuilder, OBJ_IDENT: Int) = builder.addOffset(14, OBJ_IDENT, 0)
+        fun addIDENT_AMP(builder: FlatBufferBuilder, IDENT_AMP: Int) = builder.addOffset(15, IDENT_AMP, 0)
+        fun addSAT_STATUS(builder: FlatBufferBuilder, SAT_STATUS: Int) = builder.addOffset(16, SAT_STATUS, 0)
+        fun addOBJ_TYPE(builder: FlatBufferBuilder, OBJ_TYPE: Byte) = builder.addByte(17, OBJ_TYPE, 0)
+        fun addCOUNTRY_CODE(builder: FlatBufferBuilder, COUNTRY_CODE: Int) = builder.addOffset(18, COUNTRY_CODE, 0)
+        fun addDECAY(builder: FlatBufferBuilder, DECAY: Double) = builder.addDouble(19, DECAY, 0.0)
+        fun addCHARLIE_LINE(builder: FlatBufferBuilder, CHARLIE_LINE: Int) = builder.addOffset(20, CHARLIE_LINE, 0)
+        fun addAOU_TYPE(builder: FlatBufferBuilder, AOU_TYPE: Byte) = builder.addByte(21, AOU_TYPE, 0)
+        fun addAOU_DATA(builder: FlatBufferBuilder, AOU_DATA: Int) = builder.addOffset(22, AOU_DATA, 0)
+        fun createAouDataVector(builder: FlatBufferBuilder, data: DoubleArray) : Int {
+            builder.startVector(8, data.size, 8)
             for (i in data.size - 1 downTo 0) {
-                builder.addOffset(data[i])
+                builder.addDouble(data[i])
             }
             return builder.endVector()
         }
-        fun startAouDataVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSPD(builder: FlatBufferBuilder, SPD: Double) = builder.addDouble(20, SPD, 0.0)
-        fun addANG_ELEV(builder: FlatBufferBuilder, ANG_ELEV: Double) = builder.addDouble(21, ANG_ELEV, 0.0)
-        fun addCNTNMNT(builder: FlatBufferBuilder, CNTNMNT: Double) = builder.addDouble(22, CNTNMNT, 0.0)
-        fun addXREF(builder: FlatBufferBuilder, XREF: Int) = builder.addOffset(23, XREF, 0)
-        fun addCH_XREF(builder: FlatBufferBuilder, CH_XREF: Int) = builder.addOffset(24, CH_XREF, 0)
-        fun addAMPLIFICATION(builder: FlatBufferBuilder, AMPLIFICATION: Int) = builder.addOffset(25, AMPLIFICATION, 0)
-        fun addIFF(builder: FlatBufferBuilder, IFF: Int) = builder.addOffset(26, IFF, 0)
-        fun addREINFORCED(builder: FlatBufferBuilder, REINFORCED: Boolean) = builder.addBoolean(27, REINFORCED, false)
-        fun addREDUCED(builder: FlatBufferBuilder, REDUCED: Boolean) = builder.addBoolean(28, REDUCED, false)
-        fun addHQ(builder: FlatBufferBuilder, HQ: Boolean) = builder.addBoolean(29, HQ, false)
-        fun addDUMMY(builder: FlatBufferBuilder, DUMMY: Boolean) = builder.addBoolean(30, DUMMY, false)
-        fun addTASK_FORCE(builder: FlatBufferBuilder, TASK_FORCE: Boolean) = builder.addBoolean(31, TASK_FORCE, false)
-        fun addFEINT(builder: FlatBufferBuilder, FEINT: Boolean) = builder.addBoolean(32, FEINT, false)
-        fun addINSTALLATION(builder: FlatBufferBuilder, INSTALLATION: Boolean) = builder.addBoolean(33, INSTALLATION, false)
-        fun addVEH_TYPE(builder: FlatBufferBuilder, VEH_TYPE: Int) = builder.addOffset(34, VEH_TYPE, 0)
-        fun addTRK_ID(builder: FlatBufferBuilder, TRK_ID: Int) = builder.addOffset(35, TRK_ID, 0)
+        fun startAouDataVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(8, numElems, 8)
+        fun addCNTNMNT(builder: FlatBufferBuilder, CNTNMNT: Double) = builder.addDouble(23, CNTNMNT, 0.0)
+        fun addXREF(builder: FlatBufferBuilder, XREF: Int) = builder.addOffset(24, XREF, 0)
+        fun addCH_XREF(builder: FlatBufferBuilder, CH_XREF: Int) = builder.addOffset(25, CH_XREF, 0)
+        fun addAMPLIFICATION(builder: FlatBufferBuilder, AMPLIFICATION: Int) = builder.addOffset(26, AMPLIFICATION, 0)
+        fun addIFF(builder: FlatBufferBuilder, IFF: Int) = builder.addOffset(27, IFF, 0)
+        fun addVEH_TYPE(builder: FlatBufferBuilder, VEH_TYPE: Int) = builder.addOffset(28, VEH_TYPE, 0)
+        fun addREINFORCED(builder: FlatBufferBuilder, REINFORCED: Boolean) = builder.addBoolean(29, REINFORCED, false)
+        fun addREDUCED(builder: FlatBufferBuilder, REDUCED: Boolean) = builder.addBoolean(30, REDUCED, false)
+        fun addHQ(builder: FlatBufferBuilder, HQ: Boolean) = builder.addBoolean(31, HQ, false)
+        fun addDUMMY(builder: FlatBufferBuilder, DUMMY: Boolean) = builder.addBoolean(32, DUMMY, false)
+        fun addTASK_FORCE(builder: FlatBufferBuilder, TASK_FORCE: Boolean) = builder.addBoolean(33, TASK_FORCE, false)
+        fun addFEINT(builder: FlatBufferBuilder, FEINT: Boolean) = builder.addBoolean(34, FEINT, false)
+        fun addINSTALLATION(builder: FlatBufferBuilder, INSTALLATION: Boolean) = builder.addBoolean(35, INSTALLATION, false)
         fun addTRACK_SENSORS(builder: FlatBufferBuilder, TRACK_SENSORS: Int) = builder.addOffset(36, TRACK_SENSORS, 0)
         fun createTrackSensorsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)

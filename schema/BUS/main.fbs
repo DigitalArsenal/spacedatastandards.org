@@ -1,0 +1,80 @@
+// Hash: fd1ecfe93d46c47ff384417d11c017805d92352a9754023f0768f77586cc6f02
+// Version: 0.0.2
+// -----------------------------------END_HEADER
+enum busSize : byte {
+  FEMTO,
+  PICO,
+  NANO,
+  MICRO,
+  MINI,
+  SMALL,
+  MEDIUM,
+  LARGE,
+  HEAVY
+}
+
+enum stabilizationType : byte {
+  THREE_AXIS,
+  SPIN,
+  GRAVITY_GRADIENT,
+  MAGNETIC,
+  DUAL_SPIN,
+  NONE
+}
+
+/// Satellite Bus Specification
+table BUS {
+  /// Unique identifier
+  ID:string;
+  /// Bus name or model
+  NAME:string;
+  /// Manufacturer
+  MANUFACTURER:string;
+  /// Bus size category
+  SIZE:busSize;
+  /// Dry mass in kg
+  DRY_MASS:double;
+  /// Maximum wet mass (with propellant) in kg
+  WET_MASS:double;
+  /// Maximum payload mass in kg
+  PAYLOAD_MASS:double;
+  /// Bus dimensions X in meters
+  DIM_X:double;
+  /// Bus dimensions Y in meters
+  DIM_Y:double;
+  /// Bus dimensions Z in meters
+  DIM_Z:double;
+  /// Stowed dimensions X in meters
+  STOWED_X:double;
+  /// Stowed dimensions Y in meters
+  STOWED_Y:double;
+  /// Stowed dimensions Z in meters
+  STOWED_Z:double;
+  /// Total power generation in Watts
+  POWER_GENERATION:double;
+  /// Available payload power in Watts
+  PAYLOAD_POWER:double;
+  /// Battery capacity in Watt-hours
+  BATTERY_CAPACITY:double;
+  /// Stabilization method
+  STABILIZATION:stabilizationType;
+  /// Pointing accuracy in degrees
+  POINTING_ACCURACY:double;
+  /// Pointing knowledge in degrees
+  POINTING_KNOWLEDGE:double;
+  /// Design life in years
+  DESIGN_LIFE:double;
+  /// Data storage capacity in Gbits
+  DATA_STORAGE:double;
+  /// Downlink data rate in Mbps
+  DOWNLINK_RATE:double;
+  /// Number of payload slots/interfaces
+  PAYLOAD_SLOTS:uint;
+  /// Heritage missions count
+  HERITAGE_COUNT:uint;
+  /// Additional notes
+  NOTES:string;
+}
+
+root_type BUS;
+file_identifier "$BUS";

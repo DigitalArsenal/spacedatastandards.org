@@ -1,40 +1,108 @@
-// Hash: edae4555bd8ea84b32c76254dab992138490031d153a17afcc6b8f05ef20c5a9
-// Version: 0.0.2
+// Hash: f5f7134ebde2e0a3e53ee627768dce52021b02b520f3726eafa1b50691d016fe
+// Version: 0.0.3
 // -----------------------------------END_HEADER
+enum seoDataType : byte {
+  PARTICLE_COUNT,
+  MAGNETIC_FIELD,
+  RADIATION_DOSE,
+  PLASMA_DENSITY,
+  ENERGETIC_PARTICLE,
+  SOLAR_WIND,
+  CHARGING,
+  UNKNOWN
+}
+
+enum seoParticleType : byte {
+  PROTON,
+  ELECTRON,
+  ALPHA,
+  HEAVY_ION,
+  NEUTRON,
+  COSMIC_RAY,
+  MIXED
+}
+
+enum seoObservatoryType : byte {
+  GROUND,
+  LEO,
+  GEO,
+  L1,
+  L2,
+  INTERPLANETARY,
+  SOLAR
+}
+
 /// Space Environment Observation
 table SEO {
+  /// Unique identifier
   ID:string;
+  /// Message type code
   MSG_TYPE:string;
+  /// Generating system
   GEN_SYSTEM:string;
+  /// External reference identifier
   EXTERNAL_ID:string;
-  DATA_TYPE:string;
+  /// Type of environmental data
+  DATA_TYPE:seoDataType;
+  /// Generation time (ISO 8601)
   GEN_TIME:string;
+  /// True if this is a forecast
   FORECAST:bool;
+  /// True if derived from other measurements
   DERIVED:bool;
-  SAT_NO:int;
+  /// Satellite catalog number (if space-based)
+  SAT_NO:uint32;
+  /// International designator
   ORIG_OBJECT_ID:string;
+  /// Sensor identifier
   ID_SENSOR:string;
+  /// Original sensor identifier
   ORIG_SENSOR_ID:string;
-  OBSERVATORY_TYPE:string;
+  /// Observatory type
+  OBSERVATORY_TYPE:seoObservatoryType;
+  /// Observatory name
   OBSERVATORY_NAME:string;
+  /// Observatory notes
   OBSERVATORY_NOTES:string;
+  /// Instrument type description
   INSTRUMENT_TYPE:string;
+  /// Observatory latitude (degrees)
   LAT:double;
+  /// Observatory longitude (degrees)
   LON:double;
+  /// Observatory altitude (km)
   ALT:double;
+  /// Sensor reference frame
   SEN_REFERENCE_FRAME:string;
-  SEN_POS:[string];
-  SEN_VEL:[string];
+  /// Sensor position (km, 3 components)
+  SEN_POS:[double];
+  /// Sensor velocity (km/s, 3 components)
+  SEN_VEL:[double];
+  /// Measurement type description
   MEAS_TYPE:string;
+  /// Particle type measured
+  PARTICLE_TYPE:seoParticleType;
+  /// Energy level or range (keV or MeV)
   SEN_ENERGY_LEVEL:string;
+  /// Observation set identifier
   OB_SET_ID:string;
-  PARTICLE_TYPE:string;
+  /// Observation time (ISO 8601)
   OB_TIME:string;
-  SEO_LIST:[string];
+  /// Measurement values
+  VALUES:[double];
+  /// Measurement uncertainties
+  UNCERTAINTIES:[double];
+  /// Units for measurement values
+  UNITS:string;
+  /// Data quality indicator
   QUALITY:string;
+  /// Description
   DESCRIPTION:string;
+  /// Event descriptor
   DESCRIPTOR:string;
+  /// Source types
   SRC_TYPS:[string];
+  /// Source identifiers
   SRC_IDS:[string];
 }
 

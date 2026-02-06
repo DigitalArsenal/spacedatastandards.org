@@ -19,6 +19,7 @@ public struct RDM : IFlatbufferObject
   public void __init(int _i, ByteBuffer _bb) { __p = new Table(_i, _bb); }
   public RDM __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /// CCSDS RDM version
   public string CCSDS_RDM_VERS { get { int o = __p.__offset(4); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCCSDS_RDM_VERSBytes() { return __p.__vector_as_span<byte>(4, 1); }
@@ -26,6 +27,7 @@ public struct RDM : IFlatbufferObject
   public ArraySegment<byte>? GetCCSDS_RDM_VERSBytes() { return __p.__vector_as_arraysegment(4); }
 #endif
   public byte[] GetCCSDS_RDM_VERSArray() { return __p.__vector_as_array<byte>(4); }
+  /// Message creation date (ISO 8601)
   public string CREATION_DATE { get { int o = __p.__offset(6); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetCREATION_DATEBytes() { return __p.__vector_as_span<byte>(6, 1); }
@@ -33,6 +35,7 @@ public struct RDM : IFlatbufferObject
   public ArraySegment<byte>? GetCREATION_DATEBytes() { return __p.__vector_as_arraysegment(6); }
 #endif
   public byte[] GetCREATION_DATEArray() { return __p.__vector_as_array<byte>(6); }
+  /// Creating organization
   public string ORIGINATOR { get { int o = __p.__offset(8); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetORIGINATORBytes() { return __p.__vector_as_span<byte>(8, 1); }
@@ -40,6 +43,7 @@ public struct RDM : IFlatbufferObject
   public ArraySegment<byte>? GetORIGINATORBytes() { return __p.__vector_as_arraysegment(8); }
 #endif
   public byte[] GetORIGINATORArray() { return __p.__vector_as_array<byte>(8); }
+  /// Object name
   public string OBJECT_NAME { get { int o = __p.__offset(10); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetOBJECT_NAMEBytes() { return __p.__vector_as_span<byte>(10, 1); }
@@ -47,6 +51,7 @@ public struct RDM : IFlatbufferObject
   public ArraySegment<byte>? GetOBJECT_NAMEBytes() { return __p.__vector_as_arraysegment(10); }
 #endif
   public byte[] GetOBJECT_NAMEArray() { return __p.__vector_as_array<byte>(10); }
+  /// International designator
   public string OBJECT_ID { get { int o = __p.__offset(12); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
   public Span<byte> GetOBJECT_IDBytes() { return __p.__vector_as_span<byte>(12, 1); }
@@ -54,15 +59,82 @@ public struct RDM : IFlatbufferObject
   public ArraySegment<byte>? GetOBJECT_IDBytes() { return __p.__vector_as_arraysegment(12); }
 #endif
   public byte[] GetOBJECT_IDArray() { return __p.__vector_as_array<byte>(12); }
-  public string REENTRY_EPOCH { get { int o = __p.__offset(14); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+  /// NORAD catalog number
+  public uint NORAD_CAT_ID { get { int o = __p.__offset(14); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Object type (PAYLOAD, ROCKET_BODY, DEBRIS, UNKNOWN)
+  public string OBJECT_TYPE { get { int o = __p.__offset(16); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
 #if ENABLE_SPAN_T
-  public Span<byte> GetREENTRY_EPOCHBytes() { return __p.__vector_as_span<byte>(14, 1); }
+  public Span<byte> GetOBJECT_TYPEBytes() { return __p.__vector_as_span<byte>(16, 1); }
 #else
-  public ArraySegment<byte>? GetREENTRY_EPOCHBytes() { return __p.__vector_as_arraysegment(14); }
+  public ArraySegment<byte>? GetOBJECT_TYPEBytes() { return __p.__vector_as_arraysegment(16); }
 #endif
-  public byte[] GetREENTRY_EPOCHArray() { return __p.__vector_as_array<byte>(14); }
-  public double REENTRY_LATITUDE { get { int o = __p.__offset(16); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
-  public double REENTRY_LONGITUDE { get { int o = __p.__offset(18); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  public byte[] GetOBJECT_TYPEArray() { return __p.__vector_as_array<byte>(16); }
+  /// Reentry disposition
+  public reentryDisposition DISPOSITION { get { int o = __p.__offset(18); return o != 0 ? (reentryDisposition)__p.bb.GetSbyte(o + __p.bb_pos) : reentryDisposition.CONTROLLED; } }
+  /// Reentry reason
+  public reentryReason REASON { get { int o = __p.__offset(20); return o != 0 ? (reentryReason)__p.bb.GetSbyte(o + __p.bb_pos) : reentryReason.NATURAL_DECAY; } }
+  /// Predicted reentry epoch (ISO 8601)
+  public string REENTRY_EPOCH { get { int o = __p.__offset(22); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetREENTRY_EPOCHBytes() { return __p.__vector_as_span<byte>(22, 1); }
+#else
+  public ArraySegment<byte>? GetREENTRY_EPOCHBytes() { return __p.__vector_as_arraysegment(22); }
+#endif
+  public byte[] GetREENTRY_EPOCHArray() { return __p.__vector_as_array<byte>(22); }
+  /// Reentry epoch uncertainty window in hours
+  public double REENTRY_EPOCH_UNC { get { int o = __p.__offset(24); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Reentry latitude in degrees
+  public double REENTRY_LATITUDE { get { int o = __p.__offset(26); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Reentry longitude in degrees
+  public double REENTRY_LONGITUDE { get { int o = __p.__offset(28); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Reentry altitude in km
+  public double REENTRY_ALTITUDE { get { int o = __p.__offset(30); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Time system
+  public string TIME_SYSTEM { get { int o = __p.__offset(32); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetTIME_SYSTEMBytes() { return __p.__vector_as_span<byte>(32, 1); }
+#else
+  public ArraySegment<byte>? GetTIME_SYSTEMBytes() { return __p.__vector_as_arraysegment(32); }
+#endif
+  public byte[] GetTIME_SYSTEMArray() { return __p.__vector_as_array<byte>(32); }
+  /// Previous predicted reentry epoch for comparison (ISO 8601)
+  public string PREV_PREDICTION_EPOCH { get { int o = __p.__offset(34); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetPREV_PREDICTION_EPOCHBytes() { return __p.__vector_as_span<byte>(34, 1); }
+#else
+  public ArraySegment<byte>? GetPREV_PREDICTION_EPOCHBytes() { return __p.__vector_as_arraysegment(34); }
+#endif
+  public byte[] GetPREV_PREDICTION_EPOCHArray() { return __p.__vector_as_array<byte>(34); }
+  /// Ballistic coefficient in kg/m^2
+  public double BALLISTIC_COEFF { get { int o = __p.__offset(36); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Object mass in kg
+  public double MASS { get { int o = __p.__offset(38); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Solar radiation pressure area in m^2
+  public double SOLAR_RAD_AREA { get { int o = __p.__offset(40); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Drag area in m^2
+  public double DRAG_AREA { get { int o = __p.__offset(42); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Initial state vector
+  public reentryStateVector? INITIAL_STATE { get { int o = __p.__offset(44); return o != 0 ? (reentryStateVector?)(new reentryStateVector()).__assign(__p.__indirect(o + __p.bb_pos), __p.bb) : null; } }
+  /// Ground impact predictions
+  public reentryImpact? IMPACT_PREDICTIONS(int j) { int o = __p.__offset(46); return o != 0 ? (reentryImpact?)(new reentryImpact()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int IMPACT_PREDICTIONSLength { get { int o = __p.__offset(46); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Predicted surviving debris
+  public survivingDebris? SURVIVING_DEBRIS(int j) { int o = __p.__offset(48); return o != 0 ? (survivingDebris?)(new survivingDebris()).__assign(__p.__indirect(__p.__vector(o) + j * 4), __p.bb) : null; }
+  public int SURVIVING_DEBRISLength { get { int o = __p.__offset(48); return o != 0 ? __p.__vector_len(o) : 0; } }
+  /// Casualty expectation
+  public double CASUALTY_EXPECTATION { get { int o = __p.__offset(50); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Number of breakup fragments predicted
+  public uint NUM_FRAGMENTS { get { int o = __p.__offset(52); return o != 0 ? __p.bb.GetUint(o + __p.bb_pos) : (uint)0; } }
+  /// Total surviving mass in kg
+  public double SURVIVING_MASS { get { int o = __p.__offset(54); return o != 0 ? __p.bb.GetDouble(o + __p.bb_pos) : (double)0.0; } }
+  /// Additional comments
+  public string COMMENT { get { int o = __p.__offset(56); return o != 0 ? __p.__string(o + __p.bb_pos) : null; } }
+#if ENABLE_SPAN_T
+  public Span<byte> GetCOMMENTBytes() { return __p.__vector_as_span<byte>(56, 1); }
+#else
+  public ArraySegment<byte>? GetCOMMENTBytes() { return __p.__vector_as_arraysegment(56); }
+#endif
+  public byte[] GetCOMMENTArray() { return __p.__vector_as_array<byte>(56); }
 
   public static Offset<RDM> CreateRDM(FlatBufferBuilder builder,
       StringOffset CCSDS_RDM_VERSOffset = default(StringOffset),
@@ -70,30 +142,97 @@ public struct RDM : IFlatbufferObject
       StringOffset ORIGINATOROffset = default(StringOffset),
       StringOffset OBJECT_NAMEOffset = default(StringOffset),
       StringOffset OBJECT_IDOffset = default(StringOffset),
+      uint NORAD_CAT_ID = 0,
+      StringOffset OBJECT_TYPEOffset = default(StringOffset),
+      reentryDisposition DISPOSITION = reentryDisposition.CONTROLLED,
+      reentryReason REASON = reentryReason.NATURAL_DECAY,
       StringOffset REENTRY_EPOCHOffset = default(StringOffset),
+      double REENTRY_EPOCH_UNC = 0.0,
       double REENTRY_LATITUDE = 0.0,
-      double REENTRY_LONGITUDE = 0.0) {
-    builder.StartTable(8);
+      double REENTRY_LONGITUDE = 0.0,
+      double REENTRY_ALTITUDE = 0.0,
+      StringOffset TIME_SYSTEMOffset = default(StringOffset),
+      StringOffset PREV_PREDICTION_EPOCHOffset = default(StringOffset),
+      double BALLISTIC_COEFF = 0.0,
+      double MASS = 0.0,
+      double SOLAR_RAD_AREA = 0.0,
+      double DRAG_AREA = 0.0,
+      Offset<reentryStateVector> INITIAL_STATEOffset = default(Offset<reentryStateVector>),
+      VectorOffset IMPACT_PREDICTIONSOffset = default(VectorOffset),
+      VectorOffset SURVIVING_DEBRISOffset = default(VectorOffset),
+      double CASUALTY_EXPECTATION = 0.0,
+      uint NUM_FRAGMENTS = 0,
+      double SURVIVING_MASS = 0.0,
+      StringOffset COMMENTOffset = default(StringOffset)) {
+    builder.StartTable(27);
+    RDM.AddSURVIVING_MASS(builder, SURVIVING_MASS);
+    RDM.AddCASUALTY_EXPECTATION(builder, CASUALTY_EXPECTATION);
+    RDM.AddDRAG_AREA(builder, DRAG_AREA);
+    RDM.AddSOLAR_RAD_AREA(builder, SOLAR_RAD_AREA);
+    RDM.AddMASS(builder, MASS);
+    RDM.AddBALLISTIC_COEFF(builder, BALLISTIC_COEFF);
+    RDM.AddREENTRY_ALTITUDE(builder, REENTRY_ALTITUDE);
     RDM.AddREENTRY_LONGITUDE(builder, REENTRY_LONGITUDE);
     RDM.AddREENTRY_LATITUDE(builder, REENTRY_LATITUDE);
+    RDM.AddREENTRY_EPOCH_UNC(builder, REENTRY_EPOCH_UNC);
+    RDM.AddCOMMENT(builder, COMMENTOffset);
+    RDM.AddNUM_FRAGMENTS(builder, NUM_FRAGMENTS);
+    RDM.AddSURVIVING_DEBRIS(builder, SURVIVING_DEBRISOffset);
+    RDM.AddIMPACT_PREDICTIONS(builder, IMPACT_PREDICTIONSOffset);
+    RDM.AddINITIAL_STATE(builder, INITIAL_STATEOffset);
+    RDM.AddPREV_PREDICTION_EPOCH(builder, PREV_PREDICTION_EPOCHOffset);
+    RDM.AddTIME_SYSTEM(builder, TIME_SYSTEMOffset);
     RDM.AddREENTRY_EPOCH(builder, REENTRY_EPOCHOffset);
+    RDM.AddOBJECT_TYPE(builder, OBJECT_TYPEOffset);
+    RDM.AddNORAD_CAT_ID(builder, NORAD_CAT_ID);
     RDM.AddOBJECT_ID(builder, OBJECT_IDOffset);
     RDM.AddOBJECT_NAME(builder, OBJECT_NAMEOffset);
     RDM.AddORIGINATOR(builder, ORIGINATOROffset);
     RDM.AddCREATION_DATE(builder, CREATION_DATEOffset);
     RDM.AddCCSDS_RDM_VERS(builder, CCSDS_RDM_VERSOffset);
+    RDM.AddREASON(builder, REASON);
+    RDM.AddDISPOSITION(builder, DISPOSITION);
     return RDM.EndRDM(builder);
   }
 
-  public static void StartRDM(FlatBufferBuilder builder) { builder.StartTable(8); }
+  public static void StartRDM(FlatBufferBuilder builder) { builder.StartTable(27); }
   public static void AddCCSDS_RDM_VERS(FlatBufferBuilder builder, StringOffset CCSDS_RDM_VERSOffset) { builder.AddOffset(0, CCSDS_RDM_VERSOffset.Value, 0); }
   public static void AddCREATION_DATE(FlatBufferBuilder builder, StringOffset CREATION_DATEOffset) { builder.AddOffset(1, CREATION_DATEOffset.Value, 0); }
   public static void AddORIGINATOR(FlatBufferBuilder builder, StringOffset ORIGINATOROffset) { builder.AddOffset(2, ORIGINATOROffset.Value, 0); }
   public static void AddOBJECT_NAME(FlatBufferBuilder builder, StringOffset OBJECT_NAMEOffset) { builder.AddOffset(3, OBJECT_NAMEOffset.Value, 0); }
   public static void AddOBJECT_ID(FlatBufferBuilder builder, StringOffset OBJECT_IDOffset) { builder.AddOffset(4, OBJECT_IDOffset.Value, 0); }
-  public static void AddREENTRY_EPOCH(FlatBufferBuilder builder, StringOffset REENTRY_EPOCHOffset) { builder.AddOffset(5, REENTRY_EPOCHOffset.Value, 0); }
-  public static void AddREENTRY_LATITUDE(FlatBufferBuilder builder, double REENTRY_LATITUDE) { builder.AddDouble(6, REENTRY_LATITUDE, 0.0); }
-  public static void AddREENTRY_LONGITUDE(FlatBufferBuilder builder, double REENTRY_LONGITUDE) { builder.AddDouble(7, REENTRY_LONGITUDE, 0.0); }
+  public static void AddNORAD_CAT_ID(FlatBufferBuilder builder, uint NORAD_CAT_ID) { builder.AddUint(5, NORAD_CAT_ID, 0); }
+  public static void AddOBJECT_TYPE(FlatBufferBuilder builder, StringOffset OBJECT_TYPEOffset) { builder.AddOffset(6, OBJECT_TYPEOffset.Value, 0); }
+  public static void AddDISPOSITION(FlatBufferBuilder builder, reentryDisposition DISPOSITION) { builder.AddSbyte(7, (sbyte)DISPOSITION, 0); }
+  public static void AddREASON(FlatBufferBuilder builder, reentryReason REASON) { builder.AddSbyte(8, (sbyte)REASON, 0); }
+  public static void AddREENTRY_EPOCH(FlatBufferBuilder builder, StringOffset REENTRY_EPOCHOffset) { builder.AddOffset(9, REENTRY_EPOCHOffset.Value, 0); }
+  public static void AddREENTRY_EPOCH_UNC(FlatBufferBuilder builder, double REENTRY_EPOCH_UNC) { builder.AddDouble(10, REENTRY_EPOCH_UNC, 0.0); }
+  public static void AddREENTRY_LATITUDE(FlatBufferBuilder builder, double REENTRY_LATITUDE) { builder.AddDouble(11, REENTRY_LATITUDE, 0.0); }
+  public static void AddREENTRY_LONGITUDE(FlatBufferBuilder builder, double REENTRY_LONGITUDE) { builder.AddDouble(12, REENTRY_LONGITUDE, 0.0); }
+  public static void AddREENTRY_ALTITUDE(FlatBufferBuilder builder, double REENTRY_ALTITUDE) { builder.AddDouble(13, REENTRY_ALTITUDE, 0.0); }
+  public static void AddTIME_SYSTEM(FlatBufferBuilder builder, StringOffset TIME_SYSTEMOffset) { builder.AddOffset(14, TIME_SYSTEMOffset.Value, 0); }
+  public static void AddPREV_PREDICTION_EPOCH(FlatBufferBuilder builder, StringOffset PREV_PREDICTION_EPOCHOffset) { builder.AddOffset(15, PREV_PREDICTION_EPOCHOffset.Value, 0); }
+  public static void AddBALLISTIC_COEFF(FlatBufferBuilder builder, double BALLISTIC_COEFF) { builder.AddDouble(16, BALLISTIC_COEFF, 0.0); }
+  public static void AddMASS(FlatBufferBuilder builder, double MASS) { builder.AddDouble(17, MASS, 0.0); }
+  public static void AddSOLAR_RAD_AREA(FlatBufferBuilder builder, double SOLAR_RAD_AREA) { builder.AddDouble(18, SOLAR_RAD_AREA, 0.0); }
+  public static void AddDRAG_AREA(FlatBufferBuilder builder, double DRAG_AREA) { builder.AddDouble(19, DRAG_AREA, 0.0); }
+  public static void AddINITIAL_STATE(FlatBufferBuilder builder, Offset<reentryStateVector> INITIAL_STATEOffset) { builder.AddOffset(20, INITIAL_STATEOffset.Value, 0); }
+  public static void AddIMPACT_PREDICTIONS(FlatBufferBuilder builder, VectorOffset IMPACT_PREDICTIONSOffset) { builder.AddOffset(21, IMPACT_PREDICTIONSOffset.Value, 0); }
+  public static VectorOffset CreateIMPACT_PREDICTIONSVector(FlatBufferBuilder builder, Offset<reentryImpact>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateIMPACT_PREDICTIONSVectorBlock(FlatBufferBuilder builder, Offset<reentryImpact>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateIMPACT_PREDICTIONSVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<reentryImpact>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateIMPACT_PREDICTIONSVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<reentryImpact>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartIMPACT_PREDICTIONSVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddSURVIVING_DEBRIS(FlatBufferBuilder builder, VectorOffset SURVIVING_DEBRISOffset) { builder.AddOffset(22, SURVIVING_DEBRISOffset.Value, 0); }
+  public static VectorOffset CreateSURVIVING_DEBRISVector(FlatBufferBuilder builder, Offset<survivingDebris>[] data) { builder.StartVector(4, data.Length, 4); for (int i = data.Length - 1; i >= 0; i--) builder.AddOffset(data[i].Value); return builder.EndVector(); }
+  public static VectorOffset CreateSURVIVING_DEBRISVectorBlock(FlatBufferBuilder builder, Offset<survivingDebris>[] data) { builder.StartVector(4, data.Length, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSURVIVING_DEBRISVectorBlock(FlatBufferBuilder builder, ArraySegment<Offset<survivingDebris>> data) { builder.StartVector(4, data.Count, 4); builder.Add(data); return builder.EndVector(); }
+  public static VectorOffset CreateSURVIVING_DEBRISVectorBlock(FlatBufferBuilder builder, IntPtr dataPtr, int sizeInBytes) { builder.StartVector(1, sizeInBytes, 1); builder.Add<Offset<survivingDebris>>(dataPtr, sizeInBytes); return builder.EndVector(); }
+  public static void StartSURVIVING_DEBRISVector(FlatBufferBuilder builder, int numElems) { builder.StartVector(4, numElems, 4); }
+  public static void AddCASUALTY_EXPECTATION(FlatBufferBuilder builder, double CASUALTY_EXPECTATION) { builder.AddDouble(23, CASUALTY_EXPECTATION, 0.0); }
+  public static void AddNUM_FRAGMENTS(FlatBufferBuilder builder, uint NUM_FRAGMENTS) { builder.AddUint(24, NUM_FRAGMENTS, 0); }
+  public static void AddSURVIVING_MASS(FlatBufferBuilder builder, double SURVIVING_MASS) { builder.AddDouble(25, SURVIVING_MASS, 0.0); }
+  public static void AddCOMMENT(FlatBufferBuilder builder, StringOffset COMMENTOffset) { builder.AddOffset(26, COMMENTOffset.Value, 0); }
   public static Offset<RDM> EndRDM(FlatBufferBuilder builder) {
     int o = builder.EndTable();
     return new Offset<RDM>(o);
@@ -111,9 +250,30 @@ public struct RDM : IFlatbufferObject
     _o.ORIGINATOR = this.ORIGINATOR;
     _o.OBJECT_NAME = this.OBJECT_NAME;
     _o.OBJECT_ID = this.OBJECT_ID;
+    _o.NORAD_CAT_ID = this.NORAD_CAT_ID;
+    _o.OBJECT_TYPE = this.OBJECT_TYPE;
+    _o.DISPOSITION = this.DISPOSITION;
+    _o.REASON = this.REASON;
     _o.REENTRY_EPOCH = this.REENTRY_EPOCH;
+    _o.REENTRY_EPOCH_UNC = this.REENTRY_EPOCH_UNC;
     _o.REENTRY_LATITUDE = this.REENTRY_LATITUDE;
     _o.REENTRY_LONGITUDE = this.REENTRY_LONGITUDE;
+    _o.REENTRY_ALTITUDE = this.REENTRY_ALTITUDE;
+    _o.TIME_SYSTEM = this.TIME_SYSTEM;
+    _o.PREV_PREDICTION_EPOCH = this.PREV_PREDICTION_EPOCH;
+    _o.BALLISTIC_COEFF = this.BALLISTIC_COEFF;
+    _o.MASS = this.MASS;
+    _o.SOLAR_RAD_AREA = this.SOLAR_RAD_AREA;
+    _o.DRAG_AREA = this.DRAG_AREA;
+    _o.INITIAL_STATE = this.INITIAL_STATE.HasValue ? this.INITIAL_STATE.Value.UnPack() : null;
+    _o.IMPACT_PREDICTIONS = new List<reentryImpactT>();
+    for (var _j = 0; _j < this.IMPACT_PREDICTIONSLength; ++_j) {_o.IMPACT_PREDICTIONS.Add(this.IMPACT_PREDICTIONS(_j).HasValue ? this.IMPACT_PREDICTIONS(_j).Value.UnPack() : null);}
+    _o.SURVIVING_DEBRIS = new List<survivingDebrisT>();
+    for (var _j = 0; _j < this.SURVIVING_DEBRISLength; ++_j) {_o.SURVIVING_DEBRIS.Add(this.SURVIVING_DEBRIS(_j).HasValue ? this.SURVIVING_DEBRIS(_j).Value.UnPack() : null);}
+    _o.CASUALTY_EXPECTATION = this.CASUALTY_EXPECTATION;
+    _o.NUM_FRAGMENTS = this.NUM_FRAGMENTS;
+    _o.SURVIVING_MASS = this.SURVIVING_MASS;
+    _o.COMMENT = this.COMMENT;
   }
   public static Offset<RDM> Pack(FlatBufferBuilder builder, RDMT _o) {
     if (_o == null) return default(Offset<RDM>);
@@ -122,7 +282,24 @@ public struct RDM : IFlatbufferObject
     var _ORIGINATOR = _o.ORIGINATOR == null ? default(StringOffset) : builder.CreateString(_o.ORIGINATOR);
     var _OBJECT_NAME = _o.OBJECT_NAME == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_NAME);
     var _OBJECT_ID = _o.OBJECT_ID == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_ID);
+    var _OBJECT_TYPE = _o.OBJECT_TYPE == null ? default(StringOffset) : builder.CreateString(_o.OBJECT_TYPE);
     var _REENTRY_EPOCH = _o.REENTRY_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.REENTRY_EPOCH);
+    var _TIME_SYSTEM = _o.TIME_SYSTEM == null ? default(StringOffset) : builder.CreateString(_o.TIME_SYSTEM);
+    var _PREV_PREDICTION_EPOCH = _o.PREV_PREDICTION_EPOCH == null ? default(StringOffset) : builder.CreateString(_o.PREV_PREDICTION_EPOCH);
+    var _INITIAL_STATE = _o.INITIAL_STATE == null ? default(Offset<reentryStateVector>) : reentryStateVector.Pack(builder, _o.INITIAL_STATE);
+    var _IMPACT_PREDICTIONS = default(VectorOffset);
+    if (_o.IMPACT_PREDICTIONS != null) {
+      var __IMPACT_PREDICTIONS = new Offset<reentryImpact>[_o.IMPACT_PREDICTIONS.Count];
+      for (var _j = 0; _j < __IMPACT_PREDICTIONS.Length; ++_j) { __IMPACT_PREDICTIONS[_j] = reentryImpact.Pack(builder, _o.IMPACT_PREDICTIONS[_j]); }
+      _IMPACT_PREDICTIONS = CreateIMPACT_PREDICTIONSVector(builder, __IMPACT_PREDICTIONS);
+    }
+    var _SURVIVING_DEBRIS = default(VectorOffset);
+    if (_o.SURVIVING_DEBRIS != null) {
+      var __SURVIVING_DEBRIS = new Offset<survivingDebris>[_o.SURVIVING_DEBRIS.Count];
+      for (var _j = 0; _j < __SURVIVING_DEBRIS.Length; ++_j) { __SURVIVING_DEBRIS[_j] = survivingDebris.Pack(builder, _o.SURVIVING_DEBRIS[_j]); }
+      _SURVIVING_DEBRIS = CreateSURVIVING_DEBRISVector(builder, __SURVIVING_DEBRIS);
+    }
+    var _COMMENT = _o.COMMENT == null ? default(StringOffset) : builder.CreateString(_o.COMMENT);
     return CreateRDM(
       builder,
       _CCSDS_RDM_VERS,
@@ -130,9 +307,28 @@ public struct RDM : IFlatbufferObject
       _ORIGINATOR,
       _OBJECT_NAME,
       _OBJECT_ID,
+      _o.NORAD_CAT_ID,
+      _OBJECT_TYPE,
+      _o.DISPOSITION,
+      _o.REASON,
       _REENTRY_EPOCH,
+      _o.REENTRY_EPOCH_UNC,
       _o.REENTRY_LATITUDE,
-      _o.REENTRY_LONGITUDE);
+      _o.REENTRY_LONGITUDE,
+      _o.REENTRY_ALTITUDE,
+      _TIME_SYSTEM,
+      _PREV_PREDICTION_EPOCH,
+      _o.BALLISTIC_COEFF,
+      _o.MASS,
+      _o.SOLAR_RAD_AREA,
+      _o.DRAG_AREA,
+      _INITIAL_STATE,
+      _IMPACT_PREDICTIONS,
+      _SURVIVING_DEBRIS,
+      _o.CASUALTY_EXPECTATION,
+      _o.NUM_FRAGMENTS,
+      _o.SURVIVING_MASS,
+      _COMMENT);
   }
 }
 
@@ -143,9 +339,28 @@ public class RDMT
   public string ORIGINATOR { get; set; }
   public string OBJECT_NAME { get; set; }
   public string OBJECT_ID { get; set; }
+  public uint NORAD_CAT_ID { get; set; }
+  public string OBJECT_TYPE { get; set; }
+  public reentryDisposition DISPOSITION { get; set; }
+  public reentryReason REASON { get; set; }
   public string REENTRY_EPOCH { get; set; }
+  public double REENTRY_EPOCH_UNC { get; set; }
   public double REENTRY_LATITUDE { get; set; }
   public double REENTRY_LONGITUDE { get; set; }
+  public double REENTRY_ALTITUDE { get; set; }
+  public string TIME_SYSTEM { get; set; }
+  public string PREV_PREDICTION_EPOCH { get; set; }
+  public double BALLISTIC_COEFF { get; set; }
+  public double MASS { get; set; }
+  public double SOLAR_RAD_AREA { get; set; }
+  public double DRAG_AREA { get; set; }
+  public reentryStateVectorT INITIAL_STATE { get; set; }
+  public List<reentryImpactT> IMPACT_PREDICTIONS { get; set; }
+  public List<survivingDebrisT> SURVIVING_DEBRIS { get; set; }
+  public double CASUALTY_EXPECTATION { get; set; }
+  public uint NUM_FRAGMENTS { get; set; }
+  public double SURVIVING_MASS { get; set; }
+  public string COMMENT { get; set; }
 
   public RDMT() {
     this.CCSDS_RDM_VERS = null;
@@ -153,9 +368,28 @@ public class RDMT
     this.ORIGINATOR = null;
     this.OBJECT_NAME = null;
     this.OBJECT_ID = null;
+    this.NORAD_CAT_ID = 0;
+    this.OBJECT_TYPE = null;
+    this.DISPOSITION = reentryDisposition.CONTROLLED;
+    this.REASON = reentryReason.NATURAL_DECAY;
     this.REENTRY_EPOCH = null;
+    this.REENTRY_EPOCH_UNC = 0.0;
     this.REENTRY_LATITUDE = 0.0;
     this.REENTRY_LONGITUDE = 0.0;
+    this.REENTRY_ALTITUDE = 0.0;
+    this.TIME_SYSTEM = null;
+    this.PREV_PREDICTION_EPOCH = null;
+    this.BALLISTIC_COEFF = 0.0;
+    this.MASS = 0.0;
+    this.SOLAR_RAD_AREA = 0.0;
+    this.DRAG_AREA = 0.0;
+    this.INITIAL_STATE = null;
+    this.IMPACT_PREDICTIONS = null;
+    this.SURVIVING_DEBRIS = null;
+    this.CASUALTY_EXPECTATION = 0.0;
+    this.NUM_FRAGMENTS = 0;
+    this.SURVIVING_MASS = 0.0;
+    this.COMMENT = null;
   }
   public static RDMT DeserializeFromBinary(byte[] fbBuffer) {
     return RDM.GetRootAsRDM(new ByteBuffer(fbBuffer)).UnPack();
@@ -178,9 +412,28 @@ static public class RDMVerify
       && verifier.VerifyString(tablePos, 8 /*ORIGINATOR*/, false)
       && verifier.VerifyString(tablePos, 10 /*OBJECT_NAME*/, false)
       && verifier.VerifyString(tablePos, 12 /*OBJECT_ID*/, false)
-      && verifier.VerifyString(tablePos, 14 /*REENTRY_EPOCH*/, false)
-      && verifier.VerifyField(tablePos, 16 /*REENTRY_LATITUDE*/, 8 /*double*/, 8, false)
-      && verifier.VerifyField(tablePos, 18 /*REENTRY_LONGITUDE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 14 /*NORAD_CAT_ID*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyString(tablePos, 16 /*OBJECT_TYPE*/, false)
+      && verifier.VerifyField(tablePos, 18 /*DISPOSITION*/, 1 /*reentryDisposition*/, 1, false)
+      && verifier.VerifyField(tablePos, 20 /*REASON*/, 1 /*reentryReason*/, 1, false)
+      && verifier.VerifyString(tablePos, 22 /*REENTRY_EPOCH*/, false)
+      && verifier.VerifyField(tablePos, 24 /*REENTRY_EPOCH_UNC*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 26 /*REENTRY_LATITUDE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 28 /*REENTRY_LONGITUDE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 30 /*REENTRY_ALTITUDE*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 32 /*TIME_SYSTEM*/, false)
+      && verifier.VerifyString(tablePos, 34 /*PREV_PREDICTION_EPOCH*/, false)
+      && verifier.VerifyField(tablePos, 36 /*BALLISTIC_COEFF*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 38 /*MASS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 40 /*SOLAR_RAD_AREA*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 42 /*DRAG_AREA*/, 8 /*double*/, 8, false)
+      && verifier.VerifyTable(tablePos, 44 /*INITIAL_STATE*/, reentryStateVectorVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 46 /*IMPACT_PREDICTIONS*/, reentryImpactVerify.Verify, false)
+      && verifier.VerifyVectorOfTables(tablePos, 48 /*SURVIVING_DEBRIS*/, survivingDebrisVerify.Verify, false)
+      && verifier.VerifyField(tablePos, 50 /*CASUALTY_EXPECTATION*/, 8 /*double*/, 8, false)
+      && verifier.VerifyField(tablePos, 52 /*NUM_FRAGMENTS*/, 4 /*uint*/, 4, false)
+      && verifier.VerifyField(tablePos, 54 /*SURVIVING_MASS*/, 8 /*double*/, 8, false)
+      && verifier.VerifyString(tablePos, 56 /*COMMENT*/, false)
       && verifier.VerifyTableEnd(tablePos);
   }
 }

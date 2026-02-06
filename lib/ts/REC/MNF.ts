@@ -4,6 +4,8 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { manifoldElset, manifoldElsetT } from './manifoldElset.js';
+import { manifoldStatus } from './manifoldStatus.js';
 
 
 /**
@@ -31,6 +33,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$MNF');
 }
 
+/**
+ * Unique manifold identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,50 +43,269 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-STATUS():string|null
-STATUS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-STATUS(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Parent object satellite number
+ */
+SAT_NO():number {
   const offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Object designator
+ */
+OBJECT_DESIGNATOR():string|null
+OBJECT_DESIGNATOR(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+OBJECT_DESIGNATOR(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-WEIGHT():number {
-  const offset = this.bb!.__offset(this.bb_pos, 8);
-  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
-}
-
-DELTA_V():number {
+/**
+ * Manifold status
+ */
+STATUS():manifoldStatus {
   const offset = this.bb!.__offset(this.bb_pos, 10);
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : manifoldStatus.CANDIDATE;
+}
+
+/**
+ * Event epoch that spawned the manifold (ISO 8601)
+ */
+EVENT_EPOCH():string|null
+EVENT_EPOCH(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+EVENT_EPOCH(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 12);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Source of detection (sensor ID or method)
+ */
+SOURCE():string|null
+SOURCE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+SOURCE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 14);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Reference frame
+ */
+REF_FRAME():string|null
+REF_FRAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+REF_FRAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 16);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Original pre-event semi-major axis in km
+ */
+ORIG_SEMI_MAJOR_AXIS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 18);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
 }
 
-DELTA_T():number {
-  const offset = this.bb!.__offset(this.bb_pos, 12);
+/**
+ * Original pre-event eccentricity
+ */
+ORIG_ECCENTRICITY():number {
+  const offset = this.bb!.__offset(this.bb_pos, 20);
   return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Original pre-event inclination in degrees
+ */
+ORIG_INCLINATION():number {
+  const offset = this.bb!.__offset(this.bb_pos, 22);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Minimum delta-V sampled in m/s
+ */
+DELTA_V_MIN():number {
+  const offset = this.bb!.__offset(this.bb_pos, 24);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Maximum delta-V sampled in m/s
+ */
+DELTA_V_MAX():number {
+  const offset = this.bb!.__offset(this.bb_pos, 26);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Delta-V step size in m/s
+ */
+DELTA_V_STEP():number {
+  const offset = this.bb!.__offset(this.bb_pos, 28);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Minimum delta-T sampled in seconds
+ */
+DELTA_T_MIN():number {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Maximum delta-T sampled in seconds
+ */
+DELTA_T_MAX():number {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Delta-T step size in seconds
+ */
+DELTA_T_STEP():number {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.readFloat64(this.bb_pos + offset) : 0.0;
+}
+
+/**
+ * Total number of manifold elements
+ */
+NUM_ELEMENTS():number {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Theoretical element sets
+ */
+ELEMENTS(index: number, obj?:manifoldElset):manifoldElset|null {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? (obj || new manifoldElset()).__init(this.bb!.__indirect(this.bb!.__vector(this.bb_pos + offset) + index * 4), this.bb!) : null;
+}
+
+elementsLength():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.__vector_len(this.bb_pos + offset) : 0;
+}
+
+/**
+ * Correlated catalog object ID (if matched)
+ */
+CORRELATED_ID():string|null
+CORRELATED_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+CORRELATED_ID(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Additional notes
+ */
+NOTES():string|null
+NOTES(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+NOTES(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 static startMNF(builder:flatbuffers.Builder) {
-  builder.startObject(5);
+  builder.startObject(20);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
   builder.addFieldOffset(0, IDOffset, 0);
 }
 
-static addStatus(builder:flatbuffers.Builder, STATUSOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, STATUSOffset, 0);
+static addSatNo(builder:flatbuffers.Builder, SAT_NO:number) {
+  builder.addFieldInt32(1, SAT_NO, 0);
 }
 
-static addWeight(builder:flatbuffers.Builder, WEIGHT:number) {
-  builder.addFieldFloat64(2, WEIGHT, 0.0);
+static addObjectDesignator(builder:flatbuffers.Builder, OBJECT_DESIGNATOROffset:flatbuffers.Offset) {
+  builder.addFieldOffset(2, OBJECT_DESIGNATOROffset, 0);
 }
 
-static addDeltaV(builder:flatbuffers.Builder, DELTA_V:number) {
-  builder.addFieldFloat64(3, DELTA_V, 0.0);
+static addStatus(builder:flatbuffers.Builder, STATUS:manifoldStatus) {
+  builder.addFieldInt8(3, STATUS, manifoldStatus.CANDIDATE);
 }
 
-static addDeltaT(builder:flatbuffers.Builder, DELTA_T:number) {
-  builder.addFieldFloat64(4, DELTA_T, 0.0);
+static addEventEpoch(builder:flatbuffers.Builder, EVENT_EPOCHOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(4, EVENT_EPOCHOffset, 0);
+}
+
+static addSource(builder:flatbuffers.Builder, SOURCEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(5, SOURCEOffset, 0);
+}
+
+static addRefFrame(builder:flatbuffers.Builder, REF_FRAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(6, REF_FRAMEOffset, 0);
+}
+
+static addOrigSemiMajorAxis(builder:flatbuffers.Builder, ORIG_SEMI_MAJOR_AXIS:number) {
+  builder.addFieldFloat64(7, ORIG_SEMI_MAJOR_AXIS, 0.0);
+}
+
+static addOrigEccentricity(builder:flatbuffers.Builder, ORIG_ECCENTRICITY:number) {
+  builder.addFieldFloat64(8, ORIG_ECCENTRICITY, 0.0);
+}
+
+static addOrigInclination(builder:flatbuffers.Builder, ORIG_INCLINATION:number) {
+  builder.addFieldFloat64(9, ORIG_INCLINATION, 0.0);
+}
+
+static addDeltaVMin(builder:flatbuffers.Builder, DELTA_V_MIN:number) {
+  builder.addFieldFloat64(10, DELTA_V_MIN, 0.0);
+}
+
+static addDeltaVMax(builder:flatbuffers.Builder, DELTA_V_MAX:number) {
+  builder.addFieldFloat64(11, DELTA_V_MAX, 0.0);
+}
+
+static addDeltaVStep(builder:flatbuffers.Builder, DELTA_V_STEP:number) {
+  builder.addFieldFloat64(12, DELTA_V_STEP, 0.0);
+}
+
+static addDeltaTMin(builder:flatbuffers.Builder, DELTA_T_MIN:number) {
+  builder.addFieldFloat64(13, DELTA_T_MIN, 0.0);
+}
+
+static addDeltaTMax(builder:flatbuffers.Builder, DELTA_T_MAX:number) {
+  builder.addFieldFloat64(14, DELTA_T_MAX, 0.0);
+}
+
+static addDeltaTStep(builder:flatbuffers.Builder, DELTA_T_STEP:number) {
+  builder.addFieldFloat64(15, DELTA_T_STEP, 0.0);
+}
+
+static addNumElements(builder:flatbuffers.Builder, NUM_ELEMENTS:number) {
+  builder.addFieldInt32(16, NUM_ELEMENTS, 0);
+}
+
+static addElements(builder:flatbuffers.Builder, ELEMENTSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(17, ELEMENTSOffset, 0);
+}
+
+static createElementsVector(builder:flatbuffers.Builder, data:flatbuffers.Offset[]):flatbuffers.Offset {
+  builder.startVector(4, data.length, 4);
+  for (let i = data.length - 1; i >= 0; i--) {
+    builder.addOffset(data[i]!);
+  }
+  return builder.endVector();
+}
+
+static startElementsVector(builder:flatbuffers.Builder, numElems:number) {
+  builder.startVector(4, numElems, 4);
+}
+
+static addCorrelatedId(builder:flatbuffers.Builder, CORRELATED_IDOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(18, CORRELATED_IDOffset, 0);
+}
+
+static addNotes(builder:flatbuffers.Builder, NOTESOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(19, NOTESOffset, 0);
 }
 
 static endMNF(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -97,56 +321,137 @@ static finishSizePrefixedMNFBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$MNF', true);
 }
 
-static createMNF(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, STATUSOffset:flatbuffers.Offset, WEIGHT:number, DELTA_V:number, DELTA_T:number):flatbuffers.Offset {
+static createMNF(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, SAT_NO:number, OBJECT_DESIGNATOROffset:flatbuffers.Offset, STATUS:manifoldStatus, EVENT_EPOCHOffset:flatbuffers.Offset, SOURCEOffset:flatbuffers.Offset, REF_FRAMEOffset:flatbuffers.Offset, ORIG_SEMI_MAJOR_AXIS:number, ORIG_ECCENTRICITY:number, ORIG_INCLINATION:number, DELTA_V_MIN:number, DELTA_V_MAX:number, DELTA_V_STEP:number, DELTA_T_MIN:number, DELTA_T_MAX:number, DELTA_T_STEP:number, NUM_ELEMENTS:number, ELEMENTSOffset:flatbuffers.Offset, CORRELATED_IDOffset:flatbuffers.Offset, NOTESOffset:flatbuffers.Offset):flatbuffers.Offset {
   MNF.startMNF(builder);
   MNF.addId(builder, IDOffset);
-  MNF.addStatus(builder, STATUSOffset);
-  MNF.addWeight(builder, WEIGHT);
-  MNF.addDeltaV(builder, DELTA_V);
-  MNF.addDeltaT(builder, DELTA_T);
+  MNF.addSatNo(builder, SAT_NO);
+  MNF.addObjectDesignator(builder, OBJECT_DESIGNATOROffset);
+  MNF.addStatus(builder, STATUS);
+  MNF.addEventEpoch(builder, EVENT_EPOCHOffset);
+  MNF.addSource(builder, SOURCEOffset);
+  MNF.addRefFrame(builder, REF_FRAMEOffset);
+  MNF.addOrigSemiMajorAxis(builder, ORIG_SEMI_MAJOR_AXIS);
+  MNF.addOrigEccentricity(builder, ORIG_ECCENTRICITY);
+  MNF.addOrigInclination(builder, ORIG_INCLINATION);
+  MNF.addDeltaVMin(builder, DELTA_V_MIN);
+  MNF.addDeltaVMax(builder, DELTA_V_MAX);
+  MNF.addDeltaVStep(builder, DELTA_V_STEP);
+  MNF.addDeltaTMin(builder, DELTA_T_MIN);
+  MNF.addDeltaTMax(builder, DELTA_T_MAX);
+  MNF.addDeltaTStep(builder, DELTA_T_STEP);
+  MNF.addNumElements(builder, NUM_ELEMENTS);
+  MNF.addElements(builder, ELEMENTSOffset);
+  MNF.addCorrelatedId(builder, CORRELATED_IDOffset);
+  MNF.addNotes(builder, NOTESOffset);
   return MNF.endMNF(builder);
 }
 
 unpack(): MNFT {
   return new MNFT(
     this.ID(),
+    this.SAT_NO(),
+    this.OBJECT_DESIGNATOR(),
     this.STATUS(),
-    this.WEIGHT(),
-    this.DELTA_V(),
-    this.DELTA_T()
+    this.EVENT_EPOCH(),
+    this.SOURCE(),
+    this.REF_FRAME(),
+    this.ORIG_SEMI_MAJOR_AXIS(),
+    this.ORIG_ECCENTRICITY(),
+    this.ORIG_INCLINATION(),
+    this.DELTA_V_MIN(),
+    this.DELTA_V_MAX(),
+    this.DELTA_V_STEP(),
+    this.DELTA_T_MIN(),
+    this.DELTA_T_MAX(),
+    this.DELTA_T_STEP(),
+    this.NUM_ELEMENTS(),
+    this.bb!.createObjList<manifoldElset, manifoldElsetT>(this.ELEMENTS.bind(this), this.elementsLength()),
+    this.CORRELATED_ID(),
+    this.NOTES()
   );
 }
 
 
 unpackTo(_o: MNFT): void {
   _o.ID = this.ID();
+  _o.SAT_NO = this.SAT_NO();
+  _o.OBJECT_DESIGNATOR = this.OBJECT_DESIGNATOR();
   _o.STATUS = this.STATUS();
-  _o.WEIGHT = this.WEIGHT();
-  _o.DELTA_V = this.DELTA_V();
-  _o.DELTA_T = this.DELTA_T();
+  _o.EVENT_EPOCH = this.EVENT_EPOCH();
+  _o.SOURCE = this.SOURCE();
+  _o.REF_FRAME = this.REF_FRAME();
+  _o.ORIG_SEMI_MAJOR_AXIS = this.ORIG_SEMI_MAJOR_AXIS();
+  _o.ORIG_ECCENTRICITY = this.ORIG_ECCENTRICITY();
+  _o.ORIG_INCLINATION = this.ORIG_INCLINATION();
+  _o.DELTA_V_MIN = this.DELTA_V_MIN();
+  _o.DELTA_V_MAX = this.DELTA_V_MAX();
+  _o.DELTA_V_STEP = this.DELTA_V_STEP();
+  _o.DELTA_T_MIN = this.DELTA_T_MIN();
+  _o.DELTA_T_MAX = this.DELTA_T_MAX();
+  _o.DELTA_T_STEP = this.DELTA_T_STEP();
+  _o.NUM_ELEMENTS = this.NUM_ELEMENTS();
+  _o.ELEMENTS = this.bb!.createObjList<manifoldElset, manifoldElsetT>(this.ELEMENTS.bind(this), this.elementsLength());
+  _o.CORRELATED_ID = this.CORRELATED_ID();
+  _o.NOTES = this.NOTES();
 }
 }
 
 export class MNFT implements flatbuffers.IGeneratedObject {
 constructor(
   public ID: string|Uint8Array|null = null,
-  public STATUS: string|Uint8Array|null = null,
-  public WEIGHT: number = 0.0,
-  public DELTA_V: number = 0.0,
-  public DELTA_T: number = 0.0
+  public SAT_NO: number = 0,
+  public OBJECT_DESIGNATOR: string|Uint8Array|null = null,
+  public STATUS: manifoldStatus = manifoldStatus.CANDIDATE,
+  public EVENT_EPOCH: string|Uint8Array|null = null,
+  public SOURCE: string|Uint8Array|null = null,
+  public REF_FRAME: string|Uint8Array|null = null,
+  public ORIG_SEMI_MAJOR_AXIS: number = 0.0,
+  public ORIG_ECCENTRICITY: number = 0.0,
+  public ORIG_INCLINATION: number = 0.0,
+  public DELTA_V_MIN: number = 0.0,
+  public DELTA_V_MAX: number = 0.0,
+  public DELTA_V_STEP: number = 0.0,
+  public DELTA_T_MIN: number = 0.0,
+  public DELTA_T_MAX: number = 0.0,
+  public DELTA_T_STEP: number = 0.0,
+  public NUM_ELEMENTS: number = 0,
+  public ELEMENTS: (manifoldElsetT)[] = [],
+  public CORRELATED_ID: string|Uint8Array|null = null,
+  public NOTES: string|Uint8Array|null = null
 ){}
 
 
 pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const ID = (this.ID !== null ? builder.createString(this.ID!) : 0);
-  const STATUS = (this.STATUS !== null ? builder.createString(this.STATUS!) : 0);
+  const OBJECT_DESIGNATOR = (this.OBJECT_DESIGNATOR !== null ? builder.createString(this.OBJECT_DESIGNATOR!) : 0);
+  const EVENT_EPOCH = (this.EVENT_EPOCH !== null ? builder.createString(this.EVENT_EPOCH!) : 0);
+  const SOURCE = (this.SOURCE !== null ? builder.createString(this.SOURCE!) : 0);
+  const REF_FRAME = (this.REF_FRAME !== null ? builder.createString(this.REF_FRAME!) : 0);
+  const ELEMENTS = MNF.createElementsVector(builder, builder.createObjectOffsetList(this.ELEMENTS));
+  const CORRELATED_ID = (this.CORRELATED_ID !== null ? builder.createString(this.CORRELATED_ID!) : 0);
+  const NOTES = (this.NOTES !== null ? builder.createString(this.NOTES!) : 0);
 
   return MNF.createMNF(builder,
     ID,
-    STATUS,
-    this.WEIGHT,
-    this.DELTA_V,
-    this.DELTA_T
+    this.SAT_NO,
+    OBJECT_DESIGNATOR,
+    this.STATUS,
+    EVENT_EPOCH,
+    SOURCE,
+    REF_FRAME,
+    this.ORIG_SEMI_MAJOR_AXIS,
+    this.ORIG_ECCENTRICITY,
+    this.ORIG_INCLINATION,
+    this.DELTA_V_MIN,
+    this.DELTA_V_MAX,
+    this.DELTA_V_STEP,
+    this.DELTA_T_MIN,
+    this.DELTA_T_MAX,
+    this.DELTA_T_STEP,
+    this.NUM_ELEMENTS,
+    ELEMENTS,
+    CORRELATED_ID,
+    NOTES
   );
 }
 }

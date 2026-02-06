@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "OOA" : {
+      "type" : "object",
+      "description" : "On-Orbit Antenna",
+      "properties" : {
+        "ID" : {
+                "type" : "string",
+                "description" : "Unique identifier"
+              },
+        "ID_ON_ORBIT" : {
+                "type" : "string",
+                "description" : "Reference to parent on-orbit object"
+              },
+        "ID_ANTENNA" : {
+                "type" : "string",
+                "description" : "Reference to antenna specification"
+              },
+        "NAME" : {
+                "type" : "string",
+                "description" : "Antenna name or designation"
+              },
+        "ANTENNA_TYPE" : {
+                "type" : "string",
+                "description" : "Antenna type (e.g., PARABOLIC, PHASED_ARRAY, HORN, HELICAL, DIPOLE, PATCH, YAGI)"
+              },
+        "QUANTITY" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Number of antennas of this type"
+              },
+        "BAND" : {
+                "type" : "string",
+                "description" : "Operating frequency band (e.g., UHF, L, S, C, X, Ku, Ka, V, W)"
+              },
+        "FREQ_MIN" : {
+                "type" : "number",
+                "description" : "Minimum operating frequency in MHz"
+              },
+        "FREQ_MAX" : {
+                "type" : "number",
+                "description" : "Maximum operating frequency in MHz"
+              },
+        "GAIN" : {
+                "type" : "number",
+                "description" : "Antenna gain in dBi"
+              },
+        "APERTURE" : {
+                "type" : "number",
+                "description" : "Antenna diameter or aperture in meters"
+              },
+        "BEAMWIDTH" : {
+                "type" : "number",
+                "description" : "Beamwidth in degrees"
+              },
+        "POLARIZATION" : {
+                "type" : "string",
+                "description" : "Polarization type (e.g., LINEAR, CIRCULAR, DUAL, RHCP, LHCP)"
+              },
+        "STEERABLE" : {
+                "type" : "boolean",
+                "description" : "Whether the antenna is steerable"
+              },
+        "SLEW_RATE" : {
+                "type" : "number",
+                "description" : "Maximum slew rate in degrees per second"
+              },
+        "PURPOSE" : {
+                "type" : "string",
+                "description" : "Purpose or function (e.g., TT_C, PAYLOAD, CROSSLINK, GPS)"
+              },
+        "NOTES" : {
+                "type" : "string",
+                "description" : "Additional notes"
+              }
+      },
+      "additionalProperties" : false
+    }
+  },
+  "$ref" : "#/definitions/OOA"
+}

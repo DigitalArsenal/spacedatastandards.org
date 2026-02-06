@@ -54,6 +54,7 @@ func (rcv *OBT) Table() flatbuffers.Table {
 	return rcv._tab
 }
 
+/// Unique identifier
 func (rcv *OBT) ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(4))
 	if o != 0 {
@@ -62,19 +63,23 @@ func (rcv *OBT) ID() []byte {
 	return nil
 }
 
-func (rcv *OBT) SAT_NO() int32 {
+/// Unique identifier
+/// Satellite catalog number
+func (rcv *OBT) SAT_NO() uint32 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(6))
 	if o != 0 {
-		return rcv._tab.GetInt32(o + rcv._tab.Pos)
+		return rcv._tab.GetUint32(o + rcv._tab.Pos)
 	}
 	return 0
 }
 
-func (rcv *OBT) MutateSAT_NO(n int32) bool {
-	return rcv._tab.MutateInt32Slot(6, n)
+/// Satellite catalog number
+func (rcv *OBT) MutateSAT_NO(n uint32) bool {
+	return rcv._tab.MutateUint32Slot(6, n)
 }
 
-func (rcv *OBT) ON_ORBIT() []byte {
+/// International designator
+func (rcv *OBT) ORIG_OBJECT_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(8))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -82,7 +87,9 @@ func (rcv *OBT) ON_ORBIT() []byte {
 	return nil
 }
 
-func (rcv *OBT) ORIG_OBJECT_ID() []byte {
+/// International designator
+/// On-orbit reference
+func (rcv *OBT) ON_ORBIT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(10))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -90,6 +97,8 @@ func (rcv *OBT) ORIG_OBJECT_ID() []byte {
 	return nil
 }
 
+/// On-orbit reference
+/// Track point timestamp (ISO 8601)
 func (rcv *OBT) TS() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(12))
 	if o != 0 {
@@ -98,6 +107,8 @@ func (rcv *OBT) TS() []byte {
 	return nil
 }
 
+/// Track point timestamp (ISO 8601)
+/// Latitude (degrees)
 func (rcv *OBT) LAT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(14))
 	if o != 0 {
@@ -106,10 +117,12 @@ func (rcv *OBT) LAT() float64 {
 	return 0.0
 }
 
+/// Latitude (degrees)
 func (rcv *OBT) MutateLAT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(14, n)
 }
 
+/// Longitude (degrees)
 func (rcv *OBT) LON() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(16))
 	if o != 0 {
@@ -118,10 +131,12 @@ func (rcv *OBT) LON() float64 {
 	return 0.0
 }
 
+/// Longitude (degrees)
 func (rcv *OBT) MutateLON(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(16, n)
 }
 
+/// Altitude (km)
 func (rcv *OBT) ALT() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(18))
 	if o != 0 {
@@ -130,11 +145,13 @@ func (rcv *OBT) ALT() float64 {
 	return 0.0
 }
 
+/// Altitude (km)
 func (rcv *OBT) MutateALT(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(18, n)
 }
 
-func (rcv *OBT) RDF_RF() float64 {
+/// Speed (km/s)
+func (rcv *OBT) SPD() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(20))
 	if o != 0 {
 		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
@@ -142,27 +159,41 @@ func (rcv *OBT) RDF_RF() float64 {
 	return 0.0
 }
 
-func (rcv *OBT) MutateRDF_RF(n float64) bool {
+/// Speed (km/s)
+func (rcv *OBT) MutateSPD(n float64) bool {
 	return rcv._tab.MutateFloat64Slot(20, n)
 }
 
-func (rcv *OBT) CALL_SIGN() []byte {
+/// Elevation angle from observer (degrees)
+func (rcv *OBT) ANG_ELEV() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(22))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
-	return nil
+	return 0.0
 }
 
-func (rcv *OBT) RPT_NUM() []byte {
+/// Elevation angle from observer (degrees)
+func (rcv *OBT) MutateANG_ELEV(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(22, n)
+}
+
+/// Radar data fusion RF value
+func (rcv *OBT) RDF_RF() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(24))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
-	return nil
+	return 0.0
 }
 
-func (rcv *OBT) OBJ_IDENT() []byte {
+/// Radar data fusion RF value
+func (rcv *OBT) MutateRDF_RF(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(24, n)
+}
+
+/// Call sign
+func (rcv *OBT) CALL_SIGN() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(26))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -170,7 +201,9 @@ func (rcv *OBT) OBJ_IDENT() []byte {
 	return nil
 }
 
-func (rcv *OBT) IDENT_AMP() []byte {
+/// Call sign
+/// Report number
+func (rcv *OBT) RPT_NUM() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(28))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -178,7 +211,9 @@ func (rcv *OBT) IDENT_AMP() []byte {
 	return nil
 }
 
-func (rcv *OBT) SAT_STATUS() []byte {
+/// Report number
+/// Track identifier
+func (rcv *OBT) TRK_ID() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(30))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -186,7 +221,9 @@ func (rcv *OBT) SAT_STATUS() []byte {
 	return nil
 }
 
-func (rcv *OBT) OBJECT_TYPE() []byte {
+/// Track identifier
+/// Object identity assessment
+func (rcv *OBT) OBJ_IDENT() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(32))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -194,7 +231,9 @@ func (rcv *OBT) OBJECT_TYPE() []byte {
 	return nil
 }
 
-func (rcv *OBT) COUNTRY_CODE() []byte {
+/// Object identity assessment
+/// Identity amplification
+func (rcv *OBT) IDENT_AMP() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(34))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -202,27 +241,33 @@ func (rcv *OBT) COUNTRY_CODE() []byte {
 	return nil
 }
 
-func (rcv *OBT) DECAY() float64 {
+/// Identity amplification
+/// Satellite operational status
+func (rcv *OBT) SAT_STATUS() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(36))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *OBT) MutateDECAY(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(36, n)
-}
-
-func (rcv *OBT) CHARLIE_LINE() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
 }
 
-func (rcv *OBT) AOU_TYPE() []byte {
+/// Satellite operational status
+/// Object type
+func (rcv *OBT) OBJ_TYPE() orbitObjectType {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(38))
+	if o != 0 {
+		return orbitObjectType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// Object type
+func (rcv *OBT) MutateOBJ_TYPE(n orbitObjectType) bool {
+	return rcv._tab.MutateInt8Slot(38, int8(n))
+}
+
+/// Country code (ISO 3166)
+func (rcv *OBT) COUNTRY_CODE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(40))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -230,68 +275,89 @@ func (rcv *OBT) AOU_TYPE() []byte {
 	return nil
 }
 
-func (rcv *OBT) AOU_DATA(j int) []byte {
+/// Country code (ISO 3166)
+/// Orbit decay rate (km/day)
+func (rcv *OBT) DECAY() float64 {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
 	if o != 0 {
-		a := rcv._tab.Vector(o)
-		return rcv._tab.ByteVector(a + flatbuffers.UOffsetT(j*4))
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
 	}
-	return nil
+	return 0.0
 }
 
-func (rcv *OBT) AOU_DATALength() int {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(42))
-	if o != 0 {
-		return rcv._tab.VectorLen(o)
-	}
-	return 0
+/// Orbit decay rate (km/day)
+func (rcv *OBT) MutateDECAY(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(42, n)
 }
 
-func (rcv *OBT) SPD() float64 {
+/// Charlie line data (amplification text)
+func (rcv *OBT) CHARLIE_LINE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(44))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *OBT) MutateSPD(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(44, n)
-}
-
-func (rcv *OBT) ANG_ELEV() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *OBT) MutateANG_ELEV(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(46, n)
-}
-
-func (rcv *OBT) CNTNMNT() float64 {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
-	if o != 0 {
-		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
-	}
-	return 0.0
-}
-
-func (rcv *OBT) MutateCNTNMNT(n float64) bool {
-	return rcv._tab.MutateFloat64Slot(48, n)
-}
-
-func (rcv *OBT) XREF() []byte {
-	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
 	return nil
 }
 
-func (rcv *OBT) CH_XREF() []byte {
+/// Charlie line data (amplification text)
+/// Area of uncertainty type
+func (rcv *OBT) AOU_TYPE() aouType {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(46))
+	if o != 0 {
+		return aouType(rcv._tab.GetInt8(o + rcv._tab.Pos))
+	}
+	return 0
+}
+
+/// Area of uncertainty type
+func (rcv *OBT) MutateAOU_TYPE(n aouType) bool {
+	return rcv._tab.MutateInt8Slot(46, int8(n))
+}
+
+/// Area of uncertainty data
+func (rcv *OBT) AOU_DATA(j int) float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.GetFloat64(a + flatbuffers.UOffsetT(j*8))
+	}
+	return 0
+}
+
+func (rcv *OBT) AOU_DATALength() int {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		return rcv._tab.VectorLen(o)
+	}
+	return 0
+}
+
+/// Area of uncertainty data
+func (rcv *OBT) MutateAOU_DATA(j int, n float64) bool {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(48))
+	if o != 0 {
+		a := rcv._tab.Vector(o)
+		return rcv._tab.MutateFloat64(a+flatbuffers.UOffsetT(j*8), n)
+	}
+	return false
+}
+
+/// Containment probability (0-1)
+func (rcv *OBT) CNTNMNT() float64 {
+	o := flatbuffers.UOffsetT(rcv._tab.Offset(50))
+	if o != 0 {
+		return rcv._tab.GetFloat64(o + rcv._tab.Pos)
+	}
+	return 0.0
+}
+
+/// Containment probability (0-1)
+func (rcv *OBT) MutateCNTNMNT(n float64) bool {
+	return rcv._tab.MutateFloat64Slot(50, n)
+}
+
+/// Cross-reference identifier
+func (rcv *OBT) XREF() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(52))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -299,7 +365,9 @@ func (rcv *OBT) CH_XREF() []byte {
 	return nil
 }
 
-func (rcv *OBT) AMPLIFICATION() []byte {
+/// Cross-reference identifier
+/// Charlie cross-reference
+func (rcv *OBT) CH_XREF() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(54))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -307,7 +375,9 @@ func (rcv *OBT) AMPLIFICATION() []byte {
 	return nil
 }
 
-func (rcv *OBT) IFF() []byte {
+/// Charlie cross-reference
+/// Additional amplification text
+func (rcv *OBT) AMPLIFICATION() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(56))
 	if o != 0 {
 		return rcv._tab.ByteVector(o + rcv._tab.Pos)
@@ -315,31 +385,29 @@ func (rcv *OBT) IFF() []byte {
 	return nil
 }
 
-func (rcv *OBT) REINFORCED() bool {
+/// Additional amplification text
+/// IFF mode/code
+func (rcv *OBT) IFF() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(58))
 	if o != 0 {
-		return rcv._tab.GetBool(o + rcv._tab.Pos)
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
-	return false
+	return nil
 }
 
-func (rcv *OBT) MutateREINFORCED(n bool) bool {
-	return rcv._tab.MutateBoolSlot(58, n)
-}
-
-func (rcv *OBT) REDUCED() bool {
+/// IFF mode/code
+/// Vehicle type
+func (rcv *OBT) VEH_TYPE() []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(60))
 	if o != 0 {
-		return rcv._tab.GetBool(o + rcv._tab.Pos)
+		return rcv._tab.ByteVector(o + rcv._tab.Pos)
 	}
-	return false
+	return nil
 }
 
-func (rcv *OBT) MutateREDUCED(n bool) bool {
-	return rcv._tab.MutateBoolSlot(60, n)
-}
-
-func (rcv *OBT) HQ() bool {
+/// Vehicle type
+/// True if reinforced unit
+func (rcv *OBT) REINFORCED() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(62))
 	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
@@ -347,11 +415,13 @@ func (rcv *OBT) HQ() bool {
 	return false
 }
 
-func (rcv *OBT) MutateHQ(n bool) bool {
+/// True if reinforced unit
+func (rcv *OBT) MutateREINFORCED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(62, n)
 }
 
-func (rcv *OBT) DUMMY() bool {
+/// True if reduced unit
+func (rcv *OBT) REDUCED() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(64))
 	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
@@ -359,11 +429,13 @@ func (rcv *OBT) DUMMY() bool {
 	return false
 }
 
-func (rcv *OBT) MutateDUMMY(n bool) bool {
+/// True if reduced unit
+func (rcv *OBT) MutateREDUCED(n bool) bool {
 	return rcv._tab.MutateBoolSlot(64, n)
 }
 
-func (rcv *OBT) TASK_FORCE() bool {
+/// True if headquarters element
+func (rcv *OBT) HQ() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(66))
 	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
@@ -371,11 +443,13 @@ func (rcv *OBT) TASK_FORCE() bool {
 	return false
 }
 
-func (rcv *OBT) MutateTASK_FORCE(n bool) bool {
+/// True if headquarters element
+func (rcv *OBT) MutateHQ(n bool) bool {
 	return rcv._tab.MutateBoolSlot(66, n)
 }
 
-func (rcv *OBT) FEINT() bool {
+/// True if dummy/exercise track
+func (rcv *OBT) DUMMY() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(68))
 	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
@@ -383,11 +457,13 @@ func (rcv *OBT) FEINT() bool {
 	return false
 }
 
-func (rcv *OBT) MutateFEINT(n bool) bool {
+/// True if dummy/exercise track
+func (rcv *OBT) MutateDUMMY(n bool) bool {
 	return rcv._tab.MutateBoolSlot(68, n)
 }
 
-func (rcv *OBT) INSTALLATION() bool {
+/// True if task force
+func (rcv *OBT) TASK_FORCE() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(70))
 	if o != 0 {
 		return rcv._tab.GetBool(o + rcv._tab.Pos)
@@ -395,26 +471,40 @@ func (rcv *OBT) INSTALLATION() bool {
 	return false
 }
 
-func (rcv *OBT) MutateINSTALLATION(n bool) bool {
+/// True if task force
+func (rcv *OBT) MutateTASK_FORCE(n bool) bool {
 	return rcv._tab.MutateBoolSlot(70, n)
 }
 
-func (rcv *OBT) VEH_TYPE() []byte {
+/// True if feint
+func (rcv *OBT) FEINT() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(72))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
 	}
-	return nil
+	return false
 }
 
-func (rcv *OBT) TRK_ID() []byte {
+/// True if feint
+func (rcv *OBT) MutateFEINT(n bool) bool {
+	return rcv._tab.MutateBoolSlot(72, n)
+}
+
+/// True if installation (not mobile)
+func (rcv *OBT) INSTALLATION() bool {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(74))
 	if o != 0 {
-		return rcv._tab.ByteVector(o + rcv._tab.Pos)
+		return rcv._tab.GetBool(o + rcv._tab.Pos)
 	}
-	return nil
+	return false
 }
 
+/// True if installation (not mobile)
+func (rcv *OBT) MutateINSTALLATION(n bool) bool {
+	return rcv._tab.MutateBoolSlot(74, n)
+}
+
+/// Contributing track sensors
 func (rcv *OBT) TRACK_SENSORS(j int) []byte {
 	o := flatbuffers.UOffsetT(rcv._tab.Offset(76))
 	if o != 0 {
@@ -432,20 +522,21 @@ func (rcv *OBT) TRACK_SENSORSLength() int {
 	return 0
 }
 
+/// Contributing track sensors
 func OBTStart(builder *flatbuffers.Builder) {
 	builder.StartObject(37)
 }
 func OBTAddID(builder *flatbuffers.Builder, ID flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(0, flatbuffers.UOffsetT(ID), 0)
 }
-func OBTAddSAT_NO(builder *flatbuffers.Builder, SAT_NO int32) {
-	builder.PrependInt32Slot(1, SAT_NO, 0)
-}
-func OBTAddON_ORBIT(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ON_ORBIT), 0)
+func OBTAddSAT_NO(builder *flatbuffers.Builder, SAT_NO uint32) {
+	builder.PrependUint32Slot(1, SAT_NO, 0)
 }
 func OBTAddORIG_OBJECT_ID(builder *flatbuffers.Builder, ORIG_OBJECT_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ORIG_OBJECT_ID), 0)
+	builder.PrependUOffsetTSlot(2, flatbuffers.UOffsetT(ORIG_OBJECT_ID), 0)
+}
+func OBTAddON_ORBIT(builder *flatbuffers.Builder, ON_ORBIT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(3, flatbuffers.UOffsetT(ON_ORBIT), 0)
 }
 func OBTAddTS(builder *flatbuffers.Builder, TS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(4, flatbuffers.UOffsetT(TS), 0)
@@ -459,92 +550,92 @@ func OBTAddLON(builder *flatbuffers.Builder, LON float64) {
 func OBTAddALT(builder *flatbuffers.Builder, ALT float64) {
 	builder.PrependFloat64Slot(7, ALT, 0.0)
 }
-func OBTAddRDF_RF(builder *flatbuffers.Builder, RDF_RF float64) {
-	builder.PrependFloat64Slot(8, RDF_RF, 0.0)
-}
-func OBTAddCALL_SIGN(builder *flatbuffers.Builder, CALL_SIGN flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(9, flatbuffers.UOffsetT(CALL_SIGN), 0)
-}
-func OBTAddRPT_NUM(builder *flatbuffers.Builder, RPT_NUM flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(10, flatbuffers.UOffsetT(RPT_NUM), 0)
-}
-func OBTAddOBJ_IDENT(builder *flatbuffers.Builder, OBJ_IDENT flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(OBJ_IDENT), 0)
-}
-func OBTAddIDENT_AMP(builder *flatbuffers.Builder, IDENT_AMP flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(IDENT_AMP), 0)
-}
-func OBTAddSAT_STATUS(builder *flatbuffers.Builder, SAT_STATUS flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(SAT_STATUS), 0)
-}
-func OBTAddOBJECT_TYPE(builder *flatbuffers.Builder, OBJECT_TYPE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(OBJECT_TYPE), 0)
-}
-func OBTAddCOUNTRY_CODE(builder *flatbuffers.Builder, COUNTRY_CODE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(COUNTRY_CODE), 0)
-}
-func OBTAddDECAY(builder *flatbuffers.Builder, DECAY float64) {
-	builder.PrependFloat64Slot(16, DECAY, 0.0)
-}
-func OBTAddCHARLIE_LINE(builder *flatbuffers.Builder, CHARLIE_LINE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(17, flatbuffers.UOffsetT(CHARLIE_LINE), 0)
-}
-func OBTAddAOU_TYPE(builder *flatbuffers.Builder, AOU_TYPE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(AOU_TYPE), 0)
-}
-func OBTAddAOU_DATA(builder *flatbuffers.Builder, AOU_DATA flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(19, flatbuffers.UOffsetT(AOU_DATA), 0)
-}
-func OBTStartAOU_DATAVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
-	return builder.StartVector(4, numElems, 4)
-}
 func OBTAddSPD(builder *flatbuffers.Builder, SPD float64) {
-	builder.PrependFloat64Slot(20, SPD, 0.0)
+	builder.PrependFloat64Slot(8, SPD, 0.0)
 }
 func OBTAddANG_ELEV(builder *flatbuffers.Builder, ANG_ELEV float64) {
-	builder.PrependFloat64Slot(21, ANG_ELEV, 0.0)
+	builder.PrependFloat64Slot(9, ANG_ELEV, 0.0)
 }
-func OBTAddCNTNMNT(builder *flatbuffers.Builder, CNTNMNT float64) {
-	builder.PrependFloat64Slot(22, CNTNMNT, 0.0)
+func OBTAddRDF_RF(builder *flatbuffers.Builder, RDF_RF float64) {
+	builder.PrependFloat64Slot(10, RDF_RF, 0.0)
 }
-func OBTAddXREF(builder *flatbuffers.Builder, XREF flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(23, flatbuffers.UOffsetT(XREF), 0)
+func OBTAddCALL_SIGN(builder *flatbuffers.Builder, CALL_SIGN flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(11, flatbuffers.UOffsetT(CALL_SIGN), 0)
 }
-func OBTAddCH_XREF(builder *flatbuffers.Builder, CH_XREF flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(24, flatbuffers.UOffsetT(CH_XREF), 0)
-}
-func OBTAddAMPLIFICATION(builder *flatbuffers.Builder, AMPLIFICATION flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(25, flatbuffers.UOffsetT(AMPLIFICATION), 0)
-}
-func OBTAddIFF(builder *flatbuffers.Builder, IFF flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(IFF), 0)
-}
-func OBTAddREINFORCED(builder *flatbuffers.Builder, REINFORCED bool) {
-	builder.PrependBoolSlot(27, REINFORCED, false)
-}
-func OBTAddREDUCED(builder *flatbuffers.Builder, REDUCED bool) {
-	builder.PrependBoolSlot(28, REDUCED, false)
-}
-func OBTAddHQ(builder *flatbuffers.Builder, HQ bool) {
-	builder.PrependBoolSlot(29, HQ, false)
-}
-func OBTAddDUMMY(builder *flatbuffers.Builder, DUMMY bool) {
-	builder.PrependBoolSlot(30, DUMMY, false)
-}
-func OBTAddTASK_FORCE(builder *flatbuffers.Builder, TASK_FORCE bool) {
-	builder.PrependBoolSlot(31, TASK_FORCE, false)
-}
-func OBTAddFEINT(builder *flatbuffers.Builder, FEINT bool) {
-	builder.PrependBoolSlot(32, FEINT, false)
-}
-func OBTAddINSTALLATION(builder *flatbuffers.Builder, INSTALLATION bool) {
-	builder.PrependBoolSlot(33, INSTALLATION, false)
-}
-func OBTAddVEH_TYPE(builder *flatbuffers.Builder, VEH_TYPE flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(34, flatbuffers.UOffsetT(VEH_TYPE), 0)
+func OBTAddRPT_NUM(builder *flatbuffers.Builder, RPT_NUM flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(12, flatbuffers.UOffsetT(RPT_NUM), 0)
 }
 func OBTAddTRK_ID(builder *flatbuffers.Builder, TRK_ID flatbuffers.UOffsetT) {
-	builder.PrependUOffsetTSlot(35, flatbuffers.UOffsetT(TRK_ID), 0)
+	builder.PrependUOffsetTSlot(13, flatbuffers.UOffsetT(TRK_ID), 0)
+}
+func OBTAddOBJ_IDENT(builder *flatbuffers.Builder, OBJ_IDENT flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(14, flatbuffers.UOffsetT(OBJ_IDENT), 0)
+}
+func OBTAddIDENT_AMP(builder *flatbuffers.Builder, IDENT_AMP flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(15, flatbuffers.UOffsetT(IDENT_AMP), 0)
+}
+func OBTAddSAT_STATUS(builder *flatbuffers.Builder, SAT_STATUS flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(16, flatbuffers.UOffsetT(SAT_STATUS), 0)
+}
+func OBTAddOBJ_TYPE(builder *flatbuffers.Builder, OBJ_TYPE orbitObjectType) {
+	builder.PrependInt8Slot(17, int8(OBJ_TYPE), 0)
+}
+func OBTAddCOUNTRY_CODE(builder *flatbuffers.Builder, COUNTRY_CODE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(18, flatbuffers.UOffsetT(COUNTRY_CODE), 0)
+}
+func OBTAddDECAY(builder *flatbuffers.Builder, DECAY float64) {
+	builder.PrependFloat64Slot(19, DECAY, 0.0)
+}
+func OBTAddCHARLIE_LINE(builder *flatbuffers.Builder, CHARLIE_LINE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(20, flatbuffers.UOffsetT(CHARLIE_LINE), 0)
+}
+func OBTAddAOU_TYPE(builder *flatbuffers.Builder, AOU_TYPE aouType) {
+	builder.PrependInt8Slot(21, int8(AOU_TYPE), 0)
+}
+func OBTAddAOU_DATA(builder *flatbuffers.Builder, AOU_DATA flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(22, flatbuffers.UOffsetT(AOU_DATA), 0)
+}
+func OBTStartAOU_DATAVector(builder *flatbuffers.Builder, numElems int) flatbuffers.UOffsetT {
+	return builder.StartVector(8, numElems, 8)
+}
+func OBTAddCNTNMNT(builder *flatbuffers.Builder, CNTNMNT float64) {
+	builder.PrependFloat64Slot(23, CNTNMNT, 0.0)
+}
+func OBTAddXREF(builder *flatbuffers.Builder, XREF flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(24, flatbuffers.UOffsetT(XREF), 0)
+}
+func OBTAddCH_XREF(builder *flatbuffers.Builder, CH_XREF flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(25, flatbuffers.UOffsetT(CH_XREF), 0)
+}
+func OBTAddAMPLIFICATION(builder *flatbuffers.Builder, AMPLIFICATION flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(26, flatbuffers.UOffsetT(AMPLIFICATION), 0)
+}
+func OBTAddIFF(builder *flatbuffers.Builder, IFF flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(27, flatbuffers.UOffsetT(IFF), 0)
+}
+func OBTAddVEH_TYPE(builder *flatbuffers.Builder, VEH_TYPE flatbuffers.UOffsetT) {
+	builder.PrependUOffsetTSlot(28, flatbuffers.UOffsetT(VEH_TYPE), 0)
+}
+func OBTAddREINFORCED(builder *flatbuffers.Builder, REINFORCED bool) {
+	builder.PrependBoolSlot(29, REINFORCED, false)
+}
+func OBTAddREDUCED(builder *flatbuffers.Builder, REDUCED bool) {
+	builder.PrependBoolSlot(30, REDUCED, false)
+}
+func OBTAddHQ(builder *flatbuffers.Builder, HQ bool) {
+	builder.PrependBoolSlot(31, HQ, false)
+}
+func OBTAddDUMMY(builder *flatbuffers.Builder, DUMMY bool) {
+	builder.PrependBoolSlot(32, DUMMY, false)
+}
+func OBTAddTASK_FORCE(builder *flatbuffers.Builder, TASK_FORCE bool) {
+	builder.PrependBoolSlot(33, TASK_FORCE, false)
+}
+func OBTAddFEINT(builder *flatbuffers.Builder, FEINT bool) {
+	builder.PrependBoolSlot(34, FEINT, false)
+}
+func OBTAddINSTALLATION(builder *flatbuffers.Builder, INSTALLATION bool) {
+	builder.PrependBoolSlot(35, INSTALLATION, false)
 }
 func OBTAddTRACK_SENSORS(builder *flatbuffers.Builder, TRACK_SENSORS flatbuffers.UOffsetT) {
 	builder.PrependUOffsetTSlot(36, flatbuffers.UOffsetT(TRACK_SENSORS), 0)

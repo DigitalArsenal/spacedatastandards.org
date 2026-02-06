@@ -1,47 +1,100 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "mtiStandard": {
+      "type": "string",
+      "enum": [
+        "STANAG_4607",
+        "STANAG_4545",
+        "CUSTOM",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "STANAG_4607": {
+          "value": 0
+        },
+        "STANAG_4545": {
+          "value": 1
+        },
+        "CUSTOM": {
+          "value": 2
+        },
+        "UNKNOWN": {
+          "value": 3
+        }
+      }
+    },
     "MTI": {
       "type": "object",
       "description": "Moving Target Indicator",
       "properties": {
         "ID": {
           "type": "string",
+          "description": "Unique identifier",
           "x-flatbuffer-type": "string"
+        },
+        "STANDARD": {
+          "$ref": "#/definitions/mtiStandard",
+          "description": "MTI standard (e.g., STANAG 4607)",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "STANAG_4607": {
+              "value": 0
+            },
+            "STANAG_4545": {
+              "value": 1
+            },
+            "CUSTOM": {
+              "value": 2
+            },
+            "UNKNOWN": {
+              "value": 3
+            }
+          }
         },
         "P3": {
           "type": "string",
+          "description": "Platform type (P3 field)",
           "x-flatbuffer-type": "string"
         },
         "P6": {
           "type": "string",
+          "description": "Platform activity (P6 field)",
           "x-flatbuffer-type": "string"
         },
         "P7": {
           "type": "string",
+          "description": "Sensor type (P7 field)",
           "x-flatbuffer-type": "string"
         },
         "P8": {
           "type": "string",
+          "description": "Sensor model (P8 field)",
           "x-flatbuffer-type": "string"
         },
         "P9": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Reference time code (P9)",
+          "x-flatbuffer-type": "uint32"
         },
         "P10": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 65535,
+          "description": "Security classification (P10)",
+          "x-flatbuffer-type": "uint16"
         },
         "MISSIONS": {
           "type": "array",
           "items": {
             "type": "string"
           },
+          "description": "Mission segment identifiers",
           "x-flatbuffer-type": "[string]"
         },
         "DWELLS": {
@@ -49,6 +102,7 @@
           "items": {
             "type": "string"
           },
+          "description": "Dwell segment data references",
           "x-flatbuffer-type": "[string]"
         },
         "HRRS": {
@@ -56,6 +110,7 @@
           "items": {
             "type": "string"
           },
+          "description": "High range resolution profile references",
           "x-flatbuffer-type": "[string]"
         },
         "JOB_DEFS": {
@@ -63,6 +118,7 @@
           "items": {
             "type": "string"
           },
+          "description": "Job definition references",
           "x-flatbuffer-type": "[string]"
         },
         "FREE_TEXTS": {
@@ -70,6 +126,7 @@
           "items": {
             "type": "string"
           },
+          "description": "Free text entries",
           "x-flatbuffer-type": "[string]"
         },
         "PLATFORM_LOCS": {
@@ -77,6 +134,7 @@
           "items": {
             "type": "string"
           },
+          "description": "Platform location data references",
           "x-flatbuffer-type": "[string]"
         },
         "JOB_REQUESTS": {
@@ -84,6 +142,7 @@
           "items": {
             "type": "string"
           },
+          "description": "Job request references",
           "x-flatbuffer-type": "[string]"
         }
       },

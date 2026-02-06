@@ -9,6 +9,325 @@ use core::cmp::Ordering;
 extern crate flatbuffers;
 use self::flatbuffers::{EndianScalar, Follow};
 
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_SEO_DATA_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_SEO_DATA_TYPE: i8 = 7;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_SEO_DATA_TYPE: [seoDataType; 8] = [
+  seoDataType::PARTICLE_COUNT,
+  seoDataType::MAGNETIC_FIELD,
+  seoDataType::RADIATION_DOSE,
+  seoDataType::PLASMA_DENSITY,
+  seoDataType::ENERGETIC_PARTICLE,
+  seoDataType::SOLAR_WIND,
+  seoDataType::CHARGING,
+  seoDataType::UNKNOWN,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct seoDataType(pub i8);
+#[allow(non_upper_case_globals)]
+impl seoDataType {
+  pub const PARTICLE_COUNT: Self = Self(0);
+  pub const MAGNETIC_FIELD: Self = Self(1);
+  pub const RADIATION_DOSE: Self = Self(2);
+  pub const PLASMA_DENSITY: Self = Self(3);
+  pub const ENERGETIC_PARTICLE: Self = Self(4);
+  pub const SOLAR_WIND: Self = Self(5);
+  pub const CHARGING: Self = Self(6);
+  pub const UNKNOWN: Self = Self(7);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 7;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::PARTICLE_COUNT,
+    Self::MAGNETIC_FIELD,
+    Self::RADIATION_DOSE,
+    Self::PLASMA_DENSITY,
+    Self::ENERGETIC_PARTICLE,
+    Self::SOLAR_WIND,
+    Self::CHARGING,
+    Self::UNKNOWN,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::PARTICLE_COUNT => Some("PARTICLE_COUNT"),
+      Self::MAGNETIC_FIELD => Some("MAGNETIC_FIELD"),
+      Self::RADIATION_DOSE => Some("RADIATION_DOSE"),
+      Self::PLASMA_DENSITY => Some("PLASMA_DENSITY"),
+      Self::ENERGETIC_PARTICLE => Some("ENERGETIC_PARTICLE"),
+      Self::SOLAR_WIND => Some("SOLAR_WIND"),
+      Self::CHARGING => Some("CHARGING"),
+      Self::UNKNOWN => Some("UNKNOWN"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for seoDataType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for seoDataType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for seoDataType {
+    type Output = seoDataType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for seoDataType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for seoDataType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for seoDataType {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_SEO_PARTICLE_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_SEO_PARTICLE_TYPE: i8 = 6;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_SEO_PARTICLE_TYPE: [seoParticleType; 7] = [
+  seoParticleType::PROTON,
+  seoParticleType::ELECTRON,
+  seoParticleType::ALPHA,
+  seoParticleType::HEAVY_ION,
+  seoParticleType::NEUTRON,
+  seoParticleType::COSMIC_RAY,
+  seoParticleType::MIXED,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct seoParticleType(pub i8);
+#[allow(non_upper_case_globals)]
+impl seoParticleType {
+  pub const PROTON: Self = Self(0);
+  pub const ELECTRON: Self = Self(1);
+  pub const ALPHA: Self = Self(2);
+  pub const HEAVY_ION: Self = Self(3);
+  pub const NEUTRON: Self = Self(4);
+  pub const COSMIC_RAY: Self = Self(5);
+  pub const MIXED: Self = Self(6);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 6;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::PROTON,
+    Self::ELECTRON,
+    Self::ALPHA,
+    Self::HEAVY_ION,
+    Self::NEUTRON,
+    Self::COSMIC_RAY,
+    Self::MIXED,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::PROTON => Some("PROTON"),
+      Self::ELECTRON => Some("ELECTRON"),
+      Self::ALPHA => Some("ALPHA"),
+      Self::HEAVY_ION => Some("HEAVY_ION"),
+      Self::NEUTRON => Some("NEUTRON"),
+      Self::COSMIC_RAY => Some("COSMIC_RAY"),
+      Self::MIXED => Some("MIXED"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for seoParticleType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for seoParticleType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for seoParticleType {
+    type Output = seoParticleType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for seoParticleType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for seoParticleType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for seoParticleType {}
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MIN_SEO_OBSERVATORY_TYPE: i8 = 0;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+pub const ENUM_MAX_SEO_OBSERVATORY_TYPE: i8 = 6;
+#[deprecated(since = "2.0.0", note = "Use associated constants instead. This will no longer be generated in 2021.")]
+#[allow(non_camel_case_types)]
+pub const ENUM_VALUES_SEO_OBSERVATORY_TYPE: [seoObservatoryType; 7] = [
+  seoObservatoryType::GROUND,
+  seoObservatoryType::LEO,
+  seoObservatoryType::GEO,
+  seoObservatoryType::L1,
+  seoObservatoryType::L2,
+  seoObservatoryType::INTERPLANETARY,
+  seoObservatoryType::SOLAR,
+];
+
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Default)]
+#[repr(transparent)]
+pub struct seoObservatoryType(pub i8);
+#[allow(non_upper_case_globals)]
+impl seoObservatoryType {
+  pub const GROUND: Self = Self(0);
+  pub const LEO: Self = Self(1);
+  pub const GEO: Self = Self(2);
+  pub const L1: Self = Self(3);
+  pub const L2: Self = Self(4);
+  pub const INTERPLANETARY: Self = Self(5);
+  pub const SOLAR: Self = Self(6);
+
+  pub const ENUM_MIN: i8 = 0;
+  pub const ENUM_MAX: i8 = 6;
+  pub const ENUM_VALUES: &'static [Self] = &[
+    Self::GROUND,
+    Self::LEO,
+    Self::GEO,
+    Self::L1,
+    Self::L2,
+    Self::INTERPLANETARY,
+    Self::SOLAR,
+  ];
+  /// Returns the variant's name or "" if unknown.
+  pub fn variant_name(self) -> Option<&'static str> {
+    match self {
+      Self::GROUND => Some("GROUND"),
+      Self::LEO => Some("LEO"),
+      Self::GEO => Some("GEO"),
+      Self::L1 => Some("L1"),
+      Self::L2 => Some("L2"),
+      Self::INTERPLANETARY => Some("INTERPLANETARY"),
+      Self::SOLAR => Some("SOLAR"),
+      _ => None,
+    }
+  }
+}
+impl core::fmt::Debug for seoObservatoryType {
+  fn fmt(&self, f: &mut core::fmt::Formatter) -> core::fmt::Result {
+    if let Some(name) = self.variant_name() {
+      f.write_str(name)
+    } else {
+      f.write_fmt(format_args!("<UNKNOWN {:?}>", self.0))
+    }
+  }
+}
+impl<'a> flatbuffers::Follow<'a> for seoObservatoryType {
+  type Inner = Self;
+  #[inline]
+  unsafe fn follow(buf: &'a [u8], loc: usize) -> Self::Inner {
+    let b = flatbuffers::read_scalar_at::<i8>(buf, loc);
+    Self(b)
+  }
+}
+
+impl flatbuffers::Push for seoObservatoryType {
+    type Output = seoObservatoryType;
+    #[inline]
+    unsafe fn push(&self, dst: &mut [u8], _written_len: usize) {
+        flatbuffers::emplace_scalar::<i8>(dst, self.0);
+    }
+}
+
+impl flatbuffers::EndianScalar for seoObservatoryType {
+  type Scalar = i8;
+  #[inline]
+  fn to_little_endian(self) -> i8 {
+    self.0.to_le()
+  }
+  #[inline]
+  #[allow(clippy::wrong_self_convention)]
+  fn from_little_endian(v: i8) -> Self {
+    let b = i8::from_le(v);
+    Self(b)
+  }
+}
+
+impl<'a> flatbuffers::Verifiable for seoObservatoryType {
+  #[inline]
+  fn run_verifier(
+    v: &mut flatbuffers::Verifier, pos: usize
+  ) -> Result<(), flatbuffers::InvalidFlatbuffer> {
+    use self::flatbuffers::Verifiable;
+    i8::run_verifier(v, pos)
+  }
+}
+
+impl flatbuffers::SimpleToVerifyInSlice for seoObservatoryType {}
 pub enum SEOOffset {}
 #[derive(Copy, Clone, PartialEq)]
 
@@ -49,16 +368,18 @@ impl<'a> SEO<'a> {
   pub const VT_SEN_POS: flatbuffers::VOffsetT = 44;
   pub const VT_SEN_VEL: flatbuffers::VOffsetT = 46;
   pub const VT_MEAS_TYPE: flatbuffers::VOffsetT = 48;
-  pub const VT_SEN_ENERGY_LEVEL: flatbuffers::VOffsetT = 50;
-  pub const VT_OB_SET_ID: flatbuffers::VOffsetT = 52;
-  pub const VT_PARTICLE_TYPE: flatbuffers::VOffsetT = 54;
+  pub const VT_PARTICLE_TYPE: flatbuffers::VOffsetT = 50;
+  pub const VT_SEN_ENERGY_LEVEL: flatbuffers::VOffsetT = 52;
+  pub const VT_OB_SET_ID: flatbuffers::VOffsetT = 54;
   pub const VT_OB_TIME: flatbuffers::VOffsetT = 56;
-  pub const VT_SEO_LIST: flatbuffers::VOffsetT = 58;
-  pub const VT_QUALITY: flatbuffers::VOffsetT = 60;
-  pub const VT_DESCRIPTION: flatbuffers::VOffsetT = 62;
-  pub const VT_DESCRIPTOR: flatbuffers::VOffsetT = 64;
-  pub const VT_SRC_TYPS: flatbuffers::VOffsetT = 66;
-  pub const VT_SRC_IDS: flatbuffers::VOffsetT = 68;
+  pub const VT_VALUES: flatbuffers::VOffsetT = 58;
+  pub const VT_UNCERTAINTIES: flatbuffers::VOffsetT = 60;
+  pub const VT_UNITS: flatbuffers::VOffsetT = 62;
+  pub const VT_QUALITY: flatbuffers::VOffsetT = 64;
+  pub const VT_DESCRIPTION: flatbuffers::VOffsetT = 66;
+  pub const VT_DESCRIPTOR: flatbuffers::VOffsetT = 68;
+  pub const VT_SRC_TYPS: flatbuffers::VOffsetT = 70;
+  pub const VT_SRC_IDS: flatbuffers::VOffsetT = 72;
 
   #[inline]
   pub unsafe fn init_from_table(table: flatbuffers::Table<'a>) -> Self {
@@ -78,9 +399,10 @@ impl<'a> SEO<'a> {
     if let Some(x) = args.DESCRIPTOR { builder.add_DESCRIPTOR(x); }
     if let Some(x) = args.DESCRIPTION { builder.add_DESCRIPTION(x); }
     if let Some(x) = args.QUALITY { builder.add_QUALITY(x); }
-    if let Some(x) = args.SEO_LIST { builder.add_SEO_LIST(x); }
+    if let Some(x) = args.UNITS { builder.add_UNITS(x); }
+    if let Some(x) = args.UNCERTAINTIES { builder.add_UNCERTAINTIES(x); }
+    if let Some(x) = args.VALUES { builder.add_VALUES(x); }
     if let Some(x) = args.OB_TIME { builder.add_OB_TIME(x); }
-    if let Some(x) = args.PARTICLE_TYPE { builder.add_PARTICLE_TYPE(x); }
     if let Some(x) = args.OB_SET_ID { builder.add_OB_SET_ID(x); }
     if let Some(x) = args.SEN_ENERGY_LEVEL { builder.add_SEN_ENERGY_LEVEL(x); }
     if let Some(x) = args.MEAS_TYPE { builder.add_MEAS_TYPE(x); }
@@ -90,19 +412,20 @@ impl<'a> SEO<'a> {
     if let Some(x) = args.INSTRUMENT_TYPE { builder.add_INSTRUMENT_TYPE(x); }
     if let Some(x) = args.OBSERVATORY_NOTES { builder.add_OBSERVATORY_NOTES(x); }
     if let Some(x) = args.OBSERVATORY_NAME { builder.add_OBSERVATORY_NAME(x); }
-    if let Some(x) = args.OBSERVATORY_TYPE { builder.add_OBSERVATORY_TYPE(x); }
     if let Some(x) = args.ORIG_SENSOR_ID { builder.add_ORIG_SENSOR_ID(x); }
     if let Some(x) = args.ID_SENSOR { builder.add_ID_SENSOR(x); }
     if let Some(x) = args.ORIG_OBJECT_ID { builder.add_ORIG_OBJECT_ID(x); }
     builder.add_SAT_NO(args.SAT_NO);
     if let Some(x) = args.GEN_TIME { builder.add_GEN_TIME(x); }
-    if let Some(x) = args.DATA_TYPE { builder.add_DATA_TYPE(x); }
     if let Some(x) = args.EXTERNAL_ID { builder.add_EXTERNAL_ID(x); }
     if let Some(x) = args.GEN_SYSTEM { builder.add_GEN_SYSTEM(x); }
     if let Some(x) = args.MSG_TYPE { builder.add_MSG_TYPE(x); }
     if let Some(x) = args.ID { builder.add_ID(x); }
+    builder.add_PARTICLE_TYPE(args.PARTICLE_TYPE);
+    builder.add_OBSERVATORY_TYPE(args.OBSERVATORY_TYPE);
     builder.add_DERIVED(args.DERIVED);
     builder.add_FORECAST(args.FORECAST);
+    builder.add_DATA_TYPE(args.DATA_TYPE);
     builder.finish()
   }
 
@@ -119,9 +442,7 @@ impl<'a> SEO<'a> {
     let EXTERNAL_ID = self.EXTERNAL_ID().map(|x| {
       x.to_string()
     });
-    let DATA_TYPE = self.DATA_TYPE().map(|x| {
-      x.to_string()
-    });
+    let DATA_TYPE = self.DATA_TYPE();
     let GEN_TIME = self.GEN_TIME().map(|x| {
       x.to_string()
     });
@@ -137,9 +458,7 @@ impl<'a> SEO<'a> {
     let ORIG_SENSOR_ID = self.ORIG_SENSOR_ID().map(|x| {
       x.to_string()
     });
-    let OBSERVATORY_TYPE = self.OBSERVATORY_TYPE().map(|x| {
-      x.to_string()
-    });
+    let OBSERVATORY_TYPE = self.OBSERVATORY_TYPE();
     let OBSERVATORY_NAME = self.OBSERVATORY_NAME().map(|x| {
       x.to_string()
     });
@@ -156,28 +475,32 @@ impl<'a> SEO<'a> {
       x.to_string()
     });
     let SEN_POS = self.SEN_POS().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
+      x.into_iter().collect()
     });
     let SEN_VEL = self.SEN_VEL().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
+      x.into_iter().collect()
     });
     let MEAS_TYPE = self.MEAS_TYPE().map(|x| {
       x.to_string()
     });
+    let PARTICLE_TYPE = self.PARTICLE_TYPE();
     let SEN_ENERGY_LEVEL = self.SEN_ENERGY_LEVEL().map(|x| {
       x.to_string()
     });
     let OB_SET_ID = self.OB_SET_ID().map(|x| {
       x.to_string()
     });
-    let PARTICLE_TYPE = self.PARTICLE_TYPE().map(|x| {
-      x.to_string()
-    });
     let OB_TIME = self.OB_TIME().map(|x| {
       x.to_string()
     });
-    let SEO_LIST = self.SEO_LIST().map(|x| {
-      x.iter().map(|s| s.to_string()).collect()
+    let VALUES = self.VALUES().map(|x| {
+      x.into_iter().collect()
+    });
+    let UNCERTAINTIES = self.UNCERTAINTIES().map(|x| {
+      x.into_iter().collect()
+    });
+    let UNITS = self.UNITS().map(|x| {
+      x.to_string()
     });
     let QUALITY = self.QUALITY().map(|x| {
       x.to_string()
@@ -218,11 +541,13 @@ impl<'a> SEO<'a> {
       SEN_POS,
       SEN_VEL,
       MEAS_TYPE,
+      PARTICLE_TYPE,
       SEN_ENERGY_LEVEL,
       OB_SET_ID,
-      PARTICLE_TYPE,
       OB_TIME,
-      SEO_LIST,
+      VALUES,
+      UNCERTAINTIES,
+      UNITS,
       QUALITY,
       DESCRIPTION,
       DESCRIPTOR,
@@ -231,6 +556,7 @@ impl<'a> SEO<'a> {
     }
   }
 
+  /// Unique identifier
   #[inline]
   pub fn ID(&self) -> Option<&'a str> {
     // Safety:
@@ -238,6 +564,7 @@ impl<'a> SEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SEO::VT_ID, None)}
   }
+  /// Message type code
   #[inline]
   pub fn MSG_TYPE(&self) -> Option<&'a str> {
     // Safety:
@@ -245,6 +572,7 @@ impl<'a> SEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SEO::VT_MSG_TYPE, None)}
   }
+  /// Generating system
   #[inline]
   pub fn GEN_SYSTEM(&self) -> Option<&'a str> {
     // Safety:
@@ -252,6 +580,7 @@ impl<'a> SEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SEO::VT_GEN_SYSTEM, None)}
   }
+  /// External reference identifier
   #[inline]
   pub fn EXTERNAL_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -259,13 +588,15 @@ impl<'a> SEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SEO::VT_EXTERNAL_ID, None)}
   }
+  /// Type of environmental data
   #[inline]
-  pub fn DATA_TYPE(&self) -> Option<&'a str> {
+  pub fn DATA_TYPE(&self) -> seoDataType {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SEO::VT_DATA_TYPE, None)}
+    unsafe { self._tab.get::<seoDataType>(SEO::VT_DATA_TYPE, Some(seoDataType::PARTICLE_COUNT)).unwrap()}
   }
+  /// Generation time (ISO 8601)
   #[inline]
   pub fn GEN_TIME(&self) -> Option<&'a str> {
     // Safety:
@@ -273,6 +604,7 @@ impl<'a> SEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SEO::VT_GEN_TIME, None)}
   }
+  /// True if this is a forecast
   #[inline]
   pub fn FORECAST(&self) -> bool {
     // Safety:
@@ -280,6 +612,7 @@ impl<'a> SEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(SEO::VT_FORECAST, Some(false)).unwrap()}
   }
+  /// True if derived from other measurements
   #[inline]
   pub fn DERIVED(&self) -> bool {
     // Safety:
@@ -287,13 +620,15 @@ impl<'a> SEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<bool>(SEO::VT_DERIVED, Some(false)).unwrap()}
   }
+  /// Satellite catalog number (if space-based)
   #[inline]
-  pub fn SAT_NO(&self) -> i32 {
+  pub fn SAT_NO(&self) -> u32 {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<i32>(SEO::VT_SAT_NO, Some(0)).unwrap()}
+    unsafe { self._tab.get::<u32>(SEO::VT_SAT_NO, Some(0)).unwrap()}
   }
+  /// International designator
   #[inline]
   pub fn ORIG_OBJECT_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -301,6 +636,7 @@ impl<'a> SEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SEO::VT_ORIG_OBJECT_ID, None)}
   }
+  /// Sensor identifier
   #[inline]
   pub fn ID_SENSOR(&self) -> Option<&'a str> {
     // Safety:
@@ -308,6 +644,7 @@ impl<'a> SEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SEO::VT_ID_SENSOR, None)}
   }
+  /// Original sensor identifier
   #[inline]
   pub fn ORIG_SENSOR_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -315,13 +652,15 @@ impl<'a> SEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SEO::VT_ORIG_SENSOR_ID, None)}
   }
+  /// Observatory type
   #[inline]
-  pub fn OBSERVATORY_TYPE(&self) -> Option<&'a str> {
+  pub fn OBSERVATORY_TYPE(&self) -> seoObservatoryType {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SEO::VT_OBSERVATORY_TYPE, None)}
+    unsafe { self._tab.get::<seoObservatoryType>(SEO::VT_OBSERVATORY_TYPE, Some(seoObservatoryType::GROUND)).unwrap()}
   }
+  /// Observatory name
   #[inline]
   pub fn OBSERVATORY_NAME(&self) -> Option<&'a str> {
     // Safety:
@@ -329,6 +668,7 @@ impl<'a> SEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SEO::VT_OBSERVATORY_NAME, None)}
   }
+  /// Observatory notes
   #[inline]
   pub fn OBSERVATORY_NOTES(&self) -> Option<&'a str> {
     // Safety:
@@ -336,6 +676,7 @@ impl<'a> SEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SEO::VT_OBSERVATORY_NOTES, None)}
   }
+  /// Instrument type description
   #[inline]
   pub fn INSTRUMENT_TYPE(&self) -> Option<&'a str> {
     // Safety:
@@ -343,6 +684,7 @@ impl<'a> SEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SEO::VT_INSTRUMENT_TYPE, None)}
   }
+  /// Observatory latitude (degrees)
   #[inline]
   pub fn LAT(&self) -> f64 {
     // Safety:
@@ -350,6 +692,7 @@ impl<'a> SEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SEO::VT_LAT, Some(0.0)).unwrap()}
   }
+  /// Observatory longitude (degrees)
   #[inline]
   pub fn LON(&self) -> f64 {
     // Safety:
@@ -357,6 +700,7 @@ impl<'a> SEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SEO::VT_LON, Some(0.0)).unwrap()}
   }
+  /// Observatory altitude (km)
   #[inline]
   pub fn ALT(&self) -> f64 {
     // Safety:
@@ -364,6 +708,7 @@ impl<'a> SEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<f64>(SEO::VT_ALT, Some(0.0)).unwrap()}
   }
+  /// Sensor reference frame
   #[inline]
   pub fn SEN_REFERENCE_FRAME(&self) -> Option<&'a str> {
     // Safety:
@@ -371,20 +716,23 @@ impl<'a> SEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SEO::VT_SEN_REFERENCE_FRAME, None)}
   }
+  /// Sensor position (km, 3 components)
   #[inline]
-  pub fn SEN_POS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+  pub fn SEN_POS(&self) -> Option<flatbuffers::Vector<'a, f64>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(SEO::VT_SEN_POS, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(SEO::VT_SEN_POS, None)}
   }
+  /// Sensor velocity (km/s, 3 components)
   #[inline]
-  pub fn SEN_VEL(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+  pub fn SEN_VEL(&self) -> Option<flatbuffers::Vector<'a, f64>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(SEO::VT_SEN_VEL, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(SEO::VT_SEN_VEL, None)}
   }
+  /// Measurement type description
   #[inline]
   pub fn MEAS_TYPE(&self) -> Option<&'a str> {
     // Safety:
@@ -392,6 +740,15 @@ impl<'a> SEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SEO::VT_MEAS_TYPE, None)}
   }
+  /// Particle type measured
+  #[inline]
+  pub fn PARTICLE_TYPE(&self) -> seoParticleType {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<seoParticleType>(SEO::VT_PARTICLE_TYPE, Some(seoParticleType::PROTON)).unwrap()}
+  }
+  /// Energy level or range (keV or MeV)
   #[inline]
   pub fn SEN_ENERGY_LEVEL(&self) -> Option<&'a str> {
     // Safety:
@@ -399,6 +756,7 @@ impl<'a> SEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SEO::VT_SEN_ENERGY_LEVEL, None)}
   }
+  /// Observation set identifier
   #[inline]
   pub fn OB_SET_ID(&self) -> Option<&'a str> {
     // Safety:
@@ -406,13 +764,7 @@ impl<'a> SEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SEO::VT_OB_SET_ID, None)}
   }
-  #[inline]
-  pub fn PARTICLE_TYPE(&self) -> Option<&'a str> {
-    // Safety:
-    // Created from valid Table for this object
-    // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SEO::VT_PARTICLE_TYPE, None)}
-  }
+  /// Observation time (ISO 8601)
   #[inline]
   pub fn OB_TIME(&self) -> Option<&'a str> {
     // Safety:
@@ -420,13 +772,31 @@ impl<'a> SEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SEO::VT_OB_TIME, None)}
   }
+  /// Measurement values
   #[inline]
-  pub fn SEO_LIST(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
+  pub fn VALUES(&self) -> Option<flatbuffers::Vector<'a, f64>> {
     // Safety:
     // Created from valid Table for this object
     // which contains a valid value in this slot
-    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(SEO::VT_SEO_LIST, None)}
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(SEO::VT_VALUES, None)}
   }
+  /// Measurement uncertainties
+  #[inline]
+  pub fn UNCERTAINTIES(&self) -> Option<flatbuffers::Vector<'a, f64>> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, f64>>>(SEO::VT_UNCERTAINTIES, None)}
+  }
+  /// Units for measurement values
+  #[inline]
+  pub fn UNITS(&self) -> Option<&'a str> {
+    // Safety:
+    // Created from valid Table for this object
+    // which contains a valid value in this slot
+    unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SEO::VT_UNITS, None)}
+  }
+  /// Data quality indicator
   #[inline]
   pub fn QUALITY(&self) -> Option<&'a str> {
     // Safety:
@@ -434,6 +804,7 @@ impl<'a> SEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SEO::VT_QUALITY, None)}
   }
+  /// Description
   #[inline]
   pub fn DESCRIPTION(&self) -> Option<&'a str> {
     // Safety:
@@ -441,6 +812,7 @@ impl<'a> SEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SEO::VT_DESCRIPTION, None)}
   }
+  /// Event descriptor
   #[inline]
   pub fn DESCRIPTOR(&self) -> Option<&'a str> {
     // Safety:
@@ -448,6 +820,7 @@ impl<'a> SEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<&str>>(SEO::VT_DESCRIPTOR, None)}
   }
+  /// Source types
   #[inline]
   pub fn SRC_TYPS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -455,6 +828,7 @@ impl<'a> SEO<'a> {
     // which contains a valid value in this slot
     unsafe { self._tab.get::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>(SEO::VT_SRC_TYPS, None)}
   }
+  /// Source identifiers
   #[inline]
   pub fn SRC_IDS(&self) -> Option<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>> {
     // Safety:
@@ -475,15 +849,15 @@ impl flatbuffers::Verifiable for SEO<'_> {
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MSG_TYPE", Self::VT_MSG_TYPE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("GEN_SYSTEM", Self::VT_GEN_SYSTEM, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("EXTERNAL_ID", Self::VT_EXTERNAL_ID, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DATA_TYPE", Self::VT_DATA_TYPE, false)?
+     .visit_field::<seoDataType>("DATA_TYPE", Self::VT_DATA_TYPE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("GEN_TIME", Self::VT_GEN_TIME, false)?
      .visit_field::<bool>("FORECAST", Self::VT_FORECAST, false)?
      .visit_field::<bool>("DERIVED", Self::VT_DERIVED, false)?
-     .visit_field::<i32>("SAT_NO", Self::VT_SAT_NO, false)?
+     .visit_field::<u32>("SAT_NO", Self::VT_SAT_NO, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_OBJECT_ID", Self::VT_ORIG_OBJECT_ID, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ID_SENSOR", Self::VT_ID_SENSOR, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("ORIG_SENSOR_ID", Self::VT_ORIG_SENSOR_ID, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBSERVATORY_TYPE", Self::VT_OBSERVATORY_TYPE, false)?
+     .visit_field::<seoObservatoryType>("OBSERVATORY_TYPE", Self::VT_OBSERVATORY_TYPE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBSERVATORY_NAME", Self::VT_OBSERVATORY_NAME, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OBSERVATORY_NOTES", Self::VT_OBSERVATORY_NOTES, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("INSTRUMENT_TYPE", Self::VT_INSTRUMENT_TYPE, false)?
@@ -491,14 +865,16 @@ impl flatbuffers::Verifiable for SEO<'_> {
      .visit_field::<f64>("LON", Self::VT_LON, false)?
      .visit_field::<f64>("ALT", Self::VT_ALT, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SEN_REFERENCE_FRAME", Self::VT_SEN_REFERENCE_FRAME, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("SEN_POS", Self::VT_SEN_POS, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("SEN_VEL", Self::VT_SEN_VEL, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("SEN_POS", Self::VT_SEN_POS, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("SEN_VEL", Self::VT_SEN_VEL, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("MEAS_TYPE", Self::VT_MEAS_TYPE, false)?
+     .visit_field::<seoParticleType>("PARTICLE_TYPE", Self::VT_PARTICLE_TYPE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("SEN_ENERGY_LEVEL", Self::VT_SEN_ENERGY_LEVEL, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OB_SET_ID", Self::VT_OB_SET_ID, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("PARTICLE_TYPE", Self::VT_PARTICLE_TYPE, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("OB_TIME", Self::VT_OB_TIME, false)?
-     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, flatbuffers::ForwardsUOffset<&'_ str>>>>("SEO_LIST", Self::VT_SEO_LIST, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("VALUES", Self::VT_VALUES, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<flatbuffers::Vector<'_, f64>>>("UNCERTAINTIES", Self::VT_UNCERTAINTIES, false)?
+     .visit_field::<flatbuffers::ForwardsUOffset<&str>>("UNITS", Self::VT_UNITS, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("QUALITY", Self::VT_QUALITY, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DESCRIPTION", Self::VT_DESCRIPTION, false)?
      .visit_field::<flatbuffers::ForwardsUOffset<&str>>("DESCRIPTOR", Self::VT_DESCRIPTOR, false)?
@@ -513,15 +889,15 @@ pub struct SEOArgs<'a> {
     pub MSG_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub GEN_SYSTEM: Option<flatbuffers::WIPOffset<&'a str>>,
     pub EXTERNAL_ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub DATA_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub DATA_TYPE: seoDataType,
     pub GEN_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub FORECAST: bool,
     pub DERIVED: bool,
-    pub SAT_NO: i32,
+    pub SAT_NO: u32,
     pub ORIG_OBJECT_ID: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ID_SENSOR: Option<flatbuffers::WIPOffset<&'a str>>,
     pub ORIG_SENSOR_ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub OBSERVATORY_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub OBSERVATORY_TYPE: seoObservatoryType,
     pub OBSERVATORY_NAME: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OBSERVATORY_NOTES: Option<flatbuffers::WIPOffset<&'a str>>,
     pub INSTRUMENT_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -529,14 +905,16 @@ pub struct SEOArgs<'a> {
     pub LON: f64,
     pub ALT: f64,
     pub SEN_REFERENCE_FRAME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SEN_POS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
-    pub SEN_VEL: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub SEN_POS: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub SEN_VEL: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
     pub MEAS_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
+    pub PARTICLE_TYPE: seoParticleType,
     pub SEN_ENERGY_LEVEL: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OB_SET_ID: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub PARTICLE_TYPE: Option<flatbuffers::WIPOffset<&'a str>>,
     pub OB_TIME: Option<flatbuffers::WIPOffset<&'a str>>,
-    pub SEO_LIST: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, flatbuffers::ForwardsUOffset<&'a str>>>>,
+    pub VALUES: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub UNCERTAINTIES: Option<flatbuffers::WIPOffset<flatbuffers::Vector<'a, f64>>>,
+    pub UNITS: Option<flatbuffers::WIPOffset<&'a str>>,
     pub QUALITY: Option<flatbuffers::WIPOffset<&'a str>>,
     pub DESCRIPTION: Option<flatbuffers::WIPOffset<&'a str>>,
     pub DESCRIPTOR: Option<flatbuffers::WIPOffset<&'a str>>,
@@ -551,7 +929,7 @@ impl<'a> Default for SEOArgs<'a> {
       MSG_TYPE: None,
       GEN_SYSTEM: None,
       EXTERNAL_ID: None,
-      DATA_TYPE: None,
+      DATA_TYPE: seoDataType::PARTICLE_COUNT,
       GEN_TIME: None,
       FORECAST: false,
       DERIVED: false,
@@ -559,7 +937,7 @@ impl<'a> Default for SEOArgs<'a> {
       ORIG_OBJECT_ID: None,
       ID_SENSOR: None,
       ORIG_SENSOR_ID: None,
-      OBSERVATORY_TYPE: None,
+      OBSERVATORY_TYPE: seoObservatoryType::GROUND,
       OBSERVATORY_NAME: None,
       OBSERVATORY_NOTES: None,
       INSTRUMENT_TYPE: None,
@@ -570,11 +948,13 @@ impl<'a> Default for SEOArgs<'a> {
       SEN_POS: None,
       SEN_VEL: None,
       MEAS_TYPE: None,
+      PARTICLE_TYPE: seoParticleType::PROTON,
       SEN_ENERGY_LEVEL: None,
       OB_SET_ID: None,
-      PARTICLE_TYPE: None,
       OB_TIME: None,
-      SEO_LIST: None,
+      VALUES: None,
+      UNCERTAINTIES: None,
+      UNITS: None,
       QUALITY: None,
       DESCRIPTION: None,
       DESCRIPTOR: None,
@@ -606,8 +986,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SEOBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SEO::VT_EXTERNAL_ID, EXTERNAL_ID);
   }
   #[inline]
-  pub fn add_DATA_TYPE(&mut self, DATA_TYPE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SEO::VT_DATA_TYPE, DATA_TYPE);
+  pub fn add_DATA_TYPE(&mut self, DATA_TYPE: seoDataType) {
+    self.fbb_.push_slot::<seoDataType>(SEO::VT_DATA_TYPE, DATA_TYPE, seoDataType::PARTICLE_COUNT);
   }
   #[inline]
   pub fn add_GEN_TIME(&mut self, GEN_TIME: flatbuffers::WIPOffset<&'b  str>) {
@@ -622,8 +1002,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SEOBuilder<'a, 'b, A> {
     self.fbb_.push_slot::<bool>(SEO::VT_DERIVED, DERIVED, false);
   }
   #[inline]
-  pub fn add_SAT_NO(&mut self, SAT_NO: i32) {
-    self.fbb_.push_slot::<i32>(SEO::VT_SAT_NO, SAT_NO, 0);
+  pub fn add_SAT_NO(&mut self, SAT_NO: u32) {
+    self.fbb_.push_slot::<u32>(SEO::VT_SAT_NO, SAT_NO, 0);
   }
   #[inline]
   pub fn add_ORIG_OBJECT_ID(&mut self, ORIG_OBJECT_ID: flatbuffers::WIPOffset<&'b  str>) {
@@ -638,8 +1018,8 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SEOBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SEO::VT_ORIG_SENSOR_ID, ORIG_SENSOR_ID);
   }
   #[inline]
-  pub fn add_OBSERVATORY_TYPE(&mut self, OBSERVATORY_TYPE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SEO::VT_OBSERVATORY_TYPE, OBSERVATORY_TYPE);
+  pub fn add_OBSERVATORY_TYPE(&mut self, OBSERVATORY_TYPE: seoObservatoryType) {
+    self.fbb_.push_slot::<seoObservatoryType>(SEO::VT_OBSERVATORY_TYPE, OBSERVATORY_TYPE, seoObservatoryType::GROUND);
   }
   #[inline]
   pub fn add_OBSERVATORY_NAME(&mut self, OBSERVATORY_NAME: flatbuffers::WIPOffset<&'b  str>) {
@@ -670,16 +1050,20 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SEOBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SEO::VT_SEN_REFERENCE_FRAME, SEN_REFERENCE_FRAME);
   }
   #[inline]
-  pub fn add_SEN_POS(&mut self, SEN_POS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+  pub fn add_SEN_POS(&mut self, SEN_POS: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SEO::VT_SEN_POS, SEN_POS);
   }
   #[inline]
-  pub fn add_SEN_VEL(&mut self, SEN_VEL: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
+  pub fn add_SEN_VEL(&mut self, SEN_VEL: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SEO::VT_SEN_VEL, SEN_VEL);
   }
   #[inline]
   pub fn add_MEAS_TYPE(&mut self, MEAS_TYPE: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SEO::VT_MEAS_TYPE, MEAS_TYPE);
+  }
+  #[inline]
+  pub fn add_PARTICLE_TYPE(&mut self, PARTICLE_TYPE: seoParticleType) {
+    self.fbb_.push_slot::<seoParticleType>(SEO::VT_PARTICLE_TYPE, PARTICLE_TYPE, seoParticleType::PROTON);
   }
   #[inline]
   pub fn add_SEN_ENERGY_LEVEL(&mut self, SEN_ENERGY_LEVEL: flatbuffers::WIPOffset<&'b  str>) {
@@ -690,16 +1074,20 @@ impl<'a: 'b, 'b, A: flatbuffers::Allocator + 'a> SEOBuilder<'a, 'b, A> {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SEO::VT_OB_SET_ID, OB_SET_ID);
   }
   #[inline]
-  pub fn add_PARTICLE_TYPE(&mut self, PARTICLE_TYPE: flatbuffers::WIPOffset<&'b  str>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SEO::VT_PARTICLE_TYPE, PARTICLE_TYPE);
-  }
-  #[inline]
   pub fn add_OB_TIME(&mut self, OB_TIME: flatbuffers::WIPOffset<&'b  str>) {
     self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SEO::VT_OB_TIME, OB_TIME);
   }
   #[inline]
-  pub fn add_SEO_LIST(&mut self, SEO_LIST: flatbuffers::WIPOffset<flatbuffers::Vector<'b , flatbuffers::ForwardsUOffset<&'b  str>>>) {
-    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SEO::VT_SEO_LIST, SEO_LIST);
+  pub fn add_VALUES(&mut self, VALUES: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SEO::VT_VALUES, VALUES);
+  }
+  #[inline]
+  pub fn add_UNCERTAINTIES(&mut self, UNCERTAINTIES: flatbuffers::WIPOffset<flatbuffers::Vector<'b , f64>>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SEO::VT_UNCERTAINTIES, UNCERTAINTIES);
+  }
+  #[inline]
+  pub fn add_UNITS(&mut self, UNITS: flatbuffers::WIPOffset<&'b  str>) {
+    self.fbb_.push_slot_always::<flatbuffers::WIPOffset<_>>(SEO::VT_UNITS, UNITS);
   }
   #[inline]
   pub fn add_QUALITY(&mut self, QUALITY: flatbuffers::WIPOffset<&'b  str>) {
@@ -762,11 +1150,13 @@ impl core::fmt::Debug for SEO<'_> {
       ds.field("SEN_POS", &self.SEN_POS());
       ds.field("SEN_VEL", &self.SEN_VEL());
       ds.field("MEAS_TYPE", &self.MEAS_TYPE());
+      ds.field("PARTICLE_TYPE", &self.PARTICLE_TYPE());
       ds.field("SEN_ENERGY_LEVEL", &self.SEN_ENERGY_LEVEL());
       ds.field("OB_SET_ID", &self.OB_SET_ID());
-      ds.field("PARTICLE_TYPE", &self.PARTICLE_TYPE());
       ds.field("OB_TIME", &self.OB_TIME());
-      ds.field("SEO_LIST", &self.SEO_LIST());
+      ds.field("VALUES", &self.VALUES());
+      ds.field("UNCERTAINTIES", &self.UNCERTAINTIES());
+      ds.field("UNITS", &self.UNITS());
       ds.field("QUALITY", &self.QUALITY());
       ds.field("DESCRIPTION", &self.DESCRIPTION());
       ds.field("DESCRIPTOR", &self.DESCRIPTOR());
@@ -782,15 +1172,15 @@ pub struct SEOT {
   pub MSG_TYPE: Option<String>,
   pub GEN_SYSTEM: Option<String>,
   pub EXTERNAL_ID: Option<String>,
-  pub DATA_TYPE: Option<String>,
+  pub DATA_TYPE: seoDataType,
   pub GEN_TIME: Option<String>,
   pub FORECAST: bool,
   pub DERIVED: bool,
-  pub SAT_NO: i32,
+  pub SAT_NO: u32,
   pub ORIG_OBJECT_ID: Option<String>,
   pub ID_SENSOR: Option<String>,
   pub ORIG_SENSOR_ID: Option<String>,
-  pub OBSERVATORY_TYPE: Option<String>,
+  pub OBSERVATORY_TYPE: seoObservatoryType,
   pub OBSERVATORY_NAME: Option<String>,
   pub OBSERVATORY_NOTES: Option<String>,
   pub INSTRUMENT_TYPE: Option<String>,
@@ -798,14 +1188,16 @@ pub struct SEOT {
   pub LON: f64,
   pub ALT: f64,
   pub SEN_REFERENCE_FRAME: Option<String>,
-  pub SEN_POS: Option<Vec<String>>,
-  pub SEN_VEL: Option<Vec<String>>,
+  pub SEN_POS: Option<Vec<f64>>,
+  pub SEN_VEL: Option<Vec<f64>>,
   pub MEAS_TYPE: Option<String>,
+  pub PARTICLE_TYPE: seoParticleType,
   pub SEN_ENERGY_LEVEL: Option<String>,
   pub OB_SET_ID: Option<String>,
-  pub PARTICLE_TYPE: Option<String>,
   pub OB_TIME: Option<String>,
-  pub SEO_LIST: Option<Vec<String>>,
+  pub VALUES: Option<Vec<f64>>,
+  pub UNCERTAINTIES: Option<Vec<f64>>,
+  pub UNITS: Option<String>,
   pub QUALITY: Option<String>,
   pub DESCRIPTION: Option<String>,
   pub DESCRIPTOR: Option<String>,
@@ -819,7 +1211,7 @@ impl Default for SEOT {
       MSG_TYPE: None,
       GEN_SYSTEM: None,
       EXTERNAL_ID: None,
-      DATA_TYPE: None,
+      DATA_TYPE: seoDataType::PARTICLE_COUNT,
       GEN_TIME: None,
       FORECAST: false,
       DERIVED: false,
@@ -827,7 +1219,7 @@ impl Default for SEOT {
       ORIG_OBJECT_ID: None,
       ID_SENSOR: None,
       ORIG_SENSOR_ID: None,
-      OBSERVATORY_TYPE: None,
+      OBSERVATORY_TYPE: seoObservatoryType::GROUND,
       OBSERVATORY_NAME: None,
       OBSERVATORY_NOTES: None,
       INSTRUMENT_TYPE: None,
@@ -838,11 +1230,13 @@ impl Default for SEOT {
       SEN_POS: None,
       SEN_VEL: None,
       MEAS_TYPE: None,
+      PARTICLE_TYPE: seoParticleType::PROTON,
       SEN_ENERGY_LEVEL: None,
       OB_SET_ID: None,
-      PARTICLE_TYPE: None,
       OB_TIME: None,
-      SEO_LIST: None,
+      VALUES: None,
+      UNCERTAINTIES: None,
+      UNITS: None,
       QUALITY: None,
       DESCRIPTION: None,
       DESCRIPTOR: None,
@@ -868,9 +1262,7 @@ impl SEOT {
     let EXTERNAL_ID = self.EXTERNAL_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let DATA_TYPE = self.DATA_TYPE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+    let DATA_TYPE = self.DATA_TYPE;
     let GEN_TIME = self.GEN_TIME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -886,9 +1278,7 @@ impl SEOT {
     let ORIG_SENSOR_ID = self.ORIG_SENSOR_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let OBSERVATORY_TYPE = self.OBSERVATORY_TYPE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
+    let OBSERVATORY_TYPE = self.OBSERVATORY_TYPE;
     let OBSERVATORY_NAME = self.OBSERVATORY_NAME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
@@ -905,28 +1295,32 @@ impl SEOT {
       _fbb.create_string(x)
     });
     let SEN_POS = self.SEN_POS.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+      _fbb.create_vector(x)
     });
     let SEN_VEL = self.SEN_VEL.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+      _fbb.create_vector(x)
     });
     let MEAS_TYPE = self.MEAS_TYPE.as_ref().map(|x|{
       _fbb.create_string(x)
     });
+    let PARTICLE_TYPE = self.PARTICLE_TYPE;
     let SEN_ENERGY_LEVEL = self.SEN_ENERGY_LEVEL.as_ref().map(|x|{
       _fbb.create_string(x)
     });
     let OB_SET_ID = self.OB_SET_ID.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let PARTICLE_TYPE = self.PARTICLE_TYPE.as_ref().map(|x|{
-      _fbb.create_string(x)
-    });
     let OB_TIME = self.OB_TIME.as_ref().map(|x|{
       _fbb.create_string(x)
     });
-    let SEO_LIST = self.SEO_LIST.as_ref().map(|x|{
-      let w: Vec<_> = x.iter().map(|s| _fbb.create_string(s)).collect();_fbb.create_vector(&w)
+    let VALUES = self.VALUES.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let UNCERTAINTIES = self.UNCERTAINTIES.as_ref().map(|x|{
+      _fbb.create_vector(x)
+    });
+    let UNITS = self.UNITS.as_ref().map(|x|{
+      _fbb.create_string(x)
     });
     let QUALITY = self.QUALITY.as_ref().map(|x|{
       _fbb.create_string(x)
@@ -967,11 +1361,13 @@ impl SEOT {
       SEN_POS,
       SEN_VEL,
       MEAS_TYPE,
+      PARTICLE_TYPE,
       SEN_ENERGY_LEVEL,
       OB_SET_ID,
-      PARTICLE_TYPE,
       OB_TIME,
-      SEO_LIST,
+      VALUES,
+      UNCERTAINTIES,
+      UNITS,
       QUALITY,
       DESCRIPTION,
       DESCRIPTOR,

@@ -29,6 +29,7 @@ class ACM(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # CCSDS ACM version
     # ACM
     def CCSDS_ACM_VERS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +37,7 @@ class ACM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Message creation date (ISO 8601)
     # ACM
     def CREATION_DATE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -43,6 +45,7 @@ class ACM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Creating organization
     # ACM
     def ORIGINATOR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -50,6 +53,7 @@ class ACM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Object name
     # ACM
     def OBJECT_NAME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
@@ -57,6 +61,7 @@ class ACM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # International designator
     # ACM
     def OBJECT_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -64,8 +69,138 @@ class ACM(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Catalog name
+    # ACM
+    def CATALOG_NAME(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Epoch of state (ISO 8601)
+    # ACM
+    def EPOCH(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Time system
+    # ACM
+    def TIME_SYSTEM(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Attitude states
+    # ACM
+    def ATT_STATES(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from attitudeState import attitudeState
+            obj = attitudeState()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # ACM
+    def ATT_STATESLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # ACM
+    def ATT_STATESIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
+        return o == 0
+
+    # Physical properties
+    # ACM
+    def PHYS_PROPERTIES(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            x = self._tab.Indirect(o + self._tab.Pos)
+            from attPhysicalProperties import attPhysicalProperties
+            obj = attPhysicalProperties()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # Attitude covariance data
+    # ACM
+    def COV_DATA(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from attCovariance import attCovariance
+            obj = attCovariance()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # ACM
+    def COV_DATALength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # ACM
+    def COV_DATAIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
+        return o == 0
+
+    # Attitude maneuvers
+    # ACM
+    def MANEUVERS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from attManeuver import attManeuver
+            obj = attManeuver()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # ACM
+    def MANEUVERSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        if o != 0:
+            return self._tab.VectorLen(o)
+        return 0
+
+    # ACM
+    def MANEUVERSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
+        return o == 0
+
+    # Maneuverability status
+    # ACM
+    def MANEUVERABLE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Additional comments
+    # ACM
+    def COMMENT(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
 def ACMStart(builder):
-    builder.StartObject(5)
+    builder.StartObject(14)
 
 def Start(builder):
     ACMStart(builder)
@@ -100,12 +235,92 @@ def ACMAddOBJECT_ID(builder, OBJECT_ID):
 def AddOBJECT_ID(builder, OBJECT_ID):
     ACMAddOBJECT_ID(builder, OBJECT_ID)
 
+def ACMAddCATALOG_NAME(builder, CATALOG_NAME):
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(CATALOG_NAME), 0)
+
+def AddCATALOG_NAME(builder, CATALOG_NAME):
+    ACMAddCATALOG_NAME(builder, CATALOG_NAME)
+
+def ACMAddEPOCH(builder, EPOCH):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(EPOCH), 0)
+
+def AddEPOCH(builder, EPOCH):
+    ACMAddEPOCH(builder, EPOCH)
+
+def ACMAddTIME_SYSTEM(builder, TIME_SYSTEM):
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(TIME_SYSTEM), 0)
+
+def AddTIME_SYSTEM(builder, TIME_SYSTEM):
+    ACMAddTIME_SYSTEM(builder, TIME_SYSTEM)
+
+def ACMAddATT_STATES(builder, ATT_STATES):
+    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(ATT_STATES), 0)
+
+def AddATT_STATES(builder, ATT_STATES):
+    ACMAddATT_STATES(builder, ATT_STATES)
+
+def ACMStartATT_STATESVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartATT_STATESVector(builder, numElems):
+    return ACMStartATT_STATESVector(builder, numElems)
+
+def ACMAddPHYS_PROPERTIES(builder, PHYS_PROPERTIES):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(PHYS_PROPERTIES), 0)
+
+def AddPHYS_PROPERTIES(builder, PHYS_PROPERTIES):
+    ACMAddPHYS_PROPERTIES(builder, PHYS_PROPERTIES)
+
+def ACMAddCOV_DATA(builder, COV_DATA):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(COV_DATA), 0)
+
+def AddCOV_DATA(builder, COV_DATA):
+    ACMAddCOV_DATA(builder, COV_DATA)
+
+def ACMStartCOV_DATAVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartCOV_DATAVector(builder, numElems):
+    return ACMStartCOV_DATAVector(builder, numElems)
+
+def ACMAddMANEUVERS(builder, MANEUVERS):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(MANEUVERS), 0)
+
+def AddMANEUVERS(builder, MANEUVERS):
+    ACMAddMANEUVERS(builder, MANEUVERS)
+
+def ACMStartMANEUVERSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartMANEUVERSVector(builder, numElems):
+    return ACMStartMANEUVERSVector(builder, numElems)
+
+def ACMAddMANEUVERABLE(builder, MANEUVERABLE):
+    builder.PrependInt8Slot(12, MANEUVERABLE, 0)
+
+def AddMANEUVERABLE(builder, MANEUVERABLE):
+    ACMAddMANEUVERABLE(builder, MANEUVERABLE)
+
+def ACMAddCOMMENT(builder, COMMENT):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(COMMENT), 0)
+
+def AddCOMMENT(builder, COMMENT):
+    ACMAddCOMMENT(builder, COMMENT)
+
 def ACMEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return ACMEnd(builder)
 
+import attCovariance
+import attManeuver
+import attPhysicalProperties
+import attitudeState
+try:
+    from typing import List, Optional
+except:
+    pass
 
 class ACMT(object):
 
@@ -116,6 +331,15 @@ class ACMT(object):
         self.ORIGINATOR = None  # type: str
         self.OBJECT_NAME = None  # type: str
         self.OBJECT_ID = None  # type: str
+        self.CATALOG_NAME = None  # type: str
+        self.EPOCH = None  # type: str
+        self.TIME_SYSTEM = None  # type: str
+        self.ATT_STATES = None  # type: List[attitudeState.attitudeStateT]
+        self.PHYS_PROPERTIES = None  # type: Optional[attPhysicalProperties.attPhysicalPropertiesT]
+        self.COV_DATA = None  # type: List[attCovariance.attCovarianceT]
+        self.MANEUVERS = None  # type: List[attManeuver.attManeuverT]
+        self.MANEUVERABLE = 0  # type: int
+        self.COMMENT = None  # type: str
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -143,6 +367,37 @@ class ACMT(object):
         self.ORIGINATOR = ACM.ORIGINATOR()
         self.OBJECT_NAME = ACM.OBJECT_NAME()
         self.OBJECT_ID = ACM.OBJECT_ID()
+        self.CATALOG_NAME = ACM.CATALOG_NAME()
+        self.EPOCH = ACM.EPOCH()
+        self.TIME_SYSTEM = ACM.TIME_SYSTEM()
+        if not ACM.ATT_STATESIsNone():
+            self.ATT_STATES = []
+            for i in range(ACM.ATT_STATESLength()):
+                if ACM.ATT_STATES(i) is None:
+                    self.ATT_STATES.append(None)
+                else:
+                    attitudeState_ = attitudeState.attitudeStateT.InitFromObj(ACM.ATT_STATES(i))
+                    self.ATT_STATES.append(attitudeState_)
+        if ACM.PHYS_PROPERTIES() is not None:
+            self.PHYS_PROPERTIES = attPhysicalProperties.attPhysicalPropertiesT.InitFromObj(ACM.PHYS_PROPERTIES())
+        if not ACM.COV_DATAIsNone():
+            self.COV_DATA = []
+            for i in range(ACM.COV_DATALength()):
+                if ACM.COV_DATA(i) is None:
+                    self.COV_DATA.append(None)
+                else:
+                    attCovariance_ = attCovariance.attCovarianceT.InitFromObj(ACM.COV_DATA(i))
+                    self.COV_DATA.append(attCovariance_)
+        if not ACM.MANEUVERSIsNone():
+            self.MANEUVERS = []
+            for i in range(ACM.MANEUVERSLength()):
+                if ACM.MANEUVERS(i) is None:
+                    self.MANEUVERS.append(None)
+                else:
+                    attManeuver_ = attManeuver.attManeuverT.InitFromObj(ACM.MANEUVERS(i))
+                    self.MANEUVERS.append(attManeuver_)
+        self.MANEUVERABLE = ACM.MANEUVERABLE()
+        self.COMMENT = ACM.COMMENT()
 
     # ACMT
     def Pack(self, builder):
@@ -156,6 +411,40 @@ class ACMT(object):
             OBJECT_NAME = builder.CreateString(self.OBJECT_NAME)
         if self.OBJECT_ID is not None:
             OBJECT_ID = builder.CreateString(self.OBJECT_ID)
+        if self.CATALOG_NAME is not None:
+            CATALOG_NAME = builder.CreateString(self.CATALOG_NAME)
+        if self.EPOCH is not None:
+            EPOCH = builder.CreateString(self.EPOCH)
+        if self.TIME_SYSTEM is not None:
+            TIME_SYSTEM = builder.CreateString(self.TIME_SYSTEM)
+        if self.ATT_STATES is not None:
+            ATT_STATESlist = []
+            for i in range(len(self.ATT_STATES)):
+                ATT_STATESlist.append(self.ATT_STATES[i].Pack(builder))
+            ACMStartATT_STATESVector(builder, len(self.ATT_STATES))
+            for i in reversed(range(len(self.ATT_STATES))):
+                builder.PrependUOffsetTRelative(ATT_STATESlist[i])
+            ATT_STATES = builder.EndVector()
+        if self.PHYS_PROPERTIES is not None:
+            PHYS_PROPERTIES = self.PHYS_PROPERTIES.Pack(builder)
+        if self.COV_DATA is not None:
+            COV_DATAlist = []
+            for i in range(len(self.COV_DATA)):
+                COV_DATAlist.append(self.COV_DATA[i].Pack(builder))
+            ACMStartCOV_DATAVector(builder, len(self.COV_DATA))
+            for i in reversed(range(len(self.COV_DATA))):
+                builder.PrependUOffsetTRelative(COV_DATAlist[i])
+            COV_DATA = builder.EndVector()
+        if self.MANEUVERS is not None:
+            MANEUVERSlist = []
+            for i in range(len(self.MANEUVERS)):
+                MANEUVERSlist.append(self.MANEUVERS[i].Pack(builder))
+            ACMStartMANEUVERSVector(builder, len(self.MANEUVERS))
+            for i in reversed(range(len(self.MANEUVERS))):
+                builder.PrependUOffsetTRelative(MANEUVERSlist[i])
+            MANEUVERS = builder.EndVector()
+        if self.COMMENT is not None:
+            COMMENT = builder.CreateString(self.COMMENT)
         ACMStart(builder)
         if self.CCSDS_ACM_VERS is not None:
             ACMAddCCSDS_ACM_VERS(builder, CCSDS_ACM_VERS)
@@ -167,5 +456,22 @@ class ACMT(object):
             ACMAddOBJECT_NAME(builder, OBJECT_NAME)
         if self.OBJECT_ID is not None:
             ACMAddOBJECT_ID(builder, OBJECT_ID)
+        if self.CATALOG_NAME is not None:
+            ACMAddCATALOG_NAME(builder, CATALOG_NAME)
+        if self.EPOCH is not None:
+            ACMAddEPOCH(builder, EPOCH)
+        if self.TIME_SYSTEM is not None:
+            ACMAddTIME_SYSTEM(builder, TIME_SYSTEM)
+        if self.ATT_STATES is not None:
+            ACMAddATT_STATES(builder, ATT_STATES)
+        if self.PHYS_PROPERTIES is not None:
+            ACMAddPHYS_PROPERTIES(builder, PHYS_PROPERTIES)
+        if self.COV_DATA is not None:
+            ACMAddCOV_DATA(builder, COV_DATA)
+        if self.MANEUVERS is not None:
+            ACMAddMANEUVERS(builder, MANEUVERS)
+        ACMAddMANEUVERABLE(builder, self.MANEUVERABLE)
+        if self.COMMENT is not None:
+            ACMAddCOMMENT(builder, COMMENT)
         ACM = ACMEnd(builder)
         return ACM

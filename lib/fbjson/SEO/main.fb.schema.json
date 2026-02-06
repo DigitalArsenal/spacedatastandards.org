@@ -1,143 +1,377 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "seoDataType": {
+      "type": "string",
+      "enum": [
+        "PARTICLE_COUNT",
+        "MAGNETIC_FIELD",
+        "RADIATION_DOSE",
+        "PLASMA_DENSITY",
+        "ENERGETIC_PARTICLE",
+        "SOLAR_WIND",
+        "CHARGING",
+        "UNKNOWN"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "PARTICLE_COUNT": {
+          "value": 0
+        },
+        "MAGNETIC_FIELD": {
+          "value": 1
+        },
+        "RADIATION_DOSE": {
+          "value": 2
+        },
+        "PLASMA_DENSITY": {
+          "value": 3
+        },
+        "ENERGETIC_PARTICLE": {
+          "value": 4
+        },
+        "SOLAR_WIND": {
+          "value": 5
+        },
+        "CHARGING": {
+          "value": 6
+        },
+        "UNKNOWN": {
+          "value": 7
+        }
+      }
+    },
+    "seoParticleType": {
+      "type": "string",
+      "enum": [
+        "PROTON",
+        "ELECTRON",
+        "ALPHA",
+        "HEAVY_ION",
+        "NEUTRON",
+        "COSMIC_RAY",
+        "MIXED"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "PROTON": {
+          "value": 0
+        },
+        "ELECTRON": {
+          "value": 1
+        },
+        "ALPHA": {
+          "value": 2
+        },
+        "HEAVY_ION": {
+          "value": 3
+        },
+        "NEUTRON": {
+          "value": 4
+        },
+        "COSMIC_RAY": {
+          "value": 5
+        },
+        "MIXED": {
+          "value": 6
+        }
+      }
+    },
+    "seoObservatoryType": {
+      "type": "string",
+      "enum": [
+        "GROUND",
+        "LEO",
+        "GEO",
+        "L1",
+        "L2",
+        "INTERPLANETARY",
+        "SOLAR"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "GROUND": {
+          "value": 0
+        },
+        "LEO": {
+          "value": 1
+        },
+        "GEO": {
+          "value": 2
+        },
+        "L1": {
+          "value": 3
+        },
+        "L2": {
+          "value": 4
+        },
+        "INTERPLANETARY": {
+          "value": 5
+        },
+        "SOLAR": {
+          "value": 6
+        }
+      }
+    },
     "SEO": {
       "type": "object",
       "description": "Space Environment Observation",
       "properties": {
         "ID": {
           "type": "string",
+          "description": "Unique identifier",
           "x-flatbuffer-type": "string"
         },
         "MSG_TYPE": {
           "type": "string",
+          "description": "Message type code",
           "x-flatbuffer-type": "string"
         },
         "GEN_SYSTEM": {
           "type": "string",
+          "description": "Generating system",
           "x-flatbuffer-type": "string"
         },
         "EXTERNAL_ID": {
           "type": "string",
+          "description": "External reference identifier",
           "x-flatbuffer-type": "string"
         },
         "DATA_TYPE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
+          "$ref": "#/definitions/seoDataType",
+          "description": "Type of environmental data",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "PARTICLE_COUNT": {
+              "value": 0
+            },
+            "MAGNETIC_FIELD": {
+              "value": 1
+            },
+            "RADIATION_DOSE": {
+              "value": 2
+            },
+            "PLASMA_DENSITY": {
+              "value": 3
+            },
+            "ENERGETIC_PARTICLE": {
+              "value": 4
+            },
+            "SOLAR_WIND": {
+              "value": 5
+            },
+            "CHARGING": {
+              "value": 6
+            },
+            "UNKNOWN": {
+              "value": 7
+            }
+          }
         },
         "GEN_TIME": {
           "type": "string",
+          "description": "Generation time (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
         "FORECAST": {
           "type": "boolean",
+          "description": "True if this is a forecast",
           "x-flatbuffer-type": "bool"
         },
         "DERIVED": {
           "type": "boolean",
+          "description": "True if derived from other measurements",
           "x-flatbuffer-type": "bool"
         },
         "SAT_NO": {
           "type": "integer",
-          "minimum": -2147483648,
-          "maximum": 2147483647,
-          "x-flatbuffer-type": "int"
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Satellite catalog number (if space-based)",
+          "x-flatbuffer-type": "uint32"
         },
         "ORIG_OBJECT_ID": {
           "type": "string",
+          "description": "International designator",
           "x-flatbuffer-type": "string"
         },
         "ID_SENSOR": {
           "type": "string",
+          "description": "Sensor identifier",
           "x-flatbuffer-type": "string"
         },
         "ORIG_SENSOR_ID": {
           "type": "string",
+          "description": "Original sensor identifier",
           "x-flatbuffer-type": "string"
         },
         "OBSERVATORY_TYPE": {
-          "type": "string",
-          "x-flatbuffer-type": "string"
+          "$ref": "#/definitions/seoObservatoryType",
+          "description": "Observatory type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "GROUND": {
+              "value": 0
+            },
+            "LEO": {
+              "value": 1
+            },
+            "GEO": {
+              "value": 2
+            },
+            "L1": {
+              "value": 3
+            },
+            "L2": {
+              "value": 4
+            },
+            "INTERPLANETARY": {
+              "value": 5
+            },
+            "SOLAR": {
+              "value": 6
+            }
+          }
         },
         "OBSERVATORY_NAME": {
           "type": "string",
+          "description": "Observatory name",
           "x-flatbuffer-type": "string"
         },
         "OBSERVATORY_NOTES": {
           "type": "string",
+          "description": "Observatory notes",
           "x-flatbuffer-type": "string"
         },
         "INSTRUMENT_TYPE": {
           "type": "string",
+          "description": "Instrument type description",
           "x-flatbuffer-type": "string"
         },
         "LAT": {
           "type": "number",
+          "description": "Observatory latitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "LON": {
           "type": "number",
+          "description": "Observatory longitude (degrees)",
           "x-flatbuffer-type": "double"
         },
         "ALT": {
           "type": "number",
+          "description": "Observatory altitude (km)",
           "x-flatbuffer-type": "double"
         },
         "SEN_REFERENCE_FRAME": {
           "type": "string",
+          "description": "Sensor reference frame",
           "x-flatbuffer-type": "string"
         },
         "SEN_POS": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "number"
           },
-          "x-flatbuffer-type": "[string]"
+          "description": "Sensor position (km, 3 components)",
+          "x-flatbuffer-type": "[double]"
         },
         "SEN_VEL": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "number"
           },
-          "x-flatbuffer-type": "[string]"
+          "description": "Sensor velocity (km/s, 3 components)",
+          "x-flatbuffer-type": "[double]"
         },
         "MEAS_TYPE": {
           "type": "string",
+          "description": "Measurement type description",
           "x-flatbuffer-type": "string"
+        },
+        "PARTICLE_TYPE": {
+          "$ref": "#/definitions/seoParticleType",
+          "description": "Particle type measured",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "PROTON": {
+              "value": 0
+            },
+            "ELECTRON": {
+              "value": 1
+            },
+            "ALPHA": {
+              "value": 2
+            },
+            "HEAVY_ION": {
+              "value": 3
+            },
+            "NEUTRON": {
+              "value": 4
+            },
+            "COSMIC_RAY": {
+              "value": 5
+            },
+            "MIXED": {
+              "value": 6
+            }
+          }
         },
         "SEN_ENERGY_LEVEL": {
           "type": "string",
+          "description": "Energy level or range (keV or MeV)",
           "x-flatbuffer-type": "string"
         },
         "OB_SET_ID": {
           "type": "string",
-          "x-flatbuffer-type": "string"
-        },
-        "PARTICLE_TYPE": {
-          "type": "string",
+          "description": "Observation set identifier",
           "x-flatbuffer-type": "string"
         },
         "OB_TIME": {
           "type": "string",
+          "description": "Observation time (ISO 8601)",
           "x-flatbuffer-type": "string"
         },
-        "SEO_LIST": {
+        "VALUES": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "number"
           },
-          "x-flatbuffer-type": "[string]"
+          "description": "Measurement values",
+          "x-flatbuffer-type": "[double]"
+        },
+        "UNCERTAINTIES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Measurement uncertainties",
+          "x-flatbuffer-type": "[double]"
+        },
+        "UNITS": {
+          "type": "string",
+          "description": "Units for measurement values",
+          "x-flatbuffer-type": "string"
         },
         "QUALITY": {
           "type": "string",
+          "description": "Data quality indicator",
           "x-flatbuffer-type": "string"
         },
         "DESCRIPTION": {
           "type": "string",
+          "description": "Description",
           "x-flatbuffer-type": "string"
         },
         "DESCRIPTOR": {
           "type": "string",
+          "description": "Event descriptor",
           "x-flatbuffer-type": "string"
         },
         "SRC_TYPS": {
@@ -145,6 +379,7 @@
           "items": {
             "type": "string"
           },
+          "description": "Source types",
           "x-flatbuffer-type": "[string]"
         },
         "SRC_IDS": {
@@ -152,6 +387,7 @@
           "items": {
             "type": "string"
           },
+          "description": "Source identifiers",
           "x-flatbuffer-type": "[string]"
         }
       },

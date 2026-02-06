@@ -29,6 +29,9 @@ class SAR : Table() {
         __init(_i, _bb)
         return this
     }
+    /**
+     * Unique identifier
+     */
     val ID : String?
         get() {
             val o = __offset(4)
@@ -40,11 +43,17 @@ class SAR : Table() {
         }
     val IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(4, 1)
     fun IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 4, 1)
-    val SAT_NO : Int
+    /**
+     * Satellite catalog number (of SAR platform)
+     */
+    val SAT_NO : UInt
         get() {
             val o = __offset(6)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.getInt(o + bb_pos).toUInt() else 0u
         }
+    /**
+     * International designator
+     */
     val ORIG_OBJECT_ID : String?
         get() {
             val o = __offset(8)
@@ -56,7 +65,10 @@ class SAR : Table() {
         }
     val ORIG_OBJECT_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(8, 1)
     fun ORIG_OBJECT_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 8, 1)
-    val ID_SENSOR : String?
+    /**
+     * On-orbit reference
+     */
+    val ON_ORBIT : String?
         get() {
             val o = __offset(10)
             return if (o != 0) {
@@ -65,9 +77,12 @@ class SAR : Table() {
                 null
             }
         }
-    val ID_SENSORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
-    fun ID_SENSORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
-    val ORIG_SENSOR_ID : String?
+    val ON_ORBITAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(10, 1)
+    fun ON_ORBITInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 10, 1)
+    /**
+     * Sensor identifier
+     */
+    val ID_SENSOR : String?
         get() {
             val o = __offset(12)
             return if (o != 0) {
@@ -76,9 +91,12 @@ class SAR : Table() {
                 null
             }
         }
-    val ORIG_SENSOR_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
-    fun ORIG_SENSOR_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
-    val EXTERNAL_ID : String?
+    val ID_SENSORAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(12, 1)
+    fun ID_SENSORInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 12, 1)
+    /**
+     * Original sensor identifier
+     */
+    val ORIG_SENSOR_ID : String?
         get() {
             val o = __offset(14)
             return if (o != 0) {
@@ -87,9 +105,12 @@ class SAR : Table() {
                 null
             }
         }
-    val EXTERNAL_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
-    fun EXTERNAL_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
-    val COLLECTION_ID : String?
+    val ORIG_SENSOR_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(14, 1)
+    fun ORIG_SENSOR_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 14, 1)
+    /**
+     * External reference identifier
+     */
+    val EXTERNAL_ID : String?
         get() {
             val o = __offset(16)
             return if (o != 0) {
@@ -98,9 +119,12 @@ class SAR : Table() {
                 null
             }
         }
-    val COLLECTION_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
-    fun COLLECTION_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
-    val DETECTION_ID : String?
+    val EXTERNAL_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(16, 1)
+    fun EXTERNAL_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 16, 1)
+    /**
+     * Collection identifier
+     */
+    val COLLECTION_ID : String?
         get() {
             val o = __offset(18)
             return if (o != 0) {
@@ -109,9 +133,12 @@ class SAR : Table() {
                 null
             }
         }
-    val DETECTION_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
-    fun DETECTION_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
-    val COLLECTION_START : String?
+    val COLLECTION_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(18, 1)
+    fun COLLECTION_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 18, 1)
+    /**
+     * Detection identifier
+     */
+    val DETECTION_ID : String?
         get() {
             val o = __offset(20)
             return if (o != 0) {
@@ -120,9 +147,12 @@ class SAR : Table() {
                 null
             }
         }
-    val COLLECTION_STARTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
-    fun COLLECTION_STARTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
-    val COLLECTION_END : String?
+    val DETECTION_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(20, 1)
+    fun DETECTION_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 20, 1)
+    /**
+     * Collection start time (ISO 8601)
+     */
+    val COLLECTION_START : String?
         get() {
             val o = __offset(22)
             return if (o != 0) {
@@ -131,9 +161,12 @@ class SAR : Table() {
                 null
             }
         }
-    val COLLECTION_ENDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
-    fun COLLECTION_ENDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
-    val CENTER_TIME : String?
+    val COLLECTION_STARTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(22, 1)
+    fun COLLECTION_STARTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 22, 1)
+    /**
+     * Collection end time (ISO 8601)
+     */
+    val COLLECTION_END : String?
         get() {
             val o = __offset(24)
             return if (o != 0) {
@@ -142,9 +175,12 @@ class SAR : Table() {
                 null
             }
         }
-    val CENTER_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
-    fun CENTER_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
-    val DETECTION_START : String?
+    val COLLECTION_ENDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(24, 1)
+    fun COLLECTION_ENDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 24, 1)
+    /**
+     * Center time of observation (ISO 8601)
+     */
+    val CENTER_TIME : String?
         get() {
             val o = __offset(26)
             return if (o != 0) {
@@ -153,9 +189,12 @@ class SAR : Table() {
                 null
             }
         }
-    val DETECTION_STARTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
-    fun DETECTION_STARTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
-    val DETECTION_END : String?
+    val CENTER_TIMEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(26, 1)
+    fun CENTER_TIMEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 26, 1)
+    /**
+     * Detection start time (ISO 8601)
+     */
+    val DETECTION_START : String?
         get() {
             val o = __offset(28)
             return if (o != 0) {
@@ -164,25 +203,34 @@ class SAR : Table() {
                 null
             }
         }
-    val DETECTION_ENDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
-    fun DETECTION_ENDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
-    val DWELL_TIME : Double
+    val DETECTION_STARTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(28, 1)
+    fun DETECTION_STARTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 28, 1)
+    /**
+     * Detection end time (ISO 8601)
+     */
+    val DETECTION_END : String?
         get() {
             val o = __offset(30)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val ORBIT_STATE : String?
-        get() {
-            val o = __offset(32)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val ORBIT_STATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(32, 1)
-    fun ORBIT_STATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 32, 1)
-    val SAR_MODE : String?
+    val DETECTION_ENDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(30, 1)
+    fun DETECTION_ENDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 30, 1)
+    /**
+     * Integration/dwell time (seconds)
+     */
+    val DWELL_TIME : Double
+        get() {
+            val o = __offset(32)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Orbit state description
+     */
+    val ORBIT_STATE : String?
         get() {
             val o = __offset(34)
             return if (o != 0) {
@@ -191,113 +239,146 @@ class SAR : Table() {
                 null
             }
         }
-    val SAR_MODEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
-    fun SAR_MODEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
-    val OPERATING_BAND : String?
+    val ORBIT_STATEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(34, 1)
+    fun ORBIT_STATEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 34, 1)
+    /**
+     * SAR imaging mode
+     */
+    val SAR_MODE : Byte
         get() {
             val o = __offset(36)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Operating RF band (e.g., X, C, L, S, P)
+     */
+    val OPERATING_BAND : String?
+        get() {
+            val o = __offset(38)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val OPERATING_BANDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(36, 1)
-    fun OPERATING_BANDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 36, 1)
+    val OPERATING_BANDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(38, 1)
+    fun OPERATING_BANDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 38, 1)
+    /**
+     * Operating frequency (GHz)
+     */
     val OPERATING_FREQ : Double
-        get() {
-            val o = __offset(38)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val SNR : Double
         get() {
             val o = __offset(40)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val TX_POLARIZATION : String?
+    /**
+     * Signal-to-noise ratio (dB)
+     */
+    val SNR : Double
         get() {
             val o = __offset(42)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val TX_POLARIZATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(42, 1)
-    fun TX_POLARIZATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 42, 1)
-    val RX_POLARIZATION : String?
-        get() {
-            val o = __offset(44)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val RX_POLARIZATIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(44, 1)
-    fun RX_POLARIZATIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 44, 1)
-    val GRAZE_ANGLE : Double
-        get() {
-            val o = __offset(46)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val INCIDENCE_ANGLE : Double
+    /**
+     * Transmit polarization
+     */
+    val TX_POLARIZATION : Byte
+        get() {
+            val o = __offset(44)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Receive polarization
+     */
+    val RX_POLARIZATION : Byte
+        get() {
+            val o = __offset(46)
+            return if(o != 0) bb.get(o + bb_pos) else 0
+        }
+    /**
+     * Grazing angle (degrees)
+     */
+    val GRAZE_ANGLE : Double
         get() {
             val o = __offset(48)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SQUINT_ANGLE : Double
+    /**
+     * Incidence angle (degrees)
+     */
+    val INCIDENCE_ANGLE : Double
         get() {
             val o = __offset(50)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val PULSE_BANDWIDTH : Double
+    /**
+     * Squint angle (degrees)
+     */
+    val SQUINT_ANGLE : Double
         get() {
             val o = __offset(52)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val PULSE_DURATION : Double
+    /**
+     * Pulse bandwidth (MHz)
+     */
+    val PULSE_BANDWIDTH : Double
         get() {
             val o = __offset(54)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val CONTINUOUS_SPOT_ANGLE : Double
+    /**
+     * Pulse duration (microseconds)
+     */
+    val PULSE_DURATION : Double
         get() {
             val o = __offset(56)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SLANT_RANGE : Double
+    /**
+     * Continuous spot angle (degrees)
+     */
+    val CONTINUOUS_SPOT_ANGLE : Double
         get() {
             val o = __offset(58)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val NEAR_RANGE : Double
+    /**
+     * Slant range to target (km)
+     */
+    val SLANT_RANGE : Double
         get() {
             val o = __offset(60)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val FAR_RANGE : Double
+    /**
+     * Near range (km)
+     */
+    val NEAR_RANGE : Double
         get() {
             val o = __offset(62)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SWATH_LENGTH : Double
+    /**
+     * Far range (km)
+     */
+    val FAR_RANGE : Double
         get() {
             val o = __offset(64)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val AREA : String?
+    /**
+     * Swath length (km)
+     */
+    val SWATH_LENGTH : Double
         get() {
             val o = __offset(66)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val AREAAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(66, 1)
-    fun AREAInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 66, 1)
-    val ATEXT : String?
+    /**
+     * Image area GeoJSON
+     */
+    val AGJSON : String?
         get() {
             val o = __offset(68)
             return if (o != 0) {
@@ -306,9 +387,12 @@ class SAR : Table() {
                 null
             }
         }
-    val ATEXTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(68, 1)
-    fun ATEXTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 68, 1)
-    val AGJSON : String?
+    val AGJSONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(68, 1)
+    fun AGJSONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 68, 1)
+    /**
+     * Image area text description
+     */
+    val ATEXT : String?
         get() {
             val o = __offset(70)
             return if (o != 0) {
@@ -317,8 +401,11 @@ class SAR : Table() {
                 null
             }
         }
-    val AGJSONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(70, 1)
-    fun AGJSONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 70, 1)
+    val ATEXTAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(70, 1)
+    fun ATEXTInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 70, 1)
+    /**
+     * Area type
+     */
     val ATYPE : String?
         get() {
             val o = __offset(72)
@@ -330,136 +417,189 @@ class SAR : Table() {
         }
     val ATYPEAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(72, 1)
     fun ATYPEInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 72, 1)
-    val ANDIMS : Int
+    /**
+     * Coordinate system
+     */
+    val COORD_SYS : String?
         get() {
             val o = __offset(74)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if (o != 0) {
+                __string(o + bb_pos)
+            } else {
+                null
+            }
         }
-    val ASRID : Int
+    val COORD_SYSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(74, 1)
+    fun COORD_SYSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 74, 1)
+    /**
+     * Range pixel spacing (meters)
+     */
+    val SPACING_RANGE : Double
         get() {
             val o = __offset(76)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SPACING_RANGE : Double
+    /**
+     * Azimuth pixel spacing (meters)
+     */
+    val SPACING_AZIMUTH : Double
         get() {
             val o = __offset(78)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SPACING_AZIMUTH : Double
+    /**
+     * Number of azimuth looks
+     */
+    val LOOKS_AZIMUTH : UByte
         get() {
             val o = __offset(80)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val LOOKS_AZIMUTH : Int
+    /**
+     * Number of range looks
+     */
+    val LOOKS_RANGE : UByte
         get() {
             val o = __offset(82)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.get(o + bb_pos).toUByte() else 0u
         }
-    val LOOKS_RANGE : Int
+    /**
+     * Range resolution (meters)
+     */
+    val RESOLUTION_RANGE : Double
         get() {
             val o = __offset(84)
-            return if(o != 0) bb.getInt(o + bb_pos) else 0
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val RESOLUTION_RANGE : Double
+    /**
+     * Azimuth resolution (meters)
+     */
+    val RESOLUTION_AZIMUTH : Double
         get() {
             val o = __offset(86)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val RESOLUTION_AZIMUTH : Double
-        get() {
-            val o = __offset(88)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
+    /**
+     * Observation direction (ASCENDING/DESCENDING)
+     */
     val OB_DIRECTION : String?
         get() {
-            val o = __offset(90)
+            val o = __offset(88)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val OB_DIRECTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(90, 1)
-    fun OB_DIRECTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 90, 1)
-    val COORD_SYS : String?
+    val OB_DIRECTIONAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(88, 1)
+    fun OB_DIRECTIONInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 88, 1)
+    /**
+     * Target position X (km)
+     */
+    val TARGETPOSX : Double
+        get() {
+            val o = __offset(90)
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
+        }
+    /**
+     * Target position Y (km)
+     */
+    val TARGETPOSY : Double
         get() {
             val o = __offset(92)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
+            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val COORD_SYSAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(92, 1)
-    fun COORD_SYSInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 92, 1)
-    val TARGETPOSX : Double
+    /**
+     * Target position Z (km)
+     */
+    val TARGETPOSZ : Double
         get() {
             val o = __offset(94)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val TARGETPOSY : Double
+    /**
+     * Sensor altitude (km)
+     */
+    val SENALT : Double
         get() {
             val o = __offset(96)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val TARGETPOSZ : Double
+    /**
+     * Sensor velocity X (km/s)
+     */
+    val SENVELX : Double
         get() {
             val o = __offset(98)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SENALT : Double
+    /**
+     * Sensor velocity Y (km/s)
+     */
+    val SENVELY : Double
         get() {
             val o = __offset(100)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SENVELX : Double
+    /**
+     * Sensor velocity Z (km/s)
+     */
+    val SENVELZ : Double
         get() {
             val o = __offset(102)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SENVELY : Double
+    /**
+     * Sensor latitude at start (degrees)
+     */
+    val SENLAT_START : Double
         get() {
             val o = __offset(104)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SENVELZ : Double
+    /**
+     * Sensor longitude at start (degrees)
+     */
+    val SENLON_START : Double
         get() {
             val o = __offset(106)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SENLAT_START : Double
+    /**
+     * Sensor latitude at end (degrees)
+     */
+    val SENLAT_END : Double
         get() {
             val o = __offset(108)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SENLON_START : Double
+    /**
+     * Sensor longitude at end (degrees)
+     */
+    val SENLON_END : Double
         get() {
             val o = __offset(110)
             return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
         }
-    val SENLAT_END : Double
-        get() {
-            val o = __offset(112)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
-    val SENLON_END : Double
-        get() {
-            val o = __offset(114)
-            return if(o != 0) bb.getDouble(o + bb_pos) else 0.0
-        }
+    /**
+     * Transaction identifier
+     */
     val TRANSACTION_ID : String?
         get() {
-            val o = __offset(116)
+            val o = __offset(112)
             return if (o != 0) {
                 __string(o + bb_pos)
             } else {
                 null
             }
         }
-    val TRANSACTION_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(116, 1)
-    fun TRANSACTION_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 116, 1)
+    val TRANSACTION_IDAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(112, 1)
+    fun TRANSACTION_IDInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 112, 1)
+    /**
+     * Associated tags
+     */
     fun TAGS(j: Int) : String? {
-        val o = __offset(118)
+        val o = __offset(114)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -468,10 +608,13 @@ class SAR : Table() {
     }
     val TAGSLength : Int
         get() {
-            val o = __offset(118); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(114); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Source types
+     */
     fun SRC_TYPS(j: Int) : String? {
-        val o = __offset(120)
+        val o = __offset(116)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -480,10 +623,13 @@ class SAR : Table() {
     }
     val SRC_TYPSLength : Int
         get() {
-            val o = __offset(120); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(116); return if (o != 0) __vector_len(o) else 0
         }
+    /**
+     * Source identifiers
+     */
     fun SRC_IDS(j: Int) : String? {
-        val o = __offset(122)
+        val o = __offset(118)
         return if (o != 0) {
             __string(__vector(o) + j * 4)
         } else {
@@ -492,19 +638,8 @@ class SAR : Table() {
     }
     val SRC_IDSLength : Int
         get() {
-            val o = __offset(122); return if (o != 0) __vector_len(o) else 0
+            val o = __offset(118); return if (o != 0) __vector_len(o) else 0
         }
-    val ON_ORBIT : String?
-        get() {
-            val o = __offset(124)
-            return if (o != 0) {
-                __string(o + bb_pos)
-            } else {
-                null
-            }
-        }
-    val ON_ORBITAsByteBuffer : ByteBuffer get() = __vector_as_bytebuffer(124, 1)
-    fun ON_ORBITInByteBuffer(_bb: ByteBuffer) : ByteBuffer = __vector_in_bytebuffer(_bb, 124, 1)
     companion object {
         fun validateVersion() = Constants.FLATBUFFERS_24_3_25()
         fun getRootAsSAR(_bb: ByteBuffer): SAR = getRootAsSAR(_bb, SAR())
@@ -513,8 +648,8 @@ class SAR : Table() {
             return (obj.__assign(_bb.getInt(_bb.position()) + _bb.position(), _bb))
         }
         fun SARBufferHasIdentifier(_bb: ByteBuffer) : Boolean = __has_identifier(_bb, "$SAR")
-        fun createSAR(builder: FlatBufferBuilder, IDOffset: Int, SAT_NO: Int, ORIG_OBJECT_IDOffset: Int, ID_SENSOROffset: Int, ORIG_SENSOR_IDOffset: Int, EXTERNAL_IDOffset: Int, COLLECTION_IDOffset: Int, DETECTION_IDOffset: Int, COLLECTION_STARTOffset: Int, COLLECTION_ENDOffset: Int, CENTER_TIMEOffset: Int, DETECTION_STARTOffset: Int, DETECTION_ENDOffset: Int, DWELL_TIME: Double, ORBIT_STATEOffset: Int, SAR_MODEOffset: Int, OPERATING_BANDOffset: Int, OPERATING_FREQ: Double, SNR: Double, TX_POLARIZATIONOffset: Int, RX_POLARIZATIONOffset: Int, GRAZE_ANGLE: Double, INCIDENCE_ANGLE: Double, SQUINT_ANGLE: Double, PULSE_BANDWIDTH: Double, PULSE_DURATION: Double, CONTINUOUS_SPOT_ANGLE: Double, SLANT_RANGE: Double, NEAR_RANGE: Double, FAR_RANGE: Double, SWATH_LENGTH: Double, AREAOffset: Int, ATEXTOffset: Int, AGJSONOffset: Int, ATYPEOffset: Int, ANDIMS: Int, ASRID: Int, SPACING_RANGE: Double, SPACING_AZIMUTH: Double, LOOKS_AZIMUTH: Int, LOOKS_RANGE: Int, RESOLUTION_RANGE: Double, RESOLUTION_AZIMUTH: Double, OB_DIRECTIONOffset: Int, COORD_SYSOffset: Int, TARGETPOSX: Double, TARGETPOSY: Double, TARGETPOSZ: Double, SENALT: Double, SENVELX: Double, SENVELY: Double, SENVELZ: Double, SENLAT_START: Double, SENLON_START: Double, SENLAT_END: Double, SENLON_END: Double, TRANSACTION_IDOffset: Int, TAGSOffset: Int, SRC_TYPSOffset: Int, SRC_IDSOffset: Int, ON_ORBITOffset: Int) : Int {
-            builder.startTable(61)
+        fun createSAR(builder: FlatBufferBuilder, IDOffset: Int, SAT_NO: UInt, ORIG_OBJECT_IDOffset: Int, ON_ORBITOffset: Int, ID_SENSOROffset: Int, ORIG_SENSOR_IDOffset: Int, EXTERNAL_IDOffset: Int, COLLECTION_IDOffset: Int, DETECTION_IDOffset: Int, COLLECTION_STARTOffset: Int, COLLECTION_ENDOffset: Int, CENTER_TIMEOffset: Int, DETECTION_STARTOffset: Int, DETECTION_ENDOffset: Int, DWELL_TIME: Double, ORBIT_STATEOffset: Int, SAR_MODE: Byte, OPERATING_BANDOffset: Int, OPERATING_FREQ: Double, SNR: Double, TX_POLARIZATION: Byte, RX_POLARIZATION: Byte, GRAZE_ANGLE: Double, INCIDENCE_ANGLE: Double, SQUINT_ANGLE: Double, PULSE_BANDWIDTH: Double, PULSE_DURATION: Double, CONTINUOUS_SPOT_ANGLE: Double, SLANT_RANGE: Double, NEAR_RANGE: Double, FAR_RANGE: Double, SWATH_LENGTH: Double, AGJSONOffset: Int, ATEXTOffset: Int, ATYPEOffset: Int, COORD_SYSOffset: Int, SPACING_RANGE: Double, SPACING_AZIMUTH: Double, LOOKS_AZIMUTH: UByte, LOOKS_RANGE: UByte, RESOLUTION_RANGE: Double, RESOLUTION_AZIMUTH: Double, OB_DIRECTIONOffset: Int, TARGETPOSX: Double, TARGETPOSY: Double, TARGETPOSZ: Double, SENALT: Double, SENVELX: Double, SENVELY: Double, SENVELZ: Double, SENLAT_START: Double, SENLON_START: Double, SENLAT_END: Double, SENLON_END: Double, TRANSACTION_IDOffset: Int, TAGSOffset: Int, SRC_TYPSOffset: Int, SRC_IDSOffset: Int) : Int {
+            builder.startTable(58)
             addSENLON_END(builder, SENLON_END)
             addSENLAT_END(builder, SENLAT_END)
             addSENLON_START(builder, SENLON_START)
@@ -543,25 +678,16 @@ class SAR : Table() {
             addSNR(builder, SNR)
             addOPERATING_FREQ(builder, OPERATING_FREQ)
             addDWELL_TIME(builder, DWELL_TIME)
-            addON_ORBIT(builder, ON_ORBITOffset)
             addSRC_IDS(builder, SRC_IDSOffset)
             addSRC_TYPS(builder, SRC_TYPSOffset)
             addTAGS(builder, TAGSOffset)
             addTRANSACTION_ID(builder, TRANSACTION_IDOffset)
-            addCOORD_SYS(builder, COORD_SYSOffset)
             addOB_DIRECTION(builder, OB_DIRECTIONOffset)
-            addLOOKS_RANGE(builder, LOOKS_RANGE)
-            addLOOKS_AZIMUTH(builder, LOOKS_AZIMUTH)
-            addASRID(builder, ASRID)
-            addANDIMS(builder, ANDIMS)
+            addCOORD_SYS(builder, COORD_SYSOffset)
             addATYPE(builder, ATYPEOffset)
-            addAGJSON(builder, AGJSONOffset)
             addATEXT(builder, ATEXTOffset)
-            addAREA(builder, AREAOffset)
-            addRX_POLARIZATION(builder, RX_POLARIZATIONOffset)
-            addTX_POLARIZATION(builder, TX_POLARIZATIONOffset)
+            addAGJSON(builder, AGJSONOffset)
             addOPERATING_BAND(builder, OPERATING_BANDOffset)
-            addSAR_MODE(builder, SAR_MODEOffset)
             addORBIT_STATE(builder, ORBIT_STATEOffset)
             addDETECTION_END(builder, DETECTION_ENDOffset)
             addDETECTION_START(builder, DETECTION_STARTOffset)
@@ -573,70 +699,74 @@ class SAR : Table() {
             addEXTERNAL_ID(builder, EXTERNAL_IDOffset)
             addORIG_SENSOR_ID(builder, ORIG_SENSOR_IDOffset)
             addID_SENSOR(builder, ID_SENSOROffset)
+            addON_ORBIT(builder, ON_ORBITOffset)
             addORIG_OBJECT_ID(builder, ORIG_OBJECT_IDOffset)
             addSAT_NO(builder, SAT_NO)
             addID(builder, IDOffset)
+            addLOOKS_RANGE(builder, LOOKS_RANGE)
+            addLOOKS_AZIMUTH(builder, LOOKS_AZIMUTH)
+            addRX_POLARIZATION(builder, RX_POLARIZATION)
+            addTX_POLARIZATION(builder, TX_POLARIZATION)
+            addSAR_MODE(builder, SAR_MODE)
             return endSAR(builder)
         }
-        fun startSAR(builder: FlatBufferBuilder) = builder.startTable(61)
+        fun startSAR(builder: FlatBufferBuilder) = builder.startTable(58)
         fun addID(builder: FlatBufferBuilder, ID: Int) = builder.addOffset(0, ID, 0)
-        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: Int) = builder.addInt(1, SAT_NO, 0)
+        fun addSAT_NO(builder: FlatBufferBuilder, SAT_NO: UInt) = builder.addInt(1, SAT_NO.toInt(), 0)
         fun addORIG_OBJECT_ID(builder: FlatBufferBuilder, ORIG_OBJECT_ID: Int) = builder.addOffset(2, ORIG_OBJECT_ID, 0)
-        fun addID_SENSOR(builder: FlatBufferBuilder, ID_SENSOR: Int) = builder.addOffset(3, ID_SENSOR, 0)
-        fun addORIG_SENSOR_ID(builder: FlatBufferBuilder, ORIG_SENSOR_ID: Int) = builder.addOffset(4, ORIG_SENSOR_ID, 0)
-        fun addEXTERNAL_ID(builder: FlatBufferBuilder, EXTERNAL_ID: Int) = builder.addOffset(5, EXTERNAL_ID, 0)
-        fun addCOLLECTION_ID(builder: FlatBufferBuilder, COLLECTION_ID: Int) = builder.addOffset(6, COLLECTION_ID, 0)
-        fun addDETECTION_ID(builder: FlatBufferBuilder, DETECTION_ID: Int) = builder.addOffset(7, DETECTION_ID, 0)
-        fun addCOLLECTION_START(builder: FlatBufferBuilder, COLLECTION_START: Int) = builder.addOffset(8, COLLECTION_START, 0)
-        fun addCOLLECTION_END(builder: FlatBufferBuilder, COLLECTION_END: Int) = builder.addOffset(9, COLLECTION_END, 0)
-        fun addCENTER_TIME(builder: FlatBufferBuilder, CENTER_TIME: Int) = builder.addOffset(10, CENTER_TIME, 0)
-        fun addDETECTION_START(builder: FlatBufferBuilder, DETECTION_START: Int) = builder.addOffset(11, DETECTION_START, 0)
-        fun addDETECTION_END(builder: FlatBufferBuilder, DETECTION_END: Int) = builder.addOffset(12, DETECTION_END, 0)
-        fun addDWELL_TIME(builder: FlatBufferBuilder, DWELL_TIME: Double) = builder.addDouble(13, DWELL_TIME, 0.0)
-        fun addORBIT_STATE(builder: FlatBufferBuilder, ORBIT_STATE: Int) = builder.addOffset(14, ORBIT_STATE, 0)
-        fun addSAR_MODE(builder: FlatBufferBuilder, SAR_MODE: Int) = builder.addOffset(15, SAR_MODE, 0)
-        fun addOPERATING_BAND(builder: FlatBufferBuilder, OPERATING_BAND: Int) = builder.addOffset(16, OPERATING_BAND, 0)
-        fun addOPERATING_FREQ(builder: FlatBufferBuilder, OPERATING_FREQ: Double) = builder.addDouble(17, OPERATING_FREQ, 0.0)
-        fun addSNR(builder: FlatBufferBuilder, SNR: Double) = builder.addDouble(18, SNR, 0.0)
-        fun addTX_POLARIZATION(builder: FlatBufferBuilder, TX_POLARIZATION: Int) = builder.addOffset(19, TX_POLARIZATION, 0)
-        fun addRX_POLARIZATION(builder: FlatBufferBuilder, RX_POLARIZATION: Int) = builder.addOffset(20, RX_POLARIZATION, 0)
-        fun addGRAZE_ANGLE(builder: FlatBufferBuilder, GRAZE_ANGLE: Double) = builder.addDouble(21, GRAZE_ANGLE, 0.0)
-        fun addINCIDENCE_ANGLE(builder: FlatBufferBuilder, INCIDENCE_ANGLE: Double) = builder.addDouble(22, INCIDENCE_ANGLE, 0.0)
-        fun addSQUINT_ANGLE(builder: FlatBufferBuilder, SQUINT_ANGLE: Double) = builder.addDouble(23, SQUINT_ANGLE, 0.0)
-        fun addPULSE_BANDWIDTH(builder: FlatBufferBuilder, PULSE_BANDWIDTH: Double) = builder.addDouble(24, PULSE_BANDWIDTH, 0.0)
-        fun addPULSE_DURATION(builder: FlatBufferBuilder, PULSE_DURATION: Double) = builder.addDouble(25, PULSE_DURATION, 0.0)
-        fun addCONTINUOUS_SPOT_ANGLE(builder: FlatBufferBuilder, CONTINUOUS_SPOT_ANGLE: Double) = builder.addDouble(26, CONTINUOUS_SPOT_ANGLE, 0.0)
-        fun addSLANT_RANGE(builder: FlatBufferBuilder, SLANT_RANGE: Double) = builder.addDouble(27, SLANT_RANGE, 0.0)
-        fun addNEAR_RANGE(builder: FlatBufferBuilder, NEAR_RANGE: Double) = builder.addDouble(28, NEAR_RANGE, 0.0)
-        fun addFAR_RANGE(builder: FlatBufferBuilder, FAR_RANGE: Double) = builder.addDouble(29, FAR_RANGE, 0.0)
-        fun addSWATH_LENGTH(builder: FlatBufferBuilder, SWATH_LENGTH: Double) = builder.addDouble(30, SWATH_LENGTH, 0.0)
-        fun addAREA(builder: FlatBufferBuilder, AREA: Int) = builder.addOffset(31, AREA, 0)
-        fun addATEXT(builder: FlatBufferBuilder, ATEXT: Int) = builder.addOffset(32, ATEXT, 0)
-        fun addAGJSON(builder: FlatBufferBuilder, AGJSON: Int) = builder.addOffset(33, AGJSON, 0)
+        fun addON_ORBIT(builder: FlatBufferBuilder, ON_ORBIT: Int) = builder.addOffset(3, ON_ORBIT, 0)
+        fun addID_SENSOR(builder: FlatBufferBuilder, ID_SENSOR: Int) = builder.addOffset(4, ID_SENSOR, 0)
+        fun addORIG_SENSOR_ID(builder: FlatBufferBuilder, ORIG_SENSOR_ID: Int) = builder.addOffset(5, ORIG_SENSOR_ID, 0)
+        fun addEXTERNAL_ID(builder: FlatBufferBuilder, EXTERNAL_ID: Int) = builder.addOffset(6, EXTERNAL_ID, 0)
+        fun addCOLLECTION_ID(builder: FlatBufferBuilder, COLLECTION_ID: Int) = builder.addOffset(7, COLLECTION_ID, 0)
+        fun addDETECTION_ID(builder: FlatBufferBuilder, DETECTION_ID: Int) = builder.addOffset(8, DETECTION_ID, 0)
+        fun addCOLLECTION_START(builder: FlatBufferBuilder, COLLECTION_START: Int) = builder.addOffset(9, COLLECTION_START, 0)
+        fun addCOLLECTION_END(builder: FlatBufferBuilder, COLLECTION_END: Int) = builder.addOffset(10, COLLECTION_END, 0)
+        fun addCENTER_TIME(builder: FlatBufferBuilder, CENTER_TIME: Int) = builder.addOffset(11, CENTER_TIME, 0)
+        fun addDETECTION_START(builder: FlatBufferBuilder, DETECTION_START: Int) = builder.addOffset(12, DETECTION_START, 0)
+        fun addDETECTION_END(builder: FlatBufferBuilder, DETECTION_END: Int) = builder.addOffset(13, DETECTION_END, 0)
+        fun addDWELL_TIME(builder: FlatBufferBuilder, DWELL_TIME: Double) = builder.addDouble(14, DWELL_TIME, 0.0)
+        fun addORBIT_STATE(builder: FlatBufferBuilder, ORBIT_STATE: Int) = builder.addOffset(15, ORBIT_STATE, 0)
+        fun addSAR_MODE(builder: FlatBufferBuilder, SAR_MODE: Byte) = builder.addByte(16, SAR_MODE, 0)
+        fun addOPERATING_BAND(builder: FlatBufferBuilder, OPERATING_BAND: Int) = builder.addOffset(17, OPERATING_BAND, 0)
+        fun addOPERATING_FREQ(builder: FlatBufferBuilder, OPERATING_FREQ: Double) = builder.addDouble(18, OPERATING_FREQ, 0.0)
+        fun addSNR(builder: FlatBufferBuilder, SNR: Double) = builder.addDouble(19, SNR, 0.0)
+        fun addTX_POLARIZATION(builder: FlatBufferBuilder, TX_POLARIZATION: Byte) = builder.addByte(20, TX_POLARIZATION, 0)
+        fun addRX_POLARIZATION(builder: FlatBufferBuilder, RX_POLARIZATION: Byte) = builder.addByte(21, RX_POLARIZATION, 0)
+        fun addGRAZE_ANGLE(builder: FlatBufferBuilder, GRAZE_ANGLE: Double) = builder.addDouble(22, GRAZE_ANGLE, 0.0)
+        fun addINCIDENCE_ANGLE(builder: FlatBufferBuilder, INCIDENCE_ANGLE: Double) = builder.addDouble(23, INCIDENCE_ANGLE, 0.0)
+        fun addSQUINT_ANGLE(builder: FlatBufferBuilder, SQUINT_ANGLE: Double) = builder.addDouble(24, SQUINT_ANGLE, 0.0)
+        fun addPULSE_BANDWIDTH(builder: FlatBufferBuilder, PULSE_BANDWIDTH: Double) = builder.addDouble(25, PULSE_BANDWIDTH, 0.0)
+        fun addPULSE_DURATION(builder: FlatBufferBuilder, PULSE_DURATION: Double) = builder.addDouble(26, PULSE_DURATION, 0.0)
+        fun addCONTINUOUS_SPOT_ANGLE(builder: FlatBufferBuilder, CONTINUOUS_SPOT_ANGLE: Double) = builder.addDouble(27, CONTINUOUS_SPOT_ANGLE, 0.0)
+        fun addSLANT_RANGE(builder: FlatBufferBuilder, SLANT_RANGE: Double) = builder.addDouble(28, SLANT_RANGE, 0.0)
+        fun addNEAR_RANGE(builder: FlatBufferBuilder, NEAR_RANGE: Double) = builder.addDouble(29, NEAR_RANGE, 0.0)
+        fun addFAR_RANGE(builder: FlatBufferBuilder, FAR_RANGE: Double) = builder.addDouble(30, FAR_RANGE, 0.0)
+        fun addSWATH_LENGTH(builder: FlatBufferBuilder, SWATH_LENGTH: Double) = builder.addDouble(31, SWATH_LENGTH, 0.0)
+        fun addAGJSON(builder: FlatBufferBuilder, AGJSON: Int) = builder.addOffset(32, AGJSON, 0)
+        fun addATEXT(builder: FlatBufferBuilder, ATEXT: Int) = builder.addOffset(33, ATEXT, 0)
         fun addATYPE(builder: FlatBufferBuilder, ATYPE: Int) = builder.addOffset(34, ATYPE, 0)
-        fun addANDIMS(builder: FlatBufferBuilder, ANDIMS: Int) = builder.addInt(35, ANDIMS, 0)
-        fun addASRID(builder: FlatBufferBuilder, ASRID: Int) = builder.addInt(36, ASRID, 0)
-        fun addSPACING_RANGE(builder: FlatBufferBuilder, SPACING_RANGE: Double) = builder.addDouble(37, SPACING_RANGE, 0.0)
-        fun addSPACING_AZIMUTH(builder: FlatBufferBuilder, SPACING_AZIMUTH: Double) = builder.addDouble(38, SPACING_AZIMUTH, 0.0)
-        fun addLOOKS_AZIMUTH(builder: FlatBufferBuilder, LOOKS_AZIMUTH: Int) = builder.addInt(39, LOOKS_AZIMUTH, 0)
-        fun addLOOKS_RANGE(builder: FlatBufferBuilder, LOOKS_RANGE: Int) = builder.addInt(40, LOOKS_RANGE, 0)
-        fun addRESOLUTION_RANGE(builder: FlatBufferBuilder, RESOLUTION_RANGE: Double) = builder.addDouble(41, RESOLUTION_RANGE, 0.0)
-        fun addRESOLUTION_AZIMUTH(builder: FlatBufferBuilder, RESOLUTION_AZIMUTH: Double) = builder.addDouble(42, RESOLUTION_AZIMUTH, 0.0)
-        fun addOB_DIRECTION(builder: FlatBufferBuilder, OB_DIRECTION: Int) = builder.addOffset(43, OB_DIRECTION, 0)
-        fun addCOORD_SYS(builder: FlatBufferBuilder, COORD_SYS: Int) = builder.addOffset(44, COORD_SYS, 0)
-        fun addTARGETPOSX(builder: FlatBufferBuilder, TARGETPOSX: Double) = builder.addDouble(45, TARGETPOSX, 0.0)
-        fun addTARGETPOSY(builder: FlatBufferBuilder, TARGETPOSY: Double) = builder.addDouble(46, TARGETPOSY, 0.0)
-        fun addTARGETPOSZ(builder: FlatBufferBuilder, TARGETPOSZ: Double) = builder.addDouble(47, TARGETPOSZ, 0.0)
-        fun addSENALT(builder: FlatBufferBuilder, SENALT: Double) = builder.addDouble(48, SENALT, 0.0)
-        fun addSENVELX(builder: FlatBufferBuilder, SENVELX: Double) = builder.addDouble(49, SENVELX, 0.0)
-        fun addSENVELY(builder: FlatBufferBuilder, SENVELY: Double) = builder.addDouble(50, SENVELY, 0.0)
-        fun addSENVELZ(builder: FlatBufferBuilder, SENVELZ: Double) = builder.addDouble(51, SENVELZ, 0.0)
-        fun addSENLAT_START(builder: FlatBufferBuilder, SENLAT_START: Double) = builder.addDouble(52, SENLAT_START, 0.0)
-        fun addSENLON_START(builder: FlatBufferBuilder, SENLON_START: Double) = builder.addDouble(53, SENLON_START, 0.0)
-        fun addSENLAT_END(builder: FlatBufferBuilder, SENLAT_END: Double) = builder.addDouble(54, SENLAT_END, 0.0)
-        fun addSENLON_END(builder: FlatBufferBuilder, SENLON_END: Double) = builder.addDouble(55, SENLON_END, 0.0)
-        fun addTRANSACTION_ID(builder: FlatBufferBuilder, TRANSACTION_ID: Int) = builder.addOffset(56, TRANSACTION_ID, 0)
-        fun addTAGS(builder: FlatBufferBuilder, TAGS: Int) = builder.addOffset(57, TAGS, 0)
+        fun addCOORD_SYS(builder: FlatBufferBuilder, COORD_SYS: Int) = builder.addOffset(35, COORD_SYS, 0)
+        fun addSPACING_RANGE(builder: FlatBufferBuilder, SPACING_RANGE: Double) = builder.addDouble(36, SPACING_RANGE, 0.0)
+        fun addSPACING_AZIMUTH(builder: FlatBufferBuilder, SPACING_AZIMUTH: Double) = builder.addDouble(37, SPACING_AZIMUTH, 0.0)
+        fun addLOOKS_AZIMUTH(builder: FlatBufferBuilder, LOOKS_AZIMUTH: UByte) = builder.addByte(38, LOOKS_AZIMUTH.toByte(), 0)
+        fun addLOOKS_RANGE(builder: FlatBufferBuilder, LOOKS_RANGE: UByte) = builder.addByte(39, LOOKS_RANGE.toByte(), 0)
+        fun addRESOLUTION_RANGE(builder: FlatBufferBuilder, RESOLUTION_RANGE: Double) = builder.addDouble(40, RESOLUTION_RANGE, 0.0)
+        fun addRESOLUTION_AZIMUTH(builder: FlatBufferBuilder, RESOLUTION_AZIMUTH: Double) = builder.addDouble(41, RESOLUTION_AZIMUTH, 0.0)
+        fun addOB_DIRECTION(builder: FlatBufferBuilder, OB_DIRECTION: Int) = builder.addOffset(42, OB_DIRECTION, 0)
+        fun addTARGETPOSX(builder: FlatBufferBuilder, TARGETPOSX: Double) = builder.addDouble(43, TARGETPOSX, 0.0)
+        fun addTARGETPOSY(builder: FlatBufferBuilder, TARGETPOSY: Double) = builder.addDouble(44, TARGETPOSY, 0.0)
+        fun addTARGETPOSZ(builder: FlatBufferBuilder, TARGETPOSZ: Double) = builder.addDouble(45, TARGETPOSZ, 0.0)
+        fun addSENALT(builder: FlatBufferBuilder, SENALT: Double) = builder.addDouble(46, SENALT, 0.0)
+        fun addSENVELX(builder: FlatBufferBuilder, SENVELX: Double) = builder.addDouble(47, SENVELX, 0.0)
+        fun addSENVELY(builder: FlatBufferBuilder, SENVELY: Double) = builder.addDouble(48, SENVELY, 0.0)
+        fun addSENVELZ(builder: FlatBufferBuilder, SENVELZ: Double) = builder.addDouble(49, SENVELZ, 0.0)
+        fun addSENLAT_START(builder: FlatBufferBuilder, SENLAT_START: Double) = builder.addDouble(50, SENLAT_START, 0.0)
+        fun addSENLON_START(builder: FlatBufferBuilder, SENLON_START: Double) = builder.addDouble(51, SENLON_START, 0.0)
+        fun addSENLAT_END(builder: FlatBufferBuilder, SENLAT_END: Double) = builder.addDouble(52, SENLAT_END, 0.0)
+        fun addSENLON_END(builder: FlatBufferBuilder, SENLON_END: Double) = builder.addDouble(53, SENLON_END, 0.0)
+        fun addTRANSACTION_ID(builder: FlatBufferBuilder, TRANSACTION_ID: Int) = builder.addOffset(54, TRANSACTION_ID, 0)
+        fun addTAGS(builder: FlatBufferBuilder, TAGS: Int) = builder.addOffset(55, TAGS, 0)
         fun createTagsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -645,7 +775,7 @@ class SAR : Table() {
             return builder.endVector()
         }
         fun startTagsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSRC_TYPS(builder: FlatBufferBuilder, SRC_TYPS: Int) = builder.addOffset(58, SRC_TYPS, 0)
+        fun addSRC_TYPS(builder: FlatBufferBuilder, SRC_TYPS: Int) = builder.addOffset(56, SRC_TYPS, 0)
         fun createSrcTypsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -654,7 +784,7 @@ class SAR : Table() {
             return builder.endVector()
         }
         fun startSrcTypsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addSRC_IDS(builder: FlatBufferBuilder, SRC_IDS: Int) = builder.addOffset(59, SRC_IDS, 0)
+        fun addSRC_IDS(builder: FlatBufferBuilder, SRC_IDS: Int) = builder.addOffset(57, SRC_IDS, 0)
         fun createSrcIdsVector(builder: FlatBufferBuilder, data: IntArray) : Int {
             builder.startVector(4, data.size, 4)
             for (i in data.size - 1 downTo 0) {
@@ -663,7 +793,6 @@ class SAR : Table() {
             return builder.endVector()
         }
         fun startSrcIdsVector(builder: FlatBufferBuilder, numElems: Int) = builder.startVector(4, numElems, 4)
-        fun addON_ORBIT(builder: FlatBufferBuilder, ON_ORBIT: Int) = builder.addOffset(60, ON_ORBIT, 0)
         fun endSAR(builder: FlatBufferBuilder) : Int {
             val o = builder.endTable()
             return o

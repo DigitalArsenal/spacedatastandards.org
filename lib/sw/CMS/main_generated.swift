@@ -4,6 +4,290 @@
 
 import FlatBuffers
 
+public enum modulationType: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case bpsk = 0
+  case qpsk = 1
+  case oqpsk = 2
+  case psk8 = 3
+  case qam16 = 4
+  case qam64 = 5
+  case fsk = 6
+  case msk = 7
+  case gmsk = 8
+  case am = 9
+  case fm = 10
+  case pm = 11
+  case spreadSpectrum = 12
+  case dvbS2 = 13
+  case dvbS2x = 14
+
+  public static var max: modulationType { return .dvbS2x }
+  public static var min: modulationType { return .bpsk }
+}
+
+
+public enum encryptionType: Int8, Enum, Verifiable {
+  public typealias T = Int8
+  public static var byteSize: Int { return MemoryLayout<Int8>.size }
+  public var value: Int8 { return self.rawValue }
+  case none_ = 0
+  case des = 1
+  case tripleDes = 2
+  case aes128 = 3
+  case aes256 = 4
+  case type1 = 5
+  case type2 = 6
+  case custom = 7
+
+  public static var max: encryptionType { return .custom }
+  public static var min: encryptionType { return .none_ }
+}
+
+
+///  Transponder Channel
+public struct commsChannel: FlatBufferObject, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CMS" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: commsChannel.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private enum VTOFFSET: VOffset {
+    case CHANNEL_ID = 4
+    case NAME = 6
+    case UPLINK_FREQ = 8
+    case DOWNLINK_FREQ = 10
+    case BANDWIDTH = 12
+    case MODULATION = 14
+    case DATA_RATE = 16
+    case ENCRYPTION = 18
+    case FEC_RATE = 20
+    case POWER = 22
+    var v: Int32 { Int32(self.rawValue) }
+    var p: VOffset { self.rawValue }
+  }
+
+  ///  Channel identifier
+  public var CHANNEL_ID: String? { let o = _accessor.offset(VTOFFSET.CHANNEL_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var CHANNEL_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.CHANNEL_ID.v) }
+  ///  Channel name
+  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  ///  Uplink frequency in MHz
+  public var UPLINK_FREQ: Double { let o = _accessor.offset(VTOFFSET.UPLINK_FREQ.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Downlink frequency in MHz
+  public var DOWNLINK_FREQ: Double { let o = _accessor.offset(VTOFFSET.DOWNLINK_FREQ.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Channel bandwidth in MHz
+  public var BANDWIDTH: Double { let o = _accessor.offset(VTOFFSET.BANDWIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Modulation type
+  public var MODULATION: modulationType { let o = _accessor.offset(VTOFFSET.MODULATION.v); return o == 0 ? .bpsk : modulationType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .bpsk }
+  ///  Data rate in Mbps
+  public var DATA_RATE: Double { let o = _accessor.offset(VTOFFSET.DATA_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Encryption method
+  public var ENCRYPTION: encryptionType { let o = _accessor.offset(VTOFFSET.ENCRYPTION.v); return o == 0 ? .none_ : encryptionType(rawValue: _accessor.readBuffer(of: Int8.self, at: o)) ?? .none_ }
+  ///  Forward error correction coding rate (e.g., 0.5, 0.75)
+  public var FEC_RATE: Double { let o = _accessor.offset(VTOFFSET.FEC_RATE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Channel power in dBW
+  public var POWER: Double { let o = _accessor.offset(VTOFFSET.POWER.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  public static func startcommsChannel(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 10) }
+  public static func add(CHANNEL_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHANNEL_ID, at: VTOFFSET.CHANNEL_ID.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
+  public static func add(UPLINK_FREQ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPLINK_FREQ, def: 0.0, at: VTOFFSET.UPLINK_FREQ.p) }
+  public static func add(DOWNLINK_FREQ: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DOWNLINK_FREQ, def: 0.0, at: VTOFFSET.DOWNLINK_FREQ.p) }
+  public static func add(BANDWIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BANDWIDTH, def: 0.0, at: VTOFFSET.BANDWIDTH.p) }
+  public static func add(MODULATION: modulationType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: MODULATION.rawValue, def: 0, at: VTOFFSET.MODULATION.p) }
+  public static func add(DATA_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DATA_RATE, def: 0.0, at: VTOFFSET.DATA_RATE.p) }
+  public static func add(ENCRYPTION: encryptionType, _ fbb: inout FlatBufferBuilder) { fbb.add(element: ENCRYPTION.rawValue, def: 0, at: VTOFFSET.ENCRYPTION.p) }
+  public static func add(FEC_RATE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: FEC_RATE, def: 0.0, at: VTOFFSET.FEC_RATE.p) }
+  public static func add(POWER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: POWER, def: 0.0, at: VTOFFSET.POWER.p) }
+  public static func endcommsChannel(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createcommsChannel(
+    _ fbb: inout FlatBufferBuilder,
+    CHANNEL_IDOffset CHANNEL_ID: Offset = Offset(),
+    NAMEOffset NAME: Offset = Offset(),
+    UPLINK_FREQ: Double = 0.0,
+    DOWNLINK_FREQ: Double = 0.0,
+    BANDWIDTH: Double = 0.0,
+    MODULATION: modulationType = .bpsk,
+    DATA_RATE: Double = 0.0,
+    ENCRYPTION: encryptionType = .none_,
+    FEC_RATE: Double = 0.0,
+    POWER: Double = 0.0
+  ) -> Offset {
+    let __start = commsChannel.startcommsChannel(&fbb)
+    commsChannel.add(CHANNEL_ID: CHANNEL_ID, &fbb)
+    commsChannel.add(NAME: NAME, &fbb)
+    commsChannel.add(UPLINK_FREQ: UPLINK_FREQ, &fbb)
+    commsChannel.add(DOWNLINK_FREQ: DOWNLINK_FREQ, &fbb)
+    commsChannel.add(BANDWIDTH: BANDWIDTH, &fbb)
+    commsChannel.add(MODULATION: MODULATION, &fbb)
+    commsChannel.add(DATA_RATE: DATA_RATE, &fbb)
+    commsChannel.add(ENCRYPTION: ENCRYPTION, &fbb)
+    commsChannel.add(FEC_RATE: FEC_RATE, &fbb)
+    commsChannel.add(POWER: POWER, &fbb)
+    return commsChannel.endcommsChannel(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VTOFFSET.CHANNEL_ID.p, fieldName: "CHANNEL_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.UPLINK_FREQ.p, fieldName: "UPLINK_FREQ", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.DOWNLINK_FREQ.p, fieldName: "DOWNLINK_FREQ", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.BANDWIDTH.p, fieldName: "BANDWIDTH", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.MODULATION.p, fieldName: "MODULATION", required: false, type: modulationType.self)
+    try _v.visit(field: VTOFFSET.DATA_RATE.p, fieldName: "DATA_RATE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.ENCRYPTION.p, fieldName: "ENCRYPTION", required: false, type: encryptionType.self)
+    try _v.visit(field: VTOFFSET.FEC_RATE.p, fieldName: "FEC_RATE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.POWER.p, fieldName: "POWER", required: false, type: Double.self)
+    _v.finish()
+  }
+}
+
+///  Transponder
+public struct commsTransponder: FlatBufferObject, Verifiable {
+
+  static func validateVersion() { FlatBuffersVersion_24_3_25() }
+  public var __buffer: ByteBuffer! { return _accessor.bb }
+  private var _accessor: Table
+
+  public static var id: String { "$CMS" } 
+  public static func finish(_ fbb: inout FlatBufferBuilder, end: Offset, prefix: Bool = false) { fbb.finish(offset: end, fileId: commsTransponder.id, addPrefix: prefix) }
+  private init(_ t: Table) { _accessor = t }
+  public init(_ bb: ByteBuffer, o: Int32) { _accessor = Table(bb: bb, position: o) }
+
+  private enum VTOFFSET: VOffset {
+    case TRANSPONDER_ID = 4
+    case NAME = 6
+    case TYPE = 8
+    case BAND = 10
+    case UPLINK_FREQ_MIN = 12
+    case UPLINK_FREQ_MAX = 14
+    case DOWNLINK_FREQ_MIN = 16
+    case DOWNLINK_FREQ_MAX = 18
+    case EIRP = 20
+    case G_OVER_T = 22
+    case BANDWIDTH = 24
+    case NUM_CHANNELS = 26
+    case CHANNELS = 28
+    case POLARIZATION = 30
+    var v: Int32 { Int32(self.rawValue) }
+    var p: VOffset { self.rawValue }
+  }
+
+  ///  Transponder identifier
+  public var TRANSPONDER_ID: String? { let o = _accessor.offset(VTOFFSET.TRANSPONDER_ID.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TRANSPONDER_IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TRANSPONDER_ID.v) }
+  ///  Transponder name
+  public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  ///  Transponder type (e.g., BENT_PIPE, REGENERATIVE, OBP)
+  public var TYPE: String? { let o = _accessor.offset(VTOFFSET.TYPE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var TYPESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.TYPE.v) }
+  ///  Operating band (e.g., C, Ku, Ka, L, S, X)
+  public var BAND: String? { let o = _accessor.offset(VTOFFSET.BAND.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var BANDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.BAND.v) }
+  ///  Uplink frequency range minimum in MHz
+  public var UPLINK_FREQ_MIN: Double { let o = _accessor.offset(VTOFFSET.UPLINK_FREQ_MIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Uplink frequency range maximum in MHz
+  public var UPLINK_FREQ_MAX: Double { let o = _accessor.offset(VTOFFSET.UPLINK_FREQ_MAX.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Downlink frequency range minimum in MHz
+  public var DOWNLINK_FREQ_MIN: Double { let o = _accessor.offset(VTOFFSET.DOWNLINK_FREQ_MIN.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Downlink frequency range maximum in MHz
+  public var DOWNLINK_FREQ_MAX: Double { let o = _accessor.offset(VTOFFSET.DOWNLINK_FREQ_MAX.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Saturated EIRP in dBW
+  public var EIRP: Double { let o = _accessor.offset(VTOFFSET.EIRP.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  G/T in dB/K
+  public var G_OVER_T: Double { let o = _accessor.offset(VTOFFSET.G_OVER_T.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Total bandwidth in MHz
+  public var BANDWIDTH: Double { let o = _accessor.offset(VTOFFSET.BANDWIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Number of channels
+  public var NUM_CHANNELS: UInt32 { let o = _accessor.offset(VTOFFSET.NUM_CHANNELS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Channels on this transponder
+  public var hasChannels: Bool { let o = _accessor.offset(VTOFFSET.CHANNELS.v); return o == 0 ? false : true }
+  public var CHANNELSCount: Int32 { let o = _accessor.offset(VTOFFSET.CHANNELS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
+  public func CHANNELS(at index: Int32) -> commsChannel? { let o = _accessor.offset(VTOFFSET.CHANNELS.v); return o == 0 ? nil : commsChannel(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  ///  Polarization (e.g., RHCP, LHCP, LINEAR_H, LINEAR_V)
+  public var POLARIZATION: String? { let o = _accessor.offset(VTOFFSET.POLARIZATION.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var POLARIZATIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.POLARIZATION.v) }
+  public static func startcommsTransponder(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 14) }
+  public static func add(TRANSPONDER_ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSPONDER_ID, at: VTOFFSET.TRANSPONDER_ID.p) }
+  public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
+  public static func add(TYPE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TYPE, at: VTOFFSET.TYPE.p) }
+  public static func add(BAND: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: BAND, at: VTOFFSET.BAND.p) }
+  public static func add(UPLINK_FREQ_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPLINK_FREQ_MIN, def: 0.0, at: VTOFFSET.UPLINK_FREQ_MIN.p) }
+  public static func add(UPLINK_FREQ_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: UPLINK_FREQ_MAX, def: 0.0, at: VTOFFSET.UPLINK_FREQ_MAX.p) }
+  public static func add(DOWNLINK_FREQ_MIN: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DOWNLINK_FREQ_MIN, def: 0.0, at: VTOFFSET.DOWNLINK_FREQ_MIN.p) }
+  public static func add(DOWNLINK_FREQ_MAX: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DOWNLINK_FREQ_MAX, def: 0.0, at: VTOFFSET.DOWNLINK_FREQ_MAX.p) }
+  public static func add(EIRP: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: EIRP, def: 0.0, at: VTOFFSET.EIRP.p) }
+  public static func add(G_OVER_T: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: G_OVER_T, def: 0.0, at: VTOFFSET.G_OVER_T.p) }
+  public static func add(BANDWIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: BANDWIDTH, def: 0.0, at: VTOFFSET.BANDWIDTH.p) }
+  public static func add(NUM_CHANNELS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_CHANNELS, def: 0, at: VTOFFSET.NUM_CHANNELS.p) }
+  public static func addVectorOf(CHANNELS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: CHANNELS, at: VTOFFSET.CHANNELS.p) }
+  public static func add(POLARIZATION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: POLARIZATION, at: VTOFFSET.POLARIZATION.p) }
+  public static func endcommsTransponder(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
+  public static func createcommsTransponder(
+    _ fbb: inout FlatBufferBuilder,
+    TRANSPONDER_IDOffset TRANSPONDER_ID: Offset = Offset(),
+    NAMEOffset NAME: Offset = Offset(),
+    TYPEOffset TYPE: Offset = Offset(),
+    BANDOffset BAND: Offset = Offset(),
+    UPLINK_FREQ_MIN: Double = 0.0,
+    UPLINK_FREQ_MAX: Double = 0.0,
+    DOWNLINK_FREQ_MIN: Double = 0.0,
+    DOWNLINK_FREQ_MAX: Double = 0.0,
+    EIRP: Double = 0.0,
+    G_OVER_T: Double = 0.0,
+    BANDWIDTH: Double = 0.0,
+    NUM_CHANNELS: UInt32 = 0,
+    CHANNELSVectorOffset CHANNELS: Offset = Offset(),
+    POLARIZATIONOffset POLARIZATION: Offset = Offset()
+  ) -> Offset {
+    let __start = commsTransponder.startcommsTransponder(&fbb)
+    commsTransponder.add(TRANSPONDER_ID: TRANSPONDER_ID, &fbb)
+    commsTransponder.add(NAME: NAME, &fbb)
+    commsTransponder.add(TYPE: TYPE, &fbb)
+    commsTransponder.add(BAND: BAND, &fbb)
+    commsTransponder.add(UPLINK_FREQ_MIN: UPLINK_FREQ_MIN, &fbb)
+    commsTransponder.add(UPLINK_FREQ_MAX: UPLINK_FREQ_MAX, &fbb)
+    commsTransponder.add(DOWNLINK_FREQ_MIN: DOWNLINK_FREQ_MIN, &fbb)
+    commsTransponder.add(DOWNLINK_FREQ_MAX: DOWNLINK_FREQ_MAX, &fbb)
+    commsTransponder.add(EIRP: EIRP, &fbb)
+    commsTransponder.add(G_OVER_T: G_OVER_T, &fbb)
+    commsTransponder.add(BANDWIDTH: BANDWIDTH, &fbb)
+    commsTransponder.add(NUM_CHANNELS: NUM_CHANNELS, &fbb)
+    commsTransponder.addVectorOf(CHANNELS: CHANNELS, &fbb)
+    commsTransponder.add(POLARIZATION: POLARIZATION, &fbb)
+    return commsTransponder.endcommsTransponder(&fbb, start: __start)
+  }
+
+  public static func verify<T>(_ verifier: inout Verifier, at position: Int, of type: T.Type) throws where T: Verifiable {
+    var _v = try verifier.visitTable(at: position)
+    try _v.visit(field: VTOFFSET.TRANSPONDER_ID.p, fieldName: "TRANSPONDER_ID", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.TYPE.p, fieldName: "TYPE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.BAND.p, fieldName: "BAND", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.UPLINK_FREQ_MIN.p, fieldName: "UPLINK_FREQ_MIN", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.UPLINK_FREQ_MAX.p, fieldName: "UPLINK_FREQ_MAX", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.DOWNLINK_FREQ_MIN.p, fieldName: "DOWNLINK_FREQ_MIN", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.DOWNLINK_FREQ_MAX.p, fieldName: "DOWNLINK_FREQ_MAX", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.EIRP.p, fieldName: "EIRP", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.G_OVER_T.p, fieldName: "G_OVER_T", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.BANDWIDTH.p, fieldName: "BANDWIDTH", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.NUM_CHANNELS.p, fieldName: "NUM_CHANNELS", required: false, type: UInt32.self)
+    try _v.visit(field: VTOFFSET.CHANNELS.p, fieldName: "CHANNELS", required: false, type: ForwardOffset<Vector<ForwardOffset<commsChannel>, commsChannel>>.self)
+    try _v.visit(field: VTOFFSET.POLARIZATION.p, fieldName: "POLARIZATION", required: false, type: ForwardOffset<String>.self)
+    _v.finish()
+  }
+}
+
 ///  Communications Payload
 public struct CMS: FlatBufferObject, Verifiable {
 
@@ -22,31 +306,76 @@ public struct CMS: FlatBufferObject, Verifiable {
     case NAME = 8
     case DESCRIPTION = 10
     case ENTITY = 12
-    case TRANSPONDERS = 14
+    case SAT_NO = 14
+    case NUM_TRANSPONDERS = 16
+    case TRANSPONDERS = 18
+    case TOTAL_POWER = 20
+    case TOTAL_MASS = 22
+    case TOTAL_BANDWIDTH = 24
+    case MISSION = 26
+    case COVERAGE = 28
+    case DESIGN_LIFE = 30
+    case NOTES = 32
     var v: Int32 { Int32(self.rawValue) }
     var p: VOffset { self.rawValue }
   }
 
+  ///  Unique identifier
   public var ID: String? { let o = _accessor.offset(VTOFFSET.ID.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var IDSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID.v) }
+  ///  Reference to parent entity
   public var ID_ENTITY: String? { let o = _accessor.offset(VTOFFSET.ID_ENTITY.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ID_ENTITYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ID_ENTITY.v) }
+  ///  Communications payload name
   public var NAME: String? { let o = _accessor.offset(VTOFFSET.NAME.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var NAMESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NAME.v) }
+  ///  Description
   public var DESCRIPTION: String? { let o = _accessor.offset(VTOFFSET.DESCRIPTION.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var DESCRIPTIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.DESCRIPTION.v) }
+  ///  Parent entity designator
   public var ENTITY: String? { let o = _accessor.offset(VTOFFSET.ENTITY.v); return o == 0 ? nil : _accessor.string(at: o) }
   public var ENTITYSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.ENTITY.v) }
+  ///  Satellite number
+  public var SAT_NO: UInt32 { let o = _accessor.offset(VTOFFSET.SAT_NO.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Number of transponders
+  public var NUM_TRANSPONDERS: UInt32 { let o = _accessor.offset(VTOFFSET.NUM_TRANSPONDERS.v); return o == 0 ? 0 : _accessor.readBuffer(of: UInt32.self, at: o) }
+  ///  Transponders
   public var hasTransponders: Bool { let o = _accessor.offset(VTOFFSET.TRANSPONDERS.v); return o == 0 ? false : true }
   public var TRANSPONDERSCount: Int32 { let o = _accessor.offset(VTOFFSET.TRANSPONDERS.v); return o == 0 ? 0 : _accessor.vector(count: o) }
-  public func TRANSPONDERS(at index: Int32) -> String? { let o = _accessor.offset(VTOFFSET.TRANSPONDERS.v); return o == 0 ? nil : _accessor.directString(at: _accessor.vector(at: o) + index * 4) }
-  public static func startCMS(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 6) }
+  public func TRANSPONDERS(at index: Int32) -> commsTransponder? { let o = _accessor.offset(VTOFFSET.TRANSPONDERS.v); return o == 0 ? nil : commsTransponder(_accessor.bb, o: _accessor.indirect(_accessor.vector(at: o) + index * 4)) }
+  ///  Total payload power in Watts
+  public var TOTAL_POWER: Double { let o = _accessor.offset(VTOFFSET.TOTAL_POWER.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Total payload mass in kg
+  public var TOTAL_MASS: Double { let o = _accessor.offset(VTOFFSET.TOTAL_MASS.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Total aggregate bandwidth in MHz
+  public var TOTAL_BANDWIDTH: Double { let o = _accessor.offset(VTOFFSET.TOTAL_BANDWIDTH.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Primary mission (e.g., FIXED_SAT, BROADCAST, MOBILE, RELAY, MILSATCOM)
+  public var MISSION: String? { let o = _accessor.offset(VTOFFSET.MISSION.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var MISSIONSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.MISSION.v) }
+  ///  Coverage region description
+  public var COVERAGE: String? { let o = _accessor.offset(VTOFFSET.COVERAGE.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var COVERAGESegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.COVERAGE.v) }
+  ///  Design lifetime in years
+  public var DESIGN_LIFE: Double { let o = _accessor.offset(VTOFFSET.DESIGN_LIFE.v); return o == 0 ? 0.0 : _accessor.readBuffer(of: Double.self, at: o) }
+  ///  Additional notes
+  public var NOTES: String? { let o = _accessor.offset(VTOFFSET.NOTES.v); return o == 0 ? nil : _accessor.string(at: o) }
+  public var NOTESSegmentArray: [UInt8]? { return _accessor.getVector(at: VTOFFSET.NOTES.v) }
+  public static func startCMS(_ fbb: inout FlatBufferBuilder) -> UOffset { fbb.startTable(with: 15) }
   public static func add(ID: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID, at: VTOFFSET.ID.p) }
   public static func add(ID_ENTITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ID_ENTITY, at: VTOFFSET.ID_ENTITY.p) }
   public static func add(NAME: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NAME, at: VTOFFSET.NAME.p) }
   public static func add(DESCRIPTION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: DESCRIPTION, at: VTOFFSET.DESCRIPTION.p) }
   public static func add(ENTITY: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: ENTITY, at: VTOFFSET.ENTITY.p) }
+  public static func add(SAT_NO: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: SAT_NO, def: 0, at: VTOFFSET.SAT_NO.p) }
+  public static func add(NUM_TRANSPONDERS: UInt32, _ fbb: inout FlatBufferBuilder) { fbb.add(element: NUM_TRANSPONDERS, def: 0, at: VTOFFSET.NUM_TRANSPONDERS.p) }
   public static func addVectorOf(TRANSPONDERS: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: TRANSPONDERS, at: VTOFFSET.TRANSPONDERS.p) }
+  public static func add(TOTAL_POWER: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOTAL_POWER, def: 0.0, at: VTOFFSET.TOTAL_POWER.p) }
+  public static func add(TOTAL_MASS: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOTAL_MASS, def: 0.0, at: VTOFFSET.TOTAL_MASS.p) }
+  public static func add(TOTAL_BANDWIDTH: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: TOTAL_BANDWIDTH, def: 0.0, at: VTOFFSET.TOTAL_BANDWIDTH.p) }
+  public static func add(MISSION: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: MISSION, at: VTOFFSET.MISSION.p) }
+  public static func add(COVERAGE: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: COVERAGE, at: VTOFFSET.COVERAGE.p) }
+  public static func add(DESIGN_LIFE: Double, _ fbb: inout FlatBufferBuilder) { fbb.add(element: DESIGN_LIFE, def: 0.0, at: VTOFFSET.DESIGN_LIFE.p) }
+  public static func add(NOTES: Offset, _ fbb: inout FlatBufferBuilder) { fbb.add(offset: NOTES, at: VTOFFSET.NOTES.p) }
   public static func endCMS(_ fbb: inout FlatBufferBuilder, start: UOffset) -> Offset { let end = Offset(offset: fbb.endTable(at: start)); return end }
   public static func createCMS(
     _ fbb: inout FlatBufferBuilder,
@@ -55,7 +384,16 @@ public struct CMS: FlatBufferObject, Verifiable {
     NAMEOffset NAME: Offset = Offset(),
     DESCRIPTIONOffset DESCRIPTION: Offset = Offset(),
     ENTITYOffset ENTITY: Offset = Offset(),
-    TRANSPONDERSVectorOffset TRANSPONDERS: Offset = Offset()
+    SAT_NO: UInt32 = 0,
+    NUM_TRANSPONDERS: UInt32 = 0,
+    TRANSPONDERSVectorOffset TRANSPONDERS: Offset = Offset(),
+    TOTAL_POWER: Double = 0.0,
+    TOTAL_MASS: Double = 0.0,
+    TOTAL_BANDWIDTH: Double = 0.0,
+    MISSIONOffset MISSION: Offset = Offset(),
+    COVERAGEOffset COVERAGE: Offset = Offset(),
+    DESIGN_LIFE: Double = 0.0,
+    NOTESOffset NOTES: Offset = Offset()
   ) -> Offset {
     let __start = CMS.startCMS(&fbb)
     CMS.add(ID: ID, &fbb)
@@ -63,7 +401,16 @@ public struct CMS: FlatBufferObject, Verifiable {
     CMS.add(NAME: NAME, &fbb)
     CMS.add(DESCRIPTION: DESCRIPTION, &fbb)
     CMS.add(ENTITY: ENTITY, &fbb)
+    CMS.add(SAT_NO: SAT_NO, &fbb)
+    CMS.add(NUM_TRANSPONDERS: NUM_TRANSPONDERS, &fbb)
     CMS.addVectorOf(TRANSPONDERS: TRANSPONDERS, &fbb)
+    CMS.add(TOTAL_POWER: TOTAL_POWER, &fbb)
+    CMS.add(TOTAL_MASS: TOTAL_MASS, &fbb)
+    CMS.add(TOTAL_BANDWIDTH: TOTAL_BANDWIDTH, &fbb)
+    CMS.add(MISSION: MISSION, &fbb)
+    CMS.add(COVERAGE: COVERAGE, &fbb)
+    CMS.add(DESIGN_LIFE: DESIGN_LIFE, &fbb)
+    CMS.add(NOTES: NOTES, &fbb)
     return CMS.endCMS(&fbb, start: __start)
   }
 
@@ -74,7 +421,16 @@ public struct CMS: FlatBufferObject, Verifiable {
     try _v.visit(field: VTOFFSET.NAME.p, fieldName: "NAME", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.DESCRIPTION.p, fieldName: "DESCRIPTION", required: false, type: ForwardOffset<String>.self)
     try _v.visit(field: VTOFFSET.ENTITY.p, fieldName: "ENTITY", required: false, type: ForwardOffset<String>.self)
-    try _v.visit(field: VTOFFSET.TRANSPONDERS.p, fieldName: "TRANSPONDERS", required: false, type: ForwardOffset<Vector<ForwardOffset<String>, String>>.self)
+    try _v.visit(field: VTOFFSET.SAT_NO.p, fieldName: "SAT_NO", required: false, type: UInt32.self)
+    try _v.visit(field: VTOFFSET.NUM_TRANSPONDERS.p, fieldName: "NUM_TRANSPONDERS", required: false, type: UInt32.self)
+    try _v.visit(field: VTOFFSET.TRANSPONDERS.p, fieldName: "TRANSPONDERS", required: false, type: ForwardOffset<Vector<ForwardOffset<commsTransponder>, commsTransponder>>.self)
+    try _v.visit(field: VTOFFSET.TOTAL_POWER.p, fieldName: "TOTAL_POWER", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.TOTAL_MASS.p, fieldName: "TOTAL_MASS", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.TOTAL_BANDWIDTH.p, fieldName: "TOTAL_BANDWIDTH", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.MISSION.p, fieldName: "MISSION", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.COVERAGE.p, fieldName: "COVERAGE", required: false, type: ForwardOffset<String>.self)
+    try _v.visit(field: VTOFFSET.DESIGN_LIFE.p, fieldName: "DESIGN_LIFE", required: false, type: Double.self)
+    try _v.visit(field: VTOFFSET.NOTES.p, fieldName: "NOTES", required: false, type: ForwardOffset<String>.self)
     _v.finish()
   }
 }

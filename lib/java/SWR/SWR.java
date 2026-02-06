@@ -18,7 +18,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * Short-Wave Infrared
+ * Short-Wave Infrared Observation
  */
 @SuppressWarnings("unused")
 public final class SWR extends Table {
@@ -29,48 +29,116 @@ public final class SWR extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public SWR __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * On-orbit reference
+   */
   public String ON_ORBIT() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ON_ORBITAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer ON_ORBITInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
-  public String TS() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer TSAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
-  public ByteBuffer TSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
-  public double SOLAR_PHASE_ANGLE() { int o = __offset(10); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double LAT() { int o = __offset(12); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public double LON() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
-  public String LOCATION_NAME() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer LOCATION_NAMEAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
-  public ByteBuffer LOCATION_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
-  public String BAD_WAVE() { int o = __offset(18); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer BAD_WAVEAsByteBuffer() { return __vector_as_bytebuffer(18, 1); }
-  public ByteBuffer BAD_WAVEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 18, 1); }
-  public String WAVELENGTHS(int j) { int o = __offset(20); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int WAVELENGTHSLength() { int o = __offset(20); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector wavelengthsVector() { return wavelengthsVector(new StringVector()); }
-  public StringVector wavelengthsVector(StringVector obj) { int o = __offset(20); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String ABS_FLUXES(int j) { int o = __offset(22); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int ABS_FLUXESLength() { int o = __offset(22); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector absFluxesVector() { return absFluxesVector(new StringVector()); }
-  public StringVector absFluxesVector(StringVector obj) { int o = __offset(22); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String RATIO_WAVELENGTHS(int j) { int o = __offset(24); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int RATIO_WAVELENGTHSLength() { int o = __offset(24); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector ratioWavelengthsVector() { return ratioWavelengthsVector(new StringVector()); }
-  public StringVector ratioWavelengthsVector(StringVector obj) { int o = __offset(24); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String FLUX_RATIOS(int j) { int o = __offset(26); return o != 0 ? __string(__vector(o) + j * 4) : null; }
-  public int FLUX_RATIOSLength() { int o = __offset(26); return o != 0 ? __vector_len(o) : 0; }
-  public StringVector fluxRatiosVector() { return fluxRatiosVector(new StringVector()); }
-  public StringVector fluxRatiosVector(StringVector obj) { int o = __offset(26); return o != 0 ? obj.__assign(__vector(o), 4, bb) : null; }
-  public String ORIG_OBJECT_ID() { int o = __offset(28); return o != 0 ? __string(o + bb_pos) : null; }
-  public ByteBuffer ORIG_OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(28, 1); }
-  public ByteBuffer ORIG_OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 1); }
-  public int SAT_NO() { int o = __offset(30); return o != 0 ? bb.getInt(o + bb_pos) : 0; }
+  /**
+   * International designator
+   */
+  public String ORIG_OBJECT_ID() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer ORIG_OBJECT_IDAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
+  public ByteBuffer ORIG_OBJECT_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * Satellite catalog number
+   */
+  public long SAT_NO() { int o = __offset(10); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Observation timestamp (ISO 8601)
+   */
+  public String TS() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer TSAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
+  public ByteBuffer TSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * Solar phase angle (degrees)
+   */
+  public double SOLAR_PHASE_ANGLE() { int o = __offset(14); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sub-observer latitude (degrees)
+   */
+  public double LAT() { int o = __offset(16); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Sub-observer longitude (degrees)
+   */
+  public double LON() { int o = __offset(18); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Location name
+   */
+  public String LOCATION_NAME() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer LOCATION_NAMEAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
+  public ByteBuffer LOCATION_NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
+  /**
+   * Bad wavelength flag or identifier
+   */
+  public String BAD_WAVE() { int o = __offset(22); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer BAD_WAVEAsByteBuffer() { return __vector_as_bytebuffer(22, 1); }
+  public ByteBuffer BAD_WAVEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 22, 1); }
+  /**
+   * Measured wavelengths (micrometers)
+   */
+  public double WAVELENGTHS(int j) { int o = __offset(24); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int WAVELENGTHSLength() { int o = __offset(24); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector wavelengthsVector() { return wavelengthsVector(new DoubleVector()); }
+  public DoubleVector wavelengthsVector(DoubleVector obj) { int o = __offset(24); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer WAVELENGTHSAsByteBuffer() { return __vector_as_bytebuffer(24, 8); }
+  public ByteBuffer WAVELENGTHSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 24, 8); }
+  /**
+   * Absolute flux values (W/m^2/um)
+   */
+  public double ABS_FLUXES(int j) { int o = __offset(26); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int ABS_FLUXESLength() { int o = __offset(26); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector absFluxesVector() { return absFluxesVector(new DoubleVector()); }
+  public DoubleVector absFluxesVector(DoubleVector obj) { int o = __offset(26); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer ABS_FLUXESAsByteBuffer() { return __vector_as_bytebuffer(26, 8); }
+  public ByteBuffer ABS_FLUXESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 26, 8); }
+  /**
+   * Ratio reference wavelengths (micrometers)
+   */
+  public double RATIO_WAVELENGTHS(int j) { int o = __offset(28); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int RATIO_WAVELENGTHSLength() { int o = __offset(28); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector ratioWavelengthsVector() { return ratioWavelengthsVector(new DoubleVector()); }
+  public DoubleVector ratioWavelengthsVector(DoubleVector obj) { int o = __offset(28); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer RATIO_WAVELENGTHSAsByteBuffer() { return __vector_as_bytebuffer(28, 8); }
+  public ByteBuffer RATIO_WAVELENGTHSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 28, 8); }
+  /**
+   * Flux ratios (normalized)
+   */
+  public double FLUX_RATIOS(int j) { int o = __offset(30); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int FLUX_RATIOSLength() { int o = __offset(30); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector fluxRatiosVector() { return fluxRatiosVector(new DoubleVector()); }
+  public DoubleVector fluxRatiosVector(DoubleVector obj) { int o = __offset(30); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer FLUX_RATIOSAsByteBuffer() { return __vector_as_bytebuffer(30, 8); }
+  public ByteBuffer FLUX_RATIOSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 30, 8); }
+  /**
+   * Effective temperature (Kelvin)
+   */
+  public double TEMPERATURE() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Signal-to-noise ratio
+   */
+  public double SIGNAL_NOISE_RATIO() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Integration time (seconds)
+   */
+  public double INTEGRATION_TIME() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Data quality (0-9, 9=best)
+   */
+  public int QUALITY() { int o = __offset(38); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
 
   public static int createSWR(FlatBufferBuilder builder,
       int IDOffset,
       int ON_ORBITOffset,
+      int ORIG_OBJECT_IDOffset,
+      long SAT_NO,
       int TSOffset,
       double SOLAR_PHASE_ANGLE,
       double LAT,
@@ -81,14 +149,17 @@ public final class SWR extends Table {
       int ABS_FLUXESOffset,
       int RATIO_WAVELENGTHSOffset,
       int FLUX_RATIOSOffset,
-      int ORIG_OBJECT_IDOffset,
-      int SAT_NO) {
-    builder.startTable(14);
+      double TEMPERATURE,
+      double SIGNAL_NOISE_RATIO,
+      double INTEGRATION_TIME,
+      int QUALITY) {
+    builder.startTable(18);
+    SWR.addIntegrationTime(builder, INTEGRATION_TIME);
+    SWR.addSignalNoiseRatio(builder, SIGNAL_NOISE_RATIO);
+    SWR.addTemperature(builder, TEMPERATURE);
     SWR.addLon(builder, LON);
     SWR.addLat(builder, LAT);
     SWR.addSolarPhaseAngle(builder, SOLAR_PHASE_ANGLE);
-    SWR.addSatNo(builder, SAT_NO);
-    SWR.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
     SWR.addFluxRatios(builder, FLUX_RATIOSOffset);
     SWR.addRatioWavelengths(builder, RATIO_WAVELENGTHSOffset);
     SWR.addAbsFluxes(builder, ABS_FLUXESOffset);
@@ -96,34 +167,41 @@ public final class SWR extends Table {
     SWR.addBadWave(builder, BAD_WAVEOffset);
     SWR.addLocationName(builder, LOCATION_NAMEOffset);
     SWR.addTs(builder, TSOffset);
+    SWR.addSatNo(builder, SAT_NO);
+    SWR.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
     SWR.addOnOrbit(builder, ON_ORBITOffset);
     SWR.addId(builder, IDOffset);
+    SWR.addQuality(builder, QUALITY);
     return SWR.endSWR(builder);
   }
 
-  public static void startSWR(FlatBufferBuilder builder) { builder.startTable(14); }
+  public static void startSWR(FlatBufferBuilder builder) { builder.startTable(18); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addOnOrbit(FlatBufferBuilder builder, int ON_ORBITOffset) { builder.addOffset(1, ON_ORBITOffset, 0); }
-  public static void addTs(FlatBufferBuilder builder, int TSOffset) { builder.addOffset(2, TSOffset, 0); }
-  public static void addSolarPhaseAngle(FlatBufferBuilder builder, double SOLAR_PHASE_ANGLE) { builder.addDouble(3, SOLAR_PHASE_ANGLE, 0.0); }
-  public static void addLat(FlatBufferBuilder builder, double LAT) { builder.addDouble(4, LAT, 0.0); }
-  public static void addLon(FlatBufferBuilder builder, double LON) { builder.addDouble(5, LON, 0.0); }
-  public static void addLocationName(FlatBufferBuilder builder, int LOCATION_NAMEOffset) { builder.addOffset(6, LOCATION_NAMEOffset, 0); }
-  public static void addBadWave(FlatBufferBuilder builder, int BAD_WAVEOffset) { builder.addOffset(7, BAD_WAVEOffset, 0); }
-  public static void addWavelengths(FlatBufferBuilder builder, int WAVELENGTHSOffset) { builder.addOffset(8, WAVELENGTHSOffset, 0); }
-  public static int createWavelengthsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startWavelengthsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addAbsFluxes(FlatBufferBuilder builder, int ABS_FLUXESOffset) { builder.addOffset(9, ABS_FLUXESOffset, 0); }
-  public static int createAbsFluxesVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startAbsFluxesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addRatioWavelengths(FlatBufferBuilder builder, int RATIO_WAVELENGTHSOffset) { builder.addOffset(10, RATIO_WAVELENGTHSOffset, 0); }
-  public static int createRatioWavelengthsVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startRatioWavelengthsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addFluxRatios(FlatBufferBuilder builder, int FLUX_RATIOSOffset) { builder.addOffset(11, FLUX_RATIOSOffset, 0); }
-  public static int createFluxRatiosVector(FlatBufferBuilder builder, int[] data) { builder.startVector(4, data.length, 4); for (int i = data.length - 1; i >= 0; i--) builder.addOffset(data[i]); return builder.endVector(); }
-  public static void startFluxRatiosVector(FlatBufferBuilder builder, int numElems) { builder.startVector(4, numElems, 4); }
-  public static void addOrigObjectId(FlatBufferBuilder builder, int ORIG_OBJECT_IDOffset) { builder.addOffset(12, ORIG_OBJECT_IDOffset, 0); }
-  public static void addSatNo(FlatBufferBuilder builder, int SAT_NO) { builder.addInt(13, SAT_NO, 0); }
+  public static void addOrigObjectId(FlatBufferBuilder builder, int ORIG_OBJECT_IDOffset) { builder.addOffset(2, ORIG_OBJECT_IDOffset, 0); }
+  public static void addSatNo(FlatBufferBuilder builder, long SAT_NO) { builder.addInt(3, (int) SAT_NO, (int) 0L); }
+  public static void addTs(FlatBufferBuilder builder, int TSOffset) { builder.addOffset(4, TSOffset, 0); }
+  public static void addSolarPhaseAngle(FlatBufferBuilder builder, double SOLAR_PHASE_ANGLE) { builder.addDouble(5, SOLAR_PHASE_ANGLE, 0.0); }
+  public static void addLat(FlatBufferBuilder builder, double LAT) { builder.addDouble(6, LAT, 0.0); }
+  public static void addLon(FlatBufferBuilder builder, double LON) { builder.addDouble(7, LON, 0.0); }
+  public static void addLocationName(FlatBufferBuilder builder, int LOCATION_NAMEOffset) { builder.addOffset(8, LOCATION_NAMEOffset, 0); }
+  public static void addBadWave(FlatBufferBuilder builder, int BAD_WAVEOffset) { builder.addOffset(9, BAD_WAVEOffset, 0); }
+  public static void addWavelengths(FlatBufferBuilder builder, int WAVELENGTHSOffset) { builder.addOffset(10, WAVELENGTHSOffset, 0); }
+  public static int createWavelengthsVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startWavelengthsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addAbsFluxes(FlatBufferBuilder builder, int ABS_FLUXESOffset) { builder.addOffset(11, ABS_FLUXESOffset, 0); }
+  public static int createAbsFluxesVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startAbsFluxesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addRatioWavelengths(FlatBufferBuilder builder, int RATIO_WAVELENGTHSOffset) { builder.addOffset(12, RATIO_WAVELENGTHSOffset, 0); }
+  public static int createRatioWavelengthsVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startRatioWavelengthsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addFluxRatios(FlatBufferBuilder builder, int FLUX_RATIOSOffset) { builder.addOffset(13, FLUX_RATIOSOffset, 0); }
+  public static int createFluxRatiosVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startFluxRatiosVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addTemperature(FlatBufferBuilder builder, double TEMPERATURE) { builder.addDouble(14, TEMPERATURE, 0.0); }
+  public static void addSignalNoiseRatio(FlatBufferBuilder builder, double SIGNAL_NOISE_RATIO) { builder.addDouble(15, SIGNAL_NOISE_RATIO, 0.0); }
+  public static void addIntegrationTime(FlatBufferBuilder builder, double INTEGRATION_TIME) { builder.addDouble(16, INTEGRATION_TIME, 0.0); }
+  public static void addQuality(FlatBufferBuilder builder, int QUALITY) { builder.addByte(17, (byte) QUALITY, (byte) 0); }
   public static int endSWR(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

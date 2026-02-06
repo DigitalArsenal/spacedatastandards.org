@@ -29,43 +29,255 @@ public final class IRO extends Table {
   public void __init(int _i, ByteBuffer _bb) { __reset(_i, _bb); }
   public IRO __assign(int _i, ByteBuffer _bb) { __init(_i, _bb); return this; }
 
+  /**
+   * Unique identifier
+   */
   public String ID() { int o = __offset(4); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer IDAsByteBuffer() { return __vector_as_bytebuffer(4, 1); }
   public ByteBuffer IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 4, 1); }
+  /**
+   * Reference to source entity
+   */
   public String ID_ENTITY() { int o = __offset(6); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ID_ENTITYAsByteBuffer() { return __vector_as_bytebuffer(6, 1); }
   public ByteBuffer ID_ENTITYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 6, 1); }
+  /**
+   * Sensor or observation name
+   */
   public String NAME() { int o = __offset(8); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer NAMEAsByteBuffer() { return __vector_as_bytebuffer(8, 1); }
   public ByteBuffer NAMEInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 8, 1); }
+  /**
+   * Description of observation
+   */
   public String DESCRIPTION() { int o = __offset(10); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer DESCRIPTIONAsByteBuffer() { return __vector_as_bytebuffer(10, 1); }
   public ByteBuffer DESCRIPTIONInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 10, 1); }
+  /**
+   * Source entity designator
+   */
   public String ENTITY() { int o = __offset(12); return o != 0 ? __string(o + bb_pos) : null; }
   public ByteBuffer ENTITYAsByteBuffer() { return __vector_as_bytebuffer(12, 1); }
   public ByteBuffer ENTITYInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 12, 1); }
+  /**
+   * Observation epoch (ISO 8601)
+   */
+  public String EPOCH() { int o = __offset(14); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer EPOCHAsByteBuffer() { return __vector_as_bytebuffer(14, 1); }
+  public ByteBuffer EPOCHInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 14, 1); }
+  /**
+   * Sensor identifier
+   */
+  public String SENSOR_ID() { int o = __offset(16); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer SENSOR_IDAsByteBuffer() { return __vector_as_bytebuffer(16, 1); }
+  public ByteBuffer SENSOR_IDInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 16, 1); }
+  /**
+   * Target satellite number (if identified)
+   */
+  public long SAT_NO() { int o = __offset(18); return o != 0 ? (long)bb.getInt(o + bb_pos) & 0xFFFFFFFFL : 0L; }
+  /**
+   * Target object designator
+   */
+  public String OBJECT_DESIGNATOR() { int o = __offset(20); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer OBJECT_DESIGNATORAsByteBuffer() { return __vector_as_bytebuffer(20, 1); }
+  public ByteBuffer OBJECT_DESIGNATORInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 20, 1); }
+  /**
+   * IR spectral band
+   */
+  public byte BAND() { int o = __offset(22); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Detection type
+   */
+  public byte DETECTION_TYPE() { int o = __offset(24); return o != 0 ? bb.get(o + bb_pos) : 0; }
+  /**
+   * Right ascension in degrees
+   */
+  public double RA() { int o = __offset(26); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Declination in degrees
+   */
+  public double DEC() { int o = __offset(28); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Right ascension uncertainty in arcseconds
+   */
+  public double RA_UNC() { int o = __offset(30); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Declination uncertainty in arcseconds
+   */
+  public double DEC_UNC() { int o = __offset(32); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Azimuth angle in degrees
+   */
+  public double AZIMUTH() { int o = __offset(34); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Elevation angle in degrees
+   */
+  public double ELEVATION() { int o = __offset(36); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Range in km (if available)
+   */
+  public double RANGE() { int o = __offset(38); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Irradiance in W/m^2
+   */
+  public double IRRADIANCE() { int o = __offset(40); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Irradiance uncertainty in W/m^2
+   */
+  public double IRRADIANCE_UNC() { int o = __offset(42); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Apparent IR magnitude
+   */
+  public double IR_MAG() { int o = __offset(44); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Magnitude uncertainty
+   */
+  public double MAG_UNC() { int o = __offset(46); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Effective temperature in Kelvin
+   */
+  public double TEMPERATURE() { int o = __offset(48); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Integration time in seconds
+   */
+  public double INTEGRATION_TIME() { int o = __offset(50); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Background irradiance in W/m^2/sr
+   */
+  public double BACKGROUND() { int o = __offset(52); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Signal-to-noise ratio
+   */
+  public double SNR() { int o = __offset(54); return o != 0 ? bb.getDouble(o + bb_pos) : 0.0; }
+  /**
+   * Spectral data wavelengths in micrometers
+   */
+  public double WAVELENGTHS(int j) { int o = __offset(56); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int WAVELENGTHSLength() { int o = __offset(56); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector wavelengthsVector() { return wavelengthsVector(new DoubleVector()); }
+  public DoubleVector wavelengthsVector(DoubleVector obj) { int o = __offset(56); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer WAVELENGTHSAsByteBuffer() { return __vector_as_bytebuffer(56, 8); }
+  public ByteBuffer WAVELENGTHSInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 56, 8); }
+  /**
+   * Spectral data values in W/m^2/um
+   */
+  public double SPECTRAL_VALUES(int j) { int o = __offset(58); return o != 0 ? bb.getDouble(__vector(o) + j * 8) : 0; }
+  public int SPECTRAL_VALUESLength() { int o = __offset(58); return o != 0 ? __vector_len(o) : 0; }
+  public DoubleVector spectralValuesVector() { return spectralValuesVector(new DoubleVector()); }
+  public DoubleVector spectralValuesVector(DoubleVector obj) { int o = __offset(58); return o != 0 ? obj.__assign(__vector(o), bb) : null; }
+  public ByteBuffer SPECTRAL_VALUESAsByteBuffer() { return __vector_as_bytebuffer(58, 8); }
+  public ByteBuffer SPECTRAL_VALUESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 58, 8); }
+  /**
+   * Data quality indicator (0-9, 9=best)
+   */
+  public int QUALITY() { int o = __offset(60); return o != 0 ? bb.get(o + bb_pos) & 0xFF : 0; }
+  /**
+   * Additional notes
+   */
+  public String NOTES() { int o = __offset(62); return o != 0 ? __string(o + bb_pos) : null; }
+  public ByteBuffer NOTESAsByteBuffer() { return __vector_as_bytebuffer(62, 1); }
+  public ByteBuffer NOTESInByteBuffer(ByteBuffer _bb) { return __vector_in_bytebuffer(_bb, 62, 1); }
 
   public static int createIRO(FlatBufferBuilder builder,
       int IDOffset,
       int ID_ENTITYOffset,
       int NAMEOffset,
       int DESCRIPTIONOffset,
-      int ENTITYOffset) {
-    builder.startTable(5);
+      int ENTITYOffset,
+      int EPOCHOffset,
+      int SENSOR_IDOffset,
+      long SAT_NO,
+      int OBJECT_DESIGNATOROffset,
+      byte BAND,
+      byte DETECTION_TYPE,
+      double RA,
+      double DEC,
+      double RA_UNC,
+      double DEC_UNC,
+      double AZIMUTH,
+      double ELEVATION,
+      double RANGE,
+      double IRRADIANCE,
+      double IRRADIANCE_UNC,
+      double IR_MAG,
+      double MAG_UNC,
+      double TEMPERATURE,
+      double INTEGRATION_TIME,
+      double BACKGROUND,
+      double SNR,
+      int WAVELENGTHSOffset,
+      int SPECTRAL_VALUESOffset,
+      int QUALITY,
+      int NOTESOffset) {
+    builder.startTable(30);
+    IRO.addSnr(builder, SNR);
+    IRO.addBackground(builder, BACKGROUND);
+    IRO.addIntegrationTime(builder, INTEGRATION_TIME);
+    IRO.addTemperature(builder, TEMPERATURE);
+    IRO.addMagUnc(builder, MAG_UNC);
+    IRO.addIrMag(builder, IR_MAG);
+    IRO.addIrradianceUnc(builder, IRRADIANCE_UNC);
+    IRO.addIrradiance(builder, IRRADIANCE);
+    IRO.addRange(builder, RANGE);
+    IRO.addElevation(builder, ELEVATION);
+    IRO.addAzimuth(builder, AZIMUTH);
+    IRO.addDecUnc(builder, DEC_UNC);
+    IRO.addRaUnc(builder, RA_UNC);
+    IRO.addDec(builder, DEC);
+    IRO.addRa(builder, RA);
+    IRO.addNotes(builder, NOTESOffset);
+    IRO.addSpectralValues(builder, SPECTRAL_VALUESOffset);
+    IRO.addWavelengths(builder, WAVELENGTHSOffset);
+    IRO.addObjectDesignator(builder, OBJECT_DESIGNATOROffset);
+    IRO.addSatNo(builder, SAT_NO);
+    IRO.addSensorId(builder, SENSOR_IDOffset);
+    IRO.addEpoch(builder, EPOCHOffset);
     IRO.addEntity(builder, ENTITYOffset);
     IRO.addDescription(builder, DESCRIPTIONOffset);
     IRO.addName(builder, NAMEOffset);
     IRO.addIdEntity(builder, ID_ENTITYOffset);
     IRO.addId(builder, IDOffset);
+    IRO.addQuality(builder, QUALITY);
+    IRO.addDetectionType(builder, DETECTION_TYPE);
+    IRO.addBand(builder, BAND);
     return IRO.endIRO(builder);
   }
 
-  public static void startIRO(FlatBufferBuilder builder) { builder.startTable(5); }
+  public static void startIRO(FlatBufferBuilder builder) { builder.startTable(30); }
   public static void addId(FlatBufferBuilder builder, int IDOffset) { builder.addOffset(0, IDOffset, 0); }
   public static void addIdEntity(FlatBufferBuilder builder, int ID_ENTITYOffset) { builder.addOffset(1, ID_ENTITYOffset, 0); }
   public static void addName(FlatBufferBuilder builder, int NAMEOffset) { builder.addOffset(2, NAMEOffset, 0); }
   public static void addDescription(FlatBufferBuilder builder, int DESCRIPTIONOffset) { builder.addOffset(3, DESCRIPTIONOffset, 0); }
   public static void addEntity(FlatBufferBuilder builder, int ENTITYOffset) { builder.addOffset(4, ENTITYOffset, 0); }
+  public static void addEpoch(FlatBufferBuilder builder, int EPOCHOffset) { builder.addOffset(5, EPOCHOffset, 0); }
+  public static void addSensorId(FlatBufferBuilder builder, int SENSOR_IDOffset) { builder.addOffset(6, SENSOR_IDOffset, 0); }
+  public static void addSatNo(FlatBufferBuilder builder, long SAT_NO) { builder.addInt(7, (int) SAT_NO, (int) 0L); }
+  public static void addObjectDesignator(FlatBufferBuilder builder, int OBJECT_DESIGNATOROffset) { builder.addOffset(8, OBJECT_DESIGNATOROffset, 0); }
+  public static void addBand(FlatBufferBuilder builder, byte BAND) { builder.addByte(9, BAND, 0); }
+  public static void addDetectionType(FlatBufferBuilder builder, byte DETECTION_TYPE) { builder.addByte(10, DETECTION_TYPE, 0); }
+  public static void addRa(FlatBufferBuilder builder, double RA) { builder.addDouble(11, RA, 0.0); }
+  public static void addDec(FlatBufferBuilder builder, double DEC) { builder.addDouble(12, DEC, 0.0); }
+  public static void addRaUnc(FlatBufferBuilder builder, double RA_UNC) { builder.addDouble(13, RA_UNC, 0.0); }
+  public static void addDecUnc(FlatBufferBuilder builder, double DEC_UNC) { builder.addDouble(14, DEC_UNC, 0.0); }
+  public static void addAzimuth(FlatBufferBuilder builder, double AZIMUTH) { builder.addDouble(15, AZIMUTH, 0.0); }
+  public static void addElevation(FlatBufferBuilder builder, double ELEVATION) { builder.addDouble(16, ELEVATION, 0.0); }
+  public static void addRange(FlatBufferBuilder builder, double RANGE) { builder.addDouble(17, RANGE, 0.0); }
+  public static void addIrradiance(FlatBufferBuilder builder, double IRRADIANCE) { builder.addDouble(18, IRRADIANCE, 0.0); }
+  public static void addIrradianceUnc(FlatBufferBuilder builder, double IRRADIANCE_UNC) { builder.addDouble(19, IRRADIANCE_UNC, 0.0); }
+  public static void addIrMag(FlatBufferBuilder builder, double IR_MAG) { builder.addDouble(20, IR_MAG, 0.0); }
+  public static void addMagUnc(FlatBufferBuilder builder, double MAG_UNC) { builder.addDouble(21, MAG_UNC, 0.0); }
+  public static void addTemperature(FlatBufferBuilder builder, double TEMPERATURE) { builder.addDouble(22, TEMPERATURE, 0.0); }
+  public static void addIntegrationTime(FlatBufferBuilder builder, double INTEGRATION_TIME) { builder.addDouble(23, INTEGRATION_TIME, 0.0); }
+  public static void addBackground(FlatBufferBuilder builder, double BACKGROUND) { builder.addDouble(24, BACKGROUND, 0.0); }
+  public static void addSnr(FlatBufferBuilder builder, double SNR) { builder.addDouble(25, SNR, 0.0); }
+  public static void addWavelengths(FlatBufferBuilder builder, int WAVELENGTHSOffset) { builder.addOffset(26, WAVELENGTHSOffset, 0); }
+  public static int createWavelengthsVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startWavelengthsVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addSpectralValues(FlatBufferBuilder builder, int SPECTRAL_VALUESOffset) { builder.addOffset(27, SPECTRAL_VALUESOffset, 0); }
+  public static int createSpectralValuesVector(FlatBufferBuilder builder, double[] data) { builder.startVector(8, data.length, 8); for (int i = data.length - 1; i >= 0; i--) builder.addDouble(data[i]); return builder.endVector(); }
+  public static void startSpectralValuesVector(FlatBufferBuilder builder, int numElems) { builder.startVector(8, numElems, 8); }
+  public static void addQuality(FlatBufferBuilder builder, int QUALITY) { builder.addByte(28, (byte) QUALITY, (byte) 0); }
+  public static void addNotes(FlatBufferBuilder builder, int NOTESOffset) { builder.addOffset(29, NOTESOffset, 0); }
   public static int endIRO(FlatBufferBuilder builder) {
     int o = builder.endTable();
     return o;

@@ -29,6 +29,7 @@ class OBT(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Unique identifier
     # OBT
     def ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,27 +37,31 @@ class OBT(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Satellite catalog number
     # OBT
     def SAT_NO(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
         return 0
 
+    # International designator
     # OBT
-    def ON_ORBIT(self):
+    def ORIG_OBJECT_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # On-orbit reference
     # OBT
-    def ORIG_OBJECT_ID(self):
+    def ON_ORBIT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Track point timestamp (ISO 8601)
     # OBT
     def TS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -64,6 +69,7 @@ class OBT(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Latitude (degrees)
     # OBT
     def LAT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
@@ -71,6 +77,7 @@ class OBT(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Longitude (degrees)
     # OBT
     def LON(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
@@ -78,6 +85,7 @@ class OBT(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Altitude (km)
     # OBT
     def ALT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
@@ -85,215 +93,251 @@ class OBT(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Speed (km/s)
     # OBT
-    def RDF_RF(self):
+    def SPD(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Elevation angle from observer (degrees)
     # OBT
-    def CALL_SIGN(self):
+    def ANG_ELEV(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
 
+    # Radar data fusion RF value
     # OBT
-    def RPT_NUM(self):
+    def RDF_RF(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
 
+    # Call sign
     # OBT
-    def OBJ_IDENT(self):
+    def CALL_SIGN(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Report number
     # OBT
-    def IDENT_AMP(self):
+    def RPT_NUM(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Track identifier
     # OBT
-    def SAT_STATUS(self):
+    def TRK_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Object identity assessment
     # OBT
-    def OBJECT_TYPE(self):
+    def OBJ_IDENT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Identity amplification
     # OBT
-    def COUNTRY_CODE(self):
+    def IDENT_AMP(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Satellite operational status
     # OBT
-    def DECAY(self):
+    def SAT_STATUS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # OBT
-    def CHARLIE_LINE(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Object type
     # OBT
-    def AOU_TYPE(self):
+    def OBJ_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Country code (ISO 3166)
+    # OBT
+    def COUNTRY_CODE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Orbit decay rate (km/day)
     # OBT
-    def AOU_DATA(self, j):
+    def DECAY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Charlie line data (amplification text)
+    # OBT
+    def CHARLIE_LINE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # Area of uncertainty type
+    # OBT
+    def AOU_TYPE(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
+
+    # Area of uncertainty data
+    # OBT
+    def AOU_DATA(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
             a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 8))
+        return 0
+
+    # OBT
+    def AOU_DATAAsNumpy(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        if o != 0:
+            return self._tab.GetVectorAsNumpy(flatbuffers.number_types.Float64Flags, o)
+        return 0
 
     # OBT
     def AOU_DATALength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # OBT
     def AOU_DATAIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         return o == 0
 
-    # OBT
-    def SPD(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
-    # OBT
-    def ANG_ELEV(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
-        if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
-
+    # Containment probability (0-1)
     # OBT
     def CNTNMNT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Cross-reference identifier
     # OBT
     def XREF(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # OBT
-    def CH_XREF(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Charlie cross-reference
     # OBT
-    def AMPLIFICATION(self):
+    def CH_XREF(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Additional amplification text
     # OBT
-    def IFF(self):
+    def AMPLIFICATION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # IFF mode/code
     # OBT
-    def REINFORCED(self):
+    def IFF(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
         if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
+    # Vehicle type
     # OBT
-    def REDUCED(self):
+    def VEH_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
         if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
+    # True if reinforced unit
     # OBT
-    def HQ(self):
+    def REINFORCED(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # True if reduced unit
     # OBT
-    def DUMMY(self):
+    def REDUCED(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # True if headquarters element
     # OBT
-    def TASK_FORCE(self):
+    def HQ(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # True if dummy/exercise track
     # OBT
-    def FEINT(self):
+    def DUMMY(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # True if task force
     # OBT
-    def INSTALLATION(self):
+    def TASK_FORCE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # True if feint
     # OBT
-    def VEH_TYPE(self):
+    def FEINT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
 
+    # True if installation (not mobile)
     # OBT
-    def TRK_ID(self):
+    def INSTALLATION(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
 
+    # Contributing track sensors
     # OBT
     def TRACK_SENSORS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
@@ -327,22 +371,22 @@ def AddID(builder, ID):
     OBTAddID(builder, ID)
 
 def OBTAddSAT_NO(builder, SAT_NO):
-    builder.PrependInt32Slot(1, SAT_NO, 0)
+    builder.PrependUint32Slot(1, SAT_NO, 0)
 
 def AddSAT_NO(builder, SAT_NO):
     OBTAddSAT_NO(builder, SAT_NO)
 
-def OBTAddON_ORBIT(builder, ON_ORBIT):
-    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ON_ORBIT), 0)
-
-def AddON_ORBIT(builder, ON_ORBIT):
-    OBTAddON_ORBIT(builder, ON_ORBIT)
-
 def OBTAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
-    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_OBJECT_ID), 0)
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_OBJECT_ID), 0)
 
 def AddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
     OBTAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+
+def OBTAddON_ORBIT(builder, ON_ORBIT):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ON_ORBIT), 0)
+
+def AddON_ORBIT(builder, ON_ORBIT):
+    OBTAddON_ORBIT(builder, ON_ORBIT)
 
 def OBTAddTS(builder, TS):
     builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(TS), 0)
@@ -368,179 +412,179 @@ def OBTAddALT(builder, ALT):
 def AddALT(builder, ALT):
     OBTAddALT(builder, ALT)
 
-def OBTAddRDF_RF(builder, RDF_RF):
-    builder.PrependFloat64Slot(8, RDF_RF, 0.0)
-
-def AddRDF_RF(builder, RDF_RF):
-    OBTAddRDF_RF(builder, RDF_RF)
-
-def OBTAddCALL_SIGN(builder, CALL_SIGN):
-    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(CALL_SIGN), 0)
-
-def AddCALL_SIGN(builder, CALL_SIGN):
-    OBTAddCALL_SIGN(builder, CALL_SIGN)
-
-def OBTAddRPT_NUM(builder, RPT_NUM):
-    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(RPT_NUM), 0)
-
-def AddRPT_NUM(builder, RPT_NUM):
-    OBTAddRPT_NUM(builder, RPT_NUM)
-
-def OBTAddOBJ_IDENT(builder, OBJ_IDENT):
-    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(OBJ_IDENT), 0)
-
-def AddOBJ_IDENT(builder, OBJ_IDENT):
-    OBTAddOBJ_IDENT(builder, OBJ_IDENT)
-
-def OBTAddIDENT_AMP(builder, IDENT_AMP):
-    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(IDENT_AMP), 0)
-
-def AddIDENT_AMP(builder, IDENT_AMP):
-    OBTAddIDENT_AMP(builder, IDENT_AMP)
-
-def OBTAddSAT_STATUS(builder, SAT_STATUS):
-    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(SAT_STATUS), 0)
-
-def AddSAT_STATUS(builder, SAT_STATUS):
-    OBTAddSAT_STATUS(builder, SAT_STATUS)
-
-def OBTAddOBJECT_TYPE(builder, OBJECT_TYPE):
-    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(OBJECT_TYPE), 0)
-
-def AddOBJECT_TYPE(builder, OBJECT_TYPE):
-    OBTAddOBJECT_TYPE(builder, OBJECT_TYPE)
-
-def OBTAddCOUNTRY_CODE(builder, COUNTRY_CODE):
-    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(COUNTRY_CODE), 0)
-
-def AddCOUNTRY_CODE(builder, COUNTRY_CODE):
-    OBTAddCOUNTRY_CODE(builder, COUNTRY_CODE)
-
-def OBTAddDECAY(builder, DECAY):
-    builder.PrependFloat64Slot(16, DECAY, 0.0)
-
-def AddDECAY(builder, DECAY):
-    OBTAddDECAY(builder, DECAY)
-
-def OBTAddCHARLIE_LINE(builder, CHARLIE_LINE):
-    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(CHARLIE_LINE), 0)
-
-def AddCHARLIE_LINE(builder, CHARLIE_LINE):
-    OBTAddCHARLIE_LINE(builder, CHARLIE_LINE)
-
-def OBTAddAOU_TYPE(builder, AOU_TYPE):
-    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(AOU_TYPE), 0)
-
-def AddAOU_TYPE(builder, AOU_TYPE):
-    OBTAddAOU_TYPE(builder, AOU_TYPE)
-
-def OBTAddAOU_DATA(builder, AOU_DATA):
-    builder.PrependUOffsetTRelativeSlot(19, flatbuffers.number_types.UOffsetTFlags.py_type(AOU_DATA), 0)
-
-def AddAOU_DATA(builder, AOU_DATA):
-    OBTAddAOU_DATA(builder, AOU_DATA)
-
-def OBTStartAOU_DATAVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
-
-def StartAOU_DATAVector(builder, numElems):
-    return OBTStartAOU_DATAVector(builder, numElems)
-
 def OBTAddSPD(builder, SPD):
-    builder.PrependFloat64Slot(20, SPD, 0.0)
+    builder.PrependFloat64Slot(8, SPD, 0.0)
 
 def AddSPD(builder, SPD):
     OBTAddSPD(builder, SPD)
 
 def OBTAddANG_ELEV(builder, ANG_ELEV):
-    builder.PrependFloat64Slot(21, ANG_ELEV, 0.0)
+    builder.PrependFloat64Slot(9, ANG_ELEV, 0.0)
 
 def AddANG_ELEV(builder, ANG_ELEV):
     OBTAddANG_ELEV(builder, ANG_ELEV)
 
+def OBTAddRDF_RF(builder, RDF_RF):
+    builder.PrependFloat64Slot(10, RDF_RF, 0.0)
+
+def AddRDF_RF(builder, RDF_RF):
+    OBTAddRDF_RF(builder, RDF_RF)
+
+def OBTAddCALL_SIGN(builder, CALL_SIGN):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(CALL_SIGN), 0)
+
+def AddCALL_SIGN(builder, CALL_SIGN):
+    OBTAddCALL_SIGN(builder, CALL_SIGN)
+
+def OBTAddRPT_NUM(builder, RPT_NUM):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(RPT_NUM), 0)
+
+def AddRPT_NUM(builder, RPT_NUM):
+    OBTAddRPT_NUM(builder, RPT_NUM)
+
+def OBTAddTRK_ID(builder, TRK_ID):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(TRK_ID), 0)
+
+def AddTRK_ID(builder, TRK_ID):
+    OBTAddTRK_ID(builder, TRK_ID)
+
+def OBTAddOBJ_IDENT(builder, OBJ_IDENT):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(OBJ_IDENT), 0)
+
+def AddOBJ_IDENT(builder, OBJ_IDENT):
+    OBTAddOBJ_IDENT(builder, OBJ_IDENT)
+
+def OBTAddIDENT_AMP(builder, IDENT_AMP):
+    builder.PrependUOffsetTRelativeSlot(15, flatbuffers.number_types.UOffsetTFlags.py_type(IDENT_AMP), 0)
+
+def AddIDENT_AMP(builder, IDENT_AMP):
+    OBTAddIDENT_AMP(builder, IDENT_AMP)
+
+def OBTAddSAT_STATUS(builder, SAT_STATUS):
+    builder.PrependUOffsetTRelativeSlot(16, flatbuffers.number_types.UOffsetTFlags.py_type(SAT_STATUS), 0)
+
+def AddSAT_STATUS(builder, SAT_STATUS):
+    OBTAddSAT_STATUS(builder, SAT_STATUS)
+
+def OBTAddOBJ_TYPE(builder, OBJ_TYPE):
+    builder.PrependInt8Slot(17, OBJ_TYPE, 0)
+
+def AddOBJ_TYPE(builder, OBJ_TYPE):
+    OBTAddOBJ_TYPE(builder, OBJ_TYPE)
+
+def OBTAddCOUNTRY_CODE(builder, COUNTRY_CODE):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(COUNTRY_CODE), 0)
+
+def AddCOUNTRY_CODE(builder, COUNTRY_CODE):
+    OBTAddCOUNTRY_CODE(builder, COUNTRY_CODE)
+
+def OBTAddDECAY(builder, DECAY):
+    builder.PrependFloat64Slot(19, DECAY, 0.0)
+
+def AddDECAY(builder, DECAY):
+    OBTAddDECAY(builder, DECAY)
+
+def OBTAddCHARLIE_LINE(builder, CHARLIE_LINE):
+    builder.PrependUOffsetTRelativeSlot(20, flatbuffers.number_types.UOffsetTFlags.py_type(CHARLIE_LINE), 0)
+
+def AddCHARLIE_LINE(builder, CHARLIE_LINE):
+    OBTAddCHARLIE_LINE(builder, CHARLIE_LINE)
+
+def OBTAddAOU_TYPE(builder, AOU_TYPE):
+    builder.PrependInt8Slot(21, AOU_TYPE, 0)
+
+def AddAOU_TYPE(builder, AOU_TYPE):
+    OBTAddAOU_TYPE(builder, AOU_TYPE)
+
+def OBTAddAOU_DATA(builder, AOU_DATA):
+    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(AOU_DATA), 0)
+
+def AddAOU_DATA(builder, AOU_DATA):
+    OBTAddAOU_DATA(builder, AOU_DATA)
+
+def OBTStartAOU_DATAVector(builder, numElems):
+    return builder.StartVector(8, numElems, 8)
+
+def StartAOU_DATAVector(builder, numElems):
+    return OBTStartAOU_DATAVector(builder, numElems)
+
 def OBTAddCNTNMNT(builder, CNTNMNT):
-    builder.PrependFloat64Slot(22, CNTNMNT, 0.0)
+    builder.PrependFloat64Slot(23, CNTNMNT, 0.0)
 
 def AddCNTNMNT(builder, CNTNMNT):
     OBTAddCNTNMNT(builder, CNTNMNT)
 
 def OBTAddXREF(builder, XREF):
-    builder.PrependUOffsetTRelativeSlot(23, flatbuffers.number_types.UOffsetTFlags.py_type(XREF), 0)
+    builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(XREF), 0)
 
 def AddXREF(builder, XREF):
     OBTAddXREF(builder, XREF)
 
 def OBTAddCH_XREF(builder, CH_XREF):
-    builder.PrependUOffsetTRelativeSlot(24, flatbuffers.number_types.UOffsetTFlags.py_type(CH_XREF), 0)
+    builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(CH_XREF), 0)
 
 def AddCH_XREF(builder, CH_XREF):
     OBTAddCH_XREF(builder, CH_XREF)
 
 def OBTAddAMPLIFICATION(builder, AMPLIFICATION):
-    builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(AMPLIFICATION), 0)
+    builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(AMPLIFICATION), 0)
 
 def AddAMPLIFICATION(builder, AMPLIFICATION):
     OBTAddAMPLIFICATION(builder, AMPLIFICATION)
 
 def OBTAddIFF(builder, IFF):
-    builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(IFF), 0)
+    builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(IFF), 0)
 
 def AddIFF(builder, IFF):
     OBTAddIFF(builder, IFF)
 
+def OBTAddVEH_TYPE(builder, VEH_TYPE):
+    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(VEH_TYPE), 0)
+
+def AddVEH_TYPE(builder, VEH_TYPE):
+    OBTAddVEH_TYPE(builder, VEH_TYPE)
+
 def OBTAddREINFORCED(builder, REINFORCED):
-    builder.PrependBoolSlot(27, REINFORCED, 0)
+    builder.PrependBoolSlot(29, REINFORCED, 0)
 
 def AddREINFORCED(builder, REINFORCED):
     OBTAddREINFORCED(builder, REINFORCED)
 
 def OBTAddREDUCED(builder, REDUCED):
-    builder.PrependBoolSlot(28, REDUCED, 0)
+    builder.PrependBoolSlot(30, REDUCED, 0)
 
 def AddREDUCED(builder, REDUCED):
     OBTAddREDUCED(builder, REDUCED)
 
 def OBTAddHQ(builder, HQ):
-    builder.PrependBoolSlot(29, HQ, 0)
+    builder.PrependBoolSlot(31, HQ, 0)
 
 def AddHQ(builder, HQ):
     OBTAddHQ(builder, HQ)
 
 def OBTAddDUMMY(builder, DUMMY):
-    builder.PrependBoolSlot(30, DUMMY, 0)
+    builder.PrependBoolSlot(32, DUMMY, 0)
 
 def AddDUMMY(builder, DUMMY):
     OBTAddDUMMY(builder, DUMMY)
 
 def OBTAddTASK_FORCE(builder, TASK_FORCE):
-    builder.PrependBoolSlot(31, TASK_FORCE, 0)
+    builder.PrependBoolSlot(33, TASK_FORCE, 0)
 
 def AddTASK_FORCE(builder, TASK_FORCE):
     OBTAddTASK_FORCE(builder, TASK_FORCE)
 
 def OBTAddFEINT(builder, FEINT):
-    builder.PrependBoolSlot(32, FEINT, 0)
+    builder.PrependBoolSlot(34, FEINT, 0)
 
 def AddFEINT(builder, FEINT):
     OBTAddFEINT(builder, FEINT)
 
 def OBTAddINSTALLATION(builder, INSTALLATION):
-    builder.PrependBoolSlot(33, INSTALLATION, 0)
+    builder.PrependBoolSlot(35, INSTALLATION, 0)
 
 def AddINSTALLATION(builder, INSTALLATION):
     OBTAddINSTALLATION(builder, INSTALLATION)
-
-def OBTAddVEH_TYPE(builder, VEH_TYPE):
-    builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(VEH_TYPE), 0)
-
-def AddVEH_TYPE(builder, VEH_TYPE):
-    OBTAddVEH_TYPE(builder, VEH_TYPE)
-
-def OBTAddTRK_ID(builder, TRK_ID):
-    builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(TRK_ID), 0)
-
-def AddTRK_ID(builder, TRK_ID):
-    OBTAddTRK_ID(builder, TRK_ID)
 
 def OBTAddTRACK_SENSORS(builder, TRACK_SENSORS):
     builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(TRACK_SENSORS), 0)
@@ -571,31 +615,33 @@ class OBTT(object):
     def __init__(self):
         self.ID = None  # type: str
         self.SAT_NO = 0  # type: int
-        self.ON_ORBIT = None  # type: str
         self.ORIG_OBJECT_ID = None  # type: str
+        self.ON_ORBIT = None  # type: str
         self.TS = None  # type: str
         self.LAT = 0.0  # type: float
         self.LON = 0.0  # type: float
         self.ALT = 0.0  # type: float
+        self.SPD = 0.0  # type: float
+        self.ANG_ELEV = 0.0  # type: float
         self.RDF_RF = 0.0  # type: float
         self.CALL_SIGN = None  # type: str
         self.RPT_NUM = None  # type: str
+        self.TRK_ID = None  # type: str
         self.OBJ_IDENT = None  # type: str
         self.IDENT_AMP = None  # type: str
         self.SAT_STATUS = None  # type: str
-        self.OBJECT_TYPE = None  # type: str
+        self.OBJ_TYPE = 0  # type: int
         self.COUNTRY_CODE = None  # type: str
         self.DECAY = 0.0  # type: float
         self.CHARLIE_LINE = None  # type: str
-        self.AOU_TYPE = None  # type: str
-        self.AOU_DATA = None  # type: List[str]
-        self.SPD = 0.0  # type: float
-        self.ANG_ELEV = 0.0  # type: float
+        self.AOU_TYPE = 0  # type: int
+        self.AOU_DATA = None  # type: List[float]
         self.CNTNMNT = 0.0  # type: float
         self.XREF = None  # type: str
         self.CH_XREF = None  # type: str
         self.AMPLIFICATION = None  # type: str
         self.IFF = None  # type: str
+        self.VEH_TYPE = None  # type: str
         self.REINFORCED = False  # type: bool
         self.REDUCED = False  # type: bool
         self.HQ = False  # type: bool
@@ -603,8 +649,6 @@ class OBTT(object):
         self.TASK_FORCE = False  # type: bool
         self.FEINT = False  # type: bool
         self.INSTALLATION = False  # type: bool
-        self.VEH_TYPE = None  # type: str
-        self.TRK_ID = None  # type: str
         self.TRACK_SENSORS = None  # type: List[str]
 
     @classmethod
@@ -630,34 +674,39 @@ class OBTT(object):
             return
         self.ID = OBT.ID()
         self.SAT_NO = OBT.SAT_NO()
-        self.ON_ORBIT = OBT.ON_ORBIT()
         self.ORIG_OBJECT_ID = OBT.ORIG_OBJECT_ID()
+        self.ON_ORBIT = OBT.ON_ORBIT()
         self.TS = OBT.TS()
         self.LAT = OBT.LAT()
         self.LON = OBT.LON()
         self.ALT = OBT.ALT()
+        self.SPD = OBT.SPD()
+        self.ANG_ELEV = OBT.ANG_ELEV()
         self.RDF_RF = OBT.RDF_RF()
         self.CALL_SIGN = OBT.CALL_SIGN()
         self.RPT_NUM = OBT.RPT_NUM()
+        self.TRK_ID = OBT.TRK_ID()
         self.OBJ_IDENT = OBT.OBJ_IDENT()
         self.IDENT_AMP = OBT.IDENT_AMP()
         self.SAT_STATUS = OBT.SAT_STATUS()
-        self.OBJECT_TYPE = OBT.OBJECT_TYPE()
+        self.OBJ_TYPE = OBT.OBJ_TYPE()
         self.COUNTRY_CODE = OBT.COUNTRY_CODE()
         self.DECAY = OBT.DECAY()
         self.CHARLIE_LINE = OBT.CHARLIE_LINE()
         self.AOU_TYPE = OBT.AOU_TYPE()
         if not OBT.AOU_DATAIsNone():
-            self.AOU_DATA = []
-            for i in range(OBT.AOU_DATALength()):
-                self.AOU_DATA.append(OBT.AOU_DATA(i))
-        self.SPD = OBT.SPD()
-        self.ANG_ELEV = OBT.ANG_ELEV()
+            if np is None:
+                self.AOU_DATA = []
+                for i in range(OBT.AOU_DATALength()):
+                    self.AOU_DATA.append(OBT.AOU_DATA(i))
+            else:
+                self.AOU_DATA = OBT.AOU_DATAAsNumpy()
         self.CNTNMNT = OBT.CNTNMNT()
         self.XREF = OBT.XREF()
         self.CH_XREF = OBT.CH_XREF()
         self.AMPLIFICATION = OBT.AMPLIFICATION()
         self.IFF = OBT.IFF()
+        self.VEH_TYPE = OBT.VEH_TYPE()
         self.REINFORCED = OBT.REINFORCED()
         self.REDUCED = OBT.REDUCED()
         self.HQ = OBT.HQ()
@@ -665,8 +714,6 @@ class OBTT(object):
         self.TASK_FORCE = OBT.TASK_FORCE()
         self.FEINT = OBT.FEINT()
         self.INSTALLATION = OBT.INSTALLATION()
-        self.VEH_TYPE = OBT.VEH_TYPE()
-        self.TRK_ID = OBT.TRK_ID()
         if not OBT.TRACK_SENSORSIsNone():
             self.TRACK_SENSORS = []
             for i in range(OBT.TRACK_SENSORSLength()):
@@ -676,38 +723,36 @@ class OBTT(object):
     def Pack(self, builder):
         if self.ID is not None:
             ID = builder.CreateString(self.ID)
-        if self.ON_ORBIT is not None:
-            ON_ORBIT = builder.CreateString(self.ON_ORBIT)
         if self.ORIG_OBJECT_ID is not None:
             ORIG_OBJECT_ID = builder.CreateString(self.ORIG_OBJECT_ID)
+        if self.ON_ORBIT is not None:
+            ON_ORBIT = builder.CreateString(self.ON_ORBIT)
         if self.TS is not None:
             TS = builder.CreateString(self.TS)
         if self.CALL_SIGN is not None:
             CALL_SIGN = builder.CreateString(self.CALL_SIGN)
         if self.RPT_NUM is not None:
             RPT_NUM = builder.CreateString(self.RPT_NUM)
+        if self.TRK_ID is not None:
+            TRK_ID = builder.CreateString(self.TRK_ID)
         if self.OBJ_IDENT is not None:
             OBJ_IDENT = builder.CreateString(self.OBJ_IDENT)
         if self.IDENT_AMP is not None:
             IDENT_AMP = builder.CreateString(self.IDENT_AMP)
         if self.SAT_STATUS is not None:
             SAT_STATUS = builder.CreateString(self.SAT_STATUS)
-        if self.OBJECT_TYPE is not None:
-            OBJECT_TYPE = builder.CreateString(self.OBJECT_TYPE)
         if self.COUNTRY_CODE is not None:
             COUNTRY_CODE = builder.CreateString(self.COUNTRY_CODE)
         if self.CHARLIE_LINE is not None:
             CHARLIE_LINE = builder.CreateString(self.CHARLIE_LINE)
-        if self.AOU_TYPE is not None:
-            AOU_TYPE = builder.CreateString(self.AOU_TYPE)
         if self.AOU_DATA is not None:
-            AOU_DATAlist = []
-            for i in range(len(self.AOU_DATA)):
-                AOU_DATAlist.append(builder.CreateString(self.AOU_DATA[i]))
-            OBTStartAOU_DATAVector(builder, len(self.AOU_DATA))
-            for i in reversed(range(len(self.AOU_DATA))):
-                builder.PrependUOffsetTRelative(AOU_DATAlist[i])
-            AOU_DATA = builder.EndVector()
+            if np is not None and type(self.AOU_DATA) is np.ndarray:
+                AOU_DATA = builder.CreateNumpyVector(self.AOU_DATA)
+            else:
+                OBTStartAOU_DATAVector(builder, len(self.AOU_DATA))
+                for i in reversed(range(len(self.AOU_DATA))):
+                    builder.PrependFloat64(self.AOU_DATA[i])
+                AOU_DATA = builder.EndVector()
         if self.XREF is not None:
             XREF = builder.CreateString(self.XREF)
         if self.CH_XREF is not None:
@@ -718,8 +763,6 @@ class OBTT(object):
             IFF = builder.CreateString(self.IFF)
         if self.VEH_TYPE is not None:
             VEH_TYPE = builder.CreateString(self.VEH_TYPE)
-        if self.TRK_ID is not None:
-            TRK_ID = builder.CreateString(self.TRK_ID)
         if self.TRACK_SENSORS is not None:
             TRACK_SENSORSlist = []
             for i in range(len(self.TRACK_SENSORS)):
@@ -732,39 +775,39 @@ class OBTT(object):
         if self.ID is not None:
             OBTAddID(builder, ID)
         OBTAddSAT_NO(builder, self.SAT_NO)
-        if self.ON_ORBIT is not None:
-            OBTAddON_ORBIT(builder, ON_ORBIT)
         if self.ORIG_OBJECT_ID is not None:
             OBTAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+        if self.ON_ORBIT is not None:
+            OBTAddON_ORBIT(builder, ON_ORBIT)
         if self.TS is not None:
             OBTAddTS(builder, TS)
         OBTAddLAT(builder, self.LAT)
         OBTAddLON(builder, self.LON)
         OBTAddALT(builder, self.ALT)
+        OBTAddSPD(builder, self.SPD)
+        OBTAddANG_ELEV(builder, self.ANG_ELEV)
         OBTAddRDF_RF(builder, self.RDF_RF)
         if self.CALL_SIGN is not None:
             OBTAddCALL_SIGN(builder, CALL_SIGN)
         if self.RPT_NUM is not None:
             OBTAddRPT_NUM(builder, RPT_NUM)
+        if self.TRK_ID is not None:
+            OBTAddTRK_ID(builder, TRK_ID)
         if self.OBJ_IDENT is not None:
             OBTAddOBJ_IDENT(builder, OBJ_IDENT)
         if self.IDENT_AMP is not None:
             OBTAddIDENT_AMP(builder, IDENT_AMP)
         if self.SAT_STATUS is not None:
             OBTAddSAT_STATUS(builder, SAT_STATUS)
-        if self.OBJECT_TYPE is not None:
-            OBTAddOBJECT_TYPE(builder, OBJECT_TYPE)
+        OBTAddOBJ_TYPE(builder, self.OBJ_TYPE)
         if self.COUNTRY_CODE is not None:
             OBTAddCOUNTRY_CODE(builder, COUNTRY_CODE)
         OBTAddDECAY(builder, self.DECAY)
         if self.CHARLIE_LINE is not None:
             OBTAddCHARLIE_LINE(builder, CHARLIE_LINE)
-        if self.AOU_TYPE is not None:
-            OBTAddAOU_TYPE(builder, AOU_TYPE)
+        OBTAddAOU_TYPE(builder, self.AOU_TYPE)
         if self.AOU_DATA is not None:
             OBTAddAOU_DATA(builder, AOU_DATA)
-        OBTAddSPD(builder, self.SPD)
-        OBTAddANG_ELEV(builder, self.ANG_ELEV)
         OBTAddCNTNMNT(builder, self.CNTNMNT)
         if self.XREF is not None:
             OBTAddXREF(builder, XREF)
@@ -774,6 +817,8 @@ class OBTT(object):
             OBTAddAMPLIFICATION(builder, AMPLIFICATION)
         if self.IFF is not None:
             OBTAddIFF(builder, IFF)
+        if self.VEH_TYPE is not None:
+            OBTAddVEH_TYPE(builder, VEH_TYPE)
         OBTAddREINFORCED(builder, self.REINFORCED)
         OBTAddREDUCED(builder, self.REDUCED)
         OBTAddHQ(builder, self.HQ)
@@ -781,10 +826,6 @@ class OBTT(object):
         OBTAddTASK_FORCE(builder, self.TASK_FORCE)
         OBTAddFEINT(builder, self.FEINT)
         OBTAddINSTALLATION(builder, self.INSTALLATION)
-        if self.VEH_TYPE is not None:
-            OBTAddVEH_TYPE(builder, VEH_TYPE)
-        if self.TRK_ID is not None:
-            OBTAddTRK_ID(builder, TRK_ID)
         if self.TRACK_SENSORS is not None:
             OBTAddTRACK_SENSORS(builder, TRACK_SENSORS)
         OBT = OBTEnd(builder)

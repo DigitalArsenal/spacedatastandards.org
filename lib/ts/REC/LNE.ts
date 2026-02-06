@@ -4,6 +4,7 @@
 
 import * as flatbuffers from 'flatbuffers';
 
+import { launchOutcome } from './launchOutcome.js';
 
 
 /**
@@ -31,6 +32,9 @@ static bufferHasIdentifier(bb:flatbuffers.ByteBuffer):boolean {
   return bb.__has_identifier('$LNE');
 }
 
+/**
+ * Unique identifier
+ */
 ID():string|null
 ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ID(optionalEncoding?:any):string|Uint8Array|null {
@@ -38,48 +42,67 @@ ID(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Satellite catalog number of launched object
+ */
+SAT_NO():number {
+  const offset = this.bb!.__offset(this.bb_pos, 6);
+  return offset ? this.bb!.readUint32(this.bb_pos + offset) : 0;
+}
+
+/**
+ * International designator (YYYY-NNNP)
+ */
 ORIG_OBJECT_ID():string|null
 ORIG_OBJECT_ID(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 ORIG_OBJECT_ID(optionalEncoding?:any):string|Uint8Array|null {
-  const offset = this.bb!.__offset(this.bb_pos, 6);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
-}
-
-DERIVED_FROM():string|null
-DERIVED_FROM(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-DERIVED_FROM(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 8);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-DECLASSIFICATION_DATE():string|null
-DECLASSIFICATION_DATE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-DECLASSIFICATION_DATE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Source record this event was derived from
+ */
+DERIVED_FROM():string|null
+DERIVED_FROM(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DERIVED_FROM(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 10);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-DECLASSIFICATION_STRING():string|null
-DECLASSIFICATION_STRING(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-DECLASSIFICATION_STRING(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Classification date (ISO 8601)
+ */
+DECLASSIFICATION_DATE():string|null
+DECLASSIFICATION_DATE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DECLASSIFICATION_DATE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 12);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-MSG_CREATE_DATE():string|null
-MSG_CREATE_DATE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-MSG_CREATE_DATE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Classification marking
+ */
+DECLASSIFICATION_STRING():string|null
+DECLASSIFICATION_STRING(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+DECLASSIFICATION_STRING(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 14);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-LAUNCH_FAILURE_CODE():string|null
-LAUNCH_FAILURE_CODE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-LAUNCH_FAILURE_CODE(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Message creation time (ISO 8601)
+ */
+MSG_CREATE_DATE():string|null
+MSG_CREATE_DATE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MSG_CREATE_DATE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 16);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
+/**
+ * Launch date and time (ISO 8601)
+ */
 LAUNCH_DATE():string|null
 LAUNCH_DATE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
 LAUNCH_DATE(optionalEncoding?:any):string|Uint8Array|null {
@@ -87,93 +110,232 @@ LAUNCH_DATE(optionalEncoding?:any):string|Uint8Array|null {
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-BE_NUMBER():string|null
-BE_NUMBER(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-BE_NUMBER(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Launch outcome
+ */
+OUTCOME():launchOutcome {
   const offset = this.bb!.__offset(this.bb_pos, 20);
-  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+  return offset ? this.bb!.readInt8(this.bb_pos + offset) : launchOutcome.SUCCESS;
 }
 
-O_SUFFIX():string|null
-O_SUFFIX(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-O_SUFFIX(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Launch failure code (if applicable)
+ */
+LAUNCH_FAILURE_CODE():string|null
+LAUNCH_FAILURE_CODE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LAUNCH_FAILURE_CODE(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 22);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-LAUNCH_FACILITY_NAME():string|null
-LAUNCH_FACILITY_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-LAUNCH_FACILITY_NAME(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Basic encyclopedia number
+ */
+BE_NUMBER():string|null
+BE_NUMBER(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+BE_NUMBER(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 24);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-ON_ORBIT():string|null
-ON_ORBIT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
-ON_ORBIT(optionalEncoding?:any):string|Uint8Array|null {
+/**
+ * Object suffix identifier
+ */
+O_SUFFIX():string|null
+O_SUFFIX(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+O_SUFFIX(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 26);
   return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
-SAT_NO():number {
+/**
+ * Launch facility name
+ */
+LAUNCH_FACILITY_NAME():string|null
+LAUNCH_FACILITY_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LAUNCH_FACILITY_NAME(optionalEncoding?:any):string|Uint8Array|null {
   const offset = this.bb!.__offset(this.bb_pos, 28);
-  return offset ? this.bb!.readInt32(this.bb_pos + offset) : 0;
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Launch facility code
+ */
+LAUNCH_FACILITY_CODE():string|null
+LAUNCH_FACILITY_CODE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LAUNCH_FACILITY_CODE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 30);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Launch vehicle type
+ */
+LAUNCH_VEHICLE():string|null
+LAUNCH_VEHICLE(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LAUNCH_VEHICLE(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 32);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Launch vehicle configuration
+ */
+LAUNCH_VEHICLE_CONFIG():string|null
+LAUNCH_VEHICLE_CONFIG(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LAUNCH_VEHICLE_CONFIG(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 34);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Target orbit type (LEO, MEO, GEO, HEO, SSO, etc.)
+ */
+TARGET_ORBIT():string|null
+TARGET_ORBIT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+TARGET_ORBIT(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 36);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Number of objects placed on orbit
+ */
+OBJECTS_ON_ORBIT():number {
+  const offset = this.bb!.__offset(this.bb_pos, 38);
+  return offset ? this.bb!.readUint16(this.bb_pos + offset) : 0;
+}
+
+/**
+ * On-orbit reference identifier
+ */
+ON_ORBIT():string|null
+ON_ORBIT(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+ON_ORBIT(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 40);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Launch country or operator
+ */
+LAUNCH_COUNTRY():string|null
+LAUNCH_COUNTRY(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+LAUNCH_COUNTRY(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 42);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Mission name or payload description
+ */
+MISSION_NAME():string|null
+MISSION_NAME(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+MISSION_NAME(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 44);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
+}
+
+/**
+ * Additional remarks
+ */
+REMARKS():string|null
+REMARKS(optionalEncoding:flatbuffers.Encoding):string|Uint8Array|null
+REMARKS(optionalEncoding?:any):string|Uint8Array|null {
+  const offset = this.bb!.__offset(this.bb_pos, 46);
+  return offset ? this.bb!.__string(this.bb_pos + offset, optionalEncoding) : null;
 }
 
 static startLNE(builder:flatbuffers.Builder) {
-  builder.startObject(13);
+  builder.startObject(22);
 }
 
 static addId(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset) {
   builder.addFieldOffset(0, IDOffset, 0);
 }
 
+static addSatNo(builder:flatbuffers.Builder, SAT_NO:number) {
+  builder.addFieldInt32(1, SAT_NO, 0);
+}
+
 static addOrigObjectId(builder:flatbuffers.Builder, ORIG_OBJECT_IDOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(1, ORIG_OBJECT_IDOffset, 0);
+  builder.addFieldOffset(2, ORIG_OBJECT_IDOffset, 0);
 }
 
 static addDerivedFrom(builder:flatbuffers.Builder, DERIVED_FROMOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(2, DERIVED_FROMOffset, 0);
+  builder.addFieldOffset(3, DERIVED_FROMOffset, 0);
 }
 
 static addDeclassificationDate(builder:flatbuffers.Builder, DECLASSIFICATION_DATEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(3, DECLASSIFICATION_DATEOffset, 0);
+  builder.addFieldOffset(4, DECLASSIFICATION_DATEOffset, 0);
 }
 
 static addDeclassificationString(builder:flatbuffers.Builder, DECLASSIFICATION_STRINGOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(4, DECLASSIFICATION_STRINGOffset, 0);
+  builder.addFieldOffset(5, DECLASSIFICATION_STRINGOffset, 0);
 }
 
 static addMsgCreateDate(builder:flatbuffers.Builder, MSG_CREATE_DATEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(5, MSG_CREATE_DATEOffset, 0);
-}
-
-static addLaunchFailureCode(builder:flatbuffers.Builder, LAUNCH_FAILURE_CODEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(6, LAUNCH_FAILURE_CODEOffset, 0);
+  builder.addFieldOffset(6, MSG_CREATE_DATEOffset, 0);
 }
 
 static addLaunchDate(builder:flatbuffers.Builder, LAUNCH_DATEOffset:flatbuffers.Offset) {
   builder.addFieldOffset(7, LAUNCH_DATEOffset, 0);
 }
 
+static addOutcome(builder:flatbuffers.Builder, OUTCOME:launchOutcome) {
+  builder.addFieldInt8(8, OUTCOME, launchOutcome.SUCCESS);
+}
+
+static addLaunchFailureCode(builder:flatbuffers.Builder, LAUNCH_FAILURE_CODEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(9, LAUNCH_FAILURE_CODEOffset, 0);
+}
+
 static addBeNumber(builder:flatbuffers.Builder, BE_NUMBEROffset:flatbuffers.Offset) {
-  builder.addFieldOffset(8, BE_NUMBEROffset, 0);
+  builder.addFieldOffset(10, BE_NUMBEROffset, 0);
 }
 
 static addOSuffix(builder:flatbuffers.Builder, O_SUFFIXOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(9, O_SUFFIXOffset, 0);
+  builder.addFieldOffset(11, O_SUFFIXOffset, 0);
 }
 
 static addLaunchFacilityName(builder:flatbuffers.Builder, LAUNCH_FACILITY_NAMEOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(10, LAUNCH_FACILITY_NAMEOffset, 0);
+  builder.addFieldOffset(12, LAUNCH_FACILITY_NAMEOffset, 0);
+}
+
+static addLaunchFacilityCode(builder:flatbuffers.Builder, LAUNCH_FACILITY_CODEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(13, LAUNCH_FACILITY_CODEOffset, 0);
+}
+
+static addLaunchVehicle(builder:flatbuffers.Builder, LAUNCH_VEHICLEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(14, LAUNCH_VEHICLEOffset, 0);
+}
+
+static addLaunchVehicleConfig(builder:flatbuffers.Builder, LAUNCH_VEHICLE_CONFIGOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(15, LAUNCH_VEHICLE_CONFIGOffset, 0);
+}
+
+static addTargetOrbit(builder:flatbuffers.Builder, TARGET_ORBITOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(16, TARGET_ORBITOffset, 0);
+}
+
+static addObjectsOnOrbit(builder:flatbuffers.Builder, OBJECTS_ON_ORBIT:number) {
+  builder.addFieldInt16(17, OBJECTS_ON_ORBIT, 0);
 }
 
 static addOnOrbit(builder:flatbuffers.Builder, ON_ORBITOffset:flatbuffers.Offset) {
-  builder.addFieldOffset(11, ON_ORBITOffset, 0);
+  builder.addFieldOffset(18, ON_ORBITOffset, 0);
 }
 
-static addSatNo(builder:flatbuffers.Builder, SAT_NO:number) {
-  builder.addFieldInt32(12, SAT_NO, 0);
+static addLaunchCountry(builder:flatbuffers.Builder, LAUNCH_COUNTRYOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(19, LAUNCH_COUNTRYOffset, 0);
+}
+
+static addMissionName(builder:flatbuffers.Builder, MISSION_NAMEOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(20, MISSION_NAMEOffset, 0);
+}
+
+static addRemarks(builder:flatbuffers.Builder, REMARKSOffset:flatbuffers.Offset) {
+  builder.addFieldOffset(21, REMARKSOffset, 0);
 }
 
 static endLNE(builder:flatbuffers.Builder):flatbuffers.Offset {
@@ -189,75 +351,111 @@ static finishSizePrefixedLNEBuffer(builder:flatbuffers.Builder, offset:flatbuffe
   builder.finish(offset, '$LNE', true);
 }
 
-static createLNE(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, ORIG_OBJECT_IDOffset:flatbuffers.Offset, DERIVED_FROMOffset:flatbuffers.Offset, DECLASSIFICATION_DATEOffset:flatbuffers.Offset, DECLASSIFICATION_STRINGOffset:flatbuffers.Offset, MSG_CREATE_DATEOffset:flatbuffers.Offset, LAUNCH_FAILURE_CODEOffset:flatbuffers.Offset, LAUNCH_DATEOffset:flatbuffers.Offset, BE_NUMBEROffset:flatbuffers.Offset, O_SUFFIXOffset:flatbuffers.Offset, LAUNCH_FACILITY_NAMEOffset:flatbuffers.Offset, ON_ORBITOffset:flatbuffers.Offset, SAT_NO:number):flatbuffers.Offset {
+static createLNE(builder:flatbuffers.Builder, IDOffset:flatbuffers.Offset, SAT_NO:number, ORIG_OBJECT_IDOffset:flatbuffers.Offset, DERIVED_FROMOffset:flatbuffers.Offset, DECLASSIFICATION_DATEOffset:flatbuffers.Offset, DECLASSIFICATION_STRINGOffset:flatbuffers.Offset, MSG_CREATE_DATEOffset:flatbuffers.Offset, LAUNCH_DATEOffset:flatbuffers.Offset, OUTCOME:launchOutcome, LAUNCH_FAILURE_CODEOffset:flatbuffers.Offset, BE_NUMBEROffset:flatbuffers.Offset, O_SUFFIXOffset:flatbuffers.Offset, LAUNCH_FACILITY_NAMEOffset:flatbuffers.Offset, LAUNCH_FACILITY_CODEOffset:flatbuffers.Offset, LAUNCH_VEHICLEOffset:flatbuffers.Offset, LAUNCH_VEHICLE_CONFIGOffset:flatbuffers.Offset, TARGET_ORBITOffset:flatbuffers.Offset, OBJECTS_ON_ORBIT:number, ON_ORBITOffset:flatbuffers.Offset, LAUNCH_COUNTRYOffset:flatbuffers.Offset, MISSION_NAMEOffset:flatbuffers.Offset, REMARKSOffset:flatbuffers.Offset):flatbuffers.Offset {
   LNE.startLNE(builder);
   LNE.addId(builder, IDOffset);
+  LNE.addSatNo(builder, SAT_NO);
   LNE.addOrigObjectId(builder, ORIG_OBJECT_IDOffset);
   LNE.addDerivedFrom(builder, DERIVED_FROMOffset);
   LNE.addDeclassificationDate(builder, DECLASSIFICATION_DATEOffset);
   LNE.addDeclassificationString(builder, DECLASSIFICATION_STRINGOffset);
   LNE.addMsgCreateDate(builder, MSG_CREATE_DATEOffset);
-  LNE.addLaunchFailureCode(builder, LAUNCH_FAILURE_CODEOffset);
   LNE.addLaunchDate(builder, LAUNCH_DATEOffset);
+  LNE.addOutcome(builder, OUTCOME);
+  LNE.addLaunchFailureCode(builder, LAUNCH_FAILURE_CODEOffset);
   LNE.addBeNumber(builder, BE_NUMBEROffset);
   LNE.addOSuffix(builder, O_SUFFIXOffset);
   LNE.addLaunchFacilityName(builder, LAUNCH_FACILITY_NAMEOffset);
+  LNE.addLaunchFacilityCode(builder, LAUNCH_FACILITY_CODEOffset);
+  LNE.addLaunchVehicle(builder, LAUNCH_VEHICLEOffset);
+  LNE.addLaunchVehicleConfig(builder, LAUNCH_VEHICLE_CONFIGOffset);
+  LNE.addTargetOrbit(builder, TARGET_ORBITOffset);
+  LNE.addObjectsOnOrbit(builder, OBJECTS_ON_ORBIT);
   LNE.addOnOrbit(builder, ON_ORBITOffset);
-  LNE.addSatNo(builder, SAT_NO);
+  LNE.addLaunchCountry(builder, LAUNCH_COUNTRYOffset);
+  LNE.addMissionName(builder, MISSION_NAMEOffset);
+  LNE.addRemarks(builder, REMARKSOffset);
   return LNE.endLNE(builder);
 }
 
 unpack(): LNET {
   return new LNET(
     this.ID(),
+    this.SAT_NO(),
     this.ORIG_OBJECT_ID(),
     this.DERIVED_FROM(),
     this.DECLASSIFICATION_DATE(),
     this.DECLASSIFICATION_STRING(),
     this.MSG_CREATE_DATE(),
-    this.LAUNCH_FAILURE_CODE(),
     this.LAUNCH_DATE(),
+    this.OUTCOME(),
+    this.LAUNCH_FAILURE_CODE(),
     this.BE_NUMBER(),
     this.O_SUFFIX(),
     this.LAUNCH_FACILITY_NAME(),
+    this.LAUNCH_FACILITY_CODE(),
+    this.LAUNCH_VEHICLE(),
+    this.LAUNCH_VEHICLE_CONFIG(),
+    this.TARGET_ORBIT(),
+    this.OBJECTS_ON_ORBIT(),
     this.ON_ORBIT(),
-    this.SAT_NO()
+    this.LAUNCH_COUNTRY(),
+    this.MISSION_NAME(),
+    this.REMARKS()
   );
 }
 
 
 unpackTo(_o: LNET): void {
   _o.ID = this.ID();
+  _o.SAT_NO = this.SAT_NO();
   _o.ORIG_OBJECT_ID = this.ORIG_OBJECT_ID();
   _o.DERIVED_FROM = this.DERIVED_FROM();
   _o.DECLASSIFICATION_DATE = this.DECLASSIFICATION_DATE();
   _o.DECLASSIFICATION_STRING = this.DECLASSIFICATION_STRING();
   _o.MSG_CREATE_DATE = this.MSG_CREATE_DATE();
-  _o.LAUNCH_FAILURE_CODE = this.LAUNCH_FAILURE_CODE();
   _o.LAUNCH_DATE = this.LAUNCH_DATE();
+  _o.OUTCOME = this.OUTCOME();
+  _o.LAUNCH_FAILURE_CODE = this.LAUNCH_FAILURE_CODE();
   _o.BE_NUMBER = this.BE_NUMBER();
   _o.O_SUFFIX = this.O_SUFFIX();
   _o.LAUNCH_FACILITY_NAME = this.LAUNCH_FACILITY_NAME();
+  _o.LAUNCH_FACILITY_CODE = this.LAUNCH_FACILITY_CODE();
+  _o.LAUNCH_VEHICLE = this.LAUNCH_VEHICLE();
+  _o.LAUNCH_VEHICLE_CONFIG = this.LAUNCH_VEHICLE_CONFIG();
+  _o.TARGET_ORBIT = this.TARGET_ORBIT();
+  _o.OBJECTS_ON_ORBIT = this.OBJECTS_ON_ORBIT();
   _o.ON_ORBIT = this.ON_ORBIT();
-  _o.SAT_NO = this.SAT_NO();
+  _o.LAUNCH_COUNTRY = this.LAUNCH_COUNTRY();
+  _o.MISSION_NAME = this.MISSION_NAME();
+  _o.REMARKS = this.REMARKS();
 }
 }
 
 export class LNET implements flatbuffers.IGeneratedObject {
 constructor(
   public ID: string|Uint8Array|null = null,
+  public SAT_NO: number = 0,
   public ORIG_OBJECT_ID: string|Uint8Array|null = null,
   public DERIVED_FROM: string|Uint8Array|null = null,
   public DECLASSIFICATION_DATE: string|Uint8Array|null = null,
   public DECLASSIFICATION_STRING: string|Uint8Array|null = null,
   public MSG_CREATE_DATE: string|Uint8Array|null = null,
-  public LAUNCH_FAILURE_CODE: string|Uint8Array|null = null,
   public LAUNCH_DATE: string|Uint8Array|null = null,
+  public OUTCOME: launchOutcome = launchOutcome.SUCCESS,
+  public LAUNCH_FAILURE_CODE: string|Uint8Array|null = null,
   public BE_NUMBER: string|Uint8Array|null = null,
   public O_SUFFIX: string|Uint8Array|null = null,
   public LAUNCH_FACILITY_NAME: string|Uint8Array|null = null,
+  public LAUNCH_FACILITY_CODE: string|Uint8Array|null = null,
+  public LAUNCH_VEHICLE: string|Uint8Array|null = null,
+  public LAUNCH_VEHICLE_CONFIG: string|Uint8Array|null = null,
+  public TARGET_ORBIT: string|Uint8Array|null = null,
+  public OBJECTS_ON_ORBIT: number = 0,
   public ON_ORBIT: string|Uint8Array|null = null,
-  public SAT_NO: number = 0
+  public LAUNCH_COUNTRY: string|Uint8Array|null = null,
+  public MISSION_NAME: string|Uint8Array|null = null,
+  public REMARKS: string|Uint8Array|null = null
 ){}
 
 
@@ -268,27 +466,43 @@ pack(builder:flatbuffers.Builder): flatbuffers.Offset {
   const DECLASSIFICATION_DATE = (this.DECLASSIFICATION_DATE !== null ? builder.createString(this.DECLASSIFICATION_DATE!) : 0);
   const DECLASSIFICATION_STRING = (this.DECLASSIFICATION_STRING !== null ? builder.createString(this.DECLASSIFICATION_STRING!) : 0);
   const MSG_CREATE_DATE = (this.MSG_CREATE_DATE !== null ? builder.createString(this.MSG_CREATE_DATE!) : 0);
-  const LAUNCH_FAILURE_CODE = (this.LAUNCH_FAILURE_CODE !== null ? builder.createString(this.LAUNCH_FAILURE_CODE!) : 0);
   const LAUNCH_DATE = (this.LAUNCH_DATE !== null ? builder.createString(this.LAUNCH_DATE!) : 0);
+  const LAUNCH_FAILURE_CODE = (this.LAUNCH_FAILURE_CODE !== null ? builder.createString(this.LAUNCH_FAILURE_CODE!) : 0);
   const BE_NUMBER = (this.BE_NUMBER !== null ? builder.createString(this.BE_NUMBER!) : 0);
   const O_SUFFIX = (this.O_SUFFIX !== null ? builder.createString(this.O_SUFFIX!) : 0);
   const LAUNCH_FACILITY_NAME = (this.LAUNCH_FACILITY_NAME !== null ? builder.createString(this.LAUNCH_FACILITY_NAME!) : 0);
+  const LAUNCH_FACILITY_CODE = (this.LAUNCH_FACILITY_CODE !== null ? builder.createString(this.LAUNCH_FACILITY_CODE!) : 0);
+  const LAUNCH_VEHICLE = (this.LAUNCH_VEHICLE !== null ? builder.createString(this.LAUNCH_VEHICLE!) : 0);
+  const LAUNCH_VEHICLE_CONFIG = (this.LAUNCH_VEHICLE_CONFIG !== null ? builder.createString(this.LAUNCH_VEHICLE_CONFIG!) : 0);
+  const TARGET_ORBIT = (this.TARGET_ORBIT !== null ? builder.createString(this.TARGET_ORBIT!) : 0);
   const ON_ORBIT = (this.ON_ORBIT !== null ? builder.createString(this.ON_ORBIT!) : 0);
+  const LAUNCH_COUNTRY = (this.LAUNCH_COUNTRY !== null ? builder.createString(this.LAUNCH_COUNTRY!) : 0);
+  const MISSION_NAME = (this.MISSION_NAME !== null ? builder.createString(this.MISSION_NAME!) : 0);
+  const REMARKS = (this.REMARKS !== null ? builder.createString(this.REMARKS!) : 0);
 
   return LNE.createLNE(builder,
     ID,
+    this.SAT_NO,
     ORIG_OBJECT_ID,
     DERIVED_FROM,
     DECLASSIFICATION_DATE,
     DECLASSIFICATION_STRING,
     MSG_CREATE_DATE,
-    LAUNCH_FAILURE_CODE,
     LAUNCH_DATE,
+    this.OUTCOME,
+    LAUNCH_FAILURE_CODE,
     BE_NUMBER,
     O_SUFFIX,
     LAUNCH_FACILITY_NAME,
+    LAUNCH_FACILITY_CODE,
+    LAUNCH_VEHICLE,
+    LAUNCH_VEHICLE_CONFIG,
+    TARGET_ORBIT,
+    this.OBJECTS_ON_ORBIT,
     ON_ORBIT,
-    this.SAT_NO
+    LAUNCH_COUNTRY,
+    MISSION_NAME,
+    REMARKS
   );
 }
 }

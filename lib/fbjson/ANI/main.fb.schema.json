@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "definitions": {
+    "analyticType": {
+      "type": "string",
+      "enum": [
+        "SPECTRAL",
+        "PHOTOMETRIC",
+        "ASTROMETRIC",
+        "RADIOMETRIC",
+        "SIGNATURE",
+        "FEATURE_EXTRACTION",
+        "CHANGE_DETECTION",
+        "CLASSIFICATION",
+        "FUSION"
+      ],
+      "x-flatbuffer-type": "enum",
+      "x-flatbuffer-enum-type": "byte",
+      "x-flatbuffer-enum-values": {
+        "SPECTRAL": {
+          "value": 0
+        },
+        "PHOTOMETRIC": {
+          "value": 1
+        },
+        "ASTROMETRIC": {
+          "value": 2
+        },
+        "RADIOMETRIC": {
+          "value": 3
+        },
+        "SIGNATURE": {
+          "value": 4
+        },
+        "FEATURE_EXTRACTION": {
+          "value": 5
+        },
+        "CHANGE_DETECTION": {
+          "value": 6
+        },
+        "CLASSIFICATION": {
+          "value": 7
+        },
+        "FUSION": {
+          "value": 8
+        }
+      }
+    },
+    "ANI": {
+      "type": "object",
+      "description": "Analytic Imagery Product",
+      "properties": {
+        "ID": {
+          "type": "string",
+          "description": "Unique identifier",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_ID": {
+          "type": "string",
+          "description": "Reference to source imagery (e.g., SKI, GDI, EOO)",
+          "x-flatbuffer-type": "string"
+        },
+        "SOURCE_TYPE": {
+          "type": "string",
+          "description": "Source imagery type",
+          "x-flatbuffer-type": "string"
+        },
+        "ANALYTIC_TYPE": {
+          "$ref": "#/definitions/analyticType",
+          "description": "Analytic product type",
+          "x-flatbuffer-type": "enum",
+          "x-flatbuffer-enum-type": "byte",
+          "x-flatbuffer-enum-values": {
+            "SPECTRAL": {
+              "value": 0
+            },
+            "PHOTOMETRIC": {
+              "value": 1
+            },
+            "ASTROMETRIC": {
+              "value": 2
+            },
+            "RADIOMETRIC": {
+              "value": 3
+            },
+            "SIGNATURE": {
+              "value": 4
+            },
+            "FEATURE_EXTRACTION": {
+              "value": 5
+            },
+            "CHANGE_DETECTION": {
+              "value": 6
+            },
+            "CLASSIFICATION": {
+              "value": 7
+            },
+            "FUSION": {
+              "value": 8
+            }
+          }
+        },
+        "ALGORITHM": {
+          "type": "string",
+          "description": "Processing algorithm or pipeline name",
+          "x-flatbuffer-type": "string"
+        },
+        "ALGORITHM_VERSION": {
+          "type": "string",
+          "description": "Algorithm version",
+          "x-flatbuffer-type": "string"
+        },
+        "PROCESSING_TIME": {
+          "type": "string",
+          "description": "Processing epoch (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "OBS_TIME": {
+          "type": "string",
+          "description": "Original observation epoch (ISO 8601)",
+          "x-flatbuffer-type": "string"
+        },
+        "SAT_NO": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Target satellite number (if applicable)",
+          "x-flatbuffer-type": "uint32"
+        },
+        "OBJECT_DESIGNATOR": {
+          "type": "string",
+          "description": "Target object designator",
+          "x-flatbuffer-type": "string"
+        },
+        "RA": {
+          "type": "number",
+          "description": "Center right ascension in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "DEC": {
+          "type": "number",
+          "description": "Center declination in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "FOV": {
+          "type": "number",
+          "description": "Field of view in degrees",
+          "x-flatbuffer-type": "double"
+        },
+        "VISUAL_MAG": {
+          "type": "number",
+          "description": "Visual magnitude estimate",
+          "x-flatbuffer-type": "double"
+        },
+        "MAG_UNCERTAINTY": {
+          "type": "number",
+          "description": "Magnitude uncertainty",
+          "x-flatbuffer-type": "double"
+        },
+        "OBJECT_COUNT": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4294967295,
+          "description": "Detected object count",
+          "x-flatbuffer-type": "uint"
+        },
+        "LABELS": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Classification labels",
+          "x-flatbuffer-type": "[string]"
+        },
+        "CONFIDENCE": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Classification confidence scores (0.0-1.0)",
+          "x-flatbuffer-type": "[double]"
+        },
+        "FEATURES": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "description": "Feature vector or extracted parameters",
+          "x-flatbuffer-type": "[double]"
+        },
+        "QUALITY": {
+          "type": "number",
+          "description": "Quality score (0.0-1.0)",
+          "x-flatbuffer-type": "double"
+        },
+        "NOTES": {
+          "type": "string",
+          "description": "Additional notes",
+          "x-flatbuffer-type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$ref": "#/definitions/ANI",
+  "x-flatbuffer-root-type": "ANI",
+  "x-flatbuffer-file-identifier": "$ANI"
+}

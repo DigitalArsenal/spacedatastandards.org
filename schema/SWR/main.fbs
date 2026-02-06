@@ -1,22 +1,44 @@
-// Hash: cf0bfcbe16efd1bf3fbb4f802cffa174a8e08bd835192737f44e474e2d0e1937
-// Version: 0.0.2
+// Hash: 31edc95370f7e501e7bcdc58476e8b56a8a49b1a77806049ca79d68ed1bfeabd
+// Version: 0.0.3
 // -----------------------------------END_HEADER
-/// Short-Wave Infrared
+/// Short-Wave Infrared Observation
 table SWR {
+  /// Unique identifier
   ID:string;
+  /// On-orbit reference
   ON_ORBIT:string;
-  TS:string;
-  SOLAR_PHASE_ANGLE:double;
-  LAT:double;
-  LON:double;
-  LOCATION_NAME:string;
-  BAD_WAVE:string;
-  WAVELENGTHS:[string];
-  ABS_FLUXES:[string];
-  RATIO_WAVELENGTHS:[string];
-  FLUX_RATIOS:[string];
+  /// International designator
   ORIG_OBJECT_ID:string;
-  SAT_NO:int;
+  /// Satellite catalog number
+  SAT_NO:uint32;
+  /// Observation timestamp (ISO 8601)
+  TS:string;
+  /// Solar phase angle (degrees)
+  SOLAR_PHASE_ANGLE:double;
+  /// Sub-observer latitude (degrees)
+  LAT:double;
+  /// Sub-observer longitude (degrees)
+  LON:double;
+  /// Location name
+  LOCATION_NAME:string;
+  /// Bad wavelength flag or identifier
+  BAD_WAVE:string;
+  /// Measured wavelengths (micrometers)
+  WAVELENGTHS:[double];
+  /// Absolute flux values (W/m^2/um)
+  ABS_FLUXES:[double];
+  /// Ratio reference wavelengths (micrometers)
+  RATIO_WAVELENGTHS:[double];
+  /// Flux ratios (normalized)
+  FLUX_RATIOS:[double];
+  /// Effective temperature (Kelvin)
+  TEMPERATURE:double;
+  /// Signal-to-noise ratio
+  SIGNAL_NOISE_RATIO:double;
+  /// Integration time (seconds)
+  INTEGRATION_TIME:double;
+  /// Data quality (0-9, 9=best)
+  QUALITY:uint8;
 }
 
 root_type SWR;

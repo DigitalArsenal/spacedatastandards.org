@@ -1,70 +1,157 @@
-// Hash: 1ff65c3f9e3eef7b4d27134943a292ec7efcad667e04567ec731f25fb1ff2449
-// Version: 0.0.2
+// Hash: d0d5f2f3716fd4c9aa66c91d37d893cecb85c266ff16875687b26b34ef94cb0c
+// Version: 0.0.3
 // -----------------------------------END_HEADER
+enum soiCollectionMode : byte {
+  SIDEREAL,
+  RATE_TRACK,
+  STARE,
+  SEARCH,
+  SURVEY,
+  TASKED
+}
+
+enum soiObsType : byte {
+  OPTICAL,
+  RADAR,
+  COMBINED
+}
+
+enum soiCalibrationType : byte {
+  PHOTOMETRIC,
+  ASTROMETRIC,
+  RADIOMETRIC,
+  POLARIMETRIC,
+  TEMPORAL,
+  NONE
+}
+
 /// Space Object Identification Observation Set
 table SOI {
+  /// Unique identifier
   ID:string;
+  /// Message creation date (ISO 8601)
   MSG_CREATE_DATE:string;
+  /// Sensor identifier
   ID_SENSOR:string;
+  /// Original sensor identifier
   ORIG_SENSOR_ID:string;
+  /// Sensor observation set identifier
   SENSOR_AS_ID:string;
-  SAT_NO:int;
+  /// Satellite catalog number
+  SAT_NO:uint32;
+  /// International designator
   ORIG_OBJECT_ID:string;
-  SENLAT:double;
-  SENLON:double;
-  SENALT:double;
-  SENX:double;
-  SENY:double;
-  SENZ:double;
-  SENVELX:double;
-  SENVELY:double;
-  SENVELZ:double;
-  START_TIME:string;
-  END_TIME:string;
-  NUM_OBS:int;
-  TYPE:string;
-  POLAR_ANGLE_START:double;
-  POLAR_ANGLE_END:double;
-  REFERENCE_FRAME:string;
-  SEN_REFERENCE_FRAME:string;
-  LOS_DECLINATION_START:double;
-  LOS_DECLINATION_END:double;
-  POINTING_ANGLE_AZ_START:double;
-  POINTING_ANGLE_AZ_END:double;
-  POINTING_ANGLE_EL_START:double;
-  POINTING_ANGLE_EL_END:double;
-  PIXEL_ARRAY_WIDTH:int;
-  PIXEL_ARRAY_HEIGHT:int;
-  NUM_SPECTRAL_FILTERS:int;
-  SPECTRAL_FILTERS:[string];
-  COLLECTION_MODE:string;
-  GAIN:double;
-  BINNING_HORIZ:int;
-  BINNING_VERT:int;
-  SOLAR_MAG:double;
-  PIXEL_MIN:int;
-  PIXEL_MAX:int;
-  SOFTWARE_VERSION:string;
+  /// Satellite common name
   SATELLITE_NAME:string;
-  STAR_CAT_NAME:string;
-  CORR_QUALITY:double;
+  /// True if uncorrelated target
   UCT:bool;
+  /// Sensor geodetic latitude (degrees)
+  SENLAT:double;
+  /// Sensor geodetic longitude (degrees)
+  SENLON:double;
+  /// Sensor altitude (km)
+  SENALT:double;
+  /// Sensor ECEF X position (km)
+  SENX:double;
+  /// Sensor ECEF Y position (km)
+  SENY:double;
+  /// Sensor ECEF Z position (km)
+  SENZ:double;
+  /// Sensor ECEF X velocity (km/s)
+  SENVELX:double;
+  /// Sensor ECEF Y velocity (km/s)
+  SENVELY:double;
+  /// Sensor ECEF Z velocity (km/s)
+  SENVELZ:double;
+  /// Sensor reference frame
+  SEN_REFERENCE_FRAME:string;
+  /// Observation type
+  OBS_TYPE:soiObsType;
+  /// Collection mode
+  COLLECTION_MODE:soiCollectionMode;
+  /// Observation start time (ISO 8601)
+  START_TIME:string;
+  /// Observation end time (ISO 8601)
+  END_TIME:string;
+  /// Number of observations in set
+  NUM_OBS:uint32;
+  /// Observation reference frame
+  REFERENCE_FRAME:string;
+  /// Polar angle at start (degrees)
+  POLAR_ANGLE_START:double;
+  /// Polar angle at end (degrees)
+  POLAR_ANGLE_END:double;
+  /// Line-of-sight declination at start (degrees)
+  LOS_DECLINATION_START:double;
+  /// Line-of-sight declination at end (degrees)
+  LOS_DECLINATION_END:double;
+  /// Pointing azimuth at start (degrees)
+  POINTING_ANGLE_AZ_START:double;
+  /// Pointing azimuth at end (degrees)
+  POINTING_ANGLE_AZ_END:double;
+  /// Pointing elevation at start (degrees)
+  POINTING_ANGLE_EL_START:double;
+  /// Pointing elevation at end (degrees)
+  POINTING_ANGLE_EL_END:double;
+  /// Focal plane array width (pixels)
+  PIXEL_ARRAY_WIDTH:uint16;
+  /// Focal plane array height (pixels)
+  PIXEL_ARRAY_HEIGHT:uint16;
+  /// Number of spectral filters used
+  NUM_SPECTRAL_FILTERS:uint8;
+  /// Spectral filter identifiers
+  SPECTRAL_FILTERS:[string];
+  /// Detector gain setting
+  GAIN:double;
+  /// Horizontal binning factor
+  BINNING_HORIZ:uint8;
+  /// Vertical binning factor
+  BINNING_VERT:uint8;
+  /// Solar visual magnitude
+  SOLAR_MAG:double;
+  /// Minimum pixel value in observation
+  PIXEL_MIN:int;
+  /// Maximum pixel value in observation
+  PIXEL_MAX:int;
+  /// Processing software version
+  SOFTWARE_VERSION:string;
+  /// Star catalog used for calibration
+  STAR_CAT_NAME:string;
+  /// Correlation quality score
+  CORR_QUALITY:double;
+  /// Calibration type
+  CALIBRATION_TYPE:soiCalibrationType;
+  /// Valid calibration identifiers
   VALID_CALIBRATIONS:string;
-  CALIBRATION_TYPE:string;
+  /// Percent saturation threshold
   PERCENT_SAT_THRESHOLD:double;
+  /// True if change detected from baseline
   CHANGE_DETECTED:bool;
+  /// True if periodicity change detected
   PERIODICITY_CHANGE_DETECTED:bool;
+  /// True if brightness variance change detected
   BRIGHTNESS_VARIANCE_CHANGE_DETECTED:bool;
+  /// True if solar phase angle brightness change detected
   SOLAR_PHASE_ANGLE_BRIGHTNESS_CHANGE_DETECTED:bool;
+  /// Change confidence assessment
   CHANGE_CONF:string;
+  /// Collection density confidence
   COLLECTION_DENSITY_CONF:string;
+  /// Periodicity sampling confidence
   PERIODICITY_SAMPLING_CONF:string;
+  /// Periodicity detection confidence
   PERIODICITY_DETECTION_CONF:string;
+  /// Collection identifier
   COLLECTION_ID:string;
+  /// Calibration record references
   CALIBRATIONS:[string];
+  /// Associated tags
   TAGS:[string];
+  /// Transaction identifier
   TRANSACTION_ID:string;
+  /// Optical SOI observation references
   OPTICAL_SOIOBSERVATION_LIST:[string];
+  /// Radar SOI observation references
   RADAR_SOIOBSERVATION_LIST:[string];
 }
 

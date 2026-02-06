@@ -16,80 +16,165 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct LND;
 struct LNDBuilder;
 
+enum launchDetectionType : int8_t {
+  launchDetectionType_IR_DETECT = 0,
+  launchDetectionType_RADAR_DETECT = 1,
+  launchDetectionType_OPTICAL_DETECT = 2,
+  launchDetectionType_ELINT_DETECT = 3,
+  launchDetectionType_COMBINED = 4,
+  launchDetectionType_UNKNOWN = 5,
+  launchDetectionType_MIN = launchDetectionType_IR_DETECT,
+  launchDetectionType_MAX = launchDetectionType_UNKNOWN
+};
+
+inline const launchDetectionType (&EnumValueslaunchDetectionType())[6] {
+  static const launchDetectionType values[] = {
+    launchDetectionType_IR_DETECT,
+    launchDetectionType_RADAR_DETECT,
+    launchDetectionType_OPTICAL_DETECT,
+    launchDetectionType_ELINT_DETECT,
+    launchDetectionType_COMBINED,
+    launchDetectionType_UNKNOWN
+  };
+  return values;
+}
+
+inline const char * const *EnumNameslaunchDetectionType() {
+  static const char * const names[7] = {
+    "IR_DETECT",
+    "RADAR_DETECT",
+    "OPTICAL_DETECT",
+    "ELINT_DETECT",
+    "COMBINED",
+    "UNKNOWN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNamelaunchDetectionType(launchDetectionType e) {
+  if (::flatbuffers::IsOutRange(e, launchDetectionType_IR_DETECT, launchDetectionType_UNKNOWN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNameslaunchDetectionType()[index];
+}
+
 /// Launch Detection
 struct LND FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef LNDBuilder Builder;
   enum FlatBuffersVTableOffset FLATBUFFERS_VTABLE_UNDERLYING_TYPE {
     VT_ID = 4,
-    VT_LAUNCH_TIME = 6,
-    VT_MESSAGE_TYPE = 8,
-    VT_LAUNCH_LATITUDE = 10,
-    VT_LAUNCH_LONGITUDE = 12,
-    VT_LAUNCH_AZIMUTH = 14,
-    VT_RAAN = 16,
-    VT_INCLINATION = 18,
-    VT_OBSERVATION_TIME = 20,
-    VT_OBSERVATION_LATITUDE = 22,
-    VT_OBSERVATION_LONGITUDE = 24,
-    VT_OBSERVATION_ALTITUDE = 26,
-    VT_STEREO_FLAG = 28,
-    VT_HIGH_ZENITH_AZIMUTH = 30,
-    VT_SEQUENCE_NUMBER = 32,
-    VT_EVENT_ID = 34,
-    VT_DESCRIPTOR = 36,
-    VT_TAGS = 38
+    VT_EVENT_ID = 6,
+    VT_DETECTION_TYPE = 8,
+    VT_MESSAGE_TYPE = 10,
+    VT_LAUNCH_TIME = 12,
+    VT_LAUNCH_LATITUDE = 14,
+    VT_LAUNCH_LONGITUDE = 16,
+    VT_LAUNCH_AZIMUTH = 18,
+    VT_RAAN = 20,
+    VT_INCLINATION = 22,
+    VT_OBSERVATION_TIME = 24,
+    VT_OBSERVATION_LATITUDE = 26,
+    VT_OBSERVATION_LONGITUDE = 28,
+    VT_OBSERVATION_ALTITUDE = 30,
+    VT_STEREO_FLAG = 32,
+    VT_HIGH_ZENITH_AZIMUTH = 34,
+    VT_SEQUENCE_NUMBER = 36,
+    VT_LAUNCH_SITE_ID = 38,
+    VT_LAUNCH_VEHICLE = 40,
+    VT_TRAJECTORY_TYPE = 42,
+    VT_CONFIDENCE = 44,
+    VT_DESCRIPTOR = 46,
+    VT_TAGS = 48
   };
+  /// Unique identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
-  const ::flatbuffers::String *LAUNCH_TIME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_LAUNCH_TIME);
-  }
-  const ::flatbuffers::String *MESSAGE_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_MESSAGE_TYPE);
-  }
-  double LAUNCH_LATITUDE() const {
-    return GetField<double>(VT_LAUNCH_LATITUDE, 0.0);
-  }
-  double LAUNCH_LONGITUDE() const {
-    return GetField<double>(VT_LAUNCH_LONGITUDE, 0.0);
-  }
-  double LAUNCH_AZIMUTH() const {
-    return GetField<double>(VT_LAUNCH_AZIMUTH, 0.0);
-  }
-  double RAAN() const {
-    return GetField<double>(VT_RAAN, 0.0);
-  }
-  double INCLINATION() const {
-    return GetField<double>(VT_INCLINATION, 0.0);
-  }
-  const ::flatbuffers::String *OBSERVATION_TIME() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_OBSERVATION_TIME);
-  }
-  double OBSERVATION_LATITUDE() const {
-    return GetField<double>(VT_OBSERVATION_LATITUDE, 0.0);
-  }
-  double OBSERVATION_LONGITUDE() const {
-    return GetField<double>(VT_OBSERVATION_LONGITUDE, 0.0);
-  }
-  double OBSERVATION_ALTITUDE() const {
-    return GetField<double>(VT_OBSERVATION_ALTITUDE, 0.0);
-  }
-  bool STEREO_FLAG() const {
-    return GetField<uint8_t>(VT_STEREO_FLAG, 0) != 0;
-  }
-  bool HIGH_ZENITH_AZIMUTH() const {
-    return GetField<uint8_t>(VT_HIGH_ZENITH_AZIMUTH, 0) != 0;
-  }
-  int32_t SEQUENCE_NUMBER() const {
-    return GetField<int32_t>(VT_SEQUENCE_NUMBER, 0);
-  }
+  /// Detection event identifier
   const ::flatbuffers::String *EVENT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_EVENT_ID);
   }
+  /// Detection type
+  launchDetectionType DETECTION_TYPE() const {
+    return static_cast<launchDetectionType>(GetField<int8_t>(VT_DETECTION_TYPE, 0));
+  }
+  /// Detection message type code
+  const ::flatbuffers::String *MESSAGE_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_MESSAGE_TYPE);
+  }
+  /// Time of launch detection (ISO 8601)
+  const ::flatbuffers::String *LAUNCH_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LAUNCH_TIME);
+  }
+  /// Launch site latitude (degrees)
+  double LAUNCH_LATITUDE() const {
+    return GetField<double>(VT_LAUNCH_LATITUDE, 0.0);
+  }
+  /// Launch site longitude (degrees)
+  double LAUNCH_LONGITUDE() const {
+    return GetField<double>(VT_LAUNCH_LONGITUDE, 0.0);
+  }
+  /// Launch azimuth (degrees from north)
+  double LAUNCH_AZIMUTH() const {
+    return GetField<double>(VT_LAUNCH_AZIMUTH, 0.0);
+  }
+  /// Estimated RAAN (degrees)
+  double RAAN() const {
+    return GetField<double>(VT_RAAN, 0.0);
+  }
+  /// Estimated inclination (degrees)
+  double INCLINATION() const {
+    return GetField<double>(VT_INCLINATION, 0.0);
+  }
+  /// Time of trajectory observation (ISO 8601)
+  const ::flatbuffers::String *OBSERVATION_TIME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_OBSERVATION_TIME);
+  }
+  /// Observation point latitude (degrees)
+  double OBSERVATION_LATITUDE() const {
+    return GetField<double>(VT_OBSERVATION_LATITUDE, 0.0);
+  }
+  /// Observation point longitude (degrees)
+  double OBSERVATION_LONGITUDE() const {
+    return GetField<double>(VT_OBSERVATION_LONGITUDE, 0.0);
+  }
+  /// Observation point altitude (km)
+  double OBSERVATION_ALTITUDE() const {
+    return GetField<double>(VT_OBSERVATION_ALTITUDE, 0.0);
+  }
+  /// True if stereo observation (multiple sensors)
+  bool STEREO_FLAG() const {
+    return GetField<uint8_t>(VT_STEREO_FLAG, 0) != 0;
+  }
+  /// True if high zenith angle observation
+  bool HIGH_ZENITH_AZIMUTH() const {
+    return GetField<uint8_t>(VT_HIGH_ZENITH_AZIMUTH, 0) != 0;
+  }
+  /// Sequence number in detection chain
+  uint16_t SEQUENCE_NUMBER() const {
+    return GetField<uint16_t>(VT_SEQUENCE_NUMBER, 0);
+  }
+  /// Launch site identifier
+  const ::flatbuffers::String *LAUNCH_SITE_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LAUNCH_SITE_ID);
+  }
+  /// Launch vehicle type (if identified)
+  const ::flatbuffers::String *LAUNCH_VEHICLE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_LAUNCH_VEHICLE);
+  }
+  /// Estimated trajectory type
+  const ::flatbuffers::String *TRAJECTORY_TYPE() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_TRAJECTORY_TYPE);
+  }
+  /// Detection confidence (0-1)
+  double CONFIDENCE() const {
+    return GetField<double>(VT_CONFIDENCE, 0.0);
+  }
+  /// Event descriptor
   const ::flatbuffers::String *DESCRIPTOR() const {
     return GetPointer<const ::flatbuffers::String *>(VT_DESCRIPTOR);
   }
+  /// Associated tags
   const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS() const {
     return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_TAGS);
   }
@@ -97,10 +182,13 @@ struct LND FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     return VerifyTableStart(verifier) &&
            VerifyOffset(verifier, VT_ID) &&
            verifier.VerifyString(ID()) &&
-           VerifyOffset(verifier, VT_LAUNCH_TIME) &&
-           verifier.VerifyString(LAUNCH_TIME()) &&
+           VerifyOffset(verifier, VT_EVENT_ID) &&
+           verifier.VerifyString(EVENT_ID()) &&
+           VerifyField<int8_t>(verifier, VT_DETECTION_TYPE, 1) &&
            VerifyOffset(verifier, VT_MESSAGE_TYPE) &&
            verifier.VerifyString(MESSAGE_TYPE()) &&
+           VerifyOffset(verifier, VT_LAUNCH_TIME) &&
+           verifier.VerifyString(LAUNCH_TIME()) &&
            VerifyField<double>(verifier, VT_LAUNCH_LATITUDE, 8) &&
            VerifyField<double>(verifier, VT_LAUNCH_LONGITUDE, 8) &&
            VerifyField<double>(verifier, VT_LAUNCH_AZIMUTH, 8) &&
@@ -113,9 +201,14 @@ struct LND FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            VerifyField<double>(verifier, VT_OBSERVATION_ALTITUDE, 8) &&
            VerifyField<uint8_t>(verifier, VT_STEREO_FLAG, 1) &&
            VerifyField<uint8_t>(verifier, VT_HIGH_ZENITH_AZIMUTH, 1) &&
-           VerifyField<int32_t>(verifier, VT_SEQUENCE_NUMBER, 4) &&
-           VerifyOffset(verifier, VT_EVENT_ID) &&
-           verifier.VerifyString(EVENT_ID()) &&
+           VerifyField<uint16_t>(verifier, VT_SEQUENCE_NUMBER, 2) &&
+           VerifyOffset(verifier, VT_LAUNCH_SITE_ID) &&
+           verifier.VerifyString(LAUNCH_SITE_ID()) &&
+           VerifyOffset(verifier, VT_LAUNCH_VEHICLE) &&
+           verifier.VerifyString(LAUNCH_VEHICLE()) &&
+           VerifyOffset(verifier, VT_TRAJECTORY_TYPE) &&
+           verifier.VerifyString(TRAJECTORY_TYPE()) &&
+           VerifyField<double>(verifier, VT_CONFIDENCE, 8) &&
            VerifyOffset(verifier, VT_DESCRIPTOR) &&
            verifier.VerifyString(DESCRIPTOR()) &&
            VerifyOffset(verifier, VT_TAGS) &&
@@ -132,11 +225,17 @@ struct LNDBuilder {
   void add_ID(::flatbuffers::Offset<::flatbuffers::String> ID) {
     fbb_.AddOffset(LND::VT_ID, ID);
   }
-  void add_LAUNCH_TIME(::flatbuffers::Offset<::flatbuffers::String> LAUNCH_TIME) {
-    fbb_.AddOffset(LND::VT_LAUNCH_TIME, LAUNCH_TIME);
+  void add_EVENT_ID(::flatbuffers::Offset<::flatbuffers::String> EVENT_ID) {
+    fbb_.AddOffset(LND::VT_EVENT_ID, EVENT_ID);
+  }
+  void add_DETECTION_TYPE(launchDetectionType DETECTION_TYPE) {
+    fbb_.AddElement<int8_t>(LND::VT_DETECTION_TYPE, static_cast<int8_t>(DETECTION_TYPE), 0);
   }
   void add_MESSAGE_TYPE(::flatbuffers::Offset<::flatbuffers::String> MESSAGE_TYPE) {
     fbb_.AddOffset(LND::VT_MESSAGE_TYPE, MESSAGE_TYPE);
+  }
+  void add_LAUNCH_TIME(::flatbuffers::Offset<::flatbuffers::String> LAUNCH_TIME) {
+    fbb_.AddOffset(LND::VT_LAUNCH_TIME, LAUNCH_TIME);
   }
   void add_LAUNCH_LATITUDE(double LAUNCH_LATITUDE) {
     fbb_.AddElement<double>(LND::VT_LAUNCH_LATITUDE, LAUNCH_LATITUDE, 0.0);
@@ -171,11 +270,20 @@ struct LNDBuilder {
   void add_HIGH_ZENITH_AZIMUTH(bool HIGH_ZENITH_AZIMUTH) {
     fbb_.AddElement<uint8_t>(LND::VT_HIGH_ZENITH_AZIMUTH, static_cast<uint8_t>(HIGH_ZENITH_AZIMUTH), 0);
   }
-  void add_SEQUENCE_NUMBER(int32_t SEQUENCE_NUMBER) {
-    fbb_.AddElement<int32_t>(LND::VT_SEQUENCE_NUMBER, SEQUENCE_NUMBER, 0);
+  void add_SEQUENCE_NUMBER(uint16_t SEQUENCE_NUMBER) {
+    fbb_.AddElement<uint16_t>(LND::VT_SEQUENCE_NUMBER, SEQUENCE_NUMBER, 0);
   }
-  void add_EVENT_ID(::flatbuffers::Offset<::flatbuffers::String> EVENT_ID) {
-    fbb_.AddOffset(LND::VT_EVENT_ID, EVENT_ID);
+  void add_LAUNCH_SITE_ID(::flatbuffers::Offset<::flatbuffers::String> LAUNCH_SITE_ID) {
+    fbb_.AddOffset(LND::VT_LAUNCH_SITE_ID, LAUNCH_SITE_ID);
+  }
+  void add_LAUNCH_VEHICLE(::flatbuffers::Offset<::flatbuffers::String> LAUNCH_VEHICLE) {
+    fbb_.AddOffset(LND::VT_LAUNCH_VEHICLE, LAUNCH_VEHICLE);
+  }
+  void add_TRAJECTORY_TYPE(::flatbuffers::Offset<::flatbuffers::String> TRAJECTORY_TYPE) {
+    fbb_.AddOffset(LND::VT_TRAJECTORY_TYPE, TRAJECTORY_TYPE);
+  }
+  void add_CONFIDENCE(double CONFIDENCE) {
+    fbb_.AddElement<double>(LND::VT_CONFIDENCE, CONFIDENCE, 0.0);
   }
   void add_DESCRIPTOR(::flatbuffers::Offset<::flatbuffers::String> DESCRIPTOR) {
     fbb_.AddOffset(LND::VT_DESCRIPTOR, DESCRIPTOR);
@@ -197,8 +305,10 @@ struct LNDBuilder {
 inline ::flatbuffers::Offset<LND> CreateLND(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> LAUNCH_TIME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EVENT_ID = 0,
+    launchDetectionType DETECTION_TYPE = launchDetectionType_IR_DETECT,
     ::flatbuffers::Offset<::flatbuffers::String> MESSAGE_TYPE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> LAUNCH_TIME = 0,
     double LAUNCH_LATITUDE = 0.0,
     double LAUNCH_LONGITUDE = 0.0,
     double LAUNCH_AZIMUTH = 0.0,
@@ -210,11 +320,15 @@ inline ::flatbuffers::Offset<LND> CreateLND(
     double OBSERVATION_ALTITUDE = 0.0,
     bool STEREO_FLAG = false,
     bool HIGH_ZENITH_AZIMUTH = false,
-    int32_t SEQUENCE_NUMBER = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> EVENT_ID = 0,
+    uint16_t SEQUENCE_NUMBER = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> LAUNCH_SITE_ID = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> LAUNCH_VEHICLE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> TRAJECTORY_TYPE = 0,
+    double CONFIDENCE = 0.0,
     ::flatbuffers::Offset<::flatbuffers::String> DESCRIPTOR = 0,
     ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> TAGS = 0) {
   LNDBuilder builder_(_fbb);
+  builder_.add_CONFIDENCE(CONFIDENCE);
   builder_.add_OBSERVATION_ALTITUDE(OBSERVATION_ALTITUDE);
   builder_.add_OBSERVATION_LONGITUDE(OBSERVATION_LONGITUDE);
   builder_.add_OBSERVATION_LATITUDE(OBSERVATION_LATITUDE);
@@ -225,22 +339,28 @@ inline ::flatbuffers::Offset<LND> CreateLND(
   builder_.add_LAUNCH_LATITUDE(LAUNCH_LATITUDE);
   builder_.add_TAGS(TAGS);
   builder_.add_DESCRIPTOR(DESCRIPTOR);
-  builder_.add_EVENT_ID(EVENT_ID);
-  builder_.add_SEQUENCE_NUMBER(SEQUENCE_NUMBER);
+  builder_.add_TRAJECTORY_TYPE(TRAJECTORY_TYPE);
+  builder_.add_LAUNCH_VEHICLE(LAUNCH_VEHICLE);
+  builder_.add_LAUNCH_SITE_ID(LAUNCH_SITE_ID);
   builder_.add_OBSERVATION_TIME(OBSERVATION_TIME);
-  builder_.add_MESSAGE_TYPE(MESSAGE_TYPE);
   builder_.add_LAUNCH_TIME(LAUNCH_TIME);
+  builder_.add_MESSAGE_TYPE(MESSAGE_TYPE);
+  builder_.add_EVENT_ID(EVENT_ID);
   builder_.add_ID(ID);
+  builder_.add_SEQUENCE_NUMBER(SEQUENCE_NUMBER);
   builder_.add_HIGH_ZENITH_AZIMUTH(HIGH_ZENITH_AZIMUTH);
   builder_.add_STEREO_FLAG(STEREO_FLAG);
+  builder_.add_DETECTION_TYPE(DETECTION_TYPE);
   return builder_.Finish();
 }
 
 inline ::flatbuffers::Offset<LND> CreateLNDDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *ID = nullptr,
-    const char *LAUNCH_TIME = nullptr,
+    const char *EVENT_ID = nullptr,
+    launchDetectionType DETECTION_TYPE = launchDetectionType_IR_DETECT,
     const char *MESSAGE_TYPE = nullptr,
+    const char *LAUNCH_TIME = nullptr,
     double LAUNCH_LATITUDE = 0.0,
     double LAUNCH_LONGITUDE = 0.0,
     double LAUNCH_AZIMUTH = 0.0,
@@ -252,22 +372,30 @@ inline ::flatbuffers::Offset<LND> CreateLNDDirect(
     double OBSERVATION_ALTITUDE = 0.0,
     bool STEREO_FLAG = false,
     bool HIGH_ZENITH_AZIMUTH = false,
-    int32_t SEQUENCE_NUMBER = 0,
-    const char *EVENT_ID = nullptr,
+    uint16_t SEQUENCE_NUMBER = 0,
+    const char *LAUNCH_SITE_ID = nullptr,
+    const char *LAUNCH_VEHICLE = nullptr,
+    const char *TRAJECTORY_TYPE = nullptr,
+    double CONFIDENCE = 0.0,
     const char *DESCRIPTOR = nullptr,
     const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *TAGS = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
-  auto LAUNCH_TIME__ = LAUNCH_TIME ? _fbb.CreateString(LAUNCH_TIME) : 0;
-  auto MESSAGE_TYPE__ = MESSAGE_TYPE ? _fbb.CreateString(MESSAGE_TYPE) : 0;
-  auto OBSERVATION_TIME__ = OBSERVATION_TIME ? _fbb.CreateString(OBSERVATION_TIME) : 0;
   auto EVENT_ID__ = EVENT_ID ? _fbb.CreateString(EVENT_ID) : 0;
+  auto MESSAGE_TYPE__ = MESSAGE_TYPE ? _fbb.CreateString(MESSAGE_TYPE) : 0;
+  auto LAUNCH_TIME__ = LAUNCH_TIME ? _fbb.CreateString(LAUNCH_TIME) : 0;
+  auto OBSERVATION_TIME__ = OBSERVATION_TIME ? _fbb.CreateString(OBSERVATION_TIME) : 0;
+  auto LAUNCH_SITE_ID__ = LAUNCH_SITE_ID ? _fbb.CreateString(LAUNCH_SITE_ID) : 0;
+  auto LAUNCH_VEHICLE__ = LAUNCH_VEHICLE ? _fbb.CreateString(LAUNCH_VEHICLE) : 0;
+  auto TRAJECTORY_TYPE__ = TRAJECTORY_TYPE ? _fbb.CreateString(TRAJECTORY_TYPE) : 0;
   auto DESCRIPTOR__ = DESCRIPTOR ? _fbb.CreateString(DESCRIPTOR) : 0;
   auto TAGS__ = TAGS ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*TAGS) : 0;
   return CreateLND(
       _fbb,
       ID__,
-      LAUNCH_TIME__,
+      EVENT_ID__,
+      DETECTION_TYPE,
       MESSAGE_TYPE__,
+      LAUNCH_TIME__,
       LAUNCH_LATITUDE,
       LAUNCH_LONGITUDE,
       LAUNCH_AZIMUTH,
@@ -280,7 +408,10 @@ inline ::flatbuffers::Offset<LND> CreateLNDDirect(
       STEREO_FLAG,
       HIGH_ZENITH_AZIMUTH,
       SEQUENCE_NUMBER,
-      EVENT_ID__,
+      LAUNCH_SITE_ID__,
+      LAUNCH_VEHICLE__,
+      TRAJECTORY_TYPE__,
+      CONFIDENCE,
       DESCRIPTOR__,
       TAGS__);
 }

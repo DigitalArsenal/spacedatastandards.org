@@ -29,6 +29,7 @@ class OBD(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Unique identifier
     # OBD
     def ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,212 +37,292 @@ class OBD(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Satellite catalog number
     # OBD
-    def START_TIME(self):
+    def SAT_NO(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
 
+    # International designator
     # OBD
-    def END_TIME(self):
+    def ORIG_OBJECT_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # On-orbit reference
     # OBD
-    def ORIG_OBJECT_ID(self):
+    def ON_ORBIT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # OD fit start time (ISO 8601)
     # OBD
-    def SAT_NO(self):
+    def START_TIME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
-        return 0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
+    # OD fit end time (ISO 8601)
     # OBD
-    def APRIORI_ID_ELSET(self):
+    def END_TIME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # OD method used
     # OBD
-    def APRIORI_ELSET(self):
+    def METHOD(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
+    # Method source or software
     # OBD
-    def APRIORI_ID_STATE_VECTOR(self):
+    def METHOD_SOURCE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # OBD
-    def APRIORI_STATE_VECTOR(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
+    # True if this is an initial orbit determination
     # OBD
     def INITIAL_OD(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
         if o != 0:
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # A priori element set identifier
     # OBD
-    def LAST_OB_START(self):
+    def APRIORI_ID_ELSET(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # A priori element set data reference
+    # OBD
+    def APRIORI_ELSET(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # A priori state vector identifier
     # OBD
-    def LAST_OB_END(self):
+    def APRIORI_ID_STATE_VECTOR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # A priori state vector data reference
     # OBD
-    def TIME_SPAN(self):
+    def APRIORI_STATE_VECTOR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
+    # Start of last observation arc (ISO 8601)
     # OBD
-    def EFFECTIVE_FROM(self):
+    def LAST_OB_START(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # End of last observation arc (ISO 8601)
     # OBD
-    def EFFECTIVE_UNTIL(self):
+    def LAST_OB_END(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Observation time span (days)
     # OBD
-    def WRMS(self):
+    def TIME_SPAN(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Fit span in days
     # OBD
-    def PREVIOUS_WRMS(self):
+    def FIT_SPAN(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Solution effective from (ISO 8601)
     # OBD
-    def FIRST_PASS_WRMS(self):
+    def EFFECTIVE_FROM(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
+    # Solution effective until (ISO 8601)
     # OBD
-    def BEST_PASS_WRMS(self):
+    def EFFECTIVE_UNTIL(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
-        return 0.0
+            return self._tab.String(o + self._tab.Pos)
+        return None
 
+    # Weighted RMS of residuals
     # OBD
-    def ERROR_GROWTH_RATE(self):
+    def WRMS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Previous solution WRMS
     # OBD
-    def EDR(self):
+    def PREVIOUS_WRMS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # First pass WRMS
     # OBD
-    def METHOD(self):
+    def FIRST_PASS_WRMS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
 
+    # Best pass WRMS
     # OBD
-    def METHOD_SOURCE(self):
+    def BEST_PASS_WRMS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
 
+    # Error growth rate (km/day)
     # OBD
-    def FIT_SPAN(self):
+    def ERROR_GROWTH_RATE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Energy dissipation rate
     # OBD
-    def BALLISTIC_COEFF_EST(self):
+    def EDR(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
-        if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
-
-    # OBD
-    def BALLISTIC_COEFF_MODEL(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # OBD
-    def AGOM_EST(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
-        if o != 0:
-            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
-        return False
-
-    # OBD
-    def AGOM_MODEL(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
-
-    # OBD
-    def RMS_CONVERGENCE_CRITERIA(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
         if o != 0:
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # True if ballistic coefficient was estimated
     # OBD
-    def NUM_ITERATIONS(self):
+    def BALLISTIC_COEFF_EST(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Ballistic coefficient model
+    # OBD
+    def BALLISTIC_COEFF_MODEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # True if area-to-mass ratio was estimated
+    # OBD
+    def AGOM_EST(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
+        if o != 0:
+            return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
+        return False
+
+    # Area-to-mass ratio model
+    # OBD
+    def AGOM_MODEL(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
+        if o != 0:
+            return self._tab.String(o + self._tab.Pos)
+        return None
+
+    # RMS convergence criteria
+    # OBD
+    def RMS_CONVERGENCE_CRITERIA(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
+        return 0.0
+
+    # Number of iterations to converge
+    # OBD
+    def NUM_ITERATIONS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
+        return 0
+
+    # Total accepted observations
+    # OBD
+    def NUM_ACCEPTED_OBS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Total rejected observations
+    # OBD
+    def NUM_REJECTED_OBS(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        if o != 0:
+            return self._tab.Get(flatbuffers.number_types.Uint32Flags, o + self._tab.Pos)
+        return 0
+
+    # Sensor contributions to this solution
+    # OBD
+    def SENSORS(self, j):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            x = self._tab.Vector(o)
+            x += flatbuffers.number_types.UOffsetTFlags.py_type(j) * 4
+            x = self._tab.Indirect(x)
+            from odSensorContribution import odSensorContribution
+            obj = odSensorContribution()
+            obj.Init(self._tab.Bytes, x)
+            return obj
+        return None
+
+    # OBD
+    def SENSORSLength(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        if o != 0:
+            return self._tab.VectorLen(o)
         return 0
 
     # OBD
+    def SENSORSIsNone(self):
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        return o == 0
+
+    # Accepted observation types
+    # OBD
     def ACCEPTED_OB_TYPS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -249,19 +330,20 @@ class OBD(object):
 
     # OBD
     def ACCEPTED_OB_TYPSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # OBD
     def ACCEPTED_OB_TYPSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
         return o == 0
 
+    # Accepted observation identifiers
     # OBD
     def ACCEPTED_OB_IDS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -269,19 +351,20 @@ class OBD(object):
 
     # OBD
     def ACCEPTED_OB_IDSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # OBD
     def ACCEPTED_OB_IDSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
         return o == 0
 
+    # Rejected observation types
     # OBD
     def REJECTED_OB_TYPS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -289,19 +372,20 @@ class OBD(object):
 
     # OBD
     def REJECTED_OB_TYPSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # OBD
     def REJECTED_OB_TYPSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
         return o == 0
 
+    # Rejected observation identifiers
     # OBD
     def REJECTED_OB_IDS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
         if o != 0:
             a = self._tab.Vector(o)
             return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
@@ -309,45 +393,18 @@ class OBD(object):
 
     # OBD
     def REJECTED_OB_IDSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
         if o != 0:
             return self._tab.VectorLen(o)
         return 0
 
     # OBD
     def REJECTED_OB_IDSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
+        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
         return o == 0
-
-    # OBD
-    def SENSOR_IDS(self, j):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
-        if o != 0:
-            a = self._tab.Vector(o)
-            return self._tab.String(a + flatbuffers.number_types.UOffsetTFlags.py_type(j * 4))
-        return ""
-
-    # OBD
-    def SENSOR_IDSLength(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
-        if o != 0:
-            return self._tab.VectorLen(o)
-        return 0
-
-    # OBD
-    def SENSOR_IDSIsNone(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
-        return o == 0
-
-    # OBD
-    def ON_ORBIT(self):
-        o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
-        if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
 
 def OBDStart(builder):
-    builder.StartObject(36)
+    builder.StartObject(38)
 
 def Start(builder):
     OBDStart(builder)
@@ -358,182 +415,212 @@ def OBDAddID(builder, ID):
 def AddID(builder, ID):
     OBDAddID(builder, ID)
 
+def OBDAddSAT_NO(builder, SAT_NO):
+    builder.PrependUint32Slot(1, SAT_NO, 0)
+
+def AddSAT_NO(builder, SAT_NO):
+    OBDAddSAT_NO(builder, SAT_NO)
+
+def OBDAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
+    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_OBJECT_ID), 0)
+
+def AddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
+    OBDAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+
+def OBDAddON_ORBIT(builder, ON_ORBIT):
+    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ON_ORBIT), 0)
+
+def AddON_ORBIT(builder, ON_ORBIT):
+    OBDAddON_ORBIT(builder, ON_ORBIT)
+
 def OBDAddSTART_TIME(builder, START_TIME):
-    builder.PrependUOffsetTRelativeSlot(1, flatbuffers.number_types.UOffsetTFlags.py_type(START_TIME), 0)
+    builder.PrependUOffsetTRelativeSlot(4, flatbuffers.number_types.UOffsetTFlags.py_type(START_TIME), 0)
 
 def AddSTART_TIME(builder, START_TIME):
     OBDAddSTART_TIME(builder, START_TIME)
 
 def OBDAddEND_TIME(builder, END_TIME):
-    builder.PrependUOffsetTRelativeSlot(2, flatbuffers.number_types.UOffsetTFlags.py_type(END_TIME), 0)
+    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(END_TIME), 0)
 
 def AddEND_TIME(builder, END_TIME):
     OBDAddEND_TIME(builder, END_TIME)
 
-def OBDAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
-    builder.PrependUOffsetTRelativeSlot(3, flatbuffers.number_types.UOffsetTFlags.py_type(ORIG_OBJECT_ID), 0)
-
-def AddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID):
-    OBDAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
-
-def OBDAddSAT_NO(builder, SAT_NO):
-    builder.PrependInt32Slot(4, SAT_NO, 0)
-
-def AddSAT_NO(builder, SAT_NO):
-    OBDAddSAT_NO(builder, SAT_NO)
-
-def OBDAddAPRIORI_ID_ELSET(builder, APRIORI_ID_ELSET):
-    builder.PrependUOffsetTRelativeSlot(5, flatbuffers.number_types.UOffsetTFlags.py_type(APRIORI_ID_ELSET), 0)
-
-def AddAPRIORI_ID_ELSET(builder, APRIORI_ID_ELSET):
-    OBDAddAPRIORI_ID_ELSET(builder, APRIORI_ID_ELSET)
-
-def OBDAddAPRIORI_ELSET(builder, APRIORI_ELSET):
-    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(APRIORI_ELSET), 0)
-
-def AddAPRIORI_ELSET(builder, APRIORI_ELSET):
-    OBDAddAPRIORI_ELSET(builder, APRIORI_ELSET)
-
-def OBDAddAPRIORI_ID_STATE_VECTOR(builder, APRIORI_ID_STATE_VECTOR):
-    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(APRIORI_ID_STATE_VECTOR), 0)
-
-def AddAPRIORI_ID_STATE_VECTOR(builder, APRIORI_ID_STATE_VECTOR):
-    OBDAddAPRIORI_ID_STATE_VECTOR(builder, APRIORI_ID_STATE_VECTOR)
-
-def OBDAddAPRIORI_STATE_VECTOR(builder, APRIORI_STATE_VECTOR):
-    builder.PrependUOffsetTRelativeSlot(8, flatbuffers.number_types.UOffsetTFlags.py_type(APRIORI_STATE_VECTOR), 0)
-
-def AddAPRIORI_STATE_VECTOR(builder, APRIORI_STATE_VECTOR):
-    OBDAddAPRIORI_STATE_VECTOR(builder, APRIORI_STATE_VECTOR)
-
-def OBDAddINITIAL_OD(builder, INITIAL_OD):
-    builder.PrependBoolSlot(9, INITIAL_OD, 0)
-
-def AddINITIAL_OD(builder, INITIAL_OD):
-    OBDAddINITIAL_OD(builder, INITIAL_OD)
-
-def OBDAddLAST_OB_START(builder, LAST_OB_START):
-    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(LAST_OB_START), 0)
-
-def AddLAST_OB_START(builder, LAST_OB_START):
-    OBDAddLAST_OB_START(builder, LAST_OB_START)
-
-def OBDAddLAST_OB_END(builder, LAST_OB_END):
-    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(LAST_OB_END), 0)
-
-def AddLAST_OB_END(builder, LAST_OB_END):
-    OBDAddLAST_OB_END(builder, LAST_OB_END)
-
-def OBDAddTIME_SPAN(builder, TIME_SPAN):
-    builder.PrependFloat64Slot(12, TIME_SPAN, 0.0)
-
-def AddTIME_SPAN(builder, TIME_SPAN):
-    OBDAddTIME_SPAN(builder, TIME_SPAN)
-
-def OBDAddEFFECTIVE_FROM(builder, EFFECTIVE_FROM):
-    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(EFFECTIVE_FROM), 0)
-
-def AddEFFECTIVE_FROM(builder, EFFECTIVE_FROM):
-    OBDAddEFFECTIVE_FROM(builder, EFFECTIVE_FROM)
-
-def OBDAddEFFECTIVE_UNTIL(builder, EFFECTIVE_UNTIL):
-    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(EFFECTIVE_UNTIL), 0)
-
-def AddEFFECTIVE_UNTIL(builder, EFFECTIVE_UNTIL):
-    OBDAddEFFECTIVE_UNTIL(builder, EFFECTIVE_UNTIL)
-
-def OBDAddWRMS(builder, WRMS):
-    builder.PrependFloat64Slot(15, WRMS, 0.0)
-
-def AddWRMS(builder, WRMS):
-    OBDAddWRMS(builder, WRMS)
-
-def OBDAddPREVIOUS_WRMS(builder, PREVIOUS_WRMS):
-    builder.PrependFloat64Slot(16, PREVIOUS_WRMS, 0.0)
-
-def AddPREVIOUS_WRMS(builder, PREVIOUS_WRMS):
-    OBDAddPREVIOUS_WRMS(builder, PREVIOUS_WRMS)
-
-def OBDAddFIRST_PASS_WRMS(builder, FIRST_PASS_WRMS):
-    builder.PrependFloat64Slot(17, FIRST_PASS_WRMS, 0.0)
-
-def AddFIRST_PASS_WRMS(builder, FIRST_PASS_WRMS):
-    OBDAddFIRST_PASS_WRMS(builder, FIRST_PASS_WRMS)
-
-def OBDAddBEST_PASS_WRMS(builder, BEST_PASS_WRMS):
-    builder.PrependFloat64Slot(18, BEST_PASS_WRMS, 0.0)
-
-def AddBEST_PASS_WRMS(builder, BEST_PASS_WRMS):
-    OBDAddBEST_PASS_WRMS(builder, BEST_PASS_WRMS)
-
-def OBDAddERROR_GROWTH_RATE(builder, ERROR_GROWTH_RATE):
-    builder.PrependFloat64Slot(19, ERROR_GROWTH_RATE, 0.0)
-
-def AddERROR_GROWTH_RATE(builder, ERROR_GROWTH_RATE):
-    OBDAddERROR_GROWTH_RATE(builder, ERROR_GROWTH_RATE)
-
-def OBDAddEDR(builder, EDR):
-    builder.PrependFloat64Slot(20, EDR, 0.0)
-
-def AddEDR(builder, EDR):
-    OBDAddEDR(builder, EDR)
-
 def OBDAddMETHOD(builder, METHOD):
-    builder.PrependUOffsetTRelativeSlot(21, flatbuffers.number_types.UOffsetTFlags.py_type(METHOD), 0)
+    builder.PrependInt8Slot(6, METHOD, 0)
 
 def AddMETHOD(builder, METHOD):
     OBDAddMETHOD(builder, METHOD)
 
 def OBDAddMETHOD_SOURCE(builder, METHOD_SOURCE):
-    builder.PrependUOffsetTRelativeSlot(22, flatbuffers.number_types.UOffsetTFlags.py_type(METHOD_SOURCE), 0)
+    builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(METHOD_SOURCE), 0)
 
 def AddMETHOD_SOURCE(builder, METHOD_SOURCE):
     OBDAddMETHOD_SOURCE(builder, METHOD_SOURCE)
 
+def OBDAddINITIAL_OD(builder, INITIAL_OD):
+    builder.PrependBoolSlot(8, INITIAL_OD, 0)
+
+def AddINITIAL_OD(builder, INITIAL_OD):
+    OBDAddINITIAL_OD(builder, INITIAL_OD)
+
+def OBDAddAPRIORI_ID_ELSET(builder, APRIORI_ID_ELSET):
+    builder.PrependUOffsetTRelativeSlot(9, flatbuffers.number_types.UOffsetTFlags.py_type(APRIORI_ID_ELSET), 0)
+
+def AddAPRIORI_ID_ELSET(builder, APRIORI_ID_ELSET):
+    OBDAddAPRIORI_ID_ELSET(builder, APRIORI_ID_ELSET)
+
+def OBDAddAPRIORI_ELSET(builder, APRIORI_ELSET):
+    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(APRIORI_ELSET), 0)
+
+def AddAPRIORI_ELSET(builder, APRIORI_ELSET):
+    OBDAddAPRIORI_ELSET(builder, APRIORI_ELSET)
+
+def OBDAddAPRIORI_ID_STATE_VECTOR(builder, APRIORI_ID_STATE_VECTOR):
+    builder.PrependUOffsetTRelativeSlot(11, flatbuffers.number_types.UOffsetTFlags.py_type(APRIORI_ID_STATE_VECTOR), 0)
+
+def AddAPRIORI_ID_STATE_VECTOR(builder, APRIORI_ID_STATE_VECTOR):
+    OBDAddAPRIORI_ID_STATE_VECTOR(builder, APRIORI_ID_STATE_VECTOR)
+
+def OBDAddAPRIORI_STATE_VECTOR(builder, APRIORI_STATE_VECTOR):
+    builder.PrependUOffsetTRelativeSlot(12, flatbuffers.number_types.UOffsetTFlags.py_type(APRIORI_STATE_VECTOR), 0)
+
+def AddAPRIORI_STATE_VECTOR(builder, APRIORI_STATE_VECTOR):
+    OBDAddAPRIORI_STATE_VECTOR(builder, APRIORI_STATE_VECTOR)
+
+def OBDAddLAST_OB_START(builder, LAST_OB_START):
+    builder.PrependUOffsetTRelativeSlot(13, flatbuffers.number_types.UOffsetTFlags.py_type(LAST_OB_START), 0)
+
+def AddLAST_OB_START(builder, LAST_OB_START):
+    OBDAddLAST_OB_START(builder, LAST_OB_START)
+
+def OBDAddLAST_OB_END(builder, LAST_OB_END):
+    builder.PrependUOffsetTRelativeSlot(14, flatbuffers.number_types.UOffsetTFlags.py_type(LAST_OB_END), 0)
+
+def AddLAST_OB_END(builder, LAST_OB_END):
+    OBDAddLAST_OB_END(builder, LAST_OB_END)
+
+def OBDAddTIME_SPAN(builder, TIME_SPAN):
+    builder.PrependFloat64Slot(15, TIME_SPAN, 0.0)
+
+def AddTIME_SPAN(builder, TIME_SPAN):
+    OBDAddTIME_SPAN(builder, TIME_SPAN)
+
 def OBDAddFIT_SPAN(builder, FIT_SPAN):
-    builder.PrependFloat64Slot(23, FIT_SPAN, 0.0)
+    builder.PrependFloat64Slot(16, FIT_SPAN, 0.0)
 
 def AddFIT_SPAN(builder, FIT_SPAN):
     OBDAddFIT_SPAN(builder, FIT_SPAN)
 
+def OBDAddEFFECTIVE_FROM(builder, EFFECTIVE_FROM):
+    builder.PrependUOffsetTRelativeSlot(17, flatbuffers.number_types.UOffsetTFlags.py_type(EFFECTIVE_FROM), 0)
+
+def AddEFFECTIVE_FROM(builder, EFFECTIVE_FROM):
+    OBDAddEFFECTIVE_FROM(builder, EFFECTIVE_FROM)
+
+def OBDAddEFFECTIVE_UNTIL(builder, EFFECTIVE_UNTIL):
+    builder.PrependUOffsetTRelativeSlot(18, flatbuffers.number_types.UOffsetTFlags.py_type(EFFECTIVE_UNTIL), 0)
+
+def AddEFFECTIVE_UNTIL(builder, EFFECTIVE_UNTIL):
+    OBDAddEFFECTIVE_UNTIL(builder, EFFECTIVE_UNTIL)
+
+def OBDAddWRMS(builder, WRMS):
+    builder.PrependFloat64Slot(19, WRMS, 0.0)
+
+def AddWRMS(builder, WRMS):
+    OBDAddWRMS(builder, WRMS)
+
+def OBDAddPREVIOUS_WRMS(builder, PREVIOUS_WRMS):
+    builder.PrependFloat64Slot(20, PREVIOUS_WRMS, 0.0)
+
+def AddPREVIOUS_WRMS(builder, PREVIOUS_WRMS):
+    OBDAddPREVIOUS_WRMS(builder, PREVIOUS_WRMS)
+
+def OBDAddFIRST_PASS_WRMS(builder, FIRST_PASS_WRMS):
+    builder.PrependFloat64Slot(21, FIRST_PASS_WRMS, 0.0)
+
+def AddFIRST_PASS_WRMS(builder, FIRST_PASS_WRMS):
+    OBDAddFIRST_PASS_WRMS(builder, FIRST_PASS_WRMS)
+
+def OBDAddBEST_PASS_WRMS(builder, BEST_PASS_WRMS):
+    builder.PrependFloat64Slot(22, BEST_PASS_WRMS, 0.0)
+
+def AddBEST_PASS_WRMS(builder, BEST_PASS_WRMS):
+    OBDAddBEST_PASS_WRMS(builder, BEST_PASS_WRMS)
+
+def OBDAddERROR_GROWTH_RATE(builder, ERROR_GROWTH_RATE):
+    builder.PrependFloat64Slot(23, ERROR_GROWTH_RATE, 0.0)
+
+def AddERROR_GROWTH_RATE(builder, ERROR_GROWTH_RATE):
+    OBDAddERROR_GROWTH_RATE(builder, ERROR_GROWTH_RATE)
+
+def OBDAddEDR(builder, EDR):
+    builder.PrependFloat64Slot(24, EDR, 0.0)
+
+def AddEDR(builder, EDR):
+    OBDAddEDR(builder, EDR)
+
 def OBDAddBALLISTIC_COEFF_EST(builder, BALLISTIC_COEFF_EST):
-    builder.PrependBoolSlot(24, BALLISTIC_COEFF_EST, 0)
+    builder.PrependBoolSlot(25, BALLISTIC_COEFF_EST, 0)
 
 def AddBALLISTIC_COEFF_EST(builder, BALLISTIC_COEFF_EST):
     OBDAddBALLISTIC_COEFF_EST(builder, BALLISTIC_COEFF_EST)
 
 def OBDAddBALLISTIC_COEFF_MODEL(builder, BALLISTIC_COEFF_MODEL):
-    builder.PrependUOffsetTRelativeSlot(25, flatbuffers.number_types.UOffsetTFlags.py_type(BALLISTIC_COEFF_MODEL), 0)
+    builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(BALLISTIC_COEFF_MODEL), 0)
 
 def AddBALLISTIC_COEFF_MODEL(builder, BALLISTIC_COEFF_MODEL):
     OBDAddBALLISTIC_COEFF_MODEL(builder, BALLISTIC_COEFF_MODEL)
 
 def OBDAddAGOM_EST(builder, AGOM_EST):
-    builder.PrependBoolSlot(26, AGOM_EST, 0)
+    builder.PrependBoolSlot(27, AGOM_EST, 0)
 
 def AddAGOM_EST(builder, AGOM_EST):
     OBDAddAGOM_EST(builder, AGOM_EST)
 
 def OBDAddAGOM_MODEL(builder, AGOM_MODEL):
-    builder.PrependUOffsetTRelativeSlot(27, flatbuffers.number_types.UOffsetTFlags.py_type(AGOM_MODEL), 0)
+    builder.PrependUOffsetTRelativeSlot(28, flatbuffers.number_types.UOffsetTFlags.py_type(AGOM_MODEL), 0)
 
 def AddAGOM_MODEL(builder, AGOM_MODEL):
     OBDAddAGOM_MODEL(builder, AGOM_MODEL)
 
 def OBDAddRMS_CONVERGENCE_CRITERIA(builder, RMS_CONVERGENCE_CRITERIA):
-    builder.PrependFloat64Slot(28, RMS_CONVERGENCE_CRITERIA, 0.0)
+    builder.PrependFloat64Slot(29, RMS_CONVERGENCE_CRITERIA, 0.0)
 
 def AddRMS_CONVERGENCE_CRITERIA(builder, RMS_CONVERGENCE_CRITERIA):
     OBDAddRMS_CONVERGENCE_CRITERIA(builder, RMS_CONVERGENCE_CRITERIA)
 
 def OBDAddNUM_ITERATIONS(builder, NUM_ITERATIONS):
-    builder.PrependInt32Slot(29, NUM_ITERATIONS, 0)
+    builder.PrependUint16Slot(30, NUM_ITERATIONS, 0)
 
 def AddNUM_ITERATIONS(builder, NUM_ITERATIONS):
     OBDAddNUM_ITERATIONS(builder, NUM_ITERATIONS)
 
+def OBDAddNUM_ACCEPTED_OBS(builder, NUM_ACCEPTED_OBS):
+    builder.PrependUint32Slot(31, NUM_ACCEPTED_OBS, 0)
+
+def AddNUM_ACCEPTED_OBS(builder, NUM_ACCEPTED_OBS):
+    OBDAddNUM_ACCEPTED_OBS(builder, NUM_ACCEPTED_OBS)
+
+def OBDAddNUM_REJECTED_OBS(builder, NUM_REJECTED_OBS):
+    builder.PrependUint32Slot(32, NUM_REJECTED_OBS, 0)
+
+def AddNUM_REJECTED_OBS(builder, NUM_REJECTED_OBS):
+    OBDAddNUM_REJECTED_OBS(builder, NUM_REJECTED_OBS)
+
+def OBDAddSENSORS(builder, SENSORS):
+    builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(SENSORS), 0)
+
+def AddSENSORS(builder, SENSORS):
+    OBDAddSENSORS(builder, SENSORS)
+
+def OBDStartSENSORSVector(builder, numElems):
+    return builder.StartVector(4, numElems, 4)
+
+def StartSENSORSVector(builder, numElems):
+    return OBDStartSENSORSVector(builder, numElems)
+
 def OBDAddACCEPTED_OB_TYPS(builder, ACCEPTED_OB_TYPS):
-    builder.PrependUOffsetTRelativeSlot(30, flatbuffers.number_types.UOffsetTFlags.py_type(ACCEPTED_OB_TYPS), 0)
+    builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(ACCEPTED_OB_TYPS), 0)
 
 def AddACCEPTED_OB_TYPS(builder, ACCEPTED_OB_TYPS):
     OBDAddACCEPTED_OB_TYPS(builder, ACCEPTED_OB_TYPS)
@@ -545,7 +632,7 @@ def StartACCEPTED_OB_TYPSVector(builder, numElems):
     return OBDStartACCEPTED_OB_TYPSVector(builder, numElems)
 
 def OBDAddACCEPTED_OB_IDS(builder, ACCEPTED_OB_IDS):
-    builder.PrependUOffsetTRelativeSlot(31, flatbuffers.number_types.UOffsetTFlags.py_type(ACCEPTED_OB_IDS), 0)
+    builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(ACCEPTED_OB_IDS), 0)
 
 def AddACCEPTED_OB_IDS(builder, ACCEPTED_OB_IDS):
     OBDAddACCEPTED_OB_IDS(builder, ACCEPTED_OB_IDS)
@@ -557,7 +644,7 @@ def StartACCEPTED_OB_IDSVector(builder, numElems):
     return OBDStartACCEPTED_OB_IDSVector(builder, numElems)
 
 def OBDAddREJECTED_OB_TYPS(builder, REJECTED_OB_TYPS):
-    builder.PrependUOffsetTRelativeSlot(32, flatbuffers.number_types.UOffsetTFlags.py_type(REJECTED_OB_TYPS), 0)
+    builder.PrependUOffsetTRelativeSlot(36, flatbuffers.number_types.UOffsetTFlags.py_type(REJECTED_OB_TYPS), 0)
 
 def AddREJECTED_OB_TYPS(builder, REJECTED_OB_TYPS):
     OBDAddREJECTED_OB_TYPS(builder, REJECTED_OB_TYPS)
@@ -569,7 +656,7 @@ def StartREJECTED_OB_TYPSVector(builder, numElems):
     return OBDStartREJECTED_OB_TYPSVector(builder, numElems)
 
 def OBDAddREJECTED_OB_IDS(builder, REJECTED_OB_IDS):
-    builder.PrependUOffsetTRelativeSlot(33, flatbuffers.number_types.UOffsetTFlags.py_type(REJECTED_OB_IDS), 0)
+    builder.PrependUOffsetTRelativeSlot(37, flatbuffers.number_types.UOffsetTFlags.py_type(REJECTED_OB_IDS), 0)
 
 def AddREJECTED_OB_IDS(builder, REJECTED_OB_IDS):
     OBDAddREJECTED_OB_IDS(builder, REJECTED_OB_IDS)
@@ -580,30 +667,13 @@ def OBDStartREJECTED_OB_IDSVector(builder, numElems):
 def StartREJECTED_OB_IDSVector(builder, numElems):
     return OBDStartREJECTED_OB_IDSVector(builder, numElems)
 
-def OBDAddSENSOR_IDS(builder, SENSOR_IDS):
-    builder.PrependUOffsetTRelativeSlot(34, flatbuffers.number_types.UOffsetTFlags.py_type(SENSOR_IDS), 0)
-
-def AddSENSOR_IDS(builder, SENSOR_IDS):
-    OBDAddSENSOR_IDS(builder, SENSOR_IDS)
-
-def OBDStartSENSOR_IDSVector(builder, numElems):
-    return builder.StartVector(4, numElems, 4)
-
-def StartSENSOR_IDSVector(builder, numElems):
-    return OBDStartSENSOR_IDSVector(builder, numElems)
-
-def OBDAddON_ORBIT(builder, ON_ORBIT):
-    builder.PrependUOffsetTRelativeSlot(35, flatbuffers.number_types.UOffsetTFlags.py_type(ON_ORBIT), 0)
-
-def AddON_ORBIT(builder, ON_ORBIT):
-    OBDAddON_ORBIT(builder, ON_ORBIT)
-
 def OBDEnd(builder):
     return builder.EndObject()
 
 def End(builder):
     return OBDEnd(builder)
 
+import odSensorContribution
 try:
     from typing import List
 except:
@@ -614,18 +684,22 @@ class OBDT(object):
     # OBDT
     def __init__(self):
         self.ID = None  # type: str
+        self.SAT_NO = 0  # type: int
+        self.ORIG_OBJECT_ID = None  # type: str
+        self.ON_ORBIT = None  # type: str
         self.START_TIME = None  # type: str
         self.END_TIME = None  # type: str
-        self.ORIG_OBJECT_ID = None  # type: str
-        self.SAT_NO = 0  # type: int
+        self.METHOD = 0  # type: int
+        self.METHOD_SOURCE = None  # type: str
+        self.INITIAL_OD = False  # type: bool
         self.APRIORI_ID_ELSET = None  # type: str
         self.APRIORI_ELSET = None  # type: str
         self.APRIORI_ID_STATE_VECTOR = None  # type: str
         self.APRIORI_STATE_VECTOR = None  # type: str
-        self.INITIAL_OD = False  # type: bool
         self.LAST_OB_START = None  # type: str
         self.LAST_OB_END = None  # type: str
         self.TIME_SPAN = 0.0  # type: float
+        self.FIT_SPAN = 0.0  # type: float
         self.EFFECTIVE_FROM = None  # type: str
         self.EFFECTIVE_UNTIL = None  # type: str
         self.WRMS = 0.0  # type: float
@@ -634,21 +708,19 @@ class OBDT(object):
         self.BEST_PASS_WRMS = 0.0  # type: float
         self.ERROR_GROWTH_RATE = 0.0  # type: float
         self.EDR = 0.0  # type: float
-        self.METHOD = None  # type: str
-        self.METHOD_SOURCE = None  # type: str
-        self.FIT_SPAN = 0.0  # type: float
         self.BALLISTIC_COEFF_EST = False  # type: bool
         self.BALLISTIC_COEFF_MODEL = None  # type: str
         self.AGOM_EST = False  # type: bool
         self.AGOM_MODEL = None  # type: str
         self.RMS_CONVERGENCE_CRITERIA = 0.0  # type: float
         self.NUM_ITERATIONS = 0  # type: int
+        self.NUM_ACCEPTED_OBS = 0  # type: int
+        self.NUM_REJECTED_OBS = 0  # type: int
+        self.SENSORS = None  # type: List[odSensorContribution.odSensorContributionT]
         self.ACCEPTED_OB_TYPS = None  # type: List[str]
         self.ACCEPTED_OB_IDS = None  # type: List[str]
         self.REJECTED_OB_TYPS = None  # type: List[str]
         self.REJECTED_OB_IDS = None  # type: List[str]
-        self.SENSOR_IDS = None  # type: List[str]
-        self.ON_ORBIT = None  # type: str
 
     @classmethod
     def InitFromBuf(cls, buf, pos):
@@ -672,18 +744,22 @@ class OBDT(object):
         if OBD is None:
             return
         self.ID = OBD.ID()
+        self.SAT_NO = OBD.SAT_NO()
+        self.ORIG_OBJECT_ID = OBD.ORIG_OBJECT_ID()
+        self.ON_ORBIT = OBD.ON_ORBIT()
         self.START_TIME = OBD.START_TIME()
         self.END_TIME = OBD.END_TIME()
-        self.ORIG_OBJECT_ID = OBD.ORIG_OBJECT_ID()
-        self.SAT_NO = OBD.SAT_NO()
+        self.METHOD = OBD.METHOD()
+        self.METHOD_SOURCE = OBD.METHOD_SOURCE()
+        self.INITIAL_OD = OBD.INITIAL_OD()
         self.APRIORI_ID_ELSET = OBD.APRIORI_ID_ELSET()
         self.APRIORI_ELSET = OBD.APRIORI_ELSET()
         self.APRIORI_ID_STATE_VECTOR = OBD.APRIORI_ID_STATE_VECTOR()
         self.APRIORI_STATE_VECTOR = OBD.APRIORI_STATE_VECTOR()
-        self.INITIAL_OD = OBD.INITIAL_OD()
         self.LAST_OB_START = OBD.LAST_OB_START()
         self.LAST_OB_END = OBD.LAST_OB_END()
         self.TIME_SPAN = OBD.TIME_SPAN()
+        self.FIT_SPAN = OBD.FIT_SPAN()
         self.EFFECTIVE_FROM = OBD.EFFECTIVE_FROM()
         self.EFFECTIVE_UNTIL = OBD.EFFECTIVE_UNTIL()
         self.WRMS = OBD.WRMS()
@@ -692,15 +768,22 @@ class OBDT(object):
         self.BEST_PASS_WRMS = OBD.BEST_PASS_WRMS()
         self.ERROR_GROWTH_RATE = OBD.ERROR_GROWTH_RATE()
         self.EDR = OBD.EDR()
-        self.METHOD = OBD.METHOD()
-        self.METHOD_SOURCE = OBD.METHOD_SOURCE()
-        self.FIT_SPAN = OBD.FIT_SPAN()
         self.BALLISTIC_COEFF_EST = OBD.BALLISTIC_COEFF_EST()
         self.BALLISTIC_COEFF_MODEL = OBD.BALLISTIC_COEFF_MODEL()
         self.AGOM_EST = OBD.AGOM_EST()
         self.AGOM_MODEL = OBD.AGOM_MODEL()
         self.RMS_CONVERGENCE_CRITERIA = OBD.RMS_CONVERGENCE_CRITERIA()
         self.NUM_ITERATIONS = OBD.NUM_ITERATIONS()
+        self.NUM_ACCEPTED_OBS = OBD.NUM_ACCEPTED_OBS()
+        self.NUM_REJECTED_OBS = OBD.NUM_REJECTED_OBS()
+        if not OBD.SENSORSIsNone():
+            self.SENSORS = []
+            for i in range(OBD.SENSORSLength()):
+                if OBD.SENSORS(i) is None:
+                    self.SENSORS.append(None)
+                else:
+                    odSensorContribution_ = odSensorContribution.odSensorContributionT.InitFromObj(OBD.SENSORS(i))
+                    self.SENSORS.append(odSensorContribution_)
         if not OBD.ACCEPTED_OB_TYPSIsNone():
             self.ACCEPTED_OB_TYPS = []
             for i in range(OBD.ACCEPTED_OB_TYPSLength()):
@@ -717,22 +800,21 @@ class OBDT(object):
             self.REJECTED_OB_IDS = []
             for i in range(OBD.REJECTED_OB_IDSLength()):
                 self.REJECTED_OB_IDS.append(OBD.REJECTED_OB_IDS(i))
-        if not OBD.SENSOR_IDSIsNone():
-            self.SENSOR_IDS = []
-            for i in range(OBD.SENSOR_IDSLength()):
-                self.SENSOR_IDS.append(OBD.SENSOR_IDS(i))
-        self.ON_ORBIT = OBD.ON_ORBIT()
 
     # OBDT
     def Pack(self, builder):
         if self.ID is not None:
             ID = builder.CreateString(self.ID)
+        if self.ORIG_OBJECT_ID is not None:
+            ORIG_OBJECT_ID = builder.CreateString(self.ORIG_OBJECT_ID)
+        if self.ON_ORBIT is not None:
+            ON_ORBIT = builder.CreateString(self.ON_ORBIT)
         if self.START_TIME is not None:
             START_TIME = builder.CreateString(self.START_TIME)
         if self.END_TIME is not None:
             END_TIME = builder.CreateString(self.END_TIME)
-        if self.ORIG_OBJECT_ID is not None:
-            ORIG_OBJECT_ID = builder.CreateString(self.ORIG_OBJECT_ID)
+        if self.METHOD_SOURCE is not None:
+            METHOD_SOURCE = builder.CreateString(self.METHOD_SOURCE)
         if self.APRIORI_ID_ELSET is not None:
             APRIORI_ID_ELSET = builder.CreateString(self.APRIORI_ID_ELSET)
         if self.APRIORI_ELSET is not None:
@@ -749,14 +831,18 @@ class OBDT(object):
             EFFECTIVE_FROM = builder.CreateString(self.EFFECTIVE_FROM)
         if self.EFFECTIVE_UNTIL is not None:
             EFFECTIVE_UNTIL = builder.CreateString(self.EFFECTIVE_UNTIL)
-        if self.METHOD is not None:
-            METHOD = builder.CreateString(self.METHOD)
-        if self.METHOD_SOURCE is not None:
-            METHOD_SOURCE = builder.CreateString(self.METHOD_SOURCE)
         if self.BALLISTIC_COEFF_MODEL is not None:
             BALLISTIC_COEFF_MODEL = builder.CreateString(self.BALLISTIC_COEFF_MODEL)
         if self.AGOM_MODEL is not None:
             AGOM_MODEL = builder.CreateString(self.AGOM_MODEL)
+        if self.SENSORS is not None:
+            SENSORSlist = []
+            for i in range(len(self.SENSORS)):
+                SENSORSlist.append(self.SENSORS[i].Pack(builder))
+            OBDStartSENSORSVector(builder, len(self.SENSORS))
+            for i in reversed(range(len(self.SENSORS))):
+                builder.PrependUOffsetTRelative(SENSORSlist[i])
+            SENSORS = builder.EndVector()
         if self.ACCEPTED_OB_TYPS is not None:
             ACCEPTED_OB_TYPSlist = []
             for i in range(len(self.ACCEPTED_OB_TYPS)):
@@ -789,26 +875,22 @@ class OBDT(object):
             for i in reversed(range(len(self.REJECTED_OB_IDS))):
                 builder.PrependUOffsetTRelative(REJECTED_OB_IDSlist[i])
             REJECTED_OB_IDS = builder.EndVector()
-        if self.SENSOR_IDS is not None:
-            SENSOR_IDSlist = []
-            for i in range(len(self.SENSOR_IDS)):
-                SENSOR_IDSlist.append(builder.CreateString(self.SENSOR_IDS[i]))
-            OBDStartSENSOR_IDSVector(builder, len(self.SENSOR_IDS))
-            for i in reversed(range(len(self.SENSOR_IDS))):
-                builder.PrependUOffsetTRelative(SENSOR_IDSlist[i])
-            SENSOR_IDS = builder.EndVector()
-        if self.ON_ORBIT is not None:
-            ON_ORBIT = builder.CreateString(self.ON_ORBIT)
         OBDStart(builder)
         if self.ID is not None:
             OBDAddID(builder, ID)
+        OBDAddSAT_NO(builder, self.SAT_NO)
+        if self.ORIG_OBJECT_ID is not None:
+            OBDAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
+        if self.ON_ORBIT is not None:
+            OBDAddON_ORBIT(builder, ON_ORBIT)
         if self.START_TIME is not None:
             OBDAddSTART_TIME(builder, START_TIME)
         if self.END_TIME is not None:
             OBDAddEND_TIME(builder, END_TIME)
-        if self.ORIG_OBJECT_ID is not None:
-            OBDAddORIG_OBJECT_ID(builder, ORIG_OBJECT_ID)
-        OBDAddSAT_NO(builder, self.SAT_NO)
+        OBDAddMETHOD(builder, self.METHOD)
+        if self.METHOD_SOURCE is not None:
+            OBDAddMETHOD_SOURCE(builder, METHOD_SOURCE)
+        OBDAddINITIAL_OD(builder, self.INITIAL_OD)
         if self.APRIORI_ID_ELSET is not None:
             OBDAddAPRIORI_ID_ELSET(builder, APRIORI_ID_ELSET)
         if self.APRIORI_ELSET is not None:
@@ -817,12 +899,12 @@ class OBDT(object):
             OBDAddAPRIORI_ID_STATE_VECTOR(builder, APRIORI_ID_STATE_VECTOR)
         if self.APRIORI_STATE_VECTOR is not None:
             OBDAddAPRIORI_STATE_VECTOR(builder, APRIORI_STATE_VECTOR)
-        OBDAddINITIAL_OD(builder, self.INITIAL_OD)
         if self.LAST_OB_START is not None:
             OBDAddLAST_OB_START(builder, LAST_OB_START)
         if self.LAST_OB_END is not None:
             OBDAddLAST_OB_END(builder, LAST_OB_END)
         OBDAddTIME_SPAN(builder, self.TIME_SPAN)
+        OBDAddFIT_SPAN(builder, self.FIT_SPAN)
         if self.EFFECTIVE_FROM is not None:
             OBDAddEFFECTIVE_FROM(builder, EFFECTIVE_FROM)
         if self.EFFECTIVE_UNTIL is not None:
@@ -833,11 +915,6 @@ class OBDT(object):
         OBDAddBEST_PASS_WRMS(builder, self.BEST_PASS_WRMS)
         OBDAddERROR_GROWTH_RATE(builder, self.ERROR_GROWTH_RATE)
         OBDAddEDR(builder, self.EDR)
-        if self.METHOD is not None:
-            OBDAddMETHOD(builder, METHOD)
-        if self.METHOD_SOURCE is not None:
-            OBDAddMETHOD_SOURCE(builder, METHOD_SOURCE)
-        OBDAddFIT_SPAN(builder, self.FIT_SPAN)
         OBDAddBALLISTIC_COEFF_EST(builder, self.BALLISTIC_COEFF_EST)
         if self.BALLISTIC_COEFF_MODEL is not None:
             OBDAddBALLISTIC_COEFF_MODEL(builder, BALLISTIC_COEFF_MODEL)
@@ -846,6 +923,10 @@ class OBDT(object):
             OBDAddAGOM_MODEL(builder, AGOM_MODEL)
         OBDAddRMS_CONVERGENCE_CRITERIA(builder, self.RMS_CONVERGENCE_CRITERIA)
         OBDAddNUM_ITERATIONS(builder, self.NUM_ITERATIONS)
+        OBDAddNUM_ACCEPTED_OBS(builder, self.NUM_ACCEPTED_OBS)
+        OBDAddNUM_REJECTED_OBS(builder, self.NUM_REJECTED_OBS)
+        if self.SENSORS is not None:
+            OBDAddSENSORS(builder, SENSORS)
         if self.ACCEPTED_OB_TYPS is not None:
             OBDAddACCEPTED_OB_TYPS(builder, ACCEPTED_OB_TYPS)
         if self.ACCEPTED_OB_IDS is not None:
@@ -854,9 +935,5 @@ class OBDT(object):
             OBDAddREJECTED_OB_TYPS(builder, REJECTED_OB_TYPS)
         if self.REJECTED_OB_IDS is not None:
             OBDAddREJECTED_OB_IDS(builder, REJECTED_OB_IDS)
-        if self.SENSOR_IDS is not None:
-            OBDAddSENSOR_IDS(builder, SENSOR_IDS)
-        if self.ON_ORBIT is not None:
-            OBDAddON_ORBIT(builder, ON_ORBIT)
         OBD = OBDEnd(builder)
         return OBD

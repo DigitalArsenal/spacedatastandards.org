@@ -1,48 +1,101 @@
 {
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "definitions": {
+    "launchOutcome" : {
+      "type" : "string",
+      "enum": ["SUCCESS", "PARTIAL_SUCCESS", "FAILURE", "IN_PROGRESS", "UNKNOWN"]
+    },
     "LNE" : {
       "type" : "object",
       "description" : "Launch Event",
       "properties" : {
         "ID" : {
-                "type" : "string"
-              },
-        "ORIG_OBJECT_ID" : {
-                "type" : "string"
-              },
-        "DERIVED_FROM" : {
-                "type" : "string"
-              },
-        "DECLASSIFICATION_DATE" : {
-                "type" : "string"
-              },
-        "DECLASSIFICATION_STRING" : {
-                "type" : "string"
-              },
-        "MSG_CREATE_DATE" : {
-                "type" : "string"
-              },
-        "LAUNCH_FAILURE_CODE" : {
-                "type" : "string"
-              },
-        "LAUNCH_DATE" : {
-                "type" : "string"
-              },
-        "BE_NUMBER" : {
-                "type" : "string"
-              },
-        "O_SUFFIX" : {
-                "type" : "string"
-              },
-        "LAUNCH_FACILITY_NAME" : {
-                "type" : "string"
-              },
-        "ON_ORBIT" : {
-                "type" : "string"
+                "type" : "string",
+                "description" : "Unique identifier"
               },
         "SAT_NO" : {
-                "type" : "integer", "minimum" : -2147483648, "maximum" : 2147483647
+                "type" : "integer", "minimum" : 0, "maximum" : 4294967295,
+                "description" : "Satellite catalog number of launched object"
+              },
+        "ORIG_OBJECT_ID" : {
+                "type" : "string",
+                "description" : "International designator (YYYY-NNNP)"
+              },
+        "DERIVED_FROM" : {
+                "type" : "string",
+                "description" : "Source record this event was derived from"
+              },
+        "DECLASSIFICATION_DATE" : {
+                "type" : "string",
+                "description" : "Classification date (ISO 8601)"
+              },
+        "DECLASSIFICATION_STRING" : {
+                "type" : "string",
+                "description" : "Classification marking"
+              },
+        "MSG_CREATE_DATE" : {
+                "type" : "string",
+                "description" : "Message creation time (ISO 8601)"
+              },
+        "LAUNCH_DATE" : {
+                "type" : "string",
+                "description" : "Launch date and time (ISO 8601)"
+              },
+        "OUTCOME" : {
+                "$ref" : "#/definitions/launchOutcome",
+                "description" : "Launch outcome"
+              },
+        "LAUNCH_FAILURE_CODE" : {
+                "type" : "string",
+                "description" : "Launch failure code (if applicable)"
+              },
+        "BE_NUMBER" : {
+                "type" : "string",
+                "description" : "Basic encyclopedia number"
+              },
+        "O_SUFFIX" : {
+                "type" : "string",
+                "description" : "Object suffix identifier"
+              },
+        "LAUNCH_FACILITY_NAME" : {
+                "type" : "string",
+                "description" : "Launch facility name"
+              },
+        "LAUNCH_FACILITY_CODE" : {
+                "type" : "string",
+                "description" : "Launch facility code"
+              },
+        "LAUNCH_VEHICLE" : {
+                "type" : "string",
+                "description" : "Launch vehicle type"
+              },
+        "LAUNCH_VEHICLE_CONFIG" : {
+                "type" : "string",
+                "description" : "Launch vehicle configuration"
+              },
+        "TARGET_ORBIT" : {
+                "type" : "string",
+                "description" : "Target orbit type (LEO, MEO, GEO, HEO, SSO, etc.)"
+              },
+        "OBJECTS_ON_ORBIT" : {
+                "type" : "integer", "minimum" : 0, "maximum" : 65535,
+                "description" : "Number of objects placed on orbit"
+              },
+        "ON_ORBIT" : {
+                "type" : "string",
+                "description" : "On-orbit reference identifier"
+              },
+        "LAUNCH_COUNTRY" : {
+                "type" : "string",
+                "description" : "Launch country or operator"
+              },
+        "MISSION_NAME" : {
+                "type" : "string",
+                "description" : "Mission name or payload description"
+              },
+        "REMARKS" : {
+                "type" : "string",
+                "description" : "Additional remarks"
               }
       },
       "additionalProperties" : false

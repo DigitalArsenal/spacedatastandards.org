@@ -29,6 +29,7 @@ class TRK(object):
     def Init(self, buf, pos):
         self._tab = flatbuffers.table.Table(buf, pos)
 
+    # Unique identifier
     # TRK
     def ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(4))
@@ -36,6 +37,7 @@ class TRK(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Contact reference
     # TRK
     def CNTCT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(6))
@@ -43,6 +45,7 @@ class TRK(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Message timestamp (ISO 8601)
     # TRK
     def MSG_TS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(8))
@@ -50,6 +53,7 @@ class TRK(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Mission identifier
     # TRK
     def MSN_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(10))
@@ -57,6 +61,7 @@ class TRK(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Asset nationality
     # TRK
     def ASSET_NAT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(12))
@@ -64,6 +69,7 @@ class TRK(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Asset identifier
     # TRK
     def ASSET(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(14))
@@ -71,13 +77,15 @@ class TRK(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Sensor identifier
     # TRK
-    def SEN(self):
+    def SENSOR_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(16))
         if o != 0:
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Sensor quality assessment
     # TRK
     def SEN_QUAL(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(18))
@@ -85,6 +93,7 @@ class TRK(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Track identifier
     # TRK
     def TRK_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(20))
@@ -92,6 +101,7 @@ class TRK(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Track number
     # TRK
     def TRK_NUM(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(22))
@@ -99,13 +109,15 @@ class TRK(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Track status
     # TRK
     def TRK_STAT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(24))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
+    # Object nationality
     # TRK
     def OBJ_NAT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(26))
@@ -113,6 +125,7 @@ class TRK(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Object identifier
     # TRK
     def OBJ_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(28))
@@ -120,6 +133,7 @@ class TRK(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Object type classification
     # TRK
     def OBJ_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(30))
@@ -127,6 +141,7 @@ class TRK(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Object specific type
     # TRK
     def OBJ_SPEC(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(32))
@@ -134,6 +149,7 @@ class TRK(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Object platform type
     # TRK
     def OBJ_PLAT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(34))
@@ -141,6 +157,7 @@ class TRK(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Object activity
     # TRK
     def OBJ_ACT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(36))
@@ -148,6 +165,7 @@ class TRK(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Mode type
     # TRK
     def MOD_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(38))
@@ -155,6 +173,7 @@ class TRK(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Track item identifier
     # TRK
     def TRK_ITM_ID(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(40))
@@ -162,6 +181,7 @@ class TRK(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Track point timestamp (ISO 8601)
     # TRK
     def TS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(42))
@@ -169,13 +189,15 @@ class TRK(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Track quality (0-15)
     # TRK
     def TRK_QUAL(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(44))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
+    # Track point type
     # TRK
     def TRK_PT_TYPE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(46))
@@ -183,6 +205,7 @@ class TRK(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Object identity assessment
     # TRK
     def OBJ_IDENT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(48))
@@ -190,20 +213,23 @@ class TRK(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Identity credibility (1-6)
     # TRK
     def IDENT_CRED(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(50))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
+    # Identity reliability (A-F)
     # TRK
     def IDENT_REL(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(52))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
+    # Identity amplification
     # TRK
     def IDENT_AMP(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(54))
@@ -211,13 +237,15 @@ class TRK(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Track environment
     # TRK
     def ENVIRONMENT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(56))
         if o != 0:
-            return self._tab.String(o + self._tab.Pos)
-        return None
+            return self._tab.Get(flatbuffers.number_types.Int8Flags, o + self._tab.Pos)
+        return 0
 
+    # Environment confidence (0-1)
     # TRK
     def ENVIRONMENT_CONF(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(58))
@@ -225,6 +253,7 @@ class TRK(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Track confidence (0-1)
     # TRK
     def TRK_CONF(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(60))
@@ -232,6 +261,7 @@ class TRK(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Latitude (degrees)
     # TRK
     def LAT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(62))
@@ -239,6 +269,7 @@ class TRK(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Longitude (degrees)
     # TRK
     def LON(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(64))
@@ -246,6 +277,7 @@ class TRK(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Altitude (km)
     # TRK
     def ALT(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(66))
@@ -253,6 +285,7 @@ class TRK(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Speed (km/s)
     # TRK
     def SPD(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(68))
@@ -260,6 +293,7 @@ class TRK(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Heading (degrees from north)
     # TRK
     def HDNG(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(70))
@@ -267,6 +301,7 @@ class TRK(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Course (degrees from north)
     # TRK
     def COURSE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(72))
@@ -274,6 +309,7 @@ class TRK(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
+    # Source types
     # TRK
     def SRC_TYPS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
@@ -294,6 +330,7 @@ class TRK(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(74))
         return o == 0
 
+    # Source identifiers
     # TRK
     def SRC_IDS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
@@ -314,6 +351,7 @@ class TRK(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(76))
         return o == 0
 
+    # Call sign
     # TRK
     def CALL_SIGN(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(78))
@@ -321,6 +359,7 @@ class TRK(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # True if fused from multiple sources
     # TRK
     def MULTI_SOURCE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(80))
@@ -328,6 +367,7 @@ class TRK(object):
             return bool(self._tab.Get(flatbuffers.number_types.BoolFlags, o + self._tab.Pos))
         return False
 
+    # J-series message type
     # TRK
     def J_SERIES(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(82))
@@ -335,55 +375,63 @@ class TRK(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
+    # Force strength indicator
     # TRK
     def STRENGTH(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(84))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
         return 0
 
+    # Mode 1 code
     # TRK
     def M1(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(86))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
         return 0
 
+    # Mode 1 validity
     # TRK
     def M1V(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(88))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
+    # Mode 2 code
     # TRK
     def M2(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(90))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
         return 0
 
+    # Mode 2 validity
     # TRK
     def M2V(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(92))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
+    # Mode 3A code
     # TRK
     def M3A(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(94))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint16Flags, o + self._tab.Pos)
         return 0
 
+    # Mode 3A validity
     # TRK
     def M3AV(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(96))
         if o != 0:
-            return self._tab.Get(flatbuffers.number_types.Int32Flags, o + self._tab.Pos)
+            return self._tab.Get(flatbuffers.number_types.Uint8Flags, o + self._tab.Pos)
         return 0
 
+    # Associated tags
     # TRK
     def TAGS(self, j):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
@@ -404,7 +452,7 @@ class TRK(object):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(98))
         return o == 0
 
-    # Start time for track data (ISO 8601 UTC format).
+    # Start time for track data (ISO 8601)
     # TRK
     def TRACK_START_TIME(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(100))
@@ -412,7 +460,7 @@ class TRK(object):
             return self._tab.String(o + self._tab.Pos)
         return None
 
-    # Time interval between track points in seconds.
+    # Time interval between track points (seconds)
     # TRK
     def TRACK_STEP_SIZE(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(102))
@@ -420,7 +468,7 @@ class TRK(object):
             return self._tab.Get(flatbuffers.number_types.Float64Flags, o + self._tab.Pos)
         return 0.0
 
-    # Number of components per point (default 3 for X, Y, Z).
+    # Number of components per point (default 3 for X, Y, Z)
     # TRK
     def TRACK_COMPONENTS(self):
         o = flatbuffers.number_types.UOffsetTFlags.py_type(self._tab.Offset(104))
@@ -694,11 +742,11 @@ def TRKAddASSET(builder, ASSET):
 def AddASSET(builder, ASSET):
     TRKAddASSET(builder, ASSET)
 
-def TRKAddSEN(builder, SEN):
-    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(SEN), 0)
+def TRKAddSENSOR_ID(builder, SENSOR_ID):
+    builder.PrependUOffsetTRelativeSlot(6, flatbuffers.number_types.UOffsetTFlags.py_type(SENSOR_ID), 0)
 
-def AddSEN(builder, SEN):
-    TRKAddSEN(builder, SEN)
+def AddSENSOR_ID(builder, SENSOR_ID):
+    TRKAddSENSOR_ID(builder, SENSOR_ID)
 
 def TRKAddSEN_QUAL(builder, SEN_QUAL):
     builder.PrependUOffsetTRelativeSlot(7, flatbuffers.number_types.UOffsetTFlags.py_type(SEN_QUAL), 0)
@@ -719,7 +767,7 @@ def AddTRK_NUM(builder, TRK_NUM):
     TRKAddTRK_NUM(builder, TRK_NUM)
 
 def TRKAddTRK_STAT(builder, TRK_STAT):
-    builder.PrependUOffsetTRelativeSlot(10, flatbuffers.number_types.UOffsetTFlags.py_type(TRK_STAT), 0)
+    builder.PrependInt8Slot(10, TRK_STAT, 0)
 
 def AddTRK_STAT(builder, TRK_STAT):
     TRKAddTRK_STAT(builder, TRK_STAT)
@@ -779,7 +827,7 @@ def AddTS(builder, TS):
     TRKAddTS(builder, TS)
 
 def TRKAddTRK_QUAL(builder, TRK_QUAL):
-    builder.PrependInt32Slot(20, TRK_QUAL, 0)
+    builder.PrependUint8Slot(20, TRK_QUAL, 0)
 
 def AddTRK_QUAL(builder, TRK_QUAL):
     TRKAddTRK_QUAL(builder, TRK_QUAL)
@@ -797,13 +845,13 @@ def AddOBJ_IDENT(builder, OBJ_IDENT):
     TRKAddOBJ_IDENT(builder, OBJ_IDENT)
 
 def TRKAddIDENT_CRED(builder, IDENT_CRED):
-    builder.PrependInt32Slot(23, IDENT_CRED, 0)
+    builder.PrependUint8Slot(23, IDENT_CRED, 0)
 
 def AddIDENT_CRED(builder, IDENT_CRED):
     TRKAddIDENT_CRED(builder, IDENT_CRED)
 
 def TRKAddIDENT_REL(builder, IDENT_REL):
-    builder.PrependInt32Slot(24, IDENT_REL, 0)
+    builder.PrependUint8Slot(24, IDENT_REL, 0)
 
 def AddIDENT_REL(builder, IDENT_REL):
     TRKAddIDENT_REL(builder, IDENT_REL)
@@ -815,7 +863,7 @@ def AddIDENT_AMP(builder, IDENT_AMP):
     TRKAddIDENT_AMP(builder, IDENT_AMP)
 
 def TRKAddENVIRONMENT(builder, ENVIRONMENT):
-    builder.PrependUOffsetTRelativeSlot(26, flatbuffers.number_types.UOffsetTFlags.py_type(ENVIRONMENT), 0)
+    builder.PrependInt8Slot(26, ENVIRONMENT, 0)
 
 def AddENVIRONMENT(builder, ENVIRONMENT):
     TRKAddENVIRONMENT(builder, ENVIRONMENT)
@@ -911,43 +959,43 @@ def AddJ_SERIES(builder, J_SERIES):
     TRKAddJ_SERIES(builder, J_SERIES)
 
 def TRKAddSTRENGTH(builder, STRENGTH):
-    builder.PrependInt32Slot(40, STRENGTH, 0)
+    builder.PrependUint16Slot(40, STRENGTH, 0)
 
 def AddSTRENGTH(builder, STRENGTH):
     TRKAddSTRENGTH(builder, STRENGTH)
 
 def TRKAddM1(builder, M1):
-    builder.PrependInt32Slot(41, M1, 0)
+    builder.PrependUint16Slot(41, M1, 0)
 
 def AddM1(builder, M1):
     TRKAddM1(builder, M1)
 
 def TRKAddM1V(builder, M1V):
-    builder.PrependInt32Slot(42, M1V, 0)
+    builder.PrependUint8Slot(42, M1V, 0)
 
 def AddM1V(builder, M1V):
     TRKAddM1V(builder, M1V)
 
 def TRKAddM2(builder, M2):
-    builder.PrependInt32Slot(43, M2, 0)
+    builder.PrependUint16Slot(43, M2, 0)
 
 def AddM2(builder, M2):
     TRKAddM2(builder, M2)
 
 def TRKAddM2V(builder, M2V):
-    builder.PrependInt32Slot(44, M2V, 0)
+    builder.PrependUint8Slot(44, M2V, 0)
 
 def AddM2V(builder, M2V):
     TRKAddM2V(builder, M2V)
 
 def TRKAddM3A(builder, M3A):
-    builder.PrependInt32Slot(45, M3A, 0)
+    builder.PrependUint16Slot(45, M3A, 0)
 
 def AddM3A(builder, M3A):
     TRKAddM3A(builder, M3A)
 
 def TRKAddM3AV(builder, M3AV):
-    builder.PrependInt32Slot(46, M3AV, 0)
+    builder.PrependUint8Slot(46, M3AV, 0)
 
 def AddM3AV(builder, M3AV):
     TRKAddM3AV(builder, M3AV)
@@ -1099,11 +1147,11 @@ class TRKT(object):
         self.MSN_ID = None  # type: str
         self.ASSET_NAT = None  # type: str
         self.ASSET = None  # type: str
-        self.SEN = None  # type: str
+        self.SENSOR_ID = None  # type: str
         self.SEN_QUAL = None  # type: str
         self.TRK_ID = None  # type: str
         self.TRK_NUM = None  # type: str
-        self.TRK_STAT = None  # type: str
+        self.TRK_STAT = 0  # type: int
         self.OBJ_NAT = None  # type: str
         self.OBJ_ID = None  # type: str
         self.OBJ_TYPE = None  # type: str
@@ -1119,7 +1167,7 @@ class TRKT(object):
         self.IDENT_CRED = 0  # type: int
         self.IDENT_REL = 0  # type: int
         self.IDENT_AMP = None  # type: str
-        self.ENVIRONMENT = None  # type: str
+        self.ENVIRONMENT = 0  # type: int
         self.ENVIRONMENT_CONF = 0.0  # type: float
         self.TRK_CONF = 0.0  # type: float
         self.LAT = 0.0  # type: float
@@ -1180,7 +1228,7 @@ class TRKT(object):
         self.MSN_ID = TRK.MSN_ID()
         self.ASSET_NAT = TRK.ASSET_NAT()
         self.ASSET = TRK.ASSET()
-        self.SEN = TRK.SEN()
+        self.SENSOR_ID = TRK.SENSOR_ID()
         self.SEN_QUAL = TRK.SEN_QUAL()
         self.TRK_ID = TRK.TRK_ID()
         self.TRK_NUM = TRK.TRK_NUM()
@@ -1305,16 +1353,14 @@ class TRKT(object):
             ASSET_NAT = builder.CreateString(self.ASSET_NAT)
         if self.ASSET is not None:
             ASSET = builder.CreateString(self.ASSET)
-        if self.SEN is not None:
-            SEN = builder.CreateString(self.SEN)
+        if self.SENSOR_ID is not None:
+            SENSOR_ID = builder.CreateString(self.SENSOR_ID)
         if self.SEN_QUAL is not None:
             SEN_QUAL = builder.CreateString(self.SEN_QUAL)
         if self.TRK_ID is not None:
             TRK_ID = builder.CreateString(self.TRK_ID)
         if self.TRK_NUM is not None:
             TRK_NUM = builder.CreateString(self.TRK_NUM)
-        if self.TRK_STAT is not None:
-            TRK_STAT = builder.CreateString(self.TRK_STAT)
         if self.OBJ_NAT is not None:
             OBJ_NAT = builder.CreateString(self.OBJ_NAT)
         if self.OBJ_ID is not None:
@@ -1339,8 +1385,6 @@ class TRKT(object):
             OBJ_IDENT = builder.CreateString(self.OBJ_IDENT)
         if self.IDENT_AMP is not None:
             IDENT_AMP = builder.CreateString(self.IDENT_AMP)
-        if self.ENVIRONMENT is not None:
-            ENVIRONMENT = builder.CreateString(self.ENVIRONMENT)
         if self.SRC_TYPS is not None:
             SRC_TYPSlist = []
             for i in range(len(self.SRC_TYPS)):
@@ -1448,16 +1492,15 @@ class TRKT(object):
             TRKAddASSET_NAT(builder, ASSET_NAT)
         if self.ASSET is not None:
             TRKAddASSET(builder, ASSET)
-        if self.SEN is not None:
-            TRKAddSEN(builder, SEN)
+        if self.SENSOR_ID is not None:
+            TRKAddSENSOR_ID(builder, SENSOR_ID)
         if self.SEN_QUAL is not None:
             TRKAddSEN_QUAL(builder, SEN_QUAL)
         if self.TRK_ID is not None:
             TRKAddTRK_ID(builder, TRK_ID)
         if self.TRK_NUM is not None:
             TRKAddTRK_NUM(builder, TRK_NUM)
-        if self.TRK_STAT is not None:
-            TRKAddTRK_STAT(builder, TRK_STAT)
+        TRKAddTRK_STAT(builder, self.TRK_STAT)
         if self.OBJ_NAT is not None:
             TRKAddOBJ_NAT(builder, OBJ_NAT)
         if self.OBJ_ID is not None:
@@ -1485,8 +1528,7 @@ class TRKT(object):
         TRKAddIDENT_REL(builder, self.IDENT_REL)
         if self.IDENT_AMP is not None:
             TRKAddIDENT_AMP(builder, IDENT_AMP)
-        if self.ENVIRONMENT is not None:
-            TRKAddENVIRONMENT(builder, ENVIRONMENT)
+        TRKAddENVIRONMENT(builder, self.ENVIRONMENT)
         TRKAddENVIRONMENT_CONF(builder, self.ENVIRONMENT_CONF)
         TRKAddTRK_CONF(builder, self.TRK_CONF)
         TRKAddLAT(builder, self.LAT)

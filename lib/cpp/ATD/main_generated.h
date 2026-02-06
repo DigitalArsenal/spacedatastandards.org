@@ -16,6 +16,81 @@ static_assert(FLATBUFFERS_VERSION_MAJOR == 24 &&
 struct ATD;
 struct ATDBuilder;
 
+enum attMotionType : int8_t {
+  attMotionType_STABILIZED = 0,
+  attMotionType_SPINNING = 1,
+  attMotionType_TUMBLING = 2,
+  attMotionType_PRECESSING = 3,
+  attMotionType_UNKNOWN = 4,
+  attMotionType_MIN = attMotionType_STABILIZED,
+  attMotionType_MAX = attMotionType_UNKNOWN
+};
+
+inline const attMotionType (&EnumValuesattMotionType())[5] {
+  static const attMotionType values[] = {
+    attMotionType_STABILIZED,
+    attMotionType_SPINNING,
+    attMotionType_TUMBLING,
+    attMotionType_PRECESSING,
+    attMotionType_UNKNOWN
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesattMotionType() {
+  static const char * const names[6] = {
+    "STABILIZED",
+    "SPINNING",
+    "TUMBLING",
+    "PRECESSING",
+    "UNKNOWN",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameattMotionType(attMotionType e) {
+  if (::flatbuffers::IsOutRange(e, attMotionType_STABILIZED, attMotionType_UNKNOWN)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesattMotionType()[index];
+}
+
+enum attRepresentation : int8_t {
+  attRepresentation_QUATERNION = 0,
+  attRepresentation_EULER = 1,
+  attRepresentation_SPIN = 2,
+  attRepresentation_DIRECTION_COSINE = 3,
+  attRepresentation_MIN = attRepresentation_QUATERNION,
+  attRepresentation_MAX = attRepresentation_DIRECTION_COSINE
+};
+
+inline const attRepresentation (&EnumValuesattRepresentation())[4] {
+  static const attRepresentation values[] = {
+    attRepresentation_QUATERNION,
+    attRepresentation_EULER,
+    attRepresentation_SPIN,
+    attRepresentation_DIRECTION_COSINE
+  };
+  return values;
+}
+
+inline const char * const *EnumNamesattRepresentation() {
+  static const char * const names[5] = {
+    "QUATERNION",
+    "EULER",
+    "SPIN",
+    "DIRECTION_COSINE",
+    nullptr
+  };
+  return names;
+}
+
+inline const char *EnumNameattRepresentation(attRepresentation e) {
+  if (::flatbuffers::IsOutRange(e, attRepresentation_QUATERNION, attRepresentation_DIRECTION_COSINE)) return "";
+  const size_t index = static_cast<size_t>(e);
+  return EnumNamesattRepresentation()[index];
+}
+
 /// Attitude Data Point
 struct ATD FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
   typedef ATDBuilder Builder;
@@ -24,102 +99,157 @@ struct ATD FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
     VT_AS_ID = 6,
     VT_SAT_NO = 8,
     VT_ORIG_OBJECT_ID = 10,
-    VT_TS = 12,
-    VT_MOTION_TYPE = 14,
-    VT_Q1 = 16,
-    VT_Q2 = 18,
-    VT_Q3 = 20,
-    VT_QC = 22,
-    VT_Q1_DOT = 24,
-    VT_Q2_DOT = 26,
-    VT_Q3_DOT = 28,
-    VT_QC_DOT = 30,
-    VT_X_ANGLE = 32,
-    VT_Y_ANGLE = 34,
-    VT_Z_ANGLE = 36,
-    VT_X_RATE = 38,
-    VT_Y_RATE = 40,
-    VT_Z_RATE = 42,
-    VT_RA = 44,
-    VT_DECLINATION = 46,
-    VT_CONING_ANGLE = 48,
-    VT_PREC_PERIOD = 50,
-    VT_SPIN_PERIOD = 52
+    VT_EPOCH = 12,
+    VT_REPRESENTATION = 14,
+    VT_MOTION_TYPE = 16,
+    VT_QC = 18,
+    VT_Q1 = 20,
+    VT_Q2 = 22,
+    VT_Q3 = 24,
+    VT_QC_DOT = 26,
+    VT_Q1_DOT = 28,
+    VT_Q2_DOT = 30,
+    VT_Q3_DOT = 32,
+    VT_X_ANGLE = 34,
+    VT_Y_ANGLE = 36,
+    VT_Z_ANGLE = 38,
+    VT_X_RATE = 40,
+    VT_Y_RATE = 42,
+    VT_Z_RATE = 44,
+    VT_RA = 46,
+    VT_DECLINATION = 48,
+    VT_CONING_ANGLE = 50,
+    VT_PREC_PERIOD = 52,
+    VT_SPIN_PERIOD = 54,
+    VT_ATTITUDE_UNC = 56,
+    VT_RATE_UNC = 58,
+    VT_QUALITY = 60,
+    VT_REF_FRAME = 62,
+    VT_SENSOR_ID = 64
   };
+  /// Unique identifier
   const ::flatbuffers::String *ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ID);
   }
+  /// Attitude set identifier (groups time-series points)
   const ::flatbuffers::String *AS_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_AS_ID);
   }
-  int32_t SAT_NO() const {
-    return GetField<int32_t>(VT_SAT_NO, 0);
+  /// Satellite catalog number
+  uint32_t SAT_NO() const {
+    return GetField<uint32_t>(VT_SAT_NO, 0);
   }
+  /// International designator
   const ::flatbuffers::String *ORIG_OBJECT_ID() const {
     return GetPointer<const ::flatbuffers::String *>(VT_ORIG_OBJECT_ID);
   }
-  const ::flatbuffers::String *TS() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_TS);
+  /// Observation epoch (ISO 8601)
+  const ::flatbuffers::String *EPOCH() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_EPOCH);
   }
-  const ::flatbuffers::String *MOTION_TYPE() const {
-    return GetPointer<const ::flatbuffers::String *>(VT_MOTION_TYPE);
+  /// Attitude representation used
+  attRepresentation REPRESENTATION() const {
+    return static_cast<attRepresentation>(GetField<int8_t>(VT_REPRESENTATION, 0));
   }
-  double Q1() const {
-    return GetField<double>(VT_Q1, 0.0);
+  /// Motion characterization
+  attMotionType MOTION_TYPE() const {
+    return static_cast<attMotionType>(GetField<int8_t>(VT_MOTION_TYPE, 0));
   }
-  double Q2() const {
-    return GetField<double>(VT_Q2, 0.0);
-  }
-  double Q3() const {
-    return GetField<double>(VT_Q3, 0.0);
-  }
+  /// Quaternion scalar component (q0 or qc)
   double QC() const {
     return GetField<double>(VT_QC, 0.0);
   }
-  double Q1_DOT() const {
-    return GetField<double>(VT_Q1_DOT, 0.0);
+  /// Quaternion vector component 1
+  double Q1() const {
+    return GetField<double>(VT_Q1, 0.0);
   }
-  double Q2_DOT() const {
-    return GetField<double>(VT_Q2_DOT, 0.0);
+  /// Quaternion vector component 2
+  double Q2() const {
+    return GetField<double>(VT_Q2, 0.0);
   }
-  double Q3_DOT() const {
-    return GetField<double>(VT_Q3_DOT, 0.0);
+  /// Quaternion vector component 3
+  double Q3() const {
+    return GetField<double>(VT_Q3, 0.0);
   }
+  /// Quaternion scalar rate (rad/s)
   double QC_DOT() const {
     return GetField<double>(VT_QC_DOT, 0.0);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *X_ANGLE() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_X_ANGLE);
+  /// Quaternion vector rate 1 (rad/s)
+  double Q1_DOT() const {
+    return GetField<double>(VT_Q1_DOT, 0.0);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *Y_ANGLE() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_Y_ANGLE);
+  /// Quaternion vector rate 2 (rad/s)
+  double Q2_DOT() const {
+    return GetField<double>(VT_Q2_DOT, 0.0);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *Z_ANGLE() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_Z_ANGLE);
+  /// Quaternion vector rate 3 (rad/s)
+  double Q3_DOT() const {
+    return GetField<double>(VT_Q3_DOT, 0.0);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *X_RATE() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_X_RATE);
+  /// Euler angle X (degrees)
+  double X_ANGLE() const {
+    return GetField<double>(VT_X_ANGLE, 0.0);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *Y_RATE() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_Y_RATE);
+  /// Euler angle Y (degrees)
+  double Y_ANGLE() const {
+    return GetField<double>(VT_Y_ANGLE, 0.0);
   }
-  const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *Z_RATE() const {
-    return GetPointer<const ::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>> *>(VT_Z_RATE);
+  /// Euler angle Z (degrees)
+  double Z_ANGLE() const {
+    return GetField<double>(VT_Z_ANGLE, 0.0);
   }
+  /// Angular rate about X (deg/s)
+  double X_RATE() const {
+    return GetField<double>(VT_X_RATE, 0.0);
+  }
+  /// Angular rate about Y (deg/s)
+  double Y_RATE() const {
+    return GetField<double>(VT_Y_RATE, 0.0);
+  }
+  /// Angular rate about Z (deg/s)
+  double Z_RATE() const {
+    return GetField<double>(VT_Z_RATE, 0.0);
+  }
+  /// Right ascension of spin axis (degrees)
   double RA() const {
     return GetField<double>(VT_RA, 0.0);
   }
+  /// Declination of spin axis (degrees)
   double DECLINATION() const {
     return GetField<double>(VT_DECLINATION, 0.0);
   }
+  /// Coning half-angle (degrees)
   double CONING_ANGLE() const {
     return GetField<double>(VT_CONING_ANGLE, 0.0);
   }
+  /// Precession period (seconds)
   double PREC_PERIOD() const {
     return GetField<double>(VT_PREC_PERIOD, 0.0);
   }
+  /// Spin period (seconds)
   double SPIN_PERIOD() const {
     return GetField<double>(VT_SPIN_PERIOD, 0.0);
+  }
+  /// Attitude uncertainty (degrees, 1-sigma)
+  double ATTITUDE_UNC() const {
+    return GetField<double>(VT_ATTITUDE_UNC, 0.0);
+  }
+  /// Rate uncertainty (deg/s, 1-sigma)
+  double RATE_UNC() const {
+    return GetField<double>(VT_RATE_UNC, 0.0);
+  }
+  /// Data quality (0-9, 9=best)
+  uint8_t QUALITY() const {
+    return GetField<uint8_t>(VT_QUALITY, 0);
+  }
+  /// Reference frame for attitude
+  const ::flatbuffers::String *REF_FRAME() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_REF_FRAME);
+  }
+  /// Sensor identifier providing the observation
+  const ::flatbuffers::String *SENSOR_ID() const {
+    return GetPointer<const ::flatbuffers::String *>(VT_SENSOR_ID);
   }
   bool Verify(::flatbuffers::Verifier &verifier) const {
     return VerifyTableStart(verifier) &&
@@ -127,44 +257,39 @@ struct ATD FLATBUFFERS_FINAL_CLASS : private ::flatbuffers::Table {
            verifier.VerifyString(ID()) &&
            VerifyOffset(verifier, VT_AS_ID) &&
            verifier.VerifyString(AS_ID()) &&
-           VerifyField<int32_t>(verifier, VT_SAT_NO, 4) &&
+           VerifyField<uint32_t>(verifier, VT_SAT_NO, 4) &&
            VerifyOffset(verifier, VT_ORIG_OBJECT_ID) &&
            verifier.VerifyString(ORIG_OBJECT_ID()) &&
-           VerifyOffset(verifier, VT_TS) &&
-           verifier.VerifyString(TS()) &&
-           VerifyOffset(verifier, VT_MOTION_TYPE) &&
-           verifier.VerifyString(MOTION_TYPE()) &&
+           VerifyOffset(verifier, VT_EPOCH) &&
+           verifier.VerifyString(EPOCH()) &&
+           VerifyField<int8_t>(verifier, VT_REPRESENTATION, 1) &&
+           VerifyField<int8_t>(verifier, VT_MOTION_TYPE, 1) &&
+           VerifyField<double>(verifier, VT_QC, 8) &&
            VerifyField<double>(verifier, VT_Q1, 8) &&
            VerifyField<double>(verifier, VT_Q2, 8) &&
            VerifyField<double>(verifier, VT_Q3, 8) &&
-           VerifyField<double>(verifier, VT_QC, 8) &&
+           VerifyField<double>(verifier, VT_QC_DOT, 8) &&
            VerifyField<double>(verifier, VT_Q1_DOT, 8) &&
            VerifyField<double>(verifier, VT_Q2_DOT, 8) &&
            VerifyField<double>(verifier, VT_Q3_DOT, 8) &&
-           VerifyField<double>(verifier, VT_QC_DOT, 8) &&
-           VerifyOffset(verifier, VT_X_ANGLE) &&
-           verifier.VerifyVector(X_ANGLE()) &&
-           verifier.VerifyVectorOfStrings(X_ANGLE()) &&
-           VerifyOffset(verifier, VT_Y_ANGLE) &&
-           verifier.VerifyVector(Y_ANGLE()) &&
-           verifier.VerifyVectorOfStrings(Y_ANGLE()) &&
-           VerifyOffset(verifier, VT_Z_ANGLE) &&
-           verifier.VerifyVector(Z_ANGLE()) &&
-           verifier.VerifyVectorOfStrings(Z_ANGLE()) &&
-           VerifyOffset(verifier, VT_X_RATE) &&
-           verifier.VerifyVector(X_RATE()) &&
-           verifier.VerifyVectorOfStrings(X_RATE()) &&
-           VerifyOffset(verifier, VT_Y_RATE) &&
-           verifier.VerifyVector(Y_RATE()) &&
-           verifier.VerifyVectorOfStrings(Y_RATE()) &&
-           VerifyOffset(verifier, VT_Z_RATE) &&
-           verifier.VerifyVector(Z_RATE()) &&
-           verifier.VerifyVectorOfStrings(Z_RATE()) &&
+           VerifyField<double>(verifier, VT_X_ANGLE, 8) &&
+           VerifyField<double>(verifier, VT_Y_ANGLE, 8) &&
+           VerifyField<double>(verifier, VT_Z_ANGLE, 8) &&
+           VerifyField<double>(verifier, VT_X_RATE, 8) &&
+           VerifyField<double>(verifier, VT_Y_RATE, 8) &&
+           VerifyField<double>(verifier, VT_Z_RATE, 8) &&
            VerifyField<double>(verifier, VT_RA, 8) &&
            VerifyField<double>(verifier, VT_DECLINATION, 8) &&
            VerifyField<double>(verifier, VT_CONING_ANGLE, 8) &&
            VerifyField<double>(verifier, VT_PREC_PERIOD, 8) &&
            VerifyField<double>(verifier, VT_SPIN_PERIOD, 8) &&
+           VerifyField<double>(verifier, VT_ATTITUDE_UNC, 8) &&
+           VerifyField<double>(verifier, VT_RATE_UNC, 8) &&
+           VerifyField<uint8_t>(verifier, VT_QUALITY, 1) &&
+           VerifyOffset(verifier, VT_REF_FRAME) &&
+           verifier.VerifyString(REF_FRAME()) &&
+           VerifyOffset(verifier, VT_SENSOR_ID) &&
+           verifier.VerifyString(SENSOR_ID()) &&
            verifier.EndTable();
   }
 };
@@ -179,17 +304,23 @@ struct ATDBuilder {
   void add_AS_ID(::flatbuffers::Offset<::flatbuffers::String> AS_ID) {
     fbb_.AddOffset(ATD::VT_AS_ID, AS_ID);
   }
-  void add_SAT_NO(int32_t SAT_NO) {
-    fbb_.AddElement<int32_t>(ATD::VT_SAT_NO, SAT_NO, 0);
+  void add_SAT_NO(uint32_t SAT_NO) {
+    fbb_.AddElement<uint32_t>(ATD::VT_SAT_NO, SAT_NO, 0);
   }
   void add_ORIG_OBJECT_ID(::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID) {
     fbb_.AddOffset(ATD::VT_ORIG_OBJECT_ID, ORIG_OBJECT_ID);
   }
-  void add_TS(::flatbuffers::Offset<::flatbuffers::String> TS) {
-    fbb_.AddOffset(ATD::VT_TS, TS);
+  void add_EPOCH(::flatbuffers::Offset<::flatbuffers::String> EPOCH) {
+    fbb_.AddOffset(ATD::VT_EPOCH, EPOCH);
   }
-  void add_MOTION_TYPE(::flatbuffers::Offset<::flatbuffers::String> MOTION_TYPE) {
-    fbb_.AddOffset(ATD::VT_MOTION_TYPE, MOTION_TYPE);
+  void add_REPRESENTATION(attRepresentation REPRESENTATION) {
+    fbb_.AddElement<int8_t>(ATD::VT_REPRESENTATION, static_cast<int8_t>(REPRESENTATION), 0);
+  }
+  void add_MOTION_TYPE(attMotionType MOTION_TYPE) {
+    fbb_.AddElement<int8_t>(ATD::VT_MOTION_TYPE, static_cast<int8_t>(MOTION_TYPE), 0);
+  }
+  void add_QC(double QC) {
+    fbb_.AddElement<double>(ATD::VT_QC, QC, 0.0);
   }
   void add_Q1(double Q1) {
     fbb_.AddElement<double>(ATD::VT_Q1, Q1, 0.0);
@@ -200,8 +331,8 @@ struct ATDBuilder {
   void add_Q3(double Q3) {
     fbb_.AddElement<double>(ATD::VT_Q3, Q3, 0.0);
   }
-  void add_QC(double QC) {
-    fbb_.AddElement<double>(ATD::VT_QC, QC, 0.0);
+  void add_QC_DOT(double QC_DOT) {
+    fbb_.AddElement<double>(ATD::VT_QC_DOT, QC_DOT, 0.0);
   }
   void add_Q1_DOT(double Q1_DOT) {
     fbb_.AddElement<double>(ATD::VT_Q1_DOT, Q1_DOT, 0.0);
@@ -212,26 +343,23 @@ struct ATDBuilder {
   void add_Q3_DOT(double Q3_DOT) {
     fbb_.AddElement<double>(ATD::VT_Q3_DOT, Q3_DOT, 0.0);
   }
-  void add_QC_DOT(double QC_DOT) {
-    fbb_.AddElement<double>(ATD::VT_QC_DOT, QC_DOT, 0.0);
+  void add_X_ANGLE(double X_ANGLE) {
+    fbb_.AddElement<double>(ATD::VT_X_ANGLE, X_ANGLE, 0.0);
   }
-  void add_X_ANGLE(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> X_ANGLE) {
-    fbb_.AddOffset(ATD::VT_X_ANGLE, X_ANGLE);
+  void add_Y_ANGLE(double Y_ANGLE) {
+    fbb_.AddElement<double>(ATD::VT_Y_ANGLE, Y_ANGLE, 0.0);
   }
-  void add_Y_ANGLE(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> Y_ANGLE) {
-    fbb_.AddOffset(ATD::VT_Y_ANGLE, Y_ANGLE);
+  void add_Z_ANGLE(double Z_ANGLE) {
+    fbb_.AddElement<double>(ATD::VT_Z_ANGLE, Z_ANGLE, 0.0);
   }
-  void add_Z_ANGLE(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> Z_ANGLE) {
-    fbb_.AddOffset(ATD::VT_Z_ANGLE, Z_ANGLE);
+  void add_X_RATE(double X_RATE) {
+    fbb_.AddElement<double>(ATD::VT_X_RATE, X_RATE, 0.0);
   }
-  void add_X_RATE(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> X_RATE) {
-    fbb_.AddOffset(ATD::VT_X_RATE, X_RATE);
+  void add_Y_RATE(double Y_RATE) {
+    fbb_.AddElement<double>(ATD::VT_Y_RATE, Y_RATE, 0.0);
   }
-  void add_Y_RATE(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> Y_RATE) {
-    fbb_.AddOffset(ATD::VT_Y_RATE, Y_RATE);
-  }
-  void add_Z_RATE(::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> Z_RATE) {
-    fbb_.AddOffset(ATD::VT_Z_RATE, Z_RATE);
+  void add_Z_RATE(double Z_RATE) {
+    fbb_.AddElement<double>(ATD::VT_Z_RATE, Z_RATE, 0.0);
   }
   void add_RA(double RA) {
     fbb_.AddElement<double>(ATD::VT_RA, RA, 0.0);
@@ -248,6 +376,21 @@ struct ATDBuilder {
   void add_SPIN_PERIOD(double SPIN_PERIOD) {
     fbb_.AddElement<double>(ATD::VT_SPIN_PERIOD, SPIN_PERIOD, 0.0);
   }
+  void add_ATTITUDE_UNC(double ATTITUDE_UNC) {
+    fbb_.AddElement<double>(ATD::VT_ATTITUDE_UNC, ATTITUDE_UNC, 0.0);
+  }
+  void add_RATE_UNC(double RATE_UNC) {
+    fbb_.AddElement<double>(ATD::VT_RATE_UNC, RATE_UNC, 0.0);
+  }
+  void add_QUALITY(uint8_t QUALITY) {
+    fbb_.AddElement<uint8_t>(ATD::VT_QUALITY, QUALITY, 0);
+  }
+  void add_REF_FRAME(::flatbuffers::Offset<::flatbuffers::String> REF_FRAME) {
+    fbb_.AddOffset(ATD::VT_REF_FRAME, REF_FRAME);
+  }
+  void add_SENSOR_ID(::flatbuffers::Offset<::flatbuffers::String> SENSOR_ID) {
+    fbb_.AddOffset(ATD::VT_SENSOR_ID, SENSOR_ID);
+  }
   explicit ATDBuilder(::flatbuffers::FlatBufferBuilder &_fbb)
         : fbb_(_fbb) {
     start_ = fbb_.StartTable();
@@ -263,55 +406,67 @@ inline ::flatbuffers::Offset<ATD> CreateATD(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     ::flatbuffers::Offset<::flatbuffers::String> ID = 0,
     ::flatbuffers::Offset<::flatbuffers::String> AS_ID = 0,
-    int32_t SAT_NO = 0,
+    uint32_t SAT_NO = 0,
     ::flatbuffers::Offset<::flatbuffers::String> ORIG_OBJECT_ID = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> TS = 0,
-    ::flatbuffers::Offset<::flatbuffers::String> MOTION_TYPE = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> EPOCH = 0,
+    attRepresentation REPRESENTATION = attRepresentation_QUATERNION,
+    attMotionType MOTION_TYPE = attMotionType_STABILIZED,
+    double QC = 0.0,
     double Q1 = 0.0,
     double Q2 = 0.0,
     double Q3 = 0.0,
-    double QC = 0.0,
+    double QC_DOT = 0.0,
     double Q1_DOT = 0.0,
     double Q2_DOT = 0.0,
     double Q3_DOT = 0.0,
-    double QC_DOT = 0.0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> X_ANGLE = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> Y_ANGLE = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> Z_ANGLE = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> X_RATE = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> Y_RATE = 0,
-    ::flatbuffers::Offset<::flatbuffers::Vector<::flatbuffers::Offset<::flatbuffers::String>>> Z_RATE = 0,
+    double X_ANGLE = 0.0,
+    double Y_ANGLE = 0.0,
+    double Z_ANGLE = 0.0,
+    double X_RATE = 0.0,
+    double Y_RATE = 0.0,
+    double Z_RATE = 0.0,
     double RA = 0.0,
     double DECLINATION = 0.0,
     double CONING_ANGLE = 0.0,
     double PREC_PERIOD = 0.0,
-    double SPIN_PERIOD = 0.0) {
+    double SPIN_PERIOD = 0.0,
+    double ATTITUDE_UNC = 0.0,
+    double RATE_UNC = 0.0,
+    uint8_t QUALITY = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> REF_FRAME = 0,
+    ::flatbuffers::Offset<::flatbuffers::String> SENSOR_ID = 0) {
   ATDBuilder builder_(_fbb);
+  builder_.add_RATE_UNC(RATE_UNC);
+  builder_.add_ATTITUDE_UNC(ATTITUDE_UNC);
   builder_.add_SPIN_PERIOD(SPIN_PERIOD);
   builder_.add_PREC_PERIOD(PREC_PERIOD);
   builder_.add_CONING_ANGLE(CONING_ANGLE);
   builder_.add_DECLINATION(DECLINATION);
   builder_.add_RA(RA);
-  builder_.add_QC_DOT(QC_DOT);
-  builder_.add_Q3_DOT(Q3_DOT);
-  builder_.add_Q2_DOT(Q2_DOT);
-  builder_.add_Q1_DOT(Q1_DOT);
-  builder_.add_QC(QC);
-  builder_.add_Q3(Q3);
-  builder_.add_Q2(Q2);
-  builder_.add_Q1(Q1);
   builder_.add_Z_RATE(Z_RATE);
   builder_.add_Y_RATE(Y_RATE);
   builder_.add_X_RATE(X_RATE);
   builder_.add_Z_ANGLE(Z_ANGLE);
   builder_.add_Y_ANGLE(Y_ANGLE);
   builder_.add_X_ANGLE(X_ANGLE);
-  builder_.add_MOTION_TYPE(MOTION_TYPE);
-  builder_.add_TS(TS);
+  builder_.add_Q3_DOT(Q3_DOT);
+  builder_.add_Q2_DOT(Q2_DOT);
+  builder_.add_Q1_DOT(Q1_DOT);
+  builder_.add_QC_DOT(QC_DOT);
+  builder_.add_Q3(Q3);
+  builder_.add_Q2(Q2);
+  builder_.add_Q1(Q1);
+  builder_.add_QC(QC);
+  builder_.add_SENSOR_ID(SENSOR_ID);
+  builder_.add_REF_FRAME(REF_FRAME);
+  builder_.add_EPOCH(EPOCH);
   builder_.add_ORIG_OBJECT_ID(ORIG_OBJECT_ID);
   builder_.add_SAT_NO(SAT_NO);
   builder_.add_AS_ID(AS_ID);
   builder_.add_ID(ID);
+  builder_.add_QUALITY(QUALITY);
+  builder_.add_MOTION_TYPE(MOTION_TYPE);
+  builder_.add_REPRESENTATION(REPRESENTATION);
   return builder_.Finish();
 }
 
@@ -319,67 +474,74 @@ inline ::flatbuffers::Offset<ATD> CreateATDDirect(
     ::flatbuffers::FlatBufferBuilder &_fbb,
     const char *ID = nullptr,
     const char *AS_ID = nullptr,
-    int32_t SAT_NO = 0,
+    uint32_t SAT_NO = 0,
     const char *ORIG_OBJECT_ID = nullptr,
-    const char *TS = nullptr,
-    const char *MOTION_TYPE = nullptr,
+    const char *EPOCH = nullptr,
+    attRepresentation REPRESENTATION = attRepresentation_QUATERNION,
+    attMotionType MOTION_TYPE = attMotionType_STABILIZED,
+    double QC = 0.0,
     double Q1 = 0.0,
     double Q2 = 0.0,
     double Q3 = 0.0,
-    double QC = 0.0,
+    double QC_DOT = 0.0,
     double Q1_DOT = 0.0,
     double Q2_DOT = 0.0,
     double Q3_DOT = 0.0,
-    double QC_DOT = 0.0,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *X_ANGLE = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *Y_ANGLE = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *Z_ANGLE = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *X_RATE = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *Y_RATE = nullptr,
-    const std::vector<::flatbuffers::Offset<::flatbuffers::String>> *Z_RATE = nullptr,
+    double X_ANGLE = 0.0,
+    double Y_ANGLE = 0.0,
+    double Z_ANGLE = 0.0,
+    double X_RATE = 0.0,
+    double Y_RATE = 0.0,
+    double Z_RATE = 0.0,
     double RA = 0.0,
     double DECLINATION = 0.0,
     double CONING_ANGLE = 0.0,
     double PREC_PERIOD = 0.0,
-    double SPIN_PERIOD = 0.0) {
+    double SPIN_PERIOD = 0.0,
+    double ATTITUDE_UNC = 0.0,
+    double RATE_UNC = 0.0,
+    uint8_t QUALITY = 0,
+    const char *REF_FRAME = nullptr,
+    const char *SENSOR_ID = nullptr) {
   auto ID__ = ID ? _fbb.CreateString(ID) : 0;
   auto AS_ID__ = AS_ID ? _fbb.CreateString(AS_ID) : 0;
   auto ORIG_OBJECT_ID__ = ORIG_OBJECT_ID ? _fbb.CreateString(ORIG_OBJECT_ID) : 0;
-  auto TS__ = TS ? _fbb.CreateString(TS) : 0;
-  auto MOTION_TYPE__ = MOTION_TYPE ? _fbb.CreateString(MOTION_TYPE) : 0;
-  auto X_ANGLE__ = X_ANGLE ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*X_ANGLE) : 0;
-  auto Y_ANGLE__ = Y_ANGLE ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*Y_ANGLE) : 0;
-  auto Z_ANGLE__ = Z_ANGLE ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*Z_ANGLE) : 0;
-  auto X_RATE__ = X_RATE ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*X_RATE) : 0;
-  auto Y_RATE__ = Y_RATE ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*Y_RATE) : 0;
-  auto Z_RATE__ = Z_RATE ? _fbb.CreateVector<::flatbuffers::Offset<::flatbuffers::String>>(*Z_RATE) : 0;
+  auto EPOCH__ = EPOCH ? _fbb.CreateString(EPOCH) : 0;
+  auto REF_FRAME__ = REF_FRAME ? _fbb.CreateString(REF_FRAME) : 0;
+  auto SENSOR_ID__ = SENSOR_ID ? _fbb.CreateString(SENSOR_ID) : 0;
   return CreateATD(
       _fbb,
       ID__,
       AS_ID__,
       SAT_NO,
       ORIG_OBJECT_ID__,
-      TS__,
-      MOTION_TYPE__,
+      EPOCH__,
+      REPRESENTATION,
+      MOTION_TYPE,
+      QC,
       Q1,
       Q2,
       Q3,
-      QC,
+      QC_DOT,
       Q1_DOT,
       Q2_DOT,
       Q3_DOT,
-      QC_DOT,
-      X_ANGLE__,
-      Y_ANGLE__,
-      Z_ANGLE__,
-      X_RATE__,
-      Y_RATE__,
-      Z_RATE__,
+      X_ANGLE,
+      Y_ANGLE,
+      Z_ANGLE,
+      X_RATE,
+      Y_RATE,
+      Z_RATE,
       RA,
       DECLINATION,
       CONING_ANGLE,
       PREC_PERIOD,
-      SPIN_PERIOD);
+      SPIN_PERIOD,
+      ATTITUDE_UNC,
+      RATE_UNC,
+      QUALITY,
+      REF_FRAME__,
+      SENSOR_ID__);
 }
 
 inline const ATD *GetATD(const void *buf) {

@@ -35,19 +35,32 @@ function main() {
 
   let indexHtml = fs.readFileSync(INDEX_PATH, 'utf-8');
 
-  // Update the schema count pattern: n(0,a=NUMBER)
-  const pattern = /n\(0,a=\d+\)/g;
-  const replacement = `n(0,a=${schemaCount})`;
+  // Update the schema count pattern: X(0,Y=NUMBER) where X and Y are minified variable names
+  // This appears in the Svelte catch block as a fallback count
+  const pattern = /([a-z])\(0,([a-z])=(\d{2,3})\)/g;
 
-  if (!pattern.test(indexHtml)) {
+  // Find the right match (it's inside a catch block near STANDARDS)
+  let replaced = false;
+  const updatedHtml = indexHtml.replace(pattern, (match, fn, varName, currentCount) => {
+    const num = parseInt(currentCount);
+    // Only replace if it's a plausible schema count (between 50 and 300)
+    if (num >= 50 && num <= 300) {
+      // Verify this is near STANDARDS keyword
+      const idx = indexHtml.indexOf(match);
+      const context = indexHtml.substring(Math.max(0, idx - 100), idx);
+      if (context.includes('STANDARDS')) {
+        replaced = true;
+        return `${fn}(0,${varName}=${schemaCount})`;
+      }
+    }
+    return match;
+  });
+
+  if (!replaced) {
     console.error('Could not find schema count pattern in index.html');
-    process.exit(1);
+    // Exit gracefully - the count is loaded dynamically from manifest.json
+    process.exit(0);
   }
-
-  // Reset lastIndex after test
-  pattern.lastIndex = 0;
-
-  const updatedHtml = indexHtml.replace(pattern, replacement);
 
   if (updatedHtml === indexHtml) {
     console.log(`Schema count already set to ${schemaCount}. No changes needed.`);
